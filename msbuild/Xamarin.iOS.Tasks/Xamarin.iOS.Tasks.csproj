@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -51,6 +51,9 @@
     <Compile Include="Tasks\DetectSigningIdentity.cs" />
     <Compile Include="Tasks\EmbedMobileProvision.cs" />
     <Compile Include="Tasks\FindWatchOS1AppExtensionBundle.cs" />
+    <Compile Include="Tasks\GetDirectories.cs" />
+    <Compile Include="Tasks\GetFiles.cs" />
+    <Compile Include="Tasks\GetFullPath.cs" />
     <Compile Include="Tasks\GetPropertyValue.cs" />
     <Compile Include="Tasks\IBTool.cs" />
     <Compile Include="Tasks\Metal.cs" />

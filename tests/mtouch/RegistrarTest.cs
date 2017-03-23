@@ -308,9 +308,19 @@ class C : NSObject {
 class C : NSObject {
 }
 ";
-			VerifyWithXode (R.Static, code, true, "warning MT4146: The Name parameter of the Registrar attribute on the class 'C' contains an invalid character: ' ' (0x20)");
+			VerifyWithXode (R.Static, code, true, "warning MT4146: The Name parameter of the Registrar attribute on the class 'C' (' C') contains an invalid character: ' ' (0x20).");
 		}
 
+		[Test]
+		public void MT4146_b ()
+		{
+			var code = @"
+[Register (""A C"")]
+class C : NSObject {
+}
+";
+			VerifyWithXode (R.Static, code, false, "error MT4146: The Name parameter of the Registrar attribute on the class 'C' ('A C') contains an invalid character: ' ' (0x20).");
+		}
 		[Test]
 		public void MT4148 ()
 		{
@@ -684,6 +694,21 @@ public struct FooF { public NSObject Obj; }
 			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'While' because its selector 'while' is an Objective-C keyword. Please use a different name.",
 			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Bool' because its selector '_Bool' is an Objective-C keyword. Please use a different name.",
 			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Complex' because its selector '_Complex' is an Objective-C keyword. Please use a different name.");
+		}
+
+		[Test]
+		public void MT4167 ()
+		{
+			var code = @"
+class X : ReplayKit.RPBroadcastControllerDelegate
+{
+	public override void DidUpdateServiceInfo (ReplayKit.RPBroadcastController broadcastController, NSDictionary<NSString, INSCoding> serviceInfo)
+	{
+		throw new NotImplementedException ();
+	}
+}
+";
+			Verify (R.Static, code, true);
 		}
 
 		[Test]
@@ -1160,33 +1185,28 @@ class CTP4 : CTP3 {
 		// Creates an app with the specified source as the executable.
 		// Compiles it using smcs, will throw a McsException if it fails.
 		// Then runs mtouch to try to create an app (for device), will throw MTouchException if it fails.
-		// This method should not leave anything behind on disk.
 		static int CreateTestApp (Profile profile, string source, string extra_args = "", string xcode = null, string sdk_version = null, Target target = Target.Dev, StringBuilder output = null)
 		{
 			if (target == Target.Dev)
 				MTouch.AssertDeviceAvailable ();
 
 			string path = Cache.CreateTemporaryDirectory ();
-			try {
-				string cs = Path.Combine (path, "Test.cs");
-				string exe = Path.Combine (path, "Test.exe");
-				File.WriteAllText (cs, source);
-				Compile (cs, profile);
-				string app = Path.Combine (path, "Test.app");
-				string cache = Path.Combine (path, "cache");
-				Directory.CreateDirectory (cache);
-				Directory.CreateDirectory (app);
+			string cs = Path.Combine (path, "Test.cs");
+			string exe = Path.Combine (path, "Test.exe");
+			File.WriteAllText (cs, source);
+			Compile (cs, profile);
+			string app = Path.Combine (path, "Test.app");
+			string cache = Path.Combine (path, "cache");
+			Directory.CreateDirectory (cache);
+			Directory.CreateDirectory (app);
 
-				if (xcode == null)
-					xcode = Configuration.xcode_root;
+			if (xcode == null)
+				xcode = Configuration.xcode_root;
 
-				if (sdk_version == null)
-					sdk_version = MTouch.GetSdkVersion (profile);
+			if (sdk_version == null)
+				sdk_version = MTouch.GetSdkVersion (profile);
 
-				return ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("{0} {10} {1} --sdk {2} -targetver {2} --abi={9} {3} --sdkroot {4} --cache {5} --nolink {7} --debug -r:{6} --target-framework:{8}", exe, app, sdk_version, extra_args, xcode, cache, MTouch.GetBaseLibrary (profile), string.Empty, MTouch.GetTargetFramework (profile), MTouch.GetArchitecture (profile, target), target == Target.Sim ? "-sim" : "-dev"), null, output, output);
-			} finally {
-				Directory.Delete (path, true);
-			}
+			return ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("{0} {10} {1} --sdk {2} -targetver {2} --abi={9} {3} --sdkroot {4} --cache {5} --nolink {7} --debug -r:{6} --target-framework:{8}", exe, app, sdk_version, extra_args, xcode, cache, MTouch.GetBaseLibrary (profile), string.Empty, MTouch.GetTargetFramework (profile), MTouch.GetArchitecture (profile, target), target == Target.Sim ? "-sim" : "-dev"), null, output, output);
 		}
 
 		// Compile the filename with mcs

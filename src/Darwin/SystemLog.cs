@@ -128,7 +128,7 @@ namespace XamCore.Darwin {
 		public int Log (Message msg, string text, params object [] args)
 		{
 			var txt = text == null ? "" : String.Format (text, args);
-			if (txt.IndexOf ("%") != -1)
+			if (txt.IndexOf ('%') != -1)
 				txt = txt.Replace ("%", "%%");
 			return asl_log (handle, msg == null ? IntPtr.Zero : msg.Handle, txt);
 		}

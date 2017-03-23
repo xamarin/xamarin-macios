@@ -76,6 +76,7 @@ bool xamarin_is_gc_coop = false;
 #endif
 enum MarshalObjectiveCExceptionMode xamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionModeDefault;
 enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode = MarshalManagedExceptionModeDefault;
+bool xamarin_is_extension = false;
 
 /* Callbacks */
 
@@ -996,6 +997,12 @@ print_all_exceptions (MonoObject *exc)
 
 	[str autorelease];
 	return str;
+}
+
+NSString *
+xamarin_print_all_exceptions (MonoObject *exc)
+{
+	return print_all_exceptions (exc);
 }
 
 void

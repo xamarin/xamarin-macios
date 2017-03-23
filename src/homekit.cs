@@ -691,6 +691,7 @@ namespace XamCore.HomeKit {
 		[NoTV]
 		[NoWatch]
 		[iOS (9,0)]
+		[Async]
 		[Export ("manageUsersWithCompletionHandler:")]
 		void ManageUsers (Action<NSError> completion);
 
@@ -1128,6 +1129,7 @@ namespace XamCore.HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[Async]
 		[Export ("updateTriggerValue:completionHandler:")]
 		void UpdateTriggerValue ([NullAllowed] INSCopying triggerValue, Action<NSError> completion);
 	}
@@ -1182,16 +1184,19 @@ namespace XamCore.HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[Async]
 		[Export ("addEvent:completionHandler:")]
 		void AddEvent (HMEvent @event, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[Async]
 		[Export ("removeEvent:completionHandler:")]
 		void RemoveEvent (HMEvent @event, Action<NSError> completion);
 
 		[NoTV]
 		[NoWatch]
+		[Async]
 		[Export ("updatePredicate:completionHandler:")]
 		void UpdatePredicate ([NullAllowed] NSPredicate predicate, Action<NSError> completion);
 	}
@@ -1233,6 +1238,7 @@ namespace XamCore.HomeKit {
 
 		[NoTV]
 		[NoWatch]
+		[Async]
 		[Export ("updateRegion:completionHandler:")]
 		void UpdateRegion (CLRegion region, Action<NSError> completion);
 	}

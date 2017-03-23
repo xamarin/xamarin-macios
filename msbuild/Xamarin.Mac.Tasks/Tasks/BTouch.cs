@@ -12,8 +12,6 @@ namespace Xamarin.Mac.Tasks
 {
 	public class BTouch : BTouchTaskBase
 	{
-		public string TargetFrameworkIdentifier { get; set; }
-
 		public string FrameworkRoot { get; set; }
 
 		protected override string GenerateCommandLineCommands ()
@@ -40,16 +38,35 @@ namespace Xamarin.Mac.Tasks
 			};
 
 			var sb = new StringBuilder ();
-			if (isMobile) {
-				sb.Append (Path.Combine (FrameworkRoot, "lib", "bmac", "bmac-mobile.exe"));
-				sb.Append (" --target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile ");
+			var bgen = Path.Combine (FrameworkRoot, "lib", "bgen", "bgen.exe");
+			if (File.Exists (bgen)) {
+				sb.Append (bgen);
 			} else {
-				sb.Append (Path.Combine (FrameworkRoot, "lib", "bmac", "bmac-full.exe"));
-				sb.Append (" --target-framework=Xamarin.Mac,Version=v4.5,Profile=Full ");
+				if (isMobile) {
+					sb.Append (Path.Combine (FrameworkRoot, "lib", "bmac", "bmac-mobile.exe"));
+				} else {
+					sb.Append (Path.Combine (FrameworkRoot, "lib", "bmac", "bmac-full.exe"));
+				}
 			}
-			sb.Append ("-nostdlib ");
+			sb.Append (" -nostdlib ");
 			sb.Append (base.GenerateCommandLineCommands ());
 			return sb.ToString ();
 		}
+
+		protected override string GetTargetFrameworkArgument ()
+		{
+			switch (TargetFrameworkIdentifier) {
+				case null:
+				case "":
+				case "Xamarin.Mac":
+					return "/target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile";
+				case ".NETFramework":
+					return "/target-framework=Xamarin.Mac,Version=v4.5,Profile=Full";
+				default:
+					Log.LogError ($"Unknown target framework identifier: {TargetFrameworkIdentifier}.");
+					return string.Empty;
+			}
+		}
+
 	}
 }

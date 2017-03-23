@@ -11808,12 +11808,21 @@ namespace XamCore.AppKit {
 		[Export ("printSettings")]
 		NSMutableDictionary PrintSettings { get; }
 
+#if XAMCORE_4_0
+		[Internal]
+#endif
 		[Export ("PMPrintSession")]
 		IntPtr GetPMPrintSession ();
 
+#if XAMCORE_4_0
+		[Internal]
+#endif
 		[Export ("PMPageFormat")]
 		IntPtr GetPMPageFormat ();
 
+#if XAMCORE_4_0
+		[Internal]
+#endif
 		[Export ("PMPrintSettings")]
 		IntPtr GetPMPrintSettings ();
 
@@ -13669,7 +13678,11 @@ namespace XamCore.AppKit {
 		bool IsAutomaticTextCompletionEnabled { get; }
 
 		[Mac (10,12,1)]
+#if XAMCORE_4_0
 		[Async (ResultTypeName="NSSpellCheckerCandidates")]
+#else
+		[Async (ResultTypeName="NSSpellCheckerCanidates")]
+#endif
 		[Export ("requestCandidatesForSelectedRange:inString:types:options:inSpellDocumentWithTag:completionHandler:")]
 		nint RequestCandidates (NSRange selectedRange, string stringToCheck, ulong checkingTypes, [NullAllowed] NSDictionary<NSString, NSObject> options, nint tag, [NullAllowed] Action<nint, NSTextCheckingResult []> completionHandler);
 

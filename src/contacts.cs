@@ -515,23 +515,28 @@ namespace XamCore.Contacts {
 		CNContact [] GetContactsFromData (NSData data, out NSError error);
 	}
 
+#if !XAMCORE_4_0
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
-	[Category]
+	[Category (allowStaticMembers: true)]
 	[BaseType (typeof (CNContainer))]
 	interface CNContainer_PredicatesExtension {
 
+		[Obsolete ("Use CNContainer.CreatePredicateForContainers instead")]
 		[Static]
 		[Export ("predicateForContainersWithIdentifiers:")]
 		NSPredicate GetPredicateForContainers (string [] identifiers);
 
+		[Obsolete ("Use CNContainer.CreatePredicateForContainerOfContact instead")]
 		[Static]
 		[Export ("predicateForContainerOfContactWithIdentifier:")]
 		NSPredicate GetPredicateForContainerOfContact (string contactIdentifier);
 
+		[Obsolete ("Use CNContainer.CreatePredicateForContainerOfGroup instead")]
 		[Static]
 		[Export ("predicateForContainerOfGroupWithIdentifier:")]
 		NSPredicate GetPredicateForContainerOfGroup (string groupIdentifier);
 	}
+#endif
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
@@ -545,6 +550,32 @@ namespace XamCore.Contacts {
 
 		[Export ("type", ArgumentSemantic.Assign)]
 		CNContainerType ContainerType { get; }
+
+#region comes from CNContainer (Predicates) Category
+		[Static]
+#if XAMCORE_4_0
+		[Export ("predicateForContainersWithIdentifiers:")]
+#else
+		[Wrap ("(null as CNContainer).GetPredicateForContainers (identifiers)")]
+#endif
+		NSPredicate CreatePredicateForContainers (string [] identifiers);
+
+		[Static]
+#if XAMCORE_4_0
+		[Export ("predicateForContainerOfContactWithIdentifier:")]
+#else
+		[Wrap ("(null as CNContainer).GetPredicateForContainerOfContact (contactIdentifier)")]
+#endif
+		NSPredicate CreatePredicateForContainerOfContact (string contactIdentifier);
+
+		[Static]
+#if XAMCORE_4_0
+		[Export ("predicateForContainerOfGroupWithIdentifier:")]
+#else
+		[Wrap ("(null as CNContainer).GetPredicateForContainerOfGroup (groupIdentifier)")]
+#endif
+		NSPredicate CreatePredicateForContainerOfGroup (string groupIdentifier);
+#endregion
 	}
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
@@ -580,24 +611,29 @@ namespace XamCore.Contacts {
 		NSString KeyPaths { get; }
 	}
 
+#if !XAMCORE_4_0
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
-	[Category]
+	[Category (allowStaticMembers: true)]
 	[BaseType (typeof (CNGroup))]
 	interface CNGroup_PredicatesExtension {
 
+		[Obsolete ("Use CNGroup.CreatePredicateForGroups instead")]
 		[Static]
 		[Export ("predicateForGroupsWithIdentifiers:")]
 		NSPredicate GetPredicateForGroups (string [] identifiers);
 
+		[Obsolete ("Use CNGroup.CreatePredicateForSubgroupsInGroup instead")]
 		[NoiOS][NoWatch]
 		[Static]
 		[Export ("predicateForSubgroupsInGroupWithIdentifier:")]
 		NSPredicate GetPredicateForSubgroupsInGroup (string parentGroupIdentifier);
 
+		[Obsolete ("Use CNGroup.CreatePredicateForGroupsInContainer instead")]
 		[Static]
 		[Export ("predicateForGroupsInContainerWithIdentifier:")]
 		NSPredicate GetPredicateForGroupsInContainer (string containerIdentifier);
 	}
+#endif
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
@@ -608,6 +644,33 @@ namespace XamCore.Contacts {
 
 		[Export ("name")]
 		string Name { get; }
+
+#region comes from CNGroup (Predicates) Category
+		[Static]
+#if XAMCORE_4_0
+		[Export ("predicateForGroupsWithIdentifiers:")]
+#else
+		[Wrap ("(null as CNGroup).GetPredicateForGroups (identifiers)")]
+#endif
+		NSPredicate CreatePredicateForGroups (string [] identifiers);
+
+		[NoiOS][NoWatch]
+		[Static]
+#if XAMCORE_4_0
+		[Export ("predicateForSubgroupsInGroupWithIdentifier:")]
+#else
+		[Wrap ("(null as CNGroup).GetPredicateForSubgroupsInGroup (parentGroupIdentifier)")]
+#endif
+		NSPredicate CreatePredicateForSubgroupsInGroup (string parentGroupIdentifier);
+
+		[Static]
+#if XAMCORE_4_0
+		[Export ("predicateForGroupsInContainerWithIdentifier:")]
+#else
+		[Wrap ("(null as CNGroup).GetPredicateForGroupsInContainer (containerIdentifier)")]
+#endif
+		NSPredicate CreatePredicateForGroupsInContainer (string containerIdentifier);
+#endregion
 	}
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]

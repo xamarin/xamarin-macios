@@ -80,6 +80,7 @@
     <Compile Include="..\..\src\ObjCRuntime\RuntimeException.cs">
       <Link>RuntimeException.cs</Link>
     </Compile>
+    <Compile Include="src\RoslynSmokeTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <Import Project="CustomBuildActions.targets" />

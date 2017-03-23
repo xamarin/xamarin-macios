@@ -81,6 +81,7 @@ namespace XamCore.AudioUnit {
 
 		[Static]
 		[Export ("instantiateWithComponentDescription:options:completionHandler:")]
+		[Async]
 		void FromComponentDescription (AudioComponentDescription componentDescription, AudioComponentInstantiationOptions options, Action<AUAudioUnit, NSError> completionHandler);
 
 		[Export ("componentDescription")]

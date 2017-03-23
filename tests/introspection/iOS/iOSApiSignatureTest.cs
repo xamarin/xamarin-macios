@@ -214,5 +214,23 @@ namespace Introspection {
 #endif
 			base.CheckManagedMemberSignatures (m, t, ref n);
 		}
+
+		protected override bool IgnoreAsync (MethodInfo m)
+		{
+			switch (m.Name) {
+			// Called by the OS, i.e. meant to be overridden (not called) by user code.
+			case "DidReceiveNotification":
+				return m.DeclaringType.Name == "WKUserNotificationInterfaceController";
+			case "AddCompletion":
+				return true;
+			// comes from NSFilePresenter protocol, where we cannot put [Async] today
+			// proposal: https://trello.com/c/dSOh6PXE/680-rfc-async-on-protocol-proposal
+			case "AccommodatePresentedItemDeletion":
+			case "AccommodatePresentedSubitemDeletion":
+			case "SavePresentedItemChanges":
+				return m.DeclaringType.Name == "UIDocument";
+			}
+			return base.IgnoreAsync (m);
+		}
 	}
 }

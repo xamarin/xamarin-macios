@@ -1,17 +1,12 @@
 
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
+#if IKVM
+using IKVM.Reflection;
+using Type = IKVM.Reflection.Type;
+#else
 using System.Reflection;
+#endif
 using System.Runtime.InteropServices;
-
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.Security;
-
-using DictionaryContainerType = XamCore.Foundation.DictionaryContainer;
 
 public static class TypeManager {
 	public static Type System_Attribute;
@@ -48,83 +43,6 @@ public static class TypeManager {
 	public static Type Selector;
 
 	public static Type Constants;
-
-	/* attributes */
-	public static Type AbstractAttribute;
-	public static Type AdvancedAttribute;
-	public static Type AlignAttribute;
-	public static Type AppearanceAttribute;
-	public static Type AsyncAttribute;
-	public static Type AutoreleaseAttribute;
-	public static Type AvailabilityBaseAttribute;
-	public static Type BaseTypeAttribute;
-	public static Type BindAttribute;
-	public static Type BlockCallbackAttribute;
-	public static Type CategoryAttribute;
-	public static Type CCallbackAttribute;
-	public static Type CheckDisposedAttribute;
-	public static Type CoreImageFilterAttribute;
-	public static Type CoreImageFilterPropertyAttribute;
-	public static Type DebuggerBrowsableAttribute;
-	public static Type DebuggerDisplayAttribute;
-	public static Type DefaultValueAttribute;
-	public static Type DefaultValueFromArgumentAttribute;
-	public static Type DelegateApiNameAttribute;
-	public static Type DelegateNameAttribute;
-	public static Type DesignatedInitializerAttribute;
-	public static Type DisableZeroCopyAttribute;
-	public static Type DisposeAttribute;
-	public static Type EditorBrowsableAttribute;
-	public static Type EventArgsAttribute;
-	public static Type EventNameAttribute;
-	public static Type ExportAttribute;
-	public static Type FactoryAttribute;
-	public static Type FieldAttribute;
-	public static Type FieldOffsetAttribute;
-	public static Type FlagsAttribute;
-	public static Type InternalAttribute;
-	public static Type IsThreadStaticAttribute;
-	public static Type LinkWithAttribute;
-	public static Type ManualAttribute;
-	public static Type MarshalAsAttribute;
-	public static Type MarshalNativeExceptionsAttribute;
-	public static Type ModelAttribute;
-	public static Type NativeAttribute;
-	public static Type NewAttribute;
-	public static Type NoDefaultValueAttribute;
-	public static Type NotificationAttribute;
-	public static Type NotImplementedAttribute;
-	public static Type NullAllowedAttribute;
-	public static Type ObsoleteAttribute;
-	public static Type OptionalImplementationAttribute;
-	public static Type OutAttribute;
-	public static Type OverrideAttribute;
-	public static Type ParamArrayAttribute;
-	public static Type ParamsAttribute;
-	public static Type PartialAttribute;
-	public static Type PlainStringAttribute;
-	public static Type PostGetAttribute;
-	public static Type PostSnippetAttribute;
-	public static Type PreSnippetAttribute;
-	public static Type ProbePresenceAttribute;
-	public static Type PrologueSnippetAttribute;
-	public static Type ProtectedAttribute;
-	public static Type ProtocolAttribute;
-	public static Type ProtocolizeAttribute;
-	public static Type ProxyAttribute;
-	public static Type RegisterAttribute;
-	public static Type ReleaseAttribute;
-	public static Type RetainAttribute;
-	public static Type SealedAttribute;
-	public static Type StaticAttribute;
-	public static Type StrongDictionaryAttribute;
-	public static Type SyntheticAttribute;
-	public static Type TargetAttribute;
-	public static Type ThreadSafeAttribute;
-	public static Type TransientAttribute;
-	public static Type UnifiedInternalAttribute;
-	public static Type WrapAttribute;
-	public static Type ZeroCopyStringsAttribute;
 
 	/* Different binding types */
 
@@ -188,12 +106,36 @@ public static class TypeManager {
 	public static Type CoreGraphics_CGSize;
 
 	static Assembly api_assembly;
+	static Assembly corlib_assembly;
 	static Assembly platform_assembly;
+	static Assembly system_assembly;
+	static Assembly binding_assembly;
+
+	public static Assembly CorlibAssembly {
+		get { return corlib_assembly; }
+	}
+
+	public static Assembly PlatformAssembly {
+		get { return platform_assembly; }
+		set { platform_assembly = value; }
+	}
+
+	public static Assembly SystemAssembly {
+		get { return system_assembly; }
+	}
+
+	public static Assembly BindingAssembly {
+		get { return binding_assembly; }
+	}
 
 	static Type Lookup (Assembly assembly, string @namespace, string @typename, bool inexistentOK = false)
 	{
 		string fullname;
-		string nsManagerPrefix = BindingTouch.NamespacePlatformPrefix;
+		string nsManagerPrefix = null;
+
+		if (assembly == platform_assembly || assembly == api_assembly)
+			nsManagerPrefix = BindingTouch.NamespacePlatformPrefix;
+		
 		if (!string.IsNullOrEmpty (nsManagerPrefix))
 			nsManagerPrefix += ".";
 
@@ -209,30 +151,73 @@ public static class TypeManager {
 		return rv;
 	}
 
-	public static void Initialize (Assembly api)
+	public static Type GetUnderlyingNullableType (Type type)
+	{
+#if IKVM
+		if (!type.IsConstructedGenericType)
+			return null;
+
+		var gt = type.GetGenericTypeDefinition ();
+		if (gt.Assembly != CorlibAssembly)
+			return null;
+
+		if (gt.Namespace != "System")
+			return null;
+
+		if (gt.Name != "Nullable`1")
+			return null;
+
+		return type.GenericTypeArguments [0];
+#else
+		return Nullable.GetUnderlyingType (type);
+#endif
+	}
+
+	public static bool IsOutParameter (ParameterInfo pi)
+	{
+#if IKVM
+		return pi.IsOut;
+#else
+		return AttributeManager.HasAttribute<OutAttribute> (pi);
+#endif
+	}
+
+	public static Type GetUnderlyingEnumType (Type type)
+	{
+#if IKVM
+		return type.GetEnumUnderlyingType ();
+#else
+		return Enum.GetUnderlyingType (type);
+#endif
+	}
+
+	public static void Initialize (Assembly api, Assembly corlib, Assembly platform, Assembly system, Assembly binding)
 	{
 		api_assembly = api;
-		platform_assembly = typeof (NSObject).Assembly;
+		corlib_assembly = corlib;
+		platform_assembly = platform;
+		system_assembly = system;
+		binding_assembly = binding;
 
 		/* corlib */
-		System_Attribute = typeof (System.Attribute);
-		System_Boolean = typeof (bool);
-		System_Byte = typeof (byte);
-		System_Delegate = typeof (System.Delegate);
-		System_Double = typeof (double);
-		System_Float = typeof (float);
-		System_Int16 = typeof (short);
-		System_Int32 = typeof (int);
-		System_Int64 = typeof (long);
-		System_IntPtr = typeof (System.IntPtr);
-		System_Object = typeof (object);
-		System_SByte = typeof (sbyte);
-		System_String = typeof (string);
-		System_String_Array = typeof (string[]);
-		System_UInt16 = typeof (ushort);
-		System_UInt32 = typeof (uint);
-		System_UInt64 = typeof (ulong);
-		System_Void = typeof (void);
+		System_Attribute = Lookup (corlib_assembly, "System", "Attribute");
+		System_Boolean = Lookup (corlib_assembly, "System", "Boolean");
+		System_Byte = Lookup (corlib_assembly, "System", "Byte");
+		System_Delegate = Lookup (corlib_assembly, "System", "Delegate");
+		System_Double = Lookup (corlib_assembly, "System", "Double");
+		System_Float = Lookup (corlib_assembly, "System", "Single");
+		System_Int16 = Lookup (corlib_assembly, "System", "Int16");
+		System_Int32 = Lookup (corlib_assembly, "System", "Int32");
+		System_Int64 = Lookup (corlib_assembly, "System", "Int64");
+		System_IntPtr = Lookup (corlib_assembly, "System", "IntPtr");
+		System_Object = Lookup (corlib_assembly, "System", "Object");
+		System_SByte = Lookup (corlib_assembly, "System", "SByte");
+		System_String = Lookup (corlib_assembly, "System", "String");
+		System_String_Array = Lookup (corlib_assembly, "System", "String").MakeArrayType ();
+		System_UInt16 = Lookup (corlib_assembly, "System", "UInt16");
+		System_UInt32 = Lookup (corlib_assembly, "System", "UInt32");
+		System_UInt64 = Lookup (corlib_assembly, "System", "UInt64");
+		System_Void = Lookup (corlib_assembly, "System", "Void");
 
 		if (Generator.UnifiedAPI) {
 			System_nint = Lookup (platform_assembly, "System", "nint");
@@ -241,14 +226,14 @@ public static class TypeManager {
 		}
 
 		/* fundamental */
-		NSObject = typeof (NSObject);
-		INativeObject = typeof (INativeObject);
+		NSObject = Lookup (platform_assembly, "Foundation", "NSObject");
+		INativeObject = Lookup (platform_assembly, "ObjCRuntime", "INativeObject");
 
 		/* objcruntime */
-		BlockLiteral = typeof (BlockLiteral);
-		Class = typeof (Class);
-		Protocol = typeof (Protocol);
-		Selector = typeof (Selector);
+		BlockLiteral = Lookup (platform_assembly, "ObjCRuntime", "BlockLiteral");
+		Class = Lookup (platform_assembly, "ObjCRuntime", "Class");
+		Protocol = Lookup (platform_assembly, "ObjCRuntime", "Protocol");
+		Selector = Lookup (platform_assembly, "ObjCRuntime", "Selector");
 
 		if (Generator.UnifiedAPI) {
 			Constants = Lookup (platform_assembly, "ObjCRuntime", "Constants");
@@ -256,86 +241,9 @@ public static class TypeManager {
 			Constants = Lookup (platform_assembly, "", "Constants");
 		}
 
-		/* attributes */
-		AbstractAttribute = typeof (AbstractAttribute);
-		AdvancedAttribute = typeof (AdvancedAttribute);
-		AlignAttribute = typeof (AlignAttribute);
-		AppearanceAttribute = typeof (AppearanceAttribute);
-		AsyncAttribute = typeof (AsyncAttribute);
-		AutoreleaseAttribute = typeof (AutoreleaseAttribute);
-		AvailabilityBaseAttribute = typeof (AvailabilityBaseAttribute);
-		BaseTypeAttribute = typeof (BaseTypeAttribute);
-		BindAttribute = typeof (BindAttribute);
-		BlockCallbackAttribute = typeof (BlockCallbackAttribute);
-		CategoryAttribute = typeof (CategoryAttribute);
-		CCallbackAttribute = typeof (CCallbackAttribute);
-		CheckDisposedAttribute = typeof (CheckDisposedAttribute);
-		CoreImageFilterAttribute = typeof (CoreImageFilterAttribute);
-		CoreImageFilterPropertyAttribute = typeof (CoreImageFilterPropertyAttribute);
-		DebuggerBrowsableAttribute = typeof (DebuggerBrowsableAttribute);
-		DebuggerDisplayAttribute = typeof (DebuggerDisplayAttribute);
-		DefaultValueAttribute = typeof (DefaultValueAttribute);
-		DefaultValueFromArgumentAttribute = typeof (DefaultValueFromArgumentAttribute);
-		DelegateApiNameAttribute = typeof (DelegateApiNameAttribute);
-		DelegateNameAttribute = typeof (DelegateNameAttribute);
-		DesignatedInitializerAttribute = typeof (DesignatedInitializerAttribute);
-		DisableZeroCopyAttribute = typeof (DisableZeroCopyAttribute);
-		DisposeAttribute = typeof (DisposeAttribute);
-		EditorBrowsableAttribute = typeof (System.ComponentModel.EditorBrowsableAttribute);
-		EventArgsAttribute = typeof (EventArgsAttribute);
-		EventNameAttribute = typeof (EventNameAttribute);
-		ExportAttribute = typeof (ExportAttribute);
-		FactoryAttribute = typeof (FactoryAttribute);
-		FieldAttribute = typeof (FieldAttribute);
-		FieldOffsetAttribute = typeof (FieldOffsetAttribute);
-		FlagsAttribute = typeof (FlagsAttribute);
-		InternalAttribute = typeof (InternalAttribute);
-		IsThreadStaticAttribute = typeof (IsThreadStaticAttribute);
-		LinkWithAttribute = typeof (LinkWithAttribute);
-		ManualAttribute = typeof (ManualAttribute);
-		MarshalAsAttribute = typeof (MarshalAsAttribute);
-		MarshalNativeExceptionsAttribute = typeof (MarshalNativeExceptionsAttribute);
-		ModelAttribute = typeof (ModelAttribute);
-		NativeAttribute = typeof (NativeAttribute);
-		NewAttribute = typeof (NewAttribute);
-		NoDefaultValueAttribute = typeof (NoDefaultValueAttribute);
-		NotificationAttribute = typeof (NotificationAttribute);
-		NotImplementedAttribute = typeof (NotImplementedAttribute);
-		NullAllowedAttribute = typeof (NullAllowedAttribute);
-		ObsoleteAttribute = typeof (ObsoleteAttribute);
-		OptionalImplementationAttribute = typeof (OptionalImplementationAttribute);
-		OutAttribute = typeof (OutAttribute);
-		OverrideAttribute = typeof (OverrideAttribute);
-		ParamArrayAttribute = typeof (ParamArrayAttribute);
-		ParamsAttribute = typeof (ParamsAttribute);
-		PartialAttribute = typeof (PartialAttribute);
-		PlainStringAttribute = typeof (PlainStringAttribute);
-		PostGetAttribute = typeof (PostGetAttribute);
-		PostSnippetAttribute = typeof (PostSnippetAttribute);
-		PreSnippetAttribute = typeof (PreSnippetAttribute);
-		ProbePresenceAttribute = typeof (ProbePresenceAttribute);
-		PrologueSnippetAttribute = typeof (PrologueSnippetAttribute);
-		ProtectedAttribute = typeof (ProtectedAttribute);
-		ProtocolAttribute = typeof (ProtocolAttribute);
-		ProtocolizeAttribute = typeof (ProtocolizeAttribute);
-		ProxyAttribute = typeof (ProxyAttribute);
-		RegisterAttribute = typeof (RegisterAttribute);
-		ReleaseAttribute = typeof (ReleaseAttribute);
-		RetainAttribute = typeof (RetainAttribute);
-		SealedAttribute = typeof (SealedAttribute);
-		StaticAttribute = typeof (StaticAttribute);
-		StrongDictionaryAttribute = typeof (StrongDictionaryAttribute);
-		SyntheticAttribute = typeof (SyntheticAttribute);
-		TargetAttribute = typeof (TargetAttribute);
-		ThreadSafeAttribute = typeof (ThreadSafeAttribute);
-		TransientAttribute = typeof (TransientAttribute);
-		UnifiedInternalAttribute = typeof (UnifiedInternalAttribute);
-		WrapAttribute = typeof (WrapAttribute);
-		ZeroCopyStringsAttribute = typeof (ZeroCopyStringsAttribute);
-
 		/* Different binding types */
 
-		DictionaryContainerType = typeof (DictionaryContainerType);
+		DictionaryContainerType = Lookup (platform_assembly, "Foundation", "DictionaryContainer");
 
 		if (Frameworks.HaveAddressBook) {
 			ABAddressBook = Lookup (platform_assembly, "AddressBook", "ABAddressBook");
@@ -351,24 +259,24 @@ public static class TypeManager {
 			AudioUnit = Lookup (platform_assembly, "AudioUnit", "AudioUnit");
 			AURenderEventEnumerator = Lookup (platform_assembly, "AudioUnit", "AURenderEventEnumerator");
 		}
-		AVCaptureWhiteBalanceGains = typeof (XamCore.AVFoundation.AVCaptureWhiteBalanceGains);
+		AVCaptureWhiteBalanceGains = Lookup (platform_assembly, "AVFoundation", "AVCaptureWhiteBalanceGains");
 		if (Frameworks.HaveCoreAnimation)
 			CATransform3D = Lookup (platform_assembly, "CoreAnimation", "CATransform3D");
 
-		CFRunLoop = typeof (CFRunLoop);
-		CGAffineTransform = typeof (CGAffineTransform);
-		CGColor = typeof (CGColor);
-		CGColorSpace = typeof (CGColorSpace);
-		CGContext = typeof (CGContext);
-		CGGradient = typeof (CGGradient);
-		CGImage = typeof (CGImage);
-		CGLayer = typeof (CGLayer);
+		CFRunLoop = Lookup (platform_assembly, "CoreFoundation", "CFRunLoop");
+		CGAffineTransform = Lookup (platform_assembly, "CoreGraphics", "CGAffineTransform");
+		CGColor = Lookup (platform_assembly, "CoreGraphics", "CGColor");
+		CGColorSpace = Lookup (platform_assembly, "CoreGraphics", "CGColorSpace");
+		CGContext = Lookup (platform_assembly, "CoreGraphics", "CGContext");
+		CGGradient = Lookup (platform_assembly, "CoreGraphics", "CGGradient");
+		CGImage = Lookup (platform_assembly, "CoreGraphics", "CGImage");
+		CGLayer = Lookup (platform_assembly, "CoreGraphics", "CGLayer");
 		if (Frameworks.HaveOpenGL) {
 			CGLContext = Lookup (platform_assembly, "OpenGL", "CGLContext");
 			CGLPixelFormat = Lookup (platform_assembly, "OpenGL", "CGLPixelFormat");
 		}
-		CGPath = typeof (CGPath);
-		CGVector = typeof (CGVector);
+		CGPath = Lookup (platform_assembly, "CoreGraphics", "CGPath");
+		CGVector = Lookup (platform_assembly, "CoreGraphics", "CGVector");
 		if (Frameworks.HaveCoreLocation)
 			CLLocationCoordinate2D = Lookup (platform_assembly, "CoreLocation", "CLLocationCoordinate2D");
 		if (Frameworks.HaveCoreMedia) {
@@ -387,7 +295,7 @@ public static class TypeManager {
 			CVPixelBuffer = Lookup (platform_assembly, "CoreVideo", "CVPixelBuffer");
 			CVPixelBufferPool = Lookup (platform_assembly, "CoreVideo", "CVPixelBufferPool");
 		}
-		DispatchQueue = typeof (DispatchQueue);
+		DispatchQueue = Lookup (platform_assembly, "CoreFoundation", "DispatchQueue");
 		if (Frameworks.HaveCoreMidi)
 			MidiEndpoint = Lookup (platform_assembly, "CoreMidi", "MidiEndpoint");
 		if (Frameworks.HaveMapKit)
@@ -395,16 +303,16 @@ public static class TypeManager {
 		if (Frameworks.HaveMediaToolbox)
 			MTAudioProcessingTap = Lookup (platform_assembly, "MediaToolbox", "MTAudioProcessingTap");
 		NSNumber = Lookup (BindingTouch.BindingThirdParty ? platform_assembly : api_assembly, "Foundation", "NSNumber");
-		NSRange = typeof (NSRange);
-		NSString = typeof (NSString);
+		NSRange = Lookup (platform_assembly, "Foundation", "NSRange");
+		NSString = Lookup (platform_assembly, "Foundation", "NSString");
 		NSValue = Lookup (BindingTouch.BindingThirdParty ? platform_assembly : api_assembly, "Foundation", "NSValue");
-		NSZone = typeof (NSZone);
-		SCNVector3 = typeof (XamCore.SceneKit.SCNVector3);
-		SCNVector4 = typeof (XamCore.SceneKit.SCNVector4);
-		SCNMatrix4 = typeof (XamCore.SceneKit.SCNMatrix4);
-		SecAccessControl = typeof (SecAccessControl);
-		SecIdentity = typeof (SecIdentity);
-		SecTrust = typeof (SecTrust);
+		NSZone = Lookup (platform_assembly, "Foundation", "NSZone");
+		SCNVector3 = Lookup (platform_assembly, "SceneKit", "SCNVector3");
+		SCNVector4 = Lookup (platform_assembly, "SceneKit", "SCNVector4");
+		SCNMatrix4 = Lookup (platform_assembly, "SceneKit", "SCNMatrix4");
+		SecAccessControl = Lookup (platform_assembly, "Security", "SecAccessControl");
+		SecIdentity = Lookup (platform_assembly, "Security", "SecIdentity");
+		SecTrust = Lookup (platform_assembly, "Security", "SecTrust");
 		if (Frameworks.HaveUIKit) {
 			UIOffset = Lookup (platform_assembly, "UIKit", "UIOffset");
 			UIEdgeInsets = Lookup (platform_assembly, "UIKit", "UIEdgeInsets");

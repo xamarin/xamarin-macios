@@ -198,7 +198,7 @@
               </method>
             </methods>
           </class>
-          <class name="SafeNCryptHandle" type="class" base="System.Runtime.InteropServices.SafeHandle" abstract="true" charset="Ansi" layout="Auto">
+          <class name="SafeNCryptHandle" type="class" base="Microsoft.Win32.SafeHandles.SafeHandleZeroOrMinusOneIsInvalid" abstract="true" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="System.IDisposable" />
             </interfaces>
@@ -3150,6 +3150,14 @@
                   <parameter name="bufferSize" position="2" attrib="0" type="System.Int32" />
                 </parameters>
               </constructor>
+              <constructor name=".ctor(System.IO.Pipes.PipeDirection, System.IO.HandleInheritability, System.Int32, System.IO.Pipes.PipeSecurity)" attrib="6278">
+                <parameters>
+                  <parameter name="direction" position="0" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                  <parameter name="inheritability" position="1" attrib="0" type="System.IO.HandleInheritability" />
+                  <parameter name="bufferSize" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="pipeSecurity" position="3" attrib="0" type="System.IO.Pipes.PipeSecurity" />
+                </parameters>
+              </constructor>
             </constructors>
             <properties>
               <property name="ClientSafePipeHandle" attrib="0" ptype="Microsoft.Win32.SafeHandles.SafePipeHandle">
@@ -3242,6 +3250,16 @@
                   <parameter name="impersonationLevel" position="4" attrib="0" type="System.Security.Principal.TokenImpersonationLevel" />
                 </parameters>
               </constructor>
+              <constructor name=".ctor(System.String, System.String, System.IO.Pipes.PipeAccessRights, System.IO.Pipes.PipeOptions, System.Security.Principal.TokenImpersonationLevel, System.IO.HandleInheritability)" attrib="6278">
+                <parameters>
+                  <parameter name="serverName" position="0" attrib="0" type="System.String" />
+                  <parameter name="pipeName" position="1" attrib="0" type="System.String" />
+                  <parameter name="desiredAccessRights" position="2" attrib="0" type="System.IO.Pipes.PipeAccessRights" />
+                  <parameter name="options" position="3" attrib="0" type="System.IO.Pipes.PipeOptions" />
+                  <parameter name="impersonationLevel" position="4" attrib="0" type="System.Security.Principal.TokenImpersonationLevel" />
+                  <parameter name="inheritability" position="5" attrib="0" type="System.IO.HandleInheritability" />
+                </parameters>
+              </constructor>
               <constructor name=".ctor(System.String, System.String, System.IO.Pipes.PipeDirection, System.IO.Pipes.PipeOptions, System.Security.Principal.TokenImpersonationLevel, System.IO.HandleInheritability)" attrib="6278">
                 <parameters>
                   <parameter name="serverName" position="0" attrib="0" type="System.String" />
@@ -3263,6 +3281,9 @@
               </property>
             </properties>
             <methods>
+              <method name="CheckPipePropertyOperations()" attrib="197" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
               <method name="Connect()" attrib="134" returntype="System.Void">
                 <parameters />
               </method>
@@ -3358,14 +3379,71 @@
                   <parameter name="outBufferSize" position="6" attrib="0" type="System.Int32" />
                 </parameters>
               </constructor>
+              <constructor name=".ctor(System.String, System.IO.Pipes.PipeDirection, System.Int32, System.IO.Pipes.PipeTransmissionMode, System.IO.Pipes.PipeOptions, System.Int32, System.Int32, System.IO.Pipes.PipeSecurity)" attrib="6278">
+                <parameters>
+                  <parameter name="pipeName" position="0" attrib="0" type="System.String" />
+                  <parameter name="direction" position="1" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                  <parameter name="maxNumberOfServerInstances" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="transmissionMode" position="3" attrib="0" type="System.IO.Pipes.PipeTransmissionMode" />
+                  <parameter name="options" position="4" attrib="0" type="System.IO.Pipes.PipeOptions" />
+                  <parameter name="inBufferSize" position="5" attrib="0" type="System.Int32" />
+                  <parameter name="outBufferSize" position="6" attrib="0" type="System.Int32" />
+                  <parameter name="pipeSecurity" position="7" attrib="0" type="System.IO.Pipes.PipeSecurity" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.IO.Pipes.PipeDirection, System.Int32, System.IO.Pipes.PipeTransmissionMode, System.IO.Pipes.PipeOptions, System.Int32, System.Int32, System.IO.Pipes.PipeSecurity, System.IO.HandleInheritability)" attrib="6278">
+                <parameters>
+                  <parameter name="pipeName" position="0" attrib="0" type="System.String" />
+                  <parameter name="direction" position="1" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                  <parameter name="maxNumberOfServerInstances" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="transmissionMode" position="3" attrib="0" type="System.IO.Pipes.PipeTransmissionMode" />
+                  <parameter name="options" position="4" attrib="0" type="System.IO.Pipes.PipeOptions" />
+                  <parameter name="inBufferSize" position="5" attrib="0" type="System.Int32" />
+                  <parameter name="outBufferSize" position="6" attrib="0" type="System.Int32" />
+                  <parameter name="pipeSecurity" position="7" attrib="0" type="System.IO.Pipes.PipeSecurity" />
+                  <parameter name="inheritability" position="8" attrib="0" type="System.IO.HandleInheritability" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.IO.Pipes.PipeDirection, System.Int32, System.IO.Pipes.PipeTransmissionMode, System.IO.Pipes.PipeOptions, System.Int32, System.Int32, System.IO.Pipes.PipeSecurity, System.IO.HandleInheritability, System.IO.Pipes.PipeAccessRights)" attrib="6278">
+                <attributes />
+                <parameters>
+                  <parameter name="pipeName" position="0" attrib="0" type="System.String" />
+                  <parameter name="direction" position="1" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                  <parameter name="maxNumberOfServerInstances" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="transmissionMode" position="3" attrib="0" type="System.IO.Pipes.PipeTransmissionMode" />
+                  <parameter name="options" position="4" attrib="0" type="System.IO.Pipes.PipeOptions" />
+                  <parameter name="inBufferSize" position="5" attrib="0" type="System.Int32" />
+                  <parameter name="outBufferSize" position="6" attrib="0" type="System.Int32" />
+                  <parameter name="pipeSecurity" position="7" attrib="0" type="System.IO.Pipes.PipeSecurity" />
+                  <parameter name="inheritability" position="8" attrib="0" type="System.IO.HandleInheritability" />
+                  <parameter name="additionalAccessRights" position="9" attrib="0" type="System.IO.Pipes.PipeAccessRights" />
+                </parameters>
+              </constructor>
             </constructors>
             <methods>
+              <method name="BeginWaitForConnection(System.AsyncCallback, System.Object)" attrib="16518" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="callback" position="0" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="state" position="1" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
               <method name="Disconnect()" attrib="134" returntype="System.Void">
                 <parameters />
+              </method>
+              <method name="EndWaitForConnection(System.IAsyncResult)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
               </method>
               <method name="GetImpersonationUserName()" attrib="16518" returntype="System.String">
                 <attributes />
                 <parameters />
+              </method>
+              <method name="RunAsClient(System.IO.Pipes.PipeStreamImpersonationWorker)" attrib="16518" returntype="System.Void">
+                <attributes />
+                <parameters>
+                  <parameter name="impersonationWorker" position="0" attrib="0" type="System.IO.Pipes.PipeStreamImpersonationWorker" />
+                </parameters>
               </method>
               <method name="WaitForConnection()" attrib="134" returntype="System.Void">
                 <parameters />
@@ -3682,6 +3760,16 @@
                   </method>
                 </methods>
               </property>
+              <property name="IsHandleExposed" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsHandleExposed()" attrib="2180" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="IsMessageComplete" attrib="0" ptype="System.Boolean">
                 <attributes />
                 <methods>
@@ -3748,14 +3836,64 @@
               </property>
             </properties>
             <methods>
+              <method name="BeginRead(System.Byte[], System.Int32, System.Int32, System.AsyncCallback, System.Object)" attrib="16582" virtual="true" is-override="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="callback" position="3" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="state" position="4" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="BeginWrite(System.Byte[], System.Int32, System.Int32, System.AsyncCallback, System.Object)" attrib="16582" virtual="true" is-override="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="callback" position="3" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="state" position="4" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="CheckPipePropertyOperations()" attrib="453" virtual="true" returntype="System.Void">
+                <attributes />
+                <parameters />
+              </method>
+              <method name="CheckReadOperations()" attrib="133" returntype="System.Void">
+                <attributes />
+                <parameters />
+              </method>
+              <method name="CheckWriteOperations()" attrib="133" returntype="System.Void">
+                <attributes />
+                <parameters />
+              </method>
               <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
                 <parameters>
                   <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
                 </parameters>
               </method>
+              <method name="EndRead(System.IAsyncResult)" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="EndWrite(System.IAsyncResult)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
               <method name="Flush()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
                 <attributes />
                 <parameters />
+              </method>
+              <method name="GetAccessControl()" attrib="134" returntype="System.IO.Pipes.PipeSecurity">
+                <parameters />
+              </method>
+              <method name="InitializeHandle(Microsoft.Win32.SafeHandles.SafePipeHandle, System.Boolean, System.Boolean)" attrib="132" returntype="System.Void">
+                <parameters>
+                  <parameter name="handle" position="0" attrib="0" type="Microsoft.Win32.SafeHandles.SafePipeHandle" />
+                  <parameter name="isExposed" position="1" attrib="0" type="System.Boolean" />
+                  <parameter name="isAsync" position="2" attrib="0" type="System.Boolean" />
+                </parameters>
               </method>
               <method name="Read(System.Byte[], System.Int32, System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
                 <attributes />
@@ -3773,6 +3911,11 @@
                 <parameters>
                   <parameter name="offset" position="0" attrib="0" type="System.Int64" />
                   <parameter name="origin" position="1" attrib="0" type="System.IO.SeekOrigin" />
+                </parameters>
+              </method>
+              <method name="SetAccessControl(System.IO.Pipes.PipeSecurity)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="pipeSecurity" position="0" attrib="0" type="System.IO.Pipes.PipeSecurity" />
                 </parameters>
               </method>
               <method name="SetLength(System.Int64)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
@@ -15072,6 +15215,9 @@
               </constructor>
             </constructors>
             <methods>
+              <method name="CreatePdbGenerator()" attrib="150" static="true" returntype="System.Runtime.CompilerServices.DebugInfoGenerator">
+                <parameters />
+              </method>
               <method name="MarkSequencePoint(System.Linq.Expressions.LambdaExpression, System.Int32, System.Linq.Expressions.DebugInfoExpression)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
                   <parameter name="method" position="0" attrib="0" type="System.Linq.Expressions.LambdaExpression" />
@@ -15548,6 +15694,113 @@
                 </parameters>
               </constructor>
             </constructors>
+          </class>
+        </classes>
+      </namespace>
+      <namespace name="System.Runtime.InteropServices">
+        <classes>
+          <class name="ComAwareEventInfo" type="class" base="System.Reflection.EventInfo" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Reflection.ICustomAttributeProvider" />
+              <interface name="System.Runtime.InteropServices._MemberInfo" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.Type, System.String)" attrib="6278">
+                <attributes />
+                <parameters>
+                  <parameter name="type" position="0" attrib="0" type="System.Type" />
+                  <parameter name="eventName" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Attributes" attrib="0" ptype="System.Reflection.EventAttributes">
+                <attributes />
+                <methods>
+                  <method name="get_Attributes()" attrib="2246" virtual="true" is-override="true" returntype="System.Reflection.EventAttributes">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="DeclaringType" attrib="0" ptype="System.Type">
+                <attributes />
+                <methods>
+                  <method name="get_DeclaringType()" attrib="2246" virtual="true" is-override="true" returntype="System.Type">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Name" attrib="0" ptype="System.String">
+                <attributes />
+                <methods>
+                  <method name="get_Name()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ReflectedType" attrib="0" ptype="System.Type">
+                <attributes />
+                <methods>
+                  <method name="get_ReflectedType()" attrib="2246" virtual="true" is-override="true" returntype="System.Type">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="AddEventHandler(System.Object, System.Delegate)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <attributes />
+                <parameters>
+                  <parameter name="target" position="0" attrib="0" type="System.Object" />
+                  <parameter name="handler" position="1" attrib="0" type="System.Delegate" />
+                </parameters>
+              </method>
+              <method name="GetAddMethod(System.Boolean)" attrib="198" virtual="true" is-override="true" returntype="System.Reflection.MethodInfo">
+                <attributes />
+                <parameters>
+                  <parameter name="nonPublic" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetCustomAttributes(System.Boolean)" attrib="198" virtual="true" is-override="true" returntype="System.Object[]">
+                <attributes />
+                <parameters>
+                  <parameter name="inherit" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetCustomAttributes(System.Type, System.Boolean)" attrib="198" virtual="true" is-override="true" returntype="System.Object[]">
+                <attributes />
+                <parameters>
+                  <parameter name="attributeType" position="0" attrib="0" type="System.Type" />
+                  <parameter name="inherit" position="1" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetRaiseMethod(System.Boolean)" attrib="198" virtual="true" is-override="true" returntype="System.Reflection.MethodInfo">
+                <attributes />
+                <parameters>
+                  <parameter name="nonPublic" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetRemoveMethod(System.Boolean)" attrib="198" virtual="true" is-override="true" returntype="System.Reflection.MethodInfo">
+                <attributes />
+                <parameters>
+                  <parameter name="nonPublic" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="IsDefined(System.Type, System.Boolean)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <attributes />
+                <parameters>
+                  <parameter name="attributeType" position="0" attrib="0" type="System.Type" />
+                  <parameter name="inherit" position="1" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="RemoveEventHandler(System.Object, System.Delegate)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <attributes />
+                <parameters>
+                  <parameter name="target" position="0" attrib="0" type="System.Object" />
+                  <parameter name="handler" position="1" attrib="0" type="System.Delegate" />
+                </parameters>
+              </method>
+            </methods>
           </class>
         </classes>
       </namespace>
@@ -16994,7 +17247,7 @@
               <method name="ToByteArray()" attrib="454" virtual="true" returntype="System.Byte[]">
                 <parameters />
               </method>
-              <method name="ToXmlString()" attrib="1478" abstract="true" virtual="true" returntype="System.String">
+              <method name="ToXmlString()" attrib="454" virtual="true" returntype="System.String">
                 <parameters />
               </method>
             </methods>
@@ -17200,51 +17453,6 @@
               <field name="X" attrib="6" fieldtype="System.Byte[]" />
               <field name="Y" attrib="6" fieldtype="System.Byte[]" />
             </fields>
-          </class>
-          <class name="IncrementalHash" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
-            <interfaces>
-              <interface name="System.IDisposable" />
-            </interfaces>
-            <properties>
-              <property name="AlgorithmName" attrib="0" ptype="System.Security.Cryptography.HashAlgorithmName">
-                <methods>
-                  <method name="get_AlgorithmName()" attrib="2182" returntype="System.Security.Cryptography.HashAlgorithmName">
-                    <parameters />
-                  </method>
-                </methods>
-              </property>
-            </properties>
-            <methods>
-              <method name="AppendData(System.Byte[])" attrib="134" returntype="System.Void">
-                <parameters>
-                  <parameter name="data" position="0" attrib="0" type="System.Byte[]" />
-                </parameters>
-              </method>
-              <method name="AppendData(System.Byte[], System.Int32, System.Int32)" attrib="134" returntype="System.Void">
-                <parameters>
-                  <parameter name="data" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
-              <method name="CreateHMAC(System.Security.Cryptography.HashAlgorithmName, System.Byte[])" attrib="150" static="true" returntype="System.Security.Cryptography.IncrementalHash">
-                <parameters>
-                  <parameter name="hashAlgorithm" position="0" attrib="0" type="System.Security.Cryptography.HashAlgorithmName" />
-                  <parameter name="key" position="1" attrib="0" type="System.Byte[]" />
-                </parameters>
-              </method>
-              <method name="CreateHash(System.Security.Cryptography.HashAlgorithmName)" attrib="150" static="true" returntype="System.Security.Cryptography.IncrementalHash">
-                <parameters>
-                  <parameter name="hashAlgorithm" position="0" attrib="0" type="System.Security.Cryptography.HashAlgorithmName" />
-                </parameters>
-              </method>
-              <method name="Dispose()" attrib="486" virtual="true" returntype="System.Void">
-                <parameters />
-              </method>
-              <method name="GetHashAndReset()" attrib="134" returntype="System.Byte[]">
-                <parameters />
-              </method>
-            </methods>
           </class>
           <class name="RSACng" type="class" base="System.Security.Cryptography.RSA" sealed="true" charset="Ansi" layout="Auto">
             <interfaces>

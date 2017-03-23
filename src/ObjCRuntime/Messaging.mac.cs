@@ -304,6 +304,285 @@ namespace XamCore.ObjCRuntime {
 		public extern static IntPtr IntPtr_objc_msgSendSuper_IntPtr_IntPtr_IntPtr_NSRange_int (IntPtr receiver, IntPtr selector, IntPtr arg1, IntPtr arg2, IntPtr arg3, MonoMac.Foundation.NSRange arg4, int arg5);
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper")]
 		public extern static IntPtr IntPtr_objc_msgSendSuper_IntPtr_IntPtr_NSRange_int (IntPtr receiver, IntPtr selector, IntPtr arg1, IntPtr arg2, MonoMac.Foundation.NSRange arg3, int arg4);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void AVAudio3DVectorOrientation_objc_msgSendSuper_stret (out global::MonoMac.AVFoundation.AVAudio3DVectorOrientation retval, IntPtr receiver, IntPtr selector);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void AVAudio3DVectorOrientation_objc_msgSend_stret (out global::MonoMac.AVFoundation.AVAudio3DVectorOrientation retval, IntPtr receiver, IntPtr selector);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void AVAudioConverterPrimeInfo_objc_msgSendSuper_stret (out global::MonoMac.AVFoundation.AVAudioConverterPrimeInfo retval, IntPtr receiver, IntPtr selector);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void AVAudioConverterPrimeInfo_objc_msgSend_stret (out global::MonoMac.AVFoundation.AVAudioConverterPrimeInfo retval, IntPtr receiver, IntPtr selector);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void AVPixelAspectRatio_objc_msgSendSuper_stret (out global::MonoMac.AVFoundation.AVPixelAspectRatio retval, IntPtr receiver, IntPtr selector);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void AVPixelAspectRatio_objc_msgSend_stret (out global::MonoMac.AVFoundation.AVPixelAspectRatio retval, IntPtr receiver, IntPtr selector);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void NSRange_objc_msgSendSuper_stret (out NSRange retval, IntPtr receiver, IntPtr selector);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void NSRange_objc_msgSendSuper_stret_IntPtr (out NSRange retval, IntPtr receiver, IntPtr selector, IntPtr arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void NSRange_objc_msgSendSuper_stret_IntPtr_NSRange_NSRange (out NSRange retval, IntPtr receiver, IntPtr selector, IntPtr arg1, NSRange arg2, NSRange arg3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void NSRange_objc_msgSendSuper_stret_IntPtr_UInt32 (out NSRange retval, IntPtr receiver, IntPtr selector, IntPtr arg1, global::System.UInt32 arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void NSRange_objc_msgSendSuper_stret_IntPtr_UInt64_NSRange (out NSRange retval, IntPtr receiver, IntPtr selector, IntPtr arg1, global::System.UInt64 arg2, NSRange arg3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void NSRange_objc_msgSendSuper_stret_IntPtr_int (out NSRange retval, IntPtr receiver, IntPtr selector, IntPtr arg1, int arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void NSRange_objc_msgSendSuper_stret_IntPtr_int_IntPtr_bool_int_IntPtr (out NSRange retval, IntPtr receiver, IntPtr selector, IntPtr arg1, int arg2, IntPtr arg3, bool arg4, int arg5, IntPtr arg6);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void NSRange_objc_msgSendSuper_stret_IntPtr_int_IntPtr_bool_int_out_Int32 (out NSRange retval, IntPtr receiver, IntPtr selector, IntPtr arg1, int arg2, IntPtr arg3, bool arg4, int arg5, out int arg6);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void NSRange_objc_msgSendSuper_stret_IntPtr_int_NSRange (out NSRange retval, IntPtr receiver, IntPtr selector, IntPtr arg1, int arg2, NSRange arg3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void NSRange_objc_msgSendSuper_stret_NSRange (out NSRange retval, IntPtr receiver, IntPtr selector, NSRange arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void NSRange_objc_msgSendSuper_stret_NSRange_IntPtr_UInt32 (out NSRange retval, IntPtr receiver, IntPtr selector, NSRange arg1, IntPtr arg2, global::System.UInt32 arg3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void NSRange_objc_msgSendSuper_stret_NSRange_int (out NSRange retval, IntPtr receiver, IntPtr selector, NSRange arg1, int arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void NSRange_objc_msgSendSuper_stret_NSRange_out_NSRange (out NSRange retval, IntPtr receiver, IntPtr selector, NSRange arg1, out NSRange arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void NSRange_objc_msgSendSuper_stret_PointF (out NSRange retval, IntPtr receiver, IntPtr selector, global::System.Drawing.PointF arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void NSRange_objc_msgSendSuper_stret_RectangleF (out NSRange retval, IntPtr receiver, IntPtr selector, global::System.Drawing.RectangleF arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void NSRange_objc_msgSendSuper_stret_RectangleF_IntPtr (out NSRange retval, IntPtr receiver, IntPtr selector, global::System.Drawing.RectangleF arg1, IntPtr arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void NSRange_objc_msgSendSuper_stret_UInt32 (out NSRange retval, IntPtr receiver, IntPtr selector, global::System.UInt32 arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void NSRange_objc_msgSendSuper_stret_int (out NSRange retval, IntPtr receiver, IntPtr selector, int arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void NSRange_objc_msgSendSuper_stret_int_int_IntPtr (out NSRange retval, IntPtr receiver, IntPtr selector, int arg1, int arg2, IntPtr arg3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void NSRange_objc_msgSend_stret (out NSRange retval, IntPtr receiver, IntPtr selector);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void NSRange_objc_msgSend_stret_IntPtr (out NSRange retval, IntPtr receiver, IntPtr selector, IntPtr arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void NSRange_objc_msgSend_stret_IntPtr_NSRange_NSRange (out NSRange retval, IntPtr receiver, IntPtr selector, IntPtr arg1, NSRange arg2, NSRange arg3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void NSRange_objc_msgSend_stret_IntPtr_UInt32 (out NSRange retval, IntPtr receiver, IntPtr selector, IntPtr arg1, global::System.UInt32 arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void NSRange_objc_msgSend_stret_IntPtr_UInt64_NSRange (out NSRange retval, IntPtr receiver, IntPtr selector, IntPtr arg1, global::System.UInt64 arg2, NSRange arg3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void NSRange_objc_msgSend_stret_IntPtr_int (out NSRange retval, IntPtr receiver, IntPtr selector, IntPtr arg1, int arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void NSRange_objc_msgSend_stret_IntPtr_int_IntPtr_bool_int_IntPtr (out NSRange retval, IntPtr receiver, IntPtr selector, IntPtr arg1, int arg2, IntPtr arg3, bool arg4, int arg5, IntPtr arg6);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void NSRange_objc_msgSend_stret_IntPtr_int_IntPtr_bool_int_out_Int32 (out NSRange retval, IntPtr receiver, IntPtr selector, IntPtr arg1, int arg2, IntPtr arg3, bool arg4, int arg5, out int arg6);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void NSRange_objc_msgSend_stret_IntPtr_int_NSRange (out NSRange retval, IntPtr receiver, IntPtr selector, IntPtr arg1, int arg2, NSRange arg3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void NSRange_objc_msgSend_stret_NSRange (out NSRange retval, IntPtr receiver, IntPtr selector, NSRange arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void NSRange_objc_msgSend_stret_NSRange_IntPtr_UInt32 (out NSRange retval, IntPtr receiver, IntPtr selector, NSRange arg1, IntPtr arg2, global::System.UInt32 arg3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void NSRange_objc_msgSend_stret_NSRange_int (out NSRange retval, IntPtr receiver, IntPtr selector, NSRange arg1, int arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void NSRange_objc_msgSend_stret_NSRange_out_NSRange (out NSRange retval, IntPtr receiver, IntPtr selector, NSRange arg1, out NSRange arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void NSRange_objc_msgSend_stret_PointF (out NSRange retval, IntPtr receiver, IntPtr selector, global::System.Drawing.PointF arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void NSRange_objc_msgSend_stret_RectangleF (out NSRange retval, IntPtr receiver, IntPtr selector, global::System.Drawing.RectangleF arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void NSRange_objc_msgSend_stret_RectangleF_IntPtr (out NSRange retval, IntPtr receiver, IntPtr selector, global::System.Drawing.RectangleF arg1, IntPtr arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void NSRange_objc_msgSend_stret_UInt32 (out NSRange retval, IntPtr receiver, IntPtr selector, global::System.UInt32 arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void NSRange_objc_msgSend_stret_int (out NSRange retval, IntPtr receiver, IntPtr selector, int arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void NSRange_objc_msgSend_stret_int_int_IntPtr (out NSRange retval, IntPtr receiver, IntPtr selector, int arg1, int arg2, IntPtr arg3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void PointF_objc_msgSendSuper_stret (out global::System.Drawing.PointF retval, IntPtr receiver, IntPtr selector);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void PointF_objc_msgSendSuper_stret_IntPtr (out global::System.Drawing.PointF retval, IntPtr receiver, IntPtr selector, IntPtr arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void PointF_objc_msgSendSuper_stret_IntPtr_float (out global::System.Drawing.PointF retval, IntPtr receiver, IntPtr selector, IntPtr arg1, float arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void PointF_objc_msgSendSuper_stret_PointF (out global::System.Drawing.PointF retval, IntPtr receiver, IntPtr selector, global::System.Drawing.PointF arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void PointF_objc_msgSendSuper_stret_PointF_IntPtr (out global::System.Drawing.PointF retval, IntPtr receiver, IntPtr selector, global::System.Drawing.PointF arg1, IntPtr arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void PointF_objc_msgSendSuper_stret_PointF_PointF (out global::System.Drawing.PointF retval, IntPtr receiver, IntPtr selector, global::System.Drawing.PointF arg1, global::System.Drawing.PointF arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void PointF_objc_msgSendSuper_stret_RectangleF (out global::System.Drawing.PointF retval, IntPtr receiver, IntPtr selector, global::System.Drawing.RectangleF arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void PointF_objc_msgSendSuper_stret_int (out global::System.Drawing.PointF retval, IntPtr receiver, IntPtr selector, int arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void PointF_objc_msgSend_stret (out global::System.Drawing.PointF retval, IntPtr receiver, IntPtr selector);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void PointF_objc_msgSend_stret_IntPtr (out global::System.Drawing.PointF retval, IntPtr receiver, IntPtr selector, IntPtr arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void PointF_objc_msgSend_stret_IntPtr_float (out global::System.Drawing.PointF retval, IntPtr receiver, IntPtr selector, IntPtr arg1, float arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void PointF_objc_msgSend_stret_PointF (out global::System.Drawing.PointF retval, IntPtr receiver, IntPtr selector, global::System.Drawing.PointF arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void PointF_objc_msgSend_stret_PointF_IntPtr (out global::System.Drawing.PointF retval, IntPtr receiver, IntPtr selector, global::System.Drawing.PointF arg1, IntPtr arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void PointF_objc_msgSend_stret_PointF_PointF (out global::System.Drawing.PointF retval, IntPtr receiver, IntPtr selector, global::System.Drawing.PointF arg1, global::System.Drawing.PointF arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void PointF_objc_msgSend_stret_RectangleF (out global::System.Drawing.PointF retval, IntPtr receiver, IntPtr selector, global::System.Drawing.RectangleF arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void PointF_objc_msgSend_stret_int (out global::System.Drawing.PointF retval, IntPtr receiver, IntPtr selector, int arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void SizeF_objc_msgSendSuper_stret (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void SizeF_objc_msgSendSuper_stret_IntPtr (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, IntPtr arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void SizeF_objc_msgSendSuper_stret_IntPtr_IntPtr (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, IntPtr arg1, IntPtr arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void SizeF_objc_msgSendSuper_stret_IntPtr_IntPtr_IntPtr (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, IntPtr arg1, IntPtr arg2, IntPtr arg3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void SizeF_objc_msgSendSuper_stret_IntPtr_IntPtr_int (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, IntPtr arg1, IntPtr arg2, int arg3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void SizeF_objc_msgSendSuper_stret_IntPtr_NSRange_IntPtr_UInt32 (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, IntPtr arg1, NSRange arg2, global::System.IntPtr arg3, global::System.UInt32 arg4);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void SizeF_objc_msgSendSuper_stret_IntPtr_SizeF (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, IntPtr arg1, global::System.Drawing.SizeF arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void SizeF_objc_msgSendSuper_stret_IntPtr_SizeF_SizeF (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, IntPtr arg1, global::System.Drawing.SizeF arg2, global::System.Drawing.SizeF arg3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void SizeF_objc_msgSendSuper_stret_RectangleF (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, global::System.Drawing.RectangleF arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void SizeF_objc_msgSendSuper_stret_SizeF (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, global::System.Drawing.SizeF arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void SizeF_objc_msgSendSuper_stret_SizeF_IntPtr (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, global::System.Drawing.SizeF arg1, IntPtr arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void SizeF_objc_msgSendSuper_stret_SizeF_IntPtr_IntPtr_int_int_int (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, global::System.Drawing.SizeF arg1, IntPtr arg2, IntPtr arg3, int arg4, int arg5, int arg6);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void SizeF_objc_msgSendSuper_stret_SizeF_bool_bool_int (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, global::System.Drawing.SizeF arg1, bool arg2, bool arg3, int arg4);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void SizeF_objc_msgSendSuper_stret_UInt32 (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, global::System.UInt32 arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void SizeF_objc_msgSendSuper_stret_bool (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, bool arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper_stret")]
+		public extern static void SizeF_objc_msgSendSuper_stret_int (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, int arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void SizeF_objc_msgSend_stret (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void SizeF_objc_msgSend_stret_IntPtr (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, IntPtr arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void SizeF_objc_msgSend_stret_IntPtr_IntPtr (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, IntPtr arg1, IntPtr arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void SizeF_objc_msgSend_stret_IntPtr_IntPtr_IntPtr (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, IntPtr arg1, IntPtr arg2, IntPtr arg3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void SizeF_objc_msgSend_stret_IntPtr_IntPtr_int (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, IntPtr arg1, IntPtr arg2, int arg3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void SizeF_objc_msgSend_stret_IntPtr_NSRange_IntPtr_UInt32 (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, IntPtr arg1, NSRange arg2, global::System.IntPtr arg3, global::System.UInt32 arg4);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void SizeF_objc_msgSend_stret_IntPtr_SizeF (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, IntPtr arg1, global::System.Drawing.SizeF arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void SizeF_objc_msgSend_stret_IntPtr_SizeF_SizeF (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, IntPtr arg1, global::System.Drawing.SizeF arg2, global::System.Drawing.SizeF arg3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void SizeF_objc_msgSend_stret_RectangleF (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, global::System.Drawing.RectangleF arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void SizeF_objc_msgSend_stret_SizeF (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, global::System.Drawing.SizeF arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void SizeF_objc_msgSend_stret_SizeF_IntPtr (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, global::System.Drawing.SizeF arg1, IntPtr arg2);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void SizeF_objc_msgSend_stret_SizeF_IntPtr_IntPtr_int_int_int (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, global::System.Drawing.SizeF arg1, IntPtr arg2, IntPtr arg3, int arg4, int arg5, int arg6);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void SizeF_objc_msgSend_stret_SizeF_bool_bool_int (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, global::System.Drawing.SizeF arg1, bool arg2, bool arg3, int arg4);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void SizeF_objc_msgSend_stret_UInt32 (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, global::System.UInt32 arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void SizeF_objc_msgSend_stret_bool (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, bool arg1);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
+		public extern static void SizeF_objc_msgSend_stret_int (out global::System.Drawing.SizeF retval, IntPtr receiver, IntPtr selector, int arg1);
+
+
+
 #endif
 	}
 }

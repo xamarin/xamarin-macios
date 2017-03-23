@@ -3338,6 +3338,7 @@ namespace XamCore.Foundation
 		[Export ("inputItems", ArgumentSemantic.Copy)]
 		NSExtensionItem [] InputItems { get; }
 
+		[Async]
 		[Export ("completeRequestReturningItems:completionHandler:")]
 		void CompleteRequest (NSExtensionItem [] returningItems, [NullAllowed] Action<bool> completionHandler);
 
@@ -5734,6 +5735,7 @@ namespace XamCore.Foundation
 		NSString ChangedNotification { get; }
 
 		[iOS (8,0), Mac (10,10)]
+		[Async]
 		[Export ("getCredentialsForProtectionSpace:task:completionHandler:")]
 		void GetCredentials (NSUrlProtectionSpace protectionSpace, NSUrlSessionTask task, [NullAllowed] Action<NSDictionary> completionHandler);
 
@@ -5746,6 +5748,7 @@ namespace XamCore.Foundation
 		void RemoveCredential (NSUrlCredential credential, NSUrlProtectionSpace protectionSpace, NSDictionary options, NSUrlSessionTask task);
 
 		[iOS (8,0), Mac (10,10)]
+		[Async]
 		[Export ("getDefaultCredentialForProtectionSpace:task:completionHandler:")]
 		void GetDefaultCredential (NSUrlProtectionSpace space, NSUrlSessionTask task, [NullAllowed] Action<NSUrlCredential> completionHandler);
 
@@ -7176,6 +7179,12 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("localizedUserNotificationStringForKey:arguments:")]
 		string GetLocalizedUserNotificationString (string key, [Params] [NullAllowed] NSObject [] arguments);
+
+		[Export ("getParagraphStart:end:contentsEnd:forRange:")]
+		void GetParagraphPositions (out nuint paragraphStartPosition, out nuint paragraphEndPosition, out nuint contentsEndPosition, NSRange range);
+
+		[Export ("paragraphRangeForRange:")]
+		NSRange GetParagraphRange (NSRange range);
 	}
 
 	[StrongDictionary ("NSString")]
@@ -8233,6 +8242,7 @@ namespace XamCore.Foundation
 		
 #if !MONOMAC || XAMCORE_2_0
 		[Mac (10,10)][iOS (8,0)]
+		[Async]
 		[Export ("getCookiesForTask:completionHandler:")]
 		void GetCookiesForTask (NSUrlSessionTask task, Action<NSHttpCookie []> completionHandler);
 
@@ -8724,6 +8734,7 @@ namespace XamCore.Foundation
 		[Export ("hasItemConformingToTypeIdentifier:")]
 		bool HasItemConformingTo (string typeIdentifier);
 
+		[Async]
 		[Export ("loadItemForTypeIdentifier:options:completionHandler:")]
 		void LoadItem (string typeIdentifier, [NullAllowed] NSDictionary options, [NullAllowed] Action<NSObject,NSError> completionHandler);
 
@@ -8733,6 +8744,7 @@ namespace XamCore.Foundation
 		[Export ("setPreviewImageHandler:")]
 		void SetPreviewImageHandler (NSItemProviderLoadHandler handler);
 
+		[Async]
 		[Export ("loadPreviewImageWithOptions:completionHandler:")]
 		void LoadPreviewImage (NSDictionary options, Action<NSObject,NSError> completionHandler);
 
@@ -11151,6 +11163,7 @@ namespace XamCore.Foundation
 		[Mac (10,10)]
 		[iOS (8,0)]
 		[Static]
+		[Async]
 		[Export ("getNonlocalVersionsOfItemAtURL:completionHandler:")]
 		void GetNonlocalVersions (NSUrl url, NSFileVersionNonlocalVersionsCompletionHandler completionHandler);
 

@@ -424,6 +424,13 @@
                   </method>
                 </methods>
               </property>
+              <property name="PromoterType" attrib="0" ptype="System.Guid">
+                <methods>
+                  <method name="get_PromoterType()" attrib="2182" returntype="System.Guid">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="TransactionInformation" attrib="0" ptype="System.Transactions.TransactionInformation">
                 <methods>
                   <method name="get_TransactionInformation()" attrib="2182" returntype="System.Transactions.TransactionInformation">
@@ -479,6 +486,12 @@
                   <parameter name="notification" position="0" attrib="0" type="System.Transactions.IPromotableSinglePhaseNotification" />
                 </parameters>
               </method>
+              <method name="EnlistPromotableSinglePhase(System.Transactions.IPromotableSinglePhaseNotification, System.Guid)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="promotableSinglePhaseNotification" position="0" attrib="0" type="System.Transactions.IPromotableSinglePhaseNotification" />
+                  <parameter name="promoterType" position="1" attrib="0" type="System.Guid" />
+                </parameters>
+              </method>
               <method name="EnlistVolatile(System.Transactions.IEnlistmentNotification, System.Transactions.EnlistmentOptions)" attrib="134" returntype="System.Transactions.Enlistment">
                 <attributes />
                 <parameters>
@@ -501,12 +514,30 @@
               <method name="GetHashCode()" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
                 <parameters />
               </method>
+              <method name="GetPromotedToken()" attrib="134" returntype="System.Byte[]">
+                <parameters />
+              </method>
+              <method name="PromoteAndEnlistDurable(System.Guid, System.Transactions.IPromotableSinglePhaseNotification, System.Transactions.ISinglePhaseNotification, System.Transactions.EnlistmentOptions)" attrib="16518" returntype="System.Transactions.Enlistment">
+                <attributes />
+                <parameters>
+                  <parameter name="manager" position="0" attrib="0" type="System.Guid" />
+                  <parameter name="promotableNotification" position="1" attrib="0" type="System.Transactions.IPromotableSinglePhaseNotification" />
+                  <parameter name="notification" position="2" attrib="0" type="System.Transactions.ISinglePhaseNotification" />
+                  <parameter name="options" position="3" attrib="0" type="System.Transactions.EnlistmentOptions" />
+                </parameters>
+              </method>
               <method name="Rollback()" attrib="134" returntype="System.Void">
                 <parameters />
               </method>
               <method name="Rollback(System.Exception)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="ex" position="0" attrib="0" type="System.Exception" />
+                </parameters>
+              </method>
+              <method name="SetDistributedTransactionIdentifier(System.Transactions.IPromotableSinglePhaseNotification, System.Guid)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="promotableNotification" position="0" attrib="0" type="System.Transactions.IPromotableSinglePhaseNotification" />
+                  <parameter name="distributedTransactionIdentifier" position="1" attrib="0" type="System.Guid" />
                 </parameters>
               </method>
               <method name="op_Equality(System.Transactions.Transaction, System.Transactions.Transaction)" attrib="2198" static="true" returntype="System.Boolean">
@@ -566,7 +597,7 @@
             <methods>
               <method name="BeginInvoke(System.Object, System.Transactions.TransactionEventArgs, System.AsyncCallback, System.Object)" attrib="454" virtual="true" returntype="System.IAsyncResult">
                 <parameters>
-                  <parameter name="o" position="0" attrib="0" type="System.Object" />
+                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
                   <parameter name="e" position="1" attrib="0" type="System.Transactions.TransactionEventArgs" />
                   <parameter name="callback" position="2" attrib="0" type="System.AsyncCallback" />
                   <parameter name="object" position="3" attrib="0" type="System.Object" />
@@ -579,7 +610,7 @@
               </method>
               <method name="Invoke(System.Object, System.Transactions.TransactionEventArgs)" attrib="454" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="o" position="0" attrib="0" type="System.Object" />
+                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
                   <parameter name="e" position="1" attrib="0" type="System.Transactions.TransactionEventArgs" />
                 </parameters>
               </method>
@@ -606,7 +637,7 @@
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
-              <constructor name=".ctor()" attrib="6276">
+              <constructor name=".ctor()" attrib="6278">
                 <parameters />
               </constructor>
               <constructor name=".ctor(System.String)" attrib="6278">
@@ -633,7 +664,7 @@
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
-              <constructor name=".ctor()" attrib="6276">
+              <constructor name=".ctor()" attrib="6278">
                 <parameters />
               </constructor>
               <constructor name=".ctor(System.String)" attrib="6278">
@@ -689,6 +720,9 @@
           </class>
           <class name="TransactionInterop" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
             <attributes />
+            <fields>
+              <field name="PromoterTypeDtc" attrib="54" fieldtype="System.Guid" />
+            </fields>
             <methods>
               <method name="GetDtcTransaction(System.Transactions.Transaction)" attrib="150" static="true" returntype="System.Transactions.IDtcTransaction">
                 <attributes />
@@ -788,7 +822,7 @@
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
-              <constructor name=".ctor()" attrib="6276">
+              <constructor name=".ctor()" attrib="6278">
                 <parameters />
               </constructor>
               <constructor name=".ctor(System.String)" attrib="6278">
@@ -865,7 +899,7 @@
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
-              <constructor name=".ctor()" attrib="6276">
+              <constructor name=".ctor()" attrib="6278">
                 <parameters />
               </constructor>
               <constructor name=".ctor(System.String)" attrib="6278">
@@ -916,6 +950,12 @@
                   <parameter name="timeout" position="1" attrib="0" type="System.TimeSpan" />
                 </parameters>
               </constructor>
+              <constructor name=".ctor(System.Transactions.Transaction, System.Transactions.TransactionScopeAsyncFlowOption)" attrib="6278">
+                <parameters>
+                  <parameter name="transactionToUse" position="0" attrib="0" type="System.Transactions.Transaction" />
+                  <parameter name="asyncFlowOption" position="1" attrib="0" type="System.Transactions.TransactionScopeAsyncFlowOption" />
+                </parameters>
+              </constructor>
               <constructor name=".ctor(System.Transactions.TransactionScopeOption, System.TimeSpan)" attrib="6278">
                 <parameters>
                   <parameter name="option" position="0" attrib="0" type="System.Transactions.TransactionScopeOption" />
@@ -942,6 +982,13 @@
                   <parameter name="opt" position="2" attrib="0" type="System.Transactions.EnterpriseServicesInteropOption" />
                 </parameters>
               </constructor>
+              <constructor name=".ctor(System.Transactions.Transaction, System.TimeSpan, System.Transactions.TransactionScopeAsyncFlowOption)" attrib="6278">
+                <parameters>
+                  <parameter name="transactionToUse" position="0" attrib="0" type="System.Transactions.Transaction" />
+                  <parameter name="scopeTimeout" position="1" attrib="0" type="System.TimeSpan" />
+                  <parameter name="asyncFlowOption" position="2" attrib="0" type="System.Transactions.TransactionScopeAsyncFlowOption" />
+                </parameters>
+              </constructor>
               <constructor name=".ctor(System.Transactions.TransactionScopeOption, System.TimeSpan, System.Transactions.TransactionScopeAsyncFlowOption)" attrib="6278">
                 <parameters>
                   <parameter name="option" position="0" attrib="0" type="System.Transactions.TransactionScopeOption" />
@@ -955,6 +1002,13 @@
                   <parameter name="scopeOption" position="0" attrib="0" type="System.Transactions.TransactionScopeOption" />
                   <parameter name="options" position="1" attrib="0" type="System.Transactions.TransactionOptions" />
                   <parameter name="opt" position="2" attrib="0" type="System.Transactions.EnterpriseServicesInteropOption" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Transactions.TransactionScopeOption, System.Transactions.TransactionOptions, System.Transactions.TransactionScopeAsyncFlowOption)" attrib="6278">
+                <parameters>
+                  <parameter name="scopeOption" position="0" attrib="0" type="System.Transactions.TransactionScopeOption" />
+                  <parameter name="transactionOptions" position="1" attrib="0" type="System.Transactions.TransactionOptions" />
+                  <parameter name="asyncFlowOption" position="2" attrib="0" type="System.Transactions.TransactionScopeAsyncFlowOption" />
                 </parameters>
               </constructor>
             </constructors>
@@ -1006,7 +1060,7 @@
             <methods>
               <method name="BeginInvoke(System.Object, System.Transactions.TransactionEventArgs, System.AsyncCallback, System.Object)" attrib="454" virtual="true" returntype="System.IAsyncResult">
                 <parameters>
-                  <parameter name="o" position="0" attrib="0" type="System.Object" />
+                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
                   <parameter name="e" position="1" attrib="0" type="System.Transactions.TransactionEventArgs" />
                   <parameter name="callback" position="2" attrib="0" type="System.AsyncCallback" />
                   <parameter name="object" position="3" attrib="0" type="System.Object" />
@@ -1019,7 +1073,7 @@
               </method>
               <method name="Invoke(System.Object, System.Transactions.TransactionEventArgs)" attrib="454" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="o" position="0" attrib="0" type="System.Object" />
+                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
                   <parameter name="e" position="1" attrib="0" type="System.Transactions.TransactionEventArgs" />
                 </parameters>
               </method>

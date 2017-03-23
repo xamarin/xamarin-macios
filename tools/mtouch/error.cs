@@ -108,6 +108,7 @@ namespace Xamarin.Bundler {
 	//					MT0099	Internal error {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).
 	//		Warning		MT0110  Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.
 	//		Warning		MT0111	Bitcode has been enabled because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.
+	//		Warning		MT0127	Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.
 	// MT1xxx	file copy / symlinks (project related)
 	//			MT10xx	installer.cs / mtouch.cs
 	//					MT1001	Could not find an application at the specified directory: {0}
@@ -283,6 +284,7 @@ namespace Xamarin.Bundler {
 	//					MT4143	The ObjectiveC class '{0}' could not be registered, it does not seem to derive from any known ObjectiveC class (including NSObject).
 	//					MT4144	Cannot register the method '{0}.{1}' since it does not have an associated trampoline. Please file a bug report at http://bugzilla.xamarin.com
 	//					MT4145	Invalid enum '{0}': enums with the [Native] attribute must have a underlying enum type of either 'long' or 'ulong'.
+	//					MT4146	The Name parameter of the Registrar attribute on the class '{0}' ('{3}') contains an invalid character: '{1}' (0x{2}).
 	//					MT4147	Detected a protocol inheriting from the JSExport protocol while using the dynamic registrar. It is not possible to export protocols to JavaScriptCore dynamically; the static registrar must be used (add '--registrar:static to the additional mtouch arguments in the project's iOS Build options to select the static registrar).
 	//					MT4148	The registrar found a generic protocol: '{0}'. Exporting generic protocols is not supported.
 	//					MT4149	Cannot register the method '{0}.{1}' because the type of the first parameter ('{2}') does not match the category type ('{3}').
@@ -303,7 +305,7 @@ namespace Xamarin.Bundler {
 	//					MT4164	Cannot export the property '{0}' because its selector '{1}' is an Objective-C keyword. Please use a different name.
 	//					MT4165	The registrar couldn't find the type 'System.Void' in any of the referenced assemblies.
 	//					MT4166	Cannot register the method '{0}' because the signature contains a type ({1}) that isn't a reference type.
-	//					MT4167	Cannot register the method '{0}' because the signature contains a generic type ({1}) with a generic argument type that isn't an NSObject subclass ({2}).
+	//					MT4167	Cannot register the method '{0}' because the signature contains a generic type ({1}) with a generic argument type that doesn't implement INativeObject ({2}).
 	// MT5xxx	GCC and toolchain
 	//			MT51xx	compilation
 	//					MT5101	Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component

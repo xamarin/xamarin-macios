@@ -69,15 +69,19 @@ namespace XamCore.CoreSpotlight {
 #endif
 
 		[Export ("indexSearchableItems:completionHandler:")]
+		[Async]
 		void Index (CSSearchableItem [] items, [NullAllowed] Action<NSError> completionHandler);
 
 		[Export ("deleteSearchableItemsWithIdentifiers:completionHandler:")]
+		[Async]
 		void Delete (string [] identifiers, [NullAllowed] Action<NSError> completionHandler);
 
 		[Export ("deleteSearchableItemsWithDomainIdentifiers:completionHandler:")]
+		[Async]
 		void DeleteWithDomain (string [] domainIdentifiers, [NullAllowed] Action<NSError> completionHandler);
 
 		[Export ("deleteAllSearchableItemsWithCompletionHandler:")]
+		[Async]
 		void DeleteAll ([NullAllowed] Action<NSError> completionHandler);
 	}
 

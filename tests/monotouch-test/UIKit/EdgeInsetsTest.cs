@@ -70,5 +70,17 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.False (i.Equals (UIEdgeInsets.Zero), "Equals(UIEdgeInsets)");
 			Assert.False (UIEdgeInsets.Zero.Equals ((object) i), "Equals(object)");
 		}
+
+		[Test]
+		public void Operators ()
+		{
+			var i1 = new UIEdgeInsets (10, 20, 30, 40);
+			var i2 = new UIEdgeInsets (10, 10, 10, 10);
+
+			Assert.True (i1 == i1, "i1 == i1");
+			Assert.True (i2 == i2, "i1 == i1");
+			Assert.True (i1 != i2, "i1 != i2");
+			Assert.True (i2 != i1, "i2 != i1");
+		}
 	}
 }

@@ -1,5 +1,5 @@
 #if !XAMCORE_2_0
-using MonoTouch.Foundation;
+using Foundation;
 #else
 using Foundation;
 #endif

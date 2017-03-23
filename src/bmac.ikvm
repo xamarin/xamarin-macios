@@ -1,0 +1,63 @@
+#!/bin/bash
+
+sdk=
+new_style=
+refs=
+full_profile=
+mobile_profile=
+
+BIN_DIR=`dirname $0`
+if [ `basename $BIN_DIR` == "Commands" ]; then
+BIN_DIR="`dirname $BIN_DIR`/Versions/Current/bin"
+fi
+
+ROOT_DIR=$BIN_DIR/..
+
+btouch_arguments=()
+for arg in "$@"; do
+	if [[ $sdk == next-arg ]]; then
+		sdk=$arg
+	elif [[ $arg =~ ^(/|-{1,2})sdk ]]; then
+		sdk=${arg#*=}; sdk=${sdk#*:}
+		if [[ $sdk == $arg ]]; then
+			sdk=next-arg
+		fi
+	elif [[ $arg =~ ^(/|-{1,2})new-style$ ]]; then
+		new_style=1
+		mobile_profile=1
+		continue
+	elif [[ $arg =~ ^(/|-{1,2})unified-full-profile$ ]]; then
+		full_profile=1
+		new_style=1
+	elif [[ $arg =~ ^(/|-{1,2})unified-mobile-profile$ ]]; then
+		mobile_profile=1
+		new_style=1
+	fi
+	btouch_arguments+=("${arg}")
+done
+
+sdk=$(echo $sdk | tr '[:upper:]' '[:lower:]')
+
+case $sdk in
+xammac)
+	refs="--target-framework=XamMac,v1.0"
+	;;
+mobile|xamarin.mac)
+	refs="--target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile"
+	;;
+*)
+	if [[ -z "$new_style" ]]; then
+		refs="--target-framework=XamMac,v1.0"
+	else
+		if [[ "$full_profile" -eq 1 ]]; then
+			refs="--target-framework=Xamarin.Mac,Version=v4.5,Profile=Full"
+		elif [[ "$mobile_profile" -eq 1 ]]; then
+			refs="--target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile"
+		else
+			refs="--target-framework=Xamarin.Mac,Version=v4.5,Profile=System"
+		fi
+	fi
+	;;
+esac
+
+exec $BIN_DIR/bgen $refs "${btouch_arguments[@]}"

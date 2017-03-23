@@ -639,7 +639,6 @@ IOS_BCL_TARGETS +=                                                              
 	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(IOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.iOS/$(file).pdb) \
 	$(PREFIX)/lib/mono/Xamarin.iOS/mscorlib.dll                                                                     \
 	$(PREFIX)/lib/mono/2.1/mscorlib.dll                                                                             \
-	$(PREFIX)/bin/btouch-mono                                                                                       \
 	$(foreach file,$(IOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/Facades/$(file).dll)                                 \
 	$(foreach file,$(IOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/Facades/$(file).dll)                         \
 	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/repl/$(file).dll)                                      \
@@ -647,23 +646,33 @@ IOS_BCL_TARGETS +=                                                              
 	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/repl/$(file).dll)                              \
 	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/repl/$(file).pdb)                          \
 
+ifndef IKVM
+IOS_BCL_TARGETS += $(PREFIX)/bin/btouch-mono
+endif
+
 WATCH_BCL_TARGETS += \
 	$(foreach file,$(WATCHOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/$(file).dll)                                        \
 	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(WATCHOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.WatchOS/$(file).pdb) \
 	$(PREFIX)/lib/mono/Xamarin.WatchOS/mscorlib.dll                                                                             \
-	$(PREFIX)/bin/bwatch-mono                                                                                                   \
 	$(foreach file,$(WATCHOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/Facades/$(file).dll)                         \
 	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/$(file).dll)                              \
 	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/$(file).pdb)                          \
+
+ifndef IKVM
+WATCH_BCL_TARGETS += $(PREFIX)/bin/bwatch-mono
+endif
 
 TVOS_BCL_TARGETS += \
 	$(foreach file,$(TVOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/$(file).dll)                                        \
 	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(TVOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.TVOS/$(file).pdb) \
 	$(PREFIX)/lib/mono/Xamarin.TVOS/mscorlib.dll                                                                          \
-	$(PREFIX)/bin/btv-mono                                                                                                \
 	$(foreach file,$(TVOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/Facades/$(file).dll)                         \
 	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).dll)                              \
 	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).pdb)                          \
+
+ifndef IKVM
+TVOS_BCL_TARGETS += $(PREFIX)/bin/btv-mono
+endif
 
 $(PREFIX)/lib/mono/Xamarin.iOS/%.pdb: $(BUILD_DESTDIR)/ios/bcl/%.pdb | $(PREFIX)/lib/mono/Xamarin.iOS $(PREFIX)/lib/mono/Xamarin.iOS/repl
 	$(Q) install -m 0644 $< $@
@@ -686,8 +695,10 @@ $(PREFIX)/lib/mono/2.1/%.dll: $(BUILD_DESTDIR)/ios/bcl/%.dll | $(PREFIX)/lib/mon
 $(PREFIX)/lib/mono/2.1/%.pdb: $(BUILD_DESTDIR)/ios/bcl/%.pdb | $(PREFIX)/lib/mono/2.1 $(PREFIX)/lib/mono/2.1/repl
 	$(Q) install -m 0644 $< $@
 
+ifndef IKVM
 $(PREFIX)/bin/btouch-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
 	$(Q) install -s -m 0755 $< $@
+endif
 
 $(PREFIX)/lib/mono/Xamarin.WatchOS/Facades/%.dll: $(BUILD_DESTDIR)/watchos/bcl/Facades/%.dll | $(PREFIX)/lib/mono/Xamarin.WatchOS/Facades
 	$(Q) install -m 0755 $< $@
@@ -707,6 +718,7 @@ $(PREFIX)/lib/mono/Xamarin.TVOS/%.dll: $(BUILD_DESTDIR)/tvos/bcl/%.dll | $(PREFI
 $(PREFIX)/lib/mono/Xamarin.TVOS/%.pdb: $(BUILD_DESTDIR)/tvos/bcl/%.pdb | $(PREFIX)/lib/mono/Xamarin.TVOS $(PREFIX)/lib/mono/Xamarin.TVOS/repl
 	$(Q) install -m 0644 $< $@
 
+ifndef IKVM
 $(PREFIX)/bin/btv-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
 	$(Q) install -s -m 0755 $< $@
 
@@ -716,6 +728,7 @@ else
 $(PREFIX)/bin/bwatch-mono: $(BUILD_DESTDIR)/watchbcl/bin/mono | $(PREFIX)/bin
 endif
 	$(Q) install -s -m 0755 $< $@
+endif
 
 # copy to temporary directory before signing
 # otherwise we end up re-signing if installing into a different directory.

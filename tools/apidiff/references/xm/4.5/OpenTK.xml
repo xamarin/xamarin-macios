@@ -37127,6 +37127,7 @@
               <interface name="AppKit.INSAccessibilityElementProtocol" />
               <interface name="AppKit.INSAppearanceCustomization" />
               <interface name="AppKit.INSDraggingDestination" />
+              <interface name="AppKit.INSTouchBarProvider" />
               <interface name="AppKit.INSUserInterfaceItemIdentification" />
               <interface name="Foundation.INSCoding" />
               <interface name="Foundation.INSObjectProtocol" />

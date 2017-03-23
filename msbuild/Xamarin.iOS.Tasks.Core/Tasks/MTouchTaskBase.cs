@@ -605,7 +605,7 @@ namespace Xamarin.iOS.Tasks
 			args.Add ("--target-framework");
 			args.Add (TargetFrameworkIdentifier + "," + TargetFrameworkVersion);
 
-			args.AddQuoted (MainAssembly.ItemSpec);
+			args.AddQuoted (Path.GetFullPath (MainAssembly.ItemSpec));
 
 			// We give the priority to the ExtraArgs to set the mtouch verbosity.
 			if (string.IsNullOrEmpty (ExtraArgs) || (!string.IsNullOrEmpty (ExtraArgs) && !ExtraArgs.Contains ("-q") && !ExtraArgs.Contains ("-v")))
