@@ -216,7 +216,7 @@ namespace Foundation {
 						return inflight;
 
 				// if we did not manage to get the inflight data, we either got an error or have been canceled, lets cancel the task, that will execute DidCompleteWithError
-				task.Cancel ();
+				task?.Cancel ();
 				return null;
 			}
 
