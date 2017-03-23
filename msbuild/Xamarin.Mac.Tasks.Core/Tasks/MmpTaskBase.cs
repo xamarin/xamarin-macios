@@ -72,6 +72,10 @@ namespace Xamarin.Mac.Tasks
 		public string I18n { get; set; }
 		public string ExtraArguments { get; set; }
 
+		public string AotScope { get; set; }
+		public bool HybridAotOption { get; set; }
+		public string ExplicitAotAssemblies { get; set; }
+
 		public ITaskItem [] ExplicitReferences { get; set; }
 		public ITaskItem [] NativeReferences { get; set; }
 
@@ -165,6 +169,17 @@ namespace Xamarin.Mac.Tasks
 			default:
 				args.Add ("/nolink");
 				break;
+			}
+
+			if (!string.IsNullOrEmpty (AotScope) && AotScope != "None") {
+				var aot = $"--aot:{AotScope.ToLower ()}";
+				if (HybridAotOption)
+					aot += "|hybrid";
+
+				if (!string.IsNullOrEmpty (ExplicitAotAssemblies))
+					aot += $",{ExplicitAotAssemblies}";
+
+				args.Add (aot);
 			}
 
 			if (!string.IsNullOrEmpty (I18n))
@@ -263,6 +278,10 @@ namespace Xamarin.Mac.Tasks
 			Log.LogTaskProperty ("SdkVersion", SdkVersion);
 			Log.LogTaskProperty ("NativeReferences", NativeReferences);
 			Log.LogTaskProperty ("IsAppExtension", IsAppExtension);
+			Log.LogTaskProperty ("AotScope", AotScope);
+			Log.LogTaskProperty ("HybridAotOption", HybridAotOption);
+			Log.LogTaskProperty ("ExplicitAotAssemblies", ExplicitAotAssemblies);
+
 
 			if (!base.Execute ())
 				return false;

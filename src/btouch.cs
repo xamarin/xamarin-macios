@@ -27,12 +27,19 @@
 using System;
 using System.IO;
 using System.Linq;
+#if IKVM
+using IKVM.Reflection;
+using Type = IKVM.Reflection.Type;
+#else
 using System.Reflection;
+#endif
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using Mono.Options;
+#if !MONOMAC && !IKVM
 using System.Runtime.InteropServices;
+#endif
 
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
@@ -51,6 +58,11 @@ class BindingTouch {
 	static char shellQuoteChar;
 
 	public static bool BindingThirdParty = true;
+	static List<string> libs = new List<string> ();
+
+#if IKVM
+	public static Universe universe;
+#endif
 
 	public static string ToolName {
 		get { return Path.GetFileNameWithoutExtension (System.Reflection.Assembly.GetEntryAssembly ().Location); }
@@ -66,7 +78,7 @@ class BindingTouch {
 	
 	static int Main (string [] args)
 	{
-#if !MONOMAC
+#if !MONOMAC && !IKVM
 
 		// for monotouch.dll we're using a the iOS specific mscorlib.dll, which re-routes CWL to NSLog
                // but that's not what we want for tooling, like the binding generator, so we provide our own
@@ -80,6 +92,92 @@ class BindingTouch {
 			return 1;
 		}
 	}
+
+#if IKVM
+	static string GetAttributeLibraryPath ()
+	{
+		switch (CurrentPlatform) {
+		case PlatformName.iOS:
+			if (Unified) {
+				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.iOS.BindingAttributes.dll");
+			} else {
+				return Path.Combine (GetSDKRoot (), "lib", "bgen", "monotouch.BindingAttributes.dll");
+			}
+		case PlatformName.WatchOS:
+			return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.WatchOS.BindingAttributes.dll");
+		case PlatformName.TvOS:
+			return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.TVOS.BindingAttributes.dll");
+		case PlatformName.MacOSX:
+			if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
+				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
+			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
+				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
+			} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.Mac-mobile.BindingAttributes.dll");
+			} else if (target_framework == TargetFramework.XamMac_1_0) {
+				return Path.Combine (GetSDKRoot (), "lib", "bgen", "XamMAc.BindingAttributes.dll");
+			} else {
+				throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework);
+			}
+		default:
+			throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+		}
+	}
+
+	static IEnumerable<string> GetLibraryDirectories ()
+	{
+		switch (CurrentPlatform) {
+		case PlatformName.iOS:
+			yield return Path.Combine (GetSDKRoot (), "lib", "mono", Unified ? "Xamarin.iOS" : "2.1");
+			break;
+		case PlatformName.WatchOS:
+			yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.WatchOS");
+			break;
+		case PlatformName.TvOS:
+			yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.TVOS");
+			break;
+		case PlatformName.MacOSX:
+			if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
+				yield return Path.Combine (GetSDKRoot (), "lib", "reference", "full");
+				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "4.5");
+			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
+				yield return "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5";
+				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "4.5");
+			} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.Mac");
+			} else if (target_framework == TargetFramework.XamMac_1_0) {
+				yield return Path.Combine (GetSDKRoot (), "lib", "mono");
+				yield return "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5";
+			} else {
+				throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework);
+			}
+			break;
+		default:
+			throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+		}
+		foreach (var lib in libs)
+			yield return lib;
+	}
+
+	static string LocateAssembly (string name)
+	{
+		foreach (var asm in universe.GetAssemblies ()) {
+			if (asm.GetName ().Name == name)
+				return asm.Location;
+		}
+
+		foreach (var lib in GetLibraryDirectories ()) {
+			var path = Path.Combine (lib, name);
+			if (File.Exists (path))
+				return path;
+			path += ".dll";
+			if (File.Exists (path))
+				return path;
+		}
+
+		throw new FileNotFoundException (name);
+	}
+#endif
 
 	static string GetSDKRoot ()
 	{
@@ -145,7 +243,6 @@ class BindingTouch {
 		var resources = new List<string> ();
 		var linkwith = new List<string> ();
 		var references = new List<string> ();
-		var libs = new List<string> ();
 		var api_sources = new List<string> ();
 		var core_sources = new List<string> ();
 		var extra_sources = new List<string> ();
@@ -188,7 +285,7 @@ class BindingTouch {
 			{ "nostdlib", "Does not reference mscorlib.dll library", l => nostdlib = true },
 			{ "no-mono-path", "Launches compiler with empty MONO_PATH", l => { } },
 			{ "native-exception-marshalling", "Enable the marshalling support for Objective-C exceptions", (v) => { /* no-op */} },
-			{ "inline-selectors:", "If Selector.GetHandle is inlined and does not need to be cached (enabled by default in Xamarin.iOS, disabled in Xamarin.Mac)", 
+			{ "inline-selectors:", "If Selector.GetHandle is inlined and does not need to be cached (enabled by default in Xamarin.iOS, disabled in Xamarin.Mac)",
 				v => inline_selectors = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v)
 			},
 			{ "process-enums", "Process enums as bindings, not external, types.", v => process_enums = true },
@@ -210,6 +307,32 @@ class BindingTouch {
 			{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { /* no-op*/ }, true },
 			{ "unified-mobile-profile", "Launches compiler pointing to XM Mobile Profile", l => { /* no-op*/ }, true },
 			{ "target-framework=", "Specify target framework to use. Always required, and the currently supported values are: 'MonoTouch,v1.0', 'Xamarin.iOS,v1.0', 'Xamarin.TVOS,v1.0', 'Xamarin.WatchOS,v1.0', 'XamMac,v1.0', 'Xamarin.Mac,Version=v2.0,Profile=Mobile', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => SetTargetFramework (v) },
+			{ "warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v => {
+					try {
+						if (!string.IsNullOrEmpty (v)) {
+							foreach (var code in v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+								ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Error, int.Parse (code));
+						} else {
+							ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Error);
+						}
+					} catch (Exception ex) {
+						throw ErrorHelper.CreateError (26, $"Could not parse the command line argument '--warnaserror': {ex.Message}");
+					}
+				}
+			},
+			{ "nowarn:", "An optional comma-separated list of warning codes to ignore (if no warnings are specified all warnings are ignored).", v => {
+					try {
+						if (!string.IsNullOrEmpty (v)) {
+							foreach (var code in v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+								ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable, int.Parse (code));
+						} else {
+							ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable);
+						}
+					} catch (Exception ex) {
+						throw ErrorHelper.CreateError (26, $"Could not parse the command line argument '--nowarn': {ex.Message}");
+					}
+				}
+			},
 		};
 
 		try {
@@ -330,7 +453,11 @@ class BindingTouch {
 			}
 			cargs.Append ("-debug -unsafe -target:library -nowarn:436").Append (' ');
 			cargs.Append ("-out:").Append (Quote (tmpass)).Append (' ');
+#if IKVM
+			cargs.Append ("-r:").Append (Quote (GetAttributeLibraryPath ())).Append (' ');
+#else
 			cargs.Append ("-r:").Append (Environment.GetCommandLineArgs ()[0]).Append (' ');
+#endif
 			cargs.Append (refs).Append (' ');
 			if (unsafef)
 				cargs.Append ("-unsafe ");
@@ -365,9 +492,17 @@ class BindingTouch {
 				return 1;
 			}
 
+#if IKVM
+			universe = new Universe (UniverseOptions.EnableFunctionPointers | UniverseOptions.ResolveMissingMembers | UniverseOptions.MetadataOnly);
+#endif
+
 			Assembly api;
 			try {
+#if IKVM
+				api = universe.LoadFile (tmpass);
+#else
 				api = Assembly.LoadFrom (tmpass);
+#endif
 			} catch (Exception e) {
 				if (verbose)
 					Console.WriteLine (e);
@@ -378,7 +513,11 @@ class BindingTouch {
 
 			Assembly baselib;
 			try {
+#if IKVM
+				baselib = universe.LoadFile (baselibdll);
+#else
 				baselib = Assembly.LoadFrom (baselibdll);
+#endif
 			} catch (Exception e){
 				if (verbose)
 					Console.WriteLine (e);
@@ -386,9 +525,21 @@ class BindingTouch {
 				Console.Error.WriteLine ("Error loading base library {0}", baselibdll);
 				return 1;
 			}
+
+#if IKVM
+			Assembly corlib_assembly = universe.LoadFile (LocateAssembly ("mscorlib"));
+			Assembly platform_assembly = baselib;
+			Assembly system_assembly = universe.LoadFile (LocateAssembly ("System"));
+			Assembly binding_assembly = universe.LoadFile (GetAttributeLibraryPath ());
+#else
 			GC.KeepAlive (baselib); // Fixes a compiler warning (unused variable).
-				
-			TypeManager.Initialize (api);
+
+			Assembly corlib_assembly = typeof (object).Assembly;
+			Assembly platform_assembly = typeof (XamCore.Foundation.NSObject).Assembly;
+			Assembly system_assembly = typeof (System.ComponentModel.BrowsableAttribute).Assembly;
+			Assembly binding_assembly = typeof (ProtocolizeAttribute).Assembly;
+#endif
+			TypeManager.Initialize (api, corlib_assembly, platform_assembly, system_assembly, binding_assembly);
 
 			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {
 				if (!linkwith.Contains (linkWith.LibraryName)) {
@@ -400,7 +551,11 @@ class BindingTouch {
 			foreach (var r in references) {
 				if (File.Exists (r)) {
 					try {
+#if IKVM
+						universe.LoadFile (r);
+#else
 						Assembly.LoadFrom (r);
+#endif
 					} catch (Exception ex) {
 						ErrorHelper.Show (new BindingException (1104, false, "Could not load the referenced library '{0}': {1}.", r, ex.Message));
 					}
@@ -544,7 +699,7 @@ class BindingTouch {
 	}
 }
 
-#if !MONOMAC
+#if !MONOMAC && !IKVM
 internal class UnexceptionalStreamWriter : StreamWriter
 {
 	public UnexceptionalStreamWriter (Stream stream)

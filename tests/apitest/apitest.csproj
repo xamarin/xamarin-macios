@@ -107,6 +107,7 @@
     <Compile Include="src\CoreAnimation\CALayer.cs" />
     <Compile Include="src\CoreAnimation\CAOpenGLLayer.cs" />
     <Compile Include="src\CoreImage\CIFilter.cs" />
+    <Compile Include="src\Darwin\KernelNotificationTest.cs" />
     <Compile Include="src\DelegateAndDataSourceTest.cs" />
     <Compile Include="src\DerivedEventTest.cs" />
     <Compile Include="src\EveryFrameworkSmokeTest.cs" />
