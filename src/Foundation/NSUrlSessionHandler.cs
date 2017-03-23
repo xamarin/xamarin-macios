@@ -215,12 +215,17 @@ namespace Foundation {
 					if (sessionHandler.inflightRequests.TryGetValue (task, out inflight))
 						return inflight;
 
+				// if we did not manage to get the inflight data, we either got an error or have been canceled, lets cancel the task, that will execute DidCompleteWithError
+				task.Cancel ();
 				return null;
 			}
 
 			public override void DidReceiveResponse (NSUrlSession session, NSUrlSessionDataTask dataTask, NSUrlResponse response, Action<NSUrlSessionResponseDisposition> completionHandler)
 			{
 				var inflight = GetInflightData (dataTask);
+
+				if (inflight == null)
+					return;
 
 				try {
 					// ensure that we did not cancel the request, if we did, do cancel the task
@@ -278,6 +283,9 @@ namespace Foundation {
 			public override void DidReceiveData (NSUrlSession session, NSUrlSessionDataTask dataTask, NSData data)
 			{
 				var inflight = GetInflightData (dataTask);
+
+				if (inflight == null)
+					return;
 
 				inflight.Stream.Add (data);
 				SetResponse (inflight);
@@ -338,6 +346,11 @@ namespace Foundation {
 
 			public override void DidReceiveChallenge (NSUrlSession session, NSUrlSessionTask task, NSUrlAuthenticationChallenge challenge, Action<NSUrlSessionAuthChallengeDisposition, NSUrlCredential> completionHandler)
 			{
+				var inflight = GetInflightData (task);
+
+				if (inflight == null)
+					return;
+
 				// case for the basic auth failing up front. As per apple documentation:
 				// The URL Loading System is designed to handle various aspects of the HTTP protocol for you. As a result, you should not modify the following headers using
 				// the addValue(_:forHTTPHeaderField:) or setValue(_:forHTTPHeaderField:) methods:
@@ -352,7 +365,7 @@ namespace Foundation {
 				// header, it means that we do not have the correct credentials, in any other case just do what it is expected.
 				
 				if (challenge.PreviousFailureCount == 0) {
-					var authHeader = GetInflightData (task)?.Request?.Headers?.Authorization;
+					var authHeader = inflight?.Request?.Headers?.Authorization;
 					if (!(string.IsNullOrEmpty (authHeader?.Scheme) && string.IsNullOrEmpty (authHeader?.Parameter))) {
 						completionHandler (NSUrlSessionAuthChallengeDisposition.RejectProtectionSpace, null);
 						return;
@@ -363,7 +376,7 @@ namespace Foundation {
 					if (sessionHandler.Credentials != null) {
 						var credentialsToUse = sessionHandler.Credentials as NetworkCredential;
 						if (credentialsToUse == null) {
-							var uri = GetInflightData (task).Request.RequestUri;
+							var uri = inflight.Request.RequestUri;
 							credentialsToUse = sessionHandler.Credentials.GetCredential (uri, "NTLM");
 						}
 						var credential = new NSUrlCredential (credentialsToUse.UserName, credentialsToUse.Password, NSUrlCredentialPersistence.ForSession);
