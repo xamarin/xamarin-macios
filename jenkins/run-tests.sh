@@ -1,5 +1,8 @@
 #!/bin/bash -e
 
+# this should be removed, doing it to see the env for testing purposes
+( set -o posix ; set ) | less
+
 export BUILD_REVISION=jenkins
 cd $WORKSPACE
 # Unlock
