@@ -365,7 +365,7 @@ namespace Foundation {
 				// header, it means that we do not have the correct credentials, in any other case just do what it is expected.
 				
 				if (challenge.PreviousFailureCount == 0) {
-					var authHeader = inflight?.Request?.Headers?.Authorization;
+					var authHeader = inflight.Request?.Headers?.Authorization;
 					if (!(string.IsNullOrEmpty (authHeader?.Scheme) && string.IsNullOrEmpty (authHeader?.Parameter))) {
 						completionHandler (NSUrlSessionAuthChallengeDisposition.RejectProtectionSpace, null);
 						return;
