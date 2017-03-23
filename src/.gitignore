@@ -11,3 +11,4 @@ xammac.csproj
 xamtvos.csproj
 xamwatch.csproj
 generator-ikvm.csproj
+generator-playground.cs

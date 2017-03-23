@@ -70,6 +70,7 @@ generator-ikvm.csproj: generator-ikvm.csproj.in Makefile.generator
 		-e 's^%MAC_FULL_PMCS_PROFILE%^full^' \
 		-e 's^%MAC_MOBILE_ARGS%^-d:MONOMAC -d:XAMARIN_MAC -compiler:$(MAC_BUILD_DIR)/mobile/pmcs -process-enums -native-exception-marshalling -core -sourceonly:$(MAC_BUILD_DIR)/mobile/generated-sources -tmpdir:$(MAC_BUILD_DIR)/mobile -baselib:$(MAC_BUILD_DIR)/mobile/core.dll -d:NO_SYSTEM_DRAWING --ns=ObjCRuntime $(SHARED_SYSTEM_DRAWING_SOURCES) $(xm_mobile_profile) $(MAC_APIS)^' \
 		-e 's^%MAC_MOBILE_PMCS_PROFILE%^mobile^' \
+		-e 's^%IOS_UNIFIED_PLAYGROUND_ARGS%^$(IOS_GENERATOR_FLAGS) -core -sourceonly=$(IOS_BUILD_DIR)/playground/generated_sources -compiler=$(IOS_PMCS) -nostdlib -noconfig -no-mono-path -tmpdir=$(IOS_BUILD_DIR)/playground -baselib=$(IOS_BUILD_DIR)/native/core.dll -r=$(MONO_PATH)/mcs/class/lib/monotouch/System.dll -ns=MonoTouch.ObjCRuntime -native-exception-marshalling --ns=ObjCRuntime $(xi_native_profile) $(IOS_APIS) generator-playground.cs^' \
 		-e 's^%MD_MTOUCH_SDK_ROOT%^$(MD_MTOUCH_SDK_ROOT)^' \
 		-e 's^%XamarinMacFrameworkRoot%^$(XamarinMacFrameworkRoot)^' \
 		$< | xmllint --format - > $@
