@@ -59,6 +59,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.iOS.Tasks.EmbedMobileProvision" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.FindWatchOS1AppExtensionBundle" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.FindWatchOS2AppBundle" AssemblyFile="Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.iOS.Tasks.GetDirectories" AssemblyFile="Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.iOS.Tasks.GetFiles" AssemblyFile="Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.iOS.Tasks.GetFullPath" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.IBTool" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.MetalLib" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.Metal" AssemblyFile="Xamarin.iOS.Tasks.dll" />
@@ -375,19 +378,11 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_CleanDebugSymbols" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
-		<ItemGroup>
-			<_DebugSymbolInfoPlist Include="$(DeviceSpecificOutputPath)*.dSYM\Contents\Info.plist" />
-		</ItemGroup>
+		<GetDirectories SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Path="$(DeviceSpecificOutputPath)" Pattern="*.dSYM">
+			<Output TaskParameter="Directories" ItemName="_DebugSymbolDir" />
+		</GetDirectories>
 
-		<ItemGroup>
-			<_DebugSymbolContentsDir Include="@(_DebugSymbolInfoPlist -> '%(Directory)..')" />
-		</ItemGroup>
-
-		<ItemGroup>
-			<_DebugSymbolDir Include="@(_DebugSymbolContentsDir -> '%(FullPath)')" />
-		</ItemGroup>
-
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir).dSYM;$(AppBundleDir).mSYM;@(_DebugSymbolDir)" />
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir).mSYM;@(_DebugSymbolDir)" />
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'false'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'true'" Files="$(DeviceSpecificOutputPath)dsym.items" />
 	</Target>
@@ -888,9 +883,13 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_PrepareDebugSymbolGeneration" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'true' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_CompileToNative;_ParseExtraMtouchArgs"
 			Inputs="$(_NativeExecutable)" Outputs="$(DeviceSpecificOutputPath)dsym.items">
 		<!-- For App Extensions, we delay running dsymutil & strip until it has been copied into the main app bundle... -->
+		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" RelativePath="$(_MtouchSymbolsList)">
+			<Output TaskParameter="FullPath" PropertyName="_SymbolsListFullPath" />
+		</GetFullPath>
+
 		<PropertyGroup>
+			<!-- [System.IO.Path]::GetFileName() is safe to use -->
 			<_NativeExecutableFileName>$([System.IO.Path]::GetFileName('$(_NativeExecutable)'))</_NativeExecutableFileName>
-			<_SymbolsListFullPath>$([System.IO.Path]::GetFullPath('$(_MtouchSymbolsList)'))</_SymbolsListFullPath>
 			<_AppBundleFileName>$([System.IO.Path]::GetFileName('$(AppBundleDir)'))</_AppBundleFileName>
 		</PropertyGroup>
 
@@ -1749,24 +1748,30 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_PrepareCodesignAppExtension" Condition="'$(_RequireCodeSigning)' == 'true' And '$(IsAppExtension)' == 'true'">
 		<!-- For App Extensions, we delay running codesign until it has been copied into the main app bundle... -->
-
 		<PropertyGroup>
-			<_AppBundleFullPath>$([System.IO.Path]::GetFullPath('$(AppBundleDir)'))</_AppBundleFullPath>
+			<_ResourceRulesFullPath></_ResourceRulesFullPath>
 		</PropertyGroup>
 
-		<ItemGroup>
-			<_AppExtensionBundleFiles Include="$(_AppBundleFullPath)\**\*.*" />
-		</ItemGroup>
+		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" RelativePath="$(AppBundleDir)">
+			<Output TaskParameter="FullPath" PropertyName="_AppBundleFullPath" />
+		</GetFullPath>
+
+		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" RelativePath="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent">
+			<Output TaskParameter="FullPath" PropertyName="_EntitlementsFullPath" />
+		</GetFullPath>
+
+		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(_PreparedResourceRules)' != ''" RelativePath="$(_PreparedResourceRules)">
+			<Output TaskParameter="FullPath" PropertyName="_ResourceRulesFullPath" />
+		</GetFullPath>
+
+		<GetFiles SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Path="$(_AppBundleFullPath)" Pattern="*.*" Option="AllDirectories">
+			<Output TaskParameter="Files" ItemName="_AppExtensionBundleFiles" />
+		</GetFiles>
 
 		<PropertyGroup>
+			<!-- [System.IO.Path]::GetFileName() is safe to use -->
 			<_AppBundleFileName>$([System.IO.Path]::GetFileName('$(AppBundleDir)'))</_AppBundleFileName>
-
 			<_NativeExecutableFileName>$([System.IO.Path]::GetFileName('$(_NativeExecutable)'))</_NativeExecutableFileName>
-
-			<_EntitlementsFullPath>$([System.IO.Path]::GetFullPath('$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent'))</_EntitlementsFullPath>
-
-			<_ResourceRulesFullPath></_ResourceRulesFullPath>
-			<_ResourceRulesFullPath Condition="'$(_PreparedResourceRules)' != ''">$([System.IO.Path]::GetFullPath('$(_PreparedResourceRules)'))</_ResourceRulesFullPath>
 
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
 			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
