@@ -9,7 +9,7 @@ using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks
 {
-	public abstract class GetFilesTaskBase : Task
+	public abstract class GetDirectoriesTaskBase : Task
 	{
 		public string SessionId { get; set; }
 
@@ -23,11 +23,11 @@ namespace Xamarin.iOS.Tasks
 		public string Exclude { get; set; }
 
 		[Output]
-		public ITaskItem[] Files { get; set; }
+		public ITaskItem[] Directories { get; set; }
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("GetFiles");
+			Log.LogTaskName ("GetDirectories");
 			Log.LogTaskProperty ("Path", Path);
 			Log.LogTaskProperty ("Pattern", Pattern);
 			Log.LogTaskProperty ("Option", Option);
@@ -36,7 +36,7 @@ namespace Xamarin.iOS.Tasks
 			var path = Path.Replace ('\\', '/').TrimEnd ('/');
 			var exclude = new HashSet<string> ();
 			var items = new List<ITaskItem> ();
-			IEnumerable<string> files;
+			IEnumerable<string> dirs;
 			SearchOption option;
 
 			if (!string.IsNullOrEmpty (Option)) {
@@ -49,15 +49,15 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			if (!Directory.Exists (path)) {
-				Files = items.ToArray ();
+				Directories = items.ToArray ();
 
 				return !Log.HasLoggedErrors;
 			}
 
 			if (!string.IsNullOrEmpty (Pattern))
-				files = Directory.EnumerateFiles (path, Pattern, option);
+				dirs = Directory.EnumerateDirectories (path, Pattern, option);
 			else
-				files = Directory.EnumerateFiles (path, "*.*", option);
+				dirs = Directory.EnumerateDirectories (path, "*.*", option);
 
 			if (!string.IsNullOrEmpty (Exclude)) {
 				foreach (var rpath in Exclude.Split (new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)) {
@@ -66,12 +66,12 @@ namespace Xamarin.iOS.Tasks
 				}
 			}
 
-			foreach (var file in files) {
-				if (!exclude.Contains (file))
-					items.Add (new TaskItem (file));
+			foreach (var dir in dirs) {
+				if (!exclude.Contains (dir))
+					items.Add (new TaskItem (dir));
 			}
 
-			Files = items.ToArray ();
+			Directories = items.ToArray ();
 
 			return !Log.HasLoggedErrors;
 		}
