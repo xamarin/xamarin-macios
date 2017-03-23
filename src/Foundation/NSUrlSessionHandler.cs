@@ -212,8 +212,12 @@ namespace Foundation {
 				var inflight = default (InflightData);
 
 				lock (sessionHandler.inflightRequestsLock)
-					if (sessionHandler.inflightRequests.TryGetValue (task, out inflight))
+					if (sessionHandler.inflightRequests.TryGetValue (task, out inflight)) {
+						// ensure that we did not cancel the request, if we did, do cancel the task
+						if (inflight.CancellationToken.IsCancellationRequested)
+							task?.Cancel ();
 						return inflight;
+					}
 
 				// if we did not manage to get the inflight data, we either got an error or have been canceled, lets cancel the task, that will execute DidCompleteWithError
 				task?.Cancel ();
@@ -228,11 +232,6 @@ namespace Foundation {
 					return;
 
 				try {
-					// ensure that we did not cancel the request, if we did, do cancel the task
-					if (inflight.CancellationToken.IsCancellationRequested) {
-						dataTask.Cancel ();
-					}
-
 					var urlResponse = (NSHttpUrlResponse)response;
 					var status = (int)urlResponse.StatusCode;
 
