@@ -74,6 +74,10 @@ generator-ikvm.csproj: generator-ikvm.csproj.in Makefile.generator
 		-e 's^%XamarinMacFrameworkRoot%^$(XamarinMacFrameworkRoot)^' \
 		$< | xmllint --format - > $@
 
+ifdef IKVM
+PROJECT_FILES += generator-ikvm.csproj
+endif
+
 #
 # Common
 #
@@ -92,6 +96,7 @@ IOS_TARGETS_DIRS +=                              \
 
 ifdef IKVM
 IOS_TARGETS +=                                                          \
+	generator-ikvm.csproj                                               \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/monotouch.BindingAttributes.dll \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/Xamarin.iOS.BindingAttributes.dll \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe                 \
