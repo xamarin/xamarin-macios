@@ -74,6 +74,7 @@
     <Compile Include="Tasks\DetectSigningIdentityTaskBase.cs" />
     <Compile Include="Tasks\EmbedMobileProvisionTaskBase.cs" />
     <Compile Include="Tasks\FindWatchOS1AppExtensionBundleTaskBase.cs" />
+    <Compile Include="Tasks\GetDirectoriesTaskBase.cs" />
     <Compile Include="Tasks\GetFilesTaskBase.cs" />
     <Compile Include="Tasks\GetFullPathTaskBase.cs" />
     <Compile Include="Tasks\GetPropertyValueTaskBase.cs" />
