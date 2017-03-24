@@ -28,7 +28,7 @@ Copyright (C) 2015 Xamarin Inc. All rights reserved.
 
 	<!-- TargetFrameworkDirectory needs to point to ours, and FrameworkPathOverride does not work in xbuild, so we must override. -->
 	<Target Name="GetFrameworkPaths"
-                Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'"
+                Condition="'$(TargetFrameworkIdentifier)' == 'FullFramework'"
                 DependsOnTargets="$(GetFrameworkPathsDependsOn)">
                 <CreateProperty Value="$(XamarinMacFrameworkRoot)/lib/mono/4.5/">
                         <Output TaskParameter="Value" PropertyName="TargetFrameworkDirectory"/>
@@ -38,7 +38,7 @@ Copyright (C) 2015 Xamarin Inc. All rights reserved.
 	<!-- We only need to extend GetReferenceAssemblyPaths slightly, so we can force facades to only comes from our copy -->
 	<!-- but there is no invoking of a base target in msbuild. Copied from Microsoft.Common.targets with small changes -->
 	<Target Name="GetReferenceAssemblyPaths" 
-		Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'"
+		Condition="'$(TargetFrameworkIdentifier)' == 'FullFramework'"
 		DependsOnTargets="$(GetReferenceAssemblyPathsDependsOn)">
 
 		<ItemGroup Condition="'$(ImplicitlyExpandDesignTimeFacades)' == 'true'">
@@ -54,7 +54,7 @@ Copyright (C) 2015 Xamarin Inc. All rights reserved.
 
 	<!-- This lets us bypass the standard MSBuild resolution of mscorlib, which always picks an incompatible system copy. -->
         <Target Name="_AddCorlibReference" 
-		Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'"
+		Condition="'$(TargetFrameworkIdentifier)' == 'FullFramework'"
 		DependsOnTargets="GetReferenceAssemblyPaths">
   		<ItemGroup>
                         <_ExplicitReference Include="$(XamarinMacFrameworkRoot)/lib/mono/4.5/mscorlib.dll">

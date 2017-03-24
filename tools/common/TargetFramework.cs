@@ -79,8 +79,8 @@ namespace Xamarin.Utils
 			var fields = targetFrameworkString.Split (new char [] { ',' });
 			switch (fields.Length) {
 			case 1:
-				// This is just a version number, in which case default identifier to .NETFramework.
-				identifier = ".NETFramework";
+				// This is just a version number, in which case default identifier to FullFramework.
+				identifier = "FullFramework";
 				version = fields [0];
 				break;
 			case 2:
@@ -181,8 +181,8 @@ namespace Xamarin.Utils
 		public override string ToString ()
 		{
 			var id = Identifier;
-			if (String.Equals (id, ".NETFramework", StringComparison.OrdinalIgnoreCase))
-				id = ".NETFramework";
+			if (String.Equals (id, "FullFramework", StringComparison.OrdinalIgnoreCase))
+				id = "FullFramework";
 			else if (String.Equals (id, "Xamarin.Mac", StringComparison.OrdinalIgnoreCase))
 				id = "Xamarin.Mac";
 

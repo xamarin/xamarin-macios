@@ -21,8 +21,8 @@ namespace Xamarin.Mac.Tasks
 				if (TargetFrameworkIdentifier == "Xamarin.Mac") {
 					isModern = true; // Expected case for Modern targetting
 				}
-				else if (TargetFrameworkIdentifier == ".NETFramework") {
-					isModern = false; // Expected case for XM 4.5
+				else if (TargetFrameworkIdentifier == "FullFramework") {
+					isModern = false; // Expected case for Full framework
 				}
 				else { // If it is something else, don't guess
 					Log.LogError ("BTouch doesn't know how to deal with TargetFrameworkIdentifier: " + TargetFrameworkIdentifier);
@@ -60,7 +60,7 @@ namespace Xamarin.Mac.Tasks
 				case "":
 				case "Xamarin.Mac":
 					return "/target-framework=Xamarin.Mac,Version=v2.0,Profile=Modern";
-				case ".NETFramework":
+				case "FullFramework":
 					return "/target-framework=Xamarin.Mac,Version=v4.5,Profile=Full";
 				default:
 					Log.LogError ($"Unknown target framework identifier: {TargetFrameworkIdentifier}.");

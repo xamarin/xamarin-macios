@@ -45,9 +45,9 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.XM45.xbuild.targets"
-		Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework' And '$(IsXBuild)' == 'true' "/>
+		Condition="'$(TargetFrameworkIdentifier)' == 'FullFramework' And '$(IsXBuild)' == 'true' "/>
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets"
-		Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework' And '$(IsXBuild)' == 'false' "/>
+		Condition="'$(TargetFrameworkIdentifier)' == 'FullFramework' And '$(IsXBuild)' == 'false' "/>
 
 	<!-- Override the CoreCompile Target to use btouch -->
 	<Target Name="_GenerateBindings"
