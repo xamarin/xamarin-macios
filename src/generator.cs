@@ -425,7 +425,7 @@ public class MemberInformation
 	public readonly Type type;
 	public readonly Type category_extension_type;
 	public readonly bool is_abstract, is_protected, is_internal, is_unified_internal, is_override, is_new, is_sealed, is_static, is_thread_static, is_autorelease, is_wrapper, is_forced;
-	public readonly bool is_type_sealed, ignore_category_static_warnings;
+	public readonly bool is_type_sealed, ignore_category_static_warnings, is_basewrapper_protocol_method;
 	public readonly Generator.ThreadCheck threadCheck;
 	public bool is_unsafe, is_virtual_method, is_export, is_category_extension, is_variadic, is_interface_impl, is_extension_method, is_appearance, is_model, is_ctor;
 	public bool is_return_release;
@@ -491,9 +491,10 @@ public class MemberInformation
 		
 	}
 
-	public MemberInformation (IMemberGatherer gather, MethodInfo mi, Type type, Type category_extension_type, bool is_interface_impl = false, bool is_extension_method = false, bool is_appearance = false, bool is_model = false, string selector = null)
+	public MemberInformation (IMemberGatherer gather, MethodInfo mi, Type type, Type category_extension_type, bool is_interface_impl = false, bool is_extension_method = false, bool is_appearance = false, bool is_model = false, string selector = null, bool isBaseWrapperProtocolMethod = false)
 	: this (gather, (MemberInfo)mi, type, is_interface_impl, is_extension_method, is_appearance, is_model)
 	{
+		is_basewrapper_protocol_method = isBaseWrapperProtocolMethod;
 		foreach (ParameterInfo pi in mi.GetParameters ())
 			if (pi.ParameterType.IsSubclassOf (TypeManager.System_Delegate))
 				is_unsafe = true;
@@ -4812,9 +4813,9 @@ public partial class Generator : IMemberGatherer {
 	}
 
 
-	void GenerateMethod (Type type, MethodInfo mi, bool is_model, Type category_extension_type, bool is_appearance, bool is_interface_impl = false, bool is_extension_method = false, string selector = null)
+	void GenerateMethod (Type type, MethodInfo mi, bool is_model, Type category_extension_type, bool is_appearance, bool is_interface_impl = false, bool is_extension_method = false, string selector = null, bool isBaseWrapperProtocolMethod = false)
 	{
-		var minfo = new MemberInformation (this, mi, type, category_extension_type, is_interface_impl, is_extension_method, is_appearance, is_model, selector);
+		var minfo = new MemberInformation (this, mi, type, category_extension_type, is_interface_impl, is_extension_method, is_appearance, is_model, selector, isBaseWrapperProtocolMethod);
 		GenerateMethod (minfo);
 	}
 
@@ -4938,6 +4939,11 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		if (AttributeManager.HasAttribute<AsyncAttribute> (mi)) {
+			// We do not want Async methods inside internal wrapper classes, they are useless
+			// internal sealed class FooWrapper : BaseWrapper, IMyFooDelegate
+			if (minfo.is_basewrapper_protocol_method)
+				return;
+
 			GenerateAsyncMethod (minfo, AsyncMethodKind.Plain);
 
 			// Generate the overload with the out parameter
@@ -5318,7 +5324,7 @@ public partial class Generator : IMemberGatherer {
 		print ("");
 		// Methods
 		foreach (var mi in requiredInstanceMethods) {
-			GenerateMethod (type, mi, false, null, false, true);
+			GenerateMethod (type, mi, false, null, false, true, isBaseWrapperProtocolMethod:true);
 		}
 		foreach (var pi in requiredInstanceProperties) {
 			GenerateProperty (type, pi, null, false, true);
