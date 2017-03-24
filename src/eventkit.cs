@@ -619,7 +619,11 @@ namespace XamCore.EventKit {
 
 		[Since (6,0)]
 		[Export ("fetchRemindersMatchingPredicate:completion:")]
+#if XAMCORE_4_0
 		[Async]
+#else
+		[Async (allowNonVoidReturnType: true)]
+#endif
 		IntPtr FetchReminders (NSPredicate predicate, Action<EKReminder[]> completion);
 
 		[Since (6,0)]

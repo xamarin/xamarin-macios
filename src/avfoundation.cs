@@ -9638,7 +9638,12 @@ namespace XamCore.AVFoundation {
 
 		[Since (6,0), Mavericks]
 		[Export ("seekToDate:completionHandler:")]
+
+#if XAMCORE_4_0
 		[Async]
+#else
+		[Async (allowNonVoidReturnType: true)]
+#endif
 		bool Seek (NSDate date, AVCompletion completion);
 
 		[Since (6,0), Mavericks]

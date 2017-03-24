@@ -203,6 +203,10 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 
 <h3><a name='BI1116'/>BI1116: The parameter '*' in the delegate '*' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback]. Declare a custom delegate instead of using System.Action / System.Func and add the attribute on the corresponding parameter.</h3>
 
+<h3><a name='BI1118'/> BI1118: [Async] is used in {0}.{1} where its return type isn't 'System.Void'. The return value will be ignored in the 'async' member.</h3>
+
+Please review [[AsyncAttribute]](https://developer.xamarin.com/guides/cross-platform/macios/binding/binding-types-reference/#AsyncAttribute) documentation.
+
 <!-- 2xxx: reserved -->
 <!-- 3xxx: reserved -->
 <!-- 4xxx: reserved -->

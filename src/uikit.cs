@@ -3808,7 +3808,11 @@ namespace XamCore.UIKit {
 		//
 		[Since (7,0)]
 		[Export ("startInteractiveTransitionToCollectionViewLayout:completion:")]
-		[Async (ResultTypeName="UICollectionViewTransitionResult")]
+#if XAMCORE_4_0
+		[Async (ResultTypeName = "UICollectionViewTransitionResult")]
+#else
+		[Async (ResultTypeName = "UICollectionViewTransitionResult", AllowNonVoidReturnType = true)]
+#endif
 		UICollectionViewTransitionLayout StartInteractiveTransition (UICollectionViewLayout newCollectionViewLayout,
 									     UICollectionViewLayoutInteractiveTransitionCompletion completion);
 
@@ -14924,7 +14928,11 @@ namespace XamCore.UIKit {
 		void Dismiss (bool animated);
 
 		[Export ("presentAnimated:completionHandler:")]
+#if XAMCORE_4_0
 		[Async (ResultTypeName = "UIPrintInteractionResult")]
+#else
+		[Async (ResultTypeName = "UIPrintInteractionResult", AllowNonVoidReturnType = true)]
+#endif
 		// documentation (and header) mistake that Apple corrected (IIRC I filled that issue)
 #if XAMCORE_2_0
 		bool
@@ -14934,7 +14942,11 @@ namespace XamCore.UIKit {
 		Present (bool animated, UIPrintInteractionCompletionHandler completion);
 
 		[Export ("presentFromBarButtonItem:animated:completionHandler:")]
+#if XAMCORE_4_0
 		[Async (ResultTypeName = "UIPrintInteractionResult")]
+#else
+		[Async (ResultTypeName = "UIPrintInteractionResult", AllowNonVoidReturnType = true)]
+#endif
 		// documentation (and header) mistake that Apple corrected (IIRC I filled that issue)
 #if XAMCORE_2_0
 		bool
@@ -14944,7 +14956,11 @@ namespace XamCore.UIKit {
 		PresentFromBarButtonItem (UIBarButtonItem item, bool animated, UIPrintInteractionCompletionHandler completion);
 
 		[Export ("presentFromRect:inView:animated:completionHandler:")]
+#if XAMCORE_4_0
 		[Async (ResultTypeName = "UIPrintInteractionResult")]
+#else
+		[Async (ResultTypeName = "UIPrintInteractionResult", AllowNonVoidReturnType = true)]
+#endif
 		// documentation (and header) mistake that Apple corrected (IIRC I filled that issue)
 #if XAMCORE_2_0
 		bool

@@ -5898,37 +5898,65 @@ namespace XamCore.Foundation
 
 		[Export ("dataTaskWithRequest:completionHandler:")]
 		[return: ForcedType]
-		[Async (ResultTypeName="NSUrlSessionDataTaskRequest", PostNonResultSnippet = "result.Resume ();")]
+#if XAMCORE_4_0
+		[Async (ResultTypeName = "NSUrlSessionDataTaskRequest", PostNonResultSnippet = "result.Resume ();")]
+#else
+		[Async (ResultTypeName = "NSUrlSessionDataTaskRequest", PostNonResultSnippet = "result.Resume ();", AllowNonVoidReturnType = true)]
+#endif
 		NSUrlSessionDataTask CreateDataTask (NSUrlRequest request, [NullAllowed] NSUrlSessionResponse completionHandler);
 	
 		[Export ("dataTaskWithURL:completionHandler:")]
 		[return: ForcedType]
-		[Async(ResultTypeName="NSUrlSessionDataTaskRequest", PostNonResultSnippet = "result.Resume ();")]
+#if XAMCORE_4_0
+		[Async (ResultTypeName = "NSUrlSessionDataTaskRequest", PostNonResultSnippet = "result.Resume ();")]
+#else
+		[Async (ResultTypeName = "NSUrlSessionDataTaskRequest", PostNonResultSnippet = "result.Resume ();", AllowNonVoidReturnType = true)]
+#endif
 		NSUrlSessionDataTask CreateDataTask (NSUrl url, [NullAllowed] NSUrlSessionResponse completionHandler);
 	
 		[Export ("uploadTaskWithRequest:fromFile:completionHandler:")]
 		[return: ForcedType]
-		[Async(ResultTypeName="NSUrlSessionDataTaskRequest", PostNonResultSnippet = "result.Resume ();")]
+#if XAMCORE_4_0
+		[Async (ResultTypeName = "NSUrlSessionDataTaskRequest", PostNonResultSnippet = "result.Resume ();")]
+#else
+		[Async (ResultTypeName = "NSUrlSessionDataTaskRequest", PostNonResultSnippet = "result.Resume ();", AllowNonVoidReturnType = true)]
+#endif
 		NSUrlSessionUploadTask CreateUploadTask (NSUrlRequest request, NSUrl fileURL, NSUrlSessionResponse completionHandler);
 	
 		[Export ("uploadTaskWithRequest:fromData:completionHandler:")]
 		[return: ForcedType]
-		[Async(ResultTypeName="NSUrlSessionDataTaskRequest", PostNonResultSnippet = "result.Resume ();")]
+#if XAMCORE_4_0
+		[Async (ResultTypeName = "NSUrlSessionDataTaskRequest", PostNonResultSnippet = "result.Resume ();")]
+#else
+		[Async (ResultTypeName = "NSUrlSessionDataTaskRequest", PostNonResultSnippet = "result.Resume ();", AllowNonVoidReturnType = true)]
+#endif
 		NSUrlSessionUploadTask CreateUploadTask (NSUrlRequest request, NSData bodyData, NSUrlSessionResponse completionHandler);
 	
 		[Export ("downloadTaskWithRequest:completionHandler:")]
 		[return: ForcedType]
-		[Async(ResultTypeName="NSUrlSessionDownloadTaskRequest", PostNonResultSnippet = "result.Resume ();")]
+#if XAMCORE_4_0
+		[Async (ResultTypeName = "NSUrlSessionDownloadTaskRequest", PostNonResultSnippet = "result.Resume ();")]
+#else
+		[Async (ResultTypeName = "NSUrlSessionDownloadTaskRequest", PostNonResultSnippet = "result.Resume ();", AllowNonVoidReturnType = true)]
+#endif
 		NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request, [NullAllowed] NSUrlDownloadSessionResponse completionHandler);
 	
 		[Export ("downloadTaskWithURL:completionHandler:")]
 		[return: ForcedType]
-		[Async(ResultTypeName="NSUrlSessionDownloadTaskRequest", PostNonResultSnippet = "result.Resume ();")]
+#if XAMCORE_4_0
+		[Async (ResultTypeName = "NSUrlSessionDownloadTaskRequest", PostNonResultSnippet = "result.Resume ();")]
+#else
+		[Async (ResultTypeName = "NSUrlSessionDownloadTaskRequest", PostNonResultSnippet = "result.Resume ();", AllowNonVoidReturnType = true)]
+#endif
 		NSUrlSessionDownloadTask CreateDownloadTask (NSUrl url, [NullAllowed] NSUrlDownloadSessionResponse completionHandler);
 
 		[Export ("downloadTaskWithResumeData:completionHandler:")]
 		[return: ForcedType]
-		[Async(ResultTypeName="NSUrlSessionDownloadTaskRequest", PostNonResultSnippet = "result.Resume ();")]
+#if XAMCORE_4_0
+		[Async (ResultTypeName = "NSUrlSessionDownloadTaskRequest", PostNonResultSnippet = "result.Resume ();")]
+#else
+		[Async (ResultTypeName = "NSUrlSessionDownloadTaskRequest", PostNonResultSnippet = "result.Resume ();", AllowNonVoidReturnType = true)]
+#endif
 		NSUrlSessionDownloadTask CreateDownloadTaskFromResumeData (NSData resumeData, [NullAllowed] NSUrlDownloadSessionResponse completionHandler);
 
         

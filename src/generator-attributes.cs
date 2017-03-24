@@ -769,10 +769,20 @@ public class AsyncAttribute : Attribute {
 	//This works with 4 kinds of callbacks: (), (NSError), (result), (result, NSError)
 	public AsyncAttribute () {}
 
+	public AsyncAttribute (bool allowNonVoidReturnType)
+	{
+		AllowNonVoidReturnType = allowNonVoidReturnType;
+	}
+
 	//This works with 2 kinds of callbacks: (...) and (..., NSError).
 	//Parameters are passed in order to a constructor in resultType
 	public AsyncAttribute (Type resultType) {
 		ResultType = resultType;
+	}
+
+	public AsyncAttribute (Type resultType, bool allowNonVoidReturnType) : this (resultType)
+	{
+		AllowNonVoidReturnType = allowNonVoidReturnType;
 	}
 
 	//This works with 2 kinds of callbacks: (...) and (..., NSError).
@@ -782,10 +792,16 @@ public class AsyncAttribute : Attribute {
 		MethodName = methodName;
 	}
 
+	public AsyncAttribute (string methodName, bool allowNonVoidReturnType) : this (methodName)
+	{
+		AllowNonVoidReturnType = allowNonVoidReturnType;
+	}
+
 	public Type ResultType { get; set; }
 	public string MethodName { get; set; }
 	public string ResultTypeName { get; set; }
 	public string PostNonResultSnippet { get; set; }
+	public bool AllowNonVoidReturnType { get; set; }
 }
 
 //

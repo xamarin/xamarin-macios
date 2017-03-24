@@ -1276,6 +1276,12 @@ Task<string> UploadAsync (string file);
 And on error, the resulting Task will have the exception
 set to an `NSErrorException` that wraps the resulting `NSError`. 
 
+### AsyncAttribute and members with return type different to System.Void
+
+We will issue a warning (BI1118) whenever we find `[Async]` being used on a member whose return type **is not** `System.Void`. If you really want to have `[Async]` on members with different return type to `System.Void` you can silence the warning by using `[Async (allowNonVoidReturnType: true)]`, also using the provided overloads or by setting the property `AllowNonVoidReturnType` to `true` of the `[AsyncAttribute]`.
+
+If you use `[Async]` on a member whose return type **is not** `System.Void` the returned value of the member will be **ignored**.
+
 ### AsyncAttribute.ResultType
 
 
