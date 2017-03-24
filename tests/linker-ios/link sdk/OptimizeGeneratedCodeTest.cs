@@ -184,15 +184,101 @@ namespace Linker.Shared {
 
 			}
 			// the optimization is turned off in case of fat apps (32/64 bits)
-			bool b32 = Directory.Exists (Path.Combine (NSBundle.MainBundle.BundlePath, ".monotouch-32"));
-			bool b64 = Directory.Exists (Path.Combine (NSBundle.MainBundle.BundlePath, ".monotouch-64"));
-			// classic does not use the subdirectories, neither do we for single arch simulator
-			bool classic_or_sim = !b32 && !b64;
-			bool single_arch = !(b32 && b64);
-			if (classic_or_sim || single_arch)
+			if (IsMainExecutableDual ())
 				Assert.IsFalse (contains11 && contains22, "neither instructions removed");
 			// even if disabled this condition remains
 			Assert.IsFalse (!contains11 && !contains22, "both instructions removed");
+		}
+
+		/* definitions from: /usr/include/mach-o/fat.h */
+		const uint FAT_MAGIC = 0xcafebabe;
+		const uint FAT_CIGAM = 0xbebafeca; /* NXSwapLong(FAT_MAGIC) */
+
+		static int ConvertBigEndian (int number)
+		{
+			return (((number >> 24) & 0xFF)
+				| ((number >> 08) & 0xFF00)
+				| ((number << 08) & 0xFF0000)
+				| ((number << 24)));
+		}
+
+		static uint ConvertBigEndian (uint number)
+		{
+			return (((number >> 24) & 0xFF)
+				| ((number >> 08) & 0xFF00)
+				| ((number << 08) & 0xFF0000)
+				| ((number << 24)));
+		}
+
+		static uint ReadUInt32 (BinaryReader reader, bool is_big_endian)
+		{
+			var rv = reader.ReadUInt32 ();
+			if (is_big_endian)
+				rv = ConvertBigEndian (rv);
+			return rv;
+		}
+
+		static int ReadInt32 (BinaryReader reader, bool is_big_endian)
+		{
+			var rv = reader.ReadInt32 ();
+			if (is_big_endian)
+				rv = ConvertBigEndian (rv);
+			return rv;
+		}
+
+		// Checks if the main executable has both a 32-bit architecture and a 64-bit architecture.
+		static bool IsMainExecutableDual ()
+		{
+			var path = NSGetExecutablePath ();
+			using (var reader = new BinaryReader (File.OpenRead (path), System.Text.Encoding.UTF8, false)) {
+				var header = reader.ReadUInt32 ();
+				bool is_big_endian;
+				switch (header) {
+				case FAT_MAGIC:
+					is_big_endian = false;
+					break;
+				case FAT_CIGAM:
+					is_big_endian = true;
+					break;
+				default:
+					return false;
+				}
+				var nfat_arch = ReadUInt32 (reader, is_big_endian);
+				var is32bit = false;
+				var is64bit = false;
+				for (uint i = 0; i < nfat_arch; i++) {
+					var cputype = ReadInt32 (reader, is_big_endian);
+					/*var cpusubtype = */ReadInt32 (reader, is_big_endian);
+					/*var offset = */ReadUInt32 (reader, is_big_endian);
+					/*var size = */ReadUInt32 (reader, is_big_endian);
+					/*var align = */ReadUInt32 (reader, is_big_endian);
+
+					const int CPU_ARCH_ABI64 = 0x01000000;
+					if ((cputype & CPU_ARCH_ABI64) == CPU_ARCH_ABI64) {
+						is64bit = true;
+					} else {
+						is32bit = true;
+					}
+				}
+				return is32bit && is64bit;
+			}
+		}
+
+		[DllImport ("/usr/lib/system/libdyld.dylib")]
+		static extern int _NSGetExecutablePath (IntPtr buf, ref int bufsize);
+		static string NSGetExecutablePath ()
+		{
+			IntPtr buf;
+			int bufsize = 0;
+			_NSGetExecutablePath (IntPtr.Zero, ref bufsize);
+			buf = Marshal.AllocHGlobal (bufsize);
+			try {
+				if (_NSGetExecutablePath (buf, ref bufsize) != 0)
+					throw new Exception ("Could not get executable path");
+				return Marshal.PtrToStringAuto (buf);
+			} finally {
+				Marshal.FreeHGlobal (buf);
+			}
 		}
 
 		[Test]

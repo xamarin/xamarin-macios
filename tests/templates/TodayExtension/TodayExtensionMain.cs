@@ -7,6 +7,7 @@ using UIKit;
 using MonoTouch.NUnit.UI;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Filters;
 
 [Register ("TodayViewController")]
 public partial class TodayViewController : UIViewController, INCWidgetProviding
@@ -20,6 +21,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 	{
 		runner = new ConsoleRunner ();
 		runner.Add (System.Reflection.Assembly.GetExecutingAssembly ());
+		runner.Filter = new NotFilter (new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingInterpreter").Filter);
 		System.Threading.ThreadPool.QueueUserWorkItem ((v) =>
 		{
 			runner.LoadSync ();

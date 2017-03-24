@@ -39,6 +39,7 @@ namespace xharness
 		public string AppPath;
 
 		public TestExecutingResult Result { get; private set; }
+		public string FailureMessage { get; private set; }
 
 		string appName;
 		string appPath;
@@ -735,6 +736,59 @@ namespace xharness
 			} else {
 				Result = TestExecutingResult.Failed;
 			}
+
+			// Check crash reports to see if any of them explains why the test run crashed.
+			if (!success.Value) {
+				int pid = 0;
+				string crash_reason = null;
+				foreach (var crash in crash_reports.Logs) {
+					try {
+						if (pid == 0) {
+							// Find the pid
+							using (var log_reader = main_log.GetReader ()) {
+								string line;
+								while ((line = log_reader.ReadLine ()) != null) {
+									const string str = "was launched with pid '";
+									var idx = line.IndexOf (str, StringComparison.Ordinal);
+									if (idx > 0) {
+										idx += str.Length;
+										var next_idx = line.IndexOf ('\'', idx);
+										if (next_idx > idx)
+											int.TryParse (line.Substring (idx, next_idx - idx), out pid);
+									}
+									if (pid != 0)
+										break;
+								}
+							}
+						}
+
+						using (var crash_reader = crash.GetReader ()) {
+							var text = crash_reader.ReadToEnd ();
+
+							var reader = System.Runtime.Serialization.Json.JsonReaderWriterFactory.CreateJsonReader (Encoding.UTF8.GetBytes (text), new XmlDictionaryReaderQuotas ());
+							var doc = new XmlDocument ();
+							doc.Load (reader);
+							foreach (XmlNode node in doc.SelectNodes ($"/root/processes/item[pid = '" + pid + "']")) {
+								Console.WriteLine (node?.InnerXml);
+								Console.WriteLine (node?.SelectSingleNode ("reason")?.InnerText);
+								crash_reason = node?.SelectSingleNode ("reason")?.InnerText;
+							}
+						}
+						if (crash_reason != null)
+							break;
+					} catch (Exception e) {
+						Console.WriteLine ("Failed to process crash report {1}: {0}", e.Message, crash.Description);
+					}
+				}
+				if (!string.IsNullOrEmpty (crash_reason)) {
+					if (crash_reason == "per-process-limit") {
+						FailureMessage = "Killed due to using too much memory (per-process-limit).";
+					} else {
+						FailureMessage = $"Killed by the OS ({crash_reason})";
+					}
+				}
+			}
+
 			return success.Value ? 0 : 1;
 		}
 

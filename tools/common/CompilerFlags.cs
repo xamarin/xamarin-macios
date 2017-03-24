@@ -19,12 +19,31 @@ namespace Xamarin.Utils
 		public HashSet<string> OtherFlags; // X
 		public HashSet<string> Defines; // -DX
 		public HashSet<string> UnresolvedSymbols; // -u X
+		public HashSet<string> SourceFiles; // X, added to Inputs
 
 		// Here we store a list of all the file-system based inputs
 		// to the compiler. This is used when determining if the
 		// compiler needs to be called in the first place (dependency
 		// tracking).
 		public List<string> Inputs;
+
+		public CompilerFlags (Target target)
+		{
+			if (target == null)
+				throw new ArgumentNullException (nameof (target));
+			this.Target = target;
+		}
+
+		public HashSet<string> AllLibraries {
+			get {
+				var rv = new HashSet<string> ();
+				if (LinkWithLibraries != null)
+					rv.UnionWith (LinkWithLibraries);
+				if (ForceLoadLibraries != null)
+					rv.UnionWith (ForceLoadLibraries);
+				return rv;
+			}
+		}
 
 		public void ReferenceSymbol (string symbol)
 		{
@@ -73,6 +92,13 @@ namespace Xamarin.Utils
 				AddLinkWith (lib, force_load);
 		}
 
+		public void AddSourceFile (string file)
+		{
+			if (SourceFiles == null)
+				SourceFiles = new HashSet<string> ();
+			SourceFiles.Add (file);
+		}
+
 		public void AddOtherFlag (string flag)
 		{
 			if (OtherFlags == null)
@@ -92,27 +118,36 @@ namespace Xamarin.Utils
 
 		public void LinkWithMono ()
 		{
-			// link with the exact path to libmono
-			if (Application.UseMonoFramework.Value) {
-				AddFramework (Path.Combine (Driver.GetProductFrameworksDirectory (Application), "Mono.framework"));
-			} else {
-				AddLinkWith (Path.Combine (Driver.GetMonoTouchLibDirectory (Application), Application.LibMono));
+			var mode = Target.App.LibMonoLinkMode;
+			switch (mode) {
+			case AssemblyBuildTarget.DynamicLibrary:
+			case AssemblyBuildTarget.StaticObject:
+				AddLinkWith (Application.GetLibMono (mode));
+				break;
+			case AssemblyBuildTarget.Framework:
+				AddFramework (Application.GetLibMono (mode));
+				break;
+			default:
+				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", mode);
 			}
 		}
 
 		public void LinkWithXamarin ()
 		{
-			AddLinkWith (Path.Combine (Driver.GetMonoTouchLibDirectory (Application), Application.LibXamarin));
+			var mode = Target.App.LibXamarinLinkMode;
+			switch (mode) {
+			case AssemblyBuildTarget.DynamicLibrary:
+			case AssemblyBuildTarget.StaticObject:
+				AddLinkWith (Application.GetLibXamarin (mode));
+				break;
+			case AssemblyBuildTarget.Framework:
+				AddFramework (Application.GetLibXamarin (mode));
+				break;
+			default:
+				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", mode);
+			}
 			AddFramework ("Foundation");
 			AddOtherFlag ("-lz");
-		}
-
-		public void LinkWithPInvokes (Abi abi)
-		{
-			if (!Application.FastDev || !Application.RequiresPInvokeWrappers)
-				return;
-
-			AddOtherFlag (Driver.Quote (Path.Combine (Application.Cache.Location, "libpinvokes." + abi.AsArchString () + ".dylib")));
 		}
 
 		public void AddFramework (string framework)
@@ -212,6 +247,13 @@ namespace Xamarin.Utils
 				foreach (var symbol in UnresolvedSymbols)
 					args.Append (" -u ").Append (Driver.Quote ("_" + symbol));
 			}
+
+			if (SourceFiles != null) {
+				foreach (var src in SourceFiles) {
+					args.Append (' ').Append (Driver.Quote (src));
+					AddInput (src);
+				}
+			}
 		}
 
 		void ProcessFrameworksForArguments (StringBuilder args)
@@ -234,7 +276,7 @@ namespace Xamarin.Utils
 					args.Append (" -Xlinker -rpath -Xlinker @executable_path/../../Frameworks");
 			}
 
-			if (Application.FastDev)
+			if (Application.HasAnyDynamicLibraries)
 				args.Append (" -Xlinker -rpath -Xlinker @executable_path");
 		}
 
@@ -255,6 +297,13 @@ namespace Xamarin.Utils
 			var args = new StringBuilder ();
 			WriteArguments (args);
 			return args.ToString ();
+		}
+
+		public void PopulateInputs ()
+		{
+			var args = new StringBuilder ();
+			Inputs = new List<string> ();
+			WriteArguments (args);
 		}
 	}
 }

@@ -228,7 +228,7 @@ namespace xharness
 			}
 		}
 
-		public static void AddCompileInclude (this XmlDocument csproj, string link, string include)
+		public static void AddCompileInclude (this XmlDocument csproj, string link, string include, bool prepend = false)
 		{
 			var compile_node = csproj.SelectSingleNode ("//*[local-name() = 'Compile']");
 			var item_group = compile_node.ParentNode;
@@ -240,7 +240,10 @@ namespace xharness
 			var linkElement = csproj.CreateElement ("Link", MSBuild_Namespace);
 			linkElement.InnerText = link;
 			node.AppendChild (linkElement);
-			item_group.AppendChild (node);
+			if (prepend)
+				item_group.PrependChild (node);
+			else 
+				item_group.AppendChild (node);
 		}
 
 		public static void FixCompileInclude (this XmlDocument csproj, string include, string newInclude)
@@ -381,7 +384,13 @@ namespace xharness
 		public static void FixTestLibrariesReferences (this XmlDocument csproj, string platform)
 		{
 			var nodes = csproj.SelectNodes ("//*[local-name() = 'ObjcBindingNativeLibrary' or local-name() = 'ObjcBindingNativeFramework']");
-			var test_libraries = new string [] { "libtest.a", "XTest.framework", "XStaticArTest.framework", "XStaticObjectTest.framework" };
+			var test_libraries = new string [] {
+				"libtest.a",
+				"libtest2.a",
+				"XTest.framework",
+				"XStaticArTest.framework",
+				"XStaticObjectTest.framework"
+			};
 			foreach (XmlNode node in nodes) {
 				var includeAttribute = node.Attributes ["Include"];
 				if (includeAttribute != null) {
@@ -641,6 +650,7 @@ namespace xharness
 				"AssemblyOriginatorKeyFile",
 				"CodesignEntitlements",
 				"TestLibrariesDirectory",
+				"HintPath",
 			};
 			var attributes_with_paths = new string [] []
 			{
@@ -662,6 +672,10 @@ namespace xharness
 				new string [] { "ObjcBindingNativeLibrary", "Include" },
 				new string [] { "ObjcBindingNativeFramework", "Include" },
 			};
+			var nodes_with_variables = new string []
+			{
+				"MtouchExtraArgs",
+			};
 			Func<string, string> convert = (input) =>
 			{
 				if (input [0] == '/')
@@ -677,6 +691,12 @@ namespace xharness
 				var nodes = csproj.SelectElementNodes (key);
 				foreach (var node in nodes)
 					node.InnerText = convert (node.InnerText);
+			}
+			foreach (var key in nodes_with_variables) {
+				var nodes = csproj.SelectElementNodes (key);
+				foreach (var node in nodes) {
+					node.InnerText = node.InnerText.Replace ("${ProjectDir}", Harness.Quote (System.IO.Path.GetDirectoryName (project_path)));
+				}
 			}
 			foreach (var kvp in attributes_with_paths) {
 				var element = kvp [0];

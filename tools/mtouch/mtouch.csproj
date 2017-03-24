@@ -9,6 +9,7 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>mtouch</AssemblyName>
     <RootNamespace>mtouch</RootNamespace>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>

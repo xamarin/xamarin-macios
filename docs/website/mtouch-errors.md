@@ -367,9 +367,69 @@ A last-straw solution would be to use a different version of Xamarin.iOS, one th
 
 <h3><a name="MT0096"/>MT0096: No reference to Xamarin.iOS.dll was found.</h3>
 
-<h3><a name="MT0099"/>Internal error *. Please file a bug report with a test case (http://bugzilla.xamarin.com).</h3>
+<!-- MT0097: used by mmp -->
+
+<h3><a name="MT0099"/>MT0099: Internal error *. Please file a bug report with a test case (http://bugzilla.xamarin.com).</h3>
+
+This error message is reported when an internal consistency check in Xamarin.iOS fails.
 
 This indicates a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
+
+<h3><a name="MT0100"/>Invalid assembly build target: '*'. Please file a bug report with a test case (http://bugzilla.xamarin.com).</h3>
+
+This error message is reported when an internal consistency check in Xamarin.iOS fails.
+
+This is always a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
+
+<h3><a name="MT0101"/>The assembly '*' is specified multiple times in --assembly-build-target arguments.</h3>
+
+The assembly mentioned in the error message is specified multiple times in --assembly-build-target arguments. Please make sure each assembly is only mentioned once.
+
+<h3><a name="MT0102"/>The assemblies '*' and '*' have the same target name ('*'), but different targets ('*' and '*').</h3>
+
+The assemblies mentioned in the error message have conflicting build targets.
+
+For example:
+
+    --assembly-build-target:Assembly1.dll=framework=MyBinary --assembly-build-target:Assembly2.dll=dynamiclibrary=MyBinary
+
+This example is trying to create both a dynamic library and a framework with the same make (`MyBinary`).
+
+<h3><a name="MT0103"/>The static object '*' contains more than one assembly ('*'), but each static object must correspond with exactly one assembly.</h3>
+
+The assemblies mentioned in the error message are all compiled to a single static object. This is not allowed, every assembly must be compiled to a different static object.
+
+For example:
+
+    --assembly-build-target:Assembly1.dll=staticobject=MyBinary --assembly-build-target:Assembly2.dll=staticobject=MyBinary
+
+This example tries to build a static object (`MyBinary`) comprised of two assemblies (`Assembly1.dll` and `Assembly2.dll`), which is not allowed.
+
+<h3><a name="MT0105"/>MT0105: No assembly build target was specified for '*'.</h3>
+
+When specifying the assembly build target using --assembly-build-target, every assembly in the app must have a build target assigned.
+
+This error is reported when the assembly mentioned in the error message does not have an assembly build target assigned.
+
+See the documentation about --assembly-build-target for further information.
+
+<h3><a name="MT0106"/>MT0106: The assembly build target name '*' is invalid: the character '*' is not allowed.</h3>
+
+The assembly build target name must be a valid filename.
+
+For example these values will trigger this error:
+
+    --assembly-build-target:Assembly1.dll=staticobject=my/path.o
+
+because `my/path.o` is not a valid filename due to the directory separator character.
+
+<h3><a name="MT0108"/>MT0108: The assembly build target '*' did not match any assemblies.</h3>
+
+<h3><a name="MT0109"/>MT0109: The assembly '{0}' was loaded from a different path than the provided path (provided path: {1}, actual path: {2}).</h3>
+
+This is a warning indicating that an assembly referenced by the application was loaded from a different location than requested.
+
+This might mean that the app is referencing multiple assemblies with the same name, but from different locations, which might lead to unexpected results (only the first assembly will be used).
 
 <h3><a name="MT0110"/>MT0110: Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.</h3>
 
@@ -386,6 +446,81 @@ Bitcode has been enabled automatically because this version of Xamarin.iOS does 
 No action is required on your part, this message is purely informational.
 
 For further information see bug #[51634](https://bugzilla.xamarin.com/show_bug.cgi?id=51634).
+
+<h3><a name="MT0112"/>MT0112: Native code sharing has been disabled because *</h3>
+
+There are multiple reasons code sharing can be disabled:
+
+* because the container app's deployment target is earlier than iOS 8.0 (it's *)).
+
+Native code sharing requires iOS 8.0 because native code sharing is implemented using user frameworks, which was introduced with iOS 8.0.
+
+* because the container app includes I18N assemblies (*).
+
+Native code sharing is currently not supported if the container app includes I18N assemblies.
+
+* because the container app has custom xml definitions for the managed linker (*).
+
+Native code sharing requires is not supported for projects that use custom xml definitions for the managed linker.
+
+
+<h3><a name="MT0113"/>MT0113: Native code sharing has been disabled for the extension '*' because *.</h3>
+
+* because the bitcode options differ between the container app (*) and the extension (*).
+
+Native code sharing requires that the bitcode options match between the projects that share code.
+
+* because the --assembly-build-target options are different between the container app (*) and the extension (*).
+
+Native code sharing requires that the --assembly-build-target options are identical between the projects that share code.
+
+This condition can occur if incremental builds are not either enabled or disabled in all the projects.
+
+* because the I18N assemblies are different between the container app (*) and the extension (*).
+
+Native code sharing is currently not supported for extensions that include I18N assemblies.
+
+* because the arguments to the AOT compiler are different between the container app (*) and the extension (*).
+
+Native code sharing requires that the arguments to the AOT compiler do not differ between projects that share code.
+
+* because the other arguments to the AOT compiler are different between the container app (*) and the extension (*).
+
+Native code sharing requires that the arguments to the AOT compiler do not differ between projects that share code.
+
+This condition occurs if the 'Perform all 32-bit float operations as 64-bit float' differs between projects.
+
++ because LLVM is not enabled or disabled in both the container app (*) and the extension (*).
+
+Native code sharing requires that LLVM is either enabled or disabled for all projects that share code.
+
+* because the managed linker settings are different between the container app (*) and the extension (*).
+
+Native code sharing requires that the managed linker settings are identical for all projects that share code.
+
+* because the skipped assemblies for the managed linker are different between the container app (*) and the extension (*).
+
+Native code sharing requires that the managed linker settings are identical for all projects that share code.
+
+* because the extension has custom xml definitions for the managed linker (*).
+
+Native code sharing requires is not supported for projects that use custom xml definitions for the managed linker.
+
+* because the container app does not build for the ABI * (while the extension is building for this ABI).
+
+Native code sharing requires that the container app builds for all the architectures any app extension builds for.
+
+For instance: this condition occurs when an extension builds for ARM64+ARMv7, but the container app only builds for ARM64.
+
+* because the container app is building for the ABI *, which is not compatible with the extension's ABI (*).
+
+Native code sharing requires that all the projects build for the exact same API.
+
+For instance: this condition occurs when an extension builds for ARMv7+llvm+thumb2, but the container app only builds for ARMv7+llvm.
+
+* because the container app is referencing the assembly '*' from '*', while the extension references it from '*'.
+
+Native code sharing requires that all the projects that share code use the same versions for all assemblies.
 
 <h3><a name="MT0127"/>MT0127: Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.</h3>
 
@@ -926,6 +1061,14 @@ To fix this warning, open the project file in a text editor, and remove all `Mto
 
 This means there is an error on the [custom XML linker configuration file](https://developer.xamarin.com/guides/cross-platform/advanced/custom_linking/) you provided, please review your file.
 
+<h3><a name="MT2018"/>MT2018: The assembly '*' is referenced from two different locations: '*' and '*'.</h3>
+
+The assembly mentioned in the error message is loaded from multiple locations. Make sure to always use the same version of an assembly.
+
+<h3><a name="MT2019"/>MT2019: Can not load the root assembly '*'</h3>
+
+The root assembly could not be loaded. Please verify that the path in the error message refers to an existing file, and that it's a valid .NET assembly.
+
 <h3><a name="MT202x"/>MT202x: Binding Optimizer failed processing `...`.</h3>
 
 Something unexpected occured when trying to optimize generated binding code. The element causing the issue is named in the error message. In order to fix this issue the assembly named (or containing the type or method named) will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
@@ -1297,6 +1440,11 @@ This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzil
 
 <h3><a name="MT5104"/>MT5104 Could not find neither the '*' nor the '*' compiler. Please install Xcode 'Command-Line Tools' component</h3>
 
+
+<h3><a name="MT5106"/>MT5106: Could not compile the file(s) '*'. Please file a bug report at http://bugzilla.xamarin.com</h3>
+
+This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
 ### MT52xx: Linking
 
 <!--
@@ -1445,6 +1593,12 @@ There are a few possible solutions:
 <h3><a name="MT5215"/>MT5215: References to '*' might require additional -framework=XXX or -lXXX instructions to the native linker</h3>
 
 This is a warning, indicating that a P/Invoke was detected to reference the library in question, but the app is not linking with it.
+
+<h3><a name="MT5216"/>MT5216: Native linking failed for *. Please file a bug report at http://bugzilla.xamarin.com</h3>
+
+This error is reported when linking the output from the AOT compiler.
+
+This error most likely indicates a bug in Xamarin.iOS. Please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
 ### MT53xx: Other tools
 

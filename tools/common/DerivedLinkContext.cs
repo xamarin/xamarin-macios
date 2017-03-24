@@ -11,7 +11,6 @@ namespace Xamarin.Tuner
 	{
 		internal StaticRegistrar StaticRegistrar;
 		Dictionary<string, List<MemberReference>> required_symbols;
-		List<MethodDefinition> marshal_exception_pinvokes;
 		Dictionary<string, TypeDefinition> objectivec_classes;
 
 		// SDK candidates - they will be preserved only if the application (not the SDK) uses it
@@ -62,14 +61,6 @@ namespace Xamarin.Tuner
 				if (required_symbols == null)
 					required_symbols = new Dictionary<string, List<MemberReference>> ();
 				return required_symbols;
-			}
-		}
-
-		public List<MethodDefinition> MarshalExceptionPInvokes {
-			get {
-				if (marshal_exception_pinvokes == null)
-					marshal_exception_pinvokes = new List<MethodDefinition> ();
-				return marshal_exception_pinvokes;
 			}
 		}
 

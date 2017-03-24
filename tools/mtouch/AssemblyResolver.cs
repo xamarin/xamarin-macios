@@ -116,6 +116,11 @@ namespace MonoTouch.Tuner {
 			return assembly;
 		}
 
+		public void Add (AssemblyDefinition assembly)
+		{
+			cache [Path.GetFileNameWithoutExtension (assembly.MainModule.FileName)] = assembly;
+		}
+
 		public AssemblyDefinition Resolve (string fullName)
 		{
 			return Resolve (AssemblyNameReference.Parse (fullName), null);

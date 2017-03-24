@@ -20,6 +20,8 @@ namespace MonoTouch.Tuner {
 				// 6.3.x requires mono 3.0.x to be installed so the path will be valid
 				// using /usr/bin/mono-cil-strip is not always safe, e.g. bug #12459
 
+				Driver.Log (1, "Stripping assembly {0} to {1}", assembly_file, output_file);
+
 				string tool = "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/mono-cil-strip.exe";
 				string cmd = tool + " " + Driver.Quote (assembly_file) + " " + Driver.Quote (output_file);
 				if (Driver.RunCommand ("/Library/Frameworks/Mono.framework/Versions/Current/bin/mono", cmd) != 0)

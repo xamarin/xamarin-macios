@@ -17,7 +17,7 @@ using Xamarin.Tuner;
 namespace MonoTouch.Tuner {
 
 	public class LinkerOptions {
-		public AssemblyDefinition MainAssembly { get; set; }
+		public IEnumerable<AssemblyDefinition> MainAssemblies { get; set; }
 		public string OutputDirectory { get; set; }
 		public LinkMode LinkMode { get; set; }
 		public AssemblyResolver Resolver { get; set; }
@@ -61,11 +61,12 @@ namespace MonoTouch.Tuner {
 
 	class Linker {
 
-		public static void Process (LinkerOptions options, out MonoTouchLinkContext context, out List<string> assemblies)
+		public static void Process (LinkerOptions options, out MonoTouchLinkContext context, out List<AssemblyDefinition> assemblies)
 		{
 			var pipeline = CreatePipeline (options);
 
-			pipeline.PrependStep (new MobileResolveMainAssemblyStep (options.MainAssembly));
+			foreach (var ad in options.MainAssemblies)
+				pipeline.PrependStep (new MobileResolveMainAssemblyStep (ad));
 
 			context = CreateLinkContext (options, pipeline);
 			context.Resolver.AddSearchDirectory (options.OutputDirectory);
@@ -192,22 +193,17 @@ namespace MonoTouch.Tuner {
 			return pipeline;
 		}
 
-		static List<string> ListAssemblies (MonoTouchLinkContext context)
+		static List<AssemblyDefinition> ListAssemblies (MonoTouchLinkContext context)
 		{
-			var list = new List<string> ();
+			var list = new List<AssemblyDefinition> ();
 			foreach (var assembly in context.GetAssemblies ()) {
 				if (context.Annotations.GetAction (assembly) == AssemblyAction.Delete)
 					continue;
 
-				list.Add (GetFullyQualifiedName (assembly));
+				list.Add (assembly);
 			}
 
 			return list;
-		}
-
-		static string GetFullyQualifiedName (AssemblyDefinition assembly)
-		{
-			return assembly.MainModule.FileName;
 		}
 
 		static ResolveFromXmlStep GetResolveStep (string filename)
