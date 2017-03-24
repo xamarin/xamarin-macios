@@ -99,8 +99,8 @@ namespace Xamarin.Bundler {
 	//			MM52xx	linking
 	//					MM5202	Mono.framework MDK is missing. Please install the MDK for your Mono.framework version from http://mono-project.com/Downloads
 	//					MM5203  Can't find libxammac.a, likely because of a corrupted Xamarin.Mac installation. Please reinstall Xamarin.Mac.
-	//					MM5204  Invalid architecture. x86_64 is only supported with the mobile profile.
-	//					MM5205  Invalid architecture '{0}'. Valid architectures are i386 and x86_64 (when --profile=mobile).
+	//					MM5204  Invalid architecture. x86_64 is only supported with the modern profile.
+	//					MM5205  Invalid architecture '{0}'. Valid architectures are i386 and x86_64 (when --profile=modern).
 	//					MM5206	** reserved mtouch **
 	//					MM5207	** reserved mtouch **
 	//					MM5208	** reserved mtouch **

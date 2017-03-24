@@ -28,12 +28,12 @@ ifdef IKVM
 MAC_GENERATOR = $(MAC_CURRENT_DIR)/bin/bgen
 MAC_CLASSIC_GENERATOR = $(MAC_CURRENT_DIR)/bin/bgen --target-framework=XamMac,v1.0
 MAC_FULL_GENERATOR    = $(MAC_CURRENT_DIR)/bin/bgen --target-framework=Xamarin.Mac,Version=v4.5,Profile=Full
-MAC_MOBILE_GENERATOR  = $(MAC_CURRENT_DIR)/bin/bgen --target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile
+MAC_MOBILE_GENERATOR  = $(MAC_CURRENT_DIR)/bin/bgen --target-framework=Xamarin.Mac,Version=v2.0,Profile=Modern
 else
 MAC_GENERATOR = $(MAC_CURRENT_DIR)/bin/bmac
 MAC_CLASSIC_GENERATOR = $(MAC_GENERATOR)
 MAC_FULL_GENERATOR    = $(MAC_GENERATOR) --unified-full-profile
-MAC_MOBILE_GENERATOR  = $(MAC_GENERATOR) --unified-mobile-profile
+MAC_MOBILE_GENERATOR  = $(MAC_GENERATOR) --unified-modern-profile
 endif
 MAC_TESTS = bmac_smoke bmac-with-hyphen-in-name property-redefination-mac NSApplicationPublicEnsureMethods protocol-duplicate-abstract
 MAC_CUSTOM_TESTS = bug31788 protocol-duplicate-abstract-error protocol-duplicate-method-diff-length protocol-duplicate-method-diff-out protocol-duplicate-method-diff-type protocol-duplicate-method-diff-return

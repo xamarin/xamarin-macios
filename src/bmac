@@ -31,7 +31,7 @@ for arg in "$@"; do
 	elif [[ $arg =~ ^(/|-{1,2})unified-full-profile$ ]]; then
 		full_profile=1
 		new_style=1
-	elif [[ $arg =~ ^(/|-{1,2})unified-mobile-profile$ ]]; then
+	elif [[ $arg =~ ^(/|-{1,2})unified-modern-profile$ ]]; then
 		mobile_profile=1
 		new_style=1
 	fi
@@ -57,7 +57,7 @@ mobile|xamarin.mac|xammac)
 			bmac=bmac-full.exe
 			export MONO_PATH=$ROOT_DIR/lib/reference/full
 		elif [[ "$mobile_profile" -eq 1 ]]; then
-			refs="-baselib:$ROOT_DIR/lib/reference/mobile/Xamarin.Mac.dll --target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile"
+			refs="-baselib:$ROOT_DIR/lib/reference/mobile/Xamarin.Mac.dll --target-framework=Xamarin.Mac,Version=v2.0,Profile=Modern"
 			bmac=bmac-mobile.exe
 			export MONO_PATH=$ROOT_DIR/lib/mono/Xamarin.Mac
 			mono="$ROOT_DIR/bin/bmac-mobile-mono"

@@ -138,8 +138,8 @@ namespace Xamarin.Bundler {
 
 		public static bool IsUnifiedFullXamMacFramework { get; private set; }
 		public static bool IsUnifiedFullSystemFramework { get; private set; }
-		public static bool IsUnifiedMobile { get; private set; }
-		public static bool IsUnified { get { return IsUnifiedFullSystemFramework || IsUnifiedMobile || IsUnifiedFullXamMacFramework; } }
+		public static bool IsUnifiedModern { get; private set; }
+		public static bool IsUnified { get { return IsUnifiedFullSystemFramework || IsUnifiedModern || IsUnifiedFullXamMacFramework; } }
 		public static bool IsClassic { get { return !IsUnified; } }
 
 		public static bool Is64Bit { 
@@ -158,29 +158,29 @@ namespace Xamarin.Bundler {
 
 		public static string GetPlatformFrameworkDirectory (Application app)
 		{
-			if (IsUnifiedMobile)
+			if (IsUnifiedModern)
 				return Path.Combine (MMPDirectory, "lib", "mono", "Xamarin.Mac");
 			else if (IsUnifiedFullXamMacFramework)
 				return Path.Combine (MMPDirectory, "lib", "mono", "4.5");
-			throw new InvalidOperationException ("PlatformFrameworkDirectory when not Mobile or Full?");
+			throw new InvalidOperationException ("PlatformFrameworkDirectory when not Modern or Full?");
 		}
 
 		public static string GetArch32Directory (Application app)
 		{
-			if (IsUnifiedMobile)
+			if (IsUnifiedModern)
 				return Path.Combine (MMPDirectory, "lib", "i386", "mobile");
 			else if (IsUnifiedFullXamMacFramework)
 				return Path.Combine (MMPDirectory, "lib", "i386", "full");
-			throw new InvalidOperationException ("Arch32Directory when not Mobile or Full?");
+			throw new InvalidOperationException ("Arch32Directory when not Modern or Full?");
 		}
 		
 		public static string GetArch64Directory (Application app)
 		{
-			if (IsUnifiedMobile)
+			if (IsUnifiedModern)
 				return Path.Combine (MMPDirectory, "lib", "x86_64", "mobile");
 			else if (IsUnifiedFullXamMacFramework)
 				return Path.Combine (MMPDirectory, "lib", "x86_64", "full");
-			throw new InvalidOperationException ("Arch64Directory when not Mobile or Full?");
+			throw new InvalidOperationException ("Arch64Directory when not Modern or Full?");
 		}
 					
 
@@ -358,8 +358,8 @@ namespace Xamarin.Bundler {
 					true /* this is an internal option */
 				},
 				{ "xamarin-framework-directory=", "The framework directory", v => { xm_framework_dir = v; }, true },
-				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullXamMacFramework = true; } },
-				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullSystemFramework = true; } },
+				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM Full Target Framework", v => { IsUnifiedFullXamMacFramework = true; } },
+				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM Full Target Framework", v => { IsUnifiedFullSystemFramework = true; } },
 				{ "aot:", "Specify assemblies that should be experimentally AOT compiled\n- none - No AOT (default)\n- all - Every assembly in MonoBundle\n- core - Xamarin.Mac, System, mscorlib\n- sdk - Xamarin.Mac.dll and BCL assemblies\n- |hybrid after option enables hybrid AOT which allows IL stripping but is slower\n - Individual files can be included for AOT via +FileName.dll and excluded via -FileName.dll\n\nExamples:\n  --aot:all,-MyAssembly.dll\n  --aot:core|hybird,+MyOtherAssembly.dll,-mscorlib.dll",
 					v => {
 						aotOptions = new AOTOptions (v);
@@ -410,7 +410,7 @@ namespace Xamarin.Bundler {
 				targetFramework = TargetFramework.Default;
 
 			if (TargetFramework.Identifier == TargetFramework.Xamarin_Mac_2_0.Identifier) {
-				IsUnifiedMobile = true;
+				IsUnifiedModern = true;
 			} else if (!IsUnifiedFullXamMacFramework && !IsUnifiedFullSystemFramework) {
 				// This is a total hack. Instead of passing in an argument, we walk the refernces looking for
 				// the "right" Xamarin.Mac and assume you are doing something
@@ -455,19 +455,19 @@ namespace Xamarin.Bundler {
 				throw new MonoMacException (1404, true, "Target framework '{0}' is invalid.", userTargetFramework);
 
 			// sanity check as this should never happen: we start out by not setting any
-			// Unified/Classic properties, and only IsUnifiedMobile if we are are on the
+			// Unified/Classic properties, and only IsUnifiedModern if we are are on the
 			// XM framework. If we are not, we set IsUnifiedFull to true iff we detect
 			// an explicit reference to the full unified Xamarin.Mac assembly; that is
-			// only one of IsUnifiedMobile or IsUnifiedFull should ever be true. IsUnified
-			// is true if one of IsUnifiedMobile or IsUnifiedFull is true; IsClassic is
+			// only one of IsUnifiedModern or IsUnifiedFull should ever be true. IsUnified
+			// is true if one of IsUnifiedModern or IsUnifiedFull is true; IsClassic is
 			// implied if IsUnified is not true;
-			int IsUnifiedCount = IsUnifiedMobile ? 1 : 0;
+			int IsUnifiedCount = IsUnifiedModern ? 1 : 0;
 			if (IsUnifiedFullSystemFramework)
 				IsUnifiedCount++;
 			if (IsUnifiedFullXamMacFramework)
 				IsUnifiedCount++;
 			if (IsUnified == IsClassic || (IsUnified && IsUnifiedCount != 1))
-				throw new Exception ("IsClassic/IsUnified/IsUnifiedMobile/IsUnifiedFullSystemFramework/IsUnifiedFullXamMacFramework logic regression");
+				throw new Exception ("IsClassic/IsUnified/IsUnifiedModern/IsUnifiedFullSystemFramework/IsUnifiedFullXamMacFramework logic regression");
 
 			if ((IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework) && (App.LinkMode != LinkMode.None))
 				throw new MonoMacException (2007, true,
@@ -478,8 +478,8 @@ namespace Xamarin.Bundler {
 				ErrorHelper.Warning (2014, "Xamarin.Mac Extensions do not support linking. Request for linking will be ignored.");
 			}
 
-			if (!IsUnifiedMobile && tls_provider != null)
-				throw new MonoMacException (2011, true, "Selecting a TLS Provider is only supported in the Unified Mobile profile");
+			if (!IsUnifiedModern && tls_provider != null)
+				throw new MonoMacException (2011, true, "Selecting a TLS Provider is only supported in the Unified Modern profile");
 
 
 			ValidateXcode ();
@@ -818,7 +818,7 @@ namespace Xamarin.Bundler {
 				if (!IsUnified)
 					throw new MonoMacException (98, true, "AOT compilation is only available on Unified");
 				AOTCompilerType compilerType;
-				if (IsUnifiedMobile || IsUnifiedFullXamMacFramework)
+				if (IsUnifiedModern || IsUnifiedFullXamMacFramework)
 					compilerType = Is64Bit ? AOTCompilerType.Bundled64 : AOTCompilerType.Bundled32; 
 				else if (IsUnifiedFullSystemFramework)
 					compilerType = Is64Bit ? AOTCompilerType.System64 : AOTCompilerType.System32; 
@@ -902,7 +902,7 @@ namespace Xamarin.Bundler {
 		static string MonoDirectory {
 			get {
 				if (mono_dir == null) {
-					if (IsUnifiedFullXamMacFramework || IsUnifiedMobile) {
+					if (IsUnifiedFullXamMacFramework || IsUnifiedModern) {
 						mono_dir = GetXamMacPrefix ();
 					} else {
 						var dir = new StringBuilder ();
@@ -1177,10 +1177,10 @@ namespace Xamarin.Bundler {
 				break;
 			case "x86_64":
 				if (IsClassic)
-					throw new MonoMacException (5204, true, "Invalid architecture. x86_64 is only supported with the mobile profile.");
+					throw new MonoMacException (5204, true, "Invalid architecture. x86_64 is only supported with the modern profile.");
 				break;
 			default:
-				throw new MonoMacException (5205, true, "Invalid architecture '{0}'. Valid architectures are i386 and x86_64 (when --profile=mobile).", arch);
+				throw new MonoMacException (5205, true, "Invalid architecture '{0}'. Valid architectures are i386 and x86_64 (when --profile=modern).", arch);
 			}
 
 			if (IsUnified && !arch_set)
@@ -1266,7 +1266,7 @@ namespace Xamarin.Bundler {
 				}
 
 				if (registrar == RegistrarMode.PartialStatic) {
-					args.Append (Path.Combine (GetXamMacPrefix (), "lib", string.Format ("mmp/Xamarin.Mac.registrar.{0}.a ", IsUnifiedMobile ? "mobile" : "full")));
+					args.Append (Path.Combine (GetXamMacPrefix (), "lib", string.Format ("mmp/Xamarin.Mac.registrar.{0}.a ", IsUnifiedModern ? "mobile" : "full")));
 					args.Append ("-framework Quartz ");
 				}
 
@@ -1667,7 +1667,7 @@ namespace Xamarin.Bundler {
 		}
 
 		static void CopyConfiguration () {
-			if (IsUnifiedMobile) {
+			if (IsUnifiedModern) {
 				CopyResourceFile ("config_mobile", "config");
 			}
 			else {
@@ -1820,7 +1820,7 @@ namespace Xamarin.Bundler {
 					return Path.Combine (GetXamMacPrefix (), "lib", arch, (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework) ? "full" : "mobile", fileName);
 				default:
 					throw new MonoMacException (5205, true, "Invalid architecture '{0}'. " +
-						"Valid architectures are i386 and x86_64 (when --profile=mobile).", arch);
+						"Valid architectures are i386 and x86_64 (when --profile=modern).", arch);
 				}
 			}
 			return assembly;

@@ -23,7 +23,7 @@ namespace MonoMac.Tuner {
 
 			base.Process (context);
 
-			// the resources are not part of the mobile profile (just the "classic" mono BCL)
+			// the resources are not part of the modern profile (just the "classic" mono BCL)
 			if (Profile.Current is MobileProfile)
 				return;
 
