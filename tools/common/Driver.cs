@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 
 using Xamarin.Utils;
 using XamCore.ObjCRuntime;
@@ -228,6 +229,11 @@ namespace Xamarin.Bundler {
 			return 0;
 		}
 
+		public static Task<int> RunCommandAsync (string path, string args, string [] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
+		{
+			return Task.Run (() => RunCommand (path, args, env, output, suppressPrintOnErrors));
+		}
+
 #if !MMP_TEST
 		static void FileMove (string source, string target)
 		{
@@ -265,6 +271,7 @@ namespace Xamarin.Bundler {
 
 			try {
 				if (!File.Exists (path)) {
+					Directory.CreateDirectory (Path.GetDirectoryName (path));
 					File.WriteAllText (path, contents);
 					Log (3, "File '{0}' does not exist, creating it.", path);
 					return;

@@ -34,7 +34,7 @@ using PlatformLinkContext = MonoMac.Tuner.MonoMacLinkContext;
 namespace Xamarin.Bundler {
 	public partial class Target {
 		public Application App;
-		public List<Assembly> Assemblies = new List<Assembly> ();
+		public AssemblyCollection Assemblies = new AssemblyCollection (); // The root assembly is not in this list.
 
 		public PlatformLinkContext LinkContext;
 		public LinkerOptions LinkerOptions;
@@ -62,9 +62,9 @@ namespace Xamarin.Bundler {
 					a.ExtractNativeLinkInfo ();
 
 #if MTOUCH
-					if (App.FastDev && a.HasLinkWithAttributes && App.EnableBitCode) {
+					if (a.HasLinkWithAttributes && App.EnableBitCode && !App.OnlyStaticLibraries) {
 						ErrorHelper.Warning (110, "Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.");
-						App.FastDev = false;
+						App.ClearAssemblyBuildTargets (); // the default is to compile to static libraries, so just revert to the default.
 					}
 #endif
 				} catch (Exception e) {
@@ -73,9 +73,9 @@ namespace Xamarin.Bundler {
 			}
 
 #if MTOUCH
-			if (App.FastDev && Assemblies.Count ((v) => v.HasLinkWithAttributes) > 1) {
+			if (!App.OnlyStaticLibraries && Assemblies.Count ((v) => v.HasLinkWithAttributes) > 1) {
 				ErrorHelper.Warning (127, "Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.");
-				App.FastDev = false;
+				App.ClearAssemblyBuildTargets (); // the default is to compile to static libraries, so just revert to the default.
 			}
 #endif
 		}

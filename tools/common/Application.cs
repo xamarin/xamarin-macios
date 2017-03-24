@@ -35,7 +35,7 @@ namespace Xamarin.Bundler {
 
 	public partial class Application
 	{
-		public Cache Cache = new Cache ();
+		public Cache Cache;
 		public string AppDirectory = ".";
 		public bool DeadStrip = true;
 		public bool EnableDebug;
@@ -60,11 +60,22 @@ namespace Xamarin.Bundler {
 		public MarshalManagedExceptionMode MarshalManagedExceptions;
 		public bool IsDefaultMarshalManagedExceptionMode;
 		public string RootAssembly;
+		public List<Application> SharedCodeApps = new List<Application> (); // List of appexes we're sharing code with.
 		public string RegistrarOutputLibrary;
 
 		public static int Concurrency => Driver.Concurrency;
 		public Version DeploymentTarget;
 		public Version SdkVersion;
+
+		public Application (string[] arguments)
+		{
+			Cache = new Cache (arguments);
+		}
+
+		// This is just a name for this app to show in log/error messages, etc.
+		public string Name {
+			get { return Path.GetFileNameWithoutExtension (AppDirectory); }
+		}
 
 		public bool RequiresPInvokeWrappers {
 			get {

@@ -235,46 +235,49 @@ namespace LinkAll {
 			Assert.NotNull (system, "System");
 		}
 
+		string FindAssemblyPath ()
+		{
+			var filename = Path.GetFileName (GetType ().Assembly.Location);
+			var bundlePath = NSBundle.MainBundle.BundlePath;
+			var isExtension = bundlePath.EndsWith (".appex", StringComparison.Ordinal);
+			var mainBundlePath = bundlePath;
+			if (isExtension)
+				mainBundlePath = Path.GetDirectoryName (Path.GetDirectoryName (bundlePath));
+			foreach (var filepath in Directory.EnumerateFiles (mainBundlePath, filename, SearchOption.AllDirectories)) {
+				var fname = Path.GetFileName (filepath);
+				if (filepath.EndsWith ($"{fname}.framework/{fname}", StringComparison.Ordinal)) {
+					// This isn't the assembly, but the native AOT'ed executable for the assembly.
+					continue;
+				}
+
+				if (isExtension) {
+					return "../../" + filepath.Substring (mainBundlePath.Length + 1);
+				} else {
+					return filepath.Substring (mainBundlePath.Length + 1);
+				}
+			}
+			throw new FileNotFoundException ($"Could not find the assembly ${filename} in the bundle {bundlePath}.");
+		}
+
 		[Test]
 		public void Assembly_LoadFile ()
 		{
-			string filename = Path.GetFileName (GetType ().Assembly.Location);
-			try {
-				Assert.NotNull (Assembly.LoadFile (filename), "1");
-			}
-			catch (FileNotFoundException) { 
-				// 2nd chance since FAT 32/64 applications moved the assemblies (but that could prove an issue too)
-				filename = Path.Combine (IntPtr.Size == 4 ? ".monotouch-32" : ".monotouch-64", filename);
-				Assert.NotNull (Assembly.LoadFile (filename), "2");
-			}
+			string filename = FindAssemblyPath ();
+			Assert.NotNull (Assembly.LoadFile (filename), "1");
 		}
 
 		[Test]
 		public void Assembly_LoadFrom ()
 		{
-			string filename = Path.GetFileName (GetType ().Assembly.Location);
-			try {
-				Assert.NotNull (Assembly.LoadFrom (filename), "1");
-			}
-			catch (FileNotFoundException) { 
-				// 2nd chance since FAT 32/64 applications moved the assemblies (but that could prove an issue too)
-				filename = Path.Combine (IntPtr.Size == 4 ? ".monotouch-32" : ".monotouch-64", filename);
-				Assert.NotNull (Assembly.LoadFrom (filename), "2");
-			}
+			string filename = FindAssemblyPath ();
+			Assert.NotNull (Assembly.LoadFrom (filename), "1");
 		}
 
 		[Test]
 		public void Assembly_ReflectionOnlyLoadFrom ()
 		{
-			string filename = Path.GetFileName (GetType ().Assembly.Location);
-			try {
-				Assert.NotNull (Assembly.ReflectionOnlyLoadFrom (filename), "1");
-			}
-			catch (FileNotFoundException) { 
-				// 2nd chance since FAT 32/64 applications moved the assemblies (but that could prove an issue too)
-				filename = Path.Combine (IntPtr.Size == 4 ? ".monotouch-32" : ".monotouch-64", filename);
-				Assert.NotNull (Assembly.ReflectionOnlyLoadFrom (filename), "2");
-			}
+			string filename = FindAssemblyPath ();
+			Assert.NotNull (Assembly.ReflectionOnlyLoadFrom (filename), "1");
 		}
 
 		[Test]

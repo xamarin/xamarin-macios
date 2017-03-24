@@ -18,6 +18,12 @@ public class Cache {
 
 	string cache_dir;
 	bool temporary_cache;
+	string[] arguments;
+
+	public Cache (string[] arguments)
+	{
+		this.arguments = arguments;
+	}
 
 	public bool IsCacheTemporary {
 		get { return temporary_cache; }
@@ -61,11 +67,6 @@ public class Cache {
 #endif
 		Directory.Delete (Location, true);
 		Directory.CreateDirectory (Location);
-	}
-	
-	public bool Exists (string file)
-	{
-		return File.Exists (Path.Combine (Location, file));
 	}
 
 	public static bool CompareFiles (string a, string b, bool ignore_cache = false)
@@ -166,10 +167,10 @@ public class Cache {
 		} while (true);
 	}
 	
-	static string GetArgumentsForCacheData ()
+	string GetArgumentsForCacheData ()
 	{
 		var sb = new StringBuilder ();
-		var args = new List<string> (Environment.GetCommandLineArgs ());
+		var args = new List<string> (arguments);
 
 		sb.Append ("# Version: ").Append (Constants.Version).Append ('.').Append (Constants.Revision).AppendLine ();
 		if (args.Count > 0)
@@ -196,7 +197,7 @@ public class Cache {
 		return sb.ToString ();
 	}
 
-	bool IsCacheValid ()
+	public bool IsCacheValid ()
 	{
 		var name = "arguments";
 		var pcache = Path.Combine (Location, name);
@@ -210,9 +211,9 @@ public class Cache {
 		}
 
 		// Check if mtouch/mmp has been modified.
-		var mtouch = Path.Combine (Driver.DriverBinDirectory, NAME);
-		if (!Application.IsUptodate (mtouch, pcache)) {
-			Driver.Log (3, "A full rebuild will be performed because mtouch has been modified.");
+		var executable = System.Reflection.Assembly.GetExecutingAssembly ().Location;
+		if (!Application.IsUptodate (executable, pcache)) {
+			Driver.Log (3, "A full rebuild will be performed because " + NAME + " has been modified.");
 			return false;
 		}
 
