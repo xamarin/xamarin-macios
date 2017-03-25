@@ -5139,6 +5139,7 @@ public partial class Generator : IMemberGatherer {
 		var optionalInstanceMethods = allProtocolMethods.Where ((v) => !IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v));
 		var requiredInstanceProperties = allProtocolProperties.Where ((v) => IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v)).ToList ();
 		var optionalInstanceProperties = allProtocolProperties.Where ((v) => !IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v));
+		var requiredInstanceAsyncMethods = requiredInstanceMethods.Where (m => AttributeManager.HasAttribute<AsyncAttribute> (m)).ToList ();
 
 		PrintAttributes (type, platform:true, preserve:true, advice:true);
 		print ("[Protocol (Name = \"{1}\", WrapperType = typeof ({0}Wrapper){2})]", TypeName, protocol_name, protocolAttribute.IsInformal ? ", IsInformal = true" : string.Empty);
@@ -5292,7 +5293,7 @@ public partial class Generator : IMemberGatherer {
 		// avoid (for unified) all the metadata for empty static classes, we can introduce them later when required
 		bool include_extensions = false;
 		if (UnifiedAPI) {
-			include_extensions = optionalInstanceMethods.Any () || optionalInstanceProperties.Any ();
+			include_extensions = optionalInstanceMethods.Any () || optionalInstanceProperties.Any () || requiredInstanceAsyncMethods.Any ();
 		} else {
 			include_extensions = true;
 		}
@@ -5303,6 +5304,16 @@ public partial class Generator : IMemberGatherer {
 			indent++;
 			foreach (var mi in optionalInstanceMethods)
 				GenerateMethod (type, mi, false, null, false, false, true);
+
+			// Generate Extension Methods of required [Async] decorated methods (we already do optional) 
+			foreach (var ami in requiredInstanceAsyncMethods) {
+				var minfo = new MemberInformation (this, ami, type, null, is_extension_method: true);
+				GenerateAsyncMethod (minfo, AsyncMethodKind.Plain);
+
+				// Generate the overload with the out parameter
+				if (minfo.method.ReturnType != TypeManager.System_Void)
+					GenerateAsyncMethod (minfo, AsyncMethodKind.WithResultOutParameter);
+			}
 
 			// C# does not support extension properties, so create Get* and Set* accessors instead.
 			foreach (var pi in optionalInstanceProperties) {

@@ -21,7 +21,7 @@ else
 IOS_GENERATOR = $(IOS_CURRENT_DIR)/bin/btouch-native /baselib:$(IOS_CURRENT_DIR)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll /unsafe
 endif
 IOS_TESTS = bug15283 bug15307 bug15799 bug16036 sof20696157 bug23041 bug27430 bug27428 bug34042 btouch-with-hyphen-in-name property-redefination-ios arrayfromhandlebug bug36457 bug39614 bug40282 bug17232 bug24078-ignore-methods-events strong-dict-support-templated-dicts bug43579 bindastests
-IOS_CUSTOM_TESTS = forum54078 desk63279 desk79124 multiple-api-definitions1 multiple-api-definitions2 bug29493 classNameCollision bi1036 bug37527 bug27986 bug35176 bi1046 bindas1048error bindas1049error bindas1050modelerror bindas1050protocolerror virtualwrap bug42855 bug52570 bug52570classinternal bug52570methodinternal bug52570allowstaticmembers bug42742 warnaserror nowarn noasyncinternalwrapper noasyncwarningcs0219
+IOS_CUSTOM_TESTS = forum54078 desk63279 desk79124 multiple-api-definitions1 multiple-api-definitions2 bug29493 classNameCollision bi1036 bug37527 bug27986 bug35176 bi1046 bindas1048error bindas1049error bindas1050modelerror bindas1050protocolerror virtualwrap bug42855 bug52570 bug52570classinternal bug52570methodinternal bug52570allowstaticmembers bug42742 warnaserror nowarn noasyncinternalwrapper noasyncwarningcs0219 bug53076
 
 MAC_CURRENT_DIR=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 ifdef IKVM
@@ -243,6 +243,14 @@ noasyncinternalwrapper:
 
 noasyncwarningcs0219:
 	$(if $(V),,@echo "$@";) !($(IOS_GENERATOR) $@.cs 2>&1 | grep "warning CS0219" > /dev/null 2>&1)
+
+bug53076:
+	@rm -Rf $@.tmpdir
+	@mkdir -p $@.tmpdir
+	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) --sourceonly:$@.source -tmpdir=$@.tmpdir $@.cs
+	@if [ `grep -r "Async (this IMyFooProtocol" $@.tmpdir/Bug53076Test | wc -l` -ne 10 ]; then \
+		echo "Error: Expected 10 'Async (this IMyFooProtocol' matches in generated code. If you modified code that generates extension FooRequiredMethodAsync (AsyncAttribute) please update the 'Async (this IMyFooProtocol' count."; exit 1; \
+	fi
 
 clean-local::
 	rm -f *.dll *.source
