@@ -4958,7 +4958,8 @@ public partial class Generator : IMemberGatherer {
 		if (AttributeManager.HasAttribute<AsyncAttribute> (mi)) {
 			// We do not want Async methods inside internal wrapper classes, they are useless
 			// internal sealed class FooWrapper : BaseWrapper, IMyFooDelegate
-			if (minfo.is_basewrapper_protocol_method)
+			// Also we do not want Async members inside [Model] classes
+			if (minfo.is_basewrapper_protocol_method || minfo.is_model)
 				return;
 
 			GenerateAsyncMethod (minfo, AsyncMethodKind.Plain);
