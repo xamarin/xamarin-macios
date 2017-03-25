@@ -4724,6 +4724,15 @@ public partial class Generator : IMemberGatherer {
 				ttype = "Tuple<bool,NSError>";
 		}
 		print ("var tcs = new TaskCompletionSource<{0}> ();", ttype);
+
+		// Intentionaly disable warning 0219 when method's return type is != void and AsyncMethodKind == Plain we ignore the returned value
+		bool shouldDisable219 = !is_void && asyncKind == AsyncMethodKind.Plain;
+		if (shouldDisable219) {
+			indent-=3;
+			print ("#pragma warning disable 0219 // Intentionaly ignoring result");
+			indent+=3;
+		}
+
 		print ("{6}{5}{4}{0}({1}{2}({3}) => {{",
 		       mi.Name,
 		       GetInvokeParamList (minfo.async_initial_params, false),
@@ -4733,6 +4742,14 @@ public partial class Generator : IMemberGatherer {
 			   is_void ? string.Empty : minfo.GetUniqueParamName ("result") + " = ",
 			   is_void ? string.Empty : (asyncKind == AsyncMethodKind.WithResultOutParameter ? string.Empty : "var ")
 		);
+
+		// Re-enable warning 0219 if needed
+		if (shouldDisable219) {
+			indent-=3;
+			print ("#pragma warning restore 0219");
+			indent+=3;
+		}
+
 		indent++;
 
 		int nesting_level = 1;
