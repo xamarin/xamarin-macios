@@ -4718,37 +4718,24 @@ public partial class Generator : IMemberGatherer {
 		var ttype = "bool";
 		var tuple = false;
 		if (!minfo.is_void_async) {
-				ttype = GetAsyncTaskType (minfo);
+			ttype = GetAsyncTaskType (minfo);
 			tuple = (UnifiedAPI && minfo.has_nserror && (ttype == "bool"));
 			if (tuple)
 				ttype = "Tuple<bool,NSError>";
 		}
 		print ("var tcs = new TaskCompletionSource<{0}> ();", ttype);
-
-		// Intentionaly disable warning 0219 when method's return type is != void and AsyncMethodKind == Plain we ignore the returned value
-		bool shouldDisable219 = !is_void && asyncKind == AsyncMethodKind.Plain;
-		if (shouldDisable219) {
-			indent-=3;
-			print ("#pragma warning disable 0219 // Intentionaly ignoring result");
-			indent+=3;
-		}
-
+		bool ignoreResult = !is_void &&
+			asyncKind == AsyncMethodKind.Plain &&
+			AttributeManager.GetCustomAttribute<AsyncAttribute> (mi).PostNonResultSnippet == null;
 		print ("{6}{5}{4}{0}({1}{2}({3}) => {{",
-		       mi.Name,
-		       GetInvokeParamList (minfo.async_initial_params, false),
-		       minfo.async_initial_params.Length > 0 ? ", " : "",
-		       GetInvokeParamList (minfo.async_completion_params),
-		       minfo.is_extension_method ? "This." : string.Empty,
-			   is_void ? string.Empty : minfo.GetUniqueParamName ("result") + " = ",
-			   is_void ? string.Empty : (asyncKind == AsyncMethodKind.WithResultOutParameter ? string.Empty : "var ")
+			mi.Name,
+			GetInvokeParamList (minfo.async_initial_params, false),
+			minfo.async_initial_params.Length > 0 ? ", " : "",
+			GetInvokeParamList (minfo.async_completion_params),
+			minfo.is_extension_method ? "This." : string.Empty,
+			is_void || ignoreResult ? string.Empty : minfo.GetUniqueParamName ("result") + " = ",
+			is_void || ignoreResult ? string.Empty : (asyncKind == AsyncMethodKind.WithResultOutParameter ? string.Empty : "var ")
 		);
-
-		// Re-enable warning 0219 if needed
-		if (shouldDisable219) {
-			indent-=3;
-			print ("#pragma warning restore 0219");
-			indent+=3;
-		}
 
 		indent++;
 
