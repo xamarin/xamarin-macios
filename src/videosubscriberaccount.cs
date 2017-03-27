@@ -107,7 +107,11 @@ namespace XamCore.VideoSubscriberAccount {
 		[Export ("checkAccessStatusWithOptions:completionHandler:")]
 		void CheckAccessStatus (NSDictionary options, Action<VSAccountAccessStatus, NSError> completionHandler);
 
+#if XAMCORE_4_0
 		[Async]
+#else
+		[Async (allowNonVoidReturnType: true)]
+#endif
 		[Export ("enqueueAccountMetadataRequest:completionHandler:")]
 		VSAccountManagerResult Enqueue (VSAccountMetadataRequest accountMetadataRequest, Action<VSAccountMetadata, NSError> completionHandler);
 	}

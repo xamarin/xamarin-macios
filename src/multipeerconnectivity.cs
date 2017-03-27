@@ -59,7 +59,11 @@ namespace XamCore.MultipeerConnectivity {
 		[Export ("connectedPeers")]
 		MCPeerID [] ConnectedPeers { get; }
 
+#if XAMCORE_4_0
 		[Async]
+#else
+		[Async (allowNonVoidReturnType: true)]
+#endif
 		[Export ("sendResourceAtURL:withName:toPeer:withCompletionHandler:")]
 		NSProgress SendResource (NSUrl resourceUrl, string resourceName, MCPeerID peerID, [NullAllowed] Action<NSError> completionHandler);
 

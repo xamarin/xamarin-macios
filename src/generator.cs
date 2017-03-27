@@ -4573,6 +4573,7 @@ public partial class Generator : IMemberGatherer {
 		public ParameterInfo[] async_initial_params, async_completion_params;
 		public bool has_nserror, is_void_async, is_single_arg_async;
 		public MethodInfo MethodInfo;
+		public bool AllowNonVoidReturnType;
 		
 		public AsyncMethodInfo (IMemberGatherer gather, Type type, MethodInfo mi, Type category_extension_type, bool is_extension_method) : base (gather, mi, type, category_extension_type, false, is_extension_method)
 		{
@@ -4594,6 +4595,8 @@ public partial class Generator : IMemberGatherer {
 				is_void_async = true;
 			if (cbParams.Length == 1)
 				is_single_arg_async = true;
+
+			AllowNonVoidReturnType = AttributeManager.GetCustomAttribute<AsyncAttribute> (mi).AllowNonVoidReturnType;
 		}
 
 		public string GetUniqueParamName (string suggestion)
@@ -4707,6 +4710,8 @@ public partial class Generator : IMemberGatherer {
 		var mi = original_minfo.method;
 		var minfo = new AsyncMethodInfo (this, original_minfo.type, mi, original_minfo.category_extension_type, original_minfo.is_extension_method);
 		var is_void = mi.ReturnType == TypeManager.System_Void;
+		if (!is_void && !minfo.AllowNonVoidReturnType)
+			ErrorHelper.Show (new BindingException (1118, "[Async] is used in {0}.{1} where its return type isn't 'System.Void'. The return value will be ignored in the 'async' member.", mi.DeclaringType.FullName, mi.Name));
 		PrintMethodAttributes (minfo);
 
 		PrintAsyncHeader (minfo, asyncKind);

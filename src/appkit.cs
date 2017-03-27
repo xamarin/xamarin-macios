@@ -13681,7 +13681,7 @@ namespace XamCore.AppKit {
 #if XAMCORE_4_0
 		[Async (ResultTypeName="NSSpellCheckerCandidates")]
 #else
-		[Async (ResultTypeName="NSSpellCheckerCanidates")]
+		[Async (ResultTypeName = "NSSpellCheckerCanidates", AllowNonVoidReturnType = true)]
 #endif
 		[Export ("requestCandidatesForSelectedRange:inString:types:options:inSpellDocumentWithTag:completionHandler:")]
 		nint RequestCandidates (NSRange selectedRange, string stringToCheck, ulong checkingTypes, [NullAllowed] NSDictionary<NSString, NSObject> options, nint tag, [NullAllowed] Action<nint, NSTextCheckingResult []> completionHandler);
