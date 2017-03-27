@@ -106,6 +106,7 @@ namespace Xamarin.Bundler {
 	//					MT0097 <used by mmp>
 	//		Warning		MT0110  Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.
 	//		Warning		MT0111	Bitcode has been enabled because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.
+	//		Warning		MT0127	Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.
 	// MT1xxx	file copy / symlinks (project related)
 	//			MT10xx	installer.cs / mtouch.cs
 	//					MT1001	Could not find an application at the specified directory: {0}
@@ -289,7 +290,7 @@ namespace Xamarin.Bundler {
 	//					MT4164	Cannot export the property '{0}' because its selector '{1}' is an Objective-C keyword. Please use a different name.
 	//					MT4165	The registrar couldn't find the type 'System.Void' in any of the referenced assemblies.
 	//					MT4166	Cannot register the method '{0}' because the signature contains a type ({1}) that isn't a reference type.
-	//					MT4167	Cannot register the method '{0}' because the signature contains a generic type ({1}) with a generic argument type that isn't an NSObject subclass ({2}).
+	//					MT4167	Cannot register the method '{0}' because the signature contains a generic type ({1}) with a generic argument type that doesn't implement INativeObject ({2}).
 	// MT5xxx	GCC and toolchain
 	//			MT51xx	compilation
 	//					MT5101	Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component

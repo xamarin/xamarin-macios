@@ -1958,9 +1958,9 @@ namespace XamCore.Registrar {
 					if (i > 0)
 						sb.Append (", ");
 					var argumentType = git.GenericArguments [i];
-					if (!IsNSObject (argumentType)) {
+					if (!IsINativeObject (argumentType)) {
 						// I believe the generic constraints we have should make this error impossible to hit, but better safe than sorry.
-						AddException (ref exceptions, CreateException (4167, inMethod.Resolve () as MethodDefinition, "Cannot register the method '{0}' because the signature contains a generic type ({1}) with a generic argument type that isn't an NSObject subclass ({2}).", descriptiveMethodName, GetTypeFullName (type), GetTypeFullName (argumentType)));
+						AddException (ref exceptions, CreateException (4167, inMethod.Resolve () as MethodDefinition, "Cannot register the method '{0}' because the signature contains a generic type ({1}) with a generic argument type that doesn't implement INativeObject ({2}).", descriptiveMethodName, GetTypeFullName (type), GetTypeFullName (argumentType)));
 						return "id";
 					}
 					sb.Append (ToObjCParameterType (argumentType, descriptiveMethodName, exceptions, inMethod));
