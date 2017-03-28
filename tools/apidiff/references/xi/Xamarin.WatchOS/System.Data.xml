@@ -13354,6 +13354,18 @@
               </method>
             </methods>
           </class>
+          <class name="PoolBlockingPeriod" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="AlwaysBlock" attrib="32854" fieldtype="System.Data.SqlClient.PoolBlockingPeriod" value="1" />
+              <field name="Auto" attrib="32854" fieldtype="System.Data.SqlClient.PoolBlockingPeriod" value="0" />
+              <field name="NeverBlock" attrib="32854" fieldtype="System.Data.SqlClient.PoolBlockingPeriod" value="2" />
+            </fields>
+          </class>
           <class name="SQLDebugging" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
             <attributes>
               <attribute name="System.Runtime.InteropServices.ClassInterfaceAttribute">
@@ -13420,14 +13432,12 @@
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.String, System.Data.SqlClient.SqlBulkCopyOptions)" attrib="6278">
-                <attributes />
                 <parameters>
                   <parameter name="connectionString" position="0" attrib="0" type="System.String" />
                   <parameter name="copyOptions" position="1" attrib="0" type="System.Data.SqlClient.SqlBulkCopyOptions" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Data.SqlClient.SqlConnection, System.Data.SqlClient.SqlBulkCopyOptions, System.Data.SqlClient.SqlTransaction)" attrib="6278">
-                <attributes />
                 <parameters>
                   <parameter name="connection" position="0" attrib="0" type="System.Data.SqlClient.SqlConnection" />
                   <parameter name="copyOptions" position="1" attrib="0" type="System.Data.SqlClient.SqlBulkCopyOptions" />
@@ -13480,7 +13490,6 @@
                 </methods>
               </property>
               <property name="EnableStreaming" attrib="0" ptype="System.Boolean">
-                <attributes />
                 <methods>
                   <method name="get_EnableStreaming()" attrib="2182" returntype="System.Boolean">
                     <parameters />
@@ -13513,7 +13522,6 @@
                 <parameters />
               </method>
               <method name="WriteToServer(System.Data.Common.DbDataReader)" attrib="134" returntype="System.Void">
-                <attributes />
                 <parameters>
                   <parameter name="reader" position="0" attrib="0" type="System.Data.Common.DbDataReader" />
                 </parameters>
@@ -13540,13 +13548,11 @@
                 </parameters>
               </method>
               <method name="WriteToServerAsync(System.Data.Common.DbDataReader)" attrib="134" returntype="System.Threading.Tasks.Task">
-                <attributes />
                 <parameters>
                   <parameter name="reader" position="0" attrib="0" type="System.Data.Common.DbDataReader" />
                 </parameters>
               </method>
               <method name="WriteToServerAsync(System.Data.Common.DbDataReader, System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task">
-                <attributes />
                 <parameters>
                   <parameter name="reader" position="0" attrib="0" type="System.Data.Common.DbDataReader" />
                   <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
@@ -13880,24 +13886,6 @@
             </methods>
           </class>
           <class name="SqlCommand" type="class" base="System.Data.Common.DbCommand" sealed="true" charset="Ansi" layout="Auto">
-            <attributes>
-              <attribute name="System.ComponentModel.DefaultEventAttribute">
-                <properties>
-                  <property name="Name" value="RecordsAffected" />
-                </properties>
-              </attribute>
-              <attribute name="System.ComponentModel.DesignerAttribute">
-                <properties>
-                  <property name="DesignerBaseTypeName" value="System.ComponentModel.Design.IDesigner" />
-                  <property name="DesignerTypeName" value="Microsoft.VSDesigner.Data.VS.SqlCommandDesigner, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                </properties>
-              </attribute>
-              <attribute name="System.ComponentModel.ToolboxItemAttribute">
-                <properties>
-                  <property name="ToolboxItemTypeName" value="System.Drawing.Design.ToolboxItem, System.Drawing, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                </properties>
-              </attribute>
-            </attributes>
             <interfaces>
               <interface name="System.ComponentModel.IComponent" />
               <interface name="System.Data.IDbCommand" />
@@ -13929,24 +13917,6 @@
             </constructors>
             <properties>
               <property name="CommandText" attrib="0" ptype="System.String">
-                <attributes>
-                  <attribute name="System.ComponentModel.DefaultValueAttribute">
-                    <properties>
-                      <property name="Value" value="" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.EditorAttribute">
-                    <properties>
-                      <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                      <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.SQL.Design.SqlCommandTextEditor, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.RefreshPropertiesAttribute">
-                    <properties>
-                      <property name="RefreshProperties" value="All" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_CommandText()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
                     <parameters />
@@ -13971,18 +13941,6 @@
                 </methods>
               </property>
               <property name="CommandType" attrib="0" ptype="System.Data.CommandType">
-                <attributes>
-                  <attribute name="System.ComponentModel.DefaultValueAttribute">
-                    <properties>
-                      <property name="Value" value="Text" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.RefreshPropertiesAttribute">
-                    <properties>
-                      <property name="RefreshProperties" value="All" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_CommandType()" attrib="2246" virtual="true" is-override="true" returntype="System.Data.CommandType">
                     <parameters />
@@ -13995,19 +13953,6 @@
                 </methods>
               </property>
               <property name="Connection" attrib="0" ptype="System.Data.SqlClient.SqlConnection">
-                <attributes>
-                  <attribute name="System.ComponentModel.DefaultValueAttribute">
-                    <properties>
-                      <property name="Value" value="null" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.EditorAttribute">
-                    <properties>
-                      <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                      <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.DbConnectionEditor, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_Connection()" attrib="2182" returntype="System.Data.SqlClient.SqlConnection">
                     <parameters />
@@ -14051,28 +13996,6 @@
                 </methods>
               </property>
               <property name="DesignTimeVisible" attrib="0" ptype="System.Boolean">
-                <attributes>
-                  <attribute name="System.ComponentModel.BrowsableAttribute">
-                    <properties>
-                      <property name="Browsable" value="False" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.DefaultValueAttribute">
-                    <properties>
-                      <property name="Value" value="True" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.DesignOnlyAttribute">
-                    <properties>
-                      <property name="IsDesignOnly" value="True" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
-                    <properties>
-                      <property name="State" value="Never" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_DesignTimeVisible()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
                     <parameters />
@@ -14085,18 +14008,6 @@
                 </methods>
               </property>
               <property name="Notification" attrib="0" ptype="System.Data.Sql.SqlNotificationRequest">
-                <attributes>
-                  <attribute name="System.ComponentModel.BrowsableAttribute">
-                    <properties>
-                      <property name="Browsable" value="False" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
-                    <properties>
-                      <property name="Visibility" value="Hidden" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_Notification()" attrib="2182" returntype="System.Data.Sql.SqlNotificationRequest">
                     <parameters />
@@ -14109,13 +14020,6 @@
                 </methods>
               </property>
               <property name="NotificationAutoEnlist" attrib="0" ptype="System.Boolean">
-                <attributes>
-                  <attribute name="System.ComponentModel.DefaultValueAttribute">
-                    <properties>
-                      <property name="Value" value="True" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_NotificationAutoEnlist()" attrib="2182" returntype="System.Boolean">
                     <parameters />
@@ -14128,13 +14032,6 @@
                 </methods>
               </property>
               <property name="Parameters" attrib="0" ptype="System.Data.SqlClient.SqlParameterCollection">
-                <attributes>
-                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
-                    <properties>
-                      <property name="Visibility" value="Content" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_Parameters()" attrib="2182" returntype="System.Data.SqlClient.SqlParameterCollection">
                     <parameters />
@@ -14142,18 +14039,6 @@
                 </methods>
               </property>
               <property name="Transaction" attrib="0" ptype="System.Data.SqlClient.SqlTransaction">
-                <attributes>
-                  <attribute name="System.ComponentModel.BrowsableAttribute">
-                    <properties>
-                      <property name="Browsable" value="False" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
-                    <properties>
-                      <property name="Visibility" value="Hidden" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_Transaction()" attrib="2182" returntype="System.Data.SqlClient.SqlTransaction">
                     <parameters />
@@ -14166,13 +14051,6 @@
                 </methods>
               </property>
               <property name="UpdatedRowSource" attrib="0" ptype="System.Data.UpdateRowSource">
-                <attributes>
-                  <attribute name="System.ComponentModel.DefaultValueAttribute">
-                    <properties>
-                      <property name="Value" value="Both" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_UpdatedRowSource()" attrib="2246" virtual="true" is-override="true" returntype="System.Data.UpdateRowSource">
                     <parameters />
@@ -14277,23 +14155,19 @@
                 </parameters>
               </method>
               <method name="ExecuteReaderAsync()" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Data.SqlClient.SqlDataReader]">
-                <attributes />
                 <parameters />
               </method>
               <method name="ExecuteReaderAsync(System.Data.CommandBehavior)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Data.SqlClient.SqlDataReader]">
-                <attributes />
                 <parameters>
                   <parameter name="behavior" position="0" attrib="0" type="System.Data.CommandBehavior" />
                 </parameters>
               </method>
               <method name="ExecuteReaderAsync(System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Data.SqlClient.SqlDataReader]">
-                <attributes />
                 <parameters>
                   <parameter name="cancellationToken" position="0" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
               </method>
               <method name="ExecuteReaderAsync(System.Data.CommandBehavior, System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Data.SqlClient.SqlDataReader]">
-                <attributes />
                 <parameters>
                   <parameter name="behavior" position="0" attrib="0" type="System.Data.CommandBehavior" />
                   <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
@@ -14306,11 +14180,9 @@
                 <parameters />
               </method>
               <method name="ExecuteXmlReaderAsync()" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Xml.XmlReader]">
-                <attributes />
                 <parameters />
               </method>
               <method name="ExecuteXmlReaderAsync(System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Xml.XmlReader]">
-                <attributes />
                 <parameters>
                   <parameter name="cancellationToken" position="0" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
@@ -14323,7 +14195,7 @@
               </method>
             </methods>
           </class>
-          <class name="SqlCommandBuilder" type="class" base="System.Data.Common.DbCommandBuilder" sealed="true" charset="Ansi" layout="Auto">
+          <class name="SqlCommandBuilder" type="class" base="System.Data.Common.DbCommandBuilder" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="System.ComponentModel.IComponent" />
               <interface name="System.IDisposable" />
@@ -14340,23 +14212,6 @@
             </constructors>
             <properties>
               <property name="CatalogLocation" attrib="0" ptype="System.Data.Common.CatalogLocation">
-                <attributes>
-                  <attribute name="System.ComponentModel.BrowsableAttribute">
-                    <properties>
-                      <property name="Browsable" value="False" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
-                    <properties>
-                      <property name="Visibility" value="Hidden" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
-                    <properties>
-                      <property name="State" value="Never" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_CatalogLocation()" attrib="2246" virtual="true" is-override="true" returntype="System.Data.Common.CatalogLocation">
                     <parameters />
@@ -14369,23 +14224,6 @@
                 </methods>
               </property>
               <property name="CatalogSeparator" attrib="0" ptype="System.String">
-                <attributes>
-                  <attribute name="System.ComponentModel.BrowsableAttribute">
-                    <properties>
-                      <property name="Browsable" value="False" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
-                    <properties>
-                      <property name="Visibility" value="Hidden" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
-                    <properties>
-                      <property name="State" value="Never" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_CatalogSeparator()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
                     <parameters />
@@ -14398,13 +14236,6 @@
                 </methods>
               </property>
               <property name="DataAdapter" attrib="0" ptype="System.Data.SqlClient.SqlDataAdapter">
-                <attributes>
-                  <attribute name="System.ComponentModel.DefaultValueAttribute">
-                    <properties>
-                      <property name="Value" value="null" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_DataAdapter()" attrib="2182" returntype="System.Data.SqlClient.SqlDataAdapter">
                     <parameters />
@@ -14417,23 +14248,6 @@
                 </methods>
               </property>
               <property name="QuotePrefix" attrib="0" ptype="System.String">
-                <attributes>
-                  <attribute name="System.ComponentModel.BrowsableAttribute">
-                    <properties>
-                      <property name="Browsable" value="False" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
-                    <properties>
-                      <property name="Visibility" value="Hidden" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
-                    <properties>
-                      <property name="State" value="Never" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_QuotePrefix()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
                     <parameters />
@@ -14446,23 +14260,6 @@
                 </methods>
               </property>
               <property name="QuoteSuffix" attrib="0" ptype="System.String">
-                <attributes>
-                  <attribute name="System.ComponentModel.BrowsableAttribute">
-                    <properties>
-                      <property name="Browsable" value="False" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
-                    <properties>
-                      <property name="Visibility" value="Hidden" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
-                    <properties>
-                      <property name="State" value="Never" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_QuoteSuffix()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
                     <parameters />
@@ -14475,23 +14272,6 @@
                 </methods>
               </property>
               <property name="SchemaSeparator" attrib="0" ptype="System.String">
-                <attributes>
-                  <attribute name="System.ComponentModel.BrowsableAttribute">
-                    <properties>
-                      <property name="Browsable" value="False" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
-                    <properties>
-                      <property name="Visibility" value="Hidden" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
-                    <properties>
-                      <property name="State" value="Never" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_SchemaSeparator()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
                     <parameters />
@@ -14598,13 +14378,6 @@
             </fields>
           </class>
           <class name="SqlConnection" type="class" base="System.Data.Common.DbConnection" sealed="true" charset="Ansi" layout="Auto">
-            <attributes>
-              <attribute name="System.ComponentModel.DefaultEventAttribute">
-                <properties>
-                  <property name="Name" value="InfoMessage" />
-                </properties>
-              </attribute>
-            </attributes>
             <interfaces>
               <interface name="System.ComponentModel.IComponent" />
               <interface name="System.Data.IDbConnection" />
@@ -14629,7 +14402,6 @@
             </constructors>
             <properties>
               <property name="ClientConnectionId" attrib="0" ptype="System.Guid">
-                <attributes />
                 <methods>
                   <method name="get_ClientConnectionId()" attrib="2182" returntype="System.Guid">
                     <parameters />
@@ -14637,35 +14409,11 @@
                 </methods>
               </property>
               <property name="ConnectionString" attrib="0" ptype="System.String">
-                <attributes>
-                  <attribute name="System.ComponentModel.DefaultValueAttribute">
-                    <properties>
-                      <property name="Value" value="" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.EditorAttribute">
-                    <properties>
-                      <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                      <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.SQL.Design.SqlConnectionStringEditor, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.RecommendedAsConfigurableAttribute">
-                    <properties>
-                      <property name="RecommendedAsConfigurable" value="True" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.RefreshPropertiesAttribute">
-                    <properties>
-                      <property name="RefreshProperties" value="All" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_ConnectionString()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
                     <parameters />
                   </method>
                   <method name="set_ConnectionString(System.String)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
-                    <attributes />
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.String" />
                     </parameters>
@@ -14673,13 +14421,6 @@
                 </methods>
               </property>
               <property name="ConnectionTimeout" attrib="0" ptype="System.Int32">
-                <attributes>
-                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
-                    <properties>
-                      <property name="Visibility" value="Hidden" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_ConnectionTimeout()" attrib="2246" virtual="true" is-override="true" returntype="System.Int32">
                     <parameters />
@@ -14699,18 +14440,6 @@
                 </methods>
               </property>
               <property name="DataSource" attrib="0" ptype="System.String">
-                <attributes>
-                  <attribute name="System.ComponentModel.BrowsableAttribute">
-                    <properties>
-                      <property name="Browsable" value="True" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
-                    <properties>
-                      <property name="Visibility" value="Hidden" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_DataSource()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
                     <parameters />
@@ -14718,13 +14447,6 @@
                 </methods>
               </property>
               <property name="Database" attrib="0" ptype="System.String">
-                <attributes>
-                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
-                    <properties>
-                      <property name="Visibility" value="Hidden" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_Database()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
                     <parameters />
@@ -14751,13 +14473,6 @@
                 </methods>
               </property>
               <property name="PacketSize" attrib="0" ptype="System.Int32">
-                <attributes>
-                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
-                    <properties>
-                      <property name="Visibility" value="Hidden" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_PacketSize()" attrib="2182" returntype="System.Int32">
                     <parameters />
@@ -14765,18 +14480,6 @@
                 </methods>
               </property>
               <property name="ServerVersion" attrib="0" ptype="System.String">
-                <attributes>
-                  <attribute name="System.ComponentModel.BrowsableAttribute">
-                    <properties>
-                      <property name="Browsable" value="False" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
-                    <properties>
-                      <property name="Visibility" value="Hidden" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_ServerVersion()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
                     <parameters />
@@ -14784,18 +14487,6 @@
                 </methods>
               </property>
               <property name="State" attrib="0" ptype="System.Data.ConnectionState">
-                <attributes>
-                  <attribute name="System.ComponentModel.BrowsableAttribute">
-                    <properties>
-                      <property name="Browsable" value="False" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
-                    <properties>
-                      <property name="Visibility" value="Hidden" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_State()" attrib="2246" virtual="true" is-override="true" returntype="System.Data.ConnectionState">
                     <parameters />
@@ -14803,13 +14494,6 @@
                 </methods>
               </property>
               <property name="StatisticsEnabled" attrib="0" ptype="System.Boolean">
-                <attributes>
-                  <attribute name="System.ComponentModel.DefaultValueAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_StatisticsEnabled()" attrib="2182" returntype="System.Boolean">
                     <parameters />
@@ -14822,13 +14506,6 @@
                 </methods>
               </property>
               <property name="WorkstationId" attrib="0" ptype="System.String">
-                <attributes>
-                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
-                    <properties>
-                      <property name="Visibility" value="Hidden" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_WorkstationId()" attrib="2182" returntype="System.String">
                     <parameters />
@@ -14915,11 +14592,9 @@
                 <parameters />
               </method>
               <method name="ResetStatistics()" attrib="134" returntype="System.Void">
-                <attributes />
                 <parameters />
               </method>
               <method name="RetrieveStatistics()" attrib="134" returntype="System.Collections.IDictionary">
-                <attributes />
                 <parameters />
               </method>
             </methods>
@@ -15688,6 +15363,30 @@
                   </method>
                 </methods>
               </property>
+              <property name="PoolBlockingPeriod" attrib="0" ptype="System.Data.SqlClient.PoolBlockingPeriod">
+                <attributes>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute">
+                    <properties>
+                      <property name="DisplayNameValue" value="PoolBlockingPeriod" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.RefreshPropertiesAttribute">
+                    <properties>
+                      <property name="RefreshProperties" value="All" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_PoolBlockingPeriod()" attrib="2182" returntype="System.Data.SqlClient.PoolBlockingPeriod">
+                    <parameters />
+                  </method>
+                  <method name="set_PoolBlockingPeriod(System.Data.SqlClient.PoolBlockingPeriod)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Data.SqlClient.PoolBlockingPeriod" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
               <property name="Pooling" attrib="0" ptype="System.Boolean">
                 <attributes>
                   <attribute name="System.ComponentModel.DisplayNameAttribute">
@@ -16325,13 +16024,6 @@
                 </parameters>
               </method>
               <method name="GetChar(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Char">
-                <attributes>
-                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
-                    <properties>
-                      <property name="State" value="Never" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <parameters>
                   <parameter name="i" position="0" attrib="0" type="System.Int32" />
                 </parameters>
@@ -16356,7 +16048,6 @@
                 </parameters>
               </method>
               <method name="GetDateTimeOffset(System.Int32)" attrib="454" virtual="true" returntype="System.DateTimeOffset">
-                <attributes />
                 <parameters>
                   <parameter name="i" position="0" attrib="0" type="System.Int32" />
                 </parameters>
@@ -16470,7 +16161,6 @@
                 </parameters>
               </method>
               <method name="GetSqlChars(System.Int32)" attrib="454" virtual="true" returntype="System.Data.SqlTypes.SqlChars">
-                <attributes />
                 <parameters>
                   <parameter name="i" position="0" attrib="0" type="System.Int32" />
                 </parameters>
@@ -16556,7 +16246,6 @@
                 </parameters>
               </method>
               <method name="GetTimeSpan(System.Int32)" attrib="454" virtual="true" returntype="System.TimeSpan">
-                <attributes />
                 <parameters>
                   <parameter name="i" position="0" attrib="0" type="System.Int32" />
                 </parameters>
@@ -16572,7 +16261,6 @@
                 </parameters>
               </method>
               <method name="GetXmlReader(System.Int32)" attrib="454" virtual="true" returntype="System.Xml.XmlReader">
-                <attributes />
                 <parameters>
                   <parameter name="i" position="0" attrib="0" type="System.Int32" />
                 </parameters>
@@ -16795,7 +16483,7 @@
               </method>
             </methods>
           </class>
-          <class name="SqlException" type="class" base="System.Data.Common.DbException" sealed="true" serializable="true" charset="Ansi" layout="Auto">
+          <class name="SqlException" type="class" base="System.Data.Common.DbException" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
@@ -16808,7 +16496,6 @@
                 </methods>
               </property>
               <property name="ClientConnectionId" attrib="0" ptype="System.Guid">
-                <attributes />
                 <methods>
                   <method name="get_ClientConnectionId()" attrib="2182" returntype="System.Guid">
                     <parameters />
@@ -16816,13 +16503,6 @@
                 </methods>
               </property>
               <property name="Errors" attrib="0" ptype="System.Data.SqlClient.SqlErrorCollection">
-                <attributes>
-                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
-                    <properties>
-                      <property name="Visibility" value="Content" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_Errors()" attrib="2182" returntype="System.Data.SqlClient.SqlErrorCollection">
                     <parameters />
@@ -17046,14 +16726,7 @@
               <field name="Unknown" attrib="32854" fieldtype="System.Data.SqlClient.SqlNotificationType" value="-1" />
             </fields>
           </class>
-          <class name="SqlParameter" type="class" base="System.Data.Common.DbParameter" sealed="true" charset="Ansi" layout="Auto">
-            <attributes>
-              <attribute name="System.ComponentModel.TypeConverterAttribute">
-                <properties>
-                  <property name="ConverterTypeName" value="System.Data.SqlClient.SqlParameter+SqlParameterConverter, System.Data, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-                </properties>
-              </attribute>
-            </attributes>
+          <class name="SqlParameter" type="class" base="System.Data.Common.DbParameter" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="System.Data.IDataParameter" />
               <interface name="System.Data.IDbDataParameter" />
@@ -17091,13 +16764,6 @@
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.String, System.Data.SqlDbType, System.Int32, System.Data.ParameterDirection, System.Boolean, System.Byte, System.Byte, System.String, System.Data.DataRowVersion, System.Object)" attrib="6278">
-                <attributes>
-                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
-                    <properties>
-                      <property name="State" value="Advanced" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <parameters>
                   <parameter name="parameterName" position="0" attrib="0" type="System.String" />
                   <parameter name="dbType" position="1" attrib="0" type="System.Data.SqlDbType" />
@@ -17131,13 +16797,6 @@
             </constructors>
             <properties>
               <property name="CompareInfo" attrib="0" ptype="System.Data.SqlTypes.SqlCompareOptions">
-                <attributes>
-                  <attribute name="System.ComponentModel.BrowsableAttribute">
-                    <properties>
-                      <property name="Browsable" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_CompareInfo()" attrib="2182" returntype="System.Data.SqlTypes.SqlCompareOptions">
                     <parameters />
@@ -17162,13 +16821,6 @@
                 </methods>
               </property>
               <property name="Direction" attrib="0" ptype="System.Data.ParameterDirection">
-                <attributes>
-                  <attribute name="System.ComponentModel.RefreshPropertiesAttribute">
-                    <properties>
-                      <property name="RefreshProperties" value="All" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_Direction()" attrib="2246" virtual="true" is-override="true" returntype="System.Data.ParameterDirection">
                     <parameters />
@@ -17193,13 +16845,6 @@
                 </methods>
               </property>
               <property name="LocaleId" attrib="0" ptype="System.Int32">
-                <attributes>
-                  <attribute name="System.ComponentModel.BrowsableAttribute">
-                    <properties>
-                      <property name="Browsable" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_LocaleId()" attrib="2182" returntype="System.Int32">
                     <parameters />
@@ -17212,18 +16857,6 @@
                 </methods>
               </property>
               <property name="Offset" attrib="0" ptype="System.Int32">
-                <attributes>
-                  <attribute name="System.ComponentModel.BrowsableAttribute">
-                    <properties>
-                      <property name="Browsable" value="False" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
-                    <properties>
-                      <property name="State" value="Advanced" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_Offset()" attrib="2182" returntype="System.Int32">
                     <parameters />
@@ -17248,13 +16881,6 @@
                 </methods>
               </property>
               <property name="Precision" attrib="0" ptype="System.Byte">
-                <attributes>
-                  <attribute name="System.ComponentModel.DefaultValueAttribute">
-                    <properties>
-                      <property name="Value" value="0" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_Precision()" attrib="2534" virtual="true" returntype="System.Byte">
                     <parameters />
@@ -17267,13 +16893,6 @@
                 </methods>
               </property>
               <property name="Scale" attrib="0" ptype="System.Byte">
-                <attributes>
-                  <attribute name="System.ComponentModel.DefaultValueAttribute">
-                    <properties>
-                      <property name="Value" value="0" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_Scale()" attrib="2534" virtual="true" returntype="System.Byte">
                     <parameters />
@@ -17334,18 +16953,6 @@
                 </methods>
               </property>
               <property name="SqlDbType" attrib="0" ptype="System.Data.SqlDbType">
-                <attributes>
-                  <attribute name="System.ComponentModel.RefreshPropertiesAttribute">
-                    <properties>
-                      <property name="RefreshProperties" value="All" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.Data.Common.DbProviderSpecificTypePropertyAttribute">
-                    <properties>
-                      <property name="IsProviderSpecificTypeProperty" value="True" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_SqlDbType()" attrib="2182" returntype="System.Data.SqlDbType">
                     <parameters />
@@ -17358,18 +16965,6 @@
                 </methods>
               </property>
               <property name="SqlValue" attrib="0" ptype="System.Object">
-                <attributes>
-                  <attribute name="System.ComponentModel.BrowsableAttribute">
-                    <properties>
-                      <property name="Browsable" value="False" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
-                    <properties>
-                      <property name="Visibility" value="Hidden" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_SqlValue()" attrib="2182" returntype="System.Object">
                     <parameters />
@@ -17382,24 +16977,11 @@
                 </methods>
               </property>
               <property name="TypeName" attrib="0" ptype="System.String">
-                <attributes>
-                  <attribute name="System.ComponentModel.BrowsableAttribute">
-                    <properties>
-                      <property name="Browsable" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_TypeName()" attrib="2182" returntype="System.String">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                   <method name="set_TypeName(System.String)" attrib="2182" returntype="System.Void">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.String" />
                     </parameters>
@@ -17407,24 +16989,11 @@
                 </methods>
               </property>
               <property name="UdtTypeName" attrib="0" ptype="System.String">
-                <attributes>
-                  <attribute name="System.ComponentModel.BrowsableAttribute">
-                    <properties>
-                      <property name="Browsable" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_UdtTypeName()" attrib="2182" returntype="System.String">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                   <method name="set_UdtTypeName(System.String)" attrib="2182" returntype="System.Void">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.String" />
                     </parameters>
@@ -17432,18 +17001,6 @@
                 </methods>
               </property>
               <property name="Value" attrib="0" ptype="System.Object">
-                <attributes>
-                  <attribute name="System.ComponentModel.RefreshPropertiesAttribute">
-                    <properties>
-                      <property name="RefreshProperties" value="All" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.TypeConverterAttribute">
-                    <properties>
-                      <property name="ConverterTypeName" value="System.ComponentModel.StringConverter" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_Value()" attrib="2246" virtual="true" is-override="true" returntype="System.Object">
                     <parameters />
@@ -17504,19 +17061,8 @@
               </method>
             </methods>
           </class>
-          <class name="SqlParameterCollection" type="class" base="System.Data.Common.DbParameterCollection" sealed="true" charset="Ansi" layout="Auto">
+          <class name="SqlParameterCollection" type="class" base="System.Data.Common.DbParameterCollection" charset="Ansi" layout="Auto">
             <attributes>
-              <attribute name="System.ComponentModel.EditorAttribute">
-                <properties>
-                  <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                  <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.DBParametersEditor, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                </properties>
-              </attribute>
-              <attribute name="System.ComponentModel.ListBindableAttribute">
-                <properties>
-                  <property name="ListBindable" value="False" />
-                </properties>
-              </attribute>
               <attribute name="System.Reflection.DefaultMemberAttribute">
                 <properties>
                   <property name="MemberName" value="Item" />
@@ -17559,18 +17105,6 @@
                 </methods>
               </property>
               <property name="Item" attrib="0" ptype="System.Data.SqlClient.SqlParameter" params="System.Int32">
-                <attributes>
-                  <attribute name="System.ComponentModel.BrowsableAttribute">
-                    <properties>
-                      <property name="Browsable" value="False" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
-                    <properties>
-                      <property name="Visibility" value="Hidden" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_Item(System.Int32)" attrib="2182" returntype="System.Data.SqlClient.SqlParameter">
                     <parameters>
@@ -17586,18 +17120,6 @@
                 </methods>
               </property>
               <property name="Item" attrib="0" ptype="System.Data.SqlClient.SqlParameter" params="System.String">
-                <attributes>
-                  <attribute name="System.ComponentModel.BrowsableAttribute">
-                    <properties>
-                      <property name="Browsable" value="False" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
-                    <properties>
-                      <property name="Visibility" value="Hidden" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <methods>
                   <method name="get_Item(System.String)" attrib="2182" returntype="System.Data.SqlClient.SqlParameter">
                     <parameters>
@@ -17627,13 +17149,6 @@
                 </parameters>
               </method>
               <method name="Add(System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
-                <attributes>
-                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
-                    <properties>
-                      <property name="State" value="Never" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.Object" />
                 </parameters>
@@ -17645,18 +17160,6 @@
                 </parameters>
               </method>
               <method name="Add(System.String, System.Object)" attrib="134" returntype="System.Data.SqlClient.SqlParameter">
-                <attributes>
-                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
-                    <properties>
-                      <property name="State" value="Never" />
-                    </properties>
-                  </attribute>
-                  <attribute name="System.ObsoleteAttribute">
-                    <properties>
-                      <property name="Message" value="Do not call this method." />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <parameters>
                   <parameter name="parameterName" position="0" attrib="0" type="System.String" />
                   <parameter name="value" position="1" attrib="0" type="System.Object" />
@@ -17991,7 +17494,7 @@
               </method>
             </methods>
           </class>
-          <class name="SqlTransaction" type="class" base="System.Data.Common.DbTransaction" sealed="true" charset="Ansi" layout="Auto">
+          <class name="SqlTransaction" type="class" base="System.Data.Common.DbTransaction" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="System.Data.IDbTransaction" />
               <interface name="System.IDisposable" />
