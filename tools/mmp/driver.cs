@@ -1194,6 +1194,7 @@ namespace Xamarin.Bundler {
 				args.Append ("-arch ").Append (arch).Append (' ');
 				if (arch == "x86_64")
 					args.Append ("-fobjc-runtime=macosx ");
+				bool appendedObjc = false;
 				foreach (var assembly in BuildTarget.Assemblies) {
 					if (assembly.LinkWith != null) {
 						foreach (var linkWith in assembly.LinkWith) {
@@ -1209,7 +1210,10 @@ namespace Xamarin.Bundler {
 								args.Append (Quote (linkWith)).Append (' ');
 							}
 						}
-						args.Append ("-ObjC").Append (' ');
+						if (!appendedObjc) {
+							appendedObjc = true;
+							args.Append ("-ObjC").Append (' ');
+						}
 					}
 					if (assembly.LinkerFlags != null)
 						foreach (var linkFlag in assembly.LinkerFlags)
