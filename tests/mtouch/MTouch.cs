@@ -418,17 +418,6 @@ namespace Xamarin
 		}
 
 		[Test]
-		public void MT0026 ()
-		{
-			using (var mtouch = new MTouchTool ()) {
-				mtouch.CreateTemporaryApp ();
-				mtouch.LLVMOptimizations = "-O2";
-				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
-				mtouch.AssertError (26, "Could not parse the command line argument '--llvm-opt=-O2': Both assembly and optimization must be specified (assembly=optimization)");
-			}
-		}
-			
-		[Test]
 		public void MT0051 ()
 		{
 			if (Directory.Exists ("/Applications/Xcode44.app/Contents/Developer")) {
@@ -715,7 +704,7 @@ namespace Xamarin
 		public static string GetSimulatorArchitecture (Profile profile)
 		{
 			switch (profile) {
-			case Profile.unified:
+			case Profile.iOS:
 			case Profile.watchOS:
 				return "i386";
 			case Profile.tvOS:
@@ -834,8 +823,6 @@ namespace Xamarin
 					symbols = ExecutionHelper.Execute ("nm", Quote (Path.Combine (mtouch.AppPath, "libbindings-test.dll.dylib")), hide_output: true).Split ('\n');
 					Assert.That (symbols, Has.Some.EndsWith (" T _theUltimateAnswer"), "Binding symbol in binding library");
 				}
-			} finally {
-				Directory.Delete (testDir, true);
 			}
 		}
 
