@@ -85,6 +85,21 @@
     <MtouchArch>ARM64</MtouchArch>
     <MtouchExtraArgs>-gcc_flags="-UhoItsB0rken"</MtouchExtraArgs>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug64|iPhone' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
+    <DefineConstants>DEBUG;LINKALL;;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchDebug>True</MtouchDebug>
+    <MtouchLink>Full</MtouchLink>
+    <MtouchI18n>mideast,other</MtouchI18n>
+    <MtouchArch>ARM64</MtouchArch>
+    <MtouchExtraArgs>--tls-provider=legacy -gcc_flags="-UhoItsB0rken"</MtouchExtraArgs>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
     <Optimize>False</Optimize>

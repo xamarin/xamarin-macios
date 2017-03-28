@@ -23,6 +23,12 @@
 ## deprecated in iOS8
 !missing-protocol-member! AVAudioRecorderDelegate::audioRecorderEndInterruption:withOptions: not found
 
+## Used only once in a deprecated API, native use `NSInteger` not a real enum - that's why there's a `[Native]`
+!unknown-native-enum! AVAudioSessionFlags bound
+
+## native use `NSUInteger` not a real enum - that's why there's a `[Native]`
+!unknown-native-enum! AVAudioSessionInterruptionFlags bound
+
 
 # CoreGraphics
 
@@ -42,6 +48,12 @@
 ## native long is same size as int (.net long is long long)
 !missing-selector! NSNumber::initWithLong: not bound
 !missing-selector! NSNumber::initWithUnsignedLong: not bound
+
+## should not have been [Native] it's 32bits only values -> XAMCORE_4_0
+!unknown-native-enum! NSBundleExecutableArchitecture bound
+
+## enum was [re]named to NSCalendarOptions - excluding from XAMCORE_4_0
+!unknown-native-enum! NSDateComponentsWrappingBehavior bound
 
 
 # GameKit
@@ -89,12 +101,78 @@
 !incorrect-protocol-member! MTLResource::heap is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLResource::isAliasable is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLResource::makeAliasable is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::presentDrawable:afterMinimumDuration: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDrawable::addPresentedHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDrawable::drawableID is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDrawable::presentAfterMinimumDuration: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDrawable::presentedTime is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBuffer::addDebugMarker:range: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBuffer::removeAllDebugMarkers is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::GPUEndTime is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::GPUStartTime is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::kernelEndTime is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::kernelStartTime is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::dispatchThreadgroupsWithIndirectBuffer:indirectBufferOffset:threadsPerThreadgroup: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::setStageInRegion: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::maxThreadsPerThreadgroup is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newDefaultLibraryWithBundle:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLFunction::functionConstantsDictionary is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLFunction::label is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLFunction::patchControlPointCount is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLFunction::patchType is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLFunction::setLabel: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLFunction::stageInputAttributes is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLLibrary::newFunctionWithName:constantValues:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLLibrary::newFunctionWithName:constantValues:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLParallelRenderCommandEncoder::setColorStoreAction:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLParallelRenderCommandEncoder::setDepthStoreAction: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLParallelRenderCommandEncoder::setStencilStoreAction: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawIndexedPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:instanceCount:baseInstance: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawIndexedPrimitives:indexCount:indexType:indexBuffer:indexBufferOffset:instanceCount:baseVertex:baseInstance: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawIndexedPrimitives:indexType:indexBuffer:indexBufferOffset:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:instanceCount:baseInstance: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawPrimitives:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawPrimitives:vertexStart:vertexCount:instanceCount:baseInstance: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setColorStoreAction:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setDepthStoreAction: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setStencilStoreAction: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTessellationFactorBuffer:offset:instanceStride: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTessellationFactorScale: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLResource::storageMode is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::buffer is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::bufferBytesPerRow is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::bufferOffset is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::parentRelativeLevel is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::parentRelativeSlice is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::parentTexture is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::usage is REQUIRED and should be abstract
 
 
 # ModelIO
 
 ## we only export the overload that expose an NSError
 !missing-selector! MDLAsset::exportAssetToURL: not bound
+
+## those are just doing the same as the setComponent:forProtocol: and componentConformingToProtocol:
+## objectForKeyedSubscript:'s description is: "Allows shorthand [key] syntax for componentConformingToProtocol:"
+!missing-selector! MDLAsset::objectForKeyedSubscript: not bound
+!missing-selector! MDLAsset::setObject:forKeyedSubscript: not bound
+!missing-selector! MDLObject::objectForKeyedSubscript: not bound
+!missing-selector! MDLObject::setObject:forKeyedSubscript: not bound
+
+## old @optional methods that became @required (abstract) in existing types (breaking changes)
+!incorrect-protocol-member! MDLMeshBuffer::allocator is REQUIRED and should be abstract
+!incorrect-protocol-member! MDLMeshBuffer::length is REQUIRED and should be abstract
+!incorrect-protocol-member! MDLMeshBuffer::type is REQUIRED and should be abstract
+!incorrect-protocol-member! MDLMeshBuffer::zone is REQUIRED and should be abstract
+!incorrect-protocol-member! MDLMeshBufferZone::allocator is REQUIRED and should be abstract
+!incorrect-protocol-member! MDLMeshBufferZone::capacity is REQUIRED and should be abstract
+
+
+# Security
+
+## part of mscorlib.dll -> mcs/class/corlib/CommonCrypto/CommonCrypto.cs to implement RNGCryptoServiceProvider
+!missing-pinvoke! SecRandomCopyBytes is not bound
 
 
 # SpriteKit

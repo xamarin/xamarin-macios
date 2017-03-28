@@ -240,6 +240,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVCaptureFileOutput.cs \
 	AVFoundation/AVCaptureMetadataOutput.cs \
 	AVFoundation/AVCaptureVideoDataOutput.cs \
+	AVFoundation/AVCaptureVideoPreviewLayer.cs \
 	AVFoundation/AVCompat.cs \
 	AVFoundation/AVFragmentedAsset.cs \
 	AVFoundation/AVFragmentedAssetTrack.cs \
@@ -829,9 +830,12 @@ IMAGEKIT_CORE_SOURCES = \
 
 INTENTS_SOURCES = \
 	Intents/INCompat.cs \
+	Intents/INGetCarLockStatusIntentResponse.cs \
+	Intents/INGetCarPowerLevelStatusIntentResponse.cs \
 	Intents/INIntentResolutionResult.cs \
 	Intents/INPriceRange.cs \
 	Intents/INRideOption.cs \
+	Intents/INSetCarLockStatusIntent.cs \
 	Intents/INSetClimateSettingsInCarIntent.cs \
 	Intents/INSetDefrosterSettingsInCarIntent.cs \
 	Intents/INSetProfileInCarIntent.cs \
@@ -1148,6 +1152,7 @@ SCENEKIT_SOURCES = \
 	SceneKit/SCNParticleSystem.cs \
 	SceneKit/SCNPhysicsShape.cs \
 	SceneKit/SCNPhysicsTest.cs \
+	SceneKit/SCNRenderer.cs \
 	SceneKit/SCNRenderingOptions.cs \
 	SceneKit/SCNScene.cs \
 	SceneKit/SCNSceneLoadingOptions.cs \
@@ -1678,6 +1683,7 @@ WATCHOS_FRAMEWORKS =        \
 	HealthKit               \
 	HomeKit                 \
 	ImageIO                 \
+	Intents                 \
 	MapKit                  \
 	MobileCoreServices      \
 	PassKit                 \
@@ -1735,6 +1741,7 @@ TVOS_FRAMEWORKS =           \
 	UIKit                   \
 	UserNotifications       \
 	VideoSubscriberAccount  \
+	VideoToolbox            \
 
 #
 # Compute the SOURCES variables.

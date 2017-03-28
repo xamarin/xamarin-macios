@@ -8,7 +8,7 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__
+#if !__WATCHOS__
 
 using System;
 
@@ -84,4 +84,4 @@ namespace MonoTouchFixtures.VideoToolbox {
 	}
 }
 
-#endif // !__TVOS__ && !__WATCHOS__
+#endif // !__WATCHOS__

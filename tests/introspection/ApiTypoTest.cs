@@ -65,14 +65,17 @@ namespace Introspection
 			"Acos",
 			"Actionname",
 			"Activitiy",
+			"Addin",
 			"Addr",
 			"Adjustmentfor",
 			"Aifc",
 			"Aiff",
+			"Alg", // short for Algorithm
 			"Amete",
 			"Amr",
 			"Anglet",
 			"Arraycollation",
+			"Argb",
 			"Asin",
 			"Atan",
 			"Ats",	// App Transport Security
@@ -84,6 +87,7 @@ namespace Introspection
 			"Autoredirect",
 			"Aliasable",
 			"Backface",
+			"Bancaire",
 			"Bary",
 			"Batc",
 			"Bim",
@@ -175,6 +179,7 @@ namespace Introspection
 			"Geocoder",
 			"Gigapascals",
 			"Gpp",
+			"Gpu",	// acronym for Graphics Processing Unit
 			"Grbg", // acronym for Green-Red-Blue-Green
 			"Hdmi",
 			"Hdr",
@@ -273,7 +278,9 @@ namespace Introspection
 			"Orthographyrange",
 			"ove",
 			"Paeth", // PNG filter
+			"Parms", // short for Parameters
 			"Perlin",
+			"Persistable",
 			"Pausable",
 			"Pcl",
 			"Pcm",
@@ -289,6 +296,7 @@ namespace Introspection
 			"Pointillize",
 			"Polyline",
 			"Popularimeter",
+			"Preds", // short for Predicates
 			"Prerolls",
 			"Preseti",
 			"Propogate",
@@ -296,6 +304,7 @@ namespace Introspection
 			"Pvrtc", // MTLBlitOption - PowerVR Texture Compression
 			"Quaterniond",
 			"Qura",
+			"Quic",
 			"Reacquirer",
 			"Reinvitation",
 			"Reinvite",

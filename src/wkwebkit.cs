@@ -176,6 +176,11 @@ namespace XamCore.WebKit
 
 		[Export ("plugInsEnabled")]
 		bool PlugInsEnabled { get; set; }
+
+		// Headers says 10,12,3 but it is not available likely they meant 10,12,4
+		[Mac (10,12,4, onlyOn64 : true)]
+		[Export ("tabFocusesLinks")]
+		bool TabFocusesLinks { get; set; }
 #endif
 	}
 

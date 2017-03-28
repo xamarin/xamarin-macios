@@ -74,6 +74,7 @@ namespace XamCore.CoreFoundation {
 		FileIsDirectory = 		-1101,
 		NoPermissionsToReadFile = 	-1102,
 		DataLengthExceedsMaximum =	-1103,
+		FileOutsideSafeArea = 	-1104,
 
 		SecureConnectionFailed = 		-1200,
 		ServerCertificateHasBadDate = 	-1201,

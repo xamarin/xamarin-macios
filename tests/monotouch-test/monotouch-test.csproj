@@ -147,6 +147,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
     <Reference Include="MonoTouch.NUnitLite" />
+    <Reference Include="OpenTK-1.0" />
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
@@ -647,6 +648,8 @@
     <Compile Include="System.Net.Http\MessageHandlers.cs" />
     <Compile Include="AVFoundation\PlayerItemVideoOutputTest.cs" />
     <Compile Include="mono\ConfigTest.cs" />
+    <Compile Include="OpenGLES\EAGLContext.cs" />
+    <Compile Include="System.Net.Http\MessageHandlers.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
@@ -710,6 +713,7 @@
     <Folder Include="Messages\" />
     <Folder Include="CloudKit\" />
     <Folder Include="Intents\" />
+    <Folder Include="OpenGLES\" />
     <Folder Include="System.Net.Http\" />
   </ItemGroup>
   <ItemGroup>

@@ -69,6 +69,11 @@ namespace Xamarin.iOS.Tasks
 			get; set;
 		}
 
+		[Output]
+		public bool IsXcode8 {
+			get; set;
+		}
+
 #endregion Outputs
 
 		public PlatformFramework Framework {
@@ -91,6 +96,8 @@ namespace Xamarin.iOS.Tasks
 				architectures = TargetArchitecture.Default;
 
 			SdkIsSimulator = (architectures & (TargetArchitecture.i386 | TargetArchitecture.x86_64)) != 0;
+
+			IsXcode8 = AppleSdkSettings.XcodeVersion.Major >= 8;
 
 			EnsureAppleSdkRoot ();
 			EnsureXamarinSdkRoot ();
