@@ -358,8 +358,8 @@ namespace Xamarin.Bundler {
 					true /* this is an internal option */
 				},
 				{ "xamarin-framework-directory=", "The framework directory", v => { xm_framework_dir = v; }, true },
-				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullXamMacFramework = true; } },
-				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullSystemFramework = true; } },
+				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM Full (4.5) Target Framework", v => { IsUnifiedFullXamMacFramework = true; } },
+				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM Full (4.5) Target Framework", v => { IsUnifiedFullSystemFramework = true; } },
 				{ "aot:", "Specify assemblies that should be experimentally AOT compiled\n- none - No AOT (default)\n- all - Every assembly in MonoBundle\n- core - Xamarin.Mac, System, mscorlib\n- sdk - Xamarin.Mac.dll and BCL assemblies\n- |hybrid after option enables hybrid AOT which allows IL stripping but is slower\n - Individual files can be included for AOT via +FileName.dll and excluded via -FileName.dll\n\nExamples:\n  --aot:all,-MyAssembly.dll\n  --aot:core|hybird,+MyOtherAssembly.dll,-mscorlib.dll",
 					v => {
 						aotOptions = new AOTOptions (v);
@@ -479,7 +479,7 @@ namespace Xamarin.Bundler {
 			}
 
 			if (!IsUnifiedMobile && tls_provider != null)
-				throw new MonoMacException (2011, true, "Selecting a TLS Provider is only supported in the Unified Mobile profile");
+				throw new MonoMacException (2011, true, "Selecting a TLS Provider is only supported in the Unified Modern (Mobile) profile");
 
 
 			ValidateXcode ();
@@ -1177,7 +1177,7 @@ namespace Xamarin.Bundler {
 				break;
 			case "x86_64":
 				if (IsClassic)
-					throw new MonoMacException (5204, true, "Invalid architecture. x86_64 is only supported with the mobile profile.");
+					throw new MonoMacException (5204, true, "Invalid architecture. x86_64 is only supported with the modern (mobile) profile.");
 				break;
 			default:
 				throw new MonoMacException (5205, true, "Invalid architecture '{0}'. Valid architectures are i386 and x86_64 (when --profile=mobile).", arch);
