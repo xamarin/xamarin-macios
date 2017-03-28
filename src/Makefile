@@ -22,6 +22,17 @@ include $(TOP)/opentk/Makefile.include
 include $(TOP)/tools/pmcs/Makefile.frag
 
 #
+# Specific warnings that we want reported as errors by generator
+# It takes a comma separated list, but an empty list means
+# reporting all warnings as errors.
+#
+GENERATOR_WARNASERROR=
+IOS_GENERATOR_WARNASERROR=$(GENERATOR_WARNASERROR)
+WATCH_GENERATOR_WARNASERROR=$(GENERATOR_WARNASERROR)
+TVOS_GENERATOR_WARNASERROR=$(GENERATOR_WARNASERROR)
+MAC_GENERATOR_WARNASERROR=$(GENERATOR_WARNASERROR)
+
+#
 # This is the "you are redefining the member", probably we should remove
 # those from the contract
 #
@@ -53,7 +64,7 @@ IOS_EXTRA_SOURCES = \
 IOS_CORE_SOURCES += $(IOS_EXTRA_SOURCES)
 IOS_SOURCES += $(IOS_EXTRA_SOURCES)
 
-IOS_GENERATOR_FLAGS = -inline-selectors -d:IOS -process-enums
+IOS_GENERATOR_FLAGS = -inline-selectors -d:IOS -process-enums -warnaserror:$(IOS_GENERATOR_WARNASERROR)
 IOS_DEFINES = -define:IPHONE -define:IOS -define:MONOTOUCH -d:NET_2_0 -d:__IOS__ $(APPLETLS_DEFINES)
 IOS_LIBDIR = $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
 IOS_PMCS = $(IOS_BUILD_DIR)/pmcs
@@ -525,6 +536,7 @@ $(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_$(1)_GENERATOR) $(MAC_APIS) $(MA
 		-d:XAMARIN_MAC \
 		-compiler:$(MAC_BUILD_DIR)/$(1)/pmcs \
 		-process-enums \
+		-warnaserror:$(MAC_GENERATOR_WARNASERROR) \
 		-native-exception-marshalling \
 		-core \
 		-sourceonly:$$@ \
@@ -785,6 +797,7 @@ $(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $
 	$(call Q_PROF_GEN,watch) PMCS_PROFILE=watch $(WATCH_GENERATE) \
 		-inline-selectors                                        \
 		-process-enums                                           \
+		-warnaserror:$(WATCH_GENERATOR_WARNASERROR)              \
 		-core                                                    \
 		-sourceonly=$@                                           \
 		-compiler=$(WATCH_PMCS)                                    \
@@ -990,6 +1003,7 @@ $(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_
 	$(call Q_PROF_GEN,tvos) PMCS_PROFILE=tvos $(TVOS_GENERATE) \
 		-inline-selectors                                        \
 		-process-enums                                           \
+		-warnaserror:$(TVOS_GENERATOR_WARNASERROR)               \
 		-core                                                    \
 		-sourceonly=$@                                           \
 		-compiler=$(TVOS_PMCS)                                    \
