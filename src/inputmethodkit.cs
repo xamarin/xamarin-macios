@@ -18,12 +18,12 @@ using XamCore.CoreGraphics;
 
 namespace XamCore.InputMethodKit {
 
-	partial interface IMKGlobal {
+	partial interface IMKCommand {
 		[Field ("kIMKCommandMenuItemName")]
-		NSString CommandMenuItemName { get; }
+		NSString MenuItemName { get; }
 
 		[Field ("kIMKCommandClientName")]
-		NSString CommandClientName { get; }
+		NSString ClientName { get; }
 	}
 
 	[Model]
