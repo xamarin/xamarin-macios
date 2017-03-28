@@ -18906,11 +18906,11 @@ namespace XamCore.AppKit {
 		[Export ("options")]
 		NSTrackingAreaOptions Options { get; }
 
-		[Export ("locationInView:")]
-		CGPoint GetLocation ([NullAllowed] NSView view);
+		[Export ("owner")]
+		NSObject Owner { get; }
 
-		[Export ("previousLocationInView:")]
-		CGPoint GetPreviousLocation ([NullAllowed] NSView view);
+		[Export ("userInfo")]
+		NSDictionary UserInfo { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
