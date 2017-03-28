@@ -112,7 +112,7 @@ class BindingTouch {
 				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
 			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
 				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
-			} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+			} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Modern) {
 				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.Mac-mobile.BindingAttributes.dll");
 			} else if (target_framework == TargetFramework.XamMac_1_0) {
 				return Path.Combine (GetSDKRoot (), "lib", "bgen", "XamMAc.BindingAttributes.dll");
@@ -143,7 +143,7 @@ class BindingTouch {
 			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
 				yield return "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5";
 				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "4.5");
-			} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+			} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Modern) {
 				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.Mac");
 			} else if (target_framework == TargetFramework.XamMac_1_0) {
 				yield return Path.Combine (GetSDKRoot (), "lib", "mono");
@@ -305,8 +305,8 @@ class BindingTouch {
 				}
 			},
 			{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { /* no-op*/ }, true },
-			{ "unified-mobile-profile", "Launches compiler pointing to XM Mobile Profile", l => { /* no-op*/ }, true },
-			{ "target-framework=", "Specify target framework to use. Always required, and the currently supported values are: 'MonoTouch,v1.0', 'Xamarin.iOS,v1.0', 'Xamarin.TVOS,v1.0', 'Xamarin.WatchOS,v1.0', 'XamMac,v1.0', 'Xamarin.Mac,Version=v2.0,Profile=Mobile', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => SetTargetFramework (v) },
+			{ "unified-modern-profile", "Launches compiler pointing to XM Modern Profile", l => { /* no-op*/ }, true },
+			{ "target-framework=", "Specify target framework to use. Always required, and the currently supported values are: 'MonoTouch,v1.0', 'Xamarin.iOS,v1.0', 'Xamarin.TVOS,v1.0', 'Xamarin.WatchOS,v1.0', 'XamMac,v1.0', 'Xamarin.Mac,Version=v2.0,Profile=Modern', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => SetTargetFramework (v) },
 			{ "warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v => {
 					try {
 						if (!string.IsNullOrEmpty (v)) {
@@ -389,7 +389,7 @@ class BindingTouch {
 			Unified = true;
 			skipSystemDrawing = target_framework == TargetFramework.Xamarin_Mac_4_5_Full;
 			if (string.IsNullOrEmpty (baselibdll)) {
-				if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+				if (target_framework == TargetFramework.Xamarin_Mac_2_0_Modern) {
 					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "mobile", "Xamarin.Mac.dll");
 				} else {
 					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "full", "Xamarin.Mac.dll");
@@ -445,7 +445,7 @@ class BindingTouch {
 			var cargs = new StringBuilder ();
 
 			if (CurrentPlatform == PlatformName.MacOSX) {
-				if (!string.IsNullOrEmpty (net_sdk) && net_sdk != "mobile")
+				if (!string.IsNullOrEmpty (net_sdk) && net_sdk != "modern")
 					cargs.Append ("-sdk:").Append (net_sdk).Append (' ');
 			} else {
 				if (!string.IsNullOrEmpty (net_sdk))

@@ -16,13 +16,13 @@ namespace Xamarin.Mac.Tasks
 
 		protected override string GenerateCommandLineCommands ()
 		{
-			bool isMobile;
+			bool isModern;
 			if (TargetFrameworkIdentifier != null) {
 				if (TargetFrameworkIdentifier == "Xamarin.Mac") {
-					isMobile = true; // Expected case for Mobile targetting
+					isModern = true; // Expected case for Modern targetting
 				}
-				else if (TargetFrameworkIdentifier == ".NETFramework") {
-					isMobile = false; // Expected case for XM 4.5
+				else if (TargetFrameworkIdentifier == "FullFramework") {
+					isModern = false; // Expected case for Full framework
 				}
 				else { // If it is something else, don't guess
 					Log.LogError ("BTouch doesn't know how to deal with TargetFrameworkIdentifier: " + TargetFrameworkIdentifier);
@@ -30,11 +30,11 @@ namespace Xamarin.Mac.Tasks
 				}
 			}
 			else {
-				isMobile = true; // Some older binding don't have either tag, assume mobile since it is the default
+				isModern = true; // Some older binding don't have either tag, assume modern since it is the default
 			}
 
 			EnvironmentVariables = new string[] {
-				"MONO_PATH=" + string.Format ("{0}/lib/mono/{1}", FrameworkRoot, isMobile ? "Xamarin.Mac" : "4.5")
+				"MONO_PATH=" + string.Format ("{0}/lib/mono/{1}", FrameworkRoot, isModern ? "Xamarin.Mac" : "4.5")
 			};
 
 			var sb = new StringBuilder ();
@@ -42,7 +42,7 @@ namespace Xamarin.Mac.Tasks
 			if (File.Exists (bgen)) {
 				sb.Append (bgen);
 			} else {
-				if (isMobile) {
+				if (isModern) {
 					sb.Append (Path.Combine (FrameworkRoot, "lib", "bmac", "bmac-mobile.exe"));
 				} else {
 					sb.Append (Path.Combine (FrameworkRoot, "lib", "bmac", "bmac-full.exe"));
@@ -59,8 +59,8 @@ namespace Xamarin.Mac.Tasks
 				case null:
 				case "":
 				case "Xamarin.Mac":
-					return "/target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile";
-				case ".NETFramework":
+					return "/target-framework=Xamarin.Mac,Version=v2.0,Profile=Modern";
+				case "FullFramework":
 					return "/target-framework=Xamarin.Mac,Version=v4.5,Profile=Full";
 				default:
 					Log.LogError ($"Unknown target framework identifier: {TargetFrameworkIdentifier}.");

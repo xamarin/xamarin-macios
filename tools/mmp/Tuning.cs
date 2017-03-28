@@ -74,7 +74,7 @@ namespace MonoMac.Tuner {
 		{
 			switch (options.TargetFramework.Identifier) {
 			case "Xamarin.Mac":
-				Profile.Current = new MacMobileProfile (options.Architecture == "x86_64" ? 64 : 32);
+				Profile.Current = new MacModernProfile (options.Architecture == "x86_64" ? 64 : 32);
 				break;
 			default:
 				Profile.Current = new MonoMacProfile ();

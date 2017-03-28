@@ -5,11 +5,11 @@ using Xamarin.Linker;
 
 namespace MonoMac.Tuner {
 
-	class MacMobileProfile : MobileProfile {
+	class MacModernProfile : MobileProfile {
 
 		readonly int bits;
 
-		public MacMobileProfile (int arch)
+		public MacModernProfile (int arch)
 		{
 			bits = arch;
 		}

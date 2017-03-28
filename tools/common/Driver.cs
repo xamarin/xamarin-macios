@@ -132,7 +132,7 @@ namespace Xamarin.Bundler {
 			switch (fx.Trim ().ToLowerInvariant ()) {
 #if MONOMAC
 			case "xammac":
-			case "mobile":
+			case "modern":
 			case "xamarin.mac":
 				targetFramework = TargetFramework.Xamarin_Mac_2_0;
 				break;

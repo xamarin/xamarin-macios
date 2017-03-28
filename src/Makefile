@@ -478,7 +478,7 @@ $(MAC_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in
 
 # We can't pass the --target-framework values as parameters to the templates, because the commas interfere with Make's parameter parsing.
 xm_full_profile=--target-framework=Xamarin.Mac,Version=v4.5,Profile=Full
-xm_mobile_profile=--target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile
+xm_mobile_profile=--target-framework=Xamarin.Mac,Version=v2.0,Profile=Modern
 xm_compat_profile=--target-framework=XamMac,v1.0
 
 ifdef IKVM

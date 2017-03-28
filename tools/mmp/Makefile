@@ -61,7 +61,7 @@ tuner_sources = \
 	$(TUNER_DIR)/Mono.Tuner/RemoveAttributesBase.cs			\
 	$(TUNER_DIR)/Mono.Tuner/RemoveResources.cs			\
 	$(TUNER_DIR)/Mono.Tuner/RemoveSecurity.cs			\
-	linker/MonoMac.Tuner/MacMobileProfile.cs			\
+	linker/MonoMac.Tuner/MacModernProfile.cs			\
 	linker/MonoMac.Tuner/MacRemoveResources.cs			\
 	linker/MonoMac.Tuner/MonoMacProfile.cs				\
 	linker/MonoMac.Tuner/OptimizeGeneratedCodeSubStep.cs		\

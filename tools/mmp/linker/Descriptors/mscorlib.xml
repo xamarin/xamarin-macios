@@ -595,7 +595,7 @@
 		<type fullname="System.Reflection.MonoArrayMethod" preserve="fields" />
 		 
 		<!-- if linked away the runtime will fallback to System.Reflection.Assembly but that type,
-			under NET_4_0 and MOBILE profiles, will throw NIE for some methods, like GetTypes overloads -->
+			under NET_4_0 and MODERN profiles, will throw NIE for some methods, like GetTypes overloads -->
 		<type fullname="System.Reflection.MonoAssembly" preserve="fields" />
 		<!-- same as Module vs MonoModule wrt NET_4_0 (see bug #928) -->
 		<type fullname="System.Reflection.MonoModule" preserve="fields" />

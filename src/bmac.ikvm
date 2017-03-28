@@ -29,7 +29,7 @@ for arg in "$@"; do
 	elif [[ $arg =~ ^(/|-{1,2})unified-full-profile$ ]]; then
 		full_profile=1
 		new_style=1
-	elif [[ $arg =~ ^(/|-{1,2})unified-mobile-profile$ ]]; then
+	elif [[ $arg =~ ^(/|-{1,2})unified-modern-profile$ ]]; then
 		mobile_profile=1
 		new_style=1
 	fi
@@ -43,7 +43,7 @@ xammac)
 	refs="--target-framework=XamMac,v1.0"
 	;;
 mobile|xamarin.mac)
-	refs="--target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile"
+	refs="--target-framework=Xamarin.Mac,Version=v2.0,Profile=Modern"
 	;;
 *)
 	if [[ -z "$new_style" ]]; then
@@ -52,7 +52,7 @@ mobile|xamarin.mac)
 		if [[ "$full_profile" -eq 1 ]]; then
 			refs="--target-framework=Xamarin.Mac,Version=v4.5,Profile=Full"
 		elif [[ "$mobile_profile" -eq 1 ]]; then
-			refs="--target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile"
+			refs="--target-framework=Xamarin.Mac,Version=v2.0,Profile=Modern"
 		else
 			refs="--target-framework=Xamarin.Mac,Version=v4.5,Profile=System"
 		fi

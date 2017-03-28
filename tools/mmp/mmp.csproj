@@ -193,8 +193,8 @@
     <Compile Include="linker\MonoMac.Tuner\MacRemoveResources.cs">
       <Link>MonoMac.Tuner\MacRemoveResources.cs</Link>
     </Compile>
-    <Compile Include="linker\MonoMac.Tuner\MacMobileProfile.cs">
-      <Link>MonoMac.Tuner\MacMobileProfile.cs</Link>
+    <Compile Include="linker\MonoMac.Tuner\MacModernProfile.cs">
+      <Link>MonoMac.Tuner\MacModernProfile.cs</Link>
     </Compile>
     <Compile Include="..\linker\BaseProfile.cs">
       <Link>Xamarin.Linker\BaseProfile.cs</Link>

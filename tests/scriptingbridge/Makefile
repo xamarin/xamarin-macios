@@ -35,7 +35,7 @@ build/mobile-%/test.app: build/mobile-%/finder.dll
 	$(MMP) -nolink "-minos=10.7" -o "build/mobile-$*" -n "test" --profile "4.5" -a $(TOP)/src/build/mac/mobile-$*/Xamarin.Mac.dll -a "build/mobile-$*/finder.dll" "build/mobile-$*/test.exe" --profile mobile --arch $(shell test '$*' == '32' && echo i386 || echo x86_64)
 
 build/mobile-%/finder.dll:
-	$(BMAC) --unified-mobile-profile --out=build/mobile-$*/finder.dll --outdir=build/mobile-$*/ -baselib:$(TOP)/src/build/mac/mobile-$*/Xamarin.Mac.dll -d=XAMCORE_2_0 finder.cs
+	$(BMAC) --unified-modern-profile --out=build/mobile-$*/finder.dll --outdir=build/mobile-$*/ -baselib:$(TOP)/src/build/mac/mobile-$*/Xamarin.Mac.dll -d=XAMCORE_2_0 finder.cs
 
 clean-local::
 	@rm -rf build/

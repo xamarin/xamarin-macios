@@ -4,7 +4,7 @@ using Mono.Tuner;
 
 namespace Xamarin.Linker {
 
-	// note: XamMac 1.x does not offer the mobile profile so we need a base class to MobileProfile
+	// note: XamMac 1.x does not offer the modern profile so we need a base class to MobileProfile
 
 	public abstract class BaseProfile : Profile {
 

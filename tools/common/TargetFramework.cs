@@ -40,7 +40,7 @@ namespace Xamarin.Utils
 		public static readonly TargetFramework Xamarin_TVOS_1_0 = Parse ("Xamarin.TVOS,v1.0");
 
 		public static readonly TargetFramework XamMac_1_0 = Parse ("XamMac,v1.0");
-		public static readonly TargetFramework Xamarin_Mac_2_0_Mobile = Parse ("Xamarin.Mac,Version=v2.0,Profile=Mobile");
+		public static readonly TargetFramework Xamarin_Mac_2_0_Modern = Parse ("Xamarin.Mac,Version=v2.0,Profile=Modern");
 		public static readonly TargetFramework Xamarin_Mac_4_5_Full = Parse ("Xamarin.Mac,Version=v4.5,Profile=Full");
 		public static readonly TargetFramework Xamarin_Mac_4_5_System = Parse ("Xamarin.Mac,Version=v4.5,Profile=System");
 #if MTOUCH
@@ -49,7 +49,7 @@ namespace Xamarin.Utils
 		public static readonly TargetFramework [] ValidFrameworks = new TargetFramework[]
 		{
 			MonoTouch_1_0, Xamarin_iOS_1_0, Xamarin_TVOS_1_0, Xamarin_WatchOS_1_0,
-			XamMac_1_0, Xamarin_Mac_2_0_Mobile, Xamarin_Mac_4_5_Full, Xamarin_Mac_4_5_System
+			XamMac_1_0, Xamarin_Mac_2_0_Modern, Xamarin_Mac_4_5_Full, Xamarin_Mac_4_5_System
 		};
 #endif
 
@@ -79,8 +79,8 @@ namespace Xamarin.Utils
 			var fields = targetFrameworkString.Split (new char [] { ',' });
 			switch (fields.Length) {
 			case 1:
-				// This is just a version number, in which case default identifier to .NETFramework.
-				identifier = ".NETFramework";
+				// This is just a version number, in which case default identifier to FullFramework.
+				identifier = "FullFramework";
 				version = fields [0];
 				break;
 			case 2:
@@ -181,8 +181,8 @@ namespace Xamarin.Utils
 		public override string ToString ()
 		{
 			var id = Identifier;
-			if (String.Equals (id, ".NETFramework", StringComparison.OrdinalIgnoreCase))
-				id = ".NETFramework";
+			if (String.Equals (id, "FullFramework", StringComparison.OrdinalIgnoreCase))
+				id = "FullFramework";
 			else if (String.Equals (id, "Xamarin.Mac", StringComparison.OrdinalIgnoreCase))
 				id = "Xamarin.Mac";
 
