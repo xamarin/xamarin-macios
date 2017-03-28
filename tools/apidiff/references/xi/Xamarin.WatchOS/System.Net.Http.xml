@@ -1437,6 +1437,24 @@
                   </method>
                 </methods>
               </property>
+              <property name="MaxInputInMemory" attrib="0" ptype="System.Int64">
+                <methods>
+                  <method name="get_MaxInputInMemory()" attrib="2182" returntype="System.Int64">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_MaxInputInMemory(System.Int64)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int64" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
             </properties>
             <methods>
               <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
