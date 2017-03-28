@@ -1177,7 +1177,7 @@ namespace Xamarin.Bundler {
 				break;
 			case "x86_64":
 				if (IsClassic)
-					throw new MonoMacException (5204, true, "Invalid architecture. x86_64 is only supported with the modern (mobile) profile.");
+					throw new MonoMacException (5204, true, "Invalid architecture. x86_64 is only supported with the Modern (Mobile) profile.");
 				break;
 			default:
 				throw new MonoMacException (5205, true, "Invalid architecture '{0}'. Valid architectures are i386 and x86_64 (when --profile=mobile).", arch);
