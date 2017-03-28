@@ -478,10 +478,6 @@ namespace Xamarin.Bundler {
 				ErrorHelper.Warning (2014, "Xamarin.Mac Extensions do not support linking. Request for linking will be ignored.");
 			}
 
-			if (!IsUnifiedMobile && tls_provider != null)
-				throw new MonoMacException (2011, true, "Selecting a TLS Provider is only supported in the Unified Mobile profile");
-
-
 			ValidateXcode ();
 
 			App.InitializeCommon ();
