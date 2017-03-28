@@ -181,8 +181,10 @@ namespace XamCore.ModelIO {
 
 		[Static]
 		[Export ("placeLightProbesWithDensity:heuristic:usingIrradianceDataSource:")]
-		MDLLightProbe[] PlaceLightProbes (float density, MDLProbePlacement type, MDLLightProbeIrradianceDataSource dataSource);
+		MDLLightProbe[] PlaceLightProbes (float density, MDLProbePlacement type, IMDLLightProbeIrradianceDataSource dataSource);
 	}
+
+	interface IMDLLightProbeIrradianceDataSource {}
 
 	// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
 	[Mac (10,12)]
