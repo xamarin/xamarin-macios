@@ -625,5 +625,17 @@ namespace Xamarin.MMP.Tests
 				Assert.That (output.BuildOutput, Contains.Substring ("TargetFrameworkVersion: v4.5"));
 			});
 		}
+
+		[Test]
+		public void UnifiedDebug_ShouldOnlyHaveOne_ObjCArgument ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
+				var buildOutput = TI.TestUnifiedExecutable (test).BuildOutput.Split (new string[] { Environment.NewLine }, StringSplitOptions.None);
+				string clangInvocation = buildOutput.Single (x => x.Contains ("clang"));
+				int objcCount = clangInvocation.Split (new string[] { " " }, StringSplitOptions.None).Count (x => x.Contains ("-ObjC"));
+				Assert.AreEqual (1, objcCount, "Found more than one -OjbC");
+			});
+		}
 	}
 }
