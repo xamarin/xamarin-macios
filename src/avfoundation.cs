@@ -29,6 +29,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System.ComponentModel;
+
 #if !WATCH
 using XamCore.AudioUnit;
 using XamCore.AVKit;
@@ -1115,7 +1117,7 @@ namespace XamCore.AVFoundation {
 		IntPtr Int32ChannelData { get; }
 	}
 
-	[NoWatch]
+	[Watch (3,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVAudioPlayer {
@@ -1214,19 +1216,20 @@ namespace XamCore.AVFoundation {
 		[Since (6,0)]
 		[Export ("channelAssignments", ArgumentSemantic.Copy), NullAllowed]
 		AVAudioSessionChannelDescription [] ChannelAssignments { get; set; }
-#endif
-		[Since (7,0), Mac (10,9), Export ("initWithData:fileTypeHint:error:")]
-		IntPtr Constructor (NSData data, [NullAllowed] string fileTypeHint, out NSError outError);
 
-		[Since (7,0), Mac (10,9), Export ("initWithContentsOfURL:fileTypeHint:error:")]
+		[Since (7,0), Export ("initWithContentsOfURL:fileTypeHint:error:")]
 		IntPtr Constructor (NSUrl url, [NullAllowed] string fileTypeHint, out NSError outError);
 
-		[NoWatch, iOS (10, 0), TV (10,0), Mac (10,12)]
+		[Since (7,0), Export ("initWithData:fileTypeHint:error:")]
+		IntPtr Constructor (NSData data, [NullAllowed] string fileTypeHint, out NSError outError);
+#endif
+
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
 		[Export ("format")]
 		AVAudioFormat Format { get; }
 	}
 	
-	[NoWatch]
+	[Watch (3,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -1236,7 +1239,7 @@ namespace XamCore.AVFoundation {
 	
 		[Export ("audioPlayerDecodeErrorDidOccur:error:")]
 		void DecoderError (AVAudioPlayer player, [NullAllowed] NSError error);
-	
+
 #if !MONOMAC
 		[Availability (Deprecated = Platform.iOS_8_0)]
 		[Export ("audioPlayerBeginInterruption:")]
@@ -1936,6 +1939,14 @@ namespace XamCore.AVFoundation {
 
 		[Export ("AVAudioSessionInterruptionOptionKey")]
 		AVAudioSessionInterruptionOptions Option { get; }
+
+#if false
+		// https://bugzilla.xamarin.com/show_bug.cgi?id=52730
+		[iOS (10, 3), NoMac, TV (10, 2), Watch (3,2)]
+		[Export ("AVAudioSessionInterruptionWasSuspendedKey")]
+		[return: BindAs (bool?)]
+		NSNumber WasSuspended { get; }
+#endif
 	}
 
 	interface AVAudioSessionRouteChangeEventArgs {
@@ -2623,7 +2634,7 @@ namespace XamCore.AVFoundation {
 		NSString WasDefragmentedNotification { get; }
 #endif
 
-		[iOS (10, 3), Mac (10,12,3), TV (10, 3)]
+		[iOS (10, 2), Mac (10,12,2), TV (10, 2)]
 		[Export ("overallDurationHint")]
 		CMTime OverallDurationHint { get; }
 	}
@@ -3599,6 +3610,11 @@ namespace XamCore.AVFoundation {
 	// 'init' returns NIL
 	[DisableDefaultCtor]
 	interface AVUrlAsset {
+
+		[TV (10, 2), Mac (10, 12, 4), iOS (10, 3)]
+		[Export ("mayRequireContentKeysForMediaDataProcessing")]
+		bool MayRequireContentKeysForMediaDataProcessing { get; }
+
 		[Export ("URL", ArgumentSemantic.Copy)]
 		NSUrl Url { get;  }
 
@@ -7884,7 +7900,13 @@ namespace XamCore.AVFoundation {
 		AVCaptureVideoPreviewLayer FromSession (AVCaptureSession session);
 
 		[Export ("initWithSession:")]
-		IntPtr Constructor (AVCaptureSession session);
+		[Internal]
+		IntPtr InitWithConnection (AVCaptureSession session);
+
+		[iOS (8,0), Mac (10,2)]
+		[Internal]
+		[Export ("initWithSessionWithNoConnection:")]
+		IntPtr InitWithNoConnection (AVCaptureSession session);
 
 		[Since (6,0)]
 		[Export ("connection")]
@@ -10164,6 +10186,10 @@ namespace XamCore.AVFoundation {
 		[Export ("indicatedBitrate")]
 		double IndicatedBitrate { get; }
 
+		[iOS (10, 0), TV (10,0), NoWatch, Mac (10, 12)]
+		[Export ("indicatedAverageBitrate")]
+		double IndicatedAverageBitrate { get; }
+
 		[iOS (10, 0), TV (10,0), Mac (10,12)]
 		[Export ("averageVideoBitrate")]
 		double AverageVideoBitrate { get; }
@@ -10515,8 +10541,7 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[NoTV]
-	[iOS (8,0)][Mac (10,10)]
+	[TV (10,2), iOS (8,0), Mac (10,10)]
 	[BaseType (typeof (CALayer))]
 	interface AVSampleBufferDisplayLayer {
 
@@ -10551,14 +10576,15 @@ namespace XamCore.AVFoundation {
 		[Export ("stopRequestingMediaData")]
 		void StopRequestingMediaData ();
 		
-		[NoTV, iOS (8, 0)]
+		[iOS (8, 0), Mac (10,10)]
 		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotification")]
 		[Notification]
 		NSString FailedToDecodeNotification { get; }
 
-		[NoTV, iOS (8, 0)]
+		[iOS (8, 0), Mac (10,0)]
 		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotificationErrorKey")]
 		NSString FailedToDecodeNotificationErrorKey { get; }
+
 	}
 
 	[NoWatch]
@@ -11240,4 +11266,178 @@ namespace XamCore.AVFoundation {
 		IntPtr Constructor (CMTime contentTimeForTransition, string title, [NullAllowed] UIImage previewImage);
 	}
 #endif
+
+	partial interface IAVContentKeySessionDelegate {}
+
+	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
+	[Protocol, Model]
+	[BaseType (typeof (NSObject))]
+	interface AVContentKeySessionDelegate
+	{
+		[Abstract]
+		[Export ("contentKeySession:didProvideContentKeyRequest:")]
+		void DidProvideContentKeyRequest (AVContentKeySession session, AVContentKeyRequest keyRequest);
+
+		[Export ("contentKeySession:didProvideRenewingContentKeyRequest:")]
+		void DidProvideRenewingContentKeyRequest (AVContentKeySession session, AVContentKeyRequest keyRequest);
+
+		[Export ("contentKeySession:didProvidePersistableContentKeyRequest:")]
+		void DidProvidePersistableContentKeyRequest (AVContentKeySession session, AVPersistableContentKeyRequest keyRequest);
+
+		[Export ("contentKeySession:contentKeyRequest:didFailWithError:")]
+		void DidFail (AVContentKeySession session, AVContentKeyRequest keyRequest, NSError err);
+
+		[Export ("contentKeySession:shouldRetryContentKeyRequest:reason:")]
+		bool ShouldRetryContentKeyRequest (AVContentKeySession session, AVContentKeyRequest keyRequest, string retryReason);
+
+		[Export ("contentKeySessionContentProtectionSessionIdentifierDidChange:")]
+		void DidChange (AVContentKeySession session);
+	}
+
+	partial interface IAVContentKeyRecipient {}
+
+	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
+	[Protocol]
+	interface AVContentKeyRecipient {
+		[Abstract]
+		[Export ("mayRequireContentKeysForMediaDataProcessing")]
+		bool MayRequireContentKeysForMediaDataProcessing { get; }
+	}
+
+	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject))]
+	interface AVContentKeySession {
+		[Static]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("contentKeySessionWithKeySystem:storageDirectoryAtURL:")]
+		AVContentKeySession Create (NSString keySystem, [NullAllowed] NSUrl storageUrl);
+
+		[Static]
+		[Wrap ("Create (keySystem.GetConstant (), storageUrl)")]
+		AVContentKeySession Create (AVContentKeySystem keySystem, [NullAllowed] NSUrl storageUrl);
+
+		[Export ("setDelegate:queue:")]
+		void SetDelegate ([NullAllowed] IAVContentKeySessionDelegate newDelegate, [NullAllowed] DispatchQueue delegateQueue);
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		IAVContentKeySessionDelegate Delegate { get; }
+
+		[NullAllowed, Export ("delegateQueue")]
+		DispatchQueue DelegateQueue { get; }
+
+		[NullAllowed, Export ("storageURL")]
+		NSUrl StorageUrl { get; }
+
+		[Protected]
+		[Export ("keySystem")]
+		NSString KeySystemConstant { get; }
+
+		[Wrap ("AVContentKeySystemExtensions.GetValue (this.KeySystemConstant)")]
+		AVContentKeySystem KeySystem { get; }
+
+		[Export ("expire")]
+		void Expire ();
+
+		[NullAllowed, Export ("contentProtectionSessionIdentifier")]
+		NSData ContentProtectionSessionIdentifier { get; }
+
+		[Export ("processContentKeyRequestWithIdentifier:initializationData:options:")]
+		void ProcessContentKeyRequest ([NullAllowed] NSObject identifier, [NullAllowed] NSData initializationData, [NullAllowed] NSDictionary<NSString, NSObject> options);
+
+		[Export ("renewExpiringResponseDataForContentKeyRequest:")]
+		void RenewExpiringResponseData (AVContentKeyRequest contentKeyRequest);
+
+		#region AVContentKeySession_AVContentKeySessionPendingExpiredSessionReports
+
+		// binded because they are static and from a category.
+		[Static]
+		[Export ("pendingExpiredSessionReportsWithAppIdentifier:storageDirectoryAtURL:")]
+		NSDictionary[] GetPendingExpiredSessionReports (NSData appIdentifier, NSUrl storageUrl);
+
+		[Static]
+		[Export ("removePendingExpiredSessionReports:withAppIdentifier:storageDirectoryAtURL:")]
+		void RemovePendingExpiredSessionReports (NSDictionary[] expiredSessionReports, NSData appIdentifier, NSUrl storageUrl);
+
+		#endregion
+	}
+
+	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
+	[Category]
+	[BaseType (typeof(AVContentKeySession))]
+	interface AVContentKeySession_AVContentKeyRecipients
+	{
+		[Export ("addContentKeyRecipient:")]
+		void Add (IAVContentKeyRecipient recipient);
+
+		[Export ("removeContentKeyRecipient:")]
+		void Remove (IAVContentKeyRecipient recipient);
+
+		[Export ("contentKeyRecipients")]
+		IAVContentKeyRecipient[] GetContentKeyRecipients ();
+	}
+
+	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject))]
+	interface AVContentKeyRequest {
+		[Field ("AVContentKeyRequestProtocolVersionsKey")]
+		NSString ProtocolVersions { get; }
+
+		[Export ("status")]
+		AVContentKeyRequestStatus Status { get; }
+
+		[NullAllowed, Export ("error")]
+		NSError Error { get; }
+
+		[NullAllowed, Export ("identifier")]
+		NSObject Identifier { get; }
+
+		[NullAllowed, Export ("initializationData")]
+		NSData InitializationData { get; }
+
+		[Export ("canProvidePersistableContentKey")]
+		bool CanProvidePersistableContentKey { get; }
+
+		[Async]
+		[Export ("makeStreamingContentKeyRequestDataForApp:contentIdentifier:options:completionHandler:")]
+		void MakeStreamingContentKeyRequestData (NSData appIdentifier, [NullAllowed] NSData contentIdentifier, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<NSData, NSError> handler);
+
+		[Export ("processContentKeyResponse:")]
+		void Process (AVContentKeyResponse keyResponse);
+
+		[Export ("processContentKeyResponseError:")]
+		void Process (NSError error);
+
+		[Export ("respondByRequestingPersistableContentKeyRequest")]
+		void RespondByRequestingPersistableContentKeyRequest ();
+	}
+
+	[Category]
+	[Mac (10, 12, 4), iOS (10,3), TV (10, 2), NoWatch]
+	[BaseType (typeof(AVContentKeyRequest))]
+	interface AVContentKeyRequest_AVContentKeyRequestRenewal
+	{
+		[Export ("renewsExpiringResponseData")]
+		bool GetRenewsExpiringResponseData ();
+	}
+
+	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
+	[DisableDefaultCtor]
+	[BaseType (typeof (AVContentKeyRequest))]
+	interface AVPersistableContentKeyRequest {
+		[Export ("persistableContentKeyFromKeyVendorResponse:options:error:")]
+		NSData GetPersistableContentKey (NSData keyVendorResponse, [NullAllowed] NSDictionary<NSString, NSObject> options, out NSError outError);
+
+	}
+
+	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject))]
+	interface AVContentKeyResponse {
+		[Static]
+		[Export ("contentKeyResponseWithFairPlayStreamingKeyResponseData:")]
+		AVContentKeyResponse Create (NSData fairPlayStreamingKeyResponseData);
+	}
+
 }

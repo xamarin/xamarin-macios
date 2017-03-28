@@ -94,7 +94,6 @@ namespace Introspection {
 			//  to a MTLHeapDescriptorInternal and don't respond - so we'll add unit tests for them
 			case "MTLHeapDescriptor":
 				return Runtime.Arch == Arch.DEVICE;
-
 			default:
 				return base.Skip (type);
 			}

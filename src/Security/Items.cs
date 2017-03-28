@@ -1155,6 +1155,26 @@ namespace XamCore.Security {
 			}
 		}
 
+		public bool IsSensitive {
+			get {
+				return Fetch (SecAttributeKey.IsSensitive) == CFBoolean.True.Handle;
+			}
+			
+			set {
+				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKey.IsSensitive);
+			}
+		}
+
+		public bool IsExtractable {
+			get {
+				return Fetch (SecAttributeKey.IsExtractable) == CFBoolean.True.Handle;
+			}
+			
+			set {
+				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKey.IsExtractable);
+			}
+		}
+
 		public NSData ApplicationTag {
 			get {
 				return Fetch<NSData> (SecAttributeKey.ApplicationTag);

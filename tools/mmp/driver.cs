@@ -589,6 +589,8 @@ namespace Xamarin.Bundler {
 		static Version MutateSDKVersionToPointRelease (Version rv)
 		{
 			if (rv.Major == 10 && (rv.Revision == 0 || rv.Revision == -1)) {
+				if (rv.Minor == 12 && XcodeVersion >= new Version (8, 3))
+					return new Version (rv.Major, rv.Minor, 4);
 				if (rv.Minor == 12 && XcodeVersion >= new Version (8, 2))
 					return new Version (rv.Major, rv.Minor, 2);
 				if (rv.Minor == 12 && XcodeVersion >= new Version (8, 1))
@@ -1093,6 +1095,9 @@ namespace Xamarin.Bundler {
 
 				if (aotOptions != null && aotOptions.IsHybridAOT)
 					sw.WriteLine ("\txamarin_mac_hybrid_aot = TRUE;");
+
+				if (App.EnableDebug)
+					sw.WriteLine ("\txamarin_debug_mode = TRUE;");
 
 				sw.WriteLine ("\treturn 0;");
 				sw.WriteLine ("}");

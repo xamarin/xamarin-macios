@@ -772,7 +772,18 @@ namespace XamCore.WatchKit {
 		NSError Error { get; }
 
 		[Export ("currentTime")]
-		double CurrentTime { get; }
+		double CurrentTime {
+			get;
+#if XAMCORE_4_0
+			[Watch (3,2)]
+			set;
+		}
+#else
+		}
+		[Watch (3,2)]
+		[Export ("setCurrentTime:")]
+		void SetCurrentTime (double time);
+#endif
 
 		[Watch (2,0), NoiOS]
 		[Notification]
@@ -856,6 +867,10 @@ namespace XamCore.WatchKit {
 
 		[Export ("handleUserActivity:")]
 		void HandleUserActivity ([NullAllowed] NSDictionary userInfo);
+
+		[Watch (3,2)] // TODO: Check if this is equal/similar to HandleUserActivity once docs are available
+		[Export ("handleActivity:")]
+		void HandleUserActivity (NSUserActivity userActivity);
 
 		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use UNUserNotificationCenterDelegate")]
 		[Export ("didReceiveRemoteNotification:")]

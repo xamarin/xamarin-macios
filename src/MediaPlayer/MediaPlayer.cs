@@ -303,6 +303,7 @@ namespace XamCore.MediaPlayer {
 		NotSupported,
 		[iOS (10,1)]
 		Cancelled,
+		RequestTimedOut,
 	}
 
 	[NoMac]

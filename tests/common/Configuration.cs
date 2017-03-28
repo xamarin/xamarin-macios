@@ -241,12 +241,6 @@ namespace Xamarin.Tests
 			}
 		}
 
-		static string XSIphoneDir {
-			get {
-				return Path.Combine (XS_PATH, "lib", "monodevelop", "AddIns", "MonoDevelop.IPhone");
-			}
-		}
-
 		public static string SmcsPath {
 			get {
 				return Path.Combine (SdkBinDir, "smcs");

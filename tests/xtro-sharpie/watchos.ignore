@@ -5,6 +5,9 @@
 ## all members are marked as not available on watchOS (but not the protocol itself)
 !missing-protocol! AVAudio3DMixing not bound
 
+## types/members marked as deprecated in watchOS 2.0 (even if the framework was not available before 3.0)
+AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions:
+
 
 # Foundation
 
@@ -114,6 +117,20 @@
 ## enums added in Xcode 8.1 but the only API using them are not available on watchOS
 !missing-enum! PKPaymentButtonStyle not bound
 !missing-enum! PKPaymentButtonType not bound
+
+
+# SpriteKit
+
+## AVPlayer is not available on watchOS
+!missing-selector! +SKVideoNode::videoNodeWithAVPlayer: not bound
+!missing-selector! SKVideoNode::initWithAVPlayer: not bound
+
+## Those API are already deprecated - so we're not adding them
+## from a managed point-of-view that's invisible (same .ctor)
+!missing-selector! SKVideoNode::initWithVideoFileNamed: not bound
+!missing-selector! SKVideoNode::initWithVideoURL: not bound
+!missing-selector! +SKVideoNode::videoNodeWithVideoFileNamed: not bound
+!missing-selector! +SKVideoNode::videoNodeWithVideoURL: not bound
 
 
 # UIKit

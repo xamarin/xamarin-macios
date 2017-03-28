@@ -416,7 +416,7 @@ namespace Xamarin
 				mtouch.AssertError (26, "Could not parse the command line argument '--llvm-opt=-O2': Both assembly and optimization must be specified (assembly=optimization)");
 			}
 		}
-			
+
 		[Test]
 		public void MT0051 ()
 		{
