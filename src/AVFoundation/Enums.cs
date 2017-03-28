@@ -837,31 +837,4 @@ namespace XamCore.AVFoundation {
 		[Field ("AVAssetExportPresetPassthrough")]
 		Passthrough = 9, // AVAssetExportPresetPassthrough
 	}
-
-	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
-	[Native]
-	public enum AVContentKeyRequestStatus : nint {
-		Requesting,
-		Received,
-		Renewed,
-		Retried,
-		Cancelled,
-		Failed
-	}
-
-	[TV (10, 2), Mac (10, 12, 4), iOS (10, 3)]
-	public enum AVContentKeyRequestRetryReason {
-		[Field ("AVContentKeyRequestRetryReasonTimedOut")]
-		TimedOut,
-		[Field ("AVContentKeyRequestRetryReasonReceivedResponseWithExpiredLease")]
-		ReceivedResponseWithExpiredLease,
-		[Field ("AVContentKeyRequestRetryReasonReceivedObsoleteContentKey")]
-		ReceivedObsoleteContentKey,
-	}
-
-	[TV (10, 2), Mac (10, 12, 4), iOS (10, 3)]
-	public enum AVContentKeySystem {
-		[Field ("AVContentKeySystemFairPlayStreaming")]
-		FairPlayStreaming,
-	}
 }
