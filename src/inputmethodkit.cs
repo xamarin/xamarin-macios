@@ -14,6 +14,7 @@ using System;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 using XamCore.AppKit;
+using XamCore.CoreGraphics;
 
 namespace XamCore.InputMethodKit {
 
@@ -119,13 +120,13 @@ namespace XamCore.InputMethodKit {
 	partial interface IMKMouseHandling {
 
 		[Export ("mouseDownOnCharacterIndex:coordinate:withModifier:continueTracking:client:")]
-		bool MouseDown (nuint index, NSPoint point, nuint flags, out bool keepTracking, NSObject sender);
+		bool MouseDown (nuint index, CGPoint point, nuint flags, out bool keepTracking, NSObject sender);
 
 		[Export ("mouseUpOnCharacterIndex:coordinate:withModifier:client:")]
-		bool MouseUp (nuint index, NSPoint point, nuint flags, NSObject sender);
+		bool MouseUp (nuint index, CGPoint point, nuint flags, NSObject sender);
 
 		[Export ("mouseMovedOnCharacterIndex:coordinate:withModifier:client:")]
-		bool MouseMoved (nuint index, NSPoint point, nuint flags, NSObject sender);
+		bool MouseMoved (nuint index, CGPoint point, nuint flags, NSObject sender);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -141,7 +142,7 @@ namespace XamCore.InputMethodKit {
 		void CancelComposition ();
 
 		[Export ("compositionAttributesAtRange:")]
-		NSMutableDictionary CompositionAttributesAtRange (NSRange range);
+		NSMutableDictionary GetCompositionAttributes (NSRange range);
 
 		[Export ("selectionRange")]
 		NSRange SelectionRange { get; }
@@ -150,7 +151,7 @@ namespace XamCore.InputMethodKit {
 		NSRange ReplacementRange { get; }
 
 		[Export ("markForStyle:atRange:")]
-		NSDictionary Mark (nint style, NSRange range);
+		NSDictionary GetMark (nint style, NSRange range);
 
 		[Export ("doCommandBySelector:commandDictionary:")]
 		void DoCommand (Selector aSelector, NSDictionary infoDictionary);
@@ -185,6 +186,11 @@ namespace XamCore.InputMethodKit {
 
 	[BaseType (typeof (NSResponder))]
 	partial interface IMKCandidates {
+		[Field ("IMKCandidatesOpacityAttributeName")]
+		NSString OpacityAttributeName { get; }
+
+		[Field ("IMKCandidatesSendServerKeyEventFirst")]
+		NSString SendServerKeyEventFirst { get; }
 
 		[Export ("initWithServer:panelType:")]
 		IntPtr Constructor (IMKServer server, IMKCandidatePanelType panelType);
@@ -217,13 +223,13 @@ namespace XamCore.InputMethodKit {
 		NSAttributedString SelectedCandidateString { get; }
 
 		[Lion, Export ("candidateFrameTopLeft")]
-		NSPoint CandidateFrameTopLeft { set; }
+		CGPoint CandidateFrameTopLeft { set; }
 
 		[Export ("candidateFrame")]
-		NSRect CandidateFrame { get; }
+		CGRect CandidateFrame { get; }
 
 		[Export ("selectionKeys")]
-		NSObject [] SelectionKeys { get; set; }
+		NSNumber [] SelectionKeys { get; set; }
 
 		/* TISInputSourceRef comes from Carbon
 		[Export ("selectionKeysKeylayout")]

@@ -825,6 +825,11 @@ IMAGEIO_SOURCES = \
 IMAGEKIT_CORE_SOURCES = \
 	ImageKit/Enums.cs \
 
+# InputMethodKit
+
+INPUTMETHODKIT_CORE_SOURCES = \
+	InputMethodKit/Enums.cs \
+
 # Intents
 
 INTENTS_SOURCES = \
@@ -1551,6 +1556,7 @@ MAC_FRAMEWORKS =            \
 	GLKit                   \
 	ImageIO                 \
 	ImageKit                \
+	InputMethodKit			\
 	Intents                 \
 	JavaScriptCore          \
 	LocalAuthentication     \

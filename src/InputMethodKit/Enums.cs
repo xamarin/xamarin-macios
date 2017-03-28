@@ -1,3 +1,5 @@
+using XamCore.ObjCRuntime;
+
 namespace XamCore.InputMethodKit {
 
 	[Native]
