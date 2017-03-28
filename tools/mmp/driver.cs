@@ -479,7 +479,7 @@ namespace Xamarin.Bundler {
 			}
 
 			if (!IsUnifiedMobile && tls_provider != null)
-				throw new MonoMacException (2011, true, "Selecting a TLS Provider is only supported in the Unified Modern (Mobile) profile");
+				throw new MonoMacException (2011, true, "Selecting a TLS Provider is only supported in the Unified Mobile profile");
 
 
 			ValidateXcode ();
