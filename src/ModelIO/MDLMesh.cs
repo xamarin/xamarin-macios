@@ -85,7 +85,7 @@ namespace XamCore.ModelIO {
 		}
 
 		[iOS (10,0)][TV (10,0)][Mac (10,12)]
-		public static MDLMesh CreateBox (Vector3 vector, Vector3i segments, MDLGeometryType geometryType, bool inwardNormals, IMDLMeshBufferAllocator allocator, MDLMeshVectorType type)
+		public static MDLMesh CreateBox (Vector3 vector, Vector3i segments, MDLGeometryType geometryType, bool inwardNormals, IMDLMeshBufferAllocator allocator, MDLMeshVectorType type = MDLMeshVectorType.Dimensions)
 		{
 			switch (type) {
 			case MDLMeshVectorType.Dimensions:
