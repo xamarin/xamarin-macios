@@ -228,6 +228,7 @@ namespace XamCore.InputMethodKit {
 		[Export ("candidateFrame")]
 		CGRect CandidateFrame { get; }
 
+		[BindAs (typeof (nint []))]
 		[Export ("selectionKeys")]
 		NSNumber [] SelectionKeys { get; set; }
 
