@@ -15,8 +15,8 @@ using XamCore.CoreGraphics;
 using XamCore.CoreVideo;
 
 namespace XamCore.VideoToolbox {
+	[Mac (10,11), iOS (9,0), TV (10,2)]
 	public static class VTUtilities {
-		[Mac (10,11), iOS (9,0)]
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCreateCGImageFromCVPixelBuffer (
 			/* CM_NONNULL CVPixelBufferRef */ IntPtr pixelBuffer,
@@ -26,7 +26,6 @@ namespace XamCore.VideoToolbox {
 		// intentionally not exposing the (NSDictionary options) argument
 		// since header docs indicate that there are no options available
 		// as of 9.0/10.11 and to always pass NULL
-		[Mac (10,11), iOS (9,0)]
 		public static VTStatus ToCGImage (this CVPixelBuffer pixelBuffer, out CGImage image)
 		{
 			if (pixelBuffer == null)
