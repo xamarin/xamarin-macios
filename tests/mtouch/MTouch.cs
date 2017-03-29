@@ -870,7 +870,6 @@ namespace Xamarin
 				mtouch.AssertError (105, "No assembly build target was specified for 'System'.");
 				mtouch.AssertError (105, "No assembly build target was specified for 'System.Xml'.");
 				mtouch.AssertError (105, "No assembly build target was specified for 'System.Core'.");
-				mtouch.AssertError (105, "No assembly build target was specified for 'Mono.Dynamic.Interpreter'.");
 				mtouch.AssertError (105, "No assembly build target was specified for 'Xamarin.iOS'.");
 			}
 		}
