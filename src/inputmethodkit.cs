@@ -26,8 +26,8 @@ namespace XamCore.InputMethodKit {
 		NSString ClientName { get; }
 	}
 
-	[Model]
-	partial interface IMKServerProxy {
+	[BaseType (typeof (NSObject))]
+	partial interface IMKServer {
 		[Field ("IMKModeDictionary")]
 		NSString ModeDictionary { get; }
 
@@ -36,10 +36,6 @@ namespace XamCore.InputMethodKit {
 
 		[Field ("IMKDelegateClass")]
 		NSString DelegateClass { get; }
-	}
-
-	[BaseType (typeof (NSObject))]
-	partial interface IMKServer : IMKServerProxy {
 
 		[Export ("initWithName:bundleIdentifier:")]
 		IntPtr Constructor (string name, string bundleIdentifier);
@@ -51,14 +47,16 @@ namespace XamCore.InputMethodKit {
 		NSBundle Bundle { get; }
 
 		[Lion, Export ("paletteWillTerminate")]
-		bool PaletteWillTerminate { get; }
+		bool PaletteWillTerminate ();
 
 		[Lion, Export ("lastKeyEventWasDeadKey")]
 		bool LastKeyEventWasDeadKey { get; }
 	}
 
-	[Category, BaseType (typeof (NSObject))]
-	partial interface IMKServerInput_NSObject {
+	interface IIMKServerInput { }
+
+	[Protocol]
+	partial interface IMKServerInput {
 
 		[Export ("inputText:key:modifiers:client:")]
 		bool InputText (string str, nint keyCode, nuint flags, NSObject sender);
@@ -82,8 +80,10 @@ namespace XamCore.InputMethodKit {
 		void CommitComposition (NSObject sender);
 
 		[Export ("candidates:")]
-		NSObject [] Candidates (NSObject sender);
+		string [] Candidates (NSObject sender);
 	}
+
+	interface IIMKStateSetting { }
 
 	[Protocol]
 	partial interface IMKStateSetting {
@@ -97,11 +97,11 @@ namespace XamCore.InputMethodKit {
 
 		[Abstract]
 		[Export ("valueForTag:client:")]
-		NSObject GetValue (nint tag, NSObject sender);
+		NSObject GetValue (long tag, NSObject sender);
 
 		[Abstract]
 		[Export ("setValue:forTag:client:")]
-		void SetValue (NSObject value, nint tag, NSObject sender);
+		void SetValue (NSObject value, long tag, NSObject sender);
 
 		[Abstract]
 		[Export ("modes:")]
@@ -116,7 +116,9 @@ namespace XamCore.InputMethodKit {
 		void ShowPreferences (NSObject sender);
 	}
 
-	[Model]
+	interface IIMKMouseHandling { }
+
+	[Protocol]
 	partial interface IMKMouseHandling {
 
 		[Export ("mouseDownOnCharacterIndex:coordinate:withModifier:continueTracking:client:")]
@@ -162,7 +164,8 @@ namespace XamCore.InputMethodKit {
 		[Export ("menu")]
 		NSMenu Menu { get; }
 
-		[Export ("delegate")]
+		//There is no protocol for this delegate.  used to respond to messages in the responder chain
+		[NullAllowed][Export ("delegate")]
 		NSObject Delegate { get; set; }
 
 		[Export ("server")]
@@ -222,8 +225,8 @@ namespace XamCore.InputMethodKit {
 		[Lion, Export ("selectedCandidateString")]
 		NSAttributedString SelectedCandidateString { get; }
 
-		[Lion, Export ("candidateFrameTopLeft")]
-		CGPoint CandidateFrameTopLeft { set; }
+		[Lion, Export ("setCandidateFrameTopLeft:")]
+		void SetCandidateFrameTopLeft (CGPoint point);
 
 		[Export ("candidateFrame")]
 		CGRect CandidateFrame { get; }
