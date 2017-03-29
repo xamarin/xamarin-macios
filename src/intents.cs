@@ -2737,7 +2737,9 @@ namespace XamCore.Intents {
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Introduced (PlatformName.WatchOS, 3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
+#if XAMCORE_4_0
 	[DisableDefaultCtor]
+#endif	
 	[BaseType (typeof (NSObject))]
 	interface INPreferences {
 
