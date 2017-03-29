@@ -237,8 +237,8 @@ noasyncinternalwrapper:
 	@rm -Rf $@.tmpdir
 	@mkdir -p $@.tmpdir
 	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) --sourceonly:$@.source -tmpdir=$@.tmpdir $@.cs
-	@if [ `grep -r RequiredMethodAsync $@.tmpdir/NoAsyncInternalWrapperTests | wc -l` -ne 0 ]; then \
-		echo "Error: Expected 0 RequiredMethodAsync members in generated code. If you modified code that generates RequiredMethodAsync (AsyncAttribute) please update the RequiredMethodAsync count."; exit 1; \
+	@if [ `grep -r RequiredMethodAsync $@.tmpdir/NoAsyncInternalWrapperTests | wc -l` -ne 1 ]; then \
+		echo "Error: Expected 1 RequiredMethodAsync members in generated code. If you modified code that generates RequiredMethodAsync (AsyncAttribute) please update the RequiredMethodAsync count."; exit 1; \
 	fi
 
 noasyncwarningcs0219:
