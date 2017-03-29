@@ -101,5 +101,85 @@ namespace Xamarin.Bundler {
 			ErrorHelper.Warning (54, "Unable to canonicalize the path '{0}': {1} ({2}).", path, strerror (errno), errno);
 			return path;
 		}
+
+		public void ComputeLinkerFlags ()
+		{
+			foreach (var a in Assemblies)
+				a.ComputeLinkerFlags ();
+#if MTOUCH
+			if (App.Platform != ApplePlatform.WatchOS && App.Platform != ApplePlatform.TVOS)
+				Frameworks.Add ("CFNetwork"); // required by xamarin_start_wwan
+#endif
+		}
+
+		public void GatherFrameworks ()
+		{
+			AssemblyDefinition productAssembly = null;
+
+			foreach (var assembly in Assemblies) {
+				if (assembly.AssemblyDefinition.Name.Name == Driver.GetProductAssembly (App)) {
+					productAssembly = assembly.AssemblyDefinition;
+					break;
+				}
+			}
+
+			// *** make sure any change in the above lists (or new list) are also reflected in 
+			// *** Makefile so simlauncher-sgen does not miss any framework
+
+			HashSet<string> processed = new HashSet<string> ();
+#if !MONOMAC
+			Version v80 = new Version (8, 0);
+#endif
+
+			foreach (ModuleDefinition md in productAssembly.Modules) {
+				foreach (TypeDefinition td in md.Types) {
+					// process only once each namespace (as we keep adding logic below)
+					string nspace = td.Namespace;
+					if (processed.Contains (nspace))
+						continue;
+					processed.Add (nspace);
+
+					Framework framework;
+					if (Driver.GetFrameworks (App).TryGetValue (nspace, out framework)) {
+						// framework specific processing
+						switch (framework.Name) {
+#if !MONOMAC
+						case "CoreAudioKit":
+							// CoreAudioKit seems to be functional in the iOS 9 simulator.
+							if (App.IsSimulatorBuild && App.SdkVersion.Major < 9)
+								continue;
+							break;
+						case "Metal":
+						case "MetalKit":
+						case "MetalPerformanceShaders":
+							// some frameworks do not exists on simulators and will result in linker errors if we include them
+							if (App.IsSimulatorBuild)
+								continue;
+							break;
+						case "PushKit":
+							// in Xcode 6 beta 7 this became an (ld) error - it was a warning earlier :(
+							// ld: embedded dylibs/frameworks are only supported on iOS 8.0 and later (@rpath/PushKit.framework/PushKit) for architecture armv7
+							// this was fixed in Xcode 6.2 (6.1 was still buggy) see #29786
+							if ((App.DeploymentTarget < v80) && (Driver.XcodeVersion < new Version (6, 2))) {
+								ErrorHelper.Warning (49, "{0}.framework is supported only if deployment target is 8.0 or later. {0} features might not work correctly.", framework.Name);
+								continue;
+							}
+							break;
+#endif
+						}
+
+						if (App.SdkVersion >= framework.Version) {
+							var add_to = App.DeploymentTarget >= framework.Version ? Frameworks : WeakFrameworks;
+							add_to.Add (framework.Name);
+							continue;
+						}
+					}
+				}
+			}
+
+			// Make sure there are no duplicates between frameworks and weak frameworks.
+			// Keep the weak ones.
+			Frameworks.ExceptWith (WeakFrameworks);
+		}
 	}
 }

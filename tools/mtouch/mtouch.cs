@@ -820,69 +820,6 @@ namespace Xamarin.Bundler
 			return s.ToString ();
 		}
 
-		public static void GatherFrameworks (Target target, HashSet<string> frameworks, HashSet<string> weak_frameworks)
-		{
-			var app = target.App;
-			AssemblyDefinition monotouch = null;
-
-			foreach (var assembly in target.Assemblies) {
-				if (assembly.AssemblyDefinition.FullName == target.ProductAssembly.FullName) {
-					monotouch = assembly.AssemblyDefinition;
-					break;
-				}
-			}
-
-			// *** make sure any change in the above lists (or new list) are also reflected in 
-			// *** Makefile so simlauncher-sgen does not miss any framework
-
-			HashSet<string> processed = new HashSet<string> ();
-			Version v80 = new Version (8, 0);
-
-			foreach (ModuleDefinition md in monotouch.Modules) {
-				foreach (TypeDefinition td in md.Types) {
-					// process only once each namespace (as we keep adding logic below)
-					string nspace = td.Namespace;
-					if (processed.Contains (nspace))
-						continue;
-					processed.Add (nspace);
-
-					Framework framework;
-					if (Driver.GetFrameworks (app).TryGetValue (nspace, out framework)) {
-						// framework specific processing
-						switch (framework.Name) {
-						case "CoreAudioKit":
-							// CoreAudioKit seems to be functional in the iOS 9 simulator.
-							if (app.IsSimulatorBuild && app.SdkVersion.Major < 9)
-								continue;
-							break;
-						case "Metal":
-						case "MetalKit":
-						case "MetalPerformanceShaders":
-							// some frameworks do not exists on simulators and will result in linker errors if we include them
-							if (app.IsSimulatorBuild)
-								continue;
-							break;
-						case "PushKit":
-							// in Xcode 6 beta 7 this became an (ld) error - it was a warning earlier :(
-							// ld: embedded dylibs/frameworks are only supported on iOS 8.0 and later (@rpath/PushKit.framework/PushKit) for architecture armv7
-							// this was fixed in Xcode 6.2 (6.1 was still buggy) see #29786
-							if ((app.DeploymentTarget < v80) && (XcodeVersion < new Version (6, 2))) {
-								ErrorHelper.Warning (49, "{0}.framework is supported only if deployment target is 8.0 or later. {0} features might not work correctly.", framework.Name);
-								continue;
-							}
-							break;
-						}
-
-						if (app.SdkVersion >= framework.Version) {
-							var add_to = app.DeploymentTarget >= framework.Version ? frameworks : weak_frameworks;
-							add_to.Add (framework.Name);
-							continue;
-						}
-					}
-				}
-			}
-		}
-
 		public static bool CanWeSymlinkTheApplication (Application app)
 		{
 			if (app.Platform != ApplePlatform.iOS)

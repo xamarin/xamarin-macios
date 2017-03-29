@@ -28,6 +28,16 @@ namespace Xamarin.MMP.Tests
 			}
 		}
 
+		// TODO - We have multiple tests using this. It doesn't take that long, but is it worth caching?
+		string [] GetUnifiedProjectClangInvocation (string tmpDir, string projectConfig = "")
+		{
+			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = projectConfig };
+			string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
+			string [] splitBuildOutput = TI.TestUnifiedExecutable (test).BuildOutput.Split (new string[] { Environment.NewLine }, StringSplitOptions.None);
+			string clangInvocation = splitBuildOutput.Single (x => x.Contains ("clang"));
+			return clangInvocation.Split (new string[] { " " }, StringSplitOptions.None);
+		}
+
 		[Test]
 		public void CollisionsBetweenLibraryNameAndEXE_ShouldFailBuild ()
 		{
@@ -630,10 +640,8 @@ namespace Xamarin.MMP.Tests
 		public void UnifiedDebug_ShouldOnlyHaveOne_ObjCArgument ()
 		{
 			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
-				var buildOutput = TI.TestUnifiedExecutable (test).BuildOutput.Split (new string[] { Environment.NewLine }, StringSplitOptions.None);
-				string clangInvocation = buildOutput.Single (x => x.Contains ("clang"));
-				int objcCount = clangInvocation.Split (new string[] { " " }, StringSplitOptions.None).Count (x => x.Contains ("-ObjC"));
+				string [] clangParts = GetUnifiedProjectClangInvocation (tmpDir);
+				int objcCount = clangParts.Count (x => x.Contains ("-ObjC"));
 				Assert.AreEqual (1, objcCount, "Found more than one -OjbC");
 			});
 		}
