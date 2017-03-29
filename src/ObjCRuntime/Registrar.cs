@@ -67,6 +67,19 @@ using ProductException=MonoMac.RuntimeException;
 // This file cannot use any cecil code, since it's also compiled into monotouch.dll
 //
 
+#if MONOMAC
+namespace XamCore.ObjCRuntime
+{
+	public delegate void AssemblyRegistrationHandler (object sender, AssemblyRegistrationEventArgs args);
+
+	public class AssemblyRegistrationEventArgs : EventArgs
+	{
+		public bool Register { get; set; }
+		public System.Reflection.AssemblyName AssemblyName { get; internal set; }
+	}
+}
+#endif
+
 namespace XamCore.Registrar {
 	static class Shared {
 		
