@@ -184,8 +184,13 @@ namespace Linker.Shared {
 
 			}
 			// the optimization is turned off in case of fat apps (32/64 bits)
-			if (IsMainExecutableDual ())
+			if (IsMainExecutableDual ()) {
+#if DEBUG
+				Assert.Inconclusive ("debug IL code");
+#else
 				Assert.IsFalse (contains11 && contains22, "neither instructions removed");
+#endif
+			}
 			// even if disabled this condition remains
 			Assert.IsFalse (!contains11 && !contains22, "both instructions removed");
 		}

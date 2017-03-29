@@ -53,17 +53,6 @@ namespace Xamarin.Linker.Steps {
 							break;
 						}
 					}
-					// this removes System.Runtime.Versioning's BinaryCompatibility / BinaryCompatibilityMap / CompatibilitySwitch / TargetFrameworkId
-					if (!mr.HasParameters && mr.DeclaringType.Is ("System.Runtime.Versioning", "BinaryCompatibility")) {
-						switch (mr.Name) {
-						case "get_TargetsAtLeast_Desktop_V4_5":
-							il.OpCode = OpCodes.Ldc_I4_1;
-							break;
-						case "get_TargetsAtLeast_Desktop_V4_5_1":
-							il.OpCode = OpCodes.Ldc_I4_0;
-							break;
-						}
-					}
 				}
 			}
 		}

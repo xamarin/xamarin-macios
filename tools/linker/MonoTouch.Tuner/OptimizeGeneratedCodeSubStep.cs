@@ -135,7 +135,7 @@ namespace MonoTouch.Tuner {
 				if (!mr.DeclaringType.Is ("System", "IntPtr"))
 					return;
 
-				if (ins.Next.OpCode != OpCodes.Ldc_I4_8 || ins.Next.Next.OpCode != OpCodes.Bne_Un)
+				if (!(ins.Next.OpCode == OpCodes.Ldc_I4_8 && (ins.Next.Next.OpCode == OpCodes.Bne_Un || ins.Next.Next.OpCode == OpCodes.Bne_Un_S)))
 					return;
 #if DEBUG
 				Console.WriteLine ("\t{0} get_Size {1} bits", caller, Arch * 8);

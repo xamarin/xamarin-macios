@@ -630,6 +630,11 @@ namespace Xamarin.Bundler
 								inputs.Add (input + ".mdb");
 								outputs.Add (output + ".mdb");
 							}
+							var pdb = Path.ChangeExtension (input, "pdb");
+							if (File.Exists (pdb)) {
+								inputs.Add (pdb);
+								outputs.Add (Path.ChangeExtension (output, "pdb"));
+							}
 							if (File.Exists (input + ".config")) {
 								// If a config file changes, then the AOT-compiled output can be different,
 								// so make sure to take config files into account as well.
@@ -762,6 +767,9 @@ namespace Xamarin.Bundler
 						Driver.Touch (a.FullPath);
 						if (File.Exists (a.FullPath + ".mdb"))
 							Driver.Touch (a.FullPath + ".mdb");
+						var pdb = Path.ChangeExtension (a.FullPath, "pdb");
+						if (File.Exists (pdb))
+							Driver.Touch (pdb);
 					}
 
 					// Now copy to the build directory

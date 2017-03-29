@@ -354,9 +354,9 @@ namespace Xamarin
 				var msymDir = appDir + ".mSYM";
 				var is_dual_asm = !is_sim && extra_mtouch_args.Contains ("--abi") && extra_mtouch_args.Contains (",");
 				if (!is_dual_asm) {
-					Assert.AreEqual (has_mdb, File.Exists (Path.Combine (appDir, "mscorlib.dll.mdb")), "#mdb");
+					Assert.AreEqual (has_mdb, File.Exists (Path.Combine (appDir, "mscorlib.pdb")), "#pdb");
 				} else {
-					Assert.AreEqual (has_mdb, File.Exists (Path.Combine (appDir, ".monotouch-32", "mscorlib.dll.mdb")), "#mdb");
+					Assert.AreEqual (has_mdb, File.Exists (Path.Combine (appDir, ".monotouch-32", "mscorlib.pdb")), "#pdb");
 				}
 
 				if (has_msym) {
@@ -870,7 +870,6 @@ namespace Xamarin
 				mtouch.AssertError (105, "No assembly build target was specified for 'System'.");
 				mtouch.AssertError (105, "No assembly build target was specified for 'System.Xml'.");
 				mtouch.AssertError (105, "No assembly build target was specified for 'System.Core'.");
-				mtouch.AssertError (105, "No assembly build target was specified for 'Mono.Dynamic.Interpreter'.");
 				mtouch.AssertError (105, "No assembly build target was specified for 'Xamarin.iOS'.");
 			}
 		}

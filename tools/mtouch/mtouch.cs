@@ -755,6 +755,14 @@ namespace Xamarin.Bundler
 			string sdebug = source + ".mdb";
 			if (File.Exists (sdebug))
 				File.Copy (sdebug, tdebug);
+
+			string tpdb = Path.ChangeExtension (target, "pdb");
+			if (File.Exists (tpdb))
+				File.Delete (tpdb);
+
+			string spdb = Path.ChangeExtension (source, "pdb");
+			if (File.Exists (spdb))
+				File.Copy (spdb, tpdb);
 		}
 
 		public static bool SymlinkAssembly (Application app, string source, string target, string target_dir)
@@ -785,6 +793,15 @@ namespace Xamarin.Bundler
 			string sdebug = source + ".mdb";
 			if (File.Exists (sdebug))
 				Symlink (sdebug, tdebug);
+
+			string tpdb = Path.ChangeExtension (target, "pdb");
+			if (File.Exists (tpdb))
+				File.Delete (tpdb);
+
+			string spdb = Path.ChangeExtension (source, "pdb");
+			if (File.Exists (spdb))
+				Symlink (spdb, tpdb);
+
 			return true;
 		}
 
