@@ -16,6 +16,7 @@ using Foundation;
 using AppKit;
 using UIColor = AppKit.NSColor;
 #else
+using ObjCRuntime;
 using UIKit;
 #endif
 using CoreGraphics;

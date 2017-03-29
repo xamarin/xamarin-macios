@@ -921,9 +921,6 @@ namespace Introspection {
 					if (IgnoreAsync (m))
 						continue;
 
-					if (m.ReturnType.Name != "Void")
-						continue;
-
 					// some calls are "natively" async
 					if (m.Name.IndexOf ("Async", StringComparison.Ordinal) != -1)
 						continue;
@@ -972,6 +969,12 @@ namespace Introspection {
 			// it sets the callback, it will never call it
 			case "SetCompletionBlock":
 				return m.DeclaringType.Name == "SCNTransaction";
+			// It does not make sense for this API
+			case "CreateRunningPropertyAnimator":
+				return m.DeclaringType.Name == "UIViewPropertyAnimator";
+			// It does not make sense for this API
+			case "RequestData":
+				return m.DeclaringType.Name == "PHAssetResourceManager";
 			}
 			return false;
 		}

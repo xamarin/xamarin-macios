@@ -90,6 +90,26 @@
 ## somewhere else.
 !missing-selector! HMCameraStream::setAudioStreamSetting: not bound
 
+# Intents
+
+## Deprecated so not exposing it into Xamarin.Watch.dll
+!missing-selector! INRequestRideIntent::initWithPickupLocation:dropOffLocation:rideOptionName:partySize:paymentMethod: not bound
+!missing-selector! INRideDriver::initWithHandle:displayName:image:rating:phoneNumber: not bound
+!missing-selector! INRideDriver::initWithHandle:nameComponents:image:rating:phoneNumber: not bound
+!missing-selector! INRideDriver::initWithPersonHandle:nameComponents:displayName:image:rating:phoneNumber: not bound
+!missing-selector! INRideOption::identifier not bound
+!missing-selector! INRideOption::setIdentifier: not bound
+
+## False positive the class INBookRestaurantReservationIntentResponse is not available on watchOS
+!missing-enum! INBookRestaurantReservationIntentCode not bound
+
+## INPayBillIntentHandling && INSearchForBillsIntentHandling are new protocols added in iOS 10.3. This two protocols
+## were added to the existing Protocol INPaymentsDomainHandling so making this two required would be a breaking change
+!incorrect-protocol-member! INPayBillIntentHandling::handlePayBill:completion: is REQUIRED and should be abstract
+!incorrect-protocol-member! INSearchForBillsIntentHandling::handleSearchForBills:completion: is REQUIRED and should be abstract
+
+## Waiting on a radar https://trello.com/c/h8xBlKTt
+!missing-selector! +INPreferences::requestSiriAuthorization: not bound
 
 #PassKit
 

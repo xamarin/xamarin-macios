@@ -478,10 +478,6 @@ namespace Xamarin.Bundler {
 				ErrorHelper.Warning (2014, "Xamarin.Mac Extensions do not support linking. Request for linking will be ignored.");
 			}
 
-			if (!IsUnifiedMobile && tls_provider != null)
-				throw new MonoMacException (2011, true, "Selecting a TLS Provider is only supported in the Unified Mobile profile");
-
-
 			ValidateXcode ();
 
 			App.InitializeCommon ();
@@ -589,6 +585,8 @@ namespace Xamarin.Bundler {
 		static Version MutateSDKVersionToPointRelease (Version rv)
 		{
 			if (rv.Major == 10 && (rv.Revision == 0 || rv.Revision == -1)) {
+				if (rv.Minor == 12 && XcodeVersion >= new Version (8, 3))
+					return new Version (rv.Major, rv.Minor, 4);
 				if (rv.Minor == 12 && XcodeVersion >= new Version (8, 2))
 					return new Version (rv.Major, rv.Minor, 2);
 				if (rv.Minor == 12 && XcodeVersion >= new Version (8, 1))
@@ -1194,6 +1192,7 @@ namespace Xamarin.Bundler {
 				args.Append ("-arch ").Append (arch).Append (' ');
 				if (arch == "x86_64")
 					args.Append ("-fobjc-runtime=macosx ");
+				bool appendedObjc = false;
 				foreach (var assembly in BuildTarget.Assemblies) {
 					if (assembly.LinkWith != null) {
 						foreach (var linkWith in assembly.LinkWith) {
@@ -1209,7 +1208,10 @@ namespace Xamarin.Bundler {
 								args.Append (Quote (linkWith)).Append (' ');
 							}
 						}
-						args.Append ("-ObjC").Append (' ');
+						if (!appendedObjc) {
+							appendedObjc = true;
+							args.Append ("-ObjC").Append (' ');
+						}
 					}
 					if (assembly.LinkerFlags != null)
 						foreach (var linkFlag in assembly.LinkerFlags)

@@ -1,4 +1,4 @@
-#if XAMCORE_2_0 && IOS
+#if XAMCORE_2_0 && (IOS || TVOS)
 
 using XamCore.Foundation;
 using XamCore.Intents;

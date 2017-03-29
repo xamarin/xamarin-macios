@@ -64,6 +64,7 @@ namespace Introspection {
 				if (ca is ModelAttribute)
 					return true;
 			}
+
 			switch (type.Name) {
 #if !XAMCORE_2_0
 			case "AVAssetResourceLoader": // We have DisableDefaultCtor in XAMCORE_2_0 but can't change in compat because of backwards compat

@@ -425,7 +425,7 @@ public class MemberInformation
 	public readonly Type type;
 	public readonly Type category_extension_type;
 	public readonly bool is_abstract, is_protected, is_internal, is_unified_internal, is_override, is_new, is_sealed, is_static, is_thread_static, is_autorelease, is_wrapper, is_forced;
-	public readonly bool is_type_sealed, ignore_category_static_warnings;
+	public readonly bool is_type_sealed, ignore_category_static_warnings, is_basewrapper_protocol_method;
 	public readonly Generator.ThreadCheck threadCheck;
 	public bool is_unsafe, is_virtual_method, is_export, is_category_extension, is_variadic, is_interface_impl, is_extension_method, is_appearance, is_model, is_ctor;
 	public bool is_return_release;
@@ -491,9 +491,10 @@ public class MemberInformation
 		
 	}
 
-	public MemberInformation (IMemberGatherer gather, MethodInfo mi, Type type, Type category_extension_type, bool is_interface_impl = false, bool is_extension_method = false, bool is_appearance = false, bool is_model = false, string selector = null)
+	public MemberInformation (IMemberGatherer gather, MethodInfo mi, Type type, Type category_extension_type, bool is_interface_impl = false, bool is_extension_method = false, bool is_appearance = false, bool is_model = false, string selector = null, bool isBaseWrapperProtocolMethod = false)
 	: this (gather, (MemberInfo)mi, type, is_interface_impl, is_extension_method, is_appearance, is_model)
 	{
+		is_basewrapper_protocol_method = isBaseWrapperProtocolMethod;
 		foreach (ParameterInfo pi in mi.GetParameters ())
 			if (pi.ParameterType.IsSubclassOf (TypeManager.System_Delegate))
 				is_unsafe = true;
@@ -2593,15 +2594,19 @@ public partial class Generator : IMemberGatherer {
 
 				print ("namespace {0} {{", dictType.Namespace);
 				indent++;
+				PrintPlatformAttributes (dictType);
 				print ("public partial class {0} : DictionaryContainer {{", typeName);
 				indent++;
 				sw.WriteLine ("#if !COREBUILD");
 				print ("[Preserve (Conditional = true)]");
 				print ("public {0} () : base (new NSMutableDictionary ()) {{}}\n", typeName);
 				print ("[Preserve (Conditional = true)]");
-				print ("public {0} (NSDictionary dictionary) : base (dictionary) {{}}", typeName);
+				print ("public {0} (NSDictionary dictionary) : base (dictionary) {{}}\n", typeName);
 
 				foreach (var pi in dictType.GatherProperties ()){
+					if (pi.IsUnavailable ())
+						continue;
+					
 					string keyname;
 					var attrs = AttributeManager.GetCustomAttributes<ExportAttribute> (pi);
 					if (attrs.Length == 0)
@@ -2612,6 +2617,7 @@ public partial class Generator : IMemberGatherer {
 							keyname = keyContainerType + "." + keyname;
 					}
 
+					PrintPlatformAttributes (pi);
 					string modifier = pi.IsInternal () ? "internal" : "public";
 					
 					print (modifier + " {0}{1} {2} {{",
@@ -4717,21 +4723,25 @@ public partial class Generator : IMemberGatherer {
 		var ttype = "bool";
 		var tuple = false;
 		if (!minfo.is_void_async) {
-				ttype = GetAsyncTaskType (minfo);
+			ttype = GetAsyncTaskType (minfo);
 			tuple = (UnifiedAPI && minfo.has_nserror && (ttype == "bool"));
 			if (tuple)
 				ttype = "Tuple<bool,NSError>";
 		}
 		print ("var tcs = new TaskCompletionSource<{0}> ();", ttype);
+		bool ignoreResult = !is_void &&
+			asyncKind == AsyncMethodKind.Plain &&
+			AttributeManager.GetCustomAttribute<AsyncAttribute> (mi).PostNonResultSnippet == null;
 		print ("{6}{5}{4}{0}({1}{2}({3}) => {{",
-		       mi.Name,
-		       GetInvokeParamList (minfo.async_initial_params, false),
-		       minfo.async_initial_params.Length > 0 ? ", " : "",
-		       GetInvokeParamList (minfo.async_completion_params),
-		       minfo.is_extension_method ? "This." : string.Empty,
-			   is_void ? string.Empty : minfo.GetUniqueParamName ("result") + " = ",
-			   is_void ? string.Empty : (asyncKind == AsyncMethodKind.WithResultOutParameter ? string.Empty : "var ")
+			mi.Name,
+			GetInvokeParamList (minfo.async_initial_params, false),
+			minfo.async_initial_params.Length > 0 ? ", " : "",
+			GetInvokeParamList (minfo.async_completion_params),
+			minfo.is_extension_method ? "This." : string.Empty,
+			is_void || ignoreResult ? string.Empty : minfo.GetUniqueParamName ("result") + " = ",
+			is_void || ignoreResult ? string.Empty : (asyncKind == AsyncMethodKind.WithResultOutParameter ? string.Empty : "var ")
 		);
+
 		indent++;
 
 		int nesting_level = 1;
@@ -4812,9 +4822,9 @@ public partial class Generator : IMemberGatherer {
 	}
 
 
-	void GenerateMethod (Type type, MethodInfo mi, bool is_model, Type category_extension_type, bool is_appearance, bool is_interface_impl = false, bool is_extension_method = false, string selector = null)
+	void GenerateMethod (Type type, MethodInfo mi, bool is_model, Type category_extension_type, bool is_appearance, bool is_interface_impl = false, bool is_extension_method = false, string selector = null, bool isBaseWrapperProtocolMethod = false)
 	{
-		var minfo = new MemberInformation (this, mi, type, category_extension_type, is_interface_impl, is_extension_method, is_appearance, is_model, selector);
+		var minfo = new MemberInformation (this, mi, type, category_extension_type, is_interface_impl, is_extension_method, is_appearance, is_model, selector, isBaseWrapperProtocolMethod);
 		GenerateMethod (minfo);
 	}
 
@@ -4938,6 +4948,12 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		if (AttributeManager.HasAttribute<AsyncAttribute> (mi)) {
+			// We do not want Async methods inside internal wrapper classes, they are useless
+			// internal sealed class FooWrapper : BaseWrapper, IMyFooDelegate
+			// Also we do not want Async members inside [Model] classes
+			if (minfo.is_basewrapper_protocol_method || minfo.is_model)
+				return;
+
 			GenerateAsyncMethod (minfo, AsyncMethodKind.Plain);
 
 			// Generate the overload with the out parameter
@@ -5116,6 +5132,7 @@ public partial class Generator : IMemberGatherer {
 		var optionalInstanceMethods = allProtocolMethods.Where ((v) => !IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v));
 		var requiredInstanceProperties = allProtocolProperties.Where ((v) => IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v)).ToList ();
 		var optionalInstanceProperties = allProtocolProperties.Where ((v) => !IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v));
+		var requiredInstanceAsyncMethods = requiredInstanceMethods.Where (m => AttributeManager.HasAttribute<AsyncAttribute> (m)).ToList ();
 
 		PrintAttributes (type, platform:true, preserve:true, advice:true);
 		print ("[Protocol (Name = \"{1}\", WrapperType = typeof ({0}Wrapper){2})]", TypeName, protocol_name, protocolAttribute.IsInformal ? ", IsInformal = true" : string.Empty);
@@ -5269,7 +5286,7 @@ public partial class Generator : IMemberGatherer {
 		// avoid (for unified) all the metadata for empty static classes, we can introduce them later when required
 		bool include_extensions = false;
 		if (UnifiedAPI) {
-			include_extensions = optionalInstanceMethods.Any () || optionalInstanceProperties.Any ();
+			include_extensions = optionalInstanceMethods.Any () || optionalInstanceProperties.Any () || requiredInstanceAsyncMethods.Any ();
 		} else {
 			include_extensions = true;
 		}
@@ -5280,6 +5297,16 @@ public partial class Generator : IMemberGatherer {
 			indent++;
 			foreach (var mi in optionalInstanceMethods)
 				GenerateMethod (type, mi, false, null, false, false, true);
+
+			// Generate Extension Methods of required [Async] decorated methods (we already do optional) 
+			foreach (var ami in requiredInstanceAsyncMethods) {
+				var minfo = new MemberInformation (this, ami, type, null, is_extension_method: true);
+				GenerateAsyncMethod (minfo, AsyncMethodKind.Plain);
+
+				// Generate the overload with the out parameter
+				if (minfo.method.ReturnType != TypeManager.System_Void)
+					GenerateAsyncMethod (minfo, AsyncMethodKind.WithResultOutParameter);
+			}
 
 			// C# does not support extension properties, so create Get* and Set* accessors instead.
 			foreach (var pi in optionalInstanceProperties) {
@@ -5318,7 +5345,7 @@ public partial class Generator : IMemberGatherer {
 		print ("");
 		// Methods
 		foreach (var mi in requiredInstanceMethods) {
-			GenerateMethod (type, mi, false, null, false, true);
+			GenerateMethod (type, mi, false, null, false, true, isBaseWrapperProtocolMethod:true);
 		}
 		foreach (var pi in requiredInstanceProperties) {
 			GenerateProperty (type, pi, null, false, true);

@@ -1215,8 +1215,8 @@ Only available on Xamarin.iOS 6.3 and newer.
 This attribute can be applied to methods that take a
 completion handler as their last argument.
 
-You can use the `[Async]` attribute on methods that return
-void and whose last argument is a callback.  When you apply
+You can use the `[Async]` attribute on methods whose
+last argument is a callback.  When you apply
 this to a method, the binding generator will generate a
 version of that method with the suffix `Async`.  If the callback
 takes no parameters, the return value will be a `Task`, if the
