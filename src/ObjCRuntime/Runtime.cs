@@ -236,6 +236,23 @@ namespace XamCore.ObjCRuntime {
 		}
 #endif
 
+#if MONOMAC
+		public static event AssemblyRegistrationHandler AssemblyRegistration;
+
+		static bool OnAssemblyRegistration (AssemblyName assembly_name)
+		{
+			if (AssemblyRegistration != null) {
+				var args = new AssemblyRegistrationEventArgs
+				{
+					Register = true,
+					AssemblyName = assembly_name
+				};
+				AssemblyRegistration (null, args);
+				return args.Register;
+			}
+			return true;
+		}
+#endif
 		static MarshalObjectiveCExceptionMode objc_exception_mode;
 		static MarshalManagedExceptionMode managed_exception_mode;
 
@@ -388,7 +405,12 @@ namespace XamCore.ObjCRuntime {
 			assemblies.Add (NSObject.PlatformAssembly); // make sure our platform assembly comes first
 			// Recursively get all assemblies referenced by the entry assembly.
 			if (entry_assembly != null) {
-				CollectReferencedAssemblies (assemblies, entry_assembly);
+				var register_entry_assembly = true;
+#if MONOMAC
+				register_entry_assembly = OnAssemblyRegistration (entry_assembly.GetName ());
+#endif
+				if (register_entry_assembly)
+					CollectReferencedAssemblies (assemblies, entry_assembly);
 			} else {
 				Console.WriteLine ("Could not find the entry assembly.");
 			}
@@ -396,6 +418,9 @@ namespace XamCore.ObjCRuntime {
 #if MONOMAC
 			// Add all assemblies already loaded
 			foreach (var a in AppDomain.CurrentDomain.GetAssemblies ()) {
+				if (!OnAssemblyRegistration (a.GetName ()))
+					continue;
+
 				if (!assemblies.Contains (a))
 					assemblies.Add (a);
 			}
@@ -409,6 +434,10 @@ namespace XamCore.ObjCRuntime {
 		{
 			assemblies.Add (assembly);
 			foreach (var rf in assembly.GetReferencedAssemblies ()) {
+#if MONOMAc
+				if (!OnAssemblyRegistration (rf))
+					continue;
+#endif
 				try {
 					var a = Assembly.Load (rf);
 					if (!assemblies.Contains (a))
