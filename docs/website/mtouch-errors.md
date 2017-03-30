@@ -1003,6 +1003,17 @@ The format of a file can be verified using the `file` command from a terminal:
 
 <h3><a name="MT2001"/>MT2001 Could not link assemblies</h3>
 
+This error means that the managed linker encountered an unexpected error, e.g. an exception, and could not complete or save the assembly being processed. More information about the exact error will be part of the build log, e.g.
+
+```
+error MT2001: Could not link assemblies. 
+	Method: `System.Void Todo.TodoListPageCS/<<-ctor>b__1_0>d::SetStateMachine(System.Runtime.CompilerServices.IAsyncStateMachine)`
+	Assembly: `QuickTodo, Version=1.0.6297.28241, Culture=neutral, PublicKeyToken=null`
+Reason: Value cannot be null.
+Parameter name: instruction
+```
+
+It is important to file a bug report for such issues. In most case a workaround can be provided until a proper fix is published. The above information is critical (along with a test case and/or the assembly binairy) to resolve the issue.
 
 
 <h3><a name="MT2002"/>MT2002 Can not resolve reference: *</h3>
