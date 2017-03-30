@@ -565,7 +565,7 @@ void monotouch_configure_debugging ()
 	if (!xamarin_is_extension) {
 		// Don't read shared memory in normal apps, because we're always able to pass
 		// the debug data (host/port) using either command-line arguments or environment variables
-	} else if ((shmkey = ftok ("/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mtouch", 0)) == -1) {
+	} else if ((shmkey = ftok ("/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mtouch", 0)) == -1) {
 		LOG (PRODUCT ": Could not create shared memory key: %s\n", strerror (errno));
 	} else {
 		int shmsize = 1024;
