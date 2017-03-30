@@ -16,11 +16,12 @@ Copyright (c) 2017 Microsoft Corp. (www.microsoft.com)
 
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<!-- MSBuild specific hacks - Teach msbuild where to find our BCL and facades -->
-	<Target Name="FixTargetFrameworkDirectory" AfterTargets="GetReferenceAssemblyPaths">
-		<PropertyGroup>
-			<MacBclPath Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac'">$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
-			<MacBclPath Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">$(XamarinMacFrameworkRoot)/lib/mono/Xamarin.Mac</MacBclPath>
-		</PropertyGroup>	
+	<PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+		<MacBclPath Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac'">$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
+		<MacBclPath Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">$(XamarinMacFrameworkRoot)/lib/mono/Xamarin.Mac</MacBclPath>
+		<FrameworkPathOverride>$(MacBclPath)</FrameworkPathOverride>
+	</PropertyGroup>
+	<Target Name="FixTargetFrameworkDirectory" AfterTargets="GetReferenceAssemblyPaths" Condition="'$(OS)' != 'Windows_NT'">
     		<ItemGroup>
 			<DesignTimeFacadeDirectories Remove="@(DesignTimeFacadeDirectories)" />
 			<DesignTimeFacadeDirectories Include="$(MacBclPath)/Facades/" />

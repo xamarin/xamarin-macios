@@ -22,7 +22,7 @@ namespace Xamarin.MMP.Tests
 		// [Test] - https://bugzilla.xamarin.com/show_bug.cgi?id=53164
 		public void XMModernRosylnProjet_ShouldBuildAndRunWithMSBuild ()
 		{
-			string projectPath = Path.Combine (RoslynTestProjectRoot, "Modern/RoslynTestApp.csproj");
+			string projectPath = Path.Combine (RoslynTestProjectRoot, "Modern/RoslynTestApp.sln");
 
 			TI.CleanUnifiedProject (projectPath);
 			RestoreRoslynNuget ("Modern");
@@ -33,7 +33,7 @@ namespace Xamarin.MMP.Tests
 		// [Test] - https://bugzilla.xamarin.com/show_bug.cgi?id=53164
 		public void XMFullRosylnProjet_ShouldBuildAndRunWithMSBuild ()
 		{
-			string projectPath = Path.Combine (RoslynTestProjectRoot, "Full/RoslynTestApp.csproj");
+			string projectPath = Path.Combine (RoslynTestProjectRoot, "Full/RoslynTestApp.sln");
 
 			TI.CleanUnifiedProject (projectPath);
 			RestoreRoslynNuget ("Full");

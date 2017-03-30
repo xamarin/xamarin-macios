@@ -1,0 +1,25 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoslynTestApp", "RoslynTestApp.csproj", "{0D155A7F-561C-4187-967D-3879FA760217}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ReadOnlyTestLib", "..\Lib\ReadOnlyTestLib\ReadOnlyTestLib.shproj", "{0F90A525-90FF-4351-B5AE-F5B3AF320360}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadOnlyTestMacLib", "..\Lib\Modern\ReadOnlyTestMacLib\ReadOnlyTestMacLib.csproj", "{3A745526-7709-46D2-8978-C882D9F08656}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0D155A7F-561C-4187-967D-3879FA760217}.Debug|x86.ActiveCfg = Debug|x86
+		{0D155A7F-561C-4187-967D-3879FA760217}.Debug|x86.Build.0 = Debug|x86
+		{0D155A7F-561C-4187-967D-3879FA760217}.Release|x86.ActiveCfg = Release|x86
+		{0D155A7F-561C-4187-967D-3879FA760217}.Release|x86.Build.0 = Release|x86
+		{3A745526-7709-46D2-8978-C882D9F08656}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3A745526-7709-46D2-8978-C882D9F08656}.Debug|x86.Build.0 = Debug|Any CPU
+		{3A745526-7709-46D2-8978-C882D9F08656}.Release|x86.ActiveCfg = Release|Any CPU
+		{3A745526-7709-46D2-8978-C882D9F08656}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
