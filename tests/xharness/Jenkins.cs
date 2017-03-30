@@ -570,7 +570,7 @@ namespace xharness
 			{
 				Platform = platform,
 				Jenkins = task.Jenkins,
-				TestProject = new TestProject (AddSuffixToPath (task.ProjectFile, suffix)),
+				TestProject = new TestProject (Path.ChangeExtension (AddSuffixToPath (task.ProjectFile, suffix), "csproj")),
 				ProjectConfiguration = task.ProjectConfiguration,
 				ProjectPlatform = task.ProjectPlatform,
 				SpecifyPlatform = task.BuildTask.SpecifyPlatform,
