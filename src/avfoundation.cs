@@ -1943,13 +1943,10 @@ namespace XamCore.AVFoundation {
 		[Export ("AVAudioSessionInterruptionOptionKey")]
 		AVAudioSessionInterruptionOptions Option { get; }
 
-#if false
-		// https://bugzilla.xamarin.com/show_bug.cgi?id=52730
 		[iOS (10, 3), NoMac, TV (10, 2), Watch (3,2)]
+		[NullAllowed]
 		[Export ("AVAudioSessionInterruptionWasSuspendedKey")]
-		[return: BindAs (bool?)]
-		NSNumber WasSuspended { get; }
-#endif
+		bool WasSuspended { get; }
 	}
 
 	interface AVAudioSessionRouteChangeEventArgs {
