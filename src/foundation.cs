@@ -10980,6 +10980,10 @@ namespace XamCore.Foundation
 #else
 		bool GetRelationship (out NSURLRelationship outRelationship, NSUrl directoryURL, NSUrl otherURL, out NSError error);
 #endif
+
+		[NoWatch][NoTV][NoiOS][Mac (10, 11)]
+		[Export ("unmountVolumeAtURL:options:completionHandler:")]
+		void UnmountVolume (NSUrl url, NSFileManagerUnmountOptions mask, Action<NSError> completionHandler);
 	}
 
 	[BaseType(typeof(NSObject))]
