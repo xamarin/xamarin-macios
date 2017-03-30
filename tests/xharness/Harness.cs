@@ -278,7 +278,7 @@ namespace xharness
 		{
 			var test_suites = new [] { new { ProjectFile = "apitest", Name = "apitest" }, new { ProjectFile = "dontlink-mac", Name = "dont link" } };
 			foreach (var p in test_suites)
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.ProjectFile + "/" + p.ProjectFile + ".csproj"))) { Name = p.Name });
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.ProjectFile + "/" + p.ProjectFile + ".sln"))) { Name = p.Name });
 			
 			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), skipXMVariations : true));
 
@@ -394,7 +394,7 @@ namespace xharness
 			}
  
 			foreach (var proj in MacTestProjects.Where ((v) => v.GenerateVariations)) {
-				var file = proj.Path;
+				var file = Path.ChangeExtension (proj.Path, "csproj");
  				if (!File.Exists (file))
  					throw new FileNotFoundException (file);
 
