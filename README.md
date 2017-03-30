@@ -1,4 +1,5 @@
 <img src="banner.png" alt="Xamarin.iOS + Xamarin.Mac logo" height="145" >
+
 # Xamarin.iOS & Xamarin.Mac #
 
 |              | Status                                    |
@@ -72,7 +73,7 @@ You can download continuous builds of our main development branches from [our wi
 
         $ ./system-dependencies.sh --provision-[xcode|xamarin-studio|mono|all]
 
-## Quick build & install ##
+## Quick build & install ##
 
 Follow the following steps to build and install Xamarin.iOS and Xamarin.Mac:
 
