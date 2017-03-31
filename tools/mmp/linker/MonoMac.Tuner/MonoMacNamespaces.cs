@@ -151,4 +151,4 @@ namespace MonoMac.Tuner {
 			return ins.Operand as FieldDefinition;
 		}
 	}
-} 
+}
