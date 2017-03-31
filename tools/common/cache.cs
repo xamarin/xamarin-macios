@@ -81,8 +81,8 @@ public class Cache {
 			return false;
 		}
 
-		using (var astream = new FileStream (a, FileMode.Open)) {
-			using (var bstream = new FileStream (b, FileMode.Open)) {
+		using (var astream = new FileStream (a, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+			using (var bstream = new FileStream (b, FileMode.Open, FileAccess.Read, FileShare.Read)) {
 				bool rv;
 				Driver.Log (6, "Comparing files {0} and {1}...", a, b);
 				rv = CompareStreams (astream, bstream, ignore_cache);
