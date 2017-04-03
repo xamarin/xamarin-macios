@@ -301,7 +301,7 @@ wrench-mac-%:
 endif
 
 wrench-msbuild:
-	$(MAKE) -C $(TOP)/msbuild test-xml
+	$(MAKE) -C $(TOP)/msbuild .stamp-test-xml
 ifdef INCLUDE_IOS
 	$(MAKE) test-ios-tasks
 else
