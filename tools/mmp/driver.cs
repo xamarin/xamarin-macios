@@ -479,6 +479,7 @@ namespace Xamarin.Bundler {
 
 			ValidateXcode ();
 
+			App.Initialize ();
 			App.InitializeCommon ();
 
 			Log ("Xamarin.Mac {0}{1}", Constants.Version, verbose > 0 ? "." + Constants.Revision : string.Empty);
