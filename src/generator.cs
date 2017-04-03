@@ -315,16 +315,17 @@ public class Tuple<A,B> {
 // The Invoke contains the invocation steps necessary to invoke the method
 //
 public class TrampolineInfo {
-	public string UserDelegate, DelegateName, TrampolineName, Parameters, Invoke, ReturnType, DelegateReturnType, ReturnFormat, Clear, OutReturnType;
+	public string UserDelegate, DelegateName, TrampolineName, Parameters, Convert, Invoke, ReturnType, DelegateReturnType, ReturnFormat, Clear, OutReturnType;
 	public string UserDelegateTypeAttribute;
 	public Type Type;
 	
-	public TrampolineInfo (string userDelegate, string delegateName, string trampolineName, string pars, string invoke, string returnType, string delegateReturnType, string returnFormat, string clear, Type type)
+	public TrampolineInfo (string userDelegate, string delegateName, string trampolineName, string pars, string convert, string invoke, string returnType, string delegateReturnType, string returnFormat, string clear, Type type)
 	{
 		UserDelegate = userDelegate;
 		DelegateName = delegateName;
 		Parameters = pars;
 		TrampolineName = trampolineName;
+		Convert = convert;
 		Invoke = invoke;
 		ReturnType = returnType;
 		DelegateReturnType = delegateReturnType;
@@ -1451,6 +1452,7 @@ public partial class Generator : IMemberGatherer {
 
 		var mi = t.GetMethod ("Invoke");
 		var pars = new StringBuilder ();
+		var convert = new StringBuilder ();
 		var invoke = new StringBuilder ();
 		var clear = new StringBuilder  ();
 		string returntype;
@@ -1524,8 +1526,23 @@ public partial class Generator : IMemberGatherer {
 					string marshal = string.Empty;
 					if (nt == TypeManager.System_Boolean)
 						marshal = "[System.Runtime.InteropServices.MarshalAs (System.Runtime.InteropServices.UnmanagedType.I1)] ";
-					pars.AppendFormat ("{3}{0} {1} {2}", pi.IsOut ? "out" : "ref", FormatType (null, nt), pi.Name.GetSafeParamName (), marshal);
-					invoke.AppendFormat ("{0} {1}", pi.IsOut ? "out" : "ref", pi.Name.GetSafeParamName ());
+					string fnt;
+					string invoke_name;
+					string arg_byref = pi.IsOut ? "out " : "ref ";
+					var nullable = TypeManager.GetUnderlyingNullableType (nt);
+					if (nullable != null) {
+						fnt = "IntPtr";
+						invoke_name = $"__xamarin_nullified__{pi.Position}";
+						arg_byref = String.Empty;
+						convert.AppendLine ($"{nullable.Name}? {invoke_name} = null;");
+						convert.AppendLine ("if (value != IntPtr.Zero)");
+						convert.Append ($"\t{invoke_name} = * ({nullable.Name} *) value;");
+					} else {
+						fnt = FormatType (null, nt);
+						invoke_name = pi.Name.GetSafeParamName ();
+					}
+					pars.AppendFormat ("{3}{0}{1} {2}", arg_byref, fnt, pi.Name.GetSafeParamName (), marshal);
+					invoke.AppendFormat ("{0} {1}", pi.IsOut ? "out" : "ref", invoke_name);
 					continue;
 				}
 			} else if (!Compat && IsNativeEnum (pi.ParameterType)) {
@@ -1589,6 +1606,7 @@ public partial class Generator : IMemberGatherer {
 					     delegateName: "D" + trampoline_name,
 					     trampolineName: "T" + trampoline_name,
 					     pars: pars.ToString (),
+		                             convert: convert.ToString (),
 					     invoke: invoke.ToString (),
 					     returnType: returntype,
 					     delegateReturnType: mi.ReturnType.ToString (),
@@ -1671,10 +1689,15 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		//
-		// Handle (out ValeuType foo)
+		// Handle (out ValueType foo)
 		//
-		if (pi.ParameterType.IsByRef && pi.ParameterType.GetElementType ().IsValueType){
-			return (HasAttribute (pi, TypeManager.OutAttribute) ? "out " : "ref ") + pi.Name.GetSafeParamName ();
+		if (pi.ParameterType.IsByRef) {
+			var et = pi.ParameterType.GetElementType ();
+			var nullable = TypeManager.GetUnderlyingNullableType (et);
+			if (nullable != null) {
+				return "converted";
+			} else if (et.IsValueType)
+				return (TypeManager.IsOutParameter (pi) ? "out " : "ref ") + pi.Name.GetSafeParamName ();
 		}
 
 		if (pi.ParameterType.IsSubclassOf (TypeManager.System_Delegate)){
@@ -2406,6 +2429,8 @@ public partial class Generator : IMemberGatherer {
 					indent--;
 				}
 			} else {
+				if (ti.Convert.Length > 0)
+					print (ti.Convert);
 				print ("{0} retval = del ({1});", ti.DelegateReturnType, ti.Invoke);
 				print (ti.ReturnFormat, "retval");
 			}
@@ -3704,6 +3729,18 @@ public partial class Generator : IMemberGatherer {
 				// Construct invocation
 				args.Append (", ");
 				args.Append (MarshalParameter (mi, pi, null_allowed_override, enum_mode, propInfo));
+
+				if (pi.ParameterType.IsByRef) {
+					var et = pi.ParameterType.GetElementType ();
+					var nullable = TypeManager.GetUnderlyingNullableType (et);
+					if (nullable != null) {
+						convs.Append ("var converted = IntPtr.Zero;");
+						convs.Append ("if (value.HasValue) {");
+						convs.Append ("\tvar v = value.Value;");
+						convs.Append ("\tconverted = new IntPtr (&v);");
+						convs.Append ("}");
+					}
+				}
 			}
 
 			// Construct conversions
