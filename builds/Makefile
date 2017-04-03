@@ -890,6 +890,7 @@ iphonesimulator:: setup-iphonesimulator build-iphonesimulator install-iphonesimu
 # this needs to be here because the normal usage of this makefile is "make all install", but nothing actually lists the -iphonesimulator targets as dependencies.
 ifdef INCLUDE_IOS
 install-local:: install-iphonesimulator
+all-local:: install-iphonesimulator
 endif
 
 IPHONESIMULATOR_TARGETS = \
@@ -1004,6 +1005,7 @@ setup:: setup-watchsimulator
 build:: build-watchsimulator
 clean-local:: clean-watchsimulator
 install-local:: install-watchsimulator
+all-local:: install-watchsimulator
 
 watchsimulator: build-watchsimulator install-watchsimulator
 
@@ -1150,6 +1152,7 @@ setup:: setup-tvsimulator
 build:: build-tvsimulator
 clean-local:: clean-tvsimulator
 install-local:: install-tvsimulator
+all-local:: install-tvsimulator
 
 tvsimulator: build-tvsimulator install-tvsimulator
 
@@ -1356,25 +1359,13 @@ $(BUILD_DESTDIR)/$(2)/tmp-lib:
 # them the required times according to how many versions we need.
 #
 $(BUILD_DESTDIR)/$(2)/tmp-lib/Mono: $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a | $(BUILD_DESTDIR)/$(2)/tmp-lib
-	$$(Q) rm -Rf $$@.tmpdir
-	$$(Q) mkdir -p $$@.tmpdir
-	$$(Q) cd $$@.tmpdir && ar -x $$<
-	$$(Q) $$(IOS_CC) -arch $(1) -dynamiclib -o $$@ $$@.tmpdir/*.o -liconv -O2 -Wl,-application_extension -miphoneos-version-min=8.0 -isysroot $(PLATFORM_SDK) -install_name @rpath/Mono.framework/Mono -compatibility_version 2 -current_version 2.0 -framework CoreFoundation -lobjc $(IOS_BITCODE_LDFLAGS) -Wl,-single_module
-	$$(Q) rm -Rf $$@.tmpdir
+	$$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $$< $$@ -arch $(1) -install_name @rpath/Mono.framework/Mono -miphoneos-version-min=8.0 -isysroot $(PLATFORM_SDK) $(IOS_BITCODE_LDFLAGS)
 
 $(BUILD_DESTDIR)/$(2)/tmp-lib/libmonosgen-2.0.dylib: $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a | $(BUILD_DESTDIR)/$(2)/tmp-lib
-	$$(Q) rm -Rf $$@.tmpdir
-	$$(Q) mkdir -p $$@.tmpdir
-	$$(Q) cd $$@.tmpdir && ar -x $$<
-	$$(Q) $$(IOS_CC) -arch $(1) -dynamiclib -o $$@ $$@.tmpdir/*.o -liconv -O2 -Wl,-application_extension -miphoneos-version-min=7.0 -isysroot $(PLATFORM_SDK) -install_name @rpath/libmonosgen-2.0.dylib -compatibility_version 2 -current_version 2.0 -framework CoreFoundation -lobjc $(IOS_BITCODE_LDFLAGS) -Wl,-single_module
-	$$(Q) rm -Rf $$@.tmpdir
+	$$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $$< $$@ -arch $(1) -install_name @rpath/libmonosgen-2.0.dylib -miphoneos-version-min=7.0 -isysroot $(PLATFORM_SDK) $(IOS_BITCODE_LDFLAGS)
 
 $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib: $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.a $(BUILD_DESTDIR)/$(2)/tmp-lib/libmonosgen-2.0.dylib | $(BUILD_DESTDIR)/$(2)/tmp-lib
-	$$(Q) rm -Rf $$@.tmpdir
-	$$(Q) mkdir -p $$@.tmpdir
-	$$(Q) cd $$@.tmpdir && ar -x $$<
-	$$(Q) $$(IOS_CC) -arch $(1) -dynamiclib -o $$@ $$@.tmpdir/*.o -liconv -O2 -Wl,-application_extension -miphoneos-version-min=7.0 -isysroot $(PLATFORM_SDK) -install_name @rpath/libmono-profiler-log.dylib -compatibility_version 2 -current_version 2.0 -framework CoreFoundation -lobjc -Wl,-single_module -L$(BUILD_DESTDIR)/$(2)/tmp-lib -lmonosgen-2.0 -lz
-	$$(Q) rm -Rf $$@.tmpdir
+	$$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $$< $$@ -arch $(1) -install_name @rpath/libmono-profiler-log.dylib -miphoneos-version-min=7.0 -isysroot $(PLATFORM_SDK) $(IOS_BITCODE_LDFLAGS) -L$(BUILD_DESTDIR)/$(2)/tmp-lib -lmonosgen-2.0 -lz
 
 endef
 
@@ -1411,6 +1402,7 @@ install-device: install-iphoneos
 # this needs to be here because the normal usage of this makefile is "make all install", but nothing actually lists the -iphoneos targets as dependencies.
 ifdef INCLUDE_IOS
 install-local:: install-iphoneos
+all-local:: install-iphoneos
 endif
 endif
 
@@ -1545,6 +1537,7 @@ setup:: setup-targetwatch
 build:: build-targetwatch
 clean-local:: clean-targetwatch
 install-local:: install-watchos
+all-local:: install-watchos
 
 targetwatch: build-targetwatch install-watchos
 watchos:: targetwatch
@@ -1617,12 +1610,14 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(WATCH
 $(WATCHOS_DIRECTORIES):
 	$(Q) mkdir -p $@
 
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono: $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework
+$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono: $(BUILD_DESTDIR)/targetwatch/tmp-lib/Mono | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework
 	$(Q) cp $< $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/Mono.framework/Mono -change $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framework-watchos.Info.plist | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework
 	$(Q) cp $< $@
+
+$(BUILD_DESTDIR)/targetwatch/tmp-lib/Mono: $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.a
+	$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $< $@ -arch armv7k -install_name @rpath/Mono.framework/Mono -mwatchos-version-min=$(MIN_WATCHOS_SDK_VERSION) -isysroot $(DEVICEWATCH_SDK) -lc++ -fembed-bitcode
 
 install-watchos: $(WATCHOS_TARGETS)
 
@@ -1723,6 +1718,7 @@ setup:: setup-targettv
 build:: build-targettv
 clean-local:: clean-targettv
 install-local:: install-tvos
+all-local:: install-tvos
 
 targettv: build-targettv install-tvos
 tvos:: targettv
@@ -1795,12 +1791,14 @@ $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(TVOS_TAR
 $(TVOS_DIRECTORIES):
 	$(Q) mkdir -p $@
 
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono: $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmonosgen-2.0.dylib | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework
+$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono: $(BUILD_DESTDIR)/targettv/tmp-lib/Mono | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework
 	$(Q) cp $< $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/Mono.framework/Mono $@
 
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framework-tvos.Info.plist | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework
 	$(Q) cp $< $@
+
+$(BUILD_DESTDIR)/targettv/tmp-lib/Mono: $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.a
+	$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $< $@ -arch arm64 -install_name @rpath/Mono.framework/Mono -mtvos-version-min=$(MIN_TVOS_SDK_VERSION) -isysroot $(DEVICETV_SDK) -lc++ -fembed-bitcode
 
 install-tvos: $(TVOS_TARGETS)
 
