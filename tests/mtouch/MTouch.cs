@@ -789,18 +789,37 @@ namespace Xamarin
 		[TestCase (Profile.iOS, "iOS")]
 		public void MT0091 (Profile profile, string name)
 		{
-			// Any old Xcode would do.
-			if (!Directory.Exists (Configuration.xcode72_root))
-				Assert.Ignore ("This test needs Xcode 7.0");
-			
+			// Any old Xcode will do.
+			var old_xcode = Configuration.GetOldXcodeRoot ();
+			if (!Directory.Exists (old_xcode))
+				Assert.Ignore ($"This test needs an Xcode older than {Configuration.XcodeVersion}");
+
+			// Get the SDK version for this Xcode version
+			string sdk_platform;
+			switch (profile) {
+			case Profile.iOS:
+				sdk_platform = "iPhoneSimulator";
+				break;
+			case Profile.tvOS:
+				sdk_platform = "AppleTVSimulator";
+				break;
+			case Profile.watchOS:
+				sdk_platform = "WatchSimulator";
+				break;
+			default:
+				throw new NotImplementedException ();
+			}
+			var sdk_settings = Path.Combine (old_xcode, "Platforms", $"{sdk_platform}.platform", "Developer", "SDKs", $"{sdk_platform}.sdk", "SDKSettings.plist");
+			var sdk_version = Configuration.GetPListStringValue (sdk_settings, "DefaultDeploymentTarget");
+
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = profile;
 				mtouch.CreateTemporaryApp ();
-				mtouch.SdkRoot = Configuration.xcode72_root;
+				mtouch.SdkRoot = old_xcode;
 				mtouch.Linker = MTouchLinker.DontLink;
-				mtouch.Sdk = "9.0";
+				mtouch.Sdk = sdk_version;
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
-				mtouch.AssertError (91, String.Format ("This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker by changing the Linker behaviour to Link Framework SDKs Only.", name, GetSdkVersion (profile), Configuration.XcodeVersion));
+				mtouch.AssertError (91, String.Format ("This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).", name, GetSdkVersion (profile), Configuration.XcodeVersion));
 			}
 		}
 
