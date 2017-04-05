@@ -408,6 +408,8 @@ namespace LinkAll {
 		{
 			// that will bring OpenTK-1.0 into the .app
 			OpenTK.WindowState state = OpenTK.WindowState.Normal;
+			// Compiler optimization (roslyn release) can remove the variable, which removes OpenTK-1.dll from the app and fail the test
+			Assert.That (state, Is.EqualTo (OpenTK.WindowState.Normal), "normal");
 
 			var gl = Type.GetType ("OpenTK.Graphics.ES11.GL, OpenTK-1.0", false);
 			Assert.NotNull (gl, "ES11/GL");
