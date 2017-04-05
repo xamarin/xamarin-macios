@@ -284,15 +284,6 @@ namespace Xamarin.Bundler
 			return assemblies;
 		}
 
-		public void ComputeLinkerFlags ()
-		{
-			foreach (var a in Assemblies)
-				a.ComputeLinkerFlags ();
-
-			if (App.Platform != ApplePlatform.WatchOS && App.Platform != ApplePlatform.TVOS)
-				Frameworks.Add ("CFNetwork"); // required by xamarin_start_wwan
-		}
-
 		Dictionary<string, List<MemberReference>> entry_points;
 		public IDictionary<string, List<MemberReference>> GetEntryPoints ()
 		{
@@ -853,11 +844,7 @@ namespace Xamarin.Bundler
 
 			ManagedLink ();
 
-			Driver.GatherFrameworks (this, Frameworks, WeakFrameworks);
-
-			// Make sure there are no duplicates between frameworks and weak frameworks.
-			// Keep the weak ones.
-			Frameworks.ExceptWith (WeakFrameworks);
+			GatherFrameworks ();
 		}
 
 		public void CompilePInvokeWrappers ()

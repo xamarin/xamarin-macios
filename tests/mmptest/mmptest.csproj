@@ -95,6 +95,7 @@
     <Compile Include="..\..\tools\mmp\tests\aot.cs">
       <Link>unit\aot.cs</Link>
     </Compile>
+    <Compile Include="src\FrameworkLinksTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

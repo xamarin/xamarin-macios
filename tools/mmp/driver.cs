@@ -93,7 +93,6 @@ namespace Xamarin.Bundler {
 
 		static bool arch_set = false;
 		static string arch = "i386";
-		static Version minos = new Version (10, 7);
 		static string contents_dir;
 		static string frameworks_dir;
 		static string macos_dir;
@@ -153,7 +152,7 @@ namespace Xamarin.Bundler {
 
 		public static string GetProductAssembly (Application app)
 		{
-			return "Xamarin.Mac";
+			return IsUnified ? "Xamarin.Mac" : "XamMac";
 		}
 
 		public static string GetPlatformFrameworkDirectory (Application app)
@@ -269,7 +268,7 @@ namespace Xamarin.Bundler {
 				{ "minos=", "Minimum supported version of Mac OS X", 
 					v => {
 						try {
-							minos = Version.Parse (v);
+							App.DeploymentTarget = Version.Parse (v);
 						} catch (Exception ex) {
 							ErrorHelper.Error (26, ex, "Could not parse the command line argument '{0}': {1}", "-minos", ex.Message);
 						}
@@ -480,6 +479,7 @@ namespace Xamarin.Bundler {
 
 			ValidateXcode ();
 
+			App.Initialize ();
 			App.InitializeCommon ();
 
 			Log ("Xamarin.Mac {0}{1}", Constants.Version, verbose > 0 ? "." + Constants.Revision : string.Empty);
@@ -778,6 +778,10 @@ namespace Xamarin.Bundler {
 				internalSymbols.UnionWith (BuildTarget.LinkContext.RequiredSymbols.Keys);
 				Watch (string.Format ("Linking (mode: '{0}')", App.LinkMode), 1);
 			}
+			
+			// These must occur _after_ Linking
+			BuildTarget.ComputeLinkerFlags ();
+			BuildTarget.GatherFrameworks ();
 
 			if (App.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Disable && !App.RequiresPInvokeWrappers && BuildTarget.Is64Build) {
 				internalSymbols.Add ("xamarin_dyn_objc_msgSend");
@@ -1108,12 +1112,16 @@ namespace Xamarin.Bundler {
 			string path = Path.GetDirectoryName (framework);
 			if (!string.IsNullOrEmpty (path))
 				args.Append ("-F ").Append (Quote (path)).Append (' ');
-			args.Append (weak ? "-weak_framework " : "-framework ").Append (Quote (name)).Append (' ');
+		
+			if (weak)
+				BuildTarget.WeakFrameworks.Add (name);
+			else
+				BuildTarget.Frameworks.Add (name);
 
 			if (!framework.EndsWith (".framework", StringComparison.Ordinal))
 				return;
 
-			// TODO - There is a chunk of code in mtouch that calls Xamarin.MachO.IsDynamicFramework and doesn't cpoy if framework of static libs
+			// TODO - There is a chunk of code in mtouch that calls Xamarin.MachO.IsDynamicFramework and doesn't copy if framework of static libs
 			// But IsDynamicFramework is not on XM yet
 
 			CreateDirectoryIfNeeded (frameworks_dir);
@@ -1188,7 +1196,7 @@ namespace Xamarin.Bundler {
 				var args = new StringBuilder ();
 				if (App.EnableDebug)
 					args.Append ("-g ");
-				args.Append ("-mmacosx-version-min=").Append (minos.ToString ()).Append (' ');
+				args.Append ("-mmacosx-version-min=").Append (App.DeploymentTarget.ToString ()).Append (' ');
 				args.Append ("-arch ").Append (arch).Append (' ');
 				if (arch == "x86_64")
 					args.Append ("-fobjc-runtime=macosx ");
@@ -1216,12 +1224,20 @@ namespace Xamarin.Bundler {
 					if (assembly.LinkerFlags != null)
 						foreach (var linkFlag in assembly.LinkerFlags)
 							args.Append (linkFlag).Append (' ');
-					if (assembly.Frameworks != null)
-						foreach (var f in assembly.Frameworks)
+					if (assembly.Frameworks != null) {
+						foreach (var f in assembly.Frameworks) {
+							if (verbose > 1)
+								Console.WriteLine ($"Adding Framework {f} for {assembly.FileName}");
 							HandleFramework (args, f, false);
-					if (assembly.WeakFrameworks != null)
-						foreach (var f in assembly.WeakFrameworks)
+						}
+					}
+					if (assembly.WeakFrameworks != null) { 
+						foreach (var f in assembly.WeakFrameworks) {
+							if (verbose > 1)
+								Console.WriteLine ($"Adding Weak Framework {f} for {assembly.FileName}");
 							HandleFramework (args, f, true);
+						}
+					}
 				}
 
 				foreach (var framework in App.Frameworks)
@@ -1272,7 +1288,7 @@ namespace Xamarin.Bundler {
 					args.Append ("-framework Quartz ");
 				}
 
-				args.Append ("-framework AppKit -liconv -x objective-c++ ");
+				args.Append ("-liconv -x objective-c++ ");
 				args.Append ("-I").Append (Quote (Path.Combine (GetXamMacPrefix (), "include"))).Append (' ');
 				if (registrarPath != null)
 					args.Append (registrarPath).Append (' ');

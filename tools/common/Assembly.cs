@@ -384,6 +384,20 @@ namespace Xamarin.Bundler {
 						if (Frameworks.Add ("OpenAL"))
 							Driver.Log (3, "Linking with the framework OpenAL because {0} is referenced by a module reference in {1}", file, FileName);
 						break;
+#if MONOMAC
+					case "PrintCore":
+						if (Frameworks.Add ("ApplicationServices"))
+							Driver.Log (3, "Linking with the framework ApplicationServices because {0} is referenced by a module reference in {1}", file, FileName);
+						break;
+					case "SearchKit":
+						if (Frameworks.Add ("CoreServices"))
+							Driver.Log (3, "Linking with the framework CoreServices because {0} is referenced by a module reference in {1}", file, FileName);
+						break;
+					case "CFNetwork":
+						if (Frameworks.Add ("CoreServices"))
+							Driver.Log (3, "Linking with the framework CoreServices because {0} is referenced by a module reference in {1}", file, FileName);
+						break;
+#endif
 					default:
 						// detect frameworks
 						int f = name.IndexOf (".framework/", StringComparison.Ordinal);
