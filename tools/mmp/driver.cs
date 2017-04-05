@@ -68,7 +68,7 @@ namespace Xamarin.Bundler {
 	}
 
 	public static partial class Driver {
-		internal static Application App = new Application ();
+		internal static Application App = new Application (Environment.GetCommandLineArgs ());
 		static Target BuildTarget = new Target (App);
 		static List<string> references = new List<string> ();
 		static List<string> resources = new List<string> ();
@@ -358,9 +358,9 @@ namespace Xamarin.Bundler {
 					true /* this is an internal option */
 				},
 				{ "xamarin-framework-directory=", "The framework directory", v => { xm_framework_dir = v; }, true },
-				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullXamMacFramework = true; } },
-				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullSystemFramework = true; } },
-				{ "aot:", "Specify assemblies that should be compiled via experimental AOT.\n- none - No AOT (default)\n- all - Every assembly in MonoBundle not ignored\n- core - Just Xamarin.Mac.dll, System.dll, and mscorlib.dll\n sdk - Xamarin.Mac.dll and all BCL assemblies\nIndividual files can be included for AOT via +FileName.dll and excluded via -FileName.dll",
+				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM Full Target Framework", v => { IsUnifiedFullXamMacFramework = true; } },
+				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM Full Target Framework", v => { IsUnifiedFullSystemFramework = true; } },
+				{ "aot:", "Specify assemblies that should be experimentally AOT compiled\n- none - No AOT (default)\n- all - Every assembly in MonoBundle\n- core - Xamarin.Mac, System, mscorlib\n- sdk - Xamarin.Mac.dll and BCL assemblies\n- |hybrid after option enables hybrid AOT which allows IL stripping but is slower\n - Individual files can be included for AOT via +FileName.dll and excluded via -FileName.dll\n\nExamples:\n  --aot:all,-MyAssembly.dll\n  --aot:core|hybird,+MyOtherAssembly.dll,-mscorlib.dll",
 					v => {
 						aotOptions = new AOTOptions (v);
 					}
@@ -478,10 +478,6 @@ namespace Xamarin.Bundler {
 				ErrorHelper.Warning (2014, "Xamarin.Mac Extensions do not support linking. Request for linking will be ignored.");
 			}
 
-			if (!IsUnifiedMobile && tls_provider != null)
-				throw new MonoMacException (2011, true, "Selecting a TLS Provider is only supported in the Unified Mobile profile");
-
-
 			ValidateXcode ();
 
 			App.InitializeCommon ();
@@ -589,6 +585,8 @@ namespace Xamarin.Bundler {
 		static Version MutateSDKVersionToPointRelease (Version rv)
 		{
 			if (rv.Major == 10 && (rv.Revision == 0 || rv.Revision == -1)) {
+				if (rv.Minor == 12 && XcodeVersion >= new Version (8, 3))
+					return new Version (rv.Major, rv.Minor, 4);
 				if (rv.Minor == 12 && XcodeVersion >= new Version (8, 2))
 					return new Version (rv.Major, rv.Minor, 2);
 				if (rv.Minor == 12 && XcodeVersion >= new Version (8, 1))
@@ -705,7 +703,7 @@ namespace Xamarin.Bundler {
 					throw new MonoMacException (23, true, "Application name '{0}.exe' conflicts with another user assembly.", root_wo_ext);
 
 				string monoFrameworkDirectory = TargetFramework.MonoFrameworkDirectory;
-				if (IsUnifiedFullSystemFramework || IsClassic)
+				if (IsUnifiedFullXamMacFramework || IsUnifiedFullSystemFramework || IsClassic)
 					monoFrameworkDirectory = "4.5";
 
 				fx_dir = Path.Combine (MonoDirectory, "lib", "mono", monoFrameworkDirectory);
@@ -1177,7 +1175,7 @@ namespace Xamarin.Bundler {
 				break;
 			case "x86_64":
 				if (IsClassic)
-					throw new MonoMacException (5204, true, "Invalid architecture. x86_64 is only supported with the mobile profile.");
+					throw new MonoMacException (5204, true, "Invalid architecture. x86_64 is only supported on non-Classic profiles.");
 				break;
 			default:
 				throw new MonoMacException (5205, true, "Invalid architecture '{0}'. Valid architectures are i386 and x86_64 (when --profile=mobile).", arch);
@@ -1194,6 +1192,7 @@ namespace Xamarin.Bundler {
 				args.Append ("-arch ").Append (arch).Append (' ');
 				if (arch == "x86_64")
 					args.Append ("-fobjc-runtime=macosx ");
+				bool appendedObjc = false;
 				foreach (var assembly in BuildTarget.Assemblies) {
 					if (assembly.LinkWith != null) {
 						foreach (var linkWith in assembly.LinkWith) {
@@ -1209,7 +1208,10 @@ namespace Xamarin.Bundler {
 								args.Append (Quote (linkWith)).Append (' ');
 							}
 						}
-						args.Append ("-ObjC").Append (' ');
+						if (!appendedObjc) {
+							appendedObjc = true;
+							args.Append ("-ObjC").Append (' ');
+						}
 					}
 					if (assembly.LinkerFlags != null)
 						foreach (var linkFlag in assembly.LinkerFlags)

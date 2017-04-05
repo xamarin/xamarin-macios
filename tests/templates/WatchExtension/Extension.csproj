@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{AC6D070F-2ED4-4701-B701-81915B931D1D}</ProjectGuid>
+    <ProjectGuid>{716209E4-C1D4-4DEE-9B03-CA768D5219B5}</ProjectGuid>
     <ProjectTypeGuids>{1E2E965C-F6D2-49ED-B86E-418A60C69EEF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <RootNamespace>testextension</RootNamespace>

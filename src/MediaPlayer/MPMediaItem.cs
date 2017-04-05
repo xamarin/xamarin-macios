@@ -292,6 +292,13 @@ namespace XamCore.MediaPlayer {
 				return (ValueForProperty (DateAddedProperty) as NSDate);
 			}
 		}
+
+		[iOS (10,3)]
+		public NSString PlaybackStoreID {
+			get {
+				return (ValueForProperty (PlaybackStoreIDProperty) as NSString);
+			}
+		}
 	}
 }
 

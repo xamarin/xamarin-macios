@@ -1,6 +1,5 @@
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 
 namespace Test {
 [Model, BaseType (typeof (UIPopoverControllerDelegate))]

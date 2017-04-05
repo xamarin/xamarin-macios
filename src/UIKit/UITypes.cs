@@ -63,6 +63,16 @@ namespace XamCore.UIKit {
 			return false;
 		}
 
+		public static bool operator == (UIEdgeInsets insets1, UIEdgeInsets insets2)
+		{
+			return insets1.Equals (insets2);
+		}
+
+		public static bool operator != (UIEdgeInsets insets1, UIEdgeInsets insets2)
+		{
+			return !insets1.Equals (insets2);
+		}
+
 		public override int GetHashCode ()
 		{
 			return Top.GetHashCode () ^ Left.GetHashCode () ^ Right.GetHashCode () ^ Bottom.GetHashCode ();

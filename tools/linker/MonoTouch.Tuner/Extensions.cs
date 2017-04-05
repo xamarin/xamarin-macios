@@ -4,18 +4,18 @@ using Mono.Cecil;
 
 using Mono.Tuner;
 
+using Xamarin.Tuner;
+
 namespace MonoTouch.Tuner {
 
 	public static class Extensions {
 		
-		internal static HashSet<TypeDefinition> needs_isdirectbinding_check;
-		
-		public static bool IsDirectBindingCheckRequired (this TypeDefinition type)
+		public static bool IsDirectBindingCheckRequired (this TypeDefinition type, DerivedLinkContext link_context)
 		{
-			if (needs_isdirectbinding_check == null)
+			if (link_context.NeedsIsDirectBindingCheck == null)
 				return true;
 			
-			return needs_isdirectbinding_check.Contains (type);
+			return link_context.NeedsIsDirectBindingCheck.Contains (type);
 		}
 
 		public static bool IsPlatformType (this TypeReference type, string @namespace, string name)

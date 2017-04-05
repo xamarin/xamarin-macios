@@ -627,6 +627,7 @@ namespace XamCore.NetworkExtension {
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		[Export ("displayMessage:completionHandler:")]
+		[Async]
 		void DisplayMessage (string message, Action<bool> completionHandler);
 	}
 
@@ -1321,6 +1322,7 @@ namespace XamCore.NetworkExtension {
 	[BaseType (typeof(NSObject))]
 	interface NEPacketTunnelFlow {
 		[Export ("readPacketsWithCompletionHandler:")]
+		[Async (ResultType = typeof (NEPacketTunnelFlowReadResult))]
 		void ReadPackets (Action<NSData[], NSNumber[]> completionHandler);
 
 		[Export ("writePackets:withProtocols:")]

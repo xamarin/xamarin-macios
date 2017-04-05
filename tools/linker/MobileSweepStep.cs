@@ -13,6 +13,11 @@ namespace Xamarin.Linker {
 	// would produce invalid assemblies
 	public class MobileSweepStep : SweepStep {
 
+		public MobileSweepStep (bool sweepSymbols)
+			: base (sweepSymbols)
+		{
+		}
+
 		public AssemblyAction CurrentAction { get; private set; }
 
 		protected override void Process ()

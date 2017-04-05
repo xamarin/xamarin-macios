@@ -4,8 +4,8 @@
  */
 using System;
 #if !XAMCORE_2_0
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 #else
 using Foundation;
 using ObjCRuntime;

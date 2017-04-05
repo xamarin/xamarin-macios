@@ -183,6 +183,20 @@ namespace xharness
 			foreach (var task in rv)
 				task.Variation = "Debug";
 
+			var assembly_build_targets = new []
+			{
+				/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
+				new { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = false },
+				new { Variation = "AssemblyBuildTarget: SDK framework (debug)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = false },
+
+				new { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = true },
+				new { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = true },
+
+				new { Variation = "Release", MTouchExtraArgs = "", Debug = false, Profiling = false }, 
+				new { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = false, Profiling = false },
+
+			};
+
 			// Don't build in the original project directory
 			// We can build multiple projects in parallel, and if some of those
 			// projects have the same project dependencies, then we may end up
@@ -194,6 +208,43 @@ namespace xharness
 				device_test.BuildTask.InitialTask = clone.CreateCopyAsync (device_test);
 				device_test.BuildTask.TestProject = clone;
 				device_test.TestProject = clone;
+			}
+
+			foreach (var task in rv)
+				task.Variation = "Debug";
+
+			foreach (var task in rv.ToArray ()) {
+				foreach (var test_data in assembly_build_targets) {
+					var variation = test_data.Variation;
+					var mtouch_extra_args = test_data.MTouchExtraArgs;
+					var configuration = test_data.Debug ? task.ProjectConfiguration : task.ProjectConfiguration.Replace ("Debug", "Release");
+					var debug = test_data.Debug;
+					var profiling = test_data.Profiling;
+
+					var clone = task.TestProject.Clone ();
+					var clone_task = Task.Run (async () =>
+					{
+						await task.BuildTask.InitialTask; // this is the project cloning above
+						await clone.CreateCopyAsync (task);
+						if (!string.IsNullOrEmpty (mtouch_extra_args))
+							clone.Xml.AddExtraMtouchArgs (mtouch_extra_args, task.ProjectPlatform, configuration);
+						clone.Xml.SetNode ("MTouchProfiling", profiling ? "True" : "False", task.ProjectPlatform, configuration);
+						if (!debug)
+							clone.Xml.SetMtouchUseLlvm (true, task.ProjectPlatform, configuration);
+						clone.Xml.Save (clone.Path);
+					});
+
+					var build = new XBuildTask
+					{
+						Jenkins = this,
+						TestProject = clone,
+						ProjectConfiguration = configuration,
+						ProjectPlatform = task.ProjectPlatform,
+						Platform = task.Platform,
+						InitialTask = clone_task,
+					};
+					rv.Add (new RunDeviceTask (build, task.Candidates) { Variation = variation, Ignored = task.Ignored });
+				}
 			}
 
 			return rv;
@@ -404,7 +455,8 @@ namespace xharness
 				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners.2.6.4", "tools", "nunit-console.exe"),
 				WorkingDirectory = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners.2.6.4", "tools", "lib"),
 				Platform = TestPlatform.iOS,
-				TestName = "MSBuild tests - iOS",
+				TestName = "MSBuild tests",
+				Mode = "iOS",
 				Timeout = TimeSpan.FromMinutes (30),
 				Ignored = !IncludeiOSMSBuild,
 			};
@@ -438,8 +490,9 @@ namespace xharness
 				var exec = new MacExecuteTask (build)
 				{
 					Ignored = ignored || !IncludeClassicMac,
-					BCLTest = project.IsBclTest
-				};
+					BCLTest = project.IsBclTest,
+					TestName = project.Name,
+			};
 				Tasks.Add (exec);
 
 				if (project.GenerateVariations) {
@@ -517,7 +570,7 @@ namespace xharness
 			{
 				Platform = platform,
 				Jenkins = task.Jenkins,
-				TestProject = new TestProject (AddSuffixToPath (task.ProjectFile, suffix)),
+				TestProject = new TestProject (Path.ChangeExtension (AddSuffixToPath (task.ProjectFile, suffix), "csproj")),
 				ProjectConfiguration = task.ProjectConfiguration,
 				ProjectPlatform = task.ProjectPlatform,
 				SpecifyPlatform = task.BuildTask.SpecifyPlatform,
@@ -527,6 +580,7 @@ namespace xharness
 			return new MacExecuteTask (build)
 			{
 				Ignored = ignore,
+				TestName = build.TestName,
 			};
 		}
 
@@ -597,10 +651,106 @@ namespace xharness
 					var response = context.Response;
 					var arguments = System.Web.HttpUtility.ParseQueryString (request.Url.Query);
 					try {
+						var allTasks = Tasks.SelectMany ((v) =>
+						{
+							var rv = new List<TestTask> ();
+							var runsim = v as AggregatedRunSimulatorTask;
+							if (runsim != null)
+								rv.AddRange (runsim.Tasks);
+							rv.Add (v);
+							return rv;
+						});
 						switch (request.Url.LocalPath) {
 						case "/":
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Html;
 							GenerateReportImpl (response.OutputStream);
+							break;
+						case "/select":
+						case "/deselect":
+							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+							using (var writer = new StreamWriter (response.OutputStream)) {
+								foreach (var task in allTasks) {
+									bool? is_match = null;
+									if (!(task.Ignored || task.NotStarted))
+										continue;
+									switch (request.Url.Query) {
+									case "?all":
+										is_match = true;
+										break;
+									case "?all-device":
+										is_match = task is RunDeviceTask;
+										break;
+									case "?all-simulator":
+										is_match = task is RunSimulatorTask;
+										break;
+									case "?all-ios":
+										switch (task.Platform) {
+										case TestPlatform.iOS:
+										case TestPlatform.iOS_TodayExtension64:
+										case TestPlatform.iOS_Unified:
+										case TestPlatform.iOS_Unified32:
+										case TestPlatform.iOS_Unified64:
+											is_match = true;
+											break;
+										default:
+											if (task.Platform.ToString ().StartsWith ("iOS", StringComparison.Ordinal))
+												throw new NotImplementedException ();
+											break;
+										}
+										break;
+									case "?all-tvos":
+										switch (task.Platform) {
+										case TestPlatform.tvOS:
+											is_match = true;
+											break;
+										default:
+											if (task.Platform.ToString ().StartsWith ("tvOS", StringComparison.Ordinal))
+												throw new NotImplementedException ();
+											break;
+										}
+										break;
+									case "?all-watchos":
+										switch (task.Platform) {
+										case TestPlatform.watchOS:
+											is_match = true;
+											break;
+										default:
+											if (task.Platform.ToString ().StartsWith ("watchOS", StringComparison.Ordinal))
+												throw new NotImplementedException ();
+											break;
+										}
+										break;
+									case "?all-mac":
+										switch (task.Platform) {
+										case TestPlatform.Mac:
+										case TestPlatform.Mac_Classic:
+										case TestPlatform.Mac_Unified:
+										case TestPlatform.Mac_Unified32:
+										case TestPlatform.Mac_UnifiedXM45:
+										case TestPlatform.Mac_UnifiedXM45_32:
+											is_match = true;
+											break;
+										default:
+											if (task.Platform.ToString ().StartsWith ("Mac", StringComparison.Ordinal))
+												throw new NotImplementedException ();
+											break;
+										}
+										break;
+									default:
+										writer.WriteLine ("unknown query: {0}", request.Url.Query);
+										break;
+									}
+									if (request.Url.LocalPath == "/select") {
+										if (is_match.HasValue && is_match.Value)
+											task.Ignored = false;
+									} else if (request.Url.LocalPath == "/deselect") {
+										if (is_match.HasValue && is_match.Value)
+											task.Ignored = true;
+									}
+								}
+
+								writer.WriteLine ("OK");
+							}
 							break;
 						case "/runalltests":
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
@@ -619,6 +769,37 @@ namespace xharness
 								}
 
 								writer.WriteLine ("OK");
+							}
+							break;
+						case "/runselected":
+							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+							using (var writer = new StreamWriter (response.OutputStream)) {
+								// We want to randomize the order the tests are added, so that we don't build first the test for one device, 
+								// then for another, since that would not take advantage of running tests on several devices in parallel.
+								var rnd = new Random ((int) DateTime.Now.Ticks);
+								foreach (var task in allTasks.Where ((v) => !v.Ignored).OrderBy (v => rnd.Next ())) {
+									if (task.InProgress || task.Waiting) {
+										writer.WriteLine ($"Test '{task.TestName}' is already executing.");
+									} else {
+										task.Reset ();
+										task.RunAsync ();
+										writer.WriteLine ($"Started '{task.TestName}'.");
+									}
+								}
+							}
+							break;
+						case "/runfailed":
+							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+							using (var writer = new StreamWriter (response.OutputStream)) {
+								foreach (var task in allTasks.Where ((v) => v.Failed)) {
+									if (task.InProgress || task.Waiting) {
+										writer.WriteLine ($"Test '{task.TestName}' is already executing.");
+									} else {
+										task.Reset ();
+										task.RunAsync ();
+										writer.WriteLine ($"Started '{task.TestName}'.");
+									}
+								}
 							}
 							break;
 						case "/runtest":
@@ -660,6 +841,11 @@ namespace xharness
 								writer.WriteLine ("</html>");
 							}
 							server.Stop ();
+							break;
+						case "/favicon.ico":
+							var favicon = File.ReadAllBytes (Path.Combine (Harness.RootDirectory, "xharness", "favicon.ico"));
+							response.OutputStream.Write (favicon, 0, favicon.Length);
+							response.OutputStream.Close ();
 							break;
 						default:
 							var path = Path.Combine (LogDirectory, request.Url.LocalPath.Substring (1));
@@ -853,6 +1039,62 @@ namespace xharness
 .expander { display: table-cell; height: 100%; padding-right: 6px; text-align: center; vertical-align: middle; min-width: 10px; }
 .runall { font-size: 75%; margin-left: 3px; }
 .logs { padding-bottom: 10px; padding-top: 10px; padding-left: 30px; }
+
+#nav {
+	display: inline-block;
+	width: 200px;
+}
+
+#nav > * {
+	display: inline;
+	width: 200px;
+}
+
+#nav ul {
+	background: #ffffff;
+	list-style: none;
+	position: absolute;
+	left: -9999px;
+	padding: 10px;
+	z-index: 2;
+	width: 200px;
+	border-style: ridge;
+	border-width: thin;
+}
+
+#nav li {
+	margin-right: 10px;
+	position: relative;
+}
+#nav a {
+	display: block;
+	padding: 5px;
+	text-decoration: none;
+}
+#nav a:hover {
+	text-decoration: underline;
+}
+#nav ul li {
+	padding-top: 0;
+	padding-bottom: 0;
+	padding-left: 0;
+}
+#nav ul a {
+	white-space: nowrap;
+}
+#nav li:hover ul { 
+	left: 0;
+}
+#nav li:hover a {
+	text-decoration: underline;
+}
+#nav li:hover ul a { 
+	text-decoration:none;
+}
+#nav li:hover ul li a:hover {
+	text-decoration: underline;
+}
+
 </style>
 </head>");
 				writer.WriteLine ("<title>Test results</title>");
@@ -1035,26 +1277,63 @@ function oninitialload ()
 				var headerColor = "black";
 				if (failedTests.Any ()) {
 					headerColor = "red";
-				} else if (passedTests.Count () != allTasks.Count) {
-					headerColor = "gray";
-				} else {
+				} else if (passedTests.Any ()) {
 					headerColor = "green";
+				} else {
+					headerColor = "gray";
 				}
 
 				writer.Write ($"<span id='x{id_counter++}' class='autorefreshable'>");
 				if (allTasks.Count == 0) {
 					writer.Write ($"<h2 style='color: {headerColor}'>Loading tests...");
 				} else if (unfinishedTests.Any ()) {
-					writer.Write ($"<h2 style='color: {headerColor}'>Test run in progress ({failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed, {unfinishedTests.Count ()} tests left)");
+					writer.Write ($"<h2>Test run in progress (");
+					var list = new List<string> ();
+					var grouped = allTasks.GroupBy ((v) => v.ExecutionResult).OrderBy ((v) => (int) v.Key);
+					foreach (var @group in grouped)
+						list.Add ($"<span style='color: {GetTestColor (@group)}'>{@group.Key.ToString ()}: {@group.Count ()}</span>");
+					writer.Write (string.Join (", ", list));
+					writer.Write (")");
 				} else if (failedTests.Any ()) {
 					writer.Write ($"<h2 style='color: {headerColor}'>{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed.");
+				} else if (passedTests.Any ()) {
+					writer.Write ($"<h2 style='color: {headerColor}'>All {passedTests.Count ()} tests passed");
 				} else {
-					writer.Write ($"<h2 style='color: {headerColor}'>All tests passed");
+					writer.Write ($"<h2 style='color: {headerColor}'>No tests selected.");
 				}
 				if (IsServerMode && allTasks.Count > 0) {
-					writer.Write ("<small>");
-					writer.Write (" <a href='javascript:runalltests()'>Run all tests</a>");
-					writer.WriteLine ("</small>");
+					writer.WriteLine (@"</h2></span>
+<ul id='nav'>
+	<li id=""adminmenu"">Select
+		<ul>
+			<li class=""adminitem""><a href='javascript:sendrequest (""select?all"");'>All tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-device"");'>All device tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-simulator"");'>All simulator tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-ios"");'>All iOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-tvos"");'>All tvOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-watchos"");'>All watchOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-mac"");'>All Mac tests</a></li>
+		</ul>
+	</li>
+	<li id=""adminmenu"">Deselect
+		<ul>
+			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all"");'>All tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-device"");'>All device tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-simulator"");'>All simulator tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-ios"");'>All iOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-tvos"");'>All tvOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-watchos"");'>All watchOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-mac"");'>All Mac tests</a></li>
+		</ul>
+	</li>
+	<li id=""adminmenu"">Run
+		<ul>
+			<li class=""adminitem""><a href='javascript:runalltests ();'>All tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""runselected"");'>All selected tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""runfailed"");'>All failed tests</a></li>
+		</ul>
+	</li>
+</ul>");
 				}
 				writer.WriteLine ("</h2></span>");
 
@@ -1109,8 +1388,7 @@ function oninitialload ()
 					if (resources.Any ()) {
 						writer.WriteLine ($"<h3>Devices:</h3>");
 						foreach (var dr in resources.OrderBy ((v) => v.Description, StringComparer.OrdinalIgnoreCase)) {
-							var plural = dr.Users != 1 ? "s" : string.Empty;
-							writer.WriteLine ($"{dr.Description} - {dr.Users} user{plural} - {dr.QueuedUsers} in queue<br />");
+							writer.WriteLine ($"{dr.Description} - {dr.Users}/{dr.MaxConcurrentUsers} users - {dr.QueuedUsers} in queue<br />");
 						}
 					}
 				}
@@ -1218,6 +1496,14 @@ function oninitialload ()
 								}
 								if (test.Duration.Ticks > 0)
 									writer.WriteLine ($"Run duration: {test.Duration} <br />");
+								var runDeviceTest = runTest as RunDeviceTask;
+								if (runDeviceTest?.Device != null) {
+									if (runDeviceTest.CompanionDevice != null) {
+										writer.WriteLine ($"Device: {runDeviceTest.Device.Name} ({runDeviceTest.CompanionDevice.Name}) <br />");
+									} else {
+										writer.WriteLine ($"Device: {runDeviceTest.Device.Name} <br />");
+									}
+								}
 							} else {
 								if (test.Duration.Ticks > 0)
 									writer.WriteLine ($"Duration: {test.Duration} <br />");
@@ -1236,19 +1522,30 @@ function oninitialload ()
 										log_target = "_self";
 										break;
 									}
-									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", System.Web.HttpUtility.UrlPathEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
+									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
 									if (log.Description == "Test log" || log.Description == "Execution log") {
-										var summary = string.Empty;
-										var fails = new List<string> ();
+										string summary;
+										List<string> fails;
 										try {
 											using (var reader = log.GetReader ()) {
-												while (!reader.EndOfStream) {
-													string line = reader.ReadLine ().Trim ();
-													if (line.StartsWith ("Tests run:", StringComparison.Ordinal)) {
-														summary = line;
-													} else if (line.StartsWith ("[FAIL]", StringComparison.Ordinal)) {
-														fails.Add (line);
+												Tuple<long, object> data;
+												if (!log_data.TryGetValue (log, out data) || data.Item1 != reader.BaseStream.Length) {
+													summary = string.Empty;
+													fails = new List<string> ();
+													while (!reader.EndOfStream) {
+														string line = reader.ReadLine ()?.Trim ();
+														if (line == null)
+															continue;
+														if (line.StartsWith ("Tests run:", StringComparison.Ordinal)) {
+															summary = line;
+														} else if (line.StartsWith ("[FAIL]", StringComparison.Ordinal)) {
+															fails.Add (line);
+														}
 													}
+												} else {
+													var data_tuple = (Tuple<string, List<string>>) data.Item2;
+													summary = data_tuple.Item1;
+													fails = data_tuple.Item2;
 												}
 											}
 											if (fails.Count > 0) {
@@ -1263,16 +1560,25 @@ function oninitialload ()
 											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", System.Web.HttpUtility.HtmlEncode (ex.Message));
 										}
 									} else if (log.Description == "Build log") {
-										var errors = new HashSet<string> ();
+										HashSet<string> errors;
 										try {
 											using (var reader = log.GetReader ()) {
-												while (!reader.EndOfStream) {
-													string line = reader.ReadLine ()?.Trim ();
-													// Sometimes we put error messages in pull request descriptions
-													// Then Jenkins create environment variables containing the pull request descriptions (and other pull request data)
-													// So exclude any lines matching 'ghprbPull', to avoid reporting those environment variables as build errors.
-													if (line.Contains (": error") && !line.Contains ("ghprbPull"))
-														errors.Add (line);
+												Tuple<long, object> data;
+												if (!log_data.TryGetValue (log, out data) || data.Item1 != reader.BaseStream.Length) {
+													errors = new HashSet<string> ();
+													while (!reader.EndOfStream) {
+														string line = reader.ReadLine ()?.Trim ();
+														if (line == null)
+															continue;
+														// Sometimes we put error messages in pull request descriptions
+														// Then Jenkins create environment variables containing the pull request descriptions (and other pull request data)
+														// So exclude any lines matching 'ghprbPull', to avoid reporting those environment variables as build errors.
+														if (line.Contains (": error") && !line.Contains ("ghprbPull"))
+															errors.Add (line);
+													}
+													log_data [log] = new Tuple<long, object> (reader.BaseStream.Length, errors);
+												} else {
+													errors = (HashSet<string>) data.Item2;
 												}
 											}
 											if (errors.Count > 0) {
@@ -1300,6 +1606,12 @@ function oninitialload ()
 				writer.WriteLine ("</body>");
 				writer.WriteLine ("</html>");
 			}
+		}
+		Dictionary<Log, Tuple<long, object>> log_data = new Dictionary<Log, Tuple<long, object>> ();
+
+		static string LinkEncode (string path)
+		{
+			return System.Web.HttpUtility.UrlEncode (path).Replace ("%2f", "/").Replace ("+", "%20");
 		}
 
 		string RenderTextStates (IEnumerable<TestTask> tests)
@@ -1477,12 +1789,12 @@ function oninitialload ()
 			
 			ExecutionResult = (ExecutionResult & ~TestExecutingResult.StateMask) | TestExecutingResult.InProgress;
 
-			if (InitialTask != null)
-				await InitialTask;
-
-			duration.Start ();
-
 			try {
+				if (InitialTask != null)
+					await InitialTask;
+
+				duration.Start ();
+
 				execute_task = ExecuteAsync ();
 				await execute_task;
 
@@ -1627,7 +1939,13 @@ function oninitialload ()
 			get { return Platform.ToString (); }
 			set { throw new NotSupportedException (); }
 		}
-}
+
+		public virtual Task CleanAsync ()
+		{
+			Console.WriteLine ("Clean is not implemented for {0}", GetType ().Name);
+			return Task.CompletedTask;
+		}
+	}
 
 	class MdtoolTask : BuildToolTask
 	{
@@ -1747,6 +2065,46 @@ function oninitialload ()
 				}
 			}
 		}
+
+		async Task CleanProjectAsync (Log log, string project_file, string project_platform, string project_configuration)
+		{
+			// Don't require the desktop resource here, this shouldn't be that resource sensitive
+			using (var xbuild = new Process ()) {
+				xbuild.StartInfo.FileName = "xbuild";
+				var args = new StringBuilder ();
+				args.Append ("/verbosity:diagnostic ");
+				if (project_platform != null)
+					args.Append ($"/p:Platform={project_platform} ");
+				if (project_configuration != null)
+					args.Append ($"/p:Configuration={project_configuration} ");
+				args.Append (Harness.Quote (project_file)).Append (" ");
+				args.Append ("/t:Clean ");
+				xbuild.StartInfo.Arguments = args.ToString ();
+				Jenkins.MainLog.WriteLine ("Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
+				SetEnvironmentVariables (xbuild);
+				foreach (string key in xbuild.StartInfo.EnvironmentVariables.Keys)
+					log.WriteLine ("{0}={1}", key, xbuild.StartInfo.EnvironmentVariables [key]);
+				log.WriteLine ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
+				var timeout = TimeSpan.FromMinutes (1);
+				await xbuild.RunAsync (log, true, timeout);
+				log.WriteLine ("Clean timed out after {0} seconds.", timeout.TotalSeconds);
+				Jenkins.MainLog.WriteLine ("Cleaned {0} ({1})", TestName, Mode);
+			}
+		}
+
+		public async override Task CleanAsync ()
+		{
+			var log = Logs.CreateStream (LogDirectory, $"clean-{Platform}-{Timestamp}.txt", "Clean log");
+			await CleanProjectAsync (log, ProjectFile, SpecifyPlatform ? ProjectPlatform : null, SpecifyConfiguration ? ProjectConfiguration : null);
+
+			// Iterate over all the project references as well.
+			var doc = new System.Xml.XmlDocument ();
+			doc.LoadWithoutNetworkAccess (ProjectFile);
+			foreach (var pr in doc.GetProjectReferences ()) {
+				var path = pr.Replace ('\\', '/');
+				await CleanProjectAsync (log, path, SpecifyPlatform ? ProjectPlatform : null, SpecifyConfiguration ? ProjectConfiguration : null);
+			}
+		}
 	}
 
 	class NUnitExecuteTask : RunTestTask
@@ -1775,10 +2133,10 @@ function oninitialload ()
 
 		public override string Mode {
 			get {
-				return "NUnit";
+				return base.Mode ?? "NUnit";
 			}
 			set {
-				throw new NotSupportedException ();
+				base.Mode = value;
 			}
 		}
 
@@ -1863,17 +2221,17 @@ function oninitialload ()
 			get {
 				switch (Platform) {
 				case TestPlatform.Mac:
-					return TestName;
+					return "Mac";
 				case TestPlatform.Mac_Classic:
-					return "Classic";
+					return "Mac Classic";
 				case TestPlatform.Mac_Unified:
-					return "Unified";
+					return "Mac Unified";
 				case TestPlatform.Mac_Unified32:
-					return "Unified 32-bit";
+					return "Mac Unified 32-bit";
 				case TestPlatform.Mac_UnifiedXM45:
-					return "Unified XM45";
+					return "Mac Unified XM45";
 				case TestPlatform.Mac_UnifiedXM45_32:
-					return "Unified XM45 32-bit";
+					return "Mac Unified XM45 32-bit";
 				default:
 					throw new NotImplementedException ();
 				}
@@ -2214,51 +2572,61 @@ function oninitialload ()
 					if (!uninstall_result.Succeeded) {
 						FailureMessage = $"Uninstall failed, exit code: {uninstall_result.ExitCode}.";
 						ExecutionResult = TestExecutingResult.Failed;
-						return;
 					}
 
-					// Install the app
-					lock (lock_obj)
-						this.install_log = install_log;
-					try {
-						runner.MainLog = install_log;
-						var install_result = await runner.InstallAsync ();
-						if (!install_result.Succeeded) {
-							FailureMessage = $"Install failed, exit code: {install_result.ExitCode}.";
-							ExecutionResult = TestExecutingResult.Failed;
-							return;
-						}
-					} finally {
+					if (!Failed) {
+						// Install the app
 						lock (lock_obj)
-							this.install_log = null;
+							this.install_log = install_log;
+						try {
+							runner.MainLog = install_log;
+							var install_result = await runner.InstallAsync ();
+							if (!install_result.Succeeded) {
+								FailureMessage = $"Install failed, exit code: {install_result.ExitCode}.";
+								ExecutionResult = TestExecutingResult.Failed;
+							}
+						} finally {
+							lock (lock_obj)
+								this.install_log = null;
+						}
 					}
 
-					// Run the app
-					runner.MainLog = Logs.CreateStream (LogDirectory, $"run-{Device.UDID}-{Timestamp}.log", "Run log");
-					await runner.RunAsync ();
+					if (!Failed) {
+						// Run the app
+						runner.MainLog = Logs.CreateStream (LogDirectory, $"run-{Device.UDID}-{Timestamp}.log", "Run log");
+						await runner.RunAsync ();
 
-					if (runner.Result == TestExecutingResult.Succeeded && Platform == TestPlatform.iOS_TodayExtension64) {
-						// For the today extension, the main app is just a single test.
-						// This is because running the today extension will not wake up the device,
-						// nor will it close & reopen the today app (but launching the main app
-						// will do both of these things, preparing the device for launching the today extension).
+						if (!string.IsNullOrEmpty (runner.FailureMessage))
+							FailureMessage = runner.FailureMessage;
 
-						AppRunner todayRunner = new AppRunner
-						{
-							Harness = Harness,
-							ProjectFile = TestProject.GetTodayExtension ().Path,
-							Target = AppRunnerTarget,
-							LogDirectory = LogDirectory,
-							MainLog = Logs.CreateStream (LogDirectory, $"extension-run-{Device.UDID}-{Timestamp}.log", "Extension run log"),
-							DeviceName = Device.Name,
-							CompanionDeviceName = CompanionDevice?.Name,
-							Configuration = ProjectConfiguration,
-						};
-						additional_runner = todayRunner;
-						await todayRunner.RunAsync ();
-						ExecutionResult = todayRunner.Result;
-					} else {
-						ExecutionResult = runner.Result;
+						if (runner.Result == TestExecutingResult.Succeeded && Platform == TestPlatform.iOS_TodayExtension64) {
+							// For the today extension, the main app is just a single test.
+							// This is because running the today extension will not wake up the device,
+							// nor will it close & reopen the today app (but launching the main app
+							// will do both of these things, preparing the device for launching the today extension).
+
+							AppRunner todayRunner = new AppRunner
+							{
+								Harness = Harness,
+								ProjectFile = TestProject.GetTodayExtension ().Path,
+								Target = AppRunnerTarget,
+								LogDirectory = LogDirectory,
+								MainLog = Logs.CreateStream (LogDirectory, $"extension-run-{Device.UDID}-{Timestamp}.log", "Extension run log"),
+								DeviceName = Device.Name,
+								CompanionDeviceName = CompanionDevice?.Name,
+								Configuration = ProjectConfiguration,
+							};
+							additional_runner = todayRunner;
+							await todayRunner.RunAsync ();
+							foreach (var log in todayRunner.Logs.Where ((v) => !v.Description.StartsWith ("Extension ", StringComparison.Ordinal)))
+								log.Description = "Extension " + log.Description [0].ToString ().ToLower () + log.Description.Substring (1);
+							ExecutionResult = todayRunner.Result;
+
+							if (!string.IsNullOrEmpty (todayRunner.FailureMessage))
+								FailureMessage = todayRunner.FailureMessage;
+						} else {
+							ExecutionResult = runner.Result;
+						}
 					}
 				} finally {
 					// Uninstall again, so that we don't leave junk behind and fill up the device.
@@ -2266,6 +2634,9 @@ function oninitialload ()
 					var uninstall_result = await runner.UninstallAsync ();
 					if (!uninstall_result.Succeeded)
 						MainLog.WriteLine ($"Post-run uninstall failed, exit code: {uninstall_result.ExitCode} (this won't affect the test result)");
+
+					// Also clean up after us locally.
+					await BuildTask.CleanAsync ();
 				}
 			}
 		}
@@ -2474,6 +2845,14 @@ function oninitialload ()
 
 		public int Users => users;
 		public int QueuedUsers => queue.Count + exclusive_queue.Count;
+		public int MaxConcurrentUsers {
+			get {
+				return max_concurrent_users;
+			}
+			set {
+				max_concurrent_users = value;
+			}
+		}
 
 		public Resource (string name, int max_concurrent_users = 1, string description = null)
 		{

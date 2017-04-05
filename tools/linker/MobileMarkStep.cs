@@ -9,6 +9,8 @@ using Mono.Linker;
 using Mono.Linker.Steps;
 using Mono.Tuner;
 
+using Xamarin.Tuner;
+
 namespace Xamarin.Linker.Steps {
 
 	// XML definition files have their limits, i.e. they are good to keep stuff around unconditionnally
@@ -19,6 +21,12 @@ namespace Xamarin.Linker.Steps {
 	public class MobileMarkStep : MarkStep {
 
 		protected virtual bool DebugBuild { get; set; }
+
+		protected DerivedLinkContext LinkContext {
+			get {
+				return (DerivedLinkContext) base._context;
+			}
+		}
 
 		public override void Process (LinkContext context)
 		{
@@ -478,7 +486,7 @@ namespace Xamarin.Linker.Steps {
 				system_runtime_serialization = true;
 				// if we're keeping this assembly and use the Serialization namespace inside user code then we
 				// must bring the all the members decorated with [Data[Contract|Member]] attributes from the SDK
-				var members = ApplyPreserveAttribute.DataContract;
+				var members = LinkContext.DataContract;
 				foreach (var member in members)
 					MarkMetadata (member);
 				members.Clear ();
@@ -543,7 +551,7 @@ namespace Xamarin.Linker.Steps {
 					// if we're keeping this assembly and use the Serialization namespace inside user code
 					// then we must bring the all the members decorated with [Xml*] attributes from the SDK
 					system_xml_serialization = true;
-					var members = ApplyPreserveAttribute.XmlSerialization;
+					var members = LinkContext.XmlSerialization;
 					foreach (var member in members)
 						MarkMetadata (member);
 					members.Clear ();

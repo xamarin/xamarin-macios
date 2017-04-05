@@ -8,7 +8,7 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__
+#if !__WATCHOS__
 
 using System;
 using System.Drawing;
@@ -76,14 +76,21 @@ namespace MonoTouchFixtures.VideoToolbox {
 
 			var pxbuffer = new CVPixelBuffer (originalCGImage.Width, originalCGImage.Height, CVPixelFormatType.CV32ARGB,
 				               new CVPixelBufferAttributes { CGImageCompatibility = true, CGBitmapContextCompatibility = true });
+#if !__TVOS__
 			pxbuffer.Lock (CVOptionFlags.None);
-
+#else
+			pxbuffer.Lock (CVPixelBufferLock.None);
+#endif
 			using (var colorSpace = CGColorSpace.CreateDeviceRGB ())
 			using (var ctx = new CGBitmapContext (pxbuffer.BaseAddress, originalCGImage.Width, originalCGImage.Height, 8, 
 				                 4 * originalCGImage.Width, colorSpace, CGBitmapFlags.NoneSkipLast)) {
 				ctx.RotateCTM (0);
 				ctx.DrawImage (new RectangleF (0, 0, originalCGImage.Width, originalCGImage.Height), originalCGImage);
+#if !__TVOS__
 				pxbuffer.Unlock (CVOptionFlags.None);
+#else
+				pxbuffer.Unlock (CVPixelBufferLock.None);
+#endif
 			}
 
 			Assert.NotNull (pxbuffer, "VTUtilitiesTests.ToCGImageTest pxbuffer should not be null");
@@ -102,4 +109,4 @@ namespace MonoTouchFixtures.VideoToolbox {
 	}
 }
 
-#endif // !__TVOS__ && !__WATCHOS__
+#endif // !__WATCHOS__

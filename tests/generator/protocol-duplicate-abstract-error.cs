@@ -6,8 +6,8 @@ using System.Runtime.InteropServices;
 using MonoMac.Foundation;
 using MonoMac.ObjCRuntime;
 #else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 #endif
 #else
 using Foundation;

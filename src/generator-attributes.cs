@@ -1,8 +1,17 @@
 using System;
-using System.Reflection;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+#if IKVM
+using IKVM.Reflection;
+using Type = IKVM.Reflection.Type;
+#else
+using System.Reflection;
+#endif
+
+//
+// All the attributes in this file are compiled into two binaries:
+// * Xamarin.*.Attributes.dll: this assembly references the platform assemblies (mscorlib, etc), and is used when compiling the API definition.
+// * bgen-ikvm.exe: when compiled into the generator itself, the attributes are used as mock objects to load the corresponding attributes from Xamarin.*.Attributes.dll.
+//
 
 //
 // ForcedTypeAttribute
@@ -85,13 +94,17 @@ public class BindAsAttribute : Attribute {
 	public BindAsAttribute (Type type)
 	{
 		Type = type;
-		var nullable = type.IsArray ? Nullable.GetUnderlyingType (type.GetElementType ()) : Nullable.GetUnderlyingType (type);
+#if BGENERATOR
+		var nullable = type.IsArray ? TypeManager.GetUnderlyingNullableType (type.GetElementType ()) : TypeManager.GetUnderlyingNullableType (type);
 		IsNullable = nullable != null;
 		IsValueType = IsNullable ? nullable.IsValueType : type.IsValueType;
+#endif
 	}
 	public Type Type;
+#if BGENERATOR
 	internal readonly bool IsNullable;
 	internal readonly bool IsValueType;
+#endif
 }
 
 // Used to flag a type as needing to be turned into a protocol on output for Unified
@@ -210,11 +223,14 @@ public class BindAttribute : Attribute {
 }
 
 public class WrapAttribute : Attribute {
-	public WrapAttribute (string methodname)
+	public WrapAttribute (string methodname, bool isVirtual = false)
 	{
 		MethodName = methodname;
+		IsVirtual = isVirtual;
 	}
+
 	public string MethodName { get; set; }
+	public bool IsVirtual { get; set; }
 }
 
 //
@@ -709,7 +725,15 @@ public class NotImplementedAttribute : Attribute {
 // }
 [AttributeUsage (AttributeTargets.Interface, AllowMultiple=false)]
 public class CategoryAttribute : Attribute {
-	public CategoryAttribute () {}
+	public bool AllowStaticMembers;
+	public CategoryAttribute () { }
+#if XAMCORE_4_0
+	[Obsolete ("Inline the static members in this category in the category's class (and remove this obsolete once fixed)"]
+#endif
+	public CategoryAttribute (bool allowStaticMembers)
+	{
+		AllowStaticMembers = allowStaticMembers;
+	}
 }
 
 //
@@ -840,12 +864,8 @@ public class CoreImageFilterAttribute : Attribute {
 		// default is public - will be skipped for abstract types
 		DefaultCtorVisibility = MethodAttributes.Public;
 
-		// since it was not generated code we never fixed the .ctor(IntPtr) visibility for unified
-		if (Generator.XamcoreVersion >= 3) {
-			IntPtrCtorVisibility = MethodAttributes.FamORAssem;
-		} else {
-			IntPtrCtorVisibility = MethodAttributes.Public;
-		}
+		IntPtrCtorVisibility = MethodAttributes.PrivateScope;
+
 		// not needed by default, automaticly `protected` if the type is abstract
 		StringCtorVisibility = MethodAttributes.PrivateScope;
 	}

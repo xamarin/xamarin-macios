@@ -150,7 +150,6 @@
     <Compile Include="DontLinkRegressionTests.cs" />
     <Compile Include="TableViewSourceTest.cs" />
     <Compile Include="CalendarTest.cs" />
-    <Compile Include="CanaryTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>

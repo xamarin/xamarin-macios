@@ -11,9 +11,8 @@ CECIL_PATH=$(MONO_PATH)/external/cecil
 MONO_CECIL_FILES = $(wildcard $(CECIL_PATH)/*.cs) $(wildcard $(CECIL_PATH)/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*/*/*.cs)
 
 MONO_DIR=$(MONO_PATH)
-MCS_TOOLS_DIR=$(MONO_DIR)/mcs/tools
-MONOLINKER=$(MCS_TOOLS_DIR)/linker
-MONO_TUNER=$(MCS_TOOLS_DIR)/tuner
+MONOLINKER=$(LINKER_TOOLS_PATH)/linker
+MONO_TUNER=$(LINKER_TOOLS_PATH)/tuner
 
 LINKER_RESOURCES = \
 	$(LINKER_DIR)/Descriptors/mscorlib.xml

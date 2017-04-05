@@ -21,3 +21,8 @@ To set it up, go to Project > iOS Build > Linker Behavior.
 * **Problem:** Debug configuration that uses developer signing keys should not generate an IPA as it is only needed for distribution, which now uses the Publishing Wizard.
 * **Fix:** Disable IPA build in Project Options for the Debug configuration.
 
+<h3><a name="XIA0004"/>XIA0004: Missing64BitSupportRule</h3>
+
+* **Problem:** The supported architecture for "release | device" isn't 64 bit compatible, missing ARM64. This is a problem as Apple does not accept 32 bits only iOS apps in the AppStore.
+* **Fix:** Double click on your iOS project, go to Build > iOS Build and change the supported architectures so it has ARM64.
+

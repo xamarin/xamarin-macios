@@ -1,8 +1,8 @@
 using System;
 using System.Drawing;
-using MonoTouch.Foundation;
-using MonoTouch.CoreMedia;
-using MonoTouch.CoreAnimation;
+using Foundation;
+using CoreMedia;
+using CoreAnimation;
 
 namespace BindAsTests {
 

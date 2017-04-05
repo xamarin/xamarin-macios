@@ -131,11 +131,11 @@ namespace XamCore.CoreFoundation {
 		}
 		
 		[MonoNativeFunctionWrapper]
-		delegate void CallbackDelegate (IntPtr stream, CFStreamEventType eventType, IntPtr info);
+		delegate void CallbackDelegate (IntPtr stream, IntPtr /* CFStreamEventType */ eventType, IntPtr info);
 
 		static void CFReadStreamRef_InvokeCallback (IntPtr callback, IntPtr stream, CFStreamEventType eventType, IntPtr info)
 		{
-			((CallbackDelegate)Marshal.GetDelegateForFunctionPointer (callback, typeof (CallbackDelegate))) (stream, eventType, info);
+			((CallbackDelegate)Marshal.GetDelegateForFunctionPointer (callback, typeof (CallbackDelegate))) (stream, (IntPtr) eventType, info);
 		}
 	}
 

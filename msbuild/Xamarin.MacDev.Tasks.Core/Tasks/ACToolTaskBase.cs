@@ -297,6 +297,10 @@ namespace Xamarin.MacDev.Tasks
 			for (int i = 0; i < ImageAssets.Length; i++) {
 				var vpath = BundleResource.GetVirtualProjectPath (ProjectDir, ImageAssets[i], !string.IsNullOrEmpty (SessionId));
 
+				// Ignore MacOS .DS_Store files...
+				if (Path.GetFileName (vpath).Equals (".DS_Store", StringComparison.OrdinalIgnoreCase))
+					continue;
+
 				// get the parent (which will typically be .appiconset, .launchimage, .imageset, .iconset, etc)
 				var catalog = Path.GetDirectoryName (vpath);
 
@@ -305,7 +309,7 @@ namespace Xamarin.MacDev.Tasks
 					catalog = Path.GetDirectoryName (catalog);
 
 				if (string.IsNullOrEmpty (catalog)) {
-					Log.LogWarning (null, null, null, items[i].ItemSpec, 0, 0, 0, 0, "Asset not part of an asset catalog: {0}", items[i].ItemSpec);
+					Log.LogWarning (null, null, null, ImageAssets[i].ItemSpec, 0, 0, 0, 0, "Asset not part of an asset catalog: {0}", ImageAssets[i].ItemSpec);
 					continue;
 				}
 
@@ -336,6 +340,10 @@ namespace Xamarin.MacDev.Tasks
 					var clone = false;
 					ITaskItem item;
 
+					// Ignore MacOS .DS_Store files...
+					if (Path.GetFileName (vpath).Equals (".DS_Store", StringComparison.OrdinalIgnoreCase))
+						continue;
+
 					foreach (var catalog in clones) {
 						if (vpath.Length > catalog.Length && vpath[catalog.Length] == '/' && vpath.StartsWith (catalog, StringComparison.Ordinal)) {
 							clone = true;
@@ -344,17 +352,25 @@ namespace Xamarin.MacDev.Tasks
 					}
 
 					if (clone) {
-						var path = Path.Combine (intermediateCloneDir, vpath);
-						var dir = Path.GetDirectoryName (path);
+						var src = ImageAssets[i].GetMetadata ("FullPath");
+
+						if (!File.Exists (src)) {
+							Log.LogError (null, null, null, src, 0, 0, 0, 0, "File not found: {0}", src);
+							return false;
+						}
+
+						var dest = Path.Combine (intermediateCloneDir, vpath);
+						var dir = Path.GetDirectoryName (dest);
 
 						Directory.CreateDirectory (dir);
-						File.Copy (ImageAssets[i].GetMetadata ("FullPath"), path, true);
+
+						File.Copy (src, dest, true);
 
 						// filter out everything except paths containing a Contents.json file since our main processing loop only cares about these
 						if (Path.GetFileName (vpath) != "Contents.json")
 							continue;
 
-						item = new TaskItem (path);
+						item = new TaskItem (dest);
 						ImageAssets[i].CopyMetadataTo (item);
 						item.SetMetadata ("Link", vpath);
 					} else {
@@ -430,7 +446,7 @@ namespace Xamarin.MacDev.Tasks
 
 						Directory.CreateDirectory (assetDir);
 
-						for (int j = 0; j < tags.Count; j++)
+						for (int j = 0; j < tagList.Count; j++)
 							ptags.Add (new PString (tagList[j]));
 
 						assetpack.Add ("bundle-id", new PString (string.Format ("{0}.asset-pack-{1}", bundleIdentifier, hash)));

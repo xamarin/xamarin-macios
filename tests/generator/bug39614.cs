@@ -1,5 +1,5 @@
 using System;
-using MonoTouch.Foundation;
+using Foundation;
 
 [BaseType (typeof (NSObject))]
 public interface FooType<GenType>

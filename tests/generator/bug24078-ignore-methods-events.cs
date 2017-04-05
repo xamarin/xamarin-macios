@@ -3,15 +3,9 @@
  * 
  */
 using System;
-#if !XAMCORE_2_0
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#else
 using Foundation;
 using ObjCRuntime;
 using UIKit;
-#endif
 
 namespace Test {
 

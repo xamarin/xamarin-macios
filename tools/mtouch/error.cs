@@ -97,7 +97,7 @@ namespace Xamarin.Bundler {
 	//		Warning		MT0087	<unused>
 	//					MT0088	The GC must be in cooperative mode for watchOS apps. Please remove the --coop:false argument to mtouch.
 	//					MT0089	The option '{0}' cannot take the value '{1}' when cooperative mode is enabled for the GC.
-	//					MT0091	This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker by changing the Linker behaviour to Link Framework SDKs Only.
+	//					MT0091	This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).
 	//					MT0092	<used by Xamarin.Launcher> The option '{0}' is required.
 	//					MT0093	Could not find 'mlaunch'.
 	//		Warning		MT0094	<unused> Both profiling (--profiling) and incremental builds (--fastdev) are currently not supported when building for {0}, and incremental builds have been disabled (this will be fixed in a future release).
@@ -106,8 +106,35 @@ namespace Xamarin.Bundler {
 	//					MT0097 <used by mmp>
 	//					MT0098 <used by mmp>
 	//					MT0099	Internal error {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).
+	//					MT0100	Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).
+	//					MT0101	The assembly '*' is specified multiple times in --assembly-build-target arguments.
+	//					MT0102	The assemblies '*' and '*' have the same target name ('*'), but different targets ('*' and '*').
+	//					MT0103	The static object '*' contains more than one assembly ('*'), but each static object must correspond with exactly one assembly.
+	//					MT0105	No assembly build target was specified for '{0}'.
+	//					MT0106	The assembly build target name '{0}' is invalid: the character '{1}' is not allowed.
+	//					MT0107	The assemblies '{0}' have different custom LLVM optimizations ({1}), which is not allowed when they are all compiled to a single binary.
+	//					MT0108	The assembly build target '{0}' did not match any assemblies.
+	//		Warning		MT0109	The assembly '{0}' was loaded from a different path than the provided path (provided path: {1}, actual path: {2}).
 	//		Warning		MT0110  Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.
 	//		Warning		MT0111	Bitcode has been enabled because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.
+	//		Warning		MT0112	Native code sharing has been disabled because {0} 
+	//																			the container app's deployment target is earlier than iOS 8.0 (its {0})).
+	//																			the container app includes I18N assemblies ({0}).
+	//																			the container app has custom xml definitions for the managed linker ({0}).
+	//		Warning		MT0113	Native code sharing has been disabled for the extension '{0}' because {1}
+	//																			the bitcode options differ between the container app ({0}) and the extension ({1}).
+	//																			the --assembly-build-target options are different between the container app ({1}) and the extension ({2}).
+	//																			the I18N assemblies are different between the container app ({1}) and the extension ({2}).
+	//																			the arguments to the AOT compiler are different between the container app ({1}) and the extension ({2}).
+	//																			the other arguments to the AOT compiler are different between the container app ({1}) and the extension ({2}).
+	//																			LLVM is not enabled or disabled in both the container app ({1}) and the extension ({2}).
+	//																			the managed linker settings are different between the container app ({1}) and the extension ({2}).
+	//																			the skipped assemblies for the managed linker are different between the container app ({1}) and the extension ({2}).
+	//																			the extension has custom xml definitions for the managed linker ({1}).
+	//																			the container app does not build for the ABI {1} (while the extension is building for this ABI).
+	//																			the container app is building for the ABI {1}, which is not compatible with the extension's ABI ({2}).
+	//																			the container app is referencing the assembly '{1}' from '{2}', while the extension references it from '{3}'.
+	//		Warning		MT0127	Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.
 	// MT1xxx	file copy / symlinks (project related)
 	//			MT10xx	installer.cs / mtouch.cs
 	//					MT1001	Could not find an application at the specified directory: {0}
@@ -214,6 +241,8 @@ namespace Xamarin.Bundler {
 	//		Warning		MT2015	Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.
 	//		Warning		MT2016  Invalid TlsProvider `{0}` option. The only valid value `{1}` will be used.
 	//					MT2017  Could not process XML description: {0}
+	//					MT2018	The assembly '{0}' is referenced from two different locations: '{1}' and '{2}'.
+	//					MT2019	Can not load the root assembly '{0}'.
 	//					MT202x	Binding Optimizer failed processing `...`.
 	//					MT203x	Removing User Resources failed processing `...`.
 	//					MT204x	Default HttpMessageHandler setter failed processing `...`.
@@ -283,6 +312,7 @@ namespace Xamarin.Bundler {
 	//					MT4143	The ObjectiveC class '{0}' could not be registered, it does not seem to derive from any known ObjectiveC class (including NSObject).
 	//					MT4144	Cannot register the method '{0}.{1}' since it does not have an associated trampoline. Please file a bug report at http://bugzilla.xamarin.com
 	//					MT4145	Invalid enum '{0}': enums with the [Native] attribute must have a underlying enum type of either 'long' or 'ulong'.
+	//					MT4146	The Name parameter of the Registrar attribute on the class '{0}' ('{3}') contains an invalid character: '{1}' (0x{2}).
 	//					MT4147	Detected a protocol inheriting from the JSExport protocol while using the dynamic registrar. It is not possible to export protocols to JavaScriptCore dynamically; the static registrar must be used (add '--registrar:static to the additional mtouch arguments in the project's iOS Build options to select the static registrar).
 	//					MT4148	The registrar found a generic protocol: '{0}'. Exporting generic protocols is not supported.
 	//					MT4149	Cannot register the method '{0}.{1}' because the type of the first parameter ('{2}') does not match the category type ('{3}').
@@ -303,7 +333,7 @@ namespace Xamarin.Bundler {
 	//					MT4164	Cannot export the property '{0}' because its selector '{1}' is an Objective-C keyword. Please use a different name.
 	//					MT4165	The registrar couldn't find the type 'System.Void' in any of the referenced assemblies.
 	//					MT4166	Cannot register the method '{0}' because the signature contains a type ({1}) that isn't a reference type.
-	//					MT4167	Cannot register the method '{0}' because the signature contains a generic type ({1}) with a generic argument type that isn't an NSObject subclass ({2}).
+	//					MT4167	Cannot register the method '{0}' because the signature contains a generic type ({1}) with a generic argument type that doesn't implement INativeObject ({2}).
 	// MT5xxx	GCC and toolchain
 	//			MT51xx	compilation
 	//					MT5101	Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component
@@ -311,6 +341,7 @@ namespace Xamarin.Bundler {
 	//					MT5103	Failed to compile the file '{0}'. Please file a bug report at http://bugzilla.xamarin.com
 	//					MT5104  Could not find neither the '{0}' nor the '{1}' compiler. Please install Xcode 'Command-Line Tools' component
 	//					MT5105  ** reserved Xamarin.Mac **
+	//					MT5106	Could not compile the file(s) '{0}'. Please file a bug report at http://bugzilla.xamarin.com
 	//			MT52xx	linking
 	//					MT5201	Native linking failed. Please review the build log and the user flags provided to gcc: {0}
 	//					MT5202	Native linking failed. Please review the build log.
@@ -323,6 +354,7 @@ namespace Xamarin.Bundler {
 	//					MT5213	Duplicate symbol in: {0} (Location related to previous error)
 	//					MT5214	Native linking failed, undefined symbol: {0}. This symbol was referenced by the managed member {1}.{2}. Please verify that all the necessary frameworks have been referenced and native libraries linked.
 	//		Warning		MT5215	References to '{0}' might require additional -framework=XXX or -lXXX instructions to the native linker
+	//					MT5216	Native linking failed for {0}. Please file a bug report at http://bugzilla.xamarin.com
 	//			MT53xx	other tools
 	//					MT5301	Missing 'strip' tool. Please install Xcode 'Command-Line Tools' component
 	//					MT5302	Missing 'dsymutil' tool. Please install Xcode 'Command-Line Tools' component
@@ -452,7 +484,7 @@ namespace Xamarin.Bundler {
 			base (String.Format (message, args), innerException)
 		{
 			Code = code;
-			Error = error;
+			Error = error || ErrorHelper.GetWarningLevel (code) == ErrorHelper.WarningLevel.Error;
 		}
 	
 		public string FileName { get; set; }

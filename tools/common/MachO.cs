@@ -371,6 +371,8 @@ namespace Xamarin
 					return Abi.ARMv7;
 				case 11:
 					return Abi.ARMv7s;
+				case 12:
+					return Abi.ARMv7k;
 				default:
 					return Abi.None;
 				}

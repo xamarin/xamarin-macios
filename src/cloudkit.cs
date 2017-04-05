@@ -230,7 +230,7 @@ namespace XamCore.CloudKit {
 		[Async]
 		void FetchUserRecordId (Action<CKRecordID, NSError> completionHandler);
 
-		[iOS (10,0), TV (10,0), Mac (10,12)]
+		[iOS (10,0)][Mac (10,12)]
 		[NoTV]
 		[Export ("discoverAllIdentitiesWithCompletionHandler:")]
 		[Async]
@@ -488,7 +488,6 @@ namespace XamCore.CloudKit {
 	}
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
-	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
 	[BaseType (typeof (CKOperation))]
 	interface CKFetchNotificationChangesOperation {
 		[Export ("initWithPreviousServerChangeToken:")]
@@ -1519,16 +1518,9 @@ namespace XamCore.CloudKit {
 	[iOS (9,2), Mac (10,11,2, onlyOn64 : true)]
 	[TV (9,1)]
 	[Watch (3,0)]
-#if WATCH // does not work on watchOS - existiong init* does not allow null to be used to fake it
-	[DisableDefaultCtor]
-#endif
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchWebAuthTokenOperation {
 
-#if WATCH
-		// it might be because Xcode 8.2 headers were not updated for watchOS *or* because `init` does not work
-		[DesignatedInitializer]
-#endif
 		[Export ("initWithAPIToken:")]
 		IntPtr Constructor (string token);
 

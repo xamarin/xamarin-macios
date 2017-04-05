@@ -67,6 +67,19 @@ using ProductException=MonoMac.RuntimeException;
 // This file cannot use any cecil code, since it's also compiled into monotouch.dll
 //
 
+#if MONOMAC
+namespace XamCore.ObjCRuntime
+{
+	public delegate void AssemblyRegistrationHandler (object sender, AssemblyRegistrationEventArgs args);
+
+	public class AssemblyRegistrationEventArgs : EventArgs
+	{
+		public bool Register { get; set; }
+		public System.Reflection.AssemblyName AssemblyName { get; internal set; }
+	}
+}
+#endif
+
 namespace XamCore.Registrar {
 	static class Shared {
 		
@@ -141,7 +154,7 @@ namespace XamCore.Registrar {
 
 			public bool IsCategory { get { return CategoryAttribute != null; } }
 
-			public void VerifyRegisterAttribute ()
+			public void VerifyRegisterAttribute (ref List<Exception> exceptions)
 			{
 				if (RegisterAttribute == null)
 					return;
@@ -155,9 +168,21 @@ namespace XamCore.Registrar {
 						continue;
 					// There is no Objective-C spec, and the C/C++ spec mentions "implementation-defined characters",
 					// so afaict there's no list of valid identifier characters. However we do know that whitespace
-					// is not allowed, so warn about that. We're not emitting an error because that would be a
-					// breaking change. See also bug #25441.
-					ErrorHelper.Warning (4146, "The Name parameter of the Registrar attribute on the class '{0}' contains an invalid character: '{1}' (0x{2})", Registrar.GetTypeFullName (Type), name [i], ((int) name [i]).ToString ("x"));
+					// is not allowed, so notify the developer about that. We're only emitting an error if we can detect
+					// that it's a name that will cause the static registrar output to fail to compile
+					// (currently if the whitespace is not at the start or end of the name), since otherwise it's
+					// a breaking change.
+					// See also bug #25441.
+					var showError = false;
+					var trimmedName = name.Trim (); // Trim removes any characters that returns true for 'char.IsWhiteSpace', so it matches our condition above
+					for (int k = 0; k < trimmedName.Length; k++) {
+						if (char.IsWhiteSpace (trimmedName [k])) {
+							showError = true;
+							break;
+						}
+					}
+					AddException (ref exceptions, new ProductException (4146, showError, "The Name parameter of the Registrar attribute on the class '{0}' ('{3}') contains an invalid character: '{1}' (0x{2}).", Registrar.GetTypeFullName (Type), name [i], ((int) name [i]).ToString ("x"), name));
+					break;
 				}
 			}
 
@@ -1468,7 +1493,7 @@ namespace XamCore.Registrar {
 				IsProtocol = isProtocol,
 				IsGeneric = isGenericType,
 			};
-			objcType.VerifyRegisterAttribute ();
+			objcType.VerifyRegisterAttribute (ref exceptions);
 			objcType.Protocols = GetProtocols (objcType, ref exceptions);
 			objcType.BaseType = isProtocol ? null : (baseObjCType ?? objcType);
 			objcType.IsWrapper = (isProtocol && !isInformalProtocol) ? (GetProtocolAttributeWrapperType (objcType.Type) != null) : (objcType.RegisterAttribute != null && objcType.RegisterAttribute.IsWrapper);

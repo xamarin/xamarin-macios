@@ -308,9 +308,19 @@ class C : NSObject {
 class C : NSObject {
 }
 ";
-			VerifyWithXode (R.Static, code, true, "warning MT4146: The Name parameter of the Registrar attribute on the class 'C' contains an invalid character: ' ' (0x20)");
+			VerifyWithXode (R.Static, code, true, "warning MT4146: The Name parameter of the Registrar attribute on the class 'C' (' C') contains an invalid character: ' ' (0x20).");
 		}
 
+		[Test]
+		public void MT4146_b ()
+		{
+			var code = @"
+[Register (""A C"")]
+class C : NSObject {
+}
+";
+			VerifyWithXode (R.Static, code, false, "error MT4146: The Name parameter of the Registrar attribute on the class 'C' ('A C') contains an invalid character: ' ' (0x20).");
+		}
 		[Test]
 		public void MT4148 ()
 		{
@@ -687,6 +697,21 @@ public struct FooF { public NSObject Obj; }
 		}
 
 		[Test]
+		public void MT4167 ()
+		{
+			var code = @"
+class X : ReplayKit.RPBroadcastControllerDelegate
+{
+	public override void DidUpdateServiceInfo (ReplayKit.RPBroadcastController broadcastController, NSDictionary<NSString, INSCoding> serviceInfo)
+	{
+		throw new NotImplementedException ();
+	}
+}
+";
+			Verify (R.Static, code, true);
+		}
+
+		[Test]
 		public void MultiplePropertiesInHierarchy ()
 		{
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=18337
@@ -766,8 +791,7 @@ class H : G {
 
 				string result = string.Empty;
 
-				try {
-					var header = @"
+				var header = @"
 using System;
 using System.Collections.Generic;
 using Foundation;
@@ -778,12 +802,13 @@ class Test {
 	static void Main () { Console.WriteLine (typeof (NSObject)); }
 }";
 
-
-					result = CreateTestApp (profile, header + code, "--registrar:" + value.ToString ().ToLower (), xcode, sdk_version, target);
+				StringBuilder output = new StringBuilder ();
+				var rv = CreateTestApp (profile, header + code, "--registrar:" + value.ToString ().ToLower (), xcode, sdk_version, target, output);
+				result = output.ToString ();
+				if (rv == 0) {
 					Assert.IsTrue (success, string.Format ("Expected '{0}' to show the error(s) '{1}' with --registrar:\n\t{2}", code, string.Join ("\n\t", expected_messages), value.ToString ().ToLower ()));
-				} catch (TestExecutionException mee) {
+				} else {
 					Assert.IsFalse (success, string.Format ("Expected '{0}' to compile with --registrar:{1}", code, value.ToString ().ToLower ()));
-					result = mee.Message;
 				}
 
 				var split = result.Split (new char[] {'\n', '\r'}, StringSplitOptions.RemoveEmptyEntries);
@@ -1160,33 +1185,28 @@ class CTP4 : CTP3 {
 		// Creates an app with the specified source as the executable.
 		// Compiles it using smcs, will throw a McsException if it fails.
 		// Then runs mtouch to try to create an app (for device), will throw MTouchException if it fails.
-		// This method should not leave anything behind on disk.
-		static string CreateTestApp (Profile profile, string source, string extra_args = "", string xcode = null, string sdk_version = null, Target target = Target.Dev)
+		static int CreateTestApp (Profile profile, string source, string extra_args = "", string xcode = null, string sdk_version = null, Target target = Target.Dev, StringBuilder output = null)
 		{
 			if (target == Target.Dev)
 				MTouch.AssertDeviceAvailable ();
 
 			string path = Cache.CreateTemporaryDirectory ();
-			try {
-				string cs = Path.Combine (path, "Test.cs");
-				string exe = Path.Combine (path, "Test.exe");
-				File.WriteAllText (cs, source);
-				Compile (cs, profile);
-				string app = Path.Combine (path, "Test.app");
-				string cache = Path.Combine (path, "cache");
-				Directory.CreateDirectory (cache);
-				Directory.CreateDirectory (app);
+			string cs = Path.Combine (path, "Test.cs");
+			string exe = Path.Combine (path, "Test.exe");
+			File.WriteAllText (cs, source);
+			Compile (cs, profile);
+			string app = Path.Combine (path, "Test.app");
+			string cache = Path.Combine (path, "cache");
+			Directory.CreateDirectory (cache);
+			Directory.CreateDirectory (app);
 
-				if (xcode == null)
-					xcode = Configuration.xcode_root;
+			if (xcode == null)
+				xcode = Configuration.xcode_root;
 
-				if (sdk_version == null)
-					sdk_version = MTouch.GetSdkVersion (profile);
+			if (sdk_version == null)
+				sdk_version = MTouch.GetSdkVersion (profile);
 
-				return ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("{0} {10} {1} --sdk {2} -targetver {2} --abi={9} {3} --sdkroot {4} --cache {5} --nolink {7} --debug -r:{6} --target-framework:{8}", exe, app, sdk_version, extra_args, xcode, cache, MTouch.GetBaseLibrary (profile), string.Empty, MTouch.GetTargetFramework (profile), MTouch.GetArchitecture (profile, target), target == Target.Sim ? "-sim" : "-dev"), hide_output: false);
-			} finally {
-				Directory.Delete (path, true);
-			}
+			return ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("{0} {10} {1} --sdk {2} -targetver {2} --abi={9} {3} --sdkroot {4} --cache {5} --nolink {7} --debug -r:{6} --target-framework:{8}", exe, app, sdk_version, extra_args, xcode, cache, MTouch.GetBaseLibrary (profile), string.Empty, MTouch.GetTargetFramework (profile), MTouch.GetArchitecture (profile, target), target == Target.Sim ? "-sim" : "-dev"), null, output, output);
 		}
 
 		// Compile the filename with mcs

@@ -11,9 +11,11 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using CoreGraphics;
+using ObjCRuntime;
 #else
 using MonoTouch.CoreGraphics;
 using MonoTouch.Foundation;
+using MonoTouch.ObjCRuntime;
 using System.Drawing;
 #endif
 using NUnit.Framework;
@@ -55,6 +57,39 @@ namespace MonoTouchFixtures.CoreGraphics
 			Assert.AreEqual (-28, (int)rect.Y, "y 3");
 			Assert.AreEqual (43, (int)rect.Width, "w 3");
 			Assert.AreEqual (64, (int)rect.Height, "h 3");
+		}
+
+		[Test]
+		public void Null ()
+		{
+			Assert.True (CGRect.Null.IsNull (), "Null.IsNull");
+			Assert.True (CGRect.Null.IsEmpty, "Null.IsEmpty");
+			Assert.False (CGRect.Null.IsInfinite (), "Null.IsInfinite");
+		}
+
+		[Test]
+		public void Infinite ()
+		{
+			Assert.True (CGRect.Infinite.IsInfinite (), "Infinite.IsInfinite");
+			Assert.False (CGRect.Infinite.IsEmpty, "Infinite.IsEmpty");
+			Assert.False (CGRect.Infinite.IsNull (), "Infinite.IsNull");
+		}
+
+		[Test]
+		public void Empty ()
+		{
+			Assert.True (CGRect.Empty.IsEmpty, "Empty.IsEmpty");
+			Assert.False (CGRect.Empty.IsNull (), "Empty.IsNull");
+			Assert.False (CGRect.Empty.IsInfinite (), "Empty.IsInfinite");
+
+			// for System.Drawing compatibility this was named Empty - test confirms it's identical to CGRectZero
+			var handle = Dlfcn.dlopen (Constants.CoreGraphicsLibrary, 0);
+			try {
+				var zero = Dlfcn.GetCGRect (handle, "CGRectZero");
+				Assert.AreEqual (CGRect.Empty, zero, "CGRectZero");
+			} finally {
+				Dlfcn.dlclose (handle);
+			}
 		}
 	}
 }

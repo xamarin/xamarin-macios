@@ -57,7 +57,8 @@ endif
 # to run specific test suites. For more information read the README.md.
 #
 
-all-local:: qa-test-dependencies.zip mac-test-package.zip
+package-tests:
+	$(MAKE) qa-test-dependencies.zip mac-test-package.zip
 
 test.config: Makefile $(TOP)/Make.config
 	@rm -f $@
@@ -300,7 +301,7 @@ wrench-mac-%:
 endif
 
 wrench-msbuild:
-	$(MAKE) -C $(TOP)/msbuild test-xml
+	$(MAKE) -C $(TOP)/msbuild .stamp-test-xml
 ifdef INCLUDE_IOS
 	$(MAKE) test-ios-tasks
 else

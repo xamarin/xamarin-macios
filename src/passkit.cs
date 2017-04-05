@@ -42,6 +42,8 @@ namespace XamCore.PassKit {
 #endif // XAMCORE_2_0
 
 		[iOS (9,2)]
+		[Deprecated (PlatformName.iOS, 10,3, message:"Use SubLocality and SubAdministrativeArea on PostalAddress instead")]
+		[Deprecated (PlatformName.WatchOS, 3,2, message:"Use SubLocality and SubAdministrativeArea on PostalAddress instead")]
 		[NullAllowed, Export ("supplementarySubLocality", ArgumentSemantic.Strong)]
 		string SupplementarySubLocality { get; set; }
 	}
@@ -73,6 +75,7 @@ namespace XamCore.PassKit {
 
 		[Since (7,0)]
 		[Export ("addPasses:withCompletionHandler:")]
+		[Async]
 		void AddPasses (PKPass[] passes, [NullAllowed] Action<PKPassLibraryAddPassesStatus> completion);
 
 		[Field ("PKPassLibraryDidChangeNotification")]
@@ -95,11 +98,13 @@ namespace XamCore.PassKit {
 
 		[NoWatch]
 		[iOS (8,0)]
+		[Async]
 		[Export ("activatePaymentPass:withActivationData:completion:")]
 		void ActivatePaymentPass (PKPaymentPass paymentPass, NSData activationData, [NullAllowed] Action<bool, NSError> completion);
 
 		[NoWatch]
 		[iOS (8,0)]
+		[Async]
 		[Export ("activatePaymentPass:withActivationCode:completion:")]
 		void ActivatePaymentPass (PKPaymentPass paymentPass, string activationCode, [NullAllowed] Action<bool, NSError> completion);
 
@@ -664,6 +669,10 @@ namespace XamCore.PassKit {
 		[Field ("PKPaymentNetworkAmex")]
 		NSString Amex { get; }
 
+		[iOS (10,3), Watch (3,2)]
+		[Field ("PKPaymentNetworkCarteBancaire")]
+		NSString CarteBancaire { get; }
+
 		[iOS (9,2)]
 		[Watch (2,2)]
 		[Field ("PKPaymentNetworkChinaUnionPay")]
@@ -695,6 +704,14 @@ namespace XamCore.PassKit {
 		[Watch (3,1), iOS (10,1)]
 		[Field ("PKPaymentNetworkSuica")]
 		NSString Suica { get; }
+
+		[iOS (10,3), Watch (3,2)]
+		[Field ("PKPaymentNetworkQuicPay")]
+		NSString QuicPay { get; }
+
+		[iOS (10,3), Watch (3,2)]
+		[Field ("PKPaymentNetworkIDCredit")]
+		NSString IDCredit { get; }
 	}
 
 #if !WATCH

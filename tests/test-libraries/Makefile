@@ -40,6 +40,7 @@ $(2)_TARGETS = \
 	.libs/$(1)/XStaticObjectTest.framework/XStaticObjectTest \
 	.libs/$(1)/XStaticArTest.framework/XStaticArTest \
 	.libs/$(1)/libtest.dylib \
+	.libs/$(1)/libtest2.a \
 	.libs/$(1)/libtest.a \
 	.libs/$(1)/libtest-object.a \
 	.libs/$(1)/libtest-ar.a \
@@ -64,6 +65,10 @@ EXTRA_DEPENDENCIES = libtest.h $(GENERATED_FILES)
 	$$(call Q_2,AR     [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cru $$@ $$^
 
 .libs/$(1)/libtest.a: $$(foreach arch,$(3),.libs/$(1)/libtest.$$(arch).a)
+	$(Q) rm -f $$@
+	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
+
+.libs/$(1)/libtest2.a: $$(foreach arch,$(3),.libs/$(1)/libtest2.$$(arch).a)
 	$(Q) rm -f $$@
 	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
 

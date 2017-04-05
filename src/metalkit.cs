@@ -219,18 +219,21 @@ namespace XamCore.MetalKit {
 		void FromUrl (NSUrl url, [NullAllowed] NSDictionary options, MTKTextureLoaderCallback completionHandler);
 
 		[Wrap ("FromUrl (url, options == null ? null : options.Dictionary, completionHandler)")]
+		[Async]
 		void FromUrl (NSUrl url, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderCallback completionHandler);
 
 		[Export ("newTextureWithData:options:completionHandler:"), Internal]
 		void FromData (NSData data, [NullAllowed] NSDictionary options, MTKTextureLoaderCallback completionHandler);
 
 		[Wrap ("FromData (data, options == null ? null : options.Dictionary, completionHandler)")]
+		[Async]
 		void FromData (NSData data, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderCallback completionHandler);
 
 		[Export ("newTextureWithCGImage:options:completionHandler:"), Internal]
 		void FromCGImage (CGImage cgImage, [NullAllowed] NSDictionary options, MTKTextureLoaderCallback completionHandler);
 
 		[Wrap ("FromCGImage (cgImage, options == null ? null : options.Dictionary, completionHandler)")]
+		[Async]
 		void FromCGImage (CGImage cgImage, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderCallback completionHandler);
 
 		[Export ("newTextureWithContentsOfURL:options:error:"), Internal]
@@ -243,10 +246,12 @@ namespace XamCore.MetalKit {
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		[Export ("newTexturesWithContentsOfURLs:options:completionHandler:")]
+		[Async]
 		void FromUrls (NSUrl[] urls, [NullAllowed] NSDictionary options, MTKTextureLoaderArrayCallback completionHandler);
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		[Wrap ("FromUrls (urls, options == null ? null : options.Dictionary, completionHandler)")]
+		[Async]
 		void FromUrls (NSUrl[] urls, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderArrayCallback completionHandler);
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
@@ -275,18 +280,22 @@ namespace XamCore.MetalKit {
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		[Export ("newTextureWithName:scaleFactor:bundle:options:completionHandler:")]
+		[Async]
 		void FromName (string name, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary options, MTKTextureLoaderCallback completionHandler);
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		[Wrap ("FromName (name, scaleFactor, bundle, options == null ? null : options.Dictionary, completionHandler)")]
+		[Async]
 		void FromName (string name, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderCallback completionHandler);
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		[Export ("newTexturesWithNames:scaleFactor:bundle:options:completionHandler:")]
+		[Async]
 		void FromNames (string[] names, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary options, MTKTextureLoaderArrayCallback completionHandler);
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		[Wrap ("FromNames (names, scaleFactor, bundle, options == null ? null : options.Dictionary, completionHandler)")]
+		[Async]
 		void FromNames (string[] names, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderArrayCallback completionHandler);
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]

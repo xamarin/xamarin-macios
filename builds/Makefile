@@ -26,6 +26,20 @@ ifndef ENABLE_XM_BTLS
 XAMARIN_MAC_CONFIGURE_FLAGS += --disable-btls
 endif
 
+# this is a list of all the files from mono we care about, so that we
+# can use that list as dependencies for our makefile targets
+-include .deps.mono.mk
+.deps.mono.mk: $(TOP)/.git/modules/external/mono/HEAD
+	$(Q) printf 'MONO_DEPENDENCIES += Makefile \\\n' > $@.tmp
+	$(Q) cd $(MONO_PATH) && git ls-files 'mcs/class/*.cs' '*.h' '*.c' '*.cpp' | grep -v "/Test/" | sed 's/ /\\ /g' | sed 's@^\(.*\)$$@	$(MONO_PATH)/\1 \\@' >> $(abspath $@).tmp
+	$(Q) mv $@.tmp $@
+
+-include .deps.llvm.mk
+.deps.llvm.mk: $(TOP)/.git/modules/external/llvm/HEAD
+	$(Q) printf 'LLVM_DEPENDENCIES += Makefile \\\n' > $@.tmp
+	$(Q) cd $(LLVM_PATH) && git ls-files | grep -v "^test" | sed 's/ /\\ /g' | sed 's@^\(.*\)$$@	$(LLVM_PATH)/\1 \\@' >> $(abspath $@).tmp
+	$(Q) mv $@.tmp $@
+
 # ld: weak import of symbol '_fstatat' not supported because of option: -no_weak_imports for architecture x86_64
 # according to 'man fstatat' it appeared in OS X 10.10 (iOS 8)
 # so disable 'fstatat' by setting using ac_cv_func_fstatat=no
@@ -140,11 +154,11 @@ MAC_4_5_ASSEMBLY_NAMES = $(MAC_ASSEMBLY_NAMES) $(MAC_4_5_ADDITIONAL_ASSEMBLY_NAM
 
 MAC_4_5_FACADE_ASSEMBLY_NAMES = $(xammac_net_4_5_PARALLEL_SUBDIRS) $(xammac_net_4_5_SUBDIRS)
 
-MAC_ASSEMBLIES = $(addsuffix .dll,$(MAC_ASSEMBLY_NAMES))
-MAC_FACADE_ASSEMBLIES = $(addsuffix .dll,$(MAC_FACADE_ASSEMBLY_NAMES))
-MAC_NO_MDB_ASSEMBLIES = System.Windows.dll System.Xml.Serialization.dll
-MAC_4_5_ASSEMBLIES = $(addsuffix .dll,$(MAC_4_5_ASSEMBLY_NAMES))
-MAC_4_5_FACADE_ASSEMBLIES = $(addsuffix .dll,$(MAC_4_5_FACADE_ASSEMBLY_NAMES))
+MAC_ASSEMBLIES = $(MAC_ASSEMBLY_NAMES)
+MAC_FACADE_ASSEMBLIES = $(MAC_FACADE_ASSEMBLY_NAMES)
+MAC_NO_MDB_ASSEMBLIES = System.Windows System.Xml.Serialization
+MAC_4_5_ASSEMBLIES = $(MAC_4_5_ASSEMBLY_NAMES)
+MAC_4_5_FACADE_ASSEMBLIES = $(MAC_4_5_FACADE_ASSEMBLY_NAMES)
 
 MAC_DIRECTORIES = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin \
@@ -158,12 +172,12 @@ MAC_DIRECTORIES = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System \
 
 MAC_BCL_TARGETS = \
-	$(foreach file,$(MAC_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/$(file))                \
-	$(foreach file,$(filter-out $(MAC_NO_MDB_ASSEMBLIES),$(MAC_ASSEMBLIES)),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/$(file).mdb)            \
-	$(foreach file,$(MAC_FACADE_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Facades/$(file)) \
-	$(foreach file,$(MAC_4_5_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/$(file))                    \
-	$(foreach file,$(filter-out $(MAC_NO_MDB_ASSEMBLIES),$(MAC_4_5_ASSEMBLIES)),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/$(file).mdb)                \
-	$(foreach file,$(MAC_4_5_FACADE_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Facades/$(file))     \
+	$(foreach file,$(MAC_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/$(file).dll)                \
+	$(foreach file,$(filter-out $(MAC_NO_MDB_ASSEMBLIES),$(MAC_ASSEMBLIES)),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/$(file).pdb)            \
+	$(foreach file,$(MAC_FACADE_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Facades/$(file).dll) \
+	$(foreach file,$(MAC_4_5_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/$(file).dll)                    \
+	$(foreach file,$(filter-out $(MAC_NO_MDB_ASSEMBLIES),$(MAC_4_5_ASSEMBLIES)),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/$(file).pdb)                \
+	$(foreach file,$(MAC_4_5_FACADE_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Facades/$(file).dll)     \
 
 MAC_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-profiler-log.a \
@@ -220,45 +234,29 @@ $(BUILD_DESTDIR)/mono-$(2): mono-wrapper.in .stamp-configure-$(2) | $(BUILD_DEST
 	$$(Q_GEN) sed < $$< > $$@ 's|@ARCH@|$(1)|g; s|@MONO@|$(realpath .)/$(2)/mono/mini/mono|g; s|@FRAMEWORK_ROOT@|$(abspath $(MAC_DESTDIR)/$$(MAC_FRAMEWORK_CURRENT_DIR))|g'
 	$$(Q) chmod +x $$@
 
-build-$(2): .stamp-configure-$(2) $(BUILD_DESTDIR)/mono-$(2)
+.stamp-build-$(2): .stamp-configure-$(2) $(BUILD_DESTDIR)/mono-$(2) $(MONO_DEPENDENCIES)
 	PATH="$(MONO_PREFIX)/bin:$(PATH)" $(MAKE) -C $(2)/eglib/src
 	PATH="$(MONO_PREFIX)/bin:$(PATH)" $(MAKE) -C $(2)/mono
 	PATH="$(MONO_PREFIX)/bin:$(PATH)" $(MAKE) -C $(2)/mono install
 	PATH="$(MONO_PREFIX)/bin:$(PATH)" $(MAKE) -C $(2)/support
+	$(Q) touch $$@
+
+build-$(2): .stamp-build-$(2)
 endef
 
 $(eval $(call MacBuildTemplate,i386,mac32))
 $(eval $(call MacBuildTemplate,x86_64,mac64))
 
+$(MONO_PATH)/mcs/class/lib/%: .stamp-build-tools64; @true
+
 define MacInstallBclTemplate
 
 MAC_DIRECTORIES += \
-	$$(BUILD_DESTDIR)/mac/$(2)/bcl/Facades \
-	$$(BUILD_DESTDIR)/mac/$(2)/bcl         \
+	$$(BUILD_DESTDIR)/bcl/$(2)/Facades \
+	$$(BUILD_DESTDIR)/bcl/$(2)         \
 
-# copy to temporary directory before signing / mdb-rebasing,
-# otherwise we end up re-signing if installing into a different directory.
-$$(BUILD_DESTDIR)/mac/$(2)/bcl/Facades/%.dll: $$(MONO_PATH)/mcs/class/lib/$(2)/Facades/%.dll | $$(BUILD_DESTDIR)/mac/$(2)/bcl/Facades
-	@# sign the Facade assembly
-	$$(Q) cp $$< $$@
-	$$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $$@ $$(PRODUCT_KEY_PATH)
-
-$$(BUILD_DESTDIR)/mac/$(2)/bcl/%.dll: $$(MONO_PATH)/mcs/class/lib/$(2)/%.dll | $$(BUILD_DESTDIR)/mac/$(2)/bcl
-	@# sign the BCL assembly
-	$$(Q) cp $$< $$@
-	$$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $$@ $$(PRODUCT_KEY_PATH)
-
-$$(BUILD_DESTDIR)/mac/$(2)/bcl/%.mdb: $$(MONO_PATH)/mcs/class/lib/$(2)/%.mdb .stamp-build-tools64 | $$(BUILD_DESTDIR)/mac/$(2)/bcl
-	@# mdb-rebase the mdb
-	$$(Q) cp $$< $$@
-
-$$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/%.dll: $$(BUILD_DESTDIR)/mac/$(2)/bcl/%.dll | $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/Facades
+$$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/%: $$(BUILD_DESTDIR)/bcl/$(2)/% | $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/Facades
 	$$(Q) install -m 0755 $$< $$@
-
-$$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/%.mdb: $$(BUILD_DESTDIR)/mac/$(2)/bcl/%.mdb | $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/Facades
-	$$(Q) install -m 0644 $$< $$@
-	$$(Q_MDB) $$(MDB_REBASE) -q -i $$(abspath $$(MONO_PATH))/ -o $$(MAC_TARGETDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/src/mono/ $$@
-	$$(Q) chmod 0644 $$@
 endef
 
 $(eval $(call MacInstallBclTemplate,Xamarin.Mac,xammac))
@@ -267,10 +265,10 @@ $(eval $(call MacInstallBclTemplate,4.5,xammac_net_4_5))
 $(MAC_DIRECTORIES) $(BUILD_DESTDIR):
 	$(Q) mkdir -p $@
 
-mac-facade-check:
+mac-facade-check: $(MAC_BCL_TARGETS)
 	$(Q) rm -f .$@*
 	$(Q) echo $(MAC_4_5_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
-	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/xammac_net_4_5/Facades | grep dll$$ | sort > .$@2
+	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/xammac_net_4_5/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
 	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_PATH)/mcs/class/lib/xammac_net_4_5/Facades " not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
 	$(Q) rm -f .$@*
 
@@ -278,6 +276,8 @@ define lipo_template_static
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/$1: mac32/$(2)/.libs/$(1) mac64/$(2)/.libs/$(1) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
 	$(QT_LIPO) lipo -create $$+ -output $$@
 
+mac32/$(2)/.libs/$(1): .stamp-build-mac32
+mac64/$(2)/.libs/$(1): .stamp-build-mac64
 MAC_TARGETS += $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/$1
 endef
 
@@ -286,6 +286,8 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/$1: mac32/$(2)/.libs/$(1) mac64/$
 	$(QT_LIPO) lipo -create $$+ -output $$@
 	$(Q) install_name_tool -id @rpath/$1 $$@
 
+mac32/$(2)/.libs/$(1): .stamp-build-mac32
+mac64/$(2)/.libs/$(1): .stamp-build-mac64
 MAC_TARGETS += $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/$1
 endef
 
@@ -293,6 +295,10 @@ $(eval $(call lipo_template_static,libmono-profiler-log.a,mono/profiler))
 $(eval $(call lipo_template_static,libmonosgen-2.0.a,mono/mini))
 $(eval $(call lipo_template_dynamic,libmonosgen-2.0.dylib,mono/mini))
 $(eval $(call lipo_template_dynamic,libMonoPosixHelper.dylib,support))
+
+mac32/data/mono-2.pc: .stamp-build-mac32
+install/mac64/bin/mono-sgen: .stamp-build-mac64
+install/mac32/bin/mono-sgen: .stamp-build-mac32
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-2.0.dylib $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-2.0.a: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
 	$(Q_LN) ln -sf libmonosgen-2.0$(suffix $@) $@
@@ -313,8 +319,7 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions/Current:
 	$(Q_LN) ln -hfs $(MAC_INSTALL_VERSION) $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions/Current
 
 build:: build-mac
-build-mac: build-mac32 build-mac64
-	$(MAKE) $(MAC_TARGETS)
+build-mac: $(MAC_TARGETS)
 
 install-local:: install-mac
 install-mac: $(MAC_TARGETS)
@@ -395,9 +400,7 @@ TOOLS64_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--cache-file=../tools64.config.cache \
 			--with-glib=embedded \
 			--enable-minimal=com	\
-			--with-profile2=no \
-			--with-profile4=no \
-			--with-profile4_5=yes \
+			--with-profile4_x=no \
 			--with-monotouch=yes \
 			--with-xammac=yes \
 			--with-mcs-docs=no \
@@ -446,23 +449,14 @@ setup-tools64: .stamp-configure-tools64
 build-tools-bcl: build-tools64
 build-tools: build-tools64
 
-.stamp-build-tools64: .stamp-configure-tools64
-	$(MAKE) -C tools64 all EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
+.stamp-build-tools64: .stamp-configure-tools64 $(MONO_DEPENDENCIES)
+	$(MAKE) -C tools64 all EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO) MONOTOUCH_MCS_FLAGS=$(IOS_MCS_FLAGS) XAMMAC_MCS_FLAGS=$(MAC_MCS_FLAGS)
 	# NO_INSTALL is defined in mono/mcs/build/profiles except for net_4_5. If we don't have it, then it attempts to install into a gac, and sometimes fail
 	NO_INSTALL=1 $(MAKE) -C tools64 -j 1 install EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
 	@touch .stamp-build-tools64
 
-build-tools64: .stamp-build-tools64
-ifdef INCLUDE_IOS
-	$(MAKE) $(IOS_BCL_TARGETS)
-endif
-ifdef INCLUDE_TVOS
-	$(MAKE) $(TVOS_BCL_TARGETS)
-endif
-	$(MAKE) $(MAC_BCL_TARGETS)
-
 clean-tools64:
-	rm -rf tools64 .stamp-configure-tools64 tools64.config.cache
+	rm -rf tools64 .stamp-*-tools64 tools64.config.cache
 	rm -f .stamp-build-tools64
 
 ifdef INCLUDE_WATCH
@@ -520,8 +514,6 @@ WATCHBCL_CONFIGURE_ENVIRONMENT = \
 	CC="$(MAC_CC)" \
 	CXX="$(MAC_CXX)" \
 
-tools:: build-watchbcl install-tools-watch
-
 ifdef INCLUDE_WATCH
 setup:: setup-watchbcl
 build:: build-watchbcl
@@ -540,20 +532,17 @@ endif
 build-tools-bcl: build-watchbcl
 build-tools: build-watchbcl
 
-build-watchbcl: .stamp-build-watchbcl
-	$(MAKE) $(WATCH_BCL_TARGETS)
-
 ifeq ($(WATCH_MONO_PATH),$(MONO_PATH))
-.stamp-build-watchbcl: .stamp-build-tools64
+.stamp-build-watchbcl: .stamp-build-tools64 $(MONO_DEPENDENCIES)
 else
-.stamp-build-watchbcl: .stamp-configure-watchbcl .stamp-build-tools64
+.stamp-build-watchbcl: .stamp-configure-watchbcl .stamp-build-tools64 $(MONO_DEPENDENCIES)
 	$(MAKE) -C watchbcl all EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
 	$(MAKE) -C watchbcl install EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
 endif
 	$(Q) touch $@
 
 clean-watchbcl:
-	rm -rf watchbcl .stamp-configure-watchbcl watchbcl.config.cache
+	rm -rf watchbcl .stamp-*-watchbcl watchbcl.config.cache
 
 #
 # Xamarin.iOS/WatchOS/TVOS BCL assemblies
@@ -569,7 +558,7 @@ IOS_ASSEMBLIES = I18N.CJK I18N.MidEast I18N.Other I18N.Rare I18N.West I18N Mono.
 	System.Net.Http.WinHttpHandler \
 	System.Numerics.Vectors System.Reflection.Context System.Reflection.DispatchProxy \
 	System.Runtime.InteropServices.RuntimeInformation System.Security System.Xml.XPath.XmlDocument \
-	System.Windows System.Xml.Serialization System.Net Mono.Dynamic.Interpreter \
+	System.Windows System.Xml.Serialization System.Net \
 	Microsoft.CSharp Mono.CSharp
 
 IOS_REPL_ASSEMBLIES = mscorlib System System.Core System.Xml Mono.CSharp
@@ -584,24 +573,24 @@ WATCHOS_FACADE_ASSEMBLIES = $(IOS_FACADE_ASSEMBLIES)
 TVOS_REPL_ASSEMBLIES = $(IOS_REPL_ASSEMBLIES)
 WATCHOS_REPL_ASSEMBLIES = $(IOS_REPL_ASSEMBLIES)
 
-ios-facade-check:
+ios-facade-check: $(IOS_BCL_TARGETS)
 	$(Q) rm -f .$@*
 	$(Q) echo $(IOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
 	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/monotouch/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
 	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_PATH)/mcs/class/lib/monotouch/Facades" not defined in "$(FACADE_SUBDIRS_MK)"***\n"; exit 1; fi
 	$(Q) rm -f .$@*
 
-watch-facade-check:
+watch-facade-check: $(WATCH_BCL_TARGETS)
 	@true
 
-disabled-watch-facade-check:
+disabled-watch-facade-check: $(WATCH_BCL_TARGETS)
 	$(Q) rm -f .$@*
 	$(Q) echo $(WATCHOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
 	$(Q) ls -1 $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
 	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/Facades" not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
 	$(Q) rm -f .$@*
 
-tvos-facade-check:
+tvos-facade-check: $(TVOS_BCL_TARGETS) 
 	$(Q) rm -f .$@*
 	$(Q) echo $(TVOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
 	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/monotouch_tv/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
@@ -617,109 +606,98 @@ IOS_BCL_TARGETS_DIRS +=                    \
 	$(PREFIX)/lib/mono/Xamarin.iOS/Facades \
 	$(PREFIX)/lib/mono/2.1/repl            \
 	$(PREFIX)/lib/mono/Xamarin.iOS/repl    \
-	$(BUILD_DESTDIR)/ios/bcl/Facades       \
-	$(BUILD_DESTDIR)/ios/bcl               \
-	$(BUILD_DESTDIR)/ios/bcl/repl          \
+	$(BUILD_DESTDIR)/bcl/monotouch         \
+	$(BUILD_DESTDIR)/bcl/monotouch/Facades \
+	$(BUILD_DESTDIR)/bcl/monotouch_runtime \
 
 WATCH_BCL_TARGETS_DIRS +=                      \
 	$(PREFIX)/lib/mono/Xamarin.WatchOS         \
 	$(PREFIX)/lib/mono/Xamarin.WatchOS/Facades \
 	$(PREFIX)/lib/mono/Xamarin.WatchOS/repl    \
-	$(BUILD_DESTDIR)/watchos/bcl/Facades       \
-	$(BUILD_DESTDIR)/watchos/bcl               \
-	$(BUILD_DESTDIR)/watchos/bcl/repl          \
+	$(BUILD_DESTDIR)/bcl/monotouch_watch         \
+	$(BUILD_DESTDIR)/bcl/monotouch_watch/Facades \
+	$(BUILD_DESTDIR)/bcl/monotouch_watch_runtime \
 
 TVOS_BCL_TARGETS_DIRS +=                    \
 	$(PREFIX)/lib/mono/Xamarin.TVOS         \
 	$(PREFIX)/lib/mono/Xamarin.TVOS/Facades \
 	$(PREFIX)/lib/mono/Xamarin.TVOS/repl    \
-	$(BUILD_DESTDIR)/tvos/bcl/Facades       \
-	$(BUILD_DESTDIR)/tvos/bcl               \
-	$(BUILD_DESTDIR)/tvos/bcl/repl          \
+	$(BUILD_DESTDIR)/bcl/monotouch_tv         \
+	$(BUILD_DESTDIR)/bcl/monotouch_tv/Facades \
+	$(BUILD_DESTDIR)/bcl/monotouch_tv_runtime \
 
 IOS_BCL_TARGETS +=                                                                                                  \
 	$(foreach file,$(IOS_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/$(file).dll)                                                \
-	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(IOS_ASSEMBLIES)),$(PREFIX)/lib/mono/2.1/$(file).dll.mdb)         \
+	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(IOS_ASSEMBLIES)),$(PREFIX)/lib/mono/2.1/$(file).pdb)         \
 	$(foreach file,$(IOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/$(file).dll)                                        \
-	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(IOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.iOS/$(file).dll.mdb) \
+	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(IOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.iOS/$(file).pdb) \
 	$(PREFIX)/lib/mono/Xamarin.iOS/mscorlib.dll                                                                     \
 	$(PREFIX)/lib/mono/2.1/mscorlib.dll                                                                             \
-	$(PREFIX)/bin/btouch-mono                                                                                       \
 	$(foreach file,$(IOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/Facades/$(file).dll)                                 \
 	$(foreach file,$(IOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/Facades/$(file).dll)                         \
 	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/repl/$(file).dll)                                      \
-	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/repl/$(file).dll.mdb)                                  \
+	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/repl/$(file).pdb)                                  \
 	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/repl/$(file).dll)                              \
-	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/repl/$(file).dll.mdb)                          \
+	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/repl/$(file).pdb)                          \
+
+ifndef IKVM
+IOS_BCL_TARGETS += $(PREFIX)/bin/btouch-mono
+endif
 
 WATCH_BCL_TARGETS += \
 	$(foreach file,$(WATCHOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/$(file).dll)                                        \
-	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(WATCHOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.WatchOS/$(file).dll.mdb) \
+	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(WATCHOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.WatchOS/$(file).pdb) \
 	$(PREFIX)/lib/mono/Xamarin.WatchOS/mscorlib.dll                                                                             \
-	$(PREFIX)/bin/bwatch-mono                                                                                                   \
 	$(foreach file,$(WATCHOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/Facades/$(file).dll)                         \
 	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/$(file).dll)                              \
-	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/$(file).dll.mdb)                          \
+	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/$(file).pdb)                          \
+
+ifndef IKVM
+WATCH_BCL_TARGETS += $(PREFIX)/bin/bwatch-mono
+endif
 
 TVOS_BCL_TARGETS += \
 	$(foreach file,$(TVOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/$(file).dll)                                        \
-	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(TVOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.TVOS/$(file).dll.mdb) \
+	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(TVOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.TVOS/$(file).pdb) \
 	$(PREFIX)/lib/mono/Xamarin.TVOS/mscorlib.dll                                                                          \
-	$(PREFIX)/bin/btv-mono                                                                                                \
 	$(foreach file,$(TVOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/Facades/$(file).dll)                         \
 	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).dll)                              \
-	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).dll.mdb)                          \
+	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).pdb)                          \
 
-$(PREFIX)/lib/mono/Xamarin.iOS/%.mdb: $(BUILD_DESTDIR)/ios/bcl/%.mdb | $(PREFIX)/lib/mono/Xamarin.iOS $(PREFIX)/lib/mono/Xamarin.iOS/repl
+ifndef IKVM
+TVOS_BCL_TARGETS += $(PREFIX)/bin/btv-mono
+endif
+
+$(PREFIX)/lib/mono/Xamarin.iOS/repl/%: $(BUILD_DESTDIR)/bcl/monotouch_runtime/% | $(PREFIX)/lib/mono/Xamarin.iOS/repl
+	$(Q) install -m 0755 $< $@
+
+$(PREFIX)/lib/mono/Xamarin.iOS/%: $(BUILD_DESTDIR)/bcl/monotouch/% | $(PREFIX)/lib/mono/Xamarin.iOS $(PREFIX)/lib/mono/Xamarin.iOS/Facades
 	$(Q) install -m 0644 $< $@
-	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
-	$(Q) chmod 0644 $@
 
-$(PREFIX)/lib/mono/Xamarin.iOS/Facades/%.dll: $(BUILD_DESTDIR)/ios/bcl/Facades/%.dll | $(PREFIX)/lib/mono/Xamarin.iOS/Facades
+$(PREFIX)/lib/mono/2.1/repl/%: $(BUILD_DESTDIR)/bcl/monotouch_runtime/% | $(PREFIX)/lib/mono/2.1/repl
 	$(Q) install -m 0755 $< $@
 
-$(PREFIX)/lib/mono/Xamarin.iOS/%.dll: $(BUILD_DESTDIR)/ios/bcl/%.dll | $(PREFIX)/lib/mono/Xamarin.iOS $(PREFIX)/lib/mono/Xamarin.iOS/repl
+$(PREFIX)/lib/mono/2.1/%: $(BUILD_DESTDIR)/bcl/monotouch/% | $(PREFIX)/lib/mono/2.1 $(PREFIX)/lib/mono/2.1/Facades
 	$(Q) install -m 0755 $< $@
 
-$(PREFIX)/lib/mono/Xamarin.iOS/repl/%: | $(PREFIX)/lib/mono/Xamarin.iOS/repl
-	$(Q) install -m 0755 $< $@
-
-$(PREFIX)/lib/mono/2.1/Facades/%.dll: $(BUILD_DESTDIR)/ios/bcl/Facades/%.dll | $(PREFIX)/lib/mono/2.1/Facades
-	$(Q) install -m 0755 $< $@
-
-$(PREFIX)/lib/mono/2.1/%.dll: $(BUILD_DESTDIR)/ios/bcl/%.dll | $(PREFIX)/lib/mono/2.1 $(PREFIX)/lib/mono/2.1/repl
-	$(Q) install -m 0755 $< $@
-
-$(PREFIX)/lib/mono/2.1/%.mdb: $(BUILD_DESTDIR)/ios/bcl/%.mdb | $(PREFIX)/lib/mono/2.1 $(PREFIX)/lib/mono/2.1/repl
-	$(Q) install -m 0644 $< $@
-	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
-	$(Q) chmod 0644 $@
-
+ifndef IKVM
 $(PREFIX)/bin/btouch-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
 	$(Q) install -s -m 0755 $< $@
+endif
 
-$(PREFIX)/lib/mono/Xamarin.WatchOS/Facades/%.dll: $(BUILD_DESTDIR)/watchos/bcl/Facades/%.dll | $(PREFIX)/lib/mono/Xamarin.WatchOS/Facades
+$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/%: $(BUILD_DESTDIR)/bcl/monotouch_watch_runtime/% | $(PREFIX)/lib/mono/Xamarin.WatchOS/repl
 	$(Q) install -m 0755 $< $@
 
-$(PREFIX)/lib/mono/Xamarin.WatchOS/%.dll: $(BUILD_DESTDIR)/watchos/bcl/%.dll | $(PREFIX)/lib/mono/Xamarin.WatchOS $(PREFIX)/lib/mono/Xamarin.WatchOS/repl
+$(PREFIX)/lib/mono/Xamarin.WatchOS/%: $(BUILD_DESTDIR)/bcl/monotouch_watch/% | $(PREFIX)/lib/mono/Xamarin.WatchOS $(PREFIX)/lib/mono/Xamarin.WatchOS/Facades
 	$(Q) install -m 0755 $< $@
 
-$(PREFIX)/lib/mono/Xamarin.WatchOS/%.mdb: $(BUILD_DESTDIR)/watchos/bcl/%.mdb | $(PREFIX)/lib/mono/Xamarin.WatchOS $(PREFIX)/lib/mono/Xamarin.WatchOS/repl
-	$(Q) install -m 0644 $< $@
-	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
-	$(Q) chmod 0644 $@
-
-$(PREFIX)/lib/mono/Xamarin.TVOS/Facades/%.dll: $(BUILD_DESTDIR)/tvos/bcl/Facades/%.dll | $(PREFIX)/lib/mono/Xamarin.TVOS/Facades
+$(PREFIX)/lib/mono/Xamarin.TVOS/repl/%: $(BUILD_DESTDIR)/bcl/monotouch_tv_runtime/% | $(PREFIX)/lib/mono/Xamarin.TVOS/repl
 	$(Q) install -m 0755 $< $@
 
-$(PREFIX)/lib/mono/Xamarin.TVOS/%.dll: $(BUILD_DESTDIR)/tvos/bcl/%.dll | $(PREFIX)/lib/mono/Xamarin.TVOS $(PREFIX)/lib/mono/Xamarin.TVOS/repl
+$(PREFIX)/lib/mono/Xamarin.TVOS/%: $(BUILD_DESTDIR)/bcl/monotouch_tv/% | $(PREFIX)/lib/mono/Xamarin.TVOS $(PREFIX)/lib/mono/Xamarin.TVOS/Facades
 	$(Q) install -m 0755 $< $@
 
-$(PREFIX)/lib/mono/Xamarin.TVOS/%.mdb: $(BUILD_DESTDIR)/tvos/bcl/%.mdb | $(PREFIX)/lib/mono/Xamarin.TVOS $(PREFIX)/lib/mono/Xamarin.TVOS/repl
-	$(Q) install -m 0644 $< $@
-	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
-	$(Q) chmod 0644 $@
-
+ifndef IKVM
 $(PREFIX)/bin/btv-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
 	$(Q) install -s -m 0755 $< $@
 
@@ -729,113 +707,71 @@ else
 $(PREFIX)/bin/bwatch-mono: $(BUILD_DESTDIR)/watchbcl/bin/mono | $(PREFIX)/bin
 endif
 	$(Q) install -s -m 0755 $< $@
+endif
 
-# copy to temporary directory before signing / mdb-rebasing,
+# copy to temporary directory before signing
 # otherwise we end up re-signing if installing into a different directory.
-$(BUILD_DESTDIR)/ios/bcl/Facades/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch/Facades/%.dll | $(BUILD_DESTDIR)/ios/bcl/Facades
-	@# sign the Facade assembly
+
+TMP_BCL_TARGET_DIRS = \
+	$(BUILD_DESTDIR)/bcl/monotouch \
+	$(BUILD_DESTDIR)/bcl/monotouch/Facades \
+	$(BUILD_DESTDIR)/bcl/monotouch_runtime \
+	$(BUILD_DESTDIR)/bcl/monotouch_tv \
+	$(BUILD_DESTDIR)/bcl/monotouch_tv/Facades \
+	$(BUILD_DESTDIR)/bcl/monotouch_tv_runtime \
+	$(BUILD_DESTDIR)/bcl/monotouch_watch \
+	$(BUILD_DESTDIR)/bcl/monotouch_watch/Facades \
+	$(BUILD_DESTDIR)/bcl/monotouch_watch_runtime \
+	$(BUILD_DESTDIR)/bcl/xammac \
+	$(BUILD_DESTDIR)/bcl/xammac/Facades \
+	$(BUILD_DESTDIR)/bcl/xammac_net_4_5 \
+	$(BUILD_DESTDIR)/bcl/xammac_net_4_5/Facades \
+
+$(BUILD_DESTDIR)/bcl/%.dll: $(MONO_PATH)/mcs/class/lib/%.dll | $(TMP_BCL_TARGET_DIRS)
 	$(Q) cp $< $@
 	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
-$(BUILD_DESTDIR)/ios/bcl/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch/%.dll | $(BUILD_DESTDIR)/ios/bcl
-	@# sign the BCL assembly
-	$(Q) cp $< $@
-	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
-
-$(BUILD_DESTDIR)/ios/bcl/repl/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch_runtime/%.dll | $(BUILD_DESTDIR)/ios/bcl/repl
-	@# sign the BCL assembly
-	$(Q) cp $< $@
-	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
-
-$(BUILD_DESTDIR)/ios/bcl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch/%.mdb .stamp-build-tools64 | $(BUILD_DESTDIR)/ios/bcl
-	@# mdb-rebase the mdb
-	$(Q) cp $< $@
-
-$(BUILD_DESTDIR)/ios/bcl/repl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_runtime/%.mdb .stamp-build-tools64 | $(BUILD_DESTDIR)/ios/bcl/repl
-	@# mdb-rebase the mdb
-	$(Q) cp $< $@
-
-$(BUILD_DESTDIR)/watchos/bcl/Facades/%.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/Facades/%.dll | $(BUILD_DESTDIR)/watchos/bcl/Facades
-	@# sign the Facade assembly
-	$(Q) cp $< $@
-	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
-
-$(BUILD_DESTDIR)/watchos/bcl/%.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/%.dll | $(BUILD_DESTDIR)/watchos/bcl
-	@# sign the BCL assembly
-	$(Q) cp $< $@
-	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
-
-$(BUILD_DESTDIR)/watchos/bcl/repl/%.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch_runtime/%.dll | $(BUILD_DESTDIR)/watchos/bcl/repl
-	@# sign the BCL assembly
-	$(Q) cp $< $@
-	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
-
-$(BUILD_DESTDIR)/watchos/bcl/%.mdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/%.mdb .stamp-build-watchbcl .stamp-build-tools64 | $(BUILD_DESTDIR)/watchos/bcl
-	@# mdb-rebase the mdb
-	$(Q) cp $< $@
-
-$(BUILD_DESTDIR)/watchos/bcl/repl/%.mdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch_runtime/%.mdb .stamp-build-watchbcl .stamp-build-tools64 | $(BUILD_DESTDIR)/watchos/bcl/repl
-	@# mdb-rebase the mdb
-	$(Q) cp $< $@
-
-$(BUILD_DESTDIR)/tvos/bcl/Facades/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch_tv/Facades/%.dll | $(BUILD_DESTDIR)/tvos/bcl/Facades
-	@# sign the Facade assembly
-	$(Q) cp $< $@
-	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
-
-$(BUILD_DESTDIR)/tvos/bcl/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch_tv/%.dll | $(BUILD_DESTDIR)/tvos/bcl
-	@# sign the BCL assembly
-	$(Q) cp $< $@
-	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
-
-$(BUILD_DESTDIR)/tvos/bcl/repl/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch_tv_runtime/%.dll | $(BUILD_DESTDIR)/tvos/bcl/repl
-	@# sign the BCL assembly
-	$(Q) cp $< $@
-	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
-
-$(BUILD_DESTDIR)/tvos/bcl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv/%.mdb .stamp-build-tools64 | $(BUILD_DESTDIR)/tvos/bcl
-	@# mdb-rebase the mdb
-	$(Q) cp $< $@
-
-$(BUILD_DESTDIR)/tvos/bcl/repl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv_runtime/%.mdb .stamp-build-tools64 | $(BUILD_DESTDIR)/tvos/bcl/repl
-	@# mdb-rebase the repl mdb
+$(BUILD_DESTDIR)/bcl/%.pdb: $(MONO_PATH)/mcs/class/lib/%.pdb | $(TMP_BCL_TARGET_DIRS)
 	$(Q) cp $< $@
 
 $(IOS_BCL_TARGETS_DIRS) $(WATCH_BCL_TARGETS_DIRS) $(TVOS_BCL_TARGETS_DIRS):
 	$(Q) mkdir -p $@
 
-.SECONDARY: $(foreach file,$(IOS_FACADE_ASSEMBLIES),$(BUILD_DESTDIR)/ios/bcl/Facades/$(file).dll) $(foreach file,$(IOS_ASSEMBLIES),$(BUILD_DESTDIR)/ios/bcl/$(file).dll.mdb) $(foreach file,$(IOS_ASSEMBLIES),$(BUILD_DESTDIR)/ios/bcl/$(file).dll)
-.SECONDARY: \
-	$(foreach file,$(MAC_FACADE_ASSEMBLIES),$(BUILD_DESTDIR)/mac/xammac/bcl/Facades/$(file)) \
-	$(foreach file,$(MAC_ASSEMBLIES),$(BUILD_DESTDIR)/mac/xammac/bcl/$(file).mdb) \
-	$(foreach file,$(MAC_ASSEMBLIES),$(BUILD_DESTDIR)/mac/xammac/bcl/$(file)) \
-	$(foreach file,$(MAC_FACADE_ASSEMBLIES),$(BUILD_DESTDIR)/mac/net_4_5/bcl/Facades/$(file)) \
-	$(foreach file,$(MAC_4_5_ASSEMBLIES),$(BUILD_DESTDIR)/mac/net_4_5/bcl/$(file).mdb) \
-	$(foreach file,$(MAC_4_5_ASSEMBLIES),$(BUILD_DESTDIR)/mac/net_4_5/bcl/$(file)) \
+# Keep all intermediate files always.
+.SECONDARY:
 
-.SECONDARY: \
-	$(foreach file,$(WATCHOS_FACADE_ASSEMBLIES),$(BUILD_DESTDIR)/watchos/bcl/Facades/$(file).dll)    \
-	$(foreach file,$(WATCHOS_ASSEMBLIES),$(BUILD_DESTDIR)/watchos/bcl/$(file).dll.mdb)               \
-	$(foreach file,$(WATCHOS_ASSEMBLIES),$(BUILD_DESTDIR)/watchos/bcl/$(file).dll)                   \
-	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(BUILD_DESTDIR)/watchos/bcl/repl/$(file).dll)         \
-	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(BUILD_DESTDIR)/watchos/bcl/repl/$(file).dll.mdb)     \
-	$(foreach file,$(TVOS_FACADE_ASSEMBLIES),$(BUILD_DESTDIR)/tvos/bcl/Facades/$(file).dll)          \
-	$(foreach file,$(TVOS_ASSEMBLIES),$(BUILD_DESTDIR)/tvos/bcl/$(file).dll.mdb)                     \
-	$(foreach file,$(TVOS_ASSEMBLIES),$(BUILD_DESTDIR)/tvos/bcl/$(file).dll)                         \
-	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(BUILD_DESTDIR)/tvos/bcl/repl/$(file).dll)               \
-	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(BUILD_DESTDIR)/tvos/bcl/repl/$(file).dll.mdb)           \
+install-tools-tvos: $(TVOS_BCL_TARGETS) tvos-facade-check
+	@true
 
-install-tools-tvos: $(TVOS_BCL_TARGETS)
-	$(Q) $(MAKE) tvos-facade-check
+install-tools-watch: $(WATCH_BCL_TARGETS) watch-facade-check
+	@true
 
-install-tools-watch: $(WATCH_BCL_TARGETS)
-	$(Q) $(MAKE) watch-facade-check
+install-tools-ios: $(IOS_BCL_TARGETS) ios-facade-check
+	@true
 
-install-tools-ios: $(IOS_BCL_TARGETS)
-	$(Q) $(MAKE) ios-facade-check
+install-tools-mac: $(MAC_BCL_TARGETS) mac-facade-check
+	@true
 
-install-tools-mac: $(MAC_BCL_TARGETS)
-	$(Q) $(MAKE) mac-facade-check
+build-watchbcl: $(WATCH_BCL_TARGETS)
+	@true
+
+$(IOS_BCL_TARGETS): .stamp-build-tools64
+$(TVOS_BCL_TARGETS): .stamp-build-tools64
+$(MAC_BCL_TARGETS): .stamp-build-tools64
+$(WATCH_BCL_TARGETS): .stamp-build-tools64
+
+ifdef INCLUDE_IOS
+build-tools64: $(IOS_BCL_TARGETS)
+endif
+ifdef INCLUDE_TVOS
+build-tools64: $(TVOS_BCL_TARGETS)
+endif
+ifdef INCLUDE_WATCH
+build-tools64: $(WATCH_BCL_TARGETS)
+endif
+
+build-tools64: $(MAC_BCL_TARGETS)
+	@true
 
 verify-signature:
 	for file in $(PREFIX)/lib/mono/2.1/*.dll; do \
@@ -908,15 +844,18 @@ setup-$(2): .stamp-configure-$(2)
 .stamp-configure-$(2): $(MONO_PATH)/configure
 	$(Q) $(SIM$(2)_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh $(2) $(abspath $(MONO_PATH)/configure) $(SIM$(2)_CONFIGURE_FLAGS)
 
-build-$(2): .stamp-configure-$(2)
+.stamp-build-$(2): .stamp-configure-$(2) $(MONO_DEPENDENCIES)
 	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/eglib all
 	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/mono all
 	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/support all
 	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/eglib install
 	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/mono install
+	$(Q) touch $$@
+
+build-$(2): .stamp-build-$(2)
 
 clean-$(2):
-	-rm -rf $(2) .stamp-configure-$(2) $(2).config.cache
+	-rm -rf $(2) .stamp-*-$(2) $(2).config.cache
 
 setup-iphonesimulator:: setup-$(2)
 build-iphonesimulator:: build-$(2)
@@ -926,6 +865,11 @@ $(eval SIM_TARGET_LIBMONOSGEN:=$(SIM_TARGET_LIBMONOSGEN) $(BUILD_DESTDIR)/$(2)/l
 $(eval SIM_TARGET_SHAREDMONOSGEN:=$(SIM_TARGET_SHAREDMONOSGEN) $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.dylib)
 $(eval SIM_TARGET_LIBLOGPROFILER:=$(SIM_TARGET_LIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log-static.a)
 $(eval SIM_TARGET_SHAREDLIBLOGPROFILER:=$(SIM_TARGET_SHAREDLIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib)
+
+$(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a: .stamp-build-$(2)
+$(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.dylib: .stamp-build-$(2)
+$(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log-static.a: .stamp-build-$(2)
+$(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.0.dylib: .stamp-build-$(2)
 
 $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib: $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.0.dylib | $(BUILD_DESTDIR)/$(2)/tmp-lib
 	$(Q) cp $$< $$@
@@ -946,6 +890,7 @@ iphonesimulator:: setup-iphonesimulator build-iphonesimulator install-iphonesimu
 # this needs to be here because the normal usage of this makefile is "make all install", but nothing actually lists the -iphonesimulator targets as dependencies.
 ifdef INCLUDE_IOS
 install-local:: install-iphonesimulator
+all-local:: install-iphonesimulator
 endif
 
 IPHONESIMULATOR_TARGETS = \
@@ -1060,6 +1005,7 @@ setup:: setup-watchsimulator
 build:: build-watchsimulator
 clean-local:: clean-watchsimulator
 install-local:: install-watchsimulator
+all-local:: install-watchsimulator
 
 watchsimulator: build-watchsimulator install-watchsimulator
 
@@ -1071,22 +1017,30 @@ setup-watchsimulator: .stamp-configure-watchsimulator
 .stamp-configure-watchsimulator: $(WATCH_MONO_PATH)/configure
 	$(Q) $(WATCHSIMULATOR_ENVIRONMENT) ./wrap-configure.sh watchsimulator $(abspath $(WATCH_MONO_PATH)/configure) $(WATCHSIMULATOR_CONFIGURE_FLAGS)
 
-build-watchsimulator: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
-build-watchsimulator: export PATH:="$(WATCHSIMULATOR_BIN_PATH):$(PATH)"
-build-watchsimulator: .stamp-configure-watchsimulator
+.stamp-build-watchsimulator: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
+.stamp-build-watchsimulator: export PATH:="$(WATCHSIMULATOR_BIN_PATH):$(PATH)"
+.stamp-build-watchsimulator: .stamp-configure-watchsimulator $(MONO_DEPENDENCIES)
 	$(Q) $(MAKE) -C watchsimulator/eglib all
 	$(Q) $(MAKE) -C watchsimulator/mono all
 	$(Q) $(MAKE) -C watchsimulator/support all
 	$(Q) $(MAKE) -C watchsimulator/eglib install
 	$(Q) $(MAKE) -C watchsimulator/mono install
+	$(Q) touch $@
+
+build-watchsimulator: .stamp-build-watchsimulator
 
 clean-watchsimulator:
-	$(Q) rm -rf watchsimulator .stamp-configure-watchsimulator watchsimulator.config.cache
+	$(Q) rm -rf watchsimulator .stamp-*-watchsimulator watchsimulator.config.cache
 
 WATCHSIMULATOR_LIBMONOSGEN          = $(BUILD_DESTDIR)/watchsimulator/lib/libmonosgen-2.0.a
 WATCHSIMULATOR_SHAREDMONOSGEN       = $(BUILD_DESTDIR)/watchsimulator/lib/libmonosgen-2.0.dylib
 WATCHSIMULATOR_LIBLOGPROFILER       = $(BUILD_DESTDIR)/watchsimulator/lib/libmono-profiler-log-static.a
 WATCHSIMULATOR_SHAREDLIBLOGPROFILER = $(BUILD_DESTDIR)/watchsimulator/lib/libmono-profiler-log.0.dylib
+
+$(WATCHSIMULATOR_LIBMONOSGEN): .stamp-build-watchsimulator
+$(WATCHSIMULATOR_SHAREDMONOSGEN): .stamp-build-watchsimulator
+$(WATCHSIMULATOR_LIBLOGPROFILER): .stamp-build-watchsimulator
+$(WATCHSIMULATOR_SHAREDLIBLOGPROFILER): .stamp-build-watchsimulator
 
 WATCHSIMULATOR_TARGETS = \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.a            \
@@ -1198,6 +1152,7 @@ setup:: setup-tvsimulator
 build:: build-tvsimulator
 clean-local:: clean-tvsimulator
 install-local:: install-tvsimulator
+all-local:: install-tvsimulator
 
 tvsimulator: build-tvsimulator install-tvsimulator
 
@@ -1210,22 +1165,30 @@ setup-tvsimulator: .stamp-configure-tvsimulator
 .stamp-configure-tvsimulator: $(MONO_PATH)/configure
 	$(Q) $(TVSIMULATOR_ENVIRONMENT) ./wrap-configure.sh tvsimulator $(abspath $(MONO_PATH)/configure) $(TVSIMULATOR_CONFIGURE_FLAGS)
 
-build-tvsimulator: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
-build-tvsimulator: export PATH:="$(TVSIMULATOR_BIN_PATH):$(PATH)"
-build-tvsimulator: .stamp-configure-tvsimulator
+.stamp-build-tvsimulator: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
+.stamp-build-tvsimulator: export PATH:="$(TVSIMULATOR_BIN_PATH):$(PATH)"
+.stamp-build-tvsimulator: .stamp-configure-tvsimulator $(MONO_DEPENDENCIES)
 	$(Q) $(MAKE) -C tvsimulator/eglib all
 	$(Q) $(MAKE) -C tvsimulator/mono all
 	$(Q) $(MAKE) -C tvsimulator/support all
 	$(Q) $(MAKE) -C tvsimulator/eglib install
 	$(Q) $(MAKE) -C tvsimulator/mono install
+	$(Q) touch $@
+
+build-tvsimulator: .stamp-build-tvsimulator
 
 clean-tvsimulator:
-	$(Q) rm -rf tvsimulator .stamp-configure-tvsimulator tvsimulator.config.cache
+	$(Q) rm -rf tvsimulator .stamp-*-tvsimulator tvsimulator.config.cache
 
 TVSIMULATOR_LIBMONOSGEN          = $(BUILD_DESTDIR)/tvsimulator/lib/libmonosgen-2.0.a
 TVSIMULATOR_SHAREDMONOSGEN       = $(BUILD_DESTDIR)/tvsimulator/lib/libmonosgen-2.0.dylib
 TVSIMULATOR_LIBLOGPROFILER       = $(BUILD_DESTDIR)/tvsimulator/lib/libmono-profiler-log-static.a
 TVSIMULATOR_SHAREDLIBLOGPROFILER = $(BUILD_DESTDIR)/tvsimulator/lib/libmono-profiler-log.0.dylib
+
+$(TVSIMULATOR_LIBMONOSGEN): .stamp-build-tvsimulator
+$(TVSIMULATOR_SHAREDMONOSGEN): .stamp-build-tvsimulator
+$(TVSIMULATOR_LIBLOGPROFILER): .stamp-build-tvsimulator
+$(TVSIMULATOR_SHAREDLIBLOGPROFILER): .stamp-build-tvsimulator
 
 TVSIMULATOR_TARGETS = \
 	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.a            \
@@ -1347,14 +1310,17 @@ setup-$(2): .stamp-configure-$(2)
 .stamp-configure-$(2): $(MONO_PATH)/configure
 	$(Q) $($(2)_ACVARS) $($(2)_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh $(2) $(abspath $(MONO_PATH)/configure) $($(2)_CONFIGURE_FLAGS)
 
-build-$(2): .stamp-configure-$(2)
+.stamp-build-$(2): .stamp-configure-$(2) $(MONO_DEPENDENCIES)
 	PATH="$(PLATFORM_BIN):$(PATH)" $(MAKE) -C $(2)/eglib
 	PATH="$(PLATFORM_BIN):$(PATH)" $(MAKE) -C $(2)/mono
 	PATH="$(PLATFORM_BIN):$(PATH)" $(MAKE) -C $(2)/eglib install
 	PATH="$(PLATFORM_BIN):$(PATH)" $(MAKE) -C $(2)/mono install
+	$(Q) touch $$@
+
+build-$(2): .stamp-build-$(2)
 
 clean-$(2):
-	-rm -rf $(2) .stamp-configure-$(2) $(2).config.cache
+	-rm -rf $(2) .stamp-*-$(2) $(2).config.cache
 
 setup-iphoneos:: setup-$(2)
 build-iphoneos:: build-$(2)
@@ -1370,6 +1336,10 @@ $(eval TARGET_SHAREDMONOSGEN:=$(TARGET_SHAREDMONOSGEN) $(BUILD_DESTDIR)/$(2)/tmp
 $(eval TARGET_LIBLOGPROFILER:=$(TARGET_LIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log-static.a)
 $(eval TARGET_SHAREDLIBLOGPROFILER:=$(TARGET_SHAREDLIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib)
 $(eval TARGET_MONOFRAMEWORK:=$(TARGET_MONOFRAMEWORK) $(BUILD_DESTDIR)/$(2)/tmp-lib/Mono)
+
+$(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a: .stamp-build-$(2)
+$(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log-static.a: .stamp-build-$(2)
+$(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.a: .stamp-build-$(2)
 
 $(BUILD_DESTDIR)/$(2)/tmp-lib:
 	$$(Q) mkdir -p $$@
@@ -1389,25 +1359,13 @@ $(BUILD_DESTDIR)/$(2)/tmp-lib:
 # them the required times according to how many versions we need.
 #
 $(BUILD_DESTDIR)/$(2)/tmp-lib/Mono: $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a | $(BUILD_DESTDIR)/$(2)/tmp-lib
-	$$(Q) rm -Rf $$@.tmpdir
-	$$(Q) mkdir -p $$@.tmpdir
-	$$(Q) cd $$@.tmpdir && ar -x $$<
-	$$(Q) $$(IOS_CC) -arch $(1) -dynamiclib -o $$@ $$@.tmpdir/*.o -liconv -O2 -Wl,-application_extension -miphoneos-version-min=8.0 -isysroot $(PLATFORM_SDK) -install_name @rpath/Mono.framework/Mono -compatibility_version 2 -current_version 2.0 -framework CoreFoundation -lobjc $(IOS_BITCODE_LDFLAGS) -Wl,-single_module
-	$$(Q) rm -Rf $$@.tmpdir
+	$$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $$< $$@ -arch $(1) -install_name @rpath/Mono.framework/Mono -miphoneos-version-min=8.0 -isysroot $(PLATFORM_SDK) $(IOS_BITCODE_LDFLAGS)
 
 $(BUILD_DESTDIR)/$(2)/tmp-lib/libmonosgen-2.0.dylib: $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a | $(BUILD_DESTDIR)/$(2)/tmp-lib
-	$$(Q) rm -Rf $$@.tmpdir
-	$$(Q) mkdir -p $$@.tmpdir
-	$$(Q) cd $$@.tmpdir && ar -x $$<
-	$$(Q) $$(IOS_CC) -arch $(1) -dynamiclib -o $$@ $$@.tmpdir/*.o -liconv -O2 -Wl,-application_extension -miphoneos-version-min=7.0 -isysroot $(PLATFORM_SDK) -install_name @rpath/libmonosgen-2.0.dylib -compatibility_version 2 -current_version 2.0 -framework CoreFoundation -lobjc $(IOS_BITCODE_LDFLAGS) -Wl,-single_module
-	$$(Q) rm -Rf $$@.tmpdir
+	$$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $$< $$@ -arch $(1) -install_name @rpath/libmonosgen-2.0.dylib -miphoneos-version-min=7.0 -isysroot $(PLATFORM_SDK) $(IOS_BITCODE_LDFLAGS)
 
 $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib: $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.a $(BUILD_DESTDIR)/$(2)/tmp-lib/libmonosgen-2.0.dylib | $(BUILD_DESTDIR)/$(2)/tmp-lib
-	$$(Q) rm -Rf $$@.tmpdir
-	$$(Q) mkdir -p $$@.tmpdir
-	$$(Q) cd $$@.tmpdir && ar -x $$<
-	$$(Q) $$(IOS_CC) -arch $(1) -dynamiclib -o $$@ $$@.tmpdir/*.o -liconv -O2 -Wl,-application_extension -miphoneos-version-min=7.0 -isysroot $(PLATFORM_SDK) -install_name @rpath/libmono-profiler-log.dylib -compatibility_version 2 -current_version 2.0 -framework CoreFoundation -lobjc -Wl,-single_module -L$(BUILD_DESTDIR)/$(2)/tmp-lib -lmonosgen-2.0 -lz
-	$$(Q) rm -Rf $$@.tmpdir
+	$$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $$< $$@ -arch $(1) -install_name @rpath/libmono-profiler-log.dylib -miphoneos-version-min=7.0 -isysroot $(PLATFORM_SDK) $(IOS_BITCODE_LDFLAGS) -L$(BUILD_DESTDIR)/$(2)/tmp-lib -lmonosgen-2.0 -lz
 
 endef
 
@@ -1444,6 +1402,7 @@ install-device: install-iphoneos
 # this needs to be here because the normal usage of this makefile is "make all install", but nothing actually lists the -iphoneos targets as dependencies.
 ifdef INCLUDE_IOS
 install-local:: install-iphoneos
+all-local:: install-iphoneos
 endif
 endif
 
@@ -1578,6 +1537,7 @@ setup:: setup-targetwatch
 build:: build-targetwatch
 clean-local:: clean-targetwatch
 install-local:: install-watchos
+all-local:: install-watchos
 
 targetwatch: build-targetwatch install-watchos
 watchos:: targetwatch
@@ -1591,16 +1551,19 @@ setup-targetwatch: .stamp-configure-targetwatch
 .stamp-configure-targetwatch: $(WATCH_MONO_PATH)/configure
 	$(Q) $(WATCHOS_ENVIRONMENT) ./wrap-configure.sh targetwatch $(abspath $(WATCH_MONO_PATH)/configure) $(WATCHOS_CONFIGURE_FLAGS)
 
-build-targetwatch: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
-build-targetwatch: export PATH:="$(WATCHOS_BIN_PATH):$(PATH)"
-build-targetwatch: .stamp-configure-targetwatch
+.stamp-build-targetwatch: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
+.stamp-build-targetwatch: export PATH:="$(WATCHOS_BIN_PATH):$(PATH)"
+.stamp-build-targetwatch: .stamp-configure-targetwatch $(MONO_DEPENDENCIES)
 	$(Q) $(MAKE) -C targetwatch/eglib
 	$(Q) $(MAKE) -C targetwatch/mono
 	$(Q) $(MAKE) -C targetwatch/eglib install
 	$(Q) $(MAKE) -C targetwatch/mono install
+	$(Q) touch $@
+
+build-targetwatch: .stamp-build-targetwatch
 
 clean-targetwatch:
-	$(Q) rm -rf targetwatch .stamp-configure-targetwatch targetwatch.config.cache
+	$(Q) rm -rf targetwatch .stamp-*-targetwatch targetwatch.config.cache
 
 setup-watchos: setup-targetwatch
 build-watchos: build-targetwatch
@@ -1610,6 +1573,11 @@ WATCHOS_TARGET_LIBMONOSGEN          = $(BUILD_DESTDIR)/targetwatch/lib/libmonosg
 WATCHOS_TARGET_SHAREDMONOSGEN       = $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.dylib
 WATCHOS_TARGET_LIBLOGPROFILER       = $(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log-static.a
 WATCHOS_TARGET_SHAREDLIBLOGPROFILER = $(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log.0.dylib
+
+$(WATCHOS_TARGET_LIBMONOSGEN): .stamp-build-targetwatch
+$(WATCHOS_TARGET_SHAREDMONOSGEN): .stamp-build-targetwatch
+$(WATCHOS_TARGET_LIBLOGPROFILER): .stamp-build-targetwatch
+$(WATCHOS_TARGET_SHAREDLIBLOGPROFILER): .stamp-build-targetwatch
 
 device:: watchos
 
@@ -1642,12 +1610,14 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(WATCH
 $(WATCHOS_DIRECTORIES):
 	$(Q) mkdir -p $@
 
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono: $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework
+$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono: $(BUILD_DESTDIR)/targetwatch/tmp-lib/Mono | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework
 	$(Q) cp $< $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/Mono.framework/Mono -change $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framework-watchos.Info.plist | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework
 	$(Q) cp $< $@
+
+$(BUILD_DESTDIR)/targetwatch/tmp-lib/Mono: $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.a
+	$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $< $@ -arch armv7k -install_name @rpath/Mono.framework/Mono -mwatchos-version-min=$(MIN_WATCHOS_SDK_VERSION) -isysroot $(DEVICEWATCH_SDK) -lc++ -fembed-bitcode
 
 install-watchos: $(WATCHOS_TARGETS)
 
@@ -1748,6 +1718,7 @@ setup:: setup-targettv
 build:: build-targettv
 clean-local:: clean-targettv
 install-local:: install-tvos
+all-local:: install-tvos
 
 targettv: build-targettv install-tvos
 tvos:: targettv
@@ -1761,16 +1732,19 @@ setup-targettv: .stamp-configure-targettv
 .stamp-configure-targettv: $(MONO_PATH)/configure
 	$(Q) $(TVOS_ENVIRONMENT) ./wrap-configure.sh targettv $(abspath $(MONO_PATH)/configure) $(TVOS_CONFIGURE_FLAGS)
 
-build-targettv: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
-build-targettv: export PATH:="$(TVOS_BIN_PATH):$(PATH)"
-build-targettv: .stamp-configure-targettv
+.stamp-build-targettv: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
+.stamp-build-targettv: export PATH:="$(TVOS_BIN_PATH):$(PATH)"
+.stamp-build-targettv: .stamp-configure-targettv $(MONO_DEPENDENCIES)
 	$(Q) $(MAKE) -C targettv/eglib
 	$(Q) $(MAKE) -C targettv/mono
 	$(Q) $(MAKE) -C targettv/eglib install
 	$(Q) $(MAKE) -C targettv/mono install
+	$(Q) touch $@
+
+build-targettv: .stamp-build-targettv
 
 clean-targettv:
-	$(Q) rm -rf targettv .stamp-configure-targettv targettv.config.cache
+	$(Q) rm -rf targettv .stamp-*-targettv targettv.config.cache
 
 setup-tvos: setup-targettv
 build-tvos: build-targettv
@@ -1780,6 +1754,11 @@ TVOS_TARGET_LIBMONOSGEN          = $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0
 TVOS_TARGET_SHAREDMONOSGEN       = $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.dylib
 TVOS_TARGET_LIBLOGPROFILER       = $(BUILD_DESTDIR)/targettv/lib/libmono-profiler-log-static.a
 TVOS_TARGET_SHAREDLIBLOGPROFILER = $(BUILD_DESTDIR)/targettv/lib/libmono-profiler-log.0.dylib
+
+$(TVOS_TARGET_LIBMONOSGEN): .stamp-build-targettv
+$(TVOS_TARGET_SHAREDMONOSGEN): .stamp-build-targettv
+$(TVOS_TARGET_LIBLOGPROFILER): .stamp-build-targettv
+$(TVOS_TARGET_SHAREDLIBLOGPROFILER): .stamp-build-targettv
 
 device:: tvos
 
@@ -1812,12 +1791,14 @@ $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(TVOS_TAR
 $(TVOS_DIRECTORIES):
 	$(Q) mkdir -p $@
 
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono: $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmonosgen-2.0.dylib | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework
+$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono: $(BUILD_DESTDIR)/targettv/tmp-lib/Mono | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework
 	$(Q) cp $< $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/Mono.framework/Mono $@
 
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framework-tvos.Info.plist | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework
 	$(Q) cp $< $@
+
+$(BUILD_DESTDIR)/targettv/tmp-lib/Mono: $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.a
+	$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $< $@ -arch arm64 -install_name @rpath/Mono.framework/Mono -mtvos-version-min=$(MIN_TVOS_SDK_VERSION) -isysroot $(DEVICETV_SDK) -lc++ -fembed-bitcode
 
 install-tvos: $(TVOS_TARGETS)
 
@@ -1867,11 +1848,11 @@ LLVM_CXXFLAGS=$(CCACHE_CXXFLAGS)
 build-llvm: .stamp-build-llvm
 build-llvm64: .stamp-build-llvm64
 
-.stamp-build-llvm: .stamp-configure-llvm
+.stamp-build-llvm: .stamp-configure-llvm $(LLVM_DEPENDENCIES)
 	$(MAKE) -C llvm all install
 	$(Q) touch $@
 
-.stamp-build-llvm64: .stamp-configure-llvm64
+.stamp-build-llvm64: .stamp-configure-llvm64 $(LLVM_DEPENDENCIES)
 	$(MAKE) -C llvm64 all install
 	$(Q) touch $@
 
@@ -1911,10 +1892,10 @@ $(WATCH_MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(wildcard $(WAT
 	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
 endif
 
-target7/mono/arch/arm/arm_dpimacros.h: setup-target7
+target7/mono/arch/arm/arm_dpimacros.h: .stamp-configure-target7
 	$(Q) $(MAKE) -C $(dir $@) $(notdir $@)
 
-targetwatch/mono/arch/arm/arm_dpimacros.h: setup-targetwatch
+targetwatch/mono/arch/arm/arm_dpimacros.h: .stamp-configure-targetwatch
 	$(Q) $(MAKE) -C $(dir $@) $(notdir $@)
 
 # template definition for generating AOT cross offsets for an ABI
@@ -1987,15 +1968,20 @@ setup-cross: .stamp-configure-cross
 
 $(eval $(call GenerateCrossOffsets,arm-apple-darwin10,$(TOP)/builds/cross/,cross,$(MONO_PATH)))
 
-build-cross: setup-cross cross/arm-apple-darwin10.h
+.stamp-build-cross: .stamp-configure-cross cross/arm-apple-darwin10.h $(MONO_DEPENDENCIES)
 	$(MAKE) -C cross/eglib
 	$(MAKE) -C cross/mono
 	$(MAKE) -C cross/mono install
+	$(Q) touch $@
+
+build-cross: .stamp-build-cross
 
 CROSS_TARGETS = \
 	$(PREFIX)/bin/arm-darwin-mono-sgen  \
 
-$(PREFIX)/bin/arm-darwin-mono-%: $(BUILD_DESTDIR)/cross/bin/arm-darwin-mono-% | $(PREFIX)/bin
+$(BUILD_DESTDIR)/cross/bin/arm-darwin-mono-sgen: .stamp-build-cross
+
+$(PREFIX)/bin/arm-darwin-mono-sgen: $(BUILD_DESTDIR)/cross/bin/arm-darwin-mono-sgen | $(PREFIX)/bin
 	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $< $@
 
 $(PREFIX)/bin:
@@ -2057,13 +2043,18 @@ install-directories:
 
 $(eval $(call GenerateCrossOffsets,aarch64-apple-darwin10,$(TOP)/builds/cross64/,cross64,$(MONO_PATH)))
 
-build-cross64: setup-cross64 cross64/aarch64-apple-darwin10.h
+.stamp-build-cross64: .stamp-configure-cross64 cross64/aarch64-apple-darwin10.h $(MONO_DEPENDENCIES)
 	$(MAKE) -C cross64/eglib
 	$(MAKE) -C cross64/mono
 	@$(MAKE) -C cross64/mono install
+	$(Q) touch $@
+
+build-cross64: .stamp-build-cross64
 
 CROSS64_TARGETS = \
 	$(PREFIX)/bin/arm64-darwin-mono-sgen \
+
+$(BUILD_DESTDIR)/cross64/bin/aarch64-darwin-mono-sgen: .stamp-build-cross64
 
 $(PREFIX)/bin/arm64-darwin-mono-sgen: $(BUILD_DESTDIR)/cross64/bin/aarch64-darwin-mono-sgen | $(PREFIX)/bin
 	$(call Q_2,INSTALL ,[CROSS64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $< $@
@@ -2071,7 +2062,7 @@ $(PREFIX)/bin/arm64-darwin-mono-sgen: $(BUILD_DESTDIR)/cross64/bin/aarch64-darwi
 install-cross64: install-llvm64 $(CROSS64_TARGETS)
 
 clean-cross64:
-	-rm -rf cross64 .stamp-configure-cross64 cross64.config.cache
+	-rm -rf cross64 .stamp-*-cross64 cross64.config.cache
 
 
 #
@@ -2119,15 +2110,20 @@ build-cross: setup-cross
 
 $(eval $(call GenerateCrossOffsets,armv7k-apple-darwin,$(TOP)/builds/cross-watch/,cross-watch,$(WATCH_MONO_PATH)))
 
-build-cross-watch: setup-cross-watch cross-watch/armv7k-apple-darwin.h
+.stamp-build-cross-watch: .stamp-configure-cross-watch cross-watch/armv7k-apple-darwin.h $(MONO_DEPENDENCIES)
 	$(MAKE) -C cross-watch/eglib
 	$(MAKE) -C cross-watch/mono
 	$(MAKE) -C cross-watch/mono install
+	$(Q) touch $@
+
+build-cross-watch: .stamp-build-cross-watch
 
 CROSS_WATCH_TARGETS = \
 	$(PREFIX)/bin/armv7k-unknown-darwin-mono-sgen  \
 
-$(PREFIX)/bin/armv7k-unknown-darwin-mono-%: $(BUILD_DESTDIR)/cross-watch/bin/armv7k-unknown-darwin-mono-% | $(PREFIX)/bin
+$(BUILD_DESTDIR)/cross-watch/bin/armv7k-unknown-darwin-mono-sgen: .stamp-build-cross-watch
+
+$(PREFIX)/bin/armv7k-unknown-darwin-mono-sgen: $(BUILD_DESTDIR)/cross-watch/bin/armv7k-unknown-darwin-mono-sgen | $(PREFIX)/bin
 	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $< $@
 
 install-cross-watch: install-llvm $(CROSS_WATCH_TARGETS)
@@ -2178,15 +2174,18 @@ setup-crosstv: .stamp-configure-crosstv
 
 $(eval $(call GenerateCrossOffsets,aarch64-apple-darwin10,$(TOP)/builds/crosstv/,crosstv,$(MONO_PATH)))
 
-build-crosstv: setup-crosstv crosstv/aarch64-apple-darwin10.h
+.stamp-build-crosstv: .stamp-configure-crosstv crosstv/aarch64-apple-darwin10.h $(MONO_DEPENDENCIES)
 	$(MAKE) -C crosstv/eglib
 	$(MAKE) -C crosstv/mono
 	$(MAKE) -C crosstv/mono install
+	$(Q) touch $@
 
 TV_WATCH_TARGETS = \
 	$(PREFIX)/bin/aarch64-unknown-darwin-mono-sgen  \
 
-$(PREFIX)/bin/aarch64-unknown-darwin-mono-%: $(BUILD_DESTDIR)/crosstv/bin/aarch64-unknown-darwin-mono-% | $(PREFIX)/bin
+$(BUILD_DESTDIR)/crosstv/bin/aarch64-unknown-darwin-mono-sgen: .stamp-build-crosstv
+
+$(PREFIX)/bin/aarch64-unknown-darwin-mono-sgen: $(BUILD_DESTDIR)/crosstv/bin/aarch64-unknown-darwin-mono-sgen | $(PREFIX)/bin
 	$(call Q_2,INSTALL ,[CROSSTV]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $< $@
 
 install-crosstv: install-llvm $(TV_WATCH_TARGETS)

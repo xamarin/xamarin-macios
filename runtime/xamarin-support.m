@@ -21,22 +21,23 @@ void
 xamarin_log (const unsigned short *unicodeMessage)
 {
 	// COOP: no managed memory access: any mode.
-#if TARGET_OS_WATCH && defined (__arm__) // maybe make this configurable somehow?
 	int length = 0;
 	const unsigned short *ptr = unicodeMessage;
 	while (*ptr++)
 		length += sizeof (unsigned short);
 	NSString *msg = [[NSString alloc] initWithBytes: unicodeMessage length: length encoding: NSUTF16LittleEndianStringEncoding];
+
+#if TARGET_OS_WATCH && defined (__arm__) // maybe make this configurable somehow?
 	const char *utf8 = [msg UTF8String];
 	int len = strlen (utf8);
 	fwrite (utf8, 1, len, stdout);
 	if (len == 0 || utf8 [len - 1] != '\n')
 		fwrite ("\n", 1, 1, stdout);
 	fflush (stdout);
-	[msg release];
 #else
-	NSLog (@"%S", unicodeMessage);
+	NSLog (@"%@", msg);
 #endif
+	[msg release];
 }
 
 void*
@@ -46,7 +47,7 @@ xamarin_timezone_get_data (const char *name, int *size)
 	NSTimeZone *tz = nil;
 	if (name) {
 		NSString *n = [[NSString alloc] initWithUTF8String: name];
-		tz = [[NSTimeZone alloc] initWithName:n];
+		tz = [[[NSTimeZone alloc] initWithName:n] autorelease];
 		[n release];
 	} else {
 		tz = [NSTimeZone localTimeZone];
@@ -55,7 +56,6 @@ xamarin_timezone_get_data (const char *name, int *size)
 	*size = [data length];
 	void* result = malloc (*size);
 	memcpy (result, data.bytes, *size);
-	[tz release];
 	return result;
 }
 

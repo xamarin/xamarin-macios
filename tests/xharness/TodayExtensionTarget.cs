@@ -50,7 +50,7 @@ namespace xharness
 			info_plist.LoadWithoutNetworkAccess (Path.Combine (Harness.TodayContainerTemplate, "Info.plist"));
 			info_plist.SetCFBundleIdentifier (BundleIdentifier);
 			info_plist.SetCFBundleName (Name);
-			info_plist.SetMinimumOSVersion ("6.0");
+			info_plist.SetMinimumOSVersion ("8.0");
 			Harness.Save (info_plist, target_info_plist);
 		}
 
@@ -66,7 +66,7 @@ namespace xharness
 			csproj.SetOutputType ("Library");
 			csproj.AddAdditionalDefines ("XAMCORE_2_0;XAMCORE_3_0");
 			var ext = IsFSharp ? "fs" : "cs";
-			csproj.AddCompileInclude ("Main." + ext, Path.Combine (Harness.TodayExtensionTemplate, "Main." + ext));
+			csproj.AddCompileInclude ("TodayExtensionMain." + ext, Path.Combine (Harness.TodayExtensionTemplate, "TodayExtensionMain." + ext), true);
 			csproj.AddInterfaceDefinition (Path.Combine (Harness.TodayExtensionTemplate, "TodayView.storyboard").Replace ('/', '\\'));
 			csproj.SetExtraLinkerDefs ("extra-linker-defs" + Suffix + ".xml");
 			csproj.FixProjectReferences ("-today");

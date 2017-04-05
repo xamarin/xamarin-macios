@@ -1,0 +1,41 @@
+#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp
+
+var args = Environment.GetCommandLineArgs ();
+if (args.Length != 6 /* 2 default + 4 real */) {
+	Console.WriteLine ($"Need 4 arguments, got {args.Length - 2} arguments");
+	Environment.Exit (1);
+	return;
+}
+
+var iosframeworks = args [2].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+var macosframeworks = args [3].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+var watchosframeworks = args [4].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+var tvosframeworks = args [5].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+var allframeworks = new string [] [] { iosframeworks, macosframeworks, watchosframeworks, tvosframeworks };
+var names = new string [] { "iosframeworks", "macosframeworks", "watchosframeworks", "tvosframeworks" };
+
+var all = new HashSet<string> ();
+foreach (var fws in allframeworks)
+	foreach (var fw in fws)
+		all.Add (fw)
+
+Console.WriteLine ("using System.Collections.Generic;");
+Console.WriteLine ();
+Console.WriteLine ("partial class Frameworks {");
+
+for (int i = 0; i < names.Length; i++) {
+	var name = names [i];
+	var frameworks = allframeworks [i];
+	Console.Write ($"\tstatic readonly HashSet<string> {name} = new HashSet<string> {{\"");
+	Console.Write (string.Join ("\", \"", frameworks));
+	Console.WriteLine ("\"};");
+}
+
+var allArray = all.ToArray ();
+Array.Sort (allArray);
+foreach (var fw in allArray)
+	Console.WriteLine ($"\tstatic bool? _{fw.Replace (".", "")};");
+foreach (var fw in allArray)
+	Console.WriteLine ($"\tpublic static bool Have{fw} {{ get {{ if (!_{fw}.HasValue) _{fw} = GetValue (\"{fw}\"); return _{fw}.Value; }} }}");
+Console.WriteLine ("}");
+Environment.Exit (0);

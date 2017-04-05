@@ -284,6 +284,15 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
+		public void BuildUnified45_ShouldAllowReferenceToOpenTK ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { References = " <Reference Include=\"OpenTK\" />", TestCode = "var matrix = new OpenTK.Matrix2 ();", XM45 = true };
+				TI.TestUnifiedExecutable (test);
+			});
+		}
+
+		[Test]
 		public void Dontlink_AllowsUnresolvableReferences ()
 		{
 			var sb = new StringBuilder ();
@@ -605,6 +614,28 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
+		//https://testrail.xamarin.com/index.php?/cases/view/234141&group_by=cases:section_id&group_order=asc&group_id=51097
+		[Test]
+		public void Unified45Build_CompileToNativeOutput ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = true };
+				var output = TI.TestUnifiedExecutable (test);
+				Assert.That (output.BuildOutput, Contains.Substring ("TargetFrameworkIdentifier: .NETFramework"));
+				Assert.That (output.BuildOutput, Contains.Substring ("TargetFrameworkVersion: v4.5"));
+			});
+		}
 
+		[Test]
+		public void UnifiedDebug_ShouldOnlyHaveOne_ObjCArgument ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
+				var buildOutput = TI.TestUnifiedExecutable (test).BuildOutput.Split (new string[] { Environment.NewLine }, StringSplitOptions.None);
+				string clangInvocation = buildOutput.Single (x => x.Contains ("clang"));
+				int objcCount = clangInvocation.Split (new string[] { " " }, StringSplitOptions.None).Count (x => x.Contains ("-ObjC"));
+				Assert.AreEqual (1, objcCount, "Found more than one -OjbC");
+			});
+		}
 	}
 }

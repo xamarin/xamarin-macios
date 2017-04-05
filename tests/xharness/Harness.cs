@@ -148,7 +148,7 @@ namespace xharness
 		string DownloadMlaunch ()
 		{
 			// NOTE: the filename part in the url must be unique so that the caching logic works properly.
-			var mlaunch_url = "http://bosstoragemirror.blob.core.windows.net/public-builder/mlaunch/mlaunch-63121a575eff6fa291c28d0f70bacff97b0ecc72.zip";
+			var mlaunch_url = "http://bosstoragemirror.blob.core.windows.net/public-builder/mlaunch/mlaunch-af02fb1c25d31ff3c5b4a3753fdb4b1783294294.zip";
 			var extraction_dir = Path.Combine (Path.GetTempPath (), Path.GetFileNameWithoutExtension (mlaunch_url));
 			var mlaunch_path = Path.Combine (extraction_dir, "bin", "mlaunch");
 
@@ -205,6 +205,7 @@ namespace xharness
 					var filename = Path.GetFullPath (Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch"));
 					if (File.Exists (filename)) {
 						Log ("Found mlaunch: {0}", filename);
+						Environment.SetEnvironmentVariable ("MLAUNCH_PATH", filename);
 						return mlaunch = filename;
 					}
 
@@ -217,6 +218,7 @@ namespace xharness
 					}
 					if (File.Exists (filename)) {
 						Log ("Found mlaunch: {0}", filename);
+						Environment.SetEnvironmentVariable ("MLAUNCH_PATH", filename);
 						return mlaunch = filename;
 					}
 
@@ -226,6 +228,7 @@ namespace xharness
 					filename = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch";
 					if (File.Exists (filename)) {
 						Log ("Found mlaunch: {0}", filename);
+						Environment.SetEnvironmentVariable ("MLAUNCH_PATH", filename);
 						return mlaunch = filename;
 					}
 
@@ -273,27 +276,27 @@ namespace xharness
 		 
 		void AutoConfigureMac ()
 		{
-			var test_suites = new string[] { "apitest", "dontlink-mac" }; 
+			var test_suites = new [] { new { ProjectFile = "apitest", Name = "apitest" }, new { ProjectFile = "dontlink-mac", Name = "dont link" } };
 			foreach (var p in test_suites)
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj"))));
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.ProjectFile + "/" + p.ProjectFile + ".sln"))) { Name = p.Name });
 			
 			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), skipXMVariations : true));
 
-			var hard_coded_test_suites = new string[] { "mmptest", "msbuild-mac", "xammac_tests" };
+			var hard_coded_test_suites = new [] { new { ProjectFile = "mmptest", Name = "mmptest" }, new { ProjectFile = "msbuild-mac", Name = "MSBuild tests" }, new { ProjectFile = "xammac_tests", Name = "xammac tests" } };
 			foreach (var p in hard_coded_test_suites)
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj")), generateVariations: false));
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.ProjectFile + "/" + p.ProjectFile + ".csproj")), generateVariations: false) { Name = p.Name });
 
 			var bcl_suites = new string[] { "mscorlib", "System", "System.Core", "System.Data", "System.Net.Http", "System.Numerics", "System.Runtime.Serialization", "System.Transactions", "System.Web.Services", "System.Xml", "System.Xml.Linq", "Mono.Security", "System.ComponentModel.DataAnnotations", "System.Json", "System.ServiceModel.Web", "Mono.Data.Sqlite" };
 			foreach (var p in bcl_suites) {
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + "-Mac.csproj")), generateVariations: false));
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + "-Mac.csproj")), generateVariations: false) { Name = p });
 				MacBclTests.Add (new MacBCLTest (p));
 			}
 		}
 
 		void AutoConfigureIOS ()
 		{
-			var test_suites = new string [] { "monotouch-test", "framework-test", "mini" };
-			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test", "bindings-framework-test" };
+			var test_suites = new string [] { "monotouch-test", "framework-test", "mini", "interdependent-binding-projects" };
+			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test", "bindings-test2", "bindings-framework-test" };
 			var fsharp_test_suites = new string [] { "fsharp" };
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
 			var bcl_suites = new string [] { "mscorlib", "System", "System.Core", "System.Data", "System.Net.Http", "System.Numerics", "System.Runtime.Serialization", "System.Transactions", "System.Web.Services", "System.Xml", "System.Xml.Linq", "Mono.Security", "System.ComponentModel.DataAnnotations", "System.Json", "System.ServiceModel.Web", "Mono.Data.Sqlite" };
@@ -391,7 +394,7 @@ namespace xharness
 			}
  
 			foreach (var proj in MacTestProjects.Where ((v) => v.GenerateVariations)) {
-				var file = proj.Path;
+				var file = Path.ChangeExtension (proj.Path, "csproj");
  				if (!File.Exists (file))
  					throw new FileNotFoundException (file);
 

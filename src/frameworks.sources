@@ -118,6 +118,7 @@ APPKIT_SOURCES = \
 	AppKit/NSPopUpButton.cs \
 	AppKit/NSPopUpButtonCell.cs \
 	AppKit/NSPredicateEditorRowTemplate.cs \
+	AppKit/NSPrintInfo.cs \
 	AppKit/NSPrintPanel.cs \
 	AppKit/NSResponder.cs \
 	AppKit/NSScreen.cs \
@@ -135,6 +136,7 @@ APPKIT_SOURCES = \
 	AppKit/NSTextField.cs \
 	AppKit/NSTextStorage.cs \
 	AppKit/NSToolbarItem.cs \
+	AppKit/NSTouch.cs \
 	AppKit/NSTreeController.cs \
 	AppKit/NSView.cs \
 	AppKit/NSWindow.cs \
@@ -238,6 +240,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVCaptureFileOutput.cs \
 	AVFoundation/AVCaptureMetadataOutput.cs \
 	AVFoundation/AVCaptureVideoDataOutput.cs \
+	AVFoundation/AVCaptureVideoPreviewLayer.cs \
 	AVFoundation/AVCompat.cs \
 	AVFoundation/AVFragmentedAsset.cs \
 	AVFoundation/AVFragmentedAssetTrack.cs \
@@ -827,9 +830,12 @@ IMAGEKIT_CORE_SOURCES = \
 
 INTENTS_SOURCES = \
 	Intents/INCompat.cs \
+	Intents/INGetCarLockStatusIntentResponse.cs \
+	Intents/INGetCarPowerLevelStatusIntentResponse.cs \
 	Intents/INIntentResolutionResult.cs \
 	Intents/INPriceRange.cs \
 	Intents/INRideOption.cs \
+	Intents/INSetCarLockStatusIntent.cs \
 	Intents/INSetClimateSettingsInCarIntent.cs \
 	Intents/INSetDefrosterSettingsInCarIntent.cs \
 	Intents/INSetProfileInCarIntent.cs \
@@ -974,6 +980,7 @@ NETWORKEXTENSION_API_SOURCES = \
 
 NETWORKEXTENSION_CORE_SOURCES = \
 	NetworkExtension/NEHotspotHelperOptions.cs \
+	NetworkExtension/NEPacketTunnelFlow.cs \
 	NetworkExtension/NEVpnConnectionStartOptions.cs \
 
 NETWORKEXTENSION_SOURCES = \
@@ -1243,7 +1250,8 @@ SYSTEMCONFIGURATION_SOURCES = \
 
 # TVMLKit
 
-TVMLKIT_CORE_SOURCES =
+TVMLKIT_CORE_SOURCES = \
+	TVMLKit/TVViewElement.cs \
 
 # TVServices
 
@@ -1384,9 +1392,11 @@ WATCHCONNECTIVITY_CORE_SOURCES = \
 WATCHKIT_API_SOURCES = \
     WatchKit/WKDefs.cs \
 
+WATCHKIT_CORE_SOURCES = \
+	WatchKit/WKInterfaceController.cs \
+
 WATCHKIT_SOURCES = \
 	WatchKit/WKAccessibility.cs \
-	WatchKit/WKInterfaceController.cs \
 	WatchKit/WKInterfaceDevice.cs \
 
 # WebKit (Mac version)
@@ -1676,6 +1686,7 @@ WATCHOS_FRAMEWORKS =        \
 	HealthKit               \
 	HomeKit                 \
 	ImageIO                 \
+	Intents                 \
 	MapKit                  \
 	MobileCoreServices      \
 	PassKit                 \
@@ -1733,6 +1744,7 @@ TVOS_FRAMEWORKS =           \
 	UIKit                   \
 	UserNotifications       \
 	VideoSubscriberAccount  \
+	VideoToolbox            \
 
 #
 # Compute the SOURCES variables.

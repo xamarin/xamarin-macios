@@ -45,7 +45,11 @@ namespace XamCore.Darwin {
 		public IntPtr /* uintptr_tr */ Ident;
 		public EventFilter /* int16_t */ Filter;
 		public EventFlags /* uint16_t */ Flags;
-		public uint /* uint16_t */ FilterFlags;
+#if XAMCORE_4_0
+		public FilterFlags /* uint32_t */ FilterFlags;
+#else
+		public uint /* uint32_t */ FilterFlags;
+#endif
 		public IntPtr /* uintptr_t */ Data;
 		public IntPtr /* void */ UserData;
 	}
@@ -175,11 +179,74 @@ namespace XamCore.Darwin {
 		}
 
 		[DllImport (Constants.SystemLibrary)]
-		unsafe extern static int /* int */ kevent (KernelEvent *changeList, int /* int */ nChanges, KernelEvent *eventList, int /* int */ nEvents, IntPtr timeout);
+		unsafe extern static int /* int */ kevent (int kq, KernelEvent *changeList, int /* int */ nChanges, KernelEvent *eventList, int /* int */ nEvents, IntPtr timeout);
 		
 		[DllImport (Constants.SystemLibrary)]
-		unsafe extern static int /* int */ kevent (KernelEvent *changeList, int /* int */ nChanges, KernelEvent *eventList, int /* int */ nEvents, ref TimeSpec timeout);
+		unsafe extern static int /* int */ kevent (int kq, KernelEvent *changeList, int /* int */ nChanges, KernelEvent *eventList, int /* int */ nEvents, ref TimeSpec timeout);
 
+		public int KEvent (KernelEvent[] changeList, KernelEvent[] eventList, TimeSpan? timeout = null)
+		{
+			if (changeList == null)
+				throw new ArgumentNullException (nameof (changeList));
+
+			if (eventList == null)
+				throw new ArgumentNullException (nameof (eventList));
+
+			if (changeList.Length < 1)
+				throw new ArgumentOutOfRangeException ("eventList must contain at least one element", nameof (eventList));
+
+			if (eventList.Length < 1)
+				throw new ArgumentOutOfRangeException ("changeList must contain at least one element", nameof (changeList));
+
+			return KEvent (changeList, changeList.Length, eventList, eventList.Length, ToTimespec (timeout));
+		}
+
+		public unsafe int KEvent (KernelEvent[] changeList, int nChanges, KernelEvent[] eventList, int nEvents, TimeSpec? timeout = null)
+		{
+			if (changeList == null)
+				throw new ArgumentNullException (nameof (changeList));
+
+			if (eventList == null)
+				throw new ArgumentNullException (nameof (eventList));
+
+			if (changeList.Length < 1)
+				throw new ArgumentOutOfRangeException ("eventList must contain at least one element", nameof (eventList));
+
+			if (eventList.Length < 1)
+				throw new ArgumentOutOfRangeException ("changeList must contain at least one element", nameof (changeList));
+
+			if (changeList.Length < nChanges)
+				throw new ArgumentOutOfRangeException ("nChanges is larger than the number of elements in changeList", nameof (nChanges));
+
+			if (eventList.Length < nEvents)
+				throw new ArgumentOutOfRangeException ("nEvents is larger than the number of elements in eventList", nameof (nEvents));
+
+			unsafe {
+				fixed (KernelEvent *cp = &changeList [0])
+					fixed (KernelEvent *ep = &eventList [0]) {
+						if (timeout == null) {
+							return kevent (handle, cp, nChanges, ep, nEvents, IntPtr.Zero);
+						} else {
+							TimeSpec ts = timeout.Value;
+							return kevent (handle, cp, nChanges, ep, nEvents, ref ts);
+						}
+					}
+			}
+		}
+
+		static TimeSpec? ToTimespec (TimeSpan? ts)
+		{
+			if (ts == null)
+				return null;
+
+			var rv = new TimeSpec ();
+			rv.Seconds = (nint) ts.Value.TotalSeconds;
+			rv.NanoSeconds = (nint) (ts.Value.Milliseconds * 1000000L);
+			return rv;
+		}
+
+#if !XAMCORE_4_0
+		[Obsolete ("Use any of the overloads that return an int to get how many events were returned from kevent.")]
 		public bool KEvent (KernelEvent [] changeList, int nChanges, KernelEvent [] eventList, int nEvents, ref TimeSpec timeOut)
 		{
 			if (changeList != null && changeList.Length < nChanges)
@@ -191,10 +258,11 @@ namespace XamCore.Darwin {
 			unsafe {
 				fixed (KernelEvent *cp = &changeList [0])
 					fixed (KernelEvent *ep = &eventList [0])
-						return kevent (cp, nChanges, ep, nEvents, ref timeOut) != -1;
+						return kevent (handle, cp, nChanges, ep, nEvents, ref timeOut) != -1;
 			}
 		}
 
+		[Obsolete ("Use any of the overloads that return an int to get how many events were returned from kevent.")]
 		public bool KEvent (KernelEvent [] changeList, int nChanges, KernelEvent [] eventList, int nEvents)
 		{
 			if (changeList != null && changeList.Length < nChanges)
@@ -206,25 +274,36 @@ namespace XamCore.Darwin {
 			unsafe {
 				fixed (KernelEvent *cp = &changeList [0])
 					fixed (KernelEvent *ep = &eventList [0])
-						return kevent (cp, nChanges, ep, nEvents, IntPtr.Zero) != -1;
+						return kevent (handle, cp, nChanges, ep, nEvents, IntPtr.Zero) != -1;
 			}
 		}
 
+		[Obsolete ("Use any of the overloads that return an int to get how many events were returned from kevent.")]
 		public bool KEvent (KernelEvent [] changeList, KernelEvent [] eventList, ref TimeSpec timeOut)
 		{
 			unsafe {
 				fixed (KernelEvent *cp = &changeList [0])
 					fixed (KernelEvent *ep = &eventList [0])
-						return kevent (cp, changeList != null ? changeList.Length : 0, ep, eventList != null ? eventList.Length : 0, ref timeOut) != -1;
+						return kevent (handle, cp, changeList != null ? changeList.Length : 0, ep, eventList != null ? eventList.Length : 0, ref timeOut) != -1;
 			}
 		}
+#endif
 
+#if XAMCORE_4_0
+		public int KEvent (KernelEvent [] changeList, KernelEvent [] eventList)
+#else
+		[Obsolete ("Use any of the overloads that return an int to get how many events were returned from kevent.")]
 		public bool KEvent (KernelEvent [] changeList, KernelEvent [] eventList)
+#endif
 		{
 			unsafe {
 				fixed (KernelEvent *cp = &changeList [0])
 					fixed (KernelEvent *ep = &eventList [0])
-						return kevent (cp, changeList != null ? changeList.Length : 0, ep, eventList != null ? eventList.Length : 0, IntPtr.Zero) != -1;
+#if XAMCORE_4_0
+						return kevent (handle, cp, changeList != null ? changeList.Length : 0, ep, eventList != null ? eventList.Length : 0, IntPtr.Zero);
+#else
+						return kevent (handle, cp, changeList != null ? changeList.Length : 0, ep, eventList != null ? eventList.Length : 0, IntPtr.Zero) != -1;
+#endif
 			}
 		}
 	}

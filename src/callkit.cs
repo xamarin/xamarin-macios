@@ -66,7 +66,8 @@ namespace XamCore.CallKit {
 		EntriesOutOfOrder = 3,
 		DuplicateEntries = 4,
 		MaximumEntriesExceeded = 5,
-		ExtensionDisabled = 6
+		ExtensionDisabled = 6,
+		CurrentlyLoading = 7,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]

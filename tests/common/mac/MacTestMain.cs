@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 #if XAMCORE_2_0
 using AppKit;
 using Foundation;
@@ -51,6 +52,9 @@ namespace Xamarin.Mac.Tests
 #endif
 		}
 
+		[DllImport ("/usr/lib/libSystem.dylib")]
+		static extern void _exit (int exit_code);
+
 #if !NO_GUI_TESTING
 		class NSRunLoopIntegration : NSObject, IMainLoopIntegration
 		{
@@ -70,7 +74,7 @@ namespace Xamarin.Mac.Tests
 
 			public void Shutdown ()
 			{
-				Environment.Exit (TestRunner.ExitCode);
+				_exit (TestRunner.ExitCode);
 			}
 		}
 #else
@@ -91,7 +95,7 @@ namespace Xamarin.Mac.Tests
 
 			public void Shutdown ()
 			{
-				Environment.Exit (TestRunner.ExitCode);
+				_exit (TestRunner.ExitCode);
 			}
 		}
 #endif

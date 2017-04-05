@@ -1,9 +1,9 @@
 using System;
 using System.Drawing;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-using MonoTouch.CoreBluetooth;
+using ObjCRuntime;
+using Foundation;
+using UIKit;
+using CoreBluetooth;
 
 namespace Bug15799 {
 

@@ -64,6 +64,7 @@ namespace Introspection {
 				if (ca is ModelAttribute)
 					return true;
 			}
+
 			switch (type.Name) {
 #if !XAMCORE_2_0
 			case "AVAssetResourceLoader": // We have DisableDefaultCtor in XAMCORE_2_0 but can't change in compat because of backwards compat
@@ -145,6 +146,10 @@ namespace Introspection {
 		/// <param name="type">Type of the object, to be used if special logic is required.</param>
 		protected virtual void Dispose (NSObject obj, Type type)
 		{
+			//***** ApiCtorInitTest.DefaultCtorAllowed
+			//2017-01-23 15:52:09.762 introspection[4084:16658258] *** -[NSKeyedArchiver dealloc]: warning: NSKeyedArchiver deallocated without having had -finishEncoding called on it.
+			(obj as NSKeyedArchiver)?.FinishEncoding ();
+
 			obj.Dispose ();
 		}
 

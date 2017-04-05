@@ -14,7 +14,8 @@ namespace XamCore.WebKit {
 		Page = 6,
 		Variables = 7,
 		WebKitKeyFrames = 8,
-		WebKitKeyFrame = 9
+		WebKitKeyFrame = 9,
+		NamespaceRule = 10,
 	}
 
 	public enum DomCssValueType : ushort {

@@ -52,5 +52,9 @@
       <Link>Options.cs</Link>
     </Compile>
     <Compile Include="generator-attributes.cs" />
+    <Compile Include="generator-attribute-manager.cs" />
+    <Compile Include="generator-enums.cs" />
+    <Compile Include="generator-filters.cs" />
+    <Compile Include="generator-typemanager.cs" />
   </ItemGroup>
 </Project>

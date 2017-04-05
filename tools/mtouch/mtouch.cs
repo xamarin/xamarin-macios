@@ -118,10 +118,17 @@ namespace Xamarin.Bundler
 		//
 		// Output generation
 		static bool force = false;
+		static bool dot;
 		static string cross_prefix = Environment.GetEnvironmentVariable ("MONO_CROSS_PREFIX");
 		static string extra_args = Environment.GetEnvironmentVariable ("MTOUCH_ENV_OPTIONS");
 
 		static int verbose = GetDefaultVerbosity ();
+
+		public static bool Dot {
+			get {
+				return dot;
+			}
+		}
 
 		//
 		// We need to put a hard dep on Mono.Cecil.Mdb.dll so that it get's mkbundled
@@ -170,7 +177,7 @@ namespace Xamarin.Bundler
 			set { force = value; }
 		}
 
-		static string GetPlatform (Application app)
+		public static string GetPlatform (Application app)
 		{
 			switch (app.Platform) {
 			case ApplePlatform.iOS:
@@ -549,6 +556,8 @@ namespace Xamarin.Bundler
 			var assembly_externs = new StringBuilder ();
 			var assembly_aot_modules = new StringBuilder ();
 			var register_assemblies = new StringBuilder ();
+			var assembly_location = new StringBuilder ();
+			var assembly_location_count = 0;
 			var enable_llvm = (abi & Abi.LLVM) != 0;
 
 			register_assemblies.AppendLine ("\tguint32 exception_gchandle = 0;");
@@ -566,10 +575,36 @@ namespace Xamarin.Bundler
 				}
 			}
 
+			if ((abi & Abi.SimulatorArchMask) == 0) {
+				var frameworks = assemblies.Where ((a) => a.BuildTarget == AssemblyBuildTarget.Framework)
+				                           .OrderBy ((a) => a.Identity, StringComparer.Ordinal);
+				foreach (var asm_fw in frameworks) {
+					var asm_name = asm_fw.Identity;
+					if (asm_fw.BuildTargetName == asm_name)
+						continue; // this is deduceable
+					if (app.IsExtension && asm_fw.IsCodeShared) {
+						assembly_location.AppendFormat ("\t{{ \"{0}\", \"../../Frameworks/{1}.framework/MonoBundle\" }},\n", asm_name, asm_fw.BuildTargetName);
+					} else {
+						assembly_location.AppendFormat ("\t{{ \"{0}\", \"Frameworks/{1}.framework/MonoBundle\" }},\n", asm_name, asm_fw.BuildTargetName);
+					}
+					assembly_location_count++;
+				}
+			}
+
 			try {
 				StringBuilder sb = new StringBuilder ();
 				using (var sw = new StringWriter (sb)) {
 					sw.WriteLine ("#include \"xamarin/xamarin.h\"");
+
+					if (assembly_location.Length > 0) {
+						sw.WriteLine ();
+						sw.WriteLine ("struct AssemblyLocation assembly_location_entries [] = {");
+						sw.WriteLine (assembly_location);
+						sw.WriteLine ("};");
+
+						sw.WriteLine ();
+						sw.WriteLine ("struct AssemblyLocations assembly_locations = {{ {0}, assembly_location_entries }};", assembly_location_count);
+					}
 					
 					sw.WriteLine ();
 					sw.WriteLine (assembly_externs);
@@ -614,6 +649,9 @@ namespace Xamarin.Bundler
 					if (app.EnableLLVMOnlyBitCode)
 						sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_LLVMONLY);");
 					
+					if (assembly_location.Length > 0)
+						sw.WriteLine ("\txamarin_set_assembly_directories (&assembly_locations);");
+
 					if (registration_methods != null) {
 						for (int i = 0; i < registration_methods.Count; i++) {
 							sw.Write ("\t");
@@ -717,6 +755,14 @@ namespace Xamarin.Bundler
 			string sdebug = source + ".mdb";
 			if (File.Exists (sdebug))
 				File.Copy (sdebug, tdebug);
+
+			string tpdb = Path.ChangeExtension (target, "pdb");
+			if (File.Exists (tpdb))
+				File.Delete (tpdb);
+
+			string spdb = Path.ChangeExtension (source, "pdb");
+			if (File.Exists (spdb))
+				File.Copy (spdb, tpdb);
 		}
 
 		public static bool SymlinkAssembly (Application app, string source, string target, string target_dir)
@@ -747,6 +793,15 @@ namespace Xamarin.Bundler
 			string sdebug = source + ".mdb";
 			if (File.Exists (sdebug))
 				Symlink (sdebug, tdebug);
+
+			string tpdb = Path.ChangeExtension (target, "pdb");
+			if (File.Exists (tpdb))
+				File.Delete (tpdb);
+
+			string spdb = Path.ChangeExtension (source, "pdb");
+			if (File.Exists (spdb))
+				Symlink (spdb, tpdb);
+
 			return true;
 		}
 
@@ -756,6 +811,11 @@ namespace Xamarin.Bundler
 				timestamp = DateTime.Now;
 			foreach (var filename in filenames)
 				new FileInfo (filename).LastWriteTime = timestamp.Value;
+		}
+
+		public static void Touch (params string [] filenames)
+		{
+			Touch ((IEnumerable<string>) filenames);
 		}
 
 		public static string Quote (string f)
@@ -878,6 +938,10 @@ namespace Xamarin.Bundler
 			if (app.EnvironmentVariables.Count > 0)
 				return false;
 
+			// If we are asked to run with concurrent sgen we also need to pass environment variables
+			if (app.EnableSGenConc)
+				return false;
+
 			if (app.Registrar == RegistrarMode.Static)
 				return false;
 
@@ -960,7 +1024,7 @@ namespace Xamarin.Bundler
 		static Application ParseArguments (string [] args, out Action a)
 		{
 			var action = Action.None;
-			var app = new Application ();
+			var app = new Application (args);
 			var assemblies = new List<string> ();
 
 			if (extra_args != null) {
@@ -1000,6 +1064,7 @@ namespace Xamarin.Bundler
 			{ "h|?|help", "Displays the help", v => SetAction (Action.Help) },
 			{ "version", "Output version information and exit.", v => SetAction (Action.Version) },
 			{ "f|force", "Forces the recompilation of code, regardless of timestamps", v=>force = true },
+			{ "dot:", "Generate a dot file to visualize the build tree.", v => dot = true },
 			{ "cache=", "Specify the directory where object files will be cached", v => app.Cache.Location = v },
 			{ "aot=", "Arguments to the static compiler",
 				v => app.AotArguments = v + (v.EndsWith (",", StringComparison.Ordinal) ? String.Empty : ",") + app.AotArguments
@@ -1017,6 +1082,7 @@ namespace Xamarin.Bundler
 			{ "time", v => watch_level++ },
 			{ "executable=", "Specifies the native executable name to output", v => app.ExecutableName = v },
 			{ "nofastsim", "Do not run the simulator fast-path build", v => app.NoFastSim = true },
+			{ "nodevcodeshare", "Do not share native code between extensions and main app.", v => app.NoDevCodeShare = true },
 			{ "nolink", "Do not link the assemblies", v => app.LinkMode = LinkMode.None },
 			{ "nodebugtrack", "Disable debug tracking of object resurrection bugs", v => app.DebugTrack = false },
 			{ "debugtrack:", "Enable debug tracking of object resurrection bugs (enabled by default for the simulator)", v => { app.DebugTrack = ParseBool (v, "--debugtrack"); } },
@@ -1143,7 +1209,7 @@ namespace Xamarin.Bundler
 			{ "enable-repl:", "Enable REPL support (simulator and not linking only)", v => { app.EnableRepl = ParseBool (v, "enable-repl"); }, true /* this is a hidden option until we've actually used it and made sure it works as expected */ },
 			{ "pie:", "Enable (default) or disable PIE (Position Independent Executable).", v => { app.EnablePie = ParseBool (v, "pie"); }},
 			{ "compiler=", "Specify the Objective-C compiler to use (valid values are gcc, g++, clang, clang++ or the full path to a GCC-compatible compiler).", v => { app.Compiler = v; }},
-			{ "fastdev", "Build an app that supports fastdev (this app will only work when launched using Xamarin Studio)", v => { app.FastDev = true; }},
+			{ "fastdev", "Build an app that supports fastdev (this app will only work when launched using Xamarin Studio)", v => { app.AddAssemblyBuildTarget ("@all=dynamiclibrary"); }},
 			{ "force-thread-check", "Keep UI thread checks inside (even release) builds", v => { app.ThreadCheck = true; }},
 			{ "disable-thread-check", "Remove UI thread checks inside (even debug) builds", v => { app.ThreadCheck = false; }},
 			{ "debug:", "Generate debug code in Mono for the specified assembly (set to 'all' to generate debug code for all assemblies, the default is to generate debug code for user assemblies only)",
@@ -1266,6 +1332,13 @@ namespace Xamarin.Bundler
 			},
 			{ "tls-provider=", "Specify the default TLS provider", v => { tls_provider = v; }},
 			{ "xamarin-framework-directory=", "The framework directory", v => { mtouch_dir = v; }, true },
+			{ "assembly-build-target=", "Specifies how to compile assemblies to native code. Possible values: 'staticobject' (default), 'dynamiclibrary' and 'framework'. " +
+					"Each option also takes an assembly and a potential name (defaults to the name of the assembly). Example: --assembly-build-target=mscorlib.dll=framework[=name]." +
+					"There also two special names: '@all' and '@sdk': --assembly-build-target=@all|@sdk=framework[=name].", v =>
+					{
+						app.AddAssemblyBuildTarget (v);
+					}
+			},
 		};
 
 			AddSharedOptions (app, os);
@@ -1425,14 +1498,7 @@ namespace Xamarin.Bundler
 							throw ErrorHelper.CreateError (99, "Internal error: Extension build action is '{0}' when it should be 'Build'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", app_action);
 					}
 
-					foreach (var appex in app.AppExtensions) {
-						Log ("Building {0}...", appex.BundleId);
-						appex.Build ();
-					}
-
-					if (app.AppExtensions.Count > 0)
-						Log ("Building {0}...", app.BundleId);
-					app.Build ();
+					app.BuildAll ();
 				}
 			} else {
 				throw ErrorHelper.CreateError (99, "Internal error: Invalid action: {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).", action);
@@ -1658,7 +1724,7 @@ namespace Xamarin.Bundler
 
 			foreach (ModuleDefinition md in ad.Modules)
 				foreach (TypeDefinition td in md.Types)
-					if (td.IsNSObject ())
+					if (td.IsNSObject (s.Target.LinkContext))
 						return true;
 
 			return false;

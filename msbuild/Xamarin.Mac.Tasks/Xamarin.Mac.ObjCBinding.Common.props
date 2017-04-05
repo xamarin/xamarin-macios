@@ -29,7 +29,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<AllowedReferenceRelatedFileExtensions>
 			$(AllowedReferenceRelatedFileExtensions);
 			.dll.mdb;
-			.exe.mdb
+			.exe.mdb;
+			.pdb
 		</AllowedReferenceRelatedFileExtensions>
 	</PropertyGroup>
 

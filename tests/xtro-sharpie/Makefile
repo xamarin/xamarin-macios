@@ -17,8 +17,8 @@ bin/Debug/xtro-sharpie.exe ./bin/Debug/xtro-plugin.dll build:
 	xbuild
 
 	
-XIOS ?= /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/Xamarin.iOS.dll
-XIOS_GL ?= /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll
+XIOS ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/Xamarin.iOS.dll
+XIOS_GL ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll
 XIOS_ARCH = arm64
 XIOS_PCH = iphoneos$(IOS_SDK_VERSION)-$(XIOS_ARCH).pch
 
@@ -32,7 +32,7 @@ $(XIOS_PCH):
 	sharpie sdk-db -s iphoneos$(IOS_SDK_VERSION) -a $(XIOS_ARCH)
 
 
-XWATCHOS ?= /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/32bits/Xamarin.WatchOS.dll
+XWATCHOS ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/32bits/Xamarin.WatchOS.dll
 XWATCHOS_ARCH = armv7
 XWATCHOS_PCH = watchos$(WATCH_SDK_VERSION)-$(XWATCHOS_ARCH).pch
 
@@ -46,8 +46,8 @@ $(XWATCHOS_PCH):
 	sharpie sdk-db -s watchos$(WATCH_SDK_VERSION) -a $(XWATCHOS_ARCH)
 
 
-XTVOS ?= /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll
-XTVOS_GL ?= /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll
+XTVOS ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll
+XTVOS_GL ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll
 XTVOS_ARCH = arm64
 XTVOS_PCH = appletvos$(TVOS_SDK_VERSION)-$(XTVOS_ARCH).pch
 
@@ -61,7 +61,7 @@ $(XTVOS_PCH):
 	sharpie sdk-db -s appletvos$(TVOS_SDK_VERSION) -a $(XTVOS_ARCH)
 
 
-XMAC ?= /Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/$(XMAC_ARCH)/mobile/Xamarin.Mac.dll
+XMAC ?= $(TOP)/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/$(XMAC_ARCH)/mobile/Xamarin.Mac.dll
 XMAC_ARCH = x86_64
 XMAC_PCH = macosx$(OSX_SDK_VERSION)-$(XMAC_ARCH).pch
 
@@ -101,3 +101,26 @@ classify: classify-ios classify-osx classify-watchos classify-tvos
 	@sort common.ignore common.pending ios.skip.tmp osx.skip.tmp > common.skip.tmp
 	@comm -23 common.unclassified.tmp common.skip.tmp > common.unclassified
 	@rm *.tmp *.results
+
+
+ios-$(IOS_SDK_VERSION).g.cs: $(XIOS_PCH)
+
+gen-ios: ios-$(IOS_SDK_VERSION).g.cs
+	sharpie query -bind $(XIOS_PCH) > ios-$(IOS_SDK_VERSION).g.cs
+
+tvos-$(TVOS_SDK_VERSION).g.cs: $(XTVOS_PCH)
+
+gen-tvos: tvos-$(TVOS_SDK_VERSION).g.cs
+	sharpie query -bind $(XTVOS_PCH) > tvos-$(TVOS_SDK_VERSION).g.cs
+
+watchos-$(WATCH_SDK_VERSION).g.cs: $(XWATCHOS_PCH)
+
+gen-watchos: watchos-$(WATCH_SDK_VERSION).g.cs
+	sharpie query -bind $(XWATCHOS_PCH) > watchos-$(WATCH_SDK_VERSION).g.cs
+
+macos-$(OSX_SDK_VERSION).g.cs: $(XMAC_PCH)
+
+gen-macos: macos-$(OSX_SDK_VERSION).g.cs
+	sharpie query -bind $(XMAC_PCH) > macos-$(OSX_SDK_VERSION).g.cs
+
+gen-all: gen-ios gen-tvos gen-watchos gen-macos

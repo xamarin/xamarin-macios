@@ -219,6 +219,7 @@ git-clean-all:
 	@for dir in $(DEPENDENCY_DIRECTORIES); do if test -d $(CURDIR)/$$dir; then echo "Cleaning $$dir" && cd $(CURDIR)/$$dir && git clean -xffdq && git reset --hard -q && git submodule foreach -q --recursive 'git clean -xffdq'; else echo "Skipped  $$dir (does not exist)"; fi; done
 ifdef ENABLE_XAMARIN
 	@./configure --enable-xamarin
+	$(MAKE) reset
 	@echo "Done (Xamarin-specific build has been re-enabled)"
 else
 	@echo "Done"

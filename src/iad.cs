@@ -172,7 +172,8 @@ namespace XamCore.iAd {
 		void WillLoad (ADInterstitialAd interstitialAd);
 	}
 
-	[Category, BaseType (typeof (MPMoviePlayerController))]
+	[Category (allowStaticMembers: true)] // Classic isn't internal so we need this
+	[BaseType (typeof (MPMoviePlayerController))]
 	partial interface IAdPreroll {
 
 #if XAMCORE_2_0
@@ -199,7 +200,8 @@ namespace XamCore.iAd {
 #endif
 
 	[Deprecated (PlatformName.iOS, 10, 0)]
-	[Category, BaseType (typeof (UIViewController))]
+	[Category (allowStaticMembers: true)] // Classic isn't internal so we need this
+	[BaseType (typeof (UIViewController))]
 	partial interface IAdAdditions {
 
 #if XAMCORE_2_0
@@ -263,6 +265,7 @@ namespace XamCore.iAd {
 
 		[iOS (9,0)]
 		[Export ("requestAttributionDetailsWithBlock:")]
+		[Async]
 		void RequestAttributionDetails (Action<NSDictionary, NSError> completionHandler);
 
 #if !XAMCORE_4_0
@@ -274,7 +277,7 @@ namespace XamCore.iAd {
 
 	delegate void AttributedToiAdCompletionHandler (bool attributedToiAd);
 
-	[Category]
+	[Category (allowStaticMembers: true)] // Classic isn't internal so we need this
 	[BaseType (typeof (AVPlayerViewController))]
 	interface iAdPreroll_AVPlayerViewController {
 		[iOS (8,0)]

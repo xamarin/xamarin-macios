@@ -991,7 +991,14 @@ namespace XamCore.UIKit {
 		TransitionCurlDown        = 4 << 20,
 		TransitionCrossDissolve   = 5 << 20,
 		TransitionFlipFromTop     = 6 << 20,
-		TransitionFlipFromBottom  = 7 << 20
+		TransitionFlipFromBottom  = 7 << 20,
+
+		[iOS (10,3)]
+		PreferredFramesPerSecondDefault = 0 << 24,
+		[iOS (10,3)]
+		PreferredFramesPerSecond60 = 3 << 24,
+		[iOS (10,3)]
+		PreferredFramesPerSecond30 = 7 << 24,
 	}
 
 #if !WATCH
@@ -1969,8 +1976,16 @@ namespace XamCore.UIKit {
 	[iOS (10,0), TV (10,0), NoWatch]
 	[Native]
 	public enum UITextFieldDidEndEditingReason : nint {
+		Unknown = -1, // helper value (not in headers)
 		Committed,
 		[NoiOS]
 		Cancelled
+	}
+
+	[iOS (10,3), TV (10,2), NoWatch]
+	[Native]
+	public enum UIScrollViewIndexDisplayMode : nint {
+		Automatic,
+		AlwaysHidden
 	}
 }

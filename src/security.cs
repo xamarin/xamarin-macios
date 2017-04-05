@@ -448,6 +448,12 @@ namespace XamCore.Security {
 		[Field ("kSecAttrIsPermanent")]
 		IntPtr IsPermanent { get; }
 
+		[Field ("kSecAttrIsSensitive")]
+		IntPtr IsSensitive { get; }
+
+		[Field ("kSecAttrIsExtractable")]
+		IntPtr IsExtractable { get; }
+
 		[Field ("kSecAttrApplicationTag")]
 		IntPtr ApplicationTag { get; }
 
@@ -856,11 +862,13 @@ namespace XamCore.Security {
 		[Field ("kSSLSessionConfig_anonymous")]
 		Anonymous,
 
-		[iOS (10,2)][TV (10,1)][NoWatch][Mac (10,12,2)]
+		[iOS (10,2)][TV (10,1)][Mac (10,12,2)]
+		[Watch (3,2)]
 		[Field ("kSSLSessionConfig_3DES_fallback")]
 		ThreeDesFallback,
 
-		[iOS (10,2)][TV (10,1)][NoWatch][Mac (10,12,2)]
+		[iOS (10,2)][TV (10,1)][Mac (10,12,2)]
+		[Watch (3,2)]
 		[Field ("kSSLSessionConfig_TLSv1_3DES_fallback")]
 		Tls1ThreeDesFallback,
 	}

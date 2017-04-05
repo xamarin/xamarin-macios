@@ -66,23 +66,21 @@ namespace Xamarin.iOS.Tasks
 					"MonoTouchDebugConfiguration.txt",
 					"Info.plist",
 					Path.Combine ("Settings.bundle", "Root.plist"),
-					"Mono.Dynamic.Interpreter.dll",
-					"Mono.Dynamic.Interpreter.dll.mdb",
 					"MyLibrary.dll",
-					"MyLibrary.dll.mdb",
+					"MyLibrary.pdb",
 					"MySingleView",
 					"MySingleView.exe",
-					"MySingleView.exe.mdb",
+					"MySingleView.pdb",
 					"System.Core.dll",
-					"System.Core.dll.mdb",
+					"System.Core.pdb",
 					"System.Xml.dll",
-					"System.Xml.dll.mdb",
+					"System.Xml.pdb",
 					"System.dll",
-					"System.dll.mdb",
+					"System.pdb",
 					"Xamarin.iOS.dll",
 					"Xamarin.iOS.dll.mdb",
 					"mscorlib.dll",
-					"mscorlib.dll.mdb",
+					"mscorlib.pdb",
 					"runtime-options.plist",
 				};
 
@@ -371,7 +369,7 @@ namespace Xamarin.iOS.Tasks
 			var entries = Directory.GetFileSystemEntries (LibraryProjectBinPath);
 			Assert.AreEqual (2, entries.Length, "#1");
 			Assert.IsTrue (File.Exists (library), "#2");
-			Assert.IsTrue (File.Exists (library + ".mdb"), "#3");
+			Assert.IsTrue (File.Exists (Path.ChangeExtension (library, ".pdb")), "#3");
 			
 			var assemblyDef = AssemblyDefinition.ReadAssembly (library);
 			var actualResources = assemblyDef.MainModule.Resources.Select (n => n.Name).ToList ();

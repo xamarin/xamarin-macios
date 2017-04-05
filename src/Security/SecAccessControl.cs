@@ -30,12 +30,25 @@ namespace XamCore.Security {
 	public enum SecAccessControlCreateFlags : nint {
 #endif
 		UserPresence        = 1 << 0,
+
+		[iOS (9,0)][Mac (10,12,1)]
 		TouchIDAny          = 1 << 1,
+
+		[iOS (9,0)][Mac (10,12,1)]
 		TouchIDCurrentSet   = 1 << 3,
+
 		DevicePasscode      = 1 << 4,
+
+		[iOS (9,0)][Mac (10,12,1)]
 		Or                  = 1 << 14,
+
+		[iOS (9,0)][Mac (10,12,1)]
 		And                 = 1 << 15,
+
+		[iOS (9,0)][Mac (10,12,1)]
 		PrivateKeyUsage     = 1 << 30,
+
+		[iOS (9,0)][Mac (10,12,1)]
 		ApplicationPassword = 1 << 31,
 	}
 	

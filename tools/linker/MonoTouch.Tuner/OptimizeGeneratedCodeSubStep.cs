@@ -62,7 +62,7 @@ namespace MonoTouch.Tuner {
 			if (!HasGeneratedCode)
 				return;
 
-			isdirectbinding_check_required = type.IsDirectBindingCheckRequired ();
+			isdirectbinding_check_required = type.IsDirectBindingCheckRequired (LinkContext);
 			base.Process (type);
 		}
 
@@ -70,7 +70,7 @@ namespace MonoTouch.Tuner {
 		{
 			// special processing on generated methods from NSObject-inherited types
 			// it would be too risky to apply on user-generated code
-			if (!method.HasBody || !method.IsGeneratedCode () || (!IsExtensionType && !IsExport (method)))
+			if (!method.HasBody || !method.IsGeneratedCode (LinkContext) || (!IsExtensionType && !IsExport (method)))
 				return;
 			
 			var instructions = method.Body.Instructions;
@@ -135,7 +135,7 @@ namespace MonoTouch.Tuner {
 				if (!mr.DeclaringType.Is ("System", "IntPtr"))
 					return;
 
-				if (ins.Next.OpCode != OpCodes.Ldc_I4_8 || ins.Next.Next.OpCode != OpCodes.Bne_Un)
+				if (!(ins.Next.OpCode == OpCodes.Ldc_I4_8 && (ins.Next.Next.OpCode == OpCodes.Bne_Un || ins.Next.Next.OpCode == OpCodes.Bne_Un_S)))
 					return;
 #if DEBUG
 				Console.WriteLine ("\t{0} get_Size {1} bits", caller, Arch * 8);

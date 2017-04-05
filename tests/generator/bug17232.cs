@@ -1,7 +1,7 @@
 using System;
 using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
 namespace xam.bug17232 {
 	[BaseType (typeof (NSObject))]

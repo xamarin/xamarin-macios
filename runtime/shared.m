@@ -213,7 +213,7 @@ xamarin_thread_finish (void *user_data)
 	pthread_mutex_unlock (&thread_hash_lock);
 
 	if (pool)
-		[pool release];
+		[pool drain];
 		
 	MONO_EXIT_GC_SAFE;
 }
