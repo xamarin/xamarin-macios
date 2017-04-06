@@ -37,11 +37,11 @@ namespace XamCore.InputMethodKit {
 		[Field ("IMKDelegateClass")]
 		NSString DelegateClass { get; }
 
-		[Export ("initWithName:bundleIdentifier:")]
-		IntPtr Constructor (string name, string bundleIdentifier);
+		[Internal][Export ("initWithName:bundleIdentifier:")]
+		IntPtr Init (string name, string bundleIdentifier);
 
-		[Export ("initWithName:controllerClass:delegateClass:")]
-		IntPtr Constructor (string name, Class controllerClassId, Class delegateClassId);
+		[Internal][Export ("initWithName:controllerClass:delegateClass:")]
+		IntPtr Init (string name, Class controllerClassId, Class delegateClassId);
 
 		[Export ("bundle")]
 		NSBundle Bundle { get; }
@@ -53,9 +53,10 @@ namespace XamCore.InputMethodKit {
 		bool LastKeyEventWasDeadKey { get; }
 	}
 
-	interface IIMKServerInput { }
-
-	[Protocol]
+	[Protocol (IsInformal = true)]
+	//[Category]
+	//[BaseType (typeof (NSObject))]
+	//interface NSObject_IMKServerInput {
 	partial interface IMKServerInput {
 
 		[Export ("inputText:key:modifiers:client:")]
@@ -82,8 +83,6 @@ namespace XamCore.InputMethodKit {
 		[Export ("candidates:")]
 		string [] Candidates (NSObject sender);
 	}
-
-	interface IIMKStateSetting { }
 
 	[Protocol]
 	partial interface IMKStateSetting {
@@ -116,8 +115,6 @@ namespace XamCore.InputMethodKit {
 		void ShowPreferences (NSObject sender);
 	}
 
-	interface IIMKMouseHandling { }
-
 	[Protocol]
 	partial interface IMKMouseHandling {
 
@@ -135,7 +132,7 @@ namespace XamCore.InputMethodKit {
 	partial interface IMKInputController : IMKStateSetting, IMKMouseHandling {
 
 		[Export ("initWithServer:delegate:client:")]
-		IntPtr Constructor (IMKServer server, NSObject delegateObject, NSObject inputClient);
+		IntPtr Constructor (IMKServer server, [NullAllowed] NSObject delegateObject, [NullAllowed] NSObject inputClient);
 
 		[Export ("updateComposition")]
 		void UpdateComposition ();

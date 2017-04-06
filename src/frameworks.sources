@@ -830,6 +830,9 @@ IMAGEKIT_CORE_SOURCES = \
 INPUTMETHODKIT_CORE_SOURCES = \
 	InputMethodKit/Enums.cs \
 
+INPUTMETHODKIT_SOURCES = \
+	InputMethodKit/IMKServer.cs \
+
 # Intents
 
 INTENTS_SOURCES = \
