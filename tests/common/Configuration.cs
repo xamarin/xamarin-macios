@@ -11,7 +11,7 @@ namespace Xamarin.Tests
 		public const string XI_ProductName = "MonoTouch";
 		public const string XM_ProductName = "Xamarin.Mac";
 
-		const string XS_PATH = "/Applications/Xamarin Studio.app/Contents/Resources";
+		const string XS_PATH = "/Applications/Visual Studio.app/Contents/Resources";
 
 		static string mt_root;
 		static string ios_destdir;
