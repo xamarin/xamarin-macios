@@ -335,6 +335,12 @@ namespace Xamarin.Bundler {
 				foreach (var mr in m.ModuleReferences) {
 					string name = mr.Name;
 					string file = Path.GetFileNameWithoutExtension (name);
+#if MONOMAC
+					string path = Path.GetDirectoryName (name);
+					if (!path.StartsWith ("/System/Library/Frameworks"))
+						continue;
+#endif
+
 					switch (file) {
 					// special case
 					case "__Internal":

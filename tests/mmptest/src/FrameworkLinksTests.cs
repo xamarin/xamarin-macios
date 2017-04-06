@@ -114,5 +114,21 @@ namespace Xamarin.MMP.Tests
 
 			AssertFrameworkMinOSRespected (status);
 		}
+
+
+		[Test]
+		public void ProjectWithLinkToPrivateFramework_ShouldBuild ()
+		{
+			RunMMPTest (tmpDir => {
+
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { TestDecl = @"
+	const string MobileDeviceLibrary = ""/System/Library/PrivateFrameworks/MobileDevice.framework/MobileDevice"";
+	[System.Runtime.InteropServices.DllImport (MobileDeviceLibrary)]
+	private static extern void TestMethod ();
+				" };
+
+				TI.TestUnifiedExecutable (test);
+			});
+		}
 	}
 }
