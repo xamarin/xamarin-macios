@@ -34,6 +34,49 @@ namespace Xamarin
 	public class MTouch
 	{
 		[Test]
+		[TestCase ("armv7,arm64")]
+		public void AotDataTest (string abi)
+		{
+			AssertDeviceAvailable ();
+
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Abi = abi;
+				mtouch.DSym = false; // speeds up the test
+				mtouch.MSym = false; // speeds up the test
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+
+				var expectedFiles = new string []
+				{
+					"NOTICE",
+					"testApp",
+					"testApp.aotdata.armv7",
+					"testApp.aotdata.arm64",
+					"testApp.exe",
+					"mscorlib.dll",
+					"mscorlib.aotdata.armv7",
+					"mscorlib.aotdata.arm64",
+					"System.dll",
+					"System.aotdata.armv7",
+					"System.aotdata.arm64",
+					"Xamarin.iOS.dll",
+					"Xamarin.iOS.aotdata.armv7",
+					"Xamarin.iOS.aotdata.arm64",
+
+				};
+				var allFiles = Directory.GetFiles (mtouch.AppPath, "*", SearchOption.AllDirectories);
+				var failed = new List<string> ();
+				foreach (var expected in expectedFiles) {
+					if (allFiles.Any ((v) => v.EndsWith (expected, StringComparison.Ordinal)))
+						continue;
+					failed.Add (expected);
+				}
+				Assert.IsEmpty (failed, "expected files");
+			}
+		}
+
+		[Test]
 		[TestCase ("single", "",                   false)]
 		[TestCase ("dual",   "armv7,arm64", false)]
 		[TestCase ("llvm",   "armv7+llvm",  false)]
