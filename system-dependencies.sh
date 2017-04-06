@@ -15,11 +15,11 @@ while ! test -z $1; do
 		--provision)
 			# historical reasons :(
 			PROVISION_XCODE=1
-			PROVISION_XS=1
+			PROVISION_VS=1
 			shift
 			;;
-		--provision-xamarin-studio)
-			PROVISION_XS=1
+		--provision-*-studio)
+			PROVISION_VS=1
 			shift
 			;;
 		--provision-mono)
@@ -36,7 +36,7 @@ while ! test -z $1; do
 			;;
 		--provision-all)
 			PROVISION_MONO=1
-			PROVISION_XS=1
+			PROVISION_VS=1
 			PROVISION_XCODE=1
 			PROVISION_CMAKE=1
 			PROVISION_AUTOTOOLS=1
@@ -51,8 +51,8 @@ while ! test -z $1; do
 			IGNORE_XCODE=1
 			shift
 			;;
-		--ignore-xamarin-studio)
-			IGNORE_XAMARIN_STUDIO=1
+		--ignore-*-studio)
+			IGNORE_VISUAL_STUDIO=1
 			shift
 			;;
 		--ignore-mono)
@@ -164,36 +164,36 @@ function install_mono () {
 	rm -f $MONO_PKG
 }
 
-function install_xamarin_studio () {
-	local XS="/Applications/Xamarin Studio.app"
-	local XS_URL=`grep MIN_XAMARIN_STUDIO_URL= Make.config | sed 's/.*=//'`
-	local MIN_XAMARIN_STUDIO_VERSION=`grep MIN_XAMARIN_STUDIO_VERSION= Make.config | sed 's/.*=//'`
+function install_visual_studio () {
+	local VS="/Applications/Visual Studio.app"
+	local VS_URL=`grep MIN_VISUAL_STUDIO_URL= Make.config | sed 's/.*=//'`
+	local MIN_VISUAL_STUDIO_VERSION=`grep MIN_VISUAL_STUDIO_VERSION= Make.config | sed 's/.*=//'`
 
-	if test -z $XS_URL; then
-		fail "No MIN_XAMARIN_STUDIO_URL set in Make.config, cannot provision"
+	if test -z $VS_URL; then
+		fail "No MIN_VISUAL_STUDIO_URL set in Make.config, cannot provision"
 		return
 	fi
 
 	mkdir -p $PROVISION_DOWNLOAD_DIR
-	log "Downloading Xamarin Studio $MIN_XAMARIN_STUDIO_VERSION from $XS_URL to $PROVISION_DOWNLOAD_DIR..."
-	local XS_NAME=`basename $XS_URL`
-	local XS_DMG=$PROVISION_DOWNLOAD_DIR/$XS_NAME
-	curl -L $XS_URL > $XS_DMG
+	log "Downloading Visual Studio $MIN_VISUAL_STUDIO_VERSION from $VS_URL to $PROVISION_DOWNLOAD_DIR..."
+	local VS_NAME=`basename $VS_URL`
+	local VS_DMG=$PROVISION_DOWNLOAD_DIR/$VS_NAME
+	curl -L $VS_URL > $VS_DMG
 
-	local XS_MOUNTPOINT=$PROVISION_DOWNLOAD_DIR/$XS_NAME-mount
-	log "Mounting $XS_DMG into $XS_MOUNTPOINT..."
-	hdiutil attach $XS_DMG -mountpoint $XS_MOUNTPOINT -quiet -nobrowse
-	log "Removing previous Xamarin Studio from $XS"
-	sudo rm -Rf "$XS"
-	log "Installing Xamarin Studio $MIN_XAMARIN_STUDIO_VERSION to $XS..."
-	sudo cp -R "$XS_MOUNTPOINT/Xamarin Studio.app" /Applications
-	log "Unmounting $XS_DMG..."
-	hdiutil detach $XS_MOUNTPOINT -quiet
+	local VS_MOUNTPOINT=$PROVISION_DOWNLOAD_DIR/$VS_NAME-mount
+	log "Mounting $VS_DMG into $VS_MOUNTPOINT..."
+	hdiutil attach $VS_DMG -mountpoint $VS_MOUNTPOINT -quiet -nobrowse
+	log "Removing previous Visual Studio from $VS"
+	sudo rm -Rf "$VS"
+	log "Installing Visual Studio $MIN_VISUAL_STUDIO_VERSION to $VS..."
+	sudo cp -R "$VS_MOUNTPOINT/Visual Studio.app" /Applications
+	log "Unmounting $VS_DMG..."
+	hdiutil detach $VS_MOUNTPOINT -quiet
 
-	XS_ACTUAL_VERSION=`/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$XS/Contents/Info.plist"`
-	ok "Xamarin Studio $XS_ACTUAL_VERSION provisioned"
+	VS_ACTUAL_VERSION=`/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$VS/Contents/Info.plist"`
+	ok "Visual Studio $VS_ACTUAL_VERSION provisioned"
 
-	rm -f $XS_DMG
+	rm -f $VS_DMG
 }
 
 function install_specific_xcode () {
@@ -471,48 +471,48 @@ IFS='
 IFS=$IFS_tmp
 }
 
-function check_xamarin_studio () {
-	if ! test -z $IGNORE_XAMARIN_STUDIO; then return; fi
+function check_visual_studio () {
+	if ! test -z $IGNORE_VISUAL_STUDIO; then return; fi
 
-	XS="/Applications/Xamarin Studio.app"
-	local XS_URL=`grep MIN_XAMARIN_STUDIO_URL= Make.config | sed 's/.*=//'`
-	if ! test -d "$XS"; then
-		if ! test -z $PROVISION_XS; then
-			install_xamarin_studio
+	VS="/Applications/Visual Studio.app"
+	local VS_URL=`grep MIN_VISUAL_STUDIO_URL= Make.config | sed 's/.*=//'`
+	if ! test -d "$VS"; then
+		if ! test -z $PROVISION_VS; then
+			install_visual_studio
 		else
-			fail "You must install Xamarin Studio, from http://www.monodevelop.com/download/"
+			fail "You must install Visual Studio, from http://www.monodevelop.com/download/"
 		fi
 		return
 	fi
 
-	MIN_XAMARIN_STUDIO_VERSION=`grep MIN_XAMARIN_STUDIO_VERSION= Make.config | sed 's/.*=//'`
-	MAX_XAMARIN_STUDIO_VERSION=`grep MAX_XAMARIN_STUDIO_VERSION= Make.config | sed 's/.*=//'`
-	XS_ACTUAL_VERSION=`/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$XS/Contents/Info.plist"`
-	if ! is_at_least_version $XS_ACTUAL_VERSION $MIN_XAMARIN_STUDIO_VERSION; then
-		if ! test -z $PROVISION_XS; then
-			install_xamarin_studio
-			XS_ACTUAL_VERSION=`/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$XS/Contents/Info.plist"`
+	MIN_VISUAL_STUDIO_VERSION=`grep MIN_VISUAL_STUDIO_VERSION= Make.config | sed 's/.*=//'`
+	MAX_VISUAL_STUDIO_VERSION=`grep MAX_VISUAL_STUDIO_VERSION= Make.config | sed 's/.*=//'`
+	VS_ACTUAL_VERSION=`/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$VS/Contents/Info.plist"`
+	if ! is_at_least_version $VS_ACTUAL_VERSION $MIN_VISUAL_STUDIO_VERSION; then
+		if ! test -z $PROVISION_VS; then
+			install_visual_studio
+			VS_ACTUAL_VERSION=`/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$VS/Contents/Info.plist"`
 		else
-			fail "You must have at least Xamarin Studio $MIN_XAMARIN_STUDIO_VERSION (found $XS_ACTUAL_VERSION). Download URL: $XS_URL"
+			fail "You must have at least Visual Studio $MIN_VISUAL_STUDIO_VERSION (found $VS_ACTUAL_VERSION). Download URL: $VS_URL"
 		fi
 		return
-	elif [[ "$XS_ACTUAL_VERSION" == "$MAX_XAMARIN_STUDIO_VERSION" ]]; then
+	elif [[ "$VS_ACTUAL_VERSION" == "$MAX_VISUAL_STUDIO_VERSION" ]]; then
 		: # this is ok
-	elif is_at_least_version $XS_ACTUAL_VERSION $MAX_XAMARIN_STUDIO_VERSION; then
-		if ! test -z $PROVISION_XS; then
-			install_xamarin_studio
-			XS_ACTUAL_VERSION=`/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$XS/Contents/Info.plist"`
+	elif is_at_least_version $VS_ACTUAL_VERSION $MAX_VISUAL_STUDIO_VERSION; then
+		if ! test -z $PROVISION_VS; then
+			install_visual_studio
+			VS_ACTUAL_VERSION=`/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$VS/Contents/Info.plist"`
 		else
-			fail "Your Xamarin Studio version is too new, max version is $MAX_XAMARIN_STUDIO_VERSION, found $XS_ACTUAL_VERSION."
-			fail "You may edit Make.config and change MAX_XAMARIN_STUDIO_VERSION to your actual version to continue the"
+			fail "Your Visual Studio version is too new, max version is $MAX_VISUAL_STUDIO_VERSION, found $VS_ACTUAL_VERSION."
+			fail "You may edit Make.config and change MAX_VISUAL_STUDIO_VERSION to your actual version to continue the"
 			fail "build (unless you're on a release branch). Once the build completes successfully, please"
-			fail "commit the new MAX_XAMARIN_STUDIO_VERSION value."
-			fail "Alternatively you can download an older version from $XS_URL."
+			fail "commit the new MAX_VISUAL_STUDIO_VERSION value."
+			fail "Alternatively you can download an older version from $VS_URL."
 		fi
 		return
 	fi
 
-	ok "Found Xamarin Studio $XS_ACTUAL_VERSION (at least $MIN_XAMARIN_STUDIO_VERSION and not more than $MAX_XAMARIN_STUDIO_VERSION is required)"
+	ok "Found Visual Studio $VS_ACTUAL_VERSION (at least $MIN_VISUAL_STUDIO_VERSION and not more than $MAX_VISUAL_STUDIO_VERSION is required)"
 }
 
 function check_osx_version () {
@@ -587,7 +587,7 @@ check_xcode
 check_homebrew
 check_autotools
 check_mono
-check_xamarin_studio
+check_visual_studio
 check_cmake
 
 if test -z $FAIL; then
