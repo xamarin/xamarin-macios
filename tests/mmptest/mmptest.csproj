@@ -96,6 +96,7 @@
       <Link>unit\aot.cs</Link>
     </Compile>
     <Compile Include="src\FrameworkLinksTests.cs" />
+    <Compile Include="src\LinkerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
