@@ -1883,6 +1883,7 @@ namespace Xamarin.Bundler {
 					
 				foreach (var asm in target.Assemblies) {
 					asm.CopyToDirectory (tmpdir, reload: false, only_copy: true);
+					asm.CopyAotDataFilesToDirectory (tmpdir);
 				}
 				// mono-symbolicate knows best
 				CopyMSymData (target_directory, tmpdir);
@@ -1998,6 +1999,8 @@ namespace Xamarin.Bundler {
 					} else {
 						assemblies [0].CopyToDirectory (AppDirectory, copy_mdb: PackageMdb, strip: strip, only_copy: true);
 					}
+					foreach (var asm in assemblies)
+						asm.CopyAotDataFilesToDirectory (size_specific ? asm.Target.AppTargetDirectory : AppDirectory);
 					break;
 				case AssemblyBuildTarget.Framework:
 					// Put our resources in a subdirectory in the framework
@@ -2011,6 +2014,8 @@ namespace Xamarin.Bundler {
 					} else {
 						assemblies [0].CopyToDirectory (resource_directory, copy_mdb: PackageMdb, strip: strip, only_copy: true);
 					}
+					foreach (var asm in assemblies)
+						asm.CopyAotDataFilesToDirectory (size_specific ? Path.Combine (resource_directory, Path.GetFileName (asm.Target.AppTargetDirectory)) : resource_directory);
 					break;
 				default:
 					throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", build_target);
