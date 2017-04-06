@@ -176,11 +176,14 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		// this will copy (and optionally strip) the assembly and all the related files:
+		// this will copy (and optionally strip) the assembly and almost all the related files:
 		// * debug file (.mdb)
 		// * config file (.config)
 		// * satellite assemblies (<language id>/.dll)
-		// * aot data
+		//
+		// Aot data is copied separately, because we might want to copy aot data 
+		// even if we don't want to copy the assembly (if 32/64-bit assemblies are identical, 
+		// only one is copied, but we still want the aotdata for both).
 		public void CopyToDirectory (string directory, bool reload = true, bool check_case = false, bool only_copy = false, bool copy_mdb = true, bool strip = false)
 		{
 			var target = Path.Combine (directory, FileName);
@@ -205,7 +208,10 @@ namespace Xamarin.Bundler {
 					FullPath = target;
 				}
 			}
+		}
 
+		public void CopyAotDataFilesToDirectory (string directory)
+		{
 			foreach (var aotdata in AotInfos.Values.SelectMany ((info) => info.AotDataFiles))
 				Application.UpdateFile (aotdata, Path.Combine (directory, Path.GetFileName (aotdata)));
 		}
