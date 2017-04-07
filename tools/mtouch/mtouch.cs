@@ -679,7 +679,7 @@ namespace Xamarin.Bundler
 					if (app.IsExtension) {
 						// the name of the executable must be the bundle id (reverse dns notation)
 						// but we do not want to impose that (ugly) restriction to the managed .exe / project name / ...
-						sw.WriteLine ("\targv [0] = (char *) \"{0}\";", Path.GetFileNameWithoutExtension (app.RootAssembly));
+						sw.WriteLine ("\targv [0] = (char *) \"{0}\";", Path.GetFileNameWithoutExtension (app.RootAssemblies [0]));
 						sw.WriteLine ("\tint rv = xamarin_main (argc, argv, true);");
 					} else {
 						sw.WriteLine ("\tint rv = xamarin_main (argc, argv, false);");
@@ -1301,23 +1301,9 @@ namespace Xamarin.Bundler
 			app.RuntimeOptions = RuntimeOptions.Create (app, http_message_handler, tls_provider);
 
 			if (action == Action.Build || action == Action.RunRegistrar) {
-				if (assemblies.Count != 1) {
-					var exceptions = new List<Exception> ();
-					for (int i = assemblies.Count - 1; i >= 0; i--) {
-						if (assemblies [i].StartsWith ("-", StringComparison.Ordinal)) {
-							exceptions.Add (new MonoTouchException (18, true, "Unknown command line argument: '{0}'", assemblies [i]));
-							assemblies.RemoveAt (i);
-						}
-					}
-					if (assemblies.Count > 1) {
-						exceptions.Add (new MonoTouchException (8, true, "You should provide one root assembly only, found {0} assemblies: '{1}'", assemblies.Count, string.Join ("', '", assemblies.ToArray ())));
-					} else if (assemblies.Count == 0) {
-						exceptions.Add (new MonoTouchException (17, true, "You should provide a root assembly."));
-					}
-
-					throw new AggregateException (exceptions);
-				}
-				app.RootAssembly = assemblies [0];
+				if (assemblies.Count == 0)
+					throw new MonoTouchException (17, true, "You should provide a root assembly.");
+				app.RootAssemblies = assemblies;
 			}
 
 			return app;

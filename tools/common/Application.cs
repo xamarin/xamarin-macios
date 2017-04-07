@@ -59,7 +59,7 @@ namespace Xamarin.Bundler {
 		public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptions;
 		public MarshalManagedExceptionMode MarshalManagedExceptions;
 		public bool IsDefaultMarshalManagedExceptionMode;
-		public string RootAssembly;
+		public List<string> RootAssemblies = new List<string> ();
 		public List<Application> SharedCodeApps = new List<Application> (); // List of appexes we're sharing code with.
 		public string RegistrarOutputLibrary;
 
@@ -438,8 +438,11 @@ namespace Xamarin.Bundler {
 			if (Registrar != RegistrarMode.Static)
 				throw new PlatformException (67, "Invalid registrar: {0}", Registrar); // this is only called during our own build
 
-			var registrar_m = RegistrarOutputLibrary;
+			if (RootAssemblies.Count != 1)
+				throw ErrorHelper.CreateError (8, "You should provide one root assembly only, found {0} assemblies: '{1}'", RootAssemblies.Count, string.Join ("', '", RootAssemblies.ToArray ()));
 
+			var registrar_m = RegistrarOutputLibrary;
+			var RootAssembly = RootAssemblies [0];
 			var resolvedAssemblies = new List<AssemblyDefinition> ();
 			var resolver = new PlatformResolver () {
 				FrameworkDirectory = Driver.GetPlatformFrameworkDirectory (this),

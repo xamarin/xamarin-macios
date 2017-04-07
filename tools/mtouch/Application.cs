@@ -1096,8 +1096,10 @@ namespace Xamarin.Bundler {
 			if (EnableAsmOnlyBitCode)
 				LLVMAsmWriter = true;
 
-			if (!File.Exists (RootAssembly))
-				throw new MonoTouchException (7, true, "The root assembly '{0}' does not exist", RootAssembly);
+			foreach (var root in RootAssemblies) {
+				if (!File.Exists (root))
+					throw new MonoTouchException (7, true, "The root assembly '{0}' does not exist", root);
+			}
 			
 			if (no_framework)
 				throw ErrorHelper.CreateError (96, "No reference to Xamarin.iOS.dll was found.");
@@ -1123,14 +1125,14 @@ namespace Xamarin.Bundler {
 				References.Add (Path.Combine (Driver.GetPlatformFrameworkDirectory (this), Driver.GetProductAssembly (this) + ".dll"));
 			}
 
+			((MonoTouchProfile)Profile.Current).SetProductAssembly (Driver.GetProductAssembly (this));
+
 			var FrameworkDirectory = Driver.GetPlatformFrameworkDirectory (this);
-			var RootDirectory = Path.GetDirectoryName (Path.GetFullPath (RootAssembly));
-
-			((MonoTouchProfile) Profile.Current).SetProductAssembly (Driver.GetProductAssembly (this));
-
-			string root_wo_ext = Path.GetFileNameWithoutExtension (RootAssembly);
-			if (Profile.IsSdkAssembly (root_wo_ext) || Profile.IsProductAssembly (root_wo_ext))
-				throw new MonoTouchException (3, true, "Application name '{0}.exe' conflicts with an SDK or product assembly (.dll) name.", root_wo_ext);
+			foreach (var root in RootAssemblies) {
+				string root_wo_ext = Path.GetFileNameWithoutExtension (root);
+				if (Profile.IsSdkAssembly (root_wo_ext) || Profile.IsProductAssembly (root_wo_ext))
+					throw new MonoTouchException (3, true, "Application name '{0}.exe' conflicts with an SDK or product assembly (.dll) name.", root_wo_ext);
+			}
 
 			if (IsDualBuild) {
 				var target32 = new Target (this);
@@ -1172,6 +1174,7 @@ namespace Xamarin.Bundler {
 				}
 			}
 
+			var RootDirectory = Path.GetDirectoryName (Path.GetFullPath (RootAssemblies [0]));
 			foreach (var target in Targets) {
 				target.Resolver.FrameworkDirectory = FrameworkDirectory;
 				target.Resolver.RootDirectory = RootDirectory;
@@ -1188,7 +1191,7 @@ namespace Xamarin.Bundler {
 
 			if (string.IsNullOrEmpty (ExecutableName)) {
 				var bundleExecutable = GetStringFromInfoPList ("CFBundleExecutable");
-				ExecutableName = bundleExecutable ?? Path.GetFileNameWithoutExtension (RootAssembly);
+				ExecutableName = bundleExecutable ?? Path.GetFileNameWithoutExtension (RootAssemblies [0]);
 			}
 
 			if (ExecutableName != Path.GetFileNameWithoutExtension (AppDirectory))
@@ -1335,7 +1338,7 @@ namespace Xamarin.Bundler {
 
 		public string AssemblyName {
 			get {
-				return Path.GetFileName (RootAssembly);
+				return Path.GetFileName (RootAssemblies [0]);
 			}
 		}
 

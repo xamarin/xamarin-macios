@@ -220,10 +220,13 @@ namespace Xamarin.Bundler
 			if (corlib == null)
 				throw new MonoTouchException (2006, true, "Can not load mscorlib.dll from: '{0}'. Please reinstall Xamarin.iOS.", corlib_path);
 
-			var root = ManifestResolver.Load (App.RootAssembly);
-			if (root == null) {
-				// We check elsewhere that the path exists, so I'm not sure how we can get into this.
-				throw ErrorHelper.CreateError (2019, "Can not load the root assembly '{0}'.", App.RootAssembly);
+			var roots = new List<AssemblyDefinition> ();
+			foreach (var root_assembly in App.RootAssemblies) {
+				var root = ManifestResolver.Load (root_assembly);
+				if (root == null) {
+					// We check elsewhere that the path exists, so I'm not sure how we can get into this.
+					throw ErrorHelper.CreateError (2019, "Can not load the root assembly '{0}'.", root_assembly);
+				}
 			}
 
 			foreach (var reference in App.References) {
@@ -231,9 +234,10 @@ namespace Xamarin.Bundler
 				if (ad == null)
 					throw new MonoTouchException (2002, true, "Can not resolve reference: {0}", reference);
 
-				if (ad.MainModule.FileName == root.MainModule.FileName) {
-					// If we asked the manifest resolver for assembly X and got back the root assembly, it means the requested assembly has the same identity as the root assembly, which is not allowed.
-					throw ErrorHelper.CreateError (23, "The root assembly {0} conflicts with another assembly ({1}).", root.MainModule.FileName, reference);
+				var root_assembly = roots.FirstOrDefault ((v) => v.MainModule.FileName == ad.MainModule.FileName);
+				if (root_assembly != null) {
+					// If we asked the manifest resolver for assembly X and got back a root assembly, it means the requested assembly has the same identity as the root assembly, which is not allowed.
+					throw ErrorHelper.CreateError (23, "The root assembly {0} conflicts with another assembly ({1}).", root_assembly.MainModule.FileName, reference);
 				}
 				
 				if (ad.MainModule.Runtime > TargetRuntime.Net_4_0)
@@ -376,8 +380,10 @@ namespace Xamarin.Bundler
 			var assemblies = new HashSet<string> ();
 
 			try {
-				var assembly = ManifestResolver.Load (App.RootAssembly);
-				ComputeListOfAssemblies (assemblies, assembly, exceptions);
+				foreach (var root in App.RootAssemblies) {
+					var assembly = ManifestResolver.Load (root);
+					ComputeListOfAssemblies (assemblies, assembly, exceptions);
+				}
 			} catch (MonoTouchException mte) {
 				exceptions.Add (mte);
 			} catch (Exception e) {
@@ -509,9 +515,12 @@ namespace Xamarin.Bundler
 			resolver.AddSearchDirectory (Resolver.FrameworkDirectory);
 
 			var main_assemblies = new List<AssemblyDefinition> ();
-			main_assemblies.Add (Resolver.Load (App.RootAssembly));
-			foreach (var appex in sharedCodeTargets)
-				main_assemblies.Add (Resolver.Load (appex.App.RootAssembly));
+			foreach (var root in App.RootAssemblies)
+				main_assemblies.Add (Resolver.Load (root));
+			foreach (var appex in sharedCodeTargets) {
+				foreach (var root in appex.App.RootAssemblies)
+					main_assemblies.Add (Resolver.Load (root));
+			}
 			
 			if (Driver.Verbosity > 0)
 				Console.WriteLine ("Linking {0} into {1} using mode '{2}'", string.Join (", ", main_assemblies.Select ((v) => v.MainModule.FileName)), output_dir, App.LinkMode);
@@ -685,12 +694,15 @@ namespace Xamarin.Bundler
 				foreach (var t in allTargets) {
 					// Find the root assembly
 					// Here we assume that 'AssemblyReference.Name' == 'Assembly.Identity'.
-					var rootAssembly = t.Assemblies [Assembly.GetIdentity (t.App.RootAssembly)];
+					var rootAssemblies = new List<Assembly> ();
+					foreach (var root in t.App.RootAssemblies)
+						rootAssemblies.Add (t.Assemblies [Assembly.GetIdentity (root)]);
 					var queue = new Queue<string> ();
 					var collectedNames = new HashSet<string> ();
 
 					// First collect the set of all assemblies in the app by walking the assembly references.
-					queue.Enqueue (rootAssembly.Identity);
+					foreach (var root in rootAssemblies)
+						queue.Enqueue (root.Identity);
 					do {
 						var next = queue.Dequeue ();
 						collectedNames.Add (next);
