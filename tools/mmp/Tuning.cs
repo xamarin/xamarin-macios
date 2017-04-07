@@ -34,6 +34,7 @@ namespace MonoMac.Tuner {
 		internal PInvokeWrapperGenerator MarshalNativeExceptionsState { get; set; }
 		internal RuntimeOptions RuntimeOptions { get; set; }
 		public bool SkipExportedSymbolsInSdkAssemblies { get; set; }
+		public bool FullLimitedLinking { get; set; }
 
 		public static I18nAssemblies ParseI18nAssemblies (string i18n)
 		{
@@ -113,7 +114,10 @@ namespace MonoMac.Tuner {
 		static LinkContext CreateLinkContext (LinkerOptions options, Pipeline pipeline)
 		{
 			var context = new MonoMacLinkContext (pipeline, options.Resolver);
-			context.CoreAction = AssemblyAction.Link;
+
+			context.CoreAction = options.FullLimitedLinking ? AssemblyAction.Copy : AssemblyAction.Link;
+			context.DefaultAction = options.FullLimitedLinking ? AssemblyAction.Copy : AssemblyAction.Link;
+
 			context.LinkSymbols = options.LinkSymbols;
 			if (options.LinkSymbols) {
 				context.SymbolReaderProvider = new MdbReaderProvider ();
@@ -140,7 +144,7 @@ namespace MonoMac.Tuner {
 			if (options.LinkMode != LinkMode.None)
 				pipeline.AppendStep (new BlacklistStep ());
 
-			pipeline.AppendStep (new CustomizeMacActions (options.LinkMode, options.SkippedAssemblies));
+			pipeline.AppendStep (new CustomizeMacActions (options.LinkMode, options.FullLimitedLinking, options.SkippedAssemblies));
 
 			// We need to store the Field attribute in annotations, since it may end up removed.
 			pipeline.AppendStep (new ProcessExportedFields ());
@@ -150,7 +154,7 @@ namespace MonoMac.Tuner {
 
 				pipeline.AppendStep (new SubStepDispatcher {
 					new ApplyPreserveAttribute (),
-					new CoreRemoveSecurity (),
+//					new CoreRemoveSecurity (),
 					new OptimizeGeneratedCodeSubStep (options.EnsureUIThread),
 					new RemoveUserResourcesSubStep (),
 					new CoreRemoveAttributes (),
@@ -161,7 +165,7 @@ namespace MonoMac.Tuner {
 				pipeline.AppendStep (new MonoMacPreserveCode (options));
 				pipeline.AppendStep (new PreserveCrypto ());
 
-				pipeline.AppendStep (new MonoMacMarkStep ());
+				pipeline.AppendStep (new MonoMacMarkStep (options.FullLimitedLinking));
 				pipeline.AppendStep (new MacRemoveResources (options));
 				pipeline.AppendStep (new MobileSweepStep (options.LinkSymbols));
 				pipeline.AppendStep (new CleanStep ());
@@ -224,26 +228,32 @@ namespace MonoMac.Tuner {
 	public class CustomizeMacActions : CustomizeActions
 	{
 		LinkMode link_mode;
+		bool limitedLinking;
 
-		public CustomizeMacActions (LinkMode mode, IEnumerable<string> skipped_assemblies)
+		bool NoLinking => link_mode == LinkMode.None;
+		bool XMOnlyLinking => link_mode == LinkMode.SDKOnly && limitedLinking;
+
+		public CustomizeMacActions (LinkMode mode, bool fullLimitedLinking, IEnumerable<string> skipped_assemblies)
 			: base (mode == LinkMode.SDKOnly, skipped_assemblies)
 		{
 			link_mode = mode;
+			limitedLinking = fullLimitedLinking;
 		}
-
-		protected override bool IsLinked (AssemblyDefinition assembly)
-		{
-			if (link_mode == LinkMode.None)
-				return false;
-
-			return base.IsLinked (assembly);
-		}
-
+		
 		protected override void ProcessAssembly (AssemblyDefinition assembly)
 		{
-			if (link_mode == LinkMode.None) {
+			if (NoLinking) {
 				Annotations.SetAction (assembly, AssemblyAction.Copy);
 				return;
+			}
+
+			if (XMOnlyLinking) {
+				if (assembly.Name.Name == "Xamarin.Mac")
+					Annotations.SetAction (assembly, AssemblyAction.Link);
+				else
+					Annotations.SetAction (assembly, AssemblyAction.Copy);
+				return;
+
 			}
 
 			base.ProcessAssembly (assembly);

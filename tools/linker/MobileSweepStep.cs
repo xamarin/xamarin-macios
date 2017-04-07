@@ -27,6 +27,7 @@ namespace Xamarin.Linker {
 			var assemblies = Context.GetAssemblies ();
 			foreach (var assembly in assemblies) {
 				CurrentAction = Annotations.GetAction (assembly);
+				Console.WriteLine ($"{CurrentAction} on {assembly.Name.Name}");
 				switch (CurrentAction) {
 				case AssemblyAction.Link:
 				case AssemblyAction.Save:

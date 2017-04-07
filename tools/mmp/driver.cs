@@ -468,9 +468,9 @@ namespace Xamarin.Bundler {
 			if (IsUnified == IsClassic || (IsUnified && IsUnifiedCount != 1))
 				throw new Exception ("IsClassic/IsUnified/IsUnifiedMobile/IsUnifiedFullSystemFramework/IsUnifiedFullXamMacFramework logic regression");
 
-			if ((IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework) && (App.LinkMode != LinkMode.None))
+			if ((IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework) && (App.LinkMode == LinkMode.All))
 				throw new MonoMacException (2007, true,
-					"Xamarin.Mac Unified API against a full .NET framework does not support linking. Pass the -nolink flag.");
+					"Xamarin.Mac Unified Full API against a full .NET framework does not support linking except against the SDK (Xamarin.Mac) only. Pass the -nolink flag.");
 
 			if (App.LinkMode != LinkMode.None && is_extension) {
 				App.LinkMode = LinkMode.None;
@@ -1406,6 +1406,7 @@ namespace Xamarin.Bundler {
 					Registrar = (StaticRegistrar) BuildTarget.StaticRegistrar,
 				},
 				SkipExportedSymbolsInSdkAssemblies = !embed_mono,
+				FullLimitedLinking = IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework
 			};
 
 			linker_options = options;
