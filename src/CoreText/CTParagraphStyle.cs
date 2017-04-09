@@ -375,7 +375,9 @@ namespace XamCore.CoreText {
 				}
 				handle = CTParagraphStyleCreate (settings, settings.Length);
 			}
-
+			// Yes this weird Dispose implementation is correct, this bugzilla
+			// comment explains more about it. TL;DR: check CTParagraphStyleSpecifierIntPtrsValue
+			// https://bugzilla.xamarin.com/show_bug.cgi?id=54148#c4
 			i = 0;
 			foreach (var e in specifiers) {
 				e.Dispose (values, i);
