@@ -1443,7 +1443,6 @@ namespace Xamarin.Bundler {
 				if (p.Start ()) {
 					var error = p.StandardError.ReadToEnd();
 					p.WaitForExit ();
-					GC.Collect (); // Workaround for: https://bugzilla.xamarin.com/show_bug.cgi?id=43462#c14
 					if (p.ExitCode == 0)
 						return;
 					else {
