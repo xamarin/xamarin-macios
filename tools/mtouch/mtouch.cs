@@ -1566,8 +1566,6 @@ namespace Xamarin.Bundler
 
 				p.WaitForExit ();
 
-				GC.Collect (); // Workaround for: https://bugzilla.xamarin.com/show_bug.cgi?id=43462#c14
-
 				return p.ExitCode;
 			}
 		}
