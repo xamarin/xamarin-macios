@@ -375,7 +375,9 @@ namespace XamCore.CoreText {
 				}
 				handle = CTParagraphStyleCreate (settings, settings.Length);
 			}
-
+			// Yes this weird Dispose implementation is correct, this bugzilla
+			// comment explains more about it. TL;DR: check CTParagraphStyleSpecifierIntPtrsValue
+			// https://bugzilla.xamarin.com/show_bug.cgi?id=54148#c4
 			i = 0;
 			foreach (var e in specifiers) {
 				e.Dispose (values, i);
@@ -431,52 +433,122 @@ namespace XamCore.CoreText {
 			get {return (CTWritingDirection) GetByteValue (CTParagraphStyleSpecifier.BaseWritingDirection);}
 		}
 
-		public float FirstLineHeadIndent {
-			get {return GetFloatValue (CTParagraphStyleSpecifier.FirstLineHeadIndent);}
+		public
+#if XAMCORE_4_0
+		nfloat
+#else
+		float
+#endif
+		FirstLineHeadIndent {
+			get { return GetFloatValue (CTParagraphStyleSpecifier.FirstLineHeadIndent); }
 		}
 
-		unsafe float GetFloatValue (CTParagraphStyleSpecifier spec)
+		unsafe
+#if XAMCORE_4_0
+		nfloat
+#else
+		float
+#endif
+		GetFloatValue (CTParagraphStyleSpecifier spec)
 		{
-			float value;
-			if (!CTParagraphStyleGetValueForSpecifier (handle, spec, sizeof (float), &value))
+			nfloat value;
+			if (!CTParagraphStyleGetValueForSpecifier (handle, spec, (nuint) sizeof (nfloat), &value))
 				throw new InvalidOperationException ("Unable to get property value.");
-			return value;
+			return
+#if !XAMCORE_4_0
+			(float)
+#endif
+			value;
 		}
 
-		public float HeadIndent {
-			get {return GetFloatValue (CTParagraphStyleSpecifier.HeadIndent);}
+		public
+#if XAMCORE_4_0
+		nfloat
+#else
+		float
+#endif
+		HeadIndent {
+			get { return GetFloatValue (CTParagraphStyleSpecifier.HeadIndent); }
 		}
 
-		public float TailIndent {
-			get {return GetFloatValue (CTParagraphStyleSpecifier.TailIndent);}
+		public
+#if XAMCORE_4_0
+		nfloat
+#else
+		float
+#endif
+		TailIndent {
+			get { return GetFloatValue (CTParagraphStyleSpecifier.TailIndent); }
 		}
 
-		public float DefaultTabInterval {
-			get {return GetFloatValue (CTParagraphStyleSpecifier.DefaultTabInterval);}
+		public
+#if XAMCORE_4_0
+		nfloat
+#else
+		float
+#endif
+		DefaultTabInterval {
+			get { return GetFloatValue (CTParagraphStyleSpecifier.DefaultTabInterval); }
 		}
 
-		public float LineHeightMultiple {
-			get {return GetFloatValue (CTParagraphStyleSpecifier.LineHeightMultiple);}
+		public
+#if XAMCORE_4_0
+		nfloat
+#else
+		float
+#endif
+		LineHeightMultiple {
+			get { return GetFloatValue (CTParagraphStyleSpecifier.LineHeightMultiple); }
 		}
 
-		public float MaximumLineHeight {
-			get {return GetFloatValue (CTParagraphStyleSpecifier.MaximumLineHeight);}
+public
+#if XAMCORE_4_0
+		nfloat
+#else
+		float
+#endif
+		MaximumLineHeight {
+			get { return GetFloatValue (CTParagraphStyleSpecifier.MaximumLineHeight); }
 		}
 
-		public float MinimumLineHeight {
-			get {return GetFloatValue (CTParagraphStyleSpecifier.MinimumLineHeight);}
+		public
+#if XAMCORE_4_0
+		nfloat
+#else
+		float
+#endif
+		MinimumLineHeight {
+			get { return GetFloatValue (CTParagraphStyleSpecifier.MinimumLineHeight); }
 		}
 
-		public float LineSpacing {
-			get {return GetFloatValue (CTParagraphStyleSpecifier.LineSpacing);}
+		public
+#if XAMCORE_4_0
+		nfloat
+#else
+		float
+#endif
+		LineSpacing {
+			get { return GetFloatValue (CTParagraphStyleSpecifier.LineSpacing); }
 		}
 
-		public float ParagraphSpacing {
-			get {return GetFloatValue (CTParagraphStyleSpecifier.ParagraphSpacing);}
+		public
+#if XAMCORE_4_0
+		nfloat
+#else
+		float
+#endif
+		ParagraphSpacing {
+			get { return GetFloatValue (CTParagraphStyleSpecifier.ParagraphSpacing); }
 		}
 
-		public float ParagraphSpacingBefore {
-			get {return GetFloatValue (CTParagraphStyleSpecifier.ParagraphSpacingBefore);}
+		public
+#if XAMCORE_4_0
+		nfloat
+#else
+		float
+#endif
+		ParagraphSpacingBefore {
+			get { return GetFloatValue (CTParagraphStyleSpecifier.ParagraphSpacingBefore); }
 		}
 #endregion
 	}
