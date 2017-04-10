@@ -36,8 +36,9 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 
 		<BaseLibDllPath Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">$(XamarinMacFrameworkRoot)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll</BaseLibDllPath>
 		<BaseLibDllPath Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac'">$(XamarinMacFrameworkRoot)/lib/mono/4.5/Xamarin.Mac.dll</BaseLibDllPath>
-		<BTouchToolExe>bmac-mobile-mono</BTouchToolExe>
 		<BTouchToolPath>$(XamarinMacFrameworkRoot)/bin/</BTouchToolPath>
+		<BTouchToolExe Condition="Exists('$(BTouchToolPath)/bgen')">bgen</BTouchToolExe>
+		<BTouchToolExe Condition="!Exists('$(BTouchToolPath)/bgen')">bmac-mobile-mono</BTouchToolExe>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 
 		<DefineConstants>__UNIFIED__;$(DefineConstants)</DefineConstants>
