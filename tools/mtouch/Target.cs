@@ -1365,9 +1365,6 @@ namespace Xamarin.Bundler
 
 			linker_flags.AddOtherFlag ($"-o {Driver.Quote (Executable)}");
 
-			linker_flags.AddOtherFlag ("-lz");
-			linker_flags.AddOtherFlag ("-liconv");
-
 			bool need_libcpp = false;
 			if (App.EnableBitCode)
 				need_libcpp = true;
