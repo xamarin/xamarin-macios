@@ -106,10 +106,6 @@ namespace Xamarin.Bundler {
 		{
 			foreach (var a in Assemblies)
 				a.ComputeLinkerFlags ();
-#if MTOUCH
-			if (App.Platform != ApplePlatform.WatchOS && App.Platform != ApplePlatform.TVOS)
-				Frameworks.Add ("CFNetwork"); // required by xamarin_start_wwan
-#endif
 		}
 
 		public void GatherFrameworks ()
