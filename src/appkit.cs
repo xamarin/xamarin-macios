@@ -13678,6 +13678,7 @@ namespace XamCore.AppKit {
 		bool IsAutomaticTextCompletionEnabled { get; }
 
 		[Mac (10,12,2)]
+#if XAMCORE_4_0
 		[Async (ResultTypeName="NSSpellCheckerCandidates")]
 #else
 		[Async (ResultTypeName="NSSpellCheckerCanidates")]
