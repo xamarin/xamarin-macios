@@ -220,7 +220,7 @@ extern void mono_gc_init_finalizer_thread (void);
  */
 
 int
-xamarin_main (int argc, char *argv[], bool is_extension)
+xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 {
 	// COOP: ?
 	// + 1 for the initial "monotouch" +1 for the final NULL = +2.
@@ -234,7 +234,7 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 	patch_sigaction ();
 #endif
 
-	xamarin_is_extension = is_extension;
+	xamarin_is_extension = launch_mode == XamarinLaunchModeExtension;
 
 	memset (managed_argv, 0, sizeof (char*) * (argc + 2));
 	managed_argv [0] = "monotouch";
@@ -464,7 +464,8 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 	DEBUG_LAUNCH_TIME_PRINT ("Total initialization time");
 
 	int rv = 0;
-	if (is_extension) {
+	switch (launch_mode) {
+	case XamarinLaunchModeExtension:
 		char base_dir [1024];
 		char config_file_name [1024];
 
@@ -476,8 +477,16 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 		MONO_ENTER_GC_SAFE;
 		rv = xamarin_extension_main (argc, argv);
 		MONO_EXIT_GC_SAFE;
-	} else {
+		break;
+	case XamarinLaunchModeApp:
 		mono_jit_exec (mono_domain_get (), assembly, managed_argc, managed_argv);
+		break;
+	case XamarinLaunchModeEmbedded:
+		// do nothing
+		break;
+	default:
+		xamarin_assertion_message ("Invalid launch mode: %i.", launch_mode);
+		break;
 	}
 	
 	return rv;

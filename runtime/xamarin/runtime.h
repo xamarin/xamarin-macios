@@ -98,6 +98,12 @@ enum NSObjectFlags {
 	NSObjectFlagsHasManagedRef = 32,
 };
 
+enum XamarinLaunchMode {
+	XamarinLaunchModeApp = 0,
+	XamarinLaunchModeExtension = 1,
+	XamarinLaunchModeEmbedded = 2,
+};
+
 struct AssemblyLocation {
 	const char *assembly_name; // base name (without extension) of the assembly
 	const char *location; // the directory where the assembly is
@@ -109,6 +115,7 @@ struct AssemblyLocations {
 };
 
 void xamarin_initialize ();
+void xamarin_initialize_embedded (); /* STABLE */
 
 void			xamarin_assertion_message (const char *msg, ...) __attribute__((__noreturn__));
 const char *	xamarin_get_bundle_path (); /* Public API */
@@ -159,7 +166,7 @@ void			xamarin_create_managed_ref (id self, void * managed_object, bool retain);
 void            xamarin_release_managed_ref (id self, MonoObject *managed_obj);
 void			xamarin_notify_dealloc (id self, int gchandle);
 
-int				xamarin_main (int argc, char *argv[], bool is_extension);
+int				xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode);
 
 char *			xamarin_type_get_full_name (MonoType *type, guint32 *exception_gchandle); // return value must be freed with 'mono_free'
 char *			xamarin_class_get_full_name (MonoClass *klass, guint32 *exception_gchandle); // return value must be freed with 'mono_free'

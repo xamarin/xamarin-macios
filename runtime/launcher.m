@@ -530,9 +530,11 @@ app_initialize (xamarin_initialize_data *data, bool is_extension)
 
 #define __XAMARIN_MAC_RELAUNCH_APP__ "__XAMARIN_MAC_RELAUNCH_APP__"
 
-int xamarin_main (int argc, char **argv, bool is_extension)
+int xamarin_main (int argc, char **argv, enum XamarinLaunchMode launch_mode)
 {
 	xamarin_initialize_data data = { 0 };
+
+	bool is_extension = launch_mode == XamarinLaunchModeExtension;
 
 	if (getcwd (original_working_directory_path, sizeof (original_working_directory_path)) == NULL)
 		original_working_directory_path [0] = '\0';
@@ -596,7 +598,8 @@ int xamarin_main (int argc, char **argv, bool is_extension)
 			*ptr++ = argv [i];
 		*ptr = NULL;
 
-		if (is_extension) {
+		switch (launch_mode) {
+		case XamarinLaunchModeExtension: {
 			void * libExtensionHandle = dlopen ("/usr/lib/libextension.dylib", RTLD_LAZY);
 			if (libExtensionHandle == nil)
 				exit_with_message ("Unable to load libextension.dylib", data.basename, false);
@@ -610,8 +613,17 @@ int xamarin_main (int argc, char **argv, bool is_extension)
 
 			rv = (*extensionMain) (new_argc, new_argv);
 			dlclose (libExtensionHandle);
-		} else {
+			break;
+		}
+		case XamarinLaunchModeApp:
 			rv = mono_main (new_argc, new_argv);
+			break;
+		case XamarinLaunchModeEmbedded:
+			// do nothing
+			break;
+		default:
+			xamarin_assertion_message ("Invalid launch mode: %i.", launch_mode);
+			break;
 		}
 
 		free (new_argv);
@@ -622,10 +634,10 @@ int xamarin_main (int argc, char **argv, bool is_extension)
 
 int main (int argc, char **argv)
 {
-	return xamarin_main (argc, argv, false);
+	return xamarin_main (argc, argv, XamarinLaunchModeApp);
 }
 
 int xamarin_mac_extension_main (int argc, char **argv)
 {
-	return xamarin_main (argc, argv, true);
+	return xamarin_main (argc, argv, XamarinLaunchModeEmbedded);
 }

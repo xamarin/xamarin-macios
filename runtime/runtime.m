@@ -1100,6 +1100,18 @@ print_callback (const char *string, mono_bool is_stdout)
 }
 
 void
+xamarin_initialize_embedded ()
+{
+	static bool initialized = false;
+	if (initialized)
+		return;
+	initialized = true;
+
+	char *argv[] = { (char *) "embedded" };
+	xamarin_main (1, argv, XamarinLaunchModeEmbedded);
+}
+
+void
 xamarin_initialize ()
 {
 	// COOP: accessing managed memory: UNSAFE mode
