@@ -1954,7 +1954,7 @@ function oninitialload ()
 			ExecutionResult = TestExecutingResult.Building;
 			using (var resource = await NotifyBlockingWaitAsync (Jenkins.DesktopResource.AcquireConcurrentAsync ())) {
 				using (var xbuild = new Process ()) {
-					xbuild.StartInfo.FileName = "/Applications/Visual Studio.app/Contents/MacOS/mdtool";
+					xbuild.StartInfo.FileName = "/Applications/Visual Studio.app/Contents/MacOS/vstool";
 					var args = new StringBuilder ();
 					args.Append ("build ");
 					var sln = Path.ChangeExtension (ProjectFile, "sln");
