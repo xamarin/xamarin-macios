@@ -233,6 +233,7 @@ bool						xamarin_is_parameter_out                    (MonoReflectionMethod *met
 MethodDescription			xamarin_get_method_and_object_for_selector	(Class cls, SEL sel, id self, MonoObject **mthis, guint32 *exception_gchandle);
 guint32 					xamarin_create_product_exception_for_error	(int code, const char *message, guint32 *exception_gchandle);
 
+#ifdef __cplusplus
 class XamarinObject {
 public:
 	id native_object;
@@ -240,7 +241,9 @@ public:
 
 	~XamarinObject ();
 };
+#endif
 
+#ifdef __OBJC__
 @interface XamarinAssociatedObject : NSObject {
 @public
 	id native_object;
@@ -252,6 +255,7 @@ public:
 @interface NSObject (NonXamarinObject)
 -(int) xamarinGetGCHandle;
 @end
+#endif
 
 // Coop GC helper API
 #if !TARGET_OS_WATCH
