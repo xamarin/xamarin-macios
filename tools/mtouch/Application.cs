@@ -1062,7 +1062,7 @@ namespace Xamarin.Bundler {
 				appex.IsCodeShared = true;
 				IsCodeShared = true;
 
-				Driver.Log (2, "The main app and the extension '{0}' will share code.", appex.Name);
+				Driver.Log (2, "The app '{1}' and the extension '{0}' will share code.", appex.Name, Name);
 			}
 
 			if (candidates.Count > 0)
