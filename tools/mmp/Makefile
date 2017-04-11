@@ -62,7 +62,9 @@ tuner_sources = \
 	$(TUNER_DIR)/Mono.Tuner/RemoveSecurity.cs			\
 	linker/MonoMac.Tuner/MacMobileProfile.cs			\
 	linker/MonoMac.Tuner/MacRemoveResources.cs			\
+	linker/MonoMac.Tuner/MacBaseProfile.cs				\
 	linker/MonoMac.Tuner/MonoMacProfile.cs				\
+	linker/MonoMac.Tuner/XamarinMacProfile.cs			\
 	linker/MonoMac.Tuner/OptimizeGeneratedCodeSubStep.cs		\
 	linker/MonoMac.Tuner/MonoMacNamespaces.cs			\
 	linker/MonoMac.Tuner/MonoMacPreserveCode.cs			\

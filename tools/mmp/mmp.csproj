@@ -18,7 +18,7 @@
     <DefineConstants>MONOMAC;MMP;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>anycpu</PlatformTarget>
     <ConsolePause>False</ConsolePause>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -324,6 +324,12 @@
     </Compile>
     <Compile Include="..\linker\RemoveUserResourcesSubStep.cs">
       <Link>Xamarin.Linker\RemoveUserResourcesSubStep.cs</Link>
+    </Compile>
+    <Compile Include="linker\MonoMac.Tuner\XamarinMacProfile.cs">
+      <Link>MonoMac.Tuner\XamarinMacProfile.cs</Link>
+    </Compile>
+    <Compile Include="linker\MonoMac.Tuner\MacBaseProfile.cs">
+      <Link>MonoMac.Tuner\MacBaseProfile.cs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
