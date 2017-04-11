@@ -1096,6 +1096,9 @@ namespace Xamarin.Bundler {
 				if (aotOptions != null && aotOptions.IsHybridAOT)
 					sw.WriteLine ("\txamarin_mac_hybrid_aot = TRUE;");
 
+				if (IsUnifiedMobile)
+					sw.WriteLine ("\txamarin_mac_modern = TRUE;");
+
 				sw.WriteLine ("\treturn 0;");
 				sw.WriteLine ("}");
 				sw.WriteLine ();

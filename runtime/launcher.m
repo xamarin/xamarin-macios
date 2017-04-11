@@ -571,6 +571,9 @@ int xamarin_main (int argc, char **argv, bool is_extension)
 		int new_argc = env_argc + 2 /* --debug executable */ + argc ;
 		if (xamarin_mac_hybrid_aot)
 			new_argc += 1;
+		if (xamarin_mac_modern)
+			new_argc += 1;
+
 		char **new_argv = (char **) malloc (sizeof (char *) * (new_argc + 1 /* null terminated */));
 		const char **ptr = (const char **) new_argv;
 		// binary
@@ -590,6 +593,8 @@ int xamarin_main (int argc, char **argv, bool is_extension)
 
 		if (xamarin_mac_hybrid_aot)
 			*ptr++ = "--hybrid-aot";
+		if (xamarin_mac_modern)
+			*ptr++ = "--runtime=mobile";
 
 		// the rest
 		for (int i = 1; i < argc; i++)
