@@ -55,6 +55,8 @@ namespace Xamarin.Linker {
 			MultipeerConnectivity = profile.GetNamespace ("MultipeerConnectivity");
 			MetalKit = profile.GetNamespace ("MetalKit");
 			ModelIO = profile.GetNamespace ("ModelIO");
+			Intents = profile.GetNamespace ("Intents");
+			Photos = profile.GetNamespace ("Photos");
 #if MONOMAC
 			IOBluetooth = profile.GetNamespace ("IOBluetooth");
 			IOBluetoothUI = profile.GetNamespace ("IOBluetoothUI");
@@ -127,6 +129,10 @@ namespace Xamarin.Linker {
 		public static string Security { get; private set; }
 
 		public static string StoreKit { get; private set; }
+
+		public static string Intents { get; private set; }
+
+		public static string Photos { get; private set; }
 
 #if MONOMAC
 		public static string IOBluetooth { get; private set; }
