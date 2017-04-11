@@ -274,6 +274,7 @@ namespace Xamarin.Bundler {
 						}
 					}
 				},
+				{ "linkplatform", "Link only the Xamarin.Mac.dll platform assembly", v => App.LinkMode = LinkMode.Platform },
 				{ "linksdkonly", "Link only the SDK assemblies", v => App.LinkMode = LinkMode.SDKOnly },
 				{ "linkskip=", "Skip linking of the specified assembly", v => App.LinkSkipped.Add (v) },
 				{ "i18n=", "List of i18n assemblies to copy to the output directory, separated by commas (none,all,cjk,mideast,other,rare,west)", v => App.I18n = LinkerOptions.ParseI18nAssemblies (v) },
@@ -468,9 +469,16 @@ namespace Xamarin.Bundler {
 			if (IsUnified == IsClassic || (IsUnified && IsUnifiedCount != 1))
 				throw new Exception ("IsClassic/IsUnified/IsUnifiedMobile/IsUnifiedFullSystemFramework/IsUnifiedFullXamMacFramework logic regression");
 
-			if ((IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework) && (App.LinkMode != LinkMode.None))
-				throw new MonoMacException (2007, true,
-					"Xamarin.Mac Unified API against a full .NET framework does not support linking. Pass the -nolink flag.");
+			if (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework) {
+				switch (App.LinkMode) {
+				case LinkMode.None:
+				case LinkMode.Platform:
+					break;
+				default:
+					throw new MonoMacException (2007, true,
+						"Xamarin.Mac Unified API against a full .NET framework does not support linking SDK or All assemblies. Pass either the `-nolink` or `-linkplatform` flag.");
+				}
+			}
 
 			if (App.LinkMode != LinkMode.None && is_extension) {
 				App.LinkMode = LinkMode.None;
@@ -694,6 +702,13 @@ namespace Xamarin.Bundler {
 				root_assembly = unprocessed [0];
 				if (!File.Exists (root_assembly))
 					throw new MonoMacException (7, true, "The root assembly '{0}' does not exist", root_assembly);
+
+				if (IsClassic)
+					Profile.Current = new MonoMacProfile ();
+				else if (IsUnifiedFullXamMacFramework || IsUnifiedFullSystemFramework)
+					Profile.Current = new XamarinMacProfile (arch == "x86_64" ? 64 : 32);
+				else
+					Profile.Current = new MacMobileProfile (arch == "x86_64" ? 64 : 32);
 
 				string root_wo_ext = Path.GetFileNameWithoutExtension (root_assembly);
 				if (Profile.IsSdkAssembly (root_wo_ext) || Profile.IsProductAssembly (root_wo_ext))

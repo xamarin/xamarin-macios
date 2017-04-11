@@ -536,8 +536,11 @@ namespace Xamarin.Linker.Steps {
 				switch (type.Name) {
 				case "XslCompiledTransform":
 					TypeDefinition nop = GetType ("System.Xml", "System.Xml.Xsl.NoOperationDebugger");
-					MarkNamedMethod (nop, "OnCompile");
-					MarkNamedMethod (nop, "OnExecute");
+					// only available on the mobile profile
+					if (nop != null) {
+						MarkNamedMethod (nop, "OnCompile");
+						MarkNamedMethod (nop, "OnExecute");
+					}
 					break;
 				}
 				break;

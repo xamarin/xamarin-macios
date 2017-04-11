@@ -31,6 +31,9 @@ namespace Xamarin.Bundler {
 		None,
 		SDKOnly,
 		All,
+#if !MONOTOUCH
+		Platform,
+#endif
 	}
 
 	public partial class Application
