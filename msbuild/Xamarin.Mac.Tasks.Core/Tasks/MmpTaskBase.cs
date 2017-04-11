@@ -166,6 +166,9 @@ namespace Xamarin.Mac.Tasks
 			case "sdkonly":
 				args.Add ("/linksdkonly");
 				break;
+			case "platform":
+				args.Add ("/linkplatform");
+				break;
 			default:
 				args.Add ("/nolink");
 				break;
