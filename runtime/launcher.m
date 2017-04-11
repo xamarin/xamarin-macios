@@ -588,14 +588,13 @@ int xamarin_main (int argc, char **argv, bool is_extension)
 			new_argc--;
 		}
 
-		// executable assembly
-		*ptr++ = exe_path;
-
 		if (xamarin_mac_hybrid_aot)
 			*ptr++ = "--hybrid-aot";
 		if (xamarin_mac_modern)
 			*ptr++ = "--runtime=mobile";
 
+		// executable assembly
+		*ptr++ = exe_path;
 		// the rest
 		for (int i = 1; i < argc; i++)
 			*ptr++ = argv [i];
