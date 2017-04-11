@@ -238,7 +238,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void TestGenericAndDeviceSpecificXibsGenericLast ()
 		{
-            TestGenericAndDeviceSpecificXibsGeneric ("View~ipad.xib", "View.xib");
+			TestGenericAndDeviceSpecificXibsGeneric ("View~ipad.xib", "View.xib");
 		}
 	}
 }
