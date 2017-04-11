@@ -115,7 +115,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<_CanArchive Condition="'$(OutputType)' == 'Exe' And '$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'">True</_CanArchive>
 
 		<_CanDeployToDeviceOrSimulator>False</_CanDeployToDeviceOrSimulator>
-		<_CanDeployToDeviceOrSimulator Condition="'$(OutputType)' == 'Exe' And '$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'">True</_CanDeployToDeviceOrSimulator>
+		<_CanDeployToDeviceOrSimulator Condition="('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true') And '$(IsWatchApp)' == 'false'">True</_CanDeployToDeviceOrSimulator>
 
 		<_RequireCodeSigning>False</_RequireCodeSigning>
 		<_RequireCodeSigning Condition="'$(ComputedPlatform)' == 'iPhone'">True</_RequireCodeSigning>
