@@ -72,7 +72,7 @@ IOS_BMONO = MONO_PATH=$(IOS_LIBDIR) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch
 ifdef IKVM
 IOS_GENERATOR=build/common/bgen.exe
 IOS_GENERATE=$(SYSTEM_MONO) --debug $(IOS_GENERATOR)
-IOS_GENERATOR_DEPENDENCIES=$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/monotouch.BindingAttributes.dll $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/Xamarin.iOS.BindingAttributes.dll
+IOS_GENERATOR_DEPENDENCIES=$(IOS_BUILD_DIR)/native/monotouch.BindingAttributes.dll $(IOS_BUILD_DIR)/native/Xamarin.iOS.BindingAttributes.dll
 IOS_compat_GENERATOR=$(IOS_GENERATOR)
 IOS_compat_GENERATE=$(IOS_GENERATE)
 IOS_native_GENERATOR=$(IOS_GENERATOR)
@@ -509,7 +509,7 @@ MAC_full_GENERATOR=$(MAC_GENERATOR)
 MAC_full_GENERATE=$(MAC_GENERATE)
 MAC_mobile_GENERATOR=$(MAC_GENERATOR)
 MAC_mobile_GENERATE=$(MAC_GENERATE)
-MAC_GENERATOR_DEPENDENCIES=$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/XamMac.BindingAttributes.dll $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/Xamarin.Mac-full.BindingAttributes.dll $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/Xamarin.Mac-mobile.BindingAttributes.dll
+MAC_GENERATOR_DEPENDENCIES=$(MAC_BUILD_DIR)/XamMac.BindingAttributes.dll $(MAC_BUILD_DIR)/Xamarin.Mac-full.BindingAttributes.dll $(MAC_BUILD_DIR)/Xamarin.Mac-mobile.BindingAttributes.dll
 else
 MAC_compat_GENERATOR=$(MAC_BUILD_DIR)/compat/_bmac.exe
 MAC_compat_GENERATE=$(SYSTEM_MONO) --debug $(MAC_compat_GENERATOR)
@@ -751,6 +751,7 @@ WATCH_BMONO = MONO_PATH=$(WATCH_LIBDIR)/repl $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/b
 ifdef IKVM
 WATCH_GENERATOR=build/common/bgen.exe
 WATCH_GENERATE=$(SYSTEM_MONO) --debug $(WATCH_GENERATOR)
+WATCH_GENERATOR_DEPENDENCIES=$(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll
 else
 WATCH_GENERATOR=$(WATCH_BUILD_DIR)/watch/generator.exe
 WATCH_GENERATE=$(WATCH_BMONO) --debug $(WATCH_GENERATOR)
@@ -814,7 +815,7 @@ $(WATCH_BUILD_DIR)/watch/generator.exe: $(GENERATOR_SOURCES) $(WATCH_BUILD_DIR)/
 		$(GENERATOR_DEFINES)                  \
 
 # generated_sources
-$(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $(WATCH_BUILD_DIR)/watch/core.dll $(WATCH_PMCS)
+$(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $(WATCH_BUILD_DIR)/watch/core.dll $(WATCH_PMCS) $(WATCH_GENERATOR_DEPENDENCIES)
 	$(call Q_PROF_GEN,watch) PMCS_PROFILE=watch $(WATCH_GENERATE) \
 		-inline-selectors                                        \
 		-process-enums                                           \
@@ -974,6 +975,7 @@ TVOS_BMONO = MONO_PATH=$(TVOS_LIBDIR)/repl $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
 ifdef IKVM
 TVOS_GENERATOR=build/common/bgen.exe
 TVOS_GENERATE=$(SYSTEM_MONO) --debug $(TVOS_GENERATOR)
+TVOS_GENERATOR_DEPENDENCIES=$(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll
 else
 TVOS_GENERATOR=$(TVOS_BUILD_DIR)/tvos/generator.exe
 TVOS_GENERATE=$(TVOS_BMONO) --debug $(TVOS_GENERATOR)
@@ -1031,7 +1033,7 @@ $(TVOS_BUILD_DIR)/tvos/generator.exe: $(GENERATOR_SOURCES) $(TVOS_BUILD_DIR)/tvo
 		$(GENERATOR_DEFINES)                  \
 
 # generated_sources
-$(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_BUILD_DIR)/tvos/core.dll $(TVOS_PMCS)
+$(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_BUILD_DIR)/tvos/core.dll $(TVOS_PMCS) $(TVOS_GENERATOR_DEPENDENCIES)
 	$(call Q_PROF_GEN,tvos) PMCS_PROFILE=tvos $(TVOS_GENERATE) \
 		-inline-selectors                                        \
 		-process-enums                                           \
