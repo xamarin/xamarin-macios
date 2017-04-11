@@ -917,7 +917,7 @@ namespace Xamarin.Bundler {
 				return;
 			}
 
-			if (DeploymentTarget.Major < 8) {
+			if (Platform == ApplePlatform.iOS && DeploymentTarget.Major < 8) {
 				// This is a limitation it's technically possible to fix (we can build all extensions into frameworks, and the main app to static objects).
 				// It would make our code a bit more complicated though, and would only be valuable for apps that target iOS 6 or iOS 7 and has more than one extension.
 				ErrorHelper.Warning (112, "Native code sharing has been disabled because {0}", $"the container app's deployment target is earlier than iOS 8.0 (it's {DeploymentTarget}).");
@@ -1062,7 +1062,7 @@ namespace Xamarin.Bundler {
 				appex.IsCodeShared = true;
 				IsCodeShared = true;
 
-				Driver.Log (2, "The main app and the extension '{0}' will share code.", appex.Name);
+				Driver.Log (2, "The app '{1}' and the extension '{0}' will share code.", appex.Name, Name);
 			}
 
 			if (candidates.Count > 0)
