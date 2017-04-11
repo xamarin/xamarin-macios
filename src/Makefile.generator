@@ -47,8 +47,8 @@ GENERATOR_ATTRIBUTE_SOURCES = \
 IKVM_REFLECTION_FLAGS = -d:NO_AUTHENTICODE,STATIC,NO_SYMBOL_WRITER
 
 build/common/bgen.exe: $(GENERATOR_SOURCES) $(IKVM_REFLECTION_SOURCES) $(GENERATOR_ATTRIBUTE_SOURCES) Makefile.generator
-	@mkdir -p build/common
-	$(Q_GEN) $(SYSTEM_MCS) -debug -out:$@ $(IKVM_REFLECTION_FLAGS) $(GENERATOR_DEFINES) $(IKVM_REFLECTION_SOURCES) $(GENERATOR_ATTRIBUTE_SOURCES) $(GENERATOR_SOURCES) -d:IKVM
+	$(Q) mkdir -p build/common
+	$(Q_GEN) $(SYSTEM_CSC) -debug:portable -out:$@ $(IKVM_REFLECTION_FLAGS) $(GENERATOR_DEFINES) $(IKVM_REFLECTION_SOURCES) $(GENERATOR_ATTRIBUTE_SOURCES) $(GENERATOR_SOURCES) -d:IKVM
 
 # The command-line arguments in the csproj are currently kept up-to-date manually
 generator-ikvm.csproj: generator-ikvm.csproj.in Makefile.generator
