@@ -21,8 +21,15 @@ namespace Xamarin.MMP.Tests
 			return int.Parse (number);
 		}
 
+		string GetAppName (bool modern) => modern ? "UnifiedExample.app" : "XM45Example.app";
+		string GetOutputBundlePath (string tmpDir, string name, bool modern) => Path.Combine (tmpDir, "bin/Debug/" + GetAppName (modern) + "/Contents/MonoBundle", name + ".dll");
+
+		string GetFrameworkName (bool modern) => modern ? "Xamarin.Mac" : "4.5";
+		string GetBaseAssemblyPath (string name, bool modern) => Path.Combine (TI.FindRootDirectory (), "Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/" + GetFrameworkName (modern) +  "/", name + ".dll");
+
+
 		[Test]
-		public void UnifiedLinkingSDK_WithAllNonProductSkipped_Builds ()
+		public void ModernLinkingSDK_WithAllNonProductSkipped_BuildsWithSameNumberOfTypes ()
 		{
 			RunMMPTest (tmpDir => {
 				string[] dependencies = { "mscorlib", "System.Core", "System" };
@@ -30,11 +37,31 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = config };
 				TI.TestUnifiedExecutable (test);
 				foreach (string dep in dependencies) {
-					string outputDep = Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MonoBundle", dep + ".dll");
-					string baseDep = Path.Combine (TI.FindRootDirectory (), "Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac/", dep + ".dll");
-
-					Assert.AreEqual (GetNumberOfTypesInLibrary (baseDep), GetNumberOfTypesInLibrary (outputDep), "We linked a linkskip - " + dep + " with config:\n" + config);
+					int typesInBaseLib = GetNumberOfTypesInLibrary (GetBaseAssemblyPath (dep, true));
+					int typesInOutput = GetNumberOfTypesInLibrary (GetOutputBundlePath (tmpDir, dep, true));
+					Assert.AreEqual (typesInBaseLib, typesInOutput, $"We linked a linkskip - {dep} with config ({typesInBaseLib} vs {typesInOutput}:\n {config}");
 				}
+			});
+		}
+
+		[Test]
+		public void FullLinkingSdk_BuildsWithFewerPlatformTypesOnly ()
+		{
+			RunMMPTest (tmpDir => {
+				string[] nonPlatformDependencies = { "mscorlib", "System.Core", "System" };
+				string config = "<LinkMode>Platform</LinkMode>";
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = config, XM45 = true };
+				TI.TestUnifiedExecutable (test);
+				foreach (string dep in nonPlatformDependencies) {
+					int typesInBaseLib = GetNumberOfTypesInLibrary (GetBaseAssemblyPath (dep, false));
+					int typesInOutput = GetNumberOfTypesInLibrary (GetOutputBundlePath (tmpDir, dep, false));
+					Assert.AreEqual (typesInBaseLib, typesInOutput, $"We linked a linkskip - {dep} with config ({typesInBaseLib} vs {typesInOutput}):\n {config}");
+				}
+
+				int typesInBasePlatform = GetNumberOfTypesInLibrary (GetBaseAssemblyPath ("Xamarin.Mac", false));
+				int typesInOutputPlatform = GetNumberOfTypesInLibrary (GetOutputBundlePath (tmpDir, "Xamarin.Mac", false));
+				Assert.AreNotEqual (typesInBasePlatform, typesInOutputPlatform, $"We linked a linkskip - Xamarin.Mac with config ({typesInBasePlatform} vs {typesInOutputPlatform}):\n {config}");
+
 			});
 		}
 	}
