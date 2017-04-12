@@ -486,6 +486,8 @@ namespace Xamarin.Bundler {
 
 		public BitCodeMode BitCodeMode { get; set; }
 
+		public bool Embeddinator { get; set; }
+
 		public bool EnableAsmOnlyBitCode { get { return BitCodeMode == BitCodeMode.ASMOnly; } }
 		public bool EnableLLVMOnlyBitCode { get { return BitCodeMode == BitCodeMode.LLVMOnly; } }
 		public bool EnableMarkerOnlyBitCode { get { return BitCodeMode == BitCodeMode.MarkerOnly; } }
