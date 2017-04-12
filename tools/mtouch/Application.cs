@@ -298,7 +298,7 @@ namespace Xamarin.Bundler {
 			Tuple<AssemblyBuildTarget, string> sdk = null;
 			List<Exception> exceptions = null;
 
-			if (IsSimulatorBuild)
+			if (IsSimulatorBuild && !Embeddinator)
 				return;
 			
 			if (assembly_build_targets.Count == 0) {
@@ -1604,8 +1604,22 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			// If building a fat app, we need to lipo the two different executables we have together
-			if (IsDeviceBuild && !Embeddinator) {
+			if (Embeddinator) {
+				if (IsSimulatorBuild) {
+					var frameworkName = ExecutableName;
+					var frameworkDirectory = Path.Combine (AppDirectory, "Frameworks", frameworkName + ".framework");
+					var frameworkExecutable = Path.Combine (frameworkDirectory, frameworkName);
+					Directory.CreateDirectory (frameworkDirectory);
+					if (IsDualBuild) {
+						if (Lipo (frameworkExecutable, Targets [0].Executable, Targets [1].Executable))
+							cached_executable = true;
+					} else {
+						UpdateFile (Targets [0].Executable, frameworkExecutable);
+					}
+					CreateFrameworkInfoPList (Path.Combine (frameworkDirectory, "Info.plist"), frameworkName, BundleId + frameworkName, frameworkName);
+				}
+			} else if (IsDeviceBuild) {
+				// If building a fat app, we need to lipo the two different executables we have together
 				if (IsDualBuild) {
 					if (Lipo (Executable, Targets [0].Executable, Targets [1].Executable))
 						cached_executable = true;
