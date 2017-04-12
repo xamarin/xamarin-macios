@@ -182,11 +182,13 @@ namespace Xamarin.Bundler {
 
 		AOTOptions options;
 		AOTCompilerType compilerType;
+		bool IsRelease;
 
-		public AOTCompiler (AOTOptions options, AOTCompilerType compilerType)
+		public AOTCompiler (AOTOptions options, AOTCompilerType compilerType, bool isRelease)
 		{
 			this.options = options;
 			this.compilerType = compilerType;
+			this.IsRelease = isRelease;
 		}
 
 		public void Compile (string path)
@@ -201,10 +203,19 @@ namespace Xamarin.Bundler {
 
 			var monoEnv = new string [] {"MONO_PATH", files.RootDir };
 
-			Parallel.ForEach (GetFilesToAOT (files), ParallelOptions, file => {
+			List<string> filesToAOT = GetFilesToAOT (files);
+
+			Parallel.ForEach (filesToAOT, ParallelOptions, file => {
 				if (RunCommand (MonoPath, String.Format ("--aot{0} {1}", options.IsHybridAOT ? "=hybrid" : "", Quote (file)), monoEnv) != 0)
 					throw ErrorHelper.CreateError (3001, "Could not AOT the assembly '{0}'", file);
 			});
+
+			if (IsRelease && options.IsHybridAOT) {
+				Parallel.ForEach (filesToAOT, ParallelOptions, file => {
+					if (RunCommand (StripCommand, Quote (file), monoEnv) != 0)
+						throw ErrorHelper.CreateError (3001, "Could not strip the assembly '{0}'", file);
+				});
+			}
 		}
 
 		List<string> GetFilesToAOT (IFileEnumerator files)
@@ -267,6 +278,8 @@ namespace Xamarin.Bundler {
 
 			return aotFiles;
 		}
+
+		public const string StripCommand = "/Library/Frameworks/Mono.framework/Commands/mono-cil-strip";
 
 		string MonoPath
 		{

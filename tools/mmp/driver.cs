@@ -827,7 +827,7 @@ namespace Xamarin.Bundler {
 				else
 					throw ErrorHelper.CreateError (0099, "Internal error \"AOT with unexpected profile.\" Please file a bug report with a test case (http://bugzilla.xamarin.com).");
 
-				AOTCompiler compiler = new AOTCompiler (aotOptions, compilerType);
+				AOTCompiler compiler = new AOTCompiler (aotOptions, compilerType, !EnableDebug);
 				compiler.Compile (mmp_dir);
 				Watch ("AOT Compile", 1);
 			}
