@@ -114,14 +114,17 @@ namespace Xamarin.Bundler {
 
 		public void GatherFrameworks ()
 		{
+			Assembly asm = null;
 			AssemblyDefinition productAssembly = null;
 
 			foreach (var assembly in Assemblies) {
 				if (assembly.AssemblyDefinition.Name.Name == Driver.GetProductAssembly (App)) {
-					productAssembly = assembly.AssemblyDefinition;
+					asm = assembly;
 					break;
 				}
 			}
+
+			productAssembly = asm.AssemblyDefinition;
 
 			// *** make sure any change in the above lists (or new list) are also reflected in 
 			// *** Makefile so simlauncher-sgen does not miss any framework
@@ -169,7 +172,7 @@ namespace Xamarin.Bundler {
 						}
 
 						if (App.SdkVersion >= framework.Version) {
-							var add_to = App.DeploymentTarget >= framework.Version ? Frameworks : WeakFrameworks;
+							var add_to = App.DeploymentTarget >= framework.Version ? asm.Frameworks : asm.WeakFrameworks;
 							add_to.Add (framework.Name);
 							continue;
 						}
@@ -179,7 +182,7 @@ namespace Xamarin.Bundler {
 
 			// Make sure there are no duplicates between frameworks and weak frameworks.
 			// Keep the weak ones.
-			Frameworks.ExceptWith (WeakFrameworks);
+			asm.Frameworks.ExceptWith (asm.WeakFrameworks);
 		}
 	}
 }
