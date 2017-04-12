@@ -1414,7 +1414,13 @@ namespace Xamarin.Bundler {
 			if (!IsDeviceBuild || IsExtension)
 				return;
 
-			if (Directory.Exists (Path.Combine (AppDirectory, "NOTICE")))
+			WriteNotice (AppDirectory);
+		}
+
+		void WriteNotice (string directory)
+		{
+			var path = Path.Combine (directory, "NOTICE");
+			if (Directory.Exists (path))
 				throw new MonoTouchException (1016, true, "Failed to create the NOTICE file because a directory already exists with the same name.");
 
 			try {
@@ -1423,7 +1429,7 @@ namespace Xamarin.Bundler {
 				sb.Append ("Xamarin built applications contain open source software.  ");
 				sb.Append ("For detailed attribution and licensing notices, please visit...");
 				sb.AppendLine ().AppendLine ().Append ("http://xamarin.com/mobile-licensing").AppendLine ();
-				Driver.WriteIfDifferent (Path.Combine (AppDirectory, "NOTICE"), sb.ToString ());
+				Driver.WriteIfDifferent (path, sb.ToString ());
 			} catch (Exception ex) {
 				throw new MonoTouchException (1017, true, ex, "Failed to create the NOTICE file: {0}", ex.Message);
 			}
