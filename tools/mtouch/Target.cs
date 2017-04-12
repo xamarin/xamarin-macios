@@ -1397,20 +1397,25 @@ namespace Xamarin.Bundler
 				linker_flags.ReferenceSymbols (GetRequiredSymbols ());
 			}
 
-			string mainlib;
-			if (App.IsWatchExtension) {
-				mainlib = "libwatchextension.a";
-				linker_flags.AddOtherFlag (" -e _xamarin_watchextension_main");
-			} else if (App.IsTVExtension) {
-				mainlib = "libtvextension.a";
-			} else if (App.IsExtension) {
-				mainlib = "libextension.a";
-			} else {
-				mainlib = "libapp.a";
-			}
 			var libdir = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib");
-			var libmain = Path.Combine (libdir, mainlib);
-			linker_flags.AddLinkWith (libmain, true);
+			if (App.Embeddinator) {
+				linker_flags.AddOtherFlag ("-shared");
+				linker_flags.AddOtherFlag ($"-install_name {Driver.Quote ($"@rpath/{App.ExecutableName}.framework/{App.ExecutableName}")}");
+			} else {
+				string mainlib;
+				if (App.IsWatchExtension) {
+					mainlib = "libwatchextension.a";
+					linker_flags.AddOtherFlag (" -e _xamarin_watchextension_main");
+				} else if (App.IsTVExtension) {
+					mainlib = "libtvextension.a";
+				} else if (App.IsExtension) {
+					mainlib = "libextension.a";
+				} else {
+					mainlib = "libapp.a";
+				}
+				var libmain = Path.Combine (libdir, mainlib);
+				linker_flags.AddLinkWith (libmain, true);
+			}
 
 			if (App.EnableProfiling) {
 				string libprofiler;
