@@ -1420,6 +1420,9 @@ namespace Xamarin.Bundler {
 			if (!IsDeviceBuild || IsExtension)
 				return;
 
+			if (Embeddinator)
+				return;
+
 			WriteNotice (AppDirectory);
 		}
 
@@ -1591,6 +1594,7 @@ namespace Xamarin.Bundler {
 					if (info.DylibToFramework) {
 						var bundleName = Path.GetFileName (name);
 						CreateFrameworkInfoPList (Path.Combine (targetDirectory, "Info.plist"), bundleName, BundleId + Path.GetFileNameWithoutExtension (bundleName), bundleName);
+						CreateFrameworkNotice (targetDirectory);
 					}
 				}
 			}
@@ -2044,6 +2048,14 @@ namespace Xamarin.Bundler {
 				return;
 
 			RuntimeOptions.Write (AppDirectory);
+		}
+
+		public void CreateFrameworkNotice (string output_path)
+		{
+			if (!Embeddinator)
+				return;
+
+			WriteNotice (output_path);
 		}
 
 		public void CreateFrameworkInfoPList (string output_path, string framework_name, string bundle_identifier, string bundle_name)
