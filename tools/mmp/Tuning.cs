@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Text;
 using System.Xml.XPath;
 
 using Mono.Linker;
@@ -104,7 +105,21 @@ namespace MonoMac.Tuner {
 			} catch (XmlResolutionException ex) {
 				throw new MonoMacException (2017, true, ex, "Could not process XML description: {0}", ex?.InnerException?.Message ?? ex.Message);
 			} catch (Exception e) {
-				throw new MonoMacException (2001, true, e, "Could not link assemblies. Reason: {0}", e.Message);
+				var message = new StringBuilder ();
+				if (e.Data.Count > 0) {
+					message.AppendLine ();
+					var m = e.Data ["MethodDefinition"] as string;
+					if (m != null)
+						message.AppendLine ($"\tMethod: `{m}`");
+					var t = e.Data ["TypeReference"] as string;
+					if (t != null)
+						message.AppendLine ($"\tType: `{t}`");
+					var a = e.Data ["AssemblyDefinition"] as string;
+					if (a != null)
+						message.AppendLine ($"\tAssembly: `{a}`");
+				}
+				message.Append ($"Reason: {e.Message}");
+				throw new MonoMacException (2001, true, e, "Could not link assemblies. {0}", message);
 			}
 
 			assemblies = ListAssemblies (context);

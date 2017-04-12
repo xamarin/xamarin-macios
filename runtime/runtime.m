@@ -2315,7 +2315,7 @@ xamarin_locate_assembly_resource (const char *assembly_name, const char *culture
 	}
 
 	// Then in a framework named as the assembly
-	snprintf (root, sizeof (root), "%s/Frameworks/%s.framework/%s.framework/MonoBundle", app_path, aname, aname);
+	snprintf (root, sizeof (root), "%s/Frameworks/%s.framework/MonoBundle", app_path, aname);
 	if (xamarin_locate_assembly_resource_for_root (root, culture, resource, path, pathlen)) {
 		LOG_RESOURCELOOKUP (PRODUCT ": Located resource '%s' from framework '%s': %s\n", resource, aname, path);
 		return true;

@@ -115,7 +115,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<_CanArchive Condition="'$(OutputType)' == 'Exe' And '$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'">True</_CanArchive>
 
 		<_CanDeployToDeviceOrSimulator>False</_CanDeployToDeviceOrSimulator>
-		<_CanDeployToDeviceOrSimulator Condition="'$(OutputType)' == 'Exe' And '$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'">True</_CanDeployToDeviceOrSimulator>
+		<_CanDeployToDeviceOrSimulator Condition="('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true') And '$(IsWatchApp)' == 'false'">True</_CanDeployToDeviceOrSimulator>
 
 		<_RequireCodeSigning>False</_RequireCodeSigning>
 		<_RequireCodeSigning Condition="'$(ComputedPlatform)' == 'iPhone'">True</_RequireCodeSigning>
@@ -1973,10 +1973,10 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<_IntermediateODRDir Condition="'$(_DistributionType)' == 'AdHoc' And '$(EmbedOnDemandResources)' == 'true'">$(_IpaAppBundleDir)OnDemandResources\</_IntermediateODRDir>
 			<_IntermediateODRDir Condition="'$(_DistributionType)' == 'AdHoc' And '$(EmbedOnDemandResources)' == 'false'">$(DeviceSpecificIntermediateOutputPath)OnDemandResourcesPackage\OnDemandResources\</_IntermediateODRDir>
 
-			<OnDemandResourcesUrl Condition="'$(OnDemandResourcesUrl)' == '' And '$(_DistributionType)' == 'AdHoc' And '$(EmbedOnDemandResources)' == 'true'">OnDemandResources</OnDemandResourcesUrl>
+			<OnDemandResourcesUrl Condition="'$(_DistributionType)' == 'AdHoc' And '$(EmbedOnDemandResources)' == 'true'">OnDemandResources</OnDemandResourcesUrl>
 
 			<IsStreamable>false</IsStreamable>
-			<IsStreamable Condition="'$(EmbedOnDemandResources)' == 'false'">true</IsStreamable>
+			<IsStreamable Condition="$(EmbedOnDemandResources) == 'false'">true</IsStreamable>
 
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
 			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>

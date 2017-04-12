@@ -1,4 +1,4 @@
-TT = "/Applications/Xamarin Studio.app/Contents/MacOS/lib/monodevelop/AddIns/MonoDevelop.TextTemplating/TextTransform.exe"
+TT = "/Applications/Visual Studio.app/Contents/MacOS/lib/monodevelop/AddIns/MonoDevelop.TextTemplating/TextTransform.exe"
 
 .PHONY: all test clean
 

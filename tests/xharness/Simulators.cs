@@ -25,13 +25,13 @@ namespace xharness
 		public IEnumerable<SimDevice> AvailableDevices => available_devices;
 		public IEnumerable<SimDevicePair> AvailableDevicePairs => available_device_pairs;
 
-		public Task LoadAsync (Log log)
+		public async Task LoadAsync (Log log)
 		{
 			if (loaded)
-				return Task.CompletedTask;
+				return;
 			loaded = true;
 
-			Task.Run (async () =>
+			await Task.Run (async () =>
 			{
 				var tmpfile = Path.GetTempFileName ();
 				try {
@@ -98,8 +98,6 @@ namespace xharness
 					File.Delete (tmpfile);
 				}
 			});
-
-			return Task.CompletedTask;
 		}
 
 		public async Task<SimDevice []> FindAsync (AppRunnerTarget target, Log log)
