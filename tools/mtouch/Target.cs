@@ -1059,6 +1059,10 @@ namespace Xamarin.Bundler
 						if (a.HasLinkWithAttributes && !App.EnableBitCode)
 							compiler_flags.ReferenceSymbols (GetRequiredSymbols (a, true));
 					}
+					if (App.Embeddinator) {
+						if (!string.IsNullOrEmpty (App.UserGccFlags))
+							compiler_flags.AddOtherFlag (App.UserGccFlags);
+					}
 					compiler_flags.LinkWithMono ();
 					compiler_flags.LinkWithXamarin ();
 					if (GetEntryPoints ().ContainsKey ("UIApplicationMain"))
