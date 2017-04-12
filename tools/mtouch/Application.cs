@@ -1600,7 +1600,7 @@ namespace Xamarin.Bundler {
 			}
 
 			// If building a fat app, we need to lipo the two different executables we have together
-			if (IsDeviceBuild) {
+			if (IsDeviceBuild && !Embeddinator) {
 				if (IsDualBuild) {
 					if (IsUptodate (new string [] { Targets [0].Executable, Targets [1].Executable }, new string [] { Executable })) {
 						cached_executable = true;
