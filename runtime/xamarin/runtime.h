@@ -194,6 +194,13 @@ bool			xamarin_locate_assembly_resource (const char *assembly_name, const char *
 void			xamarin_printf (const char *format, ...);
 void			xamarin_vprintf (const char *format, va_list args);
 
+/*
+ * Look for an assembly in the app and open it.
+ *
+ * Stable API.
+ */
+MonoAssembly * xamarin_open_assembly (const char *name);
+
 #if defined(__arm__) || defined(__aarch64__)
 void mono_aot_register_module (void *aot_info);
 #endif
