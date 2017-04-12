@@ -23,6 +23,13 @@ namespace MonoMac.Tuner {
 
 		List<Exception> Exceptions = new List<Exception> ();
 
+		bool FullLimitedLinking;
+
+		public MonoMacMarkStep (bool fullLimitedLinking)
+		{
+			FullLimitedLinking = fullLimitedLinking;
+		}
+
 		public override void Process (LinkContext context)
 		{
 			PInvokeModules = (context as MonoMacLinkContext).PInvokeModules;
@@ -37,6 +44,9 @@ namespace MonoMac.Tuner {
 
 		protected override TypeDefinition MarkType (TypeReference reference)
 		{
+			if (FullLimitedLinking && reference.Name != "Xamarin.Mac")
+				return null;
+
 			TypeDefinition type = base.MarkType (GetOriginalType (reference));
 			if (type == null)
 				return null;
