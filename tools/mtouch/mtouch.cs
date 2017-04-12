@@ -569,7 +569,7 @@ namespace Xamarin.Bundler
 				}
 			}
 
-			if ((abi & Abi.SimulatorArchMask) == 0) {
+			if ((abi & Abi.SimulatorArchMask) == 0 || app.Embeddinator) {
 				var frameworks = assemblies.Where ((a) => a.BuildTarget == AssemblyBuildTarget.Framework)
 				                           .OrderBy ((a) => a.Identity, StringComparer.Ordinal);
 				foreach (var asm_fw in frameworks) {
