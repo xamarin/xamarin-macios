@@ -1315,7 +1315,7 @@ namespace Xamarin.Bundler
 
 		public void NativeLink (BuildTasks build_tasks)
 		{
-			if (App.Embeddinator) {
+			if (App.Embeddinator && App.IsDeviceBuild) {
 				build_tasks.AddRange (embeddinator_tasks);
 				return;
 			}
