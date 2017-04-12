@@ -1607,25 +1607,33 @@ namespace Xamarin.Bundler {
 			// If building a fat app, we need to lipo the two different executables we have together
 			if (IsDeviceBuild && !Embeddinator) {
 				if (IsDualBuild) {
-					if (IsUptodate (new string [] { Targets [0].Executable, Targets [1].Executable }, new string [] { Executable })) {
+					if (Lipo (Executable, Targets [0].Executable, Targets [1].Executable))
 						cached_executable = true;
-						Driver.Log (3, "Target '{0}' is up-to-date.", Executable);
-					} else {
-						var cmd = new StringBuilder ();
-						foreach (var target in Targets) {
-							cmd.Append (Driver.Quote (target.Executable));
-							cmd.Append (' ');
-						}
-						cmd.Append ("-create -output ");
-						cmd.Append (Driver.Quote (Executable));
-						Driver.RunLipo (cmd.ToString ());
-					}
 				} else {
 					cached_executable = Targets [0].CachedExecutable;
 				}
 			}
 		}
-			
+
+		// Returns true if is up-to-date
+		static bool Lipo (string output, params string [] inputs)
+		{
+			if (IsUptodate (inputs, new string [] { output })) {
+				Driver.Log (3, "Target '{0}' is up-to-date.", output);
+				return true;
+			} else {
+				var cmd = new StringBuilder ();
+				foreach (var input in inputs) {
+					cmd.Append (Driver.Quote (input));
+					cmd.Append (' ');
+				}
+				cmd.Append ("-create -output ");
+				cmd.Append (Driver.Quote (output));
+				Driver.RunLipo (cmd.ToString ());
+				return false;
+			}
+		}
+
 		public void ExtractNativeLinkInfo ()
 		{
 			var exceptions = new List<Exception> ();
