@@ -165,7 +165,9 @@ namespace Xamarin.Bundler {
 
 		public AssemblyBuildTarget LibMonoLinkMode {
 			get {
-				if (HasFrameworks || UseMonoFramework.Value) {
+				if (Embeddinator) {
+					return AssemblyBuildTarget.StaticObject;
+				} else if (HasFrameworks || UseMonoFramework.Value) {
 					return AssemblyBuildTarget.Framework;
 				} else if (HasDynamicLibraries) {
 					return AssemblyBuildTarget.DynamicLibrary;
@@ -176,7 +178,9 @@ namespace Xamarin.Bundler {
 		}
 		public AssemblyBuildTarget LibXamarinLinkMode {
 			get {
-				if (HasFrameworks) {
+				if (Embeddinator) {
+					return AssemblyBuildTarget.StaticObject;
+				} else if (HasFrameworks) {
 					return AssemblyBuildTarget.Framework;
 				} else if (HasDynamicLibraries) {
 					return AssemblyBuildTarget.DynamicLibrary;
