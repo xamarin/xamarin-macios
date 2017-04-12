@@ -885,6 +885,9 @@ namespace Xamarin.Bundler
 			if (app.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.UnwindManagedCode)
 				return false; // UnwindManagedCode is the default for debug builds.
 
+			if (app.Embeddinator)
+				return false;
+
 			return true;
 		}
 
