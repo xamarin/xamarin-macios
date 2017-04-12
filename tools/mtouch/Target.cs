@@ -48,6 +48,7 @@ namespace Xamarin.Bundler
 		Dictionary<Abi, CompileTask> pinvoke_tasks = new Dictionary<Abi, CompileTask> ();
 		List<CompileTask> link_with_task_output = new List<CompileTask> ();
 		List<AOTTask> aot_dependencies = new List<AOTTask> ();
+		List<LinkTask> embeddinator_tasks = new List<LinkTask> ();
 		CompilerFlags linker_flags;
 		NativeLinkTask link_task;
 
@@ -1094,6 +1095,12 @@ namespace Xamarin.Bundler
 					link_task.AddDependency (link_dependencies);
 					link_task.AddDependency (aottasks);
 
+					if (App.Embeddinator) {
+						link_task.AddDependency (link_with_task_output);
+						link_task.CompilerFlags.AddLinkWith (link_with_task_output.Select ((v) => v.OutputFile));
+						embeddinator_tasks.Add (link_task);
+					}
+
 					LinkWithBuildTarget (build_target, name, link_task, assemblies);
 
 					foreach (var info in infos)
@@ -1209,9 +1216,6 @@ namespace Xamarin.Bundler
 				ErrorHelper.Warning (3006, "Could not compute a complete dependency map for the project. This will result in slower build times because Xamarin.iOS can't properly detect what needs to be rebuilt (and what does not need to be rebuilt). Please review previous warnings for more details.");
 			}
 
-			// Compile the managed assemblies into object files, frameworks or shared libraries
-			AOTCompile ();
-
 			List<string> registration_methods = new List<string> ();
 
 			// The static registrar.
@@ -1303,11 +1307,19 @@ namespace Xamarin.Bundler
 				LinkWithTaskOutput (main_task);
 			}
 
+			// Compile the managed assemblies into object files, frameworks or shared libraries
+			AOTCompile ();
+
 			Driver.Watch ("Compile", 1);
 		}
 
 		public void NativeLink (BuildTasks build_tasks)
 		{
+			if (App.Embeddinator) {
+				build_tasks.AddRange (embeddinator_tasks);
+				return;
+			}
+
 			if (!string.IsNullOrEmpty (App.UserGccFlags))
 				App.DeadStrip = false;
 			if (App.EnableLLVMOnlyBitCode)
