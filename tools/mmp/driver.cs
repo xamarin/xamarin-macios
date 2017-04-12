@@ -1760,7 +1760,6 @@ namespace Xamarin.Bundler {
 
 		static void CopyAssemblies () {
 			foreach (string asm in resolved_assemblies) {
-				var mdbfile = string.Format ("{0}.mdb", asm);
 				var configfile = string.Format ("{0}.config", asm);
 				string filename = Path.GetFileName (asm);
 
@@ -1770,8 +1769,14 @@ namespace Xamarin.Bundler {
 				if (verbose > 0)
 					Console.WriteLine ("Added assembly {0}", asm);
 
-				if (App.EnableDebug && File.Exists (mdbfile))
-					File.Copy (mdbfile, Path.Combine (mmp_dir, Path.GetFileName (mdbfile)), true);
+				if (App.EnableDebug) {
+					var mdbfile = asm + ".mdb";
+					if (File.Exists (mdbfile))
+						File.Copy (mdbfile, Path.Combine (mmp_dir, Path.GetFileName (mdbfile)), true);
+					var pdbfile = Path.ChangeExtension (asm, ".pdb");
+					if (File.Exists (pdbfile))
+						File.Copy (pdbfile, Path.Combine (mmp_dir, Path.GetFileName (pdbfile)), true);
+				}
 				if (File.Exists (configfile))
 					File.Copy (configfile, Path.Combine (mmp_dir, Path.GetFileName (configfile)), true);
 			}

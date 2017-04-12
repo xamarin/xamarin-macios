@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 
 using Mono.Cecil;
-using Mono.Cecil.Mdb;
+using Mono.Cecil.Cil;
 
 using Xamarin.Utils;
 
@@ -153,7 +153,7 @@ namespace Xamarin.Bundler {
 			var main = assembly.MainModule;
 			bool symbols = main.HasSymbols;
 			if (symbols) {
-				var provider = new MdbReaderProvider ();
+				var provider = new DefaultSymbolReaderProvider ();
 				main.ReadSymbols (provider.GetSymbolReader (main, main.FileName));
 			}
 
@@ -166,6 +166,9 @@ namespace Xamarin.Bundler {
 				string dest_mdb = destination + ".mdb";
 				if (File.Exists (dest_mdb))
 					File.Delete (dest_mdb);
+				string dest_pdb = Path.ChangeExtension (destination, ".pdb");
+				if (File.Exists (dest_pdb))
+					File.Delete (dest_pdb);
 			}
 		}
 
