@@ -33,15 +33,13 @@ namespace Xamarin.Mac.Tasks
 				isMobile = true; // Some older binding don't have either tag, assume mobile since it is the default
 			}
 
-			EnvironmentVariables = new string[] {
-				"MONO_PATH=" + string.Format ("{0}/lib/mono/{1}", FrameworkRoot, isMobile ? "Xamarin.Mac" : "4.5")
-			};
-
 			var sb = new StringBuilder ();
 			var bgen = Path.Combine (FrameworkRoot, "lib", "bgen", "bgen.exe");
-			if (File.Exists (bgen)) {
-				sb.Append (bgen);
-			} else {
+			if (!File.Exists (bgen)) {
+				EnvironmentVariables = new string[] {
+					"MONO_PATH=" + string.Format ("{0}/lib/mono/{1}", FrameworkRoot, isMobile ? "Xamarin.Mac" : "4.5")
+				};
+
 				if (isMobile) {
 					sb.Append (Path.Combine (FrameworkRoot, "lib", "bmac", "bmac-mobile.exe"));
 				} else {
