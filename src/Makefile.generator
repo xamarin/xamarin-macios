@@ -319,5 +319,3 @@ $(MAC_BUILD_DIR)/Xamarin.Mac-%.BindingAttributes.dll: generator-attributes.cs Ma
 	$(Q) mkdir -p $(dir $@)
 	$(Q_GEN) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/$*"     -compiler:$(SYSTEM_MCS) -global-replace:"^XamCore.="        -out:$@ -debug generator-attributes.cs -target:library
 endif
-
-.SECONDARY: $(foreach profile,full compat mobile,$(MAC_BUILD_DIR)/bmac-$(profile).exe)

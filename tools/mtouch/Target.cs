@@ -852,6 +852,9 @@ namespace Xamarin.Bundler
 			if (!App.RequiresPInvokeWrappers)
 				return;
 
+			if (!App.HasFrameworksDirectory && App.IsCodeShared)
+				return;
+
 			// Write P/Invokes
 			var state = MarshalNativeExceptionsState;
 			if (state.Started) {

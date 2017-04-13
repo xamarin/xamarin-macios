@@ -94,6 +94,14 @@ Follow the following steps to build and install Xamarin.iOS and Xamarin.Mac:
 
         $ make install-system
 
+5. Build again after any local changes
+
+    Don't use `make world` again to rebuild, because it resets dependencies
+    and causes unnecessary rebuilds. Instead use the standard `make all install`
+    (our Makefiles are parallel safe, which greatly speeds up the build):
+
+        $ make all -j8 && make install -j8
+
 ## Configure ##
 
 There is a configure script that can optionally be used to configure the build.

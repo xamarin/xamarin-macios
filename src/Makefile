@@ -260,8 +260,6 @@ $(MONO_PATH)/mcs/class/lib/monotouch/reference_Facades/netstandard.dll: $(IOS_BU
 $(IOS_BUILD_DIR)/reference/Facades/netstandard.dll: $(MONO_PATH)/mcs/class/lib/monotouch/reference_Facades/netstandard.dll | $(IOS_BUILD_DIR)/reference/Facades
 	$(Q) cp $< $@
 
-.SECONDARY: $(IOS_BUILD_DIR)/reference/Facades/System.Drawing.Primitives.dll $(IOS_BUILD_DIR)/compat/Facades/System.Drawing.Primitives.dll $(IOS_BUILD_DIR)/reference/Facades/netstandard.dll
-
 #
 # System.Net.Http is special
 #
@@ -307,8 +305,6 @@ $(IOS_BUILD_DIR)/%/System.Net.Http.dll: $(MONO_PATH)/mcs/class/lib/monotouch/%/S
 # (one target for both compat+reference)
 $(IOS_BUILD_DIR)/%/System.Net.Http.dll.mdb: $(MONO_PATH)/mcs/class/lib/monotouch/%/System.Net.Http.dll.mdb | $(IOS_BUILD_DIR)/compat $(IOS_BUILD_DIR)/reference
 	$(Q) cp $< $@
-
-.SECONDARY: $(IOS_BUILD_DIR)/reference/System.Net.Http.dll $(IOS_BUILD_DIR)/compat/System.Net.Http.dll
 
 clean-local::
 	rm -rf build
@@ -604,9 +600,6 @@ $(MONO_PATH)/mcs/class/lib/xammac/reference_Facades/netstandard.dll: $(MAC_BUILD
 $(MAC_BUILD_DIR)/mobile/Facades/netstandard.dll: $(MONO_PATH)/mcs/class/lib/xammac/reference_Facades/netstandard.dll $(MAC_BUILD_DIR)/mobile/Facades
 	$(Q) cp $< $@
 
-.SECONDARY: $(MAC_BUILD_DIR)/mobile/Facades/System.Drawing.Primitives.dll $(MAC_BUILD_DIR)/mobile/Facades/netstandard.dll
-
-
 $(MAC_BUILD_DIR)/compat/XamMac.CFNetwork.dll: $(MAC_CFNETWORK_SOURCES) $(MAC_BUILD_DIR)/compat/XamMac.dll $(SN_KEY)
 	$(call Q_PROF_PMCS,mac/compat) PMCS_PROFILE=compat-mac $(MAC_BUILD_DIR)/compat/pmcs -sdk:4.5 -out:$@ -target:library -debug \
 		$(MAC_COMMON_DEFINES) \
@@ -885,8 +878,6 @@ $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference_Facades/netstandard.d
 $(WATCH_BUILD_DIR)/%/Facades/netstandard.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/%_Facades/netstandard.dll | $(WATCH_BUILD_DIR)/reference/Facades
 	$(Q) cp $< $@
 
-.SECONDARY: $(WATCH_BUILD_DIR)/reference/Facades/System.Drawing.Primitives.dll $(WATCH_BUILD_DIR)/reference/Facades/netstandard.dll
-
 # System.Net.Http.dll is special. See comment in src/Makefile
 
 WATCH_EXTRA_SYSTEM_NET_HTTP_FILES = \
@@ -909,8 +900,6 @@ $(WATCH_BUILD_DIR)/reference/System.Net.Http.dll: $(WATCH_MONO_PATH)/mcs/class/l
 
 $(WATCH_BUILD_DIR)/reference/System.Net.Http.dll.mdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.dll.mdb
 	$(Q) cp $< $@
-
-.SECONDARY: $(WATCH_BUILD_DIR)/reference/System.Net.Http.dll
 
 xamwatch.csproj: xamwatch.tmpl.csproj Makefile $(wildcard $(TOP)/*.sources)
 	@sed -e 's*<!--%FILES%-->*$(foreach file,$(WATCHOS_SOURCES),<Compile Include="$(file)"/>)*' -e 's*<!--%APIS%-->*$(foreach file,$(WATCHOS_APIS),<None Include="$(file)"/>)*' $< | xmllint --format - > $@
@@ -1121,8 +1110,6 @@ $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference_Facades/netstandard.dll: $(TVO
 $(TVOS_BUILD_DIR)/%/Facades/netstandard.dll: $(MONO_PATH)/mcs/class/lib/monotouch_tv/%_Facades/netstandard.dll | $(TVOS_BUILD_DIR)/reference/Facades
 	$(Q) cp $< $@
 
-.SECONDARY: $(IOS_BUILD_DIR)/reference/Facades/System.Drawing.Primitives.dll $(IOS_BUILD_DIR)/reference/Facades/netstandard.dll
-
 # System.Net.Http.dll is special. See comment in src/Makefile
 
 TVOS_EXTRA_SYSTEM_NET_HTTP_FILES = \
@@ -1147,8 +1134,6 @@ $(TVOS_BUILD_DIR)/reference/System.Net.Http.dll: $(MONO_PATH)/mcs/class/lib/mono
 
 $(TVOS_BUILD_DIR)/reference/System.Net.Http.dll.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.dll.mdb
 	$(Q) cp $< $@
-
-.SECONDARY: $(TVOS_BUILD_DIR)/reference/System.Net.Http.dll
 
 xamtvos.csproj: xamtvos.tmpl.csproj Makefile $(wildcard $(TOP)/*.sources)
 	@sed -e 's*<!--%FILES%-->*$(foreach file,$(TVOS_SOURCES),<Compile Include="$(file)"/>)*' -e 's*<!--%APIS%-->*$(foreach file,$(TVOS_APIS),<None Include="$(file)"/>)*' $< | xmllint --format - > $@
@@ -1248,3 +1233,5 @@ install-local:: $(INSTALL_TARGETS)
 all-local:: $(ALL_TARGETS)
 
 project-files: $(PROJECT_FILES)
+
+.SECONDARY:

@@ -15,7 +15,7 @@ namespace Xamarin.MMP.Tests
 		{
 			get
 			{
-				return TI.FindMonoVersion () < new Version ("4.3") || !PlatformHelpers.CheckSystemVersion (10, 10); // mdtool build requires us to be on a version that XS supports
+				return TI.FindMonoVersion () < new Version ("4.3") || !PlatformHelpers.CheckSystemVersion (10, 10); // vstool build requires us to be on a version that XS supports
 			}
 		}
 

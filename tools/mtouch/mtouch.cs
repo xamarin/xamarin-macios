@@ -1464,11 +1464,6 @@ namespace Xamarin.Bundler
 				if (File.Exists (path))
 					return path;
 
-				// check inside XS
-				path = "/Applications/Xamarin Studio.app/Contents/Resources/lib/monodevelop/AddIns/MonoDevelop.IPhone/mlaunch.app/Contents/MacOS/mlaunch";
-				if (File.Exists (path))
-					return path;
-
 				// check an environment variable
 				path = Environment.GetEnvironmentVariable ("MLAUNCH_PATH");
 				if (File.Exists (path))
@@ -1502,8 +1497,6 @@ namespace Xamarin.Bundler
 				RedirectStream (p.StandardError, new StreamWriter (Console.OpenStandardError ()));
 
 				p.WaitForExit ();
-
-				GC.Collect (); // Workaround for: https://bugzilla.xamarin.com/show_bug.cgi?id=43462#c14
 
 				return p.ExitCode;
 			}
