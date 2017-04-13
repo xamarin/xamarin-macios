@@ -401,9 +401,8 @@ namespace Xamarin.Bundler {
 #endif
 					default:
 #if MONOMAC
-
 						string path = Path.GetDirectoryName (name);
-						if (!path.StartsWith ("/System/Library/Frameworks"))
+						if (!path.StartsWith ("/System/Library/Frameworks", StringComparison.Ordinal))
 							continue;
 #endif
 
