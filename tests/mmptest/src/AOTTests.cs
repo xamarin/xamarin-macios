@@ -24,8 +24,9 @@ namespace Xamarin.MMP.Tests
 		const string AOTTestBaseConfig = "<MonoBundlingExtraArgs>--aot=core,-Xamarin.Mac.dll</MonoBundlingExtraArgs>";
 		const string AOTTestHybridConfig = "<MonoBundlingExtraArgs>--aot=all|hybrid</MonoBundlingExtraArgs>";
 
-		DirectoryInfo GetOutputDirInfo (string tmpDir) => new DirectoryInfo (Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MonoBundle/"));
+		DirectoryInfo GetOutputDirInfo (string tmpDir) => new DirectoryInfo (Path.Combine (tmpDir, GetOutputBundlePath (tmpDir)));
 		string GetOutputAppPath (string tmpDir) => Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MacOS/UnifiedExample");
+		string GetOutputBundlePath (string tmpDir) => Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MonoBundle");
 
 		bool IsFileManagedCode (FileInfo file) => file.Extension.ToLowerInvariant () == ".exe" || file.Extension.ToLowerInvariant () == ".dll";
 		bool ShouldBaseFilesBeAOT (FileInfo file) => file.Name == "System.dll" || file.Name == "mscorlib.dll";
@@ -70,6 +71,23 @@ namespace Xamarin.MMP.Tests
 						TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono-cil-strip", file.ToString (), "Manually strip IL");
 
 				}
+
+				ValidateAOTStatus (tmpDir, IsFileManagedCode, buildResults);
+
+				TI.RunEXEAndVerifyGUID (tmpDir, test.guid, GetOutputAppPath (tmpDir));
+			});
+		}
+
+		[Test]
+		public void HybridAOT_WithManualStrippingOfJustMainExe ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = AOTTestHybridConfig
+				};
+				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
+
+				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono-cil-strip", Path.Combine (GetOutputBundlePath (tmpDir), "UnifiedExample.exe"), "Manually strip IL");
 
 				ValidateAOTStatus (tmpDir, IsFileManagedCode, buildResults);
 

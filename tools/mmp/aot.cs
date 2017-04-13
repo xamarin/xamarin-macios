@@ -113,6 +113,8 @@ namespace Xamarin.Bundler {
 						option = optionTypeParts [0];
 						switch (optionTypeParts [1]) {
 						case "hybrid":
+							if (option != "all")
+								throw new MonoMacException (114, true, "Hybrid AOT compilation requires all assemblies to be AOT compiled");
 							kind = AOTKind.Hybrid;
 							break;
 						case "standard":

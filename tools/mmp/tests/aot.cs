@@ -320,13 +320,14 @@ namespace Xamarin.MMP.Tests.Unit
 		[Test]
 		public void HybridOption_ShouldInvokeHybridCompiler ()
 		{
-			var options = new AOTOptions ("sdk|hybrid");
+			var options = new AOTOptions ("all|hybrid");
 			Assert.IsTrue (options.IsAOT, "Should be IsAOT");
 			Assert.IsTrue (options.IsHybridAOT, "Should be IsHybridAOT");
 
 			Compile (options, new TestFileEnumerator (FullAppFileList));
 
-			AssertFilesAOTed (SDKFileList, kind : AOTKind.Hybrid);
+			var expectedFiles = FullAppFileList.Where (x => x.EndsWith (".exe") || x.EndsWith (".dll"));
+			AssertFilesAOTed (expectedFiles, kind : AOTKind.Hybrid);
 		}
 
 		[Test]
@@ -372,7 +373,14 @@ namespace Xamarin.MMP.Tests.Unit
 			var options = new AOTOptions ("all|hybrid");
 
 			AssertThrowErrorWithCode (() => Compile (options, new TestFileEnumerator (FullAppFileList), onRunDelegate : runThatErrors, isRelease : true), 3001);
+		}
 
+		[Test]
+		public void HybridOption_MustAlsoHaveAll_ThrowsIfNot ()
+		{
+			AssertThrowErrorWithCode (() => new AOTOptions ("core|hybrid"), 114);
+			AssertThrowErrorWithCode (() => new AOTOptions ("sdk|hybrid"), 114);
+			var options = new AOTOptions ("all|hybrid");
 		}
 	}
 }

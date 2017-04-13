@@ -122,6 +122,7 @@ namespace Xamarin.Bundler {
 	//																			the container app includes I18N assemblies ({0}).
 	//																			the container app has custom xml definitions for the managed linker ({0}).
 	//		Warning		MT0113	Native code sharing has been disabled for the extension '{0}' because {1}
+	//				MT0114 <used by mmp>
 	//																			the bitcode options differ between the container app ({0}) and the extension ({1}).
 	//																			the --assembly-build-target options are different between the container app ({1}) and the extension ({2}).
 	//																			the I18N assemblies are different between the container app ({1}) and the extension ({2}).
