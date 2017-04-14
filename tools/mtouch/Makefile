@@ -306,12 +306,12 @@ MTOUCH_DEFINES= -define:ENABLE_BITCODE_ON_IOS
 endif
 
 MTOUCH_COMPILE_DEPS = $(MTOUCH_SOURCES) $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) Makefile $(LINKER_RESOURCES)
-MTOUCH_COMPILE_ARGS = -unsafe $(IOS_DEFINES) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:System.Xml.Linq.dll $(MTOUCH_SOURCES) -nowarn:0436 $(LINKER_RESOURCES:%=-resource:%) $(MTOUCH_DEFINES) -debug
+MTOUCH_COMPILE_ARGS = -unsafe $(IOS_DEFINES) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:System.Xml.Linq.dll $(MTOUCH_SOURCES) -nowarn:0436 $(LINKER_RESOURCES:%=-resource:%) $(MTOUCH_DEFINES) -debug:portable
 
 # bin/Debug/mtouch.exe is used from mtouch.csproj when debugging
 bin/Debug/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
 	$(Q) mkdir -p bin/Debug
-	$(Q) $(SYSTEM_MCS) $(MTOUCH_COMPILE_ARGS) -out:$@ -debug -d:DEV
+	$(Q_CSC) $(SYSTEM_CSC) $(MTOUCH_COMPILE_ARGS) -out:$@ -d:DEV
 
 SdkVersions.cs: SdkVersions.cs.in Makefile $(TOP)/Make.config
 	$(Q_GEN) sed \
@@ -323,7 +323,7 @@ SdkVersions.cs: SdkVersions.cs.in Makefile $(TOP)/Make.config
 # bin/Makefile/mtouch.exe is what we build from the makefile (and end up releasing)
 bin/Makefile/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
 	$(Q) mkdir -p $(dir $@)
-	$(Q_MCS) $(SYSTEM_MCS) $(MTOUCH_COMPILE_ARGS) -out:$@
+	$(Q_CSC) $(SYSTEM_CSC) $(MTOUCH_COMPILE_ARGS) -out:$@
 
 LOCAL_MTOUCH = \
 	bin/Makefile/mtouch.exe \

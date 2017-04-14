@@ -259,6 +259,19 @@ namespace Xamarin.Linker.Steps {
 		void ProcessCorlib (TypeDefinition type)
 		{
 			switch (type.Namespace) {
+			case "System.Runtime.CompilerServices.AsyncTaskMethodBuilder":
+				if (DebugBuild)
+					MarkNamedMethod (type, "SetNotificationForWaitCompletion");
+				break;
+			case "System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1":
+				if (DebugBuild)
+					MarkNamedMethod (type, "SetNotificationForWaitCompletion");
+				break;
+			case "System.Threading.Tasks.Task":
+				if (DebugBuild)
+					MarkNamedMethod (type, "NotifyDebuggerOfWaitCompletion");
+				break;
+
 			case "System.Security.Cryptography":
 				switch (type.Name) {
 				case "Aes":
