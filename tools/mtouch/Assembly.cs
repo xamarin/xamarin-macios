@@ -98,7 +98,7 @@ namespace Xamarin.Bundler {
 		}
 
 		// returns false if the assembly was not copied (because it was already up-to-date).
-		public bool CopyAssembly (string source, string target, bool copy_mdb = true, bool strip = false)
+		public bool CopyAssembly (string source, string target, bool copy_debug_symbols = true, bool strip = false)
 		{
 			var copied = false;
 
@@ -117,7 +117,7 @@ namespace Xamarin.Bundler {
 				}
 
 				// Update the debug symbols file even if the assembly didn't change.
-				if (copy_mdb) {
+				if (copy_debug_symbols) {
 					if (File.Exists (source + ".mdb"))
 						Application.UpdateFile (source + ".mdb", target + ".mdb", true);
 
@@ -134,7 +134,7 @@ namespace Xamarin.Bundler {
 			return copied;
 		}
 
-		public void CopyMdbToDirectory (string directory)
+		public void CopyDebugSymbolsToDirectory (string directory)
 		{
 			string mdb_src = FullPath + ".mdb";
 			if (File.Exists (mdb_src)) {
@@ -184,7 +184,7 @@ namespace Xamarin.Bundler {
 		// Aot data is copied separately, because we might want to copy aot data 
 		// even if we don't want to copy the assembly (if 32/64-bit assemblies are identical, 
 		// only one is copied, but we still want the aotdata for both).
-		public void CopyToDirectory (string directory, bool reload = true, bool check_case = false, bool only_copy = false, bool copy_mdb = true, bool strip = false)
+		public void CopyToDirectory (string directory, bool reload = true, bool check_case = false, bool only_copy = false, bool copy_debug_symbols = true, bool strip = false)
 		{
 			var target = Path.Combine (directory, FileName);
 
@@ -197,7 +197,7 @@ namespace Xamarin.Bundler {
 
 			// our Copy code deletes the target (so copy'ing over itself is a bad idea)
 			if (directory != Path.GetDirectoryName (FullPath))
-				CopyAssembly (FullPath, target, copy_mdb: copy_mdb, strip: strip);
+				CopyAssembly (FullPath, target, copy_debug_symbols: copy_debug_symbols, strip: strip);
 
 			CopySatellitesToDirectory (directory);
 

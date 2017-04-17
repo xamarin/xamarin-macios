@@ -1,4 +1,4 @@
-//
+﻿//
 // mtouch.cs: A tool to generate the necessary code to boot a Mono
 // application on the iPhone
 //
@@ -58,7 +58,7 @@ using System.Threading;
 
 using Mono.Options;
 using Mono.Cecil;
-using Mono.Cecil.Mdb;
+using Mono.Cecil.Cil;
 using Mono.Tuner;
 
 using MonoTouch.Tuner;
@@ -129,13 +129,6 @@ namespace Xamarin.Bundler
 				return dot;
 			}
 		}
-
-		//
-		// We need to put a hard dep on Mono.Cecil.Mdb.dll so that it get's mkbundled
-		//
-#pragma warning disable 169
-		static MdbReader mdb_reader;
-#pragma warning restore 169
 
 		static int GetDefaultVerbosity ()
 		{
@@ -460,7 +453,7 @@ namespace Xamarin.Bundler
 			bool enable_llvm = (abi & Abi.LLVM) != 0;
 			bool enable_thumb = (abi & Abi.Thumb) != 0;
 			bool enable_debug = app.EnableDebug;
-			bool enable_mdb = app.PackageMdb;
+			bool enable_debug_symbols = app.PackageManagedDebugSymbols;
 			bool llvm_only = app.EnableLLVMOnlyBitCode;
 			string arch = abi.AsArchString ();
 
@@ -487,7 +480,7 @@ namespace Xamarin.Bundler
 
 			if (enable_llvm)
 				args.Append ("nodebug,");
-			else if (!(enable_debug || enable_mdb))
+			else if (!(enable_debug || enable_debug_symbols))
 				args.Append ("nodebug,");
 			else if (app.DebugAll || app.DebugAssemblies.Contains (fname) || !sdk_or_product)
 				args.Append ("soft-debug,");
@@ -662,7 +655,7 @@ namespace Xamarin.Bundler
 
 					if (app.EnableDebug)
 						sw.WriteLine ("\txamarin_gc_pump = {0};", app.DebugTrack.Value ? "TRUE" : "FALSE");
-					sw.WriteLine ("\txamarin_init_mono_debug = {0};", app.PackageMdb ? "TRUE" : "FALSE");
+					sw.WriteLine ("\txamarin_init_mono_debug = {0};", app.PackageManagedDebugSymbols ? "TRUE" : "FALSE");
 					sw.WriteLine ("\txamarin_executable_name = \"{0}\";", assembly_name);
 					sw.WriteLine ("\tmono_use_llvm = {0};", enable_llvm ? "TRUE" : "FALSE");
 					sw.WriteLine ("\txamarin_log_level = {0};", verbose);
@@ -1161,7 +1154,8 @@ namespace Xamarin.Bundler
 					}
 				}
 			},
-			{ "package-mdb:", "Specify whether debug info files (*.mdb) should be packaged in the app. Default is 'true' for debug builds and 'false' for release builds.", v => app.PackageMdb = ParseBool (v, "package-mdb") },
+			{ "package-mdb:", "Specify whether debug info files (*.mdb) should be packaged in the app. Default is 'true' for debug builds and 'false' for release builds.", v => app.PackageManagedDebugSymbols = ParseBool (v, "package-mdb"), true },
+			{ "package-debug-symbols:", "Specify whether debug info files (*.mdb / *.pdb) should be packaged in the app. Default is 'true' for debug builds and 'false' for release builds.", v => app.PackageManagedDebugSymbols = ParseBool (v, "package-debug-symbols") },
 			{ "msym:", "Specify whether managed symbolication files (*.msym) should be created. Default is 'false' for debug builds and 'true' for release builds.", v => app.EnableMSym = ParseBool (v, "msym") },
 			{ "extension", v => app.IsExtension = true },
 			{ "app-extension=", "The path of app extensions that are included in the app. This must be specified once for each app extension.", v => app.Extensions.Add (v), true /* MSBuild-internal for now */ },
