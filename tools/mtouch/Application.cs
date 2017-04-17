@@ -87,10 +87,10 @@ namespace Xamarin.Bundler {
 
 		public bool EnableCxx;
 		public bool EnableProfiling;
-		bool? package_mdb;
-		public bool PackageMdb {
-			get { return package_mdb.Value; }
-			set { package_mdb = value; }
+		bool? package_managed_debug_symbols;
+		public bool PackageManagedDebugSymbols {
+			get { return package_managed_debug_symbols.Value; }
+			set { package_managed_debug_symbols = value; }
 		}
 		bool? enable_msym;
 		public bool EnableMSym {
@@ -1222,10 +1222,10 @@ namespace Xamarin.Bundler {
 				DeploymentTarget = new Version (8, 0);
 			}
 
-			if (!package_mdb.HasValue) {
-				package_mdb = EnableDebug;
-			} else if (package_mdb.Value && IsLLVM) {
-				ErrorHelper.Warning (3007, "Debug info files (*.mdb) will not be loaded when llvm is enabled.");
+			if (!package_managed_debug_symbols.HasValue) {
+				package_managed_debug_symbols = EnableDebug;
+			} else if (package_managed_debug_symbols.Value && IsLLVM) {
+				ErrorHelper.Warning (3007, "Debug info files (*.mdb / *.pdb) will not be loaded when llvm is enabled.");
 			}
 
 			if (!enable_msym.HasValue)
@@ -1875,7 +1875,7 @@ namespace Xamarin.Bundler {
 				// copy aot data must be done BEFORE we do copy the msym one
 				CopyAotData (msymdir, target_directory);
 				
-				// copy all assemblies under mvid and with the dll and mdb
+				// copy all assemblies under mvid and with the dll and mdb/pdb
 				var tmpdir =  Path.Combine (msymdir, "Msym", "tmp");
 				if (!Directory.Exists (tmpdir))
 					Directory.CreateDirectory (tmpdir);
@@ -1969,7 +1969,7 @@ namespace Xamarin.Bundler {
 
 		public void BundleAssemblies ()
 		{
-			var strip = ManagedStrip && IsDeviceBuild && !EnableDebug && !PackageMdb;
+			var strip = ManagedStrip && IsDeviceBuild && !EnableDebug && !PackageManagedDebugSymbols;
 
 			var grouped = Targets.SelectMany ((Target t) => t.Assemblies).GroupBy ((Assembly asm) => asm.Identity);
 			foreach (var @group in grouped) {
@@ -1993,10 +1993,10 @@ namespace Xamarin.Bundler {
 				case AssemblyBuildTarget.StaticObject:
 				case AssemblyBuildTarget.DynamicLibrary:
 					if (size_specific) {
-						assemblies [0].CopyToDirectory (assemblies [0].Target.AppTargetDirectory, copy_mdb: PackageMdb, strip: strip, only_copy: true);
-						assemblies [1].CopyToDirectory (assemblies [1].Target.AppTargetDirectory, copy_mdb: PackageMdb, strip: strip, only_copy: true);
+						assemblies [0].CopyToDirectory (assemblies [0].Target.AppTargetDirectory, copy_debug_symbols: PackageManagedDebugSymbols, strip: strip, only_copy: true);
+						assemblies [1].CopyToDirectory (assemblies [1].Target.AppTargetDirectory, copy_debug_symbols: PackageManagedDebugSymbols, strip: strip, only_copy: true);
 					} else {
-						assemblies [0].CopyToDirectory (AppDirectory, copy_mdb: PackageMdb, strip: strip, only_copy: true);
+						assemblies [0].CopyToDirectory (AppDirectory, copy_debug_symbols: PackageManagedDebugSymbols, strip: strip, only_copy: true);
 					}
 					foreach (var asm in assemblies)
 						asm.CopyAotDataFilesToDirectory (size_specific ? asm.Target.AppTargetDirectory : AppDirectory);
@@ -2008,10 +2008,10 @@ namespace Xamarin.Bundler {
 					var target_name = assemblies [0].BuildTargetName;
 					var resource_directory = Path.Combine (AppDirectory, "Frameworks", $"{target_name}.framework", "MonoBundle");
 					if (size_specific) {
-						assemblies [0].CopyToDirectory (Path.Combine (resource_directory, Path.GetFileName (assemblies [0].Target.AppTargetDirectory)), copy_mdb: PackageMdb, strip: strip, only_copy: true);
-						assemblies [1].CopyToDirectory (Path.Combine (resource_directory, Path.GetFileName (assemblies [1].Target.AppTargetDirectory)), copy_mdb: PackageMdb, strip: strip, only_copy: true);
+						assemblies [0].CopyToDirectory (Path.Combine (resource_directory, Path.GetFileName (assemblies [0].Target.AppTargetDirectory)), copy_debug_symbols: PackageManagedDebugSymbols, strip: strip, only_copy: true);
+						assemblies [1].CopyToDirectory (Path.Combine (resource_directory, Path.GetFileName (assemblies [1].Target.AppTargetDirectory)), copy_debug_symbols: PackageManagedDebugSymbols, strip: strip, only_copy: true);
 					} else {
-						assemblies [0].CopyToDirectory (resource_directory, copy_mdb: PackageMdb, strip: strip, only_copy: true);
+						assemblies [0].CopyToDirectory (resource_directory, copy_debug_symbols: PackageManagedDebugSymbols, strip: strip, only_copy: true);
 					}
 					foreach (var asm in assemblies)
 						asm.CopyAotDataFilesToDirectory (size_specific ? Path.Combine (resource_directory, Path.GetFileName (asm.Target.AppTargetDirectory)) : resource_directory);
