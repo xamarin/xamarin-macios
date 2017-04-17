@@ -21,7 +21,7 @@
     <ConsolePause>false</ConsolePause>
     <UseRefCounting>false</UseRefCounting>
     <UseSGen>false</UseSGen>
-    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <IncludeMonoRuntime>%INCLUDE_MONO_RUNTIME%</IncludeMonoRuntime>
     <EnablePackageSigning>false</EnablePackageSigning>
     <CodeSigningKey>Mac Developer</CodeSigningKey>
     <EnableCodeSigning>false</EnableCodeSigning>

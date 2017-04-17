@@ -73,6 +73,7 @@ namespace Xamarin.Bundler {
 	//				Warning	MM2016  Invalid TlsProvider `{0}` option. The only valid value `{1}` will be used.
 	//					MM2017  Could not process XML description: {0}
 	//					MM202x	Binding Optimizer failed processing `...`.
+	//					MM2100  Xamarin.Mac Classic API does not support Platofmr Linking.
 	// MT3xxx	AOT
 	//			MT30xx	AOT (general) errors
 	//					MT3001	Could not AOT the assembly '{0}'

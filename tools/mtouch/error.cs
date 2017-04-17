@@ -251,6 +251,7 @@ namespace Xamarin.Bundler {
 	//					MT207x	Metadata Reducer failed processing `...`.
 	//					MT208x	MarkNSObjects failed processing `...`.
 	//					MT209x	Inliner failed processing `...`.
+	//					MT2100  ** reserved Xamarin.Mac **
 	// MT3xxx	AOT
 	//			MT30xx	AOT (general) errors
 	//					MT3001	Could not AOT the assembly '{0}'

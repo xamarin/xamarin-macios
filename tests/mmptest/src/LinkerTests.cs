@@ -27,6 +27,7 @@ namespace Xamarin.MMP.Tests
 		string GetFrameworkName (bool modern) => modern ? "Xamarin.Mac" : "4.5";
 		string GetBaseAssemblyPath (string name, bool modern) => Path.Combine (TI.FindRootDirectory (), "Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/" + GetFrameworkName (modern) +  "/", name + ".dll");
 
+		const string PlatformProjectConfig = "<LinkMode>Platform</LinkMode>";
 
 		[Test]
 		public void ModernLinkingSDK_WithAllNonProductSkipped_BuildsWithSameNumberOfTypes ()
@@ -49,19 +50,26 @@ namespace Xamarin.MMP.Tests
 		{
 			RunMMPTest (tmpDir => {
 				string[] nonPlatformDependencies = { "mscorlib", "System.Core", "System" };
-				string config = "<LinkMode>Platform</LinkMode>";
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = config, XM45 = true };
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = PlatformProjectConfig, XM45 = true };
 				TI.TestUnifiedExecutable (test);
 				foreach (string dep in nonPlatformDependencies) {
 					int typesInBaseLib = GetNumberOfTypesInLibrary (GetBaseAssemblyPath (dep, false));
 					int typesInOutput = GetNumberOfTypesInLibrary (GetOutputBundlePath (tmpDir, dep, false));
-					Assert.AreEqual (typesInBaseLib, typesInOutput, $"We linked a linkskip - {dep} with config ({typesInBaseLib} vs {typesInOutput}):\n {config}");
+					Assert.AreEqual (typesInBaseLib, typesInOutput, $"We linked a linkskip - {dep} with config ({typesInBaseLib} vs {typesInOutput}):\n {PlatformProjectConfig}");
 				}
 
 				int typesInBasePlatform = GetNumberOfTypesInLibrary (GetBaseAssemblyPath ("Xamarin.Mac", false));
 				int typesInOutputPlatform = GetNumberOfTypesInLibrary (GetOutputBundlePath (tmpDir, "Xamarin.Mac", false));
-				Assert.AreNotEqual (typesInBasePlatform, typesInOutputPlatform, $"We linked a linkskip - Xamarin.Mac with config ({typesInBasePlatform} vs {typesInOutputPlatform}):\n {config}");
+				Assert.AreNotEqual (typesInBasePlatform, typesInOutputPlatform, $"We linked a linkskip - Xamarin.Mac with config ({typesInBasePlatform} vs {typesInOutputPlatform}):\n {PlatformProjectConfig}");
 
+			});
+		}
+
+		[Test]
+		public void PlatformSDKOnClassic_ShouldNotBeSupported ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.TestClassicExecutable (tmpDir, csprojConfig: "<MonoBundlingExtraArgs>--linkplatform</MonoBundlingExtraArgs>\n", includeMonoRuntime:true, shouldFail: true);
 			});
 		}
 	}
