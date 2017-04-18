@@ -576,11 +576,13 @@ namespace Xamarin.Bundler
 					var asm_name = asm_fw.Identity;
 					if (asm_fw.BuildTargetName == asm_name)
 						continue; // this is deduceable
-					if (app.IsExtension && asm_fw.IsCodeShared) {
-						assembly_location.AppendFormat ("\t{{ \"{0}\", \"../../Frameworks/{1}.framework/MonoBundle\" }},\n", asm_name, asm_fw.BuildTargetName);
-					} else {
-						assembly_location.AppendFormat ("\t{{ \"{0}\", \"Frameworks/{1}.framework/MonoBundle\" }},\n", asm_name, asm_fw.BuildTargetName);
-					}
+					var prefix = string.Empty;
+					if (app.IsExtension && asm_fw.IsCodeShared)
+						prefix = "../../";
+					var suffix = string.Empty;
+					if (app.IsSimulatorBuild)
+						suffix = "/simulator";
+					assembly_location.AppendFormat ("\t{{ \"{0}\", \"{2}Frameworks/{1}.framework/MonoBundle{3}\" }},\n", asm_name, asm_fw.BuildTargetName, prefix, suffix);
 					assembly_location_count++;
 				}
 			}

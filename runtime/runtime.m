@@ -2326,6 +2326,18 @@ xamarin_locate_assembly_resource (const char *assembly_name, const char *culture
 		return true;
 	}
 
+#if !MONOMAC && (defined(__i386__) || defined (__x86_64__))
+	// In the simulator we also check in a 'simulator' subdirectory. This is
+	// so that we can create a framework that works for both simulator and
+	// device, without affecting device builds in any way (device-specific
+	// files just go in the MonoBundle directory)
+	snprintf (root, sizeof (root), "%s/Frameworks/%s.framework/MonoBundle/simulator", app_path, aname);
+	if (xamarin_locate_assembly_resource_for_root (root, culture, resource, path, pathlen)) {
+		LOG_RESOURCELOOKUP (PRODUCT ": Located resource '%s' from framework '%s': %s\n", resource, aname, path);
+		return true;
+	}
+#endif // !MONOMAC
+
 	// Then in a framework named as the assembly
 	snprintf (root, sizeof (root), "%s/Frameworks/%s.framework/MonoBundle", app_path, aname);
 	if (xamarin_locate_assembly_resource_for_root (root, culture, resource, path, pathlen)) {

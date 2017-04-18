@@ -2053,6 +2053,8 @@ namespace Xamarin.Bundler {
 					// "PackageInspectionFailed: Failed to load Info.plist from bundle at path /private/var/installd/Library/Caches/com.apple.mobile.installd.staging/temp.CR0vmK/extracted/testapp.app/Frameworks/TestApp.framework"
 					var target_name = assemblies [0].BuildTargetName;
 					var resource_directory = Path.Combine (AppDirectory, "Frameworks", $"{target_name}.framework", "MonoBundle");
+					if (IsSimulatorBuild)
+						resource_directory = Path.Combine (resource_directory, "simulator");
 					if (size_specific) {
 						assemblies [0].CopyToDirectory (Path.Combine (resource_directory, Path.GetFileName (assemblies [0].Target.AppTargetDirectory)), copy_debug_symbols: PackageManagedDebugSymbols, strip: strip, only_copy: true);
 						assemblies [1].CopyToDirectory (Path.Combine (resource_directory, Path.GetFileName (assemblies [1].Target.AppTargetDirectory)), copy_debug_symbols: PackageManagedDebugSymbols, strip: strip, only_copy: true);
