@@ -87,7 +87,8 @@ namespace Xamarin.Bundler {
 
 			symbols_loaded = false;
 			try {
-				if (File.Exists (FullPath + ".mdb")) {
+				var pdb = Path.ChangeExtension (FullPath, ".pdb");
+				if (File.Exists (pdb) || File.Exists (FullPath + ".mdb")) {
 					AssemblyDefinition.MainModule.ReadSymbols ();
 					symbols_loaded = true;
 				}

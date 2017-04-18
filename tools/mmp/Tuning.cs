@@ -15,7 +15,7 @@ using Xamarin.Tuner;
 using Xamarin.Utils;
 
 using Mono.Cecil;
-using Mono.Cecil.Mdb;
+using Mono.Cecil.Cil;
 
 namespace MonoMac.Tuner {
 
@@ -116,8 +116,8 @@ namespace MonoMac.Tuner {
 			context.CoreAction = AssemblyAction.Link;
 			context.LinkSymbols = options.LinkSymbols;
 			if (options.LinkSymbols) {
-				context.SymbolReaderProvider = new MdbReaderProvider ();
-				context.SymbolWriterProvider = new MdbWriterProvider ();
+				context.SymbolReaderProvider = new DefaultSymbolReaderProvider ();
+				context.SymbolWriterProvider = new DefaultSymbolWriterProvider ();
 			}
 			context.OutputDirectory = options.OutputDirectory;
 			return context;
