@@ -398,13 +398,16 @@ $(TARGET_DIRS):
 	$(Q) mkdir -p $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/mtouch.exe: bin/Makefile/mtouch.exe | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch
-	$(Q) cp $<* $(dir $@)
+	$(Q) cp $< $(dir $@)
+	$(Q) cp $(<:.exe=.pdb) $(dir $@)
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.dll: $(MONO_CECIL_DLL) | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch
-	$(Q) cp $<* $(dir $@)
+	$(Q) cp $< $(dir $@)
+	$(Q) cp $(<:.exe=.pdb) $(dir $@)
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.Mdb.dll: $(MONO_CECIL_MDB_DLL) | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch
-	$(Q) cp $<* $(dir $@)
+	$(Q) cp $< $(dir $@)
+	$(Q) cp $(<:.exe=.pdb) $(dir $@)
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch: mtouch.in | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
 	$(Q_GEN) sed 's!@MONOTOUCH_PREFIX@!$(abspath $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX))!g' $< > $@
