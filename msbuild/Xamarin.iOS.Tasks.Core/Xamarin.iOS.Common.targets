@@ -1712,7 +1712,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</ReadItemsFromFile>
 	</Target>
 
-	<Target Name="_CodesignAppExtensions" Condition="'$(_RequireCodeSigning)' == 'true' And '$(IsAppExtension)' == 'false' And ('$(OutputType)' == 'Exe' Or '$(IsWatchApp)' == 'true') And '@(_AppExtensionCodesignProperties)' != ''"
+	<Target Name="_CodesignAppExtensions" Condition="'$(_RequireCodeSigning)' == 'true' And '@(_AppExtensionCodesignProperties)' != ''"
 		DependsOnTargets="_DetectSigningIdentity;_ReadAppExtensionCodesignProperties"
 		Inputs="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\%(_AppExtensionCodesignProperties.NativeExecutable);%(_AppExtensionCodesignProperties.CodesignAppExtensionInputs)"
 		Outputs="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources">
@@ -1755,7 +1755,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="_PrepareCodesignAppExtension" Condition="'$(_RequireCodeSigning)' == 'true' And '$(IsAppExtension)' == 'true'">
+	<Target Name="_PrepareCodesignAppExtension" Condition="'$(_RequireCodeSigning)' == 'true' And '$(IsAppExtension)' == 'true' And '@(_ResolvedAppBundleExtensions)' == ''">
 		<!-- For App Extensions, we delay running codesign until it has been copied into the main app bundle... -->
 		<PropertyGroup>
 			<_ResourceRulesFullPath></_ResourceRulesFullPath>
@@ -1789,6 +1789,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</PropertyGroup>
 
 		<ItemGroup>
+			<_AppExtensionCodesignProperties Remove="@(_AppExtensionCodesignProperties)" />
+
 			<_AppExtensionCodesignProperties Include="$(_AppBundleFileName)">
 				<CodesignAppExtensionInputs>$(_CodesignAppExtensionInputs)</CodesignAppExtensionInputs>
 				<NativeExecutable>$(_NativeExecutableFileName)</NativeExecutable>
@@ -1812,13 +1814,13 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="_CalculateCodesignAppBundleInputs" Condition="'$(_RequireCodeSigning)' == 'true' And '$(IsAppExtension)' == 'false'">
+	<Target Name="_CalculateCodesignAppBundleInputs" Condition="'$(_RequireCodeSigning)' == 'true' And ('$(IsAppExtension)' == 'false' Or '@(_ResolvedAppExtensionReferences)' != '')">
 		<ItemGroup>
 			<_CodesignAppBundleInputs Include="$(_AppBundlePath)**\*.*" Exclude="$(_AppBundlePath)_CodeSignature\CodeResources" />
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_CodesignAppBundle" Condition="'$(_RequireCodeSigning)' == 'true' And '$(IsAppExtension)' == 'false'" DependsOnTargets="$(_CodesignAppBundleDependsOn)"
+	<Target Name="_CodesignAppBundle" Condition="'$(_RequireCodeSigning)' == 'true' And ('$(IsAppExtension)' == 'false' Or '@(_ResolvedAppExtensionReferences)' != '')" DependsOnTargets="$(_CodesignAppBundleDependsOn)"
 		Inputs="@(_CodesignAppBundleInputs)" Outputs="$(_AppBundlePath)_CodeSignature\CodeResources">
 
 		<PropertyGroup>
@@ -1849,7 +1851,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="_CodesignVerify" Condition="'$(_RequireCodeSigning)' == 'true' And '$(IsAppExtension)' == 'false'" DependsOnTargets="_CodesignAppBundle">
+	<Target Name="_CodesignVerify" Condition="'$(_RequireCodeSigning)' == 'true' And ('$(IsAppExtension)' == 'false' Or '@(_ResolvedAppExtensionReferences)' != '')" DependsOnTargets="_CodesignAppBundle">
 		<CodesignVerify
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedAppExtensionReferences)' != ''"

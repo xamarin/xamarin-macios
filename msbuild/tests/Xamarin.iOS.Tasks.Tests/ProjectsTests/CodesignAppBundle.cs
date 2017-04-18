@@ -40,6 +40,15 @@ namespace Xamarin.iOS.Tasks
 		{
 			foreach (var dylib in Directory.EnumerateFiles (AppBundlePath, "*.dylib", SearchOption.AllDirectories))
 				Assert.IsTrue (IsCodesigned (dylib), "{0} is not properly codesigned.", dylib);
+
+			foreach (var appex in Directory.EnumerateDirectories (AppBundlePath, "*.appex", SearchOption.AllDirectories))
+				Assert.IsTrue (IsCodesigned (appex), "{0} is not properly codesigned.", appex);
+
+			var watchDir = Path.Combine (AppBundlePath, "Watch");
+			if (Directory.Exists (watchDir)) {
+				foreach (var watchApp in Directory.EnumerateDirectories (watchDir, "*.app", SearchOption.TopDirectoryOnly))
+					Assert.IsTrue (IsCodesigned (watchApp), "{0} is not properly codesigned.", watchApp);
+			}
 		}
 
 		[Test]
