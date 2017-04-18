@@ -96,7 +96,11 @@ namespace Xamarin.Mac.Tasks
 		bool EnsureAppleSdkRoot ()
 		{
 			if (!MacOSXSdks.Native.IsInstalled) {
-				Log.LogError("Could not find a valid Xcode app bundle at '{0}'. Please update your Apple SDK location in Visual Studio's preferences (Project > SDK Locations > Apple > Apple SDK).", AppleSdkSettings.InvalidDeveloperRoot);
+				var ideSdkPath = "(Project > SDK Locations > Apple > Apple SDK)";
+#if WINDOWS
+				ideSdkPath = "(Tools > Options > Xamarin > iOS Settings > Apple SDK)";
+#endif
+				Log.LogError ("Could not find a valid Xcode app bundle at '{0}'. Please update your Apple SDK location in Visual Studio's preferences {1}.", AppleSdkSettings.InvalidDeveloperRoot, ideSdkPath);
 				return false;
 			}
 			Log.LogMessage(MessageImportance.Low, "DeveloperRoot: {0}", MacOSXSdks.Native.DeveloperRoot);
