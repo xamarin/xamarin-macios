@@ -99,21 +99,22 @@ namespace Xamarin.iOS.Tasks
 
 			IsXcode8 = AppleSdkSettings.XcodeVersion.Major >= 8;
 
-			EnsureAppleSdkRoot ();
-			EnsureXamarinSdkRoot ();
-			switch (Framework) {
-			case PlatformFramework.iOS:
-				EnsureiOSSdkPath ();
-				break;
-			case PlatformFramework.TVOS:
-				EnsureTVOSSdkPath ();
-				break;
-			case PlatformFramework.WatchOS:
-				EnsureWatchSdkPath ();
-				break;
-			default:
-				throw new InvalidOperationException (string.Format ("Invalid framework: {0}", Framework));
+			if (EnsureAppleSdkRoot ()) {
+				switch (Framework) {
+				case PlatformFramework.iOS:
+					EnsureiOSSdkPath ();
+					break;
+				case PlatformFramework.TVOS:
+					EnsureTVOSSdkPath ();
+					break;
+				case PlatformFramework.WatchOS:
+					EnsureWatchSdkPath ();
+					break;
+				default:
+					throw new InvalidOperationException (string.Format ("Invalid framework: {0}", Framework));
+				}
 			}
+			EnsureXamarinSdkRoot ();
 
 			Log.LogTaskName ("DetectSdkLocations");
 			Log.LogTaskProperty ("TargetFrameworkIdentifier", TargetFrameworkIdentifier);
@@ -287,19 +288,26 @@ namespace Xamarin.iOS.Tasks
 			SdkPlatform = SdkIsSimulator ? "iPhoneSimulator" : "iPhoneOS";
 		}
 
-		void EnsureAppleSdkRoot ()
+		bool EnsureAppleSdkRoot ()
 		{
 			if (!CurrentSdk.IsInstalled) {
-				Log.LogError ("  Could not find a usable Xcode app bundle in {0}", CurrentSdk.DeveloperRoot);
-			} else {
-				Log.LogMessage (MessageImportance.Low, "  DeveloperRoot: {0}", CurrentSdk.DeveloperRoot);
-				Log.LogMessage (MessageImportance.Low, "  DevicePlatform: {0}", CurrentSdk.DevicePlatform);
-				Log.LogMessage (MessageImportance.Low, "  GetPlatformPath: {0}", CurrentSdk.GetPlatformPath (false));
-
-				SdkDevPath = CurrentSdk.DeveloperRoot;
-				if (string.IsNullOrEmpty (SdkDevPath))
-					Log.LogError ("  Could not find valid a usable Xcode developer path");
+				var ideSdkPath = "(Project > SDK Locations > Apple > Apple SDK)";
+#if WINDOWS
+				ideSdkPath = "(Tools > Options > Xamarin > iOS Settings > Apple SDK)";
+#endif
+				Log.LogError ("Could not find a valid Xcode app bundle at '{0}'. Please update your Apple SDK location in Visual Studio's preferences {1}.", AppleSdkSettings.InvalidDeveloperRoot, ideSdkPath);
+				return false;
 			}
+			Log.LogMessage (MessageImportance.Low, "DeveloperRoot: {0}", CurrentSdk.DeveloperRoot);
+			Log.LogMessage (MessageImportance.Low, "DevicePlatform: {0}", CurrentSdk.DevicePlatform);
+			Log.LogMessage (MessageImportance.Low, "GetPlatformPath: {0}", CurrentSdk.GetPlatformPath (false));
+
+			SdkDevPath = CurrentSdk.DeveloperRoot;
+			if (string.IsNullOrEmpty (SdkDevPath)) {
+				Log.LogError ("Could not find valid a usable Xcode developer path");
+				return false;
+			}
+			return true;
 		}
 
 		void EnsureXamarinSdkRoot ()
@@ -308,7 +316,7 @@ namespace Xamarin.iOS.Tasks
 				XamarinSdkRoot = IPhoneSdks.MonoTouch.SdkDir;
 
 			if (string.IsNullOrEmpty (XamarinSdkRoot) || !Directory.Exists (XamarinSdkRoot))
-				Log.LogError ("  Could not find 'Xamarin.iOS'");
+				Log.LogError ("Could not find 'Xamarin.iOS'");
 		}
 
 		string DirExists (string checkingFor, string path)
@@ -319,7 +327,7 @@ namespace Xamarin.iOS.Tasks
 
 				path = Path.GetFullPath (path);
 
-				Log.LogMessage (MessageImportance.Low, "  Searching for '{0}' in '{1}'", checkingFor, path);
+				Log.LogMessage (MessageImportance.Low, "Searching for '{0}' in '{1}'", checkingFor, path);
 				return Directory.Exists (path) ? path : null;
 			} catch {
 				return null;
