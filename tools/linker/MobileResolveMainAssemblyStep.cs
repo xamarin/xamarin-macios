@@ -44,7 +44,7 @@ namespace Xamarin.Linker.Steps {
 				}
 
 				if (!t.HasCustomAttribute (Namespaces.Foundation, "RegisterAttribute"))
-						continue;
+					continue;
 				Annotations.Mark (t);
 				// the existing logic (both the general one and applying to NSObject) 
 				// should bring everything else that's required
