@@ -194,6 +194,13 @@ bool			xamarin_locate_assembly_resource (const char *assembly_name, const char *
 void			xamarin_printf (const char *format, ...);
 void			xamarin_vprintf (const char *format, va_list args);
 
+/*
+ * Look for an assembly in the app and open it.
+ *
+ * Stable API.
+ */
+MonoAssembly * xamarin_open_assembly (const char *name);
+
 #if defined(__arm__) || defined(__aarch64__)
 void mono_aot_register_module (void *aot_info);
 #endif
@@ -233,6 +240,7 @@ bool						xamarin_is_parameter_out                    (MonoReflectionMethod *met
 MethodDescription			xamarin_get_method_and_object_for_selector	(Class cls, SEL sel, id self, MonoObject **mthis, guint32 *exception_gchandle);
 guint32 					xamarin_create_product_exception_for_error	(int code, const char *message, guint32 *exception_gchandle);
 
+#ifdef __cplusplus
 class XamarinObject {
 public:
 	id native_object;
@@ -240,7 +248,9 @@ public:
 
 	~XamarinObject ();
 };
+#endif
 
+#ifdef __OBJC__
 @interface XamarinAssociatedObject : NSObject {
 @public
 	id native_object;
@@ -252,6 +262,7 @@ public:
 @interface NSObject (NonXamarinObject)
 -(int) xamarinGetGCHandle;
 @end
+#endif
 
 // Coop GC helper API
 #if !TARGET_OS_WATCH

@@ -25,9 +25,15 @@
 #define DEBUG_LAUNCH_TIME_PRINT(...)
 #endif
 
-void *xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *retval, bool retain, MonoMethod *method, guint32 *exception_gchandle);
-MonoAssembly * xamarin_open_assembly (const char *name);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
+void *xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *retval, bool retain, MonoMethod *method, guint32 *exception_gchandle);
+
+#ifdef __cplusplus
+}
+#endif
 /*
  * XamarinGCHandle
  *

@@ -336,11 +336,6 @@ namespace Xamarin.Bundler {
 				foreach (var mr in m.ModuleReferences) {
 					string name = mr.Name;
 					string file = Path.GetFileNameWithoutExtension (name);
-#if MONOMAC
-					string path = Path.GetDirectoryName (name);
-					if (!path.StartsWith ("/System/Library/Frameworks"))
-						continue;
-#endif
 
 					switch (file) {
 					// special case
@@ -406,6 +401,12 @@ namespace Xamarin.Bundler {
 						break;
 #endif
 					default:
+#if MONOMAC
+						string path = Path.GetDirectoryName (name);
+						if (!path.StartsWith ("/System/Library/Frameworks", StringComparison.Ordinal))
+							continue;
+#endif
+
 						// detect frameworks
 						int f = name.IndexOf (".framework/", StringComparison.Ordinal);
 						if (f > 0) {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -208,6 +208,9 @@ namespace Xamarin.Bundler
 					var mdb = Assembly.FullPath + ".mdb";
 					if (File.Exists (mdb))
 						inputs.Add (mdb);
+					var pdb = Path.ChangeExtension (Assembly.FullPath, ".pdb");
+					if (File.Exists (pdb))
+						inputs.Add (pdb);
 					var config = Assembly.FullPath + ".config";
 					if (File.Exists (config))
 						inputs.Add (config);
