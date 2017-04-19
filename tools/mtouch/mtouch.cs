@@ -683,9 +683,9 @@ namespace Xamarin.Bundler
 						// the name of the executable must be the bundle id (reverse dns notation)
 						// but we do not want to impose that (ugly) restriction to the managed .exe / project name / ...
 						sw.WriteLine ("\targv [0] = (char *) \"{0}\";", Path.GetFileNameWithoutExtension (app.RootAssemblies [0]));
-						sw.WriteLine ("\tint rv = xamarin_main (argc, argv, XamarinLaunchModeApp);");
-					} else {
 						sw.WriteLine ("\tint rv = xamarin_main (argc, argv, XamarinLaunchModeExtension);");
+					} else {
+						sw.WriteLine ("\tint rv = xamarin_main (argc, argv, XamarinLaunchModeApp);");
 					}
 					sw.WriteLine ("\t[pool drain];");
 					sw.WriteLine ("\treturn rv;");
