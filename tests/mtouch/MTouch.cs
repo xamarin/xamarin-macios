@@ -34,15 +34,14 @@ namespace Xamarin
 	public class MTouch
 	{
 		[Test]
-		[TestCase ("armv7,arm64")]
-		public void AotDataTest (string abi)
+		public void FatAppFiles ()
 		{
 			AssertDeviceAvailable ();
 
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
 				mtouch.CreateTemporaryCacheDirectory ();
-				mtouch.Abi = abi;
+				mtouch.Abi = "armv7,arm64";
 				mtouch.DSym = false; // speeds up the test
 				mtouch.MSym = false; // speeds up the test
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
@@ -65,14 +64,34 @@ namespace Xamarin
 					"Xamarin.iOS.aotdata.arm64",
 
 				};
+				var notExpectedFiles = new string [] {
+					/* mscorlib.dll and Xamarin.iOS.dll can differ between 32-bit and 64-bit, other assemblies shouldn't */
+					/* these files should end up in the root app directory, not the size-specific subdirectory */
+					".monotouch-32/testApp.exe",
+					".monotouch-32/testApp.aotdata.armv7",
+					".monotouch-32/System.dll",
+					".monotouch-32/System.aotdata.armv7",
+					".monotouch-64/testApp.exe",
+					".monotouch-64/testApp.aotdata.arm64",
+					".monotouch-64/System.dll",
+					".monotouch-64/System.aotdata.arm64",
+				};
 				var allFiles = Directory.GetFiles (mtouch.AppPath, "*", SearchOption.AllDirectories);
-				var failed = new List<string> ();
+				var expectedFailed = new List<string> ();
 				foreach (var expected in expectedFiles) {
 					if (allFiles.Any ((v) => v.EndsWith (expected, StringComparison.Ordinal)))
 						continue;
-					failed.Add (expected);
+					expectedFailed.Add (expected);
 				}
-				Assert.IsEmpty (failed, "expected files");
+				Assert.IsEmpty (expectedFailed, "expected files");
+
+				var notExpectedFailed = new List<string> ();
+				foreach (var notExpected in notExpectedFiles) {
+					if (!allFiles.Any ((v) => v.EndsWith (notExpected, StringComparison.Ordinal)))
+						continue;
+					notExpectedFailed.Add (notExpected);
+				}
+				Assert.IsEmpty (notExpectedFailed, "not expected files");
 			}
 		}
 
