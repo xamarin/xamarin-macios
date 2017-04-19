@@ -92,6 +92,14 @@ namespace XamCore.Registrar {
 			return this;
 		}
 
+		public AutoIndentStringBuilder Append (AutoIndentStringBuilder isb)
+		{
+			if (isb.Length > 0)
+				sb.Append (isb.ToString ());
+
+			return this;
+		}
+
 		public AutoIndentStringBuilder Append (string value)
 		{
 			Output (value);
@@ -2403,6 +2411,7 @@ namespace XamCore.Registrar {
 				if (any_protocols)
 					sb.Append (">");
 
+				AutoIndentStringBuilder implementation_fields = null;
 				if (is_protocol) {
 					sb.WriteLine ();
 				} else {
@@ -2410,23 +2419,33 @@ namespace XamCore.Registrar {
 
 					if (@class.Fields != null) {
 						foreach (var field in @class.Fields.Values) {
+							AutoIndentStringBuilder fields = null;
+							if (field.IsPrivate) {
+								// Private fields go in the @implementation section.
+								if (implementation_fields == null)
+									implementation_fields = new AutoIndentStringBuilder (1);
+								fields = implementation_fields;
+							} else {
+								// Public fields go in the header.
+								fields = sb;
+							}
 							try {
 								switch (field.FieldType) {
 								case "@":
-									sb.Write ("id ");
+									fields.Write ("id ");
 									break;
 								case "^v":
-									sb.Write ("void *");
+									fields.Write ("void *");
 									break;
 								case "XamarinObject":
-									sb.Write ("XamarinObject ");
+									fields.Write ("XamarinObject ");
 									break;
 								default:
 									throw ErrorHelper.CreateError (4120, "The registrar found an unknown field type '{0}' in field '{1}.{2}'. Please file a bug report at http://bugzilla.xamarin.com", 
 										field.FieldType, field.DeclaringType.Type.FullName, field.Name);
 								}
-								sb.Write (field.Name);
-								sb.WriteLine (";");
+								fields.Write (field.Name);
+								fields.WriteLine (";");
 							} catch (Exception ex) {
 								exceptions.Add (ex);
 							}
@@ -2505,7 +2524,13 @@ namespace XamCore.Registrar {
 					if (@class.IsCategory) {
 						sb.WriteLine ("@implementation {0} ({1})", EncodeNonAsciiCharacters (@class.BaseType.ExportedName), @class.CategoryName);
 					} else {
-						sb.WriteLine ("@implementation {0} {{ }} ", class_name);
+						sb.WriteLine ("@implementation {0} {{", class_name);
+						if (implementation_fields != null) {
+							sb.Indent ();
+							sb.Append (implementation_fields);
+							sb.Unindent ();
+						}
+						sb.WriteLine ("}");
 					}
 					sb.Indent ();
 					if (@class.Methods != null) {
@@ -3727,7 +3752,11 @@ namespace XamCore.Registrar {
 				header.WriteLine ("#define DEBUG 1");
 
 			header.WriteLine ("#include <stdarg.h>");
-			header.WriteLine ("#include <xamarin/xamarin.h>");
+			if (SupportsModernObjectiveC) {
+				methods.WriteLine ("#include <xamarin/xamarin.h>");
+			} else {
+				header.WriteLine ("#include <xamarin/xamarin.h>");
+			}
 			header.WriteLine ("#include <objc/objc.h>");
 			header.WriteLine ("#include <objc/runtime.h>");
 			header.WriteLine ("#include <objc/message.h>");
