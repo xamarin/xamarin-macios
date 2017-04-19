@@ -228,6 +228,7 @@ namespace Xamarin.Bundler
 					// We check elsewhere that the path exists, so I'm not sure how we can get into this.
 					throw ErrorHelper.CreateError (2019, "Can not load the root assembly '{0}'.", root_assembly);
 				}
+				roots.Add (root);
 			}
 
 			foreach (var reference in App.References) {
