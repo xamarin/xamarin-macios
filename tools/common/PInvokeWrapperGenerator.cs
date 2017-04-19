@@ -22,6 +22,7 @@ namespace Xamarin.Bundler
 		AutoIndentStringBuilder hdr = new AutoIndentStringBuilder ();
 		AutoIndentStringBuilder decls = new AutoIndentStringBuilder ();
 		AutoIndentStringBuilder mthds = new AutoIndentStringBuilder ();
+		AutoIndentStringBuilder ifaces = new AutoIndentStringBuilder ();
 						
 		public StaticRegistrar Registrar;
 		public string HeaderPath;
@@ -46,7 +47,7 @@ namespace Xamarin.Bundler
 			hdr.WriteLine ("#include <objc/runtime.h>");
 			hdr.WriteLine ("#include <objc/message.h>");
 
-			Registrar.GeneratePInvokeWrappersStart (hdr, decls, mthds);
+			Registrar.GeneratePInvokeWrappersStart (hdr, decls, mthds, ifaces) ;
 
 			mthds.WriteLine ($"#include \"{Path.GetFileName (HeaderPath)}\"");
 
@@ -62,7 +63,7 @@ namespace Xamarin.Bundler
 
 			Registrar.GeneratePInvokeWrappersEnd ();
 
-			Driver.WriteIfDifferent (HeaderPath, hdr.ToString () + "\n" + decls.ToString () + "\n");
+			Driver.WriteIfDifferent (HeaderPath, hdr.ToString () + "\n" + decls.ToString () + "\n" + ifaces.ToString () + "\n") ;
 			Driver.WriteIfDifferent (SourcePath, mthds.ToString () + "\n" + sb.ToString () + "\n");
 		}
 

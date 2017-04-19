@@ -1631,6 +1631,7 @@ namespace XamCore.Registrar {
 		AutoIndentStringBuilder header;
 		AutoIndentStringBuilder declarations; // forward declarations, struct definitions
 		AutoIndentStringBuilder methods; // c methods that contain the actual implementations
+		AutoIndentStringBuilder interfaces; // public objective-c @interface declarations
 		AutoIndentStringBuilder nslog_start = new AutoIndentStringBuilder ();
 		AutoIndentStringBuilder nslog_end = new AutoIndentStringBuilder ();
 		
@@ -2379,16 +2380,26 @@ namespace XamCore.Registrar {
 					
 				var class_name = EncodeNonAsciiCharacters (@class.ExportedName);
 				var is_protocol = @class.IsProtocol;
+
+				// Publicly visible types should go into the header, private types go into the .m
+				var td = @class.Type.Resolve ();
+				AutoIndentStringBuilder iface;
+				if (td.IsNotPublic || td.IsNestedPrivate || td.IsNestedAssembly || td.IsNestedFamilyAndAssembly) {
+					iface = sb;
+				} else {
+					iface = interfaces;
+				}
+				
 				if (@class.IsCategory) {
 					var exportedName = EncodeNonAsciiCharacters (@class.BaseType.ExportedName);
-					sb.Write ("@interface {0} ({1})", exportedName, @class.CategoryName);
+					iface.Write ("@interface {0} ({1})", exportedName, @class.CategoryName);
 					declarations.AppendFormat ("@class {0};\n", exportedName);
 				} else if (is_protocol) {
 					var exportedName = EncodeNonAsciiCharacters (@class.ProtocolName);
-					sb.Write ("@protocol ").Write (exportedName);
+					iface.Write ("@protocol ").Write (exportedName);
 					declarations.AppendFormat ("@protocol {0};\n", exportedName);
 				} else {
-					sb.Write ("@interface {0} : {1}", class_name, EncodeNonAsciiCharacters (@class.SuperType.ExportedName));
+					iface.Write ("@interface {0} : {1}", class_name, EncodeNonAsciiCharacters (@class.SuperType.ExportedName));
 					declarations.AppendFormat ("@class {0};\n", class_name);
 				}
 				bool any_protocols = false;
@@ -2400,22 +2411,22 @@ namespace XamCore.Registrar {
 						for (int p = 0; p < tp.Protocols.Length; p++) {
 							if (tp.Protocols [p].ProtocolName == "UIAppearance")
 								continue;
-							sb.Append (any_protocols ? ", " : "<");
+							iface.Append (any_protocols ? ", " : "<");
 							any_protocols = true;
-							sb.Append (tp.Protocols [p].ProtocolName);
+							iface.Append (tp.Protocols [p].ProtocolName);
 							CheckNamespace (tp.Protocols [p], exceptions);
 						}
 					}
 					tp = tp.BaseType;
 				}
 				if (any_protocols)
-					sb.Append (">");
+					iface.Append (">");
 
 				AutoIndentStringBuilder implementation_fields = null;
 				if (is_protocol) {
-					sb.WriteLine ();
+					iface.WriteLine ();
 				} else {
-					sb.WriteLine (" {");
+					iface.WriteLine (" {");
 
 					if (@class.Fields != null) {
 						foreach (var field in @class.Fields.Values) {
@@ -2427,7 +2438,7 @@ namespace XamCore.Registrar {
 								fields = implementation_fields;
 							} else {
 								// Public fields go in the header.
-								fields = sb;
+								fields = iface;
 							}
 							try {
 								switch (field.FieldType) {
@@ -2451,51 +2462,51 @@ namespace XamCore.Registrar {
 							}
 						}
 					}
-					sb.WriteLine ("}");
+					iface.WriteLine ("}");
 				}
 
-				sb.Indent ();
+				iface.Indent ();
 				if (@class.Properties != null) {
 					foreach (var property in @class.Properties) {
 						try {
 							if (is_protocol)
-								sb.Write (property.IsOptional ? "@optional " : "@required ");
-							sb.Write ("@property (nonatomic");
+								iface.Write (property.IsOptional ? "@optional " : "@required ");
+							iface.Write ("@property (nonatomic");
 							switch (property.ArgumentSemantic) {
 							case ArgumentSemantic.Copy:
-								sb.Write (", copy");
+								iface.Write (", copy");
 								break;
 							case ArgumentSemantic.Retain:
-								sb.Write (", retain");
+								iface.Write (", retain");
 								break;
 							case ArgumentSemantic.Assign:
 							case ArgumentSemantic.None:
 							default:
-								sb.Write (", assign");
+								iface.Write (", assign");
 								break;
 							}
 							if (property.IsReadOnly)
-								sb.Write (", readonly");
+								iface.Write (", readonly");
 
 							if (property.Selector != null) {
 								if (property.GetterSelector != null && property.Selector != property.GetterSelector)
-									sb.Write (", getter = ").Write (property.GetterSelector);
+									iface.Write (", getter = ").Write (property.GetterSelector);
 								if (property.SetterSelector != null) {
 									var setterSel = string.Format ("set{0}{1}:", char.ToUpperInvariant (property.Selector [0]), property.Selector.Substring (1));
 									if (setterSel != property.SetterSelector)
-										sb.Write (", setter = ").Write (property.SetterSelector);
+										iface.Write (", setter = ").Write (property.SetterSelector);
 								}
 							}
 
-							sb.Write (") ");
+							iface.Write (") ");
 							try {
-								sb.Write (ToObjCParameterType (property.PropertyType, property.DeclaringType.Type.FullName, exceptions, property.Property));
+								iface.Write (ToObjCParameterType (property.PropertyType, property.DeclaringType.Type.FullName, exceptions, property.Property));
 							} catch (ProductException mte) {
 								exceptions.Add (CreateException (4138, mte, property.Property, "The registrar cannot marshal the property type '{0}' of the property '{1}.{2}'.",
 									GetTypeFullName (property.PropertyType), property.DeclaringType.Type.FullName, property.Name));
 							}
-							sb.Write (" ").Write (property.Selector);
-							sb.WriteLine (";");
+							iface.Write (" ").Write (property.Selector);
+							iface.WriteLine (";");
 						} catch (Exception ex) {
 							exceptions.Add (ex);
 						}
@@ -2506,8 +2517,8 @@ namespace XamCore.Registrar {
 					foreach (var method in @class.Methods) {
 						try {
 							if (is_protocol)
-								sb.Write (method.IsOptional ? "@optional " : "@required ");
-							sb.WriteLine ("{0};", GetObjCSignature (method, exceptions));
+								iface.Write (method.IsOptional ? "@optional " : "@required ");
+							iface.WriteLine ("{0};", GetObjCSignature (method, exceptions));
 						} catch (ProductException ex) {
 							skip.Add (method);
 							exceptions.Add (ex);
@@ -2517,8 +2528,9 @@ namespace XamCore.Registrar {
 						}
 					}
 				}
-				sb.Unindent ();
-				sb.WriteLine ("@end");
+				iface.Unindent ();
+				iface.WriteLine ("@end");
+				iface.WriteLine ();
 
 				if (!is_protocol && !@class.IsWrapper) {
 					if (@class.IsCategory) {
@@ -3585,11 +3597,12 @@ namespace XamCore.Registrar {
 			return (token.RID << 8) + ((uint) index << 1);
 		}
 
-		public void GeneratePInvokeWrappersStart (AutoIndentStringBuilder hdr, AutoIndentStringBuilder decls, AutoIndentStringBuilder mthds)
+		public void GeneratePInvokeWrappersStart (AutoIndentStringBuilder hdr, AutoIndentStringBuilder decls, AutoIndentStringBuilder mthds, AutoIndentStringBuilder ifaces)
 		{
 			header = hdr;
 			declarations = decls;
 			methods = mthds;
+			interfaces = ifaces;
 		}
 
 		public void GeneratePInvokeWrappersEnd ()
@@ -3597,6 +3610,7 @@ namespace XamCore.Registrar {
 			header = null;	
 			declarations = null;
 			methods = null;
+			interfaces = null;
 			namespaces.Clear ();
 			structures.Clear ();
 
@@ -3743,6 +3757,7 @@ namespace XamCore.Registrar {
 			header = new AutoIndentStringBuilder ();
 			declarations = new AutoIndentStringBuilder ();
 			methods = new AutoIndentStringBuilder ();
+			interfaces = new AutoIndentStringBuilder ();
 
 			header.WriteLine ("#pragma clang diagnostic ignored \"-Wdeprecated-declarations\"");
 			header.WriteLine ("#pragma clang diagnostic ignored \"-Wtypedef-redefinition\""); // temporary hack until we can stop including glib.h
@@ -3772,6 +3787,7 @@ namespace XamCore.Registrar {
 
 			header.AppendLine ();
 			header.AppendLine (declarations);
+			header.AppendLine (interfaces);
 			Driver.WriteIfDifferent (header_path, header.ToString ());
 
 			methods.WriteLine ();
@@ -3785,6 +3801,8 @@ namespace XamCore.Registrar {
 			declarations = null;
 			methods.Dispose ();
 			methods = null;
+			interfaces.Dispose ();
+			interfaces = null;
 			sb.Dispose ();
 		}
 
