@@ -98,6 +98,9 @@ namespace Xamarin.Bundler {
 			options.Add ("j|jobs=", "The level of concurrency. Default is the number of processors.", v => {
 				Jobs = int.Parse (v);
 			});
+			options.Add ("embeddinator", "Enables Embeddinator targetting mode.", v => {
+				app.Embeddinator = true;
+			}, true);
 		}
 
 		static int Jobs;
