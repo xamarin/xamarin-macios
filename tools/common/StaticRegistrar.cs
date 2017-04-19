@@ -3356,6 +3356,9 @@ namespace XamCore.Registrar {
 				}
 			}
 
+			if (App.Embeddinator)
+				body.WriteLine ("xamarin_embeddinator_initialize ();");
+
 			body.WriteLine ("MONO_ASSERT_GC_SAFE;");
 			body.WriteLine ("MONO_THREAD_ATTACH;"); // COOP: this will switch to GC_UNSAFE
 			body.WriteLine ();
@@ -3779,6 +3782,9 @@ namespace XamCore.Registrar {
 			methods.WriteLine ($"#include \"{Path.GetFileName (header_path)}\"");
 			methods.StringBuilder.AppendLine ("extern \"C\" {");
 
+			if (App.Embeddinator)
+				methods.WriteLine ("void xamarin_embeddinator_initialize ();");
+			
 			Specialize (sb);
 
 			methods.StringBuilder.AppendLine ("} /* extern \"C\" */");
