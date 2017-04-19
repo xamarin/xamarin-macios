@@ -1102,11 +1102,24 @@ namespace Xamarin.Bundler {
 			if (EnableAsmOnlyBitCode)
 				LLVMAsmWriter = true;
 
+			List<Exception> exceptions = null;
 			foreach (var root in RootAssemblies) {
-				if (!File.Exists (root))
-					throw new MonoTouchException (7, true, "The root assembly '{0}' does not exist", root);
+				if (File.Exists (root))
+					continue;
+
+				if (exceptions == null)
+					exceptions = new List<Exception> ();
+
+				if (root [0] == '-' || root [0] == '/') {
+					exceptions.Add (ErrorHelper.CreateError (18, "Unknown command line argument: '{0}'", root));
+				} else {
+					exceptions.Add (ErrorHelper.CreateError (7, "The root assembly '{0}' does not exist", root));
+				}
 			}
-			
+			if (exceptions?.Count > 0)
+				throw new AggregateException (exceptions);
+
+
 			if (no_framework)
 				throw ErrorHelper.CreateError (96, "No reference to Xamarin.iOS.dll was found.");
 

@@ -449,17 +449,6 @@ namespace Xamarin
 		}
 
 		[Test]
-		public void MT0008 ()
-		{
-			using (var mtouch = new MTouchTool ()) {
-				mtouch.CreateTemporaryAppDirectory ();
-				mtouch.CustomArguments = new string [] { "foo.exe", "bar.exe" };
-				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertError (8, "You should provide one root assembly only, found 2 assemblies: 'foo.exe', 'bar.exe'");
-			}
-		}
-
-		[Test]
 		public void MT0015 ()
 		{
 			using (var mtouch = new MTouchTool ()) {
