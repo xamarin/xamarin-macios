@@ -2893,7 +2893,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 				// With the linker, we'll find out that the loaded reference doesn't work.
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertError (2002, "Failed to resolve \"X\" reference from \"System.Net.Http, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\"");
+				mtouch.AssertError (2101, "Can't resolve the reference 'X', referenced from the method 'System.Void C::Main()' in 'System.Net.Http, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null'.");
 			}
 		}
 
