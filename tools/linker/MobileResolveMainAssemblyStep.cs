@@ -34,12 +34,15 @@ namespace Xamarin.Linker.Steps {
 
 			Annotations.Push (assembly);
 
+			var is_product_assembly = Mono.Tuner.Profile.IsProductAssembly (assembly);
 			foreach (var t in assembly.MainModule.Types) {
-				if (t.IsPublic && embeddinator) {
-					// Mark all public types when in embeddinator mode.
-					// There may be no types with the Register attribute,
-					// which means that without this the assembly might be completely ignored even if it's not linked.
-					Annotations.Mark (t);
+				if (embeddinator) {
+					if (t.IsPublic && !is_product_assembly) {
+						// Mark all public types when in embeddinator mode.
+						// There may be no types with the Register attribute,
+						// which means that without this the assembly might be completely ignored even if it's not linked.
+						Annotations.Mark (t);
+					}
 					continue;
 				}
 
