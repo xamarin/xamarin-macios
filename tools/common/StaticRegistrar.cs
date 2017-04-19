@@ -1621,8 +1621,8 @@ namespace XamCore.Registrar {
 		static int counter = 0;
 		static bool trace = false;
 		AutoIndentStringBuilder header;
-		AutoIndentStringBuilder declarations;
-		AutoIndentStringBuilder methods;
+		AutoIndentStringBuilder declarations; // forward declarations, struct definitions
+		AutoIndentStringBuilder methods; // c methods that contain the actual implementations
 		AutoIndentStringBuilder nslog_start = new AutoIndentStringBuilder ();
 		AutoIndentStringBuilder nslog_end = new AutoIndentStringBuilder ();
 		
@@ -3714,47 +3714,49 @@ namespace XamCore.Registrar {
 
 		void Generate (string header_path, string source_path)
 		{
-			using (var sb = new AutoIndentStringBuilder ()) {
-				using (var hdr = new AutoIndentStringBuilder ()) {
-					using (var decls = new AutoIndentStringBuilder ()) {
-						using (var mthds = new AutoIndentStringBuilder ()) {
-							hdr.WriteLine ("#pragma clang diagnostic ignored \"-Wdeprecated-declarations\"");
-							hdr.WriteLine ("#pragma clang diagnostic ignored \"-Wtypedef-redefinition\""); // temporary hack until we can stop including glib.h
-							hdr.WriteLine ("#pragma clang diagnostic ignored \"-Wobjc-designated-initializers\"");
+			var sb = new AutoIndentStringBuilder ();
+			header = new AutoIndentStringBuilder ();
+			declarations = new AutoIndentStringBuilder ();
+			methods = new AutoIndentStringBuilder ();
 
-							if (App.EnableDebug)
-								hdr.WriteLine ("#define DEBUG 1");
+			header.WriteLine ("#pragma clang diagnostic ignored \"-Wdeprecated-declarations\"");
+			header.WriteLine ("#pragma clang diagnostic ignored \"-Wtypedef-redefinition\""); // temporary hack until we can stop including glib.h
+			header.WriteLine ("#pragma clang diagnostic ignored \"-Wobjc-designated-initializers\"");
 
-							hdr.WriteLine ("#include <stdarg.h>");
-							hdr.WriteLine ("#include <xamarin/xamarin.h>");
-							hdr.WriteLine ("#include <objc/objc.h>");
-							hdr.WriteLine ("#include <objc/runtime.h>");
-							hdr.WriteLine ("#include <objc/message.h>");
+			if (App.EnableDebug)
+				header.WriteLine ("#define DEBUG 1");
 
-							header = hdr;
-							declarations = decls;
-							methods = mthds;
+			header.WriteLine ("#include <stdarg.h>");
+			header.WriteLine ("#include <xamarin/xamarin.h>");
+			header.WriteLine ("#include <objc/objc.h>");
+			header.WriteLine ("#include <objc/runtime.h>");
+			header.WriteLine ("#include <objc/message.h>");
 
-							mthds.WriteLine ($"#include \"{Path.GetFileName (header_path)}\"");
-							mthds.StringBuilder.AppendLine ("extern \"C\" {");
+			methods.WriteLine ($"#include \"{Path.GetFileName (header_path)}\"");
+			methods.StringBuilder.AppendLine ("extern \"C\" {");
 
-							Specialize (sb);
+			Specialize (sb);
 
-							mthds.StringBuilder.AppendLine ("} /* extern \"C\" */");
+			methods.StringBuilder.AppendLine ("} /* extern \"C\" */");
 
-							header = null;	
-							declarations = null;
-							methods = null;
+			FlushTrace ();
 
-							FlushTrace ();
+			header.AppendLine ();
+			header.AppendLine (declarations);
+			Driver.WriteIfDifferent (header_path, header.ToString ());
 
-							Driver.WriteIfDifferent (header_path, hdr.ToString () + "\n" + decls.ToString () + "\n");
-							Driver.WriteIfDifferent (source_path, mthds.ToString () + "\n" + sb.ToString () + "\n");
-						}
-					}
-				}
-			}
+			methods.WriteLine ();
+			methods.AppendLine ();
+			methods.AppendLine (sb);
+			Driver.WriteIfDifferent (source_path, methods.ToString ());
 
+			header.Dispose ();
+			header = null;
+			declarations.Dispose ();
+			declarations = null;
+			methods.Dispose ();
+			methods = null;
+			sb.Dispose ();
 		}
 
 		protected override bool SkipRegisterAssembly (AssemblyDefinition assembly)
