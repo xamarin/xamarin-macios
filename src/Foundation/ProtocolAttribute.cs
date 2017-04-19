@@ -34,6 +34,21 @@ namespace XamCore.Foundation {
 		public Type WrapperType { get; set; }
 		public string Name { get; set; }
 		public bool IsInformal { get; set; }
+		// In which SDK version this protocol switched from (or to, depending on the current IsInformal value) being informal.
+		// If IsInformal = true, then this protocol switched to being informal in the specified SDK version
+		// If IsInformal = false, then this protocol switched to a real protocol in the specified SDK version
+		// Version is not a valid type for attributes, so we're using an array of ints.
+		int[] informal_switch;
+		public int [] InformalSwitch {
+			get {
+				return informal_switch;
+			}
+			set {
+				if (value != null && (value.Length < 2 || value.Length > 4))
+					throw new ArgumentOutOfRangeException ("value", "array must either be null, or have between 2 and 4 elements");
+				informal_switch = value;
+			}
+		}
 	}
 
 	[AttributeUsage (AttributeTargets.Interface, AllowMultiple = true)]

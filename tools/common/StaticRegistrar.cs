@@ -1206,6 +1206,26 @@ namespace XamCore.Registrar {
 				case "IsInformal":
 					rv.IsInformal = (bool) prop.Argument.Value;
 					break;
+				case "InformalSwitch":
+					var attrArray = (CustomAttributeArgument []) prop.Argument.Value;
+					var arr = new int [attrArray.Length];
+					for (int i = 0; i < attrArray.Length; i++)
+						arr [i] = (int) attrArray [i].Value;
+
+					switch (arr.Length) {
+					case 2:
+						rv.InformalSwitchVersion = new Version (arr [0], arr [1]);
+						break;
+					case 3:
+						rv.InformalSwitchVersion = new Version (arr [0], arr [1], arr [2]);
+						break;
+					case 4:
+						rv.InformalSwitchVersion = new Version (arr [0], arr [1], arr [2], arr [3]);
+						break;
+					default:
+						throw ErrorHelper.CreateError (4147, "Invalid {0} found on '{1}'. Please file a bug report at http://bugzilla.xamarin.com", "ProtocolAttribute", type.FullName);
+					}
+					break;
 				default:
 					throw ErrorHelper.CreateError (4147, "Invalid {0} found on '{1}'. Please file a bug report at http://bugzilla.xamarin.com", "ProtocolAttribute", type.FullName);
 				}
@@ -3837,6 +3857,7 @@ namespace XamCore.Registrar {
 		public TypeDefinition WrapperType { get; set; }
 		public string Name { get; set; }
 		public bool IsInformal { get; set; }
+		public Version InformalSwitchVersion { get; set; }
 	}
 
 	public sealed class ProtocolMemberAttribute : Attribute {

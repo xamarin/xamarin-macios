@@ -858,7 +858,15 @@ namespace XamCore.CoreAnimation {
 
 	[BaseType (typeof (NSObject))]
 	[Model]
-	[Protocol (IsInformal = true)] // not informal as of iOS 10+, but removing the IsInformal value breaks when building with older SDKs (see bug #43585).
+#if IOS || TVOS
+	[Protocol (InformalSwitch = new int [] { 10, 0 })]
+#elif MONOMAC
+	[Protocol (InformalSwitch = new int [] { 10, 12 })]
+#elif WATCH
+	[Protocol (InformalSwitch = new int [] { 3, 0 })]
+#else
+	[Protocol]
+#endif
 	interface CALayerDelegate {
 		[Export ("displayLayer:")]
 		void DisplayLayer (CALayer layer);

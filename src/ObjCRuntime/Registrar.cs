@@ -1485,6 +1485,11 @@ namespace XamCore.Registrar {
 				var pAttr = GetProtocolAttribute (type);
 				isInformalProtocol = pAttr.IsInformal;
 				isProtocol = true;
+
+#if MMP || MTOUCH
+				if (pAttr.InformalSwitchVersion != null && pAttr.InformalSwitchVersion > App.SdkVersion)
+					isInformalProtocol = !isInformalProtocol;
+#endif
 			}
 
 			// make sure the base type is already registered

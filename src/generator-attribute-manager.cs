@@ -141,6 +141,12 @@ public static class AttributeManager
 				for (int a = 0; a < arr.Length; a++)
 					arr [a] = (Type) typed_values [a].Value;
 				value = arr;
+			} else if (arg.TypedValue.ArgumentType.FullName == "System.Int32[]") {
+				var typed_values = (CustomAttributeTypedArgument []) arg.TypedValue.Value;
+				var arr = new int [typed_values.Length];
+				for (int a = 0; a < arr.Length; a++)
+					arr [a] = (int) typed_values [a].Value;
+				value = arr;
 			} else if (arg.TypedValue.ArgumentType.IsArray) {
 				throw ErrorHelper.CreateError (1059, "Internal error: failed to instantiate mock attribute '{0}' (unknown type for the named argument #{1} ({2}). Please file a bug report (https://bugzilla.xamarin.com) with a test case.", attribType.FullName, i + 1, arg.MemberName);
 			}

@@ -5135,7 +5135,11 @@ public partial class Generator : IMemberGatherer {
 		var requiredInstanceAsyncMethods = requiredInstanceMethods.Where (m => AttributeManager.HasAttribute<AsyncAttribute> (m)).ToList ();
 
 		PrintAttributes (type, platform:true, preserve:true, advice:true);
-		print ("[Protocol (Name = \"{1}\", WrapperType = typeof ({0}Wrapper){2})]", TypeName, protocol_name, protocolAttribute.IsInformal ? ", IsInformal = true" : string.Empty);
+		print ("[Protocol (Name = \"{1}\", WrapperType = typeof ({0}Wrapper){2}{3})]", 
+		       TypeName, 
+		       protocol_name, 
+		       protocolAttribute.IsInformal ? ", IsInformal = true" : string.Empty, 
+		       protocolAttribute.InformalSwitch != null ? (", InformalSwitch = new int [] { " + string.Join (", ", protocolAttribute.InformalSwitch.Select ((v) => v.ToString ())) + " }") : string.Empty);
 
 		var sb = new StringBuilder ();
 

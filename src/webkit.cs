@@ -1817,7 +1817,7 @@ namespace XamCore.WebKit {
 
 	[BaseType (typeof (NSObject))]
 	[Model]
-	[Protocol (IsInformal = true)]
+	[Protocol (InformalSwitch = new int [] { 10, 11 })]
 	partial interface WebDownloadDelegate {
 		[Export ("downloadWindowForAuthenticationSheet:"), DelegateName ("WebDownloadRequest"), DefaultValue (null)]
 		NSWindow OnDownloadWindowForSheet (WebDownload download);
@@ -1897,7 +1897,7 @@ namespace XamCore.WebKit {
 	}
 
 	[Model]
-	[Protocol (IsInformal = true)]
+	[Protocol (InformalSwitch = new int [] { 10, 11 })]
 	[BaseType (typeof (NSObject))]
 	partial interface WebFrameLoadDelegate {
 		[Export ("webView:didStartProvisionalLoadForFrame:"), EventArgs ("WebFrame")]
@@ -2060,7 +2060,7 @@ namespace XamCore.WebKit {
 
 	[BaseType (typeof (NSObject))]
 	[Model]
-	[Protocol (IsInformal = true)]
+	[Protocol (InformalSwitch = new int [] { 10, 11 })]
 	partial interface WebPolicyDelegate  {
 		[Export ("webView:decidePolicyForNavigationAction:request:frame:decisionListener:"), EventArgs ("WebNavigationPolicy")]
 		void DecidePolicyForNavigation (WebView webView, NSDictionary actionInformation, NSUrlRequest request, WebFrame frame, NSObject decisionToken);
@@ -2204,7 +2204,7 @@ namespace XamCore.WebKit {
 
 	[BaseType (typeof (NSObject))]
 	[Model]
-	[Protocol (IsInformal = true)]
+	[Protocol (InformalSwitch = new int [] { 10, 11 })]
 	partial interface WebResourceLoadDelegate {
 		[Export ("webView:identifierForInitialRequest:fromDataSource:"), DelegateName ("WebResourceIdentifierRequest"), DefaultValue (null)]
 		NSObject OnIdentifierForInitialRequest (WebView sender, NSUrlRequest request, WebDataSource dataSource);
@@ -2236,7 +2236,7 @@ namespace XamCore.WebKit {
 
 	[BaseType (typeof (NSObject))]
 	[Model]
-	[Protocol (IsInformal = true)]
+	[Protocol (InformalSwitch = new int [] { 10, 11 })]
 	partial interface WebUIDelegate {
 		[Export ("webView:createWebViewWithRequest:"), DelegateName("CreateWebViewFromRequest"), DefaultValue (null)]
 		WebView UICreateWebView (WebView sender, NSUrlRequest request);
