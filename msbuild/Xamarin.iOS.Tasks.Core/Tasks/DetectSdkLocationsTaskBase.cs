@@ -292,7 +292,9 @@ namespace Xamarin.iOS.Tasks
 		{
 			if (!CurrentSdk.IsInstalled) {
 				string ideSdkPath;
-				if (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX)
+				if (string.IsNullOrEmpty(SessionId))
+					// SessionId is only and always defined on windows.
+					// We can't check 'Environment.OSVersion.Platform' since the base tasks are always executed on the Mac.
 					ideSdkPath = "(Project > SDK Locations > Apple > Apple SDK)";
 				else
 					ideSdkPath = "(Tools > Options > Xamarin > iOS Settings > Apple SDK)";
