@@ -115,7 +115,7 @@ struct AssemblyLocations {
 };
 
 void xamarin_initialize ();
-void xamarin_initialize_embedded (); /* STABLE */
+void xamarin_initialize_embedded (); /* Public API, must not change - this is used by the embeddinator */
 
 void			xamarin_assertion_message (const char *msg, ...) __attribute__((__noreturn__));
 const char *	xamarin_get_bundle_path (); /* Public API */
