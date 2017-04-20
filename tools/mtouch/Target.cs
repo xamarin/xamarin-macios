@@ -48,6 +48,7 @@ namespace Xamarin.Bundler
 		Dictionary<Abi, CompileTask> pinvoke_tasks = new Dictionary<Abi, CompileTask> ();
 		List<CompileTask> link_with_task_output = new List<CompileTask> ();
 		List<AOTTask> aot_dependencies = new List<AOTTask> ();
+		List<LinkTask> embeddinator_tasks = new List<LinkTask> ();
 		CompilerFlags linker_flags;
 		NativeLinkTask link_task;
 
@@ -220,10 +221,14 @@ namespace Xamarin.Bundler
 			if (corlib == null)
 				throw new MonoTouchException (2006, true, "Can not load mscorlib.dll from: '{0}'. Please reinstall Xamarin.iOS.", corlib_path);
 
-			var root = ManifestResolver.Load (App.RootAssembly);
-			if (root == null) {
-				// We check elsewhere that the path exists, so I'm not sure how we can get into this.
-				throw ErrorHelper.CreateError (2019, "Can not load the root assembly '{0}'.", App.RootAssembly);
+			var roots = new List<AssemblyDefinition> ();
+			foreach (var root_assembly in App.RootAssemblies) {
+				var root = ManifestResolver.Load (root_assembly);
+				if (root == null) {
+					// We check elsewhere that the path exists, so I'm not sure how we can get into this.
+					throw ErrorHelper.CreateError (2019, "Can not load the root assembly '{0}'.", root_assembly);
+				}
+				roots.Add (root);
 			}
 
 			foreach (var reference in App.References) {
@@ -231,9 +236,10 @@ namespace Xamarin.Bundler
 				if (ad == null)
 					throw new MonoTouchException (2002, true, "Can not resolve reference: {0}", reference);
 
-				if (ad.MainModule.FileName == root.MainModule.FileName) {
-					// If we asked the manifest resolver for assembly X and got back the root assembly, it means the requested assembly has the same identity as the root assembly, which is not allowed.
-					throw ErrorHelper.CreateError (23, "The root assembly {0} conflicts with another assembly ({1}).", root.MainModule.FileName, reference);
+				var root_assembly = roots.FirstOrDefault ((v) => v.MainModule.FileName == ad.MainModule.FileName);
+				if (root_assembly != null) {
+					// If we asked the manifest resolver for assembly X and got back a root assembly, it means the requested assembly has the same identity as the root assembly, which is not allowed.
+					throw ErrorHelper.CreateError (23, "The root assembly {0} conflicts with another assembly ({1}).", root_assembly.MainModule.FileName, reference);
 				}
 				
 				if (ad.MainModule.Runtime > TargetRuntime.Net_4_0)
@@ -376,8 +382,10 @@ namespace Xamarin.Bundler
 			var assemblies = new HashSet<string> ();
 
 			try {
-				var assembly = ManifestResolver.Load (App.RootAssembly);
-				ComputeListOfAssemblies (assemblies, assembly, exceptions);
+				foreach (var root in App.RootAssemblies) {
+					var assembly = ManifestResolver.Load (root);
+					ComputeListOfAssemblies (assemblies, assembly, exceptions);
+				}
 			} catch (MonoTouchException mte) {
 				exceptions.Add (mte);
 			} catch (Exception e) {
@@ -509,9 +517,12 @@ namespace Xamarin.Bundler
 			resolver.AddSearchDirectory (Resolver.FrameworkDirectory);
 
 			var main_assemblies = new List<AssemblyDefinition> ();
-			main_assemblies.Add (Resolver.Load (App.RootAssembly));
-			foreach (var appex in sharedCodeTargets)
-				main_assemblies.Add (Resolver.Load (appex.App.RootAssembly));
+			foreach (var root in App.RootAssemblies)
+				main_assemblies.Add (Resolver.Load (root));
+			foreach (var appex in sharedCodeTargets) {
+				foreach (var root in appex.App.RootAssemblies)
+					main_assemblies.Add (Resolver.Load (root));
+			}
 			
 			if (Driver.Verbosity > 0)
 				Console.WriteLine ("Linking {0} into {1} using mode '{2}'", string.Join (", ", main_assemblies.Select ((v) => v.MainModule.FileName)), output_dir, App.LinkMode);
@@ -685,12 +696,15 @@ namespace Xamarin.Bundler
 				foreach (var t in allTargets) {
 					// Find the root assembly
 					// Here we assume that 'AssemblyReference.Name' == 'Assembly.Identity'.
-					var rootAssembly = t.Assemblies [Assembly.GetIdentity (t.App.RootAssembly)];
+					var rootAssemblies = new List<Assembly> ();
+					foreach (var root in t.App.RootAssemblies)
+						rootAssemblies.Add (t.Assemblies [Assembly.GetIdentity (root)]);
 					var queue = new Queue<string> ();
 					var collectedNames = new HashSet<string> ();
 
 					// First collect the set of all assemblies in the app by walking the assembly references.
-					queue.Enqueue (rootAssembly.Identity);
+					foreach (var root in rootAssemblies)
+						queue.Enqueue (root.Identity);
 					do {
 						var next = queue.Dequeue ();
 						collectedNames.Add (next);
@@ -1047,6 +1061,10 @@ namespace Xamarin.Bundler
 						if (a.HasLinkWithAttributes && !App.EnableBitCode)
 							compiler_flags.ReferenceSymbols (GetRequiredSymbols (a, true));
 					}
+					if (App.Embeddinator) {
+						if (!string.IsNullOrEmpty (App.UserGccFlags))
+							compiler_flags.AddOtherFlag (App.UserGccFlags);
+					}
 					compiler_flags.LinkWithMono ();
 					compiler_flags.LinkWithXamarin ();
 					if (GetEntryPoints ().ContainsKey ("UIApplicationMain"))
@@ -1077,6 +1095,12 @@ namespace Xamarin.Bundler
 					};
 					link_task.AddDependency (link_dependencies);
 					link_task.AddDependency (aottasks);
+
+					if (App.Embeddinator) {
+						link_task.AddDependency (link_with_task_output);
+						link_task.CompilerFlags.AddLinkWith (link_with_task_output.Select ((v) => v.OutputFile));
+						embeddinator_tasks.Add (link_task);
+					}
 
 					LinkWithBuildTarget (build_target, name, link_task, assemblies);
 
@@ -1193,9 +1217,6 @@ namespace Xamarin.Bundler
 				ErrorHelper.Warning (3006, "Could not compute a complete dependency map for the project. This will result in slower build times because Xamarin.iOS can't properly detect what needs to be rebuilt (and what does not need to be rebuilt). Please review previous warnings for more details.");
 			}
 
-			// Compile the managed assemblies into object files, frameworks or shared libraries
-			AOTCompile ();
-
 			List<string> registration_methods = new List<string> ();
 
 			// The static registrar.
@@ -1287,11 +1308,19 @@ namespace Xamarin.Bundler
 				LinkWithTaskOutput (main_task);
 			}
 
+			// Compile the managed assemblies into object files, frameworks or shared libraries
+			AOTCompile ();
+
 			Driver.Watch ("Compile", 1);
 		}
 
 		public void NativeLink (BuildTasks build_tasks)
 		{
+			if (App.Embeddinator && App.IsDeviceBuild) {
+				build_tasks.AddRange (embeddinator_tasks);
+				return;
+			}
+
 			if (!string.IsNullOrEmpty (App.UserGccFlags))
 				App.DeadStrip = false;
 			if (App.EnableLLVMOnlyBitCode)
@@ -1353,9 +1382,6 @@ namespace Xamarin.Bundler
 
 			linker_flags.AddOtherFlag ($"-o {Driver.Quote (Executable)}");
 
-			linker_flags.AddOtherFlag ("-lz");
-			linker_flags.AddOtherFlag ("-liconv");
-
 			bool need_libcpp = false;
 			if (App.EnableBitCode)
 				need_libcpp = true;
@@ -1372,20 +1398,25 @@ namespace Xamarin.Bundler
 				linker_flags.ReferenceSymbols (GetRequiredSymbols ());
 			}
 
-			string mainlib;
-			if (App.IsWatchExtension) {
-				mainlib = "libwatchextension.a";
-				linker_flags.AddOtherFlag (" -e _xamarin_watchextension_main");
-			} else if (App.IsTVExtension) {
-				mainlib = "libtvextension.a";
-			} else if (App.IsExtension) {
-				mainlib = "libextension.a";
-			} else {
-				mainlib = "libapp.a";
-			}
 			var libdir = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib");
-			var libmain = Path.Combine (libdir, mainlib);
-			linker_flags.AddLinkWith (libmain, true);
+			if (App.Embeddinator) {
+				linker_flags.AddOtherFlag ("-shared");
+				linker_flags.AddOtherFlag ($"-install_name {Driver.Quote ($"@rpath/{App.ExecutableName}.framework/{App.ExecutableName}")}");
+			} else {
+				string mainlib;
+				if (App.IsWatchExtension) {
+					mainlib = "libwatchextension.a";
+					linker_flags.AddOtherFlag (" -e _xamarin_watchextension_main");
+				} else if (App.IsTVExtension) {
+					mainlib = "libtvextension.a";
+				} else if (App.IsExtension) {
+					mainlib = "libextension.a";
+				} else {
+					mainlib = "libapp.a";
+				}
+				var libmain = Path.Combine (libdir, mainlib);
+				linker_flags.AddLinkWith (libmain, true);
+			}
 
 			if (App.EnableProfiling) {
 				string libprofiler;

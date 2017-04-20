@@ -490,7 +490,7 @@ namespace Xamarin.Bundler {
 			ValidateSDKVersion ();
 
 			if (action == Action.RunRegistrar) {
-				App.RootAssembly = unprocessed [0];
+				App.RootAssemblies.AddRange (unprocessed);
 				App.Registrar = RegistrarMode.Static;
 				App.RunRegistrar ();
 				return;
