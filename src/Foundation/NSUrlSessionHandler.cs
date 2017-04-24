@@ -55,6 +55,7 @@ namespace Foundation {
 #endif
 	public partial class NSUrlSessionHandler : HttpMessageHandler
 	{
+		static readonly NSUrlSessionConfiguration configuration;
 		readonly Dictionary<string, string> headerSeparators = new Dictionary<string, string> {
 			["User-Agent"] = " ",
 			["Server"] = " "
@@ -64,10 +65,9 @@ namespace Foundation {
 		readonly Dictionary<NSUrlSessionTask, InflightData> inflightRequests;
 		readonly object inflightRequestsLock = new object ();
 
-		public NSUrlSessionHandler ()
+		static NSUrlSessionHandler ()
 		{
-			AllowAutoRedirect = true;
-			var configuration = NSUrlSessionConfiguration.DefaultSessionConfiguration;
+			configuration = NSUrlSessionConfiguration.DefaultSessionConfiguration;
 
 			// we cannot do a bitmask but we can set the minimum based on ServicePointManager.SecurityProtocol minimum
 			var sp = ServicePointManager.SecurityProtocol;
@@ -79,6 +79,11 @@ namespace Foundation {
 				configuration.TLSMinimumSupportedProtocol = SslProtocol.Tls_1_1;
 			else if ((sp & SecurityProtocolType.Tls12) != 0)
 				configuration.TLSMinimumSupportedProtocol = SslProtocol.Tls_1_2;
+		}
+
+		public NSUrlSessionHandler ()
+		{
+			AllowAutoRedirect = true;
 
 			session = NSUrlSession.FromConfiguration (configuration, new NSUrlSessionHandlerDelegate (this), null);
 			inflightRequests = new Dictionary<NSUrlSessionTask, InflightData> ();
