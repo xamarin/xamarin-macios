@@ -120,7 +120,7 @@ namespace xharness
 						allTargetNames.Add (MakeMacClassicTargetName (target, MacTargetNameType.Build));
 						allTargetCleanNames.Add (MakeMacClassicTargetName (target, MacTargetNameType.Clean));
 
-						// mdtool can only find referenced projects if the referenced
+						// vstool can only find referenced projects if the referenced
 						// projects are included in the solution. This requires us to
 						// build the solution (if it exists), not the project.
 						var slnPath = Path.ChangeExtension (target.ProjectPath, "sln");

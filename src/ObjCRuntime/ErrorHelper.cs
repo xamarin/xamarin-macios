@@ -239,7 +239,7 @@ namespace XamCore.ObjCRuntime {
 		{
 			AggregateException ae = ex as AggregateException;
 
-			if (ae != null) {
+			if (ae != null && ae.InnerExceptions.Count > 0) {
 				foreach (var ie in ae.InnerExceptions)
 					CollectExceptions (ie, exceptions);
 			} else {

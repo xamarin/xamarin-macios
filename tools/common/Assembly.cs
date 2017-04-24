@@ -87,7 +87,8 @@ namespace Xamarin.Bundler {
 
 			symbols_loaded = false;
 			try {
-				if (File.Exists (FullPath + ".mdb")) {
+				var pdb = Path.ChangeExtension (FullPath, ".pdb");
+				if (File.Exists (pdb) || File.Exists (FullPath + ".mdb")) {
 					AssemblyDefinition.MainModule.ReadSymbols ();
 					symbols_loaded = true;
 				}
@@ -335,6 +336,7 @@ namespace Xamarin.Bundler {
 				foreach (var mr in m.ModuleReferences) {
 					string name = mr.Name;
 					string file = Path.GetFileNameWithoutExtension (name);
+
 					switch (file) {
 					// special case
 					case "__Internal":
@@ -399,6 +401,12 @@ namespace Xamarin.Bundler {
 						break;
 #endif
 					default:
+#if MONOMAC
+						string path = Path.GetDirectoryName (name);
+						if (!path.StartsWith ("/System/Library/Frameworks", StringComparison.Ordinal))
+							continue;
+#endif
+
 						// detect frameworks
 						int f = name.IndexOf (".framework/", StringComparison.Ordinal);
 						if (f > 0) {

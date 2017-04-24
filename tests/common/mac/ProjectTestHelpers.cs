@@ -136,7 +136,7 @@ namespace Xamarin.MMP.Tests
 			if (isUnified)
 				return RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/" + (useMSBuild ? "msbuild" : "xbuild"), buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo);
 			else
-				return RunAndAssert ("/Applications/Xamarin Studio.app/Contents/MacOS/mdtool", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo);
+				return RunAndAssert ("/Applications/Visual Studio.app/Contents/MacOS/vstool", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo);
 		}
 
 		static string ProjectTextReplacement (UnifiedTestConfig config, string text)

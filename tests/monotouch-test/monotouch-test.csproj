@@ -649,6 +649,7 @@
     <Compile Include="AVFoundation\PlayerItemVideoOutputTest.cs" />
     <Compile Include="mono\ConfigTest.cs" />
     <Compile Include="OpenGLES\EAGLContext.cs" />
+    <Compile Include="CoreText\CTParagraphStyleTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>

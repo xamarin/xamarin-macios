@@ -52,6 +52,7 @@ class BindingTouch {
 	public static bool skipSystemDrawing;
 
 	static string baselibdll;
+	static string attributedll;
 	static string compiler;
 	static string net_sdk;
 
@@ -96,6 +97,9 @@ class BindingTouch {
 #if IKVM
 	static string GetAttributeLibraryPath ()
 	{
+		if (!string.IsNullOrEmpty (attributedll))
+			return attributedll;
+
 		switch (CurrentPlatform) {
 		case PlatformName.iOS:
 			if (Unified) {
@@ -281,6 +285,7 @@ class BindingTouch {
 			{ "e", "Generates smaller classes that can not be subclassed (previously called 'external mode')", v => external = true },
 			{ "p", "Sets private mode", v => public_mode = false },
 			{ "baselib=", "Sets the base library", v => baselibdll = v },
+			{ "attributelib=", "Sets the attribute library", v => attributedll = v },
 			{ "use-zero-copy", v=> zero_copy = true },
 			{ "nostdlib", "Does not reference mscorlib.dll library", l => nostdlib = true },
 			{ "no-mono-path", "Launches compiler with empty MONO_PATH", l => { } },
