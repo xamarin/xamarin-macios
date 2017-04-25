@@ -14,7 +14,7 @@
     <AssemblyOriginatorKeyFile>..\..\product.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
-    <DefineConstants>XAMCORE_2_0</DefineConstants>
+    <DefineConstants>XAMCORE_2_0;MONOTOUCH</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>True</DebugSymbols>
@@ -36,7 +36,7 @@
     <DebugType>none</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
-    <DefineConstants>MONOTOUCH;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchLink>None</MtouchLink>
@@ -93,7 +93,7 @@
     <DebugType>none</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>MONOTOUCH;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -106,7 +106,7 @@
     <DebugType>none</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>MONOTOUCH;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -119,7 +119,7 @@
     <DebugType>none</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>MONOTOUCH;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -132,7 +132,7 @@
     <DebugType>none</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>MONOTOUCH;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
