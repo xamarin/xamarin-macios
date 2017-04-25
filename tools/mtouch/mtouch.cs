@@ -577,7 +577,7 @@ namespace Xamarin.Bundler
 					if (asm_fw.BuildTargetName == asm_name)
 						continue; // this is deduceable
 					var prefix = string.Empty;
-					if (app.IsExtension && asm_fw.IsCodeShared)
+					if (!app.HasFrameworksDirectory && asm_fw.IsCodeShared)
 						prefix = "../../";
 					var suffix = string.Empty;
 					if (app.IsSimulatorBuild)

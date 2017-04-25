@@ -134,12 +134,12 @@ namespace Xamarin.Bundler
 				LinkWithTaskOutput (link_task);
 				break;
 			case AssemblyBuildTarget.DynamicLibrary:
-				if (!(App.IsExtension && assemblies.Any ((asm) => asm.IsCodeShared)))
+				if (!(!App.HasFrameworksDirectory && assemblies.Any ((asm) => asm.IsCodeShared)))
 					AddToBundle (link_task.OutputFile);
 				LinkWithTaskOutput (link_task);
 				break;
 			case AssemblyBuildTarget.Framework:
-				if (!(App.IsExtension && assemblies.Any ((asm) => asm.IsCodeShared)))
+				if (!(!App.HasFrameworksDirectory && assemblies.Any ((asm) => asm.IsCodeShared)))
 					AddToBundle (link_task.OutputFile, $"Frameworks/{name}.framework/{name}", dylib_to_framework_conversion: true);
 				LinkWithTaskOutput (link_task);
 				break;
