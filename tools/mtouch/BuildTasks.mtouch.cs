@@ -457,7 +457,7 @@ namespace Xamarin.Bundler
 				throw new ArgumentNullException (nameof (install_name));
 
 			flags.AddOtherFlag ("-shared");
-			if (!App.EnableMarkerOnlyBitCode && !App.EnableAsmOnlyBitCode)
+			if (!App.EnableBitCode)
 				flags.AddOtherFlag ("-read_only_relocs suppress");
 			flags.LinkWithMono ();
 			flags.AddOtherFlag ("-install_name " + Driver.Quote (install_name));
