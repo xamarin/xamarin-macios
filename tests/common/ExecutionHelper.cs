@@ -211,6 +211,12 @@ namespace Xamarin.Tests
 			if (!HasOutputPattern (linePattern))
 				Assert.Fail (string.Format ("The output does not contain the line '{0}'", linePattern));
 		}
+
+		public void ForAllOutputLines (Action<string> action)
+		{
+			foreach (var line in OutputLines)
+				action (line);
+		}
 	}
 
 	class XBuild
