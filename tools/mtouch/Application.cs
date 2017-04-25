@@ -502,10 +502,10 @@ namespace Xamarin.Bundler {
 				if (all_architectures == null) {
 					all_architectures = new HashSet<Abi> ();
 					foreach (var abi in abis)
-						all_architectures.Add (abi & Abi.ArchMask);
+						all_architectures.Add (abi);
 					foreach (var ext in AppExtensions) {
 						foreach (var abi in ext.Abis)
-							all_architectures.Add (abi & Abi.ArchMask);
+							all_architectures.Add (abi);
 					}
 				}
 				return all_architectures;

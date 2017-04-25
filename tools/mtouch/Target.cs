@@ -85,7 +85,7 @@ namespace Xamarin.Bundler
 					foreach (var abi in App.AllArchitectures) {
 						var a = abi & mask;
 						if (a != 0)
-							all_architectures.Add (a);
+							all_architectures.Add (abi);
 					}
 				}
 				return all_architectures;
