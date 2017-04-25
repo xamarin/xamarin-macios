@@ -1350,6 +1350,63 @@ public class TestApp {
 			}
 		}
 
+		[Test]
+		[TestCase (Profile.tvOS, MTouchBitcode.Marker)]
+		[TestCase (Profile.watchOS, MTouchBitcode.Marker)]
+		public void StripBitcodeFromFrameworks (Profile profile, MTouchBitcode bitcode)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = profile;
+				if (profile == Profile.watchOS) {
+					mtouch.CreateTemporaryWatchKitExtension ();
+				} else {
+					mtouch.CreateTemporaryApp ();
+				}
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.AssemblyBuildTargets.Add ("@all=framework=MyApp");
+				mtouch.NoStrip = true; // faster test
+				mtouch.DSym = false; // faster test
+				mtouch.Bitcode = bitcode;
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+
+				var frameworks = new string [] { "Mono", "Xamarin" };
+				foreach (var framework in frameworks) {
+					var relative_path = $"Frameworks/{framework}.framework/{framework}";
+					var src = Path.Combine (GetXamarinSdkDirectory (profile, true), relative_path);
+					var dst = Path.Combine (mtouch.AppPath, relative_path);
+					var srcLength = new FileInfo (src).Length;
+					var dstLength = new FileInfo (dst).Length;
+					Assert.That (dstLength, Is.LessThan (srcLength), "Framework size");
+				}
+			}
+		}
+
+		static string GetXamarinSdkDirectory (Profile profile, bool device)
+		{
+			switch (profile) {
+			case Profile.iOS:
+				if (device) {
+					return Path.Combine (Configuration.SdkRootXI, "SDKs", "MonoTouch.iphoneos.sdk");
+				} else {
+					return Path.Combine (Configuration.SdkRootXI, "SDKs", "MonoTouch.iphonesimulator.sdk");
+				}
+			case Profile.tvOS:
+				if (device) {
+					return Path.Combine (Configuration.SdkRootXI, "SDKs", "Xamarin.AppleTVOS.sdk");
+				} else {
+					return Path.Combine (Configuration.SdkRootXI, "SDKs", "Xamarin.AppleTVSimulator.sdk");
+				}
+			case Profile.watchOS:
+				if (device) {
+					return Path.Combine (Configuration.SdkRootXI, "SDKs", "Xamarin.WatchOS.sdk");
+				} else {
+					return Path.Combine (Configuration.SdkRootXI, "SDKs", "Xamarin.WatchSimulator.sdk");
+				}
+			default:
+				throw new NotImplementedException ();
+			}
+		}
+
 		static string BindingsLibrary {
 			get {
 				return Path.Combine (Configuration.SourceRoot, "tests/bindings-test/bin/Debug/bindings-test.dll");

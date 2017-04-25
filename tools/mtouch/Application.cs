@@ -1581,10 +1581,19 @@ namespace Xamarin.Bundler {
 					if (!MachO.IsDynamicFramework (framework_filename)) {
 						Driver.Log (1, "The framework {0} is a framework of static libraries, and will not be copied to the app.", framework_src);
 					} else {
+						var macho_file = Path.Combine (targetPath, Path.GetFileNameWithoutExtension (framework_src));
+						var macho_info = new FileInfo (macho_file);
+						var macho_last_write_time = macho_info.LastWriteTimeUtc; // this returns a date in the 17th century if the file doesn't exist.
 						UpdateDirectory (framework_src, Path.GetDirectoryName (targetPath));
 						if (IsDeviceBuild) {
 							// Remove architectures we don't care about.
-							MachO.SelectArchitectures (Path.Combine (targetPath, Path.GetFileNameWithoutExtension (framework_src)), AllArchitectures);
+							MachO.SelectArchitectures (macho_file, AllArchitectures);
+							// Strip bitcode if needed.
+							macho_info.Refresh ();
+							if (macho_info.LastWriteTimeUtc > macho_last_write_time) {
+								// bitcode_strip will always touch the file, but we only want to strip it if it was updated.
+								StripBitcode (macho_file);
+							}
 						}
 					}
 				} else {
@@ -1640,6 +1649,27 @@ namespace Xamarin.Bundler {
 					cached_executable = Targets [0].CachedExecutable;
 				}
 			}
+		}
+
+		public void StripBitcode (string macho_file)
+		{
+			var sb = new StringBuilder ();
+			sb.Append (Driver.Quote (macho_file)).Append (" ");
+			switch (BitCodeMode) {
+			case BitCodeMode.ASMOnly:
+			case BitCodeMode.LLVMOnly:
+				// do nothing, since we don't know neither if bitcode is needed (if we're publishing) or if native code is needed (not publishing).
+				return;
+			case BitCodeMode.MarkerOnly:
+				sb.Append ("-m ");
+				break;
+			case BitCodeMode.None:
+				sb.Append ("-r ");
+				break;
+			}
+			sb.Append ("-o ");
+			sb.Append (Driver.Quote (macho_file));
+			Driver.XcodeRun ("bitcode_strip", sb.ToString ());
 		}
 
 		// Returns true if is up-to-date
