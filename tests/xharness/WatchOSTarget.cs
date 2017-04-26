@@ -75,7 +75,7 @@ namespace xharness
 			csproj.FixArchitectures ("i386", "ARMv7k");
 			csproj.FixInfoPListInclude (suffix);
 			csproj.SetOutputType ("Library");
-			csproj.AddAdditionalDefines ("MONOTOUCH;XAMCORE_2_0;XAMCORE_3_0;FEATURE_NO_BSD_SOCKETS");
+			csproj.AddAdditionalDefines ("XAMCORE_2_0;XAMCORE_3_0;FEATURE_NO_BSD_SOCKETS");
 			csproj.RemoveReferences ("OpenTK-1.0");
 			var ext = IsFSharp ? "fs" : "cs";
 			csproj.AddCompileInclude ("InterfaceController." + ext, Path.Combine (Harness.WatchOSExtensionTemplate, "InterfaceController." + ext));
@@ -138,7 +138,7 @@ namespace xharness
 			csproj.RemoveTargetFrameworkIdentifier ();
 			csproj.SetPlatformAssembly ("Xamarin.WatchOS");
 			csproj.SetImport (IsBindingProject ? BindingsImports : Imports);
-			csproj.AddAdditionalDefines ("MONOTOUCH;XAMCORE_2_0;XAMCORE_3_0");
+			csproj.AddAdditionalDefines ("XAMCORE_2_0;XAMCORE_3_0");
 			csproj.FixProjectReferences (Suffix);
 			csproj.SetExtraLinkerDefs ("extra-linker-defs" + Suffix + ".xml");
 			csproj.FixTestLibrariesReferences (Platform);

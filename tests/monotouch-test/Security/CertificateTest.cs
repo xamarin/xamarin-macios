@@ -517,11 +517,10 @@ namespace MonoTouchFixtures.Security {
 			if (TestRuntime.CheckXcodeVersion (8, 3)) {
 				Assert.That (cert.GetCommonName (), Is.EqualTo ("mail.google.com"), "GetCommonName");
 				Assert.That (cert.GetSerialNumber ().Description, Is.EqualTo ("<2b9f7ee5 ca25a625 14204782 753a9bb9>"), "GetSerialNumber");
-#if MONOTOUCH // SecCertificateCopyEmailAddresses does not behavior as documented on iOS and returns null
-				Assert.Null (cert.GetEmailAddresses (), "GetEmailAddresses");
-#else
-				Assert.That (cert.GetEmailAddresses ().Length, Is.EqualTo (0), "GetEmailAddresses");
-#endif
+
+				var emailAddresses = cert.GetEmailAddresses ();
+				Assert.IsTrue (emailAddresses == null || emailAddresses.Length == 0, "GetEmailAddresses");
+
 				Assert.NotNull (cert.GetNormalizedIssuerSequence (), "GetNormalizedIssuerSequence");
 				Assert.NotNull (cert.GetNormalizedSubjectSequence (), "GetNormalizedSubjectSequence");
 				Assert.NotNull (cert.GetPublicKey (), "GetPublicKey");
