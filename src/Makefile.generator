@@ -133,10 +133,10 @@ endif
 
 ifndef IKVM
 $(IOS_BUILD_DIR)/btouch.exe: $(IOS_BUILD_DIR)/compat/monotouch.dll $(GENERATOR_SOURCES) Makefile.generator
-	$(call Q_PROF_PMCS,ios/compat) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/compat-ios" -compiler:$(IOS_CSC) -global-replace:"^XamCore=MonoTouch" -debug $(GENERATOR_DEFINES) -out:$@ $(GENERATOR_SOURCES) -r:$<
+	$(call Q_PROF_PMCS,ios/compat) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/compat-ios" -compiler:$(IOS_MCS) -global-replace:"^XamCore=MonoTouch" -debug $(GENERATOR_DEFINES) -out:$@ $(GENERATOR_SOURCES) -r:$<
 
 $(IOS_BUILD_DIR)/btouch-native.exe: $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll $(GENERATOR_SOURCES) Makefile.generator
-	$(call Q_PROF_PMCS,ios/native) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/native"     -compiler:$(IOS_CSC) -global-replace:"^XamCore.="         -debug $(GENERATOR_DEFINES) -out:$@ $(GENERATOR_SOURCES) -r:$<
+	$(call Q_PROF_PMCS,ios/native) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/native"     -compiler:$(IOS_MCS) -global-replace:"^XamCore.="         -debug $(GENERATOR_DEFINES) -out:$@ $(GENERATOR_SOURCES) -r:$<
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/btouch/%.exe: $(IOS_BUILD_DIR)/%.exe | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/btouch
 	$(Q) install -m 0755 $< $@
@@ -153,11 +153,11 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe: build/common/bgen.exe | $(I
 
 $(IOS_BUILD_DIR)/native/Xamarin.iOS.BindingAttributes.dll: generator-attributes.cs Makefile.generator $(PMCS_EXE)
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/native"     -compiler:$(IOS_CSC) -global-replace:"^XamCore.="        -out:$@ -debug generator-attributes.cs -target:library
+	$(Q_GEN) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/native"     -compiler:$(IOS_MCS) -global-replace:"^XamCore.="        -out:$@ -debug generator-attributes.cs -target:library
 
 $(IOS_BUILD_DIR)/native/monotouch.BindingAttributes.dll: generator-attributes.cs Makefile.generator $(PMCS_EXE)
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/compat-ios"     -compiler:$(IOS_CSC) -global-replace:"^XamCore.=MonoTouch."        -out:$@ -debug generator-attributes.cs -target:library
+	$(Q_GEN) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/compat-ios"     -compiler:$(IOS_MCS) -global-replace:"^XamCore.=MonoTouch."        -out:$@ -debug generator-attributes.cs -target:library
 
 #
 # Xamarin.Watch (bwatch)

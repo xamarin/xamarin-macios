@@ -111,6 +111,7 @@ namespace Xamarin.Bundler
 			DownloadCrashReport,
 			KillWatchApp,
 			LaunchWatchApp,
+			Embeddinator,
 		}
 
 		static bool xcode_version_check = true;
@@ -568,18 +569,20 @@ namespace Xamarin.Bundler
 				}
 			}
 
-			if ((abi & Abi.SimulatorArchMask) == 0) {
+			if ((abi & Abi.SimulatorArchMask) == 0 || app.Embeddinator) {
 				var frameworks = assemblies.Where ((a) => a.BuildTarget == AssemblyBuildTarget.Framework)
 				                           .OrderBy ((a) => a.Identity, StringComparer.Ordinal);
 				foreach (var asm_fw in frameworks) {
 					var asm_name = asm_fw.Identity;
 					if (asm_fw.BuildTargetName == asm_name)
 						continue; // this is deduceable
-					if (app.IsExtension && asm_fw.IsCodeShared) {
-						assembly_location.AppendFormat ("\t{{ \"{0}\", \"../../Frameworks/{1}.framework/MonoBundle\" }},\n", asm_name, asm_fw.BuildTargetName);
-					} else {
-						assembly_location.AppendFormat ("\t{{ \"{0}\", \"Frameworks/{1}.framework/MonoBundle\" }},\n", asm_name, asm_fw.BuildTargetName);
-					}
+					var prefix = string.Empty;
+					if (!app.HasFrameworksDirectory && asm_fw.IsCodeShared)
+						prefix = "../../";
+					var suffix = string.Empty;
+					if (app.IsSimulatorBuild)
+						suffix = "/simulator";
+					assembly_location.AppendFormat ("\t{{ \"{0}\", \"{2}Frameworks/{1}.framework/MonoBundle{3}\" }},\n", asm_name, asm_fw.BuildTargetName, prefix, suffix);
 					assembly_location_count++;
 				}
 			}
@@ -679,10 +682,10 @@ namespace Xamarin.Bundler
 					if (app.IsExtension) {
 						// the name of the executable must be the bundle id (reverse dns notation)
 						// but we do not want to impose that (ugly) restriction to the managed .exe / project name / ...
-						sw.WriteLine ("\targv [0] = (char *) \"{0}\";", Path.GetFileNameWithoutExtension (app.RootAssembly));
-						sw.WriteLine ("\tint rv = xamarin_main (argc, argv, true);");
+						sw.WriteLine ("\targv [0] = (char *) \"{0}\";", Path.GetFileNameWithoutExtension (app.RootAssemblies [0]));
+						sw.WriteLine ("\tint rv = xamarin_main (argc, argv, XamarinLaunchModeExtension);");
 					} else {
-						sw.WriteLine ("\tint rv = xamarin_main (argc, argv, false);");
+						sw.WriteLine ("\tint rv = xamarin_main (argc, argv, XamarinLaunchModeApp);");
 					}
 					sw.WriteLine ("\t[pool drain];");
 					sw.WriteLine ("\treturn rv;");
@@ -884,6 +887,9 @@ namespace Xamarin.Bundler
 			if (app.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.UnwindManagedCode)
 				return false; // UnwindManagedCode is the default for debug builds.
 
+			if (app.Embeddinator)
+				return false;
+
 			return true;
 		}
 
@@ -1010,6 +1016,11 @@ namespace Xamarin.Bundler
 			{ "v", "Verbose", v => verbose++ },
 			{ "q", "Quiet", v => verbose-- },
 			{ "time", v => watch_level++ },
+			{ "embeddinator", "Enables Embeddinator targetting mode.", v =>
+				{
+					app.Embeddinator = true;
+				}, true
+			},
 			{ "executable=", "Specifies the native executable name to output", v => app.ExecutableName = v },
 			{ "nofastsim", "Do not run the simulator fast-path build", v => app.NoFastSim = true },
 			{ "nodevcodeshare", "Do not share native code between extensions and main app.", v => app.NoDevCodeShare = true },
@@ -1301,23 +1312,9 @@ namespace Xamarin.Bundler
 			app.RuntimeOptions = RuntimeOptions.Create (app, http_message_handler, tls_provider);
 
 			if (action == Action.Build || action == Action.RunRegistrar) {
-				if (assemblies.Count != 1) {
-					var exceptions = new List<Exception> ();
-					for (int i = assemblies.Count - 1; i >= 0; i--) {
-						if (assemblies [i].StartsWith ("-", StringComparison.Ordinal)) {
-							exceptions.Add (new MonoTouchException (18, true, "Unknown command line argument: '{0}'", assemblies [i]));
-							assemblies.RemoveAt (i);
-						}
-					}
-					if (assemblies.Count > 1) {
-						exceptions.Add (new MonoTouchException (8, true, "You should provide one root assembly only, found {0} assemblies: '{1}'", assemblies.Count, string.Join ("', '", assemblies.ToArray ())));
-					} else if (assemblies.Count == 0) {
-						exceptions.Add (new MonoTouchException (17, true, "You should provide a root assembly."));
-					}
-
-					throw new AggregateException (exceptions);
-				}
-				app.RootAssembly = assemblies [0];
+				if (assemblies.Count == 0)
+					throw new MonoTouchException (17, true, "You should provide a root assembly.");
+				app.RootAssemblies = assemblies;
 			}
 
 			return app;

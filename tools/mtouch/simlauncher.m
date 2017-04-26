@@ -28,7 +28,7 @@ void xamarin_setup_impl ()
 int
 main (int argc, char** argv)
 {
-	@autoreleasepool { return xamarin_main (argc, argv, false); }
+	@autoreleasepool { return xamarin_main (argc, argv, XamarinLaunchModeApp); }
 }
 
 

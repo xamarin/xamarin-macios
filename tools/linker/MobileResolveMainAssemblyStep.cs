@@ -4,16 +4,19 @@ using System;
 
 using Mono.Cecil;
 using Mono.Linker.Steps;
+using Xamarin.Tuner;
 
 namespace Xamarin.Linker.Steps {
 	
 	public class MobileResolveMainAssemblyStep : ResolveFromAssemblyStep {
 
 		AssemblyDefinition assembly;
+		bool embeddinator;
 
-		public MobileResolveMainAssemblyStep (AssemblyDefinition ad) : base (ad)
+		public MobileResolveMainAssemblyStep (AssemblyDefinition ad, bool embeddinator) : base (ad)
 		{
 			assembly = ad;
+			this.embeddinator = embeddinator;
 		}
 
 		protected override void Process ()
@@ -31,7 +34,18 @@ namespace Xamarin.Linker.Steps {
 
 			Annotations.Push (assembly);
 
+			var is_product_assembly = Mono.Tuner.Profile.IsProductAssembly (assembly);
 			foreach (var t in assembly.MainModule.Types) {
+				if (embeddinator) {
+					if (t.IsPublic && !is_product_assembly) {
+						// Mark all public types when in embeddinator mode.
+						// There may be no types with the Register attribute,
+						// which means that without this the assembly might be completely ignored even if it's not linked.
+						Annotations.Mark (t);
+					}
+					continue;
+				}
+
 				if (!t.HasCustomAttribute (Namespaces.Foundation, "RegisterAttribute"))
 					continue;
 				Annotations.Mark (t);
