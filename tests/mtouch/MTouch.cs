@@ -96,6 +96,36 @@ namespace Xamarin
 		}
 
 		[Test]
+		[TestCase ("code sharing 32-bit", "armv7+llvm", new string [] { "@sdk=framework=Xamarin.Sdk", "@all=staticobject" })]
+		[TestCase ("code sharing 64-bit", "arm64+llvm", new string [] { "@sdk=framework=Xamarin.Sdk", "@all=staticobject" })]
+		[TestCase ("32-bit", "armv7+llvm", new string [] { } )]
+		[TestCase ("64-bit", "arm64+llvm", new string [] { })]
+		public void CodeSharingLLVM (string name, string abi, string[] assembly_build_targets)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Abi = abi;
+				mtouch.AssemblyBuildTargets.AddRange (assembly_build_targets);
+				mtouch.Debug = false;
+				mtouch.NoStrip = true; // faster test
+				mtouch.NoSymbolStrip = string.Empty; // faster test
+				mtouch.Verbosity = 4; // This is needed to get mtouch to print the output we're verifying
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+				// Check that --llvm is passed to the AOT compiler for every assembly we AOT.
+				var assemblies_checked = 0;
+				mtouch.ForAllOutputLines ((line) =>
+				{
+					if (!line.Contains ("arm-darwin-mono-sgen") && !line.Contains ("arm64-darwin-mono-sgen"))
+						return;
+					StringAssert.Contains (" --llvm ", line, "aot command must pass --llvm to the AOT compiler");
+					assemblies_checked++;
+				});
+				Assert.That (assemblies_checked, Is.AtLeast (4), "We build at least 4, so we must have had at least 4 asserts above."); // mscorlib.dll, Xamarin.iOS.dll, System.dll, theApp.exe
+			}
+		}
+
+		[Test]
 		[TestCase ("single", "",                   false)]
 		[TestCase ("dual",   "armv7,arm64", false)]
 		[TestCase ("llvm",   "armv7+llvm",  false)]
