@@ -34,9 +34,9 @@ namespace Xamarin.MMP.Tests.Unit
 			commandsRun = new List<Tuple<string, string>> ();
 		}
 
-		void Compile (AOTOptions options, TestFileEnumerator files, AOTCompilerType compilerType = AOTCompilerType.Bundled64, RunCommandDelegate onRunDelegate = null)
+		void Compile (AOTOptions options, TestFileEnumerator files, AOTCompilerType compilerType = AOTCompilerType.Bundled64, RunCommandDelegate onRunDelegate = null, bool isModern = false)
 		{
-			AOTCompiler compiler = new AOTCompiler (options, compilerType)
+			AOTCompiler compiler = new AOTCompiler (options, compilerType, isModern)
 			{
 				RunCommand = onRunDelegate != null ? onRunDelegate : OnRunCommand,
 				ParallelOptions = new ParallelOptions () { MaxDegreeOfParallelism = 1 },
@@ -75,26 +75,38 @@ namespace Xamarin.MMP.Tests.Unit
 			}
 		}
 
-		List<string> GetFiledAOTed (AOTCompilerType compilerType = AOTCompilerType.Bundled64, AOTKind kind = AOTKind.Standard)
+		List<string> GetFiledAOTed (AOTCompilerType compilerType = AOTCompilerType.Bundled64, AOTKind kind = AOTKind.Standard, bool isModern = false)
 		{
 			List<string> filesAOTed = new List<string> (); 
 
 			foreach (var command in commandsRun) {
 				Assert.IsTrue (command.Item1.EndsWith (GetExpectedMonoCommand (compilerType)), "Unexpected command: " + command.Item1);
-				if (kind == AOTKind.Hybrid)
-					Assert.AreEqual (command.Item2.Split (' ')[0], "--aot=hybrid", "First arg should be --aot=hybrid");
-				else
-					Assert.AreEqual (command.Item2.Split (' ')[0], "--aot", "First arg should be --aot");
+				string [] argParts = command.Item2.Split (' ');
 
-				string fileName = command.Item2.Substring (command.Item2.IndexOf(' ') + 1).Replace ("\"", "");
+				if (kind == AOTKind.Hybrid)
+					Assert.AreEqual (argParts[0], "--aot=hybrid", "First arg should be --aot=hybrid");
+				else
+					Assert.AreEqual (argParts[0], "--aot", "First arg should be --aot");
+
+				if (isModern)
+					Assert.AreEqual (argParts[1], "--runtime=mobile", "Second arg should be --runtime=mobile");
+				else
+					Assert.AreNotEqual (argParts[1], "--runtime=mobile", "Second arg should not be --runtime=mobile");
+
+
+				int fileNameBeginningIndex = command.Item2.IndexOf(' ') + 1;
+				if (isModern)
+					fileNameBeginningIndex = command.Item2.IndexOf(' ', fileNameBeginningIndex) + 1;
+
+				string fileName = command.Item2.Substring (fileNameBeginningIndex).Replace ("\"", "");
 				filesAOTed.Add (fileName);
 			}
 			return filesAOTed;
 		}
 
-		void AssertFilesAOTed (IEnumerable <string> expectedFiles, AOTCompilerType compilerType = AOTCompilerType.Bundled64, AOTKind kind = AOTKind.Standard)
+		void AssertFilesAOTed (IEnumerable <string> expectedFiles, AOTCompilerType compilerType = AOTCompilerType.Bundled64, AOTKind kind = AOTKind.Standard, bool isModern = false)
 		{
-			List<string> filesAOTed = GetFiledAOTed (compilerType, kind);
+			List<string> filesAOTed = GetFiledAOTed (compilerType, kind, isModern);
 
 			Func<string> getErrorDetails = () => $"\n {String.Join (" ", filesAOTed)} \nvs\n {String.Join (" ", expectedFiles)}";
 
@@ -310,6 +322,18 @@ namespace Xamarin.MMP.Tests.Unit
 			Compile (options, new TestFileEnumerator (FullAppFileList));
 
 			AssertFilesAOTed (SDKFileList, kind : AOTKind.Hybrid);
+		}
+
+		[Test]
+		public void All_AOTAllFiles_Modern ()
+		{
+			var options = new AOTOptions ("all");
+			Assert.IsTrue (options.IsAOT, "Should be IsAOT");
+
+			Compile (options, new TestFileEnumerator (FullAppFileList), isModern : true);
+
+			var expectedFiles = FullAppFileList.Where (x => x.EndsWith (".exe") || x.EndsWith (".dll"));
+			AssertFilesAOTed (expectedFiles, isModern : true);
 		}
 	}
 }

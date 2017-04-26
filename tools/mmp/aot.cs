@@ -182,11 +182,13 @@ namespace Xamarin.Bundler {
 
 		AOTOptions options;
 		AOTCompilerType compilerType;
+		bool IsModern;
 
-		public AOTCompiler (AOTOptions options, AOTCompilerType compilerType)
+		public AOTCompiler (AOTOptions options, AOTCompilerType compilerType, bool isModern)
 		{
 			this.options = options;
 			this.compilerType = compilerType;
+			this.IsModern = isModern;
 		}
 
 		public void Compile (string path)
@@ -202,7 +204,7 @@ namespace Xamarin.Bundler {
 			var monoEnv = new string [] {"MONO_PATH", files.RootDir };
 
 			Parallel.ForEach (GetFilesToAOT (files), ParallelOptions, file => {
-				if (RunCommand (MonoPath, String.Format ("--aot{0} {1}", options.IsHybridAOT ? "=hybrid" : "", Quote (file)), monoEnv) != 0)
+				if (RunCommand (MonoPath, String.Format ("--aot{0} {1}{2}", options.IsHybridAOT ? "=hybrid" : "", IsModern ? "--runtime=mobile " : "", Quote (file)), monoEnv) != 0)
 					throw ErrorHelper.CreateError (3001, "Could not AOT the assembly '{0}'", file);
 			});
 		}
