@@ -84,7 +84,7 @@ namespace Xamarin.Bundler
 					foreach (var abi in App.AllArchitectures) {
 						var a = abi & mask;
 						if (a != 0)
-							all_architectures.Add (a);
+							all_architectures.Add (abi);
 					}
 				}
 				return all_architectures;
@@ -1430,6 +1430,12 @@ namespace Xamarin.Bundler
 					linker_flags.AddOtherFlag ($"-F {Driver.Quote (Path.Combine (Driver.GetFrameworkDirectory (App), "System/Library/PrivateFrameworks"))} -framework PlugInKit");
 				}
 				linker_flags.AddOtherFlag ("-fapplication-extension");
+			}
+
+			if (App.HasFrameworks && Is64Build) {
+				// Work around https://bugzilla.xamarin.com/show_bug.cgi?id=55553
+				// This option was introduced in Xcode 5.1, so no need for Xcode version checks.
+				linker_flags.AddOtherFlag ("-Wl,-ignore_optimization_hints");
 			}
 
 			link_task = new NativeLinkTask
