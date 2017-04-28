@@ -134,6 +134,8 @@ namespace Xamarin.Bundler {
 	//																			the container app does not build for the ABI {1} (while the extension is building for this ABI).
 	//																			the container app is building for the ABI {1}, which is not compatible with the extension's ABI ({2}).
 	//																			the container app is referencing the assembly '{1}' from '{2}', while the extension references it from '{3}'.
+	//		Warning		MT0125	The --assembly-build-target command-line argument is ignored in the simulator.
+	//		Warning		MT0126	Incremental builds have been disabled because incremental builds are not supported in the simulator.
 	//		Warning		MT0127	Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.
 	// MT1xxx	file copy / symlinks (project related)
 	//			MT10xx	installer.cs / mtouch.cs

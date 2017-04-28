@@ -388,7 +388,7 @@ namespace Xamarin.iOS.Tasks
 				args.Add ("--extension");
 
 			if (Debug) {
-				if (FastDev)
+				if (FastDev && !SdkIsSimulator)
 					args.Add ("--fastdev");
 
 				args.Add ("--debug");
