@@ -88,7 +88,7 @@ namespace XamCore.ObjCRuntime {
 			IntPtr rv;
 
 			if (runtime_library == IntPtr.Zero) {
-				runtime_library = new IntPtr (-5 /* RTLD_MAIN_ONLY */);
+				runtime_library = new IntPtr (-2 /* RTLD_DEFAULT */);
 				rv = Dlfcn.dlsym (runtime_library, name);
 				if (rv == IntPtr.Zero) {
 					runtime_library = Dlfcn.dlopen ("libxammac.dylib", 0);
