@@ -2056,6 +2056,8 @@ The DelegateProxy attribute for the method in question is invalid.
 
 This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
+<!-- 8017 is used by mmp -->
+
 <h3><a name="MT8018"/>MT8018: Internal consistency error. Please file a bug report at http://bugzilla.xamarin.com.</h3>
 
 This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
