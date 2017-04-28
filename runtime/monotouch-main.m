@@ -234,7 +234,7 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 	patch_sigaction ();
 #endif
 
-	xamarin_is_extension = launch_mode == XamarinLaunchModeExtension;
+	xamarin_launch_mode = launch_mode;
 
 	memset (managed_argv, 0, sizeof (char*) * (argc + 2));
 	managed_argv [0] = "monotouch";

@@ -363,12 +363,12 @@ update_environment (xamarin_initialize_data *data)
 }
 
 static void
-app_initialize (xamarin_initialize_data *data, bool is_extension)
+app_initialize (xamarin_initialize_data *data)
 {
 	// The launch code here is publicly documented in xamarin/launch.h
 	// The numbers in the comments refer to numbers in xamarin/launch.h.
 
-	xamarin_is_extension = is_extension;
+	xamarin_launch_mode = data->launch_mode;
 
 #ifndef SYSTEM_LAUNCHER
 	if (xammac_setup ()) {
@@ -442,7 +442,7 @@ app_initialize (xamarin_initialize_data *data, bool is_extension)
 	if (!check_mono_version (mono_version, [minVersion UTF8String]))
 		exit_with_message ([[NSString stringWithFormat:@"This application requires the Mono framework version %@ or newer.", minVersion] UTF8String], data->basename, true);
 	// 6) Find the executable. The name is: [...]
-	if (!is_extension) {
+	if (data->launch_mode == XamarinLaunchModeApp) {
 		NSString *exeName = NULL;
 		NSString *exePath;
 		if (plist != NULL)
@@ -534,8 +534,6 @@ int xamarin_main (int argc, char **argv, enum XamarinLaunchMode launch_mode)
 {
 	xamarin_initialize_data data = { 0 };
 
-	bool is_extension = launch_mode == XamarinLaunchModeExtension;
-
 	if (getcwd (original_working_directory_path, sizeof (original_working_directory_path)) == NULL)
 		original_working_directory_path [0] = '\0';
 
@@ -543,6 +541,7 @@ int xamarin_main (int argc, char **argv, enum XamarinLaunchMode launch_mode)
 		data.size = sizeof (data);
 		data.argc = argc;
 		data.argv = argv;
+		data.launch_mode = launch_mode;
 		// basename = Path.GetFileName (argv [0])
 		if (!(data.basename = strrchr (argv [0], '/'))) {
 			data.basename = argv [0];
@@ -554,7 +553,7 @@ int xamarin_main (int argc, char **argv, enum XamarinLaunchMode launch_mode)
 		if (data.is_relaunch)
 			unsetenv (__XAMARIN_MAC_RELAUNCH_APP__);
 
-		app_initialize (&data, is_extension);
+		app_initialize (&data);
 
 		if (data.exit)
 			return data.exit_code;

@@ -37,6 +37,12 @@ enum MarshalManagedExceptionMode : int {
 	MarshalManagedExceptionModeDisable                  = 4,
 };
 
+enum XamarinLaunchMode {
+	XamarinLaunchModeApp = 0,
+	XamarinLaunchModeExtension = 1,
+	XamarinLaunchModeEmbedded = 2,
+};
+
 extern bool mono_use_llvm; // this is defined inside mono
 
 #if MONOMAC
@@ -57,7 +63,7 @@ extern const char *xamarin_arch_name;
 extern bool xamarin_is_gc_coop;
 extern enum MarshalObjectiveCExceptionMode xamarin_marshal_objectivec_exception_mode;
 extern enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode;
-extern bool xamarin_is_extension;
+extern enum XamarinLaunchMode xamarin_launch_mode;
 
 #ifdef MONOTOUCH
 extern NSString* xamarin_crashlytics_api_key;

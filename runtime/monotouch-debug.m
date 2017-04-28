@@ -562,7 +562,7 @@ void monotouch_configure_debugging ()
 #if MONOTOUCH && (defined(__i386__) || defined (__x86_64__))
 	// Try to read shared memory as well
 	key_t shmkey;
-	if (!xamarin_is_extension) {
+	if (xamarin_launch_mode == XamarinLaunchModeApp) {
 		// Don't read shared memory in normal apps, because we're always able to pass
 		// the debug data (host/port) using either command-line arguments or environment variables
 	} else if ((shmkey = ftok ("/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mtouch", 0)) == -1) {

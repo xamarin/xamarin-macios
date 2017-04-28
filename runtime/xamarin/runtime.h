@@ -98,12 +98,6 @@ enum NSObjectFlags {
 	NSObjectFlagsHasManagedRef = 32,
 };
 
-enum XamarinLaunchMode {
-	XamarinLaunchModeApp = 0,
-	XamarinLaunchModeExtension = 1,
-	XamarinLaunchModeEmbedded = 2,
-};
-
 struct AssemblyLocation {
 	const char *assembly_name; // base name (without extension) of the assembly
 	const char *location; // the directory where the assembly is

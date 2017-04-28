@@ -103,6 +103,7 @@ typedef struct xamarin_initialize_data {
 	bool exit; // If initialization failed and the app should exit.
 	int exit_code; // The exit code to return if initialization failed.
 	bool requires_relaunch; // if the launcher should respawn itself (setting some environment variables require this, in particular DYLD_* variables). This is ignored if 'is_relaunch' is true.
+	enum XamarinLaunchMode launch_mode;
 } xamarin_initialize_data;
 
 typedef void (*xamarin_custom_initialize_func) (xamarin_initialize_data *data);
