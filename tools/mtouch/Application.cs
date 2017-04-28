@@ -298,8 +298,18 @@ namespace Xamarin.Bundler {
 			Tuple<AssemblyBuildTarget, string> sdk = null;
 			List<Exception> exceptions = null;
 
-			if (IsSimulatorBuild && !Embeddinator)
+			if (IsSimulatorBuild && !Embeddinator) {
+				if (assembly_build_targets.Count > 0) {
+					var first = assembly_build_targets.First ();
+					if (assembly_build_targets.Count == 1 && first.Key == "@all" && first.Value.Item1 == AssemblyBuildTarget.DynamicLibrary && first.Value.Item2 == string.Empty) {
+						ErrorHelper.Warning (126, "Incremental builds have been disabled because incremental builds are not supported in the simulator.");
+					} else {
+						ErrorHelper.Warning (125, "The --assembly-build-target command-line argument is ignored in the simulator.");
+					}
+					assembly_build_targets.Clear ();
+				}
 				return;
+			}
 			
 			if (assembly_build_targets.Count == 0) {
 				// The logic here must match the logic in 'ContainsGroupedSdkAssemblyBuildTarget' (because we will execute 'ContainsGroupedSdkAssemblyBuildTargets' before this is executed)

@@ -517,6 +517,14 @@ For instance: this condition occurs when an extension builds for ARMv7+llvm+thum
 
 Native code sharing requires that all the projects that share code use the same versions for all assemblies.
 
+<h3><a name="MT0125"/>MT0125: The --assembly-build-target command-line argument is ignored in the simulator.</h3>
+
+No action is required, this message is purely informational.
+
+<h3><a name="MT0126"/>MT0126: Incremental builds have been disabled because incremental builds are not supported in the simulator.</h3>
+
+No action is required, this message is purely informational.
+
 <h3><a name="MT0127"/>MT0127: Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.</h3>
 
 Incremental builds have been disabled automatically because this version of Xamarin.iOS does not always build projects with multiple third-party binding libraries correctly.
