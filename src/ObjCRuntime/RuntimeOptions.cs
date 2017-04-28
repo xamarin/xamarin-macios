@@ -192,8 +192,11 @@ namespace XamCore.ObjCRuntime {
 #else
 		internal static RuntimeOptions Read ()
 		{
-			var top_level = NSBundle.MainBundle.BundlePath;
-			var plist_path = GetFileName (top_level);
+			// for iOS NSBundle.ResourcePath returns the path to the root of the app bundle
+			// for macOS apps NSBundle.ResourcePath returns foo.app/Contents/Resources
+			// for macoS frameworks NSBundle.ResourcePath returns foo.app/Versions/Current/Resources
+			var resource_dir = NSBundle.FromClass (new Class (typeof (XamCore.Foundation.NSObject.NSObject_Disposer))).ResourcePath;
+			var plist_path = GetFileName (resource_dir);
 
 			if (!File.Exists (plist_path))
 				return null;
@@ -245,13 +248,9 @@ namespace XamCore.ObjCRuntime {
 		{
 		}
 
-		static string GetFileName (string app_dir)
+		static string GetFileName (string resource_dir)
 		{
-#if MONOMAC
-			return Path.Combine (app_dir, "Contents", "Resources", "runtime-options.plist");
-#else
-			return Path.Combine (app_dir, "runtime-options.plist");
-#endif
+			return Path.Combine (resource_dir, "runtime-options.plist");
 		}
 	}
 }
