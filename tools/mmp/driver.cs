@@ -928,11 +928,11 @@ namespace Xamarin.Bundler {
 		}
 
 		static void GeneratePList () {
-			var sr = new StreamReader (typeof (Driver).Assembly.GetManifestResourceStream ("Info.plist.tmpl"));
+			var sr = new StreamReader (typeof (Driver).Assembly.GetManifestResourceStream (App.Embeddinator ? "Info-framework.plist.tmpl" : "Info.plist.tmpl"));
 			var all = sr.ReadToEnd ();
 			var icon_str = (icon != null) ? "\t<key>CFBundleIconFile</key>\n\t<string>" + icon + "</string>\n\t" : "";
-
-			using (var sw = new StreamWriter (Path.Combine (contents_dir, "Info.plist"))){
+			var path = Path.Combine (App.Embeddinator ? resources_dir : contents_dir, "Info.plist");
+			using (var sw = new StreamWriter (path)){
 				sw.WriteLine (
 					all.Replace ("@BUNDLEDISPLAYNAME@", app_name).
 					Replace ("@EXECUTABLE@", app_name).
