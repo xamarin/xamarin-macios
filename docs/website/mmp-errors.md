@@ -74,6 +74,8 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 # MM1xxx: file copy / symlinks (project related)
 
+<h3><a name="MM1034">MM1034: Could not create symlink '{file}' -> '{target}': error {number}</h3>
+
 ## MM14xx: Product assemblies
 
 <h3><a name="MM1401">MM1401: The required '{0}' assembly is missing from the references</h3>

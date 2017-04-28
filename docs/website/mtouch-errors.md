@@ -743,6 +743,8 @@ Please unlock the device and try again.
 
 <h3><a name="MT1033"/>MT1033: Could not uninstall the application '*' from the device '*': *</h3>
 
+<!-- 1034 used by mmp -->
+
 ### MT11xx: Debug Service
 
 <!--
