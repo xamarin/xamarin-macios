@@ -1521,6 +1521,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Source="@(_ResolvedAppExtensionReferences)"
 			Destination="$(_AppBundlePath)PlugIns\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)"
 		/>
+
+		<!-- Delete any code signatures since they are now invalid - the parent app bundle's _CodesignAppBundleExtensions target will recreate these signatures -->
+		<RemoveDir SessionId="$(BuildSessionId)" Directories="$(_AppBundlePath)PlugIns\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)\_CodeSignature" />
 	</Target>
 
 	<Target Name="_ValidateAppBundle" Condition="'$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_DetectSdkLocations">
