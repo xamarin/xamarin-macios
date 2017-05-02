@@ -123,6 +123,22 @@ namespace Xamarin.iOS.Tasks
 		}
 
 		[Test]
+		public void RebuildWatchAppNoChanges ()
+		{
+			BuildProject ("MyWatch2Container", Platform, config, clean: true);
+
+			AssertProperlyCodesigned ();
+
+			Thread.Sleep (1000);
+
+			// Rebuild w/ no changes
+			BuildProject ("MyWatch2Container", Platform, config, clean: false);
+
+			// make sure everything is still codesigned properly
+			AssertProperlyCodesigned ();
+		}
+
+		[Test]
 		public void CodesignAfterModifyingWatchApp2Test ()
 		{
 			var csproj = BuildProject ("MyWatch2Container", Platform, config, clean: true);
