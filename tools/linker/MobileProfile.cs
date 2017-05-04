@@ -123,6 +123,7 @@ namespace Xamarin.Linker {
 			"System.Runtime.InteropServices",
 			"System.Runtime.InteropServices.RuntimeInformation",
 			"System.Runtime.InteropServices.WindowsRuntime",
+			"System.Runtime.Loader",
 			"System.Runtime.Numerics",
 			"System.Runtime.Serialization.Formatters",
 			"System.Runtime.Serialization.Json",
