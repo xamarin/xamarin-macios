@@ -280,8 +280,11 @@ namespace Xamarin.Utils
 					args.Append (" -Xlinker -rpath -Xlinker @executable_path/../../Frameworks");
 			}
 
-			if (Application.HasAnyDynamicLibraries)
+			if (Application.HasAnyDynamicLibraries) {
 				args.Append (" -Xlinker -rpath -Xlinker @executable_path");
+				if (Application.IsExtension)
+					args.Append (" -Xlinker -rpath -Xlinker @executable_path/../..");
+			}
 		}
 
 		void ProcessFrameworkForArguments (StringBuilder args, string fw, bool is_weak, ref bool any_user_framework)

@@ -1316,6 +1316,33 @@ namespace Xamarin
 			}
 		}
 
+		[Test]
+		public void MT0125 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.AssemblyBuildTargets.Add ("@all=framework");
+				mtouch.Linker = MTouchLinker.DontLink; // faster test.
+				mtouch.Debug = true; // faster test, because it enables fastsim
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarning (125, "The --assembly-build-target command-line argument is ignored in the simulator.");
+			}
+		}
+
+		[Test]
+		public void MT0126 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.FastDev = true;
+				mtouch.Linker = MTouchLinker.DontLink; // faster test.
+				mtouch.Debug = true; // faster test, because it enables fastsim
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarning (126, "Incremental builds have been disabled because incremental builds are not supported in the simulator.");
+			}
+		}
 
 		[Test]
 		public void MT0127 ()

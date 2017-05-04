@@ -35,7 +35,7 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 		<BTouchToolExe Condition="!Exists('$(BTouchToolPath)/bgen')">bmac-mobile-mono</BTouchToolExe>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 
-		<DefineConstants>__UNIFIED__;$(DefineConstants)</DefineConstants>
+		<DefineConstants>__UNIFIED__;__MACOS__;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props"

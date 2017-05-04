@@ -1016,11 +1016,6 @@ namespace Xamarin.Bundler
 			{ "v", "Verbose", v => verbose++ },
 			{ "q", "Quiet", v => verbose-- },
 			{ "time", v => watch_level++ },
-			{ "embeddinator", "Enables Embeddinator targetting mode.", v =>
-				{
-					app.Embeddinator = true;
-				}, true
-			},
 			{ "executable=", "Specifies the native executable name to output", v => app.ExecutableName = v },
 			{ "nofastsim", "Do not run the simulator fast-path build", v => app.NoFastSim = true },
 			{ "nodevcodeshare", "Do not share native code between extensions and main app.", v => app.NoDevCodeShare = true },
@@ -1460,7 +1455,7 @@ namespace Xamarin.Bundler
 				if (File.Exists (path))
 					return path;
 
-				throw ErrorHelper.CreateError (92, "Could not find 'mlaunch'.");
+				throw ErrorHelper.CreateError (93, "Could not find 'mlaunch'.");
 			}
 		}
 

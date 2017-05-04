@@ -66,6 +66,8 @@ namespace Xamarin.Bundler {
 		public static int Concurrency => Driver.Concurrency;
 		public Version DeploymentTarget;
 		public Version SdkVersion;
+	
+		public bool Embeddinator { get; set; }
 
 		public Application (string[] arguments)
 		{

@@ -1453,7 +1453,7 @@ namespace Xamarin.Bundler
 				linker_flags.AddOtherFlag ("-fapplication-extension");
 			}
 
-			if (App.HasFrameworks && Is64Build) {
+			if (App.HasFrameworks && Is64Build && !App.EnableBitCode) {
 				// Work around https://bugzilla.xamarin.com/show_bug.cgi?id=55553
 				// This option was introduced in Xcode 5.1, so no need for Xcode version checks.
 				linker_flags.AddOtherFlag ("-Wl,-ignore_optimization_hints");
