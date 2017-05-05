@@ -553,8 +553,19 @@ namespace Xamarin.Bundler {
 
 		static void ValidateXcode ()
 		{
-			var plist_path = Path.Combine (Path.GetDirectoryName (DeveloperDirectory), "version.plist");
 			if (xcode_version == null) {
+				// Check what kind of path we got
+				if (File.Exists (Path.Combine (sdk_root, "Contents", "MacOS", "Xcode"))) {
+					// path to the Xcode.app
+					sdk_root = Path.Combine (sdk_root, "Contents", "Developer");
+				} else if (File.Exists (Path.Combine (sdk_root, "..", "MacOS", "Xcode"))) {
+					// path to Contents/Developer
+					sdk_root = Path.GetFullPath (Path.Combine (sdk_root, "..", "..", "Contents", "Developer"));
+				} else {
+					throw ErrorHelper.CreateError (57, "Cannot determine the path to Xcode.app from the sdk root '{0}'. Please specify the full path to the Xcode.app bundle.", sdk_root);
+				}
+
+				var plist_path = Path.Combine (Path.GetDirectoryName (DeveloperDirectory), "version.plist");
 				if (File.Exists (plist_path)) {
 					bool nextElement = false;
 					XmlReaderSettings settings = new XmlReaderSettings ();
