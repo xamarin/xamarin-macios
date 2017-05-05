@@ -212,7 +212,7 @@ namespace Xamarin.MMP.Tests
 			return BuildProject (csprojTarget, isUnified: true, diagnosticMSBuild: config.DiagnosticMSBuild,  shouldFail: shouldFail);
 		}
 
-		public static string RunGeneartedUnifiedExecutable (UnifiedTestConfig config)
+		public static string RunGeneratedUnifiedExecutable (UnifiedTestConfig config)
 		{
 			string bundleName = config.AssemblyName != "" ? config.AssemblyName : config.ProjectName.Split ('.')[0];
 			string exePath = Path.Combine (config.TmpDir, "bin/Debug/" + bundleName + ".app/Contents/MacOS/" + bundleName);
@@ -225,14 +225,14 @@ namespace Xamarin.MMP.Tests
 			if (config.guid == Guid.Empty)
 			{
 				config.guid = Guid.NewGuid ();
-				config.TestCode += GenerateOuputCommand (config.TmpDir, config.guid);
+				config.TestCode += GenerateOutputCommand (config.TmpDir, config.guid);
 			}
 
 			string buildOutput = GenerateAndBuildUnifiedExecutable (config, shouldFail);
 			if (shouldFail)
 				return new OutputText (buildOutput, "");
 
-			string runOutput = RunGeneartedUnifiedExecutable (config);
+			string runOutput = RunGeneratedUnifiedExecutable (config);
 
 			return new OutputText (buildOutput, runOutput);
 		}
@@ -240,7 +240,7 @@ namespace Xamarin.MMP.Tests
 		public static OutputText TestClassicExecutable (string tmpDir, string testCode = "", string csprojConfig = "", bool shouldFail = false)
 		{
 			Guid guid = Guid.NewGuid ();
-			string csprojTarget = GenerateClassicEXEProject (tmpDir, "ClassicExample.csproj", testCode + GenerateOuputCommand (tmpDir,guid), csprojConfig, "");
+			string csprojTarget = GenerateClassicEXEProject (tmpDir, "ClassicExample.csproj", testCode + GenerateOutputCommand (tmpDir,guid), csprojConfig, "");
 			string buildOutput = BuildProject (csprojTarget, isUnified : false, diagnosticMSBuild: false, shouldFail : shouldFail);
 			if (shouldFail)
 				return new OutputText (buildOutput, "");
@@ -254,7 +254,7 @@ namespace Xamarin.MMP.Tests
 		{
 			config.guid = Guid.NewGuid ();
 			var projectName = "SystemMonoExample";
-			config.TestCode += GenerateOuputCommand (config.TmpDir, config.guid);
+			config.TestCode += GenerateOutputCommand (config.TmpDir, config.guid);
 			config.ProjectName = $"{projectName}.csproj";
 			string csprojTarget = GenerateSystemMonoEXEProject (config);
 
@@ -368,7 +368,7 @@ namespace TestCase
 			return Path.GetFullPath (Path.Combine (current, "_mac-build"));
 		}
 
-		static string GenerateOuputCommand (string tmpDir, Guid guid)
+		static string GenerateOutputCommand (string tmpDir, Guid guid)
 		{
 			return string.Format ("System.IO.File.Create(\"{0}\").Dispose();",  Path.Combine (tmpDir, guid.ToString ()));
 		}
