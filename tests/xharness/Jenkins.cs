@@ -487,12 +487,25 @@ namespace xharness
 				build.ProjectPlatform = "x86";
 				build.SpecifyPlatform = false;
 				build.SpecifyConfiguration = false;
-				var exec = new MacExecuteTask (build)
-				{
-					Ignored = ignored || !IncludeClassicMac,
-					BCLTest = project.IsBclTest,
-					TestName = project.Name,
-			};
+				RunTestTask exec;
+				if (project.IsNUnitProject) {
+					var dll = Path.Combine (Path.GetDirectoryName (project.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
+					exec = new NUnitExecuteTask (build) {
+						Ignored = ignored || !IncludeClassicMac,
+						TestLibrary = dll,
+						TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
+						WorkingDirectory = Path.GetDirectoryName (dll),
+						Platform = build.Platform,
+						TestName = project.Name,
+						Timeout = TimeSpan.FromMinutes (120),
+					};
+				} else {
+					exec = new MacExecuteTask (build) {
+						Ignored = ignored || !IncludeClassicMac,
+						BCLTest = project.IsBclTest,
+						TestName = project.Name,
+					};
+				}
 				Tasks.Add (exec);
 
 				if (project.GenerateVariations) {
@@ -564,7 +577,7 @@ namespace xharness
 			Tasks.AddRange (await CreateRunDeviceTasks ());
 		}
 
-		static MacExecuteTask CloneExecuteTask (MacExecuteTask task, TestPlatform platform, string suffix, bool ignore)
+		RunTestTask CloneExecuteTask (RunTestTask task, TestPlatform platform, string suffix, bool ignore)
 		{
 			var build = new XBuildTask ()
 			{
@@ -577,11 +590,28 @@ namespace xharness
 				SpecifyConfiguration = task.BuildTask.SpecifyConfiguration,
 			};
 
-			return new MacExecuteTask (build)
-			{
-				Ignored = ignore,
-				TestName = build.TestName,
-			};
+			var macExec = task as MacExecuteTask;
+			if (macExec != null) {
+				return new MacExecuteTask (build) {
+					Ignored = ignore,
+					TestName = build.TestName,
+				};
+			}
+			var nunit = task as NUnitExecuteTask;
+			if (nunit != null) {
+				var project = build.TestProject;
+				var dll = Path.Combine (Path.GetDirectoryName (project.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
+				return new NUnitExecuteTask (build) {
+					Ignored = ignore,
+					TestName = build.TestName,
+					TestLibrary = dll,
+					TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
+					WorkingDirectory = Path.GetDirectoryName (dll),
+					Platform = build.Platform,
+					Timeout = TimeSpan.FromMinutes (120),
+				};
+			}
+			throw new NotImplementedException ();
 		}
 
 		public int Run ()

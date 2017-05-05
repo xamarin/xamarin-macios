@@ -14,6 +14,7 @@ namespace xharness
 		public string Path;
 		public string Name;
 		public bool IsExecutableProject;
+		public bool IsNUnitProject;
 		public bool GenerateVariations = true;
 
 		public TestProject ()

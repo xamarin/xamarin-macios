@@ -299,7 +299,7 @@ namespace Xamarin.MMP.Tests
 				});
 		}
 
-		public static string TestDirectory => "../../../../../../../";
+		public static string TestDirectory => Path.Combine (FindRootDirectory (), "..", "tests") + "/";
 
 		public static string FindSourceDirectory ()
 		{
@@ -360,7 +360,7 @@ namespace TestCase
 
 		public static string FindRootDirectory ()
 		{
-			var current = Environment.CurrentDirectory;
+			var current = Assembly.GetExecutingAssembly ().Location;
 			while (!Directory.Exists (Path.Combine (current, "_mac-build")) && current.Length > 1)
 				current = Path.GetDirectoryName (current);
 			if (current.Length <= 1)
