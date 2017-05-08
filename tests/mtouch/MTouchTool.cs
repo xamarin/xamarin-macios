@@ -465,7 +465,7 @@ namespace Xamarin
 			}
 		}
 
-		string CreatePlist (Profile profile, string appName)
+		public static string CreatePlist (Profile profile, string appName)
 		{
 			string plist = null;
 
@@ -497,7 +497,7 @@ namespace Xamarin
 	</array>
 </dict>
 </plist>
-", appName, MTouch.GetSdkVersion (Profile));
+", appName, MTouch.GetSdkVersion (profile));
 				break;
 			case Profile.tvOS:
 				plist = string.Format (@"<?xml version=""1.0"" encoding=""UTF-8""?>
@@ -518,7 +518,7 @@ namespace Xamarin
 	</array>
 </dict>
 </plist>
-", appName, MTouch.GetSdkVersion (Profile));
+", appName, MTouch.GetSdkVersion (profile));
 				break;
 			default:
 				throw new Exception ("Profile not specified.");

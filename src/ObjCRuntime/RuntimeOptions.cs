@@ -11,10 +11,13 @@ using System.Net.Http;
 
 #if XAMCORE_2_0
 using Foundation;
+using ObjCRuntime;
 #elif MONOMAC && !MMP
 using MonoMac.Foundation;
+using MonoMac.ObjCRuntime;
 #elif !MTOUCH && !MMP && !MMP_TEST
 using MonoTouch.Foundation;
+using MonoTouch.ObjCRuntime;
 #endif
 
 #if !COREBUILD && (XAMARIN_APPLETLS || XAMARIN_NO_TLS)
@@ -190,10 +193,21 @@ namespace XamCore.ObjCRuntime {
 			return type;
 		}
 #else
+		[Register ("__internal__xamarin_runtimeoptions_bundlefinder")]
+		class BundleFinder : NSObject {
+			public BundleFinder ()
+			{
+				IsDirectBinding = false;
+			}
+		}
+
 		internal static RuntimeOptions Read ()
 		{
-			var top_level = NSBundle.MainBundle.BundlePath;
-			var plist_path = GetFileName (top_level);
+			// for iOS NSBundle.ResourcePath returns the path to the root of the app bundle
+			// for macOS apps NSBundle.ResourcePath returns foo.app/Contents/Resources
+			// for macOS frameworks NSBundle.ResourcePath returns foo.app/Versions/Current/Resources
+			var resource_dir = NSBundle.FromClass (new Class (typeof (BundleFinder))).ResourcePath;
+			var plist_path = GetFileName (resource_dir);
 
 			if (!File.Exists (plist_path))
 				return null;
@@ -245,13 +259,9 @@ namespace XamCore.ObjCRuntime {
 		{
 		}
 
-		static string GetFileName (string app_dir)
+		static string GetFileName (string resource_dir)
 		{
-#if MONOMAC
-			return Path.Combine (app_dir, "Contents", "Resources", "runtime-options.plist");
-#else
-			return Path.Combine (app_dir, "runtime-options.plist");
-#endif
+			return Path.Combine (resource_dir, "runtime-options.plist");
 		}
 	}
 }

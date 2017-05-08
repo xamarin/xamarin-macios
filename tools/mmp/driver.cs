@@ -825,7 +825,7 @@ namespace Xamarin.Bundler {
 				GeneratePList ();
 
 			if (App.LinkMode != LinkMode.All && App.RuntimeOptions != null)
-				App.RuntimeOptions.Write (App.AppDirectory);
+				App.RuntimeOptions.Write (resources_dir);
 
 			if (aotOptions != null && aotOptions.IsAOT) {
 				if (!IsUnified)
