@@ -169,5 +169,20 @@ namespace Xamarin.MMP.Tests
 				NativeReferenceTestCore (tmpDir, test, "NativeReference_WithDllImportOfSamePath_Builds", null, true, true);
 			});
 		}
+
+		[Test]
+		public void MultipleNativeReferences_OnlyInvokeMMPOneTime_AndCopyEverythingIn ()
+		{
+			RunMMPTest (tmpDir => {
+				string firstPath = CreateCopyOfSimpleClassInTestDir (tmpDir);
+				string secondPath = CreateCopyOfSimpleClassInTestDir (tmpDir, "SeconClassDylib.dylib");
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					ProjectName = "UnifiedExample.csproj",
+					CSProjConfig = "<EnableCodeSigning>true</EnableCodeSigning>",
+					ItemGroup = CreateItemGroup (new string[] { CreateNativeRefInclude (firstPath, "Dynamic"), CreateNativeRefInclude (secondPath, "Dynamic") }),
+				};
+				NativeReferenceTestCore (tmpDir, test, "MultipleNativeReferences_OnlyInvokeMMPOneTime_AndCopyEverythingIn", null, true);
+			});
+		}
 	}
 }
