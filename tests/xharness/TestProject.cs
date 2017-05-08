@@ -12,6 +12,7 @@ namespace xharness
 		XmlDocument xml;
 
 		public string Path;
+		public string SolutionPath;
 		public string Name;
 		public bool IsExecutableProject;
 		public bool IsNUnitProject;

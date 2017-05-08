@@ -473,7 +473,7 @@ namespace xharness
 				if (!IncludeBcl && project.IsBclTest)
 					ignored = true;
 
-				BuildToolTask build;
+				BuildProjectTask build;
 				if (project.GenerateVariations) {
 					build = new MdtoolTask ();
 					build.Platform = TestPlatform.Mac_Classic;
@@ -483,6 +483,7 @@ namespace xharness
 				}
 				build.Jenkins = this;
 				build.TestProject = project;
+				build.SolutionPath = project.SolutionPath;
 				build.ProjectConfiguration = "Debug";
 				build.ProjectPlatform = "x86";
 				build.SpecifyPlatform = false;
@@ -1977,12 +1978,71 @@ function oninitialload ()
 		}
 	}
 
-	class MdtoolTask : BuildToolTask
+	abstract class BuildProjectTask : BuildToolTask
+	{
+		public string SolutionPath;
+
+		public bool RestoreNugets {
+			get {
+				return !string.IsNullOrEmpty (SolutionPath);
+			}
+		}
+
+		public bool SupportsParallelBuilds {
+			get {
+				return Platform.ToString ().StartsWith ("Mac", StringComparison.Ordinal);
+			}
+		}
+
+		protected Task<IAcquiredResource> NotifyBlockingWaitAsync ()
+		{
+			return base.NotifyBlockingWaitAsync ((SupportsParallelBuilds ? Jenkins.DesktopResource.AcquireConcurrentAsync () : Jenkins.DesktopResource.AcquireExclusiveAsync ()));
+		}
+
+		// This method must be called with the desktop resource acquired
+		// (which is why it takes an IAcquiredResources as a parameter without using it in the function itself).
+		protected async Task RestoreNugetsAsync (Log log, IAcquiredResource resource)
+		{
+			if (!RestoreNugets)
+				return;
+
+			if (!File.Exists (SolutionPath))
+				throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", SolutionPath);
+
+			using (var nuget = new Process ()) {
+				nuget.StartInfo.FileName = "/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
+				var args = new StringBuilder ();
+				args.Append ("restore ");
+				args.Append (Harness.Quote (SolutionPath));
+				nuget.StartInfo.Arguments = args.ToString ();
+				Jenkins.MainLog.WriteLine ("Restoring nugets for {0} ({1})", TestName, Mode);
+				SetEnvironmentVariables (nuget);
+				foreach (string key in nuget.StartInfo.EnvironmentVariables.Keys)
+					log.WriteLine ("{0}={1}", key, nuget.StartInfo.EnvironmentVariables [key]);
+				log.WriteLine ("{0} {1}", nuget.StartInfo.FileName, nuget.StartInfo.Arguments);
+
+				var timeout = TimeSpan.FromMinutes (15);
+				var result = await nuget.RunAsync (log, true, timeout);
+				if (result.TimedOut) {
+					ExecutionResult = TestExecutingResult.TimedOut;
+					log.WriteLine ("Nuget restore timed out after {0} seconds.", timeout.TotalSeconds);
+					return;
+				} else if (!result.Succeeded) {
+					ExecutionResult = TestExecutingResult.Failed;
+					return;
+				}
+			}
+		}
+	}
+
+	class MdtoolTask : BuildProjectTask
 	{
 		protected override async Task ExecuteAsync ()
 		{
 			ExecutionResult = TestExecutingResult.Building;
-			using (var resource = await NotifyBlockingWaitAsync (Jenkins.DesktopResource.AcquireConcurrentAsync ())) {
+			using (var resource = await NotifyBlockingWaitAsync ()) {
+				var log = Logs.CreateStream (LogDirectory, $"build-{Platform}-{Timestamp}.txt", "Build log");
+				await RestoreNugetsAsync (log, resource);
 				using (var xbuild = new Process ()) {
 					xbuild.StartInfo.FileName = "/Applications/Visual Studio.app/Contents/MacOS/vstool";
 					var args = new StringBuilder ();
@@ -1992,7 +2052,6 @@ function oninitialload ()
 					xbuild.StartInfo.Arguments = args.ToString ();
 					Jenkins.MainLog.WriteLine ("Building {0} ({1})", TestName, Mode);
 					SetEnvironmentVariables (xbuild);
-					var log = Logs.CreateStream (LogDirectory, $"build-{Platform}-{Timestamp}.txt", "Build log");
 					foreach (string key in xbuild.StartInfo.EnvironmentVariables.Keys)
 						log.WriteLine ("{0}={1}", key, xbuild.StartInfo.EnvironmentVariables [key]);
 					log.WriteLine ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
@@ -2052,17 +2111,15 @@ function oninitialload ()
 		}
 	}
 
-	class XBuildTask : BuildToolTask
+	class XBuildTask : BuildProjectTask
 	{
-		public bool SupportsParallelBuilds {
-			get {
-				return Platform.ToString ().StartsWith ("Mac", StringComparison.Ordinal);
-			}
-		}
-
 		protected override async Task ExecuteAsync ()
 		{
-			using (var resource = await NotifyBlockingWaitAsync ((SupportsParallelBuilds ? Jenkins.DesktopResource.AcquireConcurrentAsync () : Jenkins.DesktopResource.AcquireExclusiveAsync ()))) {
+			using (var resource = await NotifyBlockingWaitAsync ()) {
+				var log = Logs.CreateStream (LogDirectory, $"build-{Platform}-{Timestamp}.txt", "Build log");
+
+				await RestoreNugetsAsync (log, resource);
+
 				using (var xbuild = new Process ()) {
 					xbuild.StartInfo.FileName = "xbuild";
 					var args = new StringBuilder ();
@@ -2075,7 +2132,6 @@ function oninitialload ()
 					xbuild.StartInfo.Arguments = args.ToString ();
 					Jenkins.MainLog.WriteLine ("Building {0} ({1})", TestName, Mode);
 					SetEnvironmentVariables (xbuild);
-					var log = Logs.CreateStream (LogDirectory, $"build-{Platform}-{Timestamp}.txt", "Build log");
 					foreach (string key in xbuild.StartInfo.EnvironmentVariables.Keys)
 						log.WriteLine ("{0}={1}", key, xbuild.StartInfo.EnvironmentVariables [key]);
 					log.WriteLine ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
