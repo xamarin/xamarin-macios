@@ -1930,6 +1930,15 @@ function oninitialload ()
 			}
 		}
 
+		protected void LogProcessExecution (Log log, Process process, string text, params object[] args)
+		{
+			Jenkins.MainLog.WriteLine (text, args);
+			log.WriteLine (text, args);
+			foreach (string key in process.StartInfo.EnvironmentVariables.Keys)
+				log.WriteLine ("{0}={1}", key, process.StartInfo.EnvironmentVariables [key]);
+			log.WriteLine ("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
+		}
+
 		// This method will set (and clear) the Waiting flag correctly while waiting on a resource
 		// It will also pause the duration.
 		public async Task<IAcquiredResource> NotifyBlockingWaitAsync (Task<IAcquiredResource> task)
@@ -2015,11 +2024,8 @@ function oninitialload ()
 				args.Append ("restore ");
 				args.Append (Harness.Quote (SolutionPath));
 				nuget.StartInfo.Arguments = args.ToString ();
-				Jenkins.MainLog.WriteLine ("Restoring nugets for {0} ({1})", TestName, Mode);
 				SetEnvironmentVariables (nuget);
-				foreach (string key in nuget.StartInfo.EnvironmentVariables.Keys)
-					log.WriteLine ("{0}={1}", key, nuget.StartInfo.EnvironmentVariables [key]);
-				log.WriteLine ("{0} {1}", nuget.StartInfo.FileName, nuget.StartInfo.Arguments);
+				LogProcessExecution (log, nuget, "Restoring nugets for {0} ({1})", TestName, Mode);
 
 				var timeout = TimeSpan.FromMinutes (15);
 				var result = await nuget.RunAsync (log, true, timeout);
@@ -2050,11 +2056,8 @@ function oninitialload ()
 					var sln = Path.ChangeExtension (ProjectFile, "sln");
 					args.Append (Harness.Quote (File.Exists (sln) ? sln : ProjectFile));
 					xbuild.StartInfo.Arguments = args.ToString ();
-					Jenkins.MainLog.WriteLine ("Building {0} ({1})", TestName, Mode);
 					SetEnvironmentVariables (xbuild);
-					foreach (string key in xbuild.StartInfo.EnvironmentVariables.Keys)
-						log.WriteLine ("{0}={1}", key, xbuild.StartInfo.EnvironmentVariables [key]);
-					log.WriteLine ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
+					LogProcessExecution (log, xbuild, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (5);
 						var result = await xbuild.RunAsync (log, true, timeout);
@@ -2085,12 +2088,9 @@ function oninitialload ()
 					make.StartInfo.FileName = "make";
 					make.StartInfo.WorkingDirectory = WorkingDirectory;
 					make.StartInfo.Arguments = Target;
-					Jenkins.MainLog.WriteLine ("Making {0} in {1}", Target, WorkingDirectory);
 					SetEnvironmentVariables (make);
 					var log = Logs.CreateStream (LogDirectory, $"make-{Platform}-{Timestamp}.txt", "Build log");
-					foreach (string key in make.StartInfo.EnvironmentVariables.Keys)
-						log.WriteLine ("{0}={1}", key, make.StartInfo.EnvironmentVariables [key]);
-					log.WriteLine ("{0} {1}", make.StartInfo.FileName, make.StartInfo.Arguments);
+					LogProcessExecution (log, make, "Making {0} in {1}", Target, WorkingDirectory);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (5);
 						var result = await make.RunAsync (log, true, timeout);
@@ -2130,11 +2130,8 @@ function oninitialload ()
 						args.Append ($"/p:Configuration={ProjectConfiguration} ");
 					args.Append (Harness.Quote (ProjectFile));
 					xbuild.StartInfo.Arguments = args.ToString ();
-					Jenkins.MainLog.WriteLine ("Building {0} ({1})", TestName, Mode);
 					SetEnvironmentVariables (xbuild);
-					foreach (string key in xbuild.StartInfo.EnvironmentVariables.Keys)
-						log.WriteLine ("{0}={1}", key, xbuild.StartInfo.EnvironmentVariables [key]);
-					log.WriteLine ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
+					LogProcessExecution (log, xbuild, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (15);
 						var result = await xbuild.RunAsync (log, true, timeout);
@@ -2166,11 +2163,8 @@ function oninitialload ()
 				args.Append (Harness.Quote (project_file)).Append (" ");
 				args.Append ("/t:Clean ");
 				xbuild.StartInfo.Arguments = args.ToString ();
-				Jenkins.MainLog.WriteLine ("Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
 				SetEnvironmentVariables (xbuild);
-				foreach (string key in xbuild.StartInfo.EnvironmentVariables.Keys)
-					log.WriteLine ("{0}={1}", key, xbuild.StartInfo.EnvironmentVariables [key]);
-				log.WriteLine ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
+				LogProcessExecution (log, xbuild, "Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
 				var timeout = TimeSpan.FromMinutes (1);
 				await xbuild.RunAsync (log, true, timeout);
 				log.WriteLine ("Clean timed out after {0} seconds.", timeout.TotalSeconds);
