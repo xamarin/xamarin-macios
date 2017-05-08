@@ -1,7 +1,7 @@
-index.html
+*index.html
 *.log
 *-unified.sln
-TestResult.xml
+*TestResult.xml
 build
 *-tvos.?sproj
 *-tvos.sln

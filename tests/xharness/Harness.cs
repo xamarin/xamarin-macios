@@ -282,9 +282,18 @@ namespace xharness
 			
 			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), skipXMVariations : true));
 
-			var hard_coded_test_suites = new [] { new { ProjectFile = "mmptest", Name = "mmptest" }, new { ProjectFile = "msbuild-mac", Name = "MSBuild tests" }, new { ProjectFile = "xammac_tests", Name = "xammac tests" } };
-			foreach (var p in hard_coded_test_suites)
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.ProjectFile + "/" + p.ProjectFile + ".csproj")), generateVariations: false) { Name = p.Name });
+			var hard_coded_test_suites = new [] {
+				new { ProjectFile = "mmptest", Name = "mmptest", IsNUnit = true },
+				new { ProjectFile = "msbuild-mac", Name = "MSBuild tests", IsNUnit = false },
+				new { ProjectFile = "xammac_tests", Name = "xammac tests", IsNUnit = false }
+			};
+			foreach (var p in hard_coded_test_suites) {
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.ProjectFile + "/" + p.ProjectFile + ".csproj")), generateVariations: false) {
+					Name = p.Name,
+					IsNUnitProject = p.IsNUnit,
+					SolutionPath = Path.GetFullPath (Path.Combine (RootDirectory, "tests-mac.sln")),
+				});
+			}
 
 			var bcl_suites = new string[] { "mscorlib", "System", "System.Core", "System.Data", "System.Net.Http", "System.Numerics", "System.Runtime.Serialization", "System.Transactions", "System.Web.Services", "System.Xml", "System.Xml.Linq", "Mono.Security", "System.ComponentModel.DataAnnotations", "System.Json", "System.ServiceModel.Web", "Mono.Data.Sqlite" };
 			foreach (var p in bcl_suites) {
@@ -404,6 +413,7 @@ namespace xharness
 					{
 						TemplateProjectPath = file,
 						Harness = this,
+						IsNUnitProject = proj.IsNUnitProject,
 					};
 					unifiedMobile.Execute ();
 					unified_targets.Add (unifiedMobile);
@@ -433,6 +443,7 @@ namespace xharness
 				{
  					TemplateProjectPath = file,
  					Harness = this,
+					IsNUnitProject = proj.IsNUnitProject,
  				};
 				unifiedMobile.Execute ();
 				hardcoded_unified_targets.Add (unifiedMobile);

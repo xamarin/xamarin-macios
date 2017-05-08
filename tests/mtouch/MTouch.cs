@@ -34,15 +34,14 @@ namespace Xamarin
 	public class MTouch
 	{
 		[Test]
-		[TestCase ("armv7,arm64")]
-		public void AotDataTest (string abi)
+		public void FatAppFiles ()
 		{
 			AssertDeviceAvailable ();
 
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
 				mtouch.CreateTemporaryCacheDirectory ();
-				mtouch.Abi = abi;
+				mtouch.Abi = "armv7,arm64";
 				mtouch.DSym = false; // speeds up the test
 				mtouch.MSym = false; // speeds up the test
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
@@ -65,14 +64,64 @@ namespace Xamarin
 					"Xamarin.iOS.aotdata.arm64",
 
 				};
+				var notExpectedFiles = new string [] {
+					/* mscorlib.dll and Xamarin.iOS.dll can differ between 32-bit and 64-bit, other assemblies shouldn't */
+					/* these files should end up in the root app directory, not the size-specific subdirectory */
+					".monotouch-32/testApp.exe",
+					".monotouch-32/testApp.aotdata.armv7",
+					".monotouch-32/System.dll",
+					".monotouch-32/System.aotdata.armv7",
+					".monotouch-64/testApp.exe",
+					".monotouch-64/testApp.aotdata.arm64",
+					".monotouch-64/System.dll",
+					".monotouch-64/System.aotdata.arm64",
+				};
 				var allFiles = Directory.GetFiles (mtouch.AppPath, "*", SearchOption.AllDirectories);
-				var failed = new List<string> ();
+				var expectedFailed = new List<string> ();
 				foreach (var expected in expectedFiles) {
 					if (allFiles.Any ((v) => v.EndsWith (expected, StringComparison.Ordinal)))
 						continue;
-					failed.Add (expected);
+					expectedFailed.Add (expected);
 				}
-				Assert.IsEmpty (failed, "expected files");
+				Assert.IsEmpty (expectedFailed, "expected files");
+
+				var notExpectedFailed = new List<string> ();
+				foreach (var notExpected in notExpectedFiles) {
+					if (!allFiles.Any ((v) => v.EndsWith (notExpected, StringComparison.Ordinal)))
+						continue;
+					notExpectedFailed.Add (notExpected);
+				}
+				Assert.IsEmpty (notExpectedFailed, "not expected files");
+			}
+		}
+
+		[Test]
+		[TestCase ("code sharing 32-bit", "armv7+llvm", new string [] { "@sdk=framework=Xamarin.Sdk", "@all=staticobject" })]
+		[TestCase ("code sharing 64-bit", "arm64+llvm", new string [] { "@sdk=framework=Xamarin.Sdk", "@all=staticobject" })]
+		[TestCase ("32-bit", "armv7+llvm", new string [] { } )]
+		[TestCase ("64-bit", "arm64+llvm", new string [] { })]
+		public void CodeSharingLLVM (string name, string abi, string[] assembly_build_targets)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Abi = abi;
+				mtouch.AssemblyBuildTargets.AddRange (assembly_build_targets);
+				mtouch.Debug = false;
+				mtouch.NoStrip = true; // faster test
+				mtouch.NoSymbolStrip = string.Empty; // faster test
+				mtouch.Verbosity = 4; // This is needed to get mtouch to print the output we're verifying
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+				// Check that --llvm is passed to the AOT compiler for every assembly we AOT.
+				var assemblies_checked = 0;
+				mtouch.ForAllOutputLines ((line) =>
+				{
+					if (!line.Contains ("arm-darwin-mono-sgen") && !line.Contains ("arm64-darwin-mono-sgen"))
+						return;
+					StringAssert.Contains (" --llvm ", line, "aot command must pass --llvm to the AOT compiler");
+					assemblies_checked++;
+				});
+				Assert.That (assemblies_checked, Is.AtLeast (4), "We build at least 4, so we must have had at least 4 asserts above."); // mscorlib.dll, Xamarin.iOS.dll, System.dll, theApp.exe
 			}
 		}
 
@@ -445,17 +494,6 @@ namespace Xamarin
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
 				mtouch.AssertError (3, "Application name 'mscorlib.exe' conflicts with an SDK or product assembly (.dll) name.");
-			}
-		}
-
-		[Test]
-		public void MT0008 ()
-		{
-			using (var mtouch = new MTouchTool ()) {
-				mtouch.CreateTemporaryAppDirectory ();
-				mtouch.CustomArguments = new string [] { "foo.exe", "bar.exe" };
-				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertError (8, "You should provide one root assembly only, found 2 assemblies: 'foo.exe', 'bar.exe'");
 			}
 		}
 
@@ -1278,6 +1316,33 @@ namespace Xamarin
 			}
 		}
 
+		[Test]
+		public void MT0125 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.AssemblyBuildTargets.Add ("@all=framework");
+				mtouch.Linker = MTouchLinker.DontLink; // faster test.
+				mtouch.Debug = true; // faster test, because it enables fastsim
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarning (125, "The --assembly-build-target command-line argument is ignored in the simulator.");
+			}
+		}
+
+		[Test]
+		public void MT0126 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.FastDev = true;
+				mtouch.Linker = MTouchLinker.DontLink; // faster test.
+				mtouch.Debug = true; // faster test, because it enables fastsim
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarning (126, "Incremental builds have been disabled because incremental builds are not supported in the simulator.");
+			}
+		}
 
 		[Test]
 		public void MT0127 ()
@@ -1339,6 +1404,63 @@ public class TestApp {
 				mtouch.TargetVer = Configuration.sdk_version;
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildSim));
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev));
+			}
+		}
+
+		[Test]
+		[TestCase (Profile.tvOS, MTouchBitcode.Marker)]
+		[TestCase (Profile.watchOS, MTouchBitcode.Marker)]
+		public void StripBitcodeFromFrameworks (Profile profile, MTouchBitcode bitcode)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = profile;
+				if (profile == Profile.watchOS) {
+					mtouch.CreateTemporaryWatchKitExtension ();
+				} else {
+					mtouch.CreateTemporaryApp ();
+				}
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.AssemblyBuildTargets.Add ("@all=framework=MyApp");
+				mtouch.NoStrip = true; // faster test
+				mtouch.DSym = false; // faster test
+				mtouch.Bitcode = bitcode;
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+
+				var frameworks = new string [] { "Mono", "Xamarin" };
+				foreach (var framework in frameworks) {
+					var relative_path = $"Frameworks/{framework}.framework/{framework}";
+					var src = Path.Combine (GetXamarinSdkDirectory (profile, true), relative_path);
+					var dst = Path.Combine (mtouch.AppPath, relative_path);
+					var srcLength = new FileInfo (src).Length;
+					var dstLength = new FileInfo (dst).Length;
+					Assert.That (dstLength, Is.LessThan (srcLength), "Framework size");
+				}
+			}
+		}
+
+		static string GetXamarinSdkDirectory (Profile profile, bool device)
+		{
+			switch (profile) {
+			case Profile.iOS:
+				if (device) {
+					return Path.Combine (Configuration.SdkRootXI, "SDKs", "MonoTouch.iphoneos.sdk");
+				} else {
+					return Path.Combine (Configuration.SdkRootXI, "SDKs", "MonoTouch.iphonesimulator.sdk");
+				}
+			case Profile.tvOS:
+				if (device) {
+					return Path.Combine (Configuration.SdkRootXI, "SDKs", "Xamarin.AppleTVOS.sdk");
+				} else {
+					return Path.Combine (Configuration.SdkRootXI, "SDKs", "Xamarin.AppleTVSimulator.sdk");
+				}
+			case Profile.watchOS:
+				if (device) {
+					return Path.Combine (Configuration.SdkRootXI, "SDKs", "Xamarin.WatchOS.sdk");
+				} else {
+					return Path.Combine (Configuration.SdkRootXI, "SDKs", "Xamarin.WatchSimulator.sdk");
+				}
+			default:
+				throw new NotImplementedException ();
 			}
 		}
 

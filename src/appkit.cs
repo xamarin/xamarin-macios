@@ -12983,7 +12983,7 @@ namespace XamCore.AppKit {
 		nfloat GetWidth (nint segment);
 
 		[Export ("setImage:forSegment:")]
-		void SetImage (NSImage image, nint segment);
+		void SetImage ([NullAllowed] NSImage image, nint segment);
 
 		[Export ("imageForSegment:")]
 		NSImage GetImage (nint segment);
@@ -13001,7 +13001,7 @@ namespace XamCore.AppKit {
 		string GetLabel (nint segment);
 
 		[Export ("setMenu:forSegment:")]
-		void SetMenu (NSMenu menu, nint segment);
+		void SetMenu ([NullAllowed] NSMenu menu, nint segment);
 
 		[Export ("menuForSegment:")]
 		NSMenu GetMenu (nint segment);
@@ -19253,16 +19253,16 @@ namespace XamCore.AppKit {
 		bool ReleasedWhenClosed  { [Bind ("isReleasedWhenClosed")] get; set; }
 	
 		[Export ("miniaturize:")]
-		void Miniaturize (NSObject sender);
+		void Miniaturize ([NullAllowed] NSObject sender);
 	
 		[Export ("deminiaturize:")]
-		void Deminiaturize (NSObject sender);
+		void Deminiaturize ([NullAllowed] NSObject sender);
 	
 		[Export ("isZoomed")]
 		bool IsZoomed { get; set; }
 	
 		[Export ("zoom:")]
-		void Zoom (NSObject sender);
+		void Zoom ([NullAllowed] NSObject sender);
 	
 		[Export ("isMiniaturized")]
 		bool IsMiniaturized { get; set; }
@@ -19381,13 +19381,13 @@ namespace XamCore.AppKit {
 		CGPoint ConvertScreenToBase (CGPoint aPoint);
 	
 		[Export ("performClose:")]
-		void PerformClose (NSObject sender);
+		void PerformClose ([NullAllowed] NSObject sender);
 		
 		[Export ("performMiniaturize:")]
-		void PerformMiniaturize (NSObject sender);
+		void PerformMiniaturize ([NullAllowed] NSObject sender);
 	
 		[Export ("performZoom:")]
-		void PerformZoom (NSObject sender);
+		void PerformZoom ([NullAllowed] NSObject sender);
 	
 		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
 		[Export ("gState")]
@@ -19406,7 +19406,7 @@ namespace XamCore.AppKit {
 		NSData DataWithPdfInsideRect (CGRect rect);
 	
 		[Export ("print:")]
-		void Print (NSObject sender);
+		void Print ([NullAllowed] NSObject sender);
 	
 		[Export ("disableCursorRects")]
 		void DisableCursorRects ();
@@ -19621,10 +19621,10 @@ namespace XamCore.AppKit {
 		NSView InitialFirstResponder { get; set; }
 	
 		[Export ("selectNextKeyView:")]
-		void SelectNextKeyView (NSObject sender);
+		void SelectNextKeyView ([NullAllowed] NSObject sender);
 	
 		[Export ("selectPreviousKeyView:")]
-		void SelectPreviousKeyView (NSObject sender);
+		void SelectPreviousKeyView ([NullAllowed] NSObject sender);
 	
 		[Export ("selectKeyViewFollowingView:")]
 		void SelectKeyViewFollowingView (NSView aView);

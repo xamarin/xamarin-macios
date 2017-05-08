@@ -72,7 +72,6 @@ IOS_BMONO = MONO_PATH=$(IOS_LIBDIR) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch
 ifdef IKVM
 IOS_GENERATOR=build/common/bgen.exe
 IOS_GENERATE=$(SYSTEM_MONO) --debug $(IOS_GENERATOR)
-IOS_GENERATOR_DEPENDENCIES=$(IOS_BUILD_DIR)/native/monotouch.BindingAttributes.dll $(IOS_BUILD_DIR)/native/Xamarin.iOS.BindingAttributes.dll
 IOS_compat_GENERATOR=$(IOS_GENERATOR)
 IOS_compat_GENERATE=$(IOS_GENERATE)
 IOS_native_GENERATOR=$(IOS_GENERATOR)
@@ -145,7 +144,7 @@ $(IOS_BUILD_DIR)/$(1)/generator.exe: $$(GENERATOR_SOURCES) $(IOS_BUILD_DIR)/$(1)
 xi_compat_profile=--target-framework=MonoTouch,v1.0
 xi_native_profile=--target-framework=Xamarin.iOS,v1.0
 
-$(IOS_BUILD_DIR)/$(1)/generated_sources: $$(IOS_$(1)_GENERATOR) $$(IOS_APIS) $(IOS_BUILD_DIR)/$(1)/core.dll $(IOS_PMCS) $(IOS_GENERATOR_DEPENDENCIES)
+$(IOS_BUILD_DIR)/$(1)/generated_sources: $$(IOS_$(1)_GENERATOR) $$(IOS_APIS) $(IOS_BUILD_DIR)/$(1)/core.dll $(IOS_PMCS) $(IOS_BUILD_DIR)/native/$(4)
 	$$(call Q_PROF_GEN,ios/$(1)) PMCS_PROFILE=$(3) $$(IOS_$(1)_GENERATE) \
 		$$(IOS_GENERATOR_FLAGS) \
 		-core \
@@ -155,6 +154,7 @@ $(IOS_BUILD_DIR)/$(1)/generated_sources: $$(IOS_$(1)_GENERATOR) $$(IOS_APIS) $(I
 		-no-mono-path \
 		-tmpdir=$(IOS_BUILD_DIR)/$(1) \
 		-baselib=$(IOS_BUILD_DIR)/$(1)/core.dll \
+		-attributelib=$(IOS_BUILD_DIR)/native/$(4) \
 		-r=$$(MONO_PATH)/mcs/class/lib/monotouch/System.dll \
 		-ns=MonoTouch.ObjCRuntime \
 		-native-exception-marshalling \
@@ -162,8 +162,8 @@ $(IOS_BUILD_DIR)/$(1)/generated_sources: $$(IOS_$(1)_GENERATOR) $$(IOS_APIS) $(I
 		$$(xi_$(1)_profile) \
 		$$(IOS_APIS)
 endef
-$(eval $(call IOS_GENERATOR_template,compat,--ns=MonoTouch.ObjCRuntime -p,compat-ios))
-$(eval $(call IOS_GENERATOR_template,native,--ns=ObjCRuntime,native))
+$(eval $(call IOS_GENERATOR_template,compat,--ns=MonoTouch.ObjCRuntime -p,compat-ios,monotouch.BindingAttributes.dll))
+$(eval $(call IOS_GENERATOR_template,native,--ns=ObjCRuntime,native,Xamarin.iOS.BindingAttributes.dll))
 
 define IOS_TARGETS_template
 IOS_VARIANTS_TARGETS += $(IOS_BUILD_DIR)/$(1)/$(3)
@@ -180,6 +180,8 @@ $(IOS_BUILD_DIR)/$(1)/$(3): $$(IOS_SOURCES) $(IOS_BUILD_DIR)/$(4)/generated_sour
 $(IOS_BUILD_DIR)/$(1)/$(3).mdb: $(IOS_BUILD_DIR)/$(1)/$(3)
 	@touch $(IOS_BUILD_DIR)/$(1)/$(3).mdb
 
+$(IOS_BUILD_DIR)/$(1)/$(3).pdb: $(IOS_BUILD_DIR)/$(1)/$(3).dll
+
 endef
 
 $(eval $(call IOS_TARGETS_template,compat,--ns=MonoTouch.ObjCRuntime,monotouch.dll,compat,compat-ios))
@@ -191,29 +193,28 @@ IOS_VARIANTS_TARGETS += $(addprefix $(IOS_BUILD_DIR)/$(1)/,$(4) $(5))
 
 # MonoTouch.Dialog-1
 $(IOS_BUILD_DIR)/$(1)/$(4): $$(IOS_SOURCES) $(IOS_BUILD_DIR)/$(1)/$(3) $$(MONOTOUCH_DIALOG_SOURCES) $(PRODUCT_KEY_PATH) $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
-	$$(call Q_PROF_MCS,ios/$(1)) $$(IOS_CSC) -out:$$@ -target:library -debug -optimize \
-		-keyfile:$(PRODUCT_KEY_PATH) -r:$(IOS_BUILD_DIR)/$(1)/$(3) $(6) -r:System.Json \
+	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -out:$$@ -target:library -debug:portable -optimize -publicsign \
+		-keyfile:$(PRODUCT_KEY_PATH) -r:$(IOS_BUILD_DIR)/$(1)/$(3) $(6) -r:$(MONOTOUCH_MONO_PATH)/System.Core.dll -r:$(MONOTOUCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_MONO_PATH)/System.Json.dll \
 		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$$(MONOTOUCH_DIALOG_SOURCES) $$(MONOTOUCH_DIALOG_RESOURCES)
 
-$(IOS_BUILD_DIR)/$(1)/$(4).mdb: $(IOS_BUILD_DIR)/$(1)/$(4)
-	@touch $(IOS_BUILD_DIR)/$(1)/$(4).mdb
+$(IOS_BUILD_DIR)/$(1)/$(4:.dll=.pdb): $(IOS_BUILD_DIR)/$(1)/$(4)
+
 
 # MonoTouch.NUnitLite
 $(IOS_BUILD_DIR)/$(1)/$(5): $$(IOS_TOUCHUNIT_SOURCES) $(IOS_BUILD_DIR)/$(1)/$(4) $(PRODUCT_KEY_PATH) $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
-	$$(call Q_PROF_MCS,ios/$(1)) $$(IOS_CSC) -out:$$@ -target:library -debug -optimize \
-		-keyfile:$(PRODUCT_KEY_PATH) -r:$(IOS_BUILD_DIR)/$(1)/$(3) $(6) -r:$(IOS_BUILD_DIR)/$(1)/$(4) \
+	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -out:$$@ -target:library -debug:portable -optimize -publicsign \
+		-keyfile:$(PRODUCT_KEY_PATH) -r:$(IOS_BUILD_DIR)/$(1)/$(3) $(6) -r:$(IOS_BUILD_DIR)/$(1)/$(4) -r:$(MONOTOUCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_MONO_PATH)/System.Xml.dll \
 		-nowarn:3006,612,649,414,1635 \
 		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__ $$(IOS_DEFINES) \
 		$$(IOS_TOUCHUNIT_SOURCES)
 
-$(IOS_BUILD_DIR)/$(1)/$(5).mdb: $(IOS_BUILD_DIR)/$(1)/$(5)
-	@touch $(IOS_BUILD_DIR)/$(1)/$(5).mdb
+$(IOS_BUILD_DIR)/$(1)/$(5:.dll=.pdb): $(IOS_BUILD_DIR)/$(1)/$(5)
 
 # System.Drawing
 # not installed or shipped yet - must be compiled manually using "make System.Drawing.dll"
 $(IOS_BUILD_DIR)/$(1)/System.Drawing.dll: $$(IOS_SYSTEM_DRAWING_SOURCES) monotouch.dll $(PRODUCT_KEY_PATH)
-	$$(call Q_PROF_MCS,ios/$(1)) $$(IOS_CSC) -out:$$@ -target:library -debug \
+	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -out:$$@ -target:library -debug:portable -optimize -publicsign \
 		-keyfile:$(PRODUCT_KEY_PATH) -r:$(IOS_BUILD_DIR)/$(1)/$(3) $(6) \
 		-nowarn:114,169,414,1635 $$(IOS_DEFINES) \
 		$$(IOS_SYSTEM_DRAWING_SOURCES)
@@ -235,7 +236,7 @@ $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll.mdb: $(IOS_BUILD_DIR)/reference/Xamar
 	@touch $@
 
 %.dll: $(IOS_BUILD_DIR)/compat/%.dll
-	$(Q) cp $< $<.mdb .
+	$(Q) cp $< $(<:.dll=.pdb) . || cp $< $<.mdb .
 
 #
 # Assemblies which require special handling as they have dependency on monotouch.dll/Xamarin.iOS.dll
@@ -243,18 +244,18 @@ $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll.mdb: $(IOS_BUILD_DIR)/reference/Xamar
 #
 
 $(MONO_PATH)/mcs/class/lib/monotouch/compat_Facades/System.Drawing.Primitives.dll: $(IOS_BUILD_DIR)/compat/monotouch.dll
-	$(call Q_PROF_MCS,ios/compat) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/System.Drawing.Primitives PROFILE=monotouch LIBRARY_SUBDIR=compat_Facades    EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(IOS_BUILD_DIR)/compat/monotouch.dll)"
+	$(call Q_PROF_CSC,ios/compat) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/System.Drawing.Primitives PROFILE=monotouch LIBRARY_SUBDIR=compat_Facades    EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(IOS_BUILD_DIR)/compat/monotouch.dll)"
 	@touch $@
 
 $(MONO_PATH)/mcs/class/lib/monotouch/reference_Facades/System.Drawing.Primitives.dll: $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
-	$(call Q_PROF_MCS,ios/unified) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/System.Drawing.Primitives PROFILE=monotouch LIBRARY_SUBDIR=reference_Facades EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll)"
+	$(call Q_PROF_CSC,ios/unified) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/System.Drawing.Primitives PROFILE=monotouch LIBRARY_SUBDIR=reference_Facades EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll)"
 	@touch $@
 
 $(IOS_BUILD_DIR)/%/Facades/System.Drawing.Primitives.dll: $(MONO_PATH)/mcs/class/lib/monotouch/%_Facades/System.Drawing.Primitives.dll | $(IOS_BUILD_DIR)/compat/Facades $(IOS_BUILD_DIR)/reference/Facades
 	$(Q) cp $< $@
 
 $(MONO_PATH)/mcs/class/lib/monotouch/reference_Facades/netstandard.dll: $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll $(IOS_BUILD_DIR)/reference/OpenTK-1.0.dll
-	$(call Q_PROF_MCS,ios/unified) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/netstandard PROFILE=monotouch LIBRARY_SUBDIR=reference_Facades MONOTOUCH_MCS_FLAGS="-r:$(abspath $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll),$(abspath $(IOS_BUILD_DIR)/reference/OpenTK-1.0.dll)"
+	$(call Q_PROF_CSC,ios/unified) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/netstandard PROFILE=monotouch LIBRARY_SUBDIR=reference_Facades MONOTOUCH_MCS_FLAGS="-r:$(abspath $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll),$(abspath $(IOS_BUILD_DIR)/reference/OpenTK-1.0.dll)"
 	@touch $@
 
 $(IOS_BUILD_DIR)/reference/Facades/netstandard.dll: $(MONO_PATH)/mcs/class/lib/monotouch/reference_Facades/netstandard.dll | $(IOS_BUILD_DIR)/reference/Facades
@@ -284,17 +285,17 @@ IOS_EXTRA_SYSTEM_NET_HTTP_FILES = \
 
 # build (into custom LIBRARY_SUBDIR)
 $(MONO_PATH)/mcs/class/lib/monotouch/compat/System.Net.Http.dll:    $(IOS_EXTRA_SYSTEM_NET_HTTP_FILES) $(MONO_PATH)/mcs/class/lib/monotouch/System.Net.Http.dll $(IOS_BUILD_DIR)/compat/monotouch.dll 
-	$(call Q_PROF_MCS,ios/compat) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch LIBRARY_SUBDIR=compat   MONOTOUCH_MCS_FLAGS=$(IOS_MCS_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(IOS_BUILD_DIR)/compat/monotouch.dll)      $(IOS_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMARIN_MODERN -d:SYSTEM_NET_HTTP"
+	$(call Q_PROF_CSC,ios/compat) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch LIBRARY_SUBDIR=compat   MONOTOUCH_MCS_FLAGS=$(IOS_MCS_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(IOS_BUILD_DIR)/compat/monotouch.dll)      $(IOS_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMARIN_MODERN -d:SYSTEM_NET_HTTP"
 	$(Q) touch $@
 
 $(MONO_PATH)/mcs/class/lib/monotouch/reference/System.Net.Http.dll: $(IOS_EXTRA_SYSTEM_NET_HTTP_FILES) $(MONO_PATH)/mcs/class/lib/monotouch/System.Net.Http.dll $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
-	$(call Q_PROF_MCS,ios/unified) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch LIBRARY_SUBDIR=reference MONOTOUCH_MCS_FLAGS=$(IOS_MCS_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll) $(IOS_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
+	$(call Q_PROF_CSC,ios/unified) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch LIBRARY_SUBDIR=reference MONOTOUCH_MCS_FLAGS=$(IOS_MCS_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll) $(IOS_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
 	$(Q) touch $@
 
-$(MONO_PATH)/mcs/class/lib/monotouch/reference/System.Net.Http.dll.mdb: $(MONO_PATH)/mcs/class/lib/monotouch/reference/System.Net.Http.dll
+$(MONO_PATH)/mcs/class/lib/monotouch/reference/System.Net.Http.pdb: $(MONO_PATH)/mcs/class/lib/monotouch/reference/System.Net.Http.dll
 	@touch $@
 
-$(MONO_PATH)/mcs/class/lib/monotouch/compat/System.Net.Http.dll.mdb: $(MONO_PATH)/mcs/class/lib/monotouch/compat/System.Net.Http.dll
+$(MONO_PATH)/mcs/class/lib/monotouch/compat/System.Net.Http.pdb: $(MONO_PATH)/mcs/class/lib/monotouch/compat/System.Net.Http.dll
 	@touch $@
 
 # sign dll (one target for both compat+reference)
@@ -303,12 +304,12 @@ $(IOS_BUILD_DIR)/%/System.Net.Http.dll: $(MONO_PATH)/mcs/class/lib/monotouch/%/S
 	$(call Q_PROF_SN,ios/$@) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
 # (one target for both compat+reference)
-$(IOS_BUILD_DIR)/%/System.Net.Http.dll.mdb: $(MONO_PATH)/mcs/class/lib/monotouch/%/System.Net.Http.dll.mdb | $(IOS_BUILD_DIR)/compat $(IOS_BUILD_DIR)/reference
+$(IOS_BUILD_DIR)/%/System.Net.Http.pdb: $(MONO_PATH)/mcs/class/lib/monotouch/%/System.Net.Http.pdb | $(IOS_BUILD_DIR)/compat $(IOS_BUILD_DIR)/reference
 	$(Q) cp $< $@
 
 clean-local::
 	rm -rf build
-	rm -f $(IOS_TARGETS) generated_sources *.mdb
+	rm -f $(IOS_TARGETS) generated_sources *.mdb *.pdb
 
 IOS_TARGETS_DIRS += \
 	$(IOS_BUILD_DIR)                                           \
@@ -333,32 +334,32 @@ IOS_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/Version                                      \
 	$(PMCS_MONOTOUCH_INSTALL_TARGETS)                                              \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/System.Net.Http.dll             \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/System.Net.Http.dll.mdb         \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/System.Net.Http.pdb             \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/monotouch.dll                   \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/monotouch.dll.mdb               \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades/System.Drawing.Primitives.dll     \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/OpenTK.dll                      \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/OpenTK.dll.mdb                  \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/OpenTK.pdb                      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/OpenTK.dll.config               \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/OpenTK-1.0.dll                  \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/OpenTK-1.0.dll.mdb              \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/OpenTK-1.0.pdb                  \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/OpenTK-1.0.dll.config           \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/MonoTouch.Dialog-1.dll          \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/MonoTouch.Dialog-1.dll.mdb      \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/MonoTouch.Dialog-1.pdb          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/MonoTouch.NUnitLite.dll         \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/MonoTouch.NUnitLite.dll.mdb     \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/MonoTouch.NUnitLite.pdb         \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll         \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll.mdb     \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Facades/System.Drawing.Primitives.dll     \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/MonoTouch.Dialog-1.dll  \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/MonoTouch.Dialog-1.dll.mdb  \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/MonoTouch.Dialog-1.pdb  \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/MonoTouch.NUnitLite.dll \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/MonoTouch.NUnitLite.dll.mdb \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/MonoTouch.NUnitLite.pdb \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/OpenTK-1.0.dll          \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/OpenTK-1.0.dll.mdb      \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/OpenTK-1.0.pdb          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/OpenTK-1.0.dll.config   \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/System.Net.Http.dll     \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/System.Net.Http.dll.mdb \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/System.Net.Http.pdb     \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Facades/netstandard.dll     \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.iOS.dll                   \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.iOS.dll.mdb               \
@@ -370,6 +371,9 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/%.dll: $(IOS_BUILD_DIR)/compat/%.
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades/%.dll: $(IOS_BUILD_DIR)/compat/Facades/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades
 	$(Q) install -m 0755 $< $@
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/%.pdb: $(IOS_BUILD_DIR)/compat/%.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
+	$(Q) install -m 0644 $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/%.mdb: $(IOS_BUILD_DIR)/compat/%.mdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
 	$(Q) install -m 0644 $< $@
@@ -386,6 +390,9 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/%.dll: $(IOS_BUILD_DIR)/r
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Facades/%.dll: $(IOS_BUILD_DIR)/reference/Facades/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Facades
 	$(Q) install -m 0755 $< $@
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/%.pdb: $(IOS_BUILD_DIR)/reference/%.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS
+	$(Q) install -m 0644 $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/%.mdb: $(IOS_BUILD_DIR)/reference/%.mdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS
 	$(Q) install -m 0644 $< $@
@@ -505,7 +512,6 @@ MAC_full_GENERATOR=$(MAC_GENERATOR)
 MAC_full_GENERATE=$(MAC_GENERATE)
 MAC_mobile_GENERATOR=$(MAC_GENERATOR)
 MAC_mobile_GENERATE=$(MAC_GENERATE)
-MAC_GENERATOR_DEPENDENCIES=$(MAC_BUILD_DIR)/XamMac.BindingAttributes.dll $(MAC_BUILD_DIR)/Xamarin.Mac-full.BindingAttributes.dll $(MAC_BUILD_DIR)/Xamarin.Mac-mobile.BindingAttributes.dll
 else
 MAC_compat_GENERATOR=$(MAC_BUILD_DIR)/compat/_bmac.exe
 MAC_compat_GENERATE=$(SYSTEM_MONO) --debug $(MAC_compat_GENERATOR)
@@ -534,7 +540,7 @@ $(MAC_BUILD_DIR)/$(1)/_bmac.exe: $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_APIS) $(GE
 		-r:$$(@D)/core.dll \
 		$(GENERATOR_SOURCES)
 
-$(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_$(1)_GENERATOR) $(MAC_APIS) $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_BUILD_DIR)/$(1)/pmcs $(MAC_GENERATOR_DEPENDENCIES)
+$(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_$(1)_GENERATOR) $(MAC_APIS) $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_BUILD_DIR)/$(1)/pmcs $(MAC_BUILD_DIR)/$(7)
 	$$(call Q_PROF_GEN,mac/$(1)) PMCS_PROFILE=$(6) $$(MAC_$(1)_GENERATE) \
 		-d:MONOMAC \
 		-d:XAMARIN_MAC \
@@ -546,6 +552,7 @@ $(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_$(1)_GENERATOR) $(MAC_APIS) $(MA
 		-sourceonly:$$@ \
 		-tmpdir:$$(@D) \
 		-baselib:$$(@D)/core.dll \
+		-attributelib:$(MAC_BUILD_DIR)/$(7) \
 		-d:NO_SYSTEM_DRAWING \
 		$(2) \
 		$(3) \
@@ -553,9 +560,9 @@ $(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_$(1)_GENERATOR) $(MAC_APIS) $(MA
 		$(MAC_APIS)
 endef
 
-$(eval $(call MAC_GENERATOR_template,compat,--ns=MonoMac.ObjCRuntime,-r:/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/System.Drawing.dll,,,compat-mac))
-$(eval $(call MAC_GENERATOR_template,full,--ns=ObjCRuntime,-d:NO_SYSTEM_DRAWING,,,full))
-$(eval $(call MAC_GENERATOR_template,mobile,--ns=ObjCRuntime,$(SHARED_SYSTEM_DRAWING_SOURCES),-nostdlib -r:mscorlib.dll -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac,,mobile))
+$(eval $(call MAC_GENERATOR_template,compat,--ns=MonoMac.ObjCRuntime,-r:/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/System.Drawing.dll,,,compat-mac,XamMac.BindingAttributes.dll))
+$(eval $(call MAC_GENERATOR_template,full,--ns=ObjCRuntime,-d:NO_SYSTEM_DRAWING,,,full,Xamarin.Mac-full.BindingAttributes.dll))
+$(eval $(call MAC_GENERATOR_template,mobile,--ns=ObjCRuntime,$(SHARED_SYSTEM_DRAWING_SOURCES),-nostdlib -r:mscorlib.dll -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac,,mobile,Xamarin.Mac-mobile.BindingAttributes.dll))
 
 define MAC_TARGETS_template
 $(MAC_BUILD_DIR)/$(1)/$(2): $(MAC_BUILD_DIR)/$(3)/generated-sources $(MAC_SOURCES) $(MAC_CFNETWORK_SOURCES) $(MAC_CLASSIC_SOURCES) $(SN_KEY)
@@ -585,14 +592,14 @@ $(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/%-64/Xamarin.Mac.
 
 
 $(MONO_PATH)/mcs/class/lib/xammac/reference_Facades/System.Drawing.Primitives.dll: $(MAC_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll
-	$(call Q_PROF_MCS,xammac) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/System.Drawing.Primitives PROFILE=xammac LIBRARY_SUBDIR=reference_Facades EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(MAC_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll)"
+	$(call Q_PROF_CSC,xammac) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/System.Drawing.Primitives PROFILE=xammac LIBRARY_SUBDIR=reference_Facades EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(MAC_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll)"
 	@touch $@
 
 $(MAC_BUILD_DIR)/mobile/Facades/System.Drawing.Primitives.dll: $(MONO_PATH)/mcs/class/lib/xammac/reference_Facades/System.Drawing.Primitives.dll $(MAC_BUILD_DIR)/mobile/Facades 
 	$(Q) cp $< $@
 
 $(MONO_PATH)/mcs/class/lib/xammac/reference_Facades/netstandard.dll: $(MAC_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll $(MAC_BUILD_DIR)/mobile-reference/OpenTK.dll
-	$(call Q_PROF_MCS,xammac) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/netstandard PROFILE=xammac LIBRARY_SUBDIR=reference_Facades XAMMAC_MCS_FLAGS="-r:$(abspath $(MAC_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll),$(abspath $(MAC_BUILD_DIR)/mobile-reference/OpenTK.dll)"
+	$(call Q_PROF_CSC,xammac) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/netstandard PROFILE=xammac LIBRARY_SUBDIR=reference_Facades XAMMAC_MCS_FLAGS="-r:$(abspath $(MAC_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll),$(abspath $(MAC_BUILD_DIR)/mobile-reference/OpenTK.dll)"
 	@touch $@
 
 $(MAC_BUILD_DIR)/mobile/Facades/netstandard.dll: $(MONO_PATH)/mcs/class/lib/xammac/reference_Facades/netstandard.dll $(MAC_BUILD_DIR)/mobile/Facades
@@ -744,7 +751,6 @@ WATCH_BMONO = MONO_PATH=$(WATCH_LIBDIR)/repl $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/b
 ifdef IKVM
 WATCH_GENERATOR=build/common/bgen.exe
 WATCH_GENERATE=$(SYSTEM_MONO) --debug $(WATCH_GENERATOR)
-WATCH_GENERATOR_DEPENDENCIES=$(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll
 else
 WATCH_GENERATOR=$(WATCH_BUILD_DIR)/watch/generator.exe
 WATCH_GENERATE=$(WATCH_BMONO) --debug $(WATCH_GENERATOR)
@@ -808,7 +814,7 @@ $(WATCH_BUILD_DIR)/watch/generator.exe: $(GENERATOR_SOURCES) $(WATCH_BUILD_DIR)/
 		$(GENERATOR_DEFINES)                  \
 
 # generated_sources
-$(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $(WATCH_BUILD_DIR)/watch/core.dll $(WATCH_PMCS) $(WATCH_GENERATOR_DEPENDENCIES)
+$(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $(WATCH_BUILD_DIR)/watch/core.dll $(WATCH_PMCS) $(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll
 	$(call Q_PROF_GEN,watch) PMCS_PROFILE=watch $(WATCH_GENERATE) \
 		-inline-selectors                                        \
 		-process-enums                                           \
@@ -820,6 +826,7 @@ $(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $
 		-no-mono-path                                            \
 		-tmpdir=$(WATCH_BUILD_DIR)/watch                         \
 		-baselib=$(WATCH_BUILD_DIR)/watch/core.dll               \
+		-attributelib=$(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll \
 		-r=$(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/System.dll \
 		-ns=MonoTouch.ObjCRuntime                                \
 		-native-exception-marshalling                            \
@@ -849,17 +856,17 @@ $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll.mdb: $(WATCH_BUILD_DIR)/watch-3
 
 # MonoTouch.NUnitLite
 $(WATCH_BUILD_DIR)/reference/MonoTouch.NUnitLite.dll: $(WATCHOS_TOUCHUNIT_SOURCES) $(PRODUCT_KEY_PATH) $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll
-	$(call Q_PROF_MCS,watch) $(IOS_CSC) -out:$@ -target:library -debug -optimize \
-		-keyfile:$(PRODUCT_KEY_PATH) -r:$(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll \
+	$(call Q_PROF_CSC,watch) $(SYSTEM_CSC) -out:$@ -target:library -debug:portable -optimize -publicsign -noconfig -nostdlib \
+		-keyfile:$(PRODUCT_KEY_PATH) -r:$(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll -r:$(MONOTOUCH_WATCH_MONO_PATH)/mscorlib.dll -r:$(MONOTOUCH_WATCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_WATCH_MONO_PATH)/System.Xml.dll \
 		-nowarn:3006,612,649,414,1635 \
 		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__ $(WATCH_DEFINES) \
 		$(WATCHOS_TOUCHUNIT_SOURCES)
 
-$(WATCH_BUILD_DIR)/reference/MonoTouch.NUnitLite.dll.mdb: $(WATCH_BUILD_DIR)/reference/MonoTouch.NUnitLite.dll
+$(WATCH_BUILD_DIR)/reference/MonoTouch.NUnitLite.pdb: $(WATCH_BUILD_DIR)/reference/MonoTouch.NUnitLite.dll
 	@touch $@
 
 $(MONO_PATH)/mcs/class/lib/monotouch_watch/reference_Facades/netstandard.dll: $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll
-	$(call Q_PROF_MCS,watch) $(MAKE) $(if $(V),,-s) -C $(WATCH_MONO_PATH)/mcs/class/Facades/netstandard PROFILE=monotouch_watch LIBRARY_SUBDIR=reference_Facades MONOTOUCH_MCS_FLAGS="-r:$(abspath $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll)"
+	$(call Q_PROF_CSC,watch) $(MAKE) $(if $(V),,-s) -C $(WATCH_MONO_PATH)/mcs/class/Facades/netstandard PROFILE=monotouch_watch LIBRARY_SUBDIR=reference_Facades MONOTOUCH_MCS_FLAGS="-r:$(abspath $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll)"
 	@touch $@
 
 $(WATCH_BUILD_DIR)/%/Facades/netstandard.dll: $(MONO_PATH)/mcs/class/lib/monotouch_watch/%_Facades/netstandard.dll | $(WATCH_BUILD_DIR)/reference/Facades
@@ -874,10 +881,10 @@ WATCH_EXTRA_SYSTEM_NET_HTTP_FILES = \
 
 # build (into custom LIBRARY_SUBDIR)
 $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.dll: $(WATCH_EXTRA_SYSTEM_NET_HTTP_FILES) $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/System.Net.Http.dll $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll
-	$(call Q_PROF_MCS,watch) $(MAKE) $(if $(V),,-s) -C $(WATCH_MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch_watch LIBRARY_SUBDIR=reference MONOTOUCH_MCS_FLAGS=$(IOS_MCS_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll) $(WATCH_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
+	$(call Q_PROF_CSC,watch) $(MAKE) $(if $(V),,-s) -C $(WATCH_MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch_watch LIBRARY_SUBDIR=reference MONOTOUCH_MCS_FLAGS=$(IOS_MCS_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll) $(WATCH_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
 	$(Q) touch $@
 
-$(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.dll.mdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.dll
+$(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.pdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.dll
 	@touch $@
 
 # sign dll
@@ -885,7 +892,7 @@ $(WATCH_BUILD_DIR)/reference/System.Net.Http.dll: $(WATCH_MONO_PATH)/mcs/class/l
 	$(Q) cp $< $@
 	$(call Q_PROF_SN,watch) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
-$(WATCH_BUILD_DIR)/reference/System.Net.Http.dll.mdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.dll.mdb
+$(WATCH_BUILD_DIR)/reference/System.Net.Http.pdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.pdb
 	$(Q) cp $< $@
 
 xamwatch.csproj: xamwatch.tmpl.csproj Makefile $(wildcard $(TOP)/*.sources)
@@ -918,9 +925,9 @@ WATCH_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.WatchOS.dll.mdb                    \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/Facades/netstandard.dll      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/System.Net.Http.dll          \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/System.Net.Http.dll.mdb      \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/System.Net.Http.pdb          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/MonoTouch.NUnitLite.dll      \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/MonoTouch.NUnitLite.dll.mdb  \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/MonoTouch.NUnitLite.pdb      \
 
 # reference assemblies, this is just for compilation with XS
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/%.dll: $(WATCH_BUILD_DIR)/reference/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS
@@ -930,6 +937,9 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/Facades/%.dll: $(WATC
 	$(Q) install -m 0755 $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/%.mdb: $(WATCH_BUILD_DIR)/reference/%.mdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS
+	$(Q) install -m 0644 $< $@
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/%.pdb: $(WATCH_BUILD_DIR)/reference/%.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS
 	$(Q) install -m 0644 $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/%.config: $(WATCH_BUILD_DIR)/reference/%.config | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS
@@ -964,7 +974,6 @@ TVOS_BMONO = MONO_PATH=$(TVOS_LIBDIR)/repl $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
 ifdef IKVM
 TVOS_GENERATOR=build/common/bgen.exe
 TVOS_GENERATE=$(SYSTEM_MONO) --debug $(TVOS_GENERATOR)
-TVOS_GENERATOR_DEPENDENCIES=$(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll
 else
 TVOS_GENERATOR=$(TVOS_BUILD_DIR)/tvos/generator.exe
 TVOS_GENERATE=$(TVOS_BMONO) --debug $(TVOS_GENERATOR)
@@ -1022,7 +1031,7 @@ $(TVOS_BUILD_DIR)/tvos/generator.exe: $(GENERATOR_SOURCES) $(TVOS_BUILD_DIR)/tvo
 		$(GENERATOR_DEFINES)                  \
 
 # generated_sources
-$(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_BUILD_DIR)/tvos/core.dll $(TVOS_PMCS) $(TVOS_GENERATOR_DEPENDENCIES)
+$(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_BUILD_DIR)/tvos/core.dll $(TVOS_PMCS) $(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll
 	$(call Q_PROF_GEN,tvos) PMCS_PROFILE=tvos $(TVOS_GENERATE) \
 		-inline-selectors                                        \
 		-process-enums                                           \
@@ -1034,6 +1043,7 @@ $(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_
 		-no-mono-path                                            \
 		-tmpdir=$(TVOS_BUILD_DIR)/tvos                         \
 		-baselib=$(TVOS_BUILD_DIR)/tvos/core.dll               \
+		-attributelib=$(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll \
 		-r=$(MONO_PATH)/mcs/class/lib/monotouch_tv/System.dll \
 		-ns=MonoTouch.ObjCRuntime                                \
 		-native-exception-marshalling                            \
@@ -1063,8 +1073,8 @@ $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll.mdb: $(TVOS_BUILD_DIR)/tvos-64/Xama
 
 # MonoTouch.NUnitLite
 $(TVOS_BUILD_DIR)/reference/MonoTouch.NUnitLite.dll: $(TVOS_TOUCHUNIT_SOURCES) $(PRODUCT_KEY_PATH) $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll $(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll
-	$(call Q_PROF_MCS,tvos) $(SYSTEM_MCS) -lib:$(TVOS_LIBDIR) -out:$@ -target:library -debug -optimize \
-		-keyfile:$(PRODUCT_KEY_PATH) -r:$(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll -r:$(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll \
+	$(call Q_PROF_CSC,tvos) $(SYSTEM_CSC) -r:$(MONOTOUCH_TV_MONO_PATH)/mscorlib.dll -out:$@ -target:library -debug:portable -optimize -noconfig -nostdlib -publicsign \
+		-keyfile:$(PRODUCT_KEY_PATH) -r:$(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll -r:$(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll -r:$(MONOTOUCH_TV_MONO_PATH)/System.dll -r:$(MONOTOUCH_TV_MONO_PATH)/System.Xml.dll \
 		-nowarn:3006,612,649,414,1635 \
 		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__ $(TVOS_DEFINES) \
 		$(TVOS_TOUCHUNIT_SOURCES)
@@ -1073,8 +1083,8 @@ $(TVOS_BUILD_DIR)/%.dll.mdb: $(TVOS_BUILD_DIR)/%.dll
 	@touch $@
 
 $(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll: $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll $(TVOS_SOURCES) $(MONOTOUCH_DIALOG_SOURCES) $(PRODUCT_KEY_PATH)
-	$(call Q_PROF_MCS,tvos) $(SYSTEM_MCS) -lib:$(TVOS_LIBDIR) -out:$@ -target:library -debug -optimize \
-		-keyfile:$(PRODUCT_KEY_PATH) -r:$< -r:System.Json \
+	$(call Q_PROF_CSC,tvos) $(SYSTEM_CSC) -r:$(MONOTOUCH_TV_MONO_PATH)/mscorlib.dll -out:$@ -target:library -debug:portable -optimize -noconfig -nostdlib -publicsign \
+		-keyfile:$(PRODUCT_KEY_PATH) -r:$< -r:$(MONOTOUCH_TV_MONO_PATH)/System.dll -r:$(MONOTOUCH_TV_MONO_PATH)/System.Core.dll -r:$(MONOTOUCH_TV_MONO_PATH)/System.Json.dll \
 		-define:XAMCORE_2_0 -define:XAMCORE_3_0 -define:TVOS -define:__TVOS__ -define:__UNIFIED__ \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$(MONOTOUCH_DIALOG_SOURCES) $(MONOTOUCH_DIALOG_RESOURCES)
@@ -1082,14 +1092,14 @@ $(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll: $(TVOS_BUILD_DIR)/reference/
 # System.Drawing.Primitives.dll is special
 
 $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference_Facades/System.Drawing.Primitives.dll: $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll
-	$(call Q_PROF_MCS,tvos) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/System.Drawing.Primitives PROFILE=monotouch_tv LIBRARY_SUBDIR=reference_Facades EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll)"
+	$(call Q_PROF_CSC,tvos) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/System.Drawing.Primitives PROFILE=monotouch_tv LIBRARY_SUBDIR=reference_Facades EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll)"
 	@touch $@
 
 $(TVOS_BUILD_DIR)/%/Facades/System.Drawing.Primitives.dll: $(MONO_PATH)/mcs/class/lib/monotouch_tv/%_Facades/System.Drawing.Primitives.dll | $(TVOS_BUILD_DIR)/reference/Facades
 	$(Q) cp $< $@
 
 $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference_Facades/netstandard.dll: $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll $(TVOS_BUILD_DIR)/reference/OpenTK-1.0.dll
-	$(call Q_PROF_MCS,tvos) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/netstandard PROFILE=monotouch_tv LIBRARY_SUBDIR=reference_Facades MONOTOUCH_MCS_FLAGS="-r:$(abspath $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll),$(abspath $(TVOS_BUILD_DIR)/reference/OpenTK-1.0.dll)"
+	$(call Q_PROF_CSC,tvos) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/netstandard PROFILE=monotouch_tv LIBRARY_SUBDIR=reference_Facades MONOTOUCH_MCS_FLAGS="-r:$(abspath $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll),$(abspath $(TVOS_BUILD_DIR)/reference/OpenTK-1.0.dll)"
 	@touch $@
 
 $(TVOS_BUILD_DIR)/%/Facades/netstandard.dll: $(MONO_PATH)/mcs/class/lib/monotouch_tv/%_Facades/netstandard.dll | $(TVOS_BUILD_DIR)/reference/Facades
@@ -1106,10 +1116,10 @@ TVOS_EXTRA_SYSTEM_NET_HTTP_FILES = \
 
 # build (into custom LIBRARY_SUBDIR)
 $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.dll: $(TVOS_EXTRA_SYSTEM_NET_HTTP_FILES) $(MONO_PATH)/mcs/class/lib/monotouch_tv/System.Net.Http.dll $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll
-	$(call Q_PROF_MCS,tvos) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch_tv LIBRARY_SUBDIR=reference MONOTOUCH_MCS_FLAGS=$(IOS_MCS_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll) $(TVOS_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
+	$(call Q_PROF_CSC,tvos) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch_tv LIBRARY_SUBDIR=reference MONOTOUCH_MCS_FLAGS=$(IOS_MCS_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll) $(TVOS_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
 	$(Q) touch $@
 
-$(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.dll.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.dll
+$(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.pdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.dll
 	@touch $@
 
 # sign dll
@@ -1117,7 +1127,7 @@ $(TVOS_BUILD_DIR)/reference/System.Net.Http.dll: $(MONO_PATH)/mcs/class/lib/mono
 	$(Q) cp $< $@
 	$(call Q_PROF_SN,tvos) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
-$(TVOS_BUILD_DIR)/reference/System.Net.Http.dll.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.dll.mdb
+$(TVOS_BUILD_DIR)/reference/System.Net.Http.pdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.pdb
 	$(Q) cp $< $@
 
 xamtvos.csproj: xamtvos.tmpl.csproj Makefile $(wildcard $(TOP)/*.sources)
@@ -1156,15 +1166,15 @@ TVOS_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.TVOS.dll.mdb                    \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Facades/System.Drawing.Primitives.dll          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/System.Net.Http.dll          \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/System.Net.Http.dll.mdb      \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/System.Net.Http.pdb          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll               \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll.mdb           \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/OpenTK-1.0.pdb               \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll.config        \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Facades/netstandard.dll      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.Dialog-1.dll       \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.Dialog-1.dll.mdb   \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.Dialog-1.pdb       \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.NUnitLite.dll      \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.NUnitLite.dll.mdb  \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.NUnitLite.pdb      \
 
 # reference assemblies, this is just for compilation with XS
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.dll: $(TVOS_BUILD_DIR)/reference/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS
@@ -1174,6 +1184,9 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Facades/%.dll: $(TVOS_BU
 	$(Q) install -m 0755 $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.mdb: $(TVOS_BUILD_DIR)/reference/%.mdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS
+	$(Q) install -m 0644 $< $@
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.pdb: $(TVOS_BUILD_DIR)/reference/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS
 	$(Q) install -m 0644 $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.config: $(TVOS_BUILD_DIR)/reference/%.config | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS

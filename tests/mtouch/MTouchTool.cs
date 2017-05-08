@@ -89,6 +89,7 @@ namespace Xamarin
 		public bool? MSym;
 		public bool? DSym;
 		public bool? NoStrip;
+		public string NoSymbolStrip;
 		public string Mono;
 		public string GccFlags;
 
@@ -221,6 +222,14 @@ namespace Xamarin
 
 			if (NoStrip.HasValue && NoStrip.Value)
 				sb.Append (" --nostrip");
+
+			if (NoSymbolStrip != null) {
+				if (NoSymbolStrip.Length == 0) {
+					sb.Append (" --nosymbolstrip");
+				} else {
+					sb.Append (" --nosymbolstrip:").Append (NoSymbolStrip);
+				}
+			}
 
 			if (MSym.HasValue)
 				sb.Append (" --msym:").Append (MSym.Value ? "true" : "false");

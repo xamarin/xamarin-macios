@@ -180,6 +180,8 @@ To fix this either change 'Application Name' in the project's Build/iOS Applicat
 
 <h3><a name="MT0034"/>MT0034  Cannot include both 'monotouch.dll' and 'Xamarin.iOS.dll' in the same Xamarin.iOS project - '*' is referenced explicitly, while '*' is referenced by '*'.</h3>
 
+<!-- MT0035 unused -->
+
 <h3><a name="MT0036"/>MT0036  Cannot launch a * simulator for a * app. Please enable the correct architecture(s) in your project's iOS Build options (Advanced page).</h3>
 
 <h3><a name="MT0037"/>MT0037  monotouch.dll is not 64-bit compatible. Either reference Xamarin.iOS.dll, or do not build for a 64-bit architecture (ARM64 and/or x86_64).</h3>
@@ -350,6 +352,10 @@ This usually indicates a bug in Xamarin.iOS; please file a bug report at [http:/
 
 <h3><a name="MT0087"/>MT0087: Incremental builds (--fastdev) is not supported with the Boehm GC. Incremental builds will be disabled.</h3>
 
+<h3><a name="MT0088"/>MT0088: The GC must be in cooperative mode for watchOS apps. Please remove the --coop:false argument to mtouch.</h3>
+
+<h3><a name="MT0089"/>MT0089: The option '*' cannot take the value '*' when cooperative mode is enabled for the GC.</h3>
+
 <h3><a name="MT0091"/>MT0091: This version of Xamarin.iOS requires the * SDK (shipped with Xcode *). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).</h3>
 
 Xamarin.iOS requires the header files, from the SDK version specified in the error message, to build your application. The recommended way to fix this error is to upgrade Xcode to get the required SDK, this will include all the required header files. If you have multiple versions of Xcode installed, or want to use an Xcode in a non-default location, make sure to set the correct Xcode location in your IDE's preferences.
@@ -358,11 +364,18 @@ A potential, alternative solution is to enable the managed linker. This will rem
 
 A last-straw solution would be to use an older version of Xamarin.iOS, one that supports the SDK your project requires.
 
-<h3><a name="MT0093"/>MT0093: Aot symbolication files could not be copied to the destination directory. Symbolication will not work with the application.</h3>
+<!-- MT0092 used by mlaunch -->
+
+<h3><a name="MT0093"/>MT0093: Could not find 'mlaunch'.</h3>
+
+<!-- MT0094 is not reported anymore -->
+
+<h3><a name="MT0095"/>MT0095: Aot files could not be copied to the destination directory {dest}: {error}</h3>
 
 <h3><a name="MT0096"/>MT0096: No reference to Xamarin.iOS.dll was found.</h3>
 
 <!-- MT0097: used by mmp -->
+<!-- MT0098: used by mmp -->
 
 <h3><a name="MT0099"/>MT0099: Internal error *. Please file a bug report with a test case (http://bugzilla.xamarin.com).</h3>
 
@@ -417,6 +430,8 @@ For example these values will trigger this error:
     --assembly-build-target:Assembly1.dll=staticobject=my/path.o
 
 because `my/path.o` is not a valid filename due to the directory separator character.
+
+<h3><a name="MT0107"/>MT0107: The assemblies '*' have different custom LLVM optimizations (*), which is not allowed when they are all compiled to a single binary.</h3>
 
 <h3><a name="MT0108"/>MT0108: The assembly build target '*' did not match any assemblies.</h3>
 
@@ -516,6 +531,16 @@ For instance: this condition occurs when an extension builds for ARMv7+llvm+thum
 * because the container app is referencing the assembly '*' from '*', while the extension references it from '*'.
 
 Native code sharing requires that all the projects that share code use the same versions for all assemblies.
+
+<!-- MT0114: used by mmp -->
+
+<h3><a name="MT0125"/>MT0125: The --assembly-build-target command-line argument is ignored in the simulator.</h3>
+
+No action is required, this message is purely informational.
+
+<h3><a name="MT0126"/>MT0126: Incremental builds have been disabled because incremental builds are not supported in the simulator.</h3>
+
+No action is required, this message is purely informational.
 
 <h3><a name="MT0127"/>MT0127: Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.</h3>
 
@@ -1048,6 +1073,8 @@ The value given to `tls-provider=` is not a valid TLS (Transport Layer Security)
 The `default` and `appletls` are the only valid values and both represent the same option, which is to provide the SSL/TLS support using the native Apple TLS API.
 
 <!--- 2012 used by mmp -->
+<!--- 2013 used by mmp -->
+<!--- 2014 used by mmp -->
 
 <h3><a name="MT2015"/>MT2015: Invalid HttpMessageHandler `*` for watchOS. The only valid value is NSUrlSessionHandler.</h3>
 
@@ -1156,6 +1183,9 @@ This is not supported, and may not build or execute properly (the assembly may u
 Bitcode support requires the use of the LLVM AOT backend (--llvm).
 
 Either disable Bitcode support or enable LLVM.
+
+<!--- 3009 used by mmp -->
+<!--- 3010 used by mmp -->
 
 # MT4xxx: Code generation error messages
 
@@ -1314,6 +1344,8 @@ This error indicates a bug in Xamarin.iOS. Please file a bug report at [http://b
 
 <h3><a name="MT4136"/>MT4136  The registrar cannot marshal the parameter type '*' of the parameter '*' in the method '*.*'</h3>
 
+<!-- MT4137 is unused -->
+
 <h3><a name="MT4138"/>MT4138  The registrar cannot marshal the property type '*' of the property '*.*'.</h3>
 
 <h3><a name="MT4139"/>MT4139  The registrar cannot marshal the property type '*' of the property '*.*'. Properties with the [Connect] attribute must have a property type of NSObject (or a subclass of NSObject).</h3>
@@ -1446,6 +1478,7 @@ This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzil
 
 <h3><a name="MT5104"/>MT5104 Could not find neither the '*' nor the '*' compiler. Please install Xcode 'Command-Line Tools' component</h3>
 
+<!-- 5105 is used by mmp -->
 
 <h3><a name="MT5106"/>MT5106: Could not compile the file(s) '*'. Please file a bug report at http://bugzilla.xamarin.com</h3>
 
@@ -1642,6 +1675,7 @@ An error occurred when signing the application. Please review the build log to s
 
 <!-- 5308 is used by mmp -->
 <!-- 5309 is used by mmp -->
+<!-- 5310 is used by mmp -->
 
 # MT6xxx: mtouch internal tools error messages
 
@@ -2023,6 +2057,8 @@ This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzil
 The DelegateProxy attribute for the method in question is invalid.
 
 This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
+<!-- 8017 is used by mmp -->
 
 <h3><a name="MT8018"/>MT8018: Internal consistency error. Please file a bug report at http://bugzilla.xamarin.com.</h3>
 

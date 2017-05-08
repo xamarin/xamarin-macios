@@ -134,7 +134,7 @@ LOCAL_MMP = \
 	Mono.Cecil.Mdb.dll \
 
 mmp.exe: Makefile $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) $(mmp_sources) config config_mobile Info.plist.tmpl $(tuner_sources) $(linker_resources)
-	$(Q_MCS) $(SYSTEM_MCS) -unsafe -out:mmp.exe $(DEFINES) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:Mono.Security.dll  -resource:config -resource:config_mobile -resource:machine.4_5.config -resource:Info.plist.tmpl $(linker_resources:%=-resource:%) $(tuner_sources) $(mmp_sources)
+	$(Q_CSC) $(SYSTEM_CSC) -unsafe -out:mmp.exe $(DEFINES) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:Mono.Security.dll  -resource:config -resource:config_mobile -resource:machine.4_5.config -resource:Info.plist.tmpl $(linker_resources:%=-resource:%) $(tuner_sources) $(mmp_sources) -debug:portable
 	$(Q) cp $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) .
 
 Mono.Cecil.dll: $(MONO_CECIL_DLL)
@@ -160,13 +160,16 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mmp: mmp.in | $(MAC_DESTDIR)$(MAC
 	$(Q) chmod +x $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/mmp.exe: mmp.exe | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
-	$(Q) cp $<* $(dir $@)
+	$(Q) cp $< $(dir $@)
+	$(Q) cp $(<:.exe=.pdb) $(dir $@)
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Mono.Cecil.dll: $(MONO_CECIL_DLL) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
-	$(Q) cp $<* $(dir $@)
+	$(Q) cp $< $(dir $@)
+	$(Q) cp $(<:.exe=.pdb) $(dir $@)
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Mono.Cecil.Mdb.dll: $(MONO_CECIL_MDB_DLL) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
-	$(Q) cp $<* $(dir $@)
+	$(Q) cp $< $(dir $@)
+	$(Q) cp $(<:.exe=.pdb) $(dir $@)
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Xamarin.Mac.registrar.%.a: Xamarin.Mac.registrar.%.a | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
 	$(Q) cp $<* $(dir $@)

@@ -67,7 +67,7 @@ namespace MonoTouch.Tuner {
 			var pipeline = CreatePipeline (options);
 
 			foreach (var ad in options.MainAssemblies)
-				pipeline.PrependStep (new MobileResolveMainAssemblyStep (ad));
+				pipeline.PrependStep (new MobileResolveMainAssemblyStep (ad, options.Application.Embeddinator));
 
 			context = CreateLinkContext (options, pipeline);
 			context.Resolver.AddSearchDirectory (options.OutputDirectory);
