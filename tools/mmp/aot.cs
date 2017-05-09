@@ -214,7 +214,7 @@ namespace Xamarin.Bundler {
 
 			if (IsRelease && options.IsHybridAOT) {
 				Parallel.ForEach (filesToAOT, ParallelOptions, file => {
-					if (RunCommand (StripCommand, Quote (file), null) != 0)
+					if (RunCommand (StripCommand, Quote (file)) != 0)
 						throw ErrorHelper.CreateError (3001, "Could not strip the assembly '{0}'", file);
 				});
 			}

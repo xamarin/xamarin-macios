@@ -52,9 +52,11 @@ namespace Xamarin.MMP.Tests.Unit
 
 		int OnRunCommand (string path, string args, string [] env, StringBuilder output, bool suppressPrintOnErrors)
 		{
-			Assert.IsTrue (env[0] == "MONO_PATH", "MONO_PATH should be first env set");
-			Assert.IsTrue (env[1] == TestRootDir, "MONO_PATH should be set to our expected value");
 			commandsRun.Add (Tuple.Create <string, string>(path, args));
+			if (path != AOTCompiler.StripCommand) {
+				Assert.IsTrue (env[0] == "MONO_PATH", "MONO_PATH should be first env set");
+				Assert.IsTrue (env[1] == TestRootDir, "MONO_PATH should be set to our expected value");
+			}
 			return 0;
 		}
 
