@@ -24,6 +24,12 @@
     <Reference Include="System" />
     <Reference Include="Mono.Posix" />
     <Reference Include="Mono.CompilerServices.SymbolWriter" />
+    <Reference Include="Mono.Cecil">
+      <HintPath>Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb">
+      <HintPath>Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
