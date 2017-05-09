@@ -283,15 +283,18 @@ namespace xharness
 			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), skipXMVariations : true));
 
 			var hard_coded_test_suites = new [] {
-				new { ProjectFile = "mmptest", Name = "mmptest", IsNUnit = true },
-				new { ProjectFile = "msbuild-mac", Name = "MSBuild tests", IsNUnit = false },
-				new { ProjectFile = "xammac_tests", Name = "xammac tests", IsNUnit = false }
+				new { ProjectFile = "mmptest", Name = "mmptest", IsNUnit = true, Configuration = "", Variation = "" },
+				new { ProjectFile = "msbuild-mac", Name = "MSBuild tests", IsNUnit = false, Configuration = "", Variation = "" },
+				new { ProjectFile = "xammac_tests", Name = "xammac tests", IsNUnit = false, Configuration = "Debug", Variation = "Debug" },
+				new { ProjectFile = "xammac_tests", Name = "xammac tests", IsNUnit = false, Configuration = "Release", Variation = "Release" },
 			};
 			foreach (var p in hard_coded_test_suites) {
 				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.ProjectFile + "/" + p.ProjectFile + ".csproj")), generateVariations: false) {
 					Name = p.Name,
 					IsNUnitProject = p.IsNUnit,
 					SolutionPath = Path.GetFullPath (Path.Combine (RootDirectory, "tests-mac.sln")),
+					Configuration = p.Configuration,
+					Variation = p.Variation,
 				});
 			}
 

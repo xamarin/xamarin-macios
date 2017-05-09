@@ -484,10 +484,10 @@ namespace xharness
 				build.Jenkins = this;
 				build.TestProject = project;
 				build.SolutionPath = project.SolutionPath;
-				build.ProjectConfiguration = "Debug";
+				build.ProjectConfiguration = string.IsNullOrEmpty (project.Configuration) ? "Debug" : project.Configuration;
 				build.ProjectPlatform = "x86";
 				build.SpecifyPlatform = false;
-				build.SpecifyConfiguration = false;
+				build.SpecifyConfiguration = build.ProjectConfiguration != "Debug";
 				RunTestTask exec;
 				if (project.IsNUnitProject) {
 					var dll = Path.Combine (Path.GetDirectoryName (project.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
@@ -507,6 +507,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 				}
+				exec.Variation = string.IsNullOrEmpty (project.Variation) ? null : project.Variation;
 				Tasks.Add (exec);
 
 				if (project.GenerateVariations) {
