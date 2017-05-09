@@ -1341,6 +1341,8 @@ namespace Xamarin.Bundler {
 
 		public string Executable {
 			get {
+				if (Embeddinator)
+					return Path.Combine (AppDirectory, "Frameworks", ExecutableName + ".framework", ExecutableName);
 				return Path.Combine (AppDirectory, ExecutableName);
 			}
 		}
@@ -1939,11 +1941,15 @@ namespace Xamarin.Bundler {
 		{
 			if (NativeStrip && IsDeviceBuild && !EnableDebug && string.IsNullOrEmpty (SymbolList)) {
 				string symbol_file = Path.Combine (Cache.Location, "symbol-file");
+				var args = new StringBuilder ();
 				if (WriteSymbolList (symbol_file)) {
-					Driver.RunStrip (String.Format ("-i -s \"{0}\" \"{1}\"", symbol_file, Executable));
-				} else {
-					Driver.RunStrip (String.Format ("\"{0}\"", Executable));
+					args.Append ("-i ");
+					args.Append ("-s ").Append (Driver.Quote (symbol_file)).Append (" ");
 				}
+				if (Embeddinator)
+					args.Append ("-u ");
+				args.Append (Driver.Quote (Executable));
+				Driver.RunStrip (args.ToString ());
 				Driver.Watch ("Native Strip", 1);
 			}
 
