@@ -13249,12 +13249,6 @@
                   <parameter name="test" position="0" attrib="0" type="NUnit.Framework.Api.ITest" />
                 </parameters>
               </method>
-              <method name="TopLevelHandler(System.Object, System.UnhandledExceptionEventArgs)" attrib="134" returntype="System.Void">
-                <parameters>
-                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
-                  <parameter name="e" position="1" attrib="0" type="System.UnhandledExceptionEventArgs" />
-                </parameters>
-              </method>
               <method name="WriteHeader(System.IO.TextWriter)" attrib="150" static="true" returntype="System.Void">
                 <parameters>
                   <parameter name="writer" position="0" attrib="0" type="System.IO.TextWriter" />

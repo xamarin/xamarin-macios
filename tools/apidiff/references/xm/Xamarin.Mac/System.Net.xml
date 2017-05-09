@@ -34,17 +34,7 @@
       </attribute>
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
         <properties>
-          <property name="Destination" value="System.Net.WebRequest" />
-        </properties>
-      </attribute>
-      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
-        <properties>
           <property name="Destination" value="System.Net.HttpWebRequest" />
-        </properties>
-      </attribute>
-      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
-        <properties>
-          <property name="Destination" value="System.Net.WebResponse" />
         </properties>
       </attribute>
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
@@ -69,6 +59,21 @@
       </attribute>
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
         <properties>
+          <property name="Destination" value="System.Net.NetworkInformation.NetworkAddressChangedEventHandler" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.NetworkInformation.NetworkChange" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.NetworkInformation.NetworkInterface" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
           <property name="Destination" value="System.Net.ProtocolViolationException" />
         </properties>
       </attribute>
@@ -89,17 +94,12 @@
       </attribute>
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
         <properties>
-          <property name="Destination" value="System.Net.NetworkInformation.NetworkAddressChangedEventHandler" />
+          <property name="Destination" value="System.Net.WebRequest" />
         </properties>
       </attribute>
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
         <properties>
-          <property name="Destination" value="System.Net.NetworkInformation.NetworkChange" />
-        </properties>
-      </attribute>
-      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
-        <properties>
-          <property name="Destination" value="System.Net.NetworkInformation.NetworkInterface" />
+          <property name="Destination" value="System.Net.WebResponse" />
         </properties>
       </attribute>
       <attribute name="System.CLSCompliantAttribute">
@@ -172,6 +172,11 @@
       <attribute name="System.Resources.SatelliteContractVersionAttribute">
         <properties>
           <property name="Version" value="2.0.5.0" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
+        <properties>
+          <property name="CompilationRelaxations" value="8" />
         </properties>
       </attribute>
       <attribute name="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
