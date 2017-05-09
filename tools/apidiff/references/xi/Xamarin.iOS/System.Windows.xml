@@ -4,17 +4,17 @@
     <attributes>
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
         <properties>
-          <property name="Destination" value="System.Collections.Specialized.INotifyCollectionChanged" />
-        </properties>
-      </attribute>
-      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
-        <properties>
           <property name="Destination" value="System.Collections.ObjectModel.ObservableCollection`1" />
         </properties>
       </attribute>
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
         <properties>
           <property name="Destination" value="System.Collections.ObjectModel.ReadOnlyObservableCollection`1" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Collections.Specialized.INotifyCollectionChanged" />
         </properties>
       </attribute>
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
@@ -34,7 +34,7 @@
       </attribute>
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
         <properties>
-          <property name="Destination" value="System.Windows.Input.ICommand" />
+          <property name="Destination" value="System.ComponentModel.DataErrorsChangedEventArgs" />
         </properties>
       </attribute>
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
@@ -44,7 +44,14 @@
       </attribute>
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
         <properties>
-          <property name="Destination" value="System.ComponentModel.DataErrorsChangedEventArgs" />
+          <property name="Destination" value="System.Windows.Input.ICommand" />
+        </properties>
+      </attribute>
+      <attribute name="System.Diagnostics.DebuggableAttribute">
+        <properties>
+          <property name="IsJITTrackingEnabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="IsJITOptimizerDisabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="DebuggingFlags" value="IgnoreSymbolStoreSequencePoints" />
         </properties>
       </attribute>
       <attribute name="System.Reflection.AssemblyCompanyAttribute">
@@ -95,6 +102,11 @@
       <attribute name="System.Reflection.AssemblyTitleAttribute">
         <properties>
           <property name="Title" value="System.Windows.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
+        <properties>
+          <property name="CompilationRelaxations" value="8" />
         </properties>
       </attribute>
       <attribute name="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute">

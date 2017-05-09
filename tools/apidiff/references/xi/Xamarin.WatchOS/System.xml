@@ -74,9 +74,9 @@
           <property name="Version" value="2.0.5.0" />
         </properties>
       </attribute>
-      <attribute name="System.Runtime.CompilerServices.DefaultDependencyAttribute">
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
         <properties>
-          <property name="LoadHint" value="Always" />
+          <property name="CompilationRelaxations" value="8" />
         </properties>
       </attribute>
       <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
@@ -112,11 +112,6 @@
       </attribute>
       <attribute name="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
         <properties>
-          <property name="AssemblyName" value="Xamarin.Mac, PublicKey=0024000004800000940000000602000000240000525341310004000011000000438ac2a5acfbf16cbd2b2b47a62762f273df9cb2795ceccdf77d10bf508e69e7a362ea7a45455bbf3ac955e1f2e2814f144e5d817efc4c6502cc012df310783348304e3ae38573c6d658c234025821fda87a0be8a0d504df564e2c93b2b878925f42503e9d54dfef9f9586d9e6f38a305769587b1de01f6c0410328b2c9733db" />
-        </properties>
-      </attribute>
-      <attribute name="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-        <properties>
           <property name="AssemblyName" value="Xamarin.WatchOS, PublicKey=0024000004800000940000000602000000240000525341310004000011000000438ac2a5acfbf16cbd2b2b47a62762f273df9cb2795ceccdf77d10bf508e69e7a362ea7a45455bbf3ac955e1f2e2814f144e5d817efc4c6502cc012df310783348304e3ae38573c6d658c234025821fda87a0be8a0d504df564e2c93b2b878925f42503e9d54dfef9f9586d9e6f38a305769587b1de01f6c0410328b2c9733db" />
         </properties>
       </attribute>
@@ -130,7 +125,6 @@
           <property name="WrapNonExceptionThrows" value="True" />
         </properties>
       </attribute>
-      <attribute name="System.Runtime.CompilerServices.StringFreezingAttribute" />
       <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
         <properties>
           <property name="Value" value="False" />
@@ -1551,7 +1545,7 @@
               </method>
               <method name="GetConsumingEnumerable(System.Threading.CancellationToken)" attrib="134" returntype="System.Collections.Generic.IEnumerable`1[T]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerHiddenAttribute" />
+                  <attribute name="System.Runtime.CompilerServices.IteratorStateMachineAttribute" />
                 </attributes>
                 <parameters>
                   <parameter name="cancellationToken" position="0" attrib="0" type="System.Threading.CancellationToken" />
@@ -2928,7 +2922,7 @@
               </method>
               <method name="Reverse()" attrib="134" returntype="System.Collections.Generic.IEnumerable`1[T]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerHiddenAttribute" />
+                  <attribute name="System.Runtime.CompilerServices.IteratorStateMachineAttribute" />
                 </attributes>
                 <parameters />
               </method>
@@ -18932,7 +18926,6 @@
                 </parameters>
               </method>
               <method name="GetProcessesByName(System.String, System.String)" attrib="150" static="true" returntype="System.Diagnostics.Process[]">
-                <attributes />
                 <parameters>
                   <parameter name="processName" position="0" attrib="0" type="System.String" />
                   <parameter name="machineName" position="1" attrib="0" type="System.String" />
@@ -23195,9 +23188,6 @@
               <method name="BeginInit()" attrib="486" virtual="true" returntype="System.Void">
                 <parameters />
               </method>
-              <method name="Dispose()" attrib="454" virtual="true" returntype="System.Void">
-                <parameters />
-              </method>
               <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
                 <parameters>
                   <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
@@ -23725,20 +23715,27 @@
             <methods>
               <method name="BeginRead(System.Byte[], System.Int32, System.Int32, System.AsyncCallback, System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.IAsyncResult">
                 <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="array" position="0" attrib="0" type="System.Byte[]" />
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="count" position="2" attrib="0" type="System.Int32" />
-                  <parameter name="cback" position="3" attrib="0" type="System.AsyncCallback" />
-                  <parameter name="state" position="4" attrib="0" type="System.Object" />
+                  <parameter name="asyncCallback" position="3" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="asyncState" position="4" attrib="0" type="System.Object" />
                 </parameters>
               </method>
               <method name="BeginWrite(System.Byte[], System.Int32, System.Int32, System.AsyncCallback, System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.IAsyncResult">
                 <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="array" position="0" attrib="0" type="System.Byte[]" />
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="count" position="2" attrib="0" type="System.Int32" />
-                  <parameter name="cback" position="3" attrib="0" type="System.AsyncCallback" />
-                  <parameter name="state" position="4" attrib="0" type="System.Object" />
+                  <parameter name="asyncCallback" position="3" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="asyncState" position="4" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="CopyToAsync(System.IO.Stream, System.Int32, System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="destination" position="0" attrib="0" type="System.IO.Stream" />
+                  <parameter name="bufferSize" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="cancellationToken" position="2" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
               </method>
               <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
@@ -23748,16 +23745,21 @@
               </method>
               <method name="EndRead(System.IAsyncResult)" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
                 <parameters>
-                  <parameter name="async_result" position="0" attrib="0" type="System.IAsyncResult" />
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
                 </parameters>
               </method>
               <method name="EndWrite(System.IAsyncResult)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="async_result" position="0" attrib="0" type="System.IAsyncResult" />
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
                 </parameters>
               </method>
               <method name="Flush()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
                 <parameters />
+              </method>
+              <method name="FlushAsync(System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="cancellationToken" position="0" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
               </method>
               <method name="Read(System.Byte[], System.Int32, System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
                 <parameters>
@@ -23765,6 +23767,17 @@
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="count" position="2" attrib="0" type="System.Int32" />
                 </parameters>
+              </method>
+              <method name="ReadAsync(System.Byte[], System.Int32, System.Int32, System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task`1[System.Int32]">
+                <parameters>
+                  <parameter name="array" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="cancellationToken" position="3" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
+              <method name="ReadByte()" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <parameters />
               </method>
               <method name="Seek(System.Int64, System.IO.SeekOrigin)" attrib="198" virtual="true" is-override="true" returntype="System.Int64">
                 <parameters>
@@ -23782,6 +23795,14 @@
                   <parameter name="array" position="0" attrib="0" type="System.Byte[]" />
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="WriteAsync(System.Byte[], System.Int32, System.Int32, System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="array" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="cancellationToken" position="3" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
               </method>
             </methods>
@@ -37452,9 +37473,6 @@
               <property name="Buffer" attrib="0" ptype="System.Byte[]">
                 <methods>
                   <method name="get_Buffer()" attrib="2182" returntype="System.Byte[]">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -37462,9 +37480,6 @@
               <property name="Count" attrib="0" ptype="System.Int32">
                 <methods>
                   <method name="get_Count()" attrib="2182" returntype="System.Int32">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -37472,9 +37487,6 @@
               <property name="EndOfPacket" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_EndOfPacket()" attrib="2182" returntype="System.Boolean">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -37482,9 +37494,6 @@
               <property name="FilePath" attrib="0" ptype="System.String">
                 <methods>
                   <method name="get_FilePath()" attrib="2182" returntype="System.String">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -37492,9 +37501,6 @@
               <property name="Offset" attrib="0" ptype="System.Int32">
                 <methods>
                   <method name="get_Offset()" attrib="2182" returntype="System.Int32">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -37751,7 +37757,7 @@
                 <attributes>
                   <attribute name="System.ObsoleteAttribute">
                     <properties>
-                      <property name="Message" value="Use OSSupportsIPv4 instead" />
+                      <property name="Message" value="SupportsIPv4 is obsoleted for this type, please use OSSupportsIPv4 instead. http://go.microsoft.com/fwlink/?linkid=14202" />
                     </properties>
                   </attribute>
                 </attributes>
@@ -37765,7 +37771,7 @@
                 <attributes>
                   <attribute name="System.ObsoleteAttribute">
                     <properties>
-                      <property name="Message" value="Use OSSupportsIPv6 instead" />
+                      <property name="Message" value="SupportsIPv6 is obsoleted for this type, please use OSSupportsIPv6 instead. http://go.microsoft.com/fwlink/?linkid=14202" />
                     </properties>
                   </attribute>
                 </attributes>
@@ -37788,7 +37794,6 @@
                 </methods>
               </property>
               <property name="UseOnlyOverlappedIO" attrib="0" ptype="System.Boolean">
-                <attributes />
                 <methods>
                   <method name="get_UseOnlyOverlappedIO()" attrib="2182" returntype="System.Boolean">
                     <parameters />
@@ -37816,7 +37821,7 @@
                   <parameter name="state" position="1" attrib="0" type="System.Object" />
                 </parameters>
               </method>
-              <method name="BeginAccept(System.Int32, System.AsyncCallback, System.Object)" attrib="134" returntype="System.IAsyncResult">
+              <method name="BeginAccept(System.Int32, System.AsyncCallback, System.Object)" attrib="16518" returntype="System.IAsyncResult">
                 <parameters>
                   <parameter name="receiveSize" position="0" attrib="0" type="System.Int32" />
                   <parameter name="callback" position="1" attrib="0" type="System.AsyncCallback" />
@@ -37838,11 +37843,11 @@
                   <parameter name="state" position="2" attrib="0" type="System.Object" />
                 </parameters>
               </method>
-              <method name="BeginConnect(System.Net.IPAddress, System.Int32, System.AsyncCallback, System.Object)" attrib="134" returntype="System.IAsyncResult">
+              <method name="BeginConnect(System.Net.IPAddress, System.Int32, System.AsyncCallback, System.Object)" attrib="16518" returntype="System.IAsyncResult">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Net.IPAddress" />
                   <parameter name="port" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="callback" position="2" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="requestCallback" position="2" attrib="0" type="System.AsyncCallback" />
                   <parameter name="state" position="3" attrib="0" type="System.Object" />
                 </parameters>
               </method>
@@ -37869,14 +37874,7 @@
                   <parameter name="state" position="2" attrib="0" type="System.Object" />
                 </parameters>
               </method>
-              <method name="BeginReceive(System.Collections.Generic.IList`1[System.ArraySegment`1[System.Byte]], System.Net.Sockets.SocketFlags, System.AsyncCallback, System.Object)" attrib="134" returntype="System.IAsyncResult">
-                <attributes>
-                  <attribute name="System.CLSCompliantAttribute">
-                    <properties>
-                      <property name="IsCompliant" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="BeginReceive(System.Collections.Generic.IList`1[System.ArraySegment`1[System.Byte]], System.Net.Sockets.SocketFlags, System.AsyncCallback, System.Object)" attrib="16518" returntype="System.IAsyncResult">
                 <parameters>
                   <parameter name="buffers" position="0" attrib="0" type="System.Collections.Generic.IList`1[System.ArraySegment`1[System.Byte]]" />
                   <parameter name="socketFlags" position="1" attrib="0" type="System.Net.Sockets.SocketFlags" />
@@ -37900,12 +37898,12 @@
                   <parameter name="state" position="4" attrib="0" type="System.Object" />
                 </parameters>
               </method>
-              <method name="BeginReceive(System.Byte[], System.Int32, System.Int32, System.Net.Sockets.SocketFlags, System.AsyncCallback, System.Object)" attrib="134" returntype="System.IAsyncResult">
+              <method name="BeginReceive(System.Byte[], System.Int32, System.Int32, System.Net.Sockets.SocketFlags, System.AsyncCallback, System.Object)" attrib="16518" returntype="System.IAsyncResult">
                 <parameters>
                   <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="size" position="2" attrib="0" type="System.Int32" />
-                  <parameter name="socket_flags" position="3" attrib="0" type="System.Net.Sockets.SocketFlags" />
+                  <parameter name="socketFlags" position="3" attrib="0" type="System.Net.Sockets.SocketFlags" />
                   <parameter name="callback" position="4" attrib="0" type="System.AsyncCallback" />
                   <parameter name="state" position="5" attrib="0" type="System.Object" />
                 </parameters>
@@ -37915,8 +37913,8 @@
                   <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="size" position="2" attrib="0" type="System.Int32" />
-                  <parameter name="flags" position="3" attrib="0" type="System.Net.Sockets.SocketFlags" />
-                  <parameter name="error" position="4" attrib="2" type="System.Net.Sockets.SocketError" direction="out" />
+                  <parameter name="socketFlags" position="3" attrib="0" type="System.Net.Sockets.SocketFlags" />
+                  <parameter name="errorCode" position="4" attrib="2" type="System.Net.Sockets.SocketError" direction="out" />
                   <parameter name="callback" position="5" attrib="0" type="System.AsyncCallback" />
                   <parameter name="state" position="6" attrib="0" type="System.Object" />
                 </parameters>
@@ -37944,7 +37942,7 @@
                   <parameter name="state" position="6" attrib="0" type="System.Object" />
                 </parameters>
               </method>
-              <method name="BeginSend(System.Collections.Generic.IList`1[System.ArraySegment`1[System.Byte]], System.Net.Sockets.SocketFlags, System.AsyncCallback, System.Object)" attrib="134" returntype="System.IAsyncResult">
+              <method name="BeginSend(System.Collections.Generic.IList`1[System.ArraySegment`1[System.Byte]], System.Net.Sockets.SocketFlags, System.AsyncCallback, System.Object)" attrib="16518" returntype="System.IAsyncResult">
                 <parameters>
                   <parameter name="buffers" position="0" attrib="0" type="System.Collections.Generic.IList`1[System.ArraySegment`1[System.Byte]]" />
                   <parameter name="socketFlags" position="1" attrib="0" type="System.Net.Sockets.SocketFlags" />
@@ -37968,12 +37966,12 @@
                   <parameter name="state" position="4" attrib="0" type="System.Object" />
                 </parameters>
               </method>
-              <method name="BeginSend(System.Byte[], System.Int32, System.Int32, System.Net.Sockets.SocketFlags, System.AsyncCallback, System.Object)" attrib="134" returntype="System.IAsyncResult">
+              <method name="BeginSend(System.Byte[], System.Int32, System.Int32, System.Net.Sockets.SocketFlags, System.AsyncCallback, System.Object)" attrib="16518" returntype="System.IAsyncResult">
                 <parameters>
                   <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="size" position="2" attrib="0" type="System.Int32" />
-                  <parameter name="socket_flags" position="3" attrib="0" type="System.Net.Sockets.SocketFlags" />
+                  <parameter name="socketFlags" position="3" attrib="0" type="System.Net.Sockets.SocketFlags" />
                   <parameter name="callback" position="4" attrib="0" type="System.AsyncCallback" />
                   <parameter name="state" position="5" attrib="0" type="System.Object" />
                 </parameters>
@@ -37989,7 +37987,7 @@
                   <parameter name="state" position="6" attrib="0" type="System.Object" />
                 </parameters>
               </method>
-              <method name="BeginSendFile(System.String, System.AsyncCallback, System.Object)" attrib="134" returntype="System.IAsyncResult">
+              <method name="BeginSendFile(System.String, System.AsyncCallback, System.Object)" attrib="16518" returntype="System.IAsyncResult">
                 <parameters>
                   <parameter name="fileName" position="0" attrib="0" type="System.String" />
                   <parameter name="callback" position="1" attrib="0" type="System.AsyncCallback" />
@@ -38124,7 +38122,7 @@
               </method>
               <method name="EndReceive(System.IAsyncResult)" attrib="134" returntype="System.Int32">
                 <parameters>
-                  <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
                 </parameters>
               </method>
               <method name="EndReceive(System.IAsyncResult, out System.Net.Sockets.SocketError&amp;)" attrib="134" returntype="System.Int32">
@@ -38150,7 +38148,7 @@
               </method>
               <method name="EndSend(System.IAsyncResult)" attrib="134" returntype="System.Int32">
                 <parameters>
-                  <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
                 </parameters>
               </method>
               <method name="EndSend(System.IAsyncResult, out System.Net.Sockets.SocketError&amp;)" attrib="134" returntype="System.Int32">
@@ -38231,13 +38229,6 @@
                 </parameters>
               </method>
               <method name="Receive(System.Collections.Generic.IList`1[System.ArraySegment`1[System.Byte]], System.Net.Sockets.SocketFlags)" attrib="134" returntype="System.Int32">
-                <attributes>
-                  <attribute name="System.CLSCompliantAttribute">
-                    <properties>
-                      <property name="IsCompliant" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <parameters>
                   <parameter name="buffers" position="0" attrib="0" type="System.Collections.Generic.IList`1[System.ArraySegment`1[System.Byte]]" />
                   <parameter name="socketFlags" position="1" attrib="0" type="System.Net.Sockets.SocketFlags" />
@@ -38812,6 +38803,30 @@
               <field name="Send" attrib="32854" fieldtype="System.Net.Sockets.SocketAsyncOperation" value="7" />
               <field name="SendPackets" attrib="32854" fieldtype="System.Net.Sockets.SocketAsyncOperation" value="8" />
               <field name="SendTo" attrib="32854" fieldtype="System.Net.Sockets.SocketAsyncOperation" value="9" />
+            </fields>
+          </class>
+          <class name="SocketClientAccessPolicyProtocol" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <attributes>
+              <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                <properties>
+                  <property name="State" value="Never" />
+                </properties>
+              </attribute>
+              <attribute name="System.ObsoleteAttribute">
+                <properties>
+                  <property name="Message" value="This API supports the .NET Framework infrastructure and is not intended to be used directly from your code." />
+                  <property name="IsError" value="True" />
+                </properties>
+              </attribute>
+            </attributes>
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Http" attrib="32854" fieldtype="System.Net.Sockets.SocketClientAccessPolicyProtocol" value="1" />
+              <field name="Tcp" attrib="32854" fieldtype="System.Net.Sockets.SocketClientAccessPolicyProtocol" value="0" />
             </fields>
           </class>
           <class name="SocketError" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
