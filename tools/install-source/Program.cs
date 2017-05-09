@@ -7,6 +7,11 @@ using Mono.CompilerServices.SymbolWriter;
 using Mono.Options;
 using Mono.Unix;
 
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+using Mono.Cecil.Pdb;
+
+
 using InstallSources;
 
 public class ListSourceFiles {
@@ -35,6 +40,54 @@ public class ListSourceFiles {
 			return path + Path.DirectorySeparatorChar;
 		return path;
 	}
+
+    public static HashSet<String> GetAssemblyFiles (string assemblyPath)
+    {
+        Console.WriteLine ($"Path is {assemblyPath}");
+        var pdb = assemblyPath + ".pdb";
+        Console.WriteLine($"Pdb file is {pdb}");
+
+		var result = new HashSet<String>(StringComparer.OrdinalIgnoreCase);
+
+        if (!File.Exists(assemblyPath + ".pdb"))
+            return result;
+        
+		var assemblyResolver = new DefaultAssemblyResolver();
+		var assemblyLocation = Path.GetDirectoryName(assemblyPath);
+        assemblyResolver.AddSearchDirectory(assemblyLocation);
+
+		var readerParameters = new ReaderParameters { AssemblyResolver = assemblyResolver };
+		var writerParameters = new WriterParameters();
+
+		var symbolReaderProvider = new PortablePdbReaderProvider();
+		readerParameters.SymbolReaderProvider = symbolReaderProvider;
+		readerParameters.ReadSymbols = true;
+
+		var assemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyPath, readerParameters);
+
+		Console.WriteLine("Main module custom attrs.");
+		foreach (var attr in assemblyDefinition.MainModule.CustomAttributes)
+		{
+			Console.WriteLine($"Attr type is {attr.AttributeType}");
+			Console.WriteLine(attr.AttributeType);
+		}
+		var mainModule = assemblyDefinition.MainModule;
+		foreach (var type in mainModule.Types)
+		{
+			foreach (var method in type.Methods)
+			{
+                if (method.DebugInformation.SequencePoints.Any ())
+				{
+					var sequence_point = method.DebugInformation.SequencePoints[0];
+					var document = sequence_point.Document;
+					Console.WriteLine(document.Url);
+                    result.Add (document.Url);
+				}
+			}
+		}
+
+        return result;
+    }
 
 	public static int Main (string[] arguments)
 	{
@@ -76,16 +129,8 @@ public class ListSourceFiles {
 				continue;
 			}
 
-			MonoSymbolFile symfile;
-
-			try {
-				symfile = MonoSymbolFile.ReadSymbolFile (mdb_file);
-			} catch (IOException ioe) {
-				Console.WriteLine ("IO error while reading msb file '{0}': {1}", mdb_file, ioe.Message);
-				continue;
-			}
-
-			srcs.UnionWith (from src in symfile.Sources select src.FileName);
+            var files = GetAssemblyFiles(mdb_file);
+            srcs.UnionWith(files);
 		}
 
 		var alreadyLinked = new List<string> ();
