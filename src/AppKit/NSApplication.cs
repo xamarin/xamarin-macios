@@ -46,6 +46,7 @@ namespace XamCore.AppKit {
 
 		static bool initialized;
 
+		[Preserve]
 		public static void Init ()
 		{
 			if (initialized) {
