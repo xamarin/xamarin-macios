@@ -272,7 +272,7 @@ namespace XamCore.ObjCRuntime {
 				return asm;
 			}
 
-			throw ErrorHelper.CreateError (8019, $"Could not find the assembly ${assembly_name} in the loaded assemblies.");
+			throw ErrorHelper.CreateError (8019, $"Could not find the assembly {assembly_name} in the loaded assemblies.");
 		}
 
 		/*
