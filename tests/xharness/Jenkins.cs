@@ -180,9 +180,6 @@ namespace xharness
 				rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.watchOS)){ Ignored = ignored || !IncludewatchOS });
 			}
 
-			foreach (var task in rv)
-				task.Variation = "Debug";
-
 			var assembly_build_targets = new []
 			{
 				/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
