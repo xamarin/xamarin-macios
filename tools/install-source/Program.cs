@@ -41,8 +41,50 @@ public class ListSourceFiles {
 		return path;
 	}
 
-    public static HashSet<String> GetAssemblyFiles (string assemblyPath)
+    // returns a tuple with the pdb files as the first value and the mdb files as the second
+    public static Tuple <HashSet<String>, HashSet<String>> GetSplittedPaths (List<string> paths)
     {
+        var splittedPaths = new Tuple<HashSet<String>, HashSet<String>> (
+            new HashSet<string> (), new HashSet<string> ());
+        foreach (var p in paths) {
+            if (p.EndsWith(".pdb", StringComparison.Ordinal)) {
+                Console.WriteLine ("Adding file {p} to pdb list");
+                splittedPaths.Item1.Add (p);
+                continue;
+            }
+            if (p.EndsWith(".mdb", StringComparison.Ordinal)) {
+				Console.WriteLine("Adding file {p} to mdb list");
+				splittedPaths.Item2.Add (p);
+                continue;
+            }
+        }
+        return splittedPaths;
+    }
+
+	// returns the source paths used to create an assembly that has an mdb file
+	public static HashSet<String> GetFilePathsFromMdb(string mdb_file)
+	{
+		var srcs = new HashSet<String>();
+		MonoSymbolFile symfile;
+
+		try
+		{
+			symfile = MonoSymbolFile.ReadSymbolFile(mdb_file);
+			srcs.UnionWith(from src in symfile.Sources select src.FileName);
+
+		}
+		catch (IOException ioe)
+		{
+			Console.WriteLine("IO error while reading msb file '{0}': {1}", mdb_file, ioe.Message);
+		}
+
+		return srcs;
+	}
+
+    // returns the source paths used to create an assembly that has a pdb file
+    public static HashSet<String> GetFilePathsFromPdb (string pdbFile)
+    {
+        var assemblyPath = pdbFile.Replace (".pdb", ".dll");
         Console.WriteLine ($"Path is {assemblyPath}");
         var pdb = assemblyPath + ".pdb";
         Console.WriteLine($"Pdb file is {pdb}");
@@ -107,7 +149,8 @@ public class ListSourceFiles {
 			{ "v|erbose", "Enable verbose output", v => verbose = true },
 		};
 
-		var mdb_files = os.Parse (arguments); 
+		var paths = os.Parse (arguments);
+        var files = GetSplittedPaths (paths);
 
 		var srcs = new HashSet<string> (StringComparer.OrdinalIgnoreCase);
 
@@ -123,14 +166,26 @@ public class ListSourceFiles {
 			OpenTKSourcePath = opentkpath,
 		};
 
-		foreach (string mdb_file in mdb_files) {
-			if (!File.Exists (mdb_file)) {
-				Console.WriteLine ("File does not exist: {0}", mdb_file);
+        // add the paths from the pdb files
+        foreach (string pdbFile in files.Item1) {
+            if (!File.Exists (pdbFile)) {
+                Console.WriteLine ("File does not exist: {0}", pdbFile);
 				continue;
 			}
 
-            var files = GetAssemblyFiles(mdb_file);
-            srcs.UnionWith(files);
+            var assemblySrcs = GetFilePathsFromPdb(pdbFile);
+            srcs.UnionWith(assemblySrcs);
+		}
+
+		// add the paths from the mdb files
+        foreach (string mdbFile in files.Item2) {
+			if (!File.Exists (mdbFile)) {
+				Console.WriteLine ("File does not exist: {0}", mdbFile);
+				continue;
+			}
+
+            var assemblySrcs = GetFilePathsFromMdb (mdbFile);
+			srcs.UnionWith(assemblySrcs);
 		}
 
 		var alreadyLinked = new List<string> ();
