@@ -133,6 +133,7 @@ namespace xharness
 					ProjectConfiguration = "Debug64",
 					ProjectPlatform = "iPhone",
 					Platform = TestPlatform.iOS_Unified64,
+					TestName = project.Name,
 				};
 				rv.Add (new RunDeviceTask (build64, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOS });
 
@@ -143,6 +144,7 @@ namespace xharness
 					ProjectConfiguration = "Debug32",
 					ProjectPlatform = "iPhone",
 					Platform = TestPlatform.iOS_Unified32,
+					TestName = project.Name,
 				};
 				rv.Add (new RunDeviceTask (build32, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS)) { Ignored = ignored || !IncludeiOS });
 
@@ -154,6 +156,7 @@ namespace xharness
 					ProjectConfiguration = "Debug64",
 					ProjectPlatform = "iPhone",
 					Platform = TestPlatform.iOS_TodayExtension64,
+					TestName = project.Name,
 				};
 				rv.Add (new RunDeviceTask (buildToday, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOSExtensions });
 
@@ -165,6 +168,7 @@ namespace xharness
 					ProjectConfiguration = "Debug",
 					ProjectPlatform = "iPhone",
 					Platform = TestPlatform.tvOS,
+					TestName = project.Name,
 				};
 				rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.tvOS)) { Ignored = ignored || !IncludetvOS });
 
@@ -176,6 +180,7 @@ namespace xharness
 					ProjectConfiguration = "Debug",
 					ProjectPlatform = "iPhone",
 					Platform = TestPlatform.watchOS,
+					TestName = project.Name,
 				};
 				rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.watchOS)){ Ignored = ignored || !IncludewatchOS });
 			}
@@ -239,6 +244,7 @@ namespace xharness
 						ProjectPlatform = task.ProjectPlatform,
 						Platform = task.Platform,
 						InitialTask = clone_task,
+						TestName = clone.Name,
 					};
 					rv.Add (new RunDeviceTask (build, task.Candidates) { Variation = variation, Ignored = task.Ignored });
 				}
@@ -427,6 +433,7 @@ namespace xharness
 						ProjectPlatform = "iPhoneSimulator",
 						Platform = pair.Item2,
 						Ignored = pair.Item3,
+						TestName = project.Name,
 					};
 					runSimulatorTasks.AddRange (await CreateRunSimulatorTaskAsync (derived));
 				}
@@ -593,7 +600,7 @@ namespace xharness
 			if (macExec != null) {
 				return new MacExecuteTask (build) {
 					Ignored = ignore,
-					TestName = build.TestName,
+					TestName = task.TestName,
 				};
 			}
 			var nunit = task as NUnitExecuteTask;
@@ -1744,6 +1751,12 @@ function oninitialload ()
 			}
 		}
 
+		public bool HasCustomTestName {
+			get {
+				return test_name != null;
+			}
+		}
+
 		string test_name;
 		public virtual string TestName {
 			get {
@@ -2432,6 +2445,8 @@ function oninitialload ()
 			Platform = build_task.Platform;
 			ProjectPlatform = build_task.ProjectPlatform;
 			ProjectConfiguration = build_task.ProjectConfiguration;
+			if (build_task.HasCustomTestName)
+				TestName = build_task.TestName;
 		}
 
 		public override IEnumerable<Log> AggregatedLogs {
