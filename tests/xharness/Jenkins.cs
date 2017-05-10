@@ -1956,6 +1956,17 @@ function oninitialload ()
 			return rv;
 		}
 
+		public virtual bool SupportsParallelExecution {
+			get {
+				return true;
+			}
+		}
+
+		protected Task<IAcquiredResource> NotifyAndAcquireDesktopResourceAsync ()
+		{
+			return NotifyBlockingWaitAsync ((SupportsParallelExecution ? Jenkins.DesktopResource.AcquireConcurrentAsync () : Jenkins.DesktopResource.AcquireExclusiveAsync ()));
+		}
+
 		class BlockingWait : IAcquiredResource, IDisposable
 		{
 			public IAcquiredResource Wrapped;
@@ -1998,15 +2009,10 @@ function oninitialload ()
 			}
 		}
 
-		public bool SupportsParallelBuilds {
+		public override bool SupportsParallelExecution {
 			get {
 				return Platform.ToString ().StartsWith ("Mac", StringComparison.Ordinal);
 			}
-		}
-
-		protected Task<IAcquiredResource> NotifyBlockingWaitAsync ()
-		{
-			return base.NotifyBlockingWaitAsync ((SupportsParallelBuilds ? Jenkins.DesktopResource.AcquireConcurrentAsync () : Jenkins.DesktopResource.AcquireExclusiveAsync ()));
 		}
 
 		// This method must be called with the desktop resource acquired
@@ -2047,7 +2053,7 @@ function oninitialload ()
 		protected override async Task ExecuteAsync ()
 		{
 			ExecutionResult = TestExecutingResult.Building;
-			using (var resource = await NotifyBlockingWaitAsync ()) {
+			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				var log = Logs.CreateStream (LogDirectory, $"build-{Platform}-{Timestamp}.txt", "Build log");
 				await RestoreNugetsAsync (log, resource);
 				using (var xbuild = new Process ()) {
@@ -2084,7 +2090,7 @@ function oninitialload ()
 
 		protected override async Task ExecuteAsync ()
 		{
-			using (var resource = await NotifyBlockingWaitAsync (Jenkins.DesktopResource.AcquireConcurrentAsync ())) {
+			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				using (var make = new Process ()) {
 					make.StartInfo.FileName = "make";
 					make.StartInfo.WorkingDirectory = WorkingDirectory;
@@ -2116,7 +2122,7 @@ function oninitialload ()
 	{
 		protected override async Task ExecuteAsync ()
 		{
-			using (var resource = await NotifyBlockingWaitAsync ()) {
+			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				var log = Logs.CreateStream (LogDirectory, $"build-{Platform}-{Timestamp}.txt", "Build log");
 
 				await RestoreNugetsAsync (log, resource);
@@ -2223,7 +2229,7 @@ function oninitialload ()
 
 		protected override async Task RunTestAsync ()
 		{
-			using (var resource = await NotifyBlockingWaitAsync (Jenkins.DesktopResource.AcquireConcurrentAsync ())) {
+			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				var xmlLog = Logs.CreateFile ("XML log", Path.Combine (LogDirectory, "log.xml"));
 				var log = Logs.CreateStream (LogDirectory, $"execute-{Timestamp}.txt", "Execution log");
 				using (var proc = new Process ()) {
@@ -2333,6 +2339,20 @@ function oninitialload ()
 		{ 
 		}
 
+		public override bool SupportsParallelExecution {
+			get {
+				if (TestName.Contains ("xammac")) {
+					// We run the xammac tests in both Debug and Release configurations.
+					// These tests are not written to support parallel execution
+					// (there are hard coded paths used for instance), so disable
+					// parallel execution for these tests.
+					return false;
+				}
+
+				return base.SupportsParallelExecution;
+			}
+		}
+
 		public override IEnumerable<Log> AggregatedLogs {
 			get {
 				return base.AggregatedLogs.Union (BuildTask.Logs);
@@ -2365,7 +2385,7 @@ function oninitialload ()
 			else
 				Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), "bin", BuildTask.ProjectPlatform, BuildTask.ProjectConfiguration + suffix, name + ".app", "Contents", "MacOS", name);
 
-			using (var resource = await NotifyBlockingWaitAsync (Jenkins.DesktopResource.AcquireConcurrentAsync ())) {
+			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				using (var proc = new Process ()) {
 					proc.StartInfo.FileName = Path;
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
