@@ -464,11 +464,11 @@ app_initialize (xamarin_initialize_data *data, bool is_extension)
 			exe_path = strdup ([exePath UTF8String]);
 		 } else {
 
-		NSString *exeName = [[NSString stringWithUTF8String: data->basename] stringByAppendingString: @".dll"];
+		NSString * name= [[NSString stringWithUTF8String: data->basename] stringByAppendingString: @".dll"];
 
 		mono_jit_init_version ("EmbeddedXamarinMac", "v4.0.0.0");
 
-		MonoAssembly *extensionAssembly = xamarin_open_assembly (strdup ([exeName UTF8String]));
+		MonoAssembly *extensionAssembly = xamarin_open_assembly (strdup ([name UTF8String]));
 		if (!extensionAssembly)
 			xamarin_assertion_message ("Failed to load extension library.");
 
