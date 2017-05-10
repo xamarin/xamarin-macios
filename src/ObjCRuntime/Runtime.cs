@@ -575,9 +575,6 @@ namespace XamCore.ObjCRuntime {
 
 		static unsafe IntPtr GetGenericMethodFromToken (IntPtr obj, uint token_ref)
 		{
-#if MONOMAC
-			throw new NotSupportedException ();
-#else
 			var method = Class.ResolveTokenReference (token_ref, 0x06000000);
 			if (method == null)
 				return IntPtr.Zero;
@@ -591,7 +588,6 @@ namespace XamCore.ObjCRuntime {
 				throw ErrorHelper.CreateError (8023, $"An instance object is required to construct a closed generic method for the open generic method: {mb.DeclaringType.FullName}.{mb.Name} (token reference: 0x{token_ref:X}). Please file a bug report at http://bugzilla.xamarin.com.");
 
 			return ObjectWrapper.Convert (DynamicRegistrar.FindClosedMethod (nsobj.GetType (), mb));
-#endif
 		}
 
 		static IntPtr TryGetOrConstructNSObjectWrapped (IntPtr ptr)
