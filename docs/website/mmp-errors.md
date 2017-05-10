@@ -132,7 +132,7 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 <h3><a name="MM2013">MM2013: Failed to resolve the reference to "{0}", referenced in "{1}". The app will not include the referenced assembly, and may fail at runtime.</h3>
 
-<h3><a name="MM2014">MM2014: Xamarin.Mac Extensions do not support linking. Request for linking will be ignored.</h3>
+<!-- 2014 is unused now (Xamarin.Mac Extensions do not support linking. Request for linking will be ignored.) -->
 
 <!-- 2015 used by mtouch -->
 
