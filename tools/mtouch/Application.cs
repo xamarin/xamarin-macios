@@ -2044,7 +2044,7 @@ namespace Xamarin.Bundler {
 					args.Append ("-s ").Append (Driver.Quote (symbol_file)).Append (" ");
 				}
 				if (Embeddinator)
-					args.Append ("-u ");
+					args.Append ("-ux ");
 				args.Append (Driver.Quote (Executable));
 				Driver.RunStrip (args.ToString ());
 				Driver.Watch ("Native Strip", 1);
