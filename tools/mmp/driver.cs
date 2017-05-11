@@ -472,11 +472,6 @@ namespace Xamarin.Bundler {
 				throw new MonoMacException (2007, true,
 					"Xamarin.Mac Unified API against a full .NET framework does not support linking. Pass the -nolink flag.");
 
-			if (App.LinkMode != LinkMode.None && is_extension) {
-				App.LinkMode = LinkMode.None;
-				ErrorHelper.Warning (2014, "Xamarin.Mac Extensions do not support linking. Request for linking will be ignored.");
-			}
-
 			ValidateXcode ();
 
 			App.Initialize ();
@@ -668,8 +663,6 @@ namespace Xamarin.Bundler {
 				else
 					registrar = RegistrarMode.Dynamic;
 			}
-			if (is_extension)
-				registrar = RegistrarMode.Static;
 			
 			if (no_executable) {
 				if (unprocessed.Count != 0) {
