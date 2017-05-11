@@ -194,7 +194,7 @@ bool			xamarin_locate_assembly_resource (const char *assembly_name, const char *
 // this functions support NSLog/NSString-style format specifiers.
 void			xamarin_printf (const char *format, ...);
 void			xamarin_vprintf (const char *format, va_list args);
-void            xamarin_install_log_callbacks ();
+void			xamarin_install_log_callbacks ();
 
 /*
  * Look for an assembly in the app and open it.
