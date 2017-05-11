@@ -37,6 +37,7 @@ enum MarshalManagedExceptionMode : int {
 	MarshalManagedExceptionModeDisable                  = 4,
 };
 
+/* This enum must always match the identical enum in src/ObjCRuntime/Runtime.cs */
 enum XamarinLaunchMode {
 	XamarinLaunchModeApp = 0,
 	XamarinLaunchModeExtension = 1,
@@ -55,6 +56,7 @@ extern bool xamarin_debug_mode;
 extern bool xamarin_disable_lldb_attach;
 #if MONOMAC
 extern bool xamarin_mac_hybrid_aot;
+extern char *xamarin_entry_assembly_path;
 #endif
 extern bool xamarin_init_mono_debug;
 extern int xamarin_log_level;
@@ -82,6 +84,8 @@ bool xamarin_get_use_sgen (); /* Public API, always returns true */
 
 void xamarin_set_is_unified (bool value);  /* Public API */
 bool xamarin_get_is_unified ();  /* Public API */
+
+int xamarin_get_launch_mode ();
 
 int xamarin_watchextension_main (int argc, char **argv);
 
