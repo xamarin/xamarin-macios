@@ -475,9 +475,9 @@ app_initialize (xamarin_initialize_data *data)
 
 			if (!xamarin_file_exists ([exePath UTF8String]))
 				exit_with_message ([[NSString stringWithFormat:@"Could not find the executable '%@'\n\nFull path: %@", exeName, exePath] UTF8String], data->basename, false);
-			}
-			exe_path = strdup ([exePath UTF8String]);
-		 } else {
+		}
+		exe_path = strdup ([exePath UTF8String]);
+	} else {
 
 		mono_jit_init_version ("EmbeddedXamarinMac", "v4.0.0.0");
 
