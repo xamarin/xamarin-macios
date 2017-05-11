@@ -629,6 +629,7 @@ INSTALL_TARGETS+=install-mac
 ALL_TARGETS+=all-mac
 
 MAC_TARGETS_DIRS += \
+	$(MAC_BUILD_DIR) \
 	$(MAC_BUILD_DIR)/mobile \
 	$(MAC_BUILD_DIR)/mobile/Facades \
 	$(MAC_BUILD_DIR)/full \
