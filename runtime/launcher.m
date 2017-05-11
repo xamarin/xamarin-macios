@@ -653,5 +653,5 @@ int main (int argc, char **argv)
 
 int xamarin_mac_extension_main (int argc, char **argv)
 {
-	return xamarin_main (argc, argv, XamarinLaunchModeEmbedded);
+	return xamarin_main (argc, argv, XamarinLaunchModeExtension);
 }
