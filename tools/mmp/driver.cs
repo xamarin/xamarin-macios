@@ -410,18 +410,15 @@ namespace Xamarin.Bundler {
 
 			if (TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile || TargetFramework.Version == TargetFramework.Xamarin_Mac_2_0_Mobile.Version) {
 				IsUnifiedMobile = true;
-			} 
-			else if (TargetFramework.Identifier == TargetFramework.Xamarin_Mac_4_5_Full.Identifier 
+			} else if (TargetFramework.Identifier == TargetFramework.Xamarin_Mac_4_5_Full.Identifier 
 			         && TargetFramework.Profile == TargetFramework.Xamarin_Mac_4_5_Full.Profile) {
 				IsUnifiedFullXamMacFramework = true;
 				TargetFramework = TargetFramework.Net_4_5;
-			}
-			else if (TargetFramework.Identifier == TargetFramework.Xamarin_Mac_4_5_System.Identifier
+			} else if (TargetFramework.Identifier == TargetFramework.Xamarin_Mac_4_5_System.Identifier
 			         && TargetFramework.Profile == TargetFramework.Xamarin_Mac_4_5_System.Profile) {
 				IsUnifiedFullSystemFramework = true;
 				TargetFramework = TargetFramework.Net_4_5;
-			}
-			else if (!IsUnifiedFullXamMacFramework && !IsUnifiedFullSystemFramework) {
+			} else if (!IsUnifiedFullXamMacFramework && !IsUnifiedFullSystemFramework) {
 				// This is a total hack. Instead of passing in an argument, we walk the refernces looking for
 				// the "right" Xamarin.Mac and assume you are doing something
 				// Skip it if xamarin-full-framework or xamarin-system-framework passed in 

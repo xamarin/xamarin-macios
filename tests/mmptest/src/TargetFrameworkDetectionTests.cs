@@ -35,8 +35,7 @@ namespace Xamarin.MMP.Tests
 
 		string GetXMReference (TargetFramework target)
 		{
-			switch (target.Profile)
-			{
+			switch (target.Profile)	{
 			case "Mobile":
 					return "-a:/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac/Xamarin.Mac.dll";
 			case "Full":
