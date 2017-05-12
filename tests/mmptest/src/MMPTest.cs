@@ -12,7 +12,7 @@ namespace Xamarin.MMP.Tests
 	[TestFixture]
 	public partial class MMPTests 
 	{
-		void RunMMPTest (Action <string> test)
+		public static void RunMMPTest (Action <string> test)
 		{
 			string tmpDir = Path.Combine (Path.GetTempPath (), "mmp-test-dir");
 			try {

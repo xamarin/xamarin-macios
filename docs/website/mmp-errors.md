@@ -90,6 +90,8 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 <h3><a name="MM1406">MM1406: Target framework '{0}' is invalid when targetting Xamarin.Mac 4.5 .NET framwork.</h3>
 
+<h3><a name="MM1407">MM1407: Mismatch between Xamarin.Mac reference '{0}' and target framework selected '{1}'.</h3>
+
 ## MM15xx: Assembly gathering (not requiring linker) errors
 
 <h3><a name="MM1501">MM1501: Can not resolve reference: {0}</h3>

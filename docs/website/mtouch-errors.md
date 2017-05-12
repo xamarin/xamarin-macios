@@ -963,6 +963,8 @@ Things to try to solve this:
 * Reboot the Mac.
 * Synchronize the device with iTunes (this will remove any crash reports from the device).
 
+<!--- 1407 used by mmp -->
+
 ### MT16xx: MachO
 
 <!--
