@@ -554,6 +554,9 @@ namespace Xamarin.Bundler {
 		static void ValidateXcode ()
 		{
 			if (xcode_version == null) {
+				if (sdk_root == null)
+					throw ErrorHelper.CreateError (57, "Cannot determine the path to Xcode.app from the sdk root ''. Please specify the full path to the Xcode.app bundle.");
+
 				// Check what kind of path we got
 				if (File.Exists (Path.Combine (sdk_root, "Contents", "MacOS", "Xcode"))) {
 					// path to the Xcode.app
