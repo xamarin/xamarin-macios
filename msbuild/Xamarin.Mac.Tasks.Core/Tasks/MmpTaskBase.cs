@@ -115,9 +115,9 @@ namespace Xamarin.Mac.Tasks
 			if (TargetFrameworkIdentifier == "Xamarin.Mac")
 				args.Add ("/profile:Xamarin.Mac,Version=v2.0,Profile=Mobile");
 			else if (UseXamMacFullFramework)
-				args.Add ($"/profile:Xamarin.Mac,Version=v{TargetFrameworkVersion},Profile=Full");
+				args.Add ($"/profile:Xamarin.Mac,Version={TargetFrameworkVersion},Profile=Full");
 			else
-				args.Add ($"/profile:Xamarin.Mac,Version=v{TargetFrameworkVersion},Profile=System");
+				args.Add ($"/profile:Xamarin.Mac,Version={TargetFrameworkVersion},Profile=System");
 
 			XamMacArch arch;
 			if (!Enum.TryParse (Architecture, true, out arch))
