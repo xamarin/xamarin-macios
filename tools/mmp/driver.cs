@@ -408,6 +408,7 @@ namespace Xamarin.Bundler {
 			if (!targetFramework.HasValue)
 				targetFramework = TargetFramework.Default;
 
+			// At least once instance of a TargetFramework of Xamarin.Mac,v2.0,(null) was found already. Assume any v2.0 implies a desire for Modern.
 			if (TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile || TargetFramework.Version == TargetFramework.Xamarin_Mac_2_0_Mobile.Version) {
 				IsUnifiedMobile = true;
 			} else if (TargetFramework.Identifier == TargetFramework.Xamarin_Mac_4_5_Full.Identifier 
