@@ -46,6 +46,7 @@ namespace XamCore.AppKit {
 
 		static bool initialized;
 
+		[Preserve]
 		public static void Init ()
 		{
 			if (initialized) {
@@ -119,16 +120,16 @@ namespace XamCore.AppKit {
 				throw new InvalidOperationException (string.Format("Event registration is overwriting existing delegate. Either just use events or your own delegate: {0} {1}", newDelegateValue.GetType(), internalDelegateType));
 		}
 
-		// NSEventMask is a superset (64 bits) of the mask that can be used (32 bits)
-		// NSEventMaskFromType is often used to convert from NSEventType to the mask
 		public NSEvent NextEvent (NSEventMask mask, NSDate expiration, string mode, bool deqFlag)
 		{
-			return NextEvent ((uint) mask, expiration, mode, deqFlag);
+			// NSEventMask must be casted to nuint to preserve the NSEventMask.Any special value
+			// on 64 bit systems.
+			return NextEvent ((nuint)(ulong) mask, expiration, mode, deqFlag);
 		}
 
 		public void DiscardEvents (NSEventMask mask, NSEvent lastEvent)
 		{
-			DiscardEvents ((uint) mask, lastEvent);
+			DiscardEvents ((nuint)(ulong) mask, lastEvent);
 		}
 
 		[Obsolete ("This method does nothing")]

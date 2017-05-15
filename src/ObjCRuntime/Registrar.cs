@@ -764,6 +764,8 @@ namespace XamCore.Registrar {
 #if !MTOUCH && !MMP
 			public int Size;
 			public byte Alignment;
+#else
+			public bool IsPrivate;
 #endif
 			public string FieldType;
 			public bool IsProperty;
@@ -1431,6 +1433,18 @@ namespace XamCore.Registrar {
 			return objcType;
 		}
 			
+		protected bool SupportsModernObjectiveC {
+			get {
+#if MTOUCH || MONOTOUCH
+				return true;
+#elif MMP
+				return App.Is64Build;
+#elif MONOMAC
+				return IntPtr.Size == 8;
+#endif
+			}
+		}
+
 		// This method is not thread-safe wrt 'types', and must be called with
 		// a lock held on 'types'.
 		ObjCType RegisterTypeUnsafe (TType type, ref List<Exception> exceptions)
@@ -1593,6 +1607,7 @@ namespace XamCore.Registrar {
 							DeclaringType = objcType,
 							FieldType = "XamarinObject",// "^v", // void*
 							Name = "__monoObjectGCHandle",
+							IsPrivate = SupportsModernObjectiveC,
 						}, ref exceptions);
 					}
 #endif

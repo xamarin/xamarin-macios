@@ -30,6 +30,7 @@ namespace xharness
 		public bool IsExe { get { return outputType == "Exe"; } }
 		public bool IsBindingProject { get; private set; }
 		public bool IsBCLProject { get { return ProjectPath.Contains ("bcl-test"); } }
+		public bool IsNUnitProject { get; set; }
 
 		public string BundleIdentifier { get { return bundleIdentifier; } protected set { bundleIdentifier = value; } }
 

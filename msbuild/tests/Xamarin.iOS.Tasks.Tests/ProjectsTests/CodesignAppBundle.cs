@@ -40,6 +40,15 @@ namespace Xamarin.iOS.Tasks
 		{
 			foreach (var dylib in Directory.EnumerateFiles (AppBundlePath, "*.dylib", SearchOption.AllDirectories))
 				Assert.IsTrue (IsCodesigned (dylib), "{0} is not properly codesigned.", dylib);
+
+			foreach (var appex in Directory.EnumerateDirectories (AppBundlePath, "*.appex", SearchOption.AllDirectories))
+				Assert.IsTrue (IsCodesigned (appex), "{0} is not properly codesigned.", appex);
+
+			var watchDir = Path.Combine (AppBundlePath, "Watch");
+			if (Directory.Exists (watchDir)) {
+				foreach (var watchApp in Directory.EnumerateDirectories (watchDir, "*.app", SearchOption.TopDirectoryOnly))
+					Assert.IsTrue (IsCodesigned (watchApp), "{0} is not properly codesigned.", watchApp);
+			}
 		}
 
 		[Test]
@@ -111,6 +120,22 @@ namespace Xamarin.iOS.Tasks
 				text = text.Replace ("bool imageFound = true;", "bool imageFound = false;");
 				File.WriteAllText (viewController, text);
 			}
+		}
+
+		[Test]
+		public void RebuildWatchAppNoChanges ()
+		{
+			BuildProject ("MyWatch2Container", Platform, config, clean: true);
+
+			AssertProperlyCodesigned ();
+
+			Thread.Sleep (1000);
+
+			// Rebuild w/ no changes
+			BuildProject ("MyWatch2Container", Platform, config, clean: false);
+
+			// make sure everything is still codesigned properly
+			AssertProperlyCodesigned ();
 		}
 
 		[Test]

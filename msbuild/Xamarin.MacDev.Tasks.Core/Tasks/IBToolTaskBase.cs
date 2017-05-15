@@ -246,10 +246,23 @@ namespace Xamarin.MacDev.Tasks
 					// an optimization to collect all of the compiled output in one fell swoop.
 					var metadata = expected.CloneCustomMetadata ();
 
-					foreach (var target in targets)
-						mapping.Add (name + "~" + target + extension, metadata);
+					foreach (var target in targets) {
+						var key = name + "~" + target + extension;
 
-					mapping.Add (path, metadata);
+						// Note: we don't blindly .Add() here because there may already be a mapping for this file if the
+						// source file is named something like "MyView.xib" and we've already processed "MyView~ipad.xib".
+						//
+						// When a situation like this occurs, we don't want to override the metadata.
+						if (!mapping.ContainsKey (key))
+							mapping.Add (key, metadata);
+					}
+
+					// Note: we don't use .Add() here because there may already be a mapping for this file if the
+					// source file is named something like "MyView~ipad.xib" and we've already processed "MyView.xib".
+					//
+					// In this case, we want to override the metadata for "MyView.xib" with the metadata for
+					// "MyView~ipad.xib".
+					mapping[path] = metadata;
 				} else {
 					compiled.AddRange (GetCompilationOutput (expected));
 				}

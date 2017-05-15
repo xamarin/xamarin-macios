@@ -388,7 +388,7 @@ namespace Xamarin.iOS.Tasks
 				args.Add ("--extension");
 
 			if (Debug) {
-				if (FastDev)
+				if (FastDev && !SdkIsSimulator)
 					args.Add ("--fastdev");
 
 				args.Add ("--debug");
@@ -426,6 +426,8 @@ namespace Xamarin.iOS.Tasks
 
 			if (UseFloat32 /* We want to compile 32-bit floating point code to use 32-bit floating point operations */)
 				args.Add ("--aot-options=-O=float32");
+			else
+				args.Add ("--aot-options=-O=-float32");
 
 			if (!EnableGenericValueTypeSharing)
 				args.Add ("--gsharedvt=false");

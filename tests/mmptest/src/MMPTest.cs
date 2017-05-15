@@ -208,9 +208,9 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
 
 				// Due to https://bugzilla.xamarin.com/show_bug.cgi?id=48311 we can get warnings related to the registrar
-				// So ignore anything with registrar.m or gl3.h in the line
+				// So ignore anything with registrar.m or registrar.h or gl3.h in the line
 				Func<string, bool> hasLegitWarning = results =>
-					results.Split (Environment.NewLine.ToCharArray ()).Any (x => x.Contains ("warning") && !x.Contains ("registrar.m") && !x.Contains ("gl3.h"));
+					results.Split (Environment.NewLine.ToCharArray ()).Any (x => x.Contains ("warning") && !x.Contains ("registrar.m") && !x.Contains ("registrar.h") && !x.Contains ("gl3.h"));
 
 				// Mobile
 				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
@@ -643,6 +643,36 @@ namespace Xamarin.MMP.Tests
 				string [] clangParts = GetUnifiedProjectClangInvocation (tmpDir);
 				int objcCount = clangParts.Count (x => x.Contains ("-ObjC"));
 				Assert.AreEqual (1, objcCount, "Found more than one -OjbC");
+			});
+		}
+
+		[Test]
+		[TestCase ("CFNetworkHandler", "CFNetworkHandler")]
+		[TestCase ("NSUrlSessionHandler", "NSUrlSessionHandler")]
+		[TestCase ("HttpClientHandler", "HttpClientHandler")]
+		[TestCase (null, "HttpClientHandler")]
+		[TestCase ("", "HttpClientHandler")]
+		public void HttpClientHandler (string mmpHandler, string expectedHandler)
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					References = " <Reference Include=\"System.Net.Http\" />",
+					TestCode = $@"
+			var client = new System.Net.Http.HttpClient ();
+			var field = client.GetType ().BaseType.GetField (""handler"", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+			if (field == null)
+				throw new System.Exception (""Could not find the field 'handler' in HttpClient's base type (which should be 'HttpMessageInvoker')."");
+			var fieldValue = field.GetValue (client);
+			if (fieldValue == null)
+				throw new System.Exception (""Unexpected null value found in 'HttpMessageInvoker.handler' field."");
+			var fieldValueType = fieldValue.GetType ().Name;
+			if (fieldValueType != ""{expectedHandler}"")
+				throw new System.Exception ($""Unexpected field type, found '{{fieldValueType}}', expected '{expectedHandler}'"");
+",
+				};
+				if (mmpHandler != null)
+					test.CSProjConfig = "<HttpClientHandler>" + mmpHandler + "</HttpClientHandler>";
+				TI.TestUnifiedExecutable (test);
 			});
 		}
 	}

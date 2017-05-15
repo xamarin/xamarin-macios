@@ -4,11 +4,6 @@
     <attributes>
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
         <properties>
-          <property name="Destination" value="System.Runtime.CompilerServices.ExtensionAttribute" />
-        </properties>
-      </attribute>
-      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
-        <properties>
           <property name="Destination" value="System.Action" />
         </properties>
       </attribute>
@@ -59,7 +54,22 @@
       </attribute>
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
         <properties>
+          <property name="Destination" value="System.Lazy`1" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Runtime.CompilerServices.ExtensionAttribute" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
           <property name="Destination" value="System.Security.Cryptography.Aes" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Threading.LazyThreadSafetyMode" />
         </properties>
       </attribute>
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
@@ -70,16 +80,6 @@
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
         <properties>
           <property name="Destination" value="System.TimeZoneNotFoundException" />
-        </properties>
-      </attribute>
-      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
-        <properties>
-          <property name="Destination" value="System.Threading.LazyThreadSafetyMode" />
-        </properties>
-      </attribute>
-      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
-        <properties>
-          <property name="Destination" value="System.Lazy`1" />
         </properties>
       </attribute>
       <attribute name="System.CLSCompliantAttribute">
@@ -154,6 +154,11 @@
           <property name="Version" value="2.0.5.0" />
         </properties>
       </attribute>
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
+        <properties>
+          <property name="CompilationRelaxations" value="8" />
+        </properties>
+      </attribute>
       <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
       <attribute name="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute">
         <properties>
@@ -183,7 +188,6 @@
             </constructors>
             <methods>
               <method name="ReleaseHandle()" attrib="196" virtual="true" is-override="true" returntype="System.Boolean">
-                <attributes />
                 <parameters />
               </method>
             </methods>
@@ -1662,6 +1666,9 @@
               <property name="Operation" attrib="0" ptype="System.Linq.Expressions.ExpressionType">
                 <methods>
                   <method name="get_Operation()" attrib="2182" returntype="System.Linq.Expressions.ExpressionType">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -1768,6 +1775,9 @@
               <property name="ArgumentCount" attrib="0" ptype="System.Int32">
                 <methods>
                   <method name="get_ArgumentCount()" attrib="2182" returntype="System.Int32">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -1775,6 +1785,9 @@
               <property name="ArgumentNames" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.String]">
                 <methods>
                   <method name="get_ArgumentNames()" attrib="2182" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.String]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -1804,6 +1817,9 @@
               <property name="Explicit" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_Explicit()" attrib="2182" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -1818,6 +1834,9 @@
               <property name="Type" attrib="0" ptype="System.Type">
                 <methods>
                   <method name="get_Type()" attrib="2182" returntype="System.Type">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -1855,6 +1874,9 @@
               <property name="CallInfo" attrib="0" ptype="System.Dynamic.CallInfo">
                 <methods>
                   <method name="get_CallInfo()" attrib="2182" returntype="System.Dynamic.CallInfo">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -1901,6 +1923,9 @@
               <property name="CallInfo" attrib="0" ptype="System.Dynamic.CallInfo">
                 <methods>
                   <method name="get_CallInfo()" attrib="2182" returntype="System.Dynamic.CallInfo">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -1948,6 +1973,9 @@
               <property name="IgnoreCase" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_IgnoreCase()" attrib="2182" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -1955,6 +1983,9 @@
               <property name="Name" attrib="0" ptype="System.String">
                 <methods>
                   <method name="get_Name()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -2010,6 +2041,9 @@
               <property name="Expression" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_Expression()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -2017,6 +2051,9 @@
               <property name="HasValue" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_HasValue()" attrib="2182" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -2031,6 +2068,9 @@
               <property name="Restrictions" attrib="0" ptype="System.Dynamic.BindingRestrictions">
                 <methods>
                   <method name="get_Restrictions()" attrib="2182" returntype="System.Dynamic.BindingRestrictions">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -2045,6 +2085,9 @@
               <property name="Value" attrib="0" ptype="System.Object">
                 <methods>
                   <method name="get_Value()" attrib="2182" returntype="System.Object">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -2310,6 +2353,9 @@
               <property name="CallInfo" attrib="0" ptype="System.Dynamic.CallInfo">
                 <methods>
                   <method name="get_CallInfo()" attrib="2182" returntype="System.Dynamic.CallInfo">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -2357,6 +2403,9 @@
               <property name="IgnoreCase" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_IgnoreCase()" attrib="2182" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -2364,6 +2413,9 @@
               <property name="Name" attrib="0" ptype="System.String">
                 <methods>
                   <method name="get_Name()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -2380,11 +2432,7 @@
               <method name="Bind(System.Dynamic.DynamicMetaObject, System.Dynamic.DynamicMetaObject[])" attrib="230" virtual="true" sealed="true" is-override="true" returntype="System.Dynamic.DynamicMetaObject">
                 <parameters>
                   <parameter name="target" position="0" attrib="0" type="System.Dynamic.DynamicMetaObject" />
-                  <parameter name="args" position="1" attrib="0" type="System.Dynamic.DynamicMetaObject[]">
-                    <attributes>
-                      <attribute name="System.ParamArrayAttribute" />
-                    </attributes>
-                  </parameter>
+                  <parameter name="args" position="1" attrib="0" type="System.Dynamic.DynamicMetaObject[]" />
                 </parameters>
               </method>
               <method name="FallbackGetMember(System.Dynamic.DynamicMetaObject)" attrib="134" returntype="System.Dynamic.DynamicMetaObject">
@@ -2432,6 +2480,9 @@
               <property name="CallInfo" attrib="0" ptype="System.Dynamic.CallInfo">
                 <methods>
                   <method name="get_CallInfo()" attrib="2182" returntype="System.Dynamic.CallInfo">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -2480,6 +2531,9 @@
               <property name="CallInfo" attrib="0" ptype="System.Dynamic.CallInfo">
                 <methods>
                   <method name="get_CallInfo()" attrib="2182" returntype="System.Dynamic.CallInfo">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -2487,6 +2541,9 @@
               <property name="IgnoreCase" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_IgnoreCase()" attrib="2182" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -2494,6 +2551,9 @@
               <property name="Name" attrib="0" ptype="System.String">
                 <methods>
                   <method name="get_Name()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -2547,6 +2607,9 @@
               <property name="CallInfo" attrib="0" ptype="System.Dynamic.CallInfo">
                 <methods>
                   <method name="get_CallInfo()" attrib="2182" returntype="System.Dynamic.CallInfo">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -2596,6 +2659,9 @@
               <property name="IgnoreCase" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_IgnoreCase()" attrib="2182" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -2603,6 +2669,9 @@
               <property name="Name" attrib="0" ptype="System.String">
                 <methods>
                   <method name="get_Name()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -2649,6 +2718,9 @@
               <property name="Operation" attrib="0" ptype="System.Linq.Expressions.ExpressionType">
                 <methods>
                   <method name="get_Operation()" attrib="2182" returntype="System.Linq.Expressions.ExpressionType">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -5518,6 +5590,18 @@
                   <generic-parameter name="TSource" attributes="0" />
                 </generic-parameters>
               </method>
+              <method name="SkipLast(System.Collections.Generic.IEnumerable`1[TSource], System.Int32)" attrib="150" static="true" returntype="System.Collections.Generic.IEnumerable`1[TSource]">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[TSource]" direction="this" />
+                  <parameter name="count" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+                <generic-parameters>
+                  <generic-parameter name="TSource" attributes="0" />
+                </generic-parameters>
+              </method>
               <method name="SkipWhile(System.Collections.Generic.IEnumerable`1[TSource], System.Func`2[TSource,System.Boolean])" attrib="150" static="true" returntype="System.Collections.Generic.IEnumerable`1[TSource]">
                 <attributes>
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
@@ -5754,6 +5838,18 @@
                   <generic-parameter name="TSource" attributes="0" />
                 </generic-parameters>
               </method>
+              <method name="TakeLast(System.Collections.Generic.IEnumerable`1[TSource], System.Int32)" attrib="150" static="true" returntype="System.Collections.Generic.IEnumerable`1[TSource]">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[TSource]" direction="this" />
+                  <parameter name="count" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+                <generic-parameters>
+                  <generic-parameter name="TSource" attributes="0" />
+                </generic-parameters>
+              </method>
               <method name="TakeWhile(System.Collections.Generic.IEnumerable`1[TSource], System.Func`2[TSource,System.Boolean])" attrib="150" static="true" returntype="System.Collections.Generic.IEnumerable`1[TSource]">
                 <attributes>
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
@@ -5899,6 +5995,29 @@
                   <generic-parameter name="TSource" attributes="0" />
                   <generic-parameter name="TKey" attributes="0" />
                   <generic-parameter name="TElement" attributes="0" />
+                </generic-parameters>
+              </method>
+              <method name="ToHashSet(System.Collections.Generic.IEnumerable`1[TSource])" attrib="150" static="true" returntype="System.Collections.Generic.HashSet`1[TSource]">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[TSource]" direction="this" />
+                </parameters>
+                <generic-parameters>
+                  <generic-parameter name="TSource" attributes="0" />
+                </generic-parameters>
+              </method>
+              <method name="ToHashSet(System.Collections.Generic.IEnumerable`1[TSource], System.Collections.Generic.IEqualityComparer`1[TSource])" attrib="150" static="true" returntype="System.Collections.Generic.HashSet`1[TSource]">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[TSource]" direction="this" />
+                  <parameter name="comparer" position="1" attrib="0" type="System.Collections.Generic.IEqualityComparer`1[TSource]" />
+                </parameters>
+                <generic-parameters>
+                  <generic-parameter name="TSource" attributes="0" />
                 </generic-parameters>
               </method>
               <method name="ToList(System.Collections.Generic.IEnumerable`1[TSource])" attrib="150" static="true" returntype="System.Collections.Generic.List`1[TSource]">
@@ -6160,7 +6279,7 @@
               <interface name="System.Collections.IEnumerable" />
             </interfaces>
             <generic-parameters>
-              <generic-parameter name="TElement" attributes="0" />
+              <generic-parameter name="TElement" attributes="1" />
             </generic-parameters>
             <methods>
               <method name="CreateOrderedEnumerable(System.Func`2[TElement,TKey], System.Collections.Generic.IComparer`1[TKey], System.Boolean)" attrib="1478" abstract="true" virtual="true" returntype="System.Linq.IOrderedEnumerable`1[TElement]">
@@ -6299,7 +6418,7 @@
             <methods>
               <method name="ApplyResultSelector(System.Func`3[TKey,System.Collections.Generic.IEnumerable`1[TElement],TResult])" attrib="134" returntype="System.Collections.Generic.IEnumerable`1[TResult]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerHiddenAttribute" />
+                  <attribute name="System.Runtime.CompilerServices.IteratorStateMachineAttribute" />
                 </attributes>
                 <parameters>
                   <parameter name="resultSelector" position="0" attrib="0" type="System.Func`3[TKey,System.Collections.Generic.IEnumerable`1[TElement],TResult]" />
@@ -6315,7 +6434,7 @@
               </method>
               <method name="GetEnumerator()" attrib="486" virtual="true" returntype="System.Collections.Generic.IEnumerator`1[System.Linq.IGrouping`2[TKey,TElement]]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerHiddenAttribute" />
+                  <attribute name="System.Runtime.CompilerServices.IteratorStateMachineAttribute" />
                 </attributes>
                 <parameters />
               </method>
@@ -9933,6 +10052,18 @@
                   <generic-parameter name="TSource" attributes="0" />
                 </generic-parameters>
               </method>
+              <method name="SkipLast(System.Linq.IQueryable`1[TSource], System.Int32)" attrib="150" static="true" returntype="System.Linq.IQueryable`1[TSource]">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="source" position="0" attrib="0" type="System.Linq.IQueryable`1[TSource]" direction="this" />
+                  <parameter name="count" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+                <generic-parameters>
+                  <generic-parameter name="TSource" attributes="0" />
+                </generic-parameters>
+              </method>
               <method name="SkipWhile(System.Linq.IQueryable`1[TSource], System.Linq.Expressions.Expression`1[System.Func`2[TSource,System.Boolean]])" attrib="150" static="true" returntype="System.Linq.IQueryable`1[TSource]">
                 <attributes>
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
@@ -10169,6 +10300,18 @@
                   <generic-parameter name="TSource" attributes="0" />
                 </generic-parameters>
               </method>
+              <method name="TakeLast(System.Linq.IQueryable`1[TSource], System.Int32)" attrib="150" static="true" returntype="System.Linq.IQueryable`1[TSource]">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="source" position="0" attrib="0" type="System.Linq.IQueryable`1[TSource]" direction="this" />
+                  <parameter name="count" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+                <generic-parameters>
+                  <generic-parameter name="TSource" attributes="0" />
+                </generic-parameters>
+              </method>
               <method name="TakeWhile(System.Linq.IQueryable`1[TSource], System.Linq.Expressions.Expression`1[System.Func`2[TSource,System.Boolean]])" attrib="150" static="true" returntype="System.Linq.IQueryable`1[TSource]">
                 <attributes>
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
@@ -10357,6 +10500,9 @@
               <property name="Left" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_Left()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -10371,6 +10517,9 @@
               <property name="Right" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_Right()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -10465,6 +10614,9 @@
               <property name="Body" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_Body()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -10472,6 +10624,9 @@
               <property name="Filter" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_Filter()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -10479,6 +10634,9 @@
               <property name="Test" attrib="0" ptype="System.Type">
                 <methods>
                   <method name="get_Test()" attrib="2182" returntype="System.Type">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -10486,6 +10644,9 @@
               <property name="Variable" attrib="0" ptype="System.Linq.Expressions.ParameterExpression">
                 <methods>
                   <method name="get_Variable()" attrib="2182" returntype="System.Linq.Expressions.ParameterExpression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -10523,6 +10684,9 @@
               <property name="IfTrue" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_IfTrue()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -10537,6 +10701,9 @@
               <property name="Test" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_Test()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -10590,6 +10757,9 @@
               <property name="Value" attrib="0" ptype="System.Object">
                 <methods>
                   <method name="get_Value()" attrib="2182" returntype="System.Object">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -10615,11 +10785,17 @@
               <property name="Document" attrib="0" ptype="System.Linq.Expressions.SymbolDocumentInfo">
                 <methods>
                   <method name="get_Document()" attrib="2182" returntype="System.Linq.Expressions.SymbolDocumentInfo">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
               </property>
               <property name="EndColumn" attrib="0" ptype="System.Int32">
+                <attributes>
+                  <attribute name="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+                </attributes>
                 <methods>
                   <method name="get_EndColumn()" attrib="2502" virtual="true" returntype="System.Int32">
                     <parameters />
@@ -10627,6 +10803,9 @@
                 </methods>
               </property>
               <property name="EndLine" attrib="0" ptype="System.Int32">
+                <attributes>
+                  <attribute name="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+                </attributes>
                 <methods>
                   <method name="get_EndLine()" attrib="2502" virtual="true" returntype="System.Int32">
                     <parameters />
@@ -10634,6 +10813,9 @@
                 </methods>
               </property>
               <property name="IsClear" attrib="0" ptype="System.Boolean">
+                <attributes>
+                  <attribute name="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+                </attributes>
                 <methods>
                   <method name="get_IsClear()" attrib="2502" virtual="true" returntype="System.Boolean">
                     <parameters />
@@ -10648,6 +10830,9 @@
                 </methods>
               </property>
               <property name="StartColumn" attrib="0" ptype="System.Int32">
+                <attributes>
+                  <attribute name="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+                </attributes>
                 <methods>
                   <method name="get_StartColumn()" attrib="2502" virtual="true" returntype="System.Int32">
                     <parameters />
@@ -10655,6 +10840,9 @@
                 </methods>
               </property>
               <property name="StartLine" attrib="0" ptype="System.Int32">
+                <attributes>
+                  <attribute name="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+                </attributes>
                 <methods>
                   <method name="get_StartLine()" attrib="2502" virtual="true" returntype="System.Int32">
                     <parameters />
@@ -10696,6 +10884,9 @@
               <property name="Type" attrib="0" ptype="System.Type">
                 <methods>
                   <method name="get_Type()" attrib="2278" virtual="true" sealed="true" is-override="true" returntype="System.Type">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -10710,13 +10901,6 @@
             </methods>
           </class>
           <class name="DynamicExpression" type="class" base="System.Linq.Expressions.Expression" charset="Ansi" layout="Auto">
-            <attributes>
-              <attribute name="System.Diagnostics.DebuggerTypeProxyAttribute">
-                <properties>
-                  <property name="ProxyTypeName" value="System.Linq.Expressions.Expression/DynamicExpressionProxy" />
-                </properties>
-              </attribute>
-            </attributes>
             <interfaces>
               <interface name="System.Linq.Expressions.IArgumentProvider" />
               <interface name="System.Linq.Expressions.IDynamicExpression" />
@@ -10732,6 +10916,16 @@
               <property name="Binder" attrib="0" ptype="System.Runtime.CompilerServices.CallSiteBinder">
                 <methods>
                   <method name="get_Binder()" attrib="2182" returntype="System.Runtime.CompilerServices.CallSiteBinder">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="CanReduce" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_CanReduce()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
                     <parameters />
                   </method>
                 </methods>
@@ -10739,6 +10933,9 @@
               <property name="DelegateType" attrib="0" ptype="System.Type">
                 <methods>
                   <method name="get_DelegateType()" attrib="2534" virtual="true" returntype="System.Type">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -10868,6 +11065,9 @@
                   <parameter name="arg3" position="5" attrib="0" type="System.Linq.Expressions.Expression" />
                 </parameters>
               </method>
+              <method name="Reduce()" attrib="198" virtual="true" is-override="true" returntype="System.Linq.Expressions.Expression">
+                <parameters />
+              </method>
               <method name="Update(System.Collections.Generic.IEnumerable`1[System.Linq.Expressions.Expression])" attrib="134" returntype="System.Linq.Expressions.DynamicExpression">
                 <parameters>
                   <parameter name="arguments" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.Linq.Expressions.Expression]" />
@@ -10875,9 +11075,9 @@
               </method>
             </methods>
           </class>
-          <class name="DynamicExpressionVisitor" type="class" base="System.Linq.Expressions.ExpressionVisitor" abstract="true" charset="Ansi" layout="Auto">
+          <class name="DynamicExpressionVisitor" type="class" base="System.Linq.Expressions.ExpressionVisitor" charset="Ansi" layout="Auto">
             <constructors>
-              <constructor name=".ctor()" attrib="6276">
+              <constructor name=".ctor()" attrib="6278">
                 <parameters />
               </constructor>
             </constructors>
@@ -10897,6 +11097,16 @@
               <property name="AddMethod" attrib="0" ptype="System.Reflection.MethodInfo">
                 <methods>
                   <method name="get_AddMethod()" attrib="2182" returntype="System.Reflection.MethodInfo">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ArgumentCount" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_ArgumentCount()" attrib="2534" virtual="true" returntype="System.Int32">
                     <parameters />
                   </method>
                 </methods>
@@ -10904,12 +11114,20 @@
               <property name="Arguments" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.Expression]">
                 <methods>
                   <method name="get_Arguments()" attrib="2182" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.Expression]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
               </property>
             </properties>
             <methods>
+              <method name="GetArgument(System.Int32)" attrib="486" virtual="true" returntype="System.Linq.Expressions.Expression">
+                <parameters>
+                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
               <method name="ToString()" attrib="198" virtual="true" is-override="true" returntype="System.String">
                 <parameters />
               </method>
@@ -13514,7 +13732,7 @@
               </method>
             </methods>
           </class>
-          <class name="Expression`1" type="class" base="System.Linq.Expressions.LambdaExpression" sealed="true" charset="Ansi" layout="Auto">
+          <class name="Expression`1" type="class" base="System.Linq.Expressions.LambdaExpression" charset="Ansi" layout="Auto">
             <generic-parameters>
               <generic-parameter name="TDelegate" attributes="0" />
             </generic-parameters>
@@ -13557,6 +13775,9 @@
               <property name="Kind" attrib="0" ptype="System.Linq.Expressions.GotoExpressionKind">
                 <methods>
                   <method name="get_Kind()" attrib="2182" returntype="System.Linq.Expressions.GotoExpressionKind">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -13571,6 +13792,9 @@
               <property name="Target" attrib="0" ptype="System.Linq.Expressions.LabelTarget">
                 <methods>
                   <method name="get_Target()" attrib="2182" returntype="System.Linq.Expressions.LabelTarget">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -13578,6 +13802,9 @@
               <property name="Type" attrib="0" ptype="System.Type">
                 <methods>
                   <method name="get_Type()" attrib="2278" virtual="true" sealed="true" is-override="true" returntype="System.Type">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -13585,6 +13812,9 @@
               <property name="Value" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_Value()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -13671,6 +13901,13 @@
               <interface name="System.Linq.Expressions.IArgumentProvider" />
             </interfaces>
             <properties>
+              <property name="ArgumentCount" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_ArgumentCount()" attrib="2534" virtual="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="Arguments" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.Expression]">
                 <methods>
                   <method name="get_Arguments()" attrib="2182" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.Expression]">
@@ -13681,6 +13918,9 @@
               <property name="Indexer" attrib="0" ptype="System.Reflection.PropertyInfo">
                 <methods>
                   <method name="get_Indexer()" attrib="2182" returntype="System.Reflection.PropertyInfo">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -13695,6 +13935,9 @@
               <property name="Object" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_Object()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -13713,6 +13956,11 @@
                   <parameter name="visitor" position="0" attrib="0" type="System.Linq.Expressions.ExpressionVisitor" />
                 </parameters>
               </method>
+              <method name="GetArgument(System.Int32)" attrib="486" virtual="true" returntype="System.Linq.Expressions.Expression">
+                <parameters>
+                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
               <method name="Update(System.Linq.Expressions.Expression, System.Collections.Generic.IEnumerable`1[System.Linq.Expressions.Expression])" attrib="134" returntype="System.Linq.Expressions.IndexExpression">
                 <parameters>
                   <parameter name="object" position="0" attrib="0" type="System.Linq.Expressions.Expression" />
@@ -13721,7 +13969,7 @@
               </method>
             </methods>
           </class>
-          <class name="InvocationExpression" type="class" base="System.Linq.Expressions.Expression" sealed="true" charset="Ansi" layout="Auto">
+          <class name="InvocationExpression" type="class" base="System.Linq.Expressions.Expression" charset="Ansi" layout="Auto">
             <attributes>
               <attribute name="System.Diagnostics.DebuggerTypeProxyAttribute">
                 <properties>
@@ -13733,6 +13981,16 @@
               <interface name="System.Linq.Expressions.IArgumentProvider" />
             </interfaces>
             <properties>
+              <property name="ArgumentCount" attrib="0" ptype="System.Int32">
+                <attributes>
+                  <attribute name="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+                </attributes>
+                <methods>
+                  <method name="get_ArgumentCount()" attrib="2502" virtual="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="Arguments" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.Expression]">
                 <methods>
                   <method name="get_Arguments()" attrib="2182" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.Expression]">
@@ -13743,6 +14001,9 @@
               <property name="Expression" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_Expression()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -13757,6 +14018,9 @@
               <property name="Type" attrib="0" ptype="System.Type">
                 <methods>
                   <method name="get_Type()" attrib="2278" virtual="true" sealed="true" is-override="true" returntype="System.Type">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -13766,6 +14030,14 @@
               <method name="Accept(System.Linq.Expressions.ExpressionVisitor)" attrib="197" virtual="true" is-override="true" returntype="System.Linq.Expressions.Expression">
                 <parameters>
                   <parameter name="visitor" position="0" attrib="0" type="System.Linq.Expressions.ExpressionVisitor" />
+                </parameters>
+              </method>
+              <method name="GetArgument(System.Int32)" attrib="454" virtual="true" returntype="System.Linq.Expressions.Expression">
+                <attributes>
+                  <attribute name="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="Update(System.Linq.Expressions.Expression, System.Collections.Generic.IEnumerable`1[System.Linq.Expressions.Expression])" attrib="134" returntype="System.Linq.Expressions.InvocationExpression">
@@ -13788,6 +14060,9 @@
               <property name="DefaultValue" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_DefaultValue()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -13802,6 +14077,9 @@
               <property name="Target" attrib="0" ptype="System.Linq.Expressions.LabelTarget">
                 <methods>
                   <method name="get_Target()" attrib="2182" returntype="System.Linq.Expressions.LabelTarget">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -13833,6 +14111,9 @@
               <property name="Name" attrib="0" ptype="System.String">
                 <methods>
                   <method name="get_Name()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -13840,6 +14121,9 @@
               <property name="Type" attrib="0" ptype="System.Type">
                 <methods>
                   <method name="get_Type()" attrib="2182" returntype="System.Type">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -13945,6 +14229,9 @@
               <property name="Initializers" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.ElementInit]">
                 <methods>
                   <method name="get_Initializers()" attrib="2182" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.ElementInit]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -13952,6 +14239,9 @@
               <property name="NewExpression" attrib="0" ptype="System.Linq.Expressions.NewExpression">
                 <methods>
                   <method name="get_NewExpression()" attrib="2182" returntype="System.Linq.Expressions.NewExpression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14000,6 +14290,9 @@
               <property name="Body" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_Body()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14007,6 +14300,9 @@
               <property name="BreakLabel" attrib="0" ptype="System.Linq.Expressions.LabelTarget">
                 <methods>
                   <method name="get_BreakLabel()" attrib="2182" returntype="System.Linq.Expressions.LabelTarget">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14014,6 +14310,9 @@
               <property name="ContinueLabel" attrib="0" ptype="System.Linq.Expressions.LabelTarget">
                 <methods>
                   <method name="get_ContinueLabel()" attrib="2182" returntype="System.Linq.Expressions.LabelTarget">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14086,6 +14385,9 @@
               <property name="BindingType" attrib="0" ptype="System.Linq.Expressions.MemberBindingType">
                 <methods>
                   <method name="get_BindingType()" attrib="2182" returntype="System.Linq.Expressions.MemberBindingType">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14093,6 +14395,9 @@
               <property name="Member" attrib="0" ptype="System.Reflection.MemberInfo">
                 <methods>
                   <method name="get_Member()" attrib="2182" returntype="System.Reflection.MemberInfo">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14128,6 +14433,9 @@
               <property name="Expression" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_Expression()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14172,6 +14480,9 @@
               <property name="Bindings" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.MemberBinding]">
                 <methods>
                   <method name="get_Bindings()" attrib="2182" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.MemberBinding]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14186,6 +14497,9 @@
               <property name="NewExpression" attrib="0" ptype="System.Linq.Expressions.NewExpression">
                 <methods>
                   <method name="get_NewExpression()" attrib="2182" returntype="System.Linq.Expressions.NewExpression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14227,6 +14541,9 @@
               <property name="Initializers" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.ElementInit]">
                 <methods>
                   <method name="get_Initializers()" attrib="2182" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.ElementInit]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14245,6 +14562,9 @@
               <property name="Bindings" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.MemberBinding]">
                 <methods>
                   <method name="get_Bindings()" attrib="2182" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.MemberBinding]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14270,6 +14590,16 @@
               <interface name="System.Linq.Expressions.IArgumentProvider" />
             </interfaces>
             <properties>
+              <property name="ArgumentCount" attrib="0" ptype="System.Int32">
+                <attributes>
+                  <attribute name="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+                </attributes>
+                <methods>
+                  <method name="get_ArgumentCount()" attrib="2502" virtual="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="Arguments" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.Expression]">
                 <methods>
                   <method name="get_Arguments()" attrib="2182" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.Expression]">
@@ -14280,6 +14610,9 @@
               <property name="Method" attrib="0" ptype="System.Reflection.MethodInfo">
                 <methods>
                   <method name="get_Method()" attrib="2182" returntype="System.Reflection.MethodInfo">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14312,6 +14645,14 @@
                   <parameter name="visitor" position="0" attrib="0" type="System.Linq.Expressions.ExpressionVisitor" />
                 </parameters>
               </method>
+              <method name="GetArgument(System.Int32)" attrib="454" virtual="true" returntype="System.Linq.Expressions.Expression">
+                <attributes>
+                  <attribute name="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
               <method name="Update(System.Linq.Expressions.Expression, System.Collections.Generic.IEnumerable`1[System.Linq.Expressions.Expression])" attrib="134" returntype="System.Linq.Expressions.MethodCallExpression">
                 <parameters>
                   <parameter name="object" position="0" attrib="0" type="System.Linq.Expressions.Expression" />
@@ -14332,6 +14673,9 @@
               <property name="Expressions" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.Expression]">
                 <methods>
                   <method name="get_Expressions()" attrib="2182" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.Expression]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14339,6 +14683,9 @@
               <property name="Type" attrib="0" ptype="System.Type">
                 <methods>
                   <method name="get_Type()" attrib="2278" virtual="true" sealed="true" is-override="true" returntype="System.Type">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14369,6 +14716,13 @@
               <interface name="System.Linq.Expressions.IArgumentProvider" />
             </interfaces>
             <properties>
+              <property name="ArgumentCount" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_ArgumentCount()" attrib="2534" virtual="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="Arguments" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.Expression]">
                 <methods>
                   <method name="get_Arguments()" attrib="2182" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.Expression]">
@@ -14379,6 +14733,9 @@
               <property name="Constructor" attrib="0" ptype="System.Reflection.ConstructorInfo">
                 <methods>
                   <method name="get_Constructor()" attrib="2182" returntype="System.Reflection.ConstructorInfo">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14386,6 +14743,9 @@
               <property name="Members" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Reflection.MemberInfo]">
                 <methods>
                   <method name="get_Members()" attrib="2182" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Reflection.MemberInfo]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14409,6 +14769,11 @@
               <method name="Accept(System.Linq.Expressions.ExpressionVisitor)" attrib="197" virtual="true" is-override="true" returntype="System.Linq.Expressions.Expression">
                 <parameters>
                   <parameter name="visitor" position="0" attrib="0" type="System.Linq.Expressions.ExpressionVisitor" />
+                </parameters>
+              </method>
+              <method name="GetArgument(System.Int32)" attrib="486" virtual="true" returntype="System.Linq.Expressions.Expression">
+                <parameters>
+                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="Update(System.Collections.Generic.IEnumerable`1[System.Linq.Expressions.Expression])" attrib="134" returntype="System.Linq.Expressions.NewExpression">
@@ -14437,6 +14802,9 @@
               <property name="Name" attrib="0" ptype="System.String">
                 <methods>
                   <method name="get_Name()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14490,6 +14858,9 @@
               <property name="Variables" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.ParameterExpression]">
                 <methods>
                   <method name="get_Variables()" attrib="2182" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.ParameterExpression]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14520,6 +14891,9 @@
               <property name="Body" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_Body()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14527,6 +14901,9 @@
               <property name="TestValues" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.Expression]">
                 <methods>
                   <method name="get_TestValues()" attrib="2182" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.Expression]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14556,6 +14933,9 @@
               <property name="Cases" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.SwitchCase]">
                 <methods>
                   <method name="get_Cases()" attrib="2182" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.SwitchCase]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14563,6 +14943,9 @@
               <property name="Comparison" attrib="0" ptype="System.Reflection.MethodInfo">
                 <methods>
                   <method name="get_Comparison()" attrib="2182" returntype="System.Reflection.MethodInfo">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14570,6 +14953,9 @@
               <property name="DefaultBody" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_DefaultBody()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14584,6 +14970,9 @@
               <property name="SwitchValue" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_SwitchValue()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14591,6 +14980,9 @@
               <property name="Type" attrib="0" ptype="System.Type">
                 <methods>
                   <method name="get_Type()" attrib="2278" virtual="true" sealed="true" is-override="true" returntype="System.Type">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14623,6 +15015,9 @@
               <property name="FileName" attrib="0" ptype="System.String">
                 <methods>
                   <method name="get_FileName()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14655,6 +15050,9 @@
               <property name="Body" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_Body()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14662,6 +15060,9 @@
               <property name="Fault" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_Fault()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14669,6 +15070,9 @@
               <property name="Finally" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_Finally()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14676,6 +15080,9 @@
               <property name="Handlers" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.CatchBlock]">
                 <methods>
                   <method name="get_Handlers()" attrib="2182" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.CatchBlock]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14690,6 +15097,9 @@
               <property name="Type" attrib="0" ptype="System.Type">
                 <methods>
                   <method name="get_Type()" attrib="2278" virtual="true" sealed="true" is-override="true" returntype="System.Type">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14723,6 +15133,9 @@
               <property name="Expression" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_Expression()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14730,6 +15143,9 @@
               <property name="NodeType" attrib="0" ptype="System.Linq.Expressions.ExpressionType">
                 <methods>
                   <method name="get_NodeType()" attrib="2278" virtual="true" sealed="true" is-override="true" returntype="System.Linq.Expressions.ExpressionType">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14744,6 +15160,9 @@
               <property name="TypeOperand" attrib="0" ptype="System.Type">
                 <methods>
                   <method name="get_TypeOperand()" attrib="2182" returntype="System.Type">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14795,6 +15214,9 @@
               <property name="Method" attrib="0" ptype="System.Reflection.MethodInfo">
                 <methods>
                   <method name="get_Method()" attrib="2182" returntype="System.Reflection.MethodInfo">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14802,6 +15224,9 @@
               <property name="NodeType" attrib="0" ptype="System.Linq.Expressions.ExpressionType">
                 <methods>
                   <method name="get_NodeType()" attrib="2278" virtual="true" sealed="true" is-override="true" returntype="System.Linq.Expressions.ExpressionType">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14809,6 +15234,9 @@
               <property name="Operand" attrib="0" ptype="System.Linq.Expressions.Expression">
                 <methods>
                   <method name="get_Operand()" attrib="2182" returntype="System.Linq.Expressions.Expression">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14816,6 +15244,9 @@
               <property name="Type" attrib="0" ptype="System.Type">
                 <methods>
                   <method name="get_Type()" attrib="2278" virtual="true" sealed="true" is-override="true" returntype="System.Type">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -14870,6 +15301,9 @@
               <property name="UpdateLabel" attrib="0" ptype="System.Linq.Expressions.LabelTarget">
                 <methods>
                   <method name="get_UpdateLabel()" attrib="2198" static="true" returntype="System.Linq.Expressions.LabelTarget">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -15175,6 +15609,28 @@
               </method>
             </methods>
           </class>
+          <class name="Closure" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                <properties>
+                  <property name="State" value="Never" />
+                </properties>
+              </attribute>
+              <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
+            </attributes>
+            <fields>
+              <field name="Constants" attrib="38" fieldtype="System.Object[]" />
+              <field name="Locals" attrib="38" fieldtype="System.Object[]" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.Object[], System.Object[])" attrib="6278">
+                <parameters>
+                  <parameter name="constants" position="0" attrib="0" type="System.Object[]" />
+                  <parameter name="locals" position="1" attrib="0" type="System.Object[]" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
           <class name="DebugInfoGenerator" type="class" base="System.Object" abstract="true" charset="Ansi" layout="Auto">
             <constructors>
               <constructor name=".ctor()" attrib="6276">
@@ -15448,7 +15904,50 @@
             </generic-parameters>
           </class>
           <class name="RuntimeOps" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                <properties>
+                  <property name="State" value="Never" />
+                </properties>
+              </attribute>
+              <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
+            </attributes>
             <methods>
+              <method name="CreateRuntimeVariables()" attrib="150" static="true" returntype="System.Runtime.CompilerServices.IRuntimeVariables">
+                <attributes>
+                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                    <properties>
+                      <property name="State" value="Never" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ObsoleteAttribute">
+                    <properties>
+                      <property name="Message" value="do not use this method" />
+                      <property name="IsError" value="True" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters />
+              </method>
+              <method name="CreateRuntimeVariables(System.Object[], System.Int64[])" attrib="150" static="true" returntype="System.Runtime.CompilerServices.IRuntimeVariables">
+                <attributes>
+                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                    <properties>
+                      <property name="State" value="Never" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ObsoleteAttribute">
+                    <properties>
+                      <property name="Message" value="do not use this method" />
+                      <property name="IsError" value="True" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="data" position="0" attrib="0" type="System.Object[]" />
+                  <parameter name="indexes" position="1" attrib="0" type="System.Int64[]" />
+                </parameters>
+              </method>
               <method name="ExpandoCheckVersion(System.Dynamic.ExpandoObject, System.Object)" attrib="150" static="true" returntype="System.Boolean">
                 <attributes>
                   <attribute name="System.ComponentModel.EditorBrowsableAttribute">
@@ -15554,6 +16053,46 @@
                   <parameter name="value" position="3" attrib="0" type="System.Object" />
                   <parameter name="name" position="4" attrib="0" type="System.String" />
                   <parameter name="ignoreCase" position="5" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="MergeRuntimeVariables(System.Runtime.CompilerServices.IRuntimeVariables, System.Runtime.CompilerServices.IRuntimeVariables, System.Int32[])" attrib="150" static="true" returntype="System.Runtime.CompilerServices.IRuntimeVariables">
+                <attributes>
+                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                    <properties>
+                      <property name="State" value="Never" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ObsoleteAttribute">
+                    <properties>
+                      <property name="Message" value="do not use this method" />
+                      <property name="IsError" value="True" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="first" position="0" attrib="0" type="System.Runtime.CompilerServices.IRuntimeVariables" />
+                  <parameter name="second" position="1" attrib="0" type="System.Runtime.CompilerServices.IRuntimeVariables" />
+                  <parameter name="indexes" position="2" attrib="0" type="System.Int32[]" />
+                </parameters>
+              </method>
+              <method name="Quote(System.Linq.Expressions.Expression, System.Object, System.Object[])" attrib="150" static="true" returntype="System.Linq.Expressions.Expression">
+                <attributes>
+                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                    <properties>
+                      <property name="State" value="Never" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ObsoleteAttribute">
+                    <properties>
+                      <property name="Message" value="do not use this method" />
+                      <property name="IsError" value="True" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="expression" position="0" attrib="0" type="System.Linq.Expressions.Expression" />
+                  <parameter name="hoistedLocals" position="1" attrib="0" type="System.Object" />
+                  <parameter name="locals" position="2" attrib="0" type="System.Object[]" />
                 </parameters>
               </method>
             </methods>
@@ -17379,6 +17918,144 @@
                 <parameters>
                   <parameter name="parameters" position="0" attrib="0" type="System.Security.Cryptography.RSAParameters" />
                 </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="SHA256CryptoServiceProvider" type="class" base="System.Security.Cryptography.SHA256" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+              <interface name="System.Security.Cryptography.ICryptoTransform" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <attributes>
+                  <attribute name="System.Security.SecurityCriticalAttribute" />
+                </attributes>
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecurityCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="HashCore(System.Byte[], System.Int32, System.Int32)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecurityCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="array" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="ibStart" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="cbSize" position="2" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="HashFinal()" attrib="196" virtual="true" is-override="true" returntype="System.Byte[]">
+                <attributes>
+                  <attribute name="System.Security.SecurityCriticalAttribute" />
+                </attributes>
+                <parameters />
+              </method>
+              <method name="Initialize()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecurityCriticalAttribute" />
+                </attributes>
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="SHA384CryptoServiceProvider" type="class" base="System.Security.Cryptography.SHA384" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+              <interface name="System.Security.Cryptography.ICryptoTransform" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <attributes>
+                  <attribute name="System.Security.SecurityCriticalAttribute" />
+                </attributes>
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecurityCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="HashCore(System.Byte[], System.Int32, System.Int32)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecurityCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="array" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="ibStart" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="cbSize" position="2" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="HashFinal()" attrib="196" virtual="true" is-override="true" returntype="System.Byte[]">
+                <attributes>
+                  <attribute name="System.Security.SecurityCriticalAttribute" />
+                </attributes>
+                <parameters />
+              </method>
+              <method name="Initialize()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecurityCriticalAttribute" />
+                </attributes>
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="SHA512CryptoServiceProvider" type="class" base="System.Security.Cryptography.SHA512" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+              <interface name="System.Security.Cryptography.ICryptoTransform" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <attributes>
+                  <attribute name="System.Security.SecurityCriticalAttribute" />
+                </attributes>
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecurityCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="HashCore(System.Byte[], System.Int32, System.Int32)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecurityCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="array" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="ibStart" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="cbSize" position="2" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="HashFinal()" attrib="196" virtual="true" is-override="true" returntype="System.Byte[]">
+                <attributes>
+                  <attribute name="System.Security.SecurityCriticalAttribute" />
+                </attributes>
+                <parameters />
+              </method>
+              <method name="Initialize()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecurityCriticalAttribute" />
+                </attributes>
+                <parameters />
               </method>
             </methods>
           </class>

@@ -103,6 +103,15 @@ namespace XamCore.ObjCRuntime {
 			IsSimulator				= 0x10,
 		}
 
+#if MONOMAC
+		/* This enum must always match the identical enum in runtime/xamarin/main.h */
+		internal enum LaunchMode : int {
+			App = 0,
+			Extension = 1,
+			Embedded = 2,
+		}
+#endif
+
 		[StructLayout (LayoutKind.Sequential)]
 		internal unsafe struct InitializationOptions {
 			public int Size;
@@ -112,6 +121,10 @@ namespace XamCore.ObjCRuntime {
 			public MTRegistrationMap *RegistrationMap;
 			public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptionMode;
 			public MarshalManagedExceptionMode MarshalManagedExceptionMode;
+#if MONOMAC
+			public LaunchMode LaunchMode;
+			public IntPtr EntryAssemblyPath; /* char * */
+#endif
 			IntPtr AssemblyLocations;
 
 			public bool IsSimulator {
@@ -367,6 +380,16 @@ namespace XamCore.ObjCRuntime {
 			return BlockLiteral.GetBlockForDelegate ((MethodInfo) ObjectWrapper.Convert (method), ObjectWrapper.Convert (@delegate));
 		}
 
+		static unsafe Assembly GetEntryAssembly ()
+		{
+			var asm = Assembly.GetEntryAssembly ();
+#if MONOMAC
+			if (asm == null)
+				asm = Assembly.LoadFile (Marshal.PtrToStringAuto (options->EntryAssemblyPath));
+#endif
+			return asm;
+		}
+
 		// This method will register all assemblies referenced by the entry assembly.
 		// For XM it will also register all assemblies loaded in the current appdomain.
 		internal static void RegisterAssemblies ()
@@ -375,7 +398,7 @@ namespace XamCore.ObjCRuntime {
 			var watch = new Stopwatch ();
 #endif
 
-			RegisterEntryAssembly (Assembly.GetEntryAssembly ());
+			RegisterEntryAssembly (GetEntryAssembly ());
 
 #if PROFILE
 			Console.WriteLine ("RegisterAssemblies completed in {0} ms", watch.ElapsedMilliseconds);
@@ -575,9 +598,6 @@ namespace XamCore.ObjCRuntime {
 
 		static unsafe IntPtr GetGenericMethodFromToken (IntPtr obj, uint token_ref)
 		{
-#if MONOMAC
-			throw new NotSupportedException ();
-#else
 			var method = Class.ResolveTokenReference (token_ref, 0x06000000);
 			if (method == null)
 				return IntPtr.Zero;
@@ -591,7 +611,6 @@ namespace XamCore.ObjCRuntime {
 				throw ErrorHelper.CreateError (8023, $"An instance object is required to construct a closed generic method for the open generic method: {mb.DeclaringType.FullName}.{mb.Name} (token reference: 0x{token_ref:X}). Please file a bug report at http://bugzilla.xamarin.com.");
 
 			return ObjectWrapper.Convert (DynamicRegistrar.FindClosedMethod (nsobj.GetType (), mb));
-#endif
 		}
 
 		static IntPtr TryGetOrConstructNSObjectWrapped (IntPtr ptr)

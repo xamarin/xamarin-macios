@@ -1,4 +1,4 @@
-//
+﻿//
 // mtouch.cs: A tool to generate the necessary code to boot a Mono
 // application on the iPhone
 //
@@ -58,7 +58,7 @@ using System.Threading;
 
 using Mono.Options;
 using Mono.Cecil;
-using Mono.Cecil.Mdb;
+using Mono.Cecil.Cil;
 using Mono.Tuner;
 
 using MonoTouch.Tuner;
@@ -111,6 +111,7 @@ namespace Xamarin.Bundler
 			DownloadCrashReport,
 			KillWatchApp,
 			LaunchWatchApp,
+			Embeddinator,
 		}
 
 		static bool xcode_version_check = true;
@@ -129,13 +130,6 @@ namespace Xamarin.Bundler
 				return dot;
 			}
 		}
-
-		//
-		// We need to put a hard dep on Mono.Cecil.Mdb.dll so that it get's mkbundled
-		//
-#pragma warning disable 169
-		static MdbReader mdb_reader;
-#pragma warning restore 169
 
 		static int GetDefaultVerbosity ()
 		{
@@ -460,7 +454,7 @@ namespace Xamarin.Bundler
 			bool enable_llvm = (abi & Abi.LLVM) != 0;
 			bool enable_thumb = (abi & Abi.Thumb) != 0;
 			bool enable_debug = app.EnableDebug;
-			bool enable_mdb = app.PackageMdb;
+			bool enable_debug_symbols = app.PackageManagedDebugSymbols;
 			bool llvm_only = app.EnableLLVMOnlyBitCode;
 			string arch = abi.AsArchString ();
 
@@ -487,7 +481,7 @@ namespace Xamarin.Bundler
 
 			if (enable_llvm)
 				args.Append ("nodebug,");
-			else if (!(enable_debug || enable_mdb))
+			else if (!(enable_debug || enable_debug_symbols))
 				args.Append ("nodebug,");
 			else if (app.DebugAll || app.DebugAssemblies.Contains (fname) || !sdk_or_product)
 				args.Append ("soft-debug,");
@@ -575,18 +569,20 @@ namespace Xamarin.Bundler
 				}
 			}
 
-			if ((abi & Abi.SimulatorArchMask) == 0) {
+			if ((abi & Abi.SimulatorArchMask) == 0 || app.Embeddinator) {
 				var frameworks = assemblies.Where ((a) => a.BuildTarget == AssemblyBuildTarget.Framework)
 				                           .OrderBy ((a) => a.Identity, StringComparer.Ordinal);
 				foreach (var asm_fw in frameworks) {
 					var asm_name = asm_fw.Identity;
 					if (asm_fw.BuildTargetName == asm_name)
 						continue; // this is deduceable
-					if (app.IsExtension && asm_fw.IsCodeShared) {
-						assembly_location.AppendFormat ("\t{{ \"{0}\", \"../../Frameworks/{1}.framework/MonoBundle\" }},\n", asm_name, asm_fw.BuildTargetName);
-					} else {
-						assembly_location.AppendFormat ("\t{{ \"{0}\", \"Frameworks/{1}.framework/MonoBundle\" }},\n", asm_name, asm_fw.BuildTargetName);
-					}
+					var prefix = string.Empty;
+					if (!app.HasFrameworksDirectory && asm_fw.IsCodeShared)
+						prefix = "../../";
+					var suffix = string.Empty;
+					if (app.IsSimulatorBuild)
+						suffix = "/simulator";
+					assembly_location.AppendFormat ("\t{{ \"{0}\", \"{2}Frameworks/{1}.framework/MonoBundle{3}\" }},\n", asm_name, asm_fw.BuildTargetName, prefix, suffix);
 					assembly_location_count++;
 				}
 			}
@@ -662,7 +658,7 @@ namespace Xamarin.Bundler
 
 					if (app.EnableDebug)
 						sw.WriteLine ("\txamarin_gc_pump = {0};", app.DebugTrack.Value ? "TRUE" : "FALSE");
-					sw.WriteLine ("\txamarin_init_mono_debug = {0};", app.PackageMdb ? "TRUE" : "FALSE");
+					sw.WriteLine ("\txamarin_init_mono_debug = {0};", app.PackageManagedDebugSymbols ? "TRUE" : "FALSE");
 					sw.WriteLine ("\txamarin_executable_name = \"{0}\";", assembly_name);
 					sw.WriteLine ("\tmono_use_llvm = {0};", enable_llvm ? "TRUE" : "FALSE");
 					sw.WriteLine ("\txamarin_log_level = {0};", verbose);
@@ -686,10 +682,10 @@ namespace Xamarin.Bundler
 					if (app.IsExtension) {
 						// the name of the executable must be the bundle id (reverse dns notation)
 						// but we do not want to impose that (ugly) restriction to the managed .exe / project name / ...
-						sw.WriteLine ("\targv [0] = (char *) \"{0}\";", Path.GetFileNameWithoutExtension (app.RootAssembly));
-						sw.WriteLine ("\tint rv = xamarin_main (argc, argv, true);");
+						sw.WriteLine ("\targv [0] = (char *) \"{0}\";", Path.GetFileNameWithoutExtension (app.RootAssemblies [0]));
+						sw.WriteLine ("\tint rv = xamarin_main (argc, argv, XamarinLaunchModeExtension);");
 					} else {
-						sw.WriteLine ("\tint rv = xamarin_main (argc, argv, false);");
+						sw.WriteLine ("\tint rv = xamarin_main (argc, argv, XamarinLaunchModeApp);");
 					}
 					sw.WriteLine ("\t[pool drain];");
 					sw.WriteLine ("\treturn rv;");
@@ -890,6 +886,9 @@ namespace Xamarin.Bundler
 
 			if (app.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.UnwindManagedCode)
 				return false; // UnwindManagedCode is the default for debug builds.
+
+			if (app.Embeddinator)
+				return false;
 
 			return true;
 		}
@@ -1161,7 +1160,8 @@ namespace Xamarin.Bundler
 					}
 				}
 			},
-			{ "package-mdb:", "Specify whether debug info files (*.mdb) should be packaged in the app. Default is 'true' for debug builds and 'false' for release builds.", v => app.PackageMdb = ParseBool (v, "package-mdb") },
+			{ "package-mdb:", "Specify whether debug info files (*.mdb) should be packaged in the app. Default is 'true' for debug builds and 'false' for release builds.", v => app.PackageManagedDebugSymbols = ParseBool (v, "package-mdb"), true },
+			{ "package-debug-symbols:", "Specify whether debug info files (*.mdb / *.pdb) should be packaged in the app. Default is 'true' for debug builds and 'false' for release builds.", v => app.PackageManagedDebugSymbols = ParseBool (v, "package-debug-symbols") },
 			{ "msym:", "Specify whether managed symbolication files (*.msym) should be created. Default is 'false' for debug builds and 'true' for release builds.", v => app.EnableMSym = ParseBool (v, "msym") },
 			{ "extension", v => app.IsExtension = true },
 			{ "app-extension=", "The path of app extensions that are included in the app. This must be specified once for each app extension.", v => app.Extensions.Add (v), true /* MSBuild-internal for now */ },
@@ -1307,23 +1307,9 @@ namespace Xamarin.Bundler
 			app.RuntimeOptions = RuntimeOptions.Create (app, http_message_handler, tls_provider);
 
 			if (action == Action.Build || action == Action.RunRegistrar) {
-				if (assemblies.Count != 1) {
-					var exceptions = new List<Exception> ();
-					for (int i = assemblies.Count - 1; i >= 0; i--) {
-						if (assemblies [i].StartsWith ("-", StringComparison.Ordinal)) {
-							exceptions.Add (new MonoTouchException (18, true, "Unknown command line argument: '{0}'", assemblies [i]));
-							assemblies.RemoveAt (i);
-						}
-					}
-					if (assemblies.Count > 1) {
-						exceptions.Add (new MonoTouchException (8, true, "You should provide one root assembly only, found {0} assemblies: '{1}'", assemblies.Count, string.Join ("', '", assemblies.ToArray ())));
-					} else if (assemblies.Count == 0) {
-						exceptions.Add (new MonoTouchException (17, true, "You should provide a root assembly."));
-					}
-
-					throw new AggregateException (exceptions);
-				}
-				app.RootAssembly = assemblies [0];
+				if (assemblies.Count == 0)
+					throw new MonoTouchException (17, true, "You should provide a root assembly.");
+				app.RootAssemblies = assemblies;
 			}
 
 			return app;
@@ -1469,7 +1455,7 @@ namespace Xamarin.Bundler
 				if (File.Exists (path))
 					return path;
 
-				throw ErrorHelper.CreateError (92, "Could not find 'mlaunch'.");
+				throw ErrorHelper.CreateError (93, "Could not find 'mlaunch'.");
 			}
 		}
 

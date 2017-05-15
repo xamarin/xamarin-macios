@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -208,6 +208,9 @@ namespace Xamarin.Bundler
 					var mdb = Assembly.FullPath + ".mdb";
 					if (File.Exists (mdb))
 						inputs.Add (mdb);
+					var pdb = Path.ChangeExtension (Assembly.FullPath, ".pdb");
+					if (File.Exists (pdb))
+						inputs.Add (pdb);
 					var config = Assembly.FullPath + ".config";
 					if (File.Exists (config))
 						inputs.Add (config);
@@ -454,8 +457,10 @@ namespace Xamarin.Bundler
 				throw new ArgumentNullException (nameof (install_name));
 
 			flags.AddOtherFlag ("-shared");
-			if (!App.EnableMarkerOnlyBitCode && !App.EnableAsmOnlyBitCode)
+			if (!App.EnableBitCode)
 				flags.AddOtherFlag ("-read_only_relocs suppress");
+			if (App.EnableBitCode)
+				flags.AddOtherFlag ("-lc++");
 			flags.LinkWithMono ();
 			flags.AddOtherFlag ("-install_name " + Driver.Quote (install_name));
 			flags.AddOtherFlag ("-fapplication-extension"); // fixes this: warning MT5203: Native linking warning: warning: linking against dylib not safe for use in application extensions: [..]/actionextension.dll.arm64.dylib
