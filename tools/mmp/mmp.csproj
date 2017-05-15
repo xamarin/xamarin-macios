@@ -347,6 +347,12 @@
     <EmbeddedResource Include="machine.4_5.config">
       <LogicalName>machine.4_5.config</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Info-framework.plist.tmpl">
+      <LogicalName>Info-framework.plist.tmpl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Info.plist.tmpl">
+      <LogicalName>Info.plist.tmpl</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />

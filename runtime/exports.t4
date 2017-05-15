@@ -491,6 +491,10 @@
 			"const char *", "runtime_version"
 		),
 
+		new Export ("MonoDomain *", "mono_jit_init",
+			"const char *", "file"
+		),
+
 		new Export ("int", "mono_jit_exec",
 			"MonoDomain *", "domain",
 			"MonoAssembly *", "assembly",

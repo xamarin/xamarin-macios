@@ -60,6 +60,7 @@ const char *xamarin_executable_name = NULL;
 #if MONOMAC
 NSString * xamarin_custom_bundle_name = nil;
 bool xamarin_is_mkbundle = false;
+char *xamarin_entry_assembly_path = NULL;
 #endif
 #if defined (__i386__)
 const char *xamarin_arch_name = "i386";
@@ -76,7 +77,7 @@ bool xamarin_is_gc_coop = false;
 #endif
 enum MarshalObjectiveCExceptionMode xamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionModeDefault;
 enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode = MarshalManagedExceptionModeDefault;
-bool xamarin_is_extension = false;
+enum XamarinLaunchMode xamarin_launch_mode = XamarinLaunchModeApp;
 
 /* Callbacks */
 
@@ -139,6 +140,10 @@ struct InitializationOptions {
 	struct MTRegistrationMap* RegistrationData;
 	enum MarshalObjectiveCExceptionMode MarshalObjectiveCExceptionMode;
 	enum MarshalManagedExceptionMode MarshalManagedExceptionMode;
+#if MONOMAC
+	enum XamarinLaunchMode LaunchMode;
+	const char *EntryAssemblyPath;
+#endif
 	struct AssemblyLocations* AssemblyLocations;
 };
 
@@ -1111,6 +1116,15 @@ xamarin_initialize_embedded ()
 	xamarin_main (1, argv, XamarinLaunchModeEmbedded);
 }
 
+/* Installs g_print/g_error handlers that will redirect output to the system Console */
+void
+xamarin_install_log_callbacks ()
+{
+	mono_trace_set_log_handler (log_callback, NULL);
+	mono_trace_set_print_handler (print_callback);
+	mono_trace_set_printerr_handler (print_callback);
+}
+
 void
 xamarin_initialize ()
 {
@@ -1138,9 +1152,7 @@ xamarin_initialize ()
 
 	MONO_ENTER_GC_UNSAFE;
 
-	mono_trace_set_log_handler (log_callback, NULL);
-	mono_trace_set_print_handler (print_callback);
-	mono_trace_set_printerr_handler (print_callback);
+	xamarin_install_log_callbacks ();
 
 #if MONOMAC
 	detect_product_assembly ();
@@ -1189,6 +1201,10 @@ xamarin_initialize ()
 	options.Trampolines = &trampolines;
 	options.MarshalObjectiveCExceptionMode = xamarin_marshal_objectivec_exception_mode;
 	options.MarshalManagedExceptionMode = xamarin_marshal_managed_exception_mode;
+#if MONOMAC
+	options.LaunchMode = xamarin_launch_mode;
+	options.EntryAssemblyPath = xamarin_entry_assembly_path;
+#endif
 
 	params [0] = &options;
 
@@ -1227,10 +1243,12 @@ xamarin_get_bundle_path ()
 	char *result;
 
 #if MONOMAC
-	if (xamarin_custom_bundle_name != nil)
-		bundle_path = [[main_bundle bundlePath] stringByAppendingPathComponent:[@"Contents/" stringByAppendingString:xamarin_custom_bundle_name]];
-	else
-		bundle_path = [[main_bundle bundlePath] stringByAppendingPathComponent:@"Contents/MonoBundle"];
+	if (xamarin_launch_mode == XamarinLaunchModeEmbedded) {
+		bundle_path = [[[NSBundle bundleForClass: [XamarinAssociatedObject class]] bundlePath] stringByAppendingPathComponent: @"Versions/Current"];
+	} else {
+		bundle_path = [[main_bundle bundlePath] stringByAppendingPathComponent:@"Contents"];
+	}
+	bundle_path = [bundle_path stringByAppendingPathComponent: xamarin_custom_bundle_name == NULL ? @"MonoBundle" : xamarin_custom_bundle_name];
 #else
 	bundle_path = [main_bundle bundlePath];
 #endif
@@ -2346,7 +2364,7 @@ xamarin_locate_assembly_resource (const char *assembly_name, const char *culture
 	}
 
 	// Then in the container app's root directory (for extensions)
-	if (xamarin_is_extension) {
+	if (xamarin_launch_mode == XamarinLaunchModeExtension) {
 		snprintf (root, sizeof (root), "../..");
 		if (xamarin_locate_assembly_resource_for_root (root, culture, resource, path, pathlen)) {
 			LOG_RESOURCELOOKUP (PRODUCT ": Located resource '%s' from container app bundle '%s': %s\n", resource, aname, path);

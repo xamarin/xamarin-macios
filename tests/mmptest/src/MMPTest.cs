@@ -642,5 +642,35 @@ namespace Xamarin.MMP.Tests
 				Assert.AreEqual (1, objcCount, "Found more than one -OjbC");
 			});
 		}
+
+		[Test]
+		[TestCase ("CFNetworkHandler", "CFNetworkHandler")]
+		[TestCase ("NSUrlSessionHandler", "NSUrlSessionHandler")]
+		[TestCase ("HttpClientHandler", "HttpClientHandler")]
+		[TestCase (null, "HttpClientHandler")]
+		[TestCase ("", "HttpClientHandler")]
+		public void HttpClientHandler (string mmpHandler, string expectedHandler)
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					References = " <Reference Include=\"System.Net.Http\" />",
+					TestCode = $@"
+			var client = new System.Net.Http.HttpClient ();
+			var field = client.GetType ().BaseType.GetField (""handler"", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+			if (field == null)
+				throw new System.Exception (""Could not find the field 'handler' in HttpClient's base type (which should be 'HttpMessageInvoker')."");
+			var fieldValue = field.GetValue (client);
+			if (fieldValue == null)
+				throw new System.Exception (""Unexpected null value found in 'HttpMessageInvoker.handler' field."");
+			var fieldValueType = fieldValue.GetType ().Name;
+			if (fieldValueType != ""{expectedHandler}"")
+				throw new System.Exception ($""Unexpected field type, found '{{fieldValueType}}', expected '{expectedHandler}'"");
+",
+				};
+				if (mmpHandler != null)
+					test.CSProjConfig = "<HttpClientHandler>" + mmpHandler + "</HttpClientHandler>";
+				TI.TestUnifiedExecutable (test);
+			});
+		}
 	}
 }

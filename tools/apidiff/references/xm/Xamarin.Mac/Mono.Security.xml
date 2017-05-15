@@ -54,9 +54,19 @@
           <property name="CultureName" value="en-US" />
         </properties>
       </attribute>
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
+        <properties>
+          <property name="CompilationRelaxations" value="8" />
+        </properties>
+      </attribute>
       <attribute name="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
         <properties>
           <property name="AssemblyName" value="System, PublicKey=00240000048000009400000006020000002400005253413100040000010001008D56C76F9E8649383049F383C44BE0EC204181822A6C31CF5EB7EF486944D032188EA1D3920763712CCB12D75FB77E9811149E6148E5D32FBAAB37611C1878DDC19E20EF135D0CB2CFF2BFEC3D115810C3D9069638FE4BE215DBF795861920E5AB6F7DB2E2CEEF136AC23D5DD2BF031700AEC232F6C6B1C785B4305C123B37AB" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+        <properties>
+          <property name="AssemblyName" value="Xamarin.Mac, PublicKey=0024000004800000940000000602000000240000525341310004000011000000438ac2a5acfbf16cbd2b2b47a62762f273df9cb2795ceccdf77d10bf508e69e7a362ea7a45455bbf3ac955e1f2e2814f144e5d817efc4c6502cc012df310783348304e3ae38573c6d658c234025821fda87a0be8a0d504df564e2c93b2b878925f42503e9d54dfef9f9586d9e6f38a305769587b1de01f6c0410328b2c9733db" />
         </properties>
       </attribute>
       <attribute name="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute">
@@ -2999,6 +3009,113 @@
       </namespace>
       <namespace name="Mono.Security.Interface">
         <classes>
+          <class name="Alert" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor(Mono.Security.Interface.AlertDescription)" attrib="6278">
+                <parameters>
+                  <parameter name="description" position="0" attrib="0" type="Mono.Security.Interface.AlertDescription" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(Mono.Security.Interface.AlertLevel, Mono.Security.Interface.AlertDescription)" attrib="6278">
+                <parameters>
+                  <parameter name="level" position="0" attrib="0" type="Mono.Security.Interface.AlertLevel" />
+                  <parameter name="description" position="1" attrib="0" type="Mono.Security.Interface.AlertDescription" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Description" attrib="0" ptype="Mono.Security.Interface.AlertDescription">
+                <methods>
+                  <method name="get_Description()" attrib="2182" returntype="Mono.Security.Interface.AlertDescription">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsCloseNotify" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsCloseNotify()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsWarning" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsWarning()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Level" attrib="0" ptype="Mono.Security.Interface.AlertLevel">
+                <methods>
+                  <method name="get_Level()" attrib="2182" returntype="Mono.Security.Interface.AlertLevel">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Message" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Message()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="GetAlertMessage(Mono.Security.Interface.AlertDescription)" attrib="150" static="true" returntype="System.String">
+                <parameters>
+                  <parameter name="description" position="0" attrib="0" type="Mono.Security.Interface.AlertDescription" />
+                </parameters>
+              </method>
+              <method name="ToString()" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="AlertDescription" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Byte">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="AccessDenied" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="49" />
+              <field name="BadCertificate" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="42" />
+              <field name="BadRecordMAC" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="20" />
+              <field name="CertificateExpired" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="45" />
+              <field name="CertificateRevoked" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="44" />
+              <field name="CertificateUnknown" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="46" />
+              <field name="CloseNotify" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="0" />
+              <field name="DecodeError" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="50" />
+              <field name="DecompressionFailure" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="30" />
+              <field name="DecryptError" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="51" />
+              <field name="DecryptionFailed_RESERVED" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="21" />
+              <field name="ExportRestriction" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="60" />
+              <field name="HandshakeFailure" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="40" />
+              <field name="IlegalParameter" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="47" />
+              <field name="InsuficientSecurity" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="71" />
+              <field name="InternalError" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="80" />
+              <field name="NoCertificate_RESERVED" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="41" />
+              <field name="NoRenegotiation" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="100" />
+              <field name="ProtocolVersion" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="70" />
+              <field name="RecordOverflow" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="22" />
+              <field name="UnexpectedMessage" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="10" />
+              <field name="UnknownCA" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="48" />
+              <field name="UnsupportedCertificate" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="43" />
+              <field name="UnsupportedExtension" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="110" />
+              <field name="UserCancelled" attrib="32854" fieldtype="Mono.Security.Interface.AlertDescription" value="90" />
+            </fields>
+          </class>
+          <class name="AlertLevel" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Byte">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Fatal" attrib="32854" fieldtype="Mono.Security.Interface.AlertLevel" value="2" />
+              <field name="Warning" attrib="32854" fieldtype="Mono.Security.Interface.AlertLevel" value="1" />
+            </fields>
+          </class>
           <class name="BufferOffsetSize" type="class" base="Mono.Security.Interface.SecretParameters" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="Mono.Security.Interface.IBufferOffsetSize" />
@@ -3080,6 +3197,1374 @@
                 <parameters>
                   <parameter name="newSize" position="0" attrib="0" type="System.Int32" />
                 </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="CertificateValidationHelper" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
+            <properties>
+              <property name="SupportsTrustAnchors" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_SupportsTrustAnchors()" attrib="2198" static="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="SupportsX509Chain" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_SupportsX509Chain()" attrib="2198" static="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="GetValidator(Mono.Security.Interface.MonoTlsSettings)" attrib="150" static="true" returntype="Mono.Security.Interface.ICertificateValidator">
+                <parameters>
+                  <parameter name="settings" position="0" attrib="0" type="Mono.Security.Interface.MonoTlsSettings" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="CipherAlgorithmType" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Aes128" attrib="32854" fieldtype="Mono.Security.Interface.CipherAlgorithmType" value="1" />
+              <field name="Aes256" attrib="32854" fieldtype="Mono.Security.Interface.CipherAlgorithmType" value="2" />
+              <field name="AesGcm128" attrib="32854" fieldtype="Mono.Security.Interface.CipherAlgorithmType" value="3" />
+              <field name="AesGcm256" attrib="32854" fieldtype="Mono.Security.Interface.CipherAlgorithmType" value="4" />
+              <field name="None" attrib="32854" fieldtype="Mono.Security.Interface.CipherAlgorithmType" value="0" />
+            </fields>
+          </class>
+          <class name="CipherSuiteCode" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.UInt16">
+            <attributes>
+              <attribute name="System.CLSCompliantAttribute">
+                <properties>
+                  <property name="IsCompliant" value="False" />
+                </properties>
+              </attribute>
+            </attributes>
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="TLS_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="17" />
+              <field name="TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="19" />
+              <field name="TLS_DHE_DSS_WITH_AES_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="50" />
+              <field name="TLS_DHE_DSS_WITH_AES_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="64" />
+              <field name="TLS_DHE_DSS_WITH_AES_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="162" />
+              <field name="TLS_DHE_DSS_WITH_AES_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="56" />
+              <field name="TLS_DHE_DSS_WITH_AES_256_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="106" />
+              <field name="TLS_DHE_DSS_WITH_AES_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="163" />
+              <field name="TLS_DHE_DSS_WITH_CAMELLIA_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="68" />
+              <field name="TLS_DHE_DSS_WITH_CAMELLIA_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="189" />
+              <field name="TLS_DHE_DSS_WITH_CAMELLIA_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49280" />
+              <field name="TLS_DHE_DSS_WITH_CAMELLIA_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="135" />
+              <field name="TLS_DHE_DSS_WITH_CAMELLIA_256_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="195" />
+              <field name="TLS_DHE_DSS_WITH_CAMELLIA_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49281" />
+              <field name="TLS_DHE_DSS_WITH_DES_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="18" />
+              <field name="TLS_DHE_DSS_WITH_SEED_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="153" />
+              <field name="TLS_DHE_PSK_WITH_3DES_EDE_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="143" />
+              <field name="TLS_DHE_PSK_WITH_AES_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="144" />
+              <field name="TLS_DHE_PSK_WITH_AES_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="178" />
+              <field name="TLS_DHE_PSK_WITH_AES_128_CCM" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49318" />
+              <field name="TLS_DHE_PSK_WITH_AES_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="170" />
+              <field name="TLS_DHE_PSK_WITH_AES_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="145" />
+              <field name="TLS_DHE_PSK_WITH_AES_256_CBC_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="179" />
+              <field name="TLS_DHE_PSK_WITH_AES_256_CCM" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49319" />
+              <field name="TLS_DHE_PSK_WITH_AES_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="171" />
+              <field name="TLS_DHE_PSK_WITH_CAMELLIA_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49302" />
+              <field name="TLS_DHE_PSK_WITH_CAMELLIA_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49296" />
+              <field name="TLS_DHE_PSK_WITH_CAMELLIA_256_CBC_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49303" />
+              <field name="TLS_DHE_PSK_WITH_CAMELLIA_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49297" />
+              <field name="TLS_DHE_PSK_WITH_ESTREAM_SALSA20_SHA1" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="58396" />
+              <field name="TLS_DHE_PSK_WITH_NULL_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="45" />
+              <field name="TLS_DHE_PSK_WITH_NULL_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="180" />
+              <field name="TLS_DHE_PSK_WITH_NULL_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="181" />
+              <field name="TLS_DHE_PSK_WITH_RC4_128_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="142" />
+              <field name="TLS_DHE_PSK_WITH_SALSA20_SHA1" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="58397" />
+              <field name="TLS_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="20" />
+              <field name="TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="22" />
+              <field name="TLS_DHE_RSA_WITH_AES_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="51" />
+              <field name="TLS_DHE_RSA_WITH_AES_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="103" />
+              <field name="TLS_DHE_RSA_WITH_AES_128_CCM" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49310" />
+              <field name="TLS_DHE_RSA_WITH_AES_128_CCM_8" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49314" />
+              <field name="TLS_DHE_RSA_WITH_AES_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="158" />
+              <field name="TLS_DHE_RSA_WITH_AES_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="57" />
+              <field name="TLS_DHE_RSA_WITH_AES_256_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="107" />
+              <field name="TLS_DHE_RSA_WITH_AES_256_CCM" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49311" />
+              <field name="TLS_DHE_RSA_WITH_AES_256_CCM_8" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49315" />
+              <field name="TLS_DHE_RSA_WITH_AES_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="159" />
+              <field name="TLS_DHE_RSA_WITH_CAMELLIA_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="69" />
+              <field name="TLS_DHE_RSA_WITH_CAMELLIA_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="190" />
+              <field name="TLS_DHE_RSA_WITH_CAMELLIA_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49276" />
+              <field name="TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="136" />
+              <field name="TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="196" />
+              <field name="TLS_DHE_RSA_WITH_CAMELLIA_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49277" />
+              <field name="TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="52245" />
+              <field name="TLS_DHE_RSA_WITH_DES_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="21" />
+              <field name="TLS_DHE_RSA_WITH_ESTREAM_SALSA20_SHA1" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="58398" />
+              <field name="TLS_DHE_RSA_WITH_SALSA20_SHA1" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="58399" />
+              <field name="TLS_DHE_RSA_WITH_SEED_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="154" />
+              <field name="TLS_DH_DSS_EXPORT_WITH_DES40_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="11" />
+              <field name="TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="13" />
+              <field name="TLS_DH_DSS_WITH_AES_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="48" />
+              <field name="TLS_DH_DSS_WITH_AES_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="62" />
+              <field name="TLS_DH_DSS_WITH_AES_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="164" />
+              <field name="TLS_DH_DSS_WITH_AES_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="54" />
+              <field name="TLS_DH_DSS_WITH_AES_256_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="104" />
+              <field name="TLS_DH_DSS_WITH_AES_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="165" />
+              <field name="TLS_DH_DSS_WITH_CAMELLIA_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="66" />
+              <field name="TLS_DH_DSS_WITH_CAMELLIA_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="187" />
+              <field name="TLS_DH_DSS_WITH_CAMELLIA_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49282" />
+              <field name="TLS_DH_DSS_WITH_CAMELLIA_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="133" />
+              <field name="TLS_DH_DSS_WITH_CAMELLIA_256_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="193" />
+              <field name="TLS_DH_DSS_WITH_CAMELLIA_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49283" />
+              <field name="TLS_DH_DSS_WITH_DES_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="12" />
+              <field name="TLS_DH_DSS_WITH_SEED_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="151" />
+              <field name="TLS_DH_RSA_EXPORT_WITH_DES40_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="14" />
+              <field name="TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="16" />
+              <field name="TLS_DH_RSA_WITH_AES_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49" />
+              <field name="TLS_DH_RSA_WITH_AES_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="63" />
+              <field name="TLS_DH_RSA_WITH_AES_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="160" />
+              <field name="TLS_DH_RSA_WITH_AES_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="55" />
+              <field name="TLS_DH_RSA_WITH_AES_256_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="105" />
+              <field name="TLS_DH_RSA_WITH_AES_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="161" />
+              <field name="TLS_DH_RSA_WITH_CAMELLIA_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="67" />
+              <field name="TLS_DH_RSA_WITH_CAMELLIA_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="188" />
+              <field name="TLS_DH_RSA_WITH_CAMELLIA_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49278" />
+              <field name="TLS_DH_RSA_WITH_CAMELLIA_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="134" />
+              <field name="TLS_DH_RSA_WITH_CAMELLIA_256_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="194" />
+              <field name="TLS_DH_RSA_WITH_CAMELLIA_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49279" />
+              <field name="TLS_DH_RSA_WITH_DES_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="15" />
+              <field name="TLS_DH_RSA_WITH_SEED_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="152" />
+              <field name="TLS_DH_anon_EXPORT_WITH_DES40_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="25" />
+              <field name="TLS_DH_anon_EXPORT_WITH_RC4_40_MD5" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="23" />
+              <field name="TLS_DH_anon_WITH_3DES_EDE_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="27" />
+              <field name="TLS_DH_anon_WITH_AES_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="52" />
+              <field name="TLS_DH_anon_WITH_AES_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="108" />
+              <field name="TLS_DH_anon_WITH_AES_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="166" />
+              <field name="TLS_DH_anon_WITH_AES_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="58" />
+              <field name="TLS_DH_anon_WITH_AES_256_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="109" />
+              <field name="TLS_DH_anon_WITH_AES_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="167" />
+              <field name="TLS_DH_anon_WITH_CAMELLIA_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="70" />
+              <field name="TLS_DH_anon_WITH_CAMELLIA_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="191" />
+              <field name="TLS_DH_anon_WITH_CAMELLIA_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49284" />
+              <field name="TLS_DH_anon_WITH_CAMELLIA_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="137" />
+              <field name="TLS_DH_anon_WITH_CAMELLIA_256_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="197" />
+              <field name="TLS_DH_anon_WITH_CAMELLIA_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49285" />
+              <field name="TLS_DH_anon_WITH_DES_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="26" />
+              <field name="TLS_DH_anon_WITH_RC4_128_MD5" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="24" />
+              <field name="TLS_DH_anon_WITH_SEED_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="155" />
+              <field name="TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49160" />
+              <field name="TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49161" />
+              <field name="TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49187" />
+              <field name="TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49195" />
+              <field name="TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49162" />
+              <field name="TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49188" />
+              <field name="TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49196" />
+              <field name="TLS_ECDHE_ECDSA_WITH_CAMELLIA_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49266" />
+              <field name="TLS_ECDHE_ECDSA_WITH_CAMELLIA_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49286" />
+              <field name="TLS_ECDHE_ECDSA_WITH_CAMELLIA_256_CBC_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49267" />
+              <field name="TLS_ECDHE_ECDSA_WITH_CAMELLIA_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49287" />
+              <field name="TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="52244" />
+              <field name="TLS_ECDHE_ECDSA_WITH_ESTREAM_SALSA20_SHA1" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="58388" />
+              <field name="TLS_ECDHE_ECDSA_WITH_NULL_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49158" />
+              <field name="TLS_ECDHE_ECDSA_WITH_RC4_128_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49159" />
+              <field name="TLS_ECDHE_ECDSA_WITH_SALSA20_SHA1" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="58389" />
+              <field name="TLS_ECDHE_PSK_WITH_3DES_EDE_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49204" />
+              <field name="TLS_ECDHE_PSK_WITH_AES_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49205" />
+              <field name="TLS_ECDHE_PSK_WITH_AES_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49207" />
+              <field name="TLS_ECDHE_PSK_WITH_AES_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49206" />
+              <field name="TLS_ECDHE_PSK_WITH_AES_256_CBC_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49208" />
+              <field name="TLS_ECDHE_PSK_WITH_CAMELLIA_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49306" />
+              <field name="TLS_ECDHE_PSK_WITH_CAMELLIA_256_CBC_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49307" />
+              <field name="TLS_ECDHE_PSK_WITH_ESTREAM_SALSA20_SHA1" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="58392" />
+              <field name="TLS_ECDHE_PSK_WITH_NULL_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49209" />
+              <field name="TLS_ECDHE_PSK_WITH_NULL_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49210" />
+              <field name="TLS_ECDHE_PSK_WITH_NULL_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49211" />
+              <field name="TLS_ECDHE_PSK_WITH_RC4_128_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49203" />
+              <field name="TLS_ECDHE_PSK_WITH_SALSA20_SHA1" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="58393" />
+              <field name="TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49170" />
+              <field name="TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49171" />
+              <field name="TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49191" />
+              <field name="TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49199" />
+              <field name="TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49172" />
+              <field name="TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49192" />
+              <field name="TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49200" />
+              <field name="TLS_ECDHE_RSA_WITH_CAMELLIA_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49270" />
+              <field name="TLS_ECDHE_RSA_WITH_CAMELLIA_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49290" />
+              <field name="TLS_ECDHE_RSA_WITH_CAMELLIA_256_CBC_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49271" />
+              <field name="TLS_ECDHE_RSA_WITH_CAMELLIA_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49291" />
+              <field name="TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="52243" />
+              <field name="TLS_ECDHE_RSA_WITH_ESTREAM_SALSA20_SHA1" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="58386" />
+              <field name="TLS_ECDHE_RSA_WITH_NULL_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49168" />
+              <field name="TLS_ECDHE_RSA_WITH_RC4_128_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49169" />
+              <field name="TLS_ECDHE_RSA_WITH_SALSA20_SHA1" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="58387" />
+              <field name="TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49155" />
+              <field name="TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49156" />
+              <field name="TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49189" />
+              <field name="TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49197" />
+              <field name="TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49157" />
+              <field name="TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49190" />
+              <field name="TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49198" />
+              <field name="TLS_ECDH_ECDSA_WITH_CAMELLIA_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49268" />
+              <field name="TLS_ECDH_ECDSA_WITH_CAMELLIA_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49288" />
+              <field name="TLS_ECDH_ECDSA_WITH_CAMELLIA_256_CBC_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49269" />
+              <field name="TLS_ECDH_ECDSA_WITH_CAMELLIA_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49289" />
+              <field name="TLS_ECDH_ECDSA_WITH_NULL_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49153" />
+              <field name="TLS_ECDH_ECDSA_WITH_RC4_128_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49154" />
+              <field name="TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49165" />
+              <field name="TLS_ECDH_RSA_WITH_AES_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49166" />
+              <field name="TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49193" />
+              <field name="TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49201" />
+              <field name="TLS_ECDH_RSA_WITH_AES_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49167" />
+              <field name="TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49194" />
+              <field name="TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49202" />
+              <field name="TLS_ECDH_RSA_WITH_CAMELLIA_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49272" />
+              <field name="TLS_ECDH_RSA_WITH_CAMELLIA_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49292" />
+              <field name="TLS_ECDH_RSA_WITH_CAMELLIA_256_CBC_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49273" />
+              <field name="TLS_ECDH_RSA_WITH_CAMELLIA_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49293" />
+              <field name="TLS_ECDH_RSA_WITH_NULL_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49163" />
+              <field name="TLS_ECDH_RSA_WITH_RC4_128_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49164" />
+              <field name="TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49175" />
+              <field name="TLS_ECDH_anon_WITH_AES_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49176" />
+              <field name="TLS_ECDH_anon_WITH_AES_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49177" />
+              <field name="TLS_ECDH_anon_WITH_NULL_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49173" />
+              <field name="TLS_ECDH_anon_WITH_RC4_128_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49174" />
+              <field name="TLS_EMPTY_RENEGOTIATION_INFO_SCSV" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="255" />
+              <field name="TLS_FALLBACK_SCSV" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="22016" />
+              <field name="TLS_NULL_WITH_NULL_NULL" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="0" />
+              <field name="TLS_PSK_DHE_WITH_AES_128_CCM_8" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49322" />
+              <field name="TLS_PSK_DHE_WITH_AES_256_CCM_8" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49323" />
+              <field name="TLS_PSK_WITH_3DES_EDE_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="139" />
+              <field name="TLS_PSK_WITH_AES_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="140" />
+              <field name="TLS_PSK_WITH_AES_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="174" />
+              <field name="TLS_PSK_WITH_AES_128_CCM" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49316" />
+              <field name="TLS_PSK_WITH_AES_128_CCM_8" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49320" />
+              <field name="TLS_PSK_WITH_AES_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="168" />
+              <field name="TLS_PSK_WITH_AES_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="141" />
+              <field name="TLS_PSK_WITH_AES_256_CBC_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="175" />
+              <field name="TLS_PSK_WITH_AES_256_CCM" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49317" />
+              <field name="TLS_PSK_WITH_AES_256_CCM_8" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49321" />
+              <field name="TLS_PSK_WITH_AES_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="169" />
+              <field name="TLS_PSK_WITH_CAMELLIA_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49300" />
+              <field name="TLS_PSK_WITH_CAMELLIA_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49294" />
+              <field name="TLS_PSK_WITH_CAMELLIA_256_CBC_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49301" />
+              <field name="TLS_PSK_WITH_CAMELLIA_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49295" />
+              <field name="TLS_PSK_WITH_ESTREAM_SALSA20_SHA1" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="58390" />
+              <field name="TLS_PSK_WITH_NULL_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="44" />
+              <field name="TLS_PSK_WITH_NULL_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="176" />
+              <field name="TLS_PSK_WITH_NULL_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="177" />
+              <field name="TLS_PSK_WITH_RC4_128_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="138" />
+              <field name="TLS_PSK_WITH_SALSA20_SHA1" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="58391" />
+              <field name="TLS_RSA_EXPORT_WITH_DES40_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="8" />
+              <field name="TLS_RSA_EXPORT_WITH_RC2_CBC_40_MD5" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="6" />
+              <field name="TLS_RSA_EXPORT_WITH_RC4_40_MD5" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="3" />
+              <field name="TLS_RSA_PSK_WITH_3DES_EDE_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="147" />
+              <field name="TLS_RSA_PSK_WITH_AES_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="148" />
+              <field name="TLS_RSA_PSK_WITH_AES_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="182" />
+              <field name="TLS_RSA_PSK_WITH_AES_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="172" />
+              <field name="TLS_RSA_PSK_WITH_AES_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="149" />
+              <field name="TLS_RSA_PSK_WITH_AES_256_CBC_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="183" />
+              <field name="TLS_RSA_PSK_WITH_AES_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="173" />
+              <field name="TLS_RSA_PSK_WITH_CAMELLIA_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49304" />
+              <field name="TLS_RSA_PSK_WITH_CAMELLIA_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49298" />
+              <field name="TLS_RSA_PSK_WITH_CAMELLIA_256_CBC_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49305" />
+              <field name="TLS_RSA_PSK_WITH_CAMELLIA_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49299" />
+              <field name="TLS_RSA_PSK_WITH_ESTREAM_SALSA20_SHA1" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="58394" />
+              <field name="TLS_RSA_PSK_WITH_NULL_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="46" />
+              <field name="TLS_RSA_PSK_WITH_NULL_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="184" />
+              <field name="TLS_RSA_PSK_WITH_NULL_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="185" />
+              <field name="TLS_RSA_PSK_WITH_RC4_128_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="146" />
+              <field name="TLS_RSA_PSK_WITH_SALSA20_SHA1" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="58395" />
+              <field name="TLS_RSA_WITH_3DES_EDE_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="10" />
+              <field name="TLS_RSA_WITH_AES_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="47" />
+              <field name="TLS_RSA_WITH_AES_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="60" />
+              <field name="TLS_RSA_WITH_AES_128_CCM" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49308" />
+              <field name="TLS_RSA_WITH_AES_128_CCM_8" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49312" />
+              <field name="TLS_RSA_WITH_AES_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="156" />
+              <field name="TLS_RSA_WITH_AES_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="53" />
+              <field name="TLS_RSA_WITH_AES_256_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="61" />
+              <field name="TLS_RSA_WITH_AES_256_CCM" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49309" />
+              <field name="TLS_RSA_WITH_AES_256_CCM_8" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49313" />
+              <field name="TLS_RSA_WITH_AES_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="157" />
+              <field name="TLS_RSA_WITH_CAMELLIA_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="65" />
+              <field name="TLS_RSA_WITH_CAMELLIA_128_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="186" />
+              <field name="TLS_RSA_WITH_CAMELLIA_128_GCM_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49274" />
+              <field name="TLS_RSA_WITH_CAMELLIA_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="132" />
+              <field name="TLS_RSA_WITH_CAMELLIA_256_CBC_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="192" />
+              <field name="TLS_RSA_WITH_CAMELLIA_256_GCM_SHA384" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49275" />
+              <field name="TLS_RSA_WITH_DES_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="9" />
+              <field name="TLS_RSA_WITH_ESTREAM_SALSA20_SHA1" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="58384" />
+              <field name="TLS_RSA_WITH_IDEA_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="7" />
+              <field name="TLS_RSA_WITH_NULL_MD5" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="1" />
+              <field name="TLS_RSA_WITH_NULL_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="2" />
+              <field name="TLS_RSA_WITH_NULL_SHA256" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="59" />
+              <field name="TLS_RSA_WITH_RC4_128_MD5" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="4" />
+              <field name="TLS_RSA_WITH_RC4_128_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="5" />
+              <field name="TLS_RSA_WITH_SALSA20_SHA1" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="58385" />
+              <field name="TLS_RSA_WITH_SEED_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="150" />
+              <field name="TLS_SRP_SHA_DSS_WITH_3DES_EDE_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49180" />
+              <field name="TLS_SRP_SHA_DSS_WITH_AES_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49183" />
+              <field name="TLS_SRP_SHA_DSS_WITH_AES_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49186" />
+              <field name="TLS_SRP_SHA_RSA_WITH_3DES_EDE_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49179" />
+              <field name="TLS_SRP_SHA_RSA_WITH_AES_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49182" />
+              <field name="TLS_SRP_SHA_RSA_WITH_AES_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49185" />
+              <field name="TLS_SRP_SHA_WITH_3DES_EDE_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49178" />
+              <field name="TLS_SRP_SHA_WITH_AES_128_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49181" />
+              <field name="TLS_SRP_SHA_WITH_AES_256_CBC_SHA" attrib="32854" fieldtype="Mono.Security.Interface.CipherSuiteCode" value="49184" />
+            </fields>
+          </class>
+          <class name="ExchangeAlgorithmType" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Dhe" attrib="32854" fieldtype="Mono.Security.Interface.ExchangeAlgorithmType" value="1" />
+              <field name="EcDhe" attrib="32854" fieldtype="Mono.Security.Interface.ExchangeAlgorithmType" value="3" />
+              <field name="None" attrib="32854" fieldtype="Mono.Security.Interface.ExchangeAlgorithmType" value="0" />
+              <field name="Rsa" attrib="32854" fieldtype="Mono.Security.Interface.ExchangeAlgorithmType" value="2" />
+            </fields>
+          </class>
+          <class name="HashAlgorithmType" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Md5" attrib="32854" fieldtype="Mono.Security.Interface.HashAlgorithmType" value="1" />
+              <field name="Md5Sha1" attrib="32854" fieldtype="Mono.Security.Interface.HashAlgorithmType" value="254" />
+              <field name="None" attrib="32854" fieldtype="Mono.Security.Interface.HashAlgorithmType" value="0" />
+              <field name="Sha1" attrib="32854" fieldtype="Mono.Security.Interface.HashAlgorithmType" value="2" />
+              <field name="Sha224" attrib="32854" fieldtype="Mono.Security.Interface.HashAlgorithmType" value="3" />
+              <field name="Sha256" attrib="32854" fieldtype="Mono.Security.Interface.HashAlgorithmType" value="4" />
+              <field name="Sha384" attrib="32854" fieldtype="Mono.Security.Interface.HashAlgorithmType" value="5" />
+              <field name="Sha512" attrib="32854" fieldtype="Mono.Security.Interface.HashAlgorithmType" value="6" />
+              <field name="Unknown" attrib="32854" fieldtype="Mono.Security.Interface.HashAlgorithmType" value="255" />
+            </fields>
+          </class>
+          <class name="IBufferOffsetSize" type="interface" abstract="true" charset="Ansi" layout="Auto">
+            <properties>
+              <property name="Buffer" attrib="0" ptype="System.Byte[]">
+                <methods>
+                  <method name="get_Buffer()" attrib="3526" abstract="true" virtual="true" returntype="System.Byte[]">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Offset" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_Offset()" attrib="3526" abstract="true" virtual="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Size" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_Size()" attrib="3526" abstract="true" virtual="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="ICertificateValidator" type="interface" abstract="true" charset="Ansi" layout="Auto">
+            <properties>
+              <property name="Settings" attrib="0" ptype="Mono.Security.Interface.MonoTlsSettings">
+                <methods>
+                  <method name="get_Settings()" attrib="3526" abstract="true" virtual="true" returntype="Mono.Security.Interface.MonoTlsSettings">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="SelectClientCertificate(System.String, System.Security.Cryptography.X509Certificates.X509CertificateCollection, System.Security.Cryptography.X509Certificates.X509Certificate, System.String[], out System.Security.Cryptography.X509Certificates.X509Certificate&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="targetHost" position="0" attrib="0" type="System.String" />
+                  <parameter name="localCertificates" position="1" attrib="0" type="System.Security.Cryptography.X509Certificates.X509CertificateCollection" />
+                  <parameter name="remoteCertificate" position="2" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate" />
+                  <parameter name="acceptableIssuers" position="3" attrib="0" type="System.String[]" />
+                  <parameter name="clientCertificate" position="4" attrib="2" type="System.Security.Cryptography.X509Certificates.X509Certificate" direction="out" />
+                </parameters>
+              </method>
+              <method name="ValidateCertificate(System.String, System.Boolean, System.Security.Cryptography.X509Certificates.X509CertificateCollection)" attrib="1478" abstract="true" virtual="true" returntype="Mono.Security.Interface.ValidationResult">
+                <parameters>
+                  <parameter name="targetHost" position="0" attrib="0" type="System.String" />
+                  <parameter name="serverMode" position="1" attrib="0" type="System.Boolean" />
+                  <parameter name="certificates" position="2" attrib="0" type="System.Security.Cryptography.X509Certificates.X509CertificateCollection" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="IMonoSslStream" type="interface" abstract="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <properties>
+              <property name="AuthenticatedStream" attrib="0" ptype="System.Net.Security.AuthenticatedStream">
+                <methods>
+                  <method name="get_AuthenticatedStream()" attrib="3526" abstract="true" virtual="true" returntype="System.Net.Security.AuthenticatedStream">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="CanRead" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_CanRead()" attrib="3526" abstract="true" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="CanTimeout" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_CanTimeout()" attrib="3526" abstract="true" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="CanWrite" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_CanWrite()" attrib="3526" abstract="true" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="CheckCertRevocationStatus" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_CheckCertRevocationStatus()" attrib="3526" abstract="true" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="CipherAlgorithm" attrib="0" ptype="System.Security.Authentication.CipherAlgorithmType">
+                <methods>
+                  <method name="get_CipherAlgorithm()" attrib="3526" abstract="true" virtual="true" returntype="System.Security.Authentication.CipherAlgorithmType">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="CipherStrength" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_CipherStrength()" attrib="3526" abstract="true" virtual="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="HashAlgorithm" attrib="0" ptype="System.Security.Authentication.HashAlgorithmType">
+                <methods>
+                  <method name="get_HashAlgorithm()" attrib="3526" abstract="true" virtual="true" returntype="System.Security.Authentication.HashAlgorithmType">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="HashStrength" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_HashStrength()" attrib="3526" abstract="true" virtual="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="InternalLocalCertificate" attrib="0" ptype="System.Security.Cryptography.X509Certificates.X509Certificate">
+                <methods>
+                  <method name="get_InternalLocalCertificate()" attrib="3526" abstract="true" virtual="true" returntype="System.Security.Cryptography.X509Certificates.X509Certificate">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsAuthenticated" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsAuthenticated()" attrib="3526" abstract="true" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsEncrypted" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsEncrypted()" attrib="3526" abstract="true" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsMutuallyAuthenticated" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsMutuallyAuthenticated()" attrib="3526" abstract="true" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsServer" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsServer()" attrib="3526" abstract="true" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsSigned" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsSigned()" attrib="3526" abstract="true" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="KeyExchangeAlgorithm" attrib="0" ptype="System.Security.Authentication.ExchangeAlgorithmType">
+                <methods>
+                  <method name="get_KeyExchangeAlgorithm()" attrib="3526" abstract="true" virtual="true" returntype="System.Security.Authentication.ExchangeAlgorithmType">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="KeyExchangeStrength" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_KeyExchangeStrength()" attrib="3526" abstract="true" virtual="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Length" attrib="0" ptype="System.Int64">
+                <methods>
+                  <method name="get_Length()" attrib="3526" abstract="true" virtual="true" returntype="System.Int64">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="LocalCertificate" attrib="0" ptype="System.Security.Cryptography.X509Certificates.X509Certificate">
+                <methods>
+                  <method name="get_LocalCertificate()" attrib="3526" abstract="true" virtual="true" returntype="System.Security.Cryptography.X509Certificates.X509Certificate">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Position" attrib="0" ptype="System.Int64">
+                <methods>
+                  <method name="get_Position()" attrib="3526" abstract="true" virtual="true" returntype="System.Int64">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Provider" attrib="0" ptype="Mono.Security.Interface.MonoTlsProvider">
+                <methods>
+                  <method name="get_Provider()" attrib="3526" abstract="true" virtual="true" returntype="Mono.Security.Interface.MonoTlsProvider">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ReadTimeout" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_ReadTimeout()" attrib="3526" abstract="true" virtual="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_ReadTimeout(System.Int32)" attrib="3526" abstract="true" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="RemoteCertificate" attrib="0" ptype="System.Security.Cryptography.X509Certificates.X509Certificate">
+                <methods>
+                  <method name="get_RemoteCertificate()" attrib="3526" abstract="true" virtual="true" returntype="System.Security.Cryptography.X509Certificates.X509Certificate">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="SslProtocol" attrib="0" ptype="System.Security.Authentication.SslProtocols">
+                <methods>
+                  <method name="get_SslProtocol()" attrib="3526" abstract="true" virtual="true" returntype="System.Security.Authentication.SslProtocols">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="TransportContext" attrib="0" ptype="System.Net.TransportContext">
+                <methods>
+                  <method name="get_TransportContext()" attrib="3526" abstract="true" virtual="true" returntype="System.Net.TransportContext">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="WriteTimeout" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_WriteTimeout()" attrib="3526" abstract="true" virtual="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_WriteTimeout(System.Int32)" attrib="3526" abstract="true" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="AuthenticateAsClient(System.String)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="targetHost" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="AuthenticateAsClient(System.String, System.Security.Cryptography.X509Certificates.X509CertificateCollection, System.Security.Authentication.SslProtocols, System.Boolean)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="targetHost" position="0" attrib="0" type="System.String" />
+                  <parameter name="clientCertificates" position="1" attrib="0" type="System.Security.Cryptography.X509Certificates.X509CertificateCollection" />
+                  <parameter name="enabledSslProtocols" position="2" attrib="0" type="System.Security.Authentication.SslProtocols" />
+                  <parameter name="checkCertificateRevocation" position="3" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="AuthenticateAsClientAsync(System.String)" attrib="1478" abstract="true" virtual="true" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="targetHost" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="AuthenticateAsClientAsync(System.String, System.Security.Cryptography.X509Certificates.X509CertificateCollection, System.Security.Authentication.SslProtocols, System.Boolean)" attrib="1478" abstract="true" virtual="true" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="targetHost" position="0" attrib="0" type="System.String" />
+                  <parameter name="clientCertificates" position="1" attrib="0" type="System.Security.Cryptography.X509Certificates.X509CertificateCollection" />
+                  <parameter name="enabledSslProtocols" position="2" attrib="0" type="System.Security.Authentication.SslProtocols" />
+                  <parameter name="checkCertificateRevocation" position="3" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="AuthenticateAsServer(System.Security.Cryptography.X509Certificates.X509Certificate)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="serverCertificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate" />
+                </parameters>
+              </method>
+              <method name="AuthenticateAsServer(System.Security.Cryptography.X509Certificates.X509Certificate, System.Boolean, System.Security.Authentication.SslProtocols, System.Boolean)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="serverCertificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate" />
+                  <parameter name="clientCertificateRequired" position="1" attrib="0" type="System.Boolean" />
+                  <parameter name="enabledSslProtocols" position="2" attrib="0" type="System.Security.Authentication.SslProtocols" />
+                  <parameter name="checkCertificateRevocation" position="3" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="AuthenticateAsServerAsync(System.Security.Cryptography.X509Certificates.X509Certificate)" attrib="1478" abstract="true" virtual="true" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="serverCertificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate" />
+                </parameters>
+              </method>
+              <method name="AuthenticateAsServerAsync(System.Security.Cryptography.X509Certificates.X509Certificate, System.Boolean, System.Security.Authentication.SslProtocols, System.Boolean)" attrib="1478" abstract="true" virtual="true" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="serverCertificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate" />
+                  <parameter name="clientCertificateRequired" position="1" attrib="0" type="System.Boolean" />
+                  <parameter name="enabledSslProtocols" position="2" attrib="0" type="System.Security.Authentication.SslProtocols" />
+                  <parameter name="checkCertificateRevocation" position="3" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="BeginAuthenticateAsClient(System.String, System.AsyncCallback, System.Object)" attrib="1478" abstract="true" virtual="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="targetHost" position="0" attrib="0" type="System.String" />
+                  <parameter name="asyncCallback" position="1" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="asyncState" position="2" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="BeginAuthenticateAsClient(System.String, System.Security.Cryptography.X509Certificates.X509CertificateCollection, System.Security.Authentication.SslProtocols, System.Boolean, System.AsyncCallback, System.Object)" attrib="1478" abstract="true" virtual="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="targetHost" position="0" attrib="0" type="System.String" />
+                  <parameter name="clientCertificates" position="1" attrib="0" type="System.Security.Cryptography.X509Certificates.X509CertificateCollection" />
+                  <parameter name="enabledSslProtocols" position="2" attrib="0" type="System.Security.Authentication.SslProtocols" />
+                  <parameter name="checkCertificateRevocation" position="3" attrib="0" type="System.Boolean" />
+                  <parameter name="asyncCallback" position="4" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="asyncState" position="5" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="BeginAuthenticateAsServer(System.Security.Cryptography.X509Certificates.X509Certificate, System.AsyncCallback, System.Object)" attrib="1478" abstract="true" virtual="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="serverCertificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate" />
+                  <parameter name="asyncCallback" position="1" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="asyncState" position="2" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="BeginAuthenticateAsServer(System.Security.Cryptography.X509Certificates.X509Certificate, System.Boolean, System.Security.Authentication.SslProtocols, System.Boolean, System.AsyncCallback, System.Object)" attrib="1478" abstract="true" virtual="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="serverCertificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate" />
+                  <parameter name="clientCertificateRequired" position="1" attrib="0" type="System.Boolean" />
+                  <parameter name="enabledSslProtocols" position="2" attrib="0" type="System.Security.Authentication.SslProtocols" />
+                  <parameter name="checkCertificateRevocation" position="3" attrib="0" type="System.Boolean" />
+                  <parameter name="asyncCallback" position="4" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="asyncState" position="5" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="BeginRead(System.Byte[], System.Int32, System.Int32, System.AsyncCallback, System.Object)" attrib="1478" abstract="true" virtual="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="asyncCallback" position="3" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="asyncState" position="4" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="BeginWrite(System.Byte[], System.Int32, System.Int32, System.AsyncCallback, System.Object)" attrib="1478" abstract="true" virtual="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="asyncCallback" position="3" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="asyncState" position="4" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="EndAuthenticateAsClient(System.IAsyncResult)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="EndAuthenticateAsServer(System.IAsyncResult)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="EndRead(System.IAsyncResult)" attrib="1478" abstract="true" virtual="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="EndWrite(System.IAsyncResult)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="Flush()" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="GetConnectionInfo()" attrib="1478" abstract="true" virtual="true" returntype="Mono.Security.Interface.MonoTlsConnectionInfo">
+                <parameters />
+              </method>
+              <method name="Read(System.Byte[], System.Int32, System.Int32)" attrib="1478" abstract="true" virtual="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="SetLength(System.Int64)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Int64" />
+                </parameters>
+              </method>
+              <method name="Write(System.Byte[])" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+              <method name="Write(System.Byte[], System.Int32, System.Int32)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="IMonoTlsEventSink" type="interface" abstract="true" charset="Ansi" layout="Auto">
+            <methods>
+              <method name="Error(System.Exception)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="exception" position="0" attrib="0" type="System.Exception" />
+                </parameters>
+              </method>
+              <method name="ReceivedCloseNotify()" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="MonoEncryptionPolicy" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="AllowNoEncryption" attrib="32854" fieldtype="Mono.Security.Interface.MonoEncryptionPolicy" value="1" />
+              <field name="NoEncryption" attrib="32854" fieldtype="Mono.Security.Interface.MonoEncryptionPolicy" value="2" />
+              <field name="RequireEncryption" attrib="32854" fieldtype="Mono.Security.Interface.MonoEncryptionPolicy" value="0" />
+            </fields>
+          </class>
+          <class name="MonoLocalCertificateSelectionCallback" type="delegate" base="System.MulticastDelegate" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.ICloneable" />
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.Object, System.IntPtr)" attrib="6278">
+                <parameters>
+                  <parameter name="object" position="0" attrib="0" type="System.Object" />
+                  <parameter name="method" position="1" attrib="0" type="System.IntPtr" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="BeginInvoke(System.String, System.Security.Cryptography.X509Certificates.X509CertificateCollection, System.Security.Cryptography.X509Certificates.X509Certificate, System.String[], System.AsyncCallback, System.Object)" attrib="454" virtual="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="targetHost" position="0" attrib="0" type="System.String" />
+                  <parameter name="localCertificates" position="1" attrib="0" type="System.Security.Cryptography.X509Certificates.X509CertificateCollection" />
+                  <parameter name="remoteCertificate" position="2" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate" />
+                  <parameter name="acceptableIssuers" position="3" attrib="0" type="System.String[]" />
+                  <parameter name="callback" position="4" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="object" position="5" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="EndInvoke(System.IAsyncResult)" attrib="454" virtual="true" returntype="System.Security.Cryptography.X509Certificates.X509Certificate">
+                <parameters>
+                  <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="Invoke(System.String, System.Security.Cryptography.X509Certificates.X509CertificateCollection, System.Security.Cryptography.X509Certificates.X509Certificate, System.String[])" attrib="454" virtual="true" returntype="System.Security.Cryptography.X509Certificates.X509Certificate">
+                <parameters>
+                  <parameter name="targetHost" position="0" attrib="0" type="System.String" />
+                  <parameter name="localCertificates" position="1" attrib="0" type="System.Security.Cryptography.X509Certificates.X509CertificateCollection" />
+                  <parameter name="remoteCertificate" position="2" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate" />
+                  <parameter name="acceptableIssuers" position="3" attrib="0" type="System.String[]" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="MonoRemoteCertificateValidationCallback" type="delegate" base="System.MulticastDelegate" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.ICloneable" />
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.Object, System.IntPtr)" attrib="6278">
+                <parameters>
+                  <parameter name="object" position="0" attrib="0" type="System.Object" />
+                  <parameter name="method" position="1" attrib="0" type="System.IntPtr" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="BeginInvoke(System.String, System.Security.Cryptography.X509Certificates.X509Certificate, System.Security.Cryptography.X509Certificates.X509Chain, Mono.Security.Interface.MonoSslPolicyErrors, System.AsyncCallback, System.Object)" attrib="454" virtual="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="targetHost" position="0" attrib="0" type="System.String" />
+                  <parameter name="certificate" position="1" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate" />
+                  <parameter name="chain" position="2" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Chain" />
+                  <parameter name="sslPolicyErrors" position="3" attrib="0" type="Mono.Security.Interface.MonoSslPolicyErrors" />
+                  <parameter name="callback" position="4" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="object" position="5" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="EndInvoke(System.IAsyncResult)" attrib="454" virtual="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="Invoke(System.String, System.Security.Cryptography.X509Certificates.X509Certificate, System.Security.Cryptography.X509Certificates.X509Chain, Mono.Security.Interface.MonoSslPolicyErrors)" attrib="454" virtual="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="targetHost" position="0" attrib="0" type="System.String" />
+                  <parameter name="certificate" position="1" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate" />
+                  <parameter name="chain" position="2" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Chain" />
+                  <parameter name="sslPolicyErrors" position="3" attrib="0" type="Mono.Security.Interface.MonoSslPolicyErrors" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="MonoSslPolicyErrors" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <attributes>
+              <attribute name="System.FlagsAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="None" attrib="32854" fieldtype="Mono.Security.Interface.MonoSslPolicyErrors" value="0" />
+              <field name="RemoteCertificateChainErrors" attrib="32854" fieldtype="Mono.Security.Interface.MonoSslPolicyErrors" value="4" />
+              <field name="RemoteCertificateNameMismatch" attrib="32854" fieldtype="Mono.Security.Interface.MonoSslPolicyErrors" value="2" />
+              <field name="RemoteCertificateNotAvailable" attrib="32854" fieldtype="Mono.Security.Interface.MonoSslPolicyErrors" value="1" />
+            </fields>
+          </class>
+          <class name="MonoTlsConnectionInfo" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="CipherAlgorithmType" attrib="0" ptype="Mono.Security.Interface.CipherAlgorithmType">
+                <methods>
+                  <method name="get_CipherAlgorithmType()" attrib="2182" returntype="Mono.Security.Interface.CipherAlgorithmType">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_CipherAlgorithmType(Mono.Security.Interface.CipherAlgorithmType)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Security.Interface.CipherAlgorithmType" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="CipherSuiteCode" attrib="0" ptype="Mono.Security.Interface.CipherSuiteCode">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_CipherSuiteCode()" attrib="2182" returntype="Mono.Security.Interface.CipherSuiteCode">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_CipherSuiteCode(Mono.Security.Interface.CipherSuiteCode)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Security.Interface.CipherSuiteCode" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ExchangeAlgorithmType" attrib="0" ptype="Mono.Security.Interface.ExchangeAlgorithmType">
+                <methods>
+                  <method name="get_ExchangeAlgorithmType()" attrib="2182" returntype="Mono.Security.Interface.ExchangeAlgorithmType">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_ExchangeAlgorithmType(Mono.Security.Interface.ExchangeAlgorithmType)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Security.Interface.ExchangeAlgorithmType" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="HashAlgorithmType" attrib="0" ptype="Mono.Security.Interface.HashAlgorithmType">
+                <methods>
+                  <method name="get_HashAlgorithmType()" attrib="2182" returntype="Mono.Security.Interface.HashAlgorithmType">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_HashAlgorithmType(Mono.Security.Interface.HashAlgorithmType)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Security.Interface.HashAlgorithmType" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="PeerDomainName" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_PeerDomainName()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_PeerDomainName(System.String)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ProtocolVersion" attrib="0" ptype="Mono.Security.Interface.TlsProtocols">
+                <methods>
+                  <method name="get_ProtocolVersion()" attrib="2182" returntype="Mono.Security.Interface.TlsProtocols">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_ProtocolVersion(Mono.Security.Interface.TlsProtocols)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Security.Interface.TlsProtocols" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="ToString()" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="MonoTlsProvider" type="class" base="System.Object" abstract="true" charset="Ansi" layout="Auto">
+            <properties>
+              <property name="ID" attrib="0" ptype="System.Guid">
+                <methods>
+                  <method name="get_ID()" attrib="3526" abstract="true" virtual="true" returntype="System.Guid">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Name" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Name()" attrib="3526" abstract="true" virtual="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="SupportedProtocols" attrib="0" ptype="System.Security.Authentication.SslProtocols">
+                <methods>
+                  <method name="get_SupportedProtocols()" attrib="3526" abstract="true" virtual="true" returntype="System.Security.Authentication.SslProtocols">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="SupportsConnectionInfo" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_SupportsConnectionInfo()" attrib="3526" abstract="true" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="SupportsMonoExtensions" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_SupportsMonoExtensions()" attrib="3526" abstract="true" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="SupportsSslStream" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_SupportsSslStream()" attrib="3526" abstract="true" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="CreateSslStream(System.IO.Stream, System.Boolean, Mono.Security.Interface.MonoTlsSettings)" attrib="1478" abstract="true" virtual="true" returntype="Mono.Security.Interface.IMonoSslStream">
+                <parameters>
+                  <parameter name="innerStream" position="0" attrib="0" type="System.IO.Stream" />
+                  <parameter name="leaveInnerStreamOpen" position="1" attrib="0" type="System.Boolean" />
+                  <parameter name="settings" position="2" attrib="4112" type="Mono.Security.Interface.MonoTlsSettings" optional="true" defaultValue="NULL" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="MonoTlsProviderFactory" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
+            <properties>
+              <property name="IsInitialized" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsInitialized()" attrib="2198" static="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="CreateHttpListener(System.Security.Cryptography.X509Certificates.X509Certificate, Mono.Security.Interface.MonoTlsProvider, Mono.Security.Interface.MonoTlsSettings)" attrib="150" static="true" returntype="System.Net.HttpListener">
+                <parameters>
+                  <parameter name="certificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate" />
+                  <parameter name="provider" position="1" attrib="4112" type="Mono.Security.Interface.MonoTlsProvider" optional="true" defaultValue="NULL" />
+                  <parameter name="settings" position="2" attrib="4112" type="Mono.Security.Interface.MonoTlsSettings" optional="true" defaultValue="NULL" />
+                </parameters>
+              </method>
+              <method name="CreateHttpsRequest(System.Uri, Mono.Security.Interface.MonoTlsProvider, Mono.Security.Interface.MonoTlsSettings)" attrib="150" static="true" returntype="System.Net.HttpWebRequest">
+                <parameters>
+                  <parameter name="requestUri" position="0" attrib="0" type="System.Uri" />
+                  <parameter name="provider" position="1" attrib="0" type="Mono.Security.Interface.MonoTlsProvider" />
+                  <parameter name="settings" position="2" attrib="4112" type="Mono.Security.Interface.MonoTlsSettings" optional="true" defaultValue="NULL" />
+                </parameters>
+              </method>
+              <method name="GetDefaultProvider()" attrib="150" static="true" returntype="Mono.Security.Interface.MonoTlsProvider">
+                <attributes>
+                  <attribute name="System.ObsoleteAttribute">
+                    <properties>
+                      <property name="Message" value="Use GetProvider() instead." />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters />
+              </method>
+              <method name="GetMonoSslStream(System.Net.Security.SslStream)" attrib="150" static="true" returntype="Mono.Security.Interface.IMonoSslStream">
+                <parameters>
+                  <parameter name="stream" position="0" attrib="0" type="System.Net.Security.SslStream" />
+                </parameters>
+              </method>
+              <method name="GetProvider()" attrib="150" static="true" returntype="Mono.Security.Interface.MonoTlsProvider">
+                <parameters />
+              </method>
+              <method name="GetProvider(System.String)" attrib="150" static="true" returntype="Mono.Security.Interface.MonoTlsProvider">
+                <parameters>
+                  <parameter name="provider" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="Initialize()" attrib="150" static="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Initialize(System.String)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="provider" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="IsProviderSupported(System.String)" attrib="150" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="provider" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="SetDefaultProvider(System.String)" attrib="150" static="true" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.ObsoleteAttribute">
+                    <properties>
+                      <property name="Message" value="Use Initialize(string provider) instead." />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="name" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="MonoTlsSettings" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="CallbackNeedsCertificateChain" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_CallbackNeedsCertificateChain()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_CallbackNeedsCertificateChain(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="CertificateValidator" attrib="0" ptype="Mono.Security.Interface.ICertificateValidator">
+                <attributes>
+                  <attribute name="System.ObsoleteAttribute">
+                    <properties>
+                      <property name="Message" value="Do not use outside System.dll!" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_CertificateValidator()" attrib="2182" returntype="Mono.Security.Interface.ICertificateValidator">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="CheckCertificateName" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_CheckCertificateName()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_CheckCertificateName(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="CheckCertificateRevocationStatus" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_CheckCertificateRevocationStatus()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_CheckCertificateRevocationStatus(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ClientCertificateSelectionCallback" attrib="0" ptype="Mono.Security.Interface.MonoLocalCertificateSelectionCallback">
+                <methods>
+                  <method name="get_ClientCertificateSelectionCallback()" attrib="2182" returntype="Mono.Security.Interface.MonoLocalCertificateSelectionCallback">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_ClientCertificateSelectionCallback(Mono.Security.Interface.MonoLocalCertificateSelectionCallback)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Security.Interface.MonoLocalCertificateSelectionCallback" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="DefaultSettings" attrib="0" ptype="Mono.Security.Interface.MonoTlsSettings">
+                <methods>
+                  <method name="get_DefaultSettings()" attrib="2198" static="true" returntype="Mono.Security.Interface.MonoTlsSettings">
+                    <parameters />
+                  </method>
+                  <method name="set_DefaultSettings(Mono.Security.Interface.MonoTlsSettings)" attrib="2198" static="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Security.Interface.MonoTlsSettings" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="EnabledCiphers" attrib="0" ptype="Mono.Security.Interface.CipherSuiteCode[]">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_EnabledCiphers()" attrib="2182" returntype="Mono.Security.Interface.CipherSuiteCode[]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_EnabledCiphers(Mono.Security.Interface.CipherSuiteCode[])" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Security.Interface.CipherSuiteCode[]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="EnabledProtocols" attrib="0" ptype="System.Nullable`1[Mono.Security.Interface.TlsProtocols]">
+                <methods>
+                  <method name="get_EnabledProtocols()" attrib="2182" returntype="System.Nullable`1[Mono.Security.Interface.TlsProtocols]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_EnabledProtocols(System.Nullable`1[Mono.Security.Interface.TlsProtocols])" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Nullable`1[Mono.Security.Interface.TlsProtocols]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="RemoteCertificateValidationCallback" attrib="0" ptype="Mono.Security.Interface.MonoRemoteCertificateValidationCallback">
+                <methods>
+                  <method name="get_RemoteCertificateValidationCallback()" attrib="2182" returntype="Mono.Security.Interface.MonoRemoteCertificateValidationCallback">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_RemoteCertificateValidationCallback(Mono.Security.Interface.MonoRemoteCertificateValidationCallback)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Security.Interface.MonoRemoteCertificateValidationCallback" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="SkipSystemValidators" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_SkipSystemValidators()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_SkipSystemValidators(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="TrustAnchors" attrib="0" ptype="System.Security.Cryptography.X509Certificates.X509CertificateCollection">
+                <methods>
+                  <method name="get_TrustAnchors()" attrib="2182" returntype="System.Security.Cryptography.X509Certificates.X509CertificateCollection">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_TrustAnchors(System.Security.Cryptography.X509Certificates.X509CertificateCollection)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509CertificateCollection" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="UseServicePointManagerCallback" attrib="0" ptype="System.Nullable`1[System.Boolean]">
+                <methods>
+                  <method name="get_UseServicePointManagerCallback()" attrib="2182" returntype="System.Nullable`1[System.Boolean]">
+                    <parameters />
+                  </method>
+                  <method name="set_UseServicePointManagerCallback(System.Nullable`1[System.Boolean])" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Nullable`1[System.Boolean]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="UserSettings" attrib="0" ptype="System.Object">
+                <methods>
+                  <method name="get_UserSettings()" attrib="2182" returntype="System.Object">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_UserSettings(System.Object)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Object" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Clone()" attrib="134" returntype="Mono.Security.Interface.MonoTlsSettings">
+                <parameters />
+              </method>
+              <method name="CloneWithValidator(Mono.Security.Interface.ICertificateValidator)" attrib="134" returntype="Mono.Security.Interface.MonoTlsSettings">
+                <attributes>
+                  <attribute name="System.ObsoleteAttribute">
+                    <properties>
+                      <property name="Message" value="Do not use outside System.dll!" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="validator" position="0" attrib="0" type="Mono.Security.Interface.ICertificateValidator" />
+                </parameters>
+              </method>
+              <method name="CopyDefaultSettings()" attrib="150" static="true" returntype="Mono.Security.Interface.MonoTlsSettings">
+                <parameters />
               </method>
             </methods>
           </class>
@@ -3398,6 +4883,61 @@
               </method>
             </methods>
           </class>
+          <class name="TlsException" type="class" base="System.Exception" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(Mono.Security.Interface.Alert)" attrib="6278">
+                <parameters>
+                  <parameter name="alert" position="0" attrib="0" type="Mono.Security.Interface.Alert" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(Mono.Security.Interface.AlertDescription)" attrib="6278">
+                <parameters>
+                  <parameter name="description" position="0" attrib="0" type="Mono.Security.Interface.AlertDescription" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(Mono.Security.Interface.Alert, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="alert" position="0" attrib="0" type="Mono.Security.Interface.Alert" />
+                  <parameter name="message" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(Mono.Security.Interface.AlertDescription, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="description" position="0" attrib="0" type="Mono.Security.Interface.AlertDescription" />
+                  <parameter name="message" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(Mono.Security.Interface.AlertLevel, Mono.Security.Interface.AlertDescription)" attrib="6278">
+                <parameters>
+                  <parameter name="level" position="0" attrib="0" type="Mono.Security.Interface.AlertLevel" />
+                  <parameter name="description" position="1" attrib="0" type="Mono.Security.Interface.AlertDescription" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(Mono.Security.Interface.AlertDescription, System.String, System.Object[])" attrib="6278">
+                <parameters>
+                  <parameter name="description" position="0" attrib="0" type="Mono.Security.Interface.AlertDescription" />
+                  <parameter name="format" position="1" attrib="0" type="System.String" />
+                  <parameter name="args" position="2" attrib="0" type="System.Object[]">
+                    <attributes>
+                      <attribute name="System.ParamArrayAttribute" />
+                    </attributes>
+                  </parameter>
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Alert" attrib="0" ptype="Mono.Security.Interface.Alert">
+                <methods>
+                  <method name="get_Alert()" attrib="2182" returntype="Mono.Security.Interface.Alert">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
           <class name="TlsMultiBuffer" type="class" base="System.Object" charset="Ansi" layout="Auto">
             <constructors>
               <constructor name=".ctor()" attrib="6278">
@@ -3448,6 +4988,532 @@
                 <parameters />
               </method>
               <method name="StealBuffer()" attrib="134" returntype="Mono.Security.Interface.BufferOffsetSize">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="TlsProtocolCode" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int16">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Tls10" attrib="32854" fieldtype="Mono.Security.Interface.TlsProtocolCode" value="769" />
+              <field name="Tls11" attrib="32854" fieldtype="Mono.Security.Interface.TlsProtocolCode" value="770" />
+              <field name="Tls12" attrib="32854" fieldtype="Mono.Security.Interface.TlsProtocolCode" value="771" />
+            </fields>
+          </class>
+          <class name="TlsProtocols" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <attributes>
+              <attribute name="System.FlagsAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="ClientMask" attrib="32854" fieldtype="Mono.Security.Interface.TlsProtocols" value="2688" />
+              <field name="ServerMask" attrib="32854" fieldtype="Mono.Security.Interface.TlsProtocols" value="1344" />
+              <field name="Tls10" attrib="32854" fieldtype="Mono.Security.Interface.TlsProtocols" value="192" />
+              <field name="Tls10Client" attrib="32854" fieldtype="Mono.Security.Interface.TlsProtocols" value="128" />
+              <field name="Tls10Server" attrib="32854" fieldtype="Mono.Security.Interface.TlsProtocols" value="64" />
+              <field name="Tls11" attrib="32854" fieldtype="Mono.Security.Interface.TlsProtocols" value="768" />
+              <field name="Tls11Client" attrib="32854" fieldtype="Mono.Security.Interface.TlsProtocols" value="512" />
+              <field name="Tls11Server" attrib="32854" fieldtype="Mono.Security.Interface.TlsProtocols" value="256" />
+              <field name="Tls12" attrib="32854" fieldtype="Mono.Security.Interface.TlsProtocols" value="3072" />
+              <field name="Tls12Client" attrib="32854" fieldtype="Mono.Security.Interface.TlsProtocols" value="2048" />
+              <field name="Tls12Server" attrib="32854" fieldtype="Mono.Security.Interface.TlsProtocols" value="1024" />
+              <field name="Zero" attrib="32854" fieldtype="Mono.Security.Interface.TlsProtocols" value="0" />
+            </fields>
+          </class>
+          <class name="ValidationResult" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor(System.Boolean, System.Boolean, System.Int32, System.Nullable`1[Mono.Security.Interface.MonoSslPolicyErrors])" attrib="6278">
+                <parameters>
+                  <parameter name="trusted" position="0" attrib="0" type="System.Boolean" />
+                  <parameter name="user_denied" position="1" attrib="0" type="System.Boolean" />
+                  <parameter name="error_code" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="policy_errors" position="3" attrib="0" type="System.Nullable`1[Mono.Security.Interface.MonoSslPolicyErrors]" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="ErrorCode" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_ErrorCode()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="PolicyErrors" attrib="0" ptype="System.Nullable`1[Mono.Security.Interface.MonoSslPolicyErrors]">
+                <methods>
+                  <method name="get_PolicyErrors()" attrib="2182" returntype="System.Nullable`1[Mono.Security.Interface.MonoSslPolicyErrors]">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Trusted" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_Trusted()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="UserDenied" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_UserDenied()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+        </classes>
+      </namespace>
+      <namespace name="Mono.Security.Protocol.Ntlm">
+        <classes>
+          <class name="ChallengeResponse" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.ObsoleteAttribute">
+                <properties>
+                  <property name="Message" value="Use of this API is highly discouraged, it selects legacy-mode LM/NTLM authentication, which sends your password in very weak encryption over the wire even if the server supports the more secure NTLMv2 / NTLMv2 Session. You need to use the new `Type3Message (Type2Message)' constructor to use the more secure NTLMv2 / NTLMv2 Session authentication modes. These require the Type 2 message from the server to compute the response." />
+                </properties>
+              </attribute>
+            </attributes>
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.String, System.Byte[])" attrib="6278">
+                <parameters>
+                  <parameter name="password" position="0" attrib="0" type="System.String" />
+                  <parameter name="challenge" position="1" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Challenge" attrib="0" ptype="System.Byte[]">
+                <methods>
+                  <method name="get_Challenge()" attrib="2182" returntype="System.Byte[]">
+                    <parameters />
+                  </method>
+                  <method name="set_Challenge(System.Byte[])" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Byte[]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="LM" attrib="0" ptype="System.Byte[]">
+                <methods>
+                  <method name="get_LM()" attrib="2182" returntype="System.Byte[]">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="NT" attrib="0" ptype="System.Byte[]">
+                <methods>
+                  <method name="get_NT()" attrib="2182" returntype="System.Byte[]">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Password" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Password()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Password(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Dispose()" attrib="486" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="~ChallengeResponse()" attrib="196" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="ChallengeResponse2" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
+            <methods>
+              <method name="Compute(Mono.Security.Protocol.Ntlm.Type2Message, Mono.Security.Protocol.Ntlm.NtlmAuthLevel, System.String, System.String, System.String, out System.Byte[]&amp;, out System.Byte[]&amp;)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="type2" position="0" attrib="0" type="Mono.Security.Protocol.Ntlm.Type2Message" />
+                  <parameter name="level" position="1" attrib="0" type="Mono.Security.Protocol.Ntlm.NtlmAuthLevel" />
+                  <parameter name="username" position="2" attrib="0" type="System.String" />
+                  <parameter name="password" position="3" attrib="0" type="System.String" />
+                  <parameter name="domain" position="4" attrib="0" type="System.String" />
+                  <parameter name="lm" position="5" attrib="2" type="System.Byte[]" direction="out" />
+                  <parameter name="ntlm" position="6" attrib="2" type="System.Byte[]" direction="out" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="MessageBase" type="class" base="System.Object" abstract="true" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor(System.Int32)" attrib="6276">
+                <parameters>
+                  <parameter name="messageType" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Flags" attrib="0" ptype="Mono.Security.Protocol.Ntlm.NtlmFlags">
+                <methods>
+                  <method name="get_Flags()" attrib="2182" returntype="Mono.Security.Protocol.Ntlm.NtlmFlags">
+                    <parameters />
+                  </method>
+                  <method name="set_Flags(Mono.Security.Protocol.Ntlm.NtlmFlags)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Security.Protocol.Ntlm.NtlmFlags" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Type" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_Type()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="CheckHeader(System.Byte[])" attrib="132" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+              <method name="Decode(System.Byte[])" attrib="452" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+              <method name="GetBytes()" attrib="1478" abstract="true" virtual="true" returntype="System.Byte[]">
+                <parameters />
+              </method>
+              <method name="PrepareMessage(System.Int32)" attrib="132" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="messageSize" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="NtlmAuthLevel" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="LM_and_NTLM" attrib="32854" fieldtype="Mono.Security.Protocol.Ntlm.NtlmAuthLevel" value="0" />
+              <field name="LM_and_NTLM_and_try_NTLMv2_Session" attrib="32854" fieldtype="Mono.Security.Protocol.Ntlm.NtlmAuthLevel" value="1" />
+              <field name="NTLM_only" attrib="32854" fieldtype="Mono.Security.Protocol.Ntlm.NtlmAuthLevel" value="2" />
+              <field name="NTLMv2_only" attrib="32854" fieldtype="Mono.Security.Protocol.Ntlm.NtlmAuthLevel" value="3" />
+            </fields>
+          </class>
+          <class name="NtlmFlags" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <attributes>
+              <attribute name="System.FlagsAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Negotiate128" attrib="32854" fieldtype="Mono.Security.Protocol.Ntlm.NtlmFlags" value="536870912" />
+              <field name="Negotiate56" attrib="32854" fieldtype="Mono.Security.Protocol.Ntlm.NtlmFlags" value="-2147483648" />
+              <field name="NegotiateAlwaysSign" attrib="32854" fieldtype="Mono.Security.Protocol.Ntlm.NtlmFlags" value="32768" />
+              <field name="NegotiateDomainSupplied" attrib="32854" fieldtype="Mono.Security.Protocol.Ntlm.NtlmFlags" value="4096" />
+              <field name="NegotiateNtlm" attrib="32854" fieldtype="Mono.Security.Protocol.Ntlm.NtlmFlags" value="512" />
+              <field name="NegotiateNtlm2Key" attrib="32854" fieldtype="Mono.Security.Protocol.Ntlm.NtlmFlags" value="524288" />
+              <field name="NegotiateOem" attrib="32854" fieldtype="Mono.Security.Protocol.Ntlm.NtlmFlags" value="2" />
+              <field name="NegotiateUnicode" attrib="32854" fieldtype="Mono.Security.Protocol.Ntlm.NtlmFlags" value="1" />
+              <field name="NegotiateWorkstationSupplied" attrib="32854" fieldtype="Mono.Security.Protocol.Ntlm.NtlmFlags" value="8192" />
+              <field name="RequestTarget" attrib="32854" fieldtype="Mono.Security.Protocol.Ntlm.NtlmFlags" value="4" />
+            </fields>
+          </class>
+          <class name="NtlmSettings" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
+            <properties>
+              <property name="DefaultAuthLevel" attrib="0" ptype="Mono.Security.Protocol.Ntlm.NtlmAuthLevel">
+                <methods>
+                  <method name="get_DefaultAuthLevel()" attrib="2198" static="true" returntype="Mono.Security.Protocol.Ntlm.NtlmAuthLevel">
+                    <parameters />
+                  </method>
+                  <method name="set_DefaultAuthLevel(Mono.Security.Protocol.Ntlm.NtlmAuthLevel)" attrib="2198" static="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Security.Protocol.Ntlm.NtlmAuthLevel" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="Type1Message" type="class" base="Mono.Security.Protocol.Ntlm.MessageBase" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.Byte[])" attrib="6278">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Domain" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Domain()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Domain(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Host" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Host()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Host(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Decode(System.Byte[])" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+              <method name="GetBytes()" attrib="198" virtual="true" is-override="true" returntype="System.Byte[]">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="Type2Message" type="class" base="Mono.Security.Protocol.Ntlm.MessageBase" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.Byte[])" attrib="6278">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Nonce" attrib="0" ptype="System.Byte[]">
+                <methods>
+                  <method name="get_Nonce()" attrib="2182" returntype="System.Byte[]">
+                    <parameters />
+                  </method>
+                  <method name="set_Nonce(System.Byte[])" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Byte[]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="TargetInfo" attrib="0" ptype="System.Byte[]">
+                <methods>
+                  <method name="get_TargetInfo()" attrib="2182" returntype="System.Byte[]">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="TargetName" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_TargetName()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Decode(System.Byte[])" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+              <method name="GetBytes()" attrib="198" virtual="true" is-override="true" returntype="System.Byte[]">
+                <parameters />
+              </method>
+              <method name="~Type2Message()" attrib="196" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="Type3Message" type="class" base="Mono.Security.Protocol.Ntlm.MessageBase" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <attributes>
+                  <attribute name="System.ObsoleteAttribute">
+                    <properties>
+                      <property name="Message" value="Use of this API is highly discouraged, it selects legacy-mode LM/NTLM authentication, which sends your password in very weak encryption over the wire even if the server supports the more secure NTLMv2 / NTLMv2 Session. You need to use the new `Type3Message (Type2Message)' constructor to use the more secure NTLMv2 / NTLMv2 Session authentication modes. These require the Type 2 message from the server to compute the response." />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(Mono.Security.Protocol.Ntlm.Type2Message)" attrib="6278">
+                <parameters>
+                  <parameter name="type2" position="0" attrib="0" type="Mono.Security.Protocol.Ntlm.Type2Message" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Byte[])" attrib="6278">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Challenge" attrib="0" ptype="System.Byte[]">
+                <attributes>
+                  <attribute name="System.ObsoleteAttribute">
+                    <properties>
+                      <property name="Message" value="Use of this API is highly discouraged, it selects legacy-mode LM/NTLM authentication, which sends your password in very weak encryption over the wire even if the server supports the more secure NTLMv2 / NTLMv2 Session. You need to use the new `Type3Message (Type2Message)' constructor to use the more secure NTLMv2 / NTLMv2 Session authentication modes. These require the Type 2 message from the server to compute the response." />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_Challenge()" attrib="2182" returntype="System.Byte[]">
+                    <parameters />
+                  </method>
+                  <method name="set_Challenge(System.Byte[])" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Byte[]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="DefaultAuthLevel" attrib="0" ptype="Mono.Security.Protocol.Ntlm.NtlmAuthLevel">
+                <attributes>
+                  <attribute name="System.ObsoleteAttribute">
+                    <properties>
+                      <property name="Message" value="Use NtlmSettings.DefaultAuthLevel" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_DefaultAuthLevel()" attrib="2198" static="true" returntype="Mono.Security.Protocol.Ntlm.NtlmAuthLevel">
+                    <parameters />
+                  </method>
+                  <method name="set_DefaultAuthLevel(Mono.Security.Protocol.Ntlm.NtlmAuthLevel)" attrib="2198" static="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Security.Protocol.Ntlm.NtlmAuthLevel" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Domain" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Domain()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Domain(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Host" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Host()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Host(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="LM" attrib="0" ptype="System.Byte[]">
+                <methods>
+                  <method name="get_LM()" attrib="2182" returntype="System.Byte[]">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Level" attrib="0" ptype="Mono.Security.Protocol.Ntlm.NtlmAuthLevel">
+                <methods>
+                  <method name="get_Level()" attrib="2182" returntype="Mono.Security.Protocol.Ntlm.NtlmAuthLevel">
+                    <parameters />
+                  </method>
+                  <method name="set_Level(Mono.Security.Protocol.Ntlm.NtlmAuthLevel)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Security.Protocol.Ntlm.NtlmAuthLevel" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="NT" attrib="0" ptype="System.Byte[]">
+                <methods>
+                  <method name="get_NT()" attrib="2182" returntype="System.Byte[]">
+                    <parameters />
+                  </method>
+                  <method name="set_NT(System.Byte[])" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Byte[]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Password" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Password()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Password(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Username" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Username()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Username(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Decode(System.Byte[])" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+              <method name="GetBytes()" attrib="198" virtual="true" is-override="true" returntype="System.Byte[]">
+                <parameters />
+              </method>
+              <method name="~Type3Message()" attrib="196" virtual="true" returntype="System.Void">
                 <parameters />
               </method>
             </methods>

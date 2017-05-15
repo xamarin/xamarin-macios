@@ -76,6 +76,8 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 # MM1xxx: file copy / symlinks (project related)
 
+<h3><a name="MM1034">MM1034: Could not create symlink '{file}' -> '{target}': error {number}</h3>
+
 ## MM14xx: Product assemblies
 
 <h3><a name="MM1401">MM1401: The required '{0}' assembly is missing from the references</h3>
@@ -134,7 +136,7 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 <h3><a name="MM2013">MM2013: Failed to resolve the reference to "{0}", referenced in "{1}". The app will not include the referenced assembly, and may fail at runtime.</h3>
 
-<h3><a name="MM2014">MM2014: Xamarin.Mac Extensions do not support linking. Request for linking will be ignored.</h3>
+<h3><a name="MM2014">MM2014: Xamarin.Mac Extensions do not support linking. Request for linking will be ignored. ** This message is obsolete in XM 3.6+ **</h3>
 
 <!-- 2015 used by mtouch -->
 

@@ -472,11 +472,6 @@ namespace Xamarin.Bundler {
 				throw new MonoMacException (2007, true,
 					"Xamarin.Mac Unified API against a full .NET framework does not support linking. Pass the -nolink flag.");
 
-			if (App.LinkMode != LinkMode.None && is_extension) {
-				App.LinkMode = LinkMode.None;
-				ErrorHelper.Warning (2014, "Xamarin.Mac Extensions do not support linking. Request for linking will be ignored.");
-			}
-
 			ValidateXcode ();
 
 			App.Initialize ();
@@ -663,13 +658,11 @@ namespace Xamarin.Bundler {
 			{
 				if (!App.EnableDebug)
 					registrar = RegistrarMode.Static;
-				else if (IsUnified && App.LinkMode == LinkMode.None && embed_mono)
+				else if (IsUnified && App.LinkMode == LinkMode.None && embed_mono && App.IsDefaultMarshalManagedExceptionMode)
 					registrar = RegistrarMode.PartialStatic;
 				else
 					registrar = RegistrarMode.Dynamic;
 			}
-			if (is_extension)
-				registrar = RegistrarMode.Static;
 			
 			if (no_executable) {
 				if (unprocessed.Count != 0) {
@@ -741,7 +734,7 @@ namespace Xamarin.Bundler {
 				GatherAssemblies ();
 				CheckReferences ();
 
-				if (!is_extension && !resolved_assemblies.Exists (f => Path.GetExtension (f).ToLower () == ".exe"))
+				if (!is_extension && !resolved_assemblies.Exists (f => Path.GetExtension (f).ToLower () == ".exe") && !App.Embeddinator)
 					throw new MonoMacException (79, true, "No executable was copied into the app bundle.  Please contact 'support@xamarin.com'", "");
 
 				// i18n must be dealed outside linking too (e.g. bug 11448)
@@ -825,7 +818,7 @@ namespace Xamarin.Bundler {
 				GeneratePList ();
 
 			if (App.LinkMode != LinkMode.All && App.RuntimeOptions != null)
-				App.RuntimeOptions.Write (App.AppDirectory);
+				App.RuntimeOptions.Write (resources_dir);
 
 			if (aotOptions != null && aotOptions.IsAOT) {
 				if (!IsUnified)
@@ -928,11 +921,11 @@ namespace Xamarin.Bundler {
 		}
 
 		static void GeneratePList () {
-			var sr = new StreamReader (typeof (Driver).Assembly.GetManifestResourceStream ("Info.plist.tmpl"));
+			var sr = new StreamReader (typeof (Driver).Assembly.GetManifestResourceStream (App.Embeddinator ? "Info-framework.plist.tmpl" : "Info.plist.tmpl"));
 			var all = sr.ReadToEnd ();
 			var icon_str = (icon != null) ? "\t<key>CFBundleIconFile</key>\n\t<string>" + icon + "</string>\n\t" : "";
-
-			using (var sw = new StreamWriter (Path.Combine (contents_dir, "Info.plist"))){
+			var path = Path.Combine (App.Embeddinator ? resources_dir : contents_dir, "Info.plist");
+			using (var sw = new StreamWriter (path)){
 				sw.WriteLine (
 					all.Replace ("@BUNDLEDISPLAYNAME@", app_name).
 					Replace ("@EXECUTABLE@", app_name).
@@ -968,6 +961,9 @@ namespace Xamarin.Bundler {
 			
 			return s.ToString ();
 		}
+
+		[DllImport (Constants.libSystemLibrary)]
+		static extern int unlink (string pathname);
 
 		[DllImport (Constants.libSystemLibrary)]
 		static extern int symlink (string path1, string path2);
@@ -1207,6 +1203,8 @@ namespace Xamarin.Bundler {
 				var args = new StringBuilder ();
 				if (App.EnableDebug)
 					args.Append ("-g ");
+				if (App.Embeddinator)
+					args.Append ($"-shared -install_name \"@loader_path/../Frameworks/{App.Name}.framework/{App.Name}\" ");
 				args.Append ("-mmacosx-version-min=").Append (App.DeploymentTarget.ToString ()).Append (' ');
 				args.Append ("-arch ").Append (arch).Append (' ');
 				if (arch == "x86_64")
@@ -1675,10 +1673,16 @@ namespace Xamarin.Bundler {
 
 		/* Currently we clobber any existing files, perhaps we should error and have a -force flag */
 		static void CreateDirectoriesIfNeeded () {
-			App.AppDirectory = Path.Combine (output_dir, string.Format("{0}.{1}", app_name, is_extension ? "appex" : "app"));
+			if (App.Embeddinator) {
+				App.AppDirectory = Path.Combine (output_dir, app_name + ".framework");
+				contents_dir = Path.Combine (App.AppDirectory, "Versions", "A");
+				macos_dir = contents_dir;
+			} else {
+				App.AppDirectory = Path.Combine (output_dir, string.Format ("{0}.{1}", app_name, is_extension ? "appex" : "app"));
+				contents_dir = Path.Combine (App.AppDirectory, "Contents");
+				macos_dir = Path.Combine (contents_dir, "MacOS");
+			}
 
-			contents_dir = Path.Combine (App.AppDirectory, "Contents");
-			macos_dir = Path.Combine (contents_dir, "MacOS");
 			frameworks_dir = Path.Combine (contents_dir, "Frameworks");
 			resources_dir = Path.Combine (contents_dir, "Resources");
 			mmp_dir = Path.Combine (contents_dir, BundleName);
@@ -1688,6 +1692,21 @@ namespace Xamarin.Bundler {
 			CreateDirectoryIfNeeded (macos_dir);
 			CreateDirectoryIfNeeded (resources_dir);
 			CreateDirectoryIfNeeded (mmp_dir);
+
+			if (App.Embeddinator) {
+				CreateSymlink (Path.Combine (App.AppDirectory, "Versions", "Current"), "A");
+				CreateSymlink (Path.Combine (App.AppDirectory, app_name), $"Versions/Current/{app_name}");
+				CreateSymlink (Path.Combine (App.AppDirectory, "Resources"), "Versions/Current/Resources");
+			}
+		}
+
+		// Mono.Unix can't create symlinks to relative paths, it insists on the target to a full path before creating the symlink.
+		static void CreateSymlink (string file, string target)
+		{
+			unlink (file); // Delete any existing symlinks.
+			var rv = symlink (target, file);
+			if (rv != 0)
+				throw ErrorHelper.CreateError (1034, $"Could not create symlink '{file}' -> '{target}': error {Marshal.GetLastWin32Error ()}");
 		}
 
 		static void CreateDirectoryIfNeeded (string dir) {

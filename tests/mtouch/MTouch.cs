@@ -3047,7 +3047,153 @@ public class TestApp {
 			}
 		}
 
+		[Test]
+		[TestCase ("CFNetworkHandler", "CFNetworkHandler")]
+		[TestCase ("NSUrlSessionHandler", "NSUrlSessionHandler")]
+		[TestCase ("HttpClientHandler", "HttpClientHandler")]
+		[TestCase (null, "HttpClientHandler")]
+		[TestCase ("", "HttpClientHandler")]
+		public void HttpClientHandler (string mtouchHandler, string expectedHandler)
+		{
+			var testCode = $@"
+[TestFixture]
+public class HandlerTest
+{{
+	[Test]
+	public void Test ()
+	{{
+		var client = new System.Net.Http.HttpClient ();
+		var field = client.GetType ().BaseType.GetField (""handler"", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+		if (field == null)
+			throw new System.Exception (""Could not find the field 'handler' in HttpClient's base type (which should be 'HttpMessageInvoker')."");
+		var fieldValue = field.GetValue (client);
+		if (fieldValue == null)
+			throw new System.Exception (""Unexpected null value found in 'HttpMessageInvoker.handler' field."");
+		Assert.AreEqual (""{expectedHandler}"", fieldValue.GetType ().Name, ""default http client handler"");
+	}}
+}}
+";
+			var csproj_configuration = mtouchHandler == null ? string.Empty : ("<MtouchHttpClientHandler>" + mtouchHandler + "</MtouchHttpClientHandler>");
+			RunUnitTest (Profile.iOS, testCode, csproj_configuration, csproj_references: new string [] { "System.Net.Http" }, clean_simulator: false);
+		}
+
 #region Helper functions
+		static void RunUnitTest (Profile profile, string code, string csproj_configuration = "", string [] csproj_references = null, string configuration = "Debug", string platform = "iPhoneSimulator", bool clean_simulator = true)
+		{
+			if (profile != Profile.iOS)
+				throw new NotImplementedException ();
+			var testfile = @"
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Foundation;
+using UIKit;
+using MonoTouch.NUnit.UI;
+using NUnit.Framework;
+using NUnit.Framework.Internal;
+
+[Register (""AppDelegate"")]
+public partial class AppDelegate : UIApplicationDelegate {
+	UIWindow window;
+	TouchRunner runner;
+
+	public override bool FinishedLaunching (UIApplication app, NSDictionary options)
+	{
+		window = new UIWindow (UIScreen.MainScreen.Bounds);
+		runner = new TouchRunner (window);
+		runner.Add (Assembly.GetExecutingAssembly ());
+		window.RootViewController = new UINavigationController (runner.GetViewController ());
+		window.MakeKeyAndVisible ();
+
+		return true;
+	}
+
+	static void Main (string[] args)
+	{
+		UIApplication.Main (args, null, typeof (AppDelegate));
+	}
+}
+
+[TestFixture]
+public class Dummy {
+	[Test]
+	public void DummyTest () {}
+}
+" + code;
+			var csproj = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<Project DefaultTargets=""Build"" ToolsVersion=""4.0"" xmlns=""http://schemas.microsoft.com/developer/msbuild/2003"">
+  <PropertyGroup>
+    <Configuration Condition="" '$(Configuration)' == '' "">Debug</Configuration>
+    <Platform Condition="" '$(Platform)' == '' "">iPhoneSimulator</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{17EB364A-0D86-49AC-8B8C-C79C2C5AC9EF}</ProjectGuid>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>testapp</RootNamespace>
+    <AssemblyName>testapp</AssemblyName>
+    <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)</IntermediateOutputPath>
+    <OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
+	" + csproj_configuration + @"
+  </PropertyGroup>
+  <PropertyGroup Condition="" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' "">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>0</WarningLevel>
+    <MtouchDebug>True</MtouchDebug>
+    <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchArch>i386, x86_64</MtouchArch>
+    <MtouchLink>None</MtouchLink>
+  </PropertyGroup>
+  <PropertyGroup Condition="" '$(Configuration)|$(Platform)' == 'Debug|iPhone' "">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>0</WarningLevel>
+    <MtouchDebug>True</MtouchDebug>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
+    <MtouchLink>Full</MtouchLink>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include=""System"" />
+    <Reference Include=""System.Xml"" />
+    <Reference Include=""System.Core"" />
+    <Reference Include=""Xamarin.iOS"" />
+    <Reference Include=""MonoTouch.NUnitLite"" />
+" + (csproj_references == null ? string.Empty : string.Join ("\n", csproj_references.Select ((v) => "    <Reference Include=\"" + v + "\" />\n"))) + @"
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=""Info.plist"">
+      <LogicalName>Info.plist</LogicalName>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include=""testfile.cs"" />
+  </ItemGroup>
+  <Import Project=""$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets"" />
+</Project>";
+
+			var tmpdir = Cache.CreateTemporaryDirectory ();
+			var csprojpath = Path.Combine (tmpdir, "testapp.csproj");
+			var testfilepath = Path.Combine (tmpdir, "testfile.cs");
+			var infoplistpath = Path.Combine (tmpdir, "Info.plist");
+			File.WriteAllText (csprojpath, csproj);
+			File.WriteAllText (testfilepath, testfile);
+			File.WriteAllText (infoplistpath, MTouchTool.CreatePlist (profile, "testapp"));
+			XBuild.Build (csprojpath, configuration, platform);
+			var environment_variables = new Dictionary<string, string> ();
+			if (!clean_simulator)
+				environment_variables ["SKIP_SIMULATOR_SETUP"] = "1";
+			ExecutionHelper.Execute ("mono", $"{Quote (Path.Combine (Configuration.RootPath, "tests", "xharness", "xharness.exe"))} --run {Quote (csprojpath)} --target ios-simulator-64 --sdkroot {Configuration.xcode_root} --logdirectory {Quote (Path.Combine (tmpdir, "log.txt"))} --configuration {configuration}", environmentVariables: environment_variables);
+		}
+
 		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null)
 		{
 			if (code == null)

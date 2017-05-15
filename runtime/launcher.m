@@ -18,7 +18,6 @@
 	bool xamarin_enable_debug = 0;
 #endif
 
-static const char *exe_path = NULL;
 static char original_working_directory_path [MAXPATHLEN];
 
 extern "C" const char * const
@@ -310,8 +309,16 @@ update_environment (xamarin_initialize_data *data)
 		return;
 
 	// 3) Ensure the following environment variables are set: [...]
-	NSString *res_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/Resources"];
-	NSString *monobundle_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/MonoBundle"];
+	NSString *res_dir;
+	NSString *monobundle_dir;
+
+	if (data->launch_mode == XamarinLaunchModeEmbedded) {
+		monobundle_dir = [data->app_dir stringByAppendingPathComponent: @"Versions/Current/MonoBundle"];
+		res_dir = [data->app_dir stringByAppendingPathComponent: @"Versions/Current/Resources"];
+	} else {
+		monobundle_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/MonoBundle"];
+		res_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/Resources"];
+	}
 
 #ifdef DYNAMIC_MONO_RUNTIME
 	NSString *bin_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/MacOS"];
@@ -363,12 +370,12 @@ update_environment (xamarin_initialize_data *data)
 }
 
 static void
-app_initialize (xamarin_initialize_data *data, bool is_extension)
+app_initialize (xamarin_initialize_data *data)
 {
 	// The launch code here is publicly documented in xamarin/launch.h
 	// The numbers in the comments refer to numbers in xamarin/launch.h.
 
-	xamarin_is_extension = is_extension;
+	xamarin_launch_mode = data->launch_mode;
 
 #ifndef SYSTEM_LAUNCHER
 	if (xammac_setup ()) {
@@ -379,7 +386,14 @@ app_initialize (xamarin_initialize_data *data, bool is_extension)
 
 	bool mkbundle = xamarin_get_is_mkbundle ();
 
-	data->app_dir = [[NSBundle mainBundle] bundlePath]; // this is good until the autorelease pool releases the bundlePath string.
+	NSBundle *bundle;
+
+	if (data->launch_mode == XamarinLaunchModeEmbedded) {
+		bundle = [NSBundle bundleForClass: [XamarinAssociatedObject class]];
+	} else {
+		bundle = [NSBundle mainBundle];
+	}
+	data->app_dir = [bundle bundlePath]; // this is good until the autorelease pool releases the bundlePath string.
 
 	// 1) If found, call the custom initialization function (xamarin_custom_initialize)
 	xamarin_custom_initialize_func init = (xamarin_custom_initialize_func) dlsym (RTLD_MAIN_ONLY, "xamarin_app_initialize");
@@ -441,8 +455,9 @@ app_initialize (xamarin_initialize_data *data, bool is_extension)
 	mono_version = mono_get_runtime_build_info ();
 	if (!check_mono_version (mono_version, [minVersion UTF8String]))
 		exit_with_message ([[NSString stringWithFormat:@"This application requires the Mono framework version %@ or newer.", minVersion] UTF8String], data->basename, true);
+
 	// 6) Find the executable. The name is: [...]
-	if (!is_extension) {
+	if (data->launch_mode == XamarinLaunchModeApp) {
 		NSString *exeName = NULL;
 		NSString *exePath;
 		if (plist != NULL)
@@ -460,27 +475,15 @@ app_initialize (xamarin_initialize_data *data, bool is_extension)
 
 			if (!xamarin_file_exists ([exePath UTF8String]))
 				exit_with_message ([[NSString stringWithFormat:@"Could not find the executable '%@'\n\nFull path: %@", exeName, exePath] UTF8String], data->basename, false);
-			}
-			exe_path = strdup ([exePath UTF8String]);
-		 } else {
+		}
+		xamarin_entry_assembly_path = strdup ([exePath UTF8String]);
+	} else {
+		NSString *dllName = [[NSString stringWithUTF8String: data->basename] stringByAppendingString: @".dll"];
+		NSString *dllPath = [[[NSString stringWithUTF8String: xamarin_get_bundle_path ()] stringByAppendingString: @"/"] stringByAppendingString: dllName];
+		if (!xamarin_file_exists ([dllPath UTF8String]))
+				exit_with_message ([[NSString stringWithFormat:@"Could not find the extension library '%@'\n\nFull path: %@", dllName, dllPath] UTF8String], data->basename, false);
 
-		mono_jit_init_version ("EmbeddedXamarinMac", "v4.0.0.0");
-
-		MonoAssembly *assembly = xamarin_open_assembly ("Xamarin.Mac.dll");
-		if (!assembly)
-			xamarin_assertion_message ("Failed to load %s.", "Xamarin.Mac.dll");
-
-		MonoImage *image = mono_assembly_get_image (assembly);
-
-		MonoClass *app_class = mono_class_from_name (image, "AppKit", "NSApplication");
-		if (!app_class)
-			xamarin_assertion_message ("Fatal error: failed to load the NSApplication class");
-
-		MonoMethod *initialize = mono_class_get_method_from_name (app_class, "Init", 0);
-		if (!initialize)
-			xamarin_assertion_message ("Fatal error: failed to load the NSApplication init method");
-
-		mono_runtime_invoke (initialize, NULL, NULL, NULL);
+		xamarin_entry_assembly_path = strdup ([dllPath UTF8String]);
 	}
 
 	// 7a) [If not embedding] Parse the system Mono's config file ($monodir/etc/mono/config).
@@ -530,11 +533,41 @@ app_initialize (xamarin_initialize_data *data, bool is_extension)
 
 #define __XAMARIN_MAC_RELAUNCH_APP__ "__XAMARIN_MAC_RELAUNCH_APP__"
 
+static void
+run_application_init (xamarin_initialize_data *data)
+{
+	if (!xamarin_file_exists (xamarin_entry_assembly_path))
+		exit_with_message ([[NSString stringWithFormat:@"Could not find the assembly '%s'", xamarin_entry_assembly_path] UTF8String], data->basename, false);
+
+	// Make sure any output from mono isn't lost when launching extensions,
+	// etc, by installing the log callbacks early (xamarin_initialize will
+	// also do this, but if something goes wrong before we reach
+	// xamarin_initialize when running as an extension, the output will be
+	// lost).
+	xamarin_install_log_callbacks ();
+
+	mono_jit_init (xamarin_entry_assembly_path);
+
+	MonoAssembly *assembly = xamarin_open_assembly ("Xamarin.Mac.dll");
+	if (!assembly)
+		xamarin_assertion_message ("Failed to load %s.", "Xamarin.Mac.dll");
+
+	MonoImage *image = mono_assembly_get_image (assembly);
+
+	MonoClass *app_class = mono_class_from_name (image, "AppKit", "NSApplication");
+	if (!app_class)
+		xamarin_assertion_message ("Fatal error: failed to load the NSApplication class");
+
+	MonoMethod *initialize = mono_class_get_method_from_name (app_class, "Init", 0);
+	if (!initialize)
+		xamarin_assertion_message ("Fatal error: failed to load the NSApplication.Init method");
+
+	mono_runtime_invoke (initialize, NULL, NULL, NULL);
+}
+
 int xamarin_main (int argc, char **argv, enum XamarinLaunchMode launch_mode)
 {
 	xamarin_initialize_data data = { 0 };
-
-	bool is_extension = launch_mode == XamarinLaunchModeExtension;
 
 	if (getcwd (original_working_directory_path, sizeof (original_working_directory_path)) == NULL)
 		original_working_directory_path [0] = '\0';
@@ -543,6 +576,7 @@ int xamarin_main (int argc, char **argv, enum XamarinLaunchMode launch_mode)
 		data.size = sizeof (data);
 		data.argc = argc;
 		data.argv = argv;
+		data.launch_mode = launch_mode;
 		// basename = Path.GetFileName (argv [0])
 		if (!(data.basename = strrchr (argv [0], '/'))) {
 			data.basename = argv [0];
@@ -554,7 +588,7 @@ int xamarin_main (int argc, char **argv, enum XamarinLaunchMode launch_mode)
 		if (data.is_relaunch)
 			unsetenv (__XAMARIN_MAC_RELAUNCH_APP__);
 
-		app_initialize (&data, is_extension);
+		app_initialize (&data);
 
 		if (data.exit)
 			return data.exit_code;
@@ -591,7 +625,7 @@ int xamarin_main (int argc, char **argv, enum XamarinLaunchMode launch_mode)
 			*ptr++ = "--hybrid-aot";
 
 		// executable assembly
-		*ptr++ = exe_path;
+		*ptr++ = xamarin_entry_assembly_path;
 
 		// the rest
 		for (int i = 1; i < argc; i++)
@@ -600,6 +634,8 @@ int xamarin_main (int argc, char **argv, enum XamarinLaunchMode launch_mode)
 
 		switch (launch_mode) {
 		case XamarinLaunchModeExtension: {
+			run_application_init (&data);
+
 			void * libExtensionHandle = dlopen ("/usr/lib/libextension.dylib", RTLD_LAZY);
 			if (libExtensionHandle == nil)
 				exit_with_message ("Unable to load libextension.dylib", data.basename, false);
@@ -619,7 +655,7 @@ int xamarin_main (int argc, char **argv, enum XamarinLaunchMode launch_mode)
 			rv = mono_main (new_argc, new_argv);
 			break;
 		case XamarinLaunchModeEmbedded:
-			// do nothing
+			run_application_init (&data);
 			break;
 		default:
 			xamarin_assertion_message ("Invalid launch mode: %i.", launch_mode);
@@ -639,5 +675,5 @@ int main (int argc, char **argv)
 
 int xamarin_mac_extension_main (int argc, char **argv)
 {
-	return xamarin_main (argc, argv, XamarinLaunchModeEmbedded);
+	return xamarin_main (argc, argv, XamarinLaunchModeExtension);
 }

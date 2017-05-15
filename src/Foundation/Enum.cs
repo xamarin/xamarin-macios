@@ -1203,6 +1203,7 @@ namespace XamCore.Foundation  {
 		Abbreviated
 	}
 
+#if MONOMAC
 	[Mac (10,11)][NoWatch][NoTV][NoiOS]
 	[Native]
 	[Flags]
@@ -1211,6 +1212,7 @@ namespace XamCore.Foundation  {
 		AllPartitionsAndEjectDisk = 1 << 0,
 		WithoutUI = 1 << 1
 	}
+#endif
 
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
