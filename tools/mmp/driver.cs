@@ -477,7 +477,7 @@ namespace Xamarin.Bundler {
 			if (IsUnified == IsClassic || (IsUnified && IsUnifiedCount != 1))
 				throw new Exception ("IsClassic/IsUnified/IsUnifiedMobile/IsUnifiedFullSystemFramework/IsUnifiedFullXamMacFramework logic regression");
 
-			ValidateXamarinMacRefernce ();
+			ValidateXamarinMacReference ();
 
 			if ((IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework) && (App.LinkMode != LinkMode.None))
 				throw new MonoMacException (2007, true,
@@ -528,7 +528,7 @@ namespace Xamarin.Bundler {
 			Log ("bundling complete");
 		}
 
-		static void ValidateXamarinMacRefernce ()
+		static void ValidateXamarinMacReference ()
 		{
 			// Many Xamarin.Mac references are technically valid, so whitelisting risks breaking working project
 			// However, passing in Mobile / Xamarin.Mac folders and resolving full/4.5 or vice versa is 
