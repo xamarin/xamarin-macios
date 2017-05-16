@@ -61,6 +61,10 @@ The path passed using `--sdkroot` does not specify a valid Xcode app. Please spe
 
 <h3><a name="MM0060">MM0060: Could not find the currently selected Xcode on the system. 'xcode-select --print-path' returned '{0}', but that directory does not exist.</h3>
 
+<h3><a name="MM0062">MM0062: No Xcode.app specified (using --sdkroot or 'xcode-select --print-path'), using the default Xcode instead: *</h3>
+
+This is a informational warning, explaining which Xcode will be used, since none was specified.
+
 <h3><a name="MM0068">MM0068: Invalid value for target framework: {0}.</h3>
 
 <h3><a name="MM0079">MM0079: Internal Error - No executable was copied into the app bundle. Please contact 'support@xamarin.com'</h3>
