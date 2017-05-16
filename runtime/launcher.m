@@ -623,11 +623,11 @@ int xamarin_main (int argc, char **argv, enum XamarinLaunchMode launch_mode)
 			new_argc--;
 		}
 
-		// executable assembly
-		*ptr++ = xamarin_entry_assembly_path;
-
 		if (xamarin_mac_hybrid_aot)
 			*ptr++ = "--hybrid-aot";
+
+		// executable assembly
+		*ptr++ = xamarin_entry_assembly_path;
 
 		// the rest
 		for (int i = 1; i < argc; i++)

@@ -532,6 +532,8 @@ For instance: this condition occurs when an extension builds for ARMv7+llvm+thum
 
 Native code sharing requires that all the projects that share code use the same versions for all assemblies.
 
+<!-- MT0114: used by mmp -->
+
 <h3><a name="MT0125"/>MT0125: The --assembly-build-target command-line argument is ignored in the simulator.</h3>
 
 No action is required, this message is purely informational.
