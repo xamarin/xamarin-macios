@@ -36,6 +36,7 @@
 		<string>mono-symbol-archive</string>
 		<string>sgen-concurrent-gc</string>
 		<string>link-platform</string>
+		<string>hybrid-aot</string>
 	</array>
 </dict>
 </plist>

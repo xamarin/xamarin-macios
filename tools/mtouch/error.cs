@@ -5,8 +5,6 @@ using System.Collections.Generic;
 
 namespace Xamarin.Bundler {
 
-	// Error allocation: the errors are listed (and documented) in $(TOP)/docs/website/mtouch-errors.md
-
 	public class MonoTouchException : Exception {
 		
 		public MonoTouchException (int code, string message, params object[] args) : 

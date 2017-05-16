@@ -5,9 +5,6 @@ using System;
 using System.Collections.Generic;
 
 namespace Xamarin.Bundler {
-	
-	// Error allocation: the errors are listed (and documented) in $(TOP)/docs/website/mmp-errors.md
-
 	public class MonoMacException : Exception {
 		
 		public MonoMacException (int code, string message, params object[] args) : 

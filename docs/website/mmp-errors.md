@@ -72,6 +72,8 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 <h3><a name="MM0099">MM0099: Internal error {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).</h3>
 
+<h3><a name="MM0114">MM0114: Hybrid AOT compilation requires all assemblies to be AOT compiled.</h3>
+
 # MM1xxx: file copy / symlinks (project related)
 
 <h3><a name="MM1034">MM1034: Could not create symlink '{file}' -> '{target}': error {number}</h3>
