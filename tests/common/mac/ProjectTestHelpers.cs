@@ -240,7 +240,7 @@ namespace Xamarin.MMP.Tests
 		public static OutputText TestClassicExecutable (string tmpDir, string testCode = "", string csprojConfig = "", bool shouldFail = false, bool includeMonoRuntime = false)
 		{
 			Guid guid = Guid.NewGuid ();
-			string csprojTarget = GenerateClassicEXEProject (tmpDir, "ClassicExample.csproj", testCode + GenerateOuputCommand (tmpDir,guid), csprojConfig, includeMonoRuntime: includeMonoRuntime);
+			string csprojTarget = GenerateClassicEXEProject (tmpDir, "ClassicExample.csproj", testCode + GenerateOutputCommand (tmpDir,guid), csprojConfig, includeMonoRuntime: includeMonoRuntime);
 			string buildOutput = BuildProject (csprojTarget, isUnified : false, diagnosticMSBuild: false, shouldFail : shouldFail);
 			if (shouldFail)
 				return new OutputText (buildOutput, "");
