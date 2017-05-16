@@ -193,20 +193,14 @@ namespace XamCore.ObjCRuntime {
 			return type;
 		}
 #else
-		[Register ("__internal__xamarin_runtimeoptions_bundlefinder")]
-		class BundleFinder : NSObject {
-			public BundleFinder ()
-			{
-				IsDirectBinding = false;
-			}
-		}
 
 		internal static RuntimeOptions Read ()
 		{
 			// for iOS NSBundle.ResourcePath returns the path to the root of the app bundle
 			// for macOS apps NSBundle.ResourcePath returns foo.app/Contents/Resources
 			// for macOS frameworks NSBundle.ResourcePath returns foo.app/Versions/Current/Resources
-			var resource_dir = NSBundle.FromClass (new Class (typeof (BundleFinder))).ResourcePath;
+			Class bundle_finder = new Class (typeof (NSObject.NSObject_Disposer));
+			var resource_dir = NSBundle.FromClass (bundle_finder).ResourcePath;
 			var plist_path = GetFileName (resource_dir);
 
 			if (!File.Exists (plist_path))
