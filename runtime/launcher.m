@@ -227,6 +227,8 @@ exit_with_message (const char *reason, const char *argv0, bool request_mono)
 	NSString *fmt = request_mono ? @"%s\n\nPlease download and install the latest version of Mono." : @"%s\n";
 	NSString *msg = [NSString stringWithFormat:fmt, reason]; 
 	[alert setInformativeText:msg];
+	NSLog (@"%@", msg);
+	
 	if (request_mono) {
 		[alert addButtonWithTitle:@"Download Mono Framework"];
 		[alert addButtonWithTitle:@"Cancel"];
