@@ -71,6 +71,7 @@
     </Compile>
     <Compile Include="src\FrameworkLinksTests.cs" />
     <Compile Include="src\TargetFrameworkDetectionTests.cs" />
+    <Compile Include="src\Extensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

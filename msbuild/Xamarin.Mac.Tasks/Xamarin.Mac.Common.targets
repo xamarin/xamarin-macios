@@ -504,7 +504,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			I18n="$(I18n)"
 			Profiling="$(Profiling)"
 			ExtraArguments="$(MonoBundlingExtraArgs)"
-			NativeReferences="%(NativeReference.FullPath)"
+			NativeReferences="@(NativeReference)"
 			ExplicitReferences="@(ReferencePath)"
 			SdkRoot="$(_SdkDevPath)"
 			IntermediateOutputPath="$(IntermediateOutputPath)mmp-cache"
