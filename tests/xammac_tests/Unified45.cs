@@ -24,7 +24,7 @@ namespace MonoTouchFixtures.Net45 {
 
 			TI.BuildProject (testFolder + "/Protobuf_Test.csproj", true);
 
-			TI.RunAndAssert (testFolder + "/bin/Debug/Protobuf_Test.app/Contents/MacOS/Protobuf_Test", null, "Run");
+			TI.RunAndAssert (testFolder + "/bin/Debug/Protobuf_Test.app/Contents/MacOS/Protobuf_Test", (string)null, "Run");
 			Assert.True (File.Exists (testResults));
 
 			using (TextReader reader = File.OpenText (testResults)) {
@@ -50,7 +50,7 @@ namespace MonoTouchFixtures.Net45 {
 
 			TI.BuildProject (testFolder + "/ImmutableCollection_Test.csproj", true);
 
-			TI.RunAndAssert (testFolder + "/bin/Debug/ImmutableCollection_Test.app/Contents/MacOS/ImmutableCollection_Test", null, "Run");
+			TI.RunAndAssert (testFolder + "/bin/Debug/ImmutableCollection_Test.app/Contents/MacOS/ImmutableCollection_Test", (string)null, "Run");
 		}
 
 		[Test]
@@ -70,7 +70,7 @@ namespace MonoTouchFixtures.Net45 {
 
 			TI.BuildProject (testFolder + "/BasicPCLTest.csproj", true);
 
-			TI.RunAndAssert (testFolder + "/bin/Debug/BasicPCLTest.app/Contents/MacOS/BasicPCLTest", null, "Run");
+			TI.RunAndAssert (testFolder + "/bin/Debug/BasicPCLTest.app/Contents/MacOS/BasicPCLTest", (string)null, "Run");
 			Assert.True (File.Exists (testResults));
 
 			using (TextReader reader = File.OpenText (testResults)) {

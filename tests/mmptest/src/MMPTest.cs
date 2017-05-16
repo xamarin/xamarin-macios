@@ -512,9 +512,6 @@ namespace Xamarin.MMP.Tests
 					TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--resource=Foo.bar</MonoBundlingExtraArgs>", XM45 = xm45 };
 					TI.GenerateAndBuildUnifiedExecutable (test, shouldFail: true);
 
-					string generatedProjectPath = Path.Combine (tmpDir, TI.GetUnifiedExecutableProjectName (test));
-					string generatedMainPath = Path.Combine (tmpDir, "main.cs");
-
 					// Next, build again without the error MonoBundlingExtraArgs
 					test.CSProjConfig = "";
 					TI.GenerateUnifiedExecutableProject (test);

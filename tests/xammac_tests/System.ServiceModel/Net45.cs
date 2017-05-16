@@ -48,7 +48,7 @@ namespace MonoTouchFixtures.ServiceModel {
 
 			TI.BuildProject (testFolder + "/ServiceModel_Test.csproj", true);
 
-			TI.RunAndAssert (testFolder + "/bin/Debug/ServiceModel_Test.app/Contents/MacOS/ServiceModel_Test", null, "Run");
+			TI.RunAndAssert (testFolder + "/bin/Debug/ServiceModel_Test.app/Contents/MacOS/ServiceModel_Test", (StringBuilder)null, "Run");
 			Assert.True (File.Exists (testResults));
 
 			using (TextReader reader = File.OpenText (testResults)) {

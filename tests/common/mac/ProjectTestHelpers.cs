@@ -84,7 +84,7 @@ namespace Xamarin.MMP.Tests
 			return new Version (versionRegex.Match (output).Value.Split (' ')[2]);
 		}
 
-		public static string RunAndAssert (string exe, string args, string stepName, bool shouldFail = false, Func<string> getAdditionalFailInfo = null)
+		public static string RunAndAssert (string exe, StringBuilder args, string stepName, bool shouldFail = false, Func<string> getAdditionalFailInfo = null)
 		{
 			StringBuilder output = new StringBuilder ();
 			Environment.SetEnvironmentVariable ("MONO_PATH", null);
@@ -149,12 +149,17 @@ namespace Xamarin.MMP.Tests
 			return text.Replace ("%CODE%", config.CSProjConfig).Replace ("%REFERENCES%", config.References).Replace ("%NAME%", config.AssemblyName ?? Path.GetFileNameWithoutExtension (config.ProjectName)).Replace ("%ITEMGROUP%", config.ItemGroup);
 		}
 
-		static string RunEXEAndVerifyGUID (string tmpDir, Guid guid, string path)
+		public static string RunEXEAndVerifyGUID (string tmpDir, Guid guid, string path)
 		{
 			// Assert that the program actually runs and returns our guid
 			Assert.IsTrue (File.Exists (path), string.Format ("{0} did not generate an exe?", path));
-			string output = RunAndAssert (path, (string)null, "Run");
-			Assert.IsTrue(File.Exists (Path.Combine (tmpDir, guid.ToString ())), "Generated program did not create expected guid file: " + output);
+			string output = RunAndAssert (path, (StringBuilder)null, "Run");
+
+			string guidPath = Path.Combine (tmpDir, guid.ToString ());
+			Assert.IsTrue(File.Exists (guidPath), "Generated program did not create expected guid file: " + output);
+
+			// Let's delete the guid file so re-runs inside same tests are accurate
+			File.Delete (guidPath);
 			return output;
 		}
 
