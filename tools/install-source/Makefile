@@ -18,17 +18,15 @@ MONO_CECIL_DLL=$(CECIL_PATH)/bin/$(CECIL_CONFIG)/Mono.Cecil.dll
 MONO_CECIL_FILES=$(wildcard $(CECIL_PATH)/*.cs) $(wildcard $(CECIL_PATH)/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*/*/*.cs)
 MONO_CECIL_PDB_FILES=$(wildcard $(CECIL_PATH)/symbols/pdb/*.cs) $(wildcard $(CECIL_PATH)/symbols/pdb/*/*.cs) $(wildcard $(CECIL_PATH)/symbols/pdb/*/*/*.cs) $(wildcard $(CECIL_PATH)/symbols/pdb/*/*/*/*.cs) $(wildcard $(CECIL_PATH)/symbols/pdb/*/*/*/*/*.cs)
 
-$(MONO_CECIL_PDB_DLL): $(CECIL_PATH)/symbols/pdb/Mono.Cecil.Pdb.csproj $(MONO_CECIL_PDB_FILES)
-	$(Q_XBUILD) cd $(CECIL_PATH)/symbols/pdb/ && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) Mono.Cecil.Pdb.csproj $(XBUILD_VERBOSITY)
-
 Mono.Cecil.Pdb.dll: $(MONO_CECIL_PDB_DLL)
-	(Q) cp $(CECIL_PATH)/symbols/pdb/obj/$(CECIL_CONFIG)/*.dll $(dir $@)
+	$(Q_XBUILD) cd $(CECIL_PATH)/symbols/pdb/ && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) Mono.Cecil.Pdb.csproj $(XBUILD_VERBOSITY)
+	$(Q) cp $(CECIL_PATH)/symbols/pdb/obj/$(CECIL_CONFIG)/*.dll $(dir $@)
 
 $(MONO_CECIL_DLL): $(CECIL_PATH)/Mono.Cecil.csproj $(MONO_CECIL_FILES)
 	$(Q_XBUILD) cd $(CECIL_PATH) && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) Mono.Cecil.csproj $(XBUILD_VERBOSITY)
 
 Mono.Cecil.dll: $(MONO_CECIL_DLL)
-	(Q) cp $<* $(dir $@)
+	$(Q) cp $<* $(dir $@)
 
 IOS_ASSEMBLIES = \
 	$(wildcard $(MONO_PATH)/mcs/class/lib/monotouch/*.pdb) \
@@ -54,27 +52,12 @@ MAC_MDB_FILES = \
 
 install-source-ios: install-source.exe
 	@echo "Installing source files for Xamarin.iOS"
-	$(Q) $(SYSTEM_MONO) install-source.exe $(IOS_ASSEMBLIES) --link:$(USE_SOURCE_LINKS) --mono-path=$(abspath $(MONO_PATH)) --opentk-path=$(abspath $(OPENTK_PATH)/Source) --xamarin-path=$(abspath $(SRC_PATH)) --install-dir=$(abspath $(IOS_DESTDIR))$(abspath $(MONOTOUCH_PREFIX))
-	@echo "Rebasing the Xamarin.iOS mdb files."
-	for mdb_file in $(IOS_MDB_FILES); do \
-		$(MDB_REBASE) -q -i $(abspath $(TOP)/src)/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/ $$mdb_file ; \
-		$(MDB_REBASE) -q -i $(abspath $(TOP)/runtime)/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/runtime/ $$mdb_file ; \
-		$(MDB_REBASE) -q -i $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/build/ios/native/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/ $$mdb_file ; \
-		chmod 0644 $$mdb_file ; \
-	done
+	$(Q) $(SYSTEM_MONO) install-source.exe $(IOS_ASSEMBLIES) -v --link:$(USE_SOURCE_LINKS) --mono-path=$(abspath $(MONO_PATH)) --opentk-path=$(abspath $(OPENTK_PATH)/Source) --xamarin-path=$(abspath $(SRC_PATH)) --install-dir=$(abspath $(IOS_DESTDIR))$(abspath $(MONOTOUCH_PREFIX))
 
 install-source-mac: install-source.exe
 	@echo "Installing source files for Xamarin.Mac"
-	$(Q) $(SYSTEM_MONO) install-source.exe $(MAC_ASSEMBLIES) --link:$(USE_SOURCE_LINKS) --mono-path=$(abspath $(MONO_PATH)) --opentk-path=$(abspath $(OPENTK_PATH)/Source) --xamarin-path=$(abspath $(SRC_PATH)) --install-dir=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR))
-	@echo "Rebasing the Xamarin.Mac mdb files."
-	for mdb_file in $(MAC_MDB_FILES); do \
-		$(MDB_REBASE) -q -i $(abspath $(TOP)/external/mono)/ -o $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/mono/ $$mdb_file ; \
-		$(MDB_REBASE) -q -i $(abspath $(TOP)/runtime)/ -o $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/Xamarin.Mac/runtime/ $$mdb_file ; \
-		$(MDB_REBASE) -q -i $(abspath $(TOP)/src)/ -o $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/Xamarin.Mac/ $$mdb_file ; \
-		$(MDB_REBASE) -q -i $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/Xamarin.Mac/build/mac/full/ -o $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/Xamarin.Mac/ $$mdb_file ; \
-		$(MDB_REBASE) -q -i $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/Xamarin.Mac/build/mac/mobile/ -o $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/Xamarin.Mac/ $$mdb_file ; \
-		chmod 0644 $$mdb_file ; \
-	done
+	$(Q) $(SYSTEM_MONO) install-source.exe $(MAC_ASSEMBLIES) -v --link:$(USE_SOURCE_LINKS) --mono-path=$(abspath $(MONO_PATH)) --opentk-path=$(abspath $(OPENTK_PATH)/Source) --xamarin-path=$(abspath $(SRC_PATH)) --install-dir=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR))
+
 
 IOS_SOURCES = \
 	IPathMangler.cs \
