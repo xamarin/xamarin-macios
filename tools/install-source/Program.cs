@@ -41,25 +41,22 @@ public class ListSourceFiles {
 		return path;
 	}
 
-    // returns a tuple with the pdb files as the first value and the mdb files as the second
-    public static Tuple <HashSet<String>, HashSet<String>> GetSplittedPaths (List<string> paths)
-    {
-        var splittedPaths = new Tuple<HashSet<String>, HashSet<String>> (
-            new HashSet<string> (), new HashSet<string> ());
-        foreach (var p in paths) {
-            if (p.EndsWith(".pdb", StringComparison.Ordinal)) {
-                Console.WriteLine ("Adding file {p} to pdb list");
-                splittedPaths.Item1.Add (p);
-                continue;
-            }
-            if (p.EndsWith(".mdb", StringComparison.Ordinal)) {
-				Console.WriteLine("Adding file {p} to mdb list");
+	// returns a tuple with the pdb files as the first value and the mdb files as the second
+	public static Tuple <HashSet<String>, HashSet<String>> GetSplittedPaths (List<string> paths)
+	{
+		var splittedPaths = new Tuple<HashSet<String>, HashSet<String>> (new HashSet<string> (), new HashSet<string> ());
+		foreach (var p in paths) {
+			if (p.EndsWith(".pdb", StringComparison.Ordinal)) {
+				splittedPaths.Item1.Add (p);
+				continue;
+			}
+			if (p.EndsWith(".mdb", StringComparison.Ordinal)) {
 				splittedPaths.Item2.Add (p);
-                continue;
-            }
-        }
-        return splittedPaths;
-    }
+				continue;
+			}
+		}
+		return splittedPaths;
+	}
 
 	// returns the source paths used to create an assembly that has an mdb file
 	public static HashSet<String> GetFilePathsFromMdb(string mdb_file)
@@ -81,22 +78,20 @@ public class ListSourceFiles {
 		return srcs;
 	}
 
-    // returns the source paths used to create an assembly that has a pdb file
-    public static HashSet<String> GetFilePathsFromPdb (string pdbFile)
-    {
-        var assemblyPath = pdbFile.Replace (".pdb", ".dll");
-        Console.WriteLine ($"Path is {assemblyPath}");
-        var pdb = assemblyPath + ".pdb";
-        Console.WriteLine($"Pdb file is {pdb}");
+	// returns the source paths used to create an assembly that has a pdb file
+	public static HashSet<String> GetFilePathsFromPdb (string pdbFile)
+	{
+		var assemblyPath = pdbFile.Replace (".pdb", ".dll");
+		var pdb = assemblyPath + ".pdb";
 
 		var result = new HashSet<String>(StringComparer.OrdinalIgnoreCase);
 
-        if (!File.Exists(assemblyPath + ".pdb"))
-            return result;
-        
+		if (!File.Exists(assemblyPath + ".pdb"))
+			return result;
+
 		var assemblyResolver = new DefaultAssemblyResolver();
 		var assemblyLocation = Path.GetDirectoryName(assemblyPath);
-        assemblyResolver.AddSearchDirectory(assemblyLocation);
+		assemblyResolver.AddSearchDirectory(assemblyLocation);
 
 		var readerParameters = new ReaderParameters { AssemblyResolver = assemblyResolver };
 		var writerParameters = new WriterParameters();
@@ -106,30 +101,19 @@ public class ListSourceFiles {
 		readerParameters.ReadSymbols = true;
 
 		var assemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyPath, readerParameters);
-
-		Console.WriteLine("Main module custom attrs.");
-		foreach (var attr in assemblyDefinition.MainModule.CustomAttributes)
-		{
-			Console.WriteLine($"Attr type is {attr.AttributeType}");
-			Console.WriteLine(attr.AttributeType);
-		}
 		var mainModule = assemblyDefinition.MainModule;
 		foreach (var type in mainModule.Types)
 		{
-			foreach (var method in type.Methods)
-			{
-                if (method.DebugInformation.SequencePoints.Any ())
-				{
+			foreach (var method in type.Methods) {
+				if (method.DebugInformation.SequencePoints.Any ()) {
 					var sequence_point = method.DebugInformation.SequencePoints[0];
 					var document = sequence_point.Document;
-					Console.WriteLine(document.Url);
-                    result.Add (document.Url);
+					result.Add (document.Url);
 				}
 			}
 		}
-
-        return result;
-    }
+		return result;
+	}
 
 	public static int Main (string[] arguments)
 	{
@@ -150,7 +134,7 @@ public class ListSourceFiles {
 		};
 
 		var paths = os.Parse (arguments);
-        var files = GetSplittedPaths (paths);
+		var files = GetSplittedPaths (paths);
 
 		var srcs = new HashSet<string> (StringComparer.OrdinalIgnoreCase);
 
@@ -166,25 +150,24 @@ public class ListSourceFiles {
 			OpenTKSourcePath = opentkpath,
 		};
 
-        // add the paths from the pdb files
-        foreach (string pdbFile in files.Item1) {
-            if (!File.Exists (pdbFile)) {
-                Console.WriteLine ("File does not exist: {0}", pdbFile);
+ 		// add the paths from the pdb files
+		foreach (string pdbFile in files.Item1) {
+			if (!File.Exists (pdbFile)) {
+				Console.WriteLine ("File does not exist: {0}", pdbFile);
 				continue;
 			}
 
-            var assemblySrcs = GetFilePathsFromPdb(pdbFile);
-            srcs.UnionWith(assemblySrcs);
+			var assemblySrcs = GetFilePathsFromPdb(pdbFile);
+			srcs.UnionWith(assemblySrcs);
 		}
 
 		// add the paths from the mdb files
-        foreach (string mdbFile in files.Item2) {
+		foreach (string mdbFile in files.Item2) {
 			if (!File.Exists (mdbFile)) {
 				Console.WriteLine ("File does not exist: {0}", mdbFile);
 				continue;
 			}
-
-            var assemblySrcs = GetFilePathsFromMdb (mdbFile);
+			var assemblySrcs = GetFilePathsFromMdb (mdbFile);
 			srcs.UnionWith(assemblySrcs);
 		}
 
