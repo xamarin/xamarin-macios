@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 cat ../../external/mono/mono/metadata/image.c | grep IGNORED_ASSEMBLY |grep -v define | cut -d ',' -f 2,3 | sed -e 's/^[[:space:]]*//' |  tr -d '"' > temp.txt
 

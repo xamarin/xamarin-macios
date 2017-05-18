@@ -442,7 +442,7 @@ namespace Xamarin.Bundler {
 
 			}
 
-			if (IsUnified) {
+			if (IsUnifiedFullXamMacFramework || IsUnifiedFullSystemFramework) {
 				List<ExclusionItem> exclusionItems = ReadExclusionList ();
 				List<string> referencesToFix = new List<string> ();
 
@@ -455,14 +455,14 @@ namespace Xamarin.Bundler {
 					}
 				}
 				if (referencesToFix.Count > 0) {
-					string facadeRoot = string.Format ("/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/{0}/Facades/", IsUnifiedMobile ? "Xamarin.Mac" : "4.5");
+					string facadeDir = Path.Combine (MMPDirectory, "lib", "mono", "4.5", "Facades");
 
 					FixReferences (asm => referencesToFix.Contains (asm), asm => {
-						string replacement = Path.Combine (facadeRoot, Path.GetFileName (asm));
+						string replacement = Path.Combine (facadeDir, Path.GetFileName (asm));
 						ErrorHelper.Warning (1407, string.Format ("'{0}' is a facade mono has declared problematic and refuses to load. Replacing reference with '{1}'.", asm, replacement));
 						return replacement;
 					});
-              	}
+				}
 			}
 
 			if (IsUnifiedFullSystemFramework || IsClassic) {
@@ -556,7 +556,7 @@ namespace Xamarin.Bundler {
 				}
 				using (var sr = new StreamReader (exclusionStream)) {
 					while (!sr.EndOfStream) {
-						string [] lineParts = sr.ReadLine().Split (new char [] { ':' });
+						string [] lineParts = sr.ReadLine ().Split (new char [] { ':' });
 						exclusionList.Add (new ExclusionItem () { Name = lineParts[0], GUID = new Guid (lineParts[1]) });
 					}
 				}
