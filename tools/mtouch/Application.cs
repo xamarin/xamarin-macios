@@ -1583,7 +1583,7 @@ namespace Xamarin.Bundler {
 				if (isFramework) {
 					// This is a framework
 					if (files.Count != 1)
-						throw ErrorHelper.CreateError (99, "Internal error: 'can't lipo directories'. Please file a bug report with a test case (http://bugzilla.xamarin.com).");
+                        throw ErrorHelper.CreateError (99, $"Internal error: 'can't lipo directories'. {name}:{info}:{targetPath}:{files.Count} Please file a bug report with a test case (http://bugzilla.xamarin.com).");
 					if (info.DylibToFramework)
 						throw ErrorHelper.CreateError (99, "Internal error: 'can't convert frameworks to frameworks'. Please file a bug report with a test case (http://bugzilla.xamarin.com).");
 					var framework_src = files.First ();
