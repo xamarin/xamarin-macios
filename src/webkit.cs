@@ -2651,6 +2651,9 @@ namespace XamCore.WebKit {
 		[Export ("toggleSmartInsertDelete:")]
 		void ToggleSmartInsertDelete (NSObject sender);
 
+		[Export ("setSelectedDOMRange:affinity:")]
+		void SetSelectedDOMRange (DomRange range, NSSelectionAffinity selectionAffinity);
+
 		[Export ("selectedDOMRange")]
 		DomRange SelectedDomRange { get; }
 
