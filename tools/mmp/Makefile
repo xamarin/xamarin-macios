@@ -205,8 +205,8 @@ install-local:: $(MMP_TARGETS)
 all-local:: $(MMP_TARGETS)
 endif
 
-monoExclusionList.txt: ./generateExclusionLish.sh
-	$(Q) ./generateExclusionLish.sh
+monoExclusionList.txt: ./generateExclusionList.sh
+	$(Q) ./generateExclusionList.sh
 
 clean-local::
 	rm -f mmp mmp.exe mmp.exe.mdb mmp-uninstalled
