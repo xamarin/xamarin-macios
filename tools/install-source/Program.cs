@@ -59,15 +59,15 @@ public class ListSourceFiles {
 	}
 
 	// returns the source paths used to create an assembly that has an mdb file
-	public static HashSet<String> GetFilePathsFromMdb(string mdb_file)
+	public static HashSet<String> GetFilePathsFromMdb (string mdb_file)
 	{
-		var srcs = new HashSet<String>();
+		var srcs = new HashSet<String> ();
 		MonoSymbolFile symfile;
 
 		try
 		{
 			symfile = MonoSymbolFile.ReadSymbolFile(mdb_file);
-			srcs.UnionWith(from src in symfile.Sources select src.FileName);
+			srcs.UnionWith (from src in symfile.Sources select src.FileName);
 
 		}
 		catch (IOException ioe)
@@ -84,23 +84,23 @@ public class ListSourceFiles {
 		var assemblyPath = pdbFile.Replace (".pdb", ".dll");
 		var pdb = assemblyPath + ".pdb";
 
-		var result = new HashSet<String>(StringComparer.OrdinalIgnoreCase);
+		var result = new HashSet<String> (StringComparer.OrdinalIgnoreCase);
 
-		if (!File.Exists(assemblyPath + ".pdb"))
+		if (!File.Exists (pdbFile) || !File.Exists (pdbFile))
 			return result;
 
-		var assemblyResolver = new DefaultAssemblyResolver();
-		var assemblyLocation = Path.GetDirectoryName(assemblyPath);
-		assemblyResolver.AddSearchDirectory(assemblyLocation);
+		var assemblyResolver = new DefaultAssemblyResolver ();
+		var assemblyLocation = Path.GetDirectoryName (assemblyPath);
+		assemblyResolver.AddSearchDirectory (assemblyLocation);
 
 		var readerParameters = new ReaderParameters { AssemblyResolver = assemblyResolver };
-		var writerParameters = new WriterParameters();
+		var writerParameters = new WriterParameters ();
 
-		var symbolReaderProvider = new PortablePdbReaderProvider();
+		var symbolReaderProvider = new PortablePdbReaderProvider ();
 		readerParameters.SymbolReaderProvider = symbolReaderProvider;
 		readerParameters.ReadSymbols = true;
 
-		var assemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyPath, readerParameters);
+		var assemblyDefinition = AssemblyDefinition.ReadAssembly (assemblyPath, readerParameters);
 		var mainModule = assemblyDefinition.MainModule;
 		foreach (var type in mainModule.Types)
 		{
