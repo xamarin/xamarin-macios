@@ -2,7 +2,7 @@
 
 cat ../../external/mono/mono/metadata/image.c | grep IGNORED_ASSEMBLY |grep -v define | cut -d ',' -f 2,3 | sed -e 's/^[[:space:]]*//' |  tr -d '"' > temp.txt
 
-rm monoExclusionList.txt
+rm -f monoExclusionList.txt
 cat temp.txt | while read line
 do
    AssemblyName=`echo $line | cut -d ',' -f 1`
