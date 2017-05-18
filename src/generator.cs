@@ -717,6 +717,19 @@ public class NamespaceManager
 		if (Frameworks.HaveMetal && !(Generator.CurrentPlatform == PlatformName.MacOSX && !Generator.UnifiedAPI))
 			ImplicitNamespaces.Add (Get ("Metal"));
 
+		if (Frameworks.HaveCoreImage)
+			ImplicitNamespaces.Add (Get ("CoreImage"));
+		if (Frameworks.HavePhotos)
+			ImplicitNamespaces.Add (Get ("Photos"));
+		if (Frameworks.HaveMediaPlayer && Generator.UnifiedAPI)
+			ImplicitNamespaces.Add (Get ("MediaPlayer"));
+		if (Frameworks.HaveMessages)
+			ImplicitNamespaces.Add (Get ("Messages"));
+		if (Frameworks.HaveGameplayKit)
+			ImplicitNamespaces.Add (Get ("GameplayKit"));
+		if (Frameworks.HaveSpriteKit)
+			ImplicitNamespaces.Add (Get ("SpriteKit"));
+
 		// These are both types and namespaces
 		NamespacesThatConflictWithTypes = new HashSet<string> {
 			Get ("AudioUnit")
