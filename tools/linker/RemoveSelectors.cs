@@ -74,7 +74,7 @@ namespace Xamarin.Linker.Steps {
 				switch (instruction.OpCode.OperandType) {
 				case OperandType.InlineTok:
 				case OperandType.InlineField:
-					var field = instruction.Operand as FieldDefinition;
+					var field = (instruction.Operand as FieldReference)?.Resolve ();
 					if (field == null)
 						continue;
 
@@ -110,7 +110,7 @@ namespace Xamarin.Linker.Steps {
 			if (instruction.OpCode != OpCodes.Stsfld)
 				return false;
 
-			var field = instruction.Operand as FieldDefinition;
+			var field = (instruction.Operand as FieldReference)?.Resolve ();
 			if (field == null)
 				return false;
 
