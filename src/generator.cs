@@ -717,15 +717,15 @@ public class NamespaceManager
 		if (Frameworks.HaveMetal && !(Generator.CurrentPlatform == PlatformName.MacOSX && !Generator.UnifiedAPI))
 			ImplicitNamespaces.Add (Get ("Metal"));
 
-		if (Frameworks.HaveCoreImage && !(Generator.CurrentPlatform == PlatformName.WatchOS))
+		if (Frameworks.HaveCoreImage)
 			ImplicitNamespaces.Add (Get ("CoreImage"));
-		if (Frameworks.HavePhotos && !(Generator.CurrentPlatform == PlatformName.WatchOS))
+		if (Frameworks.HavePhotos)
 			ImplicitNamespaces.Add (Get ("Photos"));
-		if (Frameworks.HaveMediaPlayer && (Generator.CurrentPlatform != PlatformName.WatchOS && Generator.UnifiedAPI))
+		if (Frameworks.HaveMediaPlayer && Generator.UnifiedAPI)
 			ImplicitNamespaces.Add (Get ("MediaPlayer"));
-		if (Frameworks.HaveMessages && Generator.CurrentPlatform != PlatformName.MacOSX && Generator.CurrentPlatform != PlatformName.TvOS && Generator.CurrentPlatform != PlatformName.WatchOS)
+		if (Frameworks.HaveMessages)
 			ImplicitNamespaces.Add (Get ("Messages"));
-		if (Frameworks.HaveGameplayKit && Generator.CurrentPlatform != PlatformName.WatchOS)
+		if (Frameworks.HaveGameplayKit)
 			ImplicitNamespaces.Add (Get ("GameplayKit"));
 		if (Frameworks.HaveSpriteKit)
 			ImplicitNamespaces.Add (Get ("SpriteKit"));
