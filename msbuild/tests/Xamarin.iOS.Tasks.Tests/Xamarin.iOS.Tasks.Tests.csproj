@@ -111,6 +111,7 @@
     <Compile Include="TaskTests\IBToolTaskTests.cs" />
     <Compile Include="ProjectsTests\LinkedAssets.cs" />
     <Compile Include="ProjectsTests\CodesignAppBundle.cs" />
+    <Compile Include="ProjectsTests\BindingReferences.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
