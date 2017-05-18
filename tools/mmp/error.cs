@@ -38,6 +38,7 @@ namespace Xamarin.Bundler {
 	//					MM0097	machine.config file '{0}' can not be found.
 	//					MM0098	AOT compilation is only available on Unified
 	//					MM0099	Internal error {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).
+	//					MM0100	Internal Warning {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).
 	// MM1xxx	file copy / symlinks (project related)
 	//			MM14xx	Product assemblies
 	//					MM1401	The required '{0}' assembly is missing from the references
@@ -46,6 +47,7 @@ namespace Xamarin.Bundler {
 	//					MM1404	Target framework '{0}' is invalid.
 	//					MM1405	useFullXamMacFramework must always target framework .NET 4.5, not '{0}' which is invalid
 	//					MM1406	Target framework '{0}' is invalid when targetting Xamarin.Mac 4.5 .NET framwork.
+	//					MM1407	'{0}' is a facade mono has declared problematic and refuses to load. Replacing reference with '{1}'.", asm, replacement));
 	//			MM15xx	Assembly gathering (not requiring linker) errors
 	//					MM1501	Can not resolve reference: {0}
 	//			MT16xx	MachO.cs
