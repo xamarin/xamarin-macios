@@ -647,6 +647,7 @@
     <Compile Include="System.Net.Http\MessageHandlers.cs" />
     <Compile Include="AVFoundation\PlayerItemVideoOutputTest.cs" />
     <Compile Include="mono\ConfigTest.cs" />
+    <Compile Include="HttpClient\HttpClientTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
@@ -711,6 +712,7 @@
     <Folder Include="CloudKit\" />
     <Folder Include="Intents\" />
     <Folder Include="System.Net.Http\" />
+    <Folder Include="HttpClient\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />
