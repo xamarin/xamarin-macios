@@ -23,5 +23,18 @@ namespace Xamarin.iOS.Tasks {
 			RunTarget (projB, "Build", 0);
 			Assert.IsTrue (File.Exists (dllBPath), "LibraryB binding dll does not exist: {0} ", dllBPath);
 		}
+
+		// https://bugzilla.xamarin.com/show_bug.cgi?id=56317
+		[Test]
+		public void SatelliteAssembliesBug ()
+		{
+			var mtouchPaths = SetupProjectPaths ("iOSBinding", "iOSBinding", "../MySatelliteAssembliesBug/", false);
+
+			var proj = SetupProject (Engine, mtouchPaths ["project_csprojpath"]);
+			var dll = Path.Combine (mtouchPaths.ProjectBinPath, "iOSBinding.dll");
+
+			RunTarget (proj, "Build", 0);
+			Assert.IsTrue (File.Exists (dll), "iOSBinding dll does not exist: {0} ", dll);
+		}
 	}
 }
