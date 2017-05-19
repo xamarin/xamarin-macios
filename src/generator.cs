@@ -2104,7 +2104,7 @@ public partial class Generator : IMemberGatherer {
 			marshal_types.Add (new MarshalType (TypeManager.ABRecord, create: "ABRecord.FromHandle("));
 		}
 		if (Frameworks.HaveCoreVideo)
-			marshal_types.Add (new MarshalType (TypeManager.CVPixelBuffer, create: "Runtime.GetINativeObject<CVPixelBuffer> (", closingCreate: ", false)")); // owns `false` like ptr ctor https://git.io/vHvLj
+			marshal_types.Add (new MarshalType (TypeManager.CVPixelBuffer, create: "Runtime.GetINativeObject<CVPixelBuffer> (", closingCreate: ", false)")); // owns `false` like ptr ctor https://github.com/xamarin/xamarin-macios/blob/6f68ab6f79c5f1d96d2cbb1e697330623164e46d/src/CoreVideo/CVBuffer.cs#L74-L90
 		marshal_types.Add (TypeManager.CGLayer);
 		if (Frameworks.HaveCoreMedia)
 			marshal_types.Add (TypeManager.CMSampleBuffer);

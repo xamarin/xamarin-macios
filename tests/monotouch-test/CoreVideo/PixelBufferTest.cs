@@ -102,6 +102,13 @@ namespace MonoTouchFixtures.CoreVideo {
 			Assert.Throws<ArgumentOutOfRangeException> (() => CVPixelBuffer.Create (width, height, CVPixelFormatType.CV420YpCbCr8BiPlanarVideoRange, data, planeWidths, planeHeights, new nint [] { width }, null), "invalid bytesPerRow");
 			Assert.Throws<ArgumentOutOfRangeException> (() => CVPixelBuffer.Create (width, height, CVPixelFormatType.CV420YpCbCr8BiPlanarVideoRange, data, planeWidths, planeHeights, new nint [] { width, width, width }, null), "invalid bytesPerRow");
 		}
+
+		[Test]
+		public void CheckInvalidPtr ()
+		{
+			var invalid = Runtime.GetINativeObject<CVPixelBuffer> (IntPtr.Zero, false);
+			Assert.Null (invalid, "CheckInvalidPtr");
+		}
 	}
 }
 
