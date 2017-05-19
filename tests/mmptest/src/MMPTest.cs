@@ -14,18 +14,7 @@ namespace Xamarin.MMP.Tests
 	{
 		void RunMMPTest (Action <string> test)
 		{
-			string tmpDir = Path.Combine (Path.GetTempPath (), "mmp-test-dir");
-			try {
-				// Clean out any existing build there first to prevent strange behavior
-				if (Directory.Exists (tmpDir))
-					Directory.Delete (tmpDir, true);
-
-				Directory.CreateDirectory (tmpDir);
-				test (tmpDir);
-			}
-			finally {
-				Directory.Delete (tmpDir, true);
-			}
+			test (Cache.CreateTemporaryDirectory ());
 		}
 
 		// TODO - We have multiple tests using this. It doesn't take that long, but is it worth caching?
