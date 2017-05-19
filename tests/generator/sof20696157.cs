@@ -230,10 +230,8 @@ namespace Test {
 	[Protocol] interface C137 : IAUAudioUnitFactory {}
 	[Protocol] interface C138 : INSKeyedUnarchiverDelegate {}
 	[Protocol] interface C139 : IINStartAudioCallIntentHandling {}
-	// sof20696157.tmpdir/Test/C140.g.cs(92,10): error CS0246: The type or namespace name `CIFormat' could not be found. Are you missing `CoreImage' using directive?
-	// [Protocol] interface C140 : ICIImageProcessorInput {}
-	// sof20696157.tmpdir/Test/C141.g.cs(92,10): error CS0246: The type or namespace name `CIFormat' could not be found. Are you missing `CoreImage' using directive?
-	// [Protocol] interface C141 : ICIImageProcessorOutput {}
+	[Protocol] interface C140 : ICIImageProcessorInput {}
+	[Protocol] interface C141 : ICIImageProcessorOutput {}
 	[Protocol] interface C142 : IPHLivePhotoFrame {}
 	[Protocol] interface C143 : ICIImageProvider {}
 	[Protocol] interface C144 : IUIApplicationDelegate {}
@@ -594,10 +592,8 @@ namespace Test {
 	[Protocol] [BaseType (typeof (NSObject))] interface M137 : IAUAudioUnitFactory {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M138 : INSKeyedUnarchiverDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M139 : IINStartAudioCallIntentHandling {}
-	// sof20696157.tmpdir/Test/M140.g.cs(92,10): error CS0246: The type or namespace name `CIFormat' could not be found. Are you missing `CoreImage' using directive?
-	// [Protocol] [BaseType (typeof (NSObject))] interface M140 : ICIImageProcessorInput {}
-	// sof20696157.tmpdir/Test/M141.g.cs(92,10): error CS0246: The type or namespace name `CIFormat' could not be found. Are you missing `CoreImage' using directive?
-	// [Protocol] [BaseType (typeof (NSObject))] interface M141 : ICIImageProcessorOutput {}
+	[Protocol] [BaseType (typeof (NSObject))] interface M140 : ICIImageProcessorInput {}
+	[Protocol] [BaseType (typeof (NSObject))] interface M141 : ICIImageProcessorOutput {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M142 : IPHLivePhotoFrame {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M143 : ICIImageProvider {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M144 : IUIApplicationDelegate {}
