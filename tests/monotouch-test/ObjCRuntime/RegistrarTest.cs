@@ -2413,6 +2413,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
+#if !MONOMAC // ObjCRegistrarTest is from Bindings.Tests, which is not currently implemented on mac
 		class NullOutParameters : ObjCRegistrarTest
 		{
 			public override void V (out NSObject n1, out NSString n2)
@@ -2429,6 +2430,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				obj.Invoke_V_null_out ();
 		}
 	}
+#endif
 
 #if !__WATCHOS__
 	[Category (typeof (CALayer))]
