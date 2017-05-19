@@ -1,4 +1,0 @@
-﻿using System;
-
-namespace iOSBinding {
-}
