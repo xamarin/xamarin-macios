@@ -455,10 +455,18 @@ namespace Xamarin.Bundler {
 					}
 				}
 				if (referencesToFix.Count > 0) {
-					string facadeDir = Path.Combine (MMPDirectory, "lib", "mono", "4.5", "Facades");
+					string bclDir = Path.Combine (MMPDirectory, "lib", "mono", "4.5");
+					string facadeDir = Path.Combine (bclDir, "Facades");
 
 					FixReferences (asm => referencesToFix.Contains (asm), asm => {
-						string replacement = Path.Combine (facadeDir, Path.GetFileName (asm));
+						string replacement;
+						if (File.Exists (Path.Combine (bclDir, Path.GetFileName (asm))))
+							replacement = Path.Combine (bclDir, Path.GetFileName (asm));
+						else if (File.Exists (Path.Combine (facadeDir, Path.GetFileName (asm))))
+							replacement = Path.Combine (facadeDir, Path.GetFileName (asm));
+						else
+							return asm;
+
 						ErrorHelper.Warning (1407, string.Format ("'{0}' is a facade mono has declared problematic and refuses to load. Replacing reference with '{1}'.", asm, replacement));
 						return replacement;
 					});
