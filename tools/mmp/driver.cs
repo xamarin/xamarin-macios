@@ -1227,6 +1227,8 @@ namespace Xamarin.Bundler {
 				args.Append ("-arch ").Append (arch).Append (' ');
 				if (arch == "x86_64")
 					args.Append ("-fobjc-runtime=macosx ");
+				if (!embed_mono)
+					args.Append ("-DDYNAMIC_MONO_RUNTIME ");
 				bool appendedObjc = false;
 				foreach (var assembly in BuildTarget.Assemblies) {
 					if (assembly.LinkWith != null) {
