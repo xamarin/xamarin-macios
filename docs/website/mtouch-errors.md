@@ -747,6 +747,18 @@ Please unlock the device and try again.
 
 <!-- 1034 used by mmp -->
 
+<h3><a name="MT1035"/>MT1035: Cannot include different versions of the framework '{name}'</h3>
+
+It is not possible to link with different versions of the same framework.
+
+This typically happens when an extension references a different version of a framework than the container app (possibly through a third-party binding assembly).
+
+Following this error there will be multiple [MT1036](#MT1036) errors listing the paths for each different framework.
+
+<h3><a name="MT1036"/>MT1036: Framework '{name}' included from: {path} (Related to previous error)</h3>
+
+This error is reported only together with [MT1036](#MT1036). Please see [MT1036](#MT1036) for more information.
+
 ### MT11xx: Debug Service
 
 <!--
