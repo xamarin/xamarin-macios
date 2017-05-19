@@ -2429,8 +2429,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			using (var obj = new NullOutParameters ())
 				obj.Invoke_V_null_out ();
 		}
-	}
 #endif
+	}
 
 #if !__WATCHOS__
 	[Category (typeof (CALayer))]
