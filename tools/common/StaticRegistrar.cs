@@ -3105,7 +3105,8 @@ namespace XamCore.Registrar {
 							body_setup.AppendLine ("void * handle{0} = NULL;", i);
 							copyback.AppendLine ("if (mobj{0} != NULL)", i);
 							copyback.AppendLine ("handle{0} = xamarin_get_nsobject_handle (mobj{0});", i);
-							copyback.AppendLine ("*p{0} = (id) handle{0};", i);
+							copyback.AppendLine ("if (p{0} != NULL)", i).Indent ();
+							copyback.AppendLine ("*p{0} = (id) handle{0};", i).Unindent ();
 						} else {
 							body_setup.AppendLine ("NSObject *nsobj{0} = NULL;", i);
 							setup_call_stack.AppendLine ("nsobj{0} = (NSObject *) p{0};", i);
