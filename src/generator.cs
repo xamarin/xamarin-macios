@@ -865,14 +865,16 @@ public partial class Generator : IMemberGatherer {
 		public string ParameterMarshal;
 		public string CreateFromRet;
 		public bool HasCustomCreate;
+		public string ClosingCreate;
 
-		public MarshalType (Type t, string encode = null, string fetch = null, string create = null)
+		public MarshalType (Type t, string encode = null, string fetch = null, string create = null, string closingCreate = ")")
 		{
 			Type = t;
 			Encoding = encode ?? "IntPtr";
 			ParameterMarshal = fetch ?? "{0}.Handle";
 			CreateFromRet = create ?? String.Format ("new global::{0} (", t.FullName);
 			HasCustomCreate = create != null;
+			ClosingCreate = closingCreate;
 		}
 
 		//
@@ -2102,7 +2104,7 @@ public partial class Generator : IMemberGatherer {
 			marshal_types.Add (new MarshalType (TypeManager.ABRecord, create: "ABRecord.FromHandle("));
 		}
 		if (Frameworks.HaveCoreVideo)
-			marshal_types.Add (TypeManager.CVPixelBuffer);
+			marshal_types.Add (new MarshalType (TypeManager.CVPixelBuffer, create: "Runtime.GetINativeObject<CVPixelBuffer> (", closingCreate: ", false)")); // owns `false` like ptr ctor https://git.io/vHvLj
 		marshal_types.Add (TypeManager.CGLayer);
 		if (Frameworks.HaveCoreMedia)
 			marshal_types.Add (TypeManager.CMSampleBuffer);
@@ -3380,7 +3382,7 @@ public partial class Generator : IMemberGatherer {
 		} else if (LookupMarshal (mai.Type, out mt)){
 			if (mt.HasCustomCreate) {
 				cast_a = mt.CreateFromRet;
-				cast_b = ")";
+				cast_b = mt.ClosingCreate;
 			} else { // we need to gather the ptr and store it inside IntPtr ret;
 				cast_a = string.Empty;
 				cast_b = string.Empty;
