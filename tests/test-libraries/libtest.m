@@ -128,6 +128,10 @@ static UltimateMachine *shared;
 		_Pc1 = c1; _Pc2 = c2; _Pc3 = c3; _Pc4 = c4; _Pc5 = c5; _Pi1 = i1; _Pd1 = d1;
 	}
 
+	-(void) V:(out id  _Nullable *)n1 n:(out NSString * _Nullable *)n2
+	{
+		abort (); // this method is supposed to be overridden
+	}
 
 	/*
 	 * Invoke method
@@ -151,6 +155,11 @@ static UltimateMachine *shared;
 	-(struct Sf) Sf_invoke
 	{
 		return [self Sf];
+	}
+
+	-(void) invoke_V_null_out
+	{
+		[self V:nil n:nil];
 	}
 
 	/*

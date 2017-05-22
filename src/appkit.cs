@@ -19884,7 +19884,13 @@ namespace XamCore.AppKit {
 
 		[Mac (10,9)]
 		[Export ("endSheet:returnCode:")]
+		void EndSheet (NSWindow sheetWindow, NSModalResponse returnCode);
+#if !XAMCORE_4_0
+		[Obsolete ("Use the EndSheet(NSWindow,NSModalResponse) overload")]
+		[Mac (10,9)]
+		[Wrap ("EndSheet (sheetWindow, (NSModalResponse)(long)returnCode)", IsVirtual = true)]
 		void EndSheet (NSWindow sheetWindow, nint returnCode);
+#endif
 		
 		[Mac (10,11)]
 		[Export ("minFullScreenContentSize", ArgumentSemantic.Assign)]

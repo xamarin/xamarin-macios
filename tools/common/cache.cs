@@ -69,6 +69,22 @@ public class Cache {
 		Directory.CreateDirectory (Location);
 	}
 
+	public static bool CompareDirectories (string a, string b, bool ignore_cache = false)
+	{
+		if (Driver.Force && !ignore_cache) {
+			Driver.Log (6, "Directories {0} and {1} are considered different because -f was passed to " + NAME + ".", a, b);
+			return false;
+		}
+
+		var diff = new StringBuilder ();
+		if (Driver.RunCommand ("diff", $"-ur {Driver.Quote (a)} {Driver.Quote (b)}", output: diff, suppressPrintOnErrors: true) != 0) {
+			Driver.Log (1, "Directories {0} and {1} are considered different because diff said so:\n{2}", a, b, diff);
+			return false;
+		}
+
+		return true;
+	}
+
 	public static bool CompareFiles (string a, string b, bool ignore_cache = false)
 	{
 		if (Driver.Force && !ignore_cache) {

@@ -747,6 +747,18 @@ Please unlock the device and try again.
 
 <!-- 1034 used by mmp -->
 
+<h3><a name="MT1035"/>MT1035: Cannot include different versions of the framework '{name}'</h3>
+
+It is not possible to link with different versions of the same framework.
+
+This typically happens when an extension references a different version of a framework than the container app (possibly through a third-party binding assembly).
+
+Following this error there will be multiple [MT1036](#MT1036) errors listing the paths for each different framework.
+
+<h3><a name="MT1036"/>MT1036: Framework '{name}' included from: {path} (Related to previous error)</h3>
+
+This error is reported only together with [MT1036](#MT1036). Please see [MT1036](#MT1036) for more information.
+
 ### MT11xx: Debug Service
 
 <!--
@@ -1144,6 +1156,7 @@ Something unexpected occured when trying to reduce the metadata from the applica
 
 Something unexpected occured when trying to mark `NSObject` subclasses from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
+<!--- 2100 used by mmp -->
 
 # MT3xxx: AOT error messages
 

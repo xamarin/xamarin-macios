@@ -672,5 +672,17 @@ namespace Xamarin.MMP.Tests
 				TI.TestUnifiedExecutable (test);
 			});
 		}
+
+		[Test]
+		[TestCase ("Debug")]
+		[TestCase ("Release")]
+		public void SystemMonoNotEmbedded (string configuration)
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
+				test.CSProjConfig = "<MonoBundlingExtraArgs>--embed-mono=no</MonoBundlingExtraArgs>";
+				TI.TestSystemMonoExecutable (test, configuration: configuration);
+			});
+		}
 	}
 }

@@ -148,6 +148,8 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 <h3><a name="MM202x"/>MM202x: Binding Optimizer failed processing `...`.</h3>
 
+<h3><a name="MM2100"/>MM2100: Xamarin.Mac Classic API does not support Platform Linking. </h3>
+
 # MM3xxx: AOT
 
 ## MM30xx: AOT (general) errors

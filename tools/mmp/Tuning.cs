@@ -73,14 +73,6 @@ namespace MonoMac.Tuner {
 
 		public static void Process (LinkerOptions options, out LinkContext context, out List<string> assemblies)
 		{
-			switch (options.TargetFramework.Identifier) {
-			case "Xamarin.Mac":
-				Profile.Current = new MacMobileProfile (options.Architecture == "x86_64" ? 64 : 32);
-				break;
-			default:
-				Profile.Current = new MonoMacProfile ();
-				break;
-			}
 			Namespaces.Initialize ();
 
 			var pipeline = CreatePipeline (options);
@@ -89,6 +81,7 @@ namespace MonoMac.Tuner {
 
 			context = CreateLinkContext (options, pipeline);
 			context.Resolver.AddSearchDirectory (options.OutputDirectory);
+			context.KeepTypeForwarderOnlyAssemblies = (Profile.Current is XamarinMacProfile);
 
 			try {
 				pipeline.Process (context);
@@ -163,15 +156,19 @@ namespace MonoMac.Tuner {
 			if (options.LinkMode != LinkMode.None) {
 				pipeline.AppendStep (new TypeMapStep ());
 
-				pipeline.AppendStep (new SubStepDispatcher {
+				var subdispatcher = new SubStepDispatcher {
 					new ApplyPreserveAttribute (),
-					new CoreRemoveSecurity (),
 					new OptimizeGeneratedCodeSubStep (options.EnsureUIThread),
 					new RemoveUserResourcesSubStep (),
 					new CoreRemoveAttributes (),
 					new CoreHttpMessageHandler (options),
 					new MarkNSObjects (),
-				});
+				};
+				// CoreRemoveSecurity can modify non-linked assemblies
+				// but the conditions for this cannot happen if only the platform assembly is linked
+				if (options.LinkMode != LinkMode.Platform)
+					subdispatcher.Add (new CoreRemoveSecurity ());
+				pipeline.AppendStep (subdispatcher);
 
 				pipeline.AppendStep (new MonoMacPreserveCode (options));
 				pipeline.AppendStep (new PreserveCrypto ());
@@ -251,12 +248,20 @@ namespace MonoMac.Tuner {
 			if (link_mode == LinkMode.None)
 				return false;
 
+			if (link_mode == LinkMode.Platform)
+				return Profile.IsProductAssembly (assembly);
+
 			return base.IsLinked (assembly);
 		}
 
 		protected override void ProcessAssembly (AssemblyDefinition assembly)
 		{
-			if (link_mode == LinkMode.None) {
+			switch (link_mode) {
+			case LinkMode.Platform:
+				if (!Profile.IsProductAssembly (assembly))
+					Annotations.SetAction (assembly, AssemblyAction.Copy);
+				break;
+			case LinkMode.None:
 				Annotations.SetAction (assembly, AssemblyAction.Copy);
 				return;
 			}

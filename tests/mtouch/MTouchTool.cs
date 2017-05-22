@@ -620,6 +620,83 @@ public partial class NotificationService : UNNotificationServiceExtension
 				File.WriteAllText (plist_path, info_plist);
 		}
 
+		public void CreateTemporaryTodayExtension (string code = null, string extraCode = null, string extraArg = null, string appName = "testTodayExtension")
+		{
+			string testDir;
+			if (RootAssembly == null) {
+				testDir = CreateTemporaryDirectory ();
+			} else {
+				// We're rebuilding an existing executable, so just reuse that
+				testDir = Path.GetDirectoryName (RootAssembly);
+			}
+			var app = AppPath ?? Path.Combine (testDir, $"{appName}.appex");
+			Directory.CreateDirectory (app);
+
+			if (code == null) {
+				code = @"using System;
+using Foundation;
+using NotificationCenter;
+using UIKit;
+
+public partial class TodayViewController : UIViewController, INCWidgetProviding
+{
+	public TodayViewController (IntPtr handle) : base (handle)
+	{
+	}
+
+	[Export (""widgetPerformUpdateWithCompletionHandler:"")]
+	public void WidgetPerformUpdate (Action<NCUpdateResult> completionHandler)
+	{
+		completionHandler (NCUpdateResult.NewData);
+	}
+}
+";
+			}
+			if (extraCode != null)
+				code += extraCode;
+
+			AppPath = app;
+			Extension = true;
+			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile, extraArg: extraArg, appName: appName);
+
+			var info_plist = // FIXME: this includes a NSExtensionMainStoryboard key which points to a non-existent storyboard. This won't matter as long as we're only building, and not running the extension.
+@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
+<plist version=""1.0"">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>todayextension</string>
+	<key>CFBundleName</key>
+	<string>todayextension</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.xamarin.testapp.todayextension</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>XPC!</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>MinimumOSVersion</key>
+	<string>10.0</string>
+	<key>NSExtension</key>
+	<dict>
+		<key>NSExtensionPointIdentifier</key>
+		<string>widget-extension</string>
+		<key>NSExtensionMainStoryboard</key>
+		<string>MainInterface</string>
+	</dict>
+</dict>
+</plist>
+";
+			var plist_path = Path.Combine (app, "Info.plist");
+			if (!File.Exists (plist_path) || File.ReadAllText (plist_path) != info_plist)
+				File.WriteAllText (plist_path, info_plist);
+		}
+
 		public void CreateTemporaryWatchKitExtension (string code = null)
 		{
 			string testDir;

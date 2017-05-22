@@ -2412,6 +2412,24 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			using (var m = new NSMeasurement<NSUnitTemperature> (2, NSUnitTemperature.Fahrenheit)) {
 			}
 		}
+
+#if !MONOMAC // ObjCRegistrarTest is from Bindings.Tests, which is not currently implemented on mac
+		class NullOutParameters : ObjCRegistrarTest
+		{
+			public override void V (out NSObject n1, out NSString n2)
+			{
+				n1 = null;
+				n2 = null;
+			}
+		}
+
+		[Test]
+		public void TestNullOutParameters ()
+		{
+			using (var obj = new NullOutParameters ())
+				obj.Invoke_V_null_out ();
+		}
+#endif
 	}
 
 #if !__WATCHOS__

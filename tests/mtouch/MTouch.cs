@@ -2862,6 +2862,113 @@ public partial class NotificationService : UNNotificationServiceExtension
 		}
 
 		[Test]
+		public void AppAndExtensionWithBindingFramework ()
+		{
+			// There should be no problem to reference a binding library with a framework from both a container app and an extension.
+			using (var exttool = new MTouchTool ()) {
+				exttool.Profile = Profile.iOS;
+				exttool.Linker = MTouchLinker.DontLink; // faster
+				exttool.References = new string [] { GetFrameworksBindingLibrary (exttool.Profile) };
+				exttool.CreateTemporaryCacheDirectory ();
+				exttool.CreateTemporaryServiceExtension (extraCode: "\n\n[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } }", extraArg: $"-r:{Quote (exttool.References [0])}");
+				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
+
+				using (var apptool = new MTouchTool ()) {
+					apptool.Profile = Profile.iOS;
+					apptool.CreateTemporaryCacheDirectory ();
+					apptool.References = exttool.References;
+					apptool.CreateTemporaryApp (extraCode: @"[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } };", extraArg: $"-r:{Quote (apptool.References [0])}");
+					apptool.AppExtensions.Add (exttool);
+					apptool.AssertExecute (MTouchAction.BuildSim, "build app");
+
+					Assert.IsTrue (Directory.Exists (Path.Combine (apptool.AppPath, "Frameworks", "XTest.framework")), "framework exists");
+					Assert.IsFalse (Directory.Exists (Path.Combine (exttool.AppPath, "Frameworks")), "extension framework inexistence");
+				}
+			}
+		}
+
+		[Test]
+		public void MT1035 ()
+		{
+			// Verify that an error is shown if two different frameworks with the same name are included.
+
+			var tmpdir = Cache.CreateTemporaryDirectory ();
+			var framework_binding_library = GetFrameworksBindingLibrary (Profile.iOS);
+			using (var exttool = new MTouchTool ()) {
+				exttool.Profile = Profile.iOS;
+				exttool.Linker = MTouchLinker.DontLink; // faster
+				exttool.References = new string [] { framework_binding_library };
+				exttool.CreateTemporaryCacheDirectory ();
+				exttool.CreateTemporaryServiceExtension (extraCode: "\n\n[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } }", extraArg: $"-r:{Quote (exttool.References [0])}");
+				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
+
+				using (var apptool = new MTouchTool ()) {
+					// Here we do a little bit of surgery on the binding assembly to change the embedded framework (we just add a file into the zip).
+					var modified_framework_binding_library = Path.Combine (tmpdir, Path.GetFileName (framework_binding_library));
+					var framework_zip = Path.Combine (tmpdir, "XTest.framework");
+					var extra_content = Path.Combine (tmpdir, "extra-content");
+					Mono.Cecil.AssemblyDefinition ad = Mono.Cecil.AssemblyDefinition.ReadAssembly (framework_binding_library);
+					var res = (Mono.Cecil.EmbeddedResource) ad.MainModule.Resources.Where ((v) => v.Name == "XTest.framework").First ();
+					File.WriteAllBytes (framework_zip, res.GetResourceData ());
+					File.WriteAllText (extra_content, "Hello world");
+					ExecutionHelper.Execute ("zip", $"{Quote (framework_zip)} {Quote (extra_content)}");
+					ad.MainModule.Resources.Remove (res);
+					ad.MainModule.Resources.Add (new Mono.Cecil.EmbeddedResource (res.Name, res.Attributes, File.ReadAllBytes (framework_zip)));
+					ad.Write (modified_framework_binding_library);
+
+					apptool.Profile = Profile.iOS;
+					apptool.Linker = MTouchLinker.DontLink; // faster
+					apptool.References = new string [] { modified_framework_binding_library };
+					apptool.CreateTemporaryCacheDirectory ();
+					apptool.CreateTemporaryApp (extraCode: "\n\n[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } }", extraArg: $"-r:{Quote (apptool.References [0])}");
+					apptool.AppExtensions.Add (exttool);
+					apptool.AssertExecuteFailure (MTouchAction.BuildSim, "build app");
+					apptool.AssertError (1035, "Cannot include different versions of the framework 'XTest.framework'");
+					apptool.AssertError (1036, $"Framework 'XTest.framework' included from: {exttool.Cache}/XTest.framework (Related to previous error)");
+					apptool.AssertError (1036, $"Framework 'XTest.framework' included from: {apptool.Cache}/XTest.framework (Related to previous error)");
+				}
+			}
+		}
+
+		[Test]
+		public void MultipleExtensionsWithBindingFramework ()
+		{
+			// if multiple extensions references a framework (but not the container app)
+			// the framework should still be copied successfully to the main app's Framework directory.
+			using (var service_ext = new MTouchTool ()) {
+				service_ext.Profile = Profile.iOS;
+				service_ext.Linker = MTouchLinker.DontLink; // faster
+				service_ext.References = new string [] { GetFrameworksBindingLibrary (service_ext.Profile) };
+				service_ext.CreateTemporaryCacheDirectory ();
+				service_ext.CreateTemporaryServiceExtension (extraCode: "\n\n[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } }", extraArg: $"-r:{Quote (service_ext.References [0])}");
+				service_ext.AssertExecute (MTouchAction.BuildSim, "build service extension");
+
+				using (var today_ext = new MTouchTool ()) {
+					today_ext.Profile = Profile.iOS;
+					today_ext.Linker = MTouchLinker.DontLink; // faster
+					today_ext.References = service_ext.References;
+					today_ext.CreateTemporaryCacheDirectory ();
+					today_ext.CreateTemporaryTodayExtension (extraCode: "\n\n[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } }", extraArg: $"-r:{Quote (today_ext.References [0])}");
+					today_ext.AssertExecute (MTouchAction.BuildSim, "build today extension");
+
+					using (var apptool = new MTouchTool ()) {
+						apptool.Profile = Profile.iOS;
+						apptool.Linker = MTouchLinker.DontLink; // faster
+						apptool.CreateTemporaryCacheDirectory ();
+						apptool.CreateTemporaryApp ();
+						apptool.AppExtensions.Add (service_ext);
+						apptool.AppExtensions.Add (today_ext);
+						apptool.AssertExecute (MTouchAction.BuildSim, "build app");
+
+						Assert.IsTrue (Directory.Exists (Path.Combine (apptool.AppPath, "Frameworks", "XTest.framework")), "framework exists");
+						Assert.IsFalse (Directory.Exists (Path.Combine (service_ext.AppPath, "Frameworks")), "service extension framework inexistence");
+						Assert.IsFalse (Directory.Exists (Path.Combine (today_ext.AppPath, "Frameworks")), "today framework inexistence");
+					}
+				}
+			}
+		}
+
+		[Test]
 		[TestCase (MTouchLinker.DontLink)]
 		[TestCase (MTouchLinker.LinkAll)]
 		// There shouldn't be a need to test LinkSdk as well.
