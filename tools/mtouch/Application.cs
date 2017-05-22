@@ -1580,7 +1580,7 @@ namespace Xamarin.Bundler {
 				if (!HasFrameworksDirectory && (isFramework || info.DylibToFramework))
 					continue; // Don't copy frameworks to app extensions (except watch extensions), they go into the container app.
 
-				if (!files.All ((v) => Directory.Exists (v)))
+				if (!files.All ((v) => Directory.Exists (v) == isFramework))
 					throw ErrorHelper.CreateError (99, $"Internal error: 'can't process a mix of dylibs and frameworks: {string.Join (", ", files)}'. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 
 				if (isFramework) {
