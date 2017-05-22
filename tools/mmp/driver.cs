@@ -442,6 +442,37 @@ namespace Xamarin.Bundler {
 
 			}
 
+			if (IsUnifiedFullXamMacFramework || IsUnifiedFullSystemFramework) {
+				List<ExclusionItem> exclusionItems = ReadExclusionList ();
+				List<string> referencesToFix = new List<string> ();
+
+				foreach (var asm in references) {
+					List<ExclusionItem> possibleMatches = exclusionItems.Where (x => x.Name == Path.GetFileName (asm)).ToList ();
+					if (possibleMatches.Count > 0) {
+						var module = ModuleDefinition.ReadModule (asm);
+						if (possibleMatches.Any (x => x.GUID == module.Mvid))
+							referencesToFix.Add (asm);
+					}
+				}
+				if (referencesToFix.Count > 0) {
+					string bclDir = Path.Combine (MMPDirectory, "lib", "mono", "4.5");
+					string facadeDir = Path.Combine (bclDir, "Facades");
+
+					FixReferences (asm => referencesToFix.Contains (asm), asm => {
+						string replacement;
+						if (File.Exists (Path.Combine (bclDir, Path.GetFileName (asm))))
+							replacement = Path.Combine (bclDir, Path.GetFileName (asm));
+						else if (File.Exists (Path.Combine (facadeDir, Path.GetFileName (asm))))
+							replacement = Path.Combine (facadeDir, Path.GetFileName (asm));
+						else
+							return asm;
+
+						ErrorHelper.Warning (1407, string.Format ("'{0}' is a facade mono has declared problematic and refuses to load. Replacing reference with '{1}'.", asm, replacement));
+						return replacement;
+					});
+				}
+			}
+
 			if (IsUnifiedFullSystemFramework || IsClassic) {
 				// With newer Mono builds, the system assemblies passed to us by msbuild are
 				// no longer safe to copy into the bundle. They are stripped "fake" BCL
@@ -515,6 +546,30 @@ namespace Xamarin.Bundler {
 			}
 
 			Log ("bundling complete");
+		}
+
+		struct ExclusionItem
+		{
+			public string Name;
+			public Guid GUID;
+		}
+
+		static List<ExclusionItem> ReadExclusionList ()
+		{
+			List<ExclusionItem> exclusionList = new List<ExclusionItem> ();
+			using (var exclusionStream = typeof (Driver).Assembly.GetManifestResourceStream ("monoExclusionList.txt")) {
+				if (exclusionStream == null) {
+					ErrorHelper.Warning (100, "Internal Warning \"Unable to load mono exclusion list.\" .Please file a bug report with a test case (http://bugzilla.xamarin.com).");
+					return exclusionList;
+				}
+				using (var sr = new StreamReader (exclusionStream)) {
+					while (!sr.EndOfStream) {
+						string [] lineParts = sr.ReadLine ().Split (new char [] { ':' });
+						exclusionList.Add (new ExclusionItem () { Name = lineParts[0], GUID = new Guid (lineParts[1]) });
+					}
+				}
+			}
+			return exclusionList;
 		}
 
 		static void FixReferences (Func<string, bool> match, Func<string, string> fix)
