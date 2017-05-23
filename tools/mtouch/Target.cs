@@ -431,6 +431,9 @@ namespace Xamarin.Bundler
 				ComputeListOfAssemblies (assemblies, reference_assembly, exceptions);
 			}
 
+			if (Profile.IsSdkAssembly (assembly) || Profile.IsProductAssembly (assembly))
+				return; // We know there are no new assembly references from attributes in assemblies we ship
+
 			// Custom Attribute metadata can include references to other assemblies, e.g. [X (typeof (Y)], 
 			// but it is not reflected in AssemblyReferences :-( ref: #37611
 			// so we must scan every custom attribute to look for System.Type
