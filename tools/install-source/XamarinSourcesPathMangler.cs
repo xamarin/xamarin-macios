@@ -108,8 +108,13 @@ namespace InstallSources
 				src = Path.Combine (XamarinSourcePath, "build", "common", src);
 			} else {
 				pos = path.IndexOf (NativeTypeSubpath, StringComparison.InvariantCulture);
-				src = path.Remove (0, pos);
-				src = Path.Combine (XamarinSourcePath, src);
+				if (pos >= 0) {
+					src = path.Remove (0, pos);
+					src = Path.Combine (XamarinSourcePath, src);
+				} else {
+					Console.WriteLine ($"Ignoring path {path}");
+					return "";
+				}
 			}
 			return src;
 		}
