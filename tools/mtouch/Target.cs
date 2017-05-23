@@ -380,6 +380,21 @@ namespace Xamarin.Bundler
 		{
 			var exceptions = new List<Exception> ();
 			var assemblies = new HashSet<string> ();
+			var cache_file = Path.Combine (this.ArchDirectory, "assembly-references.txt");
+
+			if (File.Exists (cache_file)) {
+				assemblies.UnionWith (File.ReadAllLines (cache_file));
+				// Check if any of the referenced assemblies changed after we cached the complete set of references
+				if (Application.IsUptodate (assemblies, new string [] { cache_file })) {
+					// Load all the assemblies in the cached list of assemblies
+					foreach (var assembly in assemblies)
+						ManifestResolver.Load (assembly);
+					return;
+				}
+
+				// We must manually find all the references.
+				assemblies.Clear ();
+			}
 
 			try {
 				foreach (var root in App.RootAssemblies) {
@@ -397,6 +412,9 @@ namespace Xamarin.Bundler
 
 			if (exceptions.Count > 0)
 				throw new AggregateException (exceptions);
+
+			// Cache all the assemblies we found.
+			File.WriteAllLines (cache_file, assemblies);
 		}
 
 		void ComputeListOfAssemblies (HashSet<string> assemblies, AssemblyDefinition assembly, List<Exception> exceptions)
