@@ -414,6 +414,7 @@ namespace Xamarin.Bundler
 				throw new AggregateException (exceptions);
 
 			// Cache all the assemblies we found.
+			Directory.CreateDirectory (Path.GetDirectoryName (cache_file));
 			File.WriteAllLines (cache_file, assemblies);
 		}
 
