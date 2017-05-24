@@ -1816,8 +1816,8 @@ namespace Xamarin.Bundler {
 																"Native linking failed, undefined Objective-C class: {0}. The symbol '{1}' could not be found in any of the libraries or frameworks linked with your application.",
 							                                    symbol.Replace ("_OBJC_CLASS_$_", ""), symbol));
 						} else {
-							var members = target.GetMembersForSymbol (symbol.Substring (1));
-							if (members != null && members.Count > 0) {
+							var members = target.GetAllSymbols ().Find (symbol.Substring (1))?.Members;
+							if (members != null && members.Any ()) {
 								var member = members.First (); // Just report the first one.
 								// Neither P/Invokes nor fields have IL, so we can't find the source code location.
 								errors.Add (new MonoTouchException (5214, error,
@@ -2033,7 +2033,7 @@ namespace Xamarin.Bundler {
 			Driver.Watch ("Linking DWARF symbols", 1);
 		}
 
-		IEnumerable<string> GetRequiredSymbols ()
+		IEnumerable<Symbol> GetRequiredSymbols ()
 		{
 			foreach (var target in Targets) {
 				foreach (var symbol in target.GetRequiredSymbols ())
@@ -2043,10 +2043,10 @@ namespace Xamarin.Bundler {
 
 		bool WriteSymbolList (string filename)
 		{
-			var required_symbols = GetRequiredSymbols ().ToArray ();
+			var required_symbols = GetRequiredSymbols ();
 			using (StreamWriter writer = new StreamWriter (filename)) {
-				foreach (string symbol in required_symbols)
-					writer.WriteLine ("_{0}", symbol);
+				foreach (var symbol in required_symbols)
+					writer.WriteLine ("_{0}", symbol.Name);
 				foreach (var symbol in NoSymbolStrip)
 					writer.WriteLine ("_{0}", symbol);
 				writer.Flush ();

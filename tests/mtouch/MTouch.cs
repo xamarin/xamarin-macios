@@ -1646,17 +1646,11 @@ public class TestApp {
 				mtouch.CreateTemporaryApp_LinkWith ();
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev), "build");
 
-				bool workaround_for_bug51710 = profile != Profile.iOS; // see fe17d5db9f7c
-				if (workaround_for_bug51710) {
-					var symbols = ExecutionHelper.Execute ("nm", Quote (mtouch.NativeExecutablePath), hide_output: true).Split ('\n');
-					Assert.That (symbols, Has.Some.EndsWith (" T _theUltimateAnswer"), "Binding symbol not in executable");
-				} else {
-					var symbols = ExecutionHelper.Execute ("nm", Quote (mtouch.NativeExecutablePath), hide_output: true).Split ('\n');
-					Assert.That (symbols, Has.None.EndsWith (" T _theUltimateAnswer"), "Binding symbol not in executable");
+				var symbols = ExecutionHelper.Execute ("nm", Quote (mtouch.NativeExecutablePath), hide_output: true).Split ('\n');
+				Assert.That (symbols, Has.None.EndsWith (" T _theUltimateAnswer"), "Binding symbol not in executable");
 
-					symbols = ExecutionHelper.Execute ("nm", Quote (Path.Combine (mtouch.AppPath, "libbindings-test.dll.dylib")), hide_output: true).Split ('\n');
-					Assert.That (symbols, Has.Some.EndsWith (" T _theUltimateAnswer"), "Binding symbol in binding library");
-				}
+				symbols = ExecutionHelper.Execute ("nm", Quote (Path.Combine (mtouch.AppPath, "libbindings-test.dll.dylib")), hide_output: true).Split ('\n');
+				Assert.That (symbols, Has.Some.EndsWith (" T _theUltimateAnswer"), "Binding symbol in binding library");
 			}
 		}
 
@@ -3133,6 +3127,41 @@ public class TestApp {
 		}
 
 		[Test]
+		public void ManyBigPInvokes ()
+		{
+			var tmpdir = Cache.CreateTemporaryDirectory ();
+			var m = Path.Combine (tmpdir, "file.m");
+			var cs = Path.Combine (tmpdir, "file.cs");
+			var functions = 2500;
+			var m_writer = new StringBuilder ();
+			var cs_writer = new StringBuilder ("\n");
+			cs_writer.AppendLine ("namespace Tester {");
+			cs_writer.AppendLine ("\tusing System.Runtime.InteropServices;");
+			cs_writer.AppendLine ("\tclass PInvokes {");
+			for (int i = 0; i < functions; i++) {
+				var fname = $"this_is_a_big_function_with_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_long_name_number_{i}";
+				m_writer.AppendLine ($"void {fname} () {{}}");
+				cs_writer.AppendLine ($"\t\t[DllImport (\"__Internal\")]");
+				cs_writer.AppendLine ($"\t\tstatic extern void {fname} ();");
+			}
+			cs_writer.AppendLine ("\t}");
+			cs_writer.AppendLine ("}");
+			var o = CompileNativeLibrary (Profile.iOS, tmpdir, m_writer.ToString (), device: false);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp (extraCode: cs_writer.ToString ());
+				mtouch.GccFlags = o;
+				mtouch.Abi = "x86_64";
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "first build");
+				mtouch.AssertWarningPattern (5217, "Native linking possibly failed because the linker command line was too long .[0-9]* characters..");
+
+				mtouch.CustomArguments = new string [] { "--dynamic-symbol-mode=code" };
+				mtouch.AssertExecute (MTouchAction.BuildSim, "second build");
+			}
+		}
+
+		[Test]
 		[TestCase ("CFNetworkHandler", "CFNetworkHandler")]
 		[TestCase ("NSUrlSessionHandler", "NSUrlSessionHandler")]
 		[TestCase ("HttpClientHandler", "HttpClientHandler")]
@@ -3345,7 +3374,12 @@ using ObjCRuntime;
 			return dll;
 		}
 
-		static string CompileNativeLibrary (string targetDirectory, string code, string name = "testCode")
+		static string CompileNativeLibrary (string targetDirectory, string code, string name = "testCode", string arch = "armv7", bool device = true)
+		{
+			return CompileNativeLibrary (Profile.iOS, targetDirectory, code, name, arch, device);
+		}
+
+		static string CompileNativeLibrary (Profile profile, string targetDirectory, string code, string name = "testCode", string arch = null, bool device = true)
 		{
 			var m = Path.Combine (targetDirectory, $"{name}.m");
 			var o = Path.ChangeExtension (m, ".o");
@@ -3353,10 +3387,24 @@ using ObjCRuntime;
 
 			string output;
 			string fileName = Path.Combine (Configuration.xcode_root, "Toolchains/XcodeDefault.xctoolchain/usr/bin/clang");
-			string args = $"-gdwarf-2 -arch armv7 -std=c99 -isysroot {Configuration.xcode_root}/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS{Configuration.sdk_version}.sdk -miphoneos-version-min=6.0 -c -DDEBUG  -o {o} -x objective-c {m}";
+			string min_os_version;
+			string sdk;
 
+			switch (profile) {
+			case Profile.iOS:
+				min_os_version = device ? "iphoneos-version-min=6.0" : "iphonesimulator-version-min=6.0";
+				sdk = device ? "iPhoneOS" : "iPhoneSimulator";
+				if (arch == null)
+					arch = device ? "armv7" : "x86_64";
+				break;
+			default:
+				throw new NotImplementedException ();
+			}
+
+			string args = $"-gdwarf-2 -arch {arch} -std=c99 -isysroot {Configuration.xcode_root}/Platforms/{sdk}.platform/Developer/SDKs/{sdk}{Configuration.sdk_version}.sdk -m{min_os_version} -c -DDEBUG  -o {o} -x objective-c {m}";
+
+			Console.WriteLine ("{0} {1}", fileName, args);
 			if (ExecutionHelper.Execute (fileName, args, out output) != 0) {
-				Console.WriteLine ("{0} {1}", fileName, args);
 				Console.WriteLine (output);
 				throw new Exception (output);
 			}

@@ -110,6 +110,7 @@ MTOUCH_SOURCES = \
 	$(TOP)/tools/common/Driver.cs		\
 	$(TOP)/tools/common/Frameworks.cs	\
 	$(TOP)/tools/common/MachO.cs		\
+	$(TOP)/tools/common/Symbols.cs			\
 	mtouch.cs		\
 	$(TOP)/tools/common/PInvokeWrapperGenerator.cs	\
 	$(TOP)/tools/common/TargetFramework.cs	\

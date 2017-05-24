@@ -112,6 +112,7 @@ mmp_sources = \
 	$(TOP)/tools/common/Driver.cs \
 	$(TOP)/tools/common/Frameworks.cs \
 	$(TOP)/tools/common/StaticRegistrar.cs \
+	$(TOP)/tools/common/Symbols.cs    \
 	$(TOP)/tools/common/MachO.cs           \
 	$(TOP)/src/ObjCRuntime/Registrar.core.cs	\
 	$(TOP)/src/ObjCRuntime/Registrar.cs \
