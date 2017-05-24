@@ -141,8 +141,8 @@ namespace Xamarin.Bundler {
 					Framework framework;
 					if (Driver.GetFrameworks (App).TryGetValue (nspace, out framework)) {
 						// framework specific processing
-						switch (framework.Name) {
 #if !MONOMAC
+						switch (framework.Name) {
 						case "CoreAudioKit":
 							// CoreAudioKit seems to be functional in the iOS 9 simulator.
 							if (App.IsSimulatorBuild && App.SdkVersion.Major < 9)
@@ -164,8 +164,8 @@ namespace Xamarin.Bundler {
 								continue;
 							}
 							break;
-#endif
 						}
+#endif
 
 						if (App.SdkVersion >= framework.Version) {
 							var add_to = App.DeploymentTarget >= framework.Version ? asm.Frameworks : asm.WeakFrameworks;
