@@ -387,8 +387,12 @@ namespace Xamarin.Bundler
 				// Check if any of the referenced assemblies changed after we cached the complete set of references
 				if (Application.IsUptodate (assemblies, new string [] { cache_file })) {
 					// Load all the assemblies in the cached list of assemblies
-					foreach (var assembly in assemblies)
-						ManifestResolver.Load (assembly);
+					foreach (var assembly in assemblies) {
+						var ad = ManifestResolver.Load (assembly);
+						var asm = new Assembly (this, ad);
+						asm.ComputeSatellites ();
+						this.Assemblies.Add (asm);
+					}
 					return;
 				}
 
