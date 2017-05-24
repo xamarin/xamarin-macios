@@ -119,7 +119,7 @@ class BindingTouch {
 			} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.Mac-mobile.BindingAttributes.dll");
 			} else if (target_framework == TargetFramework.XamMac_1_0) {
-				return Path.Combine (GetSDKRoot (), "lib", "bgen", "XamMAc.BindingAttributes.dll");
+				return Path.Combine (GetSDKRoot (), "lib", "bgen", "XamMac.BindingAttributes.dll");
 			} else {
 				throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework);
 			}
