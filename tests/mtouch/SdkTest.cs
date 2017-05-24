@@ -136,30 +136,18 @@ namespace Xamarin.Linker {
 			Facades (watchOSPath);
 		}
 
-		static string [] FindAllAssemblies ()
-		{
-			var rv = new List<string> ();
-			var dir = Path.Combine (Configuration.MonoTouchRootDirectory, "lib/mono");
-			var assemblies = Directory.GetFiles (dir, "*.dll", SearchOption.AllDirectories);
-			rv.AddRange (assemblies.Select ((v) => {
-				// Return the significant part at the end of the path,
-				// which makes the various test cases show up nicer
-				// in VSfM's test pad.
-				return v.Substring (dir.Length + 1);
-			}));
-			return rv.ToArray ();
-		}
-
 		[Test]
-		[TestCaseSource ("FindAllAssemblies")]
-		public void NoAssemblyReferenceInAttributes (string filename)
+		public void NoAssemblyReferenceInAttributes ()
 		{
-			// This tests verifies that there aren't any attributes in any assembly we ship
-			// that references an assembly that's not in the normal assembly references.
-			// It takes a significant amount of time to look in all the attributes for assembly references,
-			// and knowing that no such attributes exist in any assembly we ship, allows us
-			// to complete skip this step in mtouch
-			VerifyNoAdditionalAssemblyReferenceInAttributes (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "mono", filename));
+			var dir = Path.Combine (Configuration.MonoTouchRootDirectory, "lib/mono");
+			foreach (var filename in Directory.GetFiles (dir, "*.dll", SearchOption.AllDirectories)) {
+				// This tests verifies that there aren't any attributes in any assembly we ship
+				// that references an assembly that's not in the normal assembly references.
+				// It takes a significant amount of time to look in all the attributes for assembly references,
+				// and knowing that no such attributes exist in any assembly we ship, allows us
+				// to complete skip this step in mtouch
+				VerifyNoAdditionalAssemblyReferenceInAttributes (filename);
+			}
 		}
 
 		void VerifyNoAdditionalAssemblyReferenceInAttributes (string filename)
