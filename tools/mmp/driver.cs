@@ -1435,6 +1435,7 @@ namespace Xamarin.Bundler {
 					Registrar = (StaticRegistrar) BuildTarget.StaticRegistrar,
 				},
 				SkipExportedSymbolsInSdkAssemblies = !embed_mono,
+				Target = BuildTarget,
 			};
 
 			linker_options = options;
