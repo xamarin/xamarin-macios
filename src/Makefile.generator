@@ -34,6 +34,7 @@ GENERATOR_ATTRIBUTE_SOURCES = \
 	$(TOP)/src/Foundation/ExportAttribute.cs \
 	$(TOP)/src/Foundation/FieldAttribute.cs \
 	$(TOP)/src/Foundation/ModelAttribute.cs \
+	$(TOP)/src/Foundation/NotImplementedAttribute.cs \
 	$(TOP)/src/Foundation/PreserveAttribute.cs \
 	$(TOP)/src/Foundation/ProtocolAttribute.cs \
 	$(TOP)/src/Foundation/RegisterAttribute.cs \
