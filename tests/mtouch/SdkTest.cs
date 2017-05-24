@@ -3,7 +3,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
+using Mono.Cecil;
 using NUnit.Framework;
 
 using Xamarin.Tests;
@@ -132,6 +134,75 @@ namespace Xamarin.Linker {
 			BCL (watchOSPath);
 			REPL (watchOSPath);
 			Facades (watchOSPath);
+		}
+
+		[Test]
+		public void NoAssemblyReferenceInAttributes ()
+		{
+			var dir = Path.Combine (Configuration.MonoTouchRootDirectory, "lib/mono");
+			foreach (var filename in Directory.GetFiles (dir, "*.dll", SearchOption.AllDirectories)) {
+				// This tests verifies that there aren't any attributes in any assembly we ship
+				// that references an assembly that's not in the normal assembly references.
+				// It takes a significant amount of time to look in all the attributes for assembly references,
+				// and knowing that no such attributes exist in any assembly we ship, allows us
+				// to complete skip this step in mtouch
+				VerifyNoAdditionalAssemblyReferenceInAttributes (filename);
+			}
+		}
+
+		void VerifyNoAdditionalAssemblyReferenceInAttributes (string filename)
+		{
+			var references = new HashSet<AssemblyNameReference> ();
+			using (var assembly = AssemblyDefinition.ReadAssembly (filename)) {
+				var main = assembly.MainModule;
+				references.UnionWith (main.AssemblyReferences);
+
+				var pre_attributes = new HashSet<AssemblyNameReference> (references);
+
+				GetCustomAttributeReferences (assembly, references);
+				GetCustomAttributeReferences (main, references);
+				if (main.HasTypes) {
+					foreach (var ca in main.GetCustomAttributes ())
+						GetCustomAttributeReferences (ca, references);
+				}
+
+				var post_attributes = pre_attributes.Except (references).ToArray ();
+				Assert.IsEmpty (post_attributes, assembly.Name.Name);
+			}
+		}
+
+		void GetCustomAttributeReferences (ICustomAttributeProvider cap, HashSet<AssemblyNameReference> references)
+		{
+			if (!cap.HasCustomAttributes)
+				return;
+			foreach (var ca in cap.CustomAttributes)
+				GetCustomAttributeReferences (ca, references);
+		}
+
+		static void GetCustomAttributeReferences (CustomAttribute ca, HashSet<AssemblyNameReference> references)
+		{
+			if (ca.HasConstructorArguments) {
+				foreach (var arg in ca.ConstructorArguments)
+					GetCustomAttributeArgumentReference (arg, references);
+			}
+			if (ca.HasFields) {
+				foreach (var arg in ca.Fields)
+					GetCustomAttributeArgumentReference (arg.Argument, references);
+			}
+			if (ca.HasProperties) {
+				foreach (var arg in ca.Properties)
+					GetCustomAttributeArgumentReference (arg.Argument, references);
+			}
+		}
+
+		static void GetCustomAttributeArgumentReference (CustomAttributeArgument arg, HashSet<AssemblyNameReference> references)
+		{
+			if (!arg.Type.Is ("System", "Type"))
+				return;
+			var ar = (arg.Value as TypeReference)?.Scope as AssemblyNameReference;
+			if (ar == null)
+				return;
+			references.Add (ar);
 		}
 	}
 }
