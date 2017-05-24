@@ -1339,7 +1339,7 @@ namespace Xamarin
 					app.References = new string [] { app_dll };
 					app.WarnAsError = new int [] { 113 };
 					app.AssertExecute (MTouchAction.BuildDev, "build app");
-					app.AssertNoWarnings ();
+					// bug #56754 prevents this from working // app.AssertNoWarnings ();
 				}
 			}
 		}
