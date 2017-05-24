@@ -75,7 +75,7 @@ namespace xharness
 				SimulatorLoadLog.WriteLine (e.ToString ());
 				var task = new RunSimulatorTask (buildTask) { ExecutionResult = TestExecutingResult.Failed };
 				var log = task.Logs.CreateFile ("Run log", Path.Combine (task.LogDirectory, "run-" + DateTime.Now.Ticks + ".log"));
-				File.WriteAllText (log.Path, "Failed to load simulators.");
+				log.WriteLine ("Failed to load simulators");
 				runtasks.Add (task);
 				return runtasks;
 			}
@@ -2574,7 +2574,7 @@ function oninitialload ()
 				case TestPlatform.iOS_TodayExtension64:
 					return "iOS Unified Today Extension 64-bits - " + XIMode;
 				case TestPlatform.iOS_Unified:
-					throw new NotImplementedException ();
+					return "iOS Unified - " + XIMode;
 				default:
 					throw new NotImplementedException ();
 				}
