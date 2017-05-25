@@ -26,6 +26,8 @@ namespace Xamarin.MacDev.Tasks
 
 		public string DeviceOSVersion { get; set; }
 
+		public bool EnableOnDemandResources { get; set; }
+
 		[Required]
 		public ITaskItem[] ImageAssets { get; set; }
 
@@ -156,7 +158,7 @@ namespace Xamarin.MacDev.Tasks
 
 			if (AppleSdkSettings.XcodeVersion.Major >= 7) {
 				if (!string.IsNullOrEmpty (outputSpecs))
-					args.Add ("--enable-on-demand-resources", "YES");
+					args.Add ("--enable-on-demand-resources", EnableOnDemandResources ? "YES" : "NO");
 
 				if (!string.IsNullOrEmpty (DeviceModel))
 					args.Add ("--filter-for-device-model", DeviceModel);
@@ -258,6 +260,7 @@ namespace Xamarin.MacDev.Tasks
 			Log.LogTaskProperty ("AppManifest", AppManifest);
 			Log.LogTaskProperty ("DeviceModel", DeviceModel);
 			Log.LogTaskProperty ("DeviceOSVersion", DeviceOSVersion);
+			Log.LogTaskProperty ("EnableOnDemandResources", EnableOnDemandResources);
 			Log.LogTaskProperty ("ImageAssets", ImageAssets);
 			Log.LogTaskProperty ("IntermediateOutputPath", IntermediateOutputPath);
 			Log.LogTaskProperty ("IsWatchApp", IsWatchApp);
