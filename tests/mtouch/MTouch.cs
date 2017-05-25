@@ -1304,14 +1304,42 @@ namespace Xamarin
 					app.AppExtensions.Add (extension);
 
 					var app_tmpdir = app.CreateTemporaryDirectory ();
+					var app_dll = CompileTestAppLibrary (app_tmpdir, @"public abstract class X { }", appName: "testLibrary");
+					app.CreateTemporaryApp (extraCode: "class Y : X {}", extraArg: $"-r:{Quote (app_dll)}");
+					app.CreateTemporaryCacheDirectory ();
+					app.References = new string [] { app_dll };
+					app.WarnAsError = new int [] { 113 };
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (113, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the container app is referencing the assembly 'testLibrary' from '{app_dll}', while the extension references a different version from '{ext_dll}'.");
+				}
+			}
+		}
+
+		[Test]
+		public void CodeSharingExactContentsDifferentPaths ()
+		{
+			// Test that we allow code sharing when the exact same assembly (based on file content)
+			// is referenced from different paths between extension and container project.
+			using (var extension = new MTouchTool ()) {
+				var ext_tmpdir = extension.CreateTemporaryDirectory ();
+				var ext_dll = CompileTestAppLibrary (ext_tmpdir, @"public class X { }", appName: "testLibrary");
+				extension.CreateTemporaryServiceExtension (extraCode: "class Y : X {}", extraArg: $"-r:{Quote (ext_dll)}");
+				extension.CreateTemporaryCacheDirectory ();
+				extension.References = new string [] { ext_dll };
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+
+					var app_tmpdir = app.CreateTemporaryDirectory ();
 					var app_dll = Path.Combine (app_tmpdir, Path.GetFileName (ext_dll));
 					File.Copy (ext_dll, app_dll);
 					app.CreateTemporaryApp (extraCode: "class Y : X {}", extraArg: $"-r:{Quote (app_dll)}");
 					app.CreateTemporaryCacheDirectory ();
 					app.References = new string [] { app_dll };
 					app.WarnAsError = new int [] { 113 };
-					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (113, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the container app is referencing the assembly 'testLibrary' from '{app_dll}', while the extension references it from '{ext_dll}'.");
+					app.AssertExecute (MTouchAction.BuildDev, "build app");
+					// bug #56754 prevents this from working // app.AssertNoWarnings ();
 				}
 			}
 		}

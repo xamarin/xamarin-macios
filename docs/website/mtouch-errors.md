@@ -528,7 +528,7 @@ Native code sharing requires that all the projects build for the exact same API.
 
 For instance: this condition occurs when an extension builds for ARMv7+llvm+thumb2, but the container app only builds for ARMv7+llvm.
 
-* because the container app is referencing the assembly '*' from '*', while the extension references it from '*'.
+* because the container app is referencing the assembly '*' from '*', while the extension references a different version from '*'.
 
 Native code sharing requires that all the projects that share code use the same versions for all assemblies.
 

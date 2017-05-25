@@ -1061,9 +1061,9 @@ namespace Xamarin.Bundler {
 						Assembly asm;
 						if (!target.Assemblies.TryGetValue (kvp.Key, out asm))
 							continue; // appex references an assembly the main app doesn't. This is fine.
-						if (asm.FullPath != kvp.Value.FullPath) {
-							applicable = false; // app references an assembly with the same name as the main app, but from a different location. This is not fine.
-							ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the container app is referencing the assembly '{asm.Identity}' from '{asm.FullPath}', while the extension references it from '{kvp.Value.FullPath}'.");
+						if (asm.FullPath != kvp.Value.FullPath && !Cache.CompareFiles (asm.FullPath, kvp.Value.FullPath, true)) {
+							applicable = false; // app references an assembly with the same name as the main app, but from a different location and not identical. This is not fine.
+							ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the container app is referencing the assembly '{asm.Identity}' from '{asm.FullPath}', while the extension references a different version from '{kvp.Value.FullPath}'.");
 							break;
 						}
 					}
