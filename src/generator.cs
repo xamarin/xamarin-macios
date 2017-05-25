@@ -7106,7 +7106,9 @@ public partial class Generator : IMemberGatherer {
 
 	public static string Quote (string s)
 	{
-		if (String.IsNullOrEmpty (s))
+		if (s == null)
+			return String.Empty;
+		if (s == string.Empty)
 			return @"""""";
 
 		return $"@\"{s.Replace ("\"", "\"\"")}\"";
