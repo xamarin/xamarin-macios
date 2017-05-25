@@ -5463,7 +5463,7 @@ public partial class Generator : IMemberGatherer {
 		if (p == null)
 			return;
 
-		print ($"[Advice (@\"{p.Message.Replace ("\"", "\"\"")}\")]");
+		print ($"[Advice ({Quote (p.Message)})]");
 	}
 
 	public void PrintNotImplementedAttribute (ICustomAttributeProvider mi)
@@ -5472,10 +5472,7 @@ public partial class Generator : IMemberGatherer {
 		if (p == null)
 			return;
 
-		if (p.Message != null)
-			print ($"[NotImplemented (@\"{p.Message.Replace ("\"", "\"\"")}\")]");
-		else
-			print ($"[NotImplemented]");
+		print ($"[NotImplemented ({Quote (p.Message)})]");
 	}
 
 	public void PrintAttributes (MemberInfo mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false)
@@ -7106,5 +7103,12 @@ public partial class Generator : IMemberGatherer {
 			return t.FullName;
 		
 	}
-	
+
+	public static string Quote (string s)
+	{
+		if (String.IsNullOrEmpty (s))
+			return s ?? String.Empty;
+
+		return $"@\"{s.Replace ("\"", "\"\"")}\"";
+	}
 }
