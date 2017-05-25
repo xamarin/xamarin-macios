@@ -1487,7 +1487,7 @@ namespace XamCore.Registrar {
 				isProtocol = true;
 
 #if MMP || MTOUCH
-				if (pAttr.InformalSwitchVersion != null && pAttr.InformalSwitchVersion > App.SdkVersion)
+				if (pAttr.InformalUntilVersion != null && pAttr.InformalUntilVersion > App.SdkVersion)
 					isInformalProtocol = !isInformalProtocol;
 #endif
 			}

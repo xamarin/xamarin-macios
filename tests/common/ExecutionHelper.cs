@@ -36,7 +36,7 @@ namespace Xamarin.Tests
 		public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds (60);
 
 		public IEnumerable<ToolMessage> Messages { get { return messages; } }
-		List<string> OutputLines {
+		public List<string> OutputLines {
 			get {
 				if (output_lines == null) {
 					output_lines = new List<string> ();

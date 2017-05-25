@@ -859,11 +859,11 @@ namespace XamCore.CoreAnimation {
 	[BaseType (typeof (NSObject))]
 	[Model]
 #if IOS || TVOS
-	[Protocol (InformalSwitch = new int [] { 10, 0 })]
+	[Protocol (InformalUntil = "10.0")]
 #elif MONOMAC
-	[Protocol (InformalSwitch = new int [] { 10, 12 })]
+	[Protocol (InformalUntil = "10.12")]
 #elif WATCH
-	[Protocol (InformalSwitch = new int [] { 3, 0 })]
+	[Protocol (InformalUntil = "3.0"]
 #else
 	[Protocol]
 #endif

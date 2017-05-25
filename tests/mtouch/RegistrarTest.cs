@@ -712,6 +712,22 @@ class X : ReplayKit.RPBroadcastControllerDelegate
 		}
 
 		[Test]
+		public void NoWarnings ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.Linker = MTouchLinker.DontLink; // so that as much as possible is registered
+				mtouch.Verbosity = 9; // Increase verbosity, otherwise linker warnings aren't shown
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertNoWarnings ();
+				foreach (var line in mtouch.OutputLines)
+					Assert.That (line, Does.Not.Match ("warning:"), "no warnings");
+			}
+		}
+
+		[Test]
 		public void MultiplePropertiesInHierarchy ()
 		{
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=18337
