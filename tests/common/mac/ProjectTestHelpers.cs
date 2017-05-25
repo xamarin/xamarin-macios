@@ -156,7 +156,7 @@ namespace Xamarin.MMP.Tests
 		{
 			// Assert that the program actually runs and returns our guid
 			Assert.IsTrue (File.Exists (path), string.Format ("{0} did not generate an exe?", path));
-			string output = RunAndAssert (path, (StringBuilder)null, "Run");
+			string output = RunAndAssert (path, (string)null, "Run");
 
 			string guidPath = Path.Combine (tmpDir, guid.ToString ());
 			Assert.IsTrue(File.Exists (guidPath), "Generated program did not create expected guid file: " + output);
