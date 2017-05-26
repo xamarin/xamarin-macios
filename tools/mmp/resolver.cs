@@ -31,10 +31,8 @@ using Mono.Cecil;
 
 namespace Xamarin.Bundler {
 	public partial class MonoMacResolver : IAssemblyResolver {
-#if !MKBUNDLE
 		public static bool IsClassic { get { return Driver.IsClassic; } }
 		public static bool IsUnified { get { return Driver.IsUnified; } }
-#endif
 
 		public string FrameworkDirectory { get; set; }
 		public string RootDirectory { get; set; }
