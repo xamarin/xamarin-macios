@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !__WATCHOS__
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,34 +19,79 @@ namespace MonoTouchFixtures.HttpClientTests
 	{
 		const int WaitTimeout = 5000;
 
-		[Test]
-		public void CFNetworkEnsureModifiabilityPostSend ()
+		interface IHandlerWrapper
 		{
-			var handler = new CFNetworkHandler ();
-			using (var client = new HttpClient (handler))
-			using (var request = new HttpRequestMessage (HttpMethod.Get, "http://xamarin.com")) {
-				Assert.DoesNotThrow (() => handler.AllowAutoRedirect = !handler.AllowAutoRedirect);
-				Task.Factory.StartNew (() => {
-					var token = new CancellationTokenSource ();
-					client.SendAsync (request, token.Token).Wait (WaitTimeout);
-					Assert.Throws<InvalidOperationException> (() => handler.AllowAutoRedirect = !handler.AllowAutoRedirect);
-					// cancel to ensure that we do not have side effects
-					token.Cancel ();
-				});
+			bool AllowAutoRedirect { get; set; }
+			HttpMessageHandler Handler { get; }
+
+		}
+
+		// Add new classes to deal with in this class in order not to change the tests, that way we ensure all
+		// handlers will pass the exact same tests with no duplication.
+		class HandlerWrapper : IHandlerWrapper
+		{
+			string handlerType;
+			HttpMessageHandler handler;
+
+			public HandlerWrapper (CFNetworkHandler handler)
+			{
+				handlerType = handler.GetType ().Name;
+				handler = new CFNetworkHandler ();
+			}
+
+			public HandlerWrapper (NSUrlSessionHandler handler)
+			{
+				handlerType = handler.GetType ().Name;
+				handler = new NSUrlSessionHandler ();
+			}
+
+			public bool AllowAutoRedirect
+			{
+				get
+				{
+					if (handlerType == "CFNetworkHandler")
+						return ((CFNetworkHandler)handler).AllowAutoRedirect;
+					if (handlerType == "NSUrlSessionHandler")
+						return ((NSUrlSessionHandler)handler).AllowAutoRedirect;
+					throw new InvalidOperationException ();
+				}
+				set
+				{
+					if (handlerType == "CFNetworkHandler")
+						((CFNetworkHandler)handler).AllowAutoRedirect = value;
+					if (handlerType == "NSUrlSessionHandler")
+						((NSUrlSessionHandler)handler).AllowAutoRedirect = value;
+					throw new InvalidOperationException ();
+				}
+			}
+
+			public HttpMessageHandler Handler { get { return handler; } }
+
+			public static IHandlerWrapper GetWrapper (Type handlerType)
+			{
+				switch (handlerType.Name) {
+					case "CFNetworkHandler":
+						return new HandlerWrapper (new CFNetworkHandler ());
+					case "NSUrlSessionHandler":
+						return new HandlerWrapper (new NSUrlSessionHandler ());
+					default:
+						throw new InvalidOperationException ();
+				}
 			}
 		}
 
-		[Test]
-		public void NSUrlSessionEnsureModifiabilityPostSend ()
+		[TestCase (typeof (CFNetworkHandler))]
+		[TestCase (typeof (NSUrlSessionHandler))]
+		public void EnsureModifiabilityPostSend (Type handlerType)
 		{
-			var handler = new NSUrlSessionHandler ();
-			using (var client = new HttpClient (handler))
+			var wrapper = HandlerWrapper.GetWrapper (handlerType);
+			using (var client = new HttpClient (wrapper.Handler))
 			using (var request = new HttpRequestMessage (HttpMethod.Get, "http://xamarin.com")) {
-				Assert.DoesNotThrow (() => handler.AllowAutoRedirect = !handler.AllowAutoRedirect);
+				Assert.DoesNotThrow (() => wrapper.AllowAutoRedirect = !wrapper.AllowAutoRedirect);
 				Task.Factory.StartNew (() => {
 					var token = new CancellationTokenSource ();
 					client.SendAsync (request, token.Token).Wait (WaitTimeout);
-					Assert.Throws<InvalidOperationException> (() => handler.AllowAutoRedirect = !handler.AllowAutoRedirect);
+					Assert.Throws<InvalidOperationException> (() => wrapper.AllowAutoRedirect = !wrapper.AllowAutoRedirect);
 					// cancel to ensure that we do not have side effects
 					token.Cancel ();
 				});
@@ -53,3 +99,5 @@ namespace MonoTouchFixtures.HttpClientTests
 		}
 	}
 }
+#endif
+
