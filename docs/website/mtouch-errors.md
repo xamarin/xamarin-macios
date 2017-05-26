@@ -1156,19 +1156,19 @@ Something unexpected occured when trying to mark `NSObject` subclasses from the 
 
 <!-- MT21xx: more linker errors -->
 
-<h3><a name="MT2100"/>MT2100: Error processing the method '*' in the assembly '*': *</h3>
-
-Something unexpected occured when trying to mark the method mentioned in the error message.
-
-The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+<!--- 2100 used by mmp -->
 
 <h3><a name="MT2101"/>MT2101: Can't resolve the reference '*', referenced from the method '*' in '*'.</h3>
 
 An invalid assembly reference was encountered when processing the method mentioned in the error message.
 
 The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
-=======
-<!--- 2100 used by mmp -->
+
+<h3><a name="MT2102"/>MT2102: Error processing the method '*' in the assembly '*': *</h3>
+
+Something unexpected occured when trying to mark the method mentioned in the error message.
+
+The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
 # MT3xxx: AOT error messages
 
