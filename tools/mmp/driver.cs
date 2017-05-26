@@ -274,6 +274,7 @@ namespace Xamarin.Bundler {
 						}
 					}
 				},
+				{ "linkplatform", "Link only the Xamarin.Mac.dll platform assembly", v => App.LinkMode = LinkMode.Platform },
 				{ "linksdkonly", "Link only the SDK assemblies", v => App.LinkMode = LinkMode.SDKOnly },
 				{ "linkskip=", "Skip linking of the specified assembly", v => App.LinkSkipped.Add (v) },
 				{ "i18n=", "List of i18n assemblies to copy to the output directory, separated by commas (none,all,cjk,mideast,other,rare,west)", v => App.I18n = LinkerOptions.ParseI18nAssemblies (v) },
@@ -453,6 +454,9 @@ namespace Xamarin.Bundler {
 			if (targetFramework == TargetFramework.Empty)
 				throw new MonoMacException (1404, true, "Target framework '{0}' is invalid.", userTargetFramework);
 
+			if (IsClassic && App.LinkMode == LinkMode.Platform)
+				throw new MonoMacException (2100, true, "Xamarin.Mac Classic API does not support Platofmr Linking.");
+
 			// sanity check as this should never happen: we start out by not setting any
 			// Unified/Classic properties, and only IsUnifiedMobile if we are are on the
 			// XM framework. If we are not, we set IsUnifiedFull to true iff we detect
@@ -468,13 +472,15 @@ namespace Xamarin.Bundler {
 			if (IsUnified == IsClassic || (IsUnified && IsUnifiedCount != 1))
 				throw new Exception ("IsClassic/IsUnified/IsUnifiedMobile/IsUnifiedFullSystemFramework/IsUnifiedFullXamMacFramework logic regression");
 
-			if ((IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework) && (App.LinkMode != LinkMode.None))
-				throw new MonoMacException (2007, true,
-					"Xamarin.Mac Unified API against a full .NET framework does not support linking. Pass the -nolink flag.");
-
-			if (App.LinkMode != LinkMode.None && is_extension) {
-				App.LinkMode = LinkMode.None;
-				ErrorHelper.Warning (2014, "Xamarin.Mac Extensions do not support linking. Request for linking will be ignored.");
+			if (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework) {
+				switch (App.LinkMode) {
+				case LinkMode.None:
+				case LinkMode.Platform:
+					break;
+				default:
+					throw new MonoMacException (2007, true,
+						"Xamarin.Mac Unified API against a full .NET framework does not support linking SDK or All assemblies. Pass either the `-nolink` or `-linkplatform` flag.");
+				}
 			}
 
 			ValidateXcode ();
@@ -553,8 +559,19 @@ namespace Xamarin.Bundler {
 
 		static void ValidateXcode ()
 		{
-			var plist_path = Path.Combine (Path.GetDirectoryName (DeveloperDirectory), "version.plist");
 			if (xcode_version == null) {
+				// Check what kind of path we got
+				if (File.Exists (Path.Combine (sdk_root, "Contents", "MacOS", "Xcode"))) {
+					// path to the Xcode.app
+					sdk_root = Path.Combine (sdk_root, "Contents", "Developer");
+				} else if (File.Exists (Path.Combine (sdk_root, "..", "MacOS", "Xcode"))) {
+					// path to Contents/Developer
+					sdk_root = Path.GetFullPath (Path.Combine (sdk_root, "..", "..", "Contents", "Developer"));
+				} else {
+					throw ErrorHelper.CreateError (57, "Cannot determine the path to Xcode.app from the sdk root '{0}'. Please specify the full path to the Xcode.app bundle.", sdk_root);
+				}
+
+				var plist_path = Path.Combine (Path.GetDirectoryName (DeveloperDirectory), "version.plist");
 				if (File.Exists (plist_path)) {
 					bool nextElement = false;
 					XmlReaderSettings settings = new XmlReaderSettings ();
@@ -652,13 +669,11 @@ namespace Xamarin.Bundler {
 			{
 				if (!App.EnableDebug)
 					registrar = RegistrarMode.Static;
-				else if (IsUnified && App.LinkMode == LinkMode.None && embed_mono)
+				else if (IsUnified && App.LinkMode == LinkMode.None && embed_mono && App.IsDefaultMarshalManagedExceptionMode)
 					registrar = RegistrarMode.PartialStatic;
 				else
 					registrar = RegistrarMode.Dynamic;
 			}
-			if (is_extension)
-				registrar = RegistrarMode.Static;
 			
 			if (no_executable) {
 				if (unprocessed.Count != 0) {
@@ -695,6 +710,13 @@ namespace Xamarin.Bundler {
 				if (!File.Exists (root_assembly))
 					throw new MonoMacException (7, true, "The root assembly '{0}' does not exist", root_assembly);
 
+				if (IsClassic)
+					Profile.Current = new MonoMacProfile ();
+				else if (IsUnifiedFullXamMacFramework || IsUnifiedFullSystemFramework)
+					Profile.Current = new XamarinMacProfile (arch == "x86_64" ? 64 : 32);
+				else
+					Profile.Current = new MacMobileProfile (arch == "x86_64" ? 64 : 32);
+
 				string root_wo_ext = Path.GetFileNameWithoutExtension (root_assembly);
 				if (Profile.IsSdkAssembly (root_wo_ext) || Profile.IsProductAssembly (root_wo_ext))
 					throw new MonoMacException (3, true, "Application name '{0}.exe' conflicts with an SDK or product assembly (.dll) name.", root_wo_ext);
@@ -730,7 +752,7 @@ namespace Xamarin.Bundler {
 				GatherAssemblies ();
 				CheckReferences ();
 
-				if (!is_extension && !resolved_assemblies.Exists (f => Path.GetExtension (f).ToLower () == ".exe"))
+				if (!is_extension && !resolved_assemblies.Exists (f => Path.GetExtension (f).ToLower () == ".exe") && !App.Embeddinator)
 					throw new MonoMacException (79, true, "No executable was copied into the app bundle.  Please contact 'support@xamarin.com'", "");
 
 				// i18n must be dealed outside linking too (e.g. bug 11448)
@@ -814,7 +836,7 @@ namespace Xamarin.Bundler {
 				GeneratePList ();
 
 			if (App.LinkMode != LinkMode.All && App.RuntimeOptions != null)
-				App.RuntimeOptions.Write (App.AppDirectory);
+				App.RuntimeOptions.Write (resources_dir);
 
 			if (aotOptions != null && aotOptions.IsAOT) {
 				if (!IsUnified)
@@ -827,7 +849,7 @@ namespace Xamarin.Bundler {
 				else
 					throw ErrorHelper.CreateError (0099, "Internal error \"AOT with unexpected profile.\" Please file a bug report with a test case (http://bugzilla.xamarin.com).");
 
-				AOTCompiler compiler = new AOTCompiler (aotOptions, compilerType, IsUnifiedMobile);
+				AOTCompiler compiler = new AOTCompiler (aotOptions, compilerType, IsUnifiedMobile, !EnableDebug);
 				compiler.Compile (mmp_dir);
 				Watch ("AOT Compile", 1);
 			}
@@ -917,11 +939,11 @@ namespace Xamarin.Bundler {
 		}
 
 		static void GeneratePList () {
-			var sr = new StreamReader (typeof (Driver).Assembly.GetManifestResourceStream ("Info.plist.tmpl"));
+			var sr = new StreamReader (typeof (Driver).Assembly.GetManifestResourceStream (App.Embeddinator ? "Info-framework.plist.tmpl" : "Info.plist.tmpl"));
 			var all = sr.ReadToEnd ();
 			var icon_str = (icon != null) ? "\t<key>CFBundleIconFile</key>\n\t<string>" + icon + "</string>\n\t" : "";
-
-			using (var sw = new StreamWriter (Path.Combine (contents_dir, "Info.plist"))){
+			var path = Path.Combine (App.Embeddinator ? resources_dir : contents_dir, "Info.plist");
+			using (var sw = new StreamWriter (path)){
 				sw.WriteLine (
 					all.Replace ("@BUNDLEDISPLAYNAME@", app_name).
 					Replace ("@EXECUTABLE@", app_name).
@@ -957,6 +979,9 @@ namespace Xamarin.Bundler {
 			
 			return s.ToString ();
 		}
+
+		[DllImport (Constants.libSystemLibrary)]
+		static extern int unlink (string pathname);
 
 		[DllImport (Constants.libSystemLibrary)]
 		static extern int symlink (string path1, string path2);
@@ -1199,10 +1224,14 @@ namespace Xamarin.Bundler {
 				var args = new StringBuilder ();
 				if (App.EnableDebug)
 					args.Append ("-g ");
+				if (App.Embeddinator)
+					args.Append ($"-shared -install_name \"@loader_path/../Frameworks/{App.Name}.framework/{App.Name}\" ");
 				args.Append ("-mmacosx-version-min=").Append (App.DeploymentTarget.ToString ()).Append (' ');
 				args.Append ("-arch ").Append (arch).Append (' ');
 				if (arch == "x86_64")
 					args.Append ("-fobjc-runtime=macosx ");
+				if (!embed_mono)
+					args.Append ("-DDYNAMIC_MONO_RUNTIME ");
 				bool appendedObjc = false;
 				foreach (var assembly in BuildTarget.Assemblies) {
 					if (assembly.LinkWith != null) {
@@ -1409,6 +1438,7 @@ namespace Xamarin.Bundler {
 					Registrar = (StaticRegistrar) BuildTarget.StaticRegistrar,
 				},
 				SkipExportedSymbolsInSdkAssemblies = !embed_mono,
+				Target = BuildTarget,
 			};
 
 			linker_options = options;
@@ -1667,10 +1697,16 @@ namespace Xamarin.Bundler {
 
 		/* Currently we clobber any existing files, perhaps we should error and have a -force flag */
 		static void CreateDirectoriesIfNeeded () {
-			App.AppDirectory = Path.Combine (output_dir, string.Format("{0}.{1}", app_name, is_extension ? "appex" : "app"));
+			if (App.Embeddinator) {
+				App.AppDirectory = Path.Combine (output_dir, app_name + ".framework");
+				contents_dir = Path.Combine (App.AppDirectory, "Versions", "A");
+				macos_dir = contents_dir;
+			} else {
+				App.AppDirectory = Path.Combine (output_dir, string.Format ("{0}.{1}", app_name, is_extension ? "appex" : "app"));
+				contents_dir = Path.Combine (App.AppDirectory, "Contents");
+				macos_dir = Path.Combine (contents_dir, "MacOS");
+			}
 
-			contents_dir = Path.Combine (App.AppDirectory, "Contents");
-			macos_dir = Path.Combine (contents_dir, "MacOS");
 			frameworks_dir = Path.Combine (contents_dir, "Frameworks");
 			resources_dir = Path.Combine (contents_dir, "Resources");
 			mmp_dir = Path.Combine (contents_dir, BundleName);
@@ -1680,6 +1716,21 @@ namespace Xamarin.Bundler {
 			CreateDirectoryIfNeeded (macos_dir);
 			CreateDirectoryIfNeeded (resources_dir);
 			CreateDirectoryIfNeeded (mmp_dir);
+
+			if (App.Embeddinator) {
+				CreateSymlink (Path.Combine (App.AppDirectory, "Versions", "Current"), "A");
+				CreateSymlink (Path.Combine (App.AppDirectory, app_name), $"Versions/Current/{app_name}");
+				CreateSymlink (Path.Combine (App.AppDirectory, "Resources"), "Versions/Current/Resources");
+			}
+		}
+
+		// Mono.Unix can't create symlinks to relative paths, it insists on the target to a full path before creating the symlink.
+		static void CreateSymlink (string file, string target)
+		{
+			unlink (file); // Delete any existing symlinks.
+			var rv = symlink (target, file);
+			if (rv != 0)
+				throw ErrorHelper.CreateError (1034, $"Could not create symlink '{file}' -> '{target}': error {Marshal.GetLastWin32Error ()}");
 		}
 
 		static void CreateDirectoryIfNeeded (string dir) {

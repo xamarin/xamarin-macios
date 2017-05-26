@@ -335,6 +335,9 @@ namespace Xamarin.Bundler {
 				
 				foreach (var mr in m.ModuleReferences) {
 					string name = mr.Name;
+					if (string.IsNullOrEmpty (name))
+						continue; // obfuscated assemblies.
+					
 					string file = Path.GetFileNameWithoutExtension (name);
 
 					switch (file) {

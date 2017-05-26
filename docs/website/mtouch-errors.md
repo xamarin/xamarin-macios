@@ -528,9 +528,11 @@ Native code sharing requires that all the projects build for the exact same API.
 
 For instance: this condition occurs when an extension builds for ARMv7+llvm+thumb2, but the container app only builds for ARMv7+llvm.
 
-* because the container app is referencing the assembly '*' from '*', while the extension references it from '*'.
+* because the container app is referencing the assembly '*' from '*', while the extension references a different version from '*'.
 
 Native code sharing requires that all the projects that share code use the same versions for all assemblies.
+
+<!-- MT0114: used by mmp -->
 
 <h3><a name="MT0125"/>MT0125: The --assembly-build-target command-line argument is ignored in the simulator.</h3>
 
@@ -742,6 +744,20 @@ Please unlock the device and try again.
 <h3><a name="MT1032"/>MT1032: This application executable might be too large (* MB) to execute on device. If bitcode was enabled you might want to disable it for development, it is only required to submit applications to Apple.</h3>
 
 <h3><a name="MT1033"/>MT1033: Could not uninstall the application '*' from the device '*': *</h3>
+
+<!-- 1034 used by mmp -->
+
+<h3><a name="MT1035"/>MT1035: Cannot include different versions of the framework '{name}'</h3>
+
+It is not possible to link with different versions of the same framework.
+
+This typically happens when an extension references a different version of a framework than the container app (possibly through a third-party binding assembly).
+
+Following this error there will be multiple [MT1036](#MT1036) errors listing the paths for each different framework.
+
+<h3><a name="MT1036"/>MT1036: Framework '{name}' included from: {path} (Related to previous error)</h3>
+
+This error is reported only together with [MT1036](#MT1036). Please see [MT1036](#MT1036) for more information.
 
 ### MT11xx: Debug Service
 
@@ -1151,6 +1167,8 @@ The assembly causing the issue is named in the error message. In order to fix th
 An invalid assembly reference was encountered when processing the method mentioned in the error message.
 
 The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+=======
+<!--- 2100 used by mmp -->
 
 # MT3xxx: AOT error messages
 

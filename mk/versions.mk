@@ -19,7 +19,7 @@ ifeq ($$(IGNORE_$(2)_VERSION),)
 			if test x$$(RESET_VERSIONS) != "x"; then \
 				make reset-$(1) || exit 1; \
 			else \
-				echo "Your $(1) version is out of date, please run 'make reset-$(1)' (found $($(2)_VERSION), expected $(NEEDED_$(2)_VERSION))"; \
+				echo "Your $(1) version is out of date, please run 'make reset-$(1)' (found $($(2)_VERSION), expected $(NEEDED_$(2)_VERSION)). Alternatively export IGNORE_$(2)_VERSION=1 to skip this check."; \
 				test -z "$(BUILD_REVISION)" || $(MAKE) test-$(1); \
 				touch .check-versions-failure; \
 			fi; \

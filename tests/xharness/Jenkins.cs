@@ -75,7 +75,7 @@ namespace xharness
 				SimulatorLoadLog.WriteLine (e.ToString ());
 				var task = new RunSimulatorTask (buildTask) { ExecutionResult = TestExecutingResult.Failed };
 				var log = task.Logs.CreateFile ("Run log", Path.Combine (task.LogDirectory, "run-" + DateTime.Now.Ticks + ".log"));
-				File.WriteAllText (log.Path, "Failed to load simulators.");
+				log.WriteLine ("Failed to load simulators");
 				runtasks.Add (task);
 				return runtasks;
 			}
@@ -133,6 +133,7 @@ namespace xharness
 					ProjectConfiguration = "Debug64",
 					ProjectPlatform = "iPhone",
 					Platform = TestPlatform.iOS_Unified64,
+					TestName = project.Name,
 				};
 				rv.Add (new RunDeviceTask (build64, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOS });
 
@@ -143,6 +144,7 @@ namespace xharness
 					ProjectConfiguration = "Debug32",
 					ProjectPlatform = "iPhone",
 					Platform = TestPlatform.iOS_Unified32,
+					TestName = project.Name,
 				};
 				rv.Add (new RunDeviceTask (build32, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS)) { Ignored = ignored || !IncludeiOS });
 
@@ -154,6 +156,7 @@ namespace xharness
 					ProjectConfiguration = "Debug64",
 					ProjectPlatform = "iPhone",
 					Platform = TestPlatform.iOS_TodayExtension64,
+					TestName = project.Name,
 				};
 				rv.Add (new RunDeviceTask (buildToday, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOSExtensions });
 
@@ -165,6 +168,7 @@ namespace xharness
 					ProjectConfiguration = "Debug",
 					ProjectPlatform = "iPhone",
 					Platform = TestPlatform.tvOS,
+					TestName = project.Name,
 				};
 				rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.tvOS)) { Ignored = ignored || !IncludetvOS });
 
@@ -176,12 +180,10 @@ namespace xharness
 					ProjectConfiguration = "Debug",
 					ProjectPlatform = "iPhone",
 					Platform = TestPlatform.watchOS,
+					TestName = project.Name,
 				};
 				rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.watchOS)){ Ignored = ignored || !IncludewatchOS });
 			}
-
-			foreach (var task in rv)
-				task.Variation = "Debug";
 
 			var assembly_build_targets = new []
 			{
@@ -242,6 +244,7 @@ namespace xharness
 						ProjectPlatform = task.ProjectPlatform,
 						Platform = task.Platform,
 						InitialTask = clone_task,
+						TestName = clone.Name,
 					};
 					rv.Add (new RunDeviceTask (build, task.Candidates) { Variation = variation, Ignored = task.Ignored });
 				}
@@ -430,6 +433,7 @@ namespace xharness
 						ProjectPlatform = "iPhoneSimulator",
 						Platform = pair.Item2,
 						Ignored = pair.Item3,
+						TestName = project.Name,
 					};
 					runSimulatorTasks.AddRange (await CreateRunSimulatorTaskAsync (derived));
 				}
@@ -473,34 +477,54 @@ namespace xharness
 				if (!IncludeBcl && project.IsBclTest)
 					ignored = true;
 
-				BuildToolTask build;
-				if (project.GenerateVariations) {
-					build = new MdtoolTask ();
-					build.Platform = TestPlatform.Mac_Classic;
-				} else {
-					build = new XBuildTask ();
-					build.Platform = TestPlatform.Mac;
-				}
-				build.Jenkins = this;
-				build.TestProject = project;
-				build.ProjectConfiguration = "Debug";
-				build.ProjectPlatform = "x86";
-				build.SpecifyPlatform = false;
-				build.SpecifyConfiguration = false;
-				var exec = new MacExecuteTask (build)
-				{
-					Ignored = ignored || !IncludeClassicMac,
-					BCLTest = project.IsBclTest,
-					TestName = project.Name,
-			};
-				Tasks.Add (exec);
+				var configurations = project.Configurations;
+				if (configurations == null)
+					configurations = new string [] { "Debug" };
+				foreach (var config in configurations) {
+					BuildProjectTask build;
+					if (project.GenerateVariations) {
+						build = new MdtoolTask ();
+						build.Platform = TestPlatform.Mac_Classic;
+					} else {
+						build = new XBuildTask ();
+						build.Platform = TestPlatform.Mac;
+					}
+					build.Jenkins = this;
+					build.TestProject = project;
+					build.SolutionPath = project.SolutionPath;
+					build.ProjectConfiguration = config;
+					build.ProjectPlatform = "x86";
+					build.SpecifyPlatform = false;
+					build.SpecifyConfiguration = build.ProjectConfiguration != "Debug";
+					RunTestTask exec;
+					if (project.IsNUnitProject) {
+						var dll = Path.Combine (Path.GetDirectoryName (project.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
+						exec = new NUnitExecuteTask (build) {
+							Ignored = ignored || !IncludeClassicMac,
+							TestLibrary = dll,
+							TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
+							WorkingDirectory = Path.GetDirectoryName (dll),
+							Platform = build.Platform,
+							TestName = project.Name,
+							Timeout = TimeSpan.FromMinutes (120),
+						};
+					} else {
+						exec = new MacExecuteTask (build) {
+							Ignored = ignored || !IncludeClassicMac,
+							BCLTest = project.IsBclTest,
+							TestName = project.Name,
+						};
+					}
+					exec.Variation = configurations.Length > 1 ? config : null;
+					Tasks.Add (exec);
 
-				if (project.GenerateVariations) {
-					Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified, "-unified", ignored));
-					Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified32, "-unified-32", ignored));
-					if (!project.SkipXMVariations) {
-						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45", ignored));
-						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored));
+					if (project.GenerateVariations) {
+						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified, "-unified", ignored));
+						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified32, "-unified-32", ignored));
+						if (!project.SkipXMVariations) {
+							Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45", ignored));
+							Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored));
+						}
 					}
 				}
 			}
@@ -564,7 +588,7 @@ namespace xharness
 			Tasks.AddRange (await CreateRunDeviceTasks ());
 		}
 
-		static MacExecuteTask CloneExecuteTask (MacExecuteTask task, TestPlatform platform, string suffix, bool ignore)
+		RunTestTask CloneExecuteTask (RunTestTask task, TestPlatform platform, string suffix, bool ignore)
 		{
 			var build = new XBuildTask ()
 			{
@@ -577,11 +601,28 @@ namespace xharness
 				SpecifyConfiguration = task.BuildTask.SpecifyConfiguration,
 			};
 
-			return new MacExecuteTask (build)
-			{
-				Ignored = ignore,
-				TestName = build.TestName,
-			};
+			var macExec = task as MacExecuteTask;
+			if (macExec != null) {
+				return new MacExecuteTask (build) {
+					Ignored = ignore,
+					TestName = task.TestName,
+				};
+			}
+			var nunit = task as NUnitExecuteTask;
+			if (nunit != null) {
+				var project = build.TestProject;
+				var dll = Path.Combine (Path.GetDirectoryName (project.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
+				return new NUnitExecuteTask (build) {
+					Ignored = ignore,
+					TestName = build.TestName,
+					TestLibrary = dll,
+					TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
+					WorkingDirectory = Path.GetDirectoryName (dll),
+					Platform = build.Platform,
+					Timeout = TimeSpan.FromMinutes (120),
+				};
+			}
+			throw new NotImplementedException ();
 		}
 
 		public int Run ()
@@ -1715,6 +1756,12 @@ function oninitialload ()
 			}
 		}
 
+		public bool HasCustomTestName {
+			get {
+				return test_name != null;
+			}
+		}
+
 		string test_name;
 		public virtual string TestName {
 			get {
@@ -1899,6 +1946,15 @@ function oninitialload ()
 			}
 		}
 
+		protected void LogProcessExecution (Log log, Process process, string text, params object[] args)
+		{
+			Jenkins.MainLog.WriteLine (text, args);
+			log.WriteLine (text, args);
+			foreach (string key in process.StartInfo.EnvironmentVariables.Keys)
+				log.WriteLine ("{0}={1}", key, process.StartInfo.EnvironmentVariables [key]);
+			log.WriteLine ("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
+		}
+
 		// This method will set (and clear) the Waiting flag correctly while waiting on a resource
 		// It will also pause the duration.
 		public async Task<IAcquiredResource> NotifyBlockingWaitAsync (Task<IAcquiredResource> task)
@@ -1913,6 +1969,17 @@ function oninitialload ()
 			duration.Start ();
 			rv.OnDispose = duration.Stop;
 			return rv;
+		}
+
+		public virtual bool SupportsParallelExecution {
+			get {
+				return true;
+			}
+		}
+
+		protected Task<IAcquiredResource> NotifyAndAcquireDesktopResourceAsync ()
+		{
+			return NotifyBlockingWaitAsync ((SupportsParallelExecution ? Jenkins.DesktopResource.AcquireConcurrentAsync () : Jenkins.DesktopResource.AcquireExclusiveAsync ()));
 		}
 
 		class BlockingWait : IAcquiredResource, IDisposable
@@ -1947,12 +2014,63 @@ function oninitialload ()
 		}
 	}
 
-	class MdtoolTask : BuildToolTask
+	abstract class BuildProjectTask : BuildToolTask
+	{
+		public string SolutionPath;
+
+		public bool RestoreNugets {
+			get {
+				return !string.IsNullOrEmpty (SolutionPath);
+			}
+		}
+
+		public override bool SupportsParallelExecution {
+			get {
+				return Platform.ToString ().StartsWith ("Mac", StringComparison.Ordinal);
+			}
+		}
+
+		// This method must be called with the desktop resource acquired
+		// (which is why it takes an IAcquiredResources as a parameter without using it in the function itself).
+		protected async Task RestoreNugetsAsync (Log log, IAcquiredResource resource)
+		{
+			if (!RestoreNugets)
+				return;
+
+			if (!File.Exists (SolutionPath))
+				throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", SolutionPath);
+
+			using (var nuget = new Process ()) {
+				nuget.StartInfo.FileName = "/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
+				var args = new StringBuilder ();
+				args.Append ("restore ");
+				args.Append (Harness.Quote (SolutionPath));
+				nuget.StartInfo.Arguments = args.ToString ();
+				SetEnvironmentVariables (nuget);
+				LogProcessExecution (log, nuget, "Restoring nugets for {0} ({1})", TestName, Mode);
+
+				var timeout = TimeSpan.FromMinutes (15);
+				var result = await nuget.RunAsync (log, true, timeout);
+				if (result.TimedOut) {
+					ExecutionResult = TestExecutingResult.TimedOut;
+					log.WriteLine ("Nuget restore timed out after {0} seconds.", timeout.TotalSeconds);
+					return;
+				} else if (!result.Succeeded) {
+					ExecutionResult = TestExecutingResult.Failed;
+					return;
+				}
+			}
+		}
+	}
+
+	class MdtoolTask : BuildProjectTask
 	{
 		protected override async Task ExecuteAsync ()
 		{
 			ExecutionResult = TestExecutingResult.Building;
-			using (var resource = await NotifyBlockingWaitAsync (Jenkins.DesktopResource.AcquireConcurrentAsync ())) {
+			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
+				var log = Logs.CreateStream (LogDirectory, $"build-{Platform}-{Timestamp}.txt", "Build log");
+				await RestoreNugetsAsync (log, resource);
 				using (var xbuild = new Process ()) {
 					xbuild.StartInfo.FileName = "/Applications/Visual Studio.app/Contents/MacOS/vstool";
 					var args = new StringBuilder ();
@@ -1960,12 +2078,8 @@ function oninitialload ()
 					var sln = Path.ChangeExtension (ProjectFile, "sln");
 					args.Append (Harness.Quote (File.Exists (sln) ? sln : ProjectFile));
 					xbuild.StartInfo.Arguments = args.ToString ();
-					Jenkins.MainLog.WriteLine ("Building {0} ({1})", TestName, Mode);
 					SetEnvironmentVariables (xbuild);
-					var log = Logs.CreateStream (LogDirectory, $"build-{Platform}-{Timestamp}.txt", "Build log");
-					foreach (string key in xbuild.StartInfo.EnvironmentVariables.Keys)
-						log.WriteLine ("{0}={1}", key, xbuild.StartInfo.EnvironmentVariables [key]);
-					log.WriteLine ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
+					LogProcessExecution (log, xbuild, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (5);
 						var result = await xbuild.RunAsync (log, true, timeout);
@@ -1991,17 +2105,14 @@ function oninitialload ()
 
 		protected override async Task ExecuteAsync ()
 		{
-			using (var resource = await NotifyBlockingWaitAsync (Jenkins.DesktopResource.AcquireConcurrentAsync ())) {
+			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				using (var make = new Process ()) {
 					make.StartInfo.FileName = "make";
 					make.StartInfo.WorkingDirectory = WorkingDirectory;
 					make.StartInfo.Arguments = Target;
-					Jenkins.MainLog.WriteLine ("Making {0} in {1}", Target, WorkingDirectory);
 					SetEnvironmentVariables (make);
 					var log = Logs.CreateStream (LogDirectory, $"make-{Platform}-{Timestamp}.txt", "Build log");
-					foreach (string key in make.StartInfo.EnvironmentVariables.Keys)
-						log.WriteLine ("{0}={1}", key, make.StartInfo.EnvironmentVariables [key]);
-					log.WriteLine ("{0} {1}", make.StartInfo.FileName, make.StartInfo.Arguments);
+					LogProcessExecution (log, make, "Making {0} in {1}", Target, WorkingDirectory);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (5);
 						var result = await make.RunAsync (log, true, timeout);
@@ -2022,17 +2133,15 @@ function oninitialload ()
 		}
 	}
 
-	class XBuildTask : BuildToolTask
+	class XBuildTask : BuildProjectTask
 	{
-		public bool SupportsParallelBuilds {
-			get {
-				return Platform.ToString ().StartsWith ("Mac", StringComparison.Ordinal);
-			}
-		}
-
 		protected override async Task ExecuteAsync ()
 		{
-			using (var resource = await NotifyBlockingWaitAsync ((SupportsParallelBuilds ? Jenkins.DesktopResource.AcquireConcurrentAsync () : Jenkins.DesktopResource.AcquireExclusiveAsync ()))) {
+			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
+				var log = Logs.CreateStream (LogDirectory, $"build-{Platform}-{Timestamp}.txt", "Build log");
+
+				await RestoreNugetsAsync (log, resource);
+
 				using (var xbuild = new Process ()) {
 					xbuild.StartInfo.FileName = "xbuild";
 					var args = new StringBuilder ();
@@ -2043,12 +2152,8 @@ function oninitialload ()
 						args.Append ($"/p:Configuration={ProjectConfiguration} ");
 					args.Append (Harness.Quote (ProjectFile));
 					xbuild.StartInfo.Arguments = args.ToString ();
-					Jenkins.MainLog.WriteLine ("Building {0} ({1})", TestName, Mode);
 					SetEnvironmentVariables (xbuild);
-					var log = Logs.CreateStream (LogDirectory, $"build-{Platform}-{Timestamp}.txt", "Build log");
-					foreach (string key in xbuild.StartInfo.EnvironmentVariables.Keys)
-						log.WriteLine ("{0}={1}", key, xbuild.StartInfo.EnvironmentVariables [key]);
-					log.WriteLine ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
+					LogProcessExecution (log, xbuild, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (15);
 						var result = await xbuild.RunAsync (log, true, timeout);
@@ -2080,11 +2185,8 @@ function oninitialload ()
 				args.Append (Harness.Quote (project_file)).Append (" ");
 				args.Append ("/t:Clean ");
 				xbuild.StartInfo.Arguments = args.ToString ();
-				Jenkins.MainLog.WriteLine ("Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
 				SetEnvironmentVariables (xbuild);
-				foreach (string key in xbuild.StartInfo.EnvironmentVariables.Keys)
-					log.WriteLine ("{0}={1}", key, xbuild.StartInfo.EnvironmentVariables [key]);
-				log.WriteLine ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
+				LogProcessExecution (log, xbuild, "Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
 				var timeout = TimeSpan.FromMinutes (1);
 				await xbuild.RunAsync (log, true, timeout);
 				log.WriteLine ("Clean timed out after {0} seconds.", timeout.TotalSeconds);
@@ -2142,7 +2244,7 @@ function oninitialload ()
 
 		protected override async Task RunTestAsync ()
 		{
-			using (var resource = await NotifyBlockingWaitAsync (Jenkins.DesktopResource.AcquireConcurrentAsync ())) {
+			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				var xmlLog = Logs.CreateFile ("XML log", Path.Combine (LogDirectory, "log.xml"));
 				var log = Logs.CreateStream (LogDirectory, $"execute-{Timestamp}.txt", "Execution log");
 				using (var proc = new Process ()) {
@@ -2252,6 +2354,20 @@ function oninitialload ()
 		{ 
 		}
 
+		public override bool SupportsParallelExecution {
+			get {
+				if (TestName.Contains ("xammac")) {
+					// We run the xammac tests in both Debug and Release configurations.
+					// These tests are not written to support parallel execution
+					// (there are hard coded paths used for instance), so disable
+					// parallel execution for these tests.
+					return false;
+				}
+
+				return base.SupportsParallelExecution;
+			}
+		}
+
 		public override IEnumerable<Log> AggregatedLogs {
 			get {
 				return base.AggregatedLogs.Union (BuildTask.Logs);
@@ -2284,7 +2400,7 @@ function oninitialload ()
 			else
 				Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), "bin", BuildTask.ProjectPlatform, BuildTask.ProjectConfiguration + suffix, name + ".app", "Contents", "MacOS", name);
 
-			using (var resource = await NotifyBlockingWaitAsync (Jenkins.DesktopResource.AcquireConcurrentAsync ())) {
+			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				using (var proc = new Process ()) {
 					proc.StartInfo.FileName = Path;
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
@@ -2334,6 +2450,8 @@ function oninitialload ()
 			Platform = build_task.Platform;
 			ProjectPlatform = build_task.ProjectPlatform;
 			ProjectConfiguration = build_task.ProjectConfiguration;
+			if (build_task.HasCustomTestName)
+				TestName = build_task.TestName;
 		}
 
 		public override IEnumerable<Log> AggregatedLogs {
@@ -2461,7 +2579,7 @@ function oninitialload ()
 				case TestPlatform.iOS_TodayExtension64:
 					return "iOS Unified Today Extension 64-bits - " + XIMode;
 				case TestPlatform.iOS_Unified:
-					throw new NotImplementedException ();
+					return "iOS Unified - " + XIMode;
 				default:
 					throw new NotImplementedException ();
 				}

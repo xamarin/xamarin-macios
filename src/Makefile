@@ -82,8 +82,7 @@ IOS_compat_GENERATE=$(IOS_BMONO) --debug $(IOS_compat_GENERATOR)
 IOS_native_GENERATOR=$(IOS_BUILD_DIR)/native/generator.exe
 IOS_native_GENERATE=$(IOS_BMONO) --debug $(IOS_native_GENERATOR)
 endif
-$(IOS_BUILD_DIR)/Constants.cs: Constants.iOS.cs.in Makefile
-	$(Q) mkdir -p $(IOS_BUILD_DIR)
+$(IOS_BUILD_DIR)/Constants.cs: Constants.iOS.cs.in Makefile $(TOP)/Make.config.inc | $(IOS_BUILD_DIR)
 	$(call Q_PROF_GEN,ios) sed \
 		-e "s/@VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
 		-e "s/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH): $(shell git log -1 --pretty=%h))/g" \
@@ -487,7 +486,7 @@ MAC_MODERNHTTP_SOURCES = \
 	$(abspath $(MONO_PATH)/mcs/class/System.Net.Http/CFContentStream.cs)  \
 	$(abspath $(MONO_PATH)/mcs/class/System.Net.Http/CFNetworkHandler.cs) \
 
-$(MAC_BUILD_DIR)/Constants.cs: Constants.mac.cs.in Makefile
+$(MAC_BUILD_DIR)/Constants.cs: Constants.mac.cs.in Makefile $(TOP)/Make.config.inc | $(MAC_BUILD_DIR)
 	$(Q) sed \
 			-e "s/@VERSION@/$(MAC_PACKAGE_VERSION_MAJOR).$(MAC_PACKAGE_VERSION_MINOR).$(MAC_PACKAGE_VERSION_REV)/g" \
 			-e "s/@REVISION@/$(MAC_COMMIT_DISTANCE) ($(CURRENT_BRANCH): $(shell git log -1 --pretty=%h))/g" \
@@ -637,6 +636,7 @@ INSTALL_TARGETS+=install-mac
 ALL_TARGETS+=all-mac
 
 MAC_TARGETS_DIRS += \
+	$(MAC_BUILD_DIR) \
 	$(MAC_BUILD_DIR)/mobile \
 	$(MAC_BUILD_DIR)/mobile/Facades \
 	$(MAC_BUILD_DIR)/full \
@@ -781,7 +781,7 @@ WATCHOS_CORE_SOURCES +=           \
 WATCHOS_SOURCES +=                \
     $(WATCHOS_EXTRA_CORE_SOURCES) \
 
-$(WATCH_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.watch.cs.in $(TOP)/Make.config $(TOP)/.git/HEAD | $(WATCH_BUILD_DIR)
+$(WATCH_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.watch.cs.in Makefile $(TOP)/Make.config.inc | $(WATCH_BUILD_DIR)
 	$(call Q_PROF_GEN,watch) sed \
 		-e "s/@VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
 		-e "s/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH): $(shell git log -1 --pretty=%h))/g" \
@@ -1010,7 +1010,7 @@ TVOS_CORE_SOURCES +=           \
 TVOS_SOURCES +=                \
 	$(TVOS_EXTRA_CORE_SOURCES) \
 
-$(TVOS_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.tvos.cs.in $(TOP)/Make.config $(TOP)/.git/HEAD | $(TVOS_BUILD_DIR)
+$(TVOS_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.tvos.cs.in Makefile $(TOP)/Make.config.inc | $(TVOS_BUILD_DIR)
 	$(call Q_PROF_GEN,tvos) sed \
 		-e "s/@VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
 		-e "s/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH): $(shell git log -1 --pretty=%h))/g" \

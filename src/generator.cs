@@ -717,6 +717,19 @@ public class NamespaceManager
 		if (Frameworks.HaveMetal && !(Generator.CurrentPlatform == PlatformName.MacOSX && !Generator.UnifiedAPI))
 			ImplicitNamespaces.Add (Get ("Metal"));
 
+		if (Frameworks.HaveCoreImage)
+			ImplicitNamespaces.Add (Get ("CoreImage"));
+		if (Frameworks.HavePhotos)
+			ImplicitNamespaces.Add (Get ("Photos"));
+		if (Frameworks.HaveMediaPlayer && Generator.UnifiedAPI)
+			ImplicitNamespaces.Add (Get ("MediaPlayer"));
+		if (Frameworks.HaveMessages)
+			ImplicitNamespaces.Add (Get ("Messages"));
+		if (Frameworks.HaveGameplayKit)
+			ImplicitNamespaces.Add (Get ("GameplayKit"));
+		if (Frameworks.HaveSpriteKit)
+			ImplicitNamespaces.Add (Get ("SpriteKit"));
+
 		// These are both types and namespaces
 		NamespacesThatConflictWithTypes = new HashSet<string> {
 			Get ("AudioUnit")
@@ -852,14 +865,16 @@ public partial class Generator : IMemberGatherer {
 		public string ParameterMarshal;
 		public string CreateFromRet;
 		public bool HasCustomCreate;
+		public string ClosingCreate;
 
-		public MarshalType (Type t, string encode = null, string fetch = null, string create = null)
+		public MarshalType (Type t, string encode = null, string fetch = null, string create = null, string closingCreate = ")")
 		{
 			Type = t;
 			Encoding = encode ?? "IntPtr";
 			ParameterMarshal = fetch ?? "{0}.Handle";
 			CreateFromRet = create ?? String.Format ("new global::{0} (", t.FullName);
 			HasCustomCreate = create != null;
+			ClosingCreate = closingCreate;
 		}
 
 		//
@@ -2013,7 +2028,7 @@ public partial class Generator : IMemberGatherer {
 		var ea = AttributeManager.GetCustomAttribute<ExportAttribute> (pinfo.GetSetMethod ());
 		if (ea != null && ea.Selector != null)
 			return ea;
-		return AttributeManager.GetCustomAttribute<ExportAttribute> (pinfo).ToSetter (pinfo);
+		return AttributeManager.GetCustomAttribute<ExportAttribute> (pinfo)?.ToSetter (pinfo);
 	}
 
 	public static ExportAttribute GetGetterExportAttribute (PropertyInfo pinfo)
@@ -2088,8 +2103,10 @@ public partial class Generator : IMemberGatherer {
 			marshal_types.Add (new MarshalType (TypeManager.ABPerson, create: "(ABPerson) ABRecord.FromHandle("));
 			marshal_types.Add (new MarshalType (TypeManager.ABRecord, create: "ABRecord.FromHandle("));
 		}
-		if (Frameworks.HaveCoreVideo)
-			marshal_types.Add (TypeManager.CVPixelBuffer);
+		if (Frameworks.HaveCoreVideo) {
+			// owns `false` like ptr ctor https://github.com/xamarin/xamarin-macios/blob/6f68ab6f79c5f1d96d2cbb1e697330623164e46d/src/CoreVideo/CVBuffer.cs#L74-L90
+			marshal_types.Add (new MarshalType (TypeManager.CVPixelBuffer, create: "Runtime.GetINativeObject<CVPixelBuffer> (", closingCreate: ", false)"));
+		}
 		marshal_types.Add (TypeManager.CGLayer);
 		if (Frameworks.HaveCoreMedia)
 			marshal_types.Add (TypeManager.CMSampleBuffer);
@@ -2192,8 +2209,9 @@ public partial class Generator : IMemberGatherer {
 				if (pi.CanWrite){
 					MethodInfo setter = pi.GetSetMethod ();
 					BindAttribute ba = GetBindAttribute (setter);
+					var notImpl = AttributeManager.HasAttribute<NotImplementedAttribute> (setter);
 					
-					if (!is_abstract)
+					if (!is_abstract && !notImpl)
 						tselectors.Add (ba != null ? ba.Selector : GetSetterExportAttribute (pi).Selector);
 					DeclareInvoker (setter);
 				}
@@ -3367,7 +3385,7 @@ public partial class Generator : IMemberGatherer {
 		} else if (LookupMarshal (mai.Type, out mt)){
 			if (mt.HasCustomCreate) {
 				cast_a = mt.CreateFromRet;
-				cast_b = ")";
+				cast_b = mt.ClosingCreate;
 			} else { // we need to gather the ptr and store it inside IntPtr ret;
 				cast_a = string.Empty;
 				cast_b = string.Empty;
@@ -4488,7 +4506,7 @@ public partial class Generator : IMemberGatherer {
 				PrintExport (minfo, sel, export.ArgumentSemantic);
 			}
 
-			PrintAttributes (pi.GetGetMethod(), platform:true, preserve:true, advice:true);
+			PrintAttributes (pi.GetGetMethod(), platform:true, preserve:true, advice:true, notImplemented:true);
 			if (minfo.is_abstract){
 				print ("get; ");
 			} else {
@@ -4528,7 +4546,7 @@ public partial class Generator : IMemberGatherer {
 			string sel;
 
 			if (ba == null) {
-				sel = GetSetterExportAttribute (pi).Selector;
+				sel = GetSetterExportAttribute (pi)?.Selector;
 			} else {
 				sel = ba.Selector;
 			}
@@ -4538,7 +4556,7 @@ public partial class Generator : IMemberGatherer {
 			if (not_implemented_attr == null && (!minfo.is_sealed || !minfo.is_wrapper))
 				PrintExport (minfo, sel, export.ArgumentSemantic);
 
-			PrintAttributes (pi.GetSetMethod (), platform:true, preserve:true, advice:true);
+			PrintAttributes (pi.GetSetMethod (), platform:true, preserve:true, advice:true, notImplemented:true);
 			if (minfo.is_abstract){
 				print ("set; ");
 			} else {
@@ -5078,10 +5096,16 @@ public partial class Generator : IMemberGatherer {
 				continue;
 			
 			if (!hasExportAttribute) {
-				if (p.CanRead && !AttributeManager.HasAttribute<ExportAttribute> (p.GetGetMethod ()))
-					continue;
-				if (p.CanWrite && !AttributeManager.HasAttribute<ExportAttribute> (p.GetSetMethod ()))
-					continue;
+				var getter = p.GetGetMethod ();
+				if (p.CanRead && !AttributeManager.HasAttribute<ExportAttribute> (getter)) {
+					if (!AttributeManager.HasAttribute<NotImplementedAttribute> (getter))
+						continue;
+				}
+				var setter = p.GetSetMethod ();
+				if (p.CanWrite && !AttributeManager.HasAttribute<ExportAttribute> (setter)) {
+					if (!AttributeManager.HasAttribute<NotImplementedAttribute> (setter))
+						continue;
+				}
 			}
 
 			if (@static.HasValue && @static.Value != hasStaticAttribute)
@@ -5258,20 +5282,24 @@ public partial class Generator : IMemberGatherer {
 			indent++;
 			if (pi.CanRead) {
 				var ea = GetGetterExportAttribute (pi);
+				var getMethod = pi.GetGetMethod ();
 				// there can be a [Bind] there that override the selector name to be used
 				// e.g. IMTLTexture.FramebufferOnly
-				var ba = GetBindAttribute (pi.GetGetMethod ());
-				PrintDelegateProxy (pi.GetGetMethod ());
-				if (!AttributeManager.HasAttribute<NotImplementedAttribute> (pi.GetGetMethod ())) {
+				var ba = GetBindAttribute (getMethod);
+				PrintDelegateProxy (getMethod);
+				if (!AttributeManager.HasAttribute<NotImplementedAttribute> (getMethod)) {
 					if (ba != null)
 						PrintExport (minfo, ba.Selector, ea.ArgumentSemantic);
 					else
 						PrintExport (minfo, ea);
 				}
+				PrintAttributes (getMethod, notImplemented: true);
 				print ("get;");
 			}
 			if (pi.CanWrite) {
-				if (!AttributeManager.HasAttribute<NotImplementedAttribute> (pi.GetSetMethod ()))
+				var setMethod = pi.GetSetMethod ();
+				PrintAttributes (setMethod, notImplemented:true);
+				if (!AttributeManager.HasAttribute<NotImplementedAttribute> (setMethod))
 					PrintExport (minfo, GetSetterExportAttribute (pi));
 				print ("set;");
 			}
@@ -5435,10 +5463,19 @@ public partial class Generator : IMemberGatherer {
 		if (p == null)
 			return;
 
-		print ($"[Advice (@\"{p.Message.Replace ("\"", "\"\"")}\")]");
+		print ($"[Advice ({Quote (p.Message)})]");
 	}
 
-	public void PrintAttributes (MemberInfo mi, bool platform = false, bool preserve = false, bool advice = false)
+	public void PrintNotImplementedAttribute (ICustomAttributeProvider mi)
+	{
+		var p = AttributeManager.GetCustomAttribute<NotImplementedAttribute> (mi);
+		if (p == null)
+			return;
+
+		print ($"[NotImplemented ({Quote (p.Message)})]");
+	}
+
+	public void PrintAttributes (MemberInfo mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false)
 	{
 		if (platform)
 			PrintPlatformAttributes (mi);
@@ -5446,6 +5483,8 @@ public partial class Generator : IMemberGatherer {
 			PrintPreserveAttribute (mi);
 		if (advice)
 			PrintAdviceAttribute (mi);
+		if (notImplemented)
+			PrintNotImplementedAttribute (mi);
 	}
 
 	public static string GetSelector (MemberInfo mi)
@@ -7064,5 +7103,14 @@ public partial class Generator : IMemberGatherer {
 			return t.FullName;
 		
 	}
-	
+
+	public static string Quote (string s)
+	{
+		if (s == null)
+			return String.Empty;
+		if (s == string.Empty)
+			return @"""""";
+
+		return $"@\"{s.Replace ("\"", "\"\"")}\"";
+	}
 }
