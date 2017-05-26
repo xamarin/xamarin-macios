@@ -125,6 +125,8 @@ namespace Xamarin.iOS.Tasks
 					storyboard.SetMetadata ("ResourceTags", tag);
 				}
 
+				ibtool.EnableOnDemandResources = true;
+
 				Assert.IsTrue (ibtool.Execute (), "Execution of IBTool task failed.");
 
 				foreach (var bundleResource in ibtool.BundleResources) {
