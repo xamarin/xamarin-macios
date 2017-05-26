@@ -77,11 +77,7 @@ namespace Xamarin.MMP.Tests.Unit
 			}
 		}
 
-<<<<<<< HEAD
-		List<string> GetFiledAOTed (AOTCompilerType compilerType = AOTCompilerType.Bundled64, AOTKind kind = AOTKind.Standard, bool isModern = false)
-=======
-		List<string> GetFiledAOTed (AOTCompilerType compilerType = AOTCompilerType.Bundled64, AOTKind kind = AOTKind.Standard, bool expectStripping = false)
->>>>>>> master
+		List<string> GetFiledAOTed (AOTCompilerType compilerType = AOTCompilerType.Bundled64, AOTKind kind = AOTKind.Standard, bool isModern = false, bool expectStripping = false)
 		{
 			List<string> filesAOTed = new List<string> (); 
 
@@ -112,11 +108,6 @@ namespace Xamarin.MMP.Tests.Unit
 			return filesAOTed;
 		}
 
-<<<<<<< HEAD
-		void AssertFilesAOTed (IEnumerable <string> expectedFiles, AOTCompilerType compilerType = AOTCompilerType.Bundled64, AOTKind kind = AOTKind.Standard, bool isModern = false)
-		{
-			List<string> filesAOTed = GetFiledAOTed (compilerType, kind, isModern);
-=======
 		List<string> GetFilesStripped ()
 		{
 			return commandsRun.Where (x => x.Item1 == AOTCompiler.StripCommand).Select (x => x.Item2.Replace ("\"", "")).ToList ();
@@ -132,10 +123,9 @@ namespace Xamarin.MMP.Tests.Unit
 			Assert.IsTrue (filesStripped.All (x => expectedFiles.Contains (x)), "Different files stripped than expected: "  + getErrorDetails ());
 		}
 
-		void AssertFilesAOTed (IEnumerable <string> expectedFiles, AOTCompilerType compilerType = AOTCompilerType.Bundled64, AOTKind kind = AOTKind.Standard, bool expectStripping = false)
+		void AssertFilesAOTed (IEnumerable <string> expectedFiles, AOTCompilerType compilerType = AOTCompilerType.Bundled64, AOTKind kind = AOTKind.Standard, bool isModern = false, bool expectStripping = false)
 		{
-			List<string> filesAOTed = GetFiledAOTed (compilerType, kind, expectStripping);
->>>>>>> master
+			List<string> filesAOTed = GetFiledAOTed (compilerType, kind, isModern: isModern, expectStripping: expectStripping);
 
 			Func<string> getErrorDetails = () => $"\n {String.Join (" ", filesAOTed)} \nvs\n {String.Join (" ", expectedFiles)}";
 
