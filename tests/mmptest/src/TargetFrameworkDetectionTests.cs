@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using Xamarin.Tests;
 using Xamarin.Utils;
 
 namespace Xamarin.MMP.Tests
@@ -22,7 +23,7 @@ namespace Xamarin.MMP.Tests
 		string GetTestMMPInvocation (string tmpDir, string libPath, TargetFramework targetFramework, bool correctReference = true)
 		{
 			string xmReference = correctReference ? GetXMReference (targetFramework) : GetWrongXMReference (targetFramework);
-			return string.Format ("-v -v -v -v -v --output={0} --arch=x86_64 --sdkroot /Applications/Xcode83.app --minos 10.7 {1} --sdk 10.12 --nolink -p --profile:{2} -a:{3}", tmpDir, libPath, targetFramework, xmReference);
+			return $"-v -v -v -v -v --output={tmpDir} --arch=x86_64 --sdkroot {Configuration.xcode_root} --minos 10.7 {libPath} --sdk 10.12 --nolink -p --profile:{targetFramework} -a:{xmReference}";
 		}
 
 		string GetWrongXMReference (TargetFramework target)
@@ -37,10 +38,10 @@ namespace Xamarin.MMP.Tests
 		{
 			switch (target.Profile)	{
 			case "Mobile":
-					return "-a:/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac/Xamarin.Mac.dll";
+					return $"-a:{Configuration.SdkRootXM}/lib/mono/Xamarin.Mac/Xamarin.Mac.dll";
 			case "Full":
 			case "System":
-					return "-a:/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/4.5/Xamarin.Mac.dll";
+					return $"-a:{Configuration.SdkRootXM}/lib/mono/4.5/Xamarin.Mac.dll";
 			default:
 					throw new System.InvalidOperationException ();
 			}
