@@ -1861,6 +1861,13 @@ namespace Xamarin.Bundler {
 
 			if (resolved_assemblies.Contains (fqname))
 				return;
+			
+			var main = assembly.MainModule;
+			if (Driver.verbose > 1) {
+				Driver.Log ($"Loaded assembly '{assembly.FullName}' from {Driver.Quote (assembly.MainModule.FileName)}");
+				foreach (var ar in main.AssemblyReferences)
+					Driver.Log ($"    References: {ar.FullName}");
+			}
 
 			var asm = new Assembly (BuildTarget, assembly);
 			asm.ComputeSatellites ();
@@ -1870,8 +1877,6 @@ namespace Xamarin.Bundler {
 
 			foreach (AssemblyNameReference reference in assembly.MainModule.AssemblyReferences) {
 				var reference_assembly = BuildTarget.Resolver.Resolve (SwapOutReferenceAssembly (reference.FullName));
-				if (verbose > 1)
-					Console.WriteLine ("Adding dependency {0} required by {1}", reference.Name, assembly.MainModule.Name);
 				ProcessAssemblyReferences (reference_assembly);
 			}
 		}
