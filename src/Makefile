@@ -1072,22 +1072,24 @@ $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll.mdb: $(TVOS_BUILD_DIR)/tvos-64/Xama
 	$(Q) cp $< $@
 
 # MonoTouch.NUnitLite
-$(TVOS_BUILD_DIR)/reference/MonoTouch.NUnitLite.dll: $(TVOS_TOUCHUNIT_SOURCES) $(PRODUCT_KEY_PATH) $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll $(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll
-	$(call Q_PROF_CSC,tvos) $(SYSTEM_CSC) -r:$(MONOTOUCH_TV_MONO_PATH)/mscorlib.dll -out:$@ -target:library -debug:portable -optimize -noconfig -nostdlib -publicsign \
+$(TVOS_BUILD_DIR)/reference/MonoTouch.NUnitLite%dll $(TVOS_BUILD_DIR)/reference/MonoTouch.NUnitLite%pdb: $(TVOS_TOUCHUNIT_SOURCES) $(PRODUCT_KEY_PATH) $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll $(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll
+	$(call Q_PROF_CSC,tvos) $(SYSTEM_CSC) -r:$(MONOTOUCH_TV_MONO_PATH)/mscorlib.dll -out:$(basename $@).dll -target:library -debug:portable -optimize -noconfig -nostdlib -publicsign \
 		-keyfile:$(PRODUCT_KEY_PATH) -r:$(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll -r:$(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll -r:$(MONOTOUCH_TV_MONO_PATH)/System.dll -r:$(MONOTOUCH_TV_MONO_PATH)/System.Xml.dll \
 		-nowarn:3006,612,649,414,1635 \
 		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__ $(TVOS_DEFINES) \
 		$(TVOS_TOUCHUNIT_SOURCES)
+	@touch $(basename $@).dll $(basename $@).pdb
 
 $(TVOS_BUILD_DIR)/%.dll.mdb: $(TVOS_BUILD_DIR)/%.dll
 	@touch $@
 
-$(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll: $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll $(TVOS_SOURCES) $(MONOTOUCH_DIALOG_SOURCES) $(PRODUCT_KEY_PATH)
-	$(call Q_PROF_CSC,tvos) $(SYSTEM_CSC) -r:$(MONOTOUCH_TV_MONO_PATH)/mscorlib.dll -out:$@ -target:library -debug:portable -optimize -noconfig -nostdlib -publicsign \
+$(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1%dll $(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1%pdb: $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll $(TVOS_SOURCES) $(MONOTOUCH_DIALOG_SOURCES) $(PRODUCT_KEY_PATH)
+	$(call Q_PROF_CSC,tvos) $(SYSTEM_CSC) -r:$(MONOTOUCH_TV_MONO_PATH)/mscorlib.dll -out:$(basename $@).dll -target:library -debug:portable -optimize -noconfig -nostdlib -publicsign \
 		-keyfile:$(PRODUCT_KEY_PATH) -r:$< -r:$(MONOTOUCH_TV_MONO_PATH)/System.dll -r:$(MONOTOUCH_TV_MONO_PATH)/System.Core.dll -r:$(MONOTOUCH_TV_MONO_PATH)/System.Json.dll \
 		-define:XAMCORE_2_0 -define:XAMCORE_3_0 -define:TVOS -define:__TVOS__ -define:__UNIFIED__ \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$(MONOTOUCH_DIALOG_SOURCES) $(MONOTOUCH_DIALOG_RESOURCES)
+	@touch $(basename $@).dll $(basename $@).pdb
 
 # System.Drawing.Primitives.dll is special
 
@@ -1123,12 +1125,10 @@ $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.pdb: $(MONO_PA
 	@touch $@
 
 # sign dll
-$(TVOS_BUILD_DIR)/reference/System.Net.Http.dll: $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.dll
-	$(Q) cp $< $@
-	$(call Q_PROF_SN,tvos) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
-
-$(TVOS_BUILD_DIR)/reference/System.Net.Http.pdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.pdb
-	$(Q) cp $< $@
+$(TVOS_BUILD_DIR)/reference/System.Net.Http%dll $(TVOS_BUILD_DIR)/reference/System.Net.Http%pdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.dll
+	$(Q) cp $< $(basename $@).dll
+	$(call Q_PROF_SN,tvos) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $(basename $@).dll $(PRODUCT_KEY_PATH)
+	$(Q) cp $(basename $<).pdb $(basename $@).pdb
 
 xamtvos.csproj: xamtvos.tmpl.csproj Makefile $(wildcard $(TOP)/*.sources)
 	@sed -e 's*<!--%FILES%-->*$(foreach file,$(TVOS_SOURCES),<Compile Include="$(file)"/>)*' -e 's*<!--%APIS%-->*$(foreach file,$(TVOS_APIS),<None Include="$(file)"/>)*' $< | xmllint --format - > $@
@@ -1186,7 +1186,7 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Facades/%.dll: $(TVOS_BU
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.mdb: $(TVOS_BUILD_DIR)/reference/%.mdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS
 	$(Q) install -m 0644 $< $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.pdb: $(TVOS_BUILD_DIR)/reference/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.pdb: $(TVOS_BUILD_DIR)/reference/%.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS
 	$(Q) install -m 0644 $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.config: $(TVOS_BUILD_DIR)/reference/%.config | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS
