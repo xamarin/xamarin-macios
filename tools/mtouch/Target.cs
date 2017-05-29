@@ -801,6 +801,9 @@ namespace Xamarin.Bundler
 						var pdb = Path.ChangeExtension (a.FullPath, "pdb");
 						if (File.Exists (pdb))
 							Driver.Touch (pdb);
+						var config = a.FullPath + ".config";
+						if (File.Exists (config))
+							Driver.Touch (config);
 					}
 
 					// Now copy to the build directory
