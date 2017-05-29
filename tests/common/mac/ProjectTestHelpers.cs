@@ -132,7 +132,7 @@ namespace Xamarin.MMP.Tests
 			} else
 				buildArgs.Append (" build ");
 
-			buildArgs.Append (csprojTarget);
+			buildArgs.Append (Quote (csprojTarget));
 
 			Func <string> getBuildProjectErrorInfo = () => {
 				string csprojText = "\n\n\n\tCSProj: \n" + File.ReadAllText (csprojTarget);
@@ -145,6 +145,25 @@ namespace Xamarin.MMP.Tests
 				return RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/" + (useMSBuild ? "msbuild" : "xbuild"), buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo);
 			else
 				return RunAndAssert ("/Applications/Visual Studio.app/Contents/MacOS/vstool", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo);
+		}
+
+		public static string Quote (string f)
+		{
+			if (f.IndexOf (' ') == -1)
+				return f;
+
+			var s = new StringBuilder ();
+
+			s.Append ('"');
+			foreach (var c in f) {
+				if (c == '\'' || c == '"' || c == '\\')
+					s.Append ('\\');
+
+				s.Append (c);
+			}
+			s.Append ('"');
+
+			return s.ToString ();
 		}
 
 		static string ProjectTextReplacement (UnifiedTestConfig config, string text)

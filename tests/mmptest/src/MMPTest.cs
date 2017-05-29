@@ -12,9 +12,9 @@ namespace Xamarin.MMP.Tests
 	[TestFixture]
 	public partial class MMPTests 
 	{
-		void RunMMPTest (Action <string> test)
+		void RunMMPTest (Action <string> test, string directoryName = null)
 		{
-			test (Cache.CreateTemporaryDirectory ());
+			test (Cache.CreateTemporaryDirectory (directoryName));
 		}
 
 		// TODO - We have multiple tests using this. It doesn't take that long, but is it worth caching?
@@ -90,6 +90,31 @@ namespace Xamarin.MMP.Tests
 				test.XM45 = true;
 				TI.TestUnifiedExecutable (test);
 			});
+		}
+
+		[Test]
+		public void Unified_Static_Registrar_With_SpaceTest ()
+		{
+			if (!PlatformHelpers.CheckSystemVersion (10, 11))
+				return;
+
+			RunMMPTest (tmpDir => {
+				// First in 64-bit
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>" };
+				// Mobile
+				TI.TestUnifiedExecutable (test);
+				// XM45
+				test.XM45 = true;
+				TI.TestUnifiedExecutable (test);
+
+				// Now 32-bit
+				test.CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>i386</XamMacArch>";
+				// Mobile
+				TI.TestUnifiedExecutable (test);
+				// XM45
+				test.XM45 = true;
+				TI.TestUnifiedExecutable (test);
+			}, "test withSpace");
 		}
 
 		[Test]

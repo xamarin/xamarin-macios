@@ -1320,7 +1320,7 @@ namespace Xamarin.Bundler {
 				args.Append ("-liconv -x objective-c++ ");
 				args.Append ("-I").Append (Quote (Path.Combine (GetXamMacPrefix (), "include"))).Append (' ');
 				if (registrarPath != null)
-					args.Append (registrarPath).Append (' ');
+					args.Append (Quote (registrarPath)).Append (' ');
 				args.Append ("-fno-caret-diagnostics -fno-diagnostics-fixit-info ");
 				if (link_flags != null)
 					args.Append (link_flags + " ");
