@@ -35,14 +35,14 @@ namespace MonoTouchFixtures.HttpClientTests
 
 			public HandlerWrapper (CFNetworkHandler handler)
 			{
-				handlerType = handler.GetType ().Name;
-				handler = new CFNetworkHandler ();
+				this.handlerType = handler.GetType ().Name;
+				this.handler = new CFNetworkHandler ();
 			}
 
 			public HandlerWrapper (NSUrlSessionHandler handler)
 			{
-				handlerType = handler.GetType ().Name;
-				handler = new NSUrlSessionHandler ();
+				this.handlerType = handler.GetType ().Name;
+				this.handler = new NSUrlSessionHandler ();
 			}
 
 			public bool AllowAutoRedirect
@@ -87,14 +87,11 @@ namespace MonoTouchFixtures.HttpClientTests
 			var wrapper = HandlerWrapper.GetWrapper (handlerType);
 			using (var client = new HttpClient (wrapper.Handler))
 			using (var request = new HttpRequestMessage (HttpMethod.Get, "http://xamarin.com")) {
-				Assert.DoesNotThrow (() => wrapper.AllowAutoRedirect = !wrapper.AllowAutoRedirect);
-				Task.Factory.StartNew (() => {
-					var token = new CancellationTokenSource ();
-					client.SendAsync (request, token.Token).Wait (WaitTimeout);
-					Assert.Throws<InvalidOperationException> (() => wrapper.AllowAutoRedirect = !wrapper.AllowAutoRedirect);
-					// cancel to ensure that we do not have side effects
-					token.Cancel ();
-				});
+				var token = new CancellationTokenSource ();
+				client.SendAsync (request, token.Token);
+				Assert.Throws<InvalidOperationException> (() => wrapper.AllowAutoRedirect = !wrapper.AllowAutoRedirect);
+				// cancel to ensure that we do not have side effects
+				token.Cancel ();
 			}
 		}
 	}
