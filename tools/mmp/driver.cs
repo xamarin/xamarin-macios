@@ -1862,12 +1862,7 @@ namespace Xamarin.Bundler {
 			if (resolved_assemblies.Contains (fqname))
 				return;
 			
-			var main = assembly.MainModule;
-			if (Driver.verbose > 1) {
-				Driver.Log ($"Loaded assembly '{assembly.FullName}' from {Driver.Quote (assembly.MainModule.FileName)}");
-				foreach (var ar in main.AssemblyReferences)
-					Driver.Log ($"    References: {ar.FullName}");
-			}
+			Target.PrintAssemblyReferences (assembly);
 
 			var asm = new Assembly (BuildTarget, assembly);
 			asm.ComputeSatellites ();

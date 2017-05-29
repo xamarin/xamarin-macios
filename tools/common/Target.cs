@@ -180,5 +180,16 @@ namespace Xamarin.Bundler {
 			// Keep the weak ones.
 			asm.Frameworks.ExceptWith (asm.WeakFrameworks);
 		}
+
+		internal static void PrintAssemblyReferences (AssemblyDefinition assembly)
+		{
+			if (Driver.Verbosity < 2)
+				return;
+
+			var main = assembly.MainModule;
+			Driver.Log ($"Loaded assembly '{assembly.FullName}' from {Driver.Quote (assembly.MainModule.FileName)}");
+			foreach (var ar in main.AssemblyReferences)
+				Driver.Log ($"    References: '{ar.FullName}'");
+		}
 	}
 }

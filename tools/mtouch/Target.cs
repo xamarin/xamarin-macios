@@ -431,18 +431,14 @@ namespace Xamarin.Bundler
 			if (assemblies.Contains (fqname))
 				return;
 
-			var main = assembly.MainModule;
-			if (Driver.Verbosity > 1) {
-				Driver.Log ($"Loaded assembly '{assembly.FullName}' from {Driver.Quote (assembly.MainModule.FileName)}");
-				foreach (var ar in main.AssemblyReferences)
-					Driver.Log ($"    References: {ar.FullName}");
-			}
+			PrintAssemblyReferences (assembly);
 			assemblies.Add (fqname);
 
 			var asm = new Assembly (this, assembly);
 			asm.ComputeSatellites ();
 			this.Assemblies.Add (asm);
 
+			var main = assembly.MainModule;
 			foreach (AssemblyNameReference reference in main.AssemblyReferences) {
 				// Verify that none of the references references an incorrect platform assembly.
 				switch (reference.Name) {
