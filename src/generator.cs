@@ -5139,7 +5139,7 @@ public partial class Generator : IMemberGatherer {
 		       TypeName, 
 		       protocol_name, 
 		       protocolAttribute.IsInformal ? ", IsInformal = true" : string.Empty, 
-		       protocolAttribute.InformalUntil != null ? $", InformalUntil = \"{protocolAttribute.InformalUntil}\"" : string.Empty);
+		       protocolAttribute.FormalSince != null ? $", FormalSince = \"{protocolAttribute.FormalSince}\"" : string.Empty);
 
 		var sb = new StringBuilder ();
 

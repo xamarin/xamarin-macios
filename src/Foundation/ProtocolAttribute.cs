@@ -37,7 +37,7 @@ namespace XamCore.Foundation {
 		// In which SDK version this protocol switched from being informal (i.e. a category) to a formal protocol.
 		// System.Version is not a valid type for attributes, so we're using a string instead.
 		string informal_until;
-		public string InformalUntil {
+		public string FormalSince {
 			get {
 				return informal_until;
 			}
