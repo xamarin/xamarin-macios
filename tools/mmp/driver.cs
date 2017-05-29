@@ -849,7 +849,7 @@ namespace Xamarin.Bundler {
 				else
 					throw ErrorHelper.CreateError (0099, "Internal error \"AOT with unexpected profile.\" Please file a bug report with a test case (http://bugzilla.xamarin.com).");
 
-				AOTCompiler compiler = new AOTCompiler (aotOptions, compilerType, !EnableDebug);
+				AOTCompiler compiler = new AOTCompiler (aotOptions, compilerType, IsUnifiedMobile, !EnableDebug);
 				compiler.Compile (mmp_dir);
 				Watch ("AOT Compile", 1);
 			}
@@ -1120,6 +1120,9 @@ namespace Xamarin.Bundler {
 
 				if (aotOptions != null && aotOptions.IsHybridAOT)
 					sw.WriteLine ("\txamarin_mac_hybrid_aot = TRUE;");
+
+				if (IsUnifiedMobile)
+					sw.WriteLine ("\txamarin_mac_modern = TRUE;");
 
 				sw.WriteLine ("\treturn 0;");
 				sw.WriteLine ("}");
