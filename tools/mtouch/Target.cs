@@ -431,6 +431,7 @@ namespace Xamarin.Bundler
 			if (assemblies.Contains (fqname))
 				return;
 
+			PrintAssemblyReferences (assembly);
 			assemblies.Add (fqname);
 
 			var asm = new Assembly (this, assembly);

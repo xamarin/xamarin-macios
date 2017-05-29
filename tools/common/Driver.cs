@@ -110,6 +110,10 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public static int Verbosity {
+			get { return verbose; }
+		}
+
 #if MONOMAC
 #pragma warning disable 0414
 		static string userTargetFramework = TargetFramework.Default.ToString ();
