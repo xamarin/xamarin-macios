@@ -78,7 +78,7 @@ namespace InstallSources
 		/// <param name="path">Path.</param>
 		string GetSourcePathForGeneratedPath (string path)
 		{
-			var frameworkPrefix = FrameworkPath.Remove (FrameworkPath.IndexOf (".framework", StringComparison.InvariantCulture));
+			var frameworkPrefix = FrameworkPath.Remove (FrameworkPath.IndexOf (".framework", StringComparison.Ordinal));
 			var installPath = Path.Combine (InstallDir, "src", frameworkPrefix);
 			// we might be looking at a mdb that was already gone thorugh mdb rebase, if that is the case, do find the path for the final target 
 			if (path.StartsWith (Path.Combine (InstallDir, "src", frameworkPrefix), StringComparison.InvariantCulture)) {
@@ -127,7 +127,7 @@ namespace InstallSources
 		string GetSourcePathForManualSource(string path)
 		{
 			var removalPath = $"/{FrameworkPath}/";
-			var srcFolder = Path.Combine ("src", FrameworkPath.Remove(FrameworkPath.IndexOf (".framework", StringComparison.InvariantCulture))) + Path.DirectorySeparatorChar;
+			var srcFolder = Path.Combine ("src", FrameworkPath.Remove (FrameworkPath.IndexOf (".framework", StringComparison.InvariantCulture))) + Path.DirectorySeparatorChar;
 			var pos = path.IndexOf (removalPath, StringComparison.InvariantCulture);
 			var src = path.Remove (0, pos + FrameworkPath.Length + 2);
 			pos = src.IndexOf (srcFolder, StringComparison.InvariantCulture);

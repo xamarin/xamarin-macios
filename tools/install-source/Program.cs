@@ -36,7 +36,7 @@ public class ListSourceFiles {
 
 	public static string FixPathEnding(string path)
 	{
-		if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+		if (!path.EndsWith (Path.DirectorySeparatorChar.ToString (), StringComparison.Ordinal))
 			return path + Path.DirectorySeparatorChar;
 		return path;
 	}
@@ -46,11 +46,11 @@ public class ListSourceFiles {
 	{
 		var splittedPaths = new Tuple<HashSet<String>, HashSet<String>> (new HashSet<string> (), new HashSet<string> ());
 		foreach (var p in paths) {
-			if (p.EndsWith(".pdb", StringComparison.Ordinal)) {
+			if (p.EndsWith (".pdb", StringComparison.Ordinal)) {
 				splittedPaths.Item1.Add (p);
 				continue;
 			}
-			if (p.EndsWith(".mdb", StringComparison.Ordinal)) {
+			if (p.EndsWith (".mdb", StringComparison.Ordinal)) {
 				splittedPaths.Item2.Add (p);
 				continue;
 			}
@@ -64,14 +64,11 @@ public class ListSourceFiles {
 		var srcs = new HashSet<String> ();
 		MonoSymbolFile symfile;
 
-		try
-		{
+		try {
 			symfile = MonoSymbolFile.ReadSymbolFile(mdb_file);
 			srcs.UnionWith (from src in symfile.Sources select src.FileName);
 
-		}
-		catch (IOException ioe)
-		{
+		} catch (IOException ioe) {
 			Console.WriteLine("IO error while reading msb file '{0}': {1}", mdb_file, ioe.Message);
 		}
 
@@ -102,8 +99,7 @@ public class ListSourceFiles {
 
 		var assemblyDefinition = AssemblyDefinition.ReadAssembly (assemblyPath, readerParameters);
 		var mainModule = assemblyDefinition.MainModule;
-		foreach (var type in mainModule.Types)
-		{
+		foreach (var type in mainModule.Types) {
 			foreach (var method in type.Methods) {
 				if (method.DebugInformation.SequencePoints.Any ()) {
 					var sequence_point = method.DebugInformation.SequencePoints[0];
@@ -168,7 +164,7 @@ public class ListSourceFiles {
 				continue;
 			}
 			var assemblySrcs = GetFilePathsFromMdb (mdbFile);
-			srcs.UnionWith(assemblySrcs);
+			srcs.UnionWith (assemblySrcs);
 		}
 
 		var alreadyLinked = new List<string> ();

@@ -13,7 +13,7 @@ namespace InstallSourcesTests
 		string installDir;
 
 		[SetUp]
-		public void SetUp()
+		public void SetUp ()
 		{
 			monoPath = "/Users/test/xamarin-macios/external/mono/";
 			installDir = "/Users/test/xamarin-macios/_ios-build//Library/Frameworks/Xamarin.iOS.framework/Versions/git";
