@@ -12,13 +12,13 @@ namespace InstallSources
 		/// </summary>
 		/// <returns>The source path related to the mdb path.</returns>
 		/// <param name="path">The path found in the mdb file.</param>
-		string GetSourcePath(string path);
+		string GetSourcePath (string path);
 
 		/// <summary>
 		/// Returns the target were a source path should be installed.
 		/// </summary>
 		/// <returns>The target path for the installation.</returns>
 		/// <param name="path">The source path to install.</param>/
-		string GetTargetPath(string path);
+		string GetTargetPath (string path);
 	}
 }

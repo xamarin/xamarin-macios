@@ -22,7 +22,7 @@ namespace InstallSources
 		public string GetTargetPath (string path)
 		{
 			var relativePath = path.Substring (MonoSourcePath.Length);
-			if (relativePath.StartsWith ("/", StringComparison.InvariantCulture))
+			if (relativePath.StartsWith ("/", StringComparison.Ordinal))
 				relativePath = relativePath.Remove (0, 1);
 			var target = Path.Combine (InstallDir, "src", "mono", relativePath);
 			return target;

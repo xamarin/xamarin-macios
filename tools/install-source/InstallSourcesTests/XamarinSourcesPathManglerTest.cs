@@ -14,7 +14,7 @@ namespace InstallSourcesTests
 		XamarinSourcesPathMangler mangler;
 
 		[SetUp]
-		public void SetUp()
+		public void SetUp ()
 		{
 			frameworkPath = "Xamarin.iOS.framework";
 			xamarinSourcePath = "/Users/test/xamarin-macios/src/";
