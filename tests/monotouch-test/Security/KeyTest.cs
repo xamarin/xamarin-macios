@@ -34,6 +34,13 @@ namespace MonoTouchFixtures.Security {
 	[Preserve (AllMembers = true)]
 	public class KeyTest {
 
+#if MONOMAC
+		// kSecRSAMin          = 1024 - see https://bugzilla.xamarin.com/show_bug.cgi?id=51277
+		const int MinRsaKeySize = 1024;
+#else
+		const int MinRsaKeySize = 512;
+#endif
+
 		static X509Certificate2 _c;
 		static X509Certificate2 c {
 			get {
@@ -92,17 +99,14 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
-#if MONOMAC // https://bugzilla.xamarin.com/show_bug.cgi?id=51277
-		[Ignore ("512 bit encryption fails on mac")]
-#endif
-		public void RoundtripRSA512PKCS1 ()
+		public void RoundtripRSAMinPKCS1 ()
 		{
 			NSError error;
 			SecKey private_key;
 			SecKey public_key;
 			using (var record = new SecRecord (SecKind.Key)) {
 				record.KeyType = SecKeyType.RSA;
-				record.KeySizeInBits = 512; // it's not a performance test :)
+				record.KeySizeInBits = MinRsaKeySize; // it's not a performance test :)
 
 				Assert.That (SecKey.GenerateKeyPair (record.ToDictionary (), out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "GenerateKeyPair");
 
@@ -110,6 +114,13 @@ namespace MonoTouchFixtures.Security {
 				byte [] cipher;
 				if (TestRuntime.CheckXcodeVersion (8,0)) {
 					Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Encrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "public/IsAlgorithmSupported/Encrypt");
+#if MONOMAC
+					Assert.False (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "public/IsAlgorithmSupported/Decrypt");
+
+					using (var pub = public_key.GetPublicKey ()) {
+						Assert.That (pub.Handle, Is.EqualTo (public_key.Handle), "public/GetPublicKey");
+					}
+#else
 					// I would have expect false
 					Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "public/IsAlgorithmSupported/Decrypt");
 
@@ -117,6 +128,7 @@ namespace MonoTouchFixtures.Security {
 						// a new native instance of the key is returned (so having a new managed SecKey is fine)
 						Assert.That (pub.Handle, Is.Not.EqualTo (public_key.Handle), "public/GetPublicKey");
 					}
+#endif
 					using (var attrs = public_key.GetAttributes ()) {
 						Assert.That (attrs.Count, Is.GreaterThan (0), "public/GetAttributes");
 					}
@@ -124,7 +136,7 @@ namespace MonoTouchFixtures.Security {
 						Assert.Null (error, "public/error-1");
 						Assert.NotNull (data, "public/GetExternalRepresentation");
 
-						using (var key = SecKey.Create (data, SecKeyType.RSA, SecKeyClass.Public, 512, null, out error)) {
+						using (var key = SecKey.Create (data, SecKeyType.RSA, SecKeyClass.Public, MinRsaKeySize, null, out error)) {
 							Assert.Null (error, "public/Create/error-1");
 						}
 					}
@@ -136,10 +148,16 @@ namespace MonoTouchFixtures.Security {
 					Assert.False (private_key.IsAlgorithmSupported (SecKeyOperationType.Encrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "private/IsAlgorithmSupported/Encrypt");
 					Assert.True (private_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "private/IsAlgorithmSupported/Decrypt");
 
+#if MONOMAC
+					using (var pub2 = private_key.GetPublicKey ()) {
+						Assert.That (pub2.Handle, Is.EqualTo (public_key.Handle), "private/GetPublicKey");
+					}
+#else
 					using (var pub2 = private_key.GetPublicKey ()) {
 						// a new native instance of the key is returned (so having a new managed SecKey is fine)
 						Assert.That (pub2.Handle, Is.Not.EqualTo (public_key.Handle), "private/GetPublicKey");
 					}
+#endif
 					using (var attrs = private_key.GetAttributes ()) {
 						Assert.That (attrs.Count, Is.GreaterThan (0), "private/GetAttributes");
 					}
@@ -147,7 +165,7 @@ namespace MonoTouchFixtures.Security {
 						Assert.Null (error, "private/error-1");
 						Assert.NotNull (data2, "private/GetExternalRepresentation");
 
-						using (var key = SecKey.Create (data2, SecKeyType.RSA, SecKeyClass.Private, 512, null, out error)) {
+						using (var key = SecKey.Create (data2, SecKeyType.RSA, SecKeyClass.Private, MinRsaKeySize, null, out error)) {
 							Assert.Null (error, "private/Create/error-1");
 						}
 					}
@@ -166,19 +184,11 @@ namespace MonoTouchFixtures.Security {
 			SecKey public_key;
 			using (var record = new SecRecord (SecKind.Key)) {
 				record.KeyType = SecKeyType.RSA;
-#if MONOMAC
-				record.KeySizeInBits = 1024;
-#else
-				record.KeySizeInBits = 512; // it's not a performance test :)
-#endif
+				record.KeySizeInBits = MinRsaKeySize; // it's not a performance test :)
 
 				Assert.That (SecKey.GenerateKeyPair (record.ToDictionary (), out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "GenerateKeyPair");
 
-#if MONOMAC
-				byte [] plain = new byte [128]; // 128 * 8 == 1024 - but there's the padding to consider
-#else
-				byte [] plain = new byte [64]; // 64 * 8 == 512 - but there's the padding to consider
-#endif
+				byte [] plain = new byte [MinRsaKeySize / 8];
 				byte [] cipher;
 				Assert.That (public_key.Encrypt (SecPadding.PKCS1, plain, out cipher), Is.EqualTo (SecStatusCode.Param), "Encrypt");
 
@@ -224,16 +234,13 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
-#if MONOMAC // https://bugzilla.xamarin.com/show_bug.cgi?id=51277
-		[Ignore ("512 bit encryption fails on mac")]
-#endif
-		public void SignVerifyRSA512PKCS1SHA1 ()
+		public void SignVerifyRSAMinPKCS1SHA1 ()
 		{
 			SecKey private_key;
 			SecKey public_key;
 			using (var record = new SecRecord (SecKind.Key)) {
 				record.KeyType = SecKeyType.RSA;
-				record.KeySizeInBits = 512; // it's not a performance test :)
+				record.KeySizeInBits = MinRsaKeySize; // it's not a performance test :)
 
 				Assert.That (SecKey.GenerateKeyPair (record.ToDictionary (), out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "GenerateKeyPair");
 
@@ -243,13 +250,9 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (public_key.RawVerify (SecPadding.PKCS1SHA1, hash, sign), Is.EqualTo (SecStatusCode.Success), "RawVerify");
 
 				var empty = new byte [0];
-				if (TestRuntime.CheckXcodeVersion (8, 0)) {
-					Assert.That (private_key.RawSign (SecPadding.PKCS1SHA1, empty, out sign), Is.EqualTo (SecStatusCode.Success), "RawSign-empty");
-					Assert.That (public_key.RawVerify (SecPadding.PKCS1SHA1, empty, empty), Is.EqualTo (SecStatusCode.Success), "RawVerify-empty");
-				} else {
-					Assert.That (private_key.RawSign (SecPadding.PKCS1SHA1, empty, out sign), Is.EqualTo (SecStatusCode.Param), "RawSign-empty");
-					Assert.That (public_key.RawVerify (SecPadding.PKCS1SHA1, empty, empty), Is.EqualTo (SecStatusCode.Param), "RawVerify-empty");
-				}
+				Assert.That (private_key.RawSign (SecPadding.PKCS1, empty, out sign), Is.EqualTo (SecStatusCode.Success), "RawSign-empty");
+				// results vary per iOS version - but that's out of our control and we only care that it does not crash
+				public_key.RawVerify (SecPadding.PKCS1SHA1, empty, empty);
 
 				private_key.Dispose ();
 				public_key.Dispose ();
@@ -276,12 +279,8 @@ namespace MonoTouchFixtures.Security {
 				var empty = new byte [0];
 				// there does not seem to be a length-check on PKCS1, likely because not knowning the hash algorithm makes it harder
 				Assert.That (private_key.RawSign (SecPadding.PKCS1, empty, out sign), Is.EqualTo (SecStatusCode.Success), "RawSign-empty");
-				if (TestRuntime.CheckXcodeVersion (8, 0)) {
-					Assert.That (public_key.RawVerify (SecPadding.PKCS1, empty, empty), Is.EqualTo (SecStatusCode.Success), "RawVerify-empty");
-				} else {
-					// but that does not work at verification time
-					Assert.That (public_key.RawVerify (SecPadding.PKCS1, empty, empty), Is.EqualTo ((SecStatusCode)(-9809)), "RawVerify-empty");
-				}
+				// results vary per iOS version - but that's out of our control and we only care that it does not crash
+				public_key.RawVerify (SecPadding.PKCS1, empty, empty);
 
 				private_key.Dispose ();
 				public_key.Dispose ();
@@ -388,11 +387,7 @@ namespace MonoTouchFixtures.Security {
 		{
 			TestRuntime.AssertXcodeVersion (8, 0);
 			NSError error;
-#if MONOMAC
-			using (var key = SecKey.CreateRandomKey (SecKeyType.RSA, 1024, null, out error)) {
-#else
-			using (var key = SecKey.CreateRandomKey (SecKeyType.RSA, 512, null, out error)) {
-#endif
+			using (var key = SecKey.CreateRandomKey (SecKeyType.RSA, MinRsaKeySize, null, out error)) {
 				Assert.Null (error, "RSA/error");
 
 				using (var data = NSData.FromArray (new byte [] { 1, 2, 3 })) {

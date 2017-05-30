@@ -34,7 +34,7 @@ using PlatformLinkContext = MonoMac.Tuner.MonoMacLinkContext;
 namespace Xamarin.Bundler {
 	public partial class Target {
 		public Application App;
-		public List<Assembly> Assemblies = new List<Assembly> ();
+		public AssemblyCollection Assemblies = new AssemblyCollection (); // The root assembly is not in this list.
 
 		public PlatformLinkContext LinkContext;
 		public LinkerOptions LinkerOptions;
@@ -62,9 +62,9 @@ namespace Xamarin.Bundler {
 					a.ExtractNativeLinkInfo ();
 
 #if MTOUCH
-					if (App.FastDev && a.HasLinkWithAttributes && App.EnableBitCode) {
+					if (a.HasLinkWithAttributes && App.EnableBitCode && !App.OnlyStaticLibraries) {
 						ErrorHelper.Warning (110, "Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.");
-						App.FastDev = false;
+						App.ClearAssemblyBuildTargets (); // the default is to compile to static libraries, so just revert to the default.
 					}
 #endif
 				} catch (Exception e) {
@@ -73,9 +73,9 @@ namespace Xamarin.Bundler {
 			}
 
 #if MTOUCH
-			if (App.FastDev && Assemblies.Count ((v) => v.HasLinkWithAttributes) > 1) {
+			if (!App.OnlyStaticLibraries && Assemblies.Count ((v) => v.HasLinkWithAttributes) > 1) {
 				ErrorHelper.Warning (127, "Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.");
-				App.FastDev = false;
+				App.ClearAssemblyBuildTargets (); // the default is to compile to static libraries, so just revert to the default.
 			}
 #endif
 		}
@@ -100,6 +100,96 @@ namespace Xamarin.Bundler {
 			var errno = Marshal.GetLastWin32Error ();
 			ErrorHelper.Warning (54, "Unable to canonicalize the path '{0}': {1} ({2}).", path, strerror (errno), errno);
 			return path;
+		}
+
+		public void ComputeLinkerFlags ()
+		{
+			foreach (var a in Assemblies)
+				a.ComputeLinkerFlags ();
+		}
+
+		public void GatherFrameworks ()
+		{
+			Assembly asm = null;
+			AssemblyDefinition productAssembly = null;
+
+			foreach (var assembly in Assemblies) {
+				if (assembly.AssemblyDefinition.Name.Name == Driver.GetProductAssembly (App)) {
+					asm = assembly;
+					break;
+				}
+			}
+
+			productAssembly = asm.AssemblyDefinition;
+
+			// *** make sure any change in the above lists (or new list) are also reflected in 
+			// *** Makefile so simlauncher-sgen does not miss any framework
+
+			HashSet<string> processed = new HashSet<string> ();
+#if !MONOMAC
+			Version v80 = new Version (8, 0);
+#endif
+
+			foreach (ModuleDefinition md in productAssembly.Modules) {
+				foreach (TypeDefinition td in md.Types) {
+					// process only once each namespace (as we keep adding logic below)
+					string nspace = td.Namespace;
+					if (processed.Contains (nspace))
+						continue;
+					processed.Add (nspace);
+
+					Framework framework;
+					if (Driver.GetFrameworks (App).TryGetValue (nspace, out framework)) {
+						// framework specific processing
+#if !MONOMAC
+						switch (framework.Name) {
+						case "CoreAudioKit":
+							// CoreAudioKit seems to be functional in the iOS 9 simulator.
+							if (App.IsSimulatorBuild && App.SdkVersion.Major < 9)
+								continue;
+							break;
+						case "Metal":
+						case "MetalKit":
+						case "MetalPerformanceShaders":
+							// some frameworks do not exists on simulators and will result in linker errors if we include them
+							if (App.IsSimulatorBuild)
+								continue;
+							break;
+						case "PushKit":
+							// in Xcode 6 beta 7 this became an (ld) error - it was a warning earlier :(
+							// ld: embedded dylibs/frameworks are only supported on iOS 8.0 and later (@rpath/PushKit.framework/PushKit) for architecture armv7
+							// this was fixed in Xcode 6.2 (6.1 was still buggy) see #29786
+							if ((App.DeploymentTarget < v80) && (Driver.XcodeVersion < new Version (6, 2))) {
+								ErrorHelper.Warning (49, "{0}.framework is supported only if deployment target is 8.0 or later. {0} features might not work correctly.", framework.Name);
+								continue;
+							}
+							break;
+						}
+#endif
+
+						if (App.SdkVersion >= framework.Version) {
+							var add_to = App.DeploymentTarget >= framework.Version ? asm.Frameworks : asm.WeakFrameworks;
+							add_to.Add (framework.Name);
+							continue;
+						}
+					}
+				}
+			}
+
+			// Make sure there are no duplicates between frameworks and weak frameworks.
+			// Keep the weak ones.
+			asm.Frameworks.ExceptWith (asm.WeakFrameworks);
+		}
+
+		internal static void PrintAssemblyReferences (AssemblyDefinition assembly)
+		{
+			if (Driver.Verbosity < 2)
+				return;
+
+			var main = assembly.MainModule;
+			Driver.Log ($"Loaded assembly '{assembly.FullName}' from {Driver.Quote (assembly.MainModule.FileName)}");
+			foreach (var ar in main.AssemblyReferences)
+				Driver.Log ($"    References: '{ar.FullName}'");
 		}
 	}
 }

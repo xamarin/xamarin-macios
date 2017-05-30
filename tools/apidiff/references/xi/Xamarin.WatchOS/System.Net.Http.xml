@@ -74,6 +74,11 @@
           <property name="Version" value="4.0.0.0" />
         </properties>
       </attribute>
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
+        <properties>
+          <property name="CompilationRelaxations" value="8" />
+        </properties>
+      </attribute>
       <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
       <attribute name="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
         <properties>
@@ -340,7 +345,6 @@
               </method>
               <method name="GetByteArrayAsync(System.String)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -349,7 +353,6 @@
               </method>
               <method name="GetByteArrayAsync(System.Uri)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -358,7 +361,6 @@
               </method>
               <method name="GetStreamAsync(System.String)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.IO.Stream]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -367,7 +369,6 @@
               </method>
               <method name="GetStreamAsync(System.Uri)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.IO.Stream]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -376,7 +377,6 @@
               </method>
               <method name="GetStringAsync(System.String)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.String]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -385,7 +385,6 @@
               </method>
               <method name="GetStringAsync(System.Uri)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.String]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -745,7 +744,6 @@
               </method>
               <method name="SendAsync(System.Net.Http.HttpRequestMessage, System.Threading.CancellationToken)" attrib="197" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task`1[System.Net.Http.HttpResponseMessage]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -798,7 +796,6 @@
               </method>
               <method name="CreateContentReadStreamAsync()" attrib="452" virtual="true" returntype="System.Threading.Tasks.Task`1[System.IO.Stream]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters />
@@ -816,7 +813,6 @@
               </method>
               <method name="LoadIntoBufferAsync(System.Int64)" attrib="134" returntype="System.Threading.Tasks.Task">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -825,21 +821,18 @@
               </method>
               <method name="ReadAsByteArrayAsync()" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters />
               </method>
               <method name="ReadAsStreamAsync()" attrib="134" returntype="System.Threading.Tasks.Task`1[System.IO.Stream]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters />
               </method>
               <method name="ReadAsStringAsync()" attrib="134" returntype="System.Threading.Tasks.Task`1[System.String]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters />
@@ -1291,7 +1284,6 @@
               </method>
               <method name="SendAsync(System.Net.Http.HttpRequestMessage, System.Threading.CancellationToken)" attrib="229" virtual="true" sealed="true" is-override="true" returntype="System.Threading.Tasks.Task`1[System.Net.Http.HttpResponseMessage]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -1339,7 +1331,6 @@
               </method>
               <method name="SerializeToStreamAsync(System.IO.Stream, System.Net.TransportContext)" attrib="197" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -1437,6 +1428,24 @@
                   </method>
                 </methods>
               </property>
+              <property name="MaxInputInMemory" attrib="0" ptype="System.Int64">
+                <methods>
+                  <method name="get_MaxInputInMemory()" attrib="2182" returntype="System.Int64">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_MaxInputInMemory(System.Int64)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int64" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
             </properties>
             <methods>
               <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
@@ -1446,7 +1455,6 @@
               </method>
               <method name="SendAsync(System.Net.Http.HttpRequestMessage, System.Threading.CancellationToken)" attrib="197" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task`1[System.Net.Http.HttpResponseMessage]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -2429,7 +2437,7 @@
               </method>
               <method name="GetEnumerator()" attrib="486" virtual="true" returntype="System.Collections.Generic.IEnumerator`1[System.Collections.Generic.KeyValuePair`2[System.String,System.Collections.Generic.IEnumerable`1[System.String]]]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerHiddenAttribute" />
+                  <attribute name="System.Runtime.CompilerServices.IteratorStateMachineAttribute" />
                 </attributes>
                 <parameters />
               </method>

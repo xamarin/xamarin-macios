@@ -49,16 +49,16 @@ $(IOS_DESTDIR)/Developer/MonoTouch/Version: | $(IOS_DESTDIR)/Developer/MonoTouch
 $(IOS_DESTDIR)/Developer/MonoTouch/usr/share: | $(IOS_DESTDIR)/Developer/MonoTouch/usr
 	$(Q_LN) ln -Fs $(abspath $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/share) $@
 
-$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo: Make.config .git/index | $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
+$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo: Make.config.inc .git/index | $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
 	$(Q_GEN) echo "Version: $(IOS_PACKAGE_VERSION)" > $@
 	$(Q) echo "Hash: $(shell git log --oneline -1 --pretty=%h)" >> $@
 	$(Q) echo "Branch: $(CURRENT_BRANCH)" >> $@
 	$(Q) echo "Build date: $(shell date '+%Y-%m-%d %H:%M:%S%z')" >> $@
 
-$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Version: Make.config
+$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Version: Make.config.inc
 	$(Q) echo $(IOS_PACKAGE_VERSION) > $@
 
-$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/updateinfo: Make.config
+$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/updateinfo: Make.config.inc
 	$(Q) echo "4569c276-1397-4adb-9485-82a7696df22e $(IOS_PACKAGE_UPDATE_ID)" > $@
 
 $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist: Versions-ios.plist.in Makefile $(TOP)/Make.config versions-check.csharp
@@ -92,16 +92,16 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions/Current: | $(MAC_DESTDIR)$(MAC_FRAME
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Commands:
 	$(Q_LN) ln -hfs $(MAC_TARGETDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/bin $@
 
-$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo: Make.config .git/index | $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)
+$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo: Make.config.inc .git/index | $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)
 	$(Q_GEN) echo "Version: $(MAC_PACKAGE_VERSION)" > $@
 	$(Q) echo "Hash: $(shell git log --oneline -1 --pretty=%h)" >> $@
 	$(Q) echo "Branch: $(shell git symbolic-ref --short HEAD)" >> $@
 	$(Q) echo "Build date: $(shell date '+%Y-%m-%d %H:%M:%S%z')" >> $@
 
-$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/updateinfo: Make.config
+$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/updateinfo: Make.config.inc
 	$(Q) echo "0ab364ff-c0e9-43a8-8747-3afb02dc7731 $(MAC_PACKAGE_UPDATE_ID)" > $@
 
-$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Version: Make.config
+$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Version: Make.config.inc
 	$(Q) echo $(MAC_PACKAGE_VERSION) > $@
 
 $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist: Versions-mac.plist.in Makefile $(TOP)/Make.config versions-check.csharp
@@ -219,6 +219,7 @@ git-clean-all:
 	@for dir in $(DEPENDENCY_DIRECTORIES); do if test -d $(CURDIR)/$$dir; then echo "Cleaning $$dir" && cd $(CURDIR)/$$dir && git clean -xffdq && git reset --hard -q && git submodule foreach -q --recursive 'git clean -xffdq'; else echo "Skipped  $$dir (does not exist)"; fi; done
 ifdef ENABLE_XAMARIN
 	@./configure --enable-xamarin
+	$(MAKE) reset
 	@echo "Done (Xamarin-specific build has been re-enabled)"
 else
 	@echo "Done"

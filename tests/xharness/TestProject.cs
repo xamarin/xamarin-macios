@@ -12,7 +12,10 @@ namespace xharness
 		XmlDocument xml;
 
 		public string Path;
+		public string SolutionPath;
+		public string Name;
 		public bool IsExecutableProject;
+		public bool IsNUnitProject;
 		public bool GenerateVariations = true;
 
 		public TestProject ()
@@ -84,6 +87,7 @@ namespace xharness
 				Path = Path,
 				IsExecutableProject = IsExecutableProject,
 				GenerateVariations = GenerateVariations,
+				Name = Name,
 			};
 		}
 
@@ -121,6 +125,7 @@ namespace xharness
 	public class MacTestProject : TestProject
 	{
 		public bool SkipXMVariations;
+		public string [] Configurations;
 
 		public MacTestProject () : base ()
 		{

@@ -178,6 +178,7 @@ namespace XamCore.TVMLKit {
 		UINavigationController NavigationController { get; }
 
 		[Export ("evaluateInJavaScriptContext:completion:")]
+		[Async]
 		void Evaluate (Action<JSContext> evaluation, [NullAllowed] Action<bool> completion);
 
 		[Export ("stop")]
@@ -744,9 +745,11 @@ namespace XamCore.TVMLKit {
 		void Reset (TVElementResettableProperty resettableProperty);
 
 		[Export ("dispatchEventOfType:canBubble:cancellable:extraInfo:completion:")]
+		[Async (ResultType = typeof (TVViewElementDispatchResult))]
 		void DispatchEvent (TVElementEventType type, bool canBubble, bool isCancellable, [NullAllowed] NSDictionary<NSString, NSObject> extraInfo, [NullAllowed] Action<bool, bool> completion);
 
 		[Export ("dispatchEventWithName:canBubble:cancellable:extraInfo:completion:")]
+		[Async (ResultType = typeof (TVViewElementDispatchResult))]
 		void DispatchEvent (string eventName, bool canBubble, bool isCancellable, [NullAllowed] NSDictionary<NSString, NSObject> extraInfo, [NullAllowed] Action<bool, bool> completion);
 	}
 

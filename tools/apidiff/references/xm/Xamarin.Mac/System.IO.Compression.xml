@@ -4,6 +4,11 @@
     <attributes>
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
         <properties>
+          <property name="Destination" value="System.IO.Compression.CompressionLevel" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
           <property name="Destination" value="System.IO.Compression.CompressionMode" />
         </properties>
       </attribute>
@@ -15,11 +20,6 @@
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
         <properties>
           <property name="Destination" value="System.IO.Compression.GZipStream" />
-        </properties>
-      </attribute>
-      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
-        <properties>
-          <property name="Destination" value="System.IO.Compression.CompressionLevel" />
         </properties>
       </attribute>
       <attribute name="System.Diagnostics.DebuggableAttribute">
@@ -77,6 +77,11 @@
       <attribute name="System.Reflection.AssemblyTitleAttribute">
         <properties>
           <property name="Title" value="System.IO.Compression.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
+        <properties>
+          <property name="CompilationRelaxations" value="8" />
         </properties>
       </attribute>
       <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
@@ -169,9 +174,6 @@
               <property name="Archive" attrib="0" ptype="System.IO.Compression.ZipArchive">
                 <methods>
                   <method name="get_Archive()" attrib="2182" returntype="System.IO.Compression.ZipArchive">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                 </methods>

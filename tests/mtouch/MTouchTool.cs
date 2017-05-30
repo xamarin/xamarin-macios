@@ -32,6 +32,14 @@ namespace Xamarin
 		Static,
 	}
 
+	public enum MTouchBitcode
+	{
+		Unspecified,
+		ASMOnly,
+		Full, // LLVMOnly
+		Marker,
+	}
+
 	[Flags]
 	enum I18N
 	{
@@ -74,22 +82,33 @@ namespace Xamarin
 		public MTouchRegistrar Registrar;
 		public I18N I18N;
 		public bool? Extension;
-		public List<string> AppExtensions = new List<string> ();
+		public List<MTouchTool> AppExtensions = new List<MTouchTool> ();
 		public List<string> Frameworks = new List<string> ();
 		public string HttpMessageHandler;
 		public bool? PackageMdb;
 		public bool? MSym;
 		public bool? DSym;
+		public bool? NoStrip;
+		public string NoSymbolStrip;
 		public string Mono;
 		public string GccFlags;
-#pragma warning restore 649
 
 		// These are a bit smarter
 		public Profile Profile = Profile.iOS;
 		public bool NoPlatformAssemblyReference;
+		public List<string> AssemblyBuildTargets = new List<string> ();
 		static XmlDocument device_list_cache;
 		public string LLVMOptimizations;
 		public string [] CustomArguments; // Sometimes you want to pass invalid arguments to mtouch, in this case this array is used. No processing will be done, if quotes are required, they must be added to the arguments in the array.
+		public int [] NoWarn; // null array: no passed to mtouch. empty array: pass --nowarn (which means disable all warnings).
+		public int [] WarnAsError; // null array: no passed to mtouch. empty array: pass --warnaserror (which means makes all warnings errors).
+		public MTouchBitcode Bitcode;
+		public string AotArguments;
+		public string AotOtherArguments;
+		public string [] LinkSkip;
+		public string [] XmlDefinitions;
+
+#pragma warning restore 649
 
 		public class DeviceInfo
 		{
@@ -201,6 +220,17 @@ namespace Xamarin
 			if (PackageMdb.HasValue)
 				sb.Append (" --package-mdb:").Append (PackageMdb.Value ? "true" : "false");
 
+			if (NoStrip.HasValue && NoStrip.Value)
+				sb.Append (" --nostrip");
+
+			if (NoSymbolStrip != null) {
+				if (NoSymbolStrip.Length == 0) {
+					sb.Append (" --nosymbolstrip");
+				} else {
+					sb.Append (" --nosymbolstrip:").Append (NoSymbolStrip);
+				}
+			}
+
 			if (MSym.HasValue)
 				sb.Append (" --msym:").Append (MSym.Value ? "true" : "false");
 
@@ -211,7 +241,7 @@ namespace Xamarin
 				sb.Append (" --extension");
 
 			foreach (var appext in AppExtensions)
-				sb.Append (" --app-extension ").Append (MTouch.Quote (appext));
+				sb.Append (" --app-extension ").Append (MTouch.Quote (appext.AppPath));
 
 			foreach (var framework in Frameworks)
 				sb.Append (" --framework ").Append (MTouch.Quote (framework));
@@ -338,6 +368,50 @@ namespace Xamarin
 				}
 			}
 
+			if (NoWarn != null) {
+				if (NoWarn.Length > 0) {
+					sb.Append (" --nowarn:");
+					foreach (var code in NoWarn)
+						sb.Append (code).Append (',');
+					sb.Length--;
+				} else {
+					sb.Append (" --nowarn");
+				}
+			}
+
+			if (WarnAsError != null) {
+				if (WarnAsError.Length > 0) {
+					sb.Append (" --warnaserror:");
+					foreach (var code in WarnAsError)
+						sb.Append (code).Append (',');
+					sb.Length--;
+				} else {
+					sb.Append (" --warnaserror");
+				}
+			}
+
+			if (Bitcode != MTouchBitcode.Unspecified)
+				sb.Append (" --bitcode:").Append (Bitcode.ToString ().ToLower ());
+
+			foreach (var abt in AssemblyBuildTargets)
+				sb.Append (" --assembly-build-target ").Append (MTouch.Quote (abt));
+
+			if (!string.IsNullOrEmpty (AotArguments))
+				sb.Append (" --aot:").Append (MTouch.Quote (AotArguments));
+
+			if (!string.IsNullOrEmpty (AotOtherArguments))
+				sb.Append (" --aot-options:").Append (MTouch.Quote (AotOtherArguments));
+
+			if (LinkSkip?.Length > 0) {
+				foreach (var ls in LinkSkip)
+					sb.Append (" --linkskip:").Append (MTouch.Quote (ls));
+			}
+
+			if (XmlDefinitions?.Length > 0) {
+				foreach (var xd in XmlDefinitions)
+					sb.Append (" --xml:").Append (MTouch.Quote (xd));
+			}
+
 			return sb.ToString ();
 		}
 
@@ -391,7 +465,7 @@ namespace Xamarin
 			}
 		}
 
-		string CreatePlist (Profile profile, string appName)
+		public static string CreatePlist (Profile profile, string appName)
 		{
 			string plist = null;
 
@@ -423,7 +497,7 @@ namespace Xamarin
 	</array>
 </dict>
 </plist>
-", appName, MTouch.GetSdkVersion (Profile));
+", appName, MTouch.GetSdkVersion (profile));
 				break;
 			case Profile.tvOS:
 				plist = string.Format (@"<?xml version=""1.0"" encoding=""UTF-8""?>
@@ -444,7 +518,7 @@ namespace Xamarin
 	</array>
 </dict>
 </plist>
-", appName, MTouch.GetSdkVersion (Profile));
+", appName, MTouch.GetSdkVersion (profile));
 				break;
 			default:
 				throw new Exception ("Profile not specified.");
@@ -453,7 +527,17 @@ namespace Xamarin
 			return plist;
 		}
 
-		public void CreateTemporaryApp (bool hasPlist = false, string appName = "testApp", string code = null)
+		public string CreateTemporarySatelliteAssembly (string culture = "en-AU")
+		{
+			var asm_dir = Path.Combine (Path.GetDirectoryName (RootAssembly), culture);
+			Directory.CreateDirectory (asm_dir);
+
+			var asm_name = Path.GetFileNameWithoutExtension (RootAssembly) + ".resources.dll";
+			// Cheat a bit, by compiling a normal assembly with code instead of creating a resource assembly
+			return MTouch.CompileTestAppLibrary (asm_dir, "class X {}", appName: Path.GetFileNameWithoutExtension (asm_name));
+		}
+
+		public void CreateTemporaryApp (bool hasPlist = false, string appName = "testApp", string code = null, string extraArg = "", string extraCode = null)
 		{
 			string testDir;
 			if (RootAssembly == null) {
@@ -465,16 +549,22 @@ namespace Xamarin
 			var app = AppPath ?? Path.Combine (testDir, appName + ".app");
 			Directory.CreateDirectory (app);
 			AppPath = app;
-			RootAssembly = MTouch.CompileTestAppExecutable (testDir, code, "", Profile, appName);
+			RootAssembly = MTouch.CompileTestAppExecutable (testDir, code, extraArg, Profile, appName, extraCode);
 
 			if (hasPlist)
 				File.WriteAllText (Path.Combine (app, "Info.plist"), CreatePlist (Profile, appName));
 		}
 
-		public void CreateTemporararyServiceExtension (string code = null, string extraArg = null)
+		public void CreateTemporaryServiceExtension (string code = null, string extraCode = null, string extraArg = null, string appName = "testServiceExtension")
 		{
-			var testDir = CreateTemporaryDirectory ();
-			var app = Path.Combine (testDir, "testApp.appex");
+			string testDir;
+			if (RootAssembly == null) {
+				testDir = CreateTemporaryDirectory ();
+			} else {
+				// We're rebuilding an existing executable, so just reuse that
+				testDir = Path.GetDirectoryName (RootAssembly);
+			}
+			var app = AppPath ?? Path.Combine (testDir, $"{appName}.appex");
 			Directory.CreateDirectory (app);
 
 			if (code == null) {
@@ -485,11 +575,14 @@ public partial class NotificationService : UNNotificationServiceExtension
 	protected NotificationService (System.IntPtr handle) : base (handle) {}
 }";
 			}
+			if (extraCode != null)
+				code += extraCode;
 
 			AppPath = app;
-			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile, extraArg: extraArg);
+			Extension = true;
+			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile, extraArg: extraArg, appName: appName);
 
-			File.WriteAllText (Path.Combine (app, "Info.plist"),
+			var info_plist = 
 @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
 <plist version=""1.0"">
@@ -521,7 +614,87 @@ public partial class NotificationService : UNNotificationServiceExtension
 	</dict>
 </dict>
 </plist>
-");
+";
+			var plist_path = Path.Combine (app, "Info.plist");
+			if (!File.Exists (plist_path) || File.ReadAllText (plist_path) != info_plist)
+				File.WriteAllText (plist_path, info_plist);
+		}
+
+		public void CreateTemporaryTodayExtension (string code = null, string extraCode = null, string extraArg = null, string appName = "testTodayExtension")
+		{
+			string testDir;
+			if (RootAssembly == null) {
+				testDir = CreateTemporaryDirectory ();
+			} else {
+				// We're rebuilding an existing executable, so just reuse that
+				testDir = Path.GetDirectoryName (RootAssembly);
+			}
+			var app = AppPath ?? Path.Combine (testDir, $"{appName}.appex");
+			Directory.CreateDirectory (app);
+
+			if (code == null) {
+				code = @"using System;
+using Foundation;
+using NotificationCenter;
+using UIKit;
+
+public partial class TodayViewController : UIViewController, INCWidgetProviding
+{
+	public TodayViewController (IntPtr handle) : base (handle)
+	{
+	}
+
+	[Export (""widgetPerformUpdateWithCompletionHandler:"")]
+	public void WidgetPerformUpdate (Action<NCUpdateResult> completionHandler)
+	{
+		completionHandler (NCUpdateResult.NewData);
+	}
+}
+";
+			}
+			if (extraCode != null)
+				code += extraCode;
+
+			AppPath = app;
+			Extension = true;
+			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile, extraArg: extraArg, appName: appName);
+
+			var info_plist = // FIXME: this includes a NSExtensionMainStoryboard key which points to a non-existent storyboard. This won't matter as long as we're only building, and not running the extension.
+@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
+<plist version=""1.0"">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>todayextension</string>
+	<key>CFBundleName</key>
+	<string>todayextension</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.xamarin.testapp.todayextension</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>XPC!</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>MinimumOSVersion</key>
+	<string>10.0</string>
+	<key>NSExtension</key>
+	<dict>
+		<key>NSExtensionPointIdentifier</key>
+		<string>widget-extension</string>
+		<key>NSExtensionMainStoryboard</key>
+		<string>MainInterface</string>
+	</dict>
+</dict>
+</plist>
+";
+			var plist_path = Path.Combine (app, "Info.plist");
+			if (!File.Exists (plist_path) || File.ReadAllText (plist_path) != info_plist)
+				File.WriteAllText (plist_path, info_plist);
 		}
 
 		public void CreateTemporaryWatchKitExtension (string code = null)
@@ -545,6 +718,7 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 			}
 
 			AppPath = app;
+			Extension = true;
 			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile);
 
 			File.WriteAllText (Path.Combine (app, "Info.plist"), @"<?xml version=""1.0"" encoding=""UTF-8""?>

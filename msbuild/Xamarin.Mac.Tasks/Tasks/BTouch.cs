@@ -33,21 +33,38 @@ namespace Xamarin.Mac.Tasks
 				isMobile = true; // Some older binding don't have either tag, assume mobile since it is the default
 			}
 
-			EnvironmentVariables = new string[] {
-				"MONO_PATH=" + string.Format ("{0}/lib/mono/{1}", FrameworkRoot, isMobile ? "Xamarin.Mac" : "4.5")
-			};
-
 			var sb = new StringBuilder ();
-			if (isMobile) {
-				sb.Append (Path.Combine (FrameworkRoot, "lib", "bmac", "bmac-mobile.exe"));
-				sb.Append (" --target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile ");
-			} else {
-				sb.Append (Path.Combine (FrameworkRoot, "lib", "bmac", "bmac-full.exe"));
-				sb.Append (" --target-framework=Xamarin.Mac,Version=v4.5,Profile=Full ");
+			var bgen = Path.Combine (FrameworkRoot, "lib", "bgen", "bgen.exe");
+			if (!File.Exists (bgen)) {
+				EnvironmentVariables = new string[] {
+					"MONO_PATH=" + string.Format ("{0}/lib/mono/{1}", FrameworkRoot, isMobile ? "Xamarin.Mac" : "4.5")
+				};
+
+				if (isMobile) {
+					sb.Append (Path.Combine (FrameworkRoot, "lib", "bmac", "bmac-mobile.exe"));
+				} else {
+					sb.Append (Path.Combine (FrameworkRoot, "lib", "bmac", "bmac-full.exe"));
+				}
 			}
-			sb.Append ("-nostdlib ");
+			sb.Append (" -nostdlib ");
 			sb.Append (base.GenerateCommandLineCommands ());
 			return sb.ToString ();
 		}
+
+		protected override string GetTargetFrameworkArgument ()
+		{
+			switch (TargetFrameworkIdentifier) {
+				case null:
+				case "":
+				case "Xamarin.Mac":
+					return "/target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile";
+				case ".NETFramework":
+					return "/target-framework=Xamarin.Mac,Version=v4.5,Profile=Full";
+				default:
+					Log.LogError ($"Unknown target framework identifier: {TargetFrameworkIdentifier}.");
+					return string.Empty;
+			}
+		}
+
 	}
 }

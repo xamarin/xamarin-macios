@@ -66,5 +66,8 @@ namespace ObjCRuntime {
 		public const string ReplayKitLibrary = "/System/Library/Frameworks/ReplayKit.framework/ReplayKit";
 		public const string UserNotificationsLibrary = "/System/Library/Frameworks/UserNotifications.framework/UserNotifications";
 		public const string VideoSubscriberAccountLibrary = "/System/Library/Frameworks/VideoSubscriberAccount.framework/VideoSubscriberAccount";
+		
+		// tvOS 10.2
+		public const string VideoToolboxLibrary = "/System/Library/Frameworks/VideoToolbox.framework/VideoToolbox";
 	}
 }

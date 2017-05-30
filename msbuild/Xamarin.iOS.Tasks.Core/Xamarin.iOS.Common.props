@@ -29,7 +29,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<AllowedReferenceRelatedFileExtensions>
 			$(AllowedReferenceRelatedFileExtensions);
 			.dll.mdb;
-			.exe.mdb
+			.exe.mdb;
+			.pdb
 		</AllowedReferenceRelatedFileExtensions>
 	</PropertyGroup>
 
@@ -84,8 +85,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<MtouchArch Condition="'$(MtouchArch)' == '' And '$(_Platform)' == 'iPhone'">ARMv7</MtouchArch>
 
 		<!-- On-Demand Resources -->
-		<OnDemandResourcesInitialInstallTags Condition="'$(OnDemandResourcesInitialInstallTags)' == ''"></OnDemandResourcesInitialInstallTags>
-		<OnDemandResourcesPrefetchOrder Condition="'$(OnDemandResourcesPrefetchOrder)' == ''"></OnDemandResourcesPrefetchOrder>
+		<EnableOnDemandResources Condition="'$(EnableOnDemandResources)' == ''">true</EnableOnDemandResources>
+		<OnDemandResourcesInitialInstallTags Condition="'$(OnDemandResourcesInitialInstallTags)' == '' Or '$(EnableOnDemandResources)' != 'true'"></OnDemandResourcesInitialInstallTags>
+		<OnDemandResourcesPrefetchOrder Condition="'$(OnDemandResourcesPrefetchOrder)' == '' Or '$(EnableOnDemandResources)' != 'true'"></OnDemandResourcesPrefetchOrder>
 		<EmbedOnDemandResources Condition="'$(EmbedOnDemandResources)' == ''">true</EmbedOnDemandResources>
 
 		<!-- Device-Specific Builds -->
@@ -97,7 +99,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<ItemGroup>
 		<AvailableItemName Include="BundleResource" />
 	</ItemGroup>
-	
+
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props')"/>
 

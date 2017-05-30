@@ -74,6 +74,11 @@
           <property name="Version" value="2.0.5.0" />
         </properties>
       </attribute>
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
+        <properties>
+          <property name="CompilationRelaxations" value="8" />
+        </properties>
+      </attribute>
       <attribute name="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
         <properties>
           <property name="AssemblyName" value="System.Data.DataSetExtensions, PublicKey=0024000004800000940000000602000000240000525341310004000001000100B5FC90E7027F67871E773A8FDE8938C81DD402BA65B9201D60593E96C492651E889CC13F1415EBB53FAC1131AE0BD333C5EE6021672D9718EA31A8AEBD0DA0072F25D87DBA6FC90FFD598ED4DA35E44C398C454307E8E33B8426143DAEC9F596836F97C8F74750E5975C64E2189F45DEF46B2A2B1247ADC3652BF5C308055DA9" />
@@ -1860,7 +1865,6 @@
                 </methods>
               </property>
               <property name="Table" attrib="0" ptype="System.Data.DataTable">
-                <attributes />
                 <methods>
                   <method name="get_Table()" attrib="3526" abstract="true" virtual="true" returntype="System.Data.DataTable">
                     <parameters />
@@ -1901,12 +1905,6 @@
               <attribute name="System.ComponentModel.DefaultEventAttribute">
                 <properties>
                   <property name="Name" value="CollectionChanged" />
-                </properties>
-              </attribute>
-              <attribute name="System.ComponentModel.EditorAttribute">
-                <properties>
-                  <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                  <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.ConstraintsCollectionEditor, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
                 </properties>
               </attribute>
               <attribute name="System.Reflection.DefaultMemberAttribute">
@@ -2121,7 +2119,7 @@
                   <parameter name="arrayIndex" position="1" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="16582" virtual="true" is-override="true" returntype="System.Void">
+              <method name="GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
                 <parameters>
                   <parameter name="si" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
                   <parameter name="context" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
@@ -2139,12 +2137,6 @@
               <attribute name="System.ComponentModel.DesignTimeVisibleAttribute">
                 <properties>
                   <property name="Visible" value="False" />
-                </properties>
-              </attribute>
-              <attribute name="System.ComponentModel.EditorAttribute">
-                <properties>
-                  <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                  <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.DataColumnEditor, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
                 </properties>
               </attribute>
               <attribute name="System.ComponentModel.ToolboxItemAttribute">
@@ -2277,7 +2269,6 @@
                 </methods>
               </property>
               <property name="Caption" attrib="0" ptype="System.String">
-                <attributes />
                 <methods>
                   <method name="get_Caption()" attrib="2182" returntype="System.String">
                     <parameters />
@@ -2462,7 +2453,6 @@
                 </methods>
               </property>
               <property name="Namespace" attrib="0" ptype="System.String">
-                <attributes />
                 <methods>
                   <method name="get_Namespace()" attrib="2182" returntype="System.String">
                     <parameters />
@@ -2623,9 +2613,15 @@
               <property name="ProposedValue" attrib="0" ptype="System.Object">
                 <methods>
                   <method name="get_ProposedValue()" attrib="2182" returntype="System.Object">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                   <method name="set_ProposedValue(System.Object)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.Object" />
                     </parameters>
@@ -2635,6 +2631,9 @@
               <property name="Row" attrib="0" ptype="System.Data.DataRow">
                 <methods>
                   <method name="get_Row()" attrib="2182" returntype="System.Data.DataRow">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -2683,12 +2682,6 @@
                   <property name="Name" value="CollectionChanged" />
                 </properties>
               </attribute>
-              <attribute name="System.ComponentModel.EditorAttribute">
-                <properties>
-                  <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                  <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.ColumnsCollectionEditor, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                </properties>
-              </attribute>
               <attribute name="System.Reflection.DefaultMemberAttribute">
                 <properties>
                   <property name="MemberName" value="Item" />
@@ -2727,9 +2720,7 @@
               </property>
             </properties>
             <events>
-              <event name="CollectionChanged" attrib="0" eventtype="System.ComponentModel.CollectionChangeEventHandler">
-                <attributes />
-              </event>
+              <event name="CollectionChanged" attrib="0" eventtype="System.ComponentModel.CollectionChangeEventHandler" />
             </events>
             <methods>
               <method name="Add()" attrib="134" returntype="System.Data.DataColumn">
@@ -2843,12 +2834,6 @@
                   <property name="Name" value="RelationName" />
                 </properties>
               </attribute>
-              <attribute name="System.ComponentModel.EditorAttribute">
-                <properties>
-                  <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                  <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.DataRelationEditor, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                </properties>
-              </attribute>
               <attribute name="System.ComponentModel.TypeConverterAttribute">
                 <properties>
                   <property name="ConverterTypeName" value="System.Data.RelationshipConverter" />
@@ -2925,7 +2910,6 @@
             </constructors>
             <properties>
               <property name="ChildColumns" attrib="0" ptype="System.Data.DataColumn[]">
-                <attributes />
                 <methods>
                   <method name="get_ChildColumns()" attrib="2502" virtual="true" returntype="System.Data.DataColumn[]">
                     <parameters />
@@ -2999,7 +2983,6 @@
                 </methods>
               </property>
               <property name="ParentColumns" attrib="0" ptype="System.Data.DataColumn[]">
-                <attributes />
                 <methods>
                   <method name="get_ParentColumns()" attrib="2502" virtual="true" returntype="System.Data.DataColumn[]">
                     <parameters />
@@ -3071,12 +3054,6 @@
                   <property name="Name" value="Table" />
                 </properties>
               </attribute>
-              <attribute name="System.ComponentModel.EditorAttribute">
-                <properties>
-                  <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                  <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.DataRelationCollectionEditor, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                </properties>
-              </attribute>
               <attribute name="System.Reflection.DefaultMemberAttribute">
                 <properties>
                   <property name="MemberName" value="Item" />
@@ -3113,9 +3090,7 @@
               </property>
             </properties>
             <events>
-              <event name="CollectionChanged" attrib="0" eventtype="System.ComponentModel.CollectionChangeEventHandler">
-                <attributes />
-              </event>
+              <event name="CollectionChanged" attrib="0" eventtype="System.ComponentModel.CollectionChangeEventHandler" />
             </events>
             <methods>
               <method name="Add(System.Data.DataRelation)" attrib="134" returntype="System.Void">
@@ -3605,6 +3580,9 @@
               <property name="Action" attrib="0" ptype="System.Data.DataRowAction">
                 <methods>
                   <method name="get_Action()" attrib="2182" returntype="System.Data.DataRowAction">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -3612,6 +3590,9 @@
               <property name="Row" attrib="0" ptype="System.Data.DataRow">
                 <methods>
                   <method name="get_Row()" attrib="2182" returntype="System.Data.DataRow">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -3925,16 +3906,6 @@
                   <property name="Name" value="DataSetName" />
                 </properties>
               </attribute>
-              <attribute name="System.ComponentModel.DesignerAttribute">
-                <properties>
-                  <property name="DesignerTypeName" value="Microsoft.VSDesigner.Data.VS.DataSetDesigner, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                </properties>
-              </attribute>
-              <attribute name="System.ComponentModel.ToolboxItemAttribute">
-                <properties>
-                  <property name="ToolboxItemTypeName" value="Microsoft.VSDesigner.Data.VS.DataSetToolboxItem, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                </properties>
-              </attribute>
               <attribute name="System.Xml.Serialization.XmlRootAttribute">
                 <properties>
                   <property name="ElementName" value="DataSet" />
@@ -4094,7 +4065,6 @@
                 </methods>
               </property>
               <property name="Locale" attrib="0" ptype="System.Globalization.CultureInfo">
-                <attributes />
                 <methods>
                   <method name="get_Locale()" attrib="2182" returntype="System.Globalization.CultureInfo">
                     <parameters />
@@ -4241,12 +4211,8 @@
               </property>
             </properties>
             <events>
-              <event name="Initialized" attrib="0" eventtype="System.EventHandler">
-                <attributes />
-              </event>
-              <event name="MergeFailed" attrib="0" eventtype="System.Data.MergeFailedEventHandler">
-                <attributes />
-              </event>
+              <event name="Initialized" attrib="0" eventtype="System.EventHandler" />
+              <event name="MergeFailed" attrib="0" eventtype="System.Data.MergeFailedEventHandler" />
             </events>
             <methods>
               <method name="AcceptChanges()" attrib="134" returntype="System.Void">
@@ -4303,7 +4269,7 @@
                   <parameter name="schemaSet" position="0" attrib="0" type="System.Xml.Schema.XmlSchemaSet" />
                 </parameters>
               </method>
-              <method name="GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="16838" virtual="true" returntype="System.Void">
+              <method name="GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="454" virtual="true" returntype="System.Void">
                 <parameters>
                   <parameter name="info" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
                   <parameter name="context" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
@@ -4701,12 +4667,6 @@
                   <property name="Visible" value="False" />
                 </properties>
               </attribute>
-              <attribute name="System.ComponentModel.EditorAttribute">
-                <properties>
-                  <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                  <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.DataTableEditor, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                </properties>
-              </attribute>
               <attribute name="System.ComponentModel.ToolboxItemAttribute">
                 <properties>
                   <property name="ToolboxItemTypeName" value="False" />
@@ -4755,7 +4715,6 @@
             </constructors>
             <properties>
               <property name="CaseSensitive" attrib="0" ptype="System.Boolean">
-                <attributes />
                 <methods>
                   <method name="get_CaseSensitive()" attrib="2182" returntype="System.Boolean">
                     <parameters />
@@ -4909,7 +4868,6 @@
                 </methods>
               </property>
               <property name="Locale" attrib="0" ptype="System.Globalization.CultureInfo">
-                <attributes />
                 <methods>
                   <method name="get_Locale()" attrib="2182" returntype="System.Globalization.CultureInfo">
                     <parameters />
@@ -4941,7 +4899,6 @@
                 </methods>
               </property>
               <property name="Namespace" attrib="0" ptype="System.String">
-                <attributes />
                 <methods>
                   <method name="get_Namespace()" attrib="2182" returntype="System.String">
                     <parameters />
@@ -4993,12 +4950,6 @@
               </property>
               <property name="PrimaryKey" attrib="0" ptype="System.Data.DataColumn[]">
                 <attributes>
-                  <attribute name="System.ComponentModel.EditorAttribute">
-                    <properties>
-                      <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                      <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.PrimaryKeyEditor, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                    </properties>
-                  </attribute>
                   <attribute name="System.ComponentModel.TypeConverterAttribute">
                     <properties>
                       <property name="ConverterTypeName" value="System.Data.PrimaryKeyTypeConverter" />
@@ -5099,36 +5050,16 @@
               </property>
             </properties>
             <events>
-              <event name="ColumnChanged" attrib="0" eventtype="System.Data.DataColumnChangeEventHandler">
-                <attributes />
-              </event>
-              <event name="ColumnChanging" attrib="0" eventtype="System.Data.DataColumnChangeEventHandler">
-                <attributes />
-              </event>
-              <event name="Initialized" attrib="0" eventtype="System.EventHandler">
-                <attributes />
-              </event>
-              <event name="RowChanged" attrib="0" eventtype="System.Data.DataRowChangeEventHandler">
-                <attributes />
-              </event>
-              <event name="RowChanging" attrib="0" eventtype="System.Data.DataRowChangeEventHandler">
-                <attributes />
-              </event>
-              <event name="RowDeleted" attrib="0" eventtype="System.Data.DataRowChangeEventHandler">
-                <attributes />
-              </event>
-              <event name="RowDeleting" attrib="0" eventtype="System.Data.DataRowChangeEventHandler">
-                <attributes />
-              </event>
-              <event name="TableCleared" attrib="0" eventtype="System.Data.DataTableClearEventHandler">
-                <attributes />
-              </event>
-              <event name="TableClearing" attrib="0" eventtype="System.Data.DataTableClearEventHandler">
-                <attributes />
-              </event>
-              <event name="TableNewRow" attrib="0" eventtype="System.Data.DataTableNewRowEventHandler">
-                <attributes />
-              </event>
+              <event name="ColumnChanged" attrib="0" eventtype="System.Data.DataColumnChangeEventHandler" />
+              <event name="ColumnChanging" attrib="0" eventtype="System.Data.DataColumnChangeEventHandler" />
+              <event name="Initialized" attrib="0" eventtype="System.EventHandler" />
+              <event name="RowChanged" attrib="0" eventtype="System.Data.DataRowChangeEventHandler" />
+              <event name="RowChanging" attrib="0" eventtype="System.Data.DataRowChangeEventHandler" />
+              <event name="RowDeleted" attrib="0" eventtype="System.Data.DataRowChangeEventHandler" />
+              <event name="RowDeleting" attrib="0" eventtype="System.Data.DataRowChangeEventHandler" />
+              <event name="TableCleared" attrib="0" eventtype="System.Data.DataTableClearEventHandler" />
+              <event name="TableClearing" attrib="0" eventtype="System.Data.DataTableClearEventHandler" />
+              <event name="TableNewRow" attrib="0" eventtype="System.Data.DataTableNewRowEventHandler" />
             </events>
             <methods>
               <method name="AcceptChanges()" attrib="134" returntype="System.Void">
@@ -5183,7 +5114,7 @@
               <method name="GetErrors()" attrib="134" returntype="System.Data.DataRow[]">
                 <parameters />
               </method>
-              <method name="GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="16838" virtual="true" returntype="System.Void">
+              <method name="GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="454" virtual="true" returntype="System.Void">
                 <parameters>
                   <parameter name="info" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
                   <parameter name="context" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
@@ -5545,6 +5476,9 @@
               <property name="Table" attrib="0" ptype="System.Data.DataTable">
                 <methods>
                   <method name="get_Table()" attrib="2182" returntype="System.Data.DataTable">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -5607,12 +5541,6 @@
                   <property name="Name" value="CollectionChanged" />
                 </properties>
               </attribute>
-              <attribute name="System.ComponentModel.EditorAttribute">
-                <properties>
-                  <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                  <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.TablesCollectionEditor, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                </properties>
-              </attribute>
               <attribute name="System.ComponentModel.ListBindableAttribute">
                 <properties>
                   <property name="ListBindable" value="False" />
@@ -5666,9 +5594,7 @@
               </property>
             </properties>
             <events>
-              <event name="CollectionChanged" attrib="0" eventtype="System.ComponentModel.CollectionChangeEventHandler">
-                <attributes />
-              </event>
+              <event name="CollectionChanged" attrib="0" eventtype="System.ComponentModel.CollectionChangeEventHandler" />
               <event name="CollectionChanging" attrib="0" eventtype="System.ComponentModel.CollectionChangeEventHandler" />
             </events>
             <methods>
@@ -5772,6 +5698,9 @@
               <property name="Row" attrib="0" ptype="System.Data.DataRow">
                 <methods>
                   <method name="get_Row()" attrib="2182" returntype="System.Data.DataRow">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -6052,17 +5981,6 @@
                   <property name="Name" value="Table" />
                 </properties>
               </attribute>
-              <attribute name="System.ComponentModel.DesignerAttribute">
-                <properties>
-                  <property name="DesignerTypeName" value="Microsoft.VSDesigner.Data.VS.DataViewDesigner, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                </properties>
-              </attribute>
-              <attribute name="System.ComponentModel.EditorAttribute">
-                <properties>
-                  <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                  <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.DataSourceEditor, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                </properties>
-              </attribute>
               <attribute name="System.Reflection.DefaultMemberAttribute">
                 <properties>
                   <property name="MemberName" value="Item" />
@@ -6335,12 +6253,8 @@
               </property>
             </properties>
             <events>
-              <event name="Initialized" attrib="0" eventtype="System.EventHandler">
-                <attributes />
-              </event>
-              <event name="ListChanged" attrib="0" eventtype="System.ComponentModel.ListChangedEventHandler">
-                <attributes />
-              </event>
+              <event name="Initialized" attrib="0" eventtype="System.EventHandler" />
+              <event name="ListChanged" attrib="0" eventtype="System.ComponentModel.ListChangedEventHandler" />
             </events>
             <methods>
               <method name="AddNew()" attrib="454" virtual="true" returntype="System.Data.DataRowView">
@@ -6462,13 +6376,6 @@
             </methods>
           </class>
           <class name="DataViewManager" type="class" base="System.ComponentModel.MarshalByValueComponent" charset="Ansi" layout="Auto">
-            <attributes>
-              <attribute name="System.ComponentModel.DesignerAttribute">
-                <properties>
-                  <property name="DesignerTypeName" value="Microsoft.VSDesigner.Data.VS.DataViewManagerDesigner, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                </properties>
-              </attribute>
-            </attributes>
             <interfaces>
               <interface name="System.Collections.ICollection" />
               <interface name="System.Collections.IEnumerable" />
@@ -6566,12 +6473,6 @@
           </class>
           <class name="DataViewRowState" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
             <attributes>
-              <attribute name="System.ComponentModel.EditorAttribute">
-                <properties>
-                  <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                  <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.DataViewRowStateEditor, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                </properties>
-              </attribute>
               <attribute name="System.FlagsAttribute" />
             </attributes>
             <interfaces>
@@ -6679,12 +6580,6 @@
           </class>
           <class name="DataViewSettingCollection" type="class" base="System.Object" charset="Ansi" layout="Auto">
             <attributes>
-              <attribute name="System.ComponentModel.EditorAttribute">
-                <properties>
-                  <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                  <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.DataViewSettingsCollectionEditor, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                </properties>
-              </attribute>
               <attribute name="System.Reflection.DefaultMemberAttribute">
                 <properties>
                   <property name="MemberName" value="Item" />
@@ -7017,12 +6912,6 @@
               <attribute name="System.ComponentModel.DefaultPropertyAttribute">
                 <properties>
                   <property name="Name" value="ConstraintName" />
-                </properties>
-              </attribute>
-              <attribute name="System.ComponentModel.EditorAttribute">
-                <properties>
-                  <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                  <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.ForeignKeyConstraintEditor, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
                 </properties>
               </attribute>
             </attributes>
@@ -8319,6 +8208,9 @@
               <property name="Conflict" attrib="0" ptype="System.String">
                 <methods>
                   <method name="get_Conflict()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -8326,6 +8218,9 @@
               <property name="Table" attrib="0" ptype="System.Data.DataTable">
                 <methods>
                   <method name="get_Table()" attrib="2182" returntype="System.Data.DataTable">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -8730,6 +8625,9 @@
               <property name="RecordCount" attrib="0" ptype="System.Int32">
                 <methods>
                   <method name="get_RecordCount()" attrib="2182" returntype="System.Int32">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -8895,12 +8793,6 @@
                   <property name="Name" value="ConstraintName" />
                 </properties>
               </attribute>
-              <attribute name="System.ComponentModel.EditorAttribute">
-                <properties>
-                  <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                  <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.UniqueConstraintEditor, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                </properties>
-              </attribute>
             </attributes>
             <constructors>
               <constructor name=".ctor(System.Data.DataColumn)" attrib="6278">
@@ -8982,7 +8874,6 @@
                 </methods>
               </property>
               <property name="IsPrimaryKey" attrib="0" ptype="System.Boolean">
-                <attributes />
                 <methods>
                   <method name="get_IsPrimaryKey()" attrib="2182" returntype="System.Boolean">
                     <parameters />
@@ -9475,12 +9366,10 @@
               </property>
             </properties>
             <events>
-              <event name="FillError" attrib="0" eventtype="System.Data.FillErrorEventHandler">
-                <attributes />
-              </event>
+              <event name="FillError" attrib="0" eventtype="System.Data.FillErrorEventHandler" />
             </events>
             <methods>
-              <method name="CloneInternals()" attrib="16836" virtual="true" returntype="System.Data.Common.DataAdapter">
+              <method name="CloneInternals()" attrib="452" virtual="true" returntype="System.Data.Common.DataAdapter">
                 <attributes>
                   <attribute name="System.ObsoleteAttribute">
                     <properties>
@@ -10067,12 +9956,6 @@
           </class>
           <class name="DataTableMappingCollection" type="class" base="System.MarshalByRefObject" sealed="true" charset="Ansi" layout="Auto">
             <attributes>
-              <attribute name="System.ComponentModel.EditorAttribute">
-                <properties>
-                  <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                  <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.DataTableMappingCollectionEditor, Microsoft.VSDesigner, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-                </properties>
-              </attribute>
               <attribute name="System.ComponentModel.ListBindableAttribute">
                 <properties>
                   <property name="ListBindable" value="False" />
@@ -10289,6 +10172,445 @@
               </method>
             </methods>
           </class>
+          <class name="DbColumn" type="class" base="System.Object" abstract="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Reflection.DefaultMemberAttribute">
+                <properties>
+                  <property name="MemberName" value="Item" />
+                </properties>
+              </attribute>
+            </attributes>
+            <constructors>
+              <constructor name=".ctor()" attrib="6276">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="AllowDBNull" attrib="0" ptype="System.Nullable`1[System.Boolean]">
+                <methods>
+                  <method name="get_AllowDBNull()" attrib="2182" returntype="System.Nullable`1[System.Boolean]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_AllowDBNull(System.Nullable`1[System.Boolean])" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Nullable`1[System.Boolean]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="BaseCatalogName" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_BaseCatalogName()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_BaseCatalogName(System.String)" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="BaseColumnName" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_BaseColumnName()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_BaseColumnName(System.String)" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="BaseSchemaName" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_BaseSchemaName()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_BaseSchemaName(System.String)" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="BaseServerName" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_BaseServerName()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_BaseServerName(System.String)" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="BaseTableName" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_BaseTableName()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_BaseTableName(System.String)" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ColumnName" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_ColumnName()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_ColumnName(System.String)" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ColumnOrdinal" attrib="0" ptype="System.Nullable`1[System.Int32]">
+                <methods>
+                  <method name="get_ColumnOrdinal()" attrib="2182" returntype="System.Nullable`1[System.Int32]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_ColumnOrdinal(System.Nullable`1[System.Int32])" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Nullable`1[System.Int32]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ColumnSize" attrib="0" ptype="System.Nullable`1[System.Int32]">
+                <methods>
+                  <method name="get_ColumnSize()" attrib="2182" returntype="System.Nullable`1[System.Int32]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_ColumnSize(System.Nullable`1[System.Int32])" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Nullable`1[System.Int32]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="DataType" attrib="0" ptype="System.Type">
+                <methods>
+                  <method name="get_DataType()" attrib="2182" returntype="System.Type">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_DataType(System.Type)" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Type" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="DataTypeName" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_DataTypeName()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_DataTypeName(System.String)" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IsAliased" attrib="0" ptype="System.Nullable`1[System.Boolean]">
+                <methods>
+                  <method name="get_IsAliased()" attrib="2182" returntype="System.Nullable`1[System.Boolean]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_IsAliased(System.Nullable`1[System.Boolean])" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Nullable`1[System.Boolean]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IsAutoIncrement" attrib="0" ptype="System.Nullable`1[System.Boolean]">
+                <methods>
+                  <method name="get_IsAutoIncrement()" attrib="2182" returntype="System.Nullable`1[System.Boolean]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_IsAutoIncrement(System.Nullable`1[System.Boolean])" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Nullable`1[System.Boolean]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IsExpression" attrib="0" ptype="System.Nullable`1[System.Boolean]">
+                <methods>
+                  <method name="get_IsExpression()" attrib="2182" returntype="System.Nullable`1[System.Boolean]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_IsExpression(System.Nullable`1[System.Boolean])" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Nullable`1[System.Boolean]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IsHidden" attrib="0" ptype="System.Nullable`1[System.Boolean]">
+                <methods>
+                  <method name="get_IsHidden()" attrib="2182" returntype="System.Nullable`1[System.Boolean]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_IsHidden(System.Nullable`1[System.Boolean])" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Nullable`1[System.Boolean]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IsIdentity" attrib="0" ptype="System.Nullable`1[System.Boolean]">
+                <methods>
+                  <method name="get_IsIdentity()" attrib="2182" returntype="System.Nullable`1[System.Boolean]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_IsIdentity(System.Nullable`1[System.Boolean])" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Nullable`1[System.Boolean]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IsKey" attrib="0" ptype="System.Nullable`1[System.Boolean]">
+                <methods>
+                  <method name="get_IsKey()" attrib="2182" returntype="System.Nullable`1[System.Boolean]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_IsKey(System.Nullable`1[System.Boolean])" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Nullable`1[System.Boolean]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IsLong" attrib="0" ptype="System.Nullable`1[System.Boolean]">
+                <methods>
+                  <method name="get_IsLong()" attrib="2182" returntype="System.Nullable`1[System.Boolean]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_IsLong(System.Nullable`1[System.Boolean])" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Nullable`1[System.Boolean]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IsReadOnly" attrib="0" ptype="System.Nullable`1[System.Boolean]">
+                <methods>
+                  <method name="get_IsReadOnly()" attrib="2182" returntype="System.Nullable`1[System.Boolean]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_IsReadOnly(System.Nullable`1[System.Boolean])" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Nullable`1[System.Boolean]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IsUnique" attrib="0" ptype="System.Nullable`1[System.Boolean]">
+                <methods>
+                  <method name="get_IsUnique()" attrib="2182" returntype="System.Nullable`1[System.Boolean]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_IsUnique(System.Nullable`1[System.Boolean])" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Nullable`1[System.Boolean]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Item" attrib="0" ptype="System.Object" params="System.String">
+                <methods>
+                  <method name="get_Item(System.String)" attrib="2502" virtual="true" returntype="System.Object">
+                    <parameters>
+                      <parameter name="property" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="NumericPrecision" attrib="0" ptype="System.Nullable`1[System.Int32]">
+                <methods>
+                  <method name="get_NumericPrecision()" attrib="2182" returntype="System.Nullable`1[System.Int32]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_NumericPrecision(System.Nullable`1[System.Int32])" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Nullable`1[System.Int32]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="NumericScale" attrib="0" ptype="System.Nullable`1[System.Int32]">
+                <methods>
+                  <method name="get_NumericScale()" attrib="2182" returntype="System.Nullable`1[System.Int32]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_NumericScale(System.Nullable`1[System.Int32])" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Nullable`1[System.Int32]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="UdtAssemblyQualifiedName" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_UdtAssemblyQualifiedName()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_UdtAssemblyQualifiedName(System.String)" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
           <class name="DbCommand" type="class" base="System.ComponentModel.Component" abstract="true" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="System.ComponentModel.IComponent" />
@@ -10326,7 +10648,6 @@
                 </methods>
               </property>
               <property name="CommandTimeout" attrib="0" ptype="System.Int32">
-                <attributes />
                 <methods>
                   <method name="get_CommandTimeout()" attrib="3526" abstract="true" virtual="true" returntype="System.Int32">
                     <parameters />
@@ -10903,7 +11224,6 @@
                 </methods>
               </property>
               <property name="ConnectionTimeout" attrib="0" ptype="System.Int32">
-                <attributes />
                 <methods>
                   <method name="get_ConnectionTimeout()" attrib="2502" virtual="true" returntype="System.Int32">
                     <parameters />
@@ -10911,7 +11231,6 @@
                 </methods>
               </property>
               <property name="DataSource" attrib="0" ptype="System.String">
-                <attributes />
                 <methods>
                   <method name="get_DataSource()" attrib="3526" abstract="true" virtual="true" returntype="System.String">
                     <parameters />
@@ -10919,7 +11238,6 @@
                 </methods>
               </property>
               <property name="Database" attrib="0" ptype="System.String">
-                <attributes />
                 <methods>
                   <method name="get_Database()" attrib="3526" abstract="true" virtual="true" returntype="System.String">
                     <parameters />
@@ -10963,9 +11281,7 @@
               </property>
             </properties>
             <events>
-              <event name="StateChange" attrib="0" eventtype="System.Data.StateChangeEventHandler">
-                <attributes />
-              </event>
+              <event name="StateChange" attrib="0" eventtype="System.Data.StateChangeEventHandler" />
             </events>
             <methods>
               <method name="BeginDbTransaction(System.Data.IsolationLevel)" attrib="1476" abstract="true" virtual="true" returntype="System.Data.Common.DbTransaction">
@@ -12425,7 +12741,6 @@
                 </methods>
               </property>
               <property name="Size" attrib="0" ptype="System.Int32">
-                <attributes />
                 <methods>
                   <method name="get_Size()" attrib="3526" abstract="true" virtual="true" returntype="System.Int32">
                     <parameters />
@@ -12868,6 +13183,9 @@
               <property name="IsProviderSpecificTypeProperty" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_IsProviderSpecificTypeProperty()" attrib="2182" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -12937,6 +13255,13 @@
               <field name="Unknown" attrib="32854" fieldtype="System.Data.Common.GroupByBehavior" value="0" />
               <field name="Unrelated" attrib="32854" fieldtype="System.Data.Common.GroupByBehavior" value="2" />
             </fields>
+          </class>
+          <class name="IDbColumnSchemaGenerator" type="interface" abstract="true" charset="Ansi" layout="Auto">
+            <methods>
+              <method name="GetColumnSchema()" attrib="1478" abstract="true" virtual="true" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Data.Common.DbColumn]">
+                <parameters />
+              </method>
+            </methods>
           </class>
           <class name="IdentifierCase" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
             <interfaces>
@@ -16670,7 +16995,9 @@
               </property>
             </properties>
             <events>
-              <event name="OnChange" attrib="0" eventtype="System.Data.SqlClient.OnChangeEventHandler" />
+              <event name="OnChange" attrib="0" eventtype="System.Data.SqlClient.OnChangeEventHandler">
+                <attributes />
+              </event>
             </events>
             <methods>
               <method name="AddCommandDependency(System.Data.SqlClient.SqlCommand)" attrib="134" returntype="System.Void">

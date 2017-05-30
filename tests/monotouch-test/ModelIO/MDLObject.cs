@@ -1,5 +1,5 @@
 ﻿//
-// MDLLight Unit Tests
+// MDLObject Unit Tests
 //
 // Authors:
 //	Rolf Bjarne Kvinge <rolf@xamarin.com>
@@ -67,6 +67,16 @@ namespace MonoTouchFixtures.ModelIO {
 		{
 			using (var obj = MDLObject.FromNode (SCNNode.FromGeometry (SCNBox.Create (1, 1, 1, 0)))) {
 				var bb = obj.GetBoundingBox (0);
+			}
+		}
+
+		[Test]
+		public void ProtocolTest ()
+		{
+			using (var obj = new MDLObject ()) {
+				var p = new Protocol (typeof (IMDLComponent));
+				obj.SetComponent (new MDLTransform (), p);
+				Assert.NotNull (obj.IsComponentConforming (p));
 			}
 		}
 	}

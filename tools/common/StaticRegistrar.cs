@@ -92,6 +92,14 @@ namespace XamCore.Registrar {
 			return this;
 		}
 
+		public AutoIndentStringBuilder Append (AutoIndentStringBuilder isb)
+		{
+			if (isb.Length > 0)
+				sb.Append (isb.ToString ());
+
+			return this;
+		}
+
 		public AutoIndentStringBuilder Append (string value)
 		{
 			Output (value);
@@ -853,7 +861,7 @@ namespace XamCore.Registrar {
 			}
 
 			if (corlib == null) {
-				corlib = first.MainModule.AssemblyResolver.Resolve (AssemblyNameReference.Parse ("mscorlib"));
+				corlib = first.MainModule.AssemblyResolver.Resolve (AssemblyNameReference.Parse ("mscorlib"), new ReaderParameters ());
 			}
 			foreach (var type in corlib.MainModule.Types) {
 				if (type.Namespace == "System" && type.Name == "Void")
@@ -1197,6 +1205,12 @@ namespace XamCore.Registrar {
 					break;
 				case "IsInformal":
 					rv.IsInformal = (bool) prop.Argument.Value;
+					break;
+				case "FormalSince":
+					Version version;
+					if (!Version.TryParse ((string)prop.Argument.Value, out version))
+						throw ErrorHelper.CreateError (4147, "Invalid {0} found on '{1}'. Please file a bug report at http://bugzilla.xamarin.com", "ProtocolAttribute", type.FullName);
+					rv.FormalSinceVersion = version;
 					break;
 				default:
 					throw ErrorHelper.CreateError (4147, "Invalid {0} found on '{1}'. Please file a bug report at http://bugzilla.xamarin.com", "ProtocolAttribute", type.FullName);
@@ -1621,8 +1635,9 @@ namespace XamCore.Registrar {
 		static int counter = 0;
 		static bool trace = false;
 		AutoIndentStringBuilder header;
-		AutoIndentStringBuilder declarations;
-		AutoIndentStringBuilder methods;
+		AutoIndentStringBuilder declarations; // forward declarations, struct definitions
+		AutoIndentStringBuilder methods; // c methods that contain the actual implementations
+		AutoIndentStringBuilder interfaces; // public objective-c @interface declarations
 		AutoIndentStringBuilder nslog_start = new AutoIndentStringBuilder ();
 		AutoIndentStringBuilder nslog_end = new AutoIndentStringBuilder ();
 		
@@ -1681,14 +1696,14 @@ namespace XamCore.Registrar {
 					if (!reported_frameworks.Contains (framework.Name)) {
 						exceptions.Add (ErrorHelper.CreateError (4134, 
 #if MMP
-							"Your application is using the '{0}' framework, which isn't included in the MacOS SDK you're using to build your app (this framework was introduced in OSX {2}, while you're building with the MacOS {1} SDK.) " +
+							"Your application is using the '{0}' framework, which isn't included in the {3} SDK you're using to build your app (this framework was introduced in {3} {2}, while you're building with the {3} {1} SDK.) " +
 							"This configuration is not supported with the static registrar (pass --registrar:dynamic as an additional mmp argument in your project's Mac Build option to select). " +
 							"Alternatively select a newer SDK in your app's Mac Build options.",
 #else
-							"Your application is using the '{0}' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS {2}, while you're building with the iOS {1} SDK.) " +
-							"Please select a newer SDK in your app's iOS Build options.",
+							"Your application is using the '{0}' framework, which isn't included in the {3} SDK you're using to build your app (this framework was introduced in {3} {2}, while you're building with the {3} {1} SDK.) " +
+							"Please select a newer SDK in your app's {3} Build options.",
 #endif
-							framework.Name, App.SdkVersion, framework.Version));
+							framework.Name, App.SdkVersion, framework.Version, App.PlatformName));
 						reported_frameworks.Add (framework.Name);
 					}
 					return;
@@ -1715,6 +1730,13 @@ namespace XamCore.Registrar {
 			string h;
 			switch (ns) {
 #if MMP
+			case "GLKit":
+				// This prevents this warning:
+				//     /Applications/Xcode83.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/OpenGL.framework/Headers/gl.h:5:2: warning: gl.h and gl3.h are both
+				//     included. Compiler will not invoke errors if using removed OpenGL functionality. [-W#warnings]
+				// This warning shows up when both GLKit/GLKit.h and Quartz/Quartz.h are included.
+				header.WriteLine ("#define GL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED 1");
+				goto default;
 			case "CoreBluetooth":
 				header.WriteLine ("#import <IOBluetooth/IOBluetooth.h>");
 				header.WriteLine ("#import <CoreBluetooth/CoreBluetooth.h>");
@@ -2371,16 +2393,26 @@ namespace XamCore.Registrar {
 					
 				var class_name = EncodeNonAsciiCharacters (@class.ExportedName);
 				var is_protocol = @class.IsProtocol;
+
+				// Publicly visible types should go into the header, private types go into the .m
+				var td = @class.Type.Resolve ();
+				AutoIndentStringBuilder iface;
+				if (td.IsNotPublic || td.IsNestedPrivate || td.IsNestedAssembly || td.IsNestedFamilyAndAssembly) {
+					iface = sb;
+				} else {
+					iface = interfaces;
+				}
+				
 				if (@class.IsCategory) {
 					var exportedName = EncodeNonAsciiCharacters (@class.BaseType.ExportedName);
-					sb.Write ("@interface {0} ({1})", exportedName, @class.CategoryName);
+					iface.Write ("@interface {0} ({1})", exportedName, @class.CategoryName);
 					declarations.AppendFormat ("@class {0};\n", exportedName);
 				} else if (is_protocol) {
 					var exportedName = EncodeNonAsciiCharacters (@class.ProtocolName);
-					sb.Write ("@protocol ").Write (exportedName);
+					iface.Write ("@protocol ").Write (exportedName);
 					declarations.AppendFormat ("@protocol {0};\n", exportedName);
 				} else {
-					sb.Write ("@interface {0} : {1}", class_name, EncodeNonAsciiCharacters (@class.SuperType.ExportedName));
+					iface.Write ("@interface {0} : {1}", class_name, EncodeNonAsciiCharacters (@class.SuperType.ExportedName));
 					declarations.AppendFormat ("@class {0};\n", class_name);
 				}
 				bool any_protocols = false;
@@ -2392,91 +2424,102 @@ namespace XamCore.Registrar {
 						for (int p = 0; p < tp.Protocols.Length; p++) {
 							if (tp.Protocols [p].ProtocolName == "UIAppearance")
 								continue;
-							sb.Append (any_protocols ? ", " : "<");
+							iface.Append (any_protocols ? ", " : "<");
 							any_protocols = true;
-							sb.Append (tp.Protocols [p].ProtocolName);
+							iface.Append (tp.Protocols [p].ProtocolName);
 							CheckNamespace (tp.Protocols [p], exceptions);
 						}
 					}
 					tp = tp.BaseType;
 				}
 				if (any_protocols)
-					sb.Append (">");
+					iface.Append (">");
 
+				AutoIndentStringBuilder implementation_fields = null;
 				if (is_protocol) {
-					sb.WriteLine ();
+					iface.WriteLine ();
 				} else {
-					sb.WriteLine (" {");
+					iface.WriteLine (" {");
 
 					if (@class.Fields != null) {
 						foreach (var field in @class.Fields.Values) {
+							AutoIndentStringBuilder fields = null;
+							if (field.IsPrivate) {
+								// Private fields go in the @implementation section.
+								if (implementation_fields == null)
+									implementation_fields = new AutoIndentStringBuilder (1);
+								fields = implementation_fields;
+							} else {
+								// Public fields go in the header.
+								fields = iface;
+							}
 							try {
 								switch (field.FieldType) {
 								case "@":
-									sb.Write ("id ");
+									fields.Write ("id ");
 									break;
 								case "^v":
-									sb.Write ("void *");
+									fields.Write ("void *");
 									break;
 								case "XamarinObject":
-									sb.Write ("XamarinObject ");
+									fields.Write ("XamarinObject ");
 									break;
 								default:
 									throw ErrorHelper.CreateError (4120, "The registrar found an unknown field type '{0}' in field '{1}.{2}'. Please file a bug report at http://bugzilla.xamarin.com", 
 										field.FieldType, field.DeclaringType.Type.FullName, field.Name);
 								}
-								sb.Write (field.Name);
-								sb.WriteLine (";");
+								fields.Write (field.Name);
+								fields.WriteLine (";");
 							} catch (Exception ex) {
 								exceptions.Add (ex);
 							}
 						}
 					}
-					sb.WriteLine ("}");
+					iface.WriteLine ("}");
 				}
 
-				sb.Indent ();
+				iface.Indent ();
 				if (@class.Properties != null) {
 					foreach (var property in @class.Properties) {
 						try {
 							if (is_protocol)
-								sb.Write (property.IsOptional ? "@optional " : "@required ");
-							sb.Write ("@property (nonatomic");
+								iface.Write (property.IsOptional ? "@optional " : "@required ");
+							iface.Write ("@property (nonatomic");
 							switch (property.ArgumentSemantic) {
 							case ArgumentSemantic.Copy:
-								sb.Write (", copy");
+								iface.Write (", copy");
 								break;
 							case ArgumentSemantic.Retain:
-								sb.Write (", retain");
+								iface.Write (", retain");
 								break;
 							case ArgumentSemantic.Assign:
 							case ArgumentSemantic.None:
 							default:
-								sb.Write (", assign");
+								iface.Write (", assign");
 								break;
 							}
 							if (property.IsReadOnly)
-								sb.Write (", readonly");
+								iface.Write (", readonly");
 
 							if (property.Selector != null) {
 								if (property.GetterSelector != null && property.Selector != property.GetterSelector)
-									sb.Write (", getter = ").Write (property.GetterSelector);
+									iface.Write (", getter = ").Write (property.GetterSelector);
 								if (property.SetterSelector != null) {
 									var setterSel = string.Format ("set{0}{1}:", char.ToUpperInvariant (property.Selector [0]), property.Selector.Substring (1));
 									if (setterSel != property.SetterSelector)
-										sb.Write (", setter = ").Write (property.SetterSelector);
+										iface.Write (", setter = ").Write (property.SetterSelector);
 								}
 							}
 
-							sb.Write (") ");
+							iface.Write (") ");
 							try {
-								sb.Write (ToObjCParameterType (property.PropertyType, property.DeclaringType.Type.FullName, exceptions, property.Property));
+								iface.Write (ToObjCParameterType (property.PropertyType, property.DeclaringType.Type.FullName, exceptions, property.Property));
 							} catch (ProductException mte) {
 								exceptions.Add (CreateException (4138, mte, property.Property, "The registrar cannot marshal the property type '{0}' of the property '{1}.{2}'.",
 									GetTypeFullName (property.PropertyType), property.DeclaringType.Type.FullName, property.Name));
 							}
-							sb.Write (" ").Write (property.Selector);
-							sb.WriteLine (";");
+							iface.Write (" ").Write (property.Selector);
+							iface.WriteLine (";");
 						} catch (Exception ex) {
 							exceptions.Add (ex);
 						}
@@ -2487,8 +2530,8 @@ namespace XamCore.Registrar {
 					foreach (var method in @class.Methods) {
 						try {
 							if (is_protocol)
-								sb.Write (method.IsOptional ? "@optional " : "@required ");
-							sb.WriteLine ("{0};", GetObjCSignature (method, exceptions));
+								iface.Write (method.IsOptional ? "@optional " : "@required ");
+							iface.WriteLine ("{0};", GetObjCSignature (method, exceptions));
 						} catch (ProductException ex) {
 							skip.Add (method);
 							exceptions.Add (ex);
@@ -2498,14 +2541,21 @@ namespace XamCore.Registrar {
 						}
 					}
 				}
-				sb.Unindent ();
-				sb.WriteLine ("@end");
+				iface.Unindent ();
+				iface.WriteLine ("@end");
+				iface.WriteLine ();
 
 				if (!is_protocol && !@class.IsWrapper) {
 					if (@class.IsCategory) {
 						sb.WriteLine ("@implementation {0} ({1})", EncodeNonAsciiCharacters (@class.BaseType.ExportedName), @class.CategoryName);
 					} else {
-						sb.WriteLine ("@implementation {0} {{ }} ", class_name);
+						sb.WriteLine ("@implementation {0} {{", class_name);
+						if (implementation_fields != null) {
+							sb.Indent ();
+							sb.Append (implementation_fields);
+							sb.Unindent ();
+						}
+						sb.WriteLine ("}");
 					}
 					sb.Indent ();
 					if (@class.Methods != null) {
@@ -3068,7 +3118,8 @@ namespace XamCore.Registrar {
 							body_setup.AppendLine ("void * handle{0} = NULL;", i);
 							copyback.AppendLine ("if (mobj{0} != NULL)", i);
 							copyback.AppendLine ("handle{0} = xamarin_get_nsobject_handle (mobj{0});", i);
-							copyback.AppendLine ("*p{0} = (id) handle{0};", i);
+							copyback.AppendLine ("if (p{0} != NULL)", i).Indent ();
+							copyback.AppendLine ("*p{0} = (id) handle{0};", i).Unindent ();
 						} else {
 							body_setup.AppendLine ("NSObject *nsobj{0} = NULL;", i);
 							setup_call_stack.AppendLine ("nsobj{0} = (NSObject *) p{0};", i);
@@ -3319,6 +3370,9 @@ namespace XamCore.Registrar {
 				}
 			}
 
+			if (App.Embeddinator)
+				body.WriteLine ("xamarin_embeddinator_initialize ();");
+
 			body.WriteLine ("MONO_ASSERT_GC_SAFE;");
 			body.WriteLine ("MONO_THREAD_ATTACH;"); // COOP: this will switch to GC_UNSAFE
 			body.WriteLine ();
@@ -3560,11 +3614,12 @@ namespace XamCore.Registrar {
 			return (token.RID << 8) + ((uint) index << 1);
 		}
 
-		public void GeneratePInvokeWrappersStart (AutoIndentStringBuilder hdr, AutoIndentStringBuilder decls, AutoIndentStringBuilder mthds)
+		public void GeneratePInvokeWrappersStart (AutoIndentStringBuilder hdr, AutoIndentStringBuilder decls, AutoIndentStringBuilder mthds, AutoIndentStringBuilder ifaces)
 		{
 			header = hdr;
 			declarations = decls;
 			methods = mthds;
+			interfaces = ifaces;
 		}
 
 		public void GeneratePInvokeWrappersEnd ()
@@ -3572,6 +3627,7 @@ namespace XamCore.Registrar {
 			header = null;	
 			declarations = null;
 			methods = null;
+			interfaces = null;
 			namespaces.Clear ();
 			structures.Clear ();
 
@@ -3704,55 +3760,72 @@ namespace XamCore.Registrar {
 		{
 			this.input_assemblies = assemblies;
 
-			foreach (var assembly in assemblies)
+			foreach (var assembly in assemblies) {
+				Driver.Log (3, "Generating static registrar for {0}", assembly.Name);
 				RegisterAssembly (assembly);
+			}
 
 			Generate (header_path, source_path);
 		}
 
 		void Generate (string header_path, string source_path)
 		{
-			using (var sb = new AutoIndentStringBuilder ()) {
-				using (var hdr = new AutoIndentStringBuilder ()) {
-					using (var decls = new AutoIndentStringBuilder ()) {
-						using (var mthds = new AutoIndentStringBuilder ()) {
-							hdr.WriteLine ("#pragma clang diagnostic ignored \"-Wdeprecated-declarations\"");
-							hdr.WriteLine ("#pragma clang diagnostic ignored \"-Wtypedef-redefinition\""); // temporary hack until we can stop including glib.h
-							hdr.WriteLine ("#pragma clang diagnostic ignored \"-Wobjc-designated-initializers\"");
+			var sb = new AutoIndentStringBuilder ();
+			header = new AutoIndentStringBuilder ();
+			declarations = new AutoIndentStringBuilder ();
+			methods = new AutoIndentStringBuilder ();
+			interfaces = new AutoIndentStringBuilder ();
 
-							if (App.EnableDebug)
-								hdr.WriteLine ("#define DEBUG 1");
+			header.WriteLine ("#pragma clang diagnostic ignored \"-Wdeprecated-declarations\"");
+			header.WriteLine ("#pragma clang diagnostic ignored \"-Wtypedef-redefinition\""); // temporary hack until we can stop including glib.h
+			header.WriteLine ("#pragma clang diagnostic ignored \"-Wobjc-designated-initializers\"");
 
-							hdr.WriteLine ("#include <stdarg.h>");
-							hdr.WriteLine ("#include <xamarin/xamarin.h>");
-							hdr.WriteLine ("#include <objc/objc.h>");
-							hdr.WriteLine ("#include <objc/runtime.h>");
-							hdr.WriteLine ("#include <objc/message.h>");
-
-							header = hdr;
-							declarations = decls;
-							methods = mthds;
-
-							mthds.WriteLine ($"#include \"{Path.GetFileName (header_path)}\"");
-							mthds.StringBuilder.AppendLine ("extern \"C\" {");
-
-							Specialize (sb);
-
-							mthds.StringBuilder.AppendLine ("} /* extern \"C\" */");
-
-							header = null;	
-							declarations = null;
-							methods = null;
-
-							FlushTrace ();
-
-							Driver.WriteIfDifferent (header_path, hdr.ToString () + "\n" + decls.ToString () + "\n");
-							Driver.WriteIfDifferent (source_path, mthds.ToString () + "\n" + sb.ToString () + "\n");
-						}
-					}
-				}
+			if (App.EnableDebug) {
+				header.WriteLine ("#define DEBUG 1");
+				methods.WriteLine ("#define DEBUG 1");
 			}
 
+			header.WriteLine ("#include <stdarg.h>");
+			if (SupportsModernObjectiveC) {
+				methods.WriteLine ("#include <xamarin/xamarin.h>");
+			} else {
+				header.WriteLine ("#include <xamarin/xamarin.h>");
+			}
+			header.WriteLine ("#include <objc/objc.h>");
+			header.WriteLine ("#include <objc/runtime.h>");
+			header.WriteLine ("#include <objc/message.h>");
+
+			methods.WriteLine ($"#include \"{Path.GetFileName (header_path)}\"");
+			methods.StringBuilder.AppendLine ("extern \"C\" {");
+
+			if (App.Embeddinator)
+				methods.WriteLine ("void xamarin_embeddinator_initialize ();");
+			
+			Specialize (sb);
+
+			methods.StringBuilder.AppendLine ("} /* extern \"C\" */");
+
+			FlushTrace ();
+
+			header.AppendLine ();
+			header.AppendLine (declarations);
+			header.AppendLine (interfaces);
+			Driver.WriteIfDifferent (header_path, header.ToString ());
+
+			methods.WriteLine ();
+			methods.AppendLine ();
+			methods.AppendLine (sb);
+			Driver.WriteIfDifferent (source_path, methods.ToString ());
+
+			header.Dispose ();
+			header = null;
+			declarations.Dispose ();
+			declarations = null;
+			methods.Dispose ();
+			methods = null;
+			interfaces.Dispose ();
+			interfaces = null;
+			sb.Dispose ();
 		}
 
 		protected override bool SkipRegisterAssembly (AssemblyDefinition assembly)
@@ -3778,6 +3851,7 @@ namespace XamCore.Registrar {
 		public TypeDefinition WrapperType { get; set; }
 		public string Name { get; set; }
 		public bool IsInformal { get; set; }
+		public Version FormalSinceVersion { get; set; }
 	}
 
 	public sealed class ProtocolMemberAttribute : Attribute {

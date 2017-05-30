@@ -253,11 +253,46 @@ namespace XamCore.Metal {
 		[Export ("presentDrawable:atTime:")]
 		void PresentDrawable (IMTLDrawable drawable, double presentationTime);
 
+#if XAMCORE_4_0
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#endif
+		[iOS (10,3)][TV (10,2)][NoMac]
+		[Export ("presentDrawable:afterMinimumDuration:")]
+		void PresentDrawableAfter (IMTLDrawable drawable, double duration);
+
 #if XAMCORE_2_0
 		[Abstract]
 #endif
 		[Export ("renderCommandEncoderWithDescriptor:")]
 		IMTLRenderCommandEncoder CreateRenderCommandEncoder (MTLRenderPassDescriptor renderPassDescriptor);
+
+#if XAMCORE_4_0
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#endif
+		[iOS (10,3)][TV (10,2)][Mac (10,12,4, onlyOn64 : true)]
+		[Export ("kernelStartTime")]
+		double /* CFTimeInterval */ KernelStartTime { get; }
+
+#if XAMCORE_4_0
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#endif
+		[iOS (10,3)][TV (10,2)][Mac (10,12,4, onlyOn64 : true)]
+		[Export ("kernelEndTime")]
+		double /* CFTimeInterval */ KernelEndTime { get; }
+
+#if XAMCORE_4_0
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#endif
+		[iOS (10,3)][TV (10,2)][Mac (10,12,4, onlyOn64 : true)]
+		[Export ("GPUStartTime")]
+		double /* CFTimeInterval */ GpuStartTime { get; }
+
+#if XAMCORE_4_0
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#endif
+		[iOS (10,3)][TV (10,2)][Mac (10,12,4, onlyOn64 : true)]
+		[Export ("GPUEndTime")]
+		double /* CFTimeInterval */ GpuEndTime { get; }
 	}
 
 	interface IMTLCommandQueue {}
@@ -676,6 +711,34 @@ namespace XamCore.Metal {
 		
 		[Abstract, Export ("presentAtTime:")]
 		void Present (double presentationTime);
+
+#if XAMCORE_4_0
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#endif
+		[iOS (10,3)][TV (10,2)][NoMac]
+		[Export ("presentAfterMinimumDuration:")]
+		void PresentAfter (double duration);
+
+#if XAMCORE_4_0
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#endif
+		[iOS (10,3)][TV (10,2)][NoMac]
+		[Export ("addPresentedHandler:")]
+		void AddPresentedHandler (Action<IMTLDrawable> block);
+
+#if XAMCORE_4_0
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#endif
+		[iOS (10,3)][TV (10,2)][NoMac]
+		[Export ("presentedTime")]
+		double /* CFTimeInterval */ PresentedTime { get; }
+
+#if XAMCORE_4_0
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#endif
+		[iOS (10,3)][TV (10,2)][NoMac]
+		[Export ("drawableID")]
+		nuint DrawableID { get; }
 	}
 
 	interface IMTLTexture {}

@@ -51,9 +51,6 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="XamMac" />
-    <Reference Include="GuiUnit">
-      <HintPath>..\..\external\guiunit\bin\net_4_5\GuiUnit.exe</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -107,6 +104,7 @@
     <Compile Include="src\CoreAnimation\CALayer.cs" />
     <Compile Include="src\CoreAnimation\CAOpenGLLayer.cs" />
     <Compile Include="src\CoreImage\CIFilter.cs" />
+    <Compile Include="src\Darwin\KernelNotificationTest.cs" />
     <Compile Include="src\DelegateAndDataSourceTest.cs" />
     <Compile Include="src\DerivedEventTest.cs" />
     <Compile Include="src\EveryFrameworkSmokeTest.cs" />
@@ -154,6 +152,12 @@
     <Compile Include="..\common\TestRuntime.cs">
       <Link>shared\TestRuntime.cs</Link>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">
+      <Project>{D12F0F7B-8DE3-43EC-BA49-41052D065A9B}</Project>
+      <Name>GuiUnit_NET_4_5</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

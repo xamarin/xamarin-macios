@@ -177,9 +177,6 @@ namespace Xamarin.iOS.Tasks
 		[Required]
 		[Output]
 		public ITaskItem NativeExecutable { get; set; }
-		
-		[Output]
-		public ITaskItem[] NativeLibraries { get; set; }
 
 		#endregion
 
@@ -391,7 +388,7 @@ namespace Xamarin.iOS.Tasks
 				args.Add ("--extension");
 
 			if (Debug) {
-				if (FastDev)
+				if (FastDev && !SdkIsSimulator)
 					args.Add ("--fastdev");
 
 				args.Add ("--debug");
@@ -429,6 +426,8 @@ namespace Xamarin.iOS.Tasks
 
 			if (UseFloat32 /* We want to compile 32-bit floating point code to use 32-bit floating point operations */)
 				args.Add ("--aot-options=-O=float32");
+			else
+				args.Add ("--aot-options=-O=-float32");
 
 			if (!EnableGenericValueTypeSharing)
 				args.Add ("--gsharedvt=false");
@@ -608,7 +607,7 @@ namespace Xamarin.iOS.Tasks
 			args.Add ("--target-framework");
 			args.Add (TargetFrameworkIdentifier + "," + TargetFrameworkVersion);
 
-			args.AddQuoted (MainAssembly.ItemSpec);
+			args.AddQuoted (Path.GetFullPath (MainAssembly.ItemSpec));
 
 			// We give the priority to the ExtraArgs to set the mtouch verbosity.
 			if (string.IsNullOrEmpty (ExtraArgs) || (!string.IsNullOrEmpty (ExtraArgs) && !ExtraArgs.Contains ("-q") && !ExtraArgs.Contains ("-v")))
@@ -707,23 +706,7 @@ namespace Xamarin.iOS.Tasks
 
 			Directory.CreateDirectory (AppBundleDir);
 
-			var mtouchExecution = base.Execute ();
-
-			try {
-				var nativeLibrariesPath = Directory.EnumerateFiles (AppBundleDir, "*.dylib", SearchOption.AllDirectories);
-				var nativeLibraryItems = new List<ITaskItem> ();
-
-				foreach (var nativeLibrary in nativeLibrariesPath) {
-					nativeLibraryItems.Add (new TaskItem (nativeLibrary));
-				}
-
-				NativeLibraries = nativeLibraryItems.ToArray ();
-			} catch (Exception ex) {
-				Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Could not get native libraries: {0}", ex.Message);
-				return false;
-			}
-
-			return mtouchExecution;
+			return base.Execute ();
 		}
 
 		string ResolveFrameworkFile (string fullName)

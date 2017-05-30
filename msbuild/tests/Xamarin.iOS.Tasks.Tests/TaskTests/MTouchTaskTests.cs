@@ -154,6 +154,15 @@ namespace Xamarin.iOS.Tasks
 		}
 
 		[Test]
+		public void StandardCommandline_WithoutFloat32 ()
+		{
+			Task.UseFloat32 = false;
+
+			var args = Task.GenerateCommandLineCommands ();
+			Assert.IsTrue (args.Contains ("--aot-options=-O=-float32"));
+		}
+
+		[Test]
 		public void ParsedExtraArgs ()
 		{
 			try {

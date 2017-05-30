@@ -205,6 +205,7 @@ namespace xharness
 					var filename = Path.GetFullPath (Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch"));
 					if (File.Exists (filename)) {
 						Log ("Found mlaunch: {0}", filename);
+						Environment.SetEnvironmentVariable ("MLAUNCH_PATH", filename);
 						return mlaunch = filename;
 					}
 
@@ -217,6 +218,7 @@ namespace xharness
 					}
 					if (File.Exists (filename)) {
 						Log ("Found mlaunch: {0}", filename);
+						Environment.SetEnvironmentVariable ("MLAUNCH_PATH", filename);
 						return mlaunch = filename;
 					}
 
@@ -226,6 +228,7 @@ namespace xharness
 					filename = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch";
 					if (File.Exists (filename)) {
 						Log ("Found mlaunch: {0}", filename);
+						Environment.SetEnvironmentVariable ("MLAUNCH_PATH", filename);
 						return mlaunch = filename;
 					}
 
@@ -273,27 +276,37 @@ namespace xharness
 		 
 		void AutoConfigureMac ()
 		{
-			var test_suites = new string[] { "apitest", "dontlink-mac" }; 
+			var test_suites = new [] { new { ProjectFile = "apitest", Name = "apitest" }, new { ProjectFile = "dontlink-mac", Name = "dont link" } };
 			foreach (var p in test_suites)
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj"))));
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.ProjectFile + "/" + p.ProjectFile + ".sln"))) { Name = p.Name });
 			
-			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), skipXMVariations : true));
+			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), skipXMVariations: true) { Name = "introspection" });
 
-			var hard_coded_test_suites = new string[] { "mmptest", "msbuild-mac", "xammac_tests" };
-			foreach (var p in hard_coded_test_suites)
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj")), generateVariations: false));
+			var hard_coded_test_suites = new [] {
+				new { ProjectFile = "mmptest", Name = "mmptest", IsNUnit = true, Configurations = (string[]) null },
+				new { ProjectFile = "msbuild-mac", Name = "MSBuild tests", IsNUnit = false, Configurations = (string[]) null },
+				new { ProjectFile = "xammac_tests", Name = "xammac tests", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }},
+			};
+			foreach (var p in hard_coded_test_suites) {
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.ProjectFile + "/" + p.ProjectFile + ".csproj")), generateVariations: false) {
+					Name = p.Name,
+					IsNUnitProject = p.IsNUnit,
+					SolutionPath = Path.GetFullPath (Path.Combine (RootDirectory, "tests-mac.sln")),
+					Configurations = p.Configurations,
+				});
+			}
 
 			var bcl_suites = new string[] { "mscorlib", "System", "System.Core", "System.Data", "System.Net.Http", "System.Numerics", "System.Runtime.Serialization", "System.Transactions", "System.Web.Services", "System.Xml", "System.Xml.Linq", "Mono.Security", "System.ComponentModel.DataAnnotations", "System.Json", "System.ServiceModel.Web", "Mono.Data.Sqlite" };
 			foreach (var p in bcl_suites) {
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + "-Mac.csproj")), generateVariations: false));
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + "-Mac.csproj")), generateVariations: false) { Name = p });
 				MacBclTests.Add (new MacBCLTest (p));
 			}
 		}
 
 		void AutoConfigureIOS ()
 		{
-			var test_suites = new string [] { "monotouch-test", "framework-test", "mini" };
-			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test", "bindings-framework-test" };
+			var test_suites = new string [] { "monotouch-test", "framework-test", "mini", "interdependent-binding-projects" };
+			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test", "bindings-test2", "bindings-framework-test" };
 			var fsharp_test_suites = new string [] { "fsharp" };
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
 			var bcl_suites = new string [] { "mscorlib", "System", "System.Core", "System.Data", "System.Net.Http", "System.Numerics", "System.Runtime.Serialization", "System.Transactions", "System.Web.Services", "System.Xml", "System.Xml.Linq", "Mono.Security", "System.ComponentModel.DataAnnotations", "System.Json", "System.ServiceModel.Web", "Mono.Data.Sqlite" };
@@ -313,7 +326,7 @@ namespace xharness
 				IOSBclTests.Add (new BCLTest (p));
 			}
 			
-			IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))));
+			IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
 			IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker-ios", "dont link", "dont link.csproj"))));
 			IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker-ios", "link all", "link all.csproj"))));
 			IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker-ios", "link sdk", "link sdk.csproj"))));
@@ -391,7 +404,7 @@ namespace xharness
 			}
  
 			foreach (var proj in MacTestProjects.Where ((v) => v.GenerateVariations)) {
-				var file = proj.Path;
+				var file = Path.ChangeExtension (proj.Path, "csproj");
  				if (!File.Exists (file))
  					throw new FileNotFoundException (file);
 
@@ -401,6 +414,7 @@ namespace xharness
 					{
 						TemplateProjectPath = file,
 						Harness = this,
+						IsNUnitProject = proj.IsNUnitProject,
 					};
 					unifiedMobile.Execute ();
 					unified_targets.Add (unifiedMobile);
@@ -430,6 +444,7 @@ namespace xharness
 				{
  					TemplateProjectPath = file,
  					Harness = this,
+					IsNUnitProject = proj.IsNUnitProject,
  				};
 				unifiedMobile.Execute ();
 				hardcoded_unified_targets.Add (unifiedMobile);

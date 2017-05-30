@@ -20,7 +20,6 @@ using XamCore.AVFoundation;
 namespace XamCore.VideoToolbox {
 	public partial class VTPixelTransferProperties : DictionaryContainer {
 
-		[Mac (10,8), iOS (9,0)]
 		public VTScalingMode ScalingMode { 
 			get {
 				var key = GetNSStringValue (VTPixelTransferPropertyKeys.ScalingMode);
@@ -58,7 +57,6 @@ namespace XamCore.VideoToolbox {
 			}
 		}
 
-		[Mac (10,8), iOS (9,0)]
 		public VTDownsamplingMode DownsamplingMode { 
 			get {
 				var key = GetNSStringValue (VTPixelTransferPropertyKeys.DownsamplingMode);
@@ -86,8 +84,8 @@ namespace XamCore.VideoToolbox {
 			}
 		}
 
-#if MONOMAC && XAMCORE_2_0
-		[Mac (10,8)]
+#if XAMCORE_2_0
+		[iOS (10,0)]
 		public VTColorPrimaries DestinationColorPrimaries { 
 			get {
 				var key = GetNSStringValue (VTPixelTransferPropertyKeys.DestinationColorPrimaries);
@@ -125,8 +123,8 @@ namespace XamCore.VideoToolbox {
 			}
 		}
 #endif
-#if MONOMAC
-		[Mac (10,8)]
+
+		[iOS (10,0)]
 		public VTTransferFunction DestinationTransferFunction { 
 			get {
 				var key = GetNSStringValue (VTPixelTransferPropertyKeys.DestinationTransferFunction);
@@ -158,8 +156,7 @@ namespace XamCore.VideoToolbox {
 				}
 			}
 		}
-#endif
-		[Mac (10,8), iOS (9,0)]
+
 		public VTYCbCrMatrix DestinationYCbCrMatrix { 
 			get {
 				var key = GetNSStringValue (VTPixelTransferPropertyKeys.DestinationYCbCrMatrix);

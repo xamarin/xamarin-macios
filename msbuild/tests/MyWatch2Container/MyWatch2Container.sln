@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWatchKit2Extension", "..\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWatchApp2", "..\MyWatchApp2\MyWatchApp2.csproj", "{BE02C719-EBE6-4E56-B4BA-56681E612D3F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWatchKit2IntentsExtension", "..\MyWatchKit2IntentsExtension\MyWatchKit2IntentsExtension.csproj", "{1C851DDA-4AB8-43B6-8C9B-F7F90A6E32B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|iPhoneSimulator = Debug|iPhoneSimulator
@@ -39,5 +41,13 @@ Global
 		{BE2CB04F-A233-4179-A42D-C3166FB4FFDF}.Release|iPhone.Build.0 = Release|iPhone
 		{BE2CB04F-A233-4179-A42D-C3166FB4FFDF}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
 		{BE2CB04F-A233-4179-A42D-C3166FB4FFDF}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{1C851DDA-4AB8-43B6-8C9B-F7F90A6E32B1}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{1C851DDA-4AB8-43B6-8C9B-F7F90A6E32B1}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{1C851DDA-4AB8-43B6-8C9B-F7F90A6E32B1}.Release|iPhone.ActiveCfg = Release|iPhone
+		{1C851DDA-4AB8-43B6-8C9B-F7F90A6E32B1}.Release|iPhone.Build.0 = Release|iPhone
+		{1C851DDA-4AB8-43B6-8C9B-F7F90A6E32B1}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{1C851DDA-4AB8-43B6-8C9B-F7F90A6E32B1}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{1C851DDA-4AB8-43B6-8C9B-F7F90A6E32B1}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{1C851DDA-4AB8-43B6-8C9B-F7F90A6E32B1}.Debug|iPhone.Build.0 = Debug|iPhone
 	EndGlobalSection
 EndGlobal

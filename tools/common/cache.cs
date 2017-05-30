@@ -18,6 +18,12 @@ public class Cache {
 
 	string cache_dir;
 	bool temporary_cache;
+	string[] arguments;
+
+	public Cache (string[] arguments)
+	{
+		this.arguments = arguments;
+	}
 
 	public bool IsCacheTemporary {
 		get { return temporary_cache; }
@@ -62,10 +68,21 @@ public class Cache {
 		Directory.Delete (Location, true);
 		Directory.CreateDirectory (Location);
 	}
-	
-	public bool Exists (string file)
+
+	public static bool CompareDirectories (string a, string b, bool ignore_cache = false)
 	{
-		return File.Exists (Path.Combine (Location, file));
+		if (Driver.Force && !ignore_cache) {
+			Driver.Log (6, "Directories {0} and {1} are considered different because -f was passed to " + NAME + ".", a, b);
+			return false;
+		}
+
+		var diff = new StringBuilder ();
+		if (Driver.RunCommand ("diff", $"-ur {Driver.Quote (a)} {Driver.Quote (b)}", output: diff, suppressPrintOnErrors: true) != 0) {
+			Driver.Log (1, "Directories {0} and {1} are considered different because diff said so:\n{2}", a, b, diff);
+			return false;
+		}
+
+		return true;
 	}
 
 	public static bool CompareFiles (string a, string b, bool ignore_cache = false)
@@ -80,8 +97,8 @@ public class Cache {
 			return false;
 		}
 
-		using (var astream = new FileStream (a, FileMode.Open)) {
-			using (var bstream = new FileStream (b, FileMode.Open)) {
+		using (var astream = new FileStream (a, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+			using (var bstream = new FileStream (b, FileMode.Open, FileAccess.Read, FileShare.Read)) {
 				bool rv;
 				Driver.Log (6, "Comparing files {0} and {1}...", a, b);
 				rv = CompareStreams (astream, bstream, ignore_cache);
@@ -166,10 +183,10 @@ public class Cache {
 		} while (true);
 	}
 	
-	static string GetArgumentsForCacheData ()
+	string GetArgumentsForCacheData ()
 	{
 		var sb = new StringBuilder ();
-		var args = new List<string> (Environment.GetCommandLineArgs ());
+		var args = new List<string> (arguments);
 
 		sb.Append ("# Version: ").Append (Constants.Version).Append ('.').Append (Constants.Revision).AppendLine ();
 		if (args.Count > 0)
@@ -196,7 +213,7 @@ public class Cache {
 		return sb.ToString ();
 	}
 
-	bool IsCacheValid ()
+	public bool IsCacheValid ()
 	{
 		var name = "arguments";
 		var pcache = Path.Combine (Location, name);
@@ -210,9 +227,9 @@ public class Cache {
 		}
 
 		// Check if mtouch/mmp has been modified.
-		var mtouch = Path.Combine (Driver.DriverBinDirectory, NAME);
-		if (!Application.IsUptodate (mtouch, pcache)) {
-			Driver.Log (3, "A full rebuild will be performed because mtouch has been modified.");
+		var executable = System.Reflection.Assembly.GetExecutingAssembly ().Location;
+		if (!Application.IsUptodate (executable, pcache)) {
+			Driver.Log (3, "A full rebuild will be performed because " + NAME + " has been modified.");
 			return false;
 		}
 

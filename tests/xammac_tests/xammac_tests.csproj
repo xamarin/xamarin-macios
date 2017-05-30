@@ -38,7 +38,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\x86\Release</OutputPath>
-    <DefineConstants></DefineConstants>
+    <DefineConstants>__UNIFIED__;MONOMAC;XAMCORE_2_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -49,7 +49,7 @@
     <HttpClientHandler>HttpClientHandler</HttpClientHandler>
     <TlsProvider>Default</TlsProvider>
     <LinkMode>None</LinkMode>
-    <XamMacArch></XamMacArch>
+    <XamMacArch>x86_64</XamMacArch>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
@@ -1046,6 +1046,11 @@
     <Compile Include="..\EmbeddedResources\ResourcesTest.cs">
       <Link>EmbeddedResources\ResourcesTest.cs</Link>
     </Compile>
+    <Compile Include="System.ServiceModel\Net45.cs" />
+    <Compile Include="..\common\mac\ProjectTestHelpers.cs">
+      <Link>ProjectTestHelpers.cs</Link>
+    </Compile>
+    <Compile Include="Unified45.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -1112,6 +1117,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="EmbeddedResources\" />
+    <Folder Include="System.ServiceModel\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">

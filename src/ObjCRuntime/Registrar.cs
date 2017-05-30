@@ -67,6 +67,19 @@ using ProductException=MonoMac.RuntimeException;
 // This file cannot use any cecil code, since it's also compiled into monotouch.dll
 //
 
+#if MONOMAC
+namespace XamCore.ObjCRuntime
+{
+	public delegate void AssemblyRegistrationHandler (object sender, AssemblyRegistrationEventArgs args);
+
+	public class AssemblyRegistrationEventArgs : EventArgs
+	{
+		public bool Register { get; set; }
+		public System.Reflection.AssemblyName AssemblyName { get; internal set; }
+	}
+}
+#endif
+
 namespace XamCore.Registrar {
 	static class Shared {
 		
@@ -751,6 +764,8 @@ namespace XamCore.Registrar {
 #if !MTOUCH && !MMP
 			public int Size;
 			public byte Alignment;
+#else
+			public bool IsPrivate;
 #endif
 			public string FieldType;
 			public bool IsProperty;
@@ -1418,6 +1433,18 @@ namespace XamCore.Registrar {
 			return objcType;
 		}
 			
+		protected bool SupportsModernObjectiveC {
+			get {
+#if MTOUCH || MONOTOUCH
+				return true;
+#elif MMP
+				return App.Is64Build;
+#elif MONOMAC
+				return IntPtr.Size == 8;
+#endif
+			}
+		}
+
 		// This method is not thread-safe wrt 'types', and must be called with
 		// a lock held on 'types'.
 		ObjCType RegisterTypeUnsafe (TType type, ref List<Exception> exceptions)
@@ -1458,6 +1485,11 @@ namespace XamCore.Registrar {
 				var pAttr = GetProtocolAttribute (type);
 				isInformalProtocol = pAttr.IsInformal;
 				isProtocol = true;
+
+#if MMP || MTOUCH
+				if (pAttr.FormalSinceVersion != null && pAttr.FormalSinceVersion > App.SdkVersion)
+					isInformalProtocol = !isInformalProtocol;
+#endif
 			}
 
 			// make sure the base type is already registered
@@ -1580,6 +1612,7 @@ namespace XamCore.Registrar {
 							DeclaringType = objcType,
 							FieldType = "XamarinObject",// "^v", // void*
 							Name = "__monoObjectGCHandle",
+							IsPrivate = SupportsModernObjectiveC,
 						}, ref exceptions);
 					}
 #endif

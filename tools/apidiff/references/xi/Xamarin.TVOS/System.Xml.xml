@@ -4287,7 +4287,6 @@
               </method>
               <method name="MoveToContentAsync()" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task`1[System.Xml.XmlNodeType]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters />
@@ -4318,7 +4317,6 @@
               </method>
               <method name="ReadContentAsAsync(System.Type, System.Xml.IXmlNamespaceResolver)" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task`1[System.Object]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -4383,7 +4381,6 @@
               </method>
               <method name="ReadContentAsObjectAsync()" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task`1[System.Object]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters />
@@ -4410,7 +4407,6 @@
               </method>
               <method name="ReadElementContentAsAsync(System.Type, System.Xml.IXmlNamespaceResolver)" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task`1[System.Object]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -4520,7 +4516,6 @@
               </method>
               <method name="ReadElementContentAsObjectAsync()" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task`1[System.Object]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters />
@@ -4536,7 +4531,6 @@
               </method>
               <method name="ReadElementContentAsStringAsync()" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task`1[System.String]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters />
@@ -4584,7 +4578,6 @@
               </method>
               <method name="ReadInnerXmlAsync()" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task`1[System.String]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters />
@@ -4594,7 +4587,6 @@
               </method>
               <method name="ReadOuterXmlAsync()" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task`1[System.String]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters />
@@ -6045,7 +6037,6 @@
               </method>
               <method name="GetEntityAsync(System.Uri, System.String, System.Type)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task`1[System.Object]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -6661,7 +6652,6 @@
               </method>
               <method name="WriteAttributesAsync(System.Xml.XmlReader, System.Boolean)" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -6780,7 +6770,6 @@
               </method>
               <method name="WriteElementStringAsync(System.String, System.String, System.String, System.String)" attrib="134" returntype="System.Threading.Tasks.Task">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -6858,7 +6847,6 @@
               </method>
               <method name="WriteNodeAsync(System.Xml.XPath.XPathNavigator, System.Boolean)" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -6892,7 +6880,6 @@
               </method>
               <method name="WriteQualifiedNameAsync(System.String, System.String)" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>

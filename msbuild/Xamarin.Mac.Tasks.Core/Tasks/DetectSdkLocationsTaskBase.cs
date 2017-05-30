@@ -49,6 +49,11 @@ namespace Xamarin.Mac.Tasks
 			get; set;
 		}
 
+		[Output]
+		public bool IsXcode8 {
+			get; set;
+		}
+
 		#endregion Outputs
 
 		public override bool Execute ()
@@ -56,9 +61,11 @@ namespace Xamarin.Mac.Tasks
 			Log.LogTaskName ("DetectSdkLocations");
 			Log.LogTaskProperty ("XamarinSdkRoot", XamarinSdkRoot);
 
-			EnsureAppleSdkRoot ();
+			if (EnsureAppleSdkRoot ())
+				EnsureSdkPath ();
 			EnsureXamarinSdkRoot ();
-			EnsureSdkPath ();
+
+			IsXcode8 = AppleSdkSettings.XcodeVersion.Major >= 8;
 
 			return !Log.HasLoggedErrors;
 		}
@@ -86,18 +93,28 @@ namespace Xamarin.Mac.Tasks
 				Log.LogError ("Could not locate SDK bin directory");
 		}
 
-		void EnsureAppleSdkRoot ()
+		bool EnsureAppleSdkRoot ()
 		{
 			if (!MacOSXSdks.Native.IsInstalled) {
-				Log.LogError ("Could not find a valid Xcode app bundle");
-			} else {
-				Log.LogMessage (MessageImportance.Low, "DeveloperRoot: {0}", MacOSXSdks.Native.DeveloperRoot);
-				Log.LogMessage (MessageImportance.Low, "GetPlatformPath: {0}", MacOSXSdks.Native.GetPlatformPath ());
-
-				SdkDevPath = MacOSXSdks.Native.DeveloperRoot;
-				if (string.IsNullOrEmpty (SdkDevPath))
-					Log.LogError ("Could not find a valid Xcode developer path");
+				string ideSdkPath;
+				if (string.IsNullOrEmpty(SessionId))
+					// SessionId is only and always defined on windows.
+					// We can't check 'Environment.OSVersion.Platform' since the base tasks are always executed on the Mac.
+					ideSdkPath = "(Projects > SDK Locations > Apple > Apple SDK)";
+				else
+					ideSdkPath = "(Tools > Options > Xamarin > iOS Settings > Apple SDK)";
+				Log.LogError ("Could not find a valid Xcode app bundle at '{0}'. Please update your Apple SDK location in Visual Studio's preferences {1}.", AppleSdkSettings.InvalidDeveloperRoot, ideSdkPath);
+				return false;
 			}
+			Log.LogMessage(MessageImportance.Low, "DeveloperRoot: {0}", MacOSXSdks.Native.DeveloperRoot);
+			Log.LogMessage(MessageImportance.Low, "GetPlatformPath: {0}", MacOSXSdks.Native.GetPlatformPath());
+
+			SdkDevPath = MacOSXSdks.Native.DeveloperRoot;
+			if (string.IsNullOrEmpty(SdkDevPath)) {
+				Log.LogError("Could not find a valid Xcode developer path");
+				return false;
+			}
+			return true;
 		}
 
 		void EnsureXamarinSdkRoot ()

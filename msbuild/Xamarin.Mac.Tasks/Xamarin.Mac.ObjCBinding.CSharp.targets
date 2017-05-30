@@ -28,6 +28,11 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 	<Import Project="Xamarin.Mac.ObjCBinding.Common.targets" />
 
 	<PropertyGroup>
+		<IsXBuild Condition="'$(MSBuildRuntimeVersion)' == ''">true</IsXBuild>
+		<IsXBuild Condition="'$(MSBuildRuntimeVersion)' != ''">false</IsXBuild>
+	</PropertyGroup>
+
+	<PropertyGroup>
 		<_GeneratedSourcesFileList>$(GeneratedSourcesDir)\sources.list</_GeneratedSourcesFileList>
 
 		<!-- Add our own pre-build steps -->
@@ -39,8 +44,10 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 		</CompileDependsOn>
 	</PropertyGroup>
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.XM45.targets"
-		Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'"/>
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.XM45.xbuild.targets"
+		Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework' And '$(IsXBuild)' == 'true' "/>
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets"
+		Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework' And '$(IsXBuild)' == 'false' "/>
 
 	<!-- Override the CoreCompile Target to use btouch -->
 	<Target Name="_GenerateBindings"
@@ -67,12 +74,14 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 			CoreSources="@(ObjcBindingCoreSource)"
 			DefineConstants="$(DefineConstants)"
 			EmitDebugInformation="$(BTouchEmitDebugInformation)"
+			ExtraArgs="$(BTouchExtraArgs)"
 			GeneratedSourcesDir="$(GeneratedSourcesDir)"
 			GeneratedSourcesFileList="$(_GeneratedSourcesFileList)"
 			Namespace="$(Namespace)"
 			NoStdLib="$(NoStdLib)"
 			OutputAssembly="$(OutputAssembly)"
 			ProcessEnums="$(ProcessEnums)"
+			ProjectDir="$(MSBuildProjectDirectory)"
 			References="@(ReferencePath);@(BTouchReferencePath)"
 			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			FrameworkRoot="$(XamarinMacFrameworkRoot)"

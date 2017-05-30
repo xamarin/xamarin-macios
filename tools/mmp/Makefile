@@ -16,9 +16,8 @@ $(MONO_CECIL_MDB_DLL): $(MONO_CECIL_DLL) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Md
 
 BCL_LOCATION=$(MONO_PATH)/mcs/class/lib/xammac_net_4_5
 
-TOOLS_DIR=$(MONO_PATH)/mcs/tools
-LINKER_DIR=$(TOOLS_DIR)/linker
-TUNER_DIR=$(TOOLS_DIR)/tuner
+LINKER_DIR=$(LINKER_TOOLS_PATH)/linker
+TUNER_DIR=$(LINKER_TOOLS_PATH)/tuner
 
 linker_sources = \
 	$(LINKER_DIR)/Mono.Linker/Pipeline.cs				\
@@ -26,6 +25,8 @@ linker_sources = \
 	$(LINKER_DIR)/Mono.Linker/TypePreserve.cs			\
 	$(LINKER_DIR)/Mono.Linker/Annotations.cs			\
 	$(LINKER_DIR)/Mono.Linker/LinkContext.cs			\
+	$(LINKER_DIR)/Mono.Linker/LoadException.cs			\
+	$(LINKER_DIR)/Mono.Linker/MarkException.cs			\
 	$(LINKER_DIR)/Mono.Linker/AssemblyAction.cs			\
 	$(LINKER_DIR)/Mono.Linker/I18nAssemblies.cs			\
 	$(LINKER_DIR)/Mono.Linker/MethodAction.cs			\
@@ -63,7 +64,9 @@ tuner_sources = \
 	$(TUNER_DIR)/Mono.Tuner/RemoveSecurity.cs			\
 	linker/MonoMac.Tuner/MacMobileProfile.cs			\
 	linker/MonoMac.Tuner/MacRemoveResources.cs			\
+	linker/MonoMac.Tuner/MacBaseProfile.cs				\
 	linker/MonoMac.Tuner/MonoMacProfile.cs				\
+	linker/MonoMac.Tuner/XamarinMacProfile.cs			\
 	linker/MonoMac.Tuner/OptimizeGeneratedCodeSubStep.cs		\
 	linker/MonoMac.Tuner/MonoMacNamespaces.cs			\
 	linker/MonoMac.Tuner/MonoMacPreserveCode.cs			\
@@ -132,8 +135,9 @@ LOCAL_MMP = \
 	Mono.Cecil.dll \
 	Mono.Cecil.Mdb.dll \
 
-mmp.exe: Makefile $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) $(mmp_sources) config config_mobile Info.plist.tmpl $(tuner_sources) $(linker_resources)
-	$(Q_MCS) $(SYSTEM_MCS) -unsafe -out:mmp.exe $(DEFINES) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:Mono.Security.dll  -resource:config -resource:config_mobile -resource:machine.4_5.config -resource:Info.plist.tmpl $(linker_resources:%=-resource:%) $(tuner_sources) $(mmp_sources)
+mmp.exe: Makefile $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) $(mmp_sources) config config_mobile Info.plist.tmpl Info-framework.plist.tmpl $(tuner_sources) $(linker_resources)
+	$(Q_CSC) $(SYSTEM_CSC) -unsafe -out:mmp.exe $(DEFINES) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:Mono.Security.dll  -resource:config -resource:config_mobile -resource:machine.4_5.config -resource:Info.plist.tmpl -resource:Info-framework.plist.tmpl $(linker_resources:%=-resource:%) $(tuner_sources) $(mmp_sources) -debug:portable
+	$(Q) cp $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) .
 
 Mono.Cecil.dll: $(MONO_CECIL_DLL)
 	$(Q) cp $<* $(dir $@)
@@ -158,13 +162,16 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mmp: mmp.in | $(MAC_DESTDIR)$(MAC
 	$(Q) chmod +x $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/mmp.exe: mmp.exe | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
-	$(Q) cp $<* $(dir $@)
+	$(Q) cp $< $(dir $@)
+	$(Q) cp $(<:.exe=.pdb) $(dir $@)
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Mono.Cecil.dll: $(MONO_CECIL_DLL) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
-	$(Q) cp $<* $(dir $@)
+	$(Q) cp $< $(dir $@)
+	$(Q) cp $(<:.exe=.pdb) $(dir $@)
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Mono.Cecil.Mdb.dll: $(MONO_CECIL_MDB_DLL) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
-	$(Q) cp $<* $(dir $@)
+	$(Q) cp $< $(dir $@)
+	$(Q) cp $(<:.exe=.pdb) $(dir $@)
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Xamarin.Mac.registrar.%.a: Xamarin.Mac.registrar.%.a | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
 	$(Q) cp $<* $(dir $@)
@@ -172,21 +179,21 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Xamarin.Mac.registrar.%.a: Xa
 $(MMP_DIRECTORIES):
 	$(Q) mkdir -p $@
 
-GENERATE_PART_REGISTRAR = $(Q_GEN) $(SYSTEM_MONO) --debug mmp.exe --xamarin-framework-directory=$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(OSX_SDK_VERSION)   $< --registrar:static 
+GENERATE_PART_REGISTRAR = $(Q_GEN) $(SYSTEM_MONO) --debug mmp.exe --xamarin-framework-directory=$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(OSX_SDK_VERSION)   $< --registrar:static
 
-Xamarin.Mac.registrar.mobile.i386.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile/Xamarin.Mac.dll $(LOCAL_MMP)
+Xamarin.Mac.registrar.mobile.i386.m:   $(TOP)/src/build/mac/mobile-32/Xamarin.Mac.dll $(LOCAL_MMP)
 	$(GENERATE_PART_REGISTRAR) --target-framework Xamarin.Mac,v1.0 --arch=i386
 	$(Q) touch Xamarin.Mac.registrar.mobile.i386.m Xamarin.Mac.registrar.mobile.i386.h
 
-Xamarin.Mac.registrar.mobile.x86_64.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile/Xamarin.Mac.dll $(LOCAL_MMP)
+Xamarin.Mac.registrar.mobile.x86_64.m: $(TOP)/src/build/mac/mobile-64/Xamarin.Mac.dll $(LOCAL_MMP)
 	$(GENERATE_PART_REGISTRAR) --target-framework Xamarin.Mac,v1.0 --arch=x86_64
 	$(Q) touch Xamarin.Mac.registrar.mobile.x86_64.m Xamarin.Mac.registrar.mobile.x86_64.h
 
-Xamarin.Mac.registrar.full.i386.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full/Xamarin.Mac.dll $(LOCAL_MMP)
+Xamarin.Mac.registrar.full.i386.m:     $(TOP)/src/build/mac/full-32/Xamarin.Mac.dll $(LOCAL_MMP)
 	$(GENERATE_PART_REGISTRAR) --target-framework 4.5 --arch=i386 --xamarin-full-framework --nolink
 	$(Q) touch Xamarin.Mac.registrar.full.i386.m Xamarin.Mac.registrar.full.i386.h
 
-Xamarin.Mac.registrar.full.x86_64.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full/Xamarin.Mac.dll $(LOCAL_MMP)
+Xamarin.Mac.registrar.full.x86_64.m:   $(TOP)/src/build/mac/full-64/Xamarin.Mac.dll $(LOCAL_MMP)
 	$(GENERATE_PART_REGISTRAR) --target-framework 4.5 --arch=x86_64 --xamarin-full-framework --nolink
 	$(Q) touch Xamarin.Mac.registrar.full.x86_64.m Xamarin.Mac.registrar.full.x86_64.h
 

@@ -145,12 +145,31 @@ namespace Xamarin.Linker.Steps {
 			return ((method.Name == "Dispose") && method.IsGeneratedCode (LinkContext));
 		}
 
+		protected override TypeDefinition MarkType (TypeReference reference)
+		{
+			try {
+				return base.MarkType (reference);
+			} catch (Exception e) {
+				// we need a way to know where (not just what) went wrong (e.g. debugging symbols being incorrect)
+				e.Data ["TypeReference"] = reference.ToString ();
+				e.Data ["AssemblyDefinition"] = reference.Module.Assembly.ToString ();
+				throw;
+			}
+		}
+
 		protected override void ProcessMethod (MethodDefinition method)
 		{
 			// check for generated Dispose methods inside monotouch.dll
 			processing_generated_dispose = IsGeneratedDispose (method);
 			int skip = skipped_fields;
-			base.ProcessMethod (method);
+			try {
+				base.ProcessMethod (method);
+			} catch (Exception e) {
+				// we need a way to know where (not just what) went wrong (e.g. debugging symbols being incorrect)
+				e.Data ["MethodDefinition"] = method.ToString ();
+				e.Data ["AssemblyDefinition"] = method.DeclaringType.Module.Assembly.ToString ();
+				throw;
+			}
 			if (processing_generated_dispose) {
 				// if some fields were skipped (i.e. only used inside Dispose)
 				if (skip < skipped_fields)

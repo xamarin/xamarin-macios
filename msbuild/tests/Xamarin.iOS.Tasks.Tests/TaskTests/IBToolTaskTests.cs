@@ -125,6 +125,8 @@ namespace Xamarin.iOS.Tasks
 					storyboard.SetMetadata ("ResourceTags", tag);
 				}
 
+				ibtool.EnableOnDemandResources = true;
+
 				Assert.IsTrue (ibtool.Execute (), "Execution of IBTool task failed.");
 
 				foreach (var bundleResource in ibtool.BundleResources) {
@@ -140,6 +142,8 @@ namespace Xamarin.iOS.Tasks
 
 					bundleResources.Add (bundleName);
 				}
+
+				ibtool.EnableOnDemandResources = true;
 
 				string[] expected = {
 					"Base.lproj/LaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib",
@@ -168,6 +172,79 @@ namespace Xamarin.iOS.Tasks
 			} finally {
 				Directory.Delete (tmp, true);
 			}
+		}
+
+		static IBTool CreateIBToolTask (PlatformFramework framework, string projectDir, string intermediateOutputPath, params string[] fileNames)
+		{
+			var ibtool = CreateIBToolTask (framework, projectDir, intermediateOutputPath);
+			var interfaceDefinitions = new List<ITaskItem> ();
+
+			foreach (var name in fileNames)
+				interfaceDefinitions.Add (new TaskItem (Path.Combine (projectDir, name)));
+
+			ibtool.InterfaceDefinitions = interfaceDefinitions.ToArray ();
+
+			return ibtool;
+		}
+
+		static void TestGenericAndDeviceSpecificXibsGeneric (params string[] fileNames)
+		{
+			var tmp = Path.Combine (Path.GetTempPath (), "advanced-ibtool");
+			IBTool ibtool;
+
+			Directory.CreateDirectory (tmp);
+
+			try {
+				ibtool = CreateIBToolTask (PlatformFramework.iOS, "../IBToolTaskTests/GenericAndDeviceSpecific", tmp, fileNames);
+				var bundleResources = new HashSet<string> ();
+
+				// Add some ResourceTags...
+				foreach (var storyboard in ibtool.InterfaceDefinitions) {
+					var tag = Path.GetFileNameWithoutExtension (storyboard.ItemSpec);
+					storyboard.SetMetadata ("ResourceTags", tag);
+				}
+
+				ibtool.EnableOnDemandResources = true;
+
+				Assert.IsTrue (ibtool.Execute (), "Execution of IBTool task failed.");
+
+				foreach (var bundleResource in ibtool.BundleResources) {
+					var bundleName = bundleResource.GetMetadata ("LogicalName");
+					var tag = bundleResource.GetMetadata ("ResourceTags");
+
+					Assert.IsTrue (File.Exists (bundleResource.ItemSpec), "File does not exist: {0}", bundleResource.ItemSpec);
+					Assert.IsNotNullOrEmpty (bundleResource.GetMetadata ("LogicalName"), "The 'LogicalName' metadata must be set.");
+					Assert.IsNotNullOrEmpty (bundleResource.GetMetadata ("Optimize"), "The 'Optimize' metadata must be set.");
+
+					Assert.IsNotNullOrEmpty (tag, "The 'ResourceTags' metadata should be set.");
+					Assert.AreEqual (Path.Combine (tmp, "ibtool", tag + ".nib"), bundleResource.ItemSpec, "BundleResource is not at the expected location.");
+
+					bundleResources.Add (bundleName);
+				}
+
+				string[] expected = {
+					"View.nib", "View~ipad.nib"
+				};
+
+				foreach (var bundleResource in expected)
+					Assert.IsTrue (bundleResources.Contains (bundleResource), "BundleResources should include '{0}'", bundleResource);
+
+				Assert.AreEqual (expected.Length, bundleResources.Count, "Unexpected number of BundleResources");
+			} finally {
+				Directory.Delete (tmp, true);
+			}
+		}
+
+		[Test]
+		public void TestGenericAndDeviceSpecificXibsGenericFirst ()
+		{
+			TestGenericAndDeviceSpecificXibsGeneric ("View.xib", "View~ipad.xib");
+		}
+
+		[Test]
+		public void TestGenericAndDeviceSpecificXibsGenericLast ()
+		{
+			TestGenericAndDeviceSpecificXibsGeneric ("View~ipad.xib", "View.xib");
 		}
 	}
 }

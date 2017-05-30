@@ -478,7 +478,10 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 				if (type [0] == _C_PTR && type [1] == _C_ID) {
 					MonoClass *p_klass = mono_class_from_mono_type (p);
 
-					if (p_klass == mono_get_string_class ()) {
+					if (arg == NULL) {
+						// Can't write back to a NULL pointer, so ignore this.
+						LOGZ (" not writing back to a null pointer\n");
+					} else if (p_klass == mono_get_string_class ()) {
 						MonoString *value = (MonoString *) arg_frame [ofs];
 						if (value == NULL) {
 							*(NSObject **) arg = NULL;

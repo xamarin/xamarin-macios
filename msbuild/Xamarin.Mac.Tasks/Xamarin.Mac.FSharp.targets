@@ -14,11 +14,6 @@
 		<!-- Version/fx properties -->
 		<TargetFrameworkVersion Condition="'$(TargetFrameworkIdentifier)' == '' And '$(TargetFrameworkVersion)' ==''">v4.5</TargetFrameworkVersion>
 
-		<FSharpTargets Condition="Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets')">$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets</FSharpTargets>
-		<FSharpTargets Condition="Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')">$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets</FSharpTargets>
-		<FSharpTargets Condition="'$(FSharpTargets)' == '' And Exists('$(MSBuildFrameworkToolsPath32)\Microsoft.FSharp.Targets')">$(MSBuildFrameworkToolsPath32)\Microsoft.FSharp.Targets</FSharpTargets>
-		<FSharpTargets Condition="'$(FSharpTargets)' == ''">$(MSBuildBinPath)\Microsoft.FSharp.Targets</FSharpTargets>
-
 		<!-- This should be done in the F# target files, but _DebugFileExt is not an upstream
 		     msbuild feature yet, so F# doesn't have this. Once, upstream F# adds it, we can
 		     remove this -->
@@ -26,7 +21,18 @@
 		<_DebugFileExt Condition="'$(_DebugFileExt)' == ''">.mdb</_DebugFileExt>
 	</PropertyGroup>
 
-	<Import Project="$(FSharpTargets)" />
+        <Import Condition="Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets')"
+                Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
+
+        <Import Condition="!$(MSBuildAllProjects.Contains('Microsoft.FSharp.Targets')) and Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')"
+                Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets" />
+
+        <Import Condition="!$(MSBuildAllProjects.Contains('Microsoft.FSharp.Targets')) and Exists('$(MSBuildFrameworkToolsPath32)\Microsoft.FSharp.Targets')"
+                Project="$(MSBuildFrameworkToolsPath32)\Microsoft.FSharp.Targets" />
+
+        <Import Condition="!$(MSBuildAllProjects.Contains('Microsoft.FSharp.Targets'))"
+                Project="$(MSBuildBinPath)\Microsoft.FSharp.Targets" />
+
 	<Import Project="Xamarin.Mac.Common.targets" />
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"

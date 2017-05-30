@@ -142,16 +142,18 @@ namespace MonoTouch.Tuner {
 			case "System.Linq.Expressions":
 				switch (type.Name) {
 				case "LambdaExpression":
-					var expr_t = type.Module.GetType ("System.Linq.Expressions.Expression`1");
-					if (expr_t != null)
-						MarkNamedMethod (expr_t, "Create");
+					var expr_t = type.Module.GetType ("System.Linq.Expressions.ExpressionCreator`1");
+					if (expr_t != null) {
+						MarkNamedMethod (expr_t, "CreateExpressionFunc");
+					}
 					break;
 				}
 				break;
-			case "System.Linq.Expressions.Compiler":
+			case "System.Linq.Expressions.Interpreter":
 				switch (type.Name) {
-				case "LambdaCompiler":
-					MarkMethods (GetType ("Mono.Dynamic.Interpreter", "Microsoft.Scripting.Interpreter.LightLambda"));
+				case "LightDelegateCreator":
+					// TODO: Should be more selective
+					MarkMethods (type.Module.GetType ("System.Linq.Expressions.Interpreter.LightLambda"));
 					break;
 				}
 				break;

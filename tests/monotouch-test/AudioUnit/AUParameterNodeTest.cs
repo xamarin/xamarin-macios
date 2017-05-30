@@ -89,9 +89,6 @@ namespace monotouchtest {
 		}
 
 		[Test]
-#if MONOMAC
-		[Ignore ("System.InvalidOperationException : Nullable object must have a value. during the call to var str = parameter.GetString (floatValue);")]
-#endif
 		public void ImplementorStringFromValueCallback ()
 		{
 			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))

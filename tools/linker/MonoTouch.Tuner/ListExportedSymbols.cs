@@ -76,7 +76,7 @@ namespace MonoTouch.Tuner
 
 		void ProcessMethod (MethodDefinition method)
 		{
-			if (method.IsPInvokeImpl && method.HasPInvokeInfo) {
+			if (method.IsPInvokeImpl && method.HasPInvokeInfo && method.PInvokeInfo != null) {
 				var pinfo = method.PInvokeInfo;
 				if (pinfo.Module.Name == "__Internal")
 					DerivedLinkContext.GetRequiredSymbolList (pinfo.EntryPoint).Add (method);

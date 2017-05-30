@@ -45,8 +45,13 @@ namespace XamCore.Foundation  {
 	}
 
 #if MONOMAC || !XAMCORE_3_0
+
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSBundleExecutableArchitecture : nint {
+#else
+	public enum NSBundleExecutableArchitecture {
+#endif
 		I386   = 0x00000007,
 		PPC    = 0x00000012,
 		X86_64 = 0x01000007,
@@ -425,6 +430,7 @@ namespace XamCore.Foundation  {
 		FileIsDirectory = 		-1101,
 		NoPermissionsToReadFile = 	-1102,
 		DataLengthExceedsMaximum =	-1103,
+		FileOutsideSafeArea = 	-1104,
 
 		SecureConnectionFailed = 		-1200,
 		ServerCertificateHasBadDate = 	-1201,
@@ -850,6 +856,7 @@ namespace XamCore.Foundation  {
 		None, Default, All 
 	}
 
+#if !XAMCORE_4_0
 	[Flags]
 	[Native]
 	public enum NSDateComponentsWrappingBehavior : nuint_compat_int {
@@ -858,6 +865,7 @@ namespace XamCore.Foundation  {
 
 		// Did not add the new enums here, we moved them elsewhere, and provided overloads.
 	}
+#endif
 
 	[Flags]
 	[Native]
@@ -1196,7 +1204,7 @@ namespace XamCore.Foundation  {
 	}
 
 #if MONOMAC
-	[Mac(10,11)]
+	[Mac (10,11)][NoWatch][NoTV][NoiOS]
 	[Native]
 	[Flags]
 	public enum NSFileManagerUnmountOptions : nuint

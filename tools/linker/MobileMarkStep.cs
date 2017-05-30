@@ -259,6 +259,19 @@ namespace Xamarin.Linker.Steps {
 		void ProcessCorlib (TypeDefinition type)
 		{
 			switch (type.Namespace) {
+			case "System.Runtime.CompilerServices.AsyncTaskMethodBuilder":
+				if (DebugBuild)
+					MarkNamedMethod (type, "SetNotificationForWaitCompletion");
+				break;
+			case "System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1":
+				if (DebugBuild)
+					MarkNamedMethod (type, "SetNotificationForWaitCompletion");
+				break;
+			case "System.Threading.Tasks.Task":
+				if (DebugBuild)
+					MarkNamedMethod (type, "NotifyDebuggerOfWaitCompletion");
+				break;
+
 			case "System.Security.Cryptography":
 				switch (type.Name) {
 				case "Aes":
@@ -536,8 +549,11 @@ namespace Xamarin.Linker.Steps {
 				switch (type.Name) {
 				case "XslCompiledTransform":
 					TypeDefinition nop = GetType ("System.Xml", "System.Xml.Xsl.NoOperationDebugger");
-					MarkNamedMethod (nop, "OnCompile");
-					MarkNamedMethod (nop, "OnExecute");
+					// only available on the mobile profile
+					if (nop != null) {
+						MarkNamedMethod (nop, "OnCompile");
+						MarkNamedMethod (nop, "OnExecute");
+					}
 					break;
 				}
 				break;

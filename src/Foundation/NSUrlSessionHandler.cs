@@ -80,7 +80,7 @@ namespace Foundation {
 			else if ((sp & SecurityProtocolType.Tls12) != 0)
 				configuration.TLSMinimumSupportedProtocol = SslProtocol.Tls_1_2;
 
-			session = NSUrlSession.FromConfiguration (NSUrlSessionConfiguration.DefaultSessionConfiguration, new NSUrlSessionHandlerDelegate (this), null);
+			session = NSUrlSession.FromConfiguration (configuration, new NSUrlSessionHandlerDelegate (this), null);
 			inflightRequests = new Dictionary<NSUrlSessionTask, InflightData> ();
 		}
 
@@ -214,9 +214,15 @@ namespace Foundation {
 				var inflight = default (InflightData);
 
 				lock (sessionHandler.inflightRequestsLock)
-					if (sessionHandler.inflightRequests.TryGetValue (task, out inflight))
+					if (sessionHandler.inflightRequests.TryGetValue (task, out inflight)) {
+						// ensure that we did not cancel the request, if we did, do cancel the task
+						if (inflight.CancellationToken.IsCancellationRequested)
+							task?.Cancel ();
 						return inflight;
+					}
 
+				// if we did not manage to get the inflight data, we either got an error or have been canceled, lets cancel the task, that will execute DidCompleteWithError
+				task?.Cancel ();
 				return null;
 			}
 
@@ -224,16 +230,23 @@ namespace Foundation {
 			{
 				var inflight = GetInflightData (dataTask);
 
+				if (inflight == null)
+					return;
+
 				try {
 					var urlResponse = (NSHttpUrlResponse)response;
 					var status = (int)urlResponse.StatusCode;
 
 					var content = new NSUrlSessionDataTaskStreamContent (inflight.Stream, () => {
+						if (!inflight.Completed) {
+							dataTask.Cancel ();
+						}
+
 						inflight.Disposed = true;
 						inflight.Stream.TrySetException (new ObjectDisposedException ("The content stream was disposed."));
 
 						sessionHandler.RemoveInflightData (dataTask);
-					});
+					}, inflight.CancellationToken);
 
 					// NB: The double cast is because of a Xamarin compiler bug
 					var httpResponse = new HttpResponseMessage ((HttpStatusCode)status) {
@@ -272,6 +285,9 @@ namespace Foundation {
 			{
 				var inflight = GetInflightData (dataTask);
 
+				if (inflight == null)
+					return;
+
 				inflight.Stream.Add (data);
 				SetResponse (inflight);
 			}
@@ -280,7 +296,7 @@ namespace Foundation {
 			{
 				var inflight = GetInflightData (task);
 
-				// this can happen if the HTTP request times out and it is removed as part of the cancelation process
+				// this can happen if the HTTP request times out and it is removed as part of the cancellation process
 				if (inflight != null) {
 					// set the stream as finished
 					inflight.Stream.TrySetReceivedAllData ();
@@ -331,6 +347,11 @@ namespace Foundation {
 
 			public override void DidReceiveChallenge (NSUrlSession session, NSUrlSessionTask task, NSUrlAuthenticationChallenge challenge, Action<NSUrlSessionAuthChallengeDisposition, NSUrlCredential> completionHandler)
 			{
+				var inflight = GetInflightData (task);
+
+				if (inflight == null)
+					return;
+
 				// case for the basic auth failing up front. As per apple documentation:
 				// The URL Loading System is designed to handle various aspects of the HTTP protocol for you. As a result, you should not modify the following headers using
 				// the addValue(_:forHTTPHeaderField:) or setValue(_:forHTTPHeaderField:) methods:
@@ -345,7 +366,7 @@ namespace Foundation {
 				// header, it means that we do not have the correct credentials, in any other case just do what it is expected.
 				
 				if (challenge.PreviousFailureCount == 0) {
-					var authHeader = GetInflightData (task)?.Request?.Headers?.Authorization;
+					var authHeader = inflight.Request?.Headers?.Authorization;
 					if (!(string.IsNullOrEmpty (authHeader?.Scheme) && string.IsNullOrEmpty (authHeader?.Parameter))) {
 						completionHandler (NSUrlSessionAuthChallengeDisposition.RejectProtectionSpace, null);
 						return;
@@ -356,7 +377,7 @@ namespace Foundation {
 					if (sessionHandler.Credentials != null) {
 						var credentialsToUse = sessionHandler.Credentials as NetworkCredential;
 						if (credentialsToUse == null) {
-							var uri = GetInflightData (task).Request.RequestUri;
+							var uri = inflight.Request.RequestUri;
 							credentialsToUse = sessionHandler.Credentials.GetCredential (uri, "NTLM");
 						}
 						var credential = new NSUrlCredential (credentialsToUse.UserName, credentialsToUse.Password, NSUrlCredentialPersistence.ForSession);
@@ -398,7 +419,7 @@ namespace Foundation {
 		{
 			Action disposed;
 
-			public NSUrlSessionDataTaskStreamContent (NSUrlSessionDataTaskStream source, Action onDisposed) : base (source)
+			public NSUrlSessionDataTaskStreamContent (NSUrlSessionDataTaskStream source, Action onDisposed, CancellationToken token) : base (source, token)
 			{
 				disposed = onDisposed;
 			}

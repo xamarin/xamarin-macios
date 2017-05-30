@@ -57,7 +57,8 @@ endif
 # to run specific test suites. For more information read the README.md.
 #
 
-all-local:: qa-test-dependencies.zip mac-test-package.zip
+package-tests:
+	$(MAKE) qa-test-dependencies.zip mac-test-package.zip
 
 test.config: Makefile $(TOP)/Make.config
 	@rm -f $@
@@ -260,6 +261,7 @@ ifdef INCLUDE_MAC
 wrench-mac-dontlink:
 	$(Q) $(MAKE) run-mac-dontlink
 	$(Q) $(MAKE) clean-mac-dontlink
+	git clean -xfdq
 
 wrench-mac-mmp:
 	@echo Now part of wrench-mac-mmptest
@@ -276,15 +278,18 @@ wrench-mac-drm:
 wrench-mac-api:
 	$(Q) $(MAKE) run-mac-apitest
 	$(Q) $(MAKE) clean-mac-apitest
+	git clean -xfdq
 
 wrench-mac-mmptest:
 	$(Q) $(MAKE) run-mac-mmptest
 	$(Q) $(MAKE) clean-mac-mmptest
 	$(Q) $(MAKE) -C mmptest/regression
+	git clean -xfdq
 
 wrench-mac-msbuild:
 	$(Q) $(MAKE) run-mac-msbuild
 	$(Q) $(MAKE) clean-mac-msbuild
+	git clean -xfdq
 
 wrench-mac-binding-project:
 	cd mac-binding-project && $(MAKE)
@@ -293,6 +298,7 @@ wrench-mac-binding-project:
 wrench-mac-introspection:
 	$(Q) $(MAKE) run-mac-introspection
 	$(Q) $(MAKE) clean-mac-introspection
+	git clean -xfdq
 
 else
 wrench-mac-%:
@@ -300,7 +306,7 @@ wrench-mac-%:
 endif
 
 wrench-msbuild:
-	$(MAKE) -C $(TOP)/msbuild test-xml
+	$(MAKE) -C $(TOP)/msbuild .stamp-test-xml
 ifdef INCLUDE_IOS
 	$(MAKE) test-ios-tasks
 else

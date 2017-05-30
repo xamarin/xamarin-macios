@@ -135,7 +135,7 @@ namespace MonoTouch.Tuner {
 				if (!mr.DeclaringType.Is ("System", "IntPtr"))
 					return;
 
-				if (ins.Next.OpCode != OpCodes.Ldc_I4_8 || ins.Next.Next.OpCode != OpCodes.Bne_Un)
+				if (!(ins.Next.OpCode == OpCodes.Ldc_I4_8 && (ins.Next.Next.OpCode == OpCodes.Bne_Un || ins.Next.Next.OpCode == OpCodes.Bne_Un_S)))
 					return;
 #if DEBUG
 				Console.WriteLine ("\t{0} get_Size {1} bits", caller, Arch * 8);
@@ -260,9 +260,11 @@ namespace MonoTouch.Tuner {
 			Nop (ins);						// ldfld MonoTouch.Foundation.IsDirectBinding
 			Instruction next = ins.Next;				// brfalse IL_x (SuperHandle processing)
 			Instruction end = null;
-			// unoptimized compiled code can produce a (unneeeded) store/load combo, leave it there
-			while (next.OpCode.FlowControl != FlowControl.Cond_Branch)
-				next = next.Next; // leave the code there (the JIT/AOT will deal with it)
+			// unoptimized compiled code can produce a (unneeded) store/load combo
+			while (next.OpCode.FlowControl != FlowControl.Cond_Branch) {
+				Nop (next);
+				next = next.Next;
+			}
 			ins = (next.Operand as Instruction).Previous;		// br end (ret)
 			if (ins.OpCode.Code == Code.Ret) {			// if there's not branch but it returns immediately then do not remove the 'ret' instruction
 				ins = ins.Next;

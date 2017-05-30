@@ -3,7 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+#if IKVM
+using IKVM.Reflection;
+using Type = IKVM.Reflection.Type;
+#else
 using System.Reflection;
+#endif
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
@@ -35,7 +40,7 @@ public partial class Generator {
 
 	void CopyObsolete (ICustomAttributeProvider provider)
 	{
-		foreach (ObsoleteAttribute oa in AttributeManager.GetCustomAttributes (provider, TypeManager.ObsoleteAttribute, false))
+		foreach (var oa in AttributeManager.GetCustomAttributes<ObsoleteAttribute> (provider))
 			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
 	}
 
@@ -44,7 +49,7 @@ public partial class Generator {
 	//	- call/emit PrintPlatformAttributes on the type
 	void GenerateEnum (Type type)
 	{
-		if (AttributeManager.HasAttribute (type, TypeManager.FlagsAttribute))
+		if (AttributeManager.HasAttribute<FlagsAttribute> (type))
 			print ("[Flags]");
 
 		var native = AttributeManager.GetCustomAttribute<NativeAttribute> (type);
@@ -164,7 +169,7 @@ public partial class Generator {
 			var default_symbol_name = default_symbol?.Item2.SymbolName;
 			// more than one enum member can share the same numeric value - ref: #46285
 			foreach (var kvp in fields) {
-				print ("case {0}: // {1}.{2}", Convert.ToInt64 (kvp.Key.GetValue (null)), type.Name, kvp.Key.Name);
+				print ("case {0}: // {1}.{2}", Convert.ToInt64 (kvp.Key.GetRawConstantValue ()), type.Name, kvp.Key.Name);
 				var sn = kvp.Value.SymbolName;
 				if (sn == default_symbol_name)
 					print ("default:");

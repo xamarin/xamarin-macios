@@ -113,6 +113,8 @@ namespace Xamarin.Bundler {
 						option = optionTypeParts [0];
 						switch (optionTypeParts [1]) {
 						case "hybrid":
+							if (option != "all")
+								throw new MonoMacException (114, true, "Hybrid AOT compilation requires all assemblies to be AOT compiled");
 							kind = AOTKind.Hybrid;
 							break;
 						case "standard":
@@ -182,11 +184,15 @@ namespace Xamarin.Bundler {
 
 		AOTOptions options;
 		AOTCompilerType compilerType;
+		bool IsRelease;
+		bool IsModern;
 
-		public AOTCompiler (AOTOptions options, AOTCompilerType compilerType)
+		public AOTCompiler (AOTOptions options, AOTCompilerType compilerType, bool isModern, bool isRelease)
 		{
 			this.options = options;
 			this.compilerType = compilerType;
+			this.IsModern = isModern;
+			this.IsRelease = isRelease;
 		}
 
 		public void Compile (string path)
@@ -201,10 +207,19 @@ namespace Xamarin.Bundler {
 
 			var monoEnv = new string [] {"MONO_PATH", files.RootDir };
 
-			Parallel.ForEach (GetFilesToAOT (files), ParallelOptions, file => {
-				if (RunCommand (MonoPath, String.Format ("--aot{0} {1}", options.IsHybridAOT ? "=hybrid" : "", Quote (file)), monoEnv) != 0)
+			List<string> filesToAOT = GetFilesToAOT (files);
+			Parallel.ForEach (filesToAOT, ParallelOptions, file => {
+				string command = String.Format ("--aot{0} {1}{2}", options.IsHybridAOT ? "=hybrid" : "", IsModern ? "--runtime=mobile " : "", Quote (file));
+				if (RunCommand (MonoPath, command, monoEnv) != 0)
 					throw ErrorHelper.CreateError (3001, "Could not AOT the assembly '{0}'", file);
 			});
+
+			if (IsRelease && options.IsHybridAOT) {
+				Parallel.ForEach (filesToAOT, ParallelOptions, file => {
+					if (RunCommand (StripCommand, Quote (file)) != 0)
+						throw ErrorHelper.CreateError (3001, "Could not strip the assembly '{0}'", file);
+				});
+			}
 		}
 
 		List<string> GetFilesToAOT (IFileEnumerator files)
@@ -267,6 +282,8 @@ namespace Xamarin.Bundler {
 
 			return aotFiles;
 		}
+
+		public const string StripCommand = "/Library/Frameworks/Mono.framework/Commands/mono-cil-strip";
 
 		string MonoPath
 		{

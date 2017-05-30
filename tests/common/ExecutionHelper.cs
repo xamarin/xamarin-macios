@@ -36,7 +36,7 @@ namespace Xamarin.Tests
 		public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds (60);
 
 		public IEnumerable<ToolMessage> Messages { get { return messages; } }
-		List<string> OutputLines {
+		public List<string> OutputLines {
 			get {
 				if (output_lines == null) {
 					output_lines = new List<string> ();
@@ -60,7 +60,7 @@ namespace Xamarin.Tests
 
 			if (rv != 0) {
 				if (output.Length > 0)
-					Console.WriteLine (output);
+					Console.WriteLine ("\t" + output.ToString ().Replace ("\n", "\n\t"));
 			}
 
 			ParseMessages ();
@@ -211,6 +211,12 @@ namespace Xamarin.Tests
 			if (!HasOutputPattern (linePattern))
 				Assert.Fail (string.Format ("The output does not contain the line '{0}'", linePattern));
 		}
+
+		public void ForAllOutputLines (Action<string> action)
+		{
+			foreach (var line in OutputLines)
+				action (line);
+		}
 	}
 
 	class XBuild
@@ -321,10 +327,7 @@ namespace Xamarin.Tests
 			if (environmentVariables != null) {
 				var envs = psi.EnvironmentVariables;
 				foreach (var kvp in environmentVariables) {
-					if (envs.ContainsKey (kvp.Key))
-						envs [kvp.Key] += ":" + kvp.Value;
-					else
-						envs.Add (kvp.Key, kvp.Value);
+					envs [kvp.Key] = kvp.Value;
 				}
 			}
 

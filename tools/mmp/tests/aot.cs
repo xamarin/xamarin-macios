@@ -34,9 +34,9 @@ namespace Xamarin.MMP.Tests.Unit
 			commandsRun = new List<Tuple<string, string>> ();
 		}
 
-		void Compile (AOTOptions options, TestFileEnumerator files, AOTCompilerType compilerType = AOTCompilerType.Bundled64, RunCommandDelegate onRunDelegate = null)
+		void Compile (AOTOptions options, TestFileEnumerator files, AOTCompilerType compilerType = AOTCompilerType.Bundled64, RunCommandDelegate onRunDelegate = null, bool isRelease = false, bool isModern = false)
 		{
-			AOTCompiler compiler = new AOTCompiler (options, compilerType)
+			AOTCompiler compiler = new AOTCompiler (options, compilerType, isModern, isRelease)
 			{
 				RunCommand = onRunDelegate != null ? onRunDelegate : OnRunCommand,
 				ParallelOptions = new ParallelOptions () { MaxDegreeOfParallelism = 1 },
@@ -52,9 +52,11 @@ namespace Xamarin.MMP.Tests.Unit
 
 		int OnRunCommand (string path, string args, string [] env, StringBuilder output, bool suppressPrintOnErrors)
 		{
-			Assert.IsTrue (env[0] == "MONO_PATH", "MONO_PATH should be first env set");
-			Assert.IsTrue (env[1] == TestRootDir, "MONO_PATH should be set to our expected value");
 			commandsRun.Add (Tuple.Create <string, string>(path, args));
+			if (path != AOTCompiler.StripCommand) {
+				Assert.IsTrue (env[0] == "MONO_PATH", "MONO_PATH should be first env set");
+				Assert.IsTrue (env[1] == TestRootDir, "MONO_PATH should be set to our expected value");
+			}
 			return 0;
 		}
 
@@ -75,26 +77,55 @@ namespace Xamarin.MMP.Tests.Unit
 			}
 		}
 
-		List<string> GetFiledAOTed (AOTCompilerType compilerType = AOTCompilerType.Bundled64, AOTKind kind = AOTKind.Standard)
+		List<string> GetFiledAOTed (AOTCompilerType compilerType = AOTCompilerType.Bundled64, AOTKind kind = AOTKind.Standard, bool isModern = false, bool expectStripping = false)
 		{
 			List<string> filesAOTed = new List<string> (); 
 
 			foreach (var command in commandsRun) {
+				if (expectStripping && command.Item1 == AOTCompiler.StripCommand)
+					continue;
 				Assert.IsTrue (command.Item1.EndsWith (GetExpectedMonoCommand (compilerType)), "Unexpected command: " + command.Item1);
-				if (kind == AOTKind.Hybrid)
-					Assert.AreEqual (command.Item2.Split (' ')[0], "--aot=hybrid", "First arg should be --aot=hybrid");
-				else
-					Assert.AreEqual (command.Item2.Split (' ')[0], "--aot", "First arg should be --aot");
+				string [] argParts = command.Item2.Split (' ');
 
-				string fileName = command.Item2.Substring (command.Item2.IndexOf(' ') + 1).Replace ("\"", "");
+				if (kind == AOTKind.Hybrid)
+					Assert.AreEqual (argParts[0], "--aot=hybrid", "First arg should be --aot=hybrid");
+				else
+					Assert.AreEqual (argParts[0], "--aot", "First arg should be --aot");
+
+				if (isModern)
+					Assert.AreEqual (argParts[1], "--runtime=mobile", "Second arg should be --runtime=mobile");
+				else
+					Assert.AreNotEqual (argParts[1], "--runtime=mobile", "Second arg should not be --runtime=mobile");
+
+
+				int fileNameBeginningIndex = command.Item2.IndexOf(' ') + 1;
+				if (isModern)
+					fileNameBeginningIndex = command.Item2.IndexOf(' ', fileNameBeginningIndex) + 1;
+
+				string fileName = command.Item2.Substring (fileNameBeginningIndex).Replace ("\"", "");
 				filesAOTed.Add (fileName);
 			}
 			return filesAOTed;
 		}
 
-		void AssertFilesAOTed (IEnumerable <string> expectedFiles, AOTCompilerType compilerType = AOTCompilerType.Bundled64, AOTKind kind = AOTKind.Standard)
+		List<string> GetFilesStripped ()
 		{
-			List<string> filesAOTed = GetFiledAOTed (compilerType, kind);
+			return commandsRun.Where (x => x.Item1 == AOTCompiler.StripCommand).Select (x => x.Item2.Replace ("\"", "")).ToList ();
+		}
+		
+		void AssertFilesStripped (IEnumerable <string> expectedFiles)
+		{
+			List<string> filesStripped = GetFilesStripped ();
+
+			Func<string> getErrorDetails = () => $"\n {String.Join (" ", filesStripped)} \nvs\n {String.Join (" ", expectedFiles)}";
+
+			Assert.AreEqual (filesStripped.Count, expectedFiles.Count (), "Different number of files stripped than expected: " + getErrorDetails ());
+			Assert.IsTrue (filesStripped.All (x => expectedFiles.Contains (x)), "Different files stripped than expected: "  + getErrorDetails ());
+		}
+
+		void AssertFilesAOTed (IEnumerable <string> expectedFiles, AOTCompilerType compilerType = AOTCompilerType.Bundled64, AOTKind kind = AOTKind.Standard, bool isModern = false, bool expectStripping = false)
+		{
+			List<string> filesAOTed = GetFiledAOTed (compilerType, kind, isModern: isModern, expectStripping: expectStripping);
 
 			Func<string> getErrorDetails = () => $"\n {String.Join (" ", filesAOTed)} \nvs\n {String.Join (" ", expectedFiles)}";
 
@@ -248,7 +279,7 @@ namespace Xamarin.MMP.Tests.Unit
 
 			Compile (options, new TestFileEnumerator (new string [] { "Foo Bar.dll", "Xamarin.Mac.dll" }));
 			AssertFilesAOTed (new string [] {"Foo Bar.dll"});
-			Assert.IsTrue (commandsRun[0].Item2.EndsWith ("\"Foo Bar.dll\"", StringComparison.InvariantCulture), "Should end with quoted filename");
+			Assert.IsTrue (commandsRun.Where (x => x.Item2.Contains ("Foo Bar.dll")).All (x => x.Item2.EndsWith ("\"Foo Bar.dll\"", StringComparison.InvariantCulture)), "Should end with quoted filename");
 		}
 
 		[Test]
@@ -303,13 +334,79 @@ namespace Xamarin.MMP.Tests.Unit
 		[Test]
 		public void HybridOption_ShouldInvokeHybridCompiler ()
 		{
-			var options = new AOTOptions ("sdk|hybrid");
+			var options = new AOTOptions ("all|hybrid");
 			Assert.IsTrue (options.IsAOT, "Should be IsAOT");
 			Assert.IsTrue (options.IsHybridAOT, "Should be IsHybridAOT");
 
 			Compile (options, new TestFileEnumerator (FullAppFileList));
 
-			AssertFilesAOTed (SDKFileList, kind : AOTKind.Hybrid);
+			var expectedFiles = FullAppFileList.Where (x => x.EndsWith (".exe") || x.EndsWith (".dll"));
+			AssertFilesAOTed (expectedFiles, kind : AOTKind.Hybrid);
+		}
+
+		[Test]
+		public void AllReleaseHybrid_AOTAllFilesAndRunsStrip ()
+		{
+			var options = new AOTOptions ("all|hybrid");
+
+			Compile (options, new TestFileEnumerator (FullAppFileList), isRelease : true);
+
+			var expectedFiles = FullAppFileList.Where (x => x.EndsWith (".exe") || x.EndsWith (".dll"));
+			AssertFilesAOTed (expectedFiles, kind : AOTKind.Hybrid, expectStripping : true);
+			AssertFilesStripped (expectedFiles);
+		}
+
+		[Test]
+		public void AllReleaseNonHybrid_ShouldNotStrip()
+		{
+			var options = new AOTOptions ("all");
+
+			Compile (options, new TestFileEnumerator (FullAppFileList), isRelease : true);
+
+			var expectedFiles = FullAppFileList.Where (x => x.EndsWith (".exe") || x.EndsWith (".dll"));
+			AssertFilesAOTed (expectedFiles, expectStripping : false);
+			AssertFilesStripped (new string [] {});
+		}
+
+		[Test]
+		public void AssemblyWithSpaces_ShouldStripWithQuotes ()
+		{
+			var options = new AOTOptions ("all|hybrid,+Foo Bar.dll");
+
+			var files = new string [] { "Foo Bar.dll", "Xamarin.Mac.dll" };
+			Compile (options, new TestFileEnumerator (files), isRelease : true);
+			AssertFilesStripped (files);
+			Assert.IsTrue (commandsRun.Where (x => x.Item2.Contains ("Foo Bar.dll")).All (x => x.Item2.EndsWith ("\"Foo Bar.dll\"", StringComparison.InvariantCulture)), "Should end with quoted filename");
+		}
+
+		[Test]
+		public void WhenAssemblyStrippingFails_ShouldThrowError ()
+		{
+			RunCommandDelegate runThatErrors = (path, args, env, output, suppressPrintOnErrors) => path.Contains ("mono-cil-strip") ? 42 : 0;
+
+			var options = new AOTOptions ("all|hybrid");
+
+			AssertThrowErrorWithCode (() => Compile (options, new TestFileEnumerator (FullAppFileList), onRunDelegate : runThatErrors, isRelease : true), 3001);
+		}
+
+		[Test]
+		public void HybridOption_MustAlsoHaveAll_ThrowsIfNot ()
+		{
+			AssertThrowErrorWithCode (() => new AOTOptions ("core|hybrid"), 114);
+			AssertThrowErrorWithCode (() => new AOTOptions ("sdk|hybrid"), 114);
+			var options = new AOTOptions ("all|hybrid");
+		}
+
+		[Test]
+		public void All_AOTAllFiles_Modern ()
+		{
+			var options = new AOTOptions ("all");
+			Assert.IsTrue (options.IsAOT, "Should be IsAOT");
+
+			Compile (options, new TestFileEnumerator (FullAppFileList), isModern : true);
+
+			var expectedFiles = FullAppFileList.Where (x => x.EndsWith (".exe") || x.EndsWith (".dll"));
+			AssertFilesAOTed (expectedFiles, isModern : true);
 		}
 	}
 }

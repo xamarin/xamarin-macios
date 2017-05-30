@@ -1,4 +1,5 @@
 <img src="banner.png" alt="Xamarin.iOS + Xamarin.Mac logo" height="145" >
+
 # Xamarin.iOS & Xamarin.Mac #
 
 |              | Status                                    |
@@ -72,7 +73,7 @@ You can download continuous builds of our main development branches from [our wi
 
         $ ./system-dependencies.sh --provision-[xcode|xamarin-studio|mono|all]
 
-## Quick build & install ##
+## Quick build & install ##
 
 Follow the following steps to build and install Xamarin.iOS and Xamarin.Mac:
 
@@ -92,6 +93,14 @@ Follow the following steps to build and install Xamarin.iOS and Xamarin.Mac:
 4. Install into the system
 
         $ make install-system
+
+5. Build again after any local changes
+
+    Don't use `make world` again to rebuild, because it resets dependencies
+    and causes unnecessary rebuilds. Instead use the standard `make all install`
+    (our Makefiles are parallel safe, which greatly speeds up the build):
+
+        $ make all -j8 && make install -j8
 
 ## Configure ##
 

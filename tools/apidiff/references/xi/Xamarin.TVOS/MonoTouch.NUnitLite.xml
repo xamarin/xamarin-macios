@@ -552,7 +552,7 @@
               <method name="CloseWriter()" attrib="134" returntype="System.Void">
                 <parameters />
               </method>
-              <method name="ExecuteOnMainThread(System.Action)" attrib="1476" abstract="true" virtual="true" returntype="System.Void">
+              <method name="ExecuteOnMainThread(System.Action)" attrib="452" virtual="true" returntype="System.Void">
                 <parameters>
                   <parameter name="action" position="0" attrib="0" type="System.Action" />
                 </parameters>
@@ -610,6 +610,23 @@
               </method>
             </methods>
           </class>
+          <class name="ConsoleRunner" type="class" base="MonoTouch.NUnit.UI.BaseTouchRunner" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="NUnit.Framework.Api.ITestListener" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="WriteDeviceInformation(System.IO.TextWriter)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="writer" position="0" attrib="0" type="System.IO.TextWriter" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
           <class name="TouchOptions" type="class" base="System.Object" charset="Ansi" layout="Auto">
             <fields>
               <field name="Current" attrib="22" fieldtype="MonoTouch.NUnit.UI.TouchOptions" />
@@ -629,6 +646,24 @@
                     <parameters />
                   </method>
                   <method name="set_AutoStart(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="EnableXml" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_EnableXml()" attrib="2182" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_EnableXml(System.Boolean)" attrib="2182" returntype="System.Void">
                     <attributes>
                       <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
                     </attributes>
@@ -13197,12 +13232,6 @@
               <method name="TestStarted(NUnit.Framework.Api.ITest)" attrib="486" virtual="true" returntype="System.Void">
                 <parameters>
                   <parameter name="test" position="0" attrib="0" type="NUnit.Framework.Api.ITest" />
-                </parameters>
-              </method>
-              <method name="TopLevelHandler(System.Object, System.UnhandledExceptionEventArgs)" attrib="134" returntype="System.Void">
-                <parameters>
-                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
-                  <parameter name="e" position="1" attrib="0" type="System.UnhandledExceptionEventArgs" />
                 </parameters>
               </method>
               <method name="WriteHeader(System.IO.TextWriter)" attrib="150" static="true" returntype="System.Void">

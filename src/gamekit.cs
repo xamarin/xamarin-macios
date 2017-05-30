@@ -615,10 +615,12 @@ namespace XamCore.GameKit {
 #endif
 
 #if MONOMAC
+		[Async (ResultTypeName = "GKChallengeComposeResult")]
 		[Mac (10,10)]
 		[Export ("challengeComposeControllerWithMessage:players:completionHandler:")]
 		NSViewController ChallengeComposeController ([NullAllowed] string message, [NullAllowed] GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler completionHandler);
 #else
+		[Async (ResultTypeName = "GKChallengeComposeResult")]
 		[NoWatch]
 		[iOS (8,0)]
 		[Export ("challengeComposeControllerWithMessage:players:completionHandler:")]
@@ -773,6 +775,7 @@ namespace XamCore.GameKit {
 		void UnregisterAllListeners ();
 
 		[iOS (7,0), Mac (10,10)]
+		[Async (ResultTypeName = "GKIdentityVerificationSignatureResult")]
 		[Export ("generateIdentityVerificationSignatureWithCompletionHandler:")]
 		void GenerateIdentityVerificationSignature ([NullAllowed] GKIdentityVerificationSignatureHandler completionHandler);
 
@@ -897,6 +900,7 @@ namespace XamCore.GameKit {
 
 		[iOS (8,0), Mac (10,10)]
 		[Export ("chooseBestHostingPlayerWithCompletionHandler:")]
+		[Async]
 		void ChooseBestHostingPlayer (Action<GKPlayer> completionHandler);
 
 		[iOS (8,0), Mac(10,10)]
@@ -1402,9 +1406,11 @@ namespace XamCore.GameKit {
 
 #if MONOMAC
 		[Mac (10,10)]
+		[Async (ResultTypeName = "GKChallengeComposeResult")]
 		[Export ("challengeComposeControllerWithMessage:players:completionHandler:")]
 		NSViewController ChallengeComposeController ([NullAllowed] string message, GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler completionHandler);
 #else
+		[Async (ResultTypeName = "GKChallengeComposeResult")]
 		[NoWatch]
 		[iOS (8,0)]
 		[Export ("challengeComposeControllerWithMessage:players:completionHandler:")]

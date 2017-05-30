@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 
 using Xamarin.Utils;
 using XamCore.ObjCRuntime;
@@ -47,7 +48,7 @@ namespace Xamarin.Bundler {
 				}
 			});
 			options.Add ("coop:", "If the GC should run in cooperative mode.", v => { app.EnableCoopGC = ParseBool (v, "coop"); }, hidden: true);
-			options.Add ("sgen-conc", "Enable the concurrent garbage collector.", v => { app.EnableSGenConc = true; });
+			options.Add ("sgen-conc", "Enable the *experimental* concurrent garbage collector.", v => { app.EnableSGenConc = true; });
 			options.Add ("marshal-objectivec-exceptions:", "Specify how Objective-C exceptions should be marshalled. Valid values: default, unwindmanagedcode, throwmanagedexception, abort and disable. The default depends on the target platform (on watchOS the default is 'throwmanagedexception', while on all other platforms it's 'disable').", v => {
 				switch (v) {
 				case "default":
@@ -97,6 +98,9 @@ namespace Xamarin.Bundler {
 			options.Add ("j|jobs=", "The level of concurrency. Default is the number of processors.", v => {
 				Jobs = int.Parse (v);
 			});
+			options.Add ("embeddinator", "Enables Embeddinator targetting mode.", v => {
+				app.Embeddinator = true;
+			}, true);
 		}
 
 		static int Jobs;
@@ -104,6 +108,10 @@ namespace Xamarin.Bundler {
 			get {
 				return Jobs == 0 ? Environment.ProcessorCount : Jobs;
 			}
+		}
+
+		public static int Verbosity {
+			get { return verbose; }
 		}
 
 #if MONOMAC
@@ -209,8 +217,6 @@ namespace Xamarin.Bundler {
 				stderr_completed.WaitOne (TimeSpan.FromSeconds (1));
 				stdout_completed.WaitOne (TimeSpan.FromSeconds (1));
 
-				GC.Collect (); // Workaround for: https://bugzilla.xamarin.com/show_bug.cgi?id=43462#c14
-
 				if (p.ExitCode != 0) {
 					// note: this repeat the failing command line. However we can't avoid this since we're often
 					// running commands in parallel (so the last one printed might not be the one failing)
@@ -226,6 +232,11 @@ namespace Xamarin.Bundler {
 			}
 
 			return 0;
+		}
+
+		public static Task<int> RunCommandAsync (string path, string args, string [] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
+		{
+			return Task.Run (() => RunCommand (path, args, env, output, suppressPrintOnErrors));
 		}
 
 #if !MMP_TEST
@@ -265,6 +276,7 @@ namespace Xamarin.Bundler {
 
 			try {
 				if (!File.Exists (path)) {
+					Directory.CreateDirectory (Path.GetDirectoryName (path));
 					File.WriteAllText (path, contents);
 					Log (3, "File '{0}' does not exist, creating it.", path);
 					return;

@@ -120,7 +120,7 @@ namespace xharness
 						allTargetNames.Add (MakeMacClassicTargetName (target, MacTargetNameType.Build));
 						allTargetCleanNames.Add (MakeMacClassicTargetName (target, MacTargetNameType.Clean));
 
-						// mdtool can only find referenced projects if the referenced
+						// vstool can only find referenced projects if the referenced
 						// projects are included in the solution. This requires us to
 						// build the solution (if it exists), not the project.
 						var slnPath = Path.ChangeExtension (target.ProjectPath, "sln");
@@ -149,6 +149,7 @@ namespace xharness
 						string guiUnitDependency = ((MacUnifiedTarget)target).Mobile ? "$(GUI_UNIT_PATH)/bin/xammac_mobile/GuiUnit.exe" : "$(GUI_UNIT_PATH)/bin/net_4_5/GuiUnit.exe";
 
 						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Build), "{0}", target.ProjectPath.Replace (" ", "\\ ") + " "  + guiUnitDependency);
+						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore tests-mac.sln");
 						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 						writer.WriteLine ();
 
@@ -157,7 +158,12 @@ namespace xharness
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Exec), "");
-						if (target.IsBCLProject)
+						if (target.IsNUnitProject) {
+							writer.WriteLine ("\t$(Q)rm -f $(CURDIR)/.{0}-failed.stamp", make_escaped_name);
+							writer.WriteLine ("\t$(SYSTEM_MONO) --debug $(TOP)/packages/NUnit.ConsoleRunner.3.5.0/tools/nunit3-console.exe {1}/bin/Debug/mmptest.dll \"--result=$(abspath $(CURDIR)/{0}-TestResult.xml);format=nunit2\" $(TEST_FIXTURE) --labels=All || touch $(CURDIR)/.{0}-failed.stamp", make_escaped_name, Path.GetDirectoryName (target.ProjectPath));
+							writer.WriteLine ("\t$(Q)[[ -z \"$$BUILD_REPOSITORY\" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt {0}-TestResult.xml > {0}-index.html && echo \"@MonkeyWrench: AddFile: $$PWD/{0}-index.html\")", make_escaped_name);
+							writer.WriteLine ("\t$(Q)[[ ! -e .{0}-failed.stamp ]]", make_escaped_name);
+						} else if (target.IsBCLProject)
 							writer.WriteLine ("\t$(Q) {2}/bin/Debug{1}/{0}Tests.app/Contents/MacOS/{0}Tests", make_escaped_name, target.Suffix, CreateRelativePath (Path.GetDirectoryName (target.ProjectPath), Path.GetDirectoryName (makefile)));
 						else
 							writer.WriteLine ("\t$(Q) {2}/bin/x86/Debug{1}/{0}.app/Contents/MacOS/{0}", make_escaped_name, target.Suffix, CreateRelativePath (Path.GetDirectoryName (target.ProjectPath), Path.GetDirectoryName (makefile)));

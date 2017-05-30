@@ -314,7 +314,7 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/%.dll: build/%.dll | $(MA
 ##
 
 # we must install locally during 'make all', because the F# build depends on the msbuild targets/assemblies.
-all-local:: $(MSBUILD_PRODUCTS) test-xml
+all-local:: $(MSBUILD_PRODUCTS) .stamp-test-xml
 
 .build-stamp: $(ALL_SOURCES)
 	$(Q) $(SYSTEM_MONO) /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore
@@ -348,9 +348,10 @@ install-symlinks: $(MSBUILD_SYMLINKS)
 
 install-local:: $(MSBUILD_PRODUCTS)
 
-test-xml:
-	$(Q) xmllint --noout $(wildcard */*.targets) $(wildcard */*.props)
+.stamp-test-xml: $(wildcard */*.targets) $(wildcard */*.props)
+	$(Q) xmllint --noout $^
 	@echo Targets files are valid XML
+	@touch $@
 
 # make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
 # marking those files as .SECONDARY will prevent that deletion.

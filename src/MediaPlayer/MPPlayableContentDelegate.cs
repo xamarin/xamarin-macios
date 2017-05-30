@@ -1,7 +1,9 @@
 ﻿#if !XAMCORE_3_0 && !MONOMAC
-	
+
 using System;
+using System.Threading.Tasks;
 using XamCore.Foundation;
+using XamCore.ObjCRuntime;
 
 namespace XamCore.MediaPlayer {
 	public partial class MPPlayableContentDelegate {
@@ -21,6 +23,18 @@ namespace XamCore.MediaPlayer {
 		}
 
 	}
+
+#if !XAMCORE_4_0
+	public partial class MPPlayableContentDataSource : NSObject {
+		[Unavailable (PlatformName.MacOSX, PlatformArchitecture.All)]
+		[Introduced (PlatformName.iOS, 10, 0)]
+		[Obsolete ("Use 'MPPlayableContentDataSource_Extensions.GetContentItemAsync' instead")]
+		public unsafe virtual Task<MPContentItem> GetContentItemAsync (string identifier)
+		{
+			return MPPlayableContentDataSource_Extensions.GetContentItemAsync (this, identifier);
+		}
+	}
+#endif
 }
 
 #endif

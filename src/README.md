@@ -3,6 +3,30 @@ Platform assemblies
 
 This directory contains the source code and build logic to build the platform assemblies.
 
+Generator
+=========
+
+The generator takes API definition files (most *.cs files in src/) as input,
+and generates the required binding code.
+
+There is one generator executable, based on IKVM, that's used to generate the
+binding code for all platforms.
+
+The generator relies heavily on binding attributes; all the binding attributes
+(that are not in the platform assembly) are compiled into a separate attribute
+assembly (Xamarin.[iOS|TVOS|WatchOS|Mac].BindingAttributes.dll).
+
+Since the platform assemblies (and thus all the binding attributes assemblies
+as well) reference each platform's BCL, those assemblies can't be loaded
+directly into the generator at runtime. In order to not make the generator
+code too complicated, all the attributes are also compiled into the generator
+executable, and then instantiated as mock-objects of the real attributes.
+
+The solution generator-ikvm.sln can be used to debug the generator. There are
+multiple run configurations (`ios-classic`, `ios-unified`, `tvos`, `watchos`,
+`mac-classic`, `mac-unified`, `mac-full`), each configured to execute the
+generator with the options for the corresponding profile.
+
 Conditional compilation
 =======================
 

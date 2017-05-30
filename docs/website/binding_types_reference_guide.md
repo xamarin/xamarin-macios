@@ -380,6 +380,50 @@ that contains the `MakeBackgroundRed` extension method.   This means
 that you can now call "MakeBackgroundRed" on any `UIView` subclass,
 giving you the same functionality you would get on Objective-C.
 
+In some cases you will find **static** members inside categories like in the following example:
+
+```objc
+@interface FooObject (MyFooObjectExtension)
++ (BOOL)boolMethod:(NSRange *)range;
+@end
+```
+
+This will lead to an **incorrect** Category C# interface definition:
+
+```csharp
+[Category]
+[BaseType (typeof (FooObject))]
+interface FooObject_Extensions {
+
+	// Incorrect Interface definition
+	[Static]
+	[Export ("boolMethod:")]
+	bool BoolMethod (NSRange range);
+}
+```
+
+This is incorrect because in order to use the `BoolMethod` extension you need an instance of `FooObject` but you are binding an ObjC **static** extension, this is a side effect due to the fact of how C# extension methods are implemented. 
+
+The only way to use the above definitions is by the following ugly code:
+
+```csharp
+(null as FooObject).BoolMethod (range);
+```
+
+The recommendation to avoid this is to inline the `BoolMethod` definition inside the `FooObject` interface definition itself, this will allow you to call this extension like it is intended `FooObject.BoolMethod (range)`.
+
+```csharp
+[BaseType (typeof (NSObject))]
+interface FooObject {
+
+	[Static]
+	[Export ("boolMethod:")]
+	bool BoolMethod (NSRange range);
+}
+```
+
+We will issue a warning (BI1117) whenever we find a `[Static]` member inside a `[Category]` definition. If you really want to have `[Static]` members inside your `[Category]` definitions you can silence the warning by using `[Category (allowStaticMembers: true)]` or by decorating either your member or `[Category]` interface definition with `[Internal]`.
+
  <a name="StaticAttribute" class="injected"></a>
 
 
@@ -1171,8 +1215,8 @@ Only available on Xamarin.iOS 6.3 and newer.
 This attribute can be applied to methods that take a
 completion handler as their last argument.
 
-You can use the `[Async]` attribute on methods that return
-void and whose last argument is a callback.  When you apply
+You can use the `[Async]` attribute on methods whose
+last argument is a callback.  When you apply
 this to a method, the binding generator will generate a
 version of that method with the suffix `Async`.  If the callback
 takes no parameters, the return value will be a `Task`, if the

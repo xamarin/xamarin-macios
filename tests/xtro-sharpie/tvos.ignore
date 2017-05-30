@@ -202,6 +202,7 @@
 !missing-field! MPMediaItemPropertyUserGrouping not bound
 !missing-field! MPMediaItemPropertyDateAdded not bound
 !missing-field! MPMediaItemPropertyIsExplicit not bound
+!missing-field! MPMediaItemPropertyPlaybackStoreID not bound
 
 ## shown as available in iOS 9.3 in tvOS header files (from Xcode 7.3) so normally available in tvOS 9.2 
 ## In reality it's only available in the simulator, not on AppleTV devices (all fields are null)
@@ -274,6 +275,8 @@
 !missing-selector! MPMusicPlayerController::volume not bound
 !missing-selector! MPMusicPlayerController::prepareToPlayWithCompletionHandler: not bound
 !missing-selector! MPMusicPlayerController::setQueueWithDescriptor: not bound
+!missing-selector! MPMusicPlayerController::appendQueueDescriptor: not bound
+!missing-selector! MPMusicPlayerController::prependQueueDescriptor: not bound
 
 ## from (unmarked) MPMediaItem_MPMediaQueryAdditions but MPMediaItem is not in tvOS
 !missing-selector! +MPMediaItem::persistentIDPropertyForGroupingType: not bound
@@ -291,6 +294,8 @@
 !missing-field! SKCloudServiceSetupActionSubscribe not bound
 !missing-field! SKCloudServiceSetupOptionsActionKey not bound
 !missing-field! SKCloudServiceSetupOptionsITunesItemIdentifierKey not bound
+!missing-field! SKCloudServiceSetupOptionsAffiliateTokenKey not bound
+!missing-field! SKCloudServiceSetupOptionsCampaignTokenKey not bound
 !missing-protocol! SKCloudServiceSetupViewControllerDelegate not bound
 
 

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 
 using Mono.Cecil;
-using Mono.Cecil.Mdb;
+using Mono.Cecil.Cil;
 
 using Xamarin.Utils;
 
@@ -31,11 +31,14 @@ namespace Xamarin.Bundler {
 		None,
 		SDKOnly,
 		All,
+#if !MONOTOUCH
+		Platform,
+#endif
 	}
 
 	public partial class Application
 	{
-		public Cache Cache = new Cache ();
+		public Cache Cache;
 		public string AppDirectory = ".";
 		public bool DeadStrip = true;
 		public bool EnableDebug;
@@ -59,12 +62,25 @@ namespace Xamarin.Bundler {
 		public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptions;
 		public MarshalManagedExceptionMode MarshalManagedExceptions;
 		public bool IsDefaultMarshalManagedExceptionMode;
-		public string RootAssembly;
+		public List<string> RootAssemblies = new List<string> ();
+		public List<Application> SharedCodeApps = new List<Application> (); // List of appexes we're sharing code with.
 		public string RegistrarOutputLibrary;
 
 		public static int Concurrency => Driver.Concurrency;
 		public Version DeploymentTarget;
 		public Version SdkVersion;
+	
+		public bool Embeddinator { get; set; }
+
+		public Application (string[] arguments)
+		{
+			Cache = new Cache (arguments);
+		}
+
+		// This is just a name for this app to show in log/error messages, etc.
+		public string Name {
+			get { return Path.GetFileNameWithoutExtension (AppDirectory); }
+		}
 
 		public bool RequiresPInvokeWrappers {
 			get {
@@ -142,7 +158,7 @@ namespace Xamarin.Bundler {
 			var main = assembly.MainModule;
 			bool symbols = main.HasSymbols;
 			if (symbols) {
-				var provider = new MdbReaderProvider ();
+				var provider = new DefaultSymbolReaderProvider ();
 				main.ReadSymbols (provider.GetSymbolReader (main, main.FileName));
 			}
 
@@ -155,6 +171,9 @@ namespace Xamarin.Bundler {
 				string dest_mdb = destination + ".mdb";
 				if (File.Exists (dest_mdb))
 					File.Delete (dest_mdb);
+				string dest_pdb = Path.ChangeExtension (destination, ".pdb");
+				if (File.Exists (dest_pdb))
+					File.Delete (dest_pdb);
 			}
 		}
 
@@ -424,8 +443,11 @@ namespace Xamarin.Bundler {
 			if (Registrar != RegistrarMode.Static)
 				throw new PlatformException (67, "Invalid registrar: {0}", Registrar); // this is only called during our own build
 
-			var registrar_m = RegistrarOutputLibrary;
+			if (RootAssemblies.Count != 1)
+				throw ErrorHelper.CreateError (8, "You should provide one root assembly only, found {0} assemblies: '{1}'", RootAssemblies.Count, string.Join ("', '", RootAssemblies.ToArray ()));
 
+			var registrar_m = RegistrarOutputLibrary;
+			var RootAssembly = RootAssemblies [0];
 			var resolvedAssemblies = new List<AssemblyDefinition> ();
 			var resolver = new PlatformResolver () {
 				FrameworkDirectory = Driver.GetPlatformFrameworkDirectory (this),

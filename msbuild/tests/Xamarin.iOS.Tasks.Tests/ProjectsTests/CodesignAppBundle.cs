@@ -1,61 +1,105 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Diagnostics;
 
 using NUnit.Framework;
 
+using Xamarin.MacDev;
+
 namespace Xamarin.iOS.Tasks
 {
-	[TestFixture ("iPhone")]
+	[TestFixture ("Debug")]
+	[TestFixture ("Release")]
 	public class CodesignAppBundle : ProjectTest
 	{
-		public CodesignAppBundle (string platform) : base (platform)
+		readonly string config;
+
+		public CodesignAppBundle (string configuration) : base ("iPhone")
 		{
+			config = configuration;
 		}
 
-		[Ignore] // requires msbuild instead of xbuild
+		static bool IsCodesigned (string path)
+		{
+			var psi = new ProcessStartInfo ("/usr/bin/codesign");
+			var args = new ProcessArgumentBuilder ();
+
+			args.Add ("--verify");
+			args.AddQuoted (path);
+
+			psi.Arguments = args.ToString ();
+
+			var process = Process.Start (psi);
+			process.WaitForExit ();
+
+			return process.ExitCode == 0;
+		}
+
+		void AssertProperlyCodesigned ()
+		{
+			foreach (var dylib in Directory.EnumerateFiles (AppBundlePath, "*.dylib", SearchOption.AllDirectories))
+				Assert.IsTrue (IsCodesigned (dylib), "{0} is not properly codesigned.", dylib);
+
+			foreach (var appex in Directory.EnumerateDirectories (AppBundlePath, "*.appex", SearchOption.AllDirectories))
+				Assert.IsTrue (IsCodesigned (appex), "{0} is not properly codesigned.", appex);
+
+			var watchDir = Path.Combine (AppBundlePath, "Watch");
+			if (Directory.Exists (watchDir)) {
+				foreach (var watchApp in Directory.EnumerateDirectories (watchDir, "*.app", SearchOption.TopDirectoryOnly))
+					Assert.IsTrue (IsCodesigned (watchApp), "{0} is not properly codesigned.", watchApp);
+			}
+		}
+
 		[Test]
 		public void RebuildNoChanges ()
 		{
-			BuildProject ("MyTabbedApplication", Platform, "Release", clean: true);
+			BuildProject ("MyTabbedApplication", Platform, config, clean: true);
 
-			var dsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyTabbedApplication.app.dSYM"));
-			var appexDsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyActionExtension.appex.dSYM"));
+			AssertProperlyCodesigned ();
 
-			var timestamps = Directory.EnumerateFiles (AppBundlePath, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
-			var dsymTimestamps = Directory.EnumerateFiles (dsymDir, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
-			var appexDsymTimestamps = Directory.EnumerateFiles (appexDsymDir, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
+			//var dsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyTabbedApplication.app.dSYM"));
+			//var appexDsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyActionExtension.appex.dSYM"));
+
+			//var timestamps = Directory.EnumerateFiles (AppBundlePath, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
+			//var dsymTimestamps = Directory.EnumerateFiles (dsymDir, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
+			//var appexDsymTimestamps = Directory.EnumerateFiles (appexDsymDir, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
 
 			Thread.Sleep (1000);
 
 			// Rebuild w/ no changes
-			BuildProject ("MyTabbedApplication", Platform, "Release", clean: false);
+			BuildProject ("MyTabbedApplication", Platform, config, clean: false);
 
-			var newTimestamps = Directory.EnumerateFiles (AppBundlePath, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
-			var newDsymTimestamps = Directory.EnumerateFiles (dsymDir, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
-			var newAppexDsymTimestamps = Directory.EnumerateFiles (appexDsymDir, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
+			AssertProperlyCodesigned ();
 
-			foreach (var file in timestamps.Keys)
-				Assert.AreEqual (timestamps[file], newTimestamps[file], "App Bundle timestamp changed: " + file);
+			// Note: the following checks all require msbuild instead of xbuild to work properly
 
-			foreach (var file in dsymTimestamps.Keys)
-				Assert.AreEqual (dsymTimestamps[file], newDsymTimestamps[file], "App Bundle DSym timestamp changed: " + file);
+			//var newTimestamps = Directory.EnumerateFiles (AppBundlePath, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
+			//var newDsymTimestamps = Directory.EnumerateFiles (dsymDir, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
+			//var newAppexDsymTimestamps = Directory.EnumerateFiles (appexDsymDir, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
 
-			foreach (var file in appexDsymTimestamps.Keys)
-				Assert.AreEqual (appexDsymTimestamps[file], newAppexDsymTimestamps[file], "App Extension DSym timestamp changed: " + file);
+			//foreach (var file in timestamps.Keys)
+			//	Assert.AreEqual (timestamps[file], newTimestamps[file], "App Bundle timestamp changed: " + file);
+
+			//foreach (var file in dsymTimestamps.Keys)
+			//	Assert.AreEqual (dsymTimestamps[file], newDsymTimestamps[file], "App Bundle DSym timestamp changed: " + file);
+
+			//foreach (var file in appexDsymTimestamps.Keys)
+			//	Assert.AreEqual (appexDsymTimestamps[file], newAppexDsymTimestamps[file], "App Extension DSym timestamp changed: " + file);
 		}
 
-		[Ignore] // requires msbuild instead of xbuild
 		[Test]
 		public void CodesignAfterModifyingAppExtensionTest ()
 		{
-			var csproj = BuildProject ("MyTabbedApplication", Platform, "Release", clean: true);
+			var csproj = BuildProject ("MyTabbedApplication", Platform, config, clean: true);
 			var testsDir = Path.GetDirectoryName (Path.GetDirectoryName (csproj));
 			var appexProjectDir = Path.Combine (testsDir, "MyActionExtension");
 			var viewController = Path.Combine (appexProjectDir, "ActionViewController.cs");
 			var mainExecutable = Path.Combine (AppBundlePath, "MyTabbedApplication");
 			var timestamp = File.GetLastWriteTimeUtc (mainExecutable);
 			var text = File.ReadAllText (viewController);
+
+			AssertProperlyCodesigned ();
 
 			Thread.Sleep (1000);
 
@@ -64,11 +108,13 @@ namespace Xamarin.iOS.Tasks
 			File.WriteAllText (viewController, text);
 
 			try {
-				BuildProject ("MyTabbedApplication", Platform, "Release", clean: false);
+				BuildProject ("MyTabbedApplication", Platform, config, clean: false);
 				var newTimestamp = File.GetLastWriteTimeUtc (mainExecutable);
 
 				// make sure that the main app bundle was codesigned due to the changes in the appex
 				Assert.IsTrue (newTimestamp > timestamp, "The main app bundle does not seem to have been re-codesigned");
+
+				AssertProperlyCodesigned ();
 			} finally {
 				// restore the original ActionViewController.cs code...
 				text = text.Replace ("bool imageFound = true;", "bool imageFound = false;");
@@ -76,17 +122,34 @@ namespace Xamarin.iOS.Tasks
 			}
 		}
 
-		[Ignore] // requires msbuild instead of xbuild
+		[Test]
+		public void RebuildWatchAppNoChanges ()
+		{
+			BuildProject ("MyWatch2Container", Platform, config, clean: true);
+
+			AssertProperlyCodesigned ();
+
+			Thread.Sleep (1000);
+
+			// Rebuild w/ no changes
+			BuildProject ("MyWatch2Container", Platform, config, clean: false);
+
+			// make sure everything is still codesigned properly
+			AssertProperlyCodesigned ();
+		}
+
 		[Test]
 		public void CodesignAfterModifyingWatchApp2Test ()
 		{
-			var csproj = BuildProject ("MyWatch2Container", Platform, "Release", clean: true);
+			var csproj = BuildProject ("MyWatch2Container", Platform, config, clean: true);
 			var testsDir = Path.GetDirectoryName (Path.GetDirectoryName (csproj));
 			var appexProjectDir = Path.Combine (testsDir, "MyWatchKit2Extension");
 			var viewController = Path.Combine (appexProjectDir, "InterfaceController.cs");
 			var mainExecutable = Path.Combine (AppBundlePath, "MyWatch2Container");
 			var timestamp = File.GetLastWriteTimeUtc (mainExecutable);
 			var text = File.ReadAllText (viewController);
+
+			AssertProperlyCodesigned ();
 
 			Thread.Sleep (1000);
 
@@ -95,11 +158,15 @@ namespace Xamarin.iOS.Tasks
 			File.WriteAllText (viewController, text);
 
 			try {
-				BuildProject ("MyWatch2Container", Platform, "Release", clean: false);
+				BuildProject ("MyWatch2Container", Platform, config, clean: false);
+
+				AssertProperlyCodesigned ();
+
 				var newTimestamp = File.GetLastWriteTimeUtc (mainExecutable);
 
 				// make sure that the main app bundle was codesigned due to the changes in the appex
-				Assert.IsTrue (newTimestamp > timestamp, "The main app bundle does not seem to have been re-codesigned");
+				// Note: this step requires msbuild instead of xbuild to work properly
+				//Assert.IsTrue (newTimestamp > timestamp, "The main app bundle does not seem to have been re-codesigned");
 			} finally {
 				// restore the original ActionViewController.cs code...
 				text = text.Replace ("{0} The Awakening...", "{0} awake with context");

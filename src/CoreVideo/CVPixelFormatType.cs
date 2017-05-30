@@ -93,5 +93,7 @@ namespace XamCore.CoreVideo {
 		CV14BayerRggb = 0x72676734, // 'rgg4',
 		CV14BayerBggr = 0x62676734, // 'bgg4',
 		CV14BayerGbrg = 0x67627234, // 'gbr4',
+		// iOS 10.3
+		Argb2101010LEPacked = 0x6C313072, // 'l10r'
 	}
 }

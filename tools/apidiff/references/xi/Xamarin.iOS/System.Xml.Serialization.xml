@@ -4,27 +4,12 @@
     <attributes>
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
         <properties>
-          <property name="Destination" value="System.Xml.Serialization.XmlMapping" />
-        </properties>
-      </attribute>
-      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
-        <properties>
-          <property name="Destination" value="System.Xml.Serialization.XmlTypeMapping" />
-        </properties>
-      </attribute>
-      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
-        <properties>
-          <property name="Destination" value="System.Xml.Serialization.XmlMappingAccess" />
-        </properties>
-      </attribute>
-      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
-        <properties>
-          <property name="Destination" value="System.Xml.Serialization.XmlSerializer" />
-        </properties>
-      </attribute>
-      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
-        <properties>
           <property name="Destination" value="System.ServiceModel.XmlSerializerFormatAttribute" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Xml.Serialization.XmlAnyElementAttributes" />
         </properties>
       </attribute>
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
@@ -49,12 +34,34 @@
       </attribute>
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
         <properties>
-          <property name="Destination" value="System.Xml.Serialization.XmlAnyElementAttributes" />
+          <property name="Destination" value="System.Xml.Serialization.XmlMapping" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Xml.Serialization.XmlMappingAccess" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Xml.Serialization.XmlSerializer" />
         </properties>
       </attribute>
       <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
         <properties>
           <property name="Destination" value="System.Xml.Serialization.XmlSerializerNamespaces" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Xml.Serialization.XmlTypeMapping" />
+        </properties>
+      </attribute>
+      <attribute name="System.Diagnostics.DebuggableAttribute">
+        <properties>
+          <property name="IsJITTrackingEnabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="IsJITOptimizerDisabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="DebuggingFlags" value="IgnoreSymbolStoreSequencePoints" />
         </properties>
       </attribute>
       <attribute name="System.Reflection.AssemblyCompanyAttribute">
@@ -105,6 +112,11 @@
       <attribute name="System.Reflection.AssemblyTitleAttribute">
         <properties>
           <property name="Title" value="System.Xml.Serialization.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
+        <properties>
+          <property name="CompilationRelaxations" value="8" />
         </properties>
       </attribute>
       <attribute name="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute">

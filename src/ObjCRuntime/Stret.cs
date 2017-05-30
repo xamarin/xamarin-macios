@@ -22,7 +22,12 @@
 
 using System;
 using System.Collections.Generic;
+#if IKVM
+using IKVM.Reflection;
+using Type = IKVM.Reflection.Type;
+#else
 using System.Reflection;
+#endif
 using System.Runtime.InteropServices;
 
 using XamCore.Foundation;
@@ -31,7 +36,7 @@ namespace XamCore.ObjCRuntime
 {
 	class Stret
 	{
-#if GENERATOR
+#if BGENERATOR
 		static bool isUnified = BindingTouch.Unified;
 #elif __UNIFIED__
 		const bool isUnified = true;
@@ -48,7 +53,7 @@ namespace XamCore.ObjCRuntime
 		static bool IsHomogeneousAggregateBaseType_Armv7k (Type t)
 		{
 			// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5500-L5514
-#if GENERATOR
+#if BGENERATOR
 			if (t == TypeManager.System_Float || t == TypeManager.System_Double || t == TypeManager.System_nfloat)
 				return true;
 #else
@@ -92,13 +97,13 @@ namespace XamCore.ObjCRuntime
 
 				if (t.Namespace != "System")
 					return false;
-#if GENERATOR
+#if BGENERATOR
 				return t.Assembly == TypeManager.PlatformAssembly;
 #else
 				return t.Assembly == typeof (NSObject).Assembly;
 #endif
 			default:
-#if GENERATOR
+#if BGENERATOR
 				return t.Assembly == TypeManager.CorlibAssembly;
 #else
 				return t.Assembly == typeof (object).Assembly;
@@ -109,7 +114,7 @@ namespace XamCore.ObjCRuntime
 		public static bool ArmNeedStret (MethodInfo mi)
 		{
 			bool has32bitArm;
-#if GENERATOR
+#if BGENERATOR
 			has32bitArm = BindingTouch.CurrentPlatform != PlatformName.TvOS && BindingTouch.CurrentPlatform != PlatformName.MacOSX;
 #elif MONOMAC || __TVOS__
 			has32bitArm = false;
@@ -128,7 +133,7 @@ namespace XamCore.ObjCRuntime
 			var size = GetValueTypeSize (t, fieldTypes, false);
 
 			bool isWatchOS;
-#if GENERATOR
+#if BGENERATOR
 			isWatchOS = BindingTouch.CurrentPlatform == PlatformName.WatchOS;
 #elif __WATCHOS__
 			isWatchOS = true;
@@ -149,7 +154,7 @@ namespace XamCore.ObjCRuntime
 			}
 
 			bool isiOS;
-#if GENERATOR
+#if BGENERATOR
 			isiOS = BindingTouch.CurrentPlatform == PlatformName.iOS;
 #elif __IOS__
 			isiOS = true;
@@ -220,8 +225,8 @@ namespace XamCore.ObjCRuntime
 			if (type.IsExplicitLayout) {
 				// Find the maximum of "field size + field offset" for each field.
 				foreach (var field in type.GetFields (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)) {
-#if GENERATOR
-					var fieldOffset = (FieldOffsetAttribute) AttributeManager.GetCustomAttribute (field, TypeManager.FieldOffsetAttribute);
+#if BGENERATOR
+					var fieldOffset = AttributeManager.GetCustomAttribute<FieldOffsetAttribute> (field);
 #else
 					var fieldOffset = (FieldOffsetAttribute) Attribute.GetCustomAttribute (field, typeof (FieldOffsetAttribute));
 #endif
@@ -292,8 +297,8 @@ namespace XamCore.ObjCRuntime
 
 			// composite struct
 			foreach (var field in type.GetFields (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)) {
-#if GENERATOR
-				var marshalAs = (MarshalAsAttribute) AttributeManager.GetCustomAttribute (field, TypeManager.MarshalAsAttribute);
+#if BGENERATOR
+				var marshalAs = AttributeManager.GetCustomAttribute<MarshalAsAttribute> (field);
 #else
 				var marshalAs = (MarshalAsAttribute) Attribute.GetCustomAttribute (field, typeof (MarshalAsAttribute));
 #endif

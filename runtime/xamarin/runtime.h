@@ -98,7 +98,18 @@ enum NSObjectFlags {
 	NSObjectFlagsHasManagedRef = 32,
 };
 
+struct AssemblyLocation {
+	const char *assembly_name; // base name (without extension) of the assembly
+	const char *location; // the directory where the assembly is
+};
+
+struct AssemblyLocations {
+	int length;
+	struct AssemblyLocation *locations;
+};
+
 void xamarin_initialize ();
+void xamarin_initialize_embedded (); /* Public API, must not change - this is used by the embeddinator */
 
 void			xamarin_assertion_message (const char *msg, ...) __attribute__((__noreturn__));
 const char *	xamarin_get_bundle_path (); /* Public API */
@@ -149,7 +160,7 @@ void			xamarin_create_managed_ref (id self, void * managed_object, bool retain);
 void            xamarin_release_managed_ref (id self, MonoObject *managed_obj);
 void			xamarin_notify_dealloc (id self, int gchandle);
 
-int				xamarin_main (int argc, char *argv[], bool is_extension);
+int				xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode);
 
 char *			xamarin_type_get_full_name (MonoType *type, guint32 *exception_gchandle); // return value must be freed with 'mono_free'
 char *			xamarin_class_get_full_name (MonoClass *klass, guint32 *exception_gchandle); // return value must be freed with 'mono_free'
@@ -174,9 +185,23 @@ id				xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_i
 
 bool			xamarin_is_managed_exception_marshaling_disabled ();
 
+const char *	xamarin_find_assembly_directory (const char *assembly_name);
+void			xamarin_set_assembly_directories (struct AssemblyLocations *directories);
+void			xamarin_get_assembly_name_without_extension (const char *aname, char *name, int namelen);
+bool			xamarin_locate_assembly_resource_for_name (MonoAssemblyName *assembly_name, const char *resource, char *path, int pathlen);
+bool			xamarin_locate_assembly_resource (const char *assembly_name, const char *culture, const char *resource, char *path, int pathlen);
+
 // this functions support NSLog/NSString-style format specifiers.
 void			xamarin_printf (const char *format, ...);
 void			xamarin_vprintf (const char *format, va_list args);
+void			xamarin_install_log_callbacks ();
+
+/*
+ * Look for an assembly in the app and open it.
+ *
+ * Stable API.
+ */
+MonoAssembly * xamarin_open_assembly (const char *name);
 
 #if defined(__arm__) || defined(__aarch64__)
 void mono_aot_register_module (void *aot_info);
@@ -217,6 +242,7 @@ bool						xamarin_is_parameter_out                    (MonoReflectionMethod *met
 MethodDescription			xamarin_get_method_and_object_for_selector	(Class cls, SEL sel, id self, MonoObject **mthis, guint32 *exception_gchandle);
 guint32 					xamarin_create_product_exception_for_error	(int code, const char *message, guint32 *exception_gchandle);
 
+#ifdef __cplusplus
 class XamarinObject {
 public:
 	id native_object;
@@ -224,7 +250,9 @@ public:
 
 	~XamarinObject ();
 };
+#endif
 
+#ifdef __OBJC__
 @interface XamarinAssociatedObject : NSObject {
 @public
 	id native_object;
@@ -236,6 +264,7 @@ public:
 @interface NSObject (NonXamarinObject)
 -(int) xamarinGetGCHandle;
 @end
+#endif
 
 // Coop GC helper API
 #if !TARGET_OS_WATCH

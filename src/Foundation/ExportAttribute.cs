@@ -30,7 +30,12 @@
 //
 using System;
 using System.Globalization;
+#if IKVM
+using IKVM.Reflection;
+using Type = IKVM.Reflection.Type;
+#else
 using System.Reflection;
+#endif
 using XamCore.ObjCRuntime;
 using XamCore.Registrar;
 
@@ -88,13 +93,13 @@ namespace XamCore.Foundation {
 
 	[AttributeUsage (AttributeTargets.Property)]
 	public sealed class OutletAttribute : ExportAttribute {
-		public OutletAttribute () {}
+		public OutletAttribute () : base (null) {}
 		public OutletAttribute (string name) : base (name) {}
 	}
 
 	[AttributeUsage (AttributeTargets.Method)]
 	public sealed class ActionAttribute : ExportAttribute {
-		public ActionAttribute () {}
+		public ActionAttribute () : base (null) {}
 		public ActionAttribute (string selector) : base (selector) {}
 	}
 }

@@ -105,8 +105,7 @@ namespace Test {
 	[Protocol] interface C12 : IMTLBuffer {}
 	[Protocol] interface C13 : ISKViewDelegate {}
 	[Protocol] interface C14 : IUIPreviewInteractionDelegate {}
-	// sof20696157.tmpdir/Test/C15.g.cs(58,10): error CS0246: The type or namespace name `SKWarpGeometry' could not be found. Are you missing `SpriteKit' using directive?
-	// [Protocol] interface C15 : ISKWarpable {}
+	[Protocol] interface C15 : ISKWarpable {}
 	[Protocol] interface C16 : IINMessagesDomainHandling {}
 	[Protocol] interface C17 : IINPauseWorkoutIntentHandling {}
 	[Protocol] interface C18 : IMTLCommandBuffer {}
@@ -132,8 +131,7 @@ namespace Test {
 	[Protocol] interface C38 : ISKPaymentTransactionObserver {}
 	[Protocol] interface C39 : IINPhotosDomainHandling {}
 	[Protocol] interface C40 : IMTLDepthStencilState {}
-	// sof20696157.tmpdir/Test/C41.g.cs(66,10): error CS0246: The type or namespace name `IGKGameModelPlayer' could not be found. Are you missing `GameplayKit' using directive?
-	// [Protocol] interface C41 : IGKGameModel {}
+	[Protocol] interface C41 : IGKGameModel {}
 	[Protocol] interface C42 : IMTLDevice {}
 	[Protocol] interface C43 : IGKGameModelPlayer {}
 	[Protocol] interface C44 : ISKProductsRequestDelegate {}
@@ -181,9 +179,8 @@ namespace Test {
 	[Protocol] interface C86 : IMTLSamplerState {}
 	[Protocol] interface C87 : IINSearchCallHistoryIntentHandling {}
 	[Protocol] interface C88 : IAVPictureInPictureControllerDelegate {}
-	// [Protocol] interface C89 : INSTextLayoutOrientationProvider {}
-	// sof20696157.tmpdir/Test/C90.g.cs(55,10): error CS0246: The type or namespace name `IGKGameModelUpdate' could not be found. Are you missing `GameplayKit' using directive?
-	// [Protocol] interface C90 : IGKStrategist {}
+	[Protocol] interface C89 : INSTextLayoutOrientationProvider {}
+	[Protocol] interface C90 : IGKStrategist {}
 	[Protocol] interface C91 : INSDiscardableContent {}
 	[Protocol] interface C92 : IAVPlayerViewControllerDelegate {}
 	[Protocol] interface C93 : INSTextStorageDelegate {}
@@ -206,8 +203,7 @@ namespace Test {
 	[Protocol] interface C110 : IABNewPersonViewControllerDelegate {}
 	[Protocol] interface C111 : INSFileManagerDelegate {}
 	[Protocol] interface C112 : IINSetClimateSettingsInCarIntentHandling {}
-	// sof20696157.tmpdir/Test/C113.g.cs(55,10): error CS0246: The type or namespace name `CIFilter' could not be found. Are you missing `CoreImage' using directive?
-	// [Protocol] interface C113 : ICIFilterConstructor {}
+	[Protocol] interface C113 : ICIFilterConstructor {}
 	[Protocol] interface C114 : IABPeoplePickerNavigationControllerDelegate {}
 	[Protocol] interface C115 : IUIActionSheetDelegate {}
 	[Protocol] interface C116 : INSFilePresenter {}
@@ -234,12 +230,9 @@ namespace Test {
 	[Protocol] interface C137 : IAUAudioUnitFactory {}
 	[Protocol] interface C138 : INSKeyedUnarchiverDelegate {}
 	[Protocol] interface C139 : IINStartAudioCallIntentHandling {}
-	// sof20696157.tmpdir/Test/C140.g.cs(92,10): error CS0246: The type or namespace name `CIFormat' could not be found. Are you missing `CoreImage' using directive?
-	// [Protocol] interface C140 : ICIImageProcessorInput {}
-	// sof20696157.tmpdir/Test/C141.g.cs(92,10): error CS0246: The type or namespace name `CIFormat' could not be found. Are you missing `CoreImage' using directive?
-	// [Protocol] interface C141 : ICIImageProcessorOutput {}
-	// sof20696157.tmpdir/Test/C142.g.cs(95,10): error CS0246: The type or namespace name `PHLivePhotoFrameType' could not be found. Are you missing `Photos' using directive?
-	// [Protocol] interface C142 : IPHLivePhotoFrame {}
+	[Protocol] interface C140 : ICIImageProcessorInput {}
+	[Protocol] interface C141 : ICIImageProcessorOutput {}
+	[Protocol] interface C142 : IPHLivePhotoFrame {}
 	[Protocol] interface C143 : ICIImageProvider {}
 	[Protocol] interface C144 : IUIApplicationDelegate {}
 	[Protocol] interface C145 : IINStartPhotoPlaybackIntentHandling {}
@@ -365,7 +358,7 @@ namespace Test {
 	[Protocol] interface C265 : INSFetchedResultsControllerDelegate {}
 	[Protocol] interface C266 : IUIViewControllerInteractiveTransitioning {}
 	[Protocol] interface C267 : INSFetchedResultsSectionInfo {}
-	// [Protocol] interface C268 : IUIViewControllerPreviewing {}
+	[Protocol] interface C268 : IUIViewControllerPreviewing {}
 	[Protocol] interface C269 : IHMHomeManagerDelegate {}
 	[Protocol] interface C270 : IUIViewControllerPreviewingDelegate {}
 	[Protocol] interface C271 : IUIViewControllerRestoration {}
@@ -424,8 +417,7 @@ namespace Test {
 	[Protocol] interface C324 : ISCNShadable {}
 	[Protocol] interface C325 : IUIWebViewDelegate {}
 	[Protocol] interface C326 : IGKMatchDelegate {}
-	// sof20696157.tmpdir/Test/C327.g.cs(55,10): error CS0246: The type or namespace name `MPContentItem' could not be found. Are you missing `MediaPlayer' using directive?
-	// [Protocol] interface C327 : IMPPlayableContentDataSource {}
+	[Protocol] interface C327 : IMPPlayableContentDataSource {}
 	[Protocol] interface C328 : ISCNTechniqueSupport {}
 	[Protocol] interface C329 : IGKMatchmakerViewControllerDelegate {}
 	[Protocol] interface C330 : ISKPhysicsContactDelegate {}
@@ -443,8 +435,7 @@ namespace Test {
 	[Protocol] interface C342 : ISKSceneDelegate {}
 	[Protocol] interface C343 : IUILayoutSupport {}
 	[Protocol] interface C344 : IUIPopoverBackgroundViewMethods {}
-	// sof20696157.tmpdir/Test/C345.g.cs(65,10): error CS0246: The type or namespace name `MSSticker' could not be found. Are you missing `Messages' using directive?
-	// [Protocol] interface C345 : IMSStickerBrowserViewDataSource {}
+	[Protocol] interface C345 : IMSStickerBrowserViewDataSource {}
 	[Protocol] interface C346 : IINBookRestaurantReservationIntentHandling {}
 	[Protocol] interface C347 : IUIPickerViewAccessibilityDelegate {}
 	[Protocol] interface C348 : IWCSessionDelegate {}
@@ -476,8 +467,7 @@ namespace Test {
 	[Protocol] [BaseType (typeof (NSObject))] interface M12 : IMTLBuffer {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M13 : ISKViewDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M14 : IUIPreviewInteractionDelegate {}
-	// sof20696157.tmpdir/Test/M15.g.cs(58,10): error CS0246: The type or namespace name `SKWarpGeometry' could not be found. Are you missing `SpriteKit' using directive?
-	// [Protocol] [BaseType (typeof (NSObject))] interface M15 : ISKWarpable {}
+	[Protocol] [BaseType (typeof (NSObject))] interface M15 : ISKWarpable {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M16 : IINMessagesDomainHandling {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M17 : IINPauseWorkoutIntentHandling {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M18 : IMTLCommandBuffer {}
@@ -503,8 +493,7 @@ namespace Test {
 	[Protocol] [BaseType (typeof (NSObject))] interface M38 : ISKPaymentTransactionObserver {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M39 : IINPhotosDomainHandling {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M40 : IMTLDepthStencilState {}
-	// sof20696157.tmpdir/Test/M41.g.cs(66,10): error CS0246: The type or namespace name `IGKGameModelPlayer' could not be found. Are you missing `GameplayKit' using directive?
-	// [Protocol] [BaseType (typeof (NSObject))] interface M41 : IGKGameModel {}
+	[Protocol] [BaseType (typeof (NSObject))] interface M41 : IGKGameModel {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M42 : IMTLDevice {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M43 : IGKGameModelPlayer {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M44 : ISKProductsRequestDelegate {}
@@ -552,9 +541,8 @@ namespace Test {
 	[Protocol] [BaseType (typeof (NSObject))] interface M86 : IMTLSamplerState {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M87 : IINSearchCallHistoryIntentHandling {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M88 : IAVPictureInPictureControllerDelegate {}
-	// [Protocol] [BaseType (typeof (NSObject))] interface M89 : INSTextLayoutOrientationProvider {}
-	// sof20696157.tmpdir/Test/M90.g.cs(55,10): error CS0246: The type or namespace name `IGKGameModelUpdate' could not be found. Are you missing `GameplayKit' using directive?
-	// [Protocol] [BaseType (typeof (NSObject))] interface M90 : IGKStrategist {}
+	[Protocol] [BaseType (typeof (NSObject))] interface M89 : INSTextLayoutOrientationProvider {}
+	[Protocol] [BaseType (typeof (NSObject))] interface M90 : IGKStrategist {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M91 : INSDiscardableContent {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M92 : IAVPlayerViewControllerDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M93 : INSTextStorageDelegate {}
@@ -577,8 +565,7 @@ namespace Test {
 	[Protocol] [BaseType (typeof (NSObject))] interface M110 : IABNewPersonViewControllerDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M111 : INSFileManagerDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M112 : IINSetClimateSettingsInCarIntentHandling {}
-	// sof20696157.tmpdir/Test/M113.g.cs(55,10): error CS0246: The type or namespace name `CIFilter' could not be found. Are you missing `CoreImage' using directive?
-	// [Protocol] [BaseType (typeof (NSObject))] interface M113 : ICIFilterConstructor {}
+	[Protocol] [BaseType (typeof (NSObject))] interface M113 : ICIFilterConstructor {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M114 : IABPeoplePickerNavigationControllerDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M115 : IUIActionSheetDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M116 : INSFilePresenter {}
@@ -605,12 +592,9 @@ namespace Test {
 	[Protocol] [BaseType (typeof (NSObject))] interface M137 : IAUAudioUnitFactory {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M138 : INSKeyedUnarchiverDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M139 : IINStartAudioCallIntentHandling {}
-	// sof20696157.tmpdir/Test/M140.g.cs(92,10): error CS0246: The type or namespace name `CIFormat' could not be found. Are you missing `CoreImage' using directive?
-	// [Protocol] [BaseType (typeof (NSObject))] interface M140 : ICIImageProcessorInput {}
-	// sof20696157.tmpdir/Test/M141.g.cs(92,10): error CS0246: The type or namespace name `CIFormat' could not be found. Are you missing `CoreImage' using directive?
-	// [Protocol] [BaseType (typeof (NSObject))] interface M141 : ICIImageProcessorOutput {}
-	// sof20696157.tmpdir/Test/M142.g.cs(95,10): error CS0246: The type or namespace name `PHLivePhotoFrameType' could not be found. Are you missing `Photos' using directive?
-	// [Protocol] [BaseType (typeof (NSObject))] interface M142 : IPHLivePhotoFrame {}
+	[Protocol] [BaseType (typeof (NSObject))] interface M140 : ICIImageProcessorInput {}
+	[Protocol] [BaseType (typeof (NSObject))] interface M141 : ICIImageProcessorOutput {}
+	[Protocol] [BaseType (typeof (NSObject))] interface M142 : IPHLivePhotoFrame {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M143 : ICIImageProvider {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M144 : IUIApplicationDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M145 : IINStartPhotoPlaybackIntentHandling {}
@@ -736,7 +720,7 @@ namespace Test {
 	[Protocol] [BaseType (typeof (NSObject))] interface M265 : INSFetchedResultsControllerDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M266 : IUIViewControllerInteractiveTransitioning {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M267 : INSFetchedResultsSectionInfo {}
-	// [Protocol] [BaseType (typeof (NSObject))] interface M268 : IUIViewControllerPreviewing {}
+	[Protocol] [BaseType (typeof (NSObject))] interface M268 : IUIViewControllerPreviewing {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M269 : IHMHomeManagerDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M270 : IUIViewControllerPreviewingDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M271 : IUIViewControllerRestoration {}
@@ -795,8 +779,7 @@ namespace Test {
 	[Protocol] [BaseType (typeof (NSObject))] interface M324 : ISCNShadable {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M325 : IUIWebViewDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M326 : IGKMatchDelegate {}
-	// sof20696157.tmpdir/Test/M327.g.cs(55,10): error CS0246: The type or namespace name `MPContentItem' could not be found. Are you missing `MediaPlayer' using directive?
-	// [Protocol] [BaseType (typeof (NSObject))] interface M327 : IMPPlayableContentDataSource {}
+	[Protocol] [BaseType (typeof (NSObject))] interface M327 : IMPPlayableContentDataSource {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M328 : ISCNTechniqueSupport {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M329 : IGKMatchmakerViewControllerDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M330 : ISKPhysicsContactDelegate {}
@@ -814,8 +797,7 @@ namespace Test {
 	[Protocol] [BaseType (typeof (NSObject))] interface M342 : ISKSceneDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M343 : IUILayoutSupport {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M344 : IUIPopoverBackgroundViewMethods {}
-	// sof20696157.tmpdir/Test/M345.g.cs(65,10): error CS0246: The type or namespace name `MSSticker' could not be found. Are you missing `Messages' using directive?
-	// [Protocol] [BaseType (typeof (NSObject))] interface M345 : IMSStickerBrowserViewDataSource {}
+	[Protocol] [BaseType (typeof (NSObject))] interface M345 : IMSStickerBrowserViewDataSource {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M346 : IINBookRestaurantReservationIntentHandling {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M347 : IUIPickerViewAccessibilityDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M348 : IWCSessionDelegate {}
