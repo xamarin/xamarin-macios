@@ -86,11 +86,6 @@ namespace Xamarin.MMP.Tests
 
 		public static string RunAndAssert (string exe, string args, string stepName, bool shouldFail = false, Func<string> getAdditionalFailInfo = null)
 		{
-			return RunAndAssert (exe, new StringBuilder (args), stepName, shouldFail, getAdditionalFailInfo);
-		}
-
-		public static string RunAndAssert (string exe, StringBuilder args, string stepName, bool shouldFail = false, Func<string> getAdditionalFailInfo = null)
-		{
 			StringBuilder output = new StringBuilder ();
 			Environment.SetEnvironmentVariable ("MONO_PATH", null);
 			int compileResult = Xamarin.Bundler.Driver.RunCommand (exe, args != null ? args.ToString() : string.Empty, null, output, suppressPrintOnErrors: shouldFail);
@@ -101,6 +96,11 @@ namespace Xamarin.MMP.Tests
 				Assert.AreNotEqual (0, compileResult, stepName + " did not fail as expected:\n\n'" + output + "' " + exe + " " + args + getInfo ());
 
 			return output.ToString ();
+		}
+
+		public static string RunAndAssert (string exe, StringBuilder args, string stepName, bool shouldFail = false, Func<string> getAdditionalFailInfo = null)
+		{
+			return RunAndAssert (exe, args.ToString (), stepName, shouldFail, getAdditionalFailInfo);
 		}
 
 		// In most cases we generate projects in tmp and this is not needed. But nuget and test projects can make that hard
@@ -156,14 +156,13 @@ namespace Xamarin.MMP.Tests
 		{
 			// Assert that the program actually runs and returns our guid
 			Assert.IsTrue (File.Exists (path), string.Format ("{0} did not generate an exe?", path));
-			string output = RunAndAssert (path, (StringBuilder)null, "Run");
+			string output = RunAndAssert (path, (string)null, "Run");
 
 			string guidPath = Path.Combine (tmpDir, guid.ToString ());
 			Assert.IsTrue(File.Exists (guidPath), "Generated program did not create expected guid file: " + output);
 
 			// Let's delete the guid file so re-runs inside same tests are accurate
 			File.Delete (guidPath);
-
 			return output;
 		}
 
