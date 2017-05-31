@@ -409,8 +409,17 @@ namespace Xamarin.Bundler {
 			if (!targetFramework.HasValue)
 				targetFramework = TargetFramework.Default;
 
-			if (TargetFramework.Identifier == TargetFramework.Xamarin_Mac_2_0.Identifier) {
+			// At least once instance of a TargetFramework of Xamarin.Mac,v2.0,(null) was found already. Assume any v2.0 implies a desire for Modern.
+			if (TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile || TargetFramework.Version == TargetFramework.Xamarin_Mac_2_0_Mobile.Version) {
 				IsUnifiedMobile = true;
+			} else if (TargetFramework.Identifier == TargetFramework.Xamarin_Mac_4_5_Full.Identifier 
+			         && TargetFramework.Profile == TargetFramework.Xamarin_Mac_4_5_Full.Profile) {
+				IsUnifiedFullXamMacFramework = true;
+				TargetFramework = TargetFramework.Net_4_5;
+			} else if (TargetFramework.Identifier == TargetFramework.Xamarin_Mac_4_5_System.Identifier
+			         && TargetFramework.Profile == TargetFramework.Xamarin_Mac_4_5_System.Profile) {
+				IsUnifiedFullSystemFramework = true;
+				TargetFramework = TargetFramework.Net_4_5;
 			} else if (!IsUnifiedFullXamMacFramework && !IsUnifiedFullSystemFramework) {
 				// This is a total hack. Instead of passing in an argument, we walk the refernces looking for
 				// the "right" Xamarin.Mac and assume you are doing something
@@ -472,6 +481,7 @@ namespace Xamarin.Bundler {
 			if (IsUnified == IsClassic || (IsUnified && IsUnifiedCount != 1))
 				throw new Exception ("IsClassic/IsUnified/IsUnifiedMobile/IsUnifiedFullSystemFramework/IsUnifiedFullXamMacFramework logic regression");
 
+			ValidateXamarinMacReference ();
 			if (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework) {
 				switch (App.LinkMode) {
 				case LinkMode.None:
@@ -521,6 +531,23 @@ namespace Xamarin.Bundler {
 			}
 
 			Log ("bundling complete");
+		}
+
+		static void ValidateXamarinMacReference ()
+		{
+			// Many Xamarin.Mac references are technically valid, so whitelisting risks breaking working project
+			// However, passing in Mobile / Xamarin.Mac folders and resolving full/4.5 or vice versa is 
+			// far from expected. So catch the common cases if we can
+			string reference = references.FirstOrDefault (x => x.EndsWith ("Xamarin.Mac.dll"));
+			if (reference != null) {
+				bool valid = true;
+				if (IsUnifiedMobile)
+					valid = !reference.Contains ("full/") && !reference.Contains ("4.5/");
+				else if (IsUnifiedFullXamMacFramework || IsUnifiedFullSystemFramework)
+					valid = !reference.Contains ("mobile/") && !reference.Contains ("Xamarin.Mac/");
+				if (!valid)
+					throw ErrorHelper.CreateError (1407, "Mismatch between Xamarin.Mac reference '{0}' and target framework selected '{1}'.", reference, TargetFramework);
+			}
 		}
 
 		static void FixReferences (Func<string, bool> match, Func<string, string> fix)
@@ -1363,7 +1390,7 @@ namespace Xamarin.Bundler {
 			return ret;
 		}
 
-		// check that we have a reference to XamMac.dll and not to MonoMac.dll. Check various DRM license checks
+		// check that we have a reference to XamMac.dll and not to MonoMac.dll.
 		static void CheckReferences ()
 		{
 			List<Exception> exceptions = new List<Exception> ();
