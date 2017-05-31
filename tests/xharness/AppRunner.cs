@@ -777,7 +777,7 @@ namespace xharness
 						if (crash_reason != null)
 							break;
 					} catch (Exception e) {
-						Console.WriteLine ("Failed to process crash report {1}: {0}", e.Message, crash.Description);
+						Harness.Log (2, "Failed to process crash report '{1}': {0}", e.Message, crash.Description);
 					}
 				}
 				if (!string.IsNullOrEmpty (crash_reason)) {
