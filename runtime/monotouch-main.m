@@ -479,7 +479,7 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 		MONO_EXIT_GC_SAFE;
 		break;
 	case XamarinLaunchModeApp:
-		mono_jit_exec (mono_domain_get (), assembly, managed_argc, managed_argv);
+		rv = mono_jit_exec (mono_domain_get (), assembly, managed_argc, managed_argv);
 		break;
 	case XamarinLaunchModeEmbedded:
 		// do nothing
