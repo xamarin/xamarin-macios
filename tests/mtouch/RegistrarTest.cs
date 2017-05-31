@@ -633,87 +633,19 @@ public struct FooF { public NSObject Obj; }
 		[Test]
 		public void MT4164 ()
 		{
-			var code = @"
-	class FutureType : NSObject
-	{
-		[Export (""auto"")] string Auto { get; set; }
-		[Export (""break"")] string Break { get; set; }
-		[Export (""case"")] string Case { get; set; }
-		[Export (""char"")] string Char { get; set; }
-		[Export (""const"")] string Const { get; set; }
-		[Export (""continue"")] string Continue { get; set; }
-		[Export (""default"")] string Default { get; set; }
-		[Export (""do"")] string Do { get; set; }
-		[Export (""double"")] string Double { get; set; }
-		[Export (""else"")] string Else { get; set; }
-		[Export (""enum"")] string Enum { get; set; }
-		[Export (""export"")] string Export { get; set; }
-		[Export (""extern"")] string Extern { get; set; }
-		[Export (""float"")] string Float { get; set; }
-		[Export (""for"")] string For { get; set; }
-		[Export (""goto"")] string Goto { get; set; }
-		[Export (""if"")] string If { get; set; }
-		[Export (""inline"")] string Inline { get; set; }
-		[Export (""int"")] string Int { get; set; }
-		[Export (""long"")] string Long { get; set; }
-		[Export (""register"")] string Register { get; set; }
-		[Export (""return"")] string Return { get; set; }
-		[Export (""short"")] string Short { get; set; }
-		[Export (""signed"")] string Signed { get; set; }
-		[Export (""sizeof"")] string Sizeof { get; set; }
-		[Export (""static"")] string Static { get; set; }
-		[Export (""struct"")] string Struct { get; set; }
-		[Export (""switch"")] string Switch { get; set; }
-		[Export (""template"")] string Template { get; set; }
-		[Export (""typedef"")] string Typedef { get; set; }
-		[Export (""union"")] string Union { get; set; }
-		[Export (""unsigned"")] string Unsigned { get; set; }
-		[Export (""void"")] string Void { get; set; }
-		[Export (""volatile"")] string Volatile { get; set; }
-		[Export (""while"")] string While { get; set; }
-		[Export (""_Bool"")] string Bool { get; set; }
-		[Export (""_Complex"")] string Complex { get; set; }
-	}
-";
-
-			Verify (R.Static, Profile.iOS, code, false, Target.Sim,
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Auto' because its selector 'auto' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Break' because its selector 'break' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Case' because its selector 'case' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Char' because its selector 'char' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Const' because its selector 'const' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Continue' because its selector 'continue' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Default' because its selector 'default' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Do' because its selector 'do' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Double' because its selector 'double' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Else' because its selector 'else' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Enum' because its selector 'enum' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Export' because its selector 'export' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Extern' because its selector 'extern' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Float' because its selector 'float' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'For' because its selector 'for' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Goto' because its selector 'goto' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'If' because its selector 'if' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Inline' because its selector 'inline' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Int' because its selector 'int' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Long' because its selector 'long' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Register' because its selector 'register' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Return' because its selector 'return' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Short' because its selector 'short' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Signed' because its selector 'signed' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Sizeof' because its selector 'sizeof' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Static' because its selector 'static' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Struct' because its selector 'struct' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Switch' because its selector 'switch' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Template' because its selector 'template' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Typedef' because its selector 'typedef' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Union' because its selector 'union' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Unsigned' because its selector 'unsigned' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Void' because its selector 'void' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Volatile' because its selector 'volatile' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'While' because its selector 'while' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Bool' because its selector '_Bool' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Complex' because its selector '_Complex' is an Objective-C keyword. Please use a different name.");
+			using (var mtouch = new MTouchTool ()) {
+				var sb = new StringBuilder ();
+				sb.AppendLine ("class FutureType : Foundation.NSObject {");
+				foreach (var kw in objective_c_keywords)
+					sb.AppendLine ($"[Foundation.Export (\"{kw}\")] string X{kw} {{ get; set; }}");
+				sb.AppendLine ("}");
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: sb.ToString (), extraArg: "-debug");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				foreach (var kw in objective_c_keywords)
+					mtouch.AssertError (4164, $"Cannot export the property 'X{kw}' because its selector '{kw}' is an Objective-C keyword. Please use a different name.", "testApp.cs");
+			}
 		}
 
 		[Test]
