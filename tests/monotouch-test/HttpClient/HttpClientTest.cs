@@ -45,6 +45,12 @@ namespace MonoTouchFixtures.HttpClientTests
 				this.handler = new NSUrlSessionHandler ();
 			}
 
+			public HandlerWrapper (HttpClientHandler handler)
+			{
+				this.handlerType = handler.GetType ().Name;
+				this.handler = handler;
+			}
+
 			public bool AllowAutoRedirect
 			{
 				get
@@ -53,6 +59,8 @@ namespace MonoTouchFixtures.HttpClientTests
 						return ((CFNetworkHandler)handler).AllowAutoRedirect;
 					if (handlerType == "NSUrlSessionHandler")
 						return ((NSUrlSessionHandler)handler).AllowAutoRedirect;
+					if (handlerType == "HttpClientHandler")
+						return ((HttpClientHandler)handler).AllowAutoRedirect;
 					throw new InvalidOperationException ();
 				}
 				set
@@ -61,6 +69,8 @@ namespace MonoTouchFixtures.HttpClientTests
 						((CFNetworkHandler)handler).AllowAutoRedirect = value;
 					if (handlerType == "NSUrlSessionHandler")
 						((NSUrlSessionHandler)handler).AllowAutoRedirect = value;
+					if (handlerType == "HttpClientHandler")
+						((HttpClientHandler)handler).AllowAutoRedirect = value;
 					throw new InvalidOperationException ();
 				}
 			}
@@ -74,12 +84,15 @@ namespace MonoTouchFixtures.HttpClientTests
 						return new HandlerWrapper (new CFNetworkHandler ());
 					case "NSUrlSessionHandler":
 						return new HandlerWrapper (new NSUrlSessionHandler ());
+					case "HttpClientHandler":
+						return new HandlerWrapper (new HttpClientHandler ());
 					default:
 						throw new InvalidOperationException ();
 				}
 			}
 		}
 
+		[TestCase (typeof (HttpClientHandler))]
 		[TestCase (typeof (CFNetworkHandler))]
 		[TestCase (typeof (NSUrlSessionHandler))]
 		public void EnsureModifiabilityPostSend (Type handlerType)
