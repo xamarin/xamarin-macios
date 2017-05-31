@@ -1688,7 +1688,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.iOS:
 				return Frameworks.GetiOSFrameworks (app);
 			case ApplePlatform.WatchOS:
-				return Frameworks.WatchFrameworks;
+				return Frameworks.GetwatchOSFrameworks (app);
 			case ApplePlatform.TVOS:
 				return Frameworks.TVOSFrameworks;
 			default:
