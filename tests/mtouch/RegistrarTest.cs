@@ -610,6 +610,26 @@ public struct FooF { public NSObject Obj; }
 			);
 		}
 
+		static string [] objective_c_keywords = new string [] {
+			"auto",
+			"break",
+			"case", "char", "const", "continue",
+			"default", "do", "double",
+			"else", "enum", "export", "extern",
+			"float", "for",
+			"goto",
+			"if", "inline", "int",
+			"long",
+			"register", "return",
+			"short", "signed", "sizeof", "static", "struct", "switch",
+			"template", "typedef", "union",
+			"unsigned",
+			"void", "volatile",
+			"while",
+			"_Bool",
+			"_Complex",
+		};
+
 		[Test]
 		public void MT4164 ()
 		{
@@ -709,6 +729,24 @@ class X : ReplayKit.RPBroadcastControllerDelegate
 }
 ";
 			Verify (R.Static, code, true);
+		}
+
+		[Test]
+		public void MT4168 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var sb = new StringBuilder ();
+				foreach (var kw in objective_c_keywords) {
+					sb.AppendLine ($"[Foundation.Register (\"{kw}\")]");
+					sb.AppendLine ($"class X{kw} : Foundation.NSObject {{}}");
+				}
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: sb.ToString ());
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				foreach (var kw in objective_c_keywords)
+					mtouch.AssertError (4168, $"Cannot register the type 'X{kw}' because its Objective-C name '{kw}' is an Objective-C keyword. Please use a different name.");
+			}
 		}
 
 		[Test]

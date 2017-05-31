@@ -1486,6 +1486,12 @@ This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzil
 
 This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
+<h3><a name="MT4168"/>MT4168: Cannot register the type '{managed_name}' because its Objective-C name '{exported_name}' is an Objective-C keyword. Please use a different name.</h3>
+
+The Objective-C name for the type in question is not a valid Objective-C identifier.
+
+Please use a valid Objective-C identifier.
+
 # MT5xxx: GCC and toolchain error messages
 
 ### MT51xx: Compilation
