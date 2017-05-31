@@ -9,16 +9,13 @@ ifdef INCLUDE_MAC
 install-local:: install-source-mac
 endif
 
-MDB_REBASE_EXE = $(abspath $(MONO_PATH))mcs/class/lib/xammac/mdbrebase.exe
-MDB_REBASE = MONO_PATH=$(dir $(MDB_REBASE_EXE)) $(TOP)/builds/install/tools64/bin/mono --debug $(MDB_REBASE_EXE)
-
 CECIL_PATH=$(MONO_PATH)/external/cecil
 CECIL_CONFIG=net_4_0_Release
 MONO_CECIL_DLL=$(CECIL_PATH)/bin/$(CECIL_CONFIG)/Mono.Cecil.dll
 MONO_CECIL_FILES=$(wildcard $(CECIL_PATH)/*.cs) $(wildcard $(CECIL_PATH)/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*/*/*.cs)
 MONO_CECIL_PDB_FILES=$(wildcard $(CECIL_PATH)/symbols/pdb/*.cs) $(wildcard $(CECIL_PATH)/symbols/pdb/*/*.cs) $(wildcard $(CECIL_PATH)/symbols/pdb/*/*/*.cs) $(wildcard $(CECIL_PATH)/symbols/pdb/*/*/*/*.cs) $(wildcard $(CECIL_PATH)/symbols/pdb/*/*/*/*/*.cs)
 
-Mono.Cecil.Pdb.dll: $(MONO_CECIL_PDB_DLL)
+Mono.Cecil.Pdb.dll: $(MONO_CECIL_PDB_FILES)
 	$(Q_XBUILD) cd $(CECIL_PATH)/symbols/pdb/ && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) Mono.Cecil.Pdb.csproj $(XBUILD_VERBOSITY)
 	$(Q) cp $(CECIL_PATH)/symbols/pdb/obj/$(CECIL_CONFIG)/*.dll $(dir $@)
 
