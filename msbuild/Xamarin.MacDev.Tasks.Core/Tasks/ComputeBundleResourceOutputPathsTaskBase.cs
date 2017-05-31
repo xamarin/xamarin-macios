@@ -21,6 +21,8 @@ namespace Xamarin.MacDev.Tasks
 
 		public ITaskItem[] BundleResources { get; set; }
 
+		public bool EnableOnDemandResources { get; set; }
+
 		[Required]
 		public string IntermediateOutputPath { get; set; }
 
@@ -36,6 +38,7 @@ namespace Xamarin.MacDev.Tasks
 			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
 			Log.LogTaskProperty ("BundleIdentifier", BundleIdentifier);
 			Log.LogTaskProperty ("BundleResources", BundleResources);
+			Log.LogTaskProperty ("EnableOnDemandResources", EnableOnDemandResources);
 			Log.LogTaskProperty ("IntermediateOutputPath", IntermediateOutputPath);
 			Log.LogTaskProperty ("OutputPath", OutputPath);
 
@@ -47,10 +50,10 @@ namespace Xamarin.MacDev.Tasks
 				foreach (var item in BundleResources) {
 					var logicalName = item.GetMetadata ("LogicalName");
 					var outputPath = item.GetMetadata ("OutputPath");
-					var tags = AssetPackUtils.GetResourceTags (item);
+					IList<string> tags;
 					string hash;
 
-					if (tags != null) {
+					if (EnableOnDemandResources && (tags = AssetPackUtils.GetResourceTags (item)) != null) {
 						var assetpack = AssetPackUtils.GetAssetPackDirectory (OutputPath, BundleIdentifier, tags, out hash);
 
 						if (packs.Add (hash)) {

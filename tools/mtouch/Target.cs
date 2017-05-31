@@ -380,6 +380,25 @@ namespace Xamarin.Bundler
 		{
 			var exceptions = new List<Exception> ();
 			var assemblies = new HashSet<string> ();
+			var cache_file = Path.Combine (this.ArchDirectory, "assembly-references.txt");
+
+			if (File.Exists (cache_file)) {
+				assemblies.UnionWith (File.ReadAllLines (cache_file));
+				// Check if any of the referenced assemblies changed after we cached the complete set of references
+				if (Application.IsUptodate (assemblies, new string [] { cache_file })) {
+					// Load all the assemblies in the cached list of assemblies
+					foreach (var assembly in assemblies) {
+						var ad = ManifestResolver.Load (assembly);
+						var asm = new Assembly (this, ad);
+						asm.ComputeSatellites ();
+						this.Assemblies.Add (asm);
+					}
+					return;
+				}
+
+				// We must manually find all the references.
+				assemblies.Clear ();
+			}
 
 			try {
 				foreach (var root in App.RootAssemblies) {
@@ -397,6 +416,10 @@ namespace Xamarin.Bundler
 
 			if (exceptions.Count > 0)
 				throw new AggregateException (exceptions);
+
+			// Cache all the assemblies we found.
+			Directory.CreateDirectory (Path.GetDirectoryName (cache_file));
+			File.WriteAllLines (cache_file, assemblies);
 		}
 
 		void ComputeListOfAssemblies (HashSet<string> assemblies, AssemblyDefinition assembly, List<Exception> exceptions)
@@ -408,6 +431,7 @@ namespace Xamarin.Bundler
 			if (assemblies.Contains (fqname))
 				return;
 
+			PrintAssemblyReferences (assembly);
 			assemblies.Add (fqname);
 
 			var asm = new Assembly (this, assembly);
@@ -430,6 +454,9 @@ namespace Xamarin.Bundler
 				var reference_assembly = ManifestResolver.Resolve (reference);
 				ComputeListOfAssemblies (assemblies, reference_assembly, exceptions);
 			}
+
+			if (Profile.IsSdkAssembly (assembly) || Profile.IsProductAssembly (assembly))
+				return; // We know there are no new assembly references from attributes in assemblies we ship
 
 			// Custom Attribute metadata can include references to other assemblies, e.g. [X (typeof (Y)], 
 			// but it is not reflected in AssemblyReferences :-( ref: #37611
@@ -775,6 +802,9 @@ namespace Xamarin.Bundler
 						var pdb = Path.ChangeExtension (a.FullPath, "pdb");
 						if (File.Exists (pdb))
 							Driver.Touch (pdb);
+						var config = a.FullPath + ".config";
+						if (File.Exists (config))
+							Driver.Touch (config);
 					}
 
 					// Now copy to the build directory

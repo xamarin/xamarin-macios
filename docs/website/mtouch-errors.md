@@ -528,7 +528,7 @@ Native code sharing requires that all the projects build for the exact same API.
 
 For instance: this condition occurs when an extension builds for ARMv7+llvm+thumb2, but the container app only builds for ARMv7+llvm.
 
-* because the container app is referencing the assembly '*' from '*', while the extension references it from '*'.
+* because the container app is referencing the assembly '*' from '*', while the extension references a different version from '*'.
 
 Native code sharing requires that all the projects that share code use the same versions for all assemblies.
 
@@ -977,6 +977,8 @@ Things to try to solve this:
 * Reboot the Mac.
 * Synchronize the device with iTunes (this will remove any crash reports from the device).
 
+<!--- 1407 used by mmp -->
+
 ### MT16xx: MachO
 
 <!--
@@ -1154,7 +1156,21 @@ Something unexpected occured when trying to reduce the metadata from the applica
 
 Something unexpected occured when trying to mark `NSObject` subclasses from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
+<!-- MT21xx: more linker errors -->
+
 <!--- 2100 used by mmp -->
+
+<h3><a name="MT2101"/>MT2101: Can't resolve the reference '*', referenced from the method '*' in '*'.</h3>
+
+An invalid assembly reference was encountered when processing the method mentioned in the error message.
+
+The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+<h3><a name="MT2102"/>MT2102: Error processing the method '*' in the assembly '*': *</h3>
+
+Something unexpected occured when trying to mark the method mentioned in the error message.
+
+The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
 # MT3xxx: AOT error messages
 

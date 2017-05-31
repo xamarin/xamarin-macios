@@ -56,9 +56,6 @@ namespace Xamarin
 					"mscorlib.dll",
 					"mscorlib.aotdata.armv7",
 					"mscorlib.aotdata.arm64",
-					"System.dll",
-					"System.aotdata.armv7",
-					"System.aotdata.arm64",
 					"Xamarin.iOS.dll",
 					"Xamarin.iOS.aotdata.armv7",
 					"Xamarin.iOS.aotdata.arm64",
@@ -69,8 +66,6 @@ namespace Xamarin
 					/* these files should end up in the root app directory, not the size-specific subdirectory */
 					".monotouch-32/testApp.exe",
 					".monotouch-32/testApp.aotdata.armv7",
-					".monotouch-32/System.dll",
-					".monotouch-32/System.aotdata.armv7",
 					".monotouch-64/testApp.exe",
 					".monotouch-64/testApp.aotdata.arm64",
 					".monotouch-64/System.dll",
@@ -121,7 +116,7 @@ namespace Xamarin
 					StringAssert.Contains (" --llvm ", line, "aot command must pass --llvm to the AOT compiler");
 					assemblies_checked++;
 				});
-				Assert.That (assemblies_checked, Is.AtLeast (4), "We build at least 4, so we must have had at least 4 asserts above."); // mscorlib.dll, Xamarin.iOS.dll, System.dll, theApp.exe
+				Assert.That (assemblies_checked, Is.AtLeast (3), "We build at least 3 dlls, so we must have had at least 3 asserts above."); // mscorlib.dll, Xamarin.iOS.dll, System.dll, theApp.exe
 			}
 		}
 
@@ -1304,14 +1299,42 @@ namespace Xamarin
 					app.AppExtensions.Add (extension);
 
 					var app_tmpdir = app.CreateTemporaryDirectory ();
+					var app_dll = CompileTestAppLibrary (app_tmpdir, @"public abstract class X { }", appName: "testLibrary");
+					app.CreateTemporaryApp (extraCode: "class Y : X {}", extraArg: $"-r:{Quote (app_dll)}");
+					app.CreateTemporaryCacheDirectory ();
+					app.References = new string [] { app_dll };
+					app.WarnAsError = new int [] { 113 };
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (113, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the container app is referencing the assembly 'testLibrary' from '{app_dll}', while the extension references a different version from '{ext_dll}'.");
+				}
+			}
+		}
+
+		[Test]
+		public void CodeSharingExactContentsDifferentPaths ()
+		{
+			// Test that we allow code sharing when the exact same assembly (based on file content)
+			// is referenced from different paths between extension and container project.
+			using (var extension = new MTouchTool ()) {
+				var ext_tmpdir = extension.CreateTemporaryDirectory ();
+				var ext_dll = CompileTestAppLibrary (ext_tmpdir, @"public class X { }", appName: "testLibrary");
+				extension.CreateTemporaryServiceExtension (extraCode: "class Y : X {}", extraArg: $"-r:{Quote (ext_dll)}");
+				extension.CreateTemporaryCacheDirectory ();
+				extension.References = new string [] { ext_dll };
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+
+					var app_tmpdir = app.CreateTemporaryDirectory ();
 					var app_dll = Path.Combine (app_tmpdir, Path.GetFileName (ext_dll));
 					File.Copy (ext_dll, app_dll);
 					app.CreateTemporaryApp (extraCode: "class Y : X {}", extraArg: $"-r:{Quote (app_dll)}");
 					app.CreateTemporaryCacheDirectory ();
 					app.References = new string [] { app_dll };
 					app.WarnAsError = new int [] { 113 };
-					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (113, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the container app is referencing the assembly 'testLibrary' from '{app_dll}', while the extension references it from '{ext_dll}'.");
+					app.AssertExecute (MTouchAction.BuildDev, "build app");
+					// bug #56754 prevents this from working // app.AssertNoWarnings ();
 				}
 			}
 		}
@@ -3122,7 +3145,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 				// With the linker, we'll find out that the loaded reference doesn't work.
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertError (2002, "Failed to resolve \"X\" reference from \"System.Net.Http, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\"");
+				mtouch.AssertError (2101, "Can't resolve the reference 'X', referenced from the method 'System.Void C::Main()' in 'System.Net.Http, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null'.");
 			}
 		}
 

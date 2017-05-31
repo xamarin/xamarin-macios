@@ -1206,6 +1206,12 @@ namespace XamCore.Registrar {
 				case "IsInformal":
 					rv.IsInformal = (bool) prop.Argument.Value;
 					break;
+				case "FormalSince":
+					Version version;
+					if (!Version.TryParse ((string)prop.Argument.Value, out version))
+						throw ErrorHelper.CreateError (4147, "Invalid {0} found on '{1}'. Please file a bug report at http://bugzilla.xamarin.com", "ProtocolAttribute", type.FullName);
+					rv.FormalSinceVersion = version;
+					break;
 				default:
 					throw ErrorHelper.CreateError (4147, "Invalid {0} found on '{1}'. Please file a bug report at http://bugzilla.xamarin.com", "ProtocolAttribute", type.FullName);
 				}
@@ -1724,6 +1730,13 @@ namespace XamCore.Registrar {
 			string h;
 			switch (ns) {
 #if MMP
+			case "GLKit":
+				// This prevents this warning:
+				//     /Applications/Xcode83.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/OpenGL.framework/Headers/gl.h:5:2: warning: gl.h and gl3.h are both
+				//     included. Compiler will not invoke errors if using removed OpenGL functionality. [-W#warnings]
+				// This warning shows up when both GLKit/GLKit.h and Quartz/Quartz.h are included.
+				header.WriteLine ("#define GL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED 1");
+				goto default;
 			case "CoreBluetooth":
 				header.WriteLine ("#import <IOBluetooth/IOBluetooth.h>");
 				header.WriteLine ("#import <CoreBluetooth/CoreBluetooth.h>");
@@ -3838,6 +3851,7 @@ namespace XamCore.Registrar {
 		public TypeDefinition WrapperType { get; set; }
 		public string Name { get; set; }
 		public bool IsInformal { get; set; }
+		public Version FormalSinceVersion { get; set; }
 	}
 
 	public sealed class ProtocolMemberAttribute : Attribute {

@@ -162,10 +162,6 @@ namespace Xamarin.Bundler
 			get { return true; }
 		}
 
-		public static int Verbosity {
-			get { return verbose; }
-		}
-
 		public static bool Force {
 			get { return force; }
 			set { force = value; }

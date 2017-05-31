@@ -1061,9 +1061,9 @@ namespace Xamarin.Bundler {
 						Assembly asm;
 						if (!target.Assemblies.TryGetValue (kvp.Key, out asm))
 							continue; // appex references an assembly the main app doesn't. This is fine.
-						if (asm.FullPath != kvp.Value.FullPath) {
-							applicable = false; // app references an assembly with the same name as the main app, but from a different location. This is not fine.
-							ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the container app is referencing the assembly '{asm.Identity}' from '{asm.FullPath}', while the extension references it from '{kvp.Value.FullPath}'.");
+						if (asm.FullPath != kvp.Value.FullPath && !Cache.CompareFiles (asm.FullPath, kvp.Value.FullPath, true)) {
+							applicable = false; // app references an assembly with the same name as the main app, but from a different location and not identical. This is not fine.
+							ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the container app is referencing the assembly '{asm.Identity}' from '{asm.FullPath}', while the extension references a different version from '{kvp.Value.FullPath}'.");
 							break;
 						}
 					}
@@ -1580,7 +1580,7 @@ namespace Xamarin.Bundler {
 				if (!HasFrameworksDirectory && (isFramework || info.DylibToFramework))
 					continue; // Don't copy frameworks to app extensions (except watch extensions), they go into the container app.
 
-				if (!files.All ((v) => Directory.Exists (v)))
+				if (!files.All ((v) => Directory.Exists (v) == isFramework))
 					throw ErrorHelper.CreateError (99, $"Internal error: 'can't process a mix of dylibs and frameworks: {string.Join (", ", files)}'. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 
 				if (isFramework) {

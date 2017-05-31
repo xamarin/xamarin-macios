@@ -438,6 +438,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			AppBundleDir="$(AppBundleDir)"
 			BundleIdentifier="$(_BundleIdentifier)"
 			BundleResources="@(_BundleResourceWithLogicalName)"
+			EnableOnDemandResources="$(EnableOnDemandResources)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			OutputPath="$(DeviceSpecificOutputPath)"
 		>
@@ -1163,7 +1164,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		Inputs="@(ImageAsset);$(_AppManifest)"
 		Outputs="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)"
 		DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCoreCompileImageAssets">
-		
+
 		<ACTool
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '@(ImageAsset)' != ''"
@@ -1172,6 +1173,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			AppManifest="$(_AppManifest)"
 			DeviceModel="$(TargetDeviceModel)"
 			DeviceOSVersion="$(TargetDeviceOSVersion)"
+			EnableOnDemandResources="$(EnableOnDemandResources)"
 			ImageAssets="@(ImageAsset)"
 			OptimizePNGs="$(OptimizePNGs)"
 			OutputPath="$(DeviceSpecificOutputPath)"
@@ -1275,13 +1277,14 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		Inputs="@(InterfaceDefinition)"
 		Outputs="$(_IBToolCache)"
 		DependsOnTargets="_BeforeCoreCompileInterfaceDefinitions">
-		
+
 		<IBTool
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(IBToolExe)"
 			ToolPath="$(IBToolPath)"
 			AppManifest="$(_AppManifest)"
+			EnableOnDemandResources="$(EnableOnDemandResources)"
 			InterfaceDefinitions="@(InterfaceDefinition)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			IsWatchApp="$(IsWatchApp)"
@@ -1299,7 +1302,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<!-- Local items to be persisted to items files -->
 			<Output TaskParameter="BundleResources" ItemName="_IBTool_BundleResources" />
 		</IBTool>
-	
+
 		<!-- Cached the generated outputs items for incremental build support -->
 		<WriteItemsToFile Items="@(_IBTool_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_IBToolCache)" Overwrite="true" IncludeMetadata="true" />
 		<ItemGroup>
@@ -1969,7 +1972,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</PropertyGroup>
 	</Target>
 	
-	<Target Name="_PackageOnDemandResources" Condition="'$(BuildIpa)' == 'true' And ('$(_DistributionType)' == 'AppStore' Or '$(_DistributionType)' == 'AdHoc')" >
+	<Target Name="_PackageOnDemandResources" Condition="'$(BuildIpa)' == 'true' And '$(EnableOnDemandResources)' == 'true' And ('$(_DistributionType)' == 'AppStore' Or '$(_DistributionType)' == 'AdHoc')" >
 		<PropertyGroup>
 			<_PayloadDir>$(DeviceSpecificIntermediateOutputPath)ipa\Payload\</_PayloadDir>
 			<_IpaAppBundleDir>$(_PayloadDir)$(_AppBundleName).app\</_IpaAppBundleDir>

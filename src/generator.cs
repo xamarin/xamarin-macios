@@ -2028,7 +2028,7 @@ public partial class Generator : IMemberGatherer {
 		var ea = AttributeManager.GetCustomAttribute<ExportAttribute> (pinfo.GetSetMethod ());
 		if (ea != null && ea.Selector != null)
 			return ea;
-		return AttributeManager.GetCustomAttribute<ExportAttribute> (pinfo).ToSetter (pinfo);
+		return AttributeManager.GetCustomAttribute<ExportAttribute> (pinfo)?.ToSetter (pinfo);
 	}
 
 	public static ExportAttribute GetGetterExportAttribute (PropertyInfo pinfo)
@@ -2209,8 +2209,9 @@ public partial class Generator : IMemberGatherer {
 				if (pi.CanWrite){
 					MethodInfo setter = pi.GetSetMethod ();
 					BindAttribute ba = GetBindAttribute (setter);
+					var notImpl = AttributeManager.HasAttribute<NotImplementedAttribute> (setter);
 					
-					if (!is_abstract)
+					if (!is_abstract && !notImpl)
 						tselectors.Add (ba != null ? ba.Selector : GetSetterExportAttribute (pi).Selector);
 					DeclareInvoker (setter);
 				}
@@ -4505,7 +4506,7 @@ public partial class Generator : IMemberGatherer {
 				PrintExport (minfo, sel, export.ArgumentSemantic);
 			}
 
-			PrintAttributes (pi.GetGetMethod(), platform:true, preserve:true, advice:true);
+			PrintAttributes (pi.GetGetMethod(), platform:true, preserve:true, advice:true, notImplemented:true);
 			if (minfo.is_abstract){
 				print ("get; ");
 			} else {
@@ -4545,7 +4546,7 @@ public partial class Generator : IMemberGatherer {
 			string sel;
 
 			if (ba == null) {
-				sel = GetSetterExportAttribute (pi).Selector;
+				sel = GetSetterExportAttribute (pi)?.Selector;
 			} else {
 				sel = ba.Selector;
 			}
@@ -4555,7 +4556,7 @@ public partial class Generator : IMemberGatherer {
 			if (not_implemented_attr == null && (!minfo.is_sealed || !minfo.is_wrapper))
 				PrintExport (minfo, sel, export.ArgumentSemantic);
 
-			PrintAttributes (pi.GetSetMethod (), platform:true, preserve:true, advice:true);
+			PrintAttributes (pi.GetSetMethod (), platform:true, preserve:true, advice:true, notImplemented:true);
 			if (minfo.is_abstract){
 				print ("set; ");
 			} else {
@@ -5095,10 +5096,16 @@ public partial class Generator : IMemberGatherer {
 				continue;
 			
 			if (!hasExportAttribute) {
-				if (p.CanRead && !AttributeManager.HasAttribute<ExportAttribute> (p.GetGetMethod ()))
-					continue;
-				if (p.CanWrite && !AttributeManager.HasAttribute<ExportAttribute> (p.GetSetMethod ()))
-					continue;
+				var getter = p.GetGetMethod ();
+				if (p.CanRead && !AttributeManager.HasAttribute<ExportAttribute> (getter)) {
+					if (!AttributeManager.HasAttribute<NotImplementedAttribute> (getter))
+						continue;
+				}
+				var setter = p.GetSetMethod ();
+				if (p.CanWrite && !AttributeManager.HasAttribute<ExportAttribute> (setter)) {
+					if (!AttributeManager.HasAttribute<NotImplementedAttribute> (setter))
+						continue;
+				}
 			}
 
 			if (@static.HasValue && @static.Value != hasStaticAttribute)
@@ -5152,7 +5159,11 @@ public partial class Generator : IMemberGatherer {
 		var requiredInstanceAsyncMethods = requiredInstanceMethods.Where (m => AttributeManager.HasAttribute<AsyncAttribute> (m)).ToList ();
 
 		PrintAttributes (type, platform:true, preserve:true, advice:true);
-		print ("[Protocol (Name = \"{1}\", WrapperType = typeof ({0}Wrapper){2})]", TypeName, protocol_name, protocolAttribute.IsInformal ? ", IsInformal = true" : string.Empty);
+		print ("[Protocol (Name = \"{1}\", WrapperType = typeof ({0}Wrapper){2}{3})]", 
+		       TypeName, 
+		       protocol_name, 
+		       protocolAttribute.IsInformal ? ", IsInformal = true" : string.Empty, 
+		       protocolAttribute.FormalSince != null ? $", FormalSince = \"{protocolAttribute.FormalSince}\"" : string.Empty);
 
 		var sb = new StringBuilder ();
 
@@ -5275,20 +5286,24 @@ public partial class Generator : IMemberGatherer {
 			indent++;
 			if (pi.CanRead) {
 				var ea = GetGetterExportAttribute (pi);
+				var getMethod = pi.GetGetMethod ();
 				// there can be a [Bind] there that override the selector name to be used
 				// e.g. IMTLTexture.FramebufferOnly
-				var ba = GetBindAttribute (pi.GetGetMethod ());
-				PrintDelegateProxy (pi.GetGetMethod ());
-				if (!AttributeManager.HasAttribute<NotImplementedAttribute> (pi.GetGetMethod ())) {
+				var ba = GetBindAttribute (getMethod);
+				PrintDelegateProxy (getMethod);
+				if (!AttributeManager.HasAttribute<NotImplementedAttribute> (getMethod)) {
 					if (ba != null)
 						PrintExport (minfo, ba.Selector, ea.ArgumentSemantic);
 					else
 						PrintExport (minfo, ea);
 				}
+				PrintAttributes (getMethod, notImplemented: true);
 				print ("get;");
 			}
 			if (pi.CanWrite) {
-				if (!AttributeManager.HasAttribute<NotImplementedAttribute> (pi.GetSetMethod ()))
+				var setMethod = pi.GetSetMethod ();
+				PrintAttributes (setMethod, notImplemented:true);
+				if (!AttributeManager.HasAttribute<NotImplementedAttribute> (setMethod))
 					PrintExport (minfo, GetSetterExportAttribute (pi));
 				print ("set;");
 			}
@@ -5452,10 +5467,19 @@ public partial class Generator : IMemberGatherer {
 		if (p == null)
 			return;
 
-		print ($"[Advice (@\"{p.Message.Replace ("\"", "\"\"")}\")]");
+		print ($"[Advice ({Quote (p.Message)})]");
 	}
 
-	public void PrintAttributes (MemberInfo mi, bool platform = false, bool preserve = false, bool advice = false)
+	public void PrintNotImplementedAttribute (ICustomAttributeProvider mi)
+	{
+		var p = AttributeManager.GetCustomAttribute<NotImplementedAttribute> (mi);
+		if (p == null)
+			return;
+
+		print ($"[NotImplemented ({Quote (p.Message)})]");
+	}
+
+	public void PrintAttributes (MemberInfo mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false)
 	{
 		if (platform)
 			PrintPlatformAttributes (mi);
@@ -5463,6 +5487,8 @@ public partial class Generator : IMemberGatherer {
 			PrintPreserveAttribute (mi);
 		if (advice)
 			PrintAdviceAttribute (mi);
+		if (notImplemented)
+			PrintNotImplementedAttribute (mi);
 	}
 
 	public static string GetSelector (MemberInfo mi)
@@ -7081,5 +7107,14 @@ public partial class Generator : IMemberGatherer {
 			return t.FullName;
 		
 	}
-	
+
+	public static string Quote (string s)
+	{
+		if (s == null)
+			return String.Empty;
+		if (s == string.Empty)
+			return @"""""";
+
+		return $"@\"{s.Replace ("\"", "\"\"")}\"";
+	}
 }

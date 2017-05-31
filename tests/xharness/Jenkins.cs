@@ -75,7 +75,7 @@ namespace xharness
 				SimulatorLoadLog.WriteLine (e.ToString ());
 				var task = new RunSimulatorTask (buildTask) { ExecutionResult = TestExecutingResult.Failed };
 				var log = task.Logs.CreateFile ("Run log", Path.Combine (task.LogDirectory, "run-" + DateTime.Now.Ticks + ".log"));
-				File.WriteAllText (log.Path, "Failed to load simulators.");
+				log.WriteLine ("Failed to load simulators");
 				runtasks.Add (task);
 				return runtasks;
 			}
@@ -477,49 +477,54 @@ namespace xharness
 				if (!IncludeBcl && project.IsBclTest)
 					ignored = true;
 
-				BuildProjectTask build;
-				if (project.GenerateVariations) {
-					build = new MdtoolTask ();
-					build.Platform = TestPlatform.Mac_Classic;
-				} else {
-					build = new XBuildTask ();
-					build.Platform = TestPlatform.Mac;
-				}
-				build.Jenkins = this;
-				build.TestProject = project;
-				build.SolutionPath = project.SolutionPath;
-				build.ProjectConfiguration = string.IsNullOrEmpty (project.Configuration) ? "Debug" : project.Configuration;
-				build.ProjectPlatform = "x86";
-				build.SpecifyPlatform = false;
-				build.SpecifyConfiguration = build.ProjectConfiguration != "Debug";
-				RunTestTask exec;
-				if (project.IsNUnitProject) {
-					var dll = Path.Combine (Path.GetDirectoryName (project.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
-					exec = new NUnitExecuteTask (build) {
-						Ignored = ignored || !IncludeClassicMac,
-						TestLibrary = dll,
-						TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
-						WorkingDirectory = Path.GetDirectoryName (dll),
-						Platform = build.Platform,
-						TestName = project.Name,
-						Timeout = TimeSpan.FromMinutes (120),
-					};
-				} else {
-					exec = new MacExecuteTask (build) {
-						Ignored = ignored || !IncludeClassicMac,
-						BCLTest = project.IsBclTest,
-						TestName = project.Name,
-					};
-				}
-				exec.Variation = string.IsNullOrEmpty (project.Variation) ? null : project.Variation;
-				Tasks.Add (exec);
+				var configurations = project.Configurations;
+				if (configurations == null)
+					configurations = new string [] { "Debug" };
+				foreach (var config in configurations) {
+					BuildProjectTask build;
+					if (project.GenerateVariations) {
+						build = new MdtoolTask ();
+						build.Platform = TestPlatform.Mac_Classic;
+					} else {
+						build = new XBuildTask ();
+						build.Platform = TestPlatform.Mac;
+					}
+					build.Jenkins = this;
+					build.TestProject = project;
+					build.SolutionPath = project.SolutionPath;
+					build.ProjectConfiguration = config;
+					build.ProjectPlatform = "x86";
+					build.SpecifyPlatform = false;
+					build.SpecifyConfiguration = build.ProjectConfiguration != "Debug";
+					RunTestTask exec;
+					if (project.IsNUnitProject) {
+						var dll = Path.Combine (Path.GetDirectoryName (project.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
+						exec = new NUnitExecuteTask (build) {
+							Ignored = ignored || !IncludeClassicMac,
+							TestLibrary = dll,
+							TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
+							WorkingDirectory = Path.GetDirectoryName (dll),
+							Platform = build.Platform,
+							TestName = project.Name,
+							Timeout = TimeSpan.FromMinutes (120),
+						};
+					} else {
+						exec = new MacExecuteTask (build) {
+							Ignored = ignored || !IncludeClassicMac,
+							BCLTest = project.IsBclTest,
+							TestName = project.Name,
+						};
+					}
+					exec.Variation = configurations.Length > 1 ? config : null;
+					Tasks.Add (exec);
 
-				if (project.GenerateVariations) {
-					Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified, "-unified", ignored));
-					Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified32, "-unified-32", ignored));
-					if (!project.SkipXMVariations) {
-						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45", ignored));
-						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored));
+					if (project.GenerateVariations) {
+						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified, "-unified", ignored));
+						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified32, "-unified-32", ignored));
+						if (!project.SkipXMVariations) {
+							Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45", ignored));
+							Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored));
+						}
 					}
 				}
 			}
@@ -2574,7 +2579,7 @@ function oninitialload ()
 				case TestPlatform.iOS_TodayExtension64:
 					return "iOS Unified Today Extension 64-bits - " + XIMode;
 				case TestPlatform.iOS_Unified:
-					throw new NotImplementedException ();
+					return "iOS Unified - " + XIMode;
 				default:
 					throw new NotImplementedException ();
 				}

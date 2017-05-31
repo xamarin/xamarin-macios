@@ -128,7 +128,6 @@ MAC_ASSEMBLY_NAMES = \
 	System.Xml \
 	System \
 	System.Security \
-	System.Runtime.InteropServices.RuntimeInformation \
 	System.Reflection.Context	\
 	System.Net.Http.WinHttpHandler \
 	System.Numerics.Vectors
@@ -560,8 +559,8 @@ IOS_ASSEMBLIES = I18N.CJK I18N.MidEast I18N.Other I18N.Rare I18N.West I18N Mono.
 	System.Numerics System.IdentityModel System.IO.Compression System.IO.Compression.FileSystem \
 	System.ComponentModel.DataAnnotations System.ComponentModel.Composition \
 	System.Net.Http.WinHttpHandler \
-	System.Numerics.Vectors System.Reflection.Context System.Reflection.DispatchProxy \
-	System.Runtime.InteropServices.RuntimeInformation System.Security System.Xml.XPath.XmlDocument \
+	System.Numerics.Vectors System.Reflection.Context \
+	System.Security \
 	System.Windows System.Xml.Serialization System.Net \
 	Microsoft.CSharp Mono.CSharp
 

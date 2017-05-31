@@ -409,8 +409,17 @@ namespace Xamarin.Bundler {
 			if (!targetFramework.HasValue)
 				targetFramework = TargetFramework.Default;
 
-			if (TargetFramework.Identifier == TargetFramework.Xamarin_Mac_2_0.Identifier) {
+			// At least once instance of a TargetFramework of Xamarin.Mac,v2.0,(null) was found already. Assume any v2.0 implies a desire for Modern.
+			if (TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile || TargetFramework.Version == TargetFramework.Xamarin_Mac_2_0_Mobile.Version) {
 				IsUnifiedMobile = true;
+			} else if (TargetFramework.Identifier == TargetFramework.Xamarin_Mac_4_5_Full.Identifier 
+			         && TargetFramework.Profile == TargetFramework.Xamarin_Mac_4_5_Full.Profile) {
+				IsUnifiedFullXamMacFramework = true;
+				TargetFramework = TargetFramework.Net_4_5;
+			} else if (TargetFramework.Identifier == TargetFramework.Xamarin_Mac_4_5_System.Identifier
+			         && TargetFramework.Profile == TargetFramework.Xamarin_Mac_4_5_System.Profile) {
+				IsUnifiedFullSystemFramework = true;
+				TargetFramework = TargetFramework.Net_4_5;
 			} else if (!IsUnifiedFullXamMacFramework && !IsUnifiedFullSystemFramework) {
 				// This is a total hack. Instead of passing in an argument, we walk the refernces looking for
 				// the "right" Xamarin.Mac and assume you are doing something
@@ -455,7 +464,7 @@ namespace Xamarin.Bundler {
 				throw new MonoMacException (1404, true, "Target framework '{0}' is invalid.", userTargetFramework);
 
 			if (IsClassic && App.LinkMode == LinkMode.Platform)
-				throw new MonoMacException (2100, true, "Xamarin.Mac Classic API does not support Platofmr Linking.");
+				throw new MonoMacException (2100, true, "Xamarin.Mac Classic API does not support Platform Linking.");
 
 			// sanity check as this should never happen: we start out by not setting any
 			// Unified/Classic properties, and only IsUnifiedMobile if we are are on the
@@ -472,6 +481,7 @@ namespace Xamarin.Bundler {
 			if (IsUnified == IsClassic || (IsUnified && IsUnifiedCount != 1))
 				throw new Exception ("IsClassic/IsUnified/IsUnifiedMobile/IsUnifiedFullSystemFramework/IsUnifiedFullXamMacFramework logic regression");
 
+			ValidateXamarinMacReference ();
 			if (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework) {
 				switch (App.LinkMode) {
 				case LinkMode.None:
@@ -521,6 +531,23 @@ namespace Xamarin.Bundler {
 			}
 
 			Log ("bundling complete");
+		}
+
+		static void ValidateXamarinMacReference ()
+		{
+			// Many Xamarin.Mac references are technically valid, so whitelisting risks breaking working project
+			// However, passing in Mobile / Xamarin.Mac folders and resolving full/4.5 or vice versa is 
+			// far from expected. So catch the common cases if we can
+			string reference = references.FirstOrDefault (x => x.EndsWith ("Xamarin.Mac.dll"));
+			if (reference != null) {
+				bool valid = true;
+				if (IsUnifiedMobile)
+					valid = !reference.Contains ("full/") && !reference.Contains ("4.5/");
+				else if (IsUnifiedFullXamMacFramework || IsUnifiedFullSystemFramework)
+					valid = !reference.Contains ("mobile/") && !reference.Contains ("Xamarin.Mac/");
+				if (!valid)
+					throw ErrorHelper.CreateError (1407, "Mismatch between Xamarin.Mac reference '{0}' and target framework selected '{1}'.", reference, TargetFramework);
+			}
 		}
 
 		static void FixReferences (Func<string, bool> match, Func<string, string> fix)
@@ -849,7 +876,7 @@ namespace Xamarin.Bundler {
 				else
 					throw ErrorHelper.CreateError (0099, "Internal error \"AOT with unexpected profile.\" Please file a bug report with a test case (http://bugzilla.xamarin.com).");
 
-				AOTCompiler compiler = new AOTCompiler (aotOptions, compilerType, !EnableDebug);
+				AOTCompiler compiler = new AOTCompiler (aotOptions, compilerType, IsUnifiedMobile, !EnableDebug);
 				compiler.Compile (mmp_dir);
 				Watch ("AOT Compile", 1);
 			}
@@ -1121,6 +1148,9 @@ namespace Xamarin.Bundler {
 				if (aotOptions != null && aotOptions.IsHybridAOT)
 					sw.WriteLine ("\txamarin_mac_hybrid_aot = TRUE;");
 
+				if (IsUnifiedMobile)
+					sw.WriteLine ("\txamarin_mac_modern = TRUE;");
+
 				sw.WriteLine ("\treturn 0;");
 				sw.WriteLine ("}");
 				sw.WriteLine ();
@@ -1360,7 +1390,7 @@ namespace Xamarin.Bundler {
 			return ret;
 		}
 
-		// check that we have a reference to XamMac.dll and not to MonoMac.dll. Check various DRM license checks
+		// check that we have a reference to XamMac.dll and not to MonoMac.dll.
 		static void CheckReferences ()
 		{
 			List<Exception> exceptions = new List<Exception> ();
@@ -1435,6 +1465,7 @@ namespace Xamarin.Bundler {
 					Registrar = (StaticRegistrar) BuildTarget.StaticRegistrar,
 				},
 				SkipExportedSymbolsInSdkAssemblies = !embed_mono,
+				Target = BuildTarget,
 			};
 
 			linker_options = options;
@@ -1860,6 +1891,8 @@ namespace Xamarin.Bundler {
 
 			if (resolved_assemblies.Contains (fqname))
 				return;
+			
+			Target.PrintAssemblyReferences (assembly);
 
 			var asm = new Assembly (BuildTarget, assembly);
 			asm.ComputeSatellites ();
@@ -1869,8 +1902,6 @@ namespace Xamarin.Bundler {
 
 			foreach (AssemblyNameReference reference in assembly.MainModule.AssemblyReferences) {
 				var reference_assembly = BuildTarget.Resolver.Resolve (SwapOutReferenceAssembly (reference.FullName));
-				if (verbose > 1)
-					Console.WriteLine ("Adding dependency {0} required by {1}", reference.Name, assembly.MainModule.Name);
 				ProcessAssemblyReferences (reference_assembly);
 			}
 		}

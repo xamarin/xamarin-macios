@@ -276,7 +276,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			path = Path.Combine (TempDir, path);
 			Directory.CreateDirectory (Path.GetDirectoryName (path));
-			using (new FileStream (path, FileMode.CreateNew));
+			using (new FileStream (path, FileMode.CreateNew)) {}
 			return path;
 		}
 
