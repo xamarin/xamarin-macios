@@ -479,22 +479,29 @@ public class Category
 				".*/Test.cs(.*): error MT4159: Cannot register the method 'Category.Foo' as a category method because category methods must be static.");
 		}
 
+		static char [] invalidSelectorCharacters = new char [] { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-' };
+
 		[Test]
 		public void MT4160 ()
 		{
-			var code = @"
-public class TestInvalidChar : NSObject
-{
-	[Export (""xy z"")]
-	public void XyZ () {}
-	[Export (""ab\tc"")]
-	public void AbC () {}
-}
-";
-			VerifyWithXode (R.Static, code, false,
-				".*/Test.cs(.*): error MT4160: Invalid character ' ' (0x20) found in selector 'xy z' for 'TestInvalidChar.XyZ()'",
-				".*/Test.cs(.*): error MT4160: Invalid character '\t' (0x9) found in selector 'ab\tc' for 'TestInvalidChar.AbC()'"
-				);
+			using (var mtouch = new MTouchTool ()) {
+				var sb = new StringBuilder ();
+				sb.AppendLine ("public class TestInvalidChar : Foundation.NSObject {");
+				for (int i = 0; i < invalidSelectorCharacters.Length; i++) {
+					var c = invalidSelectorCharacters [i];
+					sb.AppendLine ($"\t[Foundation.Export (@\"X{(c == '"' ? "\"\"" : c.ToString ())}\")]");
+					sb.AppendLine ($"\tpublic void X{i} () {{}}");
+				}
+				sb.AppendLine ("}");
+				mtouch.CreateTemporaryApp (extraCode: sb.ToString (), extraArg: "-debug");
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				for (int i = 0; i < invalidSelectorCharacters.Length; i++) {
+					var c = invalidSelectorCharacters [i];
+					mtouch.AssertError (4160, $"Invalid character '{c}' (0x{((int)c).ToString ("x")}) found in selector 'X{c}' for 'TestInvalidChar.X{i}()'", "testApp.cs", 3 + i * 2);
+				}
+			}
 		}
 
 		[Test]

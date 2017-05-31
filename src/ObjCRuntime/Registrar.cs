@@ -186,7 +186,7 @@ namespace XamCore.Registrar {
 				}
 			}
 
-			static char[] invalidSelectorCharacters = new char[] { ' ', '\t' };
+			static char[] invalidSelectorCharacters = new char[] { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n' };
 			void VerifySelector (ObjCMethod method, ref List<Exception> exceptions)
 			{
 				if (method.Method == null)
