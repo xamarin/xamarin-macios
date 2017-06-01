@@ -6,6 +6,7 @@ using System.Text;
 using System.Xml;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Xamarin
 {
@@ -169,19 +170,19 @@ namespace Xamarin
 				if (AppPath == null)
 					throw new Exception ("No AppPath specified.");
 				isDevice = true;
-				sb.Append (" --dev ").Append (MTouch.Quote (AppPath));
+				sb.Append (" --dev ").Append (StringUtils.Quote (AppPath));
 				break;
 			case MTouchAction.BuildSim:
 				isDevice = false;
 				if (AppPath == null)
 					throw new Exception ("No AppPath specified.");
-				sb.Append (" --sim ").Append (MTouch.Quote (AppPath));
+				sb.Append (" --sim ").Append (StringUtils.Quote (AppPath));
 				break;
 			case MTouchAction.LaunchSim:
 				isDevice = false;
 				if (AppPath == null)
 					throw new Exception ("No AppPath specified.");
-				sb.Append (" --launchsim ").Append (MTouch.Quote (AppPath));
+				sb.Append (" --launchsim ").Append (StringUtils.Quote (AppPath));
 				break;
 			default:
 				throw new NotImplementedException ();
@@ -190,9 +191,9 @@ namespace Xamarin
 			if (SdkRoot == None) {
 				// do nothing
 			} else if (!string.IsNullOrEmpty (SdkRoot)) {
-				sb.Append (" --sdkroot ").Append (MTouch.Quote (SdkRoot));
+				sb.Append (" --sdkroot ").Append (StringUtils.Quote (SdkRoot));
 			} else {
-				sb.Append (" --sdkroot ").Append (MTouch.Quote (Configuration.xcode_root));
+				sb.Append (" --sdkroot ").Append (StringUtils.Quote (Configuration.xcode_root));
 			}
 
 			sb.Append (" ").Append (GetVerbosity ());
@@ -241,33 +242,33 @@ namespace Xamarin
 				sb.Append (" --extension");
 
 			foreach (var appext in AppExtensions)
-				sb.Append (" --app-extension ").Append (MTouch.Quote (appext.AppPath));
+				sb.Append (" --app-extension ").Append (StringUtils.Quote (appext.AppPath));
 
 			foreach (var framework in Frameworks)
-				sb.Append (" --framework ").Append (MTouch.Quote (framework));
+				sb.Append (" --framework ").Append (StringUtils.Quote (framework));
 
 			if (!string.IsNullOrEmpty (Mono))
-				sb.Append (" --mono:").Append (MTouch.Quote (Mono));
+				sb.Append (" --mono:").Append (StringUtils.Quote (Mono));
 
 			if (!string.IsNullOrEmpty (GccFlags))
-				sb.Append (" --gcc_flags ").Append (MTouch.Quote (GccFlags));
+				sb.Append (" --gcc_flags ").Append (StringUtils.Quote (GccFlags));
 
 			if (!string.IsNullOrEmpty (HttpMessageHandler))
-				sb.Append (" --http-message-handler=").Append (MTouch.Quote (HttpMessageHandler));
+				sb.Append (" --http-message-handler=").Append (StringUtils.Quote (HttpMessageHandler));
 
 			if (Dlsym.HasValue)
 				sb.Append (" --dlsym:").Append (Dlsym.Value ? "true" : "false");
 
 			if (References != null) {
 				foreach (var r in References)
-					sb.Append (" -r:").Append (MTouch.Quote (r));
+					sb.Append (" -r:").Append (StringUtils.Quote (r));
 			}
 
 			if (!string.IsNullOrEmpty (Executable))
-				sb.Append (" --executable ").Append (MTouch.Quote (Executable));
+				sb.Append (" --executable ").Append (StringUtils.Quote (Executable));
 
 			if (!string.IsNullOrEmpty (RootAssembly))
-				sb.Append (" ").Append (MTouch.Quote (RootAssembly));
+				sb.Append (" ").Append (StringUtils.Quote (RootAssembly));
 
 			if (TargetFramework == None) {
 				// do nothing
@@ -277,12 +278,12 @@ namespace Xamarin
 				// make the implicit default the way tests have been running until now, and at the same time the very minimum to make apps build.
 				switch (Profile) {
 				case Profile.iOS:
-					sb.Append (" -r:").Append (MTouch.Quote (Configuration.XamarinIOSDll));
+					sb.Append (" -r:").Append (StringUtils.Quote (Configuration.XamarinIOSDll));
 					break;
 				case Profile.tvOS:
 				case Profile.watchOS:
 					sb.Append (" --target-framework ").Append (MTouch.GetTargetFramework (Profile));
-					sb.Append (" -r:").Append (MTouch.Quote (MTouch.GetBaseLibrary (Profile)));
+					sb.Append (" -r:").Append (StringUtils.Quote (MTouch.GetBaseLibrary (Profile)));
 					break;
 				default:
 					throw new NotImplementedException ();
@@ -354,13 +355,13 @@ namespace Xamarin
 			}
 
 			if (!string.IsNullOrEmpty (Cache))
-				sb.Append (" --cache ").Append (MTouch.Quote (Cache));
+				sb.Append (" --cache ").Append (StringUtils.Quote (Cache));
 
 			if (!string.IsNullOrEmpty (Device))
-				sb.Append (" --device:").Append (MTouch.Quote (Device));
+				sb.Append (" --device:").Append (StringUtils.Quote (Device));
 
 			if (!string.IsNullOrEmpty (LLVMOptimizations))
-				sb.Append (" --llvm-opt=").Append (MTouch.Quote (LLVMOptimizations));
+				sb.Append (" --llvm-opt=").Append (StringUtils.Quote (LLVMOptimizations));
 
 			if (CustomArguments != null) {
 				foreach (var arg in CustomArguments) {
@@ -394,22 +395,22 @@ namespace Xamarin
 				sb.Append (" --bitcode:").Append (Bitcode.ToString ().ToLower ());
 
 			foreach (var abt in AssemblyBuildTargets)
-				sb.Append (" --assembly-build-target ").Append (MTouch.Quote (abt));
+				sb.Append (" --assembly-build-target ").Append (StringUtils.Quote (abt));
 
 			if (!string.IsNullOrEmpty (AotArguments))
-				sb.Append (" --aot:").Append (MTouch.Quote (AotArguments));
+				sb.Append (" --aot:").Append (StringUtils.Quote (AotArguments));
 
 			if (!string.IsNullOrEmpty (AotOtherArguments))
-				sb.Append (" --aot-options:").Append (MTouch.Quote (AotOtherArguments));
+				sb.Append (" --aot-options:").Append (StringUtils.Quote (AotOtherArguments));
 
 			if (LinkSkip?.Length > 0) {
 				foreach (var ls in LinkSkip)
-					sb.Append (" --linkskip:").Append (MTouch.Quote (ls));
+					sb.Append (" --linkskip:").Append (StringUtils.Quote (ls));
 			}
 
 			if (XmlDefinitions?.Length > 0) {
 				foreach (var xd in XmlDefinitions)
-					sb.Append (" --xml:").Append (MTouch.Quote (xd));
+					sb.Append (" --xml:").Append (StringUtils.Quote (xd));
 			}
 
 			return sb.ToString ();

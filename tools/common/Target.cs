@@ -187,7 +187,7 @@ namespace Xamarin.Bundler {
 				return;
 
 			var main = assembly.MainModule;
-			Driver.Log ($"Loaded assembly '{assembly.FullName}' from {Driver.Quote (assembly.MainModule.FileName)}");
+			Driver.Log ($"Loaded assembly '{assembly.FullName}' from {StringUtils.Quote (assembly.MainModule.FileName)}");
 			foreach (var ar in main.AssemblyReferences)
 				Driver.Log ($"    References: '{ar.FullName}'");
 		}

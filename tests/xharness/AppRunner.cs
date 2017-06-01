@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Xsl;
+using Xamarin.Utils;
 
 namespace xharness
 {
@@ -545,7 +546,7 @@ namespace xharness
 					args.Append (" todayviewforextensions:");
 					args.Append (BundleIdentifier);
 					args.Append (" --observe-extension ");
-					args.Append (Harness.Quote (launchAppPath));
+					args.Append (StringUtils.Quote (launchAppPath));
 					break;
 				case Extension.WatchKit2:
 				default:
@@ -553,7 +554,7 @@ namespace xharness
 				}
 			} else {
 				args.Append (isSimulator ? " --launchsim " : " --launchdev ");
-				args.Append (Harness.Quote (launchAppPath));
+				args.Append (StringUtils.Quote (launchAppPath));
 			}
 
 			if (isSimulator) {
@@ -563,13 +564,13 @@ namespace xharness
 				if (mode != "watchos") {
 					var stderr_tty = Marshal.PtrToStringAuto (ttyname (2));
 					if (!string.IsNullOrEmpty (stderr_tty)) {
-						args.Append (" --stdout=").Append (Harness.Quote (stderr_tty));
-						args.Append (" --stderr=").Append (Harness.Quote (stderr_tty));
+						args.Append (" --stdout=").Append (StringUtils.Quote (stderr_tty));
+						args.Append (" --stderr=").Append (StringUtils.Quote (stderr_tty));
 					} else {
 						var stdout_log = Logs.CreateFile ("Standard output", Path.Combine (LogDirectory, "stdout.log"));
 						var stderr_log = Logs.CreateFile ("Standard error", Path.Combine (LogDirectory, "stderr.log"));
-						args.Append (" --stdout=").Append (Harness.Quote (stdout_log.FullPath));
-						args.Append (" --stderr=").Append (Harness.Quote (stderr_log.FullPath));
+						args.Append (" --stdout=").Append (StringUtils.Quote (stdout_log.FullPath));
+						args.Append (" --stderr=").Append (StringUtils.Quote (stderr_log.FullPath));
 					}
 				}
 
@@ -801,7 +802,7 @@ namespace xharness
 		{
 			if (!string.IsNullOrEmpty (device_name)) {
 				args.Append (" --devname ");
-				args.Append (Harness.Quote (device_name));
+				args.Append (StringUtils.Quote (device_name));
 			}
 		}
 	}

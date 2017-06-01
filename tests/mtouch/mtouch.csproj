@@ -49,6 +49,9 @@
     <Compile Include="MLaunchTool.cs" />
     <Compile Include="Cache.cs" />
     <Compile Include="InlinerTest.cs" />
+    <Compile Include="..\..\tools\common\Quote.cs">
+      <Link>Quote.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

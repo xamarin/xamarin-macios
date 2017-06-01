@@ -407,9 +407,9 @@ namespace Xamarin.Bundler
 					// error: invalid argument '-std=c99' not allowed with 'C++/ObjC++'
 					flags.AddOtherFlag ("-std=c99");
 				}
-				flags.AddOtherFlag ($"-I{Driver.Quote (Path.Combine (Driver.GetProductSdkDirectory (app), "usr", "include"))}");
+				flags.AddOtherFlag ($"-I{StringUtils.Quote (Path.Combine (Driver.GetProductSdkDirectory (app), "usr", "include"))}");
 			}
-			flags.AddOtherFlag ($"-isysroot {Driver.Quote (Driver.GetFrameworkDirectory (app))}");
+			flags.AddOtherFlag ($"-isysroot {StringUtils.Quote (Driver.GetFrameworkDirectory (app))}");
 			flags.AddOtherFlag ("-Qunused-arguments"); // don't complain about unused arguments (clang reports -std=c99 and -Isomething as unused).
 		}
 
@@ -462,7 +462,7 @@ namespace Xamarin.Bundler
 			if (App.EnableBitCode)
 				flags.AddOtherFlag ("-lc++");
 			flags.LinkWithMono ();
-			flags.AddOtherFlag ("-install_name " + Driver.Quote (install_name));
+			flags.AddOtherFlag ("-install_name " + StringUtils.Quote (install_name));
 			flags.AddOtherFlag ("-fapplication-extension"); // fixes this: warning MT5203: Native linking warning: warning: linking against dylib not safe for use in application extensions: [..]/actionextension.dll.arm64.dylib
 		}
 
@@ -509,7 +509,7 @@ namespace Xamarin.Bundler
 			if (App.EnableDebug)
 				CompilerFlags.AddDefine ("DEBUG");
 
-			CompilerFlags.AddOtherFlag ($"-o {Driver.Quote (OutputFile)}");
+			CompilerFlags.AddOtherFlag ($"-o {StringUtils.Quote (OutputFile)}");
 
 			if (!string.IsNullOrEmpty (Language))
 				CompilerFlags.AddOtherFlag ($"-x {Language}");

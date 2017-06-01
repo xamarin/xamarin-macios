@@ -56,5 +56,8 @@
     <Compile Include="generator-enums.cs" />
     <Compile Include="generator-filters.cs" />
     <Compile Include="generator-typemanager.cs" />
+    <Compile Include="..\tools\common\Quote.cs">
+      <Link>Quote.cs</Link>
+    </Compile>
   </ItemGroup>
 </Project>

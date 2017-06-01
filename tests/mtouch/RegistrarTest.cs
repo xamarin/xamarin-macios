@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using Xamarin.Tests;
-
+using Xamarin.Utils;
 using NUnit.Framework;
 
 namespace Xamarin
@@ -1233,8 +1233,8 @@ class CTP4 : CTP3 {
 			using (var p = new Process ()) {
 				var args = new StringBuilder ();
 				args.Append (" /unsafe /debug:full /nologo ");
-				args.Append (MTouch.Quote (filename));
-				args.Append (" -r:").Append (MTouch.Quote (MTouch.GetBaseLibrary (profile)));
+				args.Append (StringUtils.Quote (filename));
+				args.Append (" -r:").Append (StringUtils.Quote (MTouch.GetBaseLibrary (profile)));
 				p.StartInfo.FileName = MTouch.GetCompiler (profile, args);
 				p.StartInfo.Arguments = args.ToString ();
 				p.StartInfo.UseShellExecute = false;

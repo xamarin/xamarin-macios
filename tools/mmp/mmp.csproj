@@ -331,6 +331,12 @@
     <Compile Include="linker\MonoMac.Tuner\MacBaseProfile.cs">
       <Link>MonoMac.Tuner\MacBaseProfile.cs</Link>
     </Compile>
+    <Compile Include="..\common\StringUtils.cs">
+      <Link>external\StringUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\common\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

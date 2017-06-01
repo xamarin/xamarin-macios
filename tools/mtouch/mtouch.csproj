@@ -333,6 +333,9 @@
       <Link>common\BuildTasks.cs</Link>
     </Compile>
     <Compile Include="BuildTasks.mtouch.cs" />
+    <Compile Include="..\common\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
