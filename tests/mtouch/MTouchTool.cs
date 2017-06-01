@@ -7,6 +7,8 @@ using System.Xml;
 
 using Xamarin.Tests;
 
+using NUnit.Framework;
+
 namespace Xamarin
 {
 	public enum MTouchAction
@@ -154,6 +156,69 @@ namespace Xamarin
 		public void AssertExecuteFailure (MTouchAction action, string message = null)
 		{
 			NUnit.Framework.Assert.AreEqual (1, Execute (action), message);
+		}
+
+		// Assert that none of the files in the app has changed (except 'except' files)
+		public void AssertNoneModified (DateTime timestamp, string message, params string [] except)
+		{
+			var failed = new List<string> ();
+			var files = Directory.EnumerateFiles (AppPath, "*", SearchOption.AllDirectories);
+			foreach (var file in files) {
+				var info = new FileInfo (file);
+				if (info.LastWriteTime > timestamp) {
+					if (except != null && except.Contains (Path.GetFileName (file))) {
+						Console.WriteLine ("SKIP: {0} modified: {1} > {2}", file, info.LastWriteTime, timestamp);
+					} else {
+						failed.Add (string.Format ("{0} is modified, timestamp: {1} > {2}", file, info.LastWriteTime, timestamp));
+						Console.WriteLine ("FAIL: {0} modified: {1} > {2}", file, info.LastWriteTime, timestamp);
+					}
+				} else {
+					Console.WriteLine ("{0} not modified ted: {1} <= {2}", file, info.LastWriteTime, timestamp);
+				}
+			}
+			Assert.IsEmpty (failed, message);
+		}
+
+		// Assert that all of the files in the app has changed (except 'except' files)
+		public void AssertAllModified (DateTime timestamp, string message, params string [] except)
+		{
+			var failed = new List<string> ();
+			var files = Directory.EnumerateFiles (AppPath, "*", SearchOption.AllDirectories);
+			foreach (var file in files) {
+				var info = new FileInfo (file);
+				if (info.LastWriteTime <= timestamp) {
+					if (except != null && except.Contains (Path.GetFileName (file))) {
+						Console.WriteLine ("SKIP: {0} not modified: {1} <= {2}", file, info.LastWriteTime, timestamp);
+					} else {
+						failed.Add (string.Format ("{0} is not modified, timestamp: {1} <= {2}", file, info.LastWriteTime, timestamp));
+						Console.WriteLine ("FAIL: {0} not modified: {1} <= {2}", file, info.LastWriteTime, timestamp);
+					}
+				} else {
+					Console.WriteLine ("{0} modified (as expected): {1} > {2}", file, info.LastWriteTime, timestamp);
+				}
+			}
+			Assert.IsEmpty (failed, message);
+		}
+
+		// Asserts that the given files were modified.
+		public void AssertModified (DateTime timestamp, string message, params string [] files)
+		{
+			Assert.IsNotEmpty (files);
+
+			var failed = new List<string> ();
+			var fs = Directory.EnumerateFiles (AppPath, "*", SearchOption.AllDirectories);
+			foreach (var file in fs) {
+				if (!files.Contains (Path.GetFileName (file)))
+					continue;
+				var info = new FileInfo (file);
+				if (info.LastWriteTime < timestamp) {
+					failed.Add (string.Format ("{0} is not modified, timestamp: {1} < {2}", file, info.LastWriteTime, timestamp));
+					Console.WriteLine ("FAIL: {0} not modified: {1} < {2}", file, info.LastWriteTime, timestamp);
+				} else {
+					Console.WriteLine ("{0} modified (as expected): {1} >= {2}", file, info.LastWriteTime, timestamp);
+				}
+			}
+			Assert.IsEmpty (failed, message);
 		}
 
 		string BuildArguments (MTouchAction action)
