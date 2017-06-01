@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 using Xamarin.Bundler;
-using Xamarin.Utils;
 
 namespace Xamarin.MMP.Tests.Unit
 {
