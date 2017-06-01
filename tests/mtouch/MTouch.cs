@@ -137,6 +137,7 @@ namespace Xamarin
 				mtouch.Abi = abi;
 				mtouch.Debug = debug;
 				mtouch.TargetVer = "6.0";
+				mtouch.NoStrip = true;
 				DateTime dt = DateTime.MinValue;
 
 				mtouch.DSym = false; // we don't need the dSYMs for this test, so disable them to speed up the test.
@@ -167,6 +168,15 @@ namespace Xamarin
 				mtouch.AssertExecute (MTouchAction.BuildDev, "third build");
 				Console.WriteLine ("third build done");
 				mtouch.AssertNoneModified (dt, name + " - third build", "testApp", "testApp.exe", "testApp.aotdata.armv7", "testApp.aotdata.arm64");
+
+				// Test that a complete rebuild occurs when command-line options changes
+				dt = DateTime.Now;
+				System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older.
+
+				mtouch.GccFlags = "-v";
+				mtouch.AssertExecute (MTouchAction.BuildDev, "fourth build");
+				Console.WriteLine ("fourth build done");
+				mtouch.AssertAllModified (dt, name + " - fourth build", "NOTICE");
 			}
 		}
 
