@@ -143,7 +143,7 @@ namespace Xamarin
 
 		public int Execute (MTouchAction action)
 		{
-			return Execute (BuildArguments (action));
+			return Execute (BuildArguments (action), always_show_output: Verbosity > 0);
 		}
 
 		public void AssertExecute (MTouchAction action, string message = null)

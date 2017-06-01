@@ -57,20 +57,28 @@ namespace Xamarin.Tests
 
 		public int Execute (string arguments, params string [] args)
 		{
-			return Execute (Configuration.MtouchPath, arguments, args);
+			return Execute (Configuration.MtouchPath, arguments, false, args);
+		}
+
+		public int Execute (string arguments, bool always_show_output, params string [] args)
+		{
+			return Execute (Configuration.MtouchPath, arguments, always_show_output, args);
 		}
 
 		public int Execute (string toolPath, string arguments, params string [] args)
+		{
+			return Execute (toolPath, arguments, false, args);
+		}
+
+		public int Execute (string toolPath, string arguments, bool always_show_output, params string [] args)
 		{
 			output.Clear ();
 			output_lines = null;
 
 			var rv = ExecutionHelper.Execute (toolPath, string.Format (arguments, args), EnvironmentVariables, output, output);
 
-			if (rv != 0) {
-				if (output.Length > 0)
-					Console.WriteLine ("\t" + output.ToString ().Replace ("\n", "\n\t"));
-			}
+			if ((rv != 0 || always_show_output) && output.Length > 0)
+				Console.WriteLine ("\t" + output.ToString ().Replace ("\n", "\n\t"));
 
 			ParseMessages ();
 
