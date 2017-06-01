@@ -3,21 +3,16 @@ using System.Text;
 
 namespace Xamarin.Utils {
 	public class StringUtils {
+		static StringUtils ()
+		{
+			PlatformID pid = Environment.OSVersion.Platform;
+			if (((int)pid != 128 && pid != PlatformID.Unix && pid != PlatformID.MacOSX))
+				shellQuoteChar = '"'; // Windows
+			else
+				shellQuoteChar = '\''; // !Windows
+		}
 
 		static char shellQuoteChar;
-		static char ShellQuoteChar {
-			get {
-				if (shellQuoteChar == '\0') {
-					PlatformID pid = Environment.OSVersion.Platform;
-					if (((int)pid != 128 && pid != PlatformID.Unix && pid != PlatformID.MacOSX))
-						shellQuoteChar = '"'; // Windows
-					else
-						shellQuoteChar = '\''; // !Windows
-				}
-
-				return shellQuoteChar;
-			}
-		}
 
 		public static string Quote (string f)
 		{
@@ -29,14 +24,14 @@ namespace Xamarin.Utils {
 
 			var s = new StringBuilder ();
 
-			s.Append (ShellQuoteChar);
+			s.Append (shellQuoteChar);
 			foreach (var c in f) {
 				if (c == '\'' || c == '"' || c == '\\')
 					s.Append ('\\');
 
 				s.Append (c);
 			}
-			s.Append (ShellQuoteChar);
+			s.Append (shellQuoteChar);
 
 			return s.ToString ();
 		}
