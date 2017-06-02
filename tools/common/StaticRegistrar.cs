@@ -3803,19 +3803,20 @@ namespace XamCore.Registrar {
 			
 			Specialize (sb);
 
+			methods.WriteLine ();
+			methods.AppendLine ();
+			methods.AppendLine (sb);
+
 			methods.StringBuilder.AppendLine ("} /* extern \"C\" */");
 
 			FlushTrace ();
+
+			Driver.WriteIfDifferent (source_path, methods.ToString ());
 
 			header.AppendLine ();
 			header.AppendLine (declarations);
 			header.AppendLine (interfaces);
 			Driver.WriteIfDifferent (header_path, header.ToString ());
-
-			methods.WriteLine ();
-			methods.AppendLine ();
-			methods.AppendLine (sb);
-			Driver.WriteIfDifferent (source_path, methods.ToString ());
 
 			header.Dispose ();
 			header = null;

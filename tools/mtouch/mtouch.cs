@@ -615,7 +615,7 @@ namespace Xamarin.Bundler
 
 					if (registration_methods != null) {
 						foreach (var method in registration_methods) {
-							sw.Write ("void ");
+							sw.Write ("extern \"C\" void ");
 							sw.Write (method);
 							sw.WriteLine ("();");
 						}
