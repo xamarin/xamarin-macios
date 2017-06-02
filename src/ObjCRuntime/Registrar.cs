@@ -186,6 +186,8 @@ namespace XamCore.Registrar {
 				}
 			}
 
+			// This list is duplicated in tests/mtouch/RegistrarTest.cs.
+			// Update that list whenever this list is updated.
 			static char[] invalidSelectorCharacters = new char[] { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n' };
 			void VerifySelector (ObjCMethod method, ref List<Exception> exceptions)
 			{
