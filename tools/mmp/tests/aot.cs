@@ -399,7 +399,6 @@ namespace Xamarin.MMP.Tests.Unit
 
 		[Test]
 		public void All_AOTAllFiles_Modern ()
-
 		{
 			var options = new AOTOptions ("all");
 			Assert.IsTrue (options.IsAOT, "Should be IsAOT");

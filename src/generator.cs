@@ -56,7 +56,6 @@ using System.ComponentModel;
 
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
-using Xamarin.Utils;
 
 public static class ReflectionExtensions {
 	public static BaseTypeAttribute GetBaseTypeAttribute (Type type)

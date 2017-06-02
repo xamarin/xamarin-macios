@@ -44,7 +44,6 @@ using System.Runtime.InteropServices;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 using Xamarin.Utils;
-using Xamarin;
 
 class BindingTouch {
 	static TargetFramework? target_framework;
