@@ -72,5 +72,37 @@ namespace Xamarin.MMP.Tests
 				TI.TestClassicExecutable (tmpDir, csprojConfig: "<MonoBundlingExtraArgs>--linkplatform</MonoBundlingExtraArgs>\n", includeMonoRuntime:true, shouldFail: true);
 			});
 		}
+
+		[Test]
+		[TestCase ("linker")]
+		[TestCase ("code")]
+		[TestCase ("ignore")]
+		[TestCase ("default")]
+		public void DynamicSymbolMode (string mode)
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig config = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = $"<MonoBundlingExtraArgs>--dynamic-symbol-mode={mode}</MonoBundlingExtraArgs>\n", 
+				};
+				var output = TI.TestUnifiedExecutable (config);
+				switch (mode) {
+				case "linker":
+				case "default":
+					Assert.That (output.BuildOutput, Does.Contain ("-u "), "reference.m");
+					Assert.That (output.BuildOutput, Does.Not.Contain ("reference.m"), "reference.m");
+					break;
+				case "code":
+					Assert.That (output.BuildOutput, Does.Not.Contain ("-u "), "reference.m");
+					Assert.That (output.BuildOutput, Does.Contain ("reference.m"), "reference.m");
+					break;
+				case "ignore":
+					Assert.That (output.BuildOutput, Does.Not.Contain ("-u "), "reference.m");
+					Assert.That (output.BuildOutput, Does.Not.Contain ("reference.m"), "reference.m");
+					break;
+				default:
+					throw new NotImplementedException ();
+				}
+			});
+		}
 	}
 }

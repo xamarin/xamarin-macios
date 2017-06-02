@@ -101,6 +101,27 @@ namespace Xamarin.Bundler {
 			options.Add ("embeddinator", "Enables Embeddinator targetting mode.", v => {
 				app.Embeddinator = true;
 			}, true);
+			options.Add ("dynamic-symbol-mode:", "Specify how dynamic symbols are treated so that they're not linked away by the native linker. Valid values: linker (pass \"-u symbol\" to the native linker), code (generate native code that uses the dynamic symbol), ignore (do nothing and hope for the best). The default is 'code' when using bitcode, and 'linker' otherwise.", (v) => {
+				switch (v.ToLowerInvariant ()) {
+				case "default":
+					app.SymbolMode = SymbolMode.Default;
+					break;
+				case "linker":
+					app.SymbolMode = SymbolMode.Linker;
+					break;
+				case "code":
+					app.SymbolMode = SymbolMode.Code;
+					break;
+				case "ignore":
+					app.SymbolMode = SymbolMode.Ignore;
+					break;
+				default:
+					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--dynamic-symbol-mode", $"Invalid value: {v}. Valid values are: default, linker, code and ignore.");
+				}
+			});
+			options.Add ("ignore-dynamic-symbol:", "Specify that Xamarin.iOS/Xamarin.Mac should not try to prevent the linker from removing the specified symbol.", (v) => {
+				app.IgnoredSymbols.Add (v);
+			});
 		}
 
 		static int Jobs;

@@ -690,7 +690,6 @@ namespace Xamarin.Bundler {
 			string fx_dir = null;
 			string root_assembly = null;
 			var native_libs = new Dictionary<string, List<MethodDefinition>> ();
-			HashSet<string> internalSymbols = new HashSet<string> ();
 
 			if (registrar == RegistrarMode.Default)
 			{
@@ -824,26 +823,19 @@ namespace Xamarin.Bundler {
 						native_libs.Add (kvp.Key, kvp.Value);
 					}
 				}
-				internalSymbols.UnionWith (BuildTarget.LinkContext.RequiredSymbols.Keys);
 				Watch (string.Format ("Linking (mode: '{0}')", App.LinkMode), 1);
 			}
-			
+
 			// These must occur _after_ Linking
+			BuildTarget.CollectAllSymbols ();
 			BuildTarget.ComputeLinkerFlags ();
 			BuildTarget.GatherFrameworks ();
-
-			if (App.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Disable && !App.RequiresPInvokeWrappers && BuildTarget.Is64Build) {
-				internalSymbols.Add ("xamarin_dyn_objc_msgSend");
-				internalSymbols.Add ("xamarin_dyn_objc_msgSendSuper");
-				internalSymbols.Add ("xamarin_dyn_objc_msgSend_stret");
-				internalSymbols.Add ("xamarin_dyn_objc_msgSendSuper_stret");
-			}
 
 			CopyDependencies (native_libs);
 			Watch ("Copy Dependencies", 1);
 
 			// MDK check
-			var ret = Compile (internalSymbols);
+			var ret = Compile ();
 			Watch ("Compile", 1);
 			if (ret != 0) {
 				if (ret == 1)
@@ -1165,7 +1157,7 @@ namespace Xamarin.Bundler {
 			frameworks_copied_to_bundle_dir = true;
 		}
 
-		static int Compile (IEnumerable<string> internalSymbols)
+		static int Compile ()
 		{
 			int ret = 1;
 
@@ -1298,9 +1290,26 @@ namespace Xamarin.Bundler {
 					args.Append ("-framework ").Append (f).Append (' ');
 				foreach (var f in BuildTarget.WeakFrameworks)
 					args.Append ("-weak_framework ").Append (f).Append (' ');
-				Driver.WriteIfDifferent (Path.Combine (App.Cache.Location, "exported-symbols-list"), string.Join ("\n", internalSymbols.Select ((symbol) => "_" + symbol).ToArray ()));
-				foreach (var symbol in internalSymbols)
-					args.Append ("-u _").Append (symbol).Append (' ');
+
+				var requiredSymbols = BuildTarget.GetRequiredSymbols ();
+				Driver.WriteIfDifferent (Path.Combine (App.Cache.Location, "exported-symbols-list"), string.Join ("\n", requiredSymbols.Select ((symbol) => "_" + symbol.Name).ToArray ()));
+				switch (App.SymbolMode) {
+				case SymbolMode.Ignore:
+					break;
+				case SymbolMode.Code:
+					string reference_m = Path.Combine (App.Cache.Location, "reference.m");
+					reference_m = BuildTarget.GenerateReferencingSource (reference_m, requiredSymbols);
+					if (!string.IsNullOrEmpty (reference_m))
+						args.Append (Quote (reference_m)).Append (' ');
+					break;
+				case SymbolMode.Linker:
+				case SymbolMode.Default:
+					foreach (var symbol in requiredSymbols)
+						args.Append ("-u ").Append (Quote ("_" + symbol.Name)).Append (' ');
+					break;
+				default:
+					throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol mode: {App.SymbolMode}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+				}
 
 				bool linkWithRequiresForceLoad = BuildTarget.Assemblies.Any (x => x.ForceLoad);
 				if (no_executable || linkWithRequiresForceLoad)

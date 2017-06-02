@@ -52,12 +52,6 @@ namespace Xamarin.Bundler
 		CompilerFlags linker_flags;
 		NativeLinkTask link_task;
 
-		// If we didn't link because the existing (cached) assemblyes are up-to-date.
-		bool cached_link;
-
-		// If any assemblies were updated (only set to false if the linker is disabled and no assemblies were modified).
-		bool any_assembly_updated = true;
-
 		// If the assemblies were symlinked.
 		public bool Symlinked;
 
@@ -288,89 +282,6 @@ namespace Xamarin.Bundler
 				}
 			}
 			return assemblies;
-		}
-
-		Dictionary<string, List<MemberReference>> entry_points;
-		public IDictionary<string, List<MemberReference>> GetEntryPoints ()
-		{
-			if (entry_points == null)
-				GetRequiredSymbols ();
-			return entry_points;
-		}
-
-		public IEnumerable<string> GetRequiredSymbols ()
-		{
-			if (entry_points != null)  
-				return entry_points.Keys;
-
-			var cache_location = Path.Combine (App.Cache.Location, "entry-points.txt");
-			if (cached_link || !any_assembly_updated) {
-				entry_points = new Dictionary<string, List<MemberReference>> ();
-				foreach (var ep in File.ReadAllLines (cache_location))
-					entry_points.Add (ep, null);
-			} else {
-				if (LinkContext == null) {
-					// This happens when using the simlauncher and the msbuild tasks asked for a list
-					// of symbols (--symbollist). In that case just produce an empty list, since the
-					// binary shouldn't end up stripped anyway.
-					entry_points = new Dictionary<string, List<MemberReference>> ();
-				} else {
-					entry_points = LinkContext.RequiredSymbols;
-					if (App.IsCodeShared) {
-						// Remove symbols from assemblies from extensions that were linked together with the main app.
-						var filtered_entry_points = new Dictionary<string, List<MemberReference>> ();
-						foreach (var ep in entry_points) {
-							var filtered = ep.Value.Where ((v) => Assemblies.ContainsKey (Assembly.GetIdentity (v.Module.FileName))).ToList ();
-							if (filtered.Count > 0)
-								filtered_entry_points.Add (ep.Key, filtered);
-						}
-						entry_points = filtered_entry_points;
-					}
-				}
-				
-				// keep the debugging helper in debugging binaries only
-				if (App.EnableDebug && !App.EnableBitCode)
-					entry_points.Add ("mono_pmip", null);
-
-				if (App.IsSimulatorBuild) {
-					entry_points.Add ("xamarin_dyn_objc_msgSend", null);
-					entry_points.Add ("xamarin_dyn_objc_msgSendSuper", null);
-					entry_points.Add ("xamarin_dyn_objc_msgSend_stret", null);
-					entry_points.Add ("xamarin_dyn_objc_msgSendSuper_stret", null);
-				}
-
-				File.WriteAllText (cache_location, string.Join ("\n", entry_points.Keys.ToArray ()));
-			}
-			return entry_points.Keys;
-		}
-
-		public IEnumerable<string> GetRequiredSymbols (Assembly assembly, bool includeObjectiveCClasses)
-		{
-			if (entry_points == null)
-				GetRequiredSymbols ();
-
-			foreach (var ep in entry_points) {
-				if (ep.Value == null)
-					continue;
-				foreach (var mr in ep.Value) {
-					if (mr.Module.Assembly == assembly.AssemblyDefinition)
-						yield return ep.Key;
-				}
-			}
-
-			if (includeObjectiveCClasses) {
-				foreach (var kvp in LinkContext.ObjectiveCClasses) {
-					if (kvp.Value.Module.Assembly == assembly.AssemblyDefinition)
-						yield return $"OBJC_CLASS_$_{kvp.Key}";
-				}
-			}
-		}
-
-		public List<MemberReference> GetMembersForSymbol (string symbol)
-		{
-			List<MemberReference> rv = null;
-			entry_points?.TryGetValue (symbol, out rv);
-			return rv;
 		}
 
 		//
@@ -1088,8 +999,24 @@ namespace Xamarin.Bundler
 						compiler_flags.AddFrameworks (a.Frameworks, a.WeakFrameworks);
 						compiler_flags.AddLinkWith (a.LinkWith, a.ForceLoad);
 						compiler_flags.AddOtherFlags (a.LinkerFlags);
-						if (a.HasLinkWithAttributes && !App.EnableBitCode)
-							compiler_flags.ReferenceSymbols (GetRequiredSymbols (a, true));
+						if (a.HasLinkWithAttributes) {
+							var symbols = GetRequiredSymbols (a);
+							switch (App.SymbolMode) {
+							case SymbolMode.Ignore:
+								break;
+							case SymbolMode.Code:
+								var tasks = GenerateReferencingSource (Path.Combine (App.Cache.Location, Path.GetFileNameWithoutExtension (a.FullPath) + "-unresolved-externals.m"), symbols);
+								foreach (var task in tasks)
+									compiler_flags.AddLinkWith (task.OutputFile);
+								link_dependencies.AddRange (tasks);
+								break;
+							case SymbolMode.Linker:
+								compiler_flags.ReferenceSymbols (symbols);
+								break;
+							default:
+								throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol mode: {App.SymbolMode}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+							}
+						}
 					}
 					if (App.Embeddinator) {
 						if (!string.IsNullOrEmpty (App.UserGccFlags))
@@ -1097,7 +1024,7 @@ namespace Xamarin.Bundler
 					}
 					compiler_flags.LinkWithMono ();
 					compiler_flags.LinkWithXamarin ();
-					if (GetEntryPoints ().ContainsKey ("UIApplicationMain"))
+					if (GetAllSymbols ().Contains ("UIApplicationMain"))
 						compiler_flags.AddFramework ("UIKit");
 
 					if (App.EnableLLVMOnlyBitCode) {
@@ -1422,10 +1349,19 @@ namespace Xamarin.Bundler
 				linker_flags.AddOtherFlag ("-lc++");
 
 			// allow the native linker to remove unused symbols (if the caller was removed by the managed linker)
-			if (!bitcode) {
-				// Note that we include *all* (__Internal) p/invoked symbols here
-				// We also include any fields from [Field] attributes.
+			// Note that we include *all* (__Internal) p/invoked symbols here
+			// We also include any fields from [Field] attributes.
+			switch (App.SymbolMode) {
+			case SymbolMode.Ignore:
+				break;
+			case SymbolMode.Code:
+				LinkWithTaskOutput (GenerateReferencingSource (Path.Combine (App.Cache.Location, "reference.m"), GetRequiredSymbols ()));
+				break;
+			case SymbolMode.Linker:
 				linker_flags.ReferenceSymbols (GetRequiredSymbols ());
+				break;
+			default:
+				throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol mode: {App.SymbolMode}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 			}
 
 			var libdir = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib");
