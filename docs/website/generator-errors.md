@@ -167,6 +167,8 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 
 <h3><a name='BI1060'/>BI1060: The * protocol is decorated with [Model], but not [BaseType]. Please verify that [Model] is relevant for this protocol; if so, add [BaseType] as well, otherwise remove [Model].</h3>
 
+<h3><a name='BI1061'/>BI1061: The attribute '{attribute}' found on '{member}' is not a valid binding attribute. Please remove this attribute.</h3>
+
 # BI11xx: warnings
 
 <!-- 11xx: warnings -->

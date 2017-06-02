@@ -98,6 +98,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <None Include="..\docs\website\generator-errors.md">
+      <Link>generator-errors.md</Link>
+    </None>
     <!--%IKVM_FILES%-->
     <!--%FILES%-->
   </ItemGroup>
