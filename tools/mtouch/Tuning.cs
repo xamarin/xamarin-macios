@@ -87,6 +87,19 @@ namespace MonoTouch.Tuner {
 				throw;
 			} catch (MonoTouchException) {
 				throw;
+			} catch (MarkException me) {
+				var re = me.InnerException as ResolutionException;
+				if (re == null) {
+					if (me.InnerException != null) {
+						throw ErrorHelper.CreateError (2102, me, "Error processing the method '{0}' in the assembly '{1}': {2}", me.Method.FullName, me.Method.Module, re.InnerException.Message);
+					} else {
+						throw ErrorHelper.CreateError (2102, me, "Error processing the method '{0}' in the assembly '{1}'", me.Method.FullName, me.Method.Module);
+					}
+				} else {
+					TypeReference tr = (re.Member as TypeReference);
+					IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
+					throw ErrorHelper.CreateError (2101, me, "Can't resolve the reference '{0}', referenced from the method '{1}' in '{2}'.", re.Member, me.Method.FullName, scope);
+				}
 			} catch (ResolutionException re) {
 				TypeReference tr = (re.Member as TypeReference);
 				IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
@@ -122,7 +135,7 @@ namespace MonoTouch.Tuner {
 			context.OutputDirectory = options.OutputDirectory;
 			context.SetParameter ("debug-build", options.DebugBuild.ToString ());
 			context.StaticRegistrar = options.Target.StaticRegistrar;
-
+			context.Target = options.Target;
 			options.LinkContext = context;
 
 			return context;

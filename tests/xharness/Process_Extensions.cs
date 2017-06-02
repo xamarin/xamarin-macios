@@ -91,7 +91,7 @@ namespace xharness
 						StdoutStream.Flush ();
 					}
 				} else {
-					stdout_completion.SetResult (true);
+					stdout_completion.TrySetResult (true);
 				}
 			};
 
@@ -103,7 +103,7 @@ namespace xharness
 						StderrStream.Flush ();
 					}
 				} else {
-					stderr_completion.SetResult (true);
+					stderr_completion.TrySetResult (true);
 				}
 			};
 
@@ -134,6 +134,9 @@ namespace xharness
 					process.WaitForExit ();
 				}
 				exit_completion.TrySetResult (true);
+				Task.WaitAll (new Task [] { stderr_completion.Task, stdout_completion.Task }, TimeSpan.FromSeconds (1));
+				stderr_completion.TrySetResult (false);
+				stdout_completion.TrySetResult (false);
 			}) {
 				IsBackground = true,
 			}.Start ();

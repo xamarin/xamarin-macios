@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Xamarin.Tests;
@@ -479,22 +480,38 @@ public class Category
 				".*/Test.cs(.*): error MT4159: Cannot register the method 'Category.Foo' as a category method because category methods must be static.");
 		}
 
+		// This list is duplicated in src/ObjCRuntime/Registrar.cs
+		static char[] invalidSelectorCharacters = new char[] { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n' };
+
 		[Test]
 		public void MT4160 ()
 		{
-			var code = @"
-public class TestInvalidChar : NSObject
-{
-	[Export (""xy z"")]
-	public void XyZ () {}
-	[Export (""ab\tc"")]
-	public void AbC () {}
-}
-";
-			VerifyWithXode (R.Static, code, false,
-				".*/Test.cs(.*): error MT4160: Invalid character ' ' (0x20) found in selector 'xy z' for 'TestInvalidChar.XyZ()'",
-				".*/Test.cs(.*): error MT4160: Invalid character '\t' (0x9) found in selector 'ab\tc' for 'TestInvalidChar.AbC()'"
-				);
+			// newline is invalid, but it messes up the error message and testing is just annoying, so skip it.
+			var testInvalidCharacters = invalidSelectorCharacters.Where ((v) => v != '\n').ToArray ();
+			using (var mtouch = new MTouchTool ()) {
+				var sb = new StringBuilder ();
+				sb.AppendLine ("public class TestInvalidChar : Foundation.NSObject {");
+				for (int i = 0; i < testInvalidCharacters.Length; i++) {
+					var c = testInvalidCharacters [i];
+					var str = c.ToString ();
+					switch (c) {
+					case '"':
+						str = "\"\"";
+						break;
+					}
+					sb.AppendLine ($"\t[Foundation.Export (@\"X{str}\")]");
+					sb.AppendLine ($"\tpublic void X{i} () {{}}");
+				}
+				sb.AppendLine ("}");
+				mtouch.CreateTemporaryApp (extraCode: sb.ToString (), extraArg: "-debug");
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				for (int i = 0; i < testInvalidCharacters.Length; i++) {
+					var c = testInvalidCharacters [i];
+					mtouch.AssertError (4160, $"Invalid character '{c}' (0x{((int)c).ToString ("x")}) found in selector 'X{c}' for 'TestInvalidChar.X{i}()'", "testApp.cs", 3 + i * 2);
+				}
+			}
 		}
 
 		[Test]
@@ -610,90 +627,42 @@ public struct FooF { public NSObject Obj; }
 			);
 		}
 
+		static string [] objective_c_keywords = new string [] {
+			"auto",
+			"break",
+			"case", "char", "const", "continue",
+			"default", "do", "double",
+			"else", "enum", "export", "extern",
+			"float", "for",
+			"goto",
+			"if", "inline", "int",
+			"long",
+			"register", "return",
+			"short", "signed", "sizeof", "static", "struct", "switch",
+			"template", "typedef", "union",
+			"unsigned",
+			"void", "volatile",
+			"while",
+			"_Bool",
+			"_Complex",
+		};
+
 		[Test]
 		public void MT4164 ()
 		{
-			var code = @"
-	class FutureType : NSObject
-	{
-		[Export (""auto"")] string Auto { get; set; }
-		[Export (""break"")] string Break { get; set; }
-		[Export (""case"")] string Case { get; set; }
-		[Export (""char"")] string Char { get; set; }
-		[Export (""const"")] string Const { get; set; }
-		[Export (""continue"")] string Continue { get; set; }
-		[Export (""default"")] string Default { get; set; }
-		[Export (""do"")] string Do { get; set; }
-		[Export (""double"")] string Double { get; set; }
-		[Export (""else"")] string Else { get; set; }
-		[Export (""enum"")] string Enum { get; set; }
-		[Export (""export"")] string Export { get; set; }
-		[Export (""extern"")] string Extern { get; set; }
-		[Export (""float"")] string Float { get; set; }
-		[Export (""for"")] string For { get; set; }
-		[Export (""goto"")] string Goto { get; set; }
-		[Export (""if"")] string If { get; set; }
-		[Export (""inline"")] string Inline { get; set; }
-		[Export (""int"")] string Int { get; set; }
-		[Export (""long"")] string Long { get; set; }
-		[Export (""register"")] string Register { get; set; }
-		[Export (""return"")] string Return { get; set; }
-		[Export (""short"")] string Short { get; set; }
-		[Export (""signed"")] string Signed { get; set; }
-		[Export (""sizeof"")] string Sizeof { get; set; }
-		[Export (""static"")] string Static { get; set; }
-		[Export (""struct"")] string Struct { get; set; }
-		[Export (""switch"")] string Switch { get; set; }
-		[Export (""template"")] string Template { get; set; }
-		[Export (""typedef"")] string Typedef { get; set; }
-		[Export (""union"")] string Union { get; set; }
-		[Export (""unsigned"")] string Unsigned { get; set; }
-		[Export (""void"")] string Void { get; set; }
-		[Export (""volatile"")] string Volatile { get; set; }
-		[Export (""while"")] string While { get; set; }
-		[Export (""_Bool"")] string Bool { get; set; }
-		[Export (""_Complex"")] string Complex { get; set; }
-	}
-";
-
-			Verify (R.Static, Profile.iOS, code, false, Target.Sim,
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Auto' because its selector 'auto' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Break' because its selector 'break' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Case' because its selector 'case' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Char' because its selector 'char' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Const' because its selector 'const' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Continue' because its selector 'continue' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Default' because its selector 'default' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Do' because its selector 'do' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Double' because its selector 'double' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Else' because its selector 'else' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Enum' because its selector 'enum' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Export' because its selector 'export' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Extern' because its selector 'extern' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Float' because its selector 'float' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'For' because its selector 'for' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Goto' because its selector 'goto' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'If' because its selector 'if' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Inline' because its selector 'inline' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Int' because its selector 'int' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Long' because its selector 'long' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Register' because its selector 'register' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Return' because its selector 'return' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Short' because its selector 'short' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Signed' because its selector 'signed' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Sizeof' because its selector 'sizeof' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Static' because its selector 'static' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Struct' because its selector 'struct' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Switch' because its selector 'switch' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Template' because its selector 'template' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Typedef' because its selector 'typedef' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Union' because its selector 'union' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Unsigned' because its selector 'unsigned' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Void' because its selector 'void' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Volatile' because its selector 'volatile' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'While' because its selector 'while' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Bool' because its selector '_Bool' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Complex' because its selector '_Complex' is an Objective-C keyword. Please use a different name.");
+			using (var mtouch = new MTouchTool ()) {
+				var sb = new StringBuilder ();
+				sb.AppendLine ("class FutureType : Foundation.NSObject {");
+				foreach (var kw in objective_c_keywords)
+					sb.AppendLine ($"[Foundation.Export (\"{kw}\")] string X{kw} {{ get; set; }}");
+				sb.AppendLine ("}");
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: sb.ToString (), extraArg: "-debug");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				foreach (var kw in objective_c_keywords)
+					mtouch.AssertError (4164, $"Cannot export the property 'X{kw}' because its selector '{kw}' is an Objective-C keyword. Please use a different name.", "testApp.cs");
+			}
 		}
 
 		[Test]
@@ -709,6 +678,40 @@ class X : ReplayKit.RPBroadcastControllerDelegate
 }
 ";
 			Verify (R.Static, code, true);
+		}
+
+		[Test]
+		public void MT4168 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var sb = new StringBuilder ();
+				foreach (var kw in objective_c_keywords) {
+					sb.AppendLine ($"[Foundation.Register (\"{kw}\")]");
+					sb.AppendLine ($"class X{kw} : Foundation.NSObject {{}}");
+				}
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: sb.ToString ());
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				foreach (var kw in objective_c_keywords)
+					mtouch.AssertError (4168, $"Cannot register the type 'X{kw}' because its Objective-C name '{kw}' is an Objective-C keyword. Please use a different name.");
+			}
+		}
+
+		[Test]
+		public void NoWarnings ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.Linker = MTouchLinker.DontLink; // so that as much as possible is registered
+				mtouch.Verbosity = 9; // Increase verbosity, otherwise linker warnings aren't shown
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertNoWarnings ();
+				foreach (var line in mtouch.OutputLines)
+					Assert.That (line, Does.Not.Match ("warning:"), "no warnings");
+			}
 		}
 
 		[Test]

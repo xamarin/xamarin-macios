@@ -92,6 +92,8 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 <h3><a name="MM1406">MM1406: Target framework '{0}' is invalid when targetting Xamarin.Mac 4.5 .NET framwork.</h3>
 
+<h3><a name="MM1407">MM1407: Mismatch between Xamarin.Mac reference '{0}' and target framework selected '{1}'.</h3>
+
 ## MM15xx: Assembly gathering (not requiring linker) errors
 
 <h3><a name="MM1501">MM1501: Can not resolve reference: {0}</h3>
@@ -197,6 +199,10 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 <h3><a name="MM5205">MM5205: Invalid architecture '{0}'. Valid architectures are i386 and x86_64 (when --profile=mobile).</h3>
 
+<h3><a name="MM5218"/>MM5218: Can't ignore the dynamic symbol {symbol} (--ignore-dynamic-symbol={symbol}) because it was not detected as a dynamic symbol.</h3>
+
+See the [equivalent mtouch warning](mtouch-errors.md#MT5218).
+
 <!-- 5206 used by mtouch -->
 <!-- 5207 used by mtouch -->
 <!-- 5208 used by mtouch -->
@@ -207,6 +213,8 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 <!-- 5213 used by mtouch -->
 <!-- 5214 used by mtouch -->
 <!-- 5215 used by mtouch -->
+<!-- 5216 used by mtouch -->
+<!-- 5217 used by mtouch -->
 
 ## MM53xx: other tools
 

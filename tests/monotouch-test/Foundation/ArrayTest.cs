@@ -58,9 +58,11 @@ namespace MonoTouchFixtures.Foundation {
 			comparator_count++;
 			return 
 #if XAMCORE_2_0
-			(NSComparisonResult)
+				(NSComparisonResult) (long)
+#else
+				(int)
 #endif
-				(int) ((nint) obj2.Handle - (nint) obj1.Handle);
+				((nint) obj2.Handle - (nint) obj1.Handle);
 		}
 		
 		[Test]

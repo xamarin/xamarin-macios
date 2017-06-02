@@ -7,6 +7,8 @@ using System.Xml;
 
 using Xamarin.Tests;
 
+using NUnit.Framework;
+
 namespace Xamarin
 {
 	public enum MTouchAction
@@ -23,6 +25,15 @@ namespace Xamarin
 		LinkAll,
 		LinkSdk,
 		DontLink,
+	}
+
+	public enum MTouchSymbolMode
+	{
+		Unspecified,
+		Default,
+		Linker,
+		Code,
+		Ignore,
 	}
 
 	public enum MTouchRegistrar
@@ -78,6 +89,7 @@ namespace Xamarin
 		public string Cache;
 		public string Device; // --device
 		public MTouchLinker Linker;
+		public MTouchSymbolMode SymbolMode;
 		public bool? NoFastSim;
 		public MTouchRegistrar Registrar;
 		public I18N I18N;
@@ -143,7 +155,7 @@ namespace Xamarin
 
 		public int Execute (MTouchAction action)
 		{
-			return Execute (BuildArguments (action));
+			return Execute (BuildArguments (action), always_show_output: Verbosity > 0);
 		}
 
 		public void AssertExecute (MTouchAction action, string message = null)
@@ -154,6 +166,69 @@ namespace Xamarin
 		public void AssertExecuteFailure (MTouchAction action, string message = null)
 		{
 			NUnit.Framework.Assert.AreEqual (1, Execute (action), message);
+		}
+
+		// Assert that none of the files in the app has changed (except 'except' files)
+		public void AssertNoneModified (DateTime timestamp, string message, params string [] except)
+		{
+			var failed = new List<string> ();
+			var files = Directory.EnumerateFiles (AppPath, "*", SearchOption.AllDirectories);
+			foreach (var file in files) {
+				var info = new FileInfo (file);
+				if (info.LastWriteTime > timestamp) {
+					if (except != null && except.Contains (Path.GetFileName (file))) {
+						Console.WriteLine ("SKIP: {0} modified: {1} > {2}", file, info.LastWriteTime, timestamp);
+					} else {
+						failed.Add (string.Format ("{0} is modified, timestamp: {1} > {2}", file, info.LastWriteTime, timestamp));
+						Console.WriteLine ("FAIL: {0} modified: {1} > {2}", file, info.LastWriteTime, timestamp);
+					}
+				} else {
+					Console.WriteLine ("{0} not modified ted: {1} <= {2}", file, info.LastWriteTime, timestamp);
+				}
+			}
+			Assert.IsEmpty (failed, message);
+		}
+
+		// Assert that all of the files in the app has changed (except 'except' files)
+		public void AssertAllModified (DateTime timestamp, string message, params string [] except)
+		{
+			var failed = new List<string> ();
+			var files = Directory.EnumerateFiles (AppPath, "*", SearchOption.AllDirectories);
+			foreach (var file in files) {
+				var info = new FileInfo (file);
+				if (info.LastWriteTime <= timestamp) {
+					if (except != null && except.Contains (Path.GetFileName (file))) {
+						Console.WriteLine ("SKIP: {0} not modified: {1} <= {2}", file, info.LastWriteTime, timestamp);
+					} else {
+						failed.Add (string.Format ("{0} is not modified, timestamp: {1} <= {2}", file, info.LastWriteTime, timestamp));
+						Console.WriteLine ("FAIL: {0} not modified: {1} <= {2}", file, info.LastWriteTime, timestamp);
+					}
+				} else {
+					Console.WriteLine ("{0} modified (as expected): {1} > {2}", file, info.LastWriteTime, timestamp);
+				}
+			}
+			Assert.IsEmpty (failed, message);
+		}
+
+		// Asserts that the given files were modified.
+		public void AssertModified (DateTime timestamp, string message, params string [] files)
+		{
+			Assert.IsNotEmpty (files);
+
+			var failed = new List<string> ();
+			var fs = Directory.EnumerateFiles (AppPath, "*", SearchOption.AllDirectories);
+			foreach (var file in fs) {
+				if (!files.Contains (Path.GetFileName (file)))
+					continue;
+				var info = new FileInfo (file);
+				if (info.LastWriteTime < timestamp) {
+					failed.Add (string.Format ("{0} is not modified, timestamp: {1} < {2}", file, info.LastWriteTime, timestamp));
+					Console.WriteLine ("FAIL: {0} not modified: {1} < {2}", file, info.LastWriteTime, timestamp);
+				} else {
+					Console.WriteLine ("{0} modified (as expected): {1} >= {2}", file, info.LastWriteTime, timestamp);
+				}
+			}
+			Assert.IsEmpty (failed, message);
 		}
 
 		string BuildArguments (MTouchAction action)
@@ -317,6 +392,25 @@ namespace Xamarin
 				break;
 			case MTouchLinker.LinkSdk:
 				sb.Append (" --linksdkonly");
+				break;
+			default:
+				throw new NotImplementedException ();
+			}
+
+			switch (SymbolMode) {
+			case MTouchSymbolMode.Ignore:
+				sb.Append (" --dynamic-symbol-mode=ignore");
+				break;
+			case MTouchSymbolMode.Code:
+				sb.Append (" --dynamic-symbol-mode=code");
+				break;
+			case MTouchSymbolMode.Default:
+				sb.Append (" --dynamic-symbol-mode=default");
+				break;
+			case MTouchSymbolMode.Linker:
+				sb.Append (" --dynamic-symbol-mode=linker");
+				break;
+			case MTouchSymbolMode.Unspecified:
 				break;
 			default:
 				throw new NotImplementedException ();
@@ -611,6 +705,83 @@ public partial class NotificationService : UNNotificationServiceExtension
 		<string>com.apple.usernotifications.service</string>
 		<key>NSExtensionPrincipalClass</key>
 		<string>NotificationService</string>
+	</dict>
+</dict>
+</plist>
+";
+			var plist_path = Path.Combine (app, "Info.plist");
+			if (!File.Exists (plist_path) || File.ReadAllText (plist_path) != info_plist)
+				File.WriteAllText (plist_path, info_plist);
+		}
+
+		public void CreateTemporaryTodayExtension (string code = null, string extraCode = null, string extraArg = null, string appName = "testTodayExtension")
+		{
+			string testDir;
+			if (RootAssembly == null) {
+				testDir = CreateTemporaryDirectory ();
+			} else {
+				// We're rebuilding an existing executable, so just reuse that
+				testDir = Path.GetDirectoryName (RootAssembly);
+			}
+			var app = AppPath ?? Path.Combine (testDir, $"{appName}.appex");
+			Directory.CreateDirectory (app);
+
+			if (code == null) {
+				code = @"using System;
+using Foundation;
+using NotificationCenter;
+using UIKit;
+
+public partial class TodayViewController : UIViewController, INCWidgetProviding
+{
+	public TodayViewController (IntPtr handle) : base (handle)
+	{
+	}
+
+	[Export (""widgetPerformUpdateWithCompletionHandler:"")]
+	public void WidgetPerformUpdate (Action<NCUpdateResult> completionHandler)
+	{
+		completionHandler (NCUpdateResult.NewData);
+	}
+}
+";
+			}
+			if (extraCode != null)
+				code += extraCode;
+
+			AppPath = app;
+			Extension = true;
+			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile, extraArg: extraArg, appName: appName);
+
+			var info_plist = // FIXME: this includes a NSExtensionMainStoryboard key which points to a non-existent storyboard. This won't matter as long as we're only building, and not running the extension.
+@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
+<plist version=""1.0"">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>todayextension</string>
+	<key>CFBundleName</key>
+	<string>todayextension</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.xamarin.testapp.todayextension</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>XPC!</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>MinimumOSVersion</key>
+	<string>10.0</string>
+	<key>NSExtension</key>
+	<dict>
+		<key>NSExtensionPointIdentifier</key>
+		<string>widget-extension</string>
+		<key>NSExtensionMainStoryboard</key>
+		<string>MainInterface</string>
 	</dict>
 </dict>
 </plist>

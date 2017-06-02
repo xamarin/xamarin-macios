@@ -173,6 +173,9 @@ namespace Bindings.Test {
 		[Export ("V:c:c:c:c:i:d:")]
 		void V (sbyte c1, sbyte c2, sbyte c3, sbyte c4, sbyte c5, int i1, double d1);
 
+		[Export ("V:n:")]
+		void V (out NSObject n1, out NSString n2);
+
 		[Export ("invoke_V")]
 		void Invoke_V ();
 
@@ -184,6 +187,9 @@ namespace Bindings.Test {
 
 		[Export ("Sf_invoke")]
 		Sf Sf_invoke ();
+
+		[Export ("invoke_V_null_out")]
+		void Invoke_V_null_out ();
 
 		[Export ("methodReturningBlock")]
 		RegistrarTestBlock MethodReturningBlock ();

@@ -24,6 +24,8 @@ LINKER_SOURCES = \
 	$(MONOLINKER)/Mono.Linker/I18nAssemblies.cs			\
 	$(MONOLINKER)/Mono.Linker/IXApiVisitor.cs			\
 	$(MONOLINKER)/Mono.Linker/LinkContext.cs			\
+	$(MONOLINKER)/Mono.Linker/LoadException.cs			\
+	$(MONOLINKER)/Mono.Linker/MarkException.cs			\
 	$(MONOLINKER)/Mono.Linker/MethodAction.cs			\
 	$(MONOLINKER)/Mono.Linker/Pipeline.cs				\
 	$(MONOLINKER)/Mono.Linker/TypePreserve.cs			\
@@ -108,6 +110,7 @@ MTOUCH_SOURCES = \
 	$(TOP)/tools/common/Driver.cs		\
 	$(TOP)/tools/common/Frameworks.cs	\
 	$(TOP)/tools/common/MachO.cs		\
+	$(TOP)/tools/common/Symbols.cs			\
 	mtouch.cs		\
 	$(TOP)/tools/common/PInvokeWrapperGenerator.cs	\
 	$(TOP)/tools/common/TargetFramework.cs	\

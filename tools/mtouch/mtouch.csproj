@@ -107,6 +107,12 @@
     <Compile Include="..\..\external\linker\linker\Mono.Linker\TypePreserve.cs">
       <Link>Mono.Linker\TypePreserve.cs</Link>
     </Compile>
+    <Compile Include="..\..\external\linker\linker\Mono.Linker\LoadException.cs">
+      <Link>Mono.Linker\LoadException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\linker\linker\Mono.Linker\MarkException.cs">
+      <Link>Mono.Linker\MarkException.cs</Link>
+    </Compile>
     <Compile Include="..\..\external\linker\linker\Mono.Linker\MethodAction.cs">
       <Link>Mono.Linker\MethodAction.cs</Link>
     </Compile>
@@ -327,6 +333,9 @@
       <Link>common\BuildTasks.cs</Link>
     </Compile>
     <Compile Include="BuildTasks.mtouch.cs" />
+    <Compile Include="..\common\Symbols.cs">
+      <Link>external\Symbols.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
@@ -338,6 +347,9 @@
     <None Include="Makefile" />
     <None Include="monotouch-fixes.c" />
     <None Include="simlauncher.m" />
+    <None Include="..\..\docs\website\mtouch-errors.md">
+      <Link>mtouch-errors.md</Link>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Mono.Linker\" />

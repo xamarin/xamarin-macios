@@ -87,47 +87,51 @@ namespace Xamarin.Bundler {
 			
 		}
 
-		static bool IsDigit (char c) {
+		static bool IsDigit (byte c) {
 			return (c >= '0' && c <= '9');
 		}
 
-		static bool IsHex (char c) {
+		static bool IsHex (byte c) {
 			return IsDigit (c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
 		}
 
-		static bool ParseHex (string str, ref int start_index, ref int result)
+		static bool ParseHex (byte[] str, ref int start_index, ref byte result)
 		{
 			int i = 0;
+			var sb = new StringBuilder ();
 			while (start_index + i < str.Length && i < 2) {
-				if (IsHex (str [start_index + i]))
+				if (IsHex (str [start_index + i])) {
+					sb.Append ((char) str [start_index + i]);
 					++i;
-				else
+				} else
 					break;
 			}
 			if (i == 0)
 				return false;
 
-			result = System.Convert.ToInt32 (str.Substring (start_index, i), 16);
+			result = System.Convert.ToByte (sb.ToString (), 16);
 			start_index += i - 1; //the main loop will skip the last character
 
 			return true;
 		}
 
-		static bool ParseOctal (string str, ref int start_index, ref int result, ref string error_msg)
+		static bool ParseOctal (byte[] str, ref int start_index, ref byte result, ref string error_msg)
 		{
 			int i = 0;
+			var sb = new StringBuilder ();
 			while (start_index + i < str.Length && i < 3) {
-				if (IsDigit (str [start_index + i]))
+				if (IsDigit (str [start_index + i])) {
+					sb.Append ((char)str [start_index + i]);
 					++i;
-				else
+				} else
 					break;
 			}
 			if (i != 3) {
-				error_msg = string.Format ("Column {0} expected 3 digits but got {1}, content is {2}", start_index, i, str.Substring (start_index - 1, 4));
+				error_msg = string.Format ("Column {0} expected 3 digits but got {1}, content is {2}", start_index, i, sb);
 				return false;
 			}
 
-			result = System.Convert.ToInt32 (str.Substring (start_index, i), 8);
+			result = System.Convert.ToByte (sb.ToString (), 8);
 			start_index += i - 1; //the main loop will skip the last character
 
 			return true;
@@ -143,50 +147,51 @@ namespace Xamarin.Bundler {
 			var res = new StringBuilder (str.Length * 3);
 			res.Append (".byte ");
 			/* it's a regular C string, parse time! */
-			for (int i = 0; i < str.Length; ++i) {
-				int to_append = 0;
-				if (str [i] == '\\') {
+			var utf8 = Encoding.UTF8.GetBytes (str);
+			for (int i = 0; i < utf8.Length; ++i) {
+				byte to_append = 0;
+				if (utf8 [i] == '\\') {
 					++i;
-					if (i >= str.Length)
+					if (i >= utf8.Length)
 						throw ErrorHelper.CreateError (1302, "Invalid escape sequence when converting .s to .ll, \\ as the last characted in {0}:{1}.", input, line);
-					switch (str [i]) {
-					case 'b':
+					switch (utf8 [i]) {
+					case (byte) 'b':
 						to_append = 0x8;
 						break;
-					case 'f':
+					case (byte)'f':
 						to_append = 0xc;
 						break;
-					case 'n':
+					case (byte)'n':
 						to_append = 0xa;
 						break;
-					case 'r':
+					case (byte)'r':
 						to_append = 0xd;
 						break;
-					case 't':
+					case (byte)'t':
 						to_append = 9;
 						break;
-					case '\"':
-					case '\\':
-						to_append = str [i];
+					case (byte)'\"':
+					case (byte)'\\':
+						to_append = utf8 [i];
 						break;
-					case 'x':
-					case 'X':
+					case (byte)'x':
+					case (byte)'X':
 						++i;
-						if (!ParseHex (str, ref i, ref to_append))
+						if (!ParseHex (utf8, ref i, ref to_append))
 							throw ErrorHelper.CreateError (1302, "Invalid escape sequence when converting .s to .ll, bad hex escape in {0}:{1}.", input, line);
 
 						break;
 					default:
-						if (IsDigit (str [i])) {
+						if (IsDigit (utf8 [i])) {
 							string error_msg = null;
-							if (!ParseOctal (str, ref i, ref to_append, ref error_msg))
+							if (!ParseOctal (utf8, ref i, ref to_append, ref error_msg))
 								throw ErrorHelper.CreateError (1302, "Invalid escape sequence when converting .s to .ll, bad octal escape in {0}:{1} due to {2}.", input, line, error_msg);
 						} else
-							to_append = str [i]; // "\K" is the same as "K"
+							to_append = utf8 [i]; // "\K" is the same as "K"
 						break;
 					}
 				} else {
-					to_append = str [i];
+					to_append = utf8 [i];
 				}
 
 				if (!first)

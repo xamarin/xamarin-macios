@@ -579,7 +579,7 @@ namespace xharness
 		public static void AddAdditionalDefines (this XmlDocument csproj, string value)
 		{
 			var mainPropertyGroup = csproj.SelectSingleNode ("//*[local-name() = 'PropertyGroup' and not(@Condition)]");
-			var mainDefine = mainPropertyGroup.SelectSingleNode ("/*[local-name() = 'DefineConstants']");
+			var mainDefine = mainPropertyGroup.SelectSingleNode ("*[local-name() = 'DefineConstants']");
 			if (mainDefine == null) {
 				mainDefine = csproj.CreateElement ("DefineConstants", MSBuild_Namespace);
 				mainDefine.InnerText = value;

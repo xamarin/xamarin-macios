@@ -179,7 +179,7 @@ namespace Test {
 	[Protocol] interface C86 : IMTLSamplerState {}
 	[Protocol] interface C87 : IINSearchCallHistoryIntentHandling {}
 	[Protocol] interface C88 : IAVPictureInPictureControllerDelegate {}
-	// [Protocol] interface C89 : INSTextLayoutOrientationProvider {}
+	[Protocol] interface C89 : INSTextLayoutOrientationProvider {}
 	[Protocol] interface C90 : IGKStrategist {}
 	[Protocol] interface C91 : INSDiscardableContent {}
 	[Protocol] interface C92 : IAVPlayerViewControllerDelegate {}
@@ -230,10 +230,8 @@ namespace Test {
 	[Protocol] interface C137 : IAUAudioUnitFactory {}
 	[Protocol] interface C138 : INSKeyedUnarchiverDelegate {}
 	[Protocol] interface C139 : IINStartAudioCallIntentHandling {}
-	// sof20696157.tmpdir/Test/C140.g.cs(92,10): error CS0246: The type or namespace name `CIFormat' could not be found. Are you missing `CoreImage' using directive?
-	// [Protocol] interface C140 : ICIImageProcessorInput {}
-	// sof20696157.tmpdir/Test/C141.g.cs(92,10): error CS0246: The type or namespace name `CIFormat' could not be found. Are you missing `CoreImage' using directive?
-	// [Protocol] interface C141 : ICIImageProcessorOutput {}
+	[Protocol] interface C140 : ICIImageProcessorInput {}
+	[Protocol] interface C141 : ICIImageProcessorOutput {}
 	[Protocol] interface C142 : IPHLivePhotoFrame {}
 	[Protocol] interface C143 : ICIImageProvider {}
 	[Protocol] interface C144 : IUIApplicationDelegate {}
@@ -360,7 +358,7 @@ namespace Test {
 	[Protocol] interface C265 : INSFetchedResultsControllerDelegate {}
 	[Protocol] interface C266 : IUIViewControllerInteractiveTransitioning {}
 	[Protocol] interface C267 : INSFetchedResultsSectionInfo {}
-	// [Protocol] interface C268 : IUIViewControllerPreviewing {}
+	[Protocol] interface C268 : IUIViewControllerPreviewing {}
 	[Protocol] interface C269 : IHMHomeManagerDelegate {}
 	[Protocol] interface C270 : IUIViewControllerPreviewingDelegate {}
 	[Protocol] interface C271 : IUIViewControllerRestoration {}
@@ -543,7 +541,7 @@ namespace Test {
 	[Protocol] [BaseType (typeof (NSObject))] interface M86 : IMTLSamplerState {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M87 : IINSearchCallHistoryIntentHandling {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M88 : IAVPictureInPictureControllerDelegate {}
-	// [Protocol] [BaseType (typeof (NSObject))] interface M89 : INSTextLayoutOrientationProvider {}
+	[Protocol] [BaseType (typeof (NSObject))] interface M89 : INSTextLayoutOrientationProvider {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M90 : IGKStrategist {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M91 : INSDiscardableContent {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M92 : IAVPlayerViewControllerDelegate {}
@@ -594,10 +592,8 @@ namespace Test {
 	[Protocol] [BaseType (typeof (NSObject))] interface M137 : IAUAudioUnitFactory {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M138 : INSKeyedUnarchiverDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M139 : IINStartAudioCallIntentHandling {}
-	// sof20696157.tmpdir/Test/M140.g.cs(92,10): error CS0246: The type or namespace name `CIFormat' could not be found. Are you missing `CoreImage' using directive?
-	// [Protocol] [BaseType (typeof (NSObject))] interface M140 : ICIImageProcessorInput {}
-	// sof20696157.tmpdir/Test/M141.g.cs(92,10): error CS0246: The type or namespace name `CIFormat' could not be found. Are you missing `CoreImage' using directive?
-	// [Protocol] [BaseType (typeof (NSObject))] interface M141 : ICIImageProcessorOutput {}
+	[Protocol] [BaseType (typeof (NSObject))] interface M140 : ICIImageProcessorInput {}
+	[Protocol] [BaseType (typeof (NSObject))] interface M141 : ICIImageProcessorOutput {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M142 : IPHLivePhotoFrame {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M143 : ICIImageProvider {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M144 : IUIApplicationDelegate {}
@@ -724,7 +720,7 @@ namespace Test {
 	[Protocol] [BaseType (typeof (NSObject))] interface M265 : INSFetchedResultsControllerDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M266 : IUIViewControllerInteractiveTransitioning {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M267 : INSFetchedResultsSectionInfo {}
-	// [Protocol] [BaseType (typeof (NSObject))] interface M268 : IUIViewControllerPreviewing {}
+	[Protocol] [BaseType (typeof (NSObject))] interface M268 : IUIViewControllerPreviewing {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M269 : IHMHomeManagerDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M270 : IUIViewControllerPreviewingDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M271 : IUIViewControllerRestoration {}

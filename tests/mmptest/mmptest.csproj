@@ -70,8 +70,12 @@
       <Link>unit\aot.cs</Link>
     </Compile>
     <Compile Include="src\FrameworkLinksTests.cs" />
+    <Compile Include="src\TargetFrameworkDetectionTests.cs" />
     <Compile Include="src\LinkerTests.cs" />
     <Compile Include="src\Extensions.cs" />
+    <Compile Include="..\mtouch\Cache.cs">
+      <Link>Cache.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

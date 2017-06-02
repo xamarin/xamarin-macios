@@ -35,6 +35,7 @@ namespace MonoMac.Tuner {
 		internal PInvokeWrapperGenerator MarshalNativeExceptionsState { get; set; }
 		internal RuntimeOptions RuntimeOptions { get; set; }
 		public bool SkipExportedSymbolsInSdkAssemblies { get; set; }
+		public Target Target { get; set; }
 
 		public static I18nAssemblies ParseI18nAssemblies (string i18n)
 		{
@@ -128,6 +129,8 @@ namespace MonoMac.Tuner {
 				context.SymbolWriterProvider = new DefaultSymbolWriterProvider ();
 			}
 			context.OutputDirectory = options.OutputDirectory;
+			context.StaticRegistrar = options.Target.StaticRegistrar;
+			context.Target = options.Target;
 			return context;
 		}
 

@@ -16,7 +16,9 @@ namespace Xamarin.MacDev.Tasks
 		PDictionary plist;
 
 		#region Inputs
-		
+
+		public bool EnableOnDemandResources { get; set; }
+
 		[Required]
 		public ITaskItem[] InterfaceDefinitions { get; set; }
 
@@ -208,7 +210,7 @@ namespace Xamarin.MacDev.Tasks
 				expected.SetMetadata ("LogicalName", bundleName);
 				expected.SetMetadata ("Optimize", "false");
 
-				if (!string.IsNullOrEmpty (resourceTags))
+				if (EnableOnDemandResources && !string.IsNullOrEmpty (resourceTags))
 					expected.SetMetadata ("ResourceTags", resourceTags);
 
 				if (UseCompilationDirectory) {
@@ -398,6 +400,7 @@ namespace Xamarin.MacDev.Tasks
 		{
 			Log.LogTaskName ("IBTool");
 			Log.LogTaskProperty ("AppManifest", AppManifest);
+			Log.LogTaskProperty ("EnableOnDemandResources", EnableOnDemandResources);
 			Log.LogTaskProperty ("InterfaceDefinitions", InterfaceDefinitions);
 			Log.LogTaskProperty ("IntermediateOutputPath", IntermediateOutputPath);
 			Log.LogTaskProperty ("IsWatchApp", IsWatchApp);

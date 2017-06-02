@@ -806,6 +806,10 @@ namespace Xamarin.Bundler {
 
 			// Something's not valid anymore, so clean everything.
 			Cache.Clean ();
+			// Make sure everything is rebuilt no matter what, the cache is not
+			// the only location taken into account when determing if something
+			// needs to be rebuilt.
+			Driver.Force = true;
 			AppExtensions.ForEach ((v) => v.Cache.Clean ());
 		}
 
@@ -1061,9 +1065,9 @@ namespace Xamarin.Bundler {
 						Assembly asm;
 						if (!target.Assemblies.TryGetValue (kvp.Key, out asm))
 							continue; // appex references an assembly the main app doesn't. This is fine.
-						if (asm.FullPath != kvp.Value.FullPath) {
-							applicable = false; // app references an assembly with the same name as the main app, but from a different location. This is not fine.
-							ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the container app is referencing the assembly '{asm.Identity}' from '{asm.FullPath}', while the extension references it from '{kvp.Value.FullPath}'.");
+						if (asm.FullPath != kvp.Value.FullPath && !Cache.CompareFiles (asm.FullPath, kvp.Value.FullPath, true)) {
+							applicable = false; // app references an assembly with the same name as the main app, but from a different location and not identical. This is not fine.
+							ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the container app is referencing the assembly '{asm.Identity}' from '{asm.FullPath}', while the extension references a different version from '{kvp.Value.FullPath}'.");
 							break;
 						}
 					}
@@ -1580,12 +1584,32 @@ namespace Xamarin.Bundler {
 				if (!HasFrameworksDirectory && (isFramework || info.DylibToFramework))
 					continue; // Don't copy frameworks to app extensions (except watch extensions), they go into the container app.
 
+				if (!files.All ((v) => Directory.Exists (v) == isFramework))
+					throw ErrorHelper.CreateError (99, $"Internal error: 'can't process a mix of dylibs and frameworks: {string.Join (", ", files)}'. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+
 				if (isFramework) {
 					// This is a framework
-					if (files.Count != 1)
-                        throw ErrorHelper.CreateError (99, $"Internal error: 'can't lipo directories'. {name}:{info}:{targetPath}:{files.Count} Please file a bug report with a test case (http://bugzilla.xamarin.com).");
+					if (files.Count > 1) {
+						// If we have multiple frameworks, check if they're identical, and remove any duplicates
+						var firstFile = files.First ();
+						foreach (var otherFile in files.Where ((v) => v != firstFile).ToArray ()) {
+							if (Cache.CompareDirectories (firstFile, otherFile, ignore_cache: true)) {
+								Driver.Log (6, $"Framework '{name}' included from both '{firstFile}' and '{otherFile}', but they are identical, so the latter will be ignored.");
+								files.Remove (otherFile);
+								continue;
+							}
+						}
+					}
+					if (files.Count != 1) {
+						var exceptions = new List<Exception> ();
+						var fname = Path.GetFileName (name);
+						exceptions.Add (ErrorHelper.CreateError (1035, $"Cannot include different versions of the framework '{fname}'"));
+						foreach (var file in files)
+							exceptions.Add (ErrorHelper.CreateError (1036, $"Framework '{fname}' included from: {file} (Related to previous error)"));
+						throw new AggregateException (exceptions);
+					}
 					if (info.DylibToFramework)
-						throw ErrorHelper.CreateError (99, "Internal error: 'can't convert frameworks to frameworks'. Please file a bug report with a test case (http://bugzilla.xamarin.com).");
+						throw ErrorHelper.CreateError (99, $"Internal error: 'can't convert frameworks to frameworks: {files.First ()}'. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 					var framework_src = files.First ();
 					var framework_filename = Path.Combine (framework_src, Path.GetFileNameWithoutExtension (framework_src));
 					if (!MachO.IsDynamicFramework (framework_filename)) {
@@ -1796,8 +1820,8 @@ namespace Xamarin.Bundler {
 																"Native linking failed, undefined Objective-C class: {0}. The symbol '{1}' could not be found in any of the libraries or frameworks linked with your application.",
 							                                    symbol.Replace ("_OBJC_CLASS_$_", ""), symbol));
 						} else {
-							var members = target.GetMembersForSymbol (symbol.Substring (1));
-							if (members != null && members.Count > 0) {
+							var members = target.GetAllSymbols ().Find (symbol.Substring (1))?.Members;
+							if (members != null && members.Any ()) {
 								var member = members.First (); // Just report the first one.
 								// Neither P/Invokes nor fields have IL, so we can't find the source code location.
 								errors.Add (new MonoTouchException (5214, error,
@@ -2013,7 +2037,7 @@ namespace Xamarin.Bundler {
 			Driver.Watch ("Linking DWARF symbols", 1);
 		}
 
-		IEnumerable<string> GetRequiredSymbols ()
+		IEnumerable<Symbol> GetRequiredSymbols ()
 		{
 			foreach (var target in Targets) {
 				foreach (var symbol in target.GetRequiredSymbols ())
@@ -2023,10 +2047,10 @@ namespace Xamarin.Bundler {
 
 		bool WriteSymbolList (string filename)
 		{
-			var required_symbols = GetRequiredSymbols ().ToArray ();
+			var required_symbols = GetRequiredSymbols ();
 			using (StreamWriter writer = new StreamWriter (filename)) {
-				foreach (string symbol in required_symbols)
-					writer.WriteLine ("_{0}", symbol);
+				foreach (var symbol in required_symbols)
+					writer.WriteLine ("_{0}", symbol.Name);
 				foreach (var symbol in NoSymbolStrip)
 					writer.WriteLine ("_{0}", symbol);
 				writer.Flush ();

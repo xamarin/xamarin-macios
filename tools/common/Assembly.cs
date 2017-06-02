@@ -335,6 +335,9 @@ namespace Xamarin.Bundler {
 				
 				foreach (var mr in m.ModuleReferences) {
 					string name = mr.Name;
+					if (string.IsNullOrEmpty (name))
+						continue; // obfuscated assemblies.
+					
 					string file = Path.GetFileNameWithoutExtension (name);
 
 					switch (file) {
@@ -531,6 +534,16 @@ namespace Xamarin.Bundler {
 		public bool TryGetValue (string identity, out Assembly assembly)
 		{
 			return HashedAssemblies.TryGetValue (identity, out assembly);
+		}
+
+		public bool TryGetValue (AssemblyDefinition asm, out Assembly assembly)
+		{
+			return HashedAssemblies.TryGetValue (Assembly.GetIdentity (asm), out assembly);
+		}
+
+		public bool Contains (AssemblyDefinition asm)
+		{
+			return HashedAssemblies.ContainsKey (Assembly.GetIdentity (asm));
 		}
 
 		public bool ContainsKey (string identity)

@@ -9,7 +9,15 @@
 
 #include "xamarin/xamarin.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void xamarin_create_classes_Xamarin_iOS ();
+
+#ifdef __cplusplus
+}
+#endif
 
 void xamarin_setup_impl ()
 {

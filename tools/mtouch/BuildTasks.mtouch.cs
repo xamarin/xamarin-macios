@@ -307,6 +307,27 @@ namespace Xamarin.Bundler
 				if (!String.IsNullOrEmpty (Target.App.UserGccFlags))
 					linker_errors.Add (new MonoTouchException (5201, true, "Native linking failed. Please review the build log and the user flags provided to gcc: {0}", Target.App.UserGccFlags));
 				linker_errors.Add (new MonoTouchException (5202, true, "Native linking failed. Please review the build log.", Target.App.UserGccFlags));
+
+				if (code == 255) {
+					// check command length
+					// getconf ARG_MAX
+					StringBuilder getconf_output = new StringBuilder ();
+					if (Driver.RunCommand ("getconf", "ARG_MAX", output: getconf_output, suppressPrintOnErrors: true) == 0) {
+						int arg_max;
+						if (int.TryParse (getconf_output.ToString ().Trim (' ', '\t', '\n', '\r'), out arg_max)) {
+							var cmd_length = Target.App.CompilerPath.Length + 1 + CompilerFlags.ToString ().Length;
+							if (cmd_length > arg_max) {
+								linker_errors.Add (ErrorHelper.CreateWarning (5217, $"Native linking possibly failed because the linker command line was too long ({cmd_length} characters)."));
+							} else {
+								Driver.Log (3, $"Linker failure is probably not due to command-line length (actual: {cmd_length} limit: {arg_max}");
+							}
+						} else {
+							Driver.Log (3, "Failed to parse 'getconf ARG_MAX' output: {0}", getconf_output);
+						}
+					} else {
+						Driver.Log (3, "Failed to execute 'getconf ARG_MAX'\n{0}", getconf_output);
+					}
+				}
 			}
 			ErrorHelper.Show (linker_errors);
 

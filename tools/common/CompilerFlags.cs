@@ -53,13 +53,13 @@ namespace Xamarin.Utils
 			UnresolvedSymbols.Add (symbol);
 		}
 
-		public void ReferenceSymbols (IEnumerable<string> symbols)
+		public void ReferenceSymbols (IEnumerable<Symbol> symbols)
 		{
 			if (UnresolvedSymbols == null)
 				UnresolvedSymbols = new HashSet<string> ();
 
 			foreach (var symbol in symbols)
-				UnresolvedSymbols.Add (symbol);
+				UnresolvedSymbols.Add (symbol.Name);
 		}
 
 		public void AddDefine (string define)
