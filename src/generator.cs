@@ -914,7 +914,7 @@ public partial class Generator : IMemberGatherer {
 	// Whether to use ZeroCopy for strings, defaults to false
 	public bool ZeroCopyStrings;
 
-	public bool BindThirdPartyLibrary = false;
+	public static bool BindThirdPartyLibrary = true;
 	public bool InlineSelectors;
 	public string BaseDir { get { return basedir; } set { basedir = value; }}
 	string basedir;
