@@ -137,24 +137,8 @@ namespace Xamarin
 				mtouch.Abi = abi;
 				mtouch.Debug = debug;
 				mtouch.TargetVer = "6.0";
+				mtouch.NoStrip = true;
 				DateTime dt = DateTime.MinValue;
-
-				Action<string, IEnumerable<string>> checkNotModified = (filename, skip) =>
-				{
-					var failed = new List<string> ();
-					var files = Directory.EnumerateFiles (mtouch.AppPath, "*", SearchOption.AllDirectories);
-					foreach (var file in files) {
-						if (skip != null && skip.Contains (Path.GetFileName (file)))
-							continue;
-						var info = new FileInfo (file);
-						if (info.LastWriteTime > dt) {
-							failed.Add (string.Format ("{0} is modified, timestamp: {1}", file, info.LastWriteTime));
-						} else {
-							Console.WriteLine ("{0} not modified", file);
-						}
-					}
-					Assert.IsEmpty (failed, filename);
-				};
 
 				mtouch.DSym = false; // we don't need the dSYMs for this test, so disable them to speed up the test.
 				mtouch.MSym = false; // we don't need the mSYMs for this test, so disable them to speed up the test.
@@ -166,8 +150,7 @@ namespace Xamarin
 
 				mtouch.AssertExecute (MTouchAction.BuildDev, "second build");
 				Console.WriteLine ("second build done");
-
-				checkNotModified (name, null);
+				mtouch.AssertNoneModified (dt, name + " - second build");
 
 				// Test that a rebuild (where something changed, in this case the .exe)
 				// actually work. We compile with custom code to make sure it's different
@@ -179,10 +162,21 @@ namespace Xamarin
 					code: codeB, profile: mtouch.Profile);
 				File.Copy (exe2, mtouch.RootAssembly, true);
 
-				mtouch.AssertExecute (MTouchAction.BuildDev, "third build");
+				dt = DateTime.Now;
+				System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older.
 
-				var skipFiles = new string [] { "testApp", "testApp.exe", "testApp.aotdata.armv7", "testApp.aotdata.arm64" };
-				checkNotModified (name + "-rebuilt", skipFiles);
+				mtouch.AssertExecute (MTouchAction.BuildDev, "third build");
+				Console.WriteLine ("third build done");
+				mtouch.AssertNoneModified (dt, name + " - third build", "testApp", "testApp.exe", "testApp.aotdata.armv7", "testApp.aotdata.arm64");
+
+				// Test that a complete rebuild occurs when command-line options changes
+				dt = DateTime.Now;
+				System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older.
+
+				mtouch.GccFlags = "-v";
+				mtouch.AssertExecute (MTouchAction.BuildDev, "fourth build");
+				Console.WriteLine ("fourth build done");
+				mtouch.AssertAllModified (dt, name + " - fourth build", "NOTICE");
 			}
 		}
 
@@ -261,44 +255,6 @@ namespace Xamarin
 
 					var timestamp = DateTime.MinValue;
 
-					Action<string, IEnumerable<string>> assertNotModified = (filename, skip) =>
-					{
-						var failed = new List<string> ();
-						var files = Directory.EnumerateFiles (mtouch.AppPath, "*", SearchOption.AllDirectories);
-						files = files.Concat (Directory.EnumerateFiles (extension.AppPath, "*", SearchOption.AllDirectories));
-						foreach (var file in files) {
-							if (skip != null && skip.Contains (Path.GetFileName (file)))
-								continue;
-							var info = new FileInfo (file);
-							if (info.LastWriteTime > timestamp) {
-								failed.Add (string.Format ("{0} is modified, timestamp: {1}", file, info.LastWriteTime));
-								Console.WriteLine ("FAIL: {0} modified: {1}", file, info.LastWriteTime);
-							} else {
-								Console.WriteLine ("{0} not modified", file);
-							}
-						}
-						Assert.IsEmpty (failed, filename);
-					};
-
-					Action<string, IEnumerable<string>> assertModified = (testname, modified) =>
-					{
-						var failed = new List<string> ();
-						var files = Directory.EnumerateFiles (mtouch.AppPath, "*", SearchOption.AllDirectories);
-						files = files.Concat (Directory.EnumerateFiles (extension.AppPath, "*", SearchOption.AllDirectories));
-						foreach (var file in files) {
-							if (!modified.Contains (Path.GetFileName (file)))
-								continue;
-							var info = new FileInfo (file);
-							if (info.LastWriteTime < timestamp) {
-								failed.Add (string.Format ("{0} is not modified, timestamp: {1}", file, info.LastWriteTime));
-								Console.WriteLine ("FAIL: {0} not modified: {1}", file, info.LastWriteTime);
-							} else {
-								Console.WriteLine ("{0} modified as expected", file);
-							}
-						}
-						Assert.IsEmpty (failed, testname);
-					};
-
 					mtouch.AssertExecute (MTouchAction.BuildDev, "first build");
 					Console.WriteLine ($"{DateTime.Now} **** FIRST BUILD DONE ****");
 
@@ -308,19 +264,22 @@ namespace Xamarin
 					mtouch.AssertExecute (MTouchAction.BuildDev, "second build");
 					Console.WriteLine ($"{DateTime.Now} **** SECOND BUILD DONE ****");
 
-					assertNotModified (name, null);
+					mtouch.AssertNoneModified (timestamp, name);
+					extension.AssertNoneModified (timestamp, name);
 
 					// Touch the extension's executable, nothing should change
 					new FileInfo (extension.RootAssembly).LastWriteTimeUtc = DateTime.UtcNow;
 					mtouch.AssertExecute (MTouchAction.BuildDev, "touch extension executable");
 					Console.WriteLine ($"{DateTime.Now} **** TOUCH EXTENSION EXECUTABLE DONE ****");
-					assertNotModified (name, null);
+					mtouch.AssertNoneModified (timestamp, name);
+					extension.AssertNoneModified (timestamp, name);
 
 					// Touch the main app's executable, nothing should change
 					new FileInfo (mtouch.RootAssembly).LastWriteTimeUtc = DateTime.UtcNow;
 					mtouch.AssertExecute (MTouchAction.BuildDev, "touch main app executable");
 					Console.WriteLine ($"{DateTime.Now} **** TOUCH MAIN APP EXECUTABLE DONE ****");
-					assertNotModified (name, null);
+					mtouch.AssertNoneModified (timestamp, name);
+					extension.AssertNoneModified (timestamp, name);
 
 					// Test that a rebuild (where something changed, in this case the .exe)
 					// actually work. We compile with custom code to make sure it's different
@@ -333,7 +292,8 @@ namespace Xamarin
 					extension.CreateTemporaryServiceExtension (extraCode: codeB);
 					mtouch.AssertExecute (MTouchAction.BuildDev, "change extension executable");
 					Console.WriteLine ($"{DateTime.Now} **** CHANGE EXTENSION EXECUTABLE DONE ****");
-					assertNotModified (name, new [] { "testServiceExtension", "testServiceExtension.aotdata.armv7", "testServiceExtension.aotdata.arm64", "testServiceExtension.dll" } );
+					mtouch.AssertNoneModified (timestamp, name);
+					extension.AssertNoneModified (timestamp, name, "testServiceExtension", "testServiceExtension.aotdata.armv7", "testServiceExtension.aotdata.arm64", "testServiceExtension.dll");
 
 					timestamp = DateTime.Now;
 					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
@@ -342,7 +302,8 @@ namespace Xamarin
 					mtouch.CreateTemporaryApp (extraCode: codeB);
 					mtouch.AssertExecute (MTouchAction.BuildDev, "change app executable");
 					Console.WriteLine ($"{DateTime.Now} **** CHANGE APP EXECUTABLE DONE ****");
-					assertNotModified (name, new [] { "testApp", "testApp.aotdata.armv7", "testApp.aotdata.arm64", "testApp.exe" });
+					mtouch.AssertNoneModified (timestamp, name, "testApp", "testApp.aotdata.armv7", "testApp.aotdata.arm64", "testApp.exe");
+					extension.AssertNoneModified (timestamp, name);
 
 					timestamp = DateTime.Now;
 					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
@@ -351,7 +312,8 @@ namespace Xamarin
 					File.WriteAllText (extension.RootAssembly + ".config", "<configuration></configuration>");
 					mtouch.AssertExecute (MTouchAction.BuildDev, "add config to extension dll");
 					Console.WriteLine ($"{DateTime.Now} **** ADD CONFIG TO EXTENSION DONE ****");
-					assertNotModified (name, new [] { "testServiceExtension.dll.config", "testServiceExtension", "testServiceExtension.aotdata.armv7", "testServiceExtension.aotdata.arm64" });
+					mtouch.AssertNoneModified (timestamp, name);
+					extension.AssertNoneModified (timestamp, name, "testServiceExtension.dll.config", "testServiceExtension", "testServiceExtension.aotdata.armv7", "testServiceExtension.aotdata.arm64");
 					CollectionAssert.Contains (Directory.EnumerateFiles (extension.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), "testServiceExtension.dll.config", "extension config added");
 
 					timestamp = DateTime.Now;
@@ -361,7 +323,8 @@ namespace Xamarin
 					File.WriteAllText (mtouch.RootAssembly + ".config", "<configuration></configuration>");
 					mtouch.AssertExecute (MTouchAction.BuildDev, "add config to container exe");
 					Console.WriteLine ($"{DateTime.Now} **** ADD CONFIG TO CONTAINER DONE ****");
-					assertNotModified (name, new [] { "testApp.exe.config", "testApp", "testApp.aotdata.armv7", "testApp.aotdata.arm64" });
+					mtouch.AssertNoneModified (timestamp, name, "testApp.exe.config", "testApp", "testApp.aotdata.armv7", "testApp.aotdata.arm64");
+					extension.AssertNoneModified (timestamp, name);
 					CollectionAssert.Contains (Directory.EnumerateFiles (mtouch.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), "testApp.exe.config", "container config added");
 
 					timestamp = DateTime.Now;
@@ -372,8 +335,9 @@ namespace Xamarin
 						var satellite = extension.CreateTemporarySatelliteAssembly ();
 						mtouch.AssertExecute (MTouchAction.BuildDev, "add satellite to extension");
 						Console.WriteLine ($"{DateTime.Now} **** ADD SATELLITE TO EXTENSION DONE ****");
-						assertNotModified (name, new string [] { Path.GetFileName (satellite) });
-						assertModified (name, new string [] { Path.GetFileName (satellite) });
+						mtouch.AssertNoneModified (timestamp, name, Path.GetFileName (satellite));
+						extension.AssertNoneModified (timestamp, name, Path.GetFileName (satellite));
+						extension.AssertModified (timestamp, name, Path.GetFileName (satellite));
 						CollectionAssert.Contains (Directory.EnumerateFiles (extension.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), Path.GetFileName (satellite), "extension satellite added");
 					}
 
@@ -385,8 +349,9 @@ namespace Xamarin
 						var satellite = mtouch.CreateTemporarySatelliteAssembly ();
 						mtouch.AssertExecute (MTouchAction.BuildDev, "add satellite to container");
 						Console.WriteLine ($"{DateTime.Now} **** ADD SATELLITE TO CONTAINER DONE ****");
-						assertNotModified (name, new string [] { Path.GetFileName (satellite) });
-						assertModified (name, new string [] { Path.GetFileName (satellite) });
+						mtouch.AssertNoneModified (timestamp, name, Path.GetFileName (satellite));
+						extension.AssertNoneModified (timestamp, name, Path.GetFileName (satellite));
+						mtouch.AssertModified (timestamp, name, Path.GetFileName (satellite));
 						CollectionAssert.Contains (Directory.EnumerateFiles (mtouch.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), Path.GetFileName (satellite), "container satellite added");
 					}
 				}

@@ -186,7 +186,9 @@ namespace XamCore.Registrar {
 				}
 			}
 
-			static char[] invalidSelectorCharacters = new char[] { ' ', '\t' };
+			// This list is duplicated in tests/mtouch/RegistrarTest.cs.
+			// Update that list whenever this list is updated.
+			static char[] invalidSelectorCharacters = new char[] { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n' };
 			void VerifySelector (ObjCMethod method, ref List<Exception> exceptions)
 			{
 				if (method.Method == null)
@@ -276,7 +278,7 @@ namespace XamCore.Registrar {
 				VerifyIsNotKeyword (ref exceptions, property);
 			}
 
-			static bool IsObjectiveCKeyword (string name)
+			public static bool IsObjectiveCKeyword (string name)
 			{
 				switch (name) {
 				case "auto":
@@ -1519,6 +1521,9 @@ namespace XamCore.Registrar {
 
 			if (!objcType.IsWrapper && objcType.BaseType != null)
 				VerifyTypeInSDK (ref exceptions, objcType.BaseType.Type, baseTypeOf: objcType.Type);
+
+			if (ObjCType.IsObjectiveCKeyword (objcType.ExportedName))
+				AddException (ref exceptions, ErrorHelper.CreateError (4168, $"Cannot register the type '{GetTypeFullName (type)}' because its Objective-C name '{objcType.ExportedName}' is an Objective-C keyword. Please use a different name."));
 
 			// make sure all the protocols this type implements are registered
 			if (objcType.Protocols != null) {

@@ -1094,7 +1094,7 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("#import <AppKit/NSAlert.h>");
 				sw.WriteLine ("#import <Foundation/NSDate.h>"); // 10.7 wants this even if not needed on 10.9
 				if (Driver.registrar == RegistrarMode.PartialStatic)
-					sw.WriteLine ("extern int xamarin_create_classes_Xamarin_Mac ();");
+					sw.WriteLine ("extern \"C\" void xamarin_create_classes_Xamarin_Mac ();");
 				sw.WriteLine ();
 				sw.WriteLine ();
 				sw.WriteLine ();

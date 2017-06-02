@@ -616,5 +616,13 @@ namespace LinkSdk.Aot {
 				Assert.That (double.Epsilon.ToString (), Is.EqualTo (nfe), "Epsilon");
 			}
 		}
+
+		// The first character of this class is a cyrillic c, not a latin c.
+		[Preserve]
+		public class сolor_bug_56876
+		{
+			[System.Runtime.InteropServices.DllImport ("/usr/lib/libobjc.dylib")]
+			static extern void objc_msgSend (сolor_bug_56876 сolor);
+		}
 	}
 }

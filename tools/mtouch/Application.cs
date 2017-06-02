@@ -806,6 +806,10 @@ namespace Xamarin.Bundler {
 
 			// Something's not valid anymore, so clean everything.
 			Cache.Clean ();
+			// Make sure everything is rebuilt no matter what, the cache is not
+			// the only location taken into account when determing if something
+			// needs to be rebuilt.
+			Driver.Force = true;
 			AppExtensions.ForEach ((v) => v.Cache.Clean ());
 		}
 

@@ -615,7 +615,7 @@ namespace Xamarin.Bundler
 
 					if (registration_methods != null) {
 						foreach (var method in registration_methods) {
-							sw.Write ("void ");
+							sw.Write ("extern \"C\" void ");
 							sw.Write (method);
 							sw.WriteLine ("();");
 						}
@@ -1669,7 +1669,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.iOS:
 				return Frameworks.GetiOSFrameworks (app);
 			case ApplePlatform.WatchOS:
-				return Frameworks.WatchFrameworks;
+				return Frameworks.GetwatchOSFrameworks (app);
 			case ApplePlatform.TVOS:
 				return Frameworks.TVOSFrameworks;
 			default:
