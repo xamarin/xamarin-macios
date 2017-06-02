@@ -888,5 +888,13 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 				return ExecutionHelper.Execute ("nm", $"-gUj {StringUtils.Quote (NativeExecutablePath)}", hide_output: true).Split ('\n');
 			}
 		}
+
+		protected override string ToolPath {
+			get { return Configuration.MtouchPath; }
+		}
+
+		protected override string MessagePrefix {
+			get { return "MT"; }
+		}
 	}
 }

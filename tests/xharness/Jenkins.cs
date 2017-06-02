@@ -563,6 +563,26 @@ namespace xharness
 			};
 			Tasks.Add (runBTouch);
 
+			var buildGenerator = new MakeTask {
+				Jenkins = this,
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "src", "generator-ikvm.sln"))),
+				SpecifyPlatform = false,
+				SpecifyConfiguration = false,
+				Platform = TestPlatform.iOS,
+				Target = "build-unit-tests",
+				WorkingDirectory = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "generator")),
+			};
+			var runGenerator = new NUnitExecuteTask (buildGenerator) {
+				TestLibrary = Path.Combine (Harness.RootDirectory, "generator", "bin", "Debug", "generator-tests.dll"),
+				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
+				WorkingDirectory = Path.Combine (Harness.RootDirectory, "generator", "bin", "Debug"),
+				Platform = TestPlatform.iOS,
+				TestName = "Generator tests",
+				Timeout = TimeSpan.FromMinutes (10),
+				Ignored = !IncludeBtouch,
+			};
+			Tasks.Add (runGenerator);
+
 			var run_mmp = new MakeTask
 			{
 				Jenkins = this,
