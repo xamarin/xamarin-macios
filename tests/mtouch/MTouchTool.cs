@@ -27,6 +27,15 @@ namespace Xamarin
 		DontLink,
 	}
 
+	public enum MTouchSymbolMode
+	{
+		Unspecified,
+		Default,
+		Linker,
+		Code,
+		Ignore,
+	}
+
 	public enum MTouchRegistrar
 	{
 		Unspecified,
@@ -80,6 +89,7 @@ namespace Xamarin
 		public string Cache;
 		public string Device; // --device
 		public MTouchLinker Linker;
+		public MTouchSymbolMode SymbolMode;
 		public bool? NoFastSim;
 		public MTouchRegistrar Registrar;
 		public I18N I18N;
@@ -382,6 +392,25 @@ namespace Xamarin
 				break;
 			case MTouchLinker.LinkSdk:
 				sb.Append (" --linksdkonly");
+				break;
+			default:
+				throw new NotImplementedException ();
+			}
+
+			switch (SymbolMode) {
+			case MTouchSymbolMode.Ignore:
+				sb.Append (" --dynamic-symbol-mode=ignore");
+				break;
+			case MTouchSymbolMode.Code:
+				sb.Append (" --dynamic-symbol-mode=code");
+				break;
+			case MTouchSymbolMode.Default:
+				sb.Append (" --dynamic-symbol-mode=default");
+				break;
+			case MTouchSymbolMode.Linker:
+				sb.Append (" --dynamic-symbol-mode=linker");
+				break;
+			case MTouchSymbolMode.Unspecified:
 				break;
 			default:
 				throw new NotImplementedException ();

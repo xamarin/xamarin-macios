@@ -449,6 +449,8 @@ No action is required on your part, this message is purely informational.
 
 For further information see bug #[51710](https://bugzilla.xamarin.com/show_bug.cgi?id=51710).
 
+This warning is not reported anymore.
+
 <h3><a name="MT0111"/>MT0111: Bitcode has been enabled because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.</h3>
 
 Bitcode has been enabled automatically because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.
@@ -533,6 +535,29 @@ For instance: this condition occurs when an extension builds for ARMv7+llvm+thum
 Native code sharing requires that all the projects that share code use the same versions for all assemblies.
 
 <!-- MT0114: used by mmp -->
+
+<h3><a name="MT0115"/>MT0115: It is recommended to reference dynamic symbols using code (--dynamic-symbol-mode=code) when bitcode is enabled.</h3>
+
+Xamarin.iOS projects will often reference native symbols dynamically, which
+means that the native linker might remove such native symbols during the
+native linking process, because the native linker does not see that these
+symbols are used.
+
+Usually Xamarin.iOS will ask the native linker to keep such symbols (using the
+`-u symbol` linker flag), but when compiling for bitcode the native linker
+does not accept the `-u` flag.
+
+Xamarin.iOS has implemented an alternative solution: we generate extra native
+code which references these symbols, and thus the native linker will see that
+these symbols are used. This is automatically done when compiling to bitcode.
+
+If `--dynamic-symbol-mode=linker` is passed to mtouch, this alternative
+solution will be disabled, and Xamarin.iOS will try to pass `-u` to the native
+linker. This will most likely result in native linker errors.
+
+The solution is to remove the `--dynamic-symbol-mode=linker` argument from the additional mtouch arguments in the project's Build options.
+
+<!-- 0116 - 0124: free to use -->
 
 <h3><a name="MT0125"/>MT0125: The --assembly-build-target command-line argument is ignored in the simulator.</h3>
 
@@ -1675,6 +1700,75 @@ This is a warning, indicating that a P/Invoke was detected to reference the libr
 This error is reported when linking the output from the AOT compiler.
 
 This error most likely indicates a bug in Xamarin.iOS. Please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
+<h3><a name="MT5217"/>MT5217: Native linking possibly failed because the linker command line was too long (* characters).</h3>
+
+Native linking failed, and it's possible this occured because the linker
+command was too long.
+
+Xamarin.iOS projects will often reference native symbols dynamically, which
+means that the native linker might remove such native symbols during the
+native linking process, because the native linker does not see that these
+symbols are used.
+
+Usually Xamarin.iOS will ask the native linker to keep such symbols using the
+`-u symbol` linker flag, but if there are many such symbols, the entire
+command-line might exceed the maximum command-line length as specified by the
+operating system.
+
+There are a few possible sources for such dynamic symbols:
+
+* P/Invokes to methods in statically linked libraries (where the dll name is
+  `__Internal` in the DllImport attribute `[DllImport ("__Internal")]`).
+* Field references to memory locations in statically linked libraries from
+  binding projects (`[Field]` attributes).
+* Objective-C classes referenced in statically linked libraries from binding
+  projects (when using incremental builds or when not using the static
+  registrar).
+
+Possible solutions:
+* Enable the managed linker (if possible for all assemblies instead of only
+  SDK assemblies). This might remove enough of the sources for dynamic symbols
+  so that the linker's command-line doesn't exceeded the maximum.
+* Reduce the number of P/Invokes, field references and/or Objective-C classes.
+* Rewrite the dynamic symbols to have shorter names.
+* Pass `-dlsym:false` as an additional mtouch argument in the project's iOS
+  Build options. With this option, Xamarin.iOS will generate a native
+  reference in the AOT-compiled code, and won't need to ask the linker to keep
+  this symbol. However, this only works for device builds, and it will cause
+  linker errors if there are P/Invokes to functions that don't exist in the
+  static library.
+* Pass `--dynamic-symbol-mode=code` as an additional mtouch arguments in
+  the project's iOS Build options. With this option, Xamarin.iOS will generate
+  additional native code that references these symbols instead of asking the
+  native linker to keep these symbols using command-line arguments. The
+  downside to this approach is that it will increase the size of the
+  executable somewhat.
+* Enable the static registrar by passing `--registrar:static` as an additional
+  mtouch argument in the project's iOS Build options (for simulator builds,
+  since the static registrar is already the default for device builds). The
+  static registrar will generate code that references Objective-C classes
+  statically, so there is no need to ask the native linker to keep such
+  classes.
+* Disable incremental builds (for device builds). When incremental builds are
+  enabled, the code generated by the static registrar won't be considered by
+  the native linker, which means that Xamarin.iOS must still ask the linker to
+  keep referenced Objective-C classes. Thus disabling incremental builds will
+  prevent this need.
+
+<h3><a name="MT5218"/>MT5218: Can't ignore the dynamic symbol {symbol} (--ignore-dynamic-symbol={symbol}) because it was not detected as a dynamic symbol.</h3>
+
+The command-line argument `--ignore-dynamic-symbol=symbol` was passed, but
+this symbol is not a symbol that was recognized as a dynamic symbol that must
+be manually preserved.
+
+There are two main reasons for this:
+
+* The symbol name is incorrect.
+	* Don't prepend an underscore to the symbol name.
+	* The symbol for Objective-C classes is `OBJC_CLASS_$_<classname>`.
+* The symbol is correct, but it's a symbol that's already preserved by normal
+  means (some build options causes the exact list of dynamic symbols to vary).
 
 ### MT53xx: Other tools
 

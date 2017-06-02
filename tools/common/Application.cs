@@ -45,6 +45,8 @@ namespace Xamarin.Bundler {
 		internal RuntimeOptions RuntimeOptions;
 		public RegistrarMode Registrar = RegistrarMode.Default;
 		public RegistrarOptions RegistrarOptions = RegistrarOptions.Default;
+		public SymbolMode SymbolMode;
+		public HashSet<string> IgnoredSymbols = new HashSet<string> ();
 
 		public HashSet<string> Frameworks = new HashSet<string> ();
 		public HashSet<string> WeakFrameworks = new HashSet<string> ();
@@ -435,6 +437,24 @@ namespace Xamarin.Bundler {
 				}
 				IsDefaultMarshalManagedExceptionMode = true;
 			}
+
+			if (SymbolMode == SymbolMode.Default) {
+#if MONOTOUCH
+				SymbolMode = EnableBitCode ? SymbolMode.Code : SymbolMode.Linker;
+#else
+				SymbolMode = SymbolMode.Linker;
+#endif
+			}
+
+#if MONOTOUCH
+			if (EnableBitCode && SymbolMode != SymbolMode.Code) {
+				// This is a warning because:
+				// * The user will get a linker error anyway if they do this.
+				// * I see it as quite unlikely that anybody will in fact try this (it must be manually set in the additional mtouch arguments).
+				// * I find it more probable that Apple will remove the -u restriction, in which case someone might actually want to try this, and if it's a warning, we won't prevent it.
+				ErrorHelper.Warning (115, "It is recommended to reference dynamic symbols using code (--dynamic-symbol-mode=code) when bitcode is enabled.");
+			}
+#endif
 		}
 
 		public void RunRegistrar ()

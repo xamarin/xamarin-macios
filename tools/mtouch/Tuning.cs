@@ -135,7 +135,7 @@ namespace MonoTouch.Tuner {
 			context.OutputDirectory = options.OutputDirectory;
 			context.SetParameter ("debug-build", options.DebugBuild.ToString ());
 			context.StaticRegistrar = options.Target.StaticRegistrar;
-
+			context.Target = options.Target;
 			options.LinkContext = context;
 
 			return context;

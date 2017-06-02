@@ -333,6 +333,9 @@
       <Link>common\BuildTasks.cs</Link>
     </Compile>
     <Compile Include="BuildTasks.mtouch.cs" />
+    <Compile Include="..\common\Symbols.cs">
+      <Link>external\Symbols.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
