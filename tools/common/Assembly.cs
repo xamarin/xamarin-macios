@@ -541,6 +541,11 @@ namespace Xamarin.Bundler {
 			return HashedAssemblies.TryGetValue (Assembly.GetIdentity (asm), out assembly);
 		}
 
+		public bool Contains (AssemblyDefinition asm)
+		{
+			return HashedAssemblies.ContainsKey (Assembly.GetIdentity (asm));
+		}
+
 		public bool ContainsKey (string identity)
 		{
 			return HashedAssemblies.ContainsKey (identity);

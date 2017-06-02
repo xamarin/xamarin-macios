@@ -260,6 +260,18 @@ namespace Xamarin.Bundler {
 			if (single_assembly != null && !symbol.Members.Any ((v) => v.Module.Assembly == single_assembly.AssemblyDefinition))
 				return false; // nope, this symbol is not used in the assembly we're using as filter.
 
+			// If we're code-sharing, the managed linker might have found symbols
+			// that are not in any of the assemblies in the current app.
+			// This occurs because the managed linker processes all the
+			// assemblies for all the apps together, but when linking natively
+			// we're only linking with the assemblies that actually go into the app.
+			if (App.IsCodeShared && symbol.Assemblies.Count > 0) {
+				// So if this is a symbol related to any assembly, make sure
+				// at least one of those assemblies are in the current app.
+				if (!symbol.Assemblies.Any ((v) => Assemblies.Contains (v)))
+					return false;
+			}
+
 			switch (symbol.Type) {
 			case SymbolType.Field:
 				return true;
