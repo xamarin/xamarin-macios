@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Xamarin.Tests;
@@ -479,22 +480,38 @@ public class Category
 				".*/Test.cs(.*): error MT4159: Cannot register the method 'Category.Foo' as a category method because category methods must be static.");
 		}
 
+		// This list is duplicated in src/ObjCRuntime/Registrar.cs
+		static char[] invalidSelectorCharacters = new char[] { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n' };
+
 		[Test]
 		public void MT4160 ()
 		{
-			var code = @"
-public class TestInvalidChar : NSObject
-{
-	[Export (""xy z"")]
-	public void XyZ () {}
-	[Export (""ab\tc"")]
-	public void AbC () {}
-}
-";
-			VerifyWithXode (R.Static, code, false,
-				".*/Test.cs(.*): error MT4160: Invalid character ' ' (0x20) found in selector 'xy z' for 'TestInvalidChar.XyZ()'",
-				".*/Test.cs(.*): error MT4160: Invalid character '\t' (0x9) found in selector 'ab\tc' for 'TestInvalidChar.AbC()'"
-				);
+			// newline is invalid, but it messes up the error message and testing is just annoying, so skip it.
+			var testInvalidCharacters = invalidSelectorCharacters.Where ((v) => v != '\n').ToArray ();
+			using (var mtouch = new MTouchTool ()) {
+				var sb = new StringBuilder ();
+				sb.AppendLine ("public class TestInvalidChar : Foundation.NSObject {");
+				for (int i = 0; i < testInvalidCharacters.Length; i++) {
+					var c = testInvalidCharacters [i];
+					var str = c.ToString ();
+					switch (c) {
+					case '"':
+						str = "\"\"";
+						break;
+					}
+					sb.AppendLine ($"\t[Foundation.Export (@\"X{str}\")]");
+					sb.AppendLine ($"\tpublic void X{i} () {{}}");
+				}
+				sb.AppendLine ("}");
+				mtouch.CreateTemporaryApp (extraCode: sb.ToString (), extraArg: "-debug");
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				for (int i = 0; i < testInvalidCharacters.Length; i++) {
+					var c = testInvalidCharacters [i];
+					mtouch.AssertError (4160, $"Invalid character '{c}' (0x{((int)c).ToString ("x")}) found in selector 'X{c}' for 'TestInvalidChar.X{i}()'", "testApp.cs", 3 + i * 2);
+				}
+			}
 		}
 
 		[Test]
