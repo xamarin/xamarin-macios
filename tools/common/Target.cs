@@ -260,6 +260,7 @@ namespace Xamarin.Bundler {
 			if (single_assembly != null && !symbol.Members.Any ((v) => v.Module.Assembly == single_assembly.AssemblyDefinition))
 				return false; // nope, this symbol is not used in the assembly we're using as filter.
 
+#if MTOUCH
 			// If we're code-sharing, the managed linker might have found symbols
 			// that are not in any of the assemblies in the current app.
 			// This occurs because the managed linker processes all the
@@ -271,6 +272,7 @@ namespace Xamarin.Bundler {
 				if (!symbol.Assemblies.Any ((v) => Assemblies.Contains (v)))
 					return false;
 			}
+#endif
 
 			switch (symbol.Type) {
 			case SymbolType.Field:
