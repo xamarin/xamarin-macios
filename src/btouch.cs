@@ -58,7 +58,6 @@ class BindingTouch {
 
 	static char shellQuoteChar;
 
-	public static bool BindingThirdParty = true;
 	static List<string> libs = new List<string> ();
 
 #if IKVM
@@ -271,7 +270,7 @@ class BindingTouch {
 			{ "sourceonly=", "Only generates the source", v => generate_file_list = v },
 			{ "ns=", "Sets the namespace for storing helper classes", v => ns = v },
 			{ "unsafe", "Sets the unsafe flag for the build", v=> unsafef = true },
-			{ "core", "Use this to build product assemblies", v => BindingThirdParty = false },
+			{ "core", "Use this to build product assemblies", v => Generator.BindThirdPartyLibrary = false },
 			{ "r=", "Adds a reference", v => references.Add (v) },
 			{ "lib=", "Adds the directory to the search path for the compiler", v => libs.Add (Quote (v)) },
 			{ "compiler=", "Sets the compiler to use", v => compiler = v },
@@ -587,13 +586,12 @@ class BindingTouch {
 			);
 
 			var g = new Generator (nsManager, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()){
-				BindThirdPartyLibrary = BindingThirdParty,
 				BaseDir = basedir != null ? basedir : tmpdir,
 				ZeroCopyStrings = zero_copy,
 				InlineSelectors = inline_selectors ?? (Unified && CurrentPlatform != PlatformName.MacOSX),
 			};
 
-			if (!Unified && !BindingThirdParty) {
+			if (!Unified && !Generator.BindThirdPartyLibrary) {
 				foreach (var mi in baselib.GetType (nsManager.CoreObjCRuntime + ".Messaging").GetMethods ()){
 					if (mi.Name.IndexOf ("_objc_msgSend", StringComparison.Ordinal) != -1)
 						g.RegisterMethodName (mi.Name);
