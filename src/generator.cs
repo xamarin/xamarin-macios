@@ -7117,4 +7117,16 @@ public partial class Generator : IMemberGatherer {
 
 		return $"@\"{s.Replace ("\"", "\"\"")}\"";
 	}
+
+	// Format a provider for error messages
+	public static string FormatProvider (ICustomAttributeProvider provider)
+	{
+		if (provider is Type type) {
+			return type.FullName;
+		} else if (provider is MemberInfo mi) {
+			return mi.DeclaringType.FullName + "." + mi.Name;
+		} else {
+			return provider?.ToString ();
+		}
+	}
 }
