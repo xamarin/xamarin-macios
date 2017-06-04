@@ -1300,12 +1300,12 @@ namespace Xamarin.Bundler {
 					string reference_m = Path.Combine (App.Cache.Location, "reference.m");
 					reference_m = BuildTarget.GenerateReferencingSource (reference_m, requiredSymbols);
 					if (!string.IsNullOrEmpty (reference_m))
-						args.Append (Quote (reference_m)).Append (' ');
+						args.Append (StringUtils.Quote (reference_m)).Append (' ');
 					break;
 				case SymbolMode.Linker:
 				case SymbolMode.Default:
 					foreach (var symbol in requiredSymbols)
-						args.Append ("-u ").Append (Quote ("_" + symbol.Name)).Append (' ');
+						args.Append ("-u ").Append (StringUtils.Quote ("_" + symbol.Name)).Append (' ');
 					break;
 				default:
 					throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol mode: {App.SymbolMode}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
