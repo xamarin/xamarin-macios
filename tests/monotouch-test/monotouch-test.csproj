@@ -648,6 +648,7 @@
     <Compile Include="System.Net.Http\MessageHandlers.cs" />
     <Compile Include="AVFoundation\PlayerItemVideoOutputTest.cs" />
     <Compile Include="mono\ConfigTest.cs" />
+    <Compile Include="HttpClient\HttpClientTest.cs" />
     <Compile Include="OpenGLES\EAGLContext.cs" />
     <Compile Include="CoreText\CTParagraphStyleTests.cs" />
   </ItemGroup>
@@ -714,6 +715,7 @@
     <Folder Include="CloudKit\" />
     <Folder Include="Intents\" />
     <Folder Include="System.Net.Http\" />
+    <Folder Include="HttpClient\" />
     <Folder Include="OpenGLES\" />
   </ItemGroup>
   <ItemGroup>
