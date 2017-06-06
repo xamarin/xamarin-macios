@@ -1599,6 +1599,7 @@ IOS_FRAMEWORKS =         \
 	AdSupport \
 	AddressBook \
 	AddressBookUI \
+	ARKit \
 	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \

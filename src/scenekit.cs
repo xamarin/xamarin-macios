@@ -2084,6 +2084,8 @@ namespace XamCore.SceneKit {
 		NSString AssetUnitMeterKey { get; }
 	}
 
+	interface ISCNSceneRenderer {}
+
 	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[Protocol, Model]
@@ -2329,22 +2331,22 @@ namespace XamCore.SceneKit {
 	interface SCNSceneRendererDelegate {
 
 		[Export ("renderer:willRenderScene:atTime:")]
-		void WillRenderScene ([Protocolize]SCNSceneRenderer renderer, SCNScene scene, double timeInSeconds);
+		void WillRenderScene (ISCNSceneRenderer renderer, SCNScene scene, double timeInSeconds);
 
 		[Export ("renderer:didRenderScene:atTime:")]
-		void DidRenderScene ([Protocolize]SCNSceneRenderer renderer, SCNScene scene, double timeInSeconds);
+		void DidRenderScene (ISCNSceneRenderer renderer, SCNScene scene, double timeInSeconds);
 
 		[Mac (10,10)]
 		[Export ("renderer:updateAtTime:")]
-		void Update ([Protocolize]SCNSceneRenderer renderer, double timeInSeconds);
+		void Update (ISCNSceneRenderer renderer, double timeInSeconds);
 
 		[Mac (10,10)]
 		[Export ("renderer:didApplyAnimationsAtTime:")]
-		void DidApplyAnimations ([Protocolize]SCNSceneRenderer renderer, double timeInSeconds);
+		void DidApplyAnimations (ISCNSceneRenderer renderer, double timeInSeconds);
 
 		[Mac (10,10)]
 		[Export ("renderer:didSimulatePhysicsAtTime:")]
-		void DidSimulatePhysics ([Protocolize]SCNSceneRenderer renderer, double timeInSeconds);
+		void DidSimulatePhysics (ISCNSceneRenderer renderer, double timeInSeconds);
 	}	
 
 	[Watch (3,0)]
