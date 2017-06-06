@@ -51,20 +51,27 @@ namespace XamCore.MediaPlayer {
 
 #if XAMCORE_2_0
 	}
-
-	[NoMac]
-	[NoTV]
+	#if MONOMAC || TVOS
+	[Static]
+	#else
 	[BaseType (typeof (MPMediaEntity))]
+	#endif
 	interface MPMediaItem {
 #endif
+
+#if !MONOMAC
 		[Since (4,2)]
+		[NoMac]
+		[NoTV]
 		[Export ("persistentIDPropertyForGroupingType:")][Static]
 		string GetPersistentIDProperty (MPMediaGrouping groupingType);
 
 		[Since (4,2)]
+		[NoMac]
+		[NoTV]
 		[Export ("titlePropertyForGroupingType:")][Static]
 		string GetTitleProperty (MPMediaGrouping groupingType);
-
+#endif
 		[Since (3,0)]
 		[Field ("MPMediaItemPropertyPersistentID")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -136,6 +143,7 @@ namespace XamCore.MediaPlayer {
 		NSString ComposerProperty { get; }
 
 		[Since (3,0)]
+		[Mac (10,12,2)]
 		[Field ("MPMediaItemPropertyPlaybackDuration")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString PlaybackDurationProperty { get; }
@@ -1364,51 +1372,62 @@ namespace XamCore.MediaPlayer {
 		NSString PropertyChapterCount { get; }
 
 		[iOS (8,0)]
+		[Mac (10,12,2)]
 		[Internal]
 		[Field ("MPNowPlayingInfoPropertyDefaultPlaybackRate")]
 		NSString PropertyDefaultPlaybackRate { get; }
 
 		[iOS (9,0)]
+		[TV (10,0)]
+		[Mac (10,12,1, onlyOn64: true)]
 		[Internal]
 		[Field ("MPNowPlayingInfoPropertyAvailableLanguageOptions")]
 		NSString PropertyAvailableLanguageOptions { get; }
 
 		[iOS (9,0)]
+		[Mac (10,12,2)]
 		[Internal]
 		[Field ("MPNowPlayingInfoPropertyCurrentLanguageOptions")]
 		NSString PropertyCurrentLanguageOptions { get; }
 
 		[iOS (10,0)]
 		[TV (10,0)]
+		[Mac (10,12,2, onlyOn64: true)]
 		[Field ("MPNowPlayingInfoCollectionIdentifier")]
 		NSString PropertyCollectionIdentifier { get; }
 
 		[iOS (10,0)]
 		[TV (10,0)]
+		[Mac (10,12,2)]
 		[Field ("MPNowPlayingInfoPropertyExternalContentIdentifier")]
 		NSString PropertyExternalContentIdentifier { get; }
 
 		[iOS (10,0)]
 		[TV (10,0)]
+		[Mac (10,12,2)]
 		[Field ("MPNowPlayingInfoPropertyExternalUserProfileIdentifier")]
 		NSString PropertyExternalUserProfileIdentifier { get; }
 
 		[iOS (10,0)]
 		[TV (10,0)]
+		[Mac (10,12,2)]
 		[Field ("MPNowPlayingInfoPropertyPlaybackProgress")]
 		NSString PropertyPlaybackProgress { get; }
 
 		[iOS (10,0)]
 		[TV (10,0)]
+		[Mac (10,12,2)]
 		[Field ("MPNowPlayingInfoPropertyMediaType")]
 		NSString PropertyMediaType { get; }
 
 		[iOS (10,0)]
 		[TV (10,0)]
+		[Mac (10,12,2)]
 		[Field ("MPNowPlayingInfoPropertyIsLiveStream")]
 		NSString PropertyIsLiveStream { get; }
 
 		[iOS (10,3)]
+		[TV (10,3)]
 		[Mac (10,12,3)]
 		[Field ("MPNowPlayingInfoPropertyAssetURL")]
 		NSString PropertyAssetUrl { get; }
