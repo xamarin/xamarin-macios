@@ -9,6 +9,7 @@
 #include <pthread.h>
 #include <objc/runtime.h>
 #include <sys/stat.h>
+#include <dlfcn.h>
 
 #include "product.h"
 #include "shared.h"
@@ -1113,8 +1114,27 @@ xamarin_initialize_embedded ()
 		return;
 	initialized = true;
 
-	char *argv[] = { (char *) "embedded" };
+	char *argv[] = { NULL };
+	char *libname = NULL;
+
+	Dl_info info;
+	if (dladdr ((void *) xamarin_initialize_embedded, &info) != 0) {
+		char *last_sep = strrchr (info.dli_fname, '/');
+		if (last_sep == NULL) {
+			libname = strdup (info.dli_fname);
+		} else {
+			libname = strdup (last_sep + 1);
+		}
+		argv [0] = libname;
+	}
+
+	if (argv [0] == NULL)
+		argv [0] = (char *) "embedded";
+
 	xamarin_main (1, argv, XamarinLaunchModeEmbedded);
+
+	if (libname != NULL)
+		free (libname);
 }
 
 /* Installs g_print/g_error handlers that will redirect output to the system Console */
