@@ -1756,8 +1756,13 @@ namespace XamCore.Registrar {
 			case "CoreAnimation":
 				header.WriteLine ("#import <QuartzCore/QuartzCore.h>");
 #if MTOUCH
-				if (App.SdkVersion.Major > 7)
-					header.WriteLine ("#import <QuartzCore/CAEmitterBehavior.h>");
+				switch (App.Platform) {
+				case Xamarin.Utils.ApplePlatform.iOS:
+				case Xamarin.Utils.ApplePlatform.TVOS:
+					if (App.SdkVersion.Major > 7 && App.SdkVersion.Major < 11)
+						header.WriteLine ("#import <QuartzCore/CAEmitterBehavior.h>");
+					break;
+				}
 #endif
 				return;
 			case "CoreMidi":	
