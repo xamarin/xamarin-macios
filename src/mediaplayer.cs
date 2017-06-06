@@ -51,11 +51,11 @@ namespace XamCore.MediaPlayer {
 
 #if XAMCORE_2_0
 	}
-	#if MONOMAC || TVOS
+#if MONOMAC || TVOS
 	[Static]
-	#else
+#else
 	[BaseType (typeof (MPMediaEntity))]
-	#endif
+#endif
 	interface MPMediaItem {
 #endif
 
