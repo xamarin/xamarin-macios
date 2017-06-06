@@ -32,6 +32,8 @@ linker_sources = \
 	$(LINKER_DIR)/Mono.Linker/MethodAction.cs			\
 	$(LINKER_DIR)/Mono.Linker/XApiReader.cs				\
 	$(LINKER_DIR)/Mono.Linker/IXApiVisitor.cs			\
+	$(LINKER_DIR)/Mono.Linker/MethodReferenceExtensions.cs		\
+	$(LINKER_DIR)/Mono.Linker/TypeReferenceExtensions.cs		\
 	$(LINKER_DIR)/Mono.Linker.Steps/BaseStep.cs			\
 	$(LINKER_DIR)/Mono.Linker.Steps/LoadReferencesStep.cs		\
 	$(LINKER_DIR)/Mono.Linker.Steps/LoadI18nAssemblies.cs		\

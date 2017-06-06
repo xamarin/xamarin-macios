@@ -1443,7 +1443,7 @@ namespace Xamarin.Bundler {
 
 		static IDictionary<string,List<MethodDefinition>> Link ()
 		{
-			var cache = BuildTarget.Resolver.ToResolverCache ();
+			var cache = (Dictionary<string, AssemblyDefinition>) BuildTarget.Resolver.ResolverCache;
 			var resolver = cache != null
 				? new Mono.Linker.AssemblyResolver (cache)
 				: new Mono.Linker.AssemblyResolver ();
