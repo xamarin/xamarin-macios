@@ -186,7 +186,7 @@ namespace Xamarin.Bundler {
 				return;
 
 			var main = assembly.MainModule;
-			Driver.Log ($"Loaded assembly '{assembly.FullName}' from {Driver.Quote (assembly.MainModule.FileName)}");
+			Driver.Log ($"Loaded assembly '{assembly.FullName}' from {StringUtils.Quote (assembly.MainModule.FileName)}");
 			foreach (var ar in main.AssemblyReferences)
 				Driver.Log ($"    References: '{ar.FullName}'");
 		}
@@ -244,7 +244,7 @@ namespace Xamarin.Bundler {
 			foreach (var name in App.IgnoredSymbols) {
 				var symbol = dynamic_symbols.Find (name);
 				if (symbol == null) {
-					ErrorHelper.Warning (5218, $"Can't ignore the dynamic symbol {Driver.Quote (name)} (--ignore-dynamic-symbol={Driver.Quote (name)}) because it was not detected as a dynamic symbol.");
+					ErrorHelper.Warning (5218, $"Can't ignore the dynamic symbol {StringUtils.Quote (name)} (--ignore-dynamic-symbol={StringUtils.Quote (name)}) because it was not detected as a dynamic symbol.");
 				} else {
 					symbol.Ignore = true;
 				}

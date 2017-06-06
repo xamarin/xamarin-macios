@@ -10,6 +10,7 @@ GENERATOR_SOURCES =                                             \
 	$(TOP)/src/generator-typemanager.cs                \
 	$(TOP)/src/ObjCRuntime/Stret.cs                    \
 	$(TOP)/tools/common/TargetFramework.cs             \
+	$(TOP)/tools/common/StringUtils.cs				   \
 	build/generator-frameworks.g.cs                    \
 	$(MONO_PATH)/mcs/class/Mono.Options/Mono.Options/Options.cs \
 
