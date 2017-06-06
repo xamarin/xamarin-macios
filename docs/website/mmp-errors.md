@@ -53,9 +53,17 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 <h3><a name="MM0056">MM0056: Cannot find Xcode in any of our default locations. Please install Xcode, or pass a custom path using --sdkroot=<path></h3>
 
+<h3><a name="MM0057">MM0057: Cannot determine the path to Xcode.app from the sdk root '*'. Please specify the full path to the Xcode.app bundle.</h3>
+
+The path passed using `--sdkroot` does not specify a valid Xcode app. Please specify a path to an Xcode app.
+
 <h3><a name="MM0059">MM0059: Could not find the currently selected Xcode on the system: {0};</h3>
 
 <h3><a name="MM0060">MM0060: Could not find the currently selected Xcode on the system. 'xcode-select --print-path' returned '{0}', but that directory does not exist.</h3>
+
+<h3><a name="MM0062">MM0062: No Xcode.app specified (using --sdkroot or 'xcode-select --print-path'), using the default Xcode instead: *</h3>
+
+This is a informational warning, explaining which Xcode will be used, since none was specified.
 
 <h3><a name="MM0068">MM0068: Invalid value for target framework: {0}.</h3>
 

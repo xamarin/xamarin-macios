@@ -584,9 +584,19 @@ namespace Xamarin.Bundler {
 		}
 
 
+		const string XcodeDefault = "/Applications/Xcode.app";
 		static void ValidateXcode ()
 		{
 			if (xcode_version == null) {
+				if (sdk_root == null) {
+					if (File.Exists (Path.Combine (XcodeDefault, "Contents/MacOS/Xcode"))) {
+						sdk_root = XcodeDefault;
+						ErrorHelper.Warning (62, "No Xcode.app specified (using --sdkroot or 'xcode-select --print-path'), using the default Xcode instead: {0}", sdk_root);
+					}
+					else {
+						throw ErrorHelper.CreateError (57, "Cannot determine the path to Xcode.app from the sdk root ''. Please specify the full path to the Xcode.app bundle.");
+					}
+				}
 				// Check what kind of path we got
 				if (File.Exists (Path.Combine (sdk_root, "Contents", "MacOS", "Xcode"))) {
 					// path to the Xcode.app
