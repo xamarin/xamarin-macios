@@ -805,6 +805,7 @@ SIM_ACVARS = \
 	$(COMMON_ACVARS) \
 	ac_cv_func_clock_nanosleep=no \
 	mono_cv_uscore=yes \
+	ac_cv_func_system=no \
 
 define SimulatorBuildTemplate
 
