@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Text;
+using Xamarin.Utils;
 
 namespace xharness
 {
@@ -2044,7 +2045,7 @@ function oninitialload ()
 				nuget.StartInfo.FileName = "/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
 				var args = new StringBuilder ();
 				args.Append ("restore ");
-				args.Append (Harness.Quote (SolutionPath));
+				args.Append (StringUtils.Quote (SolutionPath));
 				nuget.StartInfo.Arguments = args.ToString ();
 				SetEnvironmentVariables (nuget);
 				LogProcessExecution (log, nuget, "Restoring nugets for {0} ({1})", TestName, Mode);
@@ -2076,7 +2077,7 @@ function oninitialload ()
 					var args = new StringBuilder ();
 					args.Append ("build ");
 					var sln = Path.ChangeExtension (ProjectFile, "sln");
-					args.Append (Harness.Quote (File.Exists (sln) ? sln : ProjectFile));
+					args.Append (StringUtils.Quote (File.Exists (sln) ? sln : ProjectFile));
 					xbuild.StartInfo.Arguments = args.ToString ();
 					SetEnvironmentVariables (xbuild);
 					LogProcessExecution (log, xbuild, "Building {0} ({1})", TestName, Mode);
@@ -2150,7 +2151,7 @@ function oninitialload ()
 						args.Append ($"/p:Platform={ProjectPlatform} ");
 					if (SpecifyConfiguration)
 						args.Append ($"/p:Configuration={ProjectConfiguration} ");
-					args.Append (Harness.Quote (ProjectFile));
+					args.Append (StringUtils.Quote (ProjectFile));
 					xbuild.StartInfo.Arguments = args.ToString ();
 					SetEnvironmentVariables (xbuild);
 					LogProcessExecution (log, xbuild, "Building {0} ({1})", TestName, Mode);
@@ -2182,7 +2183,7 @@ function oninitialload ()
 					args.Append ($"/p:Platform={project_platform} ");
 				if (project_configuration != null)
 					args.Append ($"/p:Configuration={project_configuration} ");
-				args.Append (Harness.Quote (project_file)).Append (" ");
+				args.Append (StringUtils.Quote (project_file)).Append (" ");
 				args.Append ("/t:Clean ");
 				xbuild.StartInfo.Arguments = args.ToString ();
 				SetEnvironmentVariables (xbuild);
@@ -2252,13 +2253,13 @@ function oninitialload ()
 					proc.StartInfo.WorkingDirectory = WorkingDirectory;
 					proc.StartInfo.FileName = "/Library/Frameworks/Mono.framework/Commands/mono";
 					var args = new StringBuilder ();
-					args.Append (Harness.Quote (Path.GetFullPath (TestExecutable))).Append (' ');
-					args.Append (Harness.Quote (Path.GetFullPath (TestLibrary))).Append (' ');
+					args.Append (StringUtils.Quote (Path.GetFullPath (TestExecutable))).Append (' ');
+					args.Append (StringUtils.Quote (Path.GetFullPath (TestLibrary))).Append (' ');
 					if (IsNUnit3) {
-						args.Append ("-result=").Append (Harness.Quote (xmlLog.FullPath)).Append (";format=nunit2 ");
+						args.Append ("-result=").Append (StringUtils.Quote (xmlLog.FullPath)).Append (";format=nunit2 ");
 						args.Append ("--labels=All ");
 					} else {
-						args.Append ("-xml=" + Harness.Quote (xmlLog.FullPath)).Append (' ');
+						args.Append ("-xml=" + StringUtils.Quote (xmlLog.FullPath)).Append (' ');
 						args.Append ("-labels ");
 					}
 					proc.StartInfo.Arguments = args.ToString ();

@@ -56,8 +56,6 @@ class BindingTouch {
 	static string compiler;
 	static string net_sdk;
 
-	static char shellQuoteChar;
-
 	static List<string> libs = new List<string> ();
 
 #if IKVM
@@ -253,13 +251,6 @@ class BindingTouch {
 		string generate_file_list = null;
 		bool process_enums = false;
 
-		// .NET treats ' as part of the command name when running an app so we must use " on Windows
-		PlatformID pid = Environment.OSVersion.Platform;
-		if (((int)pid != 128 && pid != PlatformID.Unix && pid != PlatformID.MacOSX))
-			shellQuoteChar = '"'; // Windows
-		else
-			shellQuoteChar = '\''; // !Windows
-
 		var os = new OptionSet () {
 			{ "h|?|help", "Displays the help", v => show_help = true },
 			{ "a", "Include alpha bindings (Obsolete).", v => {}, true },
@@ -272,15 +263,15 @@ class BindingTouch {
 			{ "unsafe", "Sets the unsafe flag for the build", v=> unsafef = true },
 			{ "core", "Use this to build product assemblies", v => Generator.BindThirdPartyLibrary = false },
 			{ "r=", "Adds a reference", v => references.Add (v) },
-			{ "lib=", "Adds the directory to the search path for the compiler", v => libs.Add (Quote (v)) },
+			{ "lib=", "Adds the directory to the search path for the compiler", v => libs.Add (StringUtils.Quote (v)) },
 			{ "compiler=", "Sets the compiler to use", v => compiler = v },
 			{ "sdk=", "Sets the .NET SDK to use", v => net_sdk = v },
 			{ "new-style", "Build for Unified (Obsolete).", v => { Console.WriteLine ("The --new-style option is obsolete and ignored."); }, true},
 			{ "d=", "Defines a symbol", v => defines.Add (v) },
-			{ "api=", "Adds a API definition source file", v => api_sources.Add (Quote (v)) },
-			{ "s=", "Adds a source file required to build the API", v => core_sources.Add (Quote (v)) },
+			{ "api=", "Adds a API definition source file", v => api_sources.Add (StringUtils.Quote (v)) },
+			{ "s=", "Adds a source file required to build the API", v => core_sources.Add (StringUtils.Quote (v)) },
 			{ "v", "Sets verbose mode", v => verbose = true },
-			{ "x=", "Adds the specified file to the build, used after the core files are compiled", v => extra_sources.Add (Quote (v)) },
+			{ "x=", "Adds the specified file to the build, used after the core files are compiled", v => extra_sources.Add (StringUtils.Quote (v)) },
 			{ "e", "Generates smaller classes that can not be subclassed (previously called 'external mode')", v => external = true },
 			{ "p", "Sets private mode", v => public_mode = false },
 			{ "baselib=", "Sets the base library", v => baselibdll = v },
@@ -414,9 +405,9 @@ class BindingTouch {
 		}
 
 		if (sources.Count > 0) {
-			api_sources.Insert (0, Quote (sources [0]));
+			api_sources.Insert (0, StringUtils.Quote (sources [0]));
 			for (int i = 1; i < sources.Count; i++)
-				core_sources.Insert (i - 1, Quote (sources [i]));
+				core_sources.Insert (i - 1, StringUtils.Quote (sources [i]));
 		}
 
 		if (api_sources.Count == 0) {
@@ -428,7 +419,7 @@ class BindingTouch {
 		if (tmpdir == null)
 			tmpdir = GetWorkDir ();
 
-		string firstApiDefinitionName = Path.GetFileNameWithoutExtension (Unquote (api_sources [0]));
+		string firstApiDefinitionName = Path.GetFileNameWithoutExtension (StringUtils.Unquote (api_sources [0]));
 		firstApiDefinitionName = firstApiDefinitionName.Replace ('-', '_'); // This is not exhaustive, but common.
 		if (outfile == null)
 			outfile = firstApiDefinitionName + ".dll";
@@ -437,7 +428,7 @@ class BindingTouch {
 		foreach (var r in references) {
 			if (refs != string.Empty)
 				refs += " ";
-			refs += "-r:" + Quote (r);
+			refs += "-r:" + StringUtils.Quote (r);
 		}
 		string paths = (libs.Count > 0 ? "-lib:" + String.Join (" -lib:", libs.ToArray ()) : "");
 
@@ -456,16 +447,16 @@ class BindingTouch {
 					cargs.Append ("-sdk:").Append (net_sdk).Append (' ');
 			}
 			cargs.Append ("-debug -unsafe -target:library -nowarn:436").Append (' ');
-			cargs.Append ("-out:").Append (Quote (tmpass)).Append (' ');
+			cargs.Append ("-out:").Append (StringUtils.Quote (tmpass)).Append (' ');
 #if IKVM
-			cargs.Append ("-r:").Append (Quote (GetAttributeLibraryPath ())).Append (' ');
+			cargs.Append ("-r:").Append (StringUtils.Quote (GetAttributeLibraryPath ())).Append (' ');
 #else
 			cargs.Append ("-r:").Append (Environment.GetCommandLineArgs ()[0]).Append (' ');
 #endif
 			cargs.Append (refs).Append (' ');
 			if (unsafef)
 				cargs.Append ("-unsafe ");
-			cargs.Append ("-r:").Append (Quote (baselibdll)).Append (' ');
+			cargs.Append ("-r:").Append (StringUtils.Quote (baselibdll)).Append (' ');
 			foreach (var def in defines)
 				cargs.Append ("-define:").Append (def).Append (' ');
 			cargs.Append (paths).Append (' ');
@@ -612,7 +603,7 @@ class BindingTouch {
 			if (unsafef)
 				cargs.Append ("-unsafe ");
 			cargs.Append ("-target:library ");
-			cargs.Append ("-out:").Append (Quote (outfile)).Append (' ');
+			cargs.Append ("-out:").Append (StringUtils.Quote (outfile)).Append (' ');
 			foreach (var def in defines)
 				cargs.Append ("-define:").Append (def).Append (' ');
 			foreach (var gf in g.GeneratedFiles)
@@ -622,7 +613,7 @@ class BindingTouch {
 			foreach (var es in extra_sources)
 				cargs.Append (es).Append (' ');
 			cargs.Append (refs).Append (' ');
-			cargs.Append ("-r:").Append (Quote (baselibdll)).Append (' ');
+			cargs.Append ("-r:").Append (StringUtils.Quote (baselibdll)).Append (' ');
 			foreach (var res in resources)
 				cargs.Append (res).Append (' ');
 			if (nostdlib)
@@ -663,42 +654,6 @@ class BindingTouch {
 			var di = Directory.CreateDirectory (p);
 			return di.FullName;
 		}
-	}
-
-	static string Unquote (string input)
-	{
-		if (input == null || input.Length == 0 || input [0] != shellQuoteChar)
-			return input;
-
-		var builder = new StringBuilder ();
-		for (int i = 1; i < input.Length - 1; i++) {
-			char c = input [i];
-			if (c == '\\') {
-				builder.Append (input [i + 1]);
-				i++;
-				continue;
-			}
-			builder.Append (input [i]);
-		}
-		return builder.ToString ();
-	}
-
-	static string Quote (string input)
-	{
-		if (String.IsNullOrEmpty (input))
-			return input ?? String.Empty;
-
-		var builder = new StringBuilder ();
-		builder.Append (shellQuoteChar);
-		foreach (var c in input) {
-			if (c == '\\')
-				builder.Append ('\\');
-
-			builder.Append (c);
-		}
-		builder.Append (shellQuoteChar);
-
-		return builder.ToString ();
 	}
 }
 
