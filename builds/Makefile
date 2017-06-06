@@ -48,9 +48,18 @@ endif
 # so disable 'readlinkat' by setting using ac_cv_func_readlinkat=no
 # these can be removed when our min ios/osx version (at runtime) is macOS 10.10+ or iOS 8+
 
+# ld: weak import of symbol '_futimens' not supported because of option: -no_weak_imports for architecture x86_64
+# ld: weak import of symbol '_utimensat' not supported because of option: -no_weak_imports for architecture x86_64
+# headers say these methods were introduced in 10.13:
+# usr/include/sys/stat.h:int	futimens(int __fd, const struct timespec __times[2]) __API_AVAILABLE(macosx(10.13), ios(11.0), tvos(11.0), watchos(4.0));
+# int	utimensat(int __fd, const char *__path, const struct timespec __times[2], int __flag) __API_AVAILABLE(macosx(10.13), ios(11.0), tvos(11.0), watchos(4.0));
+# so disable 'futimens' and 'utimensat'
+
 COMMON_ACVARS =  \
 	ac_cv_func_fstatat=no \
 	ac_cv_func_readlinkat=no \
+	ac_cv_func_futimens=no \
+	ac_cv_func_utimensat=no \
 
 COMMON_LDFLAGS=-Wl,-no_weak_imports
 
@@ -989,7 +998,9 @@ WATCHSIMULATOR_ACVARS =  \
 	ac_cv_func_execv=no \
 	ac_cv_func_execve=no \
 	ac_cv_func_execvp=no \
-	ac_cv_func_signal=no
+	ac_cv_func_signal=no \
+	ac_cv_func_futimens=no \
+	ac_cv_func_utimensat=no \
 
 WATCHSIMULATOR_ENVIRONMENT =                  \
 	$(WATCHSIMULATOR_ACVARS)                         \
@@ -1139,7 +1150,9 @@ TVSIMULATOR_ACVARS =  \
 	ac_cv_func_execv=no \
 	ac_cv_func_execve=no \
 	ac_cv_func_execvp=no \
-	ac_cv_func_signal=no
+	ac_cv_func_signal=no \
+	ac_cv_func_futimens=no \
+	ac_cv_func_utimensat=no \
 
 TVSIMULATOR_ENVIRONMENT =                  \
 	$(TVSIMULATOR_ACVARS)                  \
