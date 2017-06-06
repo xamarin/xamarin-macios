@@ -1234,8 +1234,11 @@ namespace Xamarin.Bundler
 					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", App.Platform);
 				}
 
-				registration_methods.Add (method);
-				LinkWithStaticLibrary (Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib", library));
+				var lib = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib", library);
+				if (File.Exists (lib)) {
+					registration_methods.Add (method);
+					LinkWithStaticLibrary (lib);
+				}
 			}
 
 			// The main method.
