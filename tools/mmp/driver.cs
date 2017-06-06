@@ -1940,3 +1940,4 @@ namespace Xamarin.Bundler {
 		}
 	}
 }
+
