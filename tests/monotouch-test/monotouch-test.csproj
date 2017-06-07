@@ -156,6 +156,7 @@
     </None>
     <None Include="Entitlements.plist" />
     <None Include="app.config" />
+    <None Include="EmptyNib.xib" Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -727,7 +728,6 @@
     <Content Include="drum01.mp3" />
   </ItemGroup>
   <ItemGroup>
-    <InterfaceDefinition Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="EmptyNib.xib" />
     <InterfaceDefinition Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="LaunchScreen.storyboard" />
   </ItemGroup>
   <ItemGroup>
@@ -753,7 +753,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Security\openssl_crt.der">
-        <LogicalName>monotouchtest.Security.openssl_crt.der</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
