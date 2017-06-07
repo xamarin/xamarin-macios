@@ -72,7 +72,7 @@ sharpie-osx: build $(XMAC_PCH)
 	sharpie ./bin/Debug/xtro-plugin.dll extro $(XMAC_PCH) $(XMAC) | sort > osx.results
 
 $(XMAC_PCH):
-	sharpie sdk-db -s macosx$(OSX_SDK_VERSION) -a $(XMAC_ARCH)
+	sharpie sdk-db -s macosx$(OSX_SDK_VERSION) -a $(XMAC_ARCH) -x InputMethodKit
 
 preclassify: ios.results osx.results
 	@comm -12 ios.results osx.results > common.unclassified.tmp
