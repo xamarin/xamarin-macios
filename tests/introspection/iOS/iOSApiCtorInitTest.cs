@@ -322,6 +322,12 @@ namespace Introspection {
 				if (TestRuntime.CheckXcodeVersion (8, 0))
 					return;
 				break;
+			// Xcode 9 Beta 1 to avoid crashes
+			case "AVCaptureInputPort":
+			case "CIImageAccumulator":
+				if (TestRuntime.CheckXcodeVersion (9, 0))
+					return;
+				break;
 			default:
 				base.CheckToString (obj);
 				break;
