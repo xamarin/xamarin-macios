@@ -89,6 +89,23 @@ partial class TestRuntime
 	public static bool CheckXcodeVersion (int major, int minor, int build = 0)
 	{
 		switch (major) {
+		case 9:
+			switch (minor) {
+			case 0:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (4, 0);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (11, 0);
+#elif __IOS__
+				return CheckiOSSystemVersion (11, 0);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 13, 0);
+#else
+				throw new NotImplementedException ();
+#endif
+			default:
+				throw new NotImplementedException ();
+			}
 		case 8:
 			switch (minor) {
 			case 0:
