@@ -178,10 +178,15 @@ public class ListSourceFiles {
 			}
 			var target = mangler.GetTargetPath (fixedSource);
 
-			if (verbose)
-				Console.WriteLine ($"Target file is {fixedSource}");
+			if (verbose) {
+				Console.WriteLine ($"Fixed source {fixedSource}");
+				Console.WriteLine ($"Target path {target}");
+			}
 
 			var targetDir = Path.GetDirectoryName (target);
+
+			if (verbose)
+				Console.WriteLine ($"Target direcotry is {targetDir}");
 
 			if (!Directory.Exists (targetDir)) {
 				try {
