@@ -148,7 +148,7 @@ namespace xharness
 		string DownloadMlaunch ()
 		{
 			// NOTE: the filename part in the url must be unique so that the caching logic works properly.
-			var mlaunch_url = "http://bosstoragemirror.blob.core.windows.net/public-builder/mlaunch/mlaunch-af02fb1c25d31ff3c5b4a3753fdb4b1783294294.zip";
+			var mlaunch_url = "https://dl.xamarin.com/uploads/latj2ceczbg/mlaunch-889a560308a983d566a6dc1f637427c52ca22eaa.zip";
 			var extraction_dir = Path.Combine (Path.GetTempPath (), Path.GetFileNameWithoutExtension (mlaunch_url));
 			var mlaunch_path = Path.Combine (extraction_dir, "bin", "mlaunch");
 
