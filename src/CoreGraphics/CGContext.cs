@@ -579,6 +579,15 @@ namespace XamCore.CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static void CGContextResetClip (/* CGContextRef */ IntPtr c);
+
+		[iOS (11,0)]
+		public void ResetClip ()
+		{
+			CGContextResetClip (handle);
+		}
+		
+		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextClipToMask (/* CGContextRef */ IntPtr c, CGRect rect, 
 			/* CGImageRef __nullable */ IntPtr mask);
 
@@ -1366,5 +1375,17 @@ namespace XamCore.CoreGraphics {
 			return new CGBitmapContext (Handle, false);
 		}
 #endif // !COREBUILD
+	}
+
+	[iOS(11,0), Mac(10,13)]
+	public enum CGPDFAccessPermissions : uint {
+		AllowsLowQualityPrinting    = (1 << 0),
+		AllowsHighQualityPrinting   = (1 << 1),
+		AllowsDocumentChanges       = (1 << 2),
+		AllowsDocumentAssembly      = (1 << 3),
+		AllowsContentCopying        = (1 << 4),
+		AllowsContentAccessibility  = (1 << 5),
+		AllowsCommenting            = (1 << 6),
+		AllowsFormFieldEntry        = (1 << 7) 
 	}
 }

@@ -342,16 +342,38 @@ namespace XamCore.CoreGraphics {
 			CGColorSpaceGetColorTable (handle, table);
 			return table;
 		}
-			
+
+		// Old API, removed in iOS 11.0, macro maps CGColorSpaceCreateWithICCData to this name
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateWithICCProfile (/* CFDataRef */ IntPtr data);
 
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateWithICCData (/* CFDataRef */ IntPtr data);
+
+		static bool versionChecked, use11APIs;
+		static void Check11 ()
+		{
+#if MONOMAC || IOS
+			if (PlatformHelper.CheckSystemVersion (11, 0))
+				use11APIs = true;
+#endif
+			versionChecked = true;
+		}
+		
 		public static CGColorSpace CreateICCProfile (NSData data)
 		{
 			// older versions did not throw - so we'll return null
 			if (data == null)
 				return null;
-			var ptr = CGColorSpaceCreateWithICCProfile (data.Handle);
+			if (!versionChecked)
+				Check11();
+
+			IntPtr ptr;
+
+			if (use11APIs)
+				ptr = CGColorSpaceCreateWithICCData (data.Handle);
+			else 
+				ptr = CGColorSpaceCreateWithICCProfile (data.Handle);
 			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
 		}
 
@@ -376,6 +398,12 @@ namespace XamCore.CoreGraphics {
 		[iOS (7,0)] // note: pre-release docs/headers says iOS6 and later, available on OSX since 10.5
 		public NSData GetICCProfile ()
 		{
+			if (!versionChecked)
+				Check11 ();
+
+			if (use11APIs)
+				return GetIccData ();
+			
 			IntPtr ptr = CGColorSpaceCopyICCProfile (handle);
 			return (ptr == IntPtr.Zero) ? null : new NSData (ptr, true);
 		}
