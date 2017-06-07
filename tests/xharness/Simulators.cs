@@ -285,7 +285,7 @@ namespace xharness
 					if (devices == null)
 						devices = Enumerable.Simulators.FindAsync (Enumerable.Target, Enumerable.Log).Result;
 					moved = true;
-					return moved;
+					return devices != null;
 				}
 
 				public void Reset ()
