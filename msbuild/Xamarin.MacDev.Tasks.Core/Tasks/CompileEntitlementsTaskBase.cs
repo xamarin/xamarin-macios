@@ -58,7 +58,7 @@ namespace Xamarin.MacDev.Tasks
 			get { return true; }
 		}
 
-		PString MergeEntitlementString (PString pstr, MobileProvision profile)
+		PString MergeEntitlementString (PString pstr, MobileProvision profile, bool expandWildcards)
 		{
 			string TeamIdentifierPrefix;
 			string AppIdentifierPrefix;
@@ -96,6 +96,25 @@ namespace Xamarin.MacDev.Tasks
 
 			var expanded = StringParserService.Parse (pstr.Value, customTags);
 
+			if (expandWildcards && expanded.IndexOf ('*') != -1) {
+				int asterisk = expanded.IndexOf ('*');
+				string prefix;
+
+				if (expanded.StartsWith (TeamIdentifierPrefix, StringComparison.Ordinal))
+					prefix = TeamIdentifierPrefix;
+				else if (expanded.StartsWith (AppIdentifierPrefix, StringComparison.Ordinal))
+					prefix = AppIdentifierPrefix;
+				else
+					prefix = string.Empty;
+
+				var baseBundleIdentifier = expanded.Substring (prefix.Length, asterisk - prefix.Length);
+
+				if (!BundleIdentifier.StartsWith (baseBundleIdentifier, StringComparison.Ordinal))
+					expanded = expanded.Replace ("*", BundleIdentifier);
+				else
+					expanded = prefix + BundleIdentifier;
+			}
+
 			return new PString (expanded);
 		}
 
@@ -109,7 +128,7 @@ namespace Xamarin.MacDev.Tasks
 				if (item is PDictionary)
 					value = MergeEntitlementDictionary ((PDictionary) item, profile);
 				else if (item is PString)
-					value = MergeEntitlementString ((PString) item, profile);
+					value = MergeEntitlementString ((PString) item, profile, false);
 				else if (item is PArray)
 					value = MergeEntitlementArray ((PArray) item, profile);
 				else
@@ -135,7 +154,7 @@ namespace Xamarin.MacDev.Tasks
 				if (value is PDictionary)
 					value = MergeEntitlementDictionary ((PDictionary) value, profile);
 				else if (value is PString)
-					value = MergeEntitlementString ((PString) value, profile);
+					value = MergeEntitlementString ((PString) value, profile, false);
 				else if (value is PArray)
 					value = MergeEntitlementArray ((PArray) value, profile);
 				else
@@ -210,7 +229,7 @@ namespace Xamarin.MacDev.Tasks
 					else if (value is PDictionary)
 						value = MergeEntitlementDictionary ((PDictionary) value, profile);
 					else if (value is PString)
-						value = MergeEntitlementString ((PString) value, profile);
+						value = MergeEntitlementString ((PString) value, profile, item.Key == ApplicationIdentifierKey);
 					else if (value is PArray)
 						value = MergeEntitlementArray ((PArray) value, profile);
 					else
@@ -244,7 +263,7 @@ namespace Xamarin.MacDev.Tasks
 				if (value is PDictionary)
 					value = MergeEntitlementDictionary ((PDictionary) value, profile);
 				else if (value is PString)
-					value = MergeEntitlementString ((PString) value, profile);
+					value = MergeEntitlementString ((PString) value, profile, item.Key == ApplicationIdentifierKey);
 				else if (value is PArray)
 					value = MergeEntitlementArray ((PArray) value, profile);
 				else
