@@ -8780,6 +8780,22 @@ namespace XamCore.Foundation
 #endif
 	}
 
+	interface INSItemProviderReading {}
+	
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface NSItemProviderReading
+	{
+		[Static, Abstract]
+		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] ReadableTypeIdentifiersForItemProvider { get; }
+	
+		[Abstract]
+		[Export ("initWithItemProviderData:typeIdentifier:error:")]
+		NSObject CreateFrom (NSData providerData, string typeIdentifier, [NullAllowed] out NSError outError);
+	}
+
 #if XAMCORE_2_0
 	[Static]
 #endif
