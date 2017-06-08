@@ -1227,7 +1227,7 @@ namespace XamCore.HomeKit {
 	[TV (10,0)]
 	[BaseType (typeof (HMEvent))]
 	[DisableDefaultCtor]
-	interface HMLocationEvent {
+	interface HMLocationEvent : NSMutableCopying {
 		[NoTV]
 		[NoWatch]
 		[Export ("initWithRegion:")]

@@ -12140,6 +12140,9 @@ namespace XamCore.Foundation
 		bool ContainsDate (NSDate date);
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSUnit : NSCopying, NSSecureCoding {
@@ -13223,6 +13226,9 @@ namespace XamCore.Foundation
 		nuint RedirectCount { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	interface NSUnitAcceleration : NSSecureCoding {
@@ -13245,6 +13251,9 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	interface NSUnitAngle : NSSecureCoding {
@@ -13283,6 +13292,9 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	interface NSUnitArea : NSSecureCoding {
@@ -13353,6 +13365,9 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif	
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	interface NSUnitConcentrationMass : NSSecureCoding {
@@ -13379,6 +13394,9 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	interface NSUnitDispersion : NSSecureCoding {
@@ -13397,6 +13415,9 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	interface NSUnitDuration : NSSecureCoding {
@@ -13423,6 +13444,9 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	interface NSUnitElectricCharge : NSSecureCoding {
@@ -13461,6 +13485,9 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	interface NSUnitElectricCurrent : NSSecureCoding {
@@ -13495,6 +13522,9 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	interface NSUnitElectricPotentialDifference : NSSecureCoding {
@@ -13529,6 +13559,9 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	interface NSUnitElectricResistance : NSSecureCoding {
@@ -13563,6 +13596,9 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	interface NSUnitEnergy : NSSecureCoding {
@@ -13597,6 +13633,9 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	interface NSUnitFrequency : NSSecureCoding {
@@ -13643,6 +13682,9 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	interface NSUnitFuelEfficiency : NSSecureCoding {
@@ -13669,6 +13711,9 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	interface NSUnitLength : NSSecureCoding {
@@ -13771,6 +13816,9 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif	
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	interface NSUnitIlluminance : NSSecureCoding {
@@ -13789,6 +13837,9 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	interface NSUnitMass : NSSecureCoding {
@@ -13867,6 +13918,9 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	interface NSUnitPower : NSSecureCoding {
@@ -13925,6 +13979,9 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	interface NSUnitPressure : NSSecureCoding {
@@ -13979,6 +14036,9 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	interface NSUnitSpeed : NSSecureCoding {
@@ -14009,6 +14069,9 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // -init should never be called on NSUnit!
+#endif
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	interface NSUnitVolume : NSSecureCoding {

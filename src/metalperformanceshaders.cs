@@ -510,7 +510,7 @@ namespace XamCore.MetalPerformanceShaders {
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface MPSKernel : NSCopying {
+	interface MPSKernel : NSCopying, NSSecureCoding {
 		[Export ("options", ArgumentSemantic.Assign)]
 		MPSKernelOptions Options { get; set; }
 
@@ -657,7 +657,7 @@ namespace XamCore.MetalPerformanceShaders {
 	[iOS (10,0)][TV (10,0)]
 	[BaseType (typeof (NSObject), Name = "MPSCNNConvolutionDescriptor")]
 	[DisableDefaultCtor]
-	interface MPSCnnConvolutionDescriptor : NSCopying {
+	interface MPSCnnConvolutionDescriptor : NSCopying, NSSecureCoding {
 
 		[Export ("kernelWidth")]
 		nuint KernelWidth { get; set; }

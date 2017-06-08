@@ -7179,7 +7179,7 @@ namespace XamCore.UIKit {
 	[Since (3,2)]
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe]
-	interface UIBezierPath : NSCoding, NSCopying {
+	interface UIBezierPath : NSSecureCoding, NSCopying {
 		// initWithFrame: --> unrecognized selector
 
 		[Export ("bezierPath"), Static]
@@ -15839,6 +15839,9 @@ namespace XamCore.UIKit {
 		string GetDetailTextForGuidedAccessRestriction (string restrictionIdentifier);
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // [Assert] -init is not a useful initializer for this class. Use one of the designated initializers instead
+#endif
 	[NoWatch]
 	[iOS (9,0)] // added in Xcode 7.1 / iOS 9.1 SDK
 	[BaseType (typeof (UIFocusUpdateContext))]
@@ -15908,6 +15911,9 @@ namespace XamCore.UIKit {
 		bool CanBecomeFocused { get; }
 	}
 		
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // [Assert] -init is not a useful initializer for this class. Use one of the designated initializers instead
+#endif
 	[NoWatch]
 	[iOS (9,0)]
 	[BaseType (typeof(NSObject))]

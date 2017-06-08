@@ -622,7 +622,7 @@ namespace XamCore.CloudKit {
 	
 	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	interface CKFetchRecordZoneChangesOptions : NSSecureCoding
+	interface CKFetchRecordZoneChangesOptions : NSSecureCoding, NSCopying
 	{
 		[NullAllowed, Export ("previousServerChangeToken", ArgumentSemantic.Copy)]
 		CKServerChangeToken PreviousServerChangeToken { get; set; }

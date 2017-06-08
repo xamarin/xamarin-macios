@@ -2230,7 +2230,7 @@ namespace XamCore.CoreImage {
 	[iOS (8,0)]
 	[Mac (10,12)]
 	[BaseType (typeof (CIFeature))]
-	partial interface CIQRCodeFeature {
+	partial interface CIQRCodeFeature : NSSecureCoding, NSCopying {
 
 		[Export ("bounds", ArgumentSemantic.Assign)]
 		CGRect Bounds { get; }

@@ -329,6 +329,12 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "AVPlayerLooper": // This API got introduced in Xcode 8.0 binding but is not currently present nor in Xcode 8.3 or Xcode 9.0 needs research
+				switch (selectorName) {
+				case "isLoopingEnabled":
+					return true;
+				}
+				break;
 			}
 
 			// old binding mistake
