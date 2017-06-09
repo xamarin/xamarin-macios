@@ -3009,7 +3009,19 @@ public partial class Generator : IMemberGatherer {
 		if (mi == null)
 			return;
 
-		foreach (var availability in AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (mi))
+		foreach (var availability in AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (mi)) {
+			if (availability is DefaultCtorAvailabilityAttribute)
+				continue;
+			print (availability.ToString ());
+		}
+	}
+
+	public void PrintDefaultCtorAvailabilityAttributes (MemberInfo mi)
+	{
+		if (mi == null)
+			return;
+
+		foreach (var availability in AttributeManager.GetCustomAttributes<DefaultCtorAvailabilityAttribute> (mi))
 			print (availability.ToString ());
 	}
 
@@ -5749,6 +5761,7 @@ public partial class Generator : IMemberGatherer {
 						if (!disable_default_ctor) {
 							GeneratedCode (sw, 2);
 							sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
+							PrintDefaultCtorAvailabilityAttributes (type);
 							sw.WriteLine ("\t\t[Export (\"init\")]");
 							sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, TypeName);
 							sw.WriteLine ("\t\t{");
@@ -5762,6 +5775,7 @@ public partial class Generator : IMemberGatherer {
 						if (!disable_default_ctor) {
 							GeneratedCode (sw, 2);
 							sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
+							PrintDefaultCtorAvailabilityAttributes (type);
 							sw.WriteLine ("\t\t[Export (\"init\")]");
 							sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, TypeName);
 							sw.WriteLine ("\t\t{");
