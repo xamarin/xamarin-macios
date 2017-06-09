@@ -994,31 +994,35 @@ namespace XamCore.CoreSpotlight {
 
 		[iOS (11,0), NoTV, Mac (10, 11)]
 		[NullAllowed, Export ("userCreated", ArgumentSemantic.Strong)]
+		[return: BindAs (typeof (bool?))]
 		NSNumber IsUserCreated { [Bind ("isUserCreated")] get; set; }
 
 		[iOS (11, 0), NoTV, Mac (10, 11)]
 		[NullAllowed, Export ("userOwned", ArgumentSemantic.Strong)]
+		[return: BindAs (typeof (bool?))]
 		NSNumber IsUserOwned { [Bind ("isUserOwned")] get; set; }
 
 		[iOS (11, 0), NoTV, Mac (10, 11)]
 		[NullAllowed, Export ("userCurated", ArgumentSemantic.Strong)]
+		[return: BindAs (typeof (bool?))]
 		NSNumber IsUserCurated { [Bind ("isUserCurated")] get; set; }
 
 		[iOS (11, 0), NoTV, Mac (10, 11)]
 		[NullAllowed, Export ("rankingHint", ArgumentSemantic.Strong)]
+		[return: BindAs (typeof (int?))]
 		NSNumber RankingHint { get; set; }
 
 		// CSSearchableItemAttributeSet_CSItemProvider
 
-		[NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV, Mac (10, 11)]
 		[NullAllowed, Export ("providerDataTypeIdentifiers", ArgumentSemantic.Copy)]
 		string[] ProviderDataTypeIdentifiers { get; set; }
 
-		[NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV, Mac (10, 11)]
 		[NullAllowed, Export ("providerFileTypeIdentifiers", ArgumentSemantic.Copy)]
 		string[] ProviderFileTypeIdentifiers { get; set; }
 
-		[NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV, Mac (10, 11)]
 		[NullAllowed, Export ("providerInPlaceFileTypeIdentifiers", ArgumentSemantic.Copy)]
 		string[] ProviderInPlaceFileTypeIdentifiers { get; set; }
 	}
