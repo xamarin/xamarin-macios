@@ -149,6 +149,20 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			// Xcode 9
+			case "CIQRCodeFeature":
+				switch (selectorName) {
+				case "copyWithZone:":
+				case "encodeWithCoder:":
+					return !TestRuntime.CheckXcodeVersion (9, 0);
+				}
+				break;
+			case "CKFetchRecordZoneChangesOptions":
+				switch (selectorName) {
+				case "copyWithZone:":
+					return !TestRuntime.CheckXcodeVersion (9, 0);
+				}
+				break;
 			}
 #endif
 			// This ctors needs to be manually bound

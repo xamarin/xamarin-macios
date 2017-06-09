@@ -578,8 +578,6 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (7, 0);
 				case "HKWorkoutEvent":
 					return !TestRuntime.CheckXcodeVersion (8, 0);
-				case "CIQRCodeFeature":
-				case "CKFetchRecordZoneChangesOptions":
 				case "HMLocationEvent":
 					return !TestRuntime.CheckXcodeVersion (9, 0);
 				}
@@ -637,7 +635,6 @@ namespace Introspection {
 				case "HKBiologicalSexObject":
 				case "HKBloodTypeObject":
 					return !TestRuntime.CheckXcodeVersion (7, 0);
-				case "CIQRCodeFeature":
 				case "MPSKernel":
 				case "MPSCnnConvolutionDescriptor":
 					return !TestRuntime.CheckXcodeVersion (9, 0);
