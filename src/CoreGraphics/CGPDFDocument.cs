@@ -259,7 +259,8 @@ namespace XamCore.CoreGraphics {
 			return new CGPDFDictionary (CGPDFDocumentGetInfo (handle));
 		}
 
-		[DllImport (Constants.CoreGraphicsLibrary)]
+		[DllImport (Constants.CoreGraphicsLibrary
+		[iOS (11,0), Mac(10,3), TV(11,0), Watch(4,0)]
 		extern static void CGPDFContextSetOutline (/* CGPDFDocumentRef */ IntPtr document, IntPtr /* dictionary */ outline);
 
 		public void SetOutline (CGPDFOutlineOptions options)
@@ -268,6 +269,7 @@ namespace XamCore.CoreGraphics {
 		}
 					
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[iOS (11,0), Mac(10,3), TV(11,0), Watch(4,0)]
 		extern static /* CFDictionaryPtry */ IntPtr CGPDFDocumentGetOutline (/* CGPDFDocumentRef */ IntPtr document);
 
 		[iOS (11,0), Mac(10,3)]

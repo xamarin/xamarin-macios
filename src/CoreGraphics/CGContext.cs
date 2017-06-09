@@ -579,6 +579,7 @@ namespace XamCore.CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[iOS (11,0), Mac(10,3), TV(11,0), Watch(4,0)]
 		extern static void CGContextResetClip (/* CGContextRef */ IntPtr c);
 
 		[iOS (11,0)]
