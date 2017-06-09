@@ -197,6 +197,7 @@ namespace XamCore.CoreGraphics {
 
 		[Internal]
 		[Field ("kCGColorConversionTRCSize")]
+		[iOS (11,0), Mac(10,3), TV(11,0), Watch(4,0)]
 		NSString TrcSize { get; }
 	}
 
