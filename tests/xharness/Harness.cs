@@ -144,11 +144,23 @@ namespace xharness
 			}
 		}
 
+		Version xcode_version;
+		public Version XcodeVersion {
+			get {
+				if (xcode_version == null) {
+					var doc = new XmlDocument ();
+					doc.Load (Path.Combine (XcodeRoot, "Contents", "version.plist"));
+					xcode_version = Version.Parse (doc.SelectSingleNode ("//key[text() = 'CFBundleShortVersionString']/following-sibling::string").InnerText);
+				}
+				return xcode_version;
+			}
+		}
+
 		object mlaunch_lock = new object ();
 		string DownloadMlaunch ()
 		{
 			// NOTE: the filename part in the url must be unique so that the caching logic works properly.
-			var mlaunch_url = "https://dl.xamarin.com/uploads/latj2ceczbg/mlaunch-889a560308a983d566a6dc1f637427c52ca22eaa.zip";
+			var mlaunch_url = "https://dl.xamarin.com/uploads/3euiqmcoizk/mlaunch-18deb964b64886af65fb1760b19adeee58dd8bea.zip";
 			var extraction_dir = Path.Combine (Path.GetTempPath (), Path.GetFileNameWithoutExtension (mlaunch_url));
 			var mlaunch_path = Path.Combine (extraction_dir, "bin", "mlaunch");
 
