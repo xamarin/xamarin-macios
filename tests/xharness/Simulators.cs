@@ -421,7 +421,7 @@ namespace xharness
 		{
 			string simulator_app;
 
-			if (IsWatchSimulator) {
+			if (IsWatchSimulator && Harness.XcodeVersion.Major < 9) {
 				simulator_app = Path.Combine (Harness.XcodeRoot, "Contents", "Developer", "Applications", "Simulator (Watch).app");
 			} else {
 				simulator_app = Path.Combine (Harness.XcodeRoot, "Contents", "Developer", "Applications", "Simulator.app");
