@@ -90,4 +90,16 @@ namespace XamCore.UIKit {
 #endif
 
 #endif
+
+#if !XAMCORE_4_0 && !WATCH
+	public partial class UICollectionViewFocusUpdateContext {
+		[Obsolete ("This cannot be directly created")]
+		public UICollectionViewFocusUpdateContext () { }
+	}
+
+	public partial class UIFocusUpdateContext {
+		[Obsolete ("This cannot be directly created")]
+		public UIFocusUpdateContext () { }
+	}
+#endif
 }

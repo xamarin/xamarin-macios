@@ -2230,7 +2230,7 @@ namespace XamCore.CoreImage {
 	[iOS (8,0)]
 	[Mac (10,12)]
 	[BaseType (typeof (CIFeature))]
-	partial interface CIQRCodeFeature {
+	partial interface CIQRCodeFeature : NSSecureCoding, NSCopying {
 
 		[Export ("bounds", ArgumentSemantic.Assign)]
 		CGRect Bounds { get; }
@@ -4470,5 +4470,216 @@ namespace XamCore.CoreImage {
 	[TV (10,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIXRay {
+	}
+
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIAreaMinMaxRed {
+		// TODO: Needs review
+		//[CoreImageProperty ("inputExtent")]
+		//CIVector Extent { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIAttributedTextImageGenerator {
+		// TODO: Needs review
+		//[CoreImageProperty ("inputText")]
+		//NSAttributedString Text { get; set; }
+
+		//[CoreImageProperty ("inputScaleFactor")]
+		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
+		//float ScaleFactor { get; set; }
+	}
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIBarcodeGenerator {
+		// TODO: Needs review
+		//[CoreImageProperty ("inputBarcodeDescriptor")]
+		//CIBarcodeDescriptor BarcodeDescriptor { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIBicubicScaleTransform {
+		// TODO: Needs review
+		//[CoreImageProperty ("inputB")]
+		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
+		//float B { get; set; }
+		//[CoreImageProperty ("inputScale")]
+		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
+		//float Scale { get; set; }
+		//[CoreImageProperty ("inputC")]
+		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
+		//float C { get; set; }
+		//[CoreImageProperty ("inputAspectRatio")]
+		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
+		//float AspectRatio { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIBokehBlur {
+		// TODO: Needs review
+		//[CoreImageProperty ("inputSoftness")]
+		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
+		//float Softness { get; set; }
+		//[CoreImageProperty ("inputRadius")]
+		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
+		//float Radius { get; set; }
+		//[CoreImageProperty ("inputRingSize")]
+		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
+		//float RingSize { get; set; }
+		//[CoreImageProperty ("inputRingAmount")]
+		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
+		//float RingAmount { get; set; }
+	}
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIColorCubesMixedWithMask {
+		// TODO: Needs review
+		//[CoreImageProperty ("inputCubeDimension")]
+		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
+		//float CubeDimension { get; set; }
+		//[CoreImageProperty ("inputMaskImage")]
+		//CIImage MaskImage { get; set; }
+		//[CoreImageProperty ("inputCube0Data")]
+		//NSData Cube0Data { get; set; }
+		//[CoreImageProperty ("inputCube1Data")]
+		//NSData Cube1Data { get; set; }
+		//[CoreImageProperty ("inputColorSpace")]
+		//NSObject ColorSpace { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIColorCurves {
+		// TODO: Needs review
+		//[CoreImageProperty ("inputColorSpace")]
+		//NSObject ColorSpace { get; set; }
+		//[CoreImageProperty ("inputCurvesDomain")]
+		//CIVector CurvesDomain { get; set; }
+		//[CoreImageProperty ("inputCurvesData")]
+		//NSData CurvesData { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIDepthBlurEffect {
+		// TODO: Needs review
+		//[CoreImageProperty ("inputAperture")]
+		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
+		//float Aperture { get; set; }
+		//[CoreImageProperty ("inputCalibrationData")]
+		//AVCameraCalibrationData CalibrationData { get; set; }
+		//[CoreImageProperty ("inputTuningParameters")]
+		//NSDictionary TuningParameters { get; set; }
+		//[CoreImageProperty ("inputNosePositions")]
+		//CIVector NosePositions { get; set; }
+		//[CoreImageProperty ("inputLumaNoiseScale")]
+		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
+		//float LumaNoiseScale { get; set; }
+		//[CoreImageProperty ("inputChinPositions")]
+		//CIVector ChinPositions { get; set; }
+		//[CoreImageProperty ("inputDisparityImage")]
+		//CIImage DisparityImage { get; set; }
+		//[CoreImageProperty ("inputScaleFactor")]
+		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
+		//float ScaleFactor { get; set; }
+		//[CoreImageProperty ("inputRightEyePositions")]
+		//CIVector RightEyePositions { get; set; }
+		//[CoreImageProperty ("inputLeftEyePositions")]
+		//CIVector LeftEyePositions { get; set; }
+		//[CoreImageProperty ("inputFocusRect")]
+		//CIVector FocusRect { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIDepthToDisparity {
+		// TODO: Needs review
+	}
+
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIDisparityToDepth {
+		// TODO: Needs review
+	}
+
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[NoMac]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIEdgePreserveUpsampleFilter {
+		// TODO: Needs review
+		//[CoreImageProperty ("inputLumaSigma")]
+		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
+		//float LumaSigma { get; set; }
+		//[CoreImageProperty ("inputSmallImage")]
+		//CIImage SmallImage { get; set; }
+		//[CoreImageProperty ("inputSpatialSigma")]
+		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
+		//float SpatialSigma { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CILabDeltaE {
+		// TODO: Needs review
+		//[CoreImageProperty ("inputImage2")]
+		//CIImage Image2 { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CITextImageGenerator {
+		// TODO: Needs review
+		//[CoreImageProperty ("inputText")]
+		//NSString Text { get; set; }
+		//[CoreImageProperty ("inputFontName")]
+		//NSString FontName { get; set; }
+		//[CoreImageProperty ("inputScaleFactor")]
+		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
+		//float ScaleFactor { get; set; }
+		//[CoreImageProperty ("inputFontSize")]
+		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
+		//float FontSize { get; set; }
 	}
 }

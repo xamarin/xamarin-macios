@@ -196,6 +196,13 @@ namespace Introspection {
 			case "INStartWorkoutIntent":
 				return true;
 #endif
+			// iOS 11 Beta 1
+			case "UICollectionViewFocusUpdateContext": // [Assert] -init is not a useful initializer for this class. Use one of the designated initializers instead
+			case "UIFocusUpdateContext": // [Assert] -init is not a useful initializer for this class. Use one of the designated initializers instead
+			case "EKCalendarItem": // Fails with NSInvalidArgumentException +[EKCalendarItem frozenClass]: unrecognized selector sent to class, will fill a radar
+			case "EKParticipant": // ctor disabled in XAMCORE_3_0
+			case "UITableViewFocusUpdateContext": // Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Invalid parameter not satisfying: focusSystem, will fill a radar
+				return true;
 			default:
 				return base.Skip (type);
 			}

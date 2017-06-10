@@ -77,6 +77,28 @@ namespace Introspection {
 				return true;
 			case "NEPacketTunnelProvider":
 				return true;
+			case "NSUnitDispersion": // -init should never be called on NSUnit!
+			case "NSUnitVolume": // -init should never be called on NSUnit!
+			case "NSUnitDuration": // -init should never be called on NSUnit!
+			case "NSUnitElectricCharge": // -init should never be called on NSUnit!
+			case "NSUnitElectricCurrent": // -init should never be called on NSUnit!
+			case "NSUnitElectricPotentialDifference": // -init should never be called on NSUnit!
+			case "NSUnitElectricResistance": // -init should never be called on NSUnit!
+			case "NSUnit": // -init should never be called on NSUnit!
+			case "NSUnitEnergy": // -init should never be called on NSUnit!
+			case "NSUnitAcceleration": // -init should never be called on NSUnit!
+			case "NSUnitFrequency": // -init should never be called on NSUnit!
+			case "NSUnitAngle": // -init should never be called on NSUnit!
+			case "NSUnitFuelEfficiency": // -init should never be called on NSUnit!
+			case "NSUnitArea": // -init should never be called on NSUnit!
+			case "NSUnitIlluminance": // -init should never be called on NSUnit!
+			case "NSUnitConcentrationMass": // -init should never be called on NSUnit!
+			case "NSUnitLength": // -init should never be called on NSUnit!
+			case "NSUnitMass": // -init should never be called on NSUnit!
+			case "NSUnitPower": // -init should never be called on NSUnit!
+			case "NSUnitPressure": // -init should never be called on NSUnit!
+			case "NSUnitSpeed": // -init should never be called on NSUnit!
+				return true;
 			}
 
 			return SkipDueToAttribute (type);
