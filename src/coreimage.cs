@@ -4637,8 +4637,8 @@ namespace XamCore.CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (10,0)]
-	[Mac (10,12)]
+	[iOS (11,0)]
+	[NoMac]
 	[TV (11,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIEdgePreserveUpsampleFilter {
