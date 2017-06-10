@@ -161,7 +161,11 @@ namespace MonoTouchFixtures.ModelIO {
 
 				// Looks like the URLValue can't change after construction
 				obj.UrlValue = url;
-				Assert.IsNull (obj.UrlValue, "2 UrlValue");
+				if (TestRuntime.CheckXcodeVersion (9, 0)) {
+					Assert.AreSame (url, obj.UrlValue, "2 UrlValue");
+				} else {
+					Assert.IsNull (obj.UrlValue, "2 UrlValue");
+				}
 			}
 
 

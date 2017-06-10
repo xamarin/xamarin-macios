@@ -86,6 +86,41 @@ partial class TestRuntime
 		NUnit.Framework.Assert.Ignore ("Requires the platform version shipped with Xcode {0}.{1}", major, minor);
 	}
 
+	public static bool CheckExactXcodeVersion (int major, int minor, int beta = 0)
+	{
+		var nineb1 = new {
+			Xcode = new { Major = 9, Minor = 0, Beta = 1 },
+			iOS = new { Major = 11, Minor = 0, Build = "15A5278f" },
+			tvOS = new { Major = 11, Minor = 0, Build = "?" },
+			macOS = new { Major = 10, Minor = 13, Build = "?" },
+			watchOS = new { Major = 4, Minor = 0, Build = "?" },
+		};
+		var versions = new [] { nineb1 };
+
+		foreach (var v in versions) {
+			if (v.Xcode.Major != major)
+				continue;
+			if (v.Xcode.Minor != minor)
+				continue;
+			if (v.Xcode.Beta != beta)
+				continue;
+
+#if __IOS__
+			if (!CheckExactiOSSystemVersion (v.iOS.Major, v.iOS.Minor))
+				return false;
+			if (v.iOS.Build == "?")
+				throw new NotImplementedException ($"Build number for iOS {v.iOS.Major}.{v.iOS.Minor} beta {beta}");
+			var actual = GetiOSBuildVersion ();
+			Console.WriteLine (actual);
+			return actual == v.iOS.Build;
+#else
+			throw new NotImplementedException ();
+#endif
+		}
+
+		throw new NotImplementedException ($"Xcode version {major}.{minor} beta {beta} not found");
+	}
+
 	public static bool CheckXcodeVersion (int major, int minor, int build = 0)
 	{
 		switch (major) {
@@ -309,6 +344,16 @@ partial class TestRuntime
 		if (throwIfOtherPlatform)
 			throw new Exception ("Can't get iOS System version on other platforms.");
 		return true;
+#endif
+	}
+
+	public static bool CheckExactiOSSystemVersion (int major, int minor)
+	{
+#if __IOS__
+		var version = Version.Parse (UIDevice.CurrentDevice.SystemVersion);
+		return version.Major == major && version.Minor == minor;
+#else
+		throw new Exception ("Can't get iOS System version on other platforms.");
 #endif
 	}
 
