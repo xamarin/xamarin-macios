@@ -188,6 +188,7 @@ namespace XamCore.EventKit {
 	[Since (4,0)]
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (EKObject))]
+	[DisableDefaultCtor] // Documentation says to use the static methods FromDate/FromTimeInterval to create instances
 	interface EKAlarm : NSCopying {
 		[Export ("relativeOffset")]
 		double RelativeOffset { get; set;  }
