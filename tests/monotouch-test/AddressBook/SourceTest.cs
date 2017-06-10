@@ -43,7 +43,11 @@ namespace MonoTouchFixtures.AddressBook {
 			// ABRecord
 			// some bots returns -1 (invalid) and I get 0 after a reset (maybe permission related?)
 			Assert.That (source.Id, Is.LessThanOrEqualTo (0), "Id");
-			Assert.That (source.Type, Is.EqualTo (ABRecordType.Source), "Type");
+			if (TestRuntime.CheckXcodeVersion (9, 0)) {
+				Assert.That (source.Type, Is.EqualTo (ABRecordType.Person), "Type");
+			} else {
+				Assert.That (source.Type, Is.EqualTo (ABRecordType.Source), "Type");
+			}
 		}
 	}
 }
