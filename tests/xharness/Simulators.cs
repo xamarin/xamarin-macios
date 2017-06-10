@@ -112,7 +112,7 @@ namespace xharness
 			switch (target) {
 			case AppRunnerTarget.Simulator_iOS32:
 				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5" };
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-10-3";
 				break;
 			case AppRunnerTarget.Simulator_iOS64:
 				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-6" };
