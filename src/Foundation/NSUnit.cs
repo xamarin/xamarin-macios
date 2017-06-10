@@ -1,4 +1,4 @@
-﻿// 
+﻿﻿// 
 // NSUnit.cs
 //
 // Authors:
@@ -14,112 +14,112 @@ using XamCore.ObjCRuntime;
 namespace XamCore.Foundation {
 #if !XAMCORE_4_0
 	public partial class NSUnit {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string)")]
 		public NSUnit () { }
 	}
 
 	public partial class NSUnitAcceleration {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string, NSUnitConverter) or any of the static properties.")]
 		public NSUnitAcceleration () { }
 	}
 
 	public partial class NSUnitAngle {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string, NSUnitConverter) or any of the static properties.")]
 		public NSUnitAngle () { }
 	}
 
 	public partial class NSUnitArea {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string, NSUnitConverter) or any of the static properties.")]
 		public NSUnitArea () { }
 	}
 
 	public partial class NSUnitConcentrationMass {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string, NSUnitConverter) or any of the static properties.")]
 		public NSUnitConcentrationMass () { }
 	}
 
 	public partial class NSUnitDispersion {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string, NSUnitConverter) or any of the static properties.")]
 		public NSUnitDispersion () { }
 	}
 
 	public partial class NSUnitDuration {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string, NSUnitConverter) or any of the static properties.")]
 		public NSUnitDuration () { }
 	}
 
 	public partial class NSUnitElectricCharge {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string, NSUnitConverter) or any of the static properties.")]
 		public NSUnitElectricCharge () { }
 	}
 
 	public partial class NSUnitElectricCurrent {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string, NSUnitConverter) or any of the static properties.")]
 		public NSUnitElectricCurrent () { }
 	}
 
 	public partial class NSUnitElectricPotentialDifference {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string, NSUnitConverter) or any of the static properties.")]
 		public NSUnitElectricPotentialDifference () { }
 	}
 
 	public partial class NSUnitElectricResistance {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string, NSUnitConverter) or any of the static properties.")]
 		public NSUnitElectricResistance () { }
 	}
 
 	public partial class NSUnitEnergy {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string, NSUnitConverter) or any of the static properties.")]
 		public NSUnitEnergy () { }
 	}
 
 	public partial class NSUnitFrequency {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string, NSUnitConverter) or any of the static properties.")]
 		public NSUnitFrequency () { }
 	}
 
 	public partial class NSUnitFuelEfficiency {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string, NSUnitConverter) or any of the static properties.")]
 		public NSUnitFuelEfficiency () { }
 	}
 
 	public partial class NSUnitLength {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string, NSUnitConverter) or any of the static properties.")]
 		public NSUnitLength () { }
 	}
 
 	public partial class NSUnitIlluminance {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string, NSUnitConverter) or any of the static properties.")]
 		public NSUnitIlluminance () { }
 	}
 
 	public partial class NSUnitMass {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string, NSUnitConverter) or any of the static properties.")]
 		public NSUnitMass () { }
 	}
 
 	public partial class NSUnitPower {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string, NSUnitConverter) or any of the static properties.")]
 		public NSUnitPower () { }
 	}
 
 	public partial class NSUnitPressure {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string, NSUnitConverter) or any of the static properties.")]
 		public NSUnitPressure () { }
 	}
 
 	public partial class NSUnitSpeed {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string, NSUnitConverter) or any of the static properties.")]
 		public NSUnitSpeed () { }
 	}
 
 	public partial class NSUnitVolume {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Use .ctor(string, NSUnitConverter) or any of the static properties.")]
 		public NSUnitVolume () { }
 	}
 
 	public partial class NSDimension {
-		[Obsolete ("Use the overload instead")]
+		[Obsolete ("Not intended to be directly instantiated, this is an abstract class.")]
 		public NSDimension () { }
 	}
 #endif
