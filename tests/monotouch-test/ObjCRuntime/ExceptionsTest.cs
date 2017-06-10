@@ -144,6 +144,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			if (Runtime.Arch != Arch.DEVICE)
 				Assert.Ignore ("This test only works in debug mode in the simulator.");
 #endif
+			var hasDebugger = global::System.Diagnostics.Debugger.IsAttached;
 
 			InstallHandlers ();
 			try {
@@ -159,13 +160,21 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					Assert.AreSame (e.Exception, thrownException, "exception");
 					Assert.AreEqual ("3,14", thrownException.Message, "1 thrown message");
 					Assert.AreSame (typeof (ApplicationException), thrownException.GetType (), "1 thrown type");
-					Assert.AreEqual (1, objcEventArgs.Count, "1 objc exception");
-					Assert.AreEqual (defaultObjectiveCExceptionMode, objcEventArgs [0].ExceptionMode, "1 objc mode");
-					Assert.AreEqual ("System.ApplicationException", objcEventArgs [0].Exception.Name, "1 objc reason");
-					Assert.AreEqual ("3,14", objcEventArgs [0].Exception.Reason, "1 objc message");
-					Assert.AreEqual (1, managedEventArgs.Count, "1 managed count");
-					Assert.AreEqual (defaultManagedExceptionMode, managedEventArgs [0].ExceptionMode, "1 managed mode");
-					Assert.AreSame (thrownException, managedEventArgs [0].Exception, "1 managed exception");
+					if (hasDebugger) {
+						Assert.AreEqual (0, objcEventArgs.Count, "1 objc exception");
+					} else {
+						Assert.AreEqual (1, objcEventArgs.Count, "1 objc exception");
+						Assert.AreEqual (defaultObjectiveCExceptionMode, objcEventArgs [0].ExceptionMode, "1 objc mode");
+						Assert.AreEqual ("System.ApplicationException", objcEventArgs [0].Exception.Name, "1 objc reason");
+						Assert.AreEqual ("3,14", objcEventArgs [0].Exception.Reason, "1 objc message");
+					}
+					if (hasDebugger) {
+						Assert.AreEqual (0, managedEventArgs.Count, "1 managed count");
+					} else {
+						Assert.AreEqual (1, managedEventArgs.Count, "1 managed count");
+						Assert.AreEqual (defaultManagedExceptionMode, managedEventArgs [0].ExceptionMode, "1 managed mode");
+						Assert.AreSame (thrownException, managedEventArgs [0].Exception, "1 managed exception");
+					}
 
 					ClearExceptionData ();
 					try {
@@ -176,26 +185,40 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					} catch (Exception ex) {
 						thrownException = ex;
 					}
-					Assert.AreNotSame (e.Exception, thrownException, "exception");
-					Assert.AreSame (typeof (MonoTouchException), thrownException.GetType (), "2 thrown type");
-					Assert.AreEqual ("Caught exception", ((MonoTouchException) thrownException).Name, "2 thrown name");
-					Assert.AreEqual ("exception was rethrown", ((MonoTouchException) thrownException).Reason, "2 thrown reason");
-					Assert.AreEqual (1, objcEventArgs.Count, "2 objc exception");
-					Assert.AreEqual (defaultObjectiveCExceptionMode, objcEventArgs [0].ExceptionMode, "2 objc mode");
-					Assert.AreEqual ("Caught exception", objcEventArgs [0].Exception.Name, "2 objc reason");
-					Assert.AreEqual ("exception was rethrown", objcEventArgs [0].Exception.Reason, "2 objc message");
-					Assert.AreEqual (1, managedEventArgs.Count, "2 managed count");
-					Assert.AreEqual (defaultManagedExceptionMode, managedEventArgs [0].ExceptionMode, "2 managed mode");
-					Assert.AreSame (e.Exception, managedEventArgs [0].Exception, "2 managed exception");
+					if (hasDebugger) {
+						Assert.AreSame (e.Exception, thrownException, "exception");
+					} else {
+						Assert.AreNotSame (e.Exception, thrownException, "exception");
+						Assert.AreSame (typeof (MonoTouchException), thrownException.GetType (), "2 thrown type");
+						Assert.AreEqual ("Caught exception", ((MonoTouchException) thrownException).Name, "2 thrown name");
+						Assert.AreEqual ("exception was rethrown", ((MonoTouchException) thrownException).Reason, "2 thrown reason");
+					}
+					if (hasDebugger) {
+						Assert.AreEqual (0, objcEventArgs.Count, "2 objc exception");
+					} else {
+						Assert.AreEqual (1, objcEventArgs.Count, "2 objc exception");
+						Assert.AreEqual (defaultObjectiveCExceptionMode, objcEventArgs [0].ExceptionMode, "2 objc mode");
+						Assert.AreEqual ("Caught exception", objcEventArgs [0].Exception.Name, "2 objc reason");
+						Assert.AreEqual ("exception was rethrown", objcEventArgs [0].Exception.Reason, "2 objc message");
+					}
+					if (hasDebugger) {
+						Assert.AreEqual (0, managedEventArgs.Count, "2 managed count");
+					} else {
+						Assert.AreEqual (1, managedEventArgs.Count, "2 managed count");
+						Assert.AreEqual (defaultManagedExceptionMode, managedEventArgs [0].ExceptionMode, "2 managed mode");
+						Assert.AreSame (e.Exception, managedEventArgs [0].Exception, "2 managed exception");
+					}
 
 					ClearExceptionData ();
-					objcTargetMode = MarshalObjectiveCExceptionMode.ThrowManagedException;
-					managedTargetMode = MarshalManagedExceptionMode.ThrowObjectiveCException;
-					e.InvokeManagedExceptionThrowerAndCatch (); // no exception.
-					Assert.AreEqual (0, objcEventArgs.Count, "3 objc exception");
-					Assert.AreEqual (1, managedEventArgs.Count, "3 managed count");
-					Assert.AreEqual (defaultManagedExceptionMode, managedEventArgs [0].ExceptionMode, "3 managed mode");
-					Assert.AreSame (e.Exception, managedEventArgs [0].Exception, "3 managed exception");
+					if (!hasDebugger) {
+						objcTargetMode = MarshalObjectiveCExceptionMode.ThrowManagedException;
+						managedTargetMode = MarshalManagedExceptionMode.ThrowObjectiveCException;
+						e.InvokeManagedExceptionThrowerAndCatch (); // no exception.
+						Assert.AreEqual (0, objcEventArgs.Count, "3 objc exception");
+						Assert.AreEqual (1, managedEventArgs.Count, "3 managed count");
+						Assert.AreEqual (defaultManagedExceptionMode, managedEventArgs [0].ExceptionMode, "3 managed mode");
+						Assert.AreSame (e.Exception, managedEventArgs [0].Exception, "3 managed exception");
+					}
 				}
 			} finally {
 				UninstallHandlers ();      
