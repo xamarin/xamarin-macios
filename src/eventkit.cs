@@ -54,6 +54,9 @@ namespace XamCore.EventKit {
 	[Since (5,0)]
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (EKObject))]
+#if XAMCORE_4_0	
+	[Abstract] // "The EKCalendarItem class is a an abstract superclass ..." from Apple docs.
+#endif
 	interface EKCalendarItem {
 #if !MONOMAC
 		// Never made avaialble on MonoMac
