@@ -90,7 +90,11 @@ namespace MonoTouchFixtures.UIKit {
 			using (UITextField tf = new UITextField ()) {
 				var rect = tf.GetCaretRectForPosition (null);
 				if (TestRuntime.CheckXcodeVersion (9, 0)) {
+#if __TVOS__
+					Assert.AreEqual (new CGRect (0, -24, 2, 19), rect, "IsEmpty");
+#else
 					Assert.AreEqual (new CGRect (0, -12, 2, 18.5), rect, "IsEmpty");
+#endif
 				} else {
 					Assert.AreEqual (CGRect.Empty, rect, "IsEmpty");
 				}
