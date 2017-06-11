@@ -1769,6 +1769,12 @@ function oninitialload ()
 					return test_name;
 				
 				var rv = Path.GetFileNameWithoutExtension (ProjectFile);
+
+				if (rv == null) {
+					Console.WriteLine ($"No ProjectFile for {GetType ().FullName}");
+					return $"unknown test name for {GetType ().FullName}";
+				}
+
 				switch (Platform) {
 				case TestPlatform.Mac:
 				case TestPlatform.Mac_Classic:
