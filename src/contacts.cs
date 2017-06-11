@@ -475,6 +475,7 @@ namespace XamCore.Contacts {
 #endif
 
 		[Export ("defaultContainerIdentifier")]
+		[NullAllowed]
 		string DefaultContainerIdentifier { get; }
 
 		[Notification]
@@ -988,15 +989,13 @@ namespace XamCore.Contacts {
 	[DisableDefaultCtor] // Apple doc: no handle (nil) if no string (or nil string) is given
 	interface CNPhoneNumber : NSCopying, NSSecureCoding, INSCopying, INSSecureCoding {
 
-		// @required + (instancetype)phoneNumberWithStringValue:(NSString *)stringValue;
 		[Static, Export ("phoneNumberWithStringValue:")]
+		[return: NullAllowed]
 		CNPhoneNumber PhoneNumberWithStringValue (string stringValue);
 
-		// @required - (instancetype)initWithStringValue:(NSString *)string;
 		[Export ("initWithStringValue:")]
 		IntPtr Constructor (string stringValue);
 
-		// @property (readonly, copy, nonatomic) NSString * stringValue;
 		[Export ("stringValue")]
 		string StringValue { get; }
 	}
