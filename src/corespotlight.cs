@@ -125,12 +125,12 @@ namespace XamCore.CoreSpotlight {
 		[Export ("searchableIndexDidFinishThrottle:")]
 		void DidFinishThrottle (CSSearchableIndex searchableIndex);
 
-		[iOS (11,0), NoTV, Mac (10,11)]
+		[iOS (11,0), NoTV, Mac (10,13)]
 		[Export ("dataForSearchableIndex:itemIdentifier:typeIdentifier:error:")]
 		[return: NullAllowed]
 		NSData GetData (CSSearchableIndex searchableIndex, string itemIdentifier, string typeIdentifier, out NSError outError);
 
-		[iOS (11,0), NoTV, Mac (10,11)]
+		[iOS (11,0), NoTV, Mac (10,13)]
 		[Export ("fileURLForSearchableIndex:itemIdentifier:typeIdentifier:inPlace:error:")]
 		[return: NullAllowed]
 		NSUrl GetFileUrl (CSSearchableIndex searchableIndex, string itemIdentifier, string typeIdentifier, bool inPlace, out NSError outError);
