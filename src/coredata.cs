@@ -1457,7 +1457,7 @@ namespace XamCore.CoreData
 	interface NSPersistentHistoryChange : NSCopying
 	{
 		[Export ("changeID")]
-		long ChangeID { get; }
+		long ChangeId { get; }
 
 		[Export ("changedObjectID", ArgumentSemantic.Copy)]
 		NSManagedObjectID ChangedObjectId { get; }
@@ -1487,27 +1487,27 @@ namespace XamCore.CoreData
 	{
 		[Static]
 		[Export ("fetchHistoryAfterDate:")]
-		NSPersistentHistoryChangeRequest FetchHistoryAfterDate (NSDate date);
+		NSPersistentHistoryChangeRequest FetchHistoryAfter (NSDate date);
 
 		[Static]
 		[Export ("fetchHistoryAfterToken:")]
-		NSPersistentHistoryChangeRequest FetchHistoryAfterToken ([NullAllowed] NSPersistentHistoryToken token);
+		NSPersistentHistoryChangeRequest FetchHistoryAfter ([NullAllowed] NSPersistentHistoryToken token);
 
 		[Static]
 		[Export ("fetchHistoryAfterTransaction:")]
-		NSPersistentHistoryChangeRequest FetchHistoryAfterTransaction ([NullAllowed] NSPersistentHistoryTransaction transaction);
+		NSPersistentHistoryChangeRequest FetchHistoryAfter ([NullAllowed] NSPersistentHistoryTransaction transaction);
 
 		[Static]
 		[Export ("deleteHistoryBeforeDate:")]
-		NSPersistentHistoryChangeRequest DeleteHistoryBeforeDate (NSDate date);
+		NSPersistentHistoryChangeRequest DeleteHistoryBefore (NSDate date);
 
 		[Static]
 		[Export ("deleteHistoryBeforeToken:")]
-		NSPersistentHistoryChangeRequest DeleteHistoryBeforeToken ([NullAllowed] NSPersistentHistoryToken token);
+		NSPersistentHistoryChangeRequest DeleteHistoryBefore ([NullAllowed] NSPersistentHistoryToken token);
 
 		[Static]
 		[Export ("deleteHistoryBeforeTransaction:")]
-		NSPersistentHistoryChangeRequest DeleteHistoryBeforeTransaction ([NullAllowed] NSPersistentHistoryTransaction transaction);
+		NSPersistentHistoryChangeRequest DeleteHistoryBefore ([NullAllowed] NSPersistentHistoryTransaction transaction);
 
 		[Export ("resultType", ArgumentSemantic.Assign)]
 		NSPersistentHistoryResultType ResultType { get; set; }
@@ -2043,7 +2043,7 @@ namespace XamCore.CoreData
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Field ("NSPersistentHistoryTrackingKey")]
-		NSString TrackingKey { get; }
+		NSString HistoryTrackingKey { get; }
 
 		[iOS (8,0), Mac (10,10)]
 		[NullAllowed, Export ("name")]
