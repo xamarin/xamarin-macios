@@ -33,6 +33,33 @@ namespace XamCore.CoreAudioKit {
 		[PostGet ("NibBundle")]
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 	}
+
+	[iOS (11,0)][Mac (10,13, onlyOn64: true)]
+	[BaseType (typeof (NSObject))]
+	interface AUAudioUnitViewConfiguration : NSSecureCoding {
+		[Export ("initWithWidth:height:hostHasController:")]
+		IntPtr Constructor (nfloat width, nfloat height, bool hostHasController);
+
+		[Export ("width")]
+		nfloat Width { get; }
+
+		[Export ("height")]
+		nfloat Height { get; }
+
+		[Export ("hostHasController")]
+		bool HostHasController { get; }
+	}
+
+	[Category]
+	[iOS (11,0)][Mac (10,13, onlyOn64: true)]
+	[BaseType (typeof (AUAudioUnit))]
+	interface AUAudioUnitViewControllerExtensions {
+		[Export ("supportedViewConfigurations:")]
+		NSIndexSet GetSupportedViewConfigurations (AUAudioUnitViewConfiguration [] availableViewConfigurations);
+
+		[Export ("selectViewConfiguration:")]
+		void SelectViewConfiguration (AUAudioUnitViewConfiguration viewConfiguration);
+	}
 #endif
 
 #if !MONOMAC
