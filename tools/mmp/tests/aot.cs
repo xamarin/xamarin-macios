@@ -102,7 +102,7 @@ namespace Xamarin.MMP.Tests.Unit
 				if (isModern)
 					fileNameBeginningIndex = command.Item2.IndexOf(' ', fileNameBeginningIndex) + 1;
 
-				string fileName = command.Item2.Substring (fileNameBeginningIndex).Replace ("\"", "");
+				string fileName = command.Item2.Substring (fileNameBeginningIndex).Replace ("\'", "");
 				filesAOTed.Add (fileName);
 			}
 			return filesAOTed;
@@ -110,7 +110,7 @@ namespace Xamarin.MMP.Tests.Unit
 
 		List<string> GetFilesStripped ()
 		{
-			return commandsRun.Where (x => x.Item1 == AOTCompiler.StripCommand).Select (x => x.Item2.Replace ("\"", "")).ToList ();
+			return commandsRun.Where (x => x.Item1 == AOTCompiler.StripCommand).Select (x => x.Item2.Replace ("\'", "")).ToList ();
 		}
 		
 		void AssertFilesStripped (IEnumerable <string> expectedFiles)
@@ -279,7 +279,7 @@ namespace Xamarin.MMP.Tests.Unit
 
 			Compile (options, new TestFileEnumerator (new string [] { "Foo Bar.dll", "Xamarin.Mac.dll" }));
 			AssertFilesAOTed (new string [] {"Foo Bar.dll"});
-			Assert.IsTrue (commandsRun.Where (x => x.Item2.Contains ("Foo Bar.dll")).All (x => x.Item2.EndsWith ("\"Foo Bar.dll\"", StringComparison.InvariantCulture)), "Should end with quoted filename");
+			Assert.IsTrue (commandsRun.Where (x => x.Item2.Contains ("Foo Bar.dll")).All (x => x.Item2.EndsWith ("\'Foo Bar.dll\'", StringComparison.InvariantCulture)), "Should end with quoted filename");
 		}
 
 		[Test]
@@ -376,7 +376,7 @@ namespace Xamarin.MMP.Tests.Unit
 			var files = new string [] { "Foo Bar.dll", "Xamarin.Mac.dll" };
 			Compile (options, new TestFileEnumerator (files), isRelease : true);
 			AssertFilesStripped (files);
-			Assert.IsTrue (commandsRun.Where (x => x.Item2.Contains ("Foo Bar.dll")).All (x => x.Item2.EndsWith ("\"Foo Bar.dll\"", StringComparison.InvariantCulture)), "Should end with quoted filename");
+			Assert.IsTrue (commandsRun.Where (x => x.Item2.Contains ("Foo Bar.dll")).All (x => x.Item2.EndsWith ("\'Foo Bar.dll\'", StringComparison.InvariantCulture)), "Should end with quoted filename");
 		}
 
 		[Test]

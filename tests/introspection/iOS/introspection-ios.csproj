@@ -52,6 +52,7 @@
     <MtouchLink>None</MtouchLink>
     <MtouchExtraArgs></MtouchExtraArgs>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug32|iPhone' ">
     <DebugSymbols>True</DebugSymbols>
@@ -66,6 +67,7 @@
     <MtouchLink>None</MtouchLink>
     <MtouchExtraArgs></MtouchExtraArgs>
     <MtouchArch>ARMv7</MtouchArch>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug64|iPhone' ">
     <DebugSymbols>True</DebugSymbols>
@@ -80,6 +82,7 @@
     <MtouchLink>None</MtouchLink>
     <MtouchExtraArgs></MtouchExtraArgs>
     <MtouchArch>ARM64</MtouchArch>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -93,6 +96,7 @@
     <MtouchLink>None</MtouchLink>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
     <DefineConstants>MONOTOUCH;$(DefineConstants)</DefineConstants>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release32|iPhone' ">
     <DebugType>none</DebugType>
@@ -106,6 +110,7 @@
     <MtouchLink>None</MtouchLink>
     <MtouchArch>ARMv7</MtouchArch>
     <DefineConstants>MONOTOUCH;$(DefineConstants)</DefineConstants>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release64|iPhone' ">
     <DebugType>none</DebugType>
@@ -119,6 +124,7 @@
     <MtouchLink>None</MtouchLink>
     <MtouchArch>ARM64</MtouchArch>
     <DefineConstants>MONOTOUCH;$(DefineConstants)</DefineConstants>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
     <DebugType>none</DebugType>

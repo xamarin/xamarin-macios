@@ -1326,7 +1326,7 @@ namespace Xamarin.Bundler
 			CompileTask.GetArchFlags (linker_flags, Abis);
 			if (App.IsDeviceBuild) {
 				linker_flags.AddOtherFlag ($"-m{Driver.GetTargetMinSdkName (App)}-version-min={App.DeploymentTarget}");
-				linker_flags.AddOtherFlag ($"-isysroot {Driver.Quote (Driver.GetFrameworkDirectory (App))}");
+				linker_flags.AddOtherFlag ($"-isysroot {StringUtils.Quote (Driver.GetFrameworkDirectory (App))}");
 			} else {
 				CompileTask.GetSimulatorCompilerFlags (linker_flags, false, App);
 			}
@@ -1337,7 +1337,7 @@ namespace Xamarin.Bundler
 			if (App.LibXamarinLinkMode != AssemblyBuildTarget.StaticObject)
 				AddToBundle (App.GetLibXamarin (App.LibXamarinLinkMode));
 
-			linker_flags.AddOtherFlag ($"-o {Driver.Quote (Executable)}");
+			linker_flags.AddOtherFlag ($"-o {StringUtils.Quote (Executable)}");
 
 			bool need_libcpp = false;
 			if (App.EnableBitCode)
@@ -1367,7 +1367,7 @@ namespace Xamarin.Bundler
 			var libdir = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib");
 			if (App.Embeddinator) {
 				linker_flags.AddOtherFlag ("-shared");
-				linker_flags.AddOtherFlag ($"-install_name {Driver.Quote ($"@rpath/{App.ExecutableName}.framework/{App.ExecutableName}")}");
+				linker_flags.AddOtherFlag ($"-install_name {StringUtils.Quote ($"@rpath/{App.ExecutableName}.framework/{App.ExecutableName}")}");
 			} else {
 				string mainlib;
 				if (App.IsWatchExtension) {
@@ -1414,7 +1414,7 @@ namespace Xamarin.Bundler
 			if (App.IsExtension) {
 				if (App.Platform == ApplePlatform.iOS && Driver.XcodeVersion.Major < 7) {
 					linker_flags.AddOtherFlag ("-lpkstart");
-					linker_flags.AddOtherFlag ($"-F {Driver.Quote (Path.Combine (Driver.GetFrameworkDirectory (App), "System/Library/PrivateFrameworks"))} -framework PlugInKit");
+					linker_flags.AddOtherFlag ($"-F {StringUtils.Quote (Path.Combine (Driver.GetFrameworkDirectory (App), "System/Library/PrivateFrameworks"))} -framework PlugInKit");
 				}
 				linker_flags.AddOtherFlag ("-fapplication-extension");
 			}
@@ -1440,7 +1440,7 @@ namespace Xamarin.Bundler
 				sb.Append (" -change ").Append (dependency).Append (' ').Append (fixed_dep);
 			}
 			if (sb.Length > 0) {
-				var quoted_name = Driver.Quote (Executable);
+				var quoted_name = StringUtils.Quote (Executable);
 				sb.Append (' ').Append (quoted_name);
 				Driver.XcodeRun ("install_name_tool", sb.ToString ());
 				sb.Clear ();
