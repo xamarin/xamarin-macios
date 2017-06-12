@@ -139,12 +139,12 @@ namespace XamCore.AVKit {
 		[Export ("updatesNowPlayingInfoCenter")]
 		bool UpdatesNowPlayingInfoCenter { get; set; }
 
-		[iOS (11, 0)]
+		[iOS (11,0)]
 		[NoTV]
 		[Export ("entersFullScreenWhenPlaybackBegins")]
 		bool EntersFullScreenWhenPlaybackBegins { get; set; }
 
-		[iOS (11, 0)]
+		[iOS (11,0)]
 		[NoTV]
 		[Export ("exitsFullScreenWhenPlaybackEnds")]
 		bool ExitsFullScreenWhenPlaybackEnds { get; set; }
