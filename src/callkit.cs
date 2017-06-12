@@ -68,7 +68,7 @@ namespace XamCore.CallKit {
 		MaximumEntriesExceeded = 5,
 		ExtensionDisabled = 6,
 		CurrentlyLoading = 7,
-		[iOS (11, 0)]
+		[iOS (11,0)]
 		UnexpectedIncrementalRemoval = 8,
 	}
 
