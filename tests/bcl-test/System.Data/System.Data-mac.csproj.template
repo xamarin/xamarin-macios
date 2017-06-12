@@ -15,7 +15,7 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseXamMacFullFramework>true</UseXamMacFullFramework>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
-    <DefineConstants>XAMCORE_2_0;ADD_BCL_EXCLUSIONS</DefineConstants>
+    <DefineConstants>XAMCORE_2_0;ADD_BCL_EXCLUSIONS;NO_ODBC;NO_CONFIGURATION</DefineConstants>
   </PropertyGroup>
    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

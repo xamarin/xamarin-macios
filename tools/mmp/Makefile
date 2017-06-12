@@ -25,6 +25,8 @@ linker_sources = \
 	$(LINKER_DIR)/Mono.Linker/TypePreserve.cs			\
 	$(LINKER_DIR)/Mono.Linker/Annotations.cs			\
 	$(LINKER_DIR)/Mono.Linker/LinkContext.cs			\
+	$(LINKER_DIR)/Mono.Linker/LoadException.cs			\
+	$(LINKER_DIR)/Mono.Linker/MarkException.cs			\
 	$(LINKER_DIR)/Mono.Linker/AssemblyAction.cs			\
 	$(LINKER_DIR)/Mono.Linker/I18nAssemblies.cs			\
 	$(LINKER_DIR)/Mono.Linker/MethodAction.cs			\
@@ -110,6 +112,7 @@ mmp_sources = \
 	$(TOP)/tools/common/Driver.cs \
 	$(TOP)/tools/common/Frameworks.cs \
 	$(TOP)/tools/common/StaticRegistrar.cs \
+	$(TOP)/tools/common/Symbols.cs    \
 	$(TOP)/tools/common/MachO.cs           \
 	$(TOP)/src/ObjCRuntime/Registrar.core.cs	\
 	$(TOP)/src/ObjCRuntime/Registrar.cs \
@@ -120,6 +123,7 @@ mmp_sources = \
 	$(TOP)/tools/common/Application.cs \
 	$(TOP)/tools/common/Assembly.cs \
 	$(TOP)/tools/common/DerivedLinkContext.cs \
+	$(TOP)/tools/common/StringUtils.cs \
 	$(TOP)/src/Foundation/ConnectAttribute.cs \
 	$(TOP)/src/Foundation/ExportAttribute.cs \
 	$(TOP)/src/ObjCRuntime/ArgumentSemantic.cs \
@@ -180,11 +184,11 @@ $(MMP_DIRECTORIES):
 GENERATE_PART_REGISTRAR = $(Q_GEN) $(SYSTEM_MONO) --debug mmp.exe --xamarin-framework-directory=$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(OSX_SDK_VERSION)   $< --registrar:static
 
 Xamarin.Mac.registrar.mobile.i386.m:   $(TOP)/src/build/mac/mobile-32/Xamarin.Mac.dll $(LOCAL_MMP)
-	$(GENERATE_PART_REGISTRAR) --target-framework Xamarin.Mac,v1.0 --arch=i386
+	$(GENERATE_PART_REGISTRAR) --target-framework Xamarin.Mac,Version=v2.0,Profile=Mobile --arch=i386
 	$(Q) touch Xamarin.Mac.registrar.mobile.i386.m Xamarin.Mac.registrar.mobile.i386.h
 
 Xamarin.Mac.registrar.mobile.x86_64.m: $(TOP)/src/build/mac/mobile-64/Xamarin.Mac.dll $(LOCAL_MMP)
-	$(GENERATE_PART_REGISTRAR) --target-framework Xamarin.Mac,v1.0 --arch=x86_64
+	$(GENERATE_PART_REGISTRAR) --target-framework Xamarin.Mac,Version=v2.0,Profile=Mobile --arch=x86_64
 	$(Q) touch Xamarin.Mac.registrar.mobile.x86_64.m Xamarin.Mac.registrar.mobile.x86_64.h
 
 Xamarin.Mac.registrar.full.i386.m:     $(TOP)/src/build/mac/full-32/Xamarin.Mac.dll $(LOCAL_MMP)

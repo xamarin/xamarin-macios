@@ -19,6 +19,7 @@ using Xamarin.Linker;
 
 using Xamarin.Utils;
 using XamCore.Registrar;
+using XamCore.ObjCRuntime;
 
 #if MONOTOUCH
 using MonoTouch;
@@ -45,6 +46,11 @@ namespace Xamarin.Bundler {
 
 		internal StaticRegistrar StaticRegistrar { get; set; }
 
+		// If we didn't link because the existing (cached) assemblyes are up-to-date.
+		bool cached_link = false;
+
+		Symbols dynamic_symbols;
+
 #if MONOMAC
 		public bool Is32Build { get { return !Driver.Is64Bit; } }
 		public bool Is64Build { get { return Driver.Is64Bit; } }
@@ -60,13 +66,6 @@ namespace Xamarin.Bundler {
 			foreach (var a in Assemblies) {
 				try {
 					a.ExtractNativeLinkInfo ();
-
-#if MTOUCH
-					if (a.HasLinkWithAttributes && App.EnableBitCode && !App.OnlyStaticLibraries) {
-						ErrorHelper.Warning (110, "Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.");
-						App.ClearAssemblyBuildTargets (); // the default is to compile to static libraries, so just revert to the default.
-					}
-#endif
 				} catch (Exception e) {
 					exceptions.Add (e);
 				}
@@ -179,6 +178,215 @@ namespace Xamarin.Bundler {
 			// Make sure there are no duplicates between frameworks and weak frameworks.
 			// Keep the weak ones.
 			asm.Frameworks.ExceptWith (asm.WeakFrameworks);
+		}
+
+		internal static void PrintAssemblyReferences (AssemblyDefinition assembly)
+		{
+			if (Driver.Verbosity < 2)
+				return;
+
+			var main = assembly.MainModule;
+			Driver.Log ($"Loaded assembly '{assembly.FullName}' from {StringUtils.Quote (assembly.MainModule.FileName)}");
+			foreach (var ar in main.AssemblyReferences)
+				Driver.Log ($"    References: '{ar.FullName}'");
+		}
+
+		public Symbols GetAllSymbols ()
+		{
+			CollectAllSymbols ();
+			return dynamic_symbols;
+		}
+
+		public void CollectAllSymbols ()
+		{
+			if (dynamic_symbols != null)
+				return;
+
+			var cache_location = Path.Combine (App.Cache.Location, "entry-points.txt");
+			if (cached_link) {
+				dynamic_symbols = new Symbols ();
+				dynamic_symbols.Load (cache_location, this);
+			} else {
+				if (LinkContext == null) {
+					// This happens when using the simlauncher and the msbuild tasks asked for a list
+					// of symbols (--symbollist). In that case just produce an empty list, since the
+					// binary shouldn't end up stripped anyway.
+					dynamic_symbols = new Symbols ();
+				} else {
+					dynamic_symbols = LinkContext.RequiredSymbols;
+				}
+
+				// keep the debugging helper in debugging binaries only
+				var has_mono_pmip = App.EnableDebug;
+#if MMP
+				has_mono_pmip &= !Driver.IsUnifiedFullSystemFramework;
+#endif
+				if (has_mono_pmip)
+					dynamic_symbols.AddFunction ("mono_pmip");
+
+				bool has_dyn_msgSend;
+#if MONOTOUCH
+				has_dyn_msgSend = App.IsSimulatorBuild;
+#else
+				has_dyn_msgSend = App.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Disable && !App.RequiresPInvokeWrappers && Is64Build;
+#endif
+
+				if (has_dyn_msgSend) {
+					dynamic_symbols.AddFunction ("xamarin_dyn_objc_msgSend");
+					dynamic_symbols.AddFunction ("xamarin_dyn_objc_msgSendSuper");
+					dynamic_symbols.AddFunction ("xamarin_dyn_objc_msgSend_stret");
+					dynamic_symbols.AddFunction ("xamarin_dyn_objc_msgSendSuper_stret");
+				}
+
+				dynamic_symbols.Save (cache_location);
+			}
+
+			foreach (var name in App.IgnoredSymbols) {
+				var symbol = dynamic_symbols.Find (name);
+				if (symbol == null) {
+					ErrorHelper.Warning (5218, $"Can't ignore the dynamic symbol {StringUtils.Quote (name)} (--ignore-dynamic-symbol={StringUtils.Quote (name)}) because it was not detected as a dynamic symbol.");
+				} else {
+					symbol.Ignore = true;
+				}
+			}
+		}
+
+		bool IsRequiredSymbol (Symbol symbol, Assembly single_assembly = null)
+		{
+			if (symbol.Ignore)
+				return false;
+
+			// Check if this symbol is used in the assembly we're filtering to
+			if (single_assembly != null && !symbol.Members.Any ((v) => v.Module.Assembly == single_assembly.AssemblyDefinition))
+				return false; // nope, this symbol is not used in the assembly we're using as filter.
+
+#if MTOUCH
+			// If we're code-sharing, the managed linker might have found symbols
+			// that are not in any of the assemblies in the current app.
+			// This occurs because the managed linker processes all the
+			// assemblies for all the apps together, but when linking natively
+			// we're only linking with the assemblies that actually go into the app.
+			if (App.IsCodeShared && symbol.Assemblies.Count > 0) {
+				// So if this is a symbol related to any assembly, make sure
+				// at least one of those assemblies are in the current app.
+				if (!symbol.Assemblies.Any ((v) => Assemblies.Contains (v)))
+					return false;
+			}
+#endif
+
+			switch (symbol.Type) {
+			case SymbolType.Field:
+				return true;
+			case SymbolType.Function:
+#if MTOUCH
+				// functions are not required if they're used in an assembly which isn't using dlsym, and we're AOT-compiling.
+				if (App.IsSimulatorBuild)
+					return true;
+				if (single_assembly != null)
+					return App.UseDlsym (single_assembly.FileName);
+
+				if (symbol.Members != null) {
+					foreach (var member in symbol.Members) {
+						if (!App.UseDlsym (member.Module.FileName))
+							return false;
+					}
+				}
+#endif
+				return true;
+			case SymbolType.ObjectiveCClass:
+				// Objective-C classes are not required when we're using the static registrar and we're not compiling to shared libraries,
+				// (because the registrar code is linked into the main app, but not each shared library, 
+				// so the registrar code won't keep symbols in the shared libraries).
+				if (single_assembly != null)
+					return true;
+				return App.Registrar != RegistrarMode.Static;
+			default:
+				throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol type {symbol.Type} for symbol {symbol.Name}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+			}
+		}
+
+		public Symbols GetRequiredSymbols (Assembly assembly = null)
+		{
+			CollectAllSymbols ();
+
+			Symbols filtered = new Symbols ();
+			foreach (var ep in dynamic_symbols) {
+				if (IsRequiredSymbol (ep, assembly)) {
+					filtered.Add (ep);
+				}
+			}
+			return filtered ?? dynamic_symbols;
+		}
+
+#if MTOUCH
+		IEnumerable<CompileTask> GenerateReferencingSource (string reference_m, IEnumerable<Symbol> symbols)
+#else
+		internal string GenerateReferencingSource (string reference_m, IEnumerable<Symbol> symbols)
+#endif
+		{
+			if (!symbols.Any ()) {
+				if (File.Exists (reference_m))
+					File.Delete (reference_m);
+#if MTOUCH
+				yield break;
+#else
+				return null;
+#endif
+			}
+			var sb = new StringBuilder ();
+			sb.AppendLine ("#import <Foundation/Foundation.h>");
+			foreach (var symbol in symbols) {
+				switch (symbol.Type) {
+				case SymbolType.Function:
+				case SymbolType.Field:
+					sb.Append ("extern void * ").Append (symbol.Name).AppendLine (";");
+					break;
+				case SymbolType.ObjectiveCClass:
+					sb.AppendLine ($"@interface {symbol.ObjectiveCName} : NSObject @end");
+					break;
+				default:
+					throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol type {symbol.Type} for {symbol.Name}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+				}
+			}
+			sb.AppendLine ("static void __xamarin_symbol_referencer () __attribute__ ((used)) __attribute__ ((optnone));");
+			sb.AppendLine ("void __xamarin_symbol_referencer ()");
+			sb.AppendLine ("{");
+			sb.AppendLine ("\tvoid *value;");
+			foreach (var symbol in symbols) {
+				switch (symbol.Type) {
+				case SymbolType.Function:
+				case SymbolType.Field:
+					sb.AppendLine ($"\tvalue = {symbol.Name};");
+					break;
+				case SymbolType.ObjectiveCClass:
+					sb.AppendLine ($"\tvalue = [{symbol.ObjectiveCName} class];");
+					break;
+				default:
+					throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol type {symbol.Type} for {symbol.Name}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+				}
+			}
+			sb.AppendLine ("}");
+			sb.AppendLine ();
+
+			Driver.WriteIfDifferent (reference_m, sb.ToString ());
+
+#if MTOUCH
+			foreach (var abi in GetArchitectures (AssemblyBuildTarget.StaticObject)) {
+				var arch = abi.AsArchString ();
+				var reference_o = Path.Combine (Path.GetDirectoryName (reference_m), arch, Path.GetFileNameWithoutExtension (reference_m) + ".o");
+				var compile_task = new CompileTask {
+					Target = this,
+					Abi = abi,
+					InputFile = reference_m,
+					OutputFile = reference_o,
+					SharedLibrary = false,
+					Language = "objective-c",
+				};
+				yield return compile_task;
+			}
+#else
+			return reference_m;
+#endif
 		}
 	}
 }

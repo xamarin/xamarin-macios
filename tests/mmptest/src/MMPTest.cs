@@ -12,7 +12,7 @@ namespace Xamarin.MMP.Tests
 	[TestFixture]
 	public partial class MMPTests 
 	{
-		void RunMMPTest (Action <string> test, string directoryName = null)
+		public static void RunMMPTest (Action <string> test, string directoryName = null)
 		{
 			test (Cache.CreateTemporaryDirectory (directoryName));
 		}
@@ -222,9 +222,8 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
 
 				// Due to https://bugzilla.xamarin.com/show_bug.cgi?id=48311 we can get warnings related to the registrar
-				// So ignore anything with registrar.m or registrar.h or gl3.h in the line
 				Func<string, bool> hasLegitWarning = results =>
-					results.Split (Environment.NewLine.ToCharArray ()).Any (x => x.Contains ("warning") && !x.Contains ("registrar.m") && !x.Contains ("registrar.h") && !x.Contains ("gl3.h"));
+					results.Split (Environment.NewLine.ToCharArray ()).Any (x => x.Contains ("warning") && !x.Contains ("deviceBrowserView:selectionDidChange:"));
 
 				// Mobile
 				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;

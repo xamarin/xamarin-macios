@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using Xamarin.Utils;
 
 namespace xharness
 {
@@ -579,7 +580,7 @@ namespace xharness
 		public static void AddAdditionalDefines (this XmlDocument csproj, string value)
 		{
 			var mainPropertyGroup = csproj.SelectSingleNode ("//*[local-name() = 'PropertyGroup' and not(@Condition)]");
-			var mainDefine = mainPropertyGroup.SelectSingleNode ("/*[local-name() = 'DefineConstants']");
+			var mainDefine = mainPropertyGroup.SelectSingleNode ("*[local-name() = 'DefineConstants']");
 			if (mainDefine == null) {
 				mainDefine = csproj.CreateElement ("DefineConstants", MSBuild_Namespace);
 				mainDefine.InnerText = value;
@@ -718,7 +719,7 @@ namespace xharness
 			foreach (var key in nodes_with_variables) {
 				var nodes = csproj.SelectElementNodes (key);
 				foreach (var node in nodes) {
-					node.InnerText = node.InnerText.Replace ("${ProjectDir}", Harness.Quote (System.IO.Path.GetDirectoryName (project_path)));
+					node.InnerText = node.InnerText.Replace ("${ProjectDir}", StringUtils.Quote (System.IO.Path.GetDirectoryName (project_path)));
 				}
 			}
 			foreach (var kvp in attributes_with_paths) {

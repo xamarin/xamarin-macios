@@ -107,6 +107,12 @@
     <Compile Include="..\..\external\linker\linker\Mono.Linker\TypePreserve.cs">
       <Link>Mono.Linker\TypePreserve.cs</Link>
     </Compile>
+    <Compile Include="..\..\external\linker\linker\Mono.Linker\LoadException.cs">
+      <Link>Mono.Linker\LoadException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\linker\linker\Mono.Linker\MarkException.cs">
+      <Link>Mono.Linker\MarkException.cs</Link>
+    </Compile>
     <Compile Include="..\..\external\linker\linker\Mono.Linker\MethodAction.cs">
       <Link>Mono.Linker\MethodAction.cs</Link>
     </Compile>
@@ -327,6 +333,12 @@
       <Link>common\BuildTasks.cs</Link>
     </Compile>
     <Compile Include="BuildTasks.mtouch.cs" />
+    <Compile Include="..\common\Symbols.cs">
+      <Link>external\Symbols.cs</Link>
+    </Compile>
+    <Compile Include="..\common\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />

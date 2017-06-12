@@ -125,6 +125,8 @@ namespace Xamarin.iOS.Tasks
 					storyboard.SetMetadata ("ResourceTags", tag);
 				}
 
+				ibtool.EnableOnDemandResources = true;
+
 				Assert.IsTrue (ibtool.Execute (), "Execution of IBTool task failed.");
 
 				foreach (var bundleResource in ibtool.BundleResources) {
@@ -140,6 +142,8 @@ namespace Xamarin.iOS.Tasks
 
 					bundleResources.Add (bundleName);
 				}
+
+				ibtool.EnableOnDemandResources = true;
 
 				string[] expected = {
 					"Base.lproj/LaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib",
@@ -199,6 +203,8 @@ namespace Xamarin.iOS.Tasks
 					var tag = Path.GetFileNameWithoutExtension (storyboard.ItemSpec);
 					storyboard.SetMetadata ("ResourceTags", tag);
 				}
+
+				ibtool.EnableOnDemandResources = true;
 
 				Assert.IsTrue (ibtool.Execute (), "Execution of IBTool task failed.");
 

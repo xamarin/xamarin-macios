@@ -302,10 +302,10 @@ public static class TypeManager {
 			MKCoordinateSpan = Lookup (platform_assembly, "MapKit", "MKCoordinateSpan", true /* isn't in XM/Classic */);
 		if (Frameworks.HaveMediaToolbox)
 			MTAudioProcessingTap = Lookup (platform_assembly, "MediaToolbox", "MTAudioProcessingTap");
-		NSNumber = Lookup (BindingTouch.BindingThirdParty ? platform_assembly : api_assembly, "Foundation", "NSNumber");
+		NSNumber = Lookup (Generator.BindThirdPartyLibrary ? platform_assembly : api_assembly, "Foundation", "NSNumber");
 		NSRange = Lookup (platform_assembly, "Foundation", "NSRange");
 		NSString = Lookup (platform_assembly, "Foundation", "NSString");
-		NSValue = Lookup (BindingTouch.BindingThirdParty ? platform_assembly : api_assembly, "Foundation", "NSValue");
+		NSValue = Lookup (Generator.BindThirdPartyLibrary ? platform_assembly : api_assembly, "Foundation", "NSValue");
 		NSZone = Lookup (platform_assembly, "Foundation", "NSZone");
 		SCNVector3 = Lookup (platform_assembly, "SceneKit", "SCNVector3");
 		SCNVector4 = Lookup (platform_assembly, "SceneKit", "SCNVector4");

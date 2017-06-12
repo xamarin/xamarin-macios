@@ -307,6 +307,27 @@ namespace Xamarin.Bundler
 				if (!String.IsNullOrEmpty (Target.App.UserGccFlags))
 					linker_errors.Add (new MonoTouchException (5201, true, "Native linking failed. Please review the build log and the user flags provided to gcc: {0}", Target.App.UserGccFlags));
 				linker_errors.Add (new MonoTouchException (5202, true, "Native linking failed. Please review the build log.", Target.App.UserGccFlags));
+
+				if (code == 255) {
+					// check command length
+					// getconf ARG_MAX
+					StringBuilder getconf_output = new StringBuilder ();
+					if (Driver.RunCommand ("getconf", "ARG_MAX", output: getconf_output, suppressPrintOnErrors: true) == 0) {
+						int arg_max;
+						if (int.TryParse (getconf_output.ToString ().Trim (' ', '\t', '\n', '\r'), out arg_max)) {
+							var cmd_length = Target.App.CompilerPath.Length + 1 + CompilerFlags.ToString ().Length;
+							if (cmd_length > arg_max) {
+								linker_errors.Add (ErrorHelper.CreateWarning (5217, $"Native linking possibly failed because the linker command line was too long ({cmd_length} characters)."));
+							} else {
+								Driver.Log (3, $"Linker failure is probably not due to command-line length (actual: {cmd_length} limit: {arg_max}");
+							}
+						} else {
+							Driver.Log (3, "Failed to parse 'getconf ARG_MAX' output: {0}", getconf_output);
+						}
+					} else {
+						Driver.Log (3, "Failed to execute 'getconf ARG_MAX'\n{0}", getconf_output);
+					}
+				}
 			}
 			ErrorHelper.Show (linker_errors);
 
@@ -407,9 +428,9 @@ namespace Xamarin.Bundler
 					// error: invalid argument '-std=c99' not allowed with 'C++/ObjC++'
 					flags.AddOtherFlag ("-std=c99");
 				}
-				flags.AddOtherFlag ($"-I{Driver.Quote (Path.Combine (Driver.GetProductSdkDirectory (app), "usr", "include"))}");
+				flags.AddOtherFlag ($"-I{StringUtils.Quote (Path.Combine (Driver.GetProductSdkDirectory (app), "usr", "include"))}");
 			}
-			flags.AddOtherFlag ($"-isysroot {Driver.Quote (Driver.GetFrameworkDirectory (app))}");
+			flags.AddOtherFlag ($"-isysroot {StringUtils.Quote (Driver.GetFrameworkDirectory (app))}");
 			flags.AddOtherFlag ("-Qunused-arguments"); // don't complain about unused arguments (clang reports -std=c99 and -Isomething as unused).
 		}
 
@@ -462,7 +483,7 @@ namespace Xamarin.Bundler
 			if (App.EnableBitCode)
 				flags.AddOtherFlag ("-lc++");
 			flags.LinkWithMono ();
-			flags.AddOtherFlag ("-install_name " + Driver.Quote (install_name));
+			flags.AddOtherFlag ("-install_name " + StringUtils.Quote (install_name));
 			flags.AddOtherFlag ("-fapplication-extension"); // fixes this: warning MT5203: Native linking warning: warning: linking against dylib not safe for use in application extensions: [..]/actionextension.dll.arm64.dylib
 		}
 
@@ -509,7 +530,7 @@ namespace Xamarin.Bundler
 			if (App.EnableDebug)
 				CompilerFlags.AddDefine ("DEBUG");
 
-			CompilerFlags.AddOtherFlag ($"-o {Driver.Quote (OutputFile)}");
+			CompilerFlags.AddOtherFlag ($"-o {StringUtils.Quote (OutputFile)}");
 
 			if (!string.IsNullOrEmpty (Language))
 				CompilerFlags.AddOtherFlag ($"-x {Language}");

@@ -8,6 +8,7 @@ using System.Linq;
 using Mono.Cecil;
 using MonoTouch.Tuner;
 using XamCore.ObjCRuntime;
+using Xamarin.Utils;
 
 #if MONOTOUCH
 using PlatformException = Xamarin.Bundler.MonoTouchException;
@@ -216,7 +217,7 @@ namespace Xamarin.Bundler {
 							if (!Directory.Exists (path))
 								Directory.CreateDirectory (path);
 
-							if (Driver.RunCommand ("/usr/bin/unzip", string.Format ("-u -o -d {0} {1}", Driver.Quote (path), Driver.Quote (zipPath))) != 0)
+							if (Driver.RunCommand ("/usr/bin/unzip", string.Format ("-u -o -d {0} {1}", StringUtils.Quote (path), StringUtils.Quote (zipPath))) != 0)
 								throw ErrorHelper.CreateError (1303, "Could not decompress the native framework '{0}' from '{1}'. Please review the build log for more information from the native 'unzip' command.", libraryName, zipPath);
 						}
 
@@ -534,6 +535,16 @@ namespace Xamarin.Bundler {
 		public bool TryGetValue (string identity, out Assembly assembly)
 		{
 			return HashedAssemblies.TryGetValue (identity, out assembly);
+		}
+
+		public bool TryGetValue (AssemblyDefinition asm, out Assembly assembly)
+		{
+			return HashedAssemblies.TryGetValue (Assembly.GetIdentity (asm), out assembly);
+		}
+
+		public bool Contains (AssemblyDefinition asm)
+		{
+			return HashedAssemblies.ContainsKey (Assembly.GetIdentity (asm));
 		}
 
 		public bool ContainsKey (string identity)

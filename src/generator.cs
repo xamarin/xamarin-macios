@@ -914,7 +914,7 @@ public partial class Generator : IMemberGatherer {
 	// Whether to use ZeroCopy for strings, defaults to false
 	public bool ZeroCopyStrings;
 
-	public bool BindThirdPartyLibrary = false;
+	public static bool BindThirdPartyLibrary = true;
 	public bool InlineSelectors;
 	public string BaseDir { get { return basedir; } set { basedir = value; }}
 	string basedir;
@@ -5159,7 +5159,11 @@ public partial class Generator : IMemberGatherer {
 		var requiredInstanceAsyncMethods = requiredInstanceMethods.Where (m => AttributeManager.HasAttribute<AsyncAttribute> (m)).ToList ();
 
 		PrintAttributes (type, platform:true, preserve:true, advice:true);
-		print ("[Protocol (Name = \"{1}\", WrapperType = typeof ({0}Wrapper){2})]", TypeName, protocol_name, protocolAttribute.IsInformal ? ", IsInformal = true" : string.Empty);
+		print ("[Protocol (Name = \"{1}\", WrapperType = typeof ({0}Wrapper){2}{3})]", 
+		       TypeName, 
+		       protocol_name, 
+		       protocolAttribute.IsInformal ? ", IsInformal = true" : string.Empty, 
+		       protocolAttribute.FormalSince != null ? $", FormalSince = \"{protocolAttribute.FormalSince}\"" : string.Empty);
 
 		var sb = new StringBuilder ();
 
@@ -7112,5 +7116,17 @@ public partial class Generator : IMemberGatherer {
 			return @"""""";
 
 		return $"@\"{s.Replace ("\"", "\"\"")}\"";
+	}
+
+	// Format a provider for error messages
+	public static string FormatProvider (ICustomAttributeProvider provider)
+	{
+		if (provider is Type type) {
+			return type.FullName;
+		} else if (provider is MemberInfo mi) {
+			return mi.DeclaringType.FullName + "." + mi.Name;
+		} else {
+			return provider?.ToString ();
+		}
 	}
 }

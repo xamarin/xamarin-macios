@@ -13,22 +13,27 @@
 	<xsl:text>&#10;</xsl:text>
 	<xsl:for-each select="current()/results/test-case">
 		<xsl:choose>
-			<xsl:when test="@result">
-				<xsl:if test="@result='Success'">
-					<xsl:text>    [PASS] </xsl:text>
-				</xsl:if>
-				<xsl:if test="@result='Failure'">
-					<xsl:text>    [FAIL] </xsl:text>
-				</xsl:if>
-				<xsl:if test="@result='Ignored'">
-					<xsl:text>    [IGNORED] </xsl:text>
-				</xsl:if>
-				<xsl:if test="@result='Inconclusive'">
-					<xsl:text>    [INCONCLUSIVE] </xsl:text>
-				</xsl:if>
+			<xsl:when test="@result='Success'">
+				<xsl:text>    [PASS] </xsl:text>
 			</xsl:when>
+			<xsl:when test="@result='Failure' or @result='Error'">
+				<xsl:text>    [FAIL] </xsl:text>
+			</xsl:when>
+			<xsl:when test="@result='Ignored'">
+				<xsl:text>    [IGNORED] </xsl:text>
+			</xsl:when>
+			<xsl:when test="@result='Inconclusive'">
+				<xsl:text>    [INCONCLUSIVE] </xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>    [INFO] </xsl:text>
+			</xsl:otherwise>
 		</xsl:choose>
-		<xsl:value-of select="../../@name"/><xsl:text>.</xsl:text><xsl:value-of select="@name"/><xsl:text>&#10;</xsl:text>
+		<xsl:value-of select="../../@name"/><xsl:text>.</xsl:text><xsl:value-of select="@name"/><xsl:if test="failure/message != ''"> : </xsl:if><xsl:value-of select="failure/message"/><xsl:text>&#10;</xsl:text>
+		<xsl:if test="failure/stack-trace != ''">
+			<xsl:value-of select="failure/stack-trace"/>
+			<xsl:text>&#10;</xsl:text>
+		</xsl:if>
 	</xsl:for-each>
 	<xsl:choose>
 		<xsl:when test="@time">
@@ -39,6 +44,8 @@
 		</xsl:otherwise>
 	</xsl:choose>
 	<xsl:text>&#10;</xsl:text>
+</xsl:template>
+<xsl:template match="//test-suite[@type!='TestFixture']/failure/message">
 </xsl:template>
 </xsl:stylesheet>
 

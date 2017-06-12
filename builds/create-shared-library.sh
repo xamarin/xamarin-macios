@@ -37,5 +37,3 @@ ar -x $STATIC_LIBRARY
 cd ..
 
 $CC $LINKER_FLAGS -dynamiclib -O2 -Wl,-application_extension -compatibility_version 2 -current_version 2.0 -framework CoreFoundation -lobjc -liconv -o $FRAMEWORK $TMPDIR/*.o
-
-rm -Rf $TMPDIR

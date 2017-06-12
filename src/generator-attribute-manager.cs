@@ -13,7 +13,7 @@ public static class AttributeManager
 #if IKVM
 	// This method gets the System.Type for a IKVM.Reflection.Type to a System.Type.
 	// It knows about our mock attribute logic, so it will return the corresponding non-mocked System.Type for a mocked IKVM.Reflection.Type.
-	static System.Type ConvertType (Type type)
+	static System.Type ConvertType (Type type, ICustomAttributeProvider provider)
 	{
 		System.Type rv;
 		if (type.Assembly == TypeManager.CorlibAssembly) {
@@ -25,6 +25,18 @@ public static class AttributeManager
 			rv = typeof (TypeManager).Assembly.GetType (type.FullName);
 		} else if (type.Assembly == TypeManager.PlatformAssembly) {
 			// Types (attributes) in the platform assemblies are mocked in the generator itself.
+
+			switch (type.FullName) {
+			case "ObjCRuntime.iOSAttribute":
+			case "ObjCRuntime.LionAttribute":
+			case "ObjCRuntime.AvailabilityAttribute":
+			case "ObjCRuntime.MacAttribute":
+			case "ObjCRuntime.SinceAttribute":
+			case "ObjCRuntime.MountainLionAttribute":
+			case "ObjCRuntime.MavericksAttribute":
+				throw ErrorHelper.CreateError (1061, $"The attribute '{type.FullName}' found on '{Generator.FormatProvider (provider)}' is not a valid binding attribute. Please remove this attribute.");
+			}
+
 			var prefix = BindingTouch.NamespacePlatformPrefix;
 			var n = type.FullName;
 			if (!string.IsNullOrEmpty (prefix) && type.Namespace.StartsWith (prefix, System.StringComparison.Ordinal)) {
@@ -43,7 +55,7 @@ public static class AttributeManager
 
 	// This method gets the IKVM.Reflection.Type for a System.Type.
 	// It knows about our mock attribute logic, so it will return the mocked IKVM.Reflection.Type for a mocked System.Type.
-	static Type ConvertType (System.Type type)
+	static Type ConvertType (System.Type type, ICustomAttributeProvider provider)
 	{
 		Type rv;
 		if (type.Assembly == typeof (int).Assembly) {
@@ -76,9 +88,9 @@ public static class AttributeManager
 		return rv;
 	}
 
-	static System.Attribute CreateAttributeInstance (CustomAttributeData attribute)
+	static System.Attribute CreateAttributeInstance (CustomAttributeData attribute, ICustomAttributeProvider provider)
 	{
-		System.Type attribType = ConvertType (attribute.AttributeType);
+		System.Type attribType = ConvertType (attribute.AttributeType, provider);
 
 		var constructorArguments = new object [attribute.ConstructorArguments.Count];
 
@@ -115,7 +127,7 @@ public static class AttributeManager
 				}
 				break;
 			default:
-				ctorTypes [i] = ConvertType (paramType);
+				ctorTypes [i] = ConvertType (paramType, provider);
 				break;
 			}
 			if (ctorTypes [i] == null)
@@ -154,12 +166,12 @@ public static class AttributeManager
 		return (System.Attribute) instance;
 	}
 
-	static T [] FilterAttributes<T> (IList<CustomAttributeData> attributes) where T : System.Attribute
+	static T [] FilterAttributes<T> (IList<CustomAttributeData> attributes, ICustomAttributeProvider provider) where T : System.Attribute
 	{
 		if (attributes == null || attributes.Count == 0)
 			return Array.Empty<T> ();
 
-		var type = ConvertType (typeof (T));
+		var type = ConvertType (typeof (T), provider);
 		List<T> list = null;
 		for (int i = 0; i < attributes.Count; i++) {
 			var attrib = attributes [i];
@@ -168,7 +180,7 @@ public static class AttributeManager
 
 			if (list == null)
 				list = new List<T> ();
-			list.Add ((T) CreateAttributeInstance (attributes [i]));
+			list.Add ((T) CreateAttributeInstance (attributes [i], provider));
 		}
 
 		if (list != null)
@@ -179,7 +191,7 @@ public static class AttributeManager
 
 	public static T [] GetCustomAttributes<T> (ICustomAttributeProvider provider) where T : System.Attribute
 	{
-		return FilterAttributes<T> (GetIKVMAttributes (provider));
+		return FilterAttributes<T> (GetIKVMAttributes (provider), provider);
 	}
 
 	static IList<CustomAttributeData> GetIKVMAttributes (ICustomAttributeProvider provider)
@@ -210,7 +222,7 @@ public static class AttributeManager
 
 	public static bool HasAttribute<T> (ICustomAttributeProvider provider) where T : Attribute
 	{
-		var attribute_type = ConvertType (typeof (T));
+		var attribute_type = ConvertType (typeof (T), provider);
 		var attribs = GetIKVMAttributes (provider);
 		if (attribs == null || attribs.Count == 0)
 			return false;

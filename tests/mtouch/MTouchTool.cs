@@ -6,6 +6,9 @@ using System.Text;
 using System.Xml;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
+
+using NUnit.Framework;
 
 namespace Xamarin
 {
@@ -23,6 +26,15 @@ namespace Xamarin
 		LinkAll,
 		LinkSdk,
 		DontLink,
+	}
+
+	public enum MTouchSymbolMode
+	{
+		Unspecified,
+		Default,
+		Linker,
+		Code,
+		Ignore,
 	}
 
 	public enum MTouchRegistrar
@@ -78,6 +90,7 @@ namespace Xamarin
 		public string Cache;
 		public string Device; // --device
 		public MTouchLinker Linker;
+		public MTouchSymbolMode SymbolMode;
 		public bool? NoFastSim;
 		public MTouchRegistrar Registrar;
 		public I18N I18N;
@@ -143,7 +156,7 @@ namespace Xamarin
 
 		public int Execute (MTouchAction action)
 		{
-			return Execute (BuildArguments (action));
+			return Execute (BuildArguments (action), always_show_output: Verbosity > 0);
 		}
 
 		public void AssertExecute (MTouchAction action, string message = null)
@@ -154,6 +167,69 @@ namespace Xamarin
 		public void AssertExecuteFailure (MTouchAction action, string message = null)
 		{
 			NUnit.Framework.Assert.AreEqual (1, Execute (action), message);
+		}
+
+		// Assert that none of the files in the app has changed (except 'except' files)
+		public void AssertNoneModified (DateTime timestamp, string message, params string [] except)
+		{
+			var failed = new List<string> ();
+			var files = Directory.EnumerateFiles (AppPath, "*", SearchOption.AllDirectories);
+			foreach (var file in files) {
+				var info = new FileInfo (file);
+				if (info.LastWriteTime > timestamp) {
+					if (except != null && except.Contains (Path.GetFileName (file))) {
+						Console.WriteLine ("SKIP: {0} modified: {1} > {2}", file, info.LastWriteTime, timestamp);
+					} else {
+						failed.Add (string.Format ("{0} is modified, timestamp: {1} > {2}", file, info.LastWriteTime, timestamp));
+						Console.WriteLine ("FAIL: {0} modified: {1} > {2}", file, info.LastWriteTime, timestamp);
+					}
+				} else {
+					Console.WriteLine ("{0} not modified ted: {1} <= {2}", file, info.LastWriteTime, timestamp);
+				}
+			}
+			Assert.IsEmpty (failed, message);
+		}
+
+		// Assert that all of the files in the app has changed (except 'except' files)
+		public void AssertAllModified (DateTime timestamp, string message, params string [] except)
+		{
+			var failed = new List<string> ();
+			var files = Directory.EnumerateFiles (AppPath, "*", SearchOption.AllDirectories);
+			foreach (var file in files) {
+				var info = new FileInfo (file);
+				if (info.LastWriteTime <= timestamp) {
+					if (except != null && except.Contains (Path.GetFileName (file))) {
+						Console.WriteLine ("SKIP: {0} not modified: {1} <= {2}", file, info.LastWriteTime, timestamp);
+					} else {
+						failed.Add (string.Format ("{0} is not modified, timestamp: {1} <= {2}", file, info.LastWriteTime, timestamp));
+						Console.WriteLine ("FAIL: {0} not modified: {1} <= {2}", file, info.LastWriteTime, timestamp);
+					}
+				} else {
+					Console.WriteLine ("{0} modified (as expected): {1} > {2}", file, info.LastWriteTime, timestamp);
+				}
+			}
+			Assert.IsEmpty (failed, message);
+		}
+
+		// Asserts that the given files were modified.
+		public void AssertModified (DateTime timestamp, string message, params string [] files)
+		{
+			Assert.IsNotEmpty (files);
+
+			var failed = new List<string> ();
+			var fs = Directory.EnumerateFiles (AppPath, "*", SearchOption.AllDirectories);
+			foreach (var file in fs) {
+				if (!files.Contains (Path.GetFileName (file)))
+					continue;
+				var info = new FileInfo (file);
+				if (info.LastWriteTime < timestamp) {
+					failed.Add (string.Format ("{0} is not modified, timestamp: {1} < {2}", file, info.LastWriteTime, timestamp));
+					Console.WriteLine ("FAIL: {0} not modified: {1} < {2}", file, info.LastWriteTime, timestamp);
+				} else {
+					Console.WriteLine ("{0} modified (as expected): {1} >= {2}", file, info.LastWriteTime, timestamp);
+				}
+			}
+			Assert.IsEmpty (failed, message);
 		}
 
 		string BuildArguments (MTouchAction action)
@@ -169,19 +245,19 @@ namespace Xamarin
 				if (AppPath == null)
 					throw new Exception ("No AppPath specified.");
 				isDevice = true;
-				sb.Append (" --dev ").Append (MTouch.Quote (AppPath));
+				sb.Append (" --dev ").Append (StringUtils.Quote (AppPath));
 				break;
 			case MTouchAction.BuildSim:
 				isDevice = false;
 				if (AppPath == null)
 					throw new Exception ("No AppPath specified.");
-				sb.Append (" --sim ").Append (MTouch.Quote (AppPath));
+				sb.Append (" --sim ").Append (StringUtils.Quote (AppPath));
 				break;
 			case MTouchAction.LaunchSim:
 				isDevice = false;
 				if (AppPath == null)
 					throw new Exception ("No AppPath specified.");
-				sb.Append (" --launchsim ").Append (MTouch.Quote (AppPath));
+				sb.Append (" --launchsim ").Append (StringUtils.Quote (AppPath));
 				break;
 			default:
 				throw new NotImplementedException ();
@@ -190,9 +266,9 @@ namespace Xamarin
 			if (SdkRoot == None) {
 				// do nothing
 			} else if (!string.IsNullOrEmpty (SdkRoot)) {
-				sb.Append (" --sdkroot ").Append (MTouch.Quote (SdkRoot));
+				sb.Append (" --sdkroot ").Append (StringUtils.Quote (SdkRoot));
 			} else {
-				sb.Append (" --sdkroot ").Append (MTouch.Quote (Configuration.xcode_root));
+				sb.Append (" --sdkroot ").Append (StringUtils.Quote (Configuration.xcode_root));
 			}
 
 			sb.Append (" ").Append (GetVerbosity ());
@@ -241,33 +317,33 @@ namespace Xamarin
 				sb.Append (" --extension");
 
 			foreach (var appext in AppExtensions)
-				sb.Append (" --app-extension ").Append (MTouch.Quote (appext.AppPath));
+				sb.Append (" --app-extension ").Append (StringUtils.Quote (appext.AppPath));
 
 			foreach (var framework in Frameworks)
-				sb.Append (" --framework ").Append (MTouch.Quote (framework));
+				sb.Append (" --framework ").Append (StringUtils.Quote (framework));
 
 			if (!string.IsNullOrEmpty (Mono))
-				sb.Append (" --mono:").Append (MTouch.Quote (Mono));
+				sb.Append (" --mono:").Append (StringUtils.Quote (Mono));
 
 			if (!string.IsNullOrEmpty (GccFlags))
-				sb.Append (" --gcc_flags ").Append (MTouch.Quote (GccFlags));
+				sb.Append (" --gcc_flags ").Append (StringUtils.Quote (GccFlags));
 
 			if (!string.IsNullOrEmpty (HttpMessageHandler))
-				sb.Append (" --http-message-handler=").Append (MTouch.Quote (HttpMessageHandler));
+				sb.Append (" --http-message-handler=").Append (StringUtils.Quote (HttpMessageHandler));
 
 			if (Dlsym.HasValue)
 				sb.Append (" --dlsym:").Append (Dlsym.Value ? "true" : "false");
 
 			if (References != null) {
 				foreach (var r in References)
-					sb.Append (" -r:").Append (MTouch.Quote (r));
+					sb.Append (" -r:").Append (StringUtils.Quote (r));
 			}
 
 			if (!string.IsNullOrEmpty (Executable))
-				sb.Append (" --executable ").Append (MTouch.Quote (Executable));
+				sb.Append (" --executable ").Append (StringUtils.Quote (Executable));
 
 			if (!string.IsNullOrEmpty (RootAssembly))
-				sb.Append (" ").Append (MTouch.Quote (RootAssembly));
+				sb.Append (" ").Append (StringUtils.Quote (RootAssembly));
 
 			if (TargetFramework == None) {
 				// do nothing
@@ -277,12 +353,12 @@ namespace Xamarin
 				// make the implicit default the way tests have been running until now, and at the same time the very minimum to make apps build.
 				switch (Profile) {
 				case Profile.iOS:
-					sb.Append (" -r:").Append (MTouch.Quote (Configuration.XamarinIOSDll));
+					sb.Append (" -r:").Append (StringUtils.Quote (Configuration.XamarinIOSDll));
 					break;
 				case Profile.tvOS:
 				case Profile.watchOS:
 					sb.Append (" --target-framework ").Append (MTouch.GetTargetFramework (Profile));
-					sb.Append (" -r:").Append (MTouch.Quote (MTouch.GetBaseLibrary (Profile)));
+					sb.Append (" -r:").Append (StringUtils.Quote (MTouch.GetBaseLibrary (Profile)));
 					break;
 				default:
 					throw new NotImplementedException ();
@@ -322,6 +398,25 @@ namespace Xamarin
 				throw new NotImplementedException ();
 			}
 
+			switch (SymbolMode) {
+			case MTouchSymbolMode.Ignore:
+				sb.Append (" --dynamic-symbol-mode=ignore");
+				break;
+			case MTouchSymbolMode.Code:
+				sb.Append (" --dynamic-symbol-mode=code");
+				break;
+			case MTouchSymbolMode.Default:
+				sb.Append (" --dynamic-symbol-mode=default");
+				break;
+			case MTouchSymbolMode.Linker:
+				sb.Append (" --dynamic-symbol-mode=linker");
+				break;
+			case MTouchSymbolMode.Unspecified:
+				break;
+			default:
+				throw new NotImplementedException ();
+			}
+
 			if (NoFastSim.HasValue && NoFastSim.Value)
 				sb.Append (" --nofastsim");
 
@@ -354,13 +449,13 @@ namespace Xamarin
 			}
 
 			if (!string.IsNullOrEmpty (Cache))
-				sb.Append (" --cache ").Append (MTouch.Quote (Cache));
+				sb.Append (" --cache ").Append (StringUtils.Quote (Cache));
 
 			if (!string.IsNullOrEmpty (Device))
-				sb.Append (" --device:").Append (MTouch.Quote (Device));
+				sb.Append (" --device:").Append (StringUtils.Quote (Device));
 
 			if (!string.IsNullOrEmpty (LLVMOptimizations))
-				sb.Append (" --llvm-opt=").Append (MTouch.Quote (LLVMOptimizations));
+				sb.Append (" --llvm-opt=").Append (StringUtils.Quote (LLVMOptimizations));
 
 			if (CustomArguments != null) {
 				foreach (var arg in CustomArguments) {
@@ -394,22 +489,22 @@ namespace Xamarin
 				sb.Append (" --bitcode:").Append (Bitcode.ToString ().ToLower ());
 
 			foreach (var abt in AssemblyBuildTargets)
-				sb.Append (" --assembly-build-target ").Append (MTouch.Quote (abt));
+				sb.Append (" --assembly-build-target ").Append (StringUtils.Quote (abt));
 
 			if (!string.IsNullOrEmpty (AotArguments))
-				sb.Append (" --aot:").Append (MTouch.Quote (AotArguments));
+				sb.Append (" --aot:").Append (StringUtils.Quote (AotArguments));
 
 			if (!string.IsNullOrEmpty (AotOtherArguments))
-				sb.Append (" --aot-options:").Append (MTouch.Quote (AotOtherArguments));
+				sb.Append (" --aot-options:").Append (StringUtils.Quote (AotOtherArguments));
 
 			if (LinkSkip?.Length > 0) {
 				foreach (var ls in LinkSkip)
-					sb.Append (" --linkskip:").Append (MTouch.Quote (ls));
+					sb.Append (" --linkskip:").Append (StringUtils.Quote (ls));
 			}
 
 			if (XmlDefinitions?.Length > 0) {
 				foreach (var xd in XmlDefinitions)
-					sb.Append (" --xml:").Append (MTouch.Quote (xd));
+					sb.Append (" --xml:").Append (StringUtils.Quote (xd));
 			}
 
 			return sb.ToString ();

@@ -162,10 +162,6 @@ namespace Xamarin.Bundler
 			get { return true; }
 		}
 
-		public static int Verbosity {
-			get { return verbose; }
-		}
-
 		public static bool Force {
 			get { return force; }
 			set { force = value; }
@@ -469,7 +465,7 @@ namespace Xamarin.Bundler
 			args.Append ("--aot=mtriple=");
 			args.Append (enable_thumb ? arch.Replace ("arm", "thumb") : arch);
 			args.Append ("-ios,");
-			args.Append ("data-outfile=").Append (Quote (dataFile)).Append (",");
+			args.Append ("data-outfile=").Append (StringUtils.Quote (dataFile)).Append (",");
 			args.Append (app.AotArguments);
 			if (llvm_only)
 				args.Append ("llvmonly,");
@@ -496,7 +492,7 @@ namespace Xamarin.Bundler
 				args.Append ("direct-pinvoke,");
 
 			if (app.EnableMSym) {
-				var msymdir = Quote (Path.Combine (outputDir, "Msym"));
+				var msymdir = StringUtils.Quote (Path.Combine (outputDir, "Msym"));
 				args.Append ($"msym-dir={msymdir},");
 			}
 
@@ -504,11 +500,11 @@ namespace Xamarin.Bundler
 				args.Append ("llvm-path=").Append (MonoTouchDirectory).Append ("/LLVM/bin/,");
 
 			if (!llvm_only)
-				args.Append ("outfile=").Append (Quote (outputFile));
+				args.Append ("outfile=").Append (StringUtils.Quote (outputFile));
 			if (!llvm_only && enable_llvm)
 				args.Append (",");
 			if (enable_llvm)
-				args.Append ("llvm-outfile=").Append (Quote (llvmOutputFile));
+				args.Append ("llvm-outfile=").Append (StringUtils.Quote (llvmOutputFile));
 			args.Append (" \"").Append (filename).Append ("\"");
 			return args.ToString ();
 		}
@@ -619,7 +615,7 @@ namespace Xamarin.Bundler
 
 					if (registration_methods != null) {
 						foreach (var method in registration_methods) {
-							sw.Write ("void ");
+							sw.Write ("extern \"C\" void ");
 							sw.Write (method);
 							sw.WriteLine ("();");
 						}
@@ -812,25 +808,6 @@ namespace Xamarin.Bundler
 		public static void Touch (params string [] filenames)
 		{
 			Touch ((IEnumerable<string>) filenames);
-		}
-
-		public static string Quote (string f)
-		{
-			if (f.IndexOf (' ') == -1 && f.IndexOf ('\'') == -1 && f.IndexOf (',') == -1 && f.IndexOf ('$') == -1)
-				return f;
-
-			var s = new StringBuilder ();
-
-			s.Append ('"');
-			foreach (var c in f) {
-				if (c == '"' || c == '\\')
-					s.Append ('\\');
-
-				s.Append (c);
-			}
-			s.Append ('"');
-
-			return s.ToString ();
 		}
 
 		public static bool CanWeSymlinkTheApplication (Application app)
@@ -1473,7 +1450,7 @@ namespace Xamarin.Bundler
 				foreach (var str in Environment.GetCommandLineArgs ().Skip (1)) {
 					if (sb.Length > 0)
 						sb.Append (' ');
-					sb.Append (Quote (str));
+					sb.Append (StringUtils.Quote (str));
 				}
 				p.StartInfo.Arguments = sb.ToString ();
 				p.Start ();
@@ -1599,8 +1576,8 @@ namespace Xamarin.Bundler
 
 		public static void CreateDsym (string output_dir, string appname, string dsym_dir)
 		{
-			string quoted_app_path = Quote (Path.Combine (output_dir, appname));
-			string quoted_dsym_dir = Quote (dsym_dir);
+			string quoted_app_path = StringUtils.Quote (Path.Combine (output_dir, appname));
+			string quoted_dsym_dir = StringUtils.Quote (dsym_dir);
 			RunDsymUtil (string.Format ("{0} -t 4 -z -o {1}", quoted_app_path, quoted_dsym_dir));
 			RunCommand ("/usr/bin/mdimport", quoted_dsym_dir);
 		}
@@ -1692,7 +1669,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.iOS:
 				return Frameworks.GetiOSFrameworks (app);
 			case ApplePlatform.WatchOS:
-				return Frameworks.WatchFrameworks;
+				return Frameworks.GetwatchOSFrameworks (app);
 			case ApplePlatform.TVOS:
 				return Frameworks.TVOSFrameworks;
 			default:

@@ -172,7 +172,7 @@ namespace Xamarin.Bundler {
 			string config_src = FullPath + ".config";
 			if (File.Exists (config_src)) {
 				string config_target = Path.Combine (directory, FileName + ".config");
-				Application.UpdateFile (config_src, config_target);
+				Application.UpdateFile (config_src, config_target, true);
 			}
 		}
 

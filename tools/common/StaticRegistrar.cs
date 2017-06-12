@@ -1206,6 +1206,12 @@ namespace XamCore.Registrar {
 				case "IsInformal":
 					rv.IsInformal = (bool) prop.Argument.Value;
 					break;
+				case "FormalSince":
+					Version version;
+					if (!Version.TryParse ((string)prop.Argument.Value, out version))
+						throw ErrorHelper.CreateError (4147, "Invalid {0} found on '{1}'. Please file a bug report at http://bugzilla.xamarin.com", "ProtocolAttribute", type.FullName);
+					rv.FormalSinceVersion = version;
+					break;
 				default:
 					throw ErrorHelper.CreateError (4147, "Invalid {0} found on '{1}'. Please file a bug report at http://bugzilla.xamarin.com", "ProtocolAttribute", type.FullName);
 				}
@@ -3797,19 +3803,20 @@ namespace XamCore.Registrar {
 			
 			Specialize (sb);
 
+			methods.WriteLine ();
+			methods.AppendLine ();
+			methods.AppendLine (sb);
+
 			methods.StringBuilder.AppendLine ("} /* extern \"C\" */");
 
 			FlushTrace ();
+
+			Driver.WriteIfDifferent (source_path, methods.ToString ());
 
 			header.AppendLine ();
 			header.AppendLine (declarations);
 			header.AppendLine (interfaces);
 			Driver.WriteIfDifferent (header_path, header.ToString ());
-
-			methods.WriteLine ();
-			methods.AppendLine ();
-			methods.AppendLine (sb);
-			Driver.WriteIfDifferent (source_path, methods.ToString ());
 
 			header.Dispose ();
 			header = null;
@@ -3845,6 +3852,7 @@ namespace XamCore.Registrar {
 		public TypeDefinition WrapperType { get; set; }
 		public string Name { get; set; }
 		public bool IsInformal { get; set; }
+		public Version FormalSinceVersion { get; set; }
 	}
 
 	public sealed class ProtocolMemberAttribute : Attribute {

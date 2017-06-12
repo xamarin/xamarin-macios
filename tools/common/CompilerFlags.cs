@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -53,13 +53,13 @@ namespace Xamarin.Utils
 			UnresolvedSymbols.Add (symbol);
 		}
 
-		public void ReferenceSymbols (IEnumerable<string> symbols)
+		public void ReferenceSymbols (IEnumerable<Symbol> symbols)
 		{
 			if (UnresolvedSymbols == null)
 				UnresolvedSymbols = new HashSet<string> ();
 
 			foreach (var symbol in symbols)
-				UnresolvedSymbols.Add (symbol);
+				UnresolvedSymbols.Add (symbol.Name);
 		}
 
 		public void AddDefine (string define)
@@ -225,14 +225,14 @@ namespace Xamarin.Utils
 
 			if (LinkWithLibraries != null) {
 				foreach (var lib in LinkWithLibraries) {
-					args.Append (' ').Append (Driver.Quote (lib));
+					args.Append (' ').Append (StringUtils.Quote (lib));
 					AddInput (lib);
 				}
 			}
 
 			if (ForceLoadLibraries != null) {
 				foreach (var lib in ForceLoadLibraries) {
-					args.Append (" -force_load ").Append (Driver.Quote (lib));
+					args.Append (" -force_load ").Append (StringUtils.Quote (lib));
 					AddInput (lib);
 				}
 			}
@@ -249,12 +249,12 @@ namespace Xamarin.Utils
 
 			if (UnresolvedSymbols != null) {
 				foreach (var symbol in UnresolvedSymbols)
-					args.Append (" -u ").Append (Driver.Quote ("_" + symbol));
+					args.Append (" -u ").Append (StringUtils.Quote ("_" + symbol));
 			}
 
 			if (SourceFiles != null) {
 				foreach (var src in SourceFiles) {
-					args.Append (' ').Append (Driver.Quote (src));
+					args.Append (' ').Append (StringUtils.Quote (src));
 					AddInput (src);
 				}
 			}
@@ -294,7 +294,7 @@ namespace Xamarin.Utils
 				// user framework, we need to pass -F to the linker so that the linker finds the user framework.
 				any_user_framework = true;
 				AddInput (Path.Combine (fw, name));
-				args.Append (" -F ").Append (Driver.Quote (Path.GetDirectoryName (fw)));
+				args.Append (" -F ").Append (StringUtils.Quote (Path.GetDirectoryName (fw)));
 			}
 			args.Append (is_weak ? " -weak_framework " : " -framework ").Append (name);
 		}

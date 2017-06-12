@@ -6234,7 +6234,7 @@ namespace XamCore.AppKit {
 		NSFontDescriptor FromNameMatrix (string fontName, NSAffineTransform matrix);
 
 		[Export ("initWithFontAttributes:")]
-		IntPtr Constructor (NSDictionary attributes);
+		IntPtr Constructor ([NullAllowed] NSDictionary attributes);
 
 		[Export ("matchingFontDescriptorsWithMandatoryKeys:")]
 		NSFontDescriptor [] MatchingFontDescriptors (NSSet mandatoryKeys);

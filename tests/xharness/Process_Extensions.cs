@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Xamarin.Utils;
 
 namespace xharness
 {
@@ -176,7 +177,7 @@ namespace xharness
 							commands.AppendLine ("detach");
 							commands.AppendLine ("quit");
 							dbg.StartInfo.FileName = "/usr/bin/lldb";
-							dbg.StartInfo.Arguments = $"--source {Harness.Quote (template)}";
+							dbg.StartInfo.Arguments = $"--source {StringUtils.Quote (template)}";
 							File.WriteAllText (template, commands.ToString ());
 
 							log.WriteLine ($"Printing backtrace for pid={pid}");
