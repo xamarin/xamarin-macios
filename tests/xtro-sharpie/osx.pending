@@ -456,3 +456,6 @@
 !missing-selector! MPMediaEntity::objectForKeyedSubscript: not bound
 !missing-selector! MPMediaEntity::valueForProperty: not bound
 !missing-selector! MPMediaItemArtwork::imageCropRect not bound
+
+# Not available in OS X
+!missing-selector! ACAccount::userFullName not bound
