@@ -309,7 +309,7 @@ namespace XamCore.CoreData
 		[Since(5,0)]
 		[NullAllowed] // by default this property is null
 		[Export ("compoundIndexes", ArgumentSemantic.Retain)]
-		[Availability (Introduced = Platform.iOS_5_0 | Platform.Mac_10_7, Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13, Message = "Use NSEntityDescription.Indexes instead.")]
+		[Availability (Introduced = Platform.iOS_5_0 | Platform.Mac_10_7, Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13, Message = "Use 'NSEntityDescription.Indexes' instead.")]
 		NSPropertyDescription [] CompoundIndexes { get; set; }
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
@@ -1452,6 +1452,7 @@ namespace XamCore.CoreData
 		bool UsesStoreSpecificMigrationManager { get; set; }
 	}
 
+	[Abstract]
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	interface NSPersistentHistoryChange : NSCopying
@@ -1533,6 +1534,7 @@ namespace XamCore.CoreData
 		IntPtr Constructor (NSObject[] subresults);
 	}
 
+	[Abstract]
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	interface NSPersistentHistoryTransaction : NSCopying
@@ -2172,7 +2174,7 @@ namespace XamCore.CoreData
 		NSDictionary UserInfo { get; set; }
 
 		[Export ("indexed")]
-		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_5 , Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13, Message = "Use NSEntityDescription.Indexes instead")]
+		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_5 , Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13, Message = "Use 'NSEntityDescription.Indexes' instead")]
 		bool Indexed { [Bind ("isIndexed")] get; set; }
 
 		[Export ("versionHash")]
@@ -2192,7 +2194,7 @@ namespace XamCore.CoreData
 
 		[Since (5,0)]
 		[Export ("storedInExternalRecord")]
-		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_5 , Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13, Message = "Spotlight integration is deprecated. Use CoreSpotlight integration instead.")]
+		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_5 , Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13, Message = "Spotlight integration is deprecated. Use 'CoreSpotlight' integration instead.")]
 		bool StoredInExternalRecord { [Bind ("isStoredInExternalRecord")]get; set; }
 	}
 
