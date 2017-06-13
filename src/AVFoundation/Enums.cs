@@ -837,4 +837,44 @@ namespace XamCore.AVFoundation {
 		[Field ("AVAssetExportPresetPassthrough")]
 		Passthrough = 9, // AVAssetExportPresetPassthrough
 	}
+
+	[TV (11,0), NoWatch, iOS (11,0)]
+	[Native]
+	public enum AVDepthDataAccuracy : nint {
+		Relative = 0,
+		Absolute = 1
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Native]
+	public enum AVAudioEngineManualRenderingMode : nint {
+		Offline = 0,
+		Realtime = 1
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Native]
+	public enum AVAudioEngineManualRenderingStatus : nint {
+		Error = -1,
+		Success = 0,
+		InsufficientDataFromInputNode = 1,
+		CannotDoInCurrentContext = 2
+	}
+
+	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
+	[Native]
+	public enum AVAudioSessionRouteSharingPolicy : nuint {
+		Default = 0,
+		LongForm = 1,
+		Independent = 2
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Native]
+	public enum AVAudioPlayerNodeCompletionCallbackType : nint {
+		Consumed = 0,
+		Rendered = 1,
+		PlayedBack = 2
+	}
+
 }
