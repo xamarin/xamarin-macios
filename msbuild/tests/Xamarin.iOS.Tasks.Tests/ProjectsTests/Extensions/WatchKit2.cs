@@ -20,10 +20,12 @@ namespace Xamarin.iOS.Tasks {
 
 			BuildExtension ("MyWatchApp2", "MyWatchKit2Extension", Platform, "Debug");
 
-			// make sure the dSYMs exist
-			var appexDsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatchKit2Extension.appex.dSYM"));
+			if (Platform == "iPhone") {
+				// make sure the dSYMs exist
+				var appexDsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatchKit2Extension.appex.dSYM"));
 
-			Assert.IsTrue (Directory.Exists (appexDsymDir), "MyWatchKit2Extension dSYMs not found");
+				Assert.IsTrue (Directory.Exists (appexDsymDir), "MyWatchKit2Extension dSYMs not found");
+			}
 		}
 
 		public override string TargetFrameworkIdentifier {
