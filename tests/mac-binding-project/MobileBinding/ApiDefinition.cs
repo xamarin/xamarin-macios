@@ -1,5 +1,6 @@
 using Foundation;
 
+#if !FRAMEWORK_TEST
 namespace Simple {
   [BaseType (typeof (NSObject))]
   interface SimpleClass {
@@ -7,3 +8,4 @@ namespace Simple {
     int DoIt ();
   }
 }
+#endif
