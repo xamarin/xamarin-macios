@@ -158,15 +158,15 @@ namespace XamCore.MediaLibrary {
 
 		[Mac (10,13, onlyOn64 : true)]
 		[Field ("MLPhotosLivePhotosGroupTypeIdentifier")]
-		NSString MLPhotosLivePhotosGroupTypeIdentifier { get; }
+		NSString PhotosLivePhotosGroupTypeIdentifier { get; }
 
 		[Mac (10,13, onlyOn64 : true)]
 		[Field ("MLPhotosLongExposureGroupTypeIdentifier")]
-		NSString MLPhotosLongExposureGroupTypeIdentifier { get; }
+		NSString PhotosLongExposureGroupTypeIdentifier { get; }
 
 		[Mac (10,13, onlyOn64 : true)]
 		[Field ("MLPhotosAnimatedGroupTypeIdentifier")]
-		NSString MLPhotosAnimatedGroupTypeIdentifier { get; }
+		NSString PhotosAnimatedGroupTypeIdentifier { get; }
 
 		[Mac (10,10, onlyOn64 : true)]
 		[Field ("MLPhotosPanoramasGroupTypeIdentifier")]

@@ -31,20 +31,20 @@ namespace XamCore.FinderSync {
 		[Mac (10,13, onlyOn64 : true)]
 		[Export ("lastUsedDateForItemWithURL:")]
 		[return: NullAllowed]
-		NSDate GetLastUsedDateForItem (NSUrl itemURL);
+		NSDate GetLastUsedDate (NSUrl itemUrl);
 
 		[Mac (10,13, onlyOn64 : true)]
 		[Export ("setLastUsedDate:forItemWithURL:completion:")]
-		void SetLastUsedDate (NSDate lastUsedDate, NSUrl itemURL, Action<NSError> completion);
+		void SetLastUsedDate (NSDate lastUsedDate, NSUrl itemUrl, Action<NSError> completion);
 
 		[Mac (10,13, onlyOn64 : true)]
 		[Export ("tagDataForItemWithURL:")]
 		[return: NullAllowed]
-		NSData GetTagDataForItem (NSUrl itemURL);
+		NSData GetTagData (NSUrl itemUrl);
 
 		[Mac (10,13, onlyOn64 : true)]
 		[Export ("setTagData:forItemWithURL:completion:")]
-		void SetTagData ([NullAllowed] NSData tagData, NSUrl itemURL, Action<NSError> completion);
+		void SetTagData ([NullAllowed] NSData tagData, NSUrl itemUrl, Action<NSError> completion);
 	}
 
 	[Mac (10, 10, onlyOn64: true)]
@@ -73,8 +73,8 @@ namespace XamCore.FinderSync {
 		[Export ("toolbarItemToolTip")]
 		string ToolbarItemToolTip { get; }
 
-	    [Export ("supportedMessageInterfaceNamesForItemWithURL:")]
-	    string[] GetSupportedMessageInterfaceNamesForItem (NSUrl itemURL);
+		[Export ("supportedMessageInterfaceNamesForItemWithURL:")]
+		string[] GetSupportedMessageInterfaceNamesForItem (NSUrl itemURL);
 
 		[Mac (10,13, onlyOn64 : true)]
 		[Export ("protocolForMessageInterface:")]
@@ -82,11 +82,11 @@ namespace XamCore.FinderSync {
 
 		[Mac (10,13, onlyOn64 : true)]
 		[Export ("exportedObjectForMessageInterface:itemURL:error:")]
-		NSObject GetExportedObject (NSFileProviderMessageInterface messageInterface, NSUrl itemURL, [NullAllowed] out NSError error);
+		NSObject GetExportedObject (NSFileProviderMessageInterface messageInterface, NSUrl itemUrl, [NullAllowed] out NSError error);
 
 		[Mac (10,13, onlyOn64 : true)]
 		[Export ("valuesForAttributes:forItemWithURL:completion:")]
-		void ValuesForAttributes (string[] attributes, NSUrl itemURL, Action<NSDictionary<NSString, NSObject>, NSError> completion);
+		void GetValues (string[] attributes, NSUrl itemUrl, Action<NSDictionary<NSString, NSObject>, NSError> completion);
 	}	
 
 	[Mac (10, 10, onlyOn64: true)]
