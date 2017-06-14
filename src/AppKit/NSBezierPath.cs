@@ -110,5 +110,15 @@ namespace XamCore.AppKit {
 				_AppendPathWithGlyphs ((IntPtr)ptr, glyphs.Length, font);
 		}
 
+		public unsafe void AppendBezierPathWithCGGlyphs (uint[] glyphs, NSFont font)
+		{
+			if (glyphs == null)
+				throw new ArgumentNullException ("glyphs");
+			if (glyphs.Length < 1)
+				throw new ArgumentException ("glyphs array is empty");
+
+			fixed (uint* ptr = &glyphs [0])
+				_AppendBezierPathWithCGGlyphs ((IntPtr)ptr, glyphs.Length, font);
+		}
 	}
 }

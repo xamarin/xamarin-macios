@@ -2786,4 +2786,12 @@ namespace XamCore.AppKit {
 		UnderlinedText,
 		VisitedLink
 	}
+
+	[Native]
+	public enum NSColorType : nint
+	{
+		ComponentBased,
+		Pattern,
+		Catalog
+	}
 }

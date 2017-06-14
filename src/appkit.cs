@@ -760,6 +760,30 @@ namespace XamCore.AppKit {
 		void EnumerateWindows (NSWindowListOptions options, NSApplicationEnumerateWindowsHandler block);
 	}
 
+	[Static]
+	interface NSAboutPanelOption
+	{
+		[Mac (10, 13)]
+		[Field ("NSAboutPanelOptionCredits")]
+		NSString Credits { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSAboutPanelOptionApplicationName")]
+		NSString ApplicationName { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSAboutPanelOptionApplicationIcon")]
+		NSString ApplicationIcon { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSAboutPanelOptionVersion")]
+		NSString Version { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSAboutPanelOptionApplicationVersion")]
+		NSString ApplicationVersion { get; }
+	}
+
 	delegate void NSApplicationEnumerateWindowsHandler (NSWindow window, ref bool stop);
 	delegate void ContinueUserActivityRestorationHandler (NSObject [] restorableObjects);
 	
@@ -903,6 +927,10 @@ namespace XamCore.AppKit {
 		[Export ("application:userDidAcceptCloudKitShareWithMetadata:"), EventArgs ("NSApplicationUserAcceptedCloudKitShare")]
 		void UserDidAcceptCloudKitShare (NSApplication application, CKShareMetadata metadata);
 #endif
+
+		[Mac (10,13), EventArgs ("NSApplicationOpenUrls")]
+		[Export ("application:openURLs:")]
+		void OpenUrls (NSApplication application, NSUrl[] urls);
 	}
 
 	[Mac (10, 12, 2)]
@@ -1232,6 +1260,17 @@ namespace XamCore.AppKit {
 
 		[Export ("flatness")]
 		nfloat Flatness { get; set; }
+
+		[Mac (10,13)]
+		[Export ("appendBezierPathWithCGGlyph:inFont:")]
+		void AppendBezierPathWithCGGlyph (CGGlyph glyph, NSFont font);
+
+		// -(void)appendBezierPathWithCGGlyphs:(const CGGlyph * _Nonnull)glyphs count:(NSInteger)count inFont:(NSFont * _Nonnull)font __attribute__((availability(macos, introduced=10.13)));
+		[Mac (10,13)]
+		[Export ("appendBezierPathWithCGGlyphs:count:inFont:")]
+		[Internal]
+		void _AppendBezierPathWithCGGlyphs (IntPtr glyphs, nint count, NSFont font);
+
 	}
 
 	[BaseType (typeof (NSImageRep))]
@@ -1533,6 +1572,7 @@ namespace XamCore.AppKit {
 		nint SelectedRow (nint column);
 
 		[Export ("selectionIndexPath", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSIndexPath SelectionIndexPath { get; set; }
 
 		[Export ("selectionIndexPaths", ArgumentSemantic.Copy)]
@@ -1819,6 +1859,7 @@ namespace XamCore.AppKit {
 		[Export ("browser:writeRowsWithIndexes:inColumn:toPasteboard:")]
 		bool WriteRowsWithIndexesToPasteboard (NSBrowser browser, NSIndexSet rowIndexes, nint column, NSPasteboard pasteboard);
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use NSFilePromiseReceiver objects instead")]
 		[Export ("browser:namesOfPromisedFilesDroppedAtDestination:forDraggedRowsWithIndexes:inColumn:")]
 		string [] PromisedFilesDroppedAtDestination (NSBrowser browser, NSUrl dropDestination, NSIndexSet rowIndexes, nint column);
 
@@ -1839,6 +1880,7 @@ namespace XamCore.AppKit {
 		[Export ("browser:acceptDrop:atRow:column:dropOperation:")]
 		bool AcceptDrop (NSBrowser browser, [Protocolize (4)] NSDraggingInfo info, nint row, nint column, NSBrowserDropOperation dropOperation);
 
+		[return: NullAllowed]
 		[Export ("browser:typeSelectStringForRow:inColumn:")]
 		string TypeSelectString (NSBrowser browser, nint row, nint column);
 
@@ -2332,6 +2374,7 @@ namespace XamCore.AppKit {
 		CGSize CellSizeForBounds (CGRect bounds);
 	
 		[Export ("highlightColorWithFrame:inView:")]
+		[return: NullAllowed]
 		NSColor HighlightColor (CGRect cellFrame, NSView controlView);
 	
 		[Export ("calcDrawInfo:")]
@@ -2388,6 +2431,7 @@ namespace XamCore.AppKit {
 	
 		[Static]
 		[Export ("defaultMenu")]
+		[NullAllowed]
 		NSMenu DefaultMenu { get; }
 	
 		[Export ("setSendsActionOnEndEditing:")]
@@ -2605,6 +2649,7 @@ namespace XamCore.AppKit {
 		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 
 		[Export ("collectionView")]
+		[NullAllowed]
 		NSCollectionView CollectionView { get; }
 
 		[Export ("selected")]
@@ -2623,6 +2668,10 @@ namespace XamCore.AppKit {
 		[Mac (10,11)]
 		[Export ("highlightState", ArgumentSemantic.Assign)]
 		NSCollectionViewItemHighlightState HighlightState { get; set; }
+
+		[Mac (10, 13)]
+		[NullAllowed, Export ("prefetchDataSource", ArgumentSemantic.Weak)]
+		INSCollectionViewPrefetching PrefetchDataSource { get; set; }
 	}
 
 	[BaseType (typeof (NSView))]
@@ -2902,6 +2951,7 @@ namespace XamCore.AppKit {
 		[Export ("collectionView:writeItemsAtIndexes:toPasteboard:")]
 		bool WriteItems (NSCollectionView collectionView, NSIndexSet indexes, NSPasteboard toPasteboard);
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use NSFilePromiseReceiver objects instead")]
 		[Export ("collectionView:namesOfPromisedFilesDroppedAtDestination:forDraggedItemsAtIndexes:")]
 		string [] NamesOfPromisedFilesDroppedAtDestination (NSCollectionView collectionView, NSUrl dropUrl, NSIndexSet indexes);
 
@@ -2927,6 +2977,7 @@ namespace XamCore.AppKit {
 		bool WriteItems (NSCollectionView collectionView, NSSet indexPaths, NSPasteboard pasteboard);
 
 		[Mac (10,11)]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use NSFilePromiseReceiver objects instead")]
 		[Export ("collectionView:namesOfPromisedFilesDroppedAtDestination:forDraggedItemsAtIndexPaths:")]
 		string[] GetNamesOfPromisedFiles (NSCollectionView collectionView, NSUrl dropURL, NSSet indexPaths);
 
@@ -3829,6 +3880,72 @@ namespace XamCore.AppKit {
 		[Static]
 		[Export ("scrubberTexturedBackgroundColor", ArgumentSemantic.Strong)]
 		NSColor ScrubberTexturedBackgroundColor { get; }
+
+		[Mac (10,13)]
+		[Static]
+		[Export ("colorNamed:bundle:")]
+		[return: NullAllowed]
+		NSColor ColorNamed (string name, [NullAllowed] NSBundle bundle);
+
+		[Mac (10,13)]
+		[Static]
+		[Export ("colorNamed:")]
+		[return: NullAllowed]
+		NSColor ColorNamed (string name);
+
+		[Mac (10, 13)]
+		[Export ("type")]
+		NSColorType Type { get; }
+
+		[Mac (10,13)]
+		[Export ("colorUsingType:")]
+		[return: NullAllowed]
+		NSColor ColorUsingType (NSColorType type);
+
+		[Mac (10, 10)]
+		[Static]
+		[Export ("systemRedColor", ArgumentSemantic.Strong)]
+		NSColor SystemRedColor { get; }
+
+		[Mac (10, 10)]
+		[Static]
+		[Export ("systemGreenColor", ArgumentSemantic.Strong)]
+		NSColor SystemGreenColor { get; }
+
+		[Mac (10, 10)]
+		[Static]
+		[Export ("systemBlueColor", ArgumentSemantic.Strong)]
+		NSColor SystemBlueColor { get; }
+
+		[Mac (10, 10)]
+		[Static]
+		[Export ("systemOrangeColor", ArgumentSemantic.Strong)]
+		NSColor SystemOrangeColor { get; }
+
+		[Mac (10, 10)]
+		[Static]
+		[Export ("systemYellowColor", ArgumentSemantic.Strong)]
+		NSColor SystemYellowColor { get; }
+
+		[Mac (10, 10)]
+		[Static]
+		[Export ("systemBrownColor", ArgumentSemantic.Strong)]
+		NSColor SystemBrownColor { get; }
+
+		[Mac (10, 10)]
+		[Static]
+		[Export ("systemPinkColor", ArgumentSemantic.Strong)]
+		NSColor SystemPinkColor { get; }
+
+		[Mac (10, 10)]
+		[Static]
+		[Export ("systemPurpleColor", ArgumentSemantic.Strong)]
+		NSColor SystemPurpleColor { get; }
+
+		[Mac (10, 10)]
+		[Static]
+		[Export ("systemGrayColor", ArgumentSemantic.Strong)]
+		NSColor SystemGrayColor { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -4576,6 +4693,7 @@ namespace XamCore.AppKit {
 
 		[Static]
 		[Export ("currentSystemCursor")]
+		[NullAllowed]
 		NSCursor CurrentSystemCursor { get; }
 
 		[Static]
@@ -4689,22 +4807,28 @@ namespace XamCore.AppKit {
 		[Export ("set")]
 		void Set ();
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "SetOnMouseExited is unused and should not be called")]
 		[Export ("setOnMouseExited:")]
 		void SetOnMouseExited (bool flag);
 
 		[Export ("setOnMouseEntered:")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "SetOnMouseEntered is unused and should not be called")]
 		void SetOnMouseEntered (bool flag);
 
 		[Export ("isSetOnMouseExited")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "IsSetOnMouseExited is unused")]
 		bool IsSetOnMouseExited ();
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "IsSetOnMouseEntered is unused")]
 		[Export ("isSetOnMouseEntered")]
 		bool IsSetOnMouseEntered ();
 
 		[Export ("mouseEntered:")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "MouseEntered is unused and should not be called")]
 		void MouseEntered (NSEvent theEvent);
 
 		[Export ("mouseExited:")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "MouseExited is unused and should not be called")]
 		void MouseExited (NSEvent theEvent);
 	}
 
@@ -5138,11 +5262,11 @@ namespace XamCore.AppKit {
 		[Export ("windowForSheet")]
 		NSWindow WindowForSheet { get; }
 
-		[Static, Export ("readableTypes")]
+		[Static, Export ("readableTypes", ArgumentSemantic.Copy)]
 		string [] ReadableTypes { get; }
 
 		[Static]
-		[Export ("writableTypes")]
+		[Export ("writableTypes", ArgumentSemantic.Copy)]
 		string [] WritableTypes ();
 
 		[Static]
@@ -5299,6 +5423,18 @@ namespace XamCore.AppKit {
 		[Export ("stopBrowsingVersionsWithCompletionHandler:")]
 		[Async]
 		void StopBrowsingVersions (Action completionHandler);
+
+		[Mac (10, 13)]
+		[Export ("allowsDocumentSharing")]
+		bool AllowsDocumentSharing { get; }
+
+		[Mac (10,13)]
+		[Export ("shareDocumentWithSharingService:completionHandler:")]
+		void ShareDocumentWithSharingService (NSSharingService sharingService, [NullAllowed] Action<bool> completionHandler);
+
+		[Mac (10,13)]
+		[Export ("prepareSharingServicePicker:")]
+		void PrepareSharingServicePicker (NSSharingServicePicker sharingServicePicker);
 	}
 
 	delegate void OpenDocumentCompletionHandler (NSDocument document, bool documentWasAlreadyOpen, NSError error);
@@ -21972,6 +22108,14 @@ namespace XamCore.AppKit {
 
 		[MountainLion, Export ("beginOpenPanel:forTypes:completionHandler:")]
 		void BeginOpenPanel (NSOpenPanel openPanel, NSArray inTypes, NSDocumentControllerOpenPanelResultHandler completionHandler);
+
+		[Mac (10, 13)]
+		[Export ("allowsAutomaticShareMenu")]
+		bool AllowsAutomaticShareMenu { get; }
+
+		[Mac (10, 13)]
+		[Export ("standardShareMenuItem")]
+		NSMenuItem StandardShareMenuItem { get; }
 	}
 
 	partial interface NSImage {
@@ -24793,6 +24937,10 @@ namespace XamCore.AppKit {
 
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
+
+		[Mac (10, 13)]
+		[NullAllowed, Export ("allowedColorSpaces", ArgumentSemantic.Copy)]
+		NSColorSpace[] AllowedColorSpaces { get; set; }
 	}
 
 	[Mac (10,12,2)]
@@ -25385,9 +25533,24 @@ namespace XamCore.AppKit {
 		[Abstract]
 		[Export ("accessibilityElementWithToken:")]
 		[return: NullAllowed]
-		NSAccessibilityElement AccessibilityElementWithToken (INSSecureCoding token);
+		NSAccessibilityElement GetAccessibilityElement (INSSecureCoding token);
 
 		[Export ("accessibilityRangeInTargetElementWithToken:")]
-		NSRange AccessibilityRangeInTargetElementWithToken (INSSecureCoding token);
+		NSRange GetAccessibilityRangeInTargetElement (INSSecureCoding token);
+	}
+
+	interface INSCollectionViewPrefetching { }
+
+	[Mac (10,13)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface NSCollectionViewPrefetching
+	{
+		[Abstract]
+		[Export ("collectionView:prefetchItemsAtIndexPaths:")]
+		void PrefetchItems (NSCollectionView collectionView, NSIndexPath[] indexPaths);
+
+		[Export ("collectionView:cancelPrefetchingForItemsAtIndexPaths:")]
+		void CancelPrefetchingForItems (NSCollectionView collectionView, NSIndexPath[] indexPaths);
 	}
 }
