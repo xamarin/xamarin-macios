@@ -2735,4 +2735,55 @@ namespace XamCore.AppKit {
 		Center
 	}
 
+	[Mac (10,13)]
+	public enum NSFontError : int {
+
+		AssetDownloadError = 66304,  // Generic code when font asset download error occurs.
+		ErrorMinimum = 66304,  // Generic code when font asset download error occurs.
+		ErrorMaximum = 66335,  // Generic code when font asset download error occurs.
+	}
+
+	[Mac (10,13)]
+	[Native]
+	public enum NSAccessibilityAnnotationPosition : nint
+	{
+		FullRange,
+		Start,
+		End
+	}
+
+	[Mac (10,13)]
+	[Native]
+	public enum NSAccessibilityCustomRotorSearchDirection : nint
+	{
+		Previous,
+		Next
+	}
+
+	[Mac (10,13)]
+	[Native]
+	public enum NSAccessibilityCustomRotorType : nint
+	{
+		Custom = 0,
+		Any = 1,
+		Annotation,
+		BoldText,
+		Heading,
+		HeadingLevel1,
+		HeadingLevel2,
+		HeadingLevel3,
+		HeadingLevel4,
+		HeadingLevel5,
+		HeadingLevel6,
+		Image,
+		ItalicText,
+		Landmark,
+		Link,
+		List,
+		MisspelledWord,
+		Table,
+		TextField,
+		UnderlinedText,
+		VisitedLink
+	}
 }

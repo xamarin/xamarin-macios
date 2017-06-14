@@ -23162,6 +23162,26 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityAnnouncementRequestedNotification")]
 		NSString AnnouncementRequestedNotification { get; }
 
+		[Mac (10, 13)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[NullAllowed, Export ("accessibilityChildrenInNavigationOrder", ArgumentSemantic.Copy)]
+		NSAccessibilityElement[] AccessibilityChildrenInNavigationOrder { get; set; }
+
+		[Mac (10, 13)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("accessibilityCustomRotors", ArgumentSemantic.Copy)]
+		NSAccessibilityCustomRotor[] AccessibilityCustomRotors { get; set; }
+
+		[Mac (10, 13)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[NullAllowed, Export ("accessibilityCustomActions", ArgumentSemantic.Copy)]
+		NSAccessibilityCustomAction[] AccessibilityCustomActions { get; set; }
 	}
 
 	[Protocol]
@@ -23678,6 +23698,31 @@ namespace XamCore.AppKit {
 		[Mac (10, 12)]
 		[Field ("NSAccessibilityTextAlignmentAttribute")]
 		NSString TextAlignmentAttribute { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSAccessibilityLanguageTextAttribute")]
+		NSString LanguageTextAttribute { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSAccessibilityCustomTextAttribute")]
+		NSString CustomTextAttribute { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSAccessibilityAnnotationTextAttribute")]
+		NSString AnnotationTextAttribute { get; }
+	}
+
+	[Static]
+	[Mac (10, 13)]
+	partial interface NSAccessibilityAnnotationAttributeKey {
+		[Field ("NSAccessibilityAnnotationLabel")]
+		NSString AnnotationLabel { get; }
+
+		[Field ("NSAccessibilityAnnotationElement")]
+		NSString AnnotationElement { get; }
+
+		[Field ("NSAccessibilityAnnotationLocation")]
+		NSString AnnotationLocation { get; }
 	}
 
 	[Static]
@@ -23867,6 +23912,10 @@ namespace XamCore.AppKit {
 		[Mac (10, 12)]
 		[Field ("NSAccessibilityMenuBarItemRole")]
 		NSString MenuBarItemRole { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSAccessibilityPageRole")]
+		NSString PageRole { get; }
 	}
 
 	[Static]
@@ -23966,6 +24015,18 @@ namespace XamCore.AppKit {
 		[Mac (10, 9)]
 		[Field ("NSAccessibilityDescriptionListSubrole")]
 		NSString DescriptionListSubrole { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSAccessibilityTabButtonSubrole")]
+		NSString TabButtonSubrole { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSAccessibilityCollectionListSubrole")]
+		NSString CollectionListSubrole { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSAccessibilitySectionListSubrole")]
+		NSString SectionListSubrole { get; }
 	}
 
 #if !XAMCORE_4_0
@@ -24472,6 +24533,14 @@ namespace XamCore.AppKit {
 		[Mac (10, 12)]
 		[Export ("accessibilityDisplayShouldReduceMotion")]
 		bool AccessibilityDisplayShouldReduceMotion { get; }
+
+		[Mac (10, 13)]
+		[Export ("voiceOverEnabled")]
+		bool VoiceOverEnabled { [Bind ("isVoiceOverEnabled")] get; }
+
+		[Mac (10, 13)]
+		[Export ("switchControlEnabled")]
+		bool SwitchControlEnabled { [Bind ("isSwitchControlEnabled")] get; }
 	}
 	
 	interface INSFilePromiseProviderDelegate {}
@@ -25200,5 +25269,125 @@ namespace XamCore.AppKit {
 
 		[Export ("handleAction:")]
 		void HandleAction (NSSliderAccessory sender);
+	}
+
+	[Mac (10,13)]
+	[BaseType (typeof(NSObject))]
+	interface NSAccessibilityCustomAction
+	{
+		[Export ("initWithName:handler:")]
+		IntPtr Constructor (string name, [NullAllowed] Func<bool> handler);
+
+		[Export ("initWithName:target:selector:")]
+		IntPtr Constructor (string name, NSObject target, Selector selector);
+
+		[Export ("name")]
+		string Name { get; set; }
+
+		[NullAllowed, Export ("handler", ArgumentSemantic.Copy)]
+		Func<bool> Handler { get; set; }
+
+		[NullAllowed, Export ("target", ArgumentSemantic.Weak)]
+		NSObject Target { get; set; }
+
+		/*
+		It must conform to one of the following signatures:		 
+		- (BOOL)myPerformActionMethod;
+		- (BOOL)myPerformActionMethod:(NSAccessibilityCustomAction *)action;
+		*/
+		[NullAllowed, Export ("selector", ArgumentSemantic.Assign)]
+		Selector Selector { get; set; }
+	}
+
+	[Mac (10,13)]
+	[BaseType (typeof(NSObject))]
+	interface NSAccessibilityCustomRotor
+	{
+		[Export ("initWithLabel:itemSearchDelegate:")]
+		IntPtr Constructor (string label, INSAccessibilityCustomRotorItemSearchDelegate itemSearchDelegate);
+
+		[Export ("initWithRotorType:itemSearchDelegate:")]
+		IntPtr Constructor (NSAccessibilityCustomRotorType rotorType, INSAccessibilityCustomRotorItemSearchDelegate itemSearchDelegate);
+
+		[Export ("type", ArgumentSemantic.Assign)]
+		NSAccessibilityCustomRotorType Type { get; set; }
+
+		[Export ("label")]
+		string Label { get; set; }
+
+		[NullAllowed, Export ("itemSearchDelegate", ArgumentSemantic.Weak)]
+		INSAccessibilityCustomRotorItemSearchDelegate ItemSearchDelegate { get; set; }
+
+		[NullAllowed, Export ("itemLoadingDelegate", ArgumentSemantic.Weak)]
+		INSAccessibilityElementLoading ItemLoadingDelegate { get; set; }
+	}
+	
+	[Mac (10,13)]
+	[BaseType (typeof(NSObject))]
+	interface NSAccessibilityCustomRotorSearchParameters
+	{
+		[NullAllowed, Export ("currentItem", ArgumentSemantic.Strong)]
+		NSAccessibilityCustomRotorItemResult CurrentItem { get; set; }
+
+		[Export ("searchDirection", ArgumentSemantic.Assign)]
+		NSAccessibilityCustomRotorSearchDirection SearchDirection { get; set; }
+
+		[Export ("filterString")]
+		string FilterString { get; set; }
+	}
+	
+	[Mac (10,13)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSAccessibilityCustomRotorItemResult
+	{
+		[Export ("initWithTargetElement:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSAccessibilityElement targetElement);
+
+		[Export ("initWithItemLoadingToken:customLabel:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INSSecureCoding itemLoadingToken, string customLabel);
+
+		[NullAllowed, Export ("targetElement", ArgumentSemantic.Weak)]
+		NSAccessibilityElement TargetElement { get; }
+
+		[NullAllowed, Export ("itemLoadingToken", ArgumentSemantic.Strong)]
+		INSSecureCoding ItemLoadingToken { get; }
+
+		[Export ("targetRange", ArgumentSemantic.Assign)]
+		NSRange TargetRange { get; set; }
+
+		[NullAllowed, Export ("customLabel")]
+		string CustomLabel { get; set; }
+	}
+
+	interface INSAccessibilityCustomRotorItemSearchDelegate {}
+
+	[Mac (10,13)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface NSAccessibilityCustomRotorItemSearchDelegate
+	{
+		[Abstract]
+		[Export ("rotor:resultForSearchParameters:")]
+		[return: NullAllowed]
+		NSAccessibilityCustomRotorItemResult ResultForSearchParameters (NSAccessibilityCustomRotor rotor, NSAccessibilityCustomRotorSearchParameters searchParameters);
+	}
+
+	interface INSAccessibilityElementLoading {}
+
+	[Mac (10,13)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface NSAccessibilityElementLoading
+	{
+		[Abstract]
+		[Export ("accessibilityElementWithToken:")]
+		[return: NullAllowed]
+		NSAccessibilityElement AccessibilityElementWithToken (INSSecureCoding token);
+
+		[Export ("accessibilityRangeInTargetElementWithToken:")]
+		NSRange AccessibilityRangeInTargetElementWithToken (INSSecureCoding token);
 	}
 }
