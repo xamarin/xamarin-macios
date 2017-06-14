@@ -349,7 +349,7 @@ namespace Introspection {
 					return true;
 				}
 				break;
-			case "NSQueryGenerationTokenTest": // A test was added in monotouch tests to ensure the selector works
+			case "NSQueryGenerationToken": // A test was added in monotouch tests to ensure the selector works
 				switch (selectorName) {
 				case "encodeWithCoder:":
 					return true;
