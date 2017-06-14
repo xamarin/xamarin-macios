@@ -5,6 +5,8 @@ using XamCore.AppKit;
 
 #if XAMCORE_2_0
 namespace XamCore.FinderSync {
+	delegate void GetValuesCompletionHandler (NSDictionary<NSString, NSObject> values, NSError error);
+
 	[Mac (10, 10, onlyOn64: true)]
 	[BaseType (typeof(NSExtensionContext))]
 	interface FIFinderSyncController : NSSecureCoding, NSCopying
@@ -34,7 +36,7 @@ namespace XamCore.FinderSync {
 		NSDate GetLastUsedDate (NSUrl itemUrl);
 
 		[Mac (10,13, onlyOn64 : true)]
-		[Export ("setLastUsedDate:forItemWithURL:completion:")]
+		[Async, Export ("setLastUsedDate:forItemWithURL:completion:")]
 		void SetLastUsedDate (NSDate lastUsedDate, NSUrl itemUrl, Action<NSError> completion);
 
 		[Mac (10,13, onlyOn64 : true)]
@@ -42,7 +44,7 @@ namespace XamCore.FinderSync {
 		[return: NullAllowed]
 		NSData GetTagData (NSUrl itemUrl);
 
-		[Mac (10,13, onlyOn64 : true)]
+		[Async, Mac (10,13, onlyOn64 : true)]
 		[Export ("setTagData:forItemWithURL:completion:")]
 		void SetTagData ([NullAllowed] NSData tagData, NSUrl itemUrl, Action<NSError> completion);
 	}
@@ -74,7 +76,7 @@ namespace XamCore.FinderSync {
 		string ToolbarItemToolTip { get; }
 
 		[Export ("supportedMessageInterfaceNamesForItemWithURL:")]
-		string[] GetSupportedMessageInterfaceNames (NSUrl itemURL);
+		string[] GetSupportedMessageInterfaceNames (NSUrl itemUrl);
 
 		[Mac (10,13, onlyOn64 : true)]
 		[Export ("protocolForMessageInterface:")]
@@ -85,9 +87,9 @@ namespace XamCore.FinderSync {
 		NSObject GetExportedObject (NSFileProviderMessageInterface messageInterface, NSUrl itemUrl, [NullAllowed] out NSError error);
 
 		[Mac (10,13, onlyOn64 : true)]
-		[Export ("valuesForAttributes:forItemWithURL:completion:")]
-		void GetValues (string[] attributes, NSUrl itemUrl, Action<NSDictionary<NSString, NSObject>, NSError> completion);
-	}	
+		[Async, Export ("valuesForAttributes:forItemWithURL:completion:")]
+		void GetValues (string[] attributes, NSUrl itemUrl, GetValuesCompletionHandler completion);
+	}
 
 	[Mac (10, 10, onlyOn64: true)]
 	[BaseType (typeof(NSObject))]
