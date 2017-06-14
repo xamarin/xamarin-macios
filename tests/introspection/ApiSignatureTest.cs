@@ -181,7 +181,18 @@ namespace Introspection {
 
 		protected virtual bool Skip (Type type, MethodBase method, string selector)
 		{
+			if (method is MethodInfo mf) {
+				if (IsNullableType (mf.ReturnType))
+					return true;
+
+				foreach (var param in mf.GetParameters ()) {
+					if (IsNullableType (param.ParameterType))
+						return true;
+				}
+			}
 			return SkipDueToAttribute (method);
+
+			bool IsNullableType (Type t) => Nullable.GetUnderlyingType (t) != null;
 		}
 
 		public int CurrentParameter { get; private set; }
