@@ -74,7 +74,7 @@ namespace XamCore.FinderSync {
 		string ToolbarItemToolTip { get; }
 
 		[Export ("supportedMessageInterfaceNamesForItemWithURL:")]
-		string[] GetSupportedMessageInterfaceNamesForItem (NSUrl itemURL);
+		string[] GetSupportedMessageInterfaceNames (NSUrl itemURL);
 
 		[Mac (10,13, onlyOn64 : true)]
 		[Export ("protocolForMessageInterface:")]
