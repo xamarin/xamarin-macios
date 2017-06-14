@@ -1478,7 +1478,7 @@ namespace XamCore.CoreData
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
-	interface NSPersistentHistoryToken : NSCopying, NSSecureCoding
+	interface NSPersistentHistoryToken : NSCopying //, NSSecureCoding TODO: The class does state that it supports the NSSecureCoding YET SupportsSecureCoding returns false, radar 32761925
 	{
 	}
 
