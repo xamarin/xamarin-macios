@@ -11963,11 +11963,11 @@ namespace XamCore.AppKit {
 	[BaseType (typeof (NSObject))]
 	interface NSPrinter : NSCoding, NSCopying {
 		[Static]
-		[Export ("printerNames")]
+		[Export ("printerNames", ArgumentSemantic.Copy)]
 		string [] PrinterNames{ get; }
 
 		[Static]
-		[Export ("printerTypes")]
+		[Export ("printerTypes", ArgumentSemantic.Copy)]
 		string [] PrinterTypes { get; }
 
 		[Static]
@@ -12659,6 +12659,23 @@ namespace XamCore.AppKit {
 		NSView AccessoryView { get; set; }
 	}
 
+	[Mac (10, 13)]
+	[Static]
+	interface NSRulerViewUnitNames 
+	{
+		[Field ("NSRulerViewUnitInches")]
+		NSString Inches { get; }
+
+		[Field ("NSRulerViewUnitCentimeters")]
+		NSString Centimeters { get; }
+
+		[Field ("NSRulerViewUnitPoints")]
+		NSString Points { get; }
+
+		[Field ("NSRulerViewUnitPicas")]
+		NSString Picas { get; }
+	}
+
 	delegate void NSSavePanelComplete (nint result);
 	
 	[BaseType (typeof (NSPanel), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSOpenSavePanelDelegate)})]
@@ -12777,7 +12794,7 @@ namespace XamCore.AppKit {
 	[BaseType (typeof (NSObject))]
 	partial interface NSScreen {
 		[Static]
-		[Export ("screens")]
+		[Export ("screens", ArgumentSemantic.Copy)]
 		NSScreen [] Screens { get; }
 
 		[Static]
@@ -13207,7 +13224,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[BaseType (typeof (NSControl))]
-	interface NSSegmentedControl {
+	interface NSSegmentedControl : INSUserInterfaceCompression {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
@@ -13293,6 +13310,43 @@ namespace XamCore.AppKit {
 		[Mac (10, 12, 2)]
 		[NullAllowed, Export ("selectedSegmentBezelColor", ArgumentSemantic.Copy)]
 		NSColor SelectedSegmentBezelColor { get; set; }
+
+		[Mac (10,13)]
+		[Export ("setToolTip:forSegment:")]
+		void SetToolTip ([NullAllowed] string toolTip, nint segment);
+
+		[Mac (10,13)]
+		[Export ("toolTipForSegment:")]
+		[return: NullAllowed]
+		string ToolTipForSegment (nint segment);
+
+		[Mac (10,13)]
+		[Export ("setTag:forSegment:")]
+		void SetTag (nint tag, nint segment);
+
+		[Mac (10,13)]
+		[Export ("tagForSegment:")]
+		nint TagForSegment (nint segment);
+
+		[Mac (10,13)]
+		[Export ("setShowsMenuIndicator:forSegment:")]
+		void SetShowsMenuIndicator (bool showsMenuIndicator, nint segment);
+
+		[Mac (10,13)]
+		[Export ("showsMenuIndicatorForSegment:")]
+		bool ShowsMenuIndicatorForSegment (nint segment);
+
+		[Mac (10,13)]
+		[Export ("setAlignment:forSegment:")]
+		void SetAlignment (NSTextAlignment alignment, nint segment);
+
+		[Mac (10,13)]
+		[Export ("alignmentForSegment:")]
+		NSTextAlignment AlignmentForSegment (nint segment);
+
+		[Mac (10, 13)]
+		[Export ("segmentDistribution", ArgumentSemantic.Assign)]
+		NSSegmentDistribution SegmentDistribution { get; set; }
 	}
 	
 	[BaseType (typeof (NSActionCell))]
@@ -13952,7 +14006,7 @@ namespace XamCore.AppKit {
 		bool CanCreateFromPasteboard (NSPasteboard pasteboard);
 
 		[Static]
-		[Export ("soundUnfilteredTypes")]
+		[Export ("soundUnfilteredTypes", ArgumentSemantic.Copy)]
 		string [] SoundUnfilteredTypes ();
 
 		[Export ("initWithPasteboard:")]
@@ -14106,7 +14160,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,10)]
 	[BaseType (typeof (NSViewController))]
-	interface NSSplitViewController : NSSplitViewDelegate {
+	interface NSSplitViewController : NSSplitViewDelegate, INSUserInterfaceValidations {
 		[Export ("splitView", ArgumentSemantic.Strong)]
 		NSSplitView SplitView { get; set; }
 
@@ -14672,6 +14726,11 @@ namespace XamCore.AppKit {
 
 		[Export ("instantiateControllerWithIdentifier:")]
 		NSObject InstantiateControllerWithIdentifier (string identifier);
+
+		[Mac (10, 13)]
+		[Static]
+		[NullAllowed, Export ("mainStoryboard", ArgumentSemantic.Strong)]
+		NSStoryboard MainStoryboard { get; }
 	}
 
 	[Mac (10,10)]
@@ -16650,6 +16709,10 @@ namespace XamCore.AppKit {
 		[Mac (10,12)]
 		[Export ("userInterfaceLayoutDirection")]
 		NSUserInterfaceLayoutDirection UserInterfaceLayoutDirection { get; set; }
+
+		[Mac (10, 13)]
+		[Export ("usesAutomaticRowHeights")]
+		bool UsesAutomaticRowHeights { get; set; }
 	} 
 	
 	[BaseType (typeof (NSObject))]
@@ -16901,6 +16964,7 @@ namespace XamCore.AppKit {
 		[Export ("tableView:acceptDrop:row:dropOperation:")]
 		bool AcceptDrop (NSTableView tableView, [Protocolize (4)] NSDraggingInfo info, nint row, NSTableViewDropOperation dropOperation);
 	
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use NSFilePromiseReceiver objects instead")]
 		[Export ("tableView:namesOfPromisedFilesDroppedAtDestination:forDraggedRowsWithIndexes:")]
 		string [] FilesDropped (NSTableView tableView, NSUrl dropDestination, NSIndexSet indexSet );
 		
@@ -22514,6 +22578,10 @@ namespace XamCore.AppKit {
 
 		[Notification, Field ("NSTextDidChangeNotification")]
 		NSString DidChangeNotification { get; }
+
+		[Mac (10, 13)]
+		[Notification, Field ("NSTextMovementUserInfoKey")]
+		NSString MovementUserInfoKey { get; }
 	}
 
 	partial interface NSTextInputContext {
@@ -24919,6 +24987,8 @@ namespace XamCore.AppKit {
 		string GetStringForToolTip (NSView view, nint tag, CGPoint point, IntPtr data);
 	}
 
+	interface INSUserInterfaceValidations {}
+
 	[Protocol]
 	interface NSUserInterfaceValidations
 	{
@@ -25778,5 +25848,23 @@ namespace XamCore.AppKit {
 		[Static]
 		[Export ("standardOptions", ArgumentSemantic.Copy)]
 		NSUserInterfaceCompressionOptions StandardOptions { get; }
+	}
+
+	interface INSUserInterfaceCompression {}
+
+	[Protocol]
+	interface NSUserInterfaceCompression
+	{
+		[Abstract]
+		[Export ("compressWithPrioritizedCompressionOptions:")]
+		void Compress (NSUserInterfaceCompressionOptions[] prioritizedOptions);
+
+		[Abstract]
+		[Export ("minimumSizeWithPrioritizedCompressionOptions:")]
+		CGSize MinimumSize (NSUserInterfaceCompressionOptions[] prioritizedOptions);
+
+		[Abstract]
+		[Export ("activeCompressionOptions", ArgumentSemantic.Copy)]
+		NSUserInterfaceCompressionOptions ActiveCompressionOptions { get; }
 	}
 }

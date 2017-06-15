@@ -2839,4 +2839,14 @@ namespace XamCore.AppKit {
 		Always = 1,
 		WhileEditing = 2
 	}
+
+	[Mac (10,13)]
+	[Native]
+	public enum NSSegmentDistribution : nint
+	{
+		Fit = 0,
+		Fill,
+		FillEqually,
+		FillProportionally
+	}
 }
