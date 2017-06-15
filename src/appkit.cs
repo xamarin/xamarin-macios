@@ -5674,6 +5674,7 @@ namespace XamCore.AppKit {
 #if XAMCORE_4_0
 		[Abstract]
 #endif
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use NSFilePromiseProvider objects instead")]	
 		[Export ("namesOfPromisedFilesDroppedAtDestination:")]
 		string [] PromisedFilesDroppedAtDestination (NSUrl dropDestination);
 
@@ -5784,6 +5785,7 @@ namespace XamCore.AppKit {
 		[Export ("draggingSourceOperationMaskForLocal:"), DefaultValue (NSDragOperation.None)]
 		NSDragOperation DraggingSourceOperationMaskForLocal (bool flag);
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use NSFilePromiseProvider objects instead")]	
 		[Export ("namesOfPromisedFilesDroppedAtDestination:"), DefaultValue (new string[0])]
 		string [] NamesOfPromisedFilesDroppedAtDestination (NSUrl dropDestination);
 
@@ -5805,6 +5807,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[BaseType (typeof (NSResponder), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSDrawerDelegate)})]
+	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using NSSplitViewController")]		
 	partial interface NSDrawer : NSAccessibilityElementProtocol, NSAccessibility {
 		[Export ("initWithContentSize:preferredEdge:")]
 		IntPtr Constructor (CGSize contentSize, NSRectEdge edge);
@@ -5868,6 +5871,7 @@ namespace XamCore.AppKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
+	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using NSSplitViewController")]		
 	interface NSDrawerDelegate {
 		[Export ("drawerDidClose:"), EventArgs ("NSNotification")]
 		void DrawerDidClose (NSNotification notification);
@@ -6012,6 +6016,7 @@ namespace XamCore.AppKit {
 		NSStringEncoding MostCompatibleStringEncoding { get; }
 
 		[Export ("glyphWithName:")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use CGGlyph APIs instead")]
 		uint GlyphWithName (string aName); /* NSGlyph = unsigned int */
 
 		[Export ("coveredCharacterSet")]
@@ -6051,22 +6056,12 @@ namespace XamCore.AppKit {
 		bool IsFixedPitch { get; }
 
 		[Export ("boundingRectForGlyph:")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use CGGlyph APIs instead")]
 		CGRect BoundingRectForGlyph (uint /* NSGlyph = unsigned int */ aGlyph);
 
 		[Export ("advancementForGlyph:")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use CGGlyph APIs instead")]
 		CGSize AdvancementForGlyph (uint /* NSGlyph = unsigned int */ aGlyph);
-
-		// FIXME binding
-		//[Export ("getBoundingRects:forGlyphs:count:")]
-		//void GetBoundingRectsforGlyphscount (NSRect *bounds, uint glyphs, int glyphCount);
-
-		// FIXME binding
-		//[Export ("getAdvancements:forGlyphs:count:")]
-		//void GetAdvancementsforGlyphscount (NSSizeArray advancements, const uint glyphs, int glyphCount);
-
-		// FIXME binding
-		//[Export ("getAdvancements:forPackedGlyphs:length:")]
-		//void GetAdvancementsforPackedGlyphslength (NSSizeArray advancements, void *packedGlyphs, uint length);
 
 		[Export ("set")]
 		void Set ();
@@ -6075,15 +6070,19 @@ namespace XamCore.AppKit {
 		void SetInContext (NSGraphicsContext graphicsContext);
 
 		[Export ("printerFont")]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		NSFont PrinterFont { get; }
 
 		[Export ("screenFont")]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		NSFont ScreenFont { get; }
 
 		[Export ("screenFontWithRenderingMode:")]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		NSFont ScreenFontWithRenderingMode (NSFontRenderingMode renderingMode);
 
 		[Export ("renderingMode")]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		NSFontRenderingMode RenderingMode { get; }
 
 		[Export ("isVertical")]
@@ -6174,6 +6173,25 @@ namespace XamCore.AppKit {
 		[Export ("monospacedDigitSystemFontOfSize:weight:")]
 		NSFont MonospacedDigitSystemFontOfSize (nfloat fontSize, nfloat weight);
 
+		[Mac (10,13)]
+		[Export ("boundingRectForCGGlyph:")]
+		CGRect BoundingRectForCGGlyph (CGGlyph glyph);
+
+		[Mac (10,13)]
+		[Export ("advancementForCGGlyph:")]
+		CGSize AdvancementForCGGlyph (CGGlyph glyph);
+
+		// -(void)getBoundingRects:(NSRectArray _Nonnull)bounds forCGGlyphs:(const CGGlyph * _Nonnull)glyphs count:(NSUInteger)glyphCount __attribute__((availability(macos, introduced=10.13)));
+		[Mac (10,13)]
+		[Internal]
+		[Export ("getBoundingRects:forCGGlyphs:count:")]
+		unsafe void _GetBoundingRects (NSRectArray* bounds, CGGlyph * glyphs, nuint glyphCount);
+
+		// -(void)getAdvancements:(NSSizeArray _Nonnull)advancements forCGGlyphs:(const CGGlyph * _Nonnull)glyphs count:(NSUInteger)glyphCount __attribute__((availability(macos, introduced=10.13)));
+		[Mac (10,13)]
+		[Internal]
+		[Export ("getAdvancements:forCGGlyphs:count:")]
+		unsafe void _GetAdvancements (NSSizeArray* advancements, CGGlyph * glyphs, nuint glyphCount);
 	}
 
 	[Lion]
@@ -22289,15 +22307,19 @@ namespace XamCore.AppKit {
 	}
 
 	partial interface NSDrawer {
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using NSSplitViewController")]		
 		[Notification, Field ("NSDrawerWillOpenNotification")]
 		NSString WillOpenNotification { get; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using NSSplitViewController")]		
 		[Notification, Field ("NSDrawerDidOpenNotification")]
 		NSString DidOpenNotification { get; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using NSSplitViewController")]		
 		[Notification, Field ("NSDrawerWillCloseNotification")]
 		NSString WillCloseNotification { get; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using NSSplitViewController")]		
 		[Notification, Field ("NSDrawerDidCloseNotification")]
 		NSString DidCloseNotification { get; }
 	}
@@ -24726,7 +24748,7 @@ namespace XamCore.AppKit {
 	interface NSFilePromiseReceiver : NSPasteboardReading
 	{
 		[Static]
-		[Export ("readableDraggedTypes")]
+		[Export ("readableDraggedTypes", ArgumentSemantic.Copy)]
 		string[] ReadableDraggedTypes { get; }
 
 		[Export ("fileTypes", ArgumentSemantic.Copy)]

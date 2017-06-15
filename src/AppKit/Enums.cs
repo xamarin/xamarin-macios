@@ -2112,6 +2112,7 @@ namespace XamCore.AppKit {
 	
 	// These constants specify the possible states of a drawer.
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using NSSplitViewController")]		
 	public enum NSDrawerState : nuint_compat_int {
 		Closed = 0,
 		Opening = 1,
