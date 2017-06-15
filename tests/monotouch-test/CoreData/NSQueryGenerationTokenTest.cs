@@ -7,6 +7,7 @@ using MonoTouch.CoreData;
 using MonoTouch.Foundation;
 #endif
 using NUnit.Framework;
+using Xamarin.Tests;
 
 namespace MonoTouchFixtures.CoreData
 {
@@ -17,10 +18,12 @@ namespace MonoTouchFixtures.CoreData
 		[Test]
 		public void EncodeWithCoderTest ()
 		{
-			using (var data = new NSMutableData ())
-			using (var archiver = new NSKeyedArchiver (data))
-			using (var coder = new NSCoder ()){
-				NSQueryGenerationToken.CurrentToken.EncodeTo (archiver);
+			if (!PlatformInfo.Host.IsArch32 ) {
+				using (var data = new NSMutableData ())
+				using (var archiver = new NSKeyedArchiver (data))
+				using (var coder = new NSCoder ()) {
+					NSQueryGenerationToken.CurrentToken.EncodeTo (archiver);
+				}
 			}
 		}
 	}
