@@ -28,8 +28,7 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
-	public enum ARTrackingState : nint
-	{
+	public enum ARTrackingState : nint {
 		NotAvailable,
 		Limited,
 		Normal,
@@ -38,8 +37,7 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
-	public enum ARTrackingStateReason : nint
-	{
+	public enum ARTrackingStateReason : nint {
 		None,
 		ExcessiveMotion,
 		InsufficientFeatures,
@@ -49,8 +47,7 @@ namespace XamCore.ARKit {
 	[NoWatch, NoTV, NoMac]
 	[ErrorDomain ("ARErrorDomain")]
 	[Native]
-	public enum ARErrorCode : nint
-	{
+	public enum ARErrorCode : nint {
 		UnsupportedConfiguration = 100,
 		SensorUnavailable = 101,
 		SensorFailed = 102,
@@ -60,8 +57,7 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
-	public enum ARHitTestResultType : nuint
-	{
+	public enum ARHitTestResultType : nuint {
 		FeaturePoint = 1 << 0,
 		EstimatedHorizontalPlane = 1 << 1,
 		ExistingPlane = 1 << 3,
@@ -71,16 +67,14 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
-	public enum ARPlaneAnchorAlignment : nint
-	{
+	public enum ARPlaneAnchorAlignment : nint {
 		Horizontal,
 	}
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
-	public enum ARSessionRunOptions : nuint
-	{
+	public enum ARSessionRunOptions : nuint {
 		ResetTracking = 1 << 0,
 		RemoveExistingAnchors = 1 << 1,
 	}
@@ -88,8 +82,7 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
-	public enum ARWorldAlignment : nint
-	{
+	public enum ARWorldAlignment : nint {
 		Gravity,
 		GravityAndHeading,
 		Camera,
@@ -98,18 +91,17 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
-	public enum ARPlaneDetection : nuint
-	{
+	public enum ARPlaneDetection : nuint {
 		None = 0,
 		Horizontal = 1 << 0,
 	}
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface ARAnchor : NSCopying
-	{
+	interface ARAnchor : NSCopying {
+
 		[NullAllowed, Export ("identifier")]
 		NSUuid Identifier { get; }
 
@@ -126,10 +118,10 @@ namespace XamCore.ARKit {
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface ARCamera : NSCopying
-	{
+	interface ARCamera : NSCopying {
+
 		[Export ("transform")]
 		Matrix4 Transform {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -170,10 +162,10 @@ namespace XamCore.ARKit {
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface ARFrame : NSCopying
-	{
+	interface ARFrame : NSCopying {
+
 		[Export ("timestamp")]
 		double Timestamp { get; }
 
@@ -201,10 +193,10 @@ namespace XamCore.ARKit {
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface ARHitTestResult
-	{
+	interface ARHitTestResult {
+
 		[Export ("type")]
 		ARHitTestResultType Type { get; }
 
@@ -229,19 +221,20 @@ namespace XamCore.ARKit {
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface ARLightEstimate : NSCopying
-	{
+	interface ARLightEstimate : NSCopying {
+
 		[Export ("ambientIntensity")]
 		nfloat AmbientIntensity { get; }
 	}
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
-	[BaseType (typeof(ARAnchor))]
-	interface ARPlaneAnchor
-	{
+	[BaseType (typeof (ARAnchor))]
+	[DisableDefaultCtor]
+	interface ARPlaneAnchor {
+
 		// [Export ("initWithTransform:")] marked as NS_UNAVAILABLE
 
 		[Export ("alignment")]
@@ -256,22 +249,22 @@ namespace XamCore.ARKit {
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface ARPointCloud : NSCopying
-	{
+	interface ARPointCloud : NSCopying {
+
 		[Export ("count")]
 		nuint Count { get; }
 
-		[Export ("points")]
-		IntPtr Points { get; }
+		[Internal, Export ("points")]
+		IntPtr _GetPoints ();
 	}
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
-	[BaseType (typeof(SCNView))]
-	interface ARSCNView
-	{
+	[BaseType (typeof (SCNView))]
+	interface ARSCNView {
+
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		IARSCNViewDelegate Delegate { get; set; }
 
@@ -301,9 +294,9 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
-	interface ARSCNViewDelegate : SCNSceneRendererDelegate, ARSessionObserver
-	{
+	[BaseType (typeof (NSObject))]
+	interface ARSCNViewDelegate : SCNSceneRendererDelegate, ARSessionObserver {
+
 		[Export ("renderer:nodeForAnchor:")]
 		[return: NullAllowed]
 		SCNNode GetNode (ISCNSceneRenderer renderer, ARAnchor anchor);
@@ -323,9 +316,9 @@ namespace XamCore.ARKit {
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
-	[BaseType (typeof(SKView))]
-	interface ARSKView
-	{
+	[BaseType (typeof (SKView))]
+	interface ARSKView {
+
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		IARSKViewDelegate Delegate { get; set; }
 
@@ -349,9 +342,9 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
-	interface ARSKViewDelegate : SKViewDelegate, ARSessionObserver
-	{
+	[BaseType (typeof (NSObject))]
+	interface ARSKViewDelegate : SKViewDelegate, ARSessionObserver {
+
 		[Export ("view:nodeForAnchor:")]
 		[return: NullAllowed]
 		SKNode GetNode (ARSKView view, ARAnchor anchor);
@@ -371,9 +364,9 @@ namespace XamCore.ARKit {
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
-	[BaseType (typeof(NSObject))]
-	interface ARSession
-	{
+	[BaseType (typeof (NSObject))]
+	interface ARSession {
+
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		IARSessionDelegate Delegate { get; set; }
 
@@ -404,10 +397,10 @@ namespace XamCore.ARKit {
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
-	[Protocol]
-	[BaseType (typeof(NSObject))]
-	interface ARSessionObserver
-	{
+	[Protocol, Model]
+	[BaseType (typeof (NSObject))]
+	interface ARSessionObserver {
+
 		[Export ("session:didFailWithError:")]
 		void DidFail (ARSession session, NSError error);
 
@@ -426,9 +419,9 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
-	interface ARSessionDelegate : ARSessionObserver
-	{
+	[BaseType (typeof (NSObject))]
+	interface ARSessionDelegate : ARSessionObserver {
+
 		[Export ("session:didUpdateFrame:")]
 		void DidUpdateFrame (ARSession session, ARFrame frame);
 
@@ -444,9 +437,9 @@ namespace XamCore.ARKit {
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
-	[BaseType (typeof(NSObject))]
-	interface ARSessionConfiguration : NSCopying
-	{
+	[BaseType (typeof (NSObject))]
+	interface ARSessionConfiguration : NSCopying {
+
 		[Static]
 		[Export ("isSupported")]
 		bool IsSupported { get; }
@@ -460,9 +453,9 @@ namespace XamCore.ARKit {
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
-	[BaseType (typeof(ARSessionConfiguration))]
-	interface ARWorldTrackingSessionConfiguration
-	{
+	[BaseType (typeof (ARSessionConfiguration))]
+	interface ARWorldTrackingSessionConfiguration {
+
 		[Export ("planeDetection", ArgumentSemantic.Assign)]
 		ARPlaneDetection PlaneDetection { get; set; }
 	}
@@ -470,10 +463,12 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[Static]
-	interface ARSCNDebugOptions
-	{
+	interface ARSCNDebugOptions {
+
 		[Internal]
 		[Field ("ARSCNDebugOptionShowWorldOrigin")]
+		// FIXME: Could be using [BindAs (typeof (SCNDebugOptions))]: https://bugzilla.xamarin.com/show_bug.cgi?id=57537
+		// FIXME: Should be nuint: https://bugzilla.xamarin.com/show_bug.cgi?id=57535
 		int _ARSCNDebugOptionShowWorldOrigin { get; }
 
 		[Static]
@@ -482,6 +477,8 @@ namespace XamCore.ARKit {
 
 		[Internal]
 		[Field ("ARSCNDebugOptionShowFeaturePoints")]
+		// FIXME: Could be using [BindAs (typeof (SCNDebugOptions))]: https://bugzilla.xamarin.com/show_bug.cgi?id=57537
+		// FIXME: Should be nuint: https://bugzilla.xamarin.com/show_bug.cgi?id=57535
 		int _ARSCNDebugOptionShowFeaturePoints { get; }
 
 		[Static]

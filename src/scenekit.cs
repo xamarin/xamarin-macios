@@ -2331,22 +2331,22 @@ namespace XamCore.SceneKit {
 	interface SCNSceneRendererDelegate {
 
 		[Export ("renderer:willRenderScene:atTime:")]
-		void WillRenderScene (ISCNSceneRenderer renderer, SCNScene scene, double timeInSeconds);
+		void WillRenderScene ([Protocolize]SCNSceneRenderer renderer, SCNScene scene, double timeInSeconds);
 
 		[Export ("renderer:didRenderScene:atTime:")]
-		void DidRenderScene (ISCNSceneRenderer renderer, SCNScene scene, double timeInSeconds);
+		void DidRenderScene ([Protocolize]SCNSceneRenderer renderer, SCNScene scene, double timeInSeconds);
 
 		[Mac (10,10)]
 		[Export ("renderer:updateAtTime:")]
-		void Update (ISCNSceneRenderer renderer, double timeInSeconds);
+		void Update ([Protocolize]SCNSceneRenderer renderer, double timeInSeconds);
 
 		[Mac (10,10)]
 		[Export ("renderer:didApplyAnimationsAtTime:")]
-		void DidApplyAnimations (ISCNSceneRenderer renderer, double timeInSeconds);
+		void DidApplyAnimations ([Protocolize]SCNSceneRenderer renderer, double timeInSeconds);
 
 		[Mac (10,10)]
 		[Export ("renderer:didSimulatePhysicsAtTime:")]
-		void DidSimulatePhysics (ISCNSceneRenderer renderer, double timeInSeconds);
+		void DidSimulatePhysics ([Protocolize]SCNSceneRenderer renderer, double timeInSeconds);
 	}	
 
 	[Watch (3,0)]
