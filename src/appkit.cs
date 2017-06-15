@@ -6185,13 +6185,12 @@ namespace XamCore.AppKit {
 		[Mac (10,13)]
 		[Internal]
 		[Export ("getBoundingRects:forCGGlyphs:count:")]
-		unsafe void _GetBoundingRects (NSRectArray* bounds, CGGlyph * glyphs, nuint glyphCount);
+		unsafe void _GetBoundingRects (IntPtr bounds, IntPtr glyphs, nuint glyphCount);
 
-		// -(void)getAdvancements:(NSSizeArray _Nonnull)advancements forCGGlyphs:(const CGGlyph * _Nonnull)glyphs count:(NSUInteger)glyphCount __attribute__((availability(macos, introduced=10.13)));
 		[Mac (10,13)]
 		[Internal]
 		[Export ("getAdvancements:forCGGlyphs:count:")]
-		unsafe void _GetAdvancements (NSSizeArray* advancements, CGGlyph * glyphs, nuint glyphCount);
+		unsafe void _GetAdvancements (IntPtr advancements, IntPtr glyphs, nuint glyphCount);
 	}
 
 	[Lion]
@@ -6217,7 +6216,7 @@ namespace XamCore.AppKit {
 		NSFontCollection FromDescriptors (NSFontDescriptor [] queryDescriptors);
 
 		[Static]
-		[Export ("fontCollectionWithAllAvailableDescriptors")]
+		[Export ("fontCollectionWithAllAvailableDescriptors", ArgumentSemantic.Copy)]
 		NSFontCollection GetAllAvailableFonts ();
 
 		[Static]
@@ -6237,7 +6236,7 @@ namespace XamCore.AppKit {
 		bool RenameFontCollection (string fromName, NSFontCollectionVisibility visibility, string toName, out NSError error);
 
 		[Static]
-		[Export ("allFontCollectionNames")]
+		[Export ("allFontCollectionNames", ArgumentSemantic.Copy)]
 		string [] AllFontCollectionNames { get; }
 
 		[Static]
@@ -6336,7 +6335,7 @@ namespace XamCore.AppKit {
 
 		[Mac(10,10)]
 		[Static]
-		[Export ("fontCollectionWithAllAvailableDescriptors")]
+		[Export ("fontCollectionWithAllAvailableDescriptors", ArgumentSemantic.Copy)]
 		NSMutableFontCollection GetAllAvailableFonts ();
 
 		[Mac(10,10)]
@@ -6413,6 +6412,10 @@ namespace XamCore.AppKit {
 
 		[Export ("fontDescriptorWithFamily:")]
 		NSFontDescriptor FontDescriptorWithFamily (string newFamily);
+
+		[Mac (10, 13)]
+		[Export ("requiresFontAssetRequest")]
+		bool RequiresFontAssetRequest { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -7409,7 +7412,7 @@ namespace XamCore.AppKit {
 	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type[] {typeof (NSGestureRecognizerDelegate)})]
 	interface NSGestureRecognizer : NSCoding {
 		[Export ("initWithTarget:action:")]
-		IntPtr Constructor (NSObject target, Selector action);
+		IntPtr Constructor ([NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Export ("target", ArgumentSemantic.Weak), NullAllowed]
 		NSObject Target { get; set; }
@@ -8843,11 +8846,11 @@ namespace XamCore.AppKit {
 		string [] ImagePasteboardTypes { get; }
 		
 		[Static]
-		[Export ("imageTypes")]
+		[Export ("imageTypes", ArgumentSemantic.Copy)]
 		string [] ImageTypes { get; }
 
 		[Static]
-		[Export ("imageUnfilteredTypes")]
+		[Export ("imageUnfilteredTypes", ArgumentSemantic.Copy)]
 		string [] ImageUnfilteredTypes { get; }
 		
 		[Static]
@@ -9639,11 +9642,11 @@ namespace XamCore.AppKit {
 		string [] ImagePasteboardTypes { get; }
 
 		[Static]
-		[Export ("imageUnfilteredTypes")]
+		[Export ("imageUnfilteredTypes", ArgumentSemantic.Copy)]
 		string []ImageUnfilteredTypes { get; }
 
 		[Static]
-		[Export ("imageTypes")]
+		[Export ("imageTypes", ArgumentSemantic.Copy)]
 		string [] ImageTypes { get; }
 
 		[Static]
@@ -10094,6 +10097,22 @@ namespace XamCore.AppKit {
 
 		[Export ("constraintLessThanOrEqualToAnchor:constant:")]
 		NSLayoutConstraint ConstraintLessThanOrEqualToAnchor (NSLayoutAnchor<AnchorType> anchor, nfloat constant);
+
+		[Mac (10, 12)]
+		[Export ("name")]
+		string Name { get; }
+
+		[Mac (10, 12)]
+		[NullAllowed, Export ("item", ArgumentSemantic.Weak)]
+		NSObject Item { get; }
+
+		[Mac (10, 12)]
+		[Export ("hasAmbiguousLayout")]
+		bool HasAmbiguousLayout { get; }
+
+		[Mac (10, 12)]
+		[Export ("constraintsAffectingLayout")]
+		NSLayoutConstraint[] ConstraintsAffectingLayout { get; }
 	}
 
 	[Mac (10,11)]
@@ -10101,6 +10120,9 @@ namespace XamCore.AppKit {
 	[DisableDefaultCtor] // Handle is nil
 	interface NSLayoutXAxisAnchor
 	{
+		[Mac (10,12)]
+		[Export ("anchorWithOffsetToAnchor:")]
+		NSLayoutDimension AnchorWithOffset (NSLayoutXAxisAnchor otherAnchor);
 	}
 
 	[Mac (10,11)]
@@ -10108,6 +10130,9 @@ namespace XamCore.AppKit {
 	[DisableDefaultCtor] // Handle is nil
 	interface NSLayoutYAxisAnchor
 	{
+		[Mac (10,12)]
+		[Export ("anchorWithOffsetToAnchor:")]
+		NSLayoutDimension AnchorWithOffset (NSLayoutYAxisAnchor otherAnchor);
 	}
 
 	[Mac (10,11)]
@@ -22272,6 +22297,20 @@ namespace XamCore.AppKit {
 
 		[Export ("characterCollection")]
 		NSCharacterCollection CharacterCollection { get; }
+
+		[Mac (10,13)]
+		[Static]
+		[Export ("glyphInfoWithCGGlyph:forFont:baseString:")]
+		[return: NullAllowed]
+		NSGlyphInfo GlyphInfoWithCGGlyph (ushort glyph, NSFont font, string @string);
+
+		[Mac (10, 13)]
+		[Export ("glyphID")]
+		ushort GlyphID { get; }
+
+		[Mac (10, 13)]
+		[Export ("baseString")]
+		string BaseString { get; }
 	}
 
 	partial interface NSTableViewDelegate {
@@ -25015,6 +25054,36 @@ namespace XamCore.AppKit {
 
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
+
+		[Mac (10,13)]
+		[Static]
+		[Export ("groupItemWithIdentifier:items:allowedCompressionOptions:")]
+		NSGroupTouchBarItem CreateGroupItem (string identifier, NSTouchBarItem[] items, NSUserInterfaceCompressionOptions allowedCompressionOptions);
+
+		[Mac (10,13)]
+		[Static]
+		[Export ("alertStyleGroupItemWithIdentifier:")]
+		NSGroupTouchBarItem CreateAlertStyleGroupItem (string identifier);
+
+		[Mac (10, 13)]
+		[Export ("groupUserInterfaceLayoutDirection", ArgumentSemantic.Assign)]
+		NSUserInterfaceLayoutDirection GroupUserInterfaceLayoutDirection { get; set; }
+
+		[Mac (10, 13)]
+		[Export ("prefersEqualWidths")]
+		bool PrefersEqualWidths { get; set; }
+
+		[Mac (10, 13)]
+		[Export ("preferredItemWidth")]
+		nfloat PreferredItemWidth { get; set; }
+
+		[Mac (10, 13)]
+		[Export ("effectiveCompressionOptions")]
+		NSUserInterfaceCompressionOptions EffectiveCompressionOptions { get; }
+
+		[Mac (10, 13)]
+		[Export ("prioritizedCompressionOptions", ArgumentSemantic.Copy)]
+		NSUserInterfaceCompressionOptions[] PrioritizedCompressionOptions { get; set; }
 	}
 
 	[Mac (10,12,2)]
@@ -25574,5 +25643,81 @@ namespace XamCore.AppKit {
 
 		[Export ("collectionView:cancelPrefetchingForItemsAtIndexPaths:")]
 		void CancelPrefetchingForItems (NSCollectionView collectionView, NSIndexPath[] indexPaths);
+	}
+
+	delegate bool DownloadFontAssetsRequestCompletionHandler (NSError error);
+
+	[Mac (10,13)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSFontAssetRequest : INSProgressReporting
+	{
+		[Export ("initWithFontDescriptors:options:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSFontDescriptor[] fontDescriptors, NSFontAssetRequestOptions options);
+
+		[Export ("downloadedFontDescriptors", ArgumentSemantic.Copy)]
+		NSFontDescriptor[] DownloadedFontDescriptors { get; }
+
+		[Export ("progress", ArgumentSemantic.Strong)]
+		NSProgress Progress { get; }
+
+		[Export ("downloadFontAssetsWithCompletionHandler:")]
+		void DownloadFontAssets (DownloadFontAssetsRequestCompletionHandler completionHandler);
+	}
+
+	[Category]
+	[BaseType (typeof(NSObject))]
+	interface NSObject_NSFontPanelValidationAdditions
+	{
+		[Export ("validModesForFontPanel:")]
+		NSFontPanelModeMask ValidModesForFontPanel (NSFontPanel fontPanel);
+	}
+
+	[BaseType (typeof(NSObject))]
+	interface NSUserInterfaceCompressionOptions : NSCopying, NSCoding
+	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
+		[Export ("initWithCompressionOptions:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSSet<NSUserInterfaceCompressionOptions> options);
+
+		[Export ("containsOptions:")]
+		bool ContainsOptions (NSUserInterfaceCompressionOptions options);
+
+		[Export ("intersectsOptions:")]
+		bool IntersectsOptions (NSUserInterfaceCompressionOptions options);
+
+		[Export ("empty")]
+		bool Empty { [Bind ("isEmpty")] get; }
+
+		[Export ("optionsByAddingOptions:")]
+		NSUserInterfaceCompressionOptions CreateOptionsByAdding (NSUserInterfaceCompressionOptions options);
+
+		[Export ("optionsByRemovingOptions:")]
+		NSUserInterfaceCompressionOptions CreateOptionsByRemoving (NSUserInterfaceCompressionOptions options);
+
+		[Static]
+		[Export ("hideImagesOption", ArgumentSemantic.Copy)]
+		NSUserInterfaceCompressionOptions HideImagesOption { get; }
+
+		[Static]
+		[Export ("hideTextOption", ArgumentSemantic.Copy)]
+		NSUserInterfaceCompressionOptions HideTextOption { get; }
+
+		[Static]
+		[Export ("reduceMetricsOption", ArgumentSemantic.Copy)]
+		NSUserInterfaceCompressionOptions ReduceMetricsOption { get; }
+
+		[Static]
+		[Export ("breakEqualWidthsOption", ArgumentSemantic.Copy)]
+		NSUserInterfaceCompressionOptions BreakEqualWidthsOption { get; }
+
+		[Static]
+		[Export ("standardOptions", ArgumentSemantic.Copy)]
+		NSUserInterfaceCompressionOptions StandardOptions { get; }
 	}
 }

@@ -1558,7 +1558,12 @@ namespace XamCore.AppKit {
 		MonoSpaceTrait = (1 << 10),
 		VerticalTrait = (1 << 11), 
 		UIOptimizedTrait = (1 << 12),
-		
+
+		[Mac (10,13)]
+		TraitTightLeading = 1 << 15,
+		[Mac (10,13)]
+		TraitLooseLeading = 1 << 16,
+
 		UnknownClass = 0 << 28,
 		OldStyleSerifsClass = 1 << 28,
 		TransitionalSerifsClass = 2 << 28,
@@ -2794,5 +2799,29 @@ namespace XamCore.AppKit {
 		ComponentBased,
 		Pattern,
 		Catalog
+	}
+
+	[Mac (10,13)]
+	[Native]
+	public enum NSFontAssetRequestOptions : nuint
+	{
+		UsesStandardUI = 1 << 0
+	}
+
+	[Mac (10,13)]
+	[Native]
+	public enum NSFontPanelModeMask : nuint
+	{
+		Face = 1 << 0,
+		Size = 1 << 1,
+		Collection = 1 << 2,
+		UnderlineEffect = 1 << 8,
+		StrikethroughEffect = 1 << 9,
+		TextColorEffect = 1 << 10,
+		DocumentColorEffect = 1 << 11,
+		ShadowEffect = 1 << 12,
+		AllEffects = 1048320,
+		StandardModes = 65535,
+		AllModes = (uint)4294967295L
 	}
 }
