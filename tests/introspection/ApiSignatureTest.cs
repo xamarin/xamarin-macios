@@ -181,18 +181,7 @@ namespace Introspection {
 
 		protected virtual bool Skip (Type type, MethodBase method, string selector)
 		{
-			if (method is MethodInfo mf) {
-				if (IsNullableType (mf.ReturnType))
-					return true;
-
-				foreach (var param in mf.GetParameters ()) {
-					if (IsNullableType (param.ParameterType))
-						return true;
-				}
-			}
 			return SkipDueToAttribute (method);
-
-			bool IsNullableType (Type t) => Nullable.GetUnderlyingType (t) != null;
 		}
 
 		public int CurrentParameter { get; private set; }
@@ -656,6 +645,12 @@ namespace Introspection {
 		{
 			switch (encodedType) {
 			case '@':
+				// We use BindAsAttribute to wrap NSNumber/NSValue into more accurate Nullable<T> types
+				// So we check if T of nullable is supported by bindAs
+				var nullableType = Nullable.GetUnderlyingType (type);
+				if (nullableType != null)
+					return BindAsSupportedTypes.Contains (nullableType.Name);
+
 				return (type.IsInterface ||								// protocol
 					type.IsArray || 									// NSArray
 					(type.Name == "NSArray") || 						// NSArray
@@ -989,5 +984,13 @@ namespace Introspection {
 			}
 			return false;
 		}
+
+		protected HashSet<string> BindAsSupportedTypes = new HashSet<string> {
+			"CGAffineTransform", "Range", "CGVector", "SCNMatrix4", "CLLocationCoordinate2D",
+			"SCNVector3", "Vector", "CGPoint", "CGRect", "CGSize", "UIEdgeInsets",
+			"UIOffset", "MKCoordinateSpan", "CMTimeRange", "CMTime", "CMTimeMapping",
+			"CATransform3D", "Boolean", "Byte", "Double", "Float", "Int16", "Int32",
+			"Int64", "SByte", "UInt16", "UInt32", "UInt64", "nfloat", "nint", "nuint",
+		};
 	}
 }
