@@ -7645,7 +7645,7 @@ namespace XamCore.AppKit {
 		nint IndexOf (nint itemTag);
 
 		[Export ("indexOfItemWithRepresentedObject:")]
-		nint IndexOfItem (NSObject obj);
+		nint IndexOfItem ([NullAllowed] NSObject obj);
 
 		[Export ("indexOfItemWithSubmenu:")]
 		nint IndexOfItem ([NullAllowed] NSMenu submenu);
@@ -7801,6 +7801,7 @@ namespace XamCore.AppKit {
 		string UserKeyEquivalent { get; }
 
 		[Export ("setTitleWithMnemonic:")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use Title instead")]
 		void SetTitleWithMnemonic (string stringWithAmpersand);
 
 		[Export ("isHighlighted")]
@@ -7877,6 +7878,10 @@ namespace XamCore.AppKit {
 
 		[Export ("toolTip")]
 		string ToolTip { get; set; }
+
+		[Mac (10, 13)]
+		[Export ("allowsKeyEquivalentWhenHidden")]
+		bool AllowsKeyEquivalentWhenHidden { get; set; }
 	}
 
 	[BaseType (typeof (NSButtonCell))]
@@ -8671,6 +8676,7 @@ namespace XamCore.AppKit {
 		bool AcceptDrop (NSOutlineView outlineView, [Protocolize (4)] NSDraggingInfo info, [NullAllowed] NSObject item, nint index);
 	
 		[Export ("outlineView:namesOfPromisedFilesDroppedAtDestination:forDraggedItems:")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use NSFilePromiseReceiver objects instead")]
 		string [] FilesDropped (NSOutlineView outlineView, NSUrl dropDestination, NSArray items);
 	}
 
@@ -10017,6 +10023,34 @@ namespace XamCore.AppKit {
 		[Mac (10,10)]
 		[Export ("levelIndicatorStyle")]
 		NSLevelIndicatorStyle LevelIndicatorStyle { get; set; }
+
+		[Mac (10, 13)]
+		[Export ("fillColor", ArgumentSemantic.Copy)]
+		NSColor FillColor { get; set; }
+
+		[Mac (10, 13)]
+		[Export ("warningFillColor", ArgumentSemantic.Copy)]
+		NSColor WarningFillColor { get; set; }
+
+		[Mac (10, 13)]
+		[Export ("criticalFillColor", ArgumentSemantic.Copy)]
+		NSColor CriticalFillColor { get; set; }
+
+		[Mac (10, 13)]
+		[Export ("drawsTieredCapacityLevels")]
+		bool DrawsTieredCapacityLevels { get; set; }
+
+		[Mac (10, 13)]
+		[Export ("placeholderVisibility", ArgumentSemantic.Assign)]
+		NSLevelIndicatorPlaceholderVisibility PlaceholderVisibility { get; set; }
+
+		[Mac (10, 13)]
+		[NullAllowed, Export ("ratingImage", ArgumentSemantic.Strong)]
+		NSImage RatingImage { get; set; }
+
+		[Mac (10, 13)]
+		[NullAllowed, Export ("ratingPlaceholderImage", ArgumentSemantic.Strong)]
+		NSImage RatingPlaceholderImage { get; set; }
 	}
 
 	[BaseType (typeof (NSActionCell))]
@@ -10853,7 +10887,7 @@ namespace XamCore.AppKit {
 	[BaseType (typeof (NSObject))]
 	interface NSParagraphStyle : NSSecureCoding, NSMutableCopying {
 		[Static]
-		[Export ("defaultParagraphStyle")]
+		[Export ("defaultParagraphStyle", ArgumentSemantic.Copy)]
 		NSParagraphStyle DefaultParagraphStyle { get; [NotImplemented] set; }
 
 		[Static]
@@ -11197,19 +11231,44 @@ namespace XamCore.AppKit {
 		// Pasteboard names: for NSPasteboard.FromName()
 
 		[Field ("NSGeneralPboard")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use NSPasteboardNameGeneral instead")]
 		NSString NSGeneralPasteboardName { get; }
 
 		[Field ("NSFontPboard")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use NSPasteboardNameFont instead")]
 		NSString NSFontPasteboardName { get; }
 
 		[Field ("NSRulerPboard")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use NSPasteboardNameRuler instead")]
 		NSString NSRulerPasteboardName { get; }
 
 		[Field ("NSFindPboard")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use NSPasteboardNameFind instead")]
 		NSString NSFindPasteboardName { get; }
 
 		[Field ("NSDragPboard")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use NSPasteboardNameDrag instead")]
 		NSString NSDragPasteboardName { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSPasteboardNameGeneral")]
+		NSString NSPasteboardNameGeneral { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSPasteboardNameFont")]
+		NSString NSPasteboardNameFont { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSPasteboardNameRuler")]
+		NSString NSPasteboardNameRuler { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSPasteboardNameFind")]
+		NSString NSPasteboardNameFind { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSPasteboardNameDrag")]
+		NSString NSPasteboardNameDrag { get; }
 
 		[Mac (10,6)]
 		[Field ("NSPasteboardTypeString")]
@@ -19877,32 +19936,32 @@ namespace XamCore.AppKit {
 		void SetAnchorAttribute (NSLayoutAttribute layoutAttribute, NSLayoutConstraintOrientation forOrientation);
 
 		[Lion, Export ("visualizeConstraints:")]
-		void VisualizeConstraints (NSLayoutConstraint [] constraints);
+		void VisualizeConstraints ([NullAllowed] NSLayoutConstraint [] constraints);
 
-        [Lion, Export ("convertRectToScreen:")]
-        CGRect ConvertRectToScreen (CGRect aRect);
+		[Lion, Export ("convertRectToScreen:")]
+		CGRect ConvertRectToScreen (CGRect aRect);
 
-        [Lion, Export ("convertRectFromScreen:")]
-        CGRect ConvertRectFromScreen (CGRect aRect);
+		[Lion, Export ("convertRectFromScreen:")]
+		CGRect ConvertRectFromScreen (CGRect aRect);
 
-        [Lion, Export ("convertRectToBacking:")]
-        CGRect ConvertRectToBacking (CGRect aRect);
+		[Lion, Export ("convertRectToBacking:")]
+		CGRect ConvertRectToBacking (CGRect aRect);
 
-        [Lion, Export ("convertRectFromBacking:")]
-        CGRect ConvertRectFromBacking (CGRect aRect);
+		[Lion, Export ("convertRectFromBacking:")]
+		CGRect ConvertRectFromBacking (CGRect aRect);
 
-        [Lion, Export ("backingAlignedRect:options:")]
-        CGRect BackingAlignedRect (CGRect aRect, NSAlignmentOptions options);
+		[Lion, Export ("backingAlignedRect:options:")]
+		CGRect BackingAlignedRect (CGRect aRect, NSAlignmentOptions options);
 
-        [Lion, Export ("backingScaleFactor")]
-        nfloat BackingScaleFactor { get; }
+		[Lion, Export ("backingScaleFactor")]
+		nfloat BackingScaleFactor { get; }
 
-        [Lion, Export ("toggleFullScreen:")]
-        void ToggleFullScreen ([NullAllowed] NSObject sender);
+		[Lion, Export ("toggleFullScreen:")]
+		void ToggleFullScreen ([NullAllowed] NSObject sender);
 
-        //Detected properties
-        [Export ("animationBehavior")]
-        NSWindowAnimationBehavior AnimationBehavior { get; set; }
+		//Detected properties
+		[Export ("animationBehavior")]
+		NSWindowAnimationBehavior AnimationBehavior { get; set; }
 
 #if !XAMARIN_MAC
 		//

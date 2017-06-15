@@ -138,7 +138,11 @@ namespace XamCore.AppKit {
 
 	[Native]
 	public enum NSBackingStore : nuint_compat_int {
-		Retained, Nonretained, Buffered
+		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_13, Message = "Use Buffered instead")]
+		Retained, 
+		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_13, Message = "Use Buffered instead")]
+		Nonretained, 
+		Buffered
 	}
 
 	[Native]
@@ -1444,6 +1448,7 @@ namespace XamCore.AppKit {
 	[Flags]
 #if !XAMCORE_4_0
 	[Native]
+	[Availability (Deprecated = Platform.Mac_10_11, Message = "Use NSGlyphProperty instead")]
 	public enum NSGlyphStorageOptions : nuint_compat_int {
 #else
 	public enum NSGlyphStorageOptions : int
@@ -2154,6 +2159,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
+	[Availability (Deprecated = Platform.Mac_10_11, Message = "Use NSGlyphProperty instead")]
 	public enum NSGlyphInscription : nuint_compat_int {
 		Base, Below, Above, Overstrike, OverBelow
 	}
@@ -2823,5 +2829,14 @@ namespace XamCore.AppKit {
 		AllEffects = 1048320,
 		StandardModes = 65535,
 		AllModes = (uint)4294967295L
+	}
+
+	[Mac (10,13)]
+	[Native]
+	public enum NSLevelIndicatorPlaceholderVisibility : nint
+	{
+		Automatic = 0,
+		Always = 1,
+		WhileEditing = 2
 	}
 }
