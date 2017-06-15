@@ -34,6 +34,24 @@ namespace Xamarin
 	public class MTouch
 	{
 		[Test]
+		[TestCase (NormalizationForm.FormC)]
+		[TestCase (NormalizationForm.FormD)]
+		[TestCase (NormalizationForm.FormKC)]
+		[TestCase (NormalizationForm.FormKD)]
+		public void StringNormalization (NormalizationForm form)
+		{
+			var str = "Tūhono".Normalize (form);
+
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp (appName: str);
+				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.Verbosity = 9;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+			}
+		}
+
+		[Test]
 		public void FatAppFiles ()
 		{
 			AssertDeviceAvailable ();
