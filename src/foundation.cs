@@ -14229,7 +14229,7 @@ namespace XamCore.Foundation
 
 	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
-	interface NSFileProviderMessageInterface
+	interface NSFileProviderMessageInterface : NSSecureCoding
 	{
 		[Export ("name")]
         	string Name { get; }
