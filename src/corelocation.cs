@@ -16,6 +16,9 @@ using XamCore.CoreLocation;
 #if !MONOMAC
 using XamCore.UIKit;
 #endif
+#if XAMCORE_2_0 && !TVOS
+using XamCore.Contacts;
+#endif
 using System;
 
 namespace XamCore.CoreLocation {
@@ -387,8 +390,8 @@ namespace XamCore.CoreLocation {
 		[Export ("requestLocation")]
 		void RequestLocation ();
 
-		[NoWatch][NoTV]
-		[iOS (9,0)]
+		[NoTV]
+		[iOS (9,0), Watch (4,0)]
 		[Export ("allowsBackgroundLocationUpdates")]
 		bool AllowsBackgroundLocationUpdates { get; set; }
 #endif
@@ -539,6 +542,9 @@ namespace XamCore.CoreLocation {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // will crash, see CoreLocation.cs for compatibility stubs
 	interface CLPlacemark : NSSecureCoding, NSCopying {
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CLPlacemark' properties to access data.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CLPlacemark' properties to access data.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CLPlacemark' properties to access data.")]
 		[Export("addressDictionary", ArgumentSemantic.Copy)]
 		NSDictionary AddressDictionary { get; }
 
@@ -593,6 +599,12 @@ namespace XamCore.CoreLocation {
 		[Export ("timeZone")]
 		[iOS (9,0), Mac(10,11)]
 		NSTimeZone TimeZone { get; }
+#if XAMCORE_2_0 && !TVOS
+		// From CLPlacemark (ContactsAdditions) category.
+		[Watch (4,0), NoTV, Mac (10,13), iOS (11,0)]
+		[NullAllowed, Export ("postalAddress")]
+		CNPostalAddress PostalAddress { get; }
+#endif
 	}
 
 	[Mac (10,10)]
@@ -684,6 +696,14 @@ namespace XamCore.CoreLocation {
 		[Async]
 		void ReverseGeocodeLocation (CLLocation location, CLGeocodeCompletionHandler completionHandler);
 
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("reverseGeocodeLocation:preferredLocale:completionHandler:")]
+		[Async]
+		void ReverseGeocodeLocation (CLLocation location, [NullAllowed] NSLocale locale, CLGeocodeCompletionHandler completionHandler);
+
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'GeocodeAddress (string, CLRegion, NSLocale, CLGeocodeCompletionHandler)' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'GeocodeAddress (string, CLRegion, NSLocale, CLGeocodeCompletionHandler)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'GeocodeAddress (string, CLRegion, NSLocale, CLGeocodeCompletionHandler)' instead.")]
 		[Export ("geocodeAddressDictionary:completionHandler:")]
 		[Async]
 		void GeocodeAddress (NSDictionary addressDictionary, CLGeocodeCompletionHandler completionHandler);
@@ -696,9 +716,30 @@ namespace XamCore.CoreLocation {
 		[Async]
 		void GeocodeAddress (string addressString, CLRegion region, CLGeocodeCompletionHandler completionHandler);
 
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Async]
+		[Export ("geocodeAddressString:inRegion:preferredLocale:completionHandler:")]
+		void GeocodeAddress (string addressString, [NullAllowed] CLRegion region, [NullAllowed] NSLocale locale, CLGeocodeCompletionHandler completionHandler);
+
 		[Export ("cancelGeocode")]
 		void CancelGeocode ();
 	}
+
+#if XAMCORE_2_0 && !TVOS
+	[Category]
+	[BaseType (typeof (CLGeocoder))]
+	interface CLGeocoder_ContactsAdditions {
+		[Watch (4,0), NoTV, Mac (10,13), iOS (11,0)]
+		[Export ("geocodePostalAddress:completionHandler:")]
+		// [Async] Generates invalid code: https://bugzilla.xamarin.com/show_bug.cgi?id=57531
+		void GeocodePostalAddress (CNPostalAddress postalAddress, CLGeocodeCompletionHandler completionHandler);
+
+		[Watch (4,0), NoTV, Mac (10,13), iOS (11,0)]
+		[Export ("geocodePostalAddress:preferredLocale:completionHandler:")]
+		// [Async] Generates invalid code: https://bugzilla.xamarin.com/show_bug.cgi?id=57531
+		void GeocodePostalAddress (CNPostalAddress postalAddress, [NullAllowed] NSLocale locale, CLGeocodeCompletionHandler completionHandler);
+	}
+#endif
 
 #if !MONOMAC
 	[NoWatch][NoTV]
