@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 using System.Reflection;
+using Xamarin.Utils;
 
 namespace Xamarin.MMP.Tests
 {
@@ -132,7 +133,7 @@ namespace Xamarin.MMP.Tests
 			} else
 				buildArgs.Append (" build ");
 
-			buildArgs.Append (csprojTarget);
+			buildArgs.Append (StringUtils.Quote (csprojTarget));
 
 			Func <string> getBuildProjectErrorInfo = () => {
 				string csprojText = "\n\n\n\tCSProj: \n" + File.ReadAllText (csprojTarget);

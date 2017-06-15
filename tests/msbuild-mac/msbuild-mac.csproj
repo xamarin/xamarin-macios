@@ -79,6 +79,9 @@
     </Compile>
     <Compile Include="src\RoslynSmokeTests.cs" />
     <Compile Include="src\RuntimeTests.cs" />
+    <Compile Include="..\..\tools\common\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">
