@@ -710,6 +710,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSTimeZone.cs \
 	Foundation/NSUbiquitousKeyValueStore.cs \
 	Foundation/NSUndoManager.cs \
+	Foundation/NSUnit.cs \
 	Foundation/NSUrl.cs \
 	Foundation/NSUrlComponents.cs \
 	Foundation/NSUrlConnection.cs \

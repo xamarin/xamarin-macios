@@ -140,6 +140,9 @@ namespace Introspection {
 				// iOS 10 : test throw because of generic usage
 				case "NSMeasurement`1":
 					return true; // skip
+				// xcode 9
+				case "NSConstraintConflict": // Conformance not in headers
+					return true;
 				}
 				break;
 			// conformance added in Xcode 8 (iOS 10 / macOS 10.12)

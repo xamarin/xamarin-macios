@@ -156,6 +156,7 @@
     </None>
     <None Include="Entitlements.plist" />
     <None Include="app.config" />
+    <None Include="EmptyNib.xib" Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -348,7 +349,6 @@
     <Compile Include="MapKit\LocalSearchTest.cs" />
     <Compile Include="MapKit\LocalSearchRequestTest.cs" />
     <Compile Include="Foundation\CalendarTest.cs" />
-    <Compile Include="EventKit\CalendarItemTest.cs" />
     <Compile Include="EventKit\AlarmTest.cs" />
     <Compile Include="CoreGraphics\ContextTest.cs" />
     <Compile Include="CoreGraphics\DataConsumerTest.cs" />
@@ -727,7 +727,6 @@
     <Content Include="drum01.mp3" />
   </ItemGroup>
   <ItemGroup>
-    <InterfaceDefinition Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="EmptyNib.xib" />
     <InterfaceDefinition Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="LaunchScreen.storyboard" />
   </ItemGroup>
   <ItemGroup>

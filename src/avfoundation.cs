@@ -10370,9 +10370,10 @@ namespace XamCore.AVFoundation {
 		[Export ("disableLooping")]
 		void DisableLooping ();
 
+#if !XAMCORE_4_0 // This API got introduced in Xcode 8.0 binding but is not currently present nor in Xcode 8.3 or Xcode 9.0 needs research
 		[Export ("loopingEnabled")]
 		bool LoopingEnabled { [Bind ("isLoopingEnabled")] get; }
-
+#endif
 		[Export ("loopCount")]
 		nint LoopCount { get; }
 

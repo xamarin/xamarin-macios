@@ -183,6 +183,12 @@ namespace Introspection {
 				case "MPMusicPlayerControllerMutableQueue":
 				case "MPMusicPlayerControllerQueue":
 					return true;
+				// iOS 11.0
+				case "UICollectionViewUpdateItem": // Conformance not in headers
+				case "MKMapItem": // Conformance not in headers
+				case "NSConstraintConflict": // Conformance not in headers
+				case "NSQueryGenerationToken": // Conformance not in headers
+					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
 				case "CLKComplicationTemplateCircularSmallRingImage":
@@ -285,6 +291,10 @@ namespace Introspection {
 				case "MPMusicPlayerControllerMutableQueue":
 				case "MPMusicPlayerControllerQueue":
 					return true;
+				// iOS 11.0
+				case "MKMapItem": // Conformance not in headers
+				case "NSQueryGenerationToken": // Conformance not in headers
+					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
 				case "CLKComplicationTemplateCircularSmallRingImage":
@@ -363,6 +373,10 @@ namespace Introspection {
 				// iOS 10.2
 				case "VSAccountProviderResponse":
 					return true;
+				// iOS 11.0
+				case "UICollectionViewUpdateItem": // Conformance not in headers
+					return true;
+
 #if __WATCHOS__
 				case "CLKComplicationTimelineEntry":
 					return true;

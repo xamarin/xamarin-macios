@@ -74,5 +74,12 @@ namespace XamCore.EventKit {
 		}
 #endif
 	}
+
+	partial class EKAlarm {
+#if !XAMCORE_4_0
+		[Obsolete ("Use the static methods FromDate or FromTimeInterval to create alarms")]
+		public EKAlarm () {}
+#endif
+	}
 }
 #endif // XAMCORE_2_0 || !MONOMAC

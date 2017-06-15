@@ -578,6 +578,8 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (7, 0);
 				case "HKWorkoutEvent":
 					return !TestRuntime.CheckXcodeVersion (8, 0);
+				case "HMLocationEvent":
+					return !TestRuntime.CheckXcodeVersion (9, 0);
 				}
 				break;
 
@@ -633,6 +635,9 @@ namespace Introspection {
 				case "HKBiologicalSexObject":
 				case "HKBloodTypeObject":
 					return !TestRuntime.CheckXcodeVersion (7, 0);
+				case "MPSKernel":
+				case "MPSCnnConvolutionDescriptor":
+					return !TestRuntime.CheckXcodeVersion (9, 0);
 #if __TVOS__
 				case "SKAttribute":
 				case "SKAttributeValue":
@@ -649,6 +654,12 @@ namespace Introspection {
 					return true;
 				break;
 #endif
+			case "mutableCopyWithZone:":
+				switch (declaredType.Name) {
+				case "HMLocationEvent":
+					return !TestRuntime.CheckXcodeVersion (9, 0);
+				}
+				break;
 			}
 
 			return base.CheckResponse (value, actualType, method, ref name);
