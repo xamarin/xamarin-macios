@@ -25915,6 +25915,7 @@ namespace XamCore.AppKit {
 		NSFontPanelModeMask ValidModesForFontPanel (NSFontPanel fontPanel);
 	}
 
+	[Mac (10, 13)]
 	[BaseType (typeof(NSObject))]
 	interface NSUserInterfaceCompressionOptions : NSCopying, NSCoding
 	{
@@ -25964,6 +25965,7 @@ namespace XamCore.AppKit {
 
 	interface INSUserInterfaceCompression {}
 
+	[Mac (10, 13)]
 	[Protocol]
 	interface NSUserInterfaceCompression
 	{
