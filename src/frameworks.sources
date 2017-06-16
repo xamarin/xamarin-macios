@@ -1451,6 +1451,7 @@ SHARED_CORE_SOURCES = \
 	build/common/NativeTypes/Primitives.cs \
 	ObjCRuntime/AlphaAttribute.cs \
 	ObjCRuntime/ArgumentSemantic.cs \
+	ObjCRuntime/BindAsAttribute.cs \
 	ObjCRuntime/Blocks.cs \
 	ObjCRuntime/Class.cs \
 	ObjCRuntime/INativeObject.cs \
