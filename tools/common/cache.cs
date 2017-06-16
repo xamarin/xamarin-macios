@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-
+using Xamarin.Utils;
 using Xamarin.Bundler;
 
 public class Cache {
@@ -77,7 +77,7 @@ public class Cache {
 		}
 
 		var diff = new StringBuilder ();
-		if (Driver.RunCommand ("diff", $"-ur {Driver.Quote (a)} {Driver.Quote (b)}", output: diff, suppressPrintOnErrors: true) != 0) {
+		if (Driver.RunCommand ("diff", $"-ur {StringUtils.Quote (a)} {StringUtils.Quote (b)}", output: diff, suppressPrintOnErrors: true) != 0) {
 			Driver.Log (1, "Directories {0} and {1} are considered different because diff said so:\n{2}", a, b, diff);
 			return false;
 		}
@@ -206,7 +206,7 @@ public class Cache {
 			case "--time":
 				break;
 			default:
-				sb.Append ('\t').Append (Driver.Quote (args [i])).AppendLine (" \\");
+				sb.Append ('\t').Append (StringUtils.Quote (args [i])).AppendLine (" \\");
 				break;
 			}
 		}

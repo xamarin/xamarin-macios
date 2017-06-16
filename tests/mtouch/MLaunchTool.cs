@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text;
-
+using Xamarin.Utils;
 using Xamarin.Tests;
 
 namespace Xamarin
@@ -51,7 +51,7 @@ namespace Xamarin
 			case MLaunchAction.Sim:
 				if (AppPath == null)
 					throw new Exception ("No AppPath specified.");
-				sb.Append (" --launchsim ").Append (MTouch.Quote (AppPath));
+				sb.Append (" --launchsim ").Append (StringUtils.Quote (AppPath));
 				break;
 			default:
 				throw new Exception ("MLaunchAction not specified.");
@@ -60,9 +60,9 @@ namespace Xamarin
 			if (SdkRoot == None) {
 				// do nothing
 			} else if (!string.IsNullOrEmpty (SdkRoot)) {
-				sb.Append (" --sdkroot ").Append (MTouch.Quote (SdkRoot));
+				sb.Append (" --sdkroot ").Append (StringUtils.Quote (SdkRoot));
 			} else {
-				sb.Append (" --sdkroot ").Append (MTouch.Quote (Configuration.xcode_root));
+				sb.Append (" --sdkroot ").Append (StringUtils.Quote (Configuration.xcode_root));
 			}
 
 			sb.Append (" ").Append (GetVerbosity ());
@@ -93,7 +93,7 @@ namespace Xamarin
 
 			if (!string.IsNullOrEmpty (platformName) && !string.IsNullOrEmpty (simType)) {
 				var device = string.Format (":v2:runtime=com.apple.CoreSimulator.SimRuntime.{0}-{1},devicetype=com.apple.CoreSimulator.SimDeviceType.{2}", platformName, Configuration.sdk_version.Replace ('.', '-'), simType);
-				sb.Append (" --device:").Append (MTouch.Quote (device));
+				sb.Append (" --device:").Append (StringUtils.Quote (device));
 			}
 
 			return sb.ToString ();

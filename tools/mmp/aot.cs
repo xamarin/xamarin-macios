@@ -30,6 +30,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Threading.Tasks;
+using Xamarin.Utils;
 
 using Profile = Mono.Tuner.Profile;
 
@@ -180,8 +181,6 @@ namespace Xamarin.Bundler {
 		public ParallelOptions ParallelOptions { get; set; } = new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency };
 		public string XamarinMacPrefix { get; set; } = Driver.GetXamMacPrefix (); // GetXamMacPrefix assumes GetExecutingAssembly in ways that are not valid for tests, so we must stub out
 
-		public string Quote (string f) => Driver.Quote (f);
-
 		AOTOptions options;
 		AOTCompilerType compilerType;
 		bool IsRelease;
@@ -209,14 +208,14 @@ namespace Xamarin.Bundler {
 
 			List<string> filesToAOT = GetFilesToAOT (files);
 			Parallel.ForEach (filesToAOT, ParallelOptions, file => {
-				string command = String.Format ("--aot{0} {1}{2}", options.IsHybridAOT ? "=hybrid" : "", IsModern ? "--runtime=mobile " : "", Quote (file));
+				string command = String.Format ("--aot{0} {1}{2}", options.IsHybridAOT ? "=hybrid" : "", IsModern ? "--runtime=mobile " : "", StringUtils.Quote (file));
 				if (RunCommand (MonoPath, command, monoEnv) != 0)
 					throw ErrorHelper.CreateError (3001, "Could not AOT the assembly '{0}'", file);
 			});
 
 			if (IsRelease && options.IsHybridAOT) {
 				Parallel.ForEach (filesToAOT, ParallelOptions, file => {
-					if (RunCommand (StripCommand, Quote (file)) != 0)
+					if (RunCommand (StripCommand, StringUtils.Quote (file)) != 0)
 						throw ErrorHelper.CreateError (3001, "Could not strip the assembly '{0}'", file);
 				});
 			}

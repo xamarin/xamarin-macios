@@ -1,4 +1,4 @@
-// Copyright 2013 Xamarin Inc. All rights reserved.
+﻿// Copyright 2013 Xamarin Inc. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -1639,15 +1639,15 @@ namespace Xamarin.Bundler {
 						} else {
 							var sb = new StringBuilder ();
 							foreach (var lib in files) {
-								sb.Append (Driver.Quote (lib));
+								sb.Append (StringUtils.Quote (lib));
 								sb.Append (' ');
 							}
 							sb.Append ("-create -output ");
-							sb.Append (Driver.Quote (targetPath));
+							sb.Append (StringUtils.Quote (targetPath));
 							Driver.RunLipo (sb.ToString ());
 						}
 						if (LibMonoLinkMode == AssemblyBuildTarget.Framework)
-							Driver.XcodeRun ("install_name_tool", "-change @rpath/libmonosgen-2.0.dylib @rpath/Mono.framework/Mono " + Driver.Quote (targetPath));
+							Driver.XcodeRun ("install_name_tool", "-change @rpath/libmonosgen-2.0.dylib @rpath/Mono.framework/Mono " + StringUtils.Quote (targetPath));
 					} else {
 						Driver.Log (3, "Target '{0}' is up-to-date.", targetPath);
 					}
@@ -1688,7 +1688,7 @@ namespace Xamarin.Bundler {
 		public void StripBitcode (string macho_file)
 		{
 			var sb = new StringBuilder ();
-			sb.Append (Driver.Quote (macho_file)).Append (" ");
+			sb.Append (StringUtils.Quote (macho_file)).Append (" ");
 			switch (BitCodeMode) {
 			case BitCodeMode.ASMOnly:
 			case BitCodeMode.LLVMOnly:
@@ -1702,7 +1702,7 @@ namespace Xamarin.Bundler {
 				break;
 			}
 			sb.Append ("-o ");
-			sb.Append (Driver.Quote (macho_file));
+			sb.Append (StringUtils.Quote (macho_file));
 			Driver.XcodeRun ("bitcode_strip", sb.ToString ());
 		}
 
@@ -1715,11 +1715,11 @@ namespace Xamarin.Bundler {
 			} else {
 				var cmd = new StringBuilder ();
 				foreach (var input in inputs) {
-					cmd.Append (Driver.Quote (input));
+					cmd.Append (StringUtils.Quote (input));
 					cmd.Append (' ');
 				}
 				cmd.Append ("-create -output ");
-				cmd.Append (Driver.Quote (output));
+				cmd.Append (StringUtils.Quote (output));
 				Driver.RunLipo (cmd.ToString ());
 				return false;
 			}
@@ -2065,11 +2065,11 @@ namespace Xamarin.Bundler {
 				var args = new StringBuilder ();
 				if (WriteSymbolList (symbol_file)) {
 					args.Append ("-i ");
-					args.Append ("-s ").Append (Driver.Quote (symbol_file)).Append (" ");
+					args.Append ("-s ").Append (StringUtils.Quote (symbol_file)).Append (" ");
 				}
 				if (Embeddinator)
 					args.Append ("-ux ");
-				args.Append (Driver.Quote (Executable));
+				args.Append (StringUtils.Quote (Executable));
 				Driver.RunStrip (args.ToString ());
 				Driver.Watch ("Native Strip", 1);
 			}

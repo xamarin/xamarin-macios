@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
+using Xamarin.Utils;
 
 namespace xharness
 {
@@ -23,7 +24,7 @@ namespace xharness
 			process.StartInfo.FileName = Harness.MlaunchPath;
 			var sb = new StringBuilder ();
 			sb.Append ("--logdev ");
-			sb.Append ("--sdkroot ").Append (Harness.Quote (Harness.XcodeRoot)).Append (' ');
+			sb.Append ("--sdkroot ").Append (StringUtils.Quote (Harness.XcodeRoot)).Append (' ');
 			AppRunner.AddDeviceName (sb, DeviceName);
 			process.StartInfo.Arguments = sb.ToString ();
 			process.StartInfo.UseShellExecute = false;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using Xamarin.Utils;
 
 namespace xharness
 {
@@ -718,7 +719,7 @@ namespace xharness
 			foreach (var key in nodes_with_variables) {
 				var nodes = csproj.SelectElementNodes (key);
 				foreach (var node in nodes) {
-					node.InnerText = node.InnerText.Replace ("${ProjectDir}", Harness.Quote (System.IO.Path.GetDirectoryName (project_path)));
+					node.InnerText = node.InnerText.Replace ("${ProjectDir}", StringUtils.Quote (System.IO.Path.GetDirectoryName (project_path)));
 				}
 			}
 			foreach (var kvp in attributes_with_paths) {
