@@ -1484,6 +1484,7 @@ namespace XamCore.CoreData
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(NSPersistentStoreRequest))]
+	[DisableDefaultCtor]
 	interface NSPersistentHistoryChangeRequest
 	{
 		[Static]
@@ -2029,7 +2030,7 @@ namespace XamCore.CoreData
 		[NoWatch][NoTV]
 		[Since (7,0), Mavericks]
 		[Field ("NSPersistentStoreUbiquitousContainerIdentifierKey")]
-		[Obsolete ("Use UbiquitousContainerIdentifierKey instead.")]
+		[Obsolete ("Use 'UbiquitousContainerIdentifierKey' instead.")]
 		NSString eUbiquitousContainerIdentifierKey { get; }
 
 		[NoWatch][NoTV]

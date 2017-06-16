@@ -18,7 +18,8 @@ namespace MonoTouchFixtures.CoreData
 		[Test]
 		public void EncodeWithCoderTest ()
 		{
-			if (!PlatformInfo.Host.IsArch32 ) {
+			// Added test to ensure we do support NSCoding even when introspection fails.
+			if (IntPtr == 8  && if (TestRuntime.CheckExactXcodeVersion (11, 0, beta: 1)) {
 				using (var data = new NSMutableData ())
 				using (var archiver = new NSKeyedArchiver (data))
 				using (var coder = new NSCoder ()) {
