@@ -3441,6 +3441,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Mac (10,11)]
+	[DisableDefaultCtor]
 	[BaseType (typeof(NSCollectionViewLayout))]
 	interface NSCollectionViewTransitionLayout
 	{
@@ -26001,6 +26002,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,13)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface NSWindowTabGroup
 	{
 		[Export ("identifier")]
