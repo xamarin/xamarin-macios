@@ -3,6 +3,7 @@ using System.Drawing;
 using Foundation;
 using CoreMedia;
 using CoreAnimation;
+using ObjCRuntime;
 
 namespace BindAsTests {
 
@@ -80,9 +81,10 @@ namespace BindAsTests {
 		[Export ("getScrollArrayEnum:")]
 		NSString [] GetScrollArrayEnum ([BindAs (typeof (CAScroll []))] NSString [] arg1);
 
-		[return: BindAs (typeof (CAScroll? []))]
-		[Export ("getScrollArrayNullableEnum:")]
-		NSString [] GetScrollArrayEnumNullable ([BindAs (typeof (CAScroll? []))] NSString [] arg1);
+		// Bug #57797
+		// [return: BindAs (typeof (CAScroll? []))]
+		// [Export ("getScrollArrayNullableEnum:")]
+		// NSString [] GetScrollArrayEnumNullable ([BindAs (typeof (CAScroll? []))] NSString [] arg1);
 
 		[BindAs (typeof (CAScroll []))]
 		[Export ("scrollEnumArray2")]
@@ -92,9 +94,10 @@ namespace BindAsTests {
 		[Export ("getScrollArrayEnum2:")]
 		NSNumber [] GetScrollArrayEnum2 ([BindAs (typeof (CAScroll []))] NSNumber [] arg1);
 
-		[return: BindAs (typeof (CAScroll? []))]
-		[Export ("getScrollArrayNullableEnum2:")]
-		NSNumber [] GetScrollArrayNullableEnum2 ([BindAs (typeof (CAScroll? []))] NSNumber [] arg1);
+		// Bug #57797
+		// [return: BindAs (typeof (CAScroll? []))]
+		// [Export ("getScrollArrayNullableEnum2:")]
+		// NSNumber [] GetScrollArrayNullableEnum2 ([BindAs (typeof (CAScroll? []))] NSNumber [] arg1);
 
 		[BindAs (typeof (CMTime []))]
 		[Export ("timeEnumArray")]
@@ -104,9 +107,10 @@ namespace BindAsTests {
 		[Export ("getTimeEnumArray:")]
 		NSValue [] GetTimeEnumArray ([BindAs (typeof (CMTime []))] NSValue [] arg1);
 
-		[return: BindAs (typeof (CMTime? []))]
-		[Export ("getTimeEnumNullableArray:")]
-		NSValue [] GetTimeEnumNullableArray ([BindAs (typeof (CMTime? []))] NSValue [] arg1);
+		// Bug #57797
+		// [return: BindAs (typeof (CMTime? []))]
+		// [Export ("getTimeEnumNullableArray:")]
+		// NSValue [] GetTimeEnumNullableArray ([BindAs (typeof (CMTime? []))] NSValue [] arg1);
 
 		[BindAs (typeof (CAScroll))]
 		[Export ("scrollFooEnum")]
