@@ -241,6 +241,8 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "UserNotificationsUI", "UserNotificationsUI", 10 },
 				{ "Intents", "Intents", 10 },
 				{ "IntentsUI", "IntentsUI", 10 },
+
+				{ "CoreNFC", "CoreNFC", 11 },
 			};
 		}
 		return ios_frameworks;

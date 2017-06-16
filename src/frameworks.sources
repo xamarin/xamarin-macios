@@ -1617,6 +1617,7 @@ IOS_FRAMEWORKS =         \
 	CoreMIDI \
 	CoreMedia \
 	CoreMotion \
+	CoreNFC \
 	CoreSpotlight \
 	CoreTelephony \
 	CoreText \
