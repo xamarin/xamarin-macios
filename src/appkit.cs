@@ -2068,7 +2068,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[BaseType (typeof (NSControl))]
-	interface NSButton : NSAccessibilityButton {
+	interface NSButton : NSAccessibilityButton, INSUserInterfaceCompression {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
@@ -5396,7 +5396,7 @@ namespace XamCore.AppKit {
 
 		// This one comes from the NSRestorableState category ('@interface NSResponder (NSRestorableState)')
 		[Static]
-		[Export ("restorableStateKeyPaths")]
+		[Export ("restorableStateKeyPaths", ArgumentSemantic.Copy)]
 		string [] RestorableStateKeyPaths ();
 
 #if XAMCORE_2_0
@@ -10447,7 +10447,7 @@ namespace XamCore.AppKit {
 		[Export ("intAttribute:forGlyphAtIndex:")]
 		nint IntAttributeforGlyphAtIndex (nint attributeTag, nint glyphIndex);
 
-		// TODO: bind this with a safe version
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Export ("getGlyphsInRange:glyphs:characterIndexes:glyphInscriptions:elasticBits:"), Internal]
 		nint GetGlyphs (NSRange glyphRange, IntPtr glyphBuffer, IntPtr charIndexBuffer, IntPtr inscribeBuffer, IntPtr elasticBuffer);
 
@@ -12469,7 +12469,7 @@ namespace XamCore.AppKit {
 		void InvalidateRestorableState ();
 
 		[Static]
-		[Lion, Export ("restorableStateKeyPaths")]
+		[Lion, Export ("restorableStateKeyPaths", ArgumentSemantic.Copy)]
 		string [] RestorableStateKeyPaths ();
 
 		[Lion]
@@ -12508,6 +12508,10 @@ namespace XamCore.AppKit {
 		[Sealed]
 		[Export ("presentError:modalForWindow:delegate:didPresentSelector:contextInfo:")]
 		void PresentError (NSError error, NSWindow window, [NullAllowed] NSObject @delegate, [NullAllowed] Selector didPresentSelector, IntPtr contextInfo);
+
+		[Mac (10,13)]
+		[Export ("encodeRestorableStateWithCoder:backgroundQueue:")]
+		void EncodeRestorableState (NSCoder coder, NSOperationQueue queue);
 	}
 
 	[Category]
@@ -13626,7 +13630,7 @@ namespace XamCore.AppKit {
 	[Mac (10,12,2)]
 	[BaseType (typeof(NSTouchBarItem))]
 	[DisableDefaultCtor]
-	interface NSSliderTouchBarItem
+	interface NSSliderTouchBarItem : INSUserInterfaceCompression
 	{
 		[Export ("initWithIdentifier:")]
 		[DesignatedInitializer]
@@ -15148,9 +15152,11 @@ namespace XamCore.AppKit {
 		bool LockFocusIfCanDraw ();
 
 		[Export ("lockFocusIfCanDrawInContext:")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use NSView.DisplayRectIgnoringOpacity (CGRect aRect, NSGraphicsContext context) to draw a view subtree into a graphics context.")]
 		bool LockFocusIfCanDrawInContext (NSGraphicsContext context);
 
 		[Export ("focusView")][Static]
+		[return: NullAllowed]
 		NSView FocusView ();
 
 		[Export ("visibleRect")]
@@ -15434,9 +15440,11 @@ namespace XamCore.AppKit {
 		void DragImage (NSImage anImage, CGPoint viewLocation, CGSize initialOffset, NSEvent theEvent, NSPasteboard pboard, NSObject sourceObj, bool slideFlag);
 
 		[Export ("dragFile:fromRect:slideBack:event:")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use BeginDraggingSession (NSDraggingItem [] items, NSEvent evnt, [Protocolize] NSDraggingSource source) instead")]
 		bool DragFile (string filename, CGRect aRect, bool slideBack, NSEvent theEvent);
 		
 		[Export ("dragPromisedFilesOfTypes:fromRect:source:slideBack:event:")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use BeginDraggingSession (NSDraggingItem [] items, NSEvent evnt, [Protocolize] NSDraggingSource source) with an NSFilePromiseProvider instead")]
 		bool DragPromisedFilesOfTypes (string[] typeArray, CGRect aRect, NSObject sourceObject, bool slideBack, NSEvent theEvent);
 		
 		[Export ("exitFullScreenModeWithOptions:")]
@@ -15465,6 +15473,7 @@ namespace XamCore.AppKit {
 		NSString FrameChangedNotification { get; }
  
 		[Notification, Field ("NSViewFocusDidChangeNotification")]
+		[Deprecated (PlatformName.MacOSX, 10, 4)]
 		NSString FocusChangedNotification { get; }
 
 		[Notification, Field ("NSViewBoundsDidChangeNotification")]
@@ -17908,6 +17917,78 @@ namespace XamCore.AppKit {
 		nint StartingItemNumber { get; set; }
 
 	}
+
+	[Static]
+	interface NSTextListMarkerFormats
+	{
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerBox")]
+		NSString Box { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerCheck")]
+		NSString Check { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerCircle")]
+		NSString Circle { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerDiamond")]
+		NSString Diamond { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerDisc")]
+		NSString Disc { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerHyphen")]
+		NSString Hyphen { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerSquare")]
+		NSString Square { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerLowercaseHexadecimal")]
+		NSString LowercaseHexadecimal { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerUppercaseHexadecimal")]
+		NSString UppercaseHexadecimal { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerOctal")]
+		NSString Octal { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerLowercaseAlpha")]
+		NSString LowercaseAlpha { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerUppercaseAlpha")]
+		NSString UppercaseAlpha { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerLowercaseLatin")]
+		NSString LowercaseLatin { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerUppercaseLatin")]
+		NSString UppercaseLatin { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerLowercaseRoman")]
+		NSString LowercaseRoman { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerUppercaseRoman")]
+		NSString UppercaseRoman { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSTextListMarkerDecimal")]
+		NSString Decimal { get; }
+	}
 	
 	[BaseType (typeof (NSTextBlock))]
 	[DisableDefaultCtor]
@@ -18826,6 +18907,7 @@ namespace XamCore.AppKit {
 		string GetEditingString (NSTokenField tokenField, NSObject representedObject);
 
 		[Export ("tokenField:representedObjectForEditingString:")]
+		[return: NullAllowed]
 		NSObject GetRepresentedObject (NSTokenField tokenField, string editingString);
 
 		[Export ("tokenField:writeRepresentedObjects:toPasteboard:")]
@@ -18847,9 +18929,14 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSObject), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSToolbarDelegate)})]
 #if XAMCORE_2_0
-	[DisableDefaultCtor]
+	[DisableDefaultCtor] // init was added in 10.13
 #endif
 	partial interface NSToolbar {
+#if XAMCORE_2_0
+		[Mac (10, 13)]
+		[Export ("init")]
+		IntPtr Constructor ();
+#endif
 		[Export ("initWithIdentifier:")]
 		IntPtr Constructor (string identifier);
 
@@ -19261,7 +19348,11 @@ namespace XamCore.AppKit {
 		void RearrangeObjects ();
 
 		[Export ("arrangedObjects")]
+#if XAMCORE_4_0
+		NSTreeNode ArrangedObjects { get; }
+#else
 		NSObject ArrangedObjects { get; }
+#endif
 
 		[Export ("childrenKeyPath")]
 		string ChildrenKeyPath { get; set; }
@@ -19818,12 +19909,15 @@ namespace XamCore.AppKit {
 		void RemoveFrameUsingName (string  name);
 	
 		[Export ("cacheImageInRect:")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "This method shouldn’t be used as it doesn’t work in all drawing situations; instead, a subview should be used that implements the desired drawing behavior")]
 		void CacheImageInRect (CGRect aRect);
 	
 		[Export ("restoreCachedImage")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "This method shouldn’t be used as it doesn’t work in all drawing situations; instead, a subview should be used that implements the desired drawing behavior")]
 		void RestoreCachedImage ();
 	
 		[Export ("discardCachedImage")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "This method shouldn’t be used as it doesn’t work in all drawing situations; instead, a subview should be used that implements the desired drawing behavior")]
 		void DiscardCachedImage ();
 	
 		[Export ("minSize")]
@@ -21546,14 +21640,16 @@ namespace XamCore.AppKit {
 		[Export ("setLineFragmentRect:forGlyphRange:usedRect:baselineOffset:")]
 		void SetLineFragment (CGRect fragmentRect, NSRange glyphRange, CGRect usedRect, nfloat baselineOffset);
 
-		// TODO: high level C# binding
 		[Export ("substituteGlyphsInRange:withGlyphs:")]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		void SubstituteGlyphs (NSRange glyphRange, IntPtr glyphs);
 
 		[Export ("insertGlyph:atGlyphIndex:characterIndex:")]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		void InsertGlyph (uint glyph, nuint glyphIndex, nuint characterIndex); // glyph is NSGlyph - typedef unsigned int NSGlyph;
 
 		[Export ("deleteGlyphsInRange:")]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		void DeleteGlyphs (NSRange glyphRange);
 
 		[Export ("setNotShownAttribute:forGlyphRange:")]
@@ -21936,6 +22032,18 @@ namespace XamCore.AppKit {
 		[Mac (10, 12)]
 		[Export ("windowTitlebarLayoutDirection")]
 		NSUserInterfaceLayoutDirection WindowTitlebarLayoutDirection { get; }
+
+		[Mac (10,13)]
+		[Export ("toggleTabOverview:")]
+		void ToggleTabOverview ([NullAllowed] NSObject sender);
+
+		[Mac (10, 13)]
+		[Export ("tab", ArgumentSemantic.Strong)]
+		NSWindowTab Tab { get; }
+
+		[Mac (10, 13)]
+		[NullAllowed, Export ("tabGroup", ArgumentSemantic.Weak)]
+		NSWindowTabGroup TabGroup { get; }
 	}
 
 	partial interface NSPrintOperation {
@@ -22262,6 +22370,10 @@ namespace XamCore.AppKit {
 
 		[MountainLion, Static, Export ("usesUbiquitousStorage")]
 		bool UsesUbiquitousStorage { get; }
+
+		[Mac (10,13)]
+		[Export ("encodeRestorableStateWithCoder:backgroundQueue:")]
+		void EncodeRestorableState (NSCoder coder, NSOperationQueue queue);
 	}
 
 	delegate void NSDocumentControllerOpenPanelWithCompletionHandler (NSArray urlsToOpen);
@@ -25866,5 +25978,51 @@ namespace XamCore.AppKit {
 		[Abstract]
 		[Export ("activeCompressionOptions", ArgumentSemantic.Copy)]
 		NSUserInterfaceCompressionOptions ActiveCompressionOptions { get; }
+	}
+
+	[Mac (10,13)]
+	[BaseType (typeof(NSObject))]
+	interface NSWindowTab
+	{
+		[Export ("title")]
+		string Title { get; set; }
+
+		[NullAllowed, Export ("attributedTitle", ArgumentSemantic.Copy)]
+		NSAttributedString AttributedTitle { get; set; }
+
+		[Export ("toolTip")]
+		string ToolTip { get; set; }
+
+		[NullAllowed, Export ("accessoryView", ArgumentSemantic.Strong)]
+		NSView AccessoryView { get; set; }
+	}
+
+	[Mac (10,13)]
+	[BaseType (typeof(NSObject))]
+	interface NSWindowTabGroup
+	{
+		[Export ("identifier")]
+		string Identifier { get; }
+
+		[Export ("windows", ArgumentSemantic.Copy)]
+		NSWindow[] Windows { get; }
+
+		[Export ("overviewVisible")]
+		bool OverviewVisible { [Bind ("isOverviewVisible")] get; set; }
+
+		[Export ("tabBarVisible")]
+		bool TabBarVisible { [Bind ("isTabBarVisible")] get; }
+
+		[NullAllowed, Export ("selectedWindow", ArgumentSemantic.Weak)]
+		NSWindow SelectedWindow { get; set; }
+
+		[Export ("addWindow:")]
+		void AddWindow (NSWindow window);
+
+		[Export ("insertWindow:atIndex:")]
+		void InsertWindow (NSWindow window, nint index);
+
+		[Export ("removeWindow:")]
+		void RemoveWindow (NSWindow window);
 	}
 }
