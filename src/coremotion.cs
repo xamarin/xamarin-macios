@@ -204,6 +204,10 @@ namespace XamCore.CoreMotion {
 		[Since (5,0)]
 		[Export ("magneticField")]
 		CMCalibratedMagneticField MagneticField { get; }
+
+		[Watch (4,0), iOS (11,0)]
+		[Export ("heading")]
+		double Heading { get; }
 	}
 
 	[BaseType (typeof (CMLogItem))]
