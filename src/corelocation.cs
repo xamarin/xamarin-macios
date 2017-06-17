@@ -723,23 +723,19 @@ namespace XamCore.CoreLocation {
 
 		[Export ("cancelGeocode")]
 		void CancelGeocode ();
-	}
 
 #if XAMCORE_2_0 && !TVOS
-	[Category]
-	[BaseType (typeof (CLGeocoder))]
-	interface CLGeocoder_ContactsAdditions {
 		[Watch (4,0), NoTV, Mac (10,13), iOS (11,0)]
 		[Export ("geocodePostalAddress:completionHandler:")]
-		// [Async] Generates invalid code: https://bugzilla.xamarin.com/show_bug.cgi?id=57531
+		[Async]
 		void GeocodePostalAddress (CNPostalAddress postalAddress, CLGeocodeCompletionHandler completionHandler);
 
 		[Watch (4,0), NoTV, Mac (10,13), iOS (11,0)]
 		[Export ("geocodePostalAddress:preferredLocale:completionHandler:")]
-		// [Async] Generates invalid code: https://bugzilla.xamarin.com/show_bug.cgi?id=57531
+		[Async]
 		void GeocodePostalAddress (CNPostalAddress postalAddress, [NullAllowed] NSLocale locale, CLGeocodeCompletionHandler completionHandler);
-	}
 #endif
+	}
 
 #if !MONOMAC
 	[NoWatch][NoTV]
