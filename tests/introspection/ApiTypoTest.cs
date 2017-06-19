@@ -26,6 +26,7 @@ using System.Reflection;
 using System.Text;
 using NUnit.Framework;
 #if XAMCORE_2_0
+using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 #else
@@ -716,9 +717,39 @@ namespace Introspection
 
 					var methods = t.GetMethods ();
 					foreach (MethodInfo m in methods) {
-					if (!m.IsPublic && !m.IsFamily && !IsObsolete (m))
+						if (!m.IsPublic && !m.IsFamily)
+								continue;
+
+						// Availability attribute's message checks.
+						var ca = m.GetCustomAttributes<AvailabilityBaseAttribute> ();
+						if (ca.Any ()) {
+							foreach (var attr in ca) {
+								if (attr.Message != null) {
+									// Rule 1: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-1
+									var forbidden = new [] { "iOS", "watchOS", "tvOS", "macOS" };
+									if (forbidden.Any (attr.Message.Contains)) {
+										ReportError ("[Rule 1] Don't put OS information in availability message: \"{0}\" - METHOD name: {1}, Type: {2}", attr.Message, m.Name, t.Name);
+										totalErrors++;
+									}
+
+									// Rule 2: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-2
+									if (attr.Message.Contains ('`')) {
+										ReportError ("[Rule 2] Replace grave accent (`) by apostrophe (') in availability message: \"{0}\" - METHOD name: {1}, Type: {2}", attr.Message, m.Name, t.Name);
+										totalErrors++;
+									}
+
+									// Rule 3: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-3
+									if (!attr.Message.EndsWith (".", StringComparison.Ordinal)) {
+										ReportError ("[Rule 3] Missing '.' in availability message: \"{0}\" - METHOD name: {1}, Type: {2}", attr.Message, m.Name, t.Name);
+										totalErrors++;
+									}
+								}
+							}
+						}
+
+						if (!IsObsolete (m))
 							continue;
-						
+
 						txt = NameCleaner (m.Name);
 						typo = GetTypo (txt);
 						if (typo.Length > 0) {
