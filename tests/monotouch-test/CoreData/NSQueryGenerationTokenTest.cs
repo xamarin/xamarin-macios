@@ -7,7 +7,6 @@ using MonoTouch.CoreData;
 using MonoTouch.Foundation;
 #endif
 using NUnit.Framework;
-using Xamarin.Tests;
 
 namespace MonoTouchFixtures.CoreData
 {
@@ -19,7 +18,7 @@ namespace MonoTouchFixtures.CoreData
 		public void EncodeWithCoderTest ()
 		{
 			// Added test to ensure we do support NSCoding even when introspection fails.
-			if (IntPtr == 8  && TestRuntime.CheckExactXcodeVersion (11, 0, beta: 1)) {
+			if (IntPtr.Size == 8  && TestRuntime.CheckExactXcodeVersion (9, 0, beta: 1)) {
 				using (var data = new NSMutableData ())
 				using (var archiver = new NSKeyedArchiver (data))
 				using (var coder = new NSCoder ()) {

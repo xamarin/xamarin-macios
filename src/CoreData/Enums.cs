@@ -221,5 +221,5 @@ namespace XamCore.CoreData {
 		TransactionsOnly = 3,
 		ChangesOnly = 4,
 		TransactionsAndChanges = 5
-}
+	}
 }
