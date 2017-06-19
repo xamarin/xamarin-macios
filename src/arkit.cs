@@ -397,8 +397,7 @@ namespace XamCore.ARKit {
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
-	[Protocol, Model]
-	[BaseType (typeof (NSObject))]
+	[Protocol]
 	interface ARSessionObserver {
 
 		[Export ("session:didFailWithError:")]
