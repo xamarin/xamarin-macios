@@ -205,4 +205,34 @@ namespace XamCore.ObjCRuntime
 		{
 		}
 	}
+
+	// Allows generator to include AvailabilityAttribute into generated default ctor
+	[AttributeUsage (AttributeTargets.Interface, AllowMultiple = true)]
+	public class DefaultCtorAvailabilityAttribute : AvailabilityBaseAttribute {
+
+		public DefaultCtorAvailabilityAttribute (AvailabilityKind availability, PlatformName platform,
+				PlatformArchitecture architecture = PlatformArchitecture.None,
+				string message = null)
+				: base (availability, platform, null, architecture, message)
+		{
+		}
+
+		public DefaultCtorAvailabilityAttribute (AvailabilityKind availability, PlatformName platform, int majorVersion, int minorVersion,
+			PlatformArchitecture architecture = PlatformArchitecture.None,
+			string message = null)
+				: base (availability,
+					platform, new Version (majorVersion, minorVersion),
+					architecture, message)
+		{
+		}
+
+		public DefaultCtorAvailabilityAttribute (AvailabilityKind availability, PlatformName platform, int majorVersion, int minorVersion, int subminorVersion,
+			PlatformArchitecture architecture = PlatformArchitecture.None,
+			string message = null)
+				: base (availability,
+					platform, new Version (majorVersion, minorVersion, subminorVersion),
+					architecture, message)
+		{
+		}
+	}
 }
