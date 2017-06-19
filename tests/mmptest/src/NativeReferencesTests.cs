@@ -9,14 +9,12 @@ using System.Reflection;
 
 namespace Xamarin.MMP.Tests
 {
-	public partial class MMPTests 
-	{
-		const string NativeReferenceTemplate = @"<ItemGroup><NativeReference Include=""{0}""><IsCxx>False</IsCxx><Kind>{1}</Kind></NativeReference></ItemGroup>";
+	public partial class MMPTests {
+		const string ItemGroupTemplate = @"<ItemGroup>{0}</ItemGroup>";
+		const string NativeReferenceTemplate = @"<NativeReference Include=""{0}""><IsCxx>False</IsCxx><Kind>{1}</Kind></NativeReference>";
 
-		public string SimpleDylibPath
-		{
-			get
-			{
+		public string SimpleDylibPath {
+			get {
 				string rootDir = TI.FindRootDirectory ();
 				string buildLibPath = Path.Combine (rootDir, "../tests/mac-binding-project/bin/SimpleClassDylib.dylib");
 				Assert.IsTrue (File.Exists (buildLibPath), string.Format ("SimpleDylibPath missing? {0}", buildLibPath));
@@ -24,10 +22,8 @@ namespace Xamarin.MMP.Tests
 			}
 		}
 
-		public string SimpleStaticPath
-		{
-			get
-			{
+		public string SimpleStaticPath {
+			get {
 				string rootDir = TI.FindRootDirectory ();
 				string buildLibPath = Path.Combine (rootDir, "../tests/mac-binding-project/bin/SimpleClassStatic.a");
 				Assert.IsTrue (File.Exists (buildLibPath), string.Format ("SimpleStaticPath missing? {0}", buildLibPath));
@@ -35,93 +31,20 @@ namespace Xamarin.MMP.Tests
 			}
 		}
 
-		[Test]
-		public void Unified_WithNativeReferences_InMainProjectWorks ()
+		string CreateNativeRefInclude (string path, string kind) => string.Format (NativeReferenceTemplate, path, kind);
+		string CreateItemGroup (IEnumerable<string> elements) => string.Format (ItemGroupTemplate, string.Concat (elements));
+		string CreateSingleNativeRef (string path, string kind) => CreateItemGroup (CreateNativeRefInclude (path, kind).FromSingleItem ());
+
+		string CreateCopyOfSimpleClassInTestDir (string tmpDir, string fileName = "SimpleClassDylib.dylib")
 		{
-			RunMMPTest (tmpDir => {
-				// Could be any dylib not in /System
-				const string SystemLibPath = "/Library/Frameworks/Mono.framework/Versions/Current/lib/libsqlite3.0.dylib";
-
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { ItemGroup = string.Format (NativeReferenceTemplate, SystemLibPath, "Dynamic") };
-				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - System", "libsqlite3.0.dylib", true);
-
-				test.ItemGroup = string.Format (NativeReferenceTemplate, Path.GetFullPath (SimpleDylibPath), "Dynamic");
-				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - Local", "SimpleClassDylib.dylib", true);
-
-				test.ItemGroup = string.Format (NativeReferenceTemplate, Path.GetFullPath (SimpleStaticPath), "Static");
-				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - Static", null, true);
-
-				test.ItemGroup = string.Format (NativeReferenceTemplate, "/Library/Frameworks/iTunesLibrary.framework", "Framework");
-				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - Framework", null, true);
-				Assert.True (Directory.Exists (Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/Frameworks/iTunesLibrary.framework")));
-
-				string binaryPath = Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MacOS/UnifiedExample");
-				string otoolText = TI.RunAndAssert ("/usr/bin/otool", new StringBuilder ("-l " + binaryPath), "Unified_WithNativeReferences_InMainProjectWorks - rpath");
-				Assert.True (otoolText.Contains ("path @loader_path/../Frameworks"));
-			});
+			string dylibPath = Path.Combine (tmpDir, "dll/");
+			string filePath = Path.Combine (dylibPath, fileName);
+			Directory.CreateDirectory (dylibPath);
+			File.Copy (Path.Combine (TI.AssemblyDirectory, TI.TestDirectory + "mac-binding-project/bin/SimpleClassDylib.dylib"), filePath);
+			return filePath;
 		}
 
-		[Test]
-		public void Unified_WithStaticNativeRef_ClangIncludesOurStaticLib ()
-		{
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { ItemGroup = string.Format (NativeReferenceTemplate, SimpleStaticPath, "Static") };
-				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - Static", null, true, false, s =>
-				{
-					string clangLine = s.Split ('\n').First (x => x.Contains ("xcrun -sdk macosx clang"));
-					return clangLine.Contains ("SimpleClassStatic.a");
-				});
-			});
-		}
-
-		[Test]
-		public void Unified_WithNativeReferences_MissingLibrariesActAsExpected ()
-		{
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { ItemGroup = string.Format (NativeReferenceTemplate, "/Library/Frameworks/ALibThatDoesNotExist.dylib", "Dynamic") };
-				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_MissingLibrariesActAsExpected - Nonexistant", null, false);
-
-				// Test a system dylib. Does not matter which one
-				test.ItemGroup = string.Format (NativeReferenceTemplate, "/System/Library/Frameworks/MapKit.framework/Versions/A/Resources/BridgeSupport/MapKit.dylib", "Dynamic");
-				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_MissingLibrariesActAsExpected - System", null, true);
-
-				// Test one of the ignored libs
-				test.ItemGroup = string.Format (NativeReferenceTemplate, "cups", "Dynamic");
-				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_MissingLibrariesActAsExpected - Ignored", null, true);
-			});
-		}
-
-		[Test]
-		public void Unified_WithNativeReferences_IgnoredWorks ()
-		{
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					ItemGroup = string.Format (NativeReferenceTemplate, Path.GetFullPath (SimpleDylibPath), "Dynamic"),
-					CSProjConfig = string.Format (@"<MonoBundlingExtraArgs>--ignore-native-library=""{0}""</MonoBundlingExtraArgs>", Path.GetFullPath (SimpleDylibPath))
-				};
-
-				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - Local", null, true, true);
-			});
-		}
-
-		[Test]
-		public void Unified_WithNativeReferences_ReadOnlyNativeLib ()
-		{
-			RunMMPTest (tmpDir => {
-				string dylibPath = Path.Combine (tmpDir, "dll/");
-				string filePath = Path.Combine (dylibPath, "SimpleClassDylib.dylib");
-				Directory.CreateDirectory (dylibPath);
-				File.Copy (Path.Combine (TI.AssemblyDirectory, TI.TestDirectory + "mac-binding-project/bin/SimpleClassDylib.dylib"), filePath );
-				File.SetAttributes (filePath, FileAttributes.ReadOnly); 
-
-				string itemGroup = "<ItemGroup><NativeReference Include=\".\\dll\\SimpleClassDylib.dylib\"> <IsCxx>False</IsCxx><Kind>Dynamic</Kind> </NativeReference> </ItemGroup>";
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { ProjectName = "UnifiedExample.csproj", ItemGroup = itemGroup };
-
-				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_ReadOnlyLib", null, true, true);
-			});
-		}
-
-		void NativeReferenceTestCore (string tmpDir, TI.UnifiedTestConfig test, string testName, string libraryName, bool buildShouldBeSuccessful, bool libraryShouldNotBeCopied = false, Func <string, bool> processBuildOutput = null)
+		void NativeReferenceTestCore (string tmpDir, TI.UnifiedTestConfig test, string testName, string libraryName, bool buildShouldBeSuccessful, bool libraryShouldNotBeCopied = false, Func<string, bool> processBuildOutput = null)
 		{
 			// Mobile
 			test.XM45 = false;
@@ -147,22 +70,118 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
-		public void NativeReference_WithDllImportOfSamePath_Builds ()
+		public void Unified_WithNativeReferences_InMainProjectWorks ()
 		{
-			RunMMPTest (tmpDir =>
-			{
-				string dylibPath = Path.Combine (tmpDir, "dll/");
-				string filePath = Path.Combine (dylibPath, "SimpleClassDylib.dylib");
-				Directory.CreateDirectory (dylibPath);
-				File.Copy (Path.Combine (TI.AssemblyDirectory, TI.TestDirectory + "mac-binding-project/bin/SimpleClassDylib.dylib"), filePath);
+			RunMMPTest (tmpDir => {
+				// Could be any dylib not in /System
+				const string SystemLibPath = "/Library/Frameworks/Mono.framework/Versions/Current/lib/libsqlite3.0.dylib";
 
-				// Use absolute path here and in TestDecl to trigger bug
-				string itemGroup = string.Format ("<ItemGroup><NativeReference Include=\"{0}\"> <IsCxx>False</IsCxx><Kind>Dynamic</Kind> </NativeReference> </ItemGroup>", filePath);
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { ItemGroup = CreateSingleNativeRef (SystemLibPath, "Dynamic") };
+				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - System", "libsqlite3.0.dylib", true);
+
+				test.ItemGroup = CreateSingleNativeRef (Path.GetFullPath (SimpleDylibPath), "Dynamic");
+				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - Local", "SimpleClassDylib.dylib", true);
+
+				test.ItemGroup = CreateSingleNativeRef (Path.GetFullPath (SimpleStaticPath), "Static");
+				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - Static", null, true);
+
+				test.ItemGroup = CreateSingleNativeRef ("/Library/Frameworks/iTunesLibrary.framework", "Framework");
+				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - Framework", null, true);
+				Assert.True (Directory.Exists (Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/Frameworks/iTunesLibrary.framework")));
+
+				string binaryPath = Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MacOS/UnifiedExample");
+				string otoolText = TI.RunAndAssert ("/usr/bin/otool", new StringBuilder ("-l " + binaryPath), "Unified_WithNativeReferences_InMainProjectWorks - rpath");
+				Assert.True (otoolText.Contains ("path @loader_path/../Frameworks"));
+			});
+		}
+
+		[Test]
+		public void Unified_WithStaticNativeRef_ClangIncludesOurStaticLib ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { ItemGroup = CreateSingleNativeRef (SimpleStaticPath, "Static") };
+				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - Static", null, true, false, s => {
+					string clangLine = s.Split ('\n').First (x => x.Contains ("xcrun -sdk macosx clang"));
+					return clangLine.Contains ("SimpleClassStatic.a");
+				});
+			});
+		}
+
+		[Test]
+		public void Unified_WithNativeReferences_MissingLibrariesActAsExpected ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { ItemGroup = CreateSingleNativeRef ("/Library/Frameworks/ALibThatDoesNotExist.dylib", "Dynamic") };
+				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_MissingLibrariesActAsExpected - Nonexistant", null, false);
+
+				// Test a system dylib. Does not matter which one
+				test.ItemGroup = CreateSingleNativeRef ( "/System/Library/Frameworks/MapKit.framework/Versions/A/Resources/BridgeSupport/MapKit.dylib", "Dynamic");
+				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_MissingLibrariesActAsExpected - System", null, true);
+
+				// Test one of the ignored libs
+				test.ItemGroup = CreateSingleNativeRef ("cups", "Dynamic");
+				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_MissingLibrariesActAsExpected - Ignored", null, true);
+			});
+		}
+
+		[Test]
+		public void Unified_WithNativeReferences_IgnoredWorks ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					ItemGroup = CreateSingleNativeRef (Path.GetFullPath (SimpleDylibPath), "Dynamic"),
+					CSProjConfig = string.Format (@"<MonoBundlingExtraArgs>--ignore-native-library=""{0}""</MonoBundlingExtraArgs>", Path.GetFullPath (SimpleDylibPath))
+				};
+
+				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - Local", null, true, true);
+			});
+		}
+
+		[Test]
+		public void Unified_WithNativeReferences_ReadOnlyNativeLib ()
+		{
+			RunMMPTest (tmpDir => {
+				string filePath = CreateCopyOfSimpleClassInTestDir (tmpDir);
+				File.SetAttributes (filePath, FileAttributes.ReadOnly);
+
+				string itemGroup = CreateSingleNativeRef (@".\dll\SimpleClassDylib.dylib", "Dynamic");
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { ProjectName = "UnifiedExample.csproj", ItemGroup = itemGroup };
 
-				test.TestDecl = string.Format ("[System.Runtime.InteropServices.DllImport (\"{0}\")]public static extern int GetFour ();", filePath);
-				test.TestCode = "GetFour ();";
+				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_ReadOnlyLib", null, true, true);
+			});
+		}
+
+		[Test]
+		public void NativeReference_WithDllImportOfSamePath_Builds ()
+		{
+			RunMMPTest (tmpDir => {
+				string filePath = CreateCopyOfSimpleClassInTestDir (tmpDir);
+
+				// Use absolute path here and in TestDecl to trigger bug
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) 
+				{
+					ProjectName = "UnifiedExample.csproj",
+					ItemGroup = CreateSingleNativeRef (filePath, "Dynamic"),
+					TestDecl = string.Format ("[System.Runtime.InteropServices.DllImport (\"{0}\")]public static extern int GetFour ();", filePath),
+					TestCode = "GetFour ();"
+				};
+
 				NativeReferenceTestCore (tmpDir, test, "NativeReference_WithDllImportOfSamePath_Builds", null, true, true);
+			});
+		}
+
+		[Test]
+		public void MultipleNativeReferences_OnlyInvokeMMPOneTime_AndCopyEverythingIn ()
+		{
+			RunMMPTest (tmpDir => {
+				string firstPath = CreateCopyOfSimpleClassInTestDir (tmpDir);
+				string secondPath = CreateCopyOfSimpleClassInTestDir (tmpDir, "SeconClassDylib.dylib");
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					ProjectName = "UnifiedExample.csproj",
+					CSProjConfig = "<EnableCodeSigning>true</EnableCodeSigning>",
+					ItemGroup = CreateItemGroup (new string[] { CreateNativeRefInclude (firstPath, "Dynamic"), CreateNativeRefInclude (secondPath, "Dynamic") }),
+				};
+				NativeReferenceTestCore (tmpDir, test, "MultipleNativeReferences_OnlyInvokeMMPOneTime_AndCopyEverythingIn", null, true);
 			});
 		}
 	}

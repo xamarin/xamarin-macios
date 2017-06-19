@@ -26,7 +26,17 @@
 			<string>10.10</string>
 			<key>com.apple.widget-extension</key>
 			<string>10.10</string>
+			<key>com.apple.networkextension.packet-tunnel</key>
+			<string>10.11</string>
 		</dict>
 	</dict>
+	<key>Features</key>
+	<array>
+		<string>http-client-handlers</string>
+		<string>mono-symbol-archive</string>
+		<string>sgen-concurrent-gc</string>
+		<string>link-platform</string>
+		<string>hybrid-aot</string>
+	</array>
 </dict>
 </plist>

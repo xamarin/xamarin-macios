@@ -36,7 +36,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void DataProvider ()
 		{
-			using (CGDataProvider dp = new CGDataProvider ("Tamarin.pdf"))
+			using (CGDataProvider dp = new CGDataProvider (NSBundle.MainBundle.PathForResource ("Tamarin", "pdf")))
 			using (CGPDFDocument doc = new CGPDFDocument (dp)) {
 				CheckTamarin (doc);
 			}
@@ -45,7 +45,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void FromFile ()
 		{
-			using (CGPDFDocument doc = CGPDFDocument.FromFile ("Tamarin.pdf")) {
+			using (CGPDFDocument doc = CGPDFDocument.FromFile (NSBundle.MainBundle.PathForResource ("Tamarin", "pdf"))) {
 				CheckTamarin (doc);
 			}
 		}
@@ -53,7 +53,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void FromUrl ()
 		{
-			string url = NSBundle.MainBundle.BundleUrl + "/Tamarin.pdf";
+			string url = NSBundle.MainBundle.GetUrlForResource ("Tamarin", "pdf").ToString ();
 			using (CGPDFDocument doc = CGPDFDocument.FromUrl (url)) {
 				CheckTamarin (doc);
 			}

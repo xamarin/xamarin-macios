@@ -8,11 +8,11 @@ export CCACHE_CPP2=1
 LINKER_DIR=../linker
 
 CECIL_PATH=$(MONO_PATH)/external/cecil
+MONO_CECIL_FILES = $(wildcard $(CECIL_PATH)/*.cs) $(wildcard $(CECIL_PATH)/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*/*/*.cs)
 
 MONO_DIR=$(MONO_PATH)
-MCS_TOOLS_DIR=$(MONO_DIR)/mcs/tools
-MONOLINKER=$(MCS_TOOLS_DIR)/linker
-MONO_TUNER=$(MCS_TOOLS_DIR)/tuner
+MONOLINKER=$(LINKER_TOOLS_PATH)/linker
+MONO_TUNER=$(LINKER_TOOLS_PATH)/tuner
 
 LINKER_RESOURCES = \
 	$(LINKER_DIR)/Descriptors/mscorlib.xml
@@ -24,6 +24,8 @@ LINKER_SOURCES = \
 	$(MONOLINKER)/Mono.Linker/I18nAssemblies.cs			\
 	$(MONOLINKER)/Mono.Linker/IXApiVisitor.cs			\
 	$(MONOLINKER)/Mono.Linker/LinkContext.cs			\
+	$(MONOLINKER)/Mono.Linker/LoadException.cs			\
+	$(MONOLINKER)/Mono.Linker/MarkException.cs			\
 	$(MONOLINKER)/Mono.Linker/MethodAction.cs			\
 	$(MONOLINKER)/Mono.Linker/Pipeline.cs				\
 	$(MONOLINKER)/Mono.Linker/TypePreserve.cs			\
@@ -54,6 +56,7 @@ LINKER_SOURCES = \
 	$(MONO_TUNER)/Mono.Tuner/RemoveResources.cs			\
 	$(MONO_TUNER)/Mono.Tuner/RemoveSecurity.cs			\
 	$(LINKER_DIR)/MonoTouch.Tuner/Extensions.cs			\
+	$(LINKER_DIR)/MonoTouch.Tuner/InlinerSubStep.cs		\
 	$(LINKER_DIR)/MonoTouch.Tuner/ListExportedSymbols.cs	\
 	$(LINKER_DIR)/MonoTouch.Tuner/MetadataReducerSubStep.cs	\
 	$(LINKER_DIR)/MonoTouch.Tuner/MonoTouchMarkStep.cs		\
@@ -83,7 +86,6 @@ LINKER_SOURCES = \
 	$(TOP)/tools/linker/MobileResolveMainAssemblyStep.cs	\
 	$(TOP)/tools/linker/MobileSweepStep.cs			\
 	$(TOP)/tools/linker/ObjCExtensions.cs			\
-	$(TOP)/tools/linker/RemoveSelectors.cs			\
 	$(TOP)/tools/linker/RemoveUserResourcesSubStep.cs \
 
 
@@ -108,9 +110,12 @@ MTOUCH_SOURCES = \
 	$(TOP)/tools/common/Driver.cs		\
 	$(TOP)/tools/common/Frameworks.cs	\
 	$(TOP)/tools/common/MachO.cs		\
+	$(TOP)/tools/common/Symbols.cs			\
 	mtouch.cs		\
 	$(TOP)/tools/common/PInvokeWrapperGenerator.cs	\
 	$(TOP)/tools/common/TargetFramework.cs	\
+	$(TOP)/tools/common/BuildTasks.cs	\
+	$(TOP)/tools/common/StringUtils.cs		\
 	$(TOP)/tools/common/StaticRegistrar.cs	\
 	$(TOP)/src/ObjCRuntime/Registrar.core.cs	\
 	$(TOP)/src/ObjCRuntime/Registrar.cs	\
@@ -121,8 +126,10 @@ MTOUCH_SOURCES = \
 	Target.cs		\
 	SdkVersions.cs \
 	BitcodeConverter.cs	\
+	BuildTasks.mtouch.cs \
 	$(TOP)/tools/common/Application.cs \
 	$(TOP)/tools/common/Assembly.cs \
+	$(TOP)/tools/common/DerivedLinkContext.cs \
 	$(TOP)/tools/common/Target.cs \
 	$(TOP)/tools/common/CompilerFlags.cs \
 	$(TOP)/src/Foundation/ExportAttribute.cs \
@@ -132,11 +139,12 @@ MTOUCH_SOURCES = \
 CECIL_CONFIG=net_4_0_Release
 MONO_CECIL_DLL=$(CECIL_PATH)/bin/$(CECIL_CONFIG)/Mono.Cecil.dll
 MONO_CECIL_MDB_DLL=$(CECIL_PATH)/bin/$(CECIL_CONFIG)/Mono.Cecil.Mdb.dll
+MONO_CECIL_FILES=$(wildcard $(CECIL_PATH)/*.cs) $(wildcard $(CECIL_PATH)/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*/*/*.cs)
 
-$(MONO_CECIL_DLL): $(CECIL_PATH)/Mono.Cecil.csproj
+$(MONO_CECIL_DLL): $(CECIL_PATH)/Mono.Cecil.csproj $(MONO_CECIL_FILES)
 	$(Q_XBUILD) cd $(CECIL_PATH) && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) Mono.Cecil.csproj $(XBUILD_VERBOSITY)
 
-$(MONO_CECIL_MDB_DLL): $(MONO_CECIL_DLL) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj
+$(MONO_CECIL_MDB_DLL): $(MONO_CECIL_DLL) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj $(MONO_CECIL_FILES)
 	$(Q_XBUILD) cd $(CECIL_PATH) && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) symbols/mdb/Mono.Cecil.Mdb.csproj $(XBUILD_VERBOSITY)
 
 SIMLAUNCHERS = simlauncher32-sgen simlauncher64-sgen
@@ -300,12 +308,12 @@ MTOUCH_DEFINES= -define:ENABLE_BITCODE_ON_IOS
 endif
 
 MTOUCH_COMPILE_DEPS = $(MTOUCH_SOURCES) $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) Makefile $(LINKER_RESOURCES)
-MTOUCH_COMPILE_ARGS = -unsafe $(IOS_DEFINES) -resource:Info.plist.tmpl -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:System.Xml.Linq.dll $(MTOUCH_SOURCES) -nowarn:0436 $(LINKER_RESOURCES:%=-resource:%) $(MTOUCH_DEFINES) -debug
+MTOUCH_COMPILE_ARGS = -unsafe $(IOS_DEFINES) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:System.Xml.Linq.dll $(MTOUCH_SOURCES) -nowarn:0436 $(LINKER_RESOURCES:%=-resource:%) $(MTOUCH_DEFINES) -debug:portable
 
 # bin/Debug/mtouch.exe is used from mtouch.csproj when debugging
 bin/Debug/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
 	$(Q) mkdir -p bin/Debug
-	$(Q) $(SYSTEM_MCS) $(MTOUCH_COMPILE_ARGS) -out:$@ -debug -d:DEV
+	$(Q_CSC) $(SYSTEM_CSC) $(MTOUCH_COMPILE_ARGS) -out:$@ -d:DEV
 
 SdkVersions.cs: SdkVersions.cs.in Makefile $(TOP)/Make.config
 	$(Q_GEN) sed \
@@ -317,7 +325,7 @@ SdkVersions.cs: SdkVersions.cs.in Makefile $(TOP)/Make.config
 # bin/Makefile/mtouch.exe is what we build from the makefile (and end up releasing)
 bin/Makefile/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
 	$(Q) mkdir -p $(dir $@)
-	$(Q_MCS) $(SYSTEM_MCS) $(MTOUCH_COMPILE_ARGS) -out:$@
+	$(Q_CSC) $(SYSTEM_CSC) $(MTOUCH_COMPILE_ARGS) -out:$@
 
 LOCAL_MTOUCH = \
 	bin/Makefile/mtouch.exe \
@@ -394,13 +402,16 @@ $(TARGET_DIRS):
 	$(Q) mkdir -p $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/mtouch.exe: bin/Makefile/mtouch.exe | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch
-	$(Q) cp $<* $(dir $@)
+	$(Q) cp $< $(dir $@)
+	$(Q) cp $(<:.exe=.pdb) $(dir $@)
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.dll: $(MONO_CECIL_DLL) | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch
-	$(Q) cp $<* $(dir $@)
+	$(Q) cp $< $(dir $@)
+	$(Q) cp $(<:.exe=.pdb) $(dir $@)
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.Mdb.dll: $(MONO_CECIL_MDB_DLL) | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch
-	$(Q) cp $<* $(dir $@)
+	$(Q) cp $< $(dir $@)
+	$(Q) cp $(<:.exe=.pdb) $(dir $@)
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch: mtouch.in | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
 	$(Q_GEN) sed 's!@MONOTOUCH_PREFIX@!$(abspath $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX))!g' $< > $@
@@ -429,6 +440,12 @@ ifdef INCLUDE_IOS
 install-local:: $(TARGETS)
 all-local:: $(TARGETS)
 endif
+
+mtouch: \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch                                          \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/mtouch.exe                               \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.dll                           \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.Mdb.dll
 
 clean-local::
 	rm -Rf bin obj

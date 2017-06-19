@@ -37,6 +37,20 @@ namespace MonoTouch.Tuner {
 		}
 	}
 
+	// recent cecil removed some overloads - https://github.com/mono/cecil/commit/42db79cc16f1cbe8dbab558904e188352dba2b41
+	public static class AssemblyResolverRocks {
+
+		static ReaderParameters defaults = new ReaderParameters ();
+
+		public static AssemblyDefinition Resolve (this IAssemblyResolver self, string fullName)
+		{
+			if (fullName == null)
+				throw new ArgumentNullException (nameof (fullName));
+			
+			return self.Resolve (AssemblyNameReference.Parse (fullName), defaults);
+		}
+	}
+
 	public class MonoTouchResolver : IAssemblyResolver {
 
 		public string FrameworkDirectory { get; set; }
@@ -48,7 +62,7 @@ namespace MonoTouch.Tuner {
 
 		public MonoTouchResolver ()
 		{
-			cache = new Dictionary<string, AssemblyDefinition> (StringComparer.OrdinalIgnoreCase);
+			cache = new Dictionary<string, AssemblyDefinition> (NormalizedStringComparer.OrdinalIgnoreCase);
 		}
 
 		ReaderParameters CreateParameters (string path)
@@ -61,7 +75,7 @@ namespace MonoTouch.Tuner {
 
 		public IDictionary ToResolverCache ()
 		{
-			var resolver_cache = new Hashtable (StringComparer.OrdinalIgnoreCase);
+			var resolver_cache = new Dictionary<string, AssemblyDefinition> (NormalizedStringComparer.OrdinalIgnoreCase);
 			foreach (var pair in cache)
 				resolver_cache.Add (pair.Key, pair.Value);
 
@@ -100,6 +114,11 @@ namespace MonoTouch.Tuner {
 			}
 			cache.Add (name, assembly);
 			return assembly;
+		}
+
+		public void Add (AssemblyDefinition assembly)
+		{
+			cache [Path.GetFileNameWithoutExtension (assembly.MainModule.FileName)] = assembly;
 		}
 
 		public AssemblyDefinition Resolve (string fullName)

@@ -52,6 +52,30 @@ namespace xharness
 			case "":
 				return AppRunnerTarget.None;
 			default:
+				throw new NotImplementedException (@this);
+			}
+		}
+
+		public static Extension ParseFromNSExtensionPointIdentifier (this string @this)
+		{
+			switch (@this) {
+			case "com.apple.widget-extension":
+				return Extension.TodayExtension;
+			case "com.apple.watchkit":
+				return Extension.WatchKit2;
+			default:
+				throw new NotImplementedException ();
+			}
+		}
+
+		public static string AsNSExtensionPointIdentifier (this Extension @this)
+		{
+			switch (@this) {
+			case Extension.TodayExtension:
+				return "com.apple.widget-extension";
+			case Extension.WatchKit2:
+				return "com.apple.watchkit";
+			default:
 				throw new NotImplementedException ();
 			}
 		}

@@ -6,18 +6,18 @@ CECIL_CONFIG=net_4_0_Release
 
 MONO_CECIL_DLL=$(CECIL_PATH)/bin/$(CECIL_CONFIG)/Mono.Cecil.dll
 MONO_CECIL_MDB_DLL=$(CECIL_PATH)/bin/$(CECIL_CONFIG)/Mono.Cecil.Mdb.dll
+MONO_CECIL_FILES=$(wildcard $(CECIL_PATH)/*.cs) $(wildcard $(CECIL_PATH)/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*/*/*.cs)
 
-$(MONO_CECIL_DLL): $(CECIL_PATH)/Mono.Cecil.csproj
+$(MONO_CECIL_DLL): $(CECIL_PATH)/Mono.Cecil.csproj $(MONO_CECIL_FILES)
 	$(Q_XBUILD) cd $(CECIL_PATH) && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) Mono.Cecil.csproj $(XBUILD_VERBOSITY)
 
-$(MONO_CECIL_MDB_DLL): $(MONO_CECIL_DLL) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj
+$(MONO_CECIL_MDB_DLL): $(MONO_CECIL_DLL) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj $(MONO_CECIL_FILES)
 	$(Q_XBUILD) cd $(CECIL_PATH) && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) symbols/mdb/Mono.Cecil.Mdb.csproj $(XBUILD_VERBOSITY)
 
 BCL_LOCATION=$(MONO_PATH)/mcs/class/lib/xammac_net_4_5
 
-TOOLS_DIR=$(MONO_PATH)/mcs/tools
-LINKER_DIR=$(TOOLS_DIR)/linker
-TUNER_DIR=$(TOOLS_DIR)/tuner
+LINKER_DIR=$(LINKER_TOOLS_PATH)/linker
+TUNER_DIR=$(LINKER_TOOLS_PATH)/tuner
 
 linker_sources = \
 	$(LINKER_DIR)/Mono.Linker/Pipeline.cs				\
@@ -25,6 +25,8 @@ linker_sources = \
 	$(LINKER_DIR)/Mono.Linker/TypePreserve.cs			\
 	$(LINKER_DIR)/Mono.Linker/Annotations.cs			\
 	$(LINKER_DIR)/Mono.Linker/LinkContext.cs			\
+	$(LINKER_DIR)/Mono.Linker/LoadException.cs			\
+	$(LINKER_DIR)/Mono.Linker/MarkException.cs			\
 	$(LINKER_DIR)/Mono.Linker/AssemblyAction.cs			\
 	$(LINKER_DIR)/Mono.Linker/I18nAssemblies.cs			\
 	$(LINKER_DIR)/Mono.Linker/MethodAction.cs			\
@@ -62,7 +64,9 @@ tuner_sources = \
 	$(TUNER_DIR)/Mono.Tuner/RemoveSecurity.cs			\
 	linker/MonoMac.Tuner/MacMobileProfile.cs			\
 	linker/MonoMac.Tuner/MacRemoveResources.cs			\
+	linker/MonoMac.Tuner/MacBaseProfile.cs				\
 	linker/MonoMac.Tuner/MonoMacProfile.cs				\
+	linker/MonoMac.Tuner/XamarinMacProfile.cs			\
 	linker/MonoMac.Tuner/OptimizeGeneratedCodeSubStep.cs		\
 	linker/MonoMac.Tuner/MonoMacNamespaces.cs			\
 	linker/MonoMac.Tuner/MonoMacPreserveCode.cs			\
@@ -96,6 +100,7 @@ linker_resources = \
 mmp_sources = \
 	$(TOP)/tools/common/cache.cs    \
 	driver.cs 	\
+	aot.cs 	\
 	$(TOP)/src/ObjCRuntime/ErrorHelper.cs \
 	$(TOP)/src/ObjCRuntime/ExceptionMode.cs \
 	error.cs	\
@@ -107,6 +112,7 @@ mmp_sources = \
 	$(TOP)/tools/common/Driver.cs \
 	$(TOP)/tools/common/Frameworks.cs \
 	$(TOP)/tools/common/StaticRegistrar.cs \
+	$(TOP)/tools/common/Symbols.cs    \
 	$(TOP)/tools/common/MachO.cs           \
 	$(TOP)/src/ObjCRuntime/Registrar.core.cs	\
 	$(TOP)/src/ObjCRuntime/Registrar.cs \
@@ -116,6 +122,8 @@ mmp_sources = \
 	$(TOP)/tools/common/Target.cs \
 	$(TOP)/tools/common/Application.cs \
 	$(TOP)/tools/common/Assembly.cs \
+	$(TOP)/tools/common/DerivedLinkContext.cs \
+	$(TOP)/tools/common/StringUtils.cs \
 	$(TOP)/src/Foundation/ConnectAttribute.cs \
 	$(TOP)/src/Foundation/ExportAttribute.cs \
 	$(TOP)/src/ObjCRuntime/ArgumentSemantic.cs \
@@ -124,8 +132,20 @@ mmp_sources = \
 
 DEFINES = -d:MONOMAC -d:MMP $(APPLETLS_DEFINES)
 
-mmp.exe: Makefile $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) $(mmp_sources) config config_mobile Info.plist.tmpl $(tuner_sources) $(linker_resources)
-	$(Q_MCS) $(SYSTEM_MCS) -unsafe -out:mmp.exe $(DEFINES) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:Mono.Security.dll  -resource:config -resource:config_mobile -resource:machine.4_5.config -resource:Info.plist.tmpl $(linker_resources:%=-resource:%) $(tuner_sources) $(mmp_sources)
+LOCAL_MMP = \
+	mmp.exe \
+	Mono.Cecil.dll \
+	Mono.Cecil.Mdb.dll \
+
+mmp.exe: Makefile $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) $(mmp_sources) config config_mobile Info.plist.tmpl Info-framework.plist.tmpl $(tuner_sources) $(linker_resources)
+	$(Q_CSC) $(SYSTEM_CSC) -unsafe -out:mmp.exe $(DEFINES) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:Mono.Security.dll  -resource:config -resource:config_mobile -resource:machine.4_5.config -resource:Info.plist.tmpl -resource:Info-framework.plist.tmpl $(linker_resources:%=-resource:%) $(tuner_sources) $(mmp_sources) -debug:portable
+	$(Q) cp $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) .
+
+Mono.Cecil.dll: $(MONO_CECIL_DLL)
+	$(Q) cp $<* $(dir $@)
+
+Mono.Cecil.Mdb.dll: $(MONO_CECIL_MDB_DLL)
+	$(Q) cp $<* $(dir $@)
 
 MMP_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mmp \
@@ -144,13 +164,16 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mmp: mmp.in | $(MAC_DESTDIR)$(MAC
 	$(Q) chmod +x $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/mmp.exe: mmp.exe | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
-	$(Q) cp $<* $(dir $@)
+	$(Q) cp $< $(dir $@)
+	$(Q) cp $(<:.exe=.pdb) $(dir $@)
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Mono.Cecil.dll: $(MONO_CECIL_DLL) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
-	$(Q) cp $<* $(dir $@)
+	$(Q) cp $< $(dir $@)
+	$(Q) cp $(<:.exe=.pdb) $(dir $@)
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Mono.Cecil.Mdb.dll: $(MONO_CECIL_MDB_DLL) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
-	$(Q) cp $<* $(dir $@)
+	$(Q) cp $< $(dir $@)
+	$(Q) cp $(<:.exe=.pdb) $(dir $@)
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Xamarin.Mac.registrar.%.a: Xamarin.Mac.registrar.%.a | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
 	$(Q) cp $<* $(dir $@)
@@ -158,21 +181,21 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Xamarin.Mac.registrar.%.a: Xa
 $(MMP_DIRECTORIES):
 	$(Q) mkdir -p $@
 
-GENERATE_PART_REGISTRAR = $(Q_GEN) $(SYSTEM_MONO) --debug mmp.exe --xamarin-framework-directory=$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(OSX_SDK_VERSION)   $< --registrar:static 
+GENERATE_PART_REGISTRAR = $(Q_GEN) $(SYSTEM_MONO) --debug mmp.exe --xamarin-framework-directory=$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(OSX_SDK_VERSION)   $< --registrar:static
 
-Xamarin.Mac.registrar.mobile.i386.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile/Xamarin.Mac.dll mmp.exe
-	$(GENERATE_PART_REGISTRAR) --target-framework Xamarin.Mac,v1.0 --arch=i386
+Xamarin.Mac.registrar.mobile.i386.m:   $(TOP)/src/build/mac/mobile-32/Xamarin.Mac.dll $(LOCAL_MMP)
+	$(GENERATE_PART_REGISTRAR) --target-framework Xamarin.Mac,Version=v2.0,Profile=Mobile --arch=i386
 	$(Q) touch Xamarin.Mac.registrar.mobile.i386.m Xamarin.Mac.registrar.mobile.i386.h
 
-Xamarin.Mac.registrar.mobile.x86_64.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile/Xamarin.Mac.dll mmp.exe
-	$(GENERATE_PART_REGISTRAR) --target-framework Xamarin.Mac,v1.0 --arch=x86_64
+Xamarin.Mac.registrar.mobile.x86_64.m: $(TOP)/src/build/mac/mobile-64/Xamarin.Mac.dll $(LOCAL_MMP)
+	$(GENERATE_PART_REGISTRAR) --target-framework Xamarin.Mac,Version=v2.0,Profile=Mobile --arch=x86_64
 	$(Q) touch Xamarin.Mac.registrar.mobile.x86_64.m Xamarin.Mac.registrar.mobile.x86_64.h
 
-Xamarin.Mac.registrar.full.i386.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full/Xamarin.Mac.dll mmp.exe
+Xamarin.Mac.registrar.full.i386.m:     $(TOP)/src/build/mac/full-32/Xamarin.Mac.dll $(LOCAL_MMP)
 	$(GENERATE_PART_REGISTRAR) --target-framework 4.5 --arch=i386 --xamarin-full-framework --nolink
 	$(Q) touch Xamarin.Mac.registrar.full.i386.m Xamarin.Mac.registrar.full.i386.h
 
-Xamarin.Mac.registrar.full.x86_64.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full/Xamarin.Mac.dll mmp.exe
+Xamarin.Mac.registrar.full.x86_64.m:   $(TOP)/src/build/mac/full-64/Xamarin.Mac.dll $(LOCAL_MMP)
 	$(GENERATE_PART_REGISTRAR) --target-framework 4.5 --arch=x86_64 --xamarin-full-framework --nolink
 	$(Q) touch Xamarin.Mac.registrar.full.x86_64.m Xamarin.Mac.registrar.full.x86_64.h
 
@@ -195,12 +218,16 @@ clean-local::
 	rm -f mmp mmp.exe mmp.exe.mdb mmp-uninstalled
 	rm -f mmp.stub.c mmp.helper.o
 	rm -f output/*
-	rm -f Mono.Touch.Common.dll*
+	rm -f $(LOCAL_MMP)
+	rm -f *.mdb
 	rm -f Xamarin.Mac.registrar.*
 	$(SYSTEM_XBUILD) /t:Clean /p:Configuration=$(CECIL_CONFIG) $(CECIL_PATH)/Mono.Cecil.csproj
 	$(SYSTEM_XBUILD) /t:Clean /p:Configuration=$(CECIL_CONFIG) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj
 
 include $(TOP)/mk/rules.mk
+
+run::
+	$(Q) make -C tests
 
 # make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
 # marking those files as .SECONDARY will prevent that deletion.

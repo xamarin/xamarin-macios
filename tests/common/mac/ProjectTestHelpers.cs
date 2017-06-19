@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 using System.Reflection;
+using Xamarin.Utils;
 
 namespace Xamarin.MMP.Tests
 {
@@ -84,11 +85,11 @@ namespace Xamarin.MMP.Tests
 			return new Version (versionRegex.Match (output).Value.Split (' ')[2]);
 		}
 
-		public static string RunAndAssert (string exe, StringBuilder args, string stepName, bool shouldFail = false, Func<string> getAdditionalFailInfo = null)
+		public static string RunAndAssert (string exe, string args, string stepName, bool shouldFail = false, Func<string> getAdditionalFailInfo = null)
 		{
 			StringBuilder output = new StringBuilder ();
 			Environment.SetEnvironmentVariable ("MONO_PATH", null);
-			int compileResult = Xamarin.Bundler.Driver.RunCommand (exe, args != null ? args.ToString() : string.Empty, MonoDevelopLike, output, suppressPrintOnErrors: shouldFail);
+			int compileResult = Xamarin.Bundler.Driver.RunCommand (exe, args != null ? args.ToString() : string.Empty, null, output, suppressPrintOnErrors: shouldFail);
 			Func<string> getInfo = () => getAdditionalFailInfo != null ? getAdditionalFailInfo() : "";
 			if (!shouldFail)
 				Assert.AreEqual (0, compileResult, stepName + " failed:\n\n'" + output + "' " + exe + " " + args + getInfo ());
@@ -98,24 +99,41 @@ namespace Xamarin.MMP.Tests
 			return output.ToString ();
 		}
 
-		public static string BuildProject (string csprojTarget, bool isUnified, bool diagnosticMSBuild = false, bool shouldFail = false)
+		public static string RunAndAssert (string exe, StringBuilder args, string stepName, bool shouldFail = false, Func<string> getAdditionalFailInfo = null)
+		{
+			return RunAndAssert (exe, args.ToString (), stepName, shouldFail, getAdditionalFailInfo);
+		}
+
+		// In most cases we generate projects in tmp and this is not needed. But nuget and test projects can make that hard
+		public static void CleanUnifiedProject (string csprojTarget, bool useMSBuild = false)
+		{
+			RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/" + (useMSBuild ? "msbuild" : "xbuild"), new StringBuilder (csprojTarget + " /t:clean"), "Clean");
+		}
+
+		public static string BuildProject (string csprojTarget, bool isUnified, bool diagnosticMSBuild = false, bool shouldFail = false, bool useMSBuild = false, string configuration = null)
 		{
 			string rootDirectory = FindRootDirectory ();
 
+			// TODO - This is not enough for MSBuild to really work. We need stuff to have it not use system targets!
 			// These are required to have xbuild use are local build instead of system install
-			Environment.SetEnvironmentVariable ("XBUILD_FRAMEWORK_FOLDERS_PATH", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild-frameworks");
-			Environment.SetEnvironmentVariable ("MSBuildExtensionsPath", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild");
-			Environment.SetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
+			if (!useMSBuild) {
+				Environment.SetEnvironmentVariable ("XBUILD_FRAMEWORK_FOLDERS_PATH", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild-frameworks");
+				Environment.SetEnvironmentVariable ("MSBuildExtensionsPath", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild");
+				Environment.SetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
+			}
 
 			// This is to force build to use our mmp and not system mmp
 			StringBuilder buildArgs = new StringBuilder ();
 			if (isUnified) {
 				buildArgs.Append (diagnosticMSBuild ? " /verbosity:diagnostic " : " /verbosity:normal ");
 				buildArgs.Append (" /property:XamarinMacFrameworkRoot=" + rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current ");
+
+				if (!string.IsNullOrEmpty (configuration))
+					buildArgs.Append ($" /property:Configuration={configuration} ");
 			} else
 				buildArgs.Append (" build ");
 
-			buildArgs.Append (csprojTarget);
+			buildArgs.Append (StringUtils.Quote (csprojTarget));
 
 			Func <string> getBuildProjectErrorInfo = () => {
 				string csprojText = "\n\n\n\tCSProj: \n" + File.ReadAllText (csprojTarget);
@@ -125,9 +143,9 @@ namespace Xamarin.MMP.Tests
 			};
 
 			if (isUnified)
-				return RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/xbuild", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo);
+				return RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/" + (useMSBuild ? "msbuild" : "xbuild"), buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo);
 			else
-				return RunAndAssert ("/Applications/Xamarin Studio.app/Contents/MacOS/mdtool", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo);
+				return RunAndAssert ("/Applications/Visual Studio.app/Contents/MacOS/vstool", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo);
 		}
 
 		static string ProjectTextReplacement (UnifiedTestConfig config, string text)
@@ -135,12 +153,17 @@ namespace Xamarin.MMP.Tests
 			return text.Replace ("%CODE%", config.CSProjConfig).Replace ("%REFERENCES%", config.References).Replace ("%NAME%", config.AssemblyName ?? Path.GetFileNameWithoutExtension (config.ProjectName)).Replace ("%ITEMGROUP%", config.ItemGroup);
 		}
 
-		static string RunEXEAndVerifyGUID (string tmpDir, Guid guid, string path)
+		public static string RunEXEAndVerifyGUID (string tmpDir, Guid guid, string path)
 		{
 			// Assert that the program actually runs and returns our guid
 			Assert.IsTrue (File.Exists (path), string.Format ("{0} did not generate an exe?", path));
-			string output = RunAndAssert (path, null, "Run");
-			Assert.IsTrue(File.Exists (Path.Combine (tmpDir, guid.ToString ())), "Generated program did not create expected guid file: " + output);
+			string output = RunAndAssert (path, (string)null, "Run");
+
+			string guidPath = Path.Combine (tmpDir, guid.ToString ());
+			Assert.IsTrue(File.Exists (guidPath), "Generated program did not create expected guid file: " + output);
+
+			// Let's delete the guid file so re-runs inside same tests are accurate
+			File.Delete (guidPath);
 			return output;
 		}
 
@@ -197,41 +220,41 @@ namespace Xamarin.MMP.Tests
 			return GenerateEXEProject (config);
 		}
 
-		public static string GenerateAndBuildUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false)
+		public static string GenerateAndBuildUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, string configuration = null)
 		{
 			string csprojTarget = GenerateUnifiedExecutableProject (config);
-			return BuildProject (csprojTarget, isUnified: true, diagnosticMSBuild: config.DiagnosticMSBuild,  shouldFail: shouldFail);
+			return BuildProject (csprojTarget, isUnified: true, diagnosticMSBuild: config.DiagnosticMSBuild, shouldFail: shouldFail, configuration: configuration);
 		}
 
-		public static string RunGeneartedUnifiedExecutable (UnifiedTestConfig config)
+		public static string RunGeneratedUnifiedExecutable (UnifiedTestConfig config)
 		{
 			string bundleName = config.AssemblyName != "" ? config.AssemblyName : config.ProjectName.Split ('.')[0];
 			string exePath = Path.Combine (config.TmpDir, "bin/Debug/" + bundleName + ".app/Contents/MacOS/" + bundleName);
 			return RunEXEAndVerifyGUID (config.TmpDir, config.guid, exePath);
 		}
 
-		public static OutputText TestUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false)
+		public static OutputText TestUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, string configuration = null)
 		{
 			// If we've already generated guid bits for this config, don't tack on a second copy
 			if (config.guid == Guid.Empty)
 			{
 				config.guid = Guid.NewGuid ();
-				config.TestCode += GenerateOuputCommand (config.TmpDir, config.guid);
+				config.TestCode += GenerateOutputCommand (config.TmpDir, config.guid);
 			}
 
-			string buildOutput = GenerateAndBuildUnifiedExecutable (config, shouldFail);
+			string buildOutput = GenerateAndBuildUnifiedExecutable (config, shouldFail, configuration);
 			if (shouldFail)
 				return new OutputText (buildOutput, "");
 
-			string runOutput = RunGeneartedUnifiedExecutable (config);
+			string runOutput = RunGeneratedUnifiedExecutable (config);
 
 			return new OutputText (buildOutput, runOutput);
 		}
 
-		public static OutputText TestClassicExecutable (string tmpDir, string testCode = "", string csprojConfig = "", bool shouldFail = false)
+		public static OutputText TestClassicExecutable (string tmpDir, string testCode = "", string csprojConfig = "", bool shouldFail = false, bool includeMonoRuntime = false)
 		{
 			Guid guid = Guid.NewGuid ();
-			string csprojTarget = GenerateClassicEXEProject (tmpDir, "ClassicExample.csproj", testCode + GenerateOuputCommand (tmpDir,guid), csprojConfig, "");
+			string csprojTarget = GenerateClassicEXEProject (tmpDir, "ClassicExample.csproj", testCode + GenerateOutputCommand (tmpDir,guid), csprojConfig, includeMonoRuntime: includeMonoRuntime);
 			string buildOutput = BuildProject (csprojTarget, isUnified : false, diagnosticMSBuild: false, shouldFail : shouldFail);
 			if (shouldFail)
 				return new OutputText (buildOutput, "");
@@ -241,24 +264,24 @@ namespace Xamarin.MMP.Tests
 			return new OutputText (buildOutput, runOutput);
 		}
 
-		public static OutputText TestSystemMonoExecutable (UnifiedTestConfig config, bool shouldFail = false)
+		public static OutputText TestSystemMonoExecutable (UnifiedTestConfig config, bool shouldFail = false, string configuration = null)
 		{
 			config.guid = Guid.NewGuid ();
 			var projectName = "SystemMonoExample";
-			config.TestCode += GenerateOuputCommand (config.TmpDir, config.guid);
+			config.TestCode += GenerateOutputCommand (config.TmpDir, config.guid);
 			config.ProjectName = $"{projectName}.csproj";
 			string csprojTarget = GenerateSystemMonoEXEProject (config);
 
-			string buildOutput = BuildProject (csprojTarget, isUnified : true, diagnosticMSBuild: config.DiagnosticMSBuild, shouldFail : shouldFail);
+			string buildOutput = BuildProject (csprojTarget, isUnified: true, diagnosticMSBuild: config.DiagnosticMSBuild, shouldFail: shouldFail, configuration: configuration);
 			if (shouldFail)
 				return new OutputText (buildOutput, "");
 
-			string exePath = Path.Combine (config.TmpDir, "bin/Debug/" + projectName + ".app/Contents/MacOS/" + projectName);
+			string exePath = Path.Combine (config.TmpDir, "bin", configuration ?? "Debug",  projectName + ".app", "Contents", "MacOS", projectName);
 			string runOutput = RunEXEAndVerifyGUID (config.TmpDir, config.guid, exePath);
 			return new OutputText (buildOutput, runOutput);
 		}
 
-		public static string GenerateClassicEXEProject (string tmpDir, string projectName, string testCode, string csprojConfig = "", string references = "", string assemblyName = null)
+		public static string GenerateClassicEXEProject (string tmpDir, string projectName, string testCode, string csprojConfig = "", string references = "", string assemblyName = null, bool includeMonoRuntime = false)
 		{
 			WriteMainFile ("", testCode, false, false, Path.Combine (tmpDir, "Main.cs"));
 
@@ -267,7 +290,7 @@ namespace Xamarin.MMP.Tests
 
 			return CopyFileWithSubstitutions (Path.Combine (sourceDir, projectName), Path.Combine (tmpDir, projectName), text =>
 				{
-					return text.Replace ("%CODE%", csprojConfig).Replace ("%REFERENCES%", references).Replace ("%NAME%", assemblyName ?? Path.GetFileNameWithoutExtension (projectName));
+					return text.Replace ("%CODE%", csprojConfig).Replace ("%REFERENCES%", references).Replace ("%NAME%", assemblyName ?? Path.GetFileNameWithoutExtension (projectName)).Replace ("%INCLUDE_MONO_RUNTIME%", includeMonoRuntime.ToString ());
 				});
 		}
 
@@ -290,7 +313,7 @@ namespace Xamarin.MMP.Tests
 				});
 		}
 
-		public static string TestDirectory => "../../../../../../../";
+		public static string TestDirectory => Path.Combine (FindRootDirectory (), "..", "tests") + "/";
 
 		public static string FindSourceDirectory ()
 		{
@@ -306,25 +329,6 @@ namespace Xamarin.MMP.Tests
 			string text = replacementAction (System.IO.File.ReadAllText (src));
 			System.IO.File.WriteAllText (target, text);
 			return target;
-		}
-
-		// Configuration.MonoDevelopLike is a Dictionary<string, string> but RunCommand wants string [], convert!
-		static string [] MonoDevelopLike {
-			get {
-				List<string> keys = Xamarin.Tests.Configuration.MonoDevelopLike.Keys.ToList ();
-				int numberOfKeys = keys.Count ();
-				var retValue = new string [numberOfKeys  * 2 + 2];
-				for (int i = 0 ; i < numberOfKeys ; i++) {
-					retValue[i * 2] = keys[i];
-					if (keys[i] == "PATH") // For some reason MonoDevelopLike is blapping PATH so we can't find xcrun
-						retValue[1 + (i * 2)] = Xamarin.Tests.Configuration.MonoDevelopLike[keys[i]] + ":/usr/bin";
-					else
-						retValue[1 + (i * 2)] = Xamarin.Tests.Configuration.MonoDevelopLike[keys[i]];
-				}
-				retValue [numberOfKeys * 2] = "MD_APPLE_SDK_ROOT";
-				retValue [numberOfKeys * 2 + 1] = System.Environment.GetEnvironmentVariable ("MD_APPLE_SDK_ROOT");
-				return retValue;
-			}
 		}
 
 		static void WriteMainFile (string decl, string content, bool isUnified, bool fsharp, string location)
@@ -370,7 +374,7 @@ namespace TestCase
 
 		public static string FindRootDirectory ()
 		{
-			var current = Environment.CurrentDirectory;
+			var current = Assembly.GetExecutingAssembly ().Location;
 			while (!Directory.Exists (Path.Combine (current, "_mac-build")) && current.Length > 1)
 				current = Path.GetDirectoryName (current);
 			if (current.Length <= 1)
@@ -378,7 +382,7 @@ namespace TestCase
 			return Path.GetFullPath (Path.Combine (current, "_mac-build"));
 		}
 
-		static string GenerateOuputCommand (string tmpDir, Guid guid)
+		static string GenerateOutputCommand (string tmpDir, Guid guid)
 		{
 			return string.Format ("System.IO.File.Create(\"{0}\").Dispose();",  Path.Combine (tmpDir, guid.ToString ()));
 		}
@@ -410,6 +414,7 @@ namespace TestCase
 }
 
 // A bit of a hack so we can reuse all of the RunCommand logic
+#if !MMP_TEST
 namespace Xamarin.Bundler {
 	public static partial class Driver
 	{
@@ -485,3 +490,4 @@ namespace Xamarin.Bundler {
 		}
 	}
 }
+#endif

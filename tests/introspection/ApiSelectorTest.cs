@@ -153,6 +153,13 @@ namespace Introspection {
 #endif
 			// This ctors needs to be manually bound
 			switch (type.Name) {
+			case "AVCaptureVideoPreviewLayer":
+				switch (selectorName) {
+				case "initWithSession:":
+				case "initWithSessionWithNoConnection:":
+					return true;
+				}
+				break;
 			case "GKPath":
 				switch (selectorName) {
 				case "initWithPoints:count:radius:cyclical:":
@@ -173,6 +180,17 @@ namespace Introspection {
 				case "initHemisphereWithExtent:segments:inwardNormals:cap:geometryType:allocator:":
 				case "initMeshBySubdividingMesh:submeshIndex:subdivisionLevels:allocator:":
 				case "initSphereWithExtent:segments:inwardNormals:geometryType:allocator:":
+				case "initBoxWithExtent:segments:inwardNormals:geometryType:allocator:":
+				case "initCylinderWithExtent:segments:inwardNormals:topCap:bottomCap:geometryType:allocator:":
+				case "initIcosahedronWithExtent:inwardNormals:geometryType:allocator:":
+				case "initPlaneWithExtent:segments:geometryType:allocator:":
+					return true;
+				}
+				break;
+			case "MDLNoiseTexture":
+				switch (selectorName) {
+				case "initCellularNoiseWithFrequency:name:textureDimensions:channelEncoding:":
+				case "initVectorNoiseWithSmoothness:name:textureDimensions:channelEncoding:":
 					return true;
 				}
 				break;
@@ -508,6 +526,11 @@ namespace Introspection {
 			case "initWithLeaderboardIdentifier:":
 			// MCSession
 			case "initWithPeer:securityIdentity:encryptionPreference:":
+			// INSetProfileInCarIntent and INSaveProfileInCarIntent
+			case "initWithProfileNumber:profileName:defaultProfile:":
+			case "initWithProfileNumber:profileLabel:defaultProfile:":
+			case "initWithProfileNumber:profileName:":
+			case "initWithProfileNumber:profileLabel:":
 			// UISegmentedControl
 			case "initWithItems:":
 				var mi = m as MethodInfo;

@@ -9,7 +9,10 @@ namespace Xamarin.Linker.Steps {
 
 	// The value of some metadata is very low, some is useful only when debugging
 	// and other can be replaced with different information
-	public class MetadataReducerSubStep : BaseSubStep {
+	public class MetadataReducerSubStep : ExceptionalSubStep {
+
+		protected override string Name { get; } = "Metadata Reducer";
+		protected override int ErrorCode { get; } = 2070;
 
 		public override SubStepTargets Targets {
 			get {
@@ -33,7 +36,7 @@ namespace Xamarin.Linker.Steps {
 			return Annotations.GetAction (assembly) == AssemblyAction.Link;
 		}
 
-		public override void ProcessMethod (MethodDefinition method)
+		protected override void Process (MethodDefinition method)
 		{
 			if (method.IsPInvokeImpl) {
 				// note: ObjCRuntime.Messaging - but also 3rd parties bindings (normally ApiDefinitions.Messaging)
@@ -41,7 +44,7 @@ namespace Xamarin.Linker.Steps {
 				var dt = method.DeclaringType;
 				if (!method.IsPublic || !dt.IsPublic) {
 					// Avoid hundreds of different strings for msgSend[Super] overloads
-					// C# requires different names (for methods with ifferent return values)
+					// C# requires different names (for methods with different return values)
 					// but it's not an issue in IL
 					if ((dt.Name == "Messaging") && (method.PInvokeInfo.Module.Name == "/usr/lib/libobjc.dylib"))
 						method.Name = method.PInvokeInfo.EntryPoint;

@@ -13,7 +13,11 @@ using System.IO;
 using System.Runtime.InteropServices;
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -78,7 +82,11 @@ namespace MonoTouchFixtures.Foundation {
 		public void FromFile ()
 		{
 			Assert.Null (NSData.FromFile ("does not exists"), "unexisting");
+#if MONOMAC // Info.Plist isn't there to load from the same location on mac
+			Assert.NotNull (NSData.FromFile (NSBundle.MainBundle.PathForResource ("runtime-options", "plist")), "runtime-options.plist");
+#else
 			Assert.NotNull (NSData.FromFile ("Info.plist"), "Info.plist");
+#endif
 		}
 
 		[Test]

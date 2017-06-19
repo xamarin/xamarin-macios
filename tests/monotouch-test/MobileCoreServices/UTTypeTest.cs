@@ -13,7 +13,6 @@ using System;
 using Foundation;
 using MobileCoreServices;
 using ObjCRuntime;
-using UIKit;
 #else
 using MonoTouch;
 using MonoTouch.Foundation;

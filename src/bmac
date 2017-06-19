@@ -15,6 +15,7 @@ fi
 
 ROOT_DIR=$BMAC_DIR/..
 
+btouch_arguments=()
 for arg in "$@"; do
 	if [[ $sdk == next-arg ]]; then
 		sdk=$arg
@@ -23,6 +24,10 @@ for arg in "$@"; do
 		if [[ $sdk == $arg ]]; then
 			sdk=next-arg
 		fi
+	elif [[ $arg =~ ^(/|-{1,2})new-style$ ]]; then
+		new_style=1
+		mobile_profile=1
+		continue
 	elif [[ $arg =~ ^(/|-{1,2})unified-full-profile$ ]]; then
 		full_profile=1
 		new_style=1
@@ -30,6 +35,7 @@ for arg in "$@"; do
 		mobile_profile=1
 		new_style=1
 	fi
+	btouch_arguments+=("${arg}")
 done
 
 sdk=$(echo $sdk | tr '[:upper:]' '[:lower:]')
@@ -43,15 +49,15 @@ mobile|xamarin.mac|xammac)
 *)
 	if [[ -z "$new_style" ]]; then
 		bmac=bmac-compat.exe
-		refs="-r:/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/System.Drawing.dll -baselib:$ROOT_DIR/lib/mono/XamMac.dll"
+		refs="-r:/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/System.Drawing.dll -baselib:$ROOT_DIR/lib/mono/XamMac.dll --target-framework=XamMac,v1.0"
 		export MONO_PATH=$ROOT_DIR/lib/mono
 	else
 		if [[ "$full_profile" -eq 1 ]]; then
-			refs="-baselib:$ROOT_DIR/lib/reference/full/Xamarin.Mac.dll"
+			refs="-baselib:$ROOT_DIR/lib/reference/full/Xamarin.Mac.dll --target-framework=Xamarin.Mac,Version=v4.5,Profile=Full"
 			bmac=bmac-full.exe
 			export MONO_PATH=$ROOT_DIR/lib/reference/full
 		elif [[ "$mobile_profile" -eq 1 ]]; then
-			refs="-baselib:$ROOT_DIR/lib/reference/mobile/Xamarin.Mac.dll"
+			refs="-baselib:$ROOT_DIR/lib/reference/mobile/Xamarin.Mac.dll --target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile"
 			bmac=bmac-mobile.exe
 			export MONO_PATH=$ROOT_DIR/lib/mono/Xamarin.Mac
 			mono="$ROOT_DIR/bin/bmac-mobile-mono"
@@ -60,4 +66,4 @@ mobile|xamarin.mac|xammac)
 	;;
 esac
 
-$mono $MONO_OPTIONS $ROOT_DIR/lib/bmac/$bmac $refs "$@"
+$mono $MONO_OPTIONS $ROOT_DIR/lib/bmac/$bmac $refs "${btouch_arguments[@]}"

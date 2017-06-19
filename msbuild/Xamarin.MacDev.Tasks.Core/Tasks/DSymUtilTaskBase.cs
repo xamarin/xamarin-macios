@@ -6,22 +6,6 @@ using Microsoft.Build.Utilities;
 
 namespace Xamarin.MacDev.Tasks
 {
-	[Flags]
-	enum TargetArchitecture
-	{
-		Default      = 0,
-		ARMv6        = 1,
-		ARMv7        = 2,
-		ARMv7s       = 4,
-
-		// Note: needed for backwards compatability
-		ARMv6_ARMv7  = 3,
-
-		i386		 = 8,
-		x86_64		 = 16,
-		ARM64		 = 32,
-	}
-
 	public abstract class DSymUtilTaskBase : ToolTask
 	{
 		#region Inputs
@@ -50,7 +34,7 @@ namespace Xamarin.MacDev.Tasks
 			if (!string.IsNullOrEmpty (ToolPath))
 				return Path.Combine (ToolPath, ToolExe);
 
-			var path = Path.Combine ("/usr/bin", ToolExe);
+			var path = Path.Combine (AppleSdkSettings.DeveloperRoot, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin", ToolExe);
 
 			return File.Exists (path) ? path : ToolExe;
 		}

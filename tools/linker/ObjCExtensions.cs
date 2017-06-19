@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Tuner;
 
+using Xamarin.Tuner;
+
 namespace Xamarin.Linker {
 
 	static class Namespaces {
@@ -53,6 +55,8 @@ namespace Xamarin.Linker {
 			MultipeerConnectivity = profile.GetNamespace ("MultipeerConnectivity");
 			MetalKit = profile.GetNamespace ("MetalKit");
 			ModelIO = profile.GetNamespace ("ModelIO");
+			Intents = profile.GetNamespace ("Intents");
+			Photos = profile.GetNamespace ("Photos");
 #if MONOMAC
 			IOBluetooth = profile.GetNamespace ("IOBluetooth");
 			IOBluetoothUI = profile.GetNamespace ("IOBluetoothUI");
@@ -67,6 +71,8 @@ namespace Xamarin.Linker {
 			SceneKit = profile.GetNamespace ("SceneKit");
 			ScriptingBridge = profile.GetNamespace ("ScriptingBridge");
 			WebKit = profile.GetNamespace ("WebKit");
+			MediaPlayer = profile.GetNamespace ("MediaPlayer");
+			PrintCore = profile.GetNamespace ("PrintCore");
 #else
 			Registrar = profile.GetNamespace ("Registrar");
 			UIKit = profile.GetNamespace ("UIKit");
@@ -124,6 +130,10 @@ namespace Xamarin.Linker {
 
 		public static string StoreKit { get; private set; }
 
+		public static string Intents { get; private set; }
+
+		public static string Photos { get; private set; }
+
 #if MONOMAC
 		public static string IOBluetooth { get; private set; }
 		public static string IOBluetoothUI { get; private set; }
@@ -147,6 +157,8 @@ namespace Xamarin.Linker {
 		public static string ScriptingBridge { get; private set; }
 
 		public static string WebKit { get; private set; }
+		public static string MediaPlayer { get; private set; }
+		public static string PrintCore { get; private set; }
 #else
 		public static string Registrar { get; private set; }
 
@@ -166,18 +178,16 @@ namespace Xamarin.Linker {
 			}
 		}
 
-		internal static HashSet<TypeDefinition> cached_isnsobject;
-
-		public static bool IsNSObject (this TypeReference type)
+		public static bool IsNSObject (this TypeReference type, DerivedLinkContext link_context)
 		{
-			return type.Resolve ().IsNSObject ();
+			return type.Resolve ().IsNSObject (link_context);
 		}
 
 		// warning: *Is* means does 'type' inherits from MonoTouch.Foundation.NSObject ?
-		public static bool IsNSObject (this TypeDefinition type)
+		public static bool IsNSObject (this TypeDefinition type, DerivedLinkContext link_context)
 		{
-			if (cached_isnsobject != null)
-				return cached_isnsobject.Contains (type);
+			if (link_context?.CachedIsNSObject != null)
+				return link_context.CachedIsNSObject.Contains (type);
 
 			return type.Inherits (Namespaces.Foundation, "NSObject");
 		}

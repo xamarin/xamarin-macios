@@ -4287,7 +4287,6 @@
               </method>
               <method name="MoveToContentAsync()" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task`1[System.Xml.XmlNodeType]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters />
@@ -4318,7 +4317,6 @@
               </method>
               <method name="ReadContentAsAsync(System.Type, System.Xml.IXmlNamespaceResolver)" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task`1[System.Object]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -4383,7 +4381,6 @@
               </method>
               <method name="ReadContentAsObjectAsync()" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task`1[System.Object]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters />
@@ -4410,7 +4407,6 @@
               </method>
               <method name="ReadElementContentAsAsync(System.Type, System.Xml.IXmlNamespaceResolver)" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task`1[System.Object]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -4520,7 +4516,6 @@
               </method>
               <method name="ReadElementContentAsObjectAsync()" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task`1[System.Object]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters />
@@ -4536,7 +4531,6 @@
               </method>
               <method name="ReadElementContentAsStringAsync()" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task`1[System.String]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters />
@@ -4584,7 +4578,6 @@
               </method>
               <method name="ReadInnerXmlAsync()" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task`1[System.String]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters />
@@ -4594,7 +4587,6 @@
               </method>
               <method name="ReadOuterXmlAsync()" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task`1[System.String]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters />
@@ -6045,7 +6037,6 @@
               </method>
               <method name="GetEntityAsync(System.Uri, System.String, System.Type)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task`1[System.Object]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -6661,7 +6652,6 @@
               </method>
               <method name="WriteAttributesAsync(System.Xml.XmlReader, System.Boolean)" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -6780,7 +6770,6 @@
               </method>
               <method name="WriteElementStringAsync(System.String, System.String, System.String, System.String)" attrib="134" returntype="System.Threading.Tasks.Task">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -6858,7 +6847,6 @@
               </method>
               <method name="WriteNodeAsync(System.Xml.XPath.XPathNavigator, System.Boolean)" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -6892,7 +6880,6 @@
               </method>
               <method name="WriteQualifiedNameAsync(System.String, System.String)" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
                   <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
                 </attributes>
                 <parameters>
@@ -16079,6 +16066,12 @@
                   <parameter name="serializable" position="0" attrib="0" type="System.Xml.Serialization.IXmlSerializable" />
                 </parameters>
               </method>
+              <method name="ReadSerializable(System.Xml.Serialization.IXmlSerializable, System.Boolean)" attrib="132" returntype="System.Xml.Serialization.IXmlSerializable">
+                <parameters>
+                  <parameter name="serializable" position="0" attrib="0" type="System.Xml.Serialization.IXmlSerializable" />
+                  <parameter name="wrappedAny" position="1" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
               <method name="ReadString(System.String)" attrib="132" returntype="System.String">
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.String" />
@@ -17040,6 +17033,16 @@
                   <parameter name="defaultNamespace" position="4" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
+              <constructor name=".ctor(System.Type, System.Xml.Serialization.XmlAttributeOverrides, System.Type[], System.Xml.Serialization.XmlRootAttribute, System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="type" position="0" attrib="0" type="System.Type" />
+                  <parameter name="overrides" position="1" attrib="0" type="System.Xml.Serialization.XmlAttributeOverrides" />
+                  <parameter name="extraTypes" position="2" attrib="0" type="System.Type[]" />
+                  <parameter name="root" position="3" attrib="0" type="System.Xml.Serialization.XmlRootAttribute" />
+                  <parameter name="defaultNamespace" position="4" attrib="0" type="System.String" />
+                  <parameter name="location" position="5" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
               <constructor name=".ctor(System.Type, System.Xml.Serialization.XmlAttributeOverrides, System.Type[], System.Xml.Serialization.XmlRootAttribute, System.String, System.String, System.Security.Policy.Evidence)" attrib="6278">
                 <attributes />
                 <parameters>
@@ -17313,6 +17316,16 @@
                   <parameter name="extraTypes" position="2" attrib="0" type="System.Type[]" />
                   <parameter name="root" position="3" attrib="0" type="System.Xml.Serialization.XmlRootAttribute" />
                   <parameter name="defaultNamespace" position="4" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="CreateSerializer(System.Type, System.Xml.Serialization.XmlAttributeOverrides, System.Type[], System.Xml.Serialization.XmlRootAttribute, System.String, System.String)" attrib="134" returntype="System.Xml.Serialization.XmlSerializer">
+                <parameters>
+                  <parameter name="type" position="0" attrib="0" type="System.Type" />
+                  <parameter name="overrides" position="1" attrib="0" type="System.Xml.Serialization.XmlAttributeOverrides" />
+                  <parameter name="extraTypes" position="2" attrib="0" type="System.Type[]" />
+                  <parameter name="root" position="3" attrib="0" type="System.Xml.Serialization.XmlRootAttribute" />
+                  <parameter name="defaultNamespace" position="4" attrib="0" type="System.String" />
+                  <parameter name="location" position="5" attrib="0" type="System.String" />
                 </parameters>
               </method>
               <method name="CreateSerializer(System.Type, System.Xml.Serialization.XmlAttributeOverrides, System.Type[], System.Xml.Serialization.XmlRootAttribute, System.String, System.String, System.Security.Policy.Evidence)" attrib="134" returntype="System.Xml.Serialization.XmlSerializer">
@@ -18807,6 +18820,11 @@
                   <parameter name="stylesheetUri" position="0" attrib="0" type="System.String" />
                 </parameters>
               </method>
+              <method name="Load(System.Type)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="compiledStylesheet" position="0" attrib="0" type="System.Type" />
+                </parameters>
+              </method>
               <method name="Load(System.Xml.XPath.IXPathNavigable)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="stylesheet" position="0" attrib="0" type="System.Xml.XPath.IXPathNavigable" />
@@ -18815,6 +18833,13 @@
               <method name="Load(System.Xml.XmlReader)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="stylesheet" position="0" attrib="0" type="System.Xml.XmlReader" />
+                </parameters>
+              </method>
+              <method name="Load(System.Reflection.MethodInfo, System.Byte[], System.Type[])" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="executeMethod" position="0" attrib="0" type="System.Reflection.MethodInfo" />
+                  <parameter name="queryData" position="1" attrib="0" type="System.Byte[]" />
+                  <parameter name="earlyBoundTypes" position="2" attrib="0" type="System.Type[]" />
                 </parameters>
               </method>
               <method name="Load(System.String, System.Xml.Xsl.XsltSettings, System.Xml.XmlResolver)" attrib="134" returntype="System.Void">
@@ -18923,6 +18948,14 @@
                   <parameter name="input" position="0" attrib="0" type="System.Xml.XmlReader" />
                   <parameter name="arguments" position="1" attrib="0" type="System.Xml.Xsl.XsltArgumentList" />
                   <parameter name="results" position="2" attrib="0" type="System.Xml.XmlWriter" />
+                </parameters>
+              </method>
+              <method name="Transform(System.Xml.XPath.IXPathNavigable, System.Xml.Xsl.XsltArgumentList, System.Xml.XmlWriter, System.Xml.XmlResolver)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="input" position="0" attrib="0" type="System.Xml.XPath.IXPathNavigable" />
+                  <parameter name="arguments" position="1" attrib="0" type="System.Xml.Xsl.XsltArgumentList" />
+                  <parameter name="results" position="2" attrib="0" type="System.Xml.XmlWriter" />
+                  <parameter name="documentResolver" position="3" attrib="0" type="System.Xml.XmlResolver" />
                 </parameters>
               </method>
               <method name="Transform(System.Xml.XmlReader, System.Xml.Xsl.XsltArgumentList, System.Xml.XmlWriter, System.Xml.XmlResolver)" attrib="134" returntype="System.Void">

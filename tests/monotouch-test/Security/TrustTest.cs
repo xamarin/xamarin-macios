@@ -15,7 +15,11 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 using Security;
 using ObjCRuntime;
 #else
@@ -208,7 +212,7 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (trust.Count, Is.EqualTo (ios9 ? 2 : 3), "Count");
 
 				using (SecKey pkey = trust.GetPublicKey ()) {
-					Assert.That (CFGetRetainCount (pkey.Handle), Is.GreaterThan ((nint) 1), "RetainCount(pkey)");
+					Assert.That (CFGetRetainCount (pkey.Handle), Is.GreaterThanOrEqualTo ((nint) 1), "RetainCount(pkey)");
 				}
 			}
 		}
@@ -309,7 +313,7 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (trust.Count, Is.EqualTo (3), "Count");
 
 				using (SecKey pkey = trust.GetPublicKey ()) {
-					Assert.That (CFGetRetainCount (pkey.Handle), Is.GreaterThan ((nint) 1), "RetainCount(pkey)");
+					Assert.That (CFGetRetainCount (pkey.Handle), Is.GreaterThanOrEqualTo ((nint) 1), "RetainCount(pkey)");
 				}
 			}
 		}

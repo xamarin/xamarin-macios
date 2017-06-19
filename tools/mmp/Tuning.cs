@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Text;
 using System.Xml.XPath;
 
 using Mono.Linker;
@@ -11,10 +12,11 @@ using MonoTouch.Tuner;
 using Xamarin.Bundler;
 using Xamarin.Linker;
 using Xamarin.Linker.Steps;
+using Xamarin.Tuner;
 using Xamarin.Utils;
 
 using Mono.Cecil;
-using Mono.Cecil.Mdb;
+using Mono.Cecil.Cil;
 
 namespace MonoMac.Tuner {
 
@@ -33,6 +35,7 @@ namespace MonoMac.Tuner {
 		internal PInvokeWrapperGenerator MarshalNativeExceptionsState { get; set; }
 		internal RuntimeOptions RuntimeOptions { get; set; }
 		public bool SkipExportedSymbolsInSdkAssemblies { get; set; }
+		public Target Target { get; set; }
 
 		public static I18nAssemblies ParseI18nAssemblies (string i18n)
 		{
@@ -54,11 +57,9 @@ namespace MonoMac.Tuner {
 		}
 	}
 
-	public class MonoMacLinkContext : LinkContext {
+	public class MonoMacLinkContext : DerivedLinkContext {
 
 		Dictionary<string, List<MethodDefinition>> pinvokes = new Dictionary<string, List<MethodDefinition>> ();
-		public Dictionary<string, MemberReference> RequiredSymbols = new Dictionary<string, MemberReference> ();
-		List<MethodDefinition> marshal_exception_pinvokes;
 
 		public MonoMacLinkContext (Pipeline pipeline, AssemblyResolver resolver) : base (pipeline, resolver)
 		{
@@ -67,28 +68,12 @@ namespace MonoMac.Tuner {
 		public IDictionary<string, List<MethodDefinition>> PInvokeModules {
 			get { return pinvokes; }
 		}
-
-		public List<MethodDefinition> MarshalExceptionPInvokes {
-			get {
-				if (marshal_exception_pinvokes == null)
-					marshal_exception_pinvokes = new List<MethodDefinition> ();
-				return marshal_exception_pinvokes;
-			}
-		}
 	}
 
 	class Linker {
 
 		public static void Process (LinkerOptions options, out LinkContext context, out List<string> assemblies)
 		{
-			switch (options.TargetFramework.Identifier) {
-			case "Xamarin.Mac":
-				Profile.Current = new MacMobileProfile (options.Architecture == "x86_64" ? 64 : 32);
-				break;
-			default:
-				Profile.Current = new MonoMacProfile ();
-				break;
-			}
 			Namespaces.Initialize ();
 
 			var pipeline = CreatePipeline (options);
@@ -97,6 +82,7 @@ namespace MonoMac.Tuner {
 
 			context = CreateLinkContext (options, pipeline);
 			context.Resolver.AddSearchDirectory (options.OutputDirectory);
+			context.KeepTypeForwarderOnlyAssemblies = (Profile.Current is XamarinMacProfile);
 
 			try {
 				pipeline.Process (context);
@@ -110,8 +96,24 @@ namespace MonoMac.Tuner {
 				TypeReference tr = (re.Member as TypeReference);
 				IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
 				throw new MonoMacException (2002, true, re, "Failed to resolve \"{0}\" reference from \"{1}\"", re.Member, scope);
+			} catch (XmlResolutionException ex) {
+				throw new MonoMacException (2017, true, ex, "Could not process XML description: {0}", ex?.InnerException?.Message ?? ex.Message);
 			} catch (Exception e) {
-				throw new MonoMacException (2001, true, e, "Could not link assemblies. Reason: {0}", e.Message);
+				var message = new StringBuilder ();
+				if (e.Data.Count > 0) {
+					message.AppendLine ();
+					var m = e.Data ["MethodDefinition"] as string;
+					if (m != null)
+						message.AppendLine ($"\tMethod: `{m}`");
+					var t = e.Data ["TypeReference"] as string;
+					if (t != null)
+						message.AppendLine ($"\tType: `{t}`");
+					var a = e.Data ["AssemblyDefinition"] as string;
+					if (a != null)
+						message.AppendLine ($"\tAssembly: `{a}`");
+				}
+				message.Append ($"Reason: {e.Message}");
+				throw new MonoMacException (2001, true, e, "Could not link assemblies. {0}", message);
 			}
 
 			assemblies = ListAssemblies (context);
@@ -123,10 +125,12 @@ namespace MonoMac.Tuner {
 			context.CoreAction = AssemblyAction.Link;
 			context.LinkSymbols = options.LinkSymbols;
 			if (options.LinkSymbols) {
-				context.SymbolReaderProvider = new MdbReaderProvider ();
-				context.SymbolWriterProvider = new MdbWriterProvider ();
+				context.SymbolReaderProvider = new DefaultSymbolReaderProvider ();
+				context.SymbolWriterProvider = new DefaultSymbolWriterProvider ();
 			}
 			context.OutputDirectory = options.OutputDirectory;
+			context.StaticRegistrar = options.Target.StaticRegistrar;
+			context.Target = options.Target;
 			return context;
 		}
 
@@ -155,22 +159,26 @@ namespace MonoMac.Tuner {
 			if (options.LinkMode != LinkMode.None) {
 				pipeline.AppendStep (new TypeMapStep ());
 
-				pipeline.AppendStep (new SubStepDispatcher {
+				var subdispatcher = new SubStepDispatcher {
 					new ApplyPreserveAttribute (),
-					new CoreRemoveSecurity (),
 					new OptimizeGeneratedCodeSubStep (options.EnsureUIThread),
 					new RemoveUserResourcesSubStep (),
 					new CoreRemoveAttributes (),
 					new CoreHttpMessageHandler (options),
 					new MarkNSObjects (),
-				});
+				};
+				// CoreRemoveSecurity can modify non-linked assemblies
+				// but the conditions for this cannot happen if only the platform assembly is linked
+				if (options.LinkMode != LinkMode.Platform)
+					subdispatcher.Add (new CoreRemoveSecurity ());
+				pipeline.AppendStep (subdispatcher);
 
 				pipeline.AppendStep (new MonoMacPreserveCode (options));
 				pipeline.AppendStep (new PreserveCrypto ());
 
 				pipeline.AppendStep (new MonoMacMarkStep ());
 				pipeline.AppendStep (new MacRemoveResources (options));
-				pipeline.AppendStep (new MobileSweepStep ());
+				pipeline.AppendStep (new MobileSweepStep (options.LinkSymbols));
 				pipeline.AppendStep (new CleanStep ());
 
 				pipeline.AppendStep (new MonoMacNamespaces ());
@@ -243,12 +251,20 @@ namespace MonoMac.Tuner {
 			if (link_mode == LinkMode.None)
 				return false;
 
+			if (link_mode == LinkMode.Platform)
+				return Profile.IsProductAssembly (assembly);
+
 			return base.IsLinked (assembly);
 		}
 
 		protected override void ProcessAssembly (AssemblyDefinition assembly)
 		{
-			if (link_mode == LinkMode.None) {
+			switch (link_mode) {
+			case LinkMode.Platform:
+				if (!Profile.IsProductAssembly (assembly))
+					Annotations.SetAction (assembly, AssemblyAction.Copy);
+				break;
+			case LinkMode.None:
 				Annotations.SetAction (assembly, AssemblyAction.Copy);
 				return;
 			}

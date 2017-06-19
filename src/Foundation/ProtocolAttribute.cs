@@ -34,6 +34,19 @@ namespace XamCore.Foundation {
 		public Type WrapperType { get; set; }
 		public string Name { get; set; }
 		public bool IsInformal { get; set; }
+		// In which SDK version this protocol switched from being informal (i.e. a category) to a formal protocol.
+		// System.Version is not a valid type for attributes, so we're using a string instead.
+		string informal_until;
+		public string FormalSince {
+			get {
+				return informal_until;
+			}
+			set {
+				if (value != null)
+					Version.Parse (value); // This will throw an exception with invalid input, which is what we want.
+				informal_until = value;
+			}
+		}
 	}
 
 	[AttributeUsage (AttributeTargets.Interface, AllowMultiple = true)]

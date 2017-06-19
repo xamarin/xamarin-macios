@@ -54,6 +54,10 @@ namespace XamCore.VideoSubscriberAccount {
 
 		[Field ("VSErrorInfoKeyUnsupportedProviderIdentifier")]
 		NSString UnsupportedProviderIdentifierKey { get; }
+
+		[TV (10,1)][iOS (10,2)]
+		[Field ("VSErrorInfoKeyAccountProviderResponse")]
+		NSString AccountProviderResponseKey { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -67,6 +71,9 @@ namespace XamCore.VideoSubscriberAccount {
 		string SamlResponseStatus { get; }
 
 		string UnsupportedProviderIdentifier { get; }
+
+		[TV (10,1)][iOS (10,2)]
+		string AccountProviderResponse { get; }
 	}
 
 	interface IVSAccountManagerDelegate { }
@@ -154,6 +161,10 @@ namespace XamCore.VideoSubscriberAccount {
 
 		[NullAllowed, Export ("SAMLAttributeQueryResponse")]
 		string SamlAttributeQueryResponse { get; }
+
+		[TV (10,1)][iOS (10,2)]
+		[NullAllowed, Export ("accountProviderResponse", ArgumentSemantic.Strong)]
+		VSAccountProviderResponse AccountProviderResponse { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -188,6 +199,38 @@ namespace XamCore.VideoSubscriberAccount {
 
 		[Export ("attributeNames", ArgumentSemantic.Copy)]
 		string [] AttributeNames { get; set; }
+
+		[Protected]
+		[TV (10,1)][iOS (10,2)]
+		[Export ("supportedAuthenticationSchemes", ArgumentSemantic.Copy)]
+		NSString[] SupportedAuthenticationSchemesString { get; set; }
 	}
+
+	[iOS (10,2)]
+	[TV (10,1)]
+	[BaseType (typeof (NSObject))]
+	interface VSAccountProviderResponse {
+
+		[Protected]
+		[Export ("authenticationScheme")]
+		NSString AuthenticationSchemeString { get; }
+
+		[Wrap ("VSAccountProviderAuthenticationSchemeExtensions.GetValue (AuthenticationSchemeString)")]
+		VSAccountProviderAuthenticationScheme AuthenticationScheme { get; }
+
+		[NullAllowed, Export ("status")]
+		string Status { get; }
+
+		[NullAllowed, Export ("body")]
+		string Body { get; }
+	}
+
+	[iOS (10,2)]
+	[TV (10,1)]
+	enum VSAccountProviderAuthenticationScheme {
+		[Field ("VSAccountProviderAuthenticationSchemeSAML")]
+		Saml,
+	}
+
 }
 

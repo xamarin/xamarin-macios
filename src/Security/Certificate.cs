@@ -264,50 +264,97 @@ namespace XamCore.Security {
 				return new NSData (dataPtr);
 			}
 		}
-#elif NATIVE_APPLE_CERTIFICATE && (__IOS__ || __WATCHOS__ || __TVOS__)
-		//
-		// EXPERIMENTAL
-		// Needs some more testing before we can make this public.
-		// AppleTls does not actually use this API, so it may be removed again.
-		//
-		internal NSData GetPublicKey ()
+#else
+		[iOS (10,3)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* __nullable SecKeyRef */ IntPtr SecCertificateCopyPublicKey (IntPtr /* SecCertificateRef */ certificate);
+
+		[iOS (10,3)]
+		public SecKey GetPublicKey ()
 		{
-			if (handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("SecCertificate");
-
-			var policy = SecPolicy.CreateBasicX509Policy ();
-			var trust = new SecTrust (this, policy);
-			trust.Evaluate ();
-
-			SecStatusCode status;
-
-			using (var key = trust.GetPublicKey ())
-			using (var query = new SecRecord (SecKind.Key)) {
-				query.SetValueRef (key);
-
-				status = SecKeyChain.Add (query);
-				if (status != SecStatusCode.Success && status != SecStatusCode.DuplicateItem)
-					throw new InvalidOperationException (status.ToString ());
-
-				bool added = status == SecStatusCode.Success;
-
-				try {
-					var data = SecKeyChain.QueryAsData (query, false, out status);
-					if (status != SecStatusCode.Success)
-						throw new InvalidOperationException (status.ToString ());
-
-					return data;
-				} finally {
-					if (added) {
-						status = SecKeyChain.Remove (query);
-						if (status != SecStatusCode.Success)
-							throw new InvalidOperationException (status.ToString ());
-					}
-				}
-			}
+			IntPtr data = SecCertificateCopyPublicKey (handle);
+			return (data == IntPtr.Zero) ? null : new SecKey (data, true);
 		}
 #endif
-#endif	
+		[iOS (10,3)] // [Mac (10,5)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* OSStatus */ int SecCertificateCopyCommonName (IntPtr /* SecCertificateRef */ certificate, out IntPtr /* CFStringRef * __nonnull CF_RETURNS_RETAINED */ commonName);
+
+		[iOS (10,3)]
+		public string GetCommonName ()
+		{
+			IntPtr cn;
+			if (SecCertificateCopyCommonName (handle, out cn) == 0)
+				return CFString.FetchString (cn, releaseHandle: true);
+			return null;
+		}
+
+		[iOS (10,3)] // [Mac (10,5)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* OSStatus */ int SecCertificateCopyEmailAddresses (IntPtr /* SecCertificateRef */ certificate, out IntPtr /* CFArrayRef * __nonnull CF_RETURNS_RETAINED */ emailAddresses);
+
+		[iOS (10,3)]
+		public string[] GetEmailAddresses ()
+		{
+			string[] results = null;
+			IntPtr emails;
+			if (SecCertificateCopyEmailAddresses (handle, out emails) == 0) {
+				results = NSArray.StringArrayFromHandle (emails);
+				if (emails != IntPtr.Zero)
+					CFObject.CFRelease (emails);
+			}
+			return results;
+		}
+
+		[iOS (10,3)]
+		[Mac (10,12,4)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopyNormalizedIssuerSequence (IntPtr /* SecCertificateRef */ certificate);
+
+		[iOS (10,3)]
+		[Mac (10,12,4)]
+		public NSData GetNormalizedIssuerSequence ()
+		{
+			IntPtr data = SecCertificateCopyNormalizedIssuerSequence (handle);
+			return (data == IntPtr.Zero) ? null : new NSData (data, true);
+		}
+
+		[iOS (10,3)]
+		[Mac (10,12,4)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopyNormalizedSubjectSequence (IntPtr /* SecCertificateRef */ certificate);
+
+		[iOS (10,3)]
+		[Mac (10,12,4)]
+		public NSData GetNormalizedSubjectSequence ()
+		{
+			IntPtr data = SecCertificateCopyNormalizedSubjectSequence (handle);
+			return (data == IntPtr.Zero) ? null : new NSData (data, true);
+		}
+
+#if MONOMAC
+		[Mac (10,7)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumber (IntPtr /* SecCertificateRef */ certificate, IntPtr /* CFErrorRef * */ error);
+#else
+		[iOS (10,3)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumber (IntPtr /* SecCertificateRef */ certificate);
+#endif
+		[iOS (10,3)]
+		[Mac (10,7)]
+		public NSData GetSerialNumber ()
+		{
+#if MONOMAC
+			IntPtr data = SecCertificateCopySerialNumber (handle, IntPtr.Zero);
+#else
+			IntPtr data = SecCertificateCopySerialNumber (handle);
+#endif
+			return (data == IntPtr.Zero) ? null : new NSData (data, true);
+		}
+
+#endif // COREBUILD
+		 
 		~SecCertificate ()
 		{
 			Dispose (false);

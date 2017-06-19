@@ -56,7 +56,7 @@ namespace Xamarin.iOS.Tasks
 					try {
 						ips.AddRange (Dns.GetHostEntry (Dns.GetHostName ()).AddressList.Select ((v) => v.ToString ()));
 					} catch {
-						Log.LogError ("Could not resolve host IPs for WiFi debugger settings");
+						Log.MTError (7001, "Could not resolve host IPs for WiFi debugger settings.");
 						return false;
 					}
 				} else {
@@ -69,7 +69,7 @@ namespace Xamarin.iOS.Tasks
 				}
 
 				if (ips == null || ips.Count == 0) {
-					Log.LogError ("This machine does not have any network adapters. This is required when debugging or profiling on device over WiFi.");
+					Log.MTError (7002, "This machine does not have any network adapters. This is required when debugging or profiling on device over WiFi.");
 					return false;
 				}
 			}

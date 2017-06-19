@@ -94,6 +94,7 @@ namespace XamCore.Foundation
 	delegate void EnumerateDatesCallback (NSDate date, bool exactMatch, ref bool stop);
 	delegate void EnumerateIndexSetCallback (nuint idx, ref bool stop);
 #if MONOMAC
+	delegate void CloudKitRegistrationPreparationAction ([BlockCallback] CloudKitRegistrationPreparationHandler handler);
 	delegate void CloudKitRegistrationPreparationHandler (CKShare share, CKContainer container, NSError error);
 #endif
 
@@ -600,14 +601,20 @@ namespace XamCore.Foundation
 		[Export ("components:fromDate:toDate:options:")]
 		NSDateComponents Components (NSCalendarUnit unitFlags, NSDate fromDate, NSDate toDate, NSCalendarOptions opts);
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use the overload with a NSCalendarOptions parameter")]
 		[Wrap ("Components (unitFlags, fromDate, toDate, (NSCalendarOptions) opts)")]
 		NSDateComponents Components (NSCalendarUnit unitFlags, NSDate fromDate, NSDate toDate, NSDateComponentsWrappingBehavior opts);
+#endif
 
 		[Export ("dateByAddingComponents:toDate:options:")]
 		NSDate DateByAddingComponents (NSDateComponents comps, NSDate date, NSCalendarOptions opts);
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use the overload with a NSCalendarOptions parameter")]
 		[Wrap ("DateByAddingComponents (comps, date, (NSCalendarOptions) opts)")]
 		NSDate DateByAddingComponents (NSDateComponents comps, NSDate date, NSDateComponentsWrappingBehavior opts);
+#endif
 
 		[Export ("dateFromComponents:")]
 		NSDate DateFromComponents (NSDateComponents comps);
@@ -2131,7 +2138,7 @@ namespace XamCore.Foundation
 		bool IsPartialStringValid (string partialString, out string newString, out NSString error);
 
 		[Export ("isPartialStringValid:proposedSelectedRange:originalString:originalSelectedRange:errorDescription:")]
-		unsafe bool IsPartialStringValid (out string partialString, out NSRange proposedSelRange, string origString, NSRange origSelRange, out NSString error);
+		bool IsPartialStringValid (ref string partialString, out NSRange proposedSelRange, string origString, NSRange origSelRange, out string error);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -3337,6 +3344,7 @@ namespace XamCore.Foundation
 		[Export ("inputItems", ArgumentSemantic.Copy)]
 		NSExtensionItem [] InputItems { get; }
 
+		[Async]
 		[Export ("completeRequestReturningItems:completionHandler:")]
 		void CompleteRequest (NSExtensionItem [] returningItems, [NullAllowed] Action<bool> completionHandler);
 
@@ -5733,6 +5741,7 @@ namespace XamCore.Foundation
 		NSString ChangedNotification { get; }
 
 		[iOS (8,0), Mac (10,10)]
+		[Async]
 		[Export ("getCredentialsForProtectionSpace:task:completionHandler:")]
 		void GetCredentials (NSUrlProtectionSpace protectionSpace, NSUrlSessionTask task, [NullAllowed] Action<NSDictionary> completionHandler);
 
@@ -5745,6 +5754,7 @@ namespace XamCore.Foundation
 		void RemoveCredential (NSUrlCredential credential, NSUrlProtectionSpace protectionSpace, NSDictionary options, NSUrlSessionTask task);
 
 		[iOS (8,0), Mac (10,10)]
+		[Async]
 		[Export ("getDefaultCredentialForProtectionSpace:task:completionHandler:")]
 		void GetDefaultCredential (NSUrlProtectionSpace space, NSUrlSessionTask task, [NullAllowed] Action<NSUrlCredential> completionHandler);
 
@@ -5767,6 +5777,8 @@ namespace XamCore.Foundation
 	delegate void NSUrlSessionDownloadResponse (NSUrl data, NSUrlResponse response, NSError error);
 
 	delegate void NSUrlDownloadSessionResponse (NSUrl location, NSUrlResponse response, NSError error);
+
+	interface INSUrlSessionDelegate {}
 
 	//
 	// Some of the XxxTaskWith methods that take a completion were flagged as allowing a null in
@@ -5797,9 +5809,14 @@ namespace XamCore.Foundation
 		[Static, Export ("sessionWithConfiguration:delegate:delegateQueue:")]
 		NSUrlSession FromWeakConfiguration (NSUrlSessionConfiguration configuration, [NullAllowed] NSObject weakDelegate, [NullAllowed] NSOperationQueue delegateQueue);
 	
+#if !XAMCORE_4_0
+		[Obsolete ("Use the overload with a `INSUrlSessionDelegate` parameter.")]
 		[Static, Wrap ("FromWeakConfiguration (configuration, sessionDelegate, delegateQueue);")]
 		NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, NSUrlSessionDelegate sessionDelegate, NSOperationQueue delegateQueue);
-	
+#endif
+		[Static, Wrap ("FromWeakConfiguration (configuration, (NSObject) sessionDelegate, delegateQueue);")]
+		NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, INSUrlSessionDelegate sessionDelegate, NSOperationQueue delegateQueue);
+
 		[Export ("delegateQueue", ArgumentSemantic.Retain)]
 		NSOperationQueue DelegateQueue { get; }
 	
@@ -6777,11 +6794,19 @@ namespace XamCore.Foundation
 		[Protocolize]
 		NSStreamDelegate Delegate { get; set; }
 
-		[Export ("propertyForKey:"), Internal]
-		NSObject PropertyForKey (NSString key);
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Protected]
+		[Export ("propertyForKey:")]
+		NSObject GetProperty (NSString key);
 	
-		[Export ("setProperty:forKey:"), Internal]
-		bool SetPropertyForKey ([NullAllowed] NSObject property, NSString key);
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Protected]
+		[Export ("setProperty:forKey:")]
+		bool SetProperty ([NullAllowed] NSObject property, NSString key);
 	
 #if XAMCORE_4_0
 		[Export ("scheduleInRunLoop:forMode:")]
@@ -7159,7 +7184,13 @@ namespace XamCore.Foundation
 		[iOS (10,0), Watch (3,0), NoTV, NoMac]
 		[Static]
 		[Export ("localizedUserNotificationStringForKey:arguments:")]
-		string GetLocalizedUserNotificationString (string key, [NullAllowed] NSObject [] arguments);
+		string GetLocalizedUserNotificationString (string key, [Params] [NullAllowed] NSObject [] arguments);
+
+		[Export ("getParagraphStart:end:contentsEnd:forRange:")]
+		void GetParagraphPositions (out nuint paragraphStartPosition, out nuint paragraphEndPosition, out nuint contentsEndPosition, NSRange range);
+
+		[Export ("paragraphRangeForRange:")]
+		NSRange GetParagraphRange (NSRange range);
 	}
 
 	[StrongDictionary ("NSString")]
@@ -7286,6 +7317,16 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("inputStreamWithURL:")]
 		NSInputStream FromUrl (NSUrl url);
+
+#if XAMCORE_4_0
+		[Export ("propertyForKey:"), Override]
+		NSObject GetProperty (NSString key);
+
+		[Export ("setProperty:forKey:"), Override]
+		bool SetProperty ([NullAllowed] NSObject property, NSString key);
+
+#endif
+
 	}
 
 	//
@@ -8058,6 +8099,15 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("outputStreamToFileAtPath:append:")]
 		NSOutputStream CreateFile (string path, bool shouldAppend);
+
+#if XAMCORE_4_0
+		[Export ("propertyForKey:"), Override]
+		NSObject GetProperty (NSString key);
+
+		[Export ("setProperty:forKey:"), Override]
+		bool SetProperty ([NullAllowed] NSObject property, NSString key);
+
+#endif
 	}
 
 	[BaseType (typeof (NSObject), Name="NSHTTPCookie")]
@@ -8198,6 +8248,7 @@ namespace XamCore.Foundation
 		
 #if !MONOMAC || XAMCORE_2_0
 		[Mac (10,10)][iOS (8,0)]
+		[Async]
 		[Export ("getCookiesForTask:completionHandler:")]
 		void GetCookiesForTask (NSUrlSessionTask task, Action<NSHttpCookie []> completionHandler);
 
@@ -8669,6 +8720,7 @@ namespace XamCore.Foundation
 		NSMethodSignature MethodSignature { get; }
 	}
 
+
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
 	partial interface NSItemProvider : NSCopying {
@@ -8688,6 +8740,7 @@ namespace XamCore.Foundation
 		[Export ("hasItemConformingToTypeIdentifier:")]
 		bool HasItemConformingTo (string typeIdentifier);
 
+		[Async]
 		[Export ("loadItemForTypeIdentifier:options:completionHandler:")]
 		void LoadItem (string typeIdentifier, [NullAllowed] NSDictionary options, [NullAllowed] Action<NSObject,NSError> completionHandler);
 
@@ -8697,6 +8750,7 @@ namespace XamCore.Foundation
 		[Export ("setPreviewImageHandler:")]
 		void SetPreviewImageHandler (NSItemProviderLoadHandler handler);
 
+		[Async]
 		[Export ("loadPreviewImageWithOptions:completionHandler:")]
 		void LoadPreviewImage (NSDictionary options, Action<NSObject,NSError> completionHandler);
 
@@ -8716,9 +8770,9 @@ namespace XamCore.Foundation
 		[Export ("preferredPresentationSize")]
 		CGSize PreferredPresentationSize { get; }
 
-		[Mac (10,12)][Async]
+		[Mac (10,12)] // [Async] handled by NSItemProvider.cs for backwards compat reasons
 		[Export ("registerCloudKitShareWithPreparationHandler:")]
-		void RegisterCloudKitShare ([BlockCallback] Action<CloudKitRegistrationPreparationHandler> preparationHandler);
+		void RegisterCloudKitShare (CloudKitRegistrationPreparationAction preparationHandler);
 
 		[Mac (10,12)]
 		[Export ("registerCloudKitShare:container:")]
@@ -10509,6 +10563,8 @@ namespace XamCore.Foundation
 #endif
 	delegate void NSFileCoordinatorWorkerRW (NSUrl newReadingUrl, NSUrl newWritingUrl);
 
+	interface INSFilePresenter {}
+
 	[Since (5,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSFileCoordinator {
@@ -10526,7 +10582,13 @@ namespace XamCore.Foundation
 
 		[DesignatedInitializer]
 		[Export ("initWithFilePresenter:")]
+		IntPtr Constructor ([NullAllowed] INSFilePresenter filePresenterOrNil);
+
+#if !XAMCORE_4_0
+		[Obsolete ("Use .ctor(INSFilePresenter) instead")]
+		[Wrap ("this ((INSFilePresenter) filePresenterOrNil)")]
 		IntPtr Constructor ([NullAllowed] NSFilePresenter filePresenterOrNil);
+#endif
 
 		[Export ("coordinateReadingItemAtURL:options:error:byAccessor:")]
 #if XAMCORE_2_0
@@ -10918,6 +10980,12 @@ namespace XamCore.Foundation
 #else
 		bool GetRelationship (out NSURLRelationship outRelationship, NSUrl directoryURL, NSUrl otherURL, out NSError error);
 #endif
+
+#if MONOMAC
+		[NoWatch][NoTV][NoiOS][Mac (10, 11)][Async]
+		[Export ("unmountVolumeAtURL:options:completionHandler:")]
+		void UnmountVolume (NSUrl url, NSFileManagerUnmountOptions mask, Action<NSError> completionHandler);
+#endif
 	}
 
 	[BaseType(typeof(NSObject))]
@@ -11107,6 +11175,7 @@ namespace XamCore.Foundation
 		[Mac (10,10)]
 		[iOS (8,0)]
 		[Static]
+		[Async]
 		[Export ("getNonlocalVersionsOfItemAtURL:completionHandler:")]
 		void GetNonlocalVersions (NSUrl url, NSFileVersionNonlocalVersionsCompletionHandler completionHandler);
 

@@ -36,7 +36,7 @@ namespace Xamarin.Mac.Tasks
 		public string OutputPath { get; set; }
 
 		[Required]
-		public string ApplicationAssembly { get; set; }
+		public ITaskItem ApplicationAssembly { get; set; }
 
 		[Required]
 		public string HttpClientHandler { get; set; }
@@ -46,9 +46,6 @@ namespace Xamarin.Mac.Tasks
 
 		[Required]
 		public string TargetFrameworkVersion { get; set; }
-
-		[Required]
-		public string TLSProvider {	get; set; }
 
 		[Required]
 		public string SdkRoot {	get; set; }
@@ -61,6 +58,9 @@ namespace Xamarin.Mac.Tasks
 
 		public bool IsAppExtension { get; set; }
 
+		[Required]
+		public bool EnableSGenConc { get; set; }
+
 		public bool UseXamMacFullFramework { get; set; }
 
 		public string ApplicationName { get; set; }
@@ -72,8 +72,12 @@ namespace Xamarin.Mac.Tasks
 		public string I18n { get; set; }
 		public string ExtraArguments { get; set; }
 
-		public string [] ExplicitReferences { get; set; }
-		public string [] NativeReferences { get; set; }
+		public string AotScope { get; set; }
+		public bool HybridAotOption { get; set; }
+		public string ExplicitAotAssemblies { get; set; }
+
+		public ITaskItem [] ExplicitReferences { get; set; }
+		public ITaskItem [] NativeReferences { get; set; }
 
 		public string IntermediateOutputPath { get; set; }
 
@@ -109,9 +113,11 @@ namespace Xamarin.Mac.Tasks
 				args.AddQuoted ("/name:" + ApplicationName);
 
 			if (TargetFrameworkIdentifier == "Xamarin.Mac")
-				args.Add ("/profile:Xamarin.Mac");
-			else if (TargetFrameworkVersion.StartsWith ("v", StringComparison.Ordinal))
-				args.Add ("/profile:" + TargetFrameworkVersion.Substring (1));
+				args.Add ("/profile:Xamarin.Mac,Version=v2.0,Profile=Mobile");
+			else if (UseXamMacFullFramework)
+				args.Add ($"/profile:Xamarin.Mac,Version={TargetFrameworkVersion},Profile=Full");
+			else
+				args.Add ($"/profile:Xamarin.Mac,Version={TargetFrameworkVersion},Profile=System");
 
 			XamMacArch arch;
 			if (!Enum.TryParse (Architecture, true, out arch))
@@ -150,11 +156,11 @@ namespace Xamarin.Mac.Tasks
 				}
 			}
 
-			if (TargetFrameworkIdentifier == "Xamarin.Mac" && !string.IsNullOrEmpty (TLSProvider))
-				args.Add (string.Format ("--tls-provider={0}", TLSProvider.ToLowerInvariant()));
-
 			if (Profiling)
 				args.Add ("/profiling");
+
+			if (EnableSGenConc)
+				args.Add ("/sgen-conc");
 
 			switch ((LinkMode ?? string.Empty).ToLower ()) {
 			case "full":
@@ -162,9 +168,23 @@ namespace Xamarin.Mac.Tasks
 			case "sdkonly":
 				args.Add ("/linksdkonly");
 				break;
+			case "platform":
+				args.Add ("/linkplatform");
+				break;
 			default:
 				args.Add ("/nolink");
 				break;
+			}
+
+			if (!string.IsNullOrEmpty (AotScope) && AotScope != "None") {
+				var aot = $"--aot:{AotScope.ToLower ()}";
+				if (HybridAotOption)
+					aot += "|hybrid";
+
+				if (!string.IsNullOrEmpty (ExplicitAotAssemblies))
+					aot += $",{ExplicitAotAssemblies}";
+
+				args.Add (aot);
 			}
 
 			if (!string.IsNullOrEmpty (I18n))
@@ -172,11 +192,11 @@ namespace Xamarin.Mac.Tasks
 
 			if (ExplicitReferences != null) {
 				foreach (var asm in ExplicitReferences)
-					args.AddQuoted ("/assembly:" + Path.GetFullPath (asm));
+					args.AddQuoted ("/assembly:" + Path.GetFullPath (asm.ItemSpec));
 			}
 
-			if (!string.IsNullOrEmpty (ApplicationAssembly)) {
-				args.AddQuoted (Path.GetFullPath (ApplicationAssembly + (IsAppExtension ? ".dll" : ".exe")));
+			if (!string.IsNullOrEmpty (ApplicationAssembly.ItemSpec)) {
+				args.AddQuoted (Path.GetFullPath (ApplicationAssembly.ItemSpec));
 			}
 
 			if (!string.IsNullOrWhiteSpace (ExtraArguments))
@@ -184,7 +204,7 @@ namespace Xamarin.Mac.Tasks
 
 			if (NativeReferences != null) {
 				foreach (var nr in NativeReferences)
-					args.AddQuoted ("/native-reference:" + Path.GetFullPath (nr));
+					args.AddQuoted ("/native-reference:" + Path.GetFullPath (nr.ItemSpec));
 			}
 				
 			if (IsAppExtension)
@@ -241,11 +261,12 @@ namespace Xamarin.Mac.Tasks
 		{
 			Log.LogTaskName ("Mmp");
 			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
-			Log.LogTaskProperty ("ApplicationAssembly", ApplicationAssembly + (IsAppExtension ? ".dll" : ".exe"));
+			Log.LogTaskProperty ("ApplicationAssembly", ApplicationAssembly);
 			Log.LogTaskProperty ("ApplicationName", ApplicationName);
 			Log.LogTaskProperty ("Architecture", Architecture);
 			Log.LogTaskProperty ("ArchiveSymbols", ArchiveSymbols);
 			Log.LogTaskProperty ("Debug", Debug);
+			Log.LogTaskProperty ("EnableSGenConc", EnableSGenConc);
 			Log.LogTaskProperty ("ExplicitReferences", ExplicitReferences);
 			Log.LogTaskProperty ("ExtraArguments", ExtraArguments);
 			Log.LogTaskProperty ("FrameworkRoot", FrameworkRoot);
@@ -256,13 +277,16 @@ namespace Xamarin.Mac.Tasks
 			Log.LogTaskProperty ("SdkRoot", SdkRoot);
 			Log.LogTaskProperty ("TargetFrameworkIdentifier", TargetFrameworkIdentifier);
 			Log.LogTaskProperty ("TargetFrameworkVersion", TargetFrameworkVersion);
-			Log.LogTaskProperty ("TLSProvider", TLSProvider);
 			Log.LogTaskProperty ("UseXamMacFullFramework", UseXamMacFullFramework);
 			Log.LogTaskProperty ("Profiling", Profiling);
 			Log.LogTaskProperty ("AppManifest", AppManifest);
 			Log.LogTaskProperty ("SdkVersion", SdkVersion);
 			Log.LogTaskProperty ("NativeReferences", NativeReferences);
 			Log.LogTaskProperty ("IsAppExtension", IsAppExtension);
+			Log.LogTaskProperty ("AotScope", AotScope);
+			Log.LogTaskProperty ("HybridAotOption", HybridAotOption);
+			Log.LogTaskProperty ("ExplicitAotAssemblies", ExplicitAotAssemblies);
+
 
 			if (!base.Execute ())
 				return false;

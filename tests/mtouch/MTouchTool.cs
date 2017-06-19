@@ -6,6 +6,9 @@ using System.Text;
 using System.Xml;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
+
+using NUnit.Framework;
 
 namespace Xamarin
 {
@@ -25,11 +28,28 @@ namespace Xamarin
 		DontLink,
 	}
 
+	public enum MTouchSymbolMode
+	{
+		Unspecified,
+		Default,
+		Linker,
+		Code,
+		Ignore,
+	}
+
 	public enum MTouchRegistrar
 	{
 		Unspecified,
 		Dynamic,
 		Static,
+	}
+
+	public enum MTouchBitcode
+	{
+		Unspecified,
+		ASMOnly,
+		Full, // LLVMOnly
+		Marker,
 	}
 
 	[Flags]
@@ -63,27 +83,45 @@ namespace Xamarin
 		public string TargetVer;
 		public string [] References;
 		public string Executable;
+		public string RootAssembly;
 		public string TargetFramework;
 		public string Abi;
 		public string AppPath;
 		public string Cache;
 		public string Device; // --device
 		public MTouchLinker Linker;
+		public MTouchSymbolMode SymbolMode;
 		public bool? NoFastSim;
 		public MTouchRegistrar Registrar;
 		public I18N I18N;
 		public bool? Extension;
-		public List<string> AppExtensions = new List<string> ();
+		public List<MTouchTool> AppExtensions = new List<MTouchTool> ();
 		public List<string> Frameworks = new List<string> ();
 		public string HttpMessageHandler;
-#pragma warning restore 649
+		public bool? PackageMdb;
+		public bool? MSym;
+		public bool? DSym;
+		public bool? NoStrip;
+		public string NoSymbolStrip;
+		public string Mono;
+		public string GccFlags;
 
 		// These are a bit smarter
-		public MTouch.Profile Profile = MTouch.Profile.iOS;
+		public Profile Profile = Profile.iOS;
 		public bool NoPlatformAssemblyReference;
+		public List<string> AssemblyBuildTargets = new List<string> ();
 		static XmlDocument device_list_cache;
+		public string LLVMOptimizations;
+		public string [] CustomArguments; // Sometimes you want to pass invalid arguments to mtouch, in this case this array is used. No processing will be done, if quotes are required, they must be added to the arguments in the array.
+		public int [] NoWarn; // null array: no passed to mtouch. empty array: pass --nowarn (which means disable all warnings).
+		public int [] WarnAsError; // null array: no passed to mtouch. empty array: pass --warnaserror (which means makes all warnings errors).
+		public MTouchBitcode Bitcode;
+		public string AotArguments;
+		public string AotOtherArguments;
+		public string [] LinkSkip;
+		public string [] XmlDefinitions;
 
-		List<string> directories_to_delete;
+#pragma warning restore 649
 
 		public class DeviceInfo
 		{
@@ -118,7 +156,7 @@ namespace Xamarin
 
 		public int Execute (MTouchAction action)
 		{
-			return Execute (BuildArguments (action));
+			return Execute (BuildArguments (action), always_show_output: Verbosity > 0);
 		}
 
 		public void AssertExecute (MTouchAction action, string message = null)
@@ -129,6 +167,69 @@ namespace Xamarin
 		public void AssertExecuteFailure (MTouchAction action, string message = null)
 		{
 			NUnit.Framework.Assert.AreEqual (1, Execute (action), message);
+		}
+
+		// Assert that none of the files in the app has changed (except 'except' files)
+		public void AssertNoneModified (DateTime timestamp, string message, params string [] except)
+		{
+			var failed = new List<string> ();
+			var files = Directory.EnumerateFiles (AppPath, "*", SearchOption.AllDirectories);
+			foreach (var file in files) {
+				var info = new FileInfo (file);
+				if (info.LastWriteTime > timestamp) {
+					if (except != null && except.Contains (Path.GetFileName (file))) {
+						Console.WriteLine ("SKIP: {0} modified: {1} > {2}", file, info.LastWriteTime, timestamp);
+					} else {
+						failed.Add (string.Format ("{0} is modified, timestamp: {1} > {2}", file, info.LastWriteTime, timestamp));
+						Console.WriteLine ("FAIL: {0} modified: {1} > {2}", file, info.LastWriteTime, timestamp);
+					}
+				} else {
+					Console.WriteLine ("{0} not modified ted: {1} <= {2}", file, info.LastWriteTime, timestamp);
+				}
+			}
+			Assert.IsEmpty (failed, message);
+		}
+
+		// Assert that all of the files in the app has changed (except 'except' files)
+		public void AssertAllModified (DateTime timestamp, string message, params string [] except)
+		{
+			var failed = new List<string> ();
+			var files = Directory.EnumerateFiles (AppPath, "*", SearchOption.AllDirectories);
+			foreach (var file in files) {
+				var info = new FileInfo (file);
+				if (info.LastWriteTime <= timestamp) {
+					if (except != null && except.Contains (Path.GetFileName (file))) {
+						Console.WriteLine ("SKIP: {0} not modified: {1} <= {2}", file, info.LastWriteTime, timestamp);
+					} else {
+						failed.Add (string.Format ("{0} is not modified, timestamp: {1} <= {2}", file, info.LastWriteTime, timestamp));
+						Console.WriteLine ("FAIL: {0} not modified: {1} <= {2}", file, info.LastWriteTime, timestamp);
+					}
+				} else {
+					Console.WriteLine ("{0} modified (as expected): {1} > {2}", file, info.LastWriteTime, timestamp);
+				}
+			}
+			Assert.IsEmpty (failed, message);
+		}
+
+		// Asserts that the given files were modified.
+		public void AssertModified (DateTime timestamp, string message, params string [] files)
+		{
+			Assert.IsNotEmpty (files);
+
+			var failed = new List<string> ();
+			var fs = Directory.EnumerateFiles (AppPath, "*", SearchOption.AllDirectories);
+			foreach (var file in fs) {
+				if (!files.Contains (Path.GetFileName (file)))
+					continue;
+				var info = new FileInfo (file);
+				if (info.LastWriteTime < timestamp) {
+					failed.Add (string.Format ("{0} is not modified, timestamp: {1} < {2}", file, info.LastWriteTime, timestamp));
+					Console.WriteLine ("FAIL: {0} not modified: {1} < {2}", file, info.LastWriteTime, timestamp);
+				} else {
+					Console.WriteLine ("{0} modified (as expected): {1} >= {2}", file, info.LastWriteTime, timestamp);
+				}
+			}
+			Assert.IsEmpty (failed, message);
 		}
 
 		string BuildArguments (MTouchAction action)
@@ -144,19 +245,19 @@ namespace Xamarin
 				if (AppPath == null)
 					throw new Exception ("No AppPath specified.");
 				isDevice = true;
-				sb.Append (" --dev ").Append (MTouch.Quote (AppPath));
+				sb.Append (" --dev ").Append (StringUtils.Quote (AppPath));
 				break;
 			case MTouchAction.BuildSim:
 				isDevice = false;
 				if (AppPath == null)
 					throw new Exception ("No AppPath specified.");
-				sb.Append (" --sim ").Append (MTouch.Quote (AppPath));
+				sb.Append (" --sim ").Append (StringUtils.Quote (AppPath));
 				break;
 			case MTouchAction.LaunchSim:
 				isDevice = false;
 				if (AppPath == null)
 					throw new Exception ("No AppPath specified.");
-				sb.Append (" --launchsim ").Append (MTouch.Quote (AppPath));
+				sb.Append (" --launchsim ").Append (StringUtils.Quote (AppPath));
 				break;
 			default:
 				throw new NotImplementedException ();
@@ -165,9 +266,9 @@ namespace Xamarin
 			if (SdkRoot == None) {
 				// do nothing
 			} else if (!string.IsNullOrEmpty (SdkRoot)) {
-				sb.Append (" --sdkroot ").Append (MTouch.Quote (SdkRoot));
+				sb.Append (" --sdkroot ").Append (StringUtils.Quote (SdkRoot));
 			} else {
-				sb.Append (" --sdkroot ").Append (MTouch.Quote (Configuration.xcode_root));
+				sb.Append (" --sdkroot ").Append (StringUtils.Quote (Configuration.xcode_root));
 			}
 
 			sb.Append (" ").Append (GetVerbosity ());
@@ -192,28 +293,57 @@ namespace Xamarin
 			if (FastDev.HasValue && FastDev.Value)
 				sb.Append (" --fastdev");
 
+			if (PackageMdb.HasValue)
+				sb.Append (" --package-mdb:").Append (PackageMdb.Value ? "true" : "false");
+
+			if (NoStrip.HasValue && NoStrip.Value)
+				sb.Append (" --nostrip");
+
+			if (NoSymbolStrip != null) {
+				if (NoSymbolStrip.Length == 0) {
+					sb.Append (" --nosymbolstrip");
+				} else {
+					sb.Append (" --nosymbolstrip:").Append (NoSymbolStrip);
+				}
+			}
+
+			if (MSym.HasValue)
+				sb.Append (" --msym:").Append (MSym.Value ? "true" : "false");
+
+			if (DSym.HasValue)
+				sb.Append (" --dsym:").Append (DSym.Value ? "true" : "false");
+
 			if (Extension == true)
 				sb.Append (" --extension");
 
 			foreach (var appext in AppExtensions)
-				sb.Append (" --app-extension ").Append (MTouch.Quote (appext));
+				sb.Append (" --app-extension ").Append (StringUtils.Quote (appext.AppPath));
 
 			foreach (var framework in Frameworks)
-				sb.Append (" --framework ").Append (MTouch.Quote (framework));
+				sb.Append (" --framework ").Append (StringUtils.Quote (framework));
+
+			if (!string.IsNullOrEmpty (Mono))
+				sb.Append (" --mono:").Append (StringUtils.Quote (Mono));
+
+			if (!string.IsNullOrEmpty (GccFlags))
+				sb.Append (" --gcc_flags ").Append (StringUtils.Quote (GccFlags));
 
 			if (!string.IsNullOrEmpty (HttpMessageHandler))
-				sb.Append (" --http-message-handler=").Append (MTouch.Quote (HttpMessageHandler));
+				sb.Append (" --http-message-handler=").Append (StringUtils.Quote (HttpMessageHandler));
 
 			if (Dlsym.HasValue)
 				sb.Append (" --dlsym:").Append (Dlsym.Value ? "true" : "false");
 
 			if (References != null) {
 				foreach (var r in References)
-					sb.Append (" -r:").Append (MTouch.Quote (r));
+					sb.Append (" -r:").Append (StringUtils.Quote (r));
 			}
 
 			if (!string.IsNullOrEmpty (Executable))
-				sb.Append (" ").Append (MTouch.Quote (Executable));
+				sb.Append (" --executable ").Append (StringUtils.Quote (Executable));
+
+			if (!string.IsNullOrEmpty (RootAssembly))
+				sb.Append (" ").Append (StringUtils.Quote (RootAssembly));
 
 			if (TargetFramework == None) {
 				// do nothing
@@ -222,29 +352,31 @@ namespace Xamarin
 			} else if (!NoPlatformAssemblyReference) {
 				// make the implicit default the way tests have been running until now, and at the same time the very minimum to make apps build.
 				switch (Profile) {
-				case MTouch.Profile.iOS:
-					sb.Append (" -r:").Append (MTouch.Quote (Configuration.XamarinIOSDll));
+				case Profile.iOS:
+					sb.Append (" -r:").Append (StringUtils.Quote (Configuration.XamarinIOSDll));
 					break;
-				case MTouch.Profile.tvOS:
-				case MTouch.Profile.watchOS:
+				case Profile.tvOS:
+				case Profile.watchOS:
 					sb.Append (" --target-framework ").Append (MTouch.GetTargetFramework (Profile));
-					sb.Append (" -r:").Append (MTouch.Quote (MTouch.GetBaseLibrary (Profile)));
+					sb.Append (" -r:").Append (StringUtils.Quote (MTouch.GetBaseLibrary (Profile)));
 					break;
 				default:
 					throw new NotImplementedException ();
 				}
 			}
 
-			if (!string.IsNullOrEmpty (Abi)) {
+			if (Abi == None) {
+				// add nothing
+			} else if (!string.IsNullOrEmpty (Abi)) {
 				sb.Append (" --abi ").Append (Abi);
 			} else {
 				switch (Profile) {
-				case MTouch.Profile.iOS:
+				case Profile.iOS:
 					break; // not required
-				case MTouch.Profile.tvOS:
+				case Profile.tvOS:
 					sb.Append (isDevice ? " --abi arm64" : " --abi x86_64");
 					break;
-				case MTouch.Profile.watchOS:
+				case Profile.watchOS:
 					sb.Append (isDevice ? " --abi armv7k" : " --abi i386");
 					break;
 				default:
@@ -261,6 +393,25 @@ namespace Xamarin
 				break;
 			case MTouchLinker.LinkSdk:
 				sb.Append (" --linksdkonly");
+				break;
+			default:
+				throw new NotImplementedException ();
+			}
+
+			switch (SymbolMode) {
+			case MTouchSymbolMode.Ignore:
+				sb.Append (" --dynamic-symbol-mode=ignore");
+				break;
+			case MTouchSymbolMode.Code:
+				sb.Append (" --dynamic-symbol-mode=code");
+				break;
+			case MTouchSymbolMode.Default:
+				sb.Append (" --dynamic-symbol-mode=default");
+				break;
+			case MTouchSymbolMode.Linker:
+				sb.Append (" --dynamic-symbol-mode=linker");
+				break;
+			case MTouchSymbolMode.Unspecified:
 				break;
 			default:
 				throw new NotImplementedException ();
@@ -298,10 +449,63 @@ namespace Xamarin
 			}
 
 			if (!string.IsNullOrEmpty (Cache))
-				sb.Append (" --cache ").Append (MTouch.Quote (Cache));
+				sb.Append (" --cache ").Append (StringUtils.Quote (Cache));
 
 			if (!string.IsNullOrEmpty (Device))
-				sb.Append (" --device:").Append (MTouch.Quote (Device));
+				sb.Append (" --device:").Append (StringUtils.Quote (Device));
+
+			if (!string.IsNullOrEmpty (LLVMOptimizations))
+				sb.Append (" --llvm-opt=").Append (StringUtils.Quote (LLVMOptimizations));
+
+			if (CustomArguments != null) {
+				foreach (var arg in CustomArguments) {
+					sb.Append (" ").Append (arg);
+				}
+			}
+
+			if (NoWarn != null) {
+				if (NoWarn.Length > 0) {
+					sb.Append (" --nowarn:");
+					foreach (var code in NoWarn)
+						sb.Append (code).Append (',');
+					sb.Length--;
+				} else {
+					sb.Append (" --nowarn");
+				}
+			}
+
+			if (WarnAsError != null) {
+				if (WarnAsError.Length > 0) {
+					sb.Append (" --warnaserror:");
+					foreach (var code in WarnAsError)
+						sb.Append (code).Append (',');
+					sb.Length--;
+				} else {
+					sb.Append (" --warnaserror");
+				}
+			}
+
+			if (Bitcode != MTouchBitcode.Unspecified)
+				sb.Append (" --bitcode:").Append (Bitcode.ToString ().ToLower ());
+
+			foreach (var abt in AssemblyBuildTargets)
+				sb.Append (" --assembly-build-target ").Append (StringUtils.Quote (abt));
+
+			if (!string.IsNullOrEmpty (AotArguments))
+				sb.Append (" --aot:").Append (StringUtils.Quote (AotArguments));
+
+			if (!string.IsNullOrEmpty (AotOtherArguments))
+				sb.Append (" --aot-options:").Append (StringUtils.Quote (AotOtherArguments));
+
+			if (LinkSkip?.Length > 0) {
+				foreach (var ls in LinkSkip)
+					sb.Append (" --linkskip:").Append (StringUtils.Quote (ls));
+			}
+
+			if (XmlDefinitions?.Length > 0) {
+				foreach (var xd in XmlDefinitions)
+					sb.Append (" --xml:").Append (StringUtils.Quote (xd));
+			}
 
 			return sb.ToString ();
 		}
@@ -352,16 +556,16 @@ namespace Xamarin
 
 		public string NativeExecutablePath {
 			get {
-				return Path.Combine (AppPath, Path.GetFileNameWithoutExtension (Executable));
+				return Path.Combine (AppPath, Path.GetFileNameWithoutExtension (RootAssembly));
 			}
 		}
 
-		string CreatePlist (MTouch.Profile profile, string appName)
+		public static string CreatePlist (Profile profile, string appName)
 		{
 			string plist = null;
 
 			switch (profile) {
-			case MTouch.Profile.iOS:
+			case Profile.iOS:
 				plist = string.Format (@"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
 <plist version=""1.0"">
@@ -388,9 +592,9 @@ namespace Xamarin
 	</array>
 </dict>
 </plist>
-", appName, MTouch.GetSdkVersion (Profile));
+", appName, MTouch.GetSdkVersion (profile));
 				break;
-			case MTouch.Profile.tvOS:
+			case Profile.tvOS:
 				plist = string.Format (@"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
 <plist version=""1.0"">
@@ -409,7 +613,7 @@ namespace Xamarin
 	</array>
 </dict>
 </plist>
-", appName, MTouch.GetSdkVersion (Profile));
+", appName, MTouch.GetSdkVersion (profile));
 				break;
 			default:
 				throw new Exception ("Profile not specified.");
@@ -418,23 +622,44 @@ namespace Xamarin
 			return plist;
 		}
 
-		public void CreateTemporaryApp (bool hasPlist = false, string appName = "testApp", string code = null)
+		public string CreateTemporarySatelliteAssembly (string culture = "en-AU")
 		{
-			var testDir = CreateTemporaryDirectory ();
-			var app = Path.Combine (testDir, appName + ".app");
-			Directory.CreateDirectory (app);
+			var asm_dir = Path.Combine (Path.GetDirectoryName (RootAssembly), culture);
+			Directory.CreateDirectory (asm_dir);
 
+			var asm_name = Path.GetFileNameWithoutExtension (RootAssembly) + ".resources.dll";
+			// Cheat a bit, by compiling a normal assembly with code instead of creating a resource assembly
+			return MTouch.CompileTestAppLibrary (asm_dir, "class X {}", appName: Path.GetFileNameWithoutExtension (asm_name));
+		}
+
+		public void CreateTemporaryApp (bool hasPlist = false, string appName = "testApp", string code = null, string extraArg = "", string extraCode = null)
+		{
+			string testDir;
+			if (RootAssembly == null) {
+				testDir = CreateTemporaryDirectory ();
+			} else {
+				// We're rebuilding an existing executable, so just reuse that
+				testDir = Path.GetDirectoryName (RootAssembly);
+			}
+			var app = AppPath ?? Path.Combine (testDir, appName + ".app");
+			Directory.CreateDirectory (app);
 			AppPath = app;
-			Executable = MTouch.CompileTestAppExecutable (testDir, code, "", Profile, appName);
+			RootAssembly = MTouch.CompileTestAppExecutable (testDir, code, extraArg, Profile, appName, extraCode);
 
 			if (hasPlist)
 				File.WriteAllText (Path.Combine (app, "Info.plist"), CreatePlist (Profile, appName));
 		}
 
-		public void CreateTemporararyServiceExtension (string code = null)
+		public void CreateTemporaryServiceExtension (string code = null, string extraCode = null, string extraArg = null, string appName = "testServiceExtension")
 		{
-			var testDir = CreateTemporaryDirectory ();
-			var app = Path.Combine (testDir, "testApp.appex");
+			string testDir;
+			if (RootAssembly == null) {
+				testDir = CreateTemporaryDirectory ();
+			} else {
+				// We're rebuilding an existing executable, so just reuse that
+				testDir = Path.GetDirectoryName (RootAssembly);
+			}
+			var app = AppPath ?? Path.Combine (testDir, $"{appName}.appex");
 			Directory.CreateDirectory (app);
 
 			if (code == null) {
@@ -445,11 +670,14 @@ public partial class NotificationService : UNNotificationServiceExtension
 	protected NotificationService (System.IntPtr handle) : base (handle) {}
 }";
 			}
+			if (extraCode != null)
+				code += extraCode;
 
 			AppPath = app;
-			Executable = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile);
+			Extension = true;
+			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile, extraArg: extraArg, appName: appName);
 
-			File.WriteAllText (Path.Combine (app, "Info.plist"),
+			var info_plist = 
 @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
 <plist version=""1.0"">
@@ -481,13 +709,99 @@ public partial class NotificationService : UNNotificationServiceExtension
 	</dict>
 </dict>
 </plist>
-");
+";
+			var plist_path = Path.Combine (app, "Info.plist");
+			if (!File.Exists (plist_path) || File.ReadAllText (plist_path) != info_plist)
+				File.WriteAllText (plist_path, info_plist);
+		}
+
+		public void CreateTemporaryTodayExtension (string code = null, string extraCode = null, string extraArg = null, string appName = "testTodayExtension")
+		{
+			string testDir;
+			if (RootAssembly == null) {
+				testDir = CreateTemporaryDirectory ();
+			} else {
+				// We're rebuilding an existing executable, so just reuse that
+				testDir = Path.GetDirectoryName (RootAssembly);
+			}
+			var app = AppPath ?? Path.Combine (testDir, $"{appName}.appex");
+			Directory.CreateDirectory (app);
+
+			if (code == null) {
+				code = @"using System;
+using Foundation;
+using NotificationCenter;
+using UIKit;
+
+public partial class TodayViewController : UIViewController, INCWidgetProviding
+{
+	public TodayViewController (IntPtr handle) : base (handle)
+	{
+	}
+
+	[Export (""widgetPerformUpdateWithCompletionHandler:"")]
+	public void WidgetPerformUpdate (Action<NCUpdateResult> completionHandler)
+	{
+		completionHandler (NCUpdateResult.NewData);
+	}
+}
+";
+			}
+			if (extraCode != null)
+				code += extraCode;
+
+			AppPath = app;
+			Extension = true;
+			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile, extraArg: extraArg, appName: appName);
+
+			var info_plist = // FIXME: this includes a NSExtensionMainStoryboard key which points to a non-existent storyboard. This won't matter as long as we're only building, and not running the extension.
+@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
+<plist version=""1.0"">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>todayextension</string>
+	<key>CFBundleName</key>
+	<string>todayextension</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.xamarin.testapp.todayextension</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>XPC!</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>MinimumOSVersion</key>
+	<string>10.0</string>
+	<key>NSExtension</key>
+	<dict>
+		<key>NSExtensionPointIdentifier</key>
+		<string>widget-extension</string>
+		<key>NSExtensionMainStoryboard</key>
+		<string>MainInterface</string>
+	</dict>
+</dict>
+</plist>
+";
+			var plist_path = Path.Combine (app, "Info.plist");
+			if (!File.Exists (plist_path) || File.ReadAllText (plist_path) != info_plist)
+				File.WriteAllText (plist_path, info_plist);
 		}
 
 		public void CreateTemporaryWatchKitExtension (string code = null)
 		{
-			var testDir = CreateTemporaryDirectory ();
-			var app = Path.Combine (testDir, "testApp.appex");
+			string testDir;
+			if (RootAssembly == null) {
+				testDir = CreateTemporaryDirectory ();
+			} else {
+				// We're rebuilding an existing executable, so just reuse that directory
+				testDir = Path.GetDirectoryName (RootAssembly);
+			}
+			var app = AppPath ?? Path.Combine (testDir, "testApp.appex");
 			Directory.CreateDirectory (app);
 
 			if (code == null) {
@@ -499,7 +813,8 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 			}
 
 			AppPath = app;
-			Executable = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile);
+			Extension = true;
+			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile);
 
 			File.WriteAllText (Path.Combine (app, "Info.plist"), @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
@@ -538,17 +853,13 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 
 		public string CreateTemporaryDirectory ()
 		{
-			var tmpDir = MTouch.GetTempDirectory ();
-			if (directories_to_delete == null)
-				directories_to_delete = new List<string> ();
-			directories_to_delete.Add (tmpDir);
-			return tmpDir;
+			return Xamarin.Cache.CreateTemporaryDirectory ();
 		}
 
 		public void CreateTemporaryApp_LinkWith ()
 		{
 			AppPath = CreateTemporaryAppDirectory ();
-			Executable = MTouch.CompileTestAppExecutableLinkWith (Path.GetDirectoryName (AppPath), profile: Profile);
+			RootAssembly = MTouch.CompileTestAppExecutableLinkWith (Path.GetDirectoryName (AppPath), profile: Profile);
 		}
 
 		public string CreateTemporaryAppDirectory ()
@@ -565,14 +876,11 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 		public void CreateTemporaryCacheDirectory ()
 		{
 			Cache = Path.Combine (CreateTemporaryDirectory (), "mtouch-test-cache");
+			Directory.CreateDirectory (Cache);
 		}
 
 		void IDisposable.Dispose ()
 		{
-			if (directories_to_delete != null) {
-				foreach (var dir in directories_to_delete)
-					Directory.Delete (dir, true);
-			}
 		}
 	}
 }

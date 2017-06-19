@@ -477,6 +477,9 @@
 		<!-- class.c: generic_icollection_class -->		
 		<type fullname="System.Collections.Generic.ICollection`1" />
 		<type fullname="System.Collections.Generic.IEnumerable`1" />
+		<type fullname="System.Collections.Generic.IEnumerator`1" />
+		<type fullname="System.Collections.Generic.IReadOnlyList`1" />
+		<type fullname="System.Collections.Generic.IReadOnlyCollection`1" />
 		
 		<!-- domain.c: mono_defaults.generic_ilist_class -->		
 		<type fullname="System.Collections.Generic.IList`1" />

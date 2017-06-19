@@ -21,6 +21,8 @@
 			<string>9.3</string>
 			<string>10.0</string>
 			<string>10.1</string>
+			<string>10.2</string>
+			<string>10.3</string>
 		</array>
 		<key>tvOS</key>
 		<array>
@@ -28,14 +30,18 @@
 			<string>9.1</string>
 			<string>9.2</string>
 			<string>10.0</string>
+			<string>10.1</string>
+			<string>10.2</string>
 		</array>
 		<key>watchOS</key>
 		<array>
+			<string>1.0</string>
 			<string>2.0</string>
 			<string>2.1</string>
 			<string>2.2</string>
 			<string>3.0</string>
 			<string>3.1</string>
+			<string>3.2</string>
 		</array>
 	</dict>
 	<key>RecommendedXcodeVersion</key>
@@ -61,7 +67,7 @@
 			<key>com.apple.widget-extension</key>
 			<string>8.0</string>
 			<key>com.apple.watchkit</key>
-			<string>8.0</string>
+			<string>8.2</string>
 			<key>com.apple.AudioUnit-UI</key>
 			<string>8.0</string>
 			<key>com.apple.Safari.content-blocker</key>
@@ -69,6 +75,8 @@
 			<key>com.apple.Safari.sharedlinks-service</key>
 			<string>9.0</string>
 			<key>com.apple.spotlight.index</key>
+			<string>9.0</string>
+			<key>com.apple.networkextension.packet-tunnel</key>
 			<string>9.0</string>
 			<key>com.apple.callkit.call-directory</key>
 			<string>10.0</string>
@@ -91,7 +99,23 @@
 			<string>9.0</string>
 		</dict>
 		<key>watchOS</key>
-		<dict />
+		<dict>
+			<key>com.apple.watchkit</key>
+			<string>2.0</string>
+			<key>com.apple.intents-service</key>
+			<string>3.2</string>
+		</dict>
 	</dict>
+	<key>Features</key>
+	<array>
+		<string>mlaunch-launchdevbundleid</string>
+		<string>mlaunch-observe-extension</string>
+		<string>mlaunch-launch-simulator</string>
+		<string>mlaunch-install-progress</string>
+		<string>mlaunch-watchos-complications</string>
+		<string>http-client-handlers</string>
+		<string>mono-symbol-archive</string>
+		<string>sgen-concurrent-gc</string>
+	</array>
 </dict>
 </plist>

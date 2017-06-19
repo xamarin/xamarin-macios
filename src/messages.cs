@@ -203,7 +203,7 @@ namespace XamCore.Messages {
 
 	[iOS (10,0)]
 	[BaseType (typeof(NSObject))]
-	interface MSSession {}
+	interface MSSession : NSSecureCoding {}
 
 	[iOS (10,0)]
 	[BaseType (typeof(NSObject))]

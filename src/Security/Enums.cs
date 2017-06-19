@@ -11,13 +11,16 @@ namespace XamCore.Security {
 	public enum SecStatusCode {
 		Success 							= 0,
 		Unimplemented 						= -4,
+		DiskFull 							= -34,
 		IO 									= -36,
 		OpWr 								= -49,
 		Param 								= -50,
+		WritePermissions					= -61,
 		Allocate 							= -108,
 		UserCanceled 						= -128,
 		BadReq 								= -909,
 		InternalComponent	 				= -2070,
+		CoreFoundationUnknown 				= -4960,
 		NotAvailable 						= -25291,
 		ReadOnly 							= -25292,
 		AuthFailed 							= -25293,
@@ -28,11 +31,6 @@ namespace XamCore.Security {
 		ItemNotFound 						= -25300,
 		InteractionNotAllowed 				= -25308,
 		Decode 								= -26275,
-
-#if MONOMAC
-		DiskFull 							= -34,
-		WritePermissions					= -61,
-		CoreFoundationUnknown 				= -4960,
 		DuplicateCallback					= -25297,
 		InvalidCallback						= -25298,
 		BufferTooSmall						= -25301,
@@ -293,9 +291,7 @@ namespace XamCore.Security {
 		MissingAttributeWrappedKeyFormat	= -67805,	/* A wrapped key format attribute was missing. */
 		StagedOperationInProgress			= -67806,	/* A staged operation is in progress. */
 		StagedOperationNotStarted			= -67807,	/* A staged operation was not started. */
-#endif
 		VerifyFailed						= -67808,	/* A cryptographic verification failure has occurred. */
-#if MONOMAC
 		QuerySizeUnknown					= -67809,	/* The query size is unknown. */
 		BlockSizeMismatch					= -67810,	/* A block size mismatch occurred. */
 		PublicKeyInconsistent				= -67811,	/* The public key was inconsistent. */
@@ -314,7 +310,11 @@ namespace XamCore.Security {
 		InvalidAuthority					= -67824,	/* The authority was not valid. */
 		VerifyActionFailed					= -67825,	/* A verify action has failed. */
 		InvalidCertAuthority				= -67826,	/* The certificate authority was not valid. */
-		InvaldCRLAuthority					= -67827,	/* The CRL authority was not valid. */
+		InvalidCRLAuthority					= -67827,	/* The CRL authority was not valid. */
+#if MONOMAC
+		[Obsolete ("Use InvalidCRLAuthority")]
+		InvaldCRLAuthority					= InvalidCRLAuthority,
+#endif
 		InvalidCRLEncoding					= -67828,	/* The CRL encoding was not valid. */
 		InvalidCRLType						= -67829,	/* The CRL type was not valid. */
 		InvalidCRL							= -67830,	/* The CRL was not valid. */
@@ -339,7 +339,11 @@ namespace XamCore.Security {
 		UnsupportedService					= -67849,	/* The service is not supported. */
 		InvalidTupleGroup					= -67850,	/* The tuple group was not valid. */
 		InvalidBaseACLs						= -67851,	/* The base ACLs are not valid. */
-		InvalidTupleCredendtials			= -67852,	/* The tuple credentials are not valid. */
+		InvalidTupleCredentials				= -67852,	/* The tuple credentials are not valid. */
+#if MONOMAC
+		[Obsolete ("Use InvalidTupleCredentials")]
+		InvalidTupleCredendtials			= InvalidTupleCredentials,
+#endif
 		InvalidEncoding						= -67853,	/* The encoding was not valid. */
 		InvalidValidityPeriod				= -67854,	/* The validity period was not valid. */
 		InvalidRequestor					= -67855,	/* The requestor was not valid. */
@@ -386,7 +390,6 @@ namespace XamCore.Security {
 		TimestampWaiting                    = -67896,	/* A timestamp transaction is waiting. */
 		TimestampRevocationWarning          = -67897,	/* A timestamp authority revocation warning was issued. */
 		TimestampRevocationNotification     = -67898,	/* A timestamp authority revocation notification was issued. */
-#endif
 	}
 
 	// typedef uint32_t SecPadding;
@@ -394,15 +397,28 @@ namespace XamCore.Security {
 	public enum SecPadding {
 		None      = 0,
 		PKCS1     = 1,
+
+		[NoMac][TV (10,0)][Watch (3,0)]
 		OAEP      = 2,
+
 		[iOS (8,3)]
 		Raw       = 0x4000,
+
+		[Obsolete ("Hash algorithm is deprecated")][NoTV][NoWatch]
 		PKCS1MD2  = 0x8000,
+
+		[Obsolete ("Hash algorithm is deprecated")][NoTV][NoWatch]
 		PKCS1MD5  = 0x8001,
+
 		PKCS1SHA1 = 0x8002,
+
+		[NoMac]
 		PKCS1SHA224 = 0x8003,
+		[NoMac]
 		PKCS1SHA256 = 0x8004,
+		[NoMac]
 		PKCS1SHA384 = 0x8005,
+		[NoMac]
 		PKCS1SHA512 = 0x8006,
 	}
 

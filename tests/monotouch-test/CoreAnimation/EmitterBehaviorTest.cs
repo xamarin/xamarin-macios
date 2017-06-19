@@ -13,7 +13,6 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using CoreAnimation;
-using UIKit;
 #else
 using MonoTouch.CoreAnimation;
 using MonoTouch.Foundation;

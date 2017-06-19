@@ -9,6 +9,8 @@ using Mono.Cecil.Cil;
 
 using Mono.Tuner;
 
+using Xamarin.Tuner;
+
 namespace Xamarin.Linker.Steps {
 
 	public class RemoveSelectors : IStep {
@@ -26,17 +28,17 @@ namespace Xamarin.Linker.Steps {
 				return;
 
 			foreach (TypeDefinition type in assembly.MainModule.Types) {
-				ProcessType (type);
+				ProcessType (type, (DerivedLinkContext) context);
 			}
 		}
 
-		void ProcessType (TypeDefinition type)
+		void ProcessType (TypeDefinition type, DerivedLinkContext context)
 		{
-			if (type.IsNSObject ()) {
+			if (type.IsNSObject (context)) {
 				ProcessNSObject (type);
 			} else if (type.HasNestedTypes) {
 				foreach (var nested in type.NestedTypes)
-					ProcessType (nested);
+					ProcessType (nested, context);
 			}
 		}
 
@@ -72,7 +74,7 @@ namespace Xamarin.Linker.Steps {
 				switch (instruction.OpCode.OperandType) {
 				case OperandType.InlineTok:
 				case OperandType.InlineField:
-					var field = instruction.Operand as FieldDefinition;
+					var field = (instruction.Operand as FieldReference)?.Resolve ();
 					if (field == null)
 						continue;
 
@@ -108,7 +110,7 @@ namespace Xamarin.Linker.Steps {
 			if (instruction.OpCode != OpCodes.Stsfld)
 				return false;
 
-			var field = instruction.Operand as FieldDefinition;
+			var field = (instruction.Operand as FieldReference)?.Resolve ();
 			if (field == null)
 				return false;
 

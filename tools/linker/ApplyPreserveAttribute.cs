@@ -7,12 +7,18 @@ using Mono.Cecil;
 using Mono.Linker;
 using Mono.Tuner;
 
+using Xamarin.Tuner;
+
 namespace Xamarin.Linker.Steps {
 
 	public class ApplyPreserveAttribute : ApplyPreserveAttributeBase {
 
 		bool is_sdk;
 		HashSet<TypeDefinition> preserve_synonyms;
+
+		DerivedLinkContext LinkContext {
+			get { return (DerivedLinkContext) base.context; }
+		}
 
 		// System.ServiceModel.dll is an SDK assembly but it does contain types with [DataMember] attributes
 		// just like System.Xml.dll contais [Xml*] attributes - we do not want to keep them unless the application
@@ -67,22 +73,6 @@ namespace Xamarin.Linker.Steps {
 			}
 		}
 
-		// SDK candidates - they will be preserved only if the application (not the SDK) uses it
-		static List<ICustomAttributeProvider> srs_data_contract = new List<ICustomAttributeProvider> ();
-		static List<ICustomAttributeProvider> xml_serialization = new List<ICustomAttributeProvider> ();
-
-		public static IList<ICustomAttributeProvider> DataContract {
-			get {
-				return srs_data_contract;
-			}
-		}
-
-		public static IList<ICustomAttributeProvider> XmlSerialization {
-			get {
-				return xml_serialization;
-			}
-		}
-
 		protected override bool IsPreservedAttribute (ICustomAttributeProvider provider, CustomAttribute attribute, out bool removeAttribute)
 		{
 			removeAttribute = false;
@@ -99,7 +89,7 @@ namespace Xamarin.Linker.Steps {
 					srs = (type.Name == "DataContractAttribute");
 
 				if (srs) {
-					MarkDefautConstructor (provider, is_sdk ? srs_data_contract : null);
+					MarkDefautConstructor (provider, is_sdk ? LinkContext.DataContract : null);
 					return !is_sdk;
 				}
 				break;
@@ -110,7 +100,7 @@ namespace Xamarin.Linker.Steps {
 					// but we do not have to keep things that XML serialization will ignore anyway!
 					if (name != "XmlIgnoreAttribute") {
 						// the default constructor of the type *being used* is needed
-						MarkDefautConstructor (provider, is_sdk ? xml_serialization : null);
+						MarkDefautConstructor (provider, is_sdk ? LinkContext.XmlSerialization : null);
 						return !is_sdk;
 					}
 				}

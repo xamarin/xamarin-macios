@@ -10,7 +10,6 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
-using UIKit;
 using CoreFoundation;
 #else
 using MonoTouch.CoreFoundation;

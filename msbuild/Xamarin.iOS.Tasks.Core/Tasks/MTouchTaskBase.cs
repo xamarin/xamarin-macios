@@ -107,6 +107,9 @@ namespace Xamarin.iOS.Tasks
 		public ITaskItem[] LinkDescriptions { get; set; }
 
 		[Required]
+		public bool EnableSGenConc { get; set; }
+
+		[Required]
 		public bool LinkerDumpDependencies { get; set; }
 
 		[Required]
@@ -149,9 +152,6 @@ namespace Xamarin.iOS.Tasks
 		public string TargetFrameworkVersion { get; set; }
 
 		[Required]
-		public string TLSProvider { get; set; }
-
-		[Required]
 		public bool UseLlvm { get; set; }
 
 		[Required]
@@ -177,9 +177,6 @@ namespace Xamarin.iOS.Tasks
 		[Required]
 		[Output]
 		public ITaskItem NativeExecutable { get; set; }
-		
-		[Output]
-		public ITaskItem[] NativeLibraries { get; set; }
 
 		#endregion
 
@@ -391,7 +388,7 @@ namespace Xamarin.iOS.Tasks
 				args.Add ("--extension");
 
 			if (Debug) {
-				if (FastDev)
+				if (FastDev && !SdkIsSimulator)
 					args.Add ("--fastdev");
 
 				args.Add ("--debug");
@@ -402,6 +399,9 @@ namespace Xamarin.iOS.Tasks
 
 			if (LinkerDumpDependencies)
 				args.Add ("--linkerdumpdependencies");
+
+			if (EnableSGenConc)
+				args.Add ("--sgen-conc");
 
 			switch (LinkMode.ToLowerInvariant ()) {
 			case "sdkonly": args.Add ("--linksdkonly"); break;
@@ -426,6 +426,8 @@ namespace Xamarin.iOS.Tasks
 
 			if (UseFloat32 /* We want to compile 32-bit floating point code to use 32-bit floating point operations */)
 				args.Add ("--aot-options=-O=float32");
+			else
+				args.Add ("--aot-options=-O=-float32");
 
 			if (!EnableGenericValueTypeSharing)
 				args.Add ("--gsharedvt=false");
@@ -450,9 +452,6 @@ namespace Xamarin.iOS.Tasks
 
 			if (!string.IsNullOrEmpty (HttpClientHandler))
 				args.Add (string.Format ("--http-message-handler={0}", HttpClientHandler));
-
-			if (!string.IsNullOrEmpty (TLSProvider))
-				args.Add (string.Format ("--tls-provider={0}", TLSProvider.ToLowerInvariant()));
 
 			string thumb = UseThumb && UseLlvm ? "+thumb2" : "";
 			string llvm = UseLlvm ? "+llvm" : "";
@@ -608,7 +607,7 @@ namespace Xamarin.iOS.Tasks
 			args.Add ("--target-framework");
 			args.Add (TargetFrameworkIdentifier + "," + TargetFrameworkVersion);
 
-			args.AddQuoted (MainAssembly.ItemSpec);
+			args.AddQuoted (Path.GetFullPath (MainAssembly.ItemSpec));
 
 			// We give the priority to the ExtraArgs to set the mtouch verbosity.
 			if (string.IsNullOrEmpty (ExtraArgs) || (!string.IsNullOrEmpty (ExtraArgs) && !ExtraArgs.Contains ("-q") && !ExtraArgs.Contains ("-v")))
@@ -644,6 +643,7 @@ namespace Xamarin.iOS.Tasks
 			Log.LogTaskProperty ("CompiledEntitlements", CompiledEntitlements);
 			Log.LogTaskProperty ("Debug", Debug);
 			Log.LogTaskProperty ("EnableGenericValueTypeSharing", EnableGenericValueTypeSharing);
+			Log.LogTaskProperty ("EnableSGenConc", EnableSGenConc);
 			Log.LogTaskProperty ("Entitlements", Entitlements);
 			Log.LogTaskProperty ("ExecutableName", ExecutableName);
 			Log.LogTaskProperty ("ExtraArgs", ExtraArgs);
@@ -665,7 +665,6 @@ namespace Xamarin.iOS.Tasks
 			Log.LogTaskProperty ("SdkVersion", SdkVersion);
 			Log.LogTaskProperty ("SymbolsList", SymbolsList);
 			Log.LogTaskProperty ("TargetFrameworkIdentifier", TargetFrameworkIdentifier);
-			Log.LogTaskProperty ("TLSProvider", TLSProvider);
 			Log.LogTaskProperty ("UseFloat32", UseFloat32);
 			Log.LogTaskProperty ("UseLlvm", UseLlvm);
 			Log.LogTaskProperty ("UseThumb", UseThumb);
@@ -707,23 +706,7 @@ namespace Xamarin.iOS.Tasks
 
 			Directory.CreateDirectory (AppBundleDir);
 
-			var mtouchExecution = base.Execute ();
-
-			try {
-				var nativeLibrariesPath = Directory.EnumerateFiles (AppBundleDir, "*.dylib", SearchOption.AllDirectories);
-				var nativeLibraryItems = new List<ITaskItem> ();
-
-				foreach (var nativeLibrary in nativeLibrariesPath) {
-					nativeLibraryItems.Add (new TaskItem (nativeLibrary));
-				}
-
-				NativeLibraries = nativeLibraryItems.ToArray ();
-			} catch (Exception ex) {
-				Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Could not get native libraries: {0}", ex.Message);
-				return false;
-			}
-
-			return mtouchExecution;
+			return base.Execute ();
 		}
 
 		string ResolveFrameworkFile (string fullName)

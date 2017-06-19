@@ -14,7 +14,6 @@ using System;
 using Foundation;
 using EventKit;
 using ObjCRuntime;
-using UIKit;
 #else
 using MonoTouch.EventKit;
 using MonoTouch.Foundation;

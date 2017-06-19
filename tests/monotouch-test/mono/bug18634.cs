@@ -8,7 +8,6 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-using MonoTouch;
 #if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
@@ -20,7 +19,6 @@ using CoreAnimation;
 #endif
 using CoreGraphics;
 using CoreLocation;
-using UIKit;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;

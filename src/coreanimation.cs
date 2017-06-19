@@ -686,6 +686,9 @@ namespace XamCore.CoreAnimation {
 		[Export ("layer"), New, Static]
 		CALayer Create ();
 
+#if XAMCORE_4_0
+		[Protected]
+#endif
 		[Export ("scrollMode", ArgumentSemantic.Copy)]
 		NSString ScrollMode { get; set;  }
 
@@ -694,18 +697,21 @@ namespace XamCore.CoreAnimation {
 
 		[Export ("scrollToRect:")]
 		void ScrollToRect (CGRect r);
+	}
+
+	enum CAScroll {
 
 		[Field ("kCAScrollNone")]
-		NSString ScrollNone { get; }
+		None,
 
 		[Field ("kCAScrollVertically")]
-		NSString ScrollVertically { get; }
+		Vertically,
 
 		[Field ("kCAScrollHorizontally")]
-		NSString ScrollHorizontally { get; }
+		Horizontally,
 
 		[Field ("kCAScrollBoth")]
-		NSString ScrollBoth { get; }
+		Both,
 	}
 	
 	[BaseType (typeof (CALayer))]
@@ -852,7 +858,15 @@ namespace XamCore.CoreAnimation {
 
 	[BaseType (typeof (NSObject))]
 	[Model]
-	[Protocol (IsInformal = true)] // not informal as of iOS 10+, but removing the IsInformal value breaks when building with older SDKs (see bug #43585).
+#if IOS || TVOS
+	[Protocol (FormalSince = "10.0")]
+#elif MONOMAC
+	[Protocol (FormalSince = "10.12")]
+#elif WATCH
+	[Protocol (FormalSince = "3.0"]
+#else
+	[Protocol]
+#endif
 	interface CALayerDelegate {
 		[Export ("displayLayer:")]
 		void DisplayLayer (CALayer layer);

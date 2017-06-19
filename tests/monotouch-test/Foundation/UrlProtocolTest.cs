@@ -11,7 +11,11 @@ using System;
 using System.IO;
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 using ObjCRuntime;
 #else
 using MonoTouch.Foundation;

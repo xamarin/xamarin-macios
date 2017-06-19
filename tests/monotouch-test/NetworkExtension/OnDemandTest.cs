@@ -13,7 +13,6 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using NetworkExtension;
-using UIKit;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.NetworkExtension;

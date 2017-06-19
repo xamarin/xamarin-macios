@@ -11,10 +11,10 @@
     <AssemblyName>%NAME%</AssemblyName>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
+    <OutputPath>bin\$(Configuration)</OutputPath>
 %TARGETFRAMEWORKVERSION%
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>bin\Debug</OutputPath>
     <EnableCodeSigning>false</EnableCodeSigning>
     <CreatePackage>false</CreatePackage>
     <EnablePackageSigning>false</EnablePackageSigning>
@@ -23,6 +23,7 @@
     <UseRefCounting>false</UseRefCounting>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
+    <DebugSymbols>true</DebugSymbols>
 %CODE%
   <Profiling>false</Profiling><XamMacArch>x86_64</XamMacArch><CodeSigningKey>Mac Developer</CodeSigningKey><PackageSigningKey>Developer ID Installer</PackageSigningKey></PropertyGroup>
   <ItemGroup>

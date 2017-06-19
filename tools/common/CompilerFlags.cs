@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -19,6 +19,7 @@ namespace Xamarin.Utils
 		public HashSet<string> OtherFlags; // X
 		public HashSet<string> Defines; // -DX
 		public HashSet<string> UnresolvedSymbols; // -u X
+		public HashSet<string> SourceFiles; // X, added to Inputs
 
 		// Here we store a list of all the file-system based inputs
 		// to the compiler. This is used when determining if the
@@ -26,12 +27,39 @@ namespace Xamarin.Utils
 		// tracking).
 		public List<string> Inputs;
 
+		public CompilerFlags (Target target)
+		{
+			if (target == null)
+				throw new ArgumentNullException (nameof (target));
+			this.Target = target;
+		}
+
+		public HashSet<string> AllLibraries {
+			get {
+				var rv = new HashSet<string> ();
+				if (LinkWithLibraries != null)
+					rv.UnionWith (LinkWithLibraries);
+				if (ForceLoadLibraries != null)
+					rv.UnionWith (ForceLoadLibraries);
+				return rv;
+			}
+		}
+
 		public void ReferenceSymbol (string symbol)
 		{
 			if (UnresolvedSymbols == null)
 				UnresolvedSymbols = new HashSet<string> ();
 
 			UnresolvedSymbols.Add (symbol);
+		}
+
+		public void ReferenceSymbols (IEnumerable<Symbol> symbols)
+		{
+			if (UnresolvedSymbols == null)
+				UnresolvedSymbols = new HashSet<string> ();
+
+			foreach (var symbol in symbols)
+				UnresolvedSymbols.Add (symbol.Name);
 		}
 
 		public void AddDefine (string define)
@@ -64,6 +92,13 @@ namespace Xamarin.Utils
 				AddLinkWith (lib, force_load);
 		}
 
+		public void AddSourceFile (string file)
+		{
+			if (SourceFiles == null)
+				SourceFiles = new HashSet<string> ();
+			SourceFiles.Add (file);
+		}
+
 		public void AddOtherFlag (string flag)
 		{
 			if (OtherFlags == null)
@@ -83,27 +118,40 @@ namespace Xamarin.Utils
 
 		public void LinkWithMono ()
 		{
-			// link with the exact path to libmono
-			if (Application.UseMonoFramework.Value) {
-				AddFramework (Path.Combine (Driver.ProductFrameworksDirectory, "Mono.framework"));
-			} else {
-				AddLinkWith (Path.Combine (Driver.MonoTouchLibDirectory, Application.LibMono));
+			var mode = Target.App.LibMonoLinkMode;
+			switch (mode) {
+			case AssemblyBuildTarget.DynamicLibrary:
+			case AssemblyBuildTarget.StaticObject:
+				AddLinkWith (Application.GetLibMono (mode));
+				break;
+			case AssemblyBuildTarget.Framework:
+				AddFramework (Application.GetLibMono (mode));
+				break;
+			default:
+				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", mode);
 			}
+			AddOtherFlag ("-lz");
+			AddOtherFlag ("-liconv");
 		}
 
 		public void LinkWithXamarin ()
 		{
-			AddLinkWith (Path.Combine (Driver.MonoTouchLibDirectory, Application.LibXamarin));
+			var mode = Target.App.LibXamarinLinkMode;
+			switch (mode) {
+			case AssemblyBuildTarget.DynamicLibrary:
+			case AssemblyBuildTarget.StaticObject:
+				AddLinkWith (Application.GetLibXamarin (mode));
+				break;
+			case AssemblyBuildTarget.Framework:
+				AddFramework (Application.GetLibXamarin (mode));
+				break;
+			default:
+				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", mode);
+			}
 			AddFramework ("Foundation");
 			AddOtherFlag ("-lz");
-		}
-
-		public void LinkWithPInvokes (Abi abi)
-		{
-			if (!Driver.App.FastDev || !Driver.App.RequiresPInvokeWrappers)
-				return;
-
-			AddOtherFlag (Path.Combine (Cache.Location, "libpinvokes." + abi.AsArchString () + ".dylib"));
+			if (Application.Platform != ApplePlatform.WatchOS && Application.Platform != ApplePlatform.TVOS)
+				Frameworks.Add ("CFNetwork"); // required by xamarin_start_wwan
 		}
 
 		public void AddFramework (string framework)
@@ -139,9 +187,9 @@ namespace Xamarin.Utils
 				foreach (var fwk in Frameworks) {
 					if (!fwk.EndsWith (".framework", StringComparison.Ordinal)) {
 						var add_to = WeakFrameworks;
-						var framework = Driver.Frameworks.Find (fwk);
+						var framework = Driver.GetFrameworks (Application).Find (fwk);
 						if (framework != null) {
-							if (framework.Version > Driver.SDKVersion)
+							if (framework.Version > Application.SdkVersion)
 								continue;
 							add_to = Application.DeploymentTarget >= framework.Version ? Frameworks : WeakFrameworks;
 						}
@@ -177,14 +225,14 @@ namespace Xamarin.Utils
 
 			if (LinkWithLibraries != null) {
 				foreach (var lib in LinkWithLibraries) {
-					args.Append (' ').Append (Driver.Quote (lib));
+					args.Append (' ').Append (StringUtils.Quote (lib));
 					AddInput (lib);
 				}
 			}
 
 			if (ForceLoadLibraries != null) {
 				foreach (var lib in ForceLoadLibraries) {
-					args.Append (" -force_load ").Append (Driver.Quote (lib));
+					args.Append (" -force_load ").Append (StringUtils.Quote (lib));
 					AddInput (lib);
 				}
 			}
@@ -201,7 +249,14 @@ namespace Xamarin.Utils
 
 			if (UnresolvedSymbols != null) {
 				foreach (var symbol in UnresolvedSymbols)
-					args.Append (" -u _").Append (symbol);
+					args.Append (" -u ").Append (StringUtils.Quote ("_" + symbol));
+			}
+
+			if (SourceFiles != null) {
+				foreach (var src in SourceFiles) {
+					args.Append (' ').Append (StringUtils.Quote (src));
+					AddInput (src);
+				}
 			}
 		}
 
@@ -224,6 +279,12 @@ namespace Xamarin.Utils
 				if (Application.IsExtension)
 					args.Append (" -Xlinker -rpath -Xlinker @executable_path/../../Frameworks");
 			}
+
+			if (Application.HasAnyDynamicLibraries) {
+				args.Append (" -Xlinker -rpath -Xlinker @executable_path");
+				if (Application.IsExtension)
+					args.Append (" -Xlinker -rpath -Xlinker @executable_path/../..");
+			}
 		}
 
 		void ProcessFrameworkForArguments (StringBuilder args, string fw, bool is_weak, ref bool any_user_framework)
@@ -233,7 +294,7 @@ namespace Xamarin.Utils
 				// user framework, we need to pass -F to the linker so that the linker finds the user framework.
 				any_user_framework = true;
 				AddInput (Path.Combine (fw, name));
-				args.Append (" -F ").Append (Driver.Quote (Path.GetDirectoryName (fw)));
+				args.Append (" -F ").Append (StringUtils.Quote (Path.GetDirectoryName (fw)));
 			}
 			args.Append (is_weak ? " -weak_framework " : " -framework ").Append (name);
 		}
@@ -243,6 +304,13 @@ namespace Xamarin.Utils
 			var args = new StringBuilder ();
 			WriteArguments (args);
 			return args.ToString ();
+		}
+
+		public void PopulateInputs ()
+		{
+			var args = new StringBuilder ();
+			Inputs = new List<string> ();
+			WriteArguments (args);
 		}
 	}
 }

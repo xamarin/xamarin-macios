@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 
 using Mono.Cecil;
-using Mono.Cecil.Mdb;
+using Mono.Cecil.Cil;
 
 using Xamarin.Utils;
 
@@ -31,16 +31,22 @@ namespace Xamarin.Bundler {
 		None,
 		SDKOnly,
 		All,
+#if !MONOTOUCH
+		Platform,
+#endif
 	}
 
 	public partial class Application
 	{
-		public string AppDirectory;
+		public Cache Cache;
+		public string AppDirectory = ".";
 		public bool DeadStrip = true;
 		public bool EnableDebug;
 		internal RuntimeOptions RuntimeOptions;
 		public RegistrarMode Registrar = RegistrarMode.Default;
 		public RegistrarOptions RegistrarOptions = RegistrarOptions.Default;
+		public SymbolMode SymbolMode;
+		public HashSet<string> IgnoredSymbols = new HashSet<string> ();
 
 		public HashSet<string> Frameworks = new HashSet<string> ();
 		public HashSet<string> WeakFrameworks = new HashSet<string> ();
@@ -54,11 +60,29 @@ namespace Xamarin.Bundler {
 		public Mono.Linker.I18nAssemblies I18n;
 
 		public bool? EnableCoopGC;
+		public bool EnableSGenConc;
 		public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptions;
 		public MarshalManagedExceptionMode MarshalManagedExceptions;
 		public bool IsDefaultMarshalManagedExceptionMode;
-		public string RootAssembly;
+		public List<string> RootAssemblies = new List<string> ();
+		public List<Application> SharedCodeApps = new List<Application> (); // List of appexes we're sharing code with.
 		public string RegistrarOutputLibrary;
+
+		public static int Concurrency => Driver.Concurrency;
+		public Version DeploymentTarget;
+		public Version SdkVersion;
+	
+		public bool Embeddinator { get; set; }
+
+		public Application (string[] arguments)
+		{
+			Cache = new Cache (arguments);
+		}
+
+		// This is just a name for this app to show in log/error messages, etc.
+		public string Name {
+			get { return Path.GetFileNameWithoutExtension (AppDirectory); }
+		}
 
 		public bool RequiresPInvokeWrappers {
 			get {
@@ -133,19 +157,25 @@ namespace Xamarin.Bundler {
 
 		public static void SaveAssembly (AssemblyDefinition assembly, string destination)
 		{
-			bool symbols = assembly.MainModule.HasSymbols;
-			// re-write symbols, if available, so the new tokens will match
-			assembly.Write (destination, new WriterParameters () { WriteSymbols = symbols });
-
+			var main = assembly.MainModule;
+			bool symbols = main.HasSymbols;
 			if (symbols) {
-				// re-load symbols (cecil will dispose MdbReader and will crash later if we need to save again)
-				var provider = new MdbReaderProvider ();
-				assembly.MainModule.ReadSymbols (provider.GetSymbolReader (assembly.MainModule, destination));
-			} else {
+				var provider = new DefaultSymbolReaderProvider ();
+				main.ReadSymbols (provider.GetSymbolReader (main, main.FileName));
+			}
+
+			var wp = new WriterParameters () { WriteSymbols = symbols };
+			// re-write symbols, if available, so the new tokens will match
+			assembly.Write (destination, wp);
+
+			if (!symbols) {
 				// if we're not saving the symbols then we must not leave stale/old files to be used by other tools
 				string dest_mdb = destination + ".mdb";
 				if (File.Exists (dest_mdb))
 					File.Delete (dest_mdb);
+				string dest_pdb = Path.ChangeExtension (destination, ".pdb");
+				if (File.Exists (dest_pdb))
+					File.Delete (dest_pdb);
 			}
 		}
 
@@ -407,6 +437,24 @@ namespace Xamarin.Bundler {
 				}
 				IsDefaultMarshalManagedExceptionMode = true;
 			}
+
+			if (SymbolMode == SymbolMode.Default) {
+#if MONOTOUCH
+				SymbolMode = EnableBitCode ? SymbolMode.Code : SymbolMode.Linker;
+#else
+				SymbolMode = SymbolMode.Linker;
+#endif
+			}
+
+#if MONOTOUCH
+			if (EnableBitCode && SymbolMode != SymbolMode.Code) {
+				// This is a warning because:
+				// * The user will get a linker error anyway if they do this.
+				// * I see it as quite unlikely that anybody will in fact try this (it must be manually set in the additional mtouch arguments).
+				// * I find it more probable that Apple will remove the -u restriction, in which case someone might actually want to try this, and if it's a warning, we won't prevent it.
+				ErrorHelper.Warning (115, "It is recommended to reference dynamic symbols using code (--dynamic-symbol-mode=code) when bitcode is enabled.");
+			}
+#endif
 		}
 
 		public void RunRegistrar ()
@@ -415,31 +463,34 @@ namespace Xamarin.Bundler {
 			if (Registrar != RegistrarMode.Static)
 				throw new PlatformException (67, "Invalid registrar: {0}", Registrar); // this is only called during our own build
 
-			var registrar_m = RegistrarOutputLibrary;
+			if (RootAssemblies.Count != 1)
+				throw ErrorHelper.CreateError (8, "You should provide one root assembly only, found {0} assemblies: '{1}'", RootAssemblies.Count, string.Join ("', '", RootAssemblies.ToArray ()));
 
+			var registrar_m = RegistrarOutputLibrary;
+			var RootAssembly = RootAssemblies [0];
 			var resolvedAssemblies = new List<AssemblyDefinition> ();
 			var resolver = new PlatformResolver () {
-				FrameworkDirectory = Driver.PlatformFrameworkDirectory,
+				FrameworkDirectory = Driver.GetPlatformFrameworkDirectory (this),
 				RootDirectory = Path.GetDirectoryName (RootAssembly),
 			};
 
-			if (Driver.App.Platform == ApplePlatform.iOS || Driver.App.Platform == ApplePlatform.MacOSX) {
-				if (Driver.App.Is32Build) {
-					resolver.ArchDirectory = Driver.Arch32Directory;
+			if (Platform == ApplePlatform.iOS || Platform == ApplePlatform.MacOSX) {
+				if (Is32Build) {
+					resolver.ArchDirectory = Driver.GetArch32Directory (this);
 				} else {
-					resolver.ArchDirectory = Driver.Arch64Directory;
+					resolver.ArchDirectory = Driver.GetArch64Directory (this);
 				}
 			}
 
 			var ps = new ReaderParameters ();
 			ps.AssemblyResolver = resolver;
-			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve ("mscorlib"));
+			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse ("mscorlib"), new ReaderParameters ()));
 
 			var rootName = Path.GetFileNameWithoutExtension (RootAssembly);
-			if (rootName != Driver.ProductAssembly)
-				throw new PlatformException (66, "Invalid build registrar assembly: {0}", RootAssembly);
+			if (rootName != Driver.GetProductAssembly (this))
+				throw ErrorHelper.CreateError (66, "Invalid build registrar assembly: {0}", RootAssembly);
 
-			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (rootName));
+			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ()));
 			Driver.Log (3, "Loaded {0}", resolvedAssemblies [resolvedAssemblies.Count - 1].MainModule.FileName);
 
 #if MONOTOUCH

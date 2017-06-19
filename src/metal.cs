@@ -253,11 +253,46 @@ namespace XamCore.Metal {
 		[Export ("presentDrawable:atTime:")]
 		void PresentDrawable (IMTLDrawable drawable, double presentationTime);
 
+#if XAMCORE_4_0
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#endif
+		[iOS (10,3)][TV (10,2)][NoMac]
+		[Export ("presentDrawable:afterMinimumDuration:")]
+		void PresentDrawableAfter (IMTLDrawable drawable, double duration);
+
 #if XAMCORE_2_0
 		[Abstract]
 #endif
 		[Export ("renderCommandEncoderWithDescriptor:")]
 		IMTLRenderCommandEncoder CreateRenderCommandEncoder (MTLRenderPassDescriptor renderPassDescriptor);
+
+#if XAMCORE_4_0
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#endif
+		[iOS (10,3)][TV (10,2)][Mac (10,12,4, onlyOn64 : true)]
+		[Export ("kernelStartTime")]
+		double /* CFTimeInterval */ KernelStartTime { get; }
+
+#if XAMCORE_4_0
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#endif
+		[iOS (10,3)][TV (10,2)][Mac (10,12,4, onlyOn64 : true)]
+		[Export ("kernelEndTime")]
+		double /* CFTimeInterval */ KernelEndTime { get; }
+
+#if XAMCORE_4_0
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#endif
+		[iOS (10,3)][TV (10,2)][Mac (10,12,4, onlyOn64 : true)]
+		[Export ("GPUStartTime")]
+		double /* CFTimeInterval */ GpuStartTime { get; }
+
+#if XAMCORE_4_0
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#endif
+		[iOS (10,3)][TV (10,2)][Mac (10,12,4, onlyOn64 : true)]
+		[Export ("GPUEndTime")]
+		double /* CFTimeInterval */ GpuEndTime { get; }
 	}
 
 	interface IMTLCommandQueue {}
@@ -676,6 +711,34 @@ namespace XamCore.Metal {
 		
 		[Abstract, Export ("presentAtTime:")]
 		void Present (double presentationTime);
+
+#if XAMCORE_4_0
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#endif
+		[iOS (10,3)][TV (10,2)][NoMac]
+		[Export ("presentAfterMinimumDuration:")]
+		void PresentAfter (double duration);
+
+#if XAMCORE_4_0
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#endif
+		[iOS (10,3)][TV (10,2)][NoMac]
+		[Export ("addPresentedHandler:")]
+		void AddPresentedHandler (Action<IMTLDrawable> block);
+
+#if XAMCORE_4_0
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#endif
+		[iOS (10,3)][TV (10,2)][NoMac]
+		[Export ("presentedTime")]
+		double /* CFTimeInterval */ PresentedTime { get; }
+
+#if XAMCORE_4_0
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#endif
+		[iOS (10,3)][TV (10,2)][NoMac]
+		[Export ("drawableID")]
+		nuint DrawableID { get; }
 	}
 
 	interface IMTLTexture {}
@@ -1617,7 +1680,9 @@ namespace XamCore.Metal {
 		void SetVertexTextures (IMTLTexture [] textures, NSRange range);
 
 		[NoiOS, NoTV, NoWatch, Mac (10,11)]
+#if XAMCORE_4_0
 		[Abstract]
+#endif
 		[Export ("textureBarrier")]
 		void TextureBarrier ();
 
@@ -1657,7 +1722,9 @@ namespace XamCore.Metal {
 		void DrawPatches (nuint numberOfPatchControlPoints, nuint patchStart, nuint patchCount, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, nuint instanceCount, nuint baseInstance);
 
 		[NoiOS, NoTV, NoWatch, Mac (10,12)]
+#if XAMCORE_4_0
 		[Abstract]
+#endif
 		[Export ("drawPatches:patchIndexBuffer:patchIndexBufferOffset:indirectBuffer:indirectBufferOffset:")]
 		void DrawPatches (nuint numberOfPatchControlPoints, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, IMTLBuffer indirectBuffer, nuint indirectBufferOffset);
 
@@ -1669,7 +1736,9 @@ namespace XamCore.Metal {
 		void DrawIndexedPatches (nuint numberOfPatchControlPoints, nuint patchStart, nuint patchCount, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, IMTLBuffer controlPointIndexBuffer, nuint controlPointIndexBufferOffset, nuint instanceCount, nuint baseInstance);
 
 		[NoiOS, NoTV, NoWatch, Mac (10,12)]
+#if XAMCORE_4_0
 		[Abstract]
+#endif
 		[Export ("drawIndexedPatches:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:indirectBuffer:indirectBufferOffset:")]
 		void DrawIndexedPatches (nuint numberOfPatchControlPoints, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, IMTLBuffer controlPointIndexBuffer, nuint controlPointIndexBufferOffset, IMTLBuffer indirectBuffer, nuint indirectBufferOffset);
 	}

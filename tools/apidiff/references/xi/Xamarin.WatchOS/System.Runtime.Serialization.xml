@@ -74,6 +74,11 @@
           <property name="Version" value="2.0.5.0" />
         </properties>
       </attribute>
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
+        <properties>
+          <property name="CompilationRelaxations" value="8" />
+        </properties>
+      </attribute>
       <attribute name="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute">
         <properties>
           <property name="WrapNonExceptionThrows" value="True" />
@@ -1439,6 +1444,12 @@
           </class>
           <class name="XmlSerializableServices" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
             <methods>
+              <method name="AddDefaultSchema(System.Xml.Schema.XmlSchemaSet, System.Xml.XmlQualifiedName)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="schemas" position="0" attrib="0" type="System.Xml.Schema.XmlSchemaSet" />
+                  <parameter name="typeQName" position="1" attrib="0" type="System.Xml.XmlQualifiedName" />
+                </parameters>
+              </method>
               <method name="ReadNodes(System.Xml.XmlReader)" attrib="150" static="true" returntype="System.Xml.XmlNode[]">
                 <parameters>
                   <parameter name="xmlReader" position="0" attrib="0" type="System.Xml.XmlReader" />
@@ -1448,6 +1459,86 @@
                 <parameters>
                   <parameter name="xmlWriter" position="0" attrib="0" type="System.Xml.XmlWriter" />
                   <parameter name="nodes" position="1" attrib="0" type="System.Xml.XmlNode[]" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="XsdDataContractExporter" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.Xml.Schema.XmlSchemaSet)" attrib="6278">
+                <parameters>
+                  <parameter name="schemas" position="0" attrib="0" type="System.Xml.Schema.XmlSchemaSet" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Options" attrib="0" ptype="System.Runtime.Serialization.ExportOptions">
+                <methods>
+                  <method name="get_Options()" attrib="2182" returntype="System.Runtime.Serialization.ExportOptions">
+                    <parameters />
+                  </method>
+                  <method name="set_Options(System.Runtime.Serialization.ExportOptions)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Runtime.Serialization.ExportOptions" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Schemas" attrib="0" ptype="System.Xml.Schema.XmlSchemaSet">
+                <methods>
+                  <method name="get_Schemas()" attrib="2182" returntype="System.Xml.Schema.XmlSchemaSet">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="CanExport(System.Collections.Generic.ICollection`1[System.Reflection.Assembly])" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="assemblies" position="0" attrib="0" type="System.Collections.Generic.ICollection`1[System.Reflection.Assembly]" />
+                </parameters>
+              </method>
+              <method name="CanExport(System.Collections.Generic.ICollection`1[System.Type])" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="types" position="0" attrib="0" type="System.Collections.Generic.ICollection`1[System.Type]" />
+                </parameters>
+              </method>
+              <method name="CanExport(System.Type)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="type" position="0" attrib="0" type="System.Type" />
+                </parameters>
+              </method>
+              <method name="Export(System.Collections.Generic.ICollection`1[System.Reflection.Assembly])" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="assemblies" position="0" attrib="0" type="System.Collections.Generic.ICollection`1[System.Reflection.Assembly]" />
+                </parameters>
+              </method>
+              <method name="Export(System.Collections.Generic.ICollection`1[System.Type])" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="types" position="0" attrib="0" type="System.Collections.Generic.ICollection`1[System.Type]" />
+                </parameters>
+              </method>
+              <method name="Export(System.Type)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="type" position="0" attrib="0" type="System.Type" />
+                </parameters>
+              </method>
+              <method name="GetRootElementName(System.Type)" attrib="134" returntype="System.Xml.XmlQualifiedName">
+                <parameters>
+                  <parameter name="type" position="0" attrib="0" type="System.Type" />
+                </parameters>
+              </method>
+              <method name="GetSchemaType(System.Type)" attrib="134" returntype="System.Xml.Schema.XmlSchemaType">
+                <parameters>
+                  <parameter name="type" position="0" attrib="0" type="System.Type" />
+                </parameters>
+              </method>
+              <method name="GetSchemaTypeName(System.Type)" attrib="134" returntype="System.Xml.XmlQualifiedName">
+                <parameters>
+                  <parameter name="type" position="0" attrib="0" type="System.Type" />
                 </parameters>
               </method>
             </methods>

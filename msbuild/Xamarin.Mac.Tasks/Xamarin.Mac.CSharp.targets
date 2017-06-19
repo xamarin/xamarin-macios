@@ -20,15 +20,9 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	
 	<PropertyGroup>
 		<!-- Version/fx properties -->
-		<TargetFrameworkVersion Condition="'$(TargetFrameworkIdentifier)' == '' And '$(TargetFrameworkVersion)' ==''">v4.5</TargetFrameworkVersion>
-		<!-- work around a bug in the Mono Microsoft.CSharp.Targets that defaults the compiler to gmcs -->
-		<!-- this is fixed in mono/master (2014-03-05), but we'll keep this workaround here for a while -->
-		<CscToolPath Condition="'$(OS)' == 'Unix'">/Library/Frameworks/Mono.framework/Commands</CscToolPath>
-		<CscToolExe Condition="'$(OS)' == 'Unix'">mcs</CscToolExe>
-		<!-- We default to mcs compiler above, so, select the .mdb as the debug ext -->
-		<CscDebugFileExt Condition="'$(OS)' == 'Unix'">.mdb</CscDebugFileExt>
+		<TargetFrameworkVersion Condition="'$(TargetFrameworkIdentifier)' == '' And '$(TargetFrameworkVersion)' == ''">v4.5</TargetFrameworkVersion>
 
-		<DefineConstants>__UNIFIED__;$(DefineConstants)</DefineConstants>
+		<DefineConstants>__UNIFIED__;__MACOS__;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

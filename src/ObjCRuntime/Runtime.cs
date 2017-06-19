@@ -17,6 +17,10 @@ using System.Runtime.InteropServices;
 using XamCore.Foundation;
 using XamCore.Registrar;
 
+#if MONOMAC
+using XamCore.AppKit;
+#endif
+
 #if !COREBUILD && (XAMARIN_APPLETLS || XAMARIN_NO_TLS)
 #if !MMP && !MTOUCH && !MTOUCH_TEST
 using Mono.Security.Interface;
@@ -99,6 +103,16 @@ namespace XamCore.ObjCRuntime {
 			IsSimulator				= 0x10,
 		}
 
+#if MONOMAC
+		/* This enum must always match the identical enum in runtime/xamarin/main.h */
+		internal enum LaunchMode : int {
+			App = 0,
+			Extension = 1,
+			Embedded = 2,
+		}
+#endif
+
+		[StructLayout (LayoutKind.Sequential)]
 		internal unsafe struct InitializationOptions {
 			public int Size;
 			public InitializationFlags Flags;
@@ -107,6 +121,11 @@ namespace XamCore.ObjCRuntime {
 			public MTRegistrationMap *RegistrationMap;
 			public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptionMode;
 			public MarshalManagedExceptionMode MarshalManagedExceptionMode;
+#if MONOMAC
+			public LaunchMode LaunchMode;
+			public IntPtr EntryAssemblyPath; /* char * */
+#endif
+			IntPtr AssemblyLocations;
 
 			public bool IsSimulator {
 				get {
@@ -194,10 +213,6 @@ namespace XamCore.ObjCRuntime {
 			Class.Initialize (options);
 			InitializePlatform (options);
 
-#if !COREBUILD && (XAMARIN_APPLETLS || XAMARIN_NO_TLS)
-			MonoTlsProviderFactory._PrivateFactoryDelegate = TlsProviderFactoryCallback;
-#endif
-
 #if !XAMMAC_SYSTEM_MONO
 			UseAutoreleasePoolInThreadPool = true;
 #endif
@@ -230,6 +245,23 @@ namespace XamCore.ObjCRuntime {
 		}
 #endif
 
+#if MONOMAC
+		public static event AssemblyRegistrationHandler AssemblyRegistration;
+
+		static bool OnAssemblyRegistration (AssemblyName assembly_name)
+		{
+			if (AssemblyRegistration != null) {
+				var args = new AssemblyRegistrationEventArgs
+				{
+					Register = true,
+					AssemblyName = assembly_name
+				};
+				AssemblyRegistration (null, args);
+				return args.Register;
+			}
+			return true;
+		}
+#endif
 		static MarshalObjectiveCExceptionMode objc_exception_mode;
 		static MarshalManagedExceptionMode managed_exception_mode;
 
@@ -269,13 +301,6 @@ namespace XamCore.ObjCRuntime {
 			}
 			return managed_exception_mode;
 		}
-
-#if !COREBUILD && (XAMARIN_APPLETLS || XAMARIN_NO_TLS)
-		static MonoTlsProvider TlsProviderFactoryCallback ()
-		{
-			return new AppleTlsProvider ();
-		}
-#endif
 
 		static IntPtr GetFunctionPointer (Delegate d)
 		{
@@ -355,6 +380,16 @@ namespace XamCore.ObjCRuntime {
 			return BlockLiteral.GetBlockForDelegate ((MethodInfo) ObjectWrapper.Convert (method), ObjectWrapper.Convert (@delegate));
 		}
 
+		static unsafe Assembly GetEntryAssembly ()
+		{
+			var asm = Assembly.GetEntryAssembly ();
+#if MONOMAC
+			if (asm == null)
+				asm = Assembly.LoadFile (Marshal.PtrToStringAuto (options->EntryAssemblyPath));
+#endif
+			return asm;
+		}
+
 		// This method will register all assemblies referenced by the entry assembly.
 		// For XM it will also register all assemblies loaded in the current appdomain.
 		internal static void RegisterAssemblies ()
@@ -363,7 +398,7 @@ namespace XamCore.ObjCRuntime {
 			var watch = new Stopwatch ();
 #endif
 
-			RegisterEntryAssembly (Assembly.GetEntryAssembly ());
+			RegisterEntryAssembly (GetEntryAssembly ());
 
 #if PROFILE
 			Console.WriteLine ("RegisterAssemblies completed in {0} ms", watch.ElapsedMilliseconds);
@@ -382,7 +417,12 @@ namespace XamCore.ObjCRuntime {
 			assemblies.Add (NSObject.PlatformAssembly); // make sure our platform assembly comes first
 			// Recursively get all assemblies referenced by the entry assembly.
 			if (entry_assembly != null) {
-				CollectReferencedAssemblies (assemblies, entry_assembly);
+				var register_entry_assembly = true;
+#if MONOMAC
+				register_entry_assembly = OnAssemblyRegistration (entry_assembly.GetName ());
+#endif
+				if (register_entry_assembly)
+					CollectReferencedAssemblies (assemblies, entry_assembly);
 			} else {
 				Console.WriteLine ("Could not find the entry assembly.");
 			}
@@ -390,6 +430,9 @@ namespace XamCore.ObjCRuntime {
 #if MONOMAC
 			// Add all assemblies already loaded
 			foreach (var a in AppDomain.CurrentDomain.GetAssemblies ()) {
+				if (!OnAssemblyRegistration (a.GetName ()))
+					continue;
+
 				if (!assemblies.Contains (a))
 					assemblies.Add (a);
 			}
@@ -403,19 +446,22 @@ namespace XamCore.ObjCRuntime {
 		{
 			assemblies.Add (assembly);
 			foreach (var rf in assembly.GetReferencedAssemblies ()) {
+#if MONOMAc
+				if (!OnAssemblyRegistration (rf))
+					continue;
+#endif
 				try {
 					var a = Assembly.Load (rf);
 					if (!assemblies.Contains (a))
 						CollectReferencedAssemblies (assemblies, a);
 				}
-#if MONOMAC
-				catch {
+				catch (FileNotFoundException fefe) {
 					// that's more important for XI because device builds don't go thru this step
 					// and we can end up with simulator-only failures - bug #29211
-					throw;
-#else
-				catch (FileNotFoundException fefe) {
 					NSLog ("Could not find `{0}` referenced by assembly `{1}`.", fefe.FileName, assembly.FullName);
+#if MONOMAC
+					if (!NSApplication.IgnoreMissingAssembliesDuringRegistration)
+						throw;
 #endif
 				}
 			}
@@ -552,9 +598,6 @@ namespace XamCore.ObjCRuntime {
 
 		static unsafe IntPtr GetGenericMethodFromToken (IntPtr obj, uint token_ref)
 		{
-#if MONOMAC
-			throw new NotSupportedException ();
-#else
 			var method = Class.ResolveTokenReference (token_ref, 0x06000000);
 			if (method == null)
 				return IntPtr.Zero;
@@ -568,7 +611,6 @@ namespace XamCore.ObjCRuntime {
 				throw ErrorHelper.CreateError (8023, $"An instance object is required to construct a closed generic method for the open generic method: {mb.DeclaringType.FullName}.{mb.Name} (token reference: 0x{token_ref:X}). Please file a bug report at http://bugzilla.xamarin.com.");
 
 			return ObjectWrapper.Convert (DynamicRegistrar.FindClosedMethod (nsobj.GetType (), mb));
-#endif
 		}
 
 		static IntPtr TryGetOrConstructNSObjectWrapped (IntPtr ptr)
@@ -1306,14 +1348,16 @@ namespace XamCore.ObjCRuntime {
 		extern static void NSLog (IntPtr format, [MarshalAs (UnmanagedType.LPStr)] string s);
 #endif
 
+#if !MONOMAC && !WATCHOS
 		[DllImport (Constants.FoundationLibrary, EntryPoint = "NSLog")]
 		extern static void NSLog_arm64 (IntPtr format, IntPtr p2, IntPtr p3, IntPtr p4, IntPtr p5, IntPtr p6, IntPtr p7, IntPtr p8, [MarshalAs (UnmanagedType.LPStr)] string s);
+#endif
 
 		internal static void NSLog (string format, params object[] args)
 		{
 			var fmt = NSString.CreateNative ("%s");
 			var val = (args == null || args.Length == 0) ? format : string.Format (format, args);
-#if !MONOMAC
+#if !MONOMAC && !WATCHOS
 			if (IntPtr.Size == 8 && Arch == Arch.DEVICE)
 				NSLog_arm64 (fmt, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, val);
 			else

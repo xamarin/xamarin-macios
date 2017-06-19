@@ -24,12 +24,18 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		<_XamarinCommonPropsHasBeenImported>true</_XamarinCommonPropsHasBeenImported>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<IsXBuild Condition="'$(MSBuildRuntimeVersion)' == ''">true</IsXBuild>
+		<IsXBuild Condition="'$(MSBuildRuntimeVersion)' != ''">false</IsXBuild>
+	</PropertyGroup>
+
 	<!-- When looking for related files to copy, look for Mono debugging files as well -->
 	<PropertyGroup>
 		<AllowedReferenceRelatedFileExtensions>
 			$(AllowedReferenceRelatedFileExtensions);
 			.dll.mdb;
-			.exe.mdb
+			.exe.mdb;
+			.pdb
 		</AllowedReferenceRelatedFileExtensions>
 	</PropertyGroup>
 
@@ -49,12 +55,13 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		<I18n Condition="'$(I18n)' == ''"></I18n>
 		<IncludeMonoRuntime Condition="'$(IncludeMonoRuntime)' == ''">true</IncludeMonoRuntime>
 		<MonoBundlingExtraArgs Condition="'$(MonoBundlingExtraArgs)' == ''"></MonoBundlingExtraArgs>
-		<TlsProvider Condition="'$(TlsProvider)' == ''">Default</TlsProvider>
 		<LinkMode Condition="'$(LinkMode)' == ''">None</LinkMode>
 		<XamMacArch Condition="'$(XamMacArch)' == ''">x86_64</XamMacArch>
 		<MonoMacResourcePrefix Condition="'$(MonoMacResourcePrefix)' == ''">Resources</MonoMacResourcePrefix>
 		<XamMacResourcePrefix Condition="'$(XamMacResourcePrefix)' == ''">$(MonoMacResourcePrefix)</XamMacResourcePrefix>
 		<IsAppExtension Condition="'$(IsAppExtension)' == ''">False</IsAppExtension>
+		<EnableSGenConc Condition="'$(EnableSGenConc)' == ''">false</EnableSGenConc>
+		<AotScope Condition="'$(AotScope)' == ''">None</AotScope>
 	</PropertyGroup>
 
 	<PropertyGroup>

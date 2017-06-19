@@ -12,7 +12,9 @@ using ObjCRuntime;
 #if !__WATCHOS__
 using SpriteKit;
 #endif
+#if !MONOMAC
 using UIKit;
+#endif
 #else
 using MonoTouch;
 using MonoTouch.Foundation;
@@ -93,7 +95,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Runtime.RegisterAssembly (null);
 		}
 
-#if !__WATCHOS__ && !__TVOS__
+#if !__WATCHOS__ && !__TVOS__ && !MONOMAC
 		[Test]
 		public void StartWWAN ()
 		{
@@ -499,7 +501,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
+#if !MONOMAC // Failing with 10 broken
 		[TestCase (typeof (NSObject))]
+#endif
 		[TestCase (typeof (ResurrectedObjectsDisposedTestClass))]
 		public void ResurrectedObjectsDisposedTest (Type type)
 		{

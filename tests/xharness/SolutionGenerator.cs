@@ -63,11 +63,12 @@ namespace xharness
 				writer.WriteLine ("Microsoft Visual Studio Solution File, Format Version 11.00");
 				writer.WriteLine ("# Visual Studio 2010");
 				foreach (var target in targets) {
-					var w = target as WatchOSTarget;
+					var relatedProjects = target.GetRelatedProjects ();
+					var hasRelatedProjects = relatedProjects != null;
 					var folderGuid = string.Empty;
-					var useFolders = w != null && w.IsExe && exeTarget == null;
+					var useFolders = hasRelatedProjects && target.IsExe && exeTarget == null;
 
-					if (w != null && w.IsExe) {
+					if (hasRelatedProjects && target.IsExe) {
 						if (exeTarget == null) {
 							CreateSolution (harness, targets, target, infix); // create a solution for just this test project as well
 						} else if (exeTarget != target) {
@@ -84,26 +85,33 @@ namespace xharness
 					writer.WriteLine ("Project(\"{3}\") = \"{0}\", \"{1}\", \"{2}\"", Path.GetFileNameWithoutExtension (target.ProjectPath), FixProjectPath (sln_path, Path.GetFullPath (target.ProjectPath)), target.ProjectGuid, target.LanguageGuid);
 					writer.WriteLine ("EndProject");
 
-					if (w != null && w.IsExe) {
-						writer.WriteLine ("Project(\"{3}\") = \"{0}\", \"{1}\", \"{2}\"", Path.GetFileNameWithoutExtension (w.WatchOSExtensionProjectPath), FixProjectPath (sln_path, Path.GetFullPath (w.WatchOSExtensionProjectPath)), w.WatchOSExtensionGuid, w.LanguageGuid);
-						writer.WriteLine ("EndProject");
-						writer.WriteLine ("Project(\"{3}\") = \"{0}\", \"{1}\", \"{2}\"", Path.GetFileNameWithoutExtension (w.WatchOSAppProjectPath), FixProjectPath (sln_path, Path.GetFullPath (w.WatchOSAppProjectPath)), w.WatchOSAppGuid, w.LanguageGuid);
-						writer.WriteLine ("EndProject");
+					if (hasRelatedProjects && target.IsExe) {
+						foreach (var rp in relatedProjects) {
+							writer.WriteLine ("Project(\"{3}\") = \"{0}\", \"{1}\", \"{2}\"", Path.GetFileNameWithoutExtension (rp.ProjectPath), FixProjectPath (sln_path, Path.GetFullPath (rp.ProjectPath)), rp.Guid, target.LanguageGuid);
+							writer.WriteLine ("EndProject");							
+						}
 					}
 
 					if (useFolders) {
 						folders.AppendFormat ("\t\t{0} = {{{1}}}\n", target.ProjectGuid, folderGuid);
-						folders.AppendFormat ("\t\t{0} = {{{1}}}\n", w.WatchOSExtensionGuid, folderGuid);
-						folders.AppendFormat ("\t\t{0} = {{{1}}}\n", w.WatchOSAppGuid, folderGuid);
+						foreach (var rp in relatedProjects)
+							folders.AppendFormat ("\t\t{0} = {{{1}}}\n", rp.Guid, folderGuid);
 					}
 				}
 
 				// Add reference to MonoTouch.NUnitLite project
 				string configuration;
-				AddProjectToSolution (harness, sln_path, writer, Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.NUnitLite." + infix + ".csproj")), out configuration);
+				var proj_path = Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.NUnitLite." + infix + ".csproj"));
+				if (!File.Exists (proj_path))
+					proj_path = Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.NUnitLite.csproj"));
+				AddProjectToSolution (harness, sln_path, writer, proj_path, out configuration);
 				string configuration2 = string.Empty;
-				if (infix != "watchos")
-					AddProjectToSolution (harness, sln_path, writer, Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.Dialog-1." + infix + ".csproj")), out configuration2);
+				if (infix != "watchos") {
+					proj_path = Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.Dialog-1." + infix + ".csproj"));
+					if (!File.Exists (proj_path))
+						proj_path = Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.Dialog-1.csproj"));
+					AddProjectToSolution (harness, sln_path, writer, proj_path, out configuration2);
+				}
 
 				writer.WriteLine ("Global");
 
@@ -140,21 +148,18 @@ namespace xharness
 					}
 
 					if (target.IsExe) {
-						var w = target as WatchOSTarget;
-						if (w != null) {
-							foreach (var conf in configurations) {
-								foreach (var platform in exePlatforms) {
-									writer.WriteLine ("\t\t{0}.{1}|{2}.ActiveCfg = {1}|{2}", w.WatchOSExtensionGuid, conf, platform);
-									writer.WriteLine ("\t\t{0}.{1}|{2}.Build.0 = {1}|{2}", w.WatchOSExtensionGuid, conf, platform);
-								}
-							}
-							foreach (var conf in configurations) {
-								foreach (var platform in exePlatforms) {
-									writer.WriteLine ("\t\t{0}.{1}|{2}.ActiveCfg = {1}|{2}", w.WatchOSAppGuid, conf, platform);
-									writer.WriteLine ("\t\t{0}.{1}|{2}.Build.0 = {1}|{2}", w.WatchOSAppGuid, conf, platform);
+						var relatedProjects = target.GetRelatedProjects ();
+						if (relatedProjects != null) {
+							foreach (var rp in relatedProjects) {
+								foreach (var conf in configurations) {
+									foreach (var platform in exePlatforms) {
+										writer.WriteLine ("\t\t{0}.{1}|{2}.ActiveCfg = {1}|{2}", rp.Guid, conf, platform);
+										writer.WriteLine ("\t\t{0}.{1}|{2}.Build.0 = {1}|{2}", rp.Guid, conf, platform);
+									}
 								}
 							}
 						}
+
 					}
 
 				}

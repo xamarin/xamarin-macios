@@ -12,61 +12,127 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 
 using Xamarin.Utils;
 using XamCore.ObjCRuntime;
 
 namespace Xamarin.Bundler {
 	public partial class Driver {
-		static void AddSharedOptions (Mono.Options.OptionSet options)
+		static void AddSharedOptions (Application app, Mono.Options.OptionSet options)
 		{
-			options.Add ("coop:", "If the GC should run in cooperative mode.", v => { App.EnableCoopGC = ParseBool (v, "coop"); }, hidden: true);
-			options.Add ("marshal-objectivec-exceptions:", v => {
+			options.Add ("warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v =>
+			{
+				try {
+					if (!string.IsNullOrEmpty (v)) {
+						foreach (var code in v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+							ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Error, int.Parse (code));
+					} else {
+						ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Error);
+					}
+				} catch (Exception ex) {
+					ErrorHelper.Error (26, ex, "Could not parse the command line argument '{0}': {1}", "--warnaserror", ex.Message);
+				}
+			});
+			options.Add ("nowarn:", "An optional comma-separated list of warning codes to ignore (if no warnings are specified all warnings are ignored).", v =>
+			{
+				try {
+					if (!string.IsNullOrEmpty (v)) {
+						foreach (var code in v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+							ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable, int.Parse (code));
+					} else {
+						ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable);
+					}
+				} catch (Exception ex) {
+					ErrorHelper.Error (26, ex, "Could not parse the command line argument '{0}': {1}", "--nowarn", ex.Message);
+				}
+			});
+			options.Add ("coop:", "If the GC should run in cooperative mode.", v => { app.EnableCoopGC = ParseBool (v, "coop"); }, hidden: true);
+			options.Add ("sgen-conc", "Enable the *experimental* concurrent garbage collector.", v => { app.EnableSGenConc = true; });
+			options.Add ("marshal-objectivec-exceptions:", "Specify how Objective-C exceptions should be marshalled. Valid values: default, unwindmanagedcode, throwmanagedexception, abort and disable. The default depends on the target platform (on watchOS the default is 'throwmanagedexception', while on all other platforms it's 'disable').", v => {
 				switch (v) {
 				case "default":
-					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Default;
+					app.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Default;
 					break;
 				case "unwindmanaged":
 				case "unwindmanagedcode":
-					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.UnwindManagedCode;
+					app.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.UnwindManagedCode;
 					break;
 				case "throwmanaged":
 				case "throwmanagedexception":
-					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
+					app.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
 					break;
 				case "abort":
-					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Abort;
+					app.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Abort;
 					break;
 				case "disable":
-					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Disable;
+					app.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Disable;
 					break;
 				default:
-					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--marshal-objective-exceptions", "Invalid value: " + v);
+					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--marshal-objective-exceptions", $"Invalid value: {v}. Valid values are: default, unwindmanagedcode, throwmanagedexception, abort and disable.");
 				}
 			});
-			options.Add ("marshal-managed-exceptions:", v => {
+			options.Add ("marshal-managed-exceptions:", "Specify how managed exceptions should be marshalled. Valid values: default, unwindnativecode, throwobjectivecexception, abort and disable. The default depends on the target platform (on watchOS the default is 'throwobjectivecexception', while on all other platform it's 'disable').", v => {
 				switch (v) {
 				case "default":
-					App.MarshalManagedExceptions = MarshalManagedExceptionMode.Default;
+					app.MarshalManagedExceptions = MarshalManagedExceptionMode.Default;
 					break;
 				case "unwindnative":
 				case "unwindnativecode":
-					App.MarshalManagedExceptions = MarshalManagedExceptionMode.UnwindNativeCode;
+					app.MarshalManagedExceptions = MarshalManagedExceptionMode.UnwindNativeCode;
 					break;
 				case "throwobjectivec":
 				case "throwobjectivecexception":
-					App.MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
+					app.MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
 					break;
 				case "abort":
-					App.MarshalManagedExceptions = MarshalManagedExceptionMode.Abort;
+					app.MarshalManagedExceptions = MarshalManagedExceptionMode.Abort;
 					break;
 				case "disable":
-					App.MarshalManagedExceptions = MarshalManagedExceptionMode.Disable;
+					app.MarshalManagedExceptions = MarshalManagedExceptionMode.Disable;
 					break;
 				default:
-					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--marshal-managed-exceptions", "Invalid value: " + v);
+					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--marshal-managed-exceptions", $"Invalid value: {v}. Valid values are: default, unwindnativecode, throwobjectivecexception, abort and disable.");
 				}
 			});
+			options.Add ("j|jobs=", "The level of concurrency. Default is the number of processors.", v => {
+				Jobs = int.Parse (v);
+			});
+			options.Add ("embeddinator", "Enables Embeddinator targetting mode.", v => {
+				app.Embeddinator = true;
+			}, true);
+			options.Add ("dynamic-symbol-mode:", "Specify how dynamic symbols are treated so that they're not linked away by the native linker. Valid values: linker (pass \"-u symbol\" to the native linker), code (generate native code that uses the dynamic symbol), ignore (do nothing and hope for the best). The default is 'code' when using bitcode, and 'linker' otherwise.", (v) => {
+				switch (v.ToLowerInvariant ()) {
+				case "default":
+					app.SymbolMode = SymbolMode.Default;
+					break;
+				case "linker":
+					app.SymbolMode = SymbolMode.Linker;
+					break;
+				case "code":
+					app.SymbolMode = SymbolMode.Code;
+					break;
+				case "ignore":
+					app.SymbolMode = SymbolMode.Ignore;
+					break;
+				default:
+					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--dynamic-symbol-mode", $"Invalid value: {v}. Valid values are: default, linker, code and ignore.");
+				}
+			});
+			options.Add ("ignore-dynamic-symbol:", "Specify that Xamarin.iOS/Xamarin.Mac should not try to prevent the linker from removing the specified symbol.", (v) => {
+				app.IgnoredSymbols.Add (v);
+			});
+		}
+
+		static int Jobs;
+		public static int Concurrency {
+			get {
+				return Jobs == 0 ? Environment.ProcessorCount : Jobs;
+			}
+		}
+
+		public static int Verbosity {
+			get { return verbose; }
 		}
 
 #if MONOMAC
@@ -172,8 +238,6 @@ namespace Xamarin.Bundler {
 				stderr_completed.WaitOne (TimeSpan.FromSeconds (1));
 				stdout_completed.WaitOne (TimeSpan.FromSeconds (1));
 
-				GC.Collect (); // Workaround for: https://bugzilla.xamarin.com/show_bug.cgi?id=43462#c14
-
 				if (p.ExitCode != 0) {
 					// note: this repeat the failing command line. However we can't avoid this since we're often
 					// running commands in parallel (so the last one printed might not be the one failing)
@@ -189,6 +253,11 @@ namespace Xamarin.Bundler {
 			}
 
 			return 0;
+		}
+
+		public static Task<int> RunCommandAsync (string path, string args, string [] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
+		{
+			return Task.Run (() => RunCommand (path, args, env, output, suppressPrintOnErrors));
 		}
 
 #if !MMP_TEST
@@ -228,6 +297,7 @@ namespace Xamarin.Bundler {
 
 			try {
 				if (!File.Exists (path)) {
+					Directory.CreateDirectory (Path.GetDirectoryName (path));
 					File.WriteAllText (path, contents);
 					Log (3, "File '{0}' does not exist, creating it.", path);
 					return;

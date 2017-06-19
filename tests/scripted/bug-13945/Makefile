@@ -27,7 +27,7 @@ bug-13945:
 	@$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/mtouch -r:binding.dll app.exe --abi=armv7  -sdk "$(IOS_SDK_VERSION)"  -dev:TheApp.app -sdkroot $(XCODE_DEVELOPER_ROOT) --cache=$(shell pwd)/cache -r:$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll
 
 	# this will verify that binding.dll wasn't AOT'ed again - if binding.dll.armv7.s differ then the AOT compiler executed.
-	@diff -u cache-first/binding.dll.armv7.s cache/binding.dll.armv7.s
+	@diff -u cache-first/armv7/binding.dll.s cache/armv7/binding.dll.s
 	@echo "$@: Success"
 
 include $(TOP)/mk/rules.mk

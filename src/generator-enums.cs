@@ -3,31 +3,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+#if IKVM
+using IKVM.Reflection;
+using Type = IKVM.Reflection.Type;
+#else
 using System.Reflection;
+#endif
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
-
-// If the enum is used to represent error code then this attribute can be used to
-// generate an extension type that will return the associated error domain based
-// on the field name (given as a parameter)
-[AttributeUsage (AttributeTargets.Enum)]
-public class ErrorDomainAttribute : Attribute {
-
-	public ErrorDomainAttribute (string domain)
-	{
-		ErrorDomain = domain;
-	}
-
-	public string ErrorDomain { get; set; }
-}
-
-[AttributeUsage (AttributeTargets.Field)]
-public class DefaultEnumValueAttribute : Attribute {
-
-	public DefaultEnumValueAttribute ()
-	{
-	}
-}
 
 public partial class Generator {
 
@@ -57,7 +40,7 @@ public partial class Generator {
 
 	void CopyObsolete (ICustomAttributeProvider provider)
 	{
-		foreach (ObsoleteAttribute oa in provider.GetCustomAttributes (typeof (ObsoleteAttribute), false))
+		foreach (var oa in AttributeManager.GetCustomAttributes<ObsoleteAttribute> (provider))
 			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
 	}
 
@@ -66,10 +49,10 @@ public partial class Generator {
 	//	- call/emit PrintPlatformAttributes on the type
 	void GenerateEnum (Type type)
 	{
-		if (HasAttribute (type, typeof (FlagsAttribute)))
+		if (AttributeManager.HasAttribute<FlagsAttribute> (type))
 			print ("[Flags]");
 
-		var native = GetAttribute<NativeAttribute> (type);
+		var native = AttributeManager.GetCustomAttribute<NativeAttribute> (type);
 		if (native != null) {
 			if (String.IsNullOrEmpty (native.NativeName))
 				print ("[Native]");
@@ -82,7 +65,7 @@ public partial class Generator {
 		var fields = new Dictionary<FieldInfo, FieldAttribute> ();
 		Tuple<FieldInfo, FieldAttribute> null_field = null;
 		Tuple<FieldInfo, FieldAttribute> default_symbol = null;
-		var underlying_type = GetCSharpTypeName (Enum.GetUnderlyingType (type));
+		var underlying_type = GetCSharpTypeName (TypeManager.GetUnderlyingEnumType (type));
 		print ("public enum {0} : {1} {{", type.Name, underlying_type);
 		indent++;
 		foreach (var f in type.GetFields ()) {
@@ -92,7 +75,7 @@ public partial class Generator {
 			PrintPlatformAttributes (f);
 			CopyObsolete (f);
 			print ("{0} = {1},", f.Name, f.GetRawConstantValue ());
-			var fa = GetAttribute<FieldAttribute> (f);
+			var fa = AttributeManager.GetCustomAttribute<FieldAttribute> (f);
 			if (fa == null)
 				continue;
 			if (f.IsUnavailable ())
@@ -105,7 +88,7 @@ public partial class Generator {
 				fields.Add (f, fa);
 				unique_constants.Add (fa.SymbolName);
 			}
-			if (GetAttribute<DefaultEnumValueAttribute> (f) != null) {
+			if (AttributeManager.GetCustomAttribute<DefaultEnumValueAttribute> (f) != null) {
 				if (default_symbol != null)
 					throw new BindingException (1045, true, $"Only a single [DefaultEnumValue] attribute can be used inside enum {type.Name}.");
 				default_symbol = new Tuple<FieldInfo, FieldAttribute> (f, fa);
@@ -116,7 +99,7 @@ public partial class Generator {
 		unique_constants.Clear ();
 
 		var library_name = type.Namespace;
-		var error = GetAttribute<ErrorDomainAttribute> (type);
+		var error = AttributeManager.GetCustomAttribute<ErrorDomainAttribute> (type);
 		if ((fields.Count > 0) || (error != null)) {
 			print ("");
 			// the *Extensions has the same version requirement as the enum itself
@@ -126,7 +109,7 @@ public partial class Generator {
 			indent++;
 
 			// note: not every binding namespace will start with ns.Prefix (e.g. MonoTouch.)
-			if (!String.IsNullOrEmpty (ns.Prefix) && library_name.StartsWith (ns.Prefix))
+			if (!String.IsNullOrEmpty (ns.Prefix) && library_name.StartsWith (ns.Prefix, StringComparison.Ordinal))
 				library_name = library_name.Substring (ns.Prefix.Length + 1);
 
 			// there might not be any other fields in the framework
@@ -186,7 +169,7 @@ public partial class Generator {
 			var default_symbol_name = default_symbol?.Item2.SymbolName;
 			// more than one enum member can share the same numeric value - ref: #46285
 			foreach (var kvp in fields) {
-				print ("case {0}: // {1}.{2}", Convert.ToInt64 (kvp.Key.GetValue (null)), type.Name, kvp.Key.Name);
+				print ("case {0}: // {1}.{2}", Convert.ToInt64 (kvp.Key.GetRawConstantValue ()), type.Name, kvp.Key.Name);
 				var sn = kvp.Value.SymbolName;
 				if (sn == default_symbol_name)
 					print ("default:");

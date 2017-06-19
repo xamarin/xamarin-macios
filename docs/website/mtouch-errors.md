@@ -1,11 +1,13 @@
 id:{9F76162B-D622-45DA-996B-2FBF8017E208}  
-title:mtouch errors  
+title:Xamarin.iOS errors
 
 [//]: # (The original file resides under https://github.com/xamarin/xamarin-macios/tree/master/docs/website/)
 [//]: # (This allows all contributors (including external) to submit, using a PR, updates to the documentation that match the tools changes)
 [//]: # (Modifications outside of xamarin-macios/master will be lost on future updates)
 
-# mtouch error messages
+# MT0xxx: mtouch error messages
+
+E.g. parameters, environment, missing tools.
 
 <!-- 
  MT0xxx mtouch itself, e.g. parameters, environment (e.g. missing tools)
@@ -43,6 +45,8 @@ Starting with Xamarin.iOS 7.2.1 this requirement has been lifted, the new refcou
 <h3><a name="MT0005"/>MT0005: The output directory * does not exist.</h3>
 
 Please create the directory.
+
+This error is not generated anymore, mtouch will automatically create the directory if it doesn't exist.
 
 <h3><a name="MT0006"/>MT0006: There is no devel platform at *, use --platform=PLAT to specify the SDK.</h3>
 
@@ -132,6 +136,8 @@ There are several options for mtouch that can't be used simultaneously:
 
 Remove both the options `--unsupported--enable-generics-in-registrar` and `--registrar`. Starting with Xamarin.iOS 7.2.1 the default registrar supports generics.
 
+This error is no longer shown (the command-line argument `--unsupported--enable-generics-in-registrar` has been removed from mtouch).
+
 <h3><a name="MT0023"/>MT0023 Application name '*.exe' conflicts with another user assembly.</h3>
 
 The executable assembly's name and the application's name can't match the name of any dll in the app. Please modify the name of your executable.
@@ -173,6 +179,8 @@ To fix this either change 'Application Name' in the project's Build/iOS Applicat
 <h3><a name="MT0033"/>MT0033  A Xamarin.iOS project must reference either monotouch.dll or Xamarin.iOS.dll</h3>
 
 <h3><a name="MT0034"/>MT0034  Cannot include both 'monotouch.dll' and 'Xamarin.iOS.dll' in the same Xamarin.iOS project - '*' is referenced explicitly, while '*' is referenced by '*'.</h3>
+
+<!-- MT0035 unused -->
 
 <h3><a name="MT0036"/>MT0036  Cannot launch a * simulator for a * app. Please enable the correct architecture(s) in your project's iOS Build options (Advanced page).</h3>
 
@@ -343,21 +351,234 @@ The new refcount feature is now mandatory for all projects, and it's thus not po
 This usually indicates a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
 
 <h3><a name="MT0087"/>MT0087: Incremental builds (--fastdev) is not supported with the Boehm GC. Incremental builds will be disabled.</h3>
-<h3><a name="MT0091"/>MT0091: This version of Xamarin.iOS requires the * SDK (shipped with Xcode *) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker.</h3>
 
-This version of Xamarin.iOS requires the SDK specified in the error message if the managed linker is disabled.
+<h3><a name="MT0088"/>MT0088: The GC must be in cooperative mode for watchOS apps. Please remove the --coop:false argument to mtouch.</h3>
 
-This is because the app must be built with an SDK that contains all the native API the app uses, and if the managed linker is disabled, the app will use all the API shipped with this version Xamarin.iOS.
+<h3><a name="MT0089"/>MT0089: The option '*' cannot take the value '*' when cooperative mode is enabled for the GC.</h3>
 
-The recommended way to fix this error is to upgrade Xcode to get the required SDK.
+<h3><a name="MT0091"/>MT0091: This version of Xamarin.iOS requires the * SDK (shipped with Xcode *). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).</h3>
 
-A potential alternative solution is to enable the managed linker (although this may not work if your project uses API that was introduced in the required SDK).
+Xamarin.iOS requires the header files, from the SDK version specified in the error message, to build your application. The recommended way to fix this error is to upgrade Xcode to get the required SDK, this will include all the required header files. If you have multiple versions of Xcode installed, or want to use an Xcode in a non-default location, make sure to set the correct Xcode location in your IDE's preferences.
 
-A last-straw solution would be to use a different version of Xamarin.iOS, one that supports the SDK your project requires.
+A potential, alternative solution is to enable the managed linker. This will remove unused API including, in most cases, the new API where the header files are missing (or incomplete). However this will not work if your project uses API that was introduced in a newer SDK than the one your Xcode provides.
 
-<h3><a name="MT0093"/>MT0093: Aot symbolication files could not be copied to the destination directory. Symbolication will not work with the application.</h3>
+A last-straw solution would be to use an older version of Xamarin.iOS, one that supports the SDK your project requires.
+
+<!-- MT0092 used by mlaunch -->
+
+<h3><a name="MT0093"/>MT0093: Could not find 'mlaunch'.</h3>
+
+<!-- MT0094 is not reported anymore -->
+
+<h3><a name="MT0095"/>MT0095: Aot files could not be copied to the destination directory {dest}: {error}</h3>
 
 <h3><a name="MT0096"/>MT0096: No reference to Xamarin.iOS.dll was found.</h3>
+
+<!-- MT0097: used by mmp -->
+<!-- MT0098: used by mmp -->
+
+<h3><a name="MT0099"/>MT0099: Internal error *. Please file a bug report with a test case (http://bugzilla.xamarin.com).</h3>
+
+This error message is reported when an internal consistency check in Xamarin.iOS fails.
+
+This indicates a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
+
+<h3><a name="MT0100"/>Invalid assembly build target: '*'. Please file a bug report with a test case (http://bugzilla.xamarin.com).</h3>
+
+This error message is reported when an internal consistency check in Xamarin.iOS fails.
+
+This is always a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
+
+<h3><a name="MT0101"/>The assembly '*' is specified multiple times in --assembly-build-target arguments.</h3>
+
+The assembly mentioned in the error message is specified multiple times in --assembly-build-target arguments. Please make sure each assembly is only mentioned once.
+
+<h3><a name="MT0102"/>The assemblies '*' and '*' have the same target name ('*'), but different targets ('*' and '*').</h3>
+
+The assemblies mentioned in the error message have conflicting build targets.
+
+For example:
+
+    --assembly-build-target:Assembly1.dll=framework=MyBinary --assembly-build-target:Assembly2.dll=dynamiclibrary=MyBinary
+
+This example is trying to create both a dynamic library and a framework with the same make (`MyBinary`).
+
+<h3><a name="MT0103"/>The static object '*' contains more than one assembly ('*'), but each static object must correspond with exactly one assembly.</h3>
+
+The assemblies mentioned in the error message are all compiled to a single static object. This is not allowed, every assembly must be compiled to a different static object.
+
+For example:
+
+    --assembly-build-target:Assembly1.dll=staticobject=MyBinary --assembly-build-target:Assembly2.dll=staticobject=MyBinary
+
+This example tries to build a static object (`MyBinary`) comprised of two assemblies (`Assembly1.dll` and `Assembly2.dll`), which is not allowed.
+
+<h3><a name="MT0105"/>MT0105: No assembly build target was specified for '*'.</h3>
+
+When specifying the assembly build target using --assembly-build-target, every assembly in the app must have a build target assigned.
+
+This error is reported when the assembly mentioned in the error message does not have an assembly build target assigned.
+
+See the documentation about --assembly-build-target for further information.
+
+<h3><a name="MT0106"/>MT0106: The assembly build target name '*' is invalid: the character '*' is not allowed.</h3>
+
+The assembly build target name must be a valid filename.
+
+For example these values will trigger this error:
+
+    --assembly-build-target:Assembly1.dll=staticobject=my/path.o
+
+because `my/path.o` is not a valid filename due to the directory separator character.
+
+<h3><a name="MT0107"/>MT0107: The assemblies '*' have different custom LLVM optimizations (*), which is not allowed when they are all compiled to a single binary.</h3>
+
+<h3><a name="MT0108"/>MT0108: The assembly build target '*' did not match any assemblies.</h3>
+
+<h3><a name="MT0109"/>MT0109: The assembly '{0}' was loaded from a different path than the provided path (provided path: {1}, actual path: {2}).</h3>
+
+This is a warning indicating that an assembly referenced by the application was loaded from a different location than requested.
+
+This might mean that the app is referencing multiple assemblies with the same name, but from different locations, which might lead to unexpected results (only the first assembly will be used).
+
+<h3><a name="MT0110"/>MT0110: Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.</h3>
+
+Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode (tvOS and watchOS projects).
+
+No action is required on your part, this message is purely informational.
+
+For further information see bug #[51710](https://bugzilla.xamarin.com/show_bug.cgi?id=51710).
+
+This warning is not reported anymore.
+
+<h3><a name="MT0111"/>MT0111: Bitcode has been enabled because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.</h3>
+
+Bitcode has been enabled automatically because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.
+
+No action is required on your part, this message is purely informational.
+
+For further information see bug #[51634](https://bugzilla.xamarin.com/show_bug.cgi?id=51634).
+
+<h3><a name="MT0112"/>MT0112: Native code sharing has been disabled because *</h3>
+
+There are multiple reasons code sharing can be disabled:
+
+* because the container app's deployment target is earlier than iOS 8.0 (it's *)).
+
+Native code sharing requires iOS 8.0 because native code sharing is implemented using user frameworks, which was introduced with iOS 8.0.
+
+* because the container app includes I18N assemblies (*).
+
+Native code sharing is currently not supported if the container app includes I18N assemblies.
+
+* because the container app has custom xml definitions for the managed linker (*).
+
+Native code sharing requires is not supported for projects that use custom xml definitions for the managed linker.
+
+
+<h3><a name="MT0113"/>MT0113: Native code sharing has been disabled for the extension '*' because *.</h3>
+
+* because the bitcode options differ between the container app (*) and the extension (*).
+
+Native code sharing requires that the bitcode options match between the projects that share code.
+
+* because the --assembly-build-target options are different between the container app (*) and the extension (*).
+
+Native code sharing requires that the --assembly-build-target options are identical between the projects that share code.
+
+This condition can occur if incremental builds are not either enabled or disabled in all the projects.
+
+* because the I18N assemblies are different between the container app (*) and the extension (*).
+
+Native code sharing is currently not supported for extensions that include I18N assemblies.
+
+* because the arguments to the AOT compiler are different between the container app (*) and the extension (*).
+
+Native code sharing requires that the arguments to the AOT compiler do not differ between projects that share code.
+
+* because the other arguments to the AOT compiler are different between the container app (*) and the extension (*).
+
+Native code sharing requires that the arguments to the AOT compiler do not differ between projects that share code.
+
+This condition occurs if the 'Perform all 32-bit float operations as 64-bit float' differs between projects.
+
++ because LLVM is not enabled or disabled in both the container app (*) and the extension (*).
+
+Native code sharing requires that LLVM is either enabled or disabled for all projects that share code.
+
+* because the managed linker settings are different between the container app (*) and the extension (*).
+
+Native code sharing requires that the managed linker settings are identical for all projects that share code.
+
+* because the skipped assemblies for the managed linker are different between the container app (*) and the extension (*).
+
+Native code sharing requires that the managed linker settings are identical for all projects that share code.
+
+* because the extension has custom xml definitions for the managed linker (*).
+
+Native code sharing requires is not supported for projects that use custom xml definitions for the managed linker.
+
+* because the container app does not build for the ABI * (while the extension is building for this ABI).
+
+Native code sharing requires that the container app builds for all the architectures any app extension builds for.
+
+For instance: this condition occurs when an extension builds for ARM64+ARMv7, but the container app only builds for ARM64.
+
+* because the container app is building for the ABI *, which is not compatible with the extension's ABI (*).
+
+Native code sharing requires that all the projects build for the exact same API.
+
+For instance: this condition occurs when an extension builds for ARMv7+llvm+thumb2, but the container app only builds for ARMv7+llvm.
+
+* because the container app is referencing the assembly '*' from '*', while the extension references a different version from '*'.
+
+Native code sharing requires that all the projects that share code use the same versions for all assemblies.
+
+<!-- MT0114: used by mmp -->
+
+<h3><a name="MT0115"/>MT0115: It is recommended to reference dynamic symbols using code (--dynamic-symbol-mode=code) when bitcode is enabled.</h3>
+
+Xamarin.iOS projects will often reference native symbols dynamically, which
+means that the native linker might remove such native symbols during the
+native linking process, because the native linker does not see that these
+symbols are used.
+
+Usually Xamarin.iOS will ask the native linker to keep such symbols (using the
+`-u symbol` linker flag), but when compiling for bitcode the native linker
+does not accept the `-u` flag.
+
+Xamarin.iOS has implemented an alternative solution: we generate extra native
+code which references these symbols, and thus the native linker will see that
+these symbols are used. This is automatically done when compiling to bitcode.
+
+If `--dynamic-symbol-mode=linker` is passed to mtouch, this alternative
+solution will be disabled, and Xamarin.iOS will try to pass `-u` to the native
+linker. This will most likely result in native linker errors.
+
+The solution is to remove the `--dynamic-symbol-mode=linker` argument from the additional mtouch arguments in the project's Build options.
+
+<!-- 0116 - 0124: free to use -->
+
+<h3><a name="MT0125"/>MT0125: The --assembly-build-target command-line argument is ignored in the simulator.</h3>
+
+No action is required, this message is purely informational.
+
+<h3><a name="MT0126"/>MT0126: Incremental builds have been disabled because incremental builds are not supported in the simulator.</h3>
+
+No action is required, this message is purely informational.
+
+<h3><a name="MT0127"/>MT0127: Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.</h3>
+
+Incremental builds have been disabled automatically because this version of Xamarin.iOS does not always build projects with multiple third-party binding libraries correctly.
+
+No action is required, this message is purely informational.
+
+For further information see bug #[52727](https://bugzilla.xamarin.com/show_bug.cgi?id=52727).
+
+# MT1xxx: Project related error messages
+
+### MT10xx: Installer / mtouch
+
 <!--
  MT1xxx file copy / symlinks (project related)
   MT10xx installer.cs / mtouch.cs
@@ -408,7 +629,15 @@ $ launchctl list|grep UIKitApplication|awk '{print $3}'|xargs launchctl remove
 
 <h3><a name="MT1009"/>MT1009 Could not copy the assembly '*' to '*': *</h3>
 
+This is a known issue in certain versions of Xamarin.iOS.
 
+If this occurs to you, try the following workaround:
+
+    sudo chmod 0644 /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/*/*.mdb
+
+However, since this issue has been resolved in the latest version of
+Xamarin.iOS, please file a new bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS)
+with your full version information and build log output.
 
 <h3><a name="MT1010"/>MT1010 Could not load the assembly '*': *</h3>
 
@@ -537,6 +766,26 @@ It's recommended to pass the path to the app to launch on device instead of just
 
 Please unlock the device and try again.
 
+<h3><a name="MT1032"/>MT1032: This application executable might be too large (* MB) to execute on device. If bitcode was enabled you might want to disable it for development, it is only required to submit applications to Apple.</h3>
+
+<h3><a name="MT1033"/>MT1033: Could not uninstall the application '*' from the device '*': *</h3>
+
+<!-- 1034 used by mmp -->
+
+<h3><a name="MT1035"/>MT1035: Cannot include different versions of the framework '{name}'</h3>
+
+It is not possible to link with different versions of the same framework.
+
+This typically happens when an extension references a different version of a framework than the container app (possibly through a third-party binding assembly).
+
+Following this error there will be multiple [MT1036](#MT1036) errors listing the paths for each different framework.
+
+<h3><a name="MT1036"/>MT1036: Framework '{name}' included from: {path} (Related to previous error)</h3>
+
+This error is reported only together with [MT1036](#MT1036). Please see [MT1036](#MT1036) for more information.
+
+### MT11xx: Debug Service
+
 <!--
   MT11xx DebugService.cs
   -->
@@ -591,6 +840,8 @@ Please check if your device is locked.
 
 If you're deploying an enterprise app or using a free provisioning profile, you might have trust the developer (this is explained <a href="http://stackoverflow.com/a/30726375/183422">here</a>).
 
+### MT12xx: Simulator
+
 <!--
   MT12xx simcontroller.cs
   -->
@@ -630,6 +881,8 @@ When launching a WatchOS app in a WatchOS simulator, there must be a paired iOS 
 
 Watch simulators can be paired with iOS Simulators using Xcode's Devices UI (menu Window -> Devices).
 
+### MT13xx: [LinkWith]
+
 <!--
   MT13xx [LinkWith]
   -->
@@ -658,6 +911,8 @@ Please make sure the framework is valid.
 The specified binding library contains an embedded framework, but Xamarin.iOS only supports embedded frameworks on iOS 8.0 or later.
 
 Please set the deployment target in the Info.plist file to at least 8.0 to solve this error (or don't use embedded frameworks).
+
+### MT14xx: Crash Reports
 
 <!--
   MT14xx	CrashReports.cs
@@ -747,6 +1002,10 @@ Things to try to solve this:
 * Reboot the Mac.
 * Synchronize the device with iTunes (this will remove any crash reports from the device).
 
+<!--- 1407 used by mmp -->
+
+### MT16xx: MachO
+
 <!--
   MT16xx	MachO.cs
   -->
@@ -801,6 +1060,8 @@ The format of a file can be verified using the `file` command from a terminal:
 
     file -arch all -l /path/to/file
 
+# MT2xxx: Linker error messages
+
 <!--
  MT2xxx Linker
   MT20xx Linker (general) errors
@@ -808,6 +1069,17 @@ The format of a file can be verified using the `file` command from a terminal:
 
 <h3><a name="MT2001"/>MT2001 Could not link assemblies</h3>
 
+This error means that the managed linker encountered an unexpected error, e.g. an exception, and could not complete or save the assembly being processed. More information about the exact error will be part of the build log, e.g.
+
+```
+error MT2001: Could not link assemblies. 
+	Method: `System.Void Todo.TodoListPageCS/<<-ctor>b__1_0>d::SetStateMachine(System.Runtime.CompilerServices.IAsyncStateMachine)`
+	Assembly: `QuickTodo, Version=1.0.6297.28241, Culture=neutral, PublicKeyToken=null`
+Reason: Value cannot be null.
+Parameter name: instruction
+```
+
+It is important to file a bug report for such issues. In most case a workaround can be provided until a proper fix is published. The above information is critical (along with a test case and/or the assembly binairy) to resolve the issue.
 
 
 <h3><a name="MT2002"/>MT2002 Can not resolve reference: *</h3>
@@ -842,6 +1114,8 @@ The value given to `tls-provider=` is not a valid TLS (Transport Layer Security)
 The `default` and `appletls` are the only valid values and both represent the same option, which is to provide the SSL/TLS support using the native Apple TLS API.
 
 <!--- 2012 used by mmp -->
+<!--- 2013 used by mmp -->
+<!--- 2014 used by mmp -->
 
 <h3><a name="MT2015"/>MT2015: Invalid HttpMessageHandler `*` for watchOS. The only valid value is NSUrlSessionHandler.</h3>
 
@@ -856,6 +1130,18 @@ To fix this warning, open the project file in a text editor, and remove all Http
 The `legacy` provider, which was a fully managed SSLv3 / TLSv1 only provider, is not shipped with Xamarin.iOS anymore. Projects that were using this old provider and now build with the newer `appletls` one.
 
 To fix this warning, open the project file in a text editor, and remove all `MtouchTlsProvider`` nodes from the XML.
+
+<h3><a name="MT2017"/>MT2017: Could not process XML description.</h3>
+
+This means there is an error on the [custom XML linker configuration file](https://developer.xamarin.com/guides/cross-platform/advanced/custom_linking/) you provided, please review your file.
+
+<h3><a name="MT2018"/>MT2018: The assembly '*' is referenced from two different locations: '*' and '*'.</h3>
+
+The assembly mentioned in the error message is loaded from multiple locations. Make sure to always use the same version of an assembly.
+
+<h3><a name="MT2019"/>MT2019: Can not load the root assembly '*'</h3>
+
+The root assembly could not be loaded. Please verify that the path in the error message refers to an existing file, and that it's a valid .NET assembly.
 
 <h3><a name="MT202x"/>MT202x: Binding Optimizer failed processing `...`.</h3>
 
@@ -874,6 +1160,44 @@ User resources are files included inside assemblies (as resources) that needs to
 
 * `__monotouch_content_*` and `__monotouch_pages_*` resources; and
 * Native libraries embedded inside a binding assembly;
+
+<h3><a name="MT2040"/>MT2040: Default HttpMessageHandler setter failed processing `...`.</h3>
+
+Something unexpected occured when trying to set the default `HttpMessageHandler` for the application. Please file a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+<h3><a name="MT2050"/>MT2050: Code Remover failed processing `...`.</h3>
+
+Something unexpected occured when trying to remove code from BCL shipping with the application. Please file a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+<h3><a name="MT2060"/>MT2060: Sealer failed processing `...`.</h3>
+
+Something unexpected occured when trying to seal types or methods (final) or when devirtualizing some methods. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+<h3><a name="MT2070"/>MT2070: Metadata Reducer failed processing `...`.</h3>
+
+Something unexpected occured when trying to reduce the metadata from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+<h3><a name="MT2080"/>MT2080: MarkNSObjects failed processing `...`.</h3>
+
+Something unexpected occured when trying to mark `NSObject` subclasses from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+<!-- MT21xx: more linker errors -->
+
+<!--- 2100 used by mmp -->
+
+<h3><a name="MT2101"/>MT2101: Can't resolve the reference '*', referenced from the method '*' in '*'.</h3>
+
+An invalid assembly reference was encountered when processing the method mentioned in the error message.
+
+The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+<h3><a name="MT2102"/>MT2102: Error processing the method '*' in the assembly '*': *</h3>
+
+Something unexpected occured when trying to mark the method mentioned in the error message.
+
+The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+# MT3xxx: AOT error messages
 
 <!--
  MT3xxx AOT
@@ -916,6 +1240,13 @@ Bitcode support requires the use of the LLVM AOT backend (--llvm).
 
 Either disable Bitcode support or enable LLVM.
 
+<!--- 3009 used by mmp -->
+<!--- 3010 used by mmp -->
+
+# MT4xxx: Code generation error messages
+
+### MT40xx: Main
+
 <!--
  MT4xxx code generation
   MT40xx main.m
@@ -928,6 +1259,8 @@ An error occurred when generating main.m. Please file a bug at [http://bugzilla.
 <h3><a name="MT4002"/>MT4002 Failed to compile the generated code for P/Invoke methods. Please file a bug report at http://bugzilla.xamarin.com</h3>
 
 Failed to compile the generated code for P/Invoke methods. Please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
+### MT41xx: Registrar
 
 <!--
   MT41xx registrar.m
@@ -1061,11 +1394,13 @@ This error indicates a bug in Xamarin.iOS. Please file a bug report at [http://b
 
 <h3><a name="MT4133"/>MT4133  Cannot construct an instance of the type '*' from Objective-C because the type is generic. [Runtime exception]</h3>
 
-<h3><a name="MT4134"/>MT4134  Your application is using the '*' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS *, while you're building with the iOS * SDK.) This configuration is only supported with the legacy registrar (pass --registrar:legacy as an additional mtouch argument in your project's iOS Build option to select). Alternatively select a newer SDK in your app's iOS Build options.</h3>
+<h3><a name="MT4134"/>MT4134  Your application is using the '*' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS *, while you're building with the iOS * SDK.) Please select a newer SDK in your app's iOS Build options.</h3>
 
 <h3><a name="MT4135"/>MT4135  The member '*.*' has an Export attribute that doesn't specify a selector. A selector is required.</h3>
 
 <h3><a name="MT4136"/>MT4136  The registrar cannot marshal the parameter type '*' of the parameter '*' in the method '*.*'</h3>
+
+<!-- MT4137 is unused -->
 
 <h3><a name="MT4138"/>MT4138  The registrar cannot marshal the property type '*' of the property '*.*'.</h3>
 
@@ -1120,7 +1455,12 @@ In this case Xamarin.iOS will override `retain`, `release` and `dealloc` on the 
 This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
 <h3><a name="MT4145"/>MT4145: Invalid enum '*': enums with the [Native] attribute must have a underlying enum type of either 'long' or 'ulong'.</h3>
-<!--- Not sure what happened to MT4146 -->
+<h3><a name="MT4146"/>MT4146: The Name parameter of the Registrar attribute on the class '*' ('*') contains an invalid character: '*' (*).</h3>
+
+The name of an Objectice-C class can't contain whitespace, which means that the `Register` attribute on the corresponding managed class can't have a `Name` parameter can't contain whitespace either.
+
+Please verify that the `Register` attribute on the managed class mentioned in the error message does not contain any whitespace.
+
 <h3><a name="MT4147"/>MT4147: Detected a protocol inheriting from the JSExport protocol while using the dynamic registrar. It is not possible to export protocols to JavaScriptCore dynamically; the static registrar must be used (add '--registrar:static to the additional mtouch arguments in the project's iOS Build options to select the static registrar).</h3>
 <h3><a name="MT4148"/>MT4148: The registrar found a generic protocol: '*'. Exporting generic protocols is not supported.</h3>
 <h3><a name="MT4149"/>MT4149: Cannot register the method '*.*' because the type of the first parameter ('*') does not match the category type ('*').</h3>
@@ -1171,6 +1511,16 @@ This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzil
 
 This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
+<h3><a name="MT4168"/>MT4168: Cannot register the type '{managed_name}' because its Objective-C name '{exported_name}' is an Objective-C keyword. Please use a different name.</h3>
+
+The Objective-C name for the type in question is not a valid Objective-C identifier.
+
+Please use a valid Objective-C identifier.
+
+# MT5xxx: GCC and toolchain error messages
+
+### MT51xx: Compilation
+
 <!--
  MT5xxx GCC and toolchain
   MT51xx compilation
@@ -1190,6 +1540,13 @@ This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzil
 
 <h3><a name="MT5104"/>MT5104 Could not find neither the '*' nor the '*' compiler. Please install Xcode 'Command-Line Tools' component</h3>
 
+<!-- 5105 is used by mmp -->
+
+<h3><a name="MT5106"/>MT5106: Could not compile the file(s) '*'. Please file a bug report at http://bugzilla.xamarin.com</h3>
+
+This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
+### MT52xx: Linking
 
 <!--
   MT52xx linking
@@ -1239,15 +1596,13 @@ This happens when the native linker cannot find an Objective-C class that is ref
     <li>
       A third-party binding bound an Objective-C protocol, but did not annotate it with the <code>[Protocol]</code> attribute in its api definition. Solutions:
       <ul>
-        <li>If you're the author of the third-party binding, or have access to its source, add the missing <code>[Protocol]</code> attribute:
+        <li>Add the missing <code>[Protocol]</code> attribute:
     <pre><code class=" syntax brush-C#">[BaseType (typeof (NSObject))]
 [Protocol] // Add this
 public interface MyProtocol
 {
 }</code></pre>
     </li>
-      <li>If you can't modify the third-party binding, build your project with the legacy static registrar by adding <code>--registrar:oldstatic</code> to the additional mtouch arguments in the project's iOS Build options page.
-      </li>
     </ul>
     </li>
   </ul>
@@ -1340,6 +1695,83 @@ There are a few possible solutions:
 
 This is a warning, indicating that a P/Invoke was detected to reference the library in question, but the app is not linking with it.
 
+<h3><a name="MT5216"/>MT5216: Native linking failed for *. Please file a bug report at http://bugzilla.xamarin.com</h3>
+
+This error is reported when linking the output from the AOT compiler.
+
+This error most likely indicates a bug in Xamarin.iOS. Please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
+<h3><a name="MT5217"/>MT5217: Native linking possibly failed because the linker command line was too long (* characters).</h3>
+
+Native linking failed, and it's possible this occured because the linker
+command was too long.
+
+Xamarin.iOS projects will often reference native symbols dynamically, which
+means that the native linker might remove such native symbols during the
+native linking process, because the native linker does not see that these
+symbols are used.
+
+Usually Xamarin.iOS will ask the native linker to keep such symbols using the
+`-u symbol` linker flag, but if there are many such symbols, the entire
+command-line might exceed the maximum command-line length as specified by the
+operating system.
+
+There are a few possible sources for such dynamic symbols:
+
+* P/Invokes to methods in statically linked libraries (where the dll name is
+  `__Internal` in the DllImport attribute `[DllImport ("__Internal")]`).
+* Field references to memory locations in statically linked libraries from
+  binding projects (`[Field]` attributes).
+* Objective-C classes referenced in statically linked libraries from binding
+  projects (when using incremental builds or when not using the static
+  registrar).
+
+Possible solutions:
+* Enable the managed linker (if possible for all assemblies instead of only
+  SDK assemblies). This might remove enough of the sources for dynamic symbols
+  so that the linker's command-line doesn't exceeded the maximum.
+* Reduce the number of P/Invokes, field references and/or Objective-C classes.
+* Rewrite the dynamic symbols to have shorter names.
+* Pass `-dlsym:false` as an additional mtouch argument in the project's iOS
+  Build options. With this option, Xamarin.iOS will generate a native
+  reference in the AOT-compiled code, and won't need to ask the linker to keep
+  this symbol. However, this only works for device builds, and it will cause
+  linker errors if there are P/Invokes to functions that don't exist in the
+  static library.
+* Pass `--dynamic-symbol-mode=code` as an additional mtouch arguments in
+  the project's iOS Build options. With this option, Xamarin.iOS will generate
+  additional native code that references these symbols instead of asking the
+  native linker to keep these symbols using command-line arguments. The
+  downside to this approach is that it will increase the size of the
+  executable somewhat.
+* Enable the static registrar by passing `--registrar:static` as an additional
+  mtouch argument in the project's iOS Build options (for simulator builds,
+  since the static registrar is already the default for device builds). The
+  static registrar will generate code that references Objective-C classes
+  statically, so there is no need to ask the native linker to keep such
+  classes.
+* Disable incremental builds (for device builds). When incremental builds are
+  enabled, the code generated by the static registrar won't be considered by
+  the native linker, which means that Xamarin.iOS must still ask the linker to
+  keep referenced Objective-C classes. Thus disabling incremental builds will
+  prevent this need.
+
+<h3><a name="MT5218"/>MT5218: Can't ignore the dynamic symbol {symbol} (--ignore-dynamic-symbol={symbol}) because it was not detected as a dynamic symbol.</h3>
+
+The command-line argument `--ignore-dynamic-symbol=symbol` was passed, but
+this symbol is not a symbol that was recognized as a dynamic symbol that must
+be manually preserved.
+
+There are two main reasons for this:
+
+* The symbol name is incorrect.
+	* Don't prepend an underscore to the symbol name.
+	* The symbol for Objective-C classes is `OBJC_CLASS_$_<classname>`.
+* The symbol is correct, but it's a symbol that's already preserved by normal
+  means (some build options causes the exact list of dynamic symbols to vary).
+
+### MT53xx: Other tools
+
 <!--
   MT53xx other tools
   -->
@@ -1374,6 +1806,11 @@ An error occurred when signing the application. Please review the build log to s
 
 <!-- 5308 is used by mmp -->
 <!-- 5309 is used by mmp -->
+<!-- 5310 is used by mmp -->
+
+# MT6xxx: mtouch internal tools error messages
+
+### MT600x: Stripper
 
 <!--
  MT6xxx mtouch internal tools
@@ -1390,9 +1827,300 @@ An error occurred when stripping managed code(removing the IL code) from the ass
 
 A security error ocurred while stripping debugging symbols from the application.
 
+# MT7xxx: MSBuild error messages
+
 <!--
- MT7xxx reserved
+ MT7xxx msbuild errors
   -->
+
+<h3><a name="MT7001"/>MT7001: Could not resolve host IPs for WiFi debugger settings.</h3>
+
+*MSBuild task: DetectDebugNetworkConfigurationTaskBase*
+
+Troubleshooting steps:  
+
+- try to run `csharp -e 'System.Net.Dns.GetHostEntry (System.Net.Dns.GetHostName ()).AddressList'` (that should give you an IP address and not an error obviously).
+- try to run "ping \`hostname\`" which might give you more information, like: `cannot resolve MyHost.local: Unknown host`
+
+In some cases, it's a "local network" issue and it can be addressed by adding the unknown host `127.0.0.1	MyHost.local` in `/etc/hosts`.
+
+<h3><a name="MT7002"/>MT7002: This machine does not have any network adapters. This is required when debugging or profiling on device over WiFi.</h3>
+
+*MSBuild task: DetectDebugNetworkConfigurationTaskBase*
+
+<h3><a name="MT7003"/>MT7003: The App Extension '*' does not contain an Info.plist.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7004"/>MT7004: The App Extension '*' does not specify a CFBundleIdentifier.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7005"/>MT7005: The App Extension '*' does not specify a CFBundleExecutable.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7006"/>MT7006: The App Extension '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7007"/>MT7007: The App Extension '*' has a CFBundleIdentifier (*) that ends with the illegal suffix ".key".</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7008"/>MT7008: The App Extension '*' does not specify a CFBundleShortVersionString.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7009"/>MT7009: The App Extension '*' has an invalid Info.plist: it does not contain an NSExtension dictionary.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7010"/>MT7010: The App Extension '*' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionPointIdentifier value.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7011"/>MT7011: The WatchKit Extension '*' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionAttributes dictionary.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7012"/>MT7012: The WatchKit Extension '*' does not have exactly one watch app.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7013"/>MT7013: The WatchKit Extension '*' has an invalid Info.plist: UIRequiredDeviceCapabilities must contain the 'watch-companion' capability.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7014"/>MT7014: The Watch App '*' does not contain an Info.plist.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7015"/>MT7015: The Watch App '*' does not specify a CFBundleIdentifier.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7016"/>MT7016: The Watch App '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7017"/>MT7017: The Watch App '*' does not have a valid UIDeviceFamily value. Expected 'Watch (4)' but found '* (*)'.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7018"/>MT7018: The Watch App '*' does not specify a CFBundleExecutable</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7019"/>MT7019: The Watch App '*' has an invalid WKCompanionAppBundleIdentifier value ('*'), it does not match the main app bundle's CFBundleIdentifier ('*').</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7020"/>MT7020: The Watch App '*' has an invalid Info.plist: the WKWatchKitApp key must be present and have a value of 'true'.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7021"/>MT7021: The Watch App '*' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7022"/>MT7022: The Watch App '*' does not contain a Watch Extension.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7023"/>MT7023: The Watch Extension '*' does not contain an Info.plist.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7024"/>MT7024: The Watch Extension '*' does not specify a CFBundleIdentifier.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7025"/>MT7025: The Watch Extension '*' does not specify a CFBundleExecutable.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7026"/>MT7026: The Watch Extension '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7027"/>MT7027: The Watch Extension '*' has a CFBundleIdentifier (*) that ends with the illegal suffix ".key".</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7028"/>MT7028: The Watch Extension '*' has an invalid Info.plist: it does not contain an NSExtension dictionary.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7029"/>MT7029: The Watch Extension '*' has an invalid Info.plist: the NSExtensionPointIdentifier must be "com.apple.watchkit".</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7030"/>MT7030: The Watch Extension '*' has an invalid Info.plist: the NSExtension dictionary must contain NSExtensionAttributes.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7031"/>MT7031: The Watch Extension '*' has an invalid Info.plist: the NSExtensionAttributes dictionary must contain a WKAppBundleIdentifier.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7032"/>MT7032: The WatchKit Extension '*' has an invalid Info.plist: UIRequiredDeviceCapabilities should not contain the 'watch-companion' capability.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7033"/>MT7033: The Watch App '*' does not contain an Info.plist.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7034"/>MT7034: The Watch App '*' does not specify a CFBundleIdentifier.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7035"/>MT7035: The Watch App '*' does not have a valid UIDeviceFamily value. Expected '*' but found '* (*)'.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7036"/>MT7036: The Watch App '*' does not specify a CFBundleExecutable.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7037"/>MT7037: The WatchKit Extension '{extensionName}' has an invalid WKAppBundleIdentifier value ('*'), it does not match the Watch App's CFBundleIdentifier ('*').</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7038"/>MT7038: The Watch App '*' has an invalid Info.plist: the WKCompanionAppBundleIdentifier must exist and must match the main app bundle's CFBundleIdentifier.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7039"/>MT7039: The Watch App '*' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7040"/>MT7040: The app bundle {AppBundlePath} does not contain an Info.plist.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7041"/>MT7041: Main Info.plist path does not specify a CFBundleIdentifier.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7042"/>MT7042: Main Info.plist path does not specify a CFBundleExecutable.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7043"/>MT7043: Main Info.plist path does not specify a CFBundleSupportedPlatforms.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7044"/>MT7044: Main Info.plist path does not specify a UIDeviceFamily.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7045"/>MT7045: Unrecognized Format: *.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+Where * can be:  
+
+- string
+- array
+- dict
+- bool
+- real
+- integer
+- date
+- data
+
+<h3><a name="MT7046"/>MT7046: Add: Entry, *, Incorrectly Specified.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7047"/>MT7047: Add: Entry, *, Contains Invalid Array Index.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7048"/>MT7048: Add: * Entry Already Exists.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7049"/>MT7049: Add: Can't Add Entry, *, to Parent.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7050"/>MT7050: Delete: Can't Delete Entry, *, from Parent.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7051"/>MT7051: Delete: Entry, *, Contains Invalid Array Index.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7052"/>MT7052: Delete: Entry, *, Does Not Exist.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7053"/>MT7053: Import: Entry, *, Incorrectly Specified.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7054"/>MT7054: Import: Entry, *, Contains Invalid Array Index.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7055"/>MT7055: Import: Error Reading File: *.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7056"/>MT7056: Import: Can't Add Entry, *, to Parent.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7057"/>MT7057: Merge: Can't Add array Entries to dict.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7058"/>MT7058: Merge: Specified Entry Must Be a Container.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7059"/>MT7059: Merge: Entry, *, Contains Invalid Array Index.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7060"/>MT7060: Merge: Entry, *, Does Not Exist.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7061"/>MT7061: Merge: Error Reading File: *.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7062"/>MT7062: Set: Entry, *, Incorrectly Specified.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7063"/>MT7063: Set: Entry, *, Contains Invalid Array Index.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7064"/>MT7064: Set: Entry, *, Does Not Exist.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7065"/>MT7065: Unknown PropertyList editor action: *.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7066"/>MT7066: Error loading '*': *.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+<h3><a name="MT7067"/>MT7067: Error saving '*': *.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+
+# MT8xxx: Runtime error messages
 
 <!--
  MT8xxx runtime
@@ -1460,6 +2188,8 @@ This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzil
 The DelegateProxy attribute for the method in question is invalid.
 
 This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
+<!-- 8017 is used by mmp -->
 
 <h3><a name="MT8018"/>MT8018: Internal consistency error. Please file a bug report at http://bugzilla.xamarin.com.</h3>
 

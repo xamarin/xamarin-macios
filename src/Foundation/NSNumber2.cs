@@ -11,7 +11,11 @@ using System.Runtime.InteropServices;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.Foundation {
-	public partial class NSNumber : NSValue, IComparable, IComparable<NSNumber>, IEquatable<NSNumber> {
+	public partial class NSNumber : NSValue
+#if COREBUILD
+	{
+#else
+	, IComparable, IComparable<NSNumber>, IEquatable<NSNumber> {
 
 		public static implicit operator NSNumber (float value)
 		{
@@ -199,5 +203,6 @@ namespace XamCore.Foundation {
 			// something that's really not obvious
 			return StringValue.GetHashCode ();
 		}
+#endif
 	}
 }

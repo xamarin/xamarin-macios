@@ -14,7 +14,11 @@ using System.Runtime.InteropServices;
 using Foundation;
 using CoreGraphics;
 using ObjCRuntime;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch;
 using MonoTouch.CoreGraphics;

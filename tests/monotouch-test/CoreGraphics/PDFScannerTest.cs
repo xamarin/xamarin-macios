@@ -119,7 +119,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 				// Do == the image is inside it
 				table.SetCallback ("Do", Do);
 #endif
-				using (var doc = CGPDFDocument.FromFile ("Tamarin.pdf"))
+				using (var doc = CGPDFDocument.FromFile (NSBundle.MainBundle.PathForResource ("Tamarin", "pdf")))
 				using (var page = doc.GetPage (1))
 				using (var cs = new CGPDFContentStream (page))
 				using (var scanner = new CGPDFScanner (cs, table, this)) {

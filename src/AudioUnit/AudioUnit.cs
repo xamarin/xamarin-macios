@@ -617,11 +617,8 @@ namespace XamCore.AudioUnit
 
 		public AudioUnitStatus MakeConnection (AudioUnit sourceAudioUnit, uint sourceOutputNumber, uint destInputNumber)
 		{
-			if (sourceAudioUnit == null)
-				throw new ArgumentNullException ("sourceAudioUnit");
-
 			var auc = new AudioUnitConnection {
-				SourceAudioUnit = sourceAudioUnit.handle,
+				SourceAudioUnit = sourceAudioUnit == null ? IntPtr.Zero : sourceAudioUnit.handle,
 				SourceOutputNumber = sourceOutputNumber,
 				DestInputNumber = destInputNumber
 			};

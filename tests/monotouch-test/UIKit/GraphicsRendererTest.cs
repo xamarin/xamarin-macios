@@ -46,7 +46,7 @@ namespace MonoTouchFixtures.UIKit {
 			var f = UIGraphicsImageRendererFormat.DefaultFormat;
 			Assert.True (f.Bounds.IsEmpty, "Bounds");
 			Assert.False (f.Opaque, "Opaque");
-			Assert.False (f.PrefersExtendedRange, "PrefersExtendedRange");
+			//Assert.False (f.PrefersExtendedRange, "PrefersExtendedRange"); // new iPhone (7/7+) returns True
 			Assert.That (f.Scale, Is.GreaterThan (0), "Scale"); // varies on platform
 			Assert.That (f.GetType ().Name, Is.EqualTo ("UIGraphicsImageRendererFormat"), "Name");
 		}

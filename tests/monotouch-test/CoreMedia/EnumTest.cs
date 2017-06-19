@@ -13,7 +13,6 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using CoreMedia;
-using UIKit;
 #else
 using MonoTouch.CoreMedia;
 using MonoTouch.Foundation;

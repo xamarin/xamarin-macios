@@ -12,7 +12,6 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
-using UIKit;
 using CoreGraphics;
 using EventKit;
 using ObjCRuntime;

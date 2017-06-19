@@ -283,8 +283,8 @@
               </method>
               <method name="Nodes(System.Collections.Generic.IEnumerable`1[T])" attrib="150" static="true" returntype="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XNode]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerHiddenAttribute" />
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                  <attribute name="System.Runtime.CompilerServices.IteratorStateMachineAttribute" />
                 </attributes>
                 <parameters>
                   <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" direction="this" />
@@ -917,7 +917,7 @@
               </method>
               <method name="Nodes()" attrib="134" returntype="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XNode]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerHiddenAttribute" />
+                  <attribute name="System.Runtime.CompilerServices.IteratorStateMachineAttribute" />
                 </attributes>
                 <parameters />
               </method>
@@ -2163,13 +2163,13 @@
               </method>
               <method name="NodesAfterSelf()" attrib="134" returntype="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XNode]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerHiddenAttribute" />
+                  <attribute name="System.Runtime.CompilerServices.IteratorStateMachineAttribute" />
                 </attributes>
                 <parameters />
               </method>
               <method name="NodesBeforeSelf()" attrib="134" returntype="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XNode]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerHiddenAttribute" />
+                  <attribute name="System.Runtime.CompilerServices.IteratorStateMachineAttribute" />
                 </attributes>
                 <parameters />
               </method>
@@ -2310,7 +2310,7 @@
               </method>
               <method name="Annotations()" attrib="134" returntype="System.Collections.Generic.IEnumerable`1[T]">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerHiddenAttribute" />
+                  <attribute name="System.Runtime.CompilerServices.IteratorStateMachineAttribute" />
                 </attributes>
                 <parameters />
                 <generic-parameters>

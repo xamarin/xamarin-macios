@@ -1,11 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Xamarin.Tests;
-
+using Xamarin.Utils;
 using NUnit.Framework;
 
 namespace Xamarin
@@ -204,18 +205,18 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 				Assert.Ignore ("Xcode 6 ({0}) is required for this test.", Configuration.xcode6_root);
 			
 			// This test will have to be updated when new frameworks are introduced.
-			VerifyWithXcode (R.Static, MTouch.Profile.iOS, string.Empty, false, Configuration.xcode6_root, "8.0",
+			VerifyWithXcode (R.Static, Profile.iOS, string.Empty, false, Configuration.xcode6_root, "8.0",
 				"warning MT0079: The recommended Xcode version for Xamarin.iOS .* is Xcode .* or later. The current Xcode version .found in " + Configuration.xcode6_root + ". is 6.*.",
-				"error MT4134: Your application is using the 'Contacts' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 9.0, while you're building with the iOS 8.0 SDK.) This configuration is only supported with the legacy registrar (pass --registrar:legacy as an additional mtouch argument in your project's iOS Build option to select). Alternatively select a newer SDK in your app's iOS Build options.",
-				"error MT4134: Your application is using the 'CoreSpotlight' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 9.0, while you're building with the iOS 8.0 SDK.) This configuration is only supported with the legacy registrar (pass --registrar:legacy as an additional mtouch argument in your project's iOS Build option to select). Alternatively select a newer SDK in your app's iOS Build options.",
-				"error MT4134: Your application is using the 'GameplayKit' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 9.0, while you're building with the iOS 8.0 SDK.) This configuration is only supported with the legacy registrar (pass --registrar:legacy as an additional mtouch argument in your project's iOS Build option to select). Alternatively select a newer SDK in your app's iOS Build options.",
-				"error MT4134: Your application is using the 'MetalKit' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 9.0, while you're building with the iOS 8.0 SDK.) This configuration is only supported with the legacy registrar (pass --registrar:legacy as an additional mtouch argument in your project's iOS Build option to select). Alternatively select a newer SDK in your app's iOS Build options.",
-				"error MT4134: Your application is using the 'ModelIO' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 9.0, while you're building with the iOS 8.0 SDK.) This configuration is only supported with the legacy registrar (pass --registrar:legacy as an additional mtouch argument in your project's iOS Build option to select). Alternatively select a newer SDK in your app's iOS Build options.",
-				"error MT4134: Your application is using the 'MetalPerformanceShaders' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 9.0, while you're building with the iOS 8.0 SDK.) This configuration is only supported with the legacy registrar (pass --registrar:legacy as an additional mtouch argument in your project's iOS Build option to select). Alternatively select a newer SDK in your app's iOS Build options.",
-				"error MT4134: Your application is using the 'WatchKit' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 8.2, while you're building with the iOS 8.0 SDK.) This configuration is only supported with the legacy registrar (pass --registrar:legacy as an additional mtouch argument in your project's iOS Build option to select). Alternatively select a newer SDK in your app's iOS Build options.",
-				"error MT4134: Your application is using the 'ContactsUI' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 9.0, while you're building with the iOS 8.0 SDK.) This configuration is only supported with the legacy registrar (pass --registrar:legacy as an additional mtouch argument in your project's iOS Build option to select). Alternatively select a newer SDK in your app's iOS Build options.",
-				"error MT4134: Your application is using the 'ReplayKit' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 9.0, while you're building with the iOS 8.0 SDK.) This configuration is only supported with the legacy registrar (pass --registrar:legacy as an additional mtouch argument in your project's iOS Build option to select). Alternatively select a newer SDK in your app's iOS Build options.",
-				"error MT4134: Your application is using the 'WatchConnectivity' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 9.0, while you're building with the iOS 8.0 SDK.) This configuration is only supported with the legacy registrar (pass --registrar:legacy as an additional mtouch argument in your project's iOS Build option to select). Alternatively select a newer SDK in your app's iOS Build options.");
+				"error MT4134: Your application is using the 'Contacts' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 9.0, while you're building with the iOS 8.0 SDK.) Please select a newer SDK in your app's iOS Build options.",
+				"error MT4134: Your application is using the 'CoreSpotlight' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 9.0, while you're building with the iOS 8.0 SDK.) Please select a newer SDK in your app's iOS Build options.",
+				"error MT4134: Your application is using the 'GameplayKit' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 9.0, while you're building with the iOS 8.0 SDK.) Please select a newer SDK in your app's iOS Build options.",
+				"error MT4134: Your application is using the 'MetalKit' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 9.0, while you're building with the iOS 8.0 SDK.) Please select a newer SDK in your app's iOS Build options.",
+				"error MT4134: Your application is using the 'ModelIO' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 9.0, while you're building with the iOS 8.0 SDK.) Please select a newer SDK in your app's iOS Build options.",
+				"error MT4134: Your application is using the 'MetalPerformanceShaders' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 9.0, while you're building with the iOS 8.0 SDK.) Please select a newer SDK in your app's iOS Build options.",
+				"error MT4134: Your application is using the 'WatchKit' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 8.2, while you're building with the iOS 8.0 SDK.) Please select a newer SDK in your app's iOS Build options.",
+				"error MT4134: Your application is using the 'ContactsUI' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 9.0, while you're building with the iOS 8.0 SDK.) Please select a newer SDK in your app's iOS Build options.",
+				"error MT4134: Your application is using the 'ReplayKit' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 9.0, while you're building with the iOS 8.0 SDK.) Please select a newer SDK in your app's iOS Build options.",
+				"error MT4134: Your application is using the 'WatchConnectivity' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 9.0, while you're building with the iOS 8.0 SDK.) Please select a newer SDK in your app's iOS Build options.");
 		}
 
 		[Test]
@@ -308,9 +309,19 @@ class C : NSObject {
 class C : NSObject {
 }
 ";
-			VerifyWithXode (R.Static, code, true, "warning MT4146: The Name parameter of the Registrar attribute on the class 'C' contains an invalid character: ' ' (0x20)");
+			VerifyWithXode (R.Static, code, true, "warning MT4146: The Name parameter of the Registrar attribute on the class 'C' (' C') contains an invalid character: ' ' (0x20).");
 		}
 
+		[Test]
+		public void MT4146_b ()
+		{
+			var code = @"
+[Register (""A C"")]
+class C : NSObject {
+}
+";
+			VerifyWithXode (R.Static, code, false, "error MT4146: The Name parameter of the Registrar attribute on the class 'C' ('A C') contains an invalid character: ' ' (0x20).");
+		}
 		[Test]
 		public void MT4148 ()
 		{
@@ -469,22 +480,38 @@ public class Category
 				".*/Test.cs(.*): error MT4159: Cannot register the method 'Category.Foo' as a category method because category methods must be static.");
 		}
 
+		// This list is duplicated in src/ObjCRuntime/Registrar.cs
+		static char[] invalidSelectorCharacters = new char[] { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n' };
+
 		[Test]
 		public void MT4160 ()
 		{
-			var code = @"
-public class TestInvalidChar : NSObject
-{
-	[Export (""xy z"")]
-	public void XyZ () {}
-	[Export (""ab\tc"")]
-	public void AbC () {}
-}
-";
-			VerifyWithXode (R.Static, code, false,
-				".*/Test.cs(.*): error MT4160: Invalid character ' ' (0x20) found in selector 'xy z' for 'TestInvalidChar.XyZ()'",
-				".*/Test.cs(.*): error MT4160: Invalid character '\t' (0x9) found in selector 'ab\tc' for 'TestInvalidChar.AbC()'"
-				);
+			// newline is invalid, but it messes up the error message and testing is just annoying, so skip it.
+			var testInvalidCharacters = invalidSelectorCharacters.Where ((v) => v != '\n').ToArray ();
+			using (var mtouch = new MTouchTool ()) {
+				var sb = new StringBuilder ();
+				sb.AppendLine ("public class TestInvalidChar : Foundation.NSObject {");
+				for (int i = 0; i < testInvalidCharacters.Length; i++) {
+					var c = testInvalidCharacters [i];
+					var str = c.ToString ();
+					switch (c) {
+					case '"':
+						str = "\"\"";
+						break;
+					}
+					sb.AppendLine ($"\t[Foundation.Export (@\"X{str}\")]");
+					sb.AppendLine ($"\tpublic void X{i} () {{}}");
+				}
+				sb.AppendLine ("}");
+				mtouch.CreateTemporaryApp (extraCode: sb.ToString (), extraArg: "-debug");
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				for (int i = 0; i < testInvalidCharacters.Length; i++) {
+					var c = testInvalidCharacters [i];
+					mtouch.AssertError (4160, $"Invalid character '{c}' (0x{((int)c).ToString ("x")}) found in selector 'X{c}' for 'TestInvalidChar.X{i}()'", "testApp.cs", 3 + i * 2);
+				}
+			}
 		}
 
 		[Test]
@@ -531,10 +558,10 @@ public struct FooF { public NSObject Obj; }
 
 
 		[Test]
-		[TestCase (MTouch.Profile.iOS, "iOS")]
-		[TestCase (MTouch.Profile.tvOS, "tvOS")]
-		//[TestCase (MTouch.Profile.WatchOS, "watchOS")] // MT0077 interferes
-		public void MT4162 (MTouch.Profile profile, string name)
+		[TestCase (Profile.iOS, "iOS")]
+		[TestCase (Profile.tvOS, "tvOS")]
+		//[TestCase (Profile.WatchOS, "watchOS")] // MT0077 interferes
+		public void MT4162 (Profile profile, string name)
 		{
 			var code = @"
 	[Introduced (PlatformName.iOS, 99, 0, 0, PlatformArchitecture.All, ""use Z instead"")]
@@ -600,90 +627,91 @@ public struct FooF { public NSObject Obj; }
 			);
 		}
 
+		static string [] objective_c_keywords = new string [] {
+			"auto",
+			"break",
+			"case", "char", "const", "continue",
+			"default", "do", "double",
+			"else", "enum", "export", "extern",
+			"float", "for",
+			"goto",
+			"if", "inline", "int",
+			"long",
+			"register", "return",
+			"short", "signed", "sizeof", "static", "struct", "switch",
+			"template", "typedef", "union",
+			"unsigned",
+			"void", "volatile",
+			"while",
+			"_Bool",
+			"_Complex",
+		};
+
 		[Test]
 		public void MT4164 ()
 		{
-			var code = @"
-	class FutureType : NSObject
-	{
-		[Export (""auto"")] string Auto { get; set; }
-		[Export (""break"")] string Break { get; set; }
-		[Export (""case"")] string Case { get; set; }
-		[Export (""char"")] string Char { get; set; }
-		[Export (""const"")] string Const { get; set; }
-		[Export (""continue"")] string Continue { get; set; }
-		[Export (""default"")] string Default { get; set; }
-		[Export (""do"")] string Do { get; set; }
-		[Export (""double"")] string Double { get; set; }
-		[Export (""else"")] string Else { get; set; }
-		[Export (""enum"")] string Enum { get; set; }
-		[Export (""export"")] string Export { get; set; }
-		[Export (""extern"")] string Extern { get; set; }
-		[Export (""float"")] string Float { get; set; }
-		[Export (""for"")] string For { get; set; }
-		[Export (""goto"")] string Goto { get; set; }
-		[Export (""if"")] string If { get; set; }
-		[Export (""inline"")] string Inline { get; set; }
-		[Export (""int"")] string Int { get; set; }
-		[Export (""long"")] string Long { get; set; }
-		[Export (""register"")] string Register { get; set; }
-		[Export (""return"")] string Return { get; set; }
-		[Export (""short"")] string Short { get; set; }
-		[Export (""signed"")] string Signed { get; set; }
-		[Export (""sizeof"")] string Sizeof { get; set; }
-		[Export (""static"")] string Static { get; set; }
-		[Export (""struct"")] string Struct { get; set; }
-		[Export (""switch"")] string Switch { get; set; }
-		[Export (""template"")] string Template { get; set; }
-		[Export (""typedef"")] string Typedef { get; set; }
-		[Export (""union"")] string Union { get; set; }
-		[Export (""unsigned"")] string Unsigned { get; set; }
-		[Export (""void"")] string Void { get; set; }
-		[Export (""volatile"")] string Volatile { get; set; }
-		[Export (""while"")] string While { get; set; }
-		[Export (""_Bool"")] string Bool { get; set; }
-		[Export (""_Complex"")] string Complex { get; set; }
-	}
-";
+			using (var mtouch = new MTouchTool ()) {
+				var sb = new StringBuilder ();
+				sb.AppendLine ("class FutureType : Foundation.NSObject {");
+				foreach (var kw in objective_c_keywords)
+					sb.AppendLine ($"[Foundation.Export (\"{kw}\")] string X{kw} {{ get; set; }}");
+				sb.AppendLine ("}");
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: sb.ToString (), extraArg: "-debug");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				foreach (var kw in objective_c_keywords)
+					mtouch.AssertError (4164, $"Cannot export the property 'X{kw}' because its selector '{kw}' is an Objective-C keyword. Please use a different name.", "testApp.cs");
+			}
+		}
 
-			Verify (R.Static, MTouch.Profile.iOS, code, false, MTouch.Target.Sim,
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Auto' because its selector 'auto' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Break' because its selector 'break' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Case' because its selector 'case' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Char' because its selector 'char' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Const' because its selector 'const' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Continue' because its selector 'continue' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Default' because its selector 'default' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Do' because its selector 'do' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Double' because its selector 'double' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Else' because its selector 'else' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Enum' because its selector 'enum' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Export' because its selector 'export' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Extern' because its selector 'extern' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Float' because its selector 'float' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'For' because its selector 'for' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Goto' because its selector 'goto' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'If' because its selector 'if' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Inline' because its selector 'inline' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Int' because its selector 'int' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Long' because its selector 'long' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Register' because its selector 'register' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Return' because its selector 'return' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Short' because its selector 'short' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Signed' because its selector 'signed' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Sizeof' because its selector 'sizeof' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Static' because its selector 'static' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Struct' because its selector 'struct' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Switch' because its selector 'switch' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Template' because its selector 'template' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Typedef' because its selector 'typedef' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Union' because its selector 'union' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Unsigned' because its selector 'unsigned' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Void' because its selector 'void' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Volatile' because its selector 'volatile' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'While' because its selector 'while' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Bool' because its selector '_Bool' is an Objective-C keyword. Please use a different name.",
-			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Complex' because its selector '_Complex' is an Objective-C keyword. Please use a different name.");
+		[Test]
+		public void MT4167 ()
+		{
+			var code = @"
+class X : ReplayKit.RPBroadcastControllerDelegate
+{
+	public override void DidUpdateServiceInfo (ReplayKit.RPBroadcastController broadcastController, NSDictionary<NSString, INSCoding> serviceInfo)
+	{
+		throw new NotImplementedException ();
+	}
+}
+";
+			Verify (R.Static, code, true);
+		}
+
+		[Test]
+		public void MT4168 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var sb = new StringBuilder ();
+				foreach (var kw in objective_c_keywords) {
+					sb.AppendLine ($"[Foundation.Register (\"{kw}\")]");
+					sb.AppendLine ($"class X{kw} : Foundation.NSObject {{}}");
+				}
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: sb.ToString ());
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				foreach (var kw in objective_c_keywords)
+					mtouch.AssertError (4168, $"Cannot register the type 'X{kw}' because its Objective-C name '{kw}' is an Objective-C keyword. Please use a different name.");
+			}
+		}
+
+		[Test]
+		public void NoWarnings ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.Linker = MTouchLinker.DontLink; // so that as much as possible is registered
+				mtouch.Verbosity = 9; // Increase verbosity, otherwise linker warnings aren't shown
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertNoWarnings ();
+				foreach (var line in mtouch.OutputLines)
+					Assert.That (line, Does.Not.Match ("warning:"), "no warnings");
+			}
 		}
 
 		[Test]
@@ -727,35 +755,35 @@ class H : G {
 
 		void Verify (R registrars, string code, bool success, params string [] expected_messages)
 		{
-			VerifyWithXcode (registrars,  MTouch.Profile.iOS, code, success, Configuration.xcode_root, Configuration.sdk_version, expected_messages);
+			VerifyWithXcode (registrars,  Profile.iOS, code, success, Configuration.xcode_root, Configuration.sdk_version, expected_messages);
 		}
 
-		void Verify (R registrars, MTouch.Profile profile, string code, bool success, params string [] expected_messages)
+		void Verify (R registrars, Profile profile, string code, bool success, params string [] expected_messages)
 		{
-			Verify (registrars, profile, code, success, MTouch.Target.Dev, expected_messages);
+			Verify (registrars, profile, code, success, Target.Sim, expected_messages);
 		}
 
-		void Verify (R registrars, MTouch.Profile profile, string code, bool success, MTouch.Target target, params string [] expected_messages)
+		void Verify (R registrars, Profile profile, string code, bool success, Target target, params string [] expected_messages)
 		{
 			VerifyWithXcode (registrars,  profile, code, success, Configuration.xcode_root, MTouch.GetSdkVersion (profile), target, expected_messages);
 		}
 
 		void VerifyWithXode (R registrars, string code, bool success, params string [] expected_messages)
 		{
-			VerifyWithXcode (registrars, MTouch.Profile.iOS, code, success, Configuration.xcode_root, Configuration.sdk_version, expected_messages);
+			VerifyWithXcode (registrars, Profile.iOS, code, success, Configuration.xcode_root, Configuration.sdk_version, expected_messages);
 		}
 
 		void VerifyWithXcode (R registrars, string code, bool success, string xcode, string sdk_version, params string [] expected_messages)
 		{
-			VerifyWithXcode (registrars, MTouch.Profile.iOS, code, success, xcode, sdk_version, expected_messages);
+			VerifyWithXcode (registrars, Profile.iOS, code, success, xcode, sdk_version, expected_messages);
 		}
 
-		void VerifyWithXcode (R registrars, MTouch.Profile profile, string code, bool success, string xcode, string sdk_version, params string [] expected_messages)
+		void VerifyWithXcode (R registrars, Profile profile, string code, bool success, string xcode, string sdk_version, params string [] expected_messages)
 		{
-			VerifyWithXcode (registrars, profile, code, success, xcode, sdk_version, MTouch.Target.Dev, expected_messages);
+			VerifyWithXcode (registrars, profile, code, success, xcode, sdk_version, Target.Sim, expected_messages);
 		}
 
-		void VerifyWithXcode (R registrars, MTouch.Profile profile, string code, bool success, string xcode, string sdk_version, MTouch.Target target, params string [] expected_messages)
+		void VerifyWithXcode (R registrars, Profile profile, string code, bool success, string xcode, string sdk_version, Target target, params string [] expected_messages)
 		{
 			foreach (R value in Enum.GetValues (typeof (R))) {
 				if ((registrars & value) == 0)
@@ -766,8 +794,7 @@ class H : G {
 
 				string result = string.Empty;
 
-				try {
-					var header = @"
+				var header = @"
 using System;
 using System.Collections.Generic;
 using Foundation;
@@ -778,12 +805,13 @@ class Test {
 	static void Main () { Console.WriteLine (typeof (NSObject)); }
 }";
 
-
-					result = CreateTestApp (profile, header + code, "--registrar:" + value.ToString ().ToLower (), xcode, sdk_version, target);
+				StringBuilder output = new StringBuilder ();
+				var rv = CreateTestApp (profile, header + code, "--registrar:" + value.ToString ().ToLower (), xcode, sdk_version, target, output);
+				result = output.ToString ();
+				if (rv == 0) {
 					Assert.IsTrue (success, string.Format ("Expected '{0}' to show the error(s) '{1}' with --registrar:\n\t{2}", code, string.Join ("\n\t", expected_messages), value.ToString ().ToLower ()));
-				} catch (TestExecutionException mee) {
+				} else {
 					Assert.IsFalse (success, string.Format ("Expected '{0}' to compile with --registrar:{1}", code, value.ToString ().ToLower ()));
-					result = mee.Message;
 				}
 
 				var split = result.Split (new char[] {'\n', '\r'}, StringSplitOptions.RemoveEmptyEntries);
@@ -1160,45 +1188,40 @@ class CTP4 : CTP3 {
 		// Creates an app with the specified source as the executable.
 		// Compiles it using smcs, will throw a McsException if it fails.
 		// Then runs mtouch to try to create an app (for device), will throw MTouchException if it fails.
-		// This method should not leave anything behind on disk.
-		static string CreateTestApp (MTouch.Profile profile, string source, string extra_args = "", string xcode = null, string sdk_version = null, MTouch.Target target = MTouch.Target.Dev)
+		static int CreateTestApp (Profile profile, string source, string extra_args = "", string xcode = null, string sdk_version = null, Target target = Target.Dev, StringBuilder output = null)
 		{
-			if (target == MTouch.Target.Dev)
+			if (target == Target.Dev)
 				MTouch.AssertDeviceAvailable ();
 
-			string path = MTouch.GetTempDirectory ();
-			try {
-				string cs = Path.Combine (path, "Test.cs");
-				string exe = Path.Combine (path, "Test.exe");
-				File.WriteAllText (cs, source);
-				Compile (cs, profile);
-				string app = Path.Combine (path, "Test.app");
-				string cache = Path.Combine (path, "cache");
-				Directory.CreateDirectory (cache);
-				Directory.CreateDirectory (app);
+			string path = Cache.CreateTemporaryDirectory ();
+			string cs = Path.Combine (path, "Test.cs");
+			string exe = Path.Combine (path, "Test.exe");
+			File.WriteAllText (cs, source);
+			Compile (cs, profile);
+			string app = Path.Combine (path, "Test.app");
+			string cache = Path.Combine (path, "cache");
+			Directory.CreateDirectory (cache);
+			Directory.CreateDirectory (app);
 
-				if (xcode == null)
-					xcode = Configuration.xcode_root;
+			if (xcode == null)
+				xcode = Configuration.xcode_root;
 
-				if (sdk_version == null)
-					sdk_version = MTouch.GetSdkVersion (profile);
+			if (sdk_version == null)
+				sdk_version = MTouch.GetSdkVersion (profile);
 
-				return ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("{0} {10} {1} --sdk {2} -targetver {2} --abi={9} {3} --sdkroot {4} --cache {5} --nolink {7} --debug -r:{6} --target-framework:{8}", exe, app, sdk_version, extra_args, xcode, cache, MTouch.GetBaseLibrary (profile), string.Empty, MTouch.GetTargetFramework (profile), MTouch.GetArchitecture (profile, target), target == MTouch.Target.Sim ? "-sim" : "-dev"), hide_output: false);
-			} finally {
-				Directory.Delete (path, true);
-			}
+			return ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("{0} {10} {1} --sdk {2} -targetver {2} --abi={9} {3} --sdkroot {4} --cache {5} --nolink {7} --debug -r:{6} --target-framework:{8}", exe, app, sdk_version, extra_args, xcode, cache, MTouch.GetBaseLibrary (profile), string.Empty, MTouch.GetTargetFramework (profile), MTouch.GetArchitecture (profile, target), target == Target.Sim ? "-sim" : "-dev"), null, output, output);
 		}
 
 		// Compile the filename with mcs
 		// Does not clean up anything.
-		static void Compile (string filename, MTouch.Profile profile = MTouch.Profile.iOS)
+		static void Compile (string filename, Profile profile = Profile.iOS)
 		{			
 			StringBuilder output = new StringBuilder ();
 			using (var p = new Process ()) {
 				var args = new StringBuilder ();
 				args.Append (" /unsafe /debug:full /nologo ");
-				args.Append (MTouch.Quote (filename));
-				args.Append (" -r:").Append (MTouch.Quote (MTouch.GetBaseLibrary (profile)));
+				args.Append (StringUtils.Quote (filename));
+				args.Append (" -r:").Append (StringUtils.Quote (MTouch.GetBaseLibrary (profile)));
 				p.StartInfo.FileName = MTouch.GetCompiler (profile, args);
 				p.StartInfo.Arguments = args.ToString ();
 				p.StartInfo.UseShellExecute = false;
@@ -1225,8 +1248,6 @@ class CTP4 : CTP3 {
 					}
 				};
 				p.WaitForExit ();
-				
-				GC.Collect (); // Workaround for: https://bugzilla.xamarin.com/show_bug.cgi?id=43462#c14
 
 				Console.WriteLine (output);
 				

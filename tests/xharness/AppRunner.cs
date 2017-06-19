@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Xsl;
+using Xamarin.Utils;
 
 namespace xharness
 {
@@ -26,22 +27,53 @@ namespace xharness
 		Device_watchOS,
 	}
 
+	public enum Extension
+	{
+		WatchKit2,
+		TodayExtension,
+	}
+
 	public class AppRunner
 	{
 		public Harness Harness;
 		public string ProjectFile;
+		public string AppPath;
 
 		public TestExecutingResult Result { get; private set; }
+		public string FailureMessage { get; private set; }
 
 		string appName;
 		string appPath;
 		string launchAppPath;
 		string bundle_identifier;
 		string platform;
+		Extension? extension;
 		bool isSimulator;
 
 		string device_name;
 		string companion_device_name;
+
+		string configuration;
+		public string Configuration {
+			get { return configuration ?? Harness.Configuration; }
+			set { configuration = value; }
+		}
+
+		public string DeviceName {
+			get { return device_name; }
+			set { device_name = value; }
+		}
+
+		public string CompanionDeviceName {
+			get { return companion_device_name; }
+			set { companion_device_name = value; }
+		}
+
+		public bool isExtension {
+			get {
+				return extension.HasValue;
+			}
+		}
 
 		// For watch apps we end up with 2 simulators, the watch simulator (the main one), and the iphone simulator (the companion one).
 		SimDevice[] simulators;
@@ -132,21 +164,23 @@ namespace xharness
 			if (selected.Count () == 0) {
 				throw new Exception ($"Could not find any applicable devices with device class(es): {string.Join (", ", deviceClasses)}");
 			} else if (selected.Count () > 1) {
-				selected_data = selected.First ();
-				main_log.WriteLine ("Found {0} devices for device class(es) {1}: {2}. Selected: '{3}'", selected.Count (), string.Join (", ", deviceClasses), string.Join (", ", selected.Select ((v) => v.Name).ToArray ()), selected_data.Name);
+				selected_data = selected
+					.OrderBy ((dev) =>
+					{
+						Version v;
+						if (Version.TryParse (dev.ProductVersion, out v))
+							return v;
+						return new Version ();
+					})
+					.First ();
+				main_log.WriteLine ("Found {0} devices for device class(es) '{1}': '{2}'. Selected: '{3}' (because it has the lowest version).", selected.Count (), string.Join ("', '", deviceClasses), string.Join ("', '", selected.Select ((v) => v.Name).ToArray ()), selected_data.Name);
 			} else {
 				selected_data = selected.First ();
 			}
 			device_name = selected_data.Name;
 
-			if (mode == "watchos") {
-				var companion = devs.ConnectedDevices.Where ((v) => v.DeviceIdentifier == selected_data.CompanionIdentifier);
-				if (companion.Count () == 0)
-					throw new Exception ($"Could not find the companion device for '{selected_data.Name}'");
-				else if (companion.Count () > 1)
-					main_log.WriteLine ("Found {0} companion devices for {1}?!?", companion.Count (), selected_data.Name);
-				companion_device_name = companion.First ().Name;
-			}
+			if (mode == "watchos")
+				companion_device_name = devs.FindCompanionDevice (main_log, selected_data).Name;
 		}
 
 		bool initialized;
@@ -161,8 +195,12 @@ namespace xharness
 			appName = csproj.GetAssemblyName ();
 			var info_plist_path = csproj.GetInfoPListInclude ();
 			var info_plist = new XmlDocument ();
-			info_plist.LoadWithoutNetworkAccess (Path.Combine (Path.GetDirectoryName (ProjectFile), info_plist_path));
+			info_plist.LoadWithoutNetworkAccess (Path.Combine (Path.GetDirectoryName (ProjectFile), info_plist_path.Replace ('\\', '/')));
 			bundle_identifier = info_plist.GetCFBundleIdentifier ();
+
+			var extensionPointIdentifier = info_plist.GetNSExtensionPointIdentifier ();
+			if (!string.IsNullOrEmpty (extensionPointIdentifier))
+				extension = extensionPointIdentifier.ParseFromNSExtensionPointIdentifier ();
 
 			switch (Target) {
 			case AppRunnerTarget.Simulator_iOS32:
@@ -209,7 +247,7 @@ namespace xharness
 				throw new Exception (string.Format ("Unknown target: {0}", Harness.Target));
 			}
 
-			appPath = Path.Combine (Path.GetDirectoryName (ProjectFile), csproj.GetOutputPath (platform, Harness.Configuration).Replace ('\\', '/'), appName + ".app");
+			appPath = Path.Combine (Path.GetDirectoryName (ProjectFile), csproj.GetOutputPath (platform, Configuration).Replace ('\\', '/'), appName + (isExtension ? ".appex" : ".app"));
 			if (!Directory.Exists (appPath))
 				throw new Exception (string.Format ("The app directory {0} does not exist. This is probably a bug in the test harness.", appPath));
 
@@ -220,7 +258,7 @@ namespace xharness
 			}
 		}
 
-		public int Install (Log log)
+		public async Task<ProcessExecutionResult> InstallAsync ()
 		{
 			Initialize ();
 
@@ -244,8 +282,29 @@ namespace xharness
 			if (mode == "watchos")
 				args.Append (" --device ios,watchos");
 
-			var rv = ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), log, TimeSpan.FromHours (1)).Result;
-			return rv.Succeeded ? 0 : 1;
+			return await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), main_log, TimeSpan.FromMinutes (mode == "watchos" ? 15 : 3));
+		}
+
+		public async Task<ProcessExecutionResult> UninstallAsync ()
+		{
+			Initialize ();
+
+			if (isSimulator)
+				throw new Exception ("Uninstalling from a simulator is not supported.");
+
+			FindDevice ();
+
+			var args = new StringBuilder ();
+			if (!string.IsNullOrEmpty (Harness.XcodeRoot))
+				args.Append (" --sdkroot ").Append (Harness.XcodeRoot);
+			for (int i = -1; i < Harness.Verbosity; i++)
+				args.Append (" -v ");
+
+			args.Append (" --uninstalldevbundleid");
+			args.AppendFormat (" \"{0}\" ", bundle_identifier);
+			AddDeviceName (args, companion_device_name ?? device_name);
+
+			return await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), main_log, TimeSpan.FromMinutes (1));
 		}
 
 		bool ensure_clean_simulator_state = true;
@@ -308,7 +367,7 @@ namespace xharness
 					var path = listener_log.FullPath;
 					path = path.Replace (".log", ".xml");
 					testsResults.Save (path);
-
+					Logs.Add (new LogFile ("Test xml", path));
 					// we want to keep the old TestResult page,
 					GenerateHumanReadableLogs (listener_log.FullPath, header, testsResults);
 					
@@ -458,12 +517,45 @@ namespace xharness
 			args.AppendFormat (" -argument=-app-arg:-hostport:{0}", listener.Port);
 			args.AppendFormat (" -setenv=NUNIT_HOSTPORT={0}", listener.Port);
 
+			listener.StartAsync ();
+
+			var cancellation_source = new CancellationTokenSource ();
+			var timed_out = false;
+
+			ThreadPool.QueueUserWorkItem ((v) =>
+			{
+				if (!listener.WaitForConnection (TimeSpan.FromMinutes (Harness.LaunchTimeout))) {
+					cancellation_source.Cancel ();
+					main_log.WriteLine ("Test launch timed out after {0} minute(s).", Harness.LaunchTimeout);
+					timed_out = true;
+				} else {
+					main_log.WriteLine ("Test run started");
+				}
+			});
+
 			foreach (var kvp in Harness.EnvironmentVariables)
 				args.AppendFormat (" -setenv={0}={1}", kvp.Key, kvp.Value);
 
 			bool? success = null;
-			bool timed_out = false;
 			bool launch_failure = false;
+
+			if (isExtension) {
+				switch (extension) {
+				case Extension.TodayExtension:
+					args.Append (isSimulator ? " --launchsimbundleid" : " --launchdevbundleid");
+					args.Append (" todayviewforextensions:");
+					args.Append (BundleIdentifier);
+					args.Append (" --observe-extension ");
+					args.Append (StringUtils.Quote (launchAppPath));
+					break;
+				case Extension.WatchKit2:
+				default:
+					throw new NotImplementedException ();
+				}
+			} else {
+				args.Append (isSimulator ? " --launchsim " : " --launchdev ");
+				args.Append (StringUtils.Quote (launchAppPath));
+			}
 
 			if (isSimulator) {
 				if (!await FindSimulatorAsync ())
@@ -472,13 +564,13 @@ namespace xharness
 				if (mode != "watchos") {
 					var stderr_tty = Marshal.PtrToStringAuto (ttyname (2));
 					if (!string.IsNullOrEmpty (stderr_tty)) {
-						args.Append (" --stdout=").Append (Harness.Quote (stderr_tty));
-						args.Append (" --stderr=").Append (Harness.Quote (stderr_tty));
+						args.Append (" --stdout=").Append (StringUtils.Quote (stderr_tty));
+						args.Append (" --stderr=").Append (StringUtils.Quote (stderr_tty));
 					} else {
 						var stdout_log = Logs.CreateFile ("Standard output", Path.Combine (LogDirectory, "stdout.log"));
 						var stderr_log = Logs.CreateFile ("Standard error", Path.Combine (LogDirectory, "stderr.log"));
-						args.Append (" --stdout=").Append (Harness.Quote (stdout_log.FullPath));
-						args.Append (" --stderr=").Append (Harness.Quote (stderr_log.FullPath));
+						args.Append (" --stdout=").Append (StringUtils.Quote (stdout_log.FullPath));
+						args.Append (" --stderr=").Append (StringUtils.Quote (stderr_log.FullPath));
 					}
 				}
 
@@ -506,25 +598,12 @@ namespace xharness
 						await sim.PrepareSimulatorAsync (main_log, bundle_identifier);
 				}
 
-				args.Append (" --launchsim");
-				args.AppendFormat (" \"{0}\" ", launchAppPath);
 				args.Append (" --device=:v2:udid=").Append (simulator.UDID).Append (" ");
 
 				await crash_reports.StartCaptureAsync ();
 
-				listener.StartAsync ();
 				main_log.WriteLine ("Starting test run");
 
-				var cancellation_source = new CancellationTokenSource ();
-				ThreadPool.QueueUserWorkItem ((v) => {
-					if (!listener.WaitForConnection (TimeSpan.FromMinutes (Harness.LaunchTimeout))) {
-						cancellation_source.Cancel ();
-						main_log.WriteLine ("Test launch timed out after {0} minute(s).", Harness.LaunchTimeout);
-						timed_out = true;
-					} else {
-						main_log.WriteLine ("Test run started");
-					}
-				});
 				var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), run_log, TimeSpan.FromMinutes (Harness.Timeout), cancellation_token: cancellation_source.Token);
 				if (result.TimedOut) {
 					timed_out = true;
@@ -559,7 +638,10 @@ namespace xharness
 					}
 					if (pid > 0) {
 						var launchTimedout = cancellation_source.IsCancellationRequested;
-						await KillPidAsync (main_log, pid, TimeSpan.FromSeconds (5), TimeSpan.FromMinutes (launchTimedout ? Harness.LaunchTimeout : Harness.Timeout), launchTimedout ? "Launch" : "Completion");
+						var timeoutType = launchTimedout ? "Launch" : "Completion";
+						var timeoutValue = launchTimedout ? Harness.LaunchTimeout : Harness.Timeout;
+						main_log.WriteLine ($"{timeoutType} timed out after {timeoutValue}");
+						await Process_Extensions.KillTreeAsync (pid, main_log, true);
 					} else {
 						main_log.WriteLine ("Could not find pid in mtouch output.");
 					}
@@ -577,18 +659,15 @@ namespace xharness
 			} else {
 				main_log.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", appName, mode, device_name);
 
-				args.Append (" --launchdev");
-				args.AppendFormat (" \"{0}\" ", launchAppPath);
-
-				var waits_for_exit = false;
 				if (mode == "watchos") {
 					args.Append (" --attach-native-debugger"); // this prevents the watch from backgrounding the app.
-					waits_for_exit = true;
+				} else {
+					args.Append (" --wait-for-exit");
 				}
 				
 				AddDeviceName (args);
 
-				device_system_log = Logs.CreateStream (LogDirectory, "device.log", "Device log");
+				device_system_log = Logs.CreateStream (LogDirectory, $"device-{device_name}-{DateTime.Now:yyyyMMdd_HHmmss}.log", "Device log");
 				var logdev = new DeviceLogCapturer () {
 					Harness =  Harness,
 					Log = device_system_log,
@@ -598,19 +677,19 @@ namespace xharness
 
 				await crash_reports.StartCaptureAsync ();
 
-				listener.StartAsync ();
 				main_log.WriteLine ("Starting test run");
 
-				double launch_timeout = waits_for_exit ? Harness.Timeout : 1;
-				double listener_timeout = waits_for_exit ? 0.2 : Harness.Timeout;
-				await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), main_log, TimeSpan.FromMinutes (launch_timeout));
-				if (listener.WaitForCompletion (TimeSpan.FromMinutes (listener_timeout))) {
-					main_log.WriteLine ("Test run completed");
-				} else {
-					main_log.WriteLine ("Test run did not complete in {0} minutes.", Harness.Timeout);
-					listener.Cancel ();
-					success = false;
+				var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), main_log, TimeSpan.FromMinutes (Harness.Timeout), cancellation_token: cancellation_source.Token);
+				if (result.TimedOut) {
 					timed_out = true;
+					success = false;
+					main_log.WriteLine ("Test run timed out after {0} minute(s).", Harness.Timeout);
+				} else if (result.Succeeded) {
+					main_log.WriteLine ("Test run completed");
+					success = true;
+				} else {
+					main_log.WriteLine ("Test run failed");
+					success = false;
 				}
 
 				logdev.StopCapture ();
@@ -658,6 +737,59 @@ namespace xharness
 			} else {
 				Result = TestExecutingResult.Failed;
 			}
+
+			// Check crash reports to see if any of them explains why the test run crashed.
+			if (!success.Value) {
+				int pid = 0;
+				string crash_reason = null;
+				foreach (var crash in crash_reports.Logs) {
+					try {
+						if (pid == 0) {
+							// Find the pid
+							using (var log_reader = main_log.GetReader ()) {
+								string line;
+								while ((line = log_reader.ReadLine ()) != null) {
+									const string str = "was launched with pid '";
+									var idx = line.IndexOf (str, StringComparison.Ordinal);
+									if (idx > 0) {
+										idx += str.Length;
+										var next_idx = line.IndexOf ('\'', idx);
+										if (next_idx > idx)
+											int.TryParse (line.Substring (idx, next_idx - idx), out pid);
+									}
+									if (pid != 0)
+										break;
+								}
+							}
+						}
+
+						using (var crash_reader = crash.GetReader ()) {
+							var text = crash_reader.ReadToEnd ();
+
+							var reader = System.Runtime.Serialization.Json.JsonReaderWriterFactory.CreateJsonReader (Encoding.UTF8.GetBytes (text), new XmlDictionaryReaderQuotas ());
+							var doc = new XmlDocument ();
+							doc.Load (reader);
+							foreach (XmlNode node in doc.SelectNodes ($"/root/processes/item[pid = '" + pid + "']")) {
+								Console.WriteLine (node?.InnerXml);
+								Console.WriteLine (node?.SelectSingleNode ("reason")?.InnerText);
+								crash_reason = node?.SelectSingleNode ("reason")?.InnerText;
+							}
+						}
+						if (crash_reason != null)
+							break;
+					} catch (Exception e) {
+						Harness.Log (2, "Failed to process crash report '{1}': {0}", e.Message, crash.Description);
+					}
+				}
+				if (!string.IsNullOrEmpty (crash_reason)) {
+					if (crash_reason == "per-process-limit") {
+						FailureMessage = "Killed due to using too much memory (per-process-limit).";
+					} else {
+						FailureMessage = $"Killed by the OS ({crash_reason})";
+					}
+				}
+			}
+
 			return success.Value ? 0 : 1;
 		}
 
@@ -670,27 +802,8 @@ namespace xharness
 		{
 			if (!string.IsNullOrEmpty (device_name)) {
 				args.Append (" --devname ");
-				args.Append (Harness.Quote (device_name));
+				args.Append (StringUtils.Quote (device_name));
 			}
-		}
-
-		[DllImport ("/usr/lib/libc.dylib")]
-		static extern void kill (int pid, int sig);
-
-		async Task KillPidAsync (Log log, int pid, TimeSpan kill_separation, TimeSpan timeout, string type)
-		{
-			log.WriteLine ("{2} timeout ({1} s) reached, will now send SIGQUIT to the app (PID: {0})", pid, timeout.TotalSeconds, type);
-			kill (pid, 3 /* SIGQUIT */); // print managed stack traces.
-			if (await ProcessHelper.PollForExitAsync (pid, kill_separation /* wait for at most 5 seconds to see if something happens */))
-				return;
-			
-			log.WriteLine ("{2} timeout ({1} s) reached, will now send SIGABRT to the app (PID: {0})", pid, timeout.TotalSeconds, type);
-			kill (pid, 6 /* SIGABRT */); // print native stack traces.
-			if (await ProcessHelper.PollForExitAsync (pid, kill_separation /* wait another 5 seconds */))
-				return;
-			
-			log.WriteLine ("{2} timeout ({1} s) reached, will now send SIGKILL to the app (PID: {0})", pid, timeout.TotalSeconds, type);
-			kill (pid, 9 /* SIGKILL */); // terminate unconditionally.
 		}
 	}
 }

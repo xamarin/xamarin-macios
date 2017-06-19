@@ -90,7 +90,7 @@ namespace Xamarin.MacDev.Tasks
 			var dest = output.GetMetadata ("FullPath");
 			var src = input.GetMetadata ("FullPath");
 
-			return !File.Exists (dest) || File.GetLastWriteTime (src) > File.GetLastWriteTime (dest);
+			return !File.Exists (dest) || File.GetLastWriteTimeUtc (src) > File.GetLastWriteTimeUtc (dest);
 		}
 
 		string GetFullPathToTool ()

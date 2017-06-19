@@ -66,7 +66,7 @@ namespace Xamarin.Linker.Steps {
 				if (!Annotations.IsMarked (od))
 					continue;
 				// we do NOT process non-generated code - we could break user code
-				if (!od.IsGeneratedCode ())
+				if (!od.IsGeneratedCode (LinkContext))
 					continue;
 
 				ProcessDispose (skip ? bd : cd, od);
@@ -142,7 +142,19 @@ namespace Xamarin.Linker.Steps {
 		{
 			if (!method.IsFamily || !method.IsVirtual || method.IsNewSlot || !method.HasParameters || !method.HasBody)
 				return false;
-			return ((method.Name == "Dispose") && method.IsGeneratedCode ());
+			return ((method.Name == "Dispose") && method.IsGeneratedCode (LinkContext));
+		}
+
+		protected override TypeDefinition MarkType (TypeReference reference)
+		{
+			try {
+				return base.MarkType (reference);
+			} catch (Exception e) {
+				// we need a way to know where (not just what) went wrong (e.g. debugging symbols being incorrect)
+				e.Data ["TypeReference"] = reference.ToString ();
+				e.Data ["AssemblyDefinition"] = reference.Module.Assembly.ToString ();
+				throw;
+			}
 		}
 
 		protected override void ProcessMethod (MethodDefinition method)
@@ -150,7 +162,14 @@ namespace Xamarin.Linker.Steps {
 			// check for generated Dispose methods inside monotouch.dll
 			processing_generated_dispose = IsGeneratedDispose (method);
 			int skip = skipped_fields;
-			base.ProcessMethod (method);
+			try {
+				base.ProcessMethod (method);
+			} catch (Exception e) {
+				// we need a way to know where (not just what) went wrong (e.g. debugging symbols being incorrect)
+				e.Data ["MethodDefinition"] = method.ToString ();
+				e.Data ["AssemblyDefinition"] = method.DeclaringType.Module.Assembly.ToString ();
+				throw;
+			}
 			if (processing_generated_dispose) {
 				// if some fields were skipped (i.e. only used inside Dispose)
 				if (skip < skipped_fields)
@@ -235,7 +254,7 @@ namespace Xamarin.Linker.Steps {
 					var td = i.Module.GetType (i.Namespace, i.Name.Substring (1) + "_Extensions");
 					if (td != null && td.HasMethods) {
 						foreach (var m in td.Methods) {
-							if (!m.HasParameters || (m.Name != name) || !m.IsGeneratedCode ())
+							if (!m.HasParameters || (m.Name != name) || !m.IsGeneratedCode (LinkContext))
 							    continue;
 							bool proxy = false;
 							match = method.Parameters.Count == m.Parameters.Count - 1;

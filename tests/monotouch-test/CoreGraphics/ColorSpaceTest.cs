@@ -11,7 +11,11 @@ using System;
 using System.IO;
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 using CoreGraphics;
 #else
 using MonoTouch.CoreGraphics;
@@ -231,19 +235,23 @@ namespace MonoTouchFixtures.CoreGraphics {
 		void CheckIndexedFile (CGImage img)
 		{
 			CGColorSpace cs = img.ColorSpace;
-			Assert.That (cs.Components, Is.EqualTo ((nint) 1), "Components");
+			Assert.That (cs.Components, Is.EqualTo ((nint)1), "Components");
 			Assert.That (cs.Model, Is.EqualTo (CGColorSpaceModel.Indexed), "GetBaseColorSpace");
 			var table = cs.GetColorTable ();
 			Assert.That (table.Length, Is.EqualTo (768), "GetColorTable");
 			cs.Dispose ();
 		}
-		
+
 		[Test]
 		public void Indexed_UIImage ()
 		{
 			// downloaded from http://www.schaik.com/pngsuite/#palette
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png");
+#if MONOMAC
+			using (var img = new NSImage (file)) {
+#else
 			using (var img = UIImage.FromFile (file)) {
+#endif
 				using (var cgimg = img.CGImage)
 					CheckIndexedFile (cgimg);
 			}

@@ -76,10 +76,13 @@ namespace MonoTouchFixtures.AudioToolbox {
 		{
 			Assert.That ((int) AudioQueueTimePitchAlgorithm.Spectral, Is.EqualTo (FourCC ("spec")), "Spectral");
 			Assert.That ((int) AudioQueueTimePitchAlgorithm.TimeDomain, Is.EqualTo (FourCC ("tido")), "TimeDomain");
+#if !MONOMAC // LowQualityZeroLatency is iOS only
 			Assert.That ((int) AudioQueueTimePitchAlgorithm.LowQualityZeroLatency, Is.EqualTo (FourCC ("lqzl")), "LowQualityZeroLatency");
+#endif
 			Assert.That ((int) AudioQueueTimePitchAlgorithm.Varispeed, Is.EqualTo (FourCC ("vspd")), "Varispeed");
 		}
 
+#if !MONOMAC // MusicSequenceFileTypeID and MusicSequenceType are iOS only
 		[Test]
 		public void MusicSequenceFileTypeIDTest ()
 		{
@@ -94,6 +97,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 			Assert.That ((int) MusicSequenceType.Seconds, Is.EqualTo (FourCC ("secs")), "Seconds");
 			Assert.That ((int) MusicSequenceType.Samples, Is.EqualTo (FourCC ("samp")), "Samples");
 		}
+#endif
 	}
 }
 

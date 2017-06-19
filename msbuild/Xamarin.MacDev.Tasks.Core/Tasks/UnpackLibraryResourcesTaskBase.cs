@@ -26,6 +26,9 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public ITaskItem[] ReferencedLibraries { get; set; }
 
+		[Required]
+		public ITaskItem[] TargetFrameworkDirectory { get; set; }
+
 		#endregion
 
 		#region Outputs
@@ -42,6 +45,7 @@ namespace Xamarin.MacDev.Tasks
 			Log.LogTaskProperty ("IntermediateOutputPath", IntermediateOutputPath);
 			Log.LogTaskProperty ("NoOverwrite", NoOverwrite);
 			Log.LogTaskProperty ("ReferencedLibraries", ReferencedLibraries);
+			Log.LogTaskProperty ("TargetFrameworkDirectory", TargetFrameworkDirectory);
 
 			// TODO: give each assembly its own intermediate output directory
 			// TODO: use list file to avoid re-extracting assemblies but allow FileWrites to work
@@ -49,7 +53,9 @@ namespace Xamarin.MacDev.Tasks
 			HashSet<string> ignore = null;
 
 			foreach (var asm in ReferencedLibraries) {
-				if (asm.GetMetadata ("ResolvedFrom") == "{TargetFrameworkDirectory}") {
+				// mscorlib.dll was not coming out with ResolvedFrom == {TargetFrameworkDirectory}
+				// and what we really care is where it comes from, not how it was resolved
+				if (IsFrameworkAssembly (asm)) {
 					Log.LogMessage (MessageImportance.Low, "  Skipping framework assembly: {0}", asm.ItemSpec);
 				} else {
 					var extracted = ExtractContentAssembly (asm.ItemSpec, IntermediateOutputPath);
@@ -83,6 +89,16 @@ namespace Xamarin.MacDev.Tasks
 			return !Log.HasLoggedErrors;
 		}
 
+		bool IsFrameworkAssembly (ITaskItem asm)
+		{
+			var asm_path = asm.GetMetadata ("FullPath");
+			foreach (var dir in TargetFrameworkDirectory) {
+				if (asm_path.StartsWith (dir.GetMetadata ("FullPath"), StringComparison.OrdinalIgnoreCase))
+					return true;
+			}
+			return false;
+		}
+
 		IEnumerable<ITaskItem> ExtractContentAssembly (string assembly, string intermediatePath)
 		{
 			Log.LogMessage (MessageImportance.Low, "  Inspecting assembly: {0}", assembly);
@@ -90,7 +106,7 @@ namespace Xamarin.MacDev.Tasks
 			if (!File.Exists (assembly))
 				yield break;
 
-			var asmWriteTime = File.GetLastWriteTime (assembly);
+			var asmWriteTime = File.GetLastWriteTimeUtc (assembly);
 
 			foreach (var embedded in GetAssemblyManifestResources (assembly)) {
 				string rpath;
@@ -108,7 +124,7 @@ namespace Xamarin.MacDev.Tasks
 				var path = Path.Combine (intermediatePath, rpath);
 				var file = new FileInfo (path);
 
-				if (file.Exists && file.LastWriteTime >= asmWriteTime) {
+				if (file.Exists && file.LastWriteTimeUtc >= asmWriteTime) {
 					Log.LogMessage ("    Up to date: {0}", rpath);
 				} else {
 					Log.LogMessage ("    Unpacking: {0}", rpath);

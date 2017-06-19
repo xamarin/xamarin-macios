@@ -131,7 +131,8 @@ namespace XamCore.UIKit {
 
 #if !XAMCORE_3_0
 	[NoWatch]
-	[Category, BaseType (typeof (NSAttributedString))]
+	[Category (allowStaticMembers: true)] // Classic isn't internal so we need this
+	[BaseType (typeof (NSAttributedString))]
 	interface NSAttributedStringAttachmentConveniences {
 #if XAMCORE_2_0
 		[Internal]
@@ -217,7 +218,7 @@ namespace XamCore.UIKit {
 	[iOS (10,0), NoTV, NoWatch]
 	delegate void UICloudSharingControllerPreparationCompletionHandler ([NullAllowed] CKShare share, [NullAllowed] CKContainer container, [NullAllowed] NSError error);
 
-	[iOS (10,0), NoTV, NoWatch] //TODO: This is marked as available on tvOS 10 but it isn't radar: 27929711
+	[iOS (10,0), NoTV, NoWatch]
 	[BaseType (typeof (UIViewController))]
 	interface UICloudSharingController {
 
@@ -279,6 +280,7 @@ namespace XamCore.UIKit {
 	[NoWatch]
 	[NoTV]
 	[iOS (8,0)]
+	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
 	partial interface NSFileProviderExtension {
 	    [Static, Export ("writePlaceholderAtURL:withMetadata:error:")]
@@ -935,11 +937,11 @@ namespace XamCore.UIKit {
 		[Export ("numberOfGlyphs")]
 		nuint NumberOfGlyphs { get; }
 
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Soft deprecated in iOS 9, use GetGlyph instead")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'GetGlyph' instead.")]
 		[Export ("glyphAtIndex:isValidIndex:")]
 		ushort GlyphAtIndex (nuint glyphIndex, ref bool isValidIndex);
 
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Soft deprecated in iOS 9, use GetGlyph instead")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'GetGlyph' instead.")]
 		[Export ("glyphAtIndex:")]
 		ushort GlyphAtIndex (nuint glyphIndex);
 
@@ -1220,7 +1222,7 @@ namespace XamCore.UIKit {
 #if !WATCH
 	[NoTV]
 	[BaseType (typeof (NSObject))]
-	[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_5_0, Message = "Deprecated in iOS 5, use the CoreMotion instead")]
+	[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_5_0, Message = "Use 'CoreMotion' instead.")]
 	interface UIAcceleration {
 		[Export ("timestamp")]
 		double Time { get; }
@@ -1237,7 +1239,7 @@ namespace XamCore.UIKit {
 
 	[NoTV]
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIAccelerometerDelegate)})]
-	[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_5_0, Message = "Deprecated in iOS 5, use the CoreMotion instead")]
+	[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_5_0, Message = "Use 'CoreMotion' instead.")]
 	interface UIAccelerometer {
 		[Static] [Export ("sharedAccelerometer")]
 		UIAccelerometer SharedAccelerometer { get; }
@@ -1750,7 +1752,7 @@ namespace XamCore.UIKit {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
-		[Availability (Deprecated=Platform.iOS_8_0, Message="Use UIAlertController instead")]
+		[Availability (Deprecated=Platform.iOS_8_0, Message="Use 'UIAlertController' instead.")]
 		[Export ("initWithTitle:delegate:cancelButtonTitle:destructiveButtonTitle:otherButtonTitles:")][Internal][PostGet ("WeakDelegate")]
 		IntPtr Constructor ([NullAllowed] string title, [NullAllowed] IUIActionSheetDelegate Delegate, [NullAllowed] string cancelTitle, [NullAllowed] string destroy, [NullAllowed] string other);
 
@@ -2000,7 +2002,7 @@ namespace XamCore.UIKit {
 		
 		[NullAllowed] // by default this property is null
 		[Export ("completionHandler", ArgumentSemantic.Copy)]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use CompletionWithItemsHandler property")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message="Use the 'CompletionWithItemsHandler' property instead.")]
 		Action<NSString,bool> CompletionHandler { get; set;  }
 
 		[Export ("excludedActivityTypes", ArgumentSemantic.Copy)]
@@ -2065,9 +2067,11 @@ namespace XamCore.UIKit {
 		UIAlertAction PreferredAction { get; set; }
 	}
 
+	interface IUIAlertViewDelegate {}
+
 	[NoTV]
 	[BaseType (typeof (UIView), KeepRefUntil="Dismissed", Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIAlertViewDelegate)})]
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use UIAlertController with a UIAlertControllerStyle.Alert type instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'UIAlertController' with a 'UIAlertControllerStyle.Alert' type instead.")]
 	interface UIAlertView : NSCoding {
 		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
@@ -2082,8 +2086,8 @@ namespace XamCore.UIKit {
 		// 9 arguments, where the 9th is nil (this is the 'mustAlsoBeNull' argument). Remember that Objective-C always has two hidden
 		// arguments (id, SEL), which means we only need 7 more. And 'mustAlsoBeNull' is that 7th argument.
 		// So on ARM64 the 8th argument ('mustBeNull') is ignored, and iOS sees the 9th argument ('mustAlsoBeNull') as the 8th argument.
-		[Availability (Deprecated=Platform.iOS_8_0, Message="Use UIAlertController instead")]
-		IntPtr Constructor ([NullAllowed] string title, [NullAllowed] string message, [NullAllowed] UIAlertViewDelegate viewDelegate, [NullAllowed] string cancelButtonTitle, IntPtr otherButtonTitles, IntPtr mustBeNull, IntPtr mustAlsoBeNull);
+		[Availability (Deprecated=Platform.iOS_8_0, Message="Use 'UIAlertController' instead.")]
+		IntPtr Constructor ([NullAllowed] string title, [NullAllowed] string message, [NullAllowed] IUIAlertViewDelegate viewDelegate, [NullAllowed] string cancelButtonTitle, IntPtr otherButtonTitles, IntPtr mustBeNull, IntPtr mustAlsoBeNull);
 
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
@@ -2502,7 +2506,7 @@ namespace XamCore.UIKit {
 		[Export ("idleTimerDisabled")]
 		bool IdleTimerDisabled { [Bind ("isIdleTimerDisabled")] get; set; }
 
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Please use the overload instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Please use the overload instead.")]
 		[Export ("openURL:")]
 		bool OpenUrl (NSUrl url);
 
@@ -2512,6 +2516,7 @@ namespace XamCore.UIKit {
 
 		[iOS (10,0), TV (10,0)]
 		[Wrap ("OpenUrl (url, options?.Dictionary, completion)")]
+		[Async]
 		void OpenUrl (NSUrl url, UIApplicationOpenUrlOptions options, [NullAllowed] Action<bool> completion);
 
 		[Export ("canOpenURL:")]
@@ -2554,7 +2559,7 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[Export ("setStatusBarHidden:animated:")]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_3_2, Message = "Use SetStatusBarHidden (bool, UIStatusBarAnimation) instead")]
+		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_3_2, Message = "Use 'SetStatusBarHidden (bool, UIStatusBarAnimation)' instead.")]
 		void SetStatusBarHidden (bool hidden, bool animated);
 
 		[NoTV]
@@ -2583,7 +2588,7 @@ namespace XamCore.UIKit {
 
 		// From @interface UIApplication (UIRemoteNotifications)
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use RegisterUserNotifications and RegisterForNotifications instead or if iOS 10+ UNUserNotificationCenter.RequestAuthorization")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'RegisterUserNotifications' and 'RegisterForNotifications' instead or if iOS 10+ 'UNUserNotificationCenter.RequestAuthorization'.")]
 		[Export ("registerForRemoteNotificationTypes:")]
 		void RegisterForRemoteNotificationTypes (UIRemoteNotificationType types);
 
@@ -2593,7 +2598,7 @@ namespace XamCore.UIKit {
 
 		// From @interface UIApplication (UIRemoteNotifications)
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use CurrentUserNotificationSettings instead or if iOS 10+ UNUserNotificationCenter.GetNotificationSettings")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'CurrentUserNotificationSettings' instead or if iOS 10+ 'UNUserNotificationCenter.GetNotificationSettings'.")]
 		[Export ("enabledRemoteNotificationTypes")]
 		UIRemoteNotificationType EnabledRemoteNotificationTypes { get; }
 
@@ -2695,7 +2700,7 @@ namespace XamCore.UIKit {
 		// from @interface UIApplication (UILocalNotifications)
 		[NoTV]
 		[Since (4,0)]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNUserNotificationCenter.AddNotificationRequest instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNUserNotificationCenter.AddNotificationRequest' instead.")]
 		[Export ("presentLocalNotificationNow:")]
 #if XAMCORE_2_0
 		void PresentLocalNotificationNow (UILocalNotification notification);
@@ -2706,28 +2711,28 @@ namespace XamCore.UIKit {
 		// from @interface UIApplication (UILocalNotifications)
 		[NoTV]
 		[Since (4,0)]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNUserNotificationCenter.AddNotificationRequest instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNUserNotificationCenter.AddNotificationRequest' instead.")]
 		[Export ("scheduleLocalNotification:")]
 		void ScheduleLocalNotification (UILocalNotification notification);
 
 		// from @interface UIApplication (UILocalNotifications)
 		[NoTV]
 		[Since (4,0)]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNUserNotificationCenter.RemovePendingNotificationRequests instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNUserNotificationCenter.RemovePendingNotificationRequests' instead.")]
 		[Export ("cancelLocalNotification:")]
 		void CancelLocalNotification (UILocalNotification notification);
 
 		// from @interface UIApplication (UILocalNotifications)
 		[NoTV]
 		[Since (4,0)]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNUserNotificationCenter.RemoveAllPendingNotificationRequests instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNUserNotificationCenter.RemoveAllPendingNotificationRequests' instead.")]
 		[Export ("cancelAllLocalNotifications")]
 		void CancelAllLocalNotifications ();
 
 		// from @interface UIApplication (UILocalNotifications)
 		[NoTV]
 		[Since (4,0)]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNUserNotificationCenter.GetPendingNotificationRequests instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNUserNotificationCenter.GetPendingNotificationRequests' instead.")]
 		[Export ("scheduledLocalNotifications", ArgumentSemantic.Copy)]
 		UILocalNotification [] ScheduledLocalNotifications { get; set; }
 
@@ -2775,7 +2780,7 @@ namespace XamCore.UIKit {
 		
 		[NoTV]
 		[Since (4,0)]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNUserNotificationCenterDelegate.DidReceiveNotificationResponse instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNUserNotificationCenterDelegate.DidReceiveNotificationResponse' instead.")]
 		[Field ("UIApplicationLaunchOptionsLocalNotificationKey")]
 		NSString LaunchOptionsLocalNotificationKey { get; }
 
@@ -2951,6 +2956,23 @@ namespace XamCore.UIKit {
 		[NullAllowed, Export ("shortcutItems", ArgumentSemantic.Copy)]
 		UIApplicationShortcutItem[] ShortcutItems { get; set; }
 
+		//
+		// 10.0
+		//
+		// from @interface UIApplication (UIAlternateApplicationIcons)
+
+		[iOS (10,3)][TV (10,2)]
+		[Export ("supportsAlternateIcons")]
+		bool SupportsAlternateIcons { get; }
+
+		[iOS (10,3)][TV (10,2)]
+		[Async]
+		[Export ("setAlternateIconName:completionHandler:")]
+		void SetAlternateIconName ([NullAllowed] string alternateIconName, [NullAllowed] Action<NSError> completionHandler);
+
+		[iOS (10,3)][TV (10,2)]
+		[Export ("alternateIconName"), NullAllowed]
+		string AlternateIconName { get; }
 	}
 
 	[NoTV]
@@ -3215,7 +3237,7 @@ namespace XamCore.UIKit {
 		void OnResignActivation (UIApplication application);
 
 		[NoTV]
-		[Availability (Obsoleted = Platform.iOS_9_0, Message="Override OpenUrl(UIApplication,NSUrl,NSDictionary). The later will be called if both are implemented.")]
+		[Availability (Obsoleted = Platform.iOS_9_0, Message="Override 'OpenUrl (UIApplication, NSUrl, NSDictionary)'. The later will be called if both are implemented.")]
 		[Export ("application:handleOpenURL:")]
 		bool HandleOpenURL (UIApplication application, NSUrl url);
 		
@@ -3250,13 +3272,13 @@ namespace XamCore.UIKit {
 		[Export ("application:didFailToRegisterForRemoteNotificationsWithError:")]
 		void FailedToRegisterForRemoteNotifications (UIApplication application, NSError error);
 
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNUserNotificationCenterDelegate.WillPresentNotification/DidReceiveNotificationResponse for user visible notifications and ReceivedRemoteNotification for silent remote notifications.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNUserNotificationCenterDelegate.WillPresentNotification/DidReceiveNotificationResponse' for user visible notifications and 'ReceivedRemoteNotification' for silent remote notifications.")]
 		[Export ("application:didReceiveRemoteNotification:")]
 		void ReceivedRemoteNotification (UIApplication application, NSDictionary userInfo);
 
 		[NoTV]
 		[Since (4,0)]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNUserNotificationCenterDelegate.WillPresentNotification/DidReceiveNotificationResponse instead.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNUserNotificationCenterDelegate.WillPresentNotification/DidReceiveNotificationResponse' instead.")]
 		[Export ("application:didReceiveLocalNotification:")]
 		void ReceivedLocalNotification (UIApplication application, UILocalNotification notification);
 
@@ -3277,7 +3299,7 @@ namespace XamCore.UIKit {
 		void ProtectedDataDidBecomeAvailable (UIApplication application);
 
 		[NoTV]
-		[Availability (Obsoleted = Platform.iOS_9_0, Message="Override OpenUrl(UIApplication,NSUrl,NSDictionary). The later will be called if both are implemented.")]
+		[Availability (Obsoleted = Platform.iOS_9_0, Message="Override 'OpenUrl (UIApplication, NSUrl, NSDictionary)'. The later will be called if both are implemented.")]
 		[Export ("application:openURL:sourceApplication:annotation:")]
 		bool OpenUrl (UIApplication application, NSUrl url, string sourceApplication, NSObject annotation);
 
@@ -3370,25 +3392,25 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[iOS (8,0)]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNUserNotificationCenterDelegate.DidReceiveNotificationResponse instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNUserNotificationCenterDelegate.DidReceiveNotificationResponse' instead.")]
 		[Export ("application:handleActionWithIdentifier:forLocalNotification:completionHandler:")]
 		void HandleAction (UIApplication application, string actionIdentifier, UILocalNotification localNotification, Action completionHandler);
 
 		[NoTV]
 		[iOS (9,0)]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNUserNotificationCenterDelegate.DidReceiveNotificationResponse instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNUserNotificationCenterDelegate.DidReceiveNotificationResponse' instead.")]
 		[Export ("application:handleActionWithIdentifier:forLocalNotification:withResponseInfo:completionHandler:")]
 		void HandleAction (UIApplication application, string actionIdentifier, UILocalNotification localNotification, NSDictionary responseInfo, Action completionHandler);
 		
 		[NoTV]
 		[iOS (8,0)]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNUserNotificationCenterDelegate.DidReceiveNotificationResponse instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNUserNotificationCenterDelegate.DidReceiveNotificationResponse' instead.")]
 		[Export ("application:handleActionWithIdentifier:forRemoteNotification:completionHandler:")]
 		void HandleAction (UIApplication application, string actionIdentifier, NSDictionary remoteNotificationInfo, Action completionHandler);
 
 		[NoTV]
 		[iOS (9,0)]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNUserNotificationCenterDelegate.DidReceiveNotificationResponse instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNUserNotificationCenterDelegate.DidReceiveNotificationResponse' instead.")]
 		[Export ("application:handleActionWithIdentifier:forRemoteNotification:withResponseInfo:completionHandler:")]
 		void HandleAction (UIApplication application, string actionIdentifier, NSDictionary remoteNotificationInfo, NSDictionary responseInfo, Action completionHandler);
 
@@ -3914,6 +3936,16 @@ namespace XamCore.UIKit {
 		[iOS (9,0)]
 		[Export ("collectionView:moveItemAtIndexPath:toIndexPath:")]
 		void MoveItem (UICollectionView collectionView, NSIndexPath sourceIndexPath, NSIndexPath destinationIndexPath);
+
+		[iOS (10,3), TV (10,2)]
+		[return: NullAllowed]
+		[Export ("indexTitlesForCollectionView:")]
+		string [] GetIndexTitles (UICollectionView collectionView);
+
+		[iOS (10,3), TV (10,2)]
+		[return: NullAllowed]
+		[Export ("collectionView:indexPathForIndexTitle:atIndex:")]
+		NSIndexPath GetIndexPath (UICollectionView collectionView, string title, nint atIndex);
 	}
 
 	[Since (6,0)]
@@ -6034,13 +6066,13 @@ namespace XamCore.UIKit {
 		[Export ("end")]
 		UITextPosition End { get;  }
 #else
-		[Export ("start"), Obsolete ("Use Start instead")]
+		[Export ("start"), Obsolete ("Use 'Start' instead.")]
 		UITextPosition start { get;  }
 
 		[Wrap ("start")]
 		UITextPosition Start { get; }
 
-		[Export ("end"), Obsolete ("Use End instead")]
+		[Export ("end"), Obsolete ("Use 'End' instead.")]
 		UITextPosition end { get;  }
 
 		[Wrap ("end")]
@@ -6177,17 +6209,17 @@ namespace XamCore.UIKit {
 		[Export ("characterOffsetOfPosition:withinRange:")]
 		nint GetCharacterOffsetOfPosition (UITextPosition position, UITextRange range);
 
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use NSAttributedString.BackgroundColorAttributeName starting with iOS 8.0")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'NSAttributedString.BackgroundColorAttributeName'.")]
 		[Field ("UITextInputTextBackgroundColorKey")]
 		[NoTV]
 		NSString TextBackgroundColorKey { get; }
 
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use NSAttributedString.ForegroundColorAttributeName starting with iOS 8.0")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'NSAttributedString.ForegroundColorAttributeName'.")]
 		[Field ("UITextInputTextColorKey")]
 		[NoTV]
 		NSString TextColorKey { get; }
 
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use NSAttributedString.FontAttributeName starting with iOS 8.0")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'NSAttributedString.FontAttributeName'.")]
 		[Field ("UITextInputTextFontKey")]
 		[NoTV]
 		NSString TextFontKey { get; }
@@ -6372,7 +6404,6 @@ namespace XamCore.UIKit {
 	    string UserInput { get; }
 	}
 
-	[NoTV]
 	[BaseType (typeof (NSObject))]
 	interface UILocalizedIndexedCollation {
 		[Export ("sectionTitles")]
@@ -6399,7 +6430,7 @@ namespace XamCore.UIKit {
 	[NoTV]
 	[Since (4,0)]
 	[BaseType (typeof (NSObject))]
-	[Availability (Deprecated = Platform.iOS_10_0, Message = "Soft deprecated in iOS 10, use UserNotifications.UNNotificationRequest instead")]
+	[Availability (Deprecated = Platform.iOS_10_0, Message = "Use 'UserNotifications.UNNotificationRequest' instead.")]
 	interface UILocalNotification : NSCoding, NSCopying {
 		[Export ("fireDate", ArgumentSemantic.Copy)]
 		[NullAllowed]
@@ -6442,7 +6473,7 @@ namespace XamCore.UIKit {
 		[NullAllowed]
 		NSDictionary UserInfo { get; set;  }
 
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNNotificationSound.DefaultSound instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNNotificationSound.DefaultSound' instead.")]
 		[Field ("UILocalNotificationDefaultSoundName")]
 		NSString DefaultSoundName { get; }
 
@@ -7451,7 +7482,7 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[Export ("minimumFontSize")]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_6_0, Message = "Use MinimumScaleFactor instead")]
+		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_6_0, Message = "Use 'MinimumScaleFactor' instead.")]
 		nfloat MinimumFontSize { get; set; }
 
 		[Export ("baselineAdjustment")]
@@ -7474,7 +7505,7 @@ namespace XamCore.UIKit {
 		[NoTV]
 		[Since(6,0)]
 		[Export ("adjustsLetterSpacingToFitWidth")]
-		[Availability (Introduced = Platform.iOS_6_0, Deprecated = Platform.iOS_7_0, Message = "Use NSKernAttributeName instead")]
+		[Availability (Introduced = Platform.iOS_6_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSKernAttributeName' instead.")]
 		bool AdjustsLetterSpacingToFitWidth { get; set;  }
 
 		[Since(6,0)]
@@ -8606,7 +8637,7 @@ namespace XamCore.UIKit {
 		
 		[Export ("persistent")]
 		bool Persistent { [Bind ("isPersistent")] get;
-			[Deprecated (PlatformName.iOS, 10, 0, message:"Soft deprecated in iOS 10")] set; }
+			[Deprecated (PlatformName.iOS, 10, 0)] set; }
 
 		[Export ("changeCount")]
 		nint ChangeCount { get; } 
@@ -8750,7 +8781,7 @@ namespace XamCore.UIKit {
 		[Field ("UIPasteboardNameGeneral")]
 		NSString General { get; }
 
-		[Deprecated (PlatformName.iOS, 10, 0, message: "The Find pasteboard is no longer available.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "The 'Find' pasteboard is no longer available.")]
 		[Field ("UIPasteboardNameFind")]
 		NSString Find { get; }
 	}
@@ -8781,7 +8812,12 @@ namespace XamCore.UIKit {
 
 		[NullAllowed] // by default this property is null
 		[Export ("dataSource", ArgumentSemantic.Assign)]
+#if XAMCORE_4_0
+		IUIPickerViewDataSource DataSource { get; set; }
+#else
+		// should have been WeakDataSource
 		NSObject DataSource { get; set; }
+#endif
 
 		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -9344,7 +9380,7 @@ namespace XamCore.UIKit {
 		CGRect Bounds { get; }
 
 		[NoTV]
-		[Deprecated (PlatformName.iOS, 9, 0, message : "Use Bounds property")]
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Bounds' property.")]
 		[Export ("applicationFrame")]
 		CGRect ApplicationFrame { get; }
 
@@ -9386,6 +9422,10 @@ namespace XamCore.UIKit {
 		[Since (4,0)]
 		[Export ("displayLinkWithTarget:selector:")]
 		CoreAnimation.CADisplayLink CreateDisplayLink (NSObject target, Selector sel);
+
+		[iOS (10,3), TV (10,2)]
+		[Export ("maximumFramesPerSecond")]
+		nint MaximumFramesPerSecond { get; }
 
 		[NoTV]
 		[Since (5,0)]
@@ -9500,6 +9540,10 @@ namespace XamCore.UIKit {
 
 		[Export ("decelerationRate")]
 		nfloat DecelerationRate { get; set; }
+
+		[iOS (10,3), TV (10,2), NoWatch]
+		[Export ("indexDisplayMode")]
+		UIScrollViewIndexDisplayMode IndexDisplayMode { get; set; }
 
 		[NoTV]
 		[Export ("pagingEnabled")]
@@ -9974,7 +10018,7 @@ namespace XamCore.UIKit {
 	}
 		
 	[BaseType (typeof (NSObject))]
-	[Availability (Deprecated = Platform.iOS_8_0, Message="Use UISearchController starting with iOS 8.0")]
+	[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'UISearchController'.")]
 	[NoTV]
 	interface UISearchDisplayController {
 		[Export ("initWithSearchBar:contentsController:")]
@@ -10038,51 +10082,51 @@ namespace XamCore.UIKit {
 	interface UISearchDisplayDelegate {
 		
 		[Export ("searchDisplayControllerWillBeginSearch:")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Deprecated on iOS 8")]		
+		[Availability (Deprecated = Platform.iOS_8_0)]
 		void WillBeginSearch (UISearchDisplayController controller);
 		
 		[Export ("searchDisplayControllerDidBeginSearch:")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Deprecated on iOS 8")]		
+		[Availability (Deprecated = Platform.iOS_8_0)]
 		void DidBeginSearch (UISearchDisplayController controller);
 		
 		[Export ("searchDisplayControllerWillEndSearch:")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Deprecated on iOS 8")]		
+		[Availability (Deprecated = Platform.iOS_8_0)]
 		void WillEndSearch (UISearchDisplayController controller);
 		
 		[Export ("searchDisplayControllerDidEndSearch:")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Deprecated on iOS 8")]		
+		[Availability (Deprecated = Platform.iOS_8_0)]
 		void DidEndSearch (UISearchDisplayController controller);
 		
 		[Export ("searchDisplayController:didLoadSearchResultsTableView:")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Deprecated on iOS 8")]		
+		[Availability (Deprecated = Platform.iOS_8_0)]
 		void DidLoadSearchResults (UISearchDisplayController controller, UITableView tableView);
 
 		[Export ("searchDisplayController:willUnloadSearchResultsTableView:")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Deprecated on iOS 8")]		
+		[Availability (Deprecated = Platform.iOS_8_0)]
 		void WillUnloadSearchResults (UISearchDisplayController controller, UITableView tableView);
 
 		[Export ("searchDisplayController:willShowSearchResultsTableView:")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Deprecated on iOS 8")]		
+		[Availability (Deprecated = Platform.iOS_8_0)]
 		void WillShowSearchResults (UISearchDisplayController controller, UITableView tableView);
 
 		[Export ("searchDisplayController:didShowSearchResultsTableView:")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Deprecated on iOS 8")]		
+		[Availability (Deprecated = Platform.iOS_8_0)]
 		void DidShowSearchResults (UISearchDisplayController controller, UITableView tableView);
 
 		[Export ("searchDisplayController:willHideSearchResultsTableView:")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Deprecated on iOS 8")]		
+		[Availability (Deprecated = Platform.iOS_8_0)]
 		void WillHideSearchResults (UISearchDisplayController controller, UITableView tableView);
 
 		[Export ("searchDisplayController:didHideSearchResultsTableView:")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Deprecated on iOS 8")]		
+		[Availability (Deprecated = Platform.iOS_8_0)]
 		void DidHideSearchResults (UISearchDisplayController controller, UITableView tableView);
 
 		[Export ("searchDisplayController:shouldReloadTableForSearchString:")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Deprecated on iOS 8")]		
+		[Availability (Deprecated = Platform.iOS_8_0)]
 		bool ShouldReloadForSearchString (UISearchDisplayController controller, string forSearchString);
 		
 		[Export ("searchDisplayController:shouldReloadTableForSearchScope:")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Deprecated on iOS 8")]		
+		[Availability (Deprecated = Platform.iOS_8_0)]
 		bool ShouldReloadForSearchScope (UISearchDisplayController controller, nint forSearchOption);
 	}
 	
@@ -10098,16 +10142,15 @@ namespace XamCore.UIKit {
 	
 	[BaseType (typeof(UIControl))]
 	interface UISegmentedControl {
-		// Not exposed as we need to wrap the NSArray
-		[Export ("initWithItems:")][Internal]
-		IntPtr InitWithItems (IntPtr v);
+		[Export ("initWithItems:")]
+		IntPtr Constructor (NSArray items);
 
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
 		[Export ("segmentedControlStyle")]
 		[NoTV][NoWatch]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "The SegmentedControlStyle property no longer has any effect")]
+		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "The 'SegmentedControlStyle' property no longer has any effect.")]
 		UISegmentedControlStyle ControlStyle { get; set; }
 
 		[Export ("momentary")]
@@ -10744,7 +10787,7 @@ namespace XamCore.UIKit {
 		string BadgeValue { get; set; } 
 
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_7_0, Message = "Use the (string,UIImage,UIImage) constructor or the Image and SelectedImage properties along with RenderingMode = AlwaysOriginal")]
+		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_7_0, Message = "Use the '(string, UIImage, UIImage)' constructor or the 'Image' and 'SelectedImage' properties along with 'RenderingMode = UIImageRenderingMode.AlwaysOriginal'.")]
 		[Export ("setFinishedSelectedImage:withFinishedUnselectedImage:")]
 		[PostGet ("FinishedSelectedImage")]
 		[PostGet ("FinishedUnselectedImage")]
@@ -11134,10 +11177,11 @@ namespace XamCore.UIKit {
 		[Export ("tableView:canMoveRowAtIndexPath:")]
 		bool CanMoveRow (UITableView tableView, NSIndexPath indexPath);
 
-		[NoTV]
+		[TV (10,2)]
 		[Export ("sectionIndexTitlesForTableView:")]
 		string [] SectionIndexTitles (UITableView tableView);
 
+		[TV (10,2)] // <- Header removed __TVOS_PROHIBITED;
 		[Export ("tableView:sectionForSectionIndexTitle:atIndex:")]
 		nint SectionFor (UITableView tableView, string title, nint atIndex);
 
@@ -11452,11 +11496,11 @@ namespace XamCore.UIKit {
 		[Export ("tableView:canMoveRowAtIndexPath:")]
 		bool CanMoveRow (UITableView tableView, NSIndexPath indexPath);
 
-		[NoTV]
+		[TV (10,2)]
 		[Export ("sectionIndexTitlesForTableView:")]
 		string [] SectionIndexTitles (UITableView tableView);
 
-		[NoTV]
+		[TV (10,2)]
 		[Export ("tableView:sectionForSectionIndexTitle:atIndex:")]
 		nint SectionFor (UITableView tableView, string title, nint atIndex);
 
@@ -11669,7 +11713,8 @@ namespace XamCore.UIKit {
 		UITableViewRowAction Create (UITableViewRowActionStyle style, [NullAllowed] string title, Action<UITableViewRowAction, NSIndexPath> handler);
 	}
 	
-	[BaseType (typeof (UIControl), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UITextFieldDelegate)})]
+	[BaseType (typeof (UIControl), Delegates=new string [] { "WeakDelegate" })]
+	// , Events=new Type [] {typeof(UITextFieldDelegate)})] custom logic needed, see https://bugzilla.xamarin.com/show_bug.cgi?id=53174
 	interface UITextField : UITextInput, UIContentSizeCategoryAdjusting {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
@@ -11995,12 +12040,12 @@ namespace XamCore.UIKit {
 		void SelectionChanged (UITextView textView);
 
 		[Since (7,0)]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use ShouldInteractWithUrl overload that takes UITextItemInteraction instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use the 'ShouldInteractWithUrl' overload that takes 'UITextItemInteraction' instead.")]
 		[Export ("textView:shouldInteractWithURL:inRange:"), DelegateName ("Func<UITextView,NSUrl,NSRange,bool>"), DefaultValue ("true")]
 		bool ShouldInteractWithUrl (UITextView textView, NSUrl URL, NSRange characterRange);
 
 		[Since (7,0)]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use ShouldInteractWithTextAttachment overload that takes UITextItemInteraction instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use the 'ShouldInteractWithTextAttachment' overload that takes 'UITextItemInteraction' instead.")]
 		[Export ("textView:shouldInteractWithTextAttachment:inRange:"), DelegateName ("Func<UITextView,NSTextAttachment,NSRange,bool>"), DefaultValue ("true")]
 		bool ShouldInteractWithTextAttachment (UITextView textView, NSTextAttachment textAttachment, NSRange characterRange);
 
@@ -12469,7 +12514,7 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[Export ("contentStretch")]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_6_0, Message = "Use CreateResizableImage instead")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_6_0, Message = "Use 'CreateResizableImage' instead.")]
 		CGRect ContentStretch { get; set; }
 
 		[Static] [Export ("beginAnimations:context:")]
@@ -12618,7 +12663,7 @@ namespace XamCore.UIKit {
 		[NoTV]
 		[Since(6,0)]
 		[Export ("viewForBaselineLayout")]
-		[Availability (Deprecated = Platform.iOS_9_0, Message="Starting with iOS 9, Override ViewForFirstBaselineLayout or ViewForLastBaselineLayout")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message="Override 'ViewForFirstBaselineLayout' or 'ViewForLastBaselineLayout'.")]
 		UIView ViewForBaselineLayout { get; }
 
 		[Since (9,0)]
@@ -12941,7 +12986,7 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[Export ("viewDidUnload")]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_6_0, Message = "Deprecated in iOS 6.0")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_6_0)]
 		void ViewDidUnload ();
 
 		[Export ("isViewLoaded")]
@@ -12974,12 +13019,12 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[Export ("presentModalViewController:animated:")]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_6_0, Message = "Deprecated in iOS 6.0, use PresentViewController (UIViewController, bool, NSAction) instead and set the ModalViewController property to true.")]
+		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_6_0, Message = "Use 'PresentViewController (UIViewController, bool, NSAction)' instead and set the 'ModalViewController' property to true.")]
 		void PresentModalViewController (UIViewController modalViewController, bool animated);
 
 		[NoTV]
 		[Export ("dismissModalViewControllerAnimated:")]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_6_0, Message = "Deprecated in iOS 6.0, use DismissViewController (bool, NSAction) instead.")]
+		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_6_0, Message = "Use 'DismissViewController (bool, NSAction)' instead.")]
 #if XAMCORE_2_0
 		void DismissModalViewController (bool animated);
 #else
@@ -12988,7 +13033,7 @@ namespace XamCore.UIKit {
 		
 		[NoTV]
 		[Export ("modalViewController")]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_6_0, Message = "Use PresentedViewController instead.")]
+		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_6_0, Message = "Use 'PresentedViewController' instead.")]
 		UIViewController ModalViewController { get; }
 
 		[Export ("modalTransitionStyle", ArgumentSemantic.Assign)]
@@ -12996,7 +13041,7 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[Export ("wantsFullScreenLayout", ArgumentSemantic.Assign)]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0, Message = "Use EdgesForExtendedLayout, ExtendedLayoutIncludesOpaqueBars and AutomaticallyAdjustsScrollViewInsets instead.")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0, Message = "Use 'EdgesForExtendedLayout', 'ExtendedLayoutIncludesOpaqueBars' and 'AutomaticallyAdjustsScrollViewInsets' instead.")]
 		bool WantsFullScreenLayout { get; set; }
 
 		[Export ("parentViewController")][NullAllowed]
@@ -13009,37 +13054,37 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[Export ("shouldAutorotateToInterfaceOrientation:")]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_6_0, Message = "Use both GetSupportedInterfaceOrientations and PreferredInterfaceOrientationForPresentation instead.")]
+		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_6_0, Message = "Use both 'GetSupportedInterfaceOrientations' and 'PreferredInterfaceOrientationForPresentation' instead.")]
 		bool ShouldAutorotateToInterfaceOrientation (UIInterfaceOrientation toInterfaceOrientation);
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Starting with iOS 8, you should use Adaptive View Controllers instead")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message="Use Adaptive View Controllers instead.")]
 		[Export ("rotatingHeaderView")]
 		UIView RotatingHeaderView { get; }
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Starting with iOS 8, you should use Adaptive View Controllers instead")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message="Use Adaptive View Controllers instead.")]
 		[Export ("rotatingFooterView")]
 		UIView RotatingFooterView { get; }
 
 		[NoTV]
 		[Export ("interfaceOrientation")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Starting with iOS 8, you should use Adaptive View Controllers instead")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message="Use Adaptive View Controllers instead.")]
 		UIInterfaceOrientation InterfaceOrientation { get; }
 
 		[NoTV]
 		[Export ("willRotateToInterfaceOrientation:duration:")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Starting with iOS 8, you should use Adaptive View Controllers instead")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message="Use Adaptive View Controllers instead.")]
 		void WillRotate (UIInterfaceOrientation toInterfaceOrientation, double duration);
 				 
 		[NoTV]
 		[Export ("didRotateFromInterfaceOrientation:")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Starting with iOS 8, you should use Adaptive View Controllers instead")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message="Use Adaptive View Controllers instead.")]
 		void DidRotate (UIInterfaceOrientation fromInterfaceOrientation);
 		
 		[NoTV]
 		[Export ("willAnimateRotationToInterfaceOrientation:duration:")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Starting with iOS 8, you should use Adaptive View Controllers instead")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message="Use Adaptive View Controllers instead.")]
 		void WillAnimateRotation (UIInterfaceOrientation toInterfaceOrientation, double duration);
 
 		[NoTV]
@@ -13069,7 +13114,7 @@ namespace XamCore.UIKit {
 
 		// These come from @interface UIViewController (UISearchDisplayControllerSupport)
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="With iOS 8, instead of using UISearchDisplayController, you are encouraged to create a UISearchController instead.")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'UISearchController' instead.")]
 		[Export ("searchDisplayController", ArgumentSemantic.Retain)]
 		UISearchDisplayController SearchDisplayController { get; }
 		
@@ -13105,11 +13150,13 @@ namespace XamCore.UIKit {
 		UIModalPresentationStyle ModalPresentationStyle { get; set; }
 
 		// 3.2 extensions from MoviePlayer
+		[NoMac]
 		[NoTV]
 		[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_9_0)]
 		[Export ("presentMoviePlayerViewControllerAnimated:")]
 		void PresentMoviePlayerViewController (MPMoviePlayerViewController moviePlayerViewController);
 
+		[NoMac]
 		[NoTV]
 		[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_9_0)]
 		[Export ("dismissMoviePlayerViewControllerAnimated")]
@@ -13118,7 +13165,7 @@ namespace XamCore.UIKit {
 
 		// This is defined in a category in UIPopoverSupport.h: UIViewController (UIPopoverController)
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_7_0, Message = "Use PreferredContentSize instead.")]
+		[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_7_0, Message = "Use 'PreferredContentSize' instead.")]
 		[Export ("contentSizeForViewInPopover")]
 		CGSize ContentSizeForViewInPopover { get; set; }
 
@@ -13279,7 +13326,7 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[Since (6,0)]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Starting with iOS 8, you should use Adaptive View Controllers instead")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message="Use Adaptive View Controllers instead.")]
 		[Export ("shouldAutomaticallyForwardRotationMethods")]
 		bool ShouldAutomaticallyForwardRotationMethods { get; }
 
@@ -13866,7 +13913,7 @@ namespace XamCore.UIKit {
 		bool AnimateAlongsideTransitionInView (UIView view, Action<IUIViewControllerTransitionCoordinatorContext> animation, [NullAllowed] Action<IUIViewControllerTransitionCoordinatorContext> completion);
 	
 		[Abstract]
-		[Deprecated (PlatformName.iOS, 10, 0, message:"use NotifyWhenInteractionChanges instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'NotifyWhenInteractionChanges' instead.")]
 		[Export ("notifyWhenInteractionEndsUsingBlock:")]
 		void NotifyWhenInteractionEndsUsingBlock (Action<IUIViewControllerTransitionCoordinatorContext> handler);
 
@@ -14207,23 +14254,23 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[Export ("splitViewController:popoverController:willPresentViewController:"), EventArgs ("UISplitViewPresent")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use UISearchController starting with iOS 8.0")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'UISearchController' instead.")]
 		void WillPresentViewController (UISplitViewController svc, UIPopoverController pc, UIViewController aViewController);
 
 		[NoTV]
 		[Export ("splitViewController:willHideViewController:withBarButtonItem:forPopoverController:"), EventArgs ("UISplitViewHide")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use UISearchController starting with iOS 8.0")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'UISearchController' instead.")]
 		void WillHideViewController (UISplitViewController svc, UIViewController aViewController, UIBarButtonItem barButtonItem, UIPopoverController pc);
 
 		[NoTV]
 		[Export ("splitViewController:willShowViewController:invalidatingBarButtonItem:"), EventArgs ("UISplitViewShow")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use UISearchController starting with iOS 8.0")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'UISearchController' instead.")]
 		void WillShowViewController (UISplitViewController svc, UIViewController aViewController, UIBarButtonItem button);
 
 		[NoTV]
 		[Since (5,0)]
 		[Export ("splitViewController:shouldHideViewController:inOrientation:"), DelegateName ("UISplitViewControllerHidePredicate"), DefaultValue (true)]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use UISearchController starting with iOS 8.0")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'UISearchController' instead.")]
 		bool ShouldHideViewController (UISplitViewController svc, UIViewController viewController, UIInterfaceOrientation inOrientation);
 	
 		[iOS (8,0)]
@@ -14691,6 +14738,7 @@ namespace XamCore.UIKit {
 		UIPrinter FromUrl (NSUrl url);
 	
 		[Export ("contactPrinter:")]
+		[Async]
 		void ContactPrinter (UIPrinterContactPrinterHandler completionHandler);
 	}
 
@@ -14712,12 +14760,15 @@ namespace XamCore.UIKit {
 		[Static, Export ("printerPickerControllerWithInitiallySelectedPrinter:")]
 		UIPrinterPickerController FromPrinter ([NullAllowed] UIPrinter printer);
 	
+		[Async (ResultTypeName = "UIPrinterPickerCompletionResult")]
 		[Export ("presentAnimated:completionHandler:")]
 		bool Present (bool animated, UIPrinterPickerCompletionHandler completion);
 	
+		[Async (ResultTypeName = "UIPrinterPickerCompletionResult")]
 		[Export ("presentFromRect:inView:animated:completionHandler:")]
 		bool PresentFromRect (CGRect rect, UIView view, bool animated, UIPrinterPickerCompletionHandler completion);
 	
+		[Async (ResultTypeName = "UIPrinterPickerCompletionResult")]
 		[Export ("presentFromBarButtonItem:animated:completionHandler:")]
 		bool PresentFromBarButtonItem (UIBarButtonItem item, bool animated, UIPrinterPickerCompletionHandler completion);
 	
@@ -14888,7 +14939,7 @@ namespace XamCore.UIKit {
 		[Export ("printPaper")]
 		UIPrintPaper PrintPaper { get; }
 
-		[Deprecated (PlatformName.iOS, 10, 0, message:"Page range is always shown")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Page range is now always shown.")]
 		[Export ("showsPageRange")]
 		bool ShowsPageRange { get; set; }
 
@@ -14949,6 +15000,7 @@ namespace XamCore.UIKit {
 		bool ShowsPaperSelectionForLoadedPapers { get; set; }
 
 		[iOS (8,0)]
+		[Async (ResultTypeName = "UIPrintInteractionCompletionResult")]
 		[Export ("printToPrinter:completionHandler:")]
 		bool PrintToPrinter (UIPrinter printer, UIPrintInteractionCompletionHandler completion);
 	}
@@ -15067,7 +15119,7 @@ namespace XamCore.UIKit {
 	[BaseType (typeof (NSObject))]
 	interface UIPrintFormatter : NSCopying {
 
-		[Deprecated (PlatformName.iOS, 10, 0, message:"Use PerPageContentInsets instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message:"Use 'PerPageContentInsets' instead.")]
 		[Export ("contentInsets")]
 		UIEdgeInsets ContentInsets { get; set; }
 
@@ -15176,67 +15228,67 @@ namespace XamCore.UIKit {
 	interface UIStringDrawing {
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use NSString.DrawString(CGPoint, UIStringAttributes) instead.")]
+		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGPoint, UIStringAttributes)' instead.")]
 		[Export ("drawAtPoint:withFont:")]
 		CGSize DrawString (CGPoint point, UIFont font);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
+		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
 		[Export ("drawAtPoint:forWidth:withFont:lineBreakMode:")]
 		CGSize DrawString (CGPoint point, nfloat width, UIFont font, UILineBreakMode breakMode);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
+		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
 		[Export ("drawAtPoint:forWidth:withFont:fontSize:lineBreakMode:baselineAdjustment:")]
 		CGSize DrawString (CGPoint point, nfloat width, UIFont font, nfloat fontSize, UILineBreakMode breakMode, UIBaselineAdjustment adjustment);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
+		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
 		[Export ("drawAtPoint:forWidth:withFont:minFontSize:actualFontSize:lineBreakMode:baselineAdjustment:")]
 		CGSize DrawString (CGPoint point, nfloat width, UIFont font, nfloat minFontSize, ref nfloat actualFontSize, UILineBreakMode breakMode, UIBaselineAdjustment adjustment);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
+		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
 		[Export ("drawInRect:withFont:")]
 		CGSize DrawString (CGRect rect, UIFont font);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
+		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
 		[Export ("drawInRect:withFont:lineBreakMode:")]
 		CGSize DrawString (CGRect rect, UIFont font, UILineBreakMode mode);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use NSString.DrawString(CGRect, UIStringAttributes) instead.")]
+		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
 		[Export ("drawInRect:withFont:lineBreakMode:alignment:")]
 		CGSize DrawString (CGRect rect, UIFont font, UILineBreakMode mode, UITextAlignment alignment);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use NSString.GetSizeUsingAttributes(UIStringAttributes) instead.")]
+		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.GetSizeUsingAttributes (UIStringAttributes)' instead.")]
 		[Export ("sizeWithFont:")]
 		CGSize StringSize (UIFont font);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.")]
+		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext)' instead.")]
 		[Export ("sizeWithFont:forWidth:lineBreakMode:")]
 		CGSize StringSize (UIFont font, nfloat forWidth, UILineBreakMode breakMode);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.")]
+		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext)' instead.")]
 		[Export ("sizeWithFont:constrainedToSize:")]
 		CGSize StringSize (UIFont font, CGSize constrainedToSize);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext) instead.")]
+		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext)' instead.")]
 		[Export ("sizeWithFont:constrainedToSize:lineBreakMode:")]
 		CGSize StringSize (UIFont font, CGSize constrainedToSize, UILineBreakMode lineBreakMode);
 
@@ -15481,7 +15533,7 @@ namespace XamCore.UIKit {
 
 	interface IUIAccessibilityIdentification {}
 
-	[Deprecated (PlatformName.iOS, 10, 0, message: "Soft deprecated in iOS 10, use UserNotifications.UNNotificationSettings")]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UserNotifications.UNNotificationSettings' instead.")]
 	[NoWatch]
 	[NoTV]
 	[iOS (8,0)]
@@ -15501,7 +15553,7 @@ namespace XamCore.UIKit {
 	[NoWatch]
 	[NoTV]
 	[iOS (8,0)]
-	[Deprecated (PlatformName.iOS, 10, 0, message: "Soft deprecated in iOS 10, use UserNotifications.UNNotificationCategory")]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UserNotifications.UNNotificationCategory' instead.")]
 	[BaseType (typeof (NSObject))]
 	partial interface UIUserNotificationCategory : NSCopying, NSMutableCopying, NSSecureCoding {
 
@@ -15512,7 +15564,7 @@ namespace XamCore.UIKit {
 		UIUserNotificationAction [] GetActionsForContext (UIUserNotificationActionContext context);
 	}
 
-	[Deprecated (PlatformName.iOS, 10, 0, message: "Soft deprecated in iOS 10, use UserNotifications.UNNotificationCategory")]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UserNotifications.UNNotificationCategory' instead.")]
 	[NoWatch]
 	[NoTV]
 	[iOS (8,0)]
@@ -15527,7 +15579,7 @@ namespace XamCore.UIKit {
 		void SetActions (UIUserNotificationAction [] actions, UIUserNotificationActionContext context);
 	}
 
-	[Deprecated (PlatformName.iOS, 10, 0, message: "Soft deprecated in iOS 10, use UserNotifications.UNNotificationAction")]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UserNotifications.UNNotificationAction' instead.")]
 	[NoWatch]
 	[NoTV]
 	[iOS (8,0)]
@@ -15558,20 +15610,20 @@ namespace XamCore.UIKit {
 		UIUserNotificationActionBehavior Behavior { get; [NotImplemented] set;}
 
 		[iOS (9,0)]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNTextInputNotificationAction.TextInputButtonTitle instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNTextInputNotificationAction.TextInputButtonTitle' instead.")]
 		[Field ("UIUserNotificationTextInputActionButtonTitleKey")]
 		NSString TextInputActionButtonTitleKey { get; }
 
 		// note: defined twice, where watchOS is defined it says it's not in iOS, the other one (for iOS 9) says it's not in tvOS
 		[iOS (9,0)]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNTextInputNotificationResponse.UserText instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNTextInputNotificationResponse.UserText' instead.")]
 		[Field ("UIUserNotificationActionResponseTypedTextKey")]
 		NSString ResponseTypedTextKey { get; }
 	}
 #else
 	[Watch (2,0)]
 	[Static]
-	[Deprecated (PlatformName.iOS, 10, 0, message: "Soft deprecated in iOS 10, use UserNotifications.UNNotificationAction or UserNotifications.UNTextInputNotificationAction")]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UserNotifications.UNNotificationAction' or 'UserNotifications.UNTextInputNotificationAction' instead.")]
 	interface UIUserNotificationAction {
 		// note: defined twice, where watchOS is defined it says it's not in iOS, the other one (for iOS 9) says it's not in tvOS
 		[Field ("UIUserNotificationActionResponseTypedTextKey")]
@@ -15579,7 +15631,7 @@ namespace XamCore.UIKit {
 	}
 #endif
 
-	[Deprecated (PlatformName.iOS, 10, 0, message: "Soft deprecated in iOS 10, use UserNotifications.UNNotificationAction")]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UserNotifications.UNNotificationAction' instead.")]
 	[NoWatch]
 	[NoTV]
 	[iOS (8,0)]
@@ -15636,6 +15688,7 @@ namespace XamCore.UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Export ("addOptionWithTitle:image:order:handler:")]
+		[Async]
 		void AddOption (string title, [NullAllowed] UIImage image, UIDocumentMenuOrder order, Action completionHandler);
 	}
 
@@ -15825,6 +15878,7 @@ namespace XamCore.UIKit {
 	[BaseType (typeof (NSObject))]
 	interface UIFocusAnimationCoordinator {
 		[Export ("addCoordinatedAnimations:completion:")]
+		[Async]
 		void AddCoordinatedAnimations ([NullAllowed] Action animations, [NullAllowed] Action completion);
 	}
 
@@ -15835,7 +15889,7 @@ namespace XamCore.UIKit {
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 
-		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use PreferredFocusEnvironments instead")]
+		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use 'PreferredFocusEnvironments' instead.")]
 		[NullAllowed, Export ("preferredFocusedView", ArgumentSemantic.Weak)]
 		UIView PreferredFocusedView { get; set; }
 
@@ -15929,7 +15983,7 @@ namespace XamCore.UIKit {
 		IUIPreviewInteractionDelegate Delegate { get; set; }
 
 		[Export ("locationInCoordinateSpace:")]
-		CGPoint GetLocationInCoordinateSpace ([NullAllowed] UICoordinateSpace coordinateSpace);
+		CGPoint GetLocationInCoordinateSpace ([NullAllowed] IUICoordinateSpace coordinateSpace);
 
 		[Export ("cancelInteraction")]
 		void CancelInteraction ();
@@ -15983,7 +16037,7 @@ namespace XamCore.UIKit {
 		[Abstract]
 		[NullAllowed, Export ("preferredFocusedView", ArgumentSemantic.Weak)]
 		[iOS (9,0)] // duplicated so it's inlined properly
-		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use PreferredFocusEnvironments instead")]
+		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use 'PreferredFocusEnvironments' instead.")]
 		UIView PreferredFocusedView { get; }
 
 		[Abstract]

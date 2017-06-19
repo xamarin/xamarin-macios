@@ -118,7 +118,7 @@ namespace Extrospection {
 				// we inlined this protocol in UIResponder but Apple has it on NSObject
 				return "UIResponder";
 			default:
-				return category.ClassInterface.Name;
+				return Helpers.GetManagedName (category.ClassInterface.Name);
 			}
 		}
 	}

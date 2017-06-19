@@ -13,14 +13,15 @@ using System;
 using System.IO;
 #if XAMCORE_2_0
 using Foundation;
-using MediaPlayer;
 using AudioToolbox;
 using CoreFoundation;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.MediaPlayer;
 using MonoTouch.AudioToolbox;
 using MonoTouch.CoreFoundation;
+using MonoTouch.ObjCRuntime;
 #endif
 using NUnit.Framework;
 using System.Threading;
@@ -31,23 +32,41 @@ namespace MonoTouchFixtures.AudioToolbox {
 	[Preserve (AllMembers = true)]
 	public class SystemSoundTest
 	{
+#if !MONOMAC // Currently no AppDelegate in xammac_test
 		[Test]
 		public void FromFile ()
 		{
+#if MONOMAC
+			var path = NSBundle.MainBundle.PathForResource ("1", "caf", "AudioToolbox");
+#else
 			var path = Path.GetFullPath (Path.Combine ("AudioToolbox", "1.caf"));
 
+			if (Runtime.Arch == Arch.SIMULATOR)
+				Assert.Ignore ("PlaySystemSound doesn't work in the simulator");
+#endif
+
 			using (var ss = SystemSound.FromFile (NSUrl.FromFilename (path))) {
+				var completed = false;
+				const int timeout = 10;
+
 				Assert.AreEqual (AudioServicesError.None, ss.AddSystemSoundCompletion (delegate {
+					completed = true;
 					}));
 
 				ss.PlaySystemSound ();
+				Assert.IsTrue (MonoTouchFixtures.AppDelegate.RunAsync (DateTime.Now.AddSeconds (timeout), async () => { }, () => completed), "PlaySystemSound");
 			}
 		}
+#endif
 
 		[Test]
 		public void Properties ()
 		{
+#if MONOMAC
+			var path = NSBundle.MainBundle.PathForResource ("1", "caf", "AudioToolbox");
+#else
 			var path = Path.GetFullPath (Path.Combine ("AudioToolbox", "1.caf"));
+#endif
 
 			using (var ss = SystemSound.FromFile (NSUrl.FromFilename (path))) {
 				Assert.That (ss.IsUISound, Is.True, "#1");
@@ -55,6 +74,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 			}
 		}
 
+#if !MONOMAC // Currently no AppDelegate in xammac_test
 		[Test]
 		public void TestCallbackPlaySystem ()
 		{
@@ -94,11 +114,16 @@ namespace MonoTouchFixtures.AudioToolbox {
 				), () => completed), "TestCallbackPlayAlert");
 			}
 		}
+#endif
 
 		[Test]
 		public void DisposeTest ()
 		{
+#if MONOMAC
+			var path = NSBundle.MainBundle.PathForResource ("1", "caf", "AudioToolbox");
+#else
 			var path = Path.GetFullPath (Path.Combine ("AudioToolbox", "1.caf"));
+#endif
 
 			var ss = SystemSound.FromFile (NSUrl.FromFilename (path));
 			Assert.That (ss.Handle, Is.Not.EqualTo (IntPtr.Zero), "DisposeTest");

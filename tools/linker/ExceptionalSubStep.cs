@@ -5,9 +5,17 @@ using Mono.Cecil;
 using Mono.Tuner;
 using Xamarin.Bundler;
 
+using Xamarin.Tuner;
+
 namespace Xamarin.Linker {
 
 	public abstract class ExceptionalSubStep : BaseSubStep {
+
+		protected DerivedLinkContext LinkContext {
+			get {
+				return (DerivedLinkContext) base.context;
+			}
+		}
 
 		public override sealed void ProcessAssembly (AssemblyDefinition assembly)
 		{

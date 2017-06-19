@@ -6,7 +6,7 @@
 // Copyright 2011-2015 Xamarin, Inc.
 //
 
-#if !TVOS
+#if !TVOS && !MONOMAC
 
 using System;
 using System.Runtime.InteropServices;

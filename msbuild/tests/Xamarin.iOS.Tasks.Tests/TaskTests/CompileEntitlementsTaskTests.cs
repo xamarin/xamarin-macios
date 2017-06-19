@@ -51,7 +51,7 @@ namespace Xamarin.iOS.Tasks
 			ExecuteTask (task);
 			var compiled = PDictionary.FromFile (compiledEntitlements);
 			Assert.IsTrue (compiled.Get<PBoolean> (EntitlementKeys.GetTaskAllow).Value, "#1");
-			Assert.AreEqual ("32UV7A8CDE.*", compiled.Get<PString> ("application-identifier").Value, "#2");
+			Assert.AreEqual ("32UV7A8CDE.com.xamarin.MySingleView", compiled.Get<PString> ("application-identifier").Value, "#2");
 			Assert.AreEqual ("Z8CSQKJE7R", compiled.Get<PString> ("com.apple.developer.team-identifier").Value, "#3");
 			Assert.AreEqual ("applinks:*.xamarin.com", compiled.GetAssociatedDomains ().ToStringArray ().First (), "#4");
 			Assert.AreEqual ("Z8CSQKJE7R.*", compiled.GetPassBookIdentifiers ().ToStringArray ().First (), "#5");

@@ -183,6 +183,8 @@ namespace Introspection {
 				// On 10.7 and 10.8:
 				// [FAIL] Signature failure in MonoMac.Foundation.NSUrlCredential initWithTrust: Parameter 'trust' (#1) is encoded as '^{OpaqueSecTrustRef=}' and bound as 'MonoMac.Security.SecTrust'
 				return type.Name == "SecTrust" || type.FullName == "System.IntPtr";
+			case "^{OpaqueSecAccessControlRef=}":
+				return type.Name == "SecAccessControl";
 			}
 			return base.Check (encodedType, type);
 		}
@@ -238,6 +240,39 @@ namespace Introspection {
 				break;
 			}
 			return base.Check (encodedType, type);
+		}
+
+		protected override bool CheckType (Type t, ref int n)
+		{
+			switch (t.Name) {
+#if !XAMCORE_4_0
+			case "NSPasteboardReading":
+			case "NSPasteboardWriting":
+#endif
+				return true;
+			}
+
+			return base.CheckType (t, ref n);
+		}
+
+		protected override void CheckManagedMemberSignatures (MethodBase m, Type t, ref int n)
+		{
+#if !XAMCORE_4_0 // let's review the tests exceptions if we break things
+			switch (m.Name) {
+			case "get_Source":
+			case "set_Source":
+				// NSTableViewSource is our own creation and we did not make an interface out of it
+				if (t.Name == "NSTableView")
+					return;
+				break;
+			case "AddEventListener":
+				// Fixed in XAMCORE_4_0
+				if (t.Name == "DomNode")
+					return;
+				break;
+			}
+#endif
+			base.CheckManagedMemberSignatures (m, t, ref n);
 		}
 	}
 }

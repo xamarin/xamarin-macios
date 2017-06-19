@@ -14,13 +14,18 @@ using System.IO;
 #if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
+#if MONOMAC
+using AppKit;
+using PlatformException=Foundation.ObjCException;
+#else
 using UIKit;
-using MonoTouchException=Foundation.MonoTouchException;
+using PlatformException=Foundation.MonoTouchException;
+#endif
 #else
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
 using MonoTouch.UIKit;
-using MonoTouchException=MonoTouch.Foundation.MonoTouchException;
+using PlatformException=MonoTouch.Foundation.MonoTouchException;
 #endif
 
 using NUnit.Framework;
@@ -40,8 +45,8 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.Null (NSKeyedUnarchiver.UnarchiveFile (Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png")), "UnarchiveFile");
 				Assert.Null (NSKeyedUnarchiver.UnarchiveObject (data), "UnarchiveObject");
 			} else {
-				Assert.Throws<MonoTouchException> (() => NSKeyedUnarchiver.UnarchiveFile (Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png")), "UnarchiveFile");
-				Assert.Throws<MonoTouchException> (() => NSKeyedUnarchiver.UnarchiveObject (data), "UnarchiveObject");
+				Assert.Throws<PlatformException> (() => NSKeyedUnarchiver.UnarchiveFile (Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png")), "UnarchiveFile");
+				Assert.Throws<PlatformException> (() => NSKeyedUnarchiver.UnarchiveObject (data), "UnarchiveObject");
 			}
 		}
 	}

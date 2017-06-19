@@ -66,8 +66,12 @@ namespace XamCore.WebKit {
 				callback (evt);
 			}
 		}
-		
+
+#if XAMCORE_4_0
+		public IDomEventListener AddEventListener (string type, DomEventListenerHandler handler, bool useCapture)
+#else
 		public DomEventListener AddEventListener (string type, DomEventListenerHandler handler, bool useCapture)
+#endif
 		{
 			if (handler == null)
 				throw new ArgumentNullException ("handler");
@@ -76,7 +80,11 @@ namespace XamCore.WebKit {
 			return obj;
 		}
 
+#if XAMCORE_4_0
+		public IDomEventListener AddEventListener (string type, Action<DomEvent> callback, bool useCapture)
+#else
 		public DomEventListener AddEventListener (string type, Action<DomEvent> callback, bool useCapture)
+#endif
 		{
 			if (callback == null)
 				throw new ArgumentNullException ("callback");

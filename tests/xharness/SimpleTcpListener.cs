@@ -53,11 +53,11 @@ namespace xharness
 		bool Processing (TcpClient client)
 		{
 			Connected (client.Client.RemoteEndPoint.ToString ());
-			FileStream fs = OutputStream;
 			// now simply copy what we receive
 			int i;
 			int total = 0;
 			NetworkStream stream = client.GetStream ();
+			var fs = OutputWriter.BaseStream;
 			while ((i = stream.Read (buffer, 0, buffer.Length)) != 0) {
 				fs.Write (buffer, 0, i);
 				fs.Flush ();
@@ -69,7 +69,6 @@ namespace xharness
 				// the ip address we're reachable on.
 				return false;
 			}
-			fs.Flush ();
 			return true;
 		}
 	}

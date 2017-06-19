@@ -1,26 +1,26 @@
 
 ifneq ($(RELEASE),)
-CONFIG=Release
+CONFIG=Release64
 else
-CONFIG=Debug
+CONFIG=Debug64
 endif
 
 all: build-dev
 
 build-dev:
-	$(MAKE) -C ../.. build-ios-devunified-$(LIB)
+	$(MAKE) -C ../.. build-ios-dev64-$(LIB)
 
 clean-dev:
-	$(MAKE) -C ../.. clean-ios-devunified-$(LIB)
+	$(MAKE) -C ../.. clean-ios-dev32-$(LIB) clean-ios-dev64-$(LIB)
 
 install-dev:
-	$(MAKE) -C ../.. install-ios-devunified-$(LIB)
+	$(MAKE) -C ../.. install-ios-dev64-$(LIB)
 
 exec-dev:
-	$(MAKE) -C ../.. exec-ios-devunified-$(LIB)
+	$(MAKE) -C ../.. exec-ios-dev64-$(LIB)
 
 debug-dev:
-	fruitstrap debug --bundle bin/iPhone/$(CONFIG)/$(shell echo $(LIB) | sed 's/-//g' | sed 's/\.//g').app --args "-app-arg:-autostart"
+	fruitstrap debug --bundle bin/iPhone/$(CONFIG)-unified/$(shell echo $(LIB) | sed 's/-//g' | sed 's/\.//g')tests.app --args "-app-arg:-autostart"
 
 build: build-dev
 clean: clean-dev

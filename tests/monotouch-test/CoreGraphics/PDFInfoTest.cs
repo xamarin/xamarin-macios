@@ -11,7 +11,11 @@ using System;
 using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 using CoreGraphics;
 #else
 using MonoTouch.CoreGraphics;
@@ -53,6 +57,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			};
 		}
 
+#if !MONOMAC // Not on mac
 		[Test]
 		public void ToDictionary ()
 		{
@@ -60,5 +65,6 @@ namespace MonoTouchFixtures.CoreGraphics {
 			var info = GetInfo ();
 			UIGraphics.BeginPDFContext("file", RectangleF.Empty, info); 
 		}
+#endif
 	}
 }

@@ -14,7 +14,6 @@ using System.Runtime.InteropServices;
 #if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-using UIKit;
 using MediaToolbox;
 using AudioToolbox;
 #else

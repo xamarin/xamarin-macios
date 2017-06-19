@@ -1,7 +1,7 @@
-index.html
+*index.html
 *.log
 *-unified.sln
-TestResult.xml
+*TestResult.xml
 build
 *-tvos.?sproj
 *-tvos.sln
@@ -18,6 +18,9 @@ build
 *-unifiedXM45.sln
 *-unified-32.sln
 *-unifiedXM45-32.sln
+*-today.?sproj
+*-today-extension.?sproj
+*-today.sln
 Makefile-mac.inc
 .stamp*
 Info-*.plist
@@ -25,9 +28,11 @@ Info-*.plist
 Makefile.inc
 *.stamp
 test.config
+test-system.config
 mac-test-package
 .nuget
 logs
 *.mSYM
 *.generated.cs
+x86
 

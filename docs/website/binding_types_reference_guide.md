@@ -249,7 +249,7 @@ output.
 
 These properties are used to drive the generation of C#-style Events in the
 generated classes. They are used to link a given class with its Objective-C
-delegate class. You will encounter many cases where a a class uses a delegate
+delegate class. You will encounter many cases where a class uses a delegate
 class to send notifications and events. For example a `BarcodeScanner` would have
 a companion `BardodeScannerDelegate` class. The `BarcodeScanner` class would
 typically have a "delegate" property that you would assign an instance of
@@ -379,6 +379,50 @@ The above will create a `MyUIViewExtension` a class
 that contains the `MakeBackgroundRed` extension method.   This means
 that you can now call "MakeBackgroundRed" on any `UIView` subclass,
 giving you the same functionality you would get on Objective-C.
+
+In some cases you will find **static** members inside categories like in the following example:
+
+```objc
+@interface FooObject (MyFooObjectExtension)
++ (BOOL)boolMethod:(NSRange *)range;
+@end
+```
+
+This will lead to an **incorrect** Category C# interface definition:
+
+```csharp
+[Category]
+[BaseType (typeof (FooObject))]
+interface FooObject_Extensions {
+
+	// Incorrect Interface definition
+	[Static]
+	[Export ("boolMethod:")]
+	bool BoolMethod (NSRange range);
+}
+```
+
+This is incorrect because in order to use the `BoolMethod` extension you need an instance of `FooObject` but you are binding an ObjC **static** extension, this is a side effect due to the fact of how C# extension methods are implemented. 
+
+The only way to use the above definitions is by the following ugly code:
+
+```csharp
+(null as FooObject).BoolMethod (range);
+```
+
+The recommendation to avoid this is to inline the `BoolMethod` definition inside the `FooObject` interface definition itself, this will allow you to call this extension like it is intended `FooObject.BoolMethod (range)`.
+
+```csharp
+[BaseType (typeof (NSObject))]
+interface FooObject {
+
+	[Static]
+	[Export ("boolMethod:")]
+	bool BoolMethod (NSRange range);
+}
+```
+
+We will issue a warning (BI1117) whenever we find a `[Static]` member inside a `[Category]` definition. If you really want to have `[Static]` members inside your `[Category]` definitions you can silence the warning by using `[Category (allowStaticMembers: true)]` or by decorating either your member or `[Category]` interface definition with `[Internal]`.
 
  <a name="StaticAttribute" class="injected"></a>
 
@@ -708,7 +752,7 @@ specified selector is implemented in this class.
 [BaseType (typeof (NSObject))]
 [Model][Protocol]
 interface CameraDelegate {
-    [Export ("shouldDisplayPopup"), NoDefaultValoue]
+    [Export ("shouldDisplayPopup"), NoDefaultValue]
     bool ShouldUploadToServer ();
 }
 ```
@@ -1002,6 +1046,120 @@ for **Core Foundation** objects.
 The `ForcedTypeAttribute` is only valid on `parameters`, `properties` and `return value`. 
 
 
+<a name="BindAsAttribute" class="injected"></a>
+
+
+## BindAsAttribute
+
+The `BindAsAttribute` allows binding `NSNumber`, `NSValue` and `NSString`(enums) into more accurate C# types. The attribute can be used to create better, more accurate, .NET API over the native API.
+
+You can decorate methods (on return value), parameters and properties with `BindAs`. The only restriction is that your member **must not** be inside a `[Protocol]` or `[Model]` interface.
+
+For example:
+
+```
+[return: BindAs (typeof (bool?))]
+[Export ("shouldDrawAt:")]
+NSNumber ShouldDraw ([BindAs (typeof (CGRect))] NSValue rect);
+```
+
+Would output:
+
+```
+[Export ("shouldDrawAt:")]
+bool? ShouldDraw (CGRect rect) { ... }
+```
+
+Internally we will do the `bool?` <-> `NSNumber` and `CGRect` <-> `NSValue` conversions.
+
+The current supported encapsulation types are:
+
+* `NSValue`
+* `NSNumber`
+* `NSString`
+
+### NSValue
+
+The following C# data types are supported to be encapsulated from/into `NSValue`:
+
+* CGAffineTransform
+* NSRange
+* CGVector
+* SCNMatrix4
+* CLLocationCoordinate2D
+* SCNVector3
+* SCNVector4
+* CGPoint / PointF
+* CGRect / RectangleF
+* CGSize / SizeF
+* UIEdgeInsets
+* UIOffset
+* MKCoordinateSpan
+* CMTimeRange
+* CMTime
+* CMTimeMapping
+* CATransform3D
+
+### NSNumber
+
+The following C# data types are supported to be encapsulated from/into `NSNumber`:
+
+* bool
+* byte
+* double
+* float
+* short
+* int
+* long
+* sbyte
+* ushort
+* uint
+* ulong
+* nfloat
+* nint
+* nuint
+* Enums
+
+### NSString
+
+`[BindAs]` works in conjuntion with [enums backed by a NSString constant](#enum-attributes) so you can create better .NET API, for example:
+
+```
+[BindAs (typeof (CAScroll))]
+[Export ("supportedScrollMode")]
+NSString SupportedScrollMode { get; set; }
+```
+
+Would output:
+
+```
+[Export ("supportedScrollMode")]
+CAScroll SupportedScrollMode { get; set; }
+```
+
+We will handle the `enum` <-> `NSString` conversion only if the provided enum type to `[BindAs]` is [backed by a NSString constant](#enum-attributes).
+
+### Arrays
+
+`[BindAs]` also supports arrays of any of the supported types, you can have the following API definition as an example:
+
+```
+[return: BindAs (typeof (CAScroll []))]
+[Export ("getScrollModesAt:")]
+NSString [] GetScrollModes ([BindAs (typeof (CGRect []))] NSValue [] rects);
+```
+
+Would output:
+
+```
+[Export ("getScrollModesAt:")]
+CAScroll? [] GetScrollModes (CGRect [] rects) { ... }
+```
+
+The `rects` parameter will be encapsulated into a `NSArray` that contains an `NSValue` for each `CGRect` and in return you will get an array of `CAScroll?` which has been created using the values of the returned `NSArray` containing `NSStrings`.
+
+
+
  <a name="BindAttribute" class="injected"></a>
 
 
@@ -1057,8 +1215,8 @@ Only available on Xamarin.iOS 6.3 and newer.
 This attribute can be applied to methods that take a
 completion handler as their last argument.
 
-You can use the `[Async]` attribute on methods that return
-void and whose last argument is a callback.  When you apply
+You can use the `[Async]` attribute on methods whose
+last argument is a callback.  When you apply
 this to a method, the binding generator will generate a
 version of that method with the suffix `Async`.  If the callback
 takes no parameters, the return value will be a `Task`, if the
@@ -1780,6 +1938,19 @@ interface XyzPanel {
 }
 ```
 
+The members generated by `[Wrap]` are not `virtual` by default, if you need a `virtual` member you can set to `true` the optional `isVirtual` parameter.
+
+```
+[BaseType (typeof (NSObject))]
+interface FooExplorer {
+	[Export ("fooWithContentsOfURL:")]
+	void FromUrl (NSUrl url);
+
+	[Wrap ("FromUrl (NSUrl.FromString (url))", isVirtual: true)]
+	void FromUrl (string url);
+}
+```
+
 
 # Parameter Attributes
 
@@ -2082,6 +2253,7 @@ Example:
 
 You can then call the extension method `GetDomain` to get the domain constant of
 any error.
+
 
 ## FieldAttribute
 

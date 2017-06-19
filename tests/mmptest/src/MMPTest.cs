@@ -12,20 +12,19 @@ namespace Xamarin.MMP.Tests
 	[TestFixture]
 	public partial class MMPTests 
 	{
-		void RunMMPTest (Action <string> test)
+		public static void RunMMPTest (Action <string> test, string directoryName = null)
 		{
-			string tmpDir = Path.Combine (Path.GetTempPath (), "mmp-test-dir");
-			try {
-				// Clean out any existing build there first to prevent strange behavior
-				if (Directory.Exists (tmpDir))
-					Directory.Delete (tmpDir, true);
+			test (Cache.CreateTemporaryDirectory (directoryName));
+		}
 
-				Directory.CreateDirectory (tmpDir);
-				test (tmpDir);
-			}
-			finally {
-				Directory.Delete (tmpDir, true);
-			}
+		// TODO - We have multiple tests using this. It doesn't take that long, but is it worth caching?
+		string [] GetUnifiedProjectClangInvocation (string tmpDir, string projectConfig = "")
+		{
+			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = projectConfig };
+			string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
+			string [] splitBuildOutput = TI.TestUnifiedExecutable (test).BuildOutput.Split (new string[] { Environment.NewLine }, StringSplitOptions.None);
+			string clangInvocation = splitBuildOutput.Single (x => x.Contains ("clang"));
+			return clangInvocation.Split (new string[] { " " }, StringSplitOptions.None);
 		}
 
 		[Test]
@@ -91,6 +90,31 @@ namespace Xamarin.MMP.Tests
 				test.XM45 = true;
 				TI.TestUnifiedExecutable (test);
 			});
+		}
+
+		[Test]
+		public void Unified_Static_Registrar_With_SpaceTest ()
+		{
+			if (!PlatformHelpers.CheckSystemVersion (10, 11))
+				return;
+
+			RunMMPTest (tmpDir => {
+				// First in 64-bit
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>" };
+				// Mobile
+				TI.TestUnifiedExecutable (test);
+				// XM45
+				test.XM45 = true;
+				TI.TestUnifiedExecutable (test);
+
+				// Now 32-bit
+				test.CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>i386</XamMacArch>";
+				// Mobile
+				TI.TestUnifiedExecutable (test);
+				// XM45
+				test.XM45 = true;
+				TI.TestUnifiedExecutable (test);
+			}, "test withSpace");
 		}
 
 		[Test]
@@ -198,9 +222,8 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
 
 				// Due to https://bugzilla.xamarin.com/show_bug.cgi?id=48311 we can get warnings related to the registrar
-				// So ignore anything with registrar.m or gl3.h in the line
 				Func<string, bool> hasLegitWarning = results =>
-					results.Split (Environment.NewLine.ToCharArray ()).Any (x => x.Contains ("warning") && !x.Contains ("registrar.m") && !x.Contains ("gl3.h"));
+					results.Split (Environment.NewLine.ToCharArray ()).Any (x => x.Contains ("warning") && !x.Contains ("deviceBrowserView:selectionDidChange:"));
 
 				// Mobile
 				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
@@ -280,6 +303,15 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { References = " <Reference Include=\"System.Drawing\" />", TestCode = "System.Drawing.RectangleF f = new System.Drawing.RectangleF ();", XM45 = true};
 				TI.TestUnifiedExecutable (test, shouldFail : true);
+			});
+		}
+
+		[Test]
+		public void BuildUnified45_ShouldAllowReferenceToOpenTK ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { References = " <Reference Include=\"OpenTK\" />", TestCode = "var matrix = new OpenTK.Matrix2 ();", XM45 = true };
+				TI.TestUnifiedExecutable (test);
 			});
 		}
 
@@ -428,6 +460,17 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
+		public void Unified_SgenConcurrent_Test ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = "<MonoBundlingExtraArgs>--sgen-conc</MonoBundlingExtraArgs>"
+				};
+				TI.TestUnifiedExecutable (test);
+			});
+		}
+
+		[Test]
 		public void Unified_ShouldGenerateMachineConfigInBundle_WithEmptyOption ()
 		{
 			RunMMPTest (tmpDir => {
@@ -481,9 +524,6 @@ namespace Xamarin.MMP.Tests
 					// First build with a Non-existant file to force us to error inside mmp test
 					TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--resource=Foo.bar</MonoBundlingExtraArgs>", XM45 = xm45 };
 					TI.GenerateAndBuildUnifiedExecutable (test, shouldFail: true);
-
-					string generatedProjectPath = Path.Combine (tmpDir, TI.GetUnifiedExecutableProjectName (test));
-					string generatedMainPath = Path.Combine (tmpDir, "main.cs");
 
 					// Next, build again without the error MonoBundlingExtraArgs
 					test.CSProjConfig = "";
@@ -562,7 +602,7 @@ namespace Xamarin.MMP.Tests
 				string testPath = Path.Combine (TI.FindSourceDirectory (), @"ConsoleXMApp.csproj");
 				TI.BuildProject (testPath, isUnified: true);
 				string exePath = Path.Combine (TI.FindSourceDirectory (), @"bin/Debug/ConsoleXMApp.exe");
-				var output = TI.RunAndAssert ("/usr/local/bin/mono64", new StringBuilder (exePath), "RunSideBySizeXamMac");
+				var output = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono64", new StringBuilder (exePath), "RunSideBySizeXamMac");
 				Assert.IsTrue (output.Split (Environment.NewLine.ToCharArray ()).Any (x => x.Contains ("True")), "Unified_SideBySideXamMac_ConsoleTest run"); 
 			});
 		}
@@ -594,6 +634,68 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
+		//https://testrail.xamarin.com/index.php?/cases/view/234141&group_by=cases:section_id&group_order=asc&group_id=51097
+		[Test]
+		public void Unified45Build_CompileToNativeOutput ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = true };
+				var output = TI.TestUnifiedExecutable (test);
+				Assert.That (output.BuildOutput, Contains.Substring ("TargetFrameworkIdentifier: .NETFramework"));
+				Assert.That (output.BuildOutput, Contains.Substring ("TargetFrameworkVersion: v4.5"));
+			});
+		}
 
+		[Test]
+		public void UnifiedDebug_ShouldOnlyHaveOne_ObjCArgument ()
+		{
+			RunMMPTest (tmpDir => {
+				string [] clangParts = GetUnifiedProjectClangInvocation (tmpDir);
+				int objcCount = clangParts.Count (x => x.Contains ("-ObjC"));
+				Assert.AreEqual (1, objcCount, "Found more than one -OjbC");
+			});
+		}
+
+		[Test]
+		[TestCase ("CFNetworkHandler", "CFNetworkHandler")]
+		[TestCase ("NSUrlSessionHandler", "NSUrlSessionHandler")]
+		[TestCase ("HttpClientHandler", "HttpClientHandler")]
+		[TestCase (null, "HttpClientHandler")]
+		[TestCase ("", "HttpClientHandler")]
+		public void HttpClientHandler (string mmpHandler, string expectedHandler)
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					References = " <Reference Include=\"System.Net.Http\" />",
+					TestCode = $@"
+			var client = new System.Net.Http.HttpClient ();
+			var field = client.GetType ().BaseType.GetField (""handler"", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+			if (field == null)
+				throw new System.Exception (""Could not find the field 'handler' in HttpClient's base type (which should be 'HttpMessageInvoker')."");
+			var fieldValue = field.GetValue (client);
+			if (fieldValue == null)
+				throw new System.Exception (""Unexpected null value found in 'HttpMessageInvoker.handler' field."");
+			var fieldValueType = fieldValue.GetType ().Name;
+			if (fieldValueType != ""{expectedHandler}"")
+				throw new System.Exception ($""Unexpected field type, found '{{fieldValueType}}', expected '{expectedHandler}'"");
+",
+				};
+				if (mmpHandler != null)
+					test.CSProjConfig = "<HttpClientHandler>" + mmpHandler + "</HttpClientHandler>";
+				TI.TestUnifiedExecutable (test);
+			});
+		}
+
+		[Test]
+		[TestCase ("Debug")]
+		[TestCase ("Release")]
+		public void SystemMonoNotEmbedded (string configuration)
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
+				test.CSProjConfig = "<MonoBundlingExtraArgs>--embed-mono=no</MonoBundlingExtraArgs>";
+				TI.TestSystemMonoExecutable (test, configuration: configuration);
+			});
+		}
 	}
 }

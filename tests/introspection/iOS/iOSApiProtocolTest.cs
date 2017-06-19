@@ -177,6 +177,11 @@ namespace Introspection {
 				case "SFSafariViewControllerConfiguration":
 				case "VSAccountMetadata":
 				case "VSAccountMetadataRequest":
+				// iOS 10.2
+				case "VSAccountProviderResponse":
+				// iOS 10.3
+				case "MPMusicPlayerControllerMutableQueue":
+				case "MPMusicPlayerControllerQueue":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -274,6 +279,11 @@ namespace Introspection {
 				case "SFSafariViewControllerConfiguration":
 				case "VSAccountMetadata":
 				case "VSAccountMetadataRequest":
+				// iOS 10.2
+				case "VSAccountProviderResponse":
+				// iOS 10.3
+				case "MPMusicPlayerControllerMutableQueue":
+				case "MPMusicPlayerControllerQueue":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -350,6 +360,8 @@ namespace Introspection {
 				case "SFSafariViewControllerConfiguration":
 				case "VSAccountMetadata":
 				case "VSAccountMetadataRequest":
+				// iOS 10.2
+				case "VSAccountProviderResponse":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTimelineEntry":
@@ -360,6 +372,9 @@ namespace Introspection {
 			case "NSMutableCopying":
 				switch (type.Name) {
 				case "UNNotificationSound":
+				// iOS 10.3
+				case "MPMusicPlayerControllerMutableQueue":
+				case "MPMusicPlayerControllerQueue":
 					return true;
 				}
 				break;

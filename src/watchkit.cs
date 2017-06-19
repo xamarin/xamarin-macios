@@ -145,10 +145,12 @@ namespace XamCore.WatchKit {
 
 		[ThreadSafe (false)]
 		[Export ("presentTextInputControllerWithSuggestions:allowedInputMode:completion:")]
+		[Async]
 		void PresentTextInputController ([NullAllowed] string [] suggestions, WKTextInputMode inputMode, Action<NSArray> completion);
 
 		[iOS (9,0)]
 		[Export ("presentTextInputControllerWithSuggestionsForLanguage:allowedInputMode:completion:")]
+		[Async]
 		void PresentTextInputController ([NullAllowed] Func<NSString, NSArray> suggestionsHandler, WKTextInputMode inputMode, Action<NSArray> completion);
 
 		[NoWatch]
@@ -170,6 +172,7 @@ namespace XamCore.WatchKit {
 
 		[Watch (2,0)]
 		[Export ("presentAudioRecorderControllerWithOutputURL:preset:options:completion:")]
+		[Async]
 		void PresentAudioRecorderController (NSUrl outputUrl, WKAudioRecorderPreset preset, [NullAllowed] NSDictionary options, Action<bool, NSError> completion);
 
 		[Watch (2,0)]
@@ -183,6 +186,7 @@ namespace XamCore.WatchKit {
 		void PresentAlertController ([NullAllowed] string title, [NullAllowed] string message, WKAlertControllerStyle preferredStyle, WKAlertAction[] actions);
 
 		[Export ("presentAddPassesControllerWithPasses:completion:")]
+		[Async]
 		void PresentAddPassesController (PKPass[] passes, Action completion);
 
 		[Export ("dismissAddPassesController")]
@@ -205,6 +209,7 @@ namespace XamCore.WatchKit {
 #endif
 		[NoiOS]
 		[Export ("presentMediaPlayerControllerWithURL:options:completion:")]
+		[Async (ResultType = typeof (WKPresentMediaPlayerResult))]
 		void PresentMediaPlayerController (NSUrl url, [NullAllowed] NSDictionary options, Action<bool, double, NSError> completion);
 
 		[Watch (3,0)][NoiOS]
@@ -772,7 +777,18 @@ namespace XamCore.WatchKit {
 		NSError Error { get; }
 
 		[Export ("currentTime")]
-		double CurrentTime { get; }
+		double CurrentTime {
+			get;
+#if XAMCORE_4_0
+			[Watch (3,2)]
+			set;
+		}
+#else
+		}
+		[Watch (3,2)]
+		[Export ("setCurrentTime:")]
+		void SetCurrentTime (double time);
+#endif
 
 		[Watch (2,0), NoiOS]
 		[Notification]
@@ -856,6 +872,10 @@ namespace XamCore.WatchKit {
 
 		[Export ("handleUserActivity:")]
 		void HandleUserActivity ([NullAllowed] NSDictionary userInfo);
+
+		[Watch (3,2)] // TODO: Check if this is equal/similar to HandleUserActivity once docs are available
+		[Export ("handleActivity:")]
+		void HandleUserActivity (NSUserActivity userActivity);
 
 		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use UNUserNotificationCenterDelegate")]
 		[Export ("didReceiveRemoteNotification:")]

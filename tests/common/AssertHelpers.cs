@@ -44,7 +44,7 @@ namespace Xamarin.Tests
 		
 		public static void StartsWith (string expectedStartsWith, string actual, string message)
 		{
-			if (!actual.StartsWith (expectedStartsWith))
+			if (!actual.StartsWith (expectedStartsWith, StringComparison.Ordinal))
 				throw new AssertionException (string.Format ("Expected '{0}' to start with '{1}'. {2}", actual, expectedStartsWith, message));
 		}
 		

@@ -14,7 +14,11 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using CoreMedia;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.CoreMedia;
 using MonoTouch.Foundation;
@@ -109,8 +113,8 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void MultiplyByRatio ()
 		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (7, 1))
-				Assert.Inconclusive ("Requires 7.1+");
+			if (!TestRuntime.CheckXcodeVersion (5, 1))
+				Assert.Inconclusive ("Requires iOS 7.1+ or macOS 10.9+");
 
 			var t = new CMTime (1000, 1);
 			t = CMTime.Multiply (t, 20, 10);
@@ -127,7 +131,7 @@ namespace MonoTouchFixtures.CoreMedia {
 #if !XAMCORE_3_0
 			Assert.DoesNotThrow (() => { var x = CMTimeRange.Invalid; }, "CMTimeRangeConstants - Invalid");
 #endif
-			if (UIDevice.CurrentDevice.CheckSystemVersion (9, 0)) {
+			if (TestRuntime.CheckXcodeVersion (7, 0)) {
 				Assert.DoesNotThrow (() => { var x = CMTimeRange.InvalidMapping; }, "CMTimeRangeConstants - InvalidMapping");
 				Assert.DoesNotThrow (() => { var x = CMTimeRange.TimeMappingSourceKey; }, "CMTimeRangeConstants - TimeMappingSourceKey");
 				Assert.DoesNotThrow (() => { var x = CMTimeRange.TimeMappingTargetKey; }, "CMTimeRangeConstants - TimeMappingTargetKey");
@@ -137,9 +141,9 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void CMTimeMappingFactoryMethods ()
 		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (9, 0))
-				Assert.Inconclusive ("Requires 9.0+");
-
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Inconclusive ("Requires iOS 9.0+ or macOS 10.11+");
+			
 			var first = new CMTimeRange () { Duration = new CMTime (12, 1), Start = new CMTime (1, 1) };
 			var second = new CMTimeRange () { Duration = new CMTime (4, 1), Start = new CMTime (1, 1) };
 

@@ -11,14 +11,7 @@ namespace Xamarin.Tests
 		public const string XI_ProductName = "MonoTouch";
 		public const string XM_ProductName = "Xamarin.Mac";
 
-		static Dictionary<string,string> XS = new Dictionary<string, string> () {
-			{ "MONO_GAC_PREFIX", "/Applications/Xamarin Studio.app/Contents/MacOS" },
-			{ "PATH", "/Applications/Xamarin Studio.app/Contents/MacOS" },
-			{ "DYLD_FALLBACK_LIBRARY_PATH", "/Library/Frameworks/Mono.framework/Versions/Current/lib:/lib:/usr/lib:/Applications/Xamarin Studio.app/Contents/MacOS" },
-			{ "PKG_CONFIG_PATH", "/Applications/Xamarin Studio.app/Contents/MacOS" }
-		};
-
-		const string XS_PATH = "/Applications/Xamarin Studio.app/Contents/Resources";
+		const string XS_PATH = "/Applications/Visual Studio.app/Contents/Resources";
 
 		static string mt_root;
 		static string ios_destdir;
@@ -41,6 +34,39 @@ namespace Xamarin.Tests
 		public static bool include_tvos;
 		public static bool include_watchos;
 		public static bool include_device;
+
+		// This is the location of an Xcode which is older than the recommended one.
+		public static string GetOldXcodeRoot (Version min_version = null)
+		{
+			var xcodes = Directory.GetDirectories ("/Applications", "Xcode*.app", SearchOption.TopDirectoryOnly);
+			var with_versions = new List<Tuple<Version, string>> ();
+
+			var max_version = Version.Parse (XcodeVersion);
+			foreach (var xcode in xcodes) {
+				var path = Path.Combine (xcode, "Contents", "Developer");
+				var version = Version.Parse (GetXcodeVersion (path));
+				if (version >= max_version)
+					continue;
+				if (min_version != null && version < min_version)
+					continue;
+				with_versions.Add (new Tuple<Version, string> (version, path));
+			}
+
+			if (with_versions.Count == 0)
+				return null;
+
+			with_versions.Sort ((x, y) =>
+			{
+				if (x.Item1 > y.Item1)
+					return -1;
+				else if (x.Item1 < y.Item1)
+					return 1;
+				else
+					return 0;
+			});
+
+			return with_versions [0].Item2; // return the most recent Xcode older than the recommended one.
+		}
 
 		// This is /Library/Frameworks/Xamarin.iOS.framework/Versions/Current if running
 		// against a system XI, otherwise it's the <git checkout>/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current directory.
@@ -102,6 +128,28 @@ namespace Xamarin.Tests
 			return result;
 		}
 
+		static string GetXcodeVersion (string xcode_path)
+		{
+			var version_plist = Path.Combine (xcode_path, "..", "version.plist");
+			if (!File.Exists (version_plist))
+				return null;
+
+			return GetPListStringValue (version_plist, "CFBundleShortVersionString");
+		}
+
+		public static string GetPListStringValue (string plist, string key)
+		{
+			var settings = new System.Xml.XmlReaderSettings ();
+			settings.DtdProcessing = System.Xml.DtdProcessing.Ignore;
+			var doc = new System.Xml.XmlDocument ();
+			using (var fs = new FileStream (plist, FileMode.Open, FileAccess.Read)) {
+				using (var reader = System.Xml.XmlReader.Create (fs, settings)) {
+					doc.Load (reader);
+					return doc.DocumentElement.SelectSingleNode ($"//dict/key[text()='{key}']/following-sibling::string[1]/text()").Value;
+				}
+			}
+		}
+
 		static Configuration ()
 		{
 			ParseConfigFiles ();
@@ -121,18 +169,7 @@ namespace Xamarin.Tests
 			include_watchos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_WATCH", ""));
 			include_device = !string.IsNullOrEmpty (GetVariable ("INCLUDE_DEVICE", ""));
 
-			var version_plist = Path.Combine (xcode_root, "..", "version.plist");
-			if (File.Exists (version_plist)) {
-				var settings = new System.Xml.XmlReaderSettings ();
-				settings.DtdProcessing = System.Xml.DtdProcessing.Ignore;
-				var doc = new System.Xml.XmlDocument ();
-				using (var fs = new FileStream (version_plist, FileMode.Open, FileAccess.Read)) {
-					using (var reader = System.Xml.XmlReader.Create (fs, settings)) {
-						doc.Load (reader);
-						XcodeVersion = doc.DocumentElement.SelectSingleNode ("//dict/key[text()='CFBundleShortVersionString']/following-sibling::string[1]/text()").Value;
-					}
-				}
-			}
+			XcodeVersion = GetXcodeVersion (xcode_root);
 #if MONOMAC
 			mac_xcode_root = xcode_root;
 #endif
@@ -196,12 +233,6 @@ namespace Xamarin.Tests
 			}
 		}
 
-		public static Dictionary<string,string> MonoDevelopLike {
-			get {
-				return XS;
-			}
-		}
-
 		public static string XamarinIOSDll {
 			get {
 				return Path.Combine (mt_root, "lib", "mono", "Xamarin.iOS", "Xamarin.iOS.dll");
@@ -230,15 +261,49 @@ namespace Xamarin.Tests
 			}
 		}
 
+		public static string TargetDirectoryXI {
+			get {
+				return make_config ["IOS_DESTDIR"];
+			}
+		}
+
+		public static string TargetDirectoryXM {
+			get {
+				return make_config ["MAC_DESTDIR"];
+			}
+		}
+
+		public static string SdkRoot {
+			get {
+#if MONOMAC
+				return SdkRootXM;
+#else
+				return SdkRootXI;
+#endif
+			}
+		}
+
+		public static string SdkRootXI {
+			get {
+				return Path.Combine (TargetDirectoryXI, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current");
+			}
+		}
+
+		public static string SdkRootXM {
+			get {
+				return Path.Combine (TargetDirectoryXM, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
+			}
+		}
+
 		public static string BinDirXI {
 			get {
-				return Path.Combine (RootPath, "_ios-build", "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin");
+				return Path.Combine (SdkRootXI, "bin");
 			}
 		}
 
 		public static string BinDirXM {
 			get {
-				return Path.Combine (RootPath, "_mac-build", "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current", "bin");
+				return Path.Combine (SdkRootXM, "bin");
 			}
 		}
 
@@ -274,7 +339,10 @@ namespace Xamarin.Tests
 
 		public static string MlaunchPath {
 			get {
-				return Path.Combine (XSIphoneDir, "mlaunch.app", "Contents", "MacOS", "mlaunch");
+				var env = Environment.GetEnvironmentVariable ("MLAUNCH_PATH");
+				if (!string.IsNullOrEmpty (env))
+					return env;
+				return Path.Combine (BinDirXI, "mlaunch");
 			}
 		}
 	}

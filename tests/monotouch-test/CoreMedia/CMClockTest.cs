@@ -16,7 +16,6 @@ using System.Runtime.InteropServices;
 using CoreMedia;
 using Foundation;
 using ObjCRuntime;
-using UIKit;
 #else
 using MonoTouch;
 using MonoTouch.Foundation;
@@ -37,6 +36,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static nint CFGetRetainCount (IntPtr handle);
 
+#if !MONOMAC // The CMAudioClockCreate API is only available on iOS
 		[Test]
 		public void CreateAudioClock ()
 		{
@@ -49,6 +49,7 @@ namespace MonoTouchFixtures.CoreMedia {
 				Assert.AreEqual (CMClockError.None, ce);
 			}
 		}
+#endif
 
 		[Test]
 		public void HostTimeClock ()

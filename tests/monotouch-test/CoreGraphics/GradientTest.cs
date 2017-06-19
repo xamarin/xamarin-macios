@@ -11,7 +11,12 @@ using System;
 using System.Runtime.InteropServices;
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+using UIColor = AppKit.NSColor;
+#else
 using UIKit;
+#endif
 using CoreGraphics;
 using ObjCRuntime;
 #else
@@ -94,6 +99,14 @@ namespace MonoTouchFixtures.CoreGraphics {
 			// a null CGColorSpace can return a valid instance
 			using (var a = NSArray.FromNSObjects (array))
 				Assert.That (CGGradientCreateWithColors (IntPtr.Zero, a.Handle, null), Is.Not.EqualTo (IntPtr.Zero), "CGGradientCreateWithColors-2");
+		}
+
+		[Test]
+		public void GradientDrawingOptions ()
+		{
+			var gdo = CGGradientDrawingOptions.DrawsAfterEndLocation | CGGradientDrawingOptions.DrawsBeforeStartLocation;
+			// this would be "3" without a [Flags] attribute
+			Assert.That (gdo.ToString (), Is.EqualTo ("DrawsBeforeStartLocation, DrawsAfterEndLocation"), "ToString/Flags");
 		}
 	}
 }

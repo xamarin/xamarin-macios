@@ -14,7 +14,11 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 using AVFoundation;
 #else
 using MonoTouch.AVFoundation;

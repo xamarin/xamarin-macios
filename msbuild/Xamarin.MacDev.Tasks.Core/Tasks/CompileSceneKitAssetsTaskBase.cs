@@ -174,15 +174,27 @@ namespace Xamarin.MacDev.Tasks
 				var bundleName = BundleResource.GetLogicalName (ProjectDir, prefixes, asset, !string.IsNullOrEmpty(SessionId));
 				var output = new TaskItem (Path.Combine (intermediate, bundleName));
 
-				if (!modified.Contains (scnassets) && (!File.Exists (output.ItemSpec) || File.GetLastWriteTime (asset.ItemSpec) > File.GetLastWriteTime (output.ItemSpec))) {
-					var item = new TaskItem (scnassets);
+				if (!modified.Contains (scnassets) && (!File.Exists (output.ItemSpec) || File.GetLastWriteTimeUtc (asset.ItemSpec) > File.GetLastWriteTimeUtc (output.ItemSpec))) {
+					// Base the new item on @asset, to get the `DefiningProject*` metadata too
+					var scnassetsItem = new TaskItem (asset);
 
-					metadata = asset.GetMetadata ("DefiningProjectFullPath");
-					if (!string.IsNullOrEmpty (metadata))
-						item.SetMetadata ("DefiningProjectFullPath", metadata);
+					// .. but we really want it to be for @scnassets, so set ItemSpec accordingly
+					scnassetsItem.ItemSpec = scnassets;
+
+					// .. and remove the @OriginalItemSpec which is for @asset
+					scnassetsItem.RemoveMetadata ("OriginalItemSpec");
+
+					var assetMetadata = asset.GetMetadata ("DefiningProjectFullPath");
+					if (assetMetadata != scnassetsItem.GetMetadata ("DefiningProjectFullPath")) {
+						// xbuild doesn't set this, so we'll do it
+						//
+						// `DefiningProjectFullPath` is a reserved metadata for msbuild, so
+						// setting this is not allowed anyway
+						scnassetsItem.SetMetadata ("DefiningProjectFullPath", assetMetadata);
+					}
 
 					modified.Add (scnassets);
-					items.Add (item);
+					items.Add (scnassetsItem);
 				}
 
 				output.SetMetadata ("LogicalName", bundleName);

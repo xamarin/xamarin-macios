@@ -1041,14 +1041,12 @@ namespace LinkSdk {
 			Assert.Null (Type.GetType (fqn), "Should not be included");
 		}
 
-#if !__WATCHOS__
 		[Test]
 		public void AppleTls_Default ()
 		{
 			// make test work for classic (monotouch) and unified (iOS, tvOS and watchOS)
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Security.Tls.AppleTlsProvider");
-			Assert.NotNull (Type.GetType (fqn), "Should be included");
+			Assert.Null (Type.GetType (fqn), "Should be included");
 		}
-#endif // !__WATCHOS__
 	}
 }

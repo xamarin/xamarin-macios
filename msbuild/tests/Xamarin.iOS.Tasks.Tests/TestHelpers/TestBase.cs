@@ -49,16 +49,13 @@ namespace Xamarin.iOS.Tasks
 
 			coreFiles.Add ("mscorlib.dll");
 			if (config == "Debug")
-				coreFiles.Add ("mscorlib.dll.mdb");
+				coreFiles.Add ("mscorlib.pdb");
 
 			coreFiles.Add (managedExe);
 			if (config == "Debug")
-				coreFiles.Add (managedExe + ".mdb");
+				coreFiles.Add (Path.ChangeExtension (managedExe, ".pdb"));
 
-			if (platform == "iPhone")
-				coreFiles.Add (Path.Combine ("..", nativeExe));
-			else
-				coreFiles.Add (nativeExe);
+			coreFiles.Add (nativeExe);
 
 			return coreFiles.ToArray ();
 		}
@@ -188,9 +185,9 @@ namespace Xamarin.iOS.Tasks
 
 			// Reset all the write times as we deliberately set some in the future for our tests
 			foreach (var file in Directory.GetFiles (MonoTouchProjectPath, "*.*", SearchOption.AllDirectories))
-				File.SetLastWriteTime (file, DateTime.Now);
+				File.SetLastWriteTimeUtc (file, DateTime.UtcNow);
 			foreach (var file in Directory.GetFiles (LibraryProjectPath, "*.*", SearchOption.AllDirectories))
-				File.SetLastWriteTime (file, DateTime.Now);
+				File.SetLastWriteTimeUtc (file, DateTime.UtcNow);
 		}
 
 		protected void SafeDelete (string path)
@@ -215,6 +212,17 @@ namespace Xamarin.iOS.Tasks
 		{
 			foreach (var v in files.Select (s => Path.Combine (baseDir, s)))
 				Assert.IsTrue (File.Exists (v) || Directory.Exists (v), "Expected file: {0} does not exist", v);
+		}
+
+		public void TestFilesExists (string [] baseDirs, string [] files)
+		{
+
+			if (baseDirs.Length == 1) {
+				TestFilesExists (baseDirs [0], files);
+			} else {
+				foreach (var file in files)
+					Assert.IsTrue (baseDirs.Select (s => File.Exists (Path.Combine (s, file))).Any (v => v), $"Expected file: {file} does not exist in any of the directories: {string.Join (", ", baseDirs)}");
+			}
 		}
 
 		public void TestStoryboardC (string path) 
@@ -268,7 +276,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			path = Path.Combine (TempDir, path);
 			Directory.CreateDirectory (Path.GetDirectoryName (path));
-			using (new FileStream (path, FileMode.CreateNew));
+			using (new FileStream (path, FileMode.CreateNew)) {}
 			return path;
 		}
 
@@ -280,7 +288,7 @@ namespace Xamarin.iOS.Tasks
 			if (!File.Exists (file))
 				Assert.Fail ("Expected file '{0}' did not exist", file);
 
-			return File.GetLastWriteTime (file);
+			return File.GetLastWriteTimeUtc (file);
 		}
 
 		protected void RemoveItemsByName (Project project, string itemName)
@@ -309,7 +317,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			if (!File.Exists (file))
 				Assert.Fail ("Expected file '{0}' did not exist", file);
-			File.SetLastWriteTime (file, DateTime.Now.AddDays (1));
+			File.SetLastWriteTimeUtc (file, DateTime.UtcNow.AddDays (1));
 			System.Threading.Thread.Sleep (1000);
 		}
 

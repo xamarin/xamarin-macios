@@ -42,6 +42,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		public bool EmitDebugInformation { get; set; }
 
+		public string ExtraArgs { get; set; }
+
 		public string GeneratedSourcesDir { get; set; }
 
 		public string GeneratedSourcesFileList { get; set; }
@@ -52,11 +54,19 @@ namespace Xamarin.MacDev.Tasks {
 
 		public string OutputAssembly { get; set; }
 
+		public bool ProcessEnums { get; set; }
+
+		[Required]
+		public string ProjectDir { get; set; }
+
 		public ITaskItem[] References { get; set; }
 
 		public ITaskItem[] Resources { get; set; }
 
 		public ITaskItem[] Sources { get; set; }
+
+		[Required]
+		public string TargetFrameworkIdentifier { get; set; }
 
 		protected override string ToolName {
 			get { return Path.GetFileNameWithoutExtension (ToolExe); }
@@ -78,9 +88,11 @@ namespace Xamarin.MacDev.Tasks {
 		protected override string GenerateCommandLineCommands ()
 		{
 			var cmd = new CommandLineBuilder ();
+
 			#if DEBUG
 			cmd.AppendSwitch ("/v");
 			#endif
+
 			if (NoStdLib)
 				cmd.AppendSwitch ("/nostdlib");
 			cmd.AppendSwitchIfNotNull ("/compiler:", CompilerPath);
@@ -93,9 +105,13 @@ namespace Xamarin.MacDev.Tasks {
 					dir = Path.GetDirectoryName (BaseLibDll);
 				else
 					dir = null;
+
 				cmd.AppendSwitchIfNotNull ("/lib:", dir);
 				cmd.AppendSwitchIfNotNull ("/r:", Path.Combine (dir, "mscorlib.dll"));
 			}
+
+			if (ProcessEnums)
+				cmd.AppendSwitch ("/process-enums");
 
 			if (EmitDebugInformation)
 				cmd.AppendSwitch ("/debug");
@@ -175,18 +191,66 @@ namespace Xamarin.MacDev.Tasks {
 			if (GeneratedSourcesFileList != null)
 				cmd.AppendSwitchIfNotNull ("/sourceonly:", Path.GetFullPath (GeneratedSourcesFileList));
 
+			cmd.AppendSwitch (GetTargetFrameworkArgument ());
+
+			if (!string.IsNullOrEmpty (ExtraArgs)) {
+				var extraArgs = ProcessArgumentBuilder.Parse (ExtraArgs);
+				var target = OutputAssembly;
+				string projectDir;
+
+				if (ProjectDir.StartsWith ("~/", StringComparison.Ordinal)) {
+					// Note: Since the Visual Studio plugin doesn't know the user's home directory on the Mac build host,
+					// it simply uses paths relative to "~/". Expand these paths to their full path equivalents.
+					var home = Environment.GetFolderPath (Environment.SpecialFolder.UserProfile);
+
+					projectDir = Path.Combine (home, ProjectDir.Substring (2));
+				} else {
+					projectDir = ProjectDir;
+				}
+
+				var customTags = new Dictionary<string, string> (StringComparer.OrdinalIgnoreCase) {
+					{ "projectdir",   projectDir },
+					// Apparently msbuild doesn't propagate the solution path, so we can't get it.
+					// { "solutiondir",  proj.ParentSolution != null ? proj.ParentSolution.BaseDirectory : proj.BaseDirectory },
+					{ "targetpath",   Path.Combine (Path.GetDirectoryName (target), Path.GetFileName (target)) },
+					{ "targetdir",    Path.GetDirectoryName (target) },
+					{ "targetname",   Path.GetFileName (target) },
+					{ "targetext",    Path.GetExtension (target) },
+				};
+
+				for (int i = 0; i < extraArgs.Length; i++) {
+					var argument = extraArgs[i];
+
+					cmd.AppendTextUnquoted (StringParserService.Parse (argument, customTags));
+				}
+			}
+
 			return cmd.ToString ();
+		}
+
+		protected virtual string GetTargetFrameworkArgument ()
+		{
+			switch (TargetFrameworkIdentifier) {
+				case "MonoTouch":
+				case "Xamarin.iOS":
+				case "Xamarin.TVOS":
+				case "Xamarin.WatchOS":
+					return $"/target-framework={TargetFrameworkIdentifier},v1.0";
+				default:
+					Log.LogError ($"Unknown target framework identifier: {TargetFrameworkIdentifier}.");
+					return string.Empty;
+			}
 		}
 
 		public override bool Execute ()
 		{
-			this.ToolExe = this.BTouchToolExe;
-			this.ToolPath = this.BTouchToolPath;
+			ToolExe = BTouchToolExe;
+			ToolPath = BTouchToolPath;
 
-			if (!string.IsNullOrEmpty (this.SessionId) &&
-			    	!string.IsNullOrEmpty (this.GeneratedSourcesDir) &&
-			    	!Directory.Exists (this.GeneratedSourcesDir)) {
-				Directory.CreateDirectory (this.GeneratedSourcesDir);
+			if (!string.IsNullOrEmpty (SessionId) &&
+			    !string.IsNullOrEmpty (GeneratedSourcesDir) &&
+			    !Directory.Exists (GeneratedSourcesDir)) {
+				Directory.CreateDirectory (GeneratedSourcesDir);
 			}
 
 			Log.LogTaskName ("BTouch");
@@ -200,12 +264,15 @@ namespace Xamarin.MacDev.Tasks {
 			Log.LogTaskProperty ("CoreSources", CoreSources);
 			Log.LogTaskProperty ("DefineConstants", DefineConstants);
 			Log.LogTaskProperty ("EmitDebugInformation", EmitDebugInformation);
+			Log.LogTaskProperty ("ExtraArgs", ExtraArgs);
 			Log.LogTaskProperty ("GeneratedSourcesDir", GeneratedSourcesDir);
 			Log.LogTaskProperty ("GeneratedSourcesFileList", GeneratedSourcesFileList);
 			Log.LogTaskProperty ("Namespace", Namespace);
 			Log.LogTaskProperty ("NativeLibraries", NativeLibraries);
 			Log.LogTaskProperty ("NoStdLib", NoStdLib);
 			Log.LogTaskProperty ("OutputAssembly", OutputAssembly);
+			Log.LogTaskProperty ("ProcessEnums", ProcessEnums);
+			Log.LogTaskProperty ("ProjectDir", ProjectDir);
 			Log.LogTaskProperty ("References", References);
 			Log.LogTaskProperty ("Resources", Resources);
 			Log.LogTaskProperty ("Sources", Sources);

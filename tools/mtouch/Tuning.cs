@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.XPath;
+using System.Text;
 
 using Mono.Linker;
 using Mono.Linker.Steps;
@@ -12,11 +13,12 @@ using Mono.Tuner;
 using Xamarin.Bundler;
 using Xamarin.Linker;
 using Xamarin.Linker.Steps;
+using Xamarin.Tuner;
 
 namespace MonoTouch.Tuner {
 
 	public class LinkerOptions {
-		public AssemblyDefinition MainAssembly { get; set; }
+		public IEnumerable<AssemblyDefinition> MainAssemblies { get; set; }
 		public string OutputDirectory { get; set; }
 		public LinkMode LinkMode { get; set; }
 		public AssemblyResolver Resolver { get; set; }
@@ -35,6 +37,8 @@ namespace MonoTouch.Tuner {
 		internal RuntimeOptions RuntimeOptions { get; set; }
 
 		public MonoTouchLinkContext LinkContext { get; set; }
+		public Target Target { get; set; }
+		public Application Application { get { return Target.App; } }
 
 		public static I18nAssemblies ParseI18nAssemblies (string i18n)
 		{
@@ -58,11 +62,12 @@ namespace MonoTouch.Tuner {
 
 	class Linker {
 
-		public static void Process (LinkerOptions options, out MonoTouchLinkContext context, out List<string> assemblies)
+		public static void Process (LinkerOptions options, out MonoTouchLinkContext context, out List<AssemblyDefinition> assemblies)
 		{
 			var pipeline = CreatePipeline (options);
 
-			pipeline.PrependStep (new MobileResolveMainAssemblyStep (options.MainAssembly));
+			foreach (var ad in options.MainAssemblies)
+				pipeline.PrependStep (new MobileResolveMainAssemblyStep (ad, options.Application.Embeddinator));
 
 			context = CreateLinkContext (options, pipeline);
 			context.Resolver.AddSearchDirectory (options.OutputDirectory);
@@ -82,12 +87,41 @@ namespace MonoTouch.Tuner {
 				throw;
 			} catch (MonoTouchException) {
 				throw;
+			} catch (MarkException me) {
+				var re = me.InnerException as ResolutionException;
+				if (re == null) {
+					if (me.InnerException != null) {
+						throw ErrorHelper.CreateError (2102, me, "Error processing the method '{0}' in the assembly '{1}': {2}", me.Method.FullName, me.Method.Module, me.InnerException.Message);
+					} else {
+						throw ErrorHelper.CreateError (2102, me, "Error processing the method '{0}' in the assembly '{1}'", me.Method.FullName, me.Method.Module);
+					}
+				} else {
+					TypeReference tr = (re.Member as TypeReference);
+					IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
+					throw ErrorHelper.CreateError (2101, me, "Can't resolve the reference '{0}', referenced from the method '{1}' in '{2}'.", re.Member, me.Method.FullName, scope);
+				}
 			} catch (ResolutionException re) {
 				TypeReference tr = (re.Member as TypeReference);
 				IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
 				throw new MonoTouchException (2002, true, re, "Failed to resolve \"{0}\" reference from \"{1}\"", re.Member, scope);
+			} catch (XmlResolutionException ex) {
+				throw new MonoTouchException (2017, true, ex, "Could not process XML description: {0}", ex?.InnerException?.Message ?? ex.Message);
 			} catch (Exception e) {
-				throw new MonoTouchException (2001, true, e, "Could not link assemblies. Reason: {0}", e.Message);
+				var message = new StringBuilder ();
+				if (e.Data.Count > 0) {
+					message.AppendLine ();
+					var m = e.Data ["MethodDefinition"] as string;
+					if (m != null)
+						message.AppendLine ($"\tMethod: `{m}`");
+					var t = e.Data ["TypeReference"] as string;
+					if (t != null)
+						message.AppendLine ($"\tType: `{t}`");
+					var a = e.Data ["AssemblyDefinition"] as string;
+					if (a != null)
+						message.AppendLine ($"\tAssembly: `{a}`");
+				}
+				message.Append ($"Reason: {e.Message}");
+				throw new MonoTouchException (2001, true, e, "Could not link assemblies. {0}", message);
 			}
 
 			assemblies = ListAssemblies (context);
@@ -100,7 +134,8 @@ namespace MonoTouch.Tuner {
 			context.LinkSymbols = options.LinkSymbols;
 			context.OutputDirectory = options.OutputDirectory;
 			context.SetParameter ("debug-build", options.DebugBuild.ToString ());
-
+			context.StaticRegistrar = options.Target.StaticRegistrar;
+			context.Target = options.Target;
 			options.LinkContext = context;
 
 			return context;
@@ -113,7 +148,7 @@ namespace MonoTouch.Tuner {
 			sub.Add (new CoreRemoveSecurity ());
 			sub.Add (new OptimizeGeneratedCodeSubStep (options));
 			sub.Add (new RemoveUserResourcesSubStep (options));
-			// OptimizeGeneratedCodeSubStep and RemoveNativeCodeSubStep needs [GeneratedCode] so it must occurs before RemoveAttributes
+			// OptimizeGeneratedCodeSubStep and RemoveUserResourcesSubStep needs [GeneratedCode] so it must occurs before RemoveAttributes
 			sub.Add (new RemoveAttributes ());
 			// http://bugzilla.xamarin.com/show_bug.cgi?id=1408
 			if (options.LinkAway)
@@ -121,6 +156,7 @@ namespace MonoTouch.Tuner {
 			sub.Add (new MarkNSObjects ());
 			sub.Add (new PreserveSoapHttpClients ());
 			sub.Add (new CoreHttpMessageHandler (options));
+			sub.Add (new InlinerSubStep ());
 			return sub;
 		}
 
@@ -164,13 +200,12 @@ namespace MonoTouch.Tuner {
 				pipeline.AppendStep (new RemoveResources (options.I18nAssemblies)); // remove collation tables
 
 				pipeline.AppendStep (new MonoTouchMarkStep ());
-				pipeline.AppendStep (new MonoTouchSweepStep ());
+				pipeline.AppendStep (new MonoTouchSweepStep (options));
 				pipeline.AppendStep (new CleanStep ());
 
 				if (!options.DebugBuild)
 					pipeline.AppendStep (GetPostLinkOptimizations (options));
 
-				pipeline.AppendStep (new RemoveSelectors ());
 				pipeline.AppendStep (new FixModuleFlags ());
 			} else {
 				SubStepDispatcher sub = new SubStepDispatcher () {
@@ -186,22 +221,17 @@ namespace MonoTouch.Tuner {
 			return pipeline;
 		}
 
-		static List<string> ListAssemblies (MonoTouchLinkContext context)
+		static List<AssemblyDefinition> ListAssemblies (MonoTouchLinkContext context)
 		{
-			var list = new List<string> ();
+			var list = new List<AssemblyDefinition> ();
 			foreach (var assembly in context.GetAssemblies ()) {
 				if (context.Annotations.GetAction (assembly) == AssemblyAction.Delete)
 					continue;
 
-				list.Add (GetFullyQualifiedName (assembly));
+				list.Add (assembly);
 			}
 
 			return list;
-		}
-
-		static string GetFullyQualifiedName (AssemblyDefinition assembly)
-		{
-			return assembly.MainModule.FileName;
 		}
 
 		static ResolveFromXmlStep GetResolveStep (string filename)
@@ -222,26 +252,7 @@ namespace MonoTouch.Tuner {
 		}
 	}
 
-	public class MonoTouchLinkContext : LinkContext {
-		Dictionary<string, MemberReference> required_symbols;
-		List<MethodDefinition> marshal_exception_pinvokes;
-
-		public Dictionary<string, MemberReference> RequiredSymbols {
-			get {
-				if (required_symbols == null)
-					required_symbols = new Dictionary<string, MemberReference> ();
-				return required_symbols;
-			}
-		}
-
-		public List<MethodDefinition> MarshalExceptionPInvokes {
-			get {
-				if (marshal_exception_pinvokes == null)
-					marshal_exception_pinvokes = new List<MethodDefinition> ();
-				return marshal_exception_pinvokes;
-			}
-		}
-
+	public class MonoTouchLinkContext : DerivedLinkContext {
 		public MonoTouchLinkContext (Pipeline pipeline, AssemblyResolver resolver)
 			: base (pipeline, resolver)
 		{

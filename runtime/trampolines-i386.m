@@ -121,6 +121,8 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 				v[1] = *(uint16_t *) unboxed;
 			} else if (size == 5) {
 				v[1] = *(uint8_t *) unboxed;
+			} else {
+				v[1] = 0; // theoretically impossible, but it silences static analysis, and if the real world proves the theory wrong, then we still get consistent behavior.
 			}
 			it->state->eax = v[0];
 			it->state->edx = v[1];

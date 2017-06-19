@@ -46,6 +46,14 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SymbolStrip" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 
+	<UsingTask TaskName="Microsoft.Build.Tasks.Copy" AssemblyFile="Xamarin.MacDev.Tasks.dll"/>
+	<UsingTask TaskName="Microsoft.Build.Tasks.Delete" AssemblyFile="Xamarin.MacDev.Tasks.dll"/>
+	<UsingTask TaskName="Microsoft.Build.Tasks.Exec" AssemblyFile="Xamarin.MacDev.Tasks.dll"/>
+	<UsingTask TaskName="Microsoft.Build.Tasks.MakeDir" AssemblyFile="Xamarin.MacDev.Tasks.dll"/>
+	<UsingTask TaskName="Microsoft.Build.Tasks.Move" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
+	<UsingTask TaskName="Microsoft.Build.Tasks.RemoveDir" AssemblyFile="Xamarin.MacDev.Tasks.dll"/>
+	<UsingTask TaskName="Microsoft.Build.Tasks.Touch" AssemblyFile="Xamarin.MacDev.Tasks.dll"/>
+
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.props"
 			Condition="'$(_XamarinCommonPropsHasBeenImported)' != 'true'" />
 
@@ -58,10 +66,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<PropertyGroup Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' != 'true'">
 		<AssemblySearchPaths>$(XamarinMacFrameworkRoot)/lib/reference/full;$(XamarinMacFrameworkRoot)/lib/mono;$(AssemblySearchPaths)</AssemblySearchPaths>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' == 'true'">
-		<AssemblySearchPaths>$(XamarinMacFrameworkRoot)/lib/mono/4.5;$(AssemblySearchPaths)</AssemblySearchPaths>
 	</PropertyGroup>
 
 	<!-- Do not resolve from the GAC under any circumstances in Mobile or XM45 -->
@@ -81,39 +85,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<_AppBundleName>$(AssemblyName)</_AppBundleName>
 	</PropertyGroup>
 
-	<PropertyGroup>
-		<ImplicitlyExpandDesignTimeFacades>true</ImplicitlyExpandDesignTimeFacades>
-
-		<ResolveReferencesDependsOn>
-			_SeparateAppExtensionReferences;
-			$(ResolveReferencesDependsOn);
-			ImplicitlyExpandDesignTimeFacades
-		</ResolveReferencesDependsOn>
-
-		<ImplicitlyExpandDesignTimeFacadesDependsOn>
-			$(ImplicitlyExpandDesignTimeFacadesDependsOn);
-			GetReferenceAssemblyPaths
-		</ImplicitlyExpandDesignTimeFacadesDependsOn>
-	</PropertyGroup>
-
-	<Target Name="ImplicitlyExpandDesignTimeFacades" Condition="'$(ImplicitlyExpandDesignTimeFacades)' == 'true'" DependsOnTargets="$(ImplicitlyExpandDesignTimeFacadesDependsOn)">
-		<PropertyGroup>
-			<_HasReferenceToSystemRuntime Condition="'%(ReferenceDependencyPaths.Filename)' == 'System.Runtime'">true</_HasReferenceToSystemRuntime>
-		</PropertyGroup>
-
-		<ItemGroup Condition="'$(_HasReferenceToSystemRuntime)' == 'true'">
-			<_DesignTimeFacadeAssemblies Include="%(DesignTimeFacadeDirectories.Identity)*.dll"/>
-			<ReferencePath Remove="@(_DesignTimeFacadeAssemblies)"/>
-			<ReferencePath Include="%(_DesignTimeFacadeAssemblies.Identity)">
-				<WinMDFile>false</WinMDFile>
-				<CopyLocal>false</CopyLocal>
-				<ResolvedFrom>ImplicitlyExpandDesignTimeFacades</ResolvedFrom>
-			</ReferencePath>
-			<ReferenceDependencyPath Include="@(ReferencePath)" Condition="'%(ReferencePath.ResolvedFrom)' == 'ImplicitlyExpandDesignTimeFacades'" />
-		</ItemGroup>
-
-		<Message Importance="Low" Text="Including @(ReferencePath)" Condition="'%(ReferencePath.ResolvedFrom)' == 'ImplicitlyExpandDesignTimeFacades'" />
-	</Target>
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.ImplicitFacade.xbuild.targets"
+		Condition="'$(IsXBuild)' == 'true' "/>
 
 	<PropertyGroup>
 		<BuildDependsOn>
@@ -220,7 +193,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			Condition="'@(_NativeLibrary)' != '' And '$(IsMacEnabled)' == 'true'"
 			CodesignAllocate="$(_CodesignAllocate)"
 			Keychain="$(CodesignKeychain)"
-			Resource="%(_NativeLibrary.Identity)"
+			Resources="@(_NativeLibrary)"
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			IsAppExtension="$(IsAppExtension)"
@@ -267,7 +240,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			CodesignAllocate="$(_CodesignAllocate)"
 			Keychain="$(CodesignKeychain)"
 			Entitlements="$(IntermediateOutputPath)Entitlements.xcent"
-			Resource="$(AppBundleDir)"
+			Resources="$(AppBundleDir)"
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			IsAppExtension="$(IsAppExtension)"
@@ -353,13 +326,21 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<Target Name="_ForgeMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_SmeltedMetal)' != ''" DependsOnTargets="_SmeltMetal"
 		Inputs="@(_SmeltedMetal)" Outputs="$(IntermediateOutputPath)metal\default.metal-ar">
 		<ArTool
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' and '$(_IsXcode8)' == 'false'"
 			SessionId="$(BuildSessionId)"
 			Items="@(_SmeltedMetal)"
 			Archive="$(IntermediateOutputPath)metal\default.metal-ar">
 		</ArTool>
 
-		<CreateItem Include="$(IntermediateOutputPath)metal\default.metal-ar">
+		<!-- If !Xcode8 -->
+		<CreateItem Include="$(IntermediateOutputPath)metal\default.metal-ar"
+					Condition="'$(_IsXcode8)' == 'false'">
+			<Output TaskParameter="Include" ItemName="_ForgedMetal" />
+		</CreateItem>
+
+		<!-- Else -->
+		<CreateItem Include="@(_SmeltedMetal)"
+					Condition="'$(_IsXcode8)' == 'true'">
 			<Output TaskParameter="Include" ItemName="_ForgedMetal" />
 		</CreateItem>
 	</Target>
@@ -433,7 +414,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			Prefix="xammac"
 			NoOverwrite="@(_BundleResourceWithLogicalName)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
-			ReferencedLibraries="@(ResolvedFiles)">
+			TargetFrameworkDirectory="$(TargetFrameworkDirectory)"
+			ReferencedLibraries="@(ReferencePath)">
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="FileWrites" />
 		</UnpackLibraryResources>
@@ -448,6 +430,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			<Output TaskParameter="SdkBinPath" PropertyName="_SdkBinPath" />
 			<Output TaskParameter="SdkDevPath" PropertyName="_SdkDevPath" />
 			<Output TaskParameter="SdkUsrPath" PropertyName="_SdkUsrPath" />
+			<Output TaskParameter="IsXcode8" PropertyName="_IsXcode8" />
 		</DetectSdkLocations>
 	</Target>
 
@@ -509,7 +492,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			AppBundleDir="$(AppBundleDir)"
 			OutputPath="$(OutputPath)"
 			ApplicationName="$(_AppBundleName)"
-			ApplicationAssembly="$(OutputPath)$(AssemblyName)"
+			ApplicationAssembly="$(OutputPath)$(TargetName)$(TargetExt)"
 			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			TargetFrameworkVersion="$(TargetFrameworkVersion)"
 			UseXamMacFullFramework="$(UseXamMacFullFramework)"
@@ -518,17 +501,20 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			LinkMode="$(LinkMode)"
 			Debug="$(DebugSymbols)"
 			HttpClientHandler="$(HttpClientHandler)"
-			TLSProvider="$(TlsProvider)"
 			I18n="$(I18n)"
 			Profiling="$(Profiling)"
 			ExtraArguments="$(MonoBundlingExtraArgs)"
-			NativeReferences="%(NativeReference.FullPath)"
+			NativeReferences="@(NativeReference)"
 			ExplicitReferences="@(ReferencePath)"
 			SdkRoot="$(_SdkDevPath)"
 			IntermediateOutputPath="$(IntermediateOutputPath)mmp-cache"
 			AppManifest="$(_AppManifest)"
 			SdkVersion="$(MacOSXSdkVersion)"
-			IsAppExtension="$(IsAppExtension)">
+			IsAppExtension="$(IsAppExtension)"
+			EnableSGenConc="$(EnableSGenConc)"
+			AotScope="$(AotScope)"
+			HybridAotOption="$(HybridAotOption)"
+			ExplicitAotAssemblies="$(ExplicitAotAssemblies)">
 			<Output TaskParameter="NativeLibraries" ItemName="_NativeLibrary" />
 		</Mmp>
 	</Target>
@@ -577,6 +563,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			ToolExe="$(ACToolExe)"
 			ToolPath="$(ACToolPath)"
 			AppManifest="$(_AppManifest)"
+			EnableOnDemandResources="false"
 			ImageAssets="@(ImageAsset)"
 			OptimizePngs="false"
 			OutputPath="$(OutputPath)"
@@ -625,6 +612,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			ToolExe="$(IBToolExe)"
 			ToolPath="$(IBToolPath)"
 			AppManifest="$(_AppManifest)"
+			EnableOnDemandResources="false"
 			InterfaceDefinitions="@(InterfaceDefinition)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			SdkPlatform="MacOSX"
@@ -667,8 +655,11 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.XM45.targets"
-		Condition="'$(UseXamMacFullFramework)' == 'true'"/>
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.XM45.xbuild.targets"
+		Condition="'$(UseXamMacFullFramework)' == 'true' And '$(IsXBuild)' == 'true' "/>
+
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets"
+		Condition="'$(IsXBuild)' != 'true' "/>
 
 	<Target Name="_SeparateAppExtensionReferences" BeforeTargets="AssignProjectConfiguration" Condition="'$(IsAppExtension)' != 'true'">
 		<CreateItem Include="@(ProjectReference)" PreserveExistingMetadata="true" Condition="'%(Identity)' != '' And '%(ProjectReference.IsAppExtension)' == 'true'">
@@ -717,8 +708,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_ResolveAppExtensionReferences" DependsOnTargets="_SplitAppExtensionReferencesByExistent">
 		<PropertyGroup>
-			<IsXBuild Condition="'$(MSBuildRuntimeVersion)' == ''">true</IsXBuild>
-
 			<!-- When building a .sln with xbuild or building from IDE, the referenced projects are already built.  -->
 			<_BuildReferencedExtensionProjects Condition="'$(IsXBuild)' == 'true' and '$(BuildingSolutionFile)' != 'true' and '$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
 
@@ -749,5 +738,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<Warning Text="Referenced Mac App Extension Project %(_AppExtensionReferenceWithConfigurationNonExistent.Identity) not found, ignoring."
 			 Condition="'@(_AppExtensionReferenceWithConfigurationNonExistent)' != ''"/>
 	</Target>
+
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
+			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
 </Project>
 

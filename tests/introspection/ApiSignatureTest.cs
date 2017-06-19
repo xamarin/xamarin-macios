@@ -192,10 +192,10 @@ namespace Introspection {
 
 		public Type CurrentType { get; private set; }
 
-		const BindingFlags Flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance;
+		const BindingFlags Flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance;
 
 		[Test]
-		public void Signatures ()
+		public void NativeSignatures ()
 		{
 			int n = 0;
 			Errors = 0;
@@ -791,6 +791,190 @@ namespace Introspection {
 				return type.FullName == "System.IntPtr";
 			case '^':
 				return type.FullName == "System.IntPtr";
+			}
+			return false;
+		}
+
+#if XAMCORE_2_0
+		[Test]
+#endif
+		public void ManagedSignature ()
+		{
+			int n = 0;
+			Errors = 0;
+			ErrorData.Clear ();
+
+			foreach (Type t in Assembly.GetTypes ()) {
+
+				if (!NSObjectType.IsAssignableFrom (t))
+					continue;
+
+				CurrentType = t;
+
+				foreach (MethodInfo m in t.GetMethods (Flags))
+					CheckManagedMemberSignatures (m, t, ref n);
+
+				foreach (MethodBase m in t.GetConstructors (Flags))
+					CheckManagedMemberSignatures (m, t, ref n);
+			}
+			AssertIfErrors ("{0} errors found in {1} signatures validated{2}", Errors, n, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
+		}
+
+		protected virtual bool CheckType (Type t, ref int n)
+		{
+			if (t.IsArray)
+				return CheckType (t.GetElementType (), ref n);
+			// e.g. NSDictionary<NSString,NSObject> needs 3 check
+			if (t.IsGenericType) {
+				foreach (var ga in t.GetGenericArguments ())
+					return CheckType (ga, ref n);
+			}
+			// look for [Model] types
+			if (t.GetCustomAttribute<ModelAttribute> (false) == null)
+				return true;
+			n++;
+			switch (t.Name) {
+			case "CAAnimationDelegate":	// this was not a protocol before iOS 10 and was not bound as such
+				return true;
+			default:
+				return false;
+			}
+		}
+
+		protected virtual void CheckManagedMemberSignatures (MethodBase m, Type t, ref int n)
+		{
+			// if the method was obsoleted then it's not an issue, we assume the alternative is fine
+			if (m.GetCustomAttribute<ObsoleteAttribute> () != null)
+				return;
+			if (m.DeclaringType != t)
+				return;
+
+			CurrentMethod = m;
+
+			foreach (var p in m.GetParameters ()) {
+				var pt = p.ParameterType;
+				// skip methods added inside the [Model] type - those are fine
+				if (t == pt)
+					continue;
+				if (!CheckType (pt, ref n))
+					ReportError ($"`{t.Name}.{m.Name}` includes a parameter of type `{pt.Name}` which is a concrete type `[Model]` and not an interface `[Protocol]`");
+			}
+			if (!m.IsConstructor) {
+				var rt = (m as MethodInfo).ReturnType;
+				if (!CheckType (rt, ref n))
+					ReportError ($"`{t.Name}.{m.Name}` return type `{rt.Name}` is a concrete type `[Model]` and not an interface `[Protocol]`");
+			}
+		}
+
+		static bool IsDiscouraged (MemberInfo mi)
+		{
+			foreach (var ca in mi.GetCustomAttributes ()) {
+				switch (ca.GetType ().Name) {
+				case "ObsoleteAttribute":
+				case "AdviceAttribute":
+				case "ObsoletedAttribute":
+				case "DeprecatedAttribute":
+					return true;
+				}
+			}
+			return false;
+		}
+
+#if !MONOMAC
+		[Test]
+#endif
+		public void AsyncCandidates ()
+		{
+			int n = 0;
+			Errors = 0;
+			ErrorData.Clear ();
+
+			foreach (Type t in Assembly.GetTypes ()) {
+
+				// e.g. delegates used for events
+				if (t.IsNested)
+					continue;
+
+				if (!NSObjectType.IsAssignableFrom (t))
+					continue;
+
+				if (t.GetCustomAttribute<ProtocolAttribute> () != null)
+					continue;
+				if (t.GetCustomAttribute<ModelAttribute> () != null)
+					continue;
+
+				// let's not encourage the use of some API
+				if (IsDiscouraged (t))
+					continue;
+
+				CurrentType = t;
+
+				var methods = t.GetMethods (Flags);
+				foreach (MethodInfo m in methods) {
+					if (m.DeclaringType != t)
+						continue;
+
+					// skip properties / events
+					if (m.IsSpecialName)
+						continue;
+
+					if (IgnoreAsync (m))
+						continue;
+
+					// some calls are "natively" async
+					if (m.Name.IndexOf ("Async", StringComparison.Ordinal) != -1)
+						continue;
+
+					// let's not encourage the use of some API
+					if (IsDiscouraged (m))
+						continue;
+
+					// is it a candidate ?
+					var p = m.GetParameters ();
+					if (p.Length == 0)
+						continue;
+					var last = p [p.Length - 1];
+					// trying to limit false positives and the need for large ignore lists to maintain
+					// unlike other introspection tests a failure does not mean a broken API
+					switch (last.Name) {
+					case "completionHandler":
+					case "completion":
+						break;
+					default:
+						continue;
+					}
+					if (!last.ParameterType.IsSubclassOf (typeof (Delegate)))
+						continue;
+
+					// did we provide a async wrapper ?
+					string ma = m.Name + "Async";
+					if (methods.Where ((mi) => mi.Name == ma).FirstOrDefault () != null)
+						continue;
+
+					var name = m.ToString ();
+					var i = name.IndexOf (' ');
+					ErrorData.AppendLine (name.Insert (i + 1, m.DeclaringType.Name + "::"));
+					Errors++;
+				}
+			}
+			AssertIfErrors ("{0} errors found in {1} signatures validated{2}", Errors, n, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
+		}
+
+		protected virtual bool IgnoreAsync (MethodInfo m)
+		{
+			switch (m.Name) {
+			// we bind PerformChangesAndWait which does the same
+			case "PerformChanges":
+				return m.DeclaringType.Name == "PHPhotoLibrary";
+			// it sets the callback, it will never call it
+			case "SetCompletionBlock":
+				return m.DeclaringType.Name == "SCNTransaction";
+			// It does not make sense for this API
+			case "CreateRunningPropertyAnimator":
+				return m.DeclaringType.Name == "UIViewPropertyAnimator";
+			// It does not make sense for this API
+			case "RequestData":
+				return m.DeclaringType.Name == "PHAssetResourceManager";
 			}
 			return false;
 		}

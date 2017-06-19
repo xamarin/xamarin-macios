@@ -29,7 +29,7 @@ namespace xharness
 			throw new NotSupportedException ();
 		}
 
-		public virtual TextWriter GetWriter ()
+		public virtual StreamWriter GetWriter ()
 		{
 			throw new NotSupportedException ();
 		}
@@ -72,22 +72,18 @@ namespace xharness
 		public string Path;
 		StreamWriter writer;
 
-		public LogFile (string description, string path)
+		public LogFile (string description, string path, bool append = true)
 			: base (description)
 		{
 			Path = path;
+
+			writer = new StreamWriter (new FileStream (Path, append ? FileMode.Append : FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read));
+			writer.AutoFlush = true;
 		}
 
 		protected override void WriteImpl (string value)
 		{
-			lock (this) {
-				using (var str = new FileStream (Path, FileMode.Append, FileAccess.Write, FileShare.Read)) {
-					using (var writer = new StreamWriter (str)) {
-						writer.Write (value);
-						writer.Flush ();
-					}
-				}
-			}
+			writer.Write (value);
 		}
 
 		public override string FullPath {
@@ -101,9 +97,9 @@ namespace xharness
 			return new StreamReader (new FileStream (Path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
 		}
 
-		public override TextWriter GetWriter ()
+		public override StreamWriter GetWriter ()
 		{
-			return writer ?? (writer = new StreamWriter (new FileStream (Path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read)));
+			return writer;
 		}
 
 		protected override void Dispose (bool disposing)
@@ -134,9 +130,9 @@ namespace xharness
 			return new StreamReader (new FileStream (path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
 		}
 
-		public override TextWriter GetWriter ()
+		public override StreamWriter GetWriter ()
 		{
-			return writer ?? (writer = new StreamWriter (fs));
+			return writer ?? (writer = new StreamWriter (fs) { AutoFlush = true });
 		}
 
 		public LogStream (string description, string path)
@@ -210,9 +206,9 @@ namespace xharness
 			}
 		}
 
-		public override TextWriter GetWriter ()
+		public override StreamWriter GetWriter ()
 		{
-			return Console.Out;
+			return new StreamWriter (Console.OpenStandardOutput ());
 		}
 
 		public override StreamReader GetReader ()

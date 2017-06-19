@@ -13,7 +13,12 @@ using System;
 using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+using UIColor = AppKit.NSColor;
+#else
 using UIKit;
+#endif
 using SpriteKit;
 #else
 using MonoTouch.Foundation;
@@ -95,9 +100,17 @@ namespace MonoTouchFixtures.SpriteKit {
 		public void Color ()
 		{
 			using (var n = new SKSpriteNode (UIColor.Blue, SizeF.Empty)) {
+#if MONOMAC
+				Assert.That (n.Color.ToString (), Is.EqualTo ("Device RGB(0.016804177314043,0.198350995779037,1,1)"), "Color-1");
+#else
 				Assert.That (n.Color.ToString (), Is.EqualTo ("UIColor [A=255, R=0, G=0, B=255]"), "Color-1");
+#endif
 				n.Color = null;
+#if MONOMAC
+				Assert.That (n.Color.ToString (), Is.EqualTo ("Device RGB(0,0,0,0)"), "Color-2");
+#else
 				Assert.That (n.Color.ToString (), Is.EqualTo ("UIColor [A=0, R=0, G=0, B=0]"), "Color-2");
+#endif
 			}
 		}
 

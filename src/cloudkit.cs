@@ -119,6 +119,7 @@ namespace XamCore.CloudKit {
 		[Export ("publicPermission", ArgumentSemantic.Assign)]
 		CKShareParticipantPermission PublicPermission { get; set; }
 
+		[NullAllowed]
 		[Export ("URL", ArgumentSemantic.Copy)]
 		NSUrl Url { get; }
 
@@ -205,6 +206,7 @@ namespace XamCore.CloudKit {
 		[Export ("publicCloudDatabase")]
 		CKDatabase PublicCloudDatabase { get; }
 
+		[iOS (10, 0)][Mac (10,12)]
 		[Export ("sharedCloudDatabase")]
 		CKDatabase SharedCloudDatabase { get; }
 
@@ -228,7 +230,7 @@ namespace XamCore.CloudKit {
 		[Async]
 		void FetchUserRecordId (Action<CKRecordID, NSError> completionHandler);
 
-		[iOS (10,0), TV (10,0), Mac (10,12)]
+		[iOS (10,0)][Mac (10,12)]
 		[NoTV]
 		[Export ("discoverAllIdentitiesWithCompletionHandler:")]
 		[Async]
@@ -486,7 +488,6 @@ namespace XamCore.CloudKit {
 	}
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
-	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
 	[BaseType (typeof (CKOperation))]
 	interface CKFetchNotificationChangesOperation {
 		[Export ("initWithPreviousServerChangeToken:")]
@@ -593,6 +594,7 @@ namespace XamCore.CloudKit {
 		[Export ("initWithRecordZoneIDs:optionsByRecordZoneID:")]
 		IntPtr Constructor (CKRecordZoneID[] recordZoneIDs, [NullAllowed] NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesOptions> optionsByRecordZoneID);
 
+		[NullAllowed]
 		[Export ("recordZoneIDs", ArgumentSemantic.Copy)]
 		CKRecordZoneID[] RecordZoneIDs { get; set; }
 
@@ -762,6 +764,7 @@ namespace XamCore.CloudKit {
 		[Export ("initWithNotificationIDsToMarkRead:")]
 		IntPtr Constructor (CKNotificationID [] notificationIds);
 
+		[NullAllowed]
 		[Export ("notificationIDs", ArgumentSemantic.Copy)]
 		CKNotificationID [] NotificationIds { get; set; }
 
@@ -878,7 +881,6 @@ namespace XamCore.CloudKit {
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKModifySubscriptionsOperation {
 
-		[DesignatedInitializer]
 		[Export ("initWithSubscriptionsToSave:subscriptionIDsToDelete:")]
 		IntPtr Constructor ([NullAllowed] CKSubscription [] subscriptionsToSave, [NullAllowed] string [] subscriptionIdsToDelete);
 
@@ -956,11 +958,7 @@ namespace XamCore.CloudKit {
 
 		[Static]
 		[Export ("notificationFromRemoteNotificationDictionary:")]
-#if XAMCORE_4_0
-		CKNotification FromRemoteNotificationDictionary (NSDictionary<NSString, NSObject> notificationDictionary);
-#else
 		CKNotification FromRemoteNotificationDictionary (NSDictionary notificationDictionary);
-#endif
 
 		[iOS (9,0)][Mac (10,11)]
 		[NullAllowed, Export ("subscriptionID")]
@@ -1069,6 +1067,7 @@ namespace XamCore.CloudKit {
 
 		[iOS (9,3)][Mac (10,11,4)]
 		[TV (9,2)]
+		[NullAllowed]
 		[Export ("longLivedOperationWasPersistedBlock", ArgumentSemantic.Strong)]
 		Action LongLivedOperationWasPersistedCallback { get; set; }		
 	}
@@ -1519,13 +1518,9 @@ namespace XamCore.CloudKit {
 	[iOS (9,2), Mac (10,11,2, onlyOn64 : true)]
 	[TV (9,1)]
 	[Watch (3,0)]
-#if XAMCORE_4_0 || WATCH // does not work on watchOS - existiong init* does not allow null to be used to fake it
-	[DisableDefaultCtor]
-#endif
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchWebAuthTokenOperation {
 
-		[DesignatedInitializer]
 		[Export ("initWithAPIToken:")]
 		IntPtr Constructor (string token);
 
@@ -1573,6 +1568,7 @@ namespace XamCore.CloudKit {
 		[Export ("initWithUserIdentityLookupInfos:")]
 		IntPtr Constructor (CKUserIdentityLookupInfo[] userIdentityLookupInfos);
 
+		[NullAllowed]
 		[Export ("userIdentityLookupInfos", ArgumentSemantic.Copy)]
 		CKUserIdentityLookupInfo[] UserIdentityLookupInfos { get; set; }
 
@@ -1594,6 +1590,7 @@ namespace XamCore.CloudKit {
 		IntPtr Constructor (CKShareMetadata[] shareMetadatas);
 
 		[Export ("shareMetadatas", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		CKShareMetadata[] ShareMetadatas { get; set; }
 
 		[NullAllowed, Export ("perShareCompletionBlock", ArgumentSemantic.Copy)]
@@ -1613,6 +1610,7 @@ namespace XamCore.CloudKit {
 		[Export ("initWithShareURLs:")]
 		IntPtr Constructor (NSUrl[] shareUrls);
 
+		[NullAllowed]
 		[Export ("shareURLs", ArgumentSemantic.Copy)]
 		NSUrl[] ShareUrls { get; set; }
 

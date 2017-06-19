@@ -54,6 +54,72 @@ namespace MonoTouchFixtures.UIKit {
 			// ref: https://bugzilla.xamarin.com/show_bug.cgi?id=13286
 			UISegmentedControl.Appearance.TintColor = UIColor.Blue;
 		}
+
+		[Test]
+		public void CtorObjects ()
+		{
+			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((object []) null), "null");
+			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((object []) new [] { String.Empty, null }), "null element");
+			Assert.Throws<ArgumentException> (() => new UISegmentedControl ((object []) new [] { NSZone.Default }), "invalid type");
+
+			using (var ns = new NSString ("NSString"))
+			using (var img = UIImage.FromFile ("basn3p08.png"))
+			using (UISegmentedControl sc = new UISegmentedControl ("string", ns, img)) {
+				Assert.That (sc.NumberOfSegments, Is.EqualTo (3), "NumberOfSegments");
+			}
+		}
+
+		[Test]
+		public void CtorNSArray ()
+		{
+			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((NSArray) null), "null");
+
+			using (UISegmentedControl sc = new UISegmentedControl (new NSArray ())) {
+				Assert.That(sc.NumberOfSegments, Is.EqualTo (0), "Empty");
+			}
+
+			using (var ns = new NSString ("NSString"))
+			using (var img = UIImage.FromFile ("basn3p08.png"))
+			using (var a = NSArray.FromObjects ("string", ns, img))
+			using (UISegmentedControl sc = new UISegmentedControl (a)) {
+				Assert.That (sc.NumberOfSegments, Is.EqualTo (3), "NumberOfSegments");
+			}
+		}
+
+		[Test]
+		public void CtorNSString ()
+		{
+			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((NSString) null), "null");
+			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((NSString[]) null), "null array");
+
+			using (var ns = new NSString ("NSString"))
+			using (UISegmentedControl sc = new UISegmentedControl (ns)) {
+				Assert.That (sc.NumberOfSegments, Is.EqualTo (1), "NumberOfSegments");
+			}
+		}
+
+		[Test]
+		public void CtorString ()
+		{
+			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((string) null), "null");
+			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((string[]) null), "null array");
+
+			using (UISegmentedControl sc = new UISegmentedControl ("one", "two")) {
+				Assert.That (sc.NumberOfSegments, Is.EqualTo (2), "NumberOfSegments");
+			}
+		}
+
+		[Test]
+		public void CtorUIImage ()
+		{
+			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((UIImage) null), "null");
+			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((UIImage[]) null), "null array");
+
+			using (var img = UIImage.FromFile ("basn3p08.png"))
+			using (UISegmentedControl sc = new UISegmentedControl (img)) {
+				Assert.That (sc.NumberOfSegments, Is.EqualTo (1), "NumberOfSegments");
+			}
+		}
 	}
 }
 

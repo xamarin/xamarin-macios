@@ -57,13 +57,23 @@ endif
 # to run specific test suites. For more information read the README.md.
 #
 
-all-local:: qa-test-dependencies.zip mac-test-package.zip
+package-tests:
+	$(MAKE) qa-test-dependencies.zip mac-test-package.zip
 
 test.config: Makefile $(TOP)/Make.config
 	@rm -f $@
 	@echo "MONOTOUCH_PREFIX=$(abspath $(MONOTOUCH_PREFIX))" >> $@
 	@echo "IOS_DESTDIR=$(abspath $(IOS_DESTDIR))" >> $@
 	@echo "MAC_DESTDIR=$(abspath $(MAC_DESTDIR))" >> $@
+	@echo "WATCH_MONO_PATH=$(abspath $(WATCH_MONO_PATH))" >> $@
+	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
+	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
+
+test-system.config:
+	@rm -f $@
+	@echo "MONOTOUCH_PREFIX=$(IOS_FRAMEWORK_DIR)/Versions/Current" >> $@
+	@echo "IOS_DESTDIR=/" >> $@
+	@echo "MAC_DESTDIR=/" >> $@
 	@echo "WATCH_MONO_PATH=$(abspath $(WATCH_MONO_PATH))" >> $@
 	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
 	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
@@ -160,7 +170,7 @@ $(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/mtouch/SdkVersions.cs.in
 	@$(MAKE) -C $(TOP)/src project-files
 	@touch $@
 
-xharness/xharness.exe: $(wildcard xharness/*.cs) xharness/xharness.csproj $(TOP)/tools/mtouch/SdkVersions.cs test.config .stamp-src-project-files
+xharness/xharness.exe: $(wildcard xharness/*.cs) xharness/xharness.csproj $(TOP)/tools/mtouch/SdkVersions.cs test.config test-system.config .stamp-src-project-files
 	$(Q_GEN) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
 
 killall:
@@ -251,6 +261,7 @@ ifdef INCLUDE_MAC
 wrench-mac-dontlink:
 	$(Q) $(MAKE) run-mac-dontlink
 	$(Q) $(MAKE) clean-mac-dontlink
+	git clean -xfdq
 
 wrench-mac-mmp:
 	@echo Now part of wrench-mac-mmptest
@@ -267,15 +278,18 @@ wrench-mac-drm:
 wrench-mac-api:
 	$(Q) $(MAKE) run-mac-apitest
 	$(Q) $(MAKE) clean-mac-apitest
+	git clean -xfdq
 
 wrench-mac-mmptest:
 	$(Q) $(MAKE) run-mac-mmptest
 	$(Q) $(MAKE) clean-mac-mmptest
 	$(Q) $(MAKE) -C mmptest/regression
+	git clean -xfdq
 
 wrench-mac-msbuild:
 	$(Q) $(MAKE) run-mac-msbuild
 	$(Q) $(MAKE) clean-mac-msbuild
+	git clean -xfdq
 
 wrench-mac-binding-project:
 	cd mac-binding-project && $(MAKE)
@@ -284,6 +298,7 @@ wrench-mac-binding-project:
 wrench-mac-introspection:
 	$(Q) $(MAKE) run-mac-introspection
 	$(Q) $(MAKE) clean-mac-introspection
+	git clean -xfdq
 
 else
 wrench-mac-%:
@@ -291,7 +306,7 @@ wrench-mac-%:
 endif
 
 wrench-msbuild:
-	$(MAKE) -C $(TOP)/msbuild test-xml
+	$(MAKE) -C $(TOP)/msbuild .stamp-test-xml
 ifdef INCLUDE_IOS
 	$(MAKE) test-ios-tasks
 else

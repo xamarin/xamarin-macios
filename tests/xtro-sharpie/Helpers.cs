@@ -40,8 +40,10 @@ namespace Extrospection {
 			{ "NEVPNStatus", "NEVpnStatus" },
 			{ "NSAttributedStringEnumerationOptions", "NSAttributedStringEnumeration" },
 			{ "NSHTTPCookieAcceptPolicy", "NSHttpCookieAcceptPolicy" },
+			{ "NSISO8601DateFormatOptions", "NSIso8601DateFormatOptions" },
 			{ "NSJSONReadingOptions", "NSJsonReadingOptions" },
 			{ "NSJSONWritingOptions", "NSJsonWritingOptions" },
+			{ "NSUbiquitousKeyValueStoreChangeReason", "NSUbiquitousKeyValueStore" },
 			{ "NSURLBookmarkCreationOptions", "NSUrlBookmarkCreationOptions" },
 			{ "NSURLBookmarkResolutionOptions", "NSUrlBookmarkResolutionOptions" },
 			{ "NSURLCacheStoragePolicy", "NSUrlCacheStoragePolicy" },
@@ -51,10 +53,12 @@ namespace Extrospection {
 			{ "NSURLRequestNetworkServiceType", "NSUrlRequestNetworkServiceType" },
 			{ "NSURLSessionAuthChallengeDisposition", "NSUrlSessionAuthChallengeDisposition" },
 			{ "NSURLSessionResponseDisposition", "NSUrlSessionResponseDisposition" },
+			{ "NSURLSessionTaskMetricsResourceFetchType", "NSUrlSessionTaskMetricsResourceFetchType" },
 			{ "NSURLSessionTaskState", "NSUrlSessionTaskState" },
 			{ "NWTCPConnectionState", "NWTcpConnectionState" },
 			{ "NWUDPSessionState", "NWUdpSessionState" },
 			{ "RPRecordingErrorCode", "RPRecordingError" },
+			{ "SecTrustResultType", "SecTrustResult" },
 			{ "SKErrorCode", "SKError" },
 			{ "SSReadingListErrorCode", "SSReadingListError" },
 			{ "SCNRenderingAPI", "SCNRenderingApi" },
@@ -63,6 +67,8 @@ namespace Extrospection {
 			{ "UITableViewCellAccessoryType", "UITableViewCellAccessory" },
 			{ "UITableViewCellStateMask", "UITableViewCellState" },
 			{ "WatchKitErrorCode", "WKErrorCode" }, // WebKit already had that name
+			// not enums
+			{ "NSMutableURLRequest", "NSMutableUrlRequest" },
 		};
 
 		public static string GetManagedName (string nativeName)

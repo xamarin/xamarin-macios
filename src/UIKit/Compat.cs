@@ -8,6 +8,7 @@
 
 
 using System;
+using XamCore.CoreGraphics;
 
 namespace XamCore.UIKit {
 
@@ -77,5 +78,16 @@ namespace XamCore.UIKit {
 		{
 		}
 	}
+
+#if !TVOS
+	public partial class UIPreviewInteraction {
+		[Obsolete ("Use overload accepting a IUICoordinateSpace")]
+		public virtual CGPoint GetLocationInCoordinateSpace (UICoordinateSpace coordinateSpace)
+		{
+			return GetLocationInCoordinateSpace ((IUICoordinateSpace) coordinateSpace);
+		}
+	}
+#endif
+
 #endif
 }

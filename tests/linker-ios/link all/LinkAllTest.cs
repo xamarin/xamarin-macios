@@ -235,46 +235,49 @@ namespace LinkAll {
 			Assert.NotNull (system, "System");
 		}
 
+		string FindAssemblyPath ()
+		{
+			var filename = Path.GetFileName (GetType ().Assembly.Location);
+			var bundlePath = NSBundle.MainBundle.BundlePath;
+			var isExtension = bundlePath.EndsWith (".appex", StringComparison.Ordinal);
+			var mainBundlePath = bundlePath;
+			if (isExtension)
+				mainBundlePath = Path.GetDirectoryName (Path.GetDirectoryName (bundlePath));
+			foreach (var filepath in Directory.EnumerateFiles (mainBundlePath, filename, SearchOption.AllDirectories)) {
+				var fname = Path.GetFileName (filepath);
+				if (filepath.EndsWith ($"{fname}.framework/{fname}", StringComparison.Ordinal)) {
+					// This isn't the assembly, but the native AOT'ed executable for the assembly.
+					continue;
+				}
+
+				if (isExtension) {
+					return "../../" + filepath.Substring (mainBundlePath.Length + 1);
+				} else {
+					return filepath.Substring (mainBundlePath.Length + 1);
+				}
+			}
+			throw new FileNotFoundException ($"Could not find the assembly ${filename} in the bundle {bundlePath}.");
+		}
+
 		[Test]
 		public void Assembly_LoadFile ()
 		{
-			string filename = Path.GetFileName (GetType ().Assembly.Location);
-			try {
-				Assert.NotNull (Assembly.LoadFile (filename), "1");
-			}
-			catch (FileNotFoundException) { 
-				// 2nd chance since FAT 32/64 applications moved the assemblies (but that could prove an issue too)
-				filename = Path.Combine (IntPtr.Size == 4 ? ".monotouch-32" : ".monotouch-64", filename);
-				Assert.NotNull (Assembly.LoadFile (filename), "2");
-			}
+			string filename = FindAssemblyPath ();
+			Assert.NotNull (Assembly.LoadFile (filename), "1");
 		}
 
 		[Test]
 		public void Assembly_LoadFrom ()
 		{
-			string filename = Path.GetFileName (GetType ().Assembly.Location);
-			try {
-				Assert.NotNull (Assembly.LoadFrom (filename), "1");
-			}
-			catch (FileNotFoundException) { 
-				// 2nd chance since FAT 32/64 applications moved the assemblies (but that could prove an issue too)
-				filename = Path.Combine (IntPtr.Size == 4 ? ".monotouch-32" : ".monotouch-64", filename);
-				Assert.NotNull (Assembly.LoadFrom (filename), "2");
-			}
+			string filename = FindAssemblyPath ();
+			Assert.NotNull (Assembly.LoadFrom (filename), "1");
 		}
 
 		[Test]
 		public void Assembly_ReflectionOnlyLoadFrom ()
 		{
-			string filename = Path.GetFileName (GetType ().Assembly.Location);
-			try {
-				Assert.NotNull (Assembly.ReflectionOnlyLoadFrom (filename), "1");
-			}
-			catch (FileNotFoundException) { 
-				// 2nd chance since FAT 32/64 applications moved the assemblies (but that could prove an issue too)
-				filename = Path.Combine (IntPtr.Size == 4 ? ".monotouch-32" : ".monotouch-64", filename);
-				Assert.NotNull (Assembly.ReflectionOnlyLoadFrom (filename), "2");
-			}
+			string filename = FindAssemblyPath ();
+			Assert.NotNull (Assembly.ReflectionOnlyLoadFrom (filename), "1");
 		}
 
 		[Test]
@@ -405,6 +408,8 @@ namespace LinkAll {
 		{
 			// that will bring OpenTK-1.0 into the .app
 			OpenTK.WindowState state = OpenTK.WindowState.Normal;
+			// Compiler optimization (roslyn release) can remove the variable, which removes OpenTK-1.dll from the app and fail the test
+			Assert.That (state, Is.EqualTo (OpenTK.WindowState.Normal), "normal");
 
 			var gl = Type.GetType ("OpenTK.Graphics.ES11.GL, OpenTK-1.0", false);
 			Assert.NotNull (gl, "ES11/GL");
@@ -443,9 +448,12 @@ namespace LinkAll {
 
 		string GetField (object o, string s)
 		{
-			var f = o.GetType ().GetField (s, BindingFlags.Instance | BindingFlags.NonPublic);
-			if (f == null)
+			var type = o.GetType ();
+			var f1 = type.GetField (s, BindingFlags.Instance | BindingFlags.NonPublic);
+			var f2 = type.GetField (s + "i__Field", BindingFlags.Instance | BindingFlags.NonPublic);
+			if (f1 == null && f2 == null)
 				return s;
+
 			//Console.WriteLine (f.GetValue (o));
 			return null;
 		}
@@ -523,11 +531,7 @@ namespace LinkAll {
 		{
 			// make test work for classic (monotouch) and unified (iOS, tvOS and watchOS)
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Security.Tls.AppleTlsProvider");
-#if __WATCHOS__
 			Assert.Null (Type.GetType (fqn), "Should NOT be included (no SslStream or Socket support)");
-#else
-			Assert.NotNull (Type.GetType (fqn), "Should be included");
-#endif
 		}
 	}
 }

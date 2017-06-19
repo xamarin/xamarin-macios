@@ -280,6 +280,7 @@ namespace XamCore.AVFoundation {
 			throw new NotImplementedException ();
 		}
 
+		[Obsolete ("Use the overload with a `INSUrlSessionDelegate` parameter.")]
 		public new static NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, NSUrlSessionDelegate sessionDelegate, NSOperationQueue delegateQueue)
 		{
 			throw new NotImplementedException ();

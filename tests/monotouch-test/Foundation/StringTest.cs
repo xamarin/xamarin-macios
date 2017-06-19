@@ -13,7 +13,13 @@ using System.Drawing;
 #endif
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+using UIFont = AppKit.NSFont;
+using UIStringAttributes = AppKit.NSStringAttributes;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -109,8 +115,9 @@ namespace MonoTouchFixtures.Foundation {
 					Is.EqualTo (NSComparisonResult.Same), "Replace");
 			}
 		}
-		
-#if !__TVOS__ && !__WATCHOS__
+
+		//No Mac version of DrawString with those parameters
+#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 		[Test]
 		[Culture ("en")] // fails for some cultures, e.g. ar-AE
 		public void DrawString_7 ()
@@ -136,6 +143,7 @@ namespace MonoTouchFixtures.Foundation {
 			}
 		}
 
+		//No Mac ersion of StringSize with those parmaters
 		[Test]
 		[Culture ("en")] // fails for some cultures, e.g. ar-AE
 		public void StringSize_5 ()
@@ -160,7 +168,7 @@ namespace MonoTouchFixtures.Foundation {
 				throw;
 			}
 		}
-#endif // !__TVOS__ && !__WATCHOS__
+#endif // !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
 		[Test]
 		public void PathExtensions ()
@@ -189,8 +197,10 @@ namespace MonoTouchFixtures.Foundation {
 					Assert.DoesNotThrow (() => s.WeakGetBoundingRect (new SizeF (5, 5), options, dict, null), "WeakGetBoundingRect 1");
 					Assert.DoesNotThrow (() => s.DrawString (new RectangleF (0, 0, 10, 10), options, attrib, null), "DrawString 1");
 					Assert.DoesNotThrow (() => s.WeakDrawString (new RectangleF (0, 0, 10, 10), options, dict, null), "WeakDrawString 1");
+#if !MONOMAC //WeakDrawString on mac doesn't have versions with these parameters
 					Assert.DoesNotThrow (() => s.WeakDrawString (new RectangleF (0, 0, 10, 10), dict), "WeakDrawString 2");
 					Assert.DoesNotThrow (() => s.WeakDrawString (new PointF (0, 0), dict), "WeakDrawString 3");
+#endif
 				}
 			}
 		}
@@ -229,6 +239,7 @@ namespace MonoTouchFixtures.Foundation {
 			}
 		}
 
+#if !MONOMAC // NSImage uses different methods
 		[Test]
 		public void FromData ()
 		{
@@ -242,5 +253,6 @@ namespace MonoTouchFixtures.Foundation {
 				NSString.FromData (null, NSStringEncoding.UTF8);
 			}, "NSDataNull");
 		}
+#endif
 	}
 }

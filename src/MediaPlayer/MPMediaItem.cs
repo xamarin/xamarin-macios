@@ -9,7 +9,7 @@
 // Copyright 2011-2012 Xamarin, Inc
 //
 
-#if !TVOS
+#if !TVOS && !MONOMAC
 
 using System;
 using System.Collections;
@@ -290,6 +290,13 @@ namespace XamCore.MediaPlayer {
 		public NSDate DateAdded {
 			get {
 				return (ValueForProperty (DateAddedProperty) as NSDate);
+			}
+		}
+
+		[iOS (10,3)]
+		public NSString PlaybackStoreID {
+			get {
+				return (ValueForProperty (PlaybackStoreIDProperty) as NSString);
 			}
 		}
 	}

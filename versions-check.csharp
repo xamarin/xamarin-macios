@@ -48,10 +48,10 @@ var check = new Action<string, string, string> ((product, min, max) =>
 		var v = node.InnerText;
 		var version = Version.Parse (v);
 		if (version < minVersion) {
-			Console.Error.WriteLine ($"Found the {product} version {v} in {Path.GetFileName (plistPath)}, but it's smaller the supported min {product} version we support ({min}).");
+			Console.Error.WriteLine ($"Found the {product} version {v} in {Path.GetFileName (plistPath)}, but it's smaller than the supported min {product} version we support ({min}).");
 			failed = true;
 		} else if (version > maxVersion) {
-			Console.Error.WriteLine ($"Found the {product} version {v} in {Path.GetFileName (plistPath)}, but it's higher the supported max {product} version we support ({max}).");
+			Console.Error.WriteLine ($"Found the {product} version {v} in {Path.GetFileName (plistPath)}, but it's higher than the supported max {product} version we support ({max}).");
 			failed = true;
 		} else if (version == maxVersion) {
 			foundMax = true;

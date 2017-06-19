@@ -124,7 +124,7 @@ namespace Xamarin.MacDev.Tasks
 			return startInfo;
 		}
 
-		protected int Compile (ITaskItem[] items, ITaskItem output, ITaskItem manifest)
+		protected int Compile (ITaskItem[] items, string output, ITaskItem manifest)
 		{
 			var environment = new Dictionary<string, string> ();
 			var args = new ProcessArgumentBuilder ();
@@ -147,7 +147,7 @@ namespace Xamarin.MacDev.Tasks
 			else
 				args.Add ("--compile");
 
-			args.AddQuoted (output.GetMetadata ("FullPath"));
+			args.AddQuoted (Path.GetFullPath (output));
 
 			foreach (var item in items)
 				args.AddQuoted (item.GetMetadata ("FullPath"));
@@ -177,16 +177,21 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			if (exitCode != 0) {
+				// Note: ibtool or actool exited with an error. Dump everything we can to help the user
+				// diagnose the issue and then delete the manifest log file so that rebuilding tries
+				// again (in case of ibtool's infamous spurious errors).
 				if (errors.Length > 0)
 					Log.LogError (null, null, null, items[0].ItemSpec, 0, 0, 0, 0, "{0}", errors);
 
+				Log.LogError ("{0} exited with code {1}", ToolName, exitCode);
+
+				// Note: If the log file exists and is parseable, log those warnings/errors as well...
 				if (File.Exists (manifest.ItemSpec)) {
 					try {
 						var plist = PDictionary.FromFile (manifest.ItemSpec);
 
 						LogWarningsAndErrors (plist, items[0]);
 					} catch (FormatException) {
-						Log.LogError ("{0} exited with code {1}", ToolName, exitCode);
 					}
 
 					File.Delete (manifest.ItemSpec);

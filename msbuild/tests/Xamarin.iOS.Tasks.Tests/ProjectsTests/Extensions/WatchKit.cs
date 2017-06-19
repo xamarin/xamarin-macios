@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 
 using NUnit.Framework;
 using Xamarin.MacDev;
@@ -18,7 +17,11 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void BasicTest () 
 		{
-			this.BuildExtension ("MyWatchApp", "MyWatchKitExtension", Platform, "Debug");
+			this.BuildExtension ("MyWatchApp", "MyWatchKitExtension", Platform, "Debug", additionalAsserts: (ProjectPaths mtouchPaths) =>
+			{
+				Assert.IsTrue (Directory.Exists (Path.Combine (mtouchPaths.AppBundlePath, "PlugIns", "MyWatchKitExtension.appex")), "appex");
+				Assert.IsFalse (Directory.Exists (Path.Combine (mtouchPaths.AppBundlePath, "PlugIns", "MyWatchKitExtension.appex", "Frameworks")), "frameworks");
+			});
 		}
 
 		[Test]
@@ -77,12 +80,11 @@ namespace Xamarin.iOS.Tasks {
 			Assert.IsNotEmpty (((PString)plist["CFBundleExecutable"]).Value);
 			Assert.IsNotEmpty (((PString)plist["CFBundleVersion"]).Value);
 
-			var ipaOutputDir = Directory.EnumerateDirectories (mtouchPaths.ProjectBinPath, hostAppName + " *").FirstOrDefault ();
-			var ipaPath = Path.Combine (ipaOutputDir, hostAppName +  ".ipa");
+			var ipaPath = Path.Combine (mtouchPaths.ProjectBinPath, hostAppName +  ".ipa");
 			var payloadPath = "Payload/";
 			var watchkitSupportPath = "WatchKitSupport/";
 
-			Assert.IsTrue (File.Exists (ipaPath));
+			Assert.IsTrue (File.Exists (ipaPath), "IPA package does not exist: {0}", ipaPath);
 
 			var startInfo = new ProcessStartInfo ("/usr/bin/zipinfo", "-1 \"" + ipaPath + "\"");
 			startInfo.RedirectStandardOutput = true;
@@ -103,8 +105,9 @@ namespace Xamarin.iOS.Tasks {
 
 			var ipaIncludeArtwork = proj.GetEvaluatedProperty ("IpaIncludeArtwork");
 			Assert.IsTrue (output.Contains ("iTunesMetadata.plist"), string.Format ("The ipa should contain at least one iTunesMetadata.plist file if we are using an AppStore config and IpaIncludeArtwork is true. IpaIncludeArtwork: {0}", ipaIncludeArtwork));
-		}
 
+			RunTarget (proj, "Clean");
+			Assert.IsFalse (File.Exists (ipaPath), "IPA package still exists after Clean: {0}", ipaPath);
+		}
 	}
 }
-

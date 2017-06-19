@@ -16,14 +16,20 @@ using System.Threading;
 using Foundation;
 using CoreGraphics;
 using ObjCRuntime;
-using MonoTouchException=Foundation.MonoTouchException;
 using Security;
+#if MONOMAC
+using AppKit;
+using PlatformException = Foundation.ObjCException;
+using UIView = AppKit.NSView;
+#else
 using UIKit;
+using PlatformException=Foundation.MonoTouchException;
+#endif
 #else
 using MonoTouch.CoreGraphics;
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
-using MonoTouchException=MonoTouch.Foundation.MonoTouchException;
+using PlatformException=MonoTouch.Foundation.MonoTouchException;
 using MonoTouch.Security;
 using MonoTouch.UIKit;
 #endif
@@ -130,7 +136,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void ValueForInvalidKeyTest ()
 		{
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=13243
-			Assert.Throws<MonoTouchException> (() =>
+			Assert.Throws<PlatformException> (() =>
 			{
 				using (var str = new NSString ("test")) {
 					str.ValueForKey(str);

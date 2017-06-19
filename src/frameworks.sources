@@ -118,6 +118,7 @@ APPKIT_SOURCES = \
 	AppKit/NSPopUpButton.cs \
 	AppKit/NSPopUpButtonCell.cs \
 	AppKit/NSPredicateEditorRowTemplate.cs \
+	AppKit/NSPrintInfo.cs \
 	AppKit/NSPrintPanel.cs \
 	AppKit/NSResponder.cs \
 	AppKit/NSScreen.cs \
@@ -135,6 +136,7 @@ APPKIT_SOURCES = \
 	AppKit/NSTextField.cs \
 	AppKit/NSTextStorage.cs \
 	AppKit/NSToolbarItem.cs \
+	AppKit/NSTouch.cs \
 	AppKit/NSTreeController.cs \
 	AppKit/NSView.cs \
 	AppKit/NSWindow.cs \
@@ -238,6 +240,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVCaptureFileOutput.cs \
 	AVFoundation/AVCaptureMetadataOutput.cs \
 	AVFoundation/AVCaptureVideoDataOutput.cs \
+	AVFoundation/AVCaptureVideoPreviewLayer.cs \
 	AVFoundation/AVCompat.cs \
 	AVFoundation/AVFragmentedAsset.cs \
 	AVFoundation/AVFragmentedAssetTrack.cs \
@@ -314,11 +317,13 @@ COREANIMATION_CORE_SOURCES = \
 
 COREANIMATION_SOURCES = \
 	CoreAnimation/CABasicAnimation.cs \
+	CoreAnimation/CACompat.cs \
 	CoreAnimation/CADefs.cs \
 	CoreAnimation/CALayer.cs \
 	CoreAnimation/CAKeyFrameAnimation.cs \
 	CoreAnimation/CALayerDelegate.cs \
 	CoreAnimation/CAMediaTimingFunction.cs \
+	CoreAnimation/CAScrollLayer.cs \
 	CoreAnimation/CATextLayer.cs \
 
 # CoreBluetooth
@@ -606,11 +611,14 @@ FOUNDATION_CORE_SOURCES = \
 	Foundation/LinkerSafeAttribute.cs \
 	Foundation/ModelAttribute.cs \
 	Foundation/ModelNotImplementedException.cs \
+	Foundation/NotImplementedAttribute.cs \
 	Foundation/NSAction.cs \
 	Foundation/NSAutoreleasePool.cs \
 	Foundation/NSDecimal.cs \
 	Foundation/NSDimension.cs \
 	Foundation/NSError.cs \
+	Foundation/NSNumber.mac.cs \
+	Foundation/NSNumber2.cs \
 	Foundation/NSObject2.cs \
 	Foundation/NSRange.cs \
 	Foundation/NSString.cs \
@@ -653,6 +661,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSFileManager.cs \
 	Foundation/NSFileManager.iOS.cs \
 	Foundation/NSFileManagerDelegate.cs \
+	Foundation/NSFormatter.cs \
 	Foundation/NSHost.cs \
 	Foundation/NSHttpCookie.cs \
 	Foundation/NSHttpCookieStorage.cs \
@@ -679,8 +688,6 @@ FOUNDATION_SOURCES = \
 	Foundation/NSMutableUrlRequest.cs \
 	Foundation/NSNetService.cs \
 	Foundation/NSNotificationCenter.cs \
-	Foundation/NSNumber.mac.cs \
-	Foundation/NSNumber2.cs \
 	Foundation/NSOrderedSet.cs \
 	Foundation/NSOrderedSet_1.cs \
 	Foundation/NSOutputStream.cs \
@@ -716,6 +723,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSUuid.cs \
 	Foundation/ObjCException.cs \
 	Foundation/ToString.cs \
+	Foundation/NSItemProvider.cs \
 
 # GameController
 
@@ -784,11 +792,10 @@ HEALTHKIT_SOURCES = \
 
 # HomeKit
 
-HOMEKIT_CORE_SOURCES = \
+HOMEKIT_API_SOURCES = \
 	HomeKit/HMEnums.cs \
 
 HOMEKIT_SOURCES = \
-	HomeKit/HMAccessoryCategory.cs \
 	HomeKit/HMActionSet.cs \
 	HomeKit/HMCharacteristic.cs \
 	HomeKit/HMCharacteristicMetadata.cs \
@@ -823,14 +830,19 @@ IMAGEKIT_CORE_SOURCES = \
 # Intents
 
 INTENTS_SOURCES = \
+	Intents/INCompat.cs \
+	Intents/INGetCarLockStatusIntentResponse.cs \
+	Intents/INGetCarPowerLevelStatusIntentResponse.cs \
 	Intents/INIntentResolutionResult.cs \
 	Intents/INPriceRange.cs \
 	Intents/INRideOption.cs \
+	Intents/INSetCarLockStatusIntent.cs \
 	Intents/INSetClimateSettingsInCarIntent.cs \
 	Intents/INSetDefrosterSettingsInCarIntent.cs \
 	Intents/INSetProfileInCarIntent.cs \
 	Intents/INSetSeatSettingsInCarIntent.cs \
 	Intents/INStartWorkoutIntent.cs \
+	Intents/INSaveProfileInCarIntent.cs \
 
 # JavaScriptCore
 
@@ -949,6 +961,7 @@ MODELIO_CORE_SOURCES = \
 
 MODELIO_SOURCES = \
 	ModelIO/MDLAsset.cs \
+	ModelIO/MDLNoiseTexture.cs \
 	ModelIO/MDLVertexDescriptor.cs \
 	ModelIO/MDLMesh.cs \
 
@@ -968,6 +981,7 @@ NETWORKEXTENSION_API_SOURCES = \
 
 NETWORKEXTENSION_CORE_SOURCES = \
 	NetworkExtension/NEHotspotHelperOptions.cs \
+	NetworkExtension/NEPacketTunnelFlow.cs \
 	NetworkExtension/NEVpnConnectionStartOptions.cs \
 
 NETWORKEXTENSION_SOURCES = \
@@ -1237,7 +1251,8 @@ SYSTEMCONFIGURATION_SOURCES = \
 
 # TVMLKit
 
-TVMLKIT_CORE_SOURCES =
+TVMLKIT_CORE_SOURCES = \
+	TVMLKit/TVViewElement.cs \
 
 # TVServices
 
@@ -1347,6 +1362,8 @@ USERNOTIFICATIONS_SOURCES = \
 
 VIDEOSUBSCRIBERACCOUNT_SOURCES = \
 	VideoSubscriberAccount/VSAccountManager.cs \
+	VideoSubscriberAccount/VSAccountMetadataRequest.cs \
+	VideoSubscriberAccount/VSAccountProviderAuthenticationScheme.cs \
 
 # VideoToolbox
 
@@ -1376,9 +1393,11 @@ WATCHCONNECTIVITY_CORE_SOURCES = \
 WATCHKIT_API_SOURCES = \
     WatchKit/WKDefs.cs \
 
+WATCHKIT_CORE_SOURCES = \
+	WatchKit/WKInterfaceController.cs \
+
 WATCHKIT_SOURCES = \
 	WatchKit/WKAccessibility.cs \
-	WatchKit/WKInterfaceController.cs \
 	WatchKit/WKInterfaceDevice.cs \
 
 # WebKit (Mac version)
@@ -1516,7 +1535,7 @@ MAC_FRAMEWORKS =            \
 	CFNetwork               \
 	CloudKit                \
 	Contacts                \
-	ContactsUI.Mac		\
+	ContactsUI              \
 	CoreAnimation           \
 	CoreAudioKit            \
 	CoreBluetooth           \
@@ -1543,6 +1562,7 @@ MAC_FRAMEWORKS =            \
 	MapKit                  \
 	MediaAccessibility      \
 	MediaLibrary 		\
+	MediaPlayer             \
 	MediaToolbox            \
 	Metal                   \
 	MetalKit                \
@@ -1667,6 +1687,7 @@ WATCHOS_FRAMEWORKS =        \
 	HealthKit               \
 	HomeKit                 \
 	ImageIO                 \
+	Intents                 \
 	MapKit                  \
 	MobileCoreServices      \
 	PassKit                 \
@@ -1724,6 +1745,7 @@ TVOS_FRAMEWORKS =           \
 	UIKit                   \
 	UserNotifications       \
 	VideoSubscriberAccount  \
+	VideoToolbox            \
 
 #
 # Compute the SOURCES variables.

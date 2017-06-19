@@ -9,7 +9,15 @@
 
 #include "xamarin/xamarin.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void xamarin_create_classes_Xamarin_iOS ();
+
+#ifdef __cplusplus
+}
+#endif
 
 void xamarin_setup_impl ()
 {
@@ -28,7 +36,7 @@ void xamarin_setup_impl ()
 int
 main (int argc, char** argv)
 {
-	@autoreleasepool { return xamarin_main (argc, argv, false); }
+	@autoreleasepool { return xamarin_main (argc, argv, XamarinLaunchModeApp); }
 }
 
 

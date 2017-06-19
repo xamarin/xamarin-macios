@@ -9,7 +9,7 @@
 // Copyright 2011-2012, 2014-2015 Xamarin, Inc
 //
 
-#if !TVOS
+#if !TVOS && !MONOMAC
 
 using System;
 using XamCore.Foundation; 

@@ -1833,17 +1833,6 @@ namespace XamCore.SceneKit {
 		[Wrap ("WriteToUrl (url, options == null ? null : options.Dictionary, handler, exportProgressHandler)")]
 		bool WriteToUrl (NSUrl url, SCNSceneLoadingOptions options, ISCNSceneExportDelegate handler, SCNSceneExportProgressHandler exportProgressHandler);
 
-#if MONOMAC && !XAMCORE_4_0 // Add this overloads for binary compat only on macOS
-		[Obsolete ("Use the ISCNSceneExportDelegate overload instead")]
-		[Mac (10, 9)]
-		[Wrap ("WriteToUrl (url: url, options: options == null ? null : options.Dictionary, aDelegate: handler, exportProgressHandler: exportProgressHandler)")]
-		bool WriteToUrl (NSUrl url, SCNSceneLoadingOptions options, SCNSceneExportDelegate handler, SCNSceneExportProgressHandler exportProgressHandler);
-
-		[Obsolete ("Use the ISCNSceneExportDelegate overload instead")]
-		[Mac (10, 9)]
-		[Wrap ("WriteToUrl (url: url, options: options, aDelegate: handler, exportProgressHandler: exportProgressHandler)")]
-		bool WriteToUrl (NSUrl url, NSDictionary options, SCNSceneExportDelegate handler, SCNSceneExportProgressHandler exportProgressHandler);
-#endif
 		#region SCNParticleSystemSupport (SCNNode) category
 
 		[Mac (10,10)]
@@ -2222,6 +2211,7 @@ namespace XamCore.SceneKit {
 		[Abstract]
 #endif
 		[Mac (10,10)]
+		[Async]
 		[Export ("prepareObjects:withCompletionHandler:")]
 		void Prepare (NSObject [] objects, [NullAllowed] Action<bool> completionHandler);
 
@@ -2230,6 +2220,7 @@ namespace XamCore.SceneKit {
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)] // SKTransition -> SpriteKit -> only on 64 bits
+		[Async]
 		[Export ("presentScene:withTransition:incomingPointOfView:completionHandler:")]
 		void PresentScene (SCNScene scene, SKTransition transition, [NullAllowed] SCNNode pointOfView, [NullAllowed] Action completionHandler);
 #endif
@@ -2585,7 +2576,9 @@ namespace XamCore.SceneKit {
 #else
 		new EAGLContext Context { get; set; }
 #endif
+#endif
 
+#if !WATCH
 		[iOS (9,0)][Mac (10,11)]
 		[Wrap ("this (frame, options != null ? options.Dictionary : null)")]
 		IntPtr Constructor (CGRect frame, [NullAllowed] SCNRenderingOptions options);
@@ -2617,10 +2610,6 @@ namespace XamCore.SceneKit {
 		[iOS (8,0)][Mac (10,10)]
 		[Export ("antialiasingMode")]
 		SCNAntialiasingMode AntialiasingMode { get; set; }
-
-		// HitTest comes from SCNSceneRenderer - and that Wrap'per is not copied (but needed for backward compatibility)
-		[Wrap ("HitTest (thePoint, options == null ? null : options.Dictionary)")]
-		new SCNHitTestResult [] HitTest (CGPoint thePoint, SCNHitTestOptions options);
 	}
 
 	[Mac (10,9), iOS (8,0)]

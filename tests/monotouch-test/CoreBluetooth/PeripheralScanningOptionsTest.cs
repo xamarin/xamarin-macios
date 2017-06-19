@@ -13,7 +13,6 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using CoreBluetooth;
-using UIKit;
 #else
 using MonoTouch.CoreBluetooth;
 using MonoTouch.Foundation;

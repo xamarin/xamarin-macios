@@ -15,7 +15,6 @@ using System;
 using Contacts;
 using Foundation;
 using ObjCRuntime;
-using UIKit;
 #else
 using MonoTouch.Contacts;
 using MonoTouch.Foundation;

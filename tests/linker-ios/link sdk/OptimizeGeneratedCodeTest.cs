@@ -158,44 +158,6 @@ namespace Linker.Shared {
 
 #if LINKALL
 		[Test]
-		// the two attributes below are required for the optimizing code to kick in.
-		[CompilerGenerated]
-		[Export ("dummy")]
-		public void IntPtrSizeOptimization ()
-		{
-			// bug #21541.
-			Marshal.FreeHGlobal (Marshal.AllocHGlobal (IntPtr.Size));
-
-			if (IntPtr.Size == 8) {
-				Console.WriteLine (0x11111111);
-			} else {
-				Console.WriteLine (0x22222222);
-			}
-
-			var arr = MethodInfo.GetCurrentMethod ().GetMethodBody ().GetILAsByteArray ();
-			if (arr.Length < 2) // single `ret` instruction is added by the stripper
-				Assert.Inconclusive ("IL was stripped from the assembly (release mode)");
-
-			bool contains11 = false;
-			bool contains22 = false;
-			for (int i = 0; i < arr.Length - 4; i++) {
-				contains11 |= arr [i] == 0x11 && arr [i + 1] == 0x11 && arr [i + 2] == 0x11 && arr [i + 3] == 0x11;
-				contains22 |= arr [i] == 0x22 && arr [i + 1] == 0x22 && arr [i + 2] == 0x22 && arr [i + 3] == 0x22;
-
-			}
-			// the optimization is turned off in case of fat apps (32/64 bits)
-			bool b32 = Directory.Exists (Path.Combine (NSBundle.MainBundle.BundlePath, ".monotouch-32"));
-			bool b64 = Directory.Exists (Path.Combine (NSBundle.MainBundle.BundlePath, ".monotouch-64"));
-			// classic does not use the subdirectories, neither do we for single arch simulator
-			bool classic_or_sim = !b32 && !b64;
-			bool single_arch = !(b32 && b64);
-			if (classic_or_sim || single_arch)
-				Assert.IsFalse (contains11 && contains22, "neither instructions removed");
-			// even if disabled this condition remains
-			Assert.IsFalse (!contains11 && !contains22, "both instructions removed");
-		}
-
-		[Test]
 		public void FinallyTest ()
 		{
 			// bug #26415

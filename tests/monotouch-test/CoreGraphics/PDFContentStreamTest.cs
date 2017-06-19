@@ -26,7 +26,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void FromPage ()
 		{
-			using (var doc = CGPDFDocument.FromFile ("Tamarin.pdf"))
+			using (var doc = CGPDFDocument.FromFile (NSBundle.MainBundle.PathForResource ("Tamarin", "pdf")))
 			using (var page = doc.GetPage (1))
 			using (var cs = new CGPDFContentStream (page)) {
 				Assert.That (cs.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");

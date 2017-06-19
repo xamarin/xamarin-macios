@@ -1,45 +1,14 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 using System;
 using System.Collections.Generic;
+#if IKVM
+using IKVM.Reflection;
+using Type = IKVM.Reflection.Type;
+#else
 using System.Reflection;
+#endif
 
 using XamCore.Foundation;
-
-[AttributeUsage (AttributeTargets.Interface)]
-public class CoreImageFilterAttribute : Attribute {
-
-	public CoreImageFilterAttribute ()
-	{
-		// default is public - will be skipped for abstract types
-		DefaultCtorVisibility = MethodAttributes.Public;
-
-		// since it was not generated code we never fixed the .ctor(IntPtr) visibility for unified
-#if XAMCORE_3_0
-		IntPtrCtorVisibility = MethodAttributes.FamORAssem;
-#else
-		IntPtrCtorVisibility = MethodAttributes.Public;
-#endif
-		// not needed by default, automaticly `protected` if the type is abstract
-		StringCtorVisibility = MethodAttributes.PrivateScope;
-	}
-
-	public MethodAttributes DefaultCtorVisibility { get; set; }
-
-	public MethodAttributes IntPtrCtorVisibility { get; set; }
-
-	public MethodAttributes StringCtorVisibility { get; set; }
-}
-
-[AttributeUsage (AttributeTargets.Property)]
-public class CoreImageFilterPropertyAttribute : Attribute {
-
-	public CoreImageFilterPropertyAttribute (string name)
-	{
-		Name = name;
-	}
-
-	public string Name { get; private set; }
-}
 
 public partial class Generator {
 
@@ -58,9 +27,9 @@ public partial class Generator {
 
 	public void GenerateFilter (Type type)
 	{
-		var is_abstract = HasAttribute (type, typeof (AbstractAttribute));
-		var filter = GetAttribute<CoreImageFilterAttribute> (type);
-		var base_type = GetAttribute<BaseTypeAttribute> (type);
+		var is_abstract = AttributeManager.HasAttribute<AbstractAttribute> (type);
+		var filter = AttributeManager.GetCustomAttribute<CoreImageFilterAttribute> (type);
+		var base_type = AttributeManager.GetCustomAttribute<BaseTypeAttribute> (type);
 		var type_name = type.Name;
 		var native_name = base_type.Name ?? type_name;
 		var base_name = base_type.BaseType.Name;
@@ -87,8 +56,17 @@ public partial class Generator {
 		}
 
 		// IntPtr constructor - always present
+		var intptrctor_visibility = filter.IntPtrCtorVisibility;
+		if (intptrctor_visibility == MethodAttributes.PrivateScope) {
+			// since it was not generated code we never fixed the .ctor(IntPtr) visibility for unified
+			if (Generator.XamcoreVersion >= 3) {
+				intptrctor_visibility = MethodAttributes.FamORAssem;
+			} else {
+				intptrctor_visibility = MethodAttributes.Public;
+			}
+		}
 		print ("[CompilerGenerated]");
-		print ("{0}{1} (IntPtr handle) : base (handle)", GetVisibility (filter.IntPtrCtorVisibility), type_name);
+		print ("{0}{1} (IntPtr handle) : base (handle)", GetVisibility (intptrctor_visibility), type_name);
 		PrintEmptyBody ();
 
 		// NSObjectFlag constructor - always present (needed to implement NSCoder for subclasses)
@@ -156,7 +134,7 @@ public partial class Generator {
 			print ("public {0} {1} {{", ptype, p.Name);
 			indent++;
 
-			var name = GetAttribute<CoreImageFilterPropertyAttribute> (p)?.Name;
+			var name = AttributeManager.GetCustomAttribute<CoreImageFilterPropertyAttribute> (p)?.Name;
 			if (p.GetGetMethod () != null)
 				GenerateFilterGetter (ptype, name);
 			if (p.GetSetMethod () != null)

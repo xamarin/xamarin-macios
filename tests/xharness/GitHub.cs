@@ -178,7 +178,7 @@ namespace xharness
 				}
 			}
 
-			doc.Load (path);
+			doc.LoadWithoutNetworkAccess (path);
 			return doc;
 		}
 	}

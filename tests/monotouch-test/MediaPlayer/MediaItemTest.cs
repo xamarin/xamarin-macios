@@ -29,12 +29,15 @@ namespace MonoTouchFixtures.MediaPlayer {
 
 			using (var q = new MPMediaQuery ()) {
 				var items = q.Items;
+				if (items == null)
+					Assert.Inconclusive ("This test needs media library privacy permission to be executed.");
 				if (items.Length == 0)
 					Assert.Inconclusive ("This test needs music in the music library on the device.");
 
 				var six_dot_oh = TestRuntime.CheckSystemAndSDKVersion (6, 0);
 				var nine_dot_two = TestRuntime.CheckSystemAndSDKVersion (9, 2);
 				var ten_dot_oh = TestRuntime.CheckSystemAndSDKVersion (10, 0);
+				var ten_dot_three = TestRuntime.CheckSystemAndSDKVersion (10, 3);
 
 				foreach (var i in items) {
 					object dummy;
@@ -79,6 +82,8 @@ namespace MonoTouchFixtures.MediaPlayer {
 						Assert.DoesNotThrow (() => dummy = i.IsExplicitItem, "IsExplicitItem");
 						Assert.DoesNotThrow (() => dummy = i.DateAdded, "DateAdded");
 					}
+					if (ten_dot_three)
+						Assert.DoesNotThrow (() => dummy = i.PlaybackStoreID, "PlaybackStoreID");
 				}
 			}
 		}

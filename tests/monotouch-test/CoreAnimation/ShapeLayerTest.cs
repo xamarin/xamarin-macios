@@ -14,7 +14,12 @@ using System;
 using Foundation;
 using CoreAnimation;
 using CoreGraphics;
+#if MONOMAC
+using AppKit;
+using UIColor = AppKit.NSColor;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.CoreAnimation;
 using MonoTouch.CoreGraphics;

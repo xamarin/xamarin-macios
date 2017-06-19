@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
@@ -21,12 +22,12 @@ namespace Xamarin.iOS.Tasks
 			Platform = platform;
 		}
 
-		public void BuildExtension (string hostAppName, string extensionName, string platform, string config, int expectedErrorCount = 0)
+		public void BuildExtension (string hostAppName, string extensionName, string platform, string config, int expectedErrorCount = 0, System.Action<ProjectPaths> additionalAsserts = null)
 		{
-			BuildExtension (hostAppName, extensionName, platform, platform, config, expectedErrorCount);
+			BuildExtension (hostAppName, extensionName, platform, platform, config, expectedErrorCount, additionalAsserts);
 		}
 
-		public void BuildExtension (string hostAppName, string extensionName, string bundlePath, string platform, string config, int expectedErrorCount = 0)
+		public void BuildExtension (string hostAppName, string extensionName, string bundlePath, string platform, string config, int expectedErrorCount = 0, System.Action<ProjectPaths> additionalAsserts = null)
 		{
 			var mtouchPaths = SetupProjectPaths (hostAppName, "../", true, bundlePath, config);
 
@@ -57,15 +58,24 @@ namespace Xamarin.iOS.Tasks
 			TestFilesExists (AppBundlePath, ExpectedAppFiles);
 			TestFilesDoNotExist (AppBundlePath, UnexpectedAppFiles);
 
-			var coreFiles = GetCoreAppFiles (platform, config, hostAppName + ".exe", hostAppName);
-			if (IsTVOS) {
-				TestFilesExists (platform == "iPhone" ? Path.Combine (AppBundlePath, ".monotouch-64") : AppBundlePath, coreFiles);
-			} else if (IsWatchOS) {
+			string [] coreFiles;
+			var basedirs = new List<string> ();
+			if (IsWatchOS) {
+				basedirs.Add (extensionPath);
 				coreFiles = GetCoreAppFiles (platform, config, extensionName + ".dll", Path.GetFileNameWithoutExtension (extensionPath));
-				TestFilesExists (platform == "iPhone" ? Path.Combine (extensionPath, ".monotouch-32") : extensionPath, coreFiles);
 			} else {
-				TestFilesExists (platform == "iPhone" ? Path.Combine (AppBundlePath, ".monotouch-32") : AppBundlePath, coreFiles);
+				basedirs.Add (AppBundlePath);
+				if (platform == "iPhone") {
+					basedirs.Add (Path.Combine (AppBundlePath, ".monotouch-32"));
+					basedirs.Add (Path.Combine (AppBundlePath, "Frameworks", "Xamarin.Sdk.framework", "MonoBundle"));
+					basedirs.Add (Path.Combine (AppBundlePath, "Frameworks", "Xamarin.Sdk.framework", "MonoBundle", ".monotouch-32"));
+				}
+				coreFiles = GetCoreAppFiles (platform, config, hostAppName + ".exe", hostAppName);
 			}
+			TestFilesExists (basedirs.ToArray (), coreFiles);
+
+			if (additionalAsserts != null)
+				additionalAsserts (mtouchPaths);
 		}
 
 		public void SetupPaths (string appName, string platform) 

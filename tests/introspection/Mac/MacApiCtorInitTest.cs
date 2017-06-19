@@ -152,6 +152,11 @@ namespace Introspection {
 				if (!Mac.CheckSystemVersion (10, 8) || IntPtr.Size != 8)
 					return true;
 				break;
+			case "MediaPlayer":
+			case "MonoMac.MediaPlayer":
+				if (!Mac.CheckSystemVersion (10, 12) || IntPtr.Size != 8)
+					return true;
+				break;
 			}
 
 			return base.Skip (type);

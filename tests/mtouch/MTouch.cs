@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-using Xamarin;
+using Xamarin.Utils;
 using Xamarin.Tests;
 
 using NUnit.Framework;
@@ -24,65 +24,177 @@ namespace Xamarin.Tests {
 
 namespace Xamarin
 {
+	public enum Target { Sim, Dev }
+	public enum Config { Debug, Release }
+	public enum PackageMdb { Default, WithMdb, WoutMdb }
+	public enum MSym { Default, WithMSym, WoutMSym }
+	public enum Profile { iOS, tvOS, watchOS }
+
 	[TestFixture]
 	public class MTouch
 	{
 		[Test]
-		[TestCase ("single", "-sdkroot {2} -v -v -v -v --dev {0} -sdk {3} --targetver 6.0 {1} -r:{4} --cache={5}/cache")]
-		[TestCase ("dual",   "-sdkroot {2} -v -v -v -v --dev {0} -sdk {3} --targetver 6.0 {1} -r:{4} --cache={5}/cache --abi=armv7,arm64")]
-		[TestCase ("llvm",   "-sdkroot {2} -v -v -v -v --dev {0} -sdk {3} --targetver 6.0 {1} -r:{4} --cache={5}/cache --abi=armv7+llvm")]
-		[TestCase ("debug",  "-sdkroot {2} -v -v -v -v --dev {0} -sdk {3} --targetver 6.0 {1} -r:{4} --cache={5}/cache --debug")]
-		public void RebuildTest (string name, string format)
+		[TestCase (NormalizationForm.FormC)]
+		[TestCase (NormalizationForm.FormD)]
+		[TestCase (NormalizationForm.FormKC)]
+		[TestCase (NormalizationForm.FormKD)]
+		public void StringNormalization (NormalizationForm form)
+		{
+			var str = "Tūhono".Normalize (form);
+
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp (appName: str);
+				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.Verbosity = 9;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+			}
+		}
+
+		[Test]
+		public void FatAppFiles ()
 		{
 			AssertDeviceAvailable ();
 
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			DateTime dt = DateTime.MinValue;
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Abi = "armv7,arm64";
+				mtouch.DSym = false; // speeds up the test
+				mtouch.MSym = false; // speeds up the test
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
 
-			Action<string, IEnumerable<string>> checkNotModified = (filename, skip) => {
-				var failed = new List<string> ();
-				var files = Directory.EnumerateFiles (app, "*", SearchOption.AllDirectories);
-				foreach (var file in files) {
-					if (skip != null && skip.Contains (Path.GetFileName (file)))
+				var expectedFiles = new string []
+				{
+					"NOTICE",
+					"testApp",
+					"testApp.aotdata.armv7",
+					"testApp.aotdata.arm64",
+					"testApp.exe",
+					"mscorlib.dll",
+					"mscorlib.aotdata.armv7",
+					"mscorlib.aotdata.arm64",
+					"Xamarin.iOS.dll",
+					"Xamarin.iOS.aotdata.armv7",
+					"Xamarin.iOS.aotdata.arm64",
+
+				};
+				var notExpectedFiles = new string [] {
+					/* mscorlib.dll and Xamarin.iOS.dll can differ between 32-bit and 64-bit, other assemblies shouldn't */
+					/* these files should end up in the root app directory, not the size-specific subdirectory */
+					".monotouch-32/testApp.exe",
+					".monotouch-32/testApp.aotdata.armv7",
+					".monotouch-64/testApp.exe",
+					".monotouch-64/testApp.aotdata.arm64",
+					".monotouch-64/System.dll",
+					".monotouch-64/System.aotdata.arm64",
+				};
+				var allFiles = Directory.GetFiles (mtouch.AppPath, "*", SearchOption.AllDirectories);
+				var expectedFailed = new List<string> ();
+				foreach (var expected in expectedFiles) {
+					if (allFiles.Any ((v) => v.EndsWith (expected, StringComparison.Ordinal)))
 						continue;
-					var info = new FileInfo (file);
-					if (info.LastWriteTime > dt) {
-						failed.Add (string.Format ("{0} is modified, timestamp: {1}", file, info.LastWriteTime));
-					} else {
-						Console.WriteLine ("{0} not modified", file);
-					}
+					expectedFailed.Add (expected);
 				}
-				Assert.IsTrue (failed.Count == 0, filename + "\n" + string.Join ("\n", failed.ToArray ()));
-			};
+				Assert.IsEmpty (expectedFailed, "expected files");
 
-			Directory.CreateDirectory (app);
-			try {
-				var exe = CompileUnifiedTestAppExecutable (testDir);
-				var args = string.Format (format, app, exe, Configuration.xcode_root, Configuration.sdk_version, Configuration.XamarinIOSDll, testDir);
-				ExecutionHelper.Execute (TestTarget.ToolPath, args);
+				var notExpectedFailed = new List<string> ();
+				foreach (var notExpected in notExpectedFiles) {
+					if (!allFiles.Any ((v) => v.EndsWith (notExpected, StringComparison.Ordinal)))
+						continue;
+					notExpectedFailed.Add (notExpected);
+				}
+				Assert.IsEmpty (notExpectedFailed, "not expected files");
+			}
+		}
+
+		[Test]
+		[TestCase ("code sharing 32-bit", "armv7+llvm", new string [] { "@sdk=framework=Xamarin.Sdk", "@all=staticobject" })]
+		[TestCase ("code sharing 64-bit", "arm64+llvm", new string [] { "@sdk=framework=Xamarin.Sdk", "@all=staticobject" })]
+		[TestCase ("32-bit", "armv7+llvm", new string [] { } )]
+		[TestCase ("64-bit", "arm64+llvm", new string [] { })]
+		public void CodeSharingLLVM (string name, string abi, string[] assembly_build_targets)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Abi = abi;
+				mtouch.AssemblyBuildTargets.AddRange (assembly_build_targets);
+				mtouch.Debug = false;
+				mtouch.NoStrip = true; // faster test
+				mtouch.NoSymbolStrip = string.Empty; // faster test
+				mtouch.Verbosity = 4; // This is needed to get mtouch to print the output we're verifying
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+				// Check that --llvm is passed to the AOT compiler for every assembly we AOT.
+				var assemblies_checked = 0;
+				mtouch.ForAllOutputLines ((line) =>
+				{
+					if (!line.Contains ("arm-darwin-mono-sgen") && !line.Contains ("arm64-darwin-mono-sgen"))
+						return;
+					StringAssert.Contains (" --llvm ", line, "aot command must pass --llvm to the AOT compiler");
+					assemblies_checked++;
+				});
+				Assert.That (assemblies_checked, Is.AtLeast (3), "We build at least 3 dlls, so we must have had at least 3 asserts above."); // mscorlib.dll, Xamarin.iOS.dll, System.dll, theApp.exe
+			}
+		}
+
+		[Test]
+		[TestCase ("single", "",                   false)]
+		[TestCase ("dual",   "armv7,arm64", false)]
+		[TestCase ("llvm",   "armv7+llvm",  false)]
+		[TestCase ("debug",  "",                   true)]
+		public void RebuildTest (string name, string abi, bool debug)
+		{
+			AssertDeviceAvailable ();
+
+			using (var mtouch = new MTouchTool ()) {
+				var codeA = "public class TestApp1 { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
+				var codeB = "public class TestApp2 { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
+				mtouch.CreateTemporaryApp (code: codeA);
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Abi = abi;
+				mtouch.Debug = debug;
+				mtouch.TargetVer = "6.0";
+				mtouch.NoStrip = true;
+				DateTime dt = DateTime.MinValue;
+
+				mtouch.DSym = false; // we don't need the dSYMs for this test, so disable them to speed up the test.
+				mtouch.MSym = false; // we don't need the mSYMs for this test, so disable them to speed up the test.
+				mtouch.AssertExecute (MTouchAction.BuildDev, "first build");
+				Console.WriteLine ("first build done");
+
 				dt = DateTime.Now;
 				System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older.
-				ExecutionHelper.Execute (TestTarget.ToolPath, args);
 
-				checkNotModified (name, null);
+				mtouch.AssertExecute (MTouchAction.BuildDev, "second build");
+				Console.WriteLine ("second build done");
+				mtouch.AssertNoneModified (dt, name + " - second build");
 
 				// Test that a rebuild (where something changed, in this case the .exe)
 				// actually work. We compile with custom code to make sure it's different
 				// from the previous exe we built.
-				var subDir = Path.Combine (testDir, "other");
-				Directory.CreateDirectory (subDir);
-				var exe2 = CompileUnifiedTestAppExecutable (subDir, 
-					/* the code here only changes the class name (default: 'TestApp' changed to 'TestApp2') to minimize the related
+				var subDir = Cache.CreateTemporaryDirectory ();
+				var exe2 = CompileTestAppExecutable (subDir,
+					/* the code here only changes the class name (default: 'TestApp1' changed to 'TestApp2') to minimize the related
 					 * changes (there should be no changes in Xamarin.iOS.dll nor mscorlib.dll, even after linking) */
-					code: "public class TestApp2 { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }");
-				File.Copy (exe2, exe, true);
-				ExecutionHelper.Execute (TestTarget.ToolPath, args);
+					code: codeB, profile: mtouch.Profile);
+				File.Copy (exe2, mtouch.RootAssembly, true);
 
-				var skip = new string [] { "testApp", "testApp.exe", "testApp.armv7.aotdata", "testApp.arm64.aotdata" };
-				checkNotModified (name + "-rebuilt", skip);
-			} finally {
-				Directory.Delete (testDir, true);
+				dt = DateTime.Now;
+				System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older.
+
+				mtouch.AssertExecute (MTouchAction.BuildDev, "third build");
+				Console.WriteLine ("third build done");
+				mtouch.AssertNoneModified (dt, name + " - third build", "testApp", "testApp.exe", "testApp.aotdata.armv7", "testApp.aotdata.arm64");
+
+				// Test that a complete rebuild occurs when command-line options changes
+				dt = DateTime.Now;
+				System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older.
+
+				mtouch.GccFlags = "-v";
+				mtouch.AssertExecute (MTouchAction.BuildDev, "fourth build");
+				Console.WriteLine ("fourth build done");
+				mtouch.AssertAllModified (dt, name + " - fourth build", "NOTICE");
 			}
 		}
 
@@ -92,7 +204,6 @@ namespace Xamarin
 			using (var tool = new MTouchTool ()) {
 				tool.Profile = Profile.iOS;
 				tool.I18N = I18N.West;
-				tool.Verbosity = 5;
 				tool.Cache = Path.Combine (tool.CreateTemporaryDirectory (), "mtouch-test-cache");
 				tool.CreateTemporaryApp ();
 
@@ -111,11 +222,159 @@ namespace Xamarin
 			}
 		}
 
-		public enum Target { Sim, Dev }
-		public enum Config { Debug, Release }
-		public enum PackageMdb { Default, WithMdb, WoutMdb }
-		public enum MSym { Default, WithMSym, WoutMSym }
-		public enum Profile { iOS, tvOS, watchOS }
+		[Test]
+		public void RebuildTest_DontLink ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.NoFastSim = true;
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Verbosity = 4; // This is required to get the debug output we're testing for
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build 1");
+				mtouch.AssertOutputPattern ("Linking .*/testApp.exe into .*/PreBuild using mode 'None'");
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build 2");
+				mtouch.AssertOutputPattern ("Cached assemblies reloaded.");
+			}
+		}
+
+		[Test]
+		[TestCase ("single", "", false, new string [] { } )]
+		[TestCase ("dual", "armv7,arm64", false, new string [] { })]
+		[TestCase ("llvm", "armv7+llvm", false, new string [] { })]
+		[TestCase ("debug", "", true, new string [] { })]
+		[TestCase ("single-framework", "", false, new string [] { "@sdk=framework=Xamarin.Sdk", "@all=staticobject" })]
+		public void RebuildTest_WithExtensions (string name, string abi, bool debug, string[] assembly_build_targets)
+		{
+			var codeA = "[Foundation.Preserve] public class TestApp1 { static void X () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
+			var codeB = "[Foundation.Preserve] public class TestApp2 { static void X () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
+
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension (extraCode: codeA);
+				extension.CreateTemporaryCacheDirectory ();
+				extension.Abi = abi;
+				extension.Debug = debug;
+				extension.AssemblyBuildTargets.AddRange (assembly_build_targets);
+				extension.DSym = false; // faster test
+				extension.MSym = false; // faster test
+				extension.NoStrip = true; // faster test
+				extension.AssertExecute (MTouchAction.BuildDev, "extension build");
+
+				using (var mtouch = new MTouchTool ()) {
+					mtouch.AppExtensions.Add (extension);
+					mtouch.CreateTemporaryApp (extraCode: codeA);
+					mtouch.CreateTemporaryCacheDirectory ();
+					mtouch.Abi = abi;
+					mtouch.Debug = debug;
+					mtouch.AssemblyBuildTargets.AddRange (assembly_build_targets);
+					mtouch.DSym = false; // faster test
+					mtouch.MSym = false; // faster test
+					mtouch.NoStrip = true; // faster test
+
+					var timestamp = DateTime.MinValue;
+
+					mtouch.AssertExecute (MTouchAction.BuildDev, "first build");
+					Console.WriteLine ($"{DateTime.Now} **** FIRST BUILD DONE ****");
+
+					timestamp = DateTime.Now;
+					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
+
+					mtouch.AssertExecute (MTouchAction.BuildDev, "second build");
+					Console.WriteLine ($"{DateTime.Now} **** SECOND BUILD DONE ****");
+
+					mtouch.AssertNoneModified (timestamp, name);
+					extension.AssertNoneModified (timestamp, name);
+
+					// Touch the extension's executable, nothing should change
+					new FileInfo (extension.RootAssembly).LastWriteTimeUtc = DateTime.UtcNow;
+					mtouch.AssertExecute (MTouchAction.BuildDev, "touch extension executable");
+					Console.WriteLine ($"{DateTime.Now} **** TOUCH EXTENSION EXECUTABLE DONE ****");
+					mtouch.AssertNoneModified (timestamp, name);
+					extension.AssertNoneModified (timestamp, name);
+
+					// Touch the main app's executable, nothing should change
+					new FileInfo (mtouch.RootAssembly).LastWriteTimeUtc = DateTime.UtcNow;
+					mtouch.AssertExecute (MTouchAction.BuildDev, "touch main app executable");
+					Console.WriteLine ($"{DateTime.Now} **** TOUCH MAIN APP EXECUTABLE DONE ****");
+					mtouch.AssertNoneModified (timestamp, name);
+					extension.AssertNoneModified (timestamp, name);
+
+					// Test that a rebuild (where something changed, in this case the .exe)
+					// actually work. We compile with custom code to make sure it's different
+					// from the previous exe we built.
+					//
+					// The code change is minimal: only changes the class name (default: 'TestApp1' changed to 'TestApp2') to minimize the related
+					// changes (there should be no changes in Xamarin.iOS.dll nor mscorlib.dll, even after linking)
+
+					// Rebuild the extension's .exe
+					extension.CreateTemporaryServiceExtension (extraCode: codeB);
+					mtouch.AssertExecute (MTouchAction.BuildDev, "change extension executable");
+					Console.WriteLine ($"{DateTime.Now} **** CHANGE EXTENSION EXECUTABLE DONE ****");
+					mtouch.AssertNoneModified (timestamp, name);
+					extension.AssertNoneModified (timestamp, name, "testServiceExtension", "testServiceExtension.aotdata.armv7", "testServiceExtension.aotdata.arm64", "testServiceExtension.dll");
+
+					timestamp = DateTime.Now;
+					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
+
+					// Rebuild the main app's .exe
+					mtouch.CreateTemporaryApp (extraCode: codeB);
+					mtouch.AssertExecute (MTouchAction.BuildDev, "change app executable");
+					Console.WriteLine ($"{DateTime.Now} **** CHANGE APP EXECUTABLE DONE ****");
+					mtouch.AssertNoneModified (timestamp, name, "testApp", "testApp.aotdata.armv7", "testApp.aotdata.arm64", "testApp.exe");
+					extension.AssertNoneModified (timestamp, name);
+
+					timestamp = DateTime.Now;
+					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
+
+					// Add a config file to the extension. This file should be added to the app, and the AOT-compiler re-executed for the root assembly.
+					File.WriteAllText (extension.RootAssembly + ".config", "<configuration></configuration>");
+					mtouch.AssertExecute (MTouchAction.BuildDev, "add config to extension dll");
+					Console.WriteLine ($"{DateTime.Now} **** ADD CONFIG TO EXTENSION DONE ****");
+					mtouch.AssertNoneModified (timestamp, name);
+					extension.AssertNoneModified (timestamp, name, "testServiceExtension.dll.config", "testServiceExtension", "testServiceExtension.aotdata.armv7", "testServiceExtension.aotdata.arm64");
+					CollectionAssert.Contains (Directory.EnumerateFiles (extension.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), "testServiceExtension.dll.config", "extension config added");
+
+					timestamp = DateTime.Now;
+					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
+
+					// Add a config file to the container. This file should be added to the app, and the AOT-compiler re-executed for the root assembly.
+					File.WriteAllText (mtouch.RootAssembly + ".config", "<configuration></configuration>");
+					mtouch.AssertExecute (MTouchAction.BuildDev, "add config to container exe");
+					Console.WriteLine ($"{DateTime.Now} **** ADD CONFIG TO CONTAINER DONE ****");
+					mtouch.AssertNoneModified (timestamp, name, "testApp.exe.config", "testApp", "testApp.aotdata.armv7", "testApp.aotdata.arm64");
+					extension.AssertNoneModified (timestamp, name);
+					CollectionAssert.Contains (Directory.EnumerateFiles (mtouch.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), "testApp.exe.config", "container config added");
+
+					timestamp = DateTime.Now;
+					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
+
+					{
+						// Add a satellite to the extension.
+						var satellite = extension.CreateTemporarySatelliteAssembly ();
+						mtouch.AssertExecute (MTouchAction.BuildDev, "add satellite to extension");
+						Console.WriteLine ($"{DateTime.Now} **** ADD SATELLITE TO EXTENSION DONE ****");
+						mtouch.AssertNoneModified (timestamp, name, Path.GetFileName (satellite));
+						extension.AssertNoneModified (timestamp, name, Path.GetFileName (satellite));
+						extension.AssertModified (timestamp, name, Path.GetFileName (satellite));
+						CollectionAssert.Contains (Directory.EnumerateFiles (extension.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), Path.GetFileName (satellite), "extension satellite added");
+					}
+
+					timestamp = DateTime.Now;
+					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
+
+					{
+						// Add a satellite to the container.
+						var satellite = mtouch.CreateTemporarySatelliteAssembly ();
+						mtouch.AssertExecute (MTouchAction.BuildDev, "add satellite to container");
+						Console.WriteLine ($"{DateTime.Now} **** ADD SATELLITE TO CONTAINER DONE ****");
+						mtouch.AssertNoneModified (timestamp, name, Path.GetFileName (satellite));
+						extension.AssertNoneModified (timestamp, name, Path.GetFileName (satellite));
+						mtouch.AssertModified (timestamp, name, Path.GetFileName (satellite));
+						CollectionAssert.Contains (Directory.EnumerateFiles (mtouch.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), Path.GetFileName (satellite), "container satellite added");
+					}
+				}
+			}
+		}
 
 		[Test]
 		// Simulator
@@ -125,50 +384,49 @@ namespace Xamarin
 		[TestCase (Target.Sim, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  false, "")]
 		[TestCase (Target.Sim, Config.Debug,   PackageMdb.WoutMdb, MSym.Default,  false, false, "--nofastsim --nolink")]
 		// Device
-		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  false, "")]
+		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  true,  "")]
 		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.WoutMSym, true,  false, "")]
-		[TestCase (Target.Dev, Config.Release, PackageMdb.Default, MSym.Default,  false, false, "--abi:armv7,arm64")]
+		[TestCase (Target.Dev, Config.Release, PackageMdb.Default, MSym.Default,  false, true,  "--abi:armv7,arm64")]
 		[TestCase (Target.Dev, Config.Debug,   PackageMdb.WoutMdb, MSym.Default,  false, false, "")]
 		[TestCase (Target.Dev, Config.Debug,   PackageMdb.WoutMdb, MSym.WithMSym, false, true,  "")]
-		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  false, "--abi:armv7+llvm")]
+		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  true,  "--abi:armv7+llvm")]
 		public void SymbolicationData (Target target, Config configuration, PackageMdb package_mdb, MSym msym, bool has_mdb, bool has_msym, string extra_mtouch_args)
 		{
 			if (target == Target.Dev)
 				AssertDeviceAvailable ();
-			
-			var testDir = GetTempDirectory ();
-			var appDir = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (appDir);
 
-			try {
-				var is_sim = target == Target.Sim;
-				var exe = CompileUnifiedTestAppExecutable (testDir);
-				var msymDir = appDir + ".msym";
-				var args = extra_mtouch_args;
-
-				args += is_sim ? " --sim {0} " : " --dev {0} ";
-
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = Profile.iOS;
+				mtouch.CreateTemporaryApp (hasPlist: true);
+				switch (package_mdb) {
+				case PackageMdb.WithMdb:
+					mtouch.PackageMdb = true;
+					break;
+				case PackageMdb.WoutMdb:
+					mtouch.PackageMdb = false;
+					break;
+				}
+				switch (msym) {
+				case MSym.WithMSym:
+					mtouch.MSym = true;
+					break;
+				case MSym.WoutMSym:
+					mtouch.MSym = false;
+					break;
+				}
 				if (configuration == Config.Debug)
-					args += "--debug ";
+					mtouch.Debug = true;
 
-				if (package_mdb == PackageMdb.WithMdb)
-					args += "--package-mdb:true ";
-				else if (package_mdb == PackageMdb.WoutMdb)
-					args += "--package-mdb:false ";
+				var is_sim = target == Target.Sim;
+				mtouch.AssertExecute (is_sim ? MTouchAction.BuildSim : MTouchAction.BuildDev, "build");
 
-				if (msym == MSym.WithMSym)
-					args += "--msym:true ";
-				else if (msym == MSym.WoutMSym)
-					args += "--msym:false ";
-				
-				args += " --sdkroot {2} -v -v -v -sdk {3} {1} -r:{4}";
-
-				ExecutionHelper.Execute (TestTarget.ToolPath, string.Format (args, appDir, exe, Configuration.xcode_root, Configuration.sdk_version, Configuration.XamarinIOSDll));
-
-				if (is_sim) {
-					Assert.AreEqual (has_mdb, File.Exists (Path.Combine (appDir, "mscorlib.dll.mdb")), "#mdb");
+				var appDir = mtouch.AppPath;
+				var msymDir = appDir + ".mSYM";
+				var is_dual_asm = !is_sim && extra_mtouch_args.Contains ("--abi") && extra_mtouch_args.Contains (",");
+				if (!is_dual_asm) {
+					Assert.AreEqual (has_mdb, File.Exists (Path.Combine (appDir, "mscorlib.pdb")), "#pdb");
 				} else {
-					Assert.AreEqual (has_mdb, File.Exists (Path.Combine (appDir, ".monotouch-32", "mscorlib.dll.mdb")), "#mdb");
+					Assert.AreEqual (has_mdb, File.Exists (Path.Combine (appDir, ".monotouch-32", "mscorlib.pdb")), "#pdb");
 				}
 
 				if (has_msym) {
@@ -183,81 +441,71 @@ namespace Xamarin
 						}
 					}
 					Assert.AreEqual (has_msym, msymFiles.Contains ("mscorlib.dll.msym"));
-				} 
-			} finally {
-				Directory.Delete (testDir, true);
+					var manifest = new XmlDocument ();
+					manifest.Load (Path.Combine (msymDir, "manifest.xml"));
+					Assert.AreEqual ("com.xamarin.testApp", manifest.SelectSingleNode ("/mono-debug/app-id").InnerText, "app-id");
+				} else {
+					DirectoryAssert.DoesNotExist (msymDir, "mSYM found when not expected");
+				}
 			}
 		}
 
 		[Test]
 		public void ExecutableName ()
 		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Executable = "CustomExecutable";
+				mtouch.NoFastSim = true;
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				FileAssert.Exists (Path.Combine (mtouch.AppPath, "CustomExecutable"), "1");
+				FileAssert.DoesNotExist (Path.Combine (mtouch.AppPath, Path.GetFileNameWithoutExtension (mtouch.RootAssembly)), "2");
+			}
+		}
 
-			try {
-				var exe = CompileTestAppExecutable (testDir);
-
-				ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --executable=CustomExecutable -v -v -v --nofastsim --nolink --sim {0} -sdk " + Configuration.sdk_version + " {1} -debug --fastdev -r:{2}", app, exe, Configuration.XamarinIOSDll));
-				Assert.That (File.Exists (Path.Combine (app, "CustomExecutable")), "1");
-				Assert.That (!File.Exists (Path.Combine (app, "testApp")), "2");
-			} finally {
-				Directory.Delete (testDir, true);
+		[Test]
+		public void MT0003 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp (appName: "mscorlib");
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (3, "Application name 'mscorlib.exe' conflicts with an SDK or product assembly (.dll) name.");
 			}
 		}
 
 		[Test]
 		public void MT0015 ()
 		{
-			Asserts.Throws<TestExecutionException> (() =>
-				ExecutionHelper.Execute (TestTarget.ToolPath, "--abi invalid-arm"),
-				"error MT0015: Invalid ABI: invalid-arm. Supported ABIs are: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, armv7k+llvm, arm64 and arm64+llvm.\n");
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Abi = "invalid-arm";
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (15, "Invalid ABI: invalid-arm. Supported ABIs are: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, armv7k+llvm, arm64 and arm64+llvm.");
+			}
 		}
 
 		[Test]
-		public void MT0016 ()
+		public void MT0017 ()
 		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			var deprecated_list = new string [] {
-				"-d={0}", "--dir={0}", "--cp", "--crossprefix", "--libdir", "-n", "--keeptemp", 
-				"--main", "--nomanifest", "--mapinject", "--nosign", "--displayname", "--bundleid",
-				"--mainnib", "--icon", "-c", "--certificate", "--enable-background-fetch",
-				"--llvm", "--thumb", "--armv7", "--noregistrar", "--unsupported--enable-generics-in-registrar" 
-			};
-
-
-			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.iOS);
-				var args = string.Format (string.Join (" ", deprecated_list), app);
-
-				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("--sdkroot {5} --dev {0} {1} -r:{2} {3} --sdk {4}", app, exe, Configuration.XamarinIOSDll, args, Configuration.sdk_version, Configuration.xcode_root), hide_output: false),
-					"Xamarin.iOS .* using framework:.*\n" +
-					"error MT0016: The option '--dir' has been deprecated.\n" +
-					"error MT0016: The option '--dir' has been deprecated.\n" +
-					"error MT0016: The option '--crossprefix' has been deprecated.\n" +
-					"error MT0016: The option '--libdir' has been deprecated.\n" +
-					"error MT0016: The option '-n' has been deprecated.\n" +
-					"error MT0016: The option '--keeptemp' has been deprecated.\n" +
-					"error MT0016: The option '--main' has been deprecated.\n" +
-					"error MT0016: The option '--mapinject' has been deprecated.\n" +
-					"error MT0016: The option '--nosign' has been deprecated.\n" +
-					"error MT0016: The option '--displayname' has been deprecated.\n" +
-					"error MT0016: The option '--mainnib' has been deprecated.\n" +
-					"error MT0016: The option '--certificate' has been deprecated.\n" +
-					"error MT0016: The option '--llvm' has been deprecated.\n" +
-					"error MT0016: The option '--thumb' has been deprecated.\n" +
-					"error MT0016: The option '--armv7' has been deprecated.\n" +
-					"error MT0016: The option '--noregistrar' has been deprecated.\n" +
-					"error MT0016: The option '--unsupported--enable-generics-in-registrar' has been deprecated.\n");
-			} finally {
-				Directory.Delete (testDir, true);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryAppDirectory ();
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (17, "You should provide a root assembly.");
 			}
+		}
 
+		[Test]
+		public void MT0018 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CustomArguments = new string [] { "--unknown", "-unknown" };
+				mtouch.CreateTemporaryAppDirectory ();
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (18, "Unknown command line argument: '-unknown'");
+				mtouch.AssertError (18, "Unknown command line argument: '--unknown'");
+			}
 		}
 
 		[Test]
@@ -286,65 +534,36 @@ namespace Xamarin
 		{
 			AssertDeviceAvailable ();
 
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.TargetVer = "3.1";
 
-			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.iOS);
+				mtouch.Abi = "armv7s,arm64";
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, $"build: {mtouch.Abi}");
+				mtouch.AssertErrorPattern (73, "Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 6.0.. Please select a newer deployment target in your project's Info.plist.");
 
-				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 3.1 --abi=armv7s,arm64 {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe)),
-					"Xamarin.iOS .* using framework:.*\nerror MT0073: Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 6.0.. Please select a newer deployment target in your project's Info.plist.\n");
+				mtouch.Abi = "armv7s";
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, $"build: {mtouch.Abi}");
+				mtouch.AssertErrorPattern (73, "Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 6.0.. Please select a newer deployment target in your project's Info.plist.");
 
-				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 3.1 --abi=armv7s {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe)),
-					"Xamarin.iOS .* using framework:.*\nerror MT0073: Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 6.0.. Please select a newer deployment target in your project's Info.plist.\n");
+				mtouch.Abi = "arm64";
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, $"build: {mtouch.Abi}");
+				mtouch.AssertErrorPattern (73, "Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 6.0.. Please select a newer deployment target in your project's Info.plist.");
 
-				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 5.1 --abi=arm64 {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe)),
-					"Xamarin.iOS .* using framework:.*\nerror MT0073: Xamarin.iOS .* does not support a deployment target of 5.1 for iOS .the minimum is 6.0.. Please select a newer deployment target in your project's Info.plist.\n");
-
-				// No exception here.
-				ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 6.0 --abi=arm64 {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe));
-
-			} finally {
-				Directory.Delete (testDir, true);
+				mtouch.Abi = "armv7";
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, $"build: {mtouch.Abi}");
+				mtouch.AssertErrorPattern (73, "Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 6.0.. Please select a newer deployment target in your project's Info.plist.");
 			}
 		}
 
 		[Test]
 		public void MT0074 ()
 		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.iOS);
-
-				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 400.0.0 --abi=armv7s,arm64 {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe)),
-					string.Format ("Xamarin.iOS .* using framework:.*\nerror MT0074: Xamarin.iOS .* does not support a deployment target of 400.0.0 for iOS .the maximum is " + Configuration.sdk_version + ".. Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.\n", Configuration.sdk_version));
-			} finally {
-				Directory.Delete (testDir, true);
-			}
-		}
-
-		[Test]
-		public void MT0048 ()
-		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.iOS);
-
-				Asserts.ThrowsPattern<TestExecutionException> (() => ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 6.0 --abi=armv7s {1} -debug -r:{2} --crashreporting-api-key APIKEY", app, exe, Configuration.XamarinIOSDll), hide_output: false),
-					"error MT0016: The option '--crashreporting-api-key' has been deprecated.");
-			} finally {
-				Directory.Delete (testDir, true);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.TargetVer = "400.0.0";
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertErrorPattern (74, $"Xamarin.iOS .* does not support a deployment target of 400.0.0 for iOS .the maximum is {Configuration.sdk_version}.. Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.");
 			}
 		}
 
@@ -383,7 +602,7 @@ namespace Xamarin
 				CompileCSharpCode (exe_profile, exeCode, exe, "-r:" + dll);
 
 				mtouch.Profile = exe_profile;
-				mtouch.Executable = exe;
+				mtouch.RootAssembly = exe;
 				mtouch.References = new string [] { GetBaseLibrary (exe_profile) };
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim), "build");
 				var dllBase = Path.GetFileName (GetBaseLibrary (dll_profile));
@@ -394,34 +613,85 @@ namespace Xamarin
 		[Test]
 		public void MT0020 ()
 		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
 
-			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.iOS);
+				foreach (var registrar in new string [] { "oldstatic", "olddynamic", "legacy", "legacystatic", "legacydynamic" }) {
+					mtouch.CustomArguments = new string [] { $"--registrar:{registrar}" };
+					mtouch.AssertExecuteFailure (MTouchAction.BuildSim, $"build {registrar}");
+					mtouch.AssertError (20, "The valid options for '--registrar' are 'static, dynamic or default'.");
+				}
+			}
+		}
 
-				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --registrar:oldstatic --targetver 6.0 --abi=arm64 {1} -debug -r:{2} ", app, exe, Configuration.XamarinIOSDll)),
-					"error MT0020: The valid options for '--registrar' are 'static, dynamic or default'.\n");
+		[Test]
+		public void MT0023 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				// Create a library with the same name as the exe
+				var tmp = mtouch.CreateTemporaryDirectory ();
+				var dllA = CompileTestAppCode ("library", tmp, "public class X {}");
 
-				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk " + Configuration.sdk_version + " --registrar:olddynamic --targetver 6.0 --abi=x86_64 {1} -debug -r:{2}", app, exe, Configuration.XamarinIOSDll)),
-					"error MT0020: The valid options for '--registrar' are 'static, dynamic or default'.\n");
-					
-				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk " + Configuration.sdk_version + " --registrar:legacy --targetver 6.0 --abi=x86_64 {1} -debug -r:{2}", app, exe, Configuration.XamarinIOSDll)),
-					"error MT0020: The valid options for '--registrar' are 'static, dynamic or default'.\n");
+				mtouch.CreateTemporaryApp (code: "public class C { static void Main () { System.Console.WriteLine (typeof (X)); System.Console.WriteLine (typeof (UIKit.UIWindow)); } }", extraArg: "-r:" + StringUtils.Quote (dllA));
+				mtouch.References = new string [] { dllA };
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertErrorPattern (23, "The root assembly .*/testApp.exe conflicts with another assembly (.*/testApp.dll).");
+			}
+		}
 
-				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk " + Configuration.sdk_version + " --registrar:legacystatic --targetver 6.0 --abi=x86_64 {1} -debug -r:{2}", app, exe, Configuration.XamarinIOSDll)),
-					"error MT0020: The valid options for '--registrar' are 'static, dynamic or default'.\n");
+		[Test]
+		public void MT0023_Extension ()
+		{
+			using (var extension = new MTouchTool ()) {
+				// Create a library with the same name as the root assembly
+				var tmp = extension.CreateTemporaryDirectory ();
+				var dll = CompileTestAppCode ("library", tmp, "public class X {}", appName: "testApp");
 
-				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk " + Configuration.sdk_version + " --registrar:legacydynamic --targetver 6.0 --abi=x86_64 {1} -debug -r:{2}", app, exe, Configuration.XamarinIOSDll)),
-					"error MT0020: The valid options for '--registrar' are 'static, dynamic or default'.\n");
-			} finally {
-				Directory.Delete (testDir, true);
+				extension.Linker = MTouchLinker.DontLink; // fastest.
+				extension.CreateTemporaryServiceExtension (extraArg: $"-r:{StringUtils.Quote (dll)}", extraCode: "class Z { static void Y () { System.Console.WriteLine (typeof (X)); } }", appName: "testApp");
+				extension.CreateTemporaryCacheDirectory ();
+				extension.References = new [] { dll };
+				extension.AssertExecute (MTouchAction.BuildSim, "extension build");
+
+				using (var app = new MTouchTool ()) {
+					app.Linker = MTouchLinker.DontLink; // fastest.
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.AssertExecuteFailure (MTouchAction.BuildSim, "app build");
+					app.AssertError (23, $"The root assembly {extension.RootAssembly} conflicts with another assembly ({dll}).");
+				}
+			}
+		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		[TestCase (Profile.watchOS)]
+		[TestCase (Profile.tvOS)]
+		public void MT0025 (Profile profile)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = profile;
+				mtouch.CreateTemporaryApp ();
+				mtouch.Sdk = MTouchTool.None;
+
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build dev");
+				mtouch.AssertError (25, $"No SDK version was provided. Please add --sdk=X.Y to specify which {GetPlatformSimpleName (profile)} SDK should be used to build your application.");
+
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build dev");
+				mtouch.AssertError (25, $"No SDK version was provided. Please add --sdk=X.Y to specify which {GetPlatformSimpleName (profile)} SDK should be used to build your application.");
+			}
+		}
+
+		[Test]
+		public void MT0026 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.LLVMOptimizations = "-O2";
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (26, "Could not parse the command line argument '--llvm-opt=-O2': Both assembly and optimization must be specified (assembly=optimization)");
 			}
 		}
 			
@@ -444,110 +714,90 @@ namespace Xamarin
 		[Test]
 		public void MT0055 ()
 		{
-			Asserts.ThrowsPattern<TestExecutionException> (() => {
-				ExecutionHelper.Execute (TestTarget.ToolPath, "--sdkroot /dir/that/does/not/exist");
-			}, "error MT0055: The Xcode path '/dir/that/does/not/exist' does not exist.");
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.SdkRoot = "/dir/that/does/not/exist";
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (55, "The Xcode path '/dir/that/does/not/exist' does not exist.");
+			}
 		}
 
 		[Test]
 		public void MT0060 ()
 		{
-			var msg = string.Empty;
-			if (!Directory.Exists ("/Applications/Xcode.app")) {
-				msg = "warning MT0060: Could not find the currently selected Xcode on the system. 'xcode-select --print-path' returned '/dir/that/does/not/exist', but that directory does not exist.\n" +
-				"error MT0056: Cannot find Xcode in the default location ./Applications/Xcode.app.. Please install Xcode, or pass a custom path using --sdkroot <path>.\n";
-			} else {
-				msg = "warning MT0060: Could not find the currently selected Xcode on the system. 'xcode-select --print-path' returned '/dir/that/does/not/exist', but that directory does not exist.\n" +
-				"warning MT0062: No Xcode.app specified .using --sdkroot or 'xcode-select --print-path'., using the default Xcode instead: /Applications/Xcode.app\n" +
-				"Xamarin.iOS .* using framework: .*\n" +
-				"error MT0052: No command specified.";
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.EnvironmentVariables = new Dictionary<string, string> { { "DEVELOPER_DIR", "/dir/that/does/not/exist" } };
+				mtouch.SdkRoot = MTouchTool.None;
+				mtouch.AssertExecuteFailure (MTouchAction.None, "build");
+				mtouch.AssertWarning (60, "Could not find the currently selected Xcode on the system. 'xcode-select --print-path' returned '/dir/that/does/not/exist', but that directory does not exist.");
+				if (!Directory.Exists ("/Applications/Xcode.app")) {
+					mtouch.AssertError (56, "Cannot find Xcode in the default location (/Applications/Xcode.app). Please install Xcode, or pass a custom path using --sdkroot <path>.");
+				} else {
+					mtouch.AssertWarning (62, "No Xcode.app specified (using --sdkroot or 'xcode-select --print-path'), using the default Xcode instead: /Applications/Xcode.app");
+					mtouch.AssertError (52, "No command specified.");
+				}
 			}
-
-			Asserts.ThrowsPattern<TestExecutionException> (() => {
-				var envvars = new Dictionary<string, string> 
-				{
-					{ "DEVELOPER_DIR", "/dir/that/does/not/exist" }
-				};
-				ExecutionHelper.Execute (TestTarget.ToolPath, "", environmentVariables: envvars);
-			},  msg);
 		}
 
 		[Test]
 		public void MT0061 ()
 		{
-			// The MT0070 warning depends on system configuration, so it's optional in the regexp
-			Asserts.ThrowsPattern<TestExecutionException> (() => {
-				ExecutionHelper.Execute (TestTarget.ToolPath, "");
-			}, "warning MT0061: No Xcode.app specified .using --sdkroot., using the system Xcode as reported by 'xcode-select --print-path': .*\n" +
-				"(warning MT0078: The recommended Xcode version for Xamarin.iOS [0-9.]* is Xcode [0-9.]* or later. The current Xcode version .found in .* is .*)?\\s?" +
-				"Xamarin.iOS .* using framework: .*\n" +
-				"error MT0052: No command specified.");
-		}
-
-		public void MT0062 ()
-		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			try {
-				var exe = CompileUnifiedTestAppExecutable (testDir);
-
-				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot {3} --sim {0} -sdk {4} --targetver 7.1 --framework /foo/bar/zap.framework -r:{2} {1}", app, exe, Configuration.XamarinIOSDll, Configuration.xcode_root, Configuration.sdk_version), hide_output: false),
-					"Xamarin.iOS .* using framework:.*\nerror MT0062: Xamarin.iOS only supports embedded frameworks when deployment target is at least 8.0 .current deployment target: '7.1'; embedded frameworks: '/foo/bar/zap.framework'.\n");
-
-				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot {3} --sim {0} -sdk {4} --targetver 7.1 --mono:framework -r:{2} {1}", app, exe, Configuration.XamarinIOSDll, Configuration.xcode_root, Configuration.sdk_version), hide_output: false),
-					"Xamarin.iOS .* using framework:.*\nerror MT0062: Xamarin.iOS only supports embedded frameworks when deployment target is at least 8.0 .current deployment target: '7.1'; embedded frameworks: '.*/Mono.framework'.\n");
-			} finally {
-				Directory.Delete (testDir, true);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.SdkRoot = MTouchTool.None;
+				mtouch.AssertExecuteFailure (MTouchAction.None, "build");
+				mtouch.AssertWarningPattern (61, "No Xcode.app specified .using --sdkroot., using the system Xcode as reported by 'xcode-select --print-path': .*");
+				mtouch.AssertError (52, "No command specified.");
 			}
 		}
 
+		[Test]
+		public void MT0065_Custom ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.TargetVer = "7.1";
+				mtouch.Frameworks.Add ("/foo/bar/zap.framework");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (65, "Xamarin.iOS only supports embedded frameworks when deployment target is at least 8.0 (current deployment target: '7.1'; embedded frameworks: '/foo/bar/zap.framework')");
+			}
+		}
+
+		[Test]
+		public void MT0065_Mono ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.TargetVer = "7.1";
+				mtouch.Mono = "framework";
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertErrorPattern (65, "Xamarin.iOS only supports embedded frameworks when deployment target is at least 8.0 .current deployment target: '7.1'; embedded frameworks: '.*/Mono.framework'.");
+			}
+		}
 		[Test]
 		public void MT0075 ()
 		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			try {
-				var exe = CompileTestAppExecutable (testDir);
-
-				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot {3} --dev {0} -sdk {4} -r:{2} {1} --abi armv7k", app, exe, Configuration.XamarinIOSDll, Configuration.xcode_root, Configuration.sdk_version), hide_output: false),
-					"Xamarin.iOS .* using framework:.*\n" +
-					"error MT0075: Invalid architecture 'ARMv7k' for iOS projects. Valid architectures are: ARMv7, ARMv7.Thumb, ARMv7.LLVM, ARMv7.LLVM.Thumb, ARMv7s, ARMv7s.Thumb, ARMv7s.LLVM, ARMv7s.LLVM.Thumb");
-			} finally {
-				Directory.Delete (testDir, true);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Abi = "armv7k";
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (75, "Invalid architecture 'ARMv7k' for iOS projects. Valid architectures are: ARMv7, ARMv7+Thumb, ARMv7+LLVM, ARMv7+LLVM+Thumb, ARMv7s, ARMv7s+Thumb, ARMv7s+LLVM, ARMv7s+LLVM+Thumb, ARM64, ARM64+LLVM");
 			}
 		}
 
 		[Test]
-		public void MT0076 ()
+		[TestCase (Profile.watchOS)]
+		[TestCase (Profile.tvOS)]
+		public void MT0076 (Profile profile)
 		{
 			if (!Configuration.include_watchos || !Configuration.include_tvos)
 				Assert.Ignore ("This test requires WatchOS and TVOS to be enabled.");
 
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.watchOS);
-
-				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot {3} --dev {0} -sdk {4} -r:{2} {1} --target-framework Xamarin.WatchOS,v1.0", app, exe, Configuration.XamarinWatchOSDll, Configuration.xcode_root, Configuration.watchos_sdk_version), hide_output: false),
-					"error MT0076: No architecture specified .using the --abi argument.. An architecture is required for Xamarin.WatchOS projects.");
-				
-				exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.tvOS);
-
-				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot {3} --dev {0} -sdk {4} -r:{2} {1} --target-framework Xamarin.TVOS,v1.0", app, exe, Configuration.XamarinTVOSDll, Configuration.xcode_root, Configuration.tvos_sdk_version), hide_output: false),
-					"error MT0076: No architecture specified .using the --abi argument.. An architecture is required for Xamarin.TVOS projects.");
-			} finally {
-				Directory.Delete (testDir, true);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = profile;
+				mtouch.Abi = MTouchTool.None;
+				mtouch.CreateTemporaryApp ();
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (76, $"No architecture specified (using the --abi argument). An architecture is required for {GetPlatformName (profile)} projects.");
 			}
 		}
 
@@ -556,19 +806,12 @@ namespace Xamarin
 		{
 			if (!Configuration.include_watchos)
 				Assert.Ignore ("This test requires WatchOS and TVOS to be enabled.");
-			
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
 
-			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.watchOS);
-
-				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot {3} --dev {0} -sdk {4} -r:{2} {1} --target-framework Xamarin.WatchOS,v1.0 --abi armv7k", app, exe, Configuration.XamarinWatchOSDll, Configuration.xcode_root, Configuration.watchos_sdk_version), hide_output: false),
-					"error MT0077: WatchOS projects must be extensions.");
-			} finally {
-				Directory.Delete (testDir, true);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = Profile.watchOS;
+				mtouch.CreateTemporaryApp ();
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (77, "WatchOS projects must be extensions.");
 			}
 		}
 
@@ -605,18 +848,37 @@ namespace Xamarin
 		[TestCase (Profile.iOS, "iOS")]
 		public void MT0091 (Profile profile, string name)
 		{
-			// Any old Xcode would do.
-			if (!Directory.Exists (Configuration.xcode72_root))
-				Assert.Ignore ("This test needs Xcode 7.0");
-			
+			// Any old Xcode will do.
+			var old_xcode = Configuration.GetOldXcodeRoot ();
+			if (!Directory.Exists (old_xcode))
+				Assert.Ignore ($"This test needs an Xcode older than {Configuration.XcodeVersion}");
+
+			// Get the SDK version for this Xcode version
+			string sdk_platform;
+			switch (profile) {
+			case Profile.iOS:
+				sdk_platform = "iPhoneSimulator";
+				break;
+			case Profile.tvOS:
+				sdk_platform = "AppleTVSimulator";
+				break;
+			case Profile.watchOS:
+				sdk_platform = "WatchSimulator";
+				break;
+			default:
+				throw new NotImplementedException ();
+			}
+			var sdk_settings = Path.Combine (old_xcode, "Platforms", $"{sdk_platform}.platform", "Developer", "SDKs", $"{sdk_platform}.sdk", "SDKSettings.plist");
+			var sdk_version = Configuration.GetPListStringValue (sdk_settings, "DefaultDeploymentTarget");
+
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = profile;
 				mtouch.CreateTemporaryApp ();
-				mtouch.SdkRoot = Configuration.xcode72_root;
+				mtouch.SdkRoot = old_xcode;
 				mtouch.Linker = MTouchLinker.DontLink;
-				mtouch.Sdk = "9.0";
+				mtouch.Sdk = sdk_version;
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
-				mtouch.AssertError (91, String.Format ("This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker.", name, GetSdkVersion (profile), Configuration.XcodeVersion));
+				mtouch.AssertError (91, String.Format ("This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).", name, GetSdkVersion (profile), Configuration.XcodeVersion));
 			}
 		}
 
@@ -628,6 +890,514 @@ namespace Xamarin
 				mtouch.NoPlatformAssemblyReference = true;
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
 				mtouch.AssertError (96, "No reference to Xamarin.iOS.dll was found.");
+			}
+		}
+
+		/* MT0100 is a consistency check, and should never be seen (and as such can never be tested either, since there's no known test cases that would produce it) */
+
+		[Test]
+		public void MT0101 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.DontLink; // the MT0101 check happens after linking, but before AOT-compiling, so not linking makes the test faster.
+				mtouch.AssemblyBuildTargets.Add ("mscorlib=framework");
+				mtouch.AssemblyBuildTargets.Add ("mscorlib=framework");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (101, "The assembly 'mscorlib' is specified multiple times in --assembly-build-target arguments.");
+			}
+		}
+
+		[Test]
+		public void MT0102 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.DontLink; // the MT0102 check happens after linking, but before AOT-compiling, so not linking makes the test faster.
+				mtouch.AssemblyBuildTargets.Add ("mscorlib=framework=MyBinary");
+				mtouch.AssemblyBuildTargets.Add ("System=dynamiclibrary=MyBinary");
+				mtouch.AssemblyBuildTargets.Add ("@all=dynamiclibrary");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (102, "The assemblies 'mscorlib' and 'System' have the same target name ('MyBinary'), but different targets ('Framework' and 'DynamicLibrary').");
+			}
+		}
+
+		[Test]
+		public void MT0103 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.DontLink; // the MT0103 check happens after linking, but before AOT-compiling, so not linking makes the test faster.
+				mtouch.AssemblyBuildTargets.Add ("mscorlib=staticobject=MyBinary");
+				mtouch.AssemblyBuildTargets.Add ("System=staticobject=MyBinary");
+				mtouch.AssemblyBuildTargets.Add ("@all=staticobject");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (103, "The static object 'MyBinary' contains more than one assembly ('mscorlib', 'System'), but each static object must correspond with exactly one assembly.");
+			}
+		}
+
+		[Test]
+		public void MT0105 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.DontLink; // the MT0105 check happens after linking, but before AOT-compiling, so not linking makes the test faster.
+				mtouch.AssemblyBuildTargets.Add ("mscorlib=framework");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (105, "No assembly build target was specified for 'testApp'.");
+				mtouch.AssertError (105, "No assembly build target was specified for 'System'.");
+				mtouch.AssertError (105, "No assembly build target was specified for 'System.Xml'.");
+				mtouch.AssertError (105, "No assembly build target was specified for 'System.Core'.");
+				mtouch.AssertError (105, "No assembly build target was specified for 'Xamarin.iOS'.");
+			}
+		}
+
+		[Test]
+		public void MT0106 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.DontLink; // the MT0106 check happens after linking, but before AOT-compiling, so not linking makes the test faster.
+
+				mtouch.AssemblyBuildTargets.Add ("@all=staticobject=a/b");;
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (106, "The assembly build target name 'a/b' is invalid: the character '/' is not allowed.");
+
+				mtouch.AssemblyBuildTargets.Clear ();
+				mtouch.AssemblyBuildTargets.Add ("@all=staticobject=d\\e");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (106, "The assembly build target name 'd\\e' is invalid: the character '\\' is not allowed.");
+			}
+		}
+
+		[Test]
+		public void MT0108 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.DontLink; // the MT0108 check happens after linking, but before AOT-compiling, so not linking makes the test faster.
+				mtouch.AssemblyBuildTargets.Add ("@all=staticobject");
+				mtouch.AssemblyBuildTargets.Add ("dummy=framework");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (108, "The assembly build target 'dummy' did not match any assemblies.");
+			}
+		}
+
+		/* MT0109 is tested in other tests (MT2018) */
+
+		[Test]
+		public void MT0112_deploymenttarget ()
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.TargetVer = "6.0";
+					app.WarnAsError = new int [] { 112 };
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (112, "Native code sharing has been disabled because the container app's deployment target is earlier than iOS 8.0 (it's 6.0).");
+				}
+			}
+		}
+
+		[Test]
+		public void MT0112_i18n ()
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.I18N = I18N.CJK;
+					app.WarnAsError = new int [] { 112 };
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (112, "Native code sharing has been disabled because the container app includes I18N assemblies (CJK).");
+				}
+			}
+		}
+
+		[Test]
+		public void MT0113_bitcode ()
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.Abi = "arm64+llvm";
+					app.Bitcode = MTouchBitcode.Full;
+					app.WarnAsError = new int [] { 113 };
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the bitcode options differ between the container app (None) and the extension (LLVMOnly).");
+				}
+			}
+		}
+
+		[Test]
+		[TestCase ("framework app", new string [] { "@sdk=framework=Xamarin.Sdk" }, null)]
+		[TestCase ("framework ext", null, new string [] { "@sdk=framework=Xamarin.Sdk" })]
+		[TestCase ("fastdev app", new string [] { "@all=dynamiclibrary" }, null)]
+		[TestCase ("fastdev ext", null, new string [] { "@all=dynamiclibrary" })]
+		public void MT0113_assemblybuildtarget (string name, string[] extension_abt, string[] app_abt)
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				if (extension_abt != null)
+					extension.AssemblyBuildTargets.AddRange (extension_abt);
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.WarnAsError = new int [] { 113 };
+					if (app_abt != null)
+						app.AssemblyBuildTargets.AddRange (app_abt);
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (113, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the --assembly-build-target options are different between the container app ({(app_abt == null ? string.Empty : string.Join (", ", app_abt.Select ((v) => "--assembly-build-target:" + v)))}) and the extension ({(extension_abt == null ? string.Empty : string.Join (", ", extension_abt?.Select ((v) => "--assembly-build-target:" + v)))}).");
+				}
+			}
+		}
+
+		[Test]
+		public void MT0113_i18n ()
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				extension.I18N = I18N.CJK;
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.WarnAsError = new int [] { 113 };
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the I18N assemblies are different between the container app (None) and the extension (CJK).");
+				}
+			}
+		}
+
+		[Test]
+		public void MT0113_aot ()
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.WarnAsError = new int [] { 113 };
+					app.AotArguments = "dwarfdebug"; // doesn't matter exactly what, just that it's different from the extension.
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the arguments to the AOT compiler are different between the container app (dwarfdebug,static,asmonly,direct-icalls,) and the extension (static,asmonly,direct-icalls,).");
+				}
+			}
+		}
+
+		[Test]
+		public void MT0113_aotother ()
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.WarnAsError = new int [] { 113 };
+					app.AotOtherArguments = "--aot-options=-O=float32"; // doesn't matter exactly what, just that it's different from the extension.
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the other arguments to the AOT compiler are different between the container app (--aot-options=-O=float32 ) and the extension ().");
+				}
+			}
+		}
+
+		[Test]
+		public void MT0113_llvm ()
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				extension.Abi = "arm64";
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.WarnAsError = new int [] { 113 };
+					app.Abi = "arm64+llvm";
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because LLVM is not enabled or disabled in both the container app (True) and the extension (False).");
+				}
+			}
+		}
+
+		[Test]
+		public void MT0113_linker ()
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				extension.Abi = "arm64";
+				extension.Linker = MTouchLinker.LinkAll;
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.Linker = MTouchLinker.DontLink;
+					app.WarnAsError = new int [] { 113 };
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the managed linker settings are different between the container app (None) and the extension (All).");
+				}
+			}
+		}
+
+		[Test]
+		public void MT0113_skipped ()
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.WarnAsError = new int [] { 113 };
+					app.LinkSkip = new string [] { "mscorlib.dll" };
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the skipped assemblies for the managed linker are different between the container app (mscorlib.dll) and the extension ().");
+				}
+			}
+		}
+
+		[Test]
+		public void MT0112_xml ()
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.WarnAsError = new int [] { 112 };
+					app.XmlDefinitions = new string [] { "foo.xml" };
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (112, "Native code sharing has been disabled because the container app has custom xml definitions for the managed linker (foo.xml).");
+				}
+			}
+		}
+
+		[Test]
+		public void MT0113_xml ()
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				extension.XmlDefinitions = new string [] { "foo.xml" };
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.WarnAsError = new int [] { 113 };
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the extension has custom xml definitions for the managed linker (foo.xml).");
+				}
+			}
+		}
+
+		[Test]
+		[TestCase ("arm64", "armv7", "ARMv7")]
+		[TestCase ("armv7", "armv7,arm64", "ARM64")]
+		public void MT0113_abi (string app_abi, string extension_abi, string error_abi)
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				extension.Abi = extension_abi;
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.WarnAsError = new int [] { 113 };
+					app.Abi = app_abi;
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (113, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the container app does not build for the ABI {error_abi} (while the extension is building for this ABI).");
+				}
+			}
+		}
+
+		[Test]
+		[TestCase ("armv7+llvm+thumb2", "armv7+llvm", "ARMv7, Thumb, LLVM", "ARMv7, LLVM")]
+		public void MT0113_incompatible_abi (string app_abi, string extension_abi, string container_error_abi, string extension_error_abi)
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				extension.Abi = extension_abi;
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.WarnAsError = new int [] { 113 };
+					app.Abi = app_abi;
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (113, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the container app is building for the ABI {container_error_abi}, which is not compatible with the extension's ABI ({extension_error_abi}).");
+				}
+			}
+		}
+
+		[Test]
+		public void MT0113_refmismatch ()
+		{
+			using (var extension = new MTouchTool ()) {
+				var ext_tmpdir = extension.CreateTemporaryDirectory ();
+				var ext_dll = CompileTestAppLibrary (ext_tmpdir, @"public class X { }", appName: "testLibrary");
+				extension.CreateTemporaryServiceExtension (extraCode: "class Y : X {}", extraArg: $"-r:{StringUtils.Quote (ext_dll)}");
+				extension.CreateTemporaryCacheDirectory ();
+				extension.References = new string [] { ext_dll };
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+
+					var app_tmpdir = app.CreateTemporaryDirectory ();
+					var app_dll = CompileTestAppLibrary (app_tmpdir, @"public abstract class X { }", appName: "testLibrary");
+					app.CreateTemporaryApp (extraCode: "class Y : X {}", extraArg: $"-r:{StringUtils.Quote (app_dll)}");
+					app.CreateTemporaryCacheDirectory ();
+					app.References = new string [] { app_dll };
+					app.WarnAsError = new int [] { 113 };
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (113, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the container app is referencing the assembly 'testLibrary' from '{app_dll}', while the extension references a different version from '{ext_dll}'.");
+				}
+			}
+		}
+
+		[Test]
+		public void CodeSharingExactContentsDifferentPaths ()
+		{
+			// Test that we allow code sharing when the exact same assembly (based on file content)
+			// is referenced from different paths between extension and container project.
+			using (var extension = new MTouchTool ()) {
+				var ext_tmpdir = extension.CreateTemporaryDirectory ();
+				var ext_dll = CompileTestAppLibrary (ext_tmpdir, @"public class X { }", appName: "testLibrary");
+				extension.CreateTemporaryServiceExtension (extraCode: "class Y : X {}", extraArg: $"-r:{StringUtils.Quote (ext_dll)}");
+				extension.CreateTemporaryCacheDirectory ();
+				extension.References = new string [] { ext_dll };
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+
+					var app_tmpdir = app.CreateTemporaryDirectory ();
+					var app_dll = Path.Combine (app_tmpdir, Path.GetFileName (ext_dll));
+					File.Copy (ext_dll, app_dll);
+					app.CreateTemporaryApp (extraCode: "class Y : X {}", extraArg: $"-r:{StringUtils.Quote (app_dll)}");
+					app.CreateTemporaryCacheDirectory ();
+					app.References = new string [] { app_dll };
+					app.WarnAsError = new int [] { 113 };
+					app.AssertExecute (MTouchAction.BuildDev, "build app");
+					// bug #56754 prevents this from working // app.AssertNoWarnings ();
+				}
+			}
+		}
+
+		[Test]
+		public void MT0125 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.AssemblyBuildTargets.Add ("@all=framework");
+				mtouch.Linker = MTouchLinker.DontLink; // faster test.
+				mtouch.Debug = true; // faster test, because it enables fastsim
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarning (125, "The --assembly-build-target command-line argument is ignored in the simulator.");
+			}
+		}
+
+		[Test]
+		public void MT0126 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.FastDev = true;
+				mtouch.Linker = MTouchLinker.DontLink; // faster test.
+				mtouch.Debug = true; // faster test, because it enables fastsim
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarning (126, "Incremental builds have been disabled because incremental builds are not supported in the simulator.");
+			}
+		}
+
+		[Test]
+		public void MT0127 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryAppDirectory ();
+
+				var tmpdir = mtouch.CreateTemporaryDirectory ();
+				var nativeCodeA = @"
+int getNumber () { return 123; }
+";
+				var nativeCodeB = @"
+int getNumber ();
+int getSameNumber () { return getNumber (); }
+";
+
+				var extraCodeA = @"
+public class BindingAppA {
+	[System.Runtime.InteropServices.DllImport (""__Internal"")]
+	public static extern int getNumber ();
+}
+";
+				var extraCodeB = @"
+public class BindingAppB {
+	[System.Runtime.InteropServices.DllImport (""__Internal"")]
+	public static extern int getSameNumber ();
+	public static int getNumber () { return BindingAppA.getNumber (); }
+}
+";
+
+				var bindingLibA = CreateBindingLibrary (tmpdir, nativeCodeA, null, null, extraCodeA, name: "bindingA");
+				var bindingLibB = CreateBindingLibrary (tmpdir, nativeCodeB, null, null, extraCodeB, name: "bindingB", references: new string [] { bindingLibA });
+				var exe = CompileTestAppExecutable (tmpdir, @"
+public class TestApp { 
+	static void Main () {
+		System.Console.WriteLine (typeof (UIKit.UIWindow).ToString ());
+		System.Console.WriteLine (BindingAppB.getSameNumber ());
+		System.Console.WriteLine (BindingAppB.getNumber ());
+	}
+}
+", $"-r:{StringUtils.Quote (bindingLibA)} -r:{StringUtils.Quote (bindingLibB)}");
+
+				mtouch.RootAssembly = exe;
+				mtouch.References = new [] { bindingLibA, bindingLibB };
+
+				mtouch.FastDev = true;
+				mtouch.AssertExecute (MTouchAction.BuildDev, "first build");
+				mtouch.AssertWarning (127, "Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.");
 			}
 		}
 
@@ -643,6 +1413,63 @@ namespace Xamarin
 			}
 		}
 
+		[Test]
+		[TestCase (Profile.tvOS, MTouchBitcode.Marker)]
+		[TestCase (Profile.watchOS, MTouchBitcode.Marker)]
+		public void StripBitcodeFromFrameworks (Profile profile, MTouchBitcode bitcode)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = profile;
+				if (profile == Profile.watchOS) {
+					mtouch.CreateTemporaryWatchKitExtension ();
+				} else {
+					mtouch.CreateTemporaryApp ();
+				}
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.AssemblyBuildTargets.Add ("@all=framework=MyApp");
+				mtouch.NoStrip = true; // faster test
+				mtouch.DSym = false; // faster test
+				mtouch.Bitcode = bitcode;
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+
+				var frameworks = new string [] { "Mono", "Xamarin" };
+				foreach (var framework in frameworks) {
+					var relative_path = $"Frameworks/{framework}.framework/{framework}";
+					var src = Path.Combine (GetXamarinSdkDirectory (profile, true), relative_path);
+					var dst = Path.Combine (mtouch.AppPath, relative_path);
+					var srcLength = new FileInfo (src).Length;
+					var dstLength = new FileInfo (dst).Length;
+					Assert.That (dstLength, Is.LessThan (srcLength), "Framework size");
+				}
+			}
+		}
+
+		static string GetXamarinSdkDirectory (Profile profile, bool device)
+		{
+			switch (profile) {
+			case Profile.iOS:
+				if (device) {
+					return Path.Combine (Configuration.SdkRootXI, "SDKs", "MonoTouch.iphoneos.sdk");
+				} else {
+					return Path.Combine (Configuration.SdkRootXI, "SDKs", "MonoTouch.iphonesimulator.sdk");
+				}
+			case Profile.tvOS:
+				if (device) {
+					return Path.Combine (Configuration.SdkRootXI, "SDKs", "Xamarin.AppleTVOS.sdk");
+				} else {
+					return Path.Combine (Configuration.SdkRootXI, "SDKs", "Xamarin.AppleTVSimulator.sdk");
+				}
+			case Profile.watchOS:
+				if (device) {
+					return Path.Combine (Configuration.SdkRootXI, "SDKs", "Xamarin.WatchOS.sdk");
+				} else {
+					return Path.Combine (Configuration.SdkRootXI, "SDKs", "Xamarin.WatchSimulator.sdk");
+				}
+			default:
+				throw new NotImplementedException ();
+			}
+		}
+
 		static string BindingsLibrary {
 			get {
 				return Path.Combine (Configuration.SourceRoot, "tests/bindings-test/bin/Debug/bindings-test.dll");
@@ -655,6 +1482,19 @@ namespace Xamarin
 
 			if (!File.Exists (fn)) {
 				var csproj = Path.Combine (Configuration.SourceRoot, "tests", "bindings-test", "bindings-test" + GetProjectSuffix (profile) + ".csproj");
+				XBuild.Build (csproj, platform: "AnyCPU");
+			}
+
+			return fn;
+		}
+
+		static string GetFrameworksBindingLibrary (Profile profile)
+		{
+			// Path.Combine (Configuration.SourceRoot, "tests/bindings-framework-test/bin/Any CPU/Debug-unified/bindings-framework-test.dll"),
+			var fn = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", "bin", "Any CPU", GetConfiguration (profile), "bindings-framework-test.dll");
+
+			if (!File.Exists (fn)) {
+				var csproj = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", "bindings-framework-test" + GetProjectSuffix (profile) + ".csproj");
 				XBuild.Build (csproj, platform: "AnyCPU");
 			}
 
@@ -755,6 +1595,20 @@ namespace Xamarin
 			}
 		}
 
+		static string GetPlatformSimpleName (Profile profile)
+		{
+			switch (profile) {
+			case Profile.iOS:
+				return "iOS";
+			case Profile.tvOS:
+				return "tvOS";
+			case Profile.watchOS:
+				return "watchOS";
+			default:
+				throw new NotImplementedException ();
+			}
+		}
+
 		static string GetProjectSuffix (Profile profile)
 		{
 			switch (profile) {
@@ -788,23 +1642,16 @@ namespace Xamarin
 		{
 			// Make sure that mtouch does not link with unused frameworks.
 
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.LinkAll;
+				mtouch.AssertExecute (MTouchAction.BuildSim);
 
-			try {
-				var exe = CompileTestAppExecutable (testDir);
-				var bin = Path.Combine (app, Path.GetFileNameWithoutExtension (exe));
-
-				ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + "  -v -v -v --sim {0} -sdk " + Configuration.sdk_version + " {1} -debug -r:{2}", app, exe, Configuration.XamarinIOSDll));
-
-				var load_commands = ExecutionHelper.Execute ("otool", "-l \"" + bin + "\"");
+				var load_commands = ExecutionHelper.Execute ("otool", $"-l {StringUtils.Quote (mtouch.NativeExecutablePath)}", hide_output: true);
 				Asserts.DoesNotContain ("SafariServices", load_commands, "SafariServices");
 				Asserts.DoesNotContain ("GameController", load_commands, "GameController");
 				Asserts.DoesNotContain ("QuickLook", load_commands, "QuickLook");
 				Asserts.DoesNotContain ("NewsstandKit", load_commands, "NewsstandKit");
-			} finally {
-				Directory.Delete (testDir, true);
 			}
 		}
 
@@ -814,32 +1661,24 @@ namespace Xamarin
 		//[TestCase (Profile.WatchOS)] // needs testing improvement
 		public void FastDev_LinkWithTest (Profile profile)
 		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			try {
-				// --fastdev with static registrar and linkwith library - this will fail to build if the linkwith dylib isn't linked with the corresponding native library.
-				var mtouch = new MTouchTool ()
-				{
-					Profile = profile,
-					Debug = true,
-					FastDev = true,
-					References = new string [] { GetBindingsLibrary (profile) },
-					Executable = CompileTestAppExecutableLinkWith (testDir, profile),
-					AppPath = app,
-					NoFastSim = true,
-					Registrar = MTouchRegistrar.Static,
-				};
+			// --fastdev with static registrar and linkwith library - this will fail to build if the linkwith dylib isn't linked with the corresponding native library.
+			using (var mtouch = new MTouchTool ()
+			{
+				Profile = profile,
+				Debug = true,
+				FastDev = true,
+				References = new string [] { GetBindingsLibrary (profile) },
+				NoFastSim = true,
+				Registrar = MTouchRegistrar.Static,
+			}) {
+				mtouch.CreateTemporaryApp_LinkWith ();
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev), "build");
 
-				var symbols = ExecutionHelper.Execute ("nm", Quote (mtouch.NativeExecutablePath), hide_output: true).Split ('\n');
+				var symbols = ExecutionHelper.Execute ("nm", StringUtils.Quote (mtouch.NativeExecutablePath), hide_output: true).Split ('\n');
 				Assert.That (symbols, Has.None.EndsWith (" T _theUltimateAnswer"), "Binding symbol not in executable");
 
-				symbols = ExecutionHelper.Execute ("nm", Quote (Path.Combine (mtouch.AppPath, "libbindings-test.dll.dylib")), hide_output: true).Split ('\n');
+				symbols = ExecutionHelper.Execute ("nm", StringUtils.Quote (Path.Combine (mtouch.AppPath, "libbindings-test.dll.dylib")), hide_output: true).Split ('\n');
 				Assert.That (symbols, Has.Some.EndsWith (" T _theUltimateAnswer"), "Binding symbol in binding library");
-			} finally {
-				Directory.Delete (testDir, true);
 			}
 		}
 
@@ -849,26 +1688,18 @@ namespace Xamarin
 		//[TestCase (Profile.WatchOS)] // needs testing improvement
 		public void FastDev_NoFastSim_NoLink (Profile profile)
 		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			try {
 				// --sim --nofastsim --nolink --fastdev
-				var mtouch = new MTouchTool ()
-				{
-					Profile = profile,
-					Debug = true,
-					FastDev = true,
-					References = new string [] { GetBindingsLibrary (profile) },
-					Executable = CompileTestAppExecutableLinkWith (testDir, profile),
-					AppPath = app,
-					NoFastSim = true,
-					Linker = MTouchLinker.DontLink,
-				};
+			using (var mtouch = new MTouchTool ()
+			{
+				Profile = profile,
+				Debug = true,
+				FastDev = true,
+				References = new string [] { GetBindingsLibrary (profile) },
+				NoFastSim = true,
+				Linker = MTouchLinker.DontLink,
+			}) {
+				mtouch.CreateTemporaryApp_LinkWith ();
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildSim), "build");
-			} finally {
-				Directory.Delete (testDir, true);
 			}
 		}
 		
@@ -878,25 +1709,17 @@ namespace Xamarin
 		//[TestCase (Profile.WatchOS)] // needs testing improvement
 		public void FastDev_NoFastSim_LinkAll (Profile profile)
 		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			try {
-				// --sim --nofastsim --fastdev
-				var mtouch = new MTouchTool ()
-				{
-					Profile = profile,
-					Debug = true,
-					FastDev = true,
-					References = new string [] { GetBindingsLibrary (profile) },
-					Executable = CompileTestAppExecutableLinkWith (testDir, profile),
-					AppPath = app,
-					NoFastSim = true,
-				};
+			// --sim --nofastsim --fastdev
+			using (var mtouch = new MTouchTool ()
+			{
+				Profile = profile,
+				Debug = true,
+				FastDev = true,
+				References = new string [] { GetBindingsLibrary (profile) },
+				NoFastSim = true,
+			}) {
+				mtouch.CreateTemporaryApp_LinkWith ();
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildSim), "build");
-			} finally {
-				Directory.Delete (testDir, true);
 			}
 		}
 		
@@ -906,26 +1729,18 @@ namespace Xamarin
 		//[TestCase (Profile.WatchOS)] // needs testing improvement
 		public void FastDev_NoFastSim_LinkSDK (Profile profile)
 		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			try {
-				// --sim --nofastsim --linksdkonly --fastdev
-				var mtouch = new MTouchTool ()
-				{
-					Profile = profile,
-					Debug = true,
-					FastDev = true,
-					References = new string [] { GetBindingsLibrary (profile) },
-					Linker = MTouchLinker.LinkSdk,
-					Executable = CompileTestAppExecutableLinkWith (testDir, profile),
-					AppPath = app,
-					NoFastSim = true,
-				};
+			// --sim --nofastsim --linksdkonly --fastdev
+			using (var mtouch = new MTouchTool ()
+			{
+				Profile = profile,
+				Debug = true,
+				FastDev = true,
+				References = new string [] { GetBindingsLibrary (profile) },
+				Linker = MTouchLinker.LinkSdk,
+				NoFastSim = true,
+			}) {
+				mtouch.CreateTemporaryApp_LinkWith ();
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildSim), "build");
-			} finally {
-				Directory.Delete (testDir, true);
 			}
 		}
 
@@ -935,24 +1750,16 @@ namespace Xamarin
 		//[TestCase (Profile.WatchOS)] // needs testing improvement
 		public void FastDev_Sim (Profile profile)
 		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			try {
-				// --sim --fastdev
-				var mtouch = new MTouchTool ()
-				{
-					Profile = profile,
-					Debug = true,
-					FastDev = true,
-					References = new string [] { GetBindingsLibrary (profile) },
-					Executable = CompileTestAppExecutableLinkWith (testDir, profile),
-					AppPath = app,
-				};
+			// --sim --fastdev
+			using (var mtouch = new MTouchTool ()
+			{
+				Profile = profile,
+				Debug = true,
+				FastDev = true,
+				References = new string [] { GetBindingsLibrary (profile) },
+			}) {
+				mtouch.CreateTemporaryApp_LinkWith ();
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildSim), "build");
-			} finally {
-				Directory.Delete (testDir, true);
 			}
 		}
 
@@ -1055,9 +1862,9 @@ namespace Xamarin
 				var bin = mtouch.NativeExecutablePath;
 				VerifyArchitectures (bin, "arm7s/64", "armv7", "arm64");
 				foreach (var dylib in Directory.GetFileSystemEntries (mtouch.AppPath, "*.dylib")) {
-					if (Path.GetFileName (dylib).StartsWith ("libmono"))
+					if (Path.GetFileName (dylib).StartsWith ("libmono", StringComparison.Ordinal))
 						continue;
-					if (Path.GetFileName (dylib).StartsWith ("libxamarin"))
+					if (Path.GetFileName (dylib).StartsWith ("libxamarin", StringComparison.Ordinal))
 						continue;
 					VerifyArchitectures (dylib, dylib + ": arm7s/64", "armv7", "arm64");
 				}
@@ -1066,17 +1873,42 @@ namespace Xamarin
 
 		[Test]
 		[TestCase (Profile.iOS)]
+		[TestCase (Profile.tvOS)]
+		[TestCase (Profile.watchOS)]
+		public void FastDev_WithSpace (Profile profile)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = profile;
+				mtouch.AppPath = Path.Combine (mtouch.CreateTemporaryDirectory (), "with spaces");
+				Directory.CreateDirectory (mtouch.AppPath);
+				if (profile == Profile.watchOS) {
+					mtouch.Extension = true;
+					mtouch.CreateTemporaryWatchKitExtension ();
+				} else {
+					mtouch.CreateTemporaryApp ();
+				}
+				mtouch.FastDev = true;
+				mtouch.Cache = Path.Combine (mtouch.CreateTemporaryDirectory (), "with spaces");
+				mtouch.Linker = MTouchLinker.LinkAll; // faster build
+				mtouch.Debug = true; // faster build
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+			}
+		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
 		public void FastSim (Profile profile)
 		{
 			using (var tool = new MTouchTool ()) {
-				tool.Verbosity = 1;
+				tool.Verbosity = 1; // This is required to get the debug output we're testing for.
 				tool.Profile = profile;
 				tool.CreateTemporaryApp ();
 				tool.Linker = MTouchLinker.DontLink;
 				tool.Debug = true;
+				System.Threading.Thread.Sleep (1000); // HFS does not have sub-second timestamp resolution, so make sure the timestamps actually are different...
 				tool.AssertExecute (MTouchAction.BuildSim);
 				tool.AssertOutputPattern ("was built using fast-path for simulator"); // This is just to ensure we're actually testing fastsim. If this fails, modify the mtouch options to make this test use fastsim again.
-				Assert.That (File.GetLastWriteTimeUtc (tool.Executable), Is.LessThan (File.GetLastWriteTimeUtc (tool.NativeExecutablePath)), "simlauncher timestamp");
+				Assert.That (File.GetLastWriteTimeUtc (tool.RootAssembly), Is.LessThan (File.GetLastWriteTimeUtc (tool.NativeExecutablePath)), "simlauncher timestamp");
 			}
 		}
 
@@ -1099,7 +1931,7 @@ namespace Xamarin
 
 				mtouch.Abi = abi;
 
-				var bin = Path.Combine (mtouch.AppPath, Path.GetFileNameWithoutExtension (mtouch.Executable));
+				var bin = Path.Combine (mtouch.AppPath, Path.GetFileNameWithoutExtension (mtouch.RootAssembly));
 
 				Assert.AreEqual (0, mtouch.Execute (target == Target.Dev ? MTouchAction.BuildDev : MTouchAction.BuildSim));
 
@@ -1116,9 +1948,9 @@ namespace Xamarin
 
 				mtouch.Abi = "i386,x86_64";
 
-				var bin = Path.Combine (mtouch.AppPath, Path.GetFileNameWithoutExtension (mtouch.Executable));
-				var bin32 = Path.Combine (mtouch.AppPath, ".monotouch-32", Path.GetFileNameWithoutExtension (mtouch.Executable));
-				var bin64 = Path.Combine (mtouch.AppPath, ".monotouch-64", Path.GetFileNameWithoutExtension (mtouch.Executable));
+				var bin = Path.Combine (mtouch.AppPath, Path.GetFileNameWithoutExtension (mtouch.RootAssembly));
+				var bin32 = Path.Combine (mtouch.AppPath, ".monotouch-32", Path.GetFileNameWithoutExtension (mtouch.RootAssembly));
+				var bin64 = Path.Combine (mtouch.AppPath, ".monotouch-64", Path.GetFileNameWithoutExtension (mtouch.RootAssembly));
 
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildSim));
 
@@ -1154,11 +1986,11 @@ namespace Xamarin
 			AssertDeviceAvailable ();
 
 			using (var mtouch = new MTouchTool ()) {
-				mtouch.Profile = MTouch.Profile.tvOS;
+				mtouch.Profile = Profile.tvOS;
 				mtouch.Abi = abi;
 				mtouch.CreateTemporaryApp ();
 				      
-				var bin = Path.Combine (mtouch.AppPath, Path.GetFileNameWithoutExtension (mtouch.Executable));
+				var bin = Path.Combine (mtouch.AppPath, Path.GetFileNameWithoutExtension (mtouch.RootAssembly));
 
 				Assert.AreEqual (0, mtouch.Execute (target == Target.Dev ? MTouchAction.BuildDev : MTouchAction.BuildSim), "build");
 				VerifyArchitectures (bin,  "arch",  target == Target.Dev ? "arm64" : "x86_64");
@@ -1181,70 +2013,54 @@ namespace Xamarin
 		}
 
 		[Test]
+		public void MonoFrameworkArchitectures ()
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				extension.Abi = "armv7,arm64";
+				extension.Linker = MTouchLinker.LinkAll; // faster test
+				extension.NoStrip = true; // faster test
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.Abi = "arm64";
+					app.Linker = MTouchLinker.LinkAll; // faster test
+					app.NoStrip = true; // faster test
+					app.AssertExecute (MTouchAction.BuildDev, "build app");
+
+					var mono_framework = Path.Combine (app.AppPath, "Frameworks", "Mono.framework", "Mono");
+					Assert.That (mono_framework, Does.Exist, "mono framework existence");
+					// Verify that mtouch removed armv7s from the framework.
+					Assert.That (GetArchitectures (mono_framework), Is.EquivalentTo (new [] { "armv7", "arm64" }), "mono framework architectures");
+				}
+			}
+		}
+
+		[Test]
 		public void GarbageCollectors ()
 		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-
-			Directory.CreateDirectory (app);
-			try {
-				var code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (UIKit.UIWindow).ToString ()); } }";
-				var exe = CompileTestAppExecutable (testDir, code: code, profile: MTouch.Profile.iOS);
-				var bin = Path.Combine (app, Path.GetFileNameWithoutExtension (exe));
-				var common_args = string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk " + Configuration.sdk_version + " --targetver 6.0 --abi=i386 {1} -debug -gcc_flags -Wl,-w ", app, exe);
-				var newstyle_args = common_args + "-r:" + Configuration.XamarinIOSDll;
-				ExecutionHelper.Execute (TestTarget.ToolPath, newstyle_args);
-				VerifyGC (bin, false, "dual/default");
-
-				ExecutionHelper.Execute (TestTarget.ToolPath, newstyle_args + " --sgen");
-				VerifyGC (bin, false, "dual/sgen");
-
-				var output = ExecutionHelper.Execute (TestTarget.ToolPath, newstyle_args + " --boehm");
-				VerifyGC (bin, false, "dual/boehm");
-				VerifyOutput ("Test", output, 
-					"Xamarin.iOS .* using framework:.*",
-					"warning MT0043: The Boehm garbage collector is not supported. The SGen garbage collector has been selected instead.",
-					".*testApp.app built successfully.");
-			} finally {
-				Directory.Delete (testDir, true);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build default");
+				VerifyGC (mtouch.NativeExecutablePath, "default");
 			}
-		}
 
-		void ExecuteWithStats (string binary, string arguments)
-		{
-			ExecutionHelper.Execute (TestTarget.ToolPath, arguments);
-			var fi = new FileInfo (binary);
-			Console.WriteLine ("Binary Size: {0} bytes = {1} kb", fi.Length, fi.Length / 1024);
-		}
-
-		string ReplaceExtraArgs (string contents, string replace)
-		{
-			return ReplaceCsprojData (contents, "MtouchExtraArgs", replace);
-		}
-
-		string ReplaceCompilerDefines (string contents, string replace)
-		{
-			return ReplaceCsprojData (contents, "DefineConstants", replace);
-		}
-
-		string ReplaceCsprojData (string contents, string key, string replace)
-		{
-			int idx = 0;
-			while (true) {
-				var start = contents.IndexOf ("<" + key + ">", idx);
-				if (start == -1)
-					return contents;
-				var end = contents.IndexOf("</" + key + ">", start);
-				if (end == -1)
-					return contents;
-				contents = contents.Substring (0, start + ("<" + key + ">").Length) + replace + contents.Substring (end);
-				idx = end;
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CustomArguments = new string [] { "--sgen" };
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build sgen");
+				VerifyGC (mtouch.NativeExecutablePath, "sgen");
 			}
-		}
 
-		static string MDToolPath {
-			get {
-				return "/Applications/Xamarin Studio.app/Contents/MacOS/mdtool";
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CustomArguments = new string [] { "--boehm" };
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build boehm");
+				VerifyGC (mtouch.NativeExecutablePath, "boehm");
+				mtouch.AssertWarning (43, "The Boehm garbage collector is not supported. The SGen garbage collector has been selected instead.");
 			}
 		}
 
@@ -1275,7 +2091,7 @@ namespace Xamarin
 			}
 			var platform = target == Target.Dev ? "iPhone" : "iPhoneSimulator";
 			var csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname, testname + GetProjectSuffix (profile) + ".csproj");
-			XBuild.Build (csproj, configuration, platform, timeout: TimeSpan.FromMinutes (10));
+			XBuild.Build (csproj, configuration, platform, timeout: TimeSpan.FromMinutes (15));
 		}
 
 		[Test]
@@ -1287,49 +2103,42 @@ namespace Xamarin
 		}
 
 		[Test]
-		public void Registrar ()
+		// fully linked + llvm (+thumb) + default registrar
+		[TestCase (Target.Dev, MTouchLinker.Unspecified, MTouchRegistrar.Static, "armv7+llvm")]
+		[TestCase (Target.Dev, MTouchLinker.Unspecified, MTouchRegistrar.Static, "armv7+llvm+thumb2")]
+		// non-linked device build
+		[TestCase (Target.Dev, MTouchLinker.DontLink, MTouchRegistrar.Static, "")]
+		[TestCase (Target.Dev, MTouchLinker.DontLink, MTouchRegistrar.Dynamic, "")]
+		// sdk device build
+		[TestCase (Target.Dev, MTouchLinker.LinkSdk, MTouchRegistrar.Static, "")]
+		[TestCase (Target.Dev, MTouchLinker.LinkSdk, MTouchRegistrar.Dynamic, "")]
+		// fully linked device build
+		[TestCase (Target.Dev, MTouchLinker.Unspecified, MTouchRegistrar.Static, "")]
+		[TestCase (Target.Dev, MTouchLinker.Unspecified, MTouchRegistrar.Dynamic, "")]
+		// non-linked simulator build
+		[TestCase (Target.Sim, MTouchLinker.DontLink, MTouchRegistrar.Static, "")]
+		[TestCase (Target.Sim, MTouchLinker.DontLink, MTouchRegistrar.Dynamic, "")]
+		public void Registrar (Target target, MTouchLinker linker, MTouchRegistrar registrar, string abi)
 		{
 			AssertDeviceAvailable ();
 
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-			
-			try {
-				var exe = CompileTestAppExecutable (testDir);
-				var bin = Path.Combine (app, Path.GetFileNameWithoutExtension (exe));
-				var common_args = string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk {2} {1} -debug -r:{3}", app, exe, Configuration.sdk_version, Configuration.XamarinIOSDll);
-
-				// fully linked + llvm (+thumb) + default registrar (currently llvm fails to build with clang, so we should transparently switch to gcc in this case)
-				ExecuteWithStats (bin, common_args + " --registrar:static --abi:armv7+llvm");
-				ExecuteWithStats (bin, common_args + " --registrar:static --abi:armv7+llvm+thumb2");
-				
-				// non-linked device build
-				ExecuteWithStats (bin, common_args + " --compiler:clang --nolink --registrar:static");
-				ExecuteWithStats (bin, common_args + " --compiler:clang --nolink --registrar:dynamic");
-
-				// sdk device build
-				ExecuteWithStats (bin, common_args + " --compiler:clang --linksdkonly --registrar:static");
-				ExecuteWithStats (bin, common_args + " --compiler:clang --linksdkonly --registrar:dynamic");
-
-				// fully linked device build
-				ExecuteWithStats (bin, common_args + " --compiler:clang --registrar:static");
-				ExecuteWithStats (bin, common_args + " --compiler:clang --registrar:dynamic");
-
-				// non-linked device build
-				common_args = string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk {2} {1} -debug -r:{3}", app, exe, Configuration.sdk_version, Configuration.XamarinIOSDll);
-				ExecuteWithStats (bin, common_args + " --compiler:clang --nolink --registrar:static");
-				ExecuteWithStats (bin, common_args + " --compiler:clang --nolink --registrar:dynamic");
-			} finally {
-				Directory.Delete (testDir, true);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = linker;
+				mtouch.Registrar = registrar;
+				mtouch.Abi = abi;
+				mtouch.Timeout = TimeSpan.FromMinutes (5);
+				mtouch.AssertExecute (target == Target.Dev ? MTouchAction.BuildDev : MTouchAction.BuildSim, "build");
+				var fi = new FileInfo (mtouch.NativeExecutablePath);
+				Console.WriteLine ("Binary Size: {0} bytes = {1} kb", fi.Length, fi.Length / 1024);
 			}
 		}
 
 		[Test]
-		[TestCase ("")]
-		[TestCase ("-nolink")]
-		[TestCase ("-linksdkonly")]
-		public void ExportedSymbols (string linker_flag)
+		[TestCase (MTouchLinker.Unspecified)]
+		[TestCase (MTouchLinker.DontLink)]
+		[TestCase (MTouchLinker.LinkSdk)]
+		public void ExportedSymbols (MTouchLinker linker_flag)
 		{
 			AssertDeviceAvailable ();
 
@@ -1339,12 +2148,12 @@ namespace Xamarin
 			// for this to work.
 			//
 
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			var cache = Path.Combine (testDir, "cache");
-			Directory.CreateDirectory (app);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Linker = linker_flag;
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryAppDirectory ();
 
-			try {
+				var tmpdir = mtouch.CreateTemporaryDirectory ();
 				var nativeCode = @"
 void DummyMethod () {}
 int dummy_field = 0;
@@ -1359,8 +2168,8 @@ public class BindingApp {
 	public static extern void DummyMethod ();
 }
 ";
-				var bindingLib = CreateBindingLibrary (testDir, nativeCode, null, null, extraCode);
-				var exe = CompileTestAppExecutable (testDir, @"
+				var bindingLib = CreateBindingLibrary (tmpdir, nativeCode, null, null, extraCode);
+				var exe = CompileTestAppExecutable (tmpdir, @"
 public class TestApp { 
 	static void Main () {
 		System.Console.WriteLine (typeof (UIKit.UIWindow).ToString ());
@@ -1370,24 +2179,23 @@ public class TestApp {
 }
 ",
 					"-r:" + bindingLib);
-				var bin = Path.Combine (app, Path.GetFileNameWithoutExtension (exe));
-				var args = string.Format ("-sdkroot {4} -sdk {2} {1} -debug --cache {0} -v -v -v -v -r:{3} -dev {5} -r:{6} " + linker_flag, 
-					cache, exe, Configuration.sdk_version, bindingLib, Configuration.xcode_root, app, Configuration.XamarinIOSDll);
-				
+
+				mtouch.RootAssembly = exe;
+				mtouch.References = new [] { bindingLib };
+				mtouch.Timeout = TimeSpan.FromMinutes (5);
+
 				// each variation is tested twice so that we don't break when everything is found in the cache the second time around.
 
-				ExecutionHelper.Execute (TestTarget.ToolPath, args);
-				var symbols = ExecutionHelper.Execute ("nm", bin, hide_output: true).Split ('\n');
+				mtouch.AssertExecute (MTouchAction.BuildDev, "first build");
+				var symbols = ExecutionHelper.Execute ("nm", mtouch.NativeExecutablePath, hide_output: true).Split ('\n');
 				Assert.That (symbols, Has.Some.EndsWith (" S _dummy_field"), "Field not found in initial build");
 				Assert.That (symbols, Has.Some.EndsWith (" T _DummyMethod"), "P/invoke not found in initial build");
 
 				ExecutionHelper.Execute ("touch", bindingLib); // This will make it so that the second identical variation won't skip the final link step.
-				ExecutionHelper.Execute (TestTarget.ToolPath, args);
-				symbols = ExecutionHelper.Execute ("nm", bin, hide_output: true).Split ('\n');
+				mtouch.AssertExecute (MTouchAction.BuildDev, "second build");
+				symbols = ExecutionHelper.Execute ("nm", mtouch.NativeExecutablePath, hide_output: true).Split ('\n');
 				Assert.That (symbols, Has.Some.EndsWith (" S _dummy_field"), "Field not found in second build");
 				Assert.That (symbols, Has.Some.EndsWith (" T _DummyMethod"), "P/invoke not found in second build");
-			} finally {
-				Directory.Delete (testDir, true);
 			}
 		}
 
@@ -1402,13 +2210,10 @@ public class TestApp {
 			// (and we do not request the native linker to preserve those symbols).
 			//
 
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			var cache = Path.Combine (testDir, "cache");
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
 
-			Directory.CreateDirectory (app);
-
-			try {
+				var tmpdir = mtouch.CreateTemporaryDirectory ();
 				var nativeCode = @"
 void DummyMethod () {}
 int dummy_field = 0;
@@ -1423,8 +2228,8 @@ public class BindingApp {
 	public static extern void DummyMethod ();
 }
 ";
-				var bindingLib = CreateBindingLibrary (testDir, nativeCode, null, null, extraCode);
-				var exe = CompileTestAppExecutable (testDir, @"
+				var bindingLib = CreateBindingLibrary (tmpdir, nativeCode, null, null, extraCode);
+				var exe = CompileTestAppExecutable (tmpdir, @"
 public class TestApp { 
 	static void Main () {
 		System.Console.WriteLine (typeof (UIKit.UIWindow).ToString ());
@@ -1432,37 +2237,30 @@ public class TestApp {
 }
 ",
 					"-r:" + bindingLib);
-				var bin = Path.Combine (app, Path.GetFileNameWithoutExtension (exe));
-				var common_args = string.Format ("-sdkroot " + Configuration.xcode_root + " -sdk {2} {1} -debug --cache {0} -v -v -v -v --registrar:static -r:{3} -r:{4}", 
-					cache, exe, Configuration.sdk_version, bindingLib, Configuration.XamarinIOSDll);
 
-				var variations = new string [] {
-					// each variation is tested twice so that we don't break when everything is found in the cache the second time around.
-					" -dev {0}",
-					" -dev {0}",
-				};
+				mtouch.RootAssembly = exe;
+				mtouch.References = new [] { bindingLib };
+				mtouch.CreateTemporaryAppDirectory ();
 
-				for (int v = 0; v < variations.Length; v++) {
-					var variation = variations [v];
-
+				// test twice so that we don't break when everything is found in the cache the second time around.
+				for (int iteration = 0; iteration < 2; iteration++) {
 					ExecutionHelper.Execute ("touch", bindingLib); // This will make it so that the second identical variation won't skip the final link step.
 
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format (common_args + variation, app));
-					var lines = ExecutionHelper.Execute ("nm", bin, hide_output: true).Split ('\n');
+					mtouch.AssertExecute (MTouchAction.BuildDev, $"build #{iteration}");
+
+					var lines = ExecutionHelper.Execute ("nm", mtouch.NativeExecutablePath, hide_output: true).Split ('\n');
 					var found_field = false;
 					var found_pinvoke = false;
 					foreach (var line in lines) {
-						found_field |= line.EndsWith (" S _dummy_field");
-						found_pinvoke |= line.EndsWith (" T _DummyMethod");
+						found_field |= line.EndsWith (" S _dummy_field", StringComparison.Ordinal);
+						found_pinvoke |= line.EndsWith (" T _DummyMethod", StringComparison.Ordinal);
 						if (found_field && found_pinvoke)
 							break;
 					}
 
-					Assert.IsFalse (found_field, string.Format ("Field found for variation #{0}: {1}", v, variation));
-					Assert.IsFalse (found_field, string.Format ("P/Invoke found for variation #{0}: {1}", v, variation));
+					Assert.IsFalse (found_field, string.Format ("Field found for variation #{0}", iteration));
+					Assert.IsFalse (found_field, string.Format ("P/Invoke found for variation #{0}", iteration));
 				}
-			} finally {
-				Directory.Delete (testDir, true);
 			}
 		}
 
@@ -1471,70 +2269,41 @@ public class TestApp {
 		{
 			AssertDeviceAvailable ();
 
-			string output;
-			var testDir = GetTempDirectory ();
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.NoFastSim = true;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build a");
+				Assert.IsFalse (mtouch.HasOutput ("ld: warning:"), "#a");
+				mtouch.AssertNoWarnings ();
+			}
 
-			try {
-				var app = Path.Combine (testDir, "testApp.app");
-				Directory.CreateDirectory (app);
-
-				var exe = CompileTestAppExecutable (testDir);
-
-				output = ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot {2} --dev {0} -sdk {3} --force --abi=armv7,armv7s {1} -debug -r:{4}", app, exe, Configuration.xcode_root, Configuration.sdk_version, Configuration.XamarinIOSDll));
-				Asserts.DoesNotContain ("ld: warning:", output, "#a");
-
-				output = ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot {2} --dev {0} -sdk {3} --force --abi=armv7        {1} -debug -r:{5} --gcc_flags={4}", app, exe, Configuration.xcode_root, Configuration.sdk_version, Quote (Path.Combine (Configuration.SourceRoot, "tests/test-libraries/.libs/ios/libtest.armv7s.a")), Configuration.XamarinIOSDll));
-				Asserts.Contains ("libtest.armv7s.a, file was built for archive which is not the architecture being linked (armv7)", output, "#b");
-			} finally {
-				Directory.Delete (testDir, true);
+			using (var mtouch = new MTouchTool ()) {
+				var lib = Path.Combine (Configuration.SourceRoot, "tests/test-libraries/.libs/ios/libtest.x86_64.a");
+				mtouch.CreateTemporaryApp ();
+				mtouch.NoFastSim = true;
+				mtouch.Abi = "i386";
+				mtouch.GccFlags = StringUtils.Quote (lib);
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build a");
+				mtouch.AssertWarning (5203, $"Native linking warning: warning: ignoring file {lib}, file was built for archive which is not the architecture being linked (i386): {lib}");
 			}
 		}
 
 		[Test]
-		public void NativeLinker_AllLoad ()
+		[TestCase (MTouchLinker.LinkSdk)]
+		[TestCase (MTouchLinker.DontLink)]
+		public void CachedManagedLinker (MTouchLinker linker)
 		{
-			AssertDeviceAvailable ();
-
-			// https://bugzilla.xamarin.com/show_bug.cgi?id=17199
-
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			try {
-				var exe = CompileTestAppExecutable (testDir);
-
-				ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 7.0 --abi=armv7s {1} -debug --gcc_flags -all_load -r:{2}", app, exe, Configuration.XamarinIOSDll));
-
-			} finally {
-				Directory.Delete (testDir, true);
-			}
-		}
-
-		[Test]
-		public void CachedManagedLinker ()
-		{
-			AssertDeviceAvailable ();
-
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=17506
 
-			var testDir = GetTempDirectory ();
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Linker = linker;
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Timeout = TimeSpan.FromMinutes (5);
 
-			foreach (var linker in new string [] { "", "--linksdkonly", "--nolink" }) {
-				try {
-					var app = Path.Combine (testDir, "testApp.app");
-					Directory.CreateDirectory (app);
-
-					var exe = CompileTestAppExecutable (testDir);
-					var cache = Path.Combine (testDir, "mtouch-cache");
-
-					var args = string.Format ("{3} -sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 7.0 --abi=armv7 {1} --cache={2} -r:{4}", app, exe, cache, linker, Configuration.XamarinIOSDll);
-					ExecutionHelper.Execute (TestTarget.ToolPath, args);
-					File.Delete (Path.Combine (app, "testApp")); // This will force the final native link to succeed, while everything before has been cached.
-					ExecutionHelper.Execute (TestTarget.ToolPath, args);
-				} finally {
-					Directory.Delete (testDir, true);
-				}
+				mtouch.AssertExecute (MTouchAction.BuildDev, "first build");
+				File.Delete (mtouch.NativeExecutablePath); // This will force the final native link to succeed, while everything before has been cached.
+				mtouch.AssertExecute (MTouchAction.BuildDev, "second build");
 			}
 		}
 
@@ -1543,20 +2312,15 @@ public class TestApp {
 		{
 			// BXC 18659
 
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-
-			try {
-				Directory.CreateDirectory (Path.Combine (app, "testApp"));
-
-				var exe = CompileTestAppExecutable (testDir);
-				var cache = Path.Combine (testDir, "mtouch-cache");
-
-				var args = string.Format ("-sdkroot " + Configuration.xcode_root + " --debug --nolink --sim {0} -sdk " + Configuration.sdk_version + " --abi=i386 {1} --cache={2} --r:{3}", app, exe, cache, Configuration.XamarinIOSDll);
-				Asserts.ThrowsPattern<TestExecutionException> (() => ExecutionHelper.Execute (TestTarget.ToolPath, args, hide_output: false), 
-					"Xamarin.iOS .* using framework:.*\nerror MT1015: Failed to create the executable '.*/testApp.app/testApp': .*/testApp.app/testApp is a directory\n");
-			} finally {
-				Directory.Delete (testDir, true);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				// make sure we hit the fastsim path
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Debug = true;
+				Directory.CreateDirectory (Path.Combine (mtouch.AppPath, Path.GetFileNameWithoutExtension (mtouch.AppPath)));
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertErrorPattern (1015, "Failed to create the executable '.*/testApp.app/testApp': .*/testApp.app/testApp is a directory");
 			}
 		}
 
@@ -1715,14 +2479,7 @@ public class TestApp {
 		[Test]
 		public void MT5211 ()
 		{
-			AssertDeviceAvailable ();
-
-			var testDir = GetTempDirectory ();
-
-			try {
-				var app = Path.Combine (testDir, "testApp.app");
-				Directory.CreateDirectory (app);
-
+			using (var mtouch = new MTouchTool ()) {
 				var code = @"
 using System;
 using System.Runtime.InteropServices;
@@ -1741,42 +2498,37 @@ class Test {
 	}
 }
 ";
-				var exe = CompileTestAppExecutable (testDir, code, profile: MTouch.Profile.iOS);
-				var cache = Path.Combine (testDir, "mtouch-cache");
+				mtouch.Abi = "armv7,arm64";
+				mtouch.CreateTemporaryApp (code: code);
+				mtouch.CreateTemporaryCacheDirectory ();
 
-				var mtouch = new MTouchTool ();
-
-				Assert.AreEqual (1, mtouch.Execute ("-sdkroot {5} --dev {0} -sdk {4} -targetver {4} --abi=armv7,arm64 {1} --cache={2} --r:{3}", app, exe, cache, Configuration.XamarinIOSDll, Configuration.sdk_version, Configuration.xcode_root), "build failure expected");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
 
 				mtouch.AssertOutputPattern ("Undefined symbols for architecture arm64:");
 				mtouch.AssertOutputPattern (".*_OBJC_METACLASS_._Inexistent., referenced from:.*");
-				mtouch.AssertOutputPattern (".*_OBJC_METACLASS_._Test_Subexistent in registrar.arm64.o.*");
+				mtouch.AssertOutputPattern (".*_OBJC_METACLASS_._Test_Subexistent in registrar.o.*");
 				mtouch.AssertOutputPattern (".*_OBJC_CLASS_._Inexistent., referenced from:.*");
-				mtouch.AssertOutputPattern (".*_OBJC_CLASS_._Test_Subexistent in registrar.arm64.o.*");
-				mtouch.AssertOutputPattern (".*objc-class-ref in registrar.arm64.o.*");
+				mtouch.AssertOutputPattern (".*_OBJC_CLASS_._Test_Subexistent in registrar.o.*");
+				mtouch.AssertOutputPattern (".*objc-class-ref in registrar.o.*");
 				mtouch.AssertOutputPattern (".*ld: symbol.s. not found for architecture arm64.*");
 				mtouch.AssertOutputPattern (".*clang: error: linker command failed with exit code 1 .use -v to see invocation.*");
 
 				mtouch.AssertErrorPattern ("MT", 5210, "Native linking failed, undefined symbol: _OBJC_METACLASS_._Inexistent. Please verify that all the necessary frameworks have been referenced and native libraries are properly linked in.");
 				mtouch.AssertErrorPattern ("MT", 5211, "Native linking failed, undefined Objective-C class: Inexistent. The symbol ._OBJC_CLASS_._Inexistent. could not be found in any of the libraries or frameworks linked with your application.");
 				mtouch.AssertErrorPattern ("MT", 5202, "Native linking failed. Please review the build log.");
-			} finally {
-				Directory.Delete (testDir, true);
 			}
 		}
 
 		[Test]
 		public void TestCaseMismatchedAssemblyName ()
 		{
-			AssertDeviceAvailable ();
-
 			// desk #90367 (and others in the past as well)
+			using (var mtouch = new MTouchTool ()) {
 
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (testDir);
+				var testDir = mtouch.CreateTemporaryDirectory ();
+				var app = Path.Combine (testDir, "testApp.app");
+				Directory.CreateDirectory (testDir);
 
-			try {
 				string dllcs = Path.Combine (testDir, "testLibrary.cs");
 				string exe = Path.Combine (testDir, "testApp.exe");
 				string dll = Path.Combine (testDir, "testLibrary.dll");
@@ -1824,66 +2576,50 @@ class Test {
 						Assert.Fail (v + "\n" + msg.ToString ());
 				};
 
-				string [][] tests = new string[][] {
-					new string [] { "linkall",  "-sdkroot {0} --dev {1} -sdk {2} --targetver {2} --abi=armv7s {3}      -debug -r:{4} -r:{5}" },
-					new string [] { "dontlink", "-sdkroot {0} --dev {1} -sdk {2} --targetver {2} --abi=armv7s {3}      -debug -r:{4} -r:{5} --nolink" },
-					new string [] { "dual",     "-sdkroot {0} --dev {1} -sdk {2} --targetver {2} --abi=armv7,arm64 {3} -debug -r:{4} -r:{5}" }
+				var tests = new [] {
+					new { Name = "linkall", Abi = "armv7s", Link = MTouchLinker.Unspecified },
+					new { Name = "dontlink", Abi = "armv7s", Link = MTouchLinker.DontLink },
+					new { Name = "dual", Abi = "armv7,arm64", Link = MTouchLinker.Unspecified },
 				};
 
-				foreach (var kvp in tests) {
-					var name = kvp [0];
-					var format = kvp [1];
-					var mtouch_fmt = string.Format (format, Configuration.xcode_root, app, Configuration.sdk_version, exe, Configuration.XamarinIOSDll, DLL);
+				mtouch.AppPath = app;
+				mtouch.RootAssembly = exe;
+				mtouch.References = new [] { DLL };
+				mtouch.Timeout = TimeSpan.FromMinutes (5);
+
+				foreach (var test in tests) {
+					mtouch.Abi = test.Abi;
+					mtouch.Linker = test.Link;
 					Directory.CreateDirectory (app);
-					ExecutionHelper.Execute (TestTarget.ToolPath, mtouch_fmt, hide_output: false);
-					check (name);
+					mtouch.AssertExecute (MTouchAction.BuildDev, "build: " + test.Name);
+					check (test.Name);
 					Directory.Delete (app, true);
 				}
-
-			} finally {
-				Directory.Delete (testDir, true);
 			}
 		}
 
 		[Test]
 		public void TestDuplicatedFatApp ()
 		{
-			AssertDeviceAvailable ();
-
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			try {
-				var exe = CompileUnifiedTestAppExecutable (testDir);
-				var cache = Path.Combine (testDir, "mtouch-cache");
-
-				var args = string.Format ("-sdkroot {5} --dev {0} -sdk {4} -targetver {4} --abi=armv7,arm64 {1} --cache={2} --r:{3} ", app, exe, cache, Configuration.XamarinIOSDll, Configuration.sdk_version, Configuration.xcode_root);
-				ExecutionHelper.Execute (TestTarget.ToolPath, args, hide_output: false);
-				var ufe = Mono.Unix.UnixFileInfo.GetFileSystemEntry (Path.Combine (app, ".monotouch-32", "testApp.exe"));
-				Assert.IsTrue (ufe.IsSymbolicLink, "testApp.exe IsSymbolicLink");
-			} finally {
-				Directory.Delete (testDir, true);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Abi = "armv7,arm64";
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+				FileAssert.Exists (Path.Combine (mtouch.AppPath, "testApp.exe"));
+				// Don't check for mscorlib.dll, there might be two versions of it (since Xamarin.iOS.dll depends on it), or there might not.
+				FileAssert.Exists (Path.Combine (mtouch.AppPath, ".monotouch-32", "Xamarin.iOS.dll"));
 			}
 		}
 
 		[Test]
 		public void TestAllLoad ()
 		{
-			AssertDeviceAvailable ();
-
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			try {
-				var exe = CompileUnifiedTestAppExecutable (testDir);
-				var cache = Path.Combine (testDir, "mtouch-cache");
-
-				var args = string.Format ("-sdkroot {5} --dev {0} -sdk {4} -targetver {4} --abi=armv7,arm64 {1} --cache={2} --r:{3} -gcc_flags -all_load", app, exe, cache, Configuration.XamarinIOSDll, Configuration.sdk_version, Configuration.xcode_root);
-				ExecutionHelper.Execute (TestTarget.ToolPath, args, hide_output: false);
-			} finally {
-				Directory.Delete (testDir, true);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.GccFlags = "-all_load";
+				mtouch.Abi = "armv7,arm64";
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
 			}
 		}
 
@@ -1973,7 +2709,6 @@ class Test {
 		{
 			using (var tool = new MTouchTool ()) {
 				tool.Profile = profile;
-				tool.Verbosity = 5;
 				tool.Cache = Path.Combine (tool.CreateTemporaryDirectory (), "mtouch-test-cache");
 				tool.CreateTemporaryApp (code: "using UIKit; class C { static void Main (string[] args) { UIApplication.Main (args); } }");
 				tool.FastDev = true;
@@ -1989,8 +2724,6 @@ class Test {
 			using (var tool = new MTouchTool ()) {
 				tool.Profile = Profile.watchOS;
 				tool.CreateTemporaryCacheDirectory ();
-				tool.Verbosity = 5;
-				tool.Extension = true;
 				tool.CreateTemporaryWatchKitExtension ();
 
 				tool.FastDev = true;
@@ -1998,13 +2731,13 @@ class Test {
 
 				Assert.IsTrue (File.Exists (Path.Combine (tool.AppPath, "libpinvokes.dylib")), "libpinvokes.dylib existence");
 
-				var otool_output = ExecutionHelper.Execute ("otool", $"-l {Quote (Path.Combine (tool.AppPath, "libpinvokes.dylib"))}", hide_output: true);
+				var otool_output = ExecutionHelper.Execute ("otool", $"-l {StringUtils.Quote (Path.Combine (tool.AppPath, "libpinvokes.dylib"))}", hide_output: true);
 				Assert.That (otool_output, Does.Contain ("LC_ID_DYLIB"), "output contains LC_ID_DYLIB");
 
 				var lines = otool_output.Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 				for (int i = 0; i < lines.Length; i++) {
 					if (lines [i].Contains ("LC_ID_DYLIB")) {
-						Assert.That (lines [i + 2], Does.Contain ("name @executable_path/libpinvokes.dylib "), "LC_ID_DYLIB");
+						Assert.That (lines [i + 2], Does.Contain ("name @rpath/libpinvokes.dylib "), "LC_ID_DYLIB");
 						break;
 					}
 				}
@@ -2044,9 +2777,6 @@ class C {
 			using (var exttool = new MTouchTool ()) {
 				exttool.Profile = Profile.watchOS;
 				exttool.CreateTemporaryCacheDirectory ();
-				exttool.Verbosity = 5;
-
-				exttool.Extension = true;
 				exttool.CreateTemporaryWatchKitExtension ();
 				exttool.Frameworks.Add (Path.Combine (Configuration.SourceRoot, "tests/test-libraries/.libs/watchos/XTest.framework"));
 				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
@@ -2054,9 +2784,9 @@ class C {
 				using (var apptool = new MTouchTool ()) {
 					apptool.Profile = Profile.iOS;
 					apptool.CreateTemporaryCacheDirectory ();
-					apptool.Verbosity = exttool.Verbosity;
+					apptool.Linker = MTouchLinker.DontLink; // faster
 					apptool.CreateTemporaryApp ();
-					apptool.AppExtensions.Add (exttool.AppPath);
+					apptool.AppExtensions.Add (exttool);
 					apptool.AssertExecute (MTouchAction.BuildSim, "build app");
 
 					Assert.IsFalse (Directory.Exists (Path.Combine (apptool.AppPath, "Frameworks", "XTest.framework")), "framework inexistence");
@@ -2073,23 +2803,167 @@ class C {
 			using (var exttool = new MTouchTool ()) {
 				exttool.Profile = Profile.iOS;
 				exttool.CreateTemporaryCacheDirectory ();
-				exttool.Verbosity = 5;
+				exttool.Linker = MTouchLinker.DontLink; // faster
 
-				exttool.Extension = true;
-				exttool.CreateTemporararyServiceExtension ();
+				exttool.CreateTemporaryServiceExtension ();
 				exttool.Frameworks.Add (Path.Combine (Configuration.SourceRoot, "tests/test-libraries/.libs/ios/XTest.framework"));
 				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
 
 				using (var apptool = new MTouchTool ()) {
 					apptool.Profile = Profile.iOS;
 					apptool.CreateTemporaryCacheDirectory ();
-					apptool.Verbosity = exttool.Verbosity;
 					apptool.CreateTemporaryApp ();
-					apptool.AppExtensions.Add (exttool.AppPath);
+					apptool.AppExtensions.Add (exttool);
+					apptool.Linker = MTouchLinker.DontLink; // faster
 					apptool.AssertExecute (MTouchAction.BuildSim, "build app");
 
 					Assert.IsTrue (Directory.Exists (Path.Combine (apptool.AppPath, "Frameworks", "XTest.framework")), "framework exists");
 					Assert.IsFalse (Directory.Exists (Path.Combine (exttool.AppPath, "Frameworks")), "extension framework inexistence");
+				}
+			}
+		}
+
+		[Test]
+		public void OnlyExtensionWithBindingFramework ()
+		{
+			// if an extension references a framework (from a binding library, and the main app does not,
+			// the framework should still be copied to the main app's Framework directory.
+			using (var exttool = new MTouchTool ()) {
+				exttool.Profile = Profile.iOS;
+				exttool.CreateTemporaryCacheDirectory ();
+				exttool.Linker = MTouchLinker.DontLink; // faster
+
+				exttool.References = new string []
+				{
+					GetFrameworksBindingLibrary (exttool.Profile),
+				};
+				exttool.CreateTemporaryServiceExtension (code: @"using UserNotifications;
+[Foundation.Register (""NotificationService"")]
+public partial class NotificationService : UNNotificationServiceExtension
+{
+	protected NotificationService (System.IntPtr handle) : base (handle)
+	{
+		System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ());
+	}
+}", extraArg: StringUtils.Quote ("-r:" + exttool.References [0]));
+				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
+
+				using (var apptool = new MTouchTool ()) {
+					apptool.Profile = Profile.iOS;
+					apptool.CreateTemporaryCacheDirectory ();
+					apptool.CreateTemporaryApp ();
+					apptool.AppExtensions.Add (exttool);
+					apptool.AssertExecute (MTouchAction.BuildSim, "build app");
+
+					Assert.IsTrue (Directory.Exists (Path.Combine (apptool.AppPath, "Frameworks", "XTest.framework")), "framework exists");
+					Assert.IsFalse (Directory.Exists (Path.Combine (exttool.AppPath, "Frameworks")), "extension framework inexistence");
+				}
+			}
+		}
+
+		[Test]
+		public void AppAndExtensionWithBindingFramework ()
+		{
+			// There should be no problem to reference a binding library with a framework from both a container app and an extension.
+			using (var exttool = new MTouchTool ()) {
+				exttool.Profile = Profile.iOS;
+				exttool.Linker = MTouchLinker.DontLink; // faster
+				exttool.References = new string [] { GetFrameworksBindingLibrary (exttool.Profile) };
+				exttool.CreateTemporaryCacheDirectory ();
+				exttool.CreateTemporaryServiceExtension (extraCode: "\n\n[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } }", extraArg: $"-r:{StringUtils.Quote (exttool.References [0])}");
+				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
+
+				using (var apptool = new MTouchTool ()) {
+					apptool.Profile = Profile.iOS;
+					apptool.CreateTemporaryCacheDirectory ();
+					apptool.References = exttool.References;
+					apptool.CreateTemporaryApp (extraCode: @"[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } };", extraArg: $"-r:{StringUtils.Quote (apptool.References [0])}");
+					apptool.AppExtensions.Add (exttool);
+					apptool.AssertExecute (MTouchAction.BuildSim, "build app");
+
+					Assert.IsTrue (Directory.Exists (Path.Combine (apptool.AppPath, "Frameworks", "XTest.framework")), "framework exists");
+					Assert.IsFalse (Directory.Exists (Path.Combine (exttool.AppPath, "Frameworks")), "extension framework inexistence");
+				}
+			}
+		}
+
+		[Test]
+		public void MT1035 ()
+		{
+			// Verify that an error is shown if two different frameworks with the same name are included.
+
+			var tmpdir = Cache.CreateTemporaryDirectory ();
+			var framework_binding_library = GetFrameworksBindingLibrary (Profile.iOS);
+			using (var exttool = new MTouchTool ()) {
+				exttool.Profile = Profile.iOS;
+				exttool.Linker = MTouchLinker.DontLink; // faster
+				exttool.References = new string [] { framework_binding_library };
+				exttool.CreateTemporaryCacheDirectory ();
+				exttool.CreateTemporaryServiceExtension (extraCode: "\n\n[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } }", extraArg: $"-r:{StringUtils.Quote (exttool.References [0])}");
+				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
+
+				using (var apptool = new MTouchTool ()) {
+					// Here we do a little bit of surgery on the binding assembly to change the embedded framework (we just add a file into the zip).
+					var modified_framework_binding_library = Path.Combine (tmpdir, Path.GetFileName (framework_binding_library));
+					var framework_zip = Path.Combine (tmpdir, "XTest.framework");
+					var extra_content = Path.Combine (tmpdir, "extra-content");
+					Mono.Cecil.AssemblyDefinition ad = Mono.Cecil.AssemblyDefinition.ReadAssembly (framework_binding_library);
+					var res = (Mono.Cecil.EmbeddedResource) ad.MainModule.Resources.Where ((v) => v.Name == "XTest.framework").First ();
+					File.WriteAllBytes (framework_zip, res.GetResourceData ());
+					File.WriteAllText (extra_content, "Hello world");
+					ExecutionHelper.Execute ("zip", $"{StringUtils.Quote (framework_zip)} {StringUtils.Quote (extra_content)}");
+					ad.MainModule.Resources.Remove (res);
+					ad.MainModule.Resources.Add (new Mono.Cecil.EmbeddedResource (res.Name, res.Attributes, File.ReadAllBytes (framework_zip)));
+					ad.Write (modified_framework_binding_library);
+
+					apptool.Profile = Profile.iOS;
+					apptool.Linker = MTouchLinker.DontLink; // faster
+					apptool.References = new string [] { modified_framework_binding_library };
+					apptool.CreateTemporaryCacheDirectory ();
+					apptool.CreateTemporaryApp (extraCode: "\n\n[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } }", extraArg: $"-r:{StringUtils.Quote (apptool.References [0])}");
+					apptool.AppExtensions.Add (exttool);
+					apptool.AssertExecuteFailure (MTouchAction.BuildSim, "build app");
+					apptool.AssertError (1035, "Cannot include different versions of the framework 'XTest.framework'");
+					apptool.AssertError (1036, $"Framework 'XTest.framework' included from: {exttool.Cache}/XTest.framework (Related to previous error)");
+					apptool.AssertError (1036, $"Framework 'XTest.framework' included from: {apptool.Cache}/XTest.framework (Related to previous error)");
+				}
+			}
+		}
+
+		[Test]
+		public void MultipleExtensionsWithBindingFramework ()
+		{
+			// if multiple extensions references a framework (but not the container app)
+			// the framework should still be copied successfully to the main app's Framework directory.
+			using (var service_ext = new MTouchTool ()) {
+				service_ext.Profile = Profile.iOS;
+				service_ext.Linker = MTouchLinker.DontLink; // faster
+				service_ext.References = new string [] { GetFrameworksBindingLibrary (service_ext.Profile) };
+				service_ext.CreateTemporaryCacheDirectory ();
+				service_ext.CreateTemporaryServiceExtension (extraCode: "\n\n[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } }", extraArg: $"-r:{StringUtils.Quote (service_ext.References [0])}");
+				service_ext.AssertExecute (MTouchAction.BuildSim, "build service extension");
+
+				using (var today_ext = new MTouchTool ()) {
+					today_ext.Profile = Profile.iOS;
+					today_ext.Linker = MTouchLinker.DontLink; // faster
+					today_ext.References = service_ext.References;
+					today_ext.CreateTemporaryCacheDirectory ();
+					today_ext.CreateTemporaryTodayExtension (extraCode: "\n\n[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } }", extraArg: $"-r:{StringUtils.Quote (today_ext.References [0])}");
+					today_ext.AssertExecute (MTouchAction.BuildSim, "build today extension");
+
+					using (var apptool = new MTouchTool ()) {
+						apptool.Profile = Profile.iOS;
+						apptool.Linker = MTouchLinker.DontLink; // faster
+						apptool.CreateTemporaryCacheDirectory ();
+						apptool.CreateTemporaryApp ();
+						apptool.AppExtensions.Add (service_ext);
+						apptool.AppExtensions.Add (today_ext);
+						apptool.AssertExecute (MTouchAction.BuildSim, "build app");
+
+						Assert.IsTrue (Directory.Exists (Path.Combine (apptool.AppPath, "Frameworks", "XTest.framework")), "framework exists");
+						Assert.IsFalse (Directory.Exists (Path.Combine (service_ext.AppPath, "Frameworks")), "service extension framework inexistence");
+						Assert.IsFalse (Directory.Exists (Path.Combine (today_ext.AppPath, "Frameworks")), "today framework inexistence");
+					}
 				}
 			}
 		}
@@ -2102,7 +2976,6 @@ class C {
 		{
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = Profile.iOS;
-				mtouch.Verbosity = 23;
 				var tmp = mtouch.CreateTemporaryDirectory ();
 				mtouch.CreateTemporaryCacheDirectory ();
 
@@ -2111,7 +2984,7 @@ class C {
 				var exe = MTouch.CompileTestAppExecutable (tmp, code, "/debug:full");
 
 				mtouch.AppPath = mtouch.CreateTemporaryDirectory ();
-				mtouch.Executable = exe;
+				mtouch.RootAssembly = exe;
 				mtouch.Debug = true;
 				mtouch.Linker = linker_options;
 
@@ -2123,7 +2996,8 @@ class C {
 				var exeStamp = File.GetLastWriteTimeUtc (exePath);
 				var mdbStamp = File.GetLastWriteTimeUtc (mdbPath);
 
-				// Recompile the exe, adding only whitespace. This will only change the debuf files
+				System.Threading.Thread.Sleep (1000); // HFS does not have sub-second timestamp resolution, so make sure the timestamps actually change...
+				// Recompile the exe, adding only whitespace. This will only change the debug files
 				MTouch.CompileTestAppExecutable (tmp, "\n\n" + code + "\n\n", "/debug:full");
 
 				// Rebuild the app
@@ -2156,7 +3030,6 @@ class C {
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = Profile.watchOS;
 				mtouch.CreateTemporaryWatchKitExtension ();
-				mtouch.Extension = true;
 
 				mtouch.HttpMessageHandler = "HttpClientHandler";
 				mtouch.AssertExecute (MTouchAction.BuildSim);
@@ -2172,23 +3045,310 @@ class C {
 			}
 		}
 
-#region Helper functions
-		static string CompileUnifiedTestAppExecutable (string targetDirectory, string code = null, string extraArg = "")
+		[Test]
+		public void MT2018_a ()
 		{
-			return CompileTestAppExecutable (targetDirectory, code, extraArg, profile: MTouch.Profile.iOS);
+			using (var mtouch = new MTouchTool ()) {
+				// Create a library, copy it to a different directory, and then
+				// pass both as -r:.. to mtouch. Due to assembly resolution being cached,
+				// this will *not* show the MT2018 error (in fact I don't know if it's possible
+				// to run into MT2018 at all).
+				var tmpA = mtouch.CreateTemporaryDirectory ();
+				var dllA = CompileTestAppCode ("library", tmpA, "public class X {}", appName: "testLib");
+
+				var tmpB = mtouch.CreateTemporaryDirectory ();
+				var dllB = Path.Combine (tmpB, Path.GetFileName (dllA));
+				File.Copy (dllA, dllB);
+
+				mtouch.CreateTemporaryApp (code: "public class C { static void Main () { System.Console.WriteLine (typeof (X)); System.Console.WriteLine (typeof (UIKit.UIWindow)); } }", extraArg: "-r:" + StringUtils.Quote (dllA));
+				mtouch.References = new string [] { dllA, dllB };
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarningPattern (109, "The assembly 'testLib.dll' was loaded from a different path than the provided path .provided path: .*/testLib.dll, actual path: .*/testLib.dll..");
+			}
 		}
 
-		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp")
+		[Test]
+		public void MT2018_b ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				// Create a library named as an SDK assembly, and then
+				// pass both as -r:.. to mtouch, this library being the first one.
+				// Due to assembly resolution being cached,
+				// this will *not* show the MT2018 error (in fact I don't know if it's possible
+				// to run into MT2018 at all).
+				var tmpA = mtouch.CreateTemporaryDirectory ();
+				var dllA = CompileTestAppCode ("library", tmpA, "public class X {}", appName: "System.Net.Http");
+
+				var dllB = Path.Combine (Configuration.SdkRootXI, "lib", "mono", "Xamarin.iOS", Path.GetFileName (dllA));
+
+				mtouch.CreateTemporaryApp (code: "public class C { static void Main () { System.Console.WriteLine (typeof (X)); System.Console.WriteLine (typeof (UIKit.UIWindow)); } }", extraArg: "-r:" + StringUtils.Quote (dllA));
+				mtouch.References = new string [] { dllA, dllB };
+
+				// Without the linker we'll just copy the references, and not actually run into problems if we copy one that doesn't work
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarningPattern (109, "The assembly 'System.Net.Http.dll' was loaded from a different path than the provided path .provided path: .*/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/System.Net.Http.dll, actual path: .*CreateTemporaryDirectory.*/System.Net.Http.dll..");
+
+				// With the linker, we'll find out that we've loaded the right one.
+				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarningPattern (109, "The assembly 'System.Net.Http.dll' was loaded from a different path than the provided path .provided path: .*/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/System.Net.Http.dll, actual path: .*CreateTemporaryDirectory.*/System.Net.Http.dll..");
+			}
+		}
+
+		[Test]
+		public void MT2018_c ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				// Create a library named as an SDK assembly, and then
+				// pass both as -r:.. to mtouch, the SDK library being the first one.
+				// Due to assembly resolution being cached,
+				// this will *not* show the MT2018 error (in fact I don't know if it's possible
+				// to run into MT2018 at all).
+				var tmpA = mtouch.CreateTemporaryDirectory ();
+				var dllA = CompileTestAppCode ("library", tmpA, "public class X {}", appName: "System.Net.Http");
+
+				var dllB = Path.Combine (Configuration.SdkRootXI, "lib", "mono", "Xamarin.iOS", Path.GetFileName (dllA));
+
+				mtouch.CreateTemporaryApp (code: "public class C { static void Main () { System.Console.WriteLine (typeof (X)); System.Console.WriteLine (typeof (UIKit.UIWindow)); } }", extraArg: "-r:" + StringUtils.Quote (dllA));
+				mtouch.References = new string [] { dllB, dllA };
+
+				// Without the linker we'll just copy the references, and not actually run into problems if we copy one that doesn't work
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarningPattern (109, "The assembly 'System.Net.Http.dll' was loaded from a different path than the provided path .provided path: .*CreateTemporaryDirectory.*/System.Net.Http.dll, actual path: .*/Library/Frameworks/Xamarin.iOS.framework/Versions/.*/lib/mono/Xamarin.iOS/System.Net.Http.dll..");
+
+				// With the linker, we'll find out that the loaded reference doesn't work.
+				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (2101, "Can't resolve the reference 'X', referenced from the method 'System.Void C::Main()' in 'System.Net.Http, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null'.");
+			}
+		}
+
+		[Test]
+		public void AutoLinkWithSqlite ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = Profile.iOS;
+				mtouch.CreateTemporaryApp (code: @"
+using System.Runtime.InteropServices;
+using Foundation;
+using ObjCRuntime;
+
+[assembly: LinkWith (ForceLoad = true)]
+
+[Preserve (AllMembers = true)]
+public class TestApp {
+	[DllImport (""sqlite3"")]
+	static extern void sqlite3_exec ();
+
+	static void Main ()
+	{
+		System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ());
+	}
+}
+");
+				mtouch.Linker = MTouchLinker.DontLink; // just to make the test run faster.
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+			}
+		}
+
+		[Test]
+		public void ManyBigPInvokes ()
+		{
+			var tmpdir = Cache.CreateTemporaryDirectory ();
+			var m = Path.Combine (tmpdir, "file.m");
+			var cs = Path.Combine (tmpdir, "file.cs");
+			var functions = 2500;
+			var m_writer = new StringBuilder ();
+			var cs_writer = new StringBuilder ("\n");
+			cs_writer.AppendLine ("namespace Tester {");
+			cs_writer.AppendLine ("\tusing System.Runtime.InteropServices;");
+			cs_writer.AppendLine ("\tclass PInvokes {");
+			for (int i = 0; i < functions; i++) {
+				var fname = $"this_is_a_big_function_with_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_long_name_number_{i}";
+				m_writer.AppendLine ($"void {fname} () {{}}");
+				cs_writer.AppendLine ($"\t\t[DllImport (\"__Internal\")]");
+				cs_writer.AppendLine ($"\t\tstatic extern void {fname} ();");
+			}
+			cs_writer.AppendLine ("\t}");
+			cs_writer.AppendLine ("}");
+			var o = CompileNativeLibrary (Profile.iOS, tmpdir, m_writer.ToString (), device: false);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp (extraCode: cs_writer.ToString ());
+				mtouch.GccFlags = o;
+				mtouch.Abi = "x86_64";
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "first build");
+				mtouch.AssertWarningPattern (5217, "Native linking possibly failed because the linker command line was too long .[0-9]* characters..");
+
+				mtouch.CustomArguments = new string [] { "--dynamic-symbol-mode=code" };
+				mtouch.AssertExecute (MTouchAction.BuildSim, "second build");
+			}
+		}
+
+		[Test]
+		[TestCase ("CFNetworkHandler", "CFNetworkHandler")]
+		[TestCase ("NSUrlSessionHandler", "NSUrlSessionHandler")]
+		[TestCase ("HttpClientHandler", "HttpClientHandler")]
+		[TestCase (null, "HttpClientHandler")]
+		[TestCase ("", "HttpClientHandler")]
+		public void HttpClientHandler (string mtouchHandler, string expectedHandler)
+		{
+			var testCode = $@"
+[TestFixture]
+public class HandlerTest
+{{
+	[Test]
+	public void Test ()
+	{{
+		var client = new System.Net.Http.HttpClient ();
+		var field = client.GetType ().BaseType.GetField (""handler"", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+		if (field == null)
+			throw new System.Exception (""Could not find the field 'handler' in HttpClient's base type (which should be 'HttpMessageInvoker')."");
+		var fieldValue = field.GetValue (client);
+		if (fieldValue == null)
+			throw new System.Exception (""Unexpected null value found in 'HttpMessageInvoker.handler' field."");
+		Assert.AreEqual (""{expectedHandler}"", fieldValue.GetType ().Name, ""default http client handler"");
+	}}
+}}
+";
+			var csproj_configuration = mtouchHandler == null ? string.Empty : ("<MtouchHttpClientHandler>" + mtouchHandler + "</MtouchHttpClientHandler>");
+			RunUnitTest (Profile.iOS, testCode, csproj_configuration, csproj_references: new string [] { "System.Net.Http" }, clean_simulator: false);
+		}
+
+#region Helper functions
+		static void RunUnitTest (Profile profile, string code, string csproj_configuration = "", string [] csproj_references = null, string configuration = "Debug", string platform = "iPhoneSimulator", bool clean_simulator = true)
+		{
+			if (profile != Profile.iOS)
+				throw new NotImplementedException ();
+			var testfile = @"
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Foundation;
+using UIKit;
+using MonoTouch.NUnit.UI;
+using NUnit.Framework;
+using NUnit.Framework.Internal;
+
+[Register (""AppDelegate"")]
+public partial class AppDelegate : UIApplicationDelegate {
+	UIWindow window;
+	TouchRunner runner;
+
+	public override bool FinishedLaunching (UIApplication app, NSDictionary options)
+	{
+		window = new UIWindow (UIScreen.MainScreen.Bounds);
+		runner = new TouchRunner (window);
+		runner.Add (Assembly.GetExecutingAssembly ());
+		window.RootViewController = new UINavigationController (runner.GetViewController ());
+		window.MakeKeyAndVisible ();
+
+		return true;
+	}
+
+	static void Main (string[] args)
+	{
+		UIApplication.Main (args, null, typeof (AppDelegate));
+	}
+}
+
+[TestFixture]
+public class Dummy {
+	[Test]
+	public void DummyTest () {}
+}
+" + code;
+			var csproj = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<Project DefaultTargets=""Build"" ToolsVersion=""4.0"" xmlns=""http://schemas.microsoft.com/developer/msbuild/2003"">
+  <PropertyGroup>
+    <Configuration Condition="" '$(Configuration)' == '' "">Debug</Configuration>
+    <Platform Condition="" '$(Platform)' == '' "">iPhoneSimulator</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{17EB364A-0D86-49AC-8B8C-C79C2C5AC9EF}</ProjectGuid>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>testapp</RootNamespace>
+    <AssemblyName>testapp</AssemblyName>
+    <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)</IntermediateOutputPath>
+    <OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
+	" + csproj_configuration + @"
+  </PropertyGroup>
+  <PropertyGroup Condition="" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' "">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>0</WarningLevel>
+    <MtouchDebug>True</MtouchDebug>
+    <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchArch>i386, x86_64</MtouchArch>
+    <MtouchLink>None</MtouchLink>
+  </PropertyGroup>
+  <PropertyGroup Condition="" '$(Configuration)|$(Platform)' == 'Debug|iPhone' "">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>0</WarningLevel>
+    <MtouchDebug>True</MtouchDebug>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
+    <MtouchLink>Full</MtouchLink>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include=""System"" />
+    <Reference Include=""System.Xml"" />
+    <Reference Include=""System.Core"" />
+    <Reference Include=""Xamarin.iOS"" />
+    <Reference Include=""MonoTouch.NUnitLite"" />
+" + (csproj_references == null ? string.Empty : string.Join ("\n", csproj_references.Select ((v) => "    <Reference Include=\"" + v + "\" />\n"))) + @"
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=""Info.plist"">
+      <LogicalName>Info.plist</LogicalName>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include=""testfile.cs"" />
+  </ItemGroup>
+  <Import Project=""$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets"" />
+</Project>";
+
+			var tmpdir = Cache.CreateTemporaryDirectory ();
+			var csprojpath = Path.Combine (tmpdir, "testapp.csproj");
+			var testfilepath = Path.Combine (tmpdir, "testfile.cs");
+			var infoplistpath = Path.Combine (tmpdir, "Info.plist");
+			File.WriteAllText (csprojpath, csproj);
+			File.WriteAllText (testfilepath, testfile);
+			File.WriteAllText (infoplistpath, MTouchTool.CreatePlist (profile, "testapp"));
+			XBuild.Build (csprojpath, configuration, platform);
+			var environment_variables = new Dictionary<string, string> ();
+			if (!clean_simulator)
+				environment_variables ["SKIP_SIMULATOR_SETUP"] = "1";
+			ExecutionHelper.Execute ("mono", $"{StringUtils.Quote (Path.Combine (Configuration.RootPath, "tests", "xharness", "xharness.exe"))} --run {StringUtils.Quote (csprojpath)} --target ios-simulator-64 --sdkroot {Configuration.xcode_root} --logdirectory {StringUtils.Quote (Path.Combine (tmpdir, "log.txt"))} --configuration {configuration}", environmentVariables: environment_variables);
+		}
+
+		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null)
 		{
 			if (code == null)
 				code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
+			if (extraCode != null)
+				code += extraCode;
 
 			return CompileTestAppCode ("exe", targetDirectory, code, extraArg, profile, appName);
 		}
 
-		public static string CompileTestAppLibrary (string targetDirectory, string code, string extraArg = null, Profile profile = Profile.iOS)
+		public static string CompileTestAppLibrary (string targetDirectory, string code, string extraArg = null, Profile profile = Profile.iOS, string appName = "testApp")
 		{
-			return CompileTestAppCode ("library", targetDirectory, code, extraArg, profile);
+			return CompileTestAppCode ("library", targetDirectory, code, extraArg, profile, appName);
 		}
 
 		public static string CompileTestAppCode (string target, string targetDirectory, string code, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp")
@@ -2203,7 +3363,7 @@ class C {
 			string output;
 			StringBuilder args = new StringBuilder ();
 			string fileName = GetCompiler (profile, args);
-			args.AppendFormat ($" /noconfig /t:{target} /nologo /out:{Quote (assembly)} /r:{Quote (root_library)} {cs} {extraArg}");
+			args.AppendFormat ($" /noconfig /t:{target} /nologo /out:{StringUtils.Quote (assembly)} /r:{StringUtils.Quote (root_library)} {StringUtils.Quote (cs)} {extraArg}");
 			if (ExecutionHelper.Execute (fileName, args.ToString (), out output) != 0) {
 				Console.WriteLine ("{0} {1}", fileName, args);
 				Console.WriteLine (output);
@@ -2213,11 +3373,11 @@ class C {
 			return assembly;
 		}
 
-		static string CreateBindingLibrary (string targetDirectory, string nativeCode, string bindingCode, string linkWith = null, string extraCode = "")
+		static string CreateBindingLibrary (string targetDirectory, string nativeCode, string bindingCode, string linkWith = null, string extraCode = "", string name = "binding", string[] references = null)
 		{
-			var o = CompileNativeLibrary (targetDirectory, nativeCode);
-			var cs = Path.Combine (targetDirectory, "bindingCode.cs");
-			var dll = Path.Combine (targetDirectory, "bindingLibrary.dll");
+			var o = CompileNativeLibrary (targetDirectory, nativeCode, name: name);
+			var cs = Path.Combine (targetDirectory, $"{name}Code.cs");
+			var dll = Path.Combine (targetDirectory, $"{name}Library.dll");
 
 			if (linkWith == null) {
 				linkWith = @"
@@ -2233,34 +3393,51 @@ using ObjCRuntime;
 
 			extraCode = linkWith + "\n" + extraCode;
 
-			var x = Path.Combine (targetDirectory, "extraBindingCode.cs");
+			var x = Path.Combine (targetDirectory, $"extra{name}Code.cs");
 			File.WriteAllText (x, extraCode);
 
-			ExecutionHelper.Execute (Configuration.BtouchPath, 
-				string.Format ("{0} --out:{1} --link-with={2},{3} -x:{4}", cs, dll, o, Path.GetFileName (o), x));
+			ExecutionHelper.Execute (Configuration.BtouchPath,
+			                         string.Format ("{0} --out:{1} --link-with={2},{3} -x:{4} {5}", cs, dll, o, Path.GetFileName (o), x, references == null ? string.Empty : string.Join (", ", references.Select ((v) => "-r:" + v))));
 
 			return dll;
 		}
 
-		static string CompileNativeLibrary (string targetDirectory, string code)
+		static string CompileNativeLibrary (string targetDirectory, string code, string name = "testCode", string arch = "armv7", bool device = true)
 		{
-			var m = Path.Combine (targetDirectory, "testCode.m");
+			return CompileNativeLibrary (Profile.iOS, targetDirectory, code, name, arch, device);
+		}
 
+		static string CompileNativeLibrary (Profile profile, string targetDirectory, string code, string name = "testCode", string arch = null, bool device = true)
+		{
+			var m = Path.Combine (targetDirectory, $"{name}.m");
+			var o = Path.ChangeExtension (m, ".o");
 			File.WriteAllText (m, code);
 
 			string output;
 			string fileName = Path.Combine (Configuration.xcode_root, "Toolchains/XcodeDefault.xctoolchain/usr/bin/clang");
-			string args = string.Format ("-gdwarf-2 -arch armv7 -std=c99 -isysroot {0}/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS{2}.sdk -miphoneos-version-min=3.1 " +
-				"-c -DDEBUG  -o {1}/testCode.o -x objective-c {1}/testCode.m",
-				Configuration.xcode_root, targetDirectory, Configuration.sdk_version);
+			string min_os_version;
+			string sdk;
 
+			switch (profile) {
+			case Profile.iOS:
+				min_os_version = device ? "iphoneos-version-min=6.0" : "iphonesimulator-version-min=6.0";
+				sdk = device ? "iPhoneOS" : "iPhoneSimulator";
+				if (arch == null)
+					arch = device ? "armv7" : "x86_64";
+				break;
+			default:
+				throw new NotImplementedException ();
+			}
+
+			string args = $"-gdwarf-2 -arch {arch} -std=c99 -isysroot {Configuration.xcode_root}/Platforms/{sdk}.platform/Developer/SDKs/{sdk}{Configuration.sdk_version}.sdk -m{min_os_version} -c -DDEBUG  -o {o} -x objective-c {m}";
+
+			Console.WriteLine ("{0} {1}", fileName, args);
 			if (ExecutionHelper.Execute (fileName, args, out output) != 0) {
-				Console.WriteLine ("{0} {1}", fileName, args);
 				Console.WriteLine (output);
 				throw new Exception (output);
 			}
 
-			return Path.Combine (targetDirectory, "testCode.o");
+			return o;
 		}
 
 		void CompileCSharpCode (Profile profile, string code, string outputPath, params string[] additional_arguments)
@@ -2273,10 +3450,10 @@ using ObjCRuntime;
 				var args = new StringBuilder ();
 				var compiler = GetCompiler (profile, args);
 
-				args.Append (" -target:").Append (outputPath.EndsWith (".dll") ? "library" : "exe");
-				args.Append (" -r:").Append (Quote (GetBaseLibrary (profile)));
-				args.Append (" -out:").Append (Quote (outputPath));
-				args.Append (" ").Append (Quote (tmpFile));
+				args.Append (" -target:").Append (outputPath.EndsWith (".dll", StringComparison.Ordinal) ? "library" : "exe");
+				args.Append (" -r:").Append (StringUtils.Quote (GetBaseLibrary (profile)));
+				args.Append (" -out:").Append (StringUtils.Quote (outputPath));
+				args.Append (" ").Append (StringUtils.Quote (tmpFile));
 				foreach (var aa in additional_arguments)
 					args.Append (" ").Append (aa);
 
@@ -2318,13 +3495,11 @@ public class TestApp {
 			return exe;
 		}
 	
-		static void VerifyGC (string file, bool isBoehm, string message)
+		static void VerifyGC (string file, string message)
 		{
 			var symbols = ExecutionHelper.Execute ("nm", file, hide_output: true);
 			var _sgen_gc_lock = symbols.Contains ("_sgen_gc_lock");
-			if (isBoehm && _sgen_gc_lock) {
-				Assert.Fail ("Expected '{0}' to use Boehm: {1}", file, message);
-			} else if (!isBoehm && !_sgen_gc_lock) {
+			if (!_sgen_gc_lock) {
 				Assert.Fail ("Expected '{0}' to use SGen: {1}", file, message);
 			}
 		}
@@ -2426,33 +3601,6 @@ public class TestApp {
 			}
 
 			return string.Format ("unknown: {0}/{1}", cputype, cpusubtype);
-		}
-
-		public static string Quote (string f)
-		{
-			if (f.IndexOf (' ') == -1 && f.IndexOf ('\'') == -1 && f.IndexOf (',') == -1)
-				return f;
-
-			var s = new StringBuilder ();
-
-			s.Append ('"');
-			foreach (var c in f){
-				if (c == '"' || c == '\\')
-					s.Append ('\\');
-
-				s.Append (c);
-			}
-			s.Append ('"');
-
-			return s.ToString ();
-		}
-
-		public static string GetTempDirectory ()
-		{
-			var tmp = Path.GetTempFileName ();
-			File.Delete (tmp);
-			Directory.CreateDirectory (tmp);
-			return tmp;
 		}
 
 		public static void AssertDeviceAvailable ()

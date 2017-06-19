@@ -13,7 +13,11 @@ using System;
 #if XAMCORE_2_0
 using AVFoundation;
 using Foundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.AVFoundation;
 using MonoTouch.Foundation;

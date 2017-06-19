@@ -9,11 +9,7 @@ using Mono.Linker;
 using Mono.Linker.Steps;
 using Mono.Tuner;
 
-#if MONOMAC
-using DerivedLinkContext = MonoMac.Tuner.MonoMacLinkContext;
-#else
-using DerivedLinkContext = MonoTouch.Tuner.MonoTouchLinkContext;
-#endif
+using Xamarin.Tuner;
 
 namespace Xamarin.Linker.Steps {
 
@@ -25,6 +21,12 @@ namespace Xamarin.Linker.Steps {
 	public class MobileMarkStep : MarkStep {
 
 		protected virtual bool DebugBuild { get; set; }
+
+		protected DerivedLinkContext LinkContext {
+			get {
+				return (DerivedLinkContext) base._context;
+			}
+		}
 
 		public override void Process (LinkContext context)
 		{
@@ -257,6 +259,19 @@ namespace Xamarin.Linker.Steps {
 		void ProcessCorlib (TypeDefinition type)
 		{
 			switch (type.Namespace) {
+			case "System.Runtime.CompilerServices.AsyncTaskMethodBuilder":
+				if (DebugBuild)
+					MarkNamedMethod (type, "SetNotificationForWaitCompletion");
+				break;
+			case "System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1":
+				if (DebugBuild)
+					MarkNamedMethod (type, "SetNotificationForWaitCompletion");
+				break;
+			case "System.Threading.Tasks.Task":
+				if (DebugBuild)
+					MarkNamedMethod (type, "NotifyDebuggerOfWaitCompletion");
+				break;
+
 			case "System.Security.Cryptography":
 				switch (type.Name) {
 				case "Aes":
@@ -484,7 +499,7 @@ namespace Xamarin.Linker.Steps {
 				system_runtime_serialization = true;
 				// if we're keeping this assembly and use the Serialization namespace inside user code then we
 				// must bring the all the members decorated with [Data[Contract|Member]] attributes from the SDK
-				var members = ApplyPreserveAttribute.DataContract;
+				var members = LinkContext.DataContract;
 				foreach (var member in members)
 					MarkMetadata (member);
 				members.Clear ();
@@ -534,8 +549,11 @@ namespace Xamarin.Linker.Steps {
 				switch (type.Name) {
 				case "XslCompiledTransform":
 					TypeDefinition nop = GetType ("System.Xml", "System.Xml.Xsl.NoOperationDebugger");
-					MarkNamedMethod (nop, "OnCompile");
-					MarkNamedMethod (nop, "OnExecute");
+					// only available on the mobile profile
+					if (nop != null) {
+						MarkNamedMethod (nop, "OnCompile");
+						MarkNamedMethod (nop, "OnExecute");
+					}
 					break;
 				}
 				break;
@@ -549,7 +567,7 @@ namespace Xamarin.Linker.Steps {
 					// if we're keeping this assembly and use the Serialization namespace inside user code
 					// then we must bring the all the members decorated with [Xml*] attributes from the SDK
 					system_xml_serialization = true;
-					var members = ApplyPreserveAttribute.XmlSerialization;
+					var members = LinkContext.XmlSerialization;
 					foreach (var member in members)
 						MarkMetadata (member);
 					members.Clear ();

@@ -176,6 +176,11 @@ namespace XamCore.WebKit
 
 		[Export ("plugInsEnabled")]
 		bool PlugInsEnabled { get; set; }
+
+		// Headers says 10,12,3 but it is not available likely they meant 10,12,4
+		[Mac (10,12,4, onlyOn64 : true)]
+		[Export ("tabFocusesLinks")]
+		bool TabFocusesLinks { get; set; }
 #endif
 	}
 
@@ -281,12 +286,15 @@ namespace XamCore.WebKit
 		NSSet<NSString> AllWebsiteDataTypes { get; }
 	
 		[Export ("fetchDataRecordsOfTypes:completionHandler:")]
+		[Async]
 		void FetchDataRecordsOfTypes (NSSet<NSString> dataTypes, Action<NSArray> completionHandler);
 	
 		[Export ("removeDataOfTypes:forDataRecords:completionHandler:")]
+		[Async]
 		void RemoveDataOfTypes (NSSet<NSString> dataTypes, WKWebsiteDataRecord[] dataRecords, Action completionHandler);
 	
 		[Export ("removeDataOfTypes:modifiedSince:completionHandler:")]
+		[Async]
 		void RemoveDataOfTypes (NSSet<NSString> websiteDataTypes, NSDate date, Action completionHandler);
 	}
 	

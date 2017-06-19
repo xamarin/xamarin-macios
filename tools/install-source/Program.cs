@@ -43,7 +43,7 @@ public class ListSourceFiles {
 
 		var srcs = new HashSet<string> (StringComparer.OrdinalIgnoreCase);
 
-		if (!monopath.EndsWith (Path.DirectorySeparatorChar.ToString ()))
+		if (!monopath.EndsWith (Path.DirectorySeparatorChar.ToString (), StringComparison.Ordinal))
 			monopath += Path.DirectorySeparatorChar;
 
 		foreach (string mdb_file in mdb_files) {
@@ -52,15 +52,15 @@ public class ListSourceFiles {
 				continue;
 			}
 
-			if (mdb_file.EndsWith ("monotouch.dll.mdb")) {
+			if (mdb_file.EndsWith ("monotouch.dll.mdb", StringComparison.Ordinal)) {
 				// don't include monotouch.dll source
 				continue;
-			} else if (mdb_file.EndsWith ("Xamarin.iOS.dll.mdb")) {
+			} else if (mdb_file.EndsWith ("Xamarin.iOS.dll.mdb", StringComparison.Ordinal)) {
 				// same for Xamarin.iOS.dll
 				continue;
-			} else if (mdb_file.EndsWith ("XamMac.dll.mdb")) {
+			} else if (mdb_file.EndsWith ("XamMac.dll.mdb", StringComparison.Ordinal)) {
 				continue;
-			} else if (mdb_file.EndsWith ("Xamarin.Mac.dll.mdb")) {
+			} else if (mdb_file.EndsWith ("Xamarin.Mac.dll.mdb", StringComparison.Ordinal)) {
 				continue;
 			}
 
@@ -76,7 +76,7 @@ public class ListSourceFiles {
 			foreach (var source_file in symfile.Sources) {
 				var src = source_file.FileName;
 
-				if (!src.StartsWith (monopath)) {
+				if (!src.StartsWith (monopath, StringComparison.Ordinal)) {
 					if (verbose)
 						Console.WriteLine ("{0}: not a mono source file", src);
 					continue;

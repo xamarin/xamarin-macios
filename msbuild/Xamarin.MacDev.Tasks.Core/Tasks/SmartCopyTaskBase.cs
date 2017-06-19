@@ -39,7 +39,7 @@ namespace Xamarin.MacDev.Tasks
 			var sourceInfo = new FileInfo (source);
 			var targetInfo = new FileInfo (target);
 
-			return sourceInfo.Length != targetInfo.Length || File.GetLastWriteTime (source) > File.GetLastWriteTime (target);
+			return sourceInfo.Length != targetInfo.Length || File.GetLastWriteTimeUtc (source) > File.GetLastWriteTimeUtc (target);
 		}
 
 		void EnsureDirectoryExists (string path)

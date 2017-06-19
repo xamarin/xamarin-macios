@@ -67,6 +67,19 @@ using ProductException=MonoMac.RuntimeException;
 // This file cannot use any cecil code, since it's also compiled into monotouch.dll
 //
 
+#if MONOMAC
+namespace XamCore.ObjCRuntime
+{
+	public delegate void AssemblyRegistrationHandler (object sender, AssemblyRegistrationEventArgs args);
+
+	public class AssemblyRegistrationEventArgs : EventArgs
+	{
+		public bool Register { get; set; }
+		public System.Reflection.AssemblyName AssemblyName { get; internal set; }
+	}
+}
+#endif
+
 namespace XamCore.Registrar {
 	static class Shared {
 		
@@ -88,6 +101,10 @@ namespace XamCore.Registrar {
 	}
 
 	abstract partial class Registrar {
+#if MTOUCH || MMP
+		public Application App { get; protected set; }
+#endif
+
 		Dictionary<TAssembly, object> assemblies = new Dictionary<TAssembly, object> (); // Use Dictionary instead of HashSet to avoid pulling in System.Core.dll.
 		// locking: all accesses must lock 'types'.
 		Dictionary<TType, ObjCType> types = new Dictionary<TType, ObjCType> ();
@@ -137,7 +154,7 @@ namespace XamCore.Registrar {
 
 			public bool IsCategory { get { return CategoryAttribute != null; } }
 
-			public void VerifyRegisterAttribute ()
+			public void VerifyRegisterAttribute (ref List<Exception> exceptions)
 			{
 				if (RegisterAttribute == null)
 					return;
@@ -151,13 +168,27 @@ namespace XamCore.Registrar {
 						continue;
 					// There is no Objective-C spec, and the C/C++ spec mentions "implementation-defined characters",
 					// so afaict there's no list of valid identifier characters. However we do know that whitespace
-					// is not allowed, so warn about that. We're not emitting an error because that would be a
-					// breaking change. See also bug #25441.
-					ErrorHelper.Warning (4146, "The Name parameter of the Registrar attribute on the class '{0}' contains an invalid character: '{1}' (0x{2})", Registrar.GetTypeFullName (Type), name [i], ((int) name [i]).ToString ("x"));
+					// is not allowed, so notify the developer about that. We're only emitting an error if we can detect
+					// that it's a name that will cause the static registrar output to fail to compile
+					// (currently if the whitespace is not at the start or end of the name), since otherwise it's
+					// a breaking change.
+					// See also bug #25441.
+					var showError = false;
+					var trimmedName = name.Trim (); // Trim removes any characters that returns true for 'char.IsWhiteSpace', so it matches our condition above
+					for (int k = 0; k < trimmedName.Length; k++) {
+						if (char.IsWhiteSpace (trimmedName [k])) {
+							showError = true;
+							break;
+						}
+					}
+					AddException (ref exceptions, new ProductException (4146, showError, "The Name parameter of the Registrar attribute on the class '{0}' ('{3}') contains an invalid character: '{1}' (0x{2}).", Registrar.GetTypeFullName (Type), name [i], ((int) name [i]).ToString ("x"), name));
+					break;
 				}
 			}
 
-			static char[] invalidSelectorCharacters = new char[] { ' ', '\t' };
+			// This list is duplicated in tests/mtouch/RegistrarTest.cs.
+			// Update that list whenever this list is updated.
+			static char[] invalidSelectorCharacters = new char[] { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n' };
 			void VerifySelector (ObjCMethod method, ref List<Exception> exceptions)
 			{
 				if (method.Method == null)
@@ -247,7 +278,7 @@ namespace XamCore.Registrar {
 				VerifyIsNotKeyword (ref exceptions, property);
 			}
 
-			static bool IsObjectiveCKeyword (string name)
+			public static bool IsObjectiveCKeyword (string name)
 			{
 				switch (name) {
 				case "auto":
@@ -735,6 +766,8 @@ namespace XamCore.Registrar {
 #if !MTOUCH && !MMP
 			public int Size;
 			public byte Alignment;
+#else
+			public bool IsPrivate;
 #endif
 			public string FieldType;
 			public bool IsProperty;
@@ -782,7 +815,7 @@ namespace XamCore.Registrar {
 		protected abstract ExportAttribute GetExportAttribute (TProperty property); // Return null if no attribute is found. Must check the base property (i.e. if property is overriding a property in a base class, must check the overridden property for the attribute).
 		protected abstract ExportAttribute GetExportAttribute (TMethod method); // Return null if no attribute is found. Must check the base method (i.e. if method is overriding a method in a base class, must check the overridden method for the attribute).
 		protected abstract Dictionary<TMethod, List<TMethod>> PrepareMethodMapping (TType type);
-		protected abstract RegisterAttribute GetRegisterAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
+		public abstract RegisterAttribute GetRegisterAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
 		protected abstract CategoryAttribute GetCategoryAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
 		protected abstract ConnectAttribute GetConnectAttribute (TProperty property); // Return null if no attribute is found. Do not consider inherited properties.
 		protected abstract ProtocolAttribute GetProtocolAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
@@ -885,9 +918,10 @@ namespace XamCore.Registrar {
 		internal const string CompatNamespace = "MonoTouch";
 		internal const string CompatAssemblyName = "monotouch";
 #if MTOUCH
-		internal static string DualAssemblyName {
+		internal string DualAssemblyName
+		{
 			get {
-				switch (Driver.App.Platform) {
+				switch (App.Platform) {
 				case Xamarin.Utils.ApplePlatform.iOS:
 					return "Xamarin.iOS";
 				case Xamarin.Utils.ApplePlatform.WatchOS:
@@ -895,7 +929,7 @@ namespace XamCore.Registrar {
 				case Xamarin.Utils.ApplePlatform.TVOS:
 					return "Xamarin.TVOS";
 				default:
-					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", Driver.App.Platform);
+					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", App.Platform);
 				}
 			}
 		}
@@ -923,7 +957,7 @@ namespace XamCore.Registrar {
 				internal const string INativeObject           =	"INativeObject";
 		}
 
-		internal static string PlatformAssembly {
+		internal string PlatformAssembly {
 			get {
 				return IsDualBuild ? DualAssemblyName : CompatAssemblyName;
 			}
@@ -1038,7 +1072,7 @@ namespace XamCore.Registrar {
 		
 		// overridable so that descendant classes can provide a faster implementation
 		// do not check base types.
-		protected virtual bool HasProtocolAttribute (TType type)
+		public virtual bool HasProtocolAttribute (TType type)
 		{
 			object dummy;
 			return TryGetAttribute (type, Foundation, StringConstants.ProtocolAttribute, out dummy);
@@ -1401,6 +1435,18 @@ namespace XamCore.Registrar {
 			return objcType;
 		}
 			
+		protected bool SupportsModernObjectiveC {
+			get {
+#if MTOUCH || MONOTOUCH
+				return true;
+#elif MMP
+				return App.Is64Build;
+#elif MONOMAC
+				return IntPtr.Size == 8;
+#endif
+			}
+		}
+
 		// This method is not thread-safe wrt 'types', and must be called with
 		// a lock held on 'types'.
 		ObjCType RegisterTypeUnsafe (TType type, ref List<Exception> exceptions)
@@ -1441,6 +1487,11 @@ namespace XamCore.Registrar {
 				var pAttr = GetProtocolAttribute (type);
 				isInformalProtocol = pAttr.IsInformal;
 				isProtocol = true;
+
+#if MMP || MTOUCH
+				if (pAttr.FormalSinceVersion != null && pAttr.FormalSinceVersion > App.SdkVersion)
+					isInformalProtocol = !isInformalProtocol;
+#endif
 			}
 
 			// make sure the base type is already registered
@@ -1463,13 +1514,16 @@ namespace XamCore.Registrar {
 				IsProtocol = isProtocol,
 				IsGeneric = isGenericType,
 			};
-			objcType.VerifyRegisterAttribute ();
+			objcType.VerifyRegisterAttribute (ref exceptions);
 			objcType.Protocols = GetProtocols (objcType, ref exceptions);
 			objcType.BaseType = isProtocol ? null : (baseObjCType ?? objcType);
 			objcType.IsWrapper = (isProtocol && !isInformalProtocol) ? (GetProtocolAttributeWrapperType (objcType.Type) != null) : (objcType.RegisterAttribute != null && objcType.RegisterAttribute.IsWrapper);
 
 			if (!objcType.IsWrapper && objcType.BaseType != null)
 				VerifyTypeInSDK (ref exceptions, objcType.BaseType.Type, baseTypeOf: objcType.Type);
+
+			if (ObjCType.IsObjectiveCKeyword (objcType.ExportedName))
+				AddException (ref exceptions, ErrorHelper.CreateError (4168, $"Cannot register the type '{GetTypeFullName (type)}' because its Objective-C name '{objcType.ExportedName}' is an Objective-C keyword. Please use a different name."));
 
 			// make sure all the protocols this type implements are registered
 			if (objcType.Protocols != null) {
@@ -1563,6 +1617,7 @@ namespace XamCore.Registrar {
 							DeclaringType = objcType,
 							FieldType = "XamarinObject",// "^v", // void*
 							Name = "__monoObjectGCHandle",
+							IsPrivate = SupportsModernObjectiveC,
 						}, ref exceptions);
 					}
 #endif
@@ -2053,7 +2108,7 @@ namespace XamCore.Registrar {
 			return name;
 		}
 
-		protected string GetExportedTypeName (TType type, RegisterAttribute register_attribute)
+		public string GetExportedTypeName (TType type, RegisterAttribute register_attribute)
 		{
 			string name = null;
 			if (register_attribute != null) {

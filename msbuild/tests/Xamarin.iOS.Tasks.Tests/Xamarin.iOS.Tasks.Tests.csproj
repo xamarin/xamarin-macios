@@ -108,6 +108,10 @@
     <Compile Include="TaskTests\GeneratePlistTaskTests\GeneratePlistTaskTests_watchOS.cs" />
     <Compile Include="ProjectsTests\ReleaseBuild.cs" />
     <Compile Include="TaskTests\PropertyListEditorTaskTests.cs" />
+    <Compile Include="TaskTests\IBToolTaskTests.cs" />
+    <Compile Include="ProjectsTests\LinkedAssets.cs" />
+    <Compile Include="ProjectsTests\CodesignAppBundle.cs" />
+    <Compile Include="ProjectsTests\BindingReferences.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

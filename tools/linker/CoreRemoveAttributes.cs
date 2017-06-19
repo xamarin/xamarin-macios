@@ -27,6 +27,7 @@ namespace Xamarin.Linker {
 			case "LionAttribute":
 			case "MountainLionAttribute":
 			case "MavericksAttribute":
+			case "NotImplementedAttribute":
 			case "ObsoletedAttribute":
 			case "SinceAttribute":
 			case "ThreadSafeAttribute":

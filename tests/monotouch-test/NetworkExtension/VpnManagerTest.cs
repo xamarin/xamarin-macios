@@ -13,7 +13,6 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using NetworkExtension;
-using UIKit;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.NetworkExtension;
@@ -40,9 +39,17 @@ namespace MonoTouchFixtures.NetworkExtension {
 				Assert.Inconclusive ("Requires enabling Personal PVN (entitlements)");
 
 			Assert.That (shared.Connection.Status, Is.EqualTo (NEVpnStatus.Invalid), "Connection");
+#if MONOMAC
+			Assert.True (shared.Enabled, "Enabled");
+#else
 			Assert.False (shared.Enabled, "Enabled");
+#endif
 			if (TestRuntime.CheckSystemAndSDKVersion (9, 0)) {
+#if MONOMAC
+				Assert.AreEqual ("xammac_tests", shared.LocalizedDescription, "LocalizedDescription");
+#else
 				Assert.AreEqual ("MonoTouchTest", shared.LocalizedDescription, "LocalizedDescription");
+#endif
 			} else {
 				Assert.IsNull (shared.LocalizedDescription, "LocalizedDescription");
 			}

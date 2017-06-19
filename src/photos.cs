@@ -343,6 +343,7 @@ namespace XamCore.Photos
 		int RequestData (PHAssetResource forResource, [NullAllowed] PHAssetResourceRequestOptions options, Action<NSData> handler, Action<NSError> completionHandler);
 
 		[Export ("writeDataForAssetResource:toFile:options:completionHandler:")]
+		[Async]
 		void WriteData (PHAssetResource forResource, NSUrl fileURL, [NullAllowed] PHAssetResourceRequestOptions options, Action<NSError> completionHandler);
 
 		[Export ("cancelDataRequest:")]
@@ -979,6 +980,8 @@ namespace XamCore.Photos
 		void PhotoLibraryDidChange (PHChange changeInstance);
 	}
 
+	delegate void PHPhotoLibraryCancellableChangeHandler (out bool cancel);
+
 	[iOS (8,0)]
 	[TV (10,0)]
 	[NoMac]
@@ -997,6 +1000,7 @@ namespace XamCore.Photos
 		[Async]
 		void RequestAuthorization (Action<PHAuthorizationStatus> handler);
 
+		// no [Async] since we're binding performChangesAndWait:error: too
 		[Export ("performChanges:completionHandler:")]
 		void PerformChanges (Action changeHandler, Action<bool, NSError> completionHandler);
 

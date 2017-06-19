@@ -85,10 +85,8 @@ namespace xharness
 				break;
 			case "/Finish":
 				if (!finished) {
-					using (var writer = new StreamWriter (OutputStream)) {
-						writer.Write (data);
-						writer.Flush ();
-					}
+					OutputWriter.Write (data);
+					OutputWriter.Flush ();
 					finished = true;
 				}
 				break;

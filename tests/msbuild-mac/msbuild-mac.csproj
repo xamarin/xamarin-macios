@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\x86\Debug</OutputPath>
-    <DefineConstants>__UNIFIED__;DEBUG;XAMCORE_2_0;MONOMAC;MMP_TEST</DefineConstants>
+    <DefineConstants>__UNIFIED__;DEBUG;XAMCORE_2_0;MONOMAC</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -53,9 +53,6 @@
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.Mac" />
     <Reference Include="System.Xml" />
-    <Reference Include="GuiUnit">
-      <HintPath>..\..\external\guiunit\bin\net_4_5\GuiUnit.exe</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -80,6 +77,17 @@
     <Compile Include="..\..\src\ObjCRuntime\RuntimeException.cs">
       <Link>RuntimeException.cs</Link>
     </Compile>
+    <Compile Include="src\RoslynSmokeTests.cs" />
+    <Compile Include="src\RuntimeTests.cs" />
+    <Compile Include="..\..\tools\common\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">
+      <Project>{D12F0F7B-8DE3-43EC-BA49-41052D065A9B}</Project>
+      <Name>GuiUnit_NET_4_5</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <Import Project="CustomBuildActions.targets" />

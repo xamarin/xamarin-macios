@@ -36,5 +36,13 @@ namespace Introspection
 				return String.Empty;
 			return txt.Substring ((int)typoRange.Location, (int)typoRange.Length);
 		}
+
+		public override bool Skip (Type baseType, string typo)
+		{
+			if (baseType == typeof (NSSpellCheckerCanidates))
+				return true;
+
+			return base.Skip (baseType, typo);
+		}
 	}
 }

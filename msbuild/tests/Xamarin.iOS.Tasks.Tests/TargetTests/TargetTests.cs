@@ -66,23 +66,21 @@ namespace Xamarin.iOS.Tasks
 					"MonoTouchDebugConfiguration.txt",
 					"Info.plist",
 					Path.Combine ("Settings.bundle", "Root.plist"),
-					"Mono.Dynamic.Interpreter.dll",
-					"Mono.Dynamic.Interpreter.dll.mdb",
 					"MyLibrary.dll",
-					"MyLibrary.dll.mdb",
+					"MyLibrary.pdb",
 					"MySingleView",
 					"MySingleView.exe",
-					"MySingleView.exe.mdb",
+					"MySingleView.pdb",
 					"System.Core.dll",
-					"System.Core.dll.mdb",
+					"System.Core.pdb",
 					"System.Xml.dll",
-					"System.Xml.dll.mdb",
+					"System.Xml.pdb",
 					"System.dll",
-					"System.dll.mdb",
+					"System.pdb",
 					"Xamarin.iOS.dll",
 					"Xamarin.iOS.dll.mdb",
 					"mscorlib.dll",
-					"mscorlib.dll.mdb",
+					"mscorlib.pdb",
 					"runtime-options.plist",
 				};
 
@@ -263,7 +261,6 @@ namespace Xamarin.iOS.Tasks
 		}
 
 		[Test]
-		[Ignore ("This test fails due to bugs in our implementation")]
 		public void RebuildExecutable_NoModifications ()
 		{
 			// Put a thread.sleep so that the initial build happens a noticable amount of time after we copy
@@ -272,11 +269,11 @@ namespace Xamarin.iOS.Tasks
 			// execution of the test fixture 'setup' method.
 			Thread.Sleep (1000);
 			RunTarget (MonoTouchProject, TargetName.Build);
-			var timestamps = ExpectedExecutableFiles.ToDictionary (file => file, file => GetLastModified (file));
+			var timestamps = Directory.EnumerateFiles (AppBundlePath, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
 
 			Thread.Sleep (1000);
 			RunTarget (MonoTouchProject, TargetName.Build);
-			var newTimestamps = ExpectedExecutableFiles.ToDictionary (file => file, file => GetLastModified (file));
+			var newTimestamps = Directory.EnumerateFiles (AppBundlePath, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
 
 			foreach (var file in timestamps.Keys)
 				Assert.AreEqual (timestamps [file], newTimestamps [file], "#1: " + file);
@@ -372,7 +369,7 @@ namespace Xamarin.iOS.Tasks
 			var entries = Directory.GetFileSystemEntries (LibraryProjectBinPath);
 			Assert.AreEqual (2, entries.Length, "#1");
 			Assert.IsTrue (File.Exists (library), "#2");
-			Assert.IsTrue (File.Exists (library + ".mdb"), "#3");
+			Assert.IsTrue (File.Exists (Path.ChangeExtension (library, ".pdb")), "#3");
 			
 			var assemblyDef = AssemblyDefinition.ReadAssembly (library);
 			var actualResources = assemblyDef.MainModule.Resources.Select (n => n.Name).ToList ();
@@ -434,14 +431,9 @@ namespace Xamarin.iOS.Tasks
 		public void BundleResources ()
 		{
 			var actool = Path.Combine ("obj", "iPhoneSimulator", "Debug", "actool", "bundle");
+			var ibtool = Path.Combine ("obj", "iPhoneSimulator", "Debug", "ibtool");
 			var path = Path.Combine (MonoTouchProjectPath, "Info.plist");
 			var plist = PDictionary.FromFile (path);
-			string ibtool;
-
-			if (AppleSdkSettings.XcodeVersion.Major >= 7)
-				ibtool = Path.Combine ("obj", "iPhoneSimulator", "Debug", "ibtool-link");
-			else
-				ibtool = Path.Combine ("obj", "iPhoneSimulator", "Debug", "ibtool");
 
 			plist.SetMinimumOSVersion ("6.1");
 			plist.Save (path, true);

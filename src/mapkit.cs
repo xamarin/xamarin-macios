@@ -1246,11 +1246,9 @@ namespace XamCore.MapKit {
 #endif
 	interface MKLocalSearchRequest : NSCopying {
 
-#if !XAMCORE_2_0 && !MONOMAC
-		[TV (9,2)][NoWatch][iOS (9,3)]
+		[TV (9,2)][NoWatch][iOS (9,3)][Mac (10,11,4, onlyOn64 : true)]
 		[Export ("initWithCompletion:")]
 		IntPtr Constructor (MKLocalSearchCompletion completion);
-#endif
 
 		[Export ("naturalLanguageQuery", ArgumentSemantic.Copy)]
 		[NullAllowed]
@@ -1302,6 +1300,7 @@ namespace XamCore.MapKit {
 		IntPtr Constructor (MKDirectionsRequest request);
 
 		[Export ("calculateDirectionsWithCompletionHandler:")]
+		[Async]
 		void CalculateDirections (MKDirectionsHandler completionHandler);
 
 		[Export ("cancel")]
@@ -1311,6 +1310,7 @@ namespace XamCore.MapKit {
 		bool Calculating { [Bind ("isCalculating")] get; }
 
 		[Export ("calculateETAWithCompletionHandler:")]
+		[Async]
 		void CalculateETA (MKETAHandler completionHandler);
 	}
 
@@ -1533,9 +1533,11 @@ namespace XamCore.MapKit {
 		IntPtr Constructor (MKMapSnapshotOptions options);
 
 		[Export ("startWithCompletionHandler:")]
+		[Async]
 		void Start (MKMapSnapshotCompletionHandler completionHandler);
 
 		[Export ("startWithQueue:completionHandler:")]
+		[Async]
 		void Start (DispatchQueue queue, MKMapSnapshotCompletionHandler completionHandler);
 
 		[Export ("cancel")]

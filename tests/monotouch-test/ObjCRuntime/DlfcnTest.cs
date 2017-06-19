@@ -11,7 +11,6 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-using UIKit;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
@@ -31,12 +30,16 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			IntPtr handle = Dlfcn.dlopen ("/usr/lib/libSystem.dylib", 0);
 			Assert.That (handle, Is.Not.EqualTo (IntPtr.Zero), "dlopen");
 			var err = Dlfcn.dlclose (handle);
+#if !MONOMAC
 			if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (7, 0)) {
 				// Apple is doing some funky stuff with dlopen... this condition is to track if this change during betas
 				Assert.That (err, Is.EqualTo (-1), "dlclose");
 			} else {
-				Assert.That (err, Is.EqualTo (0), "dlclose");
+#endif
+			Assert.That (err, Is.EqualTo (0), "dlclose");
+#if !MONOMAC
 			}
+#endif
 		}
 	}
 }

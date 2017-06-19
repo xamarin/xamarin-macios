@@ -9,7 +9,13 @@ using Foundation;
 using CoreImage;
 using CoreGraphics;
 using ObjCRuntime;
+#if MONOMAC
+using AppKit;
+using PlatformImage = AppKit.NSImage;
+#else
 using UIKit;
+using PlatformImage = UIKit.UIImage;
+#endif
 #else
 using MonoTouch.CoreImage;
 using MonoTouch.CoreGraphics;
@@ -142,15 +148,20 @@ namespace MonoTouchFixtures.CoreImage
 
 			Exception ex = null;
 			var t = new Thread (() => {
-				// This code will crash if an MKMapView has been created previously on 
-				// the same thread, so just run it on a different thread (MKMapViews can
-				// only be created on the main thread). This is obviously an Apple bug,
-				// and a radar has been filed: 19249153. ObjC test case: https://github.com/rolfbjarne/CIKernelMKMapViewCrash
-				try {
-					UIImage uiImg = new UIImage ("CoreImage/Xam.png");
+			// This code will crash if an MKMapView has been created previously on 
+			// the same thread, so just run it on a different thread (MKMapViews can
+			// only be created on the main thread). This is obviously an Apple bug,
+			// and a radar has been filed: 19249153. ObjC test case: https://github.com/rolfbjarne/CIKernelMKMapViewCrash
+			try {
+				PlatformImage uiImg = new PlatformImage (NSBundle.MainBundle.PathForResource ("Xam", "png", "CoreImage"));
+#if MONOMAC
+				CIImage ciImg = new CIImage (uiImg.CGImage);
+				CIContext context = new CIContext (null);
+#else
 					CIImage ciImg = new CIImage (uiImg);
-
 					CIContext context = CIContext.FromOptions (null);
+#endif
+
 
 					foreach (CustomerFilterType type in Enum.GetValues(typeof(CustomerFilterType))) {
 						MyCustomFilter filter = new MyCustomFilter (type);
@@ -159,7 +170,11 @@ namespace MonoTouchFixtures.CoreImage
 						CIImage outputImage = filter.OutputImage;
 
 						CGImage cgImage = context.CreateCGImage (outputImage, outputImage.Extent);
+#if MONOMAC
+						NSImage finalImg = new NSImage (cgImage, new CGSize ());
+#else
 						UIImage finalImg = new UIImage (cgImage);
+#endif
 						Assert.IsNotNull (finalImg, "CIKernel_BasicTest should not be null");
 						Assert.IsTrue (filter.CallbackHit, "CIKernel_BasicTest callback must be hit");
 						if (filter.IsColorKernel)

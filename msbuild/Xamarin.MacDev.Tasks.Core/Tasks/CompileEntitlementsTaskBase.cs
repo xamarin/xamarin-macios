@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
@@ -59,7 +58,7 @@ namespace Xamarin.MacDev.Tasks
 			get { return true; }
 		}
 
-		PString MergeEntitlementString (PString pstr, MobileProvision profile)
+		PString MergeEntitlementString (PString pstr, MobileProvision profile, bool expandWildcards)
 		{
 			string TeamIdentifierPrefix;
 			string AppIdentifierPrefix;
@@ -97,6 +96,25 @@ namespace Xamarin.MacDev.Tasks
 
 			var expanded = StringParserService.Parse (pstr.Value, customTags);
 
+			if (expandWildcards && expanded.IndexOf ('*') != -1) {
+				int asterisk = expanded.IndexOf ('*');
+				string prefix;
+
+				if (expanded.StartsWith (TeamIdentifierPrefix, StringComparison.Ordinal))
+					prefix = TeamIdentifierPrefix;
+				else if (expanded.StartsWith (AppIdentifierPrefix, StringComparison.Ordinal))
+					prefix = AppIdentifierPrefix;
+				else
+					prefix = string.Empty;
+
+				var baseBundleIdentifier = expanded.Substring (prefix.Length, asterisk - prefix.Length);
+
+				if (!BundleIdentifier.StartsWith (baseBundleIdentifier, StringComparison.Ordinal))
+					expanded = expanded.Replace ("*", BundleIdentifier);
+				else
+					expanded = prefix + BundleIdentifier;
+			}
+
 			return new PString (expanded);
 		}
 
@@ -110,7 +128,7 @@ namespace Xamarin.MacDev.Tasks
 				if (item is PDictionary)
 					value = MergeEntitlementDictionary ((PDictionary) item, profile);
 				else if (item is PString)
-					value = MergeEntitlementString ((PString) item, profile);
+					value = MergeEntitlementString ((PString) item, profile, false);
 				else if (item is PArray)
 					value = MergeEntitlementArray ((PArray) item, profile);
 				else
@@ -136,7 +154,7 @@ namespace Xamarin.MacDev.Tasks
 				if (value is PDictionary)
 					value = MergeEntitlementDictionary ((PDictionary) value, profile);
 				else if (value is PString)
-					value = MergeEntitlementString ((PString) value, profile);
+					value = MergeEntitlementString ((PString) value, profile, false);
 				else if (value is PArray)
 					value = MergeEntitlementArray ((PArray) value, profile);
 				else
@@ -149,11 +167,24 @@ namespace Xamarin.MacDev.Tasks
 			return result;
 		}
 
+		static bool AreEqual (byte[] x, byte[] y)
+		{
+			if (x.Length != y.Length)
+				return false;
+
+			for (int i = 0; i < x.Length; i++) {
+				if (x[i] != y[i])
+					return false;
+			}
+
+			return true;
+		}
+
 		static void WriteXcent (PObject doc, string path)
 		{
 			var buf = doc.ToByteArray (false);
 
-			using (var stream = File.Open (path, FileMode.Create)) {
+			using (var stream = new MemoryStream ()) {
 				if (AppleSdkSettings.XcodeVersion < new Version (4, 4, 1)) {
 					// write the xcent file with the magic header, length, and the plist
 					var length = Mono.DataConverter.BigEndian.GetBytes ((uint) buf.Length + 8); // 8 = magic.length + magicLen.Length
@@ -163,6 +194,21 @@ namespace Xamarin.MacDev.Tasks
 				}
 
 				stream.Write (buf, 0, buf.Length);
+
+				var src = stream.ToArray ();
+				bool save;
+
+				// Note: if the destination file already exists, only re-write it if the content will change
+				if (File.Exists (path)) {
+					var dest = File.ReadAllBytes (path);
+
+					save = !AreEqual (src, dest);
+				} else {
+					save = true;
+				}
+
+				if (save)
+					File.WriteAllBytes (path, src);
 			}
 		}
 
@@ -183,7 +229,7 @@ namespace Xamarin.MacDev.Tasks
 					else if (value is PDictionary)
 						value = MergeEntitlementDictionary ((PDictionary) value, profile);
 					else if (value is PString)
-						value = MergeEntitlementString ((PString) value, profile);
+						value = MergeEntitlementString ((PString) value, profile, item.Key == ApplicationIdentifierKey);
 					else if (value is PArray)
 						value = MergeEntitlementArray ((PArray) value, profile);
 					else
@@ -217,7 +263,7 @@ namespace Xamarin.MacDev.Tasks
 				if (value is PDictionary)
 					value = MergeEntitlementDictionary ((PDictionary) value, profile);
 				else if (value is PString)
-					value = MergeEntitlementString ((PString) value, profile);
+					value = MergeEntitlementString ((PString) value, profile, item.Key == ApplicationIdentifierKey);
 				else if (value is PArray)
 					value = MergeEntitlementArray ((PArray) value, profile);
 				else
@@ -250,15 +296,9 @@ namespace Xamarin.MacDev.Tasks
 			return archived;
 		}
 
-		protected virtual MobileProvision GetMobileProvision (MobileProvisionPlatform platform, string uuid)
+		protected virtual MobileProvision GetMobileProvision (MobileProvisionPlatform platform, string name)
 		{
-			var extension = MobileProvision.GetFileExtension (platform);
-			var path = Path.Combine (MobileProvision.ProfileDirectory, uuid + extension);
-
-			if (File.Exists (path))
-				return MobileProvision.LoadFromFile (path);
-
-			return MobileProvision.GetAllInstalledProvisions (platform, true).FirstOrDefault (x => x.Uuid == uuid);
+			return MobileProvisionIndex.GetMobileProvision (platform, name);
 		}
 
 		public override bool Execute ()
@@ -278,10 +318,11 @@ namespace Xamarin.MacDev.Tasks
 			PDictionary compiled;
 			PDictionary archived;
 			string path;
+			bool save;
 
 			if (!string.IsNullOrEmpty (ProvisioningProfile)) {
 				if ((profile = GetMobileProvision (Platform, ProvisioningProfile)) == null) {
-					Log.LogError ("Could not locate the provisioning profile with a UUID of {0}.", ProvisioningProfile);
+					Log.LogError ("Could not locate the provisioning profile with a Name or UUID of {0}.", ProvisioningProfile);
 					return false;
 				}
 			} else if (Platform == MobileProvisionPlatform.iOS) {
@@ -320,11 +361,25 @@ namespace Xamarin.MacDev.Tasks
 				return false;
 			}
 
-			try {
-				archived.Save (Path.Combine (EntitlementBundlePath, "archived-expanded-entitlements.xcent"), true);
-			} catch (Exception ex) {
-				Log.LogError ("Error writing archived-expanded-entitlements.xcent file: {0}", ex.Message);
-				return false;
+			path = Path.Combine (EntitlementBundlePath, "archived-expanded-entitlements.xcent");
+
+			if (File.Exists (path)) {
+				var plist = PDictionary.FromFile (path);
+				var src = archived.ToXml ();
+				var dest = plist.ToXml ();
+
+				save = src != dest;
+			} else {
+				save = true;
+			}
+
+			if (save) {
+				try {
+					archived.Save (path, true);
+				} catch (Exception ex) {
+					Log.LogError ("Error writing archived-expanded-entitlements.xcent file: {0}", ex.Message);
+					return false;
+				}
 			}
 
 			return !Log.HasLoggedErrors;
