@@ -18,12 +18,14 @@ namespace MonoTouchFixtures.CoreData
 		public void EncodeWithCoderTest ()
 		{
 			// Added test to ensure we do support NSCoding even when introspection fails.
-			if (IntPtr.Size == 8  && TestRuntime.CheckExactXcodeVersion (9, 0, beta: 1)) {
+			if (TestRuntime.CheckXcodeVersion (9, 0)) {
 				using (var data = new NSMutableData ())
 				using (var archiver = new NSKeyedArchiver (data))
 				using (var coder = new NSCoder ()) {
 					NSQueryGenerationToken.CurrentToken.EncodeTo (archiver);
 				}
+			} else {
+				Assert.Ignore ("NSCoding is not supported prior Xcode 9.");
 			}
 		}
 	}
