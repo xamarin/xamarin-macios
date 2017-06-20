@@ -79,6 +79,8 @@ namespace Introspection {
 			}
 
 			switch (p.Name) {
+			case "CharacteristicValidRangeString":
+				return Mac.CheckSystemVersion (10, 13); // radar 32858911 
 			// NSTableView
 			case "RowViewKey":
 				return true;
@@ -161,6 +163,8 @@ namespace Introspection {
 		protected override bool Skip (string constantName)
 		{
 			switch (constantName) {
+			case "CBUUIDValidRangeString":
+				return Mac.CheckSystemVersion (10, 13); // radar 32858911 
 			// Only there for API compat
 			case "kSecUseNoAuthenticationUI":
 			case "kSecUseOperationPrompt":
