@@ -722,7 +722,8 @@ namespace XamCore.Foundation  {
 	[Flags]
 	[Native]
 	public enum NSJsonWritingOptions : nuint_compat_int {
-		PrettyPrinted = 1
+		PrettyPrinted = 1,
+		SortedKeys = (1 << 1)
 	}
 
 	[Native]
@@ -1258,4 +1259,26 @@ namespace XamCore.Foundation  {
 		TemperatureWithoutUnit = (1 << 2)
 	}
 
+	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[Native]
+	public enum NSItemProviderRepresentationVisibility : nint {
+		All = 0,
+		Team = 1,
+		Group = 2,
+		OwnProcess = 3
+	}
+
+	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[Native]
+	public enum NSItemProviderFileOptions : nint {
+		NSItemProviderFileOptionOpenInPlace = 1
+	}
+
+	[Native]
+	public enum NSLinguisticTaggerUnit : nint {
+		Word,
+		Sentence,
+		Paragraph,
+		Document
+	}
 }

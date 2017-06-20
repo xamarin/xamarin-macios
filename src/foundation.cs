@@ -93,6 +93,7 @@ namespace XamCore.Foundation
 	delegate void NSItemProviderLoadHandler ([BlockCallback] NSItemProviderCompletionHandler completionHandler, Class expectedValueClass, NSDictionary options);
 	delegate void EnumerateDatesCallback (NSDate date, bool exactMatch, ref bool stop);
 	delegate void EnumerateIndexSetCallback (nuint idx, ref bool stop);
+
 #if MONOMAC
 	delegate void CloudKitRegistrationPreparationAction ([BlockCallback] CloudKitRegistrationPreparationHandler handler);
 	delegate void CloudKitRegistrationPreparationHandler (CKShare share, CKContainer container, NSError error);
@@ -3489,7 +3490,57 @@ namespace XamCore.Foundation
 		[NullAllowed] // by default this property is null
 		[Export ("string", ArgumentSemantic.Retain)]
 		string AnalysisString { get; set; }
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("tagsInRange:unit:scheme:options:tokenRanges:")]
+		string[] GetTags (NSRange range, NSLinguisticTaggerUnit unit, string scheme, NSLinguisticTaggerOptions options, [NullAllowed] out NSValue[] tokenRanges);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("enumerateTagsInRange:unit:scheme:options:usingBlock:")]
+		void EnumerateTags (NSRange range, NSLinguisticTaggerUnit unit, string scheme, NSLinguisticTaggerOptions options, LinguisticTaggerEnumerateTagsBlock block);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("tagAtIndex:unit:scheme:tokenRange:")]
+		[return: NullAllowed]
+		string GetTag (nuint charIndex, NSLinguisticTaggerUnit unit, string scheme, [NullAllowed] NSRange tokenRange);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("tokenRangeAtIndex:unit:")]
+		NSRange GetTokenRange (nuint charIndex, NSLinguisticTaggerUnit unit);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("availableTagSchemesForUnit:language:")]
+		string[] GetAvailableTagSchemes (NSLinguisticTaggerUnit unit, string language);
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NullAllowed, Export ("dominantLanguage")]
+		string DominantLanguage { get; }
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("dominantLanguageForString:")]
+		[return: NullAllowed]
+		string GetDominantLanguage (string str);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("tagForString:atIndex:unit:scheme:orthography:tokenRange:")]
+		[return: NullAllowed]
+		string GetTag (string str, nuint charIndex, NSLinguisticTaggerUnit unit, string scheme, [NullAllowed] NSOrthography orthography, [NullAllowed] NSRange tokenRange);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("tagsForString:range:unit:scheme:options:orthography:tokenRanges:")]
+		string[] GetTags (string str, NSRange range, NSLinguisticTaggerUnit unit, string scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, [NullAllowed] out NSValue[] tokenRanges);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("enumerateTagsForString:range:unit:scheme:options:orthography:usingBlock:")]
+		void EnumerateTagsForString (string str, NSRange range, NSLinguisticTaggerUnit unit, string scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, LinguisticTaggerEnumerateTagsBlock block);
 	}
+
+	delegate void LinguisticTaggerEnumerateTagsBlock (string tag, NSRange tokenRange, bool stop);
 
 	[Since (5,0)]
 	[Static]
@@ -8778,7 +8829,106 @@ namespace XamCore.Foundation
 		[Export ("registerCloudKitShare:container:")]
 		void RegisterCloudKitShare (CKShare share, CKContainer container);
 #endif
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("registerDataRepresentationForTypeIdentifier:visibility:loadHandler:")]
+		void RegisterDataRepresentation (string typeIdentifier, NSItemProviderRepresentationVisibility visibility, RegisterDataRepresentationLoadHandler loadHandler);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("registerFileRepresentationForTypeIdentifier:fileOptions:visibility:loadHandler:")]
+		void RegisterFileRepresentation (string typeIdentifier, NSItemProviderFileOptions fileOptions, NSItemProviderRepresentationVisibility visibility, RegisterFileRepresentationLoadHandler loadHandler);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("registeredTypeIdentifiersWithFileOptions:")]
+		string[] GetRegisteredTypeIdentifiers (NSItemProviderFileOptions fileOptions);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("hasRepresentationConformingToTypeIdentifier:fileOptions:")]
+		bool HasConformingRepresentation (string typeIdentifier, NSItemProviderFileOptions fileOptions);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Async, Export ("loadDataRepresentationForTypeIdentifier:completionHandler:")]
+		NSProgress LoadDataRepresentation (string typeIdentifier, ItemProviderDataCompletionhandler completionHandler);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Async, Export ("loadFileRepresentationForTypeIdentifier:completionHandler:")]
+		NSProgress LoadFileRepresentation (string typeIdentifier, LoadFileRepresentationHandler completionHandler);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Async (ResultTypeName = "LoadInPlaceResult"), Export ("loadInPlaceFileRepresentationForTypeIdentifier:completionHandler:")]
+		NSProgress LoadInPlaceFileRepresentation (string typeIdentifier, LoadInPlaceFileRepresentationHandler completionHandler);
+
+		[NoWatch, NoTV, NoMac, iOS (11, 0)]
+		[NullAllowed, Export ("suggestedName")]
+		string SuggestedName { get; set; }
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("initWithObject:")]
+		IntPtr Constructor (INSItemProviderWriting obj);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("registerObject:visibility:")]
+		void RegisterObject (INSItemProviderWriting obj, NSItemProviderRepresentationVisibility visibility);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("registerObjectOfClass:visibility:loadHandler:")]
+		void RegisterObject (INSItemProviderWriting aClass, NSItemProviderRepresentationVisibility visibility, RegisterObjectLoadHandler loadHandler);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("canLoadObjectOfClass:")]
+		bool CanLoadObject (INSItemProviderReading aClass);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("loadObjectOfClass:completionHandler:")]
+		NSProgress LoadObject (INSItemProviderReading aClass, LoadObjectCompletionHandler completionHandler);
 	}
+
+	interface INSItemProviderWriting { }
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface NSItemProviderWriting
+	{
+		//TODO: Where to implement this?
+		//[Static, Abstract]
+		//[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		//string[] WritableTypeIdentifiers { get; }
+
+		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] GetWritableTypeIdentifiers ();
+
+		[Abstract]
+		[Export ("loadDataWithTypeIdentifier:forItemProviderCompletionHandler:")]
+		[return: NullAllowed]
+		NSProgress LoadData (string typeIdentifier, ItemProviderDataCompletionhandler completionHandler);
+	}
+
+	interface INSItemProviderReading { }
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface NSItemProviderReading
+	{
+		//TODO: Where to implement this?
+		//[Static, Abstract]
+		//[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		//string[] ReadableTypeIdentifiers { get; }
+
+		[Abstract]
+		[Export ("initWithItemProviderData:typeIdentifier:error:")]
+		IntPtr FromData (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
+	}
+
+	delegate NSProgress RegisterFileRepresentationLoadHandler ([ BlockCallback] RegisterFileRepresentationCompletionHandler completionHandler);
+	delegate void RegisterFileRepresentationCompletionHandler (NSUrl fileUrl, bool coordinated, NSError error);
+	delegate NSProgress RegisterDataRepresentationLoadHandler ([BlockCallback] ItemProviderDataCompletionhandler completionHandler);
+	delegate NSProgress RegisterObjectLoadHandler ([BlockCallback] RegisterObjectCompletionHandler completionHandler);
+	delegate void RegisterObjectCompletionHandler (INSItemProviderWriting obj, NSError error);
+	delegate void ItemProviderDataCompletionhandler (NSData data, NSError error);
+	delegate void LoadFileRepresentationHandler (NSUrl fileUrl, NSError error);
+	delegate void LoadInPlaceFileRepresentationHandler (NSUrl fileUrl, bool isInPlace, NSError error);
+	delegate void LoadObjectCompletionHandler (INSItemProviderReading obj, NSError error);
 
 #if XAMCORE_2_0
 	[Static]
@@ -10631,6 +10781,10 @@ namespace XamCore.Foundation
 		[iOS (5,0)][Mac (10,7)]
 		[Export ("purposeIdentifier")]
 		string PurposeIdentifier { get; set; }
+
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[Export ("itemAtURL:didChangeUbiquityAttributes:")]
+		void ItemUbiquityAttributesChanged (NSUrl url, NSSet<NSString> attributes);
 	}
 
 	[iOS (8,0)][Mac (10,10)]
@@ -11124,6 +11278,14 @@ namespace XamCore.Foundation
 
 		[Export ("presentedSubitemAtURL:didResolveConflictVersion:")]
 		void PresentedSubitemResolvedConflictVersion (NSUrl url, NSFileVersion version);
+
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[Export ("presentedItemDidChangeUbiquityAttributes:")]
+		void ChangedUbiquityAttributes (NSSet<NSString> attributes);
+
+		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
+		[Export ("observedPresentedItemUbiquityAttributes", ArgumentSemantic.Strong)]
+		NSSet<NSString> ObservedUbiquityAttributes { get; }
 	}
 
 	delegate void NSFileVersionNonlocalVersionsCompletionHandler ([NullAllowed] NSFileVersion[] nonlocalFileVersions, [NullAllowed] NSError error);
@@ -11210,6 +11372,10 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("removeOtherVersionsOfItemAtURL:error:")]
 		bool RemoveOtherVersions (NSUrl url, out NSError outError);
+
+		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
+		[NullAllowed, Export ("originatorNameComponents", ArgumentSemantic.Copy)]
+		NSPersonNameComponents OriginatorNameComponents { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -12226,13 +12392,22 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
-#if MONOMAC
+#if !WATCH && !TVOS
+	delegate void FileProviderMessageInterfacesCompletionHandler (NSFileProviderMessageInterface [] interfaces, NSError error);
+
+	[Mac (10,8), iOS (11,0), NoWatch, NoTV]
 	partial interface NSFileManager {
 
 		[MountainLion, Export ("trashItemAtURL:resultingItemURL:error:")]
 		bool TrashItem (NSUrl url, out NSUrl resultingItemUrl, out NSError error);
-	}
 
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[Async, Export ("getFileProviderMessageInterfacesForItemAtURL:completionHandler:")]
+		void GetFileProviderMessageInterfaces (NSUrl url, FileProviderMessageInterfacesCompletionHandler completionHandler);
+	}
+#endif
+
+#if MONOMAC
 	partial interface NSFilePresenter {
 
 		[MountainLion, Export ("primaryPresentedItemURL")]
@@ -14227,4 +14402,26 @@ namespace XamCore.Foundation
 		string ToString (NSUnit unit);
 	}
 
+	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface NSFileProviderMessageInterface
+	{
+		[Export ("name")]
+        	string Name { get; }
+	}
+
+	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface NSFileProviderMessenger
+	{
+		[Export ("initWithInterface:protocol:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSFileProviderMessageInterface @interface, Protocol protocol);
+
+		[Async, Export ("remoteObjectProxyWithErrorHandler:")]
+		NSObject GetRemoteObjectProxy (Action<NSError> errorHandler);
+
+		[Export ("invalidate")]
+		void Invalidate ();
+	}
 }
