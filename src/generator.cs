@@ -3843,11 +3843,8 @@ public partial class Generator : IMemberGatherer {
 
 			// Handle ByRef
 			if (mai.Type.IsByRef && mai.Type.GetElementType ().IsValueType == false){
-				by_ref_init.AppendLine ("//Handle ByRef");
 				string isForcedOwns;
 				var isForced = HasForcedAttribute (pi, out isForcedOwns);
-				by_ref_init.AppendLine ("//Type: " + mai.Type.GetElementType ().GetElementType ());
-				by_ref_init.AppendLine ("//Is array: " + typeof (Array).IsAssignableFrom (mai.Type.GetType ()));
 				by_ref_init.AppendFormat ("IntPtr {0}Value = IntPtr.Zero;\n", pi.Name.GetSafeParamName ());
 
 				by_ref_processing.AppendLine();
