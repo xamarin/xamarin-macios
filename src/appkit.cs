@@ -11630,7 +11630,8 @@ namespace XamCore.AppKit {
 	}
 
 	[BaseType (typeof (NSResponder))]
-	interface NSPopover : NSAccessibilityElementProtocol, NSAccessibility {
+	interface NSPopover : NSAppearanceCustomization, NSAccessibilityElementProtocol, NSAccessibility {
+		[Obsolete ("Use GetAppearance () and SetAppearance () methods instead")]
 		[Export ("appearance", ArgumentSemantic.Retain)]
 		NSPopoverAppearance Appearance { get; set;  }
 

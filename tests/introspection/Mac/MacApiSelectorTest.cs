@@ -590,6 +590,19 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "CoreBluetooth":
+				switch (type.Name) {
+				case "CBMutableService":
+				case "CBMutableCharacteristic":
+					switch (selectorName) {
+					case "setUUID:": // radar 32873784
+						if (Mac.CheckSystemVersion (10, 13))
+							return true;
+						break;
+					}
+					break;
+				}
+				break;
 			}
 			return base.Skip (type, selectorName);
 		}

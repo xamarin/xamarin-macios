@@ -113,7 +113,7 @@ namespace XamCore.CoreAnimation {
 	}
 	
 	[BaseType (typeof (NSObject))]
-	interface CAConstraint : NSCoding {
+	interface CAConstraint : NSSecureCoding {
 		[Export ("attribute")]
 		CAConstraintAttribute Attribute { get;  }
 
