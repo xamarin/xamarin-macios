@@ -1281,4 +1281,21 @@ namespace XamCore.Foundation  {
 		Paragraph,
 		Document
 	}
+
+	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[Native]
+	public enum NSUrlSessionMultipathServiceType : nint {
+		None = 0,
+		Handover = 1,
+		Interactive = 2,
+		Aggregate = 3
+	}
+
+	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[Native]
+	public enum NSUrlSessionDelayedRequestDisposition : nint {
+		ContinueLoading = 0,
+		UseNewRequest = 1,
+		Cancel = 2
+	}
 }
