@@ -7,6 +7,8 @@
 // Copyright 2017 Microsoft Inc. All rights reserved.
 //
 
+#if XAMCORE_2_0
+
 using System;
 using System.Runtime.InteropServices;
 using Vector3 = global::OpenTK.Vector3;
@@ -26,3 +28,5 @@ namespace XamCore.ARKit {
 		}
 	}
 }
+
+#endif

@@ -7,7 +7,7 @@
 // Copyright 2017 Microsoft Inc. All rights reserved.
 //
 
-// #if XAMCORE_2_0
+#if XAMCORE_2_0
 
 using System;
 using XamCore.CoreFoundation;
@@ -464,26 +464,12 @@ namespace XamCore.ARKit {
 	[Static]
 	interface ARSCNDebugOptions {
 
-		[Internal]
 		[Field ("ARSCNDebugOptionShowWorldOrigin")]
-		// FIXME: Could be using [BindAs (typeof (SCNDebugOptions))]: https://bugzilla.xamarin.com/show_bug.cgi?id=57537
-		// FIXME: Should be nuint: https://bugzilla.xamarin.com/show_bug.cgi?id=57535
-		int _ARSCNDebugOptionShowWorldOrigin { get; }
-
-		[Static]
-		[Wrap ("(SCNDebugOptions)_ARSCNDebugOptionShowWorldOrigin")]
 		SCNDebugOptions ShowWorldOrigin { get; }
 
-		[Internal]
-		[Field ("ARSCNDebugOptionShowFeaturePoints")]
-		// FIXME: Could be using [BindAs (typeof (SCNDebugOptions))]: https://bugzilla.xamarin.com/show_bug.cgi?id=57537
-		// FIXME: Should be nuint: https://bugzilla.xamarin.com/show_bug.cgi?id=57535
-		int _ARSCNDebugOptionShowFeaturePoints { get; }
-
-		[Static]
-		[Wrap ("(SCNDebugOptions)_ARSCNDebugOptionShowFeaturePoints")]
+		[Field ("ARSCNDebugOptionShowWorldOrigin")]
 		SCNDebugOptions ShowFeaturePoints { get; }
 	}
 }
 
-// #endif // XAMCORE_2_0
+#endif // XAMCORE_2_0
