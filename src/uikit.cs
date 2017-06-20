@@ -4657,7 +4657,11 @@ namespace XamCore.UIKit {
 	// returns NIL handle causing exceptions in further calls, e.g. ToString
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -CGColor not defined for the UIColor <UIPlaceholderColor: 0x114f5ad0>; need to first convert colorspace.
 	[DisableDefaultCtor]
-	interface UIColor : NSSecureCoding, NSCopying {
+	interface UIColor : NSSecureCoding, NSCopying
+#if !TVOS && !WATCH
+		, NSItemProviderWriting
+#endif
+	{
 		[Export ("colorWithWhite:alpha:")][Static]
 		UIColor FromWhiteAlpha (nfloat white, nfloat alpha);
 
@@ -4838,6 +4842,12 @@ namespace XamCore.UIKit {
 		[Export ("getRed:green:blue:alpha:")]
 		bool GetRGBA2 (out nfloat red, out nfloat green, out nfloat blue, out nfloat alpha);
 #endif
+
+		// From the NSItemProviderWriting protocol, a static method.
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] WritableTypeIdentifiers { get; }
 	}
 
 #if !WATCH
@@ -6909,6 +6919,9 @@ namespace XamCore.UIKit {
 	interface UIImage : NSSecureCoding
 #if !WATCH
 		, UIAccessibility, UIAccessibilityIdentification
+#if !TVOS
+		, NSItemProviderWriting
+#endif
 #endif // !WATCH
 	{
 		[ThreadSafe]
@@ -7170,6 +7183,12 @@ namespace XamCore.UIKit {
 		[Export ("imageWithHorizontallyFlippedOrientation")]
 		UIImage GetImageWithHorizontallyFlippedOrientation ();
 #endif
+
+		// From the NSItemProviderWriting protocol, a static method.
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] WritableTypeIdentifiers { get; }
 	}
 
 #if !WATCH

@@ -164,6 +164,10 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "NSProgressReporting":
+				if (!TestRuntime.CheckXcodeVersion (9, 0))
+					return true;
+				break;
 			}
 			return false;
 		}

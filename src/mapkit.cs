@@ -283,11 +283,7 @@ namespace XamCore.MapKit {
 	[Since (6,0)]
 	[TV (9,2)]
 	[Mac (10,9, onlyOn64 : true)]
-	interface MKMapItem
-#if IOS_NOT_BOUND_YET // https://bugzilla.xamarin.com/show_bug.cgi?id=58203
-		: NSItemProviderReading, NSItemProviderWriting
-#endif
-	{
+	interface MKMapItem {
 		[Export ("placemark", ArgumentSemantic.Retain)]
 		MKPlacemark Placemark { get;  }
 
