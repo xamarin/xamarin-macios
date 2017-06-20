@@ -39,6 +39,12 @@ namespace FieldEnumTests {
 		[Field ("UIntField", "__Internal")]
 		uint UIntField { get; set; }
 
+		[Field ("ULongField", "__Internal")]
+		ulong ULongField { get; set; }
+
+		[Field ("LongField", "__Internal")]
+		long LongField { get; set; }
+
 		[Field ("NUIntField", "__Internal")]
 		nuint NUIntField { get; set; }
 

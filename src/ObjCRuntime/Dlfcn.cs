@@ -202,6 +202,24 @@ namespace XamCore.ObjCRuntime {
 			Marshal.WriteInt64 (indirect, value);
 		}
 
+		public static ulong GetUInt64 (IntPtr handle, string symbol)
+		{
+			var indirect = dlsym (handle, symbol);
+			if (indirect == IntPtr.Zero)
+				return 0;
+
+			return (ulong) Marshal.ReadInt64 (indirect);
+		}
+
+		public static void SetUInt64 (IntPtr handle, string symbol, long value)
+		{
+			var indirect = dlsym (handle, symbol);
+			if (indirect == IntPtr.Zero)
+				return;
+
+			Marshal.WriteInt64 (indirect, (long) value);
+		}
+
 		public static void SetString (IntPtr handle, string symbol, string value)
 		{
 			var indirect = dlsym (handle, symbol);
@@ -240,14 +258,7 @@ namespace XamCore.ObjCRuntime {
 
 		public static void SetNInt (IntPtr handle, string symbol, nint value)
 		{
-			var indirect = dlsym (handle, symbol);
-			if (indirect == IntPtr.Zero)
-				return;
-
-			unsafe {
-				nint* ptr = (nint*) indirect;
-				*ptr = value;
-			}
+			SetIntPtr (handle, symbol, (IntPtr) value);
 		}
 
 		public static nuint GetNUInt (IntPtr handle, string symbol)
@@ -257,14 +268,7 @@ namespace XamCore.ObjCRuntime {
 
 		public static void SetNUInt (IntPtr handle, string symbol, nuint value)
 		{
-			var indirect = dlsym (handle, symbol);
-			if (indirect == IntPtr.Zero)
-				return;
-
-			unsafe {
-				nuint* ptr = (nuint*) indirect;
-				*ptr = value;
-			}
+			SetIntPtr (handle, symbol, (IntPtr) value);
 		}
 
 		public static nfloat GetNFloat (IntPtr handle, string symbol)
@@ -288,13 +292,8 @@ namespace XamCore.ObjCRuntime {
 				return;
 
 			unsafe {
-				if (sizeof (IntPtr) == 4) {
-					float* ptr = (float*) indirect;
-					*ptr = (float) value;
-				} else {
-					double* ptr = (double*) indirect;
-					*ptr = (double) value;
-				}
+				nfloat* ptr = (nfloat*) indirect;
+				*ptr = value;
 			}
 		}
 #endif
