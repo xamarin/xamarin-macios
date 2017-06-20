@@ -56,6 +56,14 @@ namespace XamCore.WebKit
 		JavaScriptExceptionOccurred,
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		JavaScriptResultTypeIsUnsupported,
+		[iOS (11,0)][Mac (10,13, onlyOn64 : true)]
+		ContentRuleListStoreCompileFailed,
+		[iOS (11,0)][Mac (10,13, onlyOn64 : true)]
+		ContentRuleListStoreLookUpFailed,
+		[iOS (11,0)][Mac (10,13, onlyOn64 : true)]
+		ContentRuleListStoreRemoveFailed,
+		[iOS (11,0)][Mac (10,13, onlyOn64 : true)]
+		ContentRuleListStoreVersionMismatch
 	}
 
 #if !MONOMAC || !XAMCORE_4_0
