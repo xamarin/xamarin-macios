@@ -11,6 +11,7 @@ using System.Reflection;
 #endif
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
+using System.IO;
 
 public partial class Generator {
 
@@ -108,13 +109,10 @@ public partial class Generator {
 			print ("static public partial class {0}Extensions {{", type.Name);
 			indent++;
 
-			// note: not every binding namespace will start with ns.Prefix (e.g. MonoTouch.)
-			if (!String.IsNullOrEmpty (ns.Prefix) && library_name.StartsWith (ns.Prefix, StringComparison.Ordinal))
-				library_name = library_name.Substring (ns.Prefix.Length + 1);
+			var field = fields.FirstOrDefault ();
+			var fieldAttr = field.Value;
 
-			// there might not be any other fields in the framework
-			if (!libraries.ContainsKey (library_name))
-				libraries.Add (library_name, null);
+			ComputeLibraryName (fieldAttr, type, field.Key?.Name, out library_name, out string library_path);
 		}
 
 		if (error != null) {
