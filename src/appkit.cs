@@ -1859,7 +1859,7 @@ namespace XamCore.AppKit {
 		[Export ("browser:writeRowsWithIndexes:inColumn:toPasteboard:")]
 		bool WriteRowsWithIndexesToPasteboard (NSBrowser browser, NSIndexSet rowIndexes, nint column, NSPasteboard pasteboard);
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use NSFilePromiseReceiver objects instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead")]
 		[Export ("browser:namesOfPromisedFilesDroppedAtDestination:forDraggedRowsWithIndexes:inColumn:")]
 		string [] PromisedFilesDroppedAtDestination (NSBrowser browser, NSUrl dropDestination, NSIndexSet rowIndexes, nint column);
 
@@ -2951,7 +2951,7 @@ namespace XamCore.AppKit {
 		[Export ("collectionView:writeItemsAtIndexes:toPasteboard:")]
 		bool WriteItems (NSCollectionView collectionView, NSIndexSet indexes, NSPasteboard toPasteboard);
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use NSFilePromiseReceiver objects instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead")]
 		[Export ("collectionView:namesOfPromisedFilesDroppedAtDestination:forDraggedItemsAtIndexes:")]
 		string [] NamesOfPromisedFilesDroppedAtDestination (NSCollectionView collectionView, NSUrl dropUrl, NSIndexSet indexes);
 
@@ -2977,7 +2977,7 @@ namespace XamCore.AppKit {
 		bool WriteItems (NSCollectionView collectionView, NSSet indexPaths, NSPasteboard pasteboard);
 
 		[Mac (10,11)]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use NSFilePromiseReceiver objects instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead")]
 		[Export ("collectionView:namesOfPromisedFilesDroppedAtDestination:forDraggedItemsAtIndexPaths:")]
 		string[] GetNamesOfPromisedFiles (NSCollectionView collectionView, NSUrl dropURL, NSSet indexPaths);
 
@@ -4808,28 +4808,28 @@ namespace XamCore.AppKit {
 		[Export ("set")]
 		void Set ();
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "SetOnMouseExited is unused and should not be called")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'SetOnMouseExited' is unused and should not be called")]
 		[Export ("setOnMouseExited:")]
 		void SetOnMouseExited (bool flag);
 
 		[Export ("setOnMouseEntered:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "SetOnMouseEntered is unused and should not be called")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'SetOnMouseEntered' is unused and should not be called")]
 		void SetOnMouseEntered (bool flag);
 
 		[Export ("isSetOnMouseExited")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "IsSetOnMouseExited is unused")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'IsSetOnMouseExited' is unused")]
 		bool IsSetOnMouseExited ();
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "IsSetOnMouseEntered is unused")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'IsSetOnMouseEntered' is unused")]
 		[Export ("isSetOnMouseEntered")]
 		bool IsSetOnMouseEntered ();
 
 		[Export ("mouseEntered:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "MouseEntered is unused and should not be called")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'MouseEntered' is unused and should not be called")]
 		void MouseEntered (NSEvent theEvent);
 
 		[Export ("mouseExited:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "MouseExited is unused and should not be called")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'MouseExited' is unused and should not be called")]
 		void MouseExited (NSEvent theEvent);
 	}
 
@@ -5808,7 +5808,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[BaseType (typeof (NSResponder), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSDrawerDelegate)})]
-	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using NSSplitViewController")]		
+	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using 'NSSplitViewController'")]
 	partial interface NSDrawer : NSAccessibilityElementProtocol, NSAccessibility {
 		[Export ("initWithContentSize:preferredEdge:")]
 		IntPtr Constructor (CGSize contentSize, NSRectEdge edge);
@@ -5872,7 +5872,7 @@ namespace XamCore.AppKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using NSSplitViewController")]		
+	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using 'NSSplitViewController'")]
 	interface NSDrawerDelegate {
 		[Export ("drawerDidClose:"), EventArgs ("NSNotification")]
 		void DrawerDidClose (NSNotification notification);
@@ -8677,7 +8677,7 @@ namespace XamCore.AppKit {
 		bool AcceptDrop (NSOutlineView outlineView, [Protocolize (4)] NSDraggingInfo info, [NullAllowed] NSObject item, nint index);
 	
 		[Export ("outlineView:namesOfPromisedFilesDroppedAtDestination:forDraggedItems:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use NSFilePromiseReceiver objects instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead")]
 		string [] FilesDropped (NSOutlineView outlineView, NSUrl dropDestination, NSArray items);
 	}
 
@@ -15154,7 +15154,7 @@ namespace XamCore.AppKit {
 		bool LockFocusIfCanDraw ();
 
 		[Export ("lockFocusIfCanDrawInContext:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use NSView.DisplayRectIgnoringOpacity (CGRect aRect, NSGraphicsContext context) to draw a view subtree into a graphics context.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSView.DisplayRectIgnoringOpacity (CGRect aRect, NSGraphicsContext context)' to draw a view subtree into a graphics context.")]
 		bool LockFocusIfCanDrawInContext (NSGraphicsContext context);
 
 		[Export ("focusView")][Static]
@@ -15442,11 +15442,11 @@ namespace XamCore.AppKit {
 		void DragImage (NSImage anImage, CGPoint viewLocation, CGSize initialOffset, NSEvent theEvent, NSPasteboard pboard, NSObject sourceObj, bool slideFlag);
 
 		[Export ("dragFile:fromRect:slideBack:event:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use BeginDraggingSession (NSDraggingItem [] items, NSEvent evnt, [Protocolize] NSDraggingSource source) instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'BeginDraggingSession (NSDraggingItem [] items, NSEvent evnt, [Protocolize] NSDraggingSource source)' instead")]
 		bool DragFile (string filename, CGRect aRect, bool slideBack, NSEvent theEvent);
 		
 		[Export ("dragPromisedFilesOfTypes:fromRect:source:slideBack:event:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use BeginDraggingSession (NSDraggingItem [] items, NSEvent evnt, [Protocolize] NSDraggingSource source) with an NSFilePromiseProvider instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use BeginDraggingSession '(NSDraggingItem [] items, NSEvent evnt, [Protocolize] NSDraggingSource source)' with an NSFilePromiseProvider instead")]
 		bool DragPromisedFilesOfTypes (string[] typeArray, CGRect aRect, NSObject sourceObject, bool slideBack, NSEvent theEvent);
 		
 		[Export ("exitFullScreenModeWithOptions:")]
@@ -16975,7 +16975,7 @@ namespace XamCore.AppKit {
 		[Export ("tableView:acceptDrop:row:dropOperation:")]
 		bool AcceptDrop (NSTableView tableView, [Protocolize (4)] NSDraggingInfo info, nint row, NSTableViewDropOperation dropOperation);
 	
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use NSFilePromiseReceiver objects instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead")]
 		[Export ("tableView:namesOfPromisedFilesDroppedAtDestination:forDraggedRowsWithIndexes:")]
 		string [] FilesDropped (NSTableView tableView, NSUrl dropDestination, NSIndexSet indexSet );
 		
@@ -22583,19 +22583,19 @@ namespace XamCore.AppKit {
 	}
 
 	partial interface NSDrawer {
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using NSSplitViewController")]		
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using 'NSSplitViewController'")]	
 		[Notification, Field ("NSDrawerWillOpenNotification")]
 		NSString WillOpenNotification { get; }
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using NSSplitViewController")]		
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using 'NSSplitViewController'")]	
 		[Notification, Field ("NSDrawerDidOpenNotification")]
 		NSString DidOpenNotification { get; }
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using NSSplitViewController")]		
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using 'NSSplitViewController'")]	
 		[Notification, Field ("NSDrawerWillCloseNotification")]
 		NSString WillCloseNotification { get; }
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using NSSplitViewController")]		
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using 'NSSplitViewController'")]
 		[Notification, Field ("NSDrawerDidCloseNotification")]
 		NSString DidCloseNotification { get; }
 	}

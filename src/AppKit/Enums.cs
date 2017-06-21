@@ -138,9 +138,9 @@ namespace XamCore.AppKit {
 
 	[Native]
 	public enum NSBackingStore : nuint_compat_int {
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_13, Message = "Use Buffered instead")]
+		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_13, Message = "Use 'Buffered' instead")]
 		Retained, 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_13, Message = "Use Buffered instead")]
+		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_13, Message = "Use 'Buffered' instead")]
 		Nonretained, 
 		Buffered
 	}
@@ -1448,7 +1448,7 @@ namespace XamCore.AppKit {
 	[Flags]
 #if !XAMCORE_4_0
 	[Native]
-	[Availability (Deprecated = Platform.Mac_10_11, Message = "Use NSGlyphProperty instead")]
+	[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'NSGlyphProperty' instead")]
 	public enum NSGlyphStorageOptions : nuint_compat_int {
 #else
 	public enum NSGlyphStorageOptions : int
@@ -2122,7 +2122,7 @@ namespace XamCore.AppKit {
 	
 	// These constants specify the possible states of a drawer.
 	[Native]
-	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using NSSplitViewController")]		
+	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using 'NSSplitViewController'")]
 	public enum NSDrawerState : nuint_compat_int {
 		Closed = 0,
 		Opening = 1,
@@ -2159,7 +2159,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	[Availability (Deprecated = Platform.Mac_10_11, Message = "Use NSGlyphProperty instead")]
+	[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'NSGlyphProperty' instead")]
 	public enum NSGlyphInscription : nuint_compat_int {
 		Base, Below, Above, Overstrike, OverBelow
 	}
