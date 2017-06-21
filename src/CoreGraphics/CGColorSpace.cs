@@ -350,14 +350,20 @@ namespace XamCore.CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateWithICCData (/* CFDataRef */ IntPtr data);
 
+#if MONOMAC || IOS
 		static bool versionChecked, use11APIs;
+#else
+		const bool versionChecked = true;
+		const bool use11APIs = false;
+#endif
+	
 		static void Check11 ()
 		{
 #if MONOMAC || IOS
 			if (PlatformHelper.CheckSystemVersion (11, 0))
 				use11APIs = true;
-#endif
 			versionChecked = true;
+#endif
 		}
 		
 		public static CGColorSpace CreateICCProfile (NSData data)
