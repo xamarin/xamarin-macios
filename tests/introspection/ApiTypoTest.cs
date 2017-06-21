@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using NUnit.Framework;
 #if XAMCORE_2_0
 using ObjCRuntime;
@@ -727,7 +728,7 @@ namespace Introspection
 								if (attr.Message != null) {
 									// Rule 1: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-1
 									var forbidden = new [] { "iOS", "watchOS", "tvOS", "macOS" };
-									if (forbidden.Any (attr.Message.Contains)) {
+									if (forbidden.Any (s => Regex.Match (attr.Message, $"({s} ?)[0-9]+").Success)) {
 										ReportError ("[Rule 1] Don't put OS information in availability message: \"{0}\" - METHOD name: {1}, Type: {2}", attr.Message, m.Name, t.Name);
 										totalErrors++;
 									}
