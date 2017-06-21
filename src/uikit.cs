@@ -4502,6 +4502,10 @@ namespace XamCore.UIKit {
 		[return: NullAllowed]
 		UIColor FromName (string name);
 
+		// From the NSItemProviderReading protocol, a special constructor.
+		[Export ("initWithItemProviderData:typeIdentifier:error:")]
+		IntPtr Constructor (NSData providerData, string typeIdentifier, out NSError outError);
+
 #if !WATCH
 		[iOS (11,0)]
 		[Static]
@@ -6764,6 +6768,10 @@ namespace XamCore.UIKit {
 		UIImage FromImage (CIImage image);
 #endif // !WATCH
 
+		// From the NSItemProviderReading protocol, a special constructor.
+		[Export ("initWithItemProviderData:typeIdentifier:error:")]
+		IntPtr Constructor (NSData providerData, string typeIdentifier, out NSError outError);
+	
 		[Export ("renderingMode")]
 		[ThreadSafe]
 		[Since (7,0)]
@@ -15436,8 +15444,7 @@ namespace XamCore.UIKit {
 	}
 
 	[NoWatch, NoTV, iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface UIInteraction
 	{
 		[Abstract]
@@ -16143,8 +16150,7 @@ namespace XamCore.UIKit {
 	interface IUIDropInteractionDelegate {}
 		
 	[NoWatch, NoTV, iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface UIDragAnimating
 	{
 		[Abstract]
@@ -16157,8 +16163,7 @@ namespace XamCore.UIKit {
 	}
 	
 	[NoWatch, NoTV, iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface UIDragDropSession
 	{
 		[Abstract]

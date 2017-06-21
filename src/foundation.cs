@@ -237,6 +237,10 @@ namespace XamCore.Foundation
 		[Wrap ("this (data, options == null ? null : options.Dictionary, out resultDocumentAttributes, ref error)")]
 		IntPtr Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 
+		// From the NSItemProviderReading protocol, a special constructor.
+		[Export ("initWithItemProviderData:typeIdentifier:error:")]
+		IntPtr Constructor (NSData providerData, string typeIdentifier, out NSError outError);
+		
 		[Since (7,0)]
 		[Export ("dataFromRange:documentAttributes:error:")]
 		NSData GetDataFromRange (NSRange range, NSDictionary attributes, ref NSError error);
@@ -8783,17 +8787,22 @@ namespace XamCore.Foundation
 	interface INSItemProviderReading {}
 	
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface NSItemProviderReading
 	{
 		[Static, Abstract]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		string[] ReadableTypeIdentifiersForItemProvider { get; }
-	
-		[Abstract]
-		[Export ("initWithItemProviderData:typeIdentifier:error:")]
-		NSObject CreateFrom (NSData providerData, string typeIdentifier, [NullAllowed] out NSError outError);
+
+		//
+		// This is a constructor that various classes must implement
+		// NSAttributedString, UIColor and UIImage need to have this constructor
+		// for user-defined implementations of this interface, we are going to
+		// need to something special
+		//
+		//[Abstract]
+		//[Export ("initWithItemProviderData:typeIdentifier:error:")]
+		//INSItemProviderReading CreateFrom (NSData providerData, string typeIdentifier, [NullAllowed] NSError outError);
 	}
 
 #if XAMCORE_2_0
