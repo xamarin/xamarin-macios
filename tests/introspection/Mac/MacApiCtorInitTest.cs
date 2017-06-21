@@ -39,7 +39,9 @@ namespace Introspection {
 		{
 			switch (type.FullName) {
 			case "CoreBluetooth.CBCentralManager":
+			case "MonoMac.CoreBluetooth.CBCentralManager":
 			case "CoreBluetooth.CBPeripheralManager":
+			case "MonoMac.CoreBluetooth.CBPeripheralManager":
 				if (Mac.CheckSystemVersion (10, 13)) // radar 32899618
 					return true;
 				break;
@@ -48,6 +50,7 @@ namespace Introspection {
 			case "MonoMac.QuickLookUI.QLPreviewPanel":
 				return true;
 			// These should be DisableDefaultCtor but can't due to backward compat
+			case "MonoMac.AppKit.NSCollectionViewTransitionLayout":
 			case "AppKit.NSCollectionViewTransitionLayout":
 			case "Foundation.NSUnitDispersion": // -init should never be called on NSUnit!
 			case "Foundation.NSUnitVolume": // -init should never be called on NSUnit!
@@ -208,7 +211,9 @@ namespace Introspection {
 		{
 			switch (obj.GetType ().FullName) {
 			// Crashes on 10.13
+			case "MonoMac.CoreImage.CIImageAccumulator":
 			case "CoreImage.CIImageAccumulator": // 32897776
+			case "MonoMac.AVFoundation.AVCaptureInputPort": // https://bugzilla.xamarin.com/show_bug.cgi?id=57668
 			case "AVFoundation.AVCaptureInputPort": // https://bugzilla.xamarin.com/show_bug.cgi?id=57668
 			// Crashes on 10.12
 			case "Contacts.CNContainer":
