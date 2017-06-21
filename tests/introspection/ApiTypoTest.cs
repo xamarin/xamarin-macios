@@ -727,8 +727,8 @@ namespace Introspection
 							foreach (var attr in ca) {
 								if (attr.Message != null) {
 									// Rule 1: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-1
-									var forbidden = new [] { "iOS", "watchOS", "tvOS", "macOS" };
-									if (forbidden.Any (s => Regex.Match (attr.Message, $"({s} ?)[0-9]+").Success)) {
+									var forbiddenOSNames = new [] { "iOS", "watchOS", "tvOS", "macOS" };
+									if (forbiddenOSNames.Any (s => Regex.IsMatch (attr.Message, $"({s} ?)[0-9]+"))) {
 										ReportError ("[Rule 1] Don't put OS information in availability message: \"{0}\" - METHOD name: {1}, Type: {2}", attr.Message, m.Name, t.Name);
 										totalErrors++;
 									}
@@ -742,6 +742,13 @@ namespace Introspection
 									// Rule 3: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-3
 									if (!attr.Message.EndsWith (".", StringComparison.Ordinal)) {
 										ReportError ("[Rule 3] Missing '.' in availability message: \"{0}\" - METHOD name: {1}, Type: {2}", attr.Message, m.Name, t.Name);
+										totalErrors++;
+									}
+
+									// Rule 4: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-4
+									var forbiddenAvailabilityKeywords = new [] { "introduced", "deprecated", "obsolete", "obsoleted" };
+									if (forbiddenAvailabilityKeywords.Any (s => Regex.IsMatch (attr.Message, $"({s})", RegexOptions.IgnoreCase))) {
+										ReportError ("[Rule 4] Don't use availability keywords in availability message: \"{0}\" - METHOD name: {1}, Type: {2}", attr.Message, m.Name, t.Name);
 										totalErrors++;
 									}
 								}
