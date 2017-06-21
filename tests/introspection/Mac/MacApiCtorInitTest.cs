@@ -203,8 +203,8 @@ namespace Introspection {
 		{
 			switch (obj.GetType ().FullName) {
 			// Crashes on 10.13
-			case "CoreImage.CIImageAccumulator":
-			case "AVFoundation.AVCaptureInputPort":
+			case "CoreImage.CIImageAccumulator": // 32897776
+			case "AVFoundation.AVCaptureInputPort": // https://bugzilla.xamarin.com/show_bug.cgi?id=57668
 			// Crashes on 10.12
 			case "Contacts.CNContainer":
 			// native crash calling MonoMac.Foundation.NSObject.get_Description ()

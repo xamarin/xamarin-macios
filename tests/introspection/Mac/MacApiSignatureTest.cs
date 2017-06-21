@@ -64,8 +64,7 @@ namespace Introspection {
 
 			switch (type.Name) {
 			case "PdfDocument":
-				switch (selector)
-				{
+				switch (selector) {
 				case "majorVersion": // radar 32884659
 				case "minorVersion":
 					return true;
@@ -73,8 +72,7 @@ namespace Introspection {
 				break;
 
 			case "NSPopover":
-				switch (selector)
-				{
+				switch (selector) {
 				// Apple re-used these selectors for a new property of same size but different type
 				// We've obsoleteted the "old" one
 				case "appearance":
