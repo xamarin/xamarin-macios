@@ -75,7 +75,7 @@ namespace XamCore.WebKit
 	{
 		[Static]
 		[Export ("defaultStore")]
-		WKContentRuleListStore DefaultStore ();
+		WKContentRuleListStore DefaultStore { get; }
 	
 		[Static]
 		[Export ("storeWithURL:")]
@@ -95,7 +95,7 @@ namespace XamCore.WebKit
 	
 		[Export ("getAvailableContentRuleListIdentifiers:")]
 		[Async]
-		void GetAvailableContentRuleListIdentifiers (Action<NSString []> callback);
+		void GetAvailableContentRuleListIdentifiers (Action<string []> callback);
 	}
 	
 	[Mac (10,13), iOS (11,0)]
@@ -116,15 +116,16 @@ namespace XamCore.WebKit
 		void DeleteCookie (NSHttpCookie cookie, [NullAllowed] Action completionHandler);
 	
 		[Export ("addObserver:")]
-		void AddObserver (WKHttpCookieStoreObserver observer);
+		void AddObserver (IWKHttpCookieStoreObserver observer);
 	
 		[Export ("removeObserver:")]
-		void RemoveObserver (WKHttpCookieStoreObserver observer);
+		void RemoveObserver (IWKHttpCookieStoreObserver observer);
 	}
 
+	interface IWKHttpCookieStoreObserver {}
+	
 	[Mac (10,13), iOS (11,0)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	interface WKHttpCookieStoreObserver
 	{
 		[Export ("cookiesDidChangeInCookieStore:")]
@@ -309,23 +310,24 @@ namespace XamCore.WebKit
 	}
 
 #if XAMCORE_2_0
+	interface IWKUrlSchemeHandler {}
 	[Mac (10,13), iOS (11,0)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	interface WKUrlSchemeHandler
 	{
 		[Abstract]
 		[Export ("webView:startURLSchemeTask:")]
-		void StartUrlSchemeTask (WKWebView webView, WKUrlSchemeTask urlSchemeTask);
+		void StartUrlSchemeTask (WKWebView webView, IWKUrlSchemeTask urlSchemeTask);
 	
 		[Abstract]
 		[Export ("webView:stopURLSchemeTask:")]
-		void StopUrlSchemeTask (WKWebView webView, WKUrlSchemeTask urlSchemeTask);
+		void StopUrlSchemeTask (WKWebView webView, IWKUrlSchemeTask urlSchemeTask);
 	}
 #endif
+	interface IWKUrlSchemeTask {}
+
 	[Mac (10,13), iOS (11,0)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	interface WKUrlSchemeTask
 	{
 		[Abstract]
@@ -745,12 +747,12 @@ namespace XamCore.WebKit
 #if XAMCORE_2_0
 		[Mac (10,13), iOS (11,0)]
 		[Export ("setURLSchemeHandler:forURLScheme:")]
-		void SetUrlSchemeHandler ([NullAllowed] WKUrlSchemeHandler urlSchemeHandler, string urlScheme);
+		void SetUrlSchemeHandler ([NullAllowed] IWKUrlSchemeHandler urlSchemeHandler, string urlScheme);
 	
 		[Mac (10,13), iOS (11,0)]
 		[Export ("urlSchemeHandlerForURLScheme:")]
 		[return: NullAllowed]
-		WKUrlSchemeHandler GetUrlSchemeHandler (string urlScheme);
+		IWKUrlSchemeHandler GetUrlSchemeHandler (string urlScheme);
 #endif
 	}
 
