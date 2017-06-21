@@ -164,7 +164,9 @@ namespace Introspection {
 		{
 			switch (constantName) {
 			case "CBUUIDValidRangeString":
-				return Mac.CheckSystemVersion (10, 13); // radar 32858911 
+				if (Mac.CheckSystemVersion (10, 13)); // radar 32858911
+					return true;
+				break;
 			// Only there for API compat
 			case "kSecUseNoAuthenticationUI":
 			case "kSecUseOperationPrompt":
