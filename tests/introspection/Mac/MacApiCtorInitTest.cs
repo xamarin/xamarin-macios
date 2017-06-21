@@ -38,6 +38,11 @@ namespace Introspection {
 		protected override bool Skip (Type type)
 		{
 			switch (type.FullName) {
+			case "CoreBluetooth.CBCentralManager":
+			case "CoreBluetooth.CBPeripheralManager":
+				if (Mac.CheckSystemVersion (10, 13)) // radar 32899618
+					return true;
+				break;
 			// Random failures on build machine
 			case "QuickLookUI.QLPreviewPanel":
 			case "MonoMac.QuickLookUI.QLPreviewPanel":

@@ -592,6 +592,24 @@ namespace Introspection {
 				break;
 			case "CoreBluetooth":
 				switch (type.Name) {
+				case "CBCentralManager":
+					switch (selectorName) {
+					case "retrieveConnectedPeripherals": // radar 32899618
+					case "retrievePeripherals:": // radar 32899618
+						if (Mac.CheckSystemVersion (10, 13))
+							return true;
+						break;
+					}
+					break;
+
+				case "CBPeripheral":
+					switch (selectorName) {
+					case "isConnected": // radar 32899618
+						if (Mac.CheckSystemVersion (10, 13))
+							return true;
+						break;
+					}
+					break;
 				case "CBMutableService":
 				case "CBMutableCharacteristic":
 					switch (selectorName) {
