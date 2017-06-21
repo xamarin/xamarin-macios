@@ -393,8 +393,8 @@ namespace XamCore.HealthKit {
 		void StopQuery (HKQuery query);
 
 		// FIXME NS_EXTENSION_UNAVAILABLE("Not available to extensions") ;
-		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use GetDateOfBirthComponents instead")]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use GetDateOfBirthComponents instead")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'GetDateOfBirthComponents' instead.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'GetDateOfBirthComponents' instead.")]
 		[Export ("dateOfBirthWithError:")]
 		NSDate GetDateOfBirth (out NSError error);
 
@@ -909,8 +909,8 @@ namespace XamCore.HealthKit {
 		[NullAllowed, Export ("objectType", ArgumentSemantic.Strong)]
 		HKObjectType ObjectType { get; }
 
-		[Deprecated (PlatformName.WatchOS, 2,2, message: "Use ObjectType property")]
-		[Deprecated (PlatformName.iOS, 9,3, message: "Use ObjectType property")]
+		[Deprecated (PlatformName.WatchOS, 2,2, message: "Use 'ObjectType' property.")]
+		[Deprecated (PlatformName.iOS, 9,3, message: "Use 'ObjectType' property.")]
 		[Watch (2,0)]
 		[NullAllowed, Export ("sampleType", ArgumentSemantic.Strong)]
 		HKSampleType SampleType { get; }

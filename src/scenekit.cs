@@ -1156,8 +1156,8 @@ namespace XamCore.SceneKit {
 		[Export ("wrapT")]
 		SCNWrapMode WrapT { get; set;  }
 
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Deprecated")]
-		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Deprecated")]
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[NoWatch, NoTV]
 		[NullAllowed, Export ("borderColor", ArgumentSemantic.Retain)]
 		NSObject BorderColor { get; set; }

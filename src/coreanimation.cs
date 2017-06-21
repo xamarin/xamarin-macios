@@ -169,9 +169,9 @@ namespace XamCore.CoreAnimation {
 		[Export ("paused")]
 		bool Paused { [Bind ("isPaused")] get; set; }
 	
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use PreferredFramesPerSecond property")]
-		[Deprecated (PlatformName.TvOS, 10,0, message: "Use PreferredFramesPerSecond property")]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use PreferredFramesPerSecond property")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'PreferredFramesPerSecond' property.")]
+		[Deprecated (PlatformName.TvOS, 10,0, message: "Use 'PreferredFramesPerSecond' property.")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'PreferredFramesPerSecond' property.")]
 		[Export ("frameInterval")]
 		nint FrameInterval { get; set;  }
 

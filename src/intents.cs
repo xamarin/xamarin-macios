@@ -3577,7 +3577,7 @@ namespace XamCore.Intents {
 		[NullAllowed, Export ("profileNumber", ArgumentSemantic.Copy)]
 		NSNumber ProfileNumber { get; }
 
-		[Deprecated (PlatformName.iOS, 10,2, message:"Use ProfileName instead")]
+		[Deprecated (PlatformName.iOS, 10,2, message:"Use 'ProfileName' instead.")]
 		[NullAllowed, Export ("profileLabel")]
 		string ProfileLabel { get; }
 
@@ -4277,7 +4277,7 @@ namespace XamCore.Intents {
 		[NullAllowed, Export ("profileNumber", ArgumentSemantic.Copy)]
 		NSNumber ProfileNumber { get; }
 
-		[Deprecated (PlatformName.iOS, 10, 2, message: "Use ProfileName instead")]
+		[Deprecated (PlatformName.iOS, 10, 2, message: "Use 'ProfileName' instead.")]
 		[NullAllowed, Export ("profileLabel")]
 		string ProfileLabel { get; }
 

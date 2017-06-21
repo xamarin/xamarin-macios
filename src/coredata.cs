@@ -1010,16 +1010,16 @@ namespace XamCore.CoreData
 		bool Save (out NSError error);
 
 #if !WATCH && !TVOS
-		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_4, Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use a queue style context and PerformAndWait instead")]
+		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_4, Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use a queue style context and 'PerformAndWait' instead.")]
 		[Export ("lock")]
 		new void Lock ();
 
-		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_4, Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use a queue style context and PerformAndWait instead")]
+		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_4, Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use a queue style context and 'PerformAndWait' instead.")]
 		[Export ("unlock")]
 		new void Unlock ();
 
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_4, Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use a queue style context and Perform instead")]
+		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_4, Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use a queue style context and 'Perform' instead.")]
 		[Export ("tryLock")]
 		bool TryLock { get; }
 #endif // !WATCH && !TVOS
@@ -1797,7 +1797,7 @@ namespace XamCore.CoreData
 		[Static, Export ("registerStoreClass:forStoreType:")]
 		void RegisterStoreClass (Class storeClass, NSString storeType);
 
-		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_5 , Deprecated = Platform.iOS_9_0 | Platform.Mac_10_11, Message = "This method is obsolete, please use the method that takes an out NSError parameter.")]
+		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_5 , Deprecated = Platform.iOS_9_0 | Platform.Mac_10_11, Message = "Use the method that takes an out NSError parameter.")]
 		[Static, Export ("metadataForPersistentStoreOfType:URL:error:")]
 		[return: NullAllowed]
 		NSDictionary MetadataForPersistentStoreOfType (NSString storeType, NSUrl url, out NSError error);
@@ -1807,7 +1807,7 @@ namespace XamCore.CoreData
 		[return: NullAllowed]
 		NSDictionary<NSString, NSObject> GetMetadata (string storeType, NSUrl url, [NullAllowed] NSDictionary options, out NSError error);
 
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_9_0, Message = "This method is obsolete, please use the method that takes an out NSError parameter.")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_9_0, Message = "Use the method that takes an out NSError parameter.")]
 		[Static, Export ("setMetadata:forPersistentStoreOfType:URL:error:")]
 		bool SetMetadata (NSDictionary metadata, NSString storeType, NSUrl url, out NSError error);
 		
@@ -1872,16 +1872,16 @@ namespace XamCore.CoreData
 		NSManagedObjectID ManagedObjectIDForURIRepresentation (NSUrl url);
 
 #if !WATCH && !TVOS
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_8_0, Message="Use PerformAndWait instead")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_8_0, Message="Use 'PerformAndWait' instead.")]
 		[Export ("lock")]
 		new void Lock ();
 
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_8_0, Message="Use PerformAndWait instead")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_8_0, Message="Use 'PerformAndWait' instead.")]
 		[Export ("unlock")]
 		new void Unlock ();
 
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_8_0, Message="Use Perform instead")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_8_0, Message="Use 'Perform' instead.")]
 		[Export ("tryLock")]
 		bool TryLock { get; }
 #endif // !WATCH && !TVOS

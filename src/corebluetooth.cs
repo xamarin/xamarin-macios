@@ -90,7 +90,7 @@ namespace XamCore.CoreBluetooth {
 
 		[NoTV]
 		[Export ("retrieveConnectedPeripherals")]
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0, Message = "Use RetrievePeripheralsWithIdentifiers instead")]
+		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0, Message = "Use 'RetrievePeripheralsWithIdentifiers' instead.")]
 		void RetrieveConnectedPeripherals ();
 
 		[Export ("scanForPeripheralsWithServices:options:"), Internal]
@@ -509,7 +509,7 @@ namespace XamCore.CoreBluetooth {
 	[Model]
 	[Protocol]
 	interface CBPeripheralDelegate {
-		[Availability (Deprecated=Platform.iOS_8_0, Message="Use RssiRead")]
+		[Availability (Deprecated=Platform.iOS_8_0, Message="Use 'RssiRead' instead.")]
 		[Export ("peripheralDidUpdateRSSI:error:"), EventArgs ("NSError", true)]
 		void RssiUpdated (CBPeripheral peripheral, NSError error);
 

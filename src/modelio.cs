@@ -1881,13 +1881,13 @@ namespace XamCore.ModelIO {
 		[Export ("setVoxelsForMesh:divisions:patchRadius:")]
 		void SetVoxels (MDLMesh mesh, int divisions, float patchRadius);
 
-		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use SetVoxels (MDLMesh, int, float)")]
-		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use SetVoxels (MDLMesh, int, float)")]
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'SetVoxels (MDLMesh, int, float)' instead.")]
+		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use 'SetVoxels (MDLMesh, int, float)' instead.")]
 		[Export ("setVoxelsForMesh:divisions:interiorShells:exteriorShells:patchRadius:")]
 		void SetVoxels (MDLMesh mesh, int divisions, int interiorShells, int exteriorShells, float patchRadius);
 
-		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use SetVoxels (MDLMesh, int, float)")]
-		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use SetVoxels (MDLMesh, int, float)")]
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'SetVoxels (MDLMesh, int, float)' instead.")]
+		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use 'SetVoxels (MDLMesh, int, float)' instead.")]
 		[Export ("setVoxelsForMesh:divisions:interiorNBWidth:exteriorNBWidth:patchRadius:")]
 		void SetVoxels (MDLMesh mesh, int divisions, float interiorNBWidth, float exteriorNBWidth, float patchRadius);
 

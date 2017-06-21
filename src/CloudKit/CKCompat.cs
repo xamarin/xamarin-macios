@@ -12,7 +12,7 @@ namespace XamCore.CloudKit {
 #if !XAMCORE_4_0 && !WATCH
 	public partial class CKOperation {
 
-		[Obsoleted (PlatformName.iOS, 9,3, message: "Do not use; this API was removed in iOS 9.3 and will always return 0")]
+		[Obsoleted (PlatformName.iOS, 9,3, message: "Do not use; this API was removed and will always return 0.")]
 		public virtual ulong ActivityStart ()
 		{
 			return 0;
@@ -21,7 +21,7 @@ namespace XamCore.CloudKit {
 
 	public partial class CKNotificationID {
 
-		[Obsolete ("This type is not meant to be created by user code")]
+		[Obsolete ("This type is not meant to be created by user code.")]
 		public CKNotificationID ()
 		{
 		}
