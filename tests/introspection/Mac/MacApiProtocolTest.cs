@@ -186,6 +186,14 @@ namespace Introspection {
 				break;
 			case "NSExtensionRequestHandling":
 				return IntPtr.Size == 4;
+			case "NSAppearanceCustomization":
+				switch (type.Name) {
+				case "NSPopover":
+					if (!Mac.CheckSystemVersion (10, 13)) // Was added in 10.13
+						return true;
+					break;
+				}
+				break;
 			}
 
 			switch (type.Name) {
