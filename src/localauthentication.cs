@@ -70,10 +70,6 @@ namespace XamCore.LocalAuthentication {
 		[Export ("maxBiometryFailures")]
 		NSNumber MaxBiometryFailures { get; set; }
 #endif
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("withCurrentContextExecute:queue:")]
-		void ExecuteWithCurrentContext (Action block, DispatchQueue queue);
-
 		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
 		[Export ("localizedReason")]
 		string LocalizedReason { get; set; }
