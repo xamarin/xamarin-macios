@@ -16,7 +16,7 @@
     <Optimize>false</Optimize>
     <OutputPath>..\bin\Mobile-framework\</OutputPath>
     <BaseIntermediateOutputPath>../obj/Mobile-framework/</BaseIntermediateOutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <DefineConstants>DEBUG;FRAMEWORK_TEST</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>

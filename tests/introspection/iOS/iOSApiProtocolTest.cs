@@ -188,7 +188,8 @@ namespace Introspection {
 				case "MKMapItem": // Conformance not in headers
 				case "NSConstraintConflict": // Conformance not in headers
 				case "NSQueryGenerationToken": // Conformance not in headers
-				case "ARCamera":
+				case "NSPersistentHistoryToken": // Conformance not in headers
+ 				case "ARCamera":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -295,6 +296,7 @@ namespace Introspection {
 				// iOS 11.0
 				case "MKMapItem": // Conformance not in headers
 				case "NSQueryGenerationToken": // Conformance not in headers
+				case "NSPersistentHistoryToken": // Conformance not in headers
 				case "ARCamera":
 					return true;
 #if __WATCHOS__

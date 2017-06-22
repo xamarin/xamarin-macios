@@ -3,7 +3,9 @@ using System.Reflection;
 using System.IO;
 
 using AppKit;
+#if !FRAMEWORK_TEST
 using Simple;
+#endif
 
 namespace MobileTestApp
 {
@@ -21,10 +23,11 @@ namespace MobileTestApp
 #pragma warning disable 0219		
 			var v = ObjCRuntime.Dlfcn.dlopen (GetCurrentExecutingDirectory () + "/SimpleClassDylib.dylib", 0);
 #pragma warning restore 0219
-
 			NSApplication.Init ();
+#if !FRAMEWORK_TEST
 			SimpleClass c = new SimpleClass ();
 			Console.WriteLine (c.DoIt());
+#endif
 		}
 	}
 }

@@ -6089,9 +6089,9 @@ public partial class Generator : IMemberGatherer {
 							indent--;
 							print ($"return {smartEnumTypeName}Extensions.GetValue (_{field_pi.Name});");
 						} else if (UnifiedAPI && IsNativeEnum (field_pi.PropertyType)) {
-							if (btype == TypeManager.System_nint || (BindThirdPartyLibrary && btype == TypeManager.System_Int64))
+							if (btype == TypeManager.System_nint || btype == TypeManager.System_Int64)
 								print ($"return ({fieldTypeName}) (long) Dlfcn.GetNInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");" );
-							else if (btype == TypeManager.System_nuint || (BindThirdPartyLibrary && btype == TypeManager.System_UInt64))
+							else if (btype == TypeManager.System_nuint || btype == TypeManager.System_UInt64)
 								print ($"return ({fieldTypeName}) (ulong) Dlfcn.GetNUInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");");
 							else
 								throw new BindingException (1014, true, "Unsupported type for Fields: {0}", fieldTypeName);
