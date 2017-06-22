@@ -473,7 +473,8 @@ namespace xharness
 			args.Append (" -argument=-app-arg:-enablenetwork");
 			args.Append (" -setenv=NUNIT_ENABLE_NETWORK=true");
 			// detect if we are using a jenkins bot.
-			if (Harness.InJenkins) 
+			var useXmlOutput = Harness.InJenkins;
+			if (useXmlOutput) 
 				args.Append (" -setenv=NUNIT_ENABLE_XML_OUTPUT=true");
 
 			if (isSimulator) {
@@ -505,8 +506,9 @@ namespace xharness
 			SimpleListener listener;
 			switch (transport) {
 			case "FILE":
-				listener = new SimpleFileListener ();
-				args.Append (" -setenv=NUNIT_LOG_FILE=").Append (Harness.Quote (listener_log.FullPath));
+				var fn = listener_log.FullPath + ".tmp";
+				listener = new SimpleFileListener (fn);
+				args.Append (" -setenv=NUNIT_LOG_FILE=").Append (Harness.Quote (fn));
 				break;
 			case "HTTP":
 				listener = new SimpleHttpListener ();
@@ -521,6 +523,7 @@ namespace xharness
 			listener.Log = main_log;
 			listener.AutoExit = true;
 			listener.Address = System.Net.IPAddress.Any;
+			listener.XmlOutput = useXmlOutput;
 			listener.Initialize ();
 
 			args.AppendFormat (" -argument=-app-arg:-hostport:{0}", listener.Port);

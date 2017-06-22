@@ -11,13 +11,19 @@ namespace xharness
 	{
 		Thread processor_thread;
 		bool cancel;
+		public string Path { get; private set; }
+
+		public SimpleFileListener (string path)
+		{
+			Path = path;
+		}
 
 		protected override void Stop ()
 		{
 			cancel = true;
 			processor_thread.Join ();
 			processor_thread = null;
-			stopped.Set ();
+			Finished (true);
 		}
 
 		public override void Initialize ()
@@ -32,17 +38,21 @@ namespace xharness
 
 		void Processing ()
 		{
-			var path = TestLog.FullPath;
-			Connected ("?");
-			using (var fs = new BlockingFileStream (path) { Listener = this }) {
+			Connected ("N/A");
+			using (var fs = new BlockingFileStream (Path) { Listener = this }) {
 				using (var reader = new StreamReader (fs)) {
 					string line;
 					while ((line = reader.ReadLine ()) != null) {
+						OutputWriter.WriteLine (line);
 						if (line.StartsWith ("[Runner executing:", StringComparison.Ordinal)) {
-							Console.WriteLine ("Tests have started executing");
-						} else if (line.StartsWith ("Tests run: ", StringComparison.Ordinal)) {
-							Console.WriteLine ("Tests have finished executing");
-							stopped.Set ();
+							Log.WriteLine ("Tests have started executing");
+						} else if (!XmlOutput && line.StartsWith ("Tests run: ", StringComparison.Ordinal)) {
+							Log.WriteLine ("Tests have finished executing");
+							Finished ();
+							return;
+						} else if (XmlOutput && line == "<!-- the end -->") {
+							Log.WriteLine ("Tests have finished executing");
+							Finished ();
 							return;
 						}
 					}
@@ -57,7 +67,7 @@ namespace xharness
 			long last_position;
 
 			public BlockingFileStream (string path)
-				: base (path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
+				: base (path, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite)
 			{
 			}
 
