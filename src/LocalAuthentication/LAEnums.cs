@@ -13,8 +13,7 @@ namespace XamCore.LocalAuthentication {
 		DeviceOwnerAuthentication = 2
 	}
 
-	[iOS (8,0)]
-	[Availability (Platform.Mac_10_10)]
+	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10)]
 	[Native]
 	[ErrorDomain ("LAErrorDomain")]
 	public enum LAStatus : nint {
@@ -36,11 +35,11 @@ namespace XamCore.LocalAuthentication {
 
 		TouchIDLockout       = -8,
 		AppCancel            = -9,
-		InvalidContext       = -10
+		InvalidContext       = -10,
+		NotInteractive       = -1004,
 	}
 
-	[iOS (9,0)]
-	[Mac (10,11)]
+	[iOS (9,0), Mac (10,11), Watch (3,0), TV (11,0)]
 	[Native]
 	public enum LACredentialType : nint {
 		ApplicationPassword = 0

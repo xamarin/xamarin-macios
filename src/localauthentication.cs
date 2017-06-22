@@ -37,7 +37,7 @@ namespace XamCore.LocalAuthentication {
 		bool SetCredentialType ([NullAllowed] NSData credential, LACredentialType type);
 
 		
-		[iOS (9,0), Mac(10,11)]
+		[iOS (9,0), Mac(10,11), Watch (3,0), TV (11,0)]
 		[Export ("isCredentialSet:")]
 		bool IsCredentialSet (LACredentialType type);
 
@@ -70,5 +70,16 @@ namespace XamCore.LocalAuthentication {
 		[Export ("maxBiometryFailures")]
 		NSNumber MaxBiometryFailures { get; set; }
 #endif
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("withCurrentContextExecute:queue:")]
+		void ExecuteWithCurrentContext (Action block, DispatchQueue queue);
+
+		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
+		[Export ("localizedReason")]
+		string LocalizedReason { get; set; }
+
+		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
+		[Export ("interactionNotAllowed")]
+		bool InteractionNotAllowed { get; set; }
 	}
 }
