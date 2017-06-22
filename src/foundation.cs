@@ -9449,27 +9449,27 @@ namespace XamCore.Foundation
 
 		#region SceneKit Additions
 
-		[Mac (10,8), iOS (8,0)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Static, Export ("valueWithSCNVector3:")]
 		NSValue FromVector (SCNVector3 vector);
 
-		[Mac (10,8), iOS (8,0)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("SCNVector3Value")]
 		SCNVector3 Vector3Value { get; }
 
-		[Mac (10,8), iOS (8,0)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Static, Export ("valueWithSCNVector4:")]
 		NSValue FromVector (SCNVector4 vector);
 
-		[Mac (10,8), iOS (8,0)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("SCNVector4Value")]
 		SCNVector4 Vector4Value { get; }
 
-		[Mac (10,10), iOS (8,0)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Static, Export ("valueWithSCNMatrix4:")]
 		NSValue FromSCNMatrix4 (SCNMatrix4 matrix);
 
-		[Mac (10,10), iOS (8,0)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("SCNMatrix4Value")]
 		SCNMatrix4 SCNMatrix4Value { get; }
 

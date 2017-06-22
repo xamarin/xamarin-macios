@@ -669,6 +669,8 @@ namespace Introspection {
 				case "System.Byte":
 				// GLKBaseEffect 'instance Boolean get_ColorMaterialEnabled()' selector: colorMaterialEnabled == C8@0:4
 				case "System.Boolean":
+				// CoreNFC.NFCTypeNameFormat enum is byte
+				case "CoreNFC.NFCTypeNameFormat":
 					return true;
 				default:
 					return false;

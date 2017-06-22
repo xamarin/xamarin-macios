@@ -375,6 +375,7 @@ namespace Xamarin.Bundler {
 					case "Metal":
 					case "MetalKit":
 					case "MetalPerformanceShaders":
+					case "CoreNFC":
 						// some frameworks do not exists on simulators and will result in linker errors if we include them
 #if MTOUCH
 						if (!App.IsSimulatorBuild) {

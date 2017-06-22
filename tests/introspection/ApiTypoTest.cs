@@ -267,8 +267,10 @@ namespace Introspection
 			"Ntlm",
 			"Ntsc",
 			"nuint",
+			"Ndef",
 			"Numbernumber",
 			"Nyquist",
+			"Oaep", // Optimal asymmetric encryption padding
 			"Objectfor",
 			"Occlussion",
 			"Ocurrences",
@@ -371,6 +373,7 @@ namespace Introspection
 			"Tls",
 			"Tlv",
 			"Toi",
+			"Transceive",
 			"Truncantion",
 			"Tweening",
 			"tx",

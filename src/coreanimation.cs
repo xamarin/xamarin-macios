@@ -113,7 +113,7 @@ namespace XamCore.CoreAnimation {
 	}
 	
 	[BaseType (typeof (NSObject))]
-	interface CAConstraint : NSCoding {
+	interface CAConstraint : NSSecureCoding {
 		[Export ("attribute")]
 		CAConstraintAttribute Attribute { get;  }
 
@@ -996,15 +996,15 @@ namespace XamCore.CoreAnimation {
 		NSString RotateModeAutoReverse { get; }
 
 		#region SceneKitAdditions
-		[iOS (8,0)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("usesSceneTimeBase")]
 		bool UsesSceneTimeBase { get; set; }
 
-		[iOS (8,0)][Mac (10,9)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("fadeInDuration")]
 		nfloat FadeInDuration { get; set; }
 
-		[iOS (8,0)][Mac (10,9)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("fadeOutDuration")]
 		nfloat FadeOutDuration { get; set; }
 

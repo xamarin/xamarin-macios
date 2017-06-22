@@ -105,5 +105,7 @@ namespace MonoTouch {
 		public const string UserNotificationsUILibrary = "/System/Library/Frameworks/UserNotificationsUI.framework/UserNotificationsUI";
 		public const string IntentsLibrary = "/System/Library/Frameworks/Intents.framework/Intents";
 		public const string IntentsUILibrary = "/System/Library/Frameworks/IntentsUI.framework/IntentsUI";
+		// iOS 11.0
+		public const string CoreNFCLibrary = "/System/Library/Frameworks/CoreNFC.framework/CoreNFC";
 	}
 }
