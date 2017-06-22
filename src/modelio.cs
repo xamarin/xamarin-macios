@@ -1053,7 +1053,7 @@ namespace XamCore.ModelIO {
 #if XAMCORE_4_0
 		[Internal]
 #endif
-		[Obsolete ("Use GetComponent (Type type)")]
+		[Obsolete ("Use 'GetComponent (Type type)'.")]
 		[Export ("componentConformingToProtocol:")]
 		[return: NullAllowed]
 		IMDLComponent IsComponentConforming (Protocol protocol);

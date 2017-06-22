@@ -10,7 +10,7 @@ namespace XamCore.SceneKit {
 #if !XAMCORE_3_0
 	partial class SCNAction {
 
-		[Obsolete ("Use TimingFunction property")]
+		[Obsolete ("Use 'TimingFunction' property.")]
 		public virtual void SetTimingFunction (Action<float> timingFunction)
 		{
 			TimingFunction = timingFunction;
@@ -20,14 +20,14 @@ namespace XamCore.SceneKit {
 	partial class SCNMaterialProperty {
 	[Introduced (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.iOS, 10, 0)]
-		[Deprecated (PlatformName.TvOS, 10, 0, message: "This API is only deprecated on iOS but it is removed on tvOS.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "This API has been totally removed on tvOS.")]
 		public virtual NSObject BorderColor { get; set; }
 	}
 
 	partial class SCNRenderer {
 		[Introduced (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
-		[Deprecated (PlatformName.TvOS, 10, 0, message: "This API is only deprecated on iOS but it is removed on tvOS.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "This API has been totally removed on tvOS.")]
 		public virtual void Render ()
 		{
 		}

@@ -476,7 +476,7 @@ namespace XamCore.CoreImage {
 #if XAMCORE_4_0
 		void RegisterFilterName (string name, ICIFilterConstructor constructorObject, NSDictionary<NSString, NSObject> classAttributes);
 #else
-		[Advice ("The constructorObject argument must implement ICIFilterConstructor")]
+		[Advice ("The 'constructorObject' argument must implement 'ICIFilterConstructor'.")]
 		void RegisterFilterName (string name, NSObject constructorObject, NSDictionary<NSString, NSObject> classAttributes);
 #endif
 #endif

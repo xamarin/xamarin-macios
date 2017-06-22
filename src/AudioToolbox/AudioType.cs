@@ -142,7 +142,7 @@ namespace XamCore.AudioToolbox {
 		const int AudioUnitSampleFractionBits = 24;
 		const AudioFormatFlags AudioFormatFlagIsBigEndian = 0;
 
-		[Availability (Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point.   AudioFormatFlagsNativeFloatPacked is preffered instead")]
+		[Availability (Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Canonical is no longer encouraged, since fixed-point no longer provides a performance advantage over floating point. 'AudioFormatFlagsNativeFloatPacked' is preffered instead.")]
 		public static readonly AudioFormatFlags AudioFormatFlagsAudioUnitCanonical = AudioFormatFlags.IsSignedInteger | (BitConverter.IsLittleEndian ? 0 : AudioFormatFlags.IsBigEndian) |
 			AudioFormatFlags.IsPacked | AudioFormatFlags.IsNonInterleaved | (AudioFormatFlags) (AudioUnitSampleFractionBits << (int)AudioFormatFlags.LinearPCMSampleFractionShift);
 		

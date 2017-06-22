@@ -3005,7 +3005,7 @@ namespace XamCore.AVFoundation {
 #if XAMCORE_2_0
 		[Internal]
 #endif
-		[Advice ("Use Create method")]
+		[Advice ("Use 'Create' method.")]
 		[Static, Export ("assetReaderAudioMixOutputWithAudioTracks:audioSettings:")]
 		AVAssetReaderAudioMixOutput FromTracks (AVAssetTrack [] audioTracks, [NullAllowed] NSDictionary audioSettings);
 
@@ -3022,7 +3022,7 @@ namespace XamCore.AVFoundation {
 #if XAMCORE_2_0
 		[Internal]
 #endif
-		[Advice ("Use Settings property")]
+		[Advice ("Use 'Settings' property.")]
 		[Export ("audioSettings"), NullAllowed]
 		NSDictionary AudioSettings { get; }
 
@@ -3051,7 +3051,7 @@ namespace XamCore.AVFoundation {
 #if XAMCORE_2_0
 		[Internal]
 #endif
-		[Advice ("Use Create method")]
+		[Advice ("Use 'Create' method.")]
 		[Static]
 		[Export ("assetReaderVideoCompositionOutputWithVideoTracks:videoSettings:")]
 		AVAssetReaderVideoCompositionOutput WeakFromTracks (AVAssetTrack [] videoTracks, [NullAllowed] NSDictionary videoSettings);
@@ -3574,7 +3574,7 @@ namespace XamCore.AVFoundation {
 		CVPixelBufferPool PixelBufferPool { get;  }
 
 #if XAMCORE_2_0
-		[Advice ("Use Create method")]
+		[Advice ("Use 'Create' method.")]
 #endif
 		[Static, Export ("assetWriterInputPixelBufferAdaptorWithAssetWriterInput:sourcePixelBufferAttributes:")]
 		AVAssetWriterInputPixelBufferAdaptor FromInput (AVAssetWriterInput input, [NullAllowed] NSDictionary sourcePixelBufferAttributes);
@@ -7967,7 +7967,7 @@ namespace XamCore.AVFoundation {
 		bool AlwaysDiscardsLateVideoFrames { get; set;  }
 
 #if !XAMARIN_4_0
-		[Obsolete ("Use overload accepting a IAVCaptureVideoDataOutputSampleBufferDelegate")]
+		[Obsolete ("Use overload accepting a 'IAVCaptureVideoDataOutputSampleBufferDelegate'.")]
 		[Export ("setSampleBufferDelegate:queue:")]
 		[PostGet ("SampleBufferDelegate")]
 		[PostGet ("SampleBufferCallbackQueue")]
@@ -8035,7 +8035,7 @@ namespace XamCore.AVFoundation {
 		[Sealed]
 		void SetSampleBufferDelegateQueue ([NullAllowed] IAVCaptureAudioDataOutputSampleBufferDelegate sampleBufferDelegate, [NullAllowed] DispatchQueue sampleBufferCallbackDispatchQueue);
 
-		[Obsolete ("Use overload accepting a IAVCaptureVideoDataOutputSampleBufferDelegate")]
+		[Obsolete ("Use overload accepting a 'IAVCaptureVideoDataOutputSampleBufferDelegate'.")]
 		[Export ("setSampleBufferDelegate:queue:")]
 #if XAMCORE_2_0
 		void SetSampleBufferDelegateQueue ([NullAllowed] AVCaptureAudioDataOutputSampleBufferDelegate sampleBufferDelegate, [NullAllowed] DispatchQueue sampleBufferCallbackDispatchQueue);
@@ -8502,7 +8502,7 @@ namespace XamCore.AVFoundation {
 	[NoTV]
 	[NoWatch]
 	[Since (4,0)]
-	[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_10_0, Message = "Deprecated class, use AVCapturePhotoOutput instead.")]
+	[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_10_0, Message = "Use 'AVCapturePhotoOutput' instead.")]
 	[BaseType (typeof (AVCaptureOutput))]
 	interface AVCaptureStillImageOutput {
 		[Export ("availableImageDataCVPixelFormatTypes")]
@@ -8625,11 +8625,11 @@ namespace XamCore.AVFoundation {
 		[Export ("connected")]
 		bool Connected { [Bind ("isConnected")] get;  }
 
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use AVCaptureDeviceDiscoverySession instead.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'AVCaptureDeviceDiscoverySession' instead.")]
 		[Static, Export ("devices")]
 		AVCaptureDevice [] Devices { get;  }
 
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use AVCaptureDeviceDiscoverySession instead.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'AVCaptureDeviceDiscoverySession' instead.")]
 		[Static]
 		[Export ("devicesWithMediaType:")]
 		AVCaptureDevice [] DevicesWithMediaType (string mediaType);
@@ -8643,7 +8643,7 @@ namespace XamCore.AVFoundation {
 		AVCaptureDevice GetDefaultDevice (AVMediaTypes mediaType);
 
 #if !XAMCORE_4_0
-		[Obsolete ("Use GetDefaultDevice(AVMediaTypes)")]
+		[Obsolete ("Use 'GetDefaultDevice (AVMediaTypes)'.")]
 		[Static]
 		[Wrap ("GetDefaultDevice ((NSString) mediaType)")]
 		AVCaptureDevice DefaultDeviceWithMediaType (string mediaType);

@@ -602,7 +602,7 @@ namespace XamCore.Foundation
 		NSDateComponents Components (NSCalendarUnit unitFlags, NSDate fromDate, NSDate toDate, NSCalendarOptions opts);
 
 #if !XAMCORE_4_0
-		[Obsolete ("Use the overload with a NSCalendarOptions parameter")]
+		[Obsolete ("Use the overload with a 'NSCalendarOptions' parameter.")]
 		[Wrap ("Components (unitFlags, fromDate, toDate, (NSCalendarOptions) opts)")]
 		NSDateComponents Components (NSCalendarUnit unitFlags, NSDate fromDate, NSDate toDate, NSDateComponentsWrappingBehavior opts);
 #endif
@@ -611,7 +611,7 @@ namespace XamCore.Foundation
 		NSDate DateByAddingComponents (NSDateComponents comps, NSDate date, NSCalendarOptions opts);
 
 #if !XAMCORE_4_0
-		[Obsolete ("Use the overload with a NSCalendarOptions parameter")]
+		[Obsolete ("Use the overload with a 'NSCalendarOptions' parameter.")]
 		[Wrap ("DateByAddingComponents (comps, date, (NSCalendarOptions) opts)")]
 		NSDate DateByAddingComponents (NSDateComponents comps, NSDate date, NSDateComponentsWrappingBehavior opts);
 #endif
@@ -3233,7 +3233,7 @@ namespace XamCore.Foundation
 		NSExpression FromFormat (string expressionFormat);
 
 #if !XAMCORE_4_0 && !WATCH
-		[Obsolete("FromFormat (string, NSExpression[]) is deprecated, please use FromFormat (string, NSObject[]) instead.")]
+		[Obsolete("Use 'FromFormat (string, NSObject[])' instead.")]
 		[Static, Export ("expressionWithFormat:argumentArray:")]
 		NSExpression FromFormat (string format, NSExpression [] parameters);
 #endif
@@ -3262,7 +3262,7 @@ namespace XamCore.Foundation
 		NSExpression FromFunction (NSExpression target, string name, NSExpression[] parameters);
 
 #if !XAMCORE_4_0 && !WATCH
-		[Obsolete("FromFunction (NSExpressionHandler, NSExpression[]) is deprecated, please use FromFunction (NSExpressionCallbackHandler, NSExpression[]) instead.")]
+		[Obsolete("Use 'FromFunction (NSExpressionCallbackHandler, NSExpression[])' instead.")]
 		[Static, Export ("expressionForBlock:arguments:")]
 		NSExpression FromFunction (NSExpressionHandler target, NSExpression[] parameters);
 #endif
@@ -5810,7 +5810,7 @@ namespace XamCore.Foundation
 		NSUrlSession FromWeakConfiguration (NSUrlSessionConfiguration configuration, [NullAllowed] NSObject weakDelegate, [NullAllowed] NSOperationQueue delegateQueue);
 	
 #if !XAMCORE_4_0
-		[Obsolete ("Use the overload with a `INSUrlSessionDelegate` parameter.")]
+		[Obsolete ("Use the overload with a 'INSUrlSessionDelegate' parameter.")]
 		[Static, Wrap ("FromWeakConfiguration (configuration, sessionDelegate, delegateQueue);")]
 		NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, NSUrlSessionDelegate sessionDelegate, NSOperationQueue delegateQueue);
 #endif
@@ -6378,7 +6378,7 @@ namespace XamCore.Foundation
 		[Export ("redoActionName")]
 		string RedoActionName { get; }
 
-		[Advice ("Use correctly named method: SetActionName")]
+		[Advice ("Use the correctly named method: 'SetActionName'.")]
 		[Export ("setActionName:")]
 		void SetActionname (string actionName); 
 

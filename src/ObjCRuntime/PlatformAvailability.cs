@@ -39,7 +39,7 @@ namespace XamCore.ObjCRuntime
 	// Only iOS and Mac versions and architectures can be ORed together.
 	//
 	[Flags]
-	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName")]
+	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName.")]
 	public enum Platform : ulong
 	{
 		None = 0,
@@ -106,7 +106,7 @@ namespace XamCore.ObjCRuntime
 		iOS_Arch    = 0x00000000ff000000
 	}
 
-	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName")]
+	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName.")]
 	public static class PlatformHelper
 	{
 		public static bool IsValid (this Platform platform)
@@ -348,7 +348,7 @@ namespace XamCore.ObjCRuntime
 	}
 
 	[AttributeUsage (AttributeTargets.All, AllowMultiple = true)]
-	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName")]
+	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName.")]
 	public class AvailabilityAttribute : Attribute
 	{
 		public static AvailabilityAttribute Merge (IEnumerable<object> attrs)
@@ -548,7 +548,7 @@ namespace XamCore.ObjCRuntime
 		}
 	}
 
-	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName")]
+	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName.")]
 	public sealed class iOSAttribute : AvailabilityAttribute
 	{
 		public iOSAttribute (byte major, byte minor)
@@ -562,7 +562,7 @@ namespace XamCore.ObjCRuntime
 		}
 	}
 
-	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName")]
+	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName.")]
 	public sealed class MacAttribute : AvailabilityAttribute
 	{
 		public MacAttribute (byte major, byte minor)

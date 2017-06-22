@@ -122,7 +122,7 @@ namespace XamCore.SceneKit
 		// but the actual objective-c definition of the block is
 		// 	void (^)(SCNNode *child, BOOL *stop)
 		//
-		[Obsolete ("Use the overload that takes a SCNNodeHandler instead")]
+		[Obsolete ("Use the overload that takes a 'SCNNodeHandler' instead.")]
 		public virtual void EnumerateChildNodes (SCNNodePredicate predicate)
 		{
 			SCNNodeHandler predHandler = (SCNNode node, out bool stop) => {

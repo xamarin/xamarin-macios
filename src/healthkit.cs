@@ -727,7 +727,7 @@ namespace XamCore.HealthKit {
 #if XAMCORE_4_0 || WATCH
 		[Internal]
 #else
-		[Obsolete ("Use HKQuantityType.Create (HKQuantityTypeIdentifier)")]
+		[Obsolete ("Use 'HKQuantityType.Create (HKQuantityTypeIdentifier)'.")]
 #endif
 		[Static]
 		[Export ("quantityTypeForIdentifier:")]
@@ -737,7 +737,7 @@ namespace XamCore.HealthKit {
 #if XAMCORE_4_0 || WATCH
 		[Internal]
 #else
-		[Obsolete ("Use HKCategoryType.Create (HKCategoryTypeIdentifier)")]
+		[Obsolete ("Use 'HKCategoryType.Create (HKCategoryTypeIdentifier)'.")]
 #endif
 		[Static]
 		[Export ("categoryTypeForIdentifier:")]
@@ -747,7 +747,7 @@ namespace XamCore.HealthKit {
 #if XAMCORE_4_0 || WATCH
 		[Internal]
 #else
-		[Obsolete ("Use HKCharacteristicType.Create (HKCharacteristicTypeIdentifier)")]
+		[Obsolete ("Use 'HKCharacteristicType.Create (HKCharacteristicTypeIdentifier)'.")]
 #endif
 		[Static]
 		[Export ("characteristicTypeForIdentifier:")]
@@ -757,7 +757,7 @@ namespace XamCore.HealthKit {
 #if XAMCORE_4_0 || WATCH
 		[Internal]
 #else
-		[Obsolete ("Use HKCorrelationType.Create (HKCorrelationTypeIdentifier)")]
+		[Obsolete ("Use 'HKCorrelationType.Create (HKCorrelationTypeIdentifier)'.")]
 #endif
 		[Static, Export ("correlationTypeForIdentifier:")]
 		[return: NullAllowed]

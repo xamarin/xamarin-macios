@@ -631,7 +631,7 @@ namespace XamCore.GameKit {
 	[NoWatch]
 	[NoTV]
 	[Since (4,2)]
-	[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use GKGameCenterViewController instead")]
+	[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use 'GKGameCenterViewController' instead.")]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -645,7 +645,7 @@ namespace XamCore.GameKit {
 	}
 
 	[NoTV][NoWatch]
-	[Availability (Introduced = Platform.iOS_4_2 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use GKGameCenterViewController instead")]
+	[Availability (Introduced = Platform.iOS_4_2 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use 'GKGameCenterViewController' instead.")]
 #if MONOMAC
 	[BaseType (typeof (GKGameCenterViewController), Events=new Type [] { typeof (GKLeaderboardViewControllerDelegate)}, Delegates=new string [] {"WeakDelegate"})]
 	interface GKLeaderboardViewController 
@@ -1503,7 +1503,7 @@ namespace XamCore.GameKit {
 
 	[NoWatch]
 	[NoTV]
-	[Availability (Introduced = Platform.iOS_4_1 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use GKGameCenterViewController instead")]
+	[Availability (Introduced = Platform.iOS_4_1 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use 'GKGameCenterViewController' instead.")]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -1517,7 +1517,7 @@ namespace XamCore.GameKit {
 	}
 
 	[NoTV][NoWatch]
-	[Availability (Introduced = Platform.iOS_4_1 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use GKGameCenterViewController instead")]
+	[Availability (Introduced = Platform.iOS_4_1 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use 'GKGameCenterViewController' instead.")]
 #if MONOMAC
 	[BaseType (typeof (GKGameCenterViewController), Events=new Type [] { typeof (GKAchievementViewControllerDelegate)}, Delegates=new string [] {"WeakDelegate"})]
 	interface GKAchievementViewController 
@@ -2089,7 +2089,7 @@ namespace XamCore.GameKit {
 
 	[NoWatch]
 	[NoTV]
-	[Availability (Introduced = Platform.iOS_6_0 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Implement the IGKChallengeListener interface and register a listener with GKLocalPlayer")]
+	[Availability (Introduced = Platform.iOS_6_0 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Implement the 'IGKChallengeListener' interface and register a listener with 'GKLocalPlayer'.")]
 	[Model]
 	[BaseType (typeof (NSObject))]
 	[Protocol]

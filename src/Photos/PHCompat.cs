@@ -8,13 +8,13 @@ namespace XamCore.Photos {
 	
 	public partial class PHContentEditingInputRequestOptions {
 
-		[Obsolete ("Use CanHandleAdjustmentData property")]
+		[Obsolete ("Use 'CanHandleAdjustmentData' property.")]
 		public virtual void SetCanHandleAdjustmentDataHandler (Func<PHAdjustmentData,bool> canHandleAdjustmentDataPredicate)
 		{
 			CanHandleAdjustmentData = canHandleAdjustmentDataPredicate;
 		}
 
-		[Obsolete ("Use ProgressHandler property")]
+		[Obsolete ("Use 'ProgressHandler' property.")]
 		public virtual void SetProgressHandler (PHProgressHandler progressHandler)
 		{
 			ProgressHandler = progressHandler;

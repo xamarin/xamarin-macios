@@ -61,6 +61,14 @@ namespace Introspection
 			return SkipAllowed (methodName.DeclaringType.Name, methodName.Name, typo);
 		}
 
+		HashSet<string> allowedMemberRule4 = new HashSet<string> {
+			"Platform",
+			"PlatformHelper",
+			"AvailabilityAttribute",
+			"iOSAttribute",
+			"MacAttribute",
+		};
+
 		HashSet<string> allowed = new HashSet<string> () {
 			"Aac",
 			"Accurracy",
@@ -683,6 +691,8 @@ namespace Introspection
 				return false;
 			if (mi.GetCustomAttributes<ObsoleteAttribute> (true).Any ())
 				return true;
+			if (mi.GetCustomAttributes<ObsoletedAttribute> (true).Any ())
+				return true;
 			return IsObsolete (mi.DeclaringType);
 		}
 
@@ -692,7 +702,12 @@ namespace Introspection
 			var types = Assembly.GetTypes ();
 			int totalErrors = 0;
 			foreach (Type t in types) {
-				if (t.IsPublic && !IsObsolete (t)) {
+				if (t.IsPublic) {
+					AttributesMessageTypoRules (t, t.Name, ref totalErrors);
+
+					if (IsObsolete (t))
+						continue;
+
 					string txt = NameCleaner (t.Name);
 					var typo = GetTypo (txt);
 					if (typo.Length > 0 ) {
@@ -704,7 +719,12 @@ namespace Introspection
 
 					var fields = t.GetFields ();
 					foreach (FieldInfo f in fields) {
-					if (!f.IsPublic && !f.IsFamily && !IsObsolete (f))
+						if (!f.IsPublic && !f.IsFamily)
+							continue;
+
+						AttributesMessageTypoRules (f, t.Name, ref totalErrors);
+
+						if (IsObsolete (f))
 							continue;
 						
 						txt = NameCleaner (f.Name);
@@ -720,45 +740,13 @@ namespace Introspection
 					var methods = t.GetMethods ();
 					foreach (MethodInfo m in methods) {
 						if (!m.IsPublic && !m.IsFamily)
-								continue;
-
-						// Availability attribute's message checks.
-						var ca = m.GetCustomAttributes<AvailabilityBaseAttribute> ();
-						if (ca.Any ()) {
-							foreach (var attr in ca) {
-								if (attr.Message != null) {
-									// Rule 1: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-1
-									var forbiddenOSNames = new [] { "iOS", "watchOS", "tvOS", "macOS" };
-									if (forbiddenOSNames.Any (s => Regex.IsMatch (attr.Message, $"({s} ?)[0-9]+"))) {
-										ReportError ("[Rule 1] Don't put OS information in availability message: \"{0}\" - METHOD name: {1}, Type: {2}", attr.Message, m.Name, t.Name);
-										totalErrors++;
-									}
-
-									// Rule 2: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-2
-									if (attr.Message.Contains ('`')) {
-										ReportError ("[Rule 2] Replace grave accent (`) by apostrophe (') in availability message: \"{0}\" - METHOD name: {1}, Type: {2}", attr.Message, m.Name, t.Name);
-										totalErrors++;
-									}
-
-									// Rule 3: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-3
-									if (!attr.Message.EndsWith (".", StringComparison.Ordinal)) {
-										ReportError ("[Rule 3] Missing '.' in availability message: \"{0}\" - METHOD name: {1}, Type: {2}", attr.Message, m.Name, t.Name);
-										totalErrors++;
-									}
-
-									// Rule 4: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-4
-									var forbiddenAvailabilityKeywords = new [] { "introduced", "deprecated", "obsolete", "obsoleted" };
-									if (forbiddenAvailabilityKeywords.Any (s => Regex.IsMatch (attr.Message, $"({s})", RegexOptions.IgnoreCase))) {
-										ReportError ("[Rule 4] Don't use availability keywords in availability message: \"{0}\" - METHOD name: {1}, Type: {2}", attr.Message, m.Name, t.Name);
-										totalErrors++;
-									}
-								}
-							}
-						}
-
-						if (!IsObsolete (m))
 							continue;
 
+						AttributesMessageTypoRules (m, t.Name, ref totalErrors);
+
+						if (IsObsolete (m))
+							continue;
+						
 						txt = NameCleaner (m.Name);
 						typo = GetTypo (txt);
 						if (typo.Length > 0) {
@@ -788,6 +776,73 @@ namespace Introspection
 				Console.WriteLine ("Unused entry \"{0}\"", typo);
 #endif
 			Assert.IsTrue ((totalErrors == 0), "We have {0} typos!", totalErrors);
+		}
+
+		string GetMessage (object attribute)
+		{
+			string message = null;
+			if (attribute is AdviceAttribute)
+				message = ((AdviceAttribute)attribute).Message;
+			if (attribute is ObsoleteAttribute)
+				message = ((ObsoleteAttribute)attribute).Message;
+			if (attribute is AvailabilityBaseAttribute)
+				message = ((AvailabilityBaseAttribute)attribute).Message;
+
+			return message;
+		}
+
+		void AttributesMessageTypoRules (MemberInfo mi, string typeName, ref int totalErrors)
+		{
+			if (mi == null)
+				return;
+
+			foreach (object ca in mi.GetCustomAttributes ()) {
+				string message = GetMessage (ca);
+				if (message != null) {
+					var memberAndTypeFormat = mi.Name == typeName ? "Type: {0}" : "Member name: {1}, Type: {0}";
+					var memberAndType = string.Format (memberAndTypeFormat, typeName, mi.Name);
+
+					// Rule 1: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-1
+					// Note: we don't enforce that rule for the Obsolete (not Obsoleted) attribute since the attribute itself doesn't support versions.
+					if (!(ca is ObsoleteAttribute)) {
+						var forbiddenOSNames = new [] { "iOS", "watchOS", "tvOS", "macOS" };
+						if (forbiddenOSNames.Any (s => Regex.IsMatch (message, $"({s} ?)[0-9]+"))) {
+							ReportError ("[Rule 1] Don't put OS information in attribute's message: \"{0}\" - {1}", message, memberAndType);
+							totalErrors++;
+						}
+					}
+
+					// Rule 2: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-2
+					if (message.Contains ('`')) {
+						ReportError ("[Rule 2] Replace grave accent (`) by apostrophe (') in attribute's message: \"{0}\" - {1}", message, memberAndType);
+						totalErrors++;
+					}
+
+					// Rule 3: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-3
+					if (!message.EndsWith (".", StringComparison.Ordinal)) {
+						ReportError ("[Rule 3] Missing '.' in attribute's message: \"{0}\" - {1}", message, memberAndType);
+						totalErrors++;
+					}
+
+					// Rule 4: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-4
+					if (!allowedMemberRule4.Contains (mi.Name)) {
+						var forbiddenAvailabilityKeywords = new [] { "introduced", "deprecated", "obsolete", "obsoleted" };
+						if (forbiddenAvailabilityKeywords.Any (s => Regex.IsMatch (message, $"({s})", RegexOptions.IgnoreCase))) {
+							ReportError ("[Rule 4] Don't use availability keywords in attribute's message: \"{0}\" - {1}", message, memberAndType);
+							totalErrors++;
+						}
+					}
+
+					var forbiddensWords = new [] { "OSX", "OS X" };
+					for (int i = 0; i < forbiddensWords.Length; i++) {
+						var word = forbiddensWords [i];
+						if (Regex.IsMatch (message, $"({word})", RegexOptions.IgnoreCase)) {
+							ReportError ("Don't use {0} in attribute's message: \"{1}\" - {2}", word, message, memberAndType);
+							totalErrors++;
+						}
+					}
+				}
+			}
 		}
 
 		public abstract string GetTypo (string txt);

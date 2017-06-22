@@ -879,7 +879,7 @@ namespace XamCore.SceneKit {
 #if XAMCORE_3_0
 		[Availability (Unavailable = Platform.iOS_Version)]
 #elif !MONOMAC
-		[Obsolete ("Do not use; this method only exist in OSX, not in iOS")]
+		[Obsolete ("Do not use; this method only exist in macOS, not in iOS.")]
 #endif
 		[NoTV]
 		[Availability (Deprecated = Platform.Mac_10_10)]
@@ -889,7 +889,7 @@ namespace XamCore.SceneKit {
 #if XAMCORE_3_0
 		[Availability (Unavailable = Platform.iOS_Version)]
 #elif !MONOMAC
-		[Obsolete ("Do not use; this method only exist in OSX, not in iOS")]
+		[Obsolete ("Do not use; this method only exist in macOS, not in iOS.")]
 #endif
 		[NoTV]
 		[Availability (Deprecated = Platform.Mac_10_10)]

@@ -4906,11 +4906,11 @@ namespace XamCore.Intents {
 		[Export ("sharedVocabulary")]
 		INVocabulary SharedVocabulary { get; }
 
-		[Advice ("This API is not allowed in extensions")]
+		[Advice ("This API is not allowed in extensions.")]
 		[Export ("setVocabularyStrings:ofType:")]
 		void SetVocabularyStrings (NSOrderedSet<NSString> vocabulary, INVocabularyStringType type);
 
-		[Advice ("This API is not allowed in extensions")]
+		[Advice ("This API is not allowed in extensions.")]
 		[Export ("removeAllVocabularyStrings")]
 		void RemoveAllVocabularyStrings ();
 	}
