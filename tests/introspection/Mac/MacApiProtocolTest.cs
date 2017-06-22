@@ -52,6 +52,9 @@ namespace Introspection {
 				case "SFSafariWindow": // Not declared in header file
 				case "SFContentBlockerState": // Not declared in header file
 				case "NEFlowMetaData": // Not declared in header file
+				case "MKMapItem": // Not declared in header file
+				case "CAConstraintLayoutManager": // Not declared in header file
+				case "NSQueryGenerationToken": // Declared in header file but SupportsSecureCoding returns false - radar 32856944
 					return true;
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
@@ -114,6 +117,9 @@ namespace Introspection {
 				case "SFSafariToolbarItem": // Not declared in header file
 				case "SFSafariWindow": // Not declared in header file
 				case "NEFlowMetaData": // Not declared in header file
+				case "MKMapItem": // Not declared in header file
+				case "NSConstraintConflict": // Not declared in header file
+				case "NSQueryGenerationToken": // Declared in header file but SupportsSecureCoding returns false - radar 32856944
 					return true;
 				}
 				break;
@@ -180,6 +186,14 @@ namespace Introspection {
 				break;
 			case "NSExtensionRequestHandling":
 				return IntPtr.Size == 4;
+			case "NSAppearanceCustomization":
+				switch (type.Name) {
+				case "NSPopover":
+					if (!Mac.CheckSystemVersion (10, 13)) // Was added in 10.13
+						return true;
+					break;
+				}
+				break;
 			}
 
 			switch (type.Name) {
