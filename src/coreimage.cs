@@ -4682,4 +4682,31 @@ namespace XamCore.CoreImage {
 		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
 		//float FontSize { get; set; }
 	}
+
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIMorphologyGradient {
+		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+	}
+
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIMorphologyMaximum {
+		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+	}
+
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIMorphologyMinimum {
+		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+	}
 }
