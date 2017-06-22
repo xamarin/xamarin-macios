@@ -75,6 +75,7 @@ namespace Introspection {
 				case "EKReminder": // Not declared in header file
 				case "ACAccount": // Not declared in header file
 				case "NEFlowMetaData": // Not declared in header file
+				case "ACAccountCredential": // Not declared in header file
 					return true;
 				}
 				break;

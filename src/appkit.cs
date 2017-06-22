@@ -2668,10 +2668,6 @@ namespace XamCore.AppKit {
 		[Mac (10,11)]
 		[Export ("highlightState", ArgumentSemantic.Assign)]
 		NSCollectionViewItemHighlightState HighlightState { get; set; }
-
-		[Mac (10, 13)]
-		[NullAllowed, Export ("prefetchDataSource", ArgumentSemantic.Weak)]
-		INSCollectionViewPrefetching PrefetchDataSource { get; set; }
 	}
 
 	[BaseType (typeof (NSView))]
@@ -2916,6 +2912,10 @@ namespace XamCore.AppKit {
 		[Mac (10,12)]
 		[Export ("toggleSectionCollapse:")]
 		void ToggleSectionCollapse (NSObject sender);
+
+		[Mac (10, 13)]
+		[NullAllowed, Export ("prefetchDataSource", ArgumentSemantic.Weak)]
+		INSCollectionViewPrefetching PrefetchDataSource { get; set; }
 	}
 
 	// @protocol NSCollectionViewDataSource <NSObject>
@@ -22693,9 +22693,10 @@ namespace XamCore.AppKit {
 		[Notification, Field ("NSTextDidChangeNotification")]
 		NSString DidChangeNotification { get; }
 
-		[Mac (10, 13)]
-		[Notification, Field ("NSTextMovementUserInfoKey")]
-		NSString MovementUserInfoKey { get; }
+		//radar 32929318 - Does not exist in binaries
+		//[Mac (10, 13)]
+		//[Notification, Field ("NSTextMovementUserInfoKey")]
+		//NSString MovementUserInfoKey { get; }
 	}
 
 	partial interface NSTextInputContext {
