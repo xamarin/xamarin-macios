@@ -2563,717 +2563,574 @@ namespace XamCore.Foundation
 		[Field ("NSMetadataItemKeywordsKey")]
 		NSString ItemKeywordsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemTitleKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemTitleKey")]
 		NSString ItemTitleKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemAuthorsKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAuthorsKey")]
 		NSString ItemAuthorsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemEditorsKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemEditorsKey")]
 		NSString ItemEditorsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemParticipantsKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemParticipantsKey")]
 		NSString ItemParticipantsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemProjectsKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemProjectsKey")]
 		NSString ItemProjectsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemDownloadedDateKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemDownloadedDateKey")]
 		NSString ItemDownloadedDateKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemWhereFromsKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemWhereFromsKey")]
 		NSString ItemWhereFromsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemCommentKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemCommentKey")]
 		NSString ItemCommentKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemCopyrightKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemCopyrightKey")]
 		NSString ItemCopyrightKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemLastUsedDateKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemLastUsedDateKey")]
 		NSString ItemLastUsedDateKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemContentCreationDateKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemContentCreationDateKey")]
 		NSString ItemContentCreationDateKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemContentModificationDateKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemContentModificationDateKey")]
 		NSString ItemContentModificationDateKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemDateAddedKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemDateAddedKey")]
 		NSString ItemDateAddedKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemDurationSecondsKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemDurationSecondsKey")]
 		NSString ItemDurationSecondsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemContactKeywordsKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemContactKeywordsKey")]
 		NSString ItemContactKeywordsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemVersionKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemVersionKey")]
 		NSString ItemVersionKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemPixelHeightKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemPixelHeightKey")]
 		NSString ItemPixelHeightKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemPixelWidthKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemPixelWidthKey")]
 		NSString ItemPixelWidthKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemPixelCountKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemPixelCountKey")]
 		NSString ItemPixelCountKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemColorSpaceKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemColorSpaceKey")]
 		NSString ItemColorSpaceKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemBitsPerSampleKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemBitsPerSampleKey")]
 		NSString ItemBitsPerSampleKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemFlashOnOffKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemFlashOnOffKey")]
 		NSString ItemFlashOnOffKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemFocalLengthKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemFocalLengthKey")]
 		NSString ItemFocalLengthKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemAcquisitionMakeKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAcquisitionMakeKey")]
 		NSString ItemAcquisitionMakeKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemAcquisitionModelKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAcquisitionModelKey")]
 		NSString ItemAcquisitionModelKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemISOSpeedKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemISOSpeedKey")]
-		NSString ItemISOSpeedKey { get; }
+		NSString ItemIsoSpeedKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemOrientationKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemOrientationKey")]
 		NSString ItemOrientationKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemLayerNamesKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemLayerNamesKey")]
 		NSString ItemLayerNamesKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemWhiteBalanceKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemWhiteBalanceKey")]
 		NSString ItemWhiteBalanceKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemApertureKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemApertureKey")]
 		NSString ItemApertureKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemProfileNameKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemProfileNameKey")]
 		NSString ItemProfileNameKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemResolutionWidthDPIKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemResolutionWidthDPIKey")]
-		NSString ItemResolutionWidthDPIKey { get; }
+		NSString ItemResolutionWidthDpiKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemResolutionHeightDPIKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemResolutionHeightDPIKey")]
-		NSString ItemResolutionHeightDPIKey { get; }
+		NSString ItemResolutionHeightDpiKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemExposureModeKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemExposureModeKey")]
 		NSString ItemExposureModeKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemExposureTimeSecondsKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemExposureTimeSecondsKey")]
 		NSString ItemExposureTimeSecondsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemEXIFVersionKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemEXIFVersionKey")]
-		NSString ItemEXIFVersionKey { get; }
+		NSString ItemExifVersionKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemCameraOwnerKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemCameraOwnerKey")]
 		NSString ItemCameraOwnerKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemFocalLength35mmKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemFocalLength35mmKey")]
 		NSString ItemFocalLength35mmKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemLensModelKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemLensModelKey")]
 		NSString ItemLensModelKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemEXIFGPSVersionKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemEXIFGPSVersionKey")]
-		NSString ItemEXIFGPSVersionKey { get; }
+		NSString ItemExifGpsVersionKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemAltitudeKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAltitudeKey")]
 		NSString ItemAltitudeKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemLatitudeKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemLatitudeKey")]
 		NSString ItemLatitudeKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemLongitudeKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemLongitudeKey")]
 		NSString ItemLongitudeKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemSpeedKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemSpeedKey")]
 		NSString ItemSpeedKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemTimestampKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemTimestampKey")]
 		NSString ItemTimestampKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemGPSTrackKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSTrackKey")]
-		NSString ItemGPSTrackKey { get; }
+		NSString ItemGpsTrackKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemImageDirectionKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemImageDirectionKey")]
 		NSString ItemImageDirectionKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemNamedLocationKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemNamedLocationKey")]
 		NSString ItemNamedLocationKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemGPSStatusKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSStatusKey")]
-		NSString ItemGPSStatusKey { get; }
+		NSString ItemGpsStatusKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemGPSMeasureModeKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSMeasureModeKey")]
-		NSString ItemGPSMeasureModeKey { get; }
+		NSString ItemGpsMeasureModeKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemGPSDOPKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSDOPKey")]
-		NSString ItemGPSDOPKey { get; }
+		NSString ItemGpsDopKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemGPSMapDatumKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSMapDatumKey")]
-		NSString ItemGPSMapDatumKey { get; }
+		NSString ItemGpsMapDatumKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemGPSDestLatitudeKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSDestLatitudeKey")]
-		NSString ItemGPSDestLatitudeKey { get; }
+		NSString ItemGpsDestLatitudeKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemGPSDestLongitudeKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSDestLongitudeKey")]
-		NSString ItemGPSDestLongitudeKey { get; }
+		NSString ItemGpsDestLongitudeKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemGPSDestBearingKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSDestBearingKey")]
-		NSString ItemGPSDestBearingKey { get; }
+		NSString ItemGpsDestBearingKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemGPSDestDistanceKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSDestDistanceKey")]
-		NSString ItemGPSDestDistanceKey { get; }
+		NSString ItemGpsDestDistanceKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemGPSProcessingMethodKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSProcessingMethodKey")]
-		NSString ItemGPSProcessingMethodKey { get; }
+		NSString ItemGpsProcessingMethodKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemGPSAreaInformationKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSAreaInformationKey")]
-		NSString ItemGPSAreaInformationKey { get; }
+		NSString ItemGpsAreaInformationKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemGPSDateStampKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSDateStampKey")]
-		NSString ItemGPSDateStampKey { get; }
+		NSString ItemGpsDateStampKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemGPSDifferentalKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSDifferentalKey")]
-		NSString ItemGPSDifferentalKey { get; }
+		NSString ItemGpsDifferentalKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemCodecsKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemCodecsKey")]
 		NSString ItemCodecsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemMediaTypesKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemMediaTypesKey")]
 		NSString ItemMediaTypesKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemStreamableKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemStreamableKey")]
 		NSString ItemStreamableKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemTotalBitRateKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemTotalBitRateKey")]
 		NSString ItemTotalBitRateKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemVideoBitRateKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemVideoBitRateKey")]
 		NSString ItemVideoBitRateKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemAudioBitRateKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAudioBitRateKey")]
 		NSString ItemAudioBitRateKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemDeliveryTypeKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemDeliveryTypeKey")]
 		NSString ItemDeliveryTypeKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemAlbumKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAlbumKey")]
 		NSString ItemAlbumKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemHasAlphaChannelKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemHasAlphaChannelKey")]
 		NSString ItemHasAlphaChannelKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemRedEyeOnOffKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemRedEyeOnOffKey")]
 		NSString ItemRedEyeOnOffKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemMeteringModeKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemMeteringModeKey")]
 		NSString ItemMeteringModeKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemMaxApertureKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemMaxApertureKey")]
 		NSString ItemMaxApertureKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemFNumberKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemFNumberKey")]
 		NSString ItemFNumberKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemExposureProgramKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemExposureProgramKey")]
 		NSString ItemExposureProgramKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemExposureTimeStringKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemExposureTimeStringKey")]
 		NSString ItemExposureTimeStringKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemHeadlineKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemHeadlineKey")]
 		NSString ItemHeadlineKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemInstructionsKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemInstructionsKey")]
 		NSString ItemInstructionsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemCityKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemCityKey")]
 		NSString ItemCityKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemStateOrProvinceKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemStateOrProvinceKey")]
 		NSString ItemStateOrProvinceKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemCountryKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemCountryKey")]
 		NSString ItemCountryKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemTextContentKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemTextContentKey")]
 		NSString ItemTextContentKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemAudioSampleRateKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAudioSampleRateKey")]
 		NSString ItemAudioSampleRateKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemAudioChannelCountKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAudioChannelCountKey")]
 		NSString ItemAudioChannelCountKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemTempoKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemTempoKey")]
 		NSString ItemTempoKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemKeySignatureKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemKeySignatureKey")]
 		NSString ItemKeySignatureKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemTimeSignatureKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemTimeSignatureKey")]
 		NSString ItemTimeSignatureKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemAudioEncodingApplicationKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAudioEncodingApplicationKey")]
 		NSString ItemAudioEncodingApplicationKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemComposerKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemComposerKey")]
 		NSString ItemComposerKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemLyricistKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemLyricistKey")]
 		NSString ItemLyricistKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemAudioTrackNumberKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAudioTrackNumberKey")]
 		NSString ItemAudioTrackNumberKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemRecordingDateKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemRecordingDateKey")]
 		NSString ItemRecordingDateKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemMusicalGenreKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemMusicalGenreKey")]
 		NSString ItemMusicalGenreKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemIsGeneralMIDISequenceKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemIsGeneralMIDISequenceKey")]
-		NSString ItemIsGeneralMIDISequenceKey { get; }
+		NSString ItemIsGeneralMidiSequenceKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemRecordingYearKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemRecordingYearKey")]
 		NSString ItemRecordingYearKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemOrganizationsKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemOrganizationsKey")]
 		NSString ItemOrganizationsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemLanguagesKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemLanguagesKey")]
 		NSString ItemLanguagesKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemRightsKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemRightsKey")]
 		NSString ItemRightsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemPublishersKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemPublishersKey")]
 		NSString ItemPublishersKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemContributorsKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemContributorsKey")]
 		NSString ItemContributorsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemCoverageKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemCoverageKey")]
 		NSString ItemCoverageKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemSubjectKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemSubjectKey")]
 		NSString ItemSubjectKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemThemeKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemThemeKey")]
 		NSString ItemThemeKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemDescriptionKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemDescriptionKey")]
 		NSString ItemDescriptionKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemIdentifierKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemIdentifierKey")]
 		NSString ItemIdentifierKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemAudiencesKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAudiencesKey")]
 		NSString ItemAudiencesKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemNumberOfPagesKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemNumberOfPagesKey")]
 		NSString ItemNumberOfPagesKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemPageWidthKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemPageWidthKey")]
 		NSString ItemPageWidthKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemPageHeightKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemPageHeightKey")]
 		NSString ItemPageHeightKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemSecurityMethodKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemSecurityMethodKey")]
 		NSString ItemSecurityMethodKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemCreatorKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemCreatorKey")]
 		NSString ItemCreatorKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemEncodingApplicationsKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemEncodingApplicationsKey")]
 		NSString ItemEncodingApplicationsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemDueDateKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemDueDateKey")]
 		NSString ItemDueDateKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemStarRatingKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemStarRatingKey")]
 		NSString ItemStarRatingKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemPhoneNumbersKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemPhoneNumbersKey")]
 		NSString ItemPhoneNumbersKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemEmailAddressesKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemEmailAddressesKey")]
 		NSString ItemEmailAddressesKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemInstantMessageAddressesKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemInstantMessageAddressesKey")]
 		NSString ItemInstantMessageAddressesKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemKindKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemKindKey")]
 		NSString ItemKindKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemRecipientsKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemRecipientsKey")]
 		NSString ItemRecipientsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemFinderCommentKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemFinderCommentKey")]
 		NSString ItemFinderCommentKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemFontsKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemFontsKey")]
 		NSString ItemFontsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemAppleLoopsRootKeyKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAppleLoopsRootKeyKey")]
 		NSString ItemAppleLoopsRootKeyKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemAppleLoopsKeyFilterTypeKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAppleLoopsKeyFilterTypeKey")]
 		NSString ItemAppleLoopsKeyFilterTypeKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemAppleLoopsLoopModeKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAppleLoopsLoopModeKey")]
 		NSString ItemAppleLoopsLoopModeKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemAppleLoopDescriptorsKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAppleLoopDescriptorsKey")]
 		NSString ItemAppleLoopDescriptorsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemMusicalInstrumentCategoryKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemMusicalInstrumentCategoryKey")]
 		NSString ItemMusicalInstrumentCategoryKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemMusicalInstrumentNameKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemMusicalInstrumentNameKey")]
 		NSString ItemMusicalInstrumentNameKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemCFBundleIdentifierKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemCFBundleIdentifierKey")]
 		NSString ItemCFBundleIdentifierKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemInformationKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemInformationKey")]
 		NSString ItemInformationKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemDirectorKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemDirectorKey")]
 		NSString ItemDirectorKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemProducerKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemProducerKey")]
 		NSString ItemProducerKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemGenreKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGenreKey")]
 		NSString ItemGenreKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemPerformersKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemPerformersKey")]
 		NSString ItemPerformersKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemOriginalFormatKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemOriginalFormatKey")]
 		NSString ItemOriginalFormatKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemOriginalSourceKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemOriginalSourceKey")]
 		NSString ItemOriginalSourceKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemAuthorEmailAddressesKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAuthorEmailAddressesKey")]
 		NSString ItemAuthorEmailAddressesKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemRecipientEmailAddressesKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemRecipientEmailAddressesKey")]
 		NSString ItemRecipientEmailAddressesKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemAuthorAddressesKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAuthorAddressesKey")]
 		NSString ItemAuthorAddressesKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemRecipientAddressesKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemRecipientAddressesKey")]
 		NSString ItemRecipientAddressesKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemIsLikelyJunkKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemIsLikelyJunkKey")]
 		NSString ItemIsLikelyJunkKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemExecutableArchitecturesKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemExecutableArchitecturesKey")]
 		NSString ItemExecutableArchitecturesKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemExecutablePlatformKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemExecutablePlatformKey")]
 		NSString ItemExecutablePlatformKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemApplicationCategoriesKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemApplicationCategoriesKey")]
 		NSString ItemApplicationCategoriesKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataItemIsApplicationManagedKey __attribute__((availability(tvos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(ios, unavailable))) __attribute__((availability(macos, introduced=10.9)));
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemIsApplicationManagedKey")]
 		NSString ItemIsApplicationManagedKey { get; }
@@ -3282,42 +3139,34 @@ namespace XamCore.Foundation
 		[Field ("NSMetadataUbiquitousItemIsSharedKey")]
 		NSString UbiquitousItemIsSharedKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataUbiquitousSharedItemCurrentUserRoleKey __attribute__((availability(watchos, unavailable))) __attribute__((availability(tvos, unavailable))) __attribute__((availability(ios, introduced=10.0))) __attribute__((availability(macos, introduced=10.12)));
 		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
 		[Field ("NSMetadataUbiquitousSharedItemCurrentUserRoleKey")]
 		NSString UbiquitousSharedItemCurrentUserRoleKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataUbiquitousSharedItemCurrentUserPermissionsKey __attribute__((availability(watchos, unavailable))) __attribute__((availability(tvos, unavailable))) __attribute__((availability(ios, introduced=10.0))) __attribute__((availability(macos, introduced=10.12)));
 		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
 		[Field ("NSMetadataUbiquitousSharedItemCurrentUserPermissionsKey")]
 		NSString UbiquitousSharedItemCurrentUserPermissionsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataUbiquitousSharedItemOwnerNameComponentsKey __attribute__((availability(watchos, unavailable))) __attribute__((availability(tvos, unavailable))) __attribute__((availability(ios, introduced=10.0))) __attribute__((availability(macos, introduced=10.12)));
 		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
 		[Field ("NSMetadataUbiquitousSharedItemOwnerNameComponentsKey")]
 		NSString UbiquitousSharedItemOwnerNameComponentsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataUbiquitousSharedItemMostRecentEditorNameComponentsKey __attribute__((availability(watchos, unavailable))) __attribute__((availability(tvos, unavailable))) __attribute__((availability(ios, introduced=10.0))) __attribute__((availability(macos, introduced=10.12)));
 		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
 		[Field ("NSMetadataUbiquitousSharedItemMostRecentEditorNameComponentsKey")]
 		NSString UbiquitousSharedItemMostRecentEditorNameComponentsKey { get; }
 
-		// extern NSString *const _Nonnull NSMetadataUbiquitousSharedItemRoleOwner __attribute__((availability(watchos, unavailable))) __attribute__((availability(tvos, unavailable))) __attribute__((availability(ios, introduced=10.0))) __attribute__((availability(macos, introduced=10.12)));
 		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
 		[Field ("NSMetadataUbiquitousSharedItemRoleOwner")]
 		NSString UbiquitousSharedItemRoleOwner { get; }
 
-		// extern NSString *const _Nonnull NSMetadataUbiquitousSharedItemRoleParticipant __attribute__((availability(watchos, unavailable))) __attribute__((availability(tvos, unavailable))) __attribute__((availability(ios, introduced=10.0))) __attribute__((availability(macos, introduced=10.12)));
 		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
 		[Field ("NSMetadataUbiquitousSharedItemRoleParticipant")]
 		NSString UbiquitousSharedItemRoleParticipant { get; }
 
-		// extern NSString *const _Nonnull NSMetadataUbiquitousSharedItemPermissionsReadOnly __attribute__((availability(watchos, unavailable))) __attribute__((availability(tvos, unavailable))) __attribute__((availability(ios, introduced=10.0))) __attribute__((availability(macos, introduced=10.12)));
 		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
 		[Field ("NSMetadataUbiquitousSharedItemPermissionsReadOnly")]
 		NSString UbiquitousSharedItemPermissionsReadOnly { get; }
 
-		// extern NSString *const _Nonnull NSMetadataUbiquitousSharedItemPermissionsReadWrite __attribute__((availability(watchos, unavailable))) __attribute__((availability(tvos, unavailable))) __attribute__((availability(ios, introduced=10.0))) __attribute__((availability(macos, introduced=10.12)));
 		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
 		[Field ("NSMetadataUbiquitousSharedItemPermissionsReadWrite")]
 		NSString UbiquitousSharedItemPermissionsReadWrite { get; }
@@ -4260,7 +4109,7 @@ namespace XamCore.Foundation
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("enumerateTagsInRange:unit:scheme:options:usingBlock:")]
-		void EnumerateTags (NSRange range, NSLinguisticTaggerUnit unit, string scheme, NSLinguisticTaggerOptions options, LinguisticTaggerEnumerateTagsBlock block);
+		void EnumerateTags (NSRange range, NSLinguisticTaggerUnit unit, string scheme, NSLinguisticTaggerOptions options, LinguisticTagEnumerator enumerator);
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("tagAtIndex:unit:scheme:tokenRange:")]
@@ -4300,10 +4149,10 @@ namespace XamCore.Foundation
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("enumerateTagsForString:range:unit:scheme:options:orthography:usingBlock:")]
-		void EnumerateTagsForString (string str, NSRange range, NSLinguisticTaggerUnit unit, string scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, LinguisticTaggerEnumerateTagsBlock block);
+		void EnumerateTags (string str, NSRange range, NSLinguisticTaggerUnit unit, string scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, LinguisticTagEnumerator enumerator);
 	}
 
-	delegate void LinguisticTaggerEnumerateTagsBlock (string tag, NSRange tokenRange, bool stop);
+	delegate void LinguisticTagEnumerator (string tag, NSRange tokenRange, bool stop);
 
 	[Since (5,0)]
 	[Static]
@@ -5176,7 +5025,7 @@ namespace XamCore.Foundation
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("referrerURL", ArgumentSemantic.Copy)]
-		NSUrl ReferrerURL { get; set; }
+		NSUrl ReferrerUrl { get; set; }
 	}
 
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // same as NSUserActivity
@@ -5367,7 +5216,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject), Name="NSURL")]
 	// init returns NIL
 	[DisableDefaultCtor]
-	partial interface NSUrl : NSSecureCoding, NSCopying, NSItemProviderReading, NSItemProviderWriting
+	partial interface NSUrl : NSSecureCoding, NSCopying
 #if MONOMAC
 	, NSPasteboardReading, NSPasteboardWriting
 #endif
@@ -7869,7 +7718,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject)), Bind ("NSString")]
-	interface NSString2 : NSSecureCoding, NSMutableCopying, NSItemProviderReading, NSItemProviderWriting
+	interface NSString2 : NSSecureCoding, NSMutableCopying
 	#if MONOMAC
 		, NSPasteboardReading, NSPasteboardWriting // Documented that it implements NSPasteboard protocols even if header doesn't show it
 	#endif
@@ -9746,7 +9595,7 @@ namespace XamCore.Foundation
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Async, Export ("loadDataRepresentationForTypeIdentifier:completionHandler:")]
-		NSProgress LoadDataRepresentation (string typeIdentifier, ItemProviderDataCompletionhandler completionHandler);
+		NSProgress LoadDataRepresentation (string typeIdentifier, ItemProviderDataCompletionHandler completionHandler);
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Async, Export ("loadFileRepresentationForTypeIdentifier:completionHandler:")]
@@ -9759,75 +9608,14 @@ namespace XamCore.Foundation
 		[NoWatch, NoTV, NoMac, iOS (11, 0)]
 		[NullAllowed, Export ("suggestedName")]
 		string SuggestedName { get; set; }
-
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("initWithObject:")]
-		IntPtr Constructor (INSItemProviderWriting obj);
-
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("registerObject:visibility:")]
-		void RegisterObject (INSItemProviderWriting obj, NSItemProviderRepresentationVisibility visibility);
-
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("registerObjectOfClass:visibility:loadHandler:")]
-		void RegisterObject (INSItemProviderWriting aClass, NSItemProviderRepresentationVisibility visibility, RegisterObjectLoadHandler loadHandler);
-
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("canLoadObjectOfClass:")]
-		bool CanLoadObject (INSItemProviderReading aClass);
-
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("loadObjectOfClass:completionHandler:")]
-		NSProgress LoadObject (INSItemProviderReading aClass, LoadObjectCompletionHandler completionHandler);
-	}
-
-	interface INSItemProviderWriting { }
-
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
-	interface NSItemProviderWriting
-	{
-		//TODO: Where to implement this?
-		//[Static, Abstract]
-		//[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		//string[] WritableTypeIdentifiers { get; }
-
-		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		string[] GetWritableTypeIdentifiers ();
-
-		[Abstract]
-		[Export ("loadDataWithTypeIdentifier:forItemProviderCompletionHandler:")]
-		[return: NullAllowed]
-		NSProgress LoadData (string typeIdentifier, ItemProviderDataCompletionhandler completionHandler);
-	}
-
-	interface INSItemProviderReading { }
-
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
-	interface NSItemProviderReading
-	{
-		//TODO: Where to implement this?
-		//[Static, Abstract]
-		//[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		//string[] ReadableTypeIdentifiers { get; }
-
-		[Abstract]
-		[Export ("initWithItemProviderData:typeIdentifier:error:")]
-		IntPtr FromData (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
 	}
 
 	delegate NSProgress RegisterFileRepresentationLoadHandler ([ BlockCallback] RegisterFileRepresentationCompletionHandler completionHandler);
 	delegate void RegisterFileRepresentationCompletionHandler (NSUrl fileUrl, bool coordinated, NSError error);
-	delegate NSProgress RegisterDataRepresentationLoadHandler ([BlockCallback] ItemProviderDataCompletionhandler completionHandler);
-	delegate NSProgress RegisterObjectLoadHandler ([BlockCallback] RegisterObjectCompletionHandler completionHandler);
-	delegate void RegisterObjectCompletionHandler (INSItemProviderWriting obj, NSError error);
-	delegate void ItemProviderDataCompletionhandler (NSData data, NSError error);
+	delegate NSProgress RegisterDataRepresentationLoadHandler ([BlockCallback] ItemProviderDataCompletionHandler completionHandler);
+	delegate void ItemProviderDataCompletionHandler (NSData data, NSError error);
 	delegate void LoadFileRepresentationHandler (NSUrl fileUrl, NSError error);
 	delegate void LoadInPlaceFileRepresentationHandler (NSUrl fileUrl, bool isInPlace, NSError error);
-	delegate void LoadObjectCompletionHandler (INSItemProviderReading obj, NSError error);
 
 #if XAMCORE_2_0
 	[Static]
@@ -15341,6 +15129,7 @@ namespace XamCore.Foundation
 
 	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface NSFileProviderMessenger
 	{
 		[Export ("initWithInterface:protocol:")]

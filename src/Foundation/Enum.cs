@@ -723,7 +723,7 @@ namespace XamCore.Foundation  {
 	[Native]
 	public enum NSJsonWritingOptions : nuint_compat_int {
 		PrettyPrinted = 1,
-		SortedKeys = (1 << 1)
+		SortedKeys = (1 << 1),
 	}
 
 	[Native]
@@ -1265,21 +1265,22 @@ namespace XamCore.Foundation  {
 		All = 0,
 		Team = 1,
 		Group = 2,
-		OwnProcess = 3
+		OwnProcess = 3,
 	}
 
 	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[Native]
 	public enum NSItemProviderFileOptions : nint {
-		NSItemProviderFileOptionOpenInPlace = 1
+		NSItemProviderFileOptionOpenInPlace = 1,
 	}
 
+	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[Native]
 	public enum NSLinguisticTaggerUnit : nint {
 		Word,
 		Sentence,
 		Paragraph,
-		Document
+		Document,
 	}
 
 	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
@@ -1288,7 +1289,7 @@ namespace XamCore.Foundation  {
 		None = 0,
 		Handover = 1,
 		Interactive = 2,
-		Aggregate = 3
+		Aggregate = 3,
 	}
 
 	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
@@ -1296,6 +1297,6 @@ namespace XamCore.Foundation  {
 	public enum NSUrlSessionDelayedRequestDisposition : nint {
 		ContinueLoading = 0,
 		UseNewRequest = 1,
-		Cancel = 2
+		Cancel = 2,
 	}
 }
