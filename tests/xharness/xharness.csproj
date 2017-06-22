@@ -79,6 +79,7 @@
       <Link>Cache.cs</Link>
     </Compile>
     <Compile Include="TodayExtensionTarget.cs" />
+    <Compile Include="SimpleFileListener.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\jenkins\nunit-summary.xslt">

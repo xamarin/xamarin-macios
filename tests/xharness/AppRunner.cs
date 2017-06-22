@@ -491,12 +491,23 @@ namespace xharness
 				args.AppendFormat (" -argument=-app-arg:-hostname:{0}", ips.ToString ());
 				args.AppendFormat (" -setenv=NUNIT_HOSTNAME={0}", ips.ToString ());
 			}
-			var transport = mode == "watchos" ? "HTTP" : "TCP";
+			string transport;
+			if (mode == "watchos") {
+				transport = isSimulator ? "FILE" : "HTTP";
+			} else {
+				transport = "TCP";
+			}
 			args.AppendFormat (" -argument=-app-arg:-transport:{0}", transport);
 			args.AppendFormat (" -setenv=NUNIT_TRANSPORT={0}", transport);
 
+			listener_log = Logs.CreateStream (LogDirectory, string.Format ("test-{0}-{1:yyyyMMdd_HHmmss}.log", mode, DateTime.Now), "Test log");
+
 			SimpleListener listener;
 			switch (transport) {
+			case "FILE":
+				listener = new SimpleFileListener ();
+				args.Append (" -setenv=NUNIT_LOG_FILE=").Append (Harness.Quote (listener_log.FullPath));
+				break;
 			case "HTTP":
 				listener = new SimpleHttpListener ();
 				break;
@@ -506,7 +517,6 @@ namespace xharness
 			default:
 				throw new NotImplementedException ();
 			}
-			listener_log = Logs.CreateStream (LogDirectory, string.Format ("test-{0}-{1:yyyyMMdd_HHmmss}.log", mode, DateTime.Now), "Test log");
 			listener.TestLog = listener_log;
 			listener.Log = main_log;
 			listener.AutoExit = true;
