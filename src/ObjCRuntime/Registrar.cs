@@ -2130,9 +2130,7 @@ namespace XamCore.Registrar {
 		{
 			bool isNativeEnum;
 
-			var typeFullName = GetTypeFullName (type);
-
-			switch (typeFullName) {
+			switch (GetTypeFullName (type)) {
 			case "System.IntPtr": return "^v";
 			case "System.SByte": return "c";
 			case "System.Byte": return "C";
@@ -2164,10 +2162,6 @@ namespace XamCore.Registrar {
 			case "System.DateTime":
 				throw CreateException (4102, member, "The registrar found an invalid type `{0}` in signature for method `{2}`. Use `{1}` instead.", "System.DateTime", IsDualBuild ? "Foundation.NSDate" : CompatNamespace + ".Foundation.NSDate", member.FullName);
 			}
-
-			// We use BindAsAttribute to wrap NSNumber/NSValue into more accurate Nullable<T> types
-			if (typeFullName != null && typeFullName.Contains ("Nullable"))
-				return "@";
 
 			if (Is (type, ObjCRuntime, "Selector"))
 				return ":";
