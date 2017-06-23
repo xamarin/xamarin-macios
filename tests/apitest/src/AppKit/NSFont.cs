@@ -1,24 +1,40 @@
 ﻿using System;
 using NUnit.Framework;
-using CoreGraphics;
 
 #if !XAMCORE_2_0
 using MonoMac.AppKit;
 using MonoMac.ObjCRuntime;
 using MonoMac.Foundation;
+using MonoMac.CoreGraphics;
+using MonoMac.CoreText;
 #else
 using AppKit;
 using ObjCRuntime;
 using Foundation;
+using CoreGraphics;
+using CoreText;
 #endif
 
-namespace Xamarin.Mac.Tests {
+namespace Xamarin.Mac.Tests
+{
 	[TestFixture]
-	public class NSFontTests {
+	public class NSFontTests
+	{
 		[Test]
 		public void GetBoundingRect_Tests ()
 		{
-			var glyph = CGFont.CreateWithFontName ("Arial").GetGlyphWithGlyphName ("a");
+			CGFont cgFont = CGFont.CreateWithFontName ("Arial");
+			ushort [] glyphs = new ushort [5];
+			for (int i = 0 ; i < 5 ; ++i)
+				glyphs[i] = cgFont.GetGlyphWithGlyphName ("Hello"[i].ToString ());
+
+			CTFont ctFont = new CTFont (cgFont, 14, new CTFontDescriptor ("Arial", 14));
+			NSFont nsFont = NSFont.FromCTFont (ctFont);
+
+			var bounding = nsFont.GetBoundingRects (glyphs);
+			var advancement = nsFont.GetAdvancements (glyphs);
+			Assert.AreEqual (5, bounding.Length);
+			Assert.AreEqual (5, advancement.Length);
 		}
 	}
 }
