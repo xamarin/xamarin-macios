@@ -17909,6 +17909,9 @@ namespace XamCore.AppKit {
 #endif
 		string format, NSTextListOptions mask);
 
+		[Wrap ("this (format.GetConstant(), mask)")]
+		IntPtr Constructor (NSTextListMarkerFormats format, NSTextListOptions mask);
+
 #if XAMCORE_4_0
 		[BindAs (typeof (NSTextListMarkerFormats))] 
 #endif
