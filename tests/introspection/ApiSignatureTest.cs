@@ -985,6 +985,7 @@ namespace Introspection {
 			return false;
 		}
 
+		// This must be kept in sync with generator.cs NSValueCreateMap and NSValueReturnMap
 		protected HashSet<string> BindAsSupportedTypes = new HashSet<string> {
 			"CGAffineTransform", "Range", "CGVector", "SCNMatrix4", "CLLocationCoordinate2D",
 			"SCNVector3", "Vector", "CGPoint", "CGRect", "CGSize", "UIEdgeInsets",
