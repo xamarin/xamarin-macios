@@ -11363,12 +11363,16 @@ namespace XamCore.Foundation
 		void PerformAsCurrent (long unitCount, Action work);
 
 		[Export ("finished")]
-		bool Finished { [Bind ("isFinished")] get; }[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		bool Finished { [Bind ("isFinished")] get; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("estimatedTimeRemaining", ArgumentSemantic.Copy)]
+		[BindAs (typeof (double?))]
 		NSNumber EstimatedTimeRemaining { get; set; }
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("throughput", ArgumentSemantic.Copy)]
+		[BindAs (typeof (nint?))]
 		NSNumber Throughput { get; set; }
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
@@ -11381,10 +11385,12 @@ namespace XamCore.Foundation
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("fileTotalCount", ArgumentSemantic.Copy)]
+		[BindAs (typeof (nint?))]
 		NSNumber FileTotalCount { get; set; }
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("fileCompletedCount", ArgumentSemantic.Copy)]
+		[BindAs (typeof (nint?))]
 		NSNumber FileCompletedCount { get; set; }
 	}
 
