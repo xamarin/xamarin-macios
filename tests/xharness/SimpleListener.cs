@@ -55,9 +55,9 @@ $@"[Local Date/Time:	{DateTime.Now}]
 		{
 			if (stopped.TrySetResult (early_termination)) {
 				if (early_termination) {
-					Console.WriteLine ("Tests were terminated before completion");
+					Log.WriteLine ("Tests were terminated before completion");
 				} else {
-					Console.WriteLine ("Tests have finished executing");
+					Log.WriteLine ("Tests have finished executing");
 				}
 				if (xml_data != null) {
 					output_writer.WriteLine ($"<!-- \n{xml_data}\n -->");
