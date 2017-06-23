@@ -1265,7 +1265,6 @@ namespace XamCore.AppKit {
 		[Export ("appendBezierPathWithCGGlyph:inFont:")]
 		void AppendBezierPathWithCGGlyph (CGGlyph glyph, NSFont font);
 
-		// -(void)appendBezierPathWithCGGlyphs:(const CGGlyph * _Nonnull)glyphs count:(NSInteger)count inFont:(NSFont * _Nonnull)font __attribute__((availability(macos, introduced=10.13)));
 		[Mac (10,13)]
 		[Export ("appendBezierPathWithCGGlyphs:count:inFont:")]
 		[Internal]
@@ -6182,7 +6181,6 @@ namespace XamCore.AppKit {
 		[Export ("advancementForCGGlyph:")]
 		CGSize AdvancementForCGGlyph (CGGlyph glyph);
 
-		// -(void)getBoundingRects:(NSRectArray _Nonnull)bounds forCGGlyphs:(const CGGlyph * _Nonnull)glyphs count:(NSUInteger)glyphCount __attribute__((availability(macos, introduced=10.13)));
 		[Mac (10,13)]
 		[Internal]
 		[Export ("getBoundingRects:forCGGlyphs:count:")]
@@ -11232,23 +11230,23 @@ namespace XamCore.AppKit {
 		// Pasteboard names: for NSPasteboard.FromName()
 
 		[Field ("NSGeneralPboard")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use NSPasteboardNameGeneral instead")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSPasteboardNameGeneral' instead")]
 		NSString NSGeneralPasteboardName { get; }
 
 		[Field ("NSFontPboard")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use NSPasteboardNameFont instead")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSPasteboardNameFont' instead")]
 		NSString NSFontPasteboardName { get; }
 
 		[Field ("NSRulerPboard")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use NSPasteboardNameRuler instead")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSPasteboardNameRuler' instead")]
 		NSString NSRulerPasteboardName { get; }
 
 		[Field ("NSFindPboard")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use NSPasteboardNameFind instead")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSPasteboardNameFind' instead")]
 		NSString NSFindPasteboardName { get; }
 
 		[Field ("NSDragPboard")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use NSPasteboardNameDrag instead")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSPasteboardNameDrag' instead")]
 		NSString NSDragPasteboardName { get; }
 
 		[Mac (10, 13)]
@@ -12650,6 +12648,9 @@ namespace XamCore.AppKit {
 		nfloat ReservedThicknessForAccessoryView { get; set; }
 
 		[Export ("measurementUnits")]
+#if XAMCORE_4_0
+		[BindAs (typeof (NSRulerViewUnits))] 
+#endif
 		string MeasurementUnits { get; set; }
 
 		[Export ("originOffset")]
@@ -12666,20 +12667,19 @@ namespace XamCore.AppKit {
 	}
 
 	[Mac (10, 13)]
-	[Static]
-	interface NSRulerViewUnitNames 
+	enum NSRulerViewUnits
 	{
 		[Field ("NSRulerViewUnitInches")]
-		NSString Inches { get; }
+		Inches,
 
 		[Field ("NSRulerViewUnitCentimeters")]
-		NSString Centimeters { get; }
+		Centimeters,
 
 		[Field ("NSRulerViewUnitPoints")]
-		NSString Points { get; }
+		Points,
 
 		[Field ("NSRulerViewUnitPicas")]
-		NSString Picas { get; }
+		Picas
 	}
 
 	delegate void NSSavePanelComplete (nint result);
