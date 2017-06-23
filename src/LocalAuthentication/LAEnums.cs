@@ -13,7 +13,8 @@ namespace XamCore.LocalAuthentication {
 		DeviceOwnerAuthentication = 2
 	}
 
-	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10)]
+	[iOS (8,0)]
+-	[Availability (Platform.Mac_10_10)]
 	[Native]
 	[ErrorDomain ("LAErrorDomain")]
 	public enum LAStatus : nint {

@@ -37,7 +37,7 @@ namespace XamCore.LocalAuthentication {
 		bool SetCredentialType ([NullAllowed] NSData credential, LACredentialType type);
 
 		
-		[iOS (9,0), Mac(10,11), Watch (3,0), TV (11,0)]
+		[iOS (9,0), Mac(10,11)]
 		[Export ("isCredentialSet:")]
 		bool IsCredentialSet (LACredentialType type);
 
