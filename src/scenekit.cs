@@ -2084,6 +2084,8 @@ namespace XamCore.SceneKit {
 		NSString AssetUnitMeterKey { get; }
 	}
 
+	interface ISCNSceneRenderer {}
+
 	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[Protocol, Model]
