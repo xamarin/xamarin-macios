@@ -5430,7 +5430,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10,13)]
 		[Export ("shareDocumentWithSharingService:completionHandler:")]
-		void ShareDocumentWithSharingService (NSSharingService sharingService, [NullAllowed] Action<bool> completionHandler);
+		void ShareDocument (NSSharingService sharingService, [NullAllowed] Action<bool> completionHandler);
 
 		[Mac (10,13)]
 		[Export ("prepareSharingServicePicker:")]
@@ -6175,11 +6175,11 @@ namespace XamCore.AppKit {
 
 		[Mac (10,13)]
 		[Export ("boundingRectForCGGlyph:")]
-		CGRect BoundingRectForCGGlyph (CGGlyph glyph);
+		CGRect CalculateBoundingRect (CGGlyph glyph);
 
 		[Mac (10,13)]
 		[Export ("advancementForCGGlyph:")]
-		CGSize AdvancementForCGGlyph (CGGlyph glyph);
+		CGSize CalculateAdvancement (CGGlyph glyph);
 
 		[Mac (10,13)]
 		[Internal]
@@ -17903,8 +17903,15 @@ namespace XamCore.AppKit {
 	[BaseType (typeof (NSObject))]
 	interface NSTextList : NSCoding, NSCopying {
 		[Export ("initWithMarkerFormat:options:")]
-		IntPtr Constructor (string format, NSTextListOptions mask);
+		IntPtr Constructor (
+#if XAMCORE_4_0
+		[BindAs (typeof (NSTextListMarkerFormats))] 
+#endif
+		string format, NSTextListOptions mask);
 
+#if XAMCORE_4_0
+		[BindAs (typeof (NSTextListMarkerFormats))] 
+#endif
 		[Export ("markerFormat")]
 		string MarkerFormat { get; }
 
@@ -17920,76 +17927,75 @@ namespace XamCore.AppKit {
 
 	}
 
-	[Static]
-	interface NSTextListMarkerFormats
+	enum NSTextListMarkerFormats
 	{
 		[Mac (10, 13)]
 		[Field ("NSTextListMarkerBox")]
-		NSString Box { get; }
+		Box,
 
 		[Mac (10, 13)]
 		[Field ("NSTextListMarkerCheck")]
-		NSString Check { get; }
+		Check,
 
 		[Mac (10, 13)]
 		[Field ("NSTextListMarkerCircle")]
-		NSString Circle { get; }
+		Circle,
 
 		[Mac (10, 13)]
 		[Field ("NSTextListMarkerDiamond")]
-		NSString Diamond { get; }
+		Diamond,
 
 		[Mac (10, 13)]
 		[Field ("NSTextListMarkerDisc")]
-		NSString Disc { get; }
+		Disc,
 
 		[Mac (10, 13)]
 		[Field ("NSTextListMarkerHyphen")]
-		NSString Hyphen { get; }
+		Hyphen,
 
 		[Mac (10, 13)]
 		[Field ("NSTextListMarkerSquare")]
-		NSString Square { get; }
+		Square,
 
 		[Mac (10, 13)]
 		[Field ("NSTextListMarkerLowercaseHexadecimal")]
-		NSString LowercaseHexadecimal { get; }
+		LowercaseHexadecimal,
 
 		[Mac (10, 13)]
 		[Field ("NSTextListMarkerUppercaseHexadecimal")]
-		NSString UppercaseHexadecimal { get; }
+		UppercaseHexadecimal,
 
 		[Mac (10, 13)]
 		[Field ("NSTextListMarkerOctal")]
-		NSString Octal { get; }
+		Octal,
 
 		[Mac (10, 13)]
 		[Field ("NSTextListMarkerLowercaseAlpha")]
-		NSString LowercaseAlpha { get; }
+		LowercaseAlpha,
 
 		[Mac (10, 13)]
 		[Field ("NSTextListMarkerUppercaseAlpha")]
-		NSString UppercaseAlpha { get; }
+		UppercaseAlpha,
 
 		[Mac (10, 13)]
 		[Field ("NSTextListMarkerLowercaseLatin")]
-		NSString LowercaseLatin { get; }
+		LowercaseLatin,
 
 		[Mac (10, 13)]
 		[Field ("NSTextListMarkerUppercaseLatin")]
-		NSString UppercaseLatin { get; }
+		UppercaseLatin,
 
 		[Mac (10, 13)]
 		[Field ("NSTextListMarkerLowercaseRoman")]
-		NSString LowercaseRoman { get; }
+		LowercaseRoman,
 
 		[Mac (10, 13)]
 		[Field ("NSTextListMarkerUppercaseRoman")]
-		NSString UppercaseRoman { get; }
+		UppercaseRoman,
 
 		[Mac (10, 13)]
 		[Field ("NSTextListMarkerDecimal")]
-		NSString Decimal { get; }
+		Decimal,
 	}
 	
 	[BaseType (typeof (NSTextBlock))]
@@ -25855,7 +25861,7 @@ namespace XamCore.AppKit {
 		[Abstract]
 		[Export ("rotor:resultForSearchParameters:")]
 		[return: NullAllowed]
-		NSAccessibilityCustomRotorItemResult ResultForSearchParameters (NSAccessibilityCustomRotor rotor, NSAccessibilityCustomRotorSearchParameters searchParameters);
+		NSAccessibilityCustomRotorItemResult ResultForSearch (NSAccessibilityCustomRotor rotor, NSAccessibilityCustomRotorSearchParameters searchParameters);
 	}
 
 	interface INSAccessibilityElementLoading {}
