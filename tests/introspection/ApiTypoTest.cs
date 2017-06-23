@@ -38,6 +38,7 @@ using Foundation;
 #if MONOMAC
 using MonoMac.AppKit;
 using MonoMac.ObjCRuntime;
+using MonoMac.Foundation;
 #else
 using MonoTouch.UIKit;
 #endif
