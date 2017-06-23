@@ -2175,7 +2175,7 @@ namespace XamCore.CoreData
 		NSDictionary UserInfo { get; set; }
 
 		[Export ("indexed")]
-		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_5 , Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13, Message = "Use 'NSEntityDescription.Indexes' instead")]
+		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_5 , Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13, Message = "Use 'NSEntityDescription.Indexes' instead.")]
 		bool Indexed { [Bind ("isIndexed")] get; set; }
 
 		[Export ("versionHash")]
@@ -2195,7 +2195,7 @@ namespace XamCore.CoreData
 
 		[Since (5,0)]
 		[Export ("storedInExternalRecord")]
-		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_5 , Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13, Message = "Spotlight integration is deprecated. Use 'CoreSpotlight' integration instead.")]
+		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_5 , Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13, Message = "Use 'CoreSpotlight' integration instead.")]
 		bool StoredInExternalRecord { [Bind ("isStoredInExternalRecord")]get; set; }
 	}
 
