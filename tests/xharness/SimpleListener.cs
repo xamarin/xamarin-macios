@@ -70,7 +70,13 @@ $@"[Local Date/Time:	{DateTime.Now}]
 
 		public void StartAsync ()
 		{
-			var t = new Thread (Start)
+			var t = new Thread (() => {
+				try {
+					Start ();
+				} catch (Exception e) {
+					Console.WriteLine ($"{GetType ().Name}: an exception occurred in processing thread: {e}");
+				}
+			})
 			{
 				IsBackground = true,
 			};
