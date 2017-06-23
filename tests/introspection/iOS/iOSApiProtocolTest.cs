@@ -375,6 +375,7 @@ namespace Introspection {
 					return true;
 				// iOS 11.0
 				case "UICollectionViewUpdateItem": // Conformance not in headers
+				case "ACAccountCredential": // b2: Conformance not in headers
 					return true;
 
 #if __WATCHOS__
