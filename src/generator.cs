@@ -1247,13 +1247,14 @@ public partial class Generator : IMemberGatherer {
 		var isEnum = retType.IsEnum;
 		var parameterName = pi != null ? pi.Name.GetSafeParamName () : "value";
 		var denullify = isNullable ? ".Value" : string.Empty;
+		var nullCheck = isNullable ? $"{parameterName} == null ? null : " : string.Empty;
 
 		if (isNullable || !isValueType)
 			temp = string.Format ("{0} == null ? null : ", parameterName);
 
 		if (originalType == TypeManager.NSNumber) {
 			var enumCast = isEnum ? $"(int)" : string.Empty;
-			temp = string.Format ("new NSNumber ({2}{1}{0});", denullify, parameterName, enumCast);
+			temp = string.Format ("{3}new NSNumber ({2}{1}{0});", denullify, parameterName, enumCast, nullCheck);
 		}
 		else if (originalType == TypeManager.NSValue) {
 			var typeStr = string.Empty;
@@ -1264,7 +1265,7 @@ public partial class Generator : IMemberGatherer {
 				else
 					throw new BindingException (1049, true, GetBindAsExceptionString ("box", retType.Name, originalType.Name, "container", minfo?.mi?.Name ?? pi?.Name));
 			}
-			temp = string.Format ("NSValue.From{0} ({2}{1});", typeStr, denullify, parameterName);
+			temp = string.Format ("{3}NSValue.From{0} ({2}{1});", typeStr, denullify, parameterName, nullCheck);
 		} else if (originalType == TypeManager.NSString && IsSmartEnum (retType)) {
 			temp = string.Format ("{1}{0}.GetConstant ();", denullify, parameterName);
 		} else if (originalType.IsArray) {
