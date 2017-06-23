@@ -99,6 +99,7 @@ namespace XamCore.AppKit {
 				_AppendPathWithPoints ((IntPtr)ptr, points.Length);
 		}
 
+		[Obsolete ("Use 'AppendBezierPathWithCGGlyphs' instead.")]
 		public unsafe void AppendPathWithGlyphs (uint[] glyphs, NSFont font)
 		{
 			if (glyphs == null)
@@ -110,6 +111,7 @@ namespace XamCore.AppKit {
 				_AppendPathWithGlyphs ((IntPtr)ptr, glyphs.Length, font);
 		}
 
+		[Mac (10,13)]
 		public unsafe void AppendBezierPathWithCGGlyphs (uint[] glyphs, NSFont font)
 		{
 			if (glyphs == null)

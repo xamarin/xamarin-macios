@@ -1202,13 +1202,16 @@ namespace XamCore.AppKit {
 		[Export ("appendBezierPathWithArcFromPoint:toPoint:radius:")]
 		void AppendPathWithArc (CGPoint point1, CGPoint point2, nfloat radius);
 
+		[Obsolete ("Use 'AppendBezierPathWithCGGlyph' instead.")]
 		[Export ("appendBezierPathWithGlyph:inFont:")]
 		void AppendPathWithGlyph (uint /* NSGlyph = unsigned int */ glyph, NSFont font);
 
+		[Obsolete ("Use 'AppendBezierPathWithCGGlyphs' instead.")]
 		[Export ("appendBezierPathWithGlyphs:count:inFont:"), Internal]
 		void _AppendPathWithGlyphs (IntPtr glyphs, nint count, NSFont font);
 
 		//IntPtr is exposed because the packedGlyphs should be treated as a "black box"
+		[Obsolete ("Use 'AppendBezierPathWithCGGlyphs' instead.")]
 		[Export ("appendBezierPathWithPackedGlyphs:")]
 		void AppendPathWithPackedGlyphs (IntPtr packedGlyphs);
 

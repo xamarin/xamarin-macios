@@ -138,9 +138,9 @@ namespace XamCore.AppKit {
 
 	[Native]
 	public enum NSBackingStore : nuint_compat_int {
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_13, Message = "Use 'Buffered' instead")]
+		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_13, Message = "Use 'Buffered' instead.")]
 		Retained, 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_13, Message = "Use 'Buffered' instead")]
+		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_13, Message = "Use 'Buffered' instead.")]
 		Nonretained, 
 		Buffered
 	}
@@ -2122,7 +2122,7 @@ namespace XamCore.AppKit {
 	
 	// These constants specify the possible states of a drawer.
 	[Native]
-	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using 'NSSplitViewController'")]
+	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSSplitViewController' instead.")]
 	public enum NSDrawerState : nuint_compat_int {
 		Closed = 0,
 		Opening = 1,
@@ -2811,7 +2811,7 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSFontAssetRequestOptions : nuint
 	{
-		UsesStandardUI = 1 << 0
+		UsesStandardUI = 1 << 0,
 	}
 
 	[Mac (10,13)]
@@ -2828,7 +2828,7 @@ namespace XamCore.AppKit {
 		ShadowEffect = 1 << 12,
 		AllEffects = 1048320,
 		StandardModes = 65535,
-		AllModes = (uint)4294967295L
+		AllModes = (uint)4294967295L,
 	}
 
 	[Mac (10,13)]
@@ -2837,7 +2837,7 @@ namespace XamCore.AppKit {
 	{
 		Automatic = 0,
 		Always = 1,
-		WhileEditing = 2
+		WhileEditing = 2,
 	}
 
 	[Mac (10,13)]
@@ -2847,6 +2847,6 @@ namespace XamCore.AppKit {
 		Fit = 0,
 		Fill,
 		FillEqually,
-		FillProportionally
+		FillProportionally,
 	}
 }
