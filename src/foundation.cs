@@ -239,11 +239,13 @@ namespace XamCore.Foundation
 
 		// From the NSItemProviderReading protocol, a special constructor.
 		[Export ("initWithItemProviderData:typeIdentifier:error:")]
+		[iOS (11,0), Watch(4,0), TV(11,0), Mac(10,13)]
 		IntPtr Constructor (NSData providerData, string typeIdentifier, out NSError outError);
 
 		// From the NSItemProviderReading protocol, a static method.
 		[Static]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		[iOS (11,0), Watch(4,0), TV(11,0), Mac(10,13)]
 		string[] ReadableTypeIdentifiersForItemProvider { get; }
 		
 		[Since (7,0)]

@@ -4503,11 +4503,13 @@ namespace XamCore.UIKit {
 		UIColor FromName (string name);
 
 		// From the NSItemProviderReading protocol, a special constructor.
+		[iOS (11,0), Watch(4,0), TV(11,0)]
 		[Export ("initWithItemProviderData:typeIdentifier:error:")]
 		IntPtr Constructor (NSData providerData, string typeIdentifier, out NSError outError);
 
 		// From the NSItemProviderReading protocol, a static method.
 		[Static]
+		[iOS (11,0), Watch(4,0), TV(11,0)]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		string[] ReadableTypeIdentifiersForItemProvider { get; }
 #if !WATCH
@@ -6774,10 +6776,12 @@ namespace XamCore.UIKit {
 
 		// From the NSItemProviderReading protocol, a special constructor.
 		[Export ("initWithItemProviderData:typeIdentifier:error:")]
+		[iOS (11,0), Watch(4,0), TV(11,0)]
 		IntPtr Constructor (NSData providerData, string typeIdentifier, out NSError outError);
 
 		// From the NSItemProviderReading protocol, a static method.
 		[Static]
+		[iOS (11,0), Watch(4,0), TV(11,0)]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		string[] ReadableTypeIdentifiersForItemProvider { get; }
 	
