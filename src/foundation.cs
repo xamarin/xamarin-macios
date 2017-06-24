@@ -240,6 +240,11 @@ namespace XamCore.Foundation
 		// From the NSItemProviderReading protocol, a special constructor.
 		[Export ("initWithItemProviderData:typeIdentifier:error:")]
 		IntPtr Constructor (NSData providerData, string typeIdentifier, out NSError outError);
+
+		// From the NSItemProviderReading protocol, a static method.
+		[Static]
+		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] ReadableTypeIdentifiersForItemProvider { get; }
 		
 		[Since (7,0)]
 		[Export ("dataFromRange:documentAttributes:error:")]
@@ -8790,9 +8795,17 @@ namespace XamCore.Foundation
 	[Protocol]
 	interface NSItemProviderReading
 	{
-		[Static, Abstract]
-		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		string[] ReadableTypeIdentifiersForItemProvider { get; }
+		//
+		// This static method has to be implemented on each class that implements
+		// this, this is not a capability that exists in C#.
+		// We are inlining these on each class that implements NSItemProviderReading
+		// for the sake of the method being callable from C#, for user code, the
+		// user needs to manually [Export] the selector on a static method, like
+		// they do for the "layer" property on CALayer subclasses.
+		//
+		//[Static, Abstract]
+		//[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		//string[] ReadableTypeIdentifiersForItemProvider { get; }
 
 		//
 		// This is a constructor that various classes must implement

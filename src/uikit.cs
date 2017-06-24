@@ -4506,6 +4506,10 @@ namespace XamCore.UIKit {
 		[Export ("initWithItemProviderData:typeIdentifier:error:")]
 		IntPtr Constructor (NSData providerData, string typeIdentifier, out NSError outError);
 
+		// From the NSItemProviderReading protocol, a static method.
+		[Static]
+		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] ReadableTypeIdentifiersForItemProvider { get; }
 #if !WATCH
 		[iOS (11,0)]
 		[Static]
@@ -6771,6 +6775,11 @@ namespace XamCore.UIKit {
 		// From the NSItemProviderReading protocol, a special constructor.
 		[Export ("initWithItemProviderData:typeIdentifier:error:")]
 		IntPtr Constructor (NSData providerData, string typeIdentifier, out NSError outError);
+
+		// From the NSItemProviderReading protocol, a static method.
+		[Static]
+		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] ReadableTypeIdentifiersForItemProvider { get; }
 	
 		[Export ("renderingMode")]
 		[ThreadSafe]
