@@ -16298,7 +16298,7 @@ namespace XamCore.UIKit {
 	
 		[Export ("delegate", ArgumentSemantic.Weak)]
 		[NullAllowed]
-		IUIDropInteractionDelegate Delegate { get; set; }
+		IUIDropInteractionDelegate Delegate { get; }
 	
 		[Export ("allowsSimultaneousDropSessions")]
 		bool AllowsSimultaneousDropSessions { get; set; }
