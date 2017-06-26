@@ -86,10 +86,10 @@ namespace XamCore.FinderSync {
 		[Mac (10,13, onlyOn64 : true)]
 		[Export ("makeListenerEndpointForServiceName:andReturnError:")]
 		[return: NullAllowed]
-		NSXPCListenerEndpoint MakeListenerEndpoint (string serviceName, [NullAllowed] out NSError error);
+		NSXpcListenerEndpoint MakeListenerEndpoint (string serviceName, [NullAllowed] out NSError error);
 
 		[Mac (10,13, onlyOn64 : true)]
-		[Export ("valuesForAttributes:forItemWithURL:completion:")]
+		[Async, Export ("valuesForAttributes:forItemWithURL:completion:")]
 		void GetValues (string[] attributes, NSUrl itemUrl, GetValuesCompletionHandler completion);
 	}
 
