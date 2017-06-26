@@ -652,6 +652,8 @@
     <Compile Include="CoreText\CTParagraphStyleTests.cs" />
     <Compile Include="CoreData\NSQueryGenerationTokenTest.cs" />
     <Compile Include="EventKit\EKUIBundleTest.cs" />
+    <Compile Include="HomeKit\HMMutablePresenceEventTest.cs" />
+    <Compile Include="HomeKit\HMMutableSignificantTimeEventTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
@@ -717,6 +719,7 @@
     <Folder Include="Intents\" />
     <Folder Include="System.Net.Http\" />
     <Folder Include="OpenGLES\" />
+    <Folder Include="HomeKit\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />

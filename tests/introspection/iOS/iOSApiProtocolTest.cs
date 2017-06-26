@@ -190,6 +190,19 @@ namespace Introspection {
 				case "NSQueryGenerationToken": // Conformance not in headers
 				case "NSPersistentHistoryToken": // Conformance not in headers
  				case "ARCamera":
+				case "HMPresenceEvent":
+				case "HMMutablePresenceEvent":
+				case "HMSignificantTimeEvent":
+				case "HMMutableSignificantTimeEvent":
+				case "HMCalendarEvent":
+				case "HMMutableCalendarEvent":
+				case "HMCharacteristicThresholdRangeEvent":
+				case "HMMutableCharacteristicThresholdRangeEvent":
+				case "HMDurationEvent":
+				case "HMMutableDurationEvent":
+				case "HMMutableCharacteristicEvent":
+				case "HMMutableLocationEvent":
+				case "HMTimeEvent":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -298,6 +311,19 @@ namespace Introspection {
 				case "NSQueryGenerationToken": // Conformance not in headers
 				case "NSPersistentHistoryToken": // Conformance not in headers
 				case "ARCamera":
+				case "HMPresenceEvent":
+				case "HMMutablePresenceEvent":
+				case "HMSignificantTimeEvent":
+				case "HMMutableSignificantTimeEvent":
+				case "HMCalendarEvent":
+				case "HMMutableCalendarEvent":
+				case "HMCharacteristicThresholdRangeEvent":
+				case "HMMutableCharacteristicThresholdRangeEvent":
+				case "HMDurationEvent":
+				case "HMMutableDurationEvent":
+				case "HMMutableCharacteristicEvent":
+				case "HMMutableLocationEvent":
+				case "HMTimeEvent":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
