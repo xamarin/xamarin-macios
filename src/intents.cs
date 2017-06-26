@@ -3062,6 +3062,7 @@ namespace XamCore.Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (INPerson))]
+	[DisableDefaultCtor] // The base type, INPerson, has no default ctor.
 	interface INRestaurantGuest {
 
 		[Export ("initWithNameComponents:phoneNumber:emailAddress:")]

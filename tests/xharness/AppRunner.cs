@@ -473,7 +473,8 @@ namespace xharness
 			args.Append (" -argument=-app-arg:-enablenetwork");
 			args.Append (" -setenv=NUNIT_ENABLE_NETWORK=true");
 			// detect if we are using a jenkins bot.
-			if (Harness.InJenkins) 
+			var useXmlOutput = Harness.InJenkins;
+			if (useXmlOutput) 
 				args.Append (" -setenv=NUNIT_ENABLE_XML_OUTPUT=true");
 
 			if (isSimulator) {
@@ -491,12 +492,24 @@ namespace xharness
 				args.AppendFormat (" -argument=-app-arg:-hostname:{0}", ips.ToString ());
 				args.AppendFormat (" -setenv=NUNIT_HOSTNAME={0}", ips.ToString ());
 			}
-			var transport = mode == "watchos" ? "HTTP" : "TCP";
+			string transport;
+			if (mode == "watchos") {
+				transport = isSimulator ? "FILE" : "HTTP";
+			} else {
+				transport = "TCP";
+			}
 			args.AppendFormat (" -argument=-app-arg:-transport:{0}", transport);
 			args.AppendFormat (" -setenv=NUNIT_TRANSPORT={0}", transport);
 
+			listener_log = Logs.CreateStream (LogDirectory, string.Format ("test-{0}-{1:yyyyMMdd_HHmmss}.log", mode, DateTime.Now), "Test log");
+
 			SimpleListener listener;
 			switch (transport) {
+			case "FILE":
+				var fn = listener_log.FullPath + ".tmp";
+				listener = new SimpleFileListener (fn);
+				args.Append (" -setenv=NUNIT_LOG_FILE=").Append (Harness.Quote (fn));
+				break;
 			case "HTTP":
 				listener = new SimpleHttpListener ();
 				break;
@@ -506,11 +519,11 @@ namespace xharness
 			default:
 				throw new NotImplementedException ();
 			}
-			listener_log = Logs.CreateStream (LogDirectory, string.Format ("test-{0}-{1:yyyyMMdd_HHmmss}.log", mode, DateTime.Now), "Test log");
 			listener.TestLog = listener_log;
 			listener.Log = main_log;
 			listener.AutoExit = true;
 			listener.Address = System.Net.IPAddress.Any;
+			listener.XmlOutput = useXmlOutput;
 			listener.Initialize ();
 
 			args.AppendFormat (" -argument=-app-arg:-hostport:{0}", listener.Port);
