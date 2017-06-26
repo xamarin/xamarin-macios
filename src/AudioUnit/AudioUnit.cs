@@ -460,7 +460,7 @@ namespace XamCore.AudioUnit
 #endif
 
 #if !XAMCORE_3_0
-		[Obsolete ("Use SetFormat instead as it has the ability of returning a status code")]
+		[Obsolete ("Use 'SetFormat' instead as it has the ability of returning a status code.")]
 		public void SetAudioFormat(XamCore.AudioToolbox.AudioStreamBasicDescription audioFormat, AudioUnitScopeType scope, uint audioUnitElement = 0)
 		{
 			var err = AudioUnitSetProperty(handle,
@@ -501,7 +501,7 @@ namespace XamCore.AudioUnit
 
 #if !XAMCORE_3_0 || MONOMAC
 #if !MONOMAC
-		[Obsolete ("This API is not available on iOS")]
+		[Obsolete ("This API is not available on iOS.")]
 #endif
 		public static uint GetCurrentInputDevice ()
 		{
@@ -2068,7 +2068,7 @@ namespace XamCore.AudioUnit
 	}
 #if !XAMCORE_4_0 && !COREBUILD
 #if XAMCORE_2_0 || !MONOMAC
-	[Obsolete ("Use AUImplementorStringFromValueCallback instead")]
+	[Obsolete ("Use 'AUImplementorStringFromValueCallback' instead.")]
 	public delegate NSString _AUImplementorStringFromValueCallback (AUParameter param, IntPtr value);
 #endif
 #endif

@@ -90,7 +90,7 @@ namespace XamCore.Accounts {
 		void SaveAccount (ACAccount account, ACAccountStoreSaveCompletionHandler completionHandler);
 
 		[Export ("requestAccessToAccountsWithType:withCompletionHandler:")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use RequestAccewss (ACAccountType, AccountStoreOptions, ACRequestCompletionHandler) instead")]
+		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'RequestAccess (ACAccountType, AccountStoreOptions, ACRequestCompletionHandler)' instead.")]
 		[Async]
 		void RequestAccess (ACAccountType accountType, ACRequestCompletionHandler completionHandler);
 

@@ -454,7 +454,7 @@ namespace XamCore.Contacts {
 		NSObject GetUnifiedMeContact (NSArray keys, out NSError error);
 
 #if !XAMCORE_4_0 && !WATCH
-		[Obsolete ("Use the overload that takes CNContactStoreListContactsHandler instead")]
+		[Obsolete ("Use the overload that takes 'CNContactStoreListContactsHandler' instead.")]
 		[Export ("enumerateContactsWithFetchRequest:error:usingBlock:")]
 		bool EnumerateContacts (CNContactFetchRequest fetchRequest, out NSError error, CNContactStoreEnumerateContactsHandler handler);
 
@@ -522,17 +522,17 @@ namespace XamCore.Contacts {
 	[BaseType (typeof (CNContainer))]
 	interface CNContainer_PredicatesExtension {
 
-		[Obsolete ("Use CNContainer.CreatePredicateForContainers instead")]
+		[Obsolete ("Use 'CNContainer.CreatePredicateForContainers' instead.")]
 		[Static]
 		[Export ("predicateForContainersWithIdentifiers:")]
 		NSPredicate GetPredicateForContainers (string [] identifiers);
 
-		[Obsolete ("Use CNContainer.CreatePredicateForContainerOfContact instead")]
+		[Obsolete ("Use 'CNContainer.CreatePredicateForContainerOfContact' instead.")]
 		[Static]
 		[Export ("predicateForContainerOfContactWithIdentifier:")]
 		NSPredicate GetPredicateForContainerOfContact (string contactIdentifier);
 
-		[Obsolete ("Use CNContainer.CreatePredicateForContainerOfGroup instead")]
+		[Obsolete ("Use 'CNContainer.CreatePredicateForContainerOfGroup' instead.")]
 		[Static]
 		[Export ("predicateForContainerOfGroupWithIdentifier:")]
 		NSPredicate GetPredicateForContainerOfGroup (string groupIdentifier);
@@ -618,18 +618,18 @@ namespace XamCore.Contacts {
 	[BaseType (typeof (CNGroup))]
 	interface CNGroup_PredicatesExtension {
 
-		[Obsolete ("Use CNGroup.CreatePredicateForGroups instead")]
+		[Obsolete ("Use 'CNGroup.CreatePredicateForGroups' instead.")]
 		[Static]
 		[Export ("predicateForGroupsWithIdentifiers:")]
 		NSPredicate GetPredicateForGroups (string [] identifiers);
 
-		[Obsolete ("Use CNGroup.CreatePredicateForSubgroupsInGroup instead")]
+		[Obsolete ("Use 'CNGroup.CreatePredicateForSubgroupsInGroup' instead.")]
 		[NoiOS][NoWatch]
 		[Static]
 		[Export ("predicateForSubgroupsInGroupWithIdentifier:")]
 		NSPredicate GetPredicateForSubgroupsInGroup (string parentGroupIdentifier);
 
-		[Obsolete ("Use CNGroup.CreatePredicateForGroupsInContainer instead")]
+		[Obsolete ("Use 'CNGroup.CreatePredicateForGroupsInContainer' instead.")]
 		[Static]
 		[Export ("predicateForGroupsInContainerWithIdentifier:")]
 		NSPredicate GetPredicateForGroupsInContainer (string containerIdentifier);

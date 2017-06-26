@@ -929,7 +929,7 @@ namespace XamCore.Foundation  {
 	}
 
 #if !XAMCORE_3_0
-	[iOS (7,0)][Deprecated (PlatformName.iOS, 9, 0, message: "Use NSWritingDirectionFormatType")]
+	[iOS (7,0)][Deprecated (PlatformName.iOS, 9, 0, message: "Use 'NSWritingDirectionFormatType'.")]
 	[Flags]
 	[Native]
 	public enum NSTextWritingDirection : nint {

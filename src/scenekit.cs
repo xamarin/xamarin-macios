@@ -879,7 +879,7 @@ namespace XamCore.SceneKit {
 #if XAMCORE_3_0
 		[Availability (Unavailable = Platform.iOS_Version)]
 #elif !MONOMAC
-		[Obsolete ("Do not use; this method only exist in OSX, not in iOS")]
+		[Obsolete ("Do not use; this method only exist in macOS, not in iOS.")]
 #endif
 		[NoTV]
 		[Availability (Deprecated = Platform.Mac_10_10)]
@@ -889,7 +889,7 @@ namespace XamCore.SceneKit {
 #if XAMCORE_3_0
 		[Availability (Unavailable = Platform.iOS_Version)]
 #elif !MONOMAC
-		[Obsolete ("Do not use; this method only exist in OSX, not in iOS")]
+		[Obsolete ("Do not use; this method only exist in macOS, not in iOS.")]
 #endif
 		[NoTV]
 		[Availability (Deprecated = Platform.Mac_10_10)]
@@ -1156,8 +1156,8 @@ namespace XamCore.SceneKit {
 		[Export ("wrapT")]
 		SCNWrapMode WrapT { get; set;  }
 
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Deprecated")]
-		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Deprecated")]
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[NoWatch, NoTV]
 		[NullAllowed, Export ("borderColor", ArgumentSemantic.Retain)]
 		NSObject BorderColor { get; set; }

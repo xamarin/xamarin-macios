@@ -240,7 +240,7 @@ namespace XamCore.CoreMotion {
 	[NoWatch]
 	[Since (7,0)]
 	[BaseType (typeof (NSObject))]
-	[Availability (Deprecated = Platform.iOS_8_0, Message = "Use CMPedometer instead")]
+	[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'CMPedometer' instead.")]
 	interface CMStepCounter {
 
 		[Static]

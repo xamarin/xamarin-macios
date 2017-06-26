@@ -404,10 +404,10 @@ namespace XamCore.Security {
 		[iOS (8,3)]
 		Raw       = 0x4000,
 
-		[Obsolete ("Hash algorithm is deprecated")][NoTV][NoWatch]
+		[Obsolete ("Don't use hash algorithm.")][NoTV][NoWatch]
 		PKCS1MD2  = 0x8000,
 
-		[Obsolete ("Hash algorithm is deprecated")][NoTV][NoWatch]
+		[Obsolete ("Don't use hash algorithm.")][NoTV][NoWatch]
 		PKCS1MD5  = 0x8001,
 
 		PKCS1SHA1 = 0x8002,

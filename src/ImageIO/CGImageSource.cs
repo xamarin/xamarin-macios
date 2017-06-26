@@ -249,14 +249,14 @@ namespace XamCore.ImageIO {
 		extern static /* CFDictionaryRef __nullable */ IntPtr CGImageSourceCopyProperties (
 			/* CGImageSourceRef __nonnull */ IntPtr isrc, /* CFDictionaryRef __nullable */ IntPtr options);
 
-		[Advice ("Use GetProperties")]
+		[Advice ("Use 'GetProperties'.")]
 		public NSDictionary CopyProperties (NSDictionary dict)
 		{
 			var result = CGImageSourceCopyProperties (handle, dict == null ? IntPtr.Zero : dict.Handle);
 			return result == IntPtr.Zero ? null : Runtime.GetNSObject<NSDictionary> (result);
 		}
 
-		[Advice ("Use GetProperties")]
+		[Advice ("Use 'GetProperties'.")]
 		public NSDictionary CopyProperties (CGImageOptions options)
 		{
 			if (options == null)
@@ -269,14 +269,14 @@ namespace XamCore.ImageIO {
 			/* CGImageSourceRef __nonnull */ IntPtr isrc, /* size_t */ nint index,
 			/* CFDictionaryRef __nullable */ IntPtr options);
 
-		[Advice ("Use GetProperties")]
+		[Advice ("Use 'GetProperties'.")]
 		public NSDictionary CopyProperties (NSDictionary dict, int imageIndex)
 		{
 			var result = CGImageSourceCopyPropertiesAtIndex (handle, imageIndex, dict == null ? IntPtr.Zero : dict.Handle);
 			return result == IntPtr.Zero ? null : Runtime.GetNSObject<NSDictionary> (result);
 		}
 
-		[Advice ("Use GetProperties")]
+		[Advice ("Use 'GetProperties'.")]
 		public NSDictionary CopyProperties (CGImageOptions options, int imageIndex)
 		{
 			if (options == null)

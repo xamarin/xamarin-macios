@@ -57,7 +57,7 @@ namespace XamCore.UIKit {
 	public enum UIBarButtonItemStyle : nint {
 		Plain,
 
-		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use UIBarButtonItemStyle.Plain when the minimum deployment target is iOS 7")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'UIBarButtonItemStyle.Plain' instead.")]
 		Bordered,
 			
 		Done,
@@ -280,10 +280,10 @@ namespace XamCore.UIKit {
 		DefaultPrompt = 101,
 		CompactPrompt,
 
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_8_0, Message = "Use UIBarMetrics.Compat instead")]
+		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_8_0, Message = "Use 'UIBarMetrics.Compat' instead.")]
 		LandscapePhone = Compact,
 
-		[Availability (Introduced = Platform.iOS_7_0, Deprecated = Platform.iOS_8_0, Message = "Use UIBarMetrics.CompactPrompt instead")]
+		[Availability (Introduced = Platform.iOS_7_0, Deprecated = Platform.iOS_8_0, Message = "Use 'UIBarMetrics.CompactPrompt' instead.")]
 		LandscapePhonePrompt = CompactPrompt
 	}
 
@@ -423,11 +423,11 @@ namespace XamCore.UIKit {
 		Black,
 
 		// The header doesn't say when it was deprecated, but the earliest headers I have (iOS 5.1) it is already deprecated.
-		[Availability (Deprecated = Platform.iOS_5_1, Message = "Use UIBarStyle.Black")]
+		[Availability (Deprecated = Platform.iOS_5_1, Message = "Use 'UIBarStyle.Black'.")]
 		BlackOpaque      = 1,
 
 		// The header doesn't say when it was deprecated, but the earliest headers I have (iOS 5.1) it is already deprecated.
-		[Availability (Deprecated = Platform.iOS_5_1, Message = "Use UIBarStyle.Black and set the translucency property to true")]
+		[Availability (Deprecated = Platform.iOS_5_1, Message = "Use 'UIBarStyle.Black' and set the translucency property to true.")]
 		BlackTranslucent = 2,
 	}
 
@@ -491,7 +491,7 @@ namespace XamCore.UIKit {
 	// NSInteger -> UISegmentedControl.h
 	[Native]
 	[NoTV][NoWatch]
-	[Availability (Deprecated = Platform.iOS_7_0, Message = "Deprecated in iOS 7, this no longer has any effect")]
+	[Availability (Deprecated = Platform.iOS_7_0, Message = "This no longer has any effect.")]
 	public enum UISegmentedControlStyle : nint {
 		Plain,
 		Bordered,
@@ -791,12 +791,12 @@ namespace XamCore.UIKit {
 	public enum UIStatusBarStyle : nint {
 		Default,
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use LightContent instead")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'LightContent' instead.")]
 		BlackTranslucent = 1,
 
 		LightContent = 1,
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use LightContent instead")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'LightContent' instead.")]
 		BlackOpaque = 2,
 	}
 
@@ -1067,7 +1067,7 @@ namespace XamCore.UIKit {
 	public enum UIScreenOverscanCompensation : nint {
 		Scale, InsetBounds,
 		None,
-		[Obsolete ("Use UIScreenOverscanCompensation.None instead")]
+		[Obsolete ("Use 'UIScreenOverscanCompensation.None' instead.")]
 		InsetApplicationFrame = None
 	}
 
@@ -1651,7 +1651,7 @@ namespace XamCore.UIKit {
 
 	[NoTV][NoWatch]
 	[iOS (8,0)]
-	[Deprecated (PlatformName.iOS, 10, 0, message:"Use UNAuthorizationOptions instead")]
+	[Deprecated (PlatformName.iOS, 10, 0, message:"Use 'UNAuthorizationOptions' instead.")]
 	[Native]
 	[Flags]
 	public enum UIUserNotificationType : nuint {
@@ -1663,7 +1663,7 @@ namespace XamCore.UIKit {
 	
 	[NoTV][NoWatch]
 	[iOS (8, 0)]
-	[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNNotificationActionOptions instead")]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNNotificationActionOptions' instead.")]
 	[Native]
 	public enum UIUserNotificationActivationMode : nuint {
 		Foreground,
@@ -1672,7 +1672,7 @@ namespace XamCore.UIKit {
 
 	[NoTV][NoWatch]
 	[iOS (8, 0)]
-	[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNNotificationCategory.Actions instead")]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNNotificationCategory.Actions' instead.")]
 	[Native]
 	public enum UIUserNotificationActionContext : nuint {
 		Default,
@@ -1788,7 +1788,7 @@ namespace XamCore.UIKit {
 
 	[NoTV][NoWatch]
 	[iOS (9,0)]
-	[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNNotificationAction or UNTextInputNotificationAction instead")]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNNotificationAction' or 'UNTextInputNotificationAction' instead.")]
 	[Native]
 	public enum UIUserNotificationActionBehavior : nuint
 	{

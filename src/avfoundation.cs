@@ -1463,7 +1463,7 @@ namespace XamCore.AVFoundation {
 		[NoWatch]
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0, Message = "Use AVAudioSession.Notification.Observe* methods instead")]
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0, Message = "Use 'AVAudioSession.Notification.Observe*' methods instead.")]
 		[NoTV]
 		AVAudioSessionDelegate Delegate { get; set;  }
 	
@@ -1472,14 +1472,14 @@ namespace XamCore.AVFoundation {
 
 		[NoTV]
 		[Export ("setActive:withFlags:error:")]
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0, Message = "Use SetActive (bool, AVAudioSessionSetActiveOptions, out NSError) instead")]
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0, Message = "Use 'SetActive (bool, AVAudioSessionSetActiveOptions, out NSError)' instead.")]
 		bool SetActive (bool beActive, AVAudioSessionFlags flags, out NSError outError);
 
 		[Export ("setCategory:error:")]
 		bool SetCategory (NSString theCategory, out NSError outError);
 	
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_6_0, Message = "Use SetPreferredSampleRate instead")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_6_0, Message = "Use 'SetPreferredSampleRate' instead.")]
 		[Export ("setPreferredHardwareSampleRate:error:")]
 		bool SetPreferredHardwareSampleRate (double sampleRate, out NSError outError);
 	
@@ -1500,7 +1500,7 @@ namespace XamCore.AVFoundation {
 	
 		[NoTV]
 		[Export ("preferredHardwareSampleRate")]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_6_0, Message = "Use PreferredSampleRate instead")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_6_0, Message = "Use 'PreferredSampleRate' instead.")]
 		double PreferredHardwareSampleRate { get;  }
 	
 		[NoWatch]
@@ -1514,17 +1514,17 @@ namespace XamCore.AVFoundation {
 	
 		[NoTV]
 		[Export ("currentHardwareSampleRate")]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_6_0, Message = "Use SampleRate instead")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_6_0, Message = "Use 'SampleRate' instead.")]
 		double CurrentHardwareSampleRate { get;  }
 
 		[NoTV]
 		[Export ("currentHardwareInputNumberOfChannels")]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_6_0, Message = "Use InputNumberOfChannels instead")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_6_0, Message = "Use 'InputNumberOfChannels' instead.")]
 		nint CurrentHardwareInputNumberOfChannels { get;  }
 	
 		[NoTV]
 		[Export ("currentHardwareOutputNumberOfChannels")]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_6_0, Message = "Use OutputNumberOfChannels instead")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_6_0, Message = "Use 'OutputNumberOfChannels' instead.")]
 		nint CurrentHardwareOutputNumberOfChannels { get;  }
 
 		[Field ("AVAudioSessionCategoryAmbient")]
@@ -2473,7 +2473,7 @@ namespace XamCore.AVFoundation {
 		CGAffineTransform PreferredTransform { get;  }
 
 		[Export ("naturalSize")]
-		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_7, Deprecated = Platform.iOS_5_0 | Platform.Mac_10_8, Message = "Use NaturalSize/PreferredTransform as appropriate on the video track instead")]
+		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_7, Deprecated = Platform.iOS_5_0 | Platform.Mac_10_8, Message = "Use 'NaturalSize/PreferredTransform' as appropriate on the video track instead.")]
 		CGSize NaturalSize { get;  }
 
 		[Export ("providesPreciseDurationAndTiming")]
@@ -2960,7 +2960,7 @@ namespace XamCore.AVFoundation {
 #if XAMCORE_2_0
 		[Internal]
 #endif
-		[Advice ("Use Create method")]
+		[Advice ("Use 'Create' method.")]
 		[Static, Export ("assetReaderTrackOutputWithTrack:outputSettings:")]
 		AVAssetReaderTrackOutput FromTrack (AVAssetTrack track, [NullAllowed] NSDictionary outputSettings);
 
@@ -3005,7 +3005,7 @@ namespace XamCore.AVFoundation {
 #if XAMCORE_2_0
 		[Internal]
 #endif
-		[Advice ("Use Create method")]
+		[Advice ("Use 'Create' method.")]
 		[Static, Export ("assetReaderAudioMixOutputWithAudioTracks:audioSettings:")]
 		AVAssetReaderAudioMixOutput FromTracks (AVAssetTrack [] audioTracks, [NullAllowed] NSDictionary audioSettings);
 
@@ -3022,7 +3022,7 @@ namespace XamCore.AVFoundation {
 #if XAMCORE_2_0
 		[Internal]
 #endif
-		[Advice ("Use Settings property")]
+		[Advice ("Use 'Settings' property.")]
 		[Export ("audioSettings"), NullAllowed]
 		NSDictionary AudioSettings { get; }
 
@@ -3051,7 +3051,7 @@ namespace XamCore.AVFoundation {
 #if XAMCORE_2_0
 		[Internal]
 #endif
-		[Advice ("Use Create method")]
+		[Advice ("Use 'Create' method.")]
 		[Static]
 		[Export ("assetReaderVideoCompositionOutputWithVideoTracks:videoSettings:")]
 		AVAssetReaderVideoCompositionOutput WeakFromTracks (AVAssetTrack [] videoTracks, [NullAllowed] NSDictionary videoSettings);
@@ -3169,7 +3169,7 @@ namespace XamCore.AVFoundation {
 		bool Finished { /* [Bind ("isFinished")] */ get;  }
 
 		[Export ("finishLoadingWithResponse:data:redirect:")]
-		[Availability (Introduced = Platform.iOS_6_0, Deprecated = Platform.iOS_7_0, Message = "Use the Response, Redirect properties and the AVAssetResourceLoadingDataRequest.Responds and AVAssetResourceLoadingRequest.FinishLoading methods instead")]
+		[Availability (Introduced = Platform.iOS_6_0, Deprecated = Platform.iOS_7_0, Message = "Use the 'Response', 'Redirect' properties and the 'AVAssetResourceLoadingDataRequest.Responds' and 'AVAssetResourceLoadingRequest.FinishLoading' methods instead.")]
 		void FinishLoading ([NullAllowed] NSUrlResponse usingResponse, [NullAllowed] NSData data, [NullAllowed] NSUrlRequest redirect);
 
 		[Export ("finishLoadingWithError:")]
@@ -3316,7 +3316,7 @@ namespace XamCore.AVFoundation {
 		void CancelWriting ();
 
 		[Export ("finishWriting")]
-		[Availability (Introduced = Platform.iOS_4_1, Deprecated = Platform.iOS_6_0, Message = "Use the asynchronous FinishWriting(NSAction completionHandler) instead")]
+		[Availability (Introduced = Platform.iOS_4_1, Deprecated = Platform.iOS_6_0, Message = "Use the asynchronous 'FinishWriting (NSAction completionHandler)' instead.")]
 		bool FinishWriting ();
 
 		[Mac (10,9)]
@@ -3574,7 +3574,7 @@ namespace XamCore.AVFoundation {
 		CVPixelBufferPool PixelBufferPool { get;  }
 
 #if XAMCORE_2_0
-		[Advice ("Use Create method")]
+		[Advice ("Use 'Create' method.")]
 #endif
 		[Static, Export ("assetWriterInputPixelBufferAdaptorWithAssetWriterInput:sourcePixelBufferAttributes:")]
 		AVAssetWriterInputPixelBufferAdaptor FromInput (AVAssetWriterInput input, [NullAllowed] NSDictionary sourcePixelBufferAttributes);
@@ -6454,7 +6454,7 @@ namespace XamCore.AVFoundation {
 		NSString SegmentsDidChangeNotification { get; }
 
 		[Introduced (PlatformName.MacOSX, 10, 10)]
-		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use either AVFragmentedMovieTrackTimeRangeDidChangeNotification or AVFragmentedMovieTrackSegmentsDidChangeNotification instead.  In either case you can assume that the sender's totalSampleDataLength has changed.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use either 'AVFragmentedMovieTrackTimeRangeDidChangeNotification' or 'AVFragmentedMovieTrackSegmentsDidChangeNotification' instead. In either case, you can assume that the sender's 'TotalSampleDataLength' has changed.")]
 		[Field ("AVFragmentedMovieTrackTotalSampleDataLengthDidChangeNotification")]
 		NSString TotalSampleDataLengthDidChangeNotification { get; }
 	}
@@ -7612,11 +7612,11 @@ namespace XamCore.AVFoundation {
 
 		[Since (6,0)]
 		[Export ("videoStabilizationEnabled")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Starting with iOS 8, you should use ActiveVideoStabilizationMode instead")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'ActiveVideoStabilizationMode' instead.")]
 		bool VideoStabilizationEnabled { [Bind ("isVideoStabilizationEnabled")] get;  }
 
 		[Since (6,0)]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Starting with iOS 8, you should use PreferredVideoStabilizationMode instead")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'PreferredVideoStabilizationMode' instead.")]
 		[Export ("enablesVideoStabilizationWhenAvailable")]
 		bool EnablesVideoStabilizationWhenAvailable { get; set;  }
 
@@ -7876,23 +7876,23 @@ namespace XamCore.AVFoundation {
 
 #if !MONOMAC
 		[Export ("orientation")]
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0, Message = "Use AVCaptureConnection.VideoOrientation instead")]
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0, Message = "Use 'AVCaptureConnection.VideoOrientation' instead.")]
 		AVCaptureVideoOrientation Orientation { get; set;  }
 
 		[Export ("automaticallyAdjustsMirroring")]
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0, Message = "Use AVCaptureConnection.AutomaticallyAdjustsVideoMirroring instead")]
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0, Message = "Use 'AVCaptureConnection.AutomaticallyAdjustsVideoMirroring' instead.")]
 		bool AutomaticallyAdjustsMirroring { get; set;  }
 
 		[Export ("mirrored")]
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0, Message = "Use AVCaptureConnection.VideoMirrored instead")]
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0, Message = "Use 'AVCaptureConnection.VideoMirrored' instead.")]
 		bool Mirrored { [Bind ("isMirrored")] get; set;  }
 
 		[Export ("isMirroringSupported")]
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0, Message = "Use AVCaptureConnection.IsVideoMirroringSupported instead")]
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0, Message = "Use 'AVCaptureConnection.IsVideoMirroringSupported' instead.")]
 		bool MirroringSupported { get; }
 
 		[Export ("isOrientationSupported")]
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0, Message = "Use AVCaptureConnection.IsVideoOrientationSupported instead")]
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0, Message = "Use 'AVCaptureConnection.IsVideoOrientationSupported' instead.")]
 		bool OrientationSupported { get; }
 
 #endif
@@ -7960,14 +7960,14 @@ namespace XamCore.AVFoundation {
 		AVVideoSettingsCompressed CompressedVideoSetting { get; set; }
 
 		[Export ("minFrameDuration")]
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_5_0, Message = "Use AVCaptureConnection.MinVideoFrameDuration instead")]
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_5_0, Message = "Use 'AVCaptureConnection.MinVideoFrameDuration' instead.")]
 		CMTime MinFrameDuration { get; set;  }
 
 		[Export ("alwaysDiscardsLateVideoFrames")]
 		bool AlwaysDiscardsLateVideoFrames { get; set;  }
 
 #if !XAMARIN_4_0
-		[Obsolete ("Use overload accepting a IAVCaptureVideoDataOutputSampleBufferDelegate")]
+		[Obsolete ("Use overload accepting a 'IAVCaptureVideoDataOutputSampleBufferDelegate'.")]
 		[Export ("setSampleBufferDelegate:queue:")]
 		[PostGet ("SampleBufferDelegate")]
 		[PostGet ("SampleBufferCallbackQueue")]
@@ -8035,7 +8035,7 @@ namespace XamCore.AVFoundation {
 		[Sealed]
 		void SetSampleBufferDelegateQueue ([NullAllowed] IAVCaptureAudioDataOutputSampleBufferDelegate sampleBufferDelegate, [NullAllowed] DispatchQueue sampleBufferCallbackDispatchQueue);
 
-		[Obsolete ("Use overload accepting a IAVCaptureVideoDataOutputSampleBufferDelegate")]
+		[Obsolete ("Use overload accepting a 'IAVCaptureVideoDataOutputSampleBufferDelegate'.")]
 		[Export ("setSampleBufferDelegate:queue:")]
 #if XAMCORE_2_0
 		void SetSampleBufferDelegateQueue ([NullAllowed] AVCaptureAudioDataOutputSampleBufferDelegate sampleBufferDelegate, [NullAllowed] DispatchQueue sampleBufferCallbackDispatchQueue);
@@ -8502,7 +8502,7 @@ namespace XamCore.AVFoundation {
 	[NoTV]
 	[NoWatch]
 	[Since (4,0)]
-	[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_10_0, Message = "Deprecated class, use AVCapturePhotoOutput instead.")]
+	[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_10_0, Message = "Use 'AVCapturePhotoOutput' instead.")]
 	[BaseType (typeof (AVCaptureOutput))]
 	interface AVCaptureStillImageOutput {
 		[Export ("availableImageDataCVPixelFormatTypes")]
@@ -8596,8 +8596,8 @@ namespace XamCore.AVFoundation {
 		[Field ("AVCaptureDeviceTypeBuiltInTelephotoCamera")]
 		BuiltInTelephotoCamera,
 
-		[Introduced (PlatformName.iOS, 10, 0, message: "Use BuiltInDualCamera instead")]
-		[Deprecated (PlatformName.iOS, 10, 2, message: "Use BuiltInDualCamera instead")]
+		[Introduced (PlatformName.iOS, 10, 0, message: "Use 'BuiltInDualCamera' instead.")]
+		[Deprecated (PlatformName.iOS, 10, 2, message: "Use 'BuiltInDualCamera' instead.")]
 		[Field ("AVCaptureDeviceTypeBuiltInDuoCamera")]
 		BuiltInDuoCamera,
 
@@ -8625,11 +8625,11 @@ namespace XamCore.AVFoundation {
 		[Export ("connected")]
 		bool Connected { [Bind ("isConnected")] get;  }
 
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use AVCaptureDeviceDiscoverySession instead.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'AVCaptureDeviceDiscoverySession' instead.")]
 		[Static, Export ("devices")]
 		AVCaptureDevice [] Devices { get;  }
 
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use AVCaptureDeviceDiscoverySession instead.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'AVCaptureDeviceDiscoverySession' instead.")]
 		[Static]
 		[Export ("devicesWithMediaType:")]
 		AVCaptureDevice [] DevicesWithMediaType (string mediaType);
@@ -8643,7 +8643,7 @@ namespace XamCore.AVFoundation {
 		AVCaptureDevice GetDefaultDevice (AVMediaTypes mediaType);
 
 #if !XAMCORE_4_0
-		[Obsolete ("Use GetDefaultDevice(AVMediaTypes)")]
+		[Obsolete ("Use 'GetDefaultDevice (AVMediaTypes)'.")]
 		[Static]
 		[Wrap ("GetDefaultDevice ((NSString) mediaType)")]
 		AVCaptureDevice DefaultDeviceWithMediaType (string mediaType);
@@ -8668,11 +8668,11 @@ namespace XamCore.AVFoundation {
 		[Export ("supportsAVCaptureSessionPreset:")]
 		bool SupportsAVCaptureSessionPreset (string preset);
 
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_10_0, Message="Deprecated property, use AVCapturePhotoSettings.FlashMode instead")]
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_10_0, Message="Use 'AVCapturePhotoSettings.FlashMode' instead.")]
 		[Export ("flashMode")]
 		AVCaptureFlashMode FlashMode { get; set;  }
 
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_10_0, Message="Deprecated property, use AVCapturePhotoOutput.SupportedFlashModes instead")]
+		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_10_0, Message="Use 'AVCapturePhotoOutput.SupportedFlashModes' instead.")]
 		[Export ("isFlashModeSupported:")]
 		bool IsFlashModeSupported (AVCaptureFlashMode flashMode);
 
@@ -8749,7 +8749,7 @@ namespace XamCore.AVFoundation {
 		[Export ("isFlashAvailable")]
 		bool FlashAvailable { get;  }
 
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_10_0, Message="Deprecated property, use AVCapturePhotoOutput.IsFlashScene instead")]
+		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_10_0, Message="Use 'AVCapturePhotoOutput.IsFlashScene' instead.")]
 		[Since(5,0)]
 		[Export ("isFlashActive")]
 		bool FlashActive { get; }
@@ -9073,7 +9073,7 @@ namespace XamCore.AVFoundation {
 		bool VideoBinned { [Bind ("isVideoBinned")] get; }
 	
 		[Export ("videoStabilizationSupported")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Starting with iOS 8, you can use IsVideoStabilizationModeSupported(AVCaptureVideoStabilizationMode)")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'IsVideoStabilizationModeSupported (AVCaptureVideoStabilizationMode)' instead.")]
 		bool VideoStabilizationSupported { [Bind ("isVideoStabilizationSupported")] get; }
 	
 		[Export ("videoMaxZoomFactor")]
@@ -9206,15 +9206,15 @@ namespace XamCore.AVFoundation {
 
 #if !MONOMAC
 		// 5.0
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_6_0, Message = "Use AllowsExternalPlayback instead")]
+		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_6_0, Message = "Use 'AllowsExternalPlayback' instead.")]
 		[Export ("allowsAirPlayVideo")]
 		bool AllowsAirPlayVideo { get; set;  }
 
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_6_0, Message = "Use ExternalPlaybackActive instead")]
+		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_6_0, Message = "Use 'ExternalPlaybackActive' instead.")]
 		[Export ("airPlayVideoActive")]
 		bool AirPlayVideoActive { [Bind ("isAirPlayVideoActive")] get;  }
 
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_6_0, Message = "Use UsesExternalPlaybackWhileExternalScreenIsActive instead")]
+		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_6_0, Message = "Use 'UsesExternalPlaybackWhileExternalScreenIsActive' instead.")]
 		[Export ("usesAirPlayVideoWhileAirPlayScreenIsActive")]
 		bool UsesAirPlayVideoWhileAirPlayScreenIsActive { get; set;  }
 #endif
@@ -10146,7 +10146,7 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (NSObject))]
 	[Since (4,3)]
 	interface AVPlayerItemAccessLogEvent : NSCopying {
-		[Availability (Introduced = Platform.iOS_4_3 | Platform.Mac_10_7, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_9, Message = "Use NumberOfMediaRequests instead")]
+		[Availability (Introduced = Platform.iOS_4_3 | Platform.Mac_10_7, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_9, Message = "Use 'NumberOfMediaRequests' instead.")]
 		[Export ("numberOfSegmentsDownloaded")]
 		nint SegmentedDownloadedCount { get; }
 
@@ -10817,7 +10817,7 @@ namespace XamCore.AVFoundation {
 		[Export ("sessionWithConfiguration:assetDownloadDelegate:delegateQueue:")]
 		AVAssetDownloadUrlSession CreateSession (NSUrlSessionConfiguration configuration, [NullAllowed] IAVAssetDownloadDelegate @delegate, [NullAllowed] NSOperationQueue delegateQueue);
 
-		[Availability (Introduced = Platform.iOS_9_0, Deprecated = Platform.iOS_10_0, Message="Deprecated method, please use GetAssetDownloadTask (AVUrlAsset, string, NSData, NSDictionary<NSString, NSObject>)")]
+		[Availability (Introduced = Platform.iOS_9_0, Deprecated = Platform.iOS_10_0, Message="Please use 'GetAssetDownloadTask (AVUrlAsset, string, NSData, NSDictionary<NSString, NSObject>)'.")]
 		[Export ("assetDownloadTaskWithURLAsset:destinationURL:options:")]
 		[return: NullAllowed]
 		AVAssetDownloadTask GetAssetDownloadTask (AVUrlAsset urlAsset, NSUrl destinationUrl, [NullAllowed] NSDictionary options);

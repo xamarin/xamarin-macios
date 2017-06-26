@@ -69,13 +69,13 @@ namespace XamCore.ObjCRuntime {
 		}
 			
 #if TVOS || WATCH
-		[Advice ("This method is present only to help porting code")]
+		[Advice ("This method is present only to help porting code.")]
 		public static void StartWWAN (Uri uri, Action<Exception> callback)
 		{
 			NSRunLoop.Main.BeginInvokeOnMainThread (() => callback (null));
 		}
 
-		[Advice ("This method is present only to help porting code")]
+		[Advice ("This method is present only to help porting code.")]
 		public static void StartWWAN (Uri uri)
 		{
 		}

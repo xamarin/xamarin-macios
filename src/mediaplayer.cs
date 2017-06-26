@@ -822,14 +822,14 @@ namespace XamCore.MediaPlayer {
 
 		[Export ("backgroundColor", ArgumentSemantic.Retain)]
 		// <quote>You should avoid using this property. It is available only when you use the initWithContentURL: method to initialize the movie player controller object.</quote>
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_3_2, Obsoleted = Platform.iOS_8_0, Message = "Do not use; this API was removed in iOS 8.0 and is not always available")]
+		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_3_2, Obsoleted = Platform.iOS_8_0, Message = "Do not use; this API was removed and is not always available.")]
 		UIColor BackgroundColor { get; set; }
 
 		[Export ("scalingMode")]
 		MPMovieScalingMode ScalingMode { get; set; }
 
 		[Export ("movieControlMode")]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_3_2, Obsoleted = Platform.iOS_8_0, Message = "Do not use; this API was removed in iOS 8.0")]
+		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_3_2, Obsoleted = Platform.iOS_8_0, Message = "Do not use; this API was removed.")]
 		MPMovieControlMode MovieControlMode { get; set; }
 
 		[Since (3,2)]
@@ -900,7 +900,7 @@ namespace XamCore.MediaPlayer {
 		// Brought it from the MPMediaPlayback.h
 
 		[Export ("thumbnailImageAtTime:timeOption:")]
-		[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_7_0, Message = "Use RequestThumbnails instead")]
+		[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_7_0, Message = "Use 'RequestThumbnails' instead.")]
 		UIImage ThumbnailImageAt (double time, MPMovieTimeOption timeOption);
 
 		[Since (3,2)]
@@ -1124,7 +1124,7 @@ namespace XamCore.MediaPlayer {
 		MPMoviePlayerController MoviePlayer { get; }
 
 		// Directly removed, shows up in iOS 6.1 SDK, but not any later SDKs.
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_7_0, Message = "Do not use; this API was removed in iOS 7.0")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_7_0, Message = "Do not use; this API was removed.")]
 		[Export ("shouldAutorotateToInterfaceOrientation:")]
 		bool ShouldAutorotateToInterfaceOrientation (UIInterfaceOrientation orientation);
 	}
@@ -1143,7 +1143,7 @@ namespace XamCore.MediaPlayer {
 		MPMusicPlayerApplicationController ApplicationQueuePlayer { get; }
 
 		[Static, Export ("iPodMusicPlayer")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use SystemMusicPlayer starting with iOS 8.0")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'SystemMusicPlayer' instead.")]
 		MPMusicPlayerController iPodMusicPlayer { get; }
 
 		[iOS (8,0)]
@@ -1159,7 +1159,7 @@ namespace XamCore.MediaPlayer {
 		[Export ("shuffleMode")]
 		MPMusicShuffleMode ShuffleMode { get; set; }
 
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0, Message = "Use MPVolumeView for volume control instead")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0, Message = "Use 'MPVolumeView' for volume control instead.")]
 		[Export ("volume")]
 		float Volume { get; set; } // nfloat, not CGFloat
 
@@ -1513,7 +1513,7 @@ namespace XamCore.MediaPlayer {
 		void ContextUpdated (MPPlayableContentManager contentManager, MPPlayableContentManagerContext context);
 
 		[iOS (9,0)]
-		[Deprecated (PlatformName.iOS, 9, 3, message: "Use InitializePlaybackQueue (MPPlayableContentManager, MPContentItem[], Action<NSError>) instead")]
+		[Deprecated (PlatformName.iOS, 9, 3, message: "Use 'InitializePlaybackQueue (MPPlayableContentManager, MPContentItem[], Action<NSError>)' instead.")]
 		[Export ("playableContentManager:initializePlaybackQueueWithCompletionHandler:")]
 		void InitializePlaybackQueue (MPPlayableContentManager contentManager, Action<NSError> completionHandler);
 
@@ -1581,7 +1581,7 @@ namespace XamCore.MediaPlayer {
 		[Export ("contentLimitsEnforced")]
 		bool ContentLimitsEnforced { get; }
 
-		[Availability (Introduced = Platform.iOS_8_4, Deprecated = Platform.iOS_9_0, Message = "Replaced by ContentLimitsEnforced")]
+		[Availability (Introduced = Platform.iOS_8_4, Deprecated = Platform.iOS_9_0, Message = "Replaced by 'ContentLimitsEnforced'.")]
 		[Export ("contentLimitsEnabled")]
 		bool ContentLimitsEnabled { get; }
 

@@ -143,7 +143,7 @@ namespace XamCore.HomeKit {
 		[Field ("HMCharacteristicTypeHeatingThreshold")]
 		HeatingThreshold,
 
-		[Obsolete ("This value does not exist anymore and will always return null")]
+		[Obsolete ("This value does not exist anymore and will always return null.")]
 		HeatingCoolingStatus,
 
 		[Field ("HMCharacteristicTypeCurrentRelativeHumidity")]
@@ -987,7 +987,7 @@ namespace XamCore.HomeKit {
 		GarageDoorOpener,
 
 #if !WATCH && !TVOS
-		[Obsolete ("Use GarageDoorOpener instead")]
+		[Obsolete ("Use 'GarageDoorOpener' instead.")]
 		DoorOpener = GarageDoorOpener,
 #endif
 
