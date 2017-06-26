@@ -16288,7 +16288,7 @@ namespace XamCore.UIKit {
 	}
 	
 	[NoWatch, NoTV, iOS (11,0)]
-	[BaseType (typeof(NSObject), Delegates=new string [] {"Delegate"}, Events=new Type [] { typeof (UIDropInteractionDelegate)})]
+	[BaseType (typeof(NSObject))] // If Apple adds a delegate setter: Delegates=new string [] {"Delegate"}, Events=new Type [] { typeof (UIDropInteractionDelegate)})]
 	[DisableDefaultCtor]
 	interface UIDropInteraction : IUIInteraction
 	{
