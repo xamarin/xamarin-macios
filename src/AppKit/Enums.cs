@@ -2754,8 +2754,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,13)]
 	[Native]
-	public enum NSAccessibilityAnnotationPosition : nint
-	{
+	public enum NSAccessibilityAnnotationPosition : nint {
 		FullRange,
 		Start,
 		End,
@@ -2763,16 +2762,14 @@ namespace XamCore.AppKit {
 
 	[Mac (10,13)]
 	[Native]
-	public enum NSAccessibilityCustomRotorSearchDirection : nint
-	{
+	public enum NSAccessibilityCustomRotorSearchDirection : nint {
 		Previous,
 		Next,
 	}
 
 	[Mac (10,13)]
 	[Native]
-	public enum NSAccessibilityCustomRotorType : nint
-	{
+	public enum NSAccessibilityCustomRotorType : nint {
 		Custom = 0,
 		Any = 1,
 		Annotation,
