@@ -51,20 +51,28 @@ namespace XamCore.MediaPlayer {
 
 #if XAMCORE_2_0
 	}
-
-	[NoMac]
-	[NoTV]
+#if MONOMAC || TVOS
+	[Mac (10,12,2, onlyOn64: true)]
+	[Static]
+#else
 	[BaseType (typeof (MPMediaEntity))]
+#endif
 	interface MPMediaItem {
 #endif
+
+#if !MONOMAC
 		[Since (4,2)]
+		[NoMac]
+		[NoTV]
 		[Export ("persistentIDPropertyForGroupingType:")][Static]
 		string GetPersistentIDProperty (MPMediaGrouping groupingType);
 
 		[Since (4,2)]
+		[NoMac]
+		[NoTV]
 		[Export ("titlePropertyForGroupingType:")][Static]
 		string GetTitleProperty (MPMediaGrouping groupingType);
-
+#endif
 		[Since (3,0)]
 		[Field ("MPMediaItemPropertyPersistentID")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -1369,6 +1377,7 @@ namespace XamCore.MediaPlayer {
 		NSString PropertyDefaultPlaybackRate { get; }
 
 		[iOS (9,0)]
+		[TV (10,0)]
 		[Internal]
 		[Field ("MPNowPlayingInfoPropertyAvailableLanguageOptions")]
 		NSString PropertyAvailableLanguageOptions { get; }
@@ -1409,7 +1418,7 @@ namespace XamCore.MediaPlayer {
 		NSString PropertyIsLiveStream { get; }
 
 		[iOS (10,3)]
-		[Mac (10,12,3)]
+		[TV (10,2)]
 		[Field ("MPNowPlayingInfoPropertyAssetURL")]
 		NSString PropertyAssetUrl { get; }
 	}
