@@ -75,19 +75,21 @@ namespace XamCore.FinderSync {
 		[Export ("toolbarItemToolTip")]
 		string ToolbarItemToolTip { get; }
 
-		[Export ("supportedMessageInterfaceNamesForItemWithURL:")]
-		string[] GetSupportedMessageInterfaceNames (NSUrl itemUrl);
-
-		[Mac (10,13, onlyOn64 : true)]
-		[Export ("protocolForMessageInterface:")]
-		Protocol GetProtocol (NSFileProviderMessageInterface messageInterface);
-
 		[Mac (10,13, onlyOn64 : true)]
 		[Export ("exportedObjectForMessageInterface:itemURL:error:")]
 		NSObject GetExportedObject (NSFileProviderMessageInterface messageInterface, NSUrl itemUrl, [NullAllowed] out NSError error);
 
 		[Mac (10,13, onlyOn64 : true)]
-		[Async, Export ("valuesForAttributes:forItemWithURL:completion:")]
+		[Export ("supportedServiceNamesForItemWithURL:")]
+		string[] SupportedServiceNames (NSUrl itemUrl);
+
+		[Mac (10,13, onlyOn64 : true)]
+		[Export ("makeListenerEndpointForServiceName:andReturnError:")]
+		[return: NullAllowed]
+		NSXPCListenerEndpoint MakeListenerEndpoint (string serviceName, [NullAllowed] out NSError error);
+
+		[Mac (10,13, onlyOn64 : true)]
+		[Export ("valuesForAttributes:forItemWithURL:completion:")]
 		void GetValues (string[] attributes, NSUrl itemUrl, GetValuesCompletionHandler completion);
 	}
 
