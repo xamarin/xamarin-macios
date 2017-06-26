@@ -14,6 +14,8 @@ namespace XamCore.AppKit {
 	{
 		public static NSFont FromCTFont (CTFont font)
 		{
+			if (font == null)
+				return null;
 			return new NSFont (font.Handle);
 		}
 

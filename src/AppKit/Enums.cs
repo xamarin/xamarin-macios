@@ -1448,7 +1448,7 @@ namespace XamCore.AppKit {
 	[Flags]
 #if !XAMCORE_4_0
 	[Native]
-	[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'NSGlyphProperty' instead")]
+	[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'NSGlyphProperty' instead.")]
 	public enum NSGlyphStorageOptions : nuint_compat_int {
 #else
 	public enum NSGlyphStorageOptions : int
@@ -1563,12 +1563,10 @@ namespace XamCore.AppKit {
 		MonoSpaceTrait = (1 << 10),
 		VerticalTrait = (1 << 11), 
 		UIOptimizedTrait = (1 << 12),
-
 		[Mac (10,13)]
 		TraitTightLeading = 1 << 15,
 		[Mac (10,13)]
 		TraitLooseLeading = 1 << 16,
-
 		UnknownClass = 0 << 28,
 		OldStyleSerifsClass = 1 << 28,
 		TransitionalSerifsClass = 2 << 28,
@@ -2749,7 +2747,6 @@ namespace XamCore.AppKit {
 
 	[Mac (10,13)]
 	public enum NSFontError : int {
-
 		AssetDownloadError = 66304,  // Generic code when font asset download error occurs.
 		ErrorMinimum = 66304,  // Generic code when font asset download error occurs.
 		ErrorMaximum = 66335,  // Generic code when font asset download error occurs.
@@ -2761,7 +2758,7 @@ namespace XamCore.AppKit {
 	{
 		FullRange,
 		Start,
-		End
+		End,
 	}
 
 	[Mac (10,13)]
@@ -2769,7 +2766,7 @@ namespace XamCore.AppKit {
 	public enum NSAccessibilityCustomRotorSearchDirection : nint
 	{
 		Previous,
-		Next
+		Next,
 	}
 
 	[Mac (10,13)]
@@ -2796,28 +2793,27 @@ namespace XamCore.AppKit {
 		Table,
 		TextField,
 		UnderlinedText,
-		VisitedLink
+		VisitedLink,
 	}
 
+	[Mac (10, 13)]
 	[Native]
-	public enum NSColorType : nint
-	{
+	public enum NSColorType : nint {
 		ComponentBased,
 		Pattern,
-		Catalog
+		Catalog,
 	}
 
 	[Mac (10,13)]
 	[Native]
-	public enum NSFontAssetRequestOptions : nuint
-	{
+	public enum NSFontAssetRequestOptions : nuint {
 		UsesStandardUI = 1 << 0,
 	}
 
 	[Mac (10,13)]
 	[Native]
-	public enum NSFontPanelModeMask : nuint
-	{
+	[Flags]
+	public enum NSFontPanelModeMask : nuint {
 		Face = 1 << 0,
 		Size = 1 << 1,
 		Collection = 1 << 2,
@@ -2826,15 +2822,14 @@ namespace XamCore.AppKit {
 		TextColorEffect = 1 << 10,
 		DocumentColorEffect = 1 << 11,
 		ShadowEffect = 1 << 12,
-		AllEffects = 1048320,
-		StandardModes = 65535,
-		AllModes = (uint)4294967295L,
+		AllEffects = (nuint)0XFFF00,
+		StandardModes = (nuint)0XFFFF,
+		AllModes = (nuint)0XFFFFFFFF,
 	}
 
 	[Mac (10,13)]
 	[Native]
-	public enum NSLevelIndicatorPlaceholderVisibility : nint
-	{
+	public enum NSLevelIndicatorPlaceholderVisibility : nint {
 		Automatic = 0,
 		Always = 1,
 		WhileEditing = 2,
@@ -2842,8 +2837,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,13)]
 	[Native]
-	public enum NSSegmentDistribution : nint
-	{
+	public enum NSSegmentDistribution : nint {
 		Fit = 0,
 		Fill,
 		FillEqually,

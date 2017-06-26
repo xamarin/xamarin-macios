@@ -761,8 +761,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Static]
-	interface NSAboutPanelOption
-	{
+	interface NSAboutPanelOption {
 		[Mac (10, 13)]
 		[Field ("NSAboutPanelOptionCredits")]
 		NSString Credits { get; }
@@ -1272,7 +1271,6 @@ namespace XamCore.AppKit {
 		[Export ("appendBezierPathWithCGGlyphs:count:inFont:")]
 		[Internal]
 		void _AppendBezierPathWithCGGlyphs (IntPtr glyphs, nint count, NSFont font);
-
 	}
 
 	[BaseType (typeof (NSImageRep))]
@@ -1861,7 +1859,7 @@ namespace XamCore.AppKit {
 		[Export ("browser:writeRowsWithIndexes:inColumn:toPasteboard:")]
 		bool WriteRowsWithIndexesToPasteboard (NSBrowser browser, NSIndexSet rowIndexes, nint column, NSPasteboard pasteboard);
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead.")]
 		[Export ("browser:namesOfPromisedFilesDroppedAtDestination:forDraggedRowsWithIndexes:inColumn:")]
 		string [] PromisedFilesDroppedAtDestination (NSBrowser browser, NSUrl dropDestination, NSIndexSet rowIndexes, nint column);
 
@@ -2953,7 +2951,7 @@ namespace XamCore.AppKit {
 		[Export ("collectionView:writeItemsAtIndexes:toPasteboard:")]
 		bool WriteItems (NSCollectionView collectionView, NSIndexSet indexes, NSPasteboard toPasteboard);
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead.")]
 		[Export ("collectionView:namesOfPromisedFilesDroppedAtDestination:forDraggedItemsAtIndexes:")]
 		string [] NamesOfPromisedFilesDroppedAtDestination (NSCollectionView collectionView, NSUrl dropUrl, NSIndexSet indexes);
 
@@ -2979,7 +2977,7 @@ namespace XamCore.AppKit {
 		bool WriteItems (NSCollectionView collectionView, NSSet indexPaths, NSPasteboard pasteboard);
 
 		[Mac (10,11)]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead.")]
 		[Export ("collectionView:namesOfPromisedFilesDroppedAtDestination:forDraggedItemsAtIndexPaths:")]
 		string[] GetNamesOfPromisedFiles (NSCollectionView collectionView, NSUrl dropURL, NSSet indexPaths);
 
@@ -3443,7 +3441,9 @@ namespace XamCore.AppKit {
 	}
 
 	[Mac (10,11)]
+#if XAMCORE_4_0
 	[DisableDefaultCtor]
+#endif
 	[BaseType (typeof(NSCollectionViewLayout))]
 	interface NSCollectionViewTransitionLayout
 	{
@@ -3888,13 +3888,13 @@ namespace XamCore.AppKit {
 		[Static]
 		[Export ("colorNamed:bundle:")]
 		[return: NullAllowed]
-		NSColor ColorNamed (string name, [NullAllowed] NSBundle bundle);
+		NSColor FromName (string name, [NullAllowed] NSBundle bundle);
 
 		[Mac (10,13)]
 		[Static]
 		[Export ("colorNamed:")]
 		[return: NullAllowed]
-		NSColor ColorNamed (string name);
+		NSColor FromName (string name);
 
 		[Mac (10, 13)]
 		[Export ("type")]
@@ -3903,7 +3903,7 @@ namespace XamCore.AppKit {
 		[Mac (10,13)]
 		[Export ("colorUsingType:")]
 		[return: NullAllowed]
-		NSColor ColorUsingType (NSColorType type);
+		NSColor GetColor (NSColorType type);
 
 		[Mac (10, 10)]
 		[Static]
@@ -5433,6 +5433,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10,13)]
 		[Export ("shareDocumentWithSharingService:completionHandler:")]
+		[Async]
 		void ShareDocument (NSSharingService sharingService, [NullAllowed] Action<bool> completionHandler);
 
 		[Mac (10,13)]
@@ -5677,7 +5678,7 @@ namespace XamCore.AppKit {
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use NSFilePromiseProvider objects instead")]	
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use NSFilePromiseProvider objects instead.")]
 		[Export ("namesOfPromisedFilesDroppedAtDestination:")]
 		string [] PromisedFilesDroppedAtDestination (NSUrl dropDestination);
 
@@ -5788,7 +5789,7 @@ namespace XamCore.AppKit {
 		[Export ("draggingSourceOperationMaskForLocal:"), DefaultValue (NSDragOperation.None)]
 		NSDragOperation DraggingSourceOperationMaskForLocal (bool flag);
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use NSFilePromiseProvider objects instead")]	
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use NSFilePromiseProvider objects instead.")]
 		[Export ("namesOfPromisedFilesDroppedAtDestination:"), DefaultValue (new string[0])]
 		string [] NamesOfPromisedFilesDroppedAtDestination (NSUrl dropDestination);
 
@@ -5810,7 +5811,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[BaseType (typeof (NSResponder), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSDrawerDelegate)})]
-	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using 'NSSplitViewController'")]
+	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSSplitViewController' instead.")]
 	partial interface NSDrawer : NSAccessibilityElementProtocol, NSAccessibility {
 		[Export ("initWithContentSize:preferredEdge:")]
 		IntPtr Constructor (CGSize contentSize, NSRectEdge edge);
@@ -5874,7 +5875,7 @@ namespace XamCore.AppKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using 'NSSplitViewController'")]
+	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSSplitViewController' instead.")]
 	interface NSDrawerDelegate {
 		[Export ("drawerDidClose:"), EventArgs ("NSNotification")]
 		void DrawerDidClose (NSNotification notification);
@@ -6019,7 +6020,7 @@ namespace XamCore.AppKit {
 		NSStringEncoding MostCompatibleStringEncoding { get; }
 
 		[Export ("glyphWithName:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use CGGlyph APIs instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use the 'CGGlyph' APIs instead.")]
 		uint GlyphWithName (string aName); /* NSGlyph = unsigned int */
 
 		[Export ("coveredCharacterSet")]
@@ -6059,11 +6060,11 @@ namespace XamCore.AppKit {
 		bool IsFixedPitch { get; }
 
 		[Export ("boundingRectForGlyph:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use CGGlyph APIs instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use the 'CGGlyph' APIs instead.")]
 		CGRect BoundingRectForGlyph (uint /* NSGlyph = unsigned int */ aGlyph);
 
 		[Export ("advancementForGlyph:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use CGGlyph APIs instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use the 'CGGlyph' APIs instead.")]
 		CGSize AdvancementForGlyph (uint /* NSGlyph = unsigned int */ aGlyph);
 
 		[Export ("set")]
@@ -6178,11 +6179,11 @@ namespace XamCore.AppKit {
 
 		[Mac (10,13)]
 		[Export ("boundingRectForCGGlyph:")]
-		CGRect CalculateBoundingRect (CGGlyph glyph);
+		CGRect GetBoundingRect (CGGlyph glyph);
 
 		[Mac (10,13)]
 		[Export ("advancementForCGGlyph:")]
-		CGSize CalculateAdvancement (CGGlyph glyph);
+		CGSize GetAdvancement (CGGlyph glyph);
 
 		[Mac (10,13)]
 		[Internal]
@@ -7803,7 +7804,7 @@ namespace XamCore.AppKit {
 		string UserKeyEquivalent { get; }
 
 		[Export ("setTitleWithMnemonic:")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use Title instead")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'Title' instead")]
 		void SetTitleWithMnemonic (string stringWithAmpersand);
 
 		[Export ("isHighlighted")]
@@ -8678,7 +8679,7 @@ namespace XamCore.AppKit {
 		bool AcceptDrop (NSOutlineView outlineView, [Protocolize (4)] NSDraggingInfo info, [NullAllowed] NSObject item, nint index);
 	
 		[Export ("outlineView:namesOfPromisedFilesDroppedAtDestination:forDraggedItems:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead.")]
 		string [] FilesDropped (NSOutlineView outlineView, NSUrl dropDestination, NSArray items);
 	}
 
@@ -12682,7 +12683,7 @@ namespace XamCore.AppKit {
 		Points,
 
 		[Field ("NSRulerViewUnitPicas")]
-		Picas
+		Picas,
 	}
 
 	delegate void NSSavePanelComplete (nint result);
@@ -13327,7 +13328,7 @@ namespace XamCore.AppKit {
 		[Mac (10,13)]
 		[Export ("toolTipForSegment:")]
 		[return: NullAllowed]
-		string ToolTipForSegment (nint segment);
+		string GetToolTip (nint forSegment);
 
 		[Mac (10,13)]
 		[Export ("setTag:forSegment:")]
@@ -13335,7 +13336,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10,13)]
 		[Export ("tagForSegment:")]
-		nint TagForSegment (nint segment);
+		nint GetTag (nint segment);
 
 		[Mac (10,13)]
 		[Export ("setShowsMenuIndicator:forSegment:")]
@@ -13343,7 +13344,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10,13)]
 		[Export ("showsMenuIndicatorForSegment:")]
-		bool ShowsMenuIndicatorForSegment (nint segment);
+		bool GetShowsMenuIndicator (nint segment);
 
 		[Mac (10,13)]
 		[Export ("setAlignment:forSegment:")]
@@ -13351,7 +13352,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10,13)]
 		[Export ("alignmentForSegment:")]
-		NSTextAlignment AlignmentForSegment (nint segment);
+		NSTextAlignment GetAlignment (nint segment);
 
 		[Mac (10, 13)]
 		[Export ("segmentDistribution", ArgumentSemantic.Assign)]
@@ -15157,7 +15158,7 @@ namespace XamCore.AppKit {
 		bool LockFocusIfCanDraw ();
 
 		[Export ("lockFocusIfCanDrawInContext:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSView.DisplayRectIgnoringOpacity (CGRect aRect, NSGraphicsContext context)' to draw a view subtree into a graphics context.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSView.DisplayRectIgnoringOpacity (CGRect, NSGraphicsContext)' to draw a view subtree into a graphics context.")]
 		bool LockFocusIfCanDrawInContext (NSGraphicsContext context);
 
 		[Export ("focusView")][Static]
@@ -15445,11 +15446,11 @@ namespace XamCore.AppKit {
 		void DragImage (NSImage anImage, CGPoint viewLocation, CGSize initialOffset, NSEvent theEvent, NSPasteboard pboard, NSObject sourceObj, bool slideFlag);
 
 		[Export ("dragFile:fromRect:slideBack:event:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'BeginDraggingSession (NSDraggingItem [] items, NSEvent evnt, [Protocolize] NSDraggingSource source)' instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'BeginDraggingSession (NSDraggingItem [], NSEvent, NSDraggingSource)' instead.")]
 		bool DragFile (string filename, CGRect aRect, bool slideBack, NSEvent theEvent);
 		
 		[Export ("dragPromisedFilesOfTypes:fromRect:source:slideBack:event:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use BeginDraggingSession '(NSDraggingItem [] items, NSEvent evnt, [Protocolize] NSDraggingSource source)' with an NSFilePromiseProvider instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'BeginDraggingSession (NSDraggingItem [], NSEvent, NSDraggingSource)' instead.")]
 		bool DragPromisedFilesOfTypes (string[] typeArray, CGRect aRect, NSObject sourceObject, bool slideBack, NSEvent theEvent);
 		
 		[Export ("exitFullScreenModeWithOptions:")]
@@ -16978,7 +16979,7 @@ namespace XamCore.AppKit {
 		[Export ("tableView:acceptDrop:row:dropOperation:")]
 		bool AcceptDrop (NSTableView tableView, [Protocolize (4)] NSDraggingInfo info, nint row, NSTableViewDropOperation dropOperation);
 	
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead.")]
 		[Export ("tableView:namesOfPromisedFilesDroppedAtDestination:forDraggedRowsWithIndexes:")]
 		string [] FilesDropped (NSTableView tableView, NSUrl dropDestination, NSIndexSet indexSet );
 		
@@ -19923,15 +19924,15 @@ namespace XamCore.AppKit {
 		void RemoveFrameUsingName (string  name);
 	
 		[Export ("cacheImageInRect:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "This method shouldn’t be used as it doesn’t work in all drawing situations; instead, a subview should be used that implements the desired drawing behavior")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "This method shouldn’t be used as it doesn’t work in all drawing situations; instead, a subview should be used that implements the desired drawing behavior.")]
 		void CacheImageInRect (CGRect aRect);
 	
 		[Export ("restoreCachedImage")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "This method shouldn’t be used as it doesn’t work in all drawing situations; instead, a subview should be used that implements the desired drawing behavior")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "This method shouldn’t be used as it doesn’t work in all drawing situations; instead, a subview should be used that implements the desired drawing behavior.")]
 		void RestoreCachedImage ();
 	
 		[Export ("discardCachedImage")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "This method shouldn’t be used as it doesn’t work in all drawing situations; instead, a subview should be used that implements the desired drawing behavior")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "This method shouldn’t be used as it doesn’t work in all drawing situations; instead, a subview should be used that implements the desired drawing behavior.")]
 		void DiscardCachedImage ();
 	
 		[Export ("minSize")]
@@ -22551,11 +22552,11 @@ namespace XamCore.AppKit {
 		[Static]
 		[Export ("glyphInfoWithCGGlyph:forFont:baseString:")]
 		[return: NullAllowed]
-		NSGlyphInfo GlyphInfoWithCGGlyph (ushort glyph, NSFont font, string @string);
+		NSGlyphInfo GetGlyphInfo (ushort glyph, NSFont font, string @string);
 
 		[Mac (10, 13)]
 		[Export ("glyphID")]
-		ushort GlyphID { get; }
+		ushort GlyphId { get; }
 
 		[Mac (10, 13)]
 		[Export ("baseString")]
@@ -22595,19 +22596,19 @@ namespace XamCore.AppKit {
 	}
 
 	partial interface NSDrawer {
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using 'NSSplitViewController'")]	
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSSplitViewController' instead.")]
 		[Notification, Field ("NSDrawerWillOpenNotification")]
 		NSString WillOpenNotification { get; }
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using 'NSSplitViewController'")]	
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSSplitViewController' instead.")]
 		[Notification, Field ("NSDrawerDidOpenNotification")]
 		NSString DidOpenNotification { get; }
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using 'NSSplitViewController'")]	
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSSplitViewController' instead.")]
 		[Notification, Field ("NSDrawerWillCloseNotification")]
 		NSString WillCloseNotification { get; }
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Drawers are deprecated; consider using 'NSSplitViewController'")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSSplitViewController' instead.")]
 		[Notification, Field ("NSDrawerDidCloseNotification")]
 		NSString DidCloseNotification { get; }
 	}
@@ -25785,11 +25786,9 @@ namespace XamCore.AppKit {
 		[NullAllowed, Export ("target", ArgumentSemantic.Weak)]
 		NSObject Target { get; set; }
 
-		/*
-		It must conform to one of the following signatures:		 
+		[Advice (@"It must conform to one of the following signatures: 
 		- (BOOL)myPerformActionMethod;
-		- (BOOL)myPerformActionMethod:(NSAccessibilityCustomAction *)action;
-		*/
+		- (BOOL)myPerformActionMethod:(NSAccessibilityCustomAction *)action;")]
 		[NullAllowed, Export ("selector", ArgumentSemantic.Assign)]
 		Selector Selector { get; set; }
 	}
@@ -25867,14 +25866,13 @@ namespace XamCore.AppKit {
 		[Abstract]
 		[Export ("rotor:resultForSearchParameters:")]
 		[return: NullAllowed]
-		NSAccessibilityCustomRotorItemResult ResultForSearch (NSAccessibilityCustomRotor rotor, NSAccessibilityCustomRotorSearchParameters searchParameters);
+		NSAccessibilityCustomRotorItemResult GetResult (NSAccessibilityCustomRotor rotor, NSAccessibilityCustomRotorSearchParameters searchParameters);
 	}
 
 	interface INSAccessibilityElementLoading {}
 
 	[Mac (10,13)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface NSAccessibilityElementLoading
 	{
 		[Abstract]
@@ -25889,8 +25887,7 @@ namespace XamCore.AppKit {
 	interface INSCollectionViewPrefetching { }
 
 	[Mac (10,13)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface NSCollectionViewPrefetching
 	{
 		[Abstract]
@@ -25898,7 +25895,7 @@ namespace XamCore.AppKit {
 		void PrefetchItems (NSCollectionView collectionView, NSIndexPath[] indexPaths);
 
 		[Export ("collectionView:cancelPrefetchingForItemsAtIndexPaths:")]
-		void CancelPrefetchingForItems (NSCollectionView collectionView, NSIndexPath[] indexPaths);
+		void CancelPrefetching (NSCollectionView collectionView, NSIndexPath[] indexPaths);
 	}
 
 	delegate bool DownloadFontAssetsRequestCompletionHandler (NSError error);
@@ -25927,7 +25924,7 @@ namespace XamCore.AppKit {
 	interface NSObject_NSFontPanelValidationAdditions
 	{
 		[Export ("validModesForFontPanel:")]
-		NSFontPanelModeMask ValidModesForFontPanel (NSFontPanel fontPanel);
+		NSFontPanelModeMask GetValidModes (NSFontPanel fontPanel);
 	}
 
 	[Mac (10, 13)]
@@ -25943,19 +25940,19 @@ namespace XamCore.AppKit {
 		IntPtr Constructor (NSSet<NSUserInterfaceCompressionOptions> options);
 
 		[Export ("containsOptions:")]
-		bool ContainsOptions (NSUserInterfaceCompressionOptions options);
+		bool Contains (NSUserInterfaceCompressionOptions options);
 
 		[Export ("intersectsOptions:")]
-		bool IntersectsOptions (NSUserInterfaceCompressionOptions options);
+		bool Intersects (NSUserInterfaceCompressionOptions options);
 
 		[Export ("empty")]
 		bool Empty { [Bind ("isEmpty")] get; }
 
 		[Export ("optionsByAddingOptions:")]
-		NSUserInterfaceCompressionOptions CreateOptionsByAdding (NSUserInterfaceCompressionOptions options);
+		NSUserInterfaceCompressionOptions ByAdding (NSUserInterfaceCompressionOptions options);
 
 		[Export ("optionsByRemovingOptions:")]
-		NSUserInterfaceCompressionOptions CreateOptionsByRemoving (NSUserInterfaceCompressionOptions options);
+		NSUserInterfaceCompressionOptions ByRemoving (NSUserInterfaceCompressionOptions options);
 
 		[Static]
 		[Export ("hideImagesOption", ArgumentSemantic.Copy)]
@@ -25990,7 +25987,7 @@ namespace XamCore.AppKit {
 
 		[Abstract]
 		[Export ("minimumSizeWithPrioritizedCompressionOptions:")]
-		CGSize MinimumSize (NSUserInterfaceCompressionOptions[] prioritizedOptions);
+		CGSize GetMinimumSize (NSUserInterfaceCompressionOptions[] prioritizedOptions);
 
 		[Abstract]
 		[Export ("activeCompressionOptions", ArgumentSemantic.Copy)]
