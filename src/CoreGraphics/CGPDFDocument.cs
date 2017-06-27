@@ -272,13 +272,14 @@ namespace XamCore.CoreGraphics {
 		[iOS (11,0), Mac(10,3), TV(11,0), Watch(4,0)]
 		extern static /* CFDictionaryPtry */ IntPtr CGPDFDocumentGetOutline (/* CGPDFDocumentRef */ IntPtr document);
 
-		[iOS (11,0), Mac(10,3)]
+		[iOS (11,0), Mac(10,3), TV(11,0), Watch(4,0)]
 		public CGPDFOutlineOptions GetOutline ()
 		{
 			var ptr = CGPDFDocumentGetOutline (handle);
 			return new CGPDFOutlineOptions (new NSDictionary (ptr));
 		}
 
+		[iOS(11,0), Mac(10,3)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static CGPDFAccessPermissions CGPDFDocumentGetAccessPermissions (IntPtr document);
 

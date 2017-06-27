@@ -700,6 +700,7 @@ namespace XamCore.CoreGraphics {
 
 #if !COREBUILD
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[Mac(10,13)][iOS (11,0)]
 		unsafe extern static void CGPathApplyWithBlock (IntPtr handle, BlockLiteral *blockEnumerator);
 
 		static PathApplyProxy static_apply;
@@ -719,6 +720,7 @@ namespace XamCore.CoreGraphics {
 			}
 		}
 		
+		[Mac(10,13)][iOS (11,0)]
 		public void Apply (Action<CGPathElement> block)
 		{
 			if (block == null)
