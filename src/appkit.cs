@@ -1271,6 +1271,9 @@ namespace XamCore.AppKit {
 		[Export ("appendBezierPathWithCGGlyphs:count:inFont:")]
 		[Internal]
 		void _AppendBezierPathWithCGGlyphs (IntPtr glyphs, nint count, NSFont font);
+
+		[Wrap ("AppendPath (path)")]
+		void Append (NSBezierPath path);
 	}
 
 	[BaseType (typeof (NSImageRep))]
