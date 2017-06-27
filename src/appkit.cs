@@ -25952,10 +25952,10 @@ namespace XamCore.AppKit {
 		bool Empty { [Bind ("isEmpty")] get; }
 
 		[Export ("optionsByAddingOptions:")]
-		NSUserInterfaceCompressionOptions ByAdding (NSUserInterfaceCompressionOptions options);
+		NSUserInterfaceCompressionOptions GetOptionsByAdding (NSUserInterfaceCompressionOptions options);
 
 		[Export ("optionsByRemovingOptions:")]
-		NSUserInterfaceCompressionOptions ByRemoving (NSUserInterfaceCompressionOptions options);
+		NSUserInterfaceCompressionOptions GetOptionsByRemoving (NSUserInterfaceCompressionOptions options);
 
 		[Static]
 		[Export ("hideImagesOption", ArgumentSemantic.Copy)]
