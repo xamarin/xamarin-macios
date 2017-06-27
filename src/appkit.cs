@@ -4813,28 +4813,28 @@ namespace XamCore.AppKit {
 		[Export ("set")]
 		void Set ();
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'SetOnMouseExited' is unused and should not be called")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'SetOnMouseExited' is unused and should not be called.")]
 		[Export ("setOnMouseExited:")]
 		void SetOnMouseExited (bool flag);
 
 		[Export ("setOnMouseEntered:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'SetOnMouseEntered' is unused and should not be called")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'SetOnMouseEntered' is unused and should not be called.")]
 		void SetOnMouseEntered (bool flag);
 
 		[Export ("isSetOnMouseExited")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'IsSetOnMouseExited' is unused")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'IsSetOnMouseExited' is unused.")]
 		bool IsSetOnMouseExited ();
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'IsSetOnMouseEntered' is unused")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'IsSetOnMouseEntered' is unused.")]
 		[Export ("isSetOnMouseEntered")]
 		bool IsSetOnMouseEntered ();
 
 		[Export ("mouseEntered:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'MouseEntered' is unused and should not be called")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'MouseEntered' is unused and should not be called.")]
 		void MouseEntered (NSEvent theEvent);
 
 		[Export ("mouseExited:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'MouseExited' is unused and should not be called")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'MouseExited' is unused and should not be called.")]
 		void MouseExited (NSEvent theEvent);
 	}
 
@@ -7807,7 +7807,7 @@ namespace XamCore.AppKit {
 		string UserKeyEquivalent { get; }
 
 		[Export ("setTitleWithMnemonic:")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'Title' instead")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'Title' instead.")]
 		void SetTitleWithMnemonic (string stringWithAmpersand);
 
 		[Export ("isHighlighted")]
@@ -11237,23 +11237,23 @@ namespace XamCore.AppKit {
 		// Pasteboard names: for NSPasteboard.FromName()
 
 		[Field ("NSGeneralPboard")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSPasteboardNameGeneral' instead")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSPasteboardNameGeneral' instead.")]
 		NSString NSGeneralPasteboardName { get; }
 
 		[Field ("NSFontPboard")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSPasteboardNameFont' instead")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSPasteboardNameFont' instead.")]
 		NSString NSFontPasteboardName { get; }
 
 		[Field ("NSRulerPboard")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSPasteboardNameRuler' instead")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSPasteboardNameRuler' instead.")]
 		NSString NSRulerPasteboardName { get; }
 
 		[Field ("NSFindPboard")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSPasteboardNameFind' instead")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSPasteboardNameFind' instead.")]
 		NSString NSFindPasteboardName { get; }
 
 		[Field ("NSDragPboard")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSPasteboardNameDrag' instead")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSPasteboardNameDrag' instead.")]
 		NSString NSDragPasteboardName { get; }
 
 		[Mac (10, 13)]
