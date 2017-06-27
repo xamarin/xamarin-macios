@@ -83,11 +83,12 @@ namespace XamCore.FinderSync {
 		[Export ("supportedServiceNamesForItemWithURL:")]
 		string[] SupportedServiceNames (NSUrl itemUrl);
 
+#if FALSE // TODO: Activate after 10.13 foundation APIs have been merged
 		[Mac (10,13, onlyOn64 : true)]
 		[Export ("makeListenerEndpointForServiceName:andReturnError:")]
 		[return: NullAllowed]
 		NSXpcListenerEndpoint MakeListenerEndpoint (string serviceName, [NullAllowed] out NSError error);
-
+#endif
 		[Mac (10,13, onlyOn64 : true)]
 		[Async, Export ("valuesForAttributes:forItemWithURL:completion:")]
 		void GetValues (string[] attributes, NSUrl itemUrl, GetValuesCompletionHandler completion);
