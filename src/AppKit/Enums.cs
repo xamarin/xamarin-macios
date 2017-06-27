@@ -142,7 +142,7 @@ namespace XamCore.AppKit {
 		Retained, 
 		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_13, Message = "Use 'Buffered' instead.")]
 		Nonretained, 
-		Buffered
+		Buffered,
 	}
 
 	[Native]
