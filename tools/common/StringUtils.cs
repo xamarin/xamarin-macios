@@ -19,7 +19,7 @@ namespace Xamarin.Utils {
 			if (String.IsNullOrEmpty (f))
 				return f ?? String.Empty;
 
-			if (f.IndexOf (' ') == -1 && f.IndexOf ('\'') == -1 && f.IndexOf (',') == -1 && f.IndexOf ('$') == -1)
+			if (f.IndexOf (' ') == -1 && f.IndexOf ('\'') == -1 && f.IndexOf (',') == -1 && f.IndexOf ('$') == -1 && f.IndexOf ('\\') == -1)
 				return f;
 
 			var s = new StringBuilder ();
