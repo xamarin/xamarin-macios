@@ -93,7 +93,6 @@ namespace XamCore.Foundation
 	delegate void NSItemProviderLoadHandler ([BlockCallback] NSItemProviderCompletionHandler completionHandler, Class expectedValueClass, NSDictionary options);
 	delegate void EnumerateDatesCallback (NSDate date, bool exactMatch, ref bool stop);
 	delegate void EnumerateIndexSetCallback (nuint idx, ref bool stop);
-
 #if MONOMAC
 	delegate void CloudKitRegistrationPreparationAction ([BlockCallback] CloudKitRegistrationPreparationHandler handler);
 	delegate void CloudKitRegistrationPreparationHandler (CKShare share, CKContainer container, NSError error);
@@ -157,6 +156,16 @@ namespace XamCore.Foundation
 
 		[Export ("removeObserver:fromObjectsAtIndexes:forKeyPath:")]
 		void RemoveObserver (NSObject observer, NSIndexSet indexes, string keyPath);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("writeToURL:error:")]
+		bool WriteToUrl (NSUrl url, [NullAllowed] out NSError error);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("arrayWithContentsOfURL:error:")]
+		[return: NullAllowed]
+		NSObject[] FromUrl (NSUrl url, [NullAllowed] out NSError error);
 	}
 
 #if MONOMAC
@@ -1716,7 +1725,11 @@ namespace XamCore.Foundation
 
 		[iOS (8,0), Mac (10,10)]
 		[Export ("setLocalizedDateFormatFromTemplate:")]
-		void SetLocalizedDateFormatFromTemplate (string dateFormatTemplate);		
+		void SetLocalizedDateFormatFromTemplate (string dateFormatTemplate);
+
+		[Watch (2, 0), TV (9, 0), Mac (10, 10), iOS (8, 0)]
+		[Export ("formattingContext", ArgumentSemantic.Assign)]
+		NSFormattingContext FormattingContext { get; set; }
 	}
 
 	[iOS (8,0)][Mac(10,10)]
@@ -1769,6 +1782,10 @@ namespace XamCore.Foundation
 
 		[Export ("getObjectValue:forString:errorDescription:")]
 		bool GetObjectValue (out NSObject obj, string str, out string error);
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NullAllowed, Export ("referenceDate", ArgumentSemantic.Copy)]
+		NSDate ReferenceDate { get; set; }
 	}
 
 	[iOS (8,0)][Mac(10,10)]
@@ -3577,6 +3594,16 @@ namespace XamCore.Foundation
 
 		[Export ("initWithContentsOfURL:")]
 		IntPtr Constructor (NSUrl url);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("initWithContentsOfURL:error:")]
+		IntPtr Constructor (NSUrl url, [NullAllowed] out NSError error);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("dictionaryWithContentsOfURL:error:")]
+		[return: NullAllowed]
+		NSDictionary<NSString, NSObject> FromUrl (NSUrl url, [NullAllowed] out NSError error);
 		
 		[Export ("count")]
 		nuint Count { get; }
@@ -3771,6 +3798,13 @@ namespace XamCore.Foundation
 
 		[Field ("NSFilePathErrorKey")]
 		NSString FilePathErrorKey { get; }
+
+		[iOS (9,0)][Mac (10,11)]
+		[Field ("NSDebugDescriptionErrorKey")]
+		NSString DebugDescriptionErrorKey { get; }
+
+		[Field ("NSLocalizedFailureErrorKey")]
+		NSString LocalizedFailureErrorKey { get; }
 
 		[iOS (9,0)][Mac (10,11)]
 		[Static]
@@ -4537,6 +4571,7 @@ namespace XamCore.Foundation
 		[Field ("NSRunLoopCommonModes")]
 		NSString NSRunLoopCommonModes { get; }
 
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use NSXPCConnection instead")]
 		[NoiOS, NoWatch, NoTV]
 		[Field ("NSConnectionReplyMode")]
 		NSString NSRunLoopConnectionReplyMode { get; }
@@ -13333,6 +13368,7 @@ namespace XamCore.Foundation
 		CGAffineTransform TransformStruct { get; set; }
 	}
 
+	[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.Watch_2_0 | Platform.TV_11_0, Message = "Use NSXPCConnection instead")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSConnection {
@@ -13436,6 +13472,7 @@ namespace XamCore.Foundation
 		NSConnectionDelegate Delegate { get; set; }
 	}
 
+	[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.Watch_2_0 | Platform.TV_11_0, Message = "Use NSXPCConnection instead")]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -13459,6 +13496,7 @@ namespace XamCore.Foundation
 		bool AllowNewConnection (NSConnection newConnection, NSConnection parentConnection);
 	}
 
+	[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.Watch_2_0 | Platform.TV_11_0, Message = "Use NSXPCConnection instead")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSDistantObjectRequest {
@@ -15130,7 +15168,7 @@ namespace XamCore.Foundation
 	interface NSFileProviderMessageInterface
 	{
 		[Export ("name")]
-        	string Name { get; }
+		string Name { get; }
 	}
 
 	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
@@ -15147,5 +15185,164 @@ namespace XamCore.Foundation
 
 		[Export ("invalidate")]
 		void Invalidate ();
+	}
+
+	interface INSXPCProxyCreating
+	{
+	}
+
+	[Protocol]
+	interface NSXPCProxyCreating
+	{
+		[Abstract]
+		[Export ("remoteObjectProxy")]
+		NSObject RemoteObjectProxy { get; }
+
+		[Abstract]
+		[Export ("remoteObjectProxyWithErrorHandler:")]
+		NSObject GetRemoteObjectProxy (Action<NSError> handler);
+
+		[Watch (2,0), TV (9,0), Mac (10,11), iOS (9,0)]
+		[Export ("synchronousRemoteObjectProxyWithErrorHandler:")]
+		NSObject GetSynchronousRemoteObjectProxy (Action<NSError> handler);
+	}
+
+	[Mac (10,8)]
+	[BaseType (typeof(NSObject))]
+	interface NSXPCConnection : NSXPCProxyCreating
+	{
+		[Export ("initWithServiceName:")]
+		IntPtr Constructor (string serviceName);
+
+		[NullAllowed, Export ("serviceName")]
+		string ServiceName { get; }
+
+		[Export ("initWithMachServiceName:options:")]
+		IntPtr Constructor (string name, NSXPCConnectionOptions options);
+
+		[Export ("initWithListenerEndpoint:")]
+		IntPtr Constructor (NSXPCListenerEndpoint endpoint);
+
+		[Export ("endpoint", ArgumentSemantic.Retain)]
+		NSXPCListenerEndpoint Endpoint { get; }
+
+		[NullAllowed, Export ("exportedInterface", ArgumentSemantic.Retain)]
+		NSXPCInterface ExportedInterface { get; set; }
+
+		[NullAllowed, Export ("exportedObject", ArgumentSemantic.Retain)]
+		NSObject ExportedObject { get; set; }
+
+		[NullAllowed, Export ("remoteObjectInterface", ArgumentSemantic.Retain)]
+		NSXPCInterface RemoteObjectInterface { get; set; }
+
+		[Export ("remoteObjectProxy", ArgumentSemantic.Retain)]
+		NSObject RemoteObjectProxy { get; }
+
+		[Export ("remoteObjectProxyWithErrorHandler:")]
+		NSObject GetRemoteObjectProxy (Action<NSError> handler);
+
+		[Watch (2,0), TV (9,0), Mac (10,11), iOS (9,0)]
+		[Export ("synchronousRemoteObjectProxyWithErrorHandler:")]
+		NSObject GetSynchronousRemoteObjectProxy (Action<NSError> handler);
+
+		[NullAllowed, Export ("interruptionHandler", ArgumentSemantic.Copy)]
+		Action InterruptionHandler { get; set; }
+
+		[NullAllowed, Export ("invalidationHandler", ArgumentSemantic.Copy)]
+		Action InvalidationHandler { get; set; }
+
+		[Export ("resume")]
+		void Resume ();
+
+		[Export ("suspend")]
+		void Suspend ();
+
+		[Export ("invalidate")]
+		void Invalidate ();
+
+		[Export ("auditSessionIdentifier")]
+		int AuditSessionIdentifier { get; }
+
+		[Export ("processIdentifier")]
+		int ProcessIdentifier { get; }
+
+		[Export ("effectiveUserIdentifier")]
+		uint EffectiveUserIdentifier { get; }
+
+		[Export ("effectiveGroupIdentifier")]
+		uint EffectiveGroupIdentifier { get; }
+	}
+
+	[Mac (10,8)]
+	[BaseType (typeof(NSObject))]
+	interface NSXPCListener
+	{
+		[Static]
+		[Export ("serviceListener")]
+		NSXPCListener ServiceListener { get; }
+
+		[Static]
+		[Export ("anonymousListener")]
+		NSXPCListener AnonymousListener { get; }
+
+		[Export ("initWithMachServiceName:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string name);
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Assign)]
+		INSXPCListenerDelegate Delegate { get; set; }
+
+		[Export ("endpoint", ArgumentSemantic.Retain)]
+		NSXPCListenerEndpoint Endpoint { get; }
+
+		[Export ("resume")]
+		void Resume ();
+
+		[Export ("suspend")]
+		void Suspend ();
+
+		[Export ("invalidate")]
+		void Invalidate ();
+	}
+
+	interface INSXPCListenerDelegate { }
+
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface NSXPCListenerDelegate
+	{
+		[Export ("listener:shouldAcceptNewConnection:")]
+		bool ShouldAcceptNewConnection (NSXPCListener listener, NSXPCConnection newConnection);
+	}
+
+	[Mac (10,8)]
+	[BaseType (typeof(NSObject))]
+	interface NSXPCInterface
+	{
+		[Static]
+		[Export ("interfaceWithProtocol:")]
+		NSXPCInterface FromInterface (Protocol protocol);
+
+		[Export ("protocol", ArgumentSemantic.Assign)]
+		Protocol Protocol { get; set; }
+
+		[Export ("setClasses:forSelector:argumentIndex:ofReply:")]
+		void SetClasses (NSSet<Class> classes, Selector sel, nuint arg, bool ofReply);
+
+		[Export ("classesForSelector:argumentIndex:ofReply:")]
+		NSSet<Class> ClassesForSelector (Selector sel, nuint arg, bool ofReply);
+
+		[Export ("setInterface:forSelector:argumentIndex:ofReply:")]
+		void SetInterface (NSXPCInterface ifc, Selector sel, nuint arg, bool ofReply);
+
+		[Export ("interfaceForSelector:argumentIndex:ofReply:")]
+		[return: NullAllowed]
+		NSXPCInterface InterfaceForSelector (Selector sel, nuint arg, bool ofReply);
+	}
+
+	[Mac (10,8)]
+	[BaseType (typeof(NSObject))]
+	interface NSXPCListenerEndpoint : NSSecureCoding
+	{
 	}
 }
