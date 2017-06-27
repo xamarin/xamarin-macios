@@ -4571,7 +4571,7 @@ namespace XamCore.Foundation
 		[Field ("NSRunLoopCommonModes")]
 		NSString NSRunLoopCommonModes { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use NSXPCConnection instead")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use NSXpcConnection instead")]
 		[NoiOS, NoWatch, NoTV]
 		[Field ("NSConnectionReplyMode")]
 		NSString NSRunLoopConnectionReplyMode { get; }
@@ -13368,7 +13368,7 @@ namespace XamCore.Foundation
 		CGAffineTransform TransformStruct { get; set; }
 	}
 
-	[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.Watch_2_0 | Platform.TV_11_0, Message = "Use NSXPCConnection instead")]
+	[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.Watch_2_0 | Platform.TV_11_0, Message = "Use NSXpcConnection instead")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSConnection {
@@ -13472,7 +13472,7 @@ namespace XamCore.Foundation
 		NSConnectionDelegate Delegate { get; set; }
 	}
 
-	[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.Watch_2_0 | Platform.TV_11_0, Message = "Use NSXPCConnection instead")]
+	[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.Watch_2_0 | Platform.TV_11_0, Message = "Use NSXpcConnection instead")]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -13496,7 +13496,7 @@ namespace XamCore.Foundation
 		bool AllowNewConnection (NSConnection newConnection, NSConnection parentConnection);
 	}
 
-	[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.Watch_2_0 | Platform.TV_11_0, Message = "Use NSXPCConnection instead")]
+	[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.Watch_2_0 | Platform.TV_11_0, Message = "Use NSXpcConnection instead")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSDistantObjectRequest {
@@ -15187,12 +15187,12 @@ namespace XamCore.Foundation
 		void Invalidate ();
 	}
 
-	interface INSXPCProxyCreating
+	interface INSXpcProxyCreating
 	{
 	}
 
 	[Protocol]
-	interface NSXPCProxyCreating
+	interface NSXpcProxyCreating
 	{
 		[Abstract]
 		[Export ("remoteObjectProxy")]
@@ -15209,7 +15209,7 @@ namespace XamCore.Foundation
 
 	[Mac (10,8)]
 	[BaseType (typeof(NSObject))]
-	interface NSXPCConnection : NSXPCProxyCreating
+	interface NSXpcConnection : NSXpcProxyCreating
 	{
 		[Export ("initWithServiceName:")]
 		IntPtr Constructor (string serviceName);
@@ -15218,22 +15218,22 @@ namespace XamCore.Foundation
 		string ServiceName { get; }
 
 		[Export ("initWithMachServiceName:options:")]
-		IntPtr Constructor (string name, NSXPCConnectionOptions options);
+		IntPtr Constructor (string name, NSXpcConnectionOptions options);
 
 		[Export ("initWithListenerEndpoint:")]
-		IntPtr Constructor (NSXPCListenerEndpoint endpoint);
+		IntPtr Constructor (NSXpcListenerEndpoint endpoint);
 
 		[Export ("endpoint", ArgumentSemantic.Retain)]
-		NSXPCListenerEndpoint Endpoint { get; }
+		NSXpcListenerEndpoint Endpoint { get; }
 
 		[NullAllowed, Export ("exportedInterface", ArgumentSemantic.Retain)]
-		NSXPCInterface ExportedInterface { get; set; }
+		NSXpcInterface ExportedInterface { get; set; }
 
 		[NullAllowed, Export ("exportedObject", ArgumentSemantic.Retain)]
 		NSObject ExportedObject { get; set; }
 
 		[NullAllowed, Export ("remoteObjectInterface", ArgumentSemantic.Retain)]
-		NSXPCInterface RemoteObjectInterface { get; set; }
+		NSXpcInterface RemoteObjectInterface { get; set; }
 
 		[Export ("remoteObjectProxy", ArgumentSemantic.Retain)]
 		NSObject RemoteObjectProxy { get; }
@@ -15275,25 +15275,25 @@ namespace XamCore.Foundation
 
 	[Mac (10,8)]
 	[BaseType (typeof(NSObject))]
-	interface NSXPCListener
+	interface NSXpcListener
 	{
 		[Static]
 		[Export ("serviceListener")]
-		NSXPCListener ServiceListener { get; }
+		NSXpcListener ServiceListener { get; }
 
 		[Static]
 		[Export ("anonymousListener")]
-		NSXPCListener AnonymousListener { get; }
+		NSXpcListener AnonymousListener { get; }
 
 		[Export ("initWithMachServiceName:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (string name);
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Assign)]
-		INSXPCListenerDelegate Delegate { get; set; }
+		INSXpcListenerDelegate Delegate { get; set; }
 
 		[Export ("endpoint", ArgumentSemantic.Retain)]
-		NSXPCListenerEndpoint Endpoint { get; }
+		NSXpcListenerEndpoint Endpoint { get; }
 
 		[Export ("resume")]
 		void Resume ();
@@ -15305,23 +15305,23 @@ namespace XamCore.Foundation
 		void Invalidate ();
 	}
 
-	interface INSXPCListenerDelegate { }
+	interface INSXpcListenerDelegate { }
 
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
-	interface NSXPCListenerDelegate
+	interface NSXpcListenerDelegate
 	{
 		[Export ("listener:shouldAcceptNewConnection:")]
-		bool ShouldAcceptNewConnection (NSXPCListener listener, NSXPCConnection newConnection);
+		bool ShouldAcceptNewConnection (NSXpcListener listener, NSXpcConnection newConnection);
 	}
 
 	[Mac (10,8)]
 	[BaseType (typeof(NSObject))]
-	interface NSXPCInterface
+	interface NSXpcInterface
 	{
 		[Static]
 		[Export ("interfaceWithProtocol:")]
-		NSXPCInterface FromInterface (Protocol protocol);
+		NSXpcInterface FromInterface (Protocol protocol);
 
 		[Export ("protocol", ArgumentSemantic.Assign)]
 		Protocol Protocol { get; set; }
@@ -15333,16 +15333,16 @@ namespace XamCore.Foundation
 		NSSet<Class> ClassesForSelector (Selector sel, nuint arg, bool ofReply);
 
 		[Export ("setInterface:forSelector:argumentIndex:ofReply:")]
-		void SetInterface (NSXPCInterface ifc, Selector sel, nuint arg, bool ofReply);
+		void SetInterface (NSXpcInterface ifc, Selector sel, nuint arg, bool ofReply);
 
 		[Export ("interfaceForSelector:argumentIndex:ofReply:")]
 		[return: NullAllowed]
-		NSXPCInterface InterfaceForSelector (Selector sel, nuint arg, bool ofReply);
+		NSXpcInterface InterfaceForSelector (Selector sel, nuint arg, bool ofReply);
 	}
 
 	[Mac (10,8)]
 	[BaseType (typeof(NSObject))]
-	interface NSXPCListenerEndpoint : NSSecureCoding
+	interface NSXpcListenerEndpoint : NSSecureCoding
 	{
 	}
 }
