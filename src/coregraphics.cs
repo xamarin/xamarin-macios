@@ -195,10 +195,12 @@ namespace XamCore.CoreGraphics {
 		[Field ("kCGColorConversionBlackPointCompensation")]
 		NSString BlackPointCompensationKey { get; }
 
+#if XAMCORE_2_0
 		[Internal]
 		[Field ("kCGColorConversionTRCSize")]
 		[iOS (11,0), Mac(10,3), TV(11,0), Watch(4,0)]
 		NSString TrcSize { get; }
+#endif
 	}
 
 	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]

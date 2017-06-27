@@ -582,7 +582,7 @@ namespace XamCore.CoreGraphics {
 		[iOS (11,0), Mac(10,3), TV(11,0), Watch(4,0)]
 		extern static void CGContextResetClip (/* CGContextRef */ IntPtr c);
 
-		[iOS (11,0)]
+		[iOS (11,0), Mac(10,3), TV(11,0), Watch(4,0)]
 		public void ResetClip ()
 		{
 			CGContextResetClip (handle);
