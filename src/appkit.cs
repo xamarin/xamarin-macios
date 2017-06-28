@@ -13347,7 +13347,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10,13)]
 		[Export ("showsMenuIndicatorForSegment:")]
-		bool GetShowsMenuIndicator (nint segment);
+		bool ShowsMenuIndicator (nint segment);
 
 		[Mac (10,13)]
 		[Export ("setAlignment:forSegment:")]
