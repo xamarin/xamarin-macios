@@ -52,6 +52,43 @@ namespace Xamarin
 		}
 
 		[Test]
+		public void SymbolCollectionWithDlsym ()
+		{
+			// https://bugzilla.xamarin.com/show_bug.cgi?id=57826
+
+			using (var mtouch = new MTouchTool ()) {
+				var tmpdir = mtouch.CreateTemporaryDirectory ();
+				mtouch.CreateTemporaryCacheDirectory ();
+
+				var externMethod = @"
+class X {
+	[System.Runtime.InteropServices.DllImport (""__Internal"")]
+	static extern void xamarin_start_wwan ();
+}
+";
+
+				var codeDll = externMethod + @"
+public class A {}
+";
+				var codeExe = externMethod + @"
+public class B : A {}
+";
+
+				var dllPath = CompileTestAppLibrary (tmpdir, codeDll, profile: Profile.iOS, appName: "A");
+
+				mtouch.References = new string [] { dllPath };
+				mtouch.CreateTemporaryApp (extraCode: codeExe, extraArg: $"-r:{StringUtils.Quote (dllPath)}");
+				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.Debug = false;
+				mtouch.CustomArguments = new string [] { "--dlsym:+A.dll", "--dlsym:-testApp.exe" };
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+
+				var symbols = ExecutionHelper.Execute ("nm", $"-gUj {StringUtils.Quote (mtouch.NativeExecutablePath)}", hide_output: true).Split ('\n');
+				Assert.That (symbols, Does.Contain ("_xamarin_start_wwan"), "symb");
+			}
+		}
+
+		[Test]
 		public void FatAppFiles ()
 		{
 			AssertDeviceAvailable ();
