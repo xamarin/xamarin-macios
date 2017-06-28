@@ -2576,581 +2576,583 @@ namespace XamCore.Foundation
 		[Field ("NSMetadataUbiquitousItemURLInLocalContainerKey")]
 		NSString UbiquitousItemURLInLocalContainerKey { get; }
 
+#if MONOMAC
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemKeywordsKey")]
-		NSString ItemKeywordsKey { get; }
+		NSString KeywordsKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemTitleKey")]
-		NSString ItemTitleKey { get; }
+		NSString TitleKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAuthorsKey")]
-		NSString ItemAuthorsKey { get; }
+		NSString AuthorsKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemEditorsKey")]
-		NSString ItemEditorsKey { get; }
+		NSString EditorsKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemParticipantsKey")]
-		NSString ItemParticipantsKey { get; }
+		NSString ParticipantsKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemProjectsKey")]
-		NSString ItemProjectsKey { get; }
+		NSString ProjectsKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemDownloadedDateKey")]
-		NSString ItemDownloadedDateKey { get; }
+		NSString DownloadedDateKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemWhereFromsKey")]
-		NSString ItemWhereFromsKey { get; }
+		NSString WhereFromsKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemCommentKey")]
-		NSString ItemCommentKey { get; }
+		NSString CommentKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemCopyrightKey")]
-		NSString ItemCopyrightKey { get; }
+		NSString CopyrightKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemLastUsedDateKey")]
-		NSString ItemLastUsedDateKey { get; }
+		NSString LastUsedDateKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemContentCreationDateKey")]
-		NSString ItemContentCreationDateKey { get; }
+		NSString ContentCreationDateKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemContentModificationDateKey")]
-		NSString ItemContentModificationDateKey { get; }
+		NSString ContentModificationDateKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemDateAddedKey")]
-		NSString ItemDateAddedKey { get; }
+		NSString DateAddedKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemDurationSecondsKey")]
-		NSString ItemDurationSecondsKey { get; }
+		NSString DurationSecondsKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemContactKeywordsKey")]
-		NSString ItemContactKeywordsKey { get; }
+		NSString ContactKeywordsKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemVersionKey")]
-		NSString ItemVersionKey { get; }
+		NSString VersionKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemPixelHeightKey")]
-		NSString ItemPixelHeightKey { get; }
+		NSString PixelHeightKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemPixelWidthKey")]
-		NSString ItemPixelWidthKey { get; }
+		NSString PixelWidthKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemPixelCountKey")]
-		NSString ItemPixelCountKey { get; }
+		NSString PixelCountKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemColorSpaceKey")]
-		NSString ItemColorSpaceKey { get; }
+		NSString ColorSpaceKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemBitsPerSampleKey")]
-		NSString ItemBitsPerSampleKey { get; }
+		NSString BitsPerSampleKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemFlashOnOffKey")]
-		NSString ItemFlashOnOffKey { get; }
+		NSString FlashOnOffKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemFocalLengthKey")]
-		NSString ItemFocalLengthKey { get; }
+		NSString FocalLengthKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAcquisitionMakeKey")]
-		NSString ItemAcquisitionMakeKey { get; }
+		NSString AcquisitionMakeKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAcquisitionModelKey")]
-		NSString ItemAcquisitionModelKey { get; }
+		NSString AcquisitionModelKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemISOSpeedKey")]
-		NSString ItemIsoSpeedKey { get; }
+		NSString IsoSpeedKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemOrientationKey")]
-		NSString ItemOrientationKey { get; }
+		NSString OrientationKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemLayerNamesKey")]
-		NSString ItemLayerNamesKey { get; }
+		NSString LayerNamesKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemWhiteBalanceKey")]
-		NSString ItemWhiteBalanceKey { get; }
+		NSString WhiteBalanceKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemApertureKey")]
-		NSString ItemApertureKey { get; }
+		NSString ApertureKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemProfileNameKey")]
-		NSString ItemProfileNameKey { get; }
+		NSString ProfileNameKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemResolutionWidthDPIKey")]
-		NSString ItemResolutionWidthDpiKey { get; }
+		NSString ResolutionWidthDpiKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemResolutionHeightDPIKey")]
-		NSString ItemResolutionHeightDpiKey { get; }
+		NSString ResolutionHeightDpiKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemExposureModeKey")]
-		NSString ItemExposureModeKey { get; }
+		NSString ExposureModeKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemExposureTimeSecondsKey")]
-		NSString ItemExposureTimeSecondsKey { get; }
+		NSString ExposureTimeSecondsKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemEXIFVersionKey")]
-		NSString ItemExifVersionKey { get; }
+		NSString ExifVersionKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemCameraOwnerKey")]
-		NSString ItemCameraOwnerKey { get; }
+		NSString CameraOwnerKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemFocalLength35mmKey")]
-		NSString ItemFocalLength35mmKey { get; }
+		NSString FocalLength35mmKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemLensModelKey")]
-		NSString ItemLensModelKey { get; }
+		NSString LensModelKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemEXIFGPSVersionKey")]
-		NSString ItemExifGpsVersionKey { get; }
+		NSString ExifGpsVersionKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAltitudeKey")]
-		NSString ItemAltitudeKey { get; }
+		NSString AltitudeKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemLatitudeKey")]
-		NSString ItemLatitudeKey { get; }
+		NSString LatitudeKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemLongitudeKey")]
-		NSString ItemLongitudeKey { get; }
+		NSString LongitudeKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemSpeedKey")]
-		NSString ItemSpeedKey { get; }
+		NSString SpeedKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemTimestampKey")]
-		NSString ItemTimestampKey { get; }
+		NSString TimestampKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSTrackKey")]
-		NSString ItemGpsTrackKey { get; }
+		NSString GpsTrackKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemImageDirectionKey")]
-		NSString ItemImageDirectionKey { get; }
+		NSString ImageDirectionKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemNamedLocationKey")]
-		NSString ItemNamedLocationKey { get; }
+		NSString NamedLocationKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSStatusKey")]
-		NSString ItemGpsStatusKey { get; }
+		NSString GpsStatusKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSMeasureModeKey")]
-		NSString ItemGpsMeasureModeKey { get; }
+		NSString GpsMeasureModeKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSDOPKey")]
-		NSString ItemGpsDopKey { get; }
+		NSString GpsDopKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSMapDatumKey")]
-		NSString ItemGpsMapDatumKey { get; }
+		NSString GpsMapDatumKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSDestLatitudeKey")]
-		NSString ItemGpsDestLatitudeKey { get; }
+		NSString GpsDestLatitudeKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSDestLongitudeKey")]
-		NSString ItemGpsDestLongitudeKey { get; }
+		NSString GpsDestLongitudeKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSDestBearingKey")]
-		NSString ItemGpsDestBearingKey { get; }
+		NSString GpsDestBearingKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSDestDistanceKey")]
-		NSString ItemGpsDestDistanceKey { get; }
+		NSString GpsDestDistanceKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSProcessingMethodKey")]
-		NSString ItemGpsProcessingMethodKey { get; }
+		NSString GpsProcessingMethodKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSAreaInformationKey")]
-		NSString ItemGpsAreaInformationKey { get; }
+		NSString GpsAreaInformationKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSDateStampKey")]
-		NSString ItemGpsDateStampKey { get; }
+		NSString GpsDateStampKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGPSDifferentalKey")]
-		NSString ItemGpsDifferentalKey { get; }
+		NSString GpsDifferentalKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemCodecsKey")]
-		NSString ItemCodecsKey { get; }
+		NSString CodecsKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemMediaTypesKey")]
-		NSString ItemMediaTypesKey { get; }
+		NSString MediaTypesKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemStreamableKey")]
-		NSString ItemStreamableKey { get; }
+		NSString StreamableKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemTotalBitRateKey")]
-		NSString ItemTotalBitRateKey { get; }
+		NSString TotalBitRateKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemVideoBitRateKey")]
-		NSString ItemVideoBitRateKey { get; }
+		NSString VideoBitRateKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAudioBitRateKey")]
-		NSString ItemAudioBitRateKey { get; }
+		NSString AudioBitRateKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemDeliveryTypeKey")]
-		NSString ItemDeliveryTypeKey { get; }
+		NSString DeliveryTypeKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAlbumKey")]
-		NSString ItemAlbumKey { get; }
+		NSString AlbumKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemHasAlphaChannelKey")]
-		NSString ItemHasAlphaChannelKey { get; }
+		NSString HasAlphaChannelKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemRedEyeOnOffKey")]
-		NSString ItemRedEyeOnOffKey { get; }
+		NSString RedEyeOnOffKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemMeteringModeKey")]
-		NSString ItemMeteringModeKey { get; }
+		NSString MeteringModeKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemMaxApertureKey")]
-		NSString ItemMaxApertureKey { get; }
+		NSString MaxApertureKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemFNumberKey")]
-		NSString ItemFNumberKey { get; }
+		NSString FNumberKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemExposureProgramKey")]
-		NSString ItemExposureProgramKey { get; }
+		NSString ExposureProgramKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemExposureTimeStringKey")]
-		NSString ItemExposureTimeStringKey { get; }
+		NSString ExposureTimeStringKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemHeadlineKey")]
-		NSString ItemHeadlineKey { get; }
+		NSString HeadlineKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemInstructionsKey")]
-		NSString ItemInstructionsKey { get; }
+		NSString InstructionsKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemCityKey")]
-		NSString ItemCityKey { get; }
+		NSString CityKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemStateOrProvinceKey")]
-		NSString ItemStateOrProvinceKey { get; }
+		NSString StateOrProvinceKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemCountryKey")]
-		NSString ItemCountryKey { get; }
+		NSString CountryKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemTextContentKey")]
-		NSString ItemTextContentKey { get; }
+		NSString TextContentKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAudioSampleRateKey")]
-		NSString ItemAudioSampleRateKey { get; }
+		NSString AudioSampleRateKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAudioChannelCountKey")]
-		NSString ItemAudioChannelCountKey { get; }
+		NSString AudioChannelCountKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemTempoKey")]
-		NSString ItemTempoKey { get; }
+		NSString TempoKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemKeySignatureKey")]
-		NSString ItemKeySignatureKey { get; }
+		NSString KeySignatureKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemTimeSignatureKey")]
-		NSString ItemTimeSignatureKey { get; }
+		NSString TimeSignatureKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAudioEncodingApplicationKey")]
-		NSString ItemAudioEncodingApplicationKey { get; }
+		NSString AudioEncodingApplicationKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemComposerKey")]
-		NSString ItemComposerKey { get; }
+		NSString ComposerKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemLyricistKey")]
-		NSString ItemLyricistKey { get; }
+		NSString LyricistKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAudioTrackNumberKey")]
-		NSString ItemAudioTrackNumberKey { get; }
+		NSString AudioTrackNumberKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemRecordingDateKey")]
-		NSString ItemRecordingDateKey { get; }
+		NSString RecordingDateKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemMusicalGenreKey")]
-		NSString ItemMusicalGenreKey { get; }
+		NSString MusicalGenreKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemIsGeneralMIDISequenceKey")]
-		NSString ItemIsGeneralMidiSequenceKey { get; }
+		NSString IsGeneralMidiSequenceKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemRecordingYearKey")]
-		NSString ItemRecordingYearKey { get; }
+		NSString RecordingYearKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemOrganizationsKey")]
-		NSString ItemOrganizationsKey { get; }
+		NSString OrganizationsKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemLanguagesKey")]
-		NSString ItemLanguagesKey { get; }
+		NSString LanguagesKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemRightsKey")]
-		NSString ItemRightsKey { get; }
+		NSString RightsKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemPublishersKey")]
-		NSString ItemPublishersKey { get; }
+		NSString PublishersKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemContributorsKey")]
-		NSString ItemContributorsKey { get; }
+		NSString ContributorsKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemCoverageKey")]
-		NSString ItemCoverageKey { get; }
+		NSString CoverageKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemSubjectKey")]
-		NSString ItemSubjectKey { get; }
+		NSString SubjectKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemThemeKey")]
-		NSString ItemThemeKey { get; }
+		NSString ThemeKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemDescriptionKey")]
-		NSString ItemDescriptionKey { get; }
+		NSString DescriptionKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemIdentifierKey")]
-		NSString ItemIdentifierKey { get; }
+		NSString IdentifierKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAudiencesKey")]
-		NSString ItemAudiencesKey { get; }
+		NSString AudiencesKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemNumberOfPagesKey")]
-		NSString ItemNumberOfPagesKey { get; }
+		NSString NumberOfPagesKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemPageWidthKey")]
-		NSString ItemPageWidthKey { get; }
+		NSString PageWidthKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemPageHeightKey")]
-		NSString ItemPageHeightKey { get; }
+		NSString PageHeightKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemSecurityMethodKey")]
-		NSString ItemSecurityMethodKey { get; }
+		NSString SecurityMethodKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemCreatorKey")]
-		NSString ItemCreatorKey { get; }
+		NSString CreatorKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemEncodingApplicationsKey")]
-		NSString ItemEncodingApplicationsKey { get; }
+		NSString EncodingApplicationsKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemDueDateKey")]
-		NSString ItemDueDateKey { get; }
+		NSString DueDateKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemStarRatingKey")]
-		NSString ItemStarRatingKey { get; }
+		NSString StarRatingKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemPhoneNumbersKey")]
-		NSString ItemPhoneNumbersKey { get; }
+		NSString PhoneNumbersKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemEmailAddressesKey")]
-		NSString ItemEmailAddressesKey { get; }
+		NSString EmailAddressesKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemInstantMessageAddressesKey")]
-		NSString ItemInstantMessageAddressesKey { get; }
+		NSString InstantMessageAddressesKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemKindKey")]
-		NSString ItemKindKey { get; }
+		NSString KindKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemRecipientsKey")]
-		NSString ItemRecipientsKey { get; }
+		NSString RecipientsKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemFinderCommentKey")]
-		NSString ItemFinderCommentKey { get; }
+		NSString FinderCommentKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemFontsKey")]
-		NSString ItemFontsKey { get; }
+		NSString FontsKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAppleLoopsRootKeyKey")]
-		NSString ItemAppleLoopsRootKeyKey { get; }
+		NSString AppleLoopsRootKeyKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAppleLoopsKeyFilterTypeKey")]
-		NSString ItemAppleLoopsKeyFilterTypeKey { get; }
+		NSString AppleLoopsKeyFilterTypeKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAppleLoopsLoopModeKey")]
-		NSString ItemAppleLoopsLoopModeKey { get; }
+		NSString AppleLoopsLoopModeKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAppleLoopDescriptorsKey")]
-		NSString ItemAppleLoopDescriptorsKey { get; }
+		NSString AppleLoopDescriptorsKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemMusicalInstrumentCategoryKey")]
-		NSString ItemMusicalInstrumentCategoryKey { get; }
+		NSString MusicalInstrumentCategoryKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemMusicalInstrumentNameKey")]
-		NSString ItemMusicalInstrumentNameKey { get; }
+		NSString MusicalInstrumentNameKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemCFBundleIdentifierKey")]
-		NSString ItemCFBundleIdentifierKey { get; }
+		NSString CFBundleIdentifierKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemInformationKey")]
-		NSString ItemInformationKey { get; }
+		NSString InformationKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemDirectorKey")]
-		NSString ItemDirectorKey { get; }
+		NSString DirectorKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemProducerKey")]
-		NSString ItemProducerKey { get; }
+		NSString ProducerKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemGenreKey")]
-		NSString ItemGenreKey { get; }
+		NSString GenreKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemPerformersKey")]
-		NSString ItemPerformersKey { get; }
+		NSString PerformersKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemOriginalFormatKey")]
-		NSString ItemOriginalFormatKey { get; }
+		NSString OriginalFormatKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemOriginalSourceKey")]
-		NSString ItemOriginalSourceKey { get; }
+		NSString OriginalSourceKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAuthorEmailAddressesKey")]
-		NSString ItemAuthorEmailAddressesKey { get; }
+		NSString AuthorEmailAddressesKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemRecipientEmailAddressesKey")]
-		NSString ItemRecipientEmailAddressesKey { get; }
+		NSString RecipientEmailAddressesKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemAuthorAddressesKey")]
-		NSString ItemAuthorAddressesKey { get; }
+		NSString AuthorAddressesKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemRecipientAddressesKey")]
-		NSString ItemRecipientAddressesKey { get; }
+		NSString RecipientAddressesKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemIsLikelyJunkKey")]
-		NSString ItemIsLikelyJunkKey { get; }
+		NSString IsLikelyJunkKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemExecutableArchitecturesKey")]
-		NSString ItemExecutableArchitecturesKey { get; }
+		NSString ExecutableArchitecturesKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemExecutablePlatformKey")]
-		NSString ItemExecutablePlatformKey { get; }
+		NSString ExecutablePlatformKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemApplicationCategoriesKey")]
-		NSString ItemApplicationCategoriesKey { get; }
+		NSString ApplicationCategoriesKey { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		[Field ("NSMetadataItemIsApplicationManagedKey")]
-		NSString ItemIsApplicationManagedKey { get; }
+		NSString IsApplicationManagedKey { get; }
+#endif
 
 		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
 		[Field ("NSMetadataUbiquitousItemIsSharedKey")]
@@ -11416,7 +11418,7 @@ namespace XamCore.Foundation
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("fileURL", ArgumentSemantic.Copy)]
-		NSUrl FileURL { get; set; }
+		NSUrl FileUrl { get; set; }
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("fileTotalCount", ArgumentSemantic.Copy)]
@@ -15330,14 +15332,14 @@ namespace XamCore.Foundation
 		void SetClasses (NSSet<Class> classes, Selector sel, nuint arg, bool ofReply);
 
 		[Export ("classesForSelector:argumentIndex:ofReply:")]
-		NSSet<Class> ClassesForSelector (Selector sel, nuint arg, bool ofReply);
+		NSSet<Class> GetClasses (Selector sel, nuint arg, bool ofReply);
 
 		[Export ("setInterface:forSelector:argumentIndex:ofReply:")]
 		void SetInterface (NSXpcInterface ifc, Selector sel, nuint arg, bool ofReply);
 
 		[Export ("interfaceForSelector:argumentIndex:ofReply:")]
 		[return: NullAllowed]
-		NSXpcInterface InterfaceForSelector (Selector sel, nuint arg, bool ofReply);
+		NSXpcInterface GetInterface (Selector sel, nuint arg, bool ofReply);
 	}
 
 	[Mac (10,8)]
