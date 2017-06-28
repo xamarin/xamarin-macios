@@ -3906,7 +3906,7 @@ namespace XamCore.AppKit {
 		[Mac (10,13)]
 		[Export ("colorUsingType:")]
 		[return: NullAllowed]
-		NSColor FromType (NSColorType type);
+		NSColor GetColor (NSColorType type);
 
 		[Mac (10, 10)]
 		[Static]
@@ -25789,7 +25789,7 @@ namespace XamCore.AppKit {
 		[NullAllowed, Export ("target", ArgumentSemantic.Weak)]
 		NSObject Target { get; set; }
 
-		[Advice (@"It must conform to one of the following signatures: bool ActionMethod () or bool ActionMethod (NSAccessibilityCustomAction action) and be decorated with a corresponding [Export]")]
+		[Advice (@"It must conform to one of the following signatures: 'bool ActionMethod ()' or 'bool ActionMethod (NSAccessibilityCustomAction)' and be decorated with a corresponding [Export].")]
 		[NullAllowed, Export ("selector", ArgumentSemantic.Assign)]
 		Selector Selector { get; set; }
 	}
