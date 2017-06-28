@@ -506,5 +506,75 @@ namespace XamCore.AVKit {
 		NSString ApproximateEndDate { get; }
 	}
 
+	[TV (11,0), iOS (11,0)]
+	[BaseType (typeof (UIView))]
+	interface AVRoutePickerView {
+
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frame);
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		IAVRoutePickerViewDelegate Delegate { get; set; }
+
+		[Export ("activeTintColor", ArgumentSemantic.Assign), NullAllowed]
+		UIColor ActiveTintColor { get; set; }
+
+		[NoiOS]
+		[Export ("routePickerButtonStyle", ArgumentSemantic.Assign)]
+		AVRoutePickerViewButtonStyle RoutePickerButtonStyle { get; set; }
+	}
+
+	[TV (11,0), NoiOS]
+	[Native]
+	public enum AVRoutePickerViewButtonStyle : nint {
+		System,
+		Plain,
+		Custom,
+	}
+#else
+
+	[Mac (10,13)]
+	[BaseType (typeof (NSView))]
+	interface AVRoutePickerView {
+
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frame);
+
+		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
+		IAVRoutePickerViewDelegate Delegate { get; set; }
+
+		[Export ("routePickerButtonColorForState:")]
+		NSColor GetRoutePickerButtonColor (AVRoutePickerViewButtonState state);
+
+		[Export ("setRoutePickerButtonColor:forState:")]
+		void SetRoutePickerButtonColor ([NullAllowed] NSColor color, AVRoutePickerViewButtonState state);
+
+		[Export ("routePickerButtonBordered")]
+		bool RoutePickerButtonBordered { [Bind ("isRoutePickerButtonBordered")] get; set; }
+	}
+
+	[Mac (10,13)]
+	[Native]
+	public enum AVRoutePickerViewButtonState : nint {
+		Normal,
+		NormalHighlighted,
+		Active,
+		ActiveHighlighted
+	}
+
 #endif
+
+	interface IAVRoutePickerViewDelegate { }
+
+	[TV (11,0), iOS (11,0), Mac (10,13)]
+	[Protocol, Model]
+	[BaseType (typeof (NSObject))]
+	interface AVRoutePickerViewDelegate {
+
+		[Export ("routePickerViewWillBeginPresentingRoutes:")]
+		void WillBeginPresentingRoutes (AVRoutePickerView routePickerView);
+
+		[Export ("routePickerViewDidEndPresentingRoutes:")]
+		void DidEndPresentingRoutes (AVRoutePickerView routePickerView);
+	}
 }
