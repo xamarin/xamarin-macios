@@ -78,8 +78,7 @@ public class ListSourceFiles {
 	// returns the source paths used to create an assembly that has a pdb file
 	public static HashSet<String> GetFilePathsFromPdb (string pdbFile)
 	{
-		var assemblyPath = pdbFile.Replace (".pdb", ".dll");
-		var pdb = assemblyPath + ".pdb";
+		var pdb = pdbFile.Replace (".pdb", ".dll");
 
 		var result = new HashSet<String> (StringComparer.OrdinalIgnoreCase);
 
@@ -87,7 +86,7 @@ public class ListSourceFiles {
 			return result;
 
 		var assemblyResolver = new DefaultAssemblyResolver ();
-		var assemblyLocation = Path.GetDirectoryName (assemblyPath);
+		var assemblyLocation = Path.GetDirectoryName (pdb);
 		assemblyResolver.AddSearchDirectory (assemblyLocation);
 
 		var readerParameters = new ReaderParameters { AssemblyResolver = assemblyResolver };
@@ -97,7 +96,7 @@ public class ListSourceFiles {
 		readerParameters.SymbolReaderProvider = symbolReaderProvider;
 		readerParameters.ReadSymbols = true;
 
-		var assemblyDefinition = AssemblyDefinition.ReadAssembly (assemblyPath, readerParameters);
+		var assemblyDefinition = AssemblyDefinition.ReadAssembly (pdb, readerParameters);
 		var mainModule = assemblyDefinition.MainModule;
 		foreach (var type in mainModule.Types) {
 			foreach (var method in type.Methods) {
