@@ -981,9 +981,9 @@ namespace XamCore.GameplayKit {
 		[Wrap ("this (nodes: graphNodes, radius: radius)")] // Avoid breaking change
 		IntPtr Constructor (GKGraphNode2D [] graphNodes, float radius);
 
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use GetVector2Point instead")]
-		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use GetVector2Point instead")]
-		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use GetVector2Point instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'GetVector2Point' instead.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use 'GetVector2Point' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'GetVector2Point' instead.")]
 		[Export ("pointAtIndex:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		Vector2 GetPoint (nuint index);

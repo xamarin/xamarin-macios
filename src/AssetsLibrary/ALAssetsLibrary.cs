@@ -20,7 +20,7 @@ using XamCore.MediaPlayer;
 
 namespace XamCore.AssetsLibrary
 {
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Photos API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	public partial class ALAssetsLibrary
 	{
 		[Obsolete ("Use the overload that takes a CGImage instead")]

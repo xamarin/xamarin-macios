@@ -442,6 +442,7 @@ namespace xharness
 			foreach (var taskGroup in runSimulatorTasks.GroupBy ((RunSimulatorTask task) => task.Platform)) {
 				Tasks.Add (new AggregatedRunSimulatorTask (taskGroup) {
 					Jenkins = this,
+					TestName = $"Tests for {taskGroup.Key}",
 				});
 			}
 
@@ -1686,7 +1687,7 @@ function oninitialload ()
 		public Jenkins Jenkins;
 		public Harness Harness { get { return Jenkins.Harness; } }
 		public TestProject TestProject;
-		public string ProjectFile { get { return TestProject.Path; } }
+		public string ProjectFile { get { return TestProject?.Path; } }
 		public string ProjectConfiguration;
 		public string ProjectPlatform;
 		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
@@ -1769,6 +1770,8 @@ function oninitialload ()
 					return test_name;
 				
 				var rv = Path.GetFileNameWithoutExtension (ProjectFile);
+				if (rv == null)
+					return $"unknown test name ({GetType ().Name}";
 				switch (Platform) {
 				case TestPlatform.Mac:
 				case TestPlatform.Mac_Classic:

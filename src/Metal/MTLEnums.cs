@@ -203,7 +203,7 @@ namespace XamCore.Metal {
 #if MONOMAC
 		R8Unorm_sRGB = 11,
 #elif !XAMCORE_3_0
-		[Obsolete ("Only available on OSX")]
+		[Obsolete ("Only available on macOS.")]
 		R8Unorm_sRGB = 11,
 #endif
 		R8Snorm = 12,

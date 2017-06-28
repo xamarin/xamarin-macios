@@ -242,6 +242,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "Intents", "Intents", 10 },
 				{ "IntentsUI", "IntentsUI", 10 },
 
+				{ "ARKit", "ARKit", 11 },
 				{ "CoreNFC", "CoreNFC", 11 },
 			};
 		}

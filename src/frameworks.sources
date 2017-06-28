@@ -150,6 +150,11 @@ APPKIT_SOURCES = \
 	AppKit/NSColorPickerTouchBarItem.cs \
 	AppKit/NSSliderTouchBarItem.cs
 
+# ARKit
+
+ARKIT_SOURCES = \
+	ARKit/ARPointCloud.cs \
+
 # AssetsLibrary
 
 ASSETSLIBRARY_API_SOURCES = \
@@ -1599,6 +1604,7 @@ IOS_FRAMEWORKS =         \
 	AdSupport \
 	AddressBook \
 	AddressBookUI \
+	ARKit \
 	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \

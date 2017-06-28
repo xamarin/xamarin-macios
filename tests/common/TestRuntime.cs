@@ -86,6 +86,7 @@ partial class TestRuntime
 		NUnit.Framework.Assert.Ignore ("Requires the platform version shipped with Xcode {0}.{1}", major, minor);
 	}
 
+	// This function checks if the current Xcode version is exactly (neither higher nor lower) the requested one.
 	public static bool CheckExactXcodeVersion (int major, int minor, int beta = 0)
 	{
 		var nineb1 = new {
@@ -95,7 +96,18 @@ partial class TestRuntime
 			macOS = new { Major = 10, Minor = 13, Build = "?" },
 			watchOS = new { Major = 4, Minor = 0, Build = "?" },
 		};
-		var versions = new [] { nineb1 };
+		var nineb2 = new {
+			Xcode = new { Major = 9, Minor = 0, Beta = 2 },
+			iOS = new { Major = 11, Minor = 0, Build = "15A5304f" },
+			tvOS = new { Major = 11, Minor = 0, Build = "?" },
+			macOS = new { Major = 10, Minor = 13, Build = "?" },
+			watchOS = new { Major = 4, Minor = 0, Build = "?" },
+		};
+
+		var versions = new [] {
+			nineb1,
+			nineb2,
+		};
 
 		foreach (var v in versions) {
 			if (v.Xcode.Major != major)
@@ -109,7 +121,7 @@ partial class TestRuntime
 			if (!CheckExactiOSSystemVersion (v.iOS.Major, v.iOS.Minor))
 				return false;
 			if (v.iOS.Build == "?")
-				throw new NotImplementedException ($"Build number for iOS {v.iOS.Major}.{v.iOS.Minor} beta {beta}");
+				throw new NotImplementedException ($"Build number for iOS {v.iOS.Major}.{v.iOS.Minor} beta {beta} (candidate: {GetiOSBuildVersion ()})");
 			var actual = GetiOSBuildVersion ();
 			Console.WriteLine (actual);
 			return actual == v.iOS.Build;
@@ -118,7 +130,7 @@ partial class TestRuntime
 #endif
 		}
 
-		throw new NotImplementedException ($"Xcode version {major}.{minor} beta {beta} not found");
+		throw new NotImplementedException ($"Build information for Xcode version {major}.{minor} beta {beta} not found");
 	}
 
 	public static bool CheckXcodeVersion (int major, int minor, int build = 0)

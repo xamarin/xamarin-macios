@@ -602,7 +602,7 @@ namespace XamCore.Foundation
 		NSDateComponents Components (NSCalendarUnit unitFlags, NSDate fromDate, NSDate toDate, NSCalendarOptions opts);
 
 #if !XAMCORE_4_0
-		[Obsolete ("Use the overload with a NSCalendarOptions parameter")]
+		[Obsolete ("Use the overload with a 'NSCalendarOptions' parameter.")]
 		[Wrap ("Components (unitFlags, fromDate, toDate, (NSCalendarOptions) opts)")]
 		NSDateComponents Components (NSCalendarUnit unitFlags, NSDate fromDate, NSDate toDate, NSDateComponentsWrappingBehavior opts);
 #endif
@@ -611,7 +611,7 @@ namespace XamCore.Foundation
 		NSDate DateByAddingComponents (NSDateComponents comps, NSDate date, NSCalendarOptions opts);
 
 #if !XAMCORE_4_0
-		[Obsolete ("Use the overload with a NSCalendarOptions parameter")]
+		[Obsolete ("Use the overload with a 'NSCalendarOptions' parameter.")]
 		[Wrap ("DateByAddingComponents (comps, date, (NSCalendarOptions) opts)")]
 		NSDate DateByAddingComponents (NSDateComponents comps, NSDate date, NSDateComponentsWrappingBehavior opts);
 #endif
@@ -1512,7 +1512,7 @@ namespace XamCore.Foundation
 		nint Nanosecond { get; set; }
 
 		[Export ("week")]
-		[Availability (Introduced = Platform.Mac_10_4 | Platform.iOS_2_0, Deprecated = Platform.Mac_10_9 | Platform.iOS_7_0, Message = "Use WeekOfMonth or WeekOfYear, depending on which you mean")]
+		[Availability (Introduced = Platform.Mac_10_4 | Platform.iOS_2_0, Deprecated = Platform.Mac_10_9 | Platform.iOS_7_0, Message = "Use 'WeekOfMonth' or 'WeekOfYear' instead.")]
 		nint Week { get; set; }
 
 		[Export ("weekday")]
@@ -2508,7 +2508,7 @@ namespace XamCore.Foundation
 		[Field ("NSMetadataUbiquitousItemHasUnresolvedConflictsKey")]
 		NSString UbiquitousItemHasUnresolvedConflictsKey { get; }
 
-		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_9, Message="Use UbiquitousItemDownloadingStatusKey")]
+		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_9, Message="Use 'UbiquitousItemDownloadingStatusKey' instead.")]
 		[Field ("NSMetadataUbiquitousItemIsDownloadedKey")]
 		NSString UbiquitousItemIsDownloadedKey { get; }
 
@@ -2793,12 +2793,12 @@ namespace XamCore.Foundation
 #if !MONOMAC
 		[NoTV]
 		[Since (7,0)]
-		[Deprecated (PlatformName.iOS, 9, 0, message: "Use ReadFromUrl")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'ReadFromUrl' instead.")]
 		[Export ("readFromFileURL:options:documentAttributes:error:")]
 		bool ReadFromFile (NSUrl url, NSDictionary options, ref NSDictionary returnOptions, ref NSError error);
 
 		[NoTV]
-		[Deprecated (PlatformName.iOS, 9, 0, message: "Use ReadFromUrl")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'ReadFromUrl' instead.")]
 		[Wrap ("ReadFromFile (url, options == null ? null : options.Dictionary, ref returnOptions, ref error)")]
 		bool ReadFromFile (NSUrl url, NSAttributedStringDocumentAttributes options, ref NSDictionary returnOptions, ref NSError error);
 
@@ -3233,7 +3233,7 @@ namespace XamCore.Foundation
 		NSExpression FromFormat (string expressionFormat);
 
 #if !XAMCORE_4_0 && !WATCH
-		[Obsolete("FromFormat (string, NSExpression[]) is deprecated, please use FromFormat (string, NSObject[]) instead.")]
+		[Obsolete("Use 'FromFormat (string, NSObject[])' instead.")]
 		[Static, Export ("expressionWithFormat:argumentArray:")]
 		NSExpression FromFormat (string format, NSExpression [] parameters);
 #endif
@@ -3262,7 +3262,7 @@ namespace XamCore.Foundation
 		NSExpression FromFunction (NSExpression target, string name, NSExpression[] parameters);
 
 #if !XAMCORE_4_0 && !WATCH
-		[Obsolete("FromFunction (NSExpressionHandler, NSExpression[]) is deprecated, please use FromFunction (NSExpressionCallbackHandler, NSExpression[]) instead.")]
+		[Obsolete("Use 'FromFunction (NSExpressionCallbackHandler, NSExpression[])' instead.")]
 		[Static, Export ("expressionForBlock:arguments:")]
 		NSExpression FromFunction (NSExpressionHandler target, NSExpression[] parameters);
 #endif
@@ -5021,10 +5021,10 @@ namespace XamCore.Foundation
 		NSString UbiquitousItemIsUploadingKey { get; }
 
 		[Field ("NSURLUbiquitousItemPercentDownloadedKey")]
-		[Availability (Introduced = Platform.iOS_5_0 | Platform.Mac_10_7, Deprecated = Platform.iOS_6_0 | Platform.Mac_10_8, Message = "NSMetadataQuery.UbiquitousItemPercentDownloadedKey on NSMetadataItem instead")]
+		[Availability (Introduced = Platform.iOS_5_0 | Platform.Mac_10_7, Deprecated = Platform.iOS_6_0 | Platform.Mac_10_8, Message = "Use 'NSMetadataQuery.UbiquitousItemPercentDownloadedKey' on 'NSMetadataItem' instead.")]
 		NSString UbiquitousItemPercentDownloadedKey { get; }
 
-		[Availability (Introduced = Platform.iOS_5_0 | Platform.Mac_10_7, Deprecated = Platform.iOS_6_0 | Platform.Mac_10_8, Message = "NSMetadataQuery.UbiquitousItemPercentUploadedKey on NSMetadataItem instead")]
+		[Availability (Introduced = Platform.iOS_5_0 | Platform.Mac_10_7, Deprecated = Platform.iOS_6_0 | Platform.Mac_10_8, Message = "Use 'NSMetadataQuery.UbiquitousItemPercentUploadedKey' on 'NSMetadataItem' instead.")]
 		[Field ("NSURLUbiquitousItemPercentUploadedKey")]
 		NSString UbiquitousItemPercentUploadedKey { get; }
 
@@ -5484,18 +5484,18 @@ namespace XamCore.Foundation
 		bool CanHandleRequest (NSUrlRequest request);
 	
 		[NoWatch]
-		[Deprecated (PlatformName.iOS, 9,0, message: "Use NSUrlSession instead")]
-		[Deprecated (PlatformName.MacOSX, 10,11, message: "Use NSUrlSession instead")]
+		[Deprecated (PlatformName.iOS, 9,0, message: "Use 'NSUrlSession' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,11, message: "Use 'NSUrlSession' instead.")]
 		[Export ("connectionWithRequest:delegate:")][Static]
 		NSUrlConnection FromRequest (NSUrlRequest request, [Protocolize] NSUrlConnectionDelegate connectionDelegate);
 	
-		[Deprecated (PlatformName.iOS, 9,0, message: "Use NSUrlSession instead")]
-		[Deprecated (PlatformName.MacOSX, 10,11, message: "Use NSUrlSession instead")]
+		[Deprecated (PlatformName.iOS, 9,0, message: "Use 'NSUrlSession' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,11, message: "Use 'NSUrlSession' instead.")]
 		[Export ("initWithRequest:delegate:")]
 		IntPtr Constructor (NSUrlRequest request, [Protocolize] NSUrlConnectionDelegate connectionDelegate);
 	
-		[Deprecated (PlatformName.iOS, 9,0, message: "Use NSUrlSession instead")]
-		[Deprecated (PlatformName.MacOSX, 10,11, message: "Use NSUrlSession instead")]
+		[Deprecated (PlatformName.iOS, 9,0, message: "Use 'NSUrlSession' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,11, message: "Use 'NSUrlSession' instead.")]
 		[Export ("initWithRequest:delegate:startImmediately:")]
 		IntPtr Constructor (NSUrlRequest request, [Protocolize] NSUrlConnectionDelegate connectionDelegate, bool startImmediately);
 	
@@ -5559,15 +5559,15 @@ namespace XamCore.Foundation
 #endif
 
 		[Export ("connection:canAuthenticateAgainstProtectionSpace:")]
-		[Availability (Deprecated=Platform.iOS_8_0|Platform.Mac_10_10, Message="Use WillSendRequestForAuthenticationChallenge instead")]
+		[Availability (Deprecated=Platform.iOS_8_0|Platform.Mac_10_10, Message="Use 'WillSendRequestForAuthenticationChallenge' instead.")]
 		bool CanAuthenticateAgainstProtectionSpace (NSUrlConnection connection, NSUrlProtectionSpace protectionSpace);
 
 		[Export ("connection:didReceiveAuthenticationChallenge:")]
-		[Availability (Deprecated=Platform.iOS_8_0|Platform.Mac_10_10, Message="Use WillSendRequestForAuthenticationChallenge instead")]
+		[Availability (Deprecated=Platform.iOS_8_0|Platform.Mac_10_10, Message="Use 'WillSendRequestForAuthenticationChallenge' instead.")]
 		void ReceivedAuthenticationChallenge (NSUrlConnection connection, NSUrlAuthenticationChallenge challenge);
 
 		[Export ("connection:didCancelAuthenticationChallenge:")]
-		[Availability (Deprecated=Platform.iOS_8_0|Platform.Mac_10_10, Message="Use WillSendRequestForAuthenticationChallenge instead")]
+		[Availability (Deprecated=Platform.iOS_8_0|Platform.Mac_10_10, Message="Use 'WillSendRequestForAuthenticationChallenge' instead.")]
 		void CanceledAuthenticationChallenge (NSUrlConnection connection, NSUrlAuthenticationChallenge challenge);
 
 		[Export ("connectionShouldUseCredentialStorage:")]
@@ -5810,7 +5810,7 @@ namespace XamCore.Foundation
 		NSUrlSession FromWeakConfiguration (NSUrlSessionConfiguration configuration, [NullAllowed] NSObject weakDelegate, [NullAllowed] NSOperationQueue delegateQueue);
 	
 #if !XAMCORE_4_0
-		[Obsolete ("Use the overload with a `INSUrlSessionDelegate` parameter.")]
+		[Obsolete ("Use the overload with a 'INSUrlSessionDelegate' parameter.")]
 		[Static, Wrap ("FromWeakConfiguration (configuration, sessionDelegate, delegateQueue);")]
 		NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, NSUrlSessionDelegate sessionDelegate, NSOperationQueue delegateQueue);
 #endif
@@ -6123,7 +6123,7 @@ namespace XamCore.Foundation
 		NSUrlSessionConfiguration EphemeralSessionConfiguration { get; }
 	
 		[Static, Export ("backgroundSessionConfiguration:")]
-		[Availability (Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use CreateBackgroundSessionConfiguration instead")]
+		[Availability (Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use 'CreateBackgroundSessionConfiguration' instead.")]
 		NSUrlSessionConfiguration BackgroundSessionConfiguration (string identifier);
 	
 		[Export ("identifier", ArgumentSemantic.Copy), NullAllowed]
@@ -6378,7 +6378,7 @@ namespace XamCore.Foundation
 		[Export ("redoActionName")]
 		string RedoActionName { get; }
 
-		[Advice ("Use correctly named method: SetActionName")]
+		[Advice ("Use the correctly named method: 'SetActionName'.")]
 		[Export ("setActionName:")]
 		void SetActionname (string actionName); 
 
@@ -7455,23 +7455,23 @@ namespace XamCore.Foundation
 		Class GetBindingValueClass (NSString binding);
 
 #if !XAMCORE_4_0
-		[Obsolete ("Use Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options) instead")]
+		[Obsolete ("Use 'Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options)' instead.")]
 		[Export ("bind:toObject:withKeyPath:options:")]
 		void Bind (string binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options);
 
-		[Obsolete ("Use Unbind (NSString binding) instead")]
+		[Obsolete ("Use 'Unbind (NSString binding)' instead.")]
 		[Export ("unbind:")]
 		void Unbind (string binding);
 
-		[Obsolete ("Use GetBindingValueClass (NSString binding) instead")]
+		[Obsolete ("Use 'GetBindingValueClass (NSString binding)' instead.")]
 		[Export ("valueClassForBinding:")]
 		Class BindingValueClass (string binding);
 
-		[Obsolete ("Use GetBindingInfo (NSString binding) instead")]
+		[Obsolete ("Use 'GetBindingInfo (NSString binding)' instead.")]
 		[Export ("infoForBinding:")]
 		NSDictionary BindingInfo (string binding);
 
-		[Obsolete ("Use GetBindingOptionDescriptions (NSString aBinding) instead")]
+		[Obsolete ("Use 'GetBindingOptionDescriptions (NSString aBinding)' instead.")]
 		[Export ("optionDescriptionsForBinding:")]
 		NSObject[] BindingOptionDescriptions (string aBinding);
 
@@ -7480,7 +7480,7 @@ namespace XamCore.Foundation
 		NSObject GetDefaultPlaceholder (NSObject marker, string binding);
 
 		[Static]
-		[Obsolete ("Use SetDefaultPlaceholder (NSObject placeholder, NSObject marker, NSString binding) instead")]
+		[Obsolete ("Use 'SetDefaultPlaceholder (NSObject placeholder, NSObject marker, NSString binding)' instead.")]
 		[Wrap ("SetDefaultPlaceholder (placeholder, marker, (NSString) binding)")]
 		void SetDefaultPlaceholder (NSObject placeholder, NSObject marker, string binding);
 
@@ -8956,7 +8956,7 @@ namespace XamCore.Foundation
 		void Publish (NSNetServiceOptions options);
 
 		[Export ("resolve")]
-		[Availability (Introduced = Platform.iOS_2_0 | Platform.Mac_10_2, Deprecated = Platform.iOS_2_0 | Platform.Mac_10_4, Message = "Use Resolve (double) instead")]
+		[Availability (Introduced = Platform.iOS_2_0 | Platform.Mac_10_2, Deprecated = Platform.iOS_2_0 | Platform.Mac_10_4, Message = "Use 'Resolve (double)' instead.")]
 		[NoWatch]
 		void Resolve ();
 
@@ -9449,27 +9449,27 @@ namespace XamCore.Foundation
 
 		#region SceneKit Additions
 
-		[Mac (10,8), iOS (8,0)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Static, Export ("valueWithSCNVector3:")]
 		NSValue FromVector (SCNVector3 vector);
 
-		[Mac (10,8), iOS (8,0)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("SCNVector3Value")]
 		SCNVector3 Vector3Value { get; }
 
-		[Mac (10,8), iOS (8,0)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Static, Export ("valueWithSCNVector4:")]
 		NSValue FromVector (SCNVector4 vector);
 
-		[Mac (10,8), iOS (8,0)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("SCNVector4Value")]
 		SCNVector4 Vector4Value { get; }
 
-		[Mac (10,10), iOS (8,0)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Static, Export ("valueWithSCNMatrix4:")]
 		NSValue FromSCNMatrix4 (SCNMatrix4 matrix);
 
-		[Mac (10,10), iOS (8,0)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("SCNMatrix4Value")]
 		SCNMatrix4 SCNMatrix4Value { get; }
 
@@ -10264,11 +10264,11 @@ namespace XamCore.Foundation
 		[Export ("hostName")]
 		string HostName { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_10 | Platform.iOS_8_0, Message="Use OperatingSystemVersion or IsOperatingSystemAtLeastVersion")]
+		[Availability (Deprecated = Platform.Mac_10_10 | Platform.iOS_8_0, Message="Use 'OperatingSystemVersion' or 'IsOperatingSystemAtLeastVersion' instead.")]
 		[Export ("operatingSystem")]
 		nint OperatingSystem { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_10 | Platform.iOS_8_0, Message="Use OperatingSystemVersionString")]
+		[Availability (Deprecated = Platform.Mac_10_10 | Platform.iOS_8_0, Message="Use 'OperatingSystemVersionString' instead.")]
 		[Export ("operatingSystemName")]
 		string OperatingSystemName { get; }
 

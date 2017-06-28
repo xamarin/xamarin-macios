@@ -42,8 +42,8 @@ namespace XamCore.PassKit {
 #endif // XAMCORE_2_0
 
 		[iOS (9,2)]
-		[Deprecated (PlatformName.iOS, 10,3, message:"Use SubLocality and SubAdministrativeArea on PostalAddress instead")]
-		[Deprecated (PlatformName.WatchOS, 3,2, message:"Use SubLocality and SubAdministrativeArea on PostalAddress instead")]
+		[Deprecated (PlatformName.iOS, 10,3, message:"Use 'SubLocality' and 'SubAdministrativeArea' on 'PostalAddress' instead.")]
+		[Deprecated (PlatformName.WatchOS, 3,2, message:"Use 'SubLocality' and 'SubAdministrativeArea' on 'PostalAddress' instead.")]
 		[NullAllowed, Export ("supplementarySubLocality", ArgumentSemantic.Strong)]
 		string SupplementarySubLocality { get; set; }
 	}
@@ -89,7 +89,7 @@ namespace XamCore.PassKit {
 
 		[iOS (8,0)]
 		[Static,Export ("isPaymentPassActivationAvailable")]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "On iOS 9 and higher, use the library's instance IsLibraryPaymentPassActivationAvailable property instead")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the library's instance 'IsLibraryPaymentPassActivationAvailable' property instead.")]
 		bool IsPaymentPassActivationAvailable { get; }
 
 		[iOS (9,0)]
@@ -179,12 +179,12 @@ namespace XamCore.PassKit {
 
 		[NoWatch]
 		[Export ("billingAddress", ArgumentSemantic.Assign)]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "On iOS 9 and higher, use BillingContact instead")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'BillingContact' instead.")]
 		ABRecord BillingAddress { get; }
 
 		[NoWatch]
 		[Export ("shippingAddress", ArgumentSemantic.Assign)]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "On iOS 9 and higher, use ShippingContact instead")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'ShippingContact' instead.")]
 		ABRecord ShippingAddress { get; }
 
 		[Export ("shippingMethod", ArgumentSemantic.Strong)]
@@ -351,7 +351,7 @@ namespace XamCore.PassKit {
 		[NoWatch]
 		[NullAllowed] // by default this property is null
 		[Export ("billingAddress", ArgumentSemantic.Assign)]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "On iOS 9 and higher, use BillingContact instead")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'BillingContact' instead.")]
 		ABRecord BillingAddress { get; set; }
 
 		[Export ("requiredShippingAddressFields", ArgumentSemantic.UnsafeUnretained)]
@@ -360,7 +360,7 @@ namespace XamCore.PassKit {
 		[NoWatch]
 		[NullAllowed] // by default this property is null
 		[Export ("shippingAddress", ArgumentSemantic.Assign)]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "On iOS 9 and higher, use ShippingContact instead")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'ShippingContact' instead.")]
 		ABRecord ShippingAddress { get; set; }
 
 		[NullAllowed] // by default this property is null
@@ -396,12 +396,12 @@ namespace XamCore.PassKit {
 
 		[NoWatch]
 		[Export ("paymentInstrumentName", ArgumentSemantic.Copy)]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "On iOS 9 and higher, use PaymentMethod instead")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'PaymentMethod' instead.")]
 		string PaymentInstrumentName { get; }
 
 		[NoWatch]
 		[Export ("paymentNetwork")]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "On iOS 9 and higher, use PaymentMethod instead")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'PaymentMethod' instead.")]
 		string PaymentNetwork { get; }
 
 		[Export ("transactionIdentifier")]

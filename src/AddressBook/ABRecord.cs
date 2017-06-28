@@ -37,14 +37,14 @@ using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.AddressBook {
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public enum ABRecordType : uint /* uint32_t */ {
 		Person = 0,
 		Group = 1,
 		Source = 2
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public enum ABPropertyType : uint /* uint32_t */ {
 		Invalid         = 0,
 		String          = 0x1,
@@ -59,7 +59,7 @@ namespace XamCore.AddressBook {
 		MultiDictionary = ABMultiValue.Mask | Dictionary,
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public abstract class ABRecord : INativeObject, IDisposable {
 
 		public const int InvalidRecordId = -1;

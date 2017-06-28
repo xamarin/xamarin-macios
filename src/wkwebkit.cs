@@ -507,8 +507,8 @@ namespace XamCore.WebKit
 		string CustomUserAgent { get; set; }
 
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use ServerTrust property")]
-		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use ServerTrust property")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'ServerTrust' property.")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'ServerTrust' property.")]
 		[Export ("certificateChain", ArgumentSemantic.Copy)]
 		SecCertificate[] CertificateChain { get; }
 
@@ -555,18 +555,18 @@ namespace XamCore.WebKit
 		[Export ("allowsInlineMediaPlayback")]
 		bool AllowsInlineMediaPlayback { get; set; }
 
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0, Message = "Use RequiresUserActionForMediaPlayback or MediaTypesRequiringUserActionForPlayback")]
+		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0, Message = "Use 'RequiresUserActionForMediaPlayback' or 'MediaTypesRequiringUserActionForPlayback' instead.")]
 		[Export ("mediaPlaybackRequiresUserAction")]
 		bool MediaPlaybackRequiresUserAction { get; set; }
 
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0, Message = "Use AllowsAirPlayForMediaPlayback")]
+		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0, Message = "Use 'AllowsAirPlayForMediaPlayback' instead.")]
 		[Export ("mediaPlaybackAllowsAirPlay")]
 		bool MediaPlaybackAllowsAirPlay { get; set; }
 
 		[Export ("selectionGranularity")]
 		WKSelectionGranularity SelectionGranularity { get; set; }
 
-		[Availability (Introduced = Platform.iOS_9_0, Deprecated = Platform.iOS_10_0, Message = "Use MediaTypesRequiringUserActionForPlayback")]
+		[Availability (Introduced = Platform.iOS_9_0, Deprecated = Platform.iOS_10_0, Message = "Use 'MediaTypesRequiringUserActionForPlayback' instead.")]
 		[Export ("requiresUserActionForMediaPlayback")]
 		bool RequiresUserActionForMediaPlayback { get; set; }
 
