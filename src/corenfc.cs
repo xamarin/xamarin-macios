@@ -69,6 +69,10 @@ namespace XamCore.CoreNFC {
 		[Export ("initWithDelegate:queue:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (INFCReaderSessionDelegate @delegate, [NullAllowed] DispatchQueue queue);
+
+		[Static]
+		[Export ("readingAvailable")]
+		bool ReadingAvailable { get; }
 	}
 
 	//[iOS (11,0), NoTV, NoWatch, NoMac]
@@ -193,6 +197,10 @@ namespace XamCore.CoreNFC {
 		[Export ("initWithDelegate:queue:invalidateAfterFirstRead:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (INFCNdefReaderSessionDelegate @delegate, [NullAllowed] DispatchQueue queue, bool invalidateAfterFirstRead);
+
+		[Static]
+		[Export ("readingAvailable")]
+		bool ReadingAvailable { get; }
 	}
 
 	//[iOS (11,0), NoTV, NoWatch, NoMac]

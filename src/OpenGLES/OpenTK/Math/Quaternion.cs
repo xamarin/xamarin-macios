@@ -372,7 +372,7 @@ namespace OpenTK
             result = new Quaternion(quaternion.X * scale, quaternion.Y * scale, quaternion.Z * scale, quaternion.W * scale);
         }
 
-	[Obsolete ("Use the overload without the ref float scale")]
+	[Obsolete ("Use the overload without the 'ref float scale'.")]
         public static void Multiply(ref Quaternion quaternion, ref float scale, out Quaternion result)
 	{
             result = new Quaternion(quaternion.X * scale, quaternion.Y * scale, quaternion.Z * scale, quaternion.W * scale);		

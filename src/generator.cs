@@ -3121,7 +3121,12 @@ public partial class Generator : IMemberGatherer {
 		return FormatTypeUsedIn (usedIn == null ? null : usedIn.Namespace, type);
 	}
 
-	public string FormatTypeUsedIn (string usedInNamespace, Type type)
+	public string FormatType (Type usedIn, Type type, bool protocolized)
+	{
+		return FormatTypeUsedIn (usedIn?.Namespace, type, protocolized);
+	}
+
+	public string FormatTypeUsedIn (string usedInNamespace, Type type, bool protocolized = false)
 	{
 		type = GetCorrectGenericType (type);
 
@@ -3143,11 +3148,12 @@ public partial class Generator : IMemberGatherer {
 		if (type.IsArray)
 			return FormatTypeUsedIn (usedInNamespace, type.GetElementType ()) + "[" + new string (',', type.GetArrayRank () - 1) + "]";
 
+		var interfaceTag = protocolized == true ? "I" : "";
 		string tname;
 		if ((usedInNamespace != null && type.Namespace == usedInNamespace) || ns.StandardNamespaces.Contains (type.Namespace) || string.IsNullOrEmpty (type.FullName))
-			tname = type.Name;
+			tname = interfaceTag + type.Name;
 		else
-			tname = "global::" + type.FullName;
+			tname = $"global::{type.Namespace}.{interfaceTag}{type.Name}";
 
 		var targs = type.GetGenericArguments ();
 		if (targs.Length > 0) {
@@ -3315,18 +3321,19 @@ public partial class Generator : IMemberGatherer {
 			if (pari == parCount - 1 && parType.IsArray && (AttributeManager.HasAttribute<ParamsAttribute> (pi) || AttributeManager.HasAttribute<ParamArrayAttribute> (pi))) {
 				sb.Append ("params ");
 			}
+			var protocolized = false;
 			if (!BindThirdPartyLibrary && Protocolize (pi)) {
 				if (!AttributeManager.HasAttribute<ProtocolAttribute> (parType)) {
 					Console.WriteLine ("Protocolized attribute for type that does not have a [Protocol] for {0}'s parameter {1}", mi, pi);
 				}
-				sb.Append ("I");
+				protocolized = true;
 			}
 
 			var bindAsAtt = GetBindAsAttribute (pi);
 			if (bindAsAtt != null)
-				sb.Append (FormatType (bindAsAtt.Type.DeclaringType, bindAsAtt.Type));
+				sb.Append (FormatType (bindAsAtt.Type.DeclaringType, bindAsAtt.Type, protocolized));
 			else
-				sb.Append (FormatType (declaringType, parType));
+				sb.Append (FormatType (declaringType, parType, protocolized));
 
 			sb.Append (" ");
 			sb.Append (pi.Name.GetSafeParamName ());
@@ -6084,9 +6091,9 @@ public partial class Generator : IMemberGatherer {
 							indent--;
 							print ($"return {smartEnumTypeName}Extensions.GetValue (_{field_pi.Name});");
 						} else if (UnifiedAPI && IsNativeEnum (field_pi.PropertyType)) {
-							if (btype == TypeManager.System_nint || (BindThirdPartyLibrary && btype == TypeManager.System_Int64))
+							if (btype == TypeManager.System_nint || btype == TypeManager.System_Int64)
 								print ($"return ({fieldTypeName}) (long) Dlfcn.GetNInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");" );
-							else if (btype == TypeManager.System_nuint || (BindThirdPartyLibrary && btype == TypeManager.System_UInt64))
+							else if (btype == TypeManager.System_nuint || btype == TypeManager.System_UInt64)
 								print ($"return ({fieldTypeName}) (ulong) Dlfcn.GetNUInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");");
 							else
 								throw new BindingException (1014, true, "Unsupported type for Fields: {0}", fieldTypeName);

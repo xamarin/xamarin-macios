@@ -24,6 +24,14 @@ namespace XamCore.Intents {
 		{
 		}
 	}
+
+	public partial class INRestaurantGuest {
+		[Obsolete ("This constructor does not create a valid instance of the type")]
+		public INRestaurantGuest ()
+			: base (IntPtr.Zero) // base class doesn't have a default ctor.
+		{
+		}
+	}
 #endif
 }
 #endif

@@ -301,8 +301,8 @@ namespace XamCore.HealthKit
 		Curling,
 		Cycling,
 		Dance,
-		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use HKWorkoutActivityType.Dance, HKWorkoutActivityType.Barre, or HKWorkoutActivityType.Pilates")]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use HKWorkoutActivityType.Dance, HKWorkoutActivityType.Barre, or HKWorkoutActivityType.Pilates")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'HKWorkoutActivityType.Dance', 'HKWorkoutActivityType.Barre', or 'HKWorkoutActivityType.Pilates'.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'HKWorkoutActivityType.Dance', 'HKWorkoutActivityType.Barre', or 'HKWorkoutActivityType.Pilates'.")]
 		DanceInspiredTraining,
 		Elliptical,
 		EquestrianSports,

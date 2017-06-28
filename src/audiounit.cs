@@ -407,7 +407,7 @@ namespace XamCore.AudioUnit {
 #if XAMCORE_4_0 // undo breaking change introduced in xamarin/maccore @ 1f207bd3f3df363cb5a74e59b93acd8eb6e1fec2
 		[Internal][Sealed]
 #else
-		[Obsolete ("Use the AUParameterObserverToken overload")]
+		[Obsolete ("Use the 'AUParameterObserverToken' overload.")]
 #endif
 		[Export ("setValue:originator:")]
 		void SetValue (float value, IntPtr originator);
@@ -416,7 +416,7 @@ namespace XamCore.AudioUnit {
 #if XAMCORE_4_0 // undo breaking change introduced in xamarin/maccore @ 1f207bd3f3df363cb5a74e59b93acd8eb6e1fec2
 		[Internal][Sealed]
 #else
-		[Obsolete ("Use the AUParameterObserverToken overload")]
+		[Obsolete ("Use the 'AUParameterObserverToken' overload.")]
 #endif
 		[Export ("setValue:originator:atHostTime:")]
 		void SetValue (float value, IntPtr originator, ulong hostTime);
@@ -466,7 +466,7 @@ namespace XamCore.AudioUnit {
 #if XAMCORE_4_0 // undo breaking change introduced in xamarin/maccore @ 1f207bd3f3df363cb5a74e59b93acd8eb6e1fec2
 		[Internal][Sealed]
 #else
-		[Obsolete ("Use the CreateTokenByAddingParameterObserver instead")]
+		[Obsolete ("Use the 'CreateTokenByAddingParameterObserver' instead.")]
 #endif
 		[Export ("tokenByAddingParameterObserver:")]
 		/* void * */ IntPtr TokenByAddingParameterObserver (AUParameterObserver observer);
@@ -475,7 +475,7 @@ namespace XamCore.AudioUnit {
 #if XAMCORE_4_0 // undo breaking change introduced in xamarin/maccore @ 1f207bd3f3df363cb5a74e59b93acd8eb6e1fec2
 		[Internal][Sealed]
 #else
-		[Obsolete ("Use the CreateTokenByAddingParameterRecordingObserver instead")]
+		[Obsolete ("Use the 'CreateTokenByAddingParameterRecordingObserver' instead.")]
 #endif
 		[Export ("tokenByAddingParameterRecordingObserver:")]
 		/* void * */ IntPtr TokenByAddingParameterRecordingObserver (AUParameterRecordingObserver observer);
@@ -493,7 +493,7 @@ namespace XamCore.AudioUnit {
 #if XAMCORE_4_0 // undo breaking change introduced in xamarin/maccore @ 1f207bd3f3df363cb5a74e59b93acd8eb6e1fec2
 		[Internal][Sealed]
 #else
-		[Obsolete ("Use the AUParameterObserverToken overload")]
+		[Obsolete ("Use the 'AUParameterObserverToken' overload.")]
 #endif
 		[Export ("removeParameterObserver:")]
 		void RemoveParameterObserver (/* void * */ IntPtr token);

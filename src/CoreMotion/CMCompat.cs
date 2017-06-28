@@ -9,7 +9,7 @@ namespace XamCore.CoreMotion {
 
 	public partial class CMSensorRecorder {
 
-		[Obsolete ("Apple removed this API in iOS 9.3")]
+		[Obsolete ("Apple removed this API in iOS 9.3.")]
 		public virtual CMSensorDataList GetAccelerometerDataSince (ulong identifier)
 		{
 			return null;

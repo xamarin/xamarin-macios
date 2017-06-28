@@ -38,11 +38,41 @@ namespace Introspection {
 		protected override bool Skip (Type type)
 		{
 			switch (type.FullName) {
+			case "CoreBluetooth.CBCentralManager":
+			case "MonoMac.CoreBluetooth.CBCentralManager":
+			case "CoreBluetooth.CBPeripheralManager":
+			case "MonoMac.CoreBluetooth.CBPeripheralManager":
+				if (Mac.CheckSystemVersion (10, 13)) // radar 32899618
+					return true;
+				break;
 			// Random failures on build machine
 			case "QuickLookUI.QLPreviewPanel":
 			case "MonoMac.QuickLookUI.QLPreviewPanel":
 				return true;
 			// These should be DisableDefaultCtor but can't due to backward compat
+			case "MonoMac.AppKit.NSCollectionViewTransitionLayout":
+			case "AppKit.NSCollectionViewTransitionLayout":
+			case "Foundation.NSUnitDispersion": // -init should never be called on NSUnit!
+			case "Foundation.NSUnitVolume": // -init should never be called on NSUnit!
+			case "Foundation.NSUnitDuration": // -init should never be called on NSUnit!
+			case "Foundation.NSUnitElectricCharge": // -init should never be called on NSUnit!
+			case "Foundation.NSUnitElectricCurrent": // -init should never be called on NSUnit!
+			case "Foundation.NSUnitElectricPotentialDifference": // -init should never be called on NSUnit!
+			case "Foundation.NSUnitElectricResistance": // -init should never be called on NSUnit!
+			case "Foundation.NSUnit": // -init should never be called on NSUnit!
+			case "Foundation.NSUnitEnergy": // -init should never be called on NSUnit!
+			case "Foundation.NSUnitAcceleration": // -init should never be called on NSUnit!
+			case "Foundation.NSUnitFrequency": // -init should never be called on NSUnit!
+			case "Foundation.NSUnitAngle": // -init should never be called on NSUnit!
+			case "Foundation.NSUnitFuelEfficiency": // -init should never be called on NSUnit!
+			case "Foundation.NSUnitArea": // -init should never be called on NSUnit!
+			case "Foundation.NSUnitIlluminance": // -init should never be called on NSUnit!
+			case "Foundation.NSUnitConcentrationMass": // -init should never be called on NSUnit!
+			case "Foundation.NSUnitLength": // -init should never be called on NSUnit!
+			case "Foundation.NSUnitMass": // -init should never be called on NSUnit!
+			case "Foundation.NSUnitPower": // -init should never be called on NSUnit!
+			case "Foundation.NSUnitPressure": // -init should never be called on NSUnit!
+			case "Foundation.NSUnitSpeed": // -init should never be called on NSUnit!
 			case "MonoMac.EventKit.EKParticipant":
 			case "EventKit.EKParticipant":
 			case "XamCore.CoreImage.CISampler":
@@ -180,6 +210,11 @@ namespace Introspection {
 		protected override void CheckToString (NSObject obj)
 		{
 			switch (obj.GetType ().FullName) {
+			// Crashes on 10.13
+			case "MonoMac.CoreImage.CIImageAccumulator":
+			case "CoreImage.CIImageAccumulator": // 32897776
+			case "MonoMac.AVFoundation.AVCaptureInputPort": // https://bugzilla.xamarin.com/show_bug.cgi?id=57668
+			case "AVFoundation.AVCaptureInputPort": // https://bugzilla.xamarin.com/show_bug.cgi?id=57668
 			// Crashes on 10.12
 			case "Contacts.CNContainer":
 			// native crash calling MonoMac.Foundation.NSObject.get_Description ()

@@ -230,7 +230,7 @@ namespace XamCore.Foundation {
 #if XAMCORE_4_0
 		public static NSMutableDictionary<TKey, TValue> FromObjectsAndKeys (TValue [] objects, TKey [] keys)
 #else
-		[Obsolete ("TKey and TValue are inversed and won't work unless both types are identical. Use the generic overload that takes a count parameter instead")]
+		[Obsolete ("'TKey' and 'TValue' are inversed and won't work unless both types are identical. Use the generic overload that takes a count parameter instead.")]
 		public static NSMutableDictionary<TKey, TValue> FromObjectsAndKeys (TKey [] objects, TValue [] keys)
 #endif
 		{

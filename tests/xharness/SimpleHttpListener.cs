@@ -58,7 +58,7 @@ namespace xharness
 				try {
 					server.Stop ();
 				} finally {
-					stopped.Set ();
+					Finished ();
 				}
 			}
 		}

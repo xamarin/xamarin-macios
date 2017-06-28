@@ -113,7 +113,7 @@ namespace XamCore.CoreAnimation {
 	}
 	
 	[BaseType (typeof (NSObject))]
-	interface CAConstraint : NSCoding {
+	interface CAConstraint : NSSecureCoding {
 		[Export ("attribute")]
 		CAConstraintAttribute Attribute { get;  }
 
@@ -169,9 +169,9 @@ namespace XamCore.CoreAnimation {
 		[Export ("paused")]
 		bool Paused { [Bind ("isPaused")] get; set; }
 	
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use PreferredFramesPerSecond property")]
-		[Deprecated (PlatformName.TvOS, 10,0, message: "Use PreferredFramesPerSecond property")]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use PreferredFramesPerSecond property")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'PreferredFramesPerSecond' property.")]
+		[Deprecated (PlatformName.TvOS, 10,0, message: "Use 'PreferredFramesPerSecond' property.")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'PreferredFramesPerSecond' property.")]
 		[Export ("frameInterval")]
 		nint FrameInterval { get; set;  }
 
@@ -996,15 +996,15 @@ namespace XamCore.CoreAnimation {
 		NSString RotateModeAutoReverse { get; }
 
 		#region SceneKitAdditions
-		[iOS (8,0)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("usesSceneTimeBase")]
 		bool UsesSceneTimeBase { get; set; }
 
-		[iOS (8,0)][Mac (10,9)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("fadeInDuration")]
 		nfloat FadeInDuration { get; set; }
 
-		[iOS (8,0)][Mac (10,9)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("fadeOutDuration")]
 		nfloat FadeOutDuration { get; set; }
 

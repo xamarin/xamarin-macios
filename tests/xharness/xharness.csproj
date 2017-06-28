@@ -79,11 +79,7 @@
       <Link>Cache.cs</Link>
     </Compile>
     <Compile Include="TodayExtensionTarget.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\..\jenkins\nunit-summary.xslt">
-      <Link>nunit-summary.xslt</Link>
-    </EmbeddedResource>
+    <Compile Include="SimpleFileListener.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

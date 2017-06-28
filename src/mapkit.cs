@@ -204,7 +204,7 @@ namespace XamCore.MapKit {
 
 #if !MONOMAC && !TVOS
 	[BaseType (typeof (MKOverlayPathView))]
-	[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_7_0, Message = "Use MKCircleRenderer instead")]
+	[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_7_0, Message = "Use 'MKCircleRenderer' instead.")]
 	interface MKCircleView {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
@@ -567,7 +567,7 @@ namespace XamCore.MapKit {
 
 #if !MONOMAC && !TVOS
 		[Export ("viewForOverlay:")]
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_7_0, Message = "Use MKOverlayRenderer.RendererForOverlay instead")]
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_7_0, Message = "Use 'MKOverlayRenderer.RendererForOverlay' instead.")]
 #if XAMCORE_2_0
 		MKOverlayView ViewForOverlay (IMKOverlay overlay);
 #else
@@ -707,7 +707,7 @@ namespace XamCore.MapKit {
 
 #if !MONOMAC && !TVOS
 		[Export ("mapView:viewForOverlay:"), DelegateName ("MKMapViewOverlay"), DefaultValue (null)]
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_7_0, Message = "Use MKOverlayRenderer.RendererForOverlay instead")]
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_7_0, Message = "Use 'MKOverlayRenderer.RendererForOverlay' instead.")]
 #if XAMCORE_2_0
 		MKOverlayView GetViewForOverlay (MKMapView mapView, IMKOverlay overlay);
 #else
@@ -715,7 +715,7 @@ namespace XamCore.MapKit {
 #endif // XAMCORE_2_0
 
 		[Export ("mapView:didAddOverlayViews:"), EventArgs ("MKOverlayViews")]
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_7_0, Message = "Use DidAddOverlayRenderers instead")]
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_7_0, Message = "Use 'DidAddOverlayRenderers' instead.")]
 		void DidAddOverlayViews (MKMapView mapView, MKOverlayView overlayViews);
 #endif // !MONOMAC && !TVOS
 
@@ -784,7 +784,7 @@ namespace XamCore.MapKit {
 
 		[NoTV]
 		[Export ("pinColor")]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use PinTintColor instead")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'PinTintColor' instead.")]
 		MKPinAnnotationColor PinColor { get; set; }
 	
 		[Export ("animatesDrop")]
@@ -862,7 +862,7 @@ namespace XamCore.MapKit {
 		
 #if IOS
 	[BaseType (typeof (NSObject))]
-	[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_5_0, Message = "Use CoreLocation.CLGeocoder instead")]
+	[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_5_0, Message = "Use 'CoreLocation.CLGeocoder' instead.")]
 	// crash (at least) at Dispose time when instance is created by 'init'
 	[DisableDefaultCtor]
 	interface MKReverseGeocoder {
@@ -908,7 +908,7 @@ namespace XamCore.MapKit {
 	}
 #pragma warning restore 618
 
-	[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_7_0, Message = "Use MKOverlayRenderer instead")]
+	[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_7_0, Message = "Use 'MKOverlayRenderer' instead.")]
 	[BaseType (typeof (UIView))]
 	interface MKOverlayView {
 		[Export ("overlay")]
@@ -959,7 +959,7 @@ namespace XamCore.MapKit {
 		void SetNeedsDisplay (MKMapRect mapRect, /* MKZoomScale */ nfloat zoomScale);
 	}
 
-	[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_7_0, Message = "Use MKOverlayPathRenderer instead")]
+	[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_7_0, Message = "Use 'MKOverlayPathRenderer' instead.")]
 	[BaseType (typeof (MKOverlayView))]
 	interface MKOverlayPathView {
 		[Export ("initWithOverlay:")]
@@ -1060,7 +1060,7 @@ namespace XamCore.MapKit {
 }
 
 #if !MONOMAC && !TVOS
-	[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_7_0, Message = "Use MKPolygonRenderer instead")]
+	[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_7_0, Message = "Use 'MKPolygonRenderer' instead.")]
 	[BaseType (typeof (MKOverlayPathView))]
 	interface MKPolygonView {
 		[Export ("initWithFrame:")]
@@ -1136,7 +1136,7 @@ namespace XamCore.MapKit {
 	}
 
 #if !MONOMAC && !TVOS
-	[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_7_0, Message = "Use MKPolylineRenderer instead")]
+	[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_7_0, Message = "Use 'MKPolylineRenderer' instead.")]
 	[BaseType (typeof (MKOverlayPathView))]
 	interface MKPolylineView {
 		[Export ("initWithFrame:")]

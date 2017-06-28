@@ -207,6 +207,8 @@ namespace Introspection {
 			case "EKParticipant": // ctor disabled in XAMCORE_3_0
 			case "UITableViewFocusUpdateContext": // Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Invalid parameter not satisfying: focusSystem, will fill a radar
 				return true;
+			case "INBookRestaurantReservationIntentResponse": // iOS 11 beta 2: stack overflow in description. radar:32945914
+				return true;
 			default:
 				return base.Skip (type);
 			}

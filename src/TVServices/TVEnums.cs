@@ -27,6 +27,14 @@ namespace XamCore.TVServices {
 		Sectioned = 2
 	}
 
+	[TV (11,0)]
+	[Native]
+	[Flags]
+	public enum TVContentItemImageTrait : nuint {
+		UserInterfaceStyleLight = (1 << 8),
+		UserInterfaceStyleDark = (2 << 8),
+	}
+
 	static public class TVContentItemImageShapeExtensions {
 
 		[DllImport (Constants.TVServicesLibrary)]

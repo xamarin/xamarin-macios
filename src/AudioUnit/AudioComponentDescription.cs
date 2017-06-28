@@ -142,10 +142,10 @@ namespace XamCore.AudioUnit
 		Spacial=0x3364656d, // Same as Embedded3D
 #if MONOMAC
 		Stereo=0x736d7872, // 'smxr'
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use Spacial instead")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use 'Spacial' instead.")]
 		ThreeD=0x33646d78, // '3dmx'
 #else
-		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use Spacial instead")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'Spacial' instead.")]
 		Embedded3D=0x3364656d, // '3dem'
 #endif
 	}

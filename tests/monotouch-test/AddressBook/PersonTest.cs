@@ -54,8 +54,9 @@ namespace MonoTouchFixtures.AddressBook {
 				return;
 			}
 
-			if (TestRuntime.CheckExactXcodeVersion (9, 0, beta: 1)) {
-				// iOS 11 beta 1:
+			if (TestRuntime.CheckExactXcodeVersion (9, 0, beta: 1) ||
+			    TestRuntime.CheckExactXcodeVersion (9, 0, beta: 2)) {
+				// iOS 11 beta 1 - 2:
 				// radar://32681458 - ABMultiValueCreateMutableCopy doesn't create a mutable copy
 				// https://trello.com/c/casyTjRR/67-32681458-abmultivaluecreatemutablecopy-doesnt-create-a-mutable-copy
 				// Assigning the Zip property below fails.
