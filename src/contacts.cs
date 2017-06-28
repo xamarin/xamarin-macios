@@ -420,6 +420,14 @@ namespace XamCore.Contacts {
 
 		[Field ("CNLabelContactRelationManager")]
 		NSString Manager { get; }
+
+		[iOS (11,0), Mac (10,13, onlyOn64: true)]
+		[Field ("CNLabelContactRelationSon")]
+		NSString Son { get; }
+
+		[iOS (11,0), Mac (10,13, onlyOn64: true)]
+		[Field ("CNLabelContactRelationDaughter")]
+		NSString Daughter { get; }
 	}
 
 	delegate void CNContactStoreRequestAccessHandler (bool granted, NSError error);
