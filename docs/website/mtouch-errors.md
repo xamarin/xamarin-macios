@@ -127,7 +127,7 @@ There are several options for mtouch that can't be used simultaneously:
 
 
 
-### <a name="MT0020"/>MT0020 The valid options for '*' are '*'.
+### <a name="MT0020"/>MT0020 The valid options for '\*' are '\*'.
 
 
 
@@ -157,7 +157,7 @@ The executable assembly's name and the application's name can't match the name o
 
 
 
-### <a name="MT0027"/>MT0027 The options '*' and '*' are not compatible.
+### <a name="MT0027"/>MT0027 The options '\*' and '\*' are not compatible.
 
 
 
@@ -169,7 +169,7 @@ The executable assembly's name and the application's name can't match the name o
 
 REPL is only supported if you're building for the simulator. This means that if you pass `--enable-repl` to mtouch, you must also pass `--sim`.
 
-### <a name="MT0030"/>MT0030: The executable name (*) and the app name (*) are different, this may prevent crash logs from getting symbolicated properly.
+### <a name="MT0030"/>MT0030: The executable name (\*) and the app name (\*) are different, this may prevent crash logs from getting symbolicated properly.
 
 When Xcode symbolicates (translates memory addresses to function names and file/line numbers) the process may fail if the executable and app have different names (without the extension).
 
@@ -181,7 +181,7 @@ To fix this either change 'Application Name' in the project's Build/iOS Applicat
 
 ### <a name="MT0033"/>MT0033  A Xamarin.iOS project must reference either monotouch.dll or Xamarin.iOS.dll
 
-### <a name="MT0034"/>MT0034  Cannot include both 'monotouch.dll' and 'Xamarin.iOS.dll' in the same Xamarin.iOS project - '*' is referenced explicitly, while '*' is referenced by '*'.
+### <a name="MT0034"/>MT0034  Cannot include both 'monotouch.dll' and 'Xamarin.iOS.dll' in the same Xamarin.iOS project - '\*' is referenced explicitly, while '\*' is referenced by '*'.
 
 <!-- MT0035 unused -->
 
@@ -193,7 +193,7 @@ To fix this either change 'Application Name' in the project's Build/iOS Applicat
 
 ### <a name="MT0039"/>MT0039  Applications targeting ARMv6 cannot reference Xamarin.iOS.dll.
 
-### <a name="MT0040"/>MT0040  Could not find the assembly '*', referenced by '*'.
+### <a name="MT0040"/>MT0040  Could not find the assembly '\*', referenced by '\*'.
 
 ### <a name="MT0041"/>MT0041  Cannot reference both 'monotouch.dll' and 'Xamarin.iOS.dll'.
 
@@ -244,7 +244,7 @@ The Xcode path passed using `--sdkroot` does not exist. Please specify a valid p
 
 The path passed using `--sdkroot` does not specify a valid Xcode app. Please specify a path to an Xcode app.
 
-### <a name="MT0058"/>MT0058: The Xcode.app '*' is invalid (the file '*' does not exist).
+### <a name="MT0058"/>MT0058: The Xcode.app '\*' is invalid (the file '\*' does not exist).
 
 The path passed using `--sdkroot` does not specify a valid Xcode app. Please specify a path to an Xcode app.
 
@@ -357,7 +357,7 @@ This usually indicates a bug in Xamarin.iOS; please file a bug report at [http:/
 
 ### <a name="MT0088"/>MT0088: The GC must be in cooperative mode for watchOS apps. Please remove the --coop:false argument to mtouch.
 
-### <a name="MT0089"/>MT0089: The option '*' cannot take the value '*' when cooperative mode is enabled for the GC.
+### <a name="MT0089"/>MT0089: The option '\*' cannot take the value '\*' when cooperative mode is enabled for the GC.
 
 ### <a name="MT0091"/>MT0091: This version of Xamarin.iOS requires the * SDK (shipped with Xcode *). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).
 
@@ -386,17 +386,17 @@ This error message is reported when an internal consistency check in Xamarin.iOS
 
 This indicates a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
 
-### <a name="MT0100"/>Invalid assembly build target: '*'. Please file a bug report with a test case (http://bugzilla.xamarin.com).
+### <a name="MT0100"/>MT0100: Invalid assembly build target: '*'. Please file a bug report with a test case (http://bugzilla.xamarin.com).
 
 This error message is reported when an internal consistency check in Xamarin.iOS fails.
 
 This is always a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
 
-### <a name="MT0101"/>The assembly '*' is specified multiple times in --assembly-build-target arguments.
+### <a name="MT0101"/>MT0101: The assembly '*' is specified multiple times in --assembly-build-target arguments.
 
 The assembly mentioned in the error message is specified multiple times in --assembly-build-target arguments. Please make sure each assembly is only mentioned once.
 
-### <a name="MT0102"/>The assemblies '*' and '*' have the same target name ('*'), but different targets ('*' and '*').
+### <a name="MT0102"/>MT0102: The assemblies '\*' and '\*' have the same target name ('\*'), but different targets ('\*' and '*').
 
 The assemblies mentioned in the error message have conflicting build targets.
 
@@ -406,7 +406,7 @@ For example:
 
 This example is trying to create both a dynamic library and a framework with the same make (`MyBinary`).
 
-### <a name="MT0103"/>The static object '*' contains more than one assembly ('*'), but each static object must correspond with exactly one assembly.
+### <a name="MT0103"/>MT0103: The static object '\*' contains more than one assembly ('\*'), but each static object must correspond with exactly one assembly.
 
 The assemblies mentioned in the error message are all compiled to a single static object. This is not allowed, every assembly must be compiled to a different static object.
 
@@ -418,13 +418,13 @@ This example tries to build a static object (`MyBinary`) comprised of two assemb
 
 ### <a name="MT0105"/>MT0105: No assembly build target was specified for '*'.
 
-When specifying the assembly build target using --assembly-build-target, every assembly in the app must have a build target assigned.
+When specifying the assembly build target using `--assembly-build-target`, every assembly in the app must have a build target assigned.
 
 This error is reported when the assembly mentioned in the error message does not have an assembly build target assigned.
 
-See the documentation about --assembly-build-target for further information.
+See the documentation about `--assembly-build-target` for further information.
 
-### <a name="MT0106"/>MT0106: The assembly build target name '*' is invalid: the character '*' is not allowed.
+### <a name="MT0106"/>MT0106: The assembly build target name '\*' is invalid: the character '\*' is not allowed.
 
 The assembly build target name must be a valid filename.
 
@@ -434,7 +434,7 @@ For example these values will trigger this error:
 
 because `my/path.o` is not a valid filename due to the directory separator character.
 
-### <a name="MT0107"/>MT0107: The assemblies '*' have different custom LLVM optimizations (*), which is not allowed when they are all compiled to a single binary.
+### <a name="MT0107"/>MT0107: The assemblies '\*' have different custom LLVM optimizations (\*), which is not allowed when they are all compiled to a single binary.
 
 ### <a name="MT0108"/>MT0108: The assembly build target '*' did not match any assemblies.
 
@@ -481,61 +481,61 @@ Native code sharing requires is not supported for projects that use custom xml d
 
 ### <a name="MT0113"/>MT0113: Native code sharing has been disabled for the extension '*' because *.
 
-* because the bitcode options differ between the container app (*) and the extension (*).
+* because the bitcode options differ between the container app (\*) and the extension (\*).
 
-Native code sharing requires that the bitcode options match between the projects that share code.
+  Native code sharing requires that the bitcode options match between the projects that share code.
 
-* because the --assembly-build-target options are different between the container app (*) and the extension (*).
+* because the --assembly-build-target options are different between the container app (\*) and the extension (\*).
 
-Native code sharing requires that the --assembly-build-target options are identical between the projects that share code.
+  Native code sharing requires that the --assembly-build-target options are identical between the projects that share code.
 
-This condition can occur if incremental builds are not either enabled or disabled in all the projects.
+  This condition can occur if incremental builds are not either enabled or disabled in all the projects.
 
-* because the I18N assemblies are different between the container app (*) and the extension (*).
+* because the I18N assemblies are different between the container app (\*) and the extension (\*).
 
-Native code sharing is currently not supported for extensions that include I18N assemblies.
+  Native code sharing is currently not supported for extensions that include I18N assemblies.
 
-* because the arguments to the AOT compiler are different between the container app (*) and the extension (*).
+* because the arguments to the AOT compiler are different between the container app (\*) and the extension (\*).
 
-Native code sharing requires that the arguments to the AOT compiler do not differ between projects that share code.
+  Native code sharing requires that the arguments to the AOT compiler do not differ between projects that share code.
 
-* because the other arguments to the AOT compiler are different between the container app (*) and the extension (*).
+* because the other arguments to the AOT compiler are different between the container app (\*) and the extension (\*).
 
-Native code sharing requires that the arguments to the AOT compiler do not differ between projects that share code.
+  Native code sharing requires that the arguments to the AOT compiler do not differ between projects that share code.
 
-This condition occurs if the 'Perform all 32-bit float operations as 64-bit float' differs between projects.
+  This condition occurs if the 'Perform all 32-bit float operations as 64-bit float' differs between projects.
 
-+ because LLVM is not enabled or disabled in both the container app (*) and the extension (*).
+* because LLVM is not enabled or disabled in both the container app (\*) and the extension (\*).
 
-Native code sharing requires that LLVM is either enabled or disabled for all projects that share code.
+  Native code sharing requires that LLVM is either enabled or disabled for all projects that share code.
 
-* because the managed linker settings are different between the container app (*) and the extension (*).
+* because the managed linker settings are different between the container app (\*) and the extension (\*).
 
-Native code sharing requires that the managed linker settings are identical for all projects that share code.
+  Native code sharing requires that the managed linker settings are identical for all projects that share code.
 
-* because the skipped assemblies for the managed linker are different between the container app (*) and the extension (*).
+* because the skipped assemblies for the managed linker are different between the container app (\*) and the extension (\*).
 
-Native code sharing requires that the managed linker settings are identical for all projects that share code.
+  Native code sharing requires that the managed linker settings are identical for all projects that share code.
 
 * because the extension has custom xml definitions for the managed linker (*).
 
-Native code sharing requires is not supported for projects that use custom xml definitions for the managed linker.
+  Native code sharing requires is not supported for projects that use custom xml definitions for the managed linker.
 
 * because the container app does not build for the ABI * (while the extension is building for this ABI).
 
-Native code sharing requires that the container app builds for all the architectures any app extension builds for.
+  Native code sharing requires that the container app builds for all the architectures any app extension builds for.
 
-For instance: this condition occurs when an extension builds for ARM64+ARMv7, but the container app only builds for ARM64.
+  For instance: this condition occurs when an extension builds for ARM64+ARMv7, but the container app only builds for ARM64.
 
-* because the container app is building for the ABI *, which is not compatible with the extension's ABI (*).
+* because the container app is building for the ABI \*, which is not compatible with the extension's ABI (\*).
 
-Native code sharing requires that all the projects build for the exact same API.
+  Native code sharing requires that all the projects build for the exact same API.
 
-For instance: this condition occurs when an extension builds for ARMv7+llvm+thumb2, but the container app only builds for ARMv7+llvm.
+  For instance: this condition occurs when an extension builds for ARMv7+llvm+thumb2, but the container app only builds for ARMv7+llvm.
 
-* because the container app is referencing the assembly '*' from '*', while the extension references a different version from '*'.
+* because the container app is referencing the assembly '\*' from '\*', while the extension references a different version from '*'.
 
-Native code sharing requires that all the projects that share code use the same versions for all assemblies.
+  Native code sharing requires that all the projects that share code use the same versions for all assemblies.
 
 <!-- MT0114: used by mmp -->
 
@@ -603,15 +603,15 @@ For further information see bug #[52727](https://bugzilla.xamarin.com/show_bug.c
 
 
 
-### <a name="MT1005"/>MT1005 Could not kill the application '*' on the device '*': *- You may have to kill the application manually.
+### <a name="MT1005"/>MT1005 Could not kill the application '\*' on the device '\*': *- You may have to kill the application manually.
 
 
 
-### <a name="MT1006"/>MT1006 Could not install the application '*' on the device '*': *.
+### <a name="MT1006"/>MT1006 Could not install the application '\*' on the device '\*': *.
 
 
 
-### <a name="MT1007"/>MT1007 Failed to launch the application '*' on the device '*': *. You can still launch the application manually by tapping on it.
+### <a name="MT1007"/>MT1007 Failed to launch the application '\*' on the device '\*': *. You can still launch the application manually by tapping on it.
 
 
 
@@ -630,7 +630,7 @@ The following command issued on the Unix command line can
 $ launchctl list|grep UIKitApplication|awk '{print $3}'|xargs launchctl remove
 ```
 
-### <a name="MT1009"/>MT1009 Could not copy the assembly '*' to '*': *
+### <a name="MT1009"/>MT1009 Could not copy the assembly '\*' to '\*': *
 
 This is a known issue in certain versions of Xamarin.iOS.
 
@@ -689,13 +689,13 @@ This can happen if:
 
 In most cases more information about the failure will be printed to the iOS Device Log, which can help diagnosing the issue.
 
-### <a name="MT1020"/>MT1020: Failed to launch the application '*' on the device '*': *
+### <a name="MT1020"/>MT1020: Failed to launch the application '\*' on the device '\*': *
 
-### <a name="MT1021"/>MT1021: Could not copy the file '*' to '*': {2}
+### <a name="MT1021"/>MT1021: Could not copy the file '\*' to '\*': {2}
 
 A file could not be copied. The error message from the copy operation has more information about the error.
 
-### <a name="MT1022"/>MT1022: Could not copy the directory '*' to '*': {2}
+### <a name="MT1022"/>MT1022: Could not copy the directory '\*' to '\*': {2}
 
 A directory could not be copied. The error message from the copy operation has more information about the error.
 
@@ -758,13 +758,13 @@ The application path passed to --launchdev does not exist. Please specify a vali
 
 It's recommended to pass the path to the app to launch on device instead of just the bundle id.
 
-### <a name="MT1031"/>MT1031: Could not launch the app '*' on the device '*' because the device is locked. Please unlock the device and try again.
+### <a name="MT1031"/>MT1031: Could not launch the app '\*' on the device '\*' because the device is locked. Please unlock the device and try again.
 
 Please unlock the device and try again.
 
 ### <a name="MT1032"/>MT1032: This application executable might be too large (* MB) to execute on device. If bitcode was enabled you might want to disable it for development, it is only required to submit applications to Apple.
 
-### <a name="MT1033"/>MT1033: Could not uninstall the application '*' from the device '*': *
+### <a name="MT1033"/>MT1033: Could not uninstall the application '\*' from the device '\*': *
 
 <!-- 1034 used by mmp -->
 
@@ -851,8 +851,8 @@ If you're deploying an enterprise app or using a free provisioning profile, you 
 ### <a name="MT1207"/>MT1207: Could not find the simulator device type '*'.
 ### <a name="MT1208"/>MT1208: Could not find the simulator runtime '*'.
 ### <a name="MT1209"/>MT1209: Could not find the simulator device type '*'.
-### <a name="MT1210"/>MT1210: Invalid simulator specification: *, unknown key '*'
-### <a name="MT1211"/>MT1211: The simulator version '*' does not support the simulator type '*'
+### <a name="MT1210"/>MT1210: Invalid simulator specification: \*, unknown key '\*'
+### <a name="MT1211"/>MT1211: The simulator version '\*' does not support the simulator type '\*'
 ### <a name="MT1212"/>MT1212: Failed to create a simulator version where type = * and runtime = *.
 ### <a name="MT1213"/>MT1213: Invalid simulator specification for Xcode 4: *
 ### <a name="MT1214"/>MT1214: Invalid simulator specification for Xcode 5: *
@@ -884,13 +884,13 @@ Watch simulators can be paired with iOS Simulators using Xcode's Devices UI (men
   -->
 
 
-### <a name="MT1301"/>MT1301 Native library `*` (*) was ignored since it does not match the current build architecture(s) (*)
+### <a name="MT1301"/>MT1301 Native library `*` (\*) was ignored since it does not match the current build architecture(s) (\*)
 
 
 
 ### <a name="MT1302"/>MT1302 Could not extract the native library '*' from '+'. Please ensure the native library was properly embedded in the managed assembly (if the assembly was built using a binding project, the native library must be included in the project, and its Build Action must be 'ObjcBindingNativeLibrary').
 
-### <a name="MT1303"/>MT1303: Could not decompress the native framework '*' from '*'. Please review the build log for more information from the native 'zip' command.
+### <a name="MT1303"/>MT1303: Could not decompress the native framework '\*' from '\*'. Please review the build log for more information from the native 'zip' command.
 
 Could not decompress the specified native framework from the binding library.
 
@@ -902,7 +902,7 @@ The specified embedded framework does not contain an Info.plist, and is therefor
 
 Please make sure the framework is valid.
 
-### <a name="MT1305"/>MT1305: The binding library '*' contains a user framework (*), but embedded user frameworks require iOS 8.0 (the current deployment target is *). Please set the deployment target in the Info.plist file to at least 8.0.
+### <a name="MT1305"/>MT1305: The binding library '\*' contains a user framework (\*), but embedded user frameworks require iOS 8.0 (the current deployment target is *). Please set the deployment target in the Info.plist file to at least 8.0.
 
 The specified binding library contains an embedded framework, but Xamarin.iOS only supports embedded frameworks on iOS 8.0 or later.
 
@@ -1131,7 +1131,7 @@ To fix this warning, open the project file in a text editor, and remove all `Mto
 
 This means there is an error on the [custom XML linker configuration file](https://developer.xamarin.com/guides/cross-platform/advanced/custom_linking/) you provided, please review your file.
 
-### <a name="MT2018"/>MT2018: The assembly '*' is referenced from two different locations: '*' and '*'.
+### <a name="MT2018"/>MT2018: The assembly '\*' is referenced from two different locations: '\*' and '*'.
 
 The assembly mentioned in the error message is loaded from multiple locations. Make sure to always use the same version of an assembly.
 
@@ -1181,13 +1181,13 @@ Something unexpected occured when trying to mark `NSObject` subclasses from the 
 
 <!--- 2100 used by mmp -->
 
-### <a name="MT2101"/>MT2101: Can't resolve the reference '*', referenced from the method '*' in '*'.
+### <a name="MT2101"/>MT2101: Can't resolve the reference '\*', referenced from the method '\*' in '*'.
 
 An invalid assembly reference was encountered when processing the method mentioned in the error message.
 
 The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
-### <a name="MT2102"/>MT2102: Error processing the method '*' in the assembly '*': *
+### <a name="MT2102"/>MT2102: Error processing the method '\*' in the assembly '\*': *
 
 Something unexpected occured when trying to mark the method mentioned in the error message.
 
@@ -1206,7 +1206,9 @@ This generally indicates a bug in the AOT compiler. Please file a bug [http://bu
 
 Sometimes it's possible to work around this by disabling incremental builds in the project's iOS Build option (but it's still a bug, so please report it anyways).
 
-### <a name="MT3002"/>MT3002 AOT restriction: Method '*' must be static since it is decorated with [MonoPInvokeCallback]. See http://ios.xamarin.com/Documentation/Limitations#Reverse_Callbacks # this error message comes from the AOT compiler
+### <a name="MT3002"/>MT3002 AOT restriction: Method '*' must be static since it is decorated with [MonoPInvokeCallback]. See [https://developer.xamarin.com/guides/ios/advanced_topics/limitations/#Reverse_Callbacks](https://developer.xamarin.com/guides/ios/advanced_topics/limitations/#Reverse_Callbacks)
+
+This error message comes from the AOT compiler.
 
 
 
@@ -1218,7 +1220,7 @@ Debugging is not supported when LLVM is enabled. If you need to debug the app, d
 
 
 
-### <a name="MT3005"/>MT3005 The dependency '*' of the assembly '*' was not found. Please review the project's references.
+### <a name="MT3005"/>MT3005 The dependency '\*' of the assembly '\*' was not found. Please review the project's references.
 
 This typically occurs when an assembly references another version of a platform assembly (usually the .NET 4 version of mscorlib.dll).
 
@@ -1298,7 +1300,7 @@ A type was found in exported API that the runtime doesn't know how to marshal to
 
 If you believe Xamarin.iOS should support the type in question, please file an enhancement request at [http://bugzilla.xamarin.com](http://bugzilla.xamarin.com).
 
-### <a name="MT4108"/>MT4108 The registrar cannot get the ObjectiveC type for managed type `*`."
+### <a name="MT4108"/>MT4108 The registrar cannot get the ObjectiveC type for managed type `*`.
 
 A type was found in exported API that the runtime doesn't know how to marshal to/from Objective-C.
 
@@ -1314,19 +1316,19 @@ This is always a bug in Xamarin.iOS; please file a bug report at [http://bugzill
 
 
 
-### <a name="MT4111"/>MT4111 The registrar cannot build a signature for type `*' in method `*`.
+### <a name="MT4111"/>MT4111 The registrar cannot build a signature for type `*` in method `*`.
 
 
 
-### <a name="MT4112"/>MT4112 The registrar found an invalid type `*`. Registering generic types with ObjectiveC is not supported, and may lead to random behavior and/or crashes (for backwards compatibility with older versions of Xamarin.iOS it is possible to ignore this error by passing `--unsupported--enable-generics-in-registrar` as an additional mtouch argument in the project's iOS Build options page. See http://docs.xamarin.com/guides/ios/advanced_topics/registrar for more information).
+### <a name="MT4112"/>MT4112 The registrar found an invalid type `*`. Registering generic types with Objective-C is not supported, and may lead to random behavior and/or crashes (for backwards compatibility with older versions of Xamarin.iOS it is possible to ignore this error by passing `--unsupported--enable-generics-in-registrar` as an additional mtouch argument in the project's iOS Build options page. See [developer.xamarin.com/guides/ios/advanced_topics/registrar](https://developer.xamarin.com/guides/ios/advanced_topics/registrar) for more information).
 
 
 
-### <a name="MT4113"/>MT4113 The registrar found a generic method: '*.*'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes.
+### <a name="MT4113"/>MT4113 The registrar found a generic method: '\*.\*'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes.
 
 
 
-### <a name="MT4114"/>MT4114 Unexpected error in the registrar for the method '*.*' - Please file a bug report at http://bugzilla.xamarin.com
+### <a name="MT4114"/>MT4114 Unexpected error in the registrar for the method '\*.\*' - Please file a bug report at http://bugzilla.xamarin.com
 
 
 
@@ -1338,15 +1340,15 @@ This is always a bug in Xamarin.iOS; please file a bug report at [http://bugzill
 
 
 
-### <a name="MT4118"/>MT4118 Cannot register two managed types ('*' and '*') with the same native name ('*').
+### <a name="MT4118"/>MT4118 Cannot register two managed types ('\*' and '\*') with the same native name ('*').
 
 
 
-### <a name="MT4119"/>MT4119 Could not register the selector '*' of the member '*.*' because the selector is already registered on a different member.
+### <a name="MT4119"/>MT4119 Could not register the selector '\*' of the member '\*.*' because the selector is already registered on a different member.
 
 
 
-### <a name="MT4120"/>MT4120 The registrar found an unknown field type '*' in field '*.*'. Please file a bug report at http://bugzilla.xamarin.com
+### <a name="MT4120"/>MT4120 The registrar found an unknown field type '\*' in field '\*.*'. Please file a bug report at http://bugzilla.xamarin.com
 
 This error indicates a bug in Xamarin.iOS. Please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
@@ -1366,45 +1368,45 @@ This error indicates a bug in Xamarin.iOS. Please file a bug report at [http://b
 
 This error indicates a bug in Xamarin.iOS. Please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
-### <a name="MT4125"/>MT4125 The registrar found an invalid type '*' in signature for method '*': The interface must have a Protocol attribute specifying its wrapper type.
+### <a name="MT4125"/>MT4125 The registrar found an invalid type '\*' in signature for method '\*': The interface must have a Protocol attribute specifying its wrapper type.
 
 
 
-### <a name="MT4126"/>MT4126 Cannot register two managed protocols ('*' and '*') with the same native name ('*').
+### <a name="MT4126"/>MT4126 Cannot register two managed protocols ('\*' and '\*') with the same native name ('*').
 
 
 
-### <a name="MT4127"/>MT4127 Cannot register more than one interface method for the method '*' (which is implementing '*').
+### <a name="MT4127"/>MT4127 Cannot register more than one interface method for the method '\*' (which is implementing '\*').
 
 
 
-### <a name="MT4128"/>MT4128  The registrar found an invalid generic parameter type '*' in the method '*'. The generic parameter must have an 'NSObject' constraint.
+### <a name="MT4128"/>MT4128  The registrar found an invalid generic parameter type '\*' in the method '\*'. The generic parameter must have an 'NSObject' constraint.
 
-### <a name="MT4129"/>MT4129  The registrar found an invalid generic return type '*' in the method '*'. The generic return type must have an 'NSObject' constraint.
+### <a name="MT4129"/>MT4129  The registrar found an invalid generic return type '\*' in the method '\*'. The generic return type must have an 'NSObject' constraint.
 
 ### <a name="MT4130"/>MT4130  The registrar cannot export static methods in generic classes ('*').
 
-### <a name="MT4131"/>MT4131  The registrar cannot export static properties in generic classes ('*.*').
+### <a name="MT4131"/>MT4131  The registrar cannot export static properties in generic classes ('\*.\*').
 
-### <a name="MT4132"/>MT4132  The registrar found an invalid generic return type '*' in the property '*'. The return type must have an 'NSObject' constraint.
+### <a name="MT4132"/>MT4132  The registrar found an invalid generic return type '\*' in the property '\*'. The return type must have an 'NSObject' constraint.
 
 ### <a name="MT4133"/>MT4133  Cannot construct an instance of the type '*' from Objective-C because the type is generic. [Runtime exception]
 
 ### <a name="MT4134"/>MT4134  Your application is using the '*' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS *, while you're building with the iOS * SDK.) Please select a newer SDK in your app's iOS Build options.
 
-### <a name="MT4135"/>MT4135  The member '*.*' has an Export attribute that doesn't specify a selector. A selector is required.
+### <a name="MT4135"/>MT4135  The member '\*.\*' has an Export attribute that doesn't specify a selector. A selector is required.
 
-### <a name="MT4136"/>MT4136  The registrar cannot marshal the parameter type '*' of the parameter '*' in the method '*.*'
+### <a name="MT4136"/>MT4136  The registrar cannot marshal the parameter type '\*' of the parameter '\*' in the method '\*.*'
 
 <!-- MT4137 is unused -->
 
-### <a name="MT4138"/>MT4138  The registrar cannot marshal the property type '*' of the property '*.*'.
+### <a name="MT4138"/>MT4138  The registrar cannot marshal the property type '\*' of the property '\*.*'.
 
-### <a name="MT4139"/>MT4139  The registrar cannot marshal the property type '*' of the property '*.*'. Properties with the [Connect] attribute must have a property type of NSObject (or a subclass of NSObject).
+### <a name="MT4139"/>MT4139  The registrar cannot marshal the property type '\*' of the property '\*.*'. Properties with the [Connect] attribute must have a property type of NSObject (or a subclass of NSObject).
 
 ### <a name="MT4140"/>MT4140  The registrar found a signature mismatch in the method '*.*' - the selector indicates the variadic method takes * parameters, while the managed method has * parameters.
 
-### <a name="MT4141"/>MT4141  Cannot register the selector '*' on the member '*' because Xamarin.iOS implicitly registers this selector.
+### <a name="MT4141"/>MT4141  Cannot register the selector '\*' on the member '\*' because Xamarin.iOS implicitly registers this selector.
 
 This occurs when subclassing a framework type, and trying to implement a 'retain', 'release' or 'dealloc' method:
 
@@ -1451,7 +1453,7 @@ In this case Xamarin.iOS will override `retain`, `release` and `dealloc` on the 
 This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
 ### <a name="MT4145"/>MT4145: Invalid enum '*': enums with the [Native] attribute must have a underlying enum type of either 'long' or 'ulong'.
-### <a name="MT4146"/>MT4146: The Name parameter of the Registrar attribute on the class '*' ('*') contains an invalid character: '*' (*).
+### <a name="MT4146"/>MT4146: The Name parameter of the Registrar attribute on the class '\*' ('\*') contains an invalid character: '\*' (\*).
 
 The name of an Objectice-C class can't contain whitespace, which means that the `Register` attribute on the corresponding managed class can't have a `Name` parameter can't contain whitespace either.
 
@@ -1459,27 +1461,27 @@ Please verify that the `Register` attribute on the managed class mentioned in th
 
 ### <a name="MT4147"/>MT4147: Detected a protocol inheriting from the JSExport protocol while using the dynamic registrar. It is not possible to export protocols to JavaScriptCore dynamically; the static registrar must be used (add '--registrar:static to the additional mtouch arguments in the project's iOS Build options to select the static registrar).
 ### <a name="MT4148"/>MT4148: The registrar found a generic protocol: '*'. Exporting generic protocols is not supported.
-### <a name="MT4149"/>MT4149: Cannot register the method '*.*' because the type of the first parameter ('*') does not match the category type ('*').
-### <a name="MT4150"/>MT4150: Cannot register the type '*' because the Type property ('*') in its Category attribute does not inherit from NSObject.
+### <a name="MT4149"/>MT4149: Cannot register the method '\*.\*' because the type of the first parameter ('\*') does not match the category type ('\*').
+### <a name="MT4150"/>MT4150: Cannot register the type '\*' because the Type property ('\*') in its Category attribute does not inherit from NSObject.
 ### <a name="MT4151"/>MT4151: Cannot register the type '*' because the Type property in its Category attribute isn't set.
 ### <a name="MT4152"/>MT4152: Cannot register the type '*' as a category because it implements INativeObject or subclasses NSObject.
-### <a name="MT4153"/>MT4153: Cannot register the type '*' as a category because it's generic.
-### <a name="MT4154"/>MT4154: Cannot register the method '*' as a category method because it's generic.
-### <a name="MT4155"/>MT4155: Cannot register the method '*' with the selector '*' as a category method on '*' because the Objective-C already has an implementation for this selector.
-### <a name="MT4156"/>MT4156: Cannot register two categories ('*' and '*') with the same native name ('*').
-### <a name="MT4157"/>MT4157: Cannot register the category method '*' because at least one parameter is required (and its type must match the category type '*')
+### <a name="MT4153"/>MT4153: Cannot register the type '\*' as a category because it's generic.
+### <a name="MT4154"/>MT4154: Cannot register the method '\*' as a category method because it's generic.
+### <a name="MT4155"/>MT4155: Cannot register the method '\*' with the selector '\*' as a category method on '*' because the Objective-C already has an implementation for this selector.
+### <a name="MT4156"/>MT4156: Cannot register two categories ('\*' and '\*') with the same native name ('*').
+### <a name="MT4157"/>MT4157: Cannot register the category method '\*' because at least one parameter is required (and its type must match the category type '\*')
 ### <a name="MT4158"/>MT4158: Cannot register the constructor * in the category * because constructors in categories are not supported.
 ### <a name="MT4159"/>MT4159: Cannot register the method '*' as a category method because category methods must be static.
 
-### <a name="MT4160"/>MT4160: Invalid character '*' (*) found in selector '*' for '*'.
+### <a name="MT4160"/>MT4160: Invalid character '\*' (\*) found in selector '\*' for '\*'.
 
-### <a name="MT4161"/>MT4161: The registrar found an unsupported structure '*': All fields in a structure must also be structures (field '*' with type '{2}' is not a structure).
+### <a name="MT4161"/>MT4161: The registrar found an unsupported structure '\*': All fields in a structure must also be structures (field '\*' with type '{2}' is not a structure).
 
 The registrar found a structure with unsupported fields.
 
 All fields in a structure that is exposed to Objective-C must also be structures (not classes).
 
-### <a name="MT4162"/>MT4162: The type '*' (used as * {2}) is not available in * * (it was introduced in * *)* Please build with a newer * SDK (usually done by using the most recent version of Xcode.
+### <a name="MT4162"/>MT4162: The type '\*' (used as * {2}) is not available in * * (it was introduced in * *)\* Please build with a newer * SDK (usually done by using the most recent version of Xcode.
 
 The registrar found a type which is not included in the current SDK.
 
@@ -1489,7 +1491,7 @@ Please upgrade Xcode.
 
 This error indicates a bug in Xamarin.iOS. Please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
-### <a name="MT4164"/>MT4164: Cannot export the property '*' because its selector '*' is an Objective-C keyword. Please use a different name.
+### <a name="MT4164"/>MT4164: Cannot export the property '\*' because its selector '\*' is an Objective-C keyword. Please use a different name.
 
 The selector for the property in question is not a valid Objective-C identifer.
 
@@ -1499,15 +1501,15 @@ Please use a valid Objective-C identifier as selectors.
 
 This error most likely indicates a bug in Xamarin.iOS. Please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
-### <a name="MT4166"/>MT4166: Cannot register the method '*' because the signature contains a type (*) that isn't a reference type.
+### <a name="MT4166"/>MT4166: Cannot register the method '\*' because the signature contains a type (\*) that isn't a reference type.
 
 This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
-### <a name="MT4167"/>MT4167: Cannot register the method '*' because the signature contains a generic type (*) with a generic argument type that isn't an NSObject subclass (*).
+### <a name="MT4167"/>MT4167: Cannot register the method '\*' because the signature contains a generic type (\*) with a generic argument type that isn't an NSObject subclass (*).
 
 This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
-### <a name="MT4168"/>MT4168: Cannot register the type '{managed_name}' because its Objective-C name '{exported_name}' is an Objective-C keyword. Please use a different name.
+### <a name="MT4168"/>MT4168: Cannot register the type '{managed\_name}' because its Objective-C name '{exported\_name}' is an Objective-C keyword. Please use a different name.
 
 The Objective-C name for the type in question is not a valid Objective-C identifier.
 
@@ -1534,7 +1536,7 @@ Please use a valid Objective-C identifier.
 
 
 
-### <a name="MT5104"/>MT5104 Could not find neither the '*' nor the '*' compiler. Please install Xcode 'Command-Line Tools' component
+### <a name="MT5104"/>MT5104 Could not find neither the '\*' nor the '\*' compiler. Please install Xcode 'Command-Line Tools' component
 
 <!-- 5105 is used by mmp -->
 
@@ -1565,7 +1567,7 @@ This happens when the native linker cannot find a symbol that is referenced some
 * A third-party binding requires a framework, but the binding does not specify this in its `[LinkWith]` attribute. Solutions:
   - If you're the author of the third-party binding, or have access to its source, modify the binding's `[LinkWith]` attribute to include the framework it needs:
 
-        [LinkWith ("mylib.a", Frameworks = "SystemConfiguration")]
+            [LinkWith ("mylib.a", Frameworks = "SystemConfiguration")]
 
   - If you can't modify the third-party binding, you can manually link with the required framework by passing `-gcc_flags '-framework SystemFramework'` to `mtouch` (this is done by modifying the additional mtouch arguments in the project's iOS Build options page. Remember that this must be done for every project configuration).
 * In some cases a managed binding is composed of several native libraries, and all must be included in the bindings. It is possible to have more than one native library in each binding project, so the solution is to just add all the required native libraries to the binding project.</li>
@@ -1577,24 +1579,24 @@ This happens when the native linker cannot find a symbol that is referenced some
 * A third-party binding / library was built using C++, but the binding does not specify this in its `[LinkWith]` attribute. This is usually fairly easy to recognize, because the symbols have are mangled C++ symbols (one common example is `__ZNKSt9exception4whatEv`).
   - If you're the author of the third-party binding, or have access to its source, modify the binding's `[LinkWith]` attribute to set the `IsCxx` flag:
 
-        [LinkWith ("mylib.a", IsCxx = true)]
+            [LinkWith ("mylib.a", IsCxx = true)]
 
   - If you can't modify the third-party binding, or you're linking manually with a third-party library, you can set the equivalent flag by passing <code>-cxx</code> to mtouch (this is done by modifying the additional mtouch arguments in the project's iOS Build options page. Remember that this must be done for every project configuration).
 
 
 
-### <a name="MT5211"/>MT5211: Native linking failed, undefined Objective-C class: *. The symbol '*' could not be found in any of the libraries or frameworks linked with your application.
+### <a name="MT5211"/>MT5211: Native linking failed, undefined Objective-C class: \*. The symbol '\*' could not be found in any of the libraries or frameworks linked with your application.
 
 This happens when the native linker cannot find an Objective-C class that is referenced somewhere. There are several reasons this may happen: the same as for [MT5210](#MT5210) and in addition:
 
 * A third-party binding bound an Objective-C protocol, but did not annotate it with the <code>[Protocol]</code> attribute in its api definition. Solutions:
   - Add the missing `[Protocol]` attribute:
 
-        [BaseType (typeof (NSObject))]
-        [Protocol] // Add this
-        public interface MyProtocol
-        {
-        }
+              [BaseType (typeof (NSObject))]
+              [Protocol] // Add this
+              public interface MyProtocol
+              {
+              }
 
 
 
@@ -1621,35 +1623,37 @@ This happens when the native linker encounters duplicated symbols between all th
         ar -t libNative.i386.a
 
   There are a few possible ways to fix this:
+
   - Request that the provider of the native library fix it and provide the updated version.
   - Fix it yourself by removing the extra object files (this only works if the problem is in fact duplicated object files)
 
-        # Find out if the library is a fat library, and which
-        # architectures it contains.
-        lipo -info libNative.a
 
-        # Extract each architecture (i386/x86_64/armv7/armv7s/arm64) to a separate file
-        lipo libNative.a -thin ARCH -output libNative.ARCH.a
+            # Find out if the library is a fat library, and which
+            # architectures it contains.
+            lipo -info libNative.a
 
-        # Extract the object files for the offending architecture
-        # This will remove the duplicates by overwriting them
-        # (since they have the same filename)
-        mkdir -p ARCH
-        cd ARCH
-        ar -x ../libNative.ARCH.a
+            # Extract each architecture (i386/x86_64/armv7/armv7s/arm64) to a separate file
+            lipo libNative.a -thin ARCH -output libNative.ARCH.a
 
-        # Reassemble the object files in an .a
-        ar -r ../libNative.ARCH.a *.o
-        cd ..
+            # Extract the object files for the offending architecture
+            # This will remove the duplicates by overwriting them
+            # (since they have the same filename)
+            mkdir -p ARCH
+            cd ARCH
+            ar -x ../libNative.ARCH.a
 
-        # Reassemble the fat library
-        lipo *.a -create -output libNative.a
+            # Reassemble the object files in an .a
+            ar -r ../libNative.ARCH.a *.o
+            cd ..
+
+            # Reassemble the fat library
+            lipo *.a -create -output libNative.a
 
 
   - Ask the linker to remove unused code. Xamarin.iOS will do this automatically if all of the following conditions are met:
     - All third-party bindings' `[LinkWith]` attributes have enabled SmartLink:
 
-        [assembly: LinkWith ("libNative.a", SmartLink = true)]
+            [assembly: LinkWith ("libNative.a", SmartLink = true)]
 
     - No `-gcc_flags` is passed to mtouch (in the additional mtouch arguments field of the project's iOS Build options).
     - It's also possible to ask the linker directly to remove unused code by adding `-gcc_flags -dead_strip` to the additional mtouch arguments in the project's iOS Build options.
@@ -1713,6 +1717,7 @@ There are a few possible sources for such dynamic symbols:
   registrar).
 
 Possible solutions:
+
 * Enable the managed linker (if possible for all assemblies instead of only
   SDK assemblies). This might remove enough of the sources for dynamic symbols
   so that the linker's command-line doesn't exceeded the maximum.
@@ -1846,11 +1851,11 @@ In some cases, it's a "local network" issue and it can be addressed by adding th
 
 *MSBuild task: ValidateAppBundleTaskBase*
 
-### <a name="MT7006"/>MT7006: The App Extension '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).
+### <a name="MT7006"/>MT7006: The App Extension '\*' has an invalid CFBundleIdentifier (\*), it does not begin with the main app bundle's CFBundleIdentifier (*).
 
 *MSBuild task: ValidateAppBundleTaskBase*
 
-### <a name="MT7007"/>MT7007: The App Extension '*' has a CFBundleIdentifier (*) that ends with the illegal suffix ".key".
+### <a name="MT7007"/>MT7007: The App Extension '\*' has a CFBundleIdentifier (\*) that ends with the illegal suffix ".key".
 
 *MSBuild task: ValidateAppBundleTaskBase*
 
@@ -1886,11 +1891,11 @@ In some cases, it's a "local network" issue and it can be addressed by adding th
 
 *MSBuild task: ValidateAppBundleTaskBase*
 
-### <a name="MT7016"/>MT7016: The Watch App '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).
+### <a name="MT7016"/>MT7016: The Watch App '\*' has an invalid CFBundleIdentifier (\*), it does not begin with the main app bundle's CFBundleIdentifier (*).
 
 *MSBuild task: ValidateAppBundleTaskBase*
 
-### <a name="MT7017"/>MT7017: The Watch App '*' does not have a valid UIDeviceFamily value. Expected 'Watch (4)' but found '* (*)'.
+### <a name="MT7017"/>MT7017: The Watch App '\*' does not have a valid UIDeviceFamily value. Expected 'Watch (4)' but found '\* (*)'.
 
 *MSBuild task: ValidateAppBundleTaskBase*
 
@@ -1898,7 +1903,7 @@ In some cases, it's a "local network" issue and it can be addressed by adding th
 
 *MSBuild task: ValidateAppBundleTaskBase*
 
-### <a name="MT7019"/>MT7019: The Watch App '*' has an invalid WKCompanionAppBundleIdentifier value ('*'), it does not match the main app bundle's CFBundleIdentifier ('*').
+### <a name="MT7019"/>MT7019: The Watch App '\*' has an invalid WKCompanionAppBundleIdentifier value ('\*'), it does not match the main app bundle's CFBundleIdentifier ('*').
 
 *MSBuild task: ValidateAppBundleTaskBase*
 
@@ -1926,11 +1931,11 @@ In some cases, it's a "local network" issue and it can be addressed by adding th
 
 *MSBuild task: ValidateAppBundleTaskBase*
 
-### <a name="MT7026"/>MT7026: The Watch Extension '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).
+### <a name="MT7026"/>MT7026: The Watch Extension '\*' has an invalid CFBundleIdentifier (\*), it does not begin with the main app bundle's CFBundleIdentifier (*).
 
 *MSBuild task: ValidateAppBundleTaskBase*
 
-### <a name="MT7027"/>MT7027: The Watch Extension '*' has a CFBundleIdentifier (*) that ends with the illegal suffix ".key".
+### <a name="MT7027"/>MT7027: The Watch Extension '\*' has a CFBundleIdentifier (\*) that ends with the illegal suffix ".key".
 
 *MSBuild task: ValidateAppBundleTaskBase*
 
@@ -1962,7 +1967,7 @@ In some cases, it's a "local network" issue and it can be addressed by adding th
 
 *MSBuild task: ValidateAppBundleTaskBase*
 
-### <a name="MT7035"/>MT7035: The Watch App '*' does not have a valid UIDeviceFamily value. Expected '*' but found '* (*)'.
+### <a name="MT7035"/>MT7035: The Watch App '\*' does not have a valid UIDeviceFamily value. Expected '\*' but found '\* (\*)'.
 
 *MSBuild task: ValidateAppBundleTaskBase*
 
@@ -1970,7 +1975,7 @@ In some cases, it's a "local network" issue and it can be addressed by adding th
 
 *MSBuild task: ValidateAppBundleTaskBase*
 
-### <a name="MT7037"/>MT7037: The WatchKit Extension '{extensionName}' has an invalid WKAppBundleIdentifier value ('*'), it does not match the Watch App's CFBundleIdentifier ('*').
+### <a name="MT7037"/>MT7037: The WatchKit Extension '{extensionName}' has an invalid WKAppBundleIdentifier value ('\*'), it does not match the Watch App's CFBundleIdentifier ('\*').
 
 *MSBuild task: ValidateAppBundleTaskBase*
 
@@ -2115,17 +2120,17 @@ Where * can be:
 
 ### <a name="MT8001"/>MT8001  Version mismatch between the native Xamarin.iOS runtime and monotouch.dll. Please reinstall Xamarin.iOS.
 
-### <a name="MT8002"/>MT8002  Could not find the method '*' in the type '*'.
+### <a name="MT8002"/>MT8002  Could not find the method '\*' in the type '\*'.
 
-### <a name="MT8003"/>MT8003  Failed to find the closed generic method '*' on the type '*'.
+### <a name="MT8003"/>MT8003  Failed to find the closed generic method '\*' on the type '\*'.
 
 ### <a name="MT8004"/>MT8004: Cannot create an instance of * for the native object 0x* (of type '*'), because another instance already exists for this native object (of type *).
 
-### <a name="MT8005"/>MT8005: Wrapper type '*' is missing its native ObjectiveC class '*'.
+### <a name="MT8005"/>MT8005: Wrapper type '\*' is missing its native ObjectiveC class '\*'.
 
-### <a name="MT8006"/>MT8006: Failed to find the selector '*' on the type '*'
+### <a name="MT8006"/>MT8006: Failed to find the selector '\*' on the type '\*'
 
-### <a name="MT8007"/>MT8007: Cannot get the method descriptor for the selector '*' on the type '*', because the selector does not correspond to a method
+### <a name="MT8007"/>MT8007: Cannot get the method descriptor for the selector '\*' on the type '\*', because the selector does not correspond to a method
 
 ### <a name="MT8008"/>MT8008: The loaded version of Xamarin.iOS.dll was compiled for * bits, while the process is * bits. Please file a bug at http://bugzilla.xamarin.com.
 

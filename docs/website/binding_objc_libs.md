@@ -4,7 +4,7 @@ title: Binding Objective-C Libraries
 samplecode:
   - title: "Binding Sample"
     url: /samples/BindingSample/
-dateupdated: 2017-03-29
+dateupdated: 2017-06-26
 ---
 
 [//]: # (The original file resides under https://github.com/xamarin/xamarin-macios/tree/master/docs/website/)
@@ -619,9 +619,9 @@ the protocols, like this:
 
 ```
 class MyDelegate : NSObject, IUITableViewDelegate {
-	nint IUITableViewDelegate.GetRowHeight (nint row) {
-	    return 1;
-	}
+    nint IUITableViewDelegate.GetRowHeight (nint row) {
+        return 1;
+    }
 }
 ```
 
@@ -632,10 +632,10 @@ exported with the proper name, so it is equivalent to this:
 
 ```
 class MyDelegate : NSObject, IUITableViewDelegate {
-	[Export ("getRowHeight:")]
-        nint IUITableViewDelegate.GetRowHeight (nint row) {
-	    return 1;
-        }
+    [Export ("getRowHeight:")]
+    nint IUITableViewDelegate.GetRowHeight (nint row) {
+        return 1;
+    }
 }
 ```
 
@@ -659,8 +659,8 @@ For example, in Xamarin.iOS we bound the extension methods that are defined on
 ```
 [BaseType (typeof (UIResponder))]
 interface UIView {
-        [Bind ("drawAtPoint:withFont:")]
-        SizeF DrawString ([Target] string str, CGPoint point, UIFont font);
+    [Bind ("drawAtPoint:withFont:")]
+    SizeF DrawString ([Target] string str, CGPoint point, UIFont font);
 }
 ```
 
@@ -677,8 +677,8 @@ For example, in Xamarin.iOS we bound the extension methods that are defined on
 ```
 [Category, BaseType (typeof (NSString))]
 interface NSStringDrawingExtensions {
-        [Export ("drawAtPoint:withFont:")]
-        CGSize DrawString (CGPoint point, UIFont font);
+    [Export ("drawAtPoint:withFont:")]
+    CGSize DrawString (CGPoint point, UIFont font);
 }
 ```
 
@@ -695,7 +695,7 @@ An Objective-C message looks like this:
 
 ```
 - (void) appendWorkers:(XWorker *) firstWorker, ...
-	NS_REQUIRES_NIL_TERMINATION ;
+  NS_REQUIRES_NIL_TERMINATION ;
 ```
 
 To invoke this method from C# you will want to create a signature like
@@ -1207,8 +1207,8 @@ Example:
 
 ```
 [Export ("loadfile:completed:")]
-	[Async]
-	void LoadFile (string file, Action<string> completed);
+[Async]
+void LoadFile (string file, Action<string> completed);
 ```
 
 
@@ -1218,7 +1218,7 @@ The above code will generate both the LoadFile method, as
 
 ```
 [Export ("loadfile:completed:")]
-	Task<string> LoadFileAsync (string file);
+Task<string> LoadFileAsync (string file);
 ```
 
 <a name="Surfacing_Strong_Types"></a>
@@ -1839,11 +1839,11 @@ Considering the following setup:
 ```
 [BaseType (typeof (NSObject))]
 interface MyClass {
-        [Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
-        NSObject WeakDelegate { get; set; }
+    [Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
+    NSObject WeakDelegate { get; set; }
 
-        [Wrap ("WeakDelegate")][NullAllowed]
-        MyClassDelegate Delegate { get; set; }
+    [Wrap ("WeakDelegate")][NullAllowed]
+    MyClassDelegate Delegate { get; set; }
 }
 
 [BaseType (typeof (NSObject))]
