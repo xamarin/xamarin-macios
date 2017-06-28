@@ -15164,14 +15164,6 @@ namespace XamCore.Foundation
 		[Export ("stringFromUnit:")]
 		string ToString (NSUnit unit);
 	}
-    
-    [NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-    [BaseType (typeof(NSObject))]
-    interface NSFileProviderMessageInterface : NSSecureCoding
-    {
-        [Export ("name")]
-        string Name { get; }
-    }
 
 	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
