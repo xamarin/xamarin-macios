@@ -1,16 +1,21 @@
-id:{8A832A76-A770-1A7C-24BA-B3E6F57617A0}  
-title:Binding Objective-C Libraries  
-samplecode:[Binding Sample](/samples/BindingSample/)  
+---
+id: 8A832A76-A770-1A7C-24BA-B3E6F57617A0
+title: Binding Objective-C Libraries
+samplecode:
+  - title: "Binding Sample"
+    url: /samples/BindingSample/
+dateupdated: 2017-03-29
+---
 
 [//]: # (The original file resides under https://github.com/xamarin/xamarin-macios/tree/master/docs/website/)
 [//]: # (This allows all contributors (including external) to submit, using a PR, updates to the documentation that match the tools changes)
 [//]: # (Modifications outside of xamarin-macios/master will be lost on future updates)
 
-When working on iOS, you might encounter cases where you want to
+When working with Xamarin.iOS or Xamarin.Mac, you might encounter cases where you want to
 consume a third-party Objective-C library. In those situations, you
-can use Xamarin.iOS's Binding Projects to create a C# binding to the
+can use Xamarin Binding Projects to create a C# binding to the
 native Objective-C libraries. The project uses the same tools that we
-use to bring the iOS APIs to C#.
+use to bring the iOS and Mac APIs to C#.
 
 This document describes how to bind Objective-C APIs, if you are
 binding just C APIs, you should use the standard .NET mechanism for
@@ -20,31 +25,51 @@ Details on how to statically link a C library are available on the
 page.
 
 See our companion [Binding Types Reference
-Guide](/guides/ios/advanced_topics/binding_objective-c/binding_types_reference_guide). 
+Guide](/guides/cross-platform/macios/binding/binding-types-reference/).
 Additionally, if you want to learn more about what happens under the hood, check our
-[Binding Details](/guides/ios/advanced_topics/binding_objective-c/binding_details)
+[Binding Overview](/guides/cross-platform/macios/binding/overview/)
 page.
 
- **Sample Code**
+Bindings can be built for both iOS and Mac libraries.
+This page describes how to work on an iOS binding, however
+Mac bindings are very similar.
+
+**Sample Code for iOS**
 
 You can use the
-[BindingSample](https://github.com/xamarin/monotouch-samples/tree/master/BindingSample)
+[iOS Binding Sample](https://github.com/xamarin/monotouch-samples/tree/master/BindingSample)
 project to experiment with bindings.
-
-<div class="note">Note: This is only supported in Xamarin Studio on Mac.</div>
-
- <a name="Getting_Started" class="injected"></a>
-
 
 # Getting Started
 
-<ide name="xs">
-<p>The easiest way to create a binding is to create a Xamarin.iOS Binding Project. You can do this from Xamarin Studio on Mac by selecting the project type, <b>iOS Binding Project</b>: <br/><img src="Images/00.png" /></p>
-</ide>
+[[ide name="xs"]]
 
-<ide name="vs">
-<p>The easiest way to create a binding is to create a Xamarin.iOS Binding Project. You can do this from Visual Studio on Windows by selecting the project type, <b>iOS Binding Project</b>: <br/><img src="Images/00VS.png" /></p>
-</ide>
+
+The easiest way to create a binding is to create a Xamarin.iOS Binding Project.
+You can do this from Xamarin Studio on Mac by selecting the project type,
+**iOS > Library > Bindings Library**:
+
+
+[![](Images/00-sml.png "Do this from Xamarin Studio on Mac by selecting the project type, iOS  Library  Bindings Library")](Images/00.png)
+
+
+[[/ide]]
+
+[[ide name="vs"]]
+
+
+The easiest way to create a binding is to create a Xamarin.iOS Binding Project.
+You can do this from Visual Studio on Windows by selecting the project type,
+**Visual C# > iOS > Bindings Library (iOS)**:
+
+
+[![](Images/00VS-sml.png "iOS  Bindings Library iOS")](Images/00VS.png)
+
+> ⚠️ Note: Binding Projects for **Xamarin.Mac** are only supported in
+> Visual Studio for Mac.
+
+
+[[/ide]]
 
 The generated project contains a small template that you can edit, it
 contains two files: `ApiDefinition.cs` and `StructsAndEnums.cs`.
@@ -58,9 +83,7 @@ limited to C# interfaces and C# delegate declarations. The
 definitions that are required by the interfaces and delegates. This
 includes enumeration values and structures that your code might use.
 
- <a name="Binding_an_API" class="injected"></a>
-
-
+<a name="Binding_an_API" />
 # Binding an API
 
 To do a comprehensive binding, you will want to understand the Objective-C
@@ -114,14 +137,14 @@ To produce a complete binding, you will typically deal with four
 components:
 
 -  The API definition file (`ApiDefinition.cs` in the template).
--  Optional: any enums, types, structs required by the API definition file (`StructsAndEnums.cs` in the template). 
--  Optional: extra sources that might expand the generated binding, or provide a more C# friendly API (any C# files that you add to the project). 
+-  Optional: any enums, types, structs required by the API definition file (`StructsAndEnums.cs` in the template).
+-  Optional: extra sources that might expand the generated binding, or provide a more C# friendly API (any C# files that you add to the project).
 -  The native library that you are binding.
 
 
 This chart shows the relationship between the files:
 
- [ ![](Images/Screen_Shot_2012-02-08_at_3.33.07_PM.png)](Images/Screen_Shot_2012-02-08_at_3.33.07_PM.png)
+ [ ![](Images/Screen_Shot_2012-02-08_at_3.33.07_PM.png "This chart shows the relationship between the files")](Images/Screen_Shot_2012-02-08_at_3.33.07_PM.png)
 
 The API Definition file: will only contain namespaces and interface
 definitions (with any members that an interface can contain) and
@@ -178,7 +201,7 @@ the extension ".a". When you do this, Xamarin Studio will add two
 files: the `.a` file and an automatically populated C# file that
 contains information about what the native library contains:
 
- [ ![](Images/Screen_Shot_2012-02-08_at_3.45.06_PM.png)](Images/Screen_Shot_2012-02-08_at_3.45.06_PM.png)
+ [ ![](Images/Screen_Shot_2012-02-08_at_3.45.06_PM.png "Native libraries by convention start with the word lib and end with the extension .a")](Images/Screen_Shot_2012-02-08_at_3.45.06_PM.png)
 
 The contents of the `libMagicChord.linkwith.cs` file has information about how
 this library can be used and instructs your IDE to package this binary into
@@ -201,7 +224,7 @@ Sometimes you might find that you need a few enumeration values, delegate
 definitions or other types. Do not place those in the API definitions file, as
 this is merely a contract
 
- <a name="The_API_definition_file" class="injected"></a>
+ <a name="The_API_definition_file" />
 
 
 # The API definition file
@@ -220,7 +243,7 @@ But since we are using the interface as a skeleton to generate a class
 we had to resort to decorating various parts of the contract with
 attributes to drive the binding.
 
-<a name="Binding_Methods" class="injected"></a>
+<a name="Binding_Methods" />
 ## Binding Methods
 
 The simplest binding you can do is to bind a method. Just declare a
@@ -275,7 +298,7 @@ When exporting a reference type, with the `[Export]` keyword you can also
 specify the allocation semantics. This is necessary to ensure that no data is
 leaked.
 
-<a name="Binding_Properties" class="injected"></a>
+<a name="Binding_Properties" />
 ## Binding Properties
 
 Just like methods, Objective-C properties are bound using the
@@ -310,7 +333,7 @@ This then binds "isMenuVisible" and "setMenuVisible:". Optionally, a property ca
 ```
 [Category, BaseType(typeof(UIView))]
 interface UIView_MyIn
-{        
+{
   [Export ("name")]
   string Name();
 
@@ -400,7 +423,7 @@ interface MyMutableTree {
 }
 ```
 
- <a name="Binding_Constructors" class="injected"></a>
+ <a name="Binding_Constructors" />
 
 
 ## Binding Constructors
@@ -408,10 +431,10 @@ interface MyMutableTree {
 The **btouch-native** tool will automatically generate fours
 constructors in your class, for a given class `Foo`, it generates:
 
--  `Foo ()`: the default constructor (maps to Objective-C's "init" constructor) 
--  `Foo (NSCoder)`: the constructor used during deserialization of NIB files (maps to Objective-C's "initWithCoder:" constructor). 
--  `Foo (IntPtr handle)`: the constructor for handle-based creation, this is invoked by the runtime when the runtime needs to expose a managed object from an unmanaged object. 
--  `Foo (NSEmptyFlag)`: this is used by derived classes to prevent double initialization. 
+-  `Foo ()`: the default constructor (maps to Objective-C's "init" constructor)
+-  `Foo (NSCoder)`: the constructor used during deserialization of NIB files (maps to Objective-C's "initWithCoder:" constructor).
+-  `Foo (IntPtr handle)`: the constructor for handle-based creation, this is invoked by the runtime when the runtime needs to expose a managed object from an unmanaged object.
+-  `Foo (NSEmptyFlag)`: this is used by derived classes to prevent double initialization.
 
 
 For constructors that you define, they need to be declared using the
@@ -425,7 +448,7 @@ use:
 IntPtr Constructor (CGRect frame);
 ```
 
- <a name="Binding_Protocols" class="injected"></a>
+ <a name="Binding_Protocols" />
 
 
 ## Binding Protocols
@@ -524,7 +547,7 @@ consume protocols:
 
 	// Interface that contains only the required methods
 	interface IMyProtocol: INativeObject, IDisposable {
-		[Export (“say:”)]
+		[Export ("say:")]
 		void Say (string msg);
 	}
 
@@ -562,7 +585,7 @@ the methods.
 If you want to use the protocol definitions in your API, you will need
 to write skeleton empty interfaces in your API definition.  If you
 want to use the MyProtocol in an API, you would need to do this:
-	
+
 ```
 [BaseType (typeof (NSObject))]
 [Model, Protocol]
@@ -593,7 +616,7 @@ exist, that is why you need to provide an empty interface.
 
 Whenever you implement one of the interfaces generated for
 the protocols, like this:
-	
+
 ```
 class MyDelegate : NSObject, IUITableViewDelegate {
 	nint IUITableViewDelegate.GetRowHeight (nint row) {
@@ -609,7 +632,7 @@ exported with the proper name, so it is equivalent to this:
 
 ```
 class MyDelegate : NSObject, IUITableViewDelegate {
-	[Export (“getRowHeight:”)]
+	[Export ("getRowHeight:")]
         nint IUITableViewDelegate.GetRowHeight (nint row) {
 	    return 1;
         }
@@ -617,9 +640,9 @@ class MyDelegate : NSObject, IUITableViewDelegate {
 ```
 
 It does not matter if the interface is implemented
-implicitly or explicitly. 
+implicitly or explicitly.
 
-<a name="Binding_Class_Extensions" class="injected"></a>
+<a name="Binding_Class_Extensions" />
 
 
 ## Binding Class Extensions
@@ -659,7 +682,7 @@ interface NSStringDrawingExtensions {
 }
 ```
 
- <a name="Binding_Objective-C_Argument_Lists" class="injected"></a>
+ <a name="Binding_Objective-C_Argument_Lists" />
 
 
 ## Binding Objective-C Argument Lists
@@ -705,7 +728,7 @@ public void AppendWorkers(params Worker[] workers)
 }
 ```
 
- <a name="Binding_Fields" class="injected"></a>
+ <a name="Binding_Fields" />
 
 
 ## Binding Fields
@@ -776,14 +799,14 @@ interface LonelyClass {
 }
 ```
 
- <a name="Binding_Notifications" class="injected"></a>
+<a name="Binding_Enums" class="injected"></a>
 
 
 ## Binding Enums
 
 You can add `enum` directly in your binding files to makes it easier
 to use them inside API definitions - without using a different source
-file (that needs to be compiled in both the bindings and the final 
+file (that needs to be compiled in both the bindings and the final
 project).
 
 Example:
@@ -813,7 +836,7 @@ enum NSRunLoopMode {
 
 	[Field ("NSRunLoopCommonModes")]
 	Common,
-	
+
 	[Field (null)]
 	Other = 1000
 }
@@ -821,7 +844,7 @@ enum NSRunLoopMode {
 interface MyType {
 	[Export ("performForMode:")]
 	void Perform (NSString mode);
- 
+
 	[Wrap ("Perform (mode.GetConstant ())")]
 	void Perform (NSRunLoopMode mode);
 }
@@ -835,8 +858,8 @@ However this would limit subclassing the type as the nicer API alternative
 uses a `[Wrap]` attribute. Those generated methods are not `virtual`, i.e.
 you won't be able to override them - which may, or not, be a good choice.
 
-An alternative is to mark the original, `NSString`-based, definition as 
-`[Protected]`. This will allow subclassing to work, when required, and 
+An alternative is to mark the original, `NSString`-based, definition as
+`[Protected]`. This will allow subclassing to work, when required, and
 the wrap'ed version will still work and call the overriden method.
 
 
@@ -884,6 +907,8 @@ CAScroll [] SupportedScrollModes { get; set; }
 
 Please see [[BindAs] documentation](/guides/ios/advanced_topics/binding_objective-c/binding_types_reference_guide#BindAsAttribute) to see supported conversion types.
 
+ <a name="Binding_Notifications" />
+
 
 ## Binding Notifications
 
@@ -891,11 +916,11 @@ Notifications are messages that are posted to the
 `NSNotificationCenter.DefaultCenter` and are used as a mechanism to
 broadcast messages from one part of the application to
 another. Developers subscribe to notifications typically using the
-[NSNotificationCenter](http://iosapi.xamarin.com/?link=T%3aMonoTouch.Foundation.NSNotificationCenter)'s
-[AddObserver](http://iosapi.xamarin.com/?link=T%3aMonoTouch.Foundation.NSNotificationCenter%2fM%2fAddObserver)
+[NSNotificationCenter](/api/type/Foundation.NSNotificationCenter/)'s
+[AddObserver](/api/type/Foundation.NSNotificationCenter/M/AddObserver/)
 method. When an application posts a message to the notification
 center, it typically contains a payload stored in the
-[NSNotification.UserInfo](http://iosapi.xamarin.com/?link=P%3aMonoTouch.Foundation.NSNotification.UserInfo)
+[NSNotification.UserInfo](/api/property/Foundation.NSNotification.UserInfo/)
 dictionary. This dictionary is weakly typed, and getting information
 out of it is error prone, as users typically need to read in the
 documentation which keys are available on the dictionary and the types
@@ -942,7 +967,7 @@ public class MyClass {
 
 Users of your code can then easily subscribe to notifications posted
 to the
-[NSDefaultCenter](http://iosapi.xamarin.com/?link=P%3aMonoTouch.Foundation.NSNotificationCenter.DefaultCenter)
+[NSDefaultCenter](/api/property/Foundation.NSNotificationCenter.DefaultCenter/)
 by using code like this:
 
 ```
@@ -960,7 +985,7 @@ token.Dispose ();
 
 
 Or you can call
-[NSNotification.DefaultCenter.RemoveObserver](http://iosapi.xamarin.com/?link=M%3aMonoTouch.Foundation.NSNotificationCenter.RemoveObserver(MonoTouch.Foundation.NSObject))
+[NSNotification.DefaultCenter.RemoveObserver](/api/member/Foundation.NSNotificationCenter.RemoveObserver/p/Foundation.NSObject/)
 and pass the token. If your notification contains parameters, you
 should specify a helper `EventArgs` interface, like this:
 
@@ -987,7 +1012,7 @@ interface MyScreenChangedEventArgs {
 
 The above will generate a `MyScreenChangedEventArgs` class with the
 `ScreenX` and `ScreenY` properties that will fetch the data from the
-[NSNotification.UserInfo](http://iosapi.xamarin.com/?link=P%3aMonoTouch.Foundation.NSNotification.UserInfo)
+[NSNotification.UserInfo](/api/property/Foundation.NSNotification.UserInfo/)
 dictionary using the keys "ScreenXKey" and "ScreenYKey" respectively
 and apply the proper conversions. The `[ProbePresence]` attribute is
 used for the generator to probe if the key is set in the `UserInfo`,
@@ -1002,7 +1027,7 @@ var token = MyClass.NotificationsObserveScreenChanged ((notification) => {
 });
 ```
 
- <a name="Binding_Categories" class="injected"></a>
+ <a name="Binding_Categories" />
 
 
 ## Binding Categories
@@ -1103,7 +1128,7 @@ interface SocialNetworking {
 }
 ```
 
- <a name="Binding_Blocks" class="injected"></a>
+ <a name="Binding_Blocks" />
 
 
 ## Binding Blocks
@@ -1190,7 +1215,7 @@ Example:
 
 The above code will generate both the LoadFile method, as
 	well as:
-	
+
 ```
 [Export ("loadfile:completed:")]
 	Task<string> LoadFileAsync (string file);
@@ -1230,7 +1255,7 @@ there are scenarios where the value might not be set.
 To do this, you need to do a few things:
 
 * Create a strongly typed class, that subclasses
-  [DictionaryContainer](http://iosapi.xamarin.com/?link=T%3aMonoTouch.Foundation.DictionaryContainer) and provides the various getters and setters for each property.
+  [DictionaryContainer](/api/type/Foundation.DictionaryContainer/) and provides the various getters and setters for each property.
 * Declare overloads for the methods taking `NSDictionary` to take the new strongly typed version.
 
 You can create the strongly typed class either manually, or use the
@@ -1248,8 +1273,8 @@ public class XyzOptions : DictionaryContainer {
 #if !COREBUILD
     public XyzOptions () : base (new NSMutableDictionary ()) {}
     public XyzOptions (NSDictionary dictionary) : base (dictionary){}
-    
-    public nfloat? Volume { 
+
+    public nfloat? Volume {
        get { return GetFloatValue (XyzOptionsKeys.VolumeKey); }
        set { SetNumberValue (XyzOptionsKeys.VolumeKey, value); }
     }
@@ -1262,7 +1287,7 @@ public class XyzOptions : DictionaryContainer {
 ```
 
 You then should provide a wrapper method that surfaces the high-level
-API, on top of the low-level API.  
+API, on top of the low-level API.
 
 ```
 [BaseType (typeof (NSObject))]
@@ -1353,14 +1378,14 @@ field (that is not the name of the property with the suffix `Key`),
 you can decorate the property with an `Export` attribute with the name
 that you want to use.
 
- <a name="Type_mappings" class="injected"></a>
+ <a name="Type_mappings" />
 
 # Type mappings
 
 
-This section covers how Objective-C types are mapped to C# types. 
-	
-<a name="Simple_Types" class="injected"></a>
+This section covers how Objective-C types are mapped to C# types.
+
+<a name="Simple_Types" />
 
 
 ## Simple Types
@@ -1570,7 +1595,7 @@ Objective-C and CocoaTouch world to the Xamarin.iOS world:
 	  </tbody>
 	</table>
 
- <a name="Arrays" class="injected"></a>
+ <a name="Arrays" />
 
 
 ## Arrays
@@ -1605,7 +1630,7 @@ the actual type of the objects contained in the array.
 In cases where you can not track down the actual most derived type contained
 in the array, you can use `NSObject []` as the return value.
 
- <a name="Selectors" class="injected"></a>
+ <a name="Selectors" />
 
 
 ## Selectors
@@ -1687,7 +1712,7 @@ class DialogPrint : UIViewController {
 }
 ```
 
- <a name="Strings" class="injected"></a>
+ <a name="Strings" />
 
 
 ## Strings
@@ -1706,7 +1731,7 @@ annotate the parameter with the
 [[PlainString]](/guides/ios/advanced_topics/binding_objective-c/binding_types_reference_guide#PlainString)
 attribute.
 
- <a name="out/ref_parameters" class="injected"></a>
+ <a name="out/ref_parameters" />
 
 
 ## out/ref parameters
@@ -1735,7 +1760,7 @@ void Something (nint foo, out NSError error);
 void SomeString (ref NSObject byref);
 ```
 
- <a name="Memory_management_attributes" class="injected"></a>
+ <a name="Memory_management_attributes" />
 
 
 ## Memory management attributes
@@ -1756,12 +1781,12 @@ semantics available are:
 -  Retain:
 
 
- <a name="Style_Guidelines" class="injected"></a>
+ <a name="Style_Guidelines" />
 
 
 ## Style Guidelines
 
- <a name="Using_[Internal]" class="injected"></a>
+ <a name="Using_[Internal]" />
 
 
 ### Using [Internal]
@@ -1778,7 +1803,7 @@ generator, for example some advanced scenarios might expose types that
 are not bound and you want to bind in your own way, and you want to
 wrap those types yourself in your own way.
 
- <a name="Event_Handlers_and_Callbacks" class="injected"></a>
+ <a name="Event_Handlers_and_Callbacks" />
 
 
 # Event Handlers and Callbacks
@@ -1830,8 +1855,8 @@ interface MyClassDelegate {
 
 To wrap the class you must:
 
--  In your host class, add to your `[BaseType]` declaration the type that is acting as its delegate and the C# name that you exposed. In our example above those are "typeof (MyClassDelegate)" and "WeakDelegate" respectively. 
--  In your delegate class, on each method that has more than two parameters, you need to specify the type that you want to use for the automatically generated EventArgs class. 
+-  In your host class, add to your `[BaseType]` declaration the type that is acting as its delegate and the C# name that you exposed. In our example above those are "typeof (MyClassDelegate)" and "WeakDelegate" respectively.
+-  In your delegate class, on each method that has more than two parameters, you need to specify the type that you want to use for the automatically generated EventArgs class.
 
 
 The binding generator is not limited to wrapping only a single event
@@ -1908,7 +1933,7 @@ DefaultValue will hardcode a return value, while
 `[DefaultValueFromArgument]` is used to specify which input argument
 will be returned.
 
- <a name="Enumerations_and_Base_Types" class="injected"></a>
+ <a name="Enumerations_and_Base_Types" />
 
 
 # Enumerations and Base Types
@@ -1919,7 +1944,7 @@ this, put your enumerations and core types into a separate file and
 include this as part of one of the extra files that you provide to
 btouch.
 
- <a name="Linking_the_Dependencies" class="injected"></a>
+ <a name="Linking_the_Dependencies" />
 
 
 # Linking the Dependencies
@@ -1962,7 +1987,7 @@ does not preserve the metadata required to support categories (the
 linker/compiler dead code elimination strips it) which you need at
 runtime for Xamarin.iOS.
 
- <a name="Assisted_References" class="injected"></a>
+ <a name="Assisted_References" />
 
 
 # Assisted References
@@ -2020,7 +2045,7 @@ class Demo {
 }
 ```
 
- <a name="Inheriting_Protocols" class="injected"></a>
+ <a name="Inheriting_Protocols" />
 
 
 # Inheriting Protocols
