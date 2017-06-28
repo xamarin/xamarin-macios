@@ -83,7 +83,7 @@ namespace XamCore.FinderSync {
 		[Export ("supportedServiceNamesForItemWithURL:")]
 		string[] SupportedServiceNames (NSUrl itemUrl);
 
-#if FALSE // TODO: Activate after 10.13 foundation APIs have been merged
+#if FALSE // TODO: Activate after 10.13 foundation APIs have been merged.  Bug 57800
 		[Mac (10,13, onlyOn64 : true)]
 		[Export ("makeListenerEndpointForServiceName:andReturnError:")]
 		[return: NullAllowed]
