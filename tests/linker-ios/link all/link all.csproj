@@ -54,6 +54,7 @@
     <MtouchI18n>mideast,other</MtouchI18n>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
     <MtouchExtraArgs>-gcc_flags="-UhoItsB0rken"</MtouchExtraArgs>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug32|iPhone' ">
     <DebugSymbols>True</DebugSymbols>

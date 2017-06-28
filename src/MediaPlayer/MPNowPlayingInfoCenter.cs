@@ -7,8 +7,8 @@
 // Copyright 2011, Xamarin Inc
 //
 
-#if !TVOS && !MONOMAC
 
+#if XAMCORE_2_0
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
@@ -229,4 +229,4 @@ namespace XamCore.MediaPlayer {
 	}
 }
 
-#endif // !TVOS
+#endif

@@ -62,7 +62,7 @@ namespace MonoTouch.Tuner {
 
 		public MonoTouchResolver ()
 		{
-			cache = new Dictionary<string, AssemblyDefinition> (StringComparer.OrdinalIgnoreCase);
+			cache = new Dictionary<string, AssemblyDefinition> (NormalizedStringComparer.OrdinalIgnoreCase);
 		}
 
 		ReaderParameters CreateParameters (string path)
@@ -75,7 +75,7 @@ namespace MonoTouch.Tuner {
 
 		public IDictionary ToResolverCache ()
 		{
-			var resolver_cache = new Hashtable (StringComparer.OrdinalIgnoreCase);
+			var resolver_cache = new Dictionary<string, AssemblyDefinition> (NormalizedStringComparer.OrdinalIgnoreCase);
 			foreach (var pair in cache)
 				resolver_cache.Add (pair.Key, pair.Value);
 

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Xamarin.Utils;
 
 namespace xharness
 {
@@ -172,7 +173,7 @@ namespace xharness
 					Log ("Extracting mlaunch...");
 					using (var p = new Process ()) {
 						p.StartInfo.FileName = "unzip";
-						p.StartInfo.Arguments = $"-d {Quote (tmp_extraction_dir)} {Quote (local_zip)}";
+						p.StartInfo.Arguments = $"-d {StringUtils.Quote (tmp_extraction_dir)} {StringUtils.Quote (local_zip)}";
 						Log ("{0} {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
 						p.Start ();
 						p.WaitForExit ();
@@ -237,25 +238,6 @@ namespace xharness
 
 				return mlaunch;
 			}
-		}
-
-		public static string Quote (string f)
-		{
-			if (f.IndexOf (' ') == -1 && f.IndexOf ('\'') == -1 && f.IndexOf (',') == -1)
-				return f;
-
-			var s = new StringBuilder ();
-
-			s.Append ('"');
-			foreach (var c in f) {
-				if (c == '"' || c == '\\')
-					s.Append ('\\');
-
-				s.Append (c);
-			}
-			s.Append ('"');
-
-			return s.ToString ();
 		}
 
 		void LoadConfig ()
@@ -755,7 +737,7 @@ namespace xharness
 
 			var symbolicated = new LogFile ("Symbolicated crash report", report.Path + ".symbolicated");
 			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (XcodeRoot, "Contents", "Developer") } };
-			var rv = await ProcessHelper.ExecuteCommandAsync (symbolicatecrash, Quote (report.Path), symbolicated, TimeSpan.FromMinutes (1), environment);
+			var rv = await ProcessHelper.ExecuteCommandAsync (symbolicatecrash, StringUtils.Quote (report.Path), symbolicated, TimeSpan.FromMinutes (1), environment);
 			if (rv.Succeeded) {;
 				log.WriteLine ("Symbolicated {0} successfully.", report.Path);
 				return symbolicated;
@@ -777,10 +759,10 @@ namespace xharness
 				var tmp = Path.GetTempFileName ();
 				try {
 					var sb = new StringBuilder ();
-					sb.Append (" --list-crash-reports=").Append (Quote (tmp));
-					sb.Append (" --sdkroot ").Append (Quote (XcodeRoot));
+					sb.Append (" --list-crash-reports=").Append (StringUtils.Quote (tmp));
+					sb.Append (" --sdkroot ").Append (StringUtils.Quote (XcodeRoot));
 					if (!string.IsNullOrEmpty (device))
-						sb.Append (" --devname ").Append (Quote (device));
+						sb.Append (" --devname ").Append (StringUtils.Quote (device));
 					var result = await ProcessHelper.ExecuteCommandAsync (MlaunchPath, sb.ToString (), log, TimeSpan.FromMinutes (1));
 					if (result.Succeeded)
 						rv.UnionWith (File.ReadAllLines (tmp));
@@ -838,11 +820,11 @@ namespace xharness
 						foreach (var file in end_crashes) {
 							var crash_report_target = Logs.CreateFile ("Crash report: " + Path.GetFileName (file), Path.Combine (LogDirectory, Path.GetFileName (file)));
 							var sb = new StringBuilder ();
-							sb.Append (" --download-crash-report=").Append (Harness.Quote (file));
-							sb.Append (" --download-crash-report-to=").Append (Harness.Quote (crash_report_target.Path));
-							sb.Append (" --sdkroot ").Append (Harness.Quote (Harness.XcodeRoot));
+							sb.Append (" --download-crash-report=").Append (StringUtils.Quote (file));
+							sb.Append (" --download-crash-report-to=").Append (StringUtils.Quote (crash_report_target.Path));
+							sb.Append (" --sdkroot ").Append (StringUtils.Quote (Harness.XcodeRoot));
 							if (!string.IsNullOrEmpty (DeviceName))
-								sb.Append (" --devname ").Append (Harness.Quote (DeviceName));
+								sb.Append (" --devname ").Append (StringUtils.Quote (DeviceName));
 							var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, sb.ToString (), Log, TimeSpan.FromMinutes (1));
 							if (result.Succeeded) {
 								Log.WriteLine ("Downloaded crash report {0} to {1}", file, crash_report_target.Path);
