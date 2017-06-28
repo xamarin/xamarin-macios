@@ -60,7 +60,7 @@ namespace Extrospection {
 			"IOBluetooth", "IOBluetoothUI", "PubSub", "CryptoTokenKit", "DiscRecording", "DiscRecordingUI", "ImageCaptureCore", "OSAKit", "AudioVideoBridging", "Automator", "ImageCapture",
 
 			 // Maybe?
-			"ICADevices", "OpenDirectory", "IMServicePlugIn", "PreferencePanes", "ScreenSaver",
+			"ICADevices", "OpenDirectory", "IMServicePlugIn", "PreferencePanes", "ScreenSaver", "CoreMediaIO", "SecurityInterface",
 
 			 // Nope
 			"InstallerPlugins", "JavaVM", "ExceptionHandling", "JavaFrameEmbedding",
