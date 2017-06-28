@@ -14173,7 +14173,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,10)]
 	[BaseType (typeof (NSViewController))]
-	interface NSSplitViewController : NSSplitViewDelegate, INSUserInterfaceValidations {
+	interface NSSplitViewController : NSSplitViewDelegate, NSUserInterfaceValidations {
 		[Export ("splitView", ArgumentSemantic.Strong)]
 		NSSplitView SplitView { get; set; }
 
