@@ -445,8 +445,10 @@ namespace xharness
 			args.Append (" -setenv=NUNIT_ENABLE_NETWORK=true");
 			// detect if we are using a jenkins bot.
 			var useXmlOutput = Harness.InJenkins;
-			if (useXmlOutput) 
+			if (useXmlOutput) {
 				args.Append (" -setenv=NUNIT_ENABLE_XML_OUTPUT=true");
+				args.Append (" -setenv=NUNIT_ENABLE_XML_MODE=wrapped");
+			}
 
 			if (isSimulator) {
 				args.Append (" -argument=-app-arg:-hostname:127.0.0.1");
