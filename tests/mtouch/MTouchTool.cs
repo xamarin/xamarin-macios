@@ -882,5 +882,11 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 		void IDisposable.Dispose ()
 		{
 		}
+
+		public IEnumerable<string> NativeSymbolsInExecutable {
+			get { 
+				return ExecutionHelper.Execute ("nm", $"-gUj {StringUtils.Quote (NativeExecutablePath)}", hide_output: true).Split ('\n');
+			}
+		}
 	}
 }
