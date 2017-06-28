@@ -10162,7 +10162,7 @@ namespace XamCore.AppKit {
 	{
 		[Mac (10,12)]
 		[Export ("anchorWithOffsetToAnchor:")]
-		NSLayoutDimension AnchorWithOffset (NSLayoutXAxisAnchor otherAnchor);
+		NSLayoutDimension GetAnchorWithOffset (NSLayoutXAxisAnchor otherAnchor);
 	}
 
 	[Mac (10,11)]
@@ -10172,7 +10172,7 @@ namespace XamCore.AppKit {
 	{
 		[Mac (10,12)]
 		[Export ("anchorWithOffsetToAnchor:")]
-		NSLayoutDimension AnchorWithOffset (NSLayoutYAxisAnchor otherAnchor);
+		NSLayoutDimension GetAnchorWithOffset (NSLayoutYAxisAnchor otherAnchor);
 	}
 
 	[Mac (10,11)]

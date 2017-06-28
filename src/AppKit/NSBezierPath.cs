@@ -88,7 +88,7 @@ namespace XamCore.AppKit {
 				_SetAssociatedPointsAtIndex ((IntPtr)ptr, index);
 		}
 
-		public unsafe void Append (CGPoint[] points)
+		public void Append (CGPoint[] points)
 		{
 			AppendPathWithPoints (points);
 		}
@@ -117,7 +117,7 @@ namespace XamCore.AppKit {
 		}
 
 		[Mac (10,13)]
-		public unsafe void Append (uint[] glyphs, NSFont font)
+		public void Append (uint[] glyphs, NSFont font)
 		{
 			AppendBezierPathWithCGGlyphs (glyphs, font);
 		}
