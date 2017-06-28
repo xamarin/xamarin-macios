@@ -34,6 +34,26 @@ namespace Xamarin
 	public class MTouch
 	{
 		[Test]
+		public void ExceptionMarshaling ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp ();
+				mtouch.CustomArguments = new string [] { "--marshal-objectivec-exceptions=throwmanagedexception", "--dlsym:+Xamarin.iOS.dll" };
+				mtouch.Debug = false; // make sure the output is stripped
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_xamarin_pinvoke_wrapper_objc_msgSend"), "symbols");
+
+				// build again with llvm enabled
+				mtouch.Abi = "arm64+llvm";
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build llvm");
+
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_xamarin_pinvoke_wrapper_objc_msgSend"), "symbols llvm");
+			}
+		}
+
+		[Test]
 		[TestCase (NormalizationForm.FormC)]
 		[TestCase (NormalizationForm.FormD)]
 		[TestCase (NormalizationForm.FormKC)]
@@ -48,6 +68,43 @@ namespace Xamarin
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.Verbosity = 9;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+			}
+		}
+
+		[Test]
+		public void SymbolCollectionWithDlsym ()
+		{
+			// https://bugzilla.xamarin.com/show_bug.cgi?id=57826
+
+			using (var mtouch = new MTouchTool ()) {
+				var tmpdir = mtouch.CreateTemporaryDirectory ();
+				mtouch.CreateTemporaryCacheDirectory ();
+
+				var externMethod = @"
+class X {
+	[System.Runtime.InteropServices.DllImport (""__Internal"")]
+	static extern void xamarin_start_wwan ();
+}
+";
+
+				var codeDll = externMethod + @"
+public class A {}
+";
+				var codeExe = externMethod + @"
+public class B : A {}
+";
+
+				var dllPath = CompileTestAppLibrary (tmpdir, codeDll, profile: Profile.iOS, appName: "A");
+
+				mtouch.References = new string [] { dllPath };
+				mtouch.CreateTemporaryApp (extraCode: codeExe, extraArg: $"-r:{StringUtils.Quote (dllPath)}");
+				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.Debug = false;
+				mtouch.CustomArguments = new string [] { "--dlsym:+A.dll", "--dlsym:-testApp.exe" };
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+
+				var symbols = ExecutionHelper.Execute ("nm", $"-gUj {StringUtils.Quote (mtouch.NativeExecutablePath)}", hide_output: true).Split ('\n');
+				Assert.That (symbols, Does.Contain ("_xamarin_start_wwan"), "symb");
 			}
 		}
 

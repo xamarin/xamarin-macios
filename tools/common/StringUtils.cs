@@ -13,13 +13,14 @@ namespace Xamarin.Utils {
 		}
 
 		static char shellQuoteChar;
+		static char[] mustQuoteCharacters = new char [] { ' ', '\'', ',', '$', '\\' };
 
 		public static string Quote (string f)
 		{
 			if (String.IsNullOrEmpty (f))
 				return f ?? String.Empty;
 
-			if (f.IndexOf (' ') == -1 && f.IndexOf ('\'') == -1 && f.IndexOf (',') == -1 && f.IndexOf ('$') == -1)
+			if (f.IndexOfAny (mustQuoteCharacters) == -1)
 				return f;
 
 			var s = new StringBuilder ();

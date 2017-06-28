@@ -97,8 +97,6 @@ namespace MonoTouch.Tuner
 		{
 			if (method.IsPInvokeImpl && method.HasPInvokeInfo && method.PInvokeInfo != null) {
 				var pinfo = method.PInvokeInfo;
-				if (pinfo.Module.Name == "__Internal")
-					DerivedLinkContext.RequiredSymbols.AddFunction (pinfo.EntryPoint).AddMember (method);
 
 				if (state != null) {
 					switch (pinfo.EntryPoint) {
@@ -113,6 +111,9 @@ namespace MonoTouch.Tuner
 						return;
 					}
 				}
+
+				if (pinfo.Module.Name == "__Internal")
+					DerivedLinkContext.RequiredSymbols.AddFunction (pinfo.EntryPoint).AddMember (method);
 			}
 
 			if (MarkStep.IsPropertyMethod (method)) {
