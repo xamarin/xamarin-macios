@@ -28,9 +28,11 @@ namespace XamCore.AppKit {
 				throw new ArgumentException ("glyphs array is empty");
 
 			CGRect [] bounds = new CGRect [glyphs.Length]; 
-			fixed (CGRect* boundsPtr = &bounds [0])
-				fixed (CGGlyph* glyphsPtr = &glyphs [0])
+			fixed (CGRect* boundsPtr = &bounds [0]) {
+				fixed (CGGlyph* glyphsPtr = &glyphs [0]) {
 					_GetBoundingRects ((IntPtr)boundsPtr, (IntPtr)glyphsPtr, (nuint)glyphs.Length);
+				}
+			}
 			return bounds;
 		}
 
@@ -43,9 +45,11 @@ namespace XamCore.AppKit {
 				throw new ArgumentException ("glyphs array is empty");
 
 			CGSize [] advancements = new CGSize [glyphs.Length]; 
-			fixed (CGSize* advancementsPtr = &advancements [0])
-				fixed (CGGlyph* glyphsPtr = &glyphs [0])
+			fixed (CGSize* advancementsPtr = &advancements [0]) {
+				fixed (CGGlyph* glyphsPtr = &glyphs [0]) {
 					_GetAdvancements ((IntPtr)advancementsPtr, (IntPtr)glyphsPtr, (nuint)glyphs.Length);
+				}
+			}
 			return advancements;
 		}
 	}

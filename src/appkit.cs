@@ -2071,7 +2071,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[BaseType (typeof (NSControl))]
-	interface NSButton : NSAccessibilityButton, INSUserInterfaceCompression {
+	interface NSButton : NSAccessibilityButton, NSUserInterfaceCompression {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
@@ -3906,7 +3906,7 @@ namespace XamCore.AppKit {
 		[Mac (10,13)]
 		[Export ("colorUsingType:")]
 		[return: NullAllowed]
-		NSColor GetColor (NSColorType type);
+		NSColor FromType (NSColorType type);
 
 		[Mac (10, 10)]
 		[Static]
@@ -5441,7 +5441,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10,13)]
 		[Export ("prepareSharingServicePicker:")]
-		void PrepareSharingServicePicker (NSSharingServicePicker sharingServicePicker);
+		void Prepare (NSSharingServicePicker sharingServicePicker);
 	}
 
 	delegate void OpenDocumentCompletionHandler (NSDocument document, bool documentWasAlreadyOpen, NSError error);
@@ -13237,7 +13237,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[BaseType (typeof (NSControl))]
-	interface NSSegmentedControl : INSUserInterfaceCompression {
+	interface NSSegmentedControl : NSUserInterfaceCompression {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
@@ -13639,7 +13639,7 @@ namespace XamCore.AppKit {
 	[Mac (10,12,2)]
 	[BaseType (typeof(NSTouchBarItem))]
 	[DisableDefaultCtor]
-	interface NSSliderTouchBarItem : INSUserInterfaceCompression
+	interface NSSliderTouchBarItem : NSUserInterfaceCompression
 	{
 		[Export ("initWithIdentifier:")]
 		[DesignatedInitializer]
@@ -22711,7 +22711,7 @@ namespace XamCore.AppKit {
 
 		//radar 32929318 - Does not exist in binaries
 		//[Mac (10, 13)]
-		//[Notification, Field ("NSTextMovementUserInfoKey")]
+		//[Field ("NSTextMovementUserInfoKey")]
 		//NSString MovementUserInfoKey { get; }
 	}
 
@@ -25789,9 +25789,7 @@ namespace XamCore.AppKit {
 		[NullAllowed, Export ("target", ArgumentSemantic.Weak)]
 		NSObject Target { get; set; }
 
-		[Advice (@"It must conform to one of the following signatures: 
-		- (BOOL)myPerformActionMethod;
-		- (BOOL)myPerformActionMethod:(NSAccessibilityCustomAction *)action;")]
+		[Advice (@"It must conform to one of the following signatures: bool ActionMethod () or bool ActionMethod (NSAccessibilityCustomAction action) and be decorated with a corresponding [Export]")]
 		[NullAllowed, Export ("selector", ArgumentSemantic.Assign)]
 		Selector Selector { get; set; }
 	}
@@ -25977,8 +25975,6 @@ namespace XamCore.AppKit {
 		[Export ("standardOptions", ArgumentSemantic.Copy)]
 		NSUserInterfaceCompressionOptions StandardOptions { get; }
 	}
-
-	interface INSUserInterfaceCompression {}
 
 	[Mac (10, 13)]
 	[Protocol]
