@@ -26031,12 +26031,12 @@ namespace XamCore.AppKit {
 		NSWindow SelectedWindow { get; set; }
 
 		[Export ("addWindow:")]
-		void AddWindow (NSWindow window);
+		void Add (NSWindow window);
 
 		[Export ("insertWindow:atIndex:")]
-		void InsertWindow (NSWindow window, nint index);
+		void Insert (NSWindow window, nint index);
 
 		[Export ("removeWindow:")]
-		void RemoveWindow (NSWindow window);
+		void Remove (NSWindow window);
 	}
 }
