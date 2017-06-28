@@ -14,7 +14,7 @@ namespace XamCore.LocalAuthentication {
 	}
 
 	[iOS (8,0)]
--	[Availability (Platform.Mac_10_10)]
+	[Availability (Platform.Mac_10_10)]
 	[Native]
 	[ErrorDomain ("LAErrorDomain")]
 	public enum LAStatus : nint {
