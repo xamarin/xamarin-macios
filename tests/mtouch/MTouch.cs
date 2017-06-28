@@ -34,6 +34,26 @@ namespace Xamarin
 	public class MTouch
 	{
 		[Test]
+		public void ExceptionMarshaling ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp ();
+				mtouch.CustomArguments = new string [] { "--marshal-objectivec-exceptions=throwmanagedexception", "--dlsym:+Xamarin.iOS.dll" };
+				mtouch.Debug = false; // make sure the output is stripped
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_xamarin_pinvoke_wrapper_objc_msgSend"), "symbols");
+
+				// build again with llvm enabled
+				mtouch.Abi = "arm64+llvm";
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build llvm");
+
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_xamarin_pinvoke_wrapper_objc_msgSend"), "symbols llvm");
+			}
+		}
+
+		[Test]
 		[TestCase (NormalizationForm.FormC)]
 		[TestCase (NormalizationForm.FormD)]
 		[TestCase (NormalizationForm.FormKC)]
