@@ -90,6 +90,7 @@ namespace XamCore.CoreTelephony {
 	delegate void CTCallEventHandler (CTCall call);
 #endif
 
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Replaced by 'CXCallObserver' from 'CallKit'.")]
 	[BaseType (typeof (NSObject))]
 	[Since (4,0)]
 	interface CTCallCenter {
