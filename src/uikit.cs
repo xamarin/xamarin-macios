@@ -8857,7 +8857,11 @@ namespace XamCore.UIKit {
 		// 	inlined both + UIPickerView.cs implements IUITableViewDataSource
 
 		[Export ("tableView:numberOfRowsInSection:")]
-		nint RowsInSection (UITableView tableview, nint section);
+#if XAMCORE_4_0
+		nint RowsInSection (UITableView tableView, nint section);
+#else
+        nint RowsInSection (UITableView tableview, nint section);
+#endif
 
 		[Export ("tableView:cellForRowAtIndexPath:")]
 		UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath);
@@ -11156,7 +11160,11 @@ namespace XamCore.UIKit {
 	interface UITableViewSource {
 		[Export ("tableView:numberOfRowsInSection:")]
 		[Abstract]
-		nint RowsInSection (UITableView tableview, nint section);
+#if XAMCORE_4_0
+        nint RowsInSection (UITableView tableView, nint section);
+#else
+        nint RowsInSection (UITableView tableview, nint section);
+#endif
 
 		[Export ("tableView:cellForRowAtIndexPath:")]
 		[Abstract]
