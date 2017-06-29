@@ -159,13 +159,13 @@ namespace XamCore.Foundation
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("writeToURL:error:")]
-		bool WriteToUrl (NSUrl url, [NullAllowed] out NSError error);
+		bool Write (NSUrl url, [NullAllowed] out NSError error);
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("arrayWithContentsOfURL:error:")]
 		[return: NullAllowed]
-		NSObject[] FromUrl (NSUrl url, [NullAllowed] out NSError error);
+		NSArray FromUrl (NSUrl url, [NullAllowed] out NSError error);
 	}
 
 #if MONOMAC
@@ -1725,7 +1725,7 @@ namespace XamCore.Foundation
 
 		[iOS (8,0), Mac (10,10)]
 		[Export ("setLocalizedDateFormatFromTemplate:")]
-		void SetLocalizedDateFormatFromTemplate (string dateFormatTemplate);
+		void SetLocalizedDateFormat (string dateFormatTemplate);
 
 		[Watch (2, 0), TV (9, 0), Mac (10, 10), iOS (8, 0)]
 		[Export ("formattingContext", ArgumentSemantic.Assign)]
@@ -4573,7 +4573,7 @@ namespace XamCore.Foundation
 		[Field ("NSRunLoopCommonModes")]
 		NSString NSRunLoopCommonModes { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use NSXpcConnection instead")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSXpcConnection' instead.")]
 		[NoiOS, NoWatch, NoTV]
 		[Field ("NSConnectionReplyMode")]
 		NSString NSRunLoopConnectionReplyMode { get; }
@@ -9632,11 +9632,11 @@ namespace XamCore.Foundation
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Async, Export ("loadDataRepresentationForTypeIdentifier:completionHandler:")]
-		NSProgress LoadDataRepresentation (string typeIdentifier, ItemProviderDataCompletionHandler completionHandler);
+		NSProgress LoadDataRepresentation (string typeIdentifier, Action <NSData, NSError> completionHandler);
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Async, Export ("loadFileRepresentationForTypeIdentifier:completionHandler:")]
-		NSProgress LoadFileRepresentation (string typeIdentifier, LoadFileRepresentationHandler completionHandler);
+		NSProgress LoadFileRepresentation (string typeIdentifier, Action <NSUrl, NSError> completionHandler);
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Async (ResultTypeName = "LoadInPlaceResult"), Export ("loadInPlaceFileRepresentationForTypeIdentifier:completionHandler:")]
@@ -9647,11 +9647,10 @@ namespace XamCore.Foundation
 		string SuggestedName { get; set; }
 	}
 
-	delegate NSProgress RegisterFileRepresentationLoadHandler ([ BlockCallback] RegisterFileRepresentationCompletionHandler completionHandler);
+	delegate NSProgress RegisterFileRepresentationLoadHandler ([BlockCallback] RegisterFileRepresentationCompletionHandler completionHandler);
 	delegate void RegisterFileRepresentationCompletionHandler (NSUrl fileUrl, bool coordinated, NSError error);
-	delegate NSProgress RegisterDataRepresentationLoadHandler ([BlockCallback] ItemProviderDataCompletionHandler completionHandler);
 	delegate void ItemProviderDataCompletionHandler (NSData data, NSError error);
-	delegate void LoadFileRepresentationHandler (NSUrl fileUrl, NSError error);
+	delegate NSProgress RegisterDataRepresentationLoadHandler ([BlockCallback] ItemProviderDataCompletionHandler completionHandler);
 	delegate void LoadInPlaceFileRepresentationHandler (NSUrl fileUrl, bool isInPlace, NSError error);
 
 #if XAMCORE_2_0
@@ -12040,11 +12039,11 @@ namespace XamCore.Foundation
 
 		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[Export ("presentedItemDidChangeUbiquityAttributes:")]
-		void ChangedUbiquityAttributes (NSSet<NSString> attributes);
+		void PresentedItemChangedUbiquityAttributes (NSSet<NSString> attributes);
 
 		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
 		[Export ("observedPresentedItemUbiquityAttributes", ArgumentSemantic.Strong)]
-		NSSet<NSString> ObservedUbiquityAttributes { get; }
+		NSSet<NSString> PresentedItemObservedUbiquityAttributes { get; }
 	}
 
 	delegate void NSFileVersionNonlocalVersionsCompletionHandler ([NullAllowed] NSFileVersion[] nonlocalFileVersions, [NullAllowed] NSError error);
@@ -13153,8 +13152,6 @@ namespace XamCore.Foundation
 	}
 
 #if !WATCH && !TVOS
-	delegate void FileProviderMessageInterfacesCompletionHandler (NSFileProviderMessageInterface [] interfaces, NSError error);
-
 	[Mac (10,8), iOS (11,0), NoWatch, NoTV]
 	partial interface NSFileManager {
 
@@ -13163,7 +13160,7 @@ namespace XamCore.Foundation
 
 		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[Async, Export ("getFileProviderMessageInterfacesForItemAtURL:completionHandler:")]
-		void GetFileProviderMessageInterfaces (NSUrl url, FileProviderMessageInterfacesCompletionHandler completionHandler);
+		void GetFileProviderMessageInterfaces (NSUrl url, Action <NSFileProviderMessageInterface[], NSError> completionHandler);
 	}
 #endif
 
@@ -13370,7 +13367,7 @@ namespace XamCore.Foundation
 		CGAffineTransform TransformStruct { get; set; }
 	}
 
-	[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.Watch_2_0 | Platform.TV_11_0, Message = "Use NSXpcConnection instead")]
+	[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.Watch_2_0 | Platform.TV_11_0, Message = "Use 'NSXpcConnection' instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSConnection {
@@ -13474,7 +13471,7 @@ namespace XamCore.Foundation
 		NSConnectionDelegate Delegate { get; set; }
 	}
 
-	[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.Watch_2_0 | Platform.TV_11_0, Message = "Use NSXpcConnection instead")]
+	[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.Watch_2_0 | Platform.TV_11_0, Message = "Use 'NSXpcConnection' instead.")]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -13498,7 +13495,7 @@ namespace XamCore.Foundation
 		bool AllowNewConnection (NSConnection newConnection, NSConnection parentConnection);
 	}
 
-	[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.Watch_2_0 | Platform.TV_11_0, Message = "Use NSXpcConnection instead")]
+	[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.Watch_2_0 | Platform.TV_11_0, Message = "Use 'NSXpcConnection' instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSDistantObjectRequest {
