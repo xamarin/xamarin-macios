@@ -521,7 +521,7 @@ namespace XamCore.EventKit {
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	interface EKEventStore {
-		[NoiOS, Mac (10,11, onlyOn64: true)]
+		[NoiOS, Mac (10,11, onlyOn64: true), NoWatch]
 		[Export ("initWithSources:")]
 		IntPtr Constructor (EKSource[] sources);
 
