@@ -18,14 +18,14 @@ namespace XamCore.CoreML {
 
 		[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 		public NSNumber this [nint idx] {
-			get => ObjectAtIndexedSubscript (idx); 
-			set => SetObject (value, idx);
+			get { return ObjectAtIndexedSubscript (idx); }
+			set { SetObject (value, idx); }
 		}
 
 		[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 		public NSNumber this [NSNumber [] key] {
-			get => ObjectForKeyedSubscript (key);
-			set => SetObject (value, key);
+			get { return ObjectForKeyedSubscript (key); }
+			set { SetObject (value, key); }
 		}
 	}
 }
