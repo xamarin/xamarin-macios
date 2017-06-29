@@ -24,6 +24,16 @@ namespace XamCore.Foundation {
 			return n == null ? 0 : n.DoubleValue;
 		}
 
+		nint GetNInt (NSString key)
+		{
+			var n = Runtime.GetNSObject<NSNumber> (GetHandle (key));
+#if XAMCORE_2_0
+			return n == null ? 0 : n.NIntValue;
+#else
+			return n == null ? 0 : n.IntValue;
+#endif
+		}
+
 		// same order as NSMetadataAttributes.h
 
 		public NSString FileSystemName {
@@ -293,8 +303,11 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemDurationSecondsKey")]
-		NSString DurationSecondsKey { get; }
+		public double DurationSeconds {
+			get {
+				return GetDouble (NSMetadataQuery.DurationSecondsKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public NSString [] ContactKeywords {
@@ -312,16 +325,25 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemPixelHeightKey")]
-		NSString PixelHeightKey { get; }
+		public nint PixelHeight {
+			get {
+				return GetNInt (NSMetadataQuery.PixelHeightKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemPixelWidthKey")]
-		NSString PixelWidthKey { get; }
+		public nint PixelWidth {
+			get {
+				return GetNInt (NSMetadataQuery.PixelWidthKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemPixelCountKey")]
-		NSString PixelCountKey { get; }
+		public nint PixelCount {
+			get {
+				return GetNInt (NSMetadataQuery.PixelCountKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public NSString ColorSpace {
@@ -331,8 +353,11 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemBitsPerSampleKey")]
-		NSString BitsPerSampleKey { get; }
+		public nint BitsPerSample {
+			get {
+				return GetNInt (NSMetadataQuery.BitsPerSampleKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public bool FlashOnOff {
@@ -342,8 +367,11 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemFocalLengthKey")]
-		NSString FocalLengthKey { get; }
+		public double FocalLength {
+			get {
+				return GetDouble (NSMetadataQuery.FocalLengthKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public NSString AcquisitionMake {
@@ -360,12 +388,18 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemISOSpeedKey")]
-		NSString IsoSpeedKey { get; }
+		public double IsoSpeed {
+			get {
+				return GetDouble (NSMetadataQuery.IsoSpeedKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemOrientationKey")]
-		NSString OrientationKey { get; }
+		public nint Orientation {
+			get {
+				return GetNInt (NSMetadataQuery.OrientationKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public NSString [] LayerNames {
@@ -376,12 +410,18 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemWhiteBalanceKey")]
-		NSString WhiteBalanceKey { get; }
+		public double WhiteBalance {
+			get {
+				return GetDouble (NSMetadataQuery.WhiteBalanceKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemApertureKey")]
-		NSString ApertureKey { get; }
+		public double Aperture {
+			get {
+				return GetDouble (NSMetadataQuery.ApertureKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public NSString ProfileName {
@@ -391,20 +431,32 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemResolutionWidthDPIKey")]
-		NSString ResolutionWidthDpiKey { get; }
+		public nint ResolutionWidthDpi {
+			get {
+				return GetNInt (NSMetadataQuery.ResolutionWidthDpiKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemResolutionHeightDPIKey")]
-		NSString ResolutionHeightDpiKey { get; }
+		public nint ResolutionHeightDpi {
+			get {
+				return GetNInt (NSMetadataQuery.ResolutionHeightDpiKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemExposureModeKey")]
-		NSString ExposureModeKey { get; }
+		public nint ExposureMode {
+			get {
+				return GetNInt (NSMetadataQuery.ExposureModeKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemExposureTimeSecondsKey")]
-		NSString ExposureTimeSecondsKey { get; }
+		public double ExposureTimeSeconds {
+			get {
+				return GetDouble (NSMetadataQuery.ExposureTimeSecondsKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public NSString ExifVersion {
@@ -421,8 +473,11 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemFocalLength35mmKey")]
-		NSString FocalLength35mmKey { get; }
+		public nint FocalLength35mmKey {
+			get {
+				return GetNInt (NSMetadataQuery.FocalLength35mmKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public NSString LensModel {
@@ -439,20 +494,32 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemAltitudeKey")]
-		NSString AltitudeKey { get; }
+		public double AltitudeKey {
+			get {
+				return GetDouble (NSMetadataQuery.AltitudeKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemLatitudeKey")]
-		NSString LatitudeKey { get; }
+		public double Latitude {
+			get {
+				return GetDouble (NSMetadataQuery.LatitudeKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemLongitudeKey")]
-		NSString LongitudeKey { get; }
+		public double Longitude {
+			get {
+				return GetDouble (NSMetadataQuery.LongitudeKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemSpeedKey")]
-		NSString SpeedKey { get; }
+		public double Speed {
+			get {
+				return GetDouble (NSMetadataQuery.SpeedKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public NSDate Timestamp {
@@ -462,12 +529,18 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemGPSTrackKey")]
-		NSString GpsTrackKey { get; }
+		public double GpsTrack {
+			get {
+				return GetDouble (NSMetadataQuery.GpsTrackKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemImageDirectionKey")]
-		NSString ImageDirectionKey { get; }
+		public double ImageDirection {
+			get {
+				return GetDouble (NSMetadataQuery.ImageDirectionKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public NSString NamedLocation {
@@ -491,8 +564,11 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemGPSDOPKey")]
-		NSString GpsDopKey { get; }
+		public double GpsDop {
+			get {
+				return GetDouble (NSMetadataQuery.GpsDopKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public NSString GpsMapDatum {
@@ -502,20 +578,32 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemGPSDestLatitudeKey")]
-		NSString GpsDestLatitudeKey { get; }
+		public double GpsDestLatitude {
+			get {
+				return GetDouble (NSMetadataQuery.GpsDestLatitudeKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemGPSDestLongitudeKey")]
-		NSString GpsDestLongitudeKey { get; }
+		public double GpsDestLongitude {
+			get {
+				return GetDouble (NSMetadataQuery.GpsDestLongitudeKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemGPSDestBearingKey")]
-		NSString GpsDestBearingKey { get; }
+		public double GpsDestBearing {
+			get {
+				return GetDouble (NSMetadataQuery.GpsDestBearingKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemGPSDestDistanceKey")]
-		NSString GpsDestDistanceKey { get; }
+		public double GpsDestDistance {
+			get {
+				return GetDouble (NSMetadataQuery.GpsDestDistanceKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public NSString GpsProcessingMethod {
@@ -539,8 +627,11 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemGPSDifferentalKey")]
-		NSString GpsDifferentalKey { get; }
+		public double GpsDifferental {
+			get {
+				return GetDouble (NSMetadataQuery.GpsDifferentalKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public NSString [] Codecs {
@@ -566,16 +657,25 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemTotalBitRateKey")]
-		NSString TotalBitRateKey { get; }
+		public nint TotalBitRate {
+			get {
+				return GetNInt (NSMetadataQuery.TotalBitRateKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemVideoBitRateKey")]
-		NSString VideoBitRateKey { get; }
+		public nint VideoBitRate {
+			get {
+				return GetNInt (NSMetadataQuery.VideoBitRateKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemAudioBitRateKey")]
-		NSString AudioBitRateKey { get; }
+		public nint AudioBitRate {
+			get {
+				return GetNInt (NSMetadataQuery.AudioBitRateKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public NSString DeliveryType {
@@ -613,12 +713,18 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemMaxApertureKey")]
-		NSString MaxApertureKey { get; }
+		public double MaxApertureKey {
+			get {
+				return GetDouble (NSMetadataQuery.MaxApertureKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemFNumberKey")]
-		NSString FNumberKey { get; }
+		public nint FNumber {
+			get {
+				return GetNInt (NSMetadataQuery.FNumberKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public NSString ExposureProgram {
@@ -677,16 +783,25 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemAudioSampleRateKey")]
-		NSString AudioSampleRateKey { get; }
+		public nint AudioSampleRate {
+			get {
+				return GetNInt (NSMetadataQuery.AudioSampleRateKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemAudioChannelCountKey")]
-		NSString AudioChannelCountKey { get; }
+		public nint AudioChannelCount {
+			get {
+				return GetNInt (NSMetadataQuery.AudioChannelCountKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemTempoKey")]
-		NSString TempoKey { get; }
+		public double TempoKey {
+			get {
+				return GetDouble (NSMetadataQuery.TempoKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public NSString KeySignature {
@@ -724,8 +839,11 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemAudioTrackNumberKey")]
-		NSString AudioTrackNumberKey { get; }
+		public nint AudioTrackNumber {
+			get {
+				return GetNInt (NSMetadataQuery.AudioTrackNumberKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public NSDate RecordingDate {
@@ -749,8 +867,11 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemRecordingYearKey")]
-		NSString RecordingYearKey { get; }
+		public nint RecordingYear {
+			get {
+				return GetNInt (NSMetadataQuery.RecordingYearKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public NSString [] Organizations {
@@ -836,20 +957,32 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemNumberOfPagesKey")]
-		NSString NumberOfPagesKey { get; }
+		public nint NumberOfPages {
+			get {
+				return GetNInt (NSMetadataQuery.NumberOfPagesKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemPageWidthKey")]
-		NSString PageWidthKey { get; }
+		public double PageWidth {
+			get {
+				return GetDouble (NSMetadataQuery.PageWidthKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemPageHeightKey")]
-		NSString PageHeightKey { get; }
+		public double PageHeight {
+			get {
+				return GetDouble (NSMetadataQuery.PageHeightKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemSecurityMethodKey")]
-		NSString SecurityMethodKey { get; }
+		public NSString SecurityMethod {
+			get {
+				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.SecurityMethodKey));
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public NSString Creator {
@@ -874,8 +1007,11 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		[Field ("NSMetadataItemStarRatingKey")]
-		NSString StarRatingKey { get; }
+		public double StarRatingKey {
+			get {
+				return GetDouble (NSMetadataQuery.StarRatingKey);
+			}
+		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public NSString [] PhoneNumbers {
