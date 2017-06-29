@@ -591,6 +591,9 @@ EVENTKIT_SOURCES = \
 EVENTKITUI_CORE_SOURCES = \
 	EventKitUI/Defs.cs \
 
+EVENTKITUI_SOURCES = \
+	EventKitUI/EKUIBundle.cs \
+
 # ExternalAccessory
 
 EXTERNALACCESSORY_API_SOURCES = \
@@ -1628,6 +1631,7 @@ IOS_FRAMEWORKS =         \
 	CoreTelephony \
 	CoreText \
 	CoreVideo \
+	DeviceCheck \
 	EventKit \
 	EventKitUI \
 	ExternalAccessory \
@@ -1724,6 +1728,7 @@ TVOS_FRAMEWORKS =           \
 	CoreSpotlight			\
 	CoreText                \
 	CoreVideo               \
+	DeviceCheck             \
 	ExternalAccessory       \
 	GLKit                   \
 	GameController          \

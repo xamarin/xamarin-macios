@@ -37,6 +37,7 @@ namespace MonoTouch {
 		public const string MapKitLibrary = "/System/Library/Frameworks/MapKit.framework/MapKit";
 		public const string GameKitLibrary = "/System/Library/Frameworks/GameKit.framework/GameKit";
 		public const string EventKitLibrary = "/System/Library/Frameworks/EventKit.framework/EventKit";
+		public const string EventKitUILibrary = "/System/Library/Frameworks/EventKitUI.framework/EventKitUI";
 		public const string ImageIOLibrary = "/System/Library/Frameworks/ImageIO.framework/ImageIO";
 		public const string AssetsLibraryLibrary = "/System/Library/Frameworks/AssetsLibrary.framework/AssetsLibrary";
 		public const string CoreVideoLibrary = "/System/Library/Frameworks/CoreVideo.framework/CoreVideo";
@@ -108,5 +109,6 @@ namespace MonoTouch {
 		// iOS 11.0
 		public const string ARKitLibrary = "/System/Library/Frameworks/ARKit.framework/ARKit";
 		public const string CoreNFCLibrary = "/System/Library/Frameworks/CoreNFC.framework/CoreNFC";
+		public const string DeviceCheckLibrary = "/System/Library/Frameworks/DeviceCheck.framework/DeviceCheck";
 	}
 }

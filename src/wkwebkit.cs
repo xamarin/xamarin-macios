@@ -301,7 +301,7 @@ namespace XamCore.WebKit
 	
 	[Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
-	interface WKSnapshotConfiguration {
+	interface WKSnapshotConfiguration : NSCopying {
 		[Export ("rect")]
 		CGRect Rect { get; set; }
 

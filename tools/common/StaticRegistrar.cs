@@ -1825,6 +1825,7 @@ namespace XamCore.Registrar {
 				namespaces.Add ("UIKit");
 				return;
 			case "CoreNFC":
+			case "DeviceCheck":
 #if !MONOMAC
 				if (IsSimulator)
 					return; // No headers provided for simulator, which makes sense since there is no NFC on it.

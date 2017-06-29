@@ -521,6 +521,10 @@ namespace XamCore.EventKit {
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	interface EKEventStore {
+		[NoiOS, Mac (10,11, onlyOn64: true), NoWatch]
+		[Export ("initWithSources:")]
+		IntPtr Constructor (EKSource[] sources);
+
 		[Export ("eventStoreIdentifier")]
 		string EventStoreIdentifier { get;  }
 
@@ -530,7 +534,7 @@ namespace XamCore.EventKit {
 		EKCalendar [] Calendars { get;  }
 #endif
 
-		[Export ("defaultCalendarForNewEvents")]
+		[Export ("defaultCalendarForNewEvents"), NullAllowed]
 		EKCalendar DefaultCalendarForNewEvents { get;  }
 
 #if !MONOMAC
@@ -564,6 +568,7 @@ namespace XamCore.EventKit {
 		EKSource [] Sources { get; }
 
 		[Since (5,0)]
+		[return: NullAllowed]
 		[Export ("sourceWithIdentifier:")]
 		EKSource GetSource (string identifier);
 
@@ -606,6 +611,7 @@ namespace XamCore.EventKit {
 		void RefreshSourcesIfNecessary ();
 
 		[Since (6,0)]
+		[return: NullAllowed]
 		[Export ("calendarItemWithIdentifier:")]
 		EKCalendarItem GetCalendarItem (string identifier);
 
@@ -618,6 +624,7 @@ namespace XamCore.EventKit {
 		EKCalendar[] GetCalendars (EKEntityType entityType);
 
 		[Since (6,0)]
+		[NullAllowed]
 		[Export ("defaultCalendarForNewReminders")]
 		EKCalendar DefaultCalendarForNewReminders { get; }
 

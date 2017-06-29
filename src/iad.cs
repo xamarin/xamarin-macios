@@ -225,6 +225,7 @@ namespace XamCore.iAd {
 		void SetCanDisplayBannerAds (bool value);
 
 		[Since (7,0), Export ("originalContentView")]
+		[NullAllowed]
 		UIView GetOriginalContentView ();
 
 		[Since (7,0), Export ("isPresentingFullScreenAd")]

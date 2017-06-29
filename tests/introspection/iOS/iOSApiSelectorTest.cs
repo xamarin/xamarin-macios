@@ -63,6 +63,7 @@ namespace Introspection {
 				break;
 			// Xcode 9
 			case "CoreNFC":
+			case "DeviceCheck":
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;

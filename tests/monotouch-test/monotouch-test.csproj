@@ -651,6 +651,7 @@
     <Compile Include="OpenGLES\EAGLContext.cs" />
     <Compile Include="CoreText\CTParagraphStyleTests.cs" />
     <Compile Include="CoreData\NSQueryGenerationTokenTest.cs" />
+    <Compile Include="EventKit\EKUIBundleTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
