@@ -108,5 +108,6 @@ namespace MonoTouch {
 		// iOS 11.0
 		public const string ARKitLibrary = "/System/Library/Frameworks/ARKit.framework/ARKit";
 		public const string CoreNFCLibrary = "/System/Library/Frameworks/CoreNFC.framework/CoreNFC";
+		public const string DeviceCheckLibrary = "/System/Library/Frameworks/DeviceCheck.framework/DeviceCheck";
 	}
 }

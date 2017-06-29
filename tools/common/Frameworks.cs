@@ -244,6 +244,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "ARKit", "ARKit", 11 },
 				{ "CoreNFC", "CoreNFC", 11 },
+				{ "DeviceCheck", "DeviceCheck", 11 },
 			};
 		}
 		return ios_frameworks;
@@ -347,6 +348,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "UserNotifications", "UserNotifications", 10 },
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
 					{ "VideoToolbox", "VideoToolbox", 10,2 },
+
+					{ "DeviceCheck", "DeviceCheck", 11 },
 				};
 			}
 			return tvos_frameworks;

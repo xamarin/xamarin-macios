@@ -1628,6 +1628,7 @@ IOS_FRAMEWORKS =         \
 	CoreTelephony \
 	CoreText \
 	CoreVideo \
+	DeviceCheck \
 	EventKit \
 	EventKitUI \
 	ExternalAccessory \
@@ -1724,6 +1725,7 @@ TVOS_FRAMEWORKS =           \
 	CoreSpotlight			\
 	CoreText                \
 	CoreVideo               \
+	DeviceCheck             \
 	ExternalAccessory       \
 	GLKit                   \
 	GameController          \

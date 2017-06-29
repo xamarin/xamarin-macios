@@ -74,6 +74,7 @@ namespace Introspection {
 				break;
 #endif // !__WATCHOS__
 			case "CoreNFC": // Only available on device
+			case "DeviceCheck": // Only available on device
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;
