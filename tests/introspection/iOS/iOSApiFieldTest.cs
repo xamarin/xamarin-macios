@@ -54,6 +54,7 @@ namespace Introspection {
 			case "MetalPerformanceShaders":
 			case "MonoTouch.MetalPerformanceShaders":
 			case "CoreNFC": // Only available on device
+			case "DeviceCheck": // Only available on device
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;
