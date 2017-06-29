@@ -245,6 +245,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "ARKit", "ARKit", 11 },
 				{ "CoreNFC", "CoreNFC", 11 },
 				{ "DeviceCheck", "DeviceCheck", 11 },
+				{ "IdentityLookup", "IdentityLookup", 11 },
 			};
 		}
 		return ios_frameworks;
