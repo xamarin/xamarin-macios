@@ -68,7 +68,9 @@ namespace MonoMac.Tuner {
 		{ Constants.MediaPlayerLibrary, Namespaces.MediaPlayer },
 		{ Constants.IntentsLibrary, Namespaces.Intents },
 		{ Constants.PhotosLibrary, Namespaces.Photos },
-		{ Constants.PrintCoreLibrary, Namespaces.PrintCore} };
+		{ Constants.PrintCoreLibrary, Namespaces.PrintCore },
+		{ Constants.CoreMLLibrary, Namespaces.CoreML },
+	};
 
 		public void Process (LinkContext context)
 		{
