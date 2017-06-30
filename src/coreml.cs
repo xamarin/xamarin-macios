@@ -198,6 +198,7 @@ namespace XamCore.CoreML {
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[Internal]
 	[Static]
 	interface MLModelMetadataKeys {
 
@@ -254,10 +255,10 @@ namespace XamCore.CoreML {
 		// From MLMultiArray (NSNumberDataAccess) Category
 
 		[Export ("objectAtIndexedSubscript:")]
-		NSNumber GetObjectAtIndexedSubscript (nint idx);
+		NSNumber GetObject (nint idx);
 
 		[Export ("objectForKeyedSubscript:")]
-		NSNumber GetObjectForKeyedSubscript (NSNumber [] key);
+		NSNumber GetObject (NSNumber [] key);
 
 		[Export ("setObject:atIndexedSubscript:")]
 		void SetObject (NSNumber obj, nint idx);
