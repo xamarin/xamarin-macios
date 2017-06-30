@@ -79,7 +79,7 @@ namespace XamCore.CoreML {
 		bool Optional { [Bind ("isOptional")] get; }
 
 		[Export ("isAllowedValue:")]
-		bool IsAllowedValue (MLFeatureValue value);
+		bool IsAllowed (MLFeatureValue value);
 	}
 
 	interface IMLFeatureProvider { }
@@ -149,7 +149,7 @@ namespace XamCore.CoreML {
 
 		[Static]
 		[Export ("undefinedFeatureValueWithType:")]
-		MLFeatureValue GetUndefinedFeatureValue (MLFeatureType type);
+		MLFeatureValue CreateUndefined (MLFeatureType type);
 
 		[Static]
 		[Export ("featureValueWithDictionary:error:")]
