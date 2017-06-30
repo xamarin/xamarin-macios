@@ -332,6 +332,12 @@ namespace XamCore.GameController {
 		[NoTV] // Xcode 7.2
 		[Export ("rotationRate", ArgumentSemantic.Assign)]
 		Vector3d RotationRate { get; }
+
+		[NoTV]
+		[iOS (11,0)]
+		[Mac (10,13, onlyOn64: true)]
+		[Export ("hasAttitudeAndRotationRate")]
+		bool HasAttitudeAndRotationRate { get; }
 	}
 
 	[NoMac]
