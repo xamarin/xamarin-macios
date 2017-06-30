@@ -737,7 +737,7 @@ namespace XamCore.HomeKit {
 
 		[Watch (4,0), TV (11,0), iOS (11,0)]
 		[Export ("homeDidUpdateAccessControlForCurrentUser:")]
-		void DidUpdateAccessControl (HMHome home);
+		void DidUpdateAccessControlForCurrentUser (HMHome home);
 
 		[Export ("home:didAddAccessory:"), EventArgs ("HMHomeAccessory")]
 		void DidAddAccessory (HMHome home, HMAccessory accessory);
@@ -1351,6 +1351,7 @@ namespace XamCore.HomeKit {
 		[Export ("initWithRegion:")]
 		IntPtr Constructor (CLRegion region);
 
+		[Override]
 		[NullAllowed, Export ("region", ArgumentSemantic.Strong)]
 		CLRegion Region { get; set; }
 	}
@@ -1549,6 +1550,7 @@ namespace XamCore.HomeKit {
 		[Export ("initWithFireDateComponents:")]
 		IntPtr Constructor (NSDateComponents fireDateComponents);
 
+		[Override]
 		[Export ("fireDateComponents", ArgumentSemantic.Strong)]
 		NSDateComponents FireDateComponents { get; set; }
 	}
@@ -1561,9 +1563,11 @@ namespace XamCore.HomeKit {
 		[Export ("initWithCharacteristic:triggerValue:")]
 		IntPtr Constructor (HMCharacteristic characteristic, [NullAllowed] INSCopying triggerValue);
 
+		[Override]
 		[Export ("characteristic", ArgumentSemantic.Strong)]
 		HMCharacteristic Characteristic { get; set; }
 
+		[Override]
 		[NullAllowed, Export ("triggerValue", ArgumentSemantic.Copy)]
 		INSCopying TriggerValue { get; set; }
 	}
@@ -1591,9 +1595,11 @@ namespace XamCore.HomeKit {
 		[Export ("initWithCharacteristic:thresholdRange:")]
 		IntPtr Constructor (HMCharacteristic characteristic, HMNumberRange thresholdRange);
 
+		[Override]
 		[Export ("characteristic", ArgumentSemantic.Strong)]
 		HMCharacteristic Characteristic { get; set; }
 
+		[Override]
 		[Export ("thresholdRange", ArgumentSemantic.Copy)]
 		HMNumberRange ThresholdRange { get; set; }
 	}
@@ -1618,6 +1624,7 @@ namespace XamCore.HomeKit {
 		[Export ("initWithDuration:")]
 		IntPtr Constructor (double duration);
 
+		[Override]
 		[Export ("duration")]
 		double Duration { get; set; }
 	}
@@ -1683,10 +1690,12 @@ namespace XamCore.HomeKit {
 		IntPtr Constructor (HMPresenceType presenceType);
 
 		[Internal]
+		[Override]
 		[Export ("presenceType")]
 		NSString _PresenceType { get; set; }
 
 		// FIXME: Bug https://bugzilla.xamarin.com/show_bug.cgi?id=57870
+		// [Override]
 		// [Wrap ("HMPresenceTypeExtensions.GetValue (_PresenceType)")]
 		// HMPresenceType PresenceType { get; set; }
 	}
@@ -1727,13 +1736,16 @@ namespace XamCore.HomeKit {
 		IntPtr Constructor (HMSignificantEvent significantEvent, [NullAllowed] NSDateComponents offset);
 
 		[Internal]
+		[Override]
 		[Export ("significantEvent", ArgumentSemantic.Strong)]
 		NSString _SignificantEvent { get; set; }
 
 		// FIXME: Bug https://bugzilla.xamarin.com/show_bug.cgi?id=57870
+		// [Override]
 		// [Wrap ("HMSignificantEventExtensions.GetValue (_SignificantEvent)")]
 		// HMSignificantEvent SignificantEvent { get; set; }
 
+		[Override]
 		[Export ("offset", ArgumentSemantic.Strong)]
 		NSDateComponents Offset { get; set; }
 	}
