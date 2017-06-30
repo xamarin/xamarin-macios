@@ -43,6 +43,9 @@ using XamCore.SceneKit;
 using XamCore.Security;
 #if IOS
 using XamCore.CoreSpotlight;
+#if XAMCORE_2_0
+using XamCore.FileProvider;
+#endif
 #endif
 
 #if MONOMAC
@@ -3049,6 +3052,8 @@ namespace XamCore.Foundation
 		NSObject NextObject (); 
 	}
 
+	interface INSFileProviderItem { }
+
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSError : NSSecureCoding, NSCopying {
@@ -3180,6 +3185,21 @@ namespace XamCore.Foundation
 		[Export ("userInfoValueProviderForDomain:")]
 		[return: NullAllowed]
 		NSErrorUserInfoValueProvider GetUserInfoValueProvider (string errorDomain);
+
+#if XAMCORE_2_0 && IOS
+
+		// From NSError (NSFileProviderError) Category to avoid static category uglyness
+
+		[iOS (11,0)]
+		[Static]
+		[Export ("fileProviderErrorForCollisionWithItem:")]
+		NSError GetFileProviderError (INSFileProviderItem existingItem);
+
+		[iOS (11,0)]
+		[Static]
+		[Export ("fileProviderErrorForNonExistentItemWithIdentifier:")]
+		NSError GetFileProviderErrorForNonExistentItem (string itemIdentifier);
+#endif
 		
 #if false
 		// FIXME that value is present in the header (7.0 DP 6) files but returns NULL (i.e. unusable)

@@ -24,6 +24,10 @@ using XamCore.CoreAnimation;
 #endif
 using XamCore.CoreData;
 
+#if XAMCORE_2_0 && IOS
+using XamCore.FileProvider;
+#endif
+
 using System;
 using System.ComponentModel;
 
@@ -277,21 +281,27 @@ namespace XamCore.UIKit {
 		NSString TypeIdentifier { get; }
 	}
 
+	delegate void NSFileProviderExtensionFetchThumbnailsHandler (NSString identifier, [NullAllowed] NSData imageData, [NullAllowed] NSError error);
+
 	[NoWatch]
 	[NoTV]
 	[iOS (8,0)]
 	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
 	partial interface NSFileProviderExtension {
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'NSFileProviderManager' instead.")]
 	    [Static, Export ("writePlaceholderAtURL:withMetadata:error:")]
 	    bool WritePlaceholder (NSUrl placeholderUrl, NSDictionary metadata, ref NSError error);
 	
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'FileProvider.NSFileProviderManager.GetPlaceholderUrl (NSUrl)' instead.")]
 	    [Static, Export ("placeholderURLForURL:")]
 	    NSUrl GetPlaceholderUrl (NSUrl url);
 	
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'FileProvider.NSFileProviderManager.ProviderIdentifier' instead.")]
 	    [Export ("providerIdentifier")]
 	    string ProviderIdentifier { get; }
 	
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'FileProvider.NSFileProviderManager.DocumentStorageUrl' instead.")]
 	    [Export ("documentStorageURL")]
 	    NSUrl DocumentStorageUrl { get; }
 	
@@ -314,6 +324,92 @@ namespace XamCore.UIKit {
 	
 	    [Export ("stopProvidingItemAtURL:")]
 	    void StopProvidingItemAtUrl (NSUrl url);
+
+#if XAMCORE_2_0 && IOS
+
+		[iOS (11,0)]
+		[Export ("itemForIdentifier:error:")]
+		[return: NullAllowed]
+		XamCore.FileProvider.INSFileProviderItem GetItem (/*[BindAs (typeof (NSFileProviderItemIdentifier))]*/ NSString identifier, out NSError error);
+
+		// Inlining NSFileProviderExtension (NSFileProviderActions) so we get asyncs
+
+		[iOS (11,0)]
+		[Async]
+		[Export ("importDocumentAtURL:toParentItemIdentifier:completionHandler:")]
+		void ImportDocument (NSUrl fileUrl, string parentItemIdentifier, Action<XamCore.FileProvider.INSFileProviderItem, NSError> completionHandler);
+
+		[iOS (11,0)]
+		[Async]
+		[Export ("createDirectoryWithName:inParentItemIdentifier:completionHandler:")]
+		void CreateDirectory (string directoryName, string parentItemIdentifier, Action<XamCore.FileProvider.INSFileProviderItem, NSError> completionHandler);
+
+		[iOS (11,0)]
+		[Async]
+		[Export ("renameItemWithIdentifier:toName:completionHandler:")]
+		void RenameItem (string itemIdentifier, string itemName, Action<XamCore.FileProvider.INSFileProviderItem, NSError> completionHandler);
+
+		[iOS (11,0)]
+		[Async]
+		[Export ("reparentItemWithIdentifier:toParentItemWithIdentifier:completionHandler:")]
+		void ReparentItem (string itemIdentifier, string parentItemIdentifier, Action<XamCore.FileProvider.INSFileProviderItem, NSError> completionHandler);
+
+		[iOS (11,0)]
+		[Async]
+		[Export ("trashItemWithIdentifier:completionHandler:")]
+		void TrashItem (string itemIdentifier, Action<XamCore.FileProvider.INSFileProviderItem, NSError> completionHandler);
+
+		[iOS (11,0)]
+		[Async]
+		[Export ("untrashItemWithIdentifier:toParentItemIdentifier:completionHandler:")]
+		void UntrashItem (string itemIdentifier, [NullAllowed] string parentItemIdentifier, Action<XamCore.FileProvider.INSFileProviderItem, NSError> completionHandler);
+
+		[iOS (11,0)]
+		[Async]
+		[Export ("deleteItemWithIdentifier:completionHandler:")]
+		void DeleteItem (string itemIdentifier, Action<NSError> completionHandler);
+
+		[iOS (11,0)]
+		[Async]
+		[Export ("setLastUsedDate:forItemIdentifier:completionHandler:")]
+		void SetLastUsedDate ([NullAllowed] NSDate lastUsedDate, string itemIdentifier, Action<XamCore.FileProvider.INSFileProviderItem, NSError> completionHandler);
+
+		[iOS (11,0)]
+		[Async]
+		[Export ("setTagData:forItemIdentifier:completionHandler:")]
+		void SetTagData ([NullAllowed] NSData tagData, string itemIdentifier, Action<XamCore.FileProvider.INSFileProviderItem, NSError> completionHandler);
+
+		[iOS (11,0)]
+		[Async]
+		[Export ("setFavoriteRank:forItemIdentifier:completionHandler:")]
+		void SetFavoriteRank ([NullAllowed] NSNumber favoriteRank, string itemIdentifier, Action<XamCore.FileProvider.INSFileProviderItem, NSError> completionHandler);
+
+		[iOS (11,0)]
+		[Export ("enumeratorForContainerItemIdentifier:error:")]
+		[return: NullAllowed]
+		XamCore.FileProvider.INSFileProviderEnumerator GetEnumerator (string containerItemIdentifier, out NSError error);
+
+		// From NSFileProviderExtension (NSFileProviderThumbnailing)
+
+		[Export ("fetchThumbnailsForItemIdentifiers:requestedSize:perThumbnailCompletionHandler:completionHandler:")]
+		[Async]
+		NSProgress FetchThumbnails (/*[BindAs (typeof (NSFileProviderItemIdentifier []))]*/ NSString [] itemIdentifiers, CGSize size, NSFileProviderExtensionFetchThumbnailsHandler perThumbnailCompletionHandler, Action<NSError> completionHandler);
+
+		// From NSFileProviderExtension (NSFileProviderMessaging)
+
+		// TODO: NSFileProviderMessageInterfaceName is not bound yet, comes from Foundation
+		//[Export ("supportedMessageInterfaceNamesForItemWithIdentifier:")]
+		//NSFileProviderMessageInterfaceName[] GetSupportedMessageInterfaceNames (/*[BindAs (typeof (NSFileProviderItemIdentifier))]*/ NSString identifier);
+
+		// TODO: NSFileProviderMessageInterface is not bound yet, comes from Foundation
+		//[Export ("protocolForMessageInterface:")]
+		//Protocol GetProtocol (NSFileProviderMessageInterface messageInterface);
+
+		// TODO: NSFileProviderMessageInterface is not bound yet, comes from Foundation
+		//[return: NullAllowed]
+		//[Export ("exportedObjectForMessageInterface:itemIdentifier:error:")]
+		//NSObject GetExportedObject (NSFileProviderMessageInterface messageInterface, /*[BindAs (typeof (NSFileProviderItemIdentifier))]*/ NSString identifier, out NSError error);
+#endif
 	}
 #endif // !WATCH
 

@@ -251,6 +251,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "IdentityLookup", "IdentityLookup", 11 },
 				{ "CoreML", "CoreML", 11 },
 				{ "Vision", "Vision", 11 },
+				{ "FileProvider", "FileProvider", 11 },
 			};
 		}
 		return ios_frameworks;
