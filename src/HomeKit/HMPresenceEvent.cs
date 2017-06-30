@@ -3,7 +3,7 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.HomeKit {
 
-	partial class HMMutablePresenceEvent {
+	partial class HMPresenceEvent {
 
 		public virtual HMPresenceType PresenceType {
 			get {

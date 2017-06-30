@@ -1150,11 +1150,11 @@ namespace XamCore.HomeKit {
 		IntPtr Constructor (HMCharacteristic characteristic, [NullAllowed] INSCopying triggerValue);
 
 		[Export ("characteristic", ArgumentSemantic.Strong)]
-		HMCharacteristic Characteristic { get; }
+		HMCharacteristic Characteristic { get; [NotImplemented] set; }
 
 		[NullAllowed]
 		[Export ("triggerValue", ArgumentSemantic.Copy)]
-		INSCopying TriggerValue { get; }
+		INSCopying TriggerValue { get; [NotImplemented] set; }
 
 		[Deprecated (PlatformName.iOS, 11, 0)]
 		[NoTV]
@@ -1326,14 +1326,14 @@ namespace XamCore.HomeKit {
 	[TV (10,0)]
 	[BaseType (typeof (HMEvent))]
 	[DisableDefaultCtor]
-	interface HMLocationEvent : NSCopying, NSMutableCopying {
+	interface HMLocationEvent : NSMutableCopying {
 		[NoTV]
 		[NoWatch]
 		[Export ("initWithRegion:")]
 		IntPtr Constructor (CLRegion region);
 
 		[NullAllowed, Export ("region", ArgumentSemantic.Strong)]
-		CLRegion Region { get; }
+		CLRegion Region { get; [NotImplemented] set; }
 
 		[NoTV]
 		[NoWatch]
@@ -1532,13 +1532,13 @@ namespace XamCore.HomeKit {
 	[Watch (4,0), TV (11,0), iOS (11,0)]
 	[BaseType (typeof(HMTimeEvent))]
 	[DisableDefaultCtor]
-	interface HMCalendarEvent : NSCopying, NSMutableCopying {
+	interface HMCalendarEvent : NSMutableCopying {
 
 		[Export ("initWithFireDateComponents:")]
 		IntPtr Constructor (NSDateComponents fireDateComponents);
 
 		[Export ("fireDateComponents", ArgumentSemantic.Strong)]
-		NSDateComponents FireDateComponents { get; }
+		NSDateComponents FireDateComponents { get; [NotImplemented] set; }
 	}
 
 	[Watch (4,0), TV (11,0), iOS (11,0)]
@@ -1571,16 +1571,16 @@ namespace XamCore.HomeKit {
 	[Watch (4,0), TV (11,0), iOS (11,0)]
 	[BaseType (typeof(HMEvent))]
 	[DisableDefaultCtor]
-	interface HMCharacteristicThresholdRangeEvent : NSCopying, NSMutableCopying {
+	interface HMCharacteristicThresholdRangeEvent : NSMutableCopying {
 
 		[Export ("initWithCharacteristic:thresholdRange:")]
 		IntPtr Constructor (HMCharacteristic characteristic, HMNumberRange thresholdRange);
 
 		[Export ("characteristic", ArgumentSemantic.Strong)]
-		HMCharacteristic Characteristic { get; }
+		HMCharacteristic Characteristic { get; [NotImplemented] set; }
 
 		[Export ("thresholdRange", ArgumentSemantic.Copy)]
-		HMNumberRange ThresholdRange { get; }
+		HMNumberRange ThresholdRange { get; [NotImplemented] set; }
 	}
 
 	[Watch (4,0), TV (11,0), iOS (11,0)]
@@ -1601,13 +1601,13 @@ namespace XamCore.HomeKit {
 	[Watch (4,0), TV (11,0), iOS (11,0)]
 	[BaseType (typeof(HMTimeEvent))]
 	[DisableDefaultCtor]
-	interface HMDurationEvent : NSCopying, NSMutableCopying {
+	interface HMDurationEvent : NSMutableCopying {
 
 		[Export ("initWithDuration:")]
 		IntPtr Constructor (double duration);
 
 		[Export ("duration")]
-		double Duration { get; }
+		double Duration { get; [NotImplemented] set; }
 	}
 
 	[Watch (4,0), TV (11,0), iOS (11,0)]
@@ -1649,7 +1649,7 @@ namespace XamCore.HomeKit {
 	[Watch (4,0), TV (11,0), iOS (11,0)]
 	[BaseType (typeof(HMEvent))]
 	[DisableDefaultCtor]
-	interface HMPresenceEvent : NSCopying, NSMutableCopying {
+	interface HMPresenceEvent : NSMutableCopying {
 
 		[Internal]
 		[Export ("initWithPresenceType:")]
@@ -1660,10 +1660,11 @@ namespace XamCore.HomeKit {
 
 		[Internal]
 		[Export ("presenceType")]
-		NSString _PresenceType { get; }
+		NSString _PresenceType { get; [NotImplemented] set; }
 
-		[Wrap ("HMPresenceTypeExtensions.GetValue (_PresenceType)")]
-		HMPresenceType PresenceType { get; }
+		// FIXME: Bug https://bugzilla.xamarin.com/show_bug.cgi?id=57870
+		// [Wrap ("HMPresenceTypeExtensions.GetValue (_PresenceType)")]
+		// HMPresenceType PresenceType { get; [NotImplemented] set; }
 
 		[Field ("HMPresenceKeyPath")]
 		NSString KeyPath { get; }
@@ -1693,9 +1694,9 @@ namespace XamCore.HomeKit {
 	[Watch (4,0), TV (11,0), iOS (11,0)]
 	[BaseType (typeof(HMTimeEvent))]
 	[DisableDefaultCtor]
-	interface HMSignificantTimeEvent : NSCopying, NSMutableCopying {
+	interface HMSignificantTimeEvent : NSMutableCopying {
 
-		[Internal]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithSignificantEvent:offset:")]
 		IntPtr Constructor (NSString significantEvent, [NullAllowed] NSDateComponents offset);
 
@@ -1704,20 +1705,21 @@ namespace XamCore.HomeKit {
 
 		[Internal]
 		[Export ("significantEvent", ArgumentSemantic.Strong)]
-		NSString _SignificantEvent { get; }
+		NSString _SignificantEvent { get; [NotImplemented] set; }
 
-		[Wrap ("HMSignificantEventExtensions.GetValue (_SignificantEvent)")]
-		HMSignificantEvent SignificantEvent { get; }
+		// FIXME: Bug https://bugzilla.xamarin.com/show_bug.cgi?id=57870
+		// [Wrap ("HMSignificantEventExtensions.GetValue (_SignificantEvent)")]
+		// HMSignificantEvent SignificantEvent { get; [NotImplemented] set; }
 
 		[NullAllowed, Export ("offset", ArgumentSemantic.Strong)]
-		NSDateComponents Offset { get; }
+		NSDateComponents Offset { get; [NotImplemented] set; }
 	}
 
 	[Watch (4,0), TV (11,0), iOS (11,0)]
 	[BaseType (typeof(HMSignificantTimeEvent))]
 	interface HMMutableSignificantTimeEvent {
 
-		[Internal]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithSignificantEvent:offset:")]
 		IntPtr Constructor (NSString significantEvent, [NullAllowed] NSDateComponents offset);
 

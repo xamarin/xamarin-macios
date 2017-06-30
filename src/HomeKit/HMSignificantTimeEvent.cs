@@ -3,7 +3,7 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.HomeKit {
 
-	partial class HMMutableSignificantTimeEvent {
+	partial class HMSignificantTimeEvent {
 
 		public virtual HMSignificantEvent SignificantEvent {
 			get {
