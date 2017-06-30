@@ -1278,7 +1278,7 @@ namespace XamCore.Foundation  {
 	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[Native]
 	public enum NSItemProviderFileOptions : nint {
-		NSItemProviderFileOptionOpenInPlace = 1,
+		OpenInPlace = 1,
 	}
 
 	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
