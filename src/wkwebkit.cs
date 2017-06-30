@@ -99,7 +99,7 @@ namespace XamCore.WebKit
 	}
 	
 	[Mac (10,13), iOS (11,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof(NSObject), Name = "WKHTTPCookieStore")]
 	[DisableDefaultCtor]
 	interface WKHttpCookieStore
 	{
