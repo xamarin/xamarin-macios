@@ -30,7 +30,8 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 	<PropertyGroup>
 		<_GeneratedSourcesFileList>$(GeneratedSourcesDir)sources.list</_GeneratedSourcesFileList>
 
-		<DefineConstants>__MOBILE__;__IOS__;__UNIFIED__;$(DefineConstants)</DefineConstants>
+		<XamarinDefineConstants Condition="'$(XamarinDefineConstants)' == ''">__UNIFIED__;__MOBILE__;__IOS__</XamarinDefineConstants>
+		<DefineConstants>$(XamarinDefineConstants);$(DefineConstants)</DefineConstants>
 
 		<!-- Add our own pre-build steps -->
 		<CompileDependsOn>
