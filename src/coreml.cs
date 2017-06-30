@@ -59,10 +59,6 @@ namespace XamCore.CoreML {
 
 		[Export ("initWithDictionary:error:")]
 		IntPtr Constructor (NSDictionary<NSString, NSObject> dictionary, out NSError error);
-
-		[Export ("objectForKeyedSubscript:")]
-		[return: NullAllowed]
-		MLFeatureValue ObjectForKeyedSubscript (string featureName);
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -157,7 +153,7 @@ namespace XamCore.CoreML {
 		MLFeatureValue FromDictionary (NSDictionary<NSObject, NSNumber> value, out NSError error);
 
 		[Export ("isEqualToFeatureValue:")]
-		bool IsEqualTo (MLFeatureValue value);
+		bool IsEqual (MLFeatureValue value);
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -258,10 +254,10 @@ namespace XamCore.CoreML {
 		// From MLMultiArray (NSNumberDataAccess) Category
 
 		[Export ("objectAtIndexedSubscript:")]
-		NSNumber ObjectAtIndexedSubscript (nint idx);
+		NSNumber GetObjectAtIndexedSubscript (nint idx);
 
 		[Export ("objectForKeyedSubscript:")]
-		NSNumber ObjectForKeyedSubscript (NSNumber [] key);
+		NSNumber GetObjectForKeyedSubscript (NSNumber [] key);
 
 		[Export ("setObject:atIndexedSubscript:")]
 		void SetObject (NSNumber obj, nint idx);
