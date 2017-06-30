@@ -19,7 +19,7 @@ namespace XamCore.FileProvider {
 	[iOS (11,0)]
 	[ErrorDomain ("NSFileProviderErrorDomain")]
 	[Native]
-	public enum NSFileProviderErrorCode : nint {
+	public enum NSFileProviderError : nint {
 		NotAuthenticated = -1000,
 		FilenameCollision = -1001,
 		SyncAnchorExpired = -1002,

@@ -293,15 +293,15 @@ namespace XamCore.UIKit {
 	    [Static, Export ("writePlaceholderAtURL:withMetadata:error:")]
 	    bool WritePlaceholder (NSUrl placeholderUrl, NSDictionary metadata, ref NSError error);
 	
-		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'FileProvider.NSFileProviderManager.GetPlaceholderUrl (NSUrl)' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'FileProvider::NSFileProviderManager.GetPlaceholderUrl (NSUrl)' instead.")]
 	    [Static, Export ("placeholderURLForURL:")]
 	    NSUrl GetPlaceholderUrl (NSUrl url);
 	
-		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'FileProvider.NSFileProviderManager.ProviderIdentifier' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'FileProvider::NSFileProviderManager.ProviderIdentifier' instead.")]
 	    [Export ("providerIdentifier")]
 	    string ProviderIdentifier { get; }
 	
-		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'FileProvider.NSFileProviderManager.DocumentStorageUrl' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'FileProvider::NSFileProviderManager.DocumentStorageUrl' instead.")]
 	    [Export ("documentStorageURL")]
 	    NSUrl DocumentStorageUrl { get; }
 	
