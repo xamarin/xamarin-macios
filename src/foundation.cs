@@ -3198,7 +3198,7 @@ namespace XamCore.Foundation
 		[iOS (11,0)]
 		[Static]
 		[Export ("fileProviderErrorForNonExistentItemWithIdentifier:")]
-		NSError GetFileProviderErrorForNonExistentItem (string itemIdentifier);
+		NSError GetFileProviderError (string nonExistentItemIdentifier);
 #endif
 		
 #if false
