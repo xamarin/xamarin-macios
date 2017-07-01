@@ -16162,6 +16162,7 @@ namespace XamCore.UIKit {
 	interface IUIDragSession {}
 	interface IUIDropInteractionDelegate {}
 		
+#if !WATCH
 	[NoWatch, NoTV, iOS (11,0)]
 	[Protocol]
 	interface UIDragAnimating
@@ -16197,11 +16198,11 @@ namespace XamCore.UIKit {
 	
 		[Abstract]
 		[Export ("hasItemsConformingToTypeIdentifiers:")]
-		bool HasItemsConformingToTypeIdentifiers (string[] typeIdentifiers);
+		bool HasConformingItems (string[] typeIdentifiers);
 	
 		[Abstract]
 		[Export ("canLoadObjectsOfClass:")]
-		bool CanLoadObjectsOfClass (INSItemProviderReading aClass);
+		bool CanLoadObjectsOfClass (Class itemProviderReadingClass);
 	}
 	
 	[NoWatch, NoTV, iOS (11,0)]
@@ -16286,7 +16287,7 @@ namespace XamCore.UIKit {
 		[NullAllowed, Export ("localContext", ArgumentSemantic.Strong)]
 		NSObject LocalContext { get; set; }
 	}
-	
+
 	[NoWatch, NoTV, iOS (11,0)]
 	[BaseType (typeof(NSObject))] // If Apple adds a delegate setter: Delegates=new string [] {"Delegate"}, Events=new Type [] { typeof (UIDropInteractionDelegate)})]
 	[DisableDefaultCtor]
@@ -16402,7 +16403,8 @@ namespace XamCore.UIKit {
 		CGSize Size { get; }
 	
 		[Export ("retargetedPreviewWithTarget:")]
-		UITargetedDragPreview RetargetedPreviewWithTarget (UIDragPreviewTarget newTarget);
+		UITargetedDragPreview GetRetargetedPreview (UIDragPreviewTarget newTarget);
 	}
+#endif
 #endregion
 }
