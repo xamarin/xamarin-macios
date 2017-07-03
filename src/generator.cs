@@ -1190,8 +1190,8 @@ public partial class Generator : IMemberGatherer {
 				nsvalue_create_map [TypeManager.NSRange] = "Range";
 				nsvalue_create_map [TypeManager.CGVector] = "CGVector";
 				nsvalue_create_map [TypeManager.SCNMatrix4] = "SCNMatrix4";
-				nsvalue_create_map [TypeManager.CLLocationCoordinate2D] = "CLLocationCoordinate2D";
-				nsvalue_create_map [TypeManager.SCNVector3] = "SCNVector3";
+				nsvalue_create_map [TypeManager.CLLocationCoordinate2D] = "MKCoordinate";
+				nsvalue_create_map [TypeManager.SCNVector3] = "Vector";
 				nsvalue_create_map [TypeManager.SCNVector4] = "Vector";
 
 				if (UnifiedAPI) {
@@ -1333,7 +1333,7 @@ public partial class Generator : IMemberGatherer {
 					{ TypeManager.SCNMatrix4, ".SCNMatrix4Value" },
 					{ TypeManager.CLLocationCoordinate2D, ".CoordinateValue" },
 					{ TypeManager.SCNVector3, ".Vector3Value" },
-					{ TypeManager.SCNVector4, ".VectordValue" }
+					{ TypeManager.SCNVector4, ".Vector4Value" }
 				};
 
 				if (UnifiedAPI) {
