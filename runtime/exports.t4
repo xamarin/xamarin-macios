@@ -76,7 +76,16 @@
 		new Export ("MonoType *", "mono_class_get_type",
 			"MonoClass *", "klass"
 		),
+		#endregion
 
+		#region metadata/class-internals.h
+		new Export ("gboolean", "mono_class_is_nullable",
+			"MonoClass *", "klass"
+		),
+
+		new Export ("MonoClass *", "mono_class_get_nullable_param",
+			"MonoClass *", "klass"
+		),
 		#endregion
 
 		#region metadata/debug-helpers.h
@@ -171,6 +180,12 @@
 			"MonoObject *", "obj",
 			"MonoClassField *", "field",
 			"void *", "value"
+		),
+
+		new Export ("MonoObject *", "mono_value_box",
+			"MonoDomain *", "domain",
+			"MonoClass *", "klass",
+			"void *", "val"
 		),
 
 		#endregion
@@ -348,6 +363,9 @@
 			"MonoType *", "type"
 		),
 
+		new Export ("MonoType *", "mono_reflection_type_get_type",
+			"MonoReflectionType *", "reftype"
+		),
 		#endregion
 
 		#region metadata/metadata.h

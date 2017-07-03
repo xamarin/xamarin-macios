@@ -69,9 +69,10 @@
 			"MonoObject *", "IntPtr", "obj"
 		) { WrappedManagedFunction = "GetSelectorHandle" },
 
-		new XDelegate ("MethodDescription", "UnmanagedMethodDescription", "xamarin_get_method_for_selector",
+		new XDelegate ("void", "void", "xamarin_get_method_for_selector",
 			"Class", "IntPtr", "cls",
-			"SEL", "IntPtr", "sel"
+			"SEL", "IntPtr", "sel",
+			"MethodDescription *", "IntPtr", "desc"
 		) { WrappedManagedFunction = "GetMethodForSelector" },
 
 		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_nsobject",
@@ -137,11 +138,12 @@
 			"int", "int", "parameter"
 		) { WrappedManagedFunction = "IsParameterOut" },
 
-		new XDelegate ("MethodDescription", "UnmanagedMethodDescription", "xamarin_get_method_and_object_for_selector",
+		new XDelegate ("void", "void", "xamarin_get_method_and_object_for_selector",
 			"Class", "IntPtr", "cls",
 			"SEL", "IntPtr", "sel",
 			"id", "IntPtr", "obj",
-			"MonoObject **", "ref IntPtr", "mthis"
+			"MonoObject **", "ref IntPtr", "mthis",
+			"MethodDescription *", "IntPtr", "desc"
 		) { WrappedManagedFunction = "GetMethodAndObjectForSelector" },
 
 		new XDelegate ("guint32", "int", "xamarin_create_product_exception_for_error",
@@ -165,6 +167,15 @@
 			"id", "IntPtr", "exception",
 			"bool", "bool", "throwManagedAsDefault"
 		) { WrappedManagedFunction = "OnMarshalObjectiveCException" },
+
+		new XDelegate ("NSString *", "IntPtr", "xamarin_convert_smart_enum_to_nsstring",
+			"void *", "IntPtr", "value"
+		) { WrappedManagedFunction = "ConvertSmartEnumToNSString" },
+
+		new XDelegate ("void *", "IntPtr", "xamarin_convert_nsstring_to_smart_enum",
+			"NSString *", "IntPtr", "value",
+			"MonoReflectionType *", "IntPtr", "type"
+		) { WrappedManagedFunction = "ConvertNSStringToSmartEnum" },
 	};
 	delegates.CalculateLengths ();
 #><#+

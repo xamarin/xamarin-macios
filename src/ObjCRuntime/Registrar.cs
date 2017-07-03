@@ -472,11 +472,10 @@ namespace XamCore.Registrar {
 			Trampoline trampoline;
 			bool? is_static;
 			bool? is_ctor;
-#if !MMP && !MTOUCH
-			MethodDescription? methodDescription;
-#endif
 			TType[] parameters;
+			TType[] native_parameters;
 			TType return_type;
+			TType native_return_type;
 
 			public ObjCMethod (Registrar registrar, ObjCType declaringType, TMethod method)
 				: base (registrar, declaringType)
@@ -519,14 +518,54 @@ namespace XamCore.Registrar {
 			}
 
 #if !MMP && !MTOUCH
-			public MethodDescription MethodDescription {
+			// The ArgumentSemantic enum is public, and
+			// I don't want to add another enum value there which
+			// is just an internal implementation detail, so just
+			// use a constant instead. Eventually we'll use an internal
+			// enum instead.
+			const int RetainReturnValueFlag = 1 << 10;
+			const int InstanceCategoryFlag = 1 << 11;
+
+			internal bool IsInstanceCategory {
 				get {
-					if (!methodDescription.HasValue) {
-						// This should never be called from the static registrar
-						methodDescription = new MethodDescription ((System.Reflection.MethodBase) (object) Method, ArgumentSemantic);
-					}
-					
-					return methodDescription.Value;
+					return DynamicRegistrar.HasThisAttributeImpl (Method);
+				}
+			}
+
+			internal void WriteUnmanagedDescription (IntPtr desc)
+			{
+				WriteUnmanagedDescription (desc, (System.Reflection.MethodBase) (object) Method);
+			}
+
+			internal void WriteUnmanagedDescription (IntPtr desc, System.Reflection.MethodBase method_base)
+			{
+				var semantic = ArgumentSemantic;
+				var minfo = method_base as System.Reflection.MethodInfo;
+				var retainReturnValue = minfo != null && minfo.GetBaseDefinition ().ReturnTypeCustomAttributes.IsDefined (typeof (ReleaseAttribute), false);
+				var instanceCategory = minfo != null && DynamicRegistrar.HasThisAttributeImpl (minfo);
+
+				// bitfields and a default value of -1 don't go very well together.
+				if (semantic == ArgumentSemantic.None)
+					semantic = ArgumentSemantic.Assign;
+
+				if (retainReturnValue)
+					semantic |= (ArgumentSemantic) (RetainReturnValueFlag);
+				if (instanceCategory)
+					semantic |= (ArgumentSemantic) (InstanceCategoryFlag);
+
+				var bindas_count = Marshal.ReadInt32 (desc + IntPtr.Size + 4);
+				if (bindas_count < 1 + Parameters.Length)
+					throw ErrorHelper.CreateError (8018, $"Internal consistency error: BindAs array is not big enough (expected at least {1 + parameters.Length} elements, got {bindas_count} elements) for {method_base.DeclaringType.FullName + "." + method_base.Name}. Please file a bug report at https://bugzilla.xamarin.com.");
+
+				Marshal.WriteIntPtr (desc, ObjectWrapper.Convert (method_base));
+				Marshal.WriteInt32 (desc + IntPtr.Size, (int) semantic);
+
+				if (!IsConstructor && ReturnType != NativeReturnType)
+					Marshal.WriteIntPtr (desc + IntPtr.Size + 8, ObjectWrapper.Convert (NativeReturnType));
+				for (int i = 0; i < NativeParameters.Length; i++) {
+					if (parameters [i] == native_parameters [i])
+						continue;
+					Marshal.WriteIntPtr (desc + IntPtr.Size + 8 + IntPtr.Size * (i + 1), ObjectWrapper.Convert (native_parameters [i]));
 				}
 			}
 #endif
@@ -545,7 +584,107 @@ namespace XamCore.Registrar {
 				}
 				set {
 					parameters = value;
+					native_parameters = null;
 				}
+			}
+
+			public TType [] NativeParameters {
+				get {
+					if (native_parameters == null && Parameters != null) {
+						native_parameters = new TType [parameters.Length];
+						for (int i = 0; i < parameters.Length; i++) {
+							var originalType = Registrar.GetBindAsAttribute (this, i)?.OriginalType;
+							if (originalType != null) {
+								if (!IsValidToManagedTypeConversion (originalType, parameters [i]))
+									throw Registrar.CreateException (4169, Method, $"The registrar can't convert from '{Registrar.GetTypeFullName (parameters [i])}' to '{originalType.FullName}' for the parameter '{Registrar.GetParameterName (Method, i)}' in the method {DescriptiveMethodName}.");
+								native_parameters [i] = originalType;
+							} else {
+								native_parameters [i] = parameters [i];
+							}
+						}
+					}
+					return native_parameters;
+				}
+			}
+
+			bool IsValidToManagedTypeConversion (TType inputType, TType outputType)
+			{
+				var nullableType = Registrar.GetNullableType (outputType);
+				var isNullable = nullableType != null;
+				var arrayRank = 0;
+				var isArray = Registrar.IsArray (outputType, out arrayRank);
+
+				TType underlyingOutputType = outputType;
+				TType underlyingInputType = inputType;
+				if (isNullable) {
+					underlyingOutputType = nullableType;
+				} else if (isArray) {
+					if (arrayRank != 1)
+						return false;
+					if (!Registrar.IsArray (inputType))
+						return false;
+					underlyingOutputType = Registrar.GetElementType (outputType);
+					underlyingInputType = Registrar.GetElementType (inputType);
+				}
+				var outputTypeName = Registrar.GetTypeFullName (underlyingOutputType);
+
+				if (Registrar.Is (underlyingInputType, Foundation, "NSNumber")) {
+					switch (outputTypeName) {
+					case "System.Byte":
+					case "System.SByte":
+					case "System.Int16":
+					case "System.UInt16":
+					case "System.Int32":
+					case "System.UInt32":
+					case "System.Int64":
+					case "System.UInt64":
+					case "System.nint":
+					case "System.nuint":
+					case "System.Single":
+					case "System.Double":
+					case "System.nfloat":
+					case "System.Boolean":
+						return true;
+					default:
+						return false;
+					}
+				} else if (Registrar.Is (underlyingInputType, Foundation, "NSValue")) {
+					// Remove 'MonoMac.' namespace prefix to make switch smaller
+					if (!Registrar.IsDualBuild && outputTypeName.StartsWith ("MonoMac.", StringComparison.Ordinal))
+						outputTypeName = outputTypeName.Substring ("MonoMac.".Length);
+
+					switch (outputTypeName) {
+					case "CoreAnimation.CATransform3D":
+					case "CoreGraphics.CGAffineTransform":
+					case "CoreGraphics.CGPoint":
+					case "CoreGraphics.CGRect":
+					case "CoreGraphics.CGSize":
+					case "CoreGraphics.CGVector":
+					case "CoreLocation.CLLocationCoordinate2D":
+					case "CoreMedia.CMTime":
+					case "CoreMedia.CMTimeMapping":
+					case "CoreMedia.CMTimeRange":
+					case "MapKit.MKCoordinateSpan":
+					case "Foundation.NSRange":
+					case "SceneKit.SCNMatrix4":
+					case "SceneKit.SCNVector3":
+					case "SceneKit.SCNVector4":
+					case "UIKit.UIEdgeInsets":
+					case "UIKit.UIOffset":
+						return true;
+					default:
+						return false;
+					}
+				} else if (Registrar.Is (underlyingInputType, Foundation, "NSString")) {
+					return Registrar.IsSmartEnum (underlyingOutputType);
+				} else {
+					return false;
+				}
+			}
+
+			bool IsValidToNativeTypeConversion (TType inputType, TType outputType)
+			{
+				return IsValidToManagedTypeConversion (inputType: outputType, outputType: inputType);
 			}
 
 			public bool HasReturnType {
@@ -562,6 +701,27 @@ namespace XamCore.Registrar {
 				}
 				set {
 					return_type = value;
+					native_return_type = null;
+				}
+			}
+
+			public TType NativeReturnType {
+				get {
+					if (native_return_type == null) {
+						if (Registrar.Is (ReturnType, "System", "Void")) {
+							native_return_type = ReturnType;
+						} else {
+							var originalType = Registrar.GetBindAsAttribute (this, -1)?.OriginalType;
+							if (originalType != null) {
+								if (!IsValidToManagedTypeConversion (originalType, ReturnType))
+									throw Registrar.CreateException (4170, Method, $"The registrar can't convert from '{Registrar.GetTypeFullName (ReturnType)}' to '{originalType.FullName}' for the return value in the method {DescriptiveMethodName}.");
+								native_return_type = originalType;
+							} else {
+								native_return_type = ReturnType;
+							}
+						}
+					}
+					return native_return_type;
 				}
 			}
 
@@ -604,25 +764,25 @@ namespace XamCore.Registrar {
 					var mi = (System.Reflection.MethodInfo) Method;
 					bool is_stret;
 #if __WATCHOS__
-					is_stret = Runtime.Arch == Arch.DEVICE ? Stret.ArmNeedStret (mi.ReturnType) : Stret.X86NeedStret (mi.ReturnType);
+					is_stret = Runtime.Arch == Arch.DEVICE ? Stret.ArmNeedStret (NativeReturnType) : Stret.X86NeedStret (NativeReturnType);
 #elif MONOMAC
-					is_stret = IntPtr.Size == 8 ? Stret.X86_64NeedStret (mi.ReturnType) : Stret.X86NeedStret (mi.ReturnType);
+					is_stret = IntPtr.Size == 8 ? Stret.X86_64NeedStret (NativeReturnType) : Stret.X86NeedStret (NativeReturnType);
 #elif __IOS__
 					if (Runtime.Arch == Arch.DEVICE) {
-						is_stret = IntPtr.Size == 4 && Stret.ArmNeedStret (mi.ReturnType);
+						is_stret = IntPtr.Size == 4 && Stret.ArmNeedStret (NativeReturnType);
 					} else {
-						is_stret = IntPtr.Size == 4 ? Stret.X86NeedStret (mi.ReturnType) : Stret.X86_64NeedStret (mi.ReturnType);
+						is_stret = IntPtr.Size == 4 ? Stret.X86NeedStret (NativeReturnType) : Stret.X86_64NeedStret (NativeReturnType);
 					}
 #elif __TVOS__
-					is_stret = Runtime.Arch == Arch.SIMULATOR && Stret.X86_64NeedStret (mi.ReturnType);
+					is_stret = Runtime.Arch == Arch.SIMULATOR && Stret.X86_64NeedStret (NativeReturnType);
 #else
 	#error unknown architecture
 #endif
 					var is_static_trampoline = IsStatic && !IsCategoryInstance;
-					var is_value_type = Registrar.IsValueType (ReturnType) && !Registrar.IsEnum (ReturnType);
+					var is_value_type = Registrar.IsValueType (NativeReturnType) && !Registrar.IsEnum (NativeReturnType);
 
-					if (is_value_type && Registrar.IsGenericType (ReturnType))
-						throw Registrar.CreateException (4104, Method, "The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.", Registrar.GetTypeFullName (ReturnType), Registrar.GetTypeFullName (DeclaringType.Type), Registrar.GetDescriptiveMethodName (Method));
+					if (is_value_type && Registrar.IsGenericType (NativeReturnType))
+						throw Registrar.CreateException (4104, Method, "The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.", Registrar.GetTypeFullName (NativeReturnType), Registrar.GetTypeFullName (DeclaringType.Type), Registrar.GetDescriptiveMethodName (Method));
 					
 					if (is_stret) {
 						if (Registrar.IsSimulatorOrDesktop && !Registrar.Is64Bits) {
@@ -686,7 +846,7 @@ namespace XamCore.Registrar {
 
 			string ComputeSignature ()
 			{
-				return Registrar.ComputeSignature (DeclaringType.Type, Method, this, IsCategoryInstance);
+				return Registrar.ComputeSignature (DeclaringType.Type, null, this, IsCategoryInstance);
 			}
 
 			public override string ToString ()
@@ -823,11 +983,15 @@ namespace XamCore.Registrar {
 		protected abstract List<AvailabilityBaseAttribute> GetAvailabilityAttributes (TType obj); // must only return attributes for the current platform.
 		protected abstract Version GetSDKVersion ();
 		protected abstract TType GetProtocolAttributeWrapperType (TType type); // Return null if no attribute is found. Do not consider base types.
+		protected abstract BindAsAttribute GetBindAsAttribute (TMethod method, int parameter_index); // If parameter_index = -1 then get the attribute for the return type. Return null if no attribute is found. Must consider base method.
+		protected abstract BindAsAttribute GetBindAsAttribute (TProperty property);
+		protected abstract TType GetNullableType (TType type); // For T? returns T. For T returns null.
 		protected abstract bool HasReleaseAttribute (TMethod method); // Returns true of the method's return type/value has a [Release] attribute.
 		protected abstract bool IsINativeObject (TType type);
 		protected abstract bool IsValueType (TType type);
-		protected abstract bool IsArray (TType type);
+		protected abstract bool IsArray (TType type, out int rank);
 		protected abstract bool IsEnum (TType type, out bool isNativeEnum);
+		protected abstract bool IsNullable (TType type);
 		protected abstract bool IsDelegate (TType type);
 		protected abstract bool IsGenericType (TType type);
 		protected abstract bool IsGenericMethod (TMethod method);
@@ -845,6 +1009,9 @@ namespace XamCore.Registrar {
 		protected abstract Exception CreateException (int code, Exception innerException, TMethod method, string message, params object[] args);
 		protected abstract Exception CreateException (int code, Exception innerException, TType type, string message, params object [] args);
 		protected abstract string PlatformName { get; }
+		public abstract TType FindType (TType relative, string @namespace, string name);
+		protected abstract IEnumerable<TMethod> FindMethods (TType type, string name); // will return null if nothing was found
+		protected abstract TProperty FindProperty (TType type, string name); // will return null if nothing was found
 
 		protected abstract string GetAssemblyName (TAssembly assembly);
 		protected abstract string GetTypeFullName (TType type);
@@ -864,10 +1031,79 @@ namespace XamCore.Registrar {
 			IsDualBuild = IsDualBuildImpl;
 		}
 
-		bool IsEnum (TType type)
+		protected bool IsArray (TType type)
+		{
+			int rank;
+			return IsArray (type, out rank);
+		}
+
+		protected bool IsEnum (TType type)
 		{
 			bool dummy;
 			return IsEnum (type, out dummy);
+		}
+
+		public BindAsAttribute GetBindAsAttribute (ObjCMethod method, int parameter_index)
+		{
+			var attrib = GetBindAsAttribute (method.Method, parameter_index);
+			if (attrib != null)
+				return attrib;
+
+			if (!method.IsPropertyAccessor)
+				return null;
+
+			return GetBindAsAttribute (FindProperty (method.DeclaringType.Type, method.MethodName.Substring (4)));
+		}
+
+		bool IsSmartEnum (TType type)
+		{
+			TMethod getConstant, getValue;
+			return IsSmartEnum (type, out getConstant, out getValue);
+		}
+
+		public bool IsSmartEnum (TType type, out TMethod getConstantMethod, out TMethod getValueMethod)
+		{
+			getConstantMethod = null;
+			getValueMethod = null;
+
+			if (!IsEnum (type))
+				return false;
+
+			var extension = FindType (type, type.Namespace, type.Name + "Extensions");
+			if (extension == null)
+				return false;
+
+			var getConstantMethods = FindMethods (extension, "GetConstant");
+			foreach (var m in getConstantMethods) {
+				if (!Is (GetReturnType (m), Foundation, "NSString"))
+					continue;
+				var parameters = GetParameters (m);
+				if (parameters?.Length != 1)
+					continue;
+				if (!AreEqual (parameters [0], type))
+					continue;
+				getConstantMethod = m;
+				break;
+			}
+			if (getConstantMethod == null)
+				return false;
+
+			var getValueMethods = FindMethods (extension, "GetValue");
+			foreach (var m in getValueMethods) {
+				if (!AreEqual (GetReturnType (m), type))
+					continue;
+				var parameters = GetParameters (m);
+				if (parameters?.Length != 1)
+					continue;
+				if (!Is (parameters [0], Foundation, "NSString"))
+					continue;
+				getValueMethod = m;
+				break;
+			}
+			if (getValueMethod == null)
+				return false;
+
+			return true;
 		}
 
 		protected string GetMemberName (ObjCMember member)
@@ -1055,6 +1291,11 @@ namespace XamCore.Registrar {
 			return false;
 		}
 
+		protected virtual bool AreEqual (TType a, TType b)
+		{
+			return a == b;
+		}
+
 		protected bool Is (TType type, string @namespace, string name)
 		{
 			string ns, n;
@@ -1117,8 +1358,8 @@ namespace XamCore.Registrar {
 
 		void VerifyInSdk (ref List<Exception> exceptions, ObjCMethod method)
 		{
-			if (method.HasReturnType || (method.Method != null && !method.IsConstructor && method.ReturnType != null))
-				VerifyTypeInSDK (ref exceptions, method.ReturnType, returnTypeOf: method);
+			if (method.HasReturnType || (method.Method != null && !method.IsConstructor && method.NativeReturnType != null))
+				VerifyTypeInSDK (ref exceptions, method.NativeReturnType, returnTypeOf: method);
 
 			if (method.HasParameters || (method.Method != null && method.Parameters != null)) {
 				foreach (var p in method.Parameters)
@@ -2027,7 +2268,7 @@ namespace XamCore.Registrar {
 			if (is_ctor) {
 				signature.Append ('@');
 			} else {
-				var ReturnType = Method != null ? GetReturnType (Method) : method.ReturnType;
+				var ReturnType = Method != null ? GetReturnType (Method) : method.NativeReturnType;
 				signature.Append (ToSignature (ReturnType, member, ref success));
 				if (!success)
 					throw CreateException (4104, Method, "The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.", GetTypeFullName (ReturnType), GetTypeFullName (DeclaringType), GetDescriptiveMethodName (Method));
@@ -2039,7 +2280,7 @@ namespace XamCore.Registrar {
 			if (Method != null) {
 				parameters = GetParameters (Method);
 			} else {
-				parameters = method.Parameters;
+				parameters = method.NativeParameters;
 			}
 
 			if (parameters != null) {
@@ -2130,7 +2371,9 @@ namespace XamCore.Registrar {
 		{
 			bool isNativeEnum;
 
-			switch (GetTypeFullName (type)) {
+			var typeFullName = GetTypeFullName (type);
+
+			switch (typeFullName) {
 			case "System.IntPtr": return "^v";
 			case "System.SByte": return "c";
 			case "System.Byte": return "C";

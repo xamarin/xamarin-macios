@@ -178,6 +178,27 @@ namespace XamCore.Registrar {
 				throw exceptions.Count == 1 ? exceptions [0] : new AggregateException (exceptions);
 		}
 
+		protected override IEnumerable<MethodBase> FindMethods (Type type, string name)
+		{
+			foreach (var method in type.GetMethods (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+				if (method.Name == name)
+					yield return method;
+		}
+
+		protected override PropertyInfo FindProperty (Type type, string name)
+		{
+			return type.GetProperty (name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+		}
+
+		public override Type FindType (Type relative, string @namespace, string name)
+		{
+			foreach (var type in relative.Assembly.GetTypes ()) {
+				if (type.Namespace == @namespace && type.Name == name)
+					return type;
+			}
+			return null;
+		}
+
 		protected override int GetValueTypeSize (Type type)
 		{
 			return Marshal.SizeOf (type);
@@ -207,6 +228,54 @@ namespace XamCore.Registrar {
 		{
 			Trace ("Assembly {0} has {1} types", assembly, assembly.GetTypes ().Length);
 			return assembly.GetTypes ();
+		}
+
+		protected override BindAsAttribute GetBindAsAttribute (PropertyInfo property)
+		{
+			return property?.GetCustomAttribute<BindAsAttribute> (false);
+		}
+
+		protected override BindAsAttribute GetBindAsAttribute (MethodBase method, int parameter_index)
+		{
+			ICustomAttributeProvider provider;
+
+			if (method == null)
+				return null;
+
+			var minfo = method as MethodInfo;
+			if (minfo != null) {
+				minfo = minfo.GetBaseDefinition ();
+				if (parameter_index == -1) {
+					provider = minfo.ReturnTypeCustomAttributes;
+				} else {
+					provider = minfo.GetParameters () [parameter_index];
+				}
+			} else {
+				var cinfo = method as ConstructorInfo;
+				if (parameter_index == -1) {
+					throw new Exception ();
+				} else {
+					provider = cinfo.GetParameters () [parameter_index];
+				}
+			}
+
+			var attribs = provider.GetCustomAttributes (typeof (BindAsAttribute), false);
+			if (attribs.Length == 0)
+				return null;
+
+			if (attribs.Length != 1)
+				throw new AmbiguousMatchException (/* FIXME */);
+
+			return (BindAsAttribute) attribs [0];
+		}
+
+		protected override Type GetNullableType (Type type)
+		{
+			if (!type.IsGenericType)
+				return null;
+			if (type.GetGenericTypeDefinition () != typeof (Nullable<>))
+				return null;
+			return type.GetGenericArguments () [0];
 		}
 
 		protected override ConnectAttribute GetConnectAttribute (PropertyInfo property)
@@ -500,9 +569,14 @@ namespace XamCore.Registrar {
 			return type.IsDefined (typeof (ModelAttribute), false);
 		}
 
-		protected override bool IsArray (Type type)
+		protected override bool IsArray (Type type, out int rank)
 		{
-			return type.IsArray;
+			if (!type.IsArray) {
+				rank = 0;
+				return false;
+			}
+			rank = type.GetArrayRank ();
+			return true;
 		}
 
 		protected override bool IsByRef (Type type)
@@ -533,6 +607,14 @@ namespace XamCore.Registrar {
 		protected override bool IsDelegate (Type type)
 		{
 			return type.IsSubclassOf (typeof (System.Delegate));
+		}
+
+		protected override bool IsNullable (Type type)
+		{
+			if (!type.IsGenericType)
+				return false;
+
+			return type.GetGenericTypeDefinition () == typeof (Nullable<>);
 		}
 
 		protected override bool IsEnum (Type type, out bool isNativeEnum)
@@ -809,25 +891,25 @@ namespace XamCore.Registrar {
 				custom_type_map [type] = null;
 		}
 
-		public UnmanagedMethodDescription GetMethodDescriptionAndObject (Type type, IntPtr selector, IntPtr obj, ref IntPtr mthis)
+		public void GetMethodDescriptionAndObject (Type type, IntPtr selector, IntPtr obj, ref IntPtr mthis, IntPtr desc)
 		{
 			var sel = new Selector (selector);
 			var res = GetMethodNoThrow (type, type, sel.Name);
 			if (res == null)
 				throw ErrorHelper.CreateError (8006, "Failed to find the selector '{0}' on the type '{1}'", sel.Name, type.FullName);
 
-			var md = res.MethodDescription;
-
-			if (md.IsInstanceCategory) {
+			if (res.IsInstanceCategory) {
 				mthis = IntPtr.Zero;
 			} else {
 				var nsobj = Runtime.GetNSObject (obj, Runtime.MissingCtorResolution.ThrowConstructor1NotFound, true);
 				mthis = ObjectWrapper.Convert (nsobj);
-				if (res.Method.ContainsGenericParameters)
-					return new MethodDescription (FindClosedMethod (nsobj.GetType (), res.Method), res.ArgumentSemantic).GetUnmanagedDescription ();
+				if (res.Method.ContainsGenericParameters) {
+					res.WriteUnmanagedDescription (desc, FindClosedMethod (nsobj.GetType (), res.Method));
+					return;
+				}
 			}
 
-			return md.GetUnmanagedDescription ();
+			res.WriteUnmanagedDescription (desc);
 		}
 
 		internal static MethodInfo FindClosedMethod (Type closed_type, MethodBase open_method)
@@ -856,7 +938,7 @@ namespace XamCore.Registrar {
 			throw ErrorHelper.CreateError (8003, "Failed to find the closed generic method '{0}' on the type '{1}'.", open_method.Name, closed_type.FullName);
 		}
 
-		public UnmanagedMethodDescription GetMethodDescription (Type type, IntPtr selector)
+		public void GetMethodDescription (Type type, IntPtr selector, IntPtr desc)
 		{
 			var sel = new Selector (selector);
 			var res = GetMethodNoThrow (type, type, sel.Name);
@@ -865,7 +947,7 @@ namespace XamCore.Registrar {
 			if (type.IsGenericType && res.Method is ConstructorInfo)
 				throw ErrorHelper.CreateError (4133, "Cannot construct an instance of the type '{0}' from Objective-C because the type is generic.", type.FullName);
 
-			return res.MethodDescription.GetUnmanagedDescription ();
+			res.WriteUnmanagedDescription (desc);
 		}
 
 		ObjCMethod GetMethodNoThrow (Type original_type, Type type, string selector)

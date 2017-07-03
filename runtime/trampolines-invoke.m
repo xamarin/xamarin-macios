@@ -48,7 +48,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 
 		if (has_nsobject) {
 			self = xamarin_invoke_objc_method_implementation (self, sel, (IMP) xamarin_ctor_trampoline);
-			marshal_return_value (context, "|", sizeof (id), self, NULL, false, NULL, &exception_gchandle);
+			marshal_return_value (context, "|", sizeof (id), self, NULL, false, NULL, NULL, &exception_gchandle);
 			xamarin_process_managed_exception_gchandle (exception_gchandle);
 			return;
 		}
@@ -58,6 +58,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 
 	// pre-prolog
 	SList *dispose_list = NULL;
+	SList *free_list = NULL;
 	int num_arg;
 	NSMethodSignature *sig;
 
@@ -70,7 +71,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 
 	// prolog
 	MonoObject *mthis = NULL;
-	MethodDescription desc;
+	MethodDescription *desc = NULL;
 	MonoMethod *method;
 	MonoMethodSignature *msig;
 	int semantic;
@@ -87,18 +88,24 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	int i;
 	int mofs = 0;
 
+	int desc_arg_count = num_arg + 2; /* 1 for the return value + 1 if this is a category instance method */
+	size_t desc_size = desc_arg_count * sizeof (BindAsData) + sizeof (MethodDescription);
+	desc = (MethodDescription *) xamarin_calloc (desc_size);
+	desc->bindas_count = desc_arg_count;
+	free_list = s_list_prepend (free_list, desc);
+
 	if (is_ctor || is_static) {
-		desc = xamarin_get_method_for_selector ([self class], sel, &exception_gchandle);
+		xamarin_get_method_for_selector ([self class], sel, desc, &exception_gchandle);
 	} else {
-		desc = xamarin_get_method_and_object_for_selector ([self class], sel, self, &mthis, &exception_gchandle);
+		xamarin_get_method_and_object_for_selector ([self class], sel, self, &mthis, desc, &exception_gchandle);
 	}
 	if (exception_gchandle != 0)
 		goto exception_handling;
 
-	method = xamarin_get_reflection_method_method (desc.method);
+	method = xamarin_get_reflection_method_method (desc->method);
 	msig = mono_method_signature (method);
-	semantic = desc.semantic & ArgumentSemanticMask;
-	isCategoryInstance = (desc.semantic & ArgumentSemanticCategoryInstance) == ArgumentSemanticCategoryInstance;
+	semantic = desc->semantic & ArgumentSemanticMask;
+	isCategoryInstance = (desc->semantic & ArgumentSemanticCategoryInstance) == ArgumentSemanticCategoryInstance;
 
 	frame_length = [sig frameLength] - (sizeof (void *) * (isCategoryInstance ? 1 : 2));
 	arg_frame = (void **) alloca (frame_length);
@@ -158,6 +165,13 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 			iterator (IteratorIterate, context, type, size, &arg, &exception_gchandle);
 			if (exception_gchandle != 0)
 				goto exception_handling;
+			if (desc->bindas [i + 1].original_type != NULL) {
+				arg_ptrs [i + mofs] = xamarin_generate_conversion_to_managed ((id) arg, mono_reflection_type_get_type (desc->bindas [i + 1].original_type), p, method, &exception_gchandle, (void **) &free_list);
+				if (exception_gchandle != 0)
+					goto exception_handling;
+				ofs++;
+				continue;
+			}
 			switch (type [0]) {
 				case _C_PTR: {
 					switch (type [1]) {
@@ -531,9 +545,9 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	ret_type = [sig methodReturnType];
 	ret_type = xamarin_skip_encoding_flags (ret_type);
 	if (is_ctor) {
-		marshal_return_value (context, "|", sizeof (id), self, mono_signature_get_return_type (msig), (desc.semantic & ArgumentSemanticRetainReturnValue) != 0, method, &exception_gchandle);
+		marshal_return_value (context, "|", sizeof (id), self, mono_signature_get_return_type (msig), (desc->semantic & ArgumentSemanticRetainReturnValue) != 0, method, desc, &exception_gchandle);
 	} else if (*ret_type != 'v') {
-		marshal_return_value (context, ret_type, [sig methodReturnLength], retval, mono_signature_get_return_type (msig), (desc.semantic & ArgumentSemanticRetainReturnValue) != 0, method, &exception_gchandle);
+		marshal_return_value (context, ret_type, [sig methodReturnLength], retval, mono_signature_get_return_type (msig), (desc->semantic & ArgumentSemanticRetainReturnValue) != 0, method, desc, &exception_gchandle);
 	}
 
 exception_handling:
@@ -558,6 +572,14 @@ exception_handling:
 			list = list->next;
 		}
 		s_list_free (dispose_list);
+	}
+	if (free_list) {
+		SList *list = free_list;
+		while (list) {
+			xamarin_free (list->data);
+			list = list->next;
+		}
+		s_list_free (free_list);
 	}
 
 	MONO_THREAD_DETACH; // COOP: This will switch to GC_SAFE
