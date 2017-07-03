@@ -90,8 +90,12 @@ xamarin_extension_main_callback xamarin_extension_main = NULL;
 
 /* Local variable */
 
+static MonoImage      *platform_image;
 static MonoClass      *inativeobject_class;
 static MonoClass      *nsobject_class;
+static MonoClass      *nsvalue_class;
+static MonoClass      *nsnumber_class;
+static MonoClass      *nsstring_class;
 
 static pthread_mutex_t framework_peer_release_lock;
 static MonoGHashTable *xamarin_wrapper_hash;
@@ -240,8 +244,12 @@ xamarin_get_parameter_type (MonoMethod *managed_method, int index)
 	void *iter = NULL;
 	MonoType *p = NULL;
 	
-	for (int i = 0; i < index + 1; i++)
-		p = mono_signature_get_params (msig, &iter);
+	if (index == -1) {
+		p = mono_signature_get_return_type (msig);
+	} else {
+		for (int i = 0; i < index + 1; i++)
+			p = mono_signature_get_params (msig, &iter);
+	}
 	
 	return p;
 }
@@ -345,6 +353,18 @@ void xamarin_framework_peer_unlock ()
 	pthread_mutex_unlock (&framework_peer_release_lock);
 }
 
+MonoClass *
+xamarin_get_nsvalue_class ()
+{
+	return nsvalue_class;
+}
+
+MonoClass *
+xamarin_get_nsnumber_class ()
+{
+	return nsnumber_class;
+}
+
 bool
 xamarin_is_class_nsobject (MonoClass *cls)
 {
@@ -370,6 +390,33 @@ xamarin_is_class_array (MonoClass *cls)
 	MONO_ASSERT_GC_UNSAFE;
 	
 	return mono_class_is_subclass_of (cls, mono_get_array_class (), false);
+}
+
+bool
+xamarin_is_class_nsnumber (MonoClass *cls)
+{
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
+	return mono_class_is_subclass_of (cls, nsnumber_class, false);
+}
+
+bool
+xamarin_is_class_nsvalue (MonoClass *cls)
+{
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
+	return mono_class_is_subclass_of (cls, nsvalue_class, false);
+}
+
+bool
+xamarin_is_class_nsstring (MonoClass *cls)
+{
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
+	return mono_class_is_subclass_of (cls, nsstring_class, false);
 }
 
 #define MANAGED_REF_BIT (1 << 31)
@@ -1154,7 +1201,6 @@ xamarin_initialize ()
 	
 	MonoClass *runtime_class;
 	MonoAssembly *assembly = NULL;
-	MonoImage *image;
 	MonoMethod *runtime_initialize;
 	void* params[2];
 	const char *product_dll = NULL;
@@ -1199,14 +1245,17 @@ xamarin_initialize ()
 
 	if (!assembly)
 		xamarin_assertion_message ("Failed to load %s.", product_dll);
-	image = mono_assembly_get_image (assembly);
+	platform_image = mono_assembly_get_image (assembly);
 
 	const char *objcruntime = xamarin_use_new_assemblies ? "ObjCRuntime" : PRODUCT_COMPAT_NAMESPACE ".ObjCRuntime";
 	const char *foundation = xamarin_use_new_assemblies ? "Foundation" : PRODUCT_COMPAT_NAMESPACE ".Foundation";
 
-	runtime_class = get_class_from_name (image, objcruntime, "Runtime");
-	inativeobject_class = get_class_from_name (image, objcruntime, "INativeObject");
-	nsobject_class = get_class_from_name (image, foundation, "NSObject");
+	runtime_class = get_class_from_name (platform_image, objcruntime, "Runtime");
+	inativeobject_class = get_class_from_name (platform_image, objcruntime, "INativeObject");
+	nsobject_class = get_class_from_name (platform_image, foundation, "NSObject");
+	nsnumber_class = get_class_from_name (platform_image, foundation, "NSNumber");
+	nsvalue_class = get_class_from_name (platform_image, foundation, "NSValue");
+	nsstring_class = get_class_from_name (platform_image, foundation, "NSString");
 
 	mono_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::xamarin_release_managed_ref" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::xamarin_release_managed_ref", (const void *) xamarin_release_managed_ref);
 	mono_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::xamarin_create_managed_ref" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::xamarin_create_managed_ref", (const void *) xamarin_create_managed_ref);
@@ -1293,10 +1342,19 @@ xamarin_set_bundle_path (const char *path)
 	x_bundle_path = strdup (path);
 }
 
+void *
+xamarin_calloc (size_t size)
+{
+	// COOP: no managed memory access: any mode
+	return calloc (size, 1);
+}
+
 void
 xamarin_free (void *ptr)
 {
 	// COOP: no managed memory access: any mode
+	// We use this method to free memory returned by mono,
+	// which means we have to use the free function mono expects.
 	if (ptr)
 		free (ptr);
 }

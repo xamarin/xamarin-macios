@@ -1544,6 +1544,10 @@ Please use a valid Objective-C identifier.
 Xamarin.iOS failed to generate a P/Invoke wrapper function for the mentioned.
 Please check the reported error message for the underlying cause.
 
+### <a name="MT4170"/>MT4170: The registrar can't convert from '{managed type}' to '{native type}' for the return value in the method {method}.
+
+### <a name="MT4172"/>MT4172: The registrar can't convert from '{native type}' to '{managed type}' for the parameter '{parameter name}' in the method {method}.
+
 # MT5xxx: GCC and toolchain error messages
 
 ### MT51xx: Compilation
@@ -2234,3 +2238,8 @@ This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamar
 ### <a name="MT8023"/>MT8023: An instance object is required to construct a closed generic method for the open generic method: * (token reference: *). Please file a bug report at http://bugzilla.xamarin.com.
 
 This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
+### <a name="MT8024"/>MT8024: Could not find a valid extension type for the smart enum '{smart_type}'. Please file a bug at https://bugzilla.xamarin.com.
+
+This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
