@@ -1954,12 +1954,12 @@ public partial class Generator : IMemberGatherer {
 
 		try {
 			if (Compat) {
-				bool arm_stret = Stret.ArmNeedStret (mi);
+				bool arm_stret = Stret.ArmNeedStret (mi.ReturnType);
 				bool is_aligned = AttributeManager.HasAttribute<AlignAttribute> (mi);
 				RegisterMethod (arm_stret, mi, MakeSig (mi, arm_stret, arm_stret && is_aligned), arm_stret && is_aligned);
 				RegisterMethod (arm_stret, mi, MakeSuperSig (mi, arm_stret, arm_stret && is_aligned), arm_stret && is_aligned);
 
-				bool x86_stret = Stret.X86NeedStret (mi);
+				bool x86_stret = Stret.X86NeedStret (mi.ReturnType);
 				if (x86_stret != arm_stret){
 					RegisterMethod (x86_stret, mi, MakeSig (mi, x86_stret, x86_stret && is_aligned), x86_stret && is_aligned);
 					RegisterMethod (x86_stret, mi, MakeSuperSig (mi, x86_stret, x86_stret && is_aligned), x86_stret && is_aligned);
@@ -3550,8 +3550,8 @@ public partial class Generator : IMemberGatherer {
 			return;
 		}
 
-		bool arm_stret = Stret.ArmNeedStret (mi);
-		bool x86_stret = Stret.X86NeedStret (mi);
+		bool arm_stret = Stret.ArmNeedStret (mi.ReturnType);
+		bool x86_stret = Stret.X86NeedStret (mi.ReturnType);
 		bool aligned = AttributeManager.HasAttribute<AlignAttribute> (mi);
 
 		if (CurrentPlatform == PlatformName.MacOSX) {
@@ -3577,9 +3577,9 @@ public partial class Generator : IMemberGatherer {
 
 	void GenerateNewStyleInvoke (bool supercall, MethodInfo mi, MemberInformation minfo, string selector, string[] args, bool assign_to_temp, Type category_type)
 	{
-		bool arm_stret = Stret.ArmNeedStret (mi);
-		bool x86_stret = Stret.X86NeedStret (mi);
-		bool x64_stret = Stret.X86_64NeedStret (mi);
+		bool arm_stret = Stret.ArmNeedStret (mi.ReturnType);
+		bool x86_stret = Stret.X86NeedStret (mi.ReturnType);
+		bool x64_stret = Stret.X86_64NeedStret (mi.ReturnType);
 		bool dual_enum = HasNativeEnumInSignature (mi);
 		bool is_stret_multi = arm_stret || x86_stret || x64_stret;
 		bool need_multi_path = is_stret_multi || dual_enum;
@@ -3930,7 +3930,7 @@ public partial class Generator : IMemberGatherer {
 	bool CheckNeedStret (MethodInfo mi)
 	{
 		try {
-			return Stret.NeedStret (mi);
+			return Stret.NeedStret (mi.ReturnType);
 		}
 		catch (TypeLoadException ex) {
 			throw new BindingException (0001, true, $"The .NET runtime could not load the {mi.ReturnType.Name} type. Message: {ex.Message}");

@@ -604,17 +604,17 @@ namespace XamCore.Registrar {
 					var mi = (System.Reflection.MethodInfo) Method;
 					bool is_stret;
 #if __WATCHOS__
-					is_stret = Runtime.Arch == Arch.DEVICE ? Stret.ArmNeedStret (mi) : Stret.X86NeedStret (mi);
+					is_stret = Runtime.Arch == Arch.DEVICE ? Stret.ArmNeedStret (mi.ReturnType) : Stret.X86NeedStret (mi.ReturnType);
 #elif MONOMAC
-					is_stret = IntPtr.Size == 8 ? Stret.X86_64NeedStret (mi) : Stret.X86NeedStret (mi);
+					is_stret = IntPtr.Size == 8 ? Stret.X86_64NeedStret (mi.ReturnType) : Stret.X86NeedStret (mi.ReturnType);
 #elif __IOS__
 					if (Runtime.Arch == Arch.DEVICE) {
-						is_stret = IntPtr.Size == 4 && Stret.ArmNeedStret (mi);
+						is_stret = IntPtr.Size == 4 && Stret.ArmNeedStret (mi.ReturnType);
 					} else {
-						is_stret = IntPtr.Size == 4 ? Stret.X86NeedStret (mi) : Stret.X86_64NeedStret (mi);
+						is_stret = IntPtr.Size == 4 ? Stret.X86NeedStret (mi.ReturnType) : Stret.X86_64NeedStret (mi.ReturnType);
 					}
 #elif __TVOS__
-					is_stret = Runtime.Arch == Arch.SIMULATOR && Stret.X86_64NeedStret (mi);
+					is_stret = Runtime.Arch == Arch.SIMULATOR && Stret.X86_64NeedStret (mi.ReturnType);
 #else
 	#error unknown architecture
 #endif

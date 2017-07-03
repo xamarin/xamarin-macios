@@ -111,7 +111,7 @@ namespace XamCore.ObjCRuntime
 			}
 		}
 
-		public static bool ArmNeedStret (MethodInfo mi)
+		public static bool ArmNeedStret (Type returnType)
 		{
 			bool has32bitArm;
 #if BGENERATOR
@@ -124,7 +124,7 @@ namespace XamCore.ObjCRuntime
 			if (!has32bitArm)
 				return false;
 
-			Type t = mi.ReturnType;
+			Type t = returnType;
 
 			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t))
 				return false;
@@ -184,9 +184,9 @@ namespace XamCore.ObjCRuntime
 			return true;
 		}
 
-		public static bool X86NeedStret (MethodInfo mi)
+		public static bool X86NeedStret (Type returnType)
 		{
-			Type t = mi.ReturnType;
+			Type t = returnType;
 
 			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t))
 				return false;
@@ -203,12 +203,12 @@ namespace XamCore.ObjCRuntime
 			return false;
 		}
 
-		public static bool X86_64NeedStret (MethodInfo mi)
+		public static bool X86_64NeedStret (Type returnType)
 		{
 			if (!isUnified)
 				return false;
 
-			Type t = mi.ReturnType;
+			Type t = returnType;
 
 			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t))
 				return false;
@@ -341,15 +341,15 @@ namespace XamCore.ObjCRuntime
 			}
 		}
 
-		public static bool NeedStret (MethodInfo mi)
+		public static bool NeedStret (Type returnType)
 		{
-			if (X86NeedStret (mi))
+			if (X86NeedStret (returnType))
 				return true;
 
-			if (X86_64NeedStret (mi))
+			if (X86_64NeedStret (returnType))
 				return true;
 
-			if (ArmNeedStret (mi))
+			if (ArmNeedStret (returnType))
 				return true;
 
 			return false;
