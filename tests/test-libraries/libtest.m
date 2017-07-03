@@ -199,6 +199,9 @@ static UltimateMachine *shared;
 	{
 		// Nothing to do here.
 	}
+
+#include "libtest.methods.m"
+
 @end
 
 @implementation ObjCExceptionTest

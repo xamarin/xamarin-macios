@@ -85,6 +85,9 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 	-(bool) testBlocks;
 
 	-(void) idAsIntPtr: (id)p1;
+
+#include "libtest.methods.h"
+
 @end
 
 /*
