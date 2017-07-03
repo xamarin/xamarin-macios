@@ -165,6 +165,18 @@ public partial class Generator {
 				print ("");
 			}
 			
+			print ("public static NSString GetConstant (this {0}? self)", type.Name);
+			print ("{");
+			indent++;
+			print ("if (self == null)");
+			indent++;
+			print ("return null;");
+			indent--;
+			print ("return GetConstant (self.Value);");
+			indent--;
+			print ("}");
+			print ("");
+
 			print ("public static NSString GetConstant (this {0} self)", type.Name);
 			print ("{");
 			indent++;
@@ -189,6 +201,18 @@ public partial class Generator {
 			
 			print ("");
 			
+			print ("public static {0}? GetNullableValue (NSString constant)", type.Name);
+			print ("{");
+			indent++;
+			print ("if (constant == null)");
+			indent++;
+			print ("return null;");
+			indent--;
+			print ("return GetValue (constant);");
+			indent--;
+			print ("}");
+			print ("");
+
 			print ("public static {0} GetValue (NSString constant)", type.Name);
 			print ("{");
 			indent++;
