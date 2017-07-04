@@ -2294,9 +2294,11 @@ namespace XamCore.Registrar {
 					} else {
 						signature.Append (ToSignature (type, member, ref success));
 					}
-					if (!success)
-						throw CreateException (4136, Method, "The registrar cannot marshal the parameter type '{0}' of the parameter '{1}' in the method '{2}.{3}'", 
-							GetTypeFullName (type), GetParameterName (Method, i), GetTypeFullName (DeclaringType), GetDescriptiveMethodName (Method));
+					if (!success) {
+						var mi = Method ?? method.Method;
+						throw CreateException (4136, mi, "The registrar cannot marshal the parameter type '{0}' of the parameter '{1}' in the method '{2}.{3}'",
+							GetTypeFullName (GetParameters (mi) [i]), GetParameterName (mi, i), GetTypeFullName (DeclaringType), GetDescriptiveMethodName (mi));
+					}
 				}
 			}
 			return signature.ToString ();
