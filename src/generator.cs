@@ -1267,14 +1267,14 @@ public partial class Generator : IMemberGatherer {
 			}
 			temp = string.Format ("{3}NSValue.From{0} ({2}{1});", typeStr, denullify, parameterName, nullCheck);
 		} else if (originalType == TypeManager.NSString && IsSmartEnum (retType)) {
-			temp = $"{parameterName}.GetConstant ();";
+			temp = $"{FormatType (retType.DeclaringType, retType)}Extensions.GetConstant ({parameterName});";
 		} else if (originalType.IsArray) {
 			var arrType = originalType.GetElementType ();
 			var arrRetType = TypeManager.GetUnderlyingNullableType (retType.GetElementType ()) ?? retType.GetElementType ();
 			var valueConverter = string.Empty;
 
 			if (arrType == TypeManager.NSString)
-				valueConverter = $"o.GetConstant (), {parameterName});";
+				valueConverter = $"{FormatType (retType.DeclaringType, arrRetType)}Extensions.GetConstant (o), {parameterName});";
 			else if (arrType == TypeManager.NSNumber) {
 				var cast = arrRetType.IsEnum ? "(int)" : string.Empty;
 				valueConverter = $"new NSNumber ({cast}o{denullify}), {parameterName});";
