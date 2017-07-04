@@ -985,7 +985,7 @@ namespace XamCore.Registrar {
 		protected abstract TType GetProtocolAttributeWrapperType (TType type); // Return null if no attribute is found. Do not consider base types.
 		protected abstract BindAsAttribute GetBindAsAttribute (TMethod method, int parameter_index); // If parameter_index = -1 then get the attribute for the return type. Return null if no attribute is found. Must consider base method.
 		protected abstract BindAsAttribute GetBindAsAttribute (TProperty property);
-		protected abstract TType GetNullableType (TType type); // For T? returns T. For T returns null.
+		public abstract TType GetNullableType (TType type); // For T? returns T. For T returns null.
 		protected abstract bool HasReleaseAttribute (TMethod method); // Returns true of the method's return type/value has a [Release] attribute.
 		protected abstract bool IsINativeObject (TType type);
 		protected abstract bool IsValueType (TType type);

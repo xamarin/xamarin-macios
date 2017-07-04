@@ -269,7 +269,7 @@ namespace XamCore.Registrar {
 			return (BindAsAttribute) attribs [0];
 		}
 
-		protected override Type GetNullableType (Type type)
+		public override Type GetNullableType (Type type)
 		{
 			if (!type.IsGenericType)
 				return null;

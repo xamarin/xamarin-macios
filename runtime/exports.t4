@@ -79,11 +79,11 @@
 		#endregion
 
 		#region metadata/class-internals.h
-		new Export ("gboolean", "mono_class_is_nullable",
+		new Export (true, "gboolean", "mono_class_is_nullable",
 			"MonoClass *", "klass"
 		),
 
-		new Export ("MonoClass *", "mono_class_get_nullable_param",
+		new Export (true, "MonoClass *", "mono_class_get_nullable_param",
 			"MonoClass *", "klass"
 		),
 		#endregion

@@ -627,13 +627,16 @@ xamarin_generate_conversion_to_native (MonoObject *value, MonoType *inputType, M
 	MonoClass *managedType = mono_class_from_mono_type (inputType);
 	MonoClass *nativeType = mono_class_from_mono_type (outputType);
 
-	bool isManagedNullable = mono_class_is_nullable (managedType);
-
 	MonoClass *underlyingManagedType = managedType;
 	MonoClass *underlyingNativeType = nativeType;
 
 	bool isManagedArray = xamarin_is_class_array (managedType);
 	bool isNativeArray = xamarin_is_class_array (nativeType);
+
+	MonoClass *nullableManagedType = NULL;
+	bool isManagedNullable = xamarin_is_class_nullable (managedType, &nullableManagedType, exception_gchandle);
+	if (*exception_gchandle != 0)
+		goto exception_handling;
 
 	if (isManagedArray != isNativeArray) {
 		*exception_gchandle = xamarin_create_bindas_exception (inputType, outputType, method);
@@ -648,7 +651,7 @@ xamarin_generate_conversion_to_native (MonoObject *value, MonoType *inputType, M
 		underlyingNativeType = mono_class_get_element_class (nativeType);
 		underlyingManagedType = mono_class_get_element_class (managedType);
 	} else if (isManagedNullable) {
-		underlyingManagedType = mono_class_get_nullable_param (managedType);
+		underlyingManagedType = nullableManagedType;
 	}
 
 	if (value) {
@@ -696,13 +699,16 @@ xamarin_generate_conversion_to_managed (id value, MonoType *inputType, MonoType 
 	MonoClass *managedType = mono_class_from_mono_type (outputType);
 	MonoClass *nativeType = mono_class_from_mono_type (inputType);
 
-	bool isManagedNullable = mono_class_is_nullable (managedType);
-
 	MonoClass *underlyingManagedType = managedType;
 	MonoClass *underlyingNativeType = nativeType;
 
 	bool isManagedArray = xamarin_is_class_array (managedType);
 	bool isNativeArray = xamarin_is_class_array (nativeType);
+
+	MonoClass *nullableManagedType = NULL;
+	bool isManagedNullable = xamarin_is_class_nullable (managedType, &nullableManagedType, exception_gchandle);
+	if (*exception_gchandle != 0)
+		goto exception_handling;
 
 	if (isManagedArray != isNativeArray) {
 		*exception_gchandle = xamarin_create_bindas_exception (inputType, outputType, method);
@@ -717,7 +723,7 @@ xamarin_generate_conversion_to_managed (id value, MonoType *inputType, MonoType 
 		underlyingNativeType = mono_class_get_element_class (nativeType);
 		underlyingManagedType = mono_class_get_element_class (managedType);
 	} else if (isManagedNullable) {
-		underlyingManagedType = mono_class_get_nullable_param (managedType);
+		underlyingManagedType = nullableManagedType;
 	}
 
 	if (value) {
