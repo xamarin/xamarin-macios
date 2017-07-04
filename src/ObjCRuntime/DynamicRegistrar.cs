@@ -69,7 +69,6 @@ namespace XamCore.Registrar {
 
 	class DynamicRegistrar : Registrar {
 		Dictionary<IntPtr, ObjCType> type_map;
-		Dictionary <Type, Dictionary <IntPtr, MethodDescription>> method_map;
 		Dictionary <string, object> registered_assemblies; // Use Dictionary instead of HashSet to avoid pulling in System.Core.dll.
 
 		// custom_type_map can be accessed from multiple threads, and at the
@@ -84,7 +83,6 @@ namespace XamCore.Registrar {
 		public DynamicRegistrar ()
 		{
 			type_map = new Dictionary<IntPtr, ObjCType> (Runtime.IntPtrEqualityComparer);
-			method_map = new Dictionary<Type, Dictionary<IntPtr, MethodDescription>> (Runtime.TypeEqualityComparer);
 			custom_type_map = new Dictionary <Type, object> (Runtime.TypeEqualityComparer);
 		}
 
@@ -98,32 +96,6 @@ namespace XamCore.Registrar {
 			if (registered_assemblies == null)
 				registered_assemblies = new Dictionary<string, object> ();
 			registered_assemblies.Add (assembly, null);
-		}
-
-		public Dictionary<IntPtr, MethodDescription> GetMethods (Type type)
-		{
-			Dictionary<IntPtr, MethodDescription> methods;
-			
-			lock (lock_obj) {
-				if (method_map.TryGetValue (type, out methods))
-					return methods;
-
-				RegisterType (type);
-
-				if (!method_map.TryGetValue (type, out methods)) {
-					methods = new Dictionary <IntPtr, MethodDescription> (Runtime.IntPtrEqualityComparer);
-					method_map [type] = methods;
-				}
-
-
-				return method_map [type];
-			}
-		}
-		
-		public void RegisterMethods (Type type, Dictionary<IntPtr, MethodDescription> methods)
-		{
-			lock (lock_obj)
-				method_map [type] = methods;
 		}
 
 		protected override bool ContainsPlatformReference (Assembly assembly)
@@ -796,8 +768,6 @@ namespace XamCore.Registrar {
 			if (type.IsFakeProtocol)
 				return;
 
-			var methods = new Dictionary <IntPtr, MethodDescription> (Runtime.IntPtrEqualityComparer);
-
 			var super = type.SuperType;
 
 			type.Handle = Class.objc_allocateClassPair (super.Handle, type.ExportedName, IntPtr.Zero);
@@ -829,7 +799,6 @@ namespace XamCore.Registrar {
 			Class.objc_registerClassPair (type.Handle);
 			type_map [type.Handle] = type;
 			AddCustomType (type.Type);
-			method_map [type.Type] = methods;
 
 			Trace ("   [DYNAMIC CLASS] Registered the class {0} for {1}", type.ExportedName, type.Type.FullName);
 		}

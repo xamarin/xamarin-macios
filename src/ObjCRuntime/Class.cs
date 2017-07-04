@@ -131,11 +131,6 @@ namespace XamCore.ObjCRuntime {
 			Runtime.Registrar.Register (type, ref exceptions);
 		}
 
-		internal static Dictionary <IntPtr, MethodDescription> GetMethods (Type t)
-		{
-			return Runtime.Registrar.GetMethods (t);
-		}
-
 		internal unsafe static Type FindType (IntPtr @class, out bool is_custom_type)
 		{
 			var map = Runtime.options->RegistrationMap;
