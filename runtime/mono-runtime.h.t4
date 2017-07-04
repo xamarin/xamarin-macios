@@ -238,6 +238,13 @@ MONO_API <#= export.ReturnType #>
 <#= export.EntryPoint #> (<#= export.ArgumentSignature #>);
 <# } #>
 
+<# foreach (var export in exports) {
+	if (!export.Optional)
+		continue; #>
+bool
+<#= export.EntryPoint #>_exists ();
+
+<# } #>
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

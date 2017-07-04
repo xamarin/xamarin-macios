@@ -96,6 +96,7 @@ static MonoClass      *nsobject_class;
 static MonoClass      *nsvalue_class;
 static MonoClass      *nsnumber_class;
 static MonoClass      *nsstring_class;
+static MonoClass      *runtime_class;
 
 static pthread_mutex_t framework_peer_release_lock;
 static MonoGHashTable *xamarin_wrapper_hash;
@@ -417,6 +418,52 @@ xamarin_is_class_nsstring (MonoClass *cls)
 	MONO_ASSERT_GC_UNSAFE;
 
 	return mono_class_is_subclass_of (cls, nsstring_class, false);
+}
+
+// Returns if a MonoClass is nullable.
+// Will also return the element type (it the type is nullable, and if out pointer is not NULL).
+bool
+xamarin_is_class_nullable (MonoClass *cls, MonoClass **element_type, guint32 *exception_gchandle)
+{
+#ifdef DYNAMIC_MONO_RUNTIME
+	// mono_class_is_nullable/mono_class_get_nullable_param are private
+	// functions, and as such we can't call find them in libmono.dylib. In
+	// this case we manually call a managed function to do the work for us (we
+	// don't use the normal delegate mechanism, because how it's currently
+	// implemented it would inflict size costs on all platforms, not just
+	// Xamarin.Mac).
+	if (!mono_class_is_nullable_exists () || !mono_class_get_nullable_param_exists ()) {
+		static MonoMethod *get_nullable_type = NULL;
+
+		if (get_nullable_type == NULL)
+			get_nullable_type = mono_class_get_method_from_name (runtime_class, "GetNullableType", 1);
+
+		void *args [1] { mono_type_get_object (mono_domain_get (), mono_class_get_type (cls)) };
+		MonoObject *exc = NULL;
+		MonoReflectionType *nullable_type = (MonoReflectionType *) mono_runtime_invoke (get_nullable_type, NULL, args, &exc);
+		if (exc != NULL) {
+			*exception_gchandle = mono_gchandle_new (exc, FALSE);
+			return false;
+		}
+
+		if (element_type != NULL && nullable_type != NULL)
+			*element_type = mono_class_from_mono_type (mono_reflection_type_get_type (nullable_type));
+		return nullable_type != NULL;
+	}
+#endif
+
+	bool rv = mono_class_is_nullable (cls);
+	if (rv && element_type)
+		*element_type = mono_class_get_nullable_param (cls);
+	return rv;
+}
+
+MonoClass *
+xamarin_get_nullable_type (MonoClass *cls, guint32 *exception_gchandle)
+{
+	MonoClass *rv = NULL;
+	xamarin_is_class_nullable (cls, &rv, exception_gchandle);
+	return rv;
 }
 
 #define MANAGED_REF_BIT (1 << 31)
@@ -1199,7 +1246,6 @@ xamarin_initialize ()
 	// COOP: accessing managed memory: UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
-	MonoClass *runtime_class;
 	MonoAssembly *assembly = NULL;
 	MonoMethod *runtime_initialize;
 	void* params[2];

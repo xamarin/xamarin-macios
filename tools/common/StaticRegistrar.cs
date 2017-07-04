@@ -1596,7 +1596,7 @@ namespace XamCore.Registrar {
 			}
 		}
 
-		protected override TypeReference GetNullableType (TypeReference type)
+		public override TypeReference GetNullableType (TypeReference type)
 		{
 			var git = type as GenericInstanceType;
 			if (git == null)
@@ -3852,15 +3852,20 @@ namespace XamCore.Registrar {
 			if (isManagedArray != isNativeArray)
 				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 
+			var classVariableName = $"{inputName}_conv_class";
+			body_setup.AppendLine ($"MonoClass *{classVariableName} = NULL;");
 			if (isManagedArray) {
 				if (isManagedNullable)
 					throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 				underlyingNativeType = GetElementType (nativeType);
 				underlyingManagedType = GetElementType (managedType);
-				managedClassExpression = $"mono_class_get_element_class ({managedClassExpression})";
+				sb.AppendLine ($"{classVariableName} = mono_class_get_element_class ({managedClassExpression});");
 			} else if (isManagedNullable) {
 				underlyingManagedType = GetNullableType (managedType);
-				managedClassExpression = $"mono_class_get_nullable_param ({managedClassExpression})";
+				sb.AppendLine ($"{classVariableName} = xamarin_get_nullable_type ({managedClassExpression}, &exception_gchandle);");
+				sb.AppendLine ($"if (exception_gchandle != 0) goto exception_handling;");
+			} else {
+				sb.AppendLine ($"{classVariableName} = {managedClassExpression};");
 			}
 
 			if (isManagedNullable || isManagedArray)
@@ -3877,9 +3882,6 @@ namespace XamCore.Registrar {
 			} else {
 				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 			}
-			var classVariableName = $"{inputName}_conv_class";
-			body_setup.AppendLine ($"MonoClass *{classVariableName} = NULL;");
-			sb.AppendLine ($"{classVariableName} = {managedClassExpression};");
 			if (isManagedArray) {
 				sb.AppendLine ($"{outputName} = xamarin_convert_nsarray_to_managed_with_func ({inputName}, {classVariableName}, (xamarin_id_to_managed_func) {func}, &exception_gchandle);");
 				sb.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
@@ -3923,15 +3925,20 @@ namespace XamCore.Registrar {
 			if (isManagedArray != isNativeArray)
 				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 
+			var classVariableName = $"{inputName}_conv_class";
+			body_setup.AppendLine ($"MonoClass *{classVariableName} = NULL;");
 			if (isManagedArray) {
 				if (isManagedNullable)
 					throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 				underlyingNativeType = GetElementType (nativeType);
 				underlyingManagedType = GetElementType (managedType);
-				managedClassExpression = $"mono_class_get_element_class ({managedClassExpression})";
+				sb.AppendLine ($"{classVariableName} = mono_class_get_element_class ({managedClassExpression});");
 			} else if (isManagedNullable) {
 				underlyingManagedType = GetNullableType (managedType);
-				managedClassExpression = $"mono_class_get_nullable_param ({managedClassExpression})";
+				sb.AppendLine ($"{classVariableName} = xamarin_get_nullable_type ({managedClassExpression}, &exception_gchandle);");
+				sb.AppendLine ($"if (exception_gchandle != 0) goto exception_handling;");
+			} else {
+				sb.AppendLine ($"{classVariableName} = {managedClassExpression};");
 			}
 
 			if (isManagedNullable || isManagedArray)
@@ -3943,7 +3950,7 @@ namespace XamCore.Registrar {
 			} else if (underlyingNativeType.Is (Foundation, "NSValue")) {
 				func = GetManagedToNSValueFunc (underlyingManagedType, inputType, outputType, descriptiveMethodName);
 			} else if (underlyingNativeType.Is (Foundation, "NSString")) {
-				func = GetSmartEnumToNSStringFunc (underlyingManagedType, inputType, outputType, descriptiveMethodName, managedClassExpression);
+				func = GetSmartEnumToNSStringFunc (underlyingManagedType, inputType, outputType, descriptiveMethodName, classVariableName);
 			} else {
 				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 			}
