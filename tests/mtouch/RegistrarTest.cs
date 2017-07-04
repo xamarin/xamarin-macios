@@ -1071,15 +1071,25 @@ class Open<U> : NSObject
 		public void GenericType_WithInvalidParameterTypes ()
 		{
 			var code = @"
+		using System.Collections.Generic;
+		using Foundation;
 		class Open<U> : NSObject where U: NSObject
 		{
 			[Export (""bar:"")]
 			public void Bar (List<U> arg) {} // Not OK, can't marshal lists.
 		}
+		class C { static void Main () {} }
 ";
 
-			Verify (R.Static, code, false, 
-				".*Test.cs.*: error MT4136: The registrar cannot marshal the parameter type 'System.Collections.Generic.List`1<U>' of the parameter 'arg' in the method 'Open`1.Bar(System.Collections.Generic.List`1<U>)'");
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp (code: code, extraArg: "-debug:full");
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.Linker = MTouchLinker.DontLink; // faster test
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (4136, "The registrar cannot marshal the parameter type 'System.Collections.Generic.List`1<U>' of the parameter 'arg' in the method 'Open`1.Bar(System.Collections.Generic.List`1<U>)'", "testApp.cs", 7);
+				mtouch.AssertErrorCount (1);
+			}
 		}
 
 		[Test]
@@ -1192,6 +1202,7 @@ class GenericMethodClass : NSObject {
 		public void GenericMethods2 ()
 		{
 			var str1 = @"
+using Foundation;
 class NullableGenericTestClass<T> : NSObject where T: struct
 {
 	[Export (""init:"")]
@@ -1231,15 +1242,23 @@ class NullableGenericTestClass<T> : NSObject where T: struct
 	throw new System.NotImplementedException ();
 	}
 }
+class C { static void Main () {} }
 ";
-			Verify (R.Static, str1, false, 
-				".*Test.cs.*: error MT4113: The registrar found a generic method: 'NullableGenericTestClass`1.Z1(System.Nullable`1<Z>)'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes",
-				".*Test.cs.*: error MT4113: The registrar found a generic method: 'NullableGenericTestClass`1.Z2()'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes",
-				".*Test.cs.*: error MT4113: The registrar found a generic method: 'NullableGenericTestClass`1.Z3(Z)'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes",
-				".*Test.cs.*: error MT4128: The registrar found an invalid generic parameter type 'T' in the parameter foo of the method 'NullableGenericTestClass`1.T1(T)'. The generic parameter must have an 'NSObject' constraint.",
-				".*Test.cs.*: error MT4128: The registrar found an invalid generic parameter type 'System.Nullable`1<T>' in the parameter foo of the method 'NullableGenericTestClass`1.T2(System.Nullable`1<T>)'. The generic parameter must have an 'NSObject' constraint.",
-				".*Test.cs.*: error MT4129: The registrar found an invalid generic return type 'T' in the method 'NullableGenericTestClass`1.T3()'. The generic return type must have an 'NSObject' constraint.",
-				".*Test.cs.*: error MT4136: The registrar cannot marshal the parameter type 'System.Nullable`1<T>' of the parameter 'foo' in the method 'NullableGenericTestClass`1..ctor(System.Nullable`1<T>)'");
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp (code: str1, extraArg: "-debug:full");
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.Linker = MTouchLinker.DontLink; // faster test
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (4113, "The registrar found a generic method: 'NullableGenericTestClass`1.Z1(System.Nullable`1<Z>)'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes", "testApp.cs", 12);
+				mtouch.AssertError (4113, "The registrar found a generic method: 'NullableGenericTestClass`1.Z2()'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes", "testApp.cs", 17);
+				mtouch.AssertError (4113, "The registrar found a generic method: 'NullableGenericTestClass`1.Z3(Z)'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes", "testApp.cs", 23);
+				mtouch.AssertError (4128, "The registrar found an invalid generic parameter type 'T' in the parameter foo of the method 'NullableGenericTestClass`1.T1(T)'. The generic parameter must have an 'NSObject' constraint.", "testApp.cs", 28);
+				mtouch.AssertError (4128, "The registrar found an invalid generic parameter type 'System.Nullable`1<T>' in the parameter foo of the method 'NullableGenericTestClass`1.T2(System.Nullable`1<T>)'. The generic parameter must have an 'NSObject' constraint.", "testApp.cs", 33);
+				mtouch.AssertError (4129, "The registrar found an invalid generic return type 'T' in the method 'NullableGenericTestClass`1.T3()'. The generic return type must have an 'NSObject' constraint.", "testApp.cs", 38);
+				mtouch.AssertError (4136, "The registrar cannot marshal the parameter type 'System.Nullable`1<T>' of the parameter 'foo' in the method 'NullableGenericTestClass`1..ctor(System.Nullable`1<T>)'", "testApp.cs", 6);
+				mtouch.AssertErrorCount (7);
+			}
 		}
 
 		[Test]
