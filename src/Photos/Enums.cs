@@ -18,7 +18,7 @@ namespace XamCore.Photos
 	// NSInteger -> PHImageManager.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[Native]
 	public enum PHImageRequestOptionsVersion : nint {
 		Current = 0,
@@ -29,7 +29,7 @@ namespace XamCore.Photos
 	// NSInteger -> PHImageManager.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[Native]
 	public enum PHImageRequestOptionsDeliveryMode : nint {
 		Opportunistic = 0,
@@ -40,7 +40,7 @@ namespace XamCore.Photos
 	// NSInteger -> PHImageManager.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[Native]
 	public enum PHImageRequestOptionsResizeMode : nint {
 		None = 0,
@@ -146,6 +146,7 @@ namespace XamCore.Photos
 		AlbumSyncedFaces     = 4,
 		AlbumSyncedAlbum     = 5,
 		AlbumImported        = 6,
+		AlbumImportHistory   = AlbumImported,	// renamed only on macOS
 		AlbumMyPhotoStream   = 100,
 		AlbumCloudShared     = 101,
 		SmartAlbumGeneric    = 200,
@@ -231,7 +232,7 @@ namespace XamCore.Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[Native]
 	public enum PHAuthorizationStatus : nint {
 		NotDetermined, Restricted, Denied, Authorized
@@ -273,5 +274,53 @@ namespace XamCore.Photos
 	public enum PHLivePhotoFrameType : nint {
 		Photo,
 		Video
+	}
+
+	[TV (11,0), iOS (11,0)]
+	[Native]
+	public enum PHAssetPlaybackStyle : nint {
+		Unsupported = 0,
+		Image = 1,
+		ImageAnimated = 2,
+		LivePhoto = 3,
+		Video = 4,
+		VideoLooping = 5
+	}
+
+	[Mac (10,13, onlyOn64 : true)]
+	[NoiOS][NoTV]
+	[Native]
+	public enum PHProjectTextElementType : nint {
+		Body = 0,
+		Title,
+		Subtitle,
+	}
+
+	[Mac (10,13, onlyOn64 : true)]
+	[NoiOS][NoTV]
+	[Native]
+	public enum PHProjectCreationSource : nint {
+		Undefined = 0,
+		UserSelection = 1,
+		Album = 2,
+		Memory = 3,
+		Moment = 4,
+		Project = 20,
+		ProjectBook = 21,
+		ProjectCalendar = 22,
+		ProjectCard = 23,
+		ProjectPrintOrder = 24,
+		ProjectSlideshow = 25,
+		ProjectExtension = 26,
+	}
+
+	[Mac (10,13, onlyOn64 : true)]
+	[NoiOS][NoTV]
+	[Native]
+	public enum PHProjectSectionType : nint {
+		Undefined = 0,
+		Cover = 1,
+		Content = 2,
+		Auxiliary = 3,
 	}
 }
