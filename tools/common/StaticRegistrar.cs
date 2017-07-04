@@ -3746,9 +3746,11 @@ namespace XamCore.Registrar {
 		{
 			var underlyingTypeName = managedType.FullName;
 
+#if MMP
 			// Remove 'MonoMac.' namespace prefix to make switch smaller
 			if (!Registrar.IsDualBuild && underlyingTypeName.StartsWith ("MonoMac.", StringComparison.Ordinal))
 				underlyingTypeName = underlyingTypeName.Substring ("MonoMac.".Length);
+#endif
 
 			switch (underlyingTypeName) {
 			case "Foundation.NSRange": nativeType = "NSRange"; return "xamarin_nsvalue_to_nsrange";
@@ -3777,9 +3779,11 @@ namespace XamCore.Registrar {
 		{
 			var underlyingTypeName = managedType.FullName;
 
+#if MMP
 			// Remove 'MonoMac.' namespace prefix to make switch smaller
 			if (!Registrar.IsDualBuild && underlyingTypeName.StartsWith ("MonoMac.", StringComparison.Ordinal))
 				underlyingTypeName = underlyingTypeName.Substring ("MonoMac.".Length);
+#endif
 
 			switch (underlyingTypeName) {
 			case "Foundation.NSRange": return "xamarin_nsrange_to_nsvalue";
