@@ -96,7 +96,7 @@ static class C {
 	};
 
 	static BindAsData [] bindas_nsstring = new [] {
-		new BindAsData { Managed = "AVMediaTypes", ManagedNewExpression = "AVMediaTypes.Audio" },
+		new BindAsData { Managed = "SecKeyAlgorithm", ManagedNewExpression = "SecKeyAlgorithm.RsaSignatureRaw" },
 	};
 
 	static string GetNativeName (char t)
@@ -363,6 +363,7 @@ using MapKit;
 #endif
 using ObjCRuntime;
 using SceneKit;
+using Security;
 #if HAVE_UIKIT
 using UIKit;
 #endif
@@ -779,6 +780,7 @@ using MapKit;
 #endif
 using ObjCRuntime;
 using SceneKit;
+using Security;
 #if HAVE_UIKIT
 using UIKit;
 #endif
