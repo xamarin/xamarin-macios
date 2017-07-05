@@ -56,14 +56,21 @@ namespace XamCore.Registrar {
 			return rv;
 		}
 		
-		public static T GetOneAttribute<T> (MemberInfo provider) where T : Attribute
+		public static T GetOneAttribute<T> (ICustomAttributeProvider provider) where T : Attribute
 		{
 			var attribs = provider.GetCustomAttributes (typeof (T), false);
 			if (attribs.Length == 0)
 				return null;
 			else if (attribs.Length == 1)
 				return (T) attribs [0];
-			throw new AmbiguousMatchException (string.Format ("The member '{0}' contains more than one '{1}'", provider.Name, typeof (T).FullName));
+			var member = provider as MemberInfo;
+			if (member != null)
+				throw new AmbiguousMatchException (string.Format ("The member '{0}' contains more than one '{1}'", member.Name, typeof (T).FullName));
+			var parameter = provider as ParameterInfo;
+			if (parameter != null)
+				throw new AmbiguousMatchException (string.Format ("The parameter '{0}' contains more than one '{1}'", parameter.Name, typeof (T).FullName));
+
+			throw new AmbiguousMatchException (string.Format ("The member '{0}' contains more than one '{1}'", provider, typeof (T).FullName));
 		}
 	}
 
@@ -259,14 +266,7 @@ namespace XamCore.Registrar {
 				}
 			}
 
-			var attribs = provider.GetCustomAttributes (typeof (BindAsAttribute), false);
-			if (attribs.Length == 0)
-				return null;
-
-			if (attribs.Length != 1)
-				throw new AmbiguousMatchException (/* FIXME */);
-
-			return (BindAsAttribute) attribs [0];
+			return SharedDynamic.GetOneAttribute<BindAsAttribute> (provider);
 		}
 
 		public override Type GetNullableType (Type type)
