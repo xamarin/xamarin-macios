@@ -11899,9 +11899,11 @@ namespace XamCore.Foundation
 		void UnmountVolume (NSUrl url, NSFileManagerUnmountOptions mask, Action<NSError> completionHandler);
 #endif
 
+#if !WATCH && !TVOS
 		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[Async, Export ("getFileProviderServicesForItemAtURL:completionHandler:")]
 		void GetFileProviderServices (NSUrl url, Action<NSDictionary<NSString, NSFileProviderService>, NSError> completionHandler);
+#endif
 	}
 
 	[BaseType(typeof(NSObject))]
@@ -13176,7 +13178,7 @@ namespace XamCore.Foundation
 	interface NSFileProviderService
 	{
 		[Export ("getFileProviderConnectionWithCompletionHandler:")]
-		void GetFileProviderConnection (Action<NSXPCConnection, NSError> completionHandler);
+		void GetFileProviderConnection (Action<NSXpcConnection, NSError> completionHandler);
 
 		[Export ("name")]
 		string Name { get; }
