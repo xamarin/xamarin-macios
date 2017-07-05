@@ -260,7 +260,7 @@ namespace XamCore.Registrar {
 			} else {
 				var cinfo = method as ConstructorInfo;
 				if (parameter_index == -1) {
-					throw new Exception ();
+					throw ErrorHelper.CreateError (99, $"Internal error: can't get the BindAs attribute for the return value of a constructor ({GetDescriptiveMethodName (method)}). Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 				} else {
 					provider = cinfo.GetParameters () [parameter_index];
 				}
