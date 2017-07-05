@@ -5504,11 +5504,10 @@ public partial class Generator : IMemberGatherer {
 		var originalType = method?.ReturnType ?? property?.PropertyType;
 		originalType = originalType ?? param?.ParameterType;
 
-		var type = TypeManager.GetUnderlyingNullableType (p.Type) ?? p.Type;
+		var declaringType = (mi as MemberInfo)?.DeclaringType ?? param.Member.DeclaringType;
 		var pReturn = method != null ? "return: " : string.Empty;
-		var pBoolean = p.IsNullable ? "?" : string.Empty;
 
-		var attribstr = $"[{pReturn}BindAs (typeof ({type.FullName}{pBoolean}), OriginalType = typeof ({originalType.FullName}))]";
+		var attribstr = $"[{pReturn}BindAs (typeof ({FormatType (declaringType, p.Type)}), OriginalType = typeof ({FormatType (declaringType, originalType)}))]";
 
 		if (sb != null)
 			sb.Append ($"{attribstr} ");
