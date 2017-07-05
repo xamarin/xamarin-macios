@@ -23,6 +23,8 @@ namespace Xamarin
 		public void InvalidParameterTypes ()
 		{
 			var code = @"
+using System;
+using Foundation;
 class Foo : NSObject {
 	[Export (""bar1:"")]
 	public void Bar1 (object[] arg)
@@ -82,20 +84,28 @@ class Foo : NSObject {
 		set {}
 	}
 }
+class C { static void Main () {} }
 ";
-			Verify (R.Static, code, false,
-				".*/Test.cs(.*): error MT4138: The registrar cannot marshal the property type 'System.Object' of the property 'Foo.Bar10'.",
-				".*/Test.cs(.*): error MT4136: The registrar cannot marshal the parameter type 'System.Object[]' of the parameter 'arg' in the method 'Foo.Bar1(System.Object[])'", 
-				".*/Test.cs(.*): error MT4136: The registrar cannot marshal the parameter type 'System.Object&' of the parameter 'arg' in the method 'Foo.Bar2(System.Object&)'",
-				".*/Test.cs(.*): error MT4136: The registrar cannot marshal the parameter type 'System.Object&' of the parameter 'arg' in the method 'Foo.Bar3(System.Object&)'",
-				".*/Test.cs(.*): error MT4136: The registrar cannot marshal the parameter type 'System.Object' of the parameter 'arg' in the method 'Foo.Bar4(System.Object)'",
-				".*/Test.cs(.*): error MT4104: The registrar cannot marshal the return value of type `System.Object` in the method `Foo.Bar5()`.",
-				".*/Test.cs(.*): error MT4136: The registrar cannot marshal the parameter type 'System.Nullable`1<System.Int32>' of the parameter 'arg' in the method 'Foo.Bar6(System.Nullable`1<System.Int32>)'",
-				".*/Test.cs(.*): error MT4104: The registrar cannot marshal the return value of type `System.Nullable`1<System.Int32>` in the method `Foo.Bar7()`.",
-				".*/Test.cs(.*): error MT4136: The registrar cannot marshal the parameter type 'System.Nullable`1<System.Int32>[]&' of the parameter 'arg' in the method 'Foo.Bar8(System.Nullable`1<System.Int32>[]&)'",
-				".*/Test.cs(.*): error MT4136: The registrar cannot marshal the parameter type 'System.Attribute' of the parameter 'attribute' in the method 'Foo.Bar9(System.Attribute)'",
-				".*/Test.cs(.*): error MT4104: The registrar cannot marshal the return value of type `System.Object[]` in the method `Foo.get_Bar11()`.",
-				".*/Test.cs(.*): error MT4136: The registrar cannot marshal the parameter type 'System.Object[]' of the parameter 'value' in the method 'Foo.set_Bar11(System.Object[])'");
+
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Linker = MTouchLinker.DontLink; // faster
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (code: code, extraArg: "-debug");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (4138, "The registrar cannot marshal the property type 'System.Object' of the property 'Foo.Bar10'.", "testApp.cs", 54);
+				mtouch.AssertError (4136, "The registrar cannot marshal the parameter type 'System.Object[]' of the parameter 'arg' in the method 'Foo.Bar1(System.Object[])'", "testApp.cs", 7);
+				mtouch.AssertError (4136, "The registrar cannot marshal the parameter type 'System.Object&' of the parameter 'arg' in the method 'Foo.Bar2(System.Object&)'", "testApp.cs", 12);
+				mtouch.AssertError (4136, "The registrar cannot marshal the parameter type 'System.Object&' of the parameter 'arg' in the method 'Foo.Bar3(System.Object&)'", "testApp.cs", 17);
+				mtouch.AssertError (4136, "The registrar cannot marshal the parameter type 'System.Object' of the parameter 'arg' in the method 'Foo.Bar4(System.Object)'", "testApp.cs", 23);
+				mtouch.AssertError (4104, "The registrar cannot marshal the return value of type `System.Object` in the method `Foo.Bar5()`.", "testApp.cs", 28);
+				mtouch.AssertError (4136, "The registrar cannot marshal the parameter type 'System.Nullable`1<System.Int32>' of the parameter 'arg' in the method 'Foo.Bar6(System.Nullable`1<System.Int32>)'", "testApp.cs", 34);
+				mtouch.AssertError (4104, "The registrar cannot marshal the return value of type `System.Nullable`1<System.Int32>` in the method `Foo.Bar7()`.", "testApp.cs", 39);
+				mtouch.AssertError (4136, "The registrar cannot marshal the parameter type 'System.Nullable`1<System.Int32>[]&' of the parameter 'arg' in the method 'Foo.Bar8(System.Nullable`1<System.Int32>[]&)'", "testApp.cs", 45);
+				mtouch.AssertError (4136, "The registrar cannot marshal the parameter type 'System.Attribute' of the parameter 'attribute' in the method 'Foo.Bar9(System.Attribute)'", "testApp.cs", 50);
+				mtouch.AssertError (4104, "The registrar cannot marshal the return value of type `System.Object[]` in the method `Foo.get_Bar11()`.", "testApp.cs", 58);
+				mtouch.AssertError (4136, "The registrar cannot marshal the parameter type 'System.Object[]' of the parameter 'value' in the method 'Foo.set_Bar11(System.Object[])'", "testApp.cs", 60);
+				mtouch.AssertErrorCount (12);
+			}
 		}
 
 		[Test]
