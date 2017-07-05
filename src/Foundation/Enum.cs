@@ -363,6 +363,8 @@ namespace XamCore.Foundation  {
 
 		CoderReadCorruptError = 4864,
 		CoderValueNotFoundError = 4865,
+		[Mac (10,13), iOS (11,0), Watch (4,0), TV (11,0)]
+		CoderInvalidValueError = 4866,
 		CoderErrorMinimum = 4864,
 		CoderErrorMaximum = 4991,
 

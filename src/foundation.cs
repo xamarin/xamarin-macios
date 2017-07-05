@@ -11898,6 +11898,10 @@ namespace XamCore.Foundation
 		[Export ("unmountVolumeAtURL:options:completionHandler:")]
 		void UnmountVolume (NSUrl url, NSFileManagerUnmountOptions mask, Action<NSError> completionHandler);
 #endif
+
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[Async, Export ("getFileProviderServicesForItemAtURL:completionHandler:")]
+		void GetFileProviderServices (NSUrl url, Action<NSDictionary<NSString, NSFileProviderService>, NSError> completionHandler);
 	}
 
 	[BaseType(typeof(NSObject))]
@@ -12797,6 +12801,10 @@ namespace XamCore.Foundation
 		[Wrap ("TransitInformationCheckingResult (range, components != null ? components.Dictionary : null)")]
 		NSTextCheckingResult TransitInformationCheckingResult (NSRange range, NSTextCheckingTransitComponents components);
 
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("rangeWithName:")]
+		NSRange GetRange (string name);
+
 	}
 
 	[StrongDictionary ("NSTextChecking")]
@@ -13161,6 +13169,17 @@ namespace XamCore.Foundation
 		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[Async, Export ("getFileProviderMessageInterfacesForItemAtURL:completionHandler:")]
 		void GetFileProviderMessageInterfaces (NSUrl url, Action <NSFileProviderMessageInterface[], NSError> completionHandler);
+	}
+
+	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface NSFileProviderService
+	{
+		[Export ("getFileProviderConnectionWithCompletionHandler:")]
+		void GetFileProviderConnection (Action<NSXPCConnection, NSError> completionHandler);
+
+		[Export ("name")]
+		string Name { get; }
 	}
 #endif
 
@@ -15241,7 +15260,7 @@ namespace XamCore.Foundation
 		NSObject GetRemoteObjectProxy (Action<NSError> handler);
 
 		[Watch (2,0), TV (9,0), Mac (10,11), iOS (9,0)]
-		[Export ("synchronousRemoteObjectProxyWithErrorHandler:")]
+		[Async, Export ("synchronousRemoteObjectProxyWithErrorHandler:")]
 		NSObject GetSynchronousRemoteObjectProxy (Action<NSError> handler);
 
 		[NullAllowed, Export ("interruptionHandler", ArgumentSemantic.Copy)]
