@@ -277,6 +277,7 @@ namespace XamCore.Photos
 	}
 
 	[TV (11,0), iOS (11,0)]
+	[Mac (10,13, onlyOn64 : true)]
 	[Native]
 	public enum PHAssetPlaybackStyle : nint {
 		Unsupported = 0,
@@ -284,7 +285,7 @@ namespace XamCore.Photos
 		ImageAnimated = 2,
 		LivePhoto = 3,
 		Video = 4,
-		VideoLooping = 5
+		VideoLooping = 5,
 	}
 
 	[Mac (10,13, onlyOn64 : true)]

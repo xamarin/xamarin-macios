@@ -701,6 +701,11 @@ namespace XamCore.Photos
 		[iOS (10,0)]
 		[NullAllowed, Export ("livePhoto", ArgumentSemantic.Strong)]
 		PHLivePhoto LivePhoto { get; }
+
+		[TV (11,0), iOS (11,0)]
+		[Mac (10,13, onlyOn64 : true)]
+		[Export ("playbackStyle", ArgumentSemantic.Assign)]
+		PHAssetPlaybackStyle PlaybackStyle { get; }
 	}
 
 	[iOS (8,0)]
@@ -722,13 +727,6 @@ namespace XamCore.Photos
 
 		[Export ("renderedContentURL", ArgumentSemantic.Copy)]
 		NSUrl RenderedContentUrl { get; }
-
-#if false
-		// not responding on beta 2
-		[TV (11,0), iOS (11,0)]
-		[Export ("playbackStyle", ArgumentSemantic.Assign)]
-		PHAssetPlaybackStyle PlaybackStyle { get; }
-#endif
 	}
 
 	[iOS (8,0)]
@@ -1200,7 +1198,7 @@ namespace XamCore.Photos
 	[Mac (10,13, onlyOn64 : true)]
 	[NoiOS][NoTV]
 	[BaseType (typeof (PHAssetCollection))]
-	interface PHProject	{
+	interface PHProject {
 
 		[Export ("projectExtensionData")]
 		NSData ProjectExtensionData { get; }
