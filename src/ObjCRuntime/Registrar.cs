@@ -2271,7 +2271,7 @@ namespace XamCore.Registrar {
 				var ReturnType = Method != null ? GetReturnType (Method) : method.NativeReturnType;
 				signature.Append (ToSignature (ReturnType, member, ref success));
 				if (!success)
-					throw CreateException (4104, Method, "The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.", GetTypeFullName (ReturnType), GetTypeFullName (DeclaringType), GetDescriptiveMethodName (Method));
+					throw CreateException (4104, Method ?? method.Method, "The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.", GetTypeFullName (ReturnType), GetTypeFullName (DeclaringType), GetDescriptiveMethodName (Method ?? method.Method));
 			}
 
 			signature.Append (isBlockSignature ? "@?" : "@:");
