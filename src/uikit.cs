@@ -8860,7 +8860,7 @@ namespace XamCore.UIKit {
 #if XAMCORE_4_0
 		nint RowsInSection (UITableView tableView, nint section);
 #else
-        nint RowsInSection (UITableView tableview, nint section);
+		nint RowsInSection (UITableView tableview, nint section);
 #endif
 
 		[Export ("tableView:cellForRowAtIndexPath:")]
@@ -11161,9 +11161,9 @@ namespace XamCore.UIKit {
 		[Export ("tableView:numberOfRowsInSection:")]
 		[Abstract]
 #if XAMCORE_4_0
-        nint RowsInSection (UITableView tableView, nint section);
+		nint RowsInSection (UITableView tableView, nint section);
 #else
-        nint RowsInSection (UITableView tableview, nint section);
+		nint RowsInSection (UITableView tableview, nint section);
 #endif
 
 		[Export ("tableView:cellForRowAtIndexPath:")]
