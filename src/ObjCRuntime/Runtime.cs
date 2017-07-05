@@ -318,6 +318,8 @@ namespace XamCore.ObjCRuntime {
 			if (!Registrar.IsSmartEnum (smart_type, out getConstantMethod, out getValueMethod))
 				throw ErrorHelper.CreateError (8024, $"Could not find a valid extension type for the smart enum '{smart_type.FullName}'. Please file a bug at https://bugzilla.xamarin.com.");
 			var rv = (NSString) ((MethodInfo) getConstantMethod).Invoke (null, new object [] { value });
+			if (rv == null)
+				return IntPtr.Zero;
 			rv.DangerousRetain ().DangerousAutorelease ();
 			return rv.Handle;
 		}
