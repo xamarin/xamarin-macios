@@ -72,5 +72,6 @@ namespace ObjCRuntime {
 		// tvOS 11.0
 		public const string DeviceCheckLibrary = "/System/Library/Frameworks/DeviceCheck.framework/DeviceCheck";
 		public const string CoreMLLibrary = "/System/Library/Frameworks/CoreML.framework/CoreML";
+		public const string VisionLibrary = "/System/Library/Frameworks/Vision.framework/Vision";
 	}
 }

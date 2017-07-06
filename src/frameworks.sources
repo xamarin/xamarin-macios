@@ -1397,6 +1397,12 @@ VIDEOTOOLBOX_SOURCES = \
 	VideoToolbox/VTUtilities.cs \
 	VideoToolbox/VTPixelTransferProperties.cs \
 
+# Vision
+
+VISION_SOURCES = \
+	Vision/VNFaceLandmarkRegion2D.cs \
+	Vision/VNUtils.cs \
+
 # WatchConnectivity
 
 WATCHCONNECTIVITY_CORE_SOURCES = \
@@ -1604,6 +1610,7 @@ MAC_FRAMEWORKS =            \
 	StoreKit                \
 	SystemConfiguration     \
 	VideoToolbox            \
+	Vision                  \
 	WebKit                  \
 	WKWebKit                \
 
@@ -1689,6 +1696,7 @@ IOS_FRAMEWORKS =         \
 	UserNotificationsUI \
 	VideoToolbox \
 	VideoSubscriberAccount \
+	Vision \
 	WatchConnectivity \
 	WatchKit \
 	WKWebKit \
@@ -1768,6 +1776,7 @@ TVOS_FRAMEWORKS =           \
 	UserNotifications       \
 	VideoSubscriberAccount  \
 	VideoToolbox            \
+	Vision            \
 
 #
 # Compute the SOURCES variables.

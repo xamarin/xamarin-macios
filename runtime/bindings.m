@@ -11,6 +11,7 @@
  */
 
 #include "bindings.h"
+#include <dlfcn.h>
 
 /*
  * Hand-written bindings to support ObjectiveC exceptions.
@@ -88,3 +89,54 @@ void * monotouch_IntPtr_objc_msgSendSuper_IntPtr (struct objc_super *super, SEL 
 #endif
 #endif
 
+/*
+ * Vector c bindings
+ */
+
+typedef CGPoint (*vision_func) (vector_float2 faceLandmarkPoint, CGRect faceBoundingBox, size_t imageWidth, size_t imageHeight);
+
+CGPoint
+xamarin_CGPoint__VNNormalizedFaceBoundingBoxPointForLandmarkPoint_Vector2_CGRect_nuint_nuint (struct Vector2f faceLandmarkPoint, CGRect faceBoundingBox, xm_nuint_t imageWidth, xm_nuint_t imageHeight) {
+
+	static vision_func func = NULL;
+
+	if (func == NULL) {
+		void *vision_handle = dlopen ("/System/Library/Frameworks/Vision.framework/Vision", RTLD_LAZY);
+		if (vision_handle == NULL)
+			xamarin_assertion_message ("Could not open Vision Framework");
+
+		func = (vision_func) dlsym (vision_handle, "VNNormalizedFaceBoundingBoxPointForLandmarkPoint");
+
+		if (func == NULL)
+			xamarin_assertion_message ("Could not obtain the address for VNNormalizedFaceBoundingBoxPointForLandmarkPoint");
+	}
+
+	vector_float2 flp;
+	flp [0] = faceLandmarkPoint.a;
+	flp [1] = faceLandmarkPoint.b;
+
+	return func (flp, faceBoundingBox, imageWidth, imageHeight);
+}
+
+CGPoint
+xamarin_CGPoint__VNImagePointForFaceLandmarkPoint_Vector2_CGRect_nuint_nuint (struct Vector2f faceLandmarkPoint, CGRect faceBoundingBox, xm_nuint_t imageWidth, xm_nuint_t imageHeight) {
+
+	static vision_func func = NULL;
+
+	if (func == NULL) {
+		void *vision_handle = dlopen ("/System/Library/Frameworks/Vision.framework/Vision", RTLD_LAZY);
+		if (vision_handle == NULL)
+			xamarin_assertion_message ("Could not open Vision Framework");
+
+		func = (vision_func) dlsym (vision_handle, "VNImagePointForFaceLandmarkPoint");
+
+		if (func == NULL)
+			xamarin_assertion_message ("Could not obtain the address for VNImagePointForFaceLandmarkPoint");
+	}
+
+	vector_float2 flp;
+	flp [0] = faceLandmarkPoint.a;
+	flp [1] = faceLandmarkPoint.b;
+
+	return func (flp, faceBoundingBox, imageWidth, imageHeight);
+}

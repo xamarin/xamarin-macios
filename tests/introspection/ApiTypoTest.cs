@@ -224,6 +224,7 @@ namespace Introspection
 			"Ipp",
 			"Iptc",
 			"Ircs",
+			"Itf",
 			"Itu",
 			"Jcb", // Japanese credit card company
 			"Jfif",
@@ -374,6 +375,7 @@ namespace Introspection
 			"Superentity",
 			"Sym",
 			"Synchronizable",
+			"Symbologies",
 			"Tanh",
 			"Texcoord",
 			"Texel",
@@ -404,6 +406,7 @@ namespace Introspection
 			"Uterance",
 			"Unentitled",
 			"Utf",
+			"Upce",
 			"Uti",
 			"Varispeed",
 			"Vergence",

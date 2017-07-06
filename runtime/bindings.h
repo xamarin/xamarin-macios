@@ -2,6 +2,7 @@
 #define __BINDINGS_H__
 
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
 #include <objc/objc.h>
 #include <objc/runtime.h>
 #include <objc/message.h>
@@ -185,6 +186,8 @@ void             xamarin_vector_float3__Vector3_objc_msgSendSuper_stret (struct 
 void             xamarin_vector_float3__void_objc_msgSendSuper_Vector3 (struct objc_super *super, SEL sel, struct Vector3f p0);
 void             xamarin_vector_float3__Vector3_objc_msgSendSuper_stret_Vector3 (struct Vector3f *v3, struct objc_super *super, SEL sel, struct Vector3f p0);
 struct Vector3f  xamarin_vector_float3__Vector3_objc_msgSendSuper_Vector3 (struct objc_super *super, SEL sel, struct Vector3f p0);
+CGPoint          xamarin_CGPoint__VNNormalizedFaceBoundingBoxPointForLandmarkPoint_Vector2_CGRect_nuint_nuint (struct Vector2f faceLandmarkPoint, CGRect faceBoundingBox, xm_nuint_t imageWidth, xm_nuint_t imageHeight);
+CGPoint          xamarin_CGPoint__VNImagePointForFaceLandmarkPoint_Vector2_CGRect_nuint_nuint (struct Vector2f faceLandmarkPoint, CGRect faceBoundingBox, xm_nuint_t imageWidth, xm_nuint_t imageHeight);
 
 #ifndef XAMCORE_2_0
 #ifdef MONOMAC

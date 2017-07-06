@@ -98,6 +98,7 @@ namespace XamCore.Foundation {
 		static IntPtr mp = Dlfcn.dlopen (Constants.MediaPlayerLibrary, 1);
 		static IntPtr pc = Dlfcn.dlopen (Constants.PrintCoreLibrary, 1);
 		static IntPtr cml = Dlfcn.dlopen (Constants.CoreMLLibrary, 1);
+		static IntPtr vn = Dlfcn.dlopen (Constants.VisionLibrary, 1);
 #endif
 		// ** IF YOU ADD ITEMS HERE PLEASE UPDATE linker/ObjCExtensions.cs and mmp/linker/MonoMac.Tuner/MonoMacNamespaces.cs
 
