@@ -558,7 +558,7 @@ Global
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
 		$0.TextStylePolicy = $1
-		$1.FileWidth = 80
+		$1.FileWidth = 180
 		$1.TabWidth = 8
 		$1.IndentWidth = 8
 		$1.scope = text/x-csharp
@@ -581,5 +581,6 @@ Global
 		$2.SpaceAfterMethodCallName = True
 		$2.SpaceBeforeOpenSquareBracket = True
 		$2.scope = text/x-csharp
+		$2.SpaceAfterCast = True
 	EndGlobalSection
 EndGlobal

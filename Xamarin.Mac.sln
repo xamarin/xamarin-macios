@@ -326,7 +326,7 @@ Global
 		StartupItem = tools\mmp\mmp.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1
-		$1.FileWidth = 80
+		$1.FileWidth = 180
 		$1.TabWidth = 8
 		$1.IndentWidth = 8
 		$1.scope = text/x-csharp
@@ -349,6 +349,7 @@ Global
 		$2.SpaceAfterMethodCallName = True
 		$2.SpaceBeforeOpenSquareBracket = True
 		$2.scope = text/x-csharp
+		$2.SpaceAfterCast = True
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D12F0F7B-8DE3-43EC-BA49-41052D065A9B} = {542D4426-F287-4126-9889-E17628DAECEA}
