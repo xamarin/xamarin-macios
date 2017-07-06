@@ -1181,6 +1181,10 @@ Something unexpected occured when trying to reduce the metadata from the applica
 
 Something unexpected occured when trying to mark `NSObject` subclasses from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
+<h3><a name="MT2090"/>MT2090: Inliner failed processing `...`.</h3>
+
+Something unexpected occured when trying to inline code from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
 <!-- MT21xx: more linker errors -->
 
 <!--- 2100 used by mmp -->
