@@ -3853,6 +3853,9 @@ namespace XamCore.Registrar {
 				sb.AppendLine ($"{classVariableName} = {managedClassExpression};");
 			}
 
+			CheckNamespace (underlyingNativeType.Resolve (), exceptions);
+			CheckNamespace (underlyingManagedType.Resolve (), exceptions);
+
 			if (isManagedNullable || isManagedArray)
 				sb.AppendLine ($"if ({inputName}) {{");
 
@@ -3925,6 +3928,9 @@ namespace XamCore.Registrar {
 			} else {
 				sb.AppendLine ($"{classVariableName} = {managedClassExpression};");
 			}
+
+			CheckNamespace (underlyingNativeType.Resolve (), exceptions);
+			CheckNamespace (underlyingManagedType.Resolve (), exceptions);
 
 			if (isManagedNullable || isManagedArray)
 				sb.AppendLine ($"if ({inputName}) {{");
