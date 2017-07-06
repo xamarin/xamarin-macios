@@ -357,12 +357,16 @@ void xamarin_framework_peer_unlock ()
 MonoClass *
 xamarin_get_nsvalue_class ()
 {
+	if (nsvalue_class == NULL)
+		xamarin_assertion_message ("Internal consistency error, please file a bug (https://bugzilla.xamarin.com). Additional data: can't get the NSValue class because it's been linked away.\n");
 	return nsvalue_class;
 }
 
 MonoClass *
 xamarin_get_nsnumber_class ()
 {
+	if (nsnumber_class == NULL)
+		xamarin_assertion_message ("Internal consistency error, please file a bug (https://bugzilla.xamarin.com). Additional data: can't get the NSNumber class because it's been linked away.\n");
 	return nsnumber_class;
 }
 
@@ -399,6 +403,9 @@ xamarin_is_class_nsnumber (MonoClass *cls)
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 
+	if (nsnumber_class == NULL)
+		return false;
+
 	return mono_class_is_subclass_of (cls, nsnumber_class, false);
 }
 
@@ -408,6 +415,9 @@ xamarin_is_class_nsvalue (MonoClass *cls)
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 
+	if (nsvalue_class == NULL)
+		return false;
+
 	return mono_class_is_subclass_of (cls, nsvalue_class, false);
 }
 
@@ -416,6 +426,9 @@ xamarin_is_class_nsstring (MonoClass *cls)
 {
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
+
+	if (nsstring_class == NULL)
+		return false;
 
 	return mono_class_is_subclass_of (cls, nsstring_class, false);
 }
@@ -874,11 +887,11 @@ gc_enable_new_refcount (void)
 }
 
 static MonoClass *
-get_class_from_name (MonoImage* image, const char *nmspace, const char *name)
+get_class_from_name (MonoImage* image, const char *nmspace, const char *name, bool optional = false)
 {
 	// COOP: this is a convenience function executed only at startup, I believe the mode here doesn't matter.	
 	MonoClass *rv = mono_class_from_name (image, nmspace, name);
-	if (!rv)
+	if (!rv && !optional)
 		xamarin_assertion_message ("Fatal error: failed to load the class '%s.%s'\n.", nmspace, name);
 	return rv;
 }
@@ -1299,9 +1312,9 @@ xamarin_initialize ()
 	runtime_class = get_class_from_name (platform_image, objcruntime, "Runtime");
 	inativeobject_class = get_class_from_name (platform_image, objcruntime, "INativeObject");
 	nsobject_class = get_class_from_name (platform_image, foundation, "NSObject");
-	nsnumber_class = get_class_from_name (platform_image, foundation, "NSNumber");
-	nsvalue_class = get_class_from_name (platform_image, foundation, "NSValue");
-	nsstring_class = get_class_from_name (platform_image, foundation, "NSString");
+	nsnumber_class = get_class_from_name (platform_image, foundation, "NSNumber", true);
+	nsvalue_class = get_class_from_name (platform_image, foundation, "NSValue", true);
+	nsstring_class = get_class_from_name (platform_image, foundation, "NSString", true);
 
 	mono_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::xamarin_release_managed_ref" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::xamarin_release_managed_ref", (const void *) xamarin_release_managed_ref);
 	mono_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::xamarin_create_managed_ref" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::xamarin_create_managed_ref", (const void *) xamarin_create_managed_ref);
