@@ -42,7 +42,7 @@ namespace MonoTests.System.Net.Http
 		[TestCase (typeof (NSUrlSessionHandler))]
 		public void DnsFailure (Type handlerType)
 		{
-			// workaround until https://bugzilla.xamarin.com/show_bug.cgi?id=57062 is fixed.
+			// workaround until https://bugzilla.xamarin.com/show_bug.cgi?id=57825 is fixed.
 			PrintHandlerToTest ();
 
 			bool done = false;
