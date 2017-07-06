@@ -646,7 +646,7 @@ namespace XamCore.Registrar {
 					case "System.Boolean":
 						return true;
 					default:
-						return false;
+						return Registrar.IsEnum (underlyingOutputType);
 					}
 				} else if (Registrar.Is (underlyingInputType, Foundation, "NSValue")) {
 					// Remove 'MonoMac.' namespace prefix to make switch smaller
