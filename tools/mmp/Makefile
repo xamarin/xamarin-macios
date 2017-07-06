@@ -92,6 +92,7 @@ tuner_sources = \
 	../linker/MonoTouch.Tuner/Extensions.cs	\
 	../linker/MonoTouch.Tuner/ListExportedSymbols.cs	\
 	../linker/MonoTouch.Tuner/ProcessExportedFields.cs	\
+	../linker/MonoTouch.Tuner/PreserveSmartEnumConversionsSubStep.cs		\
 	../../src/build/mac/Constants.cs
 
 linker_resources = \

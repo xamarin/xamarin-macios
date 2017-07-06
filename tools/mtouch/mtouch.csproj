@@ -329,6 +329,9 @@
     <Compile Include="..\linker\MonoTouch.Tuner\InlinerSubStep.cs">
       <Link>MonoTouch.Tuner\InlinerSubStep.cs</Link>
     </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\PreserveSmartEnumConversionsSubStep.cs">
+      <Link>MonoTouch.Tuner\PreserveSmartEnumConversionsSubStep.cs</Link>
+    </Compile>
     <Compile Include="..\common\BuildTasks.cs">
       <Link>common\BuildTasks.cs</Link>
     </Compile>

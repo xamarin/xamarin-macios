@@ -253,6 +253,9 @@
     <Compile Include="..\linker\MonoTouch.Tuner\ProcessExportedFields.cs">
       <Link>MonoTouch.Tuner\ProcessExportedFields.cs</Link>
     </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\PreserveSmartEnumConversionsSubStep.cs">
+      <Link>MonoTouch.Tuner\PreserveSmartEnumConversionsSubStep.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\build\mac\Constants.cs">
       <Link>external\Constants.cs</Link>
     </Compile>

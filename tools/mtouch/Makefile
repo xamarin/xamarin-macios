@@ -69,6 +69,7 @@ LINKER_SOURCES = \
 	$(LINKER_DIR)/MonoTouch.Tuner/RemoveAttributes.cs		\
 	$(LINKER_DIR)/MonoTouch.Tuner/RemoveCode.cs			\
 	$(LINKER_DIR)/MonoTouch.Tuner/SealerSubStep.cs	\
+	$(LINKER_DIR)/MonoTouch.Tuner/PreserveSmartEnumConversionsSubStep.cs		\
 	$(TOP)/tools/linker/ApplyPreserveAttribute.cs 		\
 	$(TOP)/tools/linker/BaseProfile.cs			\
 	$(TOP)/tools/linker/CoreHttpMessageHandler.cs	\
