@@ -334,6 +334,7 @@ namespace xharness
 				"src/generator.cs",
 				"src/generator-enums.cs",
 				"src/generator-filters.cs",
+				"tests/generator",
 			};
 			var mac_binding_project = new string [] {
 				"msbuild",
