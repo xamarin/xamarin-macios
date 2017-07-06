@@ -3734,6 +3734,8 @@ namespace XamCore.Registrar {
 			case "System.nfloat": return "xamarin_nfloat_to_nsnumber";
 			case "System.Boolean": return "xamarin_bool_to_nsnumber";
 			default:
+				if (IsEnum (managedType))
+					return GetManagedToNSNumberFunc (GetEnumUnderlyingType (managedType), inputType, outputType, descriptiveMethodName);
 				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 			}
 		}
@@ -3757,6 +3759,8 @@ namespace XamCore.Registrar {
 			case "System.nfloat": nativeType = "CGFloat"; return "xamarin_nsnumber_to_nfloat";
 			case "System.Boolean": nativeType = "BOOL"; return "xamarin_nsnumber_to_bool";
 			default:
+				if (IsEnum (managedType))
+					return GetNSNumberToManagedFunc (GetEnumUnderlyingType (managedType), inputType, outputType, descriptiveMethodName, out nativeType);
 				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 			}
 		}

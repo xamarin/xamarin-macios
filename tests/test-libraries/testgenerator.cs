@@ -58,6 +58,8 @@ static class C {
 		public string Map;
 		public string MapFrom;
 		public Version MinXcodeVersion;
+		public string ToNSNumberCastExpression;
+		public string FromNSNumberCastExpression;
 	}
 
 	static BindAsData [] bindas_nsnumber = new [] {
@@ -75,6 +77,7 @@ static class C {
 		new BindAsData { Managed = "nuint", Native = "NSUInteger", ManagedNewExpression = "((nuint) 1)", Map = ".NUIntValue" },
 		new BindAsData { Managed = "nfloat", Native = "NSFloat", ManagedNewExpression = "((nfloat) 1)", Map = ".NFloatValue" },
 		new BindAsData { Managed = "Boolean", Native = "BOOL", ManagedNewExpression = "true", Map = ".BoolValue" },
+		new BindAsData { Managed = "NSStreamStatus", Native = "NSStreamStatus", ManagedNewExpression = "NSStreamStatus.Closed", Map = ".UInt64Value", ToNSNumberCastExpression = "(ulong) ", FromNSNumberCastExpression = "(NSStreamStatus) " },
 	};
 	static BindAsData[] bindas_nsvalue = new [] {
 		new BindAsData { Managed = "CGAffineTransform", Native = "CGAffineTransform", ManagedNewExpression = "new CGAffineTransform (1, 2, 3, 4, 5, 6)", Map = ".CGAffineTransformValue", MapFrom = "FromCGAffineTransform" },
@@ -956,13 +959,13 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ();
 
 			w.AppendLine ($"\t\t\t\tvar value = {v.ManagedNewExpression};");
-			w.AppendLine ($"\t\t\t\tusing (var input = new NSNumber (value))");
+			w.AppendLine ($"\t\t\t\tusing (var input = new NSNumber ({v.ToNSNumberCastExpression}value))");
 			w.AppendLine ($"\t\t\t\t\tMessaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle (\"set{v.Managed}NumberNullable:\"), input.Handle);");
 			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value, obj.{v.Managed}Number, \"after setting A\");");
 			w.AppendLine ();
 
 			w.AppendLine ($"\t\t\t\tobj.{v.Managed}Number = null;");
-			w.AppendLine ($"\t\t\t\tusing (var input = new NSNumber (value))");
+			w.AppendLine ($"\t\t\t\tusing (var input = new NSNumber ({v.ToNSNumberCastExpression}value))");
 			w.AppendLine ($"\t\t\t\t\tMessaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle (\"set{v.Managed}NumberNonNullable:\"), input.Handle);");
 			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value, obj.{v.Managed}Number.Value, \"after setting B\");");
 			w.AppendLine ();
@@ -975,13 +978,13 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ($"\t\t\t\tvalue = {v.ManagedNewExpression};");
 			w.AppendLine ($"\t\t\t\tobj.{v.Managed}Number = value;");
 			w.AppendLine ($"\t\t\t\tnumber = Runtime.GetNSObject<NSNumber> (Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle (\"get{v.Managed}NumberNullable\")));");
-			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value, number{v.Map}, \"getter B\");");
+			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value, {v.FromNSNumberCastExpression}number{v.Map}, \"getter B\");");
 			w.AppendLine ();
 
 			w.AppendLine ($"\t\t\t\tvalue = {v.ManagedNewExpression};");
 			w.AppendLine ($"\t\t\t\tobj.{v.Managed}Number = value;");
 			w.AppendLine ($"\t\t\t\tnumber = Runtime.GetNSObject<NSNumber> (Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle (\"get{v.Managed}NumberNonNullable\")));");
-			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value, number{v.Map}, \"getter C\");");
+			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value, {v.FromNSNumberCastExpression}number{v.Map}, \"getter C\");");
 			w.AppendLine ($"\t\t\t}}");
 			w.AppendLine ("\t\t}");
 
@@ -1032,14 +1035,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ();
 
 			w.AppendLine ($"\t\t\t\tvar value = new {v.Managed} [] {{ {v.ManagedNewExpression} }};");
-			w.AppendLine ($"\t\t\t\tusing (var input = NSArray.FromNSObjects<{v.Managed}> ((v) => new NSNumber (v), value))");
+			w.AppendLine ($"\t\t\t\tusing (var input = NSArray.FromNSObjects<{v.Managed}> ((v) => new NSNumber ({v.ToNSNumberCastExpression}v), value))");
 			w.AppendLine ($"\t\t\t\t\tMessaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle (\"set{v.Managed}Array:\"), input.Handle);");
 			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value.Length, obj.{v.Managed}Array.Length, \"after setting A\");");
 			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value [0], obj.{v.Managed}Array [0], \"after setting A element\");");
 			w.AppendLine ();
 
 			w.AppendLine ($"\t\t\t\tobj.{v.Managed}Array = null;");
-			w.AppendLine ($"\t\t\t\tusing (var input = NSArray.FromNSObjects<{v.Managed}> ((v) => new NSNumber (v), value))");
+			w.AppendLine ($"\t\t\t\tusing (var input = NSArray.FromNSObjects<{v.Managed}> ((v) => new NSNumber ({v.ToNSNumberCastExpression}v), value))");
 			w.AppendLine ($"\t\t\t\t\tMessaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle (\"set{v.Managed}Array:\"), input.Handle);");
 			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value.Length, obj.{v.Managed}Array.Length, \"after setting B\");");
 			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value [0], obj.{v.Managed}Array [0], \"after setting B element\");");
@@ -1054,7 +1057,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ($"\t\t\t\tobj.{v.Managed}Array = value;");
 			w.AppendLine ($"\t\t\t\tarray = Runtime.GetNSObject<NSArray> (Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle (\"get{v.Managed}Array\")));");
 			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value.Length, array.Count, \"getter B\");");
-			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value [0], array.GetItem<NSNumber> (0){v.Map}, \"getter B element\");");
+			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value [0], {v.FromNSNumberCastExpression}array.GetItem<NSNumber> (0){v.Map}, \"getter B element\");");
 			w.AppendLine ();
 
 			w.AppendLine ($"\t\t\t}}");

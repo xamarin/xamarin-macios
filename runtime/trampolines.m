@@ -957,6 +957,8 @@ xamarin_get_nsnumber_converter (MonoClass *managedType, MonoMethod *method, bool
 			func = to_managed ? (void *) xamarin_nsnumber_to_nuint : (void *) xamarin_nuint_to_nsnumber;
 		} else if (!strcmp (fullname, "System.nfloat")) {
 			func = to_managed ? (void *) xamarin_nsnumber_to_nfloat : (void *) xamarin_nfloat_to_nsnumber;
+		} else if (mono_class_is_enum (managedType)) {
+			func = xamarin_get_nsnumber_converter (mono_class_from_mono_type (mono_class_enum_basetype (managedType)), method, to_managed, exception_gchandle);
 		} else {
 			*exception_gchandle = xamarin_create_bindas_exception (mono_class_get_type (managedType), mono_class_get_type (xamarin_get_nsnumber_class ()), method);
 			goto exception_handling;
