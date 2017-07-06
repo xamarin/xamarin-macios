@@ -22,6 +22,13 @@ namespace MonoTests.System.Net.Http
 	[TestFixture]
 	public class MessageHandlerTest
 	{
+		void PrintHandlerToTest ()
+		{
+			Console.WriteLine (new HttpClientHandler ());
+			Console.WriteLine (new CFNetworkHandler ());
+			Console.WriteLine (new NSUrlSessionHandler ());
+		}
+
 		HttpMessageHandler GetHandler (Type handler_type)
 		{
 			return (HttpMessageHandler) Activator.CreateInstance (handler_type);
@@ -35,6 +42,9 @@ namespace MonoTests.System.Net.Http
 		[TestCase (typeof (NSUrlSessionHandler))]
 		public void DnsFailure (Type handlerType)
 		{
+			// workaround until https://bugzilla.xamarin.com/show_bug.cgi?id=57062 is fixed.
+			PrintHandlerToTest ();
+
 			bool done = false;
 			Exception ex = null;
 
