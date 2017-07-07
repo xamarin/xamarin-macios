@@ -120,12 +120,10 @@ namespace Xamarin.Tests
 				if (!int.TryParse (line.Substring (2, 4), out msg.Number))
 					continue; // something else
 
-				line = line.Substring (6);
+				line = line.Substring (8);
 				var toolName = MessageToolName;
 				if (toolName != null && line.StartsWith (toolName + ": ", StringComparison.Ordinal))
 					line = line.Substring (toolName.Length + 2);
-				else if (line.StartsWith (": ", StringComparison.Ordinal))
-					line = line.Substring (2);
 
 				msg.Message = line;
 
