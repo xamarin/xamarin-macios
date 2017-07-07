@@ -43,21 +43,21 @@ namespace XamCore.Vision {
 		InvalidOperation,
 		InvalidImage,
 		InvalidArgument,
-		InvalidModel
+		InvalidModel,
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[Native]
 	public enum VNRequestTrackingLevel : nuint {
 		Accurate = 0,
-		Fast
+		Fast,
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	public enum VNImageCropAndScaleOption : uint {
 		CenterCrop = 0,
 		ScaleFit = 1,
-		ScaleFill
+		ScaleFill,
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
