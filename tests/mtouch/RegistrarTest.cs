@@ -759,6 +759,54 @@ class X : ReplayKit.RPBroadcastControllerDelegate
 		}
 
 		[Test]
+		public void MT4171 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var code = @"
+				namespace NS {
+					using System;
+					using Foundation;
+					using ObjCRuntime;
+					class X : NSObject {
+						[Export (""a:"")]
+						void A ([BindAs (typeof (DateTime), OriginalType = typeof (NSNumber))] ConsoleColor value) {}
+
+						[Export (""b:"")]
+						void B ([BindAs (typeof (DateTime?), OriginalType = typeof (NSNumber))] ConsoleColor? value) {}
+
+						[Export (""C"")]
+						[return: BindAs (typeof (DateTime), OriginalType = typeof (NSNumber))] 
+						ConsoleColor C () { throw new NotImplementedException (); }
+
+						[Export (""d"")]
+						[return: BindAs (typeof (DateTime?), OriginalType = typeof (NSNumber))] 
+						ConsoleColor? D () { throw new NotImplementedException (); }
+
+						[Export (""E"")]
+						[BindAs (typeof (DateTime), OriginalType = typeof (NSNumber))] 
+						ConsoleColor E { get; set; }
+
+						[Export (""F"")]
+						[BindAs (typeof (DateTime?), OriginalType = typeof (NSNumber))] 
+						ConsoleColor? F { get; set; }
+					}
+				}";
+				mtouch.Linker = MTouchLinker.DontLink; // faster
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: code, extraArg: "-debug");
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (4138, "The registrar cannot marshal the property type 'System.ConsoleColor' of the property 'NS.X.E'.", "testApp.cs", 23);
+				mtouch.AssertError (4138, "The registrar cannot marshal the property type 'System.Nullable`1<System.ConsoleColor>' of the property 'NS.X.F'.", "testApp.cs", 27);
+				mtouch.AssertError (4171, "The BindAs attribute on the parameter #1 is invalid: the BindAs type System.DateTime is different from the parameter type System.ConsoleColor.", "testApp.cs", 8);
+				mtouch.AssertError (4171, "The BindAs attribute on the parameter #1 is invalid: the BindAs type System.Nullable`1<System.DateTime> is different from the parameter type System.Nullable`1<System.ConsoleColor>.", "testApp.cs", 11);
+				mtouch.AssertError (4171, "The BindAs attribute on the return value of the method NS.X.C is invalid: the BindAs type System.DateTime is different from the return type System.ConsoleColor.", "testApp.cs", 15);
+				mtouch.AssertError (4171, "The BindAs attribute on the return value of the method NS.X.D is invalid: the BindAs type System.Nullable`1<System.DateTime> is different from the return type System.Nullable`1<System.ConsoleColor>.", "testApp.cs", 19);
+				mtouch.AssertErrorCount (8 /* 2 errors are duplicated */);
+			}
+		}
+
+		[Test]
 		public void MT4172 ()
 		{
 			using (var mtouch = new MTouchTool ()) {
