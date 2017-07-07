@@ -85,10 +85,12 @@ namespace XamCore.CoreBluetooth {
 
 		[NoTV]
 		[Availability (Obsoleted = Platform.iOS_9_0)]
+		[Mac (10, 7, onlyOn64: true)] // Was removed from 32-bit in 10.13 unannounced
 		[Export ("retrievePeripherals:"), Internal]
 		void RetrievePeripherals (NSArray peripheralUUIDs);
 
 		[NoTV]
+		[Mac (10, 7, onlyOn64: true)] // Was removed from 32-bit in 10.13 unannounced
 		[Export ("retrieveConnectedPeripherals")]
 		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0, Message = "Use 'RetrievePeripheralsWithIdentifiers' instead.")]
 		void RetrieveConnectedPeripherals ();
@@ -440,6 +442,7 @@ namespace XamCore.CoreBluetooth {
 		[NoTV]
 		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0)]
 		[Export ("isConnected")]
+		[Mac (10, 7, onlyOn64: true)] // Was removed from 32-bit in 10.13 unannounced
 		bool IsConnected { get;  }
 
 		[Export ("services", ArgumentSemantic.Retain)]
