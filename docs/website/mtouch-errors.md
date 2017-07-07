@@ -1550,7 +1550,26 @@ Please check the reported error message for the underlying cause.
 
 ### <a name="MT4170"/>MT4170: The registrar can't convert from '{managed type}' to '{native type}' for the return value in the method {method}.
 
+See the description of error <a href="#MT4172">MT4172</a>.
+
+### <a name="MT4171"/>MT4171: The BindAs attribute on the member {member} is invalid: the BindAs type {type} is different from the property type {type}.
+
+Please make sure the type in the BindAs attribute matches the type of the member it's attached to.
+
 ### <a name="MT4172"/>MT4172: The registrar can't convert from '{native type}' to '{managed type}' for the parameter '{parameter name}' in the method {method}.
+
+The registrar does not support converting between the mentioned types.
+
+This is a bug in Xamarin.iOS if the API in question is provided by Xamarin.iOS;
+please file a bug at [http://bugzilla.xamarin.com][1].
+
+If you run into this while developing a binding project for a native library,
+we're open to adding support for new combinations of types. If this is the
+case, please file an enhancement request ([http://bugzilla.xamarin.com][2])
+with a test case and we'll evaluate it.
+
+[1]: https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS
+[2]: https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS&component=General&bug_severity=enhancement
 
 # MT5xxx: GCC and toolchain error messages
 
