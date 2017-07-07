@@ -15185,7 +15185,7 @@ namespace XamCore.Foundation
 
 	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
-	interface NSFileProviderMessageInterface
+	interface NSFileProviderMessageInterface : NSSecureCoding
 	{
 		[Export ("name")]
 		string Name { get; }
@@ -15228,7 +15228,8 @@ namespace XamCore.Foundation
 	}
 
 	[Mac (10,8)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof(NSObject), Name="NSXPCConnection")]
+	[DisableDefaultCtor]
 	interface NSXpcConnection : NSXpcProxyCreating
 	{
 		[Export ("initWithServiceName:")]
@@ -15294,7 +15295,8 @@ namespace XamCore.Foundation
 	}
 
 	[Mac (10,8)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof(NSObject), Name="NSXPCListener")]
+	[DisableDefaultCtor]
 	interface NSXpcListener
 	{
 		[Static]
@@ -15328,7 +15330,7 @@ namespace XamCore.Foundation
 	interface INSXpcListenerDelegate { }
 
 	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof(NSObject), Name="NSXPCListenerDelegate")]
 	interface NSXpcListenerDelegate
 	{
 		[Export ("listener:shouldAcceptNewConnection:")]
@@ -15336,7 +15338,8 @@ namespace XamCore.Foundation
 	}
 
 	[Mac (10,8)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof(NSObject), Name="NSXPCInterface")]
+	[DisableDefaultCtor]
 	interface NSXpcInterface
 	{
 		[Static]
@@ -15361,7 +15364,9 @@ namespace XamCore.Foundation
 	}
 
 	[Mac (10,8)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof(NSObject), Name="NSXPCListenerEndpoint"git diff
+	          )]
+	[DisableDefaultCtor]
 	interface NSXpcListenerEndpoint : NSSecureCoding
 	{
 	}

@@ -277,6 +277,8 @@ namespace Introspection {
 			case "CoreData.NSPersistentStoreCoordinator":
 			case "AppKit.NSColorPanel":
 			case "MonoMac.AppKit.NSColorPanel":
+			case "Foundation.NSFileProviderService":
+			case "MonoMac.Foundation.NSFileProviderService":
 				do_not_dispose.Add (obj);
 				break;
 			// 10.11
