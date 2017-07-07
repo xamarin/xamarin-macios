@@ -1590,7 +1590,7 @@ namespace XamCore.Registrar {
 			switch (attrib.ConstructorArguments.Count) {
 			case 1:
 				var t1 = (TypeReference) attrib.ConstructorArguments [0].Value;
-				return new BindAsAttribute (t1 != null ? t1.Resolve () : null) { OriginalType = originalType };
+				return new BindAsAttribute (t1) { OriginalType = originalType };
 			default:
 				throw ErrorHelper.CreateError (4124, "Invalid BindAsAttribute found on '{0}.{1}'. Please file a bug report at https://bugzilla.xamarin.com", member.DeclaringType.FullName, member.Name);
 			}
@@ -4258,12 +4258,12 @@ namespace XamCore.Registrar {
 
 	class BindAsAttribute : Attribute
 	{
-		public BindAsAttribute (TypeDefinition type)
+		public BindAsAttribute (TypeReference type)
 		{
 			this.Type = type;
 		}
 
-		public TypeDefinition Type { get; set; }
+		public TypeReference Type { get; set; }
 		public TypeReference OriginalType { get; set; }
 	}
 

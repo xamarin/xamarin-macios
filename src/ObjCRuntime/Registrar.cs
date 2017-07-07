@@ -1046,13 +1046,34 @@ namespace XamCore.Registrar {
 		public BindAsAttribute GetBindAsAttribute (ObjCMethod method, int parameter_index)
 		{
 			var attrib = GetBindAsAttribute (method.Method, parameter_index);
-			if (attrib != null)
+			if (attrib != null) {
+				var type = parameter_index == -1 ? GetReturnType (method.Method) : GetParameters (method.Method) [parameter_index];
+				if (parameter_index == -1) {
+					var returnType = GetReturnType (method.Method);
+					if (!AreEqual (returnType, attrib.Type))
+						throw CreateException (4171, method.Method, $"The BindAs attribute on the return value of the method {method.DescriptiveMethodName} is invalid: the BindAs type {GetTypeFullName (attrib.Type)} is different from the return type {GetTypeFullName (returnType)}.");
+				} else {
+					var parameterType = GetParameters (method.Method) [parameter_index];
+					if (IsByRef (parameterType))
+						parameterType = GetElementType (parameterType);
+					if (!AreEqual (parameterType, attrib.Type))
+						throw CreateException (4171, method.Method, $"The BindAs attribute on the parameter #{parameter_index + 1} is invalid: the BindAs type {GetTypeFullName (attrib.Type)} is different from the parameter type {GetTypeFullName (parameterType)}.");
+				}
+
 				return attrib;
+			}
 
 			if (!method.IsPropertyAccessor)
 				return null;
 
-			return GetBindAsAttribute (FindProperty (method.DeclaringType.Type, method.MethodName.Substring (4)));
+			var property = FindProperty (method.DeclaringType.Type, method.MethodName.Substring (4));
+			attrib = GetBindAsAttribute (property);
+			if (attrib != null) {
+				var propertyType = GetPropertyType (property);
+				if (!AreEqual (propertyType, attrib.Type))
+					throw CreateException (4171, property, $"The BindAs attribute on the property {GetTypeFullName (method.DeclaringType.Type)}.{GetPropertyName (property)} is invalid: the BindAs type {GetTypeFullName (attrib.Type)} is different from the property type {GetTypeFullName (propertyType)}.");
+			}
+			return attrib;
 		}
 
 		bool IsSmartEnum (TType type)
