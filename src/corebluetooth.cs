@@ -518,7 +518,7 @@ namespace XamCore.CoreBluetooth {
 		// This API was removed or never existed. Can't cleanly remove due to EventsArgs/Delegate
 		[Availability (Introduced=Platform.iOS_8_0)]
 		[Export ("xamarin:selector:removed:"), EventArgs ("CBRssi")]
-		[Obsolete ("No longer an OS X API - it will never be called")]
+		[Obsolete ("It will never be called.")]
 		void RssiRead (CBPeripheral peripheral, NSNumber rssi, NSError error);
 #endif
 #else

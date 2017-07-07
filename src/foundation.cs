@@ -882,7 +882,7 @@ namespace XamCore.Foundation
 
 #if MONOMAC
 	// Obsolete, but the only API surfaced by WebKit.WebHistory.
-	[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10, Message="Obsolete, use NSCalendar and NSDateComponents")]
+	[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10, Message="Obsolete, use NSCalendar and NSDateComponents.")]
 	[BaseType (typeof (NSDate))]
 	interface NSCalendarDate {
 		[Export ("initWithString:calendarFormat:locale:")]
@@ -12693,11 +12693,11 @@ namespace XamCore.Foundation
 		IntPtr _InitRecordDescriptor ();
 
 #if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead")]
+		[Obsolete ("Use the constructor instead.")]
 		[Export ("initListDescriptor")]
 		NSObject InitListDescriptor ();
 
-		[Obsolete ("Use the constructor instead")]
+		[Obsolete ("Use the constructor instead.")]
 		[Export ("initRecordDescriptor")]
 		NSObject InitRecordDescriptor ();
 #endif
