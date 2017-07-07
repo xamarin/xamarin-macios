@@ -24,8 +24,10 @@ namespace MonoTests.System.Net.Http
 	{
 		void PrintHandlerToTest ()
 		{
+#if !__WATCHOS__
 			Console.WriteLine (new HttpClientHandler ());
 			Console.WriteLine (new CFNetworkHandler ());
+#endif
 			Console.WriteLine (new NSUrlSessionHandler ());
 		}
 
