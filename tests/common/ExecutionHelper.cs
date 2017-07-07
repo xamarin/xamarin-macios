@@ -124,8 +124,10 @@ namespace Xamarin.Tests
 				var toolName = MessageToolName;
 				if (toolName != null && line.StartsWith (toolName + ": ", StringComparison.Ordinal))
 					line = line.Substring (toolName.Length + 2);
-				
-				msg.Message = line.Substring (8);
+				else if (line.StartsWith (": ", StringComparison.Ordinal))
+					line = line.Substring (2);
+
+				msg.Message = line;
 
 				if (!string.IsNullOrEmpty (origin)) {
 					var idx = origin.IndexOf ('(');
