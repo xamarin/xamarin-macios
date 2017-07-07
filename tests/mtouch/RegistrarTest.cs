@@ -741,19 +741,20 @@ class X : ReplayKit.RPBroadcastControllerDelegate
 					using ObjCRuntime;
 					class X : NSObject {
 						[Export (""a"")]
-						[return: BindAs (typeof (ConsoleColor), OriginalType = typeof (NSNumber))] 
-						ConsoleColor A () { throw new NotImplementedException (); }
+						[return: BindAs (typeof (DateTime), OriginalType = typeof (NSNumber))] 
+						DateTime A () { throw new NotImplementedException (); }
 						[Export (""b"")]
-						[return: BindAs (typeof (ConsoleColor?), OriginalType = typeof (NSNumber))] 
-						ConsoleColor? B () { throw new NotImplementedException (); }
+						[return: BindAs (typeof (DateTime?), OriginalType = typeof (NSNumber))] 
+						DateTime? B () { throw new NotImplementedException (); }
 					}
 				}";
 				mtouch.Linker = MTouchLinker.DontLink; // faster
 				mtouch.Registrar = MTouchRegistrar.Static;
 				mtouch.CreateTemporaryApp (extraCode: code, extraArg: "-debug");
+				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertError (4170, "The registrar can't convert from 'System.ConsoleColor' to 'Foundation.NSNumber' for the return value in the method NS.X.A.", "testApp.cs", 9);
-				mtouch.AssertError (4170, "The registrar can't convert from 'System.Nullable`1<System.ConsoleColor>' to 'Foundation.NSNumber' for the return value in the method NS.X.B.", "testApp.cs", 12);
+				mtouch.AssertError (4170, "The registrar can't convert from 'System.DateTime' to 'Foundation.NSNumber' for the return value in the method NS.X.A.", "testApp.cs", 9);
+				mtouch.AssertError (4170, "The registrar can't convert from 'System.Nullable`1<System.DateTime>' to 'Foundation.NSNumber' for the return value in the method NS.X.B.", "testApp.cs", 12);
 				mtouch.AssertErrorCount (4 /* errors are duplicated */);
 			}
 		}
@@ -817,9 +818,9 @@ class X : ReplayKit.RPBroadcastControllerDelegate
 					using ObjCRuntime;
 					class X : NSObject {
 						[Export (""a:"")]
-						void A ([BindAs (typeof (ConsoleColor), OriginalType = typeof (NSNumber))] ConsoleColor value) {}
+						void A ([BindAs (typeof (DateTime), OriginalType = typeof (NSNumber))] DateTime value) {}
 						[Export (""b:"")]
-						void B ([BindAs (typeof (ConsoleColor?), OriginalType = typeof (NSNumber))] ConsoleColor? value) {}
+						void B ([BindAs (typeof (DateTime?), OriginalType = typeof (NSNumber))] DateTime? value) {}
 						[Export (""d:"")]
 						void D ([BindAs (typeof (int?[]), OriginalType = typeof (NSNumber[]))] int?[] value) {}
 						[Export (""e:"")]
@@ -845,8 +846,8 @@ class X : ReplayKit.RPBroadcastControllerDelegate
 				mtouch.Registrar = MTouchRegistrar.Static;
 				mtouch.CreateTemporaryApp (extraCode: code, extraArg: "-debug");
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertError (4172, "The registrar can't convert from 'System.ConsoleColor' to 'Foundation.NSNumber' for the parameter 'value' in the method NS.X.A.", "testApp.cs", 8);
-				mtouch.AssertError (4172, "The registrar can't convert from 'System.Nullable`1<System.ConsoleColor>' to 'Foundation.NSNumber' for the parameter 'value' in the method NS.X.B.", "testApp.cs", 10);
+				mtouch.AssertError (4172, "The registrar can't convert from 'System.DateTime' to 'Foundation.NSNumber' for the parameter 'value' in the method NS.X.A.", "testApp.cs", 8);
+				mtouch.AssertError (4172, "The registrar can't convert from 'System.Nullable`1<System.DateTime>' to 'Foundation.NSNumber' for the parameter 'value' in the method NS.X.B.", "testApp.cs", 10);
 				mtouch.AssertError (4172, "The registrar can't convert from 'System.Nullable`1<System.Int32>[]' to 'Foundation.NSNumber[]' for the parameter 'value' in the method NS.X.D.", "testApp.cs", 12);
 				mtouch.AssertError (4172, "The registrar can't convert from 'System.Int32&' to 'Foundation.NSNumber' for the parameter 'value' in the method NS.X.E.", "testApp.cs", 14);
 				mtouch.AssertError (4172, "The registrar can't convert from 'System.Int32&' to 'Foundation.NSNumber' for the parameter 'value' in the method NS.X.F.", "testApp.cs", 16);
