@@ -3143,18 +3143,40 @@ public partial class Generator : IMemberGatherer {
 
 		if (type == TypeManager.System_Void)
 			return "void";
+		if (type == TypeManager.System_SByte)
+			return "sbyte";
 		if (type == TypeManager.System_Int32)
 			return "int";
 		if (type == TypeManager.System_Int16)
 			return "short";
+		if (type == TypeManager.System_Int64)
+			return "long";
+		if (type == TypeManager.System_Byte)
+			return "byte";
+		if (type == TypeManager.System_UInt16)
+			return "ushort";
+		if (type == TypeManager.System_UInt32)
+			return "uint";
+		if (type == TypeManager.System_UInt64)
+			return "ulong";
 		if (type == TypeManager.System_Byte)
 			return "byte";
 		if (type == TypeManager.System_Float)
 			return "float";
+		if (type == TypeManager.System_Double)
+			return "double";
 		if (type == TypeManager.System_Boolean)
 			return "bool";
 		if (type == TypeManager.System_String)
 			return "string";
+		if (type == TypeManager.System_nfloat)
+			return "nfloat";
+		if (type == TypeManager.System_nint)
+			return "nint";
+		if (type == TypeManager.System_nuint)
+			return "nuint";
+		if (type == TypeManager.System_Boolean)
+			return "bool";
 
 		if (type.IsArray)
 			return FormatTypeUsedIn (usedInNamespace, type.GetElementType ()) + "[" + new string (',', type.GetArrayRank () - 1) + "]";
@@ -3167,6 +3189,9 @@ public partial class Generator : IMemberGatherer {
 
 		var targs = type.GetGenericArguments ();
 		if (targs.Length > 0) {
+			var isNullable = TypeManager.GetUnderlyingNullableType (type) != null;
+			if (isNullable)
+				return FormatTypeUsedIn (usedInNamespace, targs [0]) + "?";
 			return RemoveArity (tname) + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (usedInNamespace, l)).ToArray ()) + ">";
 		}
 
