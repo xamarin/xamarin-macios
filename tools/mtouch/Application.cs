@@ -1340,6 +1340,13 @@ namespace Xamarin.Bundler {
 				RootAssemblies.Add (Path.Combine (Driver.GetPlatformFrameworkDirectory (this), Driver.GetProductAssembly (this) + ".dll"));
 			}
 
+			if (Platform == ApplePlatform.iOS) {
+				if (DeploymentTarget.Major >= 11 && Is32Build) {
+					var invalidArches = abis.Where ((v) => (v & Abi.Arch32Mask) != 0);
+					throw ErrorHelper.CreateError (116, $"Invalid architecture: {invalidArches.First ()}. 32-bit architectures are not supported when deployment target is 11 or later.");
+				}
+			}
+
 			InitializeCommon ();
 
 			Driver.Watch ("Resolve References", 1);

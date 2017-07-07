@@ -1308,6 +1308,23 @@ namespace Xamarin
 		}
 
 		[Test]
+		[TestCase ("armv7", "ARMv7")]
+		[TestCase ("armv7s", "ARMv7s")]
+		[TestCase ("armv7,armv7s", "ARMv7")]
+		[TestCase ("i386", "i386")]
+		public void MT0116 (string abi, string messageAbi)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.TargetVer = "11.0";
+				mtouch.Abi = abi;
+				mtouch.AssertExecuteFailure (abi == "i386" ? MTouchAction.BuildSim : MTouchAction.BuildDev, "build");
+				mtouch.AssertError (116, $"Invalid architecture: {messageAbi}. 32-bit architectures are not supported when deployment target is 11 or later.");
+			}
+		}
+
+		[Test]
 		public void MT0125 ()
 		{
 			using (var mtouch = new MTouchTool ()) {
