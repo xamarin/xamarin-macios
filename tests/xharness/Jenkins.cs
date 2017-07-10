@@ -2299,12 +2299,14 @@ function oninitialload ()
 						ExecutionResult = TestExecutingResult.Running;
 						var result = await proc.RunAsync (log, true, Timeout);
 						if (result.TimedOut) {
-							log.WriteLine ("Execution timed out after {0} minutes.", Timeout.Minutes);
+							FailureMessage = $"Execution timed out after {Timeout.Minutes} minutes.";
+							log.WriteLine (FailureMessage);
 							ExecutionResult = TestExecutingResult.TimedOut;
 						} else if (result.Succeeded) {
 							ExecutionResult = TestExecutingResult.Succeeded;
 						} else {
 							ExecutionResult = TestExecutingResult.Failed;
+							FailureMessage = $"Execution failed with exit code {result.ExitCode}";
 						}
 					}
 					Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
