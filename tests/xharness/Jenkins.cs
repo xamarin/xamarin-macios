@@ -558,8 +558,8 @@ namespace xharness
 				Jenkins = this,
 				Platform = TestPlatform.iOS,
 				TestName = "BTouch tests",
-				Target = "wrench-btouch",
-				WorkingDirectory = Harness.RootDirectory,
+				Target = "all",
+				WorkingDirectory = Path.Combine (Harness.RootDirectory, "generator"),
 				Ignored = !IncludeBtouch,
 			};
 			Tasks.Add (runBTouch);
