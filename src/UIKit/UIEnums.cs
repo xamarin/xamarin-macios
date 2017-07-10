@@ -183,6 +183,8 @@ namespace XamCore.UIKit {
 		Left   = 1,
 		Right  = 2,
 		Fill   = 3,
+		Leading = 4,
+		Trailing = 5
 	}
 
 	// NSUInteger -> UIControl.h
@@ -297,7 +299,8 @@ namespace XamCore.UIKit {
 		InfoLight,
 		InfoDark,
 		ContactAdd,
-		System = RoundedRect
+		Plain,
+		System = RoundedRect,
 	}
 
 	// NSInteger -> UIStringDrawing.h
@@ -880,6 +883,7 @@ namespace XamCore.UIKit {
 		OverCurrentContext,
 		[NoTV]
 		Popover,
+		BlurOverFullScreen,
 		None = -1
 	}
 	
@@ -1248,6 +1252,10 @@ namespace XamCore.UIKit {
 		DirectionLeadingToTrailing = 0 << 16, // default
 		DirectionLeftToRight = 1 << 16,
 		DirectionRightToLeft = 2 << 16,
+
+		SpacingEdgeToEdge = 0 << 19,
+		SpacingBaselineToBaseline = 1 << 19,
+		SpacingMask = 1 << 19,
 		
 		DirectionMask = 0x3 << 16,
 	}
@@ -1988,4 +1996,246 @@ namespace XamCore.UIKit {
 		Automatic,
 		AlwaysHidden
 	}
+
+	[TV (11,0), iOS (11,0)]
+	[Native]
+	public enum UIScrollViewContentInsetAdjustmentBehavior : nint
+	{
+		Automatic,
+		ScrollableAxes,
+		Never,
+		Always
+	}
+	
+	[iOS (11,0)]
+	[Native]
+	public enum UIAccessibilityContainerType : nint
+	{
+		None = 0,
+		DataTable,
+		List,
+		Landmark
+	}
+	
+	[iOS (11,0)]
+	[Native]
+	public enum UITextSmartQuotesType : nint
+	{
+		Default,
+		No,
+		Yes
+	}
+	
+	[iOS (11,0)]
+	[Native]
+	public enum UITextSmartDashesType : nint
+	{
+		Default,
+		No,
+		Yes
+	}
+	
+	[iOS (11,0)]
+	[Native]
+	public enum UITextSmartInsertDeleteType : nint
+	{
+		Default,
+		No,
+		Yes
+	}
+	
+	[iOS (11,0)]
+	[Native]
+	public enum UIAccessibilityCustomSystemRotorType : nint
+	{
+		None = 0,
+		Link,
+		VisitedLink,
+		Heading,
+		HeadingLevel1,
+		HeadingLevel2,
+		HeadingLevel3,
+		HeadingLevel4,
+		HeadingLevel5,
+		HeadingLevel6,
+		BoldText,
+		ItalicText,
+		UnderlineText,
+		MisspelledWord,
+		Image,
+		TextField,
+		Table,
+		List,
+		Landmark
+	}
+	
+	[NoWatch, NoTV, iOS (11,0)]
+	[Native]
+	public enum UIDropOperation : nuint
+	{
+		Cancel = 0,
+		Forbidden = 1,
+		Copy = 2,
+		Move = 3
+	}
+
+	[NoWatch, NoTV, iOS (11,0)]
+	[Native]
+	[Flags]
+	public enum UITextDragOptions : nint
+	{
+		None = 0,
+		StripTextColorFromPreviews = (1 << 0)
+	}
+	
+	[NoWatch, NoTV, iOS (11,0)]
+	[Native]
+	public enum UITextDropAction : nuint
+	{
+		Insert = 0,
+		ReplaceSelection,
+		ReplaceAll
+	}
+	
+	[NoWatch, NoTV, iOS (11,0)]
+	[Native]
+	public enum UITextDropProgressMode : nuint
+	{
+		System = 0,
+		Custom
+	}
+	
+	[NoWatch, NoTV, iOS (11,0)]
+	[Native]
+	public enum UITextDropEditability : nuint
+	{
+		No = 0,
+		Temporary,
+		Yes
+	}
+
+	[NoWatch, NoTV, iOS (11,0)]
+	[Native]
+	public enum UICollectionViewReorderingCadence : nint
+	{
+		Immediate,
+		Fast,
+		Slow
+	}
+
+	[NoWatch, NoTV, iOS (11,0)]
+	[Native]
+	public enum UICollectionViewDropIntent : nint
+	{
+		Unspecified,
+		InsertAtDestinationIndexPath,
+		InsertIntoDestinationIndexPath
+	}
+	
+	[NoWatch, NoTV, iOS (11,0)]
+	[Native]
+	public enum UICollectionViewCellDragState : nint
+	{
+		None,
+		Lifting,
+		Dragging
+	}
+	
+	[NoTV, iOS (11,0)]
+	[Native]
+	public enum UIImagePickerControllerImageUrlExportPreset : nint
+	{
+		Compatible = 0,
+		Current
+	}
+	
+	[NoTV, iOS (11,0)]
+	[Native]
+	public enum UIContextualActionStyle : nint
+	{
+		Normal,
+		Destructive
+	}
+	
+	[NoWatch, NoTV, iOS (11,0)]
+	[Native]
+	public enum UITableViewCellDragState : nint
+	{
+		None,
+		Lifting,
+		Dragging
+	}
+	
+	[TV (11,0), iOS (11,0)]
+	[Native]
+	public enum UITableViewSeparatorInsetReference : nint
+	{
+		CellEdges,
+		AutomaticInsets
+	}
+	
+	[NoWatch, NoTV, iOS (11,0)]
+	[Native]
+	public enum UITableViewDropIntent : nint
+	{
+		Unspecified,
+		InsertAtDestinationIndexPath,
+		InsertIntoDestinationIndexPath,
+		Automatic
+	}
+	
+	[TV (11,0), iOS (11,0)]
+	[Native]
+	public enum UISplitViewControllerPrimaryEdge : nint
+	{
+		Leading,
+		Trailing
+	}
+	
+	[NoWatch, NoTV, iOS (11,0)]
+	[Native]
+	public enum UIDropSessionProgressIndicatorStyle : nuint
+	{
+		None,
+		Default
+	}
+	
+	[NoWatch, NoTV, iOS (11,0)]
+	[Native]
+	public enum UISpringLoadedInteractionEffectState : nint
+	{
+		Inactive,
+		Possible,
+		Activating,
+		Activated
+	}
+
+	[NoTV, iOS (11,0)]
+	[Native]
+	public enum UIDocumentBrowserImportMode : nuint
+	{
+		None,
+		Copy,
+		Move
+	}
+	
+	[NoTV, iOS (11,0)]
+	[Native]
+	public enum UIDocumentBrowserUserInterfaceStyle : nuint
+	{
+		White = 0,
+		Light,
+		Dark
+	}
+	
+	[NoTV, iOS (11,0)]
+	[Native]
+	[Flags]
+	public enum UIDocumentBrowserActionAvailability : nint
+	{
+		Menu = 1,
+		NavigationBar = 1 << 1
+	}
+	
+	
 }
