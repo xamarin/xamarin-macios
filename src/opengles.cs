@@ -24,6 +24,7 @@ namespace XamCore.OpenGLES {
 
 		[iOS (6,0)]
 		[Export ("debugLabel")]
+		[NullAllowed]
 		string DebugLabel { get; set; }
 	}
 
@@ -41,6 +42,7 @@ namespace XamCore.OpenGLES {
 		bool SetCurrentContext([NullAllowed] EAGLContext context);
 
 		[Static, Export("currentContext")]
+		[NullAllowed]
 		EAGLContext CurrentContext { get; }
 
 		[Export("API")]
@@ -51,6 +53,7 @@ namespace XamCore.OpenGLES {
 
 		[iOS (6,0)]
 		[Export ("debugLabel")]
+		[NullAllowed]
 		string DebugLabel { get; set; }
 
 		//
@@ -74,6 +77,14 @@ namespace XamCore.OpenGLES {
 		[Since (7,1)]
 		[Export ("multiThreaded")]
 		bool IsMultiThreaded { [Bind ("isMultiThreaded")] get; set; }
+
+#if false // https://bugzilla.xamarin.com/show_bug.cgi?id=58054
+		// IOSurface (EAGLContext)
+
+		[iOS (11,0)]
+		[Export ("texImageIOSurface:target:internalFormat:width:height:format:type:plane:")]
+		bool TexImage (IOSurface ioSurface, nuint target, nuint internalFormat, uint width, uint height, nuint format, nuint type, uint plane);
+#endif
 	}
 
 	[Protocol]
