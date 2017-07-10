@@ -194,7 +194,7 @@ namespace XamCore.AppKit {
 #if !XAMCORE_3_0
 	[Flags]
 	[Native]
-	[Obsolete ("Use NSFileWrapperReadingOptions in Foundation instead")]
+	[Obsolete ("Use NSFileWrapperReadingOptions in Foundation instead.")]
 	public enum NSFileWrapperReadingOptions : nuint_compat_int {
 		Immediate = 1, WithoutMapping = 2
 	}
