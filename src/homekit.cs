@@ -1143,7 +1143,7 @@ namespace XamCore.HomeKit {
 	[iOS (9,0)]
 	[BaseType (typeof (HMEvent))]
 	[DisableDefaultCtor]
-	interface HMCharacteristicEvent : NSMutableCopying {
+	interface HMCharacteristicEvent { // NSMutableCopying conformance in header but invalud copyWithZone: and mutableCopyWithZone: selectors on iOS Unified 32-bits
 		[NoTV]
 		[NoWatch]
 		[Export ("initWithCharacteristic:triggerValue:")]
