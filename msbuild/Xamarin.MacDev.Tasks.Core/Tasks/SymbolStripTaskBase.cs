@@ -49,6 +49,7 @@ namespace Xamarin.MacDev.Tasks
 			if (IsFramework) {
 				// Only remove debug symbols from frameworks.
 				args.AppendSwitch ("-S");
+				args.AppendSwitch ("-x");
 			}
 
 			args.AppendFileNameIfNotNull (Executable);
