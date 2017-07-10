@@ -1558,7 +1558,7 @@ namespace XamCore.HomeKit {
 	[Watch (4,0), TV (11,0), iOS (11,0)]
 	[BaseType (typeof(HMCharacteristicEvent))]
 	[DisableDefaultCtor]
-	interface HMMutableCharacteristicEvent {
+	interface HMMutableCharacteristicEvent : NSMutableCopying {
 
 		[Export ("initWithCharacteristic:triggerValue:")]
 		IntPtr Constructor (HMCharacteristic characteristic, [NullAllowed] INSCopying triggerValue);

@@ -419,6 +419,7 @@ namespace Introspection {
 				case "UICollectionViewUpdateItem": // Conformance not in headers
 				case "ACAccountCredential": // b2: Conformance not in headers
 				case "ILMessageFilterExtensionContext": // b2: Conformance not in headers
+				case "HMCharacteristicEvent": // Selectors not available on 32 bit
 					return true;
 
 #if __WATCHOS__
@@ -437,6 +438,7 @@ namespace Introspection {
 				case "INRideDriver":
 				case "INRestaurantGuest":
 				case "INPerson":
+				case "HMCharacteristicEvent": // Selectors not available on 32 bit
 					return true;
 				}
 				break;
