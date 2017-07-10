@@ -103,10 +103,18 @@ partial class TestRuntime
 			macOS = new { Major = 10, Minor = 13, Build = "?" },
 			watchOS = new { Major = 4, Minor = 0, Build = "?" },
 		};
+		var nineb3 = new {
+			Xcode = new { Major = 9, Minor = 0, Beta = 3 },
+			iOS = new { Major = 11, Minor = 0, Build = "15A5318e" },
+			tvOS = new { Major = 11, Minor = 0, Build = "?" },
+			macOS = new { Major = 10, Minor = 13, Build = "?" },
+			watchOS = new { Major = 4, Minor = 0, Build = "?" },
+		};
 
 		var versions = new [] {
 			nineb1,
 			nineb2,
+			nineb3,
 		};
 
 		foreach (var v in versions) {
