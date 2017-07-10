@@ -50,7 +50,7 @@ namespace MonoTouchFixtures.MediaAccessibility {
 			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
 				Assert.Ignore ("requires iOS7+");
 
-			Assert.That (MACaptionAppearance.GetDisplayType (MACaptionAppearanceDomain.Default), Is.EqualTo (MACaptionAppearanceDisplayType.Automatic), "Default");
+			Assert.That (MACaptionAppearance.GetDisplayType (MACaptionAppearanceDomain.Default), Is.EqualTo (MACaptionAppearanceDisplayType.Automatic).Or.EqualTo (MACaptionAppearanceDisplayType.AlwaysOn).Or.EqualTo (MACaptionAppearanceDisplayType.ForcedOnly), "Default");
 		}
 	}
 }

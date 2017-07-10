@@ -97,10 +97,8 @@ namespace XamCore.MediaPlayer {
 	}
 
 	// NSUInteger -> MPMediaItem.h
-	[NoMac]
 	[Native]
 	[Flags]
-	[NoTV]
 	public enum MPMediaType : nuint_compat_int {
 #if !XAMCORE_2_0
 		[Obsolete ("Use Shorter name Music")]
@@ -119,18 +117,25 @@ namespace XamCore.MediaPlayer {
 		AnyAudio     = 0x00ff,
 		
 		[iOS (5,0)]
+		[Mac (10,12,2)]
 		Movie = 1 << 8,
 		[iOS (5,0)]
+		[Mac (10,12,2)]
 		TVShow = 1 << 9,
 		[iOS (5,0)]
+		[Mac (10,12,2)]
 		VideoPodcast = 1 << 10,
 		[iOS (5,0)]
+		[Mac (10,12,2)]
 		MusicVideo = 1 << 11,
 		[iOS (5,0)]
+		[Mac (10,12,2)]
 		VideoITunesU = 1 << 12,
 		[iOS (7,0)]
+		[Mac (10,12,2)]
 		HomeVideo = 1 << 13,
 		[iOS (5,0)]
+		[Mac (10,12,2)]
 		TypeAnyVideo = 0xff00,
 #if XAMCORE_2_0
 		Any          = 0xFFFFFFFFFFFFFFFF
@@ -319,6 +324,7 @@ namespace XamCore.MediaPlayer {
 
 	[Mac (10,12,2)]
 	[iOS (10,0)]
+	[TV (10,0)]
 	[Native]
 	public enum MPNowPlayingInfoMediaType : nuint
 	{

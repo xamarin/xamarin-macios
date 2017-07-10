@@ -285,11 +285,17 @@ namespace Xamarin.Bundler {
 				if (single_assembly != null)
 					return App.UseDlsym (single_assembly.FileName);
 
-				if (symbol.Members != null) {
+				if (symbol.Members?.Any () == true) {
 					foreach (var member in symbol.Members) {
-						if (!App.UseDlsym (member.Module.FileName))
-							return false;
+						if (App.UseDlsym (member.Module.FileName)) {
+							// If any assembly uses dlsym to reference this symbol, it's a required symbol that must be preserved,
+							// because otherwise stripping the binary will cause the symbol (but not the function itself) to be removed,
+							// preventing any assembly using dlsym to find it.
+							return true;
+						}
 					}
+					// None of the members use dlsym (and we have at least one member), then we don't need to preserve the symbol.
+					return false;
 				}
 #endif
 				return true;

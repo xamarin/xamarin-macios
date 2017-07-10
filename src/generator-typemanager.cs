@@ -286,7 +286,7 @@ public static class TypeManager {
 			CMSampleBuffer = Lookup (platform_assembly, "CoreMedia", "CMSampleBuffer");
 			CMTime = Lookup (platform_assembly, "CoreMedia", "CMTime");
 			CMTimebase = Lookup (platform_assembly, "CoreMedia", "CMTimebase");
-			CMTimeMapping = Lookup (platform_assembly, "CoreMedia", "CMVideoFormatDescription");
+			CMTimeMapping = Lookup (platform_assembly, "CoreMedia", "CMTimeMapping");
 			CMTimeRange = Lookup (platform_assembly, "CoreMedia", "CMTimeRange");
 			CMVideoFormatDescription = Lookup (platform_assembly, "CoreMedia", "CMVideoFormatDescription");
 		}

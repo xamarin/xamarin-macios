@@ -1473,7 +1473,6 @@ SHARED_SOURCES = \
 	ObjCRuntime/BaseWrapper.cs \
 	ObjCRuntime/BlockProxyAttribute.cs \
 	ObjCRuntime/CategoryAttribute.cs \
-	ObjCRuntime/Class.iOS.cs \
 	ObjCRuntime/Class.mac.cs \
 	ObjCRuntime/CompileFlagsAttribute.cs \
 	ObjCRuntime/DelayedRegistrationAttribute.cs \

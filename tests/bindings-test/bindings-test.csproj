@@ -61,6 +61,9 @@
     </ObjcBindingNativeLibrary>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\common\ConditionalCompilation.cs">
+      <Link>ConditionalCompilation.cs</Link>
+    </Compile>
     <Compile Include="libtest.linkwith.cs">
       <DependentUpon>libtest.a</DependentUpon>
     </Compile>
