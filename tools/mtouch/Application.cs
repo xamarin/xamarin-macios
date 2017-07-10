@@ -595,7 +595,11 @@ namespace Xamarin.Bundler {
 			switch (Platform) {
 			case ApplePlatform.iOS:
 				if (abis.Count == 0) {
-					abis.Add (IsDeviceBuild ? Abi.ARMv7 : Abi.i386);
+					if (DeploymentTarget == null || DeploymentTarget.Major >= 11) {
+						abis.Add (IsDeviceBuild ? Abi.ARM64 : Abi.x86_64);
+					} else {
+						abis.Add (IsDeviceBuild ? Abi.ARMv7 : Abi.i386);
+					}
 				}
 				break;
 			case ApplePlatform.WatchOS:
