@@ -21,7 +21,7 @@ else
 IOS_GENERATOR = $(IOS_CURRENT_DIR)/bin/btouch-native /baselib:$(IOS_CURRENT_DIR)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll /unsafe
 endif
 IOS_TESTS = bug15283 bug15307 bug15799 bug16036 sof20696157 bug23041 bug27430 bug27428 bug34042 btouch-with-hyphen-in-name property-redefination-ios arrayfromhandlebug bug36457 bug39614 bug40282 bug17232 bug24078-ignore-methods-events strong-dict-support-templated-dicts bug43579 bindastests
-IOS_CUSTOM_TESTS = forum54078 desk63279 desk79124 multiple-api-definitions1 multiple-api-definitions2 bug29493 classNameCollision bi1036 bug37527 bug27986 bug35176 bi1046 bindas1048error bindas1049error bindas1050modelerror bindas1050protocolerror virtualwrap bug42855 bug52570 bug52570classinternal bug52570methodinternal bug52570allowstaticmembers bug42742 warnaserror nowarn noasyncinternalwrapper noasyncwarningcs0219 bug53076 bug53076withmodel bug57070
+IOS_CUSTOM_TESTS = forum54078 desk63279 desk79124 multiple-api-definitions1 multiple-api-definitions2 bug29493 classNameCollision bi1036 bug37527 bug27986 bug35176 bi1046 bindas1048error bindas1049error bindas1050modelerror bindas1050protocolerror virtualwrap bug42855 bug52570classinternal bug52570methodinternal bug52570allowstaticmembers bug42742 warnaserror nowarn noasyncinternalwrapper noasyncwarningcs0219 bug53076 bug53076withmodel bug57070
 
 MAC_CURRENT_DIR=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 ifdef IKVM
@@ -46,8 +46,21 @@ ifdef INCLUDE_MAC
 ALL_TESTS += $(MAC_TESTS) $(MAC_CUSTOM_TESTS)
 endif
 
-all-local:: $(ALL_TESTS)
+all-local:: $(ALL_TESTS) run-unit-tests
 
+build-unit-tests:
+	$(Q) $(SYSTEM_MONO) /Library/Frameworks//Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore $(TOP)/src/generator-ikvm.sln
+	$(SYSTEM_XBUILD) generator-tests.csproj $(XBUILD_VERBOSITY)
+
+run-unit-tests: build-unit-tests
+	rm -f .failed-stamp
+	$(SYSTEM_MONO) --debug $(TOP)/packages/NUnit.ConsoleRunner.3.5.0/tools/nunit3-console.exe $(abspath $(TOP)/tests/generator/bin/Debug/generator-tests.dll) "--result=$(abspath $(CURDIR)/TestResult.xml);format=nunit2" $(TEST_FIXTURE) --labels=All || touch $(CURDIR)/.failed-stamp
+	@# Create an html file and tell MonkeyWrench to upload it (if we're running there)
+	@[[ -z "$$BUILD_REPOSITORY" ]] || \
+		( xsltproc $(TOP)/tests/HtmlTransform.xslt TestResult.xml  > index.html && \
+		echo "@MonkeyWrench: AddFile: $$PWD/index.html")
+	@[[ ! -e .failed-stamp ]] 
+	
 $(MAC_TESTS):
 	$(if $(V),,@echo "$@";) $(MAC_CLASSIC_GENERATOR) -d=MONOMAC $@.cs
 	$(if $(V),,@echo "$@";) $(MAC_FULL_GENERATOR)    -d=MONOMAC -d=XAMCORE_2_0 $@.cs
@@ -79,7 +92,6 @@ $(eval $(call iOSErrorCodeTestTemplate,bindas1049error,1049))
 $(eval $(call iOSErrorCodeTestTemplate,bindas1050modelerror,1050))
 $(eval $(call iOSErrorCodeTestTemplate,bindas1050protocolerror,1050))
 $(eval $(call iOSErrorCodeTestTemplate,bug42855,1060))
-$(eval $(call iOSErrorCodeTestTemplate,bug52570,1117))
 $(eval $(call iOSErrorCodeTestTemplate,bug57070,1061))
 
 define iOSNoErrorCodesTestTemplate

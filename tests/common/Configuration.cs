@@ -325,6 +325,12 @@ namespace Xamarin.Tests
 			}
 		}
 
+		public static string BGenPath {
+			get {
+				return Path.Combine (SdkBinDir, "bgen");
+			}
+		}
+
 		public static string MmpPath {
 			get {
 				return Path.Combine (BinDirXM, "mmp");
