@@ -326,6 +326,16 @@ namespace Introspection {
 				case "HMMutableLocationEvent":
 				case "HMTimeEvent":
 				case "ILMessageFilterExtensionContext": // Conformance not in headers
+				case "NSAttributeDescription":
+				case "NSEntityDescription":
+				case "NSExpressionDescription":
+				case "NSFetchedPropertyDescription":
+				case "NSFetchIndexDescription":
+				case "NSFetchIndexElementDescription":
+				case "NSFetchRequest":
+				case "NSManagedObjectModel":
+				case "NSPropertyDescription":
+				case "NSRelationshipDescription":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -423,6 +433,10 @@ namespace Introspection {
 				// iOS 10.3
 				case "MPMusicPlayerControllerMutableQueue":
 				case "MPMusicPlayerControllerQueue":
+				// iOS 11
+				case "INRideDriver":
+				case "INRestaurantGuest":
+				case "INPerson":
 					return true;
 				}
 				break;

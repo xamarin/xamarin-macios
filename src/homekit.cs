@@ -1143,7 +1143,7 @@ namespace XamCore.HomeKit {
 	[iOS (9,0)]
 	[BaseType (typeof (HMEvent))]
 	[DisableDefaultCtor]
-	interface HMCharacteristicEvent {
+	interface HMCharacteristicEvent : NSMutableCopying {
 		[NoTV]
 		[NoWatch]
 		[Export ("initWithCharacteristic:triggerValue:")]
