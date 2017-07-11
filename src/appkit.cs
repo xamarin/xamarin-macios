@@ -1201,16 +1201,15 @@ namespace XamCore.AppKit {
 		[Export ("appendBezierPathWithArcFromPoint:toPoint:radius:")]
 		void AppendPathWithArc (CGPoint point1, CGPoint point2, nfloat radius);
 
-		[Obsolete ("Use 'AppendBezierPathWithCGGlyph' instead.")]
+		[Availability (Obsoleted = Platform.Mac_10_13, Message = "Use 'AppendBezierPathWithCGGlyph (CGGlyph, NSFont)' instead.")]
 		[Export ("appendBezierPathWithGlyph:inFont:")]
 		void AppendPathWithGlyph (uint /* NSGlyph = unsigned int */ glyph, NSFont font);
 
-		[Obsolete ("Use 'AppendBezierPathWithCGGlyphs' instead.")]
 		[Export ("appendBezierPathWithGlyphs:count:inFont:"), Internal]
 		void _AppendPathWithGlyphs (IntPtr glyphs, nint count, NSFont font);
 
 		//IntPtr is exposed because the packedGlyphs should be treated as a "black box"
-		[Obsolete ("Use 'AppendBezierPathWithCGGlyphs' instead.")]
+		[Availability (Obsoleted = Platform.Mac_10_13, Message = "Use 'Append (uint[], NSFont)' instead.")]
 		[Export ("appendBezierPathWithPackedGlyphs:")]
 		void AppendPathWithPackedGlyphs (IntPtr packedGlyphs);
 
@@ -3444,9 +3443,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Mac (10,11)]
-#if XAMCORE_4_0
 	[DisableDefaultCtor]
-#endif
 	[BaseType (typeof(NSCollectionViewLayout))]
 	interface NSCollectionViewTransitionLayout
 	{

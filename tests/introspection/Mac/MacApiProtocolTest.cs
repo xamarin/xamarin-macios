@@ -197,6 +197,14 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "NSUserInterfaceValidations":
+				switch (type.Name) {
+				case "NSSplitViewController":
+					if (!Mac.CheckSystemVersion (10, 13)) // Was added in 10.13
+						return true;
+					break;
+				}
+				break;
 			}
 
 			switch (type.Name) {

@@ -2803,6 +2803,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,13)]
 	[Native]
+	[Flags]
 	public enum NSFontAssetRequestOptions : nuint {
 		UsesStandardUI = 1 << 0,
 	}

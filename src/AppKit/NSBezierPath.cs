@@ -88,12 +88,7 @@ namespace XamCore.AppKit {
 				_SetAssociatedPointsAtIndex ((IntPtr)ptr, index);
 		}
 
-		public void Append (CGPoint[] points)
-		{
-			AppendPathWithPoints (points);
-		}
-
-		public unsafe void AppendPathWithPoints (CGPoint[] points)
+		public unsafe void Append (CGPoint[] points)
 		{
 			if (points == null)
 				throw new ArgumentNullException ("points");
@@ -104,7 +99,14 @@ namespace XamCore.AppKit {
 				_AppendPathWithPoints ((IntPtr)ptr, points.Length);
 		}
 
-		[Obsolete ("Use 'AppendBezierPathWithCGGlyphs' instead.")]
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'Append (CGPoint[])' instead.")]
+		public unsafe void AppendPathWithPoints (CGPoint[] points)
+		{
+			Append (points);
+		}
+
+		[Obsolete ("Use 'Append (uint[], NSFont)' instead.")]
 		public unsafe void AppendPathWithGlyphs (uint[] glyphs, NSFont font)
 		{
 			if (glyphs == null)
@@ -115,15 +117,10 @@ namespace XamCore.AppKit {
 			fixed (uint* ptr = &glyphs [0])
 				_AppendPathWithGlyphs ((IntPtr)ptr, glyphs.Length, font);
 		}
+#endif
 
 		[Mac (10,13)]
-		public void Append (uint[] glyphs, NSFont font)
-		{
-			AppendBezierPathWithCGGlyphs (glyphs, font);
-		}
-
-		[Mac (10,13)]
-		public unsafe void AppendBezierPathWithCGGlyphs (uint[] glyphs, NSFont font)
+		public unsafe void Append (uint[] glyphs, NSFont font)
 		{
 			if (glyphs == null)
 				throw new ArgumentNullException ("glyphs");
