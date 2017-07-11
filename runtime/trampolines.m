@@ -980,11 +980,8 @@ xamarin_get_nsvalue_converter (MonoClass *managedType, MonoMethod *method, bool 
 		goto exception_handling;
 
 #if MONOMAC
-	if (xamarin_use_new_assemblies && !strncmp (fullname, "MonoMac.", 8)) {
-		char *tmp_to_name = xamarin_strdup_printf ("%s", fullname + 8);
-		xamarin_free (fullname);
-		fullname = tmp_to_name;
-	}
+	if (xamarin_use_new_assemblies && !strncmp (fullname, "MonoMac.", 8))
+		memmove (fullname, fullname + 8, strlen (fullname) - 7 /* also copy the null char */);
 #endif
 
 	if (!strcmp (fullname, "Foundation.NSRange")) {
