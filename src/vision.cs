@@ -18,6 +18,7 @@ using XamCore.CoreVideo;
 using XamCore.Foundation;
 using XamCore.Metal;
 using XamCore.ObjCRuntime;
+using XamCore.ImageIO;
 
 using Vector2 = global::OpenTK.Vector2;
 using Matrix3 = global::OpenTK.Matrix3;
@@ -627,31 +628,31 @@ namespace XamCore.Vision {
 		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSDictionary<NSString, NSObject> options);
 
 		[Export ("initWithCVPixelBuffer:orientation:options:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, int orientation, NSDictionary<NSString, NSObject> options);
+		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary<NSString, NSObject> options);
 
 		[Export ("initWithCGImage:options:")]
 		IntPtr Constructor (CGImage image, NSDictionary<NSString, NSObject> options);
 
 		[Export ("initWithCGImage:orientation:options:")]
-		IntPtr Constructor (CGImage image, int orientation, NSDictionary<NSString, NSObject> options);
+		IntPtr Constructor (CGImage image, CGImagePropertyOrientation orientation, NSDictionary<NSString, NSObject> options);
 
 		[Export ("initWithCIImage:options:")]
 		IntPtr Constructor (CIImage image, NSDictionary<NSString, NSObject> options);
 
 		[Export ("initWithCIImage:orientation:options:")]
-		IntPtr Constructor (CIImage image, int orientation, NSDictionary<NSString, NSObject> options);
+		IntPtr Constructor (CIImage image, CGImagePropertyOrientation orientation, NSDictionary<NSString, NSObject> options);
 
 		[Export ("initWithURL:options:")]
 		IntPtr Constructor (NSUrl imageUrl, NSDictionary<NSString, NSObject> options);
 
 		[Export ("initWithURL:orientation:options:")]
-		IntPtr Constructor (NSUrl imageUrl, int orientation, NSDictionary<NSString, NSObject> options);
+		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary<NSString, NSObject> options);
 
 		[Export ("initWithData:options:")]
 		IntPtr Constructor (NSData imageData, NSDictionary<NSString, NSObject> options);
 
 		[Export ("initWithData:orientation:options:")]
-		IntPtr Constructor (NSData imageData, int orientation, NSDictionary<NSString, NSObject> options);
+		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary<NSString, NSObject> options);
 
 		[Export ("performRequests:error:")]
 		bool Perform (VNRequest [] requests, out NSError error);
@@ -665,31 +666,31 @@ namespace XamCore.Vision {
 		bool Perform (VNRequest [] requests, CVPixelBuffer pixelBuffer, out NSError error);
 
 		[Export ("performRequests:onCVPixelBuffer:orientation:error:")]
-		bool Perform (VNRequest [] requests, CVPixelBuffer pixelBuffer, int orientation, out NSError error);
+		bool Perform (VNRequest [] requests, CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, out NSError error);
 
 		[Export ("performRequests:onCGImage:error:")]
 		bool Perform (VNRequest [] requests, CGImage image, out NSError error);
 
 		[Export ("performRequests:onCGImage:orientation:error:")]
-		bool Perform (VNRequest [] requests, CGImage image, int orientation, out NSError error);
+		bool Perform (VNRequest [] requests, CGImage image, CGImagePropertyOrientation orientation, out NSError error);
 
 		[Export ("performRequests:onCIImage:error:")]
 		bool Perform (VNRequest [] requests, CIImage image, out NSError error);
 
 		[Export ("performRequests:onCIImage:orientation:error:")]
-		bool Perform (VNRequest [] requests, CIImage image, int orientation, out NSError error);
+		bool Perform (VNRequest [] requests, CIImage image, CGImagePropertyOrientation orientation, out NSError error);
 
 		[Export ("performRequests:onImageURL:error:")]
 		bool Perform (VNRequest [] requests, NSUrl imageUrl, out NSError error);
 
 		[Export ("performRequests:onImageURL:orientation:error:")]
-		bool Perform (VNRequest [] requests, NSUrl imageUrl, int orientation, out NSError error);
+		bool Perform (VNRequest [] requests, NSUrl imageUrl, CGImagePropertyOrientation orientation, out NSError error);
 
 		[Export ("performRequests:onImageData:error:")]
 		bool Perform (VNRequest [] requests, NSData imageData, out NSError error);
 
 		[Export ("performRequests:onImageData:orientation:error:")]
-		bool Perform (VNRequest [] requests, NSData imageData, int orientation, out NSError error);
+		bool Perform (VNRequest [] requests, NSData imageData, CGImagePropertyOrientation orientation, out NSError error);
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
