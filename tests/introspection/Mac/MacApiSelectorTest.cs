@@ -590,36 +590,6 @@ namespace Introspection {
 					break;
 				}
 				break;
-			case "MonoMac.CoreBluetooth":
-			case "CoreBluetooth":
-				switch (type.Name) {
-				case "CBPeripheral":
-					switch (selectorName) {
-					case "UUID": // radar 32873784
-						if (Mac.CheckSystemVersion (10, 13))
-							return true;
-						break;
-					}
-					break;
-				case "CBCentral":
-					switch (selectorName) {
-					case "UUID": // radar 32873784
-						if (Mac.CheckSystemVersion (10, 13))
-							return true;
-						break;
-					}
-					break;
-				case "CBMutableService":
-				case "CBMutableCharacteristic":
-					switch (selectorName) {
-					case "setUUID:": // radar 32873784
-						if (Mac.CheckSystemVersion (10, 13))
-							return true;
-						break;
-					}
-					break;
-				}
-				break;
 			}
 			return base.Skip (type, selectorName);
 		}

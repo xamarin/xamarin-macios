@@ -365,7 +365,7 @@ namespace XamCore.CoreBluetooth {
 		[NullAllowed]
 		[Export ("UUID", ArgumentSemantic.Retain)]
 		[Override]
-		CBUUID UUID { get; set; }
+		CBUUID UUID { get; [Availability (Obsoleted = Platform.Mac_10_13)] set; }
 
 		[Export ("properties", ArgumentSemantic.Assign)]
 		[Override]
@@ -621,7 +621,7 @@ namespace XamCore.CoreBluetooth {
 #if !MONOMAC
 		[Override]
 #endif
-		CBUUID UUID { get; set; }
+		CBUUID UUID { get; [Availability (Obsoleted = Platform.Mac_10_13)] set; }
 
 		[NoTV]
 		[Export ("isPrimary")]
