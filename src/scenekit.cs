@@ -1629,7 +1629,7 @@ namespace XamCore.SceneKit {
 		[Availability (Unavailable = Platform.iOS_Version)]
 		[NoTV, NoWatch]
 	#endif
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use the SCNProgram's Opaque property instead")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use the SCNProgram's Opaque property instead.")]
 		[Export ("programIsOpaque:")]
 		bool IsProgramOpaque (SCNProgram program);
 #endif

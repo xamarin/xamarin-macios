@@ -116,7 +116,7 @@ namespace XamCore.AppKit {
 		DestinationAtop,
 		XOR,
 		PlusDarker,
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSCompositeSourceOver instead")]
+		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSCompositeSourceOver instead.")]
 		Highlight,
 		PlusLighter,
 		[Mac (10,10)] Multiply,
@@ -194,7 +194,7 @@ namespace XamCore.AppKit {
 #if !XAMCORE_3_0
 	[Flags]
 	[Native]
-	[Obsolete ("Use NSFileWrapperReadingOptions in Foundation instead")]
+	[Obsolete ("Use NSFileWrapperReadingOptions in Foundation instead.")]
 	public enum NSFileWrapperReadingOptions : nuint_compat_int {
 		Immediate = 1, WithoutMapping = 2
 	}
@@ -223,7 +223,7 @@ namespace XamCore.AppKit {
 
 #if !XAMCORE_4_0
 	[Native]
-	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use formatters instead")]
+	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use formatters instead.")]
 	public enum NSType : nuint_compat_int {
 	    Any			= 0,
 	    Int			= 1,
@@ -929,7 +929,7 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSWindowButton : nuint_compat_int {
 		CloseButton, MiniaturizeButton, ZoomButton, ToolbarButton, DocumentIconButton, DocumentVersionsButton = 6, 
-		[Availability (Deprecated = Platform.Mac_10_12, Message = "The standard window button for FullScreenButton is always null; use ZoomButton instead")]
+		[Availability (Deprecated = Platform.Mac_10_12, Message = "The standard window button for FullScreenButton is always null; use ZoomButton instead.")]
 		FullScreenButton
 	}
 
@@ -1454,7 +1454,7 @@ namespace XamCore.AppKit {
 	}
 
 #if !XAMCORE_4_0
-	[Availability (Deprecated = Platform.Mac_10_11, Message = "Use NSTextStorageEditActions instead")]
+	[Availability (Deprecated = Platform.Mac_10_11, Message = "Use NSTextStorageEditActions instead.")]
 	[Flags]
 	[Native]
 	public enum NSTextStorageEditedFlags : nuint_compat_int {
@@ -1608,7 +1608,7 @@ namespace XamCore.AppKit {
 		Default, Regular, Small
 	}
 
-	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSAlertButtonReturn instead")]
+	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSAlertButtonReturn instead.")]
 #if !XAMCORE_4_0
 	[Native]
 	public enum NSAlertType : nint {
@@ -1622,7 +1622,7 @@ namespace XamCore.AppKit {
 	}
 
 #if !XAMCORE_4_0
-	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSModalResponse instead")]
+	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSModalResponse instead.")]
 	[Native]
 	public enum NSPanelButtonType : nint {
 		Cancel, Ok

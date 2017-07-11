@@ -190,6 +190,20 @@ namespace Introspection {
 				case "NSQueryGenerationToken": // Conformance not in headers
 				case "NSPersistentHistoryToken": // Conformance not in headers
  				case "ARCamera":
+				case "HMPresenceEvent":
+				case "HMMutablePresenceEvent":
+				case "HMSignificantTimeEvent":
+				case "HMMutableSignificantTimeEvent":
+				case "HMCalendarEvent":
+				case "HMMutableCalendarEvent":
+				case "HMCharacteristicThresholdRangeEvent":
+				case "HMMutableCharacteristicThresholdRangeEvent":
+				case "HMDurationEvent":
+				case "HMMutableDurationEvent":
+				case "HMMutableCharacteristicEvent":
+				case "HMMutableLocationEvent":
+				case "HMTimeEvent":
+				case "ILMessageFilterExtensionContext": // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -298,6 +312,30 @@ namespace Introspection {
 				case "NSQueryGenerationToken": // Conformance not in headers
 				case "NSPersistentHistoryToken": // Conformance not in headers
 				case "ARCamera":
+				case "HMPresenceEvent":
+				case "HMMutablePresenceEvent":
+				case "HMSignificantTimeEvent":
+				case "HMMutableSignificantTimeEvent":
+				case "HMCalendarEvent":
+				case "HMMutableCalendarEvent":
+				case "HMCharacteristicThresholdRangeEvent":
+				case "HMMutableCharacteristicThresholdRangeEvent":
+				case "HMDurationEvent":
+				case "HMMutableDurationEvent":
+				case "HMMutableCharacteristicEvent":
+				case "HMMutableLocationEvent":
+				case "HMTimeEvent":
+				case "ILMessageFilterExtensionContext": // Conformance not in headers
+				case "NSAttributeDescription":
+				case "NSEntityDescription":
+				case "NSExpressionDescription":
+				case "NSFetchedPropertyDescription":
+				case "NSFetchIndexDescription":
+				case "NSFetchIndexElementDescription":
+				case "NSFetchRequest":
+				case "NSManagedObjectModel":
+				case "NSPropertyDescription":
+				case "NSRelationshipDescription":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -380,6 +418,8 @@ namespace Introspection {
 				// iOS 11.0
 				case "UICollectionViewUpdateItem": // Conformance not in headers
 				case "ACAccountCredential": // b2: Conformance not in headers
+				case "ILMessageFilterExtensionContext": // b2: Conformance not in headers
+				case "HMCharacteristicEvent": // Selectors not available on 32 bit
 					return true;
 
 #if __WATCHOS__
@@ -394,6 +434,11 @@ namespace Introspection {
 				// iOS 10.3
 				case "MPMusicPlayerControllerMutableQueue":
 				case "MPMusicPlayerControllerQueue":
+				// iOS 11
+				case "INRideDriver":
+				case "INRestaurantGuest":
+				case "INPerson":
+				case "HMCharacteristicEvent": // Selectors not available on 32 bit
 					return true;
 				}
 				break;

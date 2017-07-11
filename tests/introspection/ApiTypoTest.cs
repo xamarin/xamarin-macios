@@ -170,6 +170,7 @@ namespace Introspection
 			"Ecdh",  // Elliptic Curve Diffie–Hellman
 			"Ecdsa", // Elliptic Curve Digital Signature Algorithm
 			"Ecies", // Elliptic Curve Integrated Encryption Scheme
+			"Editability", 
 			"Eof", // acronym End-Of-File
 			"Emagic",
 			"Emaili",

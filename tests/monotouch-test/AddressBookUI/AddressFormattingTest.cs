@@ -69,9 +69,10 @@ namespace MonoTouchFixtures.AddressBookUI {
 				if (!UIDevice.CurrentDevice.CheckSystemVersion (8,2))
 					return;
 
-				// iOS 11.0 beta 1 - 2: broken
+				// iOS 11.0 beta 1, 2, 3: broken
 				if (TestRuntime.CheckExactXcodeVersion (9, 0, beta: 1) ||
-				    TestRuntime.CheckExactXcodeVersion (9, 0, beta: 2))
+				    TestRuntime.CheckExactXcodeVersion (9, 0, beta: 2) ||
+				    TestRuntime.CheckExactXcodeVersion (9, 0, beta: 3))
 					return;
 
 				Assert.That (s [expected.Length], Is.EqualTo ('\n'), "newline");

@@ -247,6 +247,17 @@ namespace XamCore.Foundation
 		[Wrap ("this (data, options == null ? null : options.Dictionary, out resultDocumentAttributes, ref error)")]
 		IntPtr Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 
+		// From the NSItemProviderReading protocol, a special constructor.
+		[Export ("initWithItemProviderData:typeIdentifier:error:")]
+		[iOS (11,0), NoWatch, NoTV, Mac(10,13)]
+		IntPtr Constructor (NSData providerData, string typeIdentifier, out NSError outError);
+
+		// From the NSItemProviderReading protocol, a static method.
+		[Static]
+		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		[iOS (11,0), NoWatch, NoTV, Mac(10,13)]
+		string[] ReadableTypeIdentifiersForItemProvider { get; }
+		
 		[Since (7,0)]
 		[Export ("dataFromRange:documentAttributes:error:")]
 		NSData GetDataFromRange (NSRange range, NSDictionary attributes, ref NSError error);
@@ -9654,12 +9665,41 @@ namespace XamCore.Foundation
 		[NullAllowed, Export ("suggestedName")]
 		string SuggestedName { get; set; }
 	}
+    
+    delegate NSProgress RegisterFileRepresentationLoadHandler ([BlockCallback] RegisterFileRepresentationCompletionHandler completionHandler);
+    delegate void RegisterFileRepresentationCompletionHandler (NSUrl fileUrl, bool coordinated, NSError error);
+    delegate void ItemProviderDataCompletionHandler (NSData data, NSError error);
+    delegate NSProgress RegisterDataRepresentationLoadHandler ([BlockCallback] ItemProviderDataCompletionHandler completionHandler);
+    delegate void LoadInPlaceFileRepresentationHandler (NSUrl fileUrl, bool isInPlace, NSError error);
 
-	delegate NSProgress RegisterFileRepresentationLoadHandler ([BlockCallback] RegisterFileRepresentationCompletionHandler completionHandler);
-	delegate void RegisterFileRepresentationCompletionHandler (NSUrl fileUrl, bool coordinated, NSError error);
-	delegate void ItemProviderDataCompletionHandler (NSData data, NSError error);
-	delegate NSProgress RegisterDataRepresentationLoadHandler ([BlockCallback] ItemProviderDataCompletionHandler completionHandler);
-	delegate void LoadInPlaceFileRepresentationHandler (NSUrl fileUrl, bool isInPlace, NSError error);
+	interface INSItemProviderReading {}
+	
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Protocol]
+	interface NSItemProviderReading
+	{
+		//
+		// This static method has to be implemented on each class that implements
+		// this, this is not a capability that exists in C#.
+		// We are inlining these on each class that implements NSItemProviderReading
+		// for the sake of the method being callable from C#, for user code, the
+		// user needs to manually [Export] the selector on a static method, like
+		// they do for the "layer" property on CALayer subclasses.
+		//
+		//[Static, Abstract]
+		//[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		//string[] ReadableTypeIdentifiersForItemProvider { get; }
+
+		//
+		// This is a constructor that various classes must implement
+		// NSAttributedString, UIColor and UIImage need to have this constructor
+		// for user-defined implementations of this interface, we are going to
+		// need to something special
+		//
+		//[Abstract]
+		//[Export ("initWithItemProviderData:typeIdentifier:error:")]
+		//INSItemProviderReading CreateFrom (NSData providerData, string typeIdentifier, [NullAllowed] NSError outError);
+	}
 
 #if XAMCORE_2_0
 	[Static]

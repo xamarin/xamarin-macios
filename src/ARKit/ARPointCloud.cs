@@ -16,7 +16,7 @@ using Vector3 = global::OpenTK.Vector3;
 namespace XamCore.ARKit {
 	public partial class ARPointCloud {
 
-		public Vector3 [] Points {
+		public unsafe Vector3 [] Points {
 			get {
 				var count = (int)Count;
 				var rv = new Vector3 [count];
