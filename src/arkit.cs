@@ -58,6 +58,7 @@ namespace XamCore.ARKit {
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
+	[Flags]
 	[Native]
 	public enum ARHitTestResultType : nuint {
 		FeaturePoint = 1 << 0,
@@ -75,6 +76,7 @@ namespace XamCore.ARKit {
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
+	[Flags]
 	[Native]
 	public enum ARSessionRunOptions : nuint {
 		ResetTracking = 1 << 0,
@@ -92,6 +94,7 @@ namespace XamCore.ARKit {
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
+	[Flags]
 	[Native]
 	public enum ARPlaneDetection : nuint {
 		None = 0,
