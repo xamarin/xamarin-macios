@@ -9,6 +9,8 @@ using Mono.Linker;
 using Mono.Tuner;
 using MonoTouch.Tuner;
 
+using Xamarin.Bundler;
+
 namespace Xamarin.Linker.Steps
 {
 	public class PreserveSmartEnumConversionsSubStep : ExceptionalSubStep
@@ -42,6 +44,13 @@ namespace Xamarin.Linker.Steps
 			}
 		}
 
+		static string ProviderToString (ICustomAttributeProvider provider)
+		{
+			if (provider is MemberReference member)
+				return member.DeclaringType.FullName + "." + member.Name;
+			return provider.ToString ();
+		}
+
 		void ProcessAttributeProvider (ICustomAttributeProvider provider, MethodDefinition conditionA, MethodDefinition conditionB = null)
 		{
 			if (provider?.HasCustomAttributes != true)
@@ -54,14 +63,14 @@ namespace Xamarin.Linker.Steps
 					continue;
 
 				if (ca.ConstructorArguments.Count != 1) {
-					Console.WriteLine ("WARNING");
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, "Invalid BindAsAttribute found on '{0}': should have 1 constructor arguments, found {1}. Please file a bug report at https://bugzilla.xamarin.com", ProviderToString (provider), ca.ConstructorArguments.Count));
 					continue;
 				}
 
 				var managedType = ca.ConstructorArguments [0].Value as TypeReference;
 				var managedEnumType = managedType?.GetElementType ().Resolve ();
 				if (managedEnumType == null) {
-					Console.WriteLine ("WARNING");
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, "Invalid BindAsAttribute found on '{0}': could not find the underlying enum type of {1}. Please file a bug report at https://bugzilla.xamarin.com", ProviderToString (provider), managedType?.FullName));
 					continue;
 				}
 
@@ -71,7 +80,6 @@ namespace Xamarin.Linker.Steps
 					continue;
 				}
 
-				Console.WriteLine (managedEnumType);
 				// Find the Extension type
 				TypeDefinition extensionType = null;
 				var extensionName = managedEnumType.Name + "Extensions";
@@ -84,7 +92,7 @@ namespace Xamarin.Linker.Steps
 					break;
 				}
 				if (extensionType == null) {
-					Console.WriteLine ("WARNING");
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, "Invalid BindAsAttribute found on '{0}': could not find the smart extension type {1}.{2}. Please file a bug report at https://bugzilla.xamarin.com", ProviderToString (provider), managedEnumType.Namespace, extensionName));
 					continue;
 				}
 
@@ -111,8 +119,14 @@ namespace Xamarin.Linker.Steps
 						getValue = method;
 					}
 				}
-				if (getConstant == null || getValue == null) {
-					Console.WriteLine ("WARNING");
+
+				if (getConstant == null) {
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, "Invalid BindAsAttribute found on '{0}': could not find the GetConstant method in the type {1}. Please file a bug report at https://bugzilla.xamarin.com", ProviderToString (provider), extensionType.FullName));
+					continue;
+				}
+
+				if (getValue == null) {
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, "Invalid BindAsAttribute found on '{0}': could not find the GetValue method in the type {1}. Please file a bug report at https://bugzilla.xamarin.com", ProviderToString (provider), extensionType.FullName));
 					continue;
 				}
 
