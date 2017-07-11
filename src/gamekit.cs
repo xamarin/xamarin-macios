@@ -1160,7 +1160,7 @@ namespace XamCore.GameKit {
 
 		[NoTV]
 		[Since (6,0)][Mac (10,9)]
-		[Availability (Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, message: "Use 'StartBrowsingForNearbyPlayers(Action<GKPlayer, bool> handler)' instead.")]
 		[Export ("startBrowsingForNearbyPlayersWithReachableHandler:")]
 		void StartBrowsingForNearbyPlayers ([NullAllowed] Action<string, bool> reachableHandler);
 
