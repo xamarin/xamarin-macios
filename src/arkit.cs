@@ -39,6 +39,7 @@ namespace XamCore.ARKit {
 	[Native]
 	public enum ARTrackingStateReason : nint {
 		None,
+		Initializing,
 		ExcessiveMotion,
 		InsufficientFeatures,
 	}
@@ -51,6 +52,7 @@ namespace XamCore.ARKit {
 		UnsupportedConfiguration = 100,
 		SensorUnavailable = 101,
 		SensorFailed = 102,
+		CameraUnauthorized = 103,
 		WorldTrackingFailed = 200,
 	}
 
