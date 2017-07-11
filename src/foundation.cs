@@ -14280,7 +14280,6 @@ namespace XamCore.Foundation
 	}
 
 	[Protocol]
-	[BaseType (typeof(NSObject), Name="NSXPCProxyCreating")]
 	interface NSXpcProxyCreating
 	{
 		[Abstract]
@@ -14413,7 +14412,7 @@ namespace XamCore.Foundation
 	{
 		[Static]
 		[Export ("interfaceWithProtocol:")]
-		NSXpcInterface FromInterface (Protocol protocol);
+		NSXpcInterface FromProtocol (Protocol protocol);
 
 		[Export ("protocol", ArgumentSemantic.Assign)]
 		Protocol Protocol { get; set; }

@@ -1259,8 +1259,8 @@ namespace XamCore.Foundation  {
 	}
 
 	[Watch (2, 0), TV (9, 0), Mac (10, 8), iOS (6, 0)]
-	[Native]
+	[Native, Flags]
 	public enum NSXpcConnectionOptions : nuint {
-		Privileged = (1 << 12)
+		Privileged = (1 << 12),
 	}
 }
