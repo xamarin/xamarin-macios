@@ -160,7 +160,7 @@ public partial class Generator {
 				print ("}");
 				print ("");
 			}
-
+			
 			print ("public static NSString GetConstant (this {0} self)", type.Name);
 			print ("{");
 			indent++;
@@ -184,7 +184,7 @@ public partial class Generator {
 			print ("}");
 			
 			print ("");
-
+			
 			print ("public static {0} GetValue (NSString constant)", type.Name);
 			print ("{");
 			indent++;
