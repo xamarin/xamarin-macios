@@ -358,7 +358,7 @@ MonoClass *
 xamarin_get_nsvalue_class ()
 {
 	if (nsvalue_class == NULL)
-		xamarin_assertion_message ("Internal consistency error, please file a bug (https://bugzilla.xamarin.com). Additional data: can't get the NSValue class because it's been linked away.\n");
+		xamarin_assertion_message ("Internal consistency error, please file a bug (https://bugzilla.xamarin.com). Additional data: can't get the %s class because it's been linked away.\n", "NSValue");
 	return nsvalue_class;
 }
 
@@ -366,7 +366,7 @@ MonoClass *
 xamarin_get_nsnumber_class ()
 {
 	if (nsnumber_class == NULL)
-		xamarin_assertion_message ("Internal consistency error, please file a bug (https://bugzilla.xamarin.com). Additional data: can't get the NSNumber class because it's been linked away.\n");
+		xamarin_assertion_message ("Internal consistency error, please file a bug (https://bugzilla.xamarin.com). Additional data: can't get the %s class because it's been linked away.\n", "NSNumber");
 	return nsnumber_class;
 }
 
