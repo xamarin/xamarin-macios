@@ -56,7 +56,9 @@ namespace XamCore.UserNotifications {
 	public enum UNNotificationCategoryOptions : nuint {
 		None = 0,
 		CustomDismissAction = (1 << 0),
-		AllowInCarPlay = (2 << 0)
+		AllowInCarPlay = (2 << 0),
+		HiddenPreviewsShowTitle = (1 << 2),
+		HiddenPreviewsShowSubtitle = (1 << 3),
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -112,6 +114,15 @@ namespace XamCore.UserNotifications {
 		Badge = (1 << 0),
 		Sound = (1 << 1),
 		Alert = (1 << 2)
+	}
+
+	[NoWatch, NoTV, iOS (11,0)]
+	[Native]
+	public enum UNShowPreviewsSetting : nint
+	{
+		Always,
+		WhenAuthenticated,
+		Never
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -257,9 +268,19 @@ namespace XamCore.UserNotifications {
 		[Export ("options")]
 		UNNotificationCategoryOptions Options { get; }
 
+		[NoWatch, iOS (11, 0)]
+		[Export ("hiddenPreviewsBodyPlaceholder")]
+		string HiddenPreviewsBodyPlaceholder { get; }
+		
 		[Static]
 		[Export ("categoryWithIdentifier:actions:intentIdentifiers:options:")]
 		UNNotificationCategory FromIdentifier (string identifier, UNNotificationAction [] actions, string [] intentIdentifiers, UNNotificationCategoryOptions options);
+
+		[NoWatch, iOS (11,0)]
+		[Static]
+		[Export ("categoryWithIdentifier:actions:intentIdentifiers:hiddenPreviewsBodyPlaceholder:options:")]
+		UNNotificationCategory FromIdentifier (string identifier, UNNotificationAction[] actions, string[] intentIdentifiers, string hiddenPreviewsBodyPlaceholder, UNNotificationCategoryOptions options);
+
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -478,6 +499,10 @@ namespace XamCore.UserNotifications {
 		[Unavailable (PlatformName.WatchOS)]
 		[Export ("alertStyle")]
 		UNAlertStyle AlertStyle { get; }
+
+		[NoWatch, NoTV, iOS (11, 0)]
+		[Export ("showPreviewsSetting")]
+		UNShowPreviewsSetting ShowPreviewsSetting { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]

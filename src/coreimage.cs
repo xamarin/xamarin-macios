@@ -276,7 +276,7 @@ namespace XamCore.CoreImage {
 		void Render (CIImage image, IMTLTexture texture, [NullAllowed] IMTLCommandBuffer commandBuffer, CGRect bounds, [NullAllowed] CGColorSpace colorSpace);
 #endif
 
-		[Availability (Introduced = Platform.iOS_5_0 | Platform.Mac_10_4, Deprecated = Platform.iOS_6_0 | Platform.Mac_10_8, Message = "Use DrawImage (image, CGRect, CGRect) instead")]
+		[Availability (Introduced = Platform.iOS_5_0 | Platform.Mac_10_4, Deprecated = Platform.iOS_6_0 | Platform.Mac_10_8, Message = "Use 'DrawImage (image, CGRect, CGRect)' instead.")]
 		[Export ("drawImage:atPoint:fromRect:")]
 		void DrawImage (CIImage image, CGPoint atPoint, CGRect fromRect);
 
@@ -476,7 +476,7 @@ namespace XamCore.CoreImage {
 #if XAMCORE_4_0
 		void RegisterFilterName (string name, ICIFilterConstructor constructorObject, NSDictionary<NSString, NSObject> classAttributes);
 #else
-		[Advice ("The constructorObject argument must implement ICIFilterConstructor")]
+		[Advice ("The 'constructorObject' argument must implement 'ICIFilterConstructor'.")]
 		void RegisterFilterName (string name, NSObject constructorObject, NSDictionary<NSString, NSObject> classAttributes);
 #endif
 #endif
@@ -4681,5 +4681,32 @@ namespace XamCore.CoreImage {
 		//[CoreImageProperty ("inputFontSize")]
 		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
 		//float FontSize { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIMorphologyGradient {
+		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+	}
+
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIMorphologyMaximum {
+		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+	}
+
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIMorphologyMinimum {
+		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
 	}
 }

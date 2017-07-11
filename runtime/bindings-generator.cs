@@ -35,6 +35,7 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ("/* This file is generated */");
 				writer.WriteLine ();
 				writer.WriteLine ("#include \"bindings.h\"");
+				writer.WriteLine ("#include <CoreGraphics/CoreGraphics.h>");
 				writer.WriteLine ();
 				writer.WriteLine ("#ifdef __cplusplus");
 				writer.WriteLine ("extern \"C\" {");
@@ -1862,6 +1863,38 @@ namespace Xamarin.BindingMethods.Generator
 				}
 			);
 
+			// Required for ARKit
+
+			data.Add (
+				new FunctionData {
+					Comment = " // Matrix4 func (CGSize, int, nfloat, nfloat)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.Matrix4f,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.CGSize },
+						new ParameterData { TypeData = Types.Int32 },
+						new ParameterData { TypeData = Types.NFloat },
+						new ParameterData { TypeData = Types.NFloat },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // Matrix4 func (CGSize, Int64, nfloat, nfloat)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.Matrix4f,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.CGSize },
+						new ParameterData { TypeData = Types.Int64 },
+						new ParameterData { TypeData = Types.NFloat },
+						new ParameterData { TypeData = Types.NFloat },
+					},
+				}
+			);
+
 			// We must expand functions with native types to their actual type as well.
 			for (int i = data.Count - 1; i >= 0; i--) {
 				if (!data [i].HasNativeType)
@@ -2617,6 +2650,13 @@ namespace Xamarin.BindingMethods.Generator
 				IsARMStret = true,
 				IsX86Stret = true,
 				IsX64Stret = true,
+			};
+
+			public static TypeData CGSize = new TypeData {
+				ManagedType = "CGSize",
+				NativeType = "CGSize",
+				NativeWrapperType = "CGSize",
+				RequireMarshal = false,
 			};
 		}
 	}

@@ -671,7 +671,7 @@ namespace XamCore.Photos
 		XamCore.CoreImage.CIImageOrientation FullSizeImageOrientation { get; }
 
 		[Export ("avAsset", ArgumentSemantic.Strong)]
-		[Availability (Deprecated = Platform.iOS_9_0, Message="In iOS 9, use AudiovisualAsset property instead")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message="Use 'AudiovisualAsset' property instead.")]
 		AVAsset AvAsset { get; }
 
 		[iOS (9,0)]

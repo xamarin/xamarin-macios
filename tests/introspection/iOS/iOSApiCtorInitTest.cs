@@ -73,6 +73,11 @@ namespace Introspection {
 					return true;
 				break;
 #endif // !__WATCHOS__
+			case "CoreNFC": // Only available on device
+			case "DeviceCheck": // Only available on device
+				if (Runtime.Arch == Arch.SIMULATOR)
+					return true;
+				break;
 			}
 
 			switch (type.Name) {
@@ -202,6 +207,10 @@ namespace Introspection {
 			case "EKCalendarItem": // Fails with NSInvalidArgumentException +[EKCalendarItem frozenClass]: unrecognized selector sent to class, will fill a radar
 			case "EKParticipant": // ctor disabled in XAMCORE_3_0
 			case "UITableViewFocusUpdateContext": // Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Invalid parameter not satisfying: focusSystem, will fill a radar
+				return true;
+			case "INBookRestaurantReservationIntentResponse": // iOS 11 beta 2: stack overflow in description. radar:32945914
+				return true;
+			case "MPVolumeView": // Started failing with Xcode 9 beta 3
 				return true;
 			default:
 				return base.Skip (type);

@@ -61,6 +61,12 @@ namespace Introspection {
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;
+			// Xcode 9
+			case "CoreNFC":
+			case "DeviceCheck":
+				if (Runtime.Arch == Arch.SIMULATOR)
+					return true;
+				break;
 
 			// Apple does not ship a PushKit for every arch on some devices :(
 //			case "PushKit":

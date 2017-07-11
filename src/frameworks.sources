@@ -152,6 +152,11 @@ APPKIT_SOURCES = \
 	AppKit/NSColorPickerTouchBarItem.cs \
 	AppKit/NSSliderTouchBarItem.cs
 
+# ARKit
+
+ARKIT_SOURCES = \
+	ARKit/ARPointCloud.cs \
+
 # AssetsLibrary
 
 ASSETSLIBRARY_API_SOURCES = \
@@ -588,6 +593,9 @@ EVENTKIT_SOURCES = \
 EVENTKITUI_CORE_SOURCES = \
 	EventKitUI/Defs.cs \
 
+EVENTKITUI_SOURCES = \
+	EventKitUI/EKUIBundle.cs \
+
 # ExternalAccessory
 
 EXTERNALACCESSORY_API_SOURCES = \
@@ -805,6 +813,10 @@ HOMEKIT_SOURCES = \
 	HomeKit/HMCharacteristicProperties.cs \
 	HomeKit/HMEventTrigger.cs \
 	HomeKit/HMHome.cs \
+	HomeKit/HMPresenceEvent.cs \
+	HomeKit/HMSignificantTimeEvent.cs \
+	HomeKit/HMMutablePresenceEvent.cs \
+	HomeKit/HMMutableSignificantTimeEvent.cs \
 	HomeKit/HMService.cs \
 
 # iAd
@@ -1471,6 +1483,8 @@ SHARED_SOURCES = \
 	../runtime/Delegates.generated.cs \
 	MonoNativeFunctionWrapperAttribute.cs \
 	NativeTypes/NMath.cs \
+	CoreML/MLDictionaryFeatureProvider.cs \
+	CoreML/MLMultiArray.cs \
 	ObjCRuntime/AdoptsAttribute.cs \
 	ObjCRuntime/BackingField.cs \
 	ObjCRuntime/BaseWrapper.cs \
@@ -1522,6 +1536,7 @@ SHARED_SOURCES = \
 COMMON_FRAMEWORKS =         \
 	AVFoundation            \
 	CoreFoundation          \
+	CoreML                  \
 	Foundation              \
 	GameKit                 \
 	SceneKit                \
@@ -1601,6 +1616,7 @@ IOS_FRAMEWORKS =         \
 	AdSupport \
 	AddressBook \
 	AddressBookUI \
+	ARKit \
 	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \
@@ -1619,10 +1635,12 @@ IOS_FRAMEWORKS =         \
 	CoreMIDI \
 	CoreMedia \
 	CoreMotion \
+	CoreNFC \
 	CoreSpotlight \
 	CoreTelephony \
 	CoreText \
 	CoreVideo \
+	DeviceCheck \
 	EventKit \
 	EventKitUI \
 	ExternalAccessory \
@@ -1632,6 +1650,7 @@ IOS_FRAMEWORKS =         \
 	HealthKit \
 	HealthKitUI \
 	HomeKit \
+	IdentityLookup \
 	ImageIO \
 	Intents \
 	IntentsUI \
@@ -1719,6 +1738,7 @@ TVOS_FRAMEWORKS =           \
 	CoreSpotlight			\
 	CoreText                \
 	CoreVideo               \
+	DeviceCheck             \
 	ExternalAccessory       \
 	GLKit                   \
 	GameController          \

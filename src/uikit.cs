@@ -420,7 +420,7 @@ namespace XamCore.UIKit {
 		[Export ("shouldBeArchived")]
 		bool ShouldBeArchived { get; set;  }
 
-		[Export ("firstItem", ArgumentSemantic.Assign)]
+		[NullAllowed, Export ("firstItem", ArgumentSemantic.Assign)]
 		NSObject FirstItem { get;  }
 
 		[Export ("firstAttribute")]
@@ -2588,7 +2588,7 @@ namespace XamCore.UIKit {
 
 		// From @interface UIApplication (UIRemoteNotifications)
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'RegisterUserNotifications' and 'RegisterForNotifications' instead or if iOS 10+ 'UNUserNotificationCenter.RequestAuthorization'.")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'RegisterUserNotifications', 'RegisterForNotifications'  or 'UNUserNotificationCenter.RequestAuthorization' instead.")]
 		[Export ("registerForRemoteNotificationTypes:")]
 		void RegisterForRemoteNotificationTypes (UIRemoteNotificationType types);
 
@@ -2598,7 +2598,7 @@ namespace XamCore.UIKit {
 
 		// From @interface UIApplication (UIRemoteNotifications)
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'CurrentUserNotificationSettings' instead or if iOS 10+ 'UNUserNotificationCenter.GetNotificationSettings'.")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'CurrentUserNotificationSettings' or 'UNUserNotificationCenter.GetNotificationSettings' instead.")]
 		[Export ("enabledRemoteNotificationTypes")]
 		UIRemoteNotificationType EnabledRemoteNotificationTypes { get; }
 
@@ -4496,6 +4496,30 @@ namespace XamCore.UIKit {
 		[Export ("colorWithCGColor:")][Static]
 		UIColor FromCGColor (CGColor color);
 
+		[iOS (11,0)]
+		[Static]
+		[Export ("colorNamed:")]
+		[return: NullAllowed]
+		UIColor FromName (string name);
+
+		// From the NSItemProviderReading protocol, a special constructor.
+		[iOS (11,0), NoWatch, NoTV]
+		[Export ("initWithItemProviderData:typeIdentifier:error:")]
+		IntPtr Constructor (NSData providerData, string typeIdentifier, out NSError outError);
+
+		// From the NSItemProviderReading protocol, a static method.
+		[Static]
+		[iOS (11,0), NoWatch, NoTV]
+		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] ReadableTypeIdentifiersForItemProvider { get; }
+#if !WATCH
+		[iOS (11,0)]
+		[Static]
+		[Export ("colorNamed:inBundle:compatibleWithTraitCollection:")]
+		[return: NullAllowed]
+		UIColor FromName (string name, [NullAllowed] NSBundle inBundle, [NullAllowed] UITraitCollection compatibleWithTraitCollection);
+#endif
+	
 		[iOS (10,0), TV (10,0), Watch (3,0)]
 		[Static]
 		[Export ("colorWithDisplayP3Red:green:blue:alpha:")]
@@ -6750,6 +6774,17 @@ namespace XamCore.UIKit {
 		UIImage FromImage (CIImage image);
 #endif // !WATCH
 
+		// From the NSItemProviderReading protocol, a special constructor.
+		[Export ("initWithItemProviderData:typeIdentifier:error:")]
+		[iOS (11,0), NoWatch, NoTV]
+		IntPtr Constructor (NSData providerData, string typeIdentifier, out NSError outError);
+
+		// From the NSItemProviderReading protocol, a static method.
+		[Static]
+		[iOS (11,0), NoWatch, NoTV]
+		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] ReadableTypeIdentifiersForItemProvider { get; }
+	
 		[Export ("renderingMode")]
 		[ThreadSafe]
 		[Since (7,0)]
@@ -7574,6 +7609,10 @@ namespace XamCore.UIKit {
 		[NoiOS] // UIKIT_AVAILABLE_TVOS_ONLY
 		[Export ("focusedFrameGuide")]
 		UILayoutGuide FocusedFrameGuide { get; }
+
+		[TV (11, 0), NoWatch, NoiOS]
+		[Export ("overlayContentView", ArgumentSemantic.Strong)]
+		UIView OverlayContentView { get; }
 	}
 
 	[NoTV]
@@ -12945,6 +12984,18 @@ namespace XamCore.UIKit {
 		[iOS (9,0)] // added in Xcode 7.1 / iOS 9.1 SDK
 		[Export ("canBecomeFocused")]
 		new bool CanBecomeFocused { get; }
+
+		[NoWatch, NoTV, iOS (11,0)]
+		[Export ("addInteraction:")]
+		void AddInteraction (IUIInteraction interaction);
+	
+		[NoWatch, NoTV, iOS (11,0)]
+		[Export ("removeInteraction:")]
+		void RemoveInteraction (IUIInteraction interaction);
+	
+		[NoWatch, NoTV, iOS (11, 0)]
+		[Export ("interactions", ArgumentSemantic.Copy)]
+		IUIInteraction[] Interactions { get; set; }
 	}
 
 	[Category, BaseType (typeof (UIView))]
@@ -15405,6 +15456,23 @@ namespace XamCore.UIKit {
 		void HandleInputModeList (UIView fromView, UIEvent withEvent);
 	}
 
+	[NoWatch, NoTV, iOS (11,0)]
+	[Protocol]
+	interface UIInteraction
+	{
+		[Abstract]
+		[Export ("view", ArgumentSemantic.Weak)]
+		UIView View { get; }
+	
+		[Abstract]
+		[Export ("willMoveToView:")]
+		void WillMoveToView ([NullAllowed] UIView view);
+	
+		[Abstract]
+		[Export ("didMoveToView:")]
+		void DidMoveToView ([NullAllowed] UIView view);
+	}
+	
 	[NoWatch]
 	[iOS (8,0)]
 	[Protocol, Model]
@@ -16087,4 +16155,258 @@ namespace XamCore.UIKit {
 		[Field ("UITextAttributeTextShadowOffset")]
 		NSString TextShadowOffset { get; }
 	}
+
+#region Drag and Drop
+	interface IUIInteraction {}
+	interface IUIDropSession {}
+	interface IUIDragDropSession {}
+	interface IUIDragAnimating {}
+	interface IUIDragSession {}
+	interface IUIDropInteractionDelegate {}
+		
+#if !WATCH
+	[NoWatch, NoTV, iOS (11,0)]
+	[Protocol]
+	interface UIDragAnimating
+	{
+		[Abstract]
+		[Export ("addAnimations:")]
+		void AddAnimations (Action animations);
+	
+		[Abstract]
+		[Export ("addCompletion:")]
+		void AddCompletion (Action<UIViewAnimatingPosition> completion);
+	}
+	
+	[NoWatch, NoTV, iOS (11,0)]
+	[Protocol]
+	interface UIDragDropSession
+	{
+		[Abstract]
+		[Export ("items")]
+		UIDragItem[] Items { get; }
+	
+		[Abstract]
+		[Export ("locationInView:")]
+		CGPoint LocationInView ([NullAllowed] UIView view);
+	
+		[Abstract]
+		[Export ("allowsMoveOperation")]
+		bool AllowsMoveOperation { get; }
+	
+		[Abstract]
+		[Export ("restrictedToDraggingApplication")]
+		bool RestrictedToDraggingApplication { [Bind ("isRestrictedToDraggingApplication")] get; }
+	
+		[Abstract]
+		[Export ("hasItemsConformingToTypeIdentifiers:")]
+		bool HasConformingItems (string[] typeIdentifiers);
+	
+		[Abstract]
+		[Export ("canLoadObjectsOfClass:")]
+		bool CanLoadObjectsOfClass (Class itemProviderReadingClass);
+	}
+	
+	[NoWatch, NoTV, iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UIDragItem
+	{
+		[Export ("initWithItemProvider:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSItemProvider itemProvider);
+	
+		[Export ("itemProvider")]
+		NSItemProvider ItemProvider { get; }
+	
+		[NullAllowed, Export ("localObject", ArgumentSemantic.Strong)]
+		NSObject LocalObject { get; set; }
+	
+		[NullAllowed, Export ("previewProvider", ArgumentSemantic.Copy)]
+		Func<UIDragPreview> PreviewProvider { get; set; }
+	}
+	
+	[NoWatch, NoTV, iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UIDragPreview : NSCopying
+	{
+		[Export ("initWithView:parameters:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (UIView view, UIDragPreviewParameters parameters);
+	
+		[Export ("initWithView:")]
+		IntPtr Constructor (UIView view);
+	
+		[Export ("view")]
+		UIView View { get; }
+	
+		[Export ("parameters", ArgumentSemantic.Copy)]
+		UIDragPreviewParameters Parameters { get; }
+	}
+	
+	[NoWatch, NoTV, iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface UIDragPreviewParameters : NSCopying
+	{
+		[Export ("initWithTextLineRects:")]
+		IntPtr Constructor (NSValue[] textLineRects);
+	
+		[NullAllowed, Export ("visiblePath", ArgumentSemantic.Copy)]
+		UIBezierPath VisiblePath { get; set; }
+	
+		[Export ("backgroundColor", ArgumentSemantic.Copy)]
+		UIColor BackgroundColor { get; set; }
+	}
+	
+	[NoWatch, NoTV, iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UIDragPreviewTarget : NSCopying
+	{
+		[Export ("initWithContainer:center:transform:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (UIView container, CGPoint center, CGAffineTransform transform);
+	
+		[Export ("initWithContainer:center:")]
+		IntPtr Constructor (UIView container, CGPoint center);
+	
+		[Export ("container")]
+		UIView Container { get; }
+	
+		[Export ("center")]
+		CGPoint Center { get; }
+	
+		[Export ("transform")]
+		CGAffineTransform Transform { get; }
+	}
+	
+	[NoWatch, NoTV, iOS (11,0)]
+	[Protocol]
+	interface UIDragSession : UIDragDropSession
+	{
+		[Abstract]
+		[NullAllowed, Export ("localContext", ArgumentSemantic.Strong)]
+		NSObject LocalContext { get; set; }
+	}
+
+	[NoWatch, NoTV, iOS (11,0)]
+	[BaseType (typeof(NSObject))] // If Apple adds a delegate setter: Delegates=new string [] {"Delegate"}, Events=new Type [] { typeof (UIDropInteractionDelegate)})]
+	[DisableDefaultCtor]
+	interface UIDropInteraction : UIInteraction
+	{
+		[Export ("initWithDelegate:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (IUIDropInteractionDelegate @delegate);
+	
+		[Export ("delegate", ArgumentSemantic.Weak)]
+		[NullAllowed]
+		IUIDropInteractionDelegate Delegate { get; }
+	
+		[Export ("allowsSimultaneousDropSessions")]
+		bool AllowsSimultaneousDropSessions { get; set; }
+	}
+	
+	[NoWatch, NoTV, iOS (11,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface UIDropInteractionDelegate
+	{
+		[Export ("dropInteraction:canHandleSession:"), DelegateName ("Func<UIDropInteraction,IUIDropSession,bool>"), NoDefaultValue]
+		bool CanHandleSession (UIDropInteraction interaction, IUIDropSession session);
+	
+		[Export ("dropInteraction:sessionDidEnter:"), EventArgs ("UIDropInteraction")]
+		void SessionDidEnter (UIDropInteraction interaction, IUIDropSession session);
+	
+		[Export ("dropInteraction:sessionDidUpdate:"), DelegateName ("Func<UIDropInteraction,IUIDropSession,UIDropProposal>"), NoDefaultValue]
+		UIDropProposal SessionDidUpdate (UIDropInteraction interaction, IUIDropSession session);
+	
+		[Export ("dropInteraction:sessionDidExit:"), EventArgs ("UIDropInteraction")]
+		void SessionDidExit (UIDropInteraction interaction, IUIDropSession session);
+	
+		[Export ("dropInteraction:performDrop:"), EventArgs ("UIDropInteraction")]
+		void PerformDrop (UIDropInteraction interaction, IUIDropSession session);
+	
+		[Export ("dropInteraction:concludeDrop:"), EventArgs ("UIDropInteraction")]
+		void ConcludeDrop (UIDropInteraction interaction, IUIDropSession session);
+	
+		[Export ("dropInteraction:sessionDidEnd:"), EventArgs ("UIDropInteraction")]
+		void SessionDidEnd (UIDropInteraction interaction, IUIDropSession session);
+	
+		[Export ("dropInteraction:previewForDroppingItem:withDefault:")]
+		[return: NullAllowed][DelegateName("UIDropInteractionPreviewForItem"), NoDefaultValue]
+		UITargetedDragPreview PreviewForDroppingItem (UIDropInteraction interaction, UIDragItem item, UITargetedDragPreview defaultPreview);
+	
+		[Export ("dropInteraction:item:willAnimateDropWithAnimator:"), EventArgs("UIDropInteractionAnimation")]
+		void WillAnimateDrop (UIDropInteraction interaction, UIDragItem item, IUIDragAnimating animator);
+	}
+	
+	[NoWatch, NoTV, iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UIDropProposal : NSCopying
+	{
+		[Export ("initWithDropOperation:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (UIDropOperation operation);
+	
+		[Export ("operation")]
+		UIDropOperation Operation { get; }
+	
+		[Export ("precise")]
+		bool Precise { [Bind ("isPrecise")] get; set; }
+	
+		[Export ("prefersFullSizePreview")]
+		bool PrefersFullSizePreview { get; set; }
+	}
+
+	[NoWatch, NoTV, iOS (11,0)]
+	[Protocol]
+	interface UIDropSession : UIDragDropSession, NSProgressReporting
+	{
+		[Abstract]
+		[NullAllowed, Export ("localDragSession")]
+		IUIDragSession LocalDragSession { get; }
+	
+		[Abstract]
+		[Export ("progressIndicatorStyle", ArgumentSemantic.Assign)]
+		UIDropSessionProgressIndicatorStyle ProgressIndicatorStyle { get; set; }
+	
+		[Abstract]
+		[Export ("loadObjectsOfClass:completion:")]
+		NSProgress Completion (INSItemProviderReading aClass, Action<INSItemProviderReading []> completion);
+	}
+	
+	[NoWatch, NoTV, iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UITargetedDragPreview : NSCopying
+	{
+		[Export ("initWithView:parameters:target:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (UIView view, UIDragPreviewParameters parameters, UIDragPreviewTarget target);
+	
+		[Export ("initWithView:parameters:")]
+		IntPtr Constructor (UIView view, UIDragPreviewParameters parameters);
+	
+		[Export ("initWithView:")]
+		IntPtr Constructor (UIView view);
+	
+		[Export ("target")]
+		UIDragPreviewTarget Target { get; }
+	
+		[Export ("view")]
+		UIView View { get; }
+	
+		[Export ("parameters", ArgumentSemantic.Copy)]
+		UIDragPreviewParameters Parameters { get; }
+	
+		[Export ("size")]
+		CGSize Size { get; }
+	
+		[Export ("retargetedPreviewWithTarget:")]
+		UITargetedDragPreview GetRetargetedPreview (UIDragPreviewTarget newTarget);
+	}
+#endif
+#endregion
 }

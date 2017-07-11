@@ -5,7 +5,7 @@ using XamCore.CoreGraphics;
 namespace XamCore.AppKit {
 
 	public partial class NSComboBox {
-		[Obsolete ("Use GetItemObject instead")]
+		[Obsolete ("Use GetItemObject instead.")]
 		public virtual NSComboBox GetItem (nint index)
 		{
 			return (NSComboBox) GetItemObject (index);

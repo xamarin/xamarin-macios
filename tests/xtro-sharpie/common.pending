@@ -649,3 +649,8 @@
 !incorrect-protocol-member! MDLTransformComponent::keyTimes is REQUIRED and should be abstract
 !incorrect-protocol-member! MDLTransformComponent::resetsTransform is REQUIRED and should be abstract
 !incorrect-protocol-member! MDLTransformComponent::setResetsTransform: is REQUIRED and should be abstract
+
+# CoreML
+## we do not have NSFastEnumeration and decided to not bind objectForKeyedSubscript using a local method instead
+!missing-protocol-conformance! MLDictionaryFeatureProvider should conform to NSFastEnumeration
+!missing-selector! MLDictionaryFeatureProvider::objectForKeyedSubscript: not bound

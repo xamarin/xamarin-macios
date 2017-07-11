@@ -456,3 +456,19 @@
 !missing-selector! MPMediaEntity::objectForKeyedSubscript: not bound
 !missing-selector! MPMediaEntity::valueForProperty: not bound
 !missing-selector! MPMediaItemArtwork::imageCropRect not bound
+
+# Not available in OS X
+!missing-selector! ACAccount::userFullName not bound
+
+## These are not available on macOS even if xtro says so.
+!missing-selector! EKCalendarItem::UUID not bound
+!missing-selector! EKEvent::birthdayPersonID not bound
+!missing-selector! EKEventStore::calendars not bound
+!missing-selector! EKEventStore::removeEvent:span:error: not bound
+!missing-selector! EKEventStore::saveEvent:span:error: not bound
+!missing-selector! EKSource::calendars not bound
+
+### This is not bound and it is already deprecated
+!missing-selector! EKParticipant::ABPersonInAddressBook: not bound
+
+

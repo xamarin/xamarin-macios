@@ -399,7 +399,7 @@ namespace XamCore.SceneKit
         }
 
 #if !XAMCORE_2_0
-	[Obsolete ("Use the overload without the ref float scale")]
+	[Obsolete ("Use the overload without the 'ref float scale'.")]
         public static void Multiply(ref SCNQuaternion quaternion, ref float scale, out SCNQuaternion result)
 	{
             result = new SCNQuaternion(quaternion.X * scale, quaternion.Y * scale, quaternion.Z * scale, quaternion.W * scale);		

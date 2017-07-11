@@ -262,7 +262,7 @@ namespace XamCore.AudioToolbox {
 	[StructLayout(LayoutKind.Explicit)]
 	public struct AudioQueueParameterEvent {
 		[FieldOffset(0)]
-		[Advice ("Use Parameter")] 
+		[Advice ("Use Parameter.")]
 		public uint ID;
 
 		[FieldOffset(0)] 
