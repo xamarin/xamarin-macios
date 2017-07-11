@@ -333,6 +333,7 @@ namespace xharness
 				"src/generator.cs",
 				"src/generator-enums.cs",
 				"src/generator-filters.cs",
+				"tests/generator",
 			};
 			var mac_binding_project = new string [] {
 				"msbuild",
@@ -557,11 +558,31 @@ namespace xharness
 				Jenkins = this,
 				Platform = TestPlatform.iOS,
 				TestName = "BTouch tests",
-				Target = "wrench-btouch",
-				WorkingDirectory = Harness.RootDirectory,
+				Target = "all",
+				WorkingDirectory = Path.Combine (Harness.RootDirectory, "generator"),
 				Ignored = !IncludeBtouch,
 			};
 			Tasks.Add (runBTouch);
+
+			var buildGenerator = new MakeTask {
+				Jenkins = this,
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "src", "generator-ikvm.sln"))),
+				SpecifyPlatform = false,
+				SpecifyConfiguration = false,
+				Platform = TestPlatform.iOS,
+				Target = "build-unit-tests",
+				WorkingDirectory = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "generator")),
+			};
+			var runGenerator = new NUnitExecuteTask (buildGenerator) {
+				TestLibrary = Path.Combine (Harness.RootDirectory, "generator", "bin", "Debug", "generator-tests.dll"),
+				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
+				WorkingDirectory = Path.Combine (Harness.RootDirectory, "generator", "bin", "Debug"),
+				Platform = TestPlatform.iOS,
+				TestName = "Generator tests",
+				Timeout = TimeSpan.FromMinutes (10),
+				Ignored = !IncludeBtouch,
+			};
+			Tasks.Add (runGenerator);
 
 			var run_mmp = new MakeTask
 			{
@@ -2271,12 +2292,14 @@ function oninitialload ()
 						ExecutionResult = TestExecutingResult.Running;
 						var result = await proc.RunAsync (log, true, Timeout);
 						if (result.TimedOut) {
-							log.WriteLine ("Execution timed out after {0} minutes.", Timeout.Minutes);
+							FailureMessage = $"Execution timed out after {Timeout.Minutes} minutes.";
+							log.WriteLine (FailureMessage);
 							ExecutionResult = TestExecutingResult.TimedOut;
 						} else if (result.Succeeded) {
 							ExecutionResult = TestExecutingResult.Succeeded;
 						} else {
 							ExecutionResult = TestExecutingResult.Failed;
+							FailureMessage = $"Execution failed with exit code {result.ExitCode}";
 						}
 					}
 					Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
