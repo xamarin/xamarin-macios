@@ -892,7 +892,7 @@ namespace XamCore.Foundation
 
 #if MONOMAC
 	// Obsolete, but the only API surfaced by WebKit.WebHistory.
-	[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10, Message="Obsolete, use NSCalendar and NSDateComponents")]
+	[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10, Message="Use NSCalendar and NSDateComponents.")]
 	[BaseType (typeof (NSDate))]
 	interface NSCalendarDate {
 		[Export ("initWithString:calendarFormat:locale:")]
@@ -4150,7 +4150,7 @@ namespace XamCore.Foundation
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("tagAtIndex:unit:scheme:tokenRange:")]
 		[return: NullAllowed]
-		string GetTag (nuint charIndex, NSLinguisticTaggerUnit unit, string scheme, [NullAllowed] NSRange tokenRange);
+		string GetTag (nuint charIndex, NSLinguisticTaggerUnit unit, string scheme, [NullAllowed] ref NSRange tokenRange);
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("tokenRangeAtIndex:unit:")]
@@ -4175,7 +4175,7 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("tagForString:atIndex:unit:scheme:orthography:tokenRange:")]
 		[return: NullAllowed]
-		string GetTag (string str, nuint charIndex, NSLinguisticTaggerUnit unit, string scheme, [NullAllowed] NSOrthography orthography, [NullAllowed] NSRange tokenRange);
+		string GetTag (string str, nuint charIndex, NSLinguisticTaggerUnit unit, string scheme, [NullAllowed] NSOrthography orthography, [NullAllowed] ref NSRange tokenRange);
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Static]
@@ -5947,10 +5947,6 @@ namespace XamCore.Foundation
 		NSString FileProtectionCompleteUntilFirstUserAuthentication { get; }
 #endif
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
-		[NullAllowed, Export ("percentEncodedQueryItems", ArgumentSemantic.Copy)]
-		NSUrlQueryItem[] PercentEncodedQueryItems { get; set; }
-
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
@@ -6184,6 +6180,10 @@ namespace XamCore.Foundation
 		[iOS (9,0), Mac(10,11)]
 		[Export ("rangeOfFragment"), Mac(10,11)]
 		NSRange RangeOfFragment { get; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NullAllowed, Export ("percentEncodedQueryItems", ArgumentSemantic.Copy)]
+		NSUrlQueryItem[] PercentEncodedQueryItems { get; set; }
 	}
 	
 	[BaseType (typeof (NSObject), Name="NSURLAuthenticationChallenge")]
@@ -6861,17 +6861,25 @@ namespace XamCore.Foundation
 		[Export ("progress", ArgumentSemantic.Strong)]
 		NSProgress Progress { get; }
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
-		[NullAllowed, Export ("earliestBeginDate", ArgumentSemantic.Copy)]
-		NSDate EarliestBeginDate { get; set; }
+//1) ApiSelectorTest.InstanceMethods (Introspection.MacApiSelectorTest.ApiSelectorTest.InstanceMethods)
+//     6 errors found in 22990 instance selector validated:
+//Selector not found for Foundation.NSUrlSessionTask : countOfBytesClientExpectsToReceive
+//Selector not found for Foundation.NSUrlSessionTask : setCountOfBytesClientExpectsToReceive:
+//Selector not found for Foundation.NSUrlSessionTask : countOfBytesClientExpectsToSend
+//Selector not found for Foundation.NSUrlSessionTask : setCountOfBytesClientExpectsToSend:
+//Selector not found for Foundation.NSUrlSessionTask : earliestBeginDate
+//Selector not found for Foundation.NSUrlSessionTask : setEarliestBeginDate:
+		//[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		//[NullAllowed, Export ("earliestBeginDate", ArgumentSemantic.Copy)]
+		//NSDate EarliestBeginDate { get; set; }
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
-		[Export ("countOfBytesClientExpectsToSend")]
-		long CountOfBytesClientExpectsToSend { get; set; }
+		//[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		//[Export ("countOfBytesClientExpectsToSend")]
+		//long CountOfBytesClientExpectsToSend { get; set; }
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
-		[Export ("countOfBytesClientExpectsToReceive")]
-		long CountOfBytesClientExpectsToReceive { get; set; }
+		//[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		//[Export ("countOfBytesClientExpectsToReceive")]
+		//long CountOfBytesClientExpectsToReceive { get; set; }
 
 	}
 
@@ -11403,12 +11411,12 @@ namespace XamCore.Foundation
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("estimatedTimeRemaining", ArgumentSemantic.Copy)]
-		[BindAs (typeof (double?))]
+		[BindAs (typeof (double))]
 		NSNumber EstimatedTimeRemaining { get; set; }
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("throughput", ArgumentSemantic.Copy)]
-		[BindAs (typeof (nint?))]
+		[BindAs (typeof (nint))]
 		NSNumber Throughput { get; set; }
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
@@ -11421,12 +11429,12 @@ namespace XamCore.Foundation
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("fileTotalCount", ArgumentSemantic.Copy)]
-		[BindAs (typeof (nint?))]
+		[BindAs (typeof (nint))]
 		NSNumber FileTotalCount { get; set; }
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("fileCompletedCount", ArgumentSemantic.Copy)]
-		[BindAs (typeof (nint?))]
+		[BindAs (typeof (nint))]
 		NSNumber FileCompletedCount { get; set; }
 	}
 
@@ -13119,6 +13127,11 @@ namespace XamCore.Foundation
 	[Abstract] // abstract subclass of NSUnit
 	[DisableDefaultCtor] // there's a designated initializer
 	interface NSDimension : NSSecureCoding {
+		// Inlined from base type
+		[Export ("initWithSymbol:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol);
+
 		[Export ("converter", ArgumentSemantic.Copy)]
 		NSUnitConverter Converter { get; }
 
@@ -13649,11 +13662,11 @@ namespace XamCore.Foundation
 		IntPtr _InitRecordDescriptor ();
 
 #if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead")]
+		[Obsolete ("Use the constructor instead.")]
 		[Export ("initListDescriptor")]
 		NSObject InitListDescriptor ();
 
-		[Obsolete ("Use the constructor instead")]
+		[Obsolete ("Use the constructor instead.")]
 		[Export ("initRecordDescriptor")]
 		NSObject InitRecordDescriptor ();
 #endif
@@ -15212,6 +15225,7 @@ namespace XamCore.Foundation
 	}
 
 	[Protocol]
+	[BaseType (typeof(NSObject), Name="NSXPCProxyCreating")]
 	interface NSXpcProxyCreating
 	{
 		[Abstract]
@@ -15364,8 +15378,7 @@ namespace XamCore.Foundation
 	}
 
 	[Mac (10,8)]
-	[BaseType (typeof(NSObject), Name="NSXPCListenerEndpoint"git diff
-	          )]
+	[BaseType (typeof(NSObject), Name="NSXPCListenerEndpoint")]
 	[DisableDefaultCtor]
 	interface NSXpcListenerEndpoint : NSSecureCoding
 	{
