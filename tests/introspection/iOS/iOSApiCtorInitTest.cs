@@ -210,6 +210,8 @@ namespace Introspection {
 				return true;
 			case "INBookRestaurantReservationIntentResponse": // iOS 11 beta 2: stack overflow in description. radar:32945914
 				return true;
+			case "MPVolumeView": // Started failing with Xcode 9 beta 3
+				return true;
 			default:
 				return base.Skip (type);
 			}
