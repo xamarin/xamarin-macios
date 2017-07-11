@@ -137,6 +137,19 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "NSProgress":
+				switch (selector) {
+				case "estimatedTimeRemaining":
+				case "setEstimatedTimeRemaining:":
+				case "fileCompletedCount":
+				case "setFileCompletedCount:":
+				case "fileTotalCount":
+				case "setFileTotalCount:":
+				case "throughput":
+				case "setThroughput:":
+					return true;
+				}
+				break;
 			}
 			return base.Skip (type, method, selector);
 		}
