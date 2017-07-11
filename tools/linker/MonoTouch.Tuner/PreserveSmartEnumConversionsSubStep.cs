@@ -27,9 +27,16 @@ namespace Xamarin.Linker.Steps
 
 		public override bool IsActiveFor (AssemblyDefinition assembly)
 		{
-			// we need to process all assemblies, because the functions we want to
-			// preserve are not necessarily in the assembly we're processing.
-			return true;
+			if (Profile.IsProductAssembly (assembly))
+				return true;
+
+			// We don't need to process assemblies that don't reference ObjCRuntime.BindAsAttribute.
+			foreach (var tr in assembly.MainModule.GetTypeReferences ()) {
+				if (tr.IsPlatformType ("ObjCRuntime", "BindAsAttribute"))
+					return true;
+			}
+
+			return false;
 		}
 
 		void Preserve (Tuple<MethodDefinition, MethodDefinition> pair, MethodDefinition conditionA, MethodDefinition conditionB = null)
