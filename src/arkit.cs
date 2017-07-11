@@ -39,6 +39,7 @@ namespace XamCore.ARKit {
 	[Native]
 	public enum ARTrackingStateReason : nint {
 		None,
+		Initializing,
 		ExcessiveMotion,
 		InsufficientFeatures,
 	}
@@ -51,11 +52,13 @@ namespace XamCore.ARKit {
 		UnsupportedConfiguration = 100,
 		SensorUnavailable = 101,
 		SensorFailed = 102,
+		CameraUnauthorized = 103,
 		WorldTrackingFailed = 200,
 	}
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
+	[Flags]
 	[Native]
 	public enum ARHitTestResultType : nuint {
 		FeaturePoint = 1 << 0,
@@ -73,6 +76,7 @@ namespace XamCore.ARKit {
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
+	[Flags]
 	[Native]
 	public enum ARSessionRunOptions : nuint {
 		ResetTracking = 1 << 0,
@@ -90,6 +94,7 @@ namespace XamCore.ARKit {
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
+	[Flags]
 	[Native]
 	public enum ARPlaneDetection : nuint {
 		None = 0,
