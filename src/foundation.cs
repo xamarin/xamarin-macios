@@ -14274,4 +14274,168 @@ namespace XamCore.Foundation
 		[Export ("name")]
         	string Name { get; }
 	}
+
+	interface INSXpcProxyCreating
+	{
+	}
+
+	[Protocol]
+	[BaseType (typeof(NSObject), Name="NSXPCProxyCreating")]
+	interface NSXpcProxyCreating
+	{
+		[Abstract]
+		[Export ("remoteObjectProxy")]
+		NSObject RemoteObjectProxy { get; }
+
+		[Abstract]
+		[Export ("remoteObjectProxyWithErrorHandler:")]
+		NSObject GetRemoteObjectProxy (Action<NSError> handler);
+
+		[Watch (2,0), TV (9,0), Mac (10,11), iOS (9,0)]
+		[Export ("synchronousRemoteObjectProxyWithErrorHandler:")]
+		NSObject GetSynchronousRemoteObjectProxy (Action<NSError> handler);
+	}
+
+	[Mac (10,8)]
+	[BaseType (typeof(NSObject), Name="NSXPCConnection")]
+	[DisableDefaultCtor]
+	interface NSXpcConnection : NSXpcProxyCreating
+	{
+		[Export ("initWithServiceName:")]
+		IntPtr Constructor (string serviceName);
+
+		[NullAllowed, Export ("serviceName")]
+		string ServiceName { get; }
+
+		[Export ("initWithMachServiceName:options:")]
+		IntPtr Constructor (string name, NSXpcConnectionOptions options);
+
+		[Export ("initWithListenerEndpoint:")]
+		IntPtr Constructor (NSXpcListenerEndpoint endpoint);
+
+		[Export ("endpoint", ArgumentSemantic.Retain)]
+		NSXpcListenerEndpoint Endpoint { get; }
+
+		[NullAllowed, Export ("exportedInterface", ArgumentSemantic.Retain)]
+		NSXpcInterface ExportedInterface { get; set; }
+
+		[NullAllowed, Export ("exportedObject", ArgumentSemantic.Retain)]
+		NSObject ExportedObject { get; set; }
+
+		[NullAllowed, Export ("remoteObjectInterface", ArgumentSemantic.Retain)]
+		NSXpcInterface RemoteObjectInterface { get; set; }
+
+		[Export ("remoteObjectProxy", ArgumentSemantic.Retain)]
+		NSObject RemoteObjectProxy { get; }
+
+		[Export ("remoteObjectProxyWithErrorHandler:")]
+		NSObject GetRemoteObjectProxy (Action<NSError> handler);
+
+		[Watch (2,0), TV (9,0), Mac (10,11), iOS (9,0)]
+		[Async, Export ("synchronousRemoteObjectProxyWithErrorHandler:")]
+		NSObject GetSynchronousRemoteObjectProxy (Action<NSError> handler);
+
+		[NullAllowed, Export ("interruptionHandler", ArgumentSemantic.Copy)]
+		Action InterruptionHandler { get; set; }
+
+		[NullAllowed, Export ("invalidationHandler", ArgumentSemantic.Copy)]
+		Action InvalidationHandler { get; set; }
+
+		[Export ("resume")]
+		void Resume ();
+
+		[Export ("suspend")]
+		void Suspend ();
+
+		[Export ("invalidate")]
+		void Invalidate ();
+
+		[Export ("auditSessionIdentifier")]
+		int AuditSessionIdentifier { get; }
+
+		[Export ("processIdentifier")]
+		int ProcessIdentifier { get; }
+
+		[Export ("effectiveUserIdentifier")]
+		uint EffectiveUserIdentifier { get; }
+
+		[Export ("effectiveGroupIdentifier")]
+		uint EffectiveGroupIdentifier { get; }
+	}
+
+	[Mac (10,8)]
+	[BaseType (typeof(NSObject), Name="NSXPCListener")]
+	[DisableDefaultCtor]
+	interface NSXpcListener
+	{
+		[Static]
+		[Export ("serviceListener")]
+		NSXpcListener ServiceListener { get; }
+
+		[Static]
+		[Export ("anonymousListener")]
+		NSXpcListener AnonymousListener { get; }
+
+		[Export ("initWithMachServiceName:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string name);
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Assign)]
+		INSXpcListenerDelegate Delegate { get; set; }
+
+		[Export ("endpoint", ArgumentSemantic.Retain)]
+		NSXpcListenerEndpoint Endpoint { get; }
+
+		[Export ("resume")]
+		void Resume ();
+
+		[Export ("suspend")]
+		void Suspend ();
+
+		[Export ("invalidate")]
+		void Invalidate ();
+	}
+
+	interface INSXpcListenerDelegate { }
+
+	[Protocol, Model]
+	[BaseType (typeof(NSObject), Name="NSXPCListenerDelegate")]
+	interface NSXpcListenerDelegate
+	{
+		[Export ("listener:shouldAcceptNewConnection:")]
+		bool ShouldAcceptNewConnection (NSXpcListener listener, NSXpcConnection newConnection);
+	}
+
+	[Mac (10,8)]
+	[BaseType (typeof(NSObject), Name="NSXPCInterface")]
+	[DisableDefaultCtor]
+	interface NSXpcInterface
+	{
+		[Static]
+		[Export ("interfaceWithProtocol:")]
+		NSXpcInterface FromInterface (Protocol protocol);
+
+		[Export ("protocol", ArgumentSemantic.Assign)]
+		Protocol Protocol { get; set; }
+
+		[Export ("setClasses:forSelector:argumentIndex:ofReply:")]
+		void SetClasses (NSSet<Class> classes, Selector sel, nuint arg, bool ofReply);
+
+		[Export ("classesForSelector:argumentIndex:ofReply:")]
+		NSSet<Class> GetClasses (Selector sel, nuint arg, bool ofReply);
+
+		[Export ("setInterface:forSelector:argumentIndex:ofReply:")]
+		void SetInterface (NSXpcInterface ifc, Selector sel, nuint arg, bool ofReply);
+
+		[Export ("interfaceForSelector:argumentIndex:ofReply:")]
+		[return: NullAllowed]
+		NSXpcInterface GetInterface (Selector sel, nuint arg, bool ofReply);
+	}
+
+	[Mac (10,8)]
+	[BaseType (typeof(NSObject), Name="NSXPCListenerEndpoint")]
+	[DisableDefaultCtor]
+	interface NSXpcListenerEndpoint : NSSecureCoding
+	{
+	}
 }
