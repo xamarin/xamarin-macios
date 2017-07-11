@@ -55,6 +55,7 @@ namespace Introspection {
 				case "MKMapItem": // Not declared in header file
 				case "CAConstraintLayoutManager": // Not declared in header file
 				case "NSQueryGenerationToken": // Declared in header file but SupportsSecureCoding returns false - radar 32856944
+				case "NSPersistentHistoryToken": // Conformance not in headers
 					return true;
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
@@ -75,6 +76,7 @@ namespace Introspection {
 				case "EKReminder": // Not declared in header file
 				case "ACAccount": // Not declared in header file
 				case "NEFlowMetaData": // Not declared in header file
+				case "ACAccountCredential": // b2: Conformance not in headers
 					return true;
 				}
 				break;
@@ -120,6 +122,7 @@ namespace Introspection {
 				case "MKMapItem": // Not declared in header file
 				case "NSConstraintConflict": // Not declared in header file
 				case "NSQueryGenerationToken": // Declared in header file but SupportsSecureCoding returns false - radar 32856944
+				case "NSPersistentHistoryToken": // Conformance not in headers
 					return true;
 				}
 				break;
