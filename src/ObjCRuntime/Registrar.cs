@@ -649,9 +649,11 @@ namespace XamCore.Registrar {
 						return Registrar.IsEnum (underlyingOutputType);
 					}
 				} else if (Registrar.Is (underlyingInputType, Foundation, "NSValue")) {
+#if MMP || MONOMAC
 					// Remove 'MonoMac.' namespace prefix to make switch smaller
 					if (!Registrar.IsDualBuild && outputTypeName.StartsWith ("MonoMac.", StringComparison.Ordinal))
 						outputTypeName = outputTypeName.Substring ("MonoMac.".Length);
+#endif
 
 					switch (outputTypeName) {
 					case "CoreAnimation.CATransform3D":
