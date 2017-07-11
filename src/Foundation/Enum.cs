@@ -1261,12 +1261,6 @@ namespace XamCore.Foundation  {
 		TemperatureWithoutUnit = (1 << 2)
 	}
 
-	[Watch(2, 0), TV(9, 0), Mac(10, 8), iOS(6, 0)]
-	[Native]
-	public enum NSXpcConnectionOptions : nuint
-	{
-		Privileged = (1 << 12)
-	}
 
 	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[Native]
