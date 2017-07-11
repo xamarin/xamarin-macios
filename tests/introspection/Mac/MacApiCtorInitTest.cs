@@ -211,6 +211,8 @@ namespace Introspection {
 		{
 			switch (obj.GetType ().FullName) {
 			// Crashes on 10.13
+			case "MonoMac.AppKit.NSStoryboard":
+			case "AppKit.NSStoryboard":
 			case "MonoMac.CoreImage.CIImageAccumulator":
 			case "CoreImage.CIImageAccumulator": // 32897776
 			case "MonoMac.AVFoundation.AVCaptureInputPort": // https://bugzilla.xamarin.com/show_bug.cgi?id=57668
