@@ -355,3 +355,11 @@ endif
 
 jenkins: xharness/xharness.exe
 	$(Q) $(SYSTEM_MONO) --debug $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT)
+
+ifdef ENABLE_XAMARIN
+wrench-launch-external wrench-report-external:
+	$(MAKE) -C $(MACCORE_PATH)/tests/external $@
+else
+wrench-launch-external wrench-report-external:
+	@echo "External tests have been disabled"
+endif
