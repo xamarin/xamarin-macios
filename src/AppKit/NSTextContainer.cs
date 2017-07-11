@@ -6,7 +6,7 @@ namespace XamCore.AppKit
 {
 	public partial class NSTextContainer
 	{
-		[Availability (Obsoleted = Platform.Mac_10_11, Message = "Use NSTextContainer.FromSize instead")]
+		[Availability (Obsoleted = Platform.Mac_10_11, Message = "Use NSTextContainer.FromSize instead.")]
 		public NSTextContainer (CGSize size)
 		{
 			Handle = InitWithContainerSize (size);
@@ -26,7 +26,7 @@ namespace XamCore.AppKit
 			return new NSTextContainer (size, false);
 		}
 
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use NSTextContainer.FromSize instead")]
+		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use NSTextContainer.FromSize instead.")]
 		public static NSTextContainer FromContainerSize (CGSize containerSize)
 		{
 			return new NSTextContainer (containerSize, true);

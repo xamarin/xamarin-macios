@@ -226,7 +226,7 @@ namespace XamCore.Foundation  {
 		WithoutOverwriting  = 2,
 			
 #if !XAMCORE_2_0
-		[Obsolete ("No longer available")]
+		[Obsolete ("No longer available.")]
 		Coordinated = 1 << 2,
 #endif
 			
@@ -805,7 +805,7 @@ namespace XamCore.Foundation  {
 #if !MONOMAC || !XAMCORE_3_0
 	[Native]
 #if MONOMAC
-	[Obsolete ("Use NSWritingDirection in AppKit instead")]
+	[Obsolete ("Use NSWritingDirection in AppKit instead.")]
 #endif
 	public enum NSWritingDirection : nint {
 		Natural = -1, LeftToRight = 0, RightToLeft = 1,

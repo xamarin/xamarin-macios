@@ -1090,7 +1090,7 @@ namespace XamCore.WebKit {
 		void PreventDefault ();
 
 #if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead")]
+		[Obsolete ("Use the constructor instead.")]
 		[Export ("initEvent:canBubbleArg:cancelableArg:")]
 		void InitEvent (string eventTypeArg, bool canBubbleArg, bool cancelableArg);
 #endif
@@ -1107,7 +1107,7 @@ namespace XamCore.WebKit {
 	[DisableDefaultCtor]
 	partial interface DomOverflowEvent {
 #if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead")]
+		[Obsolete ("Use the constructor instead.")]
 		[Export ("initOverflowEvent:horizontalOverflow:verticalOverflow:")]
 		void InitEvent (ushort orient, bool hasHorizontalOverflow, bool hasVerticalOverflow);
 #endif
@@ -1142,7 +1142,7 @@ namespace XamCore.WebKit {
 	[DisableDefaultCtor]
 	partial interface DomUIEvent {
 #if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead")]
+		[Obsolete ("Use the constructor instead.")]
 		[Export ("initUIEvent:canBubble:cancelable:view:detail:")]
 		void InitEvent (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail);
 #endif
@@ -1179,11 +1179,11 @@ namespace XamCore.WebKit {
 	[DisableDefaultCtor]
 	partial interface DomKeyboardEvent {
 #if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead")]
+		[Obsolete ("Use the constructor instead.")]
 		[Export ("initKeyboardEvent:canBubble:cancelable:view:keyIdentifier:keyLocation:ctrlKey:altKey:shiftKey:metaKey:altGraphKey:")]
 		void InitEvent (string eventType, bool canBubble, bool cancelable, DomAbstractView view, string keyIdentifier, DomKeyLocation keyLocation, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, bool altGraphKey);
 
-		[Obsolete ("Use the constructor instead")]
+		[Obsolete ("Use the constructor instead.")]
 		[Export ("initKeyboardEvent:canBubble:cancelable:view:keyIdentifier:keyLocation:ctrlKey:altKey:shiftKey:metaKey:")]
 		void InitEvent (string eventType, bool canBubble, bool cancelable, DomAbstractView view, string keyIdentifier, DomKeyLocation keyLocation, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey);
 #endif
@@ -1231,7 +1231,7 @@ namespace XamCore.WebKit {
 	[DisableDefaultCtor]
 	partial interface DomMouseEvent {
 #if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead")]
+		[Obsolete ("Use the constructor instead.")]
 		[Export ("initMouseEvent:canBubble:cancelable:view:detail:screenX:screenY:clientX:clientY:ctrlKey:altKey:shiftKey:metaKey:button:relatedTarget:")]
 		void InitEvent (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screenY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, ushort button, [Protocolize] DomEventTarget relatedTarget);
 #endif
@@ -1293,7 +1293,7 @@ namespace XamCore.WebKit {
 	[DisableDefaultCtor]
 	partial interface DomWheelEvent {
 #if !XAMCORE_3_0
-		[Obsolete ("Use the constructor instead")]
+		[Obsolete ("Use the constructor instead.")]
 		[Export ("initWheelEvent:wheelDeltaY:view:screenX:screenY:clientX:clientY:ctrlKey:altKey:shiftKey:metaKey:")]
 		void InitEvent (int /* int, not NSInteger */ wheelDeltaX, int /* int, not NSInteger */ wheelDeltaY, DomAbstractView view, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screnY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey);
 #endif

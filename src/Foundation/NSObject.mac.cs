@@ -102,7 +102,7 @@ namespace XamCore.Foundation {
 		// ** IF YOU ADD ITEMS HERE PLEASE UPDATE linker/ObjCExtensions.cs and mmp/linker/MonoMac.Tuner/MonoMacNamespaces.cs
 
 #if !XAMCORE_4_0
-		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms")]
+		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms.")]
 		public static readonly Assembly MonoMacAssembly = typeof (NSObject).Assembly;
 #endif
 

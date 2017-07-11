@@ -928,7 +928,7 @@ namespace XamCore.GameKit {
 #if MONOMAC
 #if !XAMCORE_4_0
 		// This API was removed or never existed. Can't cleanly remove due to EventsArgs/Delegate
-		[Obsolete ("No longer an OS X API - it will never be called")]
+		[Obsolete ("It will never be called.")]
 		[Export ("xamarin:selector:removed:"), EventArgs ("GKPlayerError")]
 		void ConnectionFailed (GKMatch match, string playerId, NSError error);
 #endif
@@ -938,7 +938,7 @@ namespace XamCore.GameKit {
 		// so we fake a selector (that Apple won't check) and let the generator do it's job
 		// note: not worth throwing an exception using a [PreSnippet] since the code already throws a 
 		//       You_Should_Not_Call_base_In_This_Method (so it would not be generated)
-		[Obsolete ("No longer an iOS API - it will never be called")]
+		[Obsolete ("It will never be called.")]
 		[Export ("xamarin:selector:removed:"), EventArgs ("GKPlayerError")]
 		void ConnectionFailed (GKMatch match, string playerId, NSError error);
 #endif
@@ -1662,7 +1662,7 @@ namespace XamCore.GameKit {
 	interface GKTurnBasedEventHandlerDelegate {
 #if !XAMCORE_2_0
 		[Export ("handleInviteFromGameCenterDoNotUse:")]
-		[Obsolete ("Use HandleInviteFromGameCenter(NSString[])")]
+		[Obsolete ("Use HandleInviteFromGameCenter(NSString[]).")]
 		void HandleInviteFromGameCenter (GKPlayer [] playersToInvite);
 #endif
 
