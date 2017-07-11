@@ -1150,9 +1150,21 @@ namespace XamCore.Photos
 		[Export ("prepareLivePhotoForPlaybackWithTargetSize:options:completionHandler:")]
 		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<PHLivePhoto, NSError> handler);
 
+#if false
+		[Async]
+		[Wrap ("PrepareLivePhotoForPlayback (targetSize, options?.Dictionary, handler)")]
+		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] PHLivePhotoEditingOption options, Action<PHLivePhoto, NSError> handler);
+#endif
+
 		[Async]
 		[Export ("saveLivePhotoToOutput:options:completionHandler:")]
 		void SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<bool, NSError> handler);
+
+#if false
+		[Async]
+		[Wrap ("SaveLivePhoto (output, options?.Dictionary, handler)")]
+		void SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] PHLivePhotoEditingOption options, Action<bool, NSError> handler);
+#endif
 
 		[Export ("cancel")]
 		void Cancel ();
@@ -1182,16 +1194,22 @@ namespace XamCore.Photos
 		nfloat RenderScale { get; }
 	}
 
-	// TODO returns null on Xcode 8 beta 1-6, rdar #28169810 https://trello.com/c/RwXK6YRX
-	// PHLivePhotoEditingContext.PrepareLivePhotoForPlayback and SaveLivePhoto could use a strong dictionary once it's available
-#if false
-	[iOS (10,0)]
-	[TV (10,0)]
+#if XAMCORE_2_0 // fails to build with mac/classic
+	[iOS (11,0)]
+	[TV (11,0)]
 	[Mac (10,12, onlyOn64 : true)]
-	[Static]
-	interface PHLivePhotoEditingOption {
+	[Static][Internal]
+	interface PHLivePhotoEditingOptionKeys {
 		[Field ("PHLivePhotoShouldRenderAtPlaybackTime")]
-		NSString ShouldRenderAtPlaybackTime { get; }
+		NSString ShouldRenderAtPlaybackTimeKey { get; }
+	}
+
+	[iOS (11,0)]
+	[TV (11,0)]
+	[Mac (10,12, onlyOn64 : true)]
+	[StrongDictionary ("PHLivePhotoEditingOptionKeys")]
+	interface PHLivePhotoEditingOption {
+		bool ShouldRenderAtPlaybackTime { get; }
 	}
 #endif
 
@@ -1202,9 +1220,14 @@ namespace XamCore.Photos
 
 		[Export ("projectExtensionData")]
 		NSData ProjectExtensionData { get; }
+	}
 
+	[Mac (10,13, onlyOn64 : true)]
+	[NoiOS][NoTV]
+	[Static]
+	interface PHProjectType {
 		[Field ("PHProjectTypeUndefined")]
-		NSString TypeUndefined { get; }
+		NSString Undefined { get; }
 	}
 
 	[Mac (10,13, onlyOn64 : true)]
@@ -1262,7 +1285,7 @@ namespace XamCore.Photos
 	interface PHProjectTypeDescription : NSSecureCoding {
 
 		[Export ("projectType")]
-		string ProjectType { get; }
+		NSString ProjectType { get; }
 
 		[Export ("localizedTitle")]
 		string LocalizedTitle { get; }
@@ -1278,10 +1301,10 @@ namespace XamCore.Photos
 
 		[Export ("initWithProjectType:title:description:image:subtypeDescriptions:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string projectType, string localizedTitle, [NullAllowed] string localizedDescription, [NullAllowed] NSImage image, PHProjectTypeDescription[] subtypeDescriptions);
+		IntPtr Constructor (NSString projectType, string localizedTitle, [NullAllowed] string localizedDescription, [NullAllowed] NSImage image, PHProjectTypeDescription[] subtypeDescriptions);
 
 		[Export ("initWithProjectType:title:description:image:")]
-		IntPtr Constructor (string projectType, string localizedTitle, [NullAllowed] string localizedDescription, [NullAllowed] NSImage image);
+		IntPtr Constructor (NSString projectType, string localizedTitle, [NullAllowed] string localizedDescription, [NullAllowed] NSImage image);
 	}
 
 	[Mac (10,13, onlyOn64 : true)]
@@ -1353,7 +1376,7 @@ namespace XamCore.Photos
 		PHProjectCreationSource CreationSource { get; }
 
 		[Export ("projectType")]
-		string ProjectType { get; }
+		NSString ProjectType { get; }
 
 		[Export ("sections")]
 		PHProjectSection[] Sections { get; }
