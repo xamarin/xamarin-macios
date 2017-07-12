@@ -970,13 +970,13 @@ namespace XamCore.Foundation  {
 
 	[Flags]
 	public enum NSActivityOptions : ulong {
-		IdleDisplaySleepDisabled = 1 << 40,
-		IdleSystemSleepDisabled = 1 << 20,
-		SuddenTerminationDisabled = 1 << 14,
-		AutomaticTerminationDisabled = 1 << 15,
-		UserInitiated = 0x00FFFFFF | IdleSystemSleepDisabled,
-		Background = 0x000000ff,
-		LatencyCritical = 0xFF00000000,
+		IdleDisplaySleepDisabled = 1UL << 40,
+		IdleSystemSleepDisabled = 1UL << 20,
+		SuddenTerminationDisabled = 1UL << 14,
+		AutomaticTerminationDisabled = 1UL << 15,
+		UserInitiated = 0x00FFFFFFUL | IdleSystemSleepDisabled,
+		Background = 0x000000ffUL,
+		LatencyCritical = 0xFF00000000UL,
 	}
 
 	[Native]
