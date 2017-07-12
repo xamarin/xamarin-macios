@@ -119,7 +119,7 @@ namespace XamCore.CoreML {
 		[Export ("dictionaryValue")]
 		NSDictionary<NSObject, NSNumber> DictionaryValue { get; }
 
-#if !WATCH
+#if !WATCH // TODO: Enable once CoreVideo's CVPixelBuffer is enabled on watch profile https://bugzilla.xamarin.com/show_bug.cgi?id=58097
 		[NullAllowed, Export ("imageBufferValue")]
 		CVPixelBuffer ImageBufferValue { get; }
 
