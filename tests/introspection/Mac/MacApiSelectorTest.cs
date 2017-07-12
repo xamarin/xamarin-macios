@@ -403,6 +403,14 @@ namespace Introspection {
 						break;
 					}
 					break;
+				case "NSSliderTouchBarItem":
+					switch (selectorName) {
+					case "compressWithPrioritizedCompressionOptions:":
+					case "minimumSizeWithPrioritizedCompressionOptions:":
+					case "activeCompressionOptions":
+						return true; // 33271241
+					}
+					break;
 				}
 				break;
 			// GameKit seems to follow a pattern were selectors are routed to an internal concrete type
