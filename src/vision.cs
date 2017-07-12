@@ -59,7 +59,7 @@ namespace XamCore.Vision {
 	enum VNImageCropAndScaleOption : nuint {
 		CenterCrop = 0,
 		ScaleFit = 1,
-		ScaleFill
+		ScaleFill,
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
