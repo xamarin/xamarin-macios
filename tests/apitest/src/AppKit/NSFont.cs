@@ -46,8 +46,8 @@ namespace Xamarin.Mac.Tests
 			CTFont ctFont = new CTFont (cgFont, 14, new CTFontDescriptor ("Arial", 14));
 			NSFont nsFont = NSFont.FromCTFont (ctFont);
 
-			Assert.Throws <ArgumentException> ( () => nsFont.GetBoundingRects (glyphs));
-			Assert.Throws <ArgumentException> ( () => nsFont.GetAdvancements (glyphs));
+			Assert.Throws <ArgumentException> (() => nsFont.GetBoundingRects (glyphs));
+			Assert.Throws <ArgumentException> (() => nsFont.GetAdvancements (glyphs));
 		}
 	}
 }
