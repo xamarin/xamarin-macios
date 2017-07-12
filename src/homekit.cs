@@ -125,6 +125,10 @@ namespace XamCore.HomeKit {
 		[Export ("services", ArgumentSemantic.Copy)]
 		HMService [] Services { get; }
 
+		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Export ("profiles", ArgumentSemantic.Copy)]
+		HMAccessoryProfile[] Profiles { get; }
+
 		[Export ("blocked")]
 		bool Blocked { [Bind ("isBlocked")] get; }
 
@@ -178,6 +182,14 @@ namespace XamCore.HomeKit {
 
 		[Export ("accessoryDidUpdateServices:")]
 		void DidUpdateServices (HMAccessory accessory);
+
+		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Export ("accessory:didAddProfile:"), EventArgs ("HMAccessoryProfile")]
+		void DidAddProfile (HMAccessory accessory, HMAccessoryProfile profile);
+
+		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Export ("accessory:didRemoveProfile:"), EventArgs ("HMAccessoryProfile")]
+		void DidRemoveProfile (HMAccessory accessory, HMAccessoryProfile profile);
 
 		[Export ("accessoryDidUpdateReachability:")]
 		void DidUpdateReachability (HMAccessory accessory);
@@ -1254,6 +1266,11 @@ namespace XamCore.HomeKit {
 		[Static]
 		[Export ("predicateForEvaluatingTriggerOccurringAfterDateWithComponents:")]
 		NSPredicate CreatePredicateForEvaluatingTriggerOccurringAfterDate (NSDateComponents dateComponents);
+
+		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Static]
+		[Export ("predicateForEvaluatingTriggerOccurringBetweenDateWithComponents:secondDateWithComponents:")]
+		NSPredicate CreatePredicateForEvaluatingTriggerOccurringBetweenDates (NSDateComponents firstDateComponents, NSDateComponents secondDateComponents);
 
 		[Static]
 		[Export ("predicateForEvaluatingTriggerWithCharacteristic:relatedBy:toValue:")]
