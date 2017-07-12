@@ -37,7 +37,6 @@ namespace Xamarin.Mac.Tests
 			Assert.AreEqual (5, advancement.Length);
 		}
 
-		// TODO - Test on 10.13
 		[Test]
 		public void GetBoundingRect_WithEmptyGlyphs ()
 		{
@@ -47,10 +46,8 @@ namespace Xamarin.Mac.Tests
 			CTFont ctFont = new CTFont (cgFont, 14, new CTFontDescriptor ("Arial", 14));
 			NSFont nsFont = NSFont.FromCTFont (ctFont);
 
-			var bounding = nsFont.GetBoundingRects (glyphs);
-			var advancement = nsFont.GetAdvancements (glyphs);
-			Assert.AreEqual (0, bounding.Length);
-			Assert.AreEqual (0, advancement.Length);
+			Assert.Throws <ArgumentException> ( () => nsFont.GetBoundingRects (glyphs));
+			Assert.Throws <ArgumentException> ( () => nsFont.GetAdvancements (glyphs));
 		}
 	}
 }
