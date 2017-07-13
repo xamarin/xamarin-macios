@@ -22,6 +22,15 @@ namespace MonoTests.System.Net.Http
 	[TestFixture]
 	public class MessageHandlerTest
 	{
+		void PrintHandlerToTest ()
+		{
+#if !__WATCHOS__
+			Console.WriteLine (new HttpClientHandler ());
+			Console.WriteLine (new CFNetworkHandler ());
+#endif
+			Console.WriteLine (new NSUrlSessionHandler ());
+		}
+
 		HttpMessageHandler GetHandler (Type handler_type)
 		{
 			return (HttpMessageHandler) Activator.CreateInstance (handler_type);
@@ -35,6 +44,12 @@ namespace MonoTests.System.Net.Http
 		[TestCase (typeof (NSUrlSessionHandler))]
 		public void DnsFailure (Type handlerType)
 		{
+#if __WATCHOS__
+			Assert.Inconclusive ("Test  fails in the new WatchOS version see bug #57762.");
+#else 
+			// workaround until https://bugzilla.xamarin.com/show_bug.cgi?id=57825 is fixed.
+			PrintHandlerToTest ();
+
 			bool done = false;
 			Exception ex = null;
 
@@ -51,6 +66,8 @@ namespace MonoTests.System.Net.Http
 			}, () => done);
 
 			Assert.IsNotNull (ex, "Exception");
-			// The handlers throw different types of exceptions, so we can't assert much more than that something went wrong.
+			// The handlers throw different types of exceptions, so we can't assert much more than that something went wrong.			
+#endif
 		}
+
 	}}
