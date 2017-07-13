@@ -1,5 +1,5 @@
 ﻿//
-// Unit tests for IUIDropSessionExtensionsTest
+// Unit tests for UIDragDropSessionExtensionsTest
 //
 // Authors:
 //	Vincent Dondain <vidondai@microsoft.com>
@@ -8,7 +8,7 @@
 // Copyright 2017 Microsoft.
 //
 
-#if !TVOS && !WATCH
+#if !__TVOS__ && !__WATCH__
 
 using System;
 #if XAMCORE_2_0
@@ -27,15 +27,16 @@ using NUnit.Framework;
 namespace MonoTouchFixtures.UIKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class IUIDropSessionExtensionsTest {
+	public class UIDragDropSessionExtensionsTest {
 
 		[Test]
 		public void LoadObjectsTest ()
 		{
-			if (!TestRuntime.CheckXcodeVersion (9, 0))
+			if (!TestRuntime.CheckXcodeVersion (9,0))
 				Assert.Ignore ("Ignoring tests: Requires iOS11+");
 
 			var test = new DropSession ();
+			test.CanLoadObjects (typeof (UIImage));
 			test.LoadObjects (typeof (UIImage), null);
 		}
 	}
@@ -53,7 +54,8 @@ namespace MonoTouchFixtures.UIKit {
 
 		public bool CanLoadObjects (Class itemProviderReadingClass)
 		{
-			throw new NotImplementedException ();
+			Assert.That (itemProviderReadingClass.Handle, Is.EqualTo (new Class (typeof (UIImage)).Handle), "UIDragDropSessionExtensionsTest did not convert the type properly for 'CanLoadObjects'.");
+			return true;
 		}
 
 		public bool HasConformingItems (string [] typeIdentifiers)
@@ -63,7 +65,7 @@ namespace MonoTouchFixtures.UIKit {
 
 		public NSProgress LoadObjects (Class itemProviderReadingClass, Action<INSItemProviderReading []> completion)
 		{
-			Assert.That (itemProviderReadingClass.Handle, Is.EqualTo (new Class (typeof (UIImage)).Handle), "IUIDropSessionExtensions did not convert the type properly.");
+			Assert.That (itemProviderReadingClass.Handle, Is.EqualTo (new Class (typeof (UIImage)).Handle), "UIDragDropSessionExtensionsTest did not convert the type properly for 'LoadObjects'.");
 			return new NSProgress ();
 		}
 
@@ -74,4 +76,4 @@ namespace MonoTouchFixtures.UIKit {
 	}
 }
 
-#endif // !TVOS && !WATCH
+#endif // !__TVOS__ && !__WATCH__
