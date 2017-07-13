@@ -383,6 +383,9 @@
     <Compile Include="..\..\external\mono\external\linker\linker\Linker\TypeNameParser.cs">
       <Link>Linker\TypeNameParser.cs</Link>
     </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\RemoveBitcodeIncompatibleCodeStep.cs">
+      <Link>MonoTouch.Tuner\RemoveBitcodeIncompatibleCodeStep.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />

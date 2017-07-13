@@ -604,3 +604,47 @@ It is always enabled by default (as long as the static registrar is enabled).
 
 The default behavior can be overridden by passing
 `--optimize=[+|-]static-delegate-to-block-lookup` to mtouch/mmp.
+
+## Remove unsupported IL for bitcode
+
+Removes unsupported IL for bitcode, and replaces it with a `NotSupportedException`.
+
+There are certain types of IL that Xamarin.iOS doesn't support when compiling
+to bitcode. This optimization will replace the unsupported IL with an
+`NotSupportedException`, and will emit a warning at build time.
+
+This ensures that any unsupported IL will be detected at runtime even when not
+compiling to bitcode (in particular it will mean that the behavior between
+Debug and Release device builds is identical, since Debug builds do not
+compile to bitcode, while Release builds do).
+
+This optimization will change the following code:
+
+```csharp
+void Method ()
+{
+	try {
+		throw new Exception ("FilterMe");
+	} catch (Exception e) when (e.Message == "FilterMe") {
+		Console.WriteLine ("filtered");
+	}
+}
+```
+
+into the following:
+
+```csharp
+void Method ()
+{
+	throw new NotSupportedException ("This method contains IL not supported when compiled to bitcode.");
+}
+```
+
+This optimization does not require the linker to be enabled, it will process
+all assemblies, even those not linked.
+
+It is only applicable to watchOS, and then it's enabled by default when
+building for device.
+
+The default behavior can be overridden by passing
+`--optimize=[+|-]remove-unsupported-il-for-bitcode` to mtouch/mmp.

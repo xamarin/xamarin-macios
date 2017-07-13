@@ -2911,6 +2911,40 @@ public class TestApp {
 		}
 
 		[Test]
+		public void MT2105 ()
+		{
+
+			using (var ext = new MTouchTool ()) {
+				var code = @"
+class TestClass {
+	// A method with a filter clause
+	static int FilterClause ()
+	{
+		try {
+			throw new System.Exception (""FilterMe"");
+		} catch (System.Exception e) when (e.Message == ""FilterMe"") {
+			return 0;
+		} catch {
+			return 1;
+		}
+	}
+}
+				";
+				ext.Profile = Profile.watchOS;
+				ext.Linker = MTouchLinker.LinkSdk;
+				ext.CreateTemporaryWatchKitExtension (extraCode: code, extraArg: "/debug");
+				ext.CreateTemporaryDirectory ();
+				ext.WarnAsError = new int [] { 2105 };
+				ext.AssertExecuteFailure (MTouchAction.BuildDev);
+				ext.AssertError (2105, "The method TestClass.FilterClause contains a 'Filter' exception clause, which is currently not supported when compiling for bitcode. This method will throw an exception if called.", "testApp.cs", 9);
+
+				ext.Optimize = new string [] { "remove-unsupported-il-for-bitcode" };
+				ext.AssertExecuteFailure (MTouchAction.BuildSim);
+				ext.AssertError (2105, "The method TestClass.FilterClause contains a 'Filter' exception clause, which is currently not supported when compiling for bitcode. This method will throw an exception if called.", "testApp.cs", 9);
+			}
+		}
+
+		[Test]
 		public void MT5211 ()
 		{
 			using (var mtouch = new MTouchTool ()) {

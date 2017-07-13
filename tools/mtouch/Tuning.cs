@@ -190,6 +190,10 @@ namespace MonoTouch.Tuner {
 			// We need to store the Field attribute in annotations, since it may end up removed.
 			pipeline.Append (new ProcessExportedFields ());
 
+			// We need to remove incompatible bitcode for all assemblies, not only the linked assemblies.
+			if (options.Application.Optimizations.RemoveUnsupportedILForBitcode == true)
+				pipeline.AppendStep (new RemoveBitcodeIncompatibleCodeStep (options));
+			
 			if (options.LinkMode != LinkMode.None) {
 				pipeline.Append (new CoreTypeMapStep ());
 

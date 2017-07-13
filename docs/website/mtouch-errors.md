@@ -1787,6 +1787,12 @@ Mixed-mode assemblies can not be processed by the linker.
 
 See https://msdn.microsoft.com/en-us/library/x0w2664k.aspx for more information on mixed-mode assemblies.
 
+### MT2105: The method {method} contains a '{handlerType}' exception clause, which is currently not supported when compiling for bitcode. This method will throw an exception if called.
+
+Currently Xamarin.iOS does not support the 'filter' exception clauses when
+compiling to bitcode. Any methods containing such code will throw a
+NotSupportedException exception.
+
 ## MT3xxx: AOT error messages
 
 <!--
