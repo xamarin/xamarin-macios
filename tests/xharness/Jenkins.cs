@@ -2787,7 +2787,8 @@ function oninitialload ()
 						MainLog.WriteLine ($"Post-run uninstall failed, exit code: {uninstall_result.ExitCode} (this won't affect the test result)");
 
 					// Also clean up after us locally.
-					await BuildTask.CleanAsync ();
+					if (Harness.InJenkins || Harness.InWrench || Succeeded)
+						await BuildTask.CleanAsync ();
 				}
 			}
 		}
