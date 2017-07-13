@@ -8,7 +8,7 @@
 // Copyright 2017 Microsoft.
 //
 
-#if !__TVOS__ && !__WATCH__
+#if !__TVOS__ && !__WATCHOS__
 
 using System;
 #if XAMCORE_2_0
@@ -76,4 +76,4 @@ namespace MonoTouchFixtures.UIKit {
 	}
 }
 
-#endif // !__TVOS__ && !__WATCH__
+#endif // !__TVOS__ && !__WATCHOS__
