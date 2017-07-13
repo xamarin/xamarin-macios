@@ -7034,7 +7034,7 @@ namespace XamCore.Foundation
 		[Export ("shouldUseExtendedBackgroundIdleMode")]
 		bool ShouldUseExtendedBackgroundIdleMode { get; set; }
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NoWatch, NoTV, NoMac, iOS (11, 0)]
 		[Export ("multipathServiceType", ArgumentSemantic.Assign)]
 		NSUrlSessionMultipathServiceType MultipathServiceType { get; set; }
 
@@ -10186,8 +10186,13 @@ namespace XamCore.Foundation
 	// init returns NIL
 	[DisableDefaultCtor]
 	partial interface NSValue : NSSecureCoding, NSCopying {
+		[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.TV_11_0 | Platform.Watch_4_0, Message="This method is unsafe because it could potentially cause buffer overruns.  Use 'StoreValueAtAddress (IntPtr, nuint)' instead.")]
 		[Export ("getValue:")]
 		void StoreValueAtAddress (IntPtr value);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("getValue:size:")]
+		void StoreValueAtAddress (IntPtr value, nuint size);
 
 		[Export ("objCType")][Internal]
 		IntPtr ObjCTypePtr ();

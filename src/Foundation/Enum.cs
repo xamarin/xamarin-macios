@@ -1286,7 +1286,7 @@ namespace XamCore.Foundation  {
 		Document,
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[NoWatch, NoTV, NoMac, iOS (11, 0)]
 	[Native]
 	public enum NSUrlSessionMultipathServiceType : nint {
 		None = 0,
