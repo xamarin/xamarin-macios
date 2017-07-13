@@ -10,6 +10,7 @@ namespace XamCore.AppKit{
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("init")]
+		[Obsolete ("Use the constructor that allows you to set currentLayout and newLayout.")]
 		public NSCollectionViewTransitionLayout () : base (NSObjectFlag.Empty)
 		{
 			if (IsDirectBinding) {

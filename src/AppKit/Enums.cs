@@ -2747,9 +2747,9 @@ namespace XamCore.AppKit {
 
 	[Mac (10,13)]
 	public enum NSFontError : int {
-		AssetDownloadError = 66304,  // Generic code when font asset download error occurs.
-		ErrorMinimum = 66304,  // Generic code when font asset download error occurs.
-		ErrorMaximum = 66335,  // Generic code when font asset download error occurs.
+		AssetDownloadError = 66304,
+		ErrorMinimum = 66304,
+		ErrorMaximum = 66335,
 	}
 
 	[Mac (10,13)]

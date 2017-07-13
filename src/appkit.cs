@@ -6188,12 +6188,12 @@ namespace XamCore.AppKit {
 		[Mac (10,13)]
 		[Internal]
 		[Export ("getBoundingRects:forCGGlyphs:count:")]
-		unsafe void _GetBoundingRects (IntPtr bounds, IntPtr glyphs, nuint glyphCount);
+		void _GetBoundingRects (IntPtr bounds, IntPtr glyphs, nuint glyphCount);
 
 		[Mac (10,13)]
 		[Internal]
 		[Export ("getAdvancements:forCGGlyphs:count:")]
-		unsafe void _GetAdvancements (IntPtr advancements, IntPtr glyphs, nuint glyphCount);
+		void _GetAdvancements (IntPtr advancements, IntPtr glyphs, nuint glyphCount);
 	}
 
 	[Lion]
@@ -10449,18 +10449,6 @@ namespace XamCore.AppKit {
 
 		[Export ("intAttribute:forGlyphAtIndex:")]
 		nint IntAttributeforGlyphAtIndex (nint attributeTag, nint glyphIndex);
-
-		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		[Export ("getGlyphsInRange:glyphs:characterIndexes:glyphInscriptions:elasticBits:"), Internal]
-		nint GetGlyphs (NSRange glyphRange, IntPtr glyphBuffer, IntPtr charIndexBuffer, IntPtr inscribeBuffer, IntPtr elasticBuffer);
-
-		// TODO: bind this with a safe version
-		[Internal, Export ("getGlyphsInRange:glyphs:characterIndexes:glyphInscriptions:elasticBits:bidiLevels:")]
-		nint GetGlyphs (NSRange glyphRange, IntPtr glyphBuffer, IntPtr charIndexBuffer, IntPtr inscribeBuffer, IntPtr elasticBuffer, IntPtr bidiLevelBuffer);
-
-		// TODO: bidn this with a safe version
-		[Internal, Export ("getGlyphs:range:")]
-		nuint GetGlyphsrange (IntPtr glyphArray, NSRange glyphRange);
 
 		[Export ("setTextContainer:forGlyphRange:")]
 		void SetTextContainerForRange (NSTextContainer container, NSRange glyphRange);
