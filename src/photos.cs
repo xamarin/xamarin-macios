@@ -1146,23 +1146,35 @@ namespace XamCore.Photos
 		[Export ("orientation")]
 		CGImagePropertyOrientation Orientation { get; }
 
-		[Async]
+		[Internal]
 		[Export ("prepareLivePhotoForPlaybackWithTargetSize:options:completionHandler:")]
+		void _PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] NSDictionary options, Action<PHLivePhoto, NSError> handler);
+
+		[Async]
+		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, (NSDictionary)options, handler)", IsVirtual = true)]
 		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<PHLivePhoto, NSError> handler);
 
-#if false
+#if XAMCORE_2_0
+		// the API existed earlier but the key needed to create the strong dictionary did not work
+		[iOS (11,0)][TV (11,0)][Mac (10,12, onlyOn64 : true)]
 		[Async]
-		[Wrap ("PrepareLivePhotoForPlayback (targetSize, options?.Dictionary, handler)")]
+		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, options?.Dictionary, handler)")]
 		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] PHLivePhotoEditingOption options, Action<PHLivePhoto, NSError> handler);
 #endif
 
-		[Async]
+		[Internal]
 		[Export ("saveLivePhotoToOutput:options:completionHandler:")]
+		void _SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] NSDictionary options, Action<bool, NSError> handler);
+
+		[Async]
+		[Wrap ("_SaveLivePhoto (output, options, handler)", IsVirtual = true)]
 		void SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<bool, NSError> handler);
 
-#if false
+#if XAMCORE_2_0
+		// the API existed earlier but the key needed to create the strong dictionary did not work
+		[iOS (11,0)][TV (11,0)][Mac (10,12, onlyOn64 : true)]
 		[Async]
-		[Wrap ("SaveLivePhoto (output, options?.Dictionary, handler)")]
+		[Wrap ("_SaveLivePhoto (output, options?.Dictionary, handler)")]
 		void SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] PHLivePhotoEditingOption options, Action<bool, NSError> handler);
 #endif
 
