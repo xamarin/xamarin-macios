@@ -9391,6 +9391,10 @@ namespace XamCore.AppKit {
 		[Mac (10, 12, 2)]
 		[Field ("NSImageNameTouchBarVolumeUpTemplate")]
 		TouchBarVolumeUpTemplate,
+
+		[Mac (10, 13)]
+		[Field ("NSImageNameTouchBarRemoveTemplate")]
+		TouchBarRemoveTemplate
 	}
 
 	interface NSStringAttributes {
@@ -10060,6 +10064,10 @@ namespace XamCore.AppKit {
 		[Mac (10, 13)]
 		[NullAllowed, Export ("ratingPlaceholderImage", ArgumentSemantic.Strong)]
 		NSImage RatingPlaceholderImage { get; set; }
+
+		[Mac (10, 13)]
+		[Export ("editable")]
+		bool Editable { [Bind ("isEditable")] get; set; }
 	}
 
 	[BaseType (typeof (NSActionCell))]
@@ -11322,6 +11330,14 @@ namespace XamCore.AppKit {
 		[Mac (10,6)]
 		[Field ("NSPasteboardTypeFindPanelSearchOptions")]
 		NSString NSPasteboardTypeFindPanelSearchOptions { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSPasteboardTypeURL")]
+		NSString NSPasteboardTypeURL { get; }
+
+		[Mac (10, 13)]
+		[Field ("NSPasteboardTypeFileURL")]
+		NSString NSPasteboardTypeFileURL { get; }
 
 		[Mac (10,12)]
 		[Export ("prepareForNewContentsWithOptions:")]
