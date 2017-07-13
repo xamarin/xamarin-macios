@@ -651,4 +651,188 @@ namespace XamCore.CoreMedia {
 	//	[Field ("kCMFormatDescriptionConformsToMPEG2VideoProfile")]
 	//	NSString ConformsToMPEG2VideoProfile { get; }
 	//}
+
+	[Static]
+	interface CMMetadataKeySpace {
+		[Mac (10, 10)]
+		[Field ("kCMMetadataKeySpace_QuickTimeUserData")]
+		NSString QuickTimeUserData { get; }
+
+		[Mac (10, 10)]
+		[Field ("kCMMetadataKeySpace_ISOUserData")]
+		NSString IsoUserData { get; }
+
+		[Mac (10, 10)]
+		[Field ("kCMMetadataKeySpace_QuickTimeMetadata")]
+		NSString QuickTimeMetadata { get; }
+
+		[Mac (10, 10)]
+		[Field ("kCMMetadataKeySpace_iTunes")]
+		NSString iTunes { get; }
+
+		[Mac (10, 10)]
+		[Field ("kCMMetadataKeySpace_ID3")]
+		NSString ID3 { get; }
+
+		[Mac (10, 10)]
+		[Field ("kCMMetadataKeySpace_Icy")]
+		NSString Icy { get; }
+
+		[Mac (10, 11, 3)]
+		[Field ("kCMMetadataKeySpace_HLSDateRange")]
+		NSString HlsDateRange { get; }
+	}
+
+	[Static]
+	interface CMMetadataIdentifier {
+		[Mac (10, 10)]
+		[Field ("kCMMetadataIdentifier_QuickTimeMetadataLocation_ISO6709")]
+		NSString QuickTimeMetadataLocation_ISO6709 { get; }
+
+		[Mac (10, 10)]
+		[Field ("kCMMetadataIdentifier_QuickTimeMetadataDirection_Facing")]
+		NSString QuickTimeMetadataDirection_Facing { get; }
+
+		[Mac (10, 10)]
+		[Field ("kCMMetadataIdentifier_QuickTimeMetadataPreferredAffineTransform")]
+		NSString QuickTimeMetadataPreferredAffineTransform { get; }
+
+		[Mac (10, 11)]
+		[Field ("kCMMetadataIdentifier_QuickTimeMetadataVideoOrientation")]
+		NSString QuickTimeMetadataVideoOrientation { get; }
+	}
+
+	[Static]
+	interface CMMetadataBaseDataType {
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_RawData")]
+		NSString RawData { get; }
+
+		// extern const CFStringRef _Nonnull UTF8 __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_UTF8")]
+		NSString Utf8 { get; }
+
+		// extern const CFStringRef _Nonnull UTF16 __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_UTF16")]
+		NSString Utf16 { get; }
+
+		// extern const CFStringRef _Nonnull GIF __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_GIF")]
+		NSString Gif { get; }
+
+		// extern const CFStringRef _Nonnull JPEG __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_JPEG")]
+		NSString Jpeg { get; }
+
+		// extern const CFStringRef _Nonnull PNG __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_PNG")]
+		NSString Png { get; }
+
+		// extern const CFStringRef _Nonnull BMP __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_BMP")]
+		NSString Bmp { get; }
+
+		// extern const CFStringRef _Nonnull Float32 __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_Float32")]
+		NSString Float32 { get; }
+
+		// extern const CFStringRef _Nonnull Float64 __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_Float64")]
+		NSString Float64 { get; }
+
+		// extern const CFStringRef _Nonnull SInt8 __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_SInt8")]
+		NSString SInt8 { get; }
+
+		// extern const CFStringRef _Nonnull SInt16 __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_SInt16")]
+		NSString SInt16 { get; }
+
+		// extern const CFStringRef _Nonnull SInt32 __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_SInt32")]
+		NSString SInt32 { get; }
+
+		// extern const CFStringRef _Nonnull SInt64 __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_SInt64")]
+		NSString SInt64 { get; }
+
+		// extern const CFStringRef _Nonnull UInt8 __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_UInt8")]
+		NSString UInt8 { get; }
+
+		// extern const CFStringRef _Nonnull UInt16 __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_UInt16")]
+		NSString UInt16 { get; }
+
+		// extern const CFStringRef _Nonnull UInt32 __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_UInt32")]
+		NSString UInt32 { get; }
+
+		// extern const CFStringRef _Nonnull UInt64 __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_UInt64")]
+		NSString UInt64 { get; }
+
+		// extern const CFStringRef _Nonnull PointF32 __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_PointF32")]
+		NSString PointF32 { get; }
+
+		// extern const CFStringRef _Nonnull DimensionsF32 __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_DimensionsF32")]
+		NSString DimensionsF32 { get; }
+
+		// extern const CFStringRef _Nonnull RectF32 __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_RectF32")]
+		NSString RectF32 { get; }
+
+		// extern const CFStringRef _Nonnull AffineTransformF64 __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataBaseDataType_AffineTransformF64")]
+		NSString AffineTransformF64 { get; }
+
+		// extern const CFStringRef _Nonnull PolygonF32 __attribute__((availability(macos, introduced=10.11)));
+		[Mac (10, 11)]
+		[Field ("kCMMetadataBaseDataType_PolygonF32")]
+		NSString PolygonF32 { get; }
+
+		// extern const CFStringRef _Nonnull PolylineF32 __attribute__((availability(macos, introduced=10.11)));
+		[Mac (10, 11)]
+		[Field ("kCMMetadataBaseDataType_PolylineF32")]
+		NSString PolylineF32 { get; }
+
+		// extern const CFStringRef _Nonnull JSON __attribute__((availability(macos, introduced=10.11)));
+		[Mac (10, 11)]
+		[Field ("kCMMetadataBaseDataType_JSON")]
+		NSString Json { get; }
+	}
+
+	[Static]
+	interface CMMetadataDataType {
+		[Mac (10, 10)]
+		[Field ("kCMMetadataDataType_QuickTimeMetadataLocation_ISO6709")]
+		NSString QuickTimeMetadataLocation_ISO6709 { get; }
+
+		// extern const CFStringRef _Nonnull QuickTimeMetadataDirection __attribute__((availability(macos, introduced=10.10)));
+		[Mac (10, 10)]
+		[Field ("kCMMetadataDataType_QuickTimeMetadataDirection")]
+		NSString QuickTimeMetadataDirection { get; }
+	}
 }
