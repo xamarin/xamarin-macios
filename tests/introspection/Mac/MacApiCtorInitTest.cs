@@ -38,13 +38,6 @@ namespace Introspection {
 		protected override bool Skip (Type type)
 		{
 			switch (type.FullName) {
-			case "CoreBluetooth.CBCentralManager":
-			case "MonoMac.CoreBluetooth.CBCentralManager":
-			case "CoreBluetooth.CBPeripheralManager":
-			case "MonoMac.CoreBluetooth.CBPeripheralManager":
-				if (Mac.CheckSystemVersion (10, 13)) // radar 32899618
-					return true;
-				break;
 			// Random failures on build machine
 			case "QuickLookUI.QLPreviewPanel":
 			case "MonoMac.QuickLookUI.QLPreviewPanel":
@@ -211,6 +204,8 @@ namespace Introspection {
 		{
 			switch (obj.GetType ().FullName) {
 			// Crashes on 10.13
+			case "MonoMac.AppKit.NSStoryboard":
+			case "AppKit.NSStoryboard":
 			case "MonoMac.CoreImage.CIImageAccumulator":
 			case "CoreImage.CIImageAccumulator": // 32897776
 			case "MonoMac.AVFoundation.AVCaptureInputPort": // https://bugzilla.xamarin.com/show_bug.cgi?id=57668

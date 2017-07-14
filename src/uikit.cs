@@ -16204,7 +16204,7 @@ namespace XamCore.UIKit {
 	
 		[Abstract]
 		[Export ("canLoadObjectsOfClass:")]
-		bool CanLoadObjectsOfClass (Class itemProviderReadingClass);
+		bool CanLoadObjects (Class itemProviderReadingClass);
 	}
 	
 	[NoWatch, NoTV, iOS (11,0)]
@@ -16374,7 +16374,7 @@ namespace XamCore.UIKit {
 	
 		[Abstract]
 		[Export ("loadObjectsOfClass:completion:")]
-		NSProgress Completion (INSItemProviderReading aClass, Action<INSItemProviderReading []> completion);
+		NSProgress LoadObjects (Class itemProviderReadingClass, Action<INSItemProviderReading []> completion);
 	}
 	
 	[NoWatch, NoTV, iOS (11,0)]

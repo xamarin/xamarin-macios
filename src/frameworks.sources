@@ -1320,6 +1320,7 @@ UIKIT_SOURCES = \
 	UIKit/UIDocumentInteractionController.cs \
 	UIKit/UIDocumentMenuViewController.cs \
 	UIKit/UIDocumentPickerViewController.cs \
+	UIKit/UIDragDropSessionExtensions.cs \
 	UIKit/UIDynamicAnimator.cs \
 	UIKit/UIEnumsExtensions.cs \
 	UIKit/UIEvent.cs \

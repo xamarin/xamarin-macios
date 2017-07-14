@@ -27,6 +27,7 @@ namespace XamCore.CoreNFC {
 	[Native]
 	public enum NFCReaderError : nint {
 		UnsupportedFeature = 1,
+		SecurityViolation,
 		ReaderTransceiveErrorTagConnectionLost = 100,
 		ReaderTransceiveErrorRetryExceeded,
 		ReaderTransceiveErrorTagResponseError,
@@ -73,6 +74,9 @@ namespace XamCore.CoreNFC {
 		[Static]
 		[Export ("readingAvailable")]
 		bool ReadingAvailable { get; }
+
+		[Export ("restartPolling")]
+		void RestartPolling ();
 	}
 
 	//[iOS (11,0), NoTV, NoWatch, NoMac]
@@ -226,6 +230,10 @@ namespace XamCore.CoreNFC {
 		[Abstract]
 		[Export ("ready")]
 		bool Ready { [Bind ("isReady")] get; }
+
+		[Abstract]
+		[Export ("alertMessage")]
+		string AlertMessage { get; set; }
 
 		[Abstract]
 		[Export ("beginSession")]
