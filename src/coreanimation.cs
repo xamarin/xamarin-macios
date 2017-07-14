@@ -312,7 +312,7 @@ namespace XamCore.CoreAnimation {
 		[Export ("containsPoint:")]
 		bool Contains (CGPoint p);
 
-		[DebuggerBrowsable(DebuggerBrowsableState.Advanced)]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("contents", ArgumentSemantic.Strong), NullAllowed]
 		CGImage Contents { get; set; }
 
