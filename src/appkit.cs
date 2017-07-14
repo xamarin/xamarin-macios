@@ -3447,6 +3447,12 @@ namespace XamCore.AppKit {
 	[BaseType (typeof(NSCollectionViewLayout))]
 	interface NSCollectionViewTransitionLayout
 	{
+#if !XAMCORE_4_0
+		[Obsolete ("Use the constructor that allows you to set currentLayout and newLayout.")]
+		[Export ("init")]
+		IntPtr Constructor ();
+#endif
+
 		[Export ("transitionProgress", ArgumentSemantic.Assign)]
 		nfloat TransitionProgress { get; set; }
 
