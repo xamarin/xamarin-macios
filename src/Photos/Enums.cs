@@ -146,7 +146,6 @@ namespace XamCore.Photos
 		AlbumSyncedFaces     = 4,
 		AlbumSyncedAlbum     = 5,
 		AlbumImported        = 6,
-		AlbumImportHistory   = AlbumImported,	// renamed only on macOS
 		AlbumMyPhotoStream   = 100,
 		AlbumCloudShared     = 101,
 		SmartAlbumGeneric    = 200,
