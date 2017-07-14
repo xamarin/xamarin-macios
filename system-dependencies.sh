@@ -159,7 +159,7 @@ function install_mono () {
 	curl -L $MONO_URL > $MONO_PKG
 
 	log "Installing Mono $MIN_MONO_VERSION from $MONO_URL..."
-	sudo installer -pkg $MONO_PKG -target /
+	installer -pkg $MONO_PKG -target /
 
 	rm -f $MONO_PKG
 }
@@ -184,9 +184,9 @@ function install_visual_studio () {
 	log "Mounting $VS_DMG into $VS_MOUNTPOINT..."
 	hdiutil attach $VS_DMG -mountpoint $VS_MOUNTPOINT -quiet -nobrowse
 	log "Removing previous Visual Studio from $VS"
-	sudo rm -Rf "$VS"
+	rm -Rf "$VS"
 	log "Installing Visual Studio $MIN_VISUAL_STUDIO_VERSION to $VS..."
-	sudo cp -R "$VS_MOUNTPOINT/Visual Studio.app" /Applications
+	cp -R "$VS_MOUNTPOINT/Visual Studio.app" /Applications
 	log "Unmounting $VS_DMG..."
 	hdiutil detach $VS_MOUNTPOINT -quiet
 
@@ -247,11 +247,11 @@ function install_specific_xcode () {
 	rm -f $XCODE_DMG
 
 	log "Removing any com.apple.quarantine attributes from the installed Xcode"
-	sudo xattr -d -r com.apple.quarantine $XCODE_ROOT
+	xattr -d -r com.apple.quarantine $XCODE_ROOT
 
 	if is_at_least_version $XCODE_VERSION 5.0; then
 		log "Accepting Xcode license"
-		sudo $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -license accept
+		$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -license accept
 	fi
 
 	if is_at_least_version $XCODE_VERSION 8.0; then
@@ -259,7 +259,7 @@ function install_specific_xcode () {
 		for pkg in $PKGS; do
 			if test -f "$XCODE_DEVELOPER_ROOT/../Resources/Packages/$pkg"; then
 				log "Installing $pkg"
-				sudo /usr/sbin/installer -dumplog -verbose -pkg "$XCODE_DEVELOPER_ROOT/../Resources/Packages/$pkg" -target /
+				/usr/sbin/installer -dumplog -verbose -pkg "$XCODE_DEVELOPER_ROOT/../Resources/Packages/$pkg" -target /
 				log "Installed $pkg"
 			else
 				log "Not installing $pkg because it doesn't exist."
@@ -267,8 +267,8 @@ function install_specific_xcode () {
 		done
 	fi
 
-	log "Executing 'sudo xcode-select -s $XCODE_DEVELOPER_ROOT'"
-	sudo xcode-select -s $XCODE_DEVELOPER_ROOT
+	log "Executing 'xcode-select -s $XCODE_DEVELOPER_ROOT'"
+	xcode-select -s $XCODE_DEVELOPER_ROOT
 
 	ok "Xcode $XCODE_VERSION provisioned"
 }
@@ -295,9 +295,9 @@ function check_specific_xcode () {
 		if is_at_least_version $XCODE_VERSION 5.0; then
 			if ! $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -license check >/dev/null 2>&1; then
 				if ! test -z $PROVISION_XCODE; then
-					sudo $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -license accept
+					$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -license accept
 				else
-					fail "The license for Xcode $XCODE_VERSION has not been accepted. Execute 'sudo $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild' to review the license and accept it."
+					fail "The license for Xcode $XCODE_VERSION has not been accepted. Execute '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild' to review the license and accept it."
 				fi
 				return
 			fi
@@ -314,10 +314,10 @@ function check_specific_xcode () {
 	local XCODE_SELECT=$(xcode-select -p)
 	if [[ "x$XCODE_SELECT" != "x$XCODE_DEVELOPER_ROOT" ]]; then
 		if ! test -z $PROVISION_XCODE; then
-			log "Executing 'sudo xcode-select -s $XCODE_DEVELOPER_ROOT'"
-			sudo xcode-select -s $XCODE_DEVELOPER_ROOT
+			log "Executing 'xcode-select -s $XCODE_DEVELOPER_ROOT'"
+			xcode-select -s $XCODE_DEVELOPER_ROOT
 		else
-			fail "'xcode-select -p' does not point to $XCODE_DEVELOPER_ROOT, it points to $XCODE_SELECT. Execute 'sudo xcode-select -s $XCODE_DEVELOPER_ROOT' to fix."
+			fail "'xcode-select -p' does not point to $XCODE_DEVELOPER_ROOT, it points to $XCODE_SELECT. Execute 'xcode-select -s $XCODE_DEVELOPER_ROOT' to fix."
 		fi
 	fi
 
