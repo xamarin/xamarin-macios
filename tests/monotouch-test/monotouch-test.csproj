@@ -656,6 +656,7 @@
     <Compile Include="HomeKit\HMMutableSignificantTimeEventTest.cs" />
     <Compile Include="HomeKit\HMPresenceEventTest.cs" />
     <Compile Include="HomeKit\HMSignificantTimeEventTest.cs" />
+    <Compile Include="UIKit\UIDragDropSessionExtensionsTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>

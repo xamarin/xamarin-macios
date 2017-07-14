@@ -504,6 +504,10 @@ namespace XamCore.AVKit {
 		[TV (11,0)]
 		[Field ("AVKitMetadataIdentifierApproximateEndDate")]
 		NSString ApproximateEndDate { get; }
+
+		[TV (11,0)]
+		[Field ("AVKitMetadataIdentifierServiceIdentifier")]
+		NSString ServiceIdentifier { get; }
 	}
 
 	[TV (11,0), iOS (11,0)]
