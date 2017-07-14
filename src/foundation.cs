@@ -14300,12 +14300,14 @@ namespace XamCore.Foundation
 	[DisableDefaultCtor]
 	interface NSXpcConnection : NSXpcProxyCreating
 	{
+		[NoWatch, NoiOS, NoTV]
 		[Export ("initWithServiceName:")]
 		IntPtr Constructor (string serviceName);
 
 		[NullAllowed, Export ("serviceName")]
 		string ServiceName { get; }
 
+		[NoWatch, NoiOS, NoTV]
 		[Export ("initWithMachServiceName:options:")]
 		IntPtr Constructor (string name, NSXpcConnectionOptions options);
 
@@ -14375,6 +14377,7 @@ namespace XamCore.Foundation
 		[Export ("anonymousListener")]
 		NSXpcListener AnonymousListener { get; }
 
+		[NoWatch, NoiOS, NoTV]
 		[Export ("initWithMachServiceName:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (string name);
