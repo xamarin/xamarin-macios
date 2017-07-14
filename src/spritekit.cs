@@ -21,6 +21,9 @@ using XamCore.CoreFoundation;
 using XamCore.CoreGraphics;
 using XamCore.CoreVideo;
 using XamCore.SceneKit;
+#if !WATCH
+using XamCore.Metal;
+#endif
 
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
@@ -28,6 +31,7 @@ using Matrix2 = global::OpenTK.Matrix2;
 using Matrix3 = global::OpenTK.Matrix3;
 using Matrix4 = global::OpenTK.Matrix4;
 using Vector4 = global::OpenTK.Vector4;
+using Quaternion = global::OpenTK.Quaternion;
 
 #if MONOMAC
 using XamCore.AppKit;
@@ -37,6 +41,7 @@ using UIView = global::XamCore.AppKit.NSView;
 using pfloat = System.nfloat;
 #else
 using XamCore.UIKit;
+using NSLineBreakMode = global::XamCore.UIKit.UILineBreakMode;
 using pfloat = System.Single;
 #if !WATCH
 using UIView = global::XamCore.UIKit.UIView;
@@ -51,6 +56,11 @@ namespace XamCore.SpriteKit {
 	interface CIFilter {}
 	interface GKPolygonObstacle {}
 	interface UIView {}
+	interface IMTLCommandBuffer {}
+	interface IMTLCommandQueue {}
+	interface IMTLDevice {}
+	interface IMTLRenderCommandEncoder {}
+	interface MTLRenderPassDescriptor {}
 #endif
 
 	delegate void SKNodeChildEnumeratorHandler (SKNode node, out bool stop);
@@ -165,6 +175,12 @@ namespace XamCore.SpriteKit {
 
 		[Export ("userInteractionEnabled")]
 		bool UserInteractionEnabled { [Bind ("isUserInteractionEnabled")] get; set; }
+
+		[NoWatch]
+		[NoMac]
+		[TV (11,0), iOS (11,0)]
+		[Export ("focusBehavior", ArgumentSemantic.Assign)]
+		SKNodeFocusBehavior FocusBehavior { get; set; }
 
 		[Export ("parent")]
 		SKNode Parent { get; }
@@ -1182,11 +1198,28 @@ namespace XamCore.SpriteKit {
 		[Static, Export ("labelNodeWithText:")]
 		SKLabelNode FromText ([NullAllowed] string text);
 
+		[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
+		[Static]
+		[Export ("labelNodeWithAttributedText:")]
+		SKLabelNode FromText ([NullAllowed] NSAttributedString attributedText);
+
 		[Export ("verticalAlignmentMode")]
 		SKLabelVerticalAlignmentMode VerticalAlignmentMode { get; set; }
 
 		[Export ("horizontalAlignmentMode")]
 		SKLabelHorizontalAlignmentMode HorizontalAlignmentMode { get; set; }
+
+		[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
+		[Export ("numberOfLines")]
+		nint NumberOfLines { get; set; }
+
+		[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
+		[Export ("lineBreakMode", ArgumentSemantic.Assign)]
+		NSLineBreakMode LineBreakMode { get; set; }
+
+		[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
+		[Export ("preferredMaxLayoutWidth")]
+		nfloat PreferredMaxLayoutWidth { get; set; }
 
 		[Export ("fontName", ArgumentSemantic.Copy)]
 		string FontName { get; set; }
@@ -1194,6 +1227,10 @@ namespace XamCore.SpriteKit {
 		[Export ("text", ArgumentSemantic.Copy)]
 		[NullAllowed] // nullable in Xcode7 headers and caught by introspection tests
 		string Text { get; set; }
+
+		[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
+		[NullAllowed, Export ("attributedText", ArgumentSemantic.Copy)]
+		NSAttributedString AttributedText { get; set; }
 
 		[Export ("fontSize")]
 		nfloat FontSize { get; set; }
@@ -1954,28 +1991,28 @@ namespace XamCore.SpriteKit {
 		
 		// These are in a category
 		[Static, Export ("moveByX:y:duration:")]
-		SKAction MoveBy (nfloat deltaX, nfloat deltaY, double sec);
+		SKAction MoveBy (nfloat deltaX, nfloat deltaY, double duration);
 
 		[Static, Export ("moveBy:duration:")]
 		SKAction MoveBy (CGVector delta, double duration);
 
 		[Static, Export ("moveTo:duration:")]
-		SKAction MoveTo (CGPoint location, double sec);
+		SKAction MoveTo (CGPoint location, double duration);
 
 		[Static, Export ("moveToX:duration:")]
-		SKAction MoveToX (nfloat x, double sec);
+		SKAction MoveToX (nfloat x, double duration);
 
 		[Static, Export ("moveToY:duration:")]
-		SKAction MoveToY (nfloat y, double sec);
+		SKAction MoveToY (nfloat y, double duration);
 
 		[Static, Export ("rotateByAngle:duration:")]
-		SKAction RotateByAngle (nfloat radians, double sec);
+		SKAction RotateByAngle (nfloat radians, double duration);
 
 		[Static, Export ("rotateToAngle:duration:")]
-		SKAction RotateToAngle (nfloat radians, double sec);
+		SKAction RotateToAngle (nfloat radians, double duration);
 
 		[Static, Export ("rotateToAngle:duration:shortestUnitArc:")]
-		SKAction RotateToAngle (nfloat radians, double sec, bool shortedUnitArc);
+		SKAction RotateToAngle (nfloat radians, double duration, bool shortedUnitArc);
 
 		[Static, Export ("resizeByWidth:height:duration:")]
 		SKAction ResizeByWidth (nfloat width, nfloat height, double duration);
@@ -1990,28 +2027,28 @@ namespace XamCore.SpriteKit {
 		SKAction ResizeToHeight (nfloat height, double duration);
 
 		[Static, Export ("scaleBy:duration:")]
-		SKAction ScaleBy (nfloat scale, double sec);
+		SKAction ScaleBy (nfloat scale, double duration);
 
 		[Static, Export ("scaleXBy:y:duration:")]
-		SKAction ScaleBy (nfloat xScale, nfloat yScale, double sec);
+		SKAction ScaleBy (nfloat xScale, nfloat yScale, double duration);
 
 		[Static, Export ("scaleTo:duration:")]
-		SKAction ScaleTo (nfloat scale, double sec);
+		SKAction ScaleTo (nfloat scale, double duration);
 
 		[Static, Export ("scaleXTo:y:duration:")]
-		SKAction ScaleTo (nfloat xScale, nfloat yScale, double sec);
+		SKAction ScaleTo (nfloat xScale, nfloat yScale, double duration);
 
 		[Static, Export ("scaleXTo:duration:")]
-		SKAction ScaleXTo (nfloat scale, double sec);
+		SKAction ScaleXTo (nfloat scale, double duration);
 
 		[Static, Export ("scaleYTo:duration:")]
-		SKAction ScaleYTo (nfloat scale, double sec);
+		SKAction ScaleYTo (nfloat scale, double duration);
 
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Static]
 		[Export ("scaleToSize:duration:")]
-		SKAction ScaleTo (CGSize size, double sec);
+		SKAction ScaleTo (CGSize size, double duration);
 
 		[Static, Export ("sequence:")]
 		SKAction Sequence ([Params] SKAction [] actions);
@@ -2026,16 +2063,16 @@ namespace XamCore.SpriteKit {
 		SKAction RepeatActionForever (SKAction action);
 
 		[Static, Export ("fadeInWithDuration:")]
-		SKAction FadeInWithDuration (double sec);
+		SKAction FadeInWithDuration (double duration);
 
 		[Static, Export ("fadeOutWithDuration:")]
-		SKAction FadeOutWithDuration (double sec);
+		SKAction FadeOutWithDuration (double duration);
 
 		[Static, Export ("fadeAlphaBy:duration:")]
-		SKAction FadeAlphaBy (nfloat factor, double sec);
+		SKAction FadeAlphaBy (nfloat factor, double duration);
 
 		[Static, Export ("fadeAlphaTo:duration:")]
-		SKAction FadeAlphaTo (nfloat alpha, double sec);
+		SKAction FadeAlphaTo (nfloat alpha, double duration);
 
 		[iOS (7,1), Mac (10,10)]
 		[Static, Export ("setTexture:")]
@@ -2055,16 +2092,16 @@ namespace XamCore.SpriteKit {
 		SKAction PlaySoundFileNamed (string soundFile, bool wait);
 
 		[Static, Export ("colorizeWithColor:colorBlendFactor:duration:")]
-		SKAction ColorizeWithColor (UIColor color, nfloat colorBlendFactor, double sec);
+		SKAction ColorizeWithColor (UIColor color, nfloat colorBlendFactor, double duration);
 
 		[Static, Export ("colorizeWithColorBlendFactor:duration:")]
-		SKAction ColorizeWithColorBlendFactor (nfloat colorBlendFactor, double sec);
+		SKAction ColorizeWithColorBlendFactor (nfloat colorBlendFactor, double duration);
 
 		[Static, Export ("followPath:duration:")]
-		SKAction FollowPath (CGPath path, double sec);
+		SKAction FollowPath (CGPath path, double duration);
 
 		[Static, Export ("followPath:asOffset:orientToPath:duration:")]
-		SKAction FollowPath (CGPath path, bool offset, bool orient, double sec);
+		SKAction FollowPath (CGPath path, bool offset, bool orient, double duration);
 
 		[iOS (8,0), Mac (10,10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
 		[Static, Export ("followPath:speed:")]
@@ -2075,16 +2112,16 @@ namespace XamCore.SpriteKit {
 		SKAction FollowPath (CGPath path, bool offset, bool orient, nfloat speed);
 
 		[Static, Export ("speedBy:duration:")]
-		SKAction SpeedBy (nfloat speed, double sec);
+		SKAction SpeedBy (nfloat speed, double duration);
 
 		[Static, Export ("speedTo:duration:")]
-		SKAction SpeedTo (nfloat speed, double sec);
+		SKAction SpeedTo (nfloat speed, double duration);
 
 		[Static, Export ("waitForDuration:")]
-		SKAction WaitForDuration (double sec);
+		SKAction WaitForDuration (double duration);
 
 		[Static, Export ("waitForDuration:withRange:")]
-		SKAction WaitForDuration (double sec, double durationRange);
+		SKAction WaitForDuration (double duration, double durationRange);
 
 		[Static, Export ("removeFromParent")]
 		SKAction RemoveFromParent ();
@@ -2102,7 +2139,7 @@ namespace XamCore.SpriteKit {
 		SKAction RunAction (SKAction action, string name);
 
 		[Static, Export ("customActionWithDuration:actionBlock:")]
-		SKAction CustomActionWithDuration (double seconds, SKActionDurationHandler actionHandler);
+		SKAction CustomActionWithDuration (double duration, SKActionDurationHandler actionHandler);
 
 		//
 		// iOS 8 cluster (a few more are above, as part of their family
@@ -2117,7 +2154,7 @@ namespace XamCore.SpriteKit {
 
 		[iOS (8,0), Mac(10,10)]
 		[Static, Export ("reachTo:rootNode:duration:")]
-		SKAction ReachTo (CGPoint position, SKNode rootNode, double secs);
+		SKAction ReachTo (CGPoint position, SKNode rootNode, double duration);
 
 		[iOS (8,0), Mac(10,10)]
 		[Static, Export ("reachTo:rootNode:velocity:")]
@@ -2125,7 +2162,7 @@ namespace XamCore.SpriteKit {
 
 		[iOS (8,0), Mac(10,10)]
 		[Static, Export ("reachToNode:rootNode:duration:")]
-		SKAction ReachToNode (SKNode node, SKNode rootNode, double sec);
+		SKAction ReachToNode (SKNode node, SKNode rootNode, double duration);
 
 		[iOS (8,0), Mac(10,10)]
 		[Static, Export ("reachToNode:rootNode:velocity:")]
@@ -2133,11 +2170,11 @@ namespace XamCore.SpriteKit {
 		
 		[iOS (8,0), Mac (10,10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
 		[Static, Export ("strengthTo:duration:")]
-		SKAction StrengthTo (float /* float, not CGFloat */ strength, double sec);
+		SKAction StrengthTo (float /* float, not CGFloat */ strength, double duration);
 
 		[iOS (8,0), Mac (10,10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
 		[Static, Export ("strengthBy:duration:")]
-		SKAction StrengthBy (float /* float, not CGFloat */ strength, double sec);
+		SKAction StrengthBy (float /* float, not CGFloat */ strength, double duration);
 
 		[iOS (8,0), Mac (10,10)]
 		[NullAllowed, Export ("timingFunction", ArgumentSemantic.Assign)]
@@ -2150,7 +2187,7 @@ namespace XamCore.SpriteKit {
 		[iOS (8,0), Mac(10,10)]
 		[Static]
 		[Export ("falloffTo:duration:")]
-		SKAction FalloffTo (float falloff, double sec);
+		SKAction FalloffTo (float falloff, double duration);
 
 		// iOS 9 cluster
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
@@ -3222,6 +3259,81 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		[Export ("gridByReplacingDestPositions:")]
 		SKWarpGeometryGrid _GridByReplacingDestPositions (IntPtr destPositions);
+	}
+
+	// SKRenderer is not available for WatchKit apps and the iOS simulator
+	[NoWatch]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface SKRenderer
+	{
+		[Static]
+		[Export ("rendererWithDevice:")]
+		[return: NullAllowed]
+		SKRenderer FromDevice ([NullAllowed] IMTLDevice device);
+
+		[Export ("renderWithViewport:commandBuffer:renderPassDescriptor:")]
+		void Render (CGRect viewport, IMTLCommandBuffer commandBuffer, MTLRenderPassDescriptor renderPassDescriptor);
+
+		[Export ("renderWithViewport:renderCommandEncoder:renderPassDescriptor:commandQueue:")]
+		void Render (CGRect viewport, IMTLRenderCommandEncoder renderCommandEncoder, MTLRenderPassDescriptor renderPassDescriptor, IMTLCommandQueue commandQueue);
+
+		[Export ("updateAtTime:")]
+		void UpdateAtTime (double currentTime);
+
+		[NullAllowed, Export ("scene", ArgumentSemantic.Assign)]
+		SKScene Scene { get; set; }
+
+		[Export ("ignoresSiblingOrder")]
+		bool IgnoresSiblingOrder { get; set; }
+
+		[Export ("shouldCullNonVisibleNodes")]
+		bool ShouldCullNonVisibleNodes { get; set; }
+
+		[Export ("showsDrawCount")]
+		bool ShowsDrawCount { get; set; }
+
+		[Export ("showsNodeCount")]
+		bool ShowsNodeCount { get; set; }
+
+		[Export ("showsQuadCount")]
+		bool ShowsQuadCount { get; set; }
+
+		[Export ("showsPhysics")]
+		bool ShowsPhysics { get; set; }
+
+		[Export ("showsFields")]
+		bool ShowsFields { get; set; }
+	}
+
+	[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
+	[BaseType (typeof(SKNode))]
+	interface SKTransformNode
+	{
+		[Export ("xRotation")]
+		nfloat XRotation { get; set; }
+
+		[Export ("yRotation")]
+		nfloat YRotation { get; set; }
+
+		[Export ("eulerAngles")]
+		Vector3 EulerAngles {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
+
+		[Export ("rotationMatrix")]
+		Matrix3 RotationMatrix {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
+
+		[Export ("quaternion")]
+		Quaternion Quaternion {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
 	}
 }
 #endif

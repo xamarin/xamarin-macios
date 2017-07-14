@@ -1444,6 +1444,26 @@ namespace Xamarin.BindingMethods.Generator
 				}
 			);
 
+			data.Add (
+				new FunctionData {
+					Comment = " // Quaternion func ()",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.QuatF,
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (Quaternion)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.QuatF },
+					},
+				}
+			);
+
 			// Required for ModelIO
 			data.Add (
 				new FunctionData {
@@ -1994,6 +2014,12 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ("\t\t{0}.points [i].c = {1}.points [i] [2];", managedVariable, nativeVariable);
 				writer.WriteLine ("\t}");
 				break;
+			case "Quaternion":
+				writer.WriteLine ("\t{0}.vector.a = {1}.vector [0];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t{0}.vector.b = {1}.vector [1];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t{0}.vector.c = {1}.vector [2];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t{0}.vector.d = {1}.vector [3];", managedVariable, nativeVariable);
+				break;
 			default:
 				throw new NotImplementedException (string.Format ("MarshalToManaged for: NativeType: {0} ManagedType: {1}", type.NativeType, type.ManagedType));
 			}
@@ -2080,6 +2106,12 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ("\t\t{0}.points [i][1] = {1}.points [i].b;", nativeVariable, managedVariable);
 				writer.WriteLine ("\t\t{0}.points [i][2] = {1}.points [i].c;", nativeVariable, managedVariable);
 				writer.WriteLine ("\t}");
+				break;
+			case "Quaternion":
+				writer.WriteLine ("\t{0}.vector [0] = {1}.vector.a;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t{0}.vector [1] = {1}.vector.b;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t{0}.vector [2] = {1}.vector.c;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t{0}.vector [3] = {1}.vector.d;", nativeVariable, managedVariable);
 				break;
 			default:
 				throw new NotImplementedException (string.Format ("MarshalToNative for: NativeType: {0} ManagedType: {1}", type.NativeType, type.ManagedType));
@@ -2657,6 +2689,13 @@ namespace Xamarin.BindingMethods.Generator
 				NativeType = "CGSize",
 				NativeWrapperType = "CGSize",
 				RequireMarshal = false,
+			};
+
+			public static TypeData QuatF = new TypeData {
+				ManagedType = "Quaternion",
+				NativeType = "simd_quatf",
+				NativeWrapperType = "struct QuatF",
+				RequireMarshal = true,
 			};
 		}
 	}

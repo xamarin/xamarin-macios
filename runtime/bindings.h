@@ -83,6 +83,8 @@ typedef struct { vector_float2 columns[2]; } matrix_float2x2;
 typedef struct { vector_float3 columns[3]; } matrix_float3x3;
 typedef struct { vector_float4 columns[4]; } matrix_float4x4;
 
+typedef struct { vector_float4 vector; } simd_quatf;
+
 typedef struct {
     vector_float3 maxBounds;
     vector_float3 minBounds;
@@ -147,6 +149,10 @@ struct Matrix3f {
 
 struct Matrix4f {
 	Vector4f columns [4];
+};
+
+struct QuatF {
+	Vector4f vector;
 };
 
 struct MDLAxisAlignedBoundingBoxWrapper {
