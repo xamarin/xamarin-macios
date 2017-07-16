@@ -17,7 +17,12 @@ PRODUCTSIGN_IDENTITY="Developer ID Installer: Xamarin Inc"
 PRODUCTSIGN_FINGERPRINT="3F:BE:54:B1:41:8B:F1:20:FA:B4:9D:A7:F2:5E:72:95:5A:49:21:D6"
 
 if [ -z "$BUILD_REVISION" ]; then
-	echo BUILD_REVISION is unset. Bailing.
+	echo BUILD_REVISION is unset. Using BUILD_SOURCEVERSION.
+	BUILD_REVISION=$BUILD_SOURCEVERSION
+fi
+
+if [ -z "$BUILD_SOURCEVERSION" ]; then
+	echo BUILD_SOURCEVERSION is unset. Bailing.
 	exit 1
 fi
 
