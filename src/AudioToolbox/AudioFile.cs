@@ -46,6 +46,7 @@ namespace XamCore.AudioToolbox {
 		AIFF = 0x41494646, // AIFF
 		AIFC = 0x41494643, // AIFC
 		WAVE = 0x57415645, // WAVE
+		RF64 = 0x52463634, // RF64
 		SoundDesigner2 = 0x53643266, // Sd2f
 		Next = 0x4e655854, // NeXT
 		MP3 = 0x4d504733, // MPG3
@@ -60,6 +61,7 @@ namespace XamCore.AudioToolbox {
 		ThreeGP = 0x33677070, // 3gpp
 		ThreeGP2 = 0x33677032, // 3gp2
 		AMR = 0x616d7266, // amrf
+		FLAC =  0x666c6163, // flac
 	}
 
 	public enum AudioFileError {// Implictly cast to OSType in AudioFile.h

@@ -39,6 +39,8 @@ namespace XamCore.AudioUnit {
 			uint frameCount, nint inputBusNumber, AudioBuffers inputData);
 
 	delegate void AUScheduleParameterBlock (AUEventSampleTime eventSampleTime, uint rampDurationSampleFrames, ulong parameterAddress, float value);
+	[iOS (11, 0), Mac (10,13), TV (11,0), NoWatch]
+	delegate int AUMidiOutputEventBlock (long eventSampleTime, byte cable, nint length, ref byte midiBytes);
 	delegate void AUImplementorValueObserver (AUParameter param, float value);
 	delegate float AUImplementorValueProvider (AUParameter param);
 
@@ -107,6 +109,10 @@ namespace XamCore.AudioUnit {
 		[NullAllowed, Export ("manufacturerName")]
 		string ManufacturerName { get; }
 
+		[iOS (11, 0), Mac (10, 13), TV (11, 0), NoWatch]
+		[NullAllowed, Export ("audioUnitShortName")]
+		string ShortName { get; }
+
 		[Export ("componentVersion")]
 		uint ComponentVersion { get; }
 
@@ -139,6 +145,18 @@ namespace XamCore.AudioUnit {
 
 // 		[NullAllowed, Export ("musicalContextBlock", ArgumentSemantic.Copy)]
 // 		AUHostMusicalContextBlock MusicalContextBlock { get; set; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("MIDIOutputNames", ArgumentSemantic.Copy)]
+		string[] MidiOutputNames { get; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("providesUserInterface")]
+		bool ProvidesUserInterface { get; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NullAllowed, Export ("MIDIOutputEventBlock", ArgumentSemantic.Copy)]
+		AUMidiOutputEventBlock MidiOutputEventBlock { get; set; }
 
 		[NullAllowed, Export ("transportStateBlock", ArgumentSemantic.Copy)]
 		AUHostTransportStateBlock TransportStateBlock { get; set; }
@@ -190,6 +208,10 @@ namespace XamCore.AudioUnit {
 		[Export ("shouldBypassEffect")]
 		bool ShouldBypassEffect { get; set; }
 
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("shouldBypassMIDIEffect")]
+		bool ShouldBypassMidiEffect { get; set; }
+
 		[Export ("canProcessInPlace")]
 		bool CanProcessInPlace { get; }
 
@@ -202,7 +224,7 @@ namespace XamCore.AudioUnit {
 		[NullAllowed, Export ("contextName")]
 		string ContextName { get; set; }
 
-		[iOS (10,0), Mac (10,12, onlyOn64 : true), TV (10,0)]
+		[iOS (10,0), Mac (10,12, onlyOn64 : true), TV (10,0), Watch (4, 0)]
 		[Export ("supportsMPE")]
 		bool SupportsMpe { get; }
 
@@ -229,6 +251,11 @@ namespace XamCore.AudioUnit {
 		[Mac (10,11)][iOS (7,0)]
 		[Notification, Field ("kAudioComponentInstanceInvalidationNotification")]
 		NSString AudioComponentInstanceInvalidationNotification { get; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("MIDIOutputBufferSizeHint")]
+		nint MidiOutputBufferSizeHint { get; set; }
+
 	}
 
 	// kept separate from AUAudioUnit, quote:
@@ -237,6 +264,14 @@ namespace XamCore.AudioUnit {
 	[Category]
 	[BaseType (typeof (AUAudioUnit))]
 	interface AUAudioUnit_AUAudioInputOutputUnit {
+
+		[Mac (10,12), NoTV, NoiOS, NoWatch]
+		[Export ("deviceID")]
+		uint GetDeviceID ();
+
+		[Mac (10,12), NoTV, NoiOS, NoWatch]
+		[Export ("setDeviceID:error:")]
+		bool SetDeviceID (uint deviceID, out NSError outError);
 
 		[Export ("canPerformInput")]
 		bool GetCanPerformInput ();
@@ -273,7 +308,20 @@ namespace XamCore.AudioUnit {
 
 		[NullAllowed, Export ("setOutputProvider:")]
 		void SetOutputProvider (AURenderPullInputBlock provider);
-}
+
+		// the following are properties but we cannot have properties in Categories.
+		[Mac (10, 13), NoWatch, NoiOS, NoTV]
+		[Export ("deviceInputLatency")]
+		double GetDeviceInputLatency ();
+
+		[Mac (10, 13), NoWatch, NoiOS, NoTV]
+		[Export ("deviceOutputLatency")]
+		double GetDeviceOutputLatency ();
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("running")]
+		bool IsRunning ();
+	}
 
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
@@ -315,6 +363,10 @@ namespace XamCore.AudioUnit {
 
 		[Export ("maximumChannelCount")]
 		uint MaximumChannelCount { get; set; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("shouldAllocateBuffer")]
+		bool ShouldAllocateBuffer { get; set; }
 	}
 
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
@@ -437,7 +489,7 @@ namespace XamCore.AudioUnit {
 		[Export ("setValue:originator:atHostTime:eventType:")]
 		void SetValue (float value, IntPtr originator, ulong hostTime, AUParameterAutomationEventType eventType);
 
-		[iOS (10,0), Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0), Mac (10,12, onlyOn64 : true), Watch (4, 0), TV (11, 0)]
 		[TV (10,0)]
 		[Wrap ("SetValue (value, originator.ObserverToken, hostTime, eventType)")]
 		void SetValue (float value, AUParameterObserverToken originator, ulong hostTime, AUParameterAutomationEventType eventType);
