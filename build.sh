@@ -1,3 +1,3 @@
 echo "PATH ======= $PATH"
-
-make world
+mkdir ../package
+make $1
