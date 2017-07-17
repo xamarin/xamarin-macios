@@ -19,7 +19,7 @@ namespace XamCore.Vision {
 			get { return GetPoint (index); }
 		}
 
-		public Vector2 [] Points {
+		public virtual Vector2 [] Points {
 			get {
 				var ret = _GetPoints ();
 				if (ret == IntPtr.Zero)

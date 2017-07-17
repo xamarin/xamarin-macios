@@ -131,8 +131,8 @@ namespace XamCore.Vision {
 	delegate void VNRequestCompletionHandler (VNRequest request, NSError error);
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof (VNImageBasedRequest))]
 	[DisableDefaultCtor]
+	[BaseType (typeof (VNImageBasedRequest))]
 	interface VNCoreMLRequest {
 
 		[Export ("model")]
@@ -155,6 +155,7 @@ namespace XamCore.Vision {
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[Abstract]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageBasedRequest))]
 	interface VNDetectBarcodesRequest {
 
@@ -171,6 +172,7 @@ namespace XamCore.Vision {
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageBasedRequest))]
 	interface VNDetectFaceLandmarksRequest : VNFaceObservationAccepting {
 
@@ -180,6 +182,7 @@ namespace XamCore.Vision {
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageBasedRequest))]
 	interface VNDetectFaceRectanglesRequest {
 
@@ -189,6 +192,7 @@ namespace XamCore.Vision {
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageBasedRequest))]
 	interface VNDetectHorizonRequest {
 
@@ -198,6 +202,7 @@ namespace XamCore.Vision {
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageBasedRequest))]
 	interface VNDetectRectanglesRequest {
 
@@ -225,6 +230,7 @@ namespace XamCore.Vision {
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageBasedRequest))]
 	interface VNDetectTextRectanglesRequest {
 
@@ -238,6 +244,7 @@ namespace XamCore.Vision {
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[Abstract]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface VNFaceLandmarkRegion {
 
@@ -246,6 +253,7 @@ namespace XamCore.Vision {
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNFaceLandmarkRegion))]
 	interface VNFaceLandmarkRegion2D {
 
@@ -260,6 +268,7 @@ namespace XamCore.Vision {
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[Abstract]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface VNFaceLandmarks {
 
@@ -268,6 +277,7 @@ namespace XamCore.Vision {
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNFaceLandmarks))]
 	interface VNFaceLandmarks2D {
 
@@ -324,6 +334,7 @@ namespace XamCore.Vision {
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[Abstract]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNTargetedImageRequest))]
 	interface VNImageRegistrationRequest {
 
@@ -364,6 +375,7 @@ namespace XamCore.Vision {
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageRegistrationRequest))]
 	interface VNTranslationalImageRegistrationRequest {
 
@@ -405,6 +417,7 @@ namespace XamCore.Vision {
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageRegistrationRequest))]
 	interface VNHomographicImageRegistrationRequest {
 
@@ -447,6 +460,7 @@ namespace XamCore.Vision {
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[Abstract]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface VNObservation : NSCopying, NSSecureCoding {
 
@@ -458,6 +472,7 @@ namespace XamCore.Vision {
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNObservation))]
 	interface VNDetectedObjectObservation {
 
@@ -470,14 +485,21 @@ namespace XamCore.Vision {
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNDetectedObjectObservation))]
 	interface VNFaceObservation {
 
 		[NullAllowed, Export ("landmarks", ArgumentSemantic.Strong)]
 		VNFaceLandmarks2D Landmarks { get; }
+
+		[New]
+		[Static]
+		[Export ("observationWithBoundingBox:")]
+		VNFaceObservation FromBoundingBox (CGRect boundingBox);
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNObservation))]
 	interface VNClassificationObservation {
 
@@ -486,6 +508,7 @@ namespace XamCore.Vision {
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNObservation))]
 	interface VNCoreMLFeatureValueObservation {
 
@@ -494,6 +517,7 @@ namespace XamCore.Vision {
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNObservation))]
 	interface VNPixelBufferObservation {
 
@@ -502,6 +526,7 @@ namespace XamCore.Vision {
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNDetectedObjectObservation))]
 	interface VNRectangleObservation {
 
@@ -516,14 +541,25 @@ namespace XamCore.Vision {
 
 		[Export ("bottomRight", ArgumentSemantic.Assign)]
 		CGPoint BottomRight { get; }
+
+		[New]
+		[Static]
+		[Export ("observationWithBoundingBox:")]
+		VNRectangleObservation FromBoundingBox (CGRect boundingBox);
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNDetectedObjectObservation))]
 	interface VNTextObservation {
 
 		[NullAllowed, Export ("characterBoxes", ArgumentSemantic.Copy)]
 		VNRectangleObservation [] CharacterBoxes { get; }
+
+		[New]
+		[Static]
+		[Export ("observationWithBoundingBox:")]
+		VNTextObservation FromBoundingBox (CGRect boundingBox);
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -533,12 +569,18 @@ namespace XamCore.Vision {
 		[Export ("symbology")]
 		string Symbology { get; }
 
-		// TODO: Enable once CoreImage Xcode 9 is bound
+		// TODO: Enable once CoreImage Xcode 9 is bound -> https://bugzilla.xamarin.com/show_bug.cgi?id=58197
 		//[NullAllowed, Export ("barcodeDescriptor", ArgumentSemantic.Strong)]
 		//CIBarcodeDescriptor BarcodeDescriptor { get; }
+
+		[New]
+		[Static]
+		[Export ("observationWithBoundingBox:")]
+		VNBarcodeObservation FromBoundingBox (CGRect boundingBox);
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNObservation))]
 	interface VNHorizonObservation {
 
@@ -551,11 +593,13 @@ namespace XamCore.Vision {
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[Abstract]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNObservation))]
 	interface VNImageAlignmentObservation {
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageAlignmentObservation))]
 	interface VNImageTranslationAlignmentObservation {
 
@@ -564,6 +608,7 @@ namespace XamCore.Vision {
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNImageAlignmentObservation))]
 	interface VNImageHomographicAlignmentObservation {
 
@@ -578,6 +623,7 @@ namespace XamCore.Vision {
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[Abstract]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface VNRequest : NSCopying {
 
@@ -591,8 +637,12 @@ namespace XamCore.Vision {
 		[NullAllowed, Export ("preferredMetalContext", ArgumentSemantic.Retain)]
 		IMTLDevice PreferredMetalContext { get; set; }
 
+		// From docs: VNObservation subclasses specific to the VNRequest subclass
+		// Since downcasting is not easy we are exposing
+		// this property as a generic method 'GetResults'.
+		[Internal]
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
-		VNObservation [] Results { get; }
+		IntPtr _Results { get; }
 
 		[NullAllowed, Export ("completionHandler", ArgumentSemantic.Copy)]
 		VNRequestCompletionHandler CompletionHandler { get; }
@@ -600,6 +650,7 @@ namespace XamCore.Vision {
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[Abstract]
+	[DisableDefaultCtor]
 	[BaseType (typeof (VNRequest))]
 	interface VNImageBasedRequest {
 
@@ -612,12 +663,26 @@ namespace XamCore.Vision {
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
-	enum VNImageOption {
+	[Internal]
+	[Static]
+	interface VNImageOptionKeys {
 		[Field ("VNImageOptionProperties")]
-		Properties,
+		NSString PropertiesKey { get; }
 
 		[Field ("VNImageOptionCameraIntrinsics")]
-		CameraIntrinsics,
+		NSString CameraIntrinsicsKey { get; }
+	}
+
+	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[StrongDictionary ("VNImageOptionKeys")]
+	interface VNImageOptions {
+		[Export ("PropertiesKey")] // Have the option to set your own dict
+		NSDictionary WeakProperties { get; set; }
+
+		[StrongDictionary] // Yep we need CoreGraphics to disambiguate
+		CoreGraphics.CGImageProperties Properties { get; set; }
+
+		NSData CameraIntrinsics { get; set; }
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -626,34 +691,64 @@ namespace XamCore.Vision {
 	interface VNImageRequestHandler {
 
 		[Export ("initWithCVPixelBuffer:options:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSDictionary<NSString, NSObject> options);
+		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSDictionary options);
+
+		[Wrap ("this (pixelBuffer, imageOptions?.Dictionary)")]
+		IntPtr Constructor (CVPixelBuffer pixelBuffer, VNImageOptions imageOptions);
 
 		[Export ("initWithCVPixelBuffer:orientation:options:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary<NSString, NSObject> options);
+		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary options);
+
+		[Wrap ("this (pixelBuffer, orientation, imageOptions?.Dictionary)")]
+		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
 
 		[Export ("initWithCGImage:options:")]
-		IntPtr Constructor (CGImage image, NSDictionary<NSString, NSObject> options);
+		IntPtr Constructor (CGImage image, NSDictionary options);
+
+		[Wrap ("this (image, imageOptions?.Dictionary)")]
+		IntPtr Constructor (CGImage image, VNImageOptions imageOptions);
 
 		[Export ("initWithCGImage:orientation:options:")]
-		IntPtr Constructor (CGImage image, CGImagePropertyOrientation orientation, NSDictionary<NSString, NSObject> options);
+		IntPtr Constructor (CGImage image, CGImagePropertyOrientation orientation, NSDictionary options);
+
+		[Wrap ("this (image, orientation, imageOptions?.Dictionary)")]
+		IntPtr Constructor (CGImage image, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
 
 		[Export ("initWithCIImage:options:")]
-		IntPtr Constructor (CIImage image, NSDictionary<NSString, NSObject> options);
+		IntPtr Constructor (CIImage image, NSDictionary options);
+
+		[Wrap ("this (image, imageOptions?.Dictionary)")]
+		IntPtr Constructor (CIImage image, VNImageOptions imageOptions);
 
 		[Export ("initWithCIImage:orientation:options:")]
-		IntPtr Constructor (CIImage image, CGImagePropertyOrientation orientation, NSDictionary<NSString, NSObject> options);
+		IntPtr Constructor (CIImage image, CGImagePropertyOrientation orientation, NSDictionary options);
+
+		[Wrap ("this (image, orientation, imageOptions?.Dictionary)")]
+		IntPtr Constructor (CIImage image, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
 
 		[Export ("initWithURL:options:")]
-		IntPtr Constructor (NSUrl imageUrl, NSDictionary<NSString, NSObject> options);
+		IntPtr Constructor (NSUrl imageUrl, NSDictionary options);
+
+		[Wrap ("this (imageUrl, imageOptions?.Dictionary)")]
+		IntPtr Constructor (NSUrl imageUrl, VNImageOptions imageOptions);
 
 		[Export ("initWithURL:orientation:options:")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary<NSString, NSObject> options);
+		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary options);
+
+		[Wrap ("this (imageUrl, orientation, imageOptions?.Dictionary)")]
+		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
 
 		[Export ("initWithData:options:")]
-		IntPtr Constructor (NSData imageData, NSDictionary<NSString, NSObject> options);
+		IntPtr Constructor (NSData imageData, NSDictionary options);
+
+		[Wrap ("this (imageData, imageOptions?.Dictionary)")]
+		IntPtr Constructor (NSData imageData, VNImageOptions imageOptions);
 
 		[Export ("initWithData:orientation:options:")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary<NSString, NSObject> options);
+		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary options);
+
+		[Wrap ("this (imageData, orientation, imageOptions?.Dictionary)")]
+		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
 
 		[Export ("performRequests:error:")]
 		bool Perform (VNRequest [] requests, out NSError error);

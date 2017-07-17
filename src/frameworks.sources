@@ -1401,6 +1401,7 @@ VIDEOTOOLBOX_SOURCES = \
 
 VISION_SOURCES = \
 	Vision/VNFaceLandmarkRegion2D.cs \
+	Vision/VNRequest.cs \
 	Vision/VNUtils.cs \
 
 # WatchConnectivity
