@@ -108,7 +108,7 @@ namespace MonoTouch.Tuner
 						state.ProcessMethod (method);
 						break;
 					default:
-						return;
+						break;
 					}
 				}
 
