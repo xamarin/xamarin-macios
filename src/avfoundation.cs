@@ -1272,9 +1272,11 @@ namespace XamCore.AVFoundation {
 		[Export ("removeTapOnBus:")]
 		void RemoveTapOnBus (nuint bus);
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+#if XAMCORE_2_0
+		[NoWatch, TV (11, 0), Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
 		[Export ("AUAudioUnit")]
 		AUAudioUnit AUAudioUnit { get; }
+#endif
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Export ("latency")]
@@ -2361,7 +2363,7 @@ namespace XamCore.AVFoundation {
 		[Async]
 		void FromComponentDescription (AudioComponentDescription audioComponentDescription, AudioComponentInstantiationOptions options, Action<AVAudioUnit, NSError> completionHandler);
 
-		[iOS (9,0), Mac (10,11, onlyOn64 : true)]
+		[NoWatch, iOS (9,0), Mac (10,11, onlyOn64 : true)]
 		[Export ("AUAudioUnit")]
 		AUAudioUnit AUAudioUnit { get; }
 #endif
