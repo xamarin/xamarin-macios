@@ -11195,7 +11195,7 @@ namespace XamCore.AVFoundation {
 		NSString Apple { get; }
 	}
 
-#if !MONOMAC && XAMCORE_2_0 // FIXME: Unsure about if CMMetadataFormatDescription will be an INativeObject and will need manual binding for Classic
+#if IOS && XAMCORE_2_0 // FIXME: Unsure about if CMMetadataFormatDescription will be an INativeObject and will need manual binding for Classic
 	[NoWatch]
 	[NoTV]
 	[iOS (9,0)]
@@ -11208,9 +11208,16 @@ namespace XamCore.AVFoundation {
 		[Export ("metadataInputWithFormatDescription:clock:")] // FIXME: Add CMMetadataFormatDescription
 		AVCaptureMetadataInput MetadataInputWithFormatDescription (IntPtr /*CMMetadataFormatDescription*/ desc, CMClock clock);
 
+		[Static]
+		[Wrap ("MetadataInputWithFormatDescription (desc.Handle, clock)")]
+		AVCaptureMetadataInput MetadataInputWithFormatDescription (CMMetadataFormatDescription desc, CMClock clock);
+
 		[Internal]
 		[Export ("initWithFormatDescription:clock:")] // FIXME: Add CMMetadataFormatDescription
 		IntPtr Constructor (IntPtr /*CMMetadataFormatDescription*/ desc, CMClock clock);
+
+		[Wrap ("this (desc.Handle, clock)")]
+		IntPtr Constructor (CMMetadataFormatDescription desc, CMClock clock);
 
 		[Export ("appendTimedMetadataGroup:error:")]
 		bool AppendTimedMetadataGroup (AVTimedMetadataGroup metadata, out NSError outError);
