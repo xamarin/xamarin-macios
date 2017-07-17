@@ -208,10 +208,6 @@ namespace XamCore.AudioUnit {
 		[Export ("shouldBypassEffect")]
 		bool ShouldBypassEffect { get; set; }
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
-		[Export ("shouldBypassMIDIEffect")]
-		bool ShouldBypassMidiEffect { get; set; }
-
 		[Export ("canProcessInPlace")]
 		bool CanProcessInPlace { get; }
 
