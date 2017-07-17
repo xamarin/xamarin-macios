@@ -29,28 +29,28 @@ fi
 mkdir -p "/tmp/$BUILD_REVISION"
 
 echo Before signing
-ls -l package
+ls -l ../package
 
 security -v find-identity
 security unlock-keychain -p "$PRODUCTSIGN_KEYCHAIN_PASSWORD" "$PRODUCTSIGN_KEYCHAIN"
 
-for pkg in package/*.pkg; do
+for pkg in ../package/*.pkg; do
 	productsign -s "$PRODUCTSIGN_IDENTITY" "$pkg" "/tmp/$BUILD_REVISION/$(basename "$pkg")"
 done
 
 echo Signing output
 ls -l /tmp/$BUILD_REVISION
 
-mv /tmp/$BUILD_REVISION/* package
+mv /tmp/$BUILD_REVISION/* ../package
 
 echo After signing
-ls -l package
+ls -l ../package
 
 echo 'setns x=http://www.w3.org/2000/09/xmldsig#' > shell.xmllint
 echo 'cat (//xar/toc/signature/x:KeyInfo/x:X509Data/x:X509Certificate)[1]/text()' >> shell.xmllint
 
 echo Signature Verification
-for pkg in package/*.pkg; do
+for pkg in ../package/*.pkg; do
 	pkgutil --check-signature "$pkg"
 	xar -f "$pkg" --dump-toc="$pkg.toc"
 	(
