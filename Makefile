@@ -176,7 +176,7 @@ endif
 endif
 
 package:
-	mkdir ../package
+	mkdir -p ../package
 	$(MAKE) -C ../maccore package
 	# copy .pkg, .zip and *updateinfo to the packages directory to be uploaded to storage
 	cp ../maccore/release/*.pkg ../package
