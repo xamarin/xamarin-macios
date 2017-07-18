@@ -89,23 +89,26 @@ partial class TestRuntime
 	// This function checks if the current Xcode version is exactly (neither higher nor lower) the requested one.
 	public static bool CheckExactXcodeVersion (int major, int minor, int beta = 0)
 	{
+		// Add the Build number minus the one last character, sometimes Apple releases
+		// different builds from the same Beta, for example in Xcode 9 Beta 3 we have
+		// 15A5318g on device and 15A5318e on the simulator
 		var nineb1 = new {
 			Xcode = new { Major = 9, Minor = 0, Beta = 1 },
-			iOS = new { Major = 11, Minor = 0, Build = "15A5278f" },
+			iOS = new { Major = 11, Minor = 0, Build = "15A5278" },
 			tvOS = new { Major = 11, Minor = 0, Build = "?" },
 			macOS = new { Major = 10, Minor = 13, Build = "?" },
 			watchOS = new { Major = 4, Minor = 0, Build = "?" },
 		};
 		var nineb2 = new {
 			Xcode = new { Major = 9, Minor = 0, Beta = 2 },
-			iOS = new { Major = 11, Minor = 0, Build = "15A5304f" },
+			iOS = new { Major = 11, Minor = 0, Build = "15A5304" },
 			tvOS = new { Major = 11, Minor = 0, Build = "?" },
 			macOS = new { Major = 10, Minor = 13, Build = "?" },
 			watchOS = new { Major = 4, Minor = 0, Build = "?" },
 		};
 		var nineb3 = new {
 			Xcode = new { Major = 9, Minor = 0, Beta = 3 },
-			iOS = new { Major = 11, Minor = 0, Build = "15A5318e" },
+			iOS = new { Major = 11, Minor = 0, Build = "15A5318" },
 			tvOS = new { Major = 11, Minor = 0, Build = "?" },
 			macOS = new { Major = 10, Minor = 13, Build = "?" },
 			watchOS = new { Major = 4, Minor = 0, Build = "?" },
@@ -132,7 +135,7 @@ partial class TestRuntime
 				throw new NotImplementedException ($"Build number for iOS {v.iOS.Major}.{v.iOS.Minor} beta {beta} (candidate: {GetiOSBuildVersion ()})");
 			var actual = GetiOSBuildVersion ();
 			Console.WriteLine (actual);
-			return actual == v.iOS.Build;
+			return actual.StartsWith (v.iOS.Build, StringComparison.Ordinal);
 #else
 			throw new NotImplementedException ();
 #endif
