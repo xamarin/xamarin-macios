@@ -857,6 +857,50 @@ namespace XamCore.ImageIO {
 		[Field ("kCGImagePropertyMakerAppleDictionary")]
 		NSString MakerAppleDictionary { get; }
 #endif
+
+		[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Field ("kCGImagePropertyImageCount")]
+		NSString ImageCount { get; }
+
+		[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Field ("kCGImagePropertyWidth")]
+		NSString Width { get; }
+
+		[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Field ("kCGImagePropertyHeight")]
+		NSString Height { get; }
+
+		[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Field ("kCGImagePropertyBytesPerRow")]
+		NSString BytesPerRow { get; }
+
+		[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Field ("kCGImagePropertyNamedColorSpace")]
+		NSString NamedColorSpace { get; }
+
+		[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Field ("kCGImagePropertyPixelFormat")]
+		NSString PixelFormat { get; }
+
+		[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Field ("kCGImagePropertyImages")]
+		NSString Images { get; }
+
+		[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Field ("kCGImagePropertyThumbnailImages")]
+		NSString ThumbnailImages { get; }
+
+		[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Field ("kCGImagePropertyAuxiliaryData")]
+		NSString AuxiliaryData { get; }
+
+		[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Field ("kCGImagePropertyAuxiliaryDataType")]
+		NSString AuxiliaryDataType { get; }
+
+		[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Field ("kCGImagePropertyFileContentsDictionary")]
+		NSString FileContentsDictionary { get; }
 	}
 
 	[Since (7,0), MountainLion]
@@ -1169,4 +1213,26 @@ namespace XamCore.ImageIO {
 		IntPtr kOrientation { get; }
 	}
 #endif
+
+	[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
+	public enum CGImageAuxiliaryDataType {
+		[Field ("kCGImageAuxiliaryDataTypeDepth")]
+		Depth,
+
+		[Field ("kCGImageAuxiliaryDataTypeDisparity")]
+		Disparity,
+	}
+
+	[Partial]
+	[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
+	public interface CGImageAuxiliaryDataInfo {
+		[Field ("kCGImageAuxiliaryDataInfoData")]
+		NSString Data { get; }
+
+		[Field ("kCGImageAuxiliaryDataInfoDataDescription")]
+		NSString DataDescription { get; }
+
+		[Field ("kCGImageAuxiliaryDataInfoMetadata")]
+		NSString kMetadata { get; }
+	}
 }

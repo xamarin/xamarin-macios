@@ -376,5 +376,42 @@ namespace XamCore.ImageIO {
 		{
 			return CGImageSourceGetStatusAtIndex (handle, index);
 		}
+
+		[iOS(11,0)][Mac (10,13)][Watch(4,0)][TV(11,0)]
+		[DllImport (Constants.ImageIOLibrary)]
+		static extern IntPtr /* CFDictionaryRef* */ CGImageSourceCopyAuxiliaryDataInfoAtIndex (IntPtr /* CGImageSourceRef* */ isrc, nuint index, IntPtr /* CFStringRef* */ auxiliaryImageDataType);
+
+		public CGImageAuxiliaryDataInfo CopyAuxiliaryDataInfo (CGImageSource imageSource, nuint index, CGImageAuxiliaryDataType auxiliaryImageDataType)
+		{
+			var ptr = CGImageSourceCopyAuxiliaryDataInfoAtIndex (imageSource.Handle, index, auxiliaryImageDataType.GetConstant ().Handle);
+			if (ptr == IntPtr.Zero)
+				return null;
+			
+			var dictionary = new NSDictionary (ptr);
+
+			var info = new CGImageAuxiliaryDataInfo ();
+
+			bool success;
+
+			NSData data;
+			success = dictionary.TryGetValue <NSData> (CGImageAuxiliaryDataInfo.Data, out data);
+
+			if (success)
+				info.DepthData = data;
+
+			NSDictionary dict;
+			success = dictionary.TryGetValue<NSDictionary> (CGImageAuxiliaryDataInfo.DataDescription, out dict);
+
+			if (success)
+				info.DepthDataDescription = dict;
+
+			CGImageMetadata metadata;
+			success = dictionary.TryGetValue<CGImageMetadata> (CGImageAuxiliaryDataInfo.kMetadata, out metadata);
+
+			if (success)
+				info.Metadata = metadata;
+
+			return info;
+		}
 	}
 }
