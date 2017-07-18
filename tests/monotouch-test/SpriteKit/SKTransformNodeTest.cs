@@ -1,4 +1,5 @@
-﻿
+﻿#if !__WATCHOS__
+
 using System;
 #if XAMCORE_2_0
 using Foundation;
@@ -68,3 +69,4 @@ namespace MonoTouchFixtures.SpriteKit {
 	}
 }
 
+#endif // !__WATCHOS__
