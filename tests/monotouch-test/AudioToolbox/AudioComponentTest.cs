@@ -1,7 +1,6 @@
 // Copyright 2011 Xamarin Inc. All rights reserved
 
 #if !__WATCHOS__
-
 using System;
 using System.Drawing;
 using System.IO;
@@ -28,6 +27,8 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void GetSetComponentList ()
 		{
+			if (IntPtr.Size == 4)
+				Assert.Ignore ("API only available in 64 bits.");
 			var types = new List<AudioTypeOutput> { AudioTypeOutput.Generic, AudioTypeOutput.Remote, AudioTypeOutput.VoiceProcessingIO };
 			foreach (var t in types) {
 				var resources = new ResourceUsageInfo ();
@@ -43,6 +44,8 @@ namespace MonoTouchFixtures.AudioToolbox {
 				componentInfo.Version = 1;
 				componentInfo.ResourceUsage = resources;
 				var component = AudioComponent.FindComponent (t);
+				if (component == null)
+					continue;
 				var l = component.ComponentList;
 				Assert.IsNull (l, "List is not null.");
 				l = new AudioComponentInfo[] { componentInfo };
