@@ -86,7 +86,7 @@ namespace XamCore.Foundation {
 		}
 
 		[iOS (8,0)][Mac (10,9)]
-		public NSString [] ContentTypeTree {
+		public NSString[] ContentTypeTree {
 			get {
 				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.ContentTypeTreeKey)))
 					return NSArray.FromArray<NSString> (a);
@@ -160,14 +160,14 @@ namespace XamCore.Foundation {
 			}
 		}
 
-		[iOS (8,0)][Mac (10,9)]
+		[iOS (8,0)][Mac (10,10)]
 		public bool UbiquitousItemDownloadRequested {
 			get {
 				return GetBool (NSMetadataQuery.UbiquitousItemDownloadRequestedKey);
 			}
 		}
 
-		[iOS (8,0)][Mac (10,9)]
+		[iOS (8,0)][Mac (10,10)]
 		public bool UbiquitousItemIsExternalDocument {
 			get {
 				return GetBool (NSMetadataQuery.UbiquitousItemIsExternalDocumentKey);
