@@ -258,7 +258,7 @@ namespace XamCore.MapKit {
 	[Since (6,0)]
 	[TV (9,2)]
 	[Mac (10,9, onlyOn64 : true)]
-	interface MKMapItem {
+	interface MKMapItem : NSItemProviderWriting {
 		[Export ("placemark", ArgumentSemantic.Retain)]
 		MKPlacemark Placemark { get;  }
 
@@ -343,6 +343,12 @@ namespace XamCore.MapKit {
 		[iOS (9,0), Mac(10,11)]
 		[NullAllowed]
 		NSTimeZone TimeZone { get; set; }
+
+		// From the NSItemProviderWriting protocol, a static method.
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] WritableTypeIdentifiers { get; }
 	}
 
 #if !WATCH

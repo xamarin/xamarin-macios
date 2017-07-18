@@ -257,6 +257,12 @@ namespace XamCore.Foundation
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		[iOS (11,0), NoWatch, NoTV, Mac(10,13)]
 		string[] ReadableTypeIdentifiersForItemProvider { get; }
+
+		// From the NSItemProviderWriting protocol, a static method.
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] WritableTypeIdentifiers { get; }
 		
 		[Since (7,0)]
 		[Export ("dataFromRange:documentAttributes:error:")]
@@ -5264,7 +5270,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject), Name="NSURL")]
 	// init returns NIL
 	[DisableDefaultCtor]
-	partial interface NSUrl : NSSecureCoding, NSCopying
+	partial interface NSUrl : NSSecureCoding, NSCopying, NSItemProviderWriting
 #if MONOMAC
 	, NSPasteboardReading, NSPasteboardWriting
 #endif
@@ -7774,7 +7780,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject)), Bind ("NSString")]
-	interface NSString2 : NSSecureCoding, NSMutableCopying
+	interface NSString2 : NSSecureCoding, NSMutableCopying, NSItemProviderWriting
 	#if MONOMAC
 		, NSPasteboardReading, NSPasteboardWriting // Documented that it implements NSPasteboard protocols even if header doesn't show it
 	#endif
@@ -8094,6 +8100,12 @@ namespace XamCore.Foundation
 
 		[Export ("replaceCharactersInRange:withString:")]
 		void ReplaceCharactersInRange (NSRange range, NSString aString);
+
+		// From the NSItemProviderWriting protocol, a static method.
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] WritableTypeIdentifiers { get; }
 	}
 	
 	[Category, BaseType (typeof (NSString))]
@@ -9666,11 +9678,11 @@ namespace XamCore.Foundation
 		string SuggestedName { get; set; }
 	}
     
-    delegate NSProgress RegisterFileRepresentationLoadHandler ([BlockCallback] RegisterFileRepresentationCompletionHandler completionHandler);
-    delegate void RegisterFileRepresentationCompletionHandler (NSUrl fileUrl, bool coordinated, NSError error);
-    delegate void ItemProviderDataCompletionHandler (NSData data, NSError error);
-    delegate NSProgress RegisterDataRepresentationLoadHandler ([BlockCallback] ItemProviderDataCompletionHandler completionHandler);
-    delegate void LoadInPlaceFileRepresentationHandler (NSUrl fileUrl, bool isInPlace, NSError error);
+	delegate NSProgress RegisterFileRepresentationLoadHandler ([BlockCallback] RegisterFileRepresentationCompletionHandler completionHandler);
+	delegate void RegisterFileRepresentationCompletionHandler (NSUrl fileUrl, bool coordinated, NSError error);
+	delegate void ItemProviderDataCompletionHandler (NSData data, NSError error);
+	delegate NSProgress RegisterDataRepresentationLoadHandler ([BlockCallback] ItemProviderDataCompletionHandler completionHandler);
+	delegate void LoadInPlaceFileRepresentationHandler (NSUrl fileUrl, bool isInPlace, NSError error);
 
 	interface INSItemProviderReading {}
 	
@@ -9699,6 +9711,36 @@ namespace XamCore.Foundation
 		//[Abstract]
 		//[Export ("initWithItemProviderData:typeIdentifier:error:")]
 		//INSItemProviderReading CreateFrom (NSData providerData, string typeIdentifier, [NullAllowed] NSError outError);
+	}
+
+	interface INSItemProviderWriting {}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface NSItemProviderWriting
+	{
+		//
+		// This static method has to be implemented on each class that implements
+		// this, this is not a capability that exists in C#.
+		// We are inlining these on each class that implements NSItemProviderWriting
+		// for the sake of the method being callable from C#, for user code, the
+		// user needs to manually [Export] the selector on a static method, like
+		// they do for the "layer" property on CALayer subclasses.
+		//
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Static, Abstract]
+		//[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		//string[] WritableTypeIdentifiersForItemProvider { get; }
+
+		// @optional @property (readonly, copy, atomic) NSArray<NSString *> * _Nonnull writableTypeIdentifiersForItemProvider;
+		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] WritableTypeIdentifiersForItemProvider { get; }
+
+		// @required -(NSProgress * _Nullable)loadDataWithTypeIdentifier:(NSString * _Nonnull)typeIdentifier forItemProviderCompletionHandler:(void (^ _Nonnull)(NSData * _Nullable, NSError * _Nullable))completionHandler;
+		[Async, Export ("loadDataWithTypeIdentifier:forItemProviderCompletionHandler:")]
+		[return: NullAllowed]
+		NSProgress LoadData (string typeIdentifier, Action<NSData, NSError> completionHandler);
 	}
 
 #if XAMCORE_2_0
