@@ -472,7 +472,7 @@ namespace XamCore.ARKit {
 		[Field ("ARSCNDebugOptionShowWorldOrigin")]
 		SCNDebugOptions ShowWorldOrigin { get; }
 
-		[Field ("ARSCNDebugOptionShowWorldOrigin")]
+		[Field ("ARSCNDebugOptionShowFeaturePoints")]
 		SCNDebugOptions ShowFeaturePoints { get; }
 	}
 }
