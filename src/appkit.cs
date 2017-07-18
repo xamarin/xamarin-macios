@@ -4810,28 +4810,28 @@ namespace XamCore.AppKit {
 		[Export ("set")]
 		void Set ();
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'SetOnMouseExited' is unused and should not be called.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Export ("setOnMouseExited:")]
 		void SetOnMouseExited (bool flag);
 
 		[Export ("setOnMouseEntered:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'SetOnMouseEntered' is unused and should not be called.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		void SetOnMouseEntered (bool flag);
 
 		[Export ("isSetOnMouseExited")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'IsSetOnMouseExited' is unused.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		bool IsSetOnMouseExited ();
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'IsSetOnMouseEntered' is unused.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Export ("isSetOnMouseEntered")]
 		bool IsSetOnMouseEntered ();
 
 		[Export ("mouseEntered:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'MouseEntered' is unused and should not be called.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		void MouseEntered (NSEvent theEvent);
 
 		[Export ("mouseExited:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "'MouseExited' is unused and should not be called.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		void MouseExited (NSEvent theEvent);
 	}
 
