@@ -34,7 +34,7 @@ namespace XamCore.Vision {
 		public static extern CGRect GetImageRect (CGRect normalizedRect, nuint imageWidth, nuint imageHeight);
 
 		[DllImport (Constants.VisionLibrary, EntryPoint = "VNNormalizedRectForImageRect")]
-		static extern CGRect GetNormalizedRect (CGRect imageRect, nuint imageWidth, nuint imageHeight);
+		public static extern CGRect GetNormalizedRect (CGRect imageRect, nuint imageWidth, nuint imageHeight);
 
 		[DllImport ("__Internal", EntryPoint = "xamarin_CGPoint__VNNormalizedFaceBoundingBoxPointForLandmarkPoint_Vector2_CGRect_nuint_nuint_string")]
 		static extern CGPoint VNNormalizedFaceBoundingBoxPointForLandmarkPoint (Vector2 faceLandmarkPoint, CGRect faceBoundingBox, nuint imageWidth, nuint imageHeight, out IntPtr error);
