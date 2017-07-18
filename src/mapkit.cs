@@ -1923,6 +1923,11 @@ namespace XamCore.MapKit {
 	[BaseType (typeof (MKAnnotationView))]
 	interface MKMarkerAnnotationView {
 
+		// inlined from base type
+		[Export ("initWithAnnotation:reuseIdentifier:")]
+		[PostGet ("Annotation")]
+		IntPtr Constructor (IMKAnnotation annotation, [NullAllowed] string reuseIdentifier);
+
 		[Export ("titleVisibility", ArgumentSemantic.Assign)]
 		MKFeatureVisibility TitleVisibility { get; set; }
 
@@ -1955,6 +1960,7 @@ namespace XamCore.MapKit {
 
 	[TV (11,0)][NoWatch][iOS (11,0)][NoMac]
 	[BaseType (typeof (UIView))]
+	[DisableDefaultCtor]
 	interface MKScaleView {
 
 		[Static]
@@ -1973,6 +1979,7 @@ namespace XamCore.MapKit {
 
 	[NoTV][iOS (11,0)][NoWatch][NoMac]
 	[BaseType (typeof (UIView))]
+	[DisableDefaultCtor]
 	interface MKUserTrackingButton {
 		[Static]
 		[Export ("userTrackingButtonWithMapView:")]
