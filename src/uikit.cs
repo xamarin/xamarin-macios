@@ -327,10 +327,15 @@ namespace XamCore.UIKit {
 
 #if XAMCORE_2_0 && IOS
 
+		[Protected]
 		[iOS (11,0)]
 		[Export ("itemForIdentifier:error:")]
 		[return: NullAllowed]
-		XamCore.FileProvider.INSFileProviderItem GetItem (/*[BindAs (typeof (NSFileProviderItemIdentifier))]*/ NSString identifier, out NSError error);
+		XamCore.FileProvider.INSFileProviderItem GetItem (NSString identifier, out NSError error);
+
+		[iOS (11,0)]
+		[Wrap ("GetItem (identifier.GetConstant (), out error)")]
+		XamCore.FileProvider.INSFileProviderItem GetItem (NSFileProviderItemIdentifier identifier, out NSError error);
 
 		// Inlining NSFileProviderExtension (NSFileProviderActions) so we get asyncs
 
@@ -391,24 +396,43 @@ namespace XamCore.UIKit {
 
 		// From NSFileProviderExtension (NSFileProviderThumbnailing)
 
+		[iOS (11,0)]
 		[Export ("fetchThumbnailsForItemIdentifiers:requestedSize:perThumbnailCompletionHandler:completionHandler:")]
 		[Async]
-		NSProgress FetchThumbnails (/*[BindAs (typeof (NSFileProviderItemIdentifier []))]*/ NSString [] itemIdentifiers, CGSize size, NSFileProviderExtensionFetchThumbnailsHandler perThumbnailCompletionHandler, Action<NSError> completionHandler);
+		NSProgress FetchThumbnails (NSString [] itemIdentifiers, CGSize size, NSFileProviderExtensionFetchThumbnailsHandler perThumbnailCompletionHandler, Action<NSError> completionHandler);
+
+		[Async]
+		[iOS (11,0)]
+		[Wrap ("FetchThumbnails (itemIdentifiers.GetConstants (), size, perThumbnailCompletionHandler, completionHandler)")]
+		NSProgress FetchThumbnails (NSFileProviderItemIdentifier [] itemIdentifiers, CGSize size, NSFileProviderExtensionFetchThumbnailsHandler perThumbnailCompletionHandler, Action<NSError> completionHandler);
 
 		// From NSFileProviderExtension (NSFileProviderMessaging)
 
 		// TODO: NSFileProviderMessageInterfaceName is not bound yet, comes from Foundation
+		//[iOS (11,0)]
+		//[Internal]
 		//[Export ("supportedMessageInterfaceNamesForItemWithIdentifier:")]
-		//NSFileProviderMessageInterfaceName[] GetSupportedMessageInterfaceNames (/*[BindAs (typeof (NSFileProviderItemIdentifier))]*/ NSString identifier);
+		//NSFileProviderMessageInterfaceName[] GetSupportedMessageInterfaceNames (NSString identifier);
+
+		//[iOS (11,0)]
+		//[Wrap ("GetSupportedMessageInterfaceNames (identifier.GetConstant ())")]
+		//NSFileProviderMessageInterfaceName[] GetSupportedMessageInterfaceNames (NSFileProviderItemIdentifier identifier);
 
 		// TODO: NSFileProviderMessageInterface is not bound yet, comes from Foundation
+		//[iOS (11,0)]
 		//[Export ("protocolForMessageInterface:")]
 		//Protocol GetProtocol (NSFileProviderMessageInterface messageInterface);
 
 		// TODO: NSFileProviderMessageInterface is not bound yet, comes from Foundation
+		//[iOS (11,0)]
+		//[Internal]
 		//[return: NullAllowed]
 		//[Export ("exportedObjectForMessageInterface:itemIdentifier:error:")]
-		//NSObject GetExportedObject (NSFileProviderMessageInterface messageInterface, /*[BindAs (typeof (NSFileProviderItemIdentifier))]*/ NSString identifier, out NSError error);
+		//NSObject GetExportedObject (NSFileProviderMessageInterface messageInterface, NSString identifier, out NSError error);
+
+		//[iOS (11,0)]
+		//[Wrap ("GetExportedObject (messageInterface, identifier.GetConstant (), out error)")]
+		//NSObject GetExportedObject (NSFileProviderMessageInterface messageInterface, NSFileProviderItemIdentifier identifier, out NSError error);
 #endif
 	}
 #endif // !WATCH

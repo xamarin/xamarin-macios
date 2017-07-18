@@ -23,22 +23,20 @@ namespace XamCore.FileProvider {
 		NotAuthenticated = -1000,
 		FilenameCollision = -1001,
 		SyncAnchorExpired = -1002,
+		PageExpired = SyncAnchorExpired,
 		InsufficientQuota = -1003,
 		ServerUnreachable = -1004,
-		NoSuchItem = -1005
+		NoSuchItem = -1005,
 	}
 
 	[iOS (11,0)]
 	enum NSFileProviderItemIdentifier {
-		// Lets follow swift names
+
 		[Field ("NSFileProviderRootContainerItemIdentifier")]
-		RootContainer,
+		Root,
 
 		[Field ("NSFileProviderWorkingSetContainerItemIdentifier")]
 		WorkingSet,
-
-		[Field ("NSFileProviderAllDirectoriesContainerItemIdentifier")]
-		AllDirectories,
 	}
 
 	[iOS (11,0)]
@@ -53,7 +51,7 @@ namespace XamCore.FileProvider {
 		Deleting = 1 << 5,
 		AddingSubItems = Writing,
 		ContentEnumerating = Reading,
-		All = Reading | Writing | Reparenting | Renaming | Trashing | Deleting
+		All = Reading | Writing | Reparenting | Renaming | Trashing | Deleting,
 	}
 
 	[iOS (11,0)]
@@ -128,10 +126,10 @@ namespace XamCore.FileProvider {
 
 		[Abstract]
 		[Export ("enumerateItemsForObserver:startingAtPage:")]
-		void EnumerateItems (INSFileProviderEnumerationObserver observer, NSData page);
+		void EnumerateItems (INSFileProviderEnumerationObserver observer, NSData startPage);
 
 		[Export ("enumerateChangesForObserver:fromSyncAnchor:")]
-		void EnumerateChanges (INSFileProviderChangeObserver observer, NSData anchor);
+		void EnumerateChanges (INSFileProviderChangeObserver observer, NSData syncAnchor);
 
 		[Export ("currentSyncAnchorWithCompletionHandler:")]
 		void CurrentSyncAnchor (Action<NSData> completionHandler);
@@ -146,12 +144,12 @@ namespace XamCore.FileProvider {
 		[Advice ("Use 'NSFileProviderItemIdentifierExtensions.GetValue (ItemIdentifier)' to get a 'NSFileProviderItemIdentifier' enum.")]
 		[Abstract]
 		[Export ("itemIdentifier")]
-		NSString ItemIdentifier { get; }
+		NSString Identifier { get; }
 
 		[Advice ("Use 'NSFileProviderItemIdentifierExtensions.GetValue (ParentItemIdentifier)' to get a 'NSFileProviderItemIdentifier' enum.")]
 		[Abstract]
 		[Export ("parentItemIdentifier")]
-		NSString ParentItemIdentifier { get; }
+		NSString ParentIdentifier { get; }
 
 		[Abstract]
 		[Export ("filename")]
@@ -250,13 +248,21 @@ namespace XamCore.FileProvider {
 		[Export ("defaultManager", ArgumentSemantic.Strong)]
 		NSFileProviderManager DefaultManager { get; }
 
+		[Protected]
 		[Export ("signalEnumeratorForContainerItemIdentifier:completionHandler:")]
-		// Not Async'ified on pruppose, because this can switch from app to extension.
-		void SignalEnumerator (/*[BindAs (typeof (NSFileProviderItemIdentifier))]*/ NSString containerItemIdentifier, Action<NSError> completion);
+		// Not Async'ified on purpose, because this can switch from app to extension.
+		void SignalEnumerator (NSString containerItemIdentifier, Action<NSError> completion);
 
-		// Not Async'ified on pruppose, because the task must be accesed while the completion action is performing...
+		[Wrap ("SignalEnumerator (containerItemIdentifier.GetConstant (), completion)")]
+		void SignalEnumerator (NSFileProviderItemIdentifier containerItemIdentifier, Action<NSError> completion);
+
+		// Not Async'ified on purpose, because the task must be accesed while the completion action is performing...
+		[Protected]
 		[Export ("registerURLSessionTask:forItemWithIdentifier:completionHandler:")]
-		void Register (NSUrlSessionTask task, /*[BindAs (typeof (NSFileProviderItemIdentifier))]*/ NSString identifier, Action<NSError> completion);
+		void Register (NSUrlSessionTask task, NSString identifier, Action<NSError> completion);
+
+		[Wrap ("Register (task, identifier.GetConstant (), completion)")]
+		void Register (NSUrlSessionTask task, NSFileProviderItemIdentifier identifier, Action<NSError> completion);
 
 		[Export ("providerIdentifier")]
 		string ProviderIdentifier { get; }
@@ -285,7 +291,7 @@ namespace XamCore.FileProvider {
 		[Static]
 		[Async]
 		[Export ("getDomainsWithCompletionHandler:")]
-		void GetDomains (Action<NSArray<NSFileProviderDomain>, NSError> completionHandler);
+		void GetDomains (Action<NSFileProviderDomain [], NSError> completionHandler);
 
 		[Static]
 		[Async]
