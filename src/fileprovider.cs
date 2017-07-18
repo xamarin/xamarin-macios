@@ -1,4 +1,4 @@
-﻿﻿//
+﻿﻿﻿//
 // FileProvider C# bindings
 //
 // Authors:
@@ -33,10 +33,10 @@ namespace XamCore.FileProvider {
 	enum NSFileProviderItemIdentifier {
 
 		[Field ("NSFileProviderRootContainerItemIdentifier")]
-		Root,
+		RootContainer,
 
 		[Field ("NSFileProviderWorkingSetContainerItemIdentifier")]
-		WorkingSet,
+		WorkingSetContainer,
 	}
 
 	[iOS (11,0)]
@@ -84,7 +84,7 @@ namespace XamCore.FileProvider {
 
 		[Abstract]
 		[Export ("finishEnumeratingUpToPage:")]
-		void FinishEnumerating ([NullAllowed] NSData nextPage);
+		void FinishEnumerating ([NullAllowed] NSData upToPage);
 
 		[Abstract]
 		[Export ("finishEnumeratingWithError:")]

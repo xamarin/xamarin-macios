@@ -331,43 +331,43 @@ namespace XamCore.UIKit {
 		[iOS (11,0)]
 		[Export ("itemForIdentifier:error:")]
 		[return: NullAllowed]
-		XamCore.FileProvider.INSFileProviderItem GetItem (NSString identifier, out NSError error);
+		INSFileProviderItem GetItem (NSString identifier, out NSError error);
 
 		[iOS (11,0)]
 		[Wrap ("GetItem (identifier.GetConstant (), out error)")]
-		XamCore.FileProvider.INSFileProviderItem GetItem (NSFileProviderItemIdentifier identifier, out NSError error);
+		INSFileProviderItem GetItem (NSFileProviderItemIdentifier identifier, out NSError error);
 
 		// Inlining NSFileProviderExtension (NSFileProviderActions) so we get asyncs
 
 		[iOS (11,0)]
 		[Async]
 		[Export ("importDocumentAtURL:toParentItemIdentifier:completionHandler:")]
-		void ImportDocument (NSUrl fileUrl, string parentItemIdentifier, Action<XamCore.FileProvider.INSFileProviderItem, NSError> completionHandler);
+		void ImportDocument (NSUrl fileUrl, string parentItemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
 		[iOS (11,0)]
 		[Async]
 		[Export ("createDirectoryWithName:inParentItemIdentifier:completionHandler:")]
-		void CreateDirectory (string directoryName, string parentItemIdentifier, Action<XamCore.FileProvider.INSFileProviderItem, NSError> completionHandler);
+		void CreateDirectory (string directoryName, string parentItemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
 		[iOS (11,0)]
 		[Async]
 		[Export ("renameItemWithIdentifier:toName:completionHandler:")]
-		void RenameItem (string itemIdentifier, string itemName, Action<XamCore.FileProvider.INSFileProviderItem, NSError> completionHandler);
+		void RenameItem (string itemIdentifier, string itemName, Action<INSFileProviderItem, NSError> completionHandler);
 
 		[iOS (11,0)]
 		[Async]
 		[Export ("reparentItemWithIdentifier:toParentItemWithIdentifier:completionHandler:")]
-		void ReparentItem (string itemIdentifier, string parentItemIdentifier, Action<XamCore.FileProvider.INSFileProviderItem, NSError> completionHandler);
+		void ReparentItem (string itemIdentifier, string parentItemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
 		[iOS (11,0)]
 		[Async]
 		[Export ("trashItemWithIdentifier:completionHandler:")]
-		void TrashItem (string itemIdentifier, Action<XamCore.FileProvider.INSFileProviderItem, NSError> completionHandler);
+		void TrashItem (string itemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
 		[iOS (11,0)]
 		[Async]
 		[Export ("untrashItemWithIdentifier:toParentItemIdentifier:completionHandler:")]
-		void UntrashItem (string itemIdentifier, [NullAllowed] string parentItemIdentifier, Action<XamCore.FileProvider.INSFileProviderItem, NSError> completionHandler);
+		void UntrashItem (string itemIdentifier, [NullAllowed] string parentItemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
 		[iOS (11,0)]
 		[Async]
@@ -377,17 +377,17 @@ namespace XamCore.UIKit {
 		[iOS (11,0)]
 		[Async]
 		[Export ("setLastUsedDate:forItemIdentifier:completionHandler:")]
-		void SetLastUsedDate ([NullAllowed] NSDate lastUsedDate, string itemIdentifier, Action<XamCore.FileProvider.INSFileProviderItem, NSError> completionHandler);
+		void SetLastUsedDate ([NullAllowed] NSDate lastUsedDate, string itemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
 		[iOS (11,0)]
 		[Async]
 		[Export ("setTagData:forItemIdentifier:completionHandler:")]
-		void SetTagData ([NullAllowed] NSData tagData, string itemIdentifier, Action<XamCore.FileProvider.INSFileProviderItem, NSError> completionHandler);
+		void SetTagData ([NullAllowed] NSData tagData, string itemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
 		[iOS (11,0)]
 		[Async]
 		[Export ("setFavoriteRank:forItemIdentifier:completionHandler:")]
-		void SetFavoriteRank ([NullAllowed] NSNumber favoriteRank, string itemIdentifier, Action<XamCore.FileProvider.INSFileProviderItem, NSError> completionHandler);
+		void SetFavoriteRank ([NullAllowed] NSNumber favoriteRank, string itemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
 		[iOS (11,0)]
 		[Export ("enumeratorForContainerItemIdentifier:error:")]
@@ -408,6 +408,7 @@ namespace XamCore.UIKit {
 
 		// From NSFileProviderExtension (NSFileProviderMessaging)
 
+		// Missing members -> https://bugzilla.xamarin.com/show_bug.cgi?id=58222
 		// TODO: NSFileProviderMessageInterfaceName is not bound yet, comes from Foundation
 		//[iOS (11,0)]
 		//[Internal]

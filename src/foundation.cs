@@ -3052,8 +3052,6 @@ namespace XamCore.Foundation
 		NSObject NextObject (); 
 	}
 
-	interface INSFileProviderItem { }
-
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSError : NSSecureCoding, NSCopying {
