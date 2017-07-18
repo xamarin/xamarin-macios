@@ -98,5 +98,13 @@ namespace Xamarin
 
 			return sb.ToString ();
 		}
+
+		protected override string ToolPath {
+			get { return Configuration.MlaunchPath; }
+		}
+
+		protected override string MessagePrefix {
+			get { return "HT"; }
+		}
 	}
 }

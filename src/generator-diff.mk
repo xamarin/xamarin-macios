@@ -1,4 +1,4 @@
-.generated_copy = rsync -qavz --exclude=*.dll --exclude=*.exe --exclude=*.mdb '--exclude=*~.pmcs*' build generator-reference
+.generated_copy = rsync -qavz --exclude=*.dll --exclude=*.exe --exclude=*.mdb --exclude=*.pdb '--exclude=*~.pmcs*' build generator-reference
 
 generator-reference:
 	@rm -rf $@

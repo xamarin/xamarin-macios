@@ -26,7 +26,7 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 		<TargetFrameworkIdentifier Condition="'$(TargetFrameworkIdentifier)' == ''">Xamarin.WatchOS</TargetFrameworkIdentifier>
 		<TargetFrameworkVersion Condition="'$(TargetFrameworkVersion)' == ''">v1.0</TargetFrameworkVersion>
 
-		<DefineConstants>__UNIFIED__;__MOBILE__;__WATCHOS__;$(DefineConstants)</DefineConstants>
+		<XamarinDefineConstants>__UNIFIED__;__MOBILE__;__WATCHOS__</XamarinDefineConstants>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)..\iOS\Xamarin.iOS.ObjCBinding.CSharp.targets"/>

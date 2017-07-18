@@ -54,9 +54,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="NoCode.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tasks\ACToolTaskBase.cs" />
     <Compile Include="Tasks\ArchiveTaskBase.cs" />
@@ -100,6 +97,9 @@
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <None Include="NoCode.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Xamarin.iOS.Common.props">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -212,6 +212,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Xamarin.TVOS.AppExtension.FSharp.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Xamarin.WatchOS.ObjCBinding.CSharp.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
