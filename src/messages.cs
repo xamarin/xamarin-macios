@@ -59,7 +59,7 @@ namespace XamCore.Messages {
 		[iOS (11,0)]
 		[Abstract]
 		[Export ("contentSizeThatFits:")]
-		CGSize ContentSizeThatFits (CGSize size);
+		CGSize GetContentSizeThatFits (CGSize size);
 	}
 
 	[iOS (10,0)]
