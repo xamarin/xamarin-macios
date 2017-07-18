@@ -2154,7 +2154,7 @@ namespace XamCore.SpriteKit {
 
 		[iOS (8,0), Mac(10,10)]
 		[Static, Export ("reachTo:rootNode:duration:")]
-		SKAction ReachTo (CGPoint position, SKNode rootNode, double sec);
+		SKAction ReachTo (CGPoint position, SKNode rootNode, double secs);
 
 		[iOS (8,0), Mac(10,10)]
 		[Static, Export ("reachTo:rootNode:velocity:")]
@@ -2182,7 +2182,7 @@ namespace XamCore.SpriteKit {
 
 		[iOS (8,0), Mac(10,10)]
 		[Static, Export ("falloffBy:duration:")]
-		SKAction FalloffBy (float /* float, not CGFloat */ to, double sec);
+		SKAction FalloffBy (float /* float, not CGFloat */ to, double duration);
 
 		[iOS (8,0), Mac(10,10)]
 		[Static]

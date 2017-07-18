@@ -36,6 +36,7 @@ namespace MonoTouchFixtures.SpriteKit {
 				Asserts.AreEqual (Vector3.Zero, obj.EulerAngles, "1 EulerAngles");
 				V3 = new Vector3 (1, 2, 3);
 				obj.EulerAngles = V3;
+				// The values bellow match what the same code in Swift returns.
 				Assert.AreEqual (-2.14159298f, obj.EulerAngles.X, "#x1");
 				Assert.AreEqual (1.14159274f, obj.EulerAngles.Y, "#y1");
 				Assert.AreEqual (-0.141592711f, obj.EulerAngles.Z, "#z1");
@@ -47,6 +48,7 @@ namespace MonoTouchFixtures.SpriteKit {
 		{
 			using (var obj = new SKTransformNode ()) {
 				obj.RotationMatrix = Matrix3.Zero;
+				// In Swift, a rotated zero matrice also becomes the identity matrice.
 				Asserts.AreEqual (Matrix3.Identity, obj.RotationMatrix, "RotationMatrix");
 			}
 		}
