@@ -24,25 +24,17 @@ namespace XamCore.Vision {
 		[Field ("VNNormalizedIdentityRect", Constants.VisionLibrary)]
 		public static CGRect NormalizedIdentityRect { get; } = Dlfcn.GetCGRect (Libraries.Vision.Handle, "VNNormalizedIdentityRect");
 
-		[DllImport (Constants.VisionLibrary)]
-		static extern bool VNNormalizedRectIsIdentityRect (CGRect rect);
+		[DllImport (Constants.VisionLibrary, EntryPoint = "VNNormalizedRectIsIdentityRect")]
+		public static extern bool IsIdentityRect (CGRect rect);
 
-		public static bool IsIdentityRect (CGRect normalizedRect) => VNNormalizedRectIsIdentityRect (normalizedRect);
+		[DllImport (Constants.VisionLibrary, EntryPoint = "VNImagePointForNormalizedPoint")]
+		public static extern CGPoint GetImagePoint (CGPoint normalizedPoint, nuint imageWidth, nuint imageHeight);
 
-		[DllImport (Constants.VisionLibrary)]
-		static extern CGPoint VNImagePointForNormalizedPoint (CGPoint normalizedPoint, nuint imageWidth, nuint imageHeight);
+		[DllImport (Constants.VisionLibrary, EntryPoint = "VNImageRectForNormalizedRect")]
+		public static extern CGRect GetImageRect (CGRect normalizedRect, nuint imageWidth, nuint imageHeight);
 
-		public static CGPoint GetImagePoint (CGPoint normalizedPoint, nuint imageWidth, nuint imageHeight) => VNImagePointForNormalizedPoint (normalizedPoint, imageWidth, imageHeight);
-
-		[DllImport (Constants.VisionLibrary)]
-		static extern CGRect VNImageRectForNormalizedRect (CGRect normalizedRect, nuint imageWidth, nuint imageHeight);
-
-		public static CGRect GetImageRect (CGRect normalizedRect, nuint imageWidth, nuint imageHeight) => VNImageRectForNormalizedRect (normalizedRect, imageWidth, imageHeight);
-
-		[DllImport (Constants.VisionLibrary)]
-		static extern CGRect VNNormalizedRectForImageRect (CGRect imageRect, nuint imageWidth, nuint imageHeight);
-
-		public static CGRect GetNormalizedRect (CGRect imageRect, nuint imageWidth, nuint imageHeight) => VNNormalizedRectForImageRect (imageRect, imageWidth, imageHeight);
+		[DllImport (Constants.VisionLibrary, EntryPoint = "VNNormalizedRectForImageRect")]
+		static extern CGRect GetNormalizedRect (CGRect imageRect, nuint imageWidth, nuint imageHeight);
 
 		[DllImport ("__Internal", EntryPoint = "xamarin_CGPoint__VNNormalizedFaceBoundingBoxPointForLandmarkPoint_Vector2_CGRect_nuint_nuint_string")]
 		static extern CGPoint VNNormalizedFaceBoundingBoxPointForLandmarkPoint (Vector2 faceLandmarkPoint, CGRect faceBoundingBox, nuint imageWidth, nuint imageHeight, out IntPtr error);
