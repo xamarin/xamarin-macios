@@ -30,6 +30,7 @@
 //
 
 using System;
+using System.Diagnostics;
 #if MONOMAC
 using XamCore.AppKit;
 using XamCore.CoreVideo;
