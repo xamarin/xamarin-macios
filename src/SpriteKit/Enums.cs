@@ -188,8 +188,7 @@ namespace XamCore.SpriteKit {
 	[NoMac]
 	[TV (11,0), iOS (11,0)]
 	[Native]
-	public enum SKNodeFocusBehavior : nint
-	{
+	public enum SKNodeFocusBehavior : nint {
 		None = 0,
 		Occluding,
 		Focusable,

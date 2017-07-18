@@ -3266,8 +3266,7 @@ namespace XamCore.SpriteKit {
 	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface SKRenderer
-	{
+	interface SKRenderer {
 		[Static]
 		[Export ("rendererWithDevice:")]
 		[return: NullAllowed]
@@ -3309,8 +3308,7 @@ namespace XamCore.SpriteKit {
 
 	[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
 	[BaseType (typeof(SKNode))]
-	interface SKTransformNode
-	{
+	interface SKTransformNode {
 		[Export ("xRotation")]
 		nfloat XRotation { get; set; }
 
