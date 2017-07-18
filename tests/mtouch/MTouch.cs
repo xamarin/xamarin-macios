@@ -37,19 +37,29 @@ namespace Xamarin
 		public void ExceptionMarshaling ()
 		{
 			using (var mtouch = new MTouchTool ()) {
+				var code = @"
+class X : Foundation.NSObject {
+	public X ()
+	{
+		ValueForKey (null); // calls xamarin_IntPtr_objc_msgSend_IntPtr, so that it's not linked away.
+	}
+}
+";
 				mtouch.CreateTemporaryCacheDirectory ();
-				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryApp (extraCode: code);
 				mtouch.CustomArguments = new string [] { "--marshal-objectivec-exceptions=throwmanagedexception", "--dlsym:+Xamarin.iOS.dll" };
 				mtouch.Debug = false; // make sure the output is stripped
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
 
 				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_xamarin_pinvoke_wrapper_objc_msgSend"), "symbols");
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_xamarin_IntPtr_objc_msgSend_IntPtr"), "symbols 2");
 
 				// build again with llvm enabled
 				mtouch.Abi = "arm64+llvm";
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build llvm");
 
 				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_xamarin_pinvoke_wrapper_objc_msgSend"), "symbols llvm");
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_xamarin_IntPtr_objc_msgSend_IntPtr"), "symbols llvm 2");
 			}
 		}
 
