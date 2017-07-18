@@ -78,14 +78,14 @@ namespace XamCore.Foundation {
 			}
 		}
 
-		[iOS (7, 0)][Mac (10, 9)]
+		[iOS (8,0)][Mac (10,9)]
 		public NSString ContentType {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ContentTypeKey));
 			}
 		}
 
-		[iOS (7, 0)][Mac (10, 9)]
+		[iOS (8,0)][Mac (10,9)]
 		public NSString [] ContentTypeTree {
 			get {
 				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.ContentTypeTreeKey)))
@@ -105,7 +105,7 @@ namespace XamCore.Foundation {
 			}
 		}
 
-		[iOS (7, 0)][Mac (10, 9)]
+		[iOS (7,0)][Mac (10,9)]
 #if XAMCORE_4_0
 		public NSItemDownloadingStatus UbiquitousItemDownloadingStatus {
 #else
@@ -146,44 +146,42 @@ namespace XamCore.Foundation {
 			}
 		}
 
-		[iOS (7, 0)][Mac (10, 9)]
+		[iOS (7,0)][Mac (10,9)]
 		public NSError UbiquitousItemDownloadingError {
 			get {
 				return Runtime.GetNSObject<NSError> (GetHandle (NSMetadataQuery.UbiquitousItemDownloadingErrorKey));
 			}
 		}
 
-		[iOS (7, 0)][Mac (10, 9)]
+		[iOS (7,0)][Mac (10,9)]
 		public NSError UbiquitousItemUploadingError {
 			get {
 				return Runtime.GetNSObject<NSError> (GetHandle (NSMetadataQuery.UbiquitousItemUploadingErrorKey));
 			}
 		}
 
-		[iOS (8, 0)]
-		[Mac (10, 10)]
+		[iOS (8,0)][Mac (10,9)]
 		public bool UbiquitousItemDownloadRequested {
 			get {
 				return GetBool (NSMetadataQuery.UbiquitousItemDownloadRequestedKey);
 			}
 		}
 
-		[iOS (8, 0)]
-		[Mac (10, 10)]
+		[iOS (8,0)][Mac (10,9)]
 		public bool UbiquitousItemIsExternalDocument {
 			get {
 				return GetBool (NSMetadataQuery.UbiquitousItemIsExternalDocumentKey);
 			}
 		}
 
-		[iOS (7, 0)][Mac (10, 9)]
+		[iOS (8,0)][Mac (10,9)]
 		public NSString UbiquitousItemContainerDisplayName {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.UbiquitousItemContainerDisplayNameKey));
 			}
 		}
 
-		[iOS (7, 0)][Mac (10, 9)]
+		[iOS (8,0)][Mac (10,9)]
 		public NSUrl UbiquitousItemUrlInLocalContainer {
 			get {
 				return Runtime.GetNSObject<NSUrl> (GetHandle (NSMetadataQuery.UbiquitousItemURLInLocalContainerKey));
