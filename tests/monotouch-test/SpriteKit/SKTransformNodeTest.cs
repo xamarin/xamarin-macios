@@ -24,8 +24,7 @@ namespace MonoTouchFixtures.SpriteKit {
 		[SetUp]
 		public void VersionCheck ()
 		{
-			if (!TestRuntime.CheckXcodeVersion (9,0))
-				Assert.Inconclusive ("Requires Xcode9+");
+			TestRuntime.AssertXcodeVersion (9, 0);
 		}
 
 		[Test]
@@ -33,8 +32,7 @@ namespace MonoTouchFixtures.SpriteKit {
 		{
 			Vector3 V3;
 
-			using (var obj = new SKTransformNode ())
-			{
+			using (var obj = new SKTransformNode ()) {
 				Asserts.AreEqual (Vector3.Zero, obj.EulerAngles, "1 EulerAngles");
 				V3 = new Vector3 (1, 2, 3);
 				obj.EulerAngles = V3;
@@ -47,8 +45,7 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void RotationMatrix ()
 		{
-			using (var obj = new SKTransformNode ())
-			{
+			using (var obj = new SKTransformNode ()) {
 				obj.RotationMatrix = Matrix3.Zero;
 				Asserts.AreEqual (Matrix3.Identity, obj.RotationMatrix, "RotationMatrix");
 			}
@@ -59,8 +56,7 @@ namespace MonoTouchFixtures.SpriteKit {
 		{
 			Quaternion Q;
 
-			using (var obj = new SKTransformNode ())
-			{
+			using (var obj = new SKTransformNode ()) {
 				Asserts.AreEqual (Quaternion.Identity, obj.Quaternion, "1 Quaternion");
 				Q = new Quaternion (new Vector3 (1, 2, 3), 4);
 				obj.Quaternion = Q;

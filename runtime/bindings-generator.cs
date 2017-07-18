@@ -1458,7 +1458,7 @@ namespace Xamarin.BindingMethods.Generator
 					Comment = " // void func (Quaternion)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
-					Parameters = new ParameterData[] {
+					Parameters = new ParameterData [] {
 						new ParameterData { TypeData = Types.QuatF },
 					},
 				}

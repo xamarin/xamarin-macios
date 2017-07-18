@@ -1991,64 +1991,64 @@ namespace XamCore.SpriteKit {
 		
 		// These are in a category
 		[Static, Export ("moveByX:y:duration:")]
-		SKAction MoveBy (nfloat deltaX, nfloat deltaY, double duration);
+		SKAction MoveBy (nfloat deltaX, nfloat deltaY, double sec);
 
 		[Static, Export ("moveBy:duration:")]
-		SKAction MoveBy (CGVector delta, double duration);
+		SKAction MoveBy (CGVector delta, double sec);
 
 		[Static, Export ("moveTo:duration:")]
-		SKAction MoveTo (CGPoint location, double duration);
+		SKAction MoveTo (CGPoint location, double sec);
 
 		[Static, Export ("moveToX:duration:")]
-		SKAction MoveToX (nfloat x, double duration);
+		SKAction MoveToX (nfloat x, double sec);
 
 		[Static, Export ("moveToY:duration:")]
-		SKAction MoveToY (nfloat y, double duration);
+		SKAction MoveToY (nfloat y, double sec);
 
 		[Static, Export ("rotateByAngle:duration:")]
-		SKAction RotateByAngle (nfloat radians, double duration);
+		SKAction RotateByAngle (nfloat radians, double sec);
 
 		[Static, Export ("rotateToAngle:duration:")]
-		SKAction RotateToAngle (nfloat radians, double duration);
+		SKAction RotateToAngle (nfloat radians, double sec);
 
 		[Static, Export ("rotateToAngle:duration:shortestUnitArc:")]
-		SKAction RotateToAngle (nfloat radians, double duration, bool shortedUnitArc);
+		SKAction RotateToAngle (nfloat radians, double sec, bool shortedUnitArc);
 
 		[Static, Export ("resizeByWidth:height:duration:")]
-		SKAction ResizeByWidth (nfloat width, nfloat height, double duration);
+		SKAction ResizeByWidth (nfloat width, nfloat height, double sec);
 
 		[Static, Export ("resizeToWidth:height:duration:")]
-		SKAction ResizeTo (nfloat width, nfloat height, double duration);
+		SKAction ResizeTo (nfloat width, nfloat height, double sec);
 
 		[Static, Export ("resizeToWidth:duration:")]
-		SKAction ResizeToWidth (nfloat width, double duration);
+		SKAction ResizeToWidth (nfloat width, double sec);
 
 		[Static, Export ("resizeToHeight:duration:")]
-		SKAction ResizeToHeight (nfloat height, double duration);
+		SKAction ResizeToHeight (nfloat height, double sec);
 
 		[Static, Export ("scaleBy:duration:")]
-		SKAction ScaleBy (nfloat scale, double duration);
+		SKAction ScaleBy (nfloat scale, double sec);
 
 		[Static, Export ("scaleXBy:y:duration:")]
-		SKAction ScaleBy (nfloat xScale, nfloat yScale, double duration);
+		SKAction ScaleBy (nfloat xScale, nfloat yScale, double sec);
 
 		[Static, Export ("scaleTo:duration:")]
-		SKAction ScaleTo (nfloat scale, double duration);
+		SKAction ScaleTo (nfloat scale, double sec);
 
 		[Static, Export ("scaleXTo:y:duration:")]
-		SKAction ScaleTo (nfloat xScale, nfloat yScale, double duration);
+		SKAction ScaleTo (nfloat xScale, nfloat yScale, double sec);
 
 		[Static, Export ("scaleXTo:duration:")]
-		SKAction ScaleXTo (nfloat scale, double duration);
+		SKAction ScaleXTo (nfloat scale, double sec);
 
 		[Static, Export ("scaleYTo:duration:")]
-		SKAction ScaleYTo (nfloat scale, double duration);
+		SKAction ScaleYTo (nfloat scale, double sec);
 
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Static]
 		[Export ("scaleToSize:duration:")]
-		SKAction ScaleTo (CGSize size, double duration);
+		SKAction ScaleTo (CGSize size, double sec);
 
 		[Static, Export ("sequence:")]
 		SKAction Sequence ([Params] SKAction [] actions);
@@ -2063,16 +2063,16 @@ namespace XamCore.SpriteKit {
 		SKAction RepeatActionForever (SKAction action);
 
 		[Static, Export ("fadeInWithDuration:")]
-		SKAction FadeInWithDuration (double duration);
+		SKAction FadeInWithDuration (double sec);
 
 		[Static, Export ("fadeOutWithDuration:")]
-		SKAction FadeOutWithDuration (double duration);
+		SKAction FadeOutWithDuration (double sec);
 
 		[Static, Export ("fadeAlphaBy:duration:")]
-		SKAction FadeAlphaBy (nfloat factor, double duration);
+		SKAction FadeAlphaBy (nfloat factor, double sec);
 
 		[Static, Export ("fadeAlphaTo:duration:")]
-		SKAction FadeAlphaTo (nfloat alpha, double duration);
+		SKAction FadeAlphaTo (nfloat alpha, double sec);
 
 		[iOS (7,1), Mac (10,10)]
 		[Static, Export ("setTexture:")]
@@ -2092,16 +2092,16 @@ namespace XamCore.SpriteKit {
 		SKAction PlaySoundFileNamed (string soundFile, bool wait);
 
 		[Static, Export ("colorizeWithColor:colorBlendFactor:duration:")]
-		SKAction ColorizeWithColor (UIColor color, nfloat colorBlendFactor, double duration);
+		SKAction ColorizeWithColor (UIColor color, nfloat colorBlendFactor, double sec);
 
 		[Static, Export ("colorizeWithColorBlendFactor:duration:")]
-		SKAction ColorizeWithColorBlendFactor (nfloat colorBlendFactor, double duration);
+		SKAction ColorizeWithColorBlendFactor (nfloat colorBlendFactor, double sec);
 
 		[Static, Export ("followPath:duration:")]
-		SKAction FollowPath (CGPath path, double duration);
+		SKAction FollowPath (CGPath path, double sec);
 
 		[Static, Export ("followPath:asOffset:orientToPath:duration:")]
-		SKAction FollowPath (CGPath path, bool offset, bool orient, double duration);
+		SKAction FollowPath (CGPath path, bool offset, bool orient, double sec);
 
 		[iOS (8,0), Mac (10,10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
 		[Static, Export ("followPath:speed:")]
@@ -2112,16 +2112,16 @@ namespace XamCore.SpriteKit {
 		SKAction FollowPath (CGPath path, bool offset, bool orient, nfloat speed);
 
 		[Static, Export ("speedBy:duration:")]
-		SKAction SpeedBy (nfloat speed, double duration);
+		SKAction SpeedBy (nfloat speed, double sec);
 
 		[Static, Export ("speedTo:duration:")]
-		SKAction SpeedTo (nfloat speed, double duration);
+		SKAction SpeedTo (nfloat speed, double sec);
 
 		[Static, Export ("waitForDuration:")]
-		SKAction WaitForDuration (double duration);
+		SKAction WaitForDuration (double sec);
 
 		[Static, Export ("waitForDuration:withRange:")]
-		SKAction WaitForDuration (double duration, double durationRange);
+		SKAction WaitForDuration (double sec, double durationRange);
 
 		[Static, Export ("removeFromParent")]
 		SKAction RemoveFromParent ();
@@ -2139,7 +2139,7 @@ namespace XamCore.SpriteKit {
 		SKAction RunAction (SKAction action, string name);
 
 		[Static, Export ("customActionWithDuration:actionBlock:")]
-		SKAction CustomActionWithDuration (double duration, SKActionDurationHandler actionHandler);
+		SKAction CustomActionWithDuration (double sec, SKActionDurationHandler actionHandler);
 
 		//
 		// iOS 8 cluster (a few more are above, as part of their family
