@@ -1994,7 +1994,7 @@ namespace XamCore.SpriteKit {
 		SKAction MoveBy (nfloat deltaX, nfloat deltaY, double sec);
 
 		[Static, Export ("moveBy:duration:")]
-		SKAction MoveBy (CGVector delta, double sec);
+		SKAction MoveBy (CGVector delta, double duration);
 
 		[Static, Export ("moveTo:duration:")]
 		SKAction MoveTo (CGPoint location, double sec);
@@ -2015,16 +2015,16 @@ namespace XamCore.SpriteKit {
 		SKAction RotateToAngle (nfloat radians, double sec, bool shortedUnitArc);
 
 		[Static, Export ("resizeByWidth:height:duration:")]
-		SKAction ResizeByWidth (nfloat width, nfloat height, double sec);
+		SKAction ResizeByWidth (nfloat width, nfloat height, double duration);
 
 		[Static, Export ("resizeToWidth:height:duration:")]
-		SKAction ResizeTo (nfloat width, nfloat height, double sec);
+		SKAction ResizeTo (nfloat width, nfloat height, double duration);
 
 		[Static, Export ("resizeToWidth:duration:")]
-		SKAction ResizeToWidth (nfloat width, double sec);
+		SKAction ResizeToWidth (nfloat width, double duration);
 
 		[Static, Export ("resizeToHeight:duration:")]
-		SKAction ResizeToHeight (nfloat height, double sec);
+		SKAction ResizeToHeight (nfloat height, double duration);
 
 		[Static, Export ("scaleBy:duration:")]
 		SKAction ScaleBy (nfloat scale, double sec);
@@ -2139,7 +2139,7 @@ namespace XamCore.SpriteKit {
 		SKAction RunAction (SKAction action, string name);
 
 		[Static, Export ("customActionWithDuration:actionBlock:")]
-		SKAction CustomActionWithDuration (double sec, SKActionDurationHandler actionHandler);
+		SKAction CustomActionWithDuration (double seconds, SKActionDurationHandler actionHandler);
 
 		//
 		// iOS 8 cluster (a few more are above, as part of their family
@@ -2154,7 +2154,7 @@ namespace XamCore.SpriteKit {
 
 		[iOS (8,0), Mac(10,10)]
 		[Static, Export ("reachTo:rootNode:duration:")]
-		SKAction ReachTo (CGPoint position, SKNode rootNode, double duration);
+		SKAction ReachTo (CGPoint position, SKNode rootNode, double sec);
 
 		[iOS (8,0), Mac(10,10)]
 		[Static, Export ("reachTo:rootNode:velocity:")]
@@ -2162,7 +2162,7 @@ namespace XamCore.SpriteKit {
 
 		[iOS (8,0), Mac(10,10)]
 		[Static, Export ("reachToNode:rootNode:duration:")]
-		SKAction ReachToNode (SKNode node, SKNode rootNode, double duration);
+		SKAction ReachToNode (SKNode node, SKNode rootNode, double sec);
 
 		[iOS (8,0), Mac(10,10)]
 		[Static, Export ("reachToNode:rootNode:velocity:")]
@@ -2170,11 +2170,11 @@ namespace XamCore.SpriteKit {
 		
 		[iOS (8,0), Mac (10,10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
 		[Static, Export ("strengthTo:duration:")]
-		SKAction StrengthTo (float /* float, not CGFloat */ strength, double duration);
+		SKAction StrengthTo (float /* float, not CGFloat */ strength, double sec);
 
 		[iOS (8,0), Mac (10,10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
 		[Static, Export ("strengthBy:duration:")]
-		SKAction StrengthBy (float /* float, not CGFloat */ strength, double duration);
+		SKAction StrengthBy (float /* float, not CGFloat */ strength, double sec);
 
 		[iOS (8,0), Mac (10,10)]
 		[NullAllowed, Export ("timingFunction", ArgumentSemantic.Assign)]
@@ -2182,12 +2182,12 @@ namespace XamCore.SpriteKit {
 
 		[iOS (8,0), Mac(10,10)]
 		[Static, Export ("falloffBy:duration:")]
-		SKAction FalloffBy (float /* float, not CGFloat */ to, double duration);
+		SKAction FalloffBy (float /* float, not CGFloat */ to, double sec);
 
 		[iOS (8,0), Mac(10,10)]
 		[Static]
 		[Export ("falloffTo:duration:")]
-		SKAction FalloffTo (float falloff, double duration);
+		SKAction FalloffTo (float falloff, double sec);
 
 		// iOS 9 cluster
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
@@ -3280,7 +3280,7 @@ namespace XamCore.SpriteKit {
 		void Render (CGRect viewport, IMTLRenderCommandEncoder renderCommandEncoder, MTLRenderPassDescriptor renderPassDescriptor, IMTLCommandQueue commandQueue);
 
 		[Export ("updateAtTime:")]
-		void UpdateAtTime (double currentTime);
+		void Update (double currentTime);
 
 		[NullAllowed, Export ("scene", ArgumentSemantic.Assign)]
 		SKScene Scene { get; set; }
