@@ -189,7 +189,7 @@ namespace XamCore.MapKit {
 		MKAnnotationView ClusterAnnotationView { get; }
 
 		[TV (11,0)][iOS (11,0)][Mac (10,13, onlyOn64: true)]
-		[Advice ("Pre-defined constants are available from `MKFeatureDisplayPriority`.")]
+		[Advice ("Pre-defined constants are available from 'MKFeatureDisplayPriority'.")]
 		[Export ("displayPriority")]
 		float DisplayPriority { get; set; }
 
