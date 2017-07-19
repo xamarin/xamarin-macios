@@ -134,7 +134,6 @@ namespace xharness
 				await Devices.LoadAsync (DeviceLoadLog, removed_locked: true);
 			} catch (Exception e) {
 				DeviceLoadLog.WriteLine ("Failed to load devices: {0}", e);
-				return rv;
 			}
 
 			foreach (var project in Harness.IOSTestProjects) {
