@@ -533,10 +533,9 @@ namespace xharness
 								continue;
 							connected_devices.Add (d);
 						}
-
-						connected_devices.SetCompleted ();
 					}
 				} finally {
+					connected_devices.SetCompleted ();
 					File.Delete (tmpfile);
 				}
 			});
