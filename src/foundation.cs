@@ -159,13 +159,13 @@ namespace XamCore.Foundation
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("writeToURL:error:")]
-		bool Write (NSUrl url, [NullAllowed] out NSError error);
+		bool Write (NSUrl url, out NSError error);
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("arrayWithContentsOfURL:error:")]
 		[return: NullAllowed]
-		NSArray FromUrl (NSUrl url, [NullAllowed] out NSError error);
+		NSArray FromUrl (NSUrl url, out NSError error);
 	}
 
 #if MONOMAC
@@ -3616,13 +3616,13 @@ namespace XamCore.Foundation
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("initWithContentsOfURL:error:")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] out NSError error);
+		IntPtr Constructor (NSUrl url, out NSError error);
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("dictionaryWithContentsOfURL:error:")]
 		[return: NullAllowed]
-		NSDictionary<NSString, NSObject> FromUrl (NSUrl url, [NullAllowed] out NSError error);
+		NSDictionary<NSString, NSObject> FromUrl (NSUrl url, out NSError error);
 		
 		[Export ("count")]
 		nuint Count { get; }

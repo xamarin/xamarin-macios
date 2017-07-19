@@ -28,9 +28,9 @@ namespace XamCore.Foundation {
 		{
 			var n = Runtime.GetNSObject<NSNumber> (GetHandle (key));
 #if XAMCORE_2_0
-			return n == null ? 0 : n.NIntValue;
+			return n?.NIntValue ?? 0;
 #else
-			return n == null ? 0 : n.IntValue;
+			return n?.IntValue ?? 0;
 #endif
 		}
 
@@ -175,9 +175,9 @@ namespace XamCore.Foundation {
 		}
 
 		[iOS (8,0)][Mac (10,9)]
-		public NSString UbiquitousItemContainerDisplayName {
+		public string UbiquitousItemContainerDisplayName {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.UbiquitousItemContainerDisplayNameKey));
+				return (string)Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.UbiquitousItemContainerDisplayNameKey));
 			}
 		}
 
@@ -190,49 +190,44 @@ namespace XamCore.Foundation {
 
 #if MONOMAC
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] Keywords {
+		public string [] Keywords {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.KeywordsKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.KeywordsKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Title {
+		public string Title {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.TitleKey));
+				return (string)Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.TitleKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] Authors {
+		public string [] Authors {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.AuthorsKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorsKey)); 
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] Editors {
+		public string [] Editors {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.EditorsKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EditorsKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] Participants {
+		public string [] Participants {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.ParticipantsKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ParticipantsKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] Projects {
+		public string [] Projects {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.ProjectsKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ProjectsKey));
 			}
 		}
 
@@ -244,24 +239,23 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] WhereFroms {
+		public string [] WhereFroms {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.WhereFromsKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.WhereFromsKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Comment {
+		public string Comment {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CommentKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CommentKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Copyright {
+		public string Copyright {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CopyrightKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CopyrightKey));
 			}
 		}
 
@@ -301,17 +295,16 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] ContactKeywords {
+		public string [] ContactKeywords {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.ContactKeywordsKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ContactKeywordsKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Version {
+		public string Version {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.VersionKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.VersionKey));
 			}
 		}
 
@@ -337,9 +330,9 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString ColorSpace {
+		public string ColorSpace {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ColorSpaceKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ColorSpaceKey));
 			}
 		}
 
@@ -365,16 +358,16 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString AcquisitionMake {
+		public string AcquisitionMake {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AcquisitionMakeKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AcquisitionMakeKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString AcquisitionModel {
+		public string AcquisitionModel {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AcquisitionModelKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AcquisitionModelKey));
 			}
 		}
 
@@ -393,10 +386,9 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] LayerNames {
+		public string [] LayerNames {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.LayerNamesKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.LayerNamesKey));
 			}
 		}
 
@@ -415,9 +407,9 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString ProfileName {
+		public string ProfileName {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ProfileNameKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ProfileNameKey));
 			}
 		}
 
@@ -450,16 +442,16 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString ExifVersion {
+		public string ExifVersion {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ExifVersionKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ExifVersionKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString CameraOwner {
+		public string CameraOwner {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CameraOwnerKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CameraOwnerKey));
 			}
 		}
 
@@ -471,16 +463,16 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString LensModel {
+		public string LensModel {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.LensModelKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.LensModelKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString ExifGpsVersion {
+		public string ExifGpsVersion {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ExifGpsVersionKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ExifGpsVersionKey));
 			}
 		}
 
@@ -534,23 +526,23 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString NamedLocation {
+		public string NamedLocation {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.NamedLocationKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.NamedLocationKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString GpsStatus {
+		public string GpsStatus {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.GpsStatusKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.GpsStatusKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString GpsMeasureMode {
+		public string GpsMeasureMode {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.GpsMeasureModeKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.GpsMeasureModeKey));
 			}
 		}
 
@@ -562,9 +554,9 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString GpsMapDatum {
+		public string GpsMapDatum {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.GpsMapDatumKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.GpsMapDatumKey));
 			}
 		}
 
@@ -597,16 +589,16 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString GpsProcessingMethod {
+		public string GpsProcessingMethod {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.GpsProcessingMethodKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.GpsProcessingMethodKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString GpsAreaInformation {
+		public string GpsAreaInformation {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.GpsAreaInformationKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.GpsAreaInformationKey));
 			}
 		}
 
@@ -625,18 +617,16 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] Codecs {
+		public string [] Codecs {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.CodecsKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.CodecsKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] MediaTypes {
+		public string [] MediaTypes {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.MediaTypesKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.MediaTypesKey));
 			}
 		}
 
@@ -669,16 +659,16 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString DeliveryType {
+		public string DeliveryType {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.DeliveryTypeKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.DeliveryTypeKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Album {
+		public string Album {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AlbumKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AlbumKey));
 			}
 		}
 
@@ -697,9 +687,9 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString MeteringMode {
+		public string MeteringMode {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.MeteringModeKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.MeteringModeKey));
 			}
 		}
 
@@ -718,58 +708,58 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString ExposureProgram {
+		public string ExposureProgram {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ExposureProgramKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ExposureProgramKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString ExposureTimeString {
+		public string ExposureTimeString {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ExposureTimeStringKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ExposureTimeStringKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Headline {
+		public string Headline {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.HeadlineKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.HeadlineKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Instructions {
+		public string Instructions {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.InstructionsKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.InstructionsKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString City {
+		public string City {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CityKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CityKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString StateOrProvince {
+		public string StateOrProvince {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.StateOrProvinceKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.StateOrProvinceKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Country {
+		public string Country {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CountryKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CountryKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString TextContent {
+		public string TextContent {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.TextContentKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.TextContentKey));
 			}
 		}
 
@@ -795,37 +785,37 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString KeySignature {
+		public string KeySignature {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.KeySignatureKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.KeySignatureKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString TimeSignature {
+		public string TimeSignature {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.TimeSignatureKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.TimeSignatureKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString AudioEncodingApplication {
+		public string AudioEncodingApplication {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AudioEncodingApplicationKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AudioEncodingApplicationKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Composer {
+		public string Composer {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ComposerKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ComposerKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Lyricist {
+		public string Lyricist {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.LyricistKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.LyricistKey));
 			}
 		}
 
@@ -844,9 +834,9 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString MusicalGenre {
+		public string MusicalGenre {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.MusicalGenreKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.MusicalGenreKey));
 			}
 		}
 
@@ -865,85 +855,78 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] Organizations {
+		public string [] Organizations {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.OrganizationsKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.OrganizationsKey));			}
+		}
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		public string [] Languages {
+			get {
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.LanguagesKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] Languages {
+		public string Rights {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.LanguagesKey)))
-					return NSArray.FromArray<NSString> (a);
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.RightsKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Rights {
+		public string [] Publishers {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.RightsKey));
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PublishersKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] Publishers {
+		public string [] Contributors {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.PublishersKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ContributorsKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] Contributors {
+		public string [] Coverage {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.ContributorsKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.CoverageKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] Coverage {
-			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.CoverageKey)))
-					return NSArray.FromArray<NSString> (a);
-			}
-		}
-
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Subject {
+		public string Subject {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.SubjectKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Theme {
+		public string Theme {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ThemeKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Description {
+		public string Description {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.DescriptionKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.DescriptionKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Identifier {
+		public string Identifier {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.IdentifierKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.IdentifierKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] Audiences {
+		public string [] Audiences {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.AudiencesKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AudiencesKey));
 			}
 		}
 
@@ -969,24 +952,23 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString SecurityMethod {
+		public string SecurityMethod {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.SecurityMethodKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.SecurityMethodKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Creator {
+		public string Creator {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CreatorKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CreatorKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] EncodingApplications {
+		public string [] EncodingApplications {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.EncodingApplicationsKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EncodingApplicationsKey));
 			}
 		}
 
@@ -1005,188 +987,177 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] PhoneNumbers {
+		public string [] PhoneNumbers {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.PhoneNumbersKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PhoneNumbersKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] EmailAddresses {
+		public string [] EmailAddresses {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.EmailAddressesKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EmailAddressesKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] InstantMessageAddresses {
+		public string [] InstantMessageAddresses {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.InstantMessageAddressesKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.InstantMessageAddressesKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Kind {
+		public string Kind {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.KindKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.KindKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] Recipients {
+		public string [] Recipients {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.RecipientsKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientsKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString FinderComment {
+		public string FinderComment {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.FinderCommentKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.FinderCommentKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] Fonts {
+		public string [] Fonts {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.FontsKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.FontsKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString AppleLoopsRoot {
+		public string AppleLoopsRoot {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AppleLoopsRootKeyKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AppleLoopsRootKeyKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString AppleLoopsKeyFilterType {
+		public string AppleLoopsKeyFilterType {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AppleLoopsKeyFilterTypeKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AppleLoopsKeyFilterTypeKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString AppleLoopsLoopMode {
+		public string AppleLoopsLoopMode {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AppleLoopsLoopModeKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AppleLoopsLoopModeKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] AppleLoopDescriptors {
+		public string [] AppleLoopDescriptors {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.AppleLoopDescriptorsKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AppleLoopDescriptorsKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString MusicalInstrumentCategory {
+		public string MusicalInstrumentCategory {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.MusicalInstrumentCategoryKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.MusicalInstrumentCategoryKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString MusicalInstrumentName {
+		public string MusicalInstrumentName {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.MusicalInstrumentNameKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.MusicalInstrumentNameKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString CFBundleIdentifier {
+		public string CFBundleIdentifier {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CFBundleIdentifierKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CFBundleIdentifierKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Information {
+		public string Information {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.InformationKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.InformationKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Director {
+		public string Director {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.DirectorKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.DirectorKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Producer {
+		public string Producer {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ProducerKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ProducerKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString Genre {
+		public string Genre {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.GenreKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.GenreKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] Performers {
+		public string [] Performers {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.PerformersKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PerformersKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString OriginalFormat {
+		public string OriginalFormat {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.OriginalFormatKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.OriginalFormatKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString OriginalSource {
+		public string OriginalSource {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.OriginalSourceKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.OriginalSourceKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] AuthorEmailAddresses {
+		public string [] AuthorEmailAddresses {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.AuthorEmailAddressesKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorEmailAddressesKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] RecipientEmailAddresses {
+		public string [] RecipientEmailAddresses {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.RecipientEmailAddressesKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientEmailAddressesKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] AuthorAddresses {
+		public string [] AuthorAddresses {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.AuthorAddressesKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorAddressesKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] RecipientAddresses {
+		public string [] RecipientAddresses {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.RecipientAddressesKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientAddressesKey));
 			}
 		}
 
@@ -1198,25 +1169,23 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] ExecutableArchitectures {
+		public string [] ExecutableArchitectures {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.ExecutableArchitecturesKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ExecutableArchitecturesKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString ExecutablePlatform {
+		public string ExecutablePlatform {
 			get {
-				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ExecutablePlatformKey));
+				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ExecutablePlatformKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSString [] ApplicationCategories {
+		public string [] ApplicationCategories {
 			get {
-				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.ApplicationCategoriesKey)))
-					return NSArray.FromArray<NSString> (a);
+				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ApplicationCategoriesKey));
 			}
 		}
 

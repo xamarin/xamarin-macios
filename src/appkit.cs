@@ -18161,6 +18161,7 @@ namespace XamCore.AppKit {
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
 		NSTextStorageDelegate Delegate { get; set; }
+
 	}
 
 	[BaseType (typeof (NSObject))]
