@@ -40,7 +40,7 @@ namespace xharness
 						process.StartInfo.FileName = Harness.MlaunchPath;
 						process.StartInfo.Arguments = string.Format ("--sdkroot {0} --listsim {1}", Harness.XcodeRoot, tmpfile);
 						log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
-						var rv = await process.RunAsync (log, false);
+						var rv = await process.RunAsync (log, false, timeout: TimeSpan.FromSeconds (30));
 						if (!rv.Succeeded)
 							throw new Exception ("Failed to list simulators.");
 						log.WriteLine ("Result:");
@@ -511,7 +511,7 @@ namespace xharness
 						process.StartInfo.FileName = Harness.MlaunchPath;
 						process.StartInfo.Arguments = string.Format ("--sdkroot {0} --listdev={1} {2} --output-format=xml", Harness.XcodeRoot, tmpfile, extra_data ? "--list-extra-data" : string.Empty);
 						log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
-						var rv = await process.RunAsync (log, false);
+						var rv = await process.RunAsync (log, false, timeout: TimeSpan.FromSeconds (30));
 						if (!rv.Succeeded)
 							throw new Exception ("Failed to list devices.");
 						log.WriteLine ("Result:");
