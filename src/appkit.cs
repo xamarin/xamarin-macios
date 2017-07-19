@@ -9394,7 +9394,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10, 13)]
 		[Field ("NSImageNameTouchBarRemoveTemplate")]
-		TouchBarRemoveTemplate
+		TouchBarRemoveTemplate,
 	}
 
 	interface NSStringAttributes {
@@ -11333,11 +11333,11 @@ namespace XamCore.AppKit {
 
 		[Mac (10, 13)]
 		[Field ("NSPasteboardTypeURL")]
-		NSString NSPasteboardTypeURL { get; }
+		NSString NSPasteboardTypeUrl { get; }
 
 		[Mac (10, 13)]
 		[Field ("NSPasteboardTypeFileURL")]
-		NSString NSPasteboardTypeFileURL { get; }
+		NSString NSPasteboardTypeFileUrl { get; }
 
 		[Mac (10,12)]
 		[Export ("prepareForNewContentsWithOptions:")]
