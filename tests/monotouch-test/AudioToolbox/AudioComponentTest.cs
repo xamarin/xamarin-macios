@@ -27,8 +27,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void GetSetComponentList ()
 		{
-			if (IntPtr.Size == 4)
-				Assert.Ignore ("API only available in 64 bits.");
+			TestRuntime.AssertXcodeVersion (9, 0);
 			var types = new List<AudioTypeOutput> { AudioTypeOutput.Generic, AudioTypeOutput.Remote, AudioTypeOutput.VoiceProcessingIO };
 			foreach (var t in types) {
 				var resources = new ResourceUsageInfo ();

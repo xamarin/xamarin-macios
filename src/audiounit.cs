@@ -8,6 +8,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 using XamCore.AudioUnit;
 using XamCore.CoreFoundation;
@@ -40,7 +41,7 @@ namespace XamCore.AudioUnit {
 
 	delegate void AUScheduleParameterBlock (AUEventSampleTime eventSampleTime, uint rampDurationSampleFrames, ulong parameterAddress, float value);
 	[iOS (11, 0), Mac (10,13), TV (11,0), NoWatch]
-	delegate int AUMidiOutputEventBlock (long eventSampleTime, byte cable, nint length, ref byte midiBytes);
+	delegate int AUMidiOutputEventBlock (long eventSampleTime, byte cable, nint length, IntPtr midiBytes);
 	delegate void AUImplementorValueObserver (AUParameter param, float value);
 	delegate float AUImplementorValueProvider (AUParameter param);
 
@@ -263,11 +264,11 @@ namespace XamCore.AudioUnit {
 
 		[Mac (10,12), NoTV, NoiOS, NoWatch]
 		[Export ("deviceID")]
-		uint GetDeviceID ();
+		uint GetDeviceId ();
 
 		[Mac (10,12), NoTV, NoiOS, NoWatch]
 		[Export ("setDeviceID:error:")]
-		bool SetDeviceID (uint deviceID, out NSError outError);
+		bool SetDeviceId (uint deviceID, out NSError outError);
 
 		[Export ("canPerformInput")]
 		bool GetCanPerformInput ();

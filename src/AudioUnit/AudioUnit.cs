@@ -365,39 +365,39 @@ namespace XamCore.AudioUnit
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioUnitParameterEvent
 	{
-		public uint scope;
-		public uint element;
-		public uint parameter;
-		public AUParameterEventType eventType;
+		public uint Scope;
+		public uint Element;
+		public uint Parameter;
+		public AUParameterEventType EventType;
 
 		[StructLayout (LayoutKind.Explicit)]
-		public struct EventValues
+		public struct EventValuesStruct
 		{
 			[StructLayout (LayoutKind.Sequential)]
-			public struct Ramp
+			public struct RampStruct
 			{
-				public int startBufferOffset;
-				public uint durationInFrames;
-				public float startValue;
-				public float endValue;
+				public int StartBufferOffset;
+				public uint DurationInFrames;
+				public float StartValue;
+				public float EndValue;
 			}
 
 
 			[FieldOffset (0)]
-			public Ramp ramp;
+			public RampStruct Ramp;
 
 			[StructLayout (LayoutKind.Sequential)]
-			public struct Immediate
+			public struct ImmediateStruct
 			{
-				public uint bufferOffset;
-				public float value;
+				public uint bBufferOffset;
+				public float Value;
 			}
 
 			[FieldOffset (0)]
-			public Immediate immediate;
+			public ImmediateStruct Immediate;
 		}
 
-		public EventValues eventValues;
+		public EventValuesStruct EventValues;
 	}
 
 	public class AudioUnit : IDisposable, XamCore.ObjCRuntime.INativeObject
@@ -1085,9 +1085,8 @@ namespace XamCore.AudioUnit
 		static extern AudioUnitStatus AudioUnitSetParameter (IntPtr inUnit, AudioUnitParameterType inID, AudioUnitScopeType inScope,
 			uint inElement, float inValue, uint inBufferOffsetInFrames);
 
-		[iOS (2,0)]
 		[DllImport (Constants.AudioUnitLibrary)]
-		static extern  AudioUnitStatus AudioUnitScheduleParameters (IntPtr inUnit, AudioUnitParameterEvent inParameterEvent, uint inNumParamEvents);
+		static extern AudioUnitStatus AudioUnitScheduleParameters (IntPtr inUnit, AudioUnitParameterEvent inParameterEvent, uint inNumParamEvents);
 
 #if MONOMAC
 		[DllImport (Constants.AudioUnitLibrary)]
@@ -2012,7 +2011,7 @@ namespace XamCore.AudioUnit
 		SoundField = 3,
 		VectorBasedPanning = 4,
 		StereoPassThrough = 5,
-		HRTFHQ = 6,
+		HrtfHQ = 6,
 	}
 
 	public enum AU3DMixerAttenuationCurve : uint

@@ -52,21 +52,23 @@ namespace XamCore.AudioUnit
 
 		public ResourceUsageInfo (NSDictionary dic) : base (dic) {}
 
-		public NSString[] IOKitUserClient { 
+		public string[] IOKitUserClient { 
 			get {
-				return GetArray<NSString> (userClientK);
+				var array = GetNativeValue<NSArray> (userClientK);
+				return NSArray.StringArrayFromHandle (array.ClassHandle);
 			} 
 			set {
-				SetArrayValue <NSString> (userClientK, value);
+				SetArrayValue (userClientK, value);
 			}
 		}
 
-		public NSString[] MachLookUpGlobalName { 
+		public string[] MachLookUpGlobalName { 
 			get {
-				return GetArray<NSString> (globalNameK);
+				var array = GetNativeValue<NSArray> (globalNameK);
+				return NSArray.StringArrayFromHandle (array.ClassHandle);
 			} 
 			set {
-				SetArrayValue <NSString> (globalNameK, value);
+				SetArrayValue (globalNameK, value);
 			}
 		}
 
@@ -392,7 +394,7 @@ namespace XamCore.AudioUnit
 					var cHandle = CopyComponentList (cfString.Handle);
 					if (cHandle == IntPtr.Zero)
 						return null;
-					using (var nsArray = Runtime.GetNSObject<NSArray> (cHandle)) {
+					using (var nsArray = Runtime.GetNSObject<NSArray> (cHandle, owns: true)) {
 						if (nsArray == null)
 							return null;
 						// make things easier for developers since we do not know how to have an implicit conversion from NSObject to AudioComponentInfo
@@ -421,7 +423,7 @@ namespace XamCore.AudioUnit
 						case AudioConverterError.None:
 							return;
 						default:
-							throw new InvalidOperationException ("ComponentList could not be set.");
+							throw new InvalidOperationException ($"ComponentList could not be set, error {result.ToString ()}");
 
 						}
 					}
