@@ -70,6 +70,7 @@ namespace MonoMac.Tuner {
 		{ Constants.PhotosLibrary, Namespaces.Photos },
 		{ Constants.PrintCoreLibrary, Namespaces.PrintCore },
 		{ Constants.CoreMLLibrary, Namespaces.CoreML },
+		{ Constants.VisionLibrary, Namespaces.Vision },
 	};
 
 		public void Process (LinkContext context)

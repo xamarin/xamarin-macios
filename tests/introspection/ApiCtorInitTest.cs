@@ -325,6 +325,11 @@ namespace Introspection {
 				if (ctor.ToString () == "Void .ctor(String, NSBundle)")
 					return true;
 				break;
+			case "MKCompassButton":
+			case "MKScaleView":
+			case "MKUserTrackingButton":
+				// Xcode9 added types that are created only from static methods (no init)
+				return true;
 #if __TVOS__
 			case "UISearchBar":
 				// - (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER __TVOS_PROHIBITED;

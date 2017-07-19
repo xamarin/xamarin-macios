@@ -125,7 +125,7 @@ namespace XamCore.WebKit
 	interface IWKHttpCookieStoreObserver {}
 	
 	[Mac (10,13), iOS (11,0)]
-	[Protocol]
+	[Protocol (Name = "WKHTTPCookieStoreObserver")]
 	interface WKHttpCookieStoreObserver
 	{
 		[Export ("cookiesDidChangeInCookieStore:")]

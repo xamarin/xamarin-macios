@@ -204,6 +204,7 @@ namespace Introspection {
 				case "HMMutableLocationEvent":
 				case "HMTimeEvent":
 				case "ILMessageFilterExtensionContext": // Conformance not in headers
+				case "MSMessageLiveLayout":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -336,6 +337,7 @@ namespace Introspection {
 				case "NSManagedObjectModel":
 				case "NSPropertyDescription":
 				case "NSRelationshipDescription":
+				case "MSMessageLiveLayout":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
