@@ -994,22 +994,21 @@ namespace XamCore.CoreSpotlight {
 
 		[iOS (11,0), NoTV, Mac (10, 11)]
 		[NullAllowed, Export ("userCreated", ArgumentSemantic.Strong)]
-		[BindAs (typeof (bool?))]
-		NSNumber IsUserCreated { [Bind ("isUserCreated")] get; set; }
+		[Protected] // We would like to use [BindAs (typeof (bool?))]
+		NSNumber _IsUserCreated { [Bind ("isUserCreated")] get; set; }
 
 		[iOS (11, 0), NoTV, Mac (10, 11)]
 		[NullAllowed, Export ("userOwned", ArgumentSemantic.Strong)]
-		[BindAs (typeof (bool?))]
-		NSNumber IsUserOwned { [Bind ("isUserOwned")] get; set; }
+		[Protected] // We would like to use[BindAs (typeof (bool?))]
+		NSNumber _IsUserOwned { [Bind ("isUserOwned")] get; set; }
 
 		[iOS (11, 0), NoTV, Mac (10, 11)]
 		[NullAllowed, Export ("userCurated", ArgumentSemantic.Strong)]
-		[BindAs (typeof (bool?))]
-		NSNumber IsUserCurated { [Bind ("isUserCurated")] get; set; }
+		[Protected] // We would like to use [BindAs (typeof (bool?))]
+		NSNumber _IsUserCurated { [Bind ("isUserCurated")] get; set; }
 
 		[iOS (11, 0), NoTV, Mac (10, 11)]
 		[NullAllowed, Export ("rankingHint", ArgumentSemantic.Strong)]
-		[BindAs (typeof (int?))]
 		NSNumber RankingHint { get; set; }
 
 		// CSSearchableItemAttributeSet_CSItemProvider
