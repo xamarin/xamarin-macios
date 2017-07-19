@@ -175,9 +175,9 @@ namespace XamCore.Foundation {
 		}
 
 		[iOS (8,0)][Mac (10,9)]
-		public string UbiquitousItemContainerDisplayName {
+		public NSString UbiquitousItemContainerDisplayName {
 			get {
-				return (string)Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.UbiquitousItemContainerDisplayNameKey));
+				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.UbiquitousItemContainerDisplayNameKey));
 			}
 		}
 
