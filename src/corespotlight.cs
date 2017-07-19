@@ -994,17 +994,17 @@ namespace XamCore.CoreSpotlight {
 
 		[iOS (11,0), NoTV, Mac (10, 11)]
 		[NullAllowed, Export ("userCreated", ArgumentSemantic.Strong)]
-		[Protected] // We would like to use [BindAs (typeof (bool?))]
+		[Internal] // We would like to use [BindAs (typeof (bool?))]
 		NSNumber _IsUserCreated { [Bind ("isUserCreated")] get; set; }
 
 		[iOS (11, 0), NoTV, Mac (10, 11)]
 		[NullAllowed, Export ("userOwned", ArgumentSemantic.Strong)]
-		[Protected] // We would like to use[BindAs (typeof (bool?))]
+		[Internal] // We would like to use[BindAs (typeof (bool?))]
 		NSNumber _IsUserOwned { [Bind ("isUserOwned")] get; set; }
 
 		[iOS (11, 0), NoTV, Mac (10, 11)]
 		[NullAllowed, Export ("userCurated", ArgumentSemantic.Strong)]
-		[Protected] // We would like to use [BindAs (typeof (bool?))]
+		[Internal] // We would like to use [BindAs (typeof (bool?))]
 		NSNumber _IsUserCurated { [Bind ("isUserCurated")] get; set; }
 
 		[iOS (11, 0), NoTV, Mac (10, 11)]

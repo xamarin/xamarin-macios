@@ -21,7 +21,7 @@ namespace XamCore.CoreSpotlight {
 
 		// Manually deal with these properties until we get BindAs working
 		[iOS (11,0), NoTV, Mac (10, 11)]
-		bool? IsUserCreated { 
+		public bool? IsUserCreated { 
 			get {
 				return _IsUserCreated?.BoolValue;
 			} set {
@@ -30,7 +30,7 @@ namespace XamCore.CoreSpotlight {
 		}
 
 		[iOS (11, 0), NoTV, Mac (10, 11)]
-		bool? IsUserOwned {
+		public bool? IsUserOwned {
 			get {
 				return _IsUserOwned?.BoolValue;
 			} set {
@@ -39,7 +39,7 @@ namespace XamCore.CoreSpotlight {
 		}
 
 		[iOS (11, 0), NoTV, Mac (10, 11)]
-		bool? IsUserCurated { 
+		public bool? IsUserCurated { 
 			get {
 				return _IsUserCurated?.BoolValue;
 			} set {
