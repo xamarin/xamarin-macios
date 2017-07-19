@@ -97,10 +97,12 @@ APPKIT_SOURCES = \
 	AppKit/NSDraggingInfo.cs \
 	AppKit/NSDraggingSession.cs \
 	AppKit/NSDraggingItem.cs \
+	AppKit/NSFont.cs \
 	AppKit/NSPasteboard.cs \
 	AppKit/NSSharingServiceDelegate.cs \
 	AppKit/NSDocument.cs \
 	AppKit/NSEvent.cs \
+	AppKit/NSFont.cs \
 	AppKit/NSGestureRecognizer.cs \
 	AppKit/NSGradient.cs \
 	AppKit/NSGraphics.cs \

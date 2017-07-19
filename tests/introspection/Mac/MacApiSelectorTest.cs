@@ -41,6 +41,9 @@ namespace Introspection {
 		protected override bool Skip (Type type)
 		{
 			switch (type.FullName) {
+			case "MonoMac.AppKit.NSWindowTabGroup":
+			case "AppKit.NSWindowTabGroup":
+				return true; /// 32930276
 			case "MonoMac.CIFilter.CIMaskedVariableBlur": // Appears to be missing from 10.11, not documented
 			case "CIFilter.CIMaskedVariableBlur":
 				if (Mac.CheckSystemVersion (10, 11))
@@ -398,6 +401,14 @@ namespace Introspection {
 						if (!Mac.CheckSystemVersion (10, 10))
 							return true;
 						break;
+					}
+					break;
+				case "NSSliderTouchBarItem":
+					switch (selectorName) {
+					case "compressWithPrioritizedCompressionOptions:":
+					case "minimumSizeWithPrioritizedCompressionOptions:":
+					case "activeCompressionOptions":
+						return true; // 33271241
 					}
 					break;
 				}
