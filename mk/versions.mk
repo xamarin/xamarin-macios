@@ -1,10 +1,10 @@
 # usage $(call CheckSubmoduleTemplate (name,MAKEFILE VAR,repo name))
 # usage $(call CheckSubmoduleTemplate (mono,MONO,mono))
 
-COLOR_GRAY:=$(shell tput setaf 250)
-COLOR_GREEN:=$(shell tput setaf 120)
-COLOR_RED:=$(shell tput setaf 1)
-COLOR_CLEAR:=$(shell tput sgr0)
+COLOR_GRAY:=$(shell tput setaf 250 2>/dev/null)
+COLOR_GREEN:=$(shell tput setaf 120 2>/dev/null)
+COLOR_RED:=$(shell tput setaf 1 2>/dev/null)
+COLOR_CLEAR:=$(shell tput sgr0 2>/dev/null)
 
 define CheckSubmoduleTemplate
 #$(eval NEEDED_$(2)_VERSION:=$(shell git --git-dir $(abspath $($(2)_PATH)/../..)/.git --work-tree $(abspath $($(2)_PATH)/../..) ls-tree HEAD --full-tree -- external/$(1) | awk -F' ' '{printf "%s",$$3}'))
