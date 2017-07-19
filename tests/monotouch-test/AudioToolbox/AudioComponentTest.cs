@@ -31,15 +31,15 @@ namespace MonoTouchFixtures.AudioToolbox {
 			var types = new List<AudioTypeOutput> { AudioTypeOutput.Generic, AudioTypeOutput.Remote, AudioTypeOutput.VoiceProcessingIO };
 			foreach (var t in types) {
 				var resources = new ResourceUsageInfo ();
-				resources.IOKitUserClient = new NSString[] { new NSString ("CustomUserClient1")};
-				resources.MachLookUpGlobalName = new NSString[] { new NSString ("MachServiceName1")};
+				resources.IOKitUserClient = new string[] { "CustomUserClient1" };
+				resources.MachLookUpGlobalName = new string[] { "MachServiceName1" };
 				resources.NetworkClient = false;
 				resources.TemporaryExceptionReadWrite = false;
 
 				var componentInfo = new AudioComponentInfo ();
 				componentInfo.Type = t.ToString ();
-				componentInfo.Subtype = new NSString ("XMPL");
-				componentInfo.Name = new NSString ("XMPL");
+				componentInfo.Subtype =  "XMPL";
+				componentInfo.Name = "XMPL";
 				componentInfo.Version = 1;
 				componentInfo.ResourceUsage = resources;
 				var component = AudioComponent.FindComponent (t);
