@@ -10232,10 +10232,6 @@ namespace XamCore.Foundation
 		[Export ("getValue:")]
 		void StoreValueAtAddress (IntPtr value);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("getValue:size:")]
-		void StoreValueAtAddress (IntPtr value, nuint size);
-
 		[Export ("objCType")][Internal]
 		IntPtr ObjCTypePtr ();
 		
