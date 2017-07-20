@@ -486,8 +486,7 @@ namespace XamCore.AudioUnit {
 		[Export ("setValue:originator:atHostTime:eventType:")]
 		void SetValue (float value, IntPtr originator, ulong hostTime, AUParameterAutomationEventType eventType);
 
-		[iOS (10,0), Mac (10,12, onlyOn64 : true), Watch (4, 0), TV (11, 0)]
-		[TV (10,0)]
+		[iOS (10,0), Mac (10,12, onlyOn64 : true), Watch (4, 0), TV (10, 0)]
 		[Wrap ("SetValue (value, originator.ObserverToken, hostTime, eventType)")]
 		void SetValue (float value, AUParameterObserverToken originator, ulong hostTime, AUParameterAutomationEventType eventType);
 	}

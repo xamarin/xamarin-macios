@@ -180,12 +180,13 @@ namespace XamCore.AudioUnit
 			}
 		}
 
-		public NSString[] Tags { 
+		public string[] Tags { 
 			get {
-				return GetArray<NSString> (tagsK);
+				var array = GetNativeValue<NSArray> (tagsK);
+				return NSArray.StringArrayFromHandle (array.ClassHandle);
 			} 
 			set {
-				SetArrayValue <NSString> (tagsK, value);
+				SetArrayValue (tagsK, value);
 			}
 		}
 	}
@@ -380,18 +381,18 @@ namespace XamCore.AudioUnit
 		}
 #endif
 		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-		[DllImport (Constants.AudioUnitLibrary, EntryPoint = "AudioUnitExtensionSetComponentList")]
-		static extern int /* OSStatus */ SetComponentList (IntPtr /* CFString */ extensionIdentifier, /* CFArrayRef */ IntPtr audioComponentInfo);
+		[DllImport (Constants.AudioUnitLibrary)]
+		static extern int /* OSStatus */ AudioUnitExtensionSetComponentList (IntPtr /* CFString */ extensionIdentifier, /* CFArrayRef */ IntPtr audioComponentInfo);
 
 		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-		[DllImport (Constants.AudioUnitLibrary, EntryPoint = "AudioUnitExtensionCopyComponentList")]
-		static extern /* CFArrayRef */ IntPtr CopyComponentList (IntPtr /* CFString */ extensionIdentifier);
+		[DllImport (Constants.AudioUnitLibrary)]
+		static extern /* CFArrayRef */ IntPtr AudioUnitExtensionCopyComponentList (IntPtr /* CFString */ extensionIdentifier);
 
 		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		public AudioComponentInfo[] ComponentList {
 			get {
 				using (var cfString = new CFString (Name)) {
-					var cHandle = CopyComponentList (cfString.Handle);
+					var cHandle = AudioUnitExtensionCopyComponentList (cfString.Handle);
 					if (cHandle == IntPtr.Zero)
 						return null;
 					using (var nsArray = Runtime.GetNSObject<NSArray> (cHandle, owns: true)) {
@@ -414,12 +415,8 @@ namespace XamCore.AudioUnit
 						dics [i] = value [i].Dictionary;
 					}
 					using (var array = NSArray.FromNSObjects (dics)) {
-						var result = (AudioConverterError) SetComponentList (cfString.Handle, array.Handle);
+						var result = (AudioConverterError) AudioUnitExtensionSetComponentList (cfString.Handle, array.Handle);
 						switch (result) {
-						case AudioConverterError.HardwareInUse:
-							throw new InvalidOperationException ("ComponentList could not be set: 'Hardware is in use.'");
-						case AudioConverterError.NoHardwarePermission:
-							throw new InvalidOperationException ("ComponentList could not be set: 'No Hardware permission.'");
 						case AudioConverterError.None:
 							return;
 						default:
