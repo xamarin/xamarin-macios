@@ -373,6 +373,9 @@ public class B : A {}
 					// The code change is minimal: only changes the class name (default: 'TestApp1' changed to 'TestApp2') to minimize the related
 					// changes (there should be no changes in Xamarin.iOS.dll nor mscorlib.dll, even after linking)
 
+					timestamp = DateTime.Now;
+					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
+
 					// Rebuild the extension's .exe
 					extension.CreateTemporaryServiceExtension (extraCode: codeB);
 					mtouch.AssertExecute (MTouchAction.BuildDev, "change extension executable");
