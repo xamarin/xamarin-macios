@@ -1519,6 +1519,11 @@ The Objective-C name for the type in question is not a valid Objective-C identif
 
 Please use a valid Objective-C identifier.
 
+### <a name="MT4169"/>MT4169: Failed to generate a P/Invoke wrapper for {method}: {message}
+
+Xamarin.iOS failed to generate a P/Invoke wrapper function for the mentioned.
+Please check the reported error message for the underlying cause.
+
 # MT5xxx: GCC and toolchain error messages
 
 ### MT51xx: Compilation
