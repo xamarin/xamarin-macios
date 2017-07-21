@@ -4025,7 +4025,8 @@ namespace XamCore.UIKit {
 		[Export ("reorderingCadence", ArgumentSemantic.Assign)]
 		UICollectionViewReorderingCadence ReorderingCadence { get; set; }
 
-		[iOS (11,0)]
+		[NoWatch]
+		[TV (11,0), iOS (11,0)]
 		[Export ("hasUncommittedUpdates")]
 		bool HasUncommittedUpdates { get; }
 
@@ -11346,15 +11347,18 @@ namespace XamCore.UIKit {
 		[NullAllowed, Export ("dropDelegate", ArgumentSemantic.Weak)]
 		IUITableViewDropDelegate DropDelegate { get; set; }
 
+		[NoWatch]
 		[TV (11,0), iOS (11,0)]
 		[Export ("separatorInsetReference", ArgumentSemantic.Assign)]
 		UITableViewSeparatorInsetReference SeparatorInsetReference { get; set; }
 
+		[NoWatch]
 		[TV (11,0), iOS (11,0)]
 		[Async]
 		[Export ("performBatchUpdates:completion:")]
 		void PerformBatchUpdates ([NullAllowed] Action updates, [NullAllowed] Action<bool> completion);
 		
+		[NoWatch]
 		[TV (11,0), iOS (11,0)]
 		[Export ("hasUncommittedUpdates")]
 		bool HasUncommittedUpdates { get; }
@@ -11909,13 +11913,13 @@ namespace XamCore.UIKit {
 		[return: NullAllowed]
 		NSIndexPath GetIndexPathForPreferredFocusedView (UITableView tableView);
 
-		[NoTV]
+		[NoWatch, NoTV]
 		[iOS (11,0)]
 		[Export ("tableView:leadingSwipeActionsConfigurationForRowAtIndexPath:")]
 		[return: NullAllowed]
 		UISwipeActionsConfiguration GetLeadingSwipeActionsConfiguration (UITableView tableView, NSIndexPath indexPath);
 
-		[NoTV]
+		[NoWatch, NoTV]
 		[iOS (11,0)]
 		[Export ("tableView:trailingSwipeActionsConfigurationForRowAtIndexPath:")]
 		[return: NullAllowed]
@@ -17096,8 +17100,7 @@ namespace XamCore.UIKit {
 
 	[NoWatch, NoTV]
 	[iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface UISpringLoadedInteractionContext {
 		[Abstract]
 		[Export ("state")]
@@ -17118,8 +17121,7 @@ namespace XamCore.UIKit {
 
 	[NoWatch, NoTV]
 	[iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface UISpringLoadedInteractionSupporting {
 		[Abstract]
 		[Export ("springLoaded")]
