@@ -2,7 +2,7 @@ using System;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.PhotosUI {
-
+#if !MONOMAC
 	[TV (10,0)]
 	[iOS (9,1)]
 	[Native]
@@ -22,4 +22,5 @@ namespace XamCore.PhotosUI {
 		OverContent = 1 << 0,
 		LiveOff = 1 << 1,
 	}
+#endif
 }
