@@ -16162,6 +16162,7 @@ namespace XamCore.UIKit {
 	interface IUIDragDropSession {}
 	interface IUIDragAnimating {}
 	interface IUIDragSession {}
+	interface IUIDragInteractionDelegate {}
 	interface IUIDropInteractionDelegate {}
 		
 #if !WATCH
@@ -16290,6 +16291,87 @@ namespace XamCore.UIKit {
 		NSObject LocalContext { get; set; }
 	}
 
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UIDragInteraction : UIInteraction {
+		[Export ("initWithDelegate:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (IUIDragInteractionDelegate @delegate);
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		IUIDragInteractionDelegate Delegate { get; }
+
+		[Export ("allowsSimultaneousRecognitionDuringLift")]
+		bool AllowsSimultaneousRecognitionDuringLift { get; set; }
+
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+
+		[Static]
+		[Export ("enabledByDefault")]
+		bool EnabledByDefault { [Bind ("isEnabledByDefault")] get; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface UIDragInteractionDelegate {
+		[Abstract]
+		[Export ("dragInteraction:itemsForBeginningSession:")]
+		UIDragItem[] GetItemsForBeginningSession (UIDragInteraction interaction, IUIDragSession session);
+
+		[Export ("dragInteraction:previewForLiftingItem:session:")]
+		[return: NullAllowed]
+		UITargetedDragPreview GetPreviewForLiftingItem (UIDragInteraction interaction, UIDragItem item, IUIDragSession session);
+
+		[Export ("dragInteraction:willAnimateLiftWithAnimator:session:")]
+		void WillAnimateLift (UIDragInteraction interaction, IUIDragAnimating animator, IUIDragSession session);
+
+		[Export ("dragInteraction:sessionWillBegin:")]
+		void SessionWillBegin (UIDragInteraction interaction, IUIDragSession session);
+
+		[Export ("dragInteraction:sessionAllowsMoveOperation:")]
+		bool SessionAllowsMoveOperation (UIDragInteraction interaction, IUIDragSession session);
+
+		[Export ("dragInteraction:sessionIsRestrictedToDraggingApplication:")]
+		bool SessionIsRestrictedToDraggingApplication (UIDragInteraction interaction, IUIDragSession session);
+
+		[Export ("dragInteraction:prefersFullSizePreviewsForSession:")]
+		bool PrefersFullSizePreviews (UIDragInteraction interaction, IUIDragSession session);
+
+		[Export ("dragInteraction:sessionDidMove:")]
+		void SessionDidMove (UIDragInteraction interaction, IUIDragSession session);
+
+		[Export ("dragInteraction:session:willEndWithOperation:")]
+		void SessionWillEnd (UIDragInteraction interaction, IUIDragSession session, UIDropOperation operation);
+
+		[Export ("dragInteraction:session:didEndWithOperation:")]
+		void SessionDidEnd (UIDragInteraction interaction, IUIDragSession session, UIDropOperation operation);
+
+		[Export ("dragInteraction:sessionDidTransferItems:")]
+		void SessionDidTransferItems (UIDragInteraction interaction, IUIDragSession session);
+
+		[Export ("dragInteraction:itemsForAddingToSession:withTouchAtPoint:")]
+		UIDragItem[] GetItemsForAddingToSession (UIDragInteraction interaction, IUIDragSession session, CGPoint point);
+
+		[Export ("dragInteraction:sessionForAddingItems:withTouchAtPoint:")]
+		[return: NullAllowed]
+		IUIDragSession GetSessionForAddingItems (UIDragInteraction interaction, IUIDragSession[] sessions, CGPoint point);
+
+		[Export ("dragInteraction:session:willAddItems:forInteraction:")]
+		void WillAddItems (UIDragInteraction interaction, IUIDragSession session, UIDragItem[] items, UIDragInteraction addingInteraction);
+
+		[Export ("dragInteraction:previewForCancellingItem:withDefault:")]
+		[return: NullAllowed]
+		UITargetedDragPreview GetPreviewForCancellingItem (UIDragInteraction interaction, UIDragItem item, UITargetedDragPreview defaultPreview);
+
+		[Export ("dragInteraction:item:willAnimateCancelWithAnimator:")]
+		void WillAnimateCancel (UIDragInteraction interaction, UIDragItem item, IUIDragAnimating animator);
+	}
+
 	[NoWatch, NoTV, iOS (11,0)]
 	[BaseType (typeof(NSObject))] // If Apple adds a delegate setter: Delegates=new string [] {"Delegate"}, Events=new Type [] { typeof (UIDropInteractionDelegate)})]
 	[DisableDefaultCtor]
@@ -16335,7 +16417,7 @@ namespace XamCore.UIKit {
 	
 		[Export ("dropInteraction:previewForDroppingItem:withDefault:")]
 		[return: NullAllowed][DelegateName("UIDropInteractionPreviewForItem"), NoDefaultValue]
-		UITargetedDragPreview PreviewForDroppingItem (UIDropInteraction interaction, UIDragItem item, UITargetedDragPreview defaultPreview);
+		UITargetedDragPreview GetPreviewForDroppingItem (UIDropInteraction interaction, UIDragItem item, UITargetedDragPreview defaultPreview);
 	
 		[Export ("dropInteraction:item:willAnimateDropWithAnimator:"), EventArgs("UIDropInteractionAnimation")]
 		void WillAnimateDrop (UIDropInteraction interaction, UIDragItem item, IUIDragAnimating animator);
