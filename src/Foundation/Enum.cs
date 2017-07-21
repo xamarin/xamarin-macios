@@ -1258,7 +1258,7 @@ namespace XamCore.Foundation  {
 	public enum NSMeasurementFormatterUnitOptions : nuint {
 		ProvidedUnit = (1 << 0),
 		NaturalScale = (1 << 1),
-		TemperatureWithoutUnit = (1 << 2),
+		TemperatureWithoutUnit = (1 << 2)
 	}
 
 

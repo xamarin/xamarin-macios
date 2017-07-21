@@ -9676,6 +9676,26 @@ namespace XamCore.Foundation
 		[NoWatch, NoTV, NoMac, iOS (11, 0)]
 		[NullAllowed, Export ("suggestedName")]
 		string SuggestedName { get; set; }
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("initWithObject:")]
+		IntPtr Constructor (INSItemProviderWriting @object);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("registerObject:visibility:")]
+		void RegisterObject (INSItemProviderWriting @object, NSItemProviderRepresentationVisibility visibility);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("registerObjectOfClass:visibility:loadHandler:")]
+		void RegisterObject (Class aClass, NSItemProviderRepresentationVisibility visibility, RegisterObjectRepresentationLoadHandler loadHandler);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("canLoadObjectOfClass:")]
+		bool CanLoadObjectOfClass (Class aClass);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Async, Export ("loadObjectOfClass:completionHandler:")]
+		NSProgress LoadObjectOfClass (Class aClass, Action<INSItemProviderReading, NSError> completionHandler);
 	}
     
 	delegate NSProgress RegisterFileRepresentationLoadHandler ([BlockCallback] RegisterFileRepresentationCompletionHandler completionHandler);
@@ -9683,6 +9703,8 @@ namespace XamCore.Foundation
 	delegate void ItemProviderDataCompletionHandler (NSData data, NSError error);
 	delegate NSProgress RegisterDataRepresentationLoadHandler ([BlockCallback] ItemProviderDataCompletionHandler completionHandler);
 	delegate void LoadInPlaceFileRepresentationHandler (NSUrl fileUrl, bool isInPlace, NSError error);
+	delegate NSProgress RegisterObjectRepresentationLoadHandler ([BlockCallback] RegisterObjectRepresentationCompletionHandler completionHandler);
+	delegate void RegisterObjectRepresentationCompletionHandler (NSItemProviderWriting @object, NSError error);
 
 	interface INSItemProviderReading {}
 	
@@ -9733,11 +9755,9 @@ namespace XamCore.Foundation
 		//[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		//string[] WritableTypeIdentifiersForItemProvider { get; }
 
-		// @optional @property (readonly, copy, atomic) NSArray<NSString *> * _Nonnull writableTypeIdentifiersForItemProvider;
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		string[] WritableTypeIdentifiersForItemProvider { get; }
 
-		// @required -(NSProgress * _Nullable)loadDataWithTypeIdentifier:(NSString * _Nonnull)typeIdentifier forItemProviderCompletionHandler:(void (^ _Nonnull)(NSData * _Nullable, NSError * _Nullable))completionHandler;
 		[Async, Export ("loadDataWithTypeIdentifier:forItemProviderCompletionHandler:")]
 		[return: NullAllowed]
 		NSProgress LoadData (string typeIdentifier, Action<NSData, NSError> completionHandler);
@@ -10228,7 +10248,7 @@ namespace XamCore.Foundation
 	// init returns NIL
 	[DisableDefaultCtor]
 	partial interface NSValue : NSSecureCoding, NSCopying {
-		[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.TV_11_0 | Platform.Watch_4_0, Message="This method is unsafe because it could potentially cause buffer overruns.  Use 'StoreValueAtAddress (IntPtr, nuint)' instead.")]
+		[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.TV_11_0 | Platform.Watch_4_0, Message="Potential for buffer overruns. Use 'StoreValueAtAddress (IntPtr, nuint)' instead.")]
 		[Export ("getValue:")]
 		void StoreValueAtAddress (IntPtr value);
 
@@ -11486,7 +11506,7 @@ namespace XamCore.Foundation
 #endif
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("performAsCurrentWithPendingUnitCount:usingBlock:")]
+		[Async, Export ("performAsCurrentWithPendingUnitCount:usingBlock:")]
 		void PerformAsCurrent (long unitCount, Action work);
 
 		[Export ("finished")]

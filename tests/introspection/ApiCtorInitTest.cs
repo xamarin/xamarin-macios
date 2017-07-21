@@ -171,6 +171,7 @@ namespace Introspection {
 			//***** ApiCtorInitTest.DefaultCtorAllowed
 			//2017-01-23 15:52:09.762 introspection[4084:16658258] *** -[NSKeyedArchiver dealloc]: warning: NSKeyedArchiver deallocated without having had -finishEncoding called on it.
 			(obj as NSKeyedArchiver)?.FinishEncoding ();
+
 			obj.Dispose ();
 		}
 
