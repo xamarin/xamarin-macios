@@ -66,7 +66,7 @@ namespace XamCore.CoreGraphics {
 		internal IntPtr handle;
 
 #if !XAMCORE_3_0
-		[Obsolete ("Use a real `null` value instead of this managed wrapper over a null native instance")]
+		[Obsolete ("Use a real 'null' value instead of this managed wrapper over a null native instance.")]
 #if XAMCORE_2_0
 		readonly
 #endif
@@ -143,7 +143,7 @@ namespace XamCore.CoreGraphics {
 		}
 
 #if !XAMCORE_3_0
-		[Obsolete ("This method has been renamed CreateDeviceCmyk()")]
+		[Obsolete ("This method has been renamed 'CreateDeviceCmyk'.")]
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static /* CGColorSpaceRef */ CGColorSpace CreateDeviceCMYK ()
 		{

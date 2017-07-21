@@ -226,7 +226,7 @@ namespace XamCore.Foundation  {
 		WithoutOverwriting  = 2,
 			
 #if !XAMCORE_2_0
-		[Obsolete ("No longer available")]
+		[Obsolete ("No longer available.")]
 		Coordinated = 1 << 2,
 #endif
 			
@@ -805,7 +805,7 @@ namespace XamCore.Foundation  {
 #if !MONOMAC || !XAMCORE_3_0
 	[Native]
 #if MONOMAC
-	[Obsolete ("Use NSWritingDirection in AppKit instead")]
+	[Obsolete ("Use NSWritingDirection in AppKit instead.")]
 #endif
 	public enum NSWritingDirection : nint {
 		Natural = -1, LeftToRight = 0, RightToLeft = 1,
@@ -929,7 +929,7 @@ namespace XamCore.Foundation  {
 	}
 
 #if !XAMCORE_3_0
-	[iOS (7,0)][Deprecated (PlatformName.iOS, 9, 0, message: "Use NSWritingDirectionFormatType")]
+	[iOS (7,0)][Deprecated (PlatformName.iOS, 9, 0, message: "Use 'NSWritingDirectionFormatType'.")]
 	[Flags]
 	[Native]
 	public enum NSTextWritingDirection : nint {
@@ -970,13 +970,13 @@ namespace XamCore.Foundation  {
 
 	[Flags]
 	public enum NSActivityOptions : ulong {
-		IdleDisplaySleepDisabled = 1 << 40,
-		IdleSystemSleepDisabled = 1 << 20,
-		SuddenTerminationDisabled = 1 << 14,
-		AutomaticTerminationDisabled = 1 << 15,
-		UserInitiated = 0x00FFFFFF | IdleSystemSleepDisabled,
-		Background = 0x000000ff,
-		LatencyCritical = 0xFF00000000,
+		IdleDisplaySleepDisabled = 1UL << 40,
+		IdleSystemSleepDisabled = 1UL << 20,
+		SuddenTerminationDisabled = 1UL << 14,
+		AutomaticTerminationDisabled = 1UL << 15,
+		UserInitiated = 0x00FFFFFFUL | IdleSystemSleepDisabled,
+		Background = 0x000000ffUL,
+		LatencyCritical = 0xFF00000000UL,
 	}
 
 	[Native]

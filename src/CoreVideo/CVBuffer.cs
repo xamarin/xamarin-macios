@@ -166,6 +166,17 @@ namespace XamCore.CoreVideo {
 			return (NSDictionary) Runtime.GetNSObject (CVBufferGetAttachments (handle, attachmentMode));
 		}
 
+#if XAMCORE_2_0
+		// There is some API that needs a more strongly typed version of a NSDictionary
+		// and there is no easy way to downcast from NSDictionary to NSDictionary<TKey, TValue>
+		public NSDictionary<TKey, TValue> GetAttachments<TKey, TValue> (CVAttachmentMode attachmentMode)
+			where TKey : class, INativeObject
+			where TValue : class, INativeObject
+		{
+			return Runtime.GetNSObject<NSDictionary<TKey, TValue>> (CVBufferGetAttachments (handle, attachmentMode));
+		}
+#endif
+
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static void CVBufferPropagateAttachments (/* CVBufferRef */ IntPtr sourceBuffer, /* CVBufferRef */ IntPtr destinationBuffer);
 

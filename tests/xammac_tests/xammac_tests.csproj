@@ -584,9 +584,6 @@
     <Compile Include="..\monotouch-test\EventKit\AlarmTest.cs">
       <Link>EventKit\AlarmTest.cs</Link>
     </Compile>
-    <Compile Include="..\monotouch-test\EventKit\CalendarItemTest.cs">
-      <Link>EventKit\CalendarItemTest.cs</Link>
-    </Compile>
     <Compile Include="..\monotouch-test\EventKit\CalendarTest.cs">
       <Link>EventKit\CalendarTest.cs</Link>
     </Compile>

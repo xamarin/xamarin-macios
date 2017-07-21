@@ -53,6 +53,8 @@ namespace Introspection {
 			case "MonoTouch.MetalKit":
 			case "MetalPerformanceShaders":
 			case "MonoTouch.MetalPerformanceShaders":
+			case "CoreNFC": // Only available on device
+			case "DeviceCheck": // Only available on device
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;
@@ -134,6 +136,7 @@ namespace Introspection {
 			case "MTKTextureLoaderOptionTextureCPUCacheMode":
 			case "MTKModelErrorDomain":
 			case "MTKModelErrorKey":
+			case "NFCISO15693TagResponseErrorKey": // Not in simulator since no NFC on it
 				return Runtime.Arch == Arch.SIMULATOR;
 			default:
 				return false;

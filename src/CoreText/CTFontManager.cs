@@ -64,7 +64,7 @@ namespace XamCore.CoreText {
 			return CTFontManagerIsSupportedFont (url.Handle);
 		}
 #elif !XAMCORE_3_0
-		[Obsolete ("API not available on iOS, it will always return false")]
+		[Obsolete ("API not available on iOS, it will always return false.")]
 		[Availability (Deprecated = Platform.Mac_10_6, Unavailable = Platform.iOS_Version)]
 		public static bool IsFontSupported (NSUrl url)
 		{

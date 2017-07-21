@@ -61,6 +61,12 @@ namespace Introspection {
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;
+			// Xcode 9
+			case "CoreNFC":
+			case "DeviceCheck":
+				if (Runtime.Arch == Arch.SIMULATOR)
+					return true;
+				break;
 
 			// Apple does not ship a PushKit for every arch on some devices :(
 //			case "PushKit":
@@ -86,8 +92,9 @@ namespace Introspection {
 			case "UILocalNotification":
 				return true;
 
-			// Metal is not available on the (iOS8) simulator
+			// Metal is not available on the simulator
 			case "CAMetalLayer":
+			case "SKRenderer":
 				return (Runtime.Arch == Arch.SIMULATOR);
 
 			// iOS 10 - this type can only be instantiated on devices, but the selectors are forwarded
@@ -578,6 +585,8 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (7, 0);
 				case "HKWorkoutEvent":
 					return !TestRuntime.CheckXcodeVersion (8, 0);
+				case "HMLocationEvent":
+					return !TestRuntime.CheckXcodeVersion (9, 0);
 				}
 				break;
 
@@ -633,6 +642,9 @@ namespace Introspection {
 				case "HKBiologicalSexObject":
 				case "HKBloodTypeObject":
 					return !TestRuntime.CheckXcodeVersion (7, 0);
+				case "MPSKernel":
+				case "MPSCnnConvolutionDescriptor":
+					return !TestRuntime.CheckXcodeVersion (9, 0);
 #if __TVOS__
 				case "SKAttribute":
 				case "SKAttributeValue":
@@ -649,6 +661,12 @@ namespace Introspection {
 					return true;
 				break;
 #endif
+			case "mutableCopyWithZone:":
+				switch (declaredType.Name) {
+				case "HMLocationEvent":
+					return !TestRuntime.CheckXcodeVersion (9, 0);
+				}
+				break;
 			}
 
 			return base.CheckResponse (value, actualType, method, ref name);

@@ -97,10 +97,12 @@ APPKIT_SOURCES = \
 	AppKit/NSDraggingInfo.cs \
 	AppKit/NSDraggingSession.cs \
 	AppKit/NSDraggingItem.cs \
+	AppKit/NSFont.cs \
 	AppKit/NSPasteboard.cs \
 	AppKit/NSSharingServiceDelegate.cs \
 	AppKit/NSDocument.cs \
 	AppKit/NSEvent.cs \
+	AppKit/NSFont.cs \
 	AppKit/NSGestureRecognizer.cs \
 	AppKit/NSGradient.cs \
 	AppKit/NSGraphics.cs \
@@ -149,6 +151,11 @@ APPKIT_SOURCES = \
 	AppKit/NSCollectionViewLayout.cs \
 	AppKit/NSColorPickerTouchBarItem.cs \
 	AppKit/NSSliderTouchBarItem.cs
+
+# ARKit
+
+ARKIT_SOURCES = \
+	ARKit/ARPointCloud.cs \
 
 # AssetsLibrary
 
@@ -586,10 +593,18 @@ EVENTKIT_SOURCES = \
 EVENTKITUI_CORE_SOURCES = \
 	EventKitUI/Defs.cs \
 
+EVENTKITUI_SOURCES = \
+	EventKitUI/EKUIBundle.cs \
+
 # ExternalAccessory
 
 EXTERNALACCESSORY_API_SOURCES = \
 	ExternalAccessory/EAEnums.cs \
+
+# FileProvider
+
+FILEPROVIDER_SOURCES = \
+	FileProvider/NSFileProviderItemIdentifierExtensions.cs \
 
 # FinderSync
 
@@ -710,6 +725,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSTimeZone.cs \
 	Foundation/NSUbiquitousKeyValueStore.cs \
 	Foundation/NSUndoManager.cs \
+	Foundation/NSUnit.cs \
 	Foundation/NSUrl.cs \
 	Foundation/NSUrlComponents.cs \
 	Foundation/NSUrlConnection.cs \
@@ -802,6 +818,10 @@ HOMEKIT_SOURCES = \
 	HomeKit/HMCharacteristicProperties.cs \
 	HomeKit/HMEventTrigger.cs \
 	HomeKit/HMHome.cs \
+	HomeKit/HMPresenceEvent.cs \
+	HomeKit/HMSignificantTimeEvent.cs \
+	HomeKit/HMMutablePresenceEvent.cs \
+	HomeKit/HMMutableSignificantTimeEvent.cs \
 	HomeKit/HMService.cs \
 
 # iAd
@@ -866,6 +886,7 @@ MAPKIT_CORE_SOURCES = \
 MAPKIT_SOURCES = \
 	MapKit/MKCircle.cs \
 	MapKit/MKDirections.cs \
+	MapKit/MKFeatureDisplayPriority.cs \
 	MapKit/MKGeodesicPolyline.cs \
 	MapKit/MKLocalSearch.cs \
 	MapKit/MKMapItem.cs \
@@ -1307,6 +1328,7 @@ UIKIT_SOURCES = \
 	UIKit/UIDocumentInteractionController.cs \
 	UIKit/UIDocumentMenuViewController.cs \
 	UIKit/UIDocumentPickerViewController.cs \
+	UIKit/UIDragDropSessionExtensions.cs \
 	UIKit/UIDynamicAnimator.cs \
 	UIKit/UIEnumsExtensions.cs \
 	UIKit/UIEvent.cs \
@@ -1382,6 +1404,13 @@ VIDEOTOOLBOX_SOURCES = \
 	VideoToolbox/VTVideoEncoder.cs \
 	VideoToolbox/VTUtilities.cs \
 	VideoToolbox/VTPixelTransferProperties.cs \
+
+# Vision
+
+VISION_SOURCES = \
+	Vision/VNFaceLandmarkRegion2D.cs \
+	Vision/VNRequest.cs \
+	Vision/VNUtils.cs \
 
 # WatchConnectivity
 
@@ -1468,6 +1497,8 @@ SHARED_SOURCES = \
 	../runtime/Delegates.generated.cs \
 	MonoNativeFunctionWrapperAttribute.cs \
 	NativeTypes/NMath.cs \
+	CoreML/MLDictionaryFeatureProvider.cs \
+	CoreML/MLMultiArray.cs \
 	ObjCRuntime/AdoptsAttribute.cs \
 	ObjCRuntime/BackingField.cs \
 	ObjCRuntime/BaseWrapper.cs \
@@ -1519,6 +1550,7 @@ SHARED_SOURCES = \
 COMMON_FRAMEWORKS =         \
 	AVFoundation            \
 	CoreFoundation          \
+	CoreML                  \
 	Foundation              \
 	GameKit                 \
 	SceneKit                \
@@ -1587,6 +1619,7 @@ MAC_FRAMEWORKS =            \
 	StoreKit                \
 	SystemConfiguration     \
 	VideoToolbox            \
+	Vision                  \
 	WebKit                  \
 	WKWebKit                \
 
@@ -1598,6 +1631,7 @@ IOS_FRAMEWORKS =         \
 	AdSupport \
 	AddressBook \
 	AddressBookUI \
+	ARKit \
 	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \
@@ -1616,19 +1650,23 @@ IOS_FRAMEWORKS =         \
 	CoreMIDI \
 	CoreMedia \
 	CoreMotion \
+	CoreNFC \
 	CoreSpotlight \
 	CoreTelephony \
 	CoreText \
 	CoreVideo \
+	DeviceCheck \
 	EventKit \
 	EventKitUI \
 	ExternalAccessory \
+	FileProvider \
 	GLKit \
 	GameController \
 	GameplayKit \
 	HealthKit \
 	HealthKitUI \
 	HomeKit \
+	IdentityLookup \
 	ImageIO \
 	Intents \
 	IntentsUI \
@@ -1668,6 +1706,7 @@ IOS_FRAMEWORKS =         \
 	UserNotificationsUI \
 	VideoToolbox \
 	VideoSubscriberAccount \
+	Vision \
 	WatchConnectivity \
 	WatchKit \
 	WKWebKit \
@@ -1716,6 +1755,7 @@ TVOS_FRAMEWORKS =           \
 	CoreSpotlight			\
 	CoreText                \
 	CoreVideo               \
+	DeviceCheck             \
 	ExternalAccessory       \
 	GLKit                   \
 	GameController          \
@@ -1746,6 +1786,7 @@ TVOS_FRAMEWORKS =           \
 	UserNotifications       \
 	VideoSubscriberAccount  \
 	VideoToolbox            \
+	Vision            \
 
 #
 # Compute the SOURCES variables.

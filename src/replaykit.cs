@@ -61,7 +61,7 @@ namespace XamCore.ReplayKit {
 		[Export ("sharedRecorder")]
 		RPScreenRecorder SharedRecorder { get; }
 
-		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use StartRecording(Action<NSError>)")]
+		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use 'StartRecording (Action<NSError>)' instead.")]
 		[Async]
 		[Export ("startRecordingWithMicrophoneEnabled:handler:")]
 		void StartRecording (bool microphoneEnabled, [NullAllowed] Action<NSError> handler);

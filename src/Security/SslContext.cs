@@ -507,7 +507,7 @@ namespace XamCore.Security {
 		[Availability (Deprecated = Platform.iOS_9_0 | Platform.Mac_10_11)]
 		extern unsafe static /* OSStatus */ SslStatus SSLSetEncryptionCertificate (/* SSLContextRef */ IntPtr context, /* CFArrayRef */ IntPtr certRefs);
 
-		[Availability (Deprecated = Platform.iOS_9_0 | Platform.Mac_10_11, Message = "Export ciphers are not available anymore")]
+		[Availability (Deprecated = Platform.iOS_9_0 | Platform.Mac_10_11, Message = "Export ciphers are not available anymore.")]
 		public SslStatus SetEncryptionCertificate (SecIdentity identify, IEnumerable<SecCertificate> certificates)
 		{
 			using (var array = Bundle (identify, certificates)) {
@@ -542,8 +542,8 @@ namespace XamCore.Security {
 		// TODO: Headers say /* Deprecated, does nothing */ but we are not completly sure about it since there is no deprecation macro
 		// Plus they added new members to SslSessionStrengthPolicy enum opened radar://23379052 https://trello.com/c/NbdTLVD3
 		// Xcode 8 beta 1: the P/Invoke was removed completely.
-		[Availability (Deprecated = Platform.iOS_9_2 | Platform.Mac_10_11, Unavailable = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "SetSessionStrengthPolicy is not available anymore")]
-		[Obsolete ("SetSessionStrengthPolicy is not available anymore.")]
+		[Availability (Deprecated = Platform.iOS_9_2 | Platform.Mac_10_11, Unavailable = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "'SetSessionStrengthPolicy' is not available anymore.")]
+		[Obsolete ("'SetSessionStrengthPolicy' is not available anymore.")]
 		public SslStatus SetSessionStrengthPolicy (SslSessionStrengthPolicy policyStrength)
 		{
 			Console.WriteLine ("SetSessionStrengthPolicy is not available anymore.");

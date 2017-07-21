@@ -30,7 +30,7 @@ namespace XamCore.CoreBluetooth {
 
 	// NSInteger -> CBCentralManager.h
 	[Introduced (PlatformName.iOS, 5, 0)]
-	[Deprecated (PlatformName.iOS, 10, 0, message: "Use CBManagerState instead")]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CBManagerState' instead.")]
 	[Native]
 	public enum CBCentralManagerState : nint {
 		Unknown = CBManagerState.Unknown,
@@ -43,7 +43,7 @@ namespace XamCore.CoreBluetooth {
 
 	// NSInteger -> CBPeripheralManager.h
 	[Introduced (PlatformName.iOS, 6, 0)]
-	[Deprecated (PlatformName.iOS, 10, 0, message: "Use CBManagerState instead")]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CBManagerState' instead.")]
 	[Native]
 	public enum CBPeripheralManagerState : nint {
 		Unknown = CBManagerState.Unknown,

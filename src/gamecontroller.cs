@@ -56,7 +56,7 @@ namespace XamCore.GameController {
 	partial interface GCControllerButtonInput {
 
 #if !XAMCORE_4_0
-		[Obsolete ("Use the ValueChangedHandler property")]
+		[Obsolete ("Use the 'ValueChangedHandler' property.")]
 		[Wrap ("ValueChangedHandler = handler;", IsVirtual = true)]
 		void SetValueChangedHandler (GCControllerButtonValueChanged handler);
 #endif
@@ -73,7 +73,7 @@ namespace XamCore.GameController {
 
 #if !XAMCORE_4_0
 		[iOS (8,0), Mac (10,10)]
-		[Obsolete ("Use the PressedChangedHandler property")]
+		[Obsolete ("Use the 'PressedChangedHandler' property.")]
 		[Wrap ("PressedChangedHandler = handler;", IsVirtual = true)]
 		void SetPressedChangedHandler (GCControllerButtonValueChanged handler);
 #endif
@@ -310,7 +310,7 @@ namespace XamCore.GameController {
 		GCController Controller { get; }
 
 #if !XAMCORE_4_0
-		[Obsolete ("Use the ValueChangedHandler property")]
+		[Obsolete ("Use the 'ValueChangedHandler' property.")]
 		[Wrap ("ValueChangedHandler = handler;", IsVirtual = true)]
 		void SetValueChangedHandler (Action<GCMotion> handler);
 #endif
@@ -332,6 +332,12 @@ namespace XamCore.GameController {
 		[NoTV] // Xcode 7.2
 		[Export ("rotationRate", ArgumentSemantic.Assign)]
 		Vector3d RotationRate { get; }
+
+		[NoTV]
+		[iOS (11,0)]
+		[Mac (10,13, onlyOn64: true)]
+		[Export ("hasAttitudeAndRotationRate")]
+		bool HasAttitudeAndRotationRate { get; }
 	}
 
 	[NoMac]

@@ -70,5 +70,12 @@ namespace XamCore.LocalAuthentication {
 		[Export ("maxBiometryFailures")]
 		NSNumber MaxBiometryFailures { get; set; }
 #endif
+		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
+		[Export ("localizedReason")]
+		string LocalizedReason { get; set; }
+
+		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
+		[Export ("interactionNotAllowed")]
+		bool InteractionNotAllowed { get; set; }
 	}
 }

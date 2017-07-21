@@ -85,12 +85,14 @@ namespace XamCore.CoreBluetooth {
 
 		[NoTV]
 		[Availability (Obsoleted = Platform.iOS_9_0)]
+		[Mac (10, 7, onlyOn64: true)] // Was removed from 32-bit in 10.13 unannounced
 		[Export ("retrievePeripherals:"), Internal]
 		void RetrievePeripherals (NSArray peripheralUUIDs);
 
 		[NoTV]
+		[Mac (10, 7, onlyOn64: true)] // Was removed from 32-bit in 10.13 unannounced
 		[Export ("retrieveConnectedPeripherals")]
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0, Message = "Use RetrievePeripheralsWithIdentifiers instead")]
+		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0, Message = "Use 'RetrievePeripheralsWithIdentifiers' instead.")]
 		void RetrieveConnectedPeripherals ();
 
 		[Export ("scanForPeripheralsWithServices:options:"), Internal]
@@ -363,7 +365,7 @@ namespace XamCore.CoreBluetooth {
 		[NullAllowed]
 		[Export ("UUID", ArgumentSemantic.Retain)]
 		[Override]
-		CBUUID UUID { get; set; }
+		CBUUID UUID { get; [Availability (Obsoleted = Platform.Mac_10_13)] set; }
 
 		[Export ("properties", ArgumentSemantic.Assign)]
 		[Override]
@@ -440,6 +442,7 @@ namespace XamCore.CoreBluetooth {
 		[NoTV]
 		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0)]
 		[Export ("isConnected")]
+		[Mac (10, 7, onlyOn64: true)] // Was removed from 32-bit in 10.13 unannounced
 		bool IsConnected { get;  }
 
 		[Export ("services", ArgumentSemantic.Retain)]
@@ -509,7 +512,7 @@ namespace XamCore.CoreBluetooth {
 	[Model]
 	[Protocol]
 	interface CBPeripheralDelegate {
-		[Availability (Deprecated=Platform.iOS_8_0, Message="Use RssiRead")]
+		[Availability (Deprecated=Platform.iOS_8_0, Message="Use 'RssiRead' instead.")]
 		[Export ("peripheralDidUpdateRSSI:error:"), EventArgs ("NSError", true)]
 		void RssiUpdated (CBPeripheral peripheral, NSError error);
 
@@ -518,7 +521,7 @@ namespace XamCore.CoreBluetooth {
 		// This API was removed or never existed. Can't cleanly remove due to EventsArgs/Delegate
 		[Availability (Introduced=Platform.iOS_8_0)]
 		[Export ("xamarin:selector:removed:"), EventArgs ("CBRssi")]
-		[Obsolete ("No longer an OS X API - it will never be called")]
+		[Obsolete ("It will never be called.")]
 		void RssiRead (CBPeripheral peripheral, NSNumber rssi, NSError error);
 #endif
 #else
@@ -618,7 +621,7 @@ namespace XamCore.CoreBluetooth {
 #if !MONOMAC
 		[Override]
 #endif
-		CBUUID UUID { get; set; }
+		CBUUID UUID { get; [Availability (Obsoleted = Platform.Mac_10_13)] set; }
 
 		[NoTV]
 		[Export ("isPrimary")]

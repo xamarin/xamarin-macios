@@ -204,6 +204,10 @@ namespace XamCore.CoreMotion {
 		[Since (5,0)]
 		[Export ("magneticField")]
 		CMCalibratedMagneticField MagneticField { get; }
+
+		[Watch (4,0), iOS (11,0)]
+		[Export ("heading")]
+		double Heading { get; }
 	}
 
 	[BaseType (typeof (CMLogItem))]
@@ -236,7 +240,7 @@ namespace XamCore.CoreMotion {
 	[NoWatch]
 	[Since (7,0)]
 	[BaseType (typeof (NSObject))]
-	[Availability (Deprecated = Platform.iOS_8_0, Message = "Use CMPedometer instead")]
+	[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'CMPedometer' instead.")]
 	interface CMStepCounter {
 
 		[Static]
@@ -340,6 +344,11 @@ namespace XamCore.CoreMotion {
 		[Watch (3,0)][iOS (10,0)]
 		[Export ("stopPedometerEventUpdates")]
 		void StopPedometerEventUpdates ();
+
+		[Watch (4,0), iOS (11,0)]
+		[Static]
+		[Export ("authorizationStatus")]
+		CMAuthorizationStatus AuthorizationStatus { get; }
 	}
 
 	[Since (7,0)]
@@ -365,6 +374,11 @@ namespace XamCore.CoreMotion {
 
 		[Export ("stopActivityUpdates")]
 		void StopActivityUpdates ();
+
+		[Watch (4,0), iOS (11,0)]
+		[Static]
+		[Export ("authorizationStatus")]
+		CMAuthorizationStatus AuthorizationStatus { get; }
 	}
 
 	[Since (7,0)]
@@ -421,6 +435,20 @@ namespace XamCore.CoreMotion {
 
 		[Export ("stopRelativeAltitudeUpdates")]
 		void StopRelativeAltitudeUpdates ();
+
+		[Watch (4,0), iOS (11,0)]
+		[Static]
+		[Export ("authorizationStatus")]
+		CMAuthorizationStatus AuthorizationStatus { get; }
+	}
+
+	[Watch (4,0), iOS (11,0)]
+	[Native]
+	public enum CMAuthorizationStatus : nint {
+		NotDetermined = 0,
+		Restricted,
+		Denied,
+		Authorized,
 	}
 
 	[iOS (9,0)]
@@ -438,6 +466,8 @@ namespace XamCore.CoreMotion {
 		[Export ("isAccelerometerRecordingAvailable")]
 		bool IsAccelerometerRecordingAvailable { get; }
 
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CMSensorRecorder.AuthorizationStatus' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CMSensorRecorder.AuthorizationStatus' instead.")]
 		[Static]
 		[Export ("isAuthorizedForRecording")]
 		bool IsAuthorizedForRecording { get; }
@@ -450,6 +480,11 @@ namespace XamCore.CoreMotion {
 		[iOS (9,3)] // Apple changed the selector in 9.3 and removed the old one
 		[Export ("recordAccelerometerForDuration:")]
 		void RecordAccelerometer (double duration);
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Static]
+		[Export ("authorizationStatus")]
+		CMAuthorizationStatus AuthorizationStatus { get; }
 	}
 
 	[Watch (3,0)][NoTV][iOS (10,0)]

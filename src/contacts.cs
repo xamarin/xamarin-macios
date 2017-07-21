@@ -420,6 +420,14 @@ namespace XamCore.Contacts {
 
 		[Field ("CNLabelContactRelationManager")]
 		NSString Manager { get; }
+
+		[iOS (11,0), Mac (10,13, onlyOn64: true)]
+		[Field ("CNLabelContactRelationSon")]
+		NSString Son { get; }
+
+		[iOS (11,0), Mac (10,13, onlyOn64: true)]
+		[Field ("CNLabelContactRelationDaughter")]
+		NSString Daughter { get; }
 	}
 
 	delegate void CNContactStoreRequestAccessHandler (bool granted, NSError error);
@@ -454,7 +462,7 @@ namespace XamCore.Contacts {
 		NSObject GetUnifiedMeContact (NSArray keys, out NSError error);
 
 #if !XAMCORE_4_0 && !WATCH
-		[Obsolete ("Use the overload that takes CNContactStoreListContactsHandler instead")]
+		[Obsolete ("Use the overload that takes 'CNContactStoreListContactsHandler' instead.")]
 		[Export ("enumerateContactsWithFetchRequest:error:usingBlock:")]
 		bool EnumerateContacts (CNContactFetchRequest fetchRequest, out NSError error, CNContactStoreEnumerateContactsHandler handler);
 
@@ -475,6 +483,7 @@ namespace XamCore.Contacts {
 #endif
 
 		[Export ("defaultContainerIdentifier")]
+		[NullAllowed]
 		string DefaultContainerIdentifier { get; }
 
 		[Notification]
@@ -521,17 +530,17 @@ namespace XamCore.Contacts {
 	[BaseType (typeof (CNContainer))]
 	interface CNContainer_PredicatesExtension {
 
-		[Obsolete ("Use CNContainer.CreatePredicateForContainers instead")]
+		[Obsolete ("Use 'CNContainer.CreatePredicateForContainers' instead.")]
 		[Static]
 		[Export ("predicateForContainersWithIdentifiers:")]
 		NSPredicate GetPredicateForContainers (string [] identifiers);
 
-		[Obsolete ("Use CNContainer.CreatePredicateForContainerOfContact instead")]
+		[Obsolete ("Use 'CNContainer.CreatePredicateForContainerOfContact' instead.")]
 		[Static]
 		[Export ("predicateForContainerOfContactWithIdentifier:")]
 		NSPredicate GetPredicateForContainerOfContact (string contactIdentifier);
 
-		[Obsolete ("Use CNContainer.CreatePredicateForContainerOfGroup instead")]
+		[Obsolete ("Use 'CNContainer.CreatePredicateForContainerOfGroup' instead.")]
 		[Static]
 		[Export ("predicateForContainerOfGroupWithIdentifier:")]
 		NSPredicate GetPredicateForContainerOfGroup (string groupIdentifier);
@@ -617,18 +626,18 @@ namespace XamCore.Contacts {
 	[BaseType (typeof (CNGroup))]
 	interface CNGroup_PredicatesExtension {
 
-		[Obsolete ("Use CNGroup.CreatePredicateForGroups instead")]
+		[Obsolete ("Use 'CNGroup.CreatePredicateForGroups' instead.")]
 		[Static]
 		[Export ("predicateForGroupsWithIdentifiers:")]
 		NSPredicate GetPredicateForGroups (string [] identifiers);
 
-		[Obsolete ("Use CNGroup.CreatePredicateForSubgroupsInGroup instead")]
+		[Obsolete ("Use 'CNGroup.CreatePredicateForSubgroupsInGroup' instead.")]
 		[NoiOS][NoWatch]
 		[Static]
 		[Export ("predicateForSubgroupsInGroupWithIdentifier:")]
 		NSPredicate GetPredicateForSubgroupsInGroup (string parentGroupIdentifier);
 
-		[Obsolete ("Use CNGroup.CreatePredicateForGroupsInContainer instead")]
+		[Obsolete ("Use 'CNGroup.CreatePredicateForGroupsInContainer' instead.")]
 		[Static]
 		[Export ("predicateForGroupsInContainerWithIdentifier:")]
 		NSPredicate GetPredicateForGroupsInContainer (string containerIdentifier);
@@ -988,15 +997,13 @@ namespace XamCore.Contacts {
 	[DisableDefaultCtor] // Apple doc: no handle (nil) if no string (or nil string) is given
 	interface CNPhoneNumber : NSCopying, NSSecureCoding, INSCopying, INSSecureCoding {
 
-		// @required + (instancetype)phoneNumberWithStringValue:(NSString *)stringValue;
 		[Static, Export ("phoneNumberWithStringValue:")]
+		[return: NullAllowed]
 		CNPhoneNumber PhoneNumberWithStringValue (string stringValue);
 
-		// @required - (instancetype)initWithStringValue:(NSString *)string;
 		[Export ("initWithStringValue:")]
 		IntPtr Constructor (string stringValue);
 
-		// @property (readonly, copy, nonatomic) NSString * stringValue;
 		[Export ("stringValue")]
 		string StringValue { get; }
 	}

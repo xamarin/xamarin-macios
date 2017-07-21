@@ -124,7 +124,7 @@ namespace XamCore.MultipeerConnectivity {
 
 		[Abstract]
 		[Export ("session:didFinishReceivingResourceWithName:fromPeer:atURL:withError:")]
-		void DidFinishReceivingResource (MCSession session, string resourceName, MCPeerID fromPeer, NSUrl localUrl, NSError error);
+		void DidFinishReceivingResource (MCSession session, string resourceName, MCPeerID fromPeer, [NullAllowed] NSUrl localUrl, [NullAllowed] NSError error);
 
 		[Abstract]
 		[Export ("session:didReceiveStream:withName:fromPeer:")]

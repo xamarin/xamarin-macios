@@ -269,7 +269,9 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework UserNotifications		\
 	-weak_framework UserNotificationsUI		\
 	-weak_framework Intents					\
-	-weak_framework IntentsUI
+	-weak_framework IntentsUI					\
+						\
+	-weak_framework ARKit
 
 # note: there _was_ no CoreAudioKit.framework or Metal.framework for the simulator (before recent iOS9 betas)
 # note 2: there's no GameKit, in iOS 9 (beta 3 at least), you're supposed to reference GameCenter instead (looks fixed in beta 4)
@@ -382,8 +384,8 @@ TARGETS += $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/Xamarin.WatchOS.r
 endif
 
 ifdef INCLUDE_TVOS
-#TARGETS +=	\
-#	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/Xamarin.TVOS.registrar.a       \
+TARGETS +=	\
+	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/Xamarin.TVOS.registrar.a       \
 
 endif
 

@@ -269,6 +269,8 @@ function install_specific_xcode () {
 
 	log "Executing 'sudo xcode-select -s $XCODE_DEVELOPER_ROOT'"
 	sudo xcode-select -s $XCODE_DEVELOPER_ROOT
+	log "Clearing xcrun cache..."
+	xcrun -k
 
 	ok "Xcode $XCODE_VERSION provisioned"
 }
@@ -316,6 +318,8 @@ function check_specific_xcode () {
 		if ! test -z $PROVISION_XCODE; then
 			log "Executing 'sudo xcode-select -s $XCODE_DEVELOPER_ROOT'"
 			sudo xcode-select -s $XCODE_DEVELOPER_ROOT
+			log "Clearing xcrun cache..."
+			xcrun -k
 		else
 			fail "'xcode-select -p' does not point to $XCODE_DEVELOPER_ROOT, it points to $XCODE_SELECT. Execute 'sudo xcode-select -s $XCODE_DEVELOPER_ROOT' to fix."
 		fi

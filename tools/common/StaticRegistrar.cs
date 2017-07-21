@@ -1824,6 +1824,13 @@ namespace XamCore.Registrar {
 				header.WriteLine ("#import <WatchKit/WatchKit.h>");
 				namespaces.Add ("UIKit");
 				return;
+			case "CoreNFC":
+			case "DeviceCheck":
+#if !MONOMAC
+				if (IsSimulator)
+					return; // No headers provided for simulator, which makes sense since there is no NFC on it.
+#endif
+				goto default;
 			case "QTKit":
 #if MONOMAC
 				if (App.SdkVersion >= MacOSTenTwelveVersion)

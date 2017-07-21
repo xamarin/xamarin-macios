@@ -29,6 +29,7 @@ namespace XamCore.TVServices {
 		TVContentIdentifier ContentIdentifier { get; }
 
 		[NullAllowed, Export ("imageURL", ArgumentSemantic.Copy)]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'SetImageUrl' instead.")]
 		NSUrl ImageUrl { get; set; }
 
 		[Export ("imageShape", ArgumentSemantic.Assign)]
@@ -70,6 +71,15 @@ namespace XamCore.TVServices {
 		[Export ("initWithContentIdentifier:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (TVContentIdentifier ident);
+
+		[TV (11,0)]
+		[Export ("imageURLForTraits:")]
+		[return: NullAllowed]
+		NSUrl GetImageUrl (TVContentItemImageTrait traits);
+
+		[TV (11,0)]
+		[Export ("setImageURL:forTraits:")]
+		void SetImageUrl ([NullAllowed] NSUrl aUrl, TVContentItemImageTrait traits);
 	}
 
 	[TV (9,0)]

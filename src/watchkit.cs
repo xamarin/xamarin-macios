@@ -56,13 +56,13 @@ namespace XamCore.WatchKit {
 		[Export ("table:didSelectRowAtIndex:")]
 		void DidSelectRow (WKInterfaceTable table, nint rowIndex);
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use UNUserNotificationCenterDelegate")]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use UNUserNotificationCenterDelegate")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
 		[Export ("handleActionWithIdentifier:forRemoteNotification:")]
 		void HandleRemoteNotificationAction ([NullAllowed] string identifier, NSDictionary remoteNotification);
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use UNUserNotificationCenterDelegate")]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use UNUserNotificationCenterDelegate")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
 		[Export ("handleActionWithIdentifier:forLocalNotification:")]
 		void HandleLocalNotificationAction ([NullAllowed] string identifier, UILocalNotification localNotification);
 
@@ -221,13 +221,13 @@ namespace XamCore.WatchKit {
 	[BaseType (typeof (WKInterfaceController))]
 	interface WKUserNotificationInterfaceController {
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use DidReceiveNotification")]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use DidReceiveNotification:")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'DidReceiveNotification' instead.")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'DidReceiveNotification' instead.")]
 		[Export ("didReceiveRemoteNotification:withCompletion:")]
 		void DidReceiveRemoteNotification (NSDictionary remoteNotification, Action<WKUserNotificationInterfaceType> completionHandler);
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use DidReceiveNotification")]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use DidReceiveNotification:")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'DidReceiveNotification' instead.")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'DidReceiveNotification' instead.")]
 		[Export ("didReceiveLocalNotification:withCompletion:")]
 		void DidReceiveLocalNotification (UILocalNotification localNotification, Action<WKUserNotificationInterfaceType> completionHandler);
 
@@ -236,12 +236,12 @@ namespace XamCore.WatchKit {
 		void DidReceiveNotification (UNNotification notification, Action<WKUserNotificationInterfaceType> completionHandler);
 
 		[NoiOS]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use overload accepting an UNNotification parameter")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use overload accepting an 'UNNotification' parameter.")]
 		[Export ("suggestionsForResponseToActionWithIdentifier:forRemoteNotification:inputLanguage:")]
 		string[] GetSuggestionsForResponseToAction (string identifier, NSDictionary remoteNotification, string inputLanguage);
 
 		[NoiOS]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use overload accepting an UNNotification parameter")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use overload accepting an 'UNNotification' parameter.")]
 		[Export ("suggestionsForResponseToActionWithIdentifier:forLocalNotification:inputLanguage:")]
 		string[] GetSuggestionsForResponseToAction (string identifier, UILocalNotification localNotification, string inputLanguage);
 

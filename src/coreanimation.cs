@@ -113,7 +113,7 @@ namespace XamCore.CoreAnimation {
 	}
 	
 	[BaseType (typeof (NSObject))]
-	interface CAConstraint : NSCoding {
+	interface CAConstraint : NSSecureCoding {
 		[Export ("attribute")]
 		CAConstraintAttribute Attribute { get;  }
 
@@ -169,9 +169,9 @@ namespace XamCore.CoreAnimation {
 		[Export ("paused")]
 		bool Paused { [Bind ("isPaused")] get; set; }
 	
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use PreferredFramesPerSecond property")]
-		[Deprecated (PlatformName.TvOS, 10,0, message: "Use PreferredFramesPerSecond property")]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use PreferredFramesPerSecond property")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'PreferredFramesPerSecond' property.")]
+		[Deprecated (PlatformName.TvOS, 10,0, message: "Use 'PreferredFramesPerSecond' property.")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'PreferredFramesPerSecond' property.")]
 		[Export ("frameInterval")]
 		nint FrameInterval { get; set;  }
 
@@ -200,7 +200,7 @@ namespace XamCore.CoreAnimation {
 
 	[BaseType (typeof (NSObject))]
 	[Dispose ("OnDispose ();")]
-	interface CALayer : CAMediaTiming, NSCoding {
+	interface CALayer : CAMediaTiming, NSSecureCoding {
 		[Export ("layer")][Static]
 		CALayer Create ();
 
@@ -910,7 +910,7 @@ namespace XamCore.CoreAnimation {
 	}
 	
 	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] { typeof (CAAnimationDelegate)})]
-	interface CAAnimation : CAAction, CAMediaTiming, NSCoding, NSMutableCopying {
+	interface CAAnimation : CAAction, CAMediaTiming, NSSecureCoding, NSMutableCopying {
 		[Export ("animation"), Static]
 		CAAnimation CreateAnimation ();
 	
@@ -996,15 +996,15 @@ namespace XamCore.CoreAnimation {
 		NSString RotateModeAutoReverse { get; }
 
 		#region SceneKitAdditions
-		[iOS (8,0)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("usesSceneTimeBase")]
 		bool UsesSceneTimeBase { get; set; }
 
-		[iOS (8,0)][Mac (10,9)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("fadeInDuration")]
 		nfloat FadeInDuration { get; set; }
 
-		[iOS (8,0)][Mac (10,9)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("fadeOutDuration")]
 		nfloat FadeOutDuration { get; set; }
 
@@ -1307,7 +1307,7 @@ namespace XamCore.CoreAnimation {
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface CAMediaTimingFunction : NSCoding {
+	interface CAMediaTimingFunction : NSSecureCoding {
 		[Export ("functionWithName:")][Static]
 		CAMediaTimingFunction FromName (NSString  name);
 
@@ -1338,7 +1338,7 @@ namespace XamCore.CoreAnimation {
 	}
 
 	[BaseType (typeof (NSObject))]
-	interface CAValueFunction : NSCoding {
+	interface CAValueFunction : NSSecureCoding {
 		[Export ("functionWithName:"), Static]
 		CAValueFunction FromName (string name);
 
@@ -1412,7 +1412,7 @@ namespace XamCore.CoreAnimation {
 
 	[Since (5,0)]
 	[BaseType (typeof (NSObject))]
-	interface CAEmitterCell : CAMediaTiming, NSCoding {
+	interface CAEmitterCell : CAMediaTiming, NSSecureCoding {
 		[NullAllowed] // by default this property is null
 		[Export ("name", ArgumentSemantic.Copy)]
 		string Name { get; set;  }
@@ -1643,7 +1643,7 @@ namespace XamCore.CoreAnimation {
 
 	[Since(7,0), Mavericks]
 	[BaseType (typeof (NSObject))]
-	interface CAEmitterBehavior : NSCoding {
+	interface CAEmitterBehavior : NSSecureCoding {
 
 		[Export ("initWithType:")]
 		IntPtr Constructor (NSString type);
