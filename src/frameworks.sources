@@ -1659,6 +1659,7 @@ IOS_FRAMEWORKS =         \
 	EventKitUI \
 	ExternalAccessory \
 	FileProvider \
+	FileProviderUI \
 	GLKit \
 	GameController \
 	GameplayKit \
