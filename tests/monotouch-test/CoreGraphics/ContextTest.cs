@@ -63,9 +63,9 @@ namespace MonoTouchFixtures.CoreGraphics {
 				var original = c.GetClipBoundingBox ();
 				var rect = new CGRect (0, 0, 2, 2);
 				c.ClipToRect (rect);
-				Assert.Equals (rect, c.GetClipBoundingBox ());
+				Assert.That (rect, Is.EqualTo (c.GetClipBoundingBox ()));
 				c.ResetClip ();
-				Assert.Equals (original, c.GetClipBoundingBox ());
+				Assert.That (original, Is.EqualTo (c.GetClipBoundingBox ()));
 			}
 		}
 	}

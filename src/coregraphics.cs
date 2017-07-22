@@ -212,6 +212,7 @@ namespace XamCore.CoreGraphics {
 #endif
 	}
 
+	[iOS(11,0), Mac(10,13)]
 	[Static]
 	[Internal]
 	public interface CGPDFOutlineKeys {

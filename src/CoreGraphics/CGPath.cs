@@ -697,46 +697,5 @@ namespace XamCore.CoreGraphics {
 		{
 			CGPathAddRoundedRect (handle, null, rect, cornerWidth, cornerHeight);
 		}
-
-#if !COREBUILD
-		[DllImport (Constants.CoreGraphicsLibrary)]
-		[Mac(10,13)][iOS (11,0)]
-		unsafe extern static void CGPathApplyWithBlock (IntPtr handle, BlockLiteral *blockEnumerator);
-
-		static PathApplyProxy static_apply;
-
-		delegate void PathApplyProxy (IntPtr block, IntPtr element);
-
-		[MonoPInvokeCallback (typeof (PathApplyProxy))]
-		static unsafe void TrampolineApply (IntPtr blockPtr, IntPtr _element)
-		{
-			var block = (BlockLiteral *) blockPtr;
-			var del = (Action<CGPathElement>) (block->Target);
-			if (del != null){
-				unsafe {
-					CGPathElement element = *((CGPathElement *) _element);
-					del (element);
-				}
-			}
-		}
-		
-		[Mac(10,13)][iOS (11,0)]
-		public void Apply (Action<CGPathElement> block)
-		{
-			if (block == null)
-				throw new ArgumentNullException (nameof (block));
-			unsafe {
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
-				static_apply = TrampolineApply;
-				block_handler.SetupBlock (static_apply, block);
-
-				CGPathApplyWithBlock (handle, block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
-			}
-		}
-#endif
 	}
 }
