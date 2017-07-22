@@ -502,8 +502,9 @@ namespace XamCore.ImageIO {
 
 		public void AddAuxiliaryDataInfo (CGImageDestination dest, CGImageAuxiliaryDataType auxiliaryImageDataType, CGImageAuxiliaryDataInfo auxiliaryDataInfo)
 		{
-			var dict = auxiliaryDataInfo == null ? null : auxiliaryDataInfo.ToDictionary ();
-			CGImageDestinationAddAuxiliaryDataInfo (dest.Handle, auxiliaryImageDataType.GetConstant ().Handle, dict == null ? IntPtr.Zero : dict.Handle);
+			using (var dict = auxiliaryDataInfo?.ToDictionary ()) {
+				CGImageDestinationAddAuxiliaryDataInfo (NativeObjectHelper.GetHandle (dest), auxiliaryImageDataType.GetConstant ().Handle, dict == null ? IntPtr.Zero : dict.Handle);
+			}
 		}
 	}
 }

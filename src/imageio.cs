@@ -1215,7 +1215,7 @@ namespace XamCore.ImageIO {
 #endif
 
 	[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
-	public enum CGImageAuxiliaryDataType {
+	enum CGImageAuxiliaryDataType {
 		[Field ("kCGImageAuxiliaryDataTypeDepth")]
 		Depth,
 
@@ -1225,7 +1225,7 @@ namespace XamCore.ImageIO {
 
 	[Partial]
 	[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
-	public interface CGImageAuxiliaryDataInfo {
+	interface CGImageAuxiliaryDataInfo {
 		[Field ("kCGImageAuxiliaryDataInfoData")]
 		NSString Data { get; }
 
