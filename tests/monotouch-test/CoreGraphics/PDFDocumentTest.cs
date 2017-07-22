@@ -58,7 +58,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 				CheckTamarin (doc);
 			}
 		}
-		
+
 		void CheckTamarin (CGPDFDocument pdf)
 		{
 			Assert.True (pdf.AllowsCopying, "AllowsCopying");
@@ -68,6 +68,14 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.That (pdf.Pages, Is.EqualTo ((nint) 3), "Pages");
 
 			Assert.That (pdf.GetInfo ().Count, Is.EqualTo (7), "GetInfo");
+
+			// Merely check that the P/Invoke goes through.
+			var perms = pdf.GetAccessPermissions ();
+
+			// Get and set outline
+			var outline = pdf.GetOutline ();
+			pdf.SetOutline (outline);
+
 		}
 	}
 }
