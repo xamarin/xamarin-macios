@@ -356,8 +356,8 @@ namespace XamCore.UIKit {
 
 		[iOS (11,0)]
 		[Async]
-		[Export ("reparentItemWithIdentifier:toParentItemWithIdentifier:completionHandler:")]
-		void ReparentItem (string itemIdentifier, string parentItemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
+		[Export ("reparentItemWithIdentifier:toParentItemWithIdentifier:newName:completionHandler:")]
+		void ReparentItem (string itemIdentifier, string parentItemIdentifier, [NullAllowed] string newName, Action<INSFileProviderItem, NSError> completionHandler);
 
 		[iOS (11,0)]
 		[Async]
