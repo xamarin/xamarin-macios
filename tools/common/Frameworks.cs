@@ -252,6 +252,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "CoreML", "CoreML", 11 },
 				{ "Vision", "Vision", 11 },
 				{ "FileProvider", "FileProvider", 11 },
+				{ "FileProviderUI", "FileProviderUI", 11 },
 			};
 		}
 		return ios_frameworks;

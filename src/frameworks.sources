@@ -97,7 +97,6 @@ APPKIT_SOURCES = \
 	AppKit/NSDraggingInfo.cs \
 	AppKit/NSDraggingSession.cs \
 	AppKit/NSDraggingItem.cs \
-	AppKit/NSFont.cs \
 	AppKit/NSPasteboard.cs \
 	AppKit/NSSharingServiceDelegate.cs \
 	AppKit/NSDocument.cs \
@@ -1661,6 +1660,7 @@ IOS_FRAMEWORKS =         \
 	EventKitUI \
 	ExternalAccessory \
 	FileProvider \
+	FileProviderUI \
 	GLKit \
 	GameController \
 	GameplayKit \
