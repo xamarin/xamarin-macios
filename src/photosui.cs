@@ -5,16 +5,17 @@ using XamCore.Foundation;
 using XamCore.UIKit;
 #else
 using XamCore.AppKit;
+using UIImage = XamCore.AppKit.NSImage;
 #endif
 using XamCore.Photos;
 using System;
 
 namespace XamCore.PhotosUI {
-#if !MONOMAC
 	[NoTV]
-	[iOS (8,0)]
+	[iOS (8, 0)]
+	[Mac (10, 13, onlyOn64: true)]
 	[Protocol]
-#if !XAMCORE_4_0 && !TVOS
+#if !XAMCORE_4_0 && !TVOS && !MONOMAC
 	// According to documentation you're supposed to implement this protocol in a UIViewController subclass,
 	// which means a model (which does not inherit from UIViewController) is not useful.
 	[Model]
@@ -43,6 +44,7 @@ namespace XamCore.PhotosUI {
 		bool ShouldShowCancelConfirmation { get; }
 	}
 
+#if !MONOMAC
 	[TV (10,0)]
 	[iOS (9,1)]
 	[BaseType (typeof (UIView))]
@@ -81,7 +83,7 @@ namespace XamCore.PhotosUI {
 	}
 
 	[TV (10,0)]
-	[iOS (9,1)]
+	[iOS (9,1)][NoMac]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface PHLivePhotoViewDelegate {
@@ -91,7 +93,8 @@ namespace XamCore.PhotosUI {
 		[Export ("livePhotoView:didEndPlaybackWithStyle:")]
 		void DidEndPlayback (PHLivePhotoView livePhotoView, PHLivePhotoViewPlaybackStyle playbackStyle);
 	}
-#else
+#endif
+
 	[Mac (10,13, onlyOn64: true)][NoiOS][NoTV][NoWatch]
 	[Static]
 	interface PHProjectType {
@@ -150,7 +153,7 @@ namespace XamCore.PhotosUI {
 	interface PHProjectExtensionController {
 
 		[Export ("supportedProjectTypes", ArgumentSemantic.Copy)]
-		PHProjectTypeDescription[] SupportedProjectTypes { get; }
+		PHProjectTypeDescription [] GetSupportedProjectTypes ();
 
 		[Abstract]
 		[Export ("beginProjectWithExtensionContext:projectInfo:completion:")]
@@ -181,17 +184,17 @@ namespace XamCore.PhotosUI {
 		string LocalizedDescription { get; }
 
 		[NullAllowed, Export ("image", ArgumentSemantic.Copy)]
-		NSImage Image { get; }
+		UIImage Image { get; }
 
 		[Export ("subtypeDescriptions", ArgumentSemantic.Copy)]
 		PHProjectTypeDescription[] SubtypeDescriptions { get; }
 
 		[Export ("initWithProjectType:title:description:image:subtypeDescriptions:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSString projectType, string localizedTitle, [NullAllowed] string localizedDescription, [NullAllowed] NSImage image, PHProjectTypeDescription[] subtypeDescriptions);
+		IntPtr Constructor (NSString projectType, string localizedTitle, [NullAllowed] string localizedDescription, [NullAllowed] UIImage image, PHProjectTypeDescription[] subtypeDescriptions);
 
 		[Export ("initWithProjectType:title:description:image:")]
-		IntPtr Constructor (NSString projectType, string localizedTitle, [NullAllowed] string localizedDescription, [NullAllowed] NSImage image);
+		IntPtr Constructor (NSString projectType, string localizedTitle, [NullAllowed] string localizedDescription, [NullAllowed] UIImage image);
 	}
 
 	[Mac (10,13, onlyOn64 : true)]
@@ -292,31 +295,4 @@ namespace XamCore.PhotosUI {
 		[Export ("cloudAssetIdentifiers")]
 		PHCloudIdentifier[] CloudAssetIdentifiers { get; }
 	}
-
-	[Mac (10,13, onlyOn64 : true)]
-	[NoiOS][NoTV]
-	[Protocol]
-	interface PHContentEditingController {
-
-		[Abstract]
-		[Export ("canHandleAdjustmentData:")]
-		bool CanHandleAdjustmentData (PHAdjustmentData adjustmentData);
-
-		[Abstract]
-		[Export ("startContentEditingWithInput:placeholderImage:")]
-		void StartContentEditing (PHContentEditingInput contentEditingInput, NSImage placeholderImage);
-
-		[Abstract]
-		[Export ("finishContentEditingWithCompletionHandler:")]
-		void FinishContentEditing (Action<PHContentEditingOutput> completionHandler);
-
-		[Abstract]
-		[Export ("cancelContentEditing")]
-		void CancelContentEditing ();
-
-		[Abstract]
-		[Export ("shouldShowCancelConfirmation")]
-		bool ShouldShowCancelConfirmation { get; }
-	}
-#endif
 }

@@ -39,7 +39,9 @@ namespace XamCore.Photos
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Mac (10,13, onlyOn64 : true)]
+#if MONOMAC
 	[DisableDefaultCtor] // Crashes mac introspection test
+#endif
 	[BaseType (typeof (PHObject))]
 	interface PHAsset {
 
