@@ -3822,6 +3822,7 @@ namespace XamCore.Foundation
 		[Field ("NSDebugDescriptionErrorKey")]
 		NSString DebugDescriptionErrorKey { get; }
 
+		[iOS (11,0), Mac (10,13), Watch (4,0), TV (11,0)]
 		[Field ("NSLocalizedFailureErrorKey")]
 		NSString LocalizedFailureErrorKey { get; }
 
@@ -6791,7 +6792,7 @@ namespace XamCore.Foundation
 	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(NSUrlSessionTask), Name="NSURLSessionStreamTask")]
 	[DisableDefaultCtor]
-	interface NSUrlSessionStreamTask
+	interface NSUrlSessionStreamTask : NSProgressReporting
 	{
 		[Export ("readDataOfMinLength:maxLength:timeout:completionHandler:")]
 		[Async (ResultTypeName="NSUrlSessionStreamDataRead")]
@@ -6927,17 +6928,17 @@ namespace XamCore.Foundation
 	[Since (7,0)]
 	[Availability (Introduced = Platform.Mac_10_9)]
 	[BaseType (typeof (NSUrlSessionTask), Name="NSURLSessionDataTask")]
-	partial interface NSUrlSessionDataTask {}
+	partial interface NSUrlSessionDataTask : NSProgressReporting {}
 
 	[Since (7,0)]
 	[Availability (Introduced = Platform.Mac_10_9)]
 	[BaseType (typeof (NSUrlSessionDataTask), Name="NSURLSessionUploadTask")]
-	partial interface NSUrlSessionUploadTask {}
+	partial interface NSUrlSessionUploadTask : NSProgressReporting {}
 
 	[Since (7,0)]
 	[Availability (Introduced = Platform.Mac_10_9)]
 	[BaseType (typeof (NSUrlSessionTask), Name="NSURLSessionDownloadTask")]
-	partial interface NSUrlSessionDownloadTask {
+	partial interface NSUrlSessionDownloadTask : NSProgressReporting {
 		[Export ("cancelByProducingResumeData:")]
 		void Cancel (Action<NSData> resumeCallback);
 	}
