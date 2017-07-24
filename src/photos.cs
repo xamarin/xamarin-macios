@@ -1151,6 +1151,10 @@ namespace XamCore.Photos
 		void _PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] NSDictionary options, Action<PHLivePhoto, NSError> handler);
 
 		[Async]
+		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, null, handler)")]
+		void PrepareLivePhotoForPlayback (CGSize targetSize, Action<PHLivePhoto, NSError> handler);
+
+		[Async]
 		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, (NSDictionary)options, handler)", IsVirtual = true)]
 		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<PHLivePhoto, NSError> handler);
 
@@ -1165,6 +1169,10 @@ namespace XamCore.Photos
 		[Internal]
 		[Export ("saveLivePhotoToOutput:options:completionHandler:")]
 		void _SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] NSDictionary options, Action<bool, NSError> handler);
+
+		[Async]
+		[Wrap ("_SaveLivePhoto (output, null, handler)")]
+		void SaveLivePhoto (PHContentEditingOutput output, Action<bool, NSError> handler);
 
 		[Async]
 		[Wrap ("_SaveLivePhoto (output, options, handler)", IsVirtual = true)]
