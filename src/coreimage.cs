@@ -1819,27 +1819,26 @@ namespace XamCore.CoreImage {
 
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // does not work in iOS 11 beta 4
 	interface CIImageAccumulator {
+#if XAMCORE_4_0
+		[Obsolete ("The default initializer does not work in recent iOS version (11b4).")]
+		IntPtr Constructor ();
+#endif
+
 		[Static]
 		[Export ("imageAccumulatorWithExtent:format:")]
-#if !MONOMAC
-		[Internal]
-#endif
 		CIImageAccumulator FromRectangle (CGRect rect, int /* CIFormat = int */ ciImageFormat);
 
 		[iOS (9,0)]
-		[Static, Internal]
+		[Static]
 		[Export ("imageAccumulatorWithExtent:format:colorSpace:")]
 		CIImageAccumulator FromRectangle (CGRect extent, int format, CGColorSpace colorSpace);
 		
-
 		[Export ("initWithExtent:format:")]
-#if !MONOMAC
-		[Internal]
-#endif
 		IntPtr Constructor (CGRect rectangle, int /* CIFormat = int */ ciImageFormat);
 
-		[Export ("initWithExtent:format:colorSpace:")][Internal]
+		[Export ("initWithExtent:format:colorSpace:")]
 		IntPtr Constructor (CGRect extent, int format, CGColorSpace colorSpace);
 		
 		[Export ("extent")]
