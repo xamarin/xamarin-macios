@@ -228,7 +228,7 @@ namespace XamCore.ARKit {
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface ARLightEstimate : NSCopying {
+	interface ARLightEstimate {
 
 		[Export ("ambientIntensity")]
 		nfloat AmbientIntensity { get; }
