@@ -3269,8 +3269,7 @@ namespace XamCore.SpriteKit {
 	interface SKRenderer {
 		[Static]
 		[Export ("rendererWithDevice:")]
-		[return: NullAllowed]
-		SKRenderer FromDevice ([NullAllowed] IMTLDevice device);
+		SKRenderer FromDevice (IMTLDevice device);
 
 		[Export ("renderWithViewport:commandBuffer:renderPassDescriptor:")]
 		void Render (CGRect viewport, IMTLCommandBuffer commandBuffer, MTLRenderPassDescriptor renderPassDescriptor);
