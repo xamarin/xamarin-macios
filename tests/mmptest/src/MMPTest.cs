@@ -464,7 +464,7 @@ namespace Xamarin.MMP.Tests
 		{
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = "<MonoBundlingExtraArgs>--sgen-conc</MonoBundlingExtraArgs>"
+					CSProjConfig = "<EnableSGenConc>true</EnableSGenConc>"
 				};
 				TI.TestUnifiedExecutable (test);
 			});
