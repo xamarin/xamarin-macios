@@ -113,5 +113,7 @@ namespace MonoTouch {
 		public const string IdentityLookupLibrary = "/System/Library/Frameworks/IdentityLookup.framework/IdentityLookup";
 		public const string CoreMLLibrary = "/System/Library/Frameworks/CoreML.framework/CoreML";
 		public const string VisionLibrary = "/System/Library/Frameworks/Vision.framework/Vision";
+		public const string FileProviderLibrary = "/System/Library/Frameworks/FileProvider.framework/FileProvider";
+		public const string FileProviderUILibrary = "/System/Library/Frameworks/FileProviderUI.framework/FileProviderUI";
 	}
 }

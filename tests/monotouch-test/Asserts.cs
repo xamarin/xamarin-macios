@@ -83,6 +83,14 @@ public static class Asserts
 		AreEqual (expected.MaxBounds, actual.MaxBounds, message + " (MaxBounds)");
 		AreEqual (expected.MinBounds, actual.MinBounds, message + " (MinBounds)");
 	}
+
+	public static void AreEqual (Quaternion expected, Quaternion actual, string message)
+	{
+		Assert.AreEqual (expected.X, actual.X, message + " (X)");
+		Assert.AreEqual (expected.Y, actual.Y, message + " (Y)");
+		Assert.AreEqual (expected.Z, actual.Z, message + " (Z)");
+		Assert.AreEqual (expected.W, actual.W, message + " (W)");
+	}
 #endif // !__WATCHOS__
 }
 

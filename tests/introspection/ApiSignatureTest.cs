@@ -983,6 +983,10 @@ namespace Introspection {
 			// It does not make sense for this API
 			case "RequestData":
 				return m.DeclaringType.Name == "PHAssetResourceManager";
+			// It does not make sense for this API
+			case "Register":
+			case "SignalEnumerator":
+				return m.DeclaringType.Name == "NSFileProviderManager";
 			}
 			return false;
 		}

@@ -729,6 +729,8 @@ public class NamespaceManager
 			ImplicitNamespaces.Add (Get ("GameplayKit"));
 		if (Frameworks.HaveSpriteKit)
 			ImplicitNamespaces.Add (Get ("SpriteKit"));
+		if (Frameworks.HaveFileProvider && Generator.UnifiedAPI)
+			ImplicitNamespaces.Add (Get ("FileProvider"));
 
 		// These are both types and namespaces
 		NamespacesThatConflictWithTypes = new HashSet<string> {

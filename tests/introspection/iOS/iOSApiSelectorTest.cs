@@ -92,8 +92,9 @@ namespace Introspection {
 			case "UILocalNotification":
 				return true;
 
-			// Metal is not available on the (iOS8) simulator
+			// Metal is not available on the simulator
 			case "CAMetalLayer":
+			case "SKRenderer":
 				return (Runtime.Arch == Arch.SIMULATOR);
 
 			// iOS 10 - this type can only be instantiated on devices, but the selectors are forwarded
