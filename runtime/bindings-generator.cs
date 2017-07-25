@@ -1915,6 +1915,18 @@ namespace Xamarin.BindingMethods.Generator
 				}
 			);
 
+			data.Add (
+				new FunctionData {
+					Comment = " // Matrix4 func (/* UIInterfaceOrientation */ nint)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.Matrix4f,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.NInt },
+					},
+				}
+			);
+
 			// We must expand functions with native types to their actual type as well.
 			for (int i = data.Count - 1; i >= 0; i--) {
 				if (!data [i].HasNativeType)
