@@ -18,89 +18,69 @@ namespace XamCore.IOSurface {
 
 	[Static]
 	[Internal]
+	[iOS (10,0), Mac (10,12)]
 	interface IOSurfacePropertyKey {
 		[Field ("IOSurfacePropertyAllocSizeKey")]
-		[iOS (10,0), Mac (10,12)]
 		NSString AllocSizeKey { get; }
 		
 		[Field ("IOSurfacePropertyKeyWidth")]
-		[iOS (10,0), Mac (10,12)]
 		NSString WidthKey { get; }
 		
 		[Field ("IOSurfacePropertyKeyHeight")]
-		[iOS (10,0), Mac (10,12)]
 		NSString HeightKey { get; }
 		
 		[Field ("IOSurfacePropertyKeyBytesPerRow")]
-		[iOS (10,0), Mac (10,12)]
 		NSString BytesPerRowKey { get; }
 		
 		[Field ("IOSurfacePropertyKeyBytesPerElement")]
-		[iOS (10,0), Mac (10,12)]
 		NSString BytesPerElementKey { get; }
 		
 		[Field ("IOSurfacePropertyKeyElementWidth")]
-		[iOS (10,0), Mac (10,12)]
 		NSString ElementWidthKey { get; }
 		
 		[Field ("IOSurfacePropertyKeyElementHeight")]
-		[iOS (10,0), Mac (10,12)]
 		NSString ElementHeightKey { get; }
 		
 		[Field ("IOSurfacePropertyKeyOffset")]
-		[iOS (10,0), Mac (10,12)]
 		NSString OffsetKey { get; }
 		
 		[Field ("IOSurfacePropertyKeyPlaneInfo")]
-		[iOS (10,0), Mac (10,12)]
 		NSString PlaneInfoKey { get; }
 		
 		[Field ("IOSurfacePropertyKeyPlaneWidth")]
-		[iOS (10,0), Mac (10,12)]
 		NSString PlaneWidthKey { get; }
 		
 		[Field ("IOSurfacePropertyKeyPlaneHeight")]
-		[iOS (10,0), Mac (10,12)]
 		NSString PlaneHeightKey { get; }
 		
 		[Field ("IOSurfacePropertyKeyPlaneBytesPerRow")]
-		[iOS (10,0), Mac (10,12)]
 		NSString PlaneBytesPerRowKey { get; }
 		
 		[Field ("IOSurfacePropertyKeyPlaneOffset")]
-		[iOS (10,0), Mac (10,12)]
 		NSString PlaneOffsetKey { get; }
 		
 		[Field ("IOSurfacePropertyKeyPlaneSize")]
-		[iOS (10,0), Mac (10,12)]
 		NSString PlaneSizeKey { get; }
 		
 		[Field ("IOSurfacePropertyKeyPlaneBase")]
-		[iOS (10,0), Mac (10,12)]
 		NSString PlaneBaseKey { get; }
 		
 		[Field ("IOSurfacePropertyKeyPlaneBytesPerElement")]
-		[iOS (10,0), Mac (10,12)]
 		NSString PlaneBytesPerElementKey { get; }
 		
 		[Field ("IOSurfacePropertyKeyPlaneElementWidth")]
-		[iOS (10,0), Mac (10,12)]
 		NSString PlaneElementWidthKey { get; }
 		
 		[Field ("IOSurfacePropertyKeyPlaneElementHeight")]
-		[iOS (10,0), Mac (10,12)]
 		NSString PlaneElementHeightKey { get; }
 		
 		[Field ("IOSurfacePropertyKeyCacheMode")]
-		[iOS (10,0), Mac (10,12)]
 		NSString CacheModeKey { get; }
 		
 		[Field ("IOSurfacePropertyKeyPixelFormat")]
-		[iOS (10,0), Mac (10,12)]
 		NSString PixelFormatKey { get; }
 		
 		[Field ("IOSurfacePropertyKeyPixelSizeCastingAllowed")]
-		[iOS (10,0), Mac (10,12)]
 		NSString PixelSizeCastingAllowedKey { get; } 
 	}
 
