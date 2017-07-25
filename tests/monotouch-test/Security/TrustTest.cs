@@ -63,6 +63,10 @@ namespace MonoTouchFixtures.Security {
 					return result;
 				NSRunLoop.Main.RunUntil (NSDate.Now.AddSeconds (i));
 			}
+			// we have done our best (it has not failed, but did not confirm either)
+			// still it can't recover (we and expected it could) most likely due to external factors (e.g. network)
+			if (result == SecTrustResult.RecoverableTrustFailure && !expect_recoverable)
+				Assert.Inconclusive ("Cannot recover from RecoverableTrustFailure after 8 attempts");
 			return result;
 		}
 
