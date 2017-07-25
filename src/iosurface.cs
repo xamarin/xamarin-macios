@@ -17,6 +17,7 @@ using XamCore.ObjCRuntime;
 namespace XamCore.IOSurface {
 
 	[Static]
+	[Internal]
 	interface IOSurfacePropertyKey {
 		[Field ("IOSurfacePropertyAllocSizeKey")]
 		[iOS (10,0), Mac (10,12)]
@@ -179,25 +180,25 @@ namespace XamCore.IOSurface {
 		nuint PlaneCount { get; }
 	
 		[Export ("widthOfPlaneAtIndex:")]
-		nint WidthOfPlane (nuint planeIndex);
+		nint GetWidth (nuint planeIndex);
 	
 		[Export ("heightOfPlaneAtIndex:")]
-		nint HeightOfPlane (nuint planeIndex);
+		nint GetHeight (nuint planeIndex);
 	
 		[Export ("bytesPerRowOfPlaneAtIndex:")]
-		nint BytesPerRowOfPlane (nuint planeIndex);
+		nint GetBytesPerRow (nuint planeIndex);
 	
 		[Export ("bytesPerElementOfPlaneAtIndex:")]
-		nint BytesPerElementOfPlane (nuint planeIndex);
+		nint GetBytesPerElement (nuint planeIndex);
 	
 		[Export ("elementWidthOfPlaneAtIndex:")]
-		nint ElementWidthOfPlane (nuint planeIndex);
+		nint GetElementWidth (nuint planeIndex);
 	
 		[Export ("elementHeightOfPlaneAtIndex:")]
-		nint ElementHeightOfPlane (nuint planeIndex);
+		nint GetElementHeight (nuint planeIndex);
 	
 		[Export ("baseAddressOfPlaneAtIndex:")]
-		IntPtr BaseAddressOfPlane (nuint planeIndex);
+		IntPtr GetBaseAddress (nuint planeIndex);
 	
 		[Export ("setAttachment:forKey:")]
 		void SetAttachment (NSObject anObject, NSString key);
