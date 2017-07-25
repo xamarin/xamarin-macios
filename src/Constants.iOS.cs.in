@@ -115,5 +115,6 @@ namespace MonoTouch {
 		public const string VisionLibrary = "/System/Library/Frameworks/Vision.framework/Vision";
 		public const string FileProviderLibrary = "/System/Library/Frameworks/FileProvider.framework/FileProvider";
 		public const string FileProviderUILibrary = "/System/Library/Frameworks/FileProviderUI.framework/FileProviderUI";
+		public const string IOSurfaceLibrary = "/System/Library/Frameworks/IOSurface.framework/IOSurface";
 	}
 }

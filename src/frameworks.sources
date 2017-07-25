@@ -863,6 +863,13 @@ INTENTS_SOURCES = \
 	Intents/INStartWorkoutIntent.cs \
 	Intents/INSaveProfileInCarIntent.cs \
 
+# IOSurface
+IOSURFACE_CORE_SOURCES = \
+	IOSurface/IODefs.cs
+
+IOSURFACE_SOURCES = \
+	IOSurface/IOSurface.cs
+
 # JavaScriptCore
 
 JAVASCRIPTCORE_SOURCES = \
@@ -1587,7 +1594,8 @@ MAC_FRAMEWORKS =            \
 	GLKit                   \
 	ImageIO                 \
 	ImageKit                \
-	Intents                 \
+	Intents			\
+	IOSurface 		\
 	JavaScriptCore          \
 	LocalAuthentication     \
 	MapKit                  \
@@ -1670,6 +1678,7 @@ IOS_FRAMEWORKS =         \
 	ImageIO \
 	Intents \
 	IntentsUI \
+	IOSurface \
 	JavaScriptCore \
 	LocalAuthentication \
 	MapKit \
@@ -1781,12 +1790,12 @@ TVOS_FRAMEWORKS =           \
 	StoreKit                \
 	SystemConfiguration     \
 	TVMLKit                 \
-	TVServices				\
+	TVServices		\
 	UIKit                   \
 	UserNotifications       \
 	VideoSubscriberAccount  \
 	VideoToolbox            \
-	Vision            \
+	Vision
 
 #
 # Compute the SOURCES variables.
