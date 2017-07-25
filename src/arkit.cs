@@ -163,6 +163,10 @@ namespace XamCore.ARKit {
 		[Export ("projectionMatrixWithViewportSize:orientation:zNear:zFar:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		Matrix4 GetProjectionMatrix (CGSize viewportSize, UIInterfaceOrientation orientation, nfloat zNear, nfloat zFar);
+
+		[Export ("viewMatrixForOrientation:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		Matrix4 GetViewMatrix (UIInterfaceOrientation orientation);
 	}
 
 	[iOS (11,0)]
@@ -183,10 +187,10 @@ namespace XamCore.ARKit {
 		[Export ("anchors", ArgumentSemantic.Copy)]
 		ARAnchor[] Anchors { get; }
 
-		[NullAllowed, Export ("lightEstimate", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("lightEstimate", ArgumentSemantic.Strong)]
 		ARLightEstimate LightEstimate { get; }
 
-		[NullAllowed, Export ("rawFeaturePoints")]
+		[NullAllowed, Export ("rawFeaturePoints", ArgumentSemantic.Strong)]
 		ARPointCloud RawFeaturePoints { get; }
 
 		[Export ("hitTest:types:")]
@@ -232,6 +236,9 @@ namespace XamCore.ARKit {
 
 		[Export ("ambientIntensity")]
 		nfloat AmbientIntensity { get; }
+
+		[Export ("ambientColorTemperature")]
+		nfloat AmbientColorTemperature { get; }
 	}
 
 	[iOS (11,0)]
