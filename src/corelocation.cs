@@ -302,7 +302,8 @@ namespace XamCore.CoreLocation {
 		void StartMonitoring (CLRegion region);
 
 #if !MONOMAC
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (4,0)]
 		[Since (6,0)]
 		[Export ("activityType", ArgumentSemantic.Assign)]
 		CLActivityType ActivityType  { get; set; }
