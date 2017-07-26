@@ -59,6 +59,7 @@ namespace Xamarin.Linker {
 			Photos = profile.GetNamespace ("Photos");
 			CoreML = profile.GetNamespace ("CoreML");
 			Vision = profile.GetNamespace ("Vision");
+			PdfKit = profile.GetNamespace ("PdfKit");
 #if MONOMAC
 			IOBluetooth = profile.GetNamespace ("IOBluetooth");
 			IOBluetoothUI = profile.GetNamespace ("IOBluetoothUI");
@@ -67,7 +68,6 @@ namespace Xamarin.Linker {
 			AppKit = profile.GetNamespace ("AppKit");
 			CoreWlan = profile.GetNamespace ("CoreWlan");
 			ImageKit = profile.GetNamespace ("ImageKit");
-			PdfKit = profile.GetNamespace ("PdfKit");
 			QTKit = profile.GetNamespace ("QTKit");
 			QuartzComposer = profile.GetNamespace ("QuartzComposer");
 			SceneKit = profile.GetNamespace ("SceneKit");
@@ -140,6 +140,8 @@ namespace Xamarin.Linker {
 
 		public static string Vision { get; private set; }
 
+		public static string PdfKit { get; private set; }
+
 #if MONOMAC
 		public static string IOBluetooth { get; private set; }
 		public static string IOBluetoothUI { get; private set; }
@@ -151,8 +153,6 @@ namespace Xamarin.Linker {
 		public static string CoreWlan { get; private set; }
 
 		public static string ImageKit { get; private set; }
-
-		public static string PdfKit { get; private set; }
 
 		public static string QTKit { get; private set; }
 

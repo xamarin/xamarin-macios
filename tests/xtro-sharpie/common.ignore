@@ -206,3 +206,19 @@
 ## CoreLocation
 # We have our own managed ctor
 !missing-pinvoke! CLLocationCoordinate2DMake is not bound
+
+## PDFKit
+# The following enums are bound as PdfFoo, lowercase Pdf prefix
+!missing-enum! PDFActionNamedName not bound
+!missing-enum! PDFAreaOfInterest not bound
+!missing-enum! PDFBorderStyle not bound
+!missing-enum! PDFDisplayBox not bound
+!missing-enum! PDFDisplayDirection not bound
+!missing-enum! PDFDisplayMode not bound
+!missing-enum! PDFDocumentPermissions not bound
+!missing-enum! PDFInterpolationQuality not bound
+!missing-enum! PDFLineStyle not bound
+!missing-enum! PDFMarkupType not bound
+!missing-enum! PDFTextAnnotationIconType not bound
+!missing-enum! PDFWidgetCellState not bound
+!missing-enum! PDFWidgetControlType not bound

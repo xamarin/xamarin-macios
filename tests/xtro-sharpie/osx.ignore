@@ -429,3 +429,7 @@
 # Deprecated in the same version of OS X that CBCentral becomes available.  The alternative (Identifier property) is bound and available.
 !missing-selector! CBCentral::UUID not bound
 !missing-selector! CBPeripheral::UUID not bound
+
+## PDFKit
+# The following enums are bound as PdfFoo, lowercase Pdf prefix
+!missing-enum! PDFPrintScalingMode not bound

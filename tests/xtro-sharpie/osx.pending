@@ -471,4 +471,7 @@
 ### This is not bound and it is already deprecated
 !missing-selector! EKParticipant::ABPersonInAddressBook: not bound
 
+#PDFKit
+## Deprecated
+!missing-selector! PDFAnnotation::initWithDictionary:forPage: not bound
 

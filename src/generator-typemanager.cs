@@ -62,6 +62,8 @@ public static class TypeManager {
 	public static Type CGColor;
 	public static Type CGColorSpace;
 	public static Type CGContext;
+	public static Type CGPDFDocument;
+	public static Type CGPDFPage;
 	public static Type CGGradient;
 	public static Type CGImage;
 	public static Type CGLayer;
@@ -268,6 +270,8 @@ public static class TypeManager {
 		CGColor = Lookup (platform_assembly, "CoreGraphics", "CGColor");
 		CGColorSpace = Lookup (platform_assembly, "CoreGraphics", "CGColorSpace");
 		CGContext = Lookup (platform_assembly, "CoreGraphics", "CGContext");
+		CGPDFDocument = Lookup (platform_assembly, "CoreGraphics", "CGPDFDocument");
+		CGPDFPage = Lookup (platform_assembly, "CoreGraphics", "CGPDFPage");
 		CGGradient = Lookup (platform_assembly, "CoreGraphics", "CGGradient");
 		CGImage = Lookup (platform_assembly, "CoreGraphics", "CGImage");
 		CGLayer = Lookup (platform_assembly, "CoreGraphics", "CGLayer");
