@@ -383,7 +383,7 @@ namespace XamCore.ImageIO {
 
 		public CGImageAuxiliaryDataInfo CopyAuxiliaryDataInfo (CGImageSource imageSource, nuint index, CGImageAuxiliaryDataType auxiliaryImageDataType)
 		{
-			var ptr = CGImageSourceCopyAuxiliaryDataInfoAtIndex (imageSource.GetHandle () ?? IntPtr.Zero, index, auxiliaryImageDataType.GetConstant ().GetHandle ());
+			var ptr = CGImageSourceCopyAuxiliaryDataInfoAtIndex (imageSource.GetHandle (), index, auxiliaryImageDataType.GetConstant ().GetHandle ());
 			if (ptr == IntPtr.Zero)
 				return null;
 
@@ -393,19 +393,19 @@ namespace XamCore.ImageIO {
 				bool success;
 
 				NSData data;
-				success = dictionary.TryGetValue<NSData> (CGImageAuxiliaryDataInfo.Data, out data);
+				success = dictionary.TryGetValue<NSData> (new NSString (CGImageAuxiliaryDataInfo.Data), out data);
 
 				if (success)
 					info.DepthData = data;
 
 				NSDictionary dict;
-				success = dictionary.TryGetValue<NSDictionary> (CGImageAuxiliaryDataInfo.DataDescription, out dict);
+				success = dictionary.TryGetValue<NSDictionary> (new NSString (CGImageAuxiliaryDataInfo.DataDescription), out dict);
 
 				if (success)
 					info.DepthDataDescription = dict;
 
 				CGImageMetadata metadata;
-				success = dictionary.TryGetValue<CGImageMetadata> (CGImageAuxiliaryDataInfo.kMetadata, out metadata);
+				success = dictionary.TryGetValue<CGImageMetadata> (new NSString (CGImageAuxiliaryDataInfo.kMetadata), out metadata);
 
 				if (success)
 					info.Metadata = metadata;
