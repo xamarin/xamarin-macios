@@ -28,9 +28,14 @@ using UIView=XamCore.AppKit.NSView;
 using UIEdgeInsets=XamCore.AppKit.NSEdgeInsets;
 using UIColor=XamCore.AppKit.NSColor;
 #endif
+#if WATCH
+// helper for [NoWatch]
+using MKMapView=XamCore.Foundation.NSObject;
+using MKAnnotationView=XamCore.Foundation.NSObject;
+#endif
 
 namespace XamCore.MapKit {
-	
+
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -175,7 +180,27 @@ namespace XamCore.MapKit {
 		[Export ("rightCalloutOffset")]
 		CGPoint RightCallpoutOffset { get; set; }
 #endif
+		[TV (11,0)][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[NullAllowed, Export ("clusteringIdentifier")]
+		string ClusteringIdentifier { get; set; }
 
+		[TV (11,0)][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[NullAllowed, Export ("clusterAnnotationView", ArgumentSemantic.Weak)]
+		MKAnnotationView ClusterAnnotationView { get; }
+
+		[TV (11,0)][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[Advice ("Pre-defined constants are available from 'MKFeatureDisplayPriority'.")]
+		[Export ("displayPriority")]
+		float DisplayPriority { get; set; }
+
+		[TV (11,0)][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[Export ("collisionMode", ArgumentSemantic.Assign)]
+		MKAnnotationViewCollisionMode CollisionMode { get; set; }
+
+		[TV (11,0)][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[Export ("prepareForDisplay")]
+		[Advice ("You must call the base method when overriding.")] // [RequiresSuper]
+		void PrepareForDisplay ();
 	}
 
 	[ThreadSafe]
@@ -258,7 +283,11 @@ namespace XamCore.MapKit {
 	[Since (6,0)]
 	[TV (9,2)]
 	[Mac (10,9, onlyOn64 : true)]
-	interface MKMapItem {
+	interface MKMapItem
+#if IOS_NOT_BOUND_YET // https://bugzilla.xamarin.com/show_bug.cgi?id=58203
+		: NSItemProviderReading, NSItemProviderWriting
+#endif
+	{
 		[Export ("placemark", ArgumentSemantic.Retain)]
 		MKPlacemark Placemark { get;  }
 
@@ -343,6 +372,10 @@ namespace XamCore.MapKit {
 		[iOS (9,0), Mac(10,11)]
 		[NullAllowed]
 		NSTimeZone TimeZone { get; set; }
+
+		[iOS (11,0)][Mac (10,13)][Mac (10,13, onlyOn64 : true)][Watch (4,0)]
+		[Field ("MKMapItemTypeIdentifier")]
+		NSString TypeIdentifier { get; }
 	}
 
 #if !WATCH
@@ -452,8 +485,21 @@ namespace XamCore.MapKit {
 #endif
 	
 		[Export ("dequeueReusableAnnotationViewWithIdentifier:")]
+		[return: NullAllowed]
 		MKAnnotationView DequeueReusableAnnotation (string withViewIdentifier);
 	
+		[TV (11,0)][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[Export ("dequeueReusableAnnotationViewWithIdentifier:forAnnotation:")]
+		MKAnnotationView DequeueReusableAnnotation (string identifier, IMKAnnotation annotation);
+
+		[TV (11,0)][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[Export ("registerClass:forAnnotationViewWithReuseIdentifier:")]
+		void Register ([NullAllowed] Class viewClass, string identifier);
+
+		[TV (11,0)][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[Wrap ("Register (viewType == null ? null : new Class (viewType), identifier)")]
+		void Register ([NullAllowed] Type viewType, string identifier);
+
 		[Export ("selectAnnotation:animated:")]
 		[PostGet ("SelectedAnnotations")]
 #if XAMCORE_2_0
@@ -664,6 +710,17 @@ namespace XamCore.MapKit {
 #endif
 	}
 
+	[Static]
+	[TV (11,0)][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+	[NoWatch]
+	interface MKMapViewDefault {
+		[Field ("MKMapViewDefaultAnnotationViewReuseIdentifier")]
+		NSString AnnotationViewReuseIdentifier { get; }
+
+		[Field ("MKMapViewDefaultClusterAnnotationViewReuseIdentifier")]
+		NSString ClusterAnnotationViewReuseIdentifier { get; }
+	}
+
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -764,6 +821,10 @@ namespace XamCore.MapKit {
 
 		[Since (7,0), Export ("mapViewDidFinishRenderingMap:fullyRendered:"), EventArgs ("MKDidFinishRenderingMap")]
 		void DidFinishRenderingMap (MKMapView mapView, bool fullyRendered);
+
+		[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[Export ("mapView:clusterAnnotationForMemberAnnotations:"), DelegateName ("MKCreateClusterAnnotation"), DefaultValue (null)]
+		MKClusterAnnotation CreateClusterAnnotation (MKMapView mapView, IMKAnnotation[] memberAnnotations);
 	}
 		
 	[BaseType (typeof (MKAnnotationView))]
@@ -845,13 +906,14 @@ namespace XamCore.MapKit {
 #endif // !MONOMAC && !WATCH
 
 		[Watch (3,0)][TV (10,0)][iOS (10,0)]
-		[NoMac]
+		[Mac (10,12, onlyOn64 : true)]
 		[Export ("initWithCoordinate:")]
 		IntPtr Constructor (CLLocationCoordinate2D coordinate);
 
-#if !TVOS && !MONOMAC && XAMCORE_2_0
+#if !TVOS && XAMCORE_2_0
 		[Watch (3,0)][iOS (10,0)]
-		[NoTV][NoMac]
+		[Mac (10,12, onlyOn64 : true)]
+		[NoTV]
 		[Export ("initWithCoordinate:postalAddress:")]
 		IntPtr Constructor (CLLocationCoordinate2D coordinate, CNPostalAddress postalAddress);
 #endif
@@ -1827,6 +1889,109 @@ namespace XamCore.MapKit {
 		[Watch (3,0)][TV (10,0)][iOS (10,0)][Mac (10,12)]
 		[Export ("setMapItem:")]
 		void SetMapItem (MKMapItem item);
+	}
+
+[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MKClusterAnnotation : MKAnnotation {
+		[NullAllowed, Export ("title")]
+		new string Title { get; set; }
+
+		[NullAllowed, Export ("subtitle")]
+		new string Subtitle { get; set; }
+
+		[Export ("memberAnnotations")]
+		IMKAnnotation[] MemberAnnotations { get; }
+
+		[Export ("initWithMemberAnnotations:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (IMKAnnotation[] memberAnnotations);
+	}
+
+	[NoTV][iOS (11,0)][NoMac][NoWatch]
+	[BaseType (typeof (UIView))]
+	[DisableDefaultCtor]
+	interface MKCompassButton {
+		[Static]
+		[Export ("compassButtonWithMapView:")]
+		MKCompassButton FromMapView ([NullAllowed] MKMapView mapView);
+
+		[NullAllowed, Export ("mapView", ArgumentSemantic.Weak)]
+		MKMapView MapView { get; set; }
+
+		[Export ("compassVisibility", ArgumentSemantic.Assign)]
+		MKFeatureVisibility CompassVisibility { get; set; }
+	}
+
+	[TV (11,0)][NoWatch][iOS (11,0)][NoMac]
+	[BaseType (typeof (MKAnnotationView))]
+	interface MKMarkerAnnotationView {
+
+		// inlined from base type
+		[Export ("initWithAnnotation:reuseIdentifier:")]
+		[PostGet ("Annotation")]
+		IntPtr Constructor (IMKAnnotation annotation, [NullAllowed] string reuseIdentifier);
+
+		[Export ("titleVisibility", ArgumentSemantic.Assign)]
+		MKFeatureVisibility TitleVisibility { get; set; }
+
+		[Export ("subtitleVisibility", ArgumentSemantic.Assign)]
+		MKFeatureVisibility SubtitleVisibility { get; set; }
+
+		[Appearance]
+		[NullAllowed, Export ("markerTintColor", ArgumentSemantic.Copy)]
+		UIColor MarkerTintColor { get; set; }
+
+		[Appearance]
+		[NullAllowed, Export ("glyphTintColor", ArgumentSemantic.Copy)]
+		UIColor GlyphTintColor { get; set; }
+
+		[Appearance]
+		[NullAllowed, Export ("glyphText")]
+		string GlyphText { get; set; }
+
+		[Appearance]
+		[NullAllowed, Export ("glyphImage", ArgumentSemantic.Copy)]
+		UIImage GlyphImage { get; set; }
+
+		[Appearance]
+		[NullAllowed, Export ("selectedGlyphImage", ArgumentSemantic.Copy)]
+		UIImage SelectedGlyphImage { get; set; }
+
+		[Export ("animatesWhenAdded")]
+		bool AnimatesWhenAdded { get; set; }
+	}
+
+	[TV (11,0)][NoWatch][iOS (11,0)][NoMac]
+	[BaseType (typeof (UIView))]
+	[DisableDefaultCtor]
+	interface MKScaleView {
+
+		[Static]
+		[Export ("scaleViewWithMapView:")]
+		MKScaleView FromMapView ([NullAllowed] MKMapView mapView);
+
+		[NullAllowed, Export ("mapView", ArgumentSemantic.Weak)]
+		MKMapView MapView { get; set; }
+
+		[Export ("scaleVisibility", ArgumentSemantic.Assign)]
+		MKFeatureVisibility ScaleVisibility { get; set; }
+
+		[Export ("legendAlignment", ArgumentSemantic.Assign)]
+		MKScaleViewAlignment LegendAlignment { get; set; }
+	}
+
+	[NoTV][iOS (11,0)][NoWatch][NoMac]
+	[BaseType (typeof (UIView))]
+	[DisableDefaultCtor]
+	interface MKUserTrackingButton {
+		[Static]
+		[Export ("userTrackingButtonWithMapView:")]
+		MKUserTrackingButton FromMapView ([NullAllowed] MKMapView mapView);
+
+		[NullAllowed, Export ("mapView", ArgumentSemantic.Weak)]
+		MKMapView MapView { get; set; }
 	}
 }
 #endif // XAMCORE_2_0 || !MONOMAC

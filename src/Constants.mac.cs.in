@@ -128,5 +128,6 @@ namespace MonoMac {
 
 		// macOS 10.13
 		public const string CoreMLLibrary = "/System/Library/Frameworks/CoreML.framework/CoreML";
+		public const string VisionLibrary = "/System/Library/Frameworks/Vision.framework/Vision";
 	}
 }

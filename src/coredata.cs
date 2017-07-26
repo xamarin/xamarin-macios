@@ -1522,17 +1522,12 @@ namespace XamCore.CoreData
 	[BaseType (typeof(NSPersistentStoreResult))]
 	interface NSPersistentHistoryResult
 	{
+		[NullAllowed]
 		[Export ("result", ArgumentSemantic.Strong)]
 		NSObject Result { get; }
 
 		[Export ("resultType")]
 		NSPersistentHistoryResultType ResultType { get; }
-
-		[Export ("initWithResultType:andResult:")]
-		IntPtr Constructor (NSPersistentHistoryResultType type, NSObject result);
-
-		[Export ("initWithSubresults:")]
-		IntPtr Constructor (NSObject[] subresults);
 	}
 
 	[Abstract]

@@ -140,6 +140,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "MediaPlayer", "MediaPlayer", 10, 12, 1 },
 
 					{ "CoreML", "CoreML", 10, 13 },
+					{ "Vision", "Vision", 10, 13 },
 				};
 			}
 			return mac_frameworks;
@@ -249,6 +250,9 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "DeviceCheck", "DeviceCheck", 11 },
 				{ "IdentityLookup", "IdentityLookup", 11 },
 				{ "CoreML", "CoreML", 11 },
+				{ "Vision", "Vision", 11 },
+				{ "FileProvider", "FileProvider", 11 },
+				{ "FileProviderUI", "FileProviderUI", 11 },
 			};
 		}
 		return ios_frameworks;
@@ -357,6 +361,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "DeviceCheck", "DeviceCheck", 11 },
 					{ "CoreML", "CoreML", 11 },
+					{ "Vision", "Vision", 11 },
 				};
 			}
 			return tvos_frameworks;

@@ -204,6 +204,9 @@ namespace Introspection {
 				case "HMMutableLocationEvent":
 				case "HMTimeEvent":
 				case "ILMessageFilterExtensionContext": // Conformance not in headers
+				case "MSMessageLiveLayout":
+				case "NSFileProviderDomain": // Conformance not in headers
+				case "FPUIActionExtensionContext": // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -336,6 +339,9 @@ namespace Introspection {
 				case "NSManagedObjectModel":
 				case "NSPropertyDescription":
 				case "NSRelationshipDescription":
+				case "MSMessageLiveLayout":
+				case "NSFileProviderDomain": // Conformance not in headers
+				case "FPUIActionExtensionContext": // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -420,6 +426,8 @@ namespace Introspection {
 				case "ACAccountCredential": // b2: Conformance not in headers
 				case "ILMessageFilterExtensionContext": // b2: Conformance not in headers
 				case "HMCharacteristicEvent": // Selectors not available on 32 bit
+				case "NSFileProviderDomain": // Conformance not in headers
+				case "FPUIActionExtensionContext": // Conformance not in headers
 					return true;
 
 #if __WATCHOS__

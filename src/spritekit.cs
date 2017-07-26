@@ -21,6 +21,9 @@ using XamCore.CoreFoundation;
 using XamCore.CoreGraphics;
 using XamCore.CoreVideo;
 using XamCore.SceneKit;
+#if !WATCH
+using XamCore.Metal;
+#endif
 
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
@@ -28,6 +31,7 @@ using Matrix2 = global::OpenTK.Matrix2;
 using Matrix3 = global::OpenTK.Matrix3;
 using Matrix4 = global::OpenTK.Matrix4;
 using Vector4 = global::OpenTK.Vector4;
+using Quaternion = global::OpenTK.Quaternion;
 
 #if MONOMAC
 using XamCore.AppKit;
@@ -37,6 +41,7 @@ using UIView = global::XamCore.AppKit.NSView;
 using pfloat = System.nfloat;
 #else
 using XamCore.UIKit;
+using NSLineBreakMode = global::XamCore.UIKit.UILineBreakMode;
 using pfloat = System.Single;
 #if !WATCH
 using UIView = global::XamCore.UIKit.UIView;
@@ -51,6 +56,11 @@ namespace XamCore.SpriteKit {
 	interface CIFilter {}
 	interface GKPolygonObstacle {}
 	interface UIView {}
+	interface IMTLCommandBuffer {}
+	interface IMTLCommandQueue {}
+	interface IMTLDevice {}
+	interface IMTLRenderCommandEncoder {}
+	interface MTLRenderPassDescriptor {}
 #endif
 
 	delegate void SKNodeChildEnumeratorHandler (SKNode node, out bool stop);
@@ -165,6 +175,12 @@ namespace XamCore.SpriteKit {
 
 		[Export ("userInteractionEnabled")]
 		bool UserInteractionEnabled { [Bind ("isUserInteractionEnabled")] get; set; }
+
+		[NoWatch]
+		[NoMac]
+		[TV (11,0), iOS (11,0)]
+		[Export ("focusBehavior", ArgumentSemantic.Assign)]
+		SKNodeFocusBehavior FocusBehavior { get; set; }
 
 		[Export ("parent")]
 		SKNode Parent { get; }
@@ -1182,11 +1198,28 @@ namespace XamCore.SpriteKit {
 		[Static, Export ("labelNodeWithText:")]
 		SKLabelNode FromText ([NullAllowed] string text);
 
+		[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
+		[Static]
+		[Export ("labelNodeWithAttributedText:")]
+		SKLabelNode FromText ([NullAllowed] NSAttributedString attributedText);
+
 		[Export ("verticalAlignmentMode")]
 		SKLabelVerticalAlignmentMode VerticalAlignmentMode { get; set; }
 
 		[Export ("horizontalAlignmentMode")]
 		SKLabelHorizontalAlignmentMode HorizontalAlignmentMode { get; set; }
+
+		[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
+		[Export ("numberOfLines")]
+		nint NumberOfLines { get; set; }
+
+		[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
+		[Export ("lineBreakMode", ArgumentSemantic.Assign)]
+		NSLineBreakMode LineBreakMode { get; set; }
+
+		[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
+		[Export ("preferredMaxLayoutWidth")]
+		nfloat PreferredMaxLayoutWidth { get; set; }
 
 		[Export ("fontName", ArgumentSemantic.Copy)]
 		string FontName { get; set; }
@@ -1194,6 +1227,10 @@ namespace XamCore.SpriteKit {
 		[Export ("text", ArgumentSemantic.Copy)]
 		[NullAllowed] // nullable in Xcode7 headers and caught by introspection tests
 		string Text { get; set; }
+
+		[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
+		[NullAllowed, Export ("attributedText", ArgumentSemantic.Copy)]
+		NSAttributedString AttributedText { get; set; }
 
 		[Export ("fontSize")]
 		nfloat FontSize { get; set; }
@@ -3222,6 +3259,78 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		[Export ("gridByReplacingDestPositions:")]
 		SKWarpGeometryGrid _GridByReplacingDestPositions (IntPtr destPositions);
+	}
+
+	// SKRenderer is not available for WatchKit apps and the iOS simulator
+	[NoWatch]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface SKRenderer {
+		[Static]
+		[Export ("rendererWithDevice:")]
+		SKRenderer FromDevice (IMTLDevice device);
+
+		[Export ("renderWithViewport:commandBuffer:renderPassDescriptor:")]
+		void Render (CGRect viewport, IMTLCommandBuffer commandBuffer, MTLRenderPassDescriptor renderPassDescriptor);
+
+		[Export ("renderWithViewport:renderCommandEncoder:renderPassDescriptor:commandQueue:")]
+		void Render (CGRect viewport, IMTLRenderCommandEncoder renderCommandEncoder, MTLRenderPassDescriptor renderPassDescriptor, IMTLCommandQueue commandQueue);
+
+		[Export ("updateAtTime:")]
+		void Update (double currentTime);
+
+		[NullAllowed, Export ("scene", ArgumentSemantic.Assign)]
+		SKScene Scene { get; set; }
+
+		[Export ("ignoresSiblingOrder")]
+		bool IgnoresSiblingOrder { get; set; }
+
+		[Export ("shouldCullNonVisibleNodes")]
+		bool ShouldCullNonVisibleNodes { get; set; }
+
+		[Export ("showsDrawCount")]
+		bool ShowsDrawCount { get; set; }
+
+		[Export ("showsNodeCount")]
+		bool ShowsNodeCount { get; set; }
+
+		[Export ("showsQuadCount")]
+		bool ShowsQuadCount { get; set; }
+
+		[Export ("showsPhysics")]
+		bool ShowsPhysics { get; set; }
+
+		[Export ("showsFields")]
+		bool ShowsFields { get; set; }
+	}
+
+	[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
+	[BaseType (typeof(SKNode))]
+	interface SKTransformNode {
+		[Export ("xRotation")]
+		nfloat XRotation { get; set; }
+
+		[Export ("yRotation")]
+		nfloat YRotation { get; set; }
+
+		[Export ("eulerAngles")]
+		Vector3 EulerAngles {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
+
+		[Export ("rotationMatrix")]
+		Matrix3 RotationMatrix {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
+
+		[Export ("quaternion")]
+		Quaternion Quaternion {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
 	}
 }
 #endif

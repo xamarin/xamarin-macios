@@ -101,6 +101,7 @@ APPKIT_SOURCES = \
 	AppKit/NSSharingServiceDelegate.cs \
 	AppKit/NSDocument.cs \
 	AppKit/NSEvent.cs \
+	AppKit/NSFont.cs \
 	AppKit/NSGestureRecognizer.cs \
 	AppKit/NSGradient.cs \
 	AppKit/NSGraphics.cs \
@@ -599,6 +600,11 @@ EVENTKITUI_SOURCES = \
 EXTERNALACCESSORY_API_SOURCES = \
 	ExternalAccessory/EAEnums.cs \
 
+# FileProvider
+
+FILEPROVIDER_SOURCES = \
+	FileProvider/NSFileProviderItemIdentifierExtensions.cs \
+
 # FinderSync
 
 FINDERSYNC_CORE_SOURCES = \
@@ -879,6 +885,7 @@ MAPKIT_CORE_SOURCES = \
 MAPKIT_SOURCES = \
 	MapKit/MKCircle.cs \
 	MapKit/MKDirections.cs \
+	MapKit/MKFeatureDisplayPriority.cs \
 	MapKit/MKGeodesicPolyline.cs \
 	MapKit/MKLocalSearch.cs \
 	MapKit/MKMapItem.cs \
@@ -1397,6 +1404,13 @@ VIDEOTOOLBOX_SOURCES = \
 	VideoToolbox/VTUtilities.cs \
 	VideoToolbox/VTPixelTransferProperties.cs \
 
+# Vision
+
+VISION_SOURCES = \
+	Vision/VNFaceLandmarkRegion2D.cs \
+	Vision/VNRequest.cs \
+	Vision/VNUtils.cs \
+
 # WatchConnectivity
 
 WATCHCONNECTIVITY_CORE_SOURCES = \
@@ -1604,6 +1618,7 @@ MAC_FRAMEWORKS =            \
 	StoreKit                \
 	SystemConfiguration     \
 	VideoToolbox            \
+	Vision                  \
 	WebKit                  \
 	WKWebKit                \
 
@@ -1643,6 +1658,8 @@ IOS_FRAMEWORKS =         \
 	EventKit \
 	EventKitUI \
 	ExternalAccessory \
+	FileProvider \
+	FileProviderUI \
 	GLKit \
 	GameController \
 	GameplayKit \
@@ -1689,6 +1706,7 @@ IOS_FRAMEWORKS =         \
 	UserNotificationsUI \
 	VideoToolbox \
 	VideoSubscriberAccount \
+	Vision \
 	WatchConnectivity \
 	WatchKit \
 	WKWebKit \
@@ -1768,6 +1786,7 @@ TVOS_FRAMEWORKS =           \
 	UserNotifications       \
 	VideoSubscriberAccount  \
 	VideoToolbox            \
+	Vision            \
 
 #
 # Compute the SOURCES variables.
