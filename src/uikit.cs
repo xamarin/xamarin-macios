@@ -4604,7 +4604,11 @@ namespace XamCore.UIKit {
 	// returns NIL handle causing exceptions in further calls, e.g. ToString
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -CGColor not defined for the UIColor <UIPlaceholderColor: 0x114f5ad0>; need to first convert colorspace.
 	[DisableDefaultCtor]
-	interface UIColor : NSSecureCoding, NSCopying, NSItemProviderWriting {
+	interface UIColor : NSSecureCoding, NSCopying
+#if !TVOS && !WATCH
+		, NSItemProviderWriting
+#endif
+	{
 		[Export ("colorWithWhite:alpha:")][Static]
 		UIColor FromWhiteAlpha (nfloat white, nfloat alpha);
 
@@ -4787,7 +4791,7 @@ namespace XamCore.UIKit {
 #endif
 
 		// From the NSItemProviderWriting protocol, a static method.
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		string[] WritableTypeIdentifiers { get; }
@@ -6847,9 +6851,12 @@ namespace XamCore.UIKit {
 #endif // !WATCH
 
 	[BaseType (typeof (NSObject))]
-	interface UIImage : NSSecureCoding, NSItemProviderWriting
+	interface UIImage : NSSecureCoding
 #if !WATCH
 		, UIAccessibility, UIAccessibilityIdentification
+#if !TVOS
+		, NSItemProviderWriting
+#endif
 #endif // !WATCH
 	{
 		[ThreadSafe]
@@ -7113,7 +7120,7 @@ namespace XamCore.UIKit {
 #endif
 
 		// From the NSItemProviderWriting protocol, a static method.
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		string[] WritableTypeIdentifiers { get; }

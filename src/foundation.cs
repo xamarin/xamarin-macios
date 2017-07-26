@@ -262,7 +262,7 @@ namespace XamCore.Foundation
 		string[] ReadableTypeIdentifiersForItemProvider { get; }
 
 		// From the NSItemProviderWriting protocol, a static method.
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		string[] WritableTypeIdentifiers { get; }
@@ -5289,9 +5289,12 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject), Name="NSURL")]
 	// init returns NIL
 	[DisableDefaultCtor]
-	partial interface NSUrl : NSSecureCoding, NSCopying, NSItemProviderWriting
+	partial interface NSUrl : NSSecureCoding, NSCopying
 #if MONOMAC
 	, NSPasteboardReading, NSPasteboardWriting
+#endif
+#if !WATCH && !TVOS
+	, NSItemProviderWriting
 #endif
 	{
 		[Export ("initWithScheme:host:path:")]
@@ -5988,7 +5991,7 @@ namespace XamCore.Foundation
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		string[] ReadableTypeIdentifiers { get; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		string[] WritableTypeIdentifiers { get; }
@@ -7804,10 +7807,13 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject)), Bind ("NSString")]
-	interface NSString2 : NSSecureCoding, NSMutableCopying, NSItemProviderWriting
+	interface NSString2 : NSSecureCoding, NSMutableCopying
 	#if MONOMAC
 		, NSPasteboardReading, NSPasteboardWriting // Documented that it implements NSPasteboard protocols even if header doesn't show it
 	#endif
+#if !WATCH && !TVOS
+		, NSItemProviderWriting
+#endif
 	{
 		[Export ("initWithData:encoding:")]
 		IntPtr Constructor (NSData data, NSStringEncoding encoding);
@@ -8072,7 +8078,7 @@ namespace XamCore.Foundation
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		string[] ReadableTypeIdentifiers { get; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		string[] WritableTypeIdentifiers { get; }
@@ -8126,7 +8132,7 @@ namespace XamCore.Foundation
 		void ReplaceCharactersInRange (NSRange range, NSString aString);
 
 		// From the NSItemProviderWriting protocol, a static method.
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		string[] WritableTypeIdentifiers { get; }
