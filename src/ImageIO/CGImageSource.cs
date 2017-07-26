@@ -383,7 +383,7 @@ namespace XamCore.ImageIO {
 
 		public CGImageAuxiliaryDataInfo CopyAuxiliaryDataInfo (CGImageSource imageSource, nuint index, CGImageAuxiliaryDataType auxiliaryImageDataType)
 		{
-			var ptr = CGImageSourceCopyAuxiliaryDataInfoAtIndex (imageSource?.Handle ?? IntPtr.Zero, index, auxiliaryImageDataType.GetConstant ().Handle);
+			var ptr = CGImageSourceCopyAuxiliaryDataInfoAtIndex (imageSource.GetHandle () ?? IntPtr.Zero, index, auxiliaryImageDataType.GetConstant ().GetHandle ());
 			if (ptr == IntPtr.Zero)
 				return null;
 

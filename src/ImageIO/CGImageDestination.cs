@@ -201,13 +201,13 @@ namespace XamCore.ImageIO {
 			var dict = new NSMutableDictionary ();
 
 			if (Metadata != null)
-				dict.LowlevelSetObject (Metadata.Handle, kMetadata.Handle);
+				dict.LowlevelSetObject (Metadata.Handle, kMetadata);
 
 			if (DepthDataDescription != null)
-				dict.LowlevelSetObject (DepthDataDescription.Handle, DataDescription.Handle);
+				dict.LowlevelSetObject (DepthDataDescription.Handle, DataDescription);
 
 			if (DepthData != null)
-				dict.LowlevelSetObject (DepthDataDescription.Handle, Data.Handle);
+				dict.LowlevelSetObject (DepthDataDescription.Handle, Data);
 
 			return dict;
 		}
@@ -503,7 +503,7 @@ namespace XamCore.ImageIO {
 		public void AddAuxiliaryDataInfo (CGImageDestination dest, CGImageAuxiliaryDataType auxiliaryImageDataType, CGImageAuxiliaryDataInfo auxiliaryDataInfo)
 		{
 			using (var dict = auxiliaryDataInfo?.ToDictionary ()) {
-				CGImageDestinationAddAuxiliaryDataInfo (NativeObjectHelper.GetHandle (dest), auxiliaryImageDataType.GetConstant ().Handle, dict == null ? IntPtr.Zero : dict.Handle);
+				CGImageDestinationAddAuxiliaryDataInfo (dest.GetHandle (), auxiliaryImageDataType.GetConstant ().GetHandle (), dict == null ? IntPtr.Zero : dict.GetHandle ());
 			}
 		}
 	}

@@ -1226,13 +1226,13 @@ namespace XamCore.ImageIO {
 	[Partial]
 	[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
 	interface CGImageAuxiliaryDataInfo {
-		[Field ("kCGImageAuxiliaryDataInfoData")]
-		NSString Data { get; }
+		[Internal, Field ("kCGImageAuxiliaryDataInfoData")]
+		IntPtr Data { get; }
 
-		[Field ("kCGImageAuxiliaryDataInfoDataDescription")]
-		NSString DataDescription { get; }
+		[Internal, Field ("kCGImageAuxiliaryDataInfoDataDescription")]
+		IntPtr DataDescription { get; }
 
-		[Field ("kCGImageAuxiliaryDataInfoMetadata")]
-		NSString kMetadata { get; }
+		[Internal, Field ("kCGImageAuxiliaryDataInfoMetadata")]
+		IntPtr kMetadata { get; }
 	}
 }
