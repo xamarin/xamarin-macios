@@ -6810,7 +6810,7 @@ namespace XamCore.Foundation
 	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(NSUrlSessionTask), Name="NSURLSessionStreamTask")]
 	[DisableDefaultCtor]
-	interface NSUrlSessionStreamTask : NSProgressReporting
+	interface NSUrlSessionStreamTask
 	{
 		[Export ("readDataOfMinLength:maxLength:timeout:completionHandler:")]
 		[Async (ResultTypeName="NSUrlSessionStreamDataRead")]
@@ -6839,8 +6839,11 @@ namespace XamCore.Foundation
 	[Since (7,0)]
 	[Availability (Introduced = Platform.Mac_10_9)]
 	[BaseType (typeof (NSObject), Name="NSURLSessionTask")]
-	partial interface NSUrlSessionTask : NSCopying, NSProgressReporting {
-	
+	partial interface NSUrlSessionTask : NSCopying
+#if MONOMAC
+	, NSProgressReporting
+#endif
+	{
 		[Export ("taskIdentifier")]
 		nuint TaskIdentifier { get; }
 	
@@ -6893,9 +6896,11 @@ namespace XamCore.Foundation
 		float Priority { get; set; } /* float, not CGFloat */
 #endif
 
+#if MONOMAC // Introspection fails for iOS
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Export ("progress", ArgumentSemantic.Strong)]
 		NSProgress Progress { get; }
+#endif
 
 //1) ApiSelectorTest.InstanceMethods (Introspection.MacApiSelectorTest.ApiSelectorTest.InstanceMethods)
 //     6 errors found in 22990 instance selector validated:
@@ -6946,17 +6951,17 @@ namespace XamCore.Foundation
 	[Since (7,0)]
 	[Availability (Introduced = Platform.Mac_10_9)]
 	[BaseType (typeof (NSUrlSessionTask), Name="NSURLSessionDataTask")]
-	partial interface NSUrlSessionDataTask : NSProgressReporting {}
+	partial interface NSUrlSessionDataTask {}
 
 	[Since (7,0)]
 	[Availability (Introduced = Platform.Mac_10_9)]
 	[BaseType (typeof (NSUrlSessionDataTask), Name="NSURLSessionUploadTask")]
-	partial interface NSUrlSessionUploadTask : NSProgressReporting {}
+	partial interface NSUrlSessionUploadTask {}
 
 	[Since (7,0)]
 	[Availability (Introduced = Platform.Mac_10_9)]
 	[BaseType (typeof (NSUrlSessionTask), Name="NSURLSessionDownloadTask")]
-	partial interface NSUrlSessionDownloadTask : NSProgressReporting {
+	partial interface NSUrlSessionDownloadTask {
 		[Export ("cancelByProducingResumeData:")]
 		void Cancel (Action<NSData> resumeCallback);
 	}
@@ -11531,15 +11536,17 @@ namespace XamCore.Foundation
 		[Export ("finished")]
 		bool Finished { [Bind ("isFinished")] get; }
 
+		[Internal]
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("estimatedTimeRemaining", ArgumentSemantic.Copy)]
-		[BindAs (typeof (nint))]
-		NSNumber EstimatedTimeRemaining { get; set; }
+		//[BindAs (typeof (nint?))]
+		NSNumber _EstimatedTimeRemaining { get; set; }
 
+		[Internal]
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("throughput", ArgumentSemantic.Copy)]
-		[BindAs (typeof (nint))]
-		NSNumber Throughput { get; set; }
+		//[BindAs (typeof (nint?))]
+		NSNumber _Throughput { get; set; }
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("fileOperationKind")]
@@ -11549,15 +11556,17 @@ namespace XamCore.Foundation
 		[NullAllowed, Export ("fileURL", ArgumentSemantic.Copy)]
 		NSUrl FileUrl { get; set; }
 
+		[Internal]
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("fileTotalCount", ArgumentSemantic.Copy)]
-		[BindAs (typeof (nint))]
-		NSNumber FileTotalCount { get; set; }
+		//[BindAs (typeof (nint?))]
+		NSNumber _FileTotalCount { get; set; }
 
+		[Internal]
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("fileCompletedCount", ArgumentSemantic.Copy)]
-		[BindAs (typeof (nint))]
-		NSNumber FileCompletedCount { get; set; }
+		//[BindAs (typeof (nint?))]
+		NSNumber _FileCompletedCount { get; set; }
 	}
 
 	interface INSProgressReporting {}
@@ -13310,6 +13319,7 @@ namespace XamCore.Foundation
 
 	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface NSFileProviderService
 	{
 		[Export ("name")]
