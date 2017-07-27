@@ -188,6 +188,31 @@ namespace XamCore.ImageIO {
 	}
 #endif
 
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	public partial class CGImageAuxiliaryDataInfo {
+		public NSData DepthData { get; set; }
+
+		public NSDictionary DepthDataDescription { get; set; }
+
+		public CGImageMetadata Metadata { get; set; }
+
+		internal NSMutableDictionary ToDictionary ()
+		{
+			var dict = new NSMutableDictionary ();
+
+			if (Metadata != null)
+				dict.LowlevelSetObject (Metadata.Handle, kMetadata);
+
+			if (DepthDataDescription != null)
+				dict.LowlevelSetObject (DepthDataDescription.Handle, DataDescription);
+
+			if (DepthData != null)
+				dict.LowlevelSetObject (DepthDataDescription.Handle, Data);
+
+			return dict;
+		}
+	}
+
 	public class CGImageDestination : INativeObject, IDisposable {
 		internal IntPtr handle;
 
@@ -468,6 +493,18 @@ namespace XamCore.ImageIO {
 			finally {
 				if (options != null)
 					o.Dispose ();
+			}
+		}
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[DllImport (Constants.ImageIOLibrary)]
+		static extern void CGImageDestinationAddAuxiliaryDataInfo (IntPtr /* CGImageDestinationRef* */ idst, IntPtr /* CFStringRef* */ auxiliaryImageDataType, IntPtr /* CFDictionaryRef* */ auxiliaryDataInfoDictionary);
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		public void AddAuxiliaryDataInfo (CGImageDestination dest, CGImageAuxiliaryDataType auxiliaryImageDataType, CGImageAuxiliaryDataInfo auxiliaryDataInfo)
+		{
+			using (var dict = auxiliaryDataInfo?.ToDictionary ()) {
+				CGImageDestinationAddAuxiliaryDataInfo (dest.GetHandle (), auxiliaryImageDataType.GetConstant ().GetHandle (), dict.GetHandle ());
 			}
 		}
 	}
