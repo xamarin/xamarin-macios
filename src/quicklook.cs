@@ -175,7 +175,7 @@ namespace XamCore.QuickLook {
 
 		[Static]
 		[Export ("replyWithImageFileURL:")]
-		QLThumbnailReply CreateReply (NSUrl fileURL);
+		QLThumbnailReply CreateReply (NSUrl fileUrl);
 	}
 
 	[iOS (11,0)]
