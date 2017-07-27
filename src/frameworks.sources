@@ -1605,6 +1605,7 @@ MAC_FRAMEWORKS =            \
 	OpenGL                  \
 	PdfKit                  \
 	Photos                  \
+	PhotosUI				\
 	PrintCore		\
 	QTKit                   \
 	QuartzComposer          \
