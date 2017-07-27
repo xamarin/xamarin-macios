@@ -58,5 +58,13 @@ namespace XamCore.StoreKit {
 		MusicCatalogSubscriptionEligible = 1 << 1,
 		AddToCloudMusicLibrary = 1 << 8
 	}
+
+	[iOS (11,0)][TV (11,0)][NoMac]
+	[Native]
+	public enum SKProductStorePromotionVisibility : nint {
+		Default,
+		Show,
+		Hide,
+	}
 #endif
 }
