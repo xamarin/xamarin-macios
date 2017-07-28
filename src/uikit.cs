@@ -17054,7 +17054,7 @@ namespace XamCore.UIKit {
 	[iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface UISpringLoadedInteraction : IUIInteraction {
+	interface UISpringLoadedInteraction : UIInteraction {
 		[Export ("initWithInteractionBehavior:interactionEffect:activationHandler:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] IUISpringLoadedInteractionBehavior interactionBehavior, [NullAllowed] IUISpringLoadedInteractionEffect interactionEffect, Action<UISpringLoadedInteraction, IUISpringLoadedInteractionContext> handler);
@@ -17073,8 +17073,7 @@ namespace XamCore.UIKit {
 
 	[NoWatch, NoTV]
 	[iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface UISpringLoadedInteractionBehavior {
 		[Abstract]
 		[Export ("shouldAllowInteraction:withContext:")]
@@ -17088,8 +17087,7 @@ namespace XamCore.UIKit {
 
 	[NoWatch, NoTV]
 	[iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface UISpringLoadedInteractionEffect {
 		[Abstract]
 		[Export ("interaction:didChangeWithContext:")]
