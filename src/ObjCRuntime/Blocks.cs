@@ -83,6 +83,10 @@ namespace XamCore.ObjCRuntime {
 		[DllImport ("__Internal")]
 		static extern IntPtr xamarin_get_block_descriptor ();
 
+		struct DelegatePairs {
+			public Delegate Trampoline, UserDelegate;
+		}
+
 		//
 		// trampoline must be static, and someone else needs to keep a ref to it
 		//
@@ -90,7 +94,8 @@ namespace XamCore.ObjCRuntime {
 		{
 			isa = block_class;
 			invoke = Marshal.GetFunctionPointerForDelegate (trampoline);
-			local_handle = (IntPtr) GCHandle.Alloc (userDelegate);
+			var delegates = new DelegatePairs () { Trampoline = trampoline, UserDelegate = userDelegate };
+			local_handle = (IntPtr) GCHandle.Alloc (delegates);
 			global_handle = IntPtr.Zero;
 			flags = BlockFlags.BLOCK_HAS_COPY_DISPOSE | BlockFlags.BLOCK_HAS_SIGNATURE;
 
