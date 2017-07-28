@@ -12,8 +12,9 @@ using XamCore.ObjCRuntime;
 namespace XamCore.SafariServices {
 
 	// NSInteger -> SSReadingList.h
-	[NoMac]
+	[NoMac][iOS (7,0)]
 	[Native]
+	[ErrorDomain ("SSReadingListErrorDomain")]
 	public enum SSReadingListError : nint {
 		UrlSchemeNotAllowed = 1
 	}
@@ -39,5 +40,32 @@ namespace XamCore.SafariServices {
 		NoExtensionFound = 1,
 		NoAttachmentFound = 2,
 		LoadingInterrupted = 3
+	}
+
+	[NoMac]
+	[iOS (11,0)]
+	[Native]
+	public enum SFSafariViewControllerDismissButtonStyle : nint {
+		Done,
+		Close,
+		Cancel,
+	}
+
+	[NoMac]
+	[iOS (11,0)]
+	[Native]
+	[ErrorDomain ("SFAuthenticationErrorDomain")]
+	public enum SFAuthenticationError : nint {
+		CanceledLogin = 1,
+	}
+
+	[NoiOS]
+	[Mac (10,12,4, only64: true)]
+	[Native]
+	public enum SFSafariServicesVersion : nint {
+		V10_0,
+		V10_1,
+		[Mac (10,13, only64: true)]
+		V11_0,
 	}
 }
