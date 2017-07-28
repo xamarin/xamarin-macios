@@ -585,6 +585,11 @@ namespace XamCore.CoreAnimation {
 		[NullAllowed] // by default this property is null
 		[Export ("compositingFilter", ArgumentSemantic.Strong)]
 		NSObject CompositingFilter { get; set; }
+
+		[NoWatch] // headers not updated
+		[TV (11,0)][Mac (10,13)][iOS (11,0)]
+		[Export ("maskedCorners", ArgumentSemantic.Assign)]
+		CACornerMask MaskedCorners { get; set; }
 	}
 
 #if XAMCORE_2_0 || !MONOMAC
@@ -626,6 +631,16 @@ namespace XamCore.CoreAnimation {
 		
 		[Export ("presentsWithTransaction")]
 		bool PresentsWithTransaction { [Bind ("presentsWithTransaction")] get; set; }
+
+		[NoWatch][NoTV][NoiOS]
+		[Mac (10,13)]
+		[Export ("displaySyncEnabled")]
+		bool DisplaySyncEnabled { get; set; }
+
+		[NoWatch] // headers not updated
+		[TV (11,0)][Mac (10,13)][iOS (11,0)]
+		[Export ("allowsNextDrawableTimeout")]
+		bool AllowsNextDrawableTimeout { get; set; }
 	}
 #endif
 

@@ -145,6 +145,10 @@ namespace XamCore.WebKit
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		[Export ("securityOrigin")]
 		WKSecurityOrigin SecurityOrigin { get; }
+
+		[iOS (11,0)][Mac (10,13, onlyOn64 : true)]
+		[NullAllowed, Export ("webView", ArgumentSemantic.Weak)]
+		WKWebView WebView { get; }
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit

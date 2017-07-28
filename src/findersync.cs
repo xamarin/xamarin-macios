@@ -76,10 +76,6 @@ namespace XamCore.FinderSync {
 		string ToolbarItemToolTip { get; }
 
 		[Mac (10,13, onlyOn64 : true)]
-		[Export ("exportedObjectForMessageInterface:itemURL:error:")]
-		NSObject GetExportedObject (NSFileProviderMessageInterface messageInterface, NSUrl itemUrl, [NullAllowed] out NSError error);
-
-		[Mac (10,13, onlyOn64 : true)]
 		[Export ("supportedServiceNamesForItemWithURL:")]
 		string[] SupportedServiceNames (NSUrl itemUrl);
 
