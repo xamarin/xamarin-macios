@@ -83,14 +83,17 @@ namespace XamCore.ObjCRuntime {
 		[DllImport ("__Internal")]
 		static extern IntPtr xamarin_get_block_descriptor ();
 
-		//
-		// trampoline must be static, and someone else needs to keep a ref to it
-		//
-		public unsafe void SetupBlock (Delegate trampoline, Delegate userDelegate)
+		unsafe void SetupBlock (Delegate trampoline, Delegate userDelegate, bool safe)
 		{
 			isa = block_class;
 			invoke = Marshal.GetFunctionPointerForDelegate (trampoline);
-			local_handle = (IntPtr) GCHandle.Alloc (userDelegate);
+			object delegates;
+			if (safe) {
+				delegates = new Tuple<Delegate, Delegate> (trampoline, userDelegate);
+			} else {
+				delegates = userDelegate;
+			}
+			local_handle = (IntPtr) GCHandle.Alloc (delegates);
 			global_handle = IntPtr.Zero;
 			flags = BlockFlags.BLOCK_HAS_COPY_DISPOSE | BlockFlags.BLOCK_HAS_SIGNATURE;
 
@@ -133,6 +136,19 @@ namespace XamCore.ObjCRuntime {
 			Marshal.WriteByte (xblock_descriptor->descriptor.signature + bytes.Length, 0); // null terminate string
 		}
 
+		// trampoline must be static, and someone else needs to keep a ref to it
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		public void SetupBlockUnsafe (Delegate trampoline, Delegate userDelegate)
+		{
+			SetupBlock (trampoline, userDelegate, safe: false);
+		}
+
+		// trampoline must be static, but it's not necessary to keep a ref to it
+		public void SetupBlock (Delegate trampoline, Delegate userDelegate)
+		{
+			SetupBlock (trampoline, userDelegate, safe: true);
+		}
+
 		public void CleanupBlock ()
 		{
 			GCHandle.FromIntPtr (local_handle).Free ();
@@ -150,9 +166,12 @@ namespace XamCore.ObjCRuntime {
 
 		public object Target {
 			get {
-				if (global_handle != IntPtr.Zero)
-					return GCHandle.FromIntPtr (global_handle).Target;
-				return GCHandle.FromIntPtr (local_handle).Target;
+				var handle = global_handle != IntPtr.Zero ? global_handle : local_handle;
+				var target = GCHandle.FromIntPtr (handle).Target;
+				var tuple = target as Tuple<Delegate, Delegate>;
+				if (tuple != null)
+					return tuple.Item2;
+				return target;
 			}
 		}
 
