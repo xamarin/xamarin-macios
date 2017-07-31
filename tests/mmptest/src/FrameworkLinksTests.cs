@@ -130,5 +130,19 @@ namespace Xamarin.MMP.Tests
 				TI.TestUnifiedExecutable (test);
 			});
 		}
+
+		[Test]
+		public void ProjectWithSubFramework_ShouldBuild ()
+		{
+			RunMMPTest (tmpDir => {
+
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { TestDecl = @"
+	[System.Runtime.InteropServices.DllImport (""/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/LaunchServices"")]
+	static extern int GetIconRef (short vRefNum, int creator, int iconType, out System.IntPtr iconRef);
+				" };
+
+				TI.TestUnifiedExecutable (test);
+			});
+		}
 	}
 }
