@@ -259,7 +259,7 @@ namespace XamCore.StoreKit {
 
 		[iOS (11,0)][TV (11,0)][NoMac]
 		[Export ("paymentQueue:shouldAddStorePayment:forProduct:")]
-		bool PaymentQueue (SKPaymentQueue queue, SKPayment payment, SKProduct product);
+		bool ShouldAddStorePayment (SKPaymentQueue queue, SKPayment payment, SKProduct product);
 	}
 
 	[BaseType (typeof (NSObject))]
