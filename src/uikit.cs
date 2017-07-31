@@ -17094,7 +17094,7 @@ namespace XamCore.UIKit {
 
 		[Abstract]
 		[Export ("commitInsertionWithDataSourceUpdates:")]
-		bool CommitInsertionWithDataSourceUpdates (Action<NSIndexPath> dataSourceUpdates);
+		bool CommitInsertion (Action<NSIndexPath> dataSourceUpdates);
 
 		[Abstract]
 		[Export ("deletePlaceholder")]
@@ -17219,6 +17219,7 @@ namespace XamCore.UIKit {
 	[NoWatch, NoTV]
 	[iOS (11,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface UIContextualAction {
 		[Static]
 		[Export ("contextualActionWithStyle:title:handler:")]
@@ -17243,6 +17244,7 @@ namespace XamCore.UIKit {
 	[NoWatch, NoTV]
 	[iOS (11,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface UISwipeActionsConfiguration {
 		[Static]
 		[Export ("configurationWithActions:")]
