@@ -75,6 +75,17 @@ namespace XamCore.CoreML {
 
 		[Export ("isAllowedValue:")]
 		bool IsAllowed (MLFeatureValue value);
+
+		// Category MLFeatureDescription (MLFeatureValueConstraints)
+
+		[NullAllowed, Export ("multiArrayConstraint", ArgumentSemantic.Assign)]
+		MLMultiArrayConstraint MultiArrayConstraint { get; set; }
+
+		[NullAllowed, Export ("imageConstraint", ArgumentSemantic.Assign)]
+		MLImageConstraint ImageConstraint { get; set; }
+
+		[NullAllowed, Export ("dictionaryConstraint", ArgumentSemantic.Assign)]
+		MLDictionaryConstraint DictionaryConstraint { get; set; }
 	}
 
 	interface IMLFeatureProvider { }
