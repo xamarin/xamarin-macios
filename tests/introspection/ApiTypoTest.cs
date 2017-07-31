@@ -399,6 +399,7 @@ namespace Introspection
 			"Undecodable",
 			"Underrun",
 			"Unflagged",
+			"Unfocusing",
 			"Unorm",
 			"Unpremultiplying",
 			"Unprepare",

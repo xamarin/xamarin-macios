@@ -16062,6 +16062,16 @@ namespace XamCore.UIKit {
 		[DesignatedInitializer]
 		IntPtr Constructor (CGPoint point1, CGPoint point2);
 	}
+
+	interface IUIFocusAnimationContext {}
+
+	[iOS (11,0)]
+	[Protocol]
+	interface UIFocusAnimationContext {
+		[Abstract]
+		[Export ("duration")]
+		double Duration { get; }
+	}
 		
 	[NoWatch]
 	[iOS (9,0)]
@@ -16070,6 +16080,16 @@ namespace XamCore.UIKit {
 		[Export ("addCoordinatedAnimations:completion:")]
 		[Async]
 		void AddCoordinatedAnimations ([NullAllowed] Action animations, [NullAllowed] Action completion);
+
+		[Async]
+		[TV (11,0), iOS (11,0)]
+		[Export ("addCoordinatedFocusingAnimations:completion:")]
+		void AddCoordinatedFocusingAnimations ([NullAllowed] Action<IUIFocusAnimationContext> animations, [NullAllowed] Action completion);
+
+		[Async]
+		[TV (11,0), iOS (11,0)]
+		[Export ("addCoordinatedUnfocusingAnimations:completion:")]
+		void AddCoordinatedUnfocusingAnimations ([NullAllowed] Action<IUIFocusAnimationContext> animations, [NullAllowed] Action completion);
 	}
 
 	[NoWatch]
@@ -16119,6 +16139,76 @@ namespace XamCore.UIKit {
 		[iOS (10,0), TV (10,0)]
 		[NullAllowed, Export ("nextFocusedItem", ArgumentSemantic.Weak)]
 		IUIFocusItem NextFocusedItem { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Notification]
+		[Field ("UIFocusDidUpdateNotification")]
+		NSString DidUpdateNotification { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Notification]
+		[Field ("UIFocusMovementDidFailNotification")]
+		NSString MovementDidFailNotification { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Field ("UIFocusUpdateContextKey")]
+		NSString Key { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Field ("UIFocusUpdateAnimationCoordinatorKey")]
+		NSString AnimationCoordinatorKey { get; }
+	}
+
+	[NoWatch]
+	[iOS (11,0), TV (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UIFocusSystem {
+		[Static]
+		[Export ("environment:containsEnvironment:")]
+		bool Contains (IUIFocusEnvironment environment, IUIFocusEnvironment otherEnvironment);
+
+		[NoiOS]
+		[Static]
+		[Export ("registerURL:forSoundIdentifier:")]
+		void RegisterUrl (NSUrl soundFileURL, string identifier);
+
+		// The 2 values associated with the smart enum cannot be used.
+		// See https://developer.apple.com/documentation/uikit/uifocussystem/2887479-register
+		// Do not specify one of the UIKit sound identifiers (such as default); doing so will cause an immediate assertion failure and crash your app.
+		//
+		// [NoiOS]
+		// [Static]
+		// [Wrap ("_RegisterUrl (soundFileURL, identifier.GetConstant ())")]
+		// void RegisterUrl (NSUrl soundFileURL, UIFocusSoundIdentifier identifier);
+	}
+
+	interface IUIFocusDebuggerOutput {}
+
+	[NoWatch]
+	[iOS (11,0), TV (11,0)]
+	[Protocol]
+	interface UIFocusDebuggerOutput {}
+
+	[NoWatch]
+	[iOS (11,0), TV (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface UIFocusDebugger {
+		[Static]
+		[Export ("help")]
+		IUIFocusDebuggerOutput Help { get; }
+
+		[Static]
+		[Export ("status")]
+		IUIFocusDebuggerOutput Status { get; }
+
+		[Static]
+		[Export ("checkFocusabilityForItem:")]
+		IUIFocusDebuggerOutput CheckFocusability (IUIFocusItem item);
+
+		[Static]
+		[Export ("simulateFocusUpdateRequestFromEnvironment:")]
+		IUIFocusDebuggerOutput SimulateFocusUpdateRequest (IUIFocusEnvironment environment);
 	}
 
 	[NoWatch]
@@ -16217,6 +16307,17 @@ namespace XamCore.UIKit {
 		NSIndexPath NextFocusedIndexPath { [return: NullAllowed] get; }
 	}
 
+	[NoWatch, NoiOS]
+	[TV (11,0)]
+	public enum UIFocusSoundIdentifier {
+
+		[Field ("UIFocusSoundIdentifierNone")]
+		None,
+
+		[Field ("UIFocusSoundIdentifierDefault")]
+		Default,
+	}
+
 	interface IUIFocusEnvironment {}
 	[NoWatch]
 	[iOS (9,0)]
@@ -16257,6 +16358,12 @@ namespace XamCore.UIKit {
 		[iOS (10, 0)]
 		[Export ("preferredFocusEnvironments", ArgumentSemantic.Copy)]
 		IUIFocusEnvironment[] PreferredFocusEnvironments { get; }
+
+		[NoiOS]
+		[TV (11,0)]
+		[Export ("soundIdentifierForFocusUpdateInContext:")]
+		[return: NullAllowed]
+		string GetSoundIdentifier (UIFocusUpdateContext context);
 		
 	}
 #endif // !WATCH
