@@ -1770,15 +1770,20 @@ namespace XamCore.AudioUnit
 			get { return Current; }
 		}
 
+		bool IsAt (nint now)
+		{
+			return current != null && (current->Head.EventSampleTime == now);
+		}
+
 		public IEnumerable <AURenderEvent> EnumeratorCurrentEvents (nint now)
 		{
 			if (IsAtEnd)
 				throw new InvalidOperationException ("Can not enumerate events on AURenderEventEnumerator when at end");
 
 			do {
-				yield return *current;
+				yield return Current;
 				MoveNext ();
-			} while (current != null && (current->Head.EventSampleTime == now));
+			} while (IsAt (now));
 		}
 
 		public bool /*IEnumerator<AURenderEvent>.*/MoveNext ()
