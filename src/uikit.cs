@@ -11579,6 +11579,23 @@ namespace XamCore.UIKit {
 		[return: NullAllowed]
 		NSIndexPath GetIndexPathForPreferredFocusedView (UITableView tableView);
 
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("tableView:leadingSwipeActionsConfigurationForRowAtIndexPath:")]
+		[return: NullAllowed]
+		UISwipeActionsConfiguration GetLeadingSwipeActionsConfiguration (UITableView tableView, NSIndexPath indexPath);
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("tableView:trailingSwipeActionsConfigurationForRowAtIndexPath:")]
+		[return: NullAllowed]
+		UISwipeActionsConfiguration GetTrailingSwipeActionsConfiguration (UITableView tableView, NSIndexPath indexPath);
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("tableView:shouldSpringLoadRowAtIndexPath:withContext:")]
+		bool ShouldSpringLoadRow (UITableView tableView, NSIndexPath indexPath, IUISpringLoadedInteractionContext context);
+
 		// WARNING: If you add more methods here, add them to UITableViewController as well.
 	}
 	
