@@ -11377,6 +11377,11 @@ namespace XamCore.UIKit {
 		[iOS (11,0)]
 		[Export ("hasActiveDrop")]
 		bool HasActiveDrop { get; }
+
+		[NoWatch]
+		[TV (11,0), iOS (11,0)]
+		[Export ("insetsContentViewsToSafeArea")]
+		bool InsetsContentViewsToSafeArea { get; set; }
 	}
 
 	interface IUITableViewDataSourcePrefetching {}
@@ -16802,6 +16807,10 @@ namespace XamCore.UIKit {
 
 		[Export ("collectionView:dropSessionDidEnd:")]
 		void DropSessionDidEnd (UICollectionView collectionView, IUIDropSession session);
+
+		[Export ("collectionView:dropPreviewParametersForItemAtIndexPath:")]
+		[return: NullAllowed]
+		UIDragPreviewParameters GetDropPreviewParameters (UICollectionView collectionView, NSIndexPath indexPath);
 	}
 
 	[NoWatch, NoTV]
@@ -16843,8 +16852,8 @@ namespace XamCore.UIKit {
 		IUIDropSession Session { get; }
 
 		[Abstract]
-		[Export ("dropItem:toPlaceholderInsertedAtIndexPath:withReuseIdentifier:cellUpdateHandler:")]
-		IUICollectionViewDropPlaceholderContext DropItemToInsertedPlaceholder (UIDragItem dragItem, NSIndexPath placeholderIndexPath, string reuseIdentifier, Action<UICollectionViewCell> cellUpdateHandler);
+		[Export ("dropItem:toPlaceholder:")]
+		IUICollectionViewDropPlaceholderContext DropItemToPlaceholder (UIDragItem dragItem, UICollectionViewDropPlaceholder placeholder);
 
 		[Abstract]
 		[Export ("dropItem:toItemAtIndexPath:")]
@@ -16857,6 +16866,31 @@ namespace XamCore.UIKit {
 		[Abstract]
 		[Export ("dropItem:toTarget:")]
 		IUIDragAnimating DropItemToTarget (UIDragItem dragItem, UIDragPreviewTarget target);
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UICollectionViewPlaceholder {
+		[Export ("initWithInsertionIndexPath:reuseIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSIndexPath insertionIndexPath, string reuseIdentifier);
+
+		[NullAllowed, Export ("cellUpdateHandler", ArgumentSemantic.Copy)]
+		Action<UICollectionViewCell> CellUpdateHandler { get; set; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[BaseType (typeof(UICollectionViewPlaceholder))]
+	interface UICollectionViewDropPlaceholder {
+		// inlined
+		[Export ("initWithInsertionIndexPath:reuseIdentifier:")]
+		IntPtr Constructor (NSIndexPath insertionIndexPath, string reuseIdentifier);
+
+		[NullAllowed, Export ("previewParametersProvider", ArgumentSemantic.Copy)]
+		Func<UICollectionViewCell, UIDragPreviewParameters> PreviewParametersProvider { get; set; }
 	}
 
 	[NoWatch, NoTV]
@@ -16949,6 +16983,10 @@ namespace XamCore.UIKit {
 
 		[Export ("tableView:dropSessionDidEnd:")]
 		void DropSessionDidEnd (UITableView tableView, IUIDropSession session);
+
+		[Export ("tableView:dropPreviewParametersForRowAtIndexPath:")]
+		[return: NullAllowed]
+		UIDragPreviewParameters GetDropPreviewParameters (UITableView tableView, NSIndexPath indexPath);
 	}
 
 	[NoWatch, NoTV]
@@ -16990,8 +17028,8 @@ namespace XamCore.UIKit {
 		IUIDropSession Session { get; }
 
 		[Abstract]
-		[Export ("dropItem:toPlaceholderInsertedAtIndexPath:withReuseIdentifier:rowHeight:cellUpdateHandler:")]
-		IUITableViewDropPlaceholderContext DropItemToInsertedPlaceholder (UIDragItem dragItem, NSIndexPath indexPath, string reuseIdentifier, nfloat rowHeight, Action<UITableViewCell> cellUpdateHandler);
+		[Export ("dropItem:toPlaceholder:")]
+		IUITableViewDropPlaceholderContext DropItemToPlaceholder (UIDragItem dragItem, UITableViewDropPlaceholder placeholder);
 
 		[Abstract]
 		[Export ("dropItem:toRowAtIndexPath:")]
@@ -17004,6 +17042,31 @@ namespace XamCore.UIKit {
 		[Abstract]
 		[Export ("dropItem:toTarget:")]
 		IUIDragAnimating DropItemToTarget (UIDragItem dragItem, UIDragPreviewTarget target);
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UITableViewPlaceholder {
+		[Export ("initWithInsertionIndexPath:reuseIdentifier:rowHeight:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSIndexPath insertionIndexPath, string reuseIdentifier, nfloat rowHeight);
+
+		[NullAllowed, Export ("cellUpdateHandler", ArgumentSemantic.Copy)]
+		Action<UITableViewCell> CellUpdateHandler { get; set; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[BaseType (typeof(UITableViewPlaceholder))]
+	interface UITableViewDropPlaceholder {
+		// inlined
+		[Export ("initWithInsertionIndexPath:reuseIdentifier:rowHeight:")]
+		IntPtr Constructor (NSIndexPath insertionIndexPath, string reuseIdentifier, nfloat rowHeight);
+
+		[NullAllowed, Export ("previewParametersProvider", ArgumentSemantic.Copy)]
+		Func<UITableViewCell, UIDragPreviewParameters> PreviewParametersProvider { get; set; }
 	}
 
 	[NoWatch, NoTV, iOS (11,0)]
