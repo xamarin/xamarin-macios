@@ -34,13 +34,6 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("CreateDebugConfiguration");
-			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
-			Log.LogTaskProperty ("DebugOverWiFi", DebugOverWiFi);
-			Log.LogTaskProperty ("DebugIPAddresses", DebugIPAddresses);
-			Log.LogTaskProperty ("DebuggerPort", DebuggerPort);
-			Log.LogTaskProperty ("SdkIsSimulator", SdkIsSimulator);
-
 			var ips = DebugIPAddresses?.Split (new char [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 			var path = Path.Combine (AppBundleDir, "MonoTouchDebugConfiguration.txt");
 			var added = new HashSet<string> ();

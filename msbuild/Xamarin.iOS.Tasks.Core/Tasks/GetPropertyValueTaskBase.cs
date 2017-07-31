@@ -31,11 +31,9 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			try { 
-				LogStartExecution ();
-
+			try {
 				string result;
-				if (!TryRunMSBuildGetPropertyValueTarget (FileName.GetMetadata ("FullPath"), PropertyName, TargetFrameworkIdentifier, out result)){
+				if (!TryRunMSBuildGetPropertyValueTarget (FileName.GetMetadata ("FullPath"), PropertyName, TargetFrameworkIdentifier, out result)) {
 					LogEndExecutionWithError (result);
 				} else { 
 					var value = ParsePropertyValueFromTargetResult (result);
@@ -127,13 +125,6 @@ namespace Xamarin.iOS.Tasks
 		protected void LogEndExecution ()
 		{
 			Log.LogTaskProperty ("PropertyValue", PropertyValue);
-		}
-
-		protected void LogStartExecution ()
-		{
-			Log.LogTaskName ("GetPropertyValue");
-			Log.LogTaskProperty ("SessionId", SessionId);
-			Log.LogTaskProperty ("PropertyName", PropertyName);
 		}
 	}
 }

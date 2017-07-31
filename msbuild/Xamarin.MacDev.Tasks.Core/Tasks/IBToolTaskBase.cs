@@ -398,21 +398,6 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("IBTool");
-			Log.LogTaskProperty ("AppManifest", AppManifest);
-			Log.LogTaskProperty ("EnableOnDemandResources", EnableOnDemandResources);
-			Log.LogTaskProperty ("InterfaceDefinitions", InterfaceDefinitions);
-			Log.LogTaskProperty ("IntermediateOutputPath", IntermediateOutputPath);
-			Log.LogTaskProperty ("IsWatchApp", IsWatchApp);
-			Log.LogTaskProperty ("IsWatch2App", IsWatch2App);
-			Log.LogTaskProperty ("IsAppExtension", IsAppExtension);
-			Log.LogTaskProperty ("ProjectDir", ProjectDir);
-			Log.LogTaskProperty ("ResourcePrefix", ResourcePrefix);
-			Log.LogTaskProperty ("SdkBinPath", SdkBinPath);
-			Log.LogTaskProperty ("SdkPlatform", SdkPlatform);
-			Log.LogTaskProperty ("SdkRoot", SdkRoot);
-			Log.LogTaskProperty ("SdkVersion", SdkVersion);
-
 			if (IsWatchApp && AppleSdkSettings.XcodeVersion < new Version (6, 2)) {
 				Log.LogError ("Watch apps/extensions require Xcode 6.2 or later. The current Xcode version is {0}", AppleSdkSettings.XcodeVersion);
 

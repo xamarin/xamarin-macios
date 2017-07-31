@@ -29,9 +29,6 @@ namespace Xamarin.MacDev.Tasks
 		{
 			PDictionary plist;
 
-			Log.LogTaskName ("GetNativeExecutableName");
-			Log.LogTaskProperty ("AppManifest", AppManifest);
-
 			try {
 				plist = PDictionary.FromFile (AppManifest);
 			} catch (Exception ex) {

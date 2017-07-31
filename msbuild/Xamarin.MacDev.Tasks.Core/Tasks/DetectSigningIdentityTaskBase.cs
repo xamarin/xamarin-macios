@@ -295,17 +295,6 @@ namespace Xamarin.MacDev.Tasks
 			IList<X509Certificate2> certs;
 			PDictionary plist;
 
-			Log.LogTaskName ("DetectSigningIdentity");
-			Log.LogTaskProperty ("AppBundleName", AppBundleName);
-			Log.LogTaskProperty ("AppManifest", AppManifest);
-			Log.LogTaskProperty ("Keychain", Keychain);
-			Log.LogTaskProperty ("ProvisioningProfile", ProvisioningProfile);
-			Log.LogTaskProperty ("RequireCodesigning", RequireCodeSigning);
-			Log.LogTaskProperty ("RequireProvisioningProfile", RequireProvisioningProfile);
-			Log.LogTaskProperty ("SdkPlatform", SdkPlatform);
-			Log.LogTaskProperty ("SdkIsSimulator", SdkIsSimulator);
-			Log.LogTaskProperty ("SigningKey", SigningKey);
-
 			switch (SdkPlatform) {
 			case "AppleTVSimulator":
 			case "AppleTVOS":

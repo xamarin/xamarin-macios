@@ -34,10 +34,6 @@ namespace Xamarin.MacDev.Tasks
 			string[] path;
 			int i = 0;
 
-			Log.LogTaskName ("GetPropertyListValue");
-			Log.LogTaskProperty ("PropertyListFile", PropertyListFile);
-			Log.LogTaskProperty ("Property", Property);
-
 			path = Property.TrimStart (':').Split (new [] { ':' });
 
 			if (path.Length == 0) {

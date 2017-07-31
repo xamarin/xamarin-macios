@@ -583,13 +583,6 @@ namespace Xamarin.MacDev.Tasks
 			PObject plist;
 			bool binary;
 
-			Log.LogTaskName ("PropertyListEditor");
-			Log.LogTaskProperty ("PropertyList", PropertyList);
-			Log.LogTaskProperty ("Action", Action);
-			Log.LogTaskProperty ("Entry", Entry);
-			Log.LogTaskProperty ("Type", Type);
-			Log.LogTaskProperty ("Value", Value);
-
 			if (!Enum.TryParse (Action, out action)) {
 				Log.MTError (7065, $"Unknown PropertyList editor action: {Action}");
 				return false;

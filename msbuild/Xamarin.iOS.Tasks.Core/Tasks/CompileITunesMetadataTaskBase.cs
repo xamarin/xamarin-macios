@@ -29,11 +29,6 @@ namespace Xamarin.iOS.Tasks
 		{
 			PDictionary metadata;
 
-			Log.LogTaskName ("CompileITunesMetadata");
-			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
-			Log.LogTaskProperty ("ITunesMetadata", ITunesMetadata);
-			Log.LogTaskProperty ("OutputPath", OutputPath);
-
 			if (ITunesMetadata != null) {
 				if (ITunesMetadata.Length > 1) {
 					Log.LogError ("Cannot have more than 1 iTunesMetadata.plist.");

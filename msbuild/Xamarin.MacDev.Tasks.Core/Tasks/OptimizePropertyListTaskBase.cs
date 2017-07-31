@@ -55,10 +55,6 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("OptimizePropertyList");
-			Log.LogTaskProperty ("Input", Input);
-			Log.LogTaskProperty ("Output", Output);
-
 			Directory.CreateDirectory (Path.GetDirectoryName (Output.ItemSpec));
 
 			return base.Execute ();
