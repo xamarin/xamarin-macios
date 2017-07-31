@@ -250,22 +250,29 @@ namespace XamCore.Foundation
 		[Wrap ("this (data, options == null ? null : options.Dictionary, out resultDocumentAttributes, ref error)")]
 		IntPtr Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 
-		// From the NSItemProviderReading protocol, a special constructor.
-		[Export ("initWithItemProviderData:typeIdentifier:error:")]
-		[iOS (11,0), NoWatch, NoTV, Mac(10,13)]
-		IntPtr Constructor (NSData providerData, string typeIdentifier, out NSError outError);
-
 		// From the NSItemProviderReading protocol, a static method.
 		[Static]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		[iOS (11,0), NoWatch, NoTV, Mac(10,13)]
 		string[] ReadableTypeIdentifiersForItemProvider { get; }
 
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
+		[return: NullAllowed]
+		INSItemProviderReading GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
+
 		// From the NSItemProviderWriting protocol, a static method.
 		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		string[] WritableTypeIdentifiers { get; }
+
+		// From the NSItemProviderWriting protocol, a static method.
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("itemProviderVisibilityForRepresentationWithTypeIdentifier:")]
+		NSItemProviderRepresentationVisibility GetItemProviderVisibility (string typeIdentifier);
 		
 		[Since (7,0)]
 		[Export ("dataFromRange:documentAttributes:error:")]
@@ -5008,7 +5015,7 @@ namespace XamCore.Foundation
 		string AsString ();
 	}
 
-	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // .objc_class_name_NSUserActivity", referenced from '' not found
+	[iOS (8,0)][Mac (10,10, onlyOn64 : true), Watch (2,0), TV (9,0)] // .objc_class_name_NSUserActivity", referenced from '' not found
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // xcode 8 beta 4 marks it as API_DEPRECATED
 	partial interface NSUserActivity {
@@ -5061,31 +5068,31 @@ namespace XamCore.Foundation
 		[Async (ResultTypeName="NSUserActivityContinuation")]
 		void GetContinuationStreams (Action<NSInputStream,NSOutputStream,NSError> completionHandler);
 
-		[Mac(10,11), iOS (9,0)]
+		[Mac(10,11), iOS (9,0), Watch (3,0), TV (10,0)]
 		[Export ("requiredUserInfoKeys", ArgumentSemantic.Copy)]
 		NSSet<NSString> RequiredUserInfoKeys { get; set; }
 
-		[Mac(10,11), iOS (9,0)]
+		[Mac(10,11), iOS (9,0), Watch (3,0), TV (10,0)]
 		[Export ("expirationDate", ArgumentSemantic.Copy)]
 		NSDate ExpirationDate { get; set; }
 
-		[Mac(10,11), iOS (9,0)]
+		[Mac(10,11), iOS (9,0), Watch (3,0), TV (10,0)]
 		[Export ("keywords", ArgumentSemantic.Copy)]
 		NSSet<NSString> Keywords { get; set; }
 
-		[Mac(10,11), iOS (9,0)]
+		[Mac(10,11), iOS (9,0), Watch (3,0), TV (10,0)]
 		[Export ("resignCurrent")]
 		void ResignCurrent ();
 
-		[Mac(10,11), iOS (9,0)]
+		[Mac(10,11), iOS (9,0), Watch (3,0), TV (10,0)]
 		[Export ("eligibleForHandoff")]
 		bool EligibleForHandoff { [Bind ("isEligibleForHandoff")] get; set; }
 
-		[Mac(10,11), iOS (9,0)]
+		[Mac(10,11), iOS (9,0), Watch (3,0), TV (10,0)]
 		[Export ("eligibleForSearch")]
 		bool EligibleForSearch { [Bind ("isEligibleForSearch")] get; set; }
 
-		[Mac(10,11), iOS (9,0)]
+		[Mac(10,11), iOS (9,0), Watch (3,0), TV (10,0)]
 		[Export ("eligibleForPublicIndexing")]
 		bool EligibleForPublicIndexing { [Bind ("isEligibleForPublicIndexing")] get; set; }
 		
@@ -5108,7 +5115,7 @@ namespace XamCore.Foundation
 		NSString BrowsingWeb { get; }
 	}
 
-	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // same as NSUserActivity
+	[iOS (8,0)][Mac (10,10, onlyOn64 : true), Watch (3,0), TV (9,0)] // same as NSUserActivity
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	partial interface NSUserActivityDelegate {
@@ -5990,6 +5997,12 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		string[] ReadableTypeIdentifiers { get; }
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
+		[return: NullAllowed]
+		INSItemProviderReading GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
 
 		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[Static]
@@ -8078,6 +8091,12 @@ namespace XamCore.Foundation
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		string[] ReadableTypeIdentifiers { get; }
 
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
+		[return: NullAllowed]
+		INSItemProviderReading GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
+
 		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
@@ -9754,15 +9773,10 @@ namespace XamCore.Foundation
 		//[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		//string[] ReadableTypeIdentifiersForItemProvider { get; }
 
-		//
-		// This is a constructor that various classes must implement
-		// NSAttributedString, UIColor and UIImage need to have this constructor
-		// for user-defined implementations of this interface, we are going to
-		// need to something special
-		//
-		//[Abstract]
-		//[Export ("initWithItemProviderData:typeIdentifier:error:")]
-		//INSItemProviderReading CreateFrom (NSData providerData, string typeIdentifier, [NullAllowed] NSError outError);
+		//[Static]
+		//[Export ("objectWithItemProviderData:typeIdentifier:error:")]
+		//[return: NullAllowed]
+		//INSItemProviderReading GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
 	}
 
 	interface INSItemProviderWriting {}
@@ -9780,13 +9794,19 @@ namespace XamCore.Foundation
 		// user needs to manually [Export] the selector on a static method, like
 		// they do for the "layer" property on CALayer subclasses.
 		//
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		//[Static, Abstract]
 		//[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		//string[] WritableTypeIdentifiersForItemProvider { get; }
 
+		//[Static]
+		//[Export ("itemProviderVisibilityForRepresentationWithTypeIdentifier:")]
+		//NSItemProviderRepresentationVisibility GetItemProviderVisibility (string typeIdentifier);
+
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		string[] WritableTypeIdentifiersForItemProvider { get; }
+
+		[Export ("itemProviderVisibilityForRepresentationWithTypeIdentifier:")]
+		NSItemProviderRepresentationVisibility GetItemProviderVisibility (string typeIdentifier);
 
 		[Async, Export ("loadDataWithTypeIdentifier:forItemProviderCompletionHandler:")]
 		[return: NullAllowed]
