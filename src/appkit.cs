@@ -22716,10 +22716,9 @@ namespace XamCore.AppKit {
 		[Notification, Field ("NSTextDidChangeNotification")]
 		NSString DidChangeNotification { get; }
 
-		//radar 32929318 - Does not exist in binaries
-		//[Mac (10, 13)]
-		//[Field ("NSTextMovementUserInfoKey")]
-		//NSString MovementUserInfoKey { get; }
+		[Mac (10, 13)]
+		[Field ("NSTextMovementUserInfoKey")]
+		NSString MovementUserInfoKey { get; }
 	}
 
 	partial interface NSTextInputContext {
