@@ -1407,6 +1407,8 @@ VIDEOTOOLBOX_SOURCES = \
 # Vision
 
 VISION_SOURCES = \
+	Vision/VNBarcodeSymbologyExtensions.cs \
+	Vision/VNDetectBarcodesRequest.cs \
 	Vision/VNFaceLandmarkRegion2D.cs \
 	Vision/VNRequest.cs \
 	Vision/VNUtils.cs \
