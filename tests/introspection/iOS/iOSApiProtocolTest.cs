@@ -393,7 +393,6 @@ namespace Introspection {
 				switch (type.Name) {
 				// undocumented conformance (up to 7.0) and conformity varies between iOS versions
 				case "MKDirectionsRequest":
-				case "MPMediaItem":
 				case "MPMediaPlaylist":
 				case "MPMediaItemCollection":
 				case "MPMediaEntity":
