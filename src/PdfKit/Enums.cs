@@ -151,7 +151,8 @@ namespace XamCore.PdfKit {
 		ImageArea      = 1 << 8
 	}
 
-	[iOS (11,0), Mac (10,13)]
+	[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+	[iOS (11,0)]
 	[Native]
 	public enum PdfDisplayDirection : nint {
 		Vertical = 0,
