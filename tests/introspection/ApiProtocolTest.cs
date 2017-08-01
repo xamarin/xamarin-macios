@@ -71,6 +71,7 @@ namespace Introspection {
 				case "CAEmitterCell":
 				case "GKAchievement":
 				case "GKScore":
+				case "MPMediaItem":
 				// new in iOS8 and 10.0
 				case "NSExtensionContext":
 				case "NSLayoutAnchor`1":
