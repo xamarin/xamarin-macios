@@ -25,9 +25,6 @@ using XamCore.AppKit;
 #if !MMP && !MTOUCH && !MTOUCH_TEST
 using Mono.Security.Interface;
 #endif
-#if !XAMARIN_NO_TLS
-using XamCore.Security.Tls;
-#endif
 #endif
 
 namespace XamCore.ObjCRuntime {
