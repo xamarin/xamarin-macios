@@ -450,6 +450,7 @@
 !missing-field! MPMediaItemPropertySkipCount not bound
 !missing-field! MPMediaItemPropertyTitle not bound
 !missing-field! MPMediaItemPropertyUserGrouping not bound
+!missing-field! MPMediaItemPropertyPlaybackStoreID not bound
 
 !missing-selector! +MPMediaEntity::canFilterByProperty: not bound
 !missing-selector! MPMediaEntity::enumerateValuesForProperties:usingBlock: not bound

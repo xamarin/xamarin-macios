@@ -1393,6 +1393,12 @@ namespace XamCore.MediaPlayer {
 		[Field ("MPNowPlayingInfoPropertyExternalUserProfileIdentifier")]
 		NSString PropertyExternalUserProfileIdentifier { get; }
 
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Mac (10,13, onlyOn64: true)]
+		[Field ("MPNowPlayingInfoPropertyServiceIdentifier")]
+		NSString PropertyServiceIdentifier { get; }
+
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Field ("MPNowPlayingInfoPropertyPlaybackProgress")]
@@ -1409,7 +1415,7 @@ namespace XamCore.MediaPlayer {
 		NSString PropertyIsLiveStream { get; }
 
 		[iOS (10,3)]
-		[Mac (10,12,3)]
+		[Mac (10,12,3, onlyOn64: true)]
 		[Field ("MPNowPlayingInfoPropertyAssetURL")]
 		NSString PropertyAssetUrl { get; }
 	}
@@ -1439,13 +1445,11 @@ namespace XamCore.MediaPlayer {
 		[Export ("title")]
 		string Title { get; set; }
 
-		[NoMac]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Export ("streamingContent")]
 		bool StreamingContent { [Bind ("isStreamingContent")] get; set; }
 
-		[NoMac]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Export ("explicitContent")]
@@ -1653,7 +1657,6 @@ namespace XamCore.MediaPlayer {
 		[Export ("localizedTitle")]
 		string LocalizedTitle { get; set; }
 
-		[NoMac]
 		[iOS (8,2)] // added in 8.2, shown as NS_AVAILABLE_IOS(8_0)
 		[Export ("localizedShortTitle")]
 		string LocalizedShortTitle { get; set; }
@@ -2084,6 +2087,50 @@ namespace XamCore.MediaPlayer {
 		[Async]
 		[Export ("performQueueTransaction:completionHandler:")]
 		void Perform (Action<MPMusicPlayerControllerMutableQueue> queueTransaction, Action<MPMusicPlayerControllerQueue, NSError> completionHandler);
+	}
+
+	[NoTV][NoMac]
+	[iOS (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MPMusicPlayerPlayParameters : NSSecureCoding {
+		[Export ("initWithDictionary:")]
+		IntPtr Constructor (NSDictionary<NSString, NSObject> dictionary);
+
+		[Export ("dictionary", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, NSObject> Dictionary { get; }
+	}
+
+	[NoTV][NoMac]
+	[iOS (11,0)]
+	[BaseType (typeof (MPMusicPlayerQueueDescriptor))]
+	[DisableDefaultCtor]
+	interface MPMusicPlayerPlayParametersQueueDescriptor {
+		[Export ("initWithPlayParametersQueue:")]
+		IntPtr Constructor (MPMusicPlayerPlayParameters[] playParametersQueue);
+
+		[Export ("playParametersQueue", ArgumentSemantic.Copy)]
+		MPMusicPlayerPlayParameters[] PlayParametersQueue { get; set; }
+
+		[NullAllowed, Export ("startItemPlayParameters", ArgumentSemantic.Strong)]
+		MPMusicPlayerPlayParameters StartItemPlayParameters { get; set; }
+
+		[Export ("setStartTime:forItemWithPlayParameters:")]
+		void SetStartTime (/* NSTimeInterval */ double startTime, MPMusicPlayerPlayParameters playParameters);
+
+		[Export ("setEndTime:forItemWithPlayParameters:")]
+		void SetEndTime (/* NSTimeInterval */ double endTime, MPMusicPlayerPlayParameters playParameters);
+	}
+
+	interface IMPSystemMusicPlayerController {}
+
+	[NoTV][NoMac]
+	[iOS (11,0)]
+	[Protocol]
+	interface MPSystemMusicPlayerController {
+		[Abstract]
+		[Export ("openToPlayQueueDescriptor:")]
+		void OpenToPlay (MPMusicPlayerQueueDescriptor queueDescriptor);
 	}
 #endif
 }
