@@ -22,10 +22,9 @@ using System;
 
 namespace XamCore.MediaPlayer {
 #if XAMCORE_2_0 || !MONOMAC
-	[NoMac]
-	[NoTV]
+	[Mac (10,12,2, onlyOn64: true)] // type exists only to expose fields
 	[BaseType (typeof (NSObject))]
-#if XAMCORE_2_0
+#if XAMCORE_2_0 && IOS
 	// introduced in 4.2
 	interface MPMediaEntity : NSSecureCoding {
 #else
@@ -49,7 +48,7 @@ namespace XamCore.MediaPlayer {
 		[Field ("MPMediaEntityPropertyPersistentID")]
 		NSString PropertyPersistentID { get; }
 
-#if XAMCORE_2_0
+#if XAMCORE_2_0 && IOS
 	}
 
 	[NoMac]
@@ -57,10 +56,12 @@ namespace XamCore.MediaPlayer {
 	[BaseType (typeof (MPMediaEntity))]
 	interface MPMediaItem {
 #endif
+		[NoMac][NoTV]
 		[Since (4,2)]
 		[Export ("persistentIDPropertyForGroupingType:")][Static]
 		string GetPersistentIDProperty (MPMediaGrouping groupingType);
 
+		[NoMac][NoTV]
 		[Since (4,2)]
 		[Export ("titlePropertyForGroupingType:")][Static]
 		string GetTitleProperty (MPMediaGrouping groupingType);
@@ -297,13 +298,13 @@ namespace XamCore.MediaPlayer {
 	[NoTV]
 	// Objective-C exception thrown.  Name: MPMediaItemCollectionInitException Reason: -init is not supported, use -initWithItems:
 	[DisableDefaultCtor]
-#if XAMCORE_2_0
+#if XAMCORE_2_0 && IOS
 	// introduced in 4.2 - but the type was never added to classic
 	[BaseType (typeof (MPMediaEntity))]
 #else
 	[BaseType (typeof (NSObject))]
 #endif
-#if XAMCORE_3_0 || !XAMCORE_2_0
+#if XAMCORE_3_0 || !XAMCORE_2_0 || !IOS
 	interface MPMediaItemCollection : NSSecureCoding {
 #else
 	// part of the bug is that we inlined MPMediaEntity needlessly
@@ -364,7 +365,7 @@ namespace XamCore.MediaPlayer {
 		[iOS (9,3)]
 		[Export ("addItemWithProductID:completionHandler:")]
 		[Async]
-#if XAMCORE_2_0
+#if XAMCORE_2_0 && IOS
 		// MPMediaEntity was not part of classic
 		void AddItem (string productID, [NullAllowed] Action<MPMediaEntity[], NSError> completionHandler);
 #else
