@@ -11341,8 +11341,6 @@ namespace XamCore.UIKit {
 		[Export ("indexPathForPreferredFocusedViewInTableView:")]
 		[return: NullAllowed]
 		NSIndexPath GetIndexPathForPreferredFocusedView (UITableView tableView);
-
-		// WARNING: If you add more methods here, add them to UITableViewController as well.
 	}
 	
 	[BaseType (typeof (UIView))]

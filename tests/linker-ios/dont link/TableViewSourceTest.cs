@@ -28,7 +28,7 @@ namespace DontLink.UIKit {
 	[Preserve (AllMembers = true)]
 	public class TableViewSourceTest {
 
-		// UITableViewSource is MonoTouch specific and should include veverything from
+		// UITableViewSource is Xamarin.iOS specific and should include everything from
 		// UITableViewDelegate and UITableViewDataSource - but it's easy to forget to
 		// update its members (e.g. bug 8298 for iOS6 additions).
 
@@ -52,7 +52,7 @@ namespace DontLink.UIKit {
 			methods.RemoveAll (delegate (string name) {
 				return tvsource.Contains (name);
 			});
-			Assert.That (methods.Count, Is.EqualTo (0), "Incomplete bindings! " + String.Join (", ", methods));
+			Assert.That (methods.Count, Is.EqualTo (0), "Incomplete bindings! Please add the following members to UITableViewSource: " + String.Join (", ", methods));
 		}
 	}
 }
