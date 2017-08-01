@@ -1837,6 +1837,9 @@ namespace XamCore.Registrar {
 					return; // 10.12 removed the header files for QTKit
 #endif
 				goto default;
+			case "IOSurface": // There is no IOSurface.h
+				h = "<IOSurface/IOSurfaceObjC.h>";
+				break;
 			default:
 				h = string.Format ("<{0}/{0}.h>", ns);
 				break;
