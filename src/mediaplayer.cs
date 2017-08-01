@@ -2128,10 +2128,10 @@ namespace XamCore.MediaPlayer {
 	[DisableDefaultCtor]
 	interface MPMusicPlayerPlayParameters : NSSecureCoding {
 		[Export ("initWithDictionary:")]
-		IntPtr Constructor (NSDictionary<NSString, NSObject> dictionary);
+		IntPtr Constructor (NSDictionary dictionary);
 
 		[Export ("dictionary", ArgumentSemantic.Copy)]
-		NSDictionary<NSString, NSObject> Dictionary { get; }
+		NSDictionary Dictionary { get; }
 	}
 
 	[NoTV][NoMac]
