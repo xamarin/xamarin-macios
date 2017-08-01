@@ -203,6 +203,11 @@ namespace Bindings.Test {
 		[Export ("idAsIntPtr:")]
 		void IdAsIntPtr (IntPtr id);
 
+		[Export ("outNSErrorOnStack:i:i:i:i:i:err:")]
+		void OutNSErrorOnStack (int i1, int i2, int i3, int i4, int i5, int i6, out NSError error);
+
+		[Export ("outNSErrorOnStack:obj:obj:int64:i:err:")]
+		void OutNSErrorOnStack (NSObject i1, NSObject i2, NSObject i3, long i4, int i5, out NSError error);
 	}
 
 	[BaseType (typeof (NSObject))]
