@@ -13324,13 +13324,13 @@ namespace XamCore.UIKit {
 		// 3.2 extensions from MoviePlayer
 		[NoMac]
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_9_0)]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Export ("presentMoviePlayerViewControllerAnimated:")]
 		void PresentMoviePlayerViewController (MPMoviePlayerViewController moviePlayerViewController);
 
 		[NoMac]
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_9_0)]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Export ("dismissMoviePlayerViewControllerAnimated")]
 		void DismissMoviePlayerViewController ();
 
