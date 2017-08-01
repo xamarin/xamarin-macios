@@ -78,14 +78,19 @@ namespace XamCore.CoreML {
 
 		// Category MLFeatureDescription (MLFeatureValueConstraints)
 
+		// HACK: radar://33643011 -> https://trello.com/c/ZN712GOi
+
+		// [FAIL] Selector not found for CoreML.MLFeatureDescription : setMultiArrayConstraint:
 		[NullAllowed, Export ("multiArrayConstraint", ArgumentSemantic.Assign)]
-		MLMultiArrayConstraint MultiArrayConstraint { get; set; }
+		MLMultiArrayConstraint MultiArrayConstraint { get; /*set;*/ }
 
+		// [FAIL] Selector not found for CoreML.MLFeatureDescription : setImageConstraint:
 		[NullAllowed, Export ("imageConstraint", ArgumentSemantic.Assign)]
-		MLImageConstraint ImageConstraint { get; set; }
+		MLImageConstraint ImageConstraint { get; /*set;*/ }
 
+		// [FAIL] Selector not found for CoreML.MLFeatureDescription : setDictionaryConstraint:
 		[NullAllowed, Export ("dictionaryConstraint", ArgumentSemantic.Assign)]
-		MLDictionaryConstraint DictionaryConstraint { get; set; }
+		MLDictionaryConstraint DictionaryConstraint { get; /*set;*/ }
 	}
 
 	interface IMLFeatureProvider { }
@@ -289,6 +294,7 @@ namespace XamCore.CoreML {
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface MLDictionaryConstraint {
 
@@ -297,6 +303,7 @@ namespace XamCore.CoreML {
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface MLImageConstraint {
 
@@ -311,6 +318,7 @@ namespace XamCore.CoreML {
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface MLMultiArrayConstraint {
 
