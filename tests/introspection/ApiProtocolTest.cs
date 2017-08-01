@@ -81,6 +81,10 @@ namespace Introspection {
 				case "GKCloudPlayer":
 				// iOS 10 : test throw because of generic usage
 				case "NSMeasurement`1":
+				// Xcode 9 - Conformance not in heades
+				case "MLDictionaryConstraint":
+				case "MLImageConstraint":
+				case "MLMultiArrayConstraint":
 					return true; // skip
 				}
 				break;
