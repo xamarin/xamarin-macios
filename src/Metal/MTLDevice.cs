@@ -42,6 +42,28 @@ namespace XamCore.Metal {
 				return system_default;
 			}
 		}
+
+#if MONOMAC
+		//[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		//[DllImport (Constants.MetalLibrary)]
+		//static extern IMTLDevice[] MTLCopyAllDevicesWithObserver ([NullAllowed] out NSObject observer, MTLDeviceNotificationHandler handler);
+
+		//[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		//public static IMTLDevice [] GetAllDevices (MTLDeviceNotificationHandler handler, out NSObject observer)
+		//{
+		//	return MTLCopyAllDevicesWithObserver (out observer, handler);
+		//}
+
+		[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		[DllImport (Constants.MetalLibrary)]
+		static extern void MTLRemoveDeviceObserver (NSObject observer);
+
+		[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		public static void RemoveObserver (NSObject observer)
+		{
+			MTLRemoveDeviceObserver (observer);
+		}
+#endif
 	}
 
 	public static partial class MTLDevice_Extensions {

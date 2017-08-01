@@ -1048,6 +1048,21 @@
       <Link>ProjectTestHelpers.cs</Link>
     </Compile>
     <Compile Include="Unified45.cs" />
+    <Compile Include="..\monotouch-test\Metal\HeapDescriptorTest.cs">
+      <Link>Metal\HeapDescriptorTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Metal\MTLArgumentDescriptorTest.cs">
+      <Link>Metal\MTLArgumentDescriptorTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Metal\MTLPipelineBufferDescriptorTests.cs">
+      <Link>Metal\MTLPipelineBufferDescriptorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Metal\MTLPointerTypeTests.cs">
+      <Link>Metal\MTLPointerTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Metal\MTLTextureReferenceType.cs">
+      <Link>Metal\MTLTextureReferenceType.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
