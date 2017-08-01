@@ -14,8 +14,8 @@ namespace XamCore.Vision {
 	public partial class VNDetectBarcodesRequest {
 
 		public VNBarcodeSymbology [] Symbologies {
-			get => VNBarcodeSymbologyExtensions.GetValues (WeakSymbologies);
-			set => WeakSymbologies = value.GetConstants ();
+			get { return VNBarcodeSymbologyExtensions.GetValues (WeakSymbologies); }
+			set { WeakSymbologies = value.GetConstants (); }
 		}
 	}
 }
