@@ -85,6 +85,8 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 	-(bool) testBlocks;
 
 	-(void) idAsIntPtr: (id)p1;
+	-(void) outNSErrorOnStack:(int)i1 i:(int)i2 i:(int)i3 i:(int)i4 i:(int)i5 i:(int)i6 err:(NSError **)err; // 6 in regs, 7th (out) in mem (on all architectures)
+	-(void) outNSErrorOnStack:(id)obj1 obj:(id)obj2 obj:(id)obj3 int64:(long long)l4 i:(int)i5 err:(NSError **)err; // 5 in regs, 6th (out) in mem (on at least x86-64)
 @end
 
 /*
