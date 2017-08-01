@@ -78,6 +78,8 @@ namespace XamCore.AudioToolbox {
 		MicrosoftGSM            = 0x6d730031,
 		AES3                    = 0x61657333, // 'aes3'
 		EnhancedAES3            = 0x65632d33, // 'ec-3'
+		Flac                    = 0x666c6163, // 'flac'
+		Opus                    = 0x6f707573, // 'opus'
 	}
 
 	[Flags]
@@ -424,7 +426,31 @@ namespace XamCore.AudioToolbox {
 		Discrete_13           = (1<<16) | 13,
 		Discrete_14           = (1<<16) | 14,
 		Discrete_15           = (1<<16) | 15,
-		Discrete_65535        = (1<<16) | 65535
+		Discrete_65535        = (1<<16) | 65535,
+
+		// HOA ACN channels
+
+		// generic
+	        HoaAcn                = 500,
+
+	        // numbered
+		HoaAcn0                = (2 << 16) | 0,
+		HoaAcn1                = (2 << 16) | 1,
+		HoaAcn2                = (2 << 16) | 2,
+		HoaAcn3                = (2 << 16) | 3,
+		HoaAcn4                = (2 << 16) | 4,
+		HoaAcn5                = (2 << 16) | 5,
+		HoaAcn6                = (2 << 16) | 6,
+		HoaAcn7                = (2 << 16) | 7,
+		HoaAcn8                = (2 << 16) | 8,
+		HoaAcn9                = (2 << 16) | 9,
+		HoaAcn10               = (2 << 16) | 10,
+		HoaAcn11               = (2 << 16) | 11,
+		HoaAcn12               = (2 << 16) | 12,
+		HoaAcn13               = (2 << 16) | 13,
+		HoaAcn14               = (2 << 16) | 14,
+		HoaAcn15               = (2 << 16) | 15,
+		HoaAcn65024            = (2 << 16) | 65024  
 	}
 
 	[Flags]
@@ -663,7 +689,10 @@ namespace XamCore.AudioToolbox {
 		DTS_8_0_B                = (179<<16) | 8,                        
 		DTS_8_1_A                = (180<<16) | 9,                        
 		DTS_8_1_B                = (181<<16) | 9,                        
-		DTS_6_1_D                = (182<<16) | 7,                         
+		DTS_6_1_D                = (182<<16) | 7,
+
+		HOA_ACN_SN3D             = (190U<<16),
+		HOA_ACN_N3D              = (191U<<16),
 		
 		DiscreteInOrder          = (147<<16) | 0,                       // needs to be ORed with the actual number of channels  
 		Unknown                  = 0xFFFF0000                           // needs to be ORed with the actual number of channels  

@@ -201,6 +201,7 @@ namespace Introspection
 			"Hfp",
 			"Hipass",
 			"Hls",
+			"Hoa",
 			"Hrtf", // acronym used in AUSpatializationAlgorithm
 			"Hvxc", // MPEG4ObjectID
 			"Ies",
