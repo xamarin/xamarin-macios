@@ -404,6 +404,11 @@ function check_mono () {
 		fi
 	fi
 
+	if ! which mono > /dev/null 2>&1; then
+		fail "Mono is not in PATH. You must add '/Library/Frameworks/Mono.framework/Versions/Current/Commands' to PATH. Current PATH is: $PATH".
+		return
+	fi
+
 	ok "Found Mono $ACTUAL_MONO_VERSION (at least $MIN_MONO_VERSION and not more than $MAX_MONO_VERSION is required)"
 }
 
