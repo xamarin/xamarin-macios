@@ -783,7 +783,7 @@ public partial class Frameworks {
 				frameworks = macosframeworks;
 				break;
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", Generator.CurrentPlatform);
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://bugzilla.xamarin.com) with a test case.", Generator.CurrentPlatform);
 			}
 		}
 
@@ -962,7 +962,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.MacOSX:
 				return "Quartz";
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
 			}
 		}
 	}

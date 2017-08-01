@@ -18,6 +18,9 @@ namespace XamCore.PdfKit {
 		// [Mac (10,12)] Headers do not show changes on Mac, but added on iOS 11 headers
 		public bool SetValue<T> (T value, PdfAnnotationKey key) where T : class, INativeObject
 		{
+			if (value == null)
+				throw new ArgumentNullException (nameof (value));
+
 			return _SetValue (value.Handle, key.GetConstant ());
 		}
 
@@ -37,6 +40,13 @@ namespace XamCore.PdfKit {
 		{
 			return Runtime.GetINativeObject<T> (_GetValue (key.GetConstant ()), true);
 		}
+
+#if IOS
+		public PdfAnnotationKey AnnotationType {
+			get { return PdfAnnotationKeyExtensions.GetValue ((NSString) Type); }
+			set { Type = value.GetConstant (); }
+		}
+#endif
 	}
 }
 #endif // XAMCORE_2_0

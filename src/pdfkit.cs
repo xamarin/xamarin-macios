@@ -554,12 +554,14 @@ namespace XamCore.PdfKit {
 		[Export ("page")]
 		PdfPage Page { get; set; }
 
+#if XAMCORE_4_0
+		[Protected]
+		[Export ("type")]
+		NSString Type { get; set; }
+#else
 		[Export ("type")]
 		string Type { get; set; }
-
-		[NoMac]
-		[Wrap ("PdfAnnotationKeyExtensions.GetValue ((NSString) Type)")]
-		PdfAnnotationKey AnnotationType { get; }
+#endif
 
 		[Export ("bounds")]
 		CGRect Bounds { get; set; }
@@ -1330,9 +1332,14 @@ namespace XamCore.PdfKit {
 	}
 
 	[iOS (11,0)]
+#if IOS
 	[BaseType (typeof (NSObject), Name = "PDFDocumentDelegate")]
-	[Model]
 	[Protocol]
+#else
+	[BaseType (typeof (NSObject))]
+	[Protocol (IsInformal = true)]
+#endif
+	[Model]
 	interface PdfDocumentDelegate {
 
 		[Export ("documentDidUnlock:"), EventArgs ("NSNotification")]
@@ -1943,9 +1950,14 @@ namespace XamCore.PdfKit {
 	//Verify delegate methods.  There are default actions (not just return null ) that should occur
 	//if the delegate does not implement the method.
 	[iOS (11,0)]
+#if IOS
 	[BaseType (typeof (NSObject), Name = "PDFViewDelegate")]
-	[Model]
 	[Protocol]
+#else
+	[BaseType (typeof (NSObject))]
+	[Protocol (IsInformal = true)]
+#endif
+	[Model]
 	interface PdfViewDelegate {
 		//from docs: 'By default, the scale factor is restricted to a range between 0.1 and 10.0 inclusive.'
 		[NoiOS]
