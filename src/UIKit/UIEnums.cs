@@ -633,6 +633,7 @@ namespace XamCore.UIKit {
 	public enum UITableViewCellSeparatorStyle : nint {
 		None,
 		SingleLine,
+		[Deprecated (PlatformName.iOS, 11, 0, message:"Use 'SingleLine' for a single line separator.")]
 		SingleLineEtched,
 		DoubleLineEtched = SingleLineEtched
 	}
