@@ -164,11 +164,17 @@ namespace XamCore.Vision {
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Static]
+		[Protected]
 		[Export ("supportedSymbologies", ArgumentSemantic.Copy)]
-		string [] SupportedSymbologies { get; }
+		NSString [] WeakSupportedSymbologies { get; }
 
+		[Static]
+		[Wrap ("VNBarcodeSymbologyExtensions.GetValues (WeakSupportedSymbologies)")]
+		VNBarcodeSymbology [] SupportedSymbologies { get; }
+
+		[Protected]
 		[Export ("symbologies", ArgumentSemantic.Copy)]
-		string [] Symbologies { get; set; }
+		NSString [] WeakSymbologies { get; set; }
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -566,8 +572,12 @@ namespace XamCore.Vision {
 	[BaseType (typeof (VNRectangleObservation))]
 	interface VNBarcodeObservation {
 
+		[Protected]
 		[Export ("symbology")]
-		string Symbology { get; }
+		NSString WeakSymbology { get; }
+
+		[Wrap ("VNBarcodeSymbologyExtensions.GetValue (WeakSymbology)")]
+		VNBarcodeSymbology Symbology { get; }
 
 		// TODO: Enable once CoreImage Xcode 9 is bound -> https://bugzilla.xamarin.com/show_bug.cgi?id=58197
 		//[NullAllowed, Export ("barcodeDescriptor", ArgumentSemantic.Strong)]
