@@ -11,18 +11,18 @@ using System;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
-#if XAMCORE_2_0
+#if XAMCORE_2_0 && !MONOMAC
 namespace XamCore.PdfKit {
 	public partial class PdfAnnotation {
 
-		[Mac (10,12)]
-		public bool SetValue<T> (T value, PDFAnnotationKey key) where T : class, INativeObject
+		// [Mac (10,12)] Headers do not show changes on Mac, but added on iOS 11 headers
+		public bool SetValue<T> (T value, PdfAnnotationKey key) where T : class, INativeObject
 		{
 			return _SetValue (value.Handle, key.GetConstant ());
 		}
 
-		[Mac (10,12)]
-		public bool SetValue (string str, PDFAnnotationKey key)
+		// [Mac (10,12)] Headers do not show changes on Mac, but added on iOS 11 headers
+		public bool SetValue (string str, PdfAnnotationKey key)
 		{
 			var nstr = NSString.CreateNative (str);
 			try {
@@ -32,8 +32,8 @@ namespace XamCore.PdfKit {
 			}
 		}
 
-		[Mac (10,12)]
-		public T GetValue<T> (PDFAnnotationKey key) where T : class, INativeObject
+		// [Mac (10,12)] Headers do not show changes on Mac, but added on iOS 11 headers
+		public T GetValue<T> (PdfAnnotationKey key) where T : class, INativeObject
 		{
 			return Runtime.GetINativeObject<T> (_GetValue (key.GetConstant ()), true);
 		}
