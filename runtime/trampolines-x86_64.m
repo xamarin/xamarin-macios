@@ -294,7 +294,12 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 		it->float_count++;
 	if (it->byte_count % 8 != 0)
 		it->byte_count += 8 - it->byte_count % 8;
-	// CHECK: do we need to round the stack pointer to?
+	// All arguments use at least 8 bytes, so round up.
+	uintptr_t stack_next = (uintptr_t) it->stack_next;
+	if ((stack_next % 8) != 0) {
+		stack_next += 8 - stack_next % 8;
+		it->stack_next = (uint8_t *) stack_next;
+	}
 }
 
 static void
