@@ -2165,5 +2165,17 @@ namespace XamCore.MediaPlayer {
 		[Export ("openToPlayQueueDescriptor:")]
 		void OpenToPlay (MPMusicPlayerQueueDescriptor queueDescriptor);
 	}
+
+	[Category]
+	[BaseType (typeof (NSUserActivity))]
+	[TV (10,0,1)][iOS (10,1)]
+	[NoWatch][NoMac]
+	interface NSUserActivity_MediaPlayerAdditions {
+		[NullAllowed, Export ("externalMediaContentIdentifier")]
+		NSString GetExternalMediaContentIdentifier ();
+
+		[NullAllowed, Export ("setExternalMediaContentIdentifier:")]
+		void SetExternalMediaContentIdentifier (NSString identifier);
+	}
 #endif
 }
