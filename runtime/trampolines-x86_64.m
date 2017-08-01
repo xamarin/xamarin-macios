@@ -241,7 +241,7 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 		it->byte_count = (it->state->type & Tramp_Stret) == Tramp_Stret ? 24 : 16;
 		it->float_count = 0;
 		it->stack_next = (uint8_t *) (2 +  (uint64_t *) it->state->rbp);
-		LOGZ("initialized parameter iterator to %p stret to %p\n", it->stack_next, it->stret);
+		LOGZ("initialized parameter iterator. byte count: %i stack next: %p\n", it->byte_count, it->stack_next);
 		return;
 	} else if (action == IteratorEnd) {
 		return;
