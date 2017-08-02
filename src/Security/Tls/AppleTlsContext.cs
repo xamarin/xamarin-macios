@@ -671,7 +671,7 @@ namespace XamCore.Security.Tls
 				if (value == IntPtr.Zero)
 					throw new TlsException (AlertDescription.CertificateUnknown);
 			}
-			return (value == IntPtr.Zero) ? null : new SecTrust (value);
+			return (value == IntPtr.Zero) ? null : new SecTrust (value, true);
 		}
 
 		[Mac (10,8)]
