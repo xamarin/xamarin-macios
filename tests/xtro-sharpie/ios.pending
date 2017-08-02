@@ -305,6 +305,8 @@
 !incorrect-protocol-member! UIViewControllerTransitionCoordinatorContext::isInterruptible is REQUIRED and should be abstract
 !incorrect-protocol-member! UIFocusEnvironment::preferredFocusEnvironments is REQUIRED and should be abstract
 !incorrect-protocol-member! UITextDocumentProxy::documentInputMode is REQUIRED and should be abstract
+!incorrect-protocol-member! UITextDocumentProxy::documentIdentifier is REQUIRED and should be abstract
+!incorrect-protocol-member! UITextDocumentProxy::selectedText is REQUIRED and should be abstract
 !incorrect-protocol-member! UILayoutSupport::bottomAnchor is REQUIRED and should be abstract
 !incorrect-protocol-member! UILayoutSupport::heightAnchor is REQUIRED and should be abstract
 !incorrect-protocol-member! UILayoutSupport::topAnchor is REQUIRED and should be abstract

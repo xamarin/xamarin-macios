@@ -6083,6 +6083,18 @@ namespace XamCore.UIKit {
 		[iOS (10, 0)] // Did not add abstract here breaking change, anyways this is optional in objc
 		[Export ("textContentType")]
 		NSString TextContentType { get; set; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("smartQuotesType", ArgumentSemantic.Assign)]
+		UITextSmartQuotesType SmartQuotesType { get; set; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("smartDashesType", ArgumentSemantic.Assign)]
+		UITextSmartDashesType SmartDashesType { get; set; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("smartInsertDeleteType", ArgumentSemantic.Assign)]
+		UITextSmartInsertDeleteType SmartInsertDeleteType { get; set; }
 	}
 
 	interface UIKeyboardEventArgs {
@@ -14471,6 +14483,14 @@ namespace XamCore.UIKit {
 
 		[Field ("UITextContentTypeCreditCardNumber")]
 		NSString CreditCardNumber { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Field ("UITextContentTypeUsername")]
+		NSString Username { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Field ("UITextContentTypePassword")]
+		NSString Password { get; }
 	}
 	
 	[Since (3,2)]
@@ -15753,6 +15773,24 @@ namespace XamCore.UIKit {
 		[iOS (10, 0)]
 		[NullAllowed, Export ("documentInputMode")]
 		UITextInputMode DocumentInputMode { get; }
+
+		// New abstract, breaks ABI
+		// Radar: 33685383
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[iOS (11,0)]
+		[NullAllowed, Export ("selectedText")]
+		string SelectedText { get; }
+
+		// New abstract, breaks ABI
+		// Radar: 33685383
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[iOS (11,0)]
+		[Export ("documentIdentifier", ArgumentSemantic.Copy)]
+		NSUuid DocumentIdentifier { get; }
 	}
 
 	[NoWatch]
