@@ -579,9 +579,8 @@ namespace XamCore.Vision {
 		[Wrap ("VNBarcodeSymbologyExtensions.GetValue (WeakSymbology)")]
 		VNBarcodeSymbology Symbology { get; }
 
-		// TODO: Enable once CoreImage Xcode 9 is bound -> https://bugzilla.xamarin.com/show_bug.cgi?id=58197
-		//[NullAllowed, Export ("barcodeDescriptor", ArgumentSemantic.Strong)]
-		//CIBarcodeDescriptor BarcodeDescriptor { get; }
+		[NullAllowed, Export ("barcodeDescriptor", ArgumentSemantic.Strong)]
+		CIBarcodeDescriptor BarcodeDescriptor { get; }
 
 		[New]
 		[Static]
