@@ -336,6 +336,24 @@ namespace Introspection {
 				// - (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER __TVOS_PROHIBITED;
 				return true;
 #endif
+			case "PdfAnnotationButtonWidget":
+			case "PdfAnnotationChoiceWidget":
+			case "PdfAnnotationCircle":
+			case "PdfAnnotationFreeText":
+			case "PdfAnnotationInk":
+			case "PdfAnnotationLine":
+			case "PdfAnnotationLink":
+			case "PdfAnnotationMarkup":
+			case "PdfAnnotationPopup":
+			case "PdfAnnotationSquare":
+			case "PdfAnnotationStamp":
+			case "PdfAnnotationText":
+			case "PdfAnnotationTextWidget":
+				// This ctor was introduced in 10,13 but all of the above objects are deprecated in 10,12
+				// so it does not make much sense to expose this ctor in all the deprecated subclasses
+				if (ctor.ToString () == "Void .ctor(RectangleF, NSString, NSDictionary)")
+					return true;
+				break;
 			}
 
 			var ep = ctor.GetParameters ();

@@ -57,7 +57,7 @@ using XamCore.CoreGraphics;
 
 namespace XamCore.PdfKit {
 
-	[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+	[Mac (10,13)]
 	[iOS (11,0)]
 	enum PdfAnnotationKey {
 
@@ -188,7 +188,7 @@ namespace XamCore.PdfKit {
 		WidgetValue,
 	}
 
-	[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+	[Mac (10,13)]
 	[iOS (11,0)]
 	enum PdfAnnotationSubtype {
 
@@ -232,7 +232,7 @@ namespace XamCore.PdfKit {
 		Widget,
 	}
 
-	[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+	[Mac (10,13)]
 	[iOS (11,0)]
 	enum PdfAnnotationWidgetSubtype {
 
@@ -249,7 +249,7 @@ namespace XamCore.PdfKit {
 		Text,
 	}
 
-	[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+	[Mac (10,13)]
 	[iOS (11,0)]
 	enum PdfAnnotationLineEndingStyle {
 
@@ -272,7 +272,7 @@ namespace XamCore.PdfKit {
 		ClosedArrow,
 	}
 
-	[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+	[Mac (10,13)]
 	[iOS (11,0)]
 	enum PdfAnnotationTextIconType {
 
@@ -298,7 +298,7 @@ namespace XamCore.PdfKit {
 		Insert,
 	}
 
-	[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+	[Mac (10,13)]
 	[iOS (11,0)]
 	enum PdfAnnotationHighlightingMode {
 
@@ -315,7 +315,7 @@ namespace XamCore.PdfKit {
 		Push,
 	}
 
-	[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+	[Mac (10,13)]
 	[iOS (11,0)]
 	[Static]
 	interface PdfAppearanceCharacteristicsKeys {
@@ -339,7 +339,7 @@ namespace XamCore.PdfKit {
 		NSString DownCaptionKey { get; }
 	}
 
-	[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+	[Mac (10,13)]
 	[iOS (11,0)]
 	[Static]
 	interface PdfBorderKeys {
@@ -354,7 +354,6 @@ namespace XamCore.PdfKit {
 		NSString DashPatternKey { get; }
 	}
 
-	[NoMac]
 	[iOS (11,0)]
 	[Internal]
 	[Static]
@@ -385,7 +384,6 @@ namespace XamCore.PdfKit {
 		NSString KeywordsKey { get; }
 	}
 
-	[NoMac]
 	[iOS (11,0)]
 	[StrongDictionary ("PdfDocumentAttributeKeys")]
 	interface PdfDocumentAttributes {
@@ -400,7 +398,7 @@ namespace XamCore.PdfKit {
 		string [] Keywords { get; set; }
 	}
 
-	[NoMac]
+	[Mac (10,13)]
 	[iOS (11,0)]
 	[Internal]
 	[Static]
@@ -413,7 +411,7 @@ namespace XamCore.PdfKit {
 		NSString UserPasswordKey { get; }
 	}
 
-	[NoMac]
+	[Mac (10,13)]
 	[iOS (11,0)]
 	[StrongDictionary ("PdfDocumentWriteOptionKeys")]
 	interface PdfDocumentWriteOptions {
@@ -422,7 +420,7 @@ namespace XamCore.PdfKit {
 		string UserPassword { get; set; }
 	}
 
-	[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+	[Mac (10,13)]
 	[iOS (11,0)]
 	[BaseType (typeof (NSObject), Name = "PDFAppearanceCharacteristics")]
 	interface PdfAppearanceCharacteristics : NSCopying {
@@ -537,17 +535,17 @@ namespace XamCore.PdfKit {
 	[BaseType (typeof (NSObject), Name = "PDFAnnotation")]
 	interface PdfAnnotation : NSCoding, NSCopying {
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("initWithBounds:forType:withProperties:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (CGRect bounds, NSString annotationType, [NullAllowed] NSDictionary properties);
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Wrap ("this (bounds, annotationType.GetConstant (), properties)")]
 		IntPtr Constructor (CGRect bounds, PdfAnnotationKey annotationType, [NullAllowed] NSDictionary properties);
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead")]
-		//[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead")] // Headers do not show changes on Mac
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead")]
 		[Export ("initWithBounds:")]
 		IntPtr Constructor (CGRect bounds);
 
@@ -588,228 +586,232 @@ namespace XamCore.PdfKit {
 		[Export ("color")]
 		NSColor Color { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Export ("mouseUpAction")]
 		PdfAction MouseUpAction { get; set; }
 
 		[Export ("contents")]
 		string Contents { get; set; }
 		
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("toolTip")]
 		string ToolTip { get; }
 
 		[Export ("hasAppearanceStream")]
 		bool HasAppearanceStream { get; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("removeAllAppearanceStreams")]
 		void RemoveAllAppearanceStreams ();
 
 		[NoiOS]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("drawWithBox:")]
 		void Draw (PdfDisplayBox box);
 
-		[NoMac] // [FAIL] Selector not found for PdfKit.PdfAnnotation : [set]action 
+		[Mac (10,13)]
 		[Export ("action", ArgumentSemantic.Strong), NullAllowed]
 		PdfAction Action { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("highlighted")]
 		bool Highlighted { [Bind ("isHighlighted")] get; set; }
 
-		[NoMac] // [Mac (10,12)] Headers do not show changes on Mac, but added on iOS 11 headers
+		[Mac (10,12)]
 		[Export ("drawWithBox:inContext:")]
 		void Draw (PdfDisplayBox box, CGContext context);
 
 		[Internal]
-		[NoMac] // [Mac (10,12)] Headers do not show changes on Mac, but added on iOS 11 headers
+		[Mac (10,12)]
 		[Export ("setValue:forAnnotationKey:")]
 		bool _SetValue (IntPtr value, NSString key);
 
 		[Internal]
-		[NoMac] // [Mac (10,12)] Headers do not show changes on Mac, but added on iOS 11 headers
+		[Mac (10,12)]
 		[Export ("valueForAnnotationKey:")]
 		[return: NullAllowed]
 		IntPtr _GetValue (NSString key);
 
 		[Protected]
-		[NoMac] // [Mac (10,12)] Headers do not show changes on Mac, but added on iOS 11 headers
+		[Mac (10,12)]
 		[Export ("setBoolean:forAnnotationKey:")]
 		bool SetValue (bool boolean, NSString key);
 
-		[NoMac] // [Mac (10,12)] Headers do not show changes on Mac, but added on iOS 11 headers
+		[Mac (10,12)]
 		[Wrap ("SetValue (boolean, key.GetConstant ())")]
 		bool SetValue (bool boolean, PdfAnnotationKey key);
 
 		[Protected]
-		[NoMac] // [Mac (10,12)] Headers do not show changes on Mac, but added on iOS 11 headers
+		[Mac (10,12)]
 		[Export ("setRect:forAnnotationKey:")]
 		bool SetValue (CGRect rect, NSString key);
 
-		[NoMac] // [Mac (10,12)] Headers do not show changes on Mac, but added on iOS 11 headers
+		[Mac (10,12)]
 		[Wrap ("SetValue (rect, key.GetConstant ())")]
 		bool SetValue (CGRect rect, PdfAnnotationKey key);
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("annotationKeyValues", ArgumentSemantic.Copy)]
 		NSDictionary AnnotationKeyValues { get; }
 
 		[Protected]
-		[NoMac] // [Mac (10,12)] Headers do not show changes on Mac, but added on iOS 11 headers
+		[Mac (10,12)]
 		[Export ("removeValueForAnnotationKey:")]
 		void RemoveValue (NSString key);
 
-		[NoMac] // [Mac (10,12)] Headers do not show changes on Mac, but added on iOS 11 headers
+		[Mac (10,12)]
 		[Wrap ("RemoveValue (key.GetConstant ())")]
 		void RemoveValue (PdfAnnotationKey key);
 
 		// PDFAnnotation (PDFAnnotationUtilities) Category
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[NullAllowed, Export ("font", ArgumentSemantic.Copy)]
 		NSFont Font { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[NullAllowed, Export ("fontColor", ArgumentSemantic.Copy)]
 		NSColor FontColor { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("alignment", ArgumentSemantic.Assign)]
 		NSTextAlignment Alignment { get; set; }
 		
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("startPoint", ArgumentSemantic.Assign)]
 		CGPoint StartPoint { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("endPoint", ArgumentSemantic.Assign)]
 		CGPoint EndPoint { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("startLineStyle", ArgumentSemantic.Assign)]
 		PdfLineStyle StartLineStyle { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("endLineStyle", ArgumentSemantic.Assign)]
 		PdfLineStyle EndLineStyle { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Static]
 		[Export ("lineStyleFromName:")]
 		PdfLineStyle GetLineStyle (string fromName);
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Static]
 		[Export ("nameForLineStyle:")]
 		string GetName (PdfLineStyle style);
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("iconType", ArgumentSemantic.Assign)]
 		PdfTextAnnotationIconType IconType { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[NullAllowed, Export ("quadrilateralPoints", ArgumentSemantic.Copy)]
 		NSValue [] QuadrilateralPoints { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("markupType", ArgumentSemantic.Assign)]
 		PdfMarkupType MarkupType { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("widgetFieldType")]
 		string WidgetFieldType { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("widgetControlType", ArgumentSemantic.Assign)]
 		PdfWidgetControlType WidgetControlType { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("multiline")]
 		bool Multiline { [Bind ("isMultiline")] get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("isPasswordField")]
 		bool IsPasswordField { get; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("comb")]
 		bool Comb { [Bind ("hasComb")] get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("maximumLength")]
 		nint MaximumLength { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[NullAllowed, Export ("widgetStringValue")]
 		string WidgetStringValue { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[NullAllowed, Export ("widgetDefaultStringValue")]
 		string WidgetDefaultStringValue { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("allowsToggleToOff")]
 		bool AllowsToggleToOff { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("radiosInUnison")]
 		bool RadiosInUnison { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("readOnly")]
 		bool ReadOnly { [Bind ("isReadOnly")] get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("listChoice")]
 		bool ListChoice { [Bind ("isListChoice")] get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[NullAllowed, Export ("choices", ArgumentSemantic.Copy)]
 		string [] Choices { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[NullAllowed, Export ("values", ArgumentSemantic.Copy)]
 		string [] Values { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("buttonWidgetState", ArgumentSemantic.Assign)]
 		PdfWidgetCellState ButtonWidgetState { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("buttonWidgetStateString")]
 		string ButtonWidgetStateString { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("open")]
 		bool Open { [Bind ("isOpen")] get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[NullAllowed, Export ("paths")]
 		NSBezierPath [] Paths { get; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("addBezierPath:")]
 		void AddBezierPath (NSBezierPath path);
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("removeBezierPath:")]
 		void RemoveBezierPath (NSBezierPath path);
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[NullAllowed, Export ("destination", ArgumentSemantic.Strong)]
 		PdfDestination Destination { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[NullAllowed, Export ("URL", ArgumentSemantic.Copy)]
 		NSUrl Url { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[NullAllowed, Export ("fieldName")]
 		string FieldName { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[NullAllowed, Export ("caption")]
 		string Caption { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[NullAllowed, Export ("backgroundColor", ArgumentSemantic.Copy)]
 		NSColor BackgroundColor { get; set; }
 	}
@@ -1050,7 +1052,7 @@ namespace XamCore.PdfKit {
 		NSArray DashPattern { get; set; }
 #endif
 
-		[NoMac]
+		[Mac (10,13)]
 		[Export ("borderKeyValues", ArgumentSemantic.Copy)]
 		NSDictionary WeakBorderKeyValues { get; }
 
@@ -1140,17 +1142,13 @@ namespace XamCore.PdfKit {
 		[Export ("documentRef")]
 		CGPDFDocument Document { get; }
 
-#if IOS
 		[Advice ("Use the strongly typed '[Get|Set]DocumentAttributes' instead.")]
-#endif
-		[Export ("documentAttributes")]
+		[Export ("documentAttributes", ArgumentSemantic.Copy)]
 		NSDictionary DocumentAttributes { get; set; }
 
-		[NoMac]
 		[Wrap ("new PdfDocumentAttributes (DocumentAttributes)")]
 		PdfDocumentAttributes GetDocumentAttributes ();
 
-		[NoMac]
 		[Wrap ("DocumentAttributes = attributes?.Dictionary")]
 		void SetDocumentAttributes (PdfDocumentAttributes attributes);
 
@@ -1183,23 +1181,23 @@ namespace XamCore.PdfKit {
 		[Export ("allowsCopying")]
 		bool AllowsCopying { get; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("allowsDocumentChanges")]
 		bool AllowsDocumentChanges { get; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("allowsDocumentAssembly")]
 		bool AllowsDocumentAssembly { get; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("allowsContentAccessibility")]
 		bool AllowsContentAccessibility { get; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("allowsCommenting")]
 		bool AllowsCommenting { get; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("allowsFormFieldEntry")]
 		bool AllowsFormFieldEntry { get; }
 
@@ -1228,7 +1226,7 @@ namespace XamCore.PdfKit {
 		[Export ("writeToFile:withOptions:")]
 		bool Write (string path, NSDictionary options);
 
-		[NoMac]
+		[Mac (10,13)]
 		[Wrap ("Write (path, options.Dictionary)")]
 		bool Write (string path, PdfDocumentWriteOptions options);
 
@@ -1238,7 +1236,7 @@ namespace XamCore.PdfKit {
 		[Export ("writeToURL:withOptions:")]
 		bool Write (NSUrl url, NSDictionary options);
 
-		[NoMac]
+		[Mac (10,13)]
 		[Wrap ("Write (url, options?.Dictionary)")]
 		bool Write (NSUrl url, PdfDocumentWriteOptions options);
 
@@ -1332,12 +1330,11 @@ namespace XamCore.PdfKit {
 	}
 
 	[iOS (11,0)]
-#if IOS
 	[BaseType (typeof (NSObject), Name = "PDFDocumentDelegate")]
+#if IOS
 	[Protocol]
 #else
-	[BaseType (typeof (NSObject))]
-	[Protocol (IsInformal = true)]
+	[Protocol (FormalSince = "10.13", Name = "PDFDocumentDelegate")]
 #endif
 	[Model]
 	interface PdfDocumentDelegate {
@@ -1354,16 +1351,17 @@ namespace XamCore.PdfKit {
 		[Export ("classForPage"), IgnoredInDelegate]
 		Class GetClassForPage ();
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[DelegateName ("ClassForAnnotationTypeDelegate"), DefaultValue (null)]
 		[Export ("classForAnnotationType:")]
 		Class GetClassForAnnotationType (string annotationType);
 
 		[NoiOS]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'GetClassForAnnotationType' instead.")]
 		[Export ("classForAnnotationClass:"), DelegateName ("ClassForAnnotationClassDelegate"), DefaultValue (null)]
 #if XAMCORE_4_0
 		Class GetClassForAnnotationClass (Class sender);
-#else		
+#else
 		Class ClassForAnnotationClass (Class sender);
 #endif
 
@@ -1414,6 +1412,7 @@ namespace XamCore.PdfKit {
 		[Export ("destination"), NullAllowed]
 		PdfDestination Destination { get; set; }
 
+		[Mac (10,13)]
 		[Export ("action"), NullAllowed]
 		PdfAction Action { get; set; }
 	}
@@ -1480,7 +1479,7 @@ namespace XamCore.PdfKit {
 		[Export ("transformContext:forBox:")]
 		void TransformContext (CGContext context, PdfDisplayBox box);
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("thumbnailOfSize:forBox:")]
 		NSImage GetThumbnail (CGSize size, PdfDisplayBox box);
 
@@ -1574,7 +1573,7 @@ namespace XamCore.PdfKit {
 		[Export ("extendSelectionAtStart:")]
 		void ExtendSelectionAtStart (nint precede);
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("extendSelectionForLineBoundaries")]
 		void ExtendSelectionForLineBoundaries ();
 
@@ -1706,14 +1705,14 @@ namespace XamCore.PdfKit {
 		[Export ("displayMode")]
 		PdfDisplayMode DisplayMode { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("displayDirection")]
 		PdfDisplayDirection DisplayDirection { get; set; }
 
 		[Export ("displaysPageBreaks")]
 		bool DisplaysPageBreaks { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("pageBreakMargins")]
 		NSEdgeInsets PageBreakMargins { get; set; }
 
@@ -1723,16 +1722,19 @@ namespace XamCore.PdfKit {
 		[Export ("displaysAsBook")]
 		bool DisplaysAsBook { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("displaysRTL")]
 		bool DisplaysRtl { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("shouldAntiAlias")]
 		bool ShouldAntiAlias { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("greekingThreshold")]
 		nfloat GreekingThreshold { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("takeBackgroundColorFrom:")]
 		void TakeBackgroundColor (NSObject sender);
 
@@ -1761,11 +1763,11 @@ namespace XamCore.PdfKit {
 		[Export ("scaleFactor")]
 		nfloat ScaleFactor { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("minScaleFactor")]
 		nfloat MinScaleFactor { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("maxScaleFactor")]
 		nfloat MaxScaleFactor { get; set; }
 
@@ -1784,7 +1786,7 @@ namespace XamCore.PdfKit {
 		[Export ("autoScales")]
 		bool AutoScales { get; set; }
 
-		[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
+		[Mac (10,13)]
 		[Export ("scaleFactorForSizeToFit")]
 		nfloat ScaleFactorForSizeToFit { get; }
 
@@ -1878,6 +1880,7 @@ namespace XamCore.PdfKit {
 		CGSize RowSize (PdfPage page);
 
 		[NoiOS]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Export ("allowsDragging")]
 		bool AllowsDragging { get; set; }
 	
@@ -1935,10 +1938,10 @@ namespace XamCore.PdfKit {
 		[Notification]
 		NSString VisiblePagesChangedNotification { get; }
 
-		//[NoiOS]
-		//[NoMac] // [Mac (10,13)] Headers do not show changes on Mac
-		//[Export ("acceptsDraggedFiles")]
-		//bool AcceptsDraggedFiles { get; set; }
+		[NoiOS]
+		[Mac (10,13)]
+		[Export ("acceptsDraggedFiles")]
+		bool AcceptsDraggedFiles { get; set; }
 	}
 	
 	[NoiOS]
@@ -1950,12 +1953,11 @@ namespace XamCore.PdfKit {
 	//Verify delegate methods.  There are default actions (not just return null ) that should occur
 	//if the delegate does not implement the method.
 	[iOS (11,0)]
-#if IOS
 	[BaseType (typeof (NSObject), Name = "PDFViewDelegate")]
+#if IOS
 	[Protocol]
 #else
-	[BaseType (typeof (NSObject))]
-	[Protocol (IsInformal = true)]
+	[Protocol (FormalSince = "10.12", Name = "PDFViewDelegate")]
 #endif
 	[Model]
 	interface PdfViewDelegate {
