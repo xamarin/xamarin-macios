@@ -16430,6 +16430,12 @@ namespace XamCore.UIKit {
 	interface IUITableViewDropCoordinator {}
 	interface IUITableViewDropItem {}
 	interface IUITableViewDropPlaceholderContext {}
+	interface IUITextDragDelegate {}
+	interface IUITextDraggable {}
+	interface IUITextDragRequest {}
+	interface IUITextDroppable {}
+	interface IUITextDropDelegate {}
+	interface IUITextDropRequest {}
 
 	[NoWatch, NoTV, iOS (11,0)]
 	[Protocol]
@@ -16509,6 +16515,16 @@ namespace XamCore.UIKit {
 	
 		[Export ("parameters", ArgumentSemantic.Copy)]
 		UIDragPreviewParameters Parameters { get; }
+
+		// From URLPreviews (UIDragPreview) category
+
+		[Static]
+		[Export ("previewForURL:")]
+		UIDragPreview GetPreview (NSUrl url);
+
+		[Static]
+		[Export ("previewForURL:title:")]
+		UIDragPreview GetPreview (NSUrl url, [NullAllowed] string title);
 	}
 	
 	[NoWatch, NoTV, iOS (11,0)]
@@ -16753,6 +16769,16 @@ namespace XamCore.UIKit {
 	
 		[Export ("retargetedPreviewWithTarget:")]
 		UITargetedDragPreview GetRetargetedPreview (UIDragPreviewTarget newTarget);
+
+		// From URLPreviews (UITargetedDragPreview) category
+
+		[Static]
+		[Export ("previewForURL:target:")]
+		UITargetedDragPreview GetPreview (NSUrl url, UIDragPreviewTarget target);
+
+		[Static]
+		[Export ("previewForURL:title:target:")]
+		UITargetedDragPreview GetPreview (NSUrl url, [NullAllowed] string title, UIDragPreviewTarget target);
 	}
 
 	[NoWatch, NoTV]
@@ -17101,6 +17127,196 @@ namespace XamCore.UIKit {
 		bool DeletePlaceholder ();
 	}
 
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UITextDragPreviewRenderer {
+		[Export ("initWithLayoutManager:range:")]
+		IntPtr Constructor (NSLayoutManager layoutManager, NSRange range);
+
+		[Export ("initWithLayoutManager:range:unifyRects:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSLayoutManager layoutManager, NSRange range, bool unifyRects);
+
+		[Export ("layoutManager")]
+		NSLayoutManager LayoutManager { get; }
+
+		[Export ("image")]
+		UIImage Image { get; }
+
+		[Export ("firstLineRect")]
+		CGRect FirstLineRect { get; }
+
+		[Export ("bodyRect")]
+		CGRect BodyRect { get; }
+
+		[Export ("lastLineRect")]
+		CGRect LastLineRect { get; }
+
+		[Export ("adjustFirstLineRect:bodyRect:lastLineRect:textOrigin:")]
+		void Adjust (ref CGRect firstLineRect, ref CGRect bodyRect, ref CGRect lastLineRect, CGPoint origin);
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UITextDraggable : UITextInput {
+		[Abstract]
+		[NullAllowed, Export ("textDragDelegate", ArgumentSemantic.Weak)]
+		IUITextDragDelegate TextDragDelegate { get; set; }
+
+		[Abstract]
+		[NullAllowed, Export ("textDragInteraction")]
+		UIDragInteraction TextDragInteraction { get; }
+
+		[Abstract]
+		[Export ("textDragActive")]
+		bool TextDragActive { [Bind ("isTextDragActive")] get; }
+
+		[Abstract]
+		[Export ("textDragOptions", ArgumentSemantic.Assign)]
+		UITextDragOptions TextDragOptions { get; set; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface UITextDragDelegate {
+		[Export ("textDraggableView:itemsForDrag:")]
+		UIDragItem[] GetItemsForDrag (IUITextDraggable textDraggableView, IUITextDragRequest dragRequest);
+
+		[Export ("textDraggableView:dragPreviewForLiftingItem:session:")]
+		[return: NullAllowed]
+		UITargetedDragPreview GetPreviewForLiftingItem (IUITextDraggable textDraggableView, UIDragItem item, IUIDragSession session);
+
+		[Export ("textDraggableView:willAnimateLiftWithAnimator:session:")]
+		void WillAnimateLift (IUITextDraggable textDraggableView, IUIDragAnimating animator, IUIDragSession session);
+
+		[Export ("textDraggableView:dragSessionWillBegin:")]
+		void DragSessionWillBegin (IUITextDraggable textDraggableView, IUIDragSession session);
+
+		[Export ("textDraggableView:dragSessionDidEnd:withOperation:")]
+		void DragSessionDidEnd (IUITextDraggable textDraggableView, IUIDragSession session, UIDropOperation operation);
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UITextDragRequest {
+		[Abstract]
+		[Export ("dragRange")]
+		UITextRange DragRange { get; }
+
+		[Abstract]
+		[Export ("suggestedItems")]
+		UIDragItem[] SuggestedItems { get; }
+
+		[Abstract]
+		[Export ("existingItems")]
+		UIDragItem[] ExistingItems { get; }
+
+		[Abstract]
+		[Export ("selected")]
+		bool Selected { [Bind ("isSelected")] get; }
+
+		[Abstract]
+		[Export ("dragSession")]
+		IUIDragSession DragSession { get; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[BaseType (typeof(UIDropProposal))]
+	[DisableDefaultCtor]
+	interface UITextDropProposal : NSCopying {
+		// inlined
+		[Export ("initWithDropOperation:")]
+		IntPtr Constructor (UIDropOperation operation);
+
+		[Export ("dropAction", ArgumentSemantic.Assign)]
+		UITextDropAction DropAction { get; set; }
+
+		[Export ("dropProgressMode", ArgumentSemantic.Assign)]
+		UITextDropProgressMode DropProgressMode { get; set; }
+
+		[Export ("useFastSameViewOperations")]
+		bool UseFastSameViewOperations { get; set; }
+
+		[Export ("dropPerformer", ArgumentSemantic.Assign)]
+		UITextDropPerformer DropPerformer { get; set; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UITextDroppable : UITextInput, UITextPasteConfigurationSupporting {
+		[Abstract]
+		[NullAllowed, Export ("textDropDelegate", ArgumentSemantic.Weak)]
+		IUITextDropDelegate TextDropDelegate { get; set; }
+
+		[Abstract]
+		[NullAllowed, Export ("textDropInteraction")]
+		UIDropInteraction TextDropInteraction { get; }
+
+		[Abstract]
+		[Export ("textDropActive")]
+		bool TextDropActive { [Bind ("isTextDropActive")] get; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface UITextDropDelegate {
+		[Export ("textDroppableView:willBecomeEditableForDrop:")]
+		UITextDropEditability WillBecomeEditable (IUITextDroppable textDroppableView, IUITextDropRequest drop);
+
+		[Export ("textDroppableView:proposalForDrop:")]
+		UITextDropProposal GetProposalForDrop (IUITextDroppable textDroppableView, IUITextDropRequest drop);
+
+		[Export ("textDroppableView:willPerformDrop:")]
+		void WillPerformDrop (IUITextDroppable textDroppableView, IUITextDropRequest drop);
+
+		[Export ("textDroppableView:previewForDroppingAllItemsWithDefault:")]
+		[return: NullAllowed]
+		UITargetedDragPreview GetPreviewForDroppingAllItems (IUITextDroppable textDroppableView, UITargetedDragPreview defaultPreview);
+
+		[Export ("textDroppableView:dropSessionDidEnter:")]
+		void DropSessionDidEnter (IUITextDroppable textDroppableView, IUIDropSession session);
+
+		[Export ("textDroppableView:dropSessionDidUpdate:")]
+		void DropSessionDidUpdate (IUITextDroppable textDroppableView, IUIDropSession session);
+
+		[Export ("textDroppableView:dropSessionDidExit:")]
+		void DropSessionDidExit (IUITextDroppable textDroppableView, IUIDropSession session);
+
+		[Export ("textDroppableView:dropSessionDidEnd:")]
+		void DropSessionDidEnd (IUITextDroppable textDroppableView, IUIDropSession session);
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UITextDropRequest {
+		[Abstract]
+		[Export ("dropPosition")]
+		UITextPosition DropPosition { get; }
+
+		[Abstract]
+		[Export ("suggestedProposal")]
+		UITextDropProposal SuggestedProposal { get; }
+
+		[Abstract]
+		[Export ("sameView")]
+		bool SameView { [Bind ("isSameView")] get; }
+
+		[Abstract]
+		[Export ("dropSession")]
+		IUIDropSession DropSession { get; }
+	}
+
 #endregion
 
 	[TV (11,0), iOS (11,0)]
@@ -17255,6 +17471,113 @@ namespace XamCore.UIKit {
 
 		[Export ("performsFirstActionWithFullSwipe")]
 		bool PerformsFirstActionWithFullSwipe { get; set; }
+	}
+
+	interface IUITextPasteConfigurationSupporting {}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UITextPasteConfigurationSupporting : UIPasteConfigurationSupporting {
+		[Abstract]
+		[NullAllowed, Export ("pasteDelegate", ArgumentSemantic.Weak)]
+		IUITextPasteDelegate PasteDelegate { get; set; }
+	}
+
+	interface IUITextPasteDelegate {}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface UITextPasteDelegate {
+		[Export ("textPasteConfigurationSupporting:transformPasteItem:")]
+		void TransformPasteItem (IUITextPasteConfigurationSupporting textPasteConfigurationSupporting, IUITextPasteItem item);
+
+		[Export ("textPasteConfigurationSupporting:combineItemAttributedStrings:forRange:")]
+		NSAttributedString CombineItemAttributedStrings (IUITextPasteConfigurationSupporting textPasteConfigurationSupporting, NSAttributedString[] itemStrings, UITextRange textRange);
+
+		[Export ("textPasteConfigurationSupporting:performPasteOfAttributedString:toRange:")]
+		UITextRange PerformPaste (IUITextPasteConfigurationSupporting textPasteConfigurationSupporting, NSAttributedString attributedString, UITextRange textRange);
+
+		[Export ("textPasteConfigurationSupporting:shouldAnimatePasteOfAttributedString:toRange:")]
+		bool ShouldAnimatePaste (IUITextPasteConfigurationSupporting textPasteConfigurationSupporting, NSAttributedString attributedString, UITextRange textRange);
+	}
+
+	interface IUITextPasteItem {}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UITextPasteItem {
+		[Abstract]
+		[Export ("itemProvider")]
+		NSItemProvider ItemProvider { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("localObject")]
+		NSObject LocalObject { get; }
+
+		[Abstract]
+		[Export ("defaultAttributes")]
+		NSDictionary<NSString, NSObject> DefaultAttributes { get; }
+
+		[Abstract]
+		[Export ("setStringResult:")]
+		void SetStringResult (string @string);
+
+		[Abstract]
+		[Export ("setAttributedStringResult:")]
+		void SetAttributedStringResult (NSAttributedString @string);
+
+		[Abstract]
+		[Export ("setAttachmentResult:")]
+		void SetAttachmentResult (NSTextAttachment textAttachment);
+
+		[Abstract]
+		[Export ("setNoResult")]
+		void SetNoResult ();
+
+		[Abstract]
+		[Export ("setDefaultResult")]
+		void SetDefaultResult ();
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface UIPasteConfiguration : NSSecureCoding, NSCopying {
+		[Export ("acceptableTypeIdentifiers", ArgumentSemantic.Copy)]
+		string[] AcceptableTypeIdentifiers { get; set; }
+
+		[Export ("initWithAcceptableTypeIdentifiers:")]
+		IntPtr Constructor (string[] acceptableTypeIdentifiers);
+
+		[Export ("addAcceptableTypeIdentifiers:")]
+		void AddAcceptableTypeIdentifiers (string[] acceptableTypeIdentifiers);
+
+		[Export ("initWithTypeIdentifiersForAcceptingClass:")]
+		IntPtr Constructor (Class itemProviderReadingClass);
+
+		[Export ("addTypeIdentifiersForAcceptingClass:")]
+		void AddTypeIdentifiers (Class itemProviderReadingClass);
+	}
+
+	interface IUIPasteConfigurationSupporting {}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UIPasteConfigurationSupporting {
+		[Abstract]
+		[NullAllowed, Export ("pasteConfiguration", ArgumentSemantic.Copy)]
+		UIPasteConfiguration PasteConfiguration { get; set; }
+
+		[Export ("pasteItemProviders:")]
+		void PasteItemProviders (NSItemProvider[] itemProviders);
+
+		[Export ("canPasteItemProviders:")]
+		bool CanPasteItemProviders (NSItemProvider[] itemProviders);
 	}
 #endif
 }
