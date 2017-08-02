@@ -75,6 +75,12 @@ namespace MonoTouch.ObjCRuntime
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
 		public extern static void void_objc_msgSend_int (IntPtr receiver, IntPtr selector, int value);
 
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
+		public extern static void void_objc_msgSend_int_int_int_int_int_int_IntPtr (IntPtr receiver, IntPtr selector, int p1, int p2, int p3, int p4, int p5, int p6, IntPtr p7);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
+		public extern static void void_objc_msgSend_IntPtr_IntPtr_IntPtr_long_int_IntPtr (IntPtr receiver, IntPtr selector, IntPtr p1, IntPtr p2, IntPtr p3, long p4, int p5, IntPtr p7);
+
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
 		public extern static void void_objc_msgSend_long (IntPtr receiver, IntPtr selector, long value);
 

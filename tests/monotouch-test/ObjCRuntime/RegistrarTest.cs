@@ -1736,6 +1736,68 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.AreEqual (IntPtr.Zero, id, "Zero");
 			}
 		}
+
+		[Test]
+		public void OutNSErrorOnStack1 ()
+		{
+			using (var obj = new OutNSErrorOnStackClass ()) {
+				Messaging.void_objc_msgSend_int_int_int_int_int_int_IntPtr (obj.Handle, Selector.GetHandle ("outNSErrorOnStack:i:i:i:i:i:err:"), 0, 0, 0, 0, 0, 0, IntPtr.Zero);
+
+				var ptr = Marshal.AllocHGlobal (IntPtr.Size);
+				Marshal.WriteIntPtr (ptr, IntPtr.Zero);
+				Console.WriteLine ("ptr: 0x{0} = 0x{1}", ptr.ToString ("x"), Marshal.ReadIntPtr (ptr));
+				Messaging.void_objc_msgSend_int_int_int_int_int_int_IntPtr (obj.Handle, Selector.GetHandle ("outNSErrorOnStack:i:i:i:i:i:err:"), 0, 0, 0, 0, 0, 0, ptr);
+				Assert.AreEqual (IntPtr.Zero, Marshal.ReadIntPtr (ptr), "#1");
+				Marshal.FreeHGlobal (ptr);
+
+				ptr = IntPtr.Zero;
+				unsafe {
+					IntPtr* ptrFixed = &ptr;
+					Console.WriteLine ("ptr: 0x{0}", ptr.ToString ("x"));
+					Messaging.void_objc_msgSend_int_int_int_int_int_int_IntPtr (obj.Handle, Selector.GetHandle ("outNSErrorOnStack:i:i:i:i:i:err:"), 0, 0, 0, 0, 0, 0, (IntPtr) ptrFixed);
+					Assert.AreEqual (IntPtr.Zero, ptr, "#2");
+				}
+			}
+		}
+
+		[Test]
+		public void OutNSErrorOnStack2 ()
+		{
+			using (var obj = new OutNSErrorOnStackClass ()) {
+				Messaging.void_objc_msgSend_IntPtr_IntPtr_IntPtr_long_int_IntPtr (obj.Handle, Selector.GetHandle ("outNSErrorOnStack:obj:obj:int64:i:err:"), IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, 1, 2, IntPtr.Zero);
+
+				var ptr = Marshal.AllocHGlobal (IntPtr.Size);
+				Marshal.WriteIntPtr (ptr, IntPtr.Zero);
+				Console.WriteLine ("ptr: 0x{0} = 0x{1}", ptr.ToString ("x"), Marshal.ReadIntPtr (ptr));
+				Messaging.void_objc_msgSend_IntPtr_IntPtr_IntPtr_long_int_IntPtr (obj.Handle, Selector.GetHandle ("outNSErrorOnStack:obj:obj:int64:i:err:"), IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, 1, 2, ptr);
+				Assert.AreEqual (IntPtr.Zero, Marshal.ReadIntPtr (ptr), "#1");
+				Marshal.FreeHGlobal (ptr);
+
+				ptr = IntPtr.Zero;
+				unsafe {
+					IntPtr* ptrFixed = &ptr;
+					Console.WriteLine ("ptr: 0x{0}", ptr.ToString ("x"));
+					Messaging.void_objc_msgSend_IntPtr_IntPtr_IntPtr_long_int_IntPtr (obj.Handle, Selector.GetHandle ("outNSErrorOnStack:obj:obj:int64:i:err:"), IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, 1, 2, (IntPtr) ptrFixed);
+					Assert.AreEqual (IntPtr.Zero, ptr, "#2");
+				}
+			}
+		}
+
+		public class OutNSErrorOnStackClass : ObjCRegistrarTest
+		{
+			public override void OutNSErrorOnStack (int i1, int i2, int i3, int i4, int i5, int i6, out NSError error)
+			{
+				error = null;
+			}
+
+			public override void OutNSErrorOnStack (NSObject i1, NSObject i2, NSObject i3, long i4, int i5, out NSError error)
+			{
+				Assert.AreEqual (i4, 1, "#long");
+				Assert.AreEqual (i5, 2, "#int");
+				error = null;
+			}
+		}
+
 #endif
 
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
