@@ -199,6 +199,17 @@ static UltimateMachine *shared;
 	{
 		// Nothing to do here.
 	}
+
+	-(void) outNSErrorOnStack:(int)i1 i:(int)i2 i:(int)i3 i:(int)i4 i:(int)i5 i:(int)i6 err:(NSError **)err
+	{
+		// Nothing to do here
+	}
+
+	
+	-(void) outNSErrorOnStack:(id)obj1 obj:(id)obj2 obj:(id)obj3 int64:(long long)l4 i:(int)i5 err:(NSError **)err
+	{
+		// Nothing to do here
+	}
 @end
 
 @implementation ObjCExceptionTest
