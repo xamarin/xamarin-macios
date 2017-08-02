@@ -16171,16 +16171,11 @@ namespace XamCore.UIKit {
 		[NoiOS]
 		[Static]
 		[Export ("registerURL:forSoundIdentifier:")]
-		void RegisterUrl (NSUrl soundFileURL, string identifier);
+		void RegisterUrl (NSUrl soundFileUrl, NSString identifier);
 
-		// The 2 values associated with the smart enum cannot be used.
+		// The 2 values associated with the 'UIFocusSoundIdentifier' smart enum cannot be used.
 		// See https://developer.apple.com/documentation/uikit/uifocussystem/2887479-register
 		// Do not specify one of the UIKit sound identifiers (such as default); doing so will cause an immediate assertion failure and crash your app.
-		//
-		// [NoiOS]
-		// [Static]
-		// [Wrap ("_RegisterUrl (soundFileURL, identifier.GetConstant ())")]
-		// void RegisterUrl (NSUrl soundFileURL, UIFocusSoundIdentifier identifier);
 	}
 
 	interface IUIFocusDebuggerOutput {}
@@ -16363,7 +16358,7 @@ namespace XamCore.UIKit {
 		[TV (11,0)]
 		[Export ("soundIdentifierForFocusUpdateInContext:")]
 		[return: NullAllowed]
-		string GetSoundIdentifier (UIFocusUpdateContext context);
+		NSString GetSoundIdentifier (UIFocusUpdateContext context);
 		
 	}
 #endif // !WATCH
