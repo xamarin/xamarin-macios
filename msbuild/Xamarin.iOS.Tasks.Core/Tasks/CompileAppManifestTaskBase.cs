@@ -28,7 +28,6 @@ namespace Xamarin.iOS.Tasks
 		[Required]
 		public bool SdkIsSimulator { get; set; }
 
-		[Required]
 		public string TargetArchitectures { get; set; }
 
 		[Required]
@@ -103,7 +102,7 @@ namespace Xamarin.iOS.Tasks
 				throw new InvalidOperationException (string.Format ("Invalid framework: {0}", Framework));
 			}
 
-			if (!Enum.TryParse (TargetArchitectures, out architectures)) {
+			if (!string.IsNullOrEmpty (TargetArchitectures) && !Enum.TryParse (TargetArchitectures, out architectures)) {
 				LogAppManifestError ("Could not parse TargetArchitectures '{0}'", TargetArchitectures);
 				return false;
 			}
