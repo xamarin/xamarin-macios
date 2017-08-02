@@ -24,7 +24,7 @@ namespace XamCore.PdfKit {
 			return _SetValue (value.Handle, key.GetConstant ());
 		}
 
-		// [Mac (10,12)] Headers do not show changes on Mac, but added on iOS 11 headers
+		[Mac (10,12)]
 		public bool SetValue (string str, PdfAnnotationKey key)
 		{
 			var nstr = NSString.CreateNative (str);
