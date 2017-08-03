@@ -2340,6 +2340,14 @@ namespace XamCore.UIKit {
 
 		[Export ("insertArrangedSubview:atIndex:")]
 		void InsertArrangedSubview (UIView view, nuint stackIndex);
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("setCustomSpacing:afterView:")]
+		void SetCustomSpacing (nfloat spacing, UIView arrangedSubview);
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("customSpacingAfterView:")]
+		nfloat GetCustomSpacing (UIView arrangedSubview);
 	}
 		
 	[Static]
@@ -14541,6 +14549,10 @@ namespace XamCore.UIKit {
 		[iOS (8,0)]
 		[Field ("UISplitViewControllerAutomaticDimension")]
 		nfloat AutomaticDimension { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("primaryEdge", ArgumentSemantic.Assign)]
+		UISplitViewControllerPrimaryEdge PrimaryEdge { get; set; }
 	}
 
 	[Since (3,2)]
