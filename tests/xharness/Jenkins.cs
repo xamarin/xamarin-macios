@@ -117,6 +117,9 @@ namespace xharness
 			if (!IncludeBcl && project.IsBclTest)
 				return false;
 
+			if (!IncludeSystemPermissionTests && project.Name == "introspection")
+				return false;
+
 			return true;
 		}
 
