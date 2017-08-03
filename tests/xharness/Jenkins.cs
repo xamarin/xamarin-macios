@@ -2719,10 +2719,8 @@ function oninitialload ()
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
 					runner.MainLog = uninstall_log;
 					var uninstall_result = await runner.UninstallAsync ();
-					if (!uninstall_result.Succeeded) {
-						FailureMessage = $"Uninstall failed, exit code: {uninstall_result.ExitCode}.";
-						ExecutionResult = TestExecutingResult.Failed;
-					}
+					if (!uninstall_result.Succeeded)
+						MainLog.WriteLine ($"Pre-run uninstall failed, exit code: {uninstall_result.ExitCode} (this hopefully won't affect the test result)");
 
 					if (!Failed) {
 						// Install the app
