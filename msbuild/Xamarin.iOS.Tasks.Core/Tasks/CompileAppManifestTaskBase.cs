@@ -273,9 +273,6 @@ namespace Xamarin.iOS.Tasks
 					case TargetArchitecture.ARMv7:
 						array.Add (new PString ("armv7"));
 						break;
-					case TargetArchitecture.ARMv6:
-						array.Add (new PString ("armv6"));
-						break;
 					}
 				} else if (capabilities is PDictionary) {
 					var dict = (PDictionary) capabilities;
@@ -289,11 +286,6 @@ namespace Xamarin.iOS.Tasks
 					case TargetArchitecture.ARMv7:
 						dict["armv7"] = new PBoolean (true);
 						dict.Remove ("armv6");
-						dict.Remove ("arm64");
-						break;
-					case TargetArchitecture.ARMv6:
-						dict["armv6"] = new PBoolean (true);
-						dict.Remove ("armv7");
 						dict.Remove ("arm64");
 						break;
 					default:
@@ -313,9 +305,6 @@ namespace Xamarin.iOS.Tasks
 					break;
 				case TargetArchitecture.ARMv7:
 					array.Add (new PString ("armv7"));
-					break;
-				case TargetArchitecture.ARMv6:
-					array.Add (new PString ("armv6"));
 					break;
 				}
 
