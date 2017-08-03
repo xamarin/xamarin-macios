@@ -17597,8 +17597,14 @@ namespace XamCore.UIKit {
 		[Export ("initWithTypeIdentifiersForAcceptingClass:")]
 		IntPtr Constructor (Class itemProviderReadingClass);
 
+		[Wrap ("this (new Class (itemProviderReadingType))")]
+		IntPtr Constructor (Type itemProviderReadingType);
+
 		[Export ("addTypeIdentifiersForAcceptingClass:")]
 		void AddTypeIdentifiers (Class itemProviderReadingClass);
+
+		[Wrap ("AddTypeIdentifiers (new Class (itemProviderReadingType))")]
+		void AddTypeIdentifiers (Type itemProviderReadingType);
 	}
 
 	interface IUIPasteConfigurationSupporting {}
