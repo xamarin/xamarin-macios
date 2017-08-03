@@ -1208,6 +1208,7 @@ namespace Xamarin.Bundler
 					// This is because iOS has a forward declaration of NSPortMessage, but no actual declaration.
 					// They still use NSPortMessage in other API though, so it can't just be removed from our bindings.
 					registrar_task.CompilerFlags.AddOtherFlag ("-Wno-receiver-forward-class");
+					registrar_task.CompilerFlags.AddOtherFlag ("-Wno-unguarded-availability-new");
 					LinkWithTaskOutput (registrar_task);
 				}
 
