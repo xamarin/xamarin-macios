@@ -272,6 +272,7 @@ namespace Introspection
 			"Mtc", // acronym
 			"Mul",
 			"Mult",
+			"Multipath",
 			"Multipeer",
 			"Muxed",
 			"Nanograms",

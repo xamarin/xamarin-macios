@@ -363,6 +363,8 @@ namespace XamCore.Foundation  {
 
 		CoderReadCorruptError = 4864,
 		CoderValueNotFoundError = 4865,
+		[Mac (10,13), iOS (11,0), Watch (4,0), TV (11,0)]
+		CoderInvalidValueError = 4866,
 		CoderErrorMinimum = 4864,
 		CoderErrorMaximum = 4991,
 
@@ -722,7 +724,8 @@ namespace XamCore.Foundation  {
 	[Flags]
 	[Native]
 	public enum NSJsonWritingOptions : nuint_compat_int {
-		PrettyPrinted = 1
+		PrettyPrinted = 1,
+		SortedKeys = (1 << 1),
 	}
 
 	[Native]
@@ -1258,4 +1261,45 @@ namespace XamCore.Foundation  {
 		TemperatureWithoutUnit = (1 << 2)
 	}
 
+
+	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[Native]
+	public enum NSItemProviderRepresentationVisibility : nint {
+		All = 0,
+		Team = 1,
+		Group = 2,
+		OwnProcess = 3,
+	}
+
+	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[Native]
+	public enum NSItemProviderFileOptions : nint {
+		OpenInPlace = 1,
+	}
+
+	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[Native]
+	public enum NSLinguisticTaggerUnit : nint {
+		Word,
+		Sentence,
+		Paragraph,
+		Document,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (11, 0)]
+	[Native]
+	public enum NSUrlSessionMultipathServiceType : nint {
+		None = 0,
+		Handover = 1,
+		Interactive = 2,
+		Aggregate = 3,
+	}
+
+	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[Native]
+	public enum NSUrlSessionDelayedRequestDisposition : nint {
+		ContinueLoading = 0,
+		UseNewRequest = 1,
+		Cancel = 2,
+	}
 }
