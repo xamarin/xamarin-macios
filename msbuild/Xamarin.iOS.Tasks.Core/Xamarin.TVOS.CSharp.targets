@@ -22,9 +22,9 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 		<TargetFrameworkIdentifier Condition="'$(TargetFrameworkIdentifier)' == ''">Xamarin.TVOS</TargetFrameworkIdentifier>
 		<TargetFrameworkVersion Condition="'$(TargetFrameworkVersion)' == ''">v1.0</TargetFrameworkVersion>
 
-		<DefineConstants Condition="!$(DefineConstants.Contains('__UNIFIED__'))">__UNIFIED__;$(DefineConstants)</DefineConstants>
-		<DefineConstants Condition="!$(DefineConstants.Contains('__MOBILE__'))">__MOBILE__;$(DefineConstants)</DefineConstants>
-		<DefineConstants Condition="!$(DefineConstants.Contains('__TVOS__'))">__TVOS__;$(DefineConstants)</DefineConstants>
+		<DefineConstants Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants.Trim()), '(^|;)__UNIFIED__($|;)'))">__UNIFIED__;$(DefineConstants)</DefineConstants>
+		<DefineConstants Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants.Trim()), '(^|;)__MOBILE__($|;)'))">__MOBILE__;$(DefineConstants)</DefineConstants>
+		<DefineConstants Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants.Trim()), '(^|;)__TVOS__($|;)'))">__TVOS__;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
