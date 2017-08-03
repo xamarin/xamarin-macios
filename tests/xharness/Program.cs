@@ -61,6 +61,11 @@ namespace xharness
 						harness.EnvironmentVariables [split [0]] = split [1];
 					}
 				},
+				{ "label=", "Comma-separated list of labels to select which tests to run.", (v) =>
+					{
+						harness.Labels.UnionWith (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+					}
+				},
 			};
 
 			showHelp = () => {
