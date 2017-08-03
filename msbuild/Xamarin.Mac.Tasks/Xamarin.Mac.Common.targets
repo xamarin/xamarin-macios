@@ -678,13 +678,13 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<AssignProjectConfiguration
 			ProjectReferences = "@(_AppExtensionReference)"
 			SolutionConfigurationContents = "$(CurrentSolutionConfigurationContents)"
-			Condition="'$(BuildingSolutionFile)' == 'true'">
+			Condition="'$(CurrentSolutionConfigurationContents)' != ''">
 
 			<Output TaskParameter="AssignedProjects" ItemName="_AppExtensionReferenceWithConfiguration"/>
 		</AssignProjectConfiguration>
 
 		<!-- Else, just -->
-		<CreateItem Include="@(_AppExtensionReference)" Condition="'$(BuildingSolutionFile)' != 'true'">
+		<CreateItem Include="@(_AppExtensionReference)" Condition="'$(CurrentSolutionConfigurationContents)' == ''">
 			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfiguration"/>
 		</CreateItem>
 
