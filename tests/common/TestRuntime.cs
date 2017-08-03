@@ -4,10 +4,20 @@ using System.Linq;
 using System.Runtime.InteropServices;
 
 #if XAMCORE_2_0
+using AVFoundation;
 using Foundation;
+#if !__TVOS__
+using Contacts;
+#endif
 #if MONOMAC
 using AppKit;
 #else
+#if !__TVOS__ && !__WATCHOS__
+using AddressBook;
+#endif
+#if !__WATCHOS__
+using MediaPlayer;
+#endif
 using UIKit;
 #endif
 using ObjCRuntime;
@@ -16,6 +26,7 @@ using ObjCRuntime;
 using MonoMac.ObjCRuntime;
 using MonoMac.Foundation;
 using MonoMac.AppKit;
+using MonoMac.AVFoundation;
 #else
 using MonoTouch.ObjCRuntime;
 using MonoTouch.Foundation;
@@ -393,4 +404,126 @@ partial class TestRuntime
 #endif
 		}
 	}
+
+	public static bool IgnoreTestThatRequiresSystemPermissions ()
+	{
+		return !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("DISABLE_SYSTEM_PERMISSION_TESTS"));
+	}
+
+#if !MONOMAC && !__TVOS__ && !__WATCHOS__
+	public static void RequestCameraPermission (NSString mediaTypeToken, bool assert_granted = false)
+	{
+		if (AVCaptureDevice.GetAuthorizationStatus (mediaTypeToken) == AVAuthorizationStatus.NotDetermined) {
+			if (IgnoreTestThatRequiresSystemPermissions ())
+				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to access the camera.");
+
+			AVCaptureDevice.RequestAccessForMediaType (mediaTypeToken, (accessGranted) =>
+			{
+				Console.WriteLine ("Camera permission {0}", accessGranted ? "granted" : "denied");
+			});
+		}
+
+		switch (AVCaptureDevice.GetAuthorizationStatus (AVMediaType.Video)) {
+		case AVAuthorizationStatus.Restricted:
+		case AVAuthorizationStatus.Denied:
+			if (assert_granted)
+				NUnit.Framework.Assert.Fail ("This test requires permission to access the camera.");
+			break;
+		}
+	}
+#endif // !!MONOMAC && !__TVOS__ && !__WATCHOS__
+
+#if XAMCORE_2_0 && !__TVOS__
+	public static void CheckContactsPermission (bool assert_granted = false)
+	{
+		switch (CNContactStore.GetAuthorizationStatus (CNEntityType.Contacts)) {
+		case CNAuthorizationStatus.NotDetermined:
+			if (IgnoreTestThatRequiresSystemPermissions ())
+				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to access the contacts.");
+			// We don't request access here, because there's no global method to request access (an contact store instance is required).
+			// Interestingly there is a global method to determine if access has been granted...
+			break;
+		case CNAuthorizationStatus.Restricted:
+		case CNAuthorizationStatus.Denied:
+			if (assert_granted)
+				NUnit.Framework.Assert.Fail ("This test requires permission to access the contacts.");
+			break;
+		}
+	}
+#endif // XAMCORE_2_0
+
+#if !MONOMAC && !__TVOS__ && !__WATCHOS__
+	public static void CheckAddressBookPermission (bool assert_granted = false)
+	{
+		switch (ABAddressBook.GetAuthorizationStatus ()) {
+		case ABAuthorizationStatus.NotDetermined:
+			if (IgnoreTestThatRequiresSystemPermissions ())
+				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to access the address book.");
+			// We don't request access here, because there's no global method to request access (an addressbook instance is required).
+			// Interestingly there is a global method to determine if access has been granted...
+			break;
+		case ABAuthorizationStatus.Restricted:
+		case ABAuthorizationStatus.Denied:
+			if (assert_granted)
+				NUnit.Framework.Assert.Fail ("This test requires permission to access the address book.");
+			break;
+		}
+	}
+#endif // !MONOMAC && !__TVOS__ && !__WATCHOS__
+
+#if !__WATCHOS__
+	public static void RequestMicrophonePermission (bool assert_granted = false)
+	{
+#if MONOMAC
+		// It looks like macOS does not restrict access to the microphone.
+#elif __TVOS__
+		// tvOS doesn't have a (developer-accessible) microphone, but it seems to have API that requires developers 
+		// to request microphone access on other platforms (which means that it makes sense to both run those tests
+		// on tvOS (because the API's there) and to request microphone access (because that's required on other platforms).
+#else
+		if (!CheckXcodeVersion (6, 0))
+			return; // The API to check/request permission isn't available in earlier versions, the dialog will just pop up.
+
+		if (AVAudioSession.SharedInstance ().RecordPermission == AVAudioSessionRecordPermission.Undetermined) {
+			if (IgnoreTestThatRequiresSystemPermissions ())
+				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to access the microphone.");
+
+			AVAudioSession.SharedInstance ().RequestRecordPermission ((bool granted) =>
+			{
+				Console.WriteLine ("Microphone permission {0}", granted ? "granted" : "denied");
+			});
+		}
+
+		switch (AVAudioSession.SharedInstance ().RecordPermission) { // iOS 8+
+		case AVAudioSessionRecordPermission.Denied:
+			if (assert_granted)
+				NUnit.Framework.Assert.Fail ("This test requires permission to access the microphone.");
+			break;
+		}
+#endif // !MONOMAC && !__TVOS__
+	}
+#endif // !__WATCHOS__
+
+#if !MONOMAC && !__TVOS__ && !__WATCHOS__
+	public static void RequestMediaLibraryPermission (bool assert_granted = false)
+	{
+		if (MPMediaLibrary.AuthorizationStatus == MPMediaLibraryAuthorizationStatus.NotDetermined) {
+			if (IgnoreTestThatRequiresSystemPermissions ())
+				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to access the media library.");
+
+			MPMediaLibrary.RequestAuthorization ((access) =>
+			{
+				Console.WriteLine ("Media library permission: {0}", access);
+			});
+		}
+
+		switch (MPMediaLibrary.AuthorizationStatus) {
+		case MPMediaLibraryAuthorizationStatus.Denied:
+		case MPMediaLibraryAuthorizationStatus.Restricted:
+			if (assert_granted)
+				NUnit.Framework.Assert.Fail ("This test requires permission to access the media library.");
+			break;
+		}
+	}
+#endif // !MONOMAC && !__TVOS__
 }
