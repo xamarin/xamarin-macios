@@ -377,6 +377,7 @@ namespace xharness
 			SetEnabled (labels, "btouch", ref IncludeBtouch);
 			SetEnabled (labels, "mac-binding-project", ref IncludeMacBindingProject);
 			SetEnabled (labels, "ios-extensions", ref IncludeiOSExtensions);
+			SetEnabled (labels, "ios-device", ref IncludeDevice);
 
 			// enabled by default
 			SetEnabled (labels, "ios", ref IncludeiOS);
@@ -385,6 +386,7 @@ namespace xharness
 			SetEnabled (labels, "mac", ref IncludeMac);
 			SetEnabled (labels, "mac-classic", ref IncludeClassicMac);
 			SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
+			SetEnabled (labels, "ios-simulator", ref IncludeSimulator);
 		}
 
 		void SetEnabled (IEnumerable<string> labels, string testname, ref bool value)
