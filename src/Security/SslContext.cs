@@ -523,7 +523,7 @@ namespace XamCore.Security {
 			get {
 				IntPtr value;
 				result = SSLCopyPeerTrust (Handle, out value);
-				return (value == IntPtr.Zero) ? null : new SecTrust (value);
+				return (value == IntPtr.Zero) ? null : new SecTrust (value, true);
 			}
 		}
 
