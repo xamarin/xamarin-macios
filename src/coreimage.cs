@@ -4708,4 +4708,13 @@ namespace XamCore.CoreImage {
 	interface CIMorphologyMinimum {
 		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
 	}
+
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[Abstract]
+	[BaseType (typeof (NSObject))]
+	interface CIBarcodeDescriptor : NSSecureCoding, NSCopying {
+		// empty
+	}
 }
