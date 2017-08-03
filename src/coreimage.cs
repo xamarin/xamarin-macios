@@ -1210,7 +1210,7 @@ namespace XamCore.CoreImage {
 #if XAMCORE_2_0
 		[Internal] // there's a CIFormat enum that maps to the kCIFormatARGB8, kCIFormatRGBA16, kCIFormatRGBAf, kCIFormatRGBAh constants
 #else
-		[Obsolete ("Use the overload acceping a CIFormat enum (instead of an int) for pixelFormat")]
+		[Obsolete ("Use the overload acceping a 'CIFormat' enum instead of an 'int'.")]
 #endif
 		CIImage FromData (NSData bitmapData, nint bytesPerRow, CGSize size, int /* CIFormat = int */ pixelFormat, [NullAllowed] CGColorSpace colorSpace);
 
@@ -1821,25 +1821,39 @@ namespace XamCore.CoreImage {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // does not work in iOS 11 beta 4
 	interface CIImageAccumulator {
-#if XAMCORE_4_0
+#if !XAMCORE_4_0
 		[Obsolete ("The default initializer does not work in recent iOS version (11b4).")]
+		[Export ("init")]
 		IntPtr Constructor ();
 #endif
 
 		[Static]
 		[Export ("imageAccumulatorWithExtent:format:")]
-		CIImageAccumulator FromRectangle (CGRect rect, int /* CIFormat = int */ ciImageFormat);
+		CIImageAccumulator FromRectangle (CGRect rect, CIFormat format);
+
+#if MONOMAC && !XAMCORE_4_0
+		[Obsolete ("Use the overload acceping a 'CIFormat' enum instead of an 'int'.")]
+		[Static]
+		[Wrap ("FromRectangle (rect, (CIFormat) ciImageFormat)")]
+		CIImageAccumulator FromRectangle (CGRect rect, int ciImageFormat);
+#endif
 
 		[iOS (9,0)]
 		[Static]
 		[Export ("imageAccumulatorWithExtent:format:colorSpace:")]
-		CIImageAccumulator FromRectangle (CGRect extent, int format, CGColorSpace colorSpace);
+		CIImageAccumulator FromRectangle (CGRect extent, CIFormat format, CGColorSpace colorSpace);
 		
 		[Export ("initWithExtent:format:")]
-		IntPtr Constructor (CGRect rectangle, int /* CIFormat = int */ ciImageFormat);
+		IntPtr Constructor (CGRect rectangle, CIFormat format);
+
+#if MONOMAC && !XAMCORE_4_0
+		[Obsolete ("Use the overload acceping a 'CIFormat' enum instead of an 'int'.")]
+		[Wrap ("this (rectangle, (CIFormat) ciImageFormat)")]
+		IntPtr Constructor (CGRect rectangle, int ciImageFormat);
+#endif
 
 		[Export ("initWithExtent:format:colorSpace:")]
-		IntPtr Constructor (CGRect extent, int format, CGColorSpace colorSpace);
+		IntPtr Constructor (CGRect extent, CIFormat format, CGColorSpace colorSpace);
 		
 		[Export ("extent")]
 		CGRect Extent { get; }
