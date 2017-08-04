@@ -392,3 +392,7 @@
 !unknown-field! CBUUIDPeripheralPrivacyFlagString bound
 !unknown-field! CBUUIDReconnectionAddressString bound
 !unknown-field! CBUUIDServiceChangedString bound
+
+## PDFKit
+# The following enums are bound as PdfFoo, lowercase Pdf prefix
+!missing-enum! PDFThumbnailLayoutMode not bound
