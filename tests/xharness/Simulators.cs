@@ -55,7 +55,6 @@ namespace xharness
 								Version = long.Parse (sim.SelectSingleNode ("Version").InnerText),
 							});
 						}
-						supported_runtimes.SetCompleted ();
 
 						foreach (XmlNode sim in simulator_data.SelectNodes ("/MTouch/Simulator/SupportedDeviceTypes/SimDeviceType")) {
 							supported_device_types.Add (new SimDeviceType ()
@@ -68,7 +67,6 @@ namespace xharness
 								Supports64Bits = bool.Parse (sim.SelectSingleNode ("Supports64Bits").InnerText),
 							});
 						}
-						supported_device_types.SetCompleted ();
 
 						foreach (XmlNode sim in simulator_data.SelectNodes ("/MTouch/Simulator/AvailableDevices/SimDevice")) {
 							available_devices.Add (new SimDevice ()
@@ -82,7 +80,6 @@ namespace xharness
 								LogPath = sim.SelectSingleNode ("LogPath").InnerText,
 							});
 						}
-						available_devices.SetCompleted ();
 
 						foreach (XmlNode sim in simulator_data.SelectNodes ("/MTouch/Simulator/AvailableDevicePairs/SimDevicePair")) {
 							available_device_pairs.Add (new SimDevicePair ()
@@ -93,9 +90,12 @@ namespace xharness
 
 							});
 						}
-						available_device_pairs.SetCompleted ();
 					}
 				} finally {
+					supported_runtimes.SetCompleted ();
+					supported_device_types.SetCompleted ();
+					available_devices.SetCompleted ();
+					available_device_pairs.SetCompleted ();
 					File.Delete (tmpfile);
 				}
 			});
