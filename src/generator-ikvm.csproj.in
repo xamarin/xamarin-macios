@@ -92,6 +92,15 @@
       <Variable name="XamarinMacFrameworkRoot" value="%XamarinMacFrameworkRoot%" />
     </EnvironmentVariables>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'ios-unified-playground' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>%IOS_UNIFIED_PLAYGROUND_ARGS%</StartArguments>
+    <StartWorkingDirectory>%WORKING_DIR%</StartWorkingDirectory>
+    <EnvironmentVariables>
+      <Variable name="PMCS_PROFILE" value="%IOS_UNIFIED_PMCS_PROFILE%" />
+      <Variable name="MD_MTOUCH_SDK_ROOT" value="%MD_MTOUCH_SDK_ROOT%" />
+    </EnvironmentVariables>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
