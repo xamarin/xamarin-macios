@@ -1251,6 +1251,10 @@ namespace Xamarin.Bundler {
 					args.Append ("-fobjc-runtime=macosx ");
 				if (!embed_mono)
 					args.Append ("-DDYNAMIC_MONO_RUNTIME ");
+
+				if (XcodeVersion >= new Version (9, 0))
+					args.Append ("-Wno-unguarded-availability-new ");
+
 				bool appendedObjc = false;
 				foreach (var assembly in BuildTarget.Assemblies) {
 					if (assembly.LinkWith != null) {
