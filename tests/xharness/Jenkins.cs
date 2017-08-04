@@ -64,24 +64,41 @@ namespace xharness
 			return new Resources (resources);
 		}
 
-		async Task<IEnumerable<RunSimulatorTask>> CreateRunSimulatorTaskAsync (XBuildTask buildTask)
+		// Loads both simulators and devices in parallel
+		Task LoadSimulatorsAndDevicesAsync ()
 		{
-			var runtasks = new List<RunSimulatorTask> ();
-
 			Simulators.Harness = Harness;
+			Devices.Harness = Harness;
+
 			if (SimulatorLoadLog == null)
 				SimulatorLoadLog = Logs.CreateStream (LogDirectory, "simulator-list.log", "Simulator Listing");
-			try {
-				await Simulators.LoadAsync (SimulatorLoadLog);
-			} catch (Exception e) {
-				SimulatorLoadLog.WriteLine ("Failed to load simulators:");
-				SimulatorLoadLog.WriteLine (e.ToString ());
-				var task = new RunSimulatorTask (buildTask) { ExecutionResult = TestExecutingResult.Failed };
-				var log = task.Logs.CreateFile ("Run log", Path.Combine (task.LogDirectory, "run-" + DateTime.Now.Ticks + ".log"));
-				log.WriteLine ("Failed to load simulators");
-				runtasks.Add (task);
-				return runtasks;
-			}
+
+			var simulatorLoadTask = Task.Run (async () => {
+				try {
+					await Simulators.LoadAsync (SimulatorLoadLog);
+				} catch (Exception e) {
+					SimulatorLoadLog.WriteLine ("Failed to load simulators:");
+					SimulatorLoadLog.WriteLine (e);
+				}
+			});
+
+			if (DeviceLoadLog == null)
+				DeviceLoadLog = Logs.CreateStream (LogDirectory, "device-list.log", "Device Listing");
+			var deviceLoadTask = Task.Run (async () => {
+				try {
+					await Devices.LoadAsync (DeviceLoadLog, removed_locked: true);
+				} catch (Exception e) {
+					DeviceLoadLog.WriteLine ("Failed to load devices:");
+					DeviceLoadLog.WriteLine (e);
+				}
+			});
+
+			return Task.WhenAll (simulatorLoadTask, deviceLoadTask);
+		}
+
+		IEnumerable<RunSimulatorTask> CreateRunSimulatorTaskAsync (XBuildTask buildTask)
+		{
+			var runtasks = new List<RunSimulatorTask> ();
 
 			AppRunnerTarget [] targets;
 			TestPlatform [] platforms;
@@ -123,18 +140,9 @@ namespace xharness
 			return true;
 		}
 
-		async Task<IEnumerable<TestTask>> CreateRunDeviceTasks ()
+		IEnumerable<TestTask> CreateRunDeviceTasks ()
 		{
 			var rv = new List<RunDeviceTask> ();
-
-			Devices.Harness = Harness;
-			if (DeviceLoadLog == null)
-				DeviceLoadLog = Logs.CreateStream (LogDirectory, "device-list.log", "Device Listing");
-			try {
-				await Devices.LoadAsync (DeviceLoadLog, removed_locked: true);
-			} catch (Exception e) {
-				DeviceLoadLog.WriteLine ("Failed to load devices: {0}", e);
-			}
 
 			foreach (var project in Harness.IOSTestProjects) {
 				bool ignored = !IncludeDevice;
@@ -428,6 +436,8 @@ namespace xharness
 
 			SelectTests ();
 
+			await LoadSimulatorsAndDevicesAsync ();
+
 			var runSimulatorTasks = new List<RunSimulatorTask> ();
 
 			foreach (var project in Harness.IOSTestProjects) {
@@ -452,7 +462,7 @@ namespace xharness
 						Ignored = pair.Item3,
 						TestName = project.Name,
 					};
-					runSimulatorTasks.AddRange (await CreateRunSimulatorTaskAsync (derived));
+					runSimulatorTasks.AddRange (CreateRunSimulatorTaskAsync (derived));
 				}
 			}
 
@@ -619,7 +629,7 @@ namespace xharness
 			};
 			Tasks.Add (runMacBindingProject);
 			
-			Tasks.AddRange (await CreateRunDeviceTasks ());
+			Tasks.AddRange (CreateRunDeviceTasks ());
 		}
 
 		RunTestTask CloneExecuteTask (RunTestTask task, TestPlatform platform, string suffix, bool ignore)
