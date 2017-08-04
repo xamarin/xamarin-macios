@@ -697,5 +697,23 @@ namespace Xamarin.MMP.Tests
 				TI.TestSystemMonoExecutable (test, configuration: configuration);
 			});
 		}
+
+		[Test]
+		public void Unified_ShouldSupportDynamic ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { 
+					TestCode = @"
+						NSObject o = new NSObject ();
+						dynamic w = o;
+						string x1 = o.Description;
+						string x2 = w.Description;",
+					References = " <Reference Include=\"Microsoft.CSharp\" />",
+				};
+
+				TI.TestUnifiedExecutable (test);
+			});
+		}
+		
 	}
 }
