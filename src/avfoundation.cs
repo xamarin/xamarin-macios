@@ -245,8 +245,7 @@ namespace XamCore.AVFoundation {
 	[NoWatch]
 	[iOS (9,0), Mac (10,11)]
 	[BaseType (typeof(AVDateRangeMetadataGroup))]
-	interface AVMutableDateRangeMetadataGroup
-	{
+	interface AVMutableDateRangeMetadataGroup {
 		[Export ("startDate", ArgumentSemantic.Copy)]
 		[Override]
 		NSDate StartDate { get; set; }
@@ -278,7 +277,7 @@ namespace XamCore.AVFoundation {
 
 		[Export ("depthDataByReplacingDepthDataMapWithPixelBuffer:error:")]
 		[return: NullAllowed]
-		AVDepthData CreateD (CVPixelBuffer pixelBuffer, [NullAllowed] out NSError outError);
+		AVDepthData Create (CVPixelBuffer pixelBuffer, [NullAllowed] out NSError outError);
 
 		[Export ("availableDepthDataTypes")]
 		NSNumber[] AvailableDepthDataTypes { get; }
