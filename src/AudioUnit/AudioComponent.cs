@@ -55,20 +55,30 @@ namespace XamCore.AudioUnit
 		public string[] IOKitUserClient { 
 			get {
 				var array = GetNativeValue<NSArray> (userClientK);
-				return NSArray.StringArrayFromHandle (array.ClassHandle);
+				if (array == null )
+					return null;
+				return NSArray.StringArrayFromHandle (array.Handle);
 			} 
 			set {
-				SetArrayValue (userClientK, value);
+				if (value == null)
+					RemoveValue (userClientK);
+				else
+					SetArrayValue (userClientK, value);
 			}
 		}
 
 		public string[] MachLookUpGlobalName { 
 			get {
 				var array = GetNativeValue<NSArray> (globalNameK);
-				return NSArray.StringArrayFromHandle (array.ClassHandle);
+				if (array == null)
+					return null;
+				return NSArray.StringArrayFromHandle (array.Handle);
 			} 
 			set {
-				SetArrayValue (globalNameK, value);
+				if (value == null)
+					RemoveValue (globalNameK);	
+				else
+					SetArrayValue (globalNameK, value);
 			}
 		}
 
@@ -176,17 +186,22 @@ namespace XamCore.AudioUnit
 				return GetStrongDictionary<ResourceUsageInfo> (resourceUsageK);
 			} 
 			set {
-				SetNativeValue (resourceUsageK, value.Dictionary, true);
+				SetNativeValue (resourceUsageK, value?.Dictionary, true);
 			}
 		}
 
 		public string[] Tags { 
 			get {
 				var array = GetNativeValue<NSArray> (tagsK);
-				return NSArray.StringArrayFromHandle (array.ClassHandle);
+				if (array == null)
+					return null;
+				return NSArray.StringArrayFromHandle (array.Handle);
 			} 
 			set {
-				SetArrayValue (tagsK, value);
+				if (value == null)
+					RemoveValue (tagsK);	
+				else
+					SetArrayValue (tagsK, value);
 			}
 		}
 	}

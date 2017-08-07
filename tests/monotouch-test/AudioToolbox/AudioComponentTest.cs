@@ -52,6 +52,44 @@ namespace MonoTouchFixtures.AudioToolbox {
 				Assert.Throws <InvalidOperationException> (() => component.ComponentList = l);
 			}
 		}
+		
+		// test the diff properties of the ResourceUsageInfo since it was manually done
+		
+		[Test]
+		public void TestResourceUsageInfoIOKitUserClient ()
+		{
+			TestRuntime.AssertXcodeVersion (9, 0);
+			var clientId = "CustomUserClient1";
+			var resources = new ResourceUsageInfo ();
+			resources.IOKitUserClient = new string[] { clientId };
+			var userClientList = resources.IOKitUserClient;
+			Assert.IsNotNull (userClientList);
+			Assert.AreEqual (1, userClientList.Length, "List does not have all client ids.");
+			Assert.AreEqual (clientId, userClientList [0], "Client ids are not the same.");
+
+			// similar test but with null values.
+			
+			resources.IOKitUserClient = null;
+			Assert.IsNull (resources.IOKitUserClient, "Value was not set to null.");
+		}
+		
+		[Test]
+		public void TestResourceUsageInfoMachLookUpGlobalName ()
+		{
+			TestRuntime.AssertXcodeVersion (9, 0);
+			var serviceName = "MachServiceName1";
+			var resources = new ResourceUsageInfo ();
+			resources.MachLookUpGlobalName = new string[] { serviceName };
+			var serviceNames = resources.MachLookUpGlobalName;
+			Assert.NotNull (serviceNames, "Returned list is null");
+			Assert.AreEqual (1, serviceNames.Length, "List does not have all service names.");
+			Assert.AreEqual (serviceName, serviceNames [0], "Service names are not equal.");
+
+			// similar test but with null values
+			
+			resources.MachLookUpGlobalName = null;
+			Assert.IsNull (resources.MachLookUpGlobalName, "Value was no set to null.");
+		}
 	}
 }
 

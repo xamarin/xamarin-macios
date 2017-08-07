@@ -389,7 +389,7 @@ namespace XamCore.AudioUnit
 			[StructLayout (LayoutKind.Sequential)]
 			public struct ImmediateStruct
 			{
-				public uint bBufferOffset;
+				public uint BufferOffset;
 				public float Value;
 			}
 
