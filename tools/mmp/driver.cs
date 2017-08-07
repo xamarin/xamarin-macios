@@ -1356,8 +1356,11 @@ namespace Xamarin.Bundler {
 				}
 
 				if (registrar == RegistrarMode.PartialStatic) {
-					args.Append (Path.Combine (GetXamMacPrefix (), "lib", string.Format ("mmp/Xamarin.Mac.registrar.{0}.a ", IsUnifiedMobile ? "mobile" : "full")));
-					args.Append ("-framework Quartz ");
+					var fn = Path.Combine (GetXamMacPrefix (), "lib", string.Format ("mmp/Xamarin.Mac.registrar.{0}.a ", IsUnifiedMobile ? "mobile" : "full"));
+					if (File.Exists (fn)) {
+						args.Append (fn);
+						args.Append ("-framework Quartz ");
+					}
 				}
 
 				args.Append ("-liconv -x objective-c++ ");
