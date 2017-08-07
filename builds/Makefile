@@ -2146,6 +2146,7 @@ TV_CROSS_CONFIGURE_FLAGS=$(CROSS_BASE_CONFIGURE_FLAGS)	\
 	--prefix=$(BUILD_DESTDIR)/crosstv \
 	--cache-file=../crosstv.config.cache \
 	--target=aarch64-unknown-darwin \
+	--with-cross-offsets=aarch64-apple-darwin10.h \
 	--with-llvm=../llvm64/usr
 
 TV_CROSS_CONFIGURE_ENVIRONMENT = \
