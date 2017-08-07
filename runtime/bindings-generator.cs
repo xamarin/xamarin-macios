@@ -1887,28 +1887,13 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // Matrix4 func (CGSize, int, nfloat, nfloat)",
+					Comment = " // Matrix4 func (CGSize, /* UIInterfaceOrientation */  nint, nfloat, nfloat)",
 					Prefix = "simd__",
 					Variants = Variants.All,
 					ReturnType = Types.Matrix4f,
 					Parameters = new ParameterData[] {
 						new ParameterData { TypeData = Types.CGSize },
-						new ParameterData { TypeData = Types.Int32 },
-						new ParameterData { TypeData = Types.NFloat },
-						new ParameterData { TypeData = Types.NFloat },
-					},
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // Matrix4 func (CGSize, Int64, nfloat, nfloat)",
-					Prefix = "simd__",
-					Variants = Variants.All,
-					ReturnType = Types.Matrix4f,
-					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.CGSize },
-						new ParameterData { TypeData = Types.Int64 },
+						new ParameterData { TypeData = Types.NInt },
 						new ParameterData { TypeData = Types.NFloat },
 						new ParameterData { TypeData = Types.NFloat },
 					},
