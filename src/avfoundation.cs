@@ -262,15 +262,14 @@ namespace XamCore.AVFoundation {
 	[TV (11,0), NoWatch, iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface AVDepthData
-	{
+	interface AVDepthData {
 		[Static]
 		[Export ("depthDataFromDictionaryRepresentation:error:")]
 		[return: NullAllowed]
 		AVDepthData Create (NSDictionary imageSourceAuxDataInfoDictionary, [NullAllowed] out NSError outError);
 
 		[Export ("depthDataByConvertingToDepthDataType:")]
-		AVDepthData Create (uint depthDataType);
+		AVDepthData Create (CVPixelFormatType depthDataType);
 
 		[Export ("depthDataByApplyingExifOrientation:")]
 		AVDepthData Create (CGImagePropertyOrientation exifOrientation);
@@ -287,7 +286,7 @@ namespace XamCore.AVFoundation {
 		NSDictionary GetDictionaryRepresentation ([NullAllowed] out string outAuxDataType);
 
 		[Export ("depthDataType")]
-		uint DepthDataType { get; }
+		CVPixelFormatType DepthDataType { get; }
 
 		[Export ("depthDataMap")]
 		CVPixelBuffer DepthDataMap { get; }
@@ -443,14 +442,14 @@ namespace XamCore.AVFoundation {
 
 		[Since (7,0), Mavericks]
 		[Field ("AVMetadataFormatISOUserData")]
-		KFormatISOUserData = 3,
+		FormatISOUserData = 3,
 
 		[Field ("AVMetadataFormatQuickTimeUserData")]
 		FormatQuickTimeUserData = 4,
 
 		[iOS (11,0), Mac (10,13), TV (11,0)]
 		[Field ("AVMetadataFormatUnknown")]
-		AVMetadataFormatUnknown = 5,
+		Unknown = 5,
 	}
 
 	enum AVFileTypes {
@@ -468,7 +467,7 @@ namespace XamCore.AVFoundation {
 	 	ThreeGpp = 3,
 		
 		[Field ("AVFileTypeAppleM4A")]
-		AppleM4A = 4, 
+		AppleM4a = 4, 
 		
 		[Field ("AVFileTypeCoreAudioFormat")]
 		CoreAudioFormat = 5, 
@@ -968,7 +967,7 @@ namespace XamCore.AVFoundation {
 
 		[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
 		[Export ("autoShutdownEnabled")]
-		bool IsAutoShutdownEnabled { [Bind ("isAutoShutdownEnabled")] get; set; }
+		bool AutoShutdownEnabled { [Bind ("isAutoShutdownEnabled")] get; set; }
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("enableManualRenderingMode:format:maximumFrameCount:error:")]
@@ -1607,8 +1606,6 @@ namespace XamCore.AVFoundation {
 		[return: NullAllowed]
 		[Export ("playerTimeForNodeTime:")]
 		AVAudioTime GetPlayerTimeFromNodeTime (AVAudioTime nodeTime);
-
-
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -2803,13 +2800,13 @@ namespace XamCore.AVFoundation {
 		AVAssetTrack [] TracksWithMediaType (string mediaType);
 
 		[Wrap ("TracksWithMediaType (mediaType.GetConstant ())")]
-		AVAssetTrack [] TracksWithMediaType (AVMediaTypes mediaType);
+		AVAssetTrack [] GetTracksWithMediaType (AVMediaTypes mediaType);
 
 		[Export ("tracksWithMediaCharacteristic:")]
 		AVAssetTrack [] TracksWithMediaCharacteristic (string mediaCharacteristic);
 
 		[Wrap ("TracksWithMediaType (mediaCharacteristic.GetConstant ())")]
-		AVAssetTrack [] TracksWithMediaCharacteristic (AVMediaCharacteristics mediaCharacteristic);
+		AVAssetTrack [] GetTracksWithMediaCharacteristic (AVMediaCharacteristics mediaCharacteristic);
 
 		[Export ("lyrics"), NullAllowed]
 		string Lyrics { get;  }
@@ -2886,7 +2883,7 @@ namespace XamCore.AVFoundation {
 		AVMediaSelectionGroup MediaSelectionGroupForMediaCharacteristic (string avMediaCharacteristic);
 
 		[Wrap ("MediaSelectionGroupForMediaCharacteristic (avMediaCharacteristic.GetConstant ())")]
-		AVMediaSelectionGroup MediaSelectionGroupForMediaCharacteristic (AVMediaCharacteristics avMediaCharacteristic);
+		AVMediaSelectionGroup GetMediaSelectionGroupForMediaCharacteristic (AVMediaCharacteristics avMediaCharacteristic);
 
 		[Export ("statusOfValueForKey:error:")]
 		AVKeyValueStatus StatusOfValue (string key, out NSError error);
@@ -3010,7 +3007,7 @@ namespace XamCore.AVFoundation {
 		AVFragmentedAssetTrack [] GetTracksWithMediaCharacteristic (string mediaCharacteristic);
 
 		[Wrap ("This.GetTracksWithMediaCharacteristic (mediaCharacteristic.GetConstant ())")]
-		AVFragmentedAssetTrack [] GetTracksWithMediaCharacteristic (AVMediaCharacteristics mediaCharacteristic);
+		AVFragmentedAssetTrack [] GetTracks (AVMediaCharacteristics mediaCharacteristic);
 
 	}
 
@@ -6558,7 +6555,7 @@ namespace XamCore.AVFoundation {
 		AVMovieTrack[] GetTracksWithMediaCharacteristic (string mediaCharacteristic);
 
 		[Wrap ("This.GetTracksWithMediaCharacteristic (mediaCharacteristic.GetConstant ())")]
-		AVMovieTrack[] GetTracksWithMediaCharacteristic (AVMediaCharacteristics mediaCharacteristic);
+		AVMovieTrack[] GetTracks (AVMediaCharacteristics mediaCharacteristic);
 
 	}
 
@@ -6678,7 +6675,7 @@ namespace XamCore.AVFoundation {
 		AVMutableMovieTrack[] GetTracksWithMediaCharacteristic (string mediaCharacteristic);
 
 		[Wrap ("This.GetTracksWithMediaCharacteristic (mediaCharacteristic.GetConstant ())")]
-		AVMutableMovieTrack[] GetTracksWithMediaCharacteristic (AVMediaCharacteristics mediaCharacteristic);
+		AVMutableMovieTrack[] GetTracks (AVMediaCharacteristics mediaCharacteristic);
 	}
 
 	[Mac (10,11)]
@@ -6742,7 +6739,7 @@ namespace XamCore.AVFoundation {
 		AVFragmentedMovieTrack[] GetTracksWithMediaCharacteristic (string mediaCharacteristic);
 
 		[Wrap ("This.GetTracksWithMediaCharacteristic (mediaCharacteristic.GetConstant ())")]
-		AVFragmentedMovieTrack[] GetTracksWithMediaCharacteristic (AVMediaCharacteristics mediaCharacteristic);
+		AVFragmentedMovieTrack[] GetTracks (AVMediaCharacteristics mediaCharacteristic);
 	}
 
 	[Mac (10,10)]
@@ -7153,7 +7150,7 @@ namespace XamCore.AVFoundation {
 		AVCompositionTrack[] GetTracksWithMediaCharacteristic (string mediaCharacteristic);
 
 		[Wrap ("This.GetTracksWithMediaCharacteristic (mediaCharacteristic.GetConstant ())")]
-		AVCompositionTrack[] GetTracksWithMediaCharacteristic (AVMediaCharacteristics mediaCharacteristic);
+		AVCompositionTrack[] GetTracks (AVMediaCharacteristics mediaCharacteristic);
 	}
 
 	[NoWatch]
@@ -7215,7 +7212,7 @@ namespace XamCore.AVFoundation {
 		AVMutableCompositionTrack[] GetTracksWithMediaCharacteristic (string mediaCharacteristic);
 
 		[Wrap ("This.GetTracksWithMediaCharacteristic (mediaCharacteristic.GetConstant ())")]
-		AVMutableCompositionTrack[] GetTracksWithMediaCharacteristic (AVMediaCharacteristics mediaCharacteristic);
+		AVMutableCompositionTrack[] GetTracks (AVMediaCharacteristics mediaCharacteristic);
 	}
 
 	[NoWatch]
@@ -7843,14 +7840,14 @@ namespace XamCore.AVFoundation {
 	{
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[Export ("intrinsicMatrix")]
-		Matrix3 GetIntrinsicMatrix ();
+		Matrix3 GetIntrinsicMatrix { get; }
 
 		[Export ("intrinsicMatrixReferenceDimensions")]
 		CGSize IntrinsicMatrixReferenceDimensions { get; }
 
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[Export ("extrinsicMatrix")]
-		Matrix4 GetExtrinsicMatrix ();// should be a matrix 4x3
+		Matrix4 GetExtrinsicMatrix { get; } // should be a matrix 4x3
 
 		[Export ("pixelSize")]
 		float PixelSize { get; }
@@ -8166,11 +8163,11 @@ namespace XamCore.AVFoundation {
 
 		[iOS (11, 0), NoMac, TV (11, 0), NoWatch]
 		[Export ("cameraIntrinsicMatrixDeliverySupported")]
-		bool IsCameraIntrinsicMatrixDeliverySupported { [Bind ("isCameraIntrinsicMatrixDeliverySupported")] get; }
+		bool CameraIntrinsicMatrixDeliverySupported { [Bind ("isCameraIntrinsicMatrixDeliverySupported")] get; }
 
 		[iOS (11, 0), NoMac, TV (11, 0), NoWatch]
 		[Export ("cameraIntrinsicMatrixDeliveryEnabled")]
-		bool IsCameraIntrinsicMatrixDeliveryEnabled { [Bind ("isCameraIntrinsicMatrixDeliveryEnabled")] get; set; }
+		bool CameraIntrinsicMatrixDeliveryEnabled { [Bind ("isCameraIntrinsicMatrixDeliveryEnabled")] get; set; }
 
 	}
 
@@ -11369,7 +11366,7 @@ namespace XamCore.AVFoundation {
 
 		[Export ("storageManagementPolicyForURL:")]
 		[return: NullAllowed]
-		AVAssetDownloadStorageManagementPolicy StorageManagementPolicyForUrl (NSUrl downloadStorageUrl);
+		AVAssetDownloadStorageManagementPolicy GetStorageManagementPolicy (NSUrl downloadStorageUrl);
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (11,0)]
@@ -11392,7 +11389,7 @@ namespace XamCore.AVFoundation {
 		AVAssetDownloadedAssetEvictionPriority Priority { get; set; }
 
 		[Export ("expirationDate", ArgumentSemantic.Copy)]
-		NSDate ExpirationDate { get; set; }
+		NSDate ExpirationDate { get; [NotImplemented] set; }
 	}
 
 	[NoWatch]
@@ -11501,7 +11498,7 @@ namespace XamCore.AVFoundation {
 
 		[NoWatch, NoMac, NoTV, iOS (11,0)]
 		[Export ("URLSession:aggregateAssetDownloadTask:willDownloadToURL:")]
-		void WillDownloadToURL (NSUrlSession session, AVAggregateAssetDownloadTask aggregateAssetDownloadTask, NSUrl location);
+		void WillDownloadToUrl (NSUrlSession session, AVAggregateAssetDownloadTask aggregateAssetDownloadTask, NSUrl location);
 
 		[NoWatch, NoMac, NoTV, iOS (11,0)]
 		[Export ("URLSession:aggregateAssetDownloadTask:didCompleteForMediaSelection:")]
@@ -11962,7 +11959,7 @@ namespace XamCore.AVFoundation {
 
 		[NoWatch, NoTV, NoMac, iOS (11,0)]
 		[Export ("contentKeySession:didUpdatePersistableContentKey:forContentKeyIdentifier:")]
-		void DidUpdatePersistableContentKey (AVContentKeySession session, NSData persistableContentKey, NSObject keyIdentifier);
+		void DidUpdate (AVContentKeySession session, NSData persistableContentKey, NSObject keyIdentifier);
 	}
 
 	partial interface IAVContentKeyRecipient {}
