@@ -395,6 +395,10 @@ namespace XamCore.CoreLocation {
 		[iOS (9,0), Watch (4,0)]
 		[Export ("allowsBackgroundLocationUpdates")]
 		bool AllowsBackgroundLocationUpdates { get; set; }
+
+		[NoWatch, NoTV, NoMac, iOS (11,0)]
+		[Export ("showsBackgroundLocationIndicator")]
+		bool ShowsBackgroundLocationIndicator { get; set; }
 #endif
 	}
 	
