@@ -694,7 +694,8 @@ namespace Xamarin.Bundler {
 			if (registrar == RegistrarMode.Default)
 			{
 				if (!App.EnableDebug)
-					registrar = RegistrarMode.Static;
+					// registrar = RegistrarMode.Static;
+					registrar = RegistrarMode.Dynamic; // Apple's macOS SDK is broken, so default to the dynamic registrar. See #58629.
 				else if (IsUnified && App.LinkMode == LinkMode.None && embed_mono && App.IsDefaultMarshalManagedExceptionMode && File.Exists (PartialStaticLibrary))
 					registrar = RegistrarMode.PartialStatic;
 				else
