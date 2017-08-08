@@ -196,8 +196,8 @@ namespace XamCore.ARKit {
 		[Export ("hitTest:types:")]
 		ARHitTestResult[] HitTest (CGPoint point, ARHitTestResultType types);
 
-		[Export ("displayTransformWithViewportSize:orientation:")]
-		CGAffineTransform DisplayTransform (CGSize viewportSize, UIInterfaceOrientation orientation);
+		[Export ("displayTransformForOrientation:viewportSize:")]
+		CGAffineTransform DisplayTransform (UIInterfaceOrientation orientation, CGSize viewportSize);
 	}
 
 	[iOS (11,0)]
