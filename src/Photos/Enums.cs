@@ -166,6 +166,11 @@ namespace XamCore.Photos
 		SmartAlbumDepthEffect   = 212,
 		[iOS (10,3), TV (10,2)]
 		SmartAlbumLivePhotos = 213,
+		[iOS (11,0)][TV(11,0)][NoMac]
+		SmartAlbumAnimated = 214,
+		[iOS (11,0)][TV(11,0)][NoMac]
+		SmartAlbumLongExposures = 215,
+
 #if XAMCORE_2_0
 		Any           = Int64.MaxValue
 #else
