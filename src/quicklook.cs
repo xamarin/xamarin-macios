@@ -184,6 +184,9 @@ namespace XamCore.QuickLook {
 		[Export ("maximumSize")]
 		CGSize MaximumSize { get; }
 
+		[Export ("minimumSize")]
+		CGSize MinimumSize { get; }
+
 		[Export ("scale")]
 		nfloat Scale { get; }
 
