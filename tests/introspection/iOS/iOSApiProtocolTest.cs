@@ -427,6 +427,7 @@ namespace Introspection {
 				case "HMCharacteristicEvent": // Selectors not available on 32 bit
 				case "NSFileProviderDomain": // Conformance not in headers
 				case "FPUIActionExtensionContext": // Conformance not in headers
+				case "CXCall": // Conformance not in headers
 					return true;
 
 #if __WATCHOS__

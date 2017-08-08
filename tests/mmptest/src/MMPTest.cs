@@ -1,3 +1,5 @@
+// #define ENABLE_STATIC_REGISTRAR_TESTS https://bugzilla.xamarin.com/show_bug.cgi?id=58629
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -67,7 +69,9 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
+#if ENABLE_STATIC_REGISTRAR_TESTS
 		[Test]
+#endif
 		public void Unified_Static_RegistrarTest ()
 		{
 			if (!PlatformHelpers.CheckSystemVersion (10, 11))
@@ -582,7 +586,9 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
+#if ENABLE_STATIC_REGISTRAR_TESTS
 		[Test]
+#endif
 		public void UnifiedDebugBuilds_ShouldLinkToPartialStatic_UnlessDisabled ()
 		{
 			RunMMPTest (tmpDir =>

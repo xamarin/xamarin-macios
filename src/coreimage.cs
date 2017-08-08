@@ -4723,6 +4723,24 @@ namespace XamCore.CoreImage {
 		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
 	}
 
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIBlendWithBlueMask {
+		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+	}
+
+	[CoreImageFilter]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIBlendWithRedMask {
+		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+	}
+
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
