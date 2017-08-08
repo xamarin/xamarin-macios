@@ -725,7 +725,7 @@ namespace Xamarin.MMP.Tests
 				};
 				TI.TestUnifiedExecutable (test, shouldFail: true);
 
-				test.CSProjConfig = test.CSProjConfig + "<MonoBundlingExtraArgs>--allow-unsafe-full-linking</MonoBundlingExtraArgs>";
+				test.CSProjConfig = test.CSProjConfig + "<MonoBundlingExtraArgs>--force-unsupported-linker</MonoBundlingExtraArgs>";
 				TI.TestUnifiedExecutable (test);
 			});
 		}
