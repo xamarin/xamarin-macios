@@ -90,6 +90,7 @@ namespace Xamarin.Bundler {
 		static LinkerOptions linker_options;
 		static bool? disable_lldb_attach = null;
 		static string machine_config_path = null;
+		static bool force_all_full_linking = false;
 
 		static bool arch_set = false;
 		static string arch = "i386";
@@ -348,6 +349,7 @@ namespace Xamarin.Bundler {
 				{ "http-message-handler=", "Specify the default HTTP Message Handler", v => { http_message_provider = v; }},
 				{ "extension", "Specifies an app extension", v => is_extension = true },
 				{ "allow-unsafe-gac-resolution", "Allow MSBuild to resolve from the System GAC", v => {} , true }, // Used in Xamarin.Mac.XM45.targets and must be ignored here. Hidden since it is a total hack. If you can use it, you don't need support
+				{ "allow-unsafe-full-linking", "Allow linking when targetting XM Full Profile. This is very unsafe unless you know exactly you are doing.", v => force_all_full_linking = true , true }, // Undocumented for a reason, You get to keep the pieces when it breaks
 				{ "disable-lldb-attach=", "Disable automatic lldb attach on crash", v => disable_lldb_attach = ParseBool (v, "disable-lldb-attach")},
 				{ "machine-config=", "Custom machine.config file to copy into MonoBundle/mono/4.5/machine.config. Pass \"\" to copy in a valid \"empty\" config file.", v => machine_config_path = v },
 				{ "runregistrar:", "Runs the registrar on the input assembly and outputs a corresponding native library.",
@@ -482,7 +484,7 @@ namespace Xamarin.Bundler {
 				throw new Exception ("IsClassic/IsUnified/IsUnifiedMobile/IsUnifiedFullSystemFramework/IsUnifiedFullXamMacFramework logic regression");
 
 			ValidateXamarinMacReference ();
-			if (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework) {
+			if (!force_all_full_linking && (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework)) {
 				switch (App.LinkMode) {
 				case LinkMode.None:
 				case LinkMode.Platform:
