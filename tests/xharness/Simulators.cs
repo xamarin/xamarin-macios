@@ -497,13 +497,13 @@ namespace xharness
 			}
 		}
 
-		public Task LoadAsync (Log log, bool extra_data = false, bool removed_locked = false)
+		public async Task LoadAsync (Log log, bool extra_data = false, bool removed_locked = false)
 		{
 			if (loaded)
-				return Task.FromResult (true);
+				return;
 			loaded = true;
 
-			Task.Run (async () =>
+			await Task.Run (async () =>
 			{
 				var tmpfile = Path.GetTempFileName ();
 				try {
@@ -542,8 +542,6 @@ namespace xharness
 					File.Delete (tmpfile);
 				}
 			});
-
-			return Task.FromResult (true);
 		}
 
 		public Device FindCompanionDevice (Log log, Device device)
