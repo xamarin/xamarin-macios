@@ -112,6 +112,12 @@
     <Compile Include="..\..\external\linker\linker\Mono.Linker\LinkContext.cs">
       <Link>Mono.Linker\LinkContext.cs</Link>
     </Compile>
+    <Compile Include="..\..\external\linker\linker\Mono.Linker\LoadException.cs">
+      <Link>Mono.Linker\LoadException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\linker\linker\Mono.Linker\MarkException.cs">
+      <Link>Mono.Linker\MarkException.cs</Link>
+    </Compile>
     <Compile Include="..\..\external\linker\linker\Mono.Linker\MethodAction.cs">
       <Link>Mono.Linker\MethodAction.cs</Link>
     </Compile>
@@ -336,9 +342,6 @@
     </Compile>
     <Compile Include="..\common\StringUtils.cs">
       <Link>external\StringUtils.cs</Link>
-    </Compile>
-    <Compile Include="..\common\StringUtils.cs">
-      <Link>StringUtils.cs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
