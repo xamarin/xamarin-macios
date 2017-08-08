@@ -263,7 +263,7 @@ namespace XamCore.ARKit {
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface ARPointCloud : NSCopying {
+	interface ARPointCloud {
 
 		[Export ("count")]
 		nuint Count { get; }
