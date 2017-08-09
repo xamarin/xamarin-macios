@@ -10,6 +10,7 @@
 #if XAMCORE_2_0
 
 using System;
+using System.ComponentModel;
 using XamCore.CoreFoundation;
 using XamCore.CoreGraphics;
 using XamCore.CoreMedia;
@@ -279,8 +280,13 @@ namespace XamCore.ARKit {
 		[Export ("count")]
 		nuint Count { get; }
 
-		[Internal, Export ("points")]
-		IntPtr _GetPoints ();
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Protected, Export ("points")]
+		IntPtr GetRawPoints ();
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Protected, Export ("identifiers")]
+		IntPtr GetRawIdentifiers ();
 	}
 
 	[iOS (11,0)]
