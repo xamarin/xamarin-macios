@@ -714,6 +714,20 @@ namespace Xamarin.MMP.Tests
 				TI.TestUnifiedExecutable (test);
 			});
 		}
-		
+
+		[Test]
+		public void UnifiedFull_AllowsLinking_WithForceFlag ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					XM45 = true,
+					CSProjConfig = "<LinkMode>Full</LinkMode>"
+				};
+				TI.TestUnifiedExecutable (test, shouldFail: true);
+
+				test.CSProjConfig = test.CSProjConfig + "<MonoBundlingExtraArgs>--force-unsupported-linker</MonoBundlingExtraArgs>";
+				TI.TestUnifiedExecutable (test);
+			});
+		}
 	}
 }
