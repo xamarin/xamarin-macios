@@ -358,6 +358,10 @@ namespace Introspection {
 #endif
 					return true;
 				break;
+			case "VNTargetedImageRequest": // Explicitly disabled
+				if (ctor.ToString () == "Void .ctor(VNRequestCompletionHandler)")
+					return true;
+				break;
 			}
 
 			var ep = ctor.GetParameters ();

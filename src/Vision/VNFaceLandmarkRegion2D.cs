@@ -10,29 +10,44 @@
 #if XAMCORE_2_0
 
 using System;
-using Vector2 = global::OpenTK.Vector2;
+using XamCore.CoreGraphics;
 
 namespace XamCore.Vision {
 	public partial class VNFaceLandmarkRegion2D {
 
-		public Vector2 this [nuint index] {
-			get { return GetPoint (index); }
-		}
-
-		public virtual Vector2 [] Points {
+		public virtual CGPoint [] NormalizedPoints {
 			get {
-				var ret = _GetPoints ();
+				var ret = _GetNormalizedPoints ();
 				if (ret == IntPtr.Zero)
 					return null;
 
 				unsafe {
 					var count = (int) PointCount;
-					var rv = new Vector2 [count];
-					var ptr = (Vector2*) ret;
+					var rv = new CGPoint [count];
+					var ptr = (CGPoint*) ret;
 					for (int i = 0; i < count; i++)
 						rv [i] = *ptr++;
 					return rv;
 				}
+			}
+		}
+
+		public virtual CGPoint [] GetPointsInImage (CGSize imageSize)
+		{
+			// return the address of the array of pointCount points
+			// or NULL if the conversion could not take place.
+			var ret = _GetPointsInImage (imageSize);
+			if (ret == IntPtr.Zero)
+				return null;
+
+			unsafe
+			{
+				var count = (int) PointCount;
+				var rv = new CGPoint [count];
+				var ptr = (CGPoint*) ret;
+				for (int i = 0; i < count; i++)
+					rv [i] = *ptr++;
+				return rv;
 			}
 		}
 	}
