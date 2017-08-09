@@ -188,18 +188,22 @@ ifdef ENABLE_XAMARIN
 endif
 
 install-system-ios:
+ifdef INCLUDE_IOS
 	@if ! test -s "$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo"; then echo "The Xamarin.iOS build seems incomplete. Did you run \"make install\"?"; exit 1; fi
 	$(Q) rm -f /Library/Frameworks/Xamarin.iOS.framework/Versions/Current
 	$(Q) mkdir -p /Library/Frameworks/Xamarin.iOS.framework/Versions
 	$(Q) ln -s $(IOS_DESTDIR)$(MONOTOUCH_PREFIX) /Library/Frameworks/Xamarin.iOS.framework/Versions/Current
 	$(Q) echo Installed Xamarin.iOS into /Library/Frameworks/Xamarin.iOS.framework/Versions/Current
+endif
 
 install-system-mac:
+ifdef INCLUDE_MAC
 	@if ! test -s "$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo" ; then echo "The Xamarin.Mac build seems incomplete. Did you run \"make install\"?"; exit 1; fi
 	$(Q) rm -f $(MAC_FRAMEWORK_DIR)/Versions/Current
 	$(Q) mkdir -p $(MAC_FRAMEWORK_DIR)/Versions
 	$(Q) ln -s $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR) $(MAC_FRAMEWORK_DIR)/Versions/Current
 	$(Q) echo Installed Xamarin.Mac into $(MAC_FRAMEWORK_DIR)/Versions/Current
+endif
 
 fix-install-permissions:
 	sudo mkdir -p /Library/Frameworks/Mono.framework/External/
