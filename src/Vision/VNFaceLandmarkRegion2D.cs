@@ -40,8 +40,7 @@ namespace XamCore.Vision {
 			if (ret == IntPtr.Zero)
 				return null;
 
-			unsafe
-			{
+			unsafe {
 				var count = (int) PointCount;
 				var rv = new CGPoint [count];
 				var ptr = (CGPoint*) ret;
