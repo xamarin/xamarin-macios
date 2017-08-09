@@ -673,7 +673,7 @@ namespace XamCore.Metal {
 		v1_1 = (1 << 16) + 1,
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 		v1_2 = (1 << 16) + 2,
-		[Mac (10,13), NoiOS, NoTV, NoWatch]
+		[Mac (10,13), iOS (11,0), TV (11,0, NoWatch]
 		v2_0 = (2 << 16)
 	}
 

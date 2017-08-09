@@ -24,7 +24,6 @@ using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.Metal {
-	[Mac (10,13, onlyOn64: true), iOS (11,0), TV (11,0), NoWatch]
 	delegate void MTLDeviceNotificationHandler (IMTLDevice device, MTLDeviceNotificationName notifyName);
 
 	delegate void MTLDeallocator (IntPtr pointer, nuint length);
