@@ -2835,7 +2835,7 @@ function oninitialload ()
 			if (Platform == TestPlatform.watchOS)
 				CompanionDevice = Jenkins.Simulators.FindCompanionDevice (Jenkins.SimulatorLoadLog, Device);
 
-			var clean_state = false;//Platform == TestPlatform.tvOS;
+			var clean_state = Platform == TestPlatform.watchOS;
 			runner = new AppRunner ()
 			{
 				Harness = Harness,
