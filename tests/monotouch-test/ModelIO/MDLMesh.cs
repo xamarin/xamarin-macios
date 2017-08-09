@@ -109,6 +109,8 @@ namespace MonoTouchFixtures.ModelIO {
 		[Test]
 		public void CreateBoxWithExtentTest ()
 		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+
 			Vector3 V3 = new Vector3 (1, 2, 3);
 			Vector3i V3i = new Vector3i (4, 5, 6);
 
@@ -197,6 +199,8 @@ namespace MonoTouchFixtures.ModelIO {
 		[Test]
 		public void CreateCylinderTest ()
 		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+
 			var V3 = new Vector3 (1, 1, 1);
 			var V2i = new Vector2i (3, 3);
 
