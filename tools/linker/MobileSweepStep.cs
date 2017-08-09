@@ -54,12 +54,5 @@ namespace Xamarin.Linker {
 			if (main.HasModuleReferences && (CurrentAction == AssemblyAction.Link))
 				SweepCollection (main.ModuleReferences);
 		}
-
-		protected void SweepCollection (IList list)
-		{
-			for (int i = 0; i < list.Count; i++)
-				if (!Annotations.IsMarked ((IMetadataTokenProvider) list [i]))
-					list.RemoveAt (i--);
-		}
 	}
 }

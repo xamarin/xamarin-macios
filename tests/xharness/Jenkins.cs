@@ -30,10 +30,12 @@ namespace xharness
 		public bool IncludeMacBindingProject;
 		public bool IncludeSimulator = true;
 		public bool IncludeDevice;
+		public bool IncludeSystemPermissionTests = true; // tests that require access to system resources (system contacts, photo library, etc) in order to work
 
 		public Logs Logs = new Logs ();
 		public Log MainLog;
 		public Log SimulatorLoadLog;
+		public Log DeviceLoadLog;
 
 		public string LogDirectory {
 			get {
@@ -62,24 +64,41 @@ namespace xharness
 			return new Resources (resources);
 		}
 
-		async Task<IEnumerable<RunSimulatorTask>> CreateRunSimulatorTaskAsync (XBuildTask buildTask)
+		// Loads both simulators and devices in parallel
+		Task LoadSimulatorsAndDevicesAsync ()
 		{
-			var runtasks = new List<RunSimulatorTask> ();
-
 			Simulators.Harness = Harness;
+			Devices.Harness = Harness;
+
 			if (SimulatorLoadLog == null)
 				SimulatorLoadLog = Logs.CreateStream (LogDirectory, "simulator-list.log", "Simulator Listing");
-			try {
-				await Simulators.LoadAsync (SimulatorLoadLog);
-			} catch (Exception e) {
-				SimulatorLoadLog.WriteLine ("Failed to load simulators:");
-				SimulatorLoadLog.WriteLine (e.ToString ());
-				var task = new RunSimulatorTask (buildTask) { ExecutionResult = TestExecutingResult.Failed };
-				var log = task.Logs.CreateFile ("Run log", Path.Combine (task.LogDirectory, "run-" + DateTime.Now.Ticks + ".log"));
-				log.WriteLine ("Failed to load simulators");
-				runtasks.Add (task);
-				return runtasks;
-			}
+
+			var simulatorLoadTask = Task.Run (async () => {
+				try {
+					await Simulators.LoadAsync (SimulatorLoadLog);
+				} catch (Exception e) {
+					SimulatorLoadLog.WriteLine ("Failed to load simulators:");
+					SimulatorLoadLog.WriteLine (e);
+				}
+			});
+
+			if (DeviceLoadLog == null)
+				DeviceLoadLog = Logs.CreateStream (LogDirectory, "device-list.log", "Device Listing");
+			var deviceLoadTask = Task.Run (async () => {
+				try {
+					await Devices.LoadAsync (DeviceLoadLog, removed_locked: true);
+				} catch (Exception e) {
+					DeviceLoadLog.WriteLine ("Failed to load devices:");
+					DeviceLoadLog.WriteLine (e);
+				}
+			});
+
+			return Task.WhenAll (simulatorLoadTask, deviceLoadTask);
+		}
+
+		IEnumerable<RunSimulatorTask> CreateRunSimulatorTaskAsync (XBuildTask buildTask)
+		{
+			var runtasks = new List<RunSimulatorTask> ();
 
 			AppRunnerTarget [] targets;
 			TestPlatform [] platforms;
@@ -107,24 +126,27 @@ namespace xharness
 			return runtasks;
 		}
 
-		async Task<IEnumerable<TestTask>> CreateRunDeviceTasks ()
+		bool IsIncluded (TestProject project)
+		{
+			if (!project.IsExecutableProject)
+				return false;
+
+			if (!IncludeBcl && project.IsBclTest)
+				return false;
+
+			if (!IncludeSystemPermissionTests && project.Name == "introspection")
+				return false;
+
+			return true;
+		}
+
+		IEnumerable<TestTask> CreateRunDeviceTasks ()
 		{
 			var rv = new List<RunDeviceTask> ();
 
-			Devices.Harness = Harness;
-			try {
-				await Devices.LoadAsync (MainLog, removed_locked: true);
-			} catch (Exception e) {
-				MainLog.WriteLine ("Failed to load devices: {0}", e);
-				return rv;
-			}
-
 			foreach (var project in Harness.IOSTestProjects) {
-				if (!project.IsExecutableProject)
-					continue;
-
 				bool ignored = !IncludeDevice;
-				if (!IncludeBcl && project.IsBclTest)
+				if (!IsIncluded (project))
 					ignored = true;
 				
 				var build64 = new XBuildTask
@@ -273,8 +295,7 @@ namespace xharness
 			
 			// Then we check for labels. Labels are manually set, so those override
 			// whatever we did automatically.
-			if (pull_request > 0)
-				SelectTestsByLabel (pull_request);
+			SelectTestsByLabel (pull_request);
 
 			if (!Harness.INCLUDE_IOS) {
 				MainLog.WriteLine ("The iOS build is diabled, so any iOS tests will be disabled as well.");
@@ -363,7 +384,10 @@ namespace xharness
 
 		void SelectTestsByLabel (int pull_request)
 		{
-			var labels = GitHub.GetLabels (Harness, pull_request);
+			var labels = new HashSet<string> ();
+			labels.UnionWith (Harness.Labels);
+			if (pull_request > 0)
+				labels.UnionWith (GitHub.GetLabels (Harness, pull_request));
 
 			MainLog.WriteLine ("Found {1} label(s) in the pull request #{2}: {0}", string.Join (", ", labels.ToArray ()), labels.Count (), pull_request);
 
@@ -374,6 +398,7 @@ namespace xharness
 			SetEnabled (labels, "btouch", ref IncludeBtouch);
 			SetEnabled (labels, "mac-binding-project", ref IncludeMacBindingProject);
 			SetEnabled (labels, "ios-extensions", ref IncludeiOSExtensions);
+			SetEnabled (labels, "ios-device", ref IncludeDevice);
 
 			// enabled by default
 			SetEnabled (labels, "ios", ref IncludeiOS);
@@ -382,9 +407,11 @@ namespace xharness
 			SetEnabled (labels, "mac", ref IncludeMac);
 			SetEnabled (labels, "mac-classic", ref IncludeClassicMac);
 			SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
+			SetEnabled (labels, "ios-simulator", ref IncludeSimulator);
+			SetEnabled (labels, "system-permission", ref IncludeSystemPermissionTests);
 		}
 
-		void SetEnabled (IEnumerable<string> labels, string testname, ref bool value)
+		void SetEnabled (HashSet<string> labels, string testname, ref bool value)
 		{
 			if (labels.Contains ("skip-" + testname + "-tests")) {
 				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-{0}-tests' is set.", testname);
@@ -406,21 +433,19 @@ namespace xharness
 		{
 			// Missing:
 			// api-diff
-			// msbuild tests
 
 			SelectTests ();
+
+			await LoadSimulatorsAndDevicesAsync ();
 
 			var runSimulatorTasks = new List<RunSimulatorTask> ();
 
 			foreach (var project in Harness.IOSTestProjects) {
-				if (!project.IsExecutableProject)
-					continue;
-
 				bool ignored = false;
 				if (!IncludeSimulator)
 					ignored = true;
 
-				if (!IncludeBcl && project.IsBclTest)
+				if (!IsIncluded (project))
 					ignored = true;
 
 				var ps = new List<Tuple<TestProject, TestPlatform, bool>> ();
@@ -437,7 +462,7 @@ namespace xharness
 						Ignored = pair.Item3,
 						TestName = project.Name,
 					};
-					runSimulatorTasks.AddRange (await CreateRunSimulatorTaskAsync (derived));
+					runSimulatorTasks.AddRange (CreateRunSimulatorTaskAsync (derived));
 				}
 			}
 
@@ -469,14 +494,11 @@ namespace xharness
 			Tasks.Add (nunitExecutioniOSMSBuild);
 			
 			foreach (var project in Harness.MacTestProjects) {
-				if (!project.IsExecutableProject)
-					continue;
-
 				bool ignored = !IncludeMac;
 				if (!IncludeMmpTest && project.Path.Contains ("mmptest"))
 					ignored = true;
 
-				if (!IncludeBcl && project.IsBclTest)
+				if (!IsIncluded (project))
 					ignored = true;
 
 				var configurations = project.Configurations;
@@ -607,7 +629,7 @@ namespace xharness
 			};
 			Tasks.Add (runMacBindingProject);
 			
-			Tasks.AddRange (await CreateRunDeviceTasks ());
+			Tasks.AddRange (CreateRunDeviceTasks ());
 		}
 
 		RunTestTask CloneExecuteTask (RunTestTask task, TestPlatform platform, string suffix, bool ignore)
@@ -680,7 +702,7 @@ namespace xharness
 				}
 				Task.WaitAll (tasks.ToArray ());
 				GenerateReport ();
-				return Tasks.Any ((v) => v.Failed) ? 1 : 0;
+				return Tasks.Any ((v) => v.Failed || v.Skipped) ? 1 : 0;
 			} catch (Exception ex) {
 				MainLog.WriteLine ("Unexpected exception: {0}", ex);
 				Console.WriteLine ("Unexpected exception: {0}", ex);
@@ -975,6 +997,8 @@ namespace xharness
 				return "black";
 			else if (tests.Any ((v) => v.Ignored))
 				return "gray";
+			else if (tests.Any ((v) => v.Skipped))
+				return "orangered";
 			else
 				return "black";
 		}
@@ -1009,7 +1033,7 @@ namespace xharness
 				} else if (test.Waiting) {
 					return "darkgray";
 				} else if (test.Skipped) {
-					return "silver";
+					return "orangered";
 				} else {
 					return "pink";
 				}
@@ -2702,7 +2726,7 @@ function oninitialload ()
 					// Set the device we acquired.
 					Device = Candidates.First ((d) => d.UDID == device_resource.Resource.Name);
 					if (Platform == TestPlatform.watchOS)
-						CompanionDevice = Jenkins.Devices.FindCompanionDevice (Jenkins.MainLog, Device);
+						CompanionDevice = Jenkins.Devices.FindCompanionDevice (Jenkins.DeviceLoadLog, Device);
 					Jenkins.MainLog.WriteLine ("Acquired device '{0}' for '{1}'", Device.Name, ProjectFile);
 
 					runner = new AppRunner
@@ -2715,15 +2739,14 @@ function oninitialload ()
 						DeviceName = Device.Name,
 						CompanionDeviceName = CompanionDevice?.Name,
 						Configuration = ProjectConfiguration,
+						IncludeSystemPermissionTests = Jenkins.IncludeSystemPermissionTests,
 					};
 
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
 					runner.MainLog = uninstall_log;
 					var uninstall_result = await runner.UninstallAsync ();
-					if (!uninstall_result.Succeeded) {
-						FailureMessage = $"Uninstall failed, exit code: {uninstall_result.ExitCode}.";
-						ExecutionResult = TestExecutingResult.Failed;
-					}
+					if (!uninstall_result.Succeeded)
+						MainLog.WriteLine ($"Pre-run uninstall failed, exit code: {uninstall_result.ExitCode} (this hopefully won't affect the test result)");
 
 					if (!Failed) {
 						// Install the app
@@ -2766,6 +2789,7 @@ function oninitialload ()
 								DeviceName = Device.Name,
 								CompanionDeviceName = CompanionDevice?.Name,
 								Configuration = ProjectConfiguration,
+								IncludeSystemPermissionTests = Jenkins.IncludeSystemPermissionTests,
 							};
 							additional_runner = todayRunner;
 							await todayRunner.RunAsync ();
@@ -2852,6 +2876,7 @@ function oninitialload ()
 				Target = AppRunnerTarget,
 				LogDirectory = LogDirectory,
 				MainLog = Logs.CreateStream (LogDirectory, $"run-{Device.UDID}-{Timestamp}.log", "Run log"),
+				IncludeSystemPermissionTests = Jenkins.IncludeSystemPermissionTests,
 			};
 			runner.Simulators = Simulators;
 			runner.Initialize ();

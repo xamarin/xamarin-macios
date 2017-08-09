@@ -62,6 +62,7 @@ namespace xharness
 		public int Verbosity { get; set; }
 		public Log HarnessLog { get; set; }
 		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
+		public HashSet<string> Labels { get; } = new HashSet<string> ();
 
 		// This is the maccore/tests directory.
 		string root_directory;
@@ -735,7 +736,7 @@ namespace xharness
 				return report;
 			}
 
-			var symbolicated = new LogFile ("Symbolicated crash report", report.Path + ".symbolicated");
+			var symbolicated = new LogFile ("Symbolicated crash report", Path.ChangeExtension (report.Path, ".symbolicated.log"));
 			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (XcodeRoot, "Contents", "Developer") } };
 			var rv = await ProcessHelper.ExecuteCommandAsync (symbolicatecrash, StringUtils.Quote (report.Path), symbolicated, TimeSpan.FromMinutes (1), environment);
 			if (rv.Succeeded) {;

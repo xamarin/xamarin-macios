@@ -699,6 +699,28 @@ class X : ReplayKit.RPBroadcastControllerDelegate
 		}
 
 		[Test]
+		public void MT4169 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var sb = new StringBuilder ();
+				sb.AppendLine (@"		
+		[Foundation.Preserve (AllMembers = true)]
+		public class C
+		{
+			[System.Runtime.InteropServices.DllImport (""/usr/lib/libobjc.dylib"")]
+			static extern void objc_msgSend (object something);
+		}");
+				mtouch.Linker = MTouchLinker.LinkAll; // faster test
+				mtouch.CustomArguments = new string [] { "--marshal-objectivec-exceptions=throwmanaged" };
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp (extraCode: sb.ToString (), extraArg: "-debug:full");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (4169, $"Failed to generate a P/Invoke wrapper for objc_msgSend(System.Object): The registrar cannot get the ObjectiveC type for managed type `System.Object`.");
+			}
+		}
+
+		[Test]
 		public void NoWarnings ()
 		{
 			using (var mtouch = new MTouchTool ()) {

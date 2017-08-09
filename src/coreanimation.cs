@@ -30,6 +30,7 @@
 //
 
 using System;
+using System.Diagnostics;
 #if MONOMAC
 using XamCore.AppKit;
 using XamCore.CoreVideo;
@@ -312,6 +313,7 @@ namespace XamCore.CoreAnimation {
 		[Export ("containsPoint:")]
 		bool Contains (CGPoint p);
 
+		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		[Export ("contents", ArgumentSemantic.Strong), NullAllowed]
 		CGImage Contents { get; set; }
 

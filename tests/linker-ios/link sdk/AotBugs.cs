@@ -618,11 +618,11 @@ namespace LinkSdk.Aot {
 		}
 
 		// The first character of this class is a cyrillic c, not a latin c.
-		[Preserve]
+		[Preserve (AllMembers = true)]
 		public class сolor_bug_56876
 		{
 			[System.Runtime.InteropServices.DllImport ("/usr/lib/libobjc.dylib")]
-			static extern void objc_msgSend (сolor_bug_56876 сolor);
+			static extern void sel_registerName (сolor_bug_56876 сolor);
 		}
 	}
 }

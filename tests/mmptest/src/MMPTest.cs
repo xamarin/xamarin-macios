@@ -464,7 +464,7 @@ namespace Xamarin.MMP.Tests
 		{
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = "<MonoBundlingExtraArgs>--sgen-conc</MonoBundlingExtraArgs>"
+					CSProjConfig = "<EnableSGenConc>true</EnableSGenConc>"
 				};
 				TI.TestUnifiedExecutable (test);
 			});
@@ -695,6 +695,38 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
 				test.CSProjConfig = "<MonoBundlingExtraArgs>--embed-mono=no</MonoBundlingExtraArgs>";
 				TI.TestSystemMonoExecutable (test, configuration: configuration);
+			});
+		}
+
+		[Test]
+		public void Unified_ShouldSupportDynamic ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { 
+					TestCode = @"
+						NSObject o = new NSObject ();
+						dynamic w = o;
+						string x1 = o.Description;
+						string x2 = w.Description;",
+					References = " <Reference Include=\"Microsoft.CSharp\" />",
+				};
+
+				TI.TestUnifiedExecutable (test);
+			});
+		}
+
+		[Test]
+		public void UnifiedFull_AllowsLinking_WithForceFlag ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					XM45 = true,
+					CSProjConfig = "<LinkMode>Full</LinkMode>"
+				};
+				TI.TestUnifiedExecutable (test, shouldFail: true);
+
+				test.CSProjConfig = test.CSProjConfig + "<MonoBundlingExtraArgs>--force-unsupported-linker</MonoBundlingExtraArgs>";
+				TI.TestUnifiedExecutable (test);
 			});
 		}
 	}
