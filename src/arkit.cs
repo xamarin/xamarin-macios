@@ -12,6 +12,7 @@
 using System;
 using XamCore.CoreFoundation;
 using XamCore.CoreGraphics;
+using XamCore.CoreMedia;
 using XamCore.CoreVideo;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
@@ -160,9 +161,13 @@ namespace XamCore.ARKit {
 			get;
 		}
 
-		[Export ("projectionMatrixWithViewportSize:orientation:zNear:zFar:")]
+		[Export ("projectPoint:orientation:viewportSize:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		Matrix4 GetProjectionMatrix (CGSize viewportSize, UIInterfaceOrientation orientation, nfloat zNear, nfloat zFar);
+		CGPoint GetProjectPoint (Vector3 point, UIInterfaceOrientation orientation, CGSize viewportSize);
+
+		[Export ("projectionMatrixForOrientation:viewportSize:zNear:zFar:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		Matrix4 GetProjectionMatrix (UIInterfaceOrientation orientation, CGSize viewportSize, nfloat zNear, nfloat zFar);
 
 		[Export ("viewMatrixForOrientation:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -389,13 +394,11 @@ namespace XamCore.ARKit {
 		ARFrame CurrentFrame { get; }
 
 		[NullAllowed, Export ("configuration", ArgumentSemantic.Copy)]
-		ARSessionConfiguration Configuration { get; }
+		ARConfiguration Configuration { get; }
 
-		[Export ("runWithConfiguration:")]
-		void Run (ARSessionConfiguration configuration);
-
+		// 'runWithConfiguration:' selector marked as unavailable in Xcode 9 beta 5. Use 'Run (ARConfiguration configuration, ARSessionRunOptions options)' instead.
 		[Export ("runWithConfiguration:options:")]
-		void Run (ARSessionConfiguration configuration, ARSessionRunOptions options);
+		void Run (ARConfiguration configuration, ARSessionRunOptions options);
 
 		[Export ("pause")]
 		void Pause ();
@@ -423,6 +426,9 @@ namespace XamCore.ARKit {
 
 		[Export ("sessionInterruptionEnded:")]
 		void SessionInterruptionEnded (ARSession session);
+
+		[Export ("session:didOutputAudioSampleBuffer:")]
+		void DidOutputAudioSampleBuffer (ARSession session, CMSampleBuffer audioSampleBuffer);
 	}
 
 	interface IARSessionDelegate {}
@@ -449,7 +455,8 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
-	interface ARSessionConfiguration : NSCopying {
+	[DisableDefaultCtor]
+	interface ARConfiguration : NSCopying {
 
 		[Static]
 		[Export ("isSupported")]
@@ -460,16 +467,24 @@ namespace XamCore.ARKit {
 
 		[Export ("lightEstimationEnabled")]
 		bool LightEstimationEnabled { [Bind ("isLightEstimationEnabled")] get; set; }
+
+		[Export ("providesAudioData")]
+		bool ProvidesAudioData { get; set; }
 	}
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
-	[BaseType (typeof (ARSessionConfiguration))]
-	interface ARWorldTrackingSessionConfiguration {
+	[BaseType (typeof (ARConfiguration))]
+	interface ARWorldTrackingConfiguration {
 
 		[Export ("planeDetection", ArgumentSemantic.Assign)]
 		ARPlaneDetection PlaneDetection { get; set; }
 	}
+
+	[iOS (11,0)]
+	[NoWatch, NoTV, NoMac]
+	[BaseType (typeof(ARConfiguration))]
+	interface AROrientationTrackingConfiguration {}
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
