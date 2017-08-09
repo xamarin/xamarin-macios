@@ -272,6 +272,8 @@ namespace XamCore.MediaPlayer {
 		NoSuchContent = 100,
 		[iOS (9,1)]
 		NoActionableNowPlayingItem = 110,
+		[iOS (11,0)][TV (11,0)][Mac (10,13)]
+		DeviceNotFound = 120,
 		CommandFailed = 200
 	}
 
