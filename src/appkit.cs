@@ -497,7 +497,7 @@ namespace XamCore.AppKit {
 		void EndModalSession (IntPtr session);
 	
 		[Export ("terminate:")]
-		void Terminate (NSObject sender);
+		void Terminate ([NullAllowed] NSObject sender);
 	
 		[Export ("requestUserAttention:")]
 		nint RequestUserAttention (NSRequestUserAttentionType requestType);
