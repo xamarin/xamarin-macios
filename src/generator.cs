@@ -1360,6 +1360,7 @@ public partial class Generator : IMemberGatherer {
 				if (Frameworks.HaveUIKit) {
 					nsvalue_return_map [TypeManager.UIEdgeInsets] = ".UIEdgeInsetsValue";
 					nsvalue_return_map [TypeManager.UIOffset] = ".UIOffsetValue";
+					nsvalue_return_map [TypeManager.NSDirectionalEdgeInsets] = ".DirectionalEdgeInsetsValue";
 				}
 
 				if (TypeManager.MKCoordinateSpan != null)
