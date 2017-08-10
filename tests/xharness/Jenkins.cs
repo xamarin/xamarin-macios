@@ -1138,12 +1138,12 @@ namespace xharness
 
 #nav {
 	display: inline-block;
-	width: 200px;
+	width: 300px;
 }
 
 #nav > * {
 	display: inline;
-	width: 200px;
+	width: 300px;
 }
 
 #nav ul {
@@ -1253,6 +1253,23 @@ function toggleAjaxLogVisibility()
 	} else {
 		ajax_log.style.display = 'none';
 		button.innerText = 'Show log';
+	}
+}
+function toggleVisibility (css_class)
+{
+	var objs = document.getElementsByClassName (css_class);
+	
+	for (var i = 0; i < objs.length; i++) {
+		var obj = objs [i];
+		
+		var pname = 'original-' + css_class + '-display';
+		if (obj.hasOwnProperty (pname)) {
+			obj.style.display = obj [pname];
+			delete obj [pname];
+		} else {
+			obj [pname] = obj.style.display;
+			obj.style.display = 'none';
+		}
 	}
 }
 function keyhandler(event)
@@ -1434,6 +1451,11 @@ function oninitialload ()
 			<li class=""adminitem""><a href='javascript:sendrequest (""runfailed"");'>All failed tests</a></li>
 		</ul>
 	</li>
+	<li>Toggle visibility
+		<ul>
+			<li class=""adminitem""><a href='javascript:toggleVisibility (""toggleable-ignored"");'>Ignored tests</a></li>
+		</ul>
+	</li>
 </ul>");
 				}
 
@@ -1522,9 +1544,10 @@ function oninitialload ()
 					// Test header for multiple tests
 					if (!singleTask) {
 						var autoExpand = !IsServerMode && group.Any ((v) => v.Failed);
+						var ignoredClass = group.All ((v) => v.Ignored) ? "toggleable-ignored" : string.Empty;
 						var defaultExpander = autoExpand ? "-" : "+";
 						var defaultDisplay = autoExpand ? "block" : "none";
-						writer.Write ($"<div class='pdiv'>");
+						writer.Write ($"<div class='pdiv {ignoredClass}'>");
 						writer.Write ($"<span id='button_container2_{groupId}' class='expander' onclick='javascript: toggleContainerVisibility2 (\"{groupId}\");'>{defaultExpander}</span>");
 						writer.Write ($"<span id='x{id_counter++}' class='p1 autorefreshable' onclick='javascript: toggleContainerVisibility2 (\"{groupId}\");'>{group.Key}{RenderTextStates (group)}</span>");
 						if (IsServerMode)
@@ -1540,9 +1563,10 @@ function oninitialload ()
 						if (multipleModes) {
 							var modeGroupId = id_counter++.ToString ();
 							var autoExpand = !IsServerMode && modeGroup.Any ((v) => v.Failed);
+							var ignoredClass = modeGroup.All ((v) => v.Ignored) ? "toggleable-ignored" : string.Empty;
 							var defaultExpander = autoExpand ? "-" : "+";
 							var defaultDisplay = autoExpand ? "block" : "none";
-							writer.Write ($"<div class='pdiv'>");
+							writer.Write ($"<div class='pdiv {ignoredClass}'>");
 							writer.Write ($"<span id='button_container2_{modeGroupId}' class='expander' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>{defaultExpander}</span>");
 							writer.Write ($"<span id='x{id_counter++}' class='p2 autorefreshable' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>{modeGroup.Key}{RenderTextStates (modeGroup)}</span>");
 							writer.Write ($" <span><a class='runall' href='javascript: runtest (\"{string.Join (",", modeGroup.Select ((v) => v.ID.ToString ()))}\");'>Run all</a></span>");
@@ -1566,10 +1590,11 @@ function oninitialload ()
 							}
 
 							var autoExpand = !IsServerMode && test.Failed;
+							var ignoredClass = test.Ignored ? "toggleable-ignored" : string.Empty;
 							var defaultExpander = autoExpand ? "&nbsp;" : "+";
 							var defaultDisplay = autoExpand ? "block" : "none";
 
-							writer.Write ($"<div class='pdiv'>");
+							writer.Write ($"<div class='pdiv {ignoredClass}'>");
 							writer.Write ($"<span id='button_{log_id}' class='expander' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{defaultExpander}</span>");
 							writer.Write ($"<span id='x{id_counter++}' class='p3 autorefreshable' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{title} (<span style='color: {GetTestColor (test)}'>{state}</span>) </span>");
 							if (IsServerMode && !test.InProgress && !test.Waiting)
