@@ -1076,6 +1076,7 @@ namespace XamCore.Contacts {
 		string LocalizeProperty (NSString property);
 	}
 
+#if !XAMCORE_4_0
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -1106,6 +1107,31 @@ namespace XamCore.Contacts {
 
 		[Field ("CNPostalAddressISOCountryCodeKey")]
 		NSString IsoCountryCode { get; }
+	}
+#endif
+
+	[iOS (9,0), Mac (10,11, onlyOn64: true)]
+	public enum CNPostalAddressKeyOption {
+		[Field ("CNPostalAddressStreetKey")]
+		Street,
+		[Field ("CNPostalAddressCityKey")]
+		City,
+		[Field ("CNPostalAddressStateKey")]
+		State,
+		[Field ("CNPostalAddressPostalCodeKey")]
+		PostalCode,
+		[Field ("CNPostalAddressCountryKey")]
+		Country,
+		[Field ("CNPostalAddressISOCountryCodeKey")]
+		IsoCountryCode,
+
+		[iOS (10,3)] [Mac (10,12,4, onlyOn64: true)]
+		[Field ("CNPostalAddressSubLocalityKey")]
+		SubLocality,
+
+		[iOS (10,3)] [Mac (10,12,4, onlyOn64: true)]
+		[Field ("CNPostalAddressSubAdministrativeAreaKey")]
+		SubAdministrativeArea,
 	}
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
@@ -1195,8 +1221,13 @@ namespace XamCore.Contacts {
 		IntPtr Constructor ([NullAllowed] string url, [NullAllowed] string username, [NullAllowed] string userIdentifier, [NullAllowed] string service);
 
 		[Static]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("localizedStringForKey:")]
 		string LocalizeProperty (NSString key);
+
+		[Static]
+		[Wrap ("LocalizeProperty (key.GetConstant ())")]
+		string LocalizeProperty (CNPostalAddressKeyOption key);
 
 		[Static]
 		[Export ("localizedStringForService:")]
