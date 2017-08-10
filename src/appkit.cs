@@ -742,17 +742,20 @@ namespace XamCore.AppKit {
 		[Export ("registerServicesMenuSendTypes:returnTypes:"), EventArgs ("NSApplicationRegister")]
 		void RegisterServicesMenu (string [] sendTypes, string [] returnTypes);
 
-		[Export ("writeSelectionToPasteboard:types:"), DelegateName ("NSApplicationSelection"), DefaultValue (false)]
-		bool WriteSelectionToPasteboard (NSPasteboard board, string [] types);
-
-		[Export ("readSelectionFromPasteboard:"), DelegateName ("NSPasteboardPredicate"), DefaultValue (false)]
-		bool ReadSelectionFromPasteboard (NSPasteboard pboard);
-
 		[Export ("orderFrontStandardAboutPanel:")]
 		void OrderFrontStandardAboutPanel (NSObject sender);
 
 		[Export ("orderFrontStandardAboutPanelWithOptions:")]
 		void OrderFrontStandardAboutPanelWithOptions (NSDictionary optionsDictionary);
+#else
+		[Export ("registerServicesMenuSendTypes:returnTypes:"), EventArgs ("NSApplicationRegister")]
+		void RegisterServicesMenu2 (string [] sendTypes, string [] returnTypes);
+
+		[Export ("orderFrontStandardAboutPanel:"), EventArgs ("NSObject")]
+		void OrderFrontStandardAboutPanel2 (NSObject sender);
+
+		[Export ("orderFrontStandardAboutPanelWithOptions:"), EventArgs ("NSDictionary")]
+		void OrderFrontStandardAboutPanelWithOptions2 (NSDictionary optionsDictionary);
 #endif
 
 		[Mac (10,12)]
@@ -849,18 +852,23 @@ namespace XamCore.AppKit {
 		void ScreenParametersChanged (NSNotification notification);
 
 #if !XAMCORE_4_0 // Needs to move from delegate in next API break
+		[Obsolete ("Use the 'RegisterServicesMenu2' on NSApplication.")]
 		[Export ("registerServicesMenuSendTypes:returnTypes:"), EventArgs ("NSApplicationRegister")]
 		void RegisterServicesMenu (string [] sendTypes, string [] returnTypes);
 	
+		[Obsolete ("Use the 'INSServicesMenuRequestor' protocol.")]
 		[Export ("writeSelectionToPasteboard:types:"), DelegateName ("NSApplicationSelection"), DefaultValue (false)]
 		bool WriteSelectionToPasteboard (NSPasteboard board, string [] types);
 	
+		[Obsolete ("Use the 'INSServicesMenuRequestor' protocol.")]
 		[Export ("readSelectionFromPasteboard:"), DelegateName ("NSPasteboardPredicate"), DefaultValue (false)]
 		bool ReadSelectionFromPasteboard (NSPasteboard pboard);
 	
+		[Obsolete ("Use the 'OrderFrontStandardAboutPanel2' on NSApplication.")]
 		[Export ("orderFrontStandardAboutPanel:"), EventArgs ("NSObject")]
 		void OrderFrontStandardAboutPanel (NSObject sender);
 	
+		[Obsolete ("Use the 'OrderFrontStandardAboutPanelWithOptions2' on NSApplication.")]
 		[Export ("orderFrontStandardAboutPanelWithOptions:"), EventArgs ("NSDictionary")]
 		void OrderFrontStandardAboutPanelWithOptions (NSDictionary optionsDictionary);
 #endif
@@ -903,6 +911,16 @@ namespace XamCore.AppKit {
 		[Export ("application:userDidAcceptCloudKitShareWithMetadata:"), EventArgs ("NSApplicationUserAcceptedCloudKitShare")]
 		void UserDidAcceptCloudKitShare (NSApplication application, CKShareMetadata metadata);
 #endif
+	}
+
+	[Protocol]
+	interface NSServicesMenuRequestor
+	{
+		[Export ("writeSelectionToPasteboard:types:")]
+		bool WriteSelectionToPasteboard (NSPasteboard pboard, string[] types);
+
+		[Export ("readSelectionFromPasteboard:")]
+		bool ReadSelectionFromPasteboard (NSPasteboard pboard);
 	}
 
 	[Mac (10, 12, 2)]
