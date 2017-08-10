@@ -7,15 +7,12 @@
 // Copyright 2017 Microsoft. All rights reserved.
 //
 
+#if XAMCORE_2_0
+
 using System;
 using System.Drawing;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
@@ -23,6 +20,12 @@ namespace MonoTouchFixtures.UIKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class DirectionalEdgeInsetsTest {
+
+		[SetUp]
+		public void SetUp ()
+		{
+			TestRuntime.AssertXcodeVersion (9, 0);
+		}
 
 		[Test]
 		public void FromString_Null ()
@@ -52,3 +55,5 @@ namespace MonoTouchFixtures.UIKit {
 		}
 	}
 }
+
+#endif // XAMCORE_2_0
