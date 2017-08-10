@@ -725,6 +725,7 @@ namespace XamCore.Foundation  {
 	[Native]
 	public enum NSJsonWritingOptions : nuint_compat_int {
 		PrettyPrinted = 1,
+		[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
 		SortedKeys = (1 << 1),
 	}
 
@@ -1238,6 +1239,7 @@ namespace XamCore.Foundation  {
 		DashSeparatorInDate = 1 << 8,
 		ColonSeparatorInTime = 1 << 9,
 		ColonSeparatorInTimeZone = 1 << 10,
+		[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
 		FractionalSeconds = 1 << 11,
 		FullDate = Year | Month | Day | DashSeparatorInDate,
 		FullTime = Time | ColonSeparatorInTime | TimeZone | ColonSeparatorInTimeZone,
