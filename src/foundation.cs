@@ -256,11 +256,13 @@ namespace XamCore.Foundation
 		[iOS (11,0), NoWatch, NoTV, Mac(10,13)]
 		string[] ReadableTypeIdentifiersForItemProvider { get; }
 
+#if !TVOS && !WATCHOS
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
 		[return: NullAllowed]
 		INSItemProviderReading GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
+#endif
 
 		// From the NSItemProviderWriting protocol, a static method.
 		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
