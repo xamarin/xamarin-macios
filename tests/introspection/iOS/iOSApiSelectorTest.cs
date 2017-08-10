@@ -183,6 +183,15 @@ namespace Introspection {
 					if (TestRuntime.CheckXcodeVersion (7, 0))
 						return true;
 					break;
+				case "earliestBeginDate":
+				case "setEarliestBeginDate:":
+				case "countOfBytesClientExpectsToSend":
+				case "setCountOfBytesClientExpectsToSend:":
+				case "countOfBytesClientExpectsToReceive":
+				case "setCountOfBytesClientExpectsToReceive:":
+					if (TestRuntime.CheckXcodeVersion (9, 0))
+						return true;
+					break;
 				}
 				break;
 			case "NSUrlSessionConfiguration":

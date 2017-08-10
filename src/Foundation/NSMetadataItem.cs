@@ -18,19 +18,31 @@ namespace XamCore.Foundation {
 			return n == null ? false : n.BoolValue;
 		}
 
+		bool? GetNullableBool (NSString key)
+		{
+			var n = Runtime.GetNSObject<NSNumber> (GetHandle (key));
+			return n?.BoolValue;
+		}
+
 		double GetDouble (NSString key)
 		{
 			var n = Runtime.GetNSObject<NSNumber> (GetHandle (key));
 			return n == null ? 0 : n.DoubleValue;
 		}
 
-		nint GetNInt (NSString key)
+		double? GetNullableDouble (NSString key)
+		{
+			var n = Runtime.GetNSObject<NSNumber> (GetHandle (key));
+			return n?.DoubleValue;
+		}
+
+		nint? GetNInt (NSString key)
 		{
 			var n = Runtime.GetNSObject<NSNumber> (GetHandle (key));
 #if XAMCORE_2_0
-			return n?.NIntValue ?? 0;
+			return n?.NIntValue;
 #else
-			return n?.IntValue ?? 0;
+			return n?.IntValue;
 #endif
 		}
 
@@ -93,12 +105,14 @@ namespace XamCore.Foundation {
 			}
 		}
 
+		// XAMCORE_4_0 FIXME return nullable
 		public bool IsUbiquitous {
 			get {
 				return GetBool (NSMetadataQuery.ItemIsUbiquitousKey);
 			}
 		}
 
+		// XAMCORE_4_0 FIXME return nullable
 		public bool UbiquitousItemHasUnresolvedConflicts {
 			get {
 				return GetBool (NSMetadataQuery.UbiquitousItemHasUnresolvedConflictsKey);
@@ -116,30 +130,35 @@ namespace XamCore.Foundation {
 			}
 		}
 
+		// XAMCORE_4_0 FIXME return nullable
 		public bool UbiquitousItemIsDownloading {
 			get {
 				return GetBool (NSMetadataQuery.UbiquitousItemIsDownloadingKey);
 			}
 		}
 
+		// XAMCORE_4_0 FIXME return nullable
 		public bool UbiquitousItemIsUploaded {
 			get {
 				return GetBool (NSMetadataQuery.UbiquitousItemIsUploadedKey);
 			}
 		}
 
+		// XAMCORE_4_0 FIXME return nullable
 		public bool UbiquitousItemIsUploading {
 			get {
 				return GetBool (NSMetadataQuery.UbiquitousItemIsUploadingKey);
 			}
 		}
 
+		// XAMCORE_4_0 FIXME return nullable
 		public double UbiquitousItemPercentDownloaded {
 			get {
 				return GetDouble (NSMetadataQuery.UbiquitousItemPercentDownloadedKey);
 			}
 		}
 
+		// XAMCORE_4_0 FIXME return nullable
 		public double UbiquitousItemPercentUploaded {
 			get {
 				return GetDouble (NSMetadataQuery.UbiquitousItemPercentUploadedKey);
@@ -160,6 +179,7 @@ namespace XamCore.Foundation {
 			}
 		}
 
+		// XAMCORE_4_0 FIXME return nullable
 		[iOS (8,0)][Mac (10,10)]
 		public bool UbiquitousItemDownloadRequested {
 			get {
@@ -167,6 +187,7 @@ namespace XamCore.Foundation {
 			}
 		}
 
+		// XAMCORE_4_0 FIXME return nullable
 		[iOS (8,0)][Mac (10,10)]
 		public bool UbiquitousItemIsExternalDocument {
 			get {
@@ -199,7 +220,7 @@ namespace XamCore.Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Title {
 			get {
-				return (string)Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.TitleKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.TitleKey));
 			}
 		}
 
@@ -248,14 +269,14 @@ namespace XamCore.Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Comment {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CommentKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.CommentKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Copyright {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CopyrightKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.CopyrightKey));
 			}
 		}
 
@@ -288,9 +309,9 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double DurationSeconds {
+		public double? DurationSeconds {
 			get {
-				return GetDouble (NSMetadataQuery.DurationSecondsKey);
+				return GetNullableDouble (NSMetadataQuery.DurationSecondsKey);
 			}
 		}
 
@@ -304,26 +325,26 @@ namespace XamCore.Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Version {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.VersionKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.VersionKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public nint PixelHeight {
+		public nint? PixelHeight {
 			get {
 				return GetNInt (NSMetadataQuery.PixelHeightKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public nint PixelWidth {
+		public nint? PixelWidth {
 			get {
 				return GetNInt (NSMetadataQuery.PixelWidthKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public nint PixelCount {
+		public nint? PixelCount {
 			get {
 				return GetNInt (NSMetadataQuery.PixelCountKey);
 			}
@@ -332,54 +353,54 @@ namespace XamCore.Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string ColorSpace {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ColorSpaceKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.ColorSpaceKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public nint BitsPerSample {
+		public nint? BitsPerSample {
 			get {
 				return GetNInt (NSMetadataQuery.BitsPerSampleKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public bool FlashOnOff {
+		public bool? FlashOnOff {
 			get {
-				return GetBool (NSMetadataQuery.FlashOnOffKey);
+				return GetNullableBool (NSMetadataQuery.FlashOnOffKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double FocalLength {
+		public double? FocalLength {
 			get {
-				return GetDouble (NSMetadataQuery.FocalLengthKey);
+				return GetNullableDouble (NSMetadataQuery.FocalLengthKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string AcquisitionMake {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AcquisitionMakeKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.AcquisitionMakeKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string AcquisitionModel {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AcquisitionModelKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.AcquisitionModelKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double IsoSpeed {
+		public double? IsoSpeed {
 			get {
-				return GetDouble (NSMetadataQuery.IsoSpeedKey);
+				return GetNullableDouble (NSMetadataQuery.IsoSpeedKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public nint Orientation {
+		public nint? Orientation {
 			get {
 				return GetNInt (NSMetadataQuery.OrientationKey);
 			}
@@ -393,70 +414,70 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double WhiteBalance {
+		public double? WhiteBalance {
 			get {
-				return GetDouble (NSMetadataQuery.WhiteBalanceKey);
+				return GetNullableDouble (NSMetadataQuery.WhiteBalanceKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double Aperture {
+		public double? Aperture {
 			get {
-				return GetDouble (NSMetadataQuery.ApertureKey);
+				return GetNullableDouble (NSMetadataQuery.ApertureKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string ProfileName {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ProfileNameKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.ProfileNameKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public nint ResolutionWidthDpi {
+		public nint? ResolutionWidthDpi {
 			get {
 				return GetNInt (NSMetadataQuery.ResolutionWidthDpiKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public nint ResolutionHeightDpi {
+		public nint? ResolutionHeightDpi {
 			get {
 				return GetNInt (NSMetadataQuery.ResolutionHeightDpiKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public nint ExposureMode {
+		public nint? ExposureMode {
 			get {
 				return GetNInt (NSMetadataQuery.ExposureModeKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double ExposureTimeSeconds {
+		public double? ExposureTimeSeconds {
 			get {
-				return GetDouble (NSMetadataQuery.ExposureTimeSecondsKey);
+				return GetNullableDouble (NSMetadataQuery.ExposureTimeSecondsKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string ExifVersion {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ExifVersionKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.ExifVersionKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string CameraOwner {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CameraOwnerKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.CameraOwnerKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public nint FocalLength35mmKey {
+		public nint? FocalLength35mmKey {
 			get {
 				return GetNInt (NSMetadataQuery.FocalLength35mmKey);
 			}
@@ -465,42 +486,42 @@ namespace XamCore.Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string LensModel {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.LensModelKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.LensModelKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string ExifGpsVersion {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ExifGpsVersionKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.ExifGpsVersionKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double AltitudeKey {
+		public double? AltitudeKey {
 			get {
-				return GetDouble (NSMetadataQuery.AltitudeKey);
+				return GetNullableDouble (NSMetadataQuery.AltitudeKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double Latitude {
+		public double? Latitude {
 			get {
-				return GetDouble (NSMetadataQuery.LatitudeKey);
+				return GetNullableDouble (NSMetadataQuery.LatitudeKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double Longitude {
+		public double? Longitude {
 			get {
-				return GetDouble (NSMetadataQuery.LongitudeKey);
+				return GetNullableDouble (NSMetadataQuery.LongitudeKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double Speed {
+		public double? Speed {
 			get {
-				return GetDouble (NSMetadataQuery.SpeedKey);
+				return GetNullableDouble (NSMetadataQuery.SpeedKey);
 			}
 		}
 
@@ -512,93 +533,93 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double GpsTrack {
+		public double? GpsTrack {
 			get {
-				return GetDouble (NSMetadataQuery.GpsTrackKey);
+				return GetNullableDouble (NSMetadataQuery.GpsTrackKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double ImageDirection {
+		public double? ImageDirection {
 			get {
-				return GetDouble (NSMetadataQuery.ImageDirectionKey);
+				return GetNullableDouble (NSMetadataQuery.ImageDirectionKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string NamedLocation {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.NamedLocationKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.NamedLocationKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string GpsStatus {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.GpsStatusKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.GpsStatusKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string GpsMeasureMode {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.GpsMeasureModeKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.GpsMeasureModeKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double GpsDop {
+		public double? GpsDop {
 			get {
-				return GetDouble (NSMetadataQuery.GpsDopKey);
+				return GetNullableDouble (NSMetadataQuery.GpsDopKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string GpsMapDatum {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.GpsMapDatumKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.GpsMapDatumKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double GpsDestLatitude {
+		public double? GpsDestLatitude {
 			get {
-				return GetDouble (NSMetadataQuery.GpsDestLatitudeKey);
+				return GetNullableDouble (NSMetadataQuery.GpsDestLatitudeKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double GpsDestLongitude {
+		public double? GpsDestLongitude {
 			get {
-				return GetDouble (NSMetadataQuery.GpsDestLongitudeKey);
+				return GetNullableDouble (NSMetadataQuery.GpsDestLongitudeKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double GpsDestBearing {
+		public double? GpsDestBearing {
 			get {
-				return GetDouble (NSMetadataQuery.GpsDestBearingKey);
+				return GetNullableDouble (NSMetadataQuery.GpsDestBearingKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double GpsDestDistance {
+		public double? GpsDestDistance {
 			get {
-				return GetDouble (NSMetadataQuery.GpsDestDistanceKey);
+				return GetNullableDouble (NSMetadataQuery.GpsDestDistanceKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string GpsProcessingMethod {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.GpsProcessingMethodKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.GpsProcessingMethodKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string GpsAreaInformation {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.GpsAreaInformationKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.GpsAreaInformationKey));
 			}
 		}
 
@@ -610,9 +631,9 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double GpsDifferental {
+		public double? GpsDifferental {
 			get {
-				return GetDouble (NSMetadataQuery.GpsDifferentalKey);
+				return GetNullableDouble (NSMetadataQuery.GpsDifferentalKey);
 			}
 		}
 
@@ -631,28 +652,28 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public bool Streamable {
+		public bool? Streamable {
 			get {
-				return GetBool (NSMetadataQuery.StreamableKey);
+				return GetNullableBool (NSMetadataQuery.StreamableKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public nint TotalBitRate {
+		public nint? TotalBitRate {
 			get {
 				return GetNInt (NSMetadataQuery.TotalBitRateKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public nint VideoBitRate {
+		public nint? VideoBitRate {
 			get {
 				return GetNInt (NSMetadataQuery.VideoBitRateKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public nint AudioBitRate {
+		public nint? AudioBitRate {
 			get {
 				return GetNInt (NSMetadataQuery.AudioBitRateKey);
 			}
@@ -661,47 +682,47 @@ namespace XamCore.Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string DeliveryType {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.DeliveryTypeKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.DeliveryTypeKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Album {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AlbumKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.AlbumKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public bool HasAlphaChannel {
+		public bool? HasAlphaChannel {
 			get {
-				return GetBool (NSMetadataQuery.HasAlphaChannelKey);
+				return GetNullableBool (NSMetadataQuery.HasAlphaChannelKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public bool RedEyeOnOff {
+		public bool? RedEyeOnOff {
 			get {
-				return GetBool (NSMetadataQuery.RedEyeOnOffKey);
+				return GetNullableBool (NSMetadataQuery.RedEyeOnOffKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string MeteringMode {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.MeteringModeKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.MeteringModeKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double MaxApertureKey {
+		public double? MaxApertureKey {
 			get {
-				return GetDouble (NSMetadataQuery.MaxApertureKey);
+				return GetNullableDouble (NSMetadataQuery.MaxApertureKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public nint FNumber {
+		public nint? FNumber {
 			get {
 				return GetNInt (NSMetadataQuery.FNumberKey);
 			}
@@ -710,117 +731,117 @@ namespace XamCore.Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string ExposureProgram {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ExposureProgramKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.ExposureProgramKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string ExposureTimeString {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ExposureTimeStringKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.ExposureTimeStringKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Headline {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.HeadlineKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.HeadlineKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Instructions {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.InstructionsKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.InstructionsKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string City {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CityKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.CityKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string StateOrProvince {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.StateOrProvinceKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.StateOrProvinceKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Country {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CountryKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.CountryKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string TextContent {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.TextContentKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.TextContentKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public nint AudioSampleRate {
+		public nint? AudioSampleRate {
 			get {
 				return GetNInt (NSMetadataQuery.AudioSampleRateKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public nint AudioChannelCount {
+		public nint? AudioChannelCount {
 			get {
 				return GetNInt (NSMetadataQuery.AudioChannelCountKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double TempoKey {
+		public double? TempoKey {
 			get {
-				return GetDouble (NSMetadataQuery.TempoKey);
+				return GetNullableDouble (NSMetadataQuery.TempoKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string KeySignature {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.KeySignatureKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.KeySignatureKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string TimeSignature {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.TimeSignatureKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.TimeSignatureKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string AudioEncodingApplication {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AudioEncodingApplicationKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.AudioEncodingApplicationKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Composer {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ComposerKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.ComposerKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Lyricist {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.LyricistKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.LyricistKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public nint AudioTrackNumber {
+		public nint? AudioTrackNumber {
 			get {
 				return GetNInt (NSMetadataQuery.AudioTrackNumberKey);
 			}
@@ -836,19 +857,19 @@ namespace XamCore.Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string MusicalGenre {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.MusicalGenreKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.MusicalGenreKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public bool IsGeneralMidiSequence {
+		public bool? IsGeneralMidiSequence {
 			get {
-				return GetBool (NSMetadataQuery.IsGeneralMidiSequenceKey);
+				return GetNullableBool (NSMetadataQuery.IsGeneralMidiSequenceKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public nint RecordingYear {
+		public nint? RecordingYear {
 			get {
 				return GetNInt (NSMetadataQuery.RecordingYearKey);
 			}
@@ -870,7 +891,7 @@ namespace XamCore.Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Rights {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.RightsKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.RightsKey));
 			}
 		}
 
@@ -912,14 +933,14 @@ namespace XamCore.Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Description {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.DescriptionKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.DescriptionKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Identifier {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.IdentifierKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.IdentifierKey));
 			}
 		}
 
@@ -931,37 +952,37 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public nint NumberOfPages {
+		public nint? NumberOfPages {
 			get {
 				return GetNInt (NSMetadataQuery.NumberOfPagesKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double PageWidth {
+		public double? PageWidth {
 			get {
-				return GetDouble (NSMetadataQuery.PageWidthKey);
+				return GetNullableDouble (NSMetadataQuery.PageWidthKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double PageHeight {
+		public double? PageHeight {
 			get {
-				return GetDouble (NSMetadataQuery.PageHeightKey);
+				return GetNullableDouble (NSMetadataQuery.PageHeightKey);
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string SecurityMethod {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.SecurityMethodKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.SecurityMethodKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Creator {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CreatorKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.CreatorKey));
 			}
 		}
 
@@ -980,9 +1001,9 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double StarRatingKey {
+		public double? StarRatingKey {
 			get {
-				return GetDouble (NSMetadataQuery.StarRatingKey);
+				return GetNullableDouble (NSMetadataQuery.StarRatingKey);
 			}
 		}
 
@@ -1010,7 +1031,7 @@ namespace XamCore.Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Kind {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.KindKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.KindKey));
 			}
 		}
 
@@ -1024,7 +1045,7 @@ namespace XamCore.Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string FinderComment {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.FinderCommentKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.FinderCommentKey));
 			}
 		}
 
@@ -1038,21 +1059,21 @@ namespace XamCore.Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string AppleLoopsRoot {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AppleLoopsRootKeyKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsRootKeyKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string AppleLoopsKeyFilterType {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AppleLoopsKeyFilterTypeKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsKeyFilterTypeKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string AppleLoopsLoopMode {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.AppleLoopsLoopModeKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsLoopModeKey));
 			}
 		}
 
@@ -1066,49 +1087,49 @@ namespace XamCore.Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string MusicalInstrumentCategory {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.MusicalInstrumentCategoryKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.MusicalInstrumentCategoryKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string MusicalInstrumentName {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.MusicalInstrumentNameKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.MusicalInstrumentNameKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string CFBundleIdentifier {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.CFBundleIdentifierKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.CFBundleIdentifierKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Information {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.InformationKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.InformationKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Director {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.DirectorKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.DirectorKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Producer {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ProducerKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.ProducerKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Genre {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.GenreKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.GenreKey));
 			}
 		}
 
@@ -1122,14 +1143,14 @@ namespace XamCore.Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string OriginalFormat {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.OriginalFormatKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.OriginalFormatKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string OriginalSource {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.OriginalSourceKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.OriginalSourceKey));
 			}
 		}
 
@@ -1162,9 +1183,9 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public bool IsLikelyJunk {
+		public bool? IsLikelyJunk {
 			get {
-				return GetBool (NSMetadataQuery.IsLikelyJunkKey);
+				return GetNullableBool (NSMetadataQuery.IsLikelyJunkKey);
 			}
 		}
 
@@ -1178,7 +1199,7 @@ namespace XamCore.Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string ExecutablePlatform {
 			get {
-				return (string) Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ExecutablePlatformKey));
+				return NSString.FromHandle (GetHandle (NSMetadataQuery.ExecutablePlatformKey));
 			}
 		}
 
@@ -1190,9 +1211,9 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public bool IsApplicationManaged {
+		public bool? IsApplicationManaged {
 			get {
-				return GetBool (NSMetadataQuery.IsApplicationManagedKey);
+				return GetNullableBool (NSMetadataQuery.IsApplicationManagedKey);
 			}
 		}
 #endif

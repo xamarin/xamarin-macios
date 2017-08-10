@@ -257,11 +257,11 @@ namespace XamCore.Foundation
 		string[] ReadableTypeIdentifiersForItemProvider { get; }
 
 #if !TVOS && !WATCHOS
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
 		[return: NullAllowed]
-		INSItemProviderReading GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
+		NSAttributedString FromItemProviderData (NSData itemProviderData, string typeIdentifier, [NullAllowed] out NSError outError);
 #endif
 
 		// From the NSItemProviderWriting protocol, a static method.
@@ -1754,7 +1754,7 @@ namespace XamCore.Foundation
 
 		[iOS (8,0), Mac (10,10)]
 		[Export ("setLocalizedDateFormatFromTemplate:")]
-		void SetLocalizedDateFormat (string dateFormatTemplate);
+		void SetLocalizedDateFormatFromTemplate (string dateFormatTemplate);
 
 		[Watch (2, 0), TV (9, 0), Mac (10, 10), iOS (8, 0)]
 		[Export ("formattingContext", ArgumentSemantic.Assign)]
@@ -6004,7 +6004,7 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
 		[return: NullAllowed]
-		INSItemProviderReading GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
+		NSUrl FromItemProviderData (NSData itemProviderData, string typeIdentifier, [NullAllowed] out NSError outError);
 
 		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[Static]
@@ -6920,25 +6920,17 @@ namespace XamCore.Foundation
 		NSProgress Progress { get; }
 #endif
 
-//1) ApiSelectorTest.InstanceMethods (Introspection.MacApiSelectorTest.ApiSelectorTest.InstanceMethods)
-//     6 errors found in 22990 instance selector validated:
-//Selector not found for Foundation.NSUrlSessionTask : countOfBytesClientExpectsToReceive
-//Selector not found for Foundation.NSUrlSessionTask : setCountOfBytesClientExpectsToReceive:
-//Selector not found for Foundation.NSUrlSessionTask : countOfBytesClientExpectsToSend
-//Selector not found for Foundation.NSUrlSessionTask : setCountOfBytesClientExpectsToSend:
-//Selector not found for Foundation.NSUrlSessionTask : earliestBeginDate
-//Selector not found for Foundation.NSUrlSessionTask : setEarliestBeginDate:
-		//[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
-		//[NullAllowed, Export ("earliestBeginDate", ArgumentSemantic.Copy)]
-		//NSDate EarliestBeginDate { get; set; }
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NullAllowed, Export ("earliestBeginDate", ArgumentSemantic.Copy)]
+		NSDate EarliestBeginDate { get; set; }
 
-		//[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
-		//[Export ("countOfBytesClientExpectsToSend")]
-		//long CountOfBytesClientExpectsToSend { get; set; }
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("countOfBytesClientExpectsToSend")]
+		long CountOfBytesClientExpectsToSend { get; set; }
 
-		//[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
-		//[Export ("countOfBytesClientExpectsToReceive")]
-		//long CountOfBytesClientExpectsToReceive { get; set; }
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("countOfBytesClientExpectsToReceive")]
+		long CountOfBytesClientExpectsToReceive { get; set; }
 
 	}
 
@@ -8097,7 +8089,7 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
 		[return: NullAllowed]
-		INSItemProviderReading GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
+		NSString FromItemProviderData (NSData itemProviderData, string typeIdentifier, [NullAllowed] out NSError outError);
 
 		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[Static]
@@ -9742,11 +9734,19 @@ namespace XamCore.Foundation
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("canLoadObjectOfClass:")]
-		bool CanLoadObjectOfClass (Class aClass);
+		bool CanLoadObject (Class aClass);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Wrap ("CanLoadObject (new Class (type))")]
+		bool CanLoadObject (Type type);
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Async, Export ("loadObjectOfClass:completionHandler:")]
-		NSProgress LoadObjectOfClass (Class aClass, Action<INSItemProviderReading, NSError> completionHandler);
+		NSProgress LoadObject (Class aClass, Action<INSItemProviderReading, NSError> completionHandler);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Async, Wrap ("LoadObject (new Class (type), completionHandler)")]
+		NSProgress LoadObject (Type type, Action<INSItemProviderReading, NSError> completionHandler);
 	}
     
 	delegate NSProgress RegisterFileRepresentationLoadHandler ([BlockCallback] RegisterFileRepresentationCompletionHandler completionHandler);
@@ -9755,7 +9755,7 @@ namespace XamCore.Foundation
 	delegate NSProgress RegisterDataRepresentationLoadHandler ([BlockCallback] ItemProviderDataCompletionHandler completionHandler);
 	delegate void LoadInPlaceFileRepresentationHandler (NSUrl fileUrl, bool isInPlace, NSError error);
 	delegate NSProgress RegisterObjectRepresentationLoadHandler ([BlockCallback] RegisterObjectRepresentationCompletionHandler completionHandler);
-	delegate void RegisterObjectRepresentationCompletionHandler (NSItemProviderWriting @object, NSError error);
+	delegate void RegisterObjectRepresentationCompletionHandler (INSItemProviderWriting @object, NSError error);
 
 	interface INSItemProviderReading {}
 	
@@ -9784,8 +9784,7 @@ namespace XamCore.Foundation
 	interface INSItemProviderWriting {}
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface NSItemProviderWriting
 	{
 		//

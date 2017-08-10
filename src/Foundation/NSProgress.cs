@@ -7,22 +7,22 @@ namespace XamCore.Foundation {
 	public partial class NSProgress {
 		//Manual bindings until BindAs support is merged
 		public nint? EstimatedTimeRemaining {
-			get { return _EstimatedTimeRemaining == null ? null : (nint?)_EstimatedTimeRemaining.NIntValue; }
+			get { return _EstimatedTimeRemaining?.NIntValue; }
 			set { _EstimatedTimeRemaining = value != null ? new NSNumber (value.Value) : null; }
 		}
 
 		public nint? Throughput {
-			get { return _Throughput == null ? null : (nint?)_Throughput.NIntValue; }
+			get { return _Throughput?.NIntValue; } 
 			set { _Throughput = value != null ? new NSNumber (value.Value) : null; }
 		}
 
 		public nint? FileTotalCount {
-			get { return _FileTotalCount == null ? null : (nint?)_FileTotalCount.NIntValue; }
+			get { return _FileTotalCount?.NIntValue; }
 			set { _FileTotalCount = value != null ? new NSNumber (value.Value) : null; }
 		}
 
 		public nint? FileCompletedCount {
-			get { return _FileCompletedCount == null ? null : (nint?)_FileCompletedCount.NIntValue; }
+			get { return _FileCompletedCount?.NIntValue; }
 			set { _FileCompletedCount = value != null ? new NSNumber (value.Value) : null; }
 		}
 	}
