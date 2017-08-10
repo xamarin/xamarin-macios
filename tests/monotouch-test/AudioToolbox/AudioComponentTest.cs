@@ -53,6 +53,32 @@ namespace MonoTouchFixtures.AudioToolbox {
 			}
 		}
 		
+		[Test]
+		public void GetSetNullComponentList ()
+		{
+			TestRuntime.AssertXcodeVersion (9, 0);
+			var types = new List<AudioTypeOutput> { AudioTypeOutput.Generic, AudioTypeOutput.Remote, AudioTypeOutput.VoiceProcessingIO };
+			foreach (var t in types) {
+				var resources = new ResourceUsageInfo ();
+				resources.IOKitUserClient = new string[] { "CustomUserClient1" };
+				resources.MachLookUpGlobalName = new string[] { "MachServiceName1" };
+				resources.NetworkClient = false;
+				resources.TemporaryExceptionReadWrite = false;
+
+				var componentInfo = new AudioComponentInfo ();
+				componentInfo.Type = t.ToString ();
+				componentInfo.Subtype =  "XMPL";
+				componentInfo.Name = "XMPL";
+				componentInfo.Version = 1;
+				componentInfo.ResourceUsage = resources;
+				var component = AudioComponent.FindComponent (t);
+				if (component == null)
+					continue;
+				//monotouchtests does not have permissions to deal with the hwd.
+				Assert.Throws <ArgumentNullException> (() => component.ComponentList = null);
+			}
+		}
+
 		// test the diff properties of the ResourceUsageInfo since it was manually done
 		
 		[Test]

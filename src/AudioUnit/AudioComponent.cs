@@ -424,6 +424,8 @@ namespace XamCore.AudioUnit
 				}
 			}
 			set {
+				if (value == null)
+					throw new ArgumentNullException	(nameof	(value));
 				using (var cfString = new CFString (Name)) {
 					var dics = new NSDictionary [value.Length];
 					for (var i = 0; i < value.Length; i++) {
