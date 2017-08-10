@@ -58,9 +58,6 @@ namespace Xamarin.Mac.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("DetectSdkLocations");
-			Log.LogTaskProperty ("XamarinSdkRoot", XamarinSdkRoot);
-
 			if (EnsureAppleSdkRoot ())
 				EnsureSdkPath ();
 			EnsureXamarinSdkRoot ();

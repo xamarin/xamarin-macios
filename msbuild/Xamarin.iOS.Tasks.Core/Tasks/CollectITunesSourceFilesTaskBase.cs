@@ -31,9 +31,6 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("CollectITunesSourceFiles");
-			Log.LogTaskProperty ("OutputPath", OutputPath);
-
 			var files = new List<ITaskItem> ();
 
 			foreach (var fileName in iTunesFileNames) {

@@ -73,17 +73,5 @@ namespace Xamarin.MacDev.Tasks
 			// TODO: do proper parsing of error messages and such
 			Log.LogMessage (messageImportance, "{0}", singleLine);
 		}
-
-		public override bool Execute ()
-		{
-			Log.LogTaskName ("Zip");
-			Log.LogTaskProperty ("OutputFile", OutputFile);
-			Log.LogTaskProperty ("Recursive", Recursive);
-			Log.LogTaskProperty ("Sources", Sources);
-			Log.LogTaskProperty ("Symlinks", Symlinks);
-			Log.LogTaskProperty ("WorkingDirectory", WorkingDirectory);
-
-			return base.Execute ();
-		}
 	}
 }

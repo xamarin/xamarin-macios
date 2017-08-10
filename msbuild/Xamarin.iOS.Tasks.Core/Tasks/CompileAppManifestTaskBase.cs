@@ -52,25 +52,6 @@ namespace Xamarin.iOS.Tasks
 		{
 			PDictionary plist;
 
-			Log.LogTaskName ("CompileAppManifest");
-			Log.LogTaskProperty ("AppBundleName", AppBundleName);
-			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
-			Log.LogTaskProperty ("AppManifest", AppManifest);
-			Log.LogTaskProperty ("Architecture", Architecture);
-			Log.LogTaskProperty ("AssemblyName", AssemblyName);
-			Log.LogTaskProperty ("BundleIdentifier", BundleIdentifier);
-			Log.LogTaskProperty ("Debug", Debug);
-			Log.LogTaskProperty ("DebugIPAddresses", DebugIPAddresses);
-			Log.LogTaskProperty ("DefaultSdkVersion", DefaultSdkVersion);
-			Log.LogTaskProperty ("IsAppExtension", IsAppExtension);
-			Log.LogTaskProperty ("IsWatchApp", IsWatchApp);
-			Log.LogTaskProperty ("IsWatchExtension", IsWatchExtension);
-			Log.LogTaskProperty ("PartialAppManifests", PartialAppManifests);
-			Log.LogTaskProperty ("ResourceRules", ResourceRules);
-			Log.LogTaskProperty ("SdkPlatform", SdkPlatform);
-			Log.LogTaskProperty ("SdkIsSimulator", SdkIsSimulator);
-			Log.LogTaskProperty ("TargetFrameworkIdentifier", TargetFrameworkIdentifier);
-
 			try {
 				plist = PDictionary.FromFile (AppManifest);
 			} catch (Exception ex) {

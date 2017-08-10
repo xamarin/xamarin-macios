@@ -30,9 +30,6 @@ namespace Xamarin.iOS.Tasks
 		{
 			var pwd = PathUtils.ResolveSymbolicLinks (Environment.CurrentDirectory);
 
-			Log.LogTaskName ("FindWatchOS2AppBundle");
-			Log.LogTaskProperty ("WatchAppReferences", WatchAppReferences);
-
 			if (WatchAppReferences.Length > 0) {
 				WatchOS2AppBundle = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLinks (WatchAppReferences[0].ItemSpec));
 

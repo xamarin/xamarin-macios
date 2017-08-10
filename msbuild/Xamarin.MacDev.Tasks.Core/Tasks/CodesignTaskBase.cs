@@ -150,17 +150,6 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("Codesign");
-			Log.LogTaskProperty ("CodesignAllocate", CodesignAllocate);
-			Log.LogTaskProperty ("DisableTimestamp", DisableTimestamp);
-			Log.LogTaskProperty ("Entitlements", Entitlements);
-			Log.LogTaskProperty ("Keychain", Keychain);
-			Log.LogTaskProperty ("Resources", Resources);
-			Log.LogTaskProperty ("ResourceRules", ResourceRules);
-			Log.LogTaskProperty ("SigningKey", SigningKey);
-			Log.LogTaskProperty ("ExtraArgs", ExtraArgs);
-			Log.LogTaskProperty ("IsAppExtension", IsAppExtension);
-
 			if (Resources.Length == 0)
 				return true;
 

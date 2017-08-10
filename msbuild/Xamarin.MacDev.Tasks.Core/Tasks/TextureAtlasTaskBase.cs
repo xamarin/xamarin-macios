@@ -102,19 +102,5 @@ namespace Xamarin.MacDev.Tasks
 
 			yield break;
 		}
-
-		public override bool Execute ()
-		{
-			Log.LogTaskName ("TextureAtlas");
-			Log.LogTaskProperty ("AtlasTextures", AtlasTextures);
-			Log.LogTaskProperty ("IntermediateOutputPath", IntermediateOutputPath);
-			Log.LogTaskProperty ("ProjectDir", ProjectDir);
-			Log.LogTaskProperty ("ResourcePrefix", ResourcePrefix);
-			Log.LogTaskProperty ("SdkBinPath", SdkBinPath);
-			Log.LogTaskProperty ("SdkDevPath", SdkDevPath);
-			Log.LogTaskProperty ("SdkUsrPath", SdkUsrPath);
-
-			return base.Execute ();
-		}
 	}
 }

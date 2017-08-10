@@ -29,12 +29,6 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("WriteAssetPackManifest");
-			Log.LogTaskProperty ("OutputFile", OutputFile);
-			Log.LogTaskProperty ("TemplatePath", TemplatePath);
-			Log.LogTaskProperty ("OnDemandResourceUrl", OnDemandResourceUrl);
-			Log.LogTaskProperty ("IsStreamable", IsStreamable);
-
 			var template = PDictionary.FromFile (TemplatePath.ItemSpec);
 			var resources = template.GetArray ("resources");
 

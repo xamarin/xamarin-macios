@@ -22,16 +22,6 @@ namespace Xamarin.Mac.Tasks
 		{
 			PDictionary plist;
 
-			Log.LogTaskName ("CompileAppManifest");
-			Log.LogTaskProperty ("AppBundleName", AppBundleName);
-			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
-			Log.LogTaskProperty ("AppManifest", AppManifest);
-			Log.LogTaskProperty ("Architecture", Architecture);
-			Log.LogTaskProperty ("AssemblyName", AssemblyName);
-			Log.LogTaskProperty ("BundleIdentifier", BundleIdentifier);
-			Log.LogTaskProperty ("IsAppExtension", IsAppExtension);
-			Log.LogTaskProperty ("PartialAppManifests", PartialAppManifests);
-
 			try {
 				plist = PDictionary.FromFile (AppManifest);
 			} catch (Exception ex) {
