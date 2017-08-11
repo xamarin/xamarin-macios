@@ -189,6 +189,7 @@ namespace Introspection {
 				case "setCountOfBytesClientExpectsToSend:":
 				case "countOfBytesClientExpectsToReceive":
 				case "setCountOfBytesClientExpectsToReceive:":
+				case "progress":
 					if (TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
 					break;

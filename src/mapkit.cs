@@ -283,7 +283,8 @@ namespace XamCore.MapKit {
 	[Since (6,0)]
 	[TV (9,2)]
 	[Mac (10,9, onlyOn64 : true)]
-	interface MKMapItem {
+	interface MKMapItem : NSItemProviderReading, NSItemProviderWriting
+	{
 		[Export ("placemark", ArgumentSemantic.Retain)]
 		MKPlacemark Placemark { get;  }
 

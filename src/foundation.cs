@@ -6914,11 +6914,9 @@ namespace XamCore.Foundation
 		float Priority { get; set; } /* float, not CGFloat */
 #endif
 
-#if MONOMAC // Introspection fails for iOS
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Export ("progress", ArgumentSemantic.Strong)]
 		NSProgress Progress { get; }
-#endif
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("earliestBeginDate", ArgumentSemantic.Copy)]
