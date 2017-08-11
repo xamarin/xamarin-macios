@@ -1,5 +1,3 @@
-#if !XAMCORE_2_0
-
 using System;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
@@ -11,8 +9,13 @@ namespace XamCore.PassKit {
 		static public PKContactFields GetValue (NSSet set)
 		{
 			var fields = PKContactFields.None;
+			if (set == null)
+				return fields;
+
 			foreach (PKContactFields value in Enum.GetValues (typeof (PKContactFields))) {
-				if (set.Contains (value.GetConstant ()))
+				var constant = value.GetConstant ();
+				// None does not have an associated native value and Contains would throw an ANE
+				if ((constant != null) && set.Contains (constant))
 				    fields |= value;
 			}
 			return fields;
@@ -21,9 +24,16 @@ namespace XamCore.PassKit {
 		static public NSSet GetSet (PKContactFields values)
 		{
 			var set = new NSMutableSet ();
+			if (values == PKContactFields.None)
+				return set;
+			
 			foreach (PKContactFields value in Enum.GetValues (typeof (PKContactFields))) {
-				if (values.HasFlag (value))
-					set.Add (value.GetConstant ());
+				if (values.HasFlag (value)) {
+					var constant = value.GetConstant ();
+					// None does not have an associated native value and Contains would throw an ANE
+					if (constant != null)
+						set.Add (constant);
+				}
 			}
 			return set;
 		}
@@ -44,5 +54,3 @@ namespace XamCore.PassKit {
 		}
 	}
 }
-
-#endif

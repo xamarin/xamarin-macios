@@ -27,7 +27,7 @@
     <MtouchDebug>True</MtouchDebug>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchArch>x86_64</MtouchArch>
+    <MtouchArch>i386, x86_64</MtouchArch>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchLink>None</MtouchLink>
@@ -762,6 +762,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Security\openssl_crt.der">
+        <LogicalName>monotouchtest.Security.openssl_crt.der</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
