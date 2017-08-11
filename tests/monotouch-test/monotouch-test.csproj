@@ -659,6 +659,7 @@
     <Compile Include="UIKit\UIDragDropSessionExtensionsTest.cs" />
     <Compile Include="SpriteKit\SKTransformNodeTest.cs" />
     <Compile Include="PassKit\PKPaymentRequestTest.cs" />
+    <Compile Include="UIKit\DirectionalEdgeInsetsTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
