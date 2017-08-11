@@ -101,7 +101,9 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			<!-- For Modern / Full we overwrite TargetFrameworkDirectory to resolve non XM assemblies from our location only -->
 			<TargetFrameworkDirectory Condition="'$(TargetFrameworkName)' != 'System'">$(MacBclPath);@(DesignTimeFacadeDirectories)</TargetFrameworkDirectory>
 
-			<!-- For system we extend, not overwrite TargetFrameworkDirectory to resolve non XM assemblies from system -->
+			<!-- For system we extend, not overwrite TargetFrameworkDirectory. -->
+			<!-- mscorlib, System, and other BCL libs must come from Mono System to prevent corlib mistmatches. Xamarin.Mac.dll must come from 4.5. -->
+			<!-- If we find cases of other non-XM assemblies being resolved from XM paths, we can look into using CandidateAssemblyFiles but it is msbuild only. -->
 			<TargetFrameworkDirectory Condition="'$(TargetFrameworkName)' == 'System'">$(TargetFrameworkDirectory);$(MacBclPath)</TargetFrameworkDirectory>
 		</PropertyGroup>
 	</Target>
