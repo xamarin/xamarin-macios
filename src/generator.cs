@@ -677,7 +677,7 @@ public class NamespaceManager
 
 		if (Frameworks.HaveAudioUnit)
 			ImplicitNamespaces.Add (Get ("AudioUnit"));
-		if (Frameworks.HaveContacts)
+		if (Frameworks.HaveContacts && Generator.UnifiedAPI)
 			ImplicitNamespaces.Add (Get ("Contacts"));
 		if (Frameworks.HaveCoreAnimation)
 			ImplicitNamespaces.Add (Get ("CoreAnimation"));
