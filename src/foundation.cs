@@ -9431,11 +9431,20 @@ namespace XamCore.Foundation
 		[Export ("UIEdgeInsetsValue")]
 		UIKit.UIEdgeInsets UIEdgeInsetsValue { get; }
 
+		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Export ("directionalEdgeInsetsValue")]
+		NSDirectionalEdgeInsets DirectionalEdgeInsetsValue { get; }
+
 		[Export ("valueWithCGAffineTransform:")][Static]
 		NSValue FromCGAffineTransform (XamCore.CoreGraphics.CGAffineTransform tran);
 
 		[Export ("valueWithUIEdgeInsets:")][Static]
 		NSValue FromUIEdgeInsets (UIKit.UIEdgeInsets insets);
+
+		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Static]
+		[Export ("valueWithDirectionalEdgeInsets:")]
+		NSValue FromDirectionalEdgeInsets (NSDirectionalEdgeInsets insets);
 
 		[Since (5,0)]
 		[Export ("valueWithUIOffset:")][Static]
