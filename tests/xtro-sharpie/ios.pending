@@ -305,6 +305,8 @@
 !incorrect-protocol-member! UIViewControllerTransitionCoordinatorContext::isInterruptible is REQUIRED and should be abstract
 !incorrect-protocol-member! UIFocusEnvironment::preferredFocusEnvironments is REQUIRED and should be abstract
 !incorrect-protocol-member! UITextDocumentProxy::documentInputMode is REQUIRED and should be abstract
+!incorrect-protocol-member! UITextDocumentProxy::documentIdentifier is REQUIRED and should be abstract
+!incorrect-protocol-member! UITextDocumentProxy::selectedText is REQUIRED and should be abstract
 !incorrect-protocol-member! UILayoutSupport::bottomAnchor is REQUIRED and should be abstract
 !incorrect-protocol-member! UILayoutSupport::heightAnchor is REQUIRED and should be abstract
 !incorrect-protocol-member! UILayoutSupport::topAnchor is REQUIRED and should be abstract
@@ -324,3 +326,8 @@
 ## unfortunate duplicated name
 !duplicate-type-name! WKErrorCode enum exists as both WatchKit.WKErrorCode and WebKit.WKErrorCode
 !duplicate-type-name! WKErrorCode enum exists as both WebKit.WKErrorCode and WatchKit.WKErrorCode
+
+#PDFKit
+# PDFAnnotationPopup is not available on iOS also deprecated in macOS 10,12
+!missing-selector! PDFAnnotation::popup not bound
+!missing-selector! PDFAnnotation::setPopup: not bound

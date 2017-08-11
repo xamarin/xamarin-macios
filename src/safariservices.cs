@@ -130,6 +130,10 @@ namespace XamCore.SafariServices {
 		[iOS (11,0)]
 		[Export ("safariViewController:excludedActivityTypesForURL:title:")]
 		string[] GetExcludedActivityTypes (SFSafariViewController controller, NSUrl url, [NullAllowed] string title);
+
+		[iOS (11,0)]
+		[Export ("safariViewController:initialLoadDidRedirectToURL:")]
+		void InitialLoadDidRedirectToUrl (SFSafariViewController controller, NSUrl url);
 	}
 
 	[iOS (11,0)]

@@ -71,6 +71,7 @@ namespace Introspection {
 				case "CAEmitterCell":
 				case "GKAchievement":
 				case "GKScore":
+				case "MPMediaItem":
 				// new in iOS8 and 10.0
 				case "NSExtensionContext":
 				case "NSLayoutAnchor`1":
@@ -81,6 +82,10 @@ namespace Introspection {
 				case "GKCloudPlayer":
 				// iOS 10 : test throw because of generic usage
 				case "NSMeasurement`1":
+				// Xcode 9 - Conformance not in heades
+				case "MLDictionaryConstraint":
+				case "MLImageConstraint":
+				case "MLMultiArrayConstraint":
 					return true; // skip
 				}
 				break;

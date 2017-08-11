@@ -654,3 +654,11 @@
 ## we do not have NSFastEnumeration and decided to not bind objectForKeyedSubscript using a local method instead
 !missing-protocol-conformance! MLDictionaryFeatureProvider should conform to NSFastEnumeration
 !missing-selector! MLDictionaryFeatureProvider::objectForKeyedSubscript: not bound
+
+## radar://33643011 -> https://trello.com/c/ZN712GOi
+## [FAIL] Selector not found for CoreML.MLFeatureDescription : setMultiArrayConstraint:
+## [FAIL] Selector not found for CoreML.MLFeatureDescription : setImageConstraint:
+## [FAIL] Selector not found for CoreML.MLFeatureDescription : setDictionaryConstraint:
+!missing-selector! MLFeatureDescription::setDictionaryConstraint: not bound
+!missing-selector! MLFeatureDescription::setImageConstraint: not bound
+!missing-selector! MLFeatureDescription::setMultiArrayConstraint: not bound

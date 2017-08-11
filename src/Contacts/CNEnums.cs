@@ -99,6 +99,8 @@ namespace XamCore.Contacts {
 		ClientIdentifierInvalid = 600,
 		[iOS (11,0), Mac (10,13)]
 		ClientIdentifierDoesNotExist = 601,
+		[iOS (11,0), Mac (10,13)]
+		VCardMalformed = 700,
 	}
 
 	// NSInteger -> CNPostalAddressFormatter.h

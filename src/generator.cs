@@ -783,7 +783,7 @@ public partial class Frameworks {
 				frameworks = macosframeworks;
 				break;
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", Generator.CurrentPlatform);
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://bugzilla.xamarin.com) with a test case.", Generator.CurrentPlatform);
 			}
 		}
 
@@ -950,6 +950,19 @@ public partial class Generator : IMemberGatherer {
 				return "CoreServices";
 			default:
 				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+			}
+		}
+	}
+
+	static string PDFKitMap {
+		get {
+			switch (CurrentPlatform) {
+			case PlatformName.iOS:
+				return "PDFKit";
+			case PlatformName.MacOSX:
+				return "Quartz";
+			default:
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
 			}
 		}
 	}
@@ -1347,6 +1360,7 @@ public partial class Generator : IMemberGatherer {
 				if (Frameworks.HaveUIKit) {
 					nsvalue_return_map [TypeManager.UIEdgeInsets] = ".UIEdgeInsetsValue";
 					nsvalue_return_map [TypeManager.UIOffset] = ".UIOffsetValue";
+					nsvalue_return_map [TypeManager.NSDirectionalEdgeInsets] = ".DirectionalEdgeInsetsValue";
 				}
 
 				if (TypeManager.MKCoordinateSpan != null)
@@ -2080,6 +2094,8 @@ public partial class Generator : IMemberGatherer {
 		marshal_types.Add (TypeManager.CGPath);
 		marshal_types.Add (TypeManager.CGGradient);
 		marshal_types.Add (TypeManager.CGContext);
+		marshal_types.Add (TypeManager.CGPDFDocument);
+		marshal_types.Add (TypeManager.CGPDFPage);
 		marshal_types.Add (TypeManager.CGImage);
 		marshal_types.Add (TypeManager.Class);
 		marshal_types.Add (TypeManager.CFRunLoop);
@@ -5515,6 +5531,10 @@ public partial class Generator : IMemberGatherer {
 				case "+CoreServices":
 					library_name = CoreServicesMap;
 					break;
+				case "+PDFKit":
+					library_name = "PdfKit";
+					library_path = PDFKitMap;
+					break;
 				}
 			} else {
 				// we get something in LibraryName from FieldAttribute so we asume
@@ -5530,6 +5550,7 @@ public partial class Generator : IMemberGatherer {
 			throw new BindingException (1042, true, $"Missing '[Field (LibraryName=value)]' for {propertyName} (e.g.\"__Internal\")");
 		} else {
 			library_name = type.Namespace;
+
 			// note: not every binding namespace will start with ns.Prefix (e.g. MonoTouch.)
 			if (!String.IsNullOrEmpty (ns.Prefix) && library_name.StartsWith (ns.Prefix, StringComparison.Ordinal)) {
 				library_name = library_name.Substring (ns.Prefix.Length + 1);

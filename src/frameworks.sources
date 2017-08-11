@@ -407,6 +407,8 @@ COREGRAPHICS_CORE_SOURCES = \
 	CoreGraphics/CGLayer.cs \
 	CoreGraphics/CGPath.cs \
 	CoreGraphics/CGVector.cs \
+	CoreGraphics/CGPDFDocument.cs \
+	CoreGraphics/CGPDFPage-2.cs \
 
 COREGRAPHICS_SOURCES = \
 	CoreGraphics/CGBitmapContext.cs \
@@ -425,10 +427,8 @@ COREGRAPHICS_SOURCES = \
 	CoreGraphics/CGPDFArray.cs \
 	CoreGraphics/CGPDFContentStream.cs \
 	CoreGraphics/CGPDFDictionary.cs \
-	CoreGraphics/CGPDFDocument.cs \
 	CoreGraphics/CGPDFObject.cs \
 	CoreGraphics/CGPDFOperatorTable.cs \
-	CoreGraphics/CGPDFPage-2.cs \
 	CoreGraphics/CGPDFPage.cs \
 	CoreGraphics/CGPDFScanner.cs \
 	CoreGraphics/CGPDFStream.cs \
@@ -1082,10 +1082,11 @@ PASSKIT_API_SOURCES = \
 
 # PdfKit
 
-PDFKIT_CORE_SOURCES = \
+PDFKIT_API_SOURCES = \
 	PdfKit/Enums.cs \
 
 PDFKIT_SOURCES = \
+	PdfKit/PdfAnnotation.cs \
 	PdfKit/PdfKit.cs \
 
 # Photos
@@ -1407,6 +1408,8 @@ VIDEOTOOLBOX_SOURCES = \
 # Vision
 
 VISION_SOURCES = \
+	Vision/VNBarcodeSymbologyExtensions.cs \
+	Vision/VNDetectBarcodesRequest.cs \
 	Vision/VNFaceLandmarkRegion2D.cs \
 	Vision/VNRequest.cs \
 	Vision/VNUtils.cs \
@@ -1690,6 +1693,7 @@ IOS_FRAMEWORKS =         \
 	NotificationCenter \
 	OpenGLES \
 	PassKit \
+	PdfKit \
 	Photos \
 	PhotosUI \
 	PushKit \

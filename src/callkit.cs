@@ -243,8 +243,8 @@ namespace XamCore.CallKit {
 		void RemoveAllBlockingEntries ();
 
 		[iOS (11,0)]
-		[Export ("removeIdentificationEntryWithPhoneNumber:label:")]
-		void RemoveIdentificationEntry (/* CXCallDirectoryPhoneNumber -> int64_t */ long phoneNumber, [NullAllowed] string label);
+		[Export ("removeIdentificationEntryWithPhoneNumber:")]
+		void RemoveIdentificationEntry (/* CXCallDirectoryPhoneNumber -> int64_t */ long phoneNumber);
 
 		[iOS (11,0)]
 		[Export ("removeAllIdentificationEntries")]

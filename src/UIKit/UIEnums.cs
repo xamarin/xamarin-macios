@@ -633,6 +633,7 @@ namespace XamCore.UIKit {
 	public enum UITableViewCellSeparatorStyle : nint {
 		None,
 		SingleLine,
+		[Deprecated (PlatformName.iOS, 11, 0, message:"Use 'SingleLine' for a single line separator.")]
 		SingleLineEtched,
 		DoubleLineEtched = SingleLineEtched
 	}
@@ -2235,6 +2236,15 @@ namespace XamCore.UIKit {
 	{
 		Menu = 1,
 		NavigationBar = 1 << 1
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Native]
+	public enum UITextDropPerformer : nuint
+	{
+		View = 0,
+		Delegate,
 	}
 	
 	

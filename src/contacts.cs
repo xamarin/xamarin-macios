@@ -12,6 +12,7 @@ using System.ComponentModel;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 
+
 namespace XamCore.Contacts {
 
 #if XAMCORE_2_0 // The Contacts framework uses generics heavily, which is only supported in Unified (for now at least)
@@ -26,7 +27,12 @@ namespace XamCore.Contacts {
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	interface CNContact : NSCopying, NSMutableCopying, NSSecureCoding {
+	interface CNContact : NSCopying, NSMutableCopying, NSSecureCoding, NSItemProviderReading
+#if IOS_NOT_BOUND_YET
+	// https://bugzilla.xamarin.com/show_bug.cgi?id=58203
+	, NSItemProviderWriting
+#endif
+	{
 
 		[Export ("identifier")]
 		string Identifier { get; }

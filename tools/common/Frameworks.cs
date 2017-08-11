@@ -253,6 +253,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "Vision", "Vision", 11 },
 				{ "FileProvider", "FileProvider", 11 },
 				{ "FileProviderUI", "FileProviderUI", 11 },
+				{ "PdfKit", "PDFKit", 11 },
 			};
 		}
 		return ios_frameworks;

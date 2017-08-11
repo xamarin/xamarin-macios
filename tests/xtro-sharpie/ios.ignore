@@ -77,6 +77,14 @@
 !missing-field! IntentsUIVersionString not bound
 
 
+# MediaPlayer
+
+## incorrect macro/parsing - decorated with `MP_API(macos(10.12.2))`
+!missing-enum! MPNowPlayingPlaybackState not bound
+!missing-selector! MPNowPlayingInfoCenter::playbackState not bound
+!missing-selector! MPNowPlayingInfoCenter::setPlaybackState: not bound
+
+
 # ReplayKit
 
 ## only used on tvOS but exposed in iOS 10 SDK
@@ -384,3 +392,7 @@
 !unknown-field! CBUUIDPeripheralPrivacyFlagString bound
 !unknown-field! CBUUIDReconnectionAddressString bound
 !unknown-field! CBUUIDServiceChangedString bound
+
+## PDFKit
+# The following enums are bound as PdfFoo, lowercase Pdf prefix
+!missing-enum! PDFThumbnailLayoutMode not bound
