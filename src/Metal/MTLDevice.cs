@@ -16,6 +16,9 @@ using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.Metal {
+#if MONOMAC
+	public delegate void MTLDeviceNotificationHandler (IMTLDevice device, MTLDeviceNotificationName notifyName);
+#endif
 
 	[iOS (8,0)][Mac (10,11)]
 	public static partial class MTLDevice {
@@ -44,15 +47,15 @@ namespace XamCore.Metal {
 		}
 
 #if MONOMAC
-		//[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
-		//[DllImport (Constants.MetalLibrary)]
-		//static extern IMTLDevice[] MTLCopyAllDevicesWithObserver ([NullAllowed] out NSObject observer, MTLDeviceNotificationHandler handler);
+		[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		[DllImport (Constants.MetalLibrary)]
+		static extern IMTLDevice[] MTLCopyAllDevicesWithObserver (out NSObject observer, MTLDeviceNotificationHandler handler);
 
-		//[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
-		//public static IMTLDevice [] GetAllDevices (MTLDeviceNotificationHandler handler, out NSObject observer)
-		//{
-		//	return MTLCopyAllDevicesWithObserver (out observer, handler);
-		//}
+		[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		public static IMTLDevice [] GetAllDevices (MTLDeviceNotificationHandler handler, out NSObject observer)
+		{
+			return MTLCopyAllDevicesWithObserver (out observer, handler);
+		}
 
 		[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
 		[DllImport (Constants.MetalLibrary)]

@@ -24,8 +24,6 @@ using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.Metal {
-	delegate void MTLDeviceNotificationHandler (IMTLDevice device, MTLDeviceNotificationName notifyName);
-
 	delegate void MTLDeallocator (IntPtr pointer, nuint length);
 
 	delegate void MTLNewComputePipelineStateWithReflectionCompletionHandler (IMTLComputePipelineState computePipelineState, MTLComputePipelineReflection reflection, NSError error);
