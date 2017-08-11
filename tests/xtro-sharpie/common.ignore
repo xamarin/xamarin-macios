@@ -85,6 +85,13 @@
 !missing-selector! CKRecord::setObject:forKeyedSubscript: not bound
 
 
+# PassKit
+
+## made optional in xcode9 beta 3 since they were replaced with newer API
+!incorrect-protocol-member! PKPaymentAuthorizationControllerDelegate::paymentAuthorizationController:didAuthorizePayment:completion: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! PKPaymentAuthorizationViewControllerDelegate::paymentAuthorizationViewController:didAuthorizePayment:completion: is OPTIONAL and should NOT be abstract
+
+
 # Metal
 
 ## New @required (abstract) methods in existing types (breaking changes)
