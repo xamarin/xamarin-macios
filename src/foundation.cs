@@ -9733,6 +9733,10 @@ namespace XamCore.Foundation
 		void RegisterObject (Class aClass, NSItemProviderRepresentationVisibility visibility, RegisterObjectRepresentationLoadHandler loadHandler);
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Wrap ("RegisterObject (new Class (type), visibility, loadHandler)")]
+		void RegisterObject (Type type, NSItemProviderRepresentationVisibility visibility, RegisterObjectRepresentationLoadHandler loadHandler);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("canLoadObjectOfClass:")]
 		bool CanLoadObject (Class aClass);
 
