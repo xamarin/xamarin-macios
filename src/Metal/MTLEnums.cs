@@ -903,8 +903,8 @@ namespace XamCore.Metal {
 
 		public MTLSamplePosition (float x, float y)
 		{
-			this.x = x;
-			this.y = y;
+			this.X = x;
+			this.Y = y;
 		}
 	}
 
