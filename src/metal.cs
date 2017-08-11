@@ -314,12 +314,16 @@ namespace XamCore.Metal {
 		double /* CFTimeInterval */ GpuEndTime { get; }
 
 		[Mac (10,13, onlyOn64: true), iOS (11,0), TV (11,0), NoWatch]
-		[Abstract]
+#if XAMCORE_4_0
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#endif
 		[Export ("pushDebugGroup:")]
 		void PushDebugGroup (string @string);
 
 		[Mac (10,13, onlyOn64: true), iOS (11,0), TV (11,0), NoWatch]
-		[Abstract]
+#if XAMCORE_4_0
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#endif
 		[Export ("popDebugGroup")]
 		void PopDebugGroup ();
 	}
@@ -1043,14 +1047,14 @@ namespace XamCore.Metal {
 		void ReplaceRegion (MTLRegion region, nuint level, IntPtr pixelBytes, nuint bytesPerRow);
 
 		[Mac (10, 11), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_2_0
+#if XAMCORE_4_0
 		[Abstract]
 #endif
 		[NullAllowed, Export ("iosurface")]
 		IntPtr /* IOSurfaceRef* */ IOSurface { get; }
 
 		[Mac (10, 11), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_2_0
+#if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("iosurfacePlane")]
@@ -2014,21 +2018,21 @@ namespace XamCore.Metal {
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
 #if XAMCORE_4_0
-			[Abstract]
+		[Abstract]
 #endif
 		[Export ("setColorStoreActionOptions:atIndex:")]
 		void SetColorStoreActionOptions (MTLStoreActionOptions storeActionOptions, nuint colorAttachmentIndex);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
 #if XAMCORE_4_0
-			[Abstract]
+		[Abstract]
 #endif
 		[Export ("setDepthStoreActionOptions:")]
 		void SetDepthStoreActionOptions (MTLStoreActionOptions storeActionOptions);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
 #if XAMCORE_4_0
-			[Abstract]
+		[Abstract]
 #endif
 		[Export ("setStencilStoreActionOptions:")]
 		void SetStencilStoreActionOptions (MTLStoreActionOptions storeActionOptions);
@@ -2522,7 +2526,7 @@ namespace XamCore.Metal {
 		DeviceRemovalRequested,
 
 		[Field ("MTLDeviceWasRemovedNotification")]
-		MTLDeviceWasRemoved
+		MTLDeviceWasRemoved,
 	}
 
 	[Mac (10,13, onlyOn64: true), iOS (11,0), TV (11,0), NoWatch]
@@ -2574,8 +2578,7 @@ namespace XamCore.Metal {
 	interface IMTLArgumentEncoder { }
 
 	[Mac (10,13, onlyOn64: true), iOS (11,0), TV (11,0), NoWatch]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface MTLArgumentEncoder
 	{
 		[Abstract]

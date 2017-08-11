@@ -27,8 +27,6 @@ namespace MonoTouchFixtures.Metal {
 			if (Runtime.Arch == Arch.SIMULATOR)
 				Assert.Ignore ("Type is missing on the simulator");
 #endif
-			
-			TestRuntime.AssertXcodeVersion (9, 0);
 			hd = new MTLHeapDescriptor ();
 		}
 
@@ -63,7 +61,7 @@ namespace MonoTouchFixtures.Metal {
 		[Test]
 		public void GetSetCpuCacheModeTest ()
 		{
-			TestRuntime.AssertXcodeVersion (8, 0);
+			TestRuntime.AssertXcodeVersion (9, 0);
 
 			hd.CpuCacheMode = MTLCpuCacheMode.WriteCombined;
 			Assert.AreEqual (MTLCpuCacheMode.WriteCombined, hd.CpuCacheMode);
@@ -72,7 +70,7 @@ namespace MonoTouchFixtures.Metal {
 		[Test]
 		public void GetSetSizeTest ()
 		{
-			TestRuntime.AssertXcodeVersion (8, 0);
+			TestRuntime.AssertXcodeVersion (9, 0);
 
 			hd.Size = 2;
 			Assert.AreEqual (2, hd.Size);
@@ -81,7 +79,7 @@ namespace MonoTouchFixtures.Metal {
 		[Test]
 		public void GetSetStorageModeTest ()
 		{
-			TestRuntime.AssertXcodeVersion (8, 0);
+			TestRuntime.AssertXcodeVersion (9, 0);
 
 			hd.StorageMode = MTLStorageMode.Private;
 			Assert.AreEqual (MTLStorageMode.Private, hd.StorageMode);

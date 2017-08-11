@@ -897,9 +897,9 @@ namespace XamCore.Metal {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLSamplePosition
 	{
-		public float x;
+		public float X;
 
-		public float y;
+		public float Y;
 
 		public MTLSamplePosition (float x, float y)
 		{
@@ -913,7 +913,7 @@ namespace XamCore.Metal {
 	public enum MTLStoreActionOptions : nuint
 	{
 		None = 0,
-		CustomSamplePositions = 1 << 0
+		CustomSamplePositions = 1 << 0,
 	}
 }
 #endif
