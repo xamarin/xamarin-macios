@@ -972,7 +972,9 @@ namespace xharness
 			};
 			thread.Start ();
 
-			Process.Start ("open", $"http://localhost:{port}/");
+			var url = $"http://localhost:{port}/";
+			Console.WriteLine ($"Launching {url} in the system's default browser.");
+			Process.Start ("open", url);
 
 			return tcs.Task;
 		}
