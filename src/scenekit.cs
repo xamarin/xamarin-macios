@@ -45,6 +45,7 @@ using XamCore.SpriteKit;
 #if (XAMCORE_2_0 || !MONOMAC) && !WATCH
 using XamCore.ModelIO;
 using XamCore.Metal;
+using XamCore.GameplayKit;
 #endif
 
 #if MONOMAC
@@ -69,6 +70,7 @@ using NSFont = global::XamCore.UIKit.UIFont;
 using NSImage = global::XamCore.UIKit.UIImage;
 using NSBezierPath = global::XamCore.UIKit.UIBezierPath;
 #endif
+
 
 namespace XamCore.SceneKit {
 
@@ -1745,7 +1747,12 @@ namespace XamCore.SceneKit {
 	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
-	interface SCNScene : NSSecureCoding {
+	interface SCNScene :
+#if (XAMCORE_2_0 || !MONOMAC) && !WATCH
+		GKSceneRootNodeType ,
+#endif
+		NSSecureCoding {
+		
 		[Static]
 		[Export ("scene")]
 		SCNScene Create ();
