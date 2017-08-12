@@ -1232,7 +1232,7 @@ namespace XamCore.SceneKit {
 		bool IgnoreChildNodes { get; set; }
 		bool IgnoreHiddenNodes { get; set; }
 		SCNNode RootNode { get; set; }
-
+		SCNHitTestSearchMode OptionSearchMode { get; }
 	}
 
 	[Watch (3,0)]
