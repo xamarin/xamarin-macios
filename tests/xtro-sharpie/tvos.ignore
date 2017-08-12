@@ -298,6 +298,12 @@
 !missing-selector! MPNowPlayingInfoCenter::setPlaybackState: not bound
 
 
+# ReplayKit
+
+## Not used on tvOS (no camera)
+!missing-enum! RPCameraPosition not bound
+
+
 # StoreKit
 
 ## SKStoreProductViewController is not in tvOS and the only member of the delegate is not either
