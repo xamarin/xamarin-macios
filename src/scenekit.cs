@@ -782,6 +782,10 @@ namespace XamCore.SceneKit {
 		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
 		[Field ("SCNHitTestOptionCategoryBitMask")]
 		NSString OptionCategoryBitMaskKey { get; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Field ("SCNHitTestOptionSearchMode")]
+		NSString OptionSearchModeKey { get; }
 	}
 	
 	[Watch (3,0)]
@@ -984,6 +988,8 @@ namespace XamCore.SceneKit {
 		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
 		[Field ("SCNLightTypeProbe")]
 		NSString Probe { get; }
+
+
 	}
 
 #if MONOMAC
@@ -1226,6 +1232,7 @@ namespace XamCore.SceneKit {
 		bool IgnoreChildNodes { get; set; }
 		bool IgnoreHiddenNodes { get; set; }
 		SCNNode RootNode { get; set; }
+
 	}
 
 	[Watch (3,0)]
