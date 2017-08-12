@@ -312,7 +312,6 @@ CONTACTS_SOURCES = \
 	Contacts/CNContactStore.cs \
 	Contacts/CNInstantMessageAddress.cs \
 	Contacts/CNObsolete.cs \
-	Contacts/CNPostalAddress.cs \
 	Contacts/CNSocialProfile.cs \
 
 # CoreAnimation (this is really Quartz.framework)
@@ -1079,6 +1078,9 @@ OPENGLES_SOURCES = \
 
 PASSKIT_API_SOURCES = \
 	PassKit/PKEnums.cs \
+	
+PASSKIT_SOURCES = \
+	PassKit/PKPaymentRequest.cs	\
 
 # PdfKit
 

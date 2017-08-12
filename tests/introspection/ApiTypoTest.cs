@@ -99,7 +99,8 @@ namespace Introspection
 			"Autoredirect",
 			"Aliasable",
 			"Backface",
-			"Bancaire",
+			"Bancaire", // french
+			"Bancaires", // french
 			"Bary",
 			"Batc",
 			"Bim",

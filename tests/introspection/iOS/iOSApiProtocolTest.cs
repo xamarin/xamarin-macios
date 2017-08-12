@@ -157,6 +157,11 @@ namespace Introspection {
 				case "PKPaymentRequest":
 				case "PKPaymentToken":
 				case "PKLabeledValue":
+				case "PKPaymentAuthorizationResult":
+				case "PKPaymentRequestShippingMethodUpdate":
+				case "PKPaymentRequestUpdate":
+				case "PKPaymentRequestPaymentMethodUpdate":
+				case "PKPaymentRequestShippingContactUpdate":
 				// iOS9
 				case "UIFont":
 				case "AVAssetTrackSegment":
@@ -283,6 +288,11 @@ namespace Introspection {
 				case "PKPaymentRequest":
 				case "PKPaymentToken":
 				case "PKLabeledValue":
+				case "PKPaymentAuthorizationResult":
+				case "PKPaymentRequestShippingMethodUpdate":
+				case "PKPaymentRequestUpdate":
+				case "PKPaymentRequestPaymentMethodUpdate":
+				case "PKPaymentRequestShippingContactUpdate":
 				// iOS9
 				case "UIFont":
 				case "AVAssetTrackSegment":
