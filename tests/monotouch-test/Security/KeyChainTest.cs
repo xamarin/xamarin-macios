@@ -112,6 +112,22 @@ namespace MonoTouchFixtures.Security {
 			
 			return returnGuid;
 		}
+
+		[Test]
+		public void QueryAsData ()
+		{
+			SecStatusCode code;
+			SecRecord queryRec = new SecRecord (SecKind.GenericPassword) {
+				Service = "KEYCHAIN_SERVICE",
+				Label = "KEYCHAIN_SERVICE",
+				Account = "KEYCHAIN_ACCOUNT"
+			};
+			var data = SecKeyChain.QueryAsData (queryRec, true, out code);
+
+			if (code == SecStatusCode.Success && queryRec != null) {
+				Assert.NotNull (data.Bytes);
+			}
+		}
 		
 		static SecStatusCode SetID (Guid setID)
 		{
