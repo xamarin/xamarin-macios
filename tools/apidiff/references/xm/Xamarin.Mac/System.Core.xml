@@ -1445,7 +1445,7 @@
               </attribute>
               <attribute name="System.Diagnostics.DebuggerTypeProxyAttribute">
                 <properties>
-                  <property name="ProxyTypeName" value="System.Collections.Generic.HashSetDebugView`1" />
+                  <property name="ProxyTypeName" value="System.Collections.Generic.ICollectionDebugView`1" />
                 </properties>
               </attribute>
             </attributes>
@@ -1475,9 +1475,20 @@
                   <parameter name="comparer" position="0" attrib="0" type="System.Collections.Generic.IEqualityComparer`1[T]" />
                 </parameters>
               </constructor>
+              <constructor name=".ctor(System.Int32)" attrib="6278">
+                <parameters>
+                  <parameter name="capacity" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </constructor>
               <constructor name=".ctor(System.Collections.Generic.IEnumerable`1[T], System.Collections.Generic.IEqualityComparer`1[T])" attrib="6278">
                 <parameters>
                   <parameter name="collection" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" />
+                  <parameter name="comparer" position="1" attrib="0" type="System.Collections.Generic.IEqualityComparer`1[T]" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Int32, System.Collections.Generic.IEqualityComparer`1[T])" attrib="6278">
+                <parameters>
+                  <parameter name="capacity" position="0" attrib="0" type="System.Int32" />
                   <parameter name="comparer" position="1" attrib="0" type="System.Collections.Generic.IEqualityComparer`1[T]" />
                 </parameters>
               </constructor>
@@ -1547,10 +1558,7 @@
               <method name="GetEnumerator()" attrib="134" returntype="System.Collections.Generic.HashSet`1+Enumerator[T]">
                 <parameters />
               </method>
-              <method name="GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="16838" virtual="true" returntype="System.Void">
-                <attributes>
-                  <attribute name="System.Security.SecurityCriticalAttribute" />
-                </attributes>
+              <method name="GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="454" virtual="true" returntype="System.Void">
                 <parameters>
                   <parameter name="info" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
                   <parameter name="context" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
@@ -1613,6 +1621,12 @@
               </method>
               <method name="TrimExcess()" attrib="134" returntype="System.Void">
                 <parameters />
+              </method>
+              <method name="TryGetValue(T, out T&amp;)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="equalValue" position="0" attrib="0" type="T" />
+                  <parameter name="actualValue" position="1" attrib="2" type="T" direction="out" />
+                </parameters>
               </method>
               <method name="UnionWith(System.Collections.Generic.IEnumerable`1[T])" attrib="486" virtual="true" returntype="System.Void">
                 <parameters>
@@ -6382,6 +6396,16 @@
           </class>
           <class name="Lookup`2" type="class" base="System.Object" charset="Ansi" layout="Auto">
             <attributes>
+              <attribute name="System.Diagnostics.DebuggerDisplayAttribute">
+                <properties>
+                  <property name="Value" value="Count = {Count}" />
+                </properties>
+              </attribute>
+              <attribute name="System.Diagnostics.DebuggerTypeProxyAttribute">
+                <properties>
+                  <property name="ProxyTypeName" value="System.Linq.SystemLinq_LookupDebugView`2" />
+                </properties>
+              </attribute>
               <attribute name="System.Reflection.DefaultMemberAttribute">
                 <properties>
                   <property name="MemberName" value="Item" />
@@ -9040,6 +9064,18 @@
                   <generic-parameter name="TSource" attributes="0" />
                 </generic-parameters>
               </method>
+              <method name="Append(System.Linq.IQueryable`1[TSource], TSource)" attrib="150" static="true" returntype="System.Linq.IQueryable`1[TSource]">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="source" position="0" attrib="0" type="System.Linq.IQueryable`1[TSource]" direction="this" />
+                  <parameter name="element" position="1" attrib="0" type="TSource" />
+                </parameters>
+                <generic-parameters>
+                  <generic-parameter name="TSource" attributes="0" />
+                </generic-parameters>
+              </method>
               <method name="AsQueryable(System.Collections.Generic.IEnumerable`1[TElement])" attrib="150" static="true" returntype="System.Linq.IQueryable`1[TElement]">
                 <attributes>
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
@@ -9874,6 +9910,18 @@
                 <generic-parameters>
                   <generic-parameter name="TSource" attributes="0" />
                   <generic-parameter name="TKey" attributes="0" />
+                </generic-parameters>
+              </method>
+              <method name="Prepend(System.Linq.IQueryable`1[TSource], TSource)" attrib="150" static="true" returntype="System.Linq.IQueryable`1[TSource]">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="source" position="0" attrib="0" type="System.Linq.IQueryable`1[TSource]" direction="this" />
+                  <parameter name="element" position="1" attrib="0" type="TSource" />
+                </parameters>
+                <generic-parameters>
+                  <generic-parameter name="TSource" attributes="0" />
                 </generic-parameters>
               </method>
               <method name="Reverse(System.Linq.IQueryable`1[TSource])" attrib="150" static="true" returntype="System.Linq.IQueryable`1[TSource]">
@@ -18204,6 +18252,19 @@
                 </parameters>
               </method>
             </methods>
+          </class>
+          <class name="TrustStatus" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="KnownIdentity" attrib="32854" fieldtype="System.Security.Cryptography.X509Certificates.TrustStatus" value="2" />
+              <field name="Trusted" attrib="32854" fieldtype="System.Security.Cryptography.X509Certificates.TrustStatus" value="3" />
+              <field name="UnknownIdentity" attrib="32854" fieldtype="System.Security.Cryptography.X509Certificates.TrustStatus" value="1" />
+              <field name="Untrusted" attrib="32854" fieldtype="System.Security.Cryptography.X509Certificates.TrustStatus" value="0" />
+            </fields>
           </class>
         </classes>
       </namespace>

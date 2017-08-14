@@ -348,7 +348,7 @@
               </constructor>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
@@ -359,8 +359,8 @@
               </constructor>
               <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
-                  <parameter name="inner" position="1" attrib="0" type="System.Exception" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                  <parameter name="innerException" position="1" attrib="0" type="System.Exception" />
                 </parameters>
               </constructor>
             </constructors>
@@ -449,7 +449,7 @@
               </constructor>
               <constructor name=".ctor(System.ServiceModel.WebHttpSecurityMode)" attrib="6278">
                 <parameters>
-                  <parameter name="mode" position="0" attrib="0" type="System.ServiceModel.WebHttpSecurityMode" />
+                  <parameter name="securityMode" position="0" attrib="0" type="System.ServiceModel.WebHttpSecurityMode" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.String)" attrib="6278">
@@ -1334,12 +1334,12 @@
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
-                  <parameter name="configurationName" position="0" attrib="0" type="System.String" />
+                  <parameter name="endpointConfigurationName" position="0" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Type)" attrib="6278">
                 <parameters>
-                  <parameter name="serviceType" position="0" attrib="0" type="System.Type" />
+                  <parameter name="channelType" position="0" attrib="0" type="System.Type" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Uri)" attrib="6278">
@@ -1582,7 +1582,7 @@
             <constructors>
               <constructor name=".ctor(System.ServiceModel.OperationContext)" attrib="6278">
                 <parameters>
-                  <parameter name="operation" position="0" attrib="0" type="System.ServiceModel.OperationContext" />
+                  <parameter name="operationContext" position="0" attrib="0" type="System.ServiceModel.OperationContext" />
                 </parameters>
               </constructor>
             </constructors>
@@ -1605,12 +1605,12 @@
             <methods>
               <method name="Attach(System.ServiceModel.OperationContext)" attrib="134" returntype="System.Void">
                 <parameters>
-                  <parameter name="context" position="0" attrib="0" type="System.ServiceModel.OperationContext" />
+                  <parameter name="owner" position="0" attrib="0" type="System.ServiceModel.OperationContext" />
                 </parameters>
               </method>
               <method name="Detach(System.ServiceModel.OperationContext)" attrib="134" returntype="System.Void">
                 <parameters>
-                  <parameter name="context" position="0" attrib="0" type="System.ServiceModel.OperationContext" />
+                  <parameter name="owner" position="0" attrib="0" type="System.ServiceModel.OperationContext" />
                 </parameters>
               </method>
             </methods>
