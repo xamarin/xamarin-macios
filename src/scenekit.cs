@@ -988,8 +988,6 @@ namespace XamCore.SceneKit {
 		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
 		[Field ("SCNLightTypeProbe")]
 		NSString Probe { get; }
-
-
 	}
 
 #if MONOMAC
