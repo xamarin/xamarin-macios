@@ -972,7 +972,9 @@ namespace xharness
 			};
 			thread.Start ();
 
-			Process.Start ("open", $"http://localhost:{port}/");
+			var url = $"http://localhost:{port}/";
+			Console.WriteLine ($"Launching {url} in the system's default browser.");
+			Process.Start ("open", url);
 
 			return tcs.Task;
 		}
@@ -1123,7 +1125,7 @@ namespace xharness
 
 			using (var writer = new StreamWriter (stream)) {
 				writer.WriteLine ("<!DOCTYPE html>");
-				writer.WriteLine ("<html onkeypress='keyhandler(event)'>");
+				writer.WriteLine ("<html onkeypress='keyhandler(event)' lang='en'>");
 				if (IsServerMode && populating)
 					writer.WriteLine ("<meta http-equiv=\"refresh\" content=\"1\">");
 				writer.WriteLine (@"<head>
@@ -1138,12 +1140,12 @@ namespace xharness
 
 #nav {
 	display: inline-block;
-	width: 200px;
+	width: 300px;
 }
 
 #nav > * {
 	display: inline;
-	width: 200px;
+	width: 300px;
 }
 
 #nav ul {
@@ -1191,8 +1193,7 @@ namespace xharness
 	text-decoration: underline;
 }
 
-</style>
-</head>");
+</style>");
 				writer.WriteLine ("<title>Test results</title>");
 				writer.WriteLine (@"<script type='text/javascript'>
 var ajax_log = null;
@@ -1254,6 +1255,23 @@ function toggleAjaxLogVisibility()
 	} else {
 		ajax_log.style.display = 'none';
 		button.innerText = 'Show log';
+	}
+}
+function toggleVisibility (css_class)
+{
+	var objs = document.getElementsByClassName (css_class);
+	
+	for (var i = 0; i < objs.length; i++) {
+		var obj = objs [i];
+		
+		var pname = 'original-' + css_class + '-display';
+		if (obj.hasOwnProperty (pname)) {
+			obj.style.display = obj [pname];
+			delete obj [pname];
+		} else {
+			obj [pname] = obj.style.display;
+			obj.style.display = 'none';
+		}
 	}
 }
 function keyhandler(event)
@@ -1358,10 +1376,11 @@ function oninitialload ()
 				if (IsServerMode)
 					writer.WriteLine ("setInterval (autorefresh, 1000);");
 				writer.WriteLine ("</script>");
+				writer.WriteLine ("</head>");
 				writer.WriteLine ("<body onload='oninitialload ();'>");
 
 				if (IsServerMode) {
-					writer.WriteLine ("<div id='quit' style='position:absolute; top: 20px; right: 20px;'><a href='javascript:quit()'>Quit</a></br><a id='ajax-log-button' href='javascript:toggleAjaxLogVisibility ();'>Show log</a></div>");
+					writer.WriteLine ("<div id='quit' style='position:absolute; top: 20px; right: 20px;'><a href='javascript:quit()'>Quit</a><br/><a id='ajax-log-button' href='javascript:toggleAjaxLogVisibility ();'>Show log</a></div>");
 					writer.WriteLine ("<div id='ajax-log' style='position:absolute; top: 200px; right: 20px; max-width: 100px; display: none;'></div>");
 				}
 
@@ -1371,7 +1390,9 @@ function oninitialload ()
 					writer.WriteLine ("<a href='{0}' type='text/plain'>{1}</a><br />", log.FullPath.Substring (LogDirectory.Length + 1), log.Description);
 
 				var headerColor = "black";
-				if (failedTests.Any ()) {
+				if (unfinishedTests.Any ()) {
+					; // default
+				} else if (failedTests.Any ()) {
 					headerColor = "red";
 				} else if (passedTests.Any ()) {
 					headerColor = "green";
@@ -1379,11 +1400,12 @@ function oninitialload ()
 					headerColor = "gray";
 				}
 
+				writer.Write ($"<h2 style='color: {headerColor}'>");
 				writer.Write ($"<span id='x{id_counter++}' class='autorefreshable'>");
 				if (allTasks.Count == 0) {
-					writer.Write ($"<h2 style='color: {headerColor}'>Loading tests...");
+					writer.Write ($"Loading tests...");
 				} else if (unfinishedTests.Any ()) {
-					writer.Write ($"<h2>Test run in progress (");
+					writer.Write ($"Test run in progress (");
 					var list = new List<string> ();
 					var grouped = allTasks.GroupBy ((v) => v.ExecutionResult).OrderBy ((v) => (int) v.Key);
 					foreach (var @group in grouped)
@@ -1391,16 +1413,18 @@ function oninitialload ()
 					writer.Write (string.Join (", ", list));
 					writer.Write (")");
 				} else if (failedTests.Any ()) {
-					writer.Write ($"<h2 style='color: {headerColor}'>{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed.");
+					writer.Write ($"{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed.");
 				} else if (passedTests.Any ()) {
-					writer.Write ($"<h2 style='color: {headerColor}'>All {passedTests.Count ()} tests passed");
+					writer.Write ($"All {passedTests.Count ()} tests passed");
 				} else {
-					writer.Write ($"<h2 style='color: {headerColor}'>No tests selected.");
+					writer.Write ($"No tests selected.");
 				}
+				writer.WriteLine ("</span>");
+				writer.WriteLine ("</h2>");
 				if (IsServerMode && allTasks.Count > 0) {
-					writer.WriteLine (@"</h2></span>
+					writer.WriteLine (@"
 <ul id='nav'>
-	<li id=""adminmenu"">Select
+	<li>Select
 		<ul>
 			<li class=""adminitem""><a href='javascript:sendrequest (""select?all"");'>All tests</a></li>
 			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-device"");'>All device tests</a></li>
@@ -1411,7 +1435,7 @@ function oninitialload ()
 			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-mac"");'>All Mac tests</a></li>
 		</ul>
 	</li>
-	<li id=""adminmenu"">Deselect
+	<li>Deselect
 		<ul>
 			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all"");'>All tests</a></li>
 			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-device"");'>All device tests</a></li>
@@ -1422,16 +1446,20 @@ function oninitialload ()
 			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-mac"");'>All Mac tests</a></li>
 		</ul>
 	</li>
-	<li id=""adminmenu"">Run
+	<li>Run
 		<ul>
 			<li class=""adminitem""><a href='javascript:runalltests ();'>All tests</a></li>
 			<li class=""adminitem""><a href='javascript:sendrequest (""runselected"");'>All selected tests</a></li>
 			<li class=""adminitem""><a href='javascript:sendrequest (""runfailed"");'>All failed tests</a></li>
 		</ul>
 	</li>
+	<li>Toggle visibility
+		<ul>
+			<li class=""adminitem""><a href='javascript:toggleVisibility (""toggleable-ignored"");'>Ignored tests</a></li>
+		</ul>
+	</li>
 </ul>");
 				}
-				writer.WriteLine ("</h2></span>");
 
 				writer.WriteLine ("<div id='test-table' style='width: 100%'>");
 				if (IsServerMode) {
@@ -1518,9 +1546,10 @@ function oninitialload ()
 					// Test header for multiple tests
 					if (!singleTask) {
 						var autoExpand = !IsServerMode && group.Any ((v) => v.Failed);
+						var ignoredClass = group.All ((v) => v.Ignored) ? "toggleable-ignored" : string.Empty;
 						var defaultExpander = autoExpand ? "-" : "+";
 						var defaultDisplay = autoExpand ? "block" : "none";
-						writer.Write ($"<div class='pdiv'>");
+						writer.Write ($"<div class='pdiv {ignoredClass}'>");
 						writer.Write ($"<span id='button_container2_{groupId}' class='expander' onclick='javascript: toggleContainerVisibility2 (\"{groupId}\");'>{defaultExpander}</span>");
 						writer.Write ($"<span id='x{id_counter++}' class='p1 autorefreshable' onclick='javascript: toggleContainerVisibility2 (\"{groupId}\");'>{group.Key}{RenderTextStates (group)}</span>");
 						if (IsServerMode)
@@ -1536,9 +1565,10 @@ function oninitialload ()
 						if (multipleModes) {
 							var modeGroupId = id_counter++.ToString ();
 							var autoExpand = !IsServerMode && modeGroup.Any ((v) => v.Failed);
+							var ignoredClass = modeGroup.All ((v) => v.Ignored) ? "toggleable-ignored" : string.Empty;
 							var defaultExpander = autoExpand ? "-" : "+";
 							var defaultDisplay = autoExpand ? "block" : "none";
-							writer.Write ($"<div class='pdiv'>");
+							writer.Write ($"<div class='pdiv {ignoredClass}'>");
 							writer.Write ($"<span id='button_container2_{modeGroupId}' class='expander' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>{defaultExpander}</span>");
 							writer.Write ($"<span id='x{id_counter++}' class='p2 autorefreshable' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>{modeGroup.Key}{RenderTextStates (modeGroup)}</span>");
 							writer.Write ($" <span><a class='runall' href='javascript: runtest (\"{string.Join (",", modeGroup.Select ((v) => v.ID.ToString ()))}\");'>Run all</a></span>");
@@ -1562,10 +1592,11 @@ function oninitialload ()
 							}
 
 							var autoExpand = !IsServerMode && test.Failed;
+							var ignoredClass = test.Ignored ? "toggleable-ignored" : string.Empty;
 							var defaultExpander = autoExpand ? "&nbsp;" : "+";
 							var defaultDisplay = autoExpand ? "block" : "none";
 
-							writer.Write ($"<div class='pdiv'>");
+							writer.Write ($"<div class='pdiv {ignoredClass}'>");
 							writer.Write ($"<span id='button_{log_id}' class='expander' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{defaultExpander}</span>");
 							writer.Write ($"<span id='x{id_counter++}' class='p3 autorefreshable' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{title} (<span style='color: {GetTestColor (test)}'>{state}</span>) </span>");
 							if (IsServerMode && !test.InProgress && !test.Waiting)

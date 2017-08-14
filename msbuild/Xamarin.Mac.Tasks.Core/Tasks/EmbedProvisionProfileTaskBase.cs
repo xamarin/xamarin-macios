@@ -26,10 +26,6 @@ namespace Xamarin.Mac.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("EmbedProvisionProfile");
-			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
-			Log.LogTaskProperty ("ProvisioningProfile", ProvisioningProfile);
-
 			var profile = MobileProvisionIndex.GetMobileProvision (MobileProvisionPlatform.MacOS, ProvisioningProfile);
 
 			if (profile == null) {

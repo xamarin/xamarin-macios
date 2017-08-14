@@ -369,11 +369,6 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("ValidateAppBundle");
-			Log.LogTaskProperty ("AppBundlePath", Path.GetFullPath (AppBundlePath));
-			Log.LogTaskProperty ("SdkIsSimulator", SdkIsSimulator);
-			Log.LogTaskProperty ("TargetFrameworkIdentifier", TargetFrameworkIdentifier);
-
 			var mainInfoPath = Path.Combine (AppBundlePath, "Info.plist");
 			if (!File.Exists (mainInfoPath)) {
 				Log.MTError (7040, $"The app bundle {AppBundlePath} does not contain an Info.plist.");

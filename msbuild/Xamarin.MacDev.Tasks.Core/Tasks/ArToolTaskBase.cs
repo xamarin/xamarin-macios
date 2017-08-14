@@ -57,10 +57,6 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("ArTool");
-			Log.LogTaskProperty ("Archive", Archive);
-			Log.LogTaskProperty ("Items", Items);
-
 			var dir = Path.GetDirectoryName (Archive.ItemSpec);
 
 			if (!Directory.Exists (dir))

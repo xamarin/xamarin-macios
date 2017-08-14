@@ -30,9 +30,6 @@ namespace Xamarin.iOS.Tasks
 		{
 			var frameworks = new List<ITaskItem> ();
 
-			Log.LogTaskName ("CollectFrameworks");
-			Log.LogTaskProperty ("AppBundlePath", AppBundlePath);
-
 			var fwDir = Path.Combine (AppBundlePath, "Frameworks");
 			if (Directory.Exists (fwDir)) {
 				foreach (var fw in Directory.GetDirectories (fwDir)) {

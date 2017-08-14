@@ -47,10 +47,6 @@ namespace Xamarin.MacDev.Tasks
 		{
 			var results = new List<ITaskItem> ();
 
-			Log.LogTaskName ("PackLibraryResources");
-			Log.LogTaskProperty ("BundleResourcesWithLogicalNames", BundleResourcesWithLogicalNames);
-			Log.LogTaskProperty ("Prefix", Prefix);
-
 			if (BundleResourcesWithLogicalNames != null) {
 				foreach (var item in BundleResourcesWithLogicalNames) {
 					var logicalName = item.GetMetadata ("LogicalName");

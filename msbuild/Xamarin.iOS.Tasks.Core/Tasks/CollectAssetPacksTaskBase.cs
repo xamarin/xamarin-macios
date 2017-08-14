@@ -29,9 +29,6 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("CollectAssetPacks");
-			Log.LogTaskProperty ("OnDemandResourcesPath", OnDemandResourcesPath);
-
 			var assetpacks = new List<ITaskItem> ();
 
 			foreach (var dir in Directory.EnumerateDirectories (OnDemandResourcesPath, "*.assetpack")) {

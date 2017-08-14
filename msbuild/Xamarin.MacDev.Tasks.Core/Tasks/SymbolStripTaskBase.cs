@@ -62,15 +62,5 @@ namespace Xamarin.MacDev.Tasks
 			// TODO: do proper parsing of error messages and such
 			Log.LogMessage (messageImportance, "{0}", singleLine);
 		}
-
-		public override bool Execute ()
-		{
-			Log.LogTaskName ("SymbolStrip");
-			Log.LogTaskProperty ("Executable", Executable);
-			Log.LogTaskProperty ("IsFramework", IsFramework);
-			Log.LogTaskProperty ("SymbolFile", SymbolFile);
-
-			return base.Execute ();
-		}
 	}
 }

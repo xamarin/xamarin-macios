@@ -253,30 +253,6 @@ namespace Xamarin.MacDev.Tasks {
 				Directory.CreateDirectory (GeneratedSourcesDir);
 			}
 
-			Log.LogTaskName ("BTouch");
-			Log.LogTaskProperty ("BTouchToolPath", BTouchToolPath);
-			Log.LogTaskProperty ("BTouchToolExe", BTouchToolExe);
-			Log.LogTaskProperty ("AdditionalLibPaths", AdditionalLibPaths);
-			Log.LogTaskProperty ("AllowUnsafeBlocks", AllowUnsafeBlocks);
-			Log.LogTaskProperty ("ApiDefinitions", ApiDefinitions);
-			Log.LogTaskProperty ("BaseLibDll", BaseLibDll);
-			Log.LogTaskProperty ("CompilerPath", CompilerPath);
-			Log.LogTaskProperty ("CoreSources", CoreSources);
-			Log.LogTaskProperty ("DefineConstants", DefineConstants);
-			Log.LogTaskProperty ("EmitDebugInformation", EmitDebugInformation);
-			Log.LogTaskProperty ("ExtraArgs", ExtraArgs);
-			Log.LogTaskProperty ("GeneratedSourcesDir", GeneratedSourcesDir);
-			Log.LogTaskProperty ("GeneratedSourcesFileList", GeneratedSourcesFileList);
-			Log.LogTaskProperty ("Namespace", Namespace);
-			Log.LogTaskProperty ("NativeLibraries", NativeLibraries);
-			Log.LogTaskProperty ("NoStdLib", NoStdLib);
-			Log.LogTaskProperty ("OutputAssembly", OutputAssembly);
-			Log.LogTaskProperty ("ProcessEnums", ProcessEnums);
-			Log.LogTaskProperty ("ProjectDir", ProjectDir);
-			Log.LogTaskProperty ("References", References);
-			Log.LogTaskProperty ("Resources", Resources);
-			Log.LogTaskProperty ("Sources", Sources);
-
 			if (ApiDefinitions.Length == 0) {
 				Log.LogError ("No API definition file specified.");
 				return false;
