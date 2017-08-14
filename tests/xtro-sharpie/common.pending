@@ -25,6 +25,10 @@
 !missing-selector! +NSPersistentStoreCoordinator::setMetadata:forPersistentStoreOfType:URL:options:error: not bound
 !missing-selector! +NSMappingModel::inferredMappingModelForSourceModel:destinationModel:error: not bound
 
+## https://trello.com/c/dlSRYPFx/92-33878590-missing-nsbinarystoresecuredecodingclasses-and-nsbinarystoreinsecuredecodingcompatibilityoption-constants-in-binaries
+!missing-field! NSBinaryStoreSecureDecodingClasses not bound
+!missing-field! NSBinaryStoreInsecureDecodingCompatibilityOption not bound
+
 
 # CoreGraphics
 
