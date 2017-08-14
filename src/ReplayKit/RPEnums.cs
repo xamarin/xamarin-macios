@@ -27,6 +27,10 @@ namespace XamCore.ReplayKit {
 		ContentResize = -5807,
 		BroadcastInvalidSession = -5808,
 		SystemDormancy = -5809,
+		Entitlements = -5810,
+		ActivePhoneCall = -5811,
+		FailedToSave = -5812,
+		CarPlay = -5813,
 	}
 
 	[NoiOS]
@@ -44,5 +48,13 @@ namespace XamCore.ReplayKit {
 		Video = 1,
 		AudioApp,
 		AudioMic
+	}
+
+	[Native]
+	[iOS (11,0)]
+	[NoTV]
+	public enum RPCameraPosition : nint {
+		Front = 1,
+		Back,
 	}
 }
