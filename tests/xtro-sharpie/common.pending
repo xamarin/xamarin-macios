@@ -61,6 +61,12 @@
 !missing-field! PHLivePhotoShouldRenderAtPlaybackTime not bound
 
 
+# ReplayKit
+
+## https://trello.com/c/eA440suj/91-33875315-rpbroadcasthandler-updatebroadcasturl-unrecognized-selector
+!missing-selector! RPBroadcastHandler::updateBroadcastURL: not bound
+
+
 # SpriteKit
 
 ## Deprecated in iOS 10

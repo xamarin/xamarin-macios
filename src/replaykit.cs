@@ -272,9 +272,11 @@ namespace XamCore.ReplayKit {
 		[Export ("updateServiceInfo:")]
 		void UpdateServiceInfo (NSDictionary<NSString, INSCoding> serviceInfo);
 
-		[TV (11,0)][iOS (11,0)]
-		[Export ("updateBroadcastURL:")]
-		void UpdateBroadcastUrl (NSUrl broadcastUrl);
+		// NSInvalidArgumentException -[RPBroadcastHandler updateBroadcastURL:]: unrecognized selector sent to instance 0x608001a4b160
+		//	https://trello.com/c/eA440suj/91-33875315-rpbroadcasthandler-updatebroadcasturl-unrecognized-selector
+		//[TV (11,0)][iOS (11,0)]
+		//[Export ("updateBroadcastURL:")]
+		//void UpdateBroadcastUrl (NSUrl broadcastUrl);
 	}
 
 	[iOS (10,0)]
