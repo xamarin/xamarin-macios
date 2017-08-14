@@ -641,7 +641,6 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = true };
 				var output = TI.TestUnifiedExecutable (test);
-				Console.WriteLine (output.BuildOutput);
 				Assert.That (output.BuildOutput, Contains.Substring ("Selected target framework: .NETFramework,Version=v4.5; API: Unified"));
 			});
 		}
