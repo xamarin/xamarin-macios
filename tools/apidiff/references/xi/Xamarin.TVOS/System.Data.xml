@@ -79,6 +79,7 @@
           <property name="CompilationRelaxations" value="8" />
         </properties>
       </attribute>
+      <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
       <attribute name="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
         <properties>
           <property name="AssemblyName" value="System.Data.DataSetExtensions, PublicKey=0024000004800000940000000602000000240000525341310004000001000100B5FC90E7027F67871E773A8FDE8938C81DD402BA65B9201D60593E96C492651E889CC13F1415EBB53FAC1131AE0BD333C5EE6021672D9718EA31A8AEBD0DA0072F25D87DBA6FC90FFD598ED4DA35E44C398C454307E8E33B8426143DAEC9F596836F97C8F74750E5975C64E2189F45DEF46B2A2B1247ADC3652BF5C308055DA9" />
@@ -12280,6 +12281,29 @@
               </method>
             </methods>
           </class>
+          <class name="DbDataReaderExtensions" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+            </attributes>
+            <methods>
+              <method name="CanGetColumnSchema(System.Data.Common.DbDataReader)" attrib="150" static="true" returntype="System.Boolean">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="reader" position="0" attrib="0" type="System.Data.Common.DbDataReader" direction="this" />
+                </parameters>
+              </method>
+              <method name="GetColumnSchema(System.Data.Common.DbDataReader)" attrib="150" static="true" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Data.Common.DbColumn]">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="reader" position="0" attrib="0" type="System.Data.Common.DbDataReader" direction="this" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
           <class name="DbDataRecord" type="class" base="System.Object" abstract="true" charset="Ansi" layout="Auto">
             <attributes>
               <attribute name="System.Reflection.DefaultMemberAttribute">
@@ -13882,11 +13906,65 @@
                   <parameter name="reader" position="0" attrib="0" type="System.Data.Common.DbDataReader" />
                 </parameters>
               </method>
+              <method name="WriteToServerAsync(System.Data.DataRow[])" attrib="134" returntype="System.Threading.Tasks.Task">
+                <attributes />
+                <parameters>
+                  <parameter name="rows" position="0" attrib="0" type="System.Data.DataRow[]" />
+                </parameters>
+              </method>
+              <method name="WriteToServerAsync(System.Data.DataTable)" attrib="134" returntype="System.Threading.Tasks.Task">
+                <attributes />
+                <parameters>
+                  <parameter name="table" position="0" attrib="0" type="System.Data.DataTable" />
+                </parameters>
+              </method>
+              <method name="WriteToServerAsync(System.Data.IDataReader)" attrib="134" returntype="System.Threading.Tasks.Task">
+                <attributes />
+                <parameters>
+                  <parameter name="reader" position="0" attrib="0" type="System.Data.IDataReader" />
+                </parameters>
+              </method>
               <method name="WriteToServerAsync(System.Data.Common.DbDataReader, System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task">
                 <attributes />
                 <parameters>
                   <parameter name="reader" position="0" attrib="0" type="System.Data.Common.DbDataReader" />
                   <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
+              <method name="WriteToServerAsync(System.Data.DataRow[], System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task">
+                <attributes />
+                <parameters>
+                  <parameter name="rows" position="0" attrib="0" type="System.Data.DataRow[]" />
+                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
+              <method name="WriteToServerAsync(System.Data.DataTable, System.Data.DataRowState)" attrib="134" returntype="System.Threading.Tasks.Task">
+                <attributes />
+                <parameters>
+                  <parameter name="table" position="0" attrib="0" type="System.Data.DataTable" />
+                  <parameter name="rowState" position="1" attrib="0" type="System.Data.DataRowState" />
+                </parameters>
+              </method>
+              <method name="WriteToServerAsync(System.Data.DataTable, System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task">
+                <attributes />
+                <parameters>
+                  <parameter name="table" position="0" attrib="0" type="System.Data.DataTable" />
+                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
+              <method name="WriteToServerAsync(System.Data.IDataReader, System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task">
+                <attributes />
+                <parameters>
+                  <parameter name="reader" position="0" attrib="0" type="System.Data.IDataReader" />
+                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
+              <method name="WriteToServerAsync(System.Data.DataTable, System.Data.DataRowState, System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task">
+                <attributes />
+                <parameters>
+                  <parameter name="table" position="0" attrib="0" type="System.Data.DataTable" />
+                  <parameter name="rowState" position="1" attrib="0" type="System.Data.DataRowState" />
+                  <parameter name="cancellationToken" position="2" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
               </method>
             </methods>
@@ -14954,7 +15032,7 @@
               <constructor name=".ctor(System.String, System.Data.SqlClient.SqlCredential)" attrib="6278">
                 <parameters>
                   <parameter name="connectionString" position="0" attrib="0" type="System.String" />
-                  <parameter name="cred" position="1" attrib="0" type="System.Data.SqlClient.SqlCredential" />
+                  <parameter name="credential" position="1" attrib="0" type="System.Data.SqlClient.SqlCredential" />
                 </parameters>
               </constructor>
             </constructors>
@@ -16303,7 +16381,7 @@
             <constructors>
               <constructor name=".ctor(System.String, System.Security.SecureString)" attrib="6278">
                 <parameters>
-                  <parameter name="user" position="0" attrib="0" type="System.String" />
+                  <parameter name="userId" position="0" attrib="0" type="System.String" />
                   <parameter name="password" position="1" attrib="0" type="System.Security.SecureString" />
                 </parameters>
               </constructor>
@@ -17101,11 +17179,6 @@
           </class>
           <class name="SqlErrorCollection" type="class" base="System.Object" sealed="true" serializable="true" charset="Ansi" layout="Auto">
             <attributes>
-              <attribute name="System.ComponentModel.ListBindableAttribute">
-                <properties>
-                  <property name="ListBindable" value="False" />
-                </properties>
-              </attribute>
               <attribute name="System.Reflection.DefaultMemberAttribute">
                 <properties>
                   <property name="MemberName" value="Item" />
