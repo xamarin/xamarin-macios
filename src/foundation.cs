@@ -159,6 +159,16 @@ namespace XamCore.Foundation
 
 		[Export ("removeObserver:fromObjectsAtIndexes:forKeyPath:")]
 		void RemoveObserver (NSObject observer, NSIndexSet indexes, string keyPath);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("writeToURL:error:")]
+		bool Write (NSUrl url, out NSError error);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("arrayWithContentsOfURL:error:")]
+		[return: NullAllowed]
+		NSArray FromUrl (NSUrl url, out NSError error);
 	}
 
 #if MONOMAC
@@ -240,16 +250,31 @@ namespace XamCore.Foundation
 		[Wrap ("this (data, options == null ? null : options.Dictionary, out resultDocumentAttributes, ref error)")]
 		IntPtr Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 
-		// From the NSItemProviderReading protocol, a special constructor.
-		[Export ("initWithItemProviderData:typeIdentifier:error:")]
-		[iOS (11,0), NoWatch, NoTV, Mac(10,13)]
-		IntPtr Constructor (NSData providerData, string typeIdentifier, out NSError outError);
-
 		// From the NSItemProviderReading protocol, a static method.
 		[Static]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		[iOS (11,0), NoWatch, NoTV, Mac(10,13)]
 		string[] ReadableTypeIdentifiersForItemProvider { get; }
+
+#if !TVOS && !WATCHOS
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
+		[return: NullAllowed]
+		NSAttributedString FromItemProviderData (NSData itemProviderData, string typeIdentifier, [NullAllowed] out NSError outError);
+#endif
+
+		// From the NSItemProviderWriting protocol, a static method.
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] WritableTypeIdentifiers { get; }
+
+		// From the NSItemProviderWriting protocol, a static method.
+		[NoWatch, NoTV, Mac (10,13), NoiOS]
+		[Static]
+		[Export ("itemProviderVisibilityForRepresentationWithTypeIdentifier:")]
+		NSItemProviderRepresentationVisibility GetItemProviderVisibility (string typeIdentifier);
 		
 		[Since (7,0)]
 		[Export ("dataFromRange:documentAttributes:error:")]
@@ -1729,7 +1754,11 @@ namespace XamCore.Foundation
 
 		[iOS (8,0), Mac (10,10)]
 		[Export ("setLocalizedDateFormatFromTemplate:")]
-		void SetLocalizedDateFormatFromTemplate (string dateFormatTemplate);		
+		void SetLocalizedDateFormatFromTemplate (string dateFormatTemplate);
+
+		[Watch (2, 0), TV (9, 0), Mac (10, 10), iOS (8, 0)]
+		[Export ("formattingContext", ArgumentSemantic.Assign)]
+		NSFormattingContext FormattingContext { get; set; }
 	}
 
 	[iOS (8,0)][Mac(10,10)]
@@ -1782,6 +1811,10 @@ namespace XamCore.Foundation
 
 		[Export ("getObjectValue:forString:errorDescription:")]
 		bool GetObjectValue (out NSObject obj, string str, out string error);
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NullAllowed, Export ("referenceDate", ArgumentSemantic.Copy)]
+		NSDate ReferenceDate { get; set; }
 	}
 
 	[iOS (8,0)][Mac(10,10)]
@@ -2571,6 +2604,620 @@ namespace XamCore.Foundation
 		[iOS(8,0),Mac(10,10)]
 		[Field ("NSMetadataUbiquitousItemURLInLocalContainerKey")]
 		NSString UbiquitousItemURLInLocalContainerKey { get; }
+
+#if MONOMAC
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemKeywordsKey")]
+		NSString KeywordsKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemTitleKey")]
+		NSString TitleKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemAuthorsKey")]
+		NSString AuthorsKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemEditorsKey")]
+		NSString EditorsKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemParticipantsKey")]
+		NSString ParticipantsKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemProjectsKey")]
+		NSString ProjectsKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemDownloadedDateKey")]
+		NSString DownloadedDateKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemWhereFromsKey")]
+		NSString WhereFromsKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemCommentKey")]
+		NSString CommentKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemCopyrightKey")]
+		NSString CopyrightKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemLastUsedDateKey")]
+		NSString LastUsedDateKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemContentCreationDateKey")]
+		NSString ContentCreationDateKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemContentModificationDateKey")]
+		NSString ContentModificationDateKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemDateAddedKey")]
+		NSString DateAddedKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemDurationSecondsKey")]
+		NSString DurationSecondsKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemContactKeywordsKey")]
+		NSString ContactKeywordsKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemVersionKey")]
+		NSString VersionKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemPixelHeightKey")]
+		NSString PixelHeightKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemPixelWidthKey")]
+		NSString PixelWidthKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemPixelCountKey")]
+		NSString PixelCountKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemColorSpaceKey")]
+		NSString ColorSpaceKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemBitsPerSampleKey")]
+		NSString BitsPerSampleKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemFlashOnOffKey")]
+		NSString FlashOnOffKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemFocalLengthKey")]
+		NSString FocalLengthKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemAcquisitionMakeKey")]
+		NSString AcquisitionMakeKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemAcquisitionModelKey")]
+		NSString AcquisitionModelKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemISOSpeedKey")]
+		NSString IsoSpeedKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemOrientationKey")]
+		NSString OrientationKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemLayerNamesKey")]
+		NSString LayerNamesKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemWhiteBalanceKey")]
+		NSString WhiteBalanceKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemApertureKey")]
+		NSString ApertureKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemProfileNameKey")]
+		NSString ProfileNameKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemResolutionWidthDPIKey")]
+		NSString ResolutionWidthDpiKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemResolutionHeightDPIKey")]
+		NSString ResolutionHeightDpiKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemExposureModeKey")]
+		NSString ExposureModeKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemExposureTimeSecondsKey")]
+		NSString ExposureTimeSecondsKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemEXIFVersionKey")]
+		NSString ExifVersionKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemCameraOwnerKey")]
+		NSString CameraOwnerKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemFocalLength35mmKey")]
+		NSString FocalLength35mmKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemLensModelKey")]
+		NSString LensModelKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemEXIFGPSVersionKey")]
+		NSString ExifGpsVersionKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemAltitudeKey")]
+		NSString AltitudeKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemLatitudeKey")]
+		NSString LatitudeKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemLongitudeKey")]
+		NSString LongitudeKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemSpeedKey")]
+		NSString SpeedKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemTimestampKey")]
+		NSString TimestampKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemGPSTrackKey")]
+		NSString GpsTrackKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemImageDirectionKey")]
+		NSString ImageDirectionKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemNamedLocationKey")]
+		NSString NamedLocationKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemGPSStatusKey")]
+		NSString GpsStatusKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemGPSMeasureModeKey")]
+		NSString GpsMeasureModeKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemGPSDOPKey")]
+		NSString GpsDopKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemGPSMapDatumKey")]
+		NSString GpsMapDatumKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemGPSDestLatitudeKey")]
+		NSString GpsDestLatitudeKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemGPSDestLongitudeKey")]
+		NSString GpsDestLongitudeKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemGPSDestBearingKey")]
+		NSString GpsDestBearingKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemGPSDestDistanceKey")]
+		NSString GpsDestDistanceKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemGPSProcessingMethodKey")]
+		NSString GpsProcessingMethodKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemGPSAreaInformationKey")]
+		NSString GpsAreaInformationKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemGPSDateStampKey")]
+		NSString GpsDateStampKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemGPSDifferentalKey")]
+		NSString GpsDifferentalKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemCodecsKey")]
+		NSString CodecsKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemMediaTypesKey")]
+		NSString MediaTypesKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemStreamableKey")]
+		NSString StreamableKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemTotalBitRateKey")]
+		NSString TotalBitRateKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemVideoBitRateKey")]
+		NSString VideoBitRateKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemAudioBitRateKey")]
+		NSString AudioBitRateKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemDeliveryTypeKey")]
+		NSString DeliveryTypeKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemAlbumKey")]
+		NSString AlbumKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemHasAlphaChannelKey")]
+		NSString HasAlphaChannelKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemRedEyeOnOffKey")]
+		NSString RedEyeOnOffKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemMeteringModeKey")]
+		NSString MeteringModeKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemMaxApertureKey")]
+		NSString MaxApertureKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemFNumberKey")]
+		NSString FNumberKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemExposureProgramKey")]
+		NSString ExposureProgramKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemExposureTimeStringKey")]
+		NSString ExposureTimeStringKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemHeadlineKey")]
+		NSString HeadlineKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemInstructionsKey")]
+		NSString InstructionsKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemCityKey")]
+		NSString CityKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemStateOrProvinceKey")]
+		NSString StateOrProvinceKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemCountryKey")]
+		NSString CountryKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemTextContentKey")]
+		NSString TextContentKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemAudioSampleRateKey")]
+		NSString AudioSampleRateKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemAudioChannelCountKey")]
+		NSString AudioChannelCountKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemTempoKey")]
+		NSString TempoKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemKeySignatureKey")]
+		NSString KeySignatureKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemTimeSignatureKey")]
+		NSString TimeSignatureKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemAudioEncodingApplicationKey")]
+		NSString AudioEncodingApplicationKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemComposerKey")]
+		NSString ComposerKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemLyricistKey")]
+		NSString LyricistKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemAudioTrackNumberKey")]
+		NSString AudioTrackNumberKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemRecordingDateKey")]
+		NSString RecordingDateKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemMusicalGenreKey")]
+		NSString MusicalGenreKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemIsGeneralMIDISequenceKey")]
+		NSString IsGeneralMidiSequenceKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemRecordingYearKey")]
+		NSString RecordingYearKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemOrganizationsKey")]
+		NSString OrganizationsKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemLanguagesKey")]
+		NSString LanguagesKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemRightsKey")]
+		NSString RightsKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemPublishersKey")]
+		NSString PublishersKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemContributorsKey")]
+		NSString ContributorsKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemCoverageKey")]
+		NSString CoverageKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemSubjectKey")]
+		NSString SubjectKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemThemeKey")]
+		NSString ThemeKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemDescriptionKey")]
+		NSString DescriptionKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemIdentifierKey")]
+		NSString IdentifierKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemAudiencesKey")]
+		NSString AudiencesKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemNumberOfPagesKey")]
+		NSString NumberOfPagesKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemPageWidthKey")]
+		NSString PageWidthKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemPageHeightKey")]
+		NSString PageHeightKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemSecurityMethodKey")]
+		NSString SecurityMethodKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemCreatorKey")]
+		NSString CreatorKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemEncodingApplicationsKey")]
+		NSString EncodingApplicationsKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemDueDateKey")]
+		NSString DueDateKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemStarRatingKey")]
+		NSString StarRatingKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemPhoneNumbersKey")]
+		NSString PhoneNumbersKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemEmailAddressesKey")]
+		NSString EmailAddressesKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemInstantMessageAddressesKey")]
+		NSString InstantMessageAddressesKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemKindKey")]
+		NSString KindKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemRecipientsKey")]
+		NSString RecipientsKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemFinderCommentKey")]
+		NSString FinderCommentKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemFontsKey")]
+		NSString FontsKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemAppleLoopsRootKeyKey")]
+		NSString AppleLoopsRootKeyKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemAppleLoopsKeyFilterTypeKey")]
+		NSString AppleLoopsKeyFilterTypeKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemAppleLoopsLoopModeKey")]
+		NSString AppleLoopsLoopModeKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemAppleLoopDescriptorsKey")]
+		NSString AppleLoopDescriptorsKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemMusicalInstrumentCategoryKey")]
+		NSString MusicalInstrumentCategoryKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemMusicalInstrumentNameKey")]
+		NSString MusicalInstrumentNameKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemCFBundleIdentifierKey")]
+		NSString CFBundleIdentifierKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemInformationKey")]
+		NSString InformationKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemDirectorKey")]
+		NSString DirectorKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemProducerKey")]
+		NSString ProducerKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemGenreKey")]
+		NSString GenreKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemPerformersKey")]
+		NSString PerformersKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemOriginalFormatKey")]
+		NSString OriginalFormatKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemOriginalSourceKey")]
+		NSString OriginalSourceKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemAuthorEmailAddressesKey")]
+		NSString AuthorEmailAddressesKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemRecipientEmailAddressesKey")]
+		NSString RecipientEmailAddressesKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemAuthorAddressesKey")]
+		NSString AuthorAddressesKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemRecipientAddressesKey")]
+		NSString RecipientAddressesKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemIsLikelyJunkKey")]
+		NSString IsLikelyJunkKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemExecutableArchitecturesKey")]
+		NSString ExecutableArchitecturesKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemExecutablePlatformKey")]
+		NSString ExecutablePlatformKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemApplicationCategoriesKey")]
+		NSString ApplicationCategoriesKey { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[Field ("NSMetadataItemIsApplicationManagedKey")]
+		NSString IsApplicationManagedKey { get; }
+#endif
+
+		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
+		[Field ("NSMetadataUbiquitousItemIsSharedKey")]
+		NSString UbiquitousItemIsSharedKey { get; }
+
+		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
+		[Field ("NSMetadataUbiquitousSharedItemCurrentUserRoleKey")]
+		NSString UbiquitousSharedItemCurrentUserRoleKey { get; }
+
+		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
+		[Field ("NSMetadataUbiquitousSharedItemCurrentUserPermissionsKey")]
+		NSString UbiquitousSharedItemCurrentUserPermissionsKey { get; }
+
+		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
+		[Field ("NSMetadataUbiquitousSharedItemOwnerNameComponentsKey")]
+		NSString UbiquitousSharedItemOwnerNameComponentsKey { get; }
+
+		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
+		[Field ("NSMetadataUbiquitousSharedItemMostRecentEditorNameComponentsKey")]
+		NSString UbiquitousSharedItemMostRecentEditorNameComponentsKey { get; }
+
+		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
+		[Field ("NSMetadataUbiquitousSharedItemRoleOwner")]
+		NSString UbiquitousSharedItemRoleOwner { get; }
+
+		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
+		[Field ("NSMetadataUbiquitousSharedItemRoleParticipant")]
+		NSString UbiquitousSharedItemRoleParticipant { get; }
+
+		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
+		[Field ("NSMetadataUbiquitousSharedItemPermissionsReadOnly")]
+		NSString UbiquitousSharedItemPermissionsReadOnly { get; }
+
+		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
+		[Field ("NSMetadataUbiquitousSharedItemPermissionsReadWrite")]
+		NSString UbiquitousSharedItemPermissionsReadWrite { get; }
 		
 		[Since (7,0), Mavericks]
 		[NullAllowed] // by default this property is null
@@ -2978,6 +3625,16 @@ namespace XamCore.Foundation
 
 		[Export ("initWithContentsOfURL:")]
 		IntPtr Constructor (NSUrl url);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("initWithContentsOfURL:error:")]
+		IntPtr Constructor (NSUrl url, out NSError error);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("dictionaryWithContentsOfURL:error:")]
+		[return: NullAllowed]
+		NSDictionary<NSString, NSObject> FromUrl (NSUrl url, out NSError error);
 		
 		[Export ("count")]
 		nuint Count { get; }
@@ -3172,6 +3829,14 @@ namespace XamCore.Foundation
 
 		[Field ("NSFilePathErrorKey")]
 		NSString FilePathErrorKey { get; }
+
+		[iOS (9,0)][Mac (10,11)]
+		[Field ("NSDebugDescriptionErrorKey")]
+		NSString DebugDescriptionErrorKey { get; }
+
+		[iOS (11,0), Mac (10,13), Watch (4,0), TV (11,0)]
+		[Field ("NSLocalizedFailureErrorKey")]
+		NSString LocalizedFailureErrorKey { get; }
 
 		[iOS (9,0)][Mac (10,11)]
 		[Static]
@@ -3518,7 +4183,57 @@ namespace XamCore.Foundation
 		[NullAllowed] // by default this property is null
 		[Export ("string", ArgumentSemantic.Retain)]
 		string AnalysisString { get; set; }
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("tagsInRange:unit:scheme:options:tokenRanges:")]
+		string[] GetTags (NSRange range, NSLinguisticTaggerUnit unit, string scheme, NSLinguisticTaggerOptions options, [NullAllowed] out NSValue[] tokenRanges);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("enumerateTagsInRange:unit:scheme:options:usingBlock:")]
+		void EnumerateTags (NSRange range, NSLinguisticTaggerUnit unit, string scheme, NSLinguisticTaggerOptions options, LinguisticTagEnumerator enumerator);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("tagAtIndex:unit:scheme:tokenRange:")]
+		[return: NullAllowed]
+		string GetTag (nuint charIndex, NSLinguisticTaggerUnit unit, string scheme, [NullAllowed] ref NSRange tokenRange);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("tokenRangeAtIndex:unit:")]
+		NSRange GetTokenRange (nuint charIndex, NSLinguisticTaggerUnit unit);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("availableTagSchemesForUnit:language:")]
+		string[] GetAvailableTagSchemes (NSLinguisticTaggerUnit unit, string language);
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NullAllowed, Export ("dominantLanguage")]
+		string DominantLanguage { get; }
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("dominantLanguageForString:")]
+		[return: NullAllowed]
+		string GetDominantLanguage (string str);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("tagForString:atIndex:unit:scheme:orthography:tokenRange:")]
+		[return: NullAllowed]
+		string GetTag (string str, nuint charIndex, NSLinguisticTaggerUnit unit, string scheme, [NullAllowed] NSOrthography orthography, [NullAllowed] ref NSRange tokenRange);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("tagsForString:range:unit:scheme:options:orthography:tokenRanges:")]
+		string[] GetTags (string str, NSRange range, NSLinguisticTaggerUnit unit, string scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, [NullAllowed] out NSValue[] tokenRanges);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("enumerateTagsForString:range:unit:scheme:options:orthography:usingBlock:")]
+		void EnumerateTags (string str, NSRange range, NSLinguisticTaggerUnit unit, string scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, LinguisticTagEnumerator enumerator);
 	}
+
+	delegate void LinguisticTagEnumerator (string tag, NSRange tokenRange, bool stop);
 
 	[Since (5,0)]
 	[Static]
@@ -3903,6 +4618,7 @@ namespace XamCore.Foundation
 		[Field ("NSRunLoopCommonModes")]
 		NSString NSRunLoopCommonModes { get; }
 
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSXpcConnection' instead.")]
 		[NoiOS, NoWatch, NoTV]
 		[Field ("NSConnectionReplyMode")]
 		NSString NSRunLoopConnectionReplyMode { get; }
@@ -4301,7 +5017,7 @@ namespace XamCore.Foundation
 		string AsString ();
 	}
 
-	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // .objc_class_name_NSUserActivity", referenced from '' not found
+	[iOS (8,0)][Mac (10,10, onlyOn64 : true), Watch (2,0), TV (9,0)] // .objc_class_name_NSUserActivity", referenced from '' not found
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // xcode 8 beta 4 marks it as API_DEPRECATED
 	partial interface NSUserActivity {
@@ -4354,31 +5070,31 @@ namespace XamCore.Foundation
 		[Async (ResultTypeName="NSUserActivityContinuation")]
 		void GetContinuationStreams (Action<NSInputStream,NSOutputStream,NSError> completionHandler);
 
-		[Mac(10,11), iOS (9,0)]
+		[Mac(10,11), iOS (9,0), Watch (3,0), TV (10,0)]
 		[Export ("requiredUserInfoKeys", ArgumentSemantic.Copy)]
 		NSSet<NSString> RequiredUserInfoKeys { get; set; }
 
-		[Mac(10,11), iOS (9,0)]
+		[Mac(10,11), iOS (9,0), Watch (3,0), TV (10,0)]
 		[Export ("expirationDate", ArgumentSemantic.Copy)]
 		NSDate ExpirationDate { get; set; }
 
-		[Mac(10,11), iOS (9,0)]
+		[Mac(10,11), iOS (9,0), Watch (3,0), TV (10,0)]
 		[Export ("keywords", ArgumentSemantic.Copy)]
 		NSSet<NSString> Keywords { get; set; }
 
-		[Mac(10,11), iOS (9,0)]
+		[Mac(10,11), iOS (9,0), Watch (3,0), TV (10,0)]
 		[Export ("resignCurrent")]
 		void ResignCurrent ();
 
-		[Mac(10,11), iOS (9,0)]
+		[Mac(10,11), iOS (9,0), Watch (3,0), TV (10,0)]
 		[Export ("eligibleForHandoff")]
 		bool EligibleForHandoff { [Bind ("isEligibleForHandoff")] get; set; }
 
-		[Mac(10,11), iOS (9,0)]
+		[Mac(10,11), iOS (9,0), Watch (3,0), TV (10,0)]
 		[Export ("eligibleForSearch")]
 		bool EligibleForSearch { [Bind ("isEligibleForSearch")] get; set; }
 
-		[Mac(10,11), iOS (9,0)]
+		[Mac(10,11), iOS (9,0), Watch (3,0), TV (10,0)]
 		[Export ("eligibleForPublicIndexing")]
 		bool EligibleForPublicIndexing { [Bind ("isEligibleForPublicIndexing")] get; set; }
 		
@@ -4389,6 +5105,9 @@ namespace XamCore.Foundation
 		CSSearchableItemAttributeSet ContentAttributeSet { get; set; }
 #endif
 
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NullAllowed, Export ("referrerURL", ArgumentSemantic.Copy)]
+		NSUrl ReferrerUrl { get; set; }
 	}
 
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // same as NSUserActivity
@@ -4398,7 +5117,7 @@ namespace XamCore.Foundation
 		NSString BrowsingWeb { get; }
 	}
 
-	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // same as NSUserActivity
+	[iOS (8,0)][Mac (10,10, onlyOn64 : true), Watch (3,0), TV (9,0)] // same as NSUserActivity
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	partial interface NSUserActivityDelegate {
@@ -4582,6 +5301,9 @@ namespace XamCore.Foundation
 	partial interface NSUrl : NSSecureCoding, NSCopying
 #if MONOMAC
 	, NSPasteboardReading, NSPasteboardWriting
+#endif
+#if !WATCH && !TVOS
+	, NSItemProviderWriting
 #endif
 	{
 		[Export ("initWithScheme:host:path:")]
@@ -5025,6 +5747,46 @@ namespace XamCore.Foundation
 		[Field ("NSURLVolumeLocalizedNameKey")]
 		NSString VolumeLocalizedNameKey { get; }
 
+		[Watch (3, 0), TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Field ("NSURLVolumeIsEncryptedKey")]
+		NSString VolumeIsEncryptedKey { get; }
+
+		[Watch (3, 0), TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Field ("NSURLVolumeIsRootFileSystemKey")]
+		NSString VolumeIsRootFileSystemKey { get; }
+
+		[Watch (3, 0), TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Field ("NSURLVolumeSupportsCompressionKey")]
+		NSString VolumeSupportsCompressionKey { get; }
+
+		[Watch (3, 0), TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Field ("NSURLVolumeSupportsFileCloningKey")]
+		NSString VolumeSupportsFileCloningKey { get; }
+
+		[Watch (3, 0), TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Field ("NSURLVolumeSupportsSwapRenamingKey")]
+		NSString VolumeSupportsSwapRenamingKey { get; }
+
+		[Watch (3, 0), TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Field ("NSURLVolumeSupportsExclusiveRenamingKey")]
+		NSString VolumeSupportsExclusiveRenamingKey { get; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Field ("NSURLVolumeSupportsImmutableFilesKey")]
+		NSString VolumeSupportsImmutableFilesKey { get; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Field ("NSURLVolumeSupportsAccessPermissionsKey")]
+		NSString VolumeSupportsAccessPermissionsKey { get; }
+
+		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
+		[Field ("NSURLVolumeAvailableCapacityForImportantUsageKey")]
+		NSString VolumeAvailableCapacityForImportantUsageKey { get; }
+
+		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
+		[Field ("NSURLVolumeAvailableCapacityForOpportunisticUsageKey")]
+		NSString VolumeAvailableCapacityForOpportunisticUsageKey { get; }
+
 		[Since (5,0)]
 		[Field ("NSURLIsUbiquitousItemKey")]
 		NSString IsUbiquitousItemKey { get; }
@@ -5056,6 +5818,42 @@ namespace XamCore.Foundation
 		[Availability (Introduced = Platform.iOS_5_0 | Platform.Mac_10_7, Deprecated = Platform.iOS_6_0 | Platform.Mac_10_8, Message = "Use 'NSMetadataQuery.UbiquitousItemPercentUploadedKey' on 'NSMetadataItem' instead.")]
 		[Field ("NSURLUbiquitousItemPercentUploadedKey")]
 		NSString UbiquitousItemPercentUploadedKey { get; }
+
+		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
+		[Field ("NSURLUbiquitousItemIsSharedKey")]
+		NSString UbiquitousItemIsSharedKey { get; }
+
+		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
+		[Field ("NSURLUbiquitousSharedItemCurrentUserRoleKey")]
+		NSString UbiquitousSharedItemCurrentUserRoleKey { get; }
+
+		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
+		[Field ("NSURLUbiquitousSharedItemCurrentUserPermissionsKey")]
+		NSString UbiquitousSharedItemCurrentUserPermissionsKey { get; }
+
+		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
+		[Field ("NSURLUbiquitousSharedItemOwnerNameComponentsKey")]
+		NSString UbiquitousSharedItemOwnerNameComponentsKey { get; }
+
+		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
+		[Field ("NSURLUbiquitousSharedItemMostRecentEditorNameComponentsKey")]
+		NSString UbiquitousSharedItemMostRecentEditorNameComponentsKey { get; }
+
+		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
+		[Field ("NSURLUbiquitousSharedItemRoleOwner")]
+		NSString UbiquitousSharedItemRoleOwner { get; }
+
+		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
+		[Field ("NSURLUbiquitousSharedItemRoleParticipant")]
+		NSString UbiquitousSharedItemRoleParticipant { get; }
+
+		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
+		[Field ("NSURLUbiquitousSharedItemPermissionsReadOnly")]
+		NSString UbiquitousSharedItemPermissionsReadOnly { get; }
+
+		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
+		[Field ("NSURLUbiquitousSharedItemPermissionsReadWrite")]
+		NSString UbiquitousSharedItemPermissionsReadWrite { get; }
 
 		[Since (5,1)]
 		[MountainLion]
@@ -5196,6 +5994,22 @@ namespace XamCore.Foundation
 		[Field ("NSURLFileProtectionCompleteUntilFirstUserAuthentication")]
 		NSString FileProtectionCompleteUntilFirstUserAuthentication { get; }
 #endif
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] ReadableTypeIdentifiers { get; }
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
+		[return: NullAllowed]
+		NSUrl FromItemProviderData (NSData itemProviderData, string typeIdentifier, [NullAllowed] out NSError outError);
+
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] WritableTypeIdentifiers { get; }
 	}
 
 	
@@ -5420,6 +6234,10 @@ namespace XamCore.Foundation
 		[iOS (9,0), Mac(10,11)]
 		[Export ("rangeOfFragment"), Mac(10,11)]
 		NSRange RangeOfFragment { get; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NullAllowed, Export ("percentEncodedQueryItems", ArgumentSemantic.Copy)]
+		NSUrlQueryItem[] PercentEncodedQueryItems { get; set; }
 	}
 	
 	[BaseType (typeof (NSObject), Name="NSURLAuthenticationChallenge")]
@@ -6039,8 +6857,11 @@ namespace XamCore.Foundation
 	[Since (7,0)]
 	[Availability (Introduced = Platform.Mac_10_9)]
 	[BaseType (typeof (NSObject), Name="NSURLSessionTask")]
-	partial interface NSUrlSessionTask : NSCopying {
-	
+	partial interface NSUrlSessionTask : NSCopying
+#if MONOMAC
+	, NSProgressReporting
+#endif
+	{
 		[Export ("taskIdentifier")]
 		nuint TaskIdentifier { get; }
 	
@@ -6092,6 +6913,23 @@ namespace XamCore.Foundation
 		[Export ("priority")]
 		float Priority { get; set; } /* float, not CGFloat */
 #endif
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("progress", ArgumentSemantic.Strong)]
+		NSProgress Progress { get; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NullAllowed, Export ("earliestBeginDate", ArgumentSemantic.Copy)]
+		NSDate EarliestBeginDate { get; set; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("countOfBytesClientExpectsToSend")]
+		long CountOfBytesClientExpectsToSend { get; set; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("countOfBytesClientExpectsToReceive")]
+		long CountOfBytesClientExpectsToReceive { get; set; }
+
 	}
 
 	[Static]
@@ -6233,6 +7071,14 @@ namespace XamCore.Foundation
 		[iOS (9,0), Mac(10,11)]
 		[Export ("shouldUseExtendedBackgroundIdleMode")]
 		bool ShouldUseExtendedBackgroundIdleMode { get; set; }
+
+		[NoWatch, NoTV, NoMac, iOS (11, 0)]
+		[Export ("multipathServiceType", ArgumentSemantic.Assign)]
+		NSUrlSessionMultipathServiceType MultipathServiceType { get; set; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("waitsForConnectivity")]
+		bool WaitsForConnectivity { get; set; }
 	}
 
 	[Since (7,0)]
@@ -6275,6 +7121,14 @@ namespace XamCore.Foundation
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 		[Export ("URLSession:task:didFinishCollectingMetrics:")]
 		void DidFinishCollectingMetrics (NSUrlSession session, NSUrlSessionTask task, NSUrlSessionTaskMetrics metrics);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("URLSession:task:willBeginDelayedRequest:completionHandler:")]
+		void WillBeginDelayedRequest (NSUrlSession session, NSUrlSessionTask task, NSUrlRequest request, Action<NSUrlSessionDelayedRequestDisposition, NSUrlRequest> completionHandler);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("URLSession:taskIsWaitingForConnectivity:")]
+		void TaskIsWaitingForConnectivity (NSUrlSession session, NSUrlSessionTask task);
 	}
 	
 	[Since (7,0)]
@@ -6962,6 +7816,9 @@ namespace XamCore.Foundation
 	#if MONOMAC
 		, NSPasteboardReading, NSPasteboardWriting // Documented that it implements NSPasteboard protocols even if header doesn't show it
 	#endif
+#if !WATCH && !TVOS
+		, NSItemProviderWriting
+#endif
 	{
 		[Export ("initWithData:encoding:")]
 		IntPtr Constructor (NSData data, NSStringEncoding encoding);
@@ -7220,6 +8077,22 @@ namespace XamCore.Foundation
 
 		[Export ("paragraphRangeForRange:")]
 		NSRange GetParagraphRange (NSRange range);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] ReadableTypeIdentifiers { get; }
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
+		[return: NullAllowed]
+		NSString FromItemProviderData (NSData itemProviderData, string typeIdentifier, [NullAllowed] out NSError outError);
+
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] WritableTypeIdentifiers { get; }
 	}
 
 	[StrongDictionary ("NSString")]
@@ -7268,6 +8141,12 @@ namespace XamCore.Foundation
 
 		[Export ("replaceCharactersInRange:withString:")]
 		void ReplaceCharactersInRange (NSRange range, NSString aString);
+
+		// From the NSItemProviderWriting protocol, a static method.
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] WritableTypeIdentifiers { get; }
 	}
 	
 	[Category, BaseType (typeof (NSString))]
@@ -8807,7 +9686,78 @@ namespace XamCore.Foundation
 		[Export ("registerCloudKitShare:container:")]
 		void RegisterCloudKitShare (CKShare share, CKContainer container);
 #endif
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("registerDataRepresentationForTypeIdentifier:visibility:loadHandler:")]
+		void RegisterDataRepresentation (string typeIdentifier, NSItemProviderRepresentationVisibility visibility, RegisterDataRepresentationLoadHandler loadHandler);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("registerFileRepresentationForTypeIdentifier:fileOptions:visibility:loadHandler:")]
+		void RegisterFileRepresentation (string typeIdentifier, NSItemProviderFileOptions fileOptions, NSItemProviderRepresentationVisibility visibility, RegisterFileRepresentationLoadHandler loadHandler);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("registeredTypeIdentifiersWithFileOptions:")]
+		string[] GetRegisteredTypeIdentifiers (NSItemProviderFileOptions fileOptions);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("hasRepresentationConformingToTypeIdentifier:fileOptions:")]
+		bool HasConformingRepresentation (string typeIdentifier, NSItemProviderFileOptions fileOptions);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Async, Export ("loadDataRepresentationForTypeIdentifier:completionHandler:")]
+		NSProgress LoadDataRepresentation (string typeIdentifier, Action <NSData, NSError> completionHandler);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Async, Export ("loadFileRepresentationForTypeIdentifier:completionHandler:")]
+		NSProgress LoadFileRepresentation (string typeIdentifier, Action <NSUrl, NSError> completionHandler);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Async (ResultTypeName = "LoadInPlaceResult"), Export ("loadInPlaceFileRepresentationForTypeIdentifier:completionHandler:")]
+		NSProgress LoadInPlaceFileRepresentation (string typeIdentifier, LoadInPlaceFileRepresentationHandler completionHandler);
+
+		[NoWatch, NoTV, NoMac, iOS (11, 0)]
+		[NullAllowed, Export ("suggestedName")]
+		string SuggestedName { get; set; }
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("initWithObject:")]
+		IntPtr Constructor (INSItemProviderWriting @object);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("registerObject:visibility:")]
+		void RegisterObject (INSItemProviderWriting @object, NSItemProviderRepresentationVisibility visibility);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("registerObjectOfClass:visibility:loadHandler:")]
+		void RegisterObject (Class aClass, NSItemProviderRepresentationVisibility visibility, RegisterObjectRepresentationLoadHandler loadHandler);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Wrap ("RegisterObject (new Class (type), visibility, loadHandler)")]
+		void RegisterObject (Type type, NSItemProviderRepresentationVisibility visibility, RegisterObjectRepresentationLoadHandler loadHandler);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("canLoadObjectOfClass:")]
+		bool CanLoadObject (Class aClass);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Wrap ("CanLoadObject (new Class (type))")]
+		bool CanLoadObject (Type type);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Async, Export ("loadObjectOfClass:completionHandler:")]
+		NSProgress LoadObject (Class aClass, Action<INSItemProviderReading, NSError> completionHandler);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Async, Wrap ("LoadObject (new Class (type), completionHandler)")]
+		NSProgress LoadObject (Type type, Action<INSItemProviderReading, NSError> completionHandler);
 	}
+    
+	delegate NSProgress RegisterFileRepresentationLoadHandler ([BlockCallback] RegisterFileRepresentationCompletionHandler completionHandler);
+	delegate void RegisterFileRepresentationCompletionHandler (NSUrl fileUrl, bool coordinated, NSError error);
+	delegate void ItemProviderDataCompletionHandler (NSData data, NSError error);
+	delegate NSProgress RegisterDataRepresentationLoadHandler ([BlockCallback] ItemProviderDataCompletionHandler completionHandler);
+	delegate void LoadInPlaceFileRepresentationHandler (NSUrl fileUrl, bool isInPlace, NSError error);
+	delegate NSProgress RegisterObjectRepresentationLoadHandler ([BlockCallback] RegisterObjectRepresentationCompletionHandler completionHandler);
+	delegate void RegisterObjectRepresentationCompletionHandler (INSItemProviderWriting @object, NSError error);
 
 	interface INSItemProviderReading {}
 	
@@ -8827,15 +9777,43 @@ namespace XamCore.Foundation
 		//[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		//string[] ReadableTypeIdentifiersForItemProvider { get; }
 
+		//[Static]
+		//[Export ("objectWithItemProviderData:typeIdentifier:error:")]
+		//[return: NullAllowed]
+		//INSItemProviderReading GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
+	}
+
+	interface INSItemProviderWriting {}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Protocol]
+	interface NSItemProviderWriting
+	{
 		//
-		// This is a constructor that various classes must implement
-		// NSAttributedString, UIColor and UIImage need to have this constructor
-		// for user-defined implementations of this interface, we are going to
-		// need to something special
+		// This static method has to be implemented on each class that implements
+		// this, this is not a capability that exists in C#.
+		// We are inlining these on each class that implements NSItemProviderWriting
+		// for the sake of the method being callable from C#, for user code, the
+		// user needs to manually [Export] the selector on a static method, like
+		// they do for the "layer" property on CALayer subclasses.
 		//
-		//[Abstract]
-		//[Export ("initWithItemProviderData:typeIdentifier:error:")]
-		//INSItemProviderReading CreateFrom (NSData providerData, string typeIdentifier, [NullAllowed] NSError outError);
+		//[Static, Abstract]
+		//[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		//string[] WritableTypeIdentifiersForItemProvider { get; }
+
+		//[Static]
+		//[Export ("itemProviderVisibilityForRepresentationWithTypeIdentifier:")]
+		//NSItemProviderRepresentationVisibility GetItemProviderVisibility (string typeIdentifier);
+
+		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] WritableTypeIdentifiersForItemProvider { get; }
+
+		[Export ("itemProviderVisibilityForRepresentationWithTypeIdentifier:")]
+		NSItemProviderRepresentationVisibility GetItemProviderVisibility (string typeIdentifier);
+
+		[Async, Export ("loadDataWithTypeIdentifier:forItemProviderCompletionHandler:")]
+		[return: NullAllowed]
+		NSProgress LoadData (string typeIdentifier, Action<NSData, NSError> completionHandler);
 	}
 
 #if XAMCORE_2_0
@@ -9323,6 +10301,7 @@ namespace XamCore.Foundation
 	// init returns NIL
 	[DisableDefaultCtor]
 	partial interface NSValue : NSSecureCoding, NSCopying {
+		[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.TV_11_0 | Platform.Watch_4_0, Message="Potential for buffer overruns. Use 'StoreValueAtAddress (IntPtr, nuint)' instead.")]
 		[Export ("getValue:")]
 		void StoreValueAtAddress (IntPtr value);
 
@@ -10587,6 +11566,45 @@ namespace XamCore.Foundation
 		[Field ("NSProgressFileIconKey")]
 		NSString FileIconKey { get; }
 #endif
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Async, Export ("performAsCurrentWithPendingUnitCount:usingBlock:")]
+		void PerformAsCurrent (long unitCount, Action work);
+
+		[Export ("finished")]
+		bool Finished { [Bind ("isFinished")] get; }
+
+		[Internal]
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NullAllowed, Export ("estimatedTimeRemaining", ArgumentSemantic.Copy)]
+		//[BindAs (typeof (nint?))]
+		NSNumber _EstimatedTimeRemaining { get; set; }
+
+		[Internal]
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NullAllowed, Export ("throughput", ArgumentSemantic.Copy)]
+		//[BindAs (typeof (nint?))]
+		NSNumber _Throughput { get; set; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NullAllowed, Export ("fileOperationKind")]
+		string FileOperationKind { get; set; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NullAllowed, Export ("fileURL", ArgumentSemantic.Copy)]
+		NSUrl FileUrl { get; set; }
+
+		[Internal]
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NullAllowed, Export ("fileTotalCount", ArgumentSemantic.Copy)]
+		//[BindAs (typeof (nint?))]
+		NSNumber _FileTotalCount { get; set; }
+
+		[Internal]
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NullAllowed, Export ("fileCompletedCount", ArgumentSemantic.Copy)]
+		//[BindAs (typeof (nint?))]
+		NSNumber _FileCompletedCount { get; set; }
 	}
 
 	interface INSProgressReporting {}
@@ -10698,6 +11716,10 @@ namespace XamCore.Foundation
 		[iOS (5,0)][Mac (10,7)]
 		[Export ("purposeIdentifier")]
 		string PurposeIdentifier { get; set; }
+
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[Export ("itemAtURL:didChangeUbiquityAttributes:")]
+		void ItemUbiquityAttributesChanged (NSUrl url, NSSet<NSString> attributes);
 	}
 
 	[iOS (8,0)][Mac (10,10)]
@@ -11053,6 +12075,12 @@ namespace XamCore.Foundation
 		[Export ("unmountVolumeAtURL:options:completionHandler:")]
 		void UnmountVolume (NSUrl url, NSFileManagerUnmountOptions mask, Action<NSError> completionHandler);
 #endif
+
+#if !WATCH && !TVOS
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[Async, Export ("getFileProviderServicesForItemAtURL:completionHandler:")]
+		void GetFileProviderServices (NSUrl url, Action<NSDictionary<NSString, NSFileProviderService>, NSError> completionHandler);
+#endif
 	}
 
 	[BaseType(typeof(NSObject))]
@@ -11191,6 +12219,14 @@ namespace XamCore.Foundation
 
 		[Export ("presentedSubitemAtURL:didResolveConflictVersion:")]
 		void PresentedSubitemResolvedConflictVersion (NSUrl url, NSFileVersion version);
+
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[Export ("presentedItemDidChangeUbiquityAttributes:")]
+		void PresentedItemChangedUbiquityAttributes (NSSet<NSString> attributes);
+
+		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
+		[Export ("observedPresentedItemUbiquityAttributes", ArgumentSemantic.Strong)]
+		NSSet<NSString> PresentedItemObservedUbiquityAttributes { get; }
 	}
 
 	delegate void NSFileVersionNonlocalVersionsCompletionHandler ([NullAllowed] NSFileVersion[] nonlocalFileVersions, [NullAllowed] NSError error);
@@ -11277,6 +12313,10 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("removeOtherVersionsOfItemAtURL:error:")]
 		bool RemoveOtherVersions (NSUrl url, out NSError outError);
+
+		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
+		[NullAllowed, Export ("originatorNameComponents", ArgumentSemantic.Copy)]
+		NSPersonNameComponents OriginatorNameComponents { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -11940,6 +12980,10 @@ namespace XamCore.Foundation
 		[Wrap ("TransitInformationCheckingResult (range, components != null ? components.Dictionary : null)")]
 		NSTextCheckingResult TransitInformationCheckingResult (NSRange range, NSTextCheckingTransitComponents components);
 
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("rangeWithName:")]
+		NSRange GetRange (string name);
+
 	}
 
 	[StrongDictionary ("NSTextChecking")]
@@ -12215,6 +13259,7 @@ namespace XamCore.Foundation
 		string Symbol { get; }
 
 		[Export ("initWithSymbol:")]
+		[DesignatedInitializer]
 		IntPtr Constructor (string symbol);
 	}
 
@@ -12251,6 +13296,11 @@ namespace XamCore.Foundation
 	[Abstract] // abstract subclass of NSUnit
 	[DisableDefaultCtor] // there's a designated initializer
 	interface NSDimension : NSSecureCoding {
+		// Inlined from base type
+		[Export ("initWithSymbol:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol);
+
 		[Export ("converter", ArgumentSemantic.Copy)]
 		NSUnitConverter Converter { get; }
 
@@ -12293,13 +13343,29 @@ namespace XamCore.Foundation
 		NSDimension BaseUnit { get; }
 	}
 
-#if MONOMAC
+#if !WATCH && !TVOS
+	[Mac (10,8), iOS (11,0), NoWatch, NoTV]
 	partial interface NSFileManager {
 
 		[MountainLion, Export ("trashItemAtURL:resultingItemURL:error:")]
 		bool TrashItem (NSUrl url, out NSUrl resultingItemUrl, out NSError error);
+
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[Async, Export ("getFileProviderMessageInterfacesForItemAtURL:completionHandler:")]
+		void GetFileProviderMessageInterfaces (NSUrl url, Action <NSFileProviderMessageInterface[], NSError> completionHandler);
 	}
 
+	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSFileProviderService
+	{
+		[Export ("name")]
+		string Name { get; }
+	}
+#endif
+
+#if MONOMAC
 	partial interface NSFilePresenter {
 
 		[MountainLion, Export ("primaryPresentedItemURL")]
@@ -12502,6 +13568,7 @@ namespace XamCore.Foundation
 		CGAffineTransform TransformStruct { get; set; }
 	}
 
+	[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.Watch_2_0 | Platform.TV_11_0, Message = "Use 'NSXpcConnection' instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSConnection {
@@ -12605,6 +13672,7 @@ namespace XamCore.Foundation
 		NSConnectionDelegate Delegate { get; set; }
 	}
 
+	[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.Watch_2_0 | Platform.TV_11_0, Message = "Use 'NSXpcConnection' instead.")]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -12628,6 +13696,7 @@ namespace XamCore.Foundation
 		bool AllowNewConnection (NSConnection newConnection, NSConnection parentConnection);
 	}
 
+	[Availability (Deprecated = Platform.Mac_10_13 | Platform.iOS_11_0 | Platform.Watch_2_0 | Platform.TV_11_0, Message = "Use 'NSXpcConnection' instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSDistantObjectRequest {
@@ -14299,6 +15368,22 @@ namespace XamCore.Foundation
 	interface NSFileProviderMessageInterface : NSSecureCoding
 	{
 		[Export ("name")]
-        	string Name { get; }
+		string Name { get; }
+	}
+
+	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSFileProviderMessenger
+	{
+		[Export ("initWithInterface:protocol:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSFileProviderMessageInterface @interface, Protocol protocol);
+
+		[Async, Export ("remoteObjectProxyWithErrorHandler:")]
+		NSObject GetRemoteObjectProxy (Action<NSError> errorHandler);
+
+		[Export ("invalidate")]
+		void Invalidate ();
 	}
 }

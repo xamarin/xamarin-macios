@@ -326,6 +326,15 @@ namespace Introspection {
 						if (Mac.CheckSystemVersion (10, 11))
 							return true;
 						break;
+					case "earliestBeginDate":
+					case "setEarliestBeginDate:":
+					case "countOfBytesClientExpectsToSend":
+					case "setCountOfBytesClientExpectsToSend:":
+					case "countOfBytesClientExpectsToReceive":
+					case "setCountOfBytesClientExpectsToReceive:":
+						if (Mac.CheckSystemVersion (10, 13))
+							return true;
+						break;
 					}
 					break;
 				case "NSUrlSessionConfiguration":

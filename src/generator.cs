@@ -3877,6 +3877,8 @@ public partial class Generator : IMemberGatherer {
 				by_ref_processing.AppendLine();
 				if (mai.Type.GetElementType () == TypeManager.System_String){
 					by_ref_processing.AppendFormat("{0} = {0}Value != IntPtr.Zero ? NSString.FromHandle ({0}Value) : null;", pi.Name.GetSafeParamName ());
+				} else if (pi.ParameterType.GetElementType ().IsArray) {
+					by_ref_processing.AppendFormat ("{0} = {0}Value != IntPtr.Zero ? NSArray.ArrayFromHandle<{1}> ({0}Value) : null;", pi.Name.GetSafeParamName (), RenderType (mai.Type.GetElementType ().GetElementType ()));
 				} else if (isForced) {
 					by_ref_processing.AppendFormat("{0} = {0}Value != IntPtr.Zero ? Runtime.GetINativeObject<{1}> ({0}Value, {2}) : null;", pi.Name.GetSafeParamName (), RenderType (mai.Type.GetElementType ()), isForcedOwns);
 				} else {
