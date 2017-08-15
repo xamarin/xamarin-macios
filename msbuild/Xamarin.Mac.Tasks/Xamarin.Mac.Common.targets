@@ -64,15 +64,49 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<XamarinMacFrameworkRoot>/Library/Frameworks/Xamarin.Mac.framework/Versions/Current</XamarinMacFrameworkRoot>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' != 'true'">
+	<Choose>
+		<When Condition=" '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">
+			<PropertyGroup>
+				<TargetFrameworkName>Modern</TargetFrameworkName>
+				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/Xamarin.Mac</MacBclPath>
+			</PropertyGroup>
+		</When>
+		<When Condition=" '$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' == 'true'">
+			<PropertyGroup>
+				<TargetFrameworkName>Full</TargetFrameworkName>
+				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
+			</PropertyGroup>
+		</When>
+		<Otherwise>
+			<PropertyGroup>
+				<TargetFrameworkName>System</TargetFrameworkName>
+				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
+			</PropertyGroup>
+		</Otherwise>
+	</Choose>
+
+	<PropertyGroup Condition="'$(TargetFrameworkName)' == 'Full'">
 		<AssemblySearchPaths>$(XamarinMacFrameworkRoot)/lib/reference/full;$(XamarinMacFrameworkRoot)/lib/mono;$(AssemblySearchPaths)</AssemblySearchPaths>
 	</PropertyGroup>
 
-	<!-- Do not resolve from the GAC under any circumstances in Mobile or XM45 -->
-	<PropertyGroup Condition="(('$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' == 'true') Or '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac') And !$(MonoBundlingExtraArgs.Contains('--allow-unsafe-gac-resolution'))" >
+	<!-- Do not resolve from the GAC in Modern or Full unless allow-unsafe-gac-resolution is passed in -->
+	<PropertyGroup Condition="'$(TargetFrameworkName)' != 'System' And !$(MonoBundlingExtraArgs.Contains('--allow-unsafe-gac-resolution'))" >
 		<AssemblySearchPaths>$([System.String]::Copy('$(AssemblySearchPaths)').Replace('{GAC}',''))</AssemblySearchPaths>
 		<AssemblySearchPaths Condition="'$(MSBuildRuntimeVersion)' != ''">$(AssemblySearchPaths.Split(';'))</AssemblySearchPaths>
 	</PropertyGroup>
+
+	<!-- Location of Libraries -->
+	<Target Name="FixTargetFrameworkDirectory" AfterTargets="GetReferenceAssemblyPaths" Condition="('$(OS)' != 'Windows_NT')">
+		<PropertyGroup>
+			<!-- For Modern / Full we overwrite TargetFrameworkDirectory to resolve non XM assemblies from our location only -->
+			<TargetFrameworkDirectory Condition="'$(TargetFrameworkName)' != 'System'">$(MacBclPath);@(DesignTimeFacadeDirectories)</TargetFrameworkDirectory>
+
+			<!-- For system we extend, not overwrite TargetFrameworkDirectory. -->
+			<!-- mscorlib, System, and other BCL libs must come from Mono System to prevent corlib mistmatches. Xamarin.Mac.dll must come from XM/lib/mono/4.5/ -->
+			<!-- If we find cases of other non-XM assemblies being resolved from XM paths, we can look into using CandidateAssemblyFiles but it is msbuild only. -->
+			<TargetFrameworkDirectory Condition="'$(TargetFrameworkName)' == 'System'">$(TargetFrameworkDirectory);$(MacBclPath)</TargetFrameworkDirectory>
+		</PropertyGroup>
+	</Target>
 
 	<PropertyGroup>
 		<_CanOutputAppBundle>False</_CanOutputAppBundle>
