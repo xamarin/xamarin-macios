@@ -2061,8 +2061,8 @@ namespace XamCore.Intents {
 
 		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
 		[Export ("EKRecurrenceRule")]
-		[return: NullAllowed]
-		EKRecurrenceRule GetEKRecurrenceRule ();
+		[NullAllowed]
+		EKRecurrenceRule EKRecurrenceRule { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
