@@ -1271,24 +1271,21 @@ namespace XamCore.HomeKit {
 	}
 
 	[Watch (4,0), TV (11,0), iOS (11,0)]
-	public enum HMPresenceType {
+	[Native]
+	public enum HMPresenceEventType : nuint {
+		EveryEntry = 1,
+		EveryExit = 2,
+		FirstEntry = 3,
+		LastExit = 4,
+		AtHome = FirstEntry,
+		NotAtHome = LastExit,
+	}
 
-		[Field ("HMPresenceTypeCurrentUserAtHome")]
-		CurrentUserAtHome,
-
-		[Field ("HMPresenceTypeCurrentUserNotAtHome")]
-		CurrentUserNotAtHome,
-
-		[Field ("HMPresenceTypeAnyUserAtHome")]
-		AnyUserAtHome,
-
-		[Field ("HMPresenceTypeNoUserAtHome")]
-		NoUserAtHome,
-
-		[Field ("HMPresenceTypeUsersAtHome")]
-		UsersAtHome,
-
-		[Field ("HMPresenceTypeUsersNotAtHome")]
-		UsersNotAtHome,
+	[Watch (4,0), TV (11,0), iOS (11,0)]
+	[Native]
+	public enum HMPresenceEventUserType : nuint {
+		CurrentUser = 1,
+		HomeUsers = 2,
+		CustomUsers = 3,
 	}
 }
