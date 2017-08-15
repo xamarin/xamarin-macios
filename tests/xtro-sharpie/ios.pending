@@ -267,6 +267,8 @@
 !incorrect-protocol-member! INPayBillIntentHandling::handlePayBill:completion: is REQUIRED and should be abstract
 !incorrect-protocol-member! INSearchForBillsIntentHandling::handleSearchForBills:completion: is REQUIRED and should be abstract
 
+## Looks like this was removed by apple in Intents iOS 11.0 Beta 1 to Beta 2 - http://codeworkshop.net/objc-diff/sdkdiffs/ios/11.0b2/Intents.html
+!extra-protocol-member! unexpected selector INSetProfileInCarIntentHandling::resolveDefaultProfileForSetProfileInCar:withCompletion: found
 
 # UIKit
 
