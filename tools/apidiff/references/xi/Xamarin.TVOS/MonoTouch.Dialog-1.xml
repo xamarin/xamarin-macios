@@ -9,6 +9,11 @@
           <property name="DebuggingFlags" value="IgnoreSymbolStoreSequencePoints" />
         </properties>
       </attribute>
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
+        <properties>
+          <property name="CompilationRelaxations" value="8" />
+        </properties>
+      </attribute>
       <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
       <attribute name="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute">
         <properties>
@@ -2813,7 +2818,7 @@
               </method>
               <method name="GetEnumerator()" attrib="486" virtual="true" returntype="System.Collections.IEnumerator">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerHiddenAttribute" />
+                  <attribute name="System.Runtime.CompilerServices.IteratorStateMachineAttribute" />
                 </attributes>
                 <parameters />
               </method>
