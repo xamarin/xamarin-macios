@@ -300,8 +300,7 @@ namespace XamCore.WebKit
 
 	[Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	interface WKOpenPanelParameters
-	{
+	interface WKOpenPanelParameters	{
 		[Export ("allowsMultipleSelection")]
 		bool AllowsMultipleSelection { get; }
 	}
