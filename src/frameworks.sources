@@ -858,6 +858,7 @@ INTENTS_SOURCES = \
 	Intents/INGetCarLockStatusIntentResponse.cs \
 	Intents/INGetCarPowerLevelStatusIntentResponse.cs \
 	Intents/INIntentResolutionResult.cs \
+	Intents/INInteraction.cs \
 	Intents/INMessageAttributeOptionsResolutionResult.cs \
 	Intents/INMessageAttributeResolutionResult.cs \
 	Intents/INPaymentStatusResolutionResult.cs \

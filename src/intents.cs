@@ -2809,10 +2809,10 @@ namespace XamCore.Intents {
 
 		// From INParameter.h INInteraction ()
 
+		[Internal]
 		[iOS (11,0), Watch (4,0), NoMac]
 		[Export ("parameterValueForParameter:")]
-		[return: NullAllowed]
-		NSObject GetParameterValue (INParameter parameter);
+		IntPtr _GetParameterValue (INParameter parameter);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
