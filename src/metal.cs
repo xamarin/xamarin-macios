@@ -808,7 +808,6 @@ namespace XamCore.Metal {
 		[Export ("readWriteTextureSupport")]
 		MTLReadWriteTextureTier ReadWriteTextureSupport { get; }
 
-		// @required @property (readonly) MTLArgumentBuffersTier argumentBuffersSupport __attribute__((availability(macos, introduced=10_13)));
 		[Mac (10, 13), iOS (11,0), TV (11,0), NoWatch]
 #if XAMCORE_4_0
 		[Abstract]
@@ -816,7 +815,6 @@ namespace XamCore.Metal {
 		[Export ("argumentBuffersSupport")]
 		MTLArgumentBuffersTier ArgumentBuffersSupport { get; }
 
-		// @required @property (readonly, getter = areRasterOrderGroupsSupported) BOOL rasterOrderGroupsSupported __attribute__((availability(macos, introduced=10_13)));
 		[Mac (10, 13), iOS (11,0), TV (11,0), NoWatch]
 #if XAMCORE_4_0
 		[Abstract]
@@ -1046,12 +1044,12 @@ namespace XamCore.Metal {
 		[Export ("replaceRegion:mipmapLevel:withBytes:bytesPerRow:")]
 		void ReplaceRegion (MTLRegion region, nuint level, IntPtr pixelBytes, nuint bytesPerRow);
 
-		[Mac (10, 11), iOS (11,0), TV (11,0), NoWatch]
-#if XAMCORE_4_0
-		[Abstract]
-#endif
-		[NullAllowed, Export ("iosurface")]
-		IntPtr /* IOSurfaceRef* */ IOSurface { get; }
+//		[Mac (10, 11), iOS (11,0), TV (11,0), NoWatch]
+//#if XAMCORE_4_0
+//		[Abstract]
+//#endif
+		//[NullAllowed, Export ("iosurface")]
+		//IOSurfaeRef* */ IOSurface { get; }
 
 		[Mac (10, 11), iOS (11,0), TV (11,0), NoWatch]
 #if XAMCORE_4_0

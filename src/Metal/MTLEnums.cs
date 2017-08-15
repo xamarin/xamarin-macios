@@ -596,7 +596,7 @@ namespace XamCore.Metal {
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch] Texture = 58,
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch] Sampler = 59,
-		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch] Pointer = 60
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch] Pointer = 60,
 	}
 
 	[Native]
@@ -674,7 +674,7 @@ namespace XamCore.Metal {
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 		v1_2 = (1 << 16) + 2,
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-		v2_0 = (2 << 16)
+		v2_0 = (2 << 16),
 	}
 
 	[iOS (9,0)][Mac (10,11)]
@@ -892,20 +892,6 @@ namespace XamCore.Metal {
 	{
 		One = 0,
 		Two = 1,
-	}
-
-	[StructLayout (LayoutKind.Sequential)]
-	public struct MTLSamplePosition
-	{
-		public float X;
-
-		public float Y;
-
-		public MTLSamplePosition (float x, float y)
-		{
-			this.X = x;
-			this.Y = y;
-		}
 	}
 
 	[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]

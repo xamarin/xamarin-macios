@@ -20,6 +20,20 @@ namespace XamCore.Metal {
 	public delegate void MTLDeviceNotificationHandler (IMTLDevice device, MTLDeviceNotificationName notifyName);
 #endif
 
+	[StructLayout (LayoutKind.Sequential)]
+	public struct MTLSamplePosition
+	{
+		public float X;
+
+		public float Y;
+
+		public MTLSamplePosition (float x, float y)
+		{
+			this.X = x;
+			this.Y = y;
+		}
+	}
+
 	[iOS (8,0)][Mac (10,11)]
 	public static partial class MTLDevice {
 		[DllImport (Constants.MetalLibrary)]
@@ -89,6 +103,14 @@ namespace XamCore.Metal {
 				return This.CreateBufferNoCopy (ptr, (nuint)(data.Length * Marshal.SizeOf (typeof (T))) , options, deallocator);
 			} finally {
 				handle.Free ();
+			}
+		}
+
+		public unsafe static void GetDefaultSamplePositions (this IMTLDevice This, MTLSamplePosition [] positions, nuint count)
+		{
+			unsafe {
+				fixed (void * handle = positions)
+					GetDefaultSamplePositions (This, (IntPtr)handle, count);
 			}
 		}
 	}
