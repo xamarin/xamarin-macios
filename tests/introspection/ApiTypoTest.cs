@@ -98,6 +98,7 @@ namespace Introspection
 			"Automounted",
 			"Autoredirect",
 			"Aliasable",
+			"Arcball",
 			"Backface",
 			"Bancaire", // french
 			"Bancaires", // french
