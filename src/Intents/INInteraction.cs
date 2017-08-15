@@ -7,7 +7,7 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0
+#if XAMCORE_2_0 && !MONOMAC
 using System;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
