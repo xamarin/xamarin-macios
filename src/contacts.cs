@@ -27,12 +27,7 @@ namespace XamCore.Contacts {
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	interface CNContact : NSCopying, NSMutableCopying, NSSecureCoding, NSItemProviderReading
-#if IOS_NOT_BOUND_YET
-	// https://bugzilla.xamarin.com/show_bug.cgi?id=58203
-	, NSItemProviderWriting
-#endif
-	{
+	interface CNContact : NSCopying, NSMutableCopying, NSSecureCoding, NSItemProviderReading, NSItemProviderWriting {
 
 		[Export ("identifier")]
 		string Identifier { get; }
