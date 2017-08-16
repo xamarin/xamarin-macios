@@ -25,6 +25,15 @@ namespace XamCore.IntentsUI {
 		MapsCard
 	}
 
+	[iOS (11,0)]
+	[Native]
+	public enum INUIInteractiveBehavior : nuint {
+		None,
+		NextView,
+		Launch,
+		GenericAction,
+	}
+
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Protocol]
 	interface INUIHostedViewControlling {
@@ -32,6 +41,10 @@ namespace XamCore.IntentsUI {
 		[Abstract]
 		[Export ("configureWithInteraction:context:completion:")]
 		void Configure (INInteraction interaction, INUIHostedViewContext context, Action<CGSize> completion);
+
+		[iOS (11,0)]
+		[Export ("configureViewForParameters:ofInteraction:interactiveBehavior:context:completion:")]
+		void ConfigureView (NSSet<INParameter> parameters, INInteraction interaction, INUIInteractiveBehavior interactiveBehavior, INUIHostedViewContext context, Action<bool, NSSet<INParameter>, CGSize> completion);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -44,6 +57,10 @@ namespace XamCore.IntentsUI {
 
 		[Export ("hostedViewMaximumAllowedSize")]
 		CGSize GetHostedViewMaximumAllowedSize ();
+
+		[iOS (11,0)]
+		[Export ("interfaceParametersDescription")]
+		string GetInterfaceParametersDescription ();
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]

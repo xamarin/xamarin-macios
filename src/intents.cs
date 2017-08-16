@@ -2664,6 +2664,11 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("imageSizeForIntentResponse:")]
 		CGSize GetImageSize (INIntentResponse response);
+
+		[NoMac, NoWatch, iOS (11,0)]
+		[Async]
+		[Export ("fetchUIImageWithCompletion:")]
+		void FetchImage (Action<UIImage> completion);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
