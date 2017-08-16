@@ -297,6 +297,13 @@ namespace XamCore.WebKit
 		[Async]
 		void RemoveDataOfTypes (NSSet<NSString> websiteDataTypes, NSDate date, Action completionHandler);
 	}
+
+	[Mac (10,12, onlyOn64 : true)][NoiOS, NoWatch, NoTV]
+	[BaseType (typeof(NSObject))]
+	interface WKOpenPanelParameters	{
+		[Export ("allowsMultipleSelection")]
+		bool AllowsMultipleSelection { get; }
+	}
 	
 	[Mac (10,10, onlyOn64 : true), iOS (8,0)]
 	[Protocol, Model]
@@ -316,6 +323,10 @@ namespace XamCore.WebKit
 		[Export ("webView:runJavaScriptTextInputPanelWithPrompt:defaultText:initiatedByFrame:completionHandler:")]
 		void RunJavaScriptTextInputPanel (WKWebView webView, string prompt, [NullAllowed] string defaultText,
 			WKFrameInfo frame, Action<string> completionHandler);
+
+		[Mac (10,12, onlyOn64 : true)][NoiOS, NoWatch, NoTV]
+		[Export ("webView:runOpenPanelWithParameters:initiatedByFrame:completionHandler:")]
+		void RunOpenPanel (WKWebView webView, WKOpenPanelParameters parameters, WKFrameInfo frame, Action<NSUrl[]> completionHandler);
 
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		[Export ("webViewDidClose:")]
