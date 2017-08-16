@@ -34,6 +34,9 @@ namespace XamCore.IntentsUI {
 		GenericAction,
 	}
 
+	[iOS (11,0)]
+	delegate void INUIHostedViewControllingConfigureViewHandler (bool success, NSSet<INParameter> configuredParameters, CGSize desiredSize);
+
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Protocol]
 	interface INUIHostedViewControlling {
@@ -44,7 +47,7 @@ namespace XamCore.IntentsUI {
 
 		[iOS (11,0)]
 		[Export ("configureViewForParameters:ofInteraction:interactiveBehavior:context:completion:")]
-		void ConfigureView (NSSet<INParameter> parameters, INInteraction interaction, INUIInteractiveBehavior interactiveBehavior, INUIHostedViewContext context, Action<bool, NSSet<INParameter>, CGSize> completion);
+		void ConfigureView (NSSet<INParameter> parameters, INInteraction interaction, INUIInteractiveBehavior interactiveBehavior, INUIHostedViewContext context, INUIHostedViewControllingConfigureViewHandler completionHandler);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
