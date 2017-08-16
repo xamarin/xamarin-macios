@@ -298,7 +298,7 @@ namespace XamCore.WebKit
 		void RemoveDataOfTypes (NSSet<NSString> websiteDataTypes, NSDate date, Action completionHandler);
 	}
 
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12, onlyOn64 : true)][NoiOS, NoWatch, NoTV]
 	[BaseType (typeof(NSObject))]
 	interface WKOpenPanelParameters	{
 		[Export ("allowsMultipleSelection")]
