@@ -17,7 +17,8 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.Metal {
 #if MONOMAC
-	public delegate void MTLDeviceNotificationHandler (IMTLDevice device, MTLDeviceNotificationName notifyName);
+	[Advice ("The 'NSString' argument will match a property of 'MTLDeviceNotificationHandler'.")]
+	public delegate void MTLDeviceNotificationHandler (IMTLDevice device, NSString notifyName);
 #endif
 
 	[StructLayout (LayoutKind.Sequential)]
@@ -63,22 +64,22 @@ namespace XamCore.Metal {
 #if MONOMAC
 		[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
 		[DllImport (Constants.MetalLibrary)]
-		static extern IMTLDevice[] MTLCopyAllDevicesWithObserver (out NSObject observer, MTLDeviceNotificationHandler handler);
+		static extern IMTLDevice[] MTLCopyAllDevicesWithObserver (IntPtr observer, MTLDeviceNotificationHandler handler);
 
 		[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
-		public static IMTLDevice [] GetAllDevices (MTLDeviceNotificationHandler handler, out NSObject observer)
+		public static IMTLDevice [] GetAllDevices (MTLDeviceNotificationHandler handler, ref NSObject observer)
 		{
-			return MTLCopyAllDevicesWithObserver (out observer, handler);
+			return MTLCopyAllDevicesWithObserver (observer.Handle, handler);
 		}
 
 		[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
 		[DllImport (Constants.MetalLibrary)]
-		static extern void MTLRemoveDeviceObserver (NSObject observer);
+		static extern void MTLRemoveDeviceObserver (IntPtr observer);
 
 		[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
 		public static void RemoveObserver (NSObject observer)
 		{
-			MTLRemoveDeviceObserver (observer);
+			MTLRemoveDeviceObserver (observer.Handle);
 		}
 #endif
 	}
@@ -108,10 +109,8 @@ namespace XamCore.Metal {
 
 		public unsafe static void GetDefaultSamplePositions (this IMTLDevice This, MTLSamplePosition [] positions, nuint count)
 		{
-			unsafe {
-				fixed (void * handle = positions)
-					GetDefaultSamplePositions (This, (IntPtr)handle, count);
-			}
+			fixed (void * handle = positions)
+				GetDefaultSamplePositions (This, (IntPtr)handle, count);
 		}
 	}
 }

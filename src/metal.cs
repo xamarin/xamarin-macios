@@ -871,7 +871,7 @@ namespace XamCore.Metal {
 		[Abstract]
 #endif
 		[Export ("registryID")]
-		ulong RegistryID { get; }
+		ulong RegistryId { get; }
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
 #if XAMCORE_4_0
@@ -1049,7 +1049,7 @@ namespace XamCore.Metal {
 //		[Abstract]
 //#endif
 		//[NullAllowed, Export ("iosurface")]
-		//IOSurfaeRef* */ IOSurface { get; }
+		//IOSurfaceRef* */ IOSurface { get; }
 
 		[Mac (10, 11), iOS (11,0), TV (11,0), NoWatch]
 #if XAMCORE_4_0
@@ -2221,7 +2221,7 @@ namespace XamCore.Metal {
 
 		[Mac (10,13)]
 		[Export ("setSamplePositions:count:")]
-		void SetSamplePositions ([NullAllowed] IntPtr positions, nuint count);
+		unsafe void SetSamplePositions ([NullAllowed] IntPtr positions, nuint count);
 
 		[Mac (10,13)]
 		[Export ("getSamplePositions:count:")]
@@ -2289,7 +2289,9 @@ namespace XamCore.Metal {
 		MTLPurgeableState SetPurgeableState (MTLPurgeableState state);
 
 		[Mac (10, 13), iOS (11,0), TV (11,0), NoWatch]
+#if XAMCORE_4_0
 		[Abstract]
+#endif
 		[Export ("currentAllocatedSize")]
 		nuint CurrentAllocatedSize { get; }
 	}
@@ -2488,7 +2490,7 @@ namespace XamCore.Metal {
 	{
 		[Static]
 		[Export ("sharedCaptureManager")]
-		MTLCaptureManager SharedCaptureManager { get; }
+		MTLCaptureManager Shared { get; }
 
 		[Export ("newCaptureScopeWithDevice:")]
 		IMTLCaptureScope CreateNewCaptureScope (IMTLDevice device);
@@ -2516,15 +2518,15 @@ namespace XamCore.Metal {
 	}
 
 	[Mac (10, 13, onlyOn64: true), NoiOS, NoTV, NoWatch]
-	enum MTLDeviceNotificationName {
+	interface MTLDeviceNotificationName {
 		[Field ("MTLDeviceWasAddedNotification")]
-		DeviceWasAdded,
+		NSString DeviceWasAdded { get; set; }
 
 		[Field ("MTLDeviceRemovalRequestedNotification")]
-		DeviceRemovalRequested,
+		NSString DeviceRemovalRequested { get; set; }
 
 		[Field ("MTLDeviceWasRemovedNotification")]
-		MTLDeviceWasRemoved,
+		NSString MTLDeviceWasRemoved { get; set; }
 	}
 
 	[Mac (10,13, onlyOn64: true), iOS (11,0), TV (11,0), NoWatch]
