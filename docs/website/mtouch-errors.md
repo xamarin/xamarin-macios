@@ -569,7 +569,14 @@ earlier iOS version.
 
 <h3><a name="MT0117"/>MT0117: Can't launch a 32-bit app on a simulator that only supports 64-bit.</h3>
 
-<!-- 0116 - 0124: free to use -->
+<h3><a name="MT0118"/>MT0118: Skipped linking with the framework '{framework}' (referenced by a module reference in {module_reference}) because it was introduced in {platform} {platform_version} (and currently building with the {platform} SDK {sdk_version}).</h3>
+
+A framework reference was detected to a framework that isn't included in the
+SDK currently being used to build.
+
+This is usually fixed by using the latest available version of Xcode.
+
+<!-- 0119 - 0124: free to use -->
 
 <h3><a name="MT0125"/>MT0125: The --assembly-build-target command-line argument is ignored in the simulator.</h3>
 

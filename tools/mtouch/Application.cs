@@ -1334,8 +1334,24 @@ namespace Xamarin.Bundler {
 			if (EnableBitCode && IsSimulatorBuild)
 				throw ErrorHelper.CreateError (84, "Bitcode is not supported in the simulator. Do not pass --bitcode when building for the simulator.");
 
-			if (LinkMode == LinkMode.None && SdkVersion < SdkVersions.GetVersion (Platform))
-				throw ErrorHelper.CreateError (91, "This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).", PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode);
+			// If the default values are changed, remember to update CanWeSymlinkTheApplication
+			// and main.m (default value for xamarin_use_old_dynamic_registrar must match).
+			if (Registrar == RegistrarMode.Default) {
+				if (IsDeviceBuild) {
+					Registrar = RegistrarMode.Static;
+				} else { /* if (app.IsSimulatorBuild) */
+					Registrar = RegistrarMode.Dynamic;
+				}
+			}
+
+			if (LinkMode == LinkMode.None && SdkVersion < SdkVersions.GetVersion (Platform)) {
+				var msg = string.Format ("This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).", PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode);
+				if (Registrar == RegistrarMode.Dynamic) {
+					ErrorHelper.Warning (91, msg);
+				} else {
+					throw ErrorHelper.CreateError (91, msg);
+				}
+			}
 
 			Namespaces.Initialize ();
 
@@ -1358,16 +1374,6 @@ namespace Xamarin.Bundler {
 		
 		void SelectRegistrar ()
 		{
-			// If the default values are changed, remember to update CanWeSymlinkTheApplication
-			// and main.m (default value for xamarin_use_old_dynamic_registrar must match).
-			if (Registrar == RegistrarMode.Default) {
-				if (IsDeviceBuild) {
-					Registrar = RegistrarMode.Static;
-				} else { /* if (app.IsSimulatorBuild) */
-					Registrar = RegistrarMode.Dynamic;
-				}
-			}
-
 			foreach (var target in Targets)
 				target.SelectStaticRegistrar ();
 		}
