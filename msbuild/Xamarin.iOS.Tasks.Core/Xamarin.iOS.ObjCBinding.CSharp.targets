@@ -133,7 +133,7 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 			Symlinks="true"
 			Sources="%(ObjCBindingNativeFramework.Identity)"
 			OutputFile="$(IntermediateOutputPath)%(ObjCBindingNativeFramework.Filename)%(ObjCBindingNativeFramework.Extension)"
-			WorkingDirectory="%(ObjCBindingNativeFramework.FullPath)" >
+			WorkingDirectory="%(ObjCBindingNativeFramework.Identity)" >
 		</Zip>
 
 		<CreateItem Include="$(IntermediateOutputPath)%(ObjCBindingNativeFramework.Filename)%(ObjCBindingNativeFramework.Extension)">
