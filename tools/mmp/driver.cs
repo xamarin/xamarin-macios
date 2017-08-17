@@ -123,9 +123,9 @@ namespace Xamarin.Bundler {
 		const string pkg_config = "/Library/Frameworks/Mono.framework/Commands/pkg-config";
 
 		static HashSet<string> xammac_reference_assemblies = new HashSet<string> {
-			"Xamarin.Mac.dll",
-			"Xamarin.Mac.CFNetwork.dll",
-			"OpenTK.dll"
+			"Xamarin.Mac",
+			"Xamarin.Mac.CFNetwork",
+			"OpenTK"
 		};
 
 		static void ShowHelp (OptionSet os) {
@@ -1893,7 +1893,17 @@ namespace Xamarin.Bundler {
 			resolved_assemblies.Add (fqname);
 
 			foreach (AssemblyNameReference reference in assembly.MainModule.AssemblyReferences) {
-				var reference_assembly = BuildTarget.Resolver.Resolve (SwapOutReferenceAssembly (reference.FullName));
+				// Assembly references may include items such as Xamarin.Mac which 
+				// may need to be swapped out with the arch specific version
+				// However, the resolver handles assembly references seperately from full paths
+				// so we must special case here
+				string swapedOutReference = SwapOutReferenceAssembly (reference.Name);
+
+				AssemblyDefinition reference_assembly;
+				if (swapedOutReference != reference.Name)
+					reference_assembly = BuildTarget.Resolver.AddAssembly (swapedOutReference);
+				else
+					reference_assembly = BuildTarget.Resolver.Resolve (reference.FullName);
 				ProcessAssemblyReferences (reference_assembly);
 			}
 		}
@@ -1908,12 +1918,16 @@ namespace Xamarin.Bundler {
 
 			if (assembly.Contains ("OpenTK.dll") && IsUnifiedFullXamMacFramework)
 				return assembly;
+
+			bool hasExtension = fileName.EndsWith (".dll", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith (".exe", StringComparison.OrdinalIgnoreCase);
+			string fileNameNoExtension = hasExtension ? Path.GetFileNameWithoutExtension (fileName) : fileName;  // Path.HasExtension does not handle "Xamarin.Mac" well
+
 			if (IsUnified &&
-				xammac_reference_assemblies.Contains (fileName)) {
+				xammac_reference_assemblies.Contains (fileNameNoExtension)) {
 				switch (arch) {
 				case "i386":
 				case "x86_64":
-					return Path.Combine (GetXamMacPrefix (), "lib", arch, (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework) ? "full" : "mobile", fileName);
+					return Path.Combine (GetXamMacPrefix (), "lib", arch, (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework) ? "full" : "mobile", fileNameNoExtension + ".dll");
 				default:
 					throw new MonoMacException (5205, true, "Invalid architecture '{0}'. " +
 						"Valid architectures are i386 and x86_64 (when --profile=mobile).", arch);
