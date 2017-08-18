@@ -923,6 +923,7 @@ namespace Xamarin.Bundler
 		{
 			try {
 				Console.OutputEncoding = new UTF8Encoding (false, false);
+				SetCurrentLanguage ();
 				return Main2 (args);
 			}
 			catch (Exception e) {
