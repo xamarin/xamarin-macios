@@ -21,6 +21,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <Commandlineparameters>../../iphoneos9.2-arm64.pch /Library/Frameworks/Xamarin.iOS.framework/Versions/Current//lib/64bits/Xamarin.iOS.dll</Commandlineparameters>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
