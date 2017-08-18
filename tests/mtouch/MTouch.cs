@@ -813,7 +813,7 @@ namespace Xamarin
 				mtouch.CreateTemporaryApp ();
 				mtouch.TargetFramework = GetTargetFramework (profile);
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildSim));
-				mtouch.AssertError (85, string.Format ("No reference to '{0}' was found. It will be added automatically.", Path.GetFileName (GetBaseLibrary (profile))));
+				mtouch.AssertWarning (85, string.Format ("No reference to '{0}' was found. It will be added automatically.", Path.GetFileName (GetBaseLibrary (profile))));
 			}
 		}
 
@@ -3056,11 +3056,11 @@ public partial class NotificationService : UNNotificationServiceExtension
 
 				mtouch.HttpMessageHandler = "HttpClientHandler";
 				mtouch.AssertExecute (MTouchAction.BuildSim);
-				mtouch.AssertError (2015, "Invalid HttpMessageHandler `HttpClientHandler` for watchOS. The only valid value is NSUrlSessionHandler.");
+				mtouch.AssertWarning (2015, "Invalid HttpMessageHandler `HttpClientHandler` for watchOS. The only valid value is NSUrlSessionHandler.");
 
 				mtouch.HttpMessageHandler = "CFNetworkHandler";
 				mtouch.AssertExecute (MTouchAction.BuildSim);
-				mtouch.AssertError (2015, "Invalid HttpMessageHandler `CFNetworkHandler` for watchOS. The only valid value is NSUrlSessionHandler.");
+				mtouch.AssertWarning (2015, "Invalid HttpMessageHandler `CFNetworkHandler` for watchOS. The only valid value is NSUrlSessionHandler.");
 
 				mtouch.HttpMessageHandler = "Dummy";
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim);
