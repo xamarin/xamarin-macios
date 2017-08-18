@@ -1,3 +1,8 @@
+# ARKit
+
+## This method is manually bound.
+!simd-missing-marshaldirective! System.IntPtr ARKit.ARPointCloud::GetRawPoints(): simd type: vector_float3
+
 # AVFoundation
 
 ## We only bind "finished" as we cannot use [Bind] here as it would break compatibility with iOS 6.x
@@ -68,6 +73,10 @@
 ## part of category GKScore_Deprecated
 !missing-selector! GKScore::playerID not bound
 
+# GameplayKit
+
+# Bound as GKAgent3D.Rotation3x3
+!simd-can't-map-native! GKAgent3D::rotation: could not find a managed method (selector:  name: GKAgent3D::. Found the simd type 'matrix_float3x3' in the native signature.'
 
 # Intents
 
@@ -175,6 +184,38 @@
 !incorrect-protocol-member! MDLMeshBufferZone::allocator is REQUIRED and should be abstract
 !incorrect-protocol-member! MDLMeshBufferZone::capacity is REQUIRED and should be abstract
 
+## MDLTransformComponent is a protocol, which makes mapping non-trivial because the only place that has the required information is in the protocol's ProtocolMember attributes.
+
+## This selector does not have a fixed version with the correct
+## Simd matrix, because it's a static member in a protocol, so creating an
+## extension method doesn't make much sense.
+!simd-can't-map-native! MDLTransformComponent::globalTransformWithObject:atTime:: could not find a managed method (selector: globalTransformWithObject:atTime: name: +MDLTransformComponent::globalTransformWithObject:atTime:. Found the simd type 'matrix_float4x4' in the native signature.
+
+## A Simd-fixed version exists as an extension method in the protocol interface (MDLTransformComponent_Extensions.GetLocalTransform4x4)
+!simd-can't-map-native! MDLTransformComponent::localTransformAtTime:: could not find a managed method (selector: localTransformAtTime: name: MDLTransformComponent::localTransformAtTime:. Found the simd type 'matrix_float4x4' in the native signature.
+
+## A Simd-fixed version exists as an extension method: MDLTransformComponent_Extensions.GetMatrix4x4
+!simd-can't-map-native! MDLTransformComponent::matrix: could not find a managed method (selector:  name: MDLTransformComponent::matrix. Found the simd type 'matrix_float4x4' in the native signature.
+
+## A Simd-fixed version exists as an extension method: MDLTransformComponent_Extensions.SetMatrix4x4
+!simd-can't-map-native! MDLTransformComponent::setMatrix:: could not find a managed method (selector: setMatrix: name: MDLTransformComponent::setMatrix:. Found the simd type 'matrix_float4x4' in the native signature.
+
+## A Simd-fixed version exists as an extension method: MDLTransformComponent_Extensions.SetLocalTransform
+!simd-can't-map-native! MDLTransformComponent::setLocalTransform:: could not find a managed method (selector: setLocalTransform: name: MDLTransformComponent::setLocalTransform:. Found the simd type 'matrix_float4x4' in the native signature.
+
+## A Simd-fixed version exists as an extension method: MDLTransformComponent_Extensions.SetLocalTransform
+!simd-can't-map-native! MDLTransformComponent::setLocalTransform:forTime:: could not find a managed method (selector: setLocalTransform:forTime: name: MDLTransformComponent::setLocalTransform:forTime:. Found the simd type 'matrix_float4x4' in the native signature.
+
+## All the MDLMesh constructors below are bound as internal functions.
+!simd-can't-map-native! MDLMesh::initBoxWithExtent:segments:inwardNormals:geometryType:allocator:: could not find a managed method (selector: initBoxWithExtent:segments:inwardNormals:geometryType:allocator: name: Generators::initBoxWithExtent:segments:inwardNormals:geometryType:allocator:. Found the simd type 'vector_uint3' in the native signature.
+!simd-can't-map-native! MDLMesh::initCapsuleWithExtent:cylinderSegments:hemisphereSegments:inwardNormals:geometryType:allocator:: could not find a managed method (selector: initCapsuleWithExtent:cylinderSegments:hemisphereSegments:inwardNormals:geometryType:allocator: name: Generators::initCapsuleWithExtent:cylinderSegments:hemisphereSegments:inwardNormals:geometryType:allocator:. Found the simd type 'vector_uint2' in the native signature.
+!simd-can't-map-native! MDLMesh::initConeWithExtent:segments:inwardNormals:cap:geometryType:allocator:: could not find a managed method (selector: initConeWithExtent:segments:inwardNormals:cap:geometryType:allocator: name: Generators::initConeWithExtent:segments:inwardNormals:cap:geometryType:allocator:. Found the simd type 'vector_uint2' in the native signature.
+!simd-can't-map-native! MDLMesh::initCylinderWithExtent:segments:inwardNormals:topCap:bottomCap:geometryType:allocator:: could not find a managed method (selector: initCylinderWithExtent:segments:inwardNormals:topCap:bottomCap:geometryType:allocator: name: Generators::initCylinderWithExtent:segments:inwardNormals:topCap:bottomCap:geometryType:allocator:. Found the simd type 'vector_uint2' in the native signature.
+!simd-can't-map-native! MDLMesh::initHemisphereWithExtent:segments:inwardNormals:cap:geometryType:allocator:: could not find a managed method (selector: initHemisphereWithExtent:segments:inwardNormals:cap:geometryType:allocator: name: Generators::initHemisphereWithExtent:segments:inwardNormals:cap:geometryType:allocator:. Found the simd type 'vector_uint2' in the native signature.
+!simd-can't-map-native! MDLMesh::initPlaneWithExtent:segments:geometryType:allocator:: could not find a managed method (selector: initPlaneWithExtent:segments:geometryType:allocator: name: Generators::initPlaneWithExtent:segments:geometryType:allocator:. Found the simd type 'vector_uint2' in the native signature.
+!simd-can't-map-native! MDLMesh::initSphereWithExtent:segments:inwardNormals:geometryType:allocator:: could not find a managed method (selector: initSphereWithExtent:segments:inwardNormals:geometryType:allocator: name: Generators::initSphereWithExtent:segments:inwardNormals:geometryType:allocator:. Found the simd type 'vector_uint2' in the native signature.
+!simd-can't-map-native! MDLMesh::newBoxWithDimensions:segments:geometryType:inwardNormals:allocator:: could not find a managed method (selector: newBoxWithDimensions:segments:geometryType:inwardNormals:allocator: name: +Generators::newBoxWithDimensions:segments:geometryType:inwardNormals:allocator:. Found the simd type 'vector_uint3' in the native signature.
+!simd-can't-map-native! MDLMesh::newPlaneWithDimensions:segments:geometryType:allocator:: could not find a managed method (selector: newPlaneWithDimensions:segments:geometryType:allocator: name: +Generators::newPlaneWithDimensions:segments:geometryType:allocator:. Found the simd type 'vector_uint2' in the native signature.
 
 # Security
 
