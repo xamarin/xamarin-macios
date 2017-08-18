@@ -31,6 +31,26 @@
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'watchOS' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>watchos4.0-armv7.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/32bits/Xamarin.WatchOS.dll</StartArguments>
+    <StartWorkingDirectory>%24{ProjectDir}</StartWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'iOS' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>iphoneos11.0-arm64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/Xamarin.iOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll</StartArguments>
+    <StartWorkingDirectory>%24{ProjectDir}</StartWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'tvOS' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>appletvos11.0-arm64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll</StartArguments>
+    <StartWorkingDirectory>%24{ProjectDir}</StartWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'macOS' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>macosx10.13-x86_64.pch ../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/x86_64/mobile/Xamarin.Mac.dll</StartArguments>
+    <StartWorkingDirectory>%24{ProjectDir}</StartWorkingDirectory>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Clang">
