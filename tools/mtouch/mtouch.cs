@@ -52,6 +52,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Linq;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -657,7 +658,7 @@ namespace Xamarin.Bundler
 					sw.WriteLine ("\txamarin_init_mono_debug = {0};", app.PackageManagedDebugSymbols ? "TRUE" : "FALSE");
 					sw.WriteLine ("\txamarin_executable_name = \"{0}\";", assembly_name);
 					sw.WriteLine ("\tmono_use_llvm = {0};", enable_llvm ? "TRUE" : "FALSE");
-					sw.WriteLine ("\txamarin_log_level = {0};", verbose);
+					sw.WriteLine ("\txamarin_log_level = {0};", verbose.ToString (CultureInfo.InvariantCulture));
 					sw.WriteLine ("\txamarin_arch_name = \"{0}\";", abi.AsArchString ());
 					if (!app.IsDefaultMarshalManagedExceptionMode)
 						sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", app.MarshalManagedExceptions);

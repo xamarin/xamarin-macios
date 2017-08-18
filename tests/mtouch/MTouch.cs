@@ -3260,6 +3260,27 @@ public class TestApp {
 		}
 
 		[Test]
+		[TestCase ("sl_SI")] // Slovenian. Has a strange minus sign.
+		[TestCase ("ur_IN")] // Urdu (India). Right-to-left.
+		public void BuildWithCulture (string culture)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Debug = false; // disables the simlauncher, and makes us produce a main.m
+				mtouch.Verbosity = -200;
+				mtouch.Linker = MTouchLinker.DontLink; // faster
+				mtouch.EnvironmentVariables = new Dictionary<string, string> ();
+				mtouch.EnvironmentVariables ["LANG"] = culture;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build sim");
+
+				mtouch.Debug = true; // faster
+				mtouch.Linker = MTouchLinker.LinkAll; // faster
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build dev");
+			}
+		}
+
+		[Test]
 		[TestCase ("CFNetworkHandler", "CFNetworkHandler")]
 		[TestCase ("NSUrlSessionHandler", "NSUrlSessionHandler")]
 		[TestCase ("HttpClientHandler", "HttpClientHandler")]
