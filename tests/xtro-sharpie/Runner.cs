@@ -193,18 +193,19 @@ namespace Extrospection {
 		
 		public override void VisitDecl (Decl decl)
 		{
-			if (decl is FunctionDecl)
+			if (decl is FunctionDecl) {
 				;
-			else if (decl is VarDecl)
+			} else if (decl is VarDecl) {
 				;
-			else if (decl is ObjCProtocolDecl)
+			} else if (decl is ObjCProtocolDecl) {
 				;
-			else if (decl is ObjCInterfaceDecl)
+			} else if (decl is ObjCInterfaceDecl) {
 				;
-			else if (decl is EnumDecl)
+			} else if (decl is EnumDecl) {
 				;
-			else
+			} else {
 				Console.WriteLine ("{0}\t{1}", decl, decl.GetType ().Name);
+			}
 		}
 	}
 }
