@@ -41,7 +41,8 @@ namespace MonoTouchFixtures.ARKit {
 		protected unsafe override IntPtr GetRawPoints ()
 		{
 			vectorArray = new Vector3 [] { new Vector3 (1, 2, 3), new Vector3 (4, 5, 6) };
-			vectorArrayHandle = GCHandle.Alloc (vectorArray, GCHandleType.Pinned);
+			if (!vectorArrayHandle.IsAllocated)
+				vectorArrayHandle = GCHandle.Alloc (vectorArray, GCHandleType.Pinned);
 			Vector3* addr = (Vector3*)vectorArrayHandle.AddrOfPinnedObject ();
 			return (IntPtr)addr;
 		}
@@ -49,7 +50,8 @@ namespace MonoTouchFixtures.ARKit {
 		protected unsafe override IntPtr GetRawIdentifiers ()
 		{
 			identifiers = new ulong [] { 0, 1 };
-			identifiersHandle = GCHandle.Alloc (identifiers, GCHandleType.Pinned);
+			if (!identifiersHandle.IsAllocated)
+				identifiersHandle = GCHandle.Alloc (identifiers, GCHandleType.Pinned);
 			ulong* addr = (ulong*)identifiersHandle.AddrOfPinnedObject ();
 			return (IntPtr)addr;
 		}
