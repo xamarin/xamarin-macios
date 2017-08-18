@@ -23,6 +23,11 @@ namespace MonoTouchFixtures.ARKit {
 
 	class ARPointCloudPoker : ARPointCloud {
 
+		GCHandle vectorArrayHandle;
+		GCHandle identifiersHandle;
+		Vector3 [] vectorArray;
+		ulong [] identifiers;
+
 		public ARPointCloudPoker () : base (IntPtr.Zero)
 		{
 		}
@@ -35,26 +40,25 @@ namespace MonoTouchFixtures.ARKit {
 
 		protected unsafe override IntPtr GetRawPoints ()
 		{
-			var va = new Vector3 [] { new Vector3 (1, 2, 3), new Vector3 (4, 5, 6) };
-			var gch = GCHandle.Alloc (va, GCHandleType.Pinned);
-			try {
-				Vector3* addr = (Vector3*)gch.AddrOfPinnedObject ();
-				return (IntPtr)addr;
-			} finally {
-				gch.Free ();
-			}
+			vectorArray = new Vector3 [] { new Vector3 (1, 2, 3), new Vector3 (4, 5, 6) };
+			vectorArrayHandle = GCHandle.Alloc (vectorArray, GCHandleType.Pinned);
+			Vector3* addr = (Vector3*)vectorArrayHandle.AddrOfPinnedObject ();
+			return (IntPtr)addr;
 		}
 
 		protected unsafe override IntPtr GetRawIdentifiers ()
 		{
-			var identifiers = new ulong [] { 0, 1 };
-			var gch = GCHandle.Alloc (identifiers, GCHandleType.Pinned);
-			try {
-				ulong* addr = (ulong*)gch.AddrOfPinnedObject ();
-				return (IntPtr)addr;
-			} finally {
-				gch.Free ();
-			}
+			identifiers = new ulong [] { 0, 1 };
+			identifiersHandle = GCHandle.Alloc (identifiers, GCHandleType.Pinned);
+			ulong* addr = (ulong*)identifiersHandle.AddrOfPinnedObject ();
+			return (IntPtr)addr;
+		}
+
+		protected override void Dispose (bool disposing)
+		{
+			base.Dispose (disposing);
+			vectorArrayHandle.Free ();
+			identifiersHandle.Free ();
 		}
 	}
 
