@@ -647,6 +647,9 @@
     <Compile Include="PassKit\LabeledValueTest.cs" />
     <Compile Include="System.Net.Http\MessageHandlers.cs" />
     <Compile Include="AVFoundation\PlayerItemVideoOutputTest.cs" />
+    <Compile Include="Simd\MatrixFloat2x2Test.cs" />
+    <Compile Include="Simd\MatrixFloat3x3Test.cs" />
+    <Compile Include="Simd\MatrixFloat4x4Test.cs" />
     <Compile Include="mono\ConfigTest.cs" />
     <Compile Include="OpenGLES\EAGLContext.cs" />
     <Compile Include="CoreText\CTParagraphStyleTests.cs" />
@@ -718,6 +721,7 @@
     <Folder Include="VideoToolbox\" />
     <Folder Include="shared\" />
     <Folder Include="shared\ObjCRuntime\" />
+    <Folder Include="Simd\" />
     <Folder Include="PushKit\" />
     <Folder Include="ModelIO\" />
     <Folder Include="GameplayKit\" />
