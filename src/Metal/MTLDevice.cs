@@ -64,11 +64,14 @@ namespace XamCore.Metal {
 #if MONOMAC
 		[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
 		[DllImport (Constants.MetalLibrary)]
-		static extern IMTLDevice[] MTLCopyAllDevicesWithObserver (IntPtr observer, MTLDeviceNotificationHandler handler);
+		static extern IntPtr MTLCopyAllDevicesWithObserver (IntPtr observer, MTLDeviceNotificationHandler handler);
 
 		[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
 		public static IMTLDevice [] GetAllDevices (MTLDeviceNotificationHandler handler, ref NSObject observer)
 		{
+			if (observer == null)
+				throw new ArgumentNullException ("observer");
+			
 			return MTLCopyAllDevicesWithObserver (observer.Handle, handler);
 		}
 
@@ -79,6 +82,8 @@ namespace XamCore.Metal {
 		[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
 		public static void RemoveObserver (NSObject observer)
 		{
+			if (observer == null)
+				throw new ArgumentNullException ("observer");
 			MTLRemoveDeviceObserver (observer.Handle);
 		}
 #endif
@@ -109,6 +114,8 @@ namespace XamCore.Metal {
 
 		public unsafe static void GetDefaultSamplePositions (this IMTLDevice This, MTLSamplePosition [] positions, nuint count)
 		{
+			if (positions.Length < count)
+				throw new ArgumentException ("Length of 'positions' cannot be less than 'count'.");
 			fixed (void * handle = positions)
 				GetDefaultSamplePositions (This, (IntPtr)handle, count);
 		}

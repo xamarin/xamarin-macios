@@ -948,9 +948,12 @@ METAL_CORE_SOURCES = \
 	Metal/Defs.cs \
 
 METAL_SOURCES = \
+	Metal/MTLArgumentEncoder.cs \
 	Metal/MTLCompat.cs \
 	Metal/MTLDevice.cs \
 	Metal/MTLArrays.cs \
+	Metal/MTLRenderCommandEncoder.cs \
+	Metal/MTLRenderPassDescriptor.cs \
 	Metal/MTLVertexDescriptor.cs \
 
 # MetalKit

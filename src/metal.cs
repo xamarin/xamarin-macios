@@ -1044,6 +1044,7 @@ namespace XamCore.Metal {
 		[Export ("replaceRegion:mipmapLevel:withBytes:bytesPerRow:")]
 		void ReplaceRegion (MTLRegion region, nuint level, IntPtr pixelBytes, nuint bytesPerRow);
 
+		//FIXME: https://bugzilla.xamarin.com/show_bug.cgi?id=58899
 //		[Mac (10, 11), iOS (11,0), TV (11,0), NoWatch]
 //#if XAMCORE_4_0
 //		[Abstract]
@@ -2542,10 +2543,10 @@ namespace XamCore.Metal {
 	interface MTLPipelineBufferDescriptorArray
 	{
 		[Export ("objectAtIndexedSubscript:")]
-		MTLPipelineBufferDescriptor GetObject (nuint bufferIndex);
+		protected MTLPipelineBufferDescriptor GetObject (nuint bufferIndex);
 
 		[Export ("setObject:atIndexedSubscript:")]
-		void SetObject ([NullAllowed] MTLPipelineBufferDescriptor buffer, nuint bufferIndex);
+		protected void SetObject ([NullAllowed] MTLPipelineBufferDescriptor buffer, nuint bufferIndex);
 	}
 
 	[Mac (10,13, onlyOn64: true), iOS (11,0), TV (11,0), NoWatch]
