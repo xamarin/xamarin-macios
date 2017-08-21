@@ -446,6 +446,106 @@ namespace XamCore.SceneKit {
 #endif
 	}
 
+	interface ISCNCameraControllerDelegate {}
+	
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Protocol]
+	[Model] // Figured I would keep the model for convenience, as all the methods here are optional
+	[BaseType (typeof(NSObject))]
+	interface SCNCameraControllerDelegate
+	{
+		[Export ("cameraInertiaWillStartForController:")]
+		void CameraInertiaWillStart (SCNCameraController cameraController);
+	
+		[Export ("cameraInertiaDidEndForController:")]
+		void CameraInertiaDidEnd (SCNCameraController cameraController);
+	}
+	
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface SCNCameraController
+	{
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		[Protocolize]
+		SCNCameraControllerDelegate Delegate { get; set; }
+	
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Assign)]
+		NSObject WeakDelegate { get; set; }
+	
+		[NullAllowed, Export ("pointOfView", ArgumentSemantic.Retain)]
+		SCNNode PointOfView { get; set; }
+	
+		[Export ("interactionMode", ArgumentSemantic.Assign)]
+		SCNInteractionMode InteractionMode { get; set; }
+	
+		[Export ("target", ArgumentSemantic.Assign)]
+		SCNVector3 Target { get; set; }
+	
+		[Export ("automaticTarget")]
+		bool AutomaticTarget { get; set; }
+	
+		[Export ("worldUp", ArgumentSemantic.Assign)]
+		SCNVector3 WorldUp { get; set; }
+	
+		[Export ("inertiaEnabled")]
+		bool InertiaEnabled { get; set; }
+
+		[Export ("inertiaFriction")]
+		float InertiaFriction { get; set; }
+	
+		[Export ("inertiaRunning")]
+		bool InertiaRunning { [Bind ("isInertiaRunning")] get; }
+	
+		[Export ("minimumVerticalAngle")]
+		float MinimumVerticalAngle { get; set; }
+	
+		[Export ("maximumVerticalAngle")]
+		float MaximumVerticalAngle { get; set; }
+	
+		[Export ("minimumHorizontalAngle")]
+		float MinimumHorizontalAngle { get; set; }
+	
+		[Export ("maximumHorizontalAngle")]
+		float MaximumHorizontalAngle { get; set; }
+	
+		[Export ("translateInCameraSpaceByX:Y:Z:")]
+		void TranslateInCameraSpace (float deltaX, float deltaY, float deltaZ);
+	
+		[Export ("frameNodes:")]
+		void FrameNodes (SCNNode[] nodes);
+	
+		[Export ("rotateByX:Y:")]
+		void Rotate (float deltaX, float deltaY);
+	
+		[Export ("rollBy:aroundScreenPoint:viewport:")]
+		void Roll (float delta, CGPoint screenPoint, CGSize viewport);
+	
+		[Export ("dollyBy:onScreenPoint:viewport:")]
+		void DollyBy (float delta, CGPoint screenPoint, CGSize viewport);
+	
+		[Export ("rollAroundTarget:")]
+		void RollAroundTarget (float delta);
+	
+		[Export ("dollyToTarget:")]
+		void DollyToTarget (float delta);
+	
+		[Export ("clearRoll")]
+		void ClearRoll ();
+	
+		[Export ("stopInertia")]
+		void StopInertia ();
+	
+		[Export ("beginInteraction:withViewport:")]
+		void BeginInteraction (CGPoint location, CGSize viewport);
+	
+		[Export ("continueInteraction:withViewport:sensitivity:")]
+		void ContinueInteraction (CGPoint location, CGSize viewport, nfloat sensitivity);
+	
+		[Export ("endInteraction:withViewport:velocity:")]
+		void EndInteraction (CGPoint location, CGSize viewport, CGPoint velocity);
+	}
+
 	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
