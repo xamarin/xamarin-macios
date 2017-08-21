@@ -90,6 +90,11 @@ namespace Xamarin.MMP.Tests
 			StringBuilder output = new StringBuilder ();
 			Environment.SetEnvironmentVariable ("MONO_PATH", null);
 			int compileResult = Xamarin.Bundler.Driver.RunCommand (exe, args != null ? args.ToString() : string.Empty, null, output, suppressPrintOnErrors: shouldFail);
+			if (!shouldFail && compileResult != 0 && Xamarin.Bundler.Driver.Verbosity < 1) {
+				// Driver.RunCommand won't print failed output unless verbosity > 0, so let's do it ourselves.
+				Console.WriteLine ($"Execution failed; exit code: {compileResult}");
+				Console.WriteLine (output);
+			}
 			Func<string> getInfo = () => getAdditionalFailInfo != null ? getAdditionalFailInfo() : "";
 			if (!shouldFail)
 				Assert.AreEqual (0, compileResult, stepName + " failed:\n\n'" + output + "' " + exe + " " + args + getInfo ());
