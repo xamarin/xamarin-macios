@@ -109,6 +109,7 @@ namespace Xamarin.Bundler {
 
 		static string BundleName { get { return custom_bundle_name != null ? custom_bundle_name : "MonoBundle"; } }
 		static string AppPath { get { return Path.Combine (macos_dir, app_name); } }
+		public static string Arch => arch;
 
 		static string icon;
 		static string certificate_name;
@@ -121,12 +122,6 @@ namespace Xamarin.Bundler {
 		// This must be kept in sync with the system launcher's minimum mono version (in launcher/launcher-system.m)
 		static Version MinimumMonoVersion = new Version (4, 2, 0);
 		const string pkg_config = "/Library/Frameworks/Mono.framework/Commands/pkg-config";
-
-		static HashSet<string> xammac_reference_assemblies = new HashSet<string> {
-			"Xamarin.Mac",
-			"Xamarin.Mac.CFNetwork",
-			"OpenTK"
-		};
 
 		static void ShowHelp (OptionSet os) {
 			Console.WriteLine ("mmp - Xamarin.Mac Packer");
@@ -1866,9 +1861,7 @@ namespace Xamarin.Bundler {
 
 		static void GatherAssemblies () {
 			foreach (string asm in references) {
-				var assembly = BuildTarget.Resolver.AddAssembly (SwapOutReferenceAssembly (asm));
-				if (assembly == null)
-					ErrorHelper.Warning (1501, "Can not resolve reference: {0}", asm);
+				AssemblyDefinition assembly = AddAssemblyPathToResolver (asm);
 				ProcessAssemblyReferences (assembly);
 			}
 			if (BuildTarget.Resolver.Exceptions.Count > 0)
@@ -1893,47 +1886,63 @@ namespace Xamarin.Bundler {
 			resolved_assemblies.Add (fqname);
 
 			foreach (AssemblyNameReference reference in assembly.MainModule.AssemblyReferences) {
-				// Assembly references may include items such as Xamarin.Mac which 
-				// may need to be swapped out with the arch specific version
-				// However, the resolver handles assembly references seperately from full paths
-				// so we must special case here
-				string swapedOutReference = SwapOutReferenceAssembly (reference.Name);
-
-				AssemblyDefinition reference_assembly;
-				if (swapedOutReference != reference.Name)
-					reference_assembly = BuildTarget.Resolver.AddAssembly (swapedOutReference);
-				else
-					reference_assembly = BuildTarget.Resolver.Resolve (reference.FullName);
+				AssemblyDefinition reference_assembly = AddAssemblyReferenceToResolver (reference.Name);
 				ProcessAssemblyReferences (reference_assembly);
 			}
 		}
 
-		static string SwapOutReferenceAssembly (string assembly)
+		static AssemblyDefinition AddAssemblyPathToResolver (string path)
 		{
-			// Inject the correct Xamarin.Mac.dll - the one in the framework
-			// directory is a reference assembly only (stripped of IL, containing
-			// only API/metadata) and the correct one based on the target
-			// architecture needs to replace it
-			string fileName = Path.GetFileName (assembly);
+			if (AssemblySwapInfo.AssemblyNeedsSwappedOut (path))
+				path = AssemblySwapInfo.GetSwappedAssemblyPath (path);
 
-			if (assembly.Contains ("OpenTK.dll") && IsUnifiedFullXamMacFramework)
-				return assembly;
+			var assembly = BuildTarget.Resolver.AddAssembly (path);
+			if (assembly == null)
+				ErrorHelper.Warning (1501, "Can not resolve reference: {0}", path);
+			return assembly;
+		}
 
-			bool hasExtension = fileName.EndsWith (".dll", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith (".exe", StringComparison.OrdinalIgnoreCase);
-			string fileNameNoExtension = hasExtension ? Path.GetFileNameWithoutExtension (fileName) : fileName;  // Path.HasExtension does not handle "Xamarin.Mac" well
+		static AssemblyDefinition AddAssemblyReferenceToResolver (string reference)
+		{
+			if (AssemblySwapInfo.ReferencedNeedsSwappedOut (reference))
+				return BuildTarget.Resolver.AddAssembly (AssemblySwapInfo.GetSwappedReference (reference));
 
-			if (IsUnified &&
-				xammac_reference_assemblies.Contains (fileNameNoExtension)) {
-				switch (arch) {
+			return BuildTarget.Resolver.Resolve (reference);
+		}
+	}
+
+	public static class AssemblySwapInfo {
+		static HashSet<string> xammac_reference_assemblies_names = new HashSet<string> {
+			"Xamarin.Mac",
+			"Xamarin.Mac.CFNetwork",
+			"OpenTK"
+		};
+
+		public static bool AssemblyNeedsSwappedOut (string path) => NeedsSwappedCore (Path.GetFileNameWithoutExtension (path));
+		public static bool ReferencedNeedsSwappedOut (string reference) => NeedsSwappedCore (reference);
+
+		static bool NeedsSwappedCore (string name)
+		{
+			if (name.Contains ("OpenTK") && Driver.IsUnifiedFullXamMacFramework)
+				return false;
+
+			return Driver.IsUnified && xammac_reference_assemblies_names.Contains (name);
+		}
+
+		public static string GetSwappedAssemblyPath (string path) => GetSwappedPathCore (Path.GetFileNameWithoutExtension (path));
+		public static string GetSwappedReference (string reference) => GetSwappedPathCore (reference);
+
+		static string GetSwappedPathCore (string name)
+		{
+			string flavor = (Driver.IsUnifiedFullSystemFramework || Driver.IsUnifiedFullXamMacFramework) ? "full" : "mobile";
+			switch (Driver.Arch) {
 				case "i386":
 				case "x86_64":
-					return Path.Combine (GetXamMacPrefix (), "lib", arch, (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework) ? "full" : "mobile", fileNameNoExtension + ".dll");
+					return Path.Combine (Driver.GetXamMacPrefix (), "lib", Driver.Arch, flavor, name + ".dll");
 				default:
-					throw new MonoMacException (5205, true, "Invalid architecture '{0}'. " +
-						"Valid architectures are i386 and x86_64 (when --profile=mobile).", arch);
-				}
+					throw new MonoMacException (5205, true, "Invalid architecture '{0}'. " + 
+							"Valid architectures are i386 and x86_64 (when --profile=mobile).", Driver.Arch);
 			}
-			return assembly;
 		}
 	}
 }

@@ -729,6 +729,7 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
+		[Test]
 		public void Unified32BitWithXMRequiringLibrary_ShouldReferenceCorrectXM_AndNotCrash ()
 		{
 			RunMMPTest (tmpDir => {
