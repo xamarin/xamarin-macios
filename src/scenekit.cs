@@ -1317,6 +1317,19 @@ namespace XamCore.SceneKit {
 		[Static]
 		[Export ("materialWithMDLMaterial:")]
 		SCNMaterial FromMaterial (MDLMaterial material);
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("displacement")]
+		SCNMaterialProperty Displacement { get; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("fillMode", ArgumentSemantic.Assign)]
+		SCNFillMode FillMode { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("colorBufferWriteMask", ArgumentSemantic.Assign)]
+		SCNColorMask ColorBufferWriteMask { get; set; }
+
 #endif
 	}
 
