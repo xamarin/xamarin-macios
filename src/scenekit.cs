@@ -307,17 +307,17 @@ namespace XamCore.SceneKit {
 		[Export ("name", ArgumentSemantic.Copy)]
 		string Name { get; set;  }
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use FieldOfView or FocalLength instead")]
-		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use FieldOfView or FocalLength instead")]
-		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use FieldOfView or FocalLength instead")]
-		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use FieldOfView or FocalLength instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'FieldOfView' or 'FocalLength' instead.")]
+		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use 'FieldOfView' or 'FocalLength' instead.")]
+		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use 'FieldOfView' or 'FocalLength' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use 'FieldOfView' or 'FocalLength' instead.")]
 		[Export ("xFov")]
 		double XFov { get; set;  }
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use FieldOfView or FocalLength instead")]
-		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use FieldOfView or FocalLength instead")]
-		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use FieldOfView or FocalLength instead")]
-		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use FieldOfView or FocalLength instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'FieldOfView' or 'FocalLength' instead.")]
+		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use 'FieldOfView' or 'FocalLength' instead.")]
+		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use 'FieldOfView' or 'FocalLength' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use 'FieldOfView' or 'FocalLength' instead.")]
 		[Export ("yFov")]
 		double YFov { get; set;  }
 
@@ -345,34 +345,34 @@ namespace XamCore.SceneKit {
 		[Export ("orthographicScale")]
 		double OrthographicScale { get; set; }
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use FocusDistance instead")]
-		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use FocusDistance instead")]
-		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use FocusDistance instead")]
-		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use FocusDistance instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'FocusDistance' instead.")]
+		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use 'FocusDistance' instead.")]
+		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use 'FocusDistance' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use 'FocusDistance' instead.")]
 		[iOS (8,0)][Mac (10,9)]
 		[Export ("focalDistance")]
 		nfloat FocalDistance { get; set; }
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use FocusDistance instead")]
-		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use FocusDistance instead")]
-		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use FocusDistance instead")]
-		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use FocusDistance instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'FocusDistance' instead.")]
+		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use 'FocusDistance' instead.")]
+		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use 'FocusDistance' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use 'FocusDistance' instead.")]
 		[iOS (8,0)][Mac (10,9)]
 		[Export ("focalSize")]
 		nfloat FocalSize { get; set; }
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use FStop instead")]
-		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use FStop instead")]
-		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use FStop instead")]
-		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use FStop instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'FStop' instead.")]
+		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use 'FStop' instead.")]
+		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use 'FStop' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use 'FStop' instead.")]
 		[iOS (8,0)][Mac (10,9)]
 		[Export ("focalBlurRadius")]
 		nfloat FocalBlurRadius { get; set; }
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use FStop instead with FStop = SensorHeight / Aperture")]
-		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use FStop instead with FStop = SensorHeight / Aperture")]
-		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use FStop instead with FStop = SensorHeight / Aperture")]
-		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use FStop instead with FStop = SensorHeight / Aperture")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'FStop' instead with FStop = SensorHeight / Aperture.")]
+		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use 'FStop' instead with FStop = SensorHeight / Aperture.")]
+		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use 'FStop' instead with FStop = SensorHeight / Aperture.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use 'FStop' instead with FStop = SensorHeight / Aperture.")]
 		[iOS (8,0)][Mac (10,9)]
 		[Export ("aperture")]
 		nfloat Aperture { get; set; }
