@@ -217,12 +217,6 @@ namespace Introspection {
 					break;
 				}
 				break;
-			case "NSUserInterfaceCompression":
-				switch (type.Name) {
-				case "NSSliderTouchBarItem":
-					return true; // 33271241
-				}
-				break;
 			}
 
 			switch (type.Name) {
