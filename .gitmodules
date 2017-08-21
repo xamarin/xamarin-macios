@@ -13,9 +13,9 @@
     url = ../../mono/llvm.git
     branch = master
 [submodule "external/mono"]
-    path = external/mono
-    url = ../../mono/mono.git
-    branch = 2017-04
+	path = external/mono
+	url = ../../mono/mono.git
+	branch = d15-3
 [submodule "external/MonoTouch.Dialog"]
     path = external/MonoTouch.Dialog
     url = ../../migueldeicaza/MonoTouch.Dialog.git
