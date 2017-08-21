@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Diagnostics;
 using System.Text;
@@ -3273,10 +3274,12 @@ public class TestApp {
 				mtouch.EnvironmentVariables = new Dictionary<string, string> ();
 				mtouch.EnvironmentVariables ["LANG"] = culture;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build sim");
+				mtouch.AssertWarning (123, $"The current language was set to '{new CultureInfo (culture.Replace ('_', '-')).DisplayName}' according to the LANG environment variable (LANG={culture}).");
 
 				mtouch.Debug = true; // faster
 				mtouch.Linker = MTouchLinker.LinkAll; // faster
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build dev");
+				mtouch.AssertWarning (123, $"The current language was set to '{new CultureInfo (culture.Replace ('_', '-')).DisplayName}' according to the LANG environment variable (LANG={culture}).");
 			}
 		}
 
