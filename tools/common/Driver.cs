@@ -375,7 +375,7 @@ namespace Xamarin.Bundler {
 				if (culture != null)
 					CultureInfo.DefaultThreadCurrentCulture = culture;
 			} catch (Exception e) {
-				ErrorHelper.Warning (114, e, $"Could not set the current language to '{lang}' (according to LANG={lang_variable}): {e.Message}");
+				ErrorHelper.Warning (124, e, $"Could not set the current language to '{lang}' (according to LANG={lang_variable}): {e.Message}");
 			}
 		}
 	}
