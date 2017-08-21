@@ -98,8 +98,10 @@ namespace Introspection
 			"Automounted",
 			"Autoredirect",
 			"Aliasable",
+			"Arcball",
 			"Backface",
-			"Bancaire",
+			"Bancaire", // french
+			"Bancaires", // french
 			"Bary",
 			"Batc",
 			"Bim",
@@ -274,6 +276,7 @@ namespace Introspection
 			"Mtc", // acronym
 			"Mul",
 			"Mult",
+			"Multipath",
 			"Multipeer",
 			"Muxed",
 			"Nanograms",

@@ -1887,13 +1887,13 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // Matrix4 func (CGSize, int, nfloat, nfloat)",
+					Comment = " // Matrix4 func (/* UIInterfaceOrientation */ Int32, CGSize, nfloat, nfloat)",
 					Prefix = "simd__",
 					Variants = Variants.All,
 					ReturnType = Types.Matrix4f,
 					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.CGSize },
 						new ParameterData { TypeData = Types.Int32 },
+						new ParameterData { TypeData = Types.CGSize },
 						new ParameterData { TypeData = Types.NFloat },
 						new ParameterData { TypeData = Types.NFloat },
 					},
@@ -1902,15 +1902,43 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // Matrix4 func (CGSize, Int64, nfloat, nfloat)",
+					Comment = " // Matrix4 func (/* UIInterfaceOrientation */ Int64, CGSize, nfloat, nfloat)",
 					Prefix = "simd__",
 					Variants = Variants.All,
 					ReturnType = Types.Matrix4f,
 					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.CGSize },
 						new ParameterData { TypeData = Types.Int64 },
+						new ParameterData { TypeData = Types.CGSize },
 						new ParameterData { TypeData = Types.NFloat },
 						new ParameterData { TypeData = Types.NFloat },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // CGPoint func (Vector3, /* UIInterfaceOrientation */ Int32, CGSize)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.CGPoint,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Vector3 },
+						new ParameterData { TypeData = Types.Int32 },
+						new ParameterData { TypeData = Types.CGSize },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // CGPoint func (Vector3, /* UIInterfaceOrientation */ Int64, CGSize)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.CGPoint,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Vector3 },
+						new ParameterData { TypeData = Types.Int64 },
+						new ParameterData { TypeData = Types.CGSize },
 					},
 				}
 			);
@@ -2700,6 +2728,13 @@ namespace Xamarin.BindingMethods.Generator
 				ManagedType = "CGSize",
 				NativeType = "CGSize",
 				NativeWrapperType = "CGSize",
+				RequireMarshal = false,
+			};
+
+			public static TypeData CGPoint = new TypeData {
+				ManagedType = "CGPoint",
+				NativeType = "CGPoint",
+				NativeWrapperType = "CGPoint",
 				RequireMarshal = false,
 			};
 

@@ -174,7 +174,7 @@
               </method>
               <method name="UrlDecode(System.String, System.Text.Encoding)" attrib="150" static="true" returntype="System.String">
                 <parameters>
-                  <parameter name="s" position="0" attrib="0" type="System.String" />
+                  <parameter name="str" position="0" attrib="0" type="System.String" />
                   <parameter name="e" position="1" attrib="0" type="System.Text.Encoding" />
                 </parameters>
               </method>
@@ -221,8 +221,8 @@
               </method>
               <method name="UrlEncode(System.String, System.Text.Encoding)" attrib="150" static="true" returntype="System.String">
                 <parameters>
-                  <parameter name="s" position="0" attrib="0" type="System.String" />
-                  <parameter name="Enc" position="1" attrib="0" type="System.Text.Encoding" />
+                  <parameter name="str" position="0" attrib="0" type="System.String" />
+                  <parameter name="e" position="1" attrib="0" type="System.Text.Encoding" />
                 </parameters>
               </method>
               <method name="UrlEncode(System.Byte[], System.Int32, System.Int32)" attrib="150" static="true" returntype="System.String">
@@ -267,7 +267,7 @@
               </method>
               <method name="UrlPathEncode(System.String)" attrib="150" static="true" returntype="System.String">
                 <parameters>
-                  <parameter name="s" position="0" attrib="0" type="System.String" />
+                  <parameter name="str" position="0" attrib="0" type="System.String" />
                 </parameters>
               </method>
             </methods>

@@ -1313,6 +1313,10 @@ namespace XamCore.UIKit {
 		
 		[Export ("encodeUIEdgeInsets:forKey:")]
 		void Encode (UIEdgeInsets edgeInsets, string forKey);
+
+		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Export ("encodeDirectionalEdgeInsets:forKey:")]
+		void Encode (NSDirectionalEdgeInsets directionalEdgeInsets, string forKey);
 		
 		[Export ("encodeUIOffset:forKey:")]
 		void Encode (UIOffset uiOffset, string forKey);
@@ -1335,6 +1339,10 @@ namespace XamCore.UIKit {
 		
 		[Export ("decodeUIEdgeInsetsForKey:")]
 		UIEdgeInsets DecodeUIEdgeInsets (string key);
+
+		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Export ("decodeDirectionalEdgeInsetsForKey:")]
+		NSDirectionalEdgeInsets DecodeDirectionalEdgeInsets (string key);
 		
 		[Export ("decodeUIOffsetForKey:")]
 		UIOffset DecodeUIOffsetForKey (string key);
@@ -4657,7 +4665,11 @@ namespace XamCore.UIKit {
 	// returns NIL handle causing exceptions in further calls, e.g. ToString
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -CGColor not defined for the UIColor <UIPlaceholderColor: 0x114f5ad0>; need to first convert colorspace.
 	[DisableDefaultCtor]
-	interface UIColor : NSSecureCoding, NSCopying {
+	interface UIColor : NSSecureCoding, NSCopying
+#if !TVOS && !WATCH
+		, NSItemProviderWriting
+#endif
+	{
 		[Export ("colorWithWhite:alpha:")][Static]
 		UIColor FromWhiteAlpha (nfloat white, nfloat alpha);
 
@@ -4838,6 +4850,12 @@ namespace XamCore.UIKit {
 		[Export ("getRed:green:blue:alpha:")]
 		bool GetRGBA2 (out nfloat red, out nfloat green, out nfloat blue, out nfloat alpha);
 #endif
+
+		// From the NSItemProviderWriting protocol, a static method.
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] WritableTypeIdentifiers { get; }
 	}
 
 #if !WATCH
@@ -6909,6 +6927,9 @@ namespace XamCore.UIKit {
 	interface UIImage : NSSecureCoding
 #if !WATCH
 		, UIAccessibility, UIAccessibilityIdentification
+#if !TVOS
+		, NSItemProviderWriting
+#endif
 #endif // !WATCH
 	{
 		[ThreadSafe]
@@ -7170,6 +7191,12 @@ namespace XamCore.UIKit {
 		[Export ("imageWithHorizontallyFlippedOrientation")]
 		UIImage GetImageWithHorizontallyFlippedOrientation ();
 #endif
+
+		// From the NSItemProviderWriting protocol, a static method.
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] WritableTypeIdentifiers { get; }
 	}
 
 #if !WATCH
@@ -9735,6 +9762,27 @@ namespace XamCore.UIKit {
 		[Export ("contentInset")]
 		UIEdgeInsets ContentInset { get; set; }
 
+		[iOS (11,0), TV (11,0)]
+		[Export ("adjustedContentInset")]
+		UIEdgeInsets AdjustedContentInset { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("adjustedContentInsetDidChange")]
+		[Advice ("You must call the base method when overriding.")] // [RequiresSuper]
+		void AdjustedContentInsetDidChange ();
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("contentInsetAdjustmentBehavior", ArgumentSemantic.Assign)]
+		UIScrollViewContentInsetAdjustmentBehavior ContentInsetAdjustmentBehavior { get; set; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("contentLayoutGuide", ArgumentSemantic.Strong)]
+		UILayoutGuide ContentLayoutGuide { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("frameLayoutGuide", ArgumentSemantic.Strong)]
+		UILayoutGuide FrameLayoutGuide { get; }
+
 		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
@@ -9859,6 +9907,7 @@ namespace XamCore.UIKit {
 
 		[NoWatch, NoiOS]
 		[TV (9,0)]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Configuring the 'PanGestureRecognizer' for indirect scrolling automatically supports directional presses now, so this property is no longer useful.")]
 		[Export ("directionalPressGestureRecognizer")]
 		UIGestureRecognizer DirectionalPressGestureRecognizer { get; }
 
@@ -9913,6 +9962,10 @@ namespace XamCore.UIKit {
 		[Since (5,0)]
 		[Export ("scrollViewWillEndDragging:withVelocity:targetContentOffset:"), EventArgs ("WillEndDragging")]
 		void WillEndDragging (UIScrollView scrollView, CGPoint velocity, ref CGPoint targetContentOffset);
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("scrollViewDidChangeAdjustedContentInset:")]
+		void DidChangeAdjustedContentInset (UIScrollView scrollView);
 	}
 
 	[Protocol, Model]
@@ -13151,13 +13204,29 @@ namespace XamCore.UIKit {
 		[Export ("layoutMargins")]
 		UIEdgeInsets LayoutMargins { get; set; }
 
+		[iOS (11,0), TV (11,0)]
+		[Export ("directionalLayoutMargins", ArgumentSemantic.Assign)]
+		NSDirectionalEdgeInsets DirectionalLayoutMargins { get; set; }
+
 		[iOS(8,0)]
 		[Export ("preservesSuperviewLayoutMargins")]
 		bool PreservesSuperviewLayoutMargins { get; set; }
 
+		[iOS (11,0), TV (11,0)]
+		[Export ("insetsLayoutMarginsFromSafeArea")]
+		bool InsetsLayoutMarginsFromSafeArea { get; set; }
+
 		[iOS(8,0)]
 		[Export ("layoutMarginsDidChange")]
 		void LayoutMarginsDidChange ();
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("safeAreaInsets")]
+		UIEdgeInsets SafeAreaInsets { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("safeAreaInsetsDidChange")]
+		void SafeAreaInsetsDidChange ();
 
 		[iOS (9,0)]
 		[Static]
@@ -13184,6 +13253,10 @@ namespace XamCore.UIKit {
 		[iOS (9,0)]
 		[Export ("readableContentGuide", ArgumentSemantic.Strong)]
 		UILayoutGuide ReadableContentGuide { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("safeAreaLayoutGuide", ArgumentSemantic.Strong)]
+		UILayoutGuide SafeAreaLayoutGuide { get; }
 
 		[iOS (9,0)]
 		[Export ("inheritedAnimationDuration")]
@@ -13696,6 +13769,8 @@ namespace XamCore.UIKit {
 		bool ExtendedLayoutIncludesOpaqueBars { get; set; }
 	
 		[Since (7,0)]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use UIScrollView's 'ContentInsetAdjustmentBehavior' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use UIScrollView's 'ContentInsetAdjustmentBehavior' instead.")]
 		[Export ("automaticallyAdjustsScrollViewInsets", ArgumentSemantic.Assign)]
 		bool AutomaticallyAdjustsScrollViewInsets { get; set; }
 
@@ -13742,10 +13817,14 @@ namespace XamCore.UIKit {
 		UIViewController ChildViewControllerForStatusBarHidden ();
 
 		[Since (7,0)]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use UIView's 'SafeAreaLayoutGuide' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use UIView's 'SafeAreaLayoutGuide' instead.")]
 		[Export ("topLayoutGuide")]
 		IUILayoutSupport TopLayoutGuide { get; }
 
 		[Since (7,0)]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use UIView's 'SafeAreaLayoutGuide' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use UIView's 'SafeAreaLayoutGuide' instead.")]
 		[Export ("bottomLayoutGuide")]
 		IUILayoutSupport BottomLayoutGuide { get; }
 		
@@ -13848,6 +13927,58 @@ namespace XamCore.UIKit {
 		[iOS (10,0), TV (10,0)]
 		[Export ("restoresFocusAfterTransition")]
 		bool RestoresFocusAfterTransition { get; set; }
+
+		[NoWatch, NoiOS]
+		[TV (11,0)]
+		[Export ("preferredUserInterfaceStyle")]
+		UIUserInterfaceStyle PreferredUserInterfaceStyle { get; }
+
+		[NoWatch, NoiOS]
+		[TV (11,0)]
+		[Export ("setNeedsUserInterfaceAppearanceUpdate")]
+		void SetNeedsUserInterfaceAppearanceUpdate ();
+
+		[NoWatch, NoiOS]
+		[TV (11, 0)]
+		[NullAllowed, Export ("childViewControllerForUserInterfaceStyle")]
+		UIViewController ChildViewControllerForUserInterfaceStyle { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("additionalSafeAreaInsets", ArgumentSemantic.Assign)]
+		UIEdgeInsets AdditionalSafeAreaInsets { get; set; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("systemMinimumLayoutMargins")]
+		NSDirectionalEdgeInsets SystemMinimumLayoutMargins { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("viewRespectsSystemMinimumLayoutMargins")]
+		bool ViewRespectsSystemMinimumLayoutMargins { get; set; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("viewLayoutMarginsDidChange")]
+		[Advice ("You must call the base method when overriding.")] // [RequiresSuper]
+		void ViewLayoutMarginsDidChange ();
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("viewSafeAreaInsetsDidChange")]
+		[Advice ("You must call the base method when overriding.")] // [RequiresSuper]
+		void ViewSafeAreaInsetsDidChange ();
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[NullAllowed, Export ("childViewControllerForScreenEdgesDeferringSystemGestures")]
+		UIViewController ChildViewControllerForScreenEdgesDeferringSystemGestures { get; }
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("preferredScreenEdgesDeferringSystemGestures")]
+		UIRectEdge PreferredScreenEdgesDeferringSystemGestures { get; }
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("setNeedsUpdateOfScreenEdgesDeferringSystemGestures")]
+		void SetNeedsUpdateOfScreenEdgesDeferringSystemGestures ();
 	}
 
 	[Since (7,0)]

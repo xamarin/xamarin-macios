@@ -239,6 +239,9 @@ namespace XamCore.CoreML {
 
 		[Field ("MLModelLicenseKey")]
 		NSString LicenseKey { get; }
+
+		[Field ("MLModelCreatorDefinedKey")]
+		NSString CreatorDefinedKey { get; }
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -248,6 +251,7 @@ namespace XamCore.CoreML {
 		string VersionString { get; }
 		string Author { get; }
 		string License { get; }
+		string CreatorDefined { get; }
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]

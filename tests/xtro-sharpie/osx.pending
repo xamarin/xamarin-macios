@@ -298,6 +298,9 @@
 !unknown-native-enum! INRelativeSetting bound
 !unknown-type! INRelativeSettingResolutionResult bound
 
+## The signature uses INBooleanResolutionResult which is not available on mac
+!missing-protocol-member! INSearchCallHistoryIntentHandling::resolveUnseenForSearchCallHistory:withCompletion: not found
+
 # Used in sandbox for NSOpen/Save panel but never should have been bound. #if !XAMCORE_3_0'ed
 !unknown-type! NSRemoteOpenPanel bound
 !unknown-type! NSRemoteSavePanel bound

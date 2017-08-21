@@ -45,7 +45,7 @@ namespace XamCore.SceneKit {
 		RgbZero,
 		SingleLayer = 2,
 		DualLayer = 3,
-		Default = AOne
+		Default = AOne,
 	}
 
 	[Watch (3,0)]
@@ -310,7 +310,7 @@ namespace XamCore.SceneKit {
 		Multiply = 3,
 		Screen = 4,
 		Replace = 5,
-		Max = 6
+		Max = 6,
 	}
 
 	[Watch (3,0)]
@@ -330,7 +330,7 @@ namespace XamCore.SceneKit {
 		ShowSkeletons = 1 << 7,
 		ShowCreases = 1 << 8,
 		ShowConstraints = 1 << 9,
-		ShowCameras = 1 << 10
+		ShowCameras = 1 << 10,
 	}
 
 	[Watch (3,0)]
@@ -375,7 +375,7 @@ namespace XamCore.SceneKit {
 		Green = 1 << 2,
 		Blue = 1 << 1,
 		Alpha = 1 << 0,
-		All = 15
+		All = 15,
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
@@ -388,7 +388,7 @@ namespace XamCore.SceneKit {
 		OrbitCenteredArcball,
 		OrbitArcball,
 		Pan,
-		Truck
+		Truck,
 	}
 		
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
@@ -396,7 +396,7 @@ namespace XamCore.SceneKit {
 	public enum SCNFillMode : nuint
 	{
 		Fill = 0,
-		Lines = 1
+		Lines = 1,
 	}
 
 	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
@@ -405,7 +405,7 @@ namespace XamCore.SceneKit {
 	{
 		None = 0,
 		PNTriangles,
-		Phong
+		Phong,
 	}
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[Native]
@@ -413,7 +413,7 @@ namespace XamCore.SceneKit {
 	{
 		Closest = 0,
 		All = 1,
-		Any = 2
+		Any = 2,
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
@@ -432,6 +432,4 @@ namespace XamCore.SceneKit {
 		Occluding,
 		Focusable
 	}
-	
-	
 }

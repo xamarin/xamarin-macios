@@ -102,6 +102,7 @@ public static class TypeManager {
 	public static Type SecTrust;
 	public static Type UIEdgeInsets;
 	public static Type UIOffset;
+	public static Type NSDirectionalEdgeInsets;
 
 	public static Type CoreGraphics_CGPoint;
 	public static Type CoreGraphics_CGRect;
@@ -320,6 +321,7 @@ public static class TypeManager {
 		if (Frameworks.HaveUIKit) {
 			UIOffset = Lookup (platform_assembly, "UIKit", "UIOffset");
 			UIEdgeInsets = Lookup (platform_assembly, "UIKit", "UIEdgeInsets");
+			NSDirectionalEdgeInsets = Lookup (platform_assembly, "UIKit", "NSDirectionalEdgeInsets");
 		}
 
 		if (Generator.UnifiedAPI) {

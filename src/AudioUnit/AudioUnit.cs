@@ -63,6 +63,10 @@ namespace XamCore.AudioUnit
 		Initialized = -10849,
 		InvalidOfflineRender = -10848,
 		Unauthorized = -10847,
+		[iOS (11,0), Mac (10,13, onlyOn64: true), TV (11,0), NoWatch]
+		MidiOutputBufferFull = -66753,
+		[iOS (11,0), Mac (10,13, onlyOn64: true), TV (11,0), NoWatch]
+		ExtensionNotFound = -66744,
 	}
 
 	public enum AudioComponentStatus { // Implictly cast to OSType
@@ -350,6 +354,50 @@ namespace XamCore.AudioUnit
 	public enum AudioUnitClumpID // UInt32 in AudioUnitParameterInfo
 	{
 		System = 0
+	}
+
+	public enum AUParameterEventType : uint
+	{
+		Immediate = 1,
+		Ramped = 2,
+	}
+
+	[StructLayout (LayoutKind.Sequential)]
+	public struct AudioUnitParameterEvent
+	{
+		public uint Scope;
+		public uint Element;
+		public uint Parameter;
+		public AUParameterEventType EventType;
+
+		[StructLayout (LayoutKind.Explicit)]
+		public struct EventValuesStruct
+		{
+			[StructLayout (LayoutKind.Sequential)]
+			public struct RampStruct
+			{
+				public int StartBufferOffset;
+				public uint DurationInFrames;
+				public float StartValue;
+				public float EndValue;
+			}
+
+
+			[FieldOffset (0)]
+			public RampStruct Ramp;
+
+			[StructLayout (LayoutKind.Sequential)]
+			public struct ImmediateStruct
+			{
+				public uint BufferOffset;
+				public float Value;
+			}
+
+			[FieldOffset (0)]
+			public ImmediateStruct Immediate;
+		}
+
+		public EventValuesStruct EventValues;
 	}
 
 	public class AudioUnit : IDisposable, XamCore.ObjCRuntime.INativeObject
@@ -873,6 +921,11 @@ namespace XamCore.AudioUnit
 			return AudioUnitSetParameter (handle, type, scope, audioUnitElement, value, 0);
 		}
 		
+		public AudioUnitStatus ScheduleParameter (AudioUnitParameterEvent inParameterEvent, uint inNumParamEvents)
+		{
+			return AudioUnitScheduleParameters (handle, inParameterEvent, inNumParamEvents);
+		}
+
 		public void Dispose()
 		{
 			Dispose (true);
@@ -1031,6 +1084,9 @@ namespace XamCore.AudioUnit
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitSetParameter (IntPtr inUnit, AudioUnitParameterType inID, AudioUnitScopeType inScope,
 			uint inElement, float inValue, uint inBufferOffsetInFrames);
+
+		[DllImport (Constants.AudioUnitLibrary)]
+		static extern AudioUnitStatus AudioUnitScheduleParameters (IntPtr inUnit, AudioUnitParameterEvent inParameterEvent, uint inNumParamEvents);
 
 #if MONOMAC
 		[DllImport (Constants.AudioUnitLibrary)]
@@ -1954,7 +2010,8 @@ namespace XamCore.AudioUnit
 		Hrtf = 2,
 		SoundField = 3,
 		VectorBasedPanning = 4,
-		StereoPassThrough = 5
+		StereoPassThrough = 5,
+		HrtfHQ = 6,
 	}
 
 	public enum AU3DMixerAttenuationCurve : uint
