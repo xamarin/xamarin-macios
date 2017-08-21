@@ -307,9 +307,17 @@ namespace XamCore.SceneKit {
 		[Export ("name", ArgumentSemantic.Copy)]
 		string Name { get; set;  }
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use FieldOfView or FocalLength instead")]
+		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use FieldOfView or FocalLength instead")]
+		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use FieldOfView or FocalLength instead")]
+		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use FieldOfView or FocalLength instead")]
 		[Export ("xFov")]
 		double XFov { get; set;  }
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use FieldOfView or FocalLength instead")]
+		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use FieldOfView or FocalLength instead")]
+		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use FieldOfView or FocalLength instead")]
+		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use FieldOfView or FocalLength instead")]
 		[Export ("yFov")]
 		double YFov { get; set;  }
 
@@ -337,18 +345,34 @@ namespace XamCore.SceneKit {
 		[Export ("orthographicScale")]
 		double OrthographicScale { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use FocusDistance instead")]
+		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use FocusDistance instead")]
+		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use FocusDistance instead")]
+		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use FocusDistance instead")]
 		[iOS (8,0)][Mac (10,9)]
 		[Export ("focalDistance")]
 		nfloat FocalDistance { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use FocusDistance instead")]
+		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use FocusDistance instead")]
+		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use FocusDistance instead")]
+		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use FocusDistance instead")]
 		[iOS (8,0)][Mac (10,9)]
 		[Export ("focalSize")]
 		nfloat FocalSize { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use FStop instead")]
+		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use FStop instead")]
+		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use FStop instead")]
+		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use FStop instead")]
 		[iOS (8,0)][Mac (10,9)]
 		[Export ("focalBlurRadius")]
 		nfloat FocalBlurRadius { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use FStop instead with FStop = SensorHeight / Aperture")]
+		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use FStop instead with FStop = SensorHeight / Aperture")]
+		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use FStop instead with FStop = SensorHeight / Aperture")]
+		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use FStop instead with FStop = SensorHeight / Aperture")]
 		[iOS (8,0)][Mac (10,9)]
 		[Export ("aperture")]
 		nfloat Aperture { get; set; }
@@ -443,6 +467,63 @@ namespace XamCore.SceneKit {
 		[Static]
 		[Export ("cameraWithMDLCamera:")]
 		SCNCamera FromModelCamera (MDLCamera modelCamera);
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("fieldOfView")]
+		nfloat FieldOfView { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("projectionDirection", ArgumentSemantic.Assign)]
+		SCNCameraProjectionDirection ProjectionDirection { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("focalLength")]
+		nfloat FocalLength { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("sensorHeight")]
+		nfloat SensorHeight { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("wantsDepthOfField")]
+		bool WantsDepthOfField { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("focusDistance")]
+		nfloat FocusDistance { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("focalBlurSampleCount")]
+		nint FocalBlurSampleCount { get; set; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("fStop")]
+		nfloat FStop { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("apertureBladeCount")]
+		nint ApertureBladeCount { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("screenSpaceAmbientOcclusionIntensity")]
+		nfloat ScreenSpaceAmbientOcclusionIntensity { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("screenSpaceAmbientOcclusionRadius")]
+		nfloat ScreenSpaceAmbientOcclusionRadius { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("screenSpaceAmbientOcclusionBias")]
+		nfloat ScreenSpaceAmbientOcclusionBias { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("screenSpaceAmbientOcclusionDepthThreshold")]
+		nfloat ScreenSpaceAmbientOcclusionDepthThreshold { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("screenSpaceAmbientOcclusionNormalThreshold")]
+		nfloat ScreenSpaceAmbientOcclusionNormalThreshold { get; set; }
+
 #endif
 	}
 

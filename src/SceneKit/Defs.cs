@@ -416,4 +416,12 @@ namespace XamCore.SceneKit {
 		Any = 2
 	}
 
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Native]
+	public enum SCNCameraProjectionDirection : nint
+	{
+		Vertical = 0,
+		Horizontal = 1
+	}
+	
 }
