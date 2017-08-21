@@ -696,6 +696,20 @@ namespace Xamarin.Bundler
 						t.Resolver.Add (asm.AssemblyDefinition);
 				}
 
+				// Find assemblies that are in more than 1 appex, but not in the container app.
+				// These assemblies will be bundled once into the container .app instead of in each appex.
+				var grouped = sharingTargets.SelectMany ((v) => v.Assemblies).
+							    GroupBy ((v) => Assembly.GetIdentity (v.AssemblyDefinition)).
+							    Where ((v) => !Assemblies.ContainsKey (v.Key)).
+							    Where ((v) => v.Count () > 1);
+				foreach (var gr in grouped) {
+					var asm = gr.First ();
+					Assemblies.Add (asm);
+					Resolver.Add (asm.AssemblyDefinition);
+					gr.All ((v) => v.BundleInContainerApp = true);
+				}
+				                                                                       
+
 				// If any of the appex'es build to a grouped SDK framework, then we must ensure that all SDK assemblies
 				// in that appex are also in the container app.
 				foreach (var st in sharingTargets) {
