@@ -527,6 +527,36 @@ namespace XamCore.SceneKit {
 #endif
 	}
 
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Protocol]
+	[BaseType (typeof(NSObject))]
+	interface SCNCameraControlConfiguration
+	{
+		[Abstract]
+		[Export ("autoSwitchToFreeCamera")]
+		bool AutoSwitchToFreeCamera { get; set; }
+	
+		[Abstract]
+		[Export ("allowsTranslation")]
+		bool AllowsTranslation { get; set; }
+	
+		[Abstract]
+		[Export ("flyModeVelocity")]
+		nfloat FlyModeVelocity { get; set; }
+	
+		[Abstract]
+		[Export ("panSensitivity")]
+		nfloat PanSensitivity { get; set; }
+	
+		[Abstract]
+		[Export ("truckSensitivity")]
+		nfloat TruckSensitivity { get; set; }
+	
+		[Abstract]
+		[Export ("rotationSensitivity")]
+		nfloat RotationSensitivity { get; set; }
+	}
+
 	interface ISCNCameraControllerDelegate {}
 	
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
@@ -925,6 +955,37 @@ namespace XamCore.SceneKit {
 #endif
 	}
 
+#if XAMCORE_2_0 && !WATCH
+	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface SCNGeometryTessellator : NSCopying, NSSecureCoding
+	{
+		[Export ("tessellationFactorScale")]
+		nfloat TessellationFactorScale { get; set; }
+	
+		[Export ("tessellationPartitionMode", ArgumentSemantic.Assign)]
+		MTLTessellationPartitionMode TessellationPartitionMode { get; set; }
+	
+		[Export ("adaptive")]
+		bool Adaptive { [Bind ("isAdaptive")] get; set; }
+	
+		[Export ("screenSpace")]
+		bool ScreenSpace { [Bind ("isScreenSpace")] get; set; }
+	
+		[Export ("edgeTessellationFactor")]
+		nfloat EdgeTessellationFactor { get; set; }
+	
+		[Export ("insideTessellationFactor")]
+		nfloat InsideTessellationFactor { get; set; }
+	
+		[Export ("maximumEdgeLength")]
+		nfloat MaximumEdgeLength { get; set; }
+	
+		[Export ("smoothingMode", ArgumentSemantic.Assign)]
+		SCNTessellationSmoothingMode SmoothingMode { get; set; }
+	}
+#endif
+	
 	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[Static]
@@ -1911,10 +1972,19 @@ namespace XamCore.SceneKit {
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("renderAtTime:viewport:commandBuffer:passDescriptor:")]
 		void Render (double timeInSeconds, CGRect viewport, IMTLCommandBuffer commandBuffer, MTLRenderPassDescriptor renderPassDescriptor);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("renderWithViewport:commandBuffer:passDescriptor:")]
+		void RenderWith (CGRect viewport, IMTLCommandBuffer commandBuffer, MTLRenderPassDescriptor renderPassDescriptor);
 #endif
 		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
 		[Export ("updateProbes:atTime:")]
 		void Update (SCNNode [] lightProbes, double time);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("updateAtTime:")]
+		void UpdateAtTime (double time);
+	
 	}
 
 	[Watch (3,0)]
@@ -2548,6 +2618,11 @@ namespace XamCore.SceneKit {
 		[Mac (10,10)]
 		[Export ("renderer:didSimulatePhysicsAtTime:")]
 		void DidSimulatePhysics ([Protocolize]SCNSceneRenderer renderer, double timeInSeconds);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("renderer:didApplyConstraintsAtTime:")]
+		void DidApplyConstraintsAtTime ([Protocolize] SCNSceneRenderer renderer, double time);
+		
 	}	
 
 	[Watch (3,0)]
@@ -2813,6 +2888,15 @@ namespace XamCore.SceneKit {
 		[iOS (8,0)][Mac (10,10)]
 		[Export ("antialiasingMode")]
 		SCNAntialiasingMode AntialiasingMode { get; set; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("cameraControlConfiguration")]
+		SCNCameraControlConfiguration CameraControlConfiguration { get; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("defaultCameraController")]
+		SCNCameraController DefaultCameraController { get; }
+		
 	}
 
 	[Mac (10,9), iOS (8,0)]

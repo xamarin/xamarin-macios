@@ -423,5 +423,15 @@ namespace XamCore.SceneKit {
 		Vertical = 0,
 		Horizontal = 1
 	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Native]
+	public enum SCNNodeFocusBehavior : nint
+	{
+		None = 0,
+		Occluding,
+		Focusable
+	}
+	
 	
 }
