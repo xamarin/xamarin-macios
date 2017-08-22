@@ -109,6 +109,7 @@ namespace XamCore.ExternalAccessory {
 		NSString BluetoothAccessoryPickerErrorDomain { get; }
 #endif
 
+		[NoMac]
 		[Since (6,0)]
 		[Export ("showBluetoothAccessoryPickerWithNameFilter:completion:")]
 		[Async]
