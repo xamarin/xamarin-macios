@@ -96,4 +96,4 @@ namespace MonoTouchFixtures.ARKit {
 	}
 }
 
-#endif // XAMCORE_2_0 && !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#endif // XAMCORE_2_0 && __IOS__
