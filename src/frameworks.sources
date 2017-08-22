@@ -1603,6 +1603,7 @@ MAC_FRAMEWORKS =            \
 	CoreVideo               \
 	CoreWlan                \
 	EventKit                \
+	ExternalAccessory 	\
 	FinderSync		\
 	GameController          \
 	GameplayKit             \
