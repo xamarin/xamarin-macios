@@ -6227,7 +6227,7 @@ namespace XamCore.UIKit {
 	[Since (7,0)]
 	[BaseType (typeof (NSObject))]
 	interface UIKeyCommand : NSCopying, NSSecureCoding {
-		[Export ("input")]
+		[NullAllowed, Export ("input")]
 		NSString Input { get; }
 
 		[Export ("modifierFlags")]
@@ -8439,6 +8439,10 @@ namespace XamCore.UIKit {
 		[Export ("backgroundImageForBarPosition:barMetrics:")]
 		UIImage GetBackgroundImage (UIBarPosition barPosition, UIBarMetrics barMetrics);
 		
+		[NoTV]
+		[iOS (11,0)]
+		[Export ("prefersLargeTitles")]
+		bool PrefersLargeTitles { get; set; }
 	}
 
 	[BaseType (typeof (UIBarPositioningDelegate))]
@@ -8534,6 +8538,21 @@ namespace XamCore.UIKit {
 		[Since (5,0)]
 		[Export ("setRightBarButtonItems:animated:")][PostGet ("RightBarButtonItems")]
 		void SetRightBarButtonItems (UIBarButtonItem [] items, bool animated);
+
+		[NoTV]
+		[iOS (11,0)]
+		[Export ("largeTitleDisplayMode", ArgumentSemantic.Assign)]
+		UINavigationItemLargeTitleDisplayMode LargeTitleDisplayMode { get; set; }
+
+		[NoTV]
+		[iOS (11,0)]
+		[NullAllowed, Export ("searchController", ArgumentSemantic.Retain)]
+		UISearchController SearchController { get; set; }
+
+		[NoTV]
+		[iOS (11,0)]
+		[Export ("hidesSearchBarWhenScrolling")]
+		bool HidesSearchBarWhenScrolling { get; set; }
 	}
 	
 	[BaseType (typeof (UIViewController))]
@@ -9025,6 +9044,22 @@ namespace XamCore.UIKit {
 		[NoWatch, NoTV, iOS (10, 0)]
 		[Export ("hasColors")]
 		bool HasColors { get; }
+
+		[NoWatch, NoTV, iOS (11,0)]
+		[Export ("itemProviders", ArgumentSemantic.Copy)]
+		NSItemProvider[] ItemProviders { get; set; }
+
+		[NoWatch, NoTV, iOS (11,0)]
+		[Export ("setItemProviders:localOnly:expirationDate:")]
+		void SetItemProviders (NSItemProvider[] itemProviders, bool localOnly, [NullAllowed] NSDate expirationDate);
+
+		[NoWatch, NoTV, iOS (11,0)]
+		[Export ("setObjects:")]
+		void SetObjects (INSItemProviderWriting[] objects);
+
+		[NoWatch, NoTV, iOS (11,0)]
+		[Export ("setObjects:localOnly:expirationDate:")]
+		void SetObjects (INSItemProviderWriting[] objects, bool localOnly, [NullAllowed] NSDate expirationDate);
 	}
 
 	[NoTV]
@@ -12052,6 +12087,7 @@ namespace XamCore.UIKit {
 		[Export ("initWithReuseIdentifier:")]
 		IntPtr Constructor (NSString reuseIdentifier);
 
+		[Advice ("You must call the base method when overriding.")] // [RequiresSuper]
 		[Export ("prepareForReuse")]
 		void PrepareForReuse ();
 

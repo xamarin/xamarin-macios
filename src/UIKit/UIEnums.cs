@@ -2246,6 +2246,16 @@ namespace XamCore.UIKit {
 		View = 0,
 		Delegate,
 	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Native]
+	public enum UINavigationItemLargeTitleDisplayMode : nint
+	{
+		Automatic,
+		Always,
+		Never,
+	}
 	
 	
 }
