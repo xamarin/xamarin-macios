@@ -527,9 +527,10 @@ namespace XamCore.SceneKit {
 #endif
 	}
 
+	interface ISCNCameraControlConfiguration {}
+	
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	interface SCNCameraControlConfiguration
 	{
 		[Abstract]
@@ -633,7 +634,7 @@ namespace XamCore.SceneKit {
 		void Roll (float delta, CGPoint screenPoint, CGSize viewport);
 	
 		[Export ("dollyBy:onScreenPoint:viewport:")]
-		void DollyBy (float delta, CGPoint screenPoint, CGSize viewport);
+		void Dolly (float delta, CGPoint screenPoint, CGSize viewport);
 	
 		[Export ("rollAroundTarget:")]
 		void RollAroundTarget (float delta);
@@ -1981,7 +1982,7 @@ namespace XamCore.SceneKit {
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("updateAtTime:")]
-		void UpdateAtTime (double time);
+		void Update (double time);
 	
 	}
 
@@ -2619,7 +2620,7 @@ namespace XamCore.SceneKit {
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("renderer:didApplyConstraintsAtTime:")]
-		void DidApplyConstraintsAtTime ([Protocolize] SCNSceneRenderer renderer, double time);
+		void DidApplyConstraints ([Protocolize] SCNSceneRenderer renderer, double atTime);
 		
 	}	
 
@@ -2889,7 +2890,7 @@ namespace XamCore.SceneKit {
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Export ("cameraControlConfiguration")]
-		SCNCameraControlConfiguration CameraControlConfiguration { get; }
+		ISCNCameraControlConfiguration CameraControlConfiguration { get; }
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Export ("defaultCameraController")]
