@@ -45,14 +45,6 @@ namespace Xamarin.Utils
 			}
 		}
 
-		public void ReferenceSymbol (string symbol)
-		{
-			if (UnresolvedSymbols == null)
-				UnresolvedSymbols = new HashSet<string> ();
-
-			UnresolvedSymbols.Add (symbol);
-		}
-
 		public void ReferenceSymbols (IEnumerable<Symbol> symbols)
 		{
 			if (UnresolvedSymbols == null)
