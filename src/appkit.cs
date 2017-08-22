@@ -2070,7 +2070,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[BaseType (typeof (NSControl))]
-	interface NSButton : NSAccessibilityButton, NSUserInterfaceCompression {
+	interface NSButton : NSAccessibilityButton {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
@@ -13459,7 +13459,7 @@ namespace XamCore.AppKit {
 	}
 
 	[BaseType (typeof (NSControl))]
-	interface NSSlider : NSUserInterfaceCompression, NSAccessibilitySlider {
+	interface NSSlider : NSAccessibilitySlider {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
