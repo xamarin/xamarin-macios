@@ -258,10 +258,16 @@ namespace XamCore.ARKit {
 		ARPlaneAnchorAlignment Alignment { get; }
 
 		[Export ("center")]
-		Vector3 Center { get; }
+		Vector3 Center {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
 
 		[Export ("extent")]
-		Vector3 Extent { get; }
+		Vector3 Extent {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
 	}
 
 	[iOS (11,0)]
