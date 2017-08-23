@@ -238,6 +238,11 @@ namespace Xamarin.Bundler {
 					dynamic_symbols.AddFunction ("xamarin_dyn_objc_msgSendSuper_stret");
 				}
 
+#if MONOTOUCH
+				if (App.EnableProfiling && App.LibProfilerLinkMode == AssemblyBuildTarget.StaticObject)
+					dynamic_symbols.AddFunction ("mono_profiler_startup_log");
+#endif
+
 				dynamic_symbols.Save (cache_location);
 			}
 
