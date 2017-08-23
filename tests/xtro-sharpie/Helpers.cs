@@ -165,7 +165,8 @@ namespace Extrospection {
 				sb.Append ('+');
 			sb.Append ((self.DeclContext as NamedDecl).Name);
 			sb.Append ("::");
-			sb.Append (self.Selector);
+			var sel = self.Selector.ToString ();
+			sb.Append (string.IsNullOrEmpty (sel) ? self.Name : sel);
 			return sb.ToString ();
 		}
 
