@@ -34,14 +34,15 @@ namespace Xamarin.MMP.Tests
 			public bool FSharp { get; set; }
 			public bool XM45 { get; set; }
 			public bool DiagnosticMSBuild { get; set; }
-			public string ProjectName { get; set; }
-			public string TestCode { get; set; }
-			public string TestDecl { get; set; }
-			public string CSProjConfig { get; set; }
-			public string References { get; set; }
-			public string AssemblyName { get; set; }
-			public string ItemGroup { get; set; }
-			public string SystemMonoVersion { get; set; }
+			public string ProjectName { get; set; } = "";
+			public string TestCode { get; set; } = "";
+			public string TestDecl { get; set; } = "";
+			public string CSProjConfig { get; set; } = "";
+			public string References { get; set; } = "";
+			public string ReferencesBeforePlatform { get; set; } = "";
+			public string AssemblyName { get; set; } = "";
+			public string ItemGroup { get; set; } = "";
+			public string SystemMonoVersion { get; set; } = "";
 
 			// Binding project specific
 			public string APIDefinitionConfig { get; set; }
@@ -53,16 +54,6 @@ namespace Xamarin.MMP.Tests
 			public UnifiedTestConfig (string tmpDir)
 			{
 				TmpDir = tmpDir;
-				ProjectName = "";
-				TestCode = "";
-				TestDecl = "";
-				CSProjConfig = "";
-				References = "";
-				AssemblyName = "";
-				APIDefinitionConfig = "";
-				StructsAndEnumsConfig = "";
-				ItemGroup = "";
-				SystemMonoVersion = "";
 			}
 		}
 
@@ -150,7 +141,11 @@ namespace Xamarin.MMP.Tests
 
 		static string ProjectTextReplacement (UnifiedTestConfig config, string text)
 		{
-			return text.Replace ("%CODE%", config.CSProjConfig).Replace ("%REFERENCES%", config.References).Replace ("%NAME%", config.AssemblyName ?? Path.GetFileNameWithoutExtension (config.ProjectName)).Replace ("%ITEMGROUP%", config.ItemGroup);
+			return text.Replace ("%CODE%", config.CSProjConfig)
+				       .Replace ("%REFERENCES%", config.References)
+				       .Replace ("%REFERENCES_BEFORE_PLATFORM%", config.ReferencesBeforePlatform)
+				       .Replace ("%NAME%", config.AssemblyName ?? Path.GetFileNameWithoutExtension (config.ProjectName))
+				       .Replace ("%ITEMGROUP%", config.ItemGroup);
 		}
 
 		public static string RunEXEAndVerifyGUID (string tmpDir, Guid guid, string path)
@@ -196,11 +191,14 @@ namespace Xamarin.MMP.Tests
 			string sourceDir = FindSourceDirectory ();
 			string sourceFileName = config.FSharp ? "Component1.fs" : "MyClass.cs";
 			string projectSuffix = config.FSharp ? ".fsproj" : ".csproj";
-			File.Copy (Path.Combine (sourceDir, sourceFileName), Path.Combine (config.TmpDir, sourceFileName), true);
+
+			CopyFileWithSubstitutions (Path.Combine (sourceDir, sourceFileName), Path.Combine (config.TmpDir, sourceFileName), text => {
+				return text.Replace ("%CODE%", config.TestCode);
+			});
 
 			return CopyFileWithSubstitutions (Path.Combine (sourceDir, config.ProjectName + projectSuffix), Path.Combine (config.TmpDir, config.ProjectName + projectSuffix), text => {
-					return ProjectTextReplacement (config, text);
-				});
+				return ProjectTextReplacement (config, text);
+			});
 		}
 
 		public static string GetUnifiedExecutableProjectName (UnifiedTestConfig config)
@@ -220,10 +218,10 @@ namespace Xamarin.MMP.Tests
 			return GenerateEXEProject (config);
 		}
 
-		public static string GenerateAndBuildUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, string configuration = null)
+		public static string GenerateAndBuildUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, bool useMSBuild = false, string configuration = null)
 		{
 			string csprojTarget = GenerateUnifiedExecutableProject (config);
-			return BuildProject (csprojTarget, isUnified: true, diagnosticMSBuild: config.DiagnosticMSBuild, shouldFail: shouldFail, configuration: configuration);
+			return BuildProject (csprojTarget, isUnified: true, diagnosticMSBuild: config.DiagnosticMSBuild, shouldFail: shouldFail, useMSBuild: useMSBuild, configuration: configuration);
 		}
 
 		public static string RunGeneratedUnifiedExecutable (UnifiedTestConfig config)
@@ -233,7 +231,7 @@ namespace Xamarin.MMP.Tests
 			return RunEXEAndVerifyGUID (config.TmpDir, config.guid, exePath);
 		}
 
-		public static OutputText TestUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, string configuration = null)
+		public static OutputText TestUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, bool useMSBuild = false, string configuration = null)
 		{
 			// If we've already generated guid bits for this config, don't tack on a second copy
 			if (config.guid == Guid.Empty)
@@ -242,7 +240,7 @@ namespace Xamarin.MMP.Tests
 				config.TestCode += GenerateOutputCommand (config.TmpDir, config.guid);
 			}
 
-			string buildOutput = GenerateAndBuildUnifiedExecutable (config, shouldFail, configuration);
+			string buildOutput = GenerateAndBuildUnifiedExecutable (config, shouldFail, useMSBuild, configuration);
 			if (shouldFail)
 				return new OutputText (buildOutput, "");
 

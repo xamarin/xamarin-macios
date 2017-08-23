@@ -10,3 +10,4 @@ namespace Library
 	}
 }
 
+%CODE%
