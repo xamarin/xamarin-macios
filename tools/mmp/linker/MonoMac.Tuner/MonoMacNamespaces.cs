@@ -71,6 +71,7 @@ namespace MonoMac.Tuner {
 		{ Constants.PrintCoreLibrary, Namespaces.PrintCore },
 		{ Constants.CoreMLLibrary, Namespaces.CoreML },
 		{ Constants.VisionLibrary, Namespaces.Vision },
+		{ Constants.ExternalAccessoryLibrary, Namespaces.ExternalAccessory },
 	};
 
 		public void Process (LinkContext context)
