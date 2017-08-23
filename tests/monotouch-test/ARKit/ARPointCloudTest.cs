@@ -59,8 +59,10 @@ namespace MonoTouchFixtures.ARKit {
 		protected override void Dispose (bool disposing)
 		{
 			base.Dispose (disposing);
-			vectorArrayHandle.Free ();
-			identifiersHandle.Free ();
+			if (vectorArrayHandle.IsAllocated)
+				vectorArrayHandle.Free ();
+			if (identifiersHandle.IsAllocated)
+				identifiersHandle.Free ();
 		}
 	}
 
