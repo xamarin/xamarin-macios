@@ -82,10 +82,11 @@ namespace Introspection {
 				case "GKCloudPlayer":
 				// iOS 10 : test throw because of generic usage
 				case "NSMeasurement`1":
-				// Xcode 9 - Conformance not in heades
+				// Xcode 9 - Conformance not in headers
 				case "MLDictionaryConstraint":
 				case "MLImageConstraint":
 				case "MLMultiArrayConstraint":
+				case "VSSubscription":
 					return true; // skip
 				}
 				break;
@@ -119,6 +120,8 @@ namespace Introspection {
 				case "GKGameSession":
 				// iOS 10 : test throw because of generic usage
 				case "NSMeasurement`1":
+				// iOS 11 / tvOS 11
+				case "VSSubscription":
 					return true;
 				}
 				break;
@@ -147,6 +150,7 @@ namespace Introspection {
 					return true; // skip
 				// xcode 9
 				case "NSConstraintConflict": // Conformance not in headers
+				case "VSSubscription":
 					return true;
 				}
 				break;

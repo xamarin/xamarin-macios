@@ -92,6 +92,10 @@ namespace XamCore.VideoSubscriberAccount {
 		[Abstract]
 		[Export ("accountManager:dismissViewController:")]
 		void DismissViewController (VSAccountManager accountManager, UIViewController viewController);
+
+		[iOS (11,0)][TV (11,0)]
+		[Export ("accountManager:shouldAuthenticateAccountProviderWithIdentifier:")]
+		bool ShouldAuthenticateAccountProvider (VSAccountManager accountManager, string accountProviderIdentifier);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -179,6 +183,10 @@ namespace XamCore.VideoSubscriberAccount {
 		[Export ("supportedAccountProviderIdentifiers", ArgumentSemantic.Copy)]
 		string [] SupportedAccountProviderIdentifiers { get; set; }
 
+		[TV (11,0)][iOS (11,0)]
+		[Export ("featuredAccountProviderIdentifiers", ArgumentSemantic.Copy)]
+		string[] FeaturedAccountProviderIdentifiers { get; set; }
+
 		[NullAllowed, Export ("verificationToken")]
 		string VerificationToken { get; set; }
 
@@ -232,5 +240,37 @@ namespace XamCore.VideoSubscriberAccount {
 		Saml,
 	}
 
+	[TV (11,0)][iOS (11,0)]
+	[Native]
+	public enum VSSubscriptionAccessLevel : nint {
+		Unknown,
+		FreeWithAccount,
+		Paid,
+	}
+
+	[TV (11,0)][iOS (11,0)]
+	[BaseType (typeof (NSObject))]
+	interface VSSubscription {
+		[Export ("expirationDate", ArgumentSemantic.Copy)]
+		NSDate ExpirationDate { get; set; }
+
+		[Export ("accessLevel", ArgumentSemantic.Assign)]
+		VSSubscriptionAccessLevel AccessLevel { get; set; }
+
+		[Export ("tierIdentifiers", ArgumentSemantic.Copy)]
+		string[] TierIdentifiers { get; set; }
+	}
+
+	[TV (11,0)][iOS (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface VSSubscriptionRegistrationCenter {
+		[Static]
+		[Export ("defaultSubscriptionRegistrationCenter")]
+		VSSubscriptionRegistrationCenter Default { get; }
+
+		[Export ("setCurrentSubscription:")]
+		void SetCurrentSubscription ([NullAllowed] VSSubscription currentSubscription);
+	}
 }
 
