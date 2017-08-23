@@ -117,7 +117,7 @@ namespace xharness
 
 		// Run
 		public AppRunnerTarget Target { get; set; }
-		public string SdkRoot { get; set; } = "/Applications/Xcode.app";
+		public string SdkRoot { get; set; }
 		public string Configuration { get; set; } = "Debug";
 		public string LogFile { get; set; }
 		public string LogDirectory { get; set; } = Environment.CurrentDirectory;
@@ -255,6 +255,8 @@ namespace xharness
 			INCLUDE_MAC = make_config.ContainsKey ("INCLUDE_MAC") && !string.IsNullOrEmpty (make_config ["INCLUDE_MAC"]);
 			MAC_DESTDIR = make_config ["MAC_DESTDIR"];
 			IOS_DESTDIR = make_config ["IOS_DESTDIR"];
+			if (string.IsNullOrEmpty (SdkRoot))
+				SdkRoot = make_config ["XCODE_DEVELOPER_ROOT"];
 		}
 		 
 		void AutoConfigureMac ()
