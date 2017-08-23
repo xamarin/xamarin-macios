@@ -472,7 +472,7 @@ namespace XamCore.Vision {
 	interface VNTranslationalImageRegistrationRequest {
 
 		// Inlined from parent class
-[Export ("initWithTargetedCVPixelBuffer:options:")]
+		[Export ("initWithTargetedCVPixelBuffer:options:")]
 		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict);
 
 		[Wrap ("this (pixelBuffer, options?.Dictionary)")]
