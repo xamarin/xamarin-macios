@@ -424,6 +424,7 @@ namespace Xamarin.Bundler {
 	public static partial class Driver
 	{
 		public static int verbose { get { return 0; } }
+		public static int Verbosity {  get { return verbose; }}
 		public static int RunCommand (string path, string args, string[] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
 		{
 			Exception stdin_exc = null;
