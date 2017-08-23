@@ -4325,6 +4325,11 @@ namespace XamCore.UIKit {
 		[Export ("sectionInset")]
 		UIEdgeInsets SectionInset { get; set;  }
 
+		[NoWatch]
+		[iOS (11,0), TV (11,0)]
+		[Export ("sectionInsetReference", ArgumentSemantic.Assign)]
+		UICollectionViewFlowLayoutSectionInsetReference SectionInsetReference { get; set; }
+
 		[iOS (9,0)]
 		[Export ("sectionHeadersPinToVisibleBounds")]
 		bool SectionHeadersPinToVisibleBounds { get; set; }
@@ -5520,6 +5525,11 @@ namespace XamCore.UIKit {
 		[Since (9,0)]
 		[Field ("UIFontTextStyleCallout")]
 		Callout,
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Field ("UIFontTextStyleLargeTitle")]
+		LargeTitle,
 	}
 
 	[Since (7,0)]
@@ -6923,12 +6933,48 @@ namespace XamCore.UIKit {
 	}
 #endif // !WATCH
 
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UIItemProviderPresentationSizeProviding {
+		[Abstract]
+		[Export ("preferredPresentationSizeForItemProvider")]
+		CGSize PreferredPresentationSizeForItemProvider { get; }
+	}
+
+	[iOS (11,0), TV (11,0), Watch (4,0)]
+	[Category]
+	[BaseType (typeof(NSItemProvider))]
+	interface NSItemProvider_UIKitAdditions {
+		[NoWatch, NoTV]
+		[NullAllowed, Export ("teamData", ArgumentSemantic.Copy)]
+		NSData GetTeamData ();
+
+		[NoWatch, NoTV]
+		[NullAllowed, Export ("setTeamData", ArgumentSemantic.Copy)]
+		NSData SetTeamData ();
+
+		[NoWatch, NoTV]
+		[Export ("preferredPresentationSize", ArgumentSemantic.Assign)]
+		CGSize GetPreferredPresentationSize ();
+
+		[NoWatch, NoTV]
+		[Export ("setPreferredPresentationSize", ArgumentSemantic.Assign)]
+		CGSize SetPreferredPresentationSize ();
+
+		[Export ("preferredPresentationStyle", ArgumentSemantic.Assign)]
+		UIPreferredPresentationStyle GetPreferredPresentationStyle ();
+
+		[Export ("setPreferredPresentationStyle", ArgumentSemantic.Assign)]
+		UIPreferredPresentationStyle SetPreferredPresentationStyle ();
+	}
+
 	[BaseType (typeof (NSObject))]
 	interface UIImage : NSSecureCoding
 #if !WATCH
 		, UIAccessibility, UIAccessibilityIdentification
 #if !TVOS
-		, NSItemProviderWriting
+		, NSItemProviderWriting, NSItemProviderReading, UIItemProviderPresentationSizeProviding
 #endif
 #endif // !WATCH
 	{
@@ -7826,6 +7872,10 @@ namespace XamCore.UIKit {
 		[TV (11, 0), NoWatch, NoiOS]
 		[Export ("overlayContentView", ArgumentSemantic.Strong)]
 		UIView OverlayContentView { get; }
+
+		[TV (11,0), NoWatch, NoiOS]
+		[Export ("masksFocusEffectToContents")]
+		bool MasksFocusEffectToContents { get; set; }
 	}
 
 	[NoTV]
@@ -8158,6 +8208,14 @@ namespace XamCore.UIKit {
 		[Static, Export ("isFlashAvailableForCameraDevice:")]
 		bool IsFlashAvailableForCameraDevice (UIImagePickerControllerCameraDevice cameraDevice);
 
+		[iOS (11,0)]
+		[Export ("imageExportPreset", ArgumentSemantic.Assign)]
+		UIImagePickerControllerImageUrlExportPreset ImageExportPreset { get; set; }
+
+		[iOS (11,0)]
+		[Export ("videoExportPreset")]
+		string VideoExportPreset { get; set; }
+
 #if XAMCORE_2_0
 		// manually bound (const fields) in monotouch.dll - unlike the newer fields (static properties)
 
@@ -8177,6 +8235,7 @@ namespace XamCore.UIKit {
 		NSString MediaURL { get; }
 #endif
 
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'UIImagePickerController.PHAsset' instead.")]
 		[Field ("UIImagePickerControllerReferenceURL")]
 		NSString ReferenceUrl { get; }
 
@@ -8186,6 +8245,14 @@ namespace XamCore.UIKit {
 		[iOS (9,1)]
 		[Field ("UIImagePickerControllerLivePhoto")]
 		NSString LivePhoto { get; }
+
+		[iOS (11,0)]
+		[Field ("UIImagePickerControllerPHAsset")]
+		NSString PHAsset { get; }
+
+		[iOS (11,0)]
+		[Field ("UIImagePickerControllerImageURL")]
+		NSString ImageUrl { get; }
 	}
 
 	// UINavigationControllerDelegate, UIImagePickerControllerDelegate
@@ -16260,9 +16327,15 @@ namespace XamCore.UIKit {
 		[Export ("initWithDocumentTypes:inMode:")]
 		IntPtr Constructor (string [] allowedUTIs, UIDocumentPickerMode mode);
 
+		[Advice ("This method will be deprecated in a future release and should be avoided. Instead, use 'UIDocumentPickerViewController (NSUrl[], UIDocumentPickerMode)'.")]
 		[DesignatedInitializer]
 		[Export ("initWithURL:inMode:")]
 		IntPtr Constructor (NSUrl url, UIDocumentPickerMode mode);
+
+		[iOS (11,0)]
+		[Export ("initWithURLs:inMode:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSUrl[] urls, UIDocumentPickerMode mode);
 
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -16273,6 +16346,10 @@ namespace XamCore.UIKit {
 
 		[Export ("documentPickerMode", ArgumentSemantic.Assign)]
 		UIDocumentPickerMode DocumentPickerMode { get; }
+
+		[iOS (11,0)]
+		[Export ("allowsMultipleSelection")]
+		bool AllowsMultipleSelection { get; set; }
 	}
 
 	[NoWatch]
@@ -16281,9 +16358,14 @@ namespace XamCore.UIKit {
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	partial interface UIDocumentPickerDelegate {
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Implement 'DidPickDocument (UIDocumentPickerViewController, NSUrl[])' instead.")]
 		[Abstract]
 		[Export ("documentPicker:didPickDocumentAtURL:"), EventArgs ("UIDocumentPicked")]
 		void DidPickDocument (UIDocumentPickerViewController controller, NSUrl url);
+
+		[iOS (11,0)]
+		[Export ("documentPicker:didPickDocumentsAtURLs:"), EventArgs ("UIDocumentPickedAtUrls"), EventName ("DidPickDocumentAtUrls")]
+		void DidPickDocument (UIDocumentPickerViewController controller, NSUrl[] urls);
 
 		[Export ("documentPickerWasCancelled:")]
 		void WasCancelled (UIDocumentPickerViewController controller);
@@ -17904,5 +17986,5 @@ namespace XamCore.UIKit {
 		[Export ("canPasteItemProviders:")]
 		bool CanPasteItemProviders (NSItemProvider[] itemProviders);
 	}
-#endif
+#endif // !WATCH
 }
