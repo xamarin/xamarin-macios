@@ -659,6 +659,7 @@
     <Compile Include="PassKit\PKPaymentRequestTest.cs" />
     <Compile Include="AudioToolbox\AudioComponentTest.cs" />
     <Compile Include="UIKit\DirectionalEdgeInsetsTest.cs" />
+    <Compile Include="ARKit\ARPointCloudTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
@@ -725,6 +726,7 @@
     <Folder Include="System.Net.Http\" />
     <Folder Include="OpenGLES\" />
     <Folder Include="HomeKit\" />
+    <Folder Include="ARKit\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />
