@@ -1730,12 +1730,10 @@ namespace XamCore.CoreData
 	interface NSPersistentContainer
 	{
 		[Static]
-		[return: NullAllowed]
 		[Export ("persistentContainerWithName:")]
 		NSPersistentContainer GetPersistentContainer (string name);
 
 		[Static]
-		[return: NullAllowed]
 		[Export ("persistentContainerWithName:managedObjectModel:")]
 		NSPersistentContainer GetPersistentContainer (string name, NSManagedObjectModel model);
 
