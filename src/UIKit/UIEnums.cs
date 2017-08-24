@@ -92,6 +92,7 @@ namespace XamCore.UIKit {
 		Redo,
 
 		[iOS (4,0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		PageCurl
 	} 
 
@@ -1688,6 +1689,7 @@ namespace XamCore.UIKit {
 		Minimal
 	}
 
+	[Deprecated (PlatformName.iOS, 11, 0)]
 	[NoTV][NoWatch]
 	[iOS (8, 0)]
 	[Native]
