@@ -1,4 +1,4 @@
-﻿// #define ENABLE_STATIC_REGISTRAR_TESTS https://bugzilla.xamarin.com/show_bug.cgi?id=58629
+﻿#define ENABLE_STATIC_REGISTRAR_TESTS
 
 using System;
 using System.Collections.Generic;
