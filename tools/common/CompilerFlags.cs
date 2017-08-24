@@ -51,7 +51,7 @@ namespace Xamarin.Utils
 				UnresolvedSymbols = new HashSet<string> ();
 
 			foreach (var symbol in symbols)
-				UnresolvedSymbols.Add (symbol.Name);
+				UnresolvedSymbols.Add (symbol.Prefix + symbol.Name);
 		}
 
 		public void AddDefine (string define)
@@ -241,7 +241,7 @@ namespace Xamarin.Utils
 
 			if (UnresolvedSymbols != null) {
 				foreach (var symbol in UnresolvedSymbols)
-					args.Append (" -u ").Append (StringUtils.Quote ("_" + symbol));
+					args.Append (" -u ").Append (StringUtils.Quote (symbol));
 			}
 
 			if (SourceFiles != null) {

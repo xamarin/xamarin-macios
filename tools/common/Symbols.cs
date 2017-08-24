@@ -32,8 +32,10 @@ namespace Xamarin.Bundler
 			get {
 				if (name != null)
 					return name;
-				if (ObjectiveCName != null)
-					return "OBJC_CLASS_$_" + ObjectiveCName;
+				if (ObjectiveCName != null) {
+					var prefix = Driver.SupportsModernObjectiveC ? "OBJC_CLASS_$_" : ".objc_class_name_";
+					return prefix + ObjectiveCName;
+				}
 				throw ErrorHelper.CreateError (99, $"Internal error: symbol without a name (type: {Type}). Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 			}
 			set {
@@ -41,6 +43,14 @@ namespace Xamarin.Bundler
 			}
 		}
 		public string ObjectiveCName;
+
+		public string Prefix {
+			get {
+				if (ObjectiveCName != null && !Driver.SupportsModernObjectiveC)
+					return string.Empty;
+				return "_";
+			}
+		}
 
 		List<MemberReference> members = new List<MemberReference> ();
 		public IEnumerable<MemberReference> Members { get { return members; } }

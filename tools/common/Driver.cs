@@ -132,6 +132,16 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public static bool SupportsModernObjectiveC {
+			get {
+#if MONOMAC || MMP
+				return Is64Bit;
+#else
+				return true;
+#endif
+			}
+		}
+
 		public static int Verbosity {
 			get { return verbose; }
 		}
