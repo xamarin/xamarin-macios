@@ -21,20 +21,6 @@ namespace XamCore.Metal {
 	public delegate void MTLDeviceNotificationHandler (IMTLDevice device, NSString notifyName);
 #endif
 
-	[StructLayout (LayoutKind.Sequential)]
-	public struct MTLSamplePosition
-	{
-		public float X;
-
-		public float Y;
-
-		public MTLSamplePosition (float x, float y)
-		{
-			this.X = x;
-			this.Y = y;
-		}
-	}
-
 	[iOS (8,0)][Mac (10,11)]
 	public static partial class MTLDevice {
 		[DllImport (Constants.MetalLibrary)]
@@ -64,15 +50,23 @@ namespace XamCore.Metal {
 #if MONOMAC
 		[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
 		[DllImport (Constants.MetalLibrary)]
-		static extern IntPtr MTLCopyAllDevicesWithObserver (IntPtr observer, MTLDeviceNotificationHandler handler);
+		static extern IntPtr MTLCopyAllDevicesWithObserver (ref IntPtr observer, MTLDeviceNotificationHandler handler);
 
 		[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
 		public static IMTLDevice [] GetAllDevices (MTLDeviceNotificationHandler handler, ref NSObject observer)
 		{
 			if (observer == null)
 				throw new ArgumentNullException ("observer");
-			
-			return MTLCopyAllDevicesWithObserver (observer.Handle, handler);
+
+			IntPtr h = observer.Handle;
+
+			var rv = MTLCopyAllDevicesWithObserver (ref h, handler);
+			var obj = NSArray.ArrayFromHandle <IMTLDevice> (rv);
+
+			if (h != observer.Handle)
+				observer = Runtime.GetNSObject (h);
+
+			return obj;
 		}
 
 		[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
@@ -114,7 +108,7 @@ namespace XamCore.Metal {
 
 		public unsafe static void GetDefaultSamplePositions (this IMTLDevice This, MTLSamplePosition [] positions, nuint count)
 		{
-			if (positions.Length < count)
+			if (positions.Length < (nint)count)
 				throw new ArgumentException ("Length of 'positions' cannot be less than 'count'.");
 			fixed (void * handle = positions)
 				GetDefaultSamplePositions (This, (IntPtr)handle, count);

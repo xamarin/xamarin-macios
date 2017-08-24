@@ -2542,11 +2542,13 @@ namespace XamCore.Metal {
 	[BaseType (typeof(NSObject))]
 	interface MTLPipelineBufferDescriptorArray
 	{
+		[Internal]
 		[Export ("objectAtIndexedSubscript:")]
-		protected MTLPipelineBufferDescriptor GetObject (nuint bufferIndex);
+		MTLPipelineBufferDescriptor GetObject (nuint bufferIndex);
 
+		[Internal]
 		[Export ("setObject:atIndexedSubscript:")]
-		protected void SetObject ([NullAllowed] MTLPipelineBufferDescriptor buffer, nuint bufferIndex);
+		void SetObject ([NullAllowed] MTLPipelineBufferDescriptor buffer, nuint bufferIndex);
 	}
 
 	[Mac (10,13, onlyOn64: true), iOS (11,0), TV (11,0), NoWatch]

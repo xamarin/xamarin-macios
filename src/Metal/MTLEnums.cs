@@ -197,7 +197,7 @@ namespace XamCore.Metal {
 		UInt1010102Normalized = 41,
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
-		UChar4Normalized_Bgra = 42,
+		UChar4NormalizedBgra = 42,
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
 		UChar = 45,
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
