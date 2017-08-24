@@ -1,5 +1,11 @@
 # A large number of assemblies are black listed in xtro-sharpie/Runner.cs 
 
+# CoreBluetooth
+
+## old and different name for CBUUIDCharacteristicValidRangeString, removed in Xcode9 headers (27160443)
+!unknown-field! CBUUIDValidRangeString bound
+
+
 # GameController
 
 ## other CGMicroGamepad API are not available on OSX (looks like a mistake)

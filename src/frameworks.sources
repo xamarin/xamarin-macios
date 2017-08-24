@@ -1570,6 +1570,7 @@ SHARED_SOURCES = \
 
 COMMON_FRAMEWORKS =         \
 	AVFoundation            \
+	CoreBluetooth           \
 	CoreFoundation          \
 	CoreML                  \
 	Foundation              \
@@ -1591,7 +1592,6 @@ MAC_FRAMEWORKS =            \
 	ContactsUI              \
 	CoreAnimation           \
 	CoreAudioKit            \
-	CoreBluetooth           \
 	CoreData                \
 	CoreGraphics            \
 	CoreImage               \
@@ -1665,7 +1665,6 @@ IOS_FRAMEWORKS =         \
 	ContactsUI \
 	CoreAnimation \
 	CoreAudioKit \
-	CoreBluetooth \
 	CoreData \
 	CoreGraphics \
 	CoreImage \
@@ -1771,7 +1770,6 @@ TVOS_FRAMEWORKS =           \
 	CFNetwork               \
 	CloudKit                \
 	CoreAnimation           \
-	CoreBluetooth           \
 	CoreData                \
 	CoreGraphics            \
 	CoreImage               \

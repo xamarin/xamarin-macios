@@ -9,6 +9,15 @@
 AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions:
 
 
+# CoreBluetooth
+
+## present in headers but already deprecated (we're not exposing them)
+!missing-enum! CBCentralManagerState not bound
+!missing-enum! CBPeripheralManagerState not bound
+!missing-selector! CBPeripheral::RSSI not bound
+!missing-selector! +CBUUID::UUIDWithCFUUID: not bound
+
+
 # Foundation
 
 ## does not exists in iOS (or watchOS) as a type - but some API refers to it (messy)
