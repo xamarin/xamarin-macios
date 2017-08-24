@@ -5276,12 +5276,16 @@ namespace XamCore.Intents {
 		string PronunciationHint { get; }
 
 		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+#if XAMCORE_4_0
 		[Abstract]
+#endif
 		[NullAllowed, Export ("vocabularyIdentifier")]
 		string VocabularyIdentifier { get; }
 
 		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+#if XAMCORE_4_0
 		[Abstract]
+#endif
 		[NullAllowed, Export ("alternativeSpeakableMatches")]
 		IINSpeakable [] AlternativeSpeakableMatches { get; }
 
