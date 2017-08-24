@@ -113,7 +113,7 @@ namespace XamCore.CoreBluetooth {
 		}
 	}
 #endif
-#if !MONOMAC && !XAMCORE_4_0
+#if (IOS || TVOS) && !XAMCORE_4_0
 	public partial class CBCentralManager {
 
 		public virtual CBCentralManagerState State {
