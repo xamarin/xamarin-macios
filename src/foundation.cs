@@ -254,7 +254,7 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		[iOS (11,0), NoWatch, NoTV, Mac(10,13)]
-		string[] ReadableTypeIdentifiersForItemProvider { get; }
+		string[] ReadableTypeIdentifiers { get; }
 
 #if !TVOS && !WATCHOS
 		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
@@ -9775,7 +9775,7 @@ namespace XamCore.Foundation
 		//
 		//[Static, Abstract]
 		//[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		//string[] ReadableTypeIdentifiersForItemProvider { get; }
+		//string[] ReadableTypeIdentifiers { get; }
 
 		//[Static]
 		//[Export ("objectWithItemProviderData:typeIdentifier:error:")]
