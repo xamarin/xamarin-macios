@@ -1069,6 +1069,10 @@ namespace XamCore.Contacts {
 		[Static]
 		[Export ("localizedStringForKey:")]
 		string LocalizeProperty (NSString property);
+
+		[Static]
+		[Wrap ("LocalizeProperty (option.GetConstant ())")]
+		string LocalizeProperty (CNPostalAddressKeyOption option);
 	}
 
 #if !XAMCORE_4_0
