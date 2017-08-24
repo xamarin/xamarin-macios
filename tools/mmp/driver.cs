@@ -694,12 +694,12 @@ namespace Xamarin.Bundler {
 			if (registrar == RegistrarMode.Default)
 			{
 				if (!App.EnableDebug)
-					// registrar = RegistrarMode.Static;
-					registrar = RegistrarMode.Dynamic; // Apple's macOS SDK is broken, so default to the dynamic registrar. See #58629.
+					registrar = RegistrarMode.Static;
 				else if (IsUnified && App.LinkMode == LinkMode.None && embed_mono && App.IsDefaultMarshalManagedExceptionMode && File.Exists (PartialStaticLibrary))
 					registrar = RegistrarMode.PartialStatic;
 				else
 					registrar = RegistrarMode.Dynamic;
+				Log (1, $"Defaulting registrar to '{registrar}'");
 			}
 			
 			if (no_executable) {
@@ -1081,7 +1081,7 @@ namespace Xamarin.Bundler {
 
 		static string PartialStaticLibrary {
 			get {
-				return Path.Combine (GetXamMacPrefix (), "lib", string.Format ("mmp/Xamarin.Mac.registrar.{0}.a ", IsUnifiedMobile ? "mobile" : "full"));
+				return Path.Combine (GetXamMacPrefix (), "lib", string.Format ("mmp/Xamarin.Mac.registrar.{0}.a", IsUnifiedMobile ? "mobile" : "full"));
 			}
 		}
 
@@ -1364,7 +1364,7 @@ namespace Xamarin.Bundler {
 
 				if (registrar == RegistrarMode.PartialStatic) {
 					args.Append (PartialStaticLibrary);
-					args.Append ("-framework Quartz ");
+					args.Append (" -framework Quartz ");
 				}
 
 				args.Append ("-liconv -x objective-c++ ");
