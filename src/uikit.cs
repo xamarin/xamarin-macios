@@ -6942,33 +6942,6 @@ namespace XamCore.UIKit {
 		CGSize PreferredPresentationSizeForItemProvider { get; }
 	}
 
-	[iOS (11,0), TV (11,0), Watch (4,0)]
-	[Category]
-	[BaseType (typeof(NSItemProvider))]
-	interface NSItemProvider_UIKitAdditions {
-		[NoWatch, NoTV]
-		[NullAllowed, Export ("teamData", ArgumentSemantic.Copy)]
-		NSData GetTeamData ();
-
-		[NoWatch, NoTV]
-		[NullAllowed, Export ("setTeamData", ArgumentSemantic.Copy)]
-		NSData SetTeamData ();
-
-		[NoWatch, NoTV]
-		[Export ("preferredPresentationSize", ArgumentSemantic.Assign)]
-		CGSize GetPreferredPresentationSize ();
-
-		[NoWatch, NoTV]
-		[Export ("setPreferredPresentationSize", ArgumentSemantic.Assign)]
-		CGSize SetPreferredPresentationSize ();
-
-		[Export ("preferredPresentationStyle", ArgumentSemantic.Assign)]
-		UIPreferredPresentationStyle GetPreferredPresentationStyle ();
-
-		[Export ("setPreferredPresentationStyle", ArgumentSemantic.Assign)]
-		UIPreferredPresentationStyle SetPreferredPresentationStyle ();
-	}
-
 	[BaseType (typeof (NSObject))]
 	interface UIImage : NSSecureCoding
 #if !WATCH
