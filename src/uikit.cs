@@ -4702,7 +4702,7 @@ namespace XamCore.UIKit {
 		[Static]
 		[iOS (11,0), NoWatch, NoTV]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		string[] ReadableTypeIdentifiersForItemProvider { get; }
+		string[] ReadableTypeIdentifiers { get; }
 #if !WATCH
 		[iOS (11,0)]
 		[Static]
@@ -7009,7 +7009,7 @@ namespace XamCore.UIKit {
 		[Static]
 		[iOS (11,0), NoWatch, NoTV]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		string[] ReadableTypeIdentifiersForItemProvider { get; }
+		string[] ReadableTypeIdentifiers { get; }
 	
 		[Export ("renderingMode")]
 		[ThreadSafe]
