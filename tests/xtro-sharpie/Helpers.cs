@@ -190,6 +190,10 @@ namespace Extrospection {
 						if (ca.HasConstructorArguments)
 							return (ca.ConstructorArguments [0].Value as string);
 						return self.Name;
+					} else if (ca.Constructor.DeclaringType.Name == "ProtocolAttribute") {
+						if (ca.HasConstructorArguments)
+							return (ca.ConstructorArguments [0].Value as string);
+						return self.Name;
 					}
 				}
 			}
