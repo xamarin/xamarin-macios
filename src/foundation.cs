@@ -9750,23 +9750,22 @@ namespace XamCore.Foundation
 		[Async, Wrap ("LoadObject (new Class (type), completionHandler)")]
 		NSProgress LoadObject (Type type, Action<INSItemProviderReading, NSError> completionHandler);
 
-#if !MONOMAC
 		// NSItemProvider_UIKitAdditions category
 
-		[NoWatch, NoTV]
+		[NoMac, NoWatch, NoTV]
 		[iOS (11,0)]
 		[NullAllowed, Export ("teamData", ArgumentSemantic.Copy)]
 		NSData TeamData { get; set; }
 
-		[NoWatch, NoTV]
+		[NoMac, NoWatch, NoTV]
 		[iOS (11,0)]
 		[Export ("preferredPresentationSize", ArgumentSemantic.Assign)]
 		CGSize PreferredPresentationSize { get; set; }
 
-		[iOS (11,0), TV (11,0), Watch (4,0)]
+		[NoMac, NoWatch, NoTV]
+		[iOS (11,0)]
 		[Export ("preferredPresentationStyle", ArgumentSemantic.Assign)]
 		UIPreferredPresentationStyle PreferredPresentationStyle { get; set; }
-#endif // !MONOMAC
 	}
     
 	delegate NSProgress RegisterFileRepresentationLoadHandler ([BlockCallback] RegisterFileRepresentationCompletionHandler completionHandler);
