@@ -451,7 +451,7 @@ namespace XamCore.AVKit {
 	}
 	
 #if !MONOMAC
-	[NoiOS, TV (10,0), NoWatch, NoMac]
+	[NoiOS, TV (10,0), NoWatch]
 	[BaseType (typeof(UIViewController))]
 	interface AVContentProposalViewController
 	{
@@ -479,7 +479,7 @@ namespace XamCore.AVKit {
 	}
 
 	[Static]
-	[NoiOS, TV (10,1), NoWatch, NoMac]
+	[NoiOS, TV (10,1), NoWatch]
 	interface AVKitMetadataIdentifier {
 
 		[Field ("AVKitMetadataIdentifierExternalContentIdentifier")]
@@ -535,42 +535,10 @@ namespace XamCore.AVKit {
 		Plain,
 		Custom,
 	}
-#else
-
-	[Mac (10,13)]
-	[BaseType (typeof (NSView))]
-	interface AVRoutePickerView {
-
-		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
-
-		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
-		IAVRoutePickerViewDelegate Delegate { get; set; }
-
-		[Export ("routePickerButtonColorForState:")]
-		NSColor GetRoutePickerButtonColor (AVRoutePickerViewButtonState state);
-
-		[Export ("setRoutePickerButtonColor:forState:")]
-		void SetRoutePickerButtonColor ([NullAllowed] NSColor color, AVRoutePickerViewButtonState state);
-
-		[Export ("routePickerButtonBordered")]
-		bool RoutePickerButtonBordered { [Bind ("isRoutePickerButtonBordered")] get; set; }
-	}
-
-	[Mac (10,13)]
-	[Native]
-	public enum AVRoutePickerViewButtonState : nint {
-		Normal,
-		NormalHighlighted,
-		Active,
-		ActiveHighlighted
-	}
-
-#endif
 
 	interface IAVRoutePickerViewDelegate { }
 
-	[TV (11,0), iOS (11,0), Mac (10,13)]
+	[TV (11,0), iOS (11,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface AVRoutePickerViewDelegate {
@@ -581,4 +549,5 @@ namespace XamCore.AVKit {
 		[Export ("routePickerViewDidEndPresentingRoutes:")]
 		void DidEndPresentingRoutes (AVRoutePickerView routePickerView);
 	}
+#endif
 }
