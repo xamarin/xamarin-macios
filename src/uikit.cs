@@ -2064,7 +2064,7 @@ namespace XamCore.UIKit {
 
 		[iOS (11,0)]
 		[Field ("UIActivityTypeMarkupAsPDF")]
-		NSString MarkupAsPDF { get; }
+		NSString MarkupAsPdf { get; }
 	}
 
 	//
@@ -2170,11 +2170,8 @@ namespace XamCore.UIKit {
 	
 	[iOS (8,0)]
 	[BaseType (typeof (UIViewController))]
-	partial interface UIAlertController
-#if IOS
-		: UISpringLoadedInteractionSupporting
-#endif
-	{
+	// Should conform to UISpringLoadedInteractionSupporting according to headers but doesn't. Filed //radar: https://trello.com/b/ZXs89x7A
+	partial interface UIAlertController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
@@ -2836,12 +2833,12 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[Since (4,0)]
-		[Deprecated (PlatformName.iOS, 9, 0, message: "Please use PushKit for VoIP applications instead of calling this method.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'PushKit' instead.")]
 		[Export ("setKeepAliveTimeout:handler:")]
 		bool SetKeepAliveTimeout (double timeout, [NullAllowed] NSAction handler);
 
 		[NoTV]
-		[Deprecated (PlatformName.iOS, 9, 0, message: "Please use PushKit for VoIP applications instead of calling this method.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'PushKit' instead.")]
 		[Export ("clearKeepAliveTimeout")]
 		void ClearKeepAliveTimeout ();
 		
@@ -3072,7 +3069,7 @@ namespace XamCore.UIKit {
 		// from @interface UIApplication (UIUserNotificationSettings)
 		[NoTV]
 		[iOS (8,0)]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use UserNotifications Framework's 'UNUserNotificationCenter.GetNotificationSettings' and 'UNUserNotificationCenter.GetNotificationCategories'.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNUserNotificationCenter.GetNotificationSettings' and 'UNUserNotificationCenter.GetNotificationCategories' instead.")]
 		[Export ("currentUserNotificationSettings")]
 		UIUserNotificationSettings CurrentUserNotificationSettings { get; }
 
@@ -3089,7 +3086,7 @@ namespace XamCore.UIKit {
 		// from @interface UIApplication (UIUserNotificationSettings)
 		[NoTV]
 		[iOS (8,0)]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use UserNotifications Framework's 'UNUserNotificationCenter.RequestAuthorization' and 'UNUserNotificationCenter.SetNotificationCategories'.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNUserNotificationCenter.RequestAuthorization' and 'UNUserNotificationCenter.SetNotificationCategories' instead.")]
 		[Export ("registerUserNotificationSettings:")]
 		void RegisterUserNotificationSettings (UIUserNotificationSettings notificationSettings);
 
@@ -3541,7 +3538,7 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[iOS (8,0)]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use UserNotifications Framework's 'UNUserNotificationCenter.RequestAuthorization'.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNUserNotificationCenter.RequestAuthorization' instead.")]
 		[Export ("application:didRegisterUserNotificationSettings:")]
 		void DidRegisterUserNotificationSettings (UIApplication application, UIUserNotificationSettings notificationSettings);
 
@@ -7650,11 +7647,8 @@ namespace XamCore.UIKit {
 	
 #if !WATCH
 	[BaseType (typeof (UIControl))]
-	interface UIButton
-#if !TVOS
-		: UISpringLoadedInteractionSupporting
-#endif
-	{
+	// Should conform to UISpringLoadedInteractionSupporting according to headers but doesn't. Filed //radar: https://trello.com/b/ZXs89x7A
+	interface UIButton {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 

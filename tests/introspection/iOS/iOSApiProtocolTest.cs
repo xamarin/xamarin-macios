@@ -637,16 +637,6 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (8, 0);
 				}
 				break;
-
-			case "UISpringLoadedInteractionSupporting": // new conformations of UISpringLoadedInteractionSupporting in iOS 11
-				switch (type.Name) {
-				case "UIButton": // UIButton (SpringLoading) category
-				case "UIAlertController": // UIAlertController (SpringLoading) category
-				case "PKPaymentButton": // UIButton (SpringLoading) category
-				case "PKAddPassButton": // UIButton (SpringLoading) category
-					return true;
-				}
-				break;
 			}
 			return base.Skip (type, protocolName);
 		}
