@@ -275,6 +275,7 @@ namespace XamCore.SpriteKit {
 		[Export ("intersectsNode:")]
 		bool IntersectsNode (SKNode node);
 
+		[iOS (8,3)][TV (9,0)][Mac (10,11)]
 		[Export ("isEqualToNode:")]
 		bool IsEqual (SKNode node);
 
