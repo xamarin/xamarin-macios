@@ -6857,10 +6857,7 @@ namespace XamCore.Foundation
 	[Since (7,0)]
 	[Availability (Introduced = Platform.Mac_10_9)]
 	[BaseType (typeof (NSObject), Name="NSURLSessionTask")]
-	partial interface NSUrlSessionTask : NSCopying
-#if MONOMAC
-	, NSProgressReporting
-#endif
+	partial interface NSUrlSessionTask : NSCopying, NSProgressReporting
 	{
 		[Export ("taskIdentifier")]
 		nuint TaskIdentifier { get; }
@@ -6913,10 +6910,6 @@ namespace XamCore.Foundation
 		[Export ("priority")]
 		float Priority { get; set; } /* float, not CGFloat */
 #endif
-
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
-		[Export ("progress", ArgumentSemantic.Strong)]
-		NSProgress Progress { get; }
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("earliestBeginDate", ArgumentSemantic.Copy)]
