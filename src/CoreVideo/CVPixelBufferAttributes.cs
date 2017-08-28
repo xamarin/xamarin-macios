@@ -32,6 +32,7 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.CoreVideo {
 
+	[Watch (4,0)]
 	[iOS (6,0)]
 	public class CVPixelBufferAttributes : DictionaryContainer
 	{
@@ -192,7 +193,8 @@ namespace XamCore.CoreVideo {
 				return GetNSDictionary (CVPixelBuffer.IOSurfacePropertiesKey) != null;
 			}
 		}
-		
+
+#if !WATCH
 		[iOS (6,0)]
 		public bool? OpenGLESCompatibility {
 			set {
@@ -212,6 +214,7 @@ namespace XamCore.CoreVideo {
 				return GetBoolValue (CVPixelBuffer.MetalCompatibilityKey);
 			}
 		}
+#endif // !WATCH
 #endif
 #endif
 	}
