@@ -12,11 +12,8 @@
 using System;
 using XamCore.ObjCRuntime;
 using XamCore.CoreFoundation;
-using XamCore.Foundation;
-
-#if !WATCH
 using XamCore.CoreVideo;
-#endif
+using XamCore.Foundation;
 
 namespace XamCore.CoreML {
 
@@ -129,14 +126,13 @@ namespace XamCore.CoreML {
 		[Export ("dictionaryValue")]
 		NSDictionary<NSObject, NSNumber> DictionaryValue { get; }
 
-#if !WATCH // TODO: Enable once CoreVideo's CVPixelBuffer is enabled on watch profile https://bugzilla.xamarin.com/show_bug.cgi?id=58097
 		[NullAllowed, Export ("imageBufferValue")]
 		CVPixelBuffer ImageBufferValue { get; }
 
 		[Static]
 		[Export ("featureValueWithPixelBuffer:")]
 		MLFeatureValue FromPixelBuffer (CVPixelBuffer value);
-#endif
+
 		[Static]
 		[Export ("featureValueWithInt64:")]
 		MLFeatureValue FromInt64 (long value);
