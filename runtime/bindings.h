@@ -113,6 +113,12 @@ typedef struct
     vector_float4   maxPixelValue;
 } MPSImageHistogramInfo;
 
+typedef vector_int4 MDLVoxelIndex;
+typedef struct {
+    MDLVoxelIndex minimumExtent;
+    MDLVoxelIndex maximumExtent;
+} MDLVoxelIndexExtent;
+
 /*
  * iOS has a vector type (vector_float3) which can't be expressed
  * in P/Invoke signatures, so we need custom wrappers.
@@ -198,6 +204,13 @@ struct MPSImageHistogramInfoWrapper {
 #endif
 	Vector4f minPixelValue;
 	Vector4f maxPixelValue;
+};
+
+typedef Vector4i MDLVoxelIndexWrapper;
+
+struct MDLVoxelIndexExtentWrapper {
+    MDLVoxelIndexWrapper minimumExtent;
+    MDLVoxelIndexWrapper maximumExtent;
 };
 
 static_assert (sizeof (MPSImageHistogramInfoWrapper) == sizeof (MPSImageHistogramInfo), "Sizes aren't equal");

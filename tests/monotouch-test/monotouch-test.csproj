@@ -664,6 +664,7 @@
     <Compile Include="MetalPerformanceShaders\MPSImageHistogramEqualizationTest.cs" />
     <Compile Include="MetalPerformanceShaders\MPSImageHistogramSpecificationTest.cs" />
     <Compile Include="ModelIO\MDLAssetTest.cs" />
+    <Compile Include="ModelIO\MDLVoxelArrayTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>

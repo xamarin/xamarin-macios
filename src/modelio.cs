@@ -1895,9 +1895,20 @@ namespace XamCore.ModelIO {
 		[Export ("setVoxelsForMesh:divisions:interiorNBWidth:exteriorNBWidth:patchRadius:")]
 		void SetVoxels (MDLMesh mesh, int divisions, float interiorNBWidth, float exteriorNBWidth, float patchRadius);
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'GetVoxels (MDLVoxelIndexExtent2)' instead.")]
+#endif
 		[Export ("voxelsWithinExtent:")]
 		[return: NullAllowed]
 		NSData GetVoxels (MDLVoxelIndexExtent withinExtent);
+
+#if !XAMCORE_4_0
+		[Sealed]
+		[Export ("voxelsWithinExtent:")]
+		[return: NullAllowed]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		NSData GetVoxels (MDLVoxelIndexExtent2 withinExtent);
+#endif
 
 		[Export ("voxelIndices")]
 		[return: NullAllowed]
@@ -1927,8 +1938,20 @@ namespace XamCore.ModelIO {
 		[Export ("count")]
 		nuint Count { get; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'VoxelIndexExtent2' instead.")]
+#endif
 		[Export ("voxelIndexExtent")]
 		MDLVoxelIndexExtent VoxelIndexExtent { get; }
+
+#if !XAMCORE_4_0
+		[Export ("voxelIndexExtent")]
+		[Sealed]
+		MDLVoxelIndexExtent2 VoxelIndexExtent2 {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+#endif
 
 		[Export ("boundingBox")]
 		MDLAxisAlignedBoundingBox BoundingBox {
