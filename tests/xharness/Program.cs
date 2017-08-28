@@ -66,6 +66,7 @@ namespace xharness
 						harness.Labels.UnionWith (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 					}
 				},
+				{ "markdown-summary=", "The path where a summary (in Markdown format) will be written.", (v) => harness.MarkdownSummaryPath = v },
 			};
 
 			showHelp = () => {

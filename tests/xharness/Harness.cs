@@ -126,6 +126,7 @@ namespace xharness
 		public bool DryRun { get; set; } // Most things don't support this. If you need it somewhere, implement it!
 		public string JenkinsConfiguration { get; set; }
 		public Dictionary<string, string> EnvironmentVariables { get; set; } = new Dictionary<string, string> ();
+		public string MarkdownSummaryPath { get; set; }
 
 		public Harness ()
 		{

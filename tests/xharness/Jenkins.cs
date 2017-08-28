@@ -1052,10 +1052,23 @@ namespace xharness
 				lock (report_lock) {
 					var report = Path.Combine (LogDirectory, "index.html");
 					using (var stream = new MemoryStream ()) {
-						GenerateReportImpl (stream);
+						MemoryStream markdown_summary = null;
+						StreamWriter markdown_writer = null;
+						if (!string.IsNullOrEmpty (Harness.MarkdownSummaryPath)) {
+							markdown_summary = new MemoryStream ();
+							markdown_writer = new StreamWriter (markdown_summary);
+						}
+						GenerateReportImpl (stream, markdown_writer);
 						if (File.Exists (report))
 							File.Delete (report);
 						File.WriteAllBytes (report, stream.ToArray ());
+						if (!string.IsNullOrEmpty (Harness.MarkdownSummaryPath)) {
+							markdown_writer.Flush ();
+							if (File.Exists (Harness.MarkdownSummaryPath))
+								File.Delete (Harness.MarkdownSummaryPath);
+							File.WriteAllBytes (Harness.MarkdownSummaryPath, markdown_summary.ToArray ());
+							markdown_writer.Close ();
+						}
 					}
 				}
 			} catch (Exception e) {
@@ -1063,7 +1076,7 @@ namespace xharness
 			}
 		}
 
-		void GenerateReportImpl (Stream stream)
+		void GenerateReportImpl (Stream stream, StreamWriter markdown_summary = null)
 		{
 			var id_counter = 0;
 
@@ -1115,13 +1128,51 @@ namespace xharness
 				allTasks.AddRange (allDeviceTasks);
 			}
 
-			var failedTests = allTasks.Where ((v) => v.Failed);
+			var failedTests = allTasks.Where ((v) => v.Failed || v.Skipped);
 			var unfinishedTests = allTasks.Where ((v) => !v.Finished);
 			var passedTests = allTasks.Where ((v) => v.Succeeded);
 			var runningTests = allTasks.Where ((v) => v.Running && !v.Waiting);
 			var buildingTests = allTasks.Where ((v) => v.Building && !v.Waiting);
 			var runningQueuedTests = allTasks.Where ((v) => v.Running && v.Waiting);
 			var buildingQueuedTests = allTasks.Where ((v) => v.Building && v.Waiting);
+
+			if (markdown_summary != null) {
+				markdown_summary.WriteLine ("# Test results");
+				markdown_summary.WriteLine ();
+				if (allTasks.Count == 0) {
+					markdown_summary.WriteLine ($"Loading tests...");
+				} else if (unfinishedTests.Any ()) {
+					var list = new List<string> ();
+					var grouped = allTasks.GroupBy ((v) => v.ExecutionResult).OrderBy ((v) => (int) v.Key);
+					foreach (var @group in grouped)
+						list.Add ($"{@group.Key.ToString ()}: {@group.Count ()}");
+					markdown_summary.Write ($"# Test run in progress: ");
+					markdown_summary.Write (string.Join (", ", list));
+					markdown_summary.WriteLine ();
+				} else if (failedTests.Any ()) {
+					markdown_summary.WriteLine ($"{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed.");
+				} else if (passedTests.Any ()) {
+					markdown_summary.WriteLine ($"# All {passedTests.Count ()} tests passed");
+				} else {
+					markdown_summary.WriteLine ($"# No tests selected.");
+				}
+				markdown_summary.WriteLine ();
+				if (failedTests.Any ()) {
+					markdown_summary.WriteLine ("## Failed tests");
+					markdown_summary.WriteLine ();
+					foreach (var t in failedTests) {
+						markdown_summary.Write ($" * {t.TestName}");
+						if (!string.IsNullOrEmpty (t.Mode))
+							markdown_summary.Write ($"/{t.Mode}");
+						if (!string.IsNullOrEmpty (t.Variation))
+							markdown_summary.Write ($"/{t.Variation}");
+						markdown_summary.Write ($": {t.ExecutionResult}");
+						if (!string.IsNullOrEmpty (t.FailureMessage))
+							markdown_summary.Write ($" ({t.FailureMessage})");
+						markdown_summary.WriteLine ();
+					}
+				}
+			}
 
 			using (var writer = new StreamWriter (stream)) {
 				writer.WriteLine ("<!DOCTYPE html>");
