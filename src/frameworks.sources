@@ -1573,6 +1573,7 @@ COMMON_FRAMEWORKS =         \
 	CoreBluetooth           \
 	CoreFoundation          \
 	CoreML                  \
+	CoreVideo               \
 	Foundation              \
 	GameKit                 \
 	SceneKit                \
@@ -1600,7 +1601,6 @@ MAC_FRAMEWORKS =            \
 	CoreMidi                \
 	CoreServices            \
 	CoreText                \
-	CoreVideo               \
 	CoreWlan                \
 	EventKit                \
 	ExternalAccessory 	\
@@ -1676,7 +1676,6 @@ IOS_FRAMEWORKS =         \
 	CoreSpotlight \
 	CoreTelephony \
 	CoreText \
-	CoreVideo \
 	DeviceCheck \
 	EventKit \
 	EventKitUI \
@@ -1777,7 +1776,6 @@ TVOS_FRAMEWORKS =           \
 	CoreMedia               \
 	CoreSpotlight			\
 	CoreText                \
-	CoreVideo               \
 	DeviceCheck             \
 	ExternalAccessory       \
 	GLKit                   \
