@@ -76,10 +76,10 @@ namespace XamCore.StoreKit {
 
 		public string CampaignToken {
 			get {
-				return GetStringValue (SKStoreProductParameterKey.AffiliateToken);
+				return GetStringValue (SKStoreProductParameterKey.CampaignToken);
 			}
 			set {
-				SetStringValue (SKStoreProductParameterKey.AffiliateToken, value);
+				SetStringValue (SKStoreProductParameterKey.CampaignToken, value);
 			}
 		}
 #endif
