@@ -405,35 +405,6 @@ namespace XamCore.UIKit {
 		[iOS (11,0)]
 		[Wrap ("FetchThumbnails (itemIdentifiers.GetConstants (), size, perThumbnailCompletionHandler, completionHandler)")]
 		NSProgress FetchThumbnails (NSFileProviderItemIdentifier [] itemIdentifiers, CGSize size, NSFileProviderExtensionFetchThumbnailsHandler perThumbnailCompletionHandler, Action<NSError> completionHandler);
-
-		// From NSFileProviderExtension (NSFileProviderMessaging)
-
-		// Missing members -> https://bugzilla.xamarin.com/show_bug.cgi?id=58222
-		// TODO: NSFileProviderMessageInterfaceName is not bound yet, comes from Foundation
-		//[iOS (11,0)]
-		//[Internal]
-		//[Export ("supportedMessageInterfaceNamesForItemWithIdentifier:")]
-		//NSFileProviderMessageInterfaceName[] GetSupportedMessageInterfaceNames (NSString identifier);
-
-		//[iOS (11,0)]
-		//[Wrap ("GetSupportedMessageInterfaceNames (identifier.GetConstant ())")]
-		//NSFileProviderMessageInterfaceName[] GetSupportedMessageInterfaceNames (NSFileProviderItemIdentifier identifier);
-
-		// TODO: NSFileProviderMessageInterface is not bound yet, comes from Foundation
-		//[iOS (11,0)]
-		//[Export ("protocolForMessageInterface:")]
-		//Protocol GetProtocol (NSFileProviderMessageInterface messageInterface);
-
-		// TODO: NSFileProviderMessageInterface is not bound yet, comes from Foundation
-		//[iOS (11,0)]
-		//[Internal]
-		//[return: NullAllowed]
-		//[Export ("exportedObjectForMessageInterface:itemIdentifier:error:")]
-		//NSObject GetExportedObject (NSFileProviderMessageInterface messageInterface, NSString identifier, out NSError error);
-
-		//[iOS (11,0)]
-		//[Wrap ("GetExportedObject (messageInterface, identifier.GetConstant (), out error)")]
-		//NSObject GetExportedObject (NSFileProviderMessageInterface messageInterface, NSFileProviderItemIdentifier identifier, out NSError error);
 #endif
 	}
 #endif // !WATCH
