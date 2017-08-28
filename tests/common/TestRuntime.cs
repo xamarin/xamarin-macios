@@ -86,6 +86,12 @@ partial class TestRuntime
 		NUnit.Framework.Assert.Ignore ("Requires the platform version shipped with Xcode {0}.{1}", major, minor);
 	}
 
+	public static void AssertDevice ()
+	{
+		if (ObjCRuntime.Runtime.Arch == Arch.SIMULATOR)
+			NUnit.Framework.Assert.Ignore ("This test only runs on device.");
+	}
+
 	// This function checks if the current Xcode version is exactly (neither higher nor lower) the requested one.
 	public static bool CheckExactXcodeVersion (int major, int minor, int beta = 0)
 	{

@@ -660,6 +660,10 @@
     <Compile Include="AudioToolbox\AudioComponentTest.cs" />
     <Compile Include="UIKit\DirectionalEdgeInsetsTest.cs" />
     <Compile Include="ARKit\ARPointCloudTest.cs" />
+    <Compile Include="MetalPerformanceShaders\MPSImageHistogramTest.cs" />
+    <Compile Include="MetalPerformanceShaders\MPSImageHistogramEqualizationTest.cs" />
+    <Compile Include="MetalPerformanceShaders\MPSImageHistogramSpecificationTest.cs" />
+    <Compile Include="ModelIO\MDLAsset.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
