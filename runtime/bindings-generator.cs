@@ -2293,17 +2293,16 @@ namespace Xamarin.BindingMethods.Generator
 			if (parameters == null)
 				return;
 
-			if (parameters != null) {
-				for (int i = 0; i < parameters.Length; i++) {
-					var p = parameters [i];
-					writer.Write (", ");
-					writer.Write (isTypedef ? p.TypeData.NativeType : p.TypeData.NativeWrapperType);
-					if (p.IsRef && p.TypeData != Types.IntPtr)
-						writer.Write ("*");
-					writer.Write (" ");
-					writer.Write (isTypedef ? "f" : "p");
-					writer.Write (i);
-				}
+
+			for (int i = 0; i < parameters.Length; i++) {
+				var p = parameters [i];
+				writer.Write (", ");
+				writer.Write (isTypedef ? p.TypeData.NativeType : p.TypeData.NativeWrapperType);
+				if (p.IsRef && p.TypeData != Types.IntPtr)
+					writer.Write ("*");
+				writer.Write (" ");
+				writer.Write (isTypedef ? "f" : "p");
+				writer.Write (i);
 			}
 		}
 
