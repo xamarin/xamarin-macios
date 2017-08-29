@@ -73,7 +73,6 @@ namespace XamCore.AudioUnit {
 }
 #endif
 
-
 namespace XamCore.AVFoundation {
 
 #if WATCH
@@ -106,7 +105,6 @@ namespace XamCore.AVFoundation {
 	interface CVPixelBufferPool {}
 	interface MTAudioProcessingTap {}
 #endif
-
 
 	delegate void AVAssetImageGeneratorCompletionHandler (CMTime requestedTime, IntPtr imageRef, CMTime actualTime, AVAssetImageGeneratorResult result, NSError error);
 	delegate void AVCompletion (bool finished);
@@ -249,7 +247,8 @@ namespace XamCore.AVFoundation {
 	[NoWatch]
 	[iOS (9,0), Mac (10,11)]
 	[BaseType (typeof(AVDateRangeMetadataGroup))]
-	interface AVMutableDateRangeMetadataGroup {
+	interface AVMutableDateRangeMetadataGroup
+	{
 		[Export ("startDate", ArgumentSemantic.Copy)]
 		[Override]
 		NSDate StartDate { get; set; }
@@ -324,7 +323,7 @@ namespace XamCore.AVFoundation {
 		[Field ("AVMediaCharacteristicUsesWideGamutColorSpace")]
 		UsesWideGamutColorSpace = 4,
 
-		[MountainLion][Since (5,0)]
+		[Mac (10, 8), iOS (5,0)]
 		[Field ("AVMediaCharacteristicIsMainProgramContent")]
 		IsMainProgramContent = 5,
 
@@ -509,27 +508,27 @@ namespace XamCore.AVFoundation {
 
 		[iOS (11, 0), Mac (10, 13)]
 		[Field ("AVFileTypeJPEG")]
-		JPEG = 15,
+		Jpeg = 15,
 
 		[iOS (11, 0), Mac (10, 13)]
 		[Field ("AVFileTypeDNG")]
-		DNG = 16,
+		Dng = 16,
 
 		[iOS (11, 0), Mac (10, 13)]
 		[Field ("AVFileTypeHEIC")]
-		HEIC = 17,
+		Heic = 17,
 
 		[iOS (11, 0), Mac (10, 13)]
 		[Field ("AVFileTypeAVCI")]
-		AVCI = 18,
+		Avci = 18,
 
 		[iOS (11, 0), Mac (10, 13)]
 		[Field ("AVFileTypeHEIF")]
-		HEIF = 19,
+		Heif = 19,
 
 		[iOS (11, 0), Mac (10, 13)]
 		[Field ("AVFileTypeTIFF")]
-		TIFF = 20,
+		Tiff = 20,
 	}
 
 #if !XAMCORE_4_0
@@ -1362,8 +1361,10 @@ namespace XamCore.AVFoundation {
  	[Watch (4,0)]
  	[iOS (8,0)][Mac (10,10)][TV (11,0)]
  	[BaseType (typeof (AVAudioIONode))]
-	[DisableDefaultCtor]
+	[DisableDefaultCtor] // returned Handle is nil
+	// note: sample source (header) suggest it comes from AVAudioEngine properties
 	interface AVAudioInputNode : AVAudioMixing {
+
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("setManualRenderingInputPCMFormat:inputBlock:")]
 		bool SetManualRenderingInputPCMFormat (AVAudioFormat format, AVAudioIONodeInputBlock block);
@@ -7855,16 +7856,16 @@ namespace XamCore.AVFoundation {
 	[DisableDefaultCtor]
 	interface AVCameraCalibrationData
 	{
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[Export ("intrinsicMatrix")]
-		Matrix3 GetIntrinsicMatrix ();
+		Matrix3 GetIntrinsicMatrix { [MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;}
 
 		[Export ("intrinsicMatrixReferenceDimensions")]
 		CGSize IntrinsicMatrixReferenceDimensions { get; }
 
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		/*
 		[Export ("extrinsicMatrix")]
-		Matrix4 GetExtrinsicMatrix (); // should be a matrix 4x3
+		Matrix4 GetExtrinsicMatrix { [MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;}; // should be a matrix 4x3
+		*/
 
 		[Export ("pixelSize")]
 		float PixelSize { get; }
@@ -8597,6 +8598,10 @@ namespace XamCore.AVFoundation {
 		[Export ("recommendedVideoSettingsForVideoCodecType:assetWriterOutputFileType:")]
 		[return: NullAllowed]
 		NSDictionary GetWeakRecommendedVideoSettings (string videoCodecType, string outputFileType);
+
+		[iOS (11,0), NoMac]
+		[Wrap ("new AVPlayerItemVideoOutputSettings (GetWeakRecommendedVideoSettings (videoCodecType, outputFileType))")]
+		AVPlayerItemVideoOutputSettings GetRecommendedVideoSettings (string videoCodecType, string outputFileType);
 	}
 
 	[NoWatch]
@@ -10437,7 +10442,7 @@ namespace XamCore.AVFoundation {
 
 		[iOS (11,0), Mac (10,13), TV (11,0)]
 		[Field ("AVVideoColorPrimaries_ITU_R_2020")]
-		NSString ITU_R_2020 { get; }
+		NSString Itu_R_2020 { get; }
 	}
 
 	[NoWatch]
@@ -10470,7 +10475,7 @@ namespace XamCore.AVFoundation {
 
 		[iOS (11, 0), TV (11, 0), Mac (10,13)]
 		[Field ("AVVideoYCbCrMatrix_ITU_R_2020")]
-		NSString ITU_R_2020 { get; }
+		NSString Itu_R_2020 { get; }
 
 	}
 	
@@ -11415,7 +11420,7 @@ namespace XamCore.AVFoundation {
 		AVAssetDownloadedAssetEvictionPriority Priority { get; set; }
 
 		[Export ("expirationDate", ArgumentSemantic.Copy)]
-		NSDate ExpirationDate { get; [NotImplemented] set; }
+		NSDate ExpirationDate { get; set; }
 	}
 
 	[NoWatch]
@@ -11598,11 +11603,11 @@ namespace XamCore.AVFoundation {
 		NSString _Preset3840x2160 { get; }
 
 		[iOS (11, 0), Mac (10, 13)]
-		[Field ("AVOutputSettingsPresetHEVC1920x1080")]
+		[Internal, Field ("AVOutputSettingsPresetHEVC1920x1080")]
 		NSString _PresetHevc1920x1080 { get; }
 
 		[iOS (11, 0), Mac (10, 13)]
-		[Field ("AVOutputSettingsPresetHEVC3840x2160")]
+		[Internal, Field ("AVOutputSettingsPresetHEVC3840x2160")]
 		NSString _PresetHevc3840x2160 { get; }
 	}
 
@@ -12048,6 +12053,7 @@ namespace XamCore.AVFoundation {
 		[Export ("renewExpiringResponseDataForContentKeyRequest:")]
 		void RenewExpiringResponseData (AVContentKeyRequest contentKeyRequest);
 
+		[Async]
 		[NoWatch, NoTV, NoMac, iOS (11,0)]
 		[Export ("makeSecureTokenForExpirationDateOfPersistableContentKey:completionHandler:")]
 		void MakeSecureToken (NSData persistableContentKeyData, Action<NSData, NSError> handler);
