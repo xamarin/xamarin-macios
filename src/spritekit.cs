@@ -475,9 +475,11 @@ namespace XamCore.SpriteKit {
 		SKFieldNode CreateRadialGravityField ();
 
 		[Static, Export ("linearGravityFieldWithVector:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKFieldNode CreateLinearGravityField (/* vector_float3 */ Vector4 direction);
 
 		[Static, Export ("velocityFieldWithVector:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKFieldNode CreateVelocityField (/* vector_float3 */ Vector4 direction);
 
 		[Static, Export ("velocityFieldWithTexture:")]

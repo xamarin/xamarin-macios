@@ -6,7 +6,7 @@
     <ProjectGuid>{6B616492-49F0-43EF-8390-F9D1B4CCC632}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>zzg</RootNamespace>
-    <AssemblyName>zzg</AssemblyName>
+    <AssemblyName>bindings-generator</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
@@ -21,7 +21,6 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <ConsolePause>false</ConsolePause>
-    <Commandlineparameters>/work/maccore/xcode7/maccore/bindings-generated.m</Commandlineparameters>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>full</DebugType>
@@ -31,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
     <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>${ProjectDir}/bindings-generated.m</StartArguments>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
