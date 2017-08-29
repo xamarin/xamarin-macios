@@ -373,7 +373,7 @@ namespace XamCore.MapKit {
 		[NullAllowed]
 		NSTimeZone TimeZone { get; set; }
 
-		[iOS (11,0)][Mac (10,13)][Mac (10,13, onlyOn64 : true)][Watch (4,0)]
+		[iOS (11,0), Mac (10,13), Watch (4,0), TV (11,0)]
 		[Field ("MKMapItemTypeIdentifier")]
 		NSString TypeIdentifier { get; }
 	}
