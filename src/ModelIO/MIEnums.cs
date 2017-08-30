@@ -252,7 +252,7 @@ namespace XamCore.ModelIO {
 	}
 
 #if !XAMCORE_4_0
-	[Obsolete ("Use 'MDLVoxelIndexExtent2' instead")]
+	[Obsolete ("Use 'MDLVoxelIndexExtent2' instead.")]
 	[StructLayout(LayoutKind.Sequential)]
 	public struct MDLVoxelIndexExtent {
 		public MDLVoxelIndexExtent (Vector4 minimumExtent, Vector4 maximumExtent)
