@@ -583,7 +583,7 @@ namespace XamCore.StoreKit {
 		Subscribe,
 	}
 
-	[iOS (11,0)]
+	[iOS (11,0), TV (11,0)]
 	enum SKCloudServiceSetupMessageIdentifier {
 		[Field ("SKCloudServiceSetupMessageIdentifierJoin")]
 		Join,
@@ -606,7 +606,7 @@ namespace XamCore.StoreKit {
 		void RequestReview ();
 	}
 
-	[iOS (11,0)]
+	[iOS (11,0), TV (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // static Default property is the only documented way to get the controller
 	interface SKProductStorePromotionController {
