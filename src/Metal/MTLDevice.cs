@@ -48,36 +48,57 @@ namespace XamCore.Metal {
 		}
 
 #if MONOMAC
-		[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		[Mac (10, 13, onlyOn64: true), NoiOS, NoWatch, NoTV]
 		[DllImport (Constants.MetalLibrary)]
-		static extern IntPtr MTLCopyAllDevicesWithObserver (ref IntPtr observer, MTLDeviceNotificationHandler handler);
+		unsafe static extern IntPtr MTLCopyAllDevicesWithObserver (ref IntPtr observer, void* handler);
 
-		[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
-		public static IMTLDevice [] GetAllDevices (MTLDeviceNotificationHandler handler, ref NSObject observer)
+		[Mac (10, 13, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		public static IMTLDevice [] GetAllDevices (ref NSObject observer, MTLDeviceNotificationHandler handler)
 		{
 			if (observer == null)
 				throw new ArgumentNullException ("observer");
 
-			IntPtr h = observer.Handle;
+			IntPtr handle = observer.Handle;
 
-			var rv = MTLCopyAllDevicesWithObserver (ref h, handler);
-			var obj = NSArray.ArrayFromHandle <IMTLDevice> (rv);
+			unsafe
+			{
+				BlockLiteral* block_ptr_handler;
+				BlockLiteral block_handler;
+				block_handler = new BlockLiteral ();
+				block_ptr_handler = &block_handler;
+				block_handler.SetupBlock (static_notificationHandler, handler);
 
-			if (h != observer.Handle)
-				observer = Runtime.GetNSObject (h);
+				var rv = MTLCopyAllDevicesWithObserver (ref handle, (void*) block_ptr_handler);
+				var obj = NSArray.ArrayFromHandle<IMTLDevice> (rv);
 
-			return obj;
+				if (handle != observer.Handle)
+					observer = Runtime.GetNSObject (handle);
+
+				return obj;
+			}
 		}
 
-		[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		internal delegate void InnerNotification (IntPtr block, IntPtr device, IntPtr notifyName);
+		static readonly InnerNotification static_notificationHandler = TrampolineNotificationHandler;
+		[MonoPInvokeCallback (typeof (InnerNotification))]
+		public static unsafe void TrampolineNotificationHandler (IntPtr block, IntPtr device, IntPtr notifyName)
+		{
+			var descriptor = (BlockLiteral*) block;
+			var del = (MTLDeviceNotificationHandler) (descriptor->Target);
+			if (del != null)
+				del (device == IntPtr.Zero ? null : (IMTLDevice) Runtime.GetNSObject (device), notifyName == IntPtr.Zero ? null : (XamCore.Foundation.NSString) Runtime.GetNSObject (notifyName));
+		}
+
+		[Mac (10, 13, onlyOn64: true), NoiOS, NoWatch, NoTV]
 		[DllImport (Constants.MetalLibrary)]
 		static extern void MTLRemoveDeviceObserver (IntPtr observer);
 
-		[Mac (10,13, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		[Mac (10, 13, onlyOn64: true), NoiOS, NoWatch, NoTV]
 		public static void RemoveObserver (NSObject observer)
 		{
 			if (observer == null)
 				throw new ArgumentNullException ("observer");
+
 			MTLRemoveDeviceObserver (observer.Handle);
 		}
 #endif
@@ -100,7 +121,7 @@ namespace XamCore.Metal {
 			var handle = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, since it's not possible to use unsafe code to get the address of a generic object.
 			try {
 				IntPtr ptr = handle.AddrOfPinnedObject ();
-				return This.CreateBufferNoCopy (ptr, (nuint)(data.Length * Marshal.SizeOf (typeof (T))) , options, deallocator);
+				return This.CreateBufferNoCopy (ptr, (nuint)(data.Length * Marshal.SizeOf (typeof (T))), options, deallocator);
 			} finally {
 				handle.Free ();
 			}

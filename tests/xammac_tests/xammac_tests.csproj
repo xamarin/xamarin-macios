@@ -1063,6 +1063,9 @@
     <Compile Include="..\monotouch-test\Metal\MTLTextureReferenceType.cs">
       <Link>Metal\MTLTextureReferenceType.cs</Link>
     </Compile>
+    <Compile Include="..\monotouch-test\Metal\MTLDeviceTests.cs">
+      <Link>Metal\MTLDeviceTests.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
