@@ -20,9 +20,11 @@ namespace XamCore.ARKit {
 			get {
 				var count = (int)Count;
 				var rv = new Vector3 [count];
-				var ptr = (Vector3*)GetRawPoints ();
-				for (int i = 0; i < count; i++)
-					rv [i] = *ptr++;
+				var ptr = GetRawPoints ();
+				for (int i = 0; i < count; i++) {
+					rv [i] = *(Vector3 *) ptr;
+					ptr += 16; // 3 floats + 1 padding float = 16 bytes
+				}
 				return rv;
 			}
 		}

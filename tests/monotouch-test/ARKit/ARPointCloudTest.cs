@@ -25,7 +25,7 @@ namespace MonoTouchFixtures.ARKit {
 
 		GCHandle vectorArrayHandle;
 		GCHandle identifiersHandle;
-		Vector3 [] vectorArray;
+		Vector4 [] vectorArray;
 		ulong [] identifiers;
 
 		public ARPointCloudPoker () : base (IntPtr.Zero)
@@ -40,7 +40,7 @@ namespace MonoTouchFixtures.ARKit {
 
 		protected unsafe override IntPtr GetRawPoints ()
 		{
-			vectorArray = new Vector3 [] { new Vector3 (1, 2, 3), new Vector3 (4, 5, 6) };
+			vectorArray = new Vector4 [] { new Vector4 (1, 2, 3, -1), new Vector4 (4, 5, 6, -1) };
 			if (!vectorArrayHandle.IsAllocated)
 				vectorArrayHandle = GCHandle.Alloc (vectorArray, GCHandleType.Pinned);
 			Vector3* addr = (Vector3*)vectorArrayHandle.AddrOfPinnedObject ();
