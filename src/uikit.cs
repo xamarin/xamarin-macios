@@ -4703,7 +4703,7 @@ namespace XamCore.UIKit {
 		[Export ("colorWithCGColor:")][Static]
 		UIColor FromCGColor (CGColor color);
 
-		[iOS (11,0)]
+		[iOS (11,0), TV (11,0)]
 		[Static]
 		[Export ("colorNamed:")]
 		[return: NullAllowed]
@@ -4720,7 +4720,7 @@ namespace XamCore.UIKit {
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		string[] ReadableTypeIdentifiers { get; }
 #if !WATCH
-		[iOS (11,0)]
+		[iOS (11,0), TV (11,0)]
 		[Static]
 		[Export ("colorNamed:inBundle:compatibleWithTraitCollection:")]
 		[return: NullAllowed]
@@ -15980,11 +15980,11 @@ namespace XamCore.UIKit {
 		[Export ("handleInputModeListFromView:withEvent:")]
 		void HandleInputModeList (UIView fromView, UIEvent withEvent);
 
-		[iOS (11,0)]
+		[iOS (11,0), TV (11,0)]
 		[Export ("hasFullAccess")]
 		bool HasFullAccess { get; }
 
-		[iOS (11,0)]
+		[iOS (11,0), TV (11,0)]
 		[Export ("needsInputModeSwitchKey")]
 		bool NeedsInputModeSwitchKey { get; }
 	}
