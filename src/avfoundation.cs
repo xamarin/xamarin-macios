@@ -262,7 +262,7 @@ namespace XamCore.AVFoundation {
 		AVMetadataItem[] Items { get; set; }
 	}
 	
-	[TV (11,0), NoWatch, iOS (11,0)]
+	[TV (11,0), NoWatch, iOS (11,0), Mac (10, 13)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface AVDepthData {
@@ -2821,7 +2821,7 @@ namespace XamCore.AVFoundation {
 		string [] AvailableMetadataFormats { get;  }
 
 #if !XAMCORE_4_0
-		[Obsolete ("Use 'GetMetadataForFormat' with enum values AVMetadataFormat")]
+		[Obsolete ("Use 'GetMetadataForFormat' with enum values AVMetadataFormat.")]
 		[Wrap ("GetMetadataForFormat (new NSString (format))")]
 		AVMetadataItem [] MetadataForFormat (string format);
 #endif
@@ -8262,12 +8262,9 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch, NoTV, iOS (11,0)]
 	[BaseType (typeof(AVCaptureOutput))]
+	[DisableDefaultCtor]
 	interface AVCaptureDepthDataOutput
 	{
-		[Static]
-		[Export ("new")]
-		AVCaptureDepthDataOutput Create ();
-
 		[Export ("setDelegate:callbackQueue:")]
 		void SetDelegate (IAVCaptureDepthDataOutputDelegate del, DispatchQueue callbackQueue);
 
@@ -11414,13 +11411,14 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch, NoTV, NoMac, iOS (11,0)]
 	[BaseType (typeof(AVAssetDownloadStorageManagementPolicy))]
+	[DisableDefaultCtor]
 	interface AVMutableAssetDownloadStorageManagementPolicy
 	{
 		[Export ("priority")]
 		AVAssetDownloadedAssetEvictionPriority Priority { get; set; }
 
 		[Export ("expirationDate", ArgumentSemantic.Copy)]
-		NSDate ExpirationDate { get; set; }
+		NSDate ExpirationDate { get; [NotImplemented] set; }
 	}
 
 	[NoWatch]
