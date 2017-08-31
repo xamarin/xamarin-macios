@@ -635,6 +635,7 @@
     <Compile Include="UIKit\GraphicsRendererTest.cs" />
     <Compile Include="Intents\INIntentResolutionResultTests.cs" />
     <Compile Include="MessageUI\MessageComposeViewControllerTest.cs" />
+    <Compile Include="GameplayKit\GKAgent3DTest.cs" />
     <Compile Include="GameplayKit\GKOctreeTests.cs" />
     <Compile Include="GameplayKit\GKQuadTreeTests.cs" />
     <Compile Include="GameplayKit\GKMeshGraphTests.cs" />
