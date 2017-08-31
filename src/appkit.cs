@@ -2070,7 +2070,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[BaseType (typeof (NSControl))]
-	interface NSButton : NSAccessibilityButton, NSUserInterfaceCompression {
+	interface NSButton : NSAccessibilityButton {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
@@ -13646,7 +13646,7 @@ namespace XamCore.AppKit {
 	[Mac (10,12,2)]
 	[BaseType (typeof(NSTouchBarItem))]
 	[DisableDefaultCtor]
-	interface NSSliderTouchBarItem : NSUserInterfaceCompression
+	interface NSSliderTouchBarItem
 	{
 		[Export ("initWithIdentifier:")]
 		[DesignatedInitializer]
@@ -22716,10 +22716,9 @@ namespace XamCore.AppKit {
 		[Notification, Field ("NSTextDidChangeNotification")]
 		NSString DidChangeNotification { get; }
 
-		//radar 32929318 - Does not exist in binaries
-		//[Mac (10, 13)]
-		//[Field ("NSTextMovementUserInfoKey")]
-		//NSString MovementUserInfoKey { get; }
+		[Mac (10, 13)]
+		[Field ("NSTextMovementUserInfoKey")]
+		NSString MovementUserInfoKey { get; }
 	}
 
 	partial interface NSTextInputContext {

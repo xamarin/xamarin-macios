@@ -12,11 +12,8 @@
 using System;
 using XamCore.ObjCRuntime;
 using XamCore.CoreFoundation;
-using XamCore.Foundation;
-
-#if !WATCH
 using XamCore.CoreVideo;
-#endif
+using XamCore.Foundation;
 
 namespace XamCore.CoreML {
 
@@ -29,7 +26,7 @@ namespace XamCore.CoreML {
 		String = 3,
 		Image = 4,
 		MultiArray = 5,
-		Dictionary = 6
+		Dictionary = 6,
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -38,8 +35,7 @@ namespace XamCore.CoreML {
 	public enum MLModelError : nint {
 		Generic = 0,
 		FeatureType = 1,
-		DescriptionMismatch = 2,
-		Io = 3
+		IO = 3,
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -47,7 +43,7 @@ namespace XamCore.CoreML {
 	public enum MLMultiArrayDataType : nint {
 		Double = 65536 | 64,
 		Float32 = 65536 | 32,
-		Int32 = 131072 | 32
+		Int32 = 131072 | 32,
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -76,6 +72,17 @@ namespace XamCore.CoreML {
 
 		[Export ("isAllowedValue:")]
 		bool IsAllowed (MLFeatureValue value);
+
+		// Category MLFeatureDescription (MLFeatureValueConstraints)
+
+		[NullAllowed, Export ("multiArrayConstraint", ArgumentSemantic.Assign)]
+		MLMultiArrayConstraint MultiArrayConstraint { get; }
+
+		[NullAllowed, Export ("imageConstraint", ArgumentSemantic.Assign)]
+		MLImageConstraint ImageConstraint { get; }
+
+		[NullAllowed, Export ("dictionaryConstraint", ArgumentSemantic.Assign)]
+		MLDictionaryConstraint DictionaryConstraint { get; }
 	}
 
 	interface IMLFeatureProvider { }
@@ -119,14 +126,13 @@ namespace XamCore.CoreML {
 		[Export ("dictionaryValue")]
 		NSDictionary<NSObject, NSNumber> DictionaryValue { get; }
 
-#if !WATCH // TODO: Enable once CoreVideo's CVPixelBuffer is enabled on watch profile https://bugzilla.xamarin.com/show_bug.cgi?id=58097
 		[NullAllowed, Export ("imageBufferValue")]
 		CVPixelBuffer ImageBufferValue { get; }
 
 		[Static]
 		[Export ("featureValueWithPixelBuffer:")]
 		MLFeatureValue FromPixelBuffer (CVPixelBuffer value);
-#endif
+
 		[Static]
 		[Export ("featureValueWithInt64:")]
 		MLFeatureValue FromInt64 (long value);
@@ -166,11 +172,22 @@ namespace XamCore.CoreML {
 		[Static]
 		[Export ("modelWithContentsOfURL:error:")]
 		[return: NullAllowed]
-		MLModel FromUrl (NSUrl url, [NullAllowed] out NSError error);
+		MLModel FromUrl (NSUrl url, out NSError error);
 
 		[Export ("predictionFromFeatures:error:")]
 		[return: NullAllowed]
 		IMLFeatureProvider GetPrediction (IMLFeatureProvider input, out NSError error);
+
+		[Export ("predictionFromFeatures:options:error:")]
+		[return: NullAllowed]
+		IMLFeatureProvider GetPrediction (IMLFeatureProvider input, MLPredictionOptions options, out NSError error);
+
+		// Category MLModel (MLModelCompilation)
+
+		[Static]
+		[Export ("compileModelAtURL:error:")]
+		[return: NullAllowed]
+		NSUrl CompileModel (NSUrl modelUrl, out NSError error);
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -213,6 +230,9 @@ namespace XamCore.CoreML {
 
 		[Field ("MLModelLicenseKey")]
 		NSString LicenseKey { get; }
+
+		[Field ("MLModelCreatorDefinedKey")]
+		NSString CreatorDefinedKey { get; }
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -222,6 +242,7 @@ namespace XamCore.CoreML {
 		string VersionString { get; }
 		string Author { get; }
 		string License { get; }
+		string CreatorDefined { get; }
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -265,6 +286,50 @@ namespace XamCore.CoreML {
 
 		[Export ("setObject:forKeyedSubscript:")]
 		void SetObject (NSNumber obj, NSNumber [] key);
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject))]
+	interface MLDictionaryConstraint {
+
+		[Export ("keyType")]
+		MLFeatureType KeyType { get; }
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject))]
+	interface MLImageConstraint {
+
+		[Export ("pixelsHigh")]
+		nint PixelsHigh { get; }
+
+		[Export ("pixelsWide")]
+		nint PixelsWide { get; }
+
+		[Export ("pixelFormatType")]
+		uint PixelFormatType { get; }
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject))]
+	interface MLMultiArrayConstraint {
+
+		[Export ("shape")]
+		NSNumber [] Shape { get; }
+
+		[Export ("dataType")]
+		MLMultiArrayDataType DataType { get; }
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[BaseType (typeof (NSObject))]
+	interface MLPredictionOptions {
+
+		[Export ("usesCPUOnly")]
+		bool UsesCpuOnly { get; set; }
 	}
 }
 #endif // XAMCORE_2_0

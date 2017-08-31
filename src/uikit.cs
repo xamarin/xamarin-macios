@@ -24,9 +24,14 @@ using XamCore.CoreAnimation;
 #endif
 using XamCore.CoreData;
 
-#if XAMCORE_2_0 && IOS
+#if XAMCORE_2_0
+#if IOS
 using XamCore.FileProvider;
-#endif
+#endif // IOS
+#if !TVOS
+using XamCore.Intents;
+#endif // !TVOS
+#endif // XAMCORE_2_0
 
 using System;
 using System.ComponentModel;
@@ -405,35 +410,6 @@ namespace XamCore.UIKit {
 		[iOS (11,0)]
 		[Wrap ("FetchThumbnails (itemIdentifiers.GetConstants (), size, perThumbnailCompletionHandler, completionHandler)")]
 		NSProgress FetchThumbnails (NSFileProviderItemIdentifier [] itemIdentifiers, CGSize size, NSFileProviderExtensionFetchThumbnailsHandler perThumbnailCompletionHandler, Action<NSError> completionHandler);
-
-		// From NSFileProviderExtension (NSFileProviderMessaging)
-
-		// Missing members -> https://bugzilla.xamarin.com/show_bug.cgi?id=58222
-		// TODO: NSFileProviderMessageInterfaceName is not bound yet, comes from Foundation
-		//[iOS (11,0)]
-		//[Internal]
-		//[Export ("supportedMessageInterfaceNamesForItemWithIdentifier:")]
-		//NSFileProviderMessageInterfaceName[] GetSupportedMessageInterfaceNames (NSString identifier);
-
-		//[iOS (11,0)]
-		//[Wrap ("GetSupportedMessageInterfaceNames (identifier.GetConstant ())")]
-		//NSFileProviderMessageInterfaceName[] GetSupportedMessageInterfaceNames (NSFileProviderItemIdentifier identifier);
-
-		// TODO: NSFileProviderMessageInterface is not bound yet, comes from Foundation
-		//[iOS (11,0)]
-		//[Export ("protocolForMessageInterface:")]
-		//Protocol GetProtocol (NSFileProviderMessageInterface messageInterface);
-
-		// TODO: NSFileProviderMessageInterface is not bound yet, comes from Foundation
-		//[iOS (11,0)]
-		//[Internal]
-		//[return: NullAllowed]
-		//[Export ("exportedObjectForMessageInterface:itemIdentifier:error:")]
-		//NSObject GetExportedObject (NSFileProviderMessageInterface messageInterface, NSString identifier, out NSError error);
-
-		//[iOS (11,0)]
-		//[Wrap ("GetExportedObject (messageInterface, identifier.GetConstant (), out error)")]
-		//NSObject GetExportedObject (NSFileProviderMessageInterface messageInterface, NSFileProviderItemIdentifier identifier, out NSError error);
 #endif
 	}
 #endif // !WATCH
@@ -1313,6 +1289,10 @@ namespace XamCore.UIKit {
 		
 		[Export ("encodeUIEdgeInsets:forKey:")]
 		void Encode (UIEdgeInsets edgeInsets, string forKey);
+
+		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Export ("encodeDirectionalEdgeInsets:forKey:")]
+		void Encode (NSDirectionalEdgeInsets directionalEdgeInsets, string forKey);
 		
 		[Export ("encodeUIOffset:forKey:")]
 		void Encode (UIOffset uiOffset, string forKey);
@@ -1335,6 +1315,10 @@ namespace XamCore.UIKit {
 		
 		[Export ("decodeUIEdgeInsetsForKey:")]
 		UIEdgeInsets DecodeUIEdgeInsets (string key);
+
+		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Export ("decodeDirectionalEdgeInsetsForKey:")]
+		NSDirectionalEdgeInsets DecodeDirectionalEdgeInsets (string key);
 		
 		[Export ("decodeUIOffsetForKey:")]
 		UIOffset DecodeUIOffsetForKey (string key);
@@ -2048,6 +2032,10 @@ namespace XamCore.UIKit {
 		[Since (9,0)]
 		[Field ("UIActivityTypeOpenInIBooks")]
 		NSString OpenInIBooks { get; }
+
+		[iOS (11,0)]
+		[Field ("UIActivityTypeMarkupAsPDF")]
+		NSString MarkupAsPdf { get; }
 	}
 
 	//
@@ -2097,19 +2085,19 @@ namespace XamCore.UIKit {
 
 		[Abstract]
 		[Export ("activityViewController:itemForActivityType:")]
-		NSObject GetItemForActivity (UIActivityViewController activityViewController, NSString activityType);
+		NSObject GetItemForActivity (UIActivityViewController activityViewController, [NullAllowed] NSString activityType);
 
 		[Since (7,0)]
 		[Export ("activityViewController:dataTypeIdentifierForActivityType:")]
-		string GetDataTypeIdentifierForActivity (UIActivityViewController activityViewController, NSString activityType);
+		string GetDataTypeIdentifierForActivity (UIActivityViewController activityViewController, [NullAllowed] NSString activityType);
 
 		[Since (7,0)]
 		[Export ("activityViewController:subjectForActivityType:")]
-		string GetSubjectForActivity (UIActivityViewController activityViewController, NSString activityType);
+		string GetSubjectForActivity (UIActivityViewController activityViewController, [NullAllowed] NSString activityType);
 		
 		[Since (7,0)]
 		[Export ("activityViewController:thumbnailImageForActivityType:suggestedSize:")]
-		UIImage GetThumbnailImageForActivity (UIActivityViewController activityViewController, NSString activityType, CGSize suggestedSize);
+		UIImage GetThumbnailImageForActivity (UIActivityViewController activityViewController, [NullAllowed] NSString activityType, CGSize suggestedSize);
 	}
 
 	[NoTV]
@@ -2153,6 +2141,7 @@ namespace XamCore.UIKit {
 	
 	[iOS (8,0)]
 	[BaseType (typeof (UIViewController))]
+	// Should conform to UISpringLoadedInteractionSupporting according to headers but doesn't. Filed //radar: https://trello.com/b/ZXs89x7A
 	partial interface UIAlertController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
@@ -2340,6 +2329,14 @@ namespace XamCore.UIKit {
 
 		[Export ("insertArrangedSubview:atIndex:")]
 		void InsertArrangedSubview (UIView view, nuint stackIndex);
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("setCustomSpacing:afterView:")]
+		void SetCustomSpacing (nfloat spacing, UIView arrangedSubview);
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("customSpacingAfterView:")]
+		nfloat GetCustomSpacing (UIView arrangedSubview);
 	}
 		
 	[Static]
@@ -2807,10 +2804,12 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[Since (4,0)]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'PushKit' instead.")]
 		[Export ("setKeepAliveTimeout:handler:")]
 		bool SetKeepAliveTimeout (double timeout, [NullAllowed] NSAction handler);
 
 		[NoTV]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'PushKit' instead.")]
 		[Export ("clearKeepAliveTimeout")]
 		void ClearKeepAliveTimeout ();
 		
@@ -2977,12 +2976,12 @@ namespace XamCore.UIKit {
 		[Export ("beginBackgroundTaskWithName:expirationHandler:")]
 		nint BeginBackgroundTask (string taskName, NSAction expirationHandler);
 
-		[NoTV]
+		[TV (11,0)]
 		[Since (7,0)]
 		[Field ("UIApplicationBackgroundFetchIntervalMinimum")]
 		double BackgroundFetchIntervalMinimum { get; }
 
-		[NoTV]
+		[TV (11,0)]
 		[Since (7,0)]
 		[Field ("UIApplicationBackgroundFetchIntervalNever")]
 		double BackgroundFetchIntervalNever { get; }
@@ -3020,7 +3019,7 @@ namespace XamCore.UIKit {
 		[Export ("backgroundRefreshStatus")]
 		UIBackgroundRefreshStatus BackgroundRefreshStatus { get; }
 
-		[NoTV]
+		[TV (11,0)]
 		[Since (7,0)]
 		[Notification]
 		[Field ("UIApplicationBackgroundRefreshStatusDidChangeNotification")]
@@ -3041,6 +3040,7 @@ namespace XamCore.UIKit {
 		// from @interface UIApplication (UIUserNotificationSettings)
 		[NoTV]
 		[iOS (8,0)]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNUserNotificationCenter.GetNotificationSettings' and 'UNUserNotificationCenter.GetNotificationCategories' instead.")]
 		[Export ("currentUserNotificationSettings")]
 		UIUserNotificationSettings CurrentUserNotificationSettings { get; }
 
@@ -3057,6 +3057,7 @@ namespace XamCore.UIKit {
 		// from @interface UIApplication (UIUserNotificationSettings)
 		[NoTV]
 		[iOS (8,0)]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNUserNotificationCenter.RequestAuthorization' and 'UNUserNotificationCenter.SetNotificationCategories' instead.")]
 		[Export ("registerUserNotificationSettings:")]
 		void RegisterUserNotificationSettings (UIUserNotificationSettings notificationSettings);
 
@@ -3486,7 +3487,7 @@ namespace XamCore.UIKit {
 		[Export ("application:handleEventsForBackgroundURLSession:completionHandler:")]
 		void HandleEventsForBackgroundUrl (UIApplication application, string sessionIdentifier, NSAction completionHandler);
 
-		[NoTV]
+		[TV (11,0)]
 		[Since (7,0)]
 		[Export ("application:performFetchWithCompletionHandler:")]
 		void PerformFetch (UIApplication application, Action<UIBackgroundFetchResult> completionHandler);
@@ -3508,6 +3509,7 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[iOS (8,0)]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNUserNotificationCenter.RequestAuthorization' instead.")]
 		[Export ("application:didRegisterUserNotificationSettings:")]
 		void DidRegisterUserNotificationSettings (UIApplication application, UIUserNotificationSettings notificationSettings);
 
@@ -3563,6 +3565,13 @@ namespace XamCore.UIKit {
 		[iOS (10,0), TV (10,0), NoWatch]
 		[Export ("application:userDidAcceptCloudKitShareWithMetadata:")]
 		void UserDidAcceptCloudKitShare (UIApplication application, CKShareMetadata cloudKitShareMetadata);
+
+#if XAMCORE_2_0 && !TVOS
+		[NoTV]
+		[iOS (11,0), Watch (4,0)]
+		[Export ("application:handleIntent:completionHandler:")]
+		void HandleIntent (UIApplication application, INIntent intent, Action<INIntentResponse> completionHandler);
+#endif // XAMCORE_2_0 && !TVOS
 	}
 
 	[Static]
@@ -3609,10 +3618,24 @@ namespace XamCore.UIKit {
 		[Export ("titleTextAttributesForState:"), Internal]
 		[Appearance]
 		NSDictionary _GetTitleTextAttributes (UIControlState state);
+
+		[NoWatch]
+		[iOS (11,0), TV (11,0)]
+		[NullAllowed, Export ("largeContentSizeImage", ArgumentSemantic.Strong)]
+		UIImage LargeContentSizeImage { get; set; }
+
+		[NoWatch]
+		[iOS (11,0), TV (11,0)]
+		[Export ("largeContentSizeImageInsets", ArgumentSemantic.Assign)]
+		UIEdgeInsets LargeContentSizeImageInsets { get; set; }
 	}
 	
 	[BaseType (typeof (UIBarItem))]
-	interface UIBarButtonItem : NSCoding {
+	interface UIBarButtonItem : NSCoding
+#if IOS
+		, UISpringLoadedInteractionSupporting
+#endif
+	 {
 		[Export ("initWithImage:style:target:action:")]
 		[PostGet ("Image")]
 		[PostGet ("Target")]
@@ -3809,7 +3832,7 @@ namespace XamCore.UIKit {
 	[BaseType (typeof (UIScrollView))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: UICollectionView must be initialized with a non-nil layout parameter
 	[DisableDefaultCtor]
-	interface UICollectionView : NSCoding {
+	interface UICollectionView : NSCoding, UIDataSourceTranslating {
 		[DesignatedInitializer]
 		[Export ("initWithFrame:collectionViewLayout:"), PostGet ("CollectionViewLayout")]
 		IntPtr Constructor (CGRect frame, UICollectionViewLayout layout);
@@ -4004,6 +4027,41 @@ namespace XamCore.UIKit {
 		[iOS (10,0), TV (10,0)]
 		[Export ("prefetchingEnabled")]
 		bool PrefetchingEnabled { [Bind ("isPrefetchingEnabled")] get; set; }
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[NullAllowed, Export ("dragDelegate", ArgumentSemantic.Weak)]
+		IUICollectionViewDragDelegate DragDelegate { get; set; }
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[NullAllowed, Export ("dropDelegate", ArgumentSemantic.Weak)]
+		IUICollectionViewDropDelegate DropDelegate { get; set; }
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("dragInteractionEnabled")]
+		bool DragInteractionEnabled { get; set; }
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("reorderingCadence", ArgumentSemantic.Assign)]
+		UICollectionViewReorderingCadence ReorderingCadence { get; set; }
+
+		[NoWatch]
+		[TV (11,0), iOS (11,0)]
+		[Export ("hasUncommittedUpdates")]
+		bool HasUncommittedUpdates { get; }
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("hasActiveDrag")]
+		bool HasActiveDrag { get; }
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("hasActiveDrop")]
+		bool HasActiveDrop { get; }
 	}
 
 	interface IUICollectionViewDataSourcePrefetching {}
@@ -4152,6 +4210,11 @@ namespace XamCore.UIKit {
 		[Export ("indexPathForPreferredFocusedViewInCollectionView:")]
 		[return: NullAllowed]
 		NSIndexPath GetIndexPathForPreferredFocusedView (UICollectionView collectionView);
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("collectionView:shouldSpringLoadItemAtIndexPath:withContext:")]
+		bool ShouldSpringLoadItem (UICollectionView collectionView, NSIndexPath indexPath, IUISpringLoadedInteractionContext context);
 	}
 
 	[Since (6,0)]
@@ -4176,6 +4239,11 @@ namespace XamCore.UIKit {
 		[NullAllowed] // by default this property is null
 		[Export ("selectedBackgroundView", ArgumentSemantic.Retain)]
 		UIView SelectedBackgroundView { get; set;  }
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("dragStateDidChange:")]
+		void DragStateDidChange (UICollectionViewCellDragState dragState);
 	}
 
 	[Since (6,0)]
@@ -4263,6 +4331,11 @@ namespace XamCore.UIKit {
 
 		[Export ("sectionInset")]
 		UIEdgeInsets SectionInset { get; set;  }
+
+		[NoWatch]
+		[iOS (11,0), TV (11,0)]
+		[Export ("sectionInsetReference", ArgumentSemantic.Assign)]
+		UICollectionViewFlowLayoutSectionInsetReference SectionInsetReference { get; set; }
 
 		[iOS (9,0)]
 		[Export ("sectionHeadersPinToVisibleBounds")]
@@ -4425,6 +4498,15 @@ namespace XamCore.UIKit {
 		[Export ("invalidationContextForEndingInteractiveMovementOfItemsToFinalIndexPaths:previousIndexPaths:movementCancelled:")]
 		UICollectionViewLayoutInvalidationContext GetInvalidationContextForEndingInteractiveMovementOfItems (NSIndexPath[] finalIndexPaths, NSIndexPath[] previousIndexPaths, bool movementCancelled);
 		
+		[NoWatch]
+		[iOS (11,0), TV (11,0)]
+		[Export ("developmentLayoutDirection")]
+		UIUserInterfaceLayoutDirection DevelopmentLayoutDirection { get; }
+
+		[NoWatch]
+		[iOS (11,0), TV (11,0)]
+		[Export ("flipsHorizontallyInOppositeLayoutDirection")]
+		bool FlipsHorizontallyInOppositeLayoutDirection { get; }
 	}
 	
 	[Since (6,0)]
@@ -4604,7 +4686,11 @@ namespace XamCore.UIKit {
 	// returns NIL handle causing exceptions in further calls, e.g. ToString
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -CGColor not defined for the UIColor <UIPlaceholderColor: 0x114f5ad0>; need to first convert colorspace.
 	[DisableDefaultCtor]
-	interface UIColor : NSSecureCoding, NSCopying {
+	interface UIColor : NSSecureCoding, NSCopying
+#if !TVOS && !WATCH
+		, NSItemProviderWriting, NSItemProviderReading
+#endif
+	{
 		[Export ("colorWithWhite:alpha:")][Static]
 		UIColor FromWhiteAlpha (nfloat white, nfloat alpha);
 
@@ -4617,7 +4703,7 @@ namespace XamCore.UIKit {
 		[Export ("colorWithCGColor:")][Static]
 		UIColor FromCGColor (CGColor color);
 
-		[iOS (11,0)]
+		[iOS (11,0), TV (11,0)]
 		[Static]
 		[Export ("colorNamed:")]
 		[return: NullAllowed]
@@ -4632,9 +4718,9 @@ namespace XamCore.UIKit {
 		[Static]
 		[iOS (11,0), NoWatch, NoTV]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		string[] ReadableTypeIdentifiersForItemProvider { get; }
+		string[] ReadableTypeIdentifiers { get; }
 #if !WATCH
-		[iOS (11,0)]
+		[iOS (11,0), TV (11,0)]
 		[Static]
 		[Export ("colorNamed:inBundle:compatibleWithTraitCollection:")]
 		[return: NullAllowed]
@@ -4785,6 +4871,12 @@ namespace XamCore.UIKit {
 		[Export ("getRed:green:blue:alpha:")]
 		bool GetRGBA2 (out nfloat red, out nfloat green, out nfloat blue, out nfloat alpha);
 #endif
+
+		// From the NSItemProviderWriting protocol, a static method.
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] WritableTypeIdentifiers { get; }
 	}
 
 #if !WATCH
@@ -5449,6 +5541,11 @@ namespace XamCore.UIKit {
 		[Since (9,0)]
 		[Field ("UIFontTextStyleCallout")]
 		Callout,
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Field ("UIFontTextStyleLargeTitle")]
+		LargeTitle,
 	}
 
 	[Since (7,0)]
@@ -5673,6 +5770,10 @@ namespace XamCore.UIKit {
 		[Export ("requireGestureRecognizerToFail:")]
 		void RequireGestureRecognizerToFail (UIGestureRecognizer otherGestureRecognizer);
 
+		[TV (11,0), iOS (11,0)]
+		[NullAllowed, Export ("name")]
+		string Name { get; set; }
+
 		//
 		// These come from the UIGestureRecognizerProtected category, and you should only call
 		// these methods from a subclass of UIGestureRecognizer, never externally
@@ -5873,6 +5974,11 @@ namespace XamCore.UIKit {
 		[Static]
 		[Export ("defaultFormat")]
 		UIGraphicsImageRendererFormat DefaultFormat { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Static]
+		[Export ("formatForTraitCollection:")]
+		UIGraphicsImageRendererFormat GetFormat (UITraitCollection traitCollection);
 	}
 
 	[iOS (10,0), TV (10,0)]
@@ -6038,6 +6144,18 @@ namespace XamCore.UIKit {
 		[iOS (10, 0)] // Did not add abstract here breaking change, anyways this is optional in objc
 		[Export ("textContentType")]
 		NSString TextContentType { get; set; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("smartQuotesType", ArgumentSemantic.Assign)]
+		UITextSmartQuotesType SmartQuotesType { get; set; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("smartDashesType", ArgumentSemantic.Assign)]
+		UITextSmartDashesType SmartDashesType { get; set; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("smartInsertDeleteType", ArgumentSemantic.Assign)]
+		UITextSmartInsertDeleteType SmartInsertDeleteType { get; set; }
 	}
 
 	interface UIKeyboardEventArgs {
@@ -6144,7 +6262,7 @@ namespace XamCore.UIKit {
 	[Since (7,0)]
 	[BaseType (typeof (NSObject))]
 	interface UIKeyCommand : NSCopying, NSSecureCoding {
-		[Export ("input")]
+		[NullAllowed, Export ("input")]
 		NSString Input { get; }
 
 		[Export ("modifierFlags")]
@@ -6840,10 +6958,22 @@ namespace XamCore.UIKit {
 	}
 #endif // !WATCH
 
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UIItemProviderPresentationSizeProviding {
+		[Abstract]
+		[Export ("preferredPresentationSizeForItemProvider")]
+		CGSize PreferredPresentationSizeForItemProvider { get; }
+	}
+
 	[BaseType (typeof (NSObject))]
 	interface UIImage : NSSecureCoding
 #if !WATCH
 		, UIAccessibility, UIAccessibilityIdentification
+#if !TVOS
+		, NSItemProviderWriting, NSItemProviderReading, UIItemProviderPresentationSizeProviding
+#endif
 #endif // !WATCH
 	{
 		[ThreadSafe]
@@ -6904,7 +7034,7 @@ namespace XamCore.UIKit {
 		[Static]
 		[iOS (11,0), NoWatch, NoTV]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		string[] ReadableTypeIdentifiersForItemProvider { get; }
+		string[] ReadableTypeIdentifiers { get; }
 	
 		[Export ("renderingMode")]
 		[ThreadSafe]
@@ -7105,6 +7235,12 @@ namespace XamCore.UIKit {
 		[Export ("imageWithHorizontallyFlippedOrientation")]
 		UIImage GetImageWithHorizontallyFlippedOrientation ();
 #endif
+
+		// From the NSItemProviderWriting protocol, a static method.
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] WritableTypeIdentifiers { get; }
 	}
 
 #if !WATCH
@@ -7253,6 +7389,11 @@ namespace XamCore.UIKit {
 
 		[Export ("contentHorizontalAlignment")]
 		UIControlContentHorizontalAlignment HorizontalAlignment { get; set; }
+
+		[NoWatch]
+		[iOS (11,0), TV (11,0)]
+		[Export ("effectiveContentHorizontalAlignment")]
+		UIControlContentHorizontalAlignment EffectiveContentHorizontalAlignment { get; }
 
 		[Export ("state")]
 		UIControlState State { get; }
@@ -7450,6 +7591,7 @@ namespace XamCore.UIKit {
 	
 #if !WATCH
 	[BaseType (typeof (UIControl))]
+	// Should conform to UISpringLoadedInteractionSupporting according to headers but doesn't. Filed //radar: https://trello.com/b/ZXs89x7A
 	interface UIButton {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
@@ -7734,6 +7876,10 @@ namespace XamCore.UIKit {
 		[TV (11, 0), NoWatch, NoiOS]
 		[Export ("overlayContentView", ArgumentSemantic.Strong)]
 		UIView OverlayContentView { get; }
+
+		[TV (11,0), NoWatch, NoiOS]
+		[Export ("masksFocusEffectToContents")]
+		bool MasksFocusEffectToContents { get; set; }
 	}
 
 	[NoTV]
@@ -8066,6 +8212,14 @@ namespace XamCore.UIKit {
 		[Static, Export ("isFlashAvailableForCameraDevice:")]
 		bool IsFlashAvailableForCameraDevice (UIImagePickerControllerCameraDevice cameraDevice);
 
+		[iOS (11,0)]
+		[Export ("imageExportPreset", ArgumentSemantic.Assign)]
+		UIImagePickerControllerImageUrlExportPreset ImageExportPreset { get; set; }
+
+		[iOS (11,0)]
+		[Export ("videoExportPreset")]
+		string VideoExportPreset { get; set; }
+
 #if XAMCORE_2_0
 		// manually bound (const fields) in monotouch.dll - unlike the newer fields (static properties)
 
@@ -8085,6 +8239,7 @@ namespace XamCore.UIKit {
 		NSString MediaURL { get; }
 #endif
 
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'UIImagePickerController.PHAsset' instead.")]
 		[Field ("UIImagePickerControllerReferenceURL")]
 		NSString ReferenceUrl { get; }
 
@@ -8094,6 +8249,14 @@ namespace XamCore.UIKit {
 		[iOS (9,1)]
 		[Field ("UIImagePickerControllerLivePhoto")]
 		NSString LivePhoto { get; }
+
+		[iOS (11,0)]
+		[Field ("UIImagePickerControllerPHAsset")]
+		NSString PHAsset { get; }
+
+		[iOS (11,0)]
+		[Field ("UIImagePickerControllerImageURL")]
+		NSString ImageUrl { get; }
 	}
 
 	// UINavigationControllerDelegate, UIImagePickerControllerDelegate
@@ -8347,6 +8510,10 @@ namespace XamCore.UIKit {
 		[Export ("backgroundImageForBarPosition:barMetrics:")]
 		UIImage GetBackgroundImage (UIBarPosition barPosition, UIBarMetrics barMetrics);
 		
+		[NoTV]
+		[iOS (11,0)]
+		[Export ("prefersLargeTitles")]
+		bool PrefersLargeTitles { get; set; }
 	}
 
 	[BaseType (typeof (UIBarPositioningDelegate))]
@@ -8442,6 +8609,21 @@ namespace XamCore.UIKit {
 		[Since (5,0)]
 		[Export ("setRightBarButtonItems:animated:")][PostGet ("RightBarButtonItems")]
 		void SetRightBarButtonItems (UIBarButtonItem [] items, bool animated);
+
+		[NoTV]
+		[iOS (11,0)]
+		[Export ("largeTitleDisplayMode", ArgumentSemantic.Assign)]
+		UINavigationItemLargeTitleDisplayMode LargeTitleDisplayMode { get; set; }
+
+		[NoTV]
+		[iOS (11,0)]
+		[NullAllowed, Export ("searchController", ArgumentSemantic.Retain)]
+		UISearchController SearchController { get; set; }
+
+		[NoTV]
+		[iOS (11,0)]
+		[Export ("hidesSearchBarWhenScrolling")]
+		bool HidesSearchBarWhenScrolling { get; set; }
 	}
 	
 	[BaseType (typeof (UIViewController))]
@@ -8933,6 +9115,22 @@ namespace XamCore.UIKit {
 		[NoWatch, NoTV, iOS (10, 0)]
 		[Export ("hasColors")]
 		bool HasColors { get; }
+
+		[NoWatch, NoTV, iOS (11,0)]
+		[Export ("itemProviders", ArgumentSemantic.Copy)]
+		NSItemProvider[] ItemProviders { get; set; }
+
+		[NoWatch, NoTV, iOS (11,0)]
+		[Export ("setItemProviders:localOnly:expirationDate:")]
+		void SetItemProviders (NSItemProvider[] itemProviders, bool localOnly, [NullAllowed] NSDate expirationDate);
+
+		[NoWatch, NoTV, iOS (11,0)]
+		[Export ("setObjects:")]
+		void SetObjects (INSItemProviderWriting[] objects);
+
+		[NoWatch, NoTV, iOS (11,0)]
+		[Export ("setObjects:localOnly:expirationDate:")]
+		void SetObjects (INSItemProviderWriting[] objects, bool localOnly, [NullAllowed] NSDate expirationDate);
 	}
 
 	[NoTV]
@@ -9670,6 +9868,27 @@ namespace XamCore.UIKit {
 		[Export ("contentInset")]
 		UIEdgeInsets ContentInset { get; set; }
 
+		[iOS (11,0), TV (11,0)]
+		[Export ("adjustedContentInset")]
+		UIEdgeInsets AdjustedContentInset { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("adjustedContentInsetDidChange")]
+		[Advice ("You must call the base method when overriding.")] // [RequiresSuper]
+		void AdjustedContentInsetDidChange ();
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("contentInsetAdjustmentBehavior", ArgumentSemantic.Assign)]
+		UIScrollViewContentInsetAdjustmentBehavior ContentInsetAdjustmentBehavior { get; set; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("contentLayoutGuide", ArgumentSemantic.Strong)]
+		UILayoutGuide ContentLayoutGuide { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("frameLayoutGuide", ArgumentSemantic.Strong)]
+		UILayoutGuide FrameLayoutGuide { get; }
+
 		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
@@ -9794,6 +10013,7 @@ namespace XamCore.UIKit {
 
 		[NoWatch, NoiOS]
 		[TV (9,0)]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Configuring the 'PanGestureRecognizer' for indirect scrolling automatically supports directional presses now, so this property is no longer useful.")]
 		[Export ("directionalPressGestureRecognizer")]
 		UIGestureRecognizer DirectionalPressGestureRecognizer { get; }
 
@@ -9848,6 +10068,10 @@ namespace XamCore.UIKit {
 		[Since (5,0)]
 		[Export ("scrollViewWillEndDragging:withVelocity:targetContentOffset:"), EventArgs ("WillEndDragging")]
 		void WillEndDragging (UIScrollView scrollView, CGPoint velocity, ref CGPoint targetContentOffset);
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("scrollViewDidChangeAdjustedContentInset:")]
+		void DidChangeAdjustedContentInset (UIScrollView scrollView);
 	}
 
 	[Protocol, Model]
@@ -11002,7 +11226,7 @@ namespace XamCore.UIKit {
 	}
 	
 	[BaseType (typeof(UIScrollView))]
-	interface UITableView : NSCoding {
+	interface UITableView : NSCoding, UIDataSourceTranslating {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
@@ -11291,7 +11515,52 @@ namespace XamCore.UIKit {
 		[iOS (10,0), TV (10,0)]
 		[NullAllowed, Export ("prefetchDataSource", ArgumentSemantic.Weak)]
 		IUITableViewDataSourcePrefetching PrefetchDataSource { get; set; }
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[NullAllowed, Export ("dragDelegate", ArgumentSemantic.Weak)]
+		IUITableViewDragDelegate DragDelegate { get; set; }
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[NullAllowed, Export ("dropDelegate", ArgumentSemantic.Weak)]
+		IUITableViewDropDelegate DropDelegate { get; set; }
+
+		[NoWatch]
+		[TV (11,0), iOS (11,0)]
+		[Export ("separatorInsetReference", ArgumentSemantic.Assign)]
+		UITableViewSeparatorInsetReference SeparatorInsetReference { get; set; }
+
+		[NoWatch]
+		[TV (11,0), iOS (11,0)]
+		[Async]
+		[Export ("performBatchUpdates:completion:")]
+		void PerformBatchUpdates ([NullAllowed] Action updates, [NullAllowed] Action<bool> completion);
 		
+		[NoWatch]
+		[TV (11,0), iOS (11,0)]
+		[Export ("hasUncommittedUpdates")]
+		bool HasUncommittedUpdates { get; }
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("dragInteractionEnabled")]
+		bool DragInteractionEnabled { get; set; }
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("hasActiveDrag")]
+		bool HasActiveDrag { get; }
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("hasActiveDrop")]
+		bool HasActiveDrop { get; }
+
+		[NoWatch]
+		[TV (11,0), iOS (11,0)]
+		[Export ("insetsContentViewsToSafeArea")]
+		bool InsetsContentViewsToSafeArea { get; set; }
 	}
 
 	interface IUITableViewDataSourcePrefetching {}
@@ -11494,6 +11763,23 @@ namespace XamCore.UIKit {
 		[return: NullAllowed]
 		NSIndexPath GetIndexPathForPreferredFocusedView (UITableView tableView);
 
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("tableView:leadingSwipeActionsConfigurationForRowAtIndexPath:")]
+		[return: NullAllowed]
+		UISwipeActionsConfiguration GetLeadingSwipeActionsConfiguration (UITableView tableView, NSIndexPath indexPath);
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("tableView:trailingSwipeActionsConfigurationForRowAtIndexPath:")]
+		[return: NullAllowed]
+		UISwipeActionsConfiguration GetTrailingSwipeActionsConfiguration (UITableView tableView, NSIndexPath indexPath);
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("tableView:shouldSpringLoadRowAtIndexPath:withContext:")]
+		bool ShouldSpringLoadRow (UITableView tableView, NSIndexPath indexPath, IUISpringLoadedInteractionContext context);
+
 		// WARNING: If you add more methods here, add them to UITableViewController as well.
 	}
 	
@@ -11603,6 +11889,16 @@ namespace XamCore.UIKit {
 		[iOS (9,0)] // introduced in Xcode 7.1 SDK (iOS 9.1 but hidden in 9.0)
 		[Export ("focusStyle", ArgumentSemantic.Assign)]
 		UITableViewCellFocusStyle FocusStyle { get; set; }
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("dragStateDidChange:")]
+		void DragStateDidChange (UITableViewCellDragState dragState);
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("userInteractionEnabledWhileDragging")]
+		bool UserInteractionEnabledWhileDragging { get; set; }
 	}
 
 	[BaseType (typeof (UIViewController))]
@@ -11817,6 +12113,23 @@ namespace XamCore.UIKit {
 		[Export ("indexPathForPreferredFocusedViewInTableView:")]
 		[return: NullAllowed]
 		NSIndexPath GetIndexPathForPreferredFocusedView (UITableView tableView);
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("tableView:leadingSwipeActionsConfigurationForRowAtIndexPath:")]
+		[return: NullAllowed]
+		UISwipeActionsConfiguration GetLeadingSwipeActionsConfiguration (UITableView tableView, NSIndexPath indexPath);
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("tableView:trailingSwipeActionsConfigurationForRowAtIndexPath:")]
+		[return: NullAllowed]
+		UISwipeActionsConfiguration GetTrailingSwipeActionsConfiguration (UITableView tableView, NSIndexPath indexPath);
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("tableView:shouldSpringLoadRowAtIndexPath:withContext:")]
+		bool ShouldSpringLoadRow (UITableView tableView, NSIndexPath indexPath, IUISpringLoadedInteractionContext context);
 	}
 
 	[Since (6,0)]
@@ -11845,6 +12158,7 @@ namespace XamCore.UIKit {
 		[Export ("initWithReuseIdentifier:")]
 		IntPtr Constructor (NSString reuseIdentifier);
 
+		[Advice ("You must call the base method when overriding.")] // [RequiresSuper]
 		[Export ("prepareForReuse")]
 		void PrepareForReuse ();
 
@@ -12997,13 +13311,29 @@ namespace XamCore.UIKit {
 		[Export ("layoutMargins")]
 		UIEdgeInsets LayoutMargins { get; set; }
 
+		[iOS (11,0), TV (11,0)]
+		[Export ("directionalLayoutMargins", ArgumentSemantic.Assign)]
+		NSDirectionalEdgeInsets DirectionalLayoutMargins { get; set; }
+
 		[iOS(8,0)]
 		[Export ("preservesSuperviewLayoutMargins")]
 		bool PreservesSuperviewLayoutMargins { get; set; }
 
+		[iOS (11,0), TV (11,0)]
+		[Export ("insetsLayoutMarginsFromSafeArea")]
+		bool InsetsLayoutMarginsFromSafeArea { get; set; }
+
 		[iOS(8,0)]
 		[Export ("layoutMarginsDidChange")]
 		void LayoutMarginsDidChange ();
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("safeAreaInsets")]
+		UIEdgeInsets SafeAreaInsets { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("safeAreaInsetsDidChange")]
+		void SafeAreaInsetsDidChange ();
 
 		[iOS (9,0)]
 		[Static]
@@ -13030,6 +13360,10 @@ namespace XamCore.UIKit {
 		[iOS (9,0)]
 		[Export ("readableContentGuide", ArgumentSemantic.Strong)]
 		UILayoutGuide ReadableContentGuide { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("safeAreaLayoutGuide", ArgumentSemantic.Strong)]
+		UILayoutGuide SafeAreaLayoutGuide { get; }
 
 		[iOS (9,0)]
 		[Export ("inheritedAnimationDuration")]
@@ -13324,13 +13658,13 @@ namespace XamCore.UIKit {
 		// 3.2 extensions from MoviePlayer
 		[NoMac]
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_9_0)]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Export ("presentMoviePlayerViewControllerAnimated:")]
 		void PresentMoviePlayerViewController (MPMoviePlayerViewController moviePlayerViewController);
 
 		[NoMac]
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_9_0)]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Export ("dismissMoviePlayerViewControllerAnimated")]
 		void DismissMoviePlayerViewController ();
 
@@ -13542,6 +13876,8 @@ namespace XamCore.UIKit {
 		bool ExtendedLayoutIncludesOpaqueBars { get; set; }
 	
 		[Since (7,0)]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use UIScrollView's 'ContentInsetAdjustmentBehavior' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use UIScrollView's 'ContentInsetAdjustmentBehavior' instead.")]
 		[Export ("automaticallyAdjustsScrollViewInsets", ArgumentSemantic.Assign)]
 		bool AutomaticallyAdjustsScrollViewInsets { get; set; }
 
@@ -13588,10 +13924,14 @@ namespace XamCore.UIKit {
 		UIViewController ChildViewControllerForStatusBarHidden ();
 
 		[Since (7,0)]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use UIView's 'SafeAreaLayoutGuide' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use UIView's 'SafeAreaLayoutGuide' instead.")]
 		[Export ("topLayoutGuide")]
 		IUILayoutSupport TopLayoutGuide { get; }
 
 		[Since (7,0)]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use UIView's 'SafeAreaLayoutGuide' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use UIView's 'SafeAreaLayoutGuide' instead.")]
 		[Export ("bottomLayoutGuide")]
 		IUILayoutSupport BottomLayoutGuide { get; }
 		
@@ -13694,6 +14034,58 @@ namespace XamCore.UIKit {
 		[iOS (10,0), TV (10,0)]
 		[Export ("restoresFocusAfterTransition")]
 		bool RestoresFocusAfterTransition { get; set; }
+
+		[NoWatch, NoiOS]
+		[TV (11,0)]
+		[Export ("preferredUserInterfaceStyle")]
+		UIUserInterfaceStyle PreferredUserInterfaceStyle { get; }
+
+		[NoWatch, NoiOS]
+		[TV (11,0)]
+		[Export ("setNeedsUserInterfaceAppearanceUpdate")]
+		void SetNeedsUserInterfaceAppearanceUpdate ();
+
+		[NoWatch, NoiOS]
+		[TV (11, 0)]
+		[NullAllowed, Export ("childViewControllerForUserInterfaceStyle")]
+		UIViewController ChildViewControllerForUserInterfaceStyle { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("additionalSafeAreaInsets", ArgumentSemantic.Assign)]
+		UIEdgeInsets AdditionalSafeAreaInsets { get; set; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("systemMinimumLayoutMargins")]
+		NSDirectionalEdgeInsets SystemMinimumLayoutMargins { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("viewRespectsSystemMinimumLayoutMargins")]
+		bool ViewRespectsSystemMinimumLayoutMargins { get; set; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("viewLayoutMarginsDidChange")]
+		[Advice ("You must call the base method when overriding.")] // [RequiresSuper]
+		void ViewLayoutMarginsDidChange ();
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("viewSafeAreaInsetsDidChange")]
+		[Advice ("You must call the base method when overriding.")] // [RequiresSuper]
+		void ViewSafeAreaInsetsDidChange ();
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[NullAllowed, Export ("childViewControllerForScreenEdgesDeferringSystemGestures")]
+		UIViewController ChildViewControllerForScreenEdgesDeferringSystemGestures { get; }
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("preferredScreenEdgesDeferringSystemGestures")]
+		UIRectEdge PreferredScreenEdgesDeferringSystemGestures { get; }
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("setNeedsUpdateOfScreenEdgesDeferringSystemGestures")]
+		void SetNeedsUpdateOfScreenEdgesDeferringSystemGestures ();
 	}
 
 	[Since (7,0)]
@@ -14337,6 +14729,14 @@ namespace XamCore.UIKit {
 
 		[Field ("UITextContentTypeCreditCardNumber")]
 		NSString CreditCardNumber { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Field ("UITextContentTypeUsername")]
+		NSString Username { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Field ("UITextContentTypePassword")]
+		NSString Password { get; }
 	}
 	
 	[Since (3,2)]
@@ -14407,6 +14807,10 @@ namespace XamCore.UIKit {
 		[iOS (8,0)]
 		[Field ("UISplitViewControllerAutomaticDimension")]
 		nfloat AutomaticDimension { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("primaryEdge", ArgumentSemantic.Assign)]
+		UISplitViewControllerPrimaryEdge PrimaryEdge { get; set; }
 	}
 
 	[Since (3,2)]
@@ -15575,6 +15979,14 @@ namespace XamCore.UIKit {
 		[iOS (10,0), TV (10,0)]
 		[Export ("handleInputModeListFromView:withEvent:")]
 		void HandleInputModeList (UIView fromView, UIEvent withEvent);
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("hasFullAccess")]
+		bool HasFullAccess { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Export ("needsInputModeSwitchKey")]
+		bool NeedsInputModeSwitchKey { get; }
 	}
 
 	[NoWatch, NoTV, iOS (11,0)]
@@ -15619,6 +16031,24 @@ namespace XamCore.UIKit {
 		[iOS (10, 0)]
 		[NullAllowed, Export ("documentInputMode")]
 		UITextInputMode DocumentInputMode { get; }
+
+		// New abstract, breaks ABI
+		// Radar: 33685383
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[iOS (11,0)]
+		[NullAllowed, Export ("selectedText")]
+		string SelectedText { get; }
+
+		// New abstract, breaks ABI
+		// Radar: 33685383
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[iOS (11,0)]
+		[Export ("documentIdentifier", ArgumentSemantic.Copy)]
+		NSUuid DocumentIdentifier { get; }
 	}
 
 	[NoWatch]
@@ -15857,6 +16287,7 @@ namespace XamCore.UIKit {
 	[NoWatch]
 	[NoTV]
 	[iOS (8,0)]
+	[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'UIDocumentPickerViewController' instead.")]
 	[BaseType (typeof (UIViewController), Delegates=new string [] {"Delegate"}, Events=new Type [] {typeof (UIDocumentMenuDelegate)})]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You cannot initialize a UIDocumentMenuViewController except by the initWithDocumentTypes:inMode: and initWithURL:inMode: initializers.
 	partial interface UIDocumentMenuViewController : NSCoding {
@@ -15909,9 +16340,15 @@ namespace XamCore.UIKit {
 		[Export ("initWithDocumentTypes:inMode:")]
 		IntPtr Constructor (string [] allowedUTIs, UIDocumentPickerMode mode);
 
+		[Advice ("This method will be deprecated in a future release and should be avoided. Instead, use 'UIDocumentPickerViewController (NSUrl[], UIDocumentPickerMode)'.")]
 		[DesignatedInitializer]
 		[Export ("initWithURL:inMode:")]
 		IntPtr Constructor (NSUrl url, UIDocumentPickerMode mode);
+
+		[iOS (11,0)]
+		[Export ("initWithURLs:inMode:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSUrl[] urls, UIDocumentPickerMode mode);
 
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -15922,6 +16359,10 @@ namespace XamCore.UIKit {
 
 		[Export ("documentPickerMode", ArgumentSemantic.Assign)]
 		UIDocumentPickerMode DocumentPickerMode { get; }
+
+		[iOS (11,0)]
+		[Export ("allowsMultipleSelection")]
+		bool AllowsMultipleSelection { get; set; }
 	}
 
 	[NoWatch]
@@ -15930,9 +16371,14 @@ namespace XamCore.UIKit {
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	partial interface UIDocumentPickerDelegate {
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Implement 'DidPickDocument (UIDocumentPickerViewController, NSUrl[])' instead.")]
 		[Abstract]
 		[Export ("documentPicker:didPickDocumentAtURL:"), EventArgs ("UIDocumentPicked")]
 		void DidPickDocument (UIDocumentPickerViewController controller, NSUrl url);
+
+		[iOS (11,0)]
+		[Export ("documentPicker:didPickDocumentsAtURLs:"), EventArgs ("UIDocumentPickedAtUrls"), EventName ("DidPickDocumentAtUrls")]
+		void DidPickDocument (UIDocumentPickerViewController controller, NSUrl[] urls);
 
 		[Export ("documentPickerWasCancelled:")]
 		void WasCancelled (UIDocumentPickerViewController controller);
@@ -16062,6 +16508,16 @@ namespace XamCore.UIKit {
 		[DesignatedInitializer]
 		IntPtr Constructor (CGPoint point1, CGPoint point2);
 	}
+
+	interface IUIFocusAnimationContext {}
+
+	[iOS (11,0)]
+	[Protocol]
+	interface UIFocusAnimationContext {
+		[Abstract]
+		[Export ("duration")]
+		double Duration { get; }
+	}
 		
 	[NoWatch]
 	[iOS (9,0)]
@@ -16070,6 +16526,16 @@ namespace XamCore.UIKit {
 		[Export ("addCoordinatedAnimations:completion:")]
 		[Async]
 		void AddCoordinatedAnimations ([NullAllowed] Action animations, [NullAllowed] Action completion);
+
+		[Async]
+		[TV (11,0), iOS (11,0)]
+		[Export ("addCoordinatedFocusingAnimations:completion:")]
+		void AddCoordinatedFocusingAnimations ([NullAllowed] Action<IUIFocusAnimationContext> animations, [NullAllowed] Action completion);
+
+		[Async]
+		[TV (11,0), iOS (11,0)]
+		[Export ("addCoordinatedUnfocusingAnimations:completion:")]
+		void AddCoordinatedUnfocusingAnimations ([NullAllowed] Action<IUIFocusAnimationContext> animations, [NullAllowed] Action completion);
 	}
 
 	[NoWatch]
@@ -16119,6 +16585,71 @@ namespace XamCore.UIKit {
 		[iOS (10,0), TV (10,0)]
 		[NullAllowed, Export ("nextFocusedItem", ArgumentSemantic.Weak)]
 		IUIFocusItem NextFocusedItem { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Notification]
+		[Field ("UIFocusDidUpdateNotification")]
+		NSString DidUpdateNotification { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Notification]
+		[Field ("UIFocusMovementDidFailNotification")]
+		NSString MovementDidFailNotification { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Field ("UIFocusUpdateContextKey")]
+		NSString Key { get; }
+
+		[iOS (11,0), TV (11,0)]
+		[Field ("UIFocusUpdateAnimationCoordinatorKey")]
+		NSString AnimationCoordinatorKey { get; }
+	}
+
+	[NoWatch]
+	[iOS (11,0), TV (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UIFocusSystem {
+		[Static]
+		[Export ("environment:containsEnvironment:")]
+		bool Contains (IUIFocusEnvironment environment, IUIFocusEnvironment otherEnvironment);
+
+		[NoiOS]
+		[Static]
+		[Export ("registerURL:forSoundIdentifier:")]
+		void RegisterUrl (NSUrl soundFileUrl, NSString identifier);
+
+		// The 2 values associated with the 'UIFocusSoundIdentifier' smart enum cannot be used.
+		// See https://developer.apple.com/documentation/uikit/uifocussystem/2887479-register
+		// Do not specify one of the UIKit sound identifiers (such as default); doing so will cause an immediate assertion failure and crash your app.
+	}
+
+	interface IUIFocusDebuggerOutput {}
+
+	[NoWatch]
+	[iOS (11,0), TV (11,0)]
+	[Protocol]
+	interface UIFocusDebuggerOutput {}
+
+	[NoWatch]
+	[iOS (11,0), TV (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface UIFocusDebugger {
+		[Static]
+		[Export ("help")]
+		IUIFocusDebuggerOutput Help { get; }
+
+		[Static]
+		[Export ("status")]
+		IUIFocusDebuggerOutput Status { get; }
+
+		[Static]
+		[Export ("checkFocusabilityForItem:")]
+		IUIFocusDebuggerOutput CheckFocusability (IUIFocusItem item);
+
+		[Static]
+		[Export ("simulateFocusUpdateRequestFromEnvironment:")]
+		IUIFocusDebuggerOutput SimulateFocusUpdateRequest (IUIFocusEnvironment environment);
 	}
 
 	[NoWatch]
@@ -16217,6 +16748,17 @@ namespace XamCore.UIKit {
 		NSIndexPath NextFocusedIndexPath { [return: NullAllowed] get; }
 	}
 
+	[NoWatch, NoiOS]
+	[TV (11,0)]
+	public enum UIFocusSoundIdentifier {
+
+		[Field ("UIFocusSoundIdentifierNone")]
+		None,
+
+		[Field ("UIFocusSoundIdentifierDefault")]
+		Default,
+	}
+
 	interface IUIFocusEnvironment {}
 	[NoWatch]
 	[iOS (9,0)]
@@ -16257,6 +16799,12 @@ namespace XamCore.UIKit {
 		[iOS (10, 0)]
 		[Export ("preferredFocusEnvironments", ArgumentSemantic.Copy)]
 		IUIFocusEnvironment[] PreferredFocusEnvironments { get; }
+
+		[NoiOS]
+		[TV (11,0)]
+		[Export ("soundIdentifierForFocusUpdateInContext:")]
+		[return: NullAllowed]
+		NSString GetSoundIdentifier (UIFocusUpdateContext context);
 		
 	}
 #endif // !WATCH
@@ -16277,6 +16825,7 @@ namespace XamCore.UIKit {
 		NSString TextShadowOffset { get; }
 	}
 
+#if !WATCH
 #region Drag and Drop
 	interface IUIInteraction {}
 	interface IUIDropSession {}
@@ -16285,8 +16834,23 @@ namespace XamCore.UIKit {
 	interface IUIDragSession {}
 	interface IUIDragInteractionDelegate {}
 	interface IUIDropInteractionDelegate {}
-		
-#if !WATCH
+	interface IUICollectionViewDragDelegate {}
+	interface IUICollectionViewDropDelegate {}
+	interface IUICollectionViewDropCoordinator {}
+	interface IUICollectionViewDropItem {}
+	interface IUICollectionViewDropPlaceholderContext {}
+	interface IUITableViewDragDelegate {}
+	interface IUITableViewDropDelegate {}
+	interface IUITableViewDropCoordinator {}
+	interface IUITableViewDropItem {}
+	interface IUITableViewDropPlaceholderContext {}
+	interface IUITextDragDelegate {}
+	interface IUITextDraggable {}
+	interface IUITextDragRequest {}
+	interface IUITextDroppable {}
+	interface IUITextDropDelegate {}
+	interface IUITextDropRequest {}
+
 	[NoWatch, NoTV, iOS (11,0)]
 	[Protocol]
 	interface UIDragAnimating
@@ -16365,6 +16929,16 @@ namespace XamCore.UIKit {
 	
 		[Export ("parameters", ArgumentSemantic.Copy)]
 		UIDragPreviewParameters Parameters { get; }
+
+		// From URLPreviews (UIDragPreview) category
+
+		[Static]
+		[Export ("previewForURL:")]
+		UIDragPreview GetPreview (NSUrl url);
+
+		[Static]
+		[Export ("previewForURL:title:")]
+		UIDragPreview GetPreview (NSUrl url, [NullAllowed] string title);
 	}
 	
 	[NoWatch, NoTV, iOS (11,0)]
@@ -16609,7 +17183,861 @@ namespace XamCore.UIKit {
 	
 		[Export ("retargetedPreviewWithTarget:")]
 		UITargetedDragPreview GetRetargetedPreview (UIDragPreviewTarget newTarget);
+
+		// From URLPreviews (UITargetedDragPreview) category
+
+		[Static]
+		[Export ("previewForURL:target:")]
+		UITargetedDragPreview GetPreview (NSUrl url, UIDragPreviewTarget target);
+
+		[Static]
+		[Export ("previewForURL:title:target:")]
+		UITargetedDragPreview GetPreview (NSUrl url, [NullAllowed] string title, UIDragPreviewTarget target);
 	}
-#endif
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface UICollectionViewDragDelegate {
+		[Abstract]
+		[Export ("collectionView:itemsForBeginningDragSession:atIndexPath:")]
+		UIDragItem[] GetItemsForBeginningDragSession (UICollectionView collectionView, IUIDragSession session, NSIndexPath indexPath);
+
+		[Export ("collectionView:itemsForAddingToDragSession:atIndexPath:point:")]
+		UIDragItem[] GetItemsForAddingToDragSession (UICollectionView collectionView, IUIDragSession session, NSIndexPath indexPath, CGPoint point);
+
+		[Export ("collectionView:dragPreviewParametersForItemAtIndexPath:")]
+		[return: NullAllowed]
+		UIDragPreviewParameters GetDragPreviewParameters (UICollectionView collectionView, NSIndexPath indexPath);
+
+		[Export ("collectionView:dragSessionWillBegin:")]
+		void DragSessionWillBegin (UICollectionView collectionView, IUIDragSession session);
+
+		[Export ("collectionView:dragSessionDidEnd:")]
+		void DragSessionDidEnd (UICollectionView collectionView, IUIDragSession session);
+
+		[Export ("collectionView:dragSessionAllowsMoveOperation:")]
+		bool DragSessionAllowsMoveOperation (UICollectionView collectionView, IUIDragSession session);
+
+		[Export ("collectionView:dragSessionIsRestrictedToDraggingApplication:")]
+		bool DragSessionIsRestrictedToDraggingApplication (UICollectionView collectionView, IUIDragSession session);
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface UICollectionViewDropDelegate {
+		[Abstract]
+		[Export ("collectionView:performDropWithCoordinator:")]
+		void PerformDrop (UICollectionView collectionView, IUICollectionViewDropCoordinator coordinator);
+
+		[Export ("collectionView:canHandleDropSession:")]
+		bool CanHandleDropSession (UICollectionView collectionView, IUIDropSession session);
+
+		[Export ("collectionView:dropSessionDidEnter:")]
+		void DropSessionDidEnter (UICollectionView collectionView, IUIDropSession session);
+
+		[Export ("collectionView:dropSessionDidUpdate:withDestinationIndexPath:")]
+		UICollectionViewDropProposal DropSessionDidUpdate (UICollectionView collectionView, IUIDropSession session, [NullAllowed] NSIndexPath destinationIndexPath);
+
+		[Export ("collectionView:dropSessionDidExit:")]
+		void DropSessionDidExit (UICollectionView collectionView, IUIDropSession session);
+
+		[Export ("collectionView:dropSessionDidEnd:")]
+		void DropSessionDidEnd (UICollectionView collectionView, IUIDropSession session);
+
+		[Export ("collectionView:dropPreviewParametersForItemAtIndexPath:")]
+		[return: NullAllowed]
+		UIDragPreviewParameters GetDropPreviewParameters (UICollectionView collectionView, NSIndexPath indexPath);
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[BaseType (typeof(UIDropProposal))]
+	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: Not implemented
+	interface UICollectionViewDropProposal {
+
+		// inline from base type
+		[Export ("initWithDropOperation:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (UIDropOperation operation);
+
+		[Export ("initWithDropOperation:intent:")]
+		IntPtr Constructor (UIDropOperation operation, UICollectionViewDropIntent intent);
+
+		[Export ("intent")]
+		UICollectionViewDropIntent Intent { get; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UICollectionViewDropCoordinator {
+		[Abstract]
+		[Export ("items")]
+		IUICollectionViewDropItem[] Items { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("destinationIndexPath")]
+		NSIndexPath DestinationIndexPath { get; }
+
+		[Abstract]
+		[Export ("proposal")]
+		UICollectionViewDropProposal Proposal { get; }
+
+		[Abstract]
+		[Export ("session")]
+		IUIDropSession Session { get; }
+
+		[Abstract]
+		[Export ("dropItem:toPlaceholder:")]
+		IUICollectionViewDropPlaceholderContext DropItemToPlaceholder (UIDragItem dragItem, UICollectionViewDropPlaceholder placeholder);
+
+		[Abstract]
+		[Export ("dropItem:toItemAtIndexPath:")]
+		IUIDragAnimating DropItemToItem (UIDragItem dragItem, NSIndexPath itemIndexPath);
+
+		[Abstract]
+		[Export ("dropItem:intoItemAtIndexPath:rect:")]
+		IUIDragAnimating DropItemIntoItem (UIDragItem dragItem, NSIndexPath itemIndexPath, CGRect rect);
+
+		[Abstract]
+		[Export ("dropItem:toTarget:")]
+		IUIDragAnimating DropItemToTarget (UIDragItem dragItem, UIDragPreviewTarget target);
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UICollectionViewPlaceholder {
+		[Export ("initWithInsertionIndexPath:reuseIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSIndexPath insertionIndexPath, string reuseIdentifier);
+
+		[NullAllowed, Export ("cellUpdateHandler", ArgumentSemantic.Copy)]
+		Action<UICollectionViewCell> CellUpdateHandler { get; set; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[BaseType (typeof(UICollectionViewPlaceholder))]
+	interface UICollectionViewDropPlaceholder {
+		// inlined
+		[Export ("initWithInsertionIndexPath:reuseIdentifier:")]
+		IntPtr Constructor (NSIndexPath insertionIndexPath, string reuseIdentifier);
+
+		[NullAllowed, Export ("previewParametersProvider", ArgumentSemantic.Copy)]
+		Func<UICollectionViewCell, UIDragPreviewParameters> PreviewParametersProvider { get; set; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UICollectionViewDropItem {
+		[Abstract]
+		[Export ("dragItem")]
+		UIDragItem DragItem { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("sourceIndexPath")]
+		NSIndexPath SourceIndexPath { get; }
+
+		[Abstract]
+		[Export ("previewSize")]
+		CGSize PreviewSize { get; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UICollectionViewDropPlaceholderContext : UIDragAnimating {
+		[Abstract]
+		[Export ("dragItem")]
+		UIDragItem DragItem { get; }
+
+		[Abstract]
+		[Export ("commitInsertionWithDataSourceUpdates:")]
+		bool CommitInsertion (Action<NSIndexPath> dataSourceUpdates);
+
+		[Abstract]
+		[Export ("deletePlaceholder")]
+		bool DeletePlaceholder ();
+
+		[Abstract]
+		[Export ("setNeedsCellUpdate")]
+		void SetNeedsCellUpdate ();
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface UITableViewDragDelegate {
+		[Abstract]
+		[Export ("tableView:itemsForBeginningDragSession:atIndexPath:")]
+		UIDragItem[] GetItemsForBeginningDragSession (UITableView tableView, IUIDragSession session, NSIndexPath indexPath);
+
+		[Export ("tableView:itemsForAddingToDragSession:atIndexPath:point:")]
+		UIDragItem[] GetItemsForAddingToDragSession (UITableView tableView, IUIDragSession session, NSIndexPath indexPath, CGPoint point);
+
+		[Export ("tableView:dragPreviewParametersForRowAtIndexPath:")]
+		[return: NullAllowed]
+		UIDragPreviewParameters GetDragPreviewParameters (UITableView tableView, NSIndexPath indexPath);
+
+		[Export ("tableView:dragSessionWillBegin:")]
+		void DragSessionWillBegin (UITableView tableView, IUIDragSession session);
+
+		[Export ("tableView:dragSessionDidEnd:")]
+		void DragSessionDidEnd (UITableView tableView, IUIDragSession session);
+
+		[Export ("tableView:dragSessionAllowsMoveOperation:")]
+		bool DragSessionAllowsMoveOperation (UITableView tableView, IUIDragSession session);
+
+		[Export ("tableView:dragSessionIsRestrictedToDraggingApplication:")]
+		bool DragSessionIsRestrictedToDraggingApplication (UITableView tableView, IUIDragSession session);
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface UITableViewDropDelegate {
+		[Abstract]
+		[Export ("tableView:performDropWithCoordinator:")]
+		void PerformDrop (UITableView tableView, IUITableViewDropCoordinator coordinator);
+
+		[Export ("tableView:canHandleDropSession:")]
+		bool CanHandleDropSession (UITableView tableView, IUIDropSession session);
+
+		[Export ("tableView:dropSessionDidEnter:")]
+		void DropSessionDidEnter (UITableView tableView, IUIDropSession session);
+
+		[Export ("tableView:dropSessionDidUpdate:withDestinationIndexPath:")]
+		UITableViewDropProposal DropSessionDidUpdate (UITableView tableView, IUIDropSession session, [NullAllowed] NSIndexPath destinationIndexPath);
+
+		[Export ("tableView:dropSessionDidExit:")]
+		void DropSessionDidExit (UITableView tableView, IUIDropSession session);
+
+		[Export ("tableView:dropSessionDidEnd:")]
+		void DropSessionDidEnd (UITableView tableView, IUIDropSession session);
+
+		[Export ("tableView:dropPreviewParametersForRowAtIndexPath:")]
+		[return: NullAllowed]
+		UIDragPreviewParameters GetDropPreviewParameters (UITableView tableView, NSIndexPath indexPath);
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[BaseType (typeof(UIDropProposal))]
+	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: Not implemented
+	interface UITableViewDropProposal {
+
+		// inline from base type
+		[Export ("initWithDropOperation:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (UIDropOperation operation);
+
+		[Export ("initWithDropOperation:intent:")]
+		IntPtr Constructor (UIDropOperation operation, UITableViewDropIntent intent);
+
+		[Export ("intent")]
+		UITableViewDropIntent Intent { get; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UITableViewDropCoordinator {
+		[Abstract]
+		[Export ("items")]
+		IUITableViewDropItem[] Items { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("destinationIndexPath")]
+		NSIndexPath DestinationIndexPath { get; }
+
+		[Abstract]
+		[Export ("proposal")]
+		UITableViewDropProposal Proposal { get; }
+
+		[Abstract]
+		[Export ("session")]
+		IUIDropSession Session { get; }
+
+		[Abstract]
+		[Export ("dropItem:toPlaceholder:")]
+		IUITableViewDropPlaceholderContext DropItemToPlaceholder (UIDragItem dragItem, UITableViewDropPlaceholder placeholder);
+
+		[Abstract]
+		[Export ("dropItem:toRowAtIndexPath:")]
+		IUIDragAnimating DropItemToRow (UIDragItem dragItem, NSIndexPath indexPath);
+
+		[Abstract]
+		[Export ("dropItem:intoRowAtIndexPath:rect:")]
+		IUIDragAnimating DropItemIntoRow (UIDragItem dragItem, NSIndexPath indexPath, CGRect rect);
+
+		[Abstract]
+		[Export ("dropItem:toTarget:")]
+		IUIDragAnimating DropItemToTarget (UIDragItem dragItem, UIDragPreviewTarget target);
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UITableViewPlaceholder {
+		[Export ("initWithInsertionIndexPath:reuseIdentifier:rowHeight:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSIndexPath insertionIndexPath, string reuseIdentifier, nfloat rowHeight);
+
+		[NullAllowed, Export ("cellUpdateHandler", ArgumentSemantic.Copy)]
+		Action<UITableViewCell> CellUpdateHandler { get; set; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[BaseType (typeof(UITableViewPlaceholder))]
+	interface UITableViewDropPlaceholder {
+		// inlined
+		[Export ("initWithInsertionIndexPath:reuseIdentifier:rowHeight:")]
+		IntPtr Constructor (NSIndexPath insertionIndexPath, string reuseIdentifier, nfloat rowHeight);
+
+		[NullAllowed, Export ("previewParametersProvider", ArgumentSemantic.Copy)]
+		Func<UITableViewCell, UIDragPreviewParameters> PreviewParametersProvider { get; set; }
+	}
+
+	[NoWatch, NoTV, iOS (11,0)]
+	[Protocol]
+	interface UITableViewDropItem {
+		[Abstract]
+		[Export ("dragItem")]
+		UIDragItem DragItem { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("sourceIndexPath")]
+		NSIndexPath SourceIndexPath { get; }
+
+		[Abstract]
+		[Export ("previewSize")]
+		CGSize PreviewSize { get; }
+	}
+
+	[NoWatch, NoTV, iOS (11,0)]
+	[Protocol]
+	interface UITableViewDropPlaceholderContext : UIDragAnimating {
+		[Abstract]
+		[Export ("dragItem")]
+		UIDragItem DragItem { get; }
+
+		[Abstract]
+		[Export ("commitInsertionWithDataSourceUpdates:")]
+		bool CommitInsertion (Action<NSIndexPath> dataSourceUpdates);
+
+		[Abstract]
+		[Export ("deletePlaceholder")]
+		bool DeletePlaceholder ();
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UITextDragPreviewRenderer {
+		[Export ("initWithLayoutManager:range:")]
+		IntPtr Constructor (NSLayoutManager layoutManager, NSRange range);
+
+		[Export ("initWithLayoutManager:range:unifyRects:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSLayoutManager layoutManager, NSRange range, bool unifyRects);
+
+		[Export ("layoutManager")]
+		NSLayoutManager LayoutManager { get; }
+
+		[Export ("image")]
+		UIImage Image { get; }
+
+		[Export ("firstLineRect")]
+		CGRect FirstLineRect { get; }
+
+		[Export ("bodyRect")]
+		CGRect BodyRect { get; }
+
+		[Export ("lastLineRect")]
+		CGRect LastLineRect { get; }
+
+		[Export ("adjustFirstLineRect:bodyRect:lastLineRect:textOrigin:")]
+		void Adjust (ref CGRect firstLineRect, ref CGRect bodyRect, ref CGRect lastLineRect, CGPoint origin);
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UITextDraggable : UITextInput {
+		[Abstract]
+		[NullAllowed, Export ("textDragDelegate", ArgumentSemantic.Weak)]
+		IUITextDragDelegate TextDragDelegate { get; set; }
+
+		[Abstract]
+		[NullAllowed, Export ("textDragInteraction")]
+		UIDragInteraction TextDragInteraction { get; }
+
+		[Abstract]
+		[Export ("textDragActive")]
+		bool TextDragActive { [Bind ("isTextDragActive")] get; }
+
+		[Abstract]
+		[Export ("textDragOptions", ArgumentSemantic.Assign)]
+		UITextDragOptions TextDragOptions { get; set; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface UITextDragDelegate {
+		[Export ("textDraggableView:itemsForDrag:")]
+		UIDragItem[] GetItemsForDrag (IUITextDraggable textDraggableView, IUITextDragRequest dragRequest);
+
+		[Export ("textDraggableView:dragPreviewForLiftingItem:session:")]
+		[return: NullAllowed]
+		UITargetedDragPreview GetPreviewForLiftingItem (IUITextDraggable textDraggableView, UIDragItem item, IUIDragSession session);
+
+		[Export ("textDraggableView:willAnimateLiftWithAnimator:session:")]
+		void WillAnimateLift (IUITextDraggable textDraggableView, IUIDragAnimating animator, IUIDragSession session);
+
+		[Export ("textDraggableView:dragSessionWillBegin:")]
+		void DragSessionWillBegin (IUITextDraggable textDraggableView, IUIDragSession session);
+
+		[Export ("textDraggableView:dragSessionDidEnd:withOperation:")]
+		void DragSessionDidEnd (IUITextDraggable textDraggableView, IUIDragSession session, UIDropOperation operation);
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UITextDragRequest {
+		[Abstract]
+		[Export ("dragRange")]
+		UITextRange DragRange { get; }
+
+		[Abstract]
+		[Export ("suggestedItems")]
+		UIDragItem[] SuggestedItems { get; }
+
+		[Abstract]
+		[Export ("existingItems")]
+		UIDragItem[] ExistingItems { get; }
+
+		[Abstract]
+		[Export ("selected")]
+		bool Selected { [Bind ("isSelected")] get; }
+
+		[Abstract]
+		[Export ("dragSession")]
+		IUIDragSession DragSession { get; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[BaseType (typeof(UIDropProposal))]
+	[DisableDefaultCtor]
+	interface UITextDropProposal : NSCopying {
+		// inlined
+		[Export ("initWithDropOperation:")]
+		IntPtr Constructor (UIDropOperation operation);
+
+		[Export ("dropAction", ArgumentSemantic.Assign)]
+		UITextDropAction DropAction { get; set; }
+
+		[Export ("dropProgressMode", ArgumentSemantic.Assign)]
+		UITextDropProgressMode DropProgressMode { get; set; }
+
+		[Export ("useFastSameViewOperations")]
+		bool UseFastSameViewOperations { get; set; }
+
+		[Export ("dropPerformer", ArgumentSemantic.Assign)]
+		UITextDropPerformer DropPerformer { get; set; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UITextDroppable : UITextInput, UITextPasteConfigurationSupporting {
+		[Abstract]
+		[NullAllowed, Export ("textDropDelegate", ArgumentSemantic.Weak)]
+		IUITextDropDelegate TextDropDelegate { get; set; }
+
+		[Abstract]
+		[NullAllowed, Export ("textDropInteraction")]
+		UIDropInteraction TextDropInteraction { get; }
+
+		[Abstract]
+		[Export ("textDropActive")]
+		bool TextDropActive { [Bind ("isTextDropActive")] get; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface UITextDropDelegate {
+		[Export ("textDroppableView:willBecomeEditableForDrop:")]
+		UITextDropEditability WillBecomeEditable (IUITextDroppable textDroppableView, IUITextDropRequest drop);
+
+		[Export ("textDroppableView:proposalForDrop:")]
+		UITextDropProposal GetProposalForDrop (IUITextDroppable textDroppableView, IUITextDropRequest drop);
+
+		[Export ("textDroppableView:willPerformDrop:")]
+		void WillPerformDrop (IUITextDroppable textDroppableView, IUITextDropRequest drop);
+
+		[Export ("textDroppableView:previewForDroppingAllItemsWithDefault:")]
+		[return: NullAllowed]
+		UITargetedDragPreview GetPreviewForDroppingAllItems (IUITextDroppable textDroppableView, UITargetedDragPreview defaultPreview);
+
+		[Export ("textDroppableView:dropSessionDidEnter:")]
+		void DropSessionDidEnter (IUITextDroppable textDroppableView, IUIDropSession session);
+
+		[Export ("textDroppableView:dropSessionDidUpdate:")]
+		void DropSessionDidUpdate (IUITextDroppable textDroppableView, IUIDropSession session);
+
+		[Export ("textDroppableView:dropSessionDidExit:")]
+		void DropSessionDidExit (IUITextDroppable textDroppableView, IUIDropSession session);
+
+		[Export ("textDroppableView:dropSessionDidEnd:")]
+		void DropSessionDidEnd (IUITextDroppable textDroppableView, IUIDropSession session);
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UITextDropRequest {
+		[Abstract]
+		[Export ("dropPosition")]
+		UITextPosition DropPosition { get; }
+
+		[Abstract]
+		[Export ("suggestedProposal")]
+		UITextDropProposal SuggestedProposal { get; }
+
+		[Abstract]
+		[Export ("sameView")]
+		bool SameView { [Bind ("isSameView")] get; }
+
+		[Abstract]
+		[Export ("dropSession")]
+		IUIDropSession DropSession { get; }
+	}
+
 #endregion
+
+	[TV (11,0), iOS (11,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface UIDataSourceTranslating {
+		[Abstract]
+		[Export ("presentationSectionIndexForDataSourceSectionIndex:")]
+		nint GetPresentationSectionIndex (nint dataSourceSectionIndex);
+
+		[Abstract]
+		[Export ("dataSourceSectionIndexForPresentationSectionIndex:")]
+		nint GetDataSourceSectionIndex (nint presentationSectionIndex);
+
+		[Abstract]
+		[Export ("presentationIndexPathForDataSourceIndexPath:")]
+		[return: NullAllowed]
+		NSIndexPath GetPresentationIndexPath ([NullAllowed] NSIndexPath dataSourceIndexPath);
+
+		[Abstract]
+		[Export ("dataSourceIndexPathForPresentationIndexPath:")]
+		[return: NullAllowed]
+		NSIndexPath GetDataSourceIndexPath ([NullAllowed] NSIndexPath presentationIndexPath);
+
+		[Abstract]
+		[Export ("performUsingPresentationValues:")]
+		void PerformUsingPresentationValues (Action actionsToTranslate);
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UISpringLoadedInteraction : UIInteraction {
+		[Export ("initWithInteractionBehavior:interactionEffect:activationHandler:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] IUISpringLoadedInteractionBehavior interactionBehavior, [NullAllowed] IUISpringLoadedInteractionEffect interactionEffect, Action<UISpringLoadedInteraction, IUISpringLoadedInteractionContext> handler);
+
+		[Export ("initWithActivationHandler:")]
+		IntPtr Constructor (Action<UISpringLoadedInteraction, IUISpringLoadedInteractionContext> handler);
+
+		[Export ("interactionBehavior", ArgumentSemantic.Strong)]
+		IUISpringLoadedInteractionBehavior InteractionBehavior { get; }
+
+		[Export ("interactionEffect", ArgumentSemantic.Strong)]
+		IUISpringLoadedInteractionEffect InteractionEffect { get; }
+	}
+
+	interface IUISpringLoadedInteractionBehavior {}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UISpringLoadedInteractionBehavior {
+		[Abstract]
+		[Export ("shouldAllowInteraction:withContext:")]
+		bool ShouldAllowInteraction (UISpringLoadedInteraction interaction, IUISpringLoadedInteractionContext context);
+
+		[Export ("interactionDidFinish:")]
+		void InteractionDidFinish (UISpringLoadedInteraction interaction);
+	}
+
+	interface IUISpringLoadedInteractionEffect {}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UISpringLoadedInteractionEffect {
+		[Abstract]
+		[Export ("interaction:didChangeWithContext:")]
+		void DidChange (UISpringLoadedInteraction interaction, IUISpringLoadedInteractionContext context);
+	}
+
+	interface IUISpringLoadedInteractionContext {}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UISpringLoadedInteractionContext {
+		[Abstract]
+		[Export ("state")]
+		UISpringLoadedInteractionEffectState State { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("targetView", ArgumentSemantic.Strong)]
+		UIView TargetView { get; set; }
+
+		[Abstract]
+		[NullAllowed, Export ("targetItem", ArgumentSemantic.Strong)]
+		NSObject TargetItem { get; set; }
+
+		[Abstract]
+		[Export ("locationInView:")]
+		CGPoint LocationInView ([NullAllowed] UIView view);
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UISpringLoadedInteractionSupporting {
+		[Abstract]
+		[Export ("springLoaded")]
+		bool SpringLoaded { [Bind ("isSpringLoaded")] get; set; }
+	}
+
+	// https://bugzilla.xamarin.com/show_bug.cgi?id=58282, we should be able to write one delegate with a 'Action<bool>'. See original signature:
+	// typedef void (^UIContextualActionHandler)(UIContextualAction * _Nonnull, __kindof UIView * _Nonnull, void (^ _Nonnull)(BOOL));
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	delegate void UIContextualActionHandler (UIContextualAction action, UIView sourceView, [BlockCallback] UIContextualActionCompletionHandler completionHandler);
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	delegate void UIContextualActionCompletionHandler (bool finished);
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UIContextualAction {
+		[Static]
+		[Export ("contextualActionWithStyle:title:handler:")]
+		UIContextualAction FromContextualActionStyle (UIContextualActionStyle style, [NullAllowed] string title, UIContextualActionHandler handler);
+
+		[Export ("style")]
+		UIContextualActionStyle Style { get; }
+
+		[Export ("handler", ArgumentSemantic.Copy)]
+		UIContextualActionHandler Handler { get; }
+
+		[NullAllowed, Export ("title")]
+		string Title { get; set; }
+
+		[NullAllowed, Export ("backgroundColor", ArgumentSemantic.Copy)]
+		UIColor BackgroundColor { get; set; }
+
+		[NullAllowed, Export ("image", ArgumentSemantic.Copy)]
+		UIImage Image { get; set; }
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UISwipeActionsConfiguration {
+		[Static]
+		[Export ("configurationWithActions:")]
+		UISwipeActionsConfiguration FromActions (UIContextualAction[] actions);
+
+		[Export ("actions", ArgumentSemantic.Copy)]
+		UIContextualAction[] Actions { get; }
+
+		[Export ("performsFirstActionWithFullSwipe")]
+		bool PerformsFirstActionWithFullSwipe { get; set; }
+	}
+
+	interface IUITextPasteConfigurationSupporting {}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UITextPasteConfigurationSupporting : UIPasteConfigurationSupporting {
+		[Abstract]
+		[NullAllowed, Export ("pasteDelegate", ArgumentSemantic.Weak)]
+		IUITextPasteDelegate PasteDelegate { get; set; }
+	}
+
+	interface IUITextPasteDelegate {}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface UITextPasteDelegate {
+		[Export ("textPasteConfigurationSupporting:transformPasteItem:")]
+		void TransformPasteItem (IUITextPasteConfigurationSupporting textPasteConfigurationSupporting, IUITextPasteItem item);
+
+		[Export ("textPasteConfigurationSupporting:combineItemAttributedStrings:forRange:")]
+		NSAttributedString CombineItemAttributedStrings (IUITextPasteConfigurationSupporting textPasteConfigurationSupporting, NSAttributedString[] itemStrings, UITextRange textRange);
+
+		[Export ("textPasteConfigurationSupporting:performPasteOfAttributedString:toRange:")]
+		UITextRange PerformPaste (IUITextPasteConfigurationSupporting textPasteConfigurationSupporting, NSAttributedString attributedString, UITextRange textRange);
+
+		[Export ("textPasteConfigurationSupporting:shouldAnimatePasteOfAttributedString:toRange:")]
+		bool ShouldAnimatePaste (IUITextPasteConfigurationSupporting textPasteConfigurationSupporting, NSAttributedString attributedString, UITextRange textRange);
+	}
+
+	interface IUITextPasteItem {}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UITextPasteItem {
+		[Abstract]
+		[Export ("itemProvider")]
+		NSItemProvider ItemProvider { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("localObject")]
+		NSObject LocalObject { get; }
+
+		[Abstract]
+		[Export ("defaultAttributes")]
+		NSDictionary<NSString, NSObject> DefaultAttributes { get; }
+
+		[Abstract]
+		[Export ("setStringResult:")]
+		void SetStringResult (string @string);
+
+		[Abstract]
+		[Export ("setAttributedStringResult:")]
+		void SetAttributedStringResult (NSAttributedString @string);
+
+		[Abstract]
+		[Export ("setAttachmentResult:")]
+		void SetAttachmentResult (NSTextAttachment textAttachment);
+
+		[Abstract]
+		[Export ("setNoResult")]
+		void SetNoResult ();
+
+		[Abstract]
+		[Export ("setDefaultResult")]
+		void SetDefaultResult ();
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface UIPasteConfiguration : NSSecureCoding, NSCopying {
+		[Export ("acceptableTypeIdentifiers", ArgumentSemantic.Copy)]
+		string[] AcceptableTypeIdentifiers { get; set; }
+
+		[Export ("initWithAcceptableTypeIdentifiers:")]
+		IntPtr Constructor (string[] acceptableTypeIdentifiers);
+
+		[Export ("addAcceptableTypeIdentifiers:")]
+		void AddAcceptableTypeIdentifiers (string[] acceptableTypeIdentifiers);
+
+		[Export ("initWithTypeIdentifiersForAcceptingClass:")]
+		IntPtr Constructor (Class itemProviderReadingClass);
+
+		[Wrap ("this (new Class (itemProviderReadingType))")]
+		IntPtr Constructor (Type itemProviderReadingType);
+
+		[Export ("addTypeIdentifiersForAcceptingClass:")]
+		void AddTypeIdentifiers (Class itemProviderReadingClass);
+
+		[Wrap ("AddTypeIdentifiers (new Class (itemProviderReadingType))")]
+		void AddTypeIdentifiers (Type itemProviderReadingType);
+	}
+
+	interface IUIPasteConfigurationSupporting {}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Protocol]
+	interface UIPasteConfigurationSupporting {
+		[Abstract]
+		[NullAllowed, Export ("pasteConfiguration", ArgumentSemantic.Copy)]
+		UIPasteConfiguration PasteConfiguration { get; set; }
+
+		[Export ("pasteItemProviders:")]
+		void PasteItemProviders (NSItemProvider[] itemProviders);
+
+		[Export ("canPasteItemProviders:")]
+		bool CanPasteItemProviders (NSItemProvider[] itemProviders);
+	}
+#endif // !WATCH
+
+	[Watch (4,0), TV (11,0), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UIFontMetrics {
+		[Static]
+		[Export ("defaultMetrics", ArgumentSemantic.Strong)]
+		UIFontMetrics DefaultMetrics { get; }
+
+		[Static]
+		[Export ("metricsForTextStyle:")]
+		UIFontMetrics GetMetrics (string textStyle);
+
+		[Export ("initForTextStyle:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string textStyle);
+
+		[Export ("scaledFontForFont:")]
+		UIFont GetScaledFont (UIFont font);
+
+		[Export ("scaledFontForFont:maximumPointSize:")]
+		UIFont GetScaledFont (UIFont font, nfloat maximumPointSize);
+
+		[Export ("scaledValueForValue:")]
+		nfloat GetScaledValue (nfloat value);
+
+#if !WATCH
+		[NoWatch]
+		[Export ("scaledFontForFont:compatibleWithTraitCollection:")]
+		UIFont GetScaledFont (UIFont font, [NullAllowed] UITraitCollection traitCollection);
+
+		[NoWatch]
+		[Export ("scaledFontForFont:maximumPointSize:compatibleWithTraitCollection:")]
+		UIFont GetScaledFont (UIFont font, nfloat maximumPointSize, [NullAllowed] UITraitCollection traitCollection);
+
+		[NoWatch]
+		[Export ("scaledValueForValue:compatibleWithTraitCollection:")]
+		nfloat GetScaledValue (nfloat value, [NullAllowed] UITraitCollection traitCollection);
+#endif // !WATCH
+	}
 }

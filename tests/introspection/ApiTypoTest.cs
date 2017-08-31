@@ -98,8 +98,10 @@ namespace Introspection
 			"Automounted",
 			"Autoredirect",
 			"Aliasable",
+			"Arcball",
 			"Backface",
-			"Bancaire",
+			"Bancaire", // french
+			"Bancaires", // french
 			"Bary",
 			"Batc",
 			"Bim",
@@ -194,6 +196,7 @@ namespace Introspection
 			"Gpp",
 			"Gpu",	// acronym for Graphics Processing Unit
 			"Grbg", // acronym for Green-Red-Blue-Green
+			"Greeking",
 			"Hdmi",
 			"Hdr",
 			"Hectopascals",
@@ -201,6 +204,7 @@ namespace Introspection
 			"Hfp",
 			"Hipass",
 			"Hls",
+			"Hoa",
 			"Hrtf", // acronym used in AUSpatializationAlgorithm
 			"Hvxc", // MPEG4ObjectID
 			"Ies",
@@ -212,6 +216,7 @@ namespace Introspection
 			"Img",
 			"Indoorrun",
 			"Indoorcycle",
+			"Inklist",
 			"Indoorwalk",
 			"Inser",
 			"Interac",
@@ -271,6 +276,7 @@ namespace Introspection
 			"Mtc", // acronym
 			"Mul",
 			"Mult",
+			"Multipath",
 			"Multipeer",
 			"Muxed",
 			"Nanograms",
@@ -317,8 +323,10 @@ namespace Introspection
 			"Preseti",
 			"Propogate",
 			"Psec",
+			"Psm", // Protocol/Service Multiplexer
 			"Pvrtc", // MTLBlitOption - PowerVR Texture Compression
 			"Quaterniond",
+			"Quadding",
 			"Qura",
 			"Quic",
 			"Reacquirer",
@@ -337,6 +345,7 @@ namespace Introspection
 			"Rsa", // Rivest, Shamir and Adleman
 			"Rssi",
 			"Rtp",
+			"Rtl",
 			"Rtsp",
 			"Saml", // acronym
 			"Scn",
@@ -399,10 +408,12 @@ namespace Introspection
 			"Undecodable",
 			"Underrun",
 			"Unflagged",
+			"Unfocusing",
 			"Unorm",
 			"Unpremultiplying",
 			"Unprepare",
 			"Unproject",
+			"Unpublish",
 			"Uterance",
 			"Unentitled",
 			"Untrash",

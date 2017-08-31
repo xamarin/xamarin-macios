@@ -1423,17 +1423,12 @@
             <attributes>
               <attribute name="System.Diagnostics.DebuggerDisplayAttribute">
                 <properties>
-                  <property name="Value" value="Count = {Count}, Type = {m_collection}" />
+                  <property name="Value" value="Count = {Count}, Type = {_collection}" />
                 </properties>
               </attribute>
               <attribute name="System.Diagnostics.DebuggerTypeProxyAttribute">
                 <properties>
-                  <property name="ProxyTypeName" value="System.Collections.Concurrent.SystemThreadingCollections_BlockingCollectionDebugView`1" />
-                </properties>
-              </attribute>
-              <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                <properties>
-                  <property name="Value" value="False" />
+                  <property name="ProxyTypeName" value="System.Collections.Concurrent.BlockingCollectionDebugView`1" />
                 </properties>
               </attribute>
             </attributes>
@@ -1690,12 +1685,7 @@
               </attribute>
               <attribute name="System.Diagnostics.DebuggerTypeProxyAttribute">
                 <properties>
-                  <property name="ProxyTypeName" value="System.Collections.Concurrent.SystemThreadingCollection_IProducerConsumerCollectionDebugView`1" />
-                </properties>
-              </attribute>
-              <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                <properties>
-                  <property name="Value" value="False" />
+                  <property name="ProxyTypeName" value="System.Collections.Concurrent.IProducerConsumerCollectionDebugView`1" />
                 </properties>
               </attribute>
             </attributes>
@@ -1740,6 +1730,9 @@
                 <parameters>
                   <parameter name="item" position="0" attrib="0" type="T" />
                 </parameters>
+              </method>
+              <method name="Clear()" attrib="134" returntype="System.Void">
+                <parameters />
               </method>
               <method name="CopyTo(T[], System.Int32)" attrib="486" virtual="true" returntype="System.Void">
                 <parameters>
@@ -1837,13 +1830,6 @@
             </methods>
           </class>
           <class name="LinkedListNode`1" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
-            <attributes>
-              <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                <properties>
-                  <property name="Value" value="False" />
-                </properties>
-              </attribute>
-            </attributes>
             <generic-parameters>
               <generic-parameter name="T" attributes="0" />
             </generic-parameters>
@@ -1899,12 +1885,7 @@
               </attribute>
               <attribute name="System.Diagnostics.DebuggerTypeProxyAttribute">
                 <properties>
-                  <property name="ProxyTypeName" value="System.Collections.Generic.System_CollectionDebugView`1" />
-                </properties>
-              </attribute>
-              <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                <properties>
-                  <property name="Value" value="False" />
+                  <property name="ProxyTypeName" value="System.Collections.Generic.ICollectionDebugView`1" />
                 </properties>
               </attribute>
             </attributes>
@@ -2031,7 +2012,7 @@
               <method name="GetEnumerator()" attrib="134" returntype="System.Collections.Generic.LinkedList`1+Enumerator[T]">
                 <parameters />
               </method>
-              <method name="GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="16838" virtual="true" returntype="System.Void">
+              <method name="GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="454" virtual="true" returntype="System.Void">
                 <parameters>
                   <parameter name="info" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
                   <parameter name="context" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
@@ -2100,12 +2081,7 @@
               </attribute>
               <attribute name="System.Diagnostics.DebuggerTypeProxyAttribute">
                 <properties>
-                  <property name="ProxyTypeName" value="System.Collections.Generic.System_QueueDebugView`1" />
-                </properties>
-              </attribute>
-              <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                <properties>
-                  <property name="Value" value="False" />
+                  <property name="ProxyTypeName" value="System.Collections.Generic.QueueDebugView`1" />
                 </properties>
               </attribute>
             </attributes>
@@ -2177,6 +2153,16 @@
               <method name="TrimExcess()" attrib="134" returntype="System.Void">
                 <parameters />
               </method>
+              <method name="TryDequeue(out T&amp;)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="result" position="0" attrib="2" type="T" direction="out" />
+                </parameters>
+              </method>
+              <method name="TryPeek(out T&amp;)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="result" position="0" attrib="2" type="T" direction="out" />
+                </parameters>
+              </method>
             </methods>
             <classes>
               <class name="Enumerator" type="struct" base="System.ValueType" sealed="true" serializable="true" charset="Ansi" layout="Sequential">
@@ -2217,7 +2203,7 @@
               </attribute>
               <attribute name="System.Diagnostics.DebuggerTypeProxyAttribute">
                 <properties>
-                  <property name="ProxyTypeName" value="System.Collections.Generic.System_DictionaryDebugView`2" />
+                  <property name="ProxyTypeName" value="System.Collections.Generic.IDictionaryDebugView`2" />
                 </properties>
               </attribute>
               <attribute name="System.Reflection.DefaultMemberAttribute">
@@ -2386,7 +2372,7 @@
                   </attribute>
                   <attribute name="System.Diagnostics.DebuggerTypeProxyAttribute">
                     <properties>
-                      <property name="ProxyTypeName" value="System.Collections.Generic.System_DictionaryKeyCollectionDebugView`2" />
+                      <property name="ProxyTypeName" value="System.Collections.Generic.DictionaryKeyCollectionDebugView`2" />
                     </properties>
                   </attribute>
                 </attributes>
@@ -2468,7 +2454,7 @@
                   </attribute>
                   <attribute name="System.Diagnostics.DebuggerTypeProxyAttribute">
                     <properties>
-                      <property name="ProxyTypeName" value="System.Collections.Generic.System_DictionaryValueCollectionDebugView`2" />
+                      <property name="ProxyTypeName" value="System.Collections.Generic.DictionaryValueCollectionDebugView`2" />
                     </properties>
                   </attribute>
                 </attributes>
@@ -2552,17 +2538,12 @@
               </attribute>
               <attribute name="System.Diagnostics.DebuggerTypeProxyAttribute">
                 <properties>
-                  <property name="ProxyTypeName" value="System.Collections.Generic.System_DictionaryDebugView`2" />
+                  <property name="ProxyTypeName" value="System.Collections.Generic.IDictionaryDebugView`2" />
                 </properties>
               </attribute>
               <attribute name="System.Reflection.DefaultMemberAttribute">
                 <properties>
                   <property name="MemberName" value="Item" />
-                </properties>
-              </attribute>
-              <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                <properties>
-                  <property name="Value" value="False" />
                 </properties>
               </attribute>
             </attributes>
@@ -2732,7 +2713,7 @@
               </attribute>
               <attribute name="System.Diagnostics.DebuggerTypeProxyAttribute">
                 <properties>
-                  <property name="ProxyTypeName" value="System.Collections.Generic.SortedSetDebugView`1" />
+                  <property name="ProxyTypeName" value="System.Collections.Generic.ICollectionDebugView`1" />
                 </properties>
               </attribute>
             </attributes>
@@ -2872,25 +2853,16 @@
                 </parameters>
               </method>
               <method name="IsProperSubsetOf(System.Collections.Generic.IEnumerable`1[T])" attrib="486" virtual="true" returntype="System.Boolean">
-                <attributes>
-                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
-                </attributes>
                 <parameters>
                   <parameter name="other" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" />
                 </parameters>
               </method>
               <method name="IsProperSupersetOf(System.Collections.Generic.IEnumerable`1[T])" attrib="486" virtual="true" returntype="System.Boolean">
-                <attributes>
-                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
-                </attributes>
                 <parameters>
                   <parameter name="other" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" />
                 </parameters>
               </method>
               <method name="IsSubsetOf(System.Collections.Generic.IEnumerable`1[T])" attrib="486" virtual="true" returntype="System.Boolean">
-                <attributes>
-                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
-                </attributes>
                 <parameters>
                   <parameter name="other" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" />
                 </parameters>
@@ -2927,9 +2899,6 @@
                 <parameters />
               </method>
               <method name="SetEquals(System.Collections.Generic.IEnumerable`1[T])" attrib="486" virtual="true" returntype="System.Boolean">
-                <attributes>
-                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
-                </attributes>
                 <parameters>
                   <parameter name="other" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" />
                 </parameters>
@@ -2937,6 +2906,12 @@
               <method name="SymmetricExceptWith(System.Collections.Generic.IEnumerable`1[T])" attrib="486" virtual="true" returntype="System.Void">
                 <parameters>
                   <parameter name="other" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" />
+                </parameters>
+              </method>
+              <method name="TryGetValue(T, out T&amp;)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="equalValue" position="0" attrib="0" type="T" />
+                  <parameter name="actualValue" position="1" attrib="2" type="T" direction="out" />
                 </parameters>
               </method>
               <method name="UnionWith(System.Collections.Generic.IEnumerable`1[T])" attrib="486" virtual="true" returntype="System.Void">
@@ -2986,12 +2961,7 @@
               </attribute>
               <attribute name="System.Diagnostics.DebuggerTypeProxyAttribute">
                 <properties>
-                  <property name="ProxyTypeName" value="System.Collections.Generic.System_StackDebugView`1" />
-                </properties>
-              </attribute>
-              <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                <properties>
-                  <property name="Value" value="False" />
+                  <property name="ProxyTypeName" value="System.Collections.Generic.StackDebugView`1" />
                 </properties>
               </attribute>
             </attributes>
@@ -3062,6 +3032,16 @@
               </method>
               <method name="TrimExcess()" attrib="134" returntype="System.Void">
                 <parameters />
+              </method>
+              <method name="TryPeek(out T&amp;)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="result" position="0" attrib="2" type="T" direction="out" />
+                </parameters>
+              </method>
+              <method name="TryPop(out T&amp;)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="result" position="0" attrib="2" type="T" direction="out" />
+                </parameters>
               </method>
             </methods>
             <classes>
@@ -23538,20 +23518,20 @@
             <methods>
               <method name="BeginRead(System.Byte[], System.Int32, System.Int32, System.AsyncCallback, System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.IAsyncResult">
                 <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="array" position="0" attrib="0" type="System.Byte[]" />
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="count" position="2" attrib="0" type="System.Int32" />
-                  <parameter name="cback" position="3" attrib="0" type="System.AsyncCallback" />
-                  <parameter name="state" position="4" attrib="0" type="System.Object" />
+                  <parameter name="asyncCallback" position="3" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="asyncState" position="4" attrib="0" type="System.Object" />
                 </parameters>
               </method>
               <method name="BeginWrite(System.Byte[], System.Int32, System.Int32, System.AsyncCallback, System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.IAsyncResult">
                 <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="array" position="0" attrib="0" type="System.Byte[]" />
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="count" position="2" attrib="0" type="System.Int32" />
-                  <parameter name="cback" position="3" attrib="0" type="System.AsyncCallback" />
-                  <parameter name="state" position="4" attrib="0" type="System.Object" />
+                  <parameter name="asyncCallback" position="3" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="asyncState" position="4" attrib="0" type="System.Object" />
                 </parameters>
               </method>
               <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
@@ -23561,12 +23541,12 @@
               </method>
               <method name="EndRead(System.IAsyncResult)" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
                 <parameters>
-                  <parameter name="async_result" position="0" attrib="0" type="System.IAsyncResult" />
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
                 </parameters>
               </method>
               <method name="EndWrite(System.IAsyncResult)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="async_result" position="0" attrib="0" type="System.IAsyncResult" />
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
                 </parameters>
               </method>
               <method name="Flush()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
@@ -27372,7 +27352,7 @@
               <method name="EndGetRequestStream(System.IAsyncResult, out System.Net.TransportContext&amp;)" attrib="134" returntype="System.IO.Stream">
                 <parameters>
                   <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
-                  <parameter name="transportContext" position="1" attrib="2" type="System.Net.TransportContext" direction="out" />
+                  <parameter name="context" position="1" attrib="2" type="System.Net.TransportContext" direction="out" />
                 </parameters>
               </method>
               <method name="EndGetResponse(System.IAsyncResult)" attrib="198" virtual="true" is-override="true" returntype="System.Net.WebResponse">
@@ -31621,7 +31601,7 @@
               <method name="CreateAlternateViewFromString(System.String, System.Text.Encoding, System.String)" attrib="150" static="true" returntype="System.Net.Mail.AlternateView">
                 <parameters>
                   <parameter name="content" position="0" attrib="0" type="System.String" />
-                  <parameter name="encoding" position="1" attrib="0" type="System.Text.Encoding" />
+                  <parameter name="contentEncoding" position="1" attrib="0" type="System.Text.Encoding" />
                   <parameter name="mediaType" position="2" attrib="0" type="System.String" />
                 </parameters>
               </method>
@@ -32087,7 +32067,7 @@
             <methods>
               <method name="Equals(System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="obj" position="0" attrib="0" type="System.Object" />
+                  <parameter name="value" position="0" attrib="0" type="System.Object" />
                 </parameters>
               </method>
               <method name="GetHashCode()" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
@@ -32636,7 +32616,7 @@
               <method name="Send(System.String, System.String, System.String, System.String)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="from" position="0" attrib="0" type="System.String" />
-                  <parameter name="to" position="1" attrib="0" type="System.String" />
+                  <parameter name="recipients" position="1" attrib="0" type="System.String" />
                   <parameter name="subject" position="2" attrib="0" type="System.String" />
                   <parameter name="body" position="3" attrib="0" type="System.String" />
                 </parameters>
@@ -32650,7 +32630,7 @@
               <method name="SendAsync(System.String, System.String, System.String, System.String, System.Object)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="from" position="0" attrib="0" type="System.String" />
-                  <parameter name="to" position="1" attrib="0" type="System.String" />
+                  <parameter name="recipients" position="1" attrib="0" type="System.String" />
                   <parameter name="subject" position="2" attrib="0" type="System.String" />
                   <parameter name="body" position="3" attrib="0" type="System.String" />
                   <parameter name="userToken" position="4" attrib="0" type="System.Object" />
@@ -32723,8 +32703,8 @@
               </constructor>
               <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
                 <parameters>
-                  <parameter name="info" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
-                  <parameter name="context" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
+                  <parameter name="serializationInfo" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
+                  <parameter name="streamingContext" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
@@ -32751,8 +32731,8 @@
             <methods>
               <method name="GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="info" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
-                  <parameter name="context" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
+                  <parameter name="serializationInfo" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
+                  <parameter name="streamingContext" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
                 </parameters>
               </method>
             </methods>
@@ -32778,8 +32758,8 @@
               </constructor>
               <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
                 <parameters>
-                  <parameter name="serializationInfo" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
-                  <parameter name="streamingContext" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
+                  <parameter name="info" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
+                  <parameter name="context" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
@@ -32865,8 +32845,8 @@
             <methods>
               <method name="GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="info" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
-                  <parameter name="context" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
+                  <parameter name="serializationInfo" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
+                  <parameter name="streamingContext" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
                 </parameters>
               </method>
             </methods>
@@ -37849,7 +37829,7 @@
               </method>
               <method name="BeginConnect(System.Net.EndPoint, System.AsyncCallback, System.Object)" attrib="134" returntype="System.IAsyncResult">
                 <parameters>
-                  <parameter name="end_point" position="0" attrib="0" type="System.Net.EndPoint" />
+                  <parameter name="remoteEP" position="0" attrib="0" type="System.Net.EndPoint" />
                   <parameter name="callback" position="1" attrib="0" type="System.AsyncCallback" />
                   <parameter name="state" position="2" attrib="0" type="System.Object" />
                 </parameters>
@@ -37866,7 +37846,7 @@
                 <parameters>
                   <parameter name="addresses" position="0" attrib="0" type="System.Net.IPAddress[]" />
                   <parameter name="port" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="callback" position="2" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="requestCallback" position="2" attrib="0" type="System.AsyncCallback" />
                   <parameter name="state" position="3" attrib="0" type="System.Object" />
                 </parameters>
               </method>
@@ -37874,7 +37854,7 @@
                 <parameters>
                   <parameter name="host" position="0" attrib="0" type="System.String" />
                   <parameter name="port" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="callback" position="2" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="requestCallback" position="2" attrib="0" type="System.AsyncCallback" />
                   <parameter name="state" position="3" attrib="0" type="System.Object" />
                 </parameters>
               </method>
@@ -37935,8 +37915,8 @@
                   <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="size" position="2" attrib="0" type="System.Int32" />
-                  <parameter name="socket_flags" position="3" attrib="0" type="System.Net.Sockets.SocketFlags" />
-                  <parameter name="remote_end" position="4" attrib="0" type="System.Net.EndPoint" direction="ref" />
+                  <parameter name="socketFlags" position="3" attrib="0" type="System.Net.Sockets.SocketFlags" />
+                  <parameter name="remoteEP" position="4" attrib="0" type="System.Net.EndPoint" direction="ref" />
                   <parameter name="callback" position="5" attrib="0" type="System.AsyncCallback" />
                   <parameter name="state" position="6" attrib="0" type="System.Object" />
                 </parameters>
@@ -38020,8 +38000,8 @@
                   <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="size" position="2" attrib="0" type="System.Int32" />
-                  <parameter name="socket_flags" position="3" attrib="0" type="System.Net.Sockets.SocketFlags" />
-                  <parameter name="remote_end" position="4" attrib="0" type="System.Net.EndPoint" />
+                  <parameter name="socketFlags" position="3" attrib="0" type="System.Net.Sockets.SocketFlags" />
+                  <parameter name="remoteEP" position="4" attrib="0" type="System.Net.EndPoint" />
                   <parameter name="callback" position="5" attrib="0" type="System.AsyncCallback" />
                   <parameter name="state" position="6" attrib="0" type="System.Object" />
                 </parameters>
@@ -38105,7 +38085,7 @@
               </method>
               <method name="EndAccept(System.IAsyncResult)" attrib="134" returntype="System.Net.Sockets.Socket">
                 <parameters>
-                  <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
                 </parameters>
               </method>
               <method name="EndAccept(out System.Byte[]&amp;, System.IAsyncResult)" attrib="134" returntype="System.Net.Sockets.Socket">
@@ -38123,7 +38103,7 @@
               </method>
               <method name="EndConnect(System.IAsyncResult)" attrib="134" returntype="System.Void">
                 <parameters>
-                  <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
                 </parameters>
               </method>
               <method name="EndDisconnect(System.IAsyncResult)" attrib="134" returntype="System.Void">
@@ -38144,8 +38124,8 @@
               </method>
               <method name="EndReceiveFrom(System.IAsyncResult, System.Net.EndPoint&amp;)" attrib="134" returntype="System.Int32">
                 <parameters>
-                  <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
-                  <parameter name="end_point" position="1" attrib="0" type="System.Net.EndPoint" direction="ref" />
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
+                  <parameter name="endPoint" position="1" attrib="0" type="System.Net.EndPoint" direction="ref" />
                 </parameters>
               </method>
               <method name="EndReceiveMessageFrom(System.IAsyncResult, System.Net.Sockets.SocketFlags&amp;, System.Net.EndPoint&amp;, out System.Net.Sockets.IPPacketInformation&amp;)" attrib="134" returntype="System.Int32">
@@ -38175,7 +38155,7 @@
               </method>
               <method name="EndSendTo(System.IAsyncResult)" attrib="134" returntype="System.Int32">
                 <parameters>
-                  <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
                 </parameters>
               </method>
               <method name="GetSocketOption(System.Net.Sockets.SocketOptionLevel, System.Net.Sockets.SocketOptionName)" attrib="134" returntype="System.Object">
@@ -39984,7 +39964,7 @@
       </namespace>
       <namespace name="System.Net.WebSockets">
         <classes>
-          <class name="ClientWebSocket" type="class" base="System.Net.WebSockets.WebSocket" charset="Ansi" layout="Auto">
+          <class name="ClientWebSocket" type="class" base="System.Net.WebSockets.WebSocket" sealed="true" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="System.IDisposable" />
             </interfaces>
@@ -40032,13 +40012,9 @@
             </properties>
             <methods>
               <method name="Abort()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
-                <attributes />
                 <parameters />
               </method>
               <method name="CloseAsync(System.Net.WebSockets.WebSocketCloseStatus, System.String, System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task">
-                <attributes>
-                  <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
-                </attributes>
                 <parameters>
                   <parameter name="closeStatus" position="0" attrib="0" type="System.Net.WebSockets.WebSocketCloseStatus" />
                   <parameter name="statusDescription" position="1" attrib="0" type="System.String" />
@@ -40046,9 +40022,6 @@
                 </parameters>
               </method>
               <method name="CloseOutputAsync(System.Net.WebSockets.WebSocketCloseStatus, System.String, System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task">
-                <attributes>
-                  <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
-                </attributes>
                 <parameters>
                   <parameter name="closeStatus" position="0" attrib="0" type="System.Net.WebSockets.WebSocketCloseStatus" />
                   <parameter name="statusDescription" position="1" attrib="0" type="System.String" />
@@ -40056,9 +40029,6 @@
                 </parameters>
               </method>
               <method name="ConnectAsync(System.Uri, System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task">
-                <attributes>
-                  <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
-                </attributes>
                 <parameters>
                   <parameter name="uri" position="0" attrib="0" type="System.Uri" />
                   <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
@@ -40084,24 +40054,13 @@
             </methods>
           </class>
           <class name="ClientWebSocketOptions" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
-            <constructors>
-              <constructor name=".ctor()" attrib="6278">
-                <parameters />
-              </constructor>
-            </constructors>
             <properties>
               <property name="ClientCertificates" attrib="0" ptype="System.Security.Cryptography.X509Certificates.X509CertificateCollection">
                 <methods>
                   <method name="get_ClientCertificates()" attrib="2182" returntype="System.Security.Cryptography.X509Certificates.X509CertificateCollection">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                   <method name="set_ClientCertificates(System.Security.Cryptography.X509Certificates.X509CertificateCollection)" attrib="2182" returntype="System.Void">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509CertificateCollection" />
                     </parameters>
@@ -40111,15 +40070,9 @@
               <property name="Cookies" attrib="0" ptype="System.Net.CookieContainer">
                 <methods>
                   <method name="get_Cookies()" attrib="2182" returntype="System.Net.CookieContainer">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                   <method name="set_Cookies(System.Net.CookieContainer)" attrib="2182" returntype="System.Void">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.Net.CookieContainer" />
                     </parameters>
@@ -40129,15 +40082,9 @@
               <property name="Credentials" attrib="0" ptype="System.Net.ICredentials">
                 <methods>
                   <method name="get_Credentials()" attrib="2182" returntype="System.Net.ICredentials">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                   <method name="set_Credentials(System.Net.ICredentials)" attrib="2182" returntype="System.Void">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.Net.ICredentials" />
                     </parameters>
@@ -40147,15 +40094,9 @@
               <property name="KeepAliveInterval" attrib="0" ptype="System.TimeSpan">
                 <methods>
                   <method name="get_KeepAliveInterval()" attrib="2182" returntype="System.TimeSpan">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                   <method name="set_KeepAliveInterval(System.TimeSpan)" attrib="2182" returntype="System.Void">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.TimeSpan" />
                     </parameters>
@@ -40165,15 +40106,9 @@
               <property name="Proxy" attrib="0" ptype="System.Net.IWebProxy">
                 <methods>
                   <method name="get_Proxy()" attrib="2182" returntype="System.Net.IWebProxy">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                   <method name="set_Proxy(System.Net.IWebProxy)" attrib="2182" returntype="System.Void">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.Net.IWebProxy" />
                     </parameters>
@@ -40183,15 +40118,9 @@
               <property name="UseDefaultCredentials" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_UseDefaultCredentials()" attrib="2182" returntype="System.Boolean">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                   <method name="set_UseDefaultCredentials(System.Boolean)" attrib="2182" returntype="System.Void">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.Boolean" />
                     </parameters>
@@ -40227,14 +40156,8 @@
             </methods>
           </class>
           <class name="HttpListenerWebSocketContext" type="class" base="System.Net.WebSockets.WebSocketContext" charset="Ansi" layout="Auto">
-            <constructors>
-              <constructor name=".ctor()" attrib="6278">
-                <parameters />
-              </constructor>
-            </constructors>
             <properties>
               <property name="CookieCollection" attrib="0" ptype="System.Net.CookieCollection">
-                <attributes />
                 <methods>
                   <method name="get_CookieCollection()" attrib="2246" virtual="true" is-override="true" returntype="System.Net.CookieCollection">
                     <parameters />
@@ -40242,7 +40165,6 @@
                 </methods>
               </property>
               <property name="Headers" attrib="0" ptype="System.Collections.Specialized.NameValueCollection">
-                <attributes />
                 <methods>
                   <method name="get_Headers()" attrib="2246" virtual="true" is-override="true" returntype="System.Collections.Specialized.NameValueCollection">
                     <parameters />
@@ -40250,7 +40172,6 @@
                 </methods>
               </property>
               <property name="IsAuthenticated" attrib="0" ptype="System.Boolean">
-                <attributes />
                 <methods>
                   <method name="get_IsAuthenticated()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
                     <parameters />
@@ -40258,7 +40179,6 @@
                 </methods>
               </property>
               <property name="IsLocal" attrib="0" ptype="System.Boolean">
-                <attributes />
                 <methods>
                   <method name="get_IsLocal()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
                     <parameters />
@@ -40266,7 +40186,6 @@
                 </methods>
               </property>
               <property name="IsSecureConnection" attrib="0" ptype="System.Boolean">
-                <attributes />
                 <methods>
                   <method name="get_IsSecureConnection()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
                     <parameters />
@@ -40274,7 +40193,6 @@
                 </methods>
               </property>
               <property name="Origin" attrib="0" ptype="System.String">
-                <attributes />
                 <methods>
                   <method name="get_Origin()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
                     <parameters />
@@ -40282,7 +40200,6 @@
                 </methods>
               </property>
               <property name="RequestUri" attrib="0" ptype="System.Uri">
-                <attributes />
                 <methods>
                   <method name="get_RequestUri()" attrib="2246" virtual="true" is-override="true" returntype="System.Uri">
                     <parameters />
@@ -40290,7 +40207,6 @@
                 </methods>
               </property>
               <property name="SecWebSocketKey" attrib="0" ptype="System.String">
-                <attributes />
                 <methods>
                   <method name="get_SecWebSocketKey()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
                     <parameters />
@@ -40298,7 +40214,6 @@
                 </methods>
               </property>
               <property name="SecWebSocketProtocols" attrib="0" ptype="System.Collections.Generic.IEnumerable`1[System.String]">
-                <attributes />
                 <methods>
                   <method name="get_SecWebSocketProtocols()" attrib="2246" virtual="true" is-override="true" returntype="System.Collections.Generic.IEnumerable`1[System.String]">
                     <parameters />
@@ -40306,7 +40221,6 @@
                 </methods>
               </property>
               <property name="SecWebSocketVersion" attrib="0" ptype="System.String">
-                <attributes />
                 <methods>
                   <method name="get_SecWebSocketVersion()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
                     <parameters />
@@ -40314,7 +40228,6 @@
                 </methods>
               </property>
               <property name="User" attrib="0" ptype="System.Security.Principal.IPrincipal">
-                <attributes />
                 <methods>
                   <method name="get_User()" attrib="2246" virtual="true" is-override="true" returntype="System.Security.Principal.IPrincipal">
                     <parameters />
@@ -40322,7 +40235,6 @@
                 </methods>
               </property>
               <property name="WebSocket" attrib="0" ptype="System.Net.WebSockets.WebSocket">
-                <attributes />
                 <methods>
                   <method name="get_WebSocket()" attrib="2246" virtual="true" is-override="true" returntype="System.Net.WebSockets.WebSocket">
                     <parameters />
@@ -40356,7 +40268,6 @@
                 </methods>
               </property>
               <property name="DefaultKeepAliveInterval" attrib="0" ptype="System.TimeSpan">
-                <attributes />
                 <methods>
                   <method name="get_DefaultKeepAliveInterval()" attrib="2198" static="true" returntype="System.TimeSpan">
                     <parameters />
@@ -40397,14 +40308,19 @@
                 </parameters>
               </method>
               <method name="CreateClientBuffer(System.Int32, System.Int32)" attrib="150" static="true" returntype="System.ArraySegment`1[System.Byte]">
-                <attributes />
                 <parameters>
                   <parameter name="receiveBufferSize" position="0" attrib="0" type="System.Int32" />
                   <parameter name="sendBufferSize" position="1" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="CreateClientWebSocket(System.IO.Stream, System.String, System.Int32, System.Int32, System.TimeSpan, System.Boolean, System.ArraySegment`1[System.Byte])" attrib="150" static="true" returntype="System.Net.WebSockets.WebSocket">
-                <attributes />
+                <attributes>
+                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                    <properties>
+                      <property name="State" value="Never" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <parameters>
                   <parameter name="innerStream" position="0" attrib="0" type="System.IO.Stream" />
                   <parameter name="subProtocol" position="1" attrib="0" type="System.String" />
@@ -40416,7 +40332,6 @@
                 </parameters>
               </method>
               <method name="CreateServerBuffer(System.Int32)" attrib="150" static="true" returntype="System.ArraySegment`1[System.Byte]">
-                <attributes />
                 <parameters>
                   <parameter name="receiveBufferSize" position="0" attrib="0" type="System.Int32" />
                 </parameters>
@@ -40426,7 +40341,16 @@
               </method>
               <method name="IsApplicationTargeting45()" attrib="150" static="true" returntype="System.Boolean">
                 <attributes>
-                  <attribute name="System.ObsoleteAttribute" />
+                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                    <properties>
+                      <property name="State" value="Never" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ObsoleteAttribute">
+                    <properties>
+                      <property name="Message" value="This API supports the .NET Framework infrastructure and is not intended to be used directly from your code." />
+                    </properties>
+                  </attribute>
                 </attributes>
                 <parameters />
               </method>
@@ -40442,7 +40366,13 @@
                 </parameters>
               </method>
               <method name="RegisterPrefixes()" attrib="150" static="true" returntype="System.Void">
-                <attributes />
+                <attributes>
+                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                    <properties>
+                      <property name="State" value="Never" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <parameters />
               </method>
               <method name="SendAsync(System.ArraySegment`1[System.Byte], System.Net.WebSockets.WebSocketMessageType, System.Boolean, System.Threading.CancellationToken)" attrib="1478" abstract="true" virtual="true" returntype="System.Threading.Tasks.Task">
@@ -40454,7 +40384,6 @@
                 </parameters>
               </method>
               <method name="ThrowOnInvalidState(System.Net.WebSockets.WebSocketState, System.Net.WebSockets.WebSocketState[])" attrib="148" static="true" returntype="System.Void">
-                <attributes />
                 <parameters>
                   <parameter name="state" position="0" attrib="0" type="System.Net.WebSockets.WebSocketState" />
                   <parameter name="validStates" position="1" attrib="0" type="System.Net.WebSockets.WebSocketState[]">
@@ -40597,7 +40526,7 @@
               <field name="UnsupportedVersion" attrib="32854" fieldtype="System.Net.WebSockets.WebSocketError" value="5" />
             </fields>
           </class>
-          <class name="WebSocketException" type="class" base="System.ComponentModel.Win32Exception" sealed="true" charset="Ansi" layout="Auto">
+          <class name="WebSocketException" type="class" base="System.ComponentModel.Win32Exception" sealed="true" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
@@ -40687,17 +40616,29 @@
               </constructor>
             </constructors>
             <properties>
+              <property name="ErrorCode" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_ErrorCode()" attrib="2246" virtual="true" is-override="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="WebSocketErrorCode" attrib="0" ptype="System.Net.WebSockets.WebSocketError">
                 <methods>
                   <method name="get_WebSocketErrorCode()" attrib="2182" returntype="System.Net.WebSockets.WebSocketError">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                 </methods>
               </property>
             </properties>
+            <methods>
+              <method name="GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="info" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
+                  <parameter name="context" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
+                </parameters>
+              </method>
+            </methods>
           </class>
           <class name="WebSocketMessageType" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
             <interfaces>

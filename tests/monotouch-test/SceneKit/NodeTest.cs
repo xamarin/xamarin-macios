@@ -49,9 +49,6 @@ namespace MonoTouchFixtures.SceneKit {
 			if (!TestRuntime.CheckSystemAndSDKVersion (8,0))
 				Assert.Ignore ("Requires iOS8");
 
-			if (TestRuntime.CheckXcodeVersion (9, 0))
-				Assert.Ignore ("Crashes: https://trello.com/c/IjrMT5K5/68-32688391-crash-after-adding-caanimation-to-scnnode");
-			
 			using (var a = CAAnimation.CreateAnimation ())
 			using (var n = SCNNode.Create ()) {
 				n.AddAnimation (a, (NSString) null);

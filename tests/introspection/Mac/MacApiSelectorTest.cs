@@ -326,6 +326,15 @@ namespace Introspection {
 						if (Mac.CheckSystemVersion (10, 11))
 							return true;
 						break;
+					case "earliestBeginDate":
+					case "setEarliestBeginDate:":
+					case "countOfBytesClientExpectsToSend":
+					case "setCountOfBytesClientExpectsToSend:":
+					case "countOfBytesClientExpectsToReceive":
+					case "setCountOfBytesClientExpectsToReceive:":
+						if (Mac.CheckSystemVersion (10, 13))
+							return true;
+						break;
 					}
 					break;
 				case "NSUrlSessionConfiguration":
@@ -401,14 +410,6 @@ namespace Introspection {
 						if (!Mac.CheckSystemVersion (10, 10))
 							return true;
 						break;
-					}
-					break;
-				case "NSSliderTouchBarItem":
-					switch (selectorName) {
-					case "compressWithPrioritizedCompressionOptions:":
-					case "minimumSizeWithPrioritizedCompressionOptions:":
-					case "activeCompressionOptions":
-						return true; // 33271241
 					}
 					break;
 				}

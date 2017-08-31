@@ -1427,10 +1427,12 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		public class NativeObjectArrayType : MKMapView
+		public class NativeObjectArrayType : NSObject
 		{
 			public IMKAnnotation[] Annotations;
-			public override void AddAnnotations(params IMKAnnotation[] annotations)
+
+			[Export ("addAnnotations:")]
+			public void AddAnnotations (params IMKAnnotation[] annotations)
 			{
 				this.Annotations = annotations;
 			}

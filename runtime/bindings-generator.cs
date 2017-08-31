@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 /*
@@ -666,6 +667,32 @@ namespace Xamarin.BindingMethods.Generator
 					ReturnType = Types.MDLAxisAlignedBoundingBox,
 					Parameters = new ParameterData[] {
 						new ParameterData { TypeData = Types.Double },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // MDLAxisAlignedBoundingBox func (float)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.MDLAxisAlignedBoundingBox,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Float },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, MDLAxisAlignedBoundingBox, float)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.MDLAxisAlignedBoundingBox },
+						new ParameterData { TypeData = Types.Float },
 					},
 				}
 			);
@@ -1887,13 +1914,13 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // Matrix4 func (CGSize, int, nfloat, nfloat)",
+					Comment = " // Matrix4 func (/* UIInterfaceOrientation */ Int32, CGSize, nfloat, nfloat)",
 					Prefix = "simd__",
 					Variants = Variants.All,
 					ReturnType = Types.Matrix4f,
 					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.CGSize },
 						new ParameterData { TypeData = Types.Int32 },
+						new ParameterData { TypeData = Types.CGSize },
 						new ParameterData { TypeData = Types.NFloat },
 						new ParameterData { TypeData = Types.NFloat },
 					},
@@ -1902,15 +1929,43 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // Matrix4 func (CGSize, Int64, nfloat, nfloat)",
+					Comment = " // Matrix4 func (/* UIInterfaceOrientation */ Int64, CGSize, nfloat, nfloat)",
 					Prefix = "simd__",
 					Variants = Variants.All,
 					ReturnType = Types.Matrix4f,
 					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.CGSize },
 						new ParameterData { TypeData = Types.Int64 },
+						new ParameterData { TypeData = Types.CGSize },
 						new ParameterData { TypeData = Types.NFloat },
 						new ParameterData { TypeData = Types.NFloat },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // CGPoint func (Vector3, /* UIInterfaceOrientation */ Int32, CGSize)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.CGPoint,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Vector3 },
+						new ParameterData { TypeData = Types.Int32 },
+						new ParameterData { TypeData = Types.CGSize },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // CGPoint func (Vector3, /* UIInterfaceOrientation */ Int64, CGSize)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.CGPoint,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Vector3 },
+						new ParameterData { TypeData = Types.Int64 },
+						new ParameterData { TypeData = Types.CGSize },
 					},
 				}
 			);
@@ -1923,6 +1978,60 @@ namespace Xamarin.BindingMethods.Generator
 					ReturnType = Types.Matrix4f,
 					Parameters = new ParameterData[] {
 						new ParameterData { TypeData = Types.NInt },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // MPSImageHistogramInfo func ()",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.MPSImageHistogramInfo,
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, ref MPSImageHistogramInfo)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.MPSImageHistogramInfo, IsRef = true },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // MDLVoxelIndexExtent2 func ()",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.MDLVoxelIndexExtent2,
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (MDLVoxelIndexExtent2)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.MDLVoxelIndexExtent2 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (MDLVoxelIndexExtent2)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.MDLVoxelIndexExtent2 },
 					},
 				}
 			);
@@ -1943,187 +2052,233 @@ namespace Xamarin.BindingMethods.Generator
 			return managed_type;
 		}
 
-		static void MarshalToManaged (StringWriter writer, TypeData type, string nativeVariable, string managedVariable)
+		static void MarshalToManaged (StringWriter writer, TypeData type, string nativeVariable, string managedVariable, bool isRef = false)
 		{
+			var accessor = isRef ? "->" : ".";
 			switch (type.ManagedType) {
 			case "Vector2d":
 			case "Vector2i":
 			case "Vector2":
-				writer.WriteLine ("\t{0}.a = {1} [0];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t{0}.b = {1} [1];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t{0}{2}a = {1} [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}b = {1} [1];", managedVariable, nativeVariable, accessor);
 				break;
 			case "Vector3d":
 			case "Vector3i":
 			case "Vector3":
-				writer.WriteLine ("\t{0}.a = {1} [0];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t{0}.b = {1} [1];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t{0}.c = {1} [2];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t{0}{2}a = {1} [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}b = {1} [1];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}c = {1} [2];", managedVariable, nativeVariable, accessor);
 				break;
 			case "Vector4d":
 			case "Vector4i":
 			case "Vector4":
 				if (type.NativeType == "vector_float3") {
-					writer.WriteLine ("\t{0}.a = {1} [0];", managedVariable, nativeVariable);
-					writer.WriteLine ("\t{0}.b = {1} [1];", managedVariable, nativeVariable);
-					writer.WriteLine ("\t{0}.c = {1} [2];", managedVariable, nativeVariable);
-					writer.WriteLine ("\t{0}.d = 0;", managedVariable);
+					writer.WriteLine ("\t{0}{2}a = {1} [0];", managedVariable, nativeVariable, accessor);
+					writer.WriteLine ("\t{0}{2}b = {1} [1];", managedVariable, nativeVariable, accessor);
+					writer.WriteLine ("\t{0}{2}c = {1} [2];", managedVariable, nativeVariable, accessor);
+					writer.WriteLine ("\t{0}{1}d = 0;", managedVariable, accessor);
 				} else if (type.NativeType == "vector_float4" || type.NativeType == "vector_int4" || type.NativeType == "vector_double4") {
-					writer.WriteLine ("\t{0}.a = {1} [0];", managedVariable, nativeVariable);
-					writer.WriteLine ("\t{0}.b = {1} [1];", managedVariable, nativeVariable);
-					writer.WriteLine ("\t{0}.c = {1} [2];", managedVariable, nativeVariable);
-					writer.WriteLine ("\t{0}.d = {1} [3];", managedVariable, nativeVariable);
+					writer.WriteLine ("\t{0}{2}a = {1} [0];", managedVariable, nativeVariable, accessor);
+					writer.WriteLine ("\t{0}{2}b = {1} [1];", managedVariable, nativeVariable, accessor);
+					writer.WriteLine ("\t{0}{2}c = {1} [2];", managedVariable, nativeVariable, accessor);
+					writer.WriteLine ("\t{0}{2}d = {1} [3];", managedVariable, nativeVariable, accessor);
 				} else {
 					goto default;
 				}
 				break;
 			case "Matrix2":
 				writer.WriteLine ("\tfor (int i = 0; i < 2; i++) {");
-				writer.WriteLine ("\t\t{0}.columns [i].a = {1}.columns [i] [0];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t\t{0}.columns [i].b = {1}.columns [i] [1];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t\t{0}{2}columns [i].a = {1}.columns [i] [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t\t{0}{2}columns [i].b = {1}.columns [i] [1];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t}");
 				break;
 			case "Matrix3":
 				writer.WriteLine ("\tfor (int i = 0; i < 3; i++) {");
-				writer.WriteLine ("\t\t{0}.columns [i].a = {1}.columns [i] [0];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t\t{0}.columns [i].b = {1}.columns [i] [1];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t\t{0}.columns [i].c = {1}.columns [i] [2];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t\t{0}{2}columns [i].a = {1}.columns [i] [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t\t{0}{2}columns [i].b = {1}.columns [i] [1];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t\t{0}{2}columns [i].c = {1}.columns [i] [2];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t}");
 				break;
 			case "Matrix4":
 				writer.WriteLine ("\tfor (int i = 0; i < 4; i++) {");
-				writer.WriteLine ("\t\t{0}.columns [i].a = {1}.columns [i] [0];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t\t{0}.columns [i].b = {1}.columns [i] [1];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t\t{0}.columns [i].c = {1}.columns [i] [2];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t\t{0}.columns [i].d = {1}.columns [i] [3];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t\t{0}{2}columns [i].a = {1}.columns [i] [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t\t{0}{2}columns [i].b = {1}.columns [i] [1];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t\t{0}{2}columns [i].c = {1}.columns [i] [2];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t\t{0}{2}columns [i].d = {1}.columns [i] [3];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t}");
 				break;
 			case "MDLAxisAlignedBoundingBox":
-				writer.WriteLine ("\t{0}.maxBounds.a = {1}.maxBounds [0];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t{0}.maxBounds.b = {1}.maxBounds [1];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t{0}.maxBounds.c = {1}.maxBounds [2];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t{0}.minBounds.a = {1}.minBounds [0];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t{0}.minBounds.b = {1}.minBounds [1];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t{0}.minBounds.c = {1}.minBounds [2];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t{0}{2}maxBounds.a = {1}.maxBounds [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}maxBounds.b = {1}.maxBounds [1];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}maxBounds.c = {1}.maxBounds [2];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}minBounds.a = {1}.minBounds [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}minBounds.b = {1}.minBounds [1];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}minBounds.c = {1}.minBounds [2];", managedVariable, nativeVariable, accessor);
 				break;
 			case "GKBox":
-				writer.WriteLine ("\t{0}.maxBounds.a = {1}.maxBounds [0];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t{0}.maxBounds.b = {1}.maxBounds [1];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t{0}.maxBounds.c = {1}.maxBounds [2];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t{0}.minBounds.a = {1}.minBounds [0];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t{0}.minBounds.b = {1}.minBounds [1];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t{0}.minBounds.c = {1}.minBounds [2];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t{0}{2}maxBounds.a = {1}.maxBounds [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}maxBounds.b = {1}.maxBounds [1];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}maxBounds.c = {1}.maxBounds [2];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}minBounds.a = {1}.minBounds [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}minBounds.b = {1}.minBounds [1];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}minBounds.c = {1}.minBounds [2];", managedVariable, nativeVariable, accessor);
 				break;
 			case "GKQuad":
-				writer.WriteLine ("\t{0}.maxBounds.a = {1}.maxBounds [0];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t{0}.maxBounds.b = {1}.maxBounds [1];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t{0}.minBounds.a = {1}.minBounds [0];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t{0}.minBounds.b = {1}.minBounds [1];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t{0}{2}maxBounds.a = {1}.maxBounds [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}maxBounds.b = {1}.maxBounds [1];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}minBounds.a = {1}.minBounds [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}minBounds.b = {1}.minBounds [1];", managedVariable, nativeVariable, accessor);
 				break;
 			case "GKTriangle":
 				writer.WriteLine ("\tfor (int i = 0; i < 3; i++) {");
-				writer.WriteLine ("\t\t{0}.points [i].a = {1}.points [i] [0];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t\t{0}.points [i].b = {1}.points [i] [1];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t\t{0}.points [i].c = {1}.points [i] [2];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t\t{0}{2}points [i].a = {1}.points [i] [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t\t{0}{2}points [i].b = {1}.points [i] [1];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t\t{0}{2}points [i].c = {1}.points [i] [2];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t}");
 				break;
 			case "Quaternion":
-				writer.WriteLine ("\t{0}.vector.a = {1}.vector [0];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t{0}.vector.b = {1}.vector [1];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t{0}.vector.c = {1}.vector [2];", managedVariable, nativeVariable);
-				writer.WriteLine ("\t{0}.vector.d = {1}.vector [3];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t{0}{2}vector.a = {1}.vector [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}vector.b = {1}.vector [1];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}vector.c = {1}.vector [2];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}vector.d = {1}.vector [3];", managedVariable, nativeVariable, accessor);
+				break;
+			case "MPSImageHistogramInfo":
+				writer.WriteLine ("\t{0}{2}numberOfHistogramEntries = {1}.numberOfHistogramEntries;", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}histogramForAlpha = {1}.histogramForAlpha;", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}minPixelValue.a = {1}.minPixelValue [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}minPixelValue.b = {1}.minPixelValue [1];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}minPixelValue.c = {1}.minPixelValue [2];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}minPixelValue.d = {1}.minPixelValue [3];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}maxPixelValue.a = {1}.maxPixelValue [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}maxPixelValue.b = {1}.maxPixelValue [1];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}maxPixelValue.c = {1}.maxPixelValue [2];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}maxPixelValue.d = {1}.maxPixelValue [3];", managedVariable, nativeVariable, accessor);
+				break;
+			case "MDLVoxelIndexExtent2":
+				writer.WriteLine ("\t{0}{2}minimumExtent.a = {1}.minimumExtent [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}minimumExtent.b = {1}.minimumExtent [1];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}minimumExtent.c = {1}.minimumExtent [2];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}minimumExtent.d = {1}.minimumExtent [3];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}maximumExtent.a = {1}.maximumExtent [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}maximumExtent.b = {1}.maximumExtent [1];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}maximumExtent.c = {1}.maximumExtent [2];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}maximumExtent.d = {1}.maximumExtent [3];", managedVariable, nativeVariable, accessor);
 				break;
 			default:
 				throw new NotImplementedException (string.Format ("MarshalToManaged for: NativeType: {0} ManagedType: {1}", type.NativeType, type.ManagedType));
 			}
 		}
 
-		static void MarshalToNative (StringWriter writer, TypeData type, string nativeVariable, string managedVariable)
+		static void MarshalToNative (StringWriter writer, TypeData type, string nativeVariable, string managedVariable, bool isRef)
 		{
+			var accessor = isRef ? "->" : ".";
 			switch (type.ManagedType) {
 			case "Vector2d":
 			case "Vector2i":
 			case "Vector2":
-				writer.WriteLine ("\t{0} [0] = {1}.a;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t{0} [1] = {1}.b;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t{0} [0] = {1}{2}a;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0} [1] = {1}{2}b;", nativeVariable, managedVariable, accessor);
 				break;
 			case "Vector3d":
 			case "Vector3i":
 			case "Vector3":
-				writer.WriteLine ("\t{0} [0] = {1}.a;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t{0} [1] = {1}.b;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t{0} [2] = {1}.c;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t{0} [0] = {1}{2}a;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0} [1] = {1}{2}b;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0} [2] = {1}{2}c;", nativeVariable, managedVariable, accessor);
 				break;
 			case "Vector4d":
 			case "Vector4i":
 			case "Vector4":
 				if (type.NativeType == "vector_float3") {
-					writer.WriteLine ("\t{0} [0] = {1}.a;", nativeVariable, managedVariable);
-					writer.WriteLine ("\t{0} [1] = {1}.b;", nativeVariable, managedVariable);
-					writer.WriteLine ("\t{0} [2] = {1}.c;", nativeVariable, managedVariable);
+					writer.WriteLine ("\t{0} [0] = {1}{2}a;", nativeVariable, managedVariable, accessor);
+					writer.WriteLine ("\t{0} [1] = {1}{2}b;", nativeVariable, managedVariable, accessor);
+					writer.WriteLine ("\t{0} [2] = {1}{2}c;", nativeVariable, managedVariable, accessor);
 				} else if (type.NativeType == "vector_float4" || type.NativeType == "vector_int4" || type.NativeType == "vector_double4") {
-					writer.WriteLine ("\t{0} [0] = {1}.a;", nativeVariable, managedVariable);
-					writer.WriteLine ("\t{0} [1] = {1}.b;", nativeVariable, managedVariable);
-					writer.WriteLine ("\t{0} [2] = {1}.c;", nativeVariable, managedVariable);
-					writer.WriteLine ("\t{0} [3] = {1}.d;", nativeVariable, managedVariable);
+					writer.WriteLine ("\t{0} [0] = {1}{2}a;", nativeVariable, managedVariable, accessor);
+					writer.WriteLine ("\t{0} [1] = {1}{2}b;", nativeVariable, managedVariable, accessor);
+					writer.WriteLine ("\t{0} [2] = {1}{2}c;", nativeVariable, managedVariable, accessor);
+					writer.WriteLine ("\t{0} [3] = {1}{2}d;", nativeVariable, managedVariable, accessor);
 				} else {
 					goto default;
 				}
 				break;
 			case "Matrix2":
 				writer.WriteLine ("\tfor (int i = 0; i < 2; i++) {");
-				writer.WriteLine ("\t\t{0}.columns [i][0] = {1}.columns [i].a;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t\t{0}.columns [i][1] = {1}.columns [i].b;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t\t{0}.columns [i][0] = {1}{2}columns [i].a;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t\t{0}.columns [i][1] = {1}{2}columns [i].b;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t}");
 				break;
 			case "Matrix3":
 				writer.WriteLine ("\tfor (int i = 0; i < 3; i++) {");
-				writer.WriteLine ("\t\t{0}.columns [i][0] = {1}.columns [i].a;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t\t{0}.columns [i][1] = {1}.columns [i].b;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t\t{0}.columns [i][2] = {1}.columns [i].c;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t\t{0}.columns [i][0] = {1}{2}columns [i].a;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t\t{0}.columns [i][1] = {1}{2}columns [i].b;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t\t{0}.columns [i][2] = {1}{2}columns [i].c;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t}");
 				break;
 			case "Matrix4":
 				writer.WriteLine ("\tfor (int i = 0; i < 4; i++) {");
-				writer.WriteLine ("\t\t{0}.columns [i][0] = {1}.columns [i].a;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t\t{0}.columns [i][1] = {1}.columns [i].b;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t\t{0}.columns [i][2] = {1}.columns [i].c;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t\t{0}.columns [i][3] = {1}.columns [i].d;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t\t{0}.columns [i][0] = {1}{2}columns [i].a;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t\t{0}.columns [i][1] = {1}{2}columns [i].b;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t\t{0}.columns [i][2] = {1}{2}columns [i].c;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t\t{0}.columns [i][3] = {1}{2}columns [i].d;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t}");
 				break;
 			case "MDLAxisAlignedBoundingBox":
-				writer.WriteLine ("\t{0}.maxBounds [0] = {1}.maxBounds.a;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t{0}.maxBounds [1] = {1}.maxBounds.b;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t{0}.maxBounds [2] = {1}.maxBounds.c;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t{0}.minBounds [0] = {1}.minBounds.a;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t{0}.minBounds [1] = {1}.minBounds.b;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t{0}.minBounds [2] = {1}.minBounds.c;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t{0}.maxBounds [0] = {1}{2}maxBounds.a;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.maxBounds [1] = {1}{2}maxBounds.b;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.maxBounds [2] = {1}{2}maxBounds.c;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.minBounds [0] = {1}{2}minBounds.a;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.minBounds [1] = {1}{2}minBounds.b;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.minBounds [2] = {1}{2}minBounds.c;", nativeVariable, managedVariable, accessor);
 				break;
 			case "GKBox":
-				writer.WriteLine ("\t{0}.maxBounds [0] = {1}.maxBounds.a;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t{0}.maxBounds [1] = {1}.maxBounds.b;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t{0}.maxBounds [2] = {1}.maxBounds.c;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t{0}.minBounds [0] = {1}.minBounds.a;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t{0}.minBounds [1] = {1}.minBounds.b;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t{0}.minBounds [2] = {1}.minBounds.c;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t{0}.maxBounds [0] = {1}{2}maxBounds.a;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.maxBounds [1] = {1}{2}maxBounds.b;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.maxBounds [2] = {1}{2}maxBounds.c;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.minBounds [0] = {1}{2}minBounds.a;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.minBounds [1] = {1}{2}minBounds.b;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.minBounds [2] = {1}{2}minBounds.c;", nativeVariable, managedVariable, accessor);
 				break;
 			case "GKQuad":
-				writer.WriteLine ("\t{0}.maxBounds [0] = {1}.maxBounds.a;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t{0}.maxBounds [1] = {1}.maxBounds.b;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t{0}.minBounds [0] = {1}.minBounds.a;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t{0}.minBounds [1] = {1}.minBounds.b;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t{0}.maxBounds [0] = {1}{2}maxBounds.a;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.maxBounds [1] = {1}{2}maxBounds.b;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.minBounds [0] = {1}{2}minBounds.a;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.minBounds [1] = {1}{2}minBounds.b;", nativeVariable, managedVariable, accessor);
 				break;
 			case "GKTriangle":
 				writer.WriteLine ("\tfor (int i = 0; i < 3; i++) {");
-				writer.WriteLine ("\t\t{0}.points [i][0] = {1}.points [i].a;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t\t{0}.points [i][1] = {1}.points [i].b;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t\t{0}.points [i][2] = {1}.points [i].c;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t\t{0}.points [i][0] = {1}{2}points [i].a;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t\t{0}.points [i][1] = {1}{2}points [i].b;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t\t{0}.points [i][2] = {1}{2}points [i].c;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t}");
 				break;
 			case "Quaternion":
-				writer.WriteLine ("\t{0}.vector [0] = {1}.vector.a;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t{0}.vector [1] = {1}.vector.b;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t{0}.vector [2] = {1}.vector.c;", nativeVariable, managedVariable);
-				writer.WriteLine ("\t{0}.vector [3] = {1}.vector.d;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t{0}.vector [0] = {1}{2}vector.a;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.vector [1] = {1}{2}vector.b;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.vector [2] = {1}{2}vector.c;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.vector [3] = {1}{2}vector.d;", nativeVariable, managedVariable, accessor);
+				break;
+			case "MPSImageHistogramInfo":
+				writer.WriteLine ("\t{0}.numberOfHistogramEntries = {1}{2}numberOfHistogramEntries;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.histogramForAlpha = {1}{2}histogramForAlpha;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.minPixelValue [0] = {1}{2}minPixelValue.a;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.minPixelValue [1] = {1}{2}minPixelValue.b;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.minPixelValue [2] = {1}{2}minPixelValue.c;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.minPixelValue [3] = {1}{2}minPixelValue.d;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.maxPixelValue [0] = {1}{2}maxPixelValue.a;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.maxPixelValue [1] = {1}{2}maxPixelValue.b;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.maxPixelValue [2] = {1}{2}maxPixelValue.c;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.maxPixelValue [3] = {1}{2}maxPixelValue.d;", nativeVariable, managedVariable, accessor);
+				break;
+			case "MDLVoxelIndexExtent2":
+				writer.WriteLine ("\t{0}.minimumExtent [0] = {1}{2}minimumExtent.a;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.minimumExtent [1] = {1}{2}minimumExtent.b;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.minimumExtent [2] = {1}{2}minimumExtent.c;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.minimumExtent [3] = {1}{2}minimumExtent.d;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.maximumExtent [0] = {1}{2}maximumExtent.a;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.maximumExtent [1] = {1}{2}maximumExtent.b;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.maximumExtent [2] = {1}{2}maximumExtent.c;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.maximumExtent [3] = {1}{2}maximumExtent.d;", nativeVariable, managedVariable, accessor);
 				break;
 			default:
 				throw new NotImplementedException (string.Format ("MarshalToNative for: NativeType: {0} ManagedType: {1}", type.NativeType, type.ManagedType));
@@ -2163,7 +2318,7 @@ namespace Xamarin.BindingMethods.Generator
 					continue;
 
 				writer.WriteLine ("\t{0} v{1};", p.TypeData.NativeType, i);
-				MarshalToNative (writer, p.TypeData, "v" + i.ToString (), "p" + i.ToString ());
+				MarshalToNative (writer, p.TypeData, "v" + i.ToString (), "p" + i.ToString (), p.IsRef);
 			}
 		}
 
@@ -2174,11 +2329,32 @@ namespace Xamarin.BindingMethods.Generator
 			
 			for (int i = 0; i < ps.Length; i++) {
 				var p = ps [i];
+				writer.Write (", ");
+				if (p.IsRef && p.TypeData != Types.IntPtr)
+					writer.Write ("&");
 				if (p.TypeData.RequireMarshal) {
-					writer.Write (", v{0}", i);
+					writer.Write ("v{0}", i);
 				} else {
-					writer.Write (", p{0}", i);
+					writer.Write ("p{0}", i);
 				}
+			}
+		}
+
+		static void WriteParametersNativeDeclaration (StringWriter writer, ParameterData [] parameters, bool isTypedef)
+		{
+			if (parameters == null)
+				return;
+
+
+			for (int i = 0; i < parameters.Length; i++) {
+				var p = parameters [i];
+				writer.Write (", ");
+				writer.Write (isTypedef ? p.TypeData.NativeType : p.TypeData.NativeWrapperType);
+				if (p.IsRef && p.TypeData != Types.IntPtr)
+					writer.Write ("*");
+				writer.Write (" ");
+				writer.Write (isTypedef ? "f" : "p");
+				writer.Write (i);
 			}
 		}
 
@@ -2207,35 +2383,56 @@ namespace Xamarin.BindingMethods.Generator
 			writer.WriteLine ("\t}");
 		}
 
+		static void WriteMarshalParametersToManaged (StringWriter writer, FunctionData func)
+		{
+			if (func.Parameters == null)
+				return;
+			
+			for (int i = 0; i < func.Parameters.Length; i++) {
+				var p = func.Parameters [i];
+				if (!p.IsRef || !p.TypeData.RequireMarshal)
+					continue;
+				MarshalToManaged (writer, p.TypeData, $"v{i}", $"p{i}", true);
+			}
+		}
+
+		static void WriteMarshalReturnValue (StringWriter writer, FunctionData func, string indent, bool tmpReturnValue)
+		{
+			if (func.ReturnType != null) {
+				if (func.ReturnType.RequireMarshal) {
+					// Marshal return value back
+					writer.WriteLine ("{0}{1} rvm;", indent, func.ReturnType.NativeWrapperType);
+					MarshalToManaged (writer, func.ReturnType, "rv", "rvm");
+					writer.WriteLine ("{0}return rvm;", indent);
+				} else if (tmpReturnValue) {
+					writer.WriteLine ("{0}return rv;", indent);
+				}
+			}
+		}
+
 		static void Write_objc_msgSend (StringWriter writer, FunctionData func)
 		{
+			var tmpReturnValue = func.ReturnType != null && (func.ReturnType.RequireMarshal == true || func.Parameters?.Any ((v) => v.IsRef && v.TypeData.RequireMarshal) == true);
+
 			// func name
 			var overload = "objc_msgSend";
 			var funcName = GetFuncName (func, overload);
 
 			// typedef
 			writer.Write ("typedef {0} (*func_{1}) (id self, SEL sel", func.ReturnType == null ? "void" : func.ReturnType.NativeType, funcName.ToString ());
-			if (func.Parameters != null) {
-				for (int i = 0; i < func.Parameters.Length; i++) {
-					writer.Write (", {0} f{1}", func.Parameters [i].TypeData.NativeType, i);
-				}
-			}
+			WriteParametersNativeDeclaration (writer, func.Parameters, true);
 			writer.WriteLine (");");
 
 			// declaration
 			writer.WriteLine (func.ReturnType != null ? func.ReturnType.NativeWrapperType : "void");
 			writer.Write (funcName);
 			writer.Write (" (id self, SEL sel");
-			if (func.Parameters != null) {
-				for (int i = 0; i < func.Parameters.Length; i++) {
-					writer.Write (", {0} p{1}", func.Parameters [i].TypeData.NativeWrapperType, i);
-				}
-			}
+			WriteParametersNativeDeclaration (writer, func.Parameters, false);
 			writer.WriteLine (")");
 
 			// body
 			writer.WriteLine ("{");
-			if (func.ReturnType != null && func.ReturnType.RequireMarshal) {
+			if (tmpReturnValue) {
 				writer.WriteLine ("\t{0} rv;", func.ReturnType.NativeType);
 			}
 
@@ -2255,7 +2452,7 @@ namespace Xamarin.BindingMethods.Generator
 			// invoke
 			writer.Write (indent);
 			if (func.ReturnType != null) {
-				if (func.ReturnType.RequireMarshal) {
+				if (tmpReturnValue) {
 					writer.Write ("rv = ");
 				} else {
 					writer.Write ("return ");
@@ -2265,14 +2462,8 @@ namespace Xamarin.BindingMethods.Generator
 			WriteParametersInvoke (writer, func.Parameters);
 			writer.WriteLine (");");
 
-			if (func.ReturnType != null) {
-				if (func.ReturnType.RequireMarshal) {
-					// Marshal return value back
-					writer.WriteLine ("{0}{1} rvm;", indent, func.ReturnType.NativeWrapperType);
-					MarshalToManaged (writer, func.ReturnType, "rv", "rvm");
-					writer.WriteLine ("{0}return rvm;", indent);
-				}
-			}
+			WriteMarshalParametersToManaged (writer, func);
+			WriteMarshalReturnValue (writer, func, indent, tmpReturnValue);
 
 			// @catch
 			if (func.MarshalExceptions)
@@ -2284,33 +2475,27 @@ namespace Xamarin.BindingMethods.Generator
 
 		static void Write_objc_msgSendSuper (StringWriter writer, FunctionData func)
 		{
+			var tmpReturnValue = func.ReturnType != null && (func.ReturnType.RequireMarshal == true || func.Parameters?.Any ((v) => v.IsRef && v.TypeData.RequireMarshal) == true);
+
 			// func name
 			var overload = "objc_msgSendSuper";
 			var funcName = GetFuncName (func, overload);
 
 			// typedef
 			writer.Write ("typedef {0} (*func_{1}) (struct objc_super *super, SEL sel", func.ReturnType == null ? "void" : func.ReturnType.NativeType, funcName.ToString ());
-			if (func.Parameters != null) {
-				for (int i = 0; i < func.Parameters.Length; i++) {
-					writer.Write (", {0} f{1}", func.Parameters [i].TypeData.NativeType, i);
-				}
-			}
+			WriteParametersNativeDeclaration (writer, func.Parameters, true);
 			writer.WriteLine (");");
 
 			// declaration
 			writer.WriteLine (func.ReturnType != null ? func.ReturnType.NativeWrapperType : "void");
 			writer.Write (funcName);
 			writer.Write (" (struct objc_super *super, SEL sel");
-			if (func.Parameters != null) {
-				for (int i = 0; i < func.Parameters.Length; i++) {
-					writer.Write (", {0} p{1}", func.Parameters [i].TypeData.NativeWrapperType, i);
-				}
-			}
+			WriteParametersNativeDeclaration (writer, func.Parameters, false);
 			writer.WriteLine (")");
 
 			// body
 			writer.WriteLine ("{");
-			if (func.ReturnType != null && func.ReturnType.RequireMarshal) {
+			if (tmpReturnValue) {
 				writer.WriteLine ("\t{0} rv;", func.ReturnType.NativeType);
 			}
 
@@ -2330,7 +2515,7 @@ namespace Xamarin.BindingMethods.Generator
 			// invoke
 			writer.Write (indent);
 			if (func.ReturnType != null) {
-				if (func.ReturnType.RequireMarshal) {
+				if (tmpReturnValue) {
 					writer.Write ("rv = ");
 				} else {
 					writer.Write ("return ");
@@ -2340,14 +2525,8 @@ namespace Xamarin.BindingMethods.Generator
 			WriteParametersInvoke (writer, func.Parameters);
 			writer.WriteLine (");");
 
-			if (func.ReturnType != null) {
-				if (func.ReturnType.RequireMarshal) {
-					// Marshal return value back
-					writer.WriteLine ("{0}{1} rvm;", indent, func.ReturnType.NativeWrapperType);
-					MarshalToManaged (writer, func.ReturnType, "rv", "rvm");
-					writer.WriteLine ("{0}return rvm;", indent);
-				}
-			}
+			WriteMarshalParametersToManaged (writer, func);
+			WriteMarshalReturnValue (writer, func, indent, tmpReturnValue);
 
 			// @catch
 			if (func.MarshalExceptions)
@@ -2368,22 +2547,14 @@ namespace Xamarin.BindingMethods.Generator
 
 			// typedef
 			writer.Write ("typedef {0} (*func_{1}) (id self, SEL sel", func.ReturnType.NativeType, funcName.ToString ());
-			if (func.Parameters != null) {
-				for (int i = 0; i < func.Parameters.Length; i++) {
-					writer.Write (", {0} f{1}", func.Parameters [i].TypeData.NativeType, i);
-				}
-			}
+			WriteParametersNativeDeclaration (writer, func.Parameters, true);
 			writer.WriteLine (");");
 
 			// declaration
 			writer.WriteLine ("void");
 			writer.Write (funcName);
 			writer.Write (" ({0} *stret_rv, id self, SEL sel", func.ReturnType.NativeWrapperType);
-			if (func.Parameters != null) {
-				for (int i = 0; i < func.Parameters.Length; i++) {
-					writer.Write (", {0} p{1}", func.Parameters [i].TypeData.NativeWrapperType, i);
-				}
-			}
+			WriteParametersNativeDeclaration (writer, func.Parameters, false);
 			writer.WriteLine (")");
 
 			// body
@@ -2415,6 +2586,7 @@ namespace Xamarin.BindingMethods.Generator
 			WriteParametersInvoke (writer, func.Parameters);
 			writer.WriteLine (");");
 
+			WriteMarshalParametersToManaged (writer, func);
 			if (func.ReturnType.RequireMarshal) {
 				// Marshal return value back
 				MarshalToManaged (writer, func.ReturnType, "rv", "(*stret_rv)");
@@ -2439,22 +2611,14 @@ namespace Xamarin.BindingMethods.Generator
 
 			// typedef
 			writer.Write ("typedef {0} (*func_{1}) (struct objc_super *super, SEL sel", func.ReturnType.NativeType, funcName.ToString ());
-			if (func.Parameters != null) {
-				for (int i = 0; i < func.Parameters.Length; i++) {
-					writer.Write (", {0} f{1}", func.Parameters [i].TypeData.NativeType, i);
-				}
-			}
+			WriteParametersNativeDeclaration (writer, func.Parameters, true);
 			writer.WriteLine (");");
 
 			// declaration
 			writer.WriteLine ("void");
 			writer.Write (funcName);
 			writer.Write (" ({0} *stret_rv, struct objc_super *super, SEL sel", func.ReturnType.NativeWrapperType);
-			if (func.Parameters != null) {
-				for (int i = 0; i < func.Parameters.Length; i++) {
-					writer.Write (", {0} p{1}", func.Parameters [i].TypeData.NativeWrapperType, i);
-				}
-			}
+			WriteParametersNativeDeclaration (writer, func.Parameters, false);
 			writer.WriteLine (")");
 
 			// body
@@ -2486,6 +2650,7 @@ namespace Xamarin.BindingMethods.Generator
 			WriteParametersInvoke (writer, func.Parameters);
 			writer.WriteLine (");");
 
+			WriteMarshalParametersToManaged (writer, func);
 			if (func.ReturnType.RequireMarshal) {
 				// Marshal return value back
 				MarshalToManaged (writer, func.ReturnType, "rv", "(*stret_rv)");
@@ -2703,11 +2868,38 @@ namespace Xamarin.BindingMethods.Generator
 				RequireMarshal = false,
 			};
 
+			public static TypeData CGPoint = new TypeData {
+				ManagedType = "CGPoint",
+				NativeType = "CGPoint",
+				NativeWrapperType = "CGPoint",
+				RequireMarshal = false,
+			};
+
 			public static TypeData QuatF = new TypeData {
 				ManagedType = "Quaternion",
 				NativeType = "simd_quatf",
 				NativeWrapperType = "struct QuatF",
 				RequireMarshal = true,
+			};
+
+			public static TypeData MPSImageHistogramInfo = new TypeData {
+				ManagedType = "MPSImageHistogramInfo",
+				NativeType = "MPSImageHistogramInfo",
+				NativeWrapperType = "struct MPSImageHistogramInfoWrapper",
+				RequireMarshal = true,
+				IsARMStret = true,
+				IsX86Stret = true,
+				IsX64Stret = true,
+			};
+
+			public static TypeData MDLVoxelIndexExtent2 = new TypeData {
+				ManagedType = "MDLVoxelIndexExtent2",
+				NativeType = "MDLVoxelIndexExtent",
+				NativeWrapperType = "struct MDLVoxelIndexExtentWrapper",
+				RequireMarshal = true,
+				IsARMStret = true,
+				IsX86Stret = true,
+				IsX64Stret = true,
 			};
 		}
 	}

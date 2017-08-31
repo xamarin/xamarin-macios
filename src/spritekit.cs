@@ -275,6 +275,7 @@ namespace XamCore.SpriteKit {
 		[Export ("intersectsNode:")]
 		bool IntersectsNode (SKNode node);
 
+		[iOS (8,3)][TV (9,0)][Mac (10,11)]
 		[Export ("isEqualToNode:")]
 		bool IsEqual (SKNode node);
 
@@ -474,9 +475,11 @@ namespace XamCore.SpriteKit {
 		SKFieldNode CreateRadialGravityField ();
 
 		[Static, Export ("linearGravityFieldWithVector:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKFieldNode CreateLinearGravityField (/* vector_float3 */ Vector4 direction);
 
 		[Static, Export ("velocityFieldWithVector:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKFieldNode CreateVelocityField (/* vector_float3 */ Vector4 direction);
 
 		[Static, Export ("velocityFieldWithTexture:")]

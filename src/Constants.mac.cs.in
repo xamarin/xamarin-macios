@@ -131,5 +131,6 @@ namespace MonoMac {
 		public const string VisionLibrary = "/System/Library/Frameworks/Vision.framework/Vision";
 		public const string IOSurfaceLibrary = "/System/Library/Frameworks/IOSurface.framework/IOSurface";
 		public const string PhotosUILibrary = "/System/Library/Frameworks/Photos.framework/PhotosUI";
+		public const string ExternalAccessoryLibrary = "/System/Library/Frameworks/ExternalAccessory.framework/ExternalAccessory";
 	}
 }

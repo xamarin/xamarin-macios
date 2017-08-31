@@ -25,6 +25,10 @@
 !missing-selector! +NSPersistentStoreCoordinator::setMetadata:forPersistentStoreOfType:URL:options:error: not bound
 !missing-selector! +NSMappingModel::inferredMappingModelForSourceModel:destinationModel:error: not bound
 
+## https://trello.com/c/dlSRYPFx/92-33878590-missing-nsbinarystoresecuredecodingclasses-and-nsbinarystoreinsecuredecodingcompatibilityoption-constants-in-binaries
+!missing-field! NSBinaryStoreSecureDecodingClasses not bound
+!missing-field! NSBinaryStoreInsecureDecodingCompatibilityOption not bound
+
 
 # CoreGraphics
 
@@ -59,6 +63,12 @@
 
 ## xcode 8 beta 1-6 defines it but it does not exists in the binaries - rdar #28169810 https://trello.com/c/RwXK6YRX
 !missing-field! PHLivePhotoShouldRenderAtPlaybackTime not bound
+
+
+# ReplayKit
+
+## https://trello.com/c/eA440suj/91-33875315-rpbroadcasthandler-updatebroadcasturl-unrecognized-selector
+!missing-selector! RPBroadcastHandler::updateBroadcastURL: not bound
 
 
 # SpriteKit
@@ -636,6 +646,9 @@
 !missing-selector! INPerson::initWithHandle:nameComponents:contactIdentifier: not bound
 !missing-selector! INPerson::initWithHandle:nameComponents:displayName:image:contactIdentifier: not bound
 
+## Apple made this @optional in iOS 11 but this is a breaking change
+!incorrect-protocol-member! INSpeakable::identifier is OPTIONAL and should NOT be abstract
+
 # GameplayKit
 
 ## Fixed in XAMCORE_4_0
@@ -654,3 +667,11 @@
 ## we do not have NSFastEnumeration and decided to not bind objectForKeyedSubscript using a local method instead
 !missing-protocol-conformance! MLDictionaryFeatureProvider should conform to NSFastEnumeration
 !missing-selector! MLDictionaryFeatureProvider::objectForKeyedSubscript: not bound
+
+## radar://33643011 -> https://trello.com/c/ZN712GOi
+## [FAIL] Selector not found for CoreML.MLFeatureDescription : setMultiArrayConstraint:
+## [FAIL] Selector not found for CoreML.MLFeatureDescription : setImageConstraint:
+## [FAIL] Selector not found for CoreML.MLFeatureDescription : setDictionaryConstraint:
+!missing-selector! MLFeatureDescription::setDictionaryConstraint: not bound
+!missing-selector! MLFeatureDescription::setImageConstraint: not bound
+!missing-selector! MLFeatureDescription::setMultiArrayConstraint: not bound

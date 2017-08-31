@@ -92,6 +92,7 @@ namespace XamCore.UIKit {
 		Redo,
 
 		[iOS (4,0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		PageCurl
 	} 
 
@@ -633,6 +634,7 @@ namespace XamCore.UIKit {
 	public enum UITableViewCellSeparatorStyle : nint {
 		None,
 		SingleLine,
+		[Deprecated (PlatformName.iOS, 11, 0, message:"Use 'SingleLine' for a single line separator.")]
 		SingleLineEtched,
 		DoubleLineEtched = SingleLineEtched
 	}
@@ -1687,6 +1689,7 @@ namespace XamCore.UIKit {
 		Minimal
 	}
 
+	[Deprecated (PlatformName.iOS, 11, 0)]
 	[NoTV][NoWatch]
 	[iOS (8, 0)]
 	[Native]
@@ -2235,6 +2238,44 @@ namespace XamCore.UIKit {
 	{
 		Menu = 1,
 		NavigationBar = 1 << 1
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Native]
+	public enum UITextDropPerformer : nuint
+	{
+		View = 0,
+		Delegate,
+	}
+
+	[NoWatch, NoTV]
+	[iOS (11,0)]
+	[Native]
+	public enum UINavigationItemLargeTitleDisplayMode : nint
+	{
+		Automatic,
+		Always,
+		Never,
+	}
+
+	[NoWatch]
+	[iOS (11,0), TV (11,0)]
+	[Native]
+	public enum UICollectionViewFlowLayoutSectionInsetReference : nint
+	{
+		ContentInset,
+		SafeArea,
+		LayoutMargins,
+	}
+
+	[iOS (11,0), TV (11,0), Watch (4,0)]
+	[Native]
+	public enum UIPreferredPresentationStyle : nint
+	{
+		Unspecified = 0,
+		Inline,
+		Attachment,
 	}
 	
 	

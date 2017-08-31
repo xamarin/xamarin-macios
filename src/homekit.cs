@@ -1207,7 +1207,6 @@ namespace XamCore.HomeKit {
 		[NoWatch]
 		[iOS (11,0)]
 		[Export ("initWithName:events:endEvents:recurrences:predicate:")]
-		[DesignatedInitializer]
 		IntPtr Constructor (string name, HMEvent[] events, [NullAllowed] HMEvent[] endEvents, [NullAllowed] NSDateComponents[] recurrences, [NullAllowed] NSPredicate predicate);
 
 		[Export ("events", ArgumentSemantic.Copy)]
@@ -1675,20 +1674,14 @@ namespace XamCore.HomeKit {
 	[DisableDefaultCtor]
 	interface HMPresenceEvent : NSMutableCopying {
 
-		[Internal]
-		[Export ("initWithPresenceType:")]
-		IntPtr Constructor (NSString presenceType);
+		[Export ("initWithPresenceEventType:presenceUserType:")]
+		IntPtr Constructor (HMPresenceEventType presenceEventType, HMPresenceEventUserType presenceUserType);
 
-		[Wrap ("this (HMPresenceTypeExtensions.GetConstant (presenceType))")]
-		IntPtr Constructor (HMPresenceType presenceType);
+		[Export ("presenceEventType")]
+		HMPresenceEventType PresenceEventType { get;  [NotImplemented] set; }
 
-		[Internal]
-		[Export ("presenceType")]
-		NSString _PresenceType { get; [NotImplemented] set; }
-
-		// FIXME: Bug https://bugzilla.xamarin.com/show_bug.cgi?id=57870
-		// [Wrap ("HMPresenceTypeExtensions.GetValue (_PresenceType)")]
-		// HMPresenceType PresenceType { get; [NotImplemented] set; }
+		[Export ("presenceUserType")]
+		HMPresenceEventUserType PresenceUserType { get;  [NotImplemented] set; }
 
 		[Field ("HMPresenceKeyPath")]
 		NSString KeyPath { get; }
@@ -1699,22 +1692,11 @@ namespace XamCore.HomeKit {
 	[DisableDefaultCtor]
 	interface HMMutablePresenceEvent {
 
-		[Internal]
-		[Export ("initWithPresenceType:")]
-		IntPtr Constructor (NSString presenceType);
+		[Export ("presenceEventType", ArgumentSemantic.Assign)]
+		HMPresenceEventType PresenceEventType { get; /* Radar 33883958: https://trello.com/c/TIlzWzrL*/ [NotImplemented] set; }
 
-		[Wrap ("this (HMPresenceTypeExtensions.GetConstant (presenceType))")]
-		IntPtr Constructor (HMPresenceType presenceType);
-
-		[Internal]
-		[Override]
-		[Export ("presenceType")]
-		NSString _PresenceType { get; set; }
-
-		// FIXME: Bug https://bugzilla.xamarin.com/show_bug.cgi?id=57870
-		// [Override]
-		// [Wrap ("HMPresenceTypeExtensions.GetValue (_PresenceType)")]
-		// HMPresenceType PresenceType { get; set; }
+		[Export ("presenceUserType", ArgumentSemantic.Assign)]
+		HMPresenceEventUserType PresenceUserType { get; /* Radar 33883958: https://trello.com/c/TIlzWzrL*/ [NotImplemented] set; }
 	}
 
 	[Watch (4,0), TV (11,0), iOS (11,0)]

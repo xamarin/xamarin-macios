@@ -157,6 +157,11 @@ namespace Introspection {
 				case "PKPaymentRequest":
 				case "PKPaymentToken":
 				case "PKLabeledValue":
+				case "PKPaymentAuthorizationResult":
+				case "PKPaymentRequestShippingMethodUpdate":
+				case "PKPaymentRequestUpdate":
+				case "PKPaymentRequestPaymentMethodUpdate":
+				case "PKPaymentRequestShippingContactUpdate":
 				// iOS9
 				case "UIFont":
 				case "AVAssetTrackSegment":
@@ -283,6 +288,11 @@ namespace Introspection {
 				case "PKPaymentRequest":
 				case "PKPaymentToken":
 				case "PKLabeledValue":
+				case "PKPaymentAuthorizationResult":
+				case "PKPaymentRequestShippingMethodUpdate":
+				case "PKPaymentRequestUpdate":
+				case "PKPaymentRequestPaymentMethodUpdate":
+				case "PKPaymentRequestShippingContactUpdate":
 				// iOS9
 				case "UIFont":
 				case "AVAssetTrackSegment":
@@ -393,7 +403,6 @@ namespace Introspection {
 				switch (type.Name) {
 				// undocumented conformance (up to 7.0) and conformity varies between iOS versions
 				case "MKDirectionsRequest":
-				case "MPMediaItem":
 				case "MPMediaPlaylist":
 				case "MPMediaItemCollection":
 				case "MPMediaEntity":
@@ -428,6 +437,7 @@ namespace Introspection {
 				case "HMCharacteristicEvent": // Selectors not available on 32 bit
 				case "NSFileProviderDomain": // Conformance not in headers
 				case "FPUIActionExtensionContext": // Conformance not in headers
+				case "CXCall": // Conformance not in headers
 					return true;
 
 #if __WATCHOS__

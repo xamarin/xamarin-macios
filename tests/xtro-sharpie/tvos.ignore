@@ -282,6 +282,27 @@
 !missing-selector! +MPMediaItem::persistentIDPropertyForGroupingType: not bound
 !missing-selector! +MPMediaItem::titlePropertyForGroupingType: not bound
 
+## unused in public API for tvOS
+!missing-enum! MPMediaType not bound
+
+ These are not available on macOS even if xtro says so.
+!missing-type! MPMediaEntity not bound
+
+## MPMediaItem only exposed for fields, it's not really available in macOS
+!unknown-type! MPMediaItem bound
+#!wrong-base-type! MPMediaItem expected MPMediaEntity actual NSObject
+
+## incorrect macro/parsing - decorated with `MP_API(macos(10.12.2))`
+!missing-enum! MPNowPlayingPlaybackState not bound
+!missing-selector! MPNowPlayingInfoCenter::playbackState not bound
+!missing-selector! MPNowPlayingInfoCenter::setPlaybackState: not bound
+
+
+# ReplayKit
+
+## Not used on tvOS (no camera)
+!missing-enum! RPCameraPosition not bound
+
 
 # StoreKit
 
@@ -296,6 +317,7 @@
 !missing-field! SKCloudServiceSetupOptionsITunesItemIdentifierKey not bound
 !missing-field! SKCloudServiceSetupOptionsAffiliateTokenKey not bound
 !missing-field! SKCloudServiceSetupOptionsCampaignTokenKey not bound
+!missing-field! SKCloudServiceSetupOptionsMessageIdentifierKey not bound
 !missing-protocol! SKCloudServiceSetupViewControllerDelegate not bound
 
 

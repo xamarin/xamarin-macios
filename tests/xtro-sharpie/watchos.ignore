@@ -9,6 +9,15 @@
 AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions:
 
 
+# CoreBluetooth
+
+## present in headers but already deprecated (we're not exposing them)
+!missing-enum! CBCentralManagerState not bound
+!missing-enum! CBPeripheralManagerState not bound
+!missing-selector! CBPeripheral::RSSI not bound
+!missing-selector! +CBUUID::UUIDWithCFUUID: not bound
+
+
 # Foundation
 
 ## does not exists in iOS (or watchOS) as a type - but some API refers to it (messy)
@@ -117,6 +126,20 @@ AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions:
 ## enums added in Xcode 8.1 but the only API using them are not available on watchOS
 !missing-enum! PKPaymentButtonStyle not bound
 !missing-enum! PKPaymentButtonType not bound
+
+
+# SpriteKit
+
+## AVPlayer is not available on watchOS
+!missing-selector! +SKVideoNode::videoNodeWithAVPlayer: not bound
+!missing-selector! SKVideoNode::initWithAVPlayer: not bound
+
+## Those API are already deprecated - so we're not adding them
+## from a managed point-of-view that's invisible (same .ctor)
+!missing-selector! SKVideoNode::initWithVideoFileNamed: not bound
+!missing-selector! SKVideoNode::initWithVideoURL: not bound
+!missing-selector! +SKVideoNode::videoNodeWithVideoFileNamed: not bound
+!missing-selector! +SKVideoNode::videoNodeWithVideoURL: not bound
 
 
 # UIKit

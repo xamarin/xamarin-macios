@@ -85,6 +85,13 @@
 !missing-selector! CKRecord::setObject:forKeyedSubscript: not bound
 
 
+# PassKit
+
+## made optional in xcode9 beta 3 since they were replaced with newer API
+!incorrect-protocol-member! PKPaymentAuthorizationControllerDelegate::paymentAuthorizationController:didAuthorizePayment:completion: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! PKPaymentAuthorizationViewControllerDelegate::paymentAuthorizationViewController:didAuthorizePayment:completion: is OPTIONAL and should NOT be abstract
+
+
 # Metal
 
 ## New @required (abstract) methods in existing types (breaking changes)
@@ -198,6 +205,16 @@
 !missing-selector! +UIView::layerClass not bound
 
 
+# Vision
+
+## we do not expose internal framework versions
+!missing-field! VNVisionVersionNumber not bound
+
+## called indirectly (there's a required native layer for them)
+!missing-pinvoke! VNImagePointForFaceLandmarkPoint is not bound
+!missing-pinvoke! VNNormalizedFaceBoundingBoxPointForLandmarkPoint is not bound
+
+
 # non-imported headers
 
 ## objc runtime
@@ -206,3 +223,19 @@
 ## CoreLocation
 # We have our own managed ctor
 !missing-pinvoke! CLLocationCoordinate2DMake is not bound
+
+## PDFKit
+# The following enums are bound as PdfFoo, lowercase Pdf prefix
+!missing-enum! PDFActionNamedName not bound
+!missing-enum! PDFAreaOfInterest not bound
+!missing-enum! PDFBorderStyle not bound
+!missing-enum! PDFDisplayBox not bound
+!missing-enum! PDFDisplayDirection not bound
+!missing-enum! PDFDisplayMode not bound
+!missing-enum! PDFDocumentPermissions not bound
+!missing-enum! PDFInterpolationQuality not bound
+!missing-enum! PDFLineStyle not bound
+!missing-enum! PDFMarkupType not bound
+!missing-enum! PDFTextAnnotationIconType not bound
+!missing-enum! PDFWidgetCellState not bound
+!missing-enum! PDFWidgetControlType not bound

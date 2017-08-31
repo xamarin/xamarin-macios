@@ -10,8 +10,10 @@
 #if XAMCORE_2_0
 
 using System;
+using System.ComponentModel;
 using XamCore.CoreFoundation;
 using XamCore.CoreGraphics;
+using XamCore.CoreMedia;
 using XamCore.CoreVideo;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
@@ -160,9 +162,13 @@ namespace XamCore.ARKit {
 			get;
 		}
 
-		[Export ("projectionMatrixWithViewportSize:orientation:zNear:zFar:")]
+		[Export ("projectPoint:orientation:viewportSize:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		Matrix4 GetProjectionMatrix (CGSize viewportSize, UIInterfaceOrientation orientation, nfloat zNear, nfloat zFar);
+		CGPoint GetProjectPoint (Vector3 point, UIInterfaceOrientation orientation, CGSize viewportSize);
+
+		[Export ("projectionMatrixForOrientation:viewportSize:zNear:zFar:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		Matrix4 GetProjectionMatrix (UIInterfaceOrientation orientation, CGSize viewportSize, nfloat zNear, nfloat zFar);
 
 		[Export ("viewMatrixForOrientation:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -196,8 +202,8 @@ namespace XamCore.ARKit {
 		[Export ("hitTest:types:")]
 		ARHitTestResult[] HitTest (CGPoint point, ARHitTestResultType types);
 
-		[Export ("displayTransformWithViewportSize:orientation:")]
-		CGAffineTransform DisplayTransform (CGSize viewportSize, UIInterfaceOrientation orientation);
+		[Export ("displayTransformForOrientation:viewportSize:")]
+		CGAffineTransform DisplayTransform (UIInterfaceOrientation orientation, CGSize viewportSize);
 	}
 
 	[iOS (11,0)]
@@ -253,23 +259,34 @@ namespace XamCore.ARKit {
 		ARPlaneAnchorAlignment Alignment { get; }
 
 		[Export ("center")]
-		Vector3 Center { get; }
+		Vector3 Center {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
 
 		[Export ("extent")]
-		Vector3 Extent { get; }
+		Vector3 Extent {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
 	}
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface ARPointCloud : NSCopying {
+	interface ARPointCloud {
 
 		[Export ("count")]
 		nuint Count { get; }
 
-		[Internal, Export ("points")]
-		IntPtr _GetPoints ();
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Protected, Export ("points")]
+		IntPtr GetRawPoints ();
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Protected, Export ("identifiers")]
+		IntPtr GetRawIdentifiers ();
 	}
 
 	[iOS (11,0)]
@@ -389,13 +406,11 @@ namespace XamCore.ARKit {
 		ARFrame CurrentFrame { get; }
 
 		[NullAllowed, Export ("configuration", ArgumentSemantic.Copy)]
-		ARSessionConfiguration Configuration { get; }
+		ARConfiguration Configuration { get; }
 
-		[Export ("runWithConfiguration:")]
-		void Run (ARSessionConfiguration configuration);
-
+		// 'runWithConfiguration:' selector marked as unavailable in Xcode 9 beta 5. Use 'Run (ARConfiguration configuration, ARSessionRunOptions options)' instead.
 		[Export ("runWithConfiguration:options:")]
-		void Run (ARSessionConfiguration configuration, ARSessionRunOptions options);
+		void Run (ARConfiguration configuration, ARSessionRunOptions options);
 
 		[Export ("pause")]
 		void Pause ();
@@ -423,6 +438,9 @@ namespace XamCore.ARKit {
 
 		[Export ("sessionInterruptionEnded:")]
 		void SessionInterruptionEnded (ARSession session);
+
+		[Export ("session:didOutputAudioSampleBuffer:")]
+		void DidOutputAudioSampleBuffer (ARSession session, CMSampleBuffer audioSampleBuffer);
 	}
 
 	interface IARSessionDelegate {}
@@ -449,7 +467,8 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
-	interface ARSessionConfiguration : NSCopying {
+	[DisableDefaultCtor]
+	interface ARConfiguration : NSCopying {
 
 		[Static]
 		[Export ("isSupported")]
@@ -460,16 +479,24 @@ namespace XamCore.ARKit {
 
 		[Export ("lightEstimationEnabled")]
 		bool LightEstimationEnabled { [Bind ("isLightEstimationEnabled")] get; set; }
+
+		[Export ("providesAudioData")]
+		bool ProvidesAudioData { get; set; }
 	}
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
-	[BaseType (typeof (ARSessionConfiguration))]
-	interface ARWorldTrackingSessionConfiguration {
+	[BaseType (typeof (ARConfiguration))]
+	interface ARWorldTrackingConfiguration {
 
 		[Export ("planeDetection", ArgumentSemantic.Assign)]
 		ARPlaneDetection PlaneDetection { get; set; }
 	}
+
+	[iOS (11,0)]
+	[NoWatch, NoTV, NoMac]
+	[BaseType (typeof(ARConfiguration))]
+	interface AROrientationTrackingConfiguration {}
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]

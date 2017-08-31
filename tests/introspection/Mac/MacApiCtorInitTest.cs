@@ -206,8 +206,6 @@ namespace Introspection {
 			// Crashes on 10.13
 			case "MonoMac.AppKit.NSStoryboard":
 			case "AppKit.NSStoryboard":
-			case "MonoMac.CoreImage.CIImageAccumulator":
-			case "CoreImage.CIImageAccumulator": // 32897776
 			case "MonoMac.AVFoundation.AVCaptureInputPort": // https://bugzilla.xamarin.com/show_bug.cgi?id=57668
 			case "AVFoundation.AVCaptureInputPort": // https://bugzilla.xamarin.com/show_bug.cgi?id=57668
 			// Crashes on 10.12
@@ -272,6 +270,8 @@ namespace Introspection {
 			case "CoreData.NSPersistentStoreCoordinator":
 			case "AppKit.NSColorPanel":
 			case "MonoMac.AppKit.NSColorPanel":
+			case "Foundation.NSFileProviderService":
+			case "MonoMac.Foundation.NSFileProviderService":
 				do_not_dispose.Add (obj);
 				break;
 			// 10.11
