@@ -1993,6 +1993,26 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
+					Comment = " // void func (MatrixFloat2x2)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.MatrixFloat2x2 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // MatrixFloat2x2 func ()",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.MatrixFloat2x2,
+				}
+			);
+
+			data.Add (
+				new FunctionData {
 					Comment = " // IntPtr func (IntPtr, ref MPSImageHistogramInfo)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
@@ -2000,6 +2020,19 @@ namespace Xamarin.BindingMethods.Generator
 					Parameters = new ParameterData [] {
 						new ParameterData { TypeData = Types.IntPtr },
 						new ParameterData { TypeData = Types.MPSImageHistogramInfo, IsRef = true },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, MatrixFloat2x2)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.MatrixFloat2x2 },
 					},
 				}
 			);
@@ -2053,6 +2086,19 @@ namespace Xamarin.BindingMethods.Generator
 					Parameters = new ParameterData [] {
 						new ParameterData { TypeData = Types.MDLVoxelIndexExtent2 },
 					}
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, MatrixFloat3x3)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.MatrixFloat3x3 },
+					},
 				}
 			);
 
@@ -2208,6 +2254,19 @@ namespace Xamarin.BindingMethods.Generator
 				}
 			);
 
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, MatrixFloat4x4)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.MatrixFloat4x4 },
+					},
+				}
+			);
+
 			// We must expand functions with native types to their actual type as well.
 			for (int i = data.Count - 1; i >= 0; i--) {
 				if (!data [i].HasNativeType)
@@ -2259,6 +2318,7 @@ namespace Xamarin.BindingMethods.Generator
 				}
 				break;
 			case "Matrix2":
+			case "MatrixFloat2x2":
 				writer.WriteLine ("\tfor (int i = 0; i < 2; i++) {");
 				writer.WriteLine ("\t\t{0}{2}columns [i].a = {1}.columns [i] [0];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t\t{0}{2}columns [i].b = {1}.columns [i] [1];", managedVariable, nativeVariable, accessor);
@@ -2377,6 +2437,7 @@ namespace Xamarin.BindingMethods.Generator
 				}
 				break;
 			case "Matrix2":
+			case "MatrixFloat2x2":
 				writer.WriteLine ("\tfor (int i = 0; i < 2; i++) {");
 				writer.WriteLine ("\t\t{0}.columns [i][0] = {1}{2}columns [i].a;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t\t{0}.columns [i][1] = {1}{2}columns [i].b;", nativeVariable, managedVariable, accessor);
@@ -2907,6 +2968,15 @@ namespace Xamarin.BindingMethods.Generator
 				ManagedType = "Matrix2",
 				NativeType = "matrix_float2x2",
 				NativeWrapperType = "struct Matrix2f",
+				RequireMarshal = true,
+				IsARMStret = true,
+				IsX86Stret = true,
+				IsX64Stret = false,
+			};
+			public static TypeData MatrixFloat2x2 = new TypeData {
+				ManagedType = "MatrixFloat2x2",
+				NativeType = "matrix_float2x2",
+				NativeWrapperType = "struct MatrixFloat2x2",
 				RequireMarshal = true,
 				IsARMStret = true,
 				IsX86Stret = true,

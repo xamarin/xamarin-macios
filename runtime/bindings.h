@@ -158,6 +158,10 @@ struct Matrix2f {
 	Vector2f columns [2];
 };
 
+struct MatrixFloat2x2 {
+	Vector2f columns [2];
+};
+
 struct Matrix3f {
 	Vector3f columns [3];
 };

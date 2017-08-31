@@ -15,6 +15,8 @@ using MonoTouch.UIKit;
 using MonoTouch.ObjCRuntime;
 #endif
 using OpenTK;
+using Simd;
+using Bindings.Test;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.SpriteKit {
@@ -51,6 +53,27 @@ namespace MonoTouchFixtures.SpriteKit {
 				obj.RotationMatrix = Matrix3.Zero;
 				// In Swift, a rotated zero matrice also becomes the identity matrice.
 				Asserts.AreEqual (Matrix3.Identity, obj.RotationMatrix, "RotationMatrix");
+				// Changing XRotation (or YRotation for that matter), makes the RotationMatrix change too
+				obj.XRotation = (nfloat) (Math.PI / 2);
+				var rotatedMatrix = new MatrixFloat3x3 (
+					1, 0, 0,
+					0, 0, -1,
+					0, 1, 0
+				);
+				Asserts.AreEqual (rotatedMatrix, obj.RotationMatrix3x3, 0.000001f, "RotationMatrix3x3 a");
+				Asserts.AreEqual (rotatedMatrix, CFunctions.GetMatrixFloat3x3 (obj, "rotationMatrix"), 0.000001f, "RotationMatrix3x3 native a");
+				Asserts.AreEqual ((Matrix3) MatrixFloat3x3.Transpose (rotatedMatrix), obj.RotationMatrix, 0.000001f, "RotationMatrix a");
+
+				// Got this matrix after setting both XRotation and YRotation to Pi/2
+				rotatedMatrix = new MatrixFloat3x3 (
+					0, 1, 0,
+					0, 0, -1,
+					-1, 0, 0
+				);
+				obj.RotationMatrix3x3 = rotatedMatrix;
+				Asserts.AreEqual (rotatedMatrix, obj.RotationMatrix3x3, 0.000001f, "RotationMatrix3x3 b");
+				Assert.AreEqual ((nfloat) (Math.PI / 2), obj.XRotation, 0.000001f, "XRotation b");
+				Assert.AreEqual (0, obj.YRotation, 0.000001f, "YRotation b"); // Setting YRotation changes RotationMatrix, but setting RotationMatrix doesn't change YRotation.
 			}
 		}
 

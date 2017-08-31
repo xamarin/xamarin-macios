@@ -30,6 +30,7 @@ using Vector3 = global::OpenTK.Vector3;
 using Matrix2 = global::OpenTK.Matrix2;
 using Matrix3 = global::OpenTK.Matrix3;
 using Matrix4 = global::OpenTK.Matrix4;
+using Simd;
 using Vector4 = global::OpenTK.Vector4;
 using Quaternion = global::OpenTK.Quaternion;
 
@@ -1748,14 +1749,19 @@ namespace XamCore.SpriteKit {
 		IntPtr InitWithNameVectorFloat4 (string name, Vector4 value);
 #endif
 
+#if !XAMCORE_4_0
 		[Internal]
 		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatMatrix2:")]
 		IntPtr InitWithNameFloatMatrix2 (string name, Matrix2 value);
+#endif
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use the '(string, MatrixFloat2x2)' overload instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
+		[Sealed]
 		[Export ("initWithName:matrixFloat2x2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #if WATCH
@@ -1764,15 +1770,25 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		IntPtr InitWithNameMatrixFloat2x2 (string name, Matrix2 value);
 #endif
+#endif // !XAMCORE_4_0
 
+		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
+		[Export ("initWithName:matrixFloat2x2:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr Constructor (string name, MatrixFloat2x2 value);
+
+#if !XAMCORE_4_0
 		[Internal]
 		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatMatrix3:")]
 		IntPtr InitWithNameFloatMatrix3 (string name, Matrix3 value);
 
+		[Obsolete ("Use the '(string, MatrixFloat3x3)' overload instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
+		[Sealed]
 		[Export ("initWithName:matrixFloat3x3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #if WATCH
@@ -1781,16 +1797,28 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		IntPtr InitWithNameMatrixFloat3x3 (string name, Matrix3 value);
 #endif
+#endif
 
+		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
+		[Export ("initWithName:matrixFloat3x3:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr Constructor (string name, MatrixFloat3x3 value);
+
+#if !XAMCORE_4_0
 		[Internal]
 		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatMatrix4:")]
 		IntPtr InitWithNameFloatMatrix4 (string name, Matrix4 value);
+#endif
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use the '(string, MatrixFloat4x4)' overload instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Export ("initWithName:matrixFloat4x4:")]
+		[Sealed]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #if WATCH
 		IntPtr Constructor (string name, Matrix4 value);
@@ -1798,6 +1826,13 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		IntPtr InitWithNameMatrixFloat4x4 (string name, Matrix4 value);
 #endif
+#endif
+
+		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
+		[Export ("initWithName:matrixFloat4x4:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr Constructor (string name, MatrixFloat4x4 value);
 
 		[Export ("name")]
 		string Name { get; }
@@ -1868,59 +1903,92 @@ namespace XamCore.SpriteKit {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
+#if !XAMCORE_4_0
 		[Internal]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[NoWatch]
 		[Export ("floatMatrix2Value")]
 		Matrix2 _FloatMatrix2Value { get; set; }
+#endif
 
+#if !XAMCORE_4_0 && WATCH
+		[Obsolete ("Use 'MatrixFloat2x2Value' instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Export ("matrixFloat2x2Value", ArgumentSemantic.Assign)]
-#if WATCH
 		Matrix2 FloatMatrix2x2Value {
-#else
-		[Internal]
-		Matrix2 _MatrixFloat2x2Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
 #endif
+
+#if !XAMCORE_4_0 && WATCH
+		[Sealed] // The selector is already used in the 'FloatMatrix2x2Value' property.
+#endif
+		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
+		[Export ("matrixFloat2x2Value", ArgumentSemantic.Assign)]
+		MatrixFloat2x2 MatrixFloat2x2Value {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
+#if !XAMCORE_4_0
 		[Internal]
 		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("floatMatrix3Value")]
 		Matrix3 _FloatMatrix3Value { get; set; }
+#endif
 
+#if !XAMCORE_4_0 && WATCH
+		[Obsolete ("Use 'MatrixFloat3x3Value' instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Export ("matrixFloat3x3Value", ArgumentSemantic.Assign)]
-#if WATCH
 		Matrix3 FloatMatrix3x3Value {
-#else
-		[Internal]
-		Matrix3 _MatrixFloat3x3Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
 #endif
+
+#if !XAMCORE_4_0 && WATCH
+		[Sealed] // The selector is already used in the 'FloatMatrix3x3Value' property.
+#endif
+		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
+		[Export ("matrixFloat3x3Value", ArgumentSemantic.Assign)]
+		MatrixFloat3x3 MatrixFloat3x3Value {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
+#if !XAMCORE_4_0
 		[Internal]
 		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("floatMatrix4Value")]
 		Matrix4 _FloatMatrix4Value { get; set; }
+#endif
 
+#if !XAMCORE_4_0 && WATCH
+		[Obsolete ("Use 'FloatMatrix4x4Value' instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Export ("matrixFloat4x4Value", ArgumentSemantic.Assign)]
-#if WATCH
 		Matrix4 FloatMatrix4x4Value {
-#else
-		[Internal]
-		Matrix4 _MatrixFloat4x4Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
 #endif
+
+#if !XAMCORE_4_0 && WATCH
+		[Sealed] // The selector is already used in the 'FloatMatrix4x4Value' property.
+#endif
+		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
+		[Export ("matrixFloat4x4Value", ArgumentSemantic.Assign)]
+		MatrixFloat4x4 MatrixFloat4x4Value {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
@@ -1952,23 +2020,50 @@ namespace XamCore.SpriteKit {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, Vector4 value);
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use the '(string, MatrixFloat2x2)' overload instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[Static]
 		[Export ("uniformWithName:matrixFloat2x2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, Matrix2 value);
+#endif
 
+		[iOS (10,0)][Mac (10,12)]
+		[Static]
+		[Export ("uniformWithName:matrixFloat2x2:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		SKUniform Create (string name, MatrixFloat2x2 value);
+
+#if !XAMCORE_4_0
+		[Obsolete ("Use the '(string, MatrixFloat3x3)' overload instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[Static]
 		[Export ("uniformWithName:matrixFloat3x3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, Matrix3 value);
+#endif
 
+		[iOS (10,0)][Mac (10,12)]
+		[Static]
+		[Export ("uniformWithName:matrixFloat3x3:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		SKUniform Create (string name, MatrixFloat3x3 value);
+
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'the '(string, MatrixFloat4x4)' overload instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[Static]
 		[Export ("uniformWithName:matrixFloat4x4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, Matrix4 value);
+#endif
+
+		[iOS (10,0)][Mac (10,12)]
+		[Static]
+		[Export ("uniformWithName:matrixFloat4x4:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		SKUniform Create (string name, MatrixFloat4x4 value);
 	}
 
 	delegate void SKActionDurationHandler (SKNode node, nfloat elapsedTime);
@@ -3323,12 +3418,25 @@ namespace XamCore.SpriteKit {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'RotationMatrix3x3' instead.")]
 		[Export ("rotationMatrix")]
 		Matrix3 RotationMatrix {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
+#endif
 
+		[Export ("rotationMatrix")]
+#if XAMCORE_4_0
+		MatrixFloat3x3 RotationMatrix {
+#else
+		[Sealed]
+		MatrixFloat3x3 RotationMatrix3x3 {
+#endif
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
 		[Export ("quaternion")]
 		Quaternion Quaternion {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
