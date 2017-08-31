@@ -11403,11 +11403,12 @@ namespace XamCore.AVFoundation {
 	[DisableDefaultCtor]
 	interface AVAssetDownloadStorageManagementPolicy : NSCopying, NSMutableCopying
 	{
-		[Export ("priority")]
-		AVAssetDownloadedAssetEvictionPriority Priority { get; }
+		// Commented until rdar is fixed https://bugreport.apple.com/web/?problemID=34184435 
+		// [Export ("priority")]
+		// AVAssetDownloadedAssetEvictionPriority Priority { get; }
 
 		[Export ("expirationDate", ArgumentSemantic.Copy)]
-		NSDate ExpirationDate { get; }
+		NSDate ExpirationDate { get; [NotImplemented] set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (11,0)]
@@ -11415,8 +11416,9 @@ namespace XamCore.AVFoundation {
 	[DisableDefaultCtor]
 	interface AVMutableAssetDownloadStorageManagementPolicy
 	{
-		[Export ("priority")]
-		AVAssetDownloadedAssetEvictionPriority Priority { get; set; }
+		// Commented until rdar is fixed https://bugreport.apple.com/web/?problemID=34184435 
+		// [Export ("priority")]
+		// AVAssetDownloadedAssetEvictionPriority Priority { get; set; }
 
 		[Export ("expirationDate", ArgumentSemantic.Copy)]
 		NSDate ExpirationDate { get; set; }

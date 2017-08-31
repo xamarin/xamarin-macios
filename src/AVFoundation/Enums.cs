@@ -930,15 +930,17 @@ namespace XamCore.AVFoundation {
 		EncodedPixels = 2,
 	}
 
+	/*
 	// Enum values are present in header but missing rdar filed at: https://bugreport.apple.com/web/?problemID=34184435
 	[NoWatch, NoTV, NoMac, iOS (11, 0)]
 	public enum AVAssetDownloadedAssetEvictionPriority {
-		//[Field ("AVAssetDownloadedAssetEvictionPriorityDefault")]
+		[Field ("AVAssetDownloadedAssetEvictionPriorityDefault")]
 		Default = 0,
 
-		//[Field ("AVAssetDownloadedAssetEvictionPriorityImportant")]
+		[Field ("AVAssetDownloadedAssetEvictionPriorityImportant")]
 		Important = 1,
 	}
+	*/
 
 	[NoWatch, iOS (11, 0), TV (11,0), Mac (10,13)]
 	public enum AVAssetWriterInputMediaDataLocation {
