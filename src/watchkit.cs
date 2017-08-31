@@ -26,10 +26,12 @@ namespace XamCore.WatchKit {
 	[iOS (8,2)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // <quote>To use this class, subclass it</quote> 
-	// FIXME: that's not 100% obvious - OTOH beta2 crash if we call `init`
+	[DisableDefaultCtor] // DesignatedInitializer below
 	interface WKInterfaceController {
 
-		// `init` is now (beta 2) the designated initializer
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 
 		[Export ("awakeWithContext:")]
 		void Awake ([NullAllowed] NSObject context);
@@ -244,7 +246,12 @@ namespace XamCore.WatchKit {
 
 	[iOS (8,2)]
 	[BaseType (typeof (WKInterfaceController))]
+	[DisableDefaultCtor] // DesignatedInitializer below
 	interface WKUserNotificationInterfaceController {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'DidReceiveNotification' instead.")]
 		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'DidReceiveNotification' instead.")]
