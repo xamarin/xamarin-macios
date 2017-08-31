@@ -30,6 +30,8 @@ using MonoTouch.ModelIO;
 using MonoTouch.ObjCRuntime;
 #endif
 using OpenTK;
+using Simd;
+using Bindings.Test;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.ModelIO {
@@ -120,6 +122,31 @@ namespace MonoTouchFixtures.ModelIO {
 				obj.Rotation = V3;
 				Asserts.AreEqual (V3, obj.Rotation, "Rotation 2");
 			}
+
+			var m4 = new Matrix4 (
+				4, 0, 0, 0,
+				0, 3, 0, 0,
+				0, 0, 2, 0,
+				2, 3, 4, 1);
+			using (var obj = new MDLTransform (m4)) {
+				Asserts.AreEqual (Vector3.Zero, obj.Rotation, "Rotation 3");
+				Asserts.AreEqual (new Vector3 (4, 3, 2), obj.Scale, "Scale 3");
+				Asserts.AreEqual (new Vector3 (2, 3, 4), obj.Translation, "Translation 3");
+				Asserts.AreEqual (m4, obj.Matrix, 0.0001f, "Matrix 3");
+			}
+
+			var m4x4 = new MatrixFloat4x4 (
+				4, 0, 0, 2,
+				0, 3, 0, 3,
+				0, 0, 2, 4,
+				0, 0, 0, 1);
+			using (var obj = new MDLTransform (m4x4)) {
+				Asserts.AreEqual (Vector3.Zero, obj.Rotation, "Rotation 4");
+				Asserts.AreEqual (new Vector3 (4, 3, 2), obj.Scale, "Scale 4");
+				Asserts.AreEqual (new Vector3 (2, 3, 4), obj.Translation, "Translation 4");
+				Asserts.AreEqual (m4x4, obj.GetMatrix4x4 (), 0.0001f, "Matrix4x4 4");
+				Asserts.AreEqual (m4x4, CFunctions.GetMatrixFloat4x4 (obj, "matrix"), 0.0001f, "Matrix4x4-native 4");
+			}
 		}
 			
 		[Test]
@@ -155,6 +182,26 @@ namespace MonoTouchFixtures.ModelIO {
 			using (var obj = new MDLTransform (matrix)) {
 				obj.SetRotation (V3, 0);
 				Asserts.AreEqual (V3, obj.GetRotation (0), "RotationAtTime");
+			}
+		}
+
+		[Test]
+		public void GetRotationMatrixTest ()
+		{
+			var matrix = Matrix4.Identity;
+			var V3 = new Vector3 (1, 0, 0);
+
+			using (var obj = new MDLTransform (matrix)) {
+				obj.SetRotation (V3, 0);
+				var expected = new MatrixFloat4x4 (
+					1, 0, 0, 0,
+					0, (float) Math.Cos (1.0f), (float) -Math.Sin(1.0f), 0,
+					0, (float) Math.Sin (1.0f), (float) Math.Cos(1.0f), 0,
+					0, 0, 0, 1
+				);
+				Asserts.AreEqual ((Matrix4) MatrixFloat4x4.Transpose (expected), obj.GetRotationMatrix (0), 0.00001f, "GetRotationMatrix");
+				Asserts.AreEqual (expected, obj.GetRotationMatrix4x4 (0), 0.00001f, "GetRotationMatrix4x4");
+				Asserts.AreEqual (expected, CFunctions.MDLTransform_GetRotationMatrix (obj, 0), 0.00001f, "GetRotationMatrix4x4 native");
 			}
 		}
 	}

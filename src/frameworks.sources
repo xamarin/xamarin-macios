@@ -998,6 +998,8 @@ MODELIO_CORE_SOURCES = \
 MODELIO_SOURCES = \
 	ModelIO/MDLAsset.cs \
 	ModelIO/MDLNoiseTexture.cs \
+	ModelIO/MDLTransform.cs \
+	ModelIO/MDLTransformComponent.cs \
 	ModelIO/MDLVertexDescriptor.cs \
 	ModelIO/MDLMesh.cs \
 

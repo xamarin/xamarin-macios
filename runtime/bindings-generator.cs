@@ -2058,12 +2058,48 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
+					Comment = " // void func (MatrixFloat4x4)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.MatrixFloat4x4 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
 					Comment = " // IntPtr func (MatrixFloat4x4)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					ReturnType = Types.IntPtr,
 					Parameters = new ParameterData[]  {
 						new ParameterData { TypeData = Types.MatrixFloat4x4 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (MatrixFloat4x4, double)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.MatrixFloat4x4 },
+						new ParameterData { TypeData = Types.Double },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (MatrixFloat4x4, bool)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.MatrixFloat4x4 },
+						new ParameterData { TypeData = Types.Bool },
 					},
 				}
 			);
@@ -2080,6 +2116,20 @@ namespace Xamarin.BindingMethods.Generator
 				}
 			);
 
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, nuint, MatrixFloat4x4)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.NUInt },
+						new ParameterData { TypeData = Types.MatrixFloat4x4 },
+					},
+				}
+			);
 
 			data.Add (
 				new FunctionData {
@@ -2122,12 +2172,38 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
+					Comment = " // MatrixFloat4x4 func (double)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.MatrixFloat4x4,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Double },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
 					Comment = " // MatrixFloat4x4 func (nint)",
 					Prefix = "simd__",
 					Variants = Variants.All,
 					ReturnType = Types.MatrixFloat4x4,
 					Parameters = new ParameterData [] {
 						new ParameterData { TypeData = Types.NInt },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, nint, MatrixFloat4x4)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.NInt },
+						new ParameterData { TypeData = Types.MatrixFloat4x4 },
 					},
 				}
 			);
