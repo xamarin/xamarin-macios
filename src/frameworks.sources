@@ -1617,7 +1617,7 @@ MAC_FRAMEWORKS =            \
 	GLKit                   \
 	ImageIO                 \
 	ImageKit                \
-	Intents			\
+	Intents                 \
 	IOSurface 		\
 	JavaScriptCore          \
 	LocalAuthentication     \
@@ -1811,12 +1811,12 @@ TVOS_FRAMEWORKS =           \
 	StoreKit                \
 	SystemConfiguration     \
 	TVMLKit                 \
-	TVServices		\
+	TVServices				\
 	UIKit                   \
 	UserNotifications       \
 	VideoSubscriberAccount  \
 	VideoToolbox            \
-	Vision
+	Vision            \
 
 #
 # Compute the SOURCES variables.
