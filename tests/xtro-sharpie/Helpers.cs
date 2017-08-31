@@ -69,6 +69,7 @@ namespace Extrospection {
 			{ "WatchKitErrorCode", "WKErrorCode" }, // WebKit already had that name
 			// not enums
 			{ "NSMutableURLRequest", "NSMutableUrlRequest" },
+			{ "UIImagePickerControllerImageURLExportPreset", "UIImagePickerControllerImageUrlExportPreset" },
 		};
 
 		public static string GetManagedName (string nativeName)

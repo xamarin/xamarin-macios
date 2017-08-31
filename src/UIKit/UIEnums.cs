@@ -2000,6 +2000,7 @@ namespace XamCore.UIKit {
 		AlwaysHidden
 	}
 
+	[NoWatch]
 	[TV (11,0), iOS (11,0)]
 	[Native]
 	public enum UIScrollViewContentInsetAdjustmentBehavior : nint
@@ -2010,6 +2011,7 @@ namespace XamCore.UIKit {
 		Always
 	}
 	
+	[NoTV, NoWatch]
 	[iOS (11,0)]
 	[Native]
 	public enum UIAccessibilityContainerType : nint
@@ -2020,7 +2022,8 @@ namespace XamCore.UIKit {
 		Landmark
 	}
 	
-	[iOS (11,0)]
+	[NoWatch]
+	[iOS (11,0), TV (11,0)]
 	[Native]
 	public enum UITextSmartQuotesType : nint
 	{
@@ -2029,7 +2032,8 @@ namespace XamCore.UIKit {
 		Yes
 	}
 	
-	[iOS (11,0)]
+	[NoWatch]
+	[iOS (11,0), TV (11,0)]
 	[Native]
 	public enum UITextSmartDashesType : nint
 	{
@@ -2038,7 +2042,8 @@ namespace XamCore.UIKit {
 		Yes
 	}
 	
-	[iOS (11,0)]
+	[NoWatch]
+	[iOS (11,0), TV (11,0)]
 	[Native]
 	public enum UITextSmartInsertDeleteType : nint
 	{
@@ -2047,7 +2052,8 @@ namespace XamCore.UIKit {
 		Yes
 	}
 	
-	[iOS (11,0)]
+	[NoWatch]
+	[iOS (11,0), TV (11,0)]
 	[Native]
 	public enum UIAccessibilityCustomSystemRotorType : nint
 	{
@@ -2144,6 +2150,7 @@ namespace XamCore.UIKit {
 		Dragging
 	}
 	
+	[NoWatch]
 	[NoTV, iOS (11,0)]
 	[Native]
 	public enum UIImagePickerControllerImageUrlExportPreset : nint
@@ -2152,6 +2159,7 @@ namespace XamCore.UIKit {
 		Current
 	}
 	
+	[NoWatch]
 	[NoTV, iOS (11,0)]
 	[Native]
 	public enum UIContextualActionStyle : nint
@@ -2169,6 +2177,7 @@ namespace XamCore.UIKit {
 		Dragging
 	}
 	
+	[NoWatch]
 	[TV (11,0), iOS (11,0)]
 	[Native]
 	public enum UITableViewSeparatorInsetReference : nint
@@ -2187,6 +2196,7 @@ namespace XamCore.UIKit {
 		Automatic
 	}
 	
+	[NoWatch]
 	[TV (11,0), iOS (11,0)]
 	[Native]
 	public enum UISplitViewControllerPrimaryEdge : nint
@@ -2213,6 +2223,7 @@ namespace XamCore.UIKit {
 		Activated
 	}
 
+	[NoWatch]
 	[NoTV, iOS (11,0)]
 	[Native]
 	public enum UIDocumentBrowserImportMode : nuint
@@ -2222,6 +2233,7 @@ namespace XamCore.UIKit {
 		Move
 	}
 	
+	[NoWatch]
 	[NoTV, iOS (11,0)]
 	[Native]
 	public enum UIDocumentBrowserUserInterfaceStyle : nuint
@@ -2231,6 +2243,7 @@ namespace XamCore.UIKit {
 		Dark
 	}
 	
+	[NoWatch]
 	[NoTV, iOS (11,0)]
 	[Native]
 	[Flags]
