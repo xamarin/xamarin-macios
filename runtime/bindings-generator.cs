@@ -2006,6 +2006,17 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
+					Comment = " // void func (MatrixFloat3x3)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.MatrixFloat3x3 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
 					Comment = " // IntPtr func (MatrixFloat3x3)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
