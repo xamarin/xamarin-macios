@@ -312,7 +312,6 @@ CONTACTS_SOURCES = \
 	Contacts/CNContactStore.cs \
 	Contacts/CNInstantMessageAddress.cs \
 	Contacts/CNObsolete.cs \
-	Contacts/CNPostalAddress.cs \
 	Contacts/CNSocialProfile.cs \
 
 # CoreAnimation (this is really Quartz.framework)
@@ -634,6 +633,7 @@ FOUNDATION_CORE_SOURCES = \
 	Foundation/NSNumber.mac.cs \
 	Foundation/NSNumber2.cs \
 	Foundation/NSObject2.cs \
+	Foundation/NSProgress.cs \
 	Foundation/NSRange.cs \
 	Foundation/NSString.cs \
 	Foundation/NSValue.cs \
@@ -817,9 +817,7 @@ HOMEKIT_SOURCES = \
 	HomeKit/HMCharacteristicProperties.cs \
 	HomeKit/HMEventTrigger.cs \
 	HomeKit/HMHome.cs \
-	HomeKit/HMPresenceEvent.cs \
 	HomeKit/HMSignificantTimeEvent.cs \
-	HomeKit/HMMutablePresenceEvent.cs \
 	HomeKit/HMMutableSignificantTimeEvent.cs \
 	HomeKit/HMService.cs \
 
@@ -849,19 +847,37 @@ IMAGEKIT_CORE_SOURCES = \
 # Intents
 
 INTENTS_SOURCES = \
+	Intents/INBillTypeResolutionResult.cs \
+	Intents/INCallRecord.cs \
+	Intents/INCallRecordTypeResolutionResult.cs \
+	Intents/INCarAirCirculationModeResolutionResult.cs \
+	Intents/INCarAudioSourceResolutionResult.cs \
+	Intents/INCarDefrosterResolutionResult.cs \
+	Intents/INCarSignalOptionsResolutionResult.cs \
 	Intents/INCompat.cs \
 	Intents/INGetCarLockStatusIntentResponse.cs \
 	Intents/INGetCarPowerLevelStatusIntentResponse.cs \
 	Intents/INIntentResolutionResult.cs \
+	Intents/INInteraction.cs \
+	Intents/INMessageAttributeOptionsResolutionResult.cs \
+	Intents/INMessageAttributeResolutionResult.cs \
+	Intents/INPaymentStatusResolutionResult.cs \
 	Intents/INPriceRange.cs \
+	Intents/INRadioTypeResolutionResult.cs \
+	Intents/INRelativeReferenceResolutionResult.cs \
+	Intents/INRelativeSettingResolutionResult.cs \
 	Intents/INRideOption.cs \
+	Intents/INSaveProfileInCarIntent.cs \
+	Intents/INSearchCallHistoryIntent.cs \
 	Intents/INSetCarLockStatusIntent.cs \
 	Intents/INSetClimateSettingsInCarIntent.cs \
 	Intents/INSetDefrosterSettingsInCarIntent.cs \
 	Intents/INSetProfileInCarIntent.cs \
 	Intents/INSetSeatSettingsInCarIntent.cs \
+	Intents/INSpeakableString.cs \
 	Intents/INStartWorkoutIntent.cs \
-	Intents/INSaveProfileInCarIntent.cs \
+	Intents/INWorkoutGoalUnitTypeResolutionResult.cs \
+	Intents/INWorkoutLocationTypeResolutionResult.cs \
 
 # JavaScriptCore
 
@@ -1082,6 +1098,9 @@ OPENGLES_SOURCES = \
 
 PASSKIT_API_SOURCES = \
 	PassKit/PKEnums.cs \
+	
+PASSKIT_SOURCES = \
+	PassKit/PKPaymentRequest.cs	\
 
 # PdfKit
 
@@ -1554,8 +1573,10 @@ SHARED_SOURCES = \
 
 COMMON_FRAMEWORKS =         \
 	AVFoundation            \
+	CoreBluetooth           \
 	CoreFoundation          \
 	CoreML                  \
+	CoreVideo               \
 	Foundation              \
 	GameKit                 \
 	SceneKit                \
@@ -1575,7 +1596,6 @@ MAC_FRAMEWORKS =            \
 	ContactsUI              \
 	CoreAnimation           \
 	CoreAudioKit            \
-	CoreBluetooth           \
 	CoreData                \
 	CoreGraphics            \
 	CoreImage               \
@@ -1584,9 +1604,9 @@ MAC_FRAMEWORKS =            \
 	CoreMidi                \
 	CoreServices            \
 	CoreText                \
-	CoreVideo               \
 	CoreWlan                \
 	EventKit                \
+	ExternalAccessory 	\
 	FinderSync		\
 	GameController          \
 	GameplayKit             \
@@ -1648,7 +1668,6 @@ IOS_FRAMEWORKS =         \
 	ContactsUI \
 	CoreAnimation \
 	CoreAudioKit \
-	CoreBluetooth \
 	CoreData \
 	CoreGraphics \
 	CoreImage \
@@ -1660,7 +1679,6 @@ IOS_FRAMEWORKS =         \
 	CoreSpotlight \
 	CoreTelephony \
 	CoreText \
-	CoreVideo \
 	DeviceCheck \
 	EventKit \
 	EventKitUI \
@@ -1754,7 +1772,6 @@ TVOS_FRAMEWORKS =           \
 	CFNetwork               \
 	CloudKit                \
 	CoreAnimation           \
-	CoreBluetooth           \
 	CoreData                \
 	CoreGraphics            \
 	CoreImage               \
@@ -1762,7 +1779,6 @@ TVOS_FRAMEWORKS =           \
 	CoreMedia               \
 	CoreSpotlight			\
 	CoreText                \
-	CoreVideo               \
 	DeviceCheck             \
 	ExternalAccessory       \
 	GLKit                   \

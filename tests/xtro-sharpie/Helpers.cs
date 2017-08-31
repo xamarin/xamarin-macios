@@ -69,6 +69,7 @@ namespace Extrospection {
 			{ "WatchKitErrorCode", "WKErrorCode" }, // WebKit already had that name
 			// not enums
 			{ "NSMutableURLRequest", "NSMutableUrlRequest" },
+			{ "UIImagePickerControllerImageURLExportPreset", "UIImagePickerControllerImageUrlExportPreset" },
 		};
 
 		public static string GetManagedName (string nativeName)
@@ -165,7 +166,8 @@ namespace Extrospection {
 				sb.Append ('+');
 			sb.Append ((self.DeclContext as NamedDecl).Name);
 			sb.Append ("::");
-			sb.Append (self.Selector);
+			var sel = self.Selector.ToString ();
+			sb.Append (string.IsNullOrEmpty (sel) ? self.Name : sel);
 			return sb.ToString ();
 		}
 
@@ -186,6 +188,10 @@ namespace Extrospection {
 			} else {
 				foreach (var ca in self.CustomAttributes) {
 					if (ca.Constructor.DeclaringType.Name == "RegisterAttribute") {
+						if (ca.HasConstructorArguments)
+							return (ca.ConstructorArguments [0].Value as string);
+						return self.Name;
+					} else if (ca.Constructor.DeclaringType.Name == "ProtocolAttribute") {
 						if (ca.HasConstructorArguments)
 							return (ca.ConstructorArguments [0].Value as string);
 						return self.Name;

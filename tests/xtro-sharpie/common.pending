@@ -25,6 +25,10 @@
 !missing-selector! +NSPersistentStoreCoordinator::setMetadata:forPersistentStoreOfType:URL:options:error: not bound
 !missing-selector! +NSMappingModel::inferredMappingModelForSourceModel:destinationModel:error: not bound
 
+## https://trello.com/c/dlSRYPFx/92-33878590-missing-nsbinarystoresecuredecodingclasses-and-nsbinarystoreinsecuredecodingcompatibilityoption-constants-in-binaries
+!missing-field! NSBinaryStoreSecureDecodingClasses not bound
+!missing-field! NSBinaryStoreInsecureDecodingCompatibilityOption not bound
+
 
 # CoreGraphics
 
@@ -59,6 +63,12 @@
 
 ## xcode 8 beta 1-6 defines it but it does not exists in the binaries - rdar #28169810 https://trello.com/c/RwXK6YRX
 !missing-field! PHLivePhotoShouldRenderAtPlaybackTime not bound
+
+
+# ReplayKit
+
+## https://trello.com/c/eA440suj/91-33875315-rpbroadcasthandler-updatebroadcasturl-unrecognized-selector
+!missing-selector! RPBroadcastHandler::updateBroadcastURL: not bound
 
 
 # SpriteKit
@@ -636,6 +646,9 @@
 !missing-selector! INPerson::initWithHandle:nameComponents:contactIdentifier: not bound
 !missing-selector! INPerson::initWithHandle:nameComponents:displayName:image:contactIdentifier: not bound
 
+## Apple made this @optional in iOS 11 but this is a breaking change
+!incorrect-protocol-member! INSpeakable::identifier is OPTIONAL and should NOT be abstract
+
 # GameplayKit
 
 ## Fixed in XAMCORE_4_0
@@ -662,3 +675,10 @@
 !missing-selector! MLFeatureDescription::setDictionaryConstraint: not bound
 !missing-selector! MLFeatureDescription::setImageConstraint: not bound
 !missing-selector! MLFeatureDescription::setMultiArrayConstraint: not bound
+
+
+# WekKit
+
+## 34185961 The header WKSnapshotConfiguration.h is not included inside the umbrella WebKit.h
+!unknown-type! WKSnapshotConfiguration bound
+

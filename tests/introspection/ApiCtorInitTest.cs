@@ -358,6 +358,15 @@ namespace Introspection {
 #endif
 					return true;
 				break;
+			case "VNTargetedImageRequest": // Explicitly disabled
+				if (ctor.ToString () == "Void .ctor(VNRequestCompletionHandler)")
+					return true;
+				break;
+			case "PKPaymentRequestShippingContactUpdate":
+				// a more precise designated initializer is provided
+				if (ctor.ToString () == "Void .ctor(PKPaymentSummaryItem[])")
+					return true;
+				break;
 			}
 
 			var ep = ctor.GetParameters ();

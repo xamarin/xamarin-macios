@@ -1894,7 +1894,15 @@ namespace XamCore.CoreData
 #endif	
 		[Field ("NSBinaryStoreType")]
 		NSString BinaryStoreType { get; }
-		
+
+		[Watch (4,0)][TV (11,0)][Mac (10,13)][iOS (11,0)]
+		[Field ("NSBinaryStoreSecureDecodingClasses")]
+		NSString BinaryStoreSecureDecodingClasses { get; }
+
+		[Watch (4,0)][TV (11,0)][Mac (10,13)][iOS (11,0)]
+		[Field ("NSBinaryStoreInsecureDecodingCompatibilityOption")]
+		NSString BinaryStoreInsecureDecodingCompatibilityOption { get; }
+
 		[Field ("NSInMemoryStoreType")]
 		NSString InMemoryStoreType { get; }
 

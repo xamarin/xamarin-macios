@@ -105,6 +105,20 @@ typedef struct {
     vector_float3 points[3];
 } GKTriangle;
 
+typedef struct
+{
+    NSUInteger      numberOfHistogramEntries;
+    BOOL            histogramForAlpha;
+    vector_float4   minPixelValue;
+    vector_float4   maxPixelValue;
+} MPSImageHistogramInfo;
+
+typedef vector_int4 MDLVoxelIndex;
+typedef struct {
+    MDLVoxelIndex minimumExtent;
+    MDLVoxelIndex maximumExtent;
+} MDLVoxelIndexExtent;
+
 /*
  * iOS has a vector type (vector_float3) which can't be expressed
  * in P/Invoke signatures, so we need custom wrappers.
@@ -174,6 +188,32 @@ struct GKQuadWrapper {
 struct GKTriangleWrapper {
 	Vector3f points [3];
 };
+
+struct MPSImageHistogramInfoWrapper {
+	NSUInteger numberOfHistogramEntries;
+	BOOL histogramForAlpha;
+	// The minPixelValue field starts at offset 16, but we can't use
+	// __attribute__ ((aligned (16))), because that will make clang align the
+	// entire struct on a 16-byte boundary, which doesn't match how we've
+	// defined it in managed code (explicit layout, but no specific alignment).
+	// So we need to manually pad the struct to match the managed definition.
+#if defined (__x86_64__) || defined (__arm64__)
+	uint8_t dummy[7];
+#else
+	uint8_t dummy[11];
+#endif
+	Vector4f minPixelValue;
+	Vector4f maxPixelValue;
+};
+
+typedef Vector4i MDLVoxelIndexWrapper;
+
+struct MDLVoxelIndexExtentWrapper {
+    MDLVoxelIndexWrapper minimumExtent;
+    MDLVoxelIndexWrapper maximumExtent;
+};
+
+static_assert (sizeof (MPSImageHistogramInfoWrapper) == sizeof (MPSImageHistogramInfo), "Sizes aren't equal");
 
 struct Vector4f  xamarin_vector_float3__Vector4_objc_msgSend (id self, SEL sel);
 void             xamarin_vector_float3__Vector4_objc_msgSend_stret (struct Vector4f *v4, id self, SEL sel);

@@ -162,10 +162,15 @@ namespace XamCore.Photos
 		SmartAlbumSelfPortraits = 210,
 		[iOS (9,0)]
 		SmartAlbumScreenshots   = 211,
-		[iOS (10,2), TV (10,1)]
+		[iOS (10,2), TV (10,1)][Mac (10,13, onlyOn64 : true)]
 		SmartAlbumDepthEffect   = 212,
-		[iOS (10,3), TV (10,2)]
+		[iOS (10,3), TV (10,2)][Mac (10,13, onlyOn64 : true)]
 		SmartAlbumLivePhotos = 213,
+		[iOS (11,0)][TV(11,0)][NoMac]
+		SmartAlbumAnimated = 214,
+		[iOS (11,0)][TV(11,0)][NoMac]
+		SmartAlbumLongExposures = 215,
+
 #if XAMCORE_2_0
 		Any           = Int64.MaxValue
 #else

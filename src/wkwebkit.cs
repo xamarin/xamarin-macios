@@ -316,7 +316,7 @@ namespace XamCore.WebKit
 #if XAMCORE_2_0
 	interface IWKUrlSchemeHandler {}
 	[Mac (10,13), iOS (11,0)]
-	[Protocol]
+	[Protocol (Name = "WKURLSchemeHandler")]
 	interface WKUrlSchemeHandler
 	{
 		[Abstract]
@@ -331,7 +331,7 @@ namespace XamCore.WebKit
 	interface IWKUrlSchemeTask {}
 
 	[Mac (10,13), iOS (11,0)]
-	[Protocol]
+	[Protocol (Name = "WKURLSchemeTask")]
 	interface WKUrlSchemeTask
 	{
 		[Abstract]

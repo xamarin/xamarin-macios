@@ -2070,7 +2070,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[BaseType (typeof (NSControl))]
-	interface NSButton : NSAccessibilityButton, NSUserInterfaceCompression {
+	interface NSButton : NSAccessibilityButton {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
@@ -13646,7 +13646,7 @@ namespace XamCore.AppKit {
 	[Mac (10,12,2)]
 	[BaseType (typeof(NSTouchBarItem))]
 	[DisableDefaultCtor]
-	interface NSSliderTouchBarItem : NSUserInterfaceCompression
+	interface NSSliderTouchBarItem
 	{
 		[Export ("initWithIdentifier:")]
 		[DesignatedInitializer]

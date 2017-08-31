@@ -415,6 +415,13 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "INSpeakableString":
+				switch (selectorName) {
+				case "initWithVocabularyIdentifier:spokenPhrase:pronunciationHint:":
+				case "initWithIdentifier:spokenPhrase:pronunciationHint:":
+					return true;
+				}
+				break;
 			}
 
 			// old binding mistake

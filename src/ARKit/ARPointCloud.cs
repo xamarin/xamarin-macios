@@ -20,7 +20,20 @@ namespace XamCore.ARKit {
 			get {
 				var count = (int)Count;
 				var rv = new Vector3 [count];
-				var ptr = (Vector3*)_GetPoints ();
+				var ptr = GetRawPoints ();
+				for (int i = 0; i < count; i++) {
+					rv [i] = *(Vector3 *) ptr;
+					ptr += 16; // 3 floats + 1 padding float = 16 bytes
+				}
+				return rv;
+			}
+		}
+
+		public unsafe ulong [] Identifiers {
+			get {
+				var count = (int)Count;
+				var rv = new ulong [count];
+				var ptr = (ulong*)GetRawIdentifiers ();
 				for (int i = 0; i < count; i++)
 					rv [i] = *ptr++;
 				return rv;

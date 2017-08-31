@@ -1272,38 +1272,38 @@ namespace XamCore.PdfKit {
 		Type PageType { get; }
 
 		[Export ("findString:withOptions:")]
-#if !XAMCORE_4_0
+#if MONOMAC && !XAMCORE_4_0
 		[Obsolete ("Use 'Find (string, NSStringCompareOptions)' instead.")]
 		PdfSelection [] Find (string text, nint options);
 
-		[Wrap ("Find (text: text, options: (nint) (int) compareOptions)")]
+		[Wrap ("Find (text: text, options: (nint) (int) compareOptions)", IsVirtual = true)]
 #endif
 		PdfSelection [] Find (string text, NSStringCompareOptions compareOptions);
 
 		[Export ("beginFindString:withOptions:")]
-#if !XAMCORE_4_0
+#if MONOMAC && !XAMCORE_4_0
 		[Obsolete ("Use 'FindAsync (string, NSStringCompareOptions)' instead.")]
 		void FindAsync (string text, nint options);
 
-		[Wrap ("FindAsync (text: text, options: (nint) (int) compareOptions)")]
+		[Wrap ("FindAsync (text: text, options: (nint) (int) compareOptions)", IsVirtual = true)]
 #endif
 		void FindAsync (string text, NSStringCompareOptions compareOptions);
 
 		[Export ("beginFindStrings:withOptions:")]
-#if !XAMCORE_4_0
+#if MONOMAC && !XAMCORE_4_0
 		[Obsolete ("Use 'FindAsync (string [], NSStringCompareOptions)' instead.")]
 		void FindAsync (string [] text, nint options);
 
-		[Wrap ("FindAsync (text: text, options: (nint) (int) compareOptions)")]
+		[Wrap ("FindAsync (text: text, options: (nint) (int) compareOptions)", IsVirtual = true)]
 #endif
 		void FindAsync (string [] text, NSStringCompareOptions compareOptions);
 
 		[Export ("findString:fromSelection:withOptions:")]
-#if !XAMCORE_4_0
+#if MONOMAC && !XAMCORE_4_0
 		[Obsolete ("Use 'Find (string, PdfSelection, NSStringCompareOptions)' instead.")]
 		PdfSelection Find (string text, PdfSelection selection, nint options);
 
-		[Wrap ("Find (text: text, selection: selection, options: (nint) (int) compareOptions)")]
+		[Wrap ("Find (text: text, selection: selection, options: (nint) (int) compareOptions)", IsVirtual = true)]
 #endif
 		PdfSelection Find (string text, PdfSelection selection, NSStringCompareOptions compareOptions);
 

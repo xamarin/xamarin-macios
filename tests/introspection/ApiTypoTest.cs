@@ -98,8 +98,10 @@ namespace Introspection
 			"Automounted",
 			"Autoredirect",
 			"Aliasable",
+			"Arcball",
 			"Backface",
-			"Bancaire",
+			"Bancaire", // french
+			"Bancaires", // french
 			"Bary",
 			"Batc",
 			"Bim",
@@ -274,6 +276,7 @@ namespace Introspection
 			"Mtc", // acronym
 			"Mul",
 			"Mult",
+			"Multipath",
 			"Multipeer",
 			"Muxed",
 			"Nanograms",
@@ -320,6 +323,7 @@ namespace Introspection
 			"Preseti",
 			"Propogate",
 			"Psec",
+			"Psm", // Protocol/Service Multiplexer
 			"Pvrtc", // MTLBlitOption - PowerVR Texture Compression
 			"Quaterniond",
 			"Quadding",
@@ -409,6 +413,7 @@ namespace Introspection
 			"Unpremultiplying",
 			"Unprepare",
 			"Unproject",
+			"Unpublish",
 			"Uterance",
 			"Unentitled",
 			"Untrash",

@@ -12,11 +12,8 @@
 using System;
 using XamCore.ObjCRuntime;
 using XamCore.CoreFoundation;
-using XamCore.Foundation;
-
-#if !WATCH
 using XamCore.CoreVideo;
-#endif
+using XamCore.Foundation;
 
 namespace XamCore.CoreML {
 
@@ -78,19 +75,14 @@ namespace XamCore.CoreML {
 
 		// Category MLFeatureDescription (MLFeatureValueConstraints)
 
-		// HACK: radar://33643011 -> https://trello.com/c/ZN712GOi
-
-		// [FAIL] Selector not found for CoreML.MLFeatureDescription : setMultiArrayConstraint:
 		[NullAllowed, Export ("multiArrayConstraint", ArgumentSemantic.Assign)]
-		MLMultiArrayConstraint MultiArrayConstraint { get; /*set;*/ }
+		MLMultiArrayConstraint MultiArrayConstraint { get; }
 
-		// [FAIL] Selector not found for CoreML.MLFeatureDescription : setImageConstraint:
 		[NullAllowed, Export ("imageConstraint", ArgumentSemantic.Assign)]
-		MLImageConstraint ImageConstraint { get; /*set;*/ }
+		MLImageConstraint ImageConstraint { get; }
 
-		// [FAIL] Selector not found for CoreML.MLFeatureDescription : setDictionaryConstraint:
 		[NullAllowed, Export ("dictionaryConstraint", ArgumentSemantic.Assign)]
-		MLDictionaryConstraint DictionaryConstraint { get; /*set;*/ }
+		MLDictionaryConstraint DictionaryConstraint { get; }
 	}
 
 	interface IMLFeatureProvider { }
@@ -134,14 +126,13 @@ namespace XamCore.CoreML {
 		[Export ("dictionaryValue")]
 		NSDictionary<NSObject, NSNumber> DictionaryValue { get; }
 
-#if !WATCH // TODO: Enable once CoreVideo's CVPixelBuffer is enabled on watch profile https://bugzilla.xamarin.com/show_bug.cgi?id=58097
 		[NullAllowed, Export ("imageBufferValue")]
 		CVPixelBuffer ImageBufferValue { get; }
 
 		[Static]
 		[Export ("featureValueWithPixelBuffer:")]
 		MLFeatureValue FromPixelBuffer (CVPixelBuffer value);
-#endif
+
 		[Static]
 		[Export ("featureValueWithInt64:")]
 		MLFeatureValue FromInt64 (long value);
@@ -239,6 +230,9 @@ namespace XamCore.CoreML {
 
 		[Field ("MLModelLicenseKey")]
 		NSString LicenseKey { get; }
+
+		[Field ("MLModelCreatorDefinedKey")]
+		NSString CreatorDefinedKey { get; }
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -248,6 +242,7 @@ namespace XamCore.CoreML {
 		string VersionString { get; }
 		string Author { get; }
 		string License { get; }
+		string CreatorDefined { get; }
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
