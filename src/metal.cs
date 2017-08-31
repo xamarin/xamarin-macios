@@ -2220,11 +2220,11 @@ namespace XamCore.Metal {
 		[Export ("renderTargetArrayLength")]
 		nuint RenderTargetArrayLength { get; set; }
 
-		[Mac (10,13)]
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
 		[Export ("setSamplePositions:count:")]
 		unsafe void SetSamplePositions ([NullAllowed] IntPtr positions, nuint count);
 
-		[Mac (10,13)]
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
 		[Export ("getSamplePositions:count:")]
 		nuint GetSamplePositions ([NullAllowed] IntPtr positions, nuint count);
 	}

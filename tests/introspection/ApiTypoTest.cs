@@ -104,6 +104,7 @@ namespace Introspection
 			"Bancaires", // french
 			"Bary",
 			"Batc",
+			"Bgra", // acrnym for Blue, Green, Red, Alpha
 			"Bim",
 			"Biquad",
 			"Bitangent",
