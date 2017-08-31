@@ -1895,7 +1895,6 @@ namespace XamCore.CoreData
 		[Field ("NSBinaryStoreType")]
 		NSString BinaryStoreType { get; }
 
-#if false // https://trello.com/c/dlSRYPFx/92-33878590-missing-nsbinarystoresecuredecodingclasses-and-nsbinarystoreinsecuredecodingcompatibilityoption-constants-in-binaries
 		[Watch (4,0)][TV (11,0)][Mac (10,13)][iOS (11,0)]
 		[Field ("NSBinaryStoreSecureDecodingClasses")]
 		NSString BinaryStoreSecureDecodingClasses { get; }
@@ -1903,7 +1902,6 @@ namespace XamCore.CoreData
 		[Watch (4,0)][TV (11,0)][Mac (10,13)][iOS (11,0)]
 		[Field ("NSBinaryStoreInsecureDecodingCompatibilityOption")]
 		NSString BinaryStoreInsecureDecodingCompatibilityOption { get; }
-#endif
 
 		[Field ("NSInMemoryStoreType")]
 		NSString InMemoryStoreType { get; }
