@@ -327,6 +327,8 @@
 ## exception name, not clear if useful
 !missing-field! UIApplicationInvalidInterfaceOrientationException not bound
 
+## fixed for XAMCORE_4_0
+!incorrect-protocol-member! UIDocumentPickerDelegate::documentPicker:didPickDocumentAtURL: is OPTIONAL and should NOT be abstract
 
 # WatchKit
 
