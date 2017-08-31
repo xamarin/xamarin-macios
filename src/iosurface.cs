@@ -109,7 +109,6 @@ namespace XamCore.IOSurface {
 		bool PixelSizeCastingAllowed { get; set; }
 	}
 
-	// @interface IOSurface : NSObject <NSSecureCoding>
 	[iOS (10,0), Mac(10,12)]
 	[BaseType (typeof(NSObject))]
 	interface IOSurface : NSSecureCoding
