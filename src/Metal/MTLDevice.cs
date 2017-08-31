@@ -86,7 +86,7 @@ namespace XamCore.Metal {
 			var descriptor = (BlockLiteral*) block;
 			var del = (MTLDeviceNotificationHandler) (descriptor->Target);
 			if (del != null)
-				del (device == IntPtr.Zero ? null : (IMTLDevice) Runtime.GetNSObject (device), notifyName == IntPtr.Zero ? null : (XamCore.Foundation.NSString) Runtime.GetNSObject (notifyName));
+				del ((IMTLDevice) Runtime.GetNSObject (device), (XamCore.Foundation.NSString) Runtime.GetNSObject (notifyName));
 		}
 
 		[Mac (10, 13, onlyOn64: true), NoiOS, NoWatch, NoTV]

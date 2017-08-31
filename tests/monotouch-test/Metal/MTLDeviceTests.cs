@@ -16,7 +16,7 @@ namespace MonoTouchFixtures.Metal {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertXcodeVersion (8, 0);
+			TestRuntime.AssertXcodeVersion (9, 0);
 		}
 
 		[Test]

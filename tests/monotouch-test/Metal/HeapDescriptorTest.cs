@@ -21,11 +21,13 @@ namespace MonoTouchFixtures.Metal {
 		[SetUp]
 		public void SetUp ()
 		{
+#if !MONOMAC
 			TestRuntime.AssertXcodeVersion (8, 0);
 
-#if !MONOMAC
 			if (Runtime.Arch == Arch.SIMULATOR)
 				Assert.Ignore ("Type is missing on the simulator");
+#else
+			TestRuntime.AssertXcodeVersion (9, 0);
 #endif
 			hd = new MTLHeapDescriptor ();
 		}
