@@ -213,6 +213,10 @@ namespace Introspection {
 			case "AudioUnit":
 				libname = "AudioToolbox";
 				break;
+			case "IOSurface":
+				if (!TestRuntime.CheckXcodeVersion (9, 0))
+					prefix = Path.Combine (Path.GetDirectoryName (prefix), "PrivateFrameworks");
+				break;
 #endif
 			case "CoreAnimation":
 				// generated code uses QuartzCore correctly - even if the [Field] property is wrong

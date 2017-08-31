@@ -115,7 +115,15 @@ namespace MonoTouch {
 		public const string VisionLibrary = "/System/Library/Frameworks/Vision.framework/Vision";
 		public const string FileProviderLibrary = "/System/Library/Frameworks/FileProvider.framework/FileProvider";
 		public const string FileProviderUILibrary = "/System/Library/Frameworks/FileProviderUI.framework/FileProviderUI";
-		public const string IOSurfaceLibrary = "/System/Library/Frameworks/IOSurface.framework/IOSurface";
+		public static string IOSurfaceLibrary {
+			get {
+#if !COREBUILD && !MTOUCH
+				if (!XamCore.UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
+					return "/System/Library/PrivateFrameworks/IOSurface.framework/IOSurface";
+#endif
+				return "/System/Library/Frameworks/IOSurface.framework/IOSurface";
+			}
+		}
 		public const string PdfKitLibrary = "/System/Library/Frameworks/PDFKit.framework/PDFKit";
 	}
 }
