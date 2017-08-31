@@ -854,7 +854,7 @@ namespace XamCore.AVFoundation {
 	[Native]
 	public enum AVDepthDataAccuracy : nint {
 		Relative = 0,
-		Absolute = 1
+		Absolute = 1,
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
@@ -930,12 +930,13 @@ namespace XamCore.AVFoundation {
 		EncodedPixels = 2,
 	}
 
+	// Enum values are present in header but missing rdar filed at: https://bugreport.apple.com/web/?problemID=34184435
 	[NoWatch, NoTV, NoMac, iOS (11, 0)]
 	public enum AVAssetDownloadedAssetEvictionPriority {
-		[Field ("AVAssetDownloadedAssetEvictionPriorityDefault")]
+		//[Field ("AVAssetDownloadedAssetEvictionPriorityDefault")]
 		Default = 0,
 
-		[Field ("AVAssetDownloadedAssetEvictionPriorityImportant")]
+		//[Field ("AVAssetDownloadedAssetEvictionPriorityImportant")]
 		Important = 1,
 	}
 

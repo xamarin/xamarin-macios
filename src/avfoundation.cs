@@ -1354,7 +1354,8 @@ namespace XamCore.AVFoundation {
 
 	}	
 	
-	// AudioBufferList is binded as AudioBuffers which is present in AudioToolbox which is not present on the watch. TODO.
+	// AudioBufferList is binded as AudioBuffers which is present in AudioToolbox which is not present on the watch. bug filled: 
+	// https://bugzilla.xamarin.com/show_bug.cgi?id=59145
 	[Watch (4,0), TV (11,0), Mac (10,10), iOS (8,0)]
 	delegate IntPtr AVAudioIONodeInputBlock (uint frameCount);
 
@@ -2803,13 +2804,13 @@ namespace XamCore.AVFoundation {
 		AVAssetTrack [] TracksWithMediaType (string mediaType);
 
 		[Wrap ("TracksWithMediaType (mediaType.GetConstant ())")]
-		AVAssetTrack [] GetTracksWithMediaType (AVMediaTypes mediaType);
+		AVAssetTrack [] GetTracks (AVMediaTypes mediaType);
 
 		[Export ("tracksWithMediaCharacteristic:")]
 		AVAssetTrack [] TracksWithMediaCharacteristic (string mediaCharacteristic);
 
 		[Wrap ("TracksWithMediaType (mediaCharacteristic.GetConstant ())")]
-		AVAssetTrack [] GetTracksWithMediaCharacteristic (AVMediaCharacteristics mediaCharacteristic);
+		AVAssetTrack [] GetTracks (AVMediaCharacteristics mediaCharacteristic);
 
 		[Export ("lyrics"), NullAllowed]
 		string Lyrics { get;  }
@@ -11418,7 +11419,7 @@ namespace XamCore.AVFoundation {
 		AVAssetDownloadedAssetEvictionPriority Priority { get; set; }
 
 		[Export ("expirationDate", ArgumentSemantic.Copy)]
-		NSDate ExpirationDate { get; [NotImplemented] set; }
+		NSDate ExpirationDate { get; set; }
 	}
 
 	[NoWatch]
