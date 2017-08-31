@@ -271,6 +271,9 @@ namespace Extrospection
 			if (!method.HasBody)
 				return;
 
+			if (method.IsObsolete ())
+				return;
+
 			// The [MarshalDirective] attribute isn't copied to the generated code,
 			// so instead apply some heuristics and detect calls to the xamarin_simd__ P/Invoke,
 			// and if there are any, then assume the method binding has a [MarshalDirective].
