@@ -132,6 +132,7 @@ namespace Introspection
 			"Conflictserror",
 			"Connnect",
 			"Counterclock",
+			"Copyback",
 			"Craete",
 			"Crosstraining",
 			"Cubemap",
