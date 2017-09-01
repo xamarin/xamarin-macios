@@ -13,6 +13,12 @@
 !missing-pinvoke! NSDataFromGCMicroGamepadSnapShotDataV100 is not bound
 
 
+# SpriteKit
+
+## This enum is not used in macOS API so it makes not sense to expose it
+!missing-enum! SKNodeFocusBehavior not bound
+
+
 # fixed in XAMCORE_3_0
 
 ## 8a6099b8027fa8e1ad1e032c731c7f750619303e
