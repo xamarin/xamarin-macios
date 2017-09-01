@@ -163,6 +163,10 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (9, 0);
 				}
 				break;
+			case "MTLCaptureManager":
+				if (Runtime.Arch == Arch.SIMULATOR)
+					return true;
+				break;
 			}
 #endif
 			// This ctors needs to be manually bound

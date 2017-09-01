@@ -2489,11 +2489,9 @@ namespace XamCore.Metal {
 	[DisableDefaultCtor]
 	interface MTLCaptureManager
 	{
-#if MONOMAC // Radar #34208590 MTLCaptureManager sharedCaptureManager not available on iOS or tvOS
 		[Static]
 		[Export ("sharedCaptureManager")]
 		MTLCaptureManager Shared { get; }
-#endif
 
 		[Export ("newCaptureScopeWithDevice:")]
 		IMTLCaptureScope CreateNewCaptureScope (IMTLDevice device);
