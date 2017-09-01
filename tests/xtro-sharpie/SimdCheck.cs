@@ -125,7 +125,7 @@ namespace Extrospection
 
 				if (contains_simd_types && very_strict) {
 					// We can't map this method to a native function.
-					Console.WriteLine ($"!simd-can't-map-managed! {method}");
+					Console.WriteLine ($"!missing-simd-native-signature! {method}");
 				}
 				return;
 			}
@@ -133,7 +133,7 @@ namespace Extrospection
 			ManagedSimdInfo existing;
 			if (managed_methods.TryGetValue (key, out existing)) {
 				if (very_strict)
-					Console.WriteLine ($"!simd-double-mapping! same key '{key}' for both '{existing.Method}' and '{method}'");
+					Console.WriteLine ($"!duplicate-type-mapping! same key '{key}' for both '{existing.Method}' and '{method}'");
 			} else {
 				managed_methods [key] = new ManagedSimdInfo {
 					Method = method, ContainsInvalidMappingForSimd = invalid_simd_type
@@ -359,7 +359,7 @@ namespace Extrospection
 					return;
 				if (!strict)
 					return;
-				Console.WriteLine ($"!simd-can't-map-native! {decl}: could not find a managed method for the native method {decl.GetName ()} (selector: {decl.Selector}). Found the simd type '{simd_type}' in the native signature.");
+				Console.WriteLine ($"!missing-simd-managed-method! {decl}: could not find a managed method for the native method {decl.GetName ()} (selector: {decl.Selector}). Found the simd type '{simd_type}' in the native signature.");
 				return;
 			}
 
