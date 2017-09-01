@@ -444,7 +444,7 @@ namespace XamCore.Intents {
 		FailurePaymentsCurrencyUnsupported,
 		FailureNoBankAccount,
 		[iOS (11,0), Watch (4,0)]
-		NotEligible,
+		FailureNotEligible,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2509,7 +2509,12 @@ namespace XamCore.Intents {
 	[Introduced (PlatformName.WatchOS, 3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (INIntent))]
+	[DisableDefaultCtor] // DesignatedInitializer below
 	interface INGetRideStatusIntent {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
