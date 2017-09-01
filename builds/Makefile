@@ -2210,6 +2210,8 @@ $(eval $(call GenerateCrossOffsets,aarch64-apple-darwin10,$(TOP)/builds/crosstv/
 	$(MAKE) -C crosstv/mono install
 	$(Q) touch $@
 
+build-crosstv: .stamp-build-crosstv
+
 TV_WATCH_TARGETS = \
 	$(PREFIX)/bin/aarch64-unknown-darwin-mono-sgen  \
 
@@ -2221,6 +2223,6 @@ $(PREFIX)/bin/aarch64-unknown-darwin-mono-sgen: $(BUILD_DESTDIR)/crosstv/bin/aar
 install-crosstv: install-llvm $(TV_WATCH_TARGETS)
 
 clean-crosstv:
-	-rm -rf crosstv .stamp-configure-crosstv crosstv.config.cache
+	-rm -rf crosstv .stamp-configure-crosstv .stamp-build-crosstv crosstv.config.cache
 
 crosstv: build-crosstv install-crosstv
