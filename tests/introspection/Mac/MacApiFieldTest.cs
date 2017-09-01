@@ -160,7 +160,7 @@ namespace Introspection {
 			}
 		}
 
-		protected override bool Skip (string constantName)
+		protected override bool Skip (string constantName, string libraryName)
 		{
 			switch (constantName) {
 			case "CBUUIDValidRangeString":
@@ -183,7 +183,7 @@ namespace Introspection {
 					return true;
 				goto default;
 			default:
-				return base.Skip (constantName);
+				return base.Skip (constantName, libraryName);
 			}
 		}
 
