@@ -119,6 +119,7 @@ namespace XamCore.SpriteKit {
 	}
 
 
+	[DisableDefaultCtor] // DesignatedInitializer below
 #if MONOMAC
 	[Mac (10,9, onlyOn64 : true)]
 	[BaseType (typeof (NSResponder))]
@@ -132,6 +133,10 @@ namespace XamCore.SpriteKit {
 	[BaseType (typeof (NSObject))]
 	partial interface SKNode : NSCoding, NSCopying {
 #endif
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Static, Export ("node")]
 		SKNode Create ();
 
@@ -321,11 +326,13 @@ namespace XamCore.SpriteKit {
 		[Export ("obstaclesFromSpriteTextures:accuracy:")]
 		GKPolygonObstacle[] ObstaclesFromSpriteTextures (SKNode[] sprites, float accuracy);
 
+#if !XAMCORE_4_0
+		[Deprecated (PlatformName.iOS, 10,0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[iOS (9,0),Mac(10,11)]
 		[Export ("attributeValues", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
 
-#if !XAMCORE_4_0
 		[Deprecated (PlatformName.iOS, 10,0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[iOS (9,0),Mac(10,11)]
@@ -409,7 +416,10 @@ namespace XamCore.SpriteKit {
 		[Export ("shader", ArgumentSemantic.Retain)]
 		SKShader Shader { get; set; }
 
-#if XAMCORE_4_0
+		[iOS (9,0),Mac(10,11)]
+		[Export ("attributeValues", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
+
 		[iOS (9,0), Mac(10,11)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
@@ -418,7 +428,6 @@ namespace XamCore.SpriteKit {
 		[iOS (9,0), Mac(10,11)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
-#endif
 	}
 
 	delegate Vector3 SKFieldForceEvaluator (/* vector_float3 */ Vector4 position, /* vector_float3 */ Vector4 velocity, float /* float, not CGFloat */ mass, float /* float, not CGFloat */ charge, double time);
@@ -758,7 +767,10 @@ namespace XamCore.SpriteKit {
 		[Export ("scaleToSize:")]
 		void ScaleTo (CGSize size);
 
-#if XAMCORE_4_0
+		[iOS (9,0),Mac(10,11)]
+		[Export ("attributeValues", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
+
 		[iOS (9,0), Mac(10,11)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
@@ -767,7 +779,6 @@ namespace XamCore.SpriteKit {
 		[iOS (9,0), Mac(10,11)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
-#endif
 	}
 
 	[Watch (3,0)]
@@ -992,7 +1003,10 @@ namespace XamCore.SpriteKit {
 		[Export ("particleRenderOrder", ArgumentSemantic.Assign)]
 		SKParticleRenderOrder ParticleRenderOrder { get; set; }
 
-#if XAMCORE_4_0
+		[iOS (9,0),Mac(10,11)]
+		[Export ("attributeValues", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
+
 		[iOS (9,0), Mac(10,11)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
@@ -1001,7 +1015,6 @@ namespace XamCore.SpriteKit {
 		[iOS (9,0), Mac(10,11)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
-#endif
 	}
 
 	[Watch (3,0)]
@@ -1275,13 +1288,27 @@ namespace XamCore.SpriteKit {
 		uint CategoryBitMask { get; set; } /* uint32_t */
 	}
 
-	[NoWatch]
+	[Watch (4,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKVideoNode {
 
-		[NoWatch]
+#if WATCH
+		[Static, Export ("videoNodeWithFileNamed:")]
+		SKVideoNode VideoNodeWithFileNamed (string videoFile);
+
+		[Static, Export ("videoNodeWithURL:")]
+		SKVideoNode VideoNodeWithURL (NSUrl videoURL);
+
+		[DesignatedInitializer]
+		[Export ("initWithFileNamed:")]
+		IntPtr Constructor (string videoFile);
+
+		[DesignatedInitializer]
+		[Export ("initWithURL:")]
+		IntPtr Constructor (NSUrl url);
+#else
 		[Static, Export ("videoNodeWithAVPlayer:")]
 		SKVideoNode FromPlayer (AVPlayer player);
 
@@ -1297,7 +1324,6 @@ namespace XamCore.SpriteKit {
 		[Static, Export ("videoNodeWithURL:"), Internal]
 		SKVideoNode VideoNodeWithURL (NSUrl videoURL);
 
-		[NoWatch]
 		[DesignatedInitializer]
 		[Export ("initWithAVPlayer:")]
 		IntPtr Constructor (AVPlayer player);
@@ -1313,10 +1339,13 @@ namespace XamCore.SpriteKit {
 
 		[Export ("initWithURL:"), Internal]
 		IntPtr InitWithURL (NSUrl url);
+#endif
 
+		[NoWatch]
 		[Export ("play")]
 		void Play ();
 
+		[NoWatch]
 		[Export ("pause")]
 		void Pause ();
 
@@ -2865,8 +2894,13 @@ namespace XamCore.SpriteKit {
 
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor] // DesignatedInitializer below
 	interface SKAttributeValue : NSCoding
 	{
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Static]
 		[Export ("valueWithFloat:")]
 		SKAttributeValue Create (float value);
