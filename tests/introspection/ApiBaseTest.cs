@@ -66,6 +66,8 @@ namespace Introspection {
 		protected void AddErrorLine (string line)
 		{
 			error_output.AppendLine (line);
+			if (!line.StartsWith ("[FAIL] ", StringComparison.Ordinal))
+				Console.Error.Write ("[FAIL] ");
 			Console.Error.WriteLine (line);
 			Errors++;
 		}
