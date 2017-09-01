@@ -93,9 +93,13 @@ namespace Xamarin.MacDev.Tasks
 
 		static string GetPathWithoutExtension (string path)
 		{
-			int dot = path.LastIndexOf ('.');
+			var fileName = Path.GetFileNameWithoutExtension (path);
+			var dir = Path.GetDirectoryName (path);
 
-			return path.Substring (0, dot);
+			if (string.IsNullOrEmpty (dir))
+				return fileName;
+
+			return Path.Combine (dir, fileName);
 		}
 
 		IEnumerable<ITaskItem> GetCompilationDirectoryOutput (string baseOutputDir, IDictionary<string, IDictionary> mapping)
