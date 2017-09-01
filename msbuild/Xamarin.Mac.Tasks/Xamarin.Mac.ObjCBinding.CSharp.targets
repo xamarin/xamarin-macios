@@ -52,7 +52,8 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 	<!-- Override the CoreCompile Target to use btouch -->
 	<Target Name="_GenerateBindings"
 		Inputs="$(MSBuildAllProjects);@(ObjcBindingApiDefinition);@(ObjcBindingCoreSource);@(ReferencePath);@(ObjcBindingNativeLibrary)"
-		Outputs="$(_GeneratedSourcesFileList)">
+		Outputs="$(_GeneratedSourcesFileList)"
+		Condition="'$(DesignTimeBuild)' != 'true'">
 
 		<ItemGroup>
 			<BTouchReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
@@ -90,7 +91,7 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 		</BTouch>
 	</Target>
 
-	<Target Name="_PrepareNativeReferences">
+	<Target Name="_PrepareNativeReferences" Condition="'$(DesignTimeBuild)' != 'true'">
 		<PrepareNativeReferences
 			SessionId="$(BuildSessionId)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
@@ -125,7 +126,9 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 		</CreateItem>
 	</Target>
 
-	<Target Name="_CollectGeneratedSources" DependsOnTargets="_CompressFrameworks;_GenerateBindings">
+	<Target Name="_CollectGeneratedSources" DependsOnTargets="_CompressFrameworks;_GenerateBindings"
+		Condition="'$(DesignTimeBuild)' != 'true'">
+		
 		<ReadLinesFromFile File="$(_GeneratedSourcesFileList)" >
 			<Output TaskParameter="Lines" ItemName="GeneratedSources" />
 		</ReadLinesFromFile>
