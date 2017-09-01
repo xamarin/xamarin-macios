@@ -15,7 +15,6 @@ using NUnit.Framework;
 
 public static class Asserts
 {
-#if !__WATCHOS__
 	public static void AreEqual (bool expected, bool actual, string message)
 	{
 		Assert.AreEqual (expected, actual, message + " (M)");
@@ -123,11 +122,13 @@ public static class Asserts
 		Assert.AreEqual (expected.Y, actual.Y, message + " (Y)");
 	}
 
+#if !__WATCHOS__
 	public static void AreEqual (MDLAxisAlignedBoundingBox expected, MDLAxisAlignedBoundingBox actual, string message)
 	{
 		AreEqual (expected.MaxBounds, actual.MaxBounds, message + " (MaxBounds)");
 		AreEqual (expected.MinBounds, actual.MinBounds, message + " (MinBounds)");
 	}
+#endif // !__WATCHOS__
 
 	public static void AreEqual (Quaternion expected, Quaternion actual, string message)
 	{
@@ -137,7 +138,7 @@ public static class Asserts
 		Assert.AreEqual (expected.W, actual.W, message + " (W)");
 	}
 
-#if !MONOMAC
+#if !MONOMAC && !__WATCHOS__
 	public static void AreEqual (MPSImageHistogramInfo expected, MPSImageHistogramInfo actual, string message)
 	{
 		Assert.AreEqual (expected.HistogramForAlpha, actual.HistogramForAlpha, message + " HistogramForAlpha");
@@ -145,7 +146,7 @@ public static class Asserts
 		Asserts.AreEqual (expected.MinPixelValue, actual.MinPixelValue, message + " MinPixelValue");
 		Assert.AreEqual (expected.NumberOfHistogramEntries, actual.NumberOfHistogramEntries, message + " NumberOfHistogramEntries");
 	}
-#endif // !MONOMAC
+#endif // !MONOMAC && !__WATCHOS__
 
 	public static void AreEqual (MatrixFloat2x2 expected, MatrixFloat2x2 actual, string message)
 	{
@@ -330,6 +331,5 @@ public static class Asserts
 		AreEqual (expected.M34, actual.M34, message + " (M34)");
 		AreEqual (expected.M44, actual.M44, message + " (M44)");
 	}
-#endif // !__WATCHOS__
 }
 
