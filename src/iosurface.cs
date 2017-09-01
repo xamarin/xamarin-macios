@@ -210,7 +210,7 @@ namespace XamCore.IOSurface {
 		[Export ("allowsPixelSizeCasting")]
 		bool AllowsPixelSizeCasting { get; }
 	
-		[iOS (11,0)]
+		[iOS (11,0)][Mac (10,13)]
 		[Internal, Export ("setPurgeable:oldState:")]
 		int _SetPurgeable (IOSurfacePurgeabilityState newState, IntPtr oldStatePtr);
 	}
