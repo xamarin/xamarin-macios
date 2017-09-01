@@ -31,7 +31,9 @@ using MonoTouch.ObjCRuntime;
 #endif
 using OpenTK;
 using Simd;
+#if !TEST_BINDINGS_UNAVAILABLE
 using Bindings.Test;
+#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.ModelIO {
@@ -145,7 +147,9 @@ namespace MonoTouchFixtures.ModelIO {
 				Asserts.AreEqual (new Vector3 (4, 3, 2), obj.Scale, "Scale 4");
 				Asserts.AreEqual (new Vector3 (2, 3, 4), obj.Translation, "Translation 4");
 				Asserts.AreEqual (m4x4, obj.GetMatrix4x4 (), 0.0001f, "Matrix4x4 4");
+#if !TEST_BINDINGS_UNAVAILABLE
 				Asserts.AreEqual (m4x4, CFunctions.GetMatrixFloat4x4 (obj, "matrix"), 0.0001f, "Matrix4x4-native 4");
+#endif
 			}
 		}
 			
@@ -201,7 +205,9 @@ namespace MonoTouchFixtures.ModelIO {
 				);
 				Asserts.AreEqual ((Matrix4) MatrixFloat4x4.Transpose (expected), obj.GetRotationMatrix (0), 0.00001f, "GetRotationMatrix");
 				Asserts.AreEqual (expected, obj.GetRotationMatrix4x4 (0), 0.00001f, "GetRotationMatrix4x4");
+#if !TEST_BINDINGS_UNAVAILABLE
 				Asserts.AreEqual (expected, CFunctions.MDLTransform_GetRotationMatrix (obj, 0), 0.00001f, "GetRotationMatrix4x4 native");
+#endif
 			}
 		}
 	}
