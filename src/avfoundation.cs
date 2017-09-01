@@ -884,9 +884,11 @@ namespace XamCore.AVFoundation {
 		nuint Bus { get; }
 	}
 
-	// AudioBufferList is binded as AudioBuffers which is in AudioToolbox
+	// AudioBufferList is binded as AudioBuffers which is in AudioToolbox, uncomment once bug #59145 is fixed
+#if !WATCH && XAMCORE_2_0
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-	delegate AVAudioEngineManualRenderingStatus AVAudioEngineManualRenderingBlock (/* AVAudioFrameCount = uint */ uint numberOfFrames, /* AudioBufferList */IntPtr outBuffer, [NullAllowed] /* OSStatus */ int outError);
+	delegate AVAudioEngineManualRenderingStatus AVAudioEngineManualRenderingBlock (/* AVAudioFrameCount = uint */ uint numberOfFrames, AudioBuffers outBuffer, [NullAllowed] /* OSStatus */ int outError);
+#endif
 	
 	[Watch (3,0)]
 	[iOS (8,0)][Mac (10,10)]
@@ -980,9 +982,12 @@ namespace XamCore.AVFoundation {
 		[Export ("renderOffline:toBuffer:error:")]
 		AVAudioEngineManualRenderingStatus RenderOffline (uint numberOfFrames, AVAudioPcmBuffer buffer, [NullAllowed] out NSError outError);
 
+		// uncomment once bug #59145 is fixed
+#if !WATCH && XAMCORE_2_0
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Export ("manualRenderingBlock")]
 		AVAudioEngineManualRenderingBlock ManualRenderingBlock { get; }
+#endif
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Export ("isInManualRenderingMode")]
@@ -1356,8 +1361,10 @@ namespace XamCore.AVFoundation {
 	
 	// AudioBufferList is binded as AudioBuffers which is present in AudioToolbox which is not present on the watch. bug filled: 
 	// https://bugzilla.xamarin.com/show_bug.cgi?id=59145
+#if !WATCH && XAMCORE_2_0
 	[Watch (4,0), TV (11,0), Mac (10,10), iOS (8,0)]
-	delegate IntPtr AVAudioIONodeInputBlock (uint frameCount);
+	delegate AudioBuffers AVAudioIONodeInputBlock (uint frameCount);
+#endif
 
  	[Watch (4,0)]
  	[iOS (8,0)][Mac (10,10)][TV (11,0)]
@@ -1366,9 +1373,12 @@ namespace XamCore.AVFoundation {
 	// note: sample source (header) suggest it comes from AVAudioEngine properties
 	interface AVAudioInputNode : AVAudioMixing {
 
+		// uncomment once bug 59145 is fixed.
+#if !WATCH && XAMCORE_2_0
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("setManualRenderingInputPCMFormat:inputBlock:")]
 		bool SetManualRenderingInputPCMFormat (AVAudioFormat format, AVAudioIONodeInputBlock block);
+#endif
 	}
 
 	[Watch (3,0)]
