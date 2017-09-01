@@ -207,7 +207,7 @@ namespace Extrospection
 			var typeName = type.ToString ();
 
 			if (!rv && typeName.Contains ("simd"))
-				Console.WriteLine ($"!simd-unknown-type! Could not detect that {typeName} is a Simd type, but its name contains 'simd'.");
+				Console.WriteLine ($"!unknown-simd-type! Could not detect that {typeName} is a Simd type, but its name contains 'simd'. Something needs fixing in SimdCheck.cs");
 			
 			if (rv)
 				simd_type = typeName;
@@ -226,7 +226,7 @@ namespace Extrospection
 			}
 
 			if (IsExtVector (type, ref simd_type))
-				Console.WriteLine ($"!simd-unmapped-type! The Simd type {simd_type} does not have a mapping. Please add one in SimdCheck.cs");
+				Console.WriteLine ($"!unknown-simd-type-mapping! The Simd type {simd_type} does not have a mapping to a managed type. Please add one in SimdCheck.cs");
 
 			return false;
 		}
@@ -303,7 +303,7 @@ namespace Extrospection
 			if (!anyCalls)
 				return;
 
-			Console.WriteLine ($"!simd-missing-marshaldirective! {method}: simd type: {simd_type}");
+			Console.WriteLine ($"!wrong-simd-missing-marshaldirective! {method}: simd type: {simd_type}");
 		}
 
 		public override void VisitObjCMethodDecl (ObjCMethodDecl decl, VisitKind visitKind)
@@ -359,7 +359,7 @@ namespace Extrospection
 					return;
 				if (!strict)
 					return;
-				Console.WriteLine ($"!simd-can't-map-native! {decl}: could not find a managed method (selector: {decl.Selector} name: {decl.GetName ()}. Found the simd type '{simd_type}' in the native signature.");
+				Console.WriteLine ($"!simd-can't-map-native! {decl}: could not find a managed method for the native method {decl.GetName ()} (selector: {decl.Selector}). Found the simd type '{simd_type}' in the native signature.");
 				return;
 			}
 
