@@ -69,6 +69,12 @@
 !missing-protocol-conformance! CMSensorDataList should conform to NSFastEnumeration
 
 
+# Foundation
+
+## type was not marked as unavailable before Xcode9
+!unknown-type! NSUbiquitousKeyValueStore bound
+
+
 # HealthKit
 
 ## deprecated API (removed in same version it was added)

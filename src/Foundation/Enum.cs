@@ -1113,12 +1113,14 @@ namespace XamCore.Foundation  {
 		}
 	}
 
-#if MONOMAC
+	[Mac (10,10,3)]
+	[Watch (4,0)]
+	[TV (11,0)]
+	[iOS (11,0)]
 	[Native]
 	public enum NSProcessInfoThermalState : nint {
 		Nominal, Fair, Serious, Critical
 	}
-#endif
 
 	[Native]
 #if XAMCORE_2_0
