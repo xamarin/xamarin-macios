@@ -328,6 +328,7 @@ namespace xharness
 			};
 			var bcl_skip_watchos = new string [] {
 				"Mono.Security",
+				"Mono.Data.Tds",
 			};
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-0.csproj")), false));
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-1.csproj")), false));
@@ -342,7 +343,7 @@ namespace xharness
 
 			foreach (var p in bcl_suites) {
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + ".csproj"))) {
-					SkipwatchOSVariation = bcl_skip_watchos.Contains (p),
+					SkipwatchOSVaration = bcl_skip_watchos.Contains (p),
 				});
 				IOSBclTests.Add (new BCLTest (p));
 			}
@@ -495,11 +496,18 @@ namespace xharness
 				if (!File.Exists (file))
 					throw new FileNotFoundException (file);
 
+<<<<<<< HEAD
 				if (!proj.SkipwatchOSVariation) {
 					var watchos = new WatchOSTarget () {
 						TemplateProjectPath = file,
 						Harness = this,
 						TestProject = proj,
+=======
+				if (!proj.SkipwatchOSVaration) {
+					var watchos = new WatchOSTarget () {
+						TemplateProjectPath = file,
+						Harness = this,
+>>>>>>> [xharness] Add support for generating only specific variations for iOS projects.
 					};
 					watchos.Execute ();
 					watchos_targets.Add (watchos);
@@ -509,7 +517,10 @@ namespace xharness
 					var tvos = new TVOSTarget () {
 						TemplateProjectPath = file,
 						Harness = this,
+<<<<<<< HEAD
 						TestProject = proj,
+=======
+>>>>>>> [xharness] Add support for generating only specific variations for iOS projects.
 					};
 					tvos.Execute ();
 					tvos_targets.Add (tvos);
