@@ -1377,7 +1377,7 @@ namespace XamCore.AVFoundation {
 #if !WATCH && XAMCORE_2_0
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("setManualRenderingInputPCMFormat:inputBlock:")]
-		bool SetManualRenderingInputPCMFormat (AVAudioFormat format, AVAudioIONodeInputBlock block);
+		bool SetManualRenderingInputPcmFormat (AVAudioFormat format, AVAudioIONodeInputBlock block);
 #endif
 	}
 
