@@ -1620,6 +1620,7 @@ MAC_FRAMEWORKS =            \
 	MediaToolbox            \
 	Metal                   \
 	MetalKit                \
+	MetalPerformanceShaders \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity	\
