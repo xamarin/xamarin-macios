@@ -141,6 +141,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "CoreML", "CoreML", 10, 13 },
 					{ "Vision", "Vision", 10, 13 },
+					{ "MetalPerformanceShaders", "MetalPerformanceShaders", 10, 13 },
 				};
 			}
 			return mac_frameworks;
