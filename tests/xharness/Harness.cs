@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -294,7 +294,25 @@ namespace xharness
 				});
 			}
 
-			var bcl_suites = new string[] { "mscorlib", "System", "System.Core", "System.Data", "System.Net.Http", "System.Numerics", "System.Runtime.Serialization", "System.Transactions", "System.Web.Services", "System.Xml", "System.Xml.Linq", "Mono.Security", "System.ComponentModel.DataAnnotations", "System.Json", "System.ServiceModel.Web", "Mono.Data.Sqlite", "Mono.Data.Tds" };
+			var bcl_suites = new string[] {
+				"mscorlib",
+				"System",
+				"System.Core",
+				"System.Data",
+				"System.Net.Http",
+				"System.Numerics",
+				"System.Runtime.Serialization",
+				"System.Transactions",
+				"System.Web.Services",
+				"System.Xml",
+				"System.Xml.Linq",
+				"Mono.Security",
+				"System.ComponentModel.DataAnnotations",
+				"System.Json",
+				"System.ServiceModel.Web",
+				"Mono.Data.Sqlite",
+				"Mono.Data.Tds",
+			};
 			foreach (var p in bcl_suites) {
 				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + "-Mac.csproj")), generateVariations: false) { Name = p });
 				MacBclTests.Add (new MacBCLTest (p));
@@ -343,7 +361,7 @@ namespace xharness
 
 			foreach (var p in bcl_suites) {
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + ".csproj"))) {
-					SkipwatchOSVaration = bcl_skip_watchos.Contains (p),
+					SkipwatchOSVariation = bcl_skip_watchos.Contains (p),
 				});
 				IOSBclTests.Add (new BCLTest (p));
 			}
@@ -496,18 +514,11 @@ namespace xharness
 				if (!File.Exists (file))
 					throw new FileNotFoundException (file);
 
-<<<<<<< HEAD
 				if (!proj.SkipwatchOSVariation) {
 					var watchos = new WatchOSTarget () {
 						TemplateProjectPath = file,
 						Harness = this,
 						TestProject = proj,
-=======
-				if (!proj.SkipwatchOSVaration) {
-					var watchos = new WatchOSTarget () {
-						TemplateProjectPath = file,
-						Harness = this,
->>>>>>> [xharness] Add support for generating only specific variations for iOS projects.
 					};
 					watchos.Execute ();
 					watchos_targets.Add (watchos);
@@ -517,10 +528,7 @@ namespace xharness
 					var tvos = new TVOSTarget () {
 						TemplateProjectPath = file,
 						Harness = this,
-<<<<<<< HEAD
 						TestProject = proj,
-=======
->>>>>>> [xharness] Add support for generating only specific variations for iOS projects.
 					};
 					tvos.Execute ();
 					tvos_targets.Add (tvos);
