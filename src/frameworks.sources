@@ -1000,6 +1000,9 @@ METALPERFORMANCESHADERS_CORE_SOURCES = \
 
 METALPERFORMANCESHADERS_SOURCES = \
 	MetalPerformanceShaders/MPSImageLanczosScale.cs \
+	MetalPerformanceShaders/MPSCnnConvolutionDescriptor.cs \
+	MetalPerformanceShaders/MPSCnnNeuron.cs \
+	MetalPerformanceShaders/MPSCnnKernel.cs \
 
 # MobileCoreServices
 
@@ -1643,6 +1646,7 @@ MAC_FRAMEWORKS =            \
 	MediaToolbox            \
 	Metal                   \
 	MetalKit                \
+	MetalPerformanceShaders \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity	\

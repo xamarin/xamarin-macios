@@ -54,6 +54,7 @@ namespace Xamarin.Linker {
 			NetworkExtension = profile.GetNamespace ("NetworkExtension");
 			MultipeerConnectivity = profile.GetNamespace ("MultipeerConnectivity");
 			MetalKit = profile.GetNamespace ("MetalKit");
+			MetalPerformanceShaders = profile.GetNamespace ("MetalPerformanceShaders");
 			ModelIO = profile.GetNamespace ("ModelIO");
 			Intents = profile.GetNamespace ("Intents");
 			Photos = profile.GetNamespace ("Photos");
@@ -106,6 +107,7 @@ namespace Xamarin.Linker {
 		public static string NetworkExtension { get; private set; }
 		public static string MultipeerConnectivity { get; private set; }
 		public static string MetalKit { get; private set; }
+		public static string MetalPerformanceShaders { get; private set; }
 		public static string ModelIO { get; private set; }
 
 		public static string AddressBook { get; private set; }

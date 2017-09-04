@@ -74,6 +74,12 @@ namespace Extrospection {
 			{ "UITableViewCellAccessoryType", "UITableViewCellAccessory" },
 			{ "UITableViewCellStateMask", "UITableViewCellState" },
 			{ "WatchKitErrorCode", "WKErrorCode" }, // WebKit already had that name
+			{ "MPSCNNBinaryConvolutionFlags", "MPSCnnBinaryConvolutionFlags"},
+			{ "MPSCNNBinaryConvolutionType", "MPSCnnBinaryConvolutionType" },
+			{ "MPSCNNNeuronType", "MPSCnnNeuronType" },
+			{ "MPSNNPaddingMethod", "MPSNnPaddingMethod" },
+			{ "MPSRNNBidirectionalCombineMode", "MPSRnnBidirectionalCombineMode" },
+			{ "MPSRNNSequenceDirection", "MPSRnnSequenceDirection" },
 			// not enums
 			{ "NSMutableURLRequest", "NSMutableUrlRequest" },
 			{ "UIImagePickerControllerImageURLExportPreset", "UIImagePickerControllerImageUrlExportPreset" },
