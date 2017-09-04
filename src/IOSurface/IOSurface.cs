@@ -32,7 +32,9 @@ namespace XamCore.IOSurface {
 	public partial class IOSurface {
 
 		// kern_return_t
-		[iOS (10,0), Mac(10,12)]
+		// See bug #59201 [iOS (10,0)]
+		[iOS (11, 0)]
+		[Mac (10, 12)]
 		public int Lock (IOSurfaceLockOptions options, ref int seed)
 		{
 			unsafe {
@@ -43,14 +45,18 @@ namespace XamCore.IOSurface {
 		}
 
 		// kern_return_t
-		[iOS (10,0), Mac(10,12)]
+		// See bug #59201 [iOS (10,0)]
+		[iOS (11, 0)]
+		[Mac (10, 12)]
 		public int Lock (IOSurfaceLockOptions options)
 		{
 			return _Lock (options, IntPtr.Zero);
 		}
 		
 		// kern_return_t
-		[iOS (10,0), Mac(10,12)]
+		// See bug #59201 [iOS (10,0)]
+		[iOS (11, 0)]
+		[Mac (10, 12)]
 		public int Unlock (IOSurfaceLockOptions options, ref int seed)
 		{
 			unsafe {
@@ -61,7 +67,9 @@ namespace XamCore.IOSurface {
 		}
 
 		// kern_return_t
-		[iOS (10,0), Mac(10,12)]
+		// See bug #59201 [iOS (10,0)]
+		[iOS (11, 0)]
+		[Mac (10, 12)]
 		public int Unlock (IOSurfaceLockOptions options)
 		{
 			return _Unlock (options, IntPtr.Zero);

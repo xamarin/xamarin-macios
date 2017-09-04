@@ -117,10 +117,12 @@ namespace MonoTouch {
 		public const string FileProviderUILibrary = "/System/Library/Frameworks/FileProviderUI.framework/FileProviderUI";
 		public static string IOSurfaceLibrary {
 			get {
-#if !COREBUILD && !MTOUCH
-				if (!XamCore.UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
-					return "/System/Library/PrivateFrameworks/IOSurface.framework/IOSurface";
-#endif
+// Disabled because of bug #59201
+// #if !COREBUILD && !MTOUCH
+// // Sidenote: this is in /System/Library/Frameworks/IOSurface.framework/IOSurface in macOS 10.12.
+// 				if (!XamCore.UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
+// 					return "/System/Library/PrivateFrameworks/IOSurface.framework/IOSurface";
+// #endif
 				return "/System/Library/Frameworks/IOSurface.framework/IOSurface";
 			}
 		}
