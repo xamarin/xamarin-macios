@@ -27,19 +27,19 @@ namespace xharness
 				{ "run=", "Executes a project.", (v) =>
 					{
 						harness.Action = HarnessAction.Run;
-						harness.IOSTestProjects.Add (new TestProject (v));
+						harness.IOSTestProjects.Add (new iOSTestProject (v));
 					}
 				},
 				{ "install=", "Installs a project.", (v) =>
 					{
 						harness.Action = HarnessAction.Install;
-						harness.IOSTestProjects.Add (new TestProject (v));
+						harness.IOSTestProjects.Add (new iOSTestProject (v));
 					}
 				},
 				{ "uninstall=", "Uninstalls a project.", (v) =>
 					{
 						harness.Action = HarnessAction.Uninstall;
-						harness.IOSTestProjects.Add (new TestProject (v));
+						harness.IOSTestProjects.Add (new iOSTestProject (v));
 					}
 				},
 				{ "sdkroot=", "Where Xcode is", (v) => harness.SdkRoot = v },

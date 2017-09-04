@@ -90,7 +90,7 @@ namespace xharness
 			}
 		}
 
-		public List<TestProject> IOSTestProjects { get; set; } = new List<TestProject> ();
+		public List<iOSTestProject> IOSTestProjects { get; set; } = new List<iOSTestProject> ();
 		public List<MacTestProject> MacTestProjects { get; set; } = new List<MacTestProject> ();
 
 		public List<BCLTest> IOSBclTests { get; set; } = new List<BCLTest> ();
@@ -296,26 +296,31 @@ namespace xharness
 			var fsharp_test_suites = new string [] { "fsharp" };
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
 			var bcl_suites = new string [] { "mscorlib", "System", "System.Core", "System.Data", "System.Net.Http", "System.Numerics", "System.Runtime.Serialization", "System.Transactions", "System.Web.Services", "System.Xml", "System.Xml.Linq", "Mono.Security", "System.ComponentModel.DataAnnotations", "System.Json", "System.ServiceModel.Web", "Mono.Data.Sqlite" };
-			IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-0.csproj")), false));
-			IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-1.csproj")), false));
+			var bcl_skip_watchos = new string [] {
+				"Mono.Data.Tds",
+			};
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-0.csproj")), false));
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-1.csproj")), false));
 			foreach (var p in test_suites)
-				IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj"))));
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj"))));
 			foreach (var p in fsharp_test_suites)
-				IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj"))));
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj"))));
 			foreach (var p in library_projects)
-				IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj")), false));
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj")), false));
 			foreach (var p in fsharp_library_projects)
-				IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false));
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false));
 
 			foreach (var p in bcl_suites) {
-				IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + ".csproj"))));
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + ".csproj"))) {
+					SkipwatchOSVaration = bcl_skip_watchos.Contains (p),
+				});
 				IOSBclTests.Add (new BCLTest (p));
 			}
 			
-			IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
-			IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker-ios", "dont link", "dont link.csproj"))));
-			IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker-ios", "link all", "link all.csproj"))));
-			IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker-ios", "link sdk", "link sdk.csproj"))));
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker-ios", "dont link", "dont link.csproj"))));
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker-ios", "link all", "link all.csproj"))));
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker-ios", "link sdk", "link sdk.csproj"))));
 
 			WatchOSContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchContainer"));
 			WatchOSAppTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchApp"));
@@ -460,19 +465,23 @@ namespace xharness
 				if (!File.Exists (file))
 					throw new FileNotFoundException (file);
 
-				var watchos = new WatchOSTarget () {
-					TemplateProjectPath = file,
-					Harness = this,
-				};
-				watchos.Execute ();
-				watchos_targets.Add (watchos);
+				if (!proj.SkipwatchOSVaration) {
+					var watchos = new WatchOSTarget () {
+						TemplateProjectPath = file,
+						Harness = this,
+					};
+					watchos.Execute ();
+					watchos_targets.Add (watchos);
+				}
 
-				var tvos = new TVOSTarget () {
-					TemplateProjectPath = file,
-					Harness = this,
-				};
-				tvos.Execute ();
-				tvos_targets.Add (tvos);
+				if (!proj.SkiptvOSVariation) {
+					var tvos = new TVOSTarget () {
+						TemplateProjectPath = file,
+						Harness = this,
+					};
+					tvos.Execute ();
+					tvos_targets.Add (tvos);
+				}
 
 				var unified = new UnifiedTarget () {
 					TemplateProjectPath = file,
