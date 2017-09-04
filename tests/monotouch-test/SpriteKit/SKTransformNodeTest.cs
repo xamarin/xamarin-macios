@@ -50,9 +50,10 @@ namespace MonoTouchFixtures.SpriteKit {
 		public void RotationMatrix ()
 		{
 			using (var obj = new SKTransformNode ()) {
-				obj.RotationMatrix = Matrix3.Zero;
+				var zero = new MatrixFloat3x3 ();
+				obj.RotationMatrix = zero;
 				// In Swift, a rotated zero matrice also becomes the identity matrice.
-				Asserts.AreEqual (Matrix3.Identity, obj.RotationMatrix, "RotationMatrix");
+				Asserts.AreEqual (MatrixFloat3x3.Identity, obj.RotationMatrix, "RotationMatrix");
 				// Changing XRotation (or YRotation for that matter), makes the RotationMatrix change too
 				obj.XRotation = (nfloat) (Math.PI / 2);
 				var rotatedMatrix = new MatrixFloat3x3 (
@@ -60,9 +61,8 @@ namespace MonoTouchFixtures.SpriteKit {
 					0, 0, -1,
 					0, 1, 0
 				);
-				Asserts.AreEqual (rotatedMatrix, obj.RotationMatrix3x3, 0.000001f, "RotationMatrix3x3 a");
-				Asserts.AreEqual (rotatedMatrix, CFunctions.GetMatrixFloat3x3 (obj, "rotationMatrix"), 0.000001f, "RotationMatrix3x3 native a");
-				Asserts.AreEqual ((Matrix3) MatrixFloat3x3.Transpose (rotatedMatrix), obj.RotationMatrix, 0.000001f, "RotationMatrix a");
+				Asserts.AreEqual (rotatedMatrix, obj.RotationMatrix, 0.000001f, "RotationMatrix a");
+				Asserts.AreEqual (rotatedMatrix, CFunctions.GetMatrixFloat3x3 (obj, "rotationMatrix"), 0.000001f, "RotationMatrix native a");
 
 				// Got this matrix after setting both XRotation and YRotation to Pi/2
 				rotatedMatrix = new MatrixFloat3x3 (
@@ -70,8 +70,8 @@ namespace MonoTouchFixtures.SpriteKit {
 					0, 0, -1,
 					-1, 0, 0
 				);
-				obj.RotationMatrix3x3 = rotatedMatrix;
-				Asserts.AreEqual (rotatedMatrix, obj.RotationMatrix3x3, 0.000001f, "RotationMatrix3x3 b");
+				obj.RotationMatrix = rotatedMatrix;
+				Asserts.AreEqual (rotatedMatrix, obj.RotationMatrix, 0.000001f, "RotationMatrix b");
 				Assert.AreEqual ((nfloat) (Math.PI / 2), obj.XRotation, 0.000001f, "XRotation b");
 				Assert.AreEqual (0, obj.YRotation, 0.000001f, "YRotation b"); // Setting YRotation changes RotationMatrix, but setting RotationMatrix doesn't change YRotation.
 			}

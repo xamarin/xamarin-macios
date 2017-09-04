@@ -3418,25 +3418,12 @@ namespace XamCore.SpriteKit {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
-#if !XAMCORE_4_0
-		[Obsolete ("Use 'RotationMatrix3x3' instead.")]
 		[Export ("rotationMatrix")]
-		Matrix3 RotationMatrix {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
-		}
-#endif
-
-		[Export ("rotationMatrix")]
-#if XAMCORE_4_0
 		MatrixFloat3x3 RotationMatrix {
-#else
-		[Sealed]
-		MatrixFloat3x3 RotationMatrix3x3 {
-#endif
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
+
 		[Export ("quaternion")]
 		Quaternion Quaternion {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
