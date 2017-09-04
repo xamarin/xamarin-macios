@@ -20,7 +20,7 @@ namespace xharness
 				{ "configure", "Creates project files and makefiles.", (v) => harness.Action = HarnessAction.Configure },
 				{ "autoconf", "Automatically decide what to configure.", (v) => harness.AutoConf = true },
 				{ "rootdir=", "The root directory for the tests.", (v) => harness.RootDirectory = v },
-				{ "project=", "Add a project file to process. This can be specified multiple times.", (v) => harness.IOSTestProjects.Add (new TestProject (v)) },
+				{ "project=", "Add a project file to process. This can be specified multiple times.", (v) => harness.IOSTestProjects.Add (new iOSTestProject (v)) },
 				{ "watchos-container-template=", "The directory to use as a template for a watchos container app.", (v) => harness.WatchOSContainerTemplate = v },
 				{ "watchos-app-template=", "The directory to use as a template for a watchos app.", (v) => harness.WatchOSAppTemplate = v },
 				// Run
