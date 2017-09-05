@@ -41,7 +41,7 @@ namespace XamCore.CoreMedia {
 			if (attachments == IntPtr.Zero)
 				return null;
 
-			return Runtime.GetNSObject<NSDictionary<TKey, TValue>> (attachments);
+			return Runtime.GetNSObject<NSDictionary<TKey, TValue>> (attachments, true);
 		}
 #endif
 
