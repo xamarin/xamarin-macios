@@ -488,6 +488,13 @@ COREMIDI_CORE_SOURCES = \
 	CoreMidi/MidiThruConnection.cs \
 	CoreMidi/MidiThruConnectionParams.cs \
 
+# CoreML
+
+COREML_SOURCES = \
+	CoreML/MLDictionaryFeatureProvider.cs \
+	CoreML/MLMultiArray.cs \
+	CoreML/MLMultiArrayConstraint.cs \
+
 # CoreMotion
 
 COREMOTION_CORE_SOURCES = \
@@ -1518,8 +1525,6 @@ SHARED_SOURCES = \
 	../runtime/Delegates.generated.cs \
 	MonoNativeFunctionWrapperAttribute.cs \
 	NativeTypes/NMath.cs \
-	CoreML/MLDictionaryFeatureProvider.cs \
-	CoreML/MLMultiArray.cs \
 	ObjCRuntime/AdoptsAttribute.cs \
 	ObjCRuntime/BackingField.cs \
 	ObjCRuntime/BaseWrapper.cs \
