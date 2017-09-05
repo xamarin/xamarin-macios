@@ -28,6 +28,8 @@ namespace MonoTouchFixtures.CoreML
 		[Test]
 		public void Ctors ()
 		{
+			TestRuntime.AssertXcodeVersion (9, 0);
+
 			NSError err;
 			var shape = new nint [] { 1 };
 			var strides = new nint [] { 0 };
@@ -65,6 +67,8 @@ namespace MonoTouchFixtures.CoreML
 		[Test]
 		public void Indexers ()
 		{
+			TestRuntime.AssertXcodeVersion (9, 0);
+
 			NSError err;
 			var shape = new nint [] { 10 };
 			using (var arr = new MLMultiArray (shape, MLMultiArrayDataType.Int32, out err)) {
@@ -103,10 +107,10 @@ namespace MonoTouchFixtures.CoreML
 			}
 
 			// multi-dimensional
-			shape = new nint [] { 5, 5, 5 };
+			shape = new nint [] { 7, 7, 7 };
 			using (var arr = new MLMultiArray (shape, MLMultiArrayDataType.Int32, out err)) {
 				Assert.IsNull (err, "err");
-				Assert.AreEqual (5 * 5 * 5, arr.Count, "Count");
+				Assert.AreEqual (shape [0] * shape [1] * shape [2], arr.Count, "Count");
 
 				Assert.AreEqual (0, arr [0, 0, 0].Int32Value, "a");
 				Assert.AreEqual (0, arr [new nint [] { 0, 0, 0 }].Int32Value, "b");
