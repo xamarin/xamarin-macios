@@ -879,6 +879,13 @@ INTENTS_SOURCES = \
 	Intents/INWorkoutGoalUnitTypeResolutionResult.cs \
 	Intents/INWorkoutLocationTypeResolutionResult.cs \
 
+# IOSurface
+IOSURFACE_CORE_SOURCES = \
+	IOSurface/IODefs.cs
+
+IOSURFACE_SOURCES = \
+	IOSurface/IOSurface.cs
+
 # JavaScriptCore
 
 JAVASCRIPTCORE_SOURCES = \
@@ -1614,6 +1621,7 @@ MAC_FRAMEWORKS =            \
 	ImageIO                 \
 	ImageKit                \
 	Intents                 \
+	IOSurface 		\
 	JavaScriptCore          \
 	LocalAuthentication     \
 	MapKit                  \
@@ -1695,6 +1703,7 @@ IOS_FRAMEWORKS =         \
 	ImageIO \
 	Intents \
 	IntentsUI \
+	IOSurface \
 	JavaScriptCore \
 	LocalAuthentication \
 	MapKit \
