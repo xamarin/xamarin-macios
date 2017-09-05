@@ -10,6 +10,7 @@ using ObjCRuntime;
 
 using MatrixFloat2x2 = global::OpenTK.NMatrix2;
 using MatrixFloat3x3 = global::OpenTK.NMatrix3;
+using MatrixFloat4x3 = global::OpenTK.NMatrix4x3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 
 namespace Bindings.Test
@@ -26,6 +27,9 @@ namespace Bindings.Test
 
 		[DllImport ("__Internal")]
 		public static extern void x_get_matrix_float4x4 (IntPtr self, string sel, out float r0c0, out float r0c1, out float r0c2, out float r0c3, out float r1c0, out float r1c1, out float r1c2, out float r1c3, out float r2c0, out float r2c1, out float r2c2, out float r2c3, out float r3c0, out float r3c1, out float r3c2, out float r3c3);
+
+		[DllImport ("__Internal")]
+		public static extern void x_get_matrix_float4x3 (IntPtr self, string sel, out float r0c0, out float r0c1, out float r0c2, out float r0c3, out float r1c0, out float r1c1, out float r1c2, out float r1c3, out float r2c0, out float r2c1, out float r2c2, out float r2c3);
 
 		public static MatrixFloat2x2 GetMatrixFloat2x2 (NSObject obj, string selector)
 		{
@@ -58,6 +62,15 @@ namespace Bindings.Test
 				r3c0, r3c1, r3c2, r3c3);
 		}
 
+		public static MatrixFloat4x3 GetMatrixFloat4x3 (NSObject obj, string selector)
+		{
+			float r0c0, r0c1, r0c2, r0c3, r1c0, r1c1, r1c2, r1c3, r2c0, r2c1, r2c2, r2c3;
+			x_get_matrix_float4x3 (obj.Handle, selector, out r0c0, out r0c1, out r0c2, out r0c3, out r1c0, out r1c1, out r1c2, out r1c3, out r2c0, out r2c1, out r2c2, out r2c3);
+			return new MatrixFloat4x3 (
+				r0c0, r0c1, r0c2, r0c3,
+				r1c0, r1c1, r1c2, r1c3,
+				r2c0, r2c1, r2c2, r2c3);
+		}
 
 #if !__WATCHOS__
 		[DllImport ("__Internal")]
