@@ -9,21 +9,17 @@ using XamCore.Metal;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.MetalPerformanceShaders {
-	[Mac (10, 13)]
 	public partial class MPSKernel : NSObject {
 
 #if !COREBUILD
-		[Mac (10,13)]
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
 		extern static bool MPSSupportsMTLDevice (/* __nullable id <MTLDevice> */ IntPtr device);
 
-		[Mac (10,13)]
 		public static bool Supports (IMTLDevice device)
 		{
 			return MPSSupportsMTLDevice (device == null ? IntPtr.Zero : device.Handle);
 		}
 
-		[Mac (10, 13)]
 		internal static IntPtr GetPtr (float [] values, bool throwOnNull)
 		{
 			if (throwOnNull && (values == null))
@@ -35,7 +31,6 @@ namespace XamCore.MetalPerformanceShaders {
 		}
 
 #if XAMCORE_2_0
-		[Mac (10,13)]
 		internal static IntPtr GetPtr (nfloat [] values, bool throwOnNull)
 		{
 			if (throwOnNull && (values == null))
@@ -46,7 +41,6 @@ namespace XamCore.MetalPerformanceShaders {
 			}
 		}
 #endif
-		[Mac (10, 13)]
 		internal unsafe static float [] GetTransform (IntPtr transform)
 		{
 			var t = (float*) transform;
@@ -55,7 +49,6 @@ namespace XamCore.MetalPerformanceShaders {
 			return new float [3] { t [0], t [1], t [2] };
 		}
 
-		[Mac (10, 13)]
 		[Field ("MPSRectNoClip", "MetalPerformanceShaders")]
 		public unsafe static MTLRegion RectNoClip {
 			get {
@@ -72,7 +65,6 @@ namespace XamCore.MetalPerformanceShaders {
 	}
 
 #if !COREBUILD
-	[Mac (10, 13)]
 	public partial class MPSImageDilate {
 
 		public MPSImageDilate (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] values)
@@ -81,7 +73,6 @@ namespace XamCore.MetalPerformanceShaders {
 		}
 	}
 
-	[Mac (10, 13)]
 	public partial class MPSImageErode : MPSImageDilate {
 
 		public MPSImageErode (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] values)
@@ -90,7 +81,6 @@ namespace XamCore.MetalPerformanceShaders {
 		}
 	}
 
-	[Mac (10, 13)]
 	public partial class MPSImageThresholdBinary {
 
 		public MPSImageThresholdBinary (IMTLDevice device, float thresholdValue, float maximumValue, /*[NullAllowed]*/ float[] transform)
@@ -103,7 +93,6 @@ namespace XamCore.MetalPerformanceShaders {
 		}
 	}
 
-	[Mac (10, 13)]
 	public partial class MPSImageThresholdBinaryInverse {
 
 		public MPSImageThresholdBinaryInverse (IMTLDevice device, float thresholdValue, float maximumValue, /*[NullAllowed]*/ float[] transform)
@@ -116,7 +105,6 @@ namespace XamCore.MetalPerformanceShaders {
 		}
 	}
 
-	[Mac (10, 13)]
 	public partial class MPSImageThresholdTruncate {
 
 		public MPSImageThresholdTruncate (IMTLDevice device, float thresholdValue, /*[NullAllowed]*/ float[] transform)
@@ -129,7 +117,6 @@ namespace XamCore.MetalPerformanceShaders {
 		}
 	}
 
-	[Mac (10, 13)]
 	public partial class MPSImageThresholdToZero {
 
 		public MPSImageThresholdToZero (IMTLDevice device, float thresholdValue, /*[NullAllowed]*/ float[] transform)
@@ -142,7 +129,6 @@ namespace XamCore.MetalPerformanceShaders {
 		}
 	}
 
-	[Mac (10, 13)]
 	public partial class MPSImageThresholdToZeroInverse {
 
 		public MPSImageThresholdToZeroInverse (IMTLDevice device, float thresholdValue, /*[NullAllowed]*/ float[] transform)
@@ -155,7 +141,6 @@ namespace XamCore.MetalPerformanceShaders {
 		}
 	}
 
-	[Mac (10, 13)]
 	public partial class MPSImageSobel {
 		public MPSImageSobel (IMTLDevice device, float[] transform)
 			: this (device, MPSKernel.GetPtr (transform, true))
@@ -167,7 +152,6 @@ namespace XamCore.MetalPerformanceShaders {
 		}
 	}
 
-	[Mac (10, 13)]
 	public partial class MPSCnnConvolution {
 		public MPSCnnConvolution (IMTLDevice device, MPSCnnConvolutionDescriptor convolutionDescriptor, float[] kernelWeights, float[] biasTerms, MPSCnnConvolutionFlags flags)
 			: this (device, convolutionDescriptor, MPSKernel.GetPtr (kernelWeights, true), MPSKernel.GetPtr (biasTerms, false), flags)
@@ -175,7 +159,6 @@ namespace XamCore.MetalPerformanceShaders {
 		}
 	}
 
-	[Mac (10, 13)]
 	public partial class MPSCnnFullyConnected {
 		public MPSCnnFullyConnected (IMTLDevice device, MPSCnnConvolutionDescriptor convolutionDescriptor, float[] kernelWeights, float[] biasTerms, MPSCnnConvolutionFlags flags)
 			: this (device, convolutionDescriptor, MPSKernel.GetPtr (kernelWeights, true), MPSKernel.GetPtr (biasTerms, false), flags)
@@ -183,7 +166,6 @@ namespace XamCore.MetalPerformanceShaders {
 		}
 	}
 
-	[Mac (10, 13)]
 	public partial class MPSImageConversion {
 		public MPSImageConversion (IMTLDevice device, MPSAlphaType srcAlpha, MPSAlphaType destAlpha, nfloat[] backgroundColor, CGColorConversionInfo conversionInfo)
 			: this (device, srcAlpha, destAlpha, MPSKernel.GetPtr (backgroundColor, false), conversionInfo)
@@ -191,7 +173,6 @@ namespace XamCore.MetalPerformanceShaders {
 		}
 	}
 
-	[Mac (10, 13)]
 	public partial class MPSImagePyramid {
 		public MPSImagePyramid (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights)
 			: this (device, kernelWidth, kernelHeight, MPSKernel.GetPtr (kernelWeights, true))
@@ -199,7 +180,6 @@ namespace XamCore.MetalPerformanceShaders {
 		}
 	}
 
-	[Mac (10, 13)]
 	public partial class MPSImageGaussianPyramid {
 		public MPSImageGaussianPyramid (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights)
 			: this (device, kernelWidth, kernelHeight, MPSKernel.GetPtr (kernelWeights, true))

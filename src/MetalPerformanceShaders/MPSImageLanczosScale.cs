@@ -8,12 +8,9 @@ using XamCore.Metal;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.MetalPerformanceShaders {
-	[Mac (10, 13)]
 	public partial class MPSImageLanczosScale {
-		[Mac (10,13)]
 		static int size_of_scale_transform = Marshal.SizeOf (typeof(MPSScaleTransform));
 
-		[Mac (10,13)]
 		public virtual MPSScaleTransform? ScaleTransform {
 			get {
 				var ptr = _GetScaleTransform ();
