@@ -97,6 +97,7 @@ namespace Introspection
 			"Automapping",
 			"Automounted",
 			"Autoredirect",
+			"Avci", // file type
 			"Aliasable",
 			"Arcball",
 			"Backface",
@@ -201,6 +202,8 @@ namespace Introspection
 			"Hdmi",
 			"Hdr",
 			"Hectopascals",
+			"Heic", // file type
+			"Heif", // file type
 			"Hevc", // CMVideoCodecType / High Efficiency Video Coding
 			"Hfp",
 			"Hipass",

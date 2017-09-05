@@ -66,6 +66,18 @@ namespace Introspection {
 			// These concrete (wrapper) subclasses do not implement all of those optional members, but we
 			// still need to provide a binding for them, so that user subclasses can implement those members.
 			switch (type.Name) {
+			case "AVAggregateAssetDownloadTask":
+				switch (selectorName) {
+				case "URLAsset": // added in Xcode 9 and it is present.
+					return true;
+				}
+				break;
+			case "AVAssetDownloadStorageManager":
+				switch (selectorName) {
+				case "sharedDownloadStorageManager": // added in Xcode 9 and it is present.
+					return true;
+				}
+				break;
 			case "MKCircle":
 			case "MKPolygon":
 			case "MKPolyline":
