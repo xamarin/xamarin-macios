@@ -577,13 +577,10 @@ namespace XamCore.SceneKit {
 	[BaseType (typeof(NSObject))]
 	interface SCNCameraController
 	{
-		[Wrap ("WeakDelegate")]
+		[Export ("delegate", ArgumentSemantic.Assign)]
 		[NullAllowed]
 		[Protocolize]
 		SCNCameraControllerDelegate Delegate { get; set; }
-	
-		[NullAllowed, Export ("delegate", ArgumentSemantic.Assign)]
-		NSObject WeakDelegate { get; set; }
 	
 		[NullAllowed, Export ("pointOfView", ArgumentSemantic.Retain)]
 		SCNNode PointOfView { get; set; }
