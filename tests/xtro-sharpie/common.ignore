@@ -1,3 +1,8 @@
+# ARKit
+
+## This method is manually bound.
+!simd-missing-marshaldirective! System.IntPtr ARKit.ARPointCloud::GetRawPoints(): simd type: vector_float3
+
 # AVFoundation
 
 ## We only bind "finished" as we cannot use [Bind] here as it would break compatibility with iOS 6.x
@@ -67,7 +72,6 @@
 
 ## part of category GKScore_Deprecated
 !missing-selector! GKScore::playerID not bound
-
 
 # Intents
 
@@ -200,7 +204,6 @@
 !incorrect-protocol-member! MDLMeshBuffer::zone is REQUIRED and should be abstract
 !incorrect-protocol-member! MDLMeshBufferZone::allocator is REQUIRED and should be abstract
 !incorrect-protocol-member! MDLMeshBufferZone::capacity is REQUIRED and should be abstract
-
 
 # Security
 

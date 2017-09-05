@@ -71,6 +71,7 @@
     <Compile Include="FieldCheck.cs" />
     <Compile Include="SelectorCheck.cs" />
     <Compile Include="DesignatedInitializerCheck.cs" />
+    <Compile Include="SimdCheck.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">

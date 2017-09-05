@@ -1008,6 +1008,8 @@ MODELIO_CORE_SOURCES = \
 MODELIO_SOURCES = \
 	ModelIO/MDLAsset.cs \
 	ModelIO/MDLNoiseTexture.cs \
+	ModelIO/MDLTransform.cs \
+	ModelIO/MDLTransformComponent.cs \
 	ModelIO/MDLVertexDescriptor.cs \
 	ModelIO/MDLMesh.cs \
 
@@ -1523,6 +1525,9 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/Protocol.cs \
 	ObjCRuntime/Registrar.core.cs \
 	ObjCRuntime/Selector.cs \
+	Simd/MatrixFloat2x2.cs \
+	Simd/MatrixFloat3x3.cs \
+	Simd/MatrixFloat4x4.cs \
 
 SHARED_SOURCES = \
 	../runtime/Delegates.generated.cs \
