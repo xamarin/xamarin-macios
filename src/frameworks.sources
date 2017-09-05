@@ -853,6 +853,7 @@ INTENTS_SOURCES = \
 	Intents/INCarAirCirculationModeResolutionResult.cs \
 	Intents/INCarAudioSourceResolutionResult.cs \
 	Intents/INCarDefrosterResolutionResult.cs \
+	Intents/INCarSeatResolutionResult.cs \
 	Intents/INCarSignalOptionsResolutionResult.cs \
 	Intents/INCompat.cs \
 	Intents/INGetCarLockStatusIntentResponse.cs \

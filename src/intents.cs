@@ -1959,13 +1959,29 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INCarSeatResolutionResult {
 
+		[iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("successWithResolvedCarSeat:")]
+		INCarSeatResolutionResult SuccessWithResolvedCarSeat (INCarSeat resolvedCarSeat);
+
+		[Internal]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
-		INCarSeatResolutionResult GetSuccess (INCarSeat resolvedValue);
+		INCarSeatResolutionResult SuccessWithResolvedValue (INCarSeat resolvedValue);
 
+		[iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("confirmationRequiredWithCarSeatToConfirm:")]
+		INCarSeatResolutionResult ConfirmationRequiredWithCarSeatToConfirm (INCarSeat carSeatToConfirm);
+
+		[Internal]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INCarSeatResolutionResult GetConfirmationRequired (INCarSeat valueToConfirm);
+		INCarSeatResolutionResult ConfirmationRequiredWithValueToConfirm (INCarSeat valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
