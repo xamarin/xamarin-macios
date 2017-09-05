@@ -641,8 +641,7 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = true };
 				var output = TI.TestUnifiedExecutable (test);
-				Assert.That (output.BuildOutput, Contains.Substring ("TargetFrameworkIdentifier: .NETFramework"));
-				Assert.That (output.BuildOutput, Contains.Substring ("TargetFrameworkVersion: v4.5"));
+				Assert.That (output.BuildOutput, Contains.Substring ("Selected target framework: .NETFramework,Version=v4.5; API: Unified"));
 			});
 		}
 
@@ -726,6 +725,30 @@ namespace Xamarin.MMP.Tests
 				TI.TestUnifiedExecutable (test, shouldFail: true);
 
 				test.CSProjConfig = test.CSProjConfig + "<MonoBundlingExtraArgs>--force-unsupported-linker</MonoBundlingExtraArgs>";
+				TI.TestUnifiedExecutable (test);
+			});
+		}
+
+		[Test]
+		public void Unified32BitWithXMRequiringLibrary_ShouldReferenceCorrectXM_AndNotCrash ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig libConfig = new TI.UnifiedTestConfig (tmpDir) {
+					ProjectName = "UnifiedLibrary",
+					TestCode = "namespace Library { public static class Foo { public static void Bar () { var v = new Foundation.NSObject (); } } }"
+				};
+
+				string csprojTarget = TI.GenerateUnifiedLibraryProject (libConfig);
+				TI.BuildProject (csprojTarget, isUnified: true);
+
+				string referenceCode = string.Format (@"<Reference Include=""UnifiedLibrary""><HintPath>{0}</HintPath></Reference>", Path.Combine (tmpDir, "bin/Debug/UnifiedLibrary.dll"));
+
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = @"<PlatformTarget>x86</PlatformTarget><XamMacArch>i386</XamMacArch>",
+					ReferencesBeforePlatform = referenceCode,
+					TestCode = "Library.Foo.Bar ();"
+				};
+
 				TI.TestUnifiedExecutable (test);
 			});
 		}

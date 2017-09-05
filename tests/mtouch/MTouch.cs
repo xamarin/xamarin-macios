@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Diagnostics;
 using System.Text;
@@ -33,6 +34,59 @@ namespace Xamarin
 	[TestFixture]
 	public class MTouch
 	{
+		[Test]
+		//[TestCase (Profile.iOS)] // tested as part of the watchOS case below, since that builds both for iOS and watchOS.
+		[TestCase (Profile.tvOS)]
+		[TestCase (Profile.watchOS)]
+		public void Profiling (Profile profile)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var tmpdir = mtouch.CreateTemporaryDirectory ();
+				MTouchTool ext = null;
+				if (profile == Profile.watchOS) {
+					mtouch.Profile = Profile.iOS;
+
+					ext = new MTouchTool ();
+					ext.Profile = profile;
+					ext.Profiling = true;
+					ext.SymbolList = Path.Combine (tmpdir, "extsymbollist.txt");
+					ext.CreateTemporaryWatchKitExtension ();
+					ext.CreateTemporaryDirectory ();
+					mtouch.AppExtensions.Add (ext);
+					ext.AssertExecute (MTouchAction.BuildDev, "ext build");
+				} else {
+					mtouch.Profile = profile;
+				}
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+
+				mtouch.DSym = false; // faster test
+				mtouch.MSym = false; // faster test
+				mtouch.NoStrip = true; // faster test
+
+				mtouch.Profiling = true;
+				mtouch.SymbolList = Path.Combine (tmpdir, "symbollist.txt");
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+
+				var profiler_symbol = "_mono_profiler_startup_log";
+
+				var symbols = File.ReadAllLines (mtouch.SymbolList);
+				Assert.That (symbols, Contains.Item (profiler_symbol), profiler_symbol);
+
+				symbols = ExecutionHelper.Execute ("nm", StringUtils.Quote (mtouch.NativeExecutablePath), hide_output: true).Split ('\n');
+				Assert.That (symbols, Has.Some.EndsWith (" T " + profiler_symbol), $"{profiler_symbol} nm");
+
+				if (ext != null) {
+					symbols = File.ReadAllLines (ext.SymbolList);
+					Assert.That (symbols, Contains.Item (profiler_symbol), $"{profiler_symbol} - extension");
+
+					symbols = ExecutionHelper.Execute ("nm", StringUtils.Quote (ext.NativeExecutablePath), hide_output: true).Split ('\n');
+					Assert.That (symbols, Has.Some.EndsWith (" T " + profiler_symbol), $"{profiler_symbol} extension nm");
+
+				}
+			}
+		}
+
 		[Test]
 		public void ExceptionMarshaling ()
 		{
@@ -3256,6 +3310,29 @@ public class TestApp {
 
 				mtouch.CustomArguments = new string [] { "--dynamic-symbol-mode=code" };
 				mtouch.AssertExecute (MTouchAction.BuildSim, "second build");
+			}
+		}
+
+		[Test]
+		[TestCase ("sl_SI")] // Slovenian. Has a strange minus sign.
+		[TestCase ("ur_IN")] // Urdu (India). Right-to-left.
+		public void BuildWithCulture (string culture)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Debug = false; // disables the simlauncher, and makes us produce a main.m
+				mtouch.Verbosity = -200;
+				mtouch.Linker = MTouchLinker.DontLink; // faster
+				mtouch.EnvironmentVariables = new Dictionary<string, string> ();
+				mtouch.EnvironmentVariables ["LANG"] = culture;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build sim");
+				mtouch.AssertWarning (123, $"The current language was set to '{new CultureInfo (culture.Replace ('_', '-')).DisplayName}' according to the LANG environment variable (LANG={culture}).");
+
+				mtouch.Debug = true; // faster
+				mtouch.Linker = MTouchLinker.LinkAll; // faster
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build dev");
+				mtouch.AssertWarning (123, $"The current language was set to '{new CultureInfo (culture.Replace ('_', '-')).DisplayName}' according to the LANG environment variable (LANG={culture}).");
 			}
 		}
 
