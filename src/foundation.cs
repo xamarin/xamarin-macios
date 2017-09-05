@@ -13208,6 +13208,33 @@ namespace XamCore.Foundation
 #endif
 		NSString TextLayoutSectionsAttribute { get; }
 
+#if MONOMAC
+		[Mac (10,13)]
+		[Field ("NSDocumentTypeDocumentOption", "AppKit")]
+#else
+		[iOS (11,0)]
+		[Field ("NSDocumentTypeDocumentOption", "UIKit")]
+#endif
+		NSString DocumentTypeDocumentOption { get; }
+
+#if MONOMAC
+		[Mac (10,13)]
+		[Field ("NSDefaultAttributesDocumentOption", "AppKit")]
+#else
+		[iOS (11,0)]
+		[Field ("NSDefaultAttributesDocumentOption", "UIKit")]
+#endif
+		NSString DefaultAttributesDocumentOption { get; }
+
+#if MONOMAC
+		[Mac (10,13)]
+		[Field ("NSCharacterEncodingDocumentOption", "AppKit")]
+#else
+		[iOS (11,0)]
+		[Field ("NSCharacterEncodingDocumentOption", "UIKit")]
+#endif
+		NSString CharacterEncodingDocumentOption { get; }
+
 		#if !XAMCORE_2_0 && MONOMAC
 		[Field ("NSCharacterShapeAttributeName", "AppKit")]
 		NSString CharacterShapeAttributeName { get; }
