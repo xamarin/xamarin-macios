@@ -6712,7 +6712,7 @@ namespace XamCore.Intents {
 		void HandleAddTasks (INAddTasksIntent intent, Action<INAddTasksIntentResponse> completion);
 
 		[Export ("confirmAddTasks:completion:")]
-		void ConfirmAddTasks (INAddTasksIntent intent, Action<INAddTasksIntentResponse> completion);
+		void Confirm (INAddTasksIntent intent, Action<INAddTasksIntentResponse> completion);
 
 		[Export ("resolveTargetTaskListForAddTasks:withCompletion:")]
 		void ResolveTargetTaskList (INAddTasksIntent intent, Action<INTaskListResolutionResult> completion);
@@ -6770,7 +6770,7 @@ namespace XamCore.Intents {
 		void HandleAppendToNote (INAppendToNoteIntent intent, Action<INAppendToNoteIntentResponse> completion);
 
 		[Export ("confirmAppendToNote:completion:")]
-		void ConfirmAppendToNote (INAppendToNoteIntent intent, Action<INAppendToNoteIntentResponse> completion);
+		void Confirm (INAppendToNoteIntent intent, Action<INAppendToNoteIntentResponse> completion);
 
 		[Export ("resolveTargetNoteForAppendToNote:withCompletion:")]
 		void ResolveTargetNoteForAppend (INAppendToNoteIntent intent, Action<INNoteResolutionResult> completion);
@@ -6969,7 +6969,7 @@ namespace XamCore.Intents {
 		void HandleCancelRide (INCancelRideIntent intent, Action<INCancelRideIntentResponse> completion);
 
 		[Export ("confirmCancelRide:completion:")]
-		void ConfirmCancelRide (INCancelRideIntent intent, Action<INCancelRideIntentResponse> completion);
+		void Confirm (INCancelRideIntent intent, Action<INCancelRideIntentResponse> completion);
 	}
 
 	[NoWatch, NoMac, iOS (11,0)]
@@ -7019,7 +7019,7 @@ namespace XamCore.Intents {
 		void HandleCreateNote (INCreateNoteIntent intent, Action<INCreateNoteIntentResponse> completion);
 
 		[Export ("confirmCreateNote:completion:")]
-		void ConfirmCreateNote (INCreateNoteIntent intent, Action<INCreateNoteIntentResponse> completion);
+		void Confirm (INCreateNoteIntent intent, Action<INCreateNoteIntentResponse> completion);
 
 		[Export ("resolveTitleForCreateNote:withCompletion:")]
 		void ResolveTitle (INCreateNoteIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -7075,7 +7075,7 @@ namespace XamCore.Intents {
 		void HandleCreateTaskList (INCreateTaskListIntent intent, Action<INCreateTaskListIntentResponse> completion);
 
 		[Export ("confirmCreateTaskList:completion:")]
-		void ConfirmCreateTaskList (INCreateTaskListIntent intent, Action<INCreateTaskListIntentResponse> completion);
+		void Confirm (INCreateTaskListIntent intent, Action<INCreateTaskListIntentResponse> completion);
 
 		[Export ("resolveTitleForCreateTaskList:withCompletion:")]
 		void ResolveTitle (INCreateTaskListIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -7157,7 +7157,7 @@ namespace XamCore.Intents {
 		void HandleGetVisualCode (INGetVisualCodeIntent intent, Action<INGetVisualCodeIntentResponse> completion);
 
 		[Export ("confirmGetVisualCode:completion:")]
-		void ConfirmGetVisualCode (INGetVisualCodeIntent intent, Action<INGetVisualCodeIntentResponse> completion);
+		void Confirm (INGetVisualCodeIntent intent, Action<INGetVisualCodeIntentResponse> completion);
 
 		[Export ("resolveVisualCodeTypeForGetVisualCode:withCompletion:")]
 		void ResolveVisualCodeType (INGetVisualCodeIntent intent, Action<INVisualCodeTypeResolutionResult> completion);
@@ -7529,7 +7529,7 @@ namespace XamCore.Intents {
 		void HandleSearchForAccounts (INSearchForAccountsIntent intent, Action<INSearchForAccountsIntentResponse> completion);
 
 		[Export ("confirmSearchForAccounts:completion:")]
-		void ConfirmSearchForAccounts (INSearchForAccountsIntent intent, Action<INSearchForAccountsIntentResponse> completion);
+		void Confirm (INSearchForAccountsIntent intent, Action<INSearchForAccountsIntentResponse> completion);
 
 		[Export ("resolveAccountNicknameForSearchForAccounts:withCompletion:")]
 		void ResolveAccountNickname (INSearchForAccountsIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -7602,7 +7602,7 @@ namespace XamCore.Intents {
 		void HandleSearchForNotebookItems (INSearchForNotebookItemsIntent intent, Action<INSearchForNotebookItemsIntentResponse> completion);
 
 		[Export ("confirmSearchForNotebookItems:completion:")]
-		void ConfirmSearchForNotebookItems (INSearchForNotebookItemsIntent intent, Action<INSearchForNotebookItemsIntentResponse> completion);
+		void Confirm (INSearchForNotebookItemsIntent intent, Action<INSearchForNotebookItemsIntentResponse> completion);
 
 		[Export ("resolveTitleForSearchForNotebookItems:withCompletion:")]
 		void ResolveTitle (INSearchForNotebookItemsIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -7775,7 +7775,7 @@ namespace XamCore.Intents {
 		void HandleSendRideFeedback (INSendRideFeedbackIntent sendRideFeedbackintent, Action<INSendRideFeedbackIntentResponse> completion);
 
 		[Export ("confirmSendRideFeedback:completion:")]
-		void ConfirmSendRideFeedback (INSendRideFeedbackIntent sendRideFeedbackIntent, Action<INSendRideFeedbackIntentResponse> completion);
+		void Confirm (INSendRideFeedbackIntent sendRideFeedbackIntent, Action<INSendRideFeedbackIntentResponse> completion);
 	}
 
 	[NoWatch, NoMac, iOS (11,0)]
@@ -7821,7 +7821,7 @@ namespace XamCore.Intents {
 		void HandleSetTaskAttribute (INSetTaskAttributeIntent intent, Action<INSetTaskAttributeIntentResponse> completion);
 
 		[Export ("confirmSetTaskAttribute:completion:")]
-		void ConfirmSetTaskAttribute (INSetTaskAttributeIntent intent, Action<INSetTaskAttributeIntentResponse> completion);
+		void Confirm (INSetTaskAttributeIntent intent, Action<INSetTaskAttributeIntentResponse> completion);
 
 		[Export ("resolveTargetTaskForSetTaskAttribute:withCompletion:")]
 		void ResolveTargetTask (INSetTaskAttributeIntent intent, Action<INTaskResolutionResult> completion);
@@ -8161,7 +8161,7 @@ namespace XamCore.Intents {
 		void HandleTransferMoney (INTransferMoneyIntent intent, Action<INTransferMoneyIntentResponse> completion);
 
 		[Export ("confirmTransferMoney:completion:")]
-		void ConfirmTransferMoney (INTransferMoneyIntent intent, Action<INTransferMoneyIntentResponse> completion);
+		void Confirm (INTransferMoneyIntent intent, Action<INTransferMoneyIntentResponse> completion);
 
 		[Export ("resolveFromAccountForTransferMoney:withCompletion:")]
 		void ResolveFromAccount (INTransferMoneyIntent intent, Action<INPaymentAccountResolutionResult> completion);
