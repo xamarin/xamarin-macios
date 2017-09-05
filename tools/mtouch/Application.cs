@@ -1995,6 +1995,10 @@ namespace Xamarin.Bundler {
 			foreach (var target in Targets) {
 				GenerateMSymManifest (target, target_directory);
 				var msymdir = Path.Combine (target.BuildDirectory, "Msym");
+				if (!Directory.Exists (msymdir)) {
+					ErrorHelper.Warning (95, $"Aot files could not be copied to msym directory is missing: '{msymdir}'");
+					continue;
+				}
 				// copy aot data must be done BEFORE we do copy the msym one
 				CopyAotData (msymdir, target_directory);
 				
