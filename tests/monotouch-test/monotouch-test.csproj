@@ -656,6 +656,10 @@
     <Compile Include="HomeKit\HMSignificantTimeEventTest.cs" />
     <Compile Include="UIKit\UIDragDropSessionExtensionsTest.cs" />
     <Compile Include="SpriteKit\SKTransformNodeTest.cs" />
+    <Compile Include="Metal\MTLArgumentDescriptorTest.cs" />
+    <Compile Include="Metal\MTLPipelineBufferDescriptorTests.cs" />
+    <Compile Include="Metal\MTLPointerTypeTests.cs" />
+    <Compile Include="Metal\MTLTextureReferenceType.cs" />
     <Compile Include="PassKit\PKPaymentRequestTest.cs" />
     <Compile Include="AudioToolbox\AudioComponentTest.cs" />
     <Compile Include="UIKit\DirectionalEdgeInsetsTest.cs" />

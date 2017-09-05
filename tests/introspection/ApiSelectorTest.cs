@@ -163,6 +163,12 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (9, 0);
 				}
 				break;
+#if !MONOMAC
+			case "MTLCaptureManager":
+				if (Runtime.Arch == Arch.SIMULATOR)
+					return true;
+				break;
+#endif
 			}
 #endif
 			// This ctors needs to be manually bound
@@ -340,6 +346,66 @@ namespace Introspection {
 			case "MTLArgument": // we do have unit tests under monotouch-tests for this properties
 				switch (selectorName){
 				case "isDepthTexture":
+					return true;
+				}
+				break;
+			case "MTLArgumentDescriptor":
+				switch (selectorName) {
+				case "access":
+				case "setAccess:":
+				case "arrayLength":
+				case "setArrayLength:":
+				case "constantBlockAlignment":
+				case "setConstantBlockAlignment:":
+				case "dataType":
+				case "setDataType:":
+				case "index":
+				case "setIndex:":
+				case "textureType":
+				case "setTextureType:":
+					return true;
+				}
+				break;
+			case "MTLHeapDescriptor":
+				switch (selectorName) {
+				case "cpuCacheMode":
+				case "setCpuCacheMode:":
+				case "size":
+				case "setSize:":
+				case "storageMode":
+				case "setStorageMode:":
+					return true;
+				}
+				break;
+			case "MTLPipelineBufferDescriptor":
+				switch (selectorName) {
+				case "mutability":
+				case "setMutability:":
+					return true;
+				}
+				break;
+			case "MTLPointerType":
+				switch (selectorName) {
+				case "access":
+				case "alignment":
+				case "dataSize":
+				case "elementIsArgumentBuffer":
+				case "elementType":
+					return true;
+				}
+				break;
+			case "MTLTextureReferenceType":
+				switch (selectorName) {
+				case "access":
+				case "isDepthTexture":
+				case "textureDataType":
+				case "textureType":
+					return true;
+				}
+				break;
+			case "MTLType":
+				switch (selectorName) {
+				case "dataType":
 					return true;
 				}
 				break;
