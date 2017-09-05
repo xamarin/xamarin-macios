@@ -448,7 +448,7 @@ namespace Xamarin.Bundler
 
 		public void LinkAssemblies (out List<AssemblyDefinition> assemblies, string output_dir, IEnumerable<Target> sharedCodeTargets)
 		{
-			var cache = Resolver.ToResolverCache ();
+			var cache = (Dictionary<string, AssemblyDefinition>) Resolver.ResolverCache;
 			var resolver = new AssemblyResolver (cache);
 
 			resolver.AddSearchDirectory (Resolver.RootDirectory);

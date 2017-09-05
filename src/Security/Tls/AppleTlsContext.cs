@@ -865,12 +865,12 @@ namespace XamCore.Security.Tls
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* OSStatus */ SslStatus SSLClose (/* SSLContextRef */ IntPtr context);
 
-		public override void Close ()
+		public override void Shutdown ()
 		{
 			if (Interlocked.Exchange (ref pendingIO, 1) == 1)
 				throw new InvalidOperationException ();
 
-			Debug ("Close");
+			Debug ("Shutdown");
 
 			lastException = null;
 
@@ -879,7 +879,7 @@ namespace XamCore.Security.Tls
 					return;
 
 				var status = SSLClose (Handle);
-				Debug ("Close done: {0}", status);
+				Debug ("Shutdown done: {0}", status);
 				CheckStatusAndThrow (status);
 			} finally {
 				closed = true;
