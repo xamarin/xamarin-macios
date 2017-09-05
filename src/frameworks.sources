@@ -1801,6 +1801,7 @@ TVOS_FRAMEWORKS =           \
 	GameplayKit             \
 	HomeKit                 \
 	ImageIO                 \
+	IOSurface				\
 	JavaScriptCore          \
 	MapKit                  \
 	MediaAccessibility      \

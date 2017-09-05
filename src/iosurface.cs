@@ -7,8 +7,6 @@
 // Copyright 2017 Microsoft Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0
-
 using System;
 using XamCore.CoreFoundation;
 using XamCore.Foundation;
@@ -217,5 +215,3 @@ namespace XamCore.IOSurface {
 		int _SetPurgeable (IOSurfacePurgeabilityState newState, IntPtr oldStatePtr);
 	}
 }
-
-#endif // XAMCORE_2_0
