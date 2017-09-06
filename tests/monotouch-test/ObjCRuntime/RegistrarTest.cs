@@ -2529,4 +2529,15 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			block.CleanupBlock ();
 		}
 	}
+
+	[Preserve]
+	class OverloadByStaticity : NSObject
+	{
+		// Two methods/properties can 
+		[Export ("method")]
+		public void InstanceMethod () { }
+
+		[Export ("method")]
+		public static void StaticMethod () { } 
+	}
 }
