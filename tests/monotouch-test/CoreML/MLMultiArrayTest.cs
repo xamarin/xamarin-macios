@@ -77,6 +77,7 @@ namespace MonoTouchFixtures.CoreML
 				Assert.AreEqual (new nint [] { 10 }, arr.Shape, "Shape");
 				Assert.AreEqual (new nint [] { 1 }, arr.Strides, "Strides");
 
+				arr [0] = 0; // MLMultiArray's elements aren't zero-initialized
 				Assert.AreEqual (0, arr [0].Int32Value, "a");
 				Assert.AreEqual (0, arr [new nint [] { 0 }].Int32Value, "b");
 				Assert.AreEqual (0, arr [new NSNumber [] { NSNumber.FromNInt (0) }].Int32Value, "c nint");
@@ -112,6 +113,7 @@ namespace MonoTouchFixtures.CoreML
 				Assert.IsNull (err, "err");
 				Assert.AreEqual (shape [0] * shape [1] * shape [2], arr.Count, "Count");
 
+				arr [0, 0, 0] = 0; // MLMultiArray's elements aren't zero-initialized
 				Assert.AreEqual (0, arr [0, 0, 0].Int32Value, "a");
 				Assert.AreEqual (0, arr [new nint [] { 0, 0, 0 }].Int32Value, "b");
 				Assert.AreEqual (0, arr [new NSNumber [] { NSNumber.FromNInt (0), NSNumber.FromNInt (0), NSNumber.FromNInt (0) }].Int32Value, "c nint");
