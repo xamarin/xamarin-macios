@@ -13,8 +13,6 @@
 using System;
 using System.Runtime.InteropServices;
 
-using VectorFloat4=global::OpenTK.Vector4;
-
 namespace Simd
 {
 	[StructLayout (LayoutKind.Sequential)]
@@ -48,6 +46,26 @@ namespace Simd
 		};
 
 		public MatrixFloat4x4 (VectorFloat4 column0, VectorFloat4 column1, VectorFloat4 column2, VectorFloat4 column3)
+		{
+			M11 = column0.X;
+			M21 = column0.Y;
+			M31 = column0.Z;
+			M41 = column0.W;
+			M12 = column1.X;
+			M22 = column1.Y;
+			M32 = column1.Z;
+			M42 = column1.W;
+			M13 = column2.X;
+			M23 = column2.Y;
+			M33 = column2.Z;
+			M43 = column2.W;
+			M14 = column3.X;
+			M24 = column3.Y;
+			M34 = column3.Z;
+			M44 = column3.W;
+		}
+
+		public MatrixFloat4x4 (global::OpenTK.Vector4 column0, global::OpenTK.Vector4 column1, global::OpenTK.Vector4 column2, global::OpenTK.Vector4 column3)
 		{
 			M11 = column0.X;
 			M21 = column0.Y;
