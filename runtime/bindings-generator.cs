@@ -79,6 +79,15 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
+					Comment = " // VectorFloat3 func ()",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.VectorFloat3,
+				}
+			);
+
+			data.Add (
+				new FunctionData {
 					Comment = " // void func (Vector3)",
 					Prefix = "simd__",
 					Variants = Variants.msgSend | Variants.msgSendSuper,
@@ -1949,7 +1958,7 @@ namespace Xamarin.BindingMethods.Generator
 					Variants = Variants.All,
 					ReturnType = Types.CGPoint,
 					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.Vector3 },
+						new ParameterData { TypeData = Types.VectorFloat3 },
 						new ParameterData { TypeData = Types.Int32 },
 						new ParameterData { TypeData = Types.CGSize },
 					},
@@ -1963,7 +1972,7 @@ namespace Xamarin.BindingMethods.Generator
 					Variants = Variants.All,
 					ReturnType = Types.CGPoint,
 					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.Vector3 },
+						new ParameterData { TypeData = Types.VectorFloat3 },
 						new ParameterData { TypeData = Types.Int64 },
 						new ParameterData { TypeData = Types.CGSize },
 					},
@@ -2290,12 +2299,14 @@ namespace Xamarin.BindingMethods.Generator
 			case "Vector2d":
 			case "Vector2i":
 			case "Vector2":
+			case "VectorFloat2":
 				writer.WriteLine ("\t{0}{2}a = {1} [0];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t{0}{2}b = {1} [1];", managedVariable, nativeVariable, accessor);
 				break;
 			case "Vector3d":
 			case "Vector3i":
 			case "Vector3":
+			case "VectorFloat3":
 				writer.WriteLine ("\t{0}{2}a = {1} [0];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t{0}{2}b = {1} [1];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t{0}{2}c = {1} [2];", managedVariable, nativeVariable, accessor);
@@ -2303,6 +2314,7 @@ namespace Xamarin.BindingMethods.Generator
 			case "Vector4d":
 			case "Vector4i":
 			case "Vector4":
+			case "VectorFloat4":
 				if (type.NativeType == "vector_float3") {
 					writer.WriteLine ("\t{0}{2}a = {1} [0];", managedVariable, nativeVariable, accessor);
 					writer.WriteLine ("\t{0}{2}b = {1} [1];", managedVariable, nativeVariable, accessor);
@@ -2410,12 +2422,14 @@ namespace Xamarin.BindingMethods.Generator
 			case "Vector2d":
 			case "Vector2i":
 			case "Vector2":
+			case "VectorFloat2":
 				writer.WriteLine ("\t{0} [0] = {1}{2}a;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t{0} [1] = {1}{2}b;", nativeVariable, managedVariable, accessor);
 				break;
 			case "Vector3d":
 			case "Vector3i":
 			case "Vector3":
+			case "VectorFloat3":
 				writer.WriteLine ("\t{0} [0] = {1}{2}a;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t{0} [1] = {1}{2}b;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t{0} [2] = {1}{2}c;", nativeVariable, managedVariable, accessor);
@@ -2423,6 +2437,7 @@ namespace Xamarin.BindingMethods.Generator
 			case "Vector4d":
 			case "Vector4i":
 			case "Vector4":
+			case "VectorFloat4":
 				if (type.NativeType == "vector_float3") {
 					writer.WriteLine ("\t{0} [0] = {1}{2}a;", nativeVariable, managedVariable, accessor);
 					writer.WriteLine ("\t{0} [1] = {1}{2}b;", nativeVariable, managedVariable, accessor);
@@ -2909,14 +2924,33 @@ namespace Xamarin.BindingMethods.Generator
 				RequireMarshal = true,
 				IsX86Stret = true,
 			};
+			public static TypeData VectorFloat2 = new TypeData {
+				ManagedType = "VectorFloat2",
+				NativeType = "vector_float2",
+				NativeWrapperType = "struct Vector2f",
+				RequireMarshal = true,
+				IsX86Stret = true,
+			};
 			public static TypeData Vector3 = new TypeData {
 				ManagedType = "Vector3",
 				NativeType = "vector_float3",
 				NativeWrapperType = "struct Vector3f",
 				RequireMarshal = true,
 			};
+			public static TypeData VectorFloat3 = new TypeData {
+				ManagedType = "VectorFloat3",
+				NativeType = "vector_float3",
+				NativeWrapperType = "struct Vector4f", // Yes, Vector4f, since VectorFloat3 has 4 floats.
+				RequireMarshal = true,
+			};
 			public static TypeData Vector4 = new TypeData {
 				ManagedType = "Vector4",
+				NativeType = "vector_float4",
+				NativeWrapperType = "struct Vector4f",
+				RequireMarshal = true,
+			};
+			public static TypeData VectorFloat4 = new TypeData {
+				ManagedType = "VectorFloat4",
 				NativeType = "vector_float4",
 				NativeWrapperType = "struct Vector4f",
 				RequireMarshal = true,
