@@ -377,6 +377,8 @@ A last-straw solution would be to use an older version of Xamarin.iOS, one that 
 
 ### <a name="MT0096"/>MT0096: No reference to Xamarin.iOS.dll was found.
 
+### <a name="MT0097"/>MT0097: Aot files could not be found at the expected directory '{msymdir}'.
+
 <!-- MT0097: used by mmp -->
 <!-- MT0098: used by mmp -->
 
