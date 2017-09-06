@@ -74,6 +74,7 @@ namespace Extrospection {
 			case "OptionBits": // UInt32
 			case "long":
 			case "FourCharCode":
+			case "OSStatus":
 				break;
 			case "int64_t":
 			case "uint64_t":
