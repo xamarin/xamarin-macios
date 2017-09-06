@@ -458,7 +458,7 @@ namespace XamCore.UIKit {
 	{
 		[iOS (10,0)]
 		[Export ("anchorWithOffsetToAnchor:")]
-		NSLayoutDimension AnchorWithOffset (NSLayoutXAxisAnchor otherAnchor);
+		NSLayoutDimension CreateAnchorWithOffset (NSLayoutXAxisAnchor otherAnchor);
 
 		[TV (11,0), iOS (11,0)]
 		[Export ("constraintEqualToSystemSpacingAfterAnchor:multiplier:")]
@@ -482,7 +482,7 @@ namespace XamCore.UIKit {
 	{
 		[iOS (10,0)]
 		[Export ("anchorWithOffsetToAnchor:")]
-		NSLayoutDimension AnchorWithOffset (NSLayoutYAxisAnchor otherAnchor);
+		NSLayoutDimension CreateAnchorWithOffset (NSLayoutYAxisAnchor otherAnchor);
 
 		[TV (11,0), iOS (11,0)]
 		[Export ("constraintEqualToSystemSpacingBelowAnchor:multiplier:")]
@@ -1773,8 +1773,7 @@ namespace XamCore.UIKit {
 	interface IUIAccessibilityContainerDataTableCell {}
 
 	[iOS (11,0), TV (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface UIAccessibilityContainerDataTableCell {
 		[Abstract]
 		[Export ("accessibilityRowRange")]
@@ -1796,11 +1795,11 @@ namespace XamCore.UIKit {
 
 		[Abstract]
 		[Export ("accessibilityRowCount")]
-		nuint GetAccessibilityRowCount ();
+		nuint AccessibilityRowCount { get; }
 
 		[Abstract]
 		[Export ("accessibilityColumnCount")]
-		nuint GetAccessibilityColumnCount ();
+		nuint AccessibilityColumnCount { get; }
 
 		[Export ("accessibilityHeaderElementsForRow:")]
 		[return: NullAllowed]
@@ -1818,17 +1817,17 @@ namespace XamCore.UIKit {
 	    [Export ("initWithName:target:selector:")]
 	    IntPtr Constructor (string name, NSObject target, Selector selector);
 	
-	[TV (11,0), iOS (11,0)]
-	[Export ("initWithAttributedName:target:selector:")]
-	IntPtr Constructor (NSAttributedString attributedName, [NullAllowed] NSObject target, Selector selector);
+		[TV (11,0), iOS (11,0)]
+		[Export ("initWithAttributedName:target:selector:")]
+		IntPtr Constructor (NSAttributedString attributedName, [NullAllowed] NSObject target, Selector selector);
 
 		[NullAllowed] // by default this property is null
 	    [Export ("name")]
 	    string Name { get; set; }
 	
-	[TV (11,0), iOS (11,0)]
-	[Export ("attributedName", ArgumentSemantic.Copy)]
-	NSAttributedString AttributedName { get; set; }
+		[TV (11,0), iOS (11,0)]
+		[Export ("attributedName", ArgumentSemantic.Copy)]
+		NSAttributedString AttributedName { get; set; }
 
 		[NullAllowed] // by default this property is null
 	    [Export ("target", ArgumentSemantic.Weak)]
@@ -1998,6 +1997,7 @@ namespace XamCore.UIKit {
 
 	[NoWatch, NoTV]
 	[iOS (11,0)]
+	// NSObject category inlined in UIResponder
 	interface UIAccessibilityDragging {
 		[NullAllowed, Export ("accessibilityDragSourceDescriptors", ArgumentSemantic.Copy)]
 		UIAccessibilityLocationDescriptor[] AccessibilityDragSourceDescriptors { get; set; }
@@ -2036,8 +2036,7 @@ namespace XamCore.UIKit {
 
 	[NoWatch]
 	[TV (11,0), iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface UIAccessibilityContentSizeCategoryImageAdjusting {
 		[Abstract]
 		[Export ("adjustsImageSizeForAccessibilityContentSizeCategory")]
@@ -9771,7 +9770,11 @@ namespace XamCore.UIKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	interface UIResponder : UIAccessibilityAction, UIAccessibilityFocus {
+	interface UIResponder : UIAccessibilityAction, UIAccessibilityFocus
+#if !TVOS
+	, UIAccessibilityDragging
+#endif // !TVOS
+	{
 
 		[Export ("nextResponder")]
 		UIResponder NextResponder { get; } 
@@ -18289,14 +18292,14 @@ namespace XamCore.UIKit {
 
 		[Async]
 		[Export ("revealDocumentAtURL:importIfNeeded:completion:")]
-		void RevealDocumentAtUrl (NSUrl url, bool importIfNeeded, [NullAllowed] Action<NSUrl, NSError> completion);
+		void RevealDocument (NSUrl url, bool importIfNeeded, [NullAllowed] Action<NSUrl, NSError> completion);
 
 		[Async]
 		[Export ("importDocumentAtURL:nextToDocumentAtURL:mode:completionHandler:")]
-		void ImportDocumentAtUrl (NSUrl documentUrl, NSUrl neighbourUrl, UIDocumentBrowserImportMode importMode, Action<NSUrl, NSError> completion);
+		void ImportDocument (NSUrl documentUrl, NSUrl neighbourUrl, UIDocumentBrowserImportMode importMode, Action<NSUrl, NSError> completion);
 
 		[Export ("transitionControllerForDocumentURL:")]
-		UIDocumentBrowserTransitionController TransitionControllerForDocumentUrl (NSUrl documentUrl);
+		UIDocumentBrowserTransitionController GetTransitionController (NSUrl documentUrl);
 
 		[Export ("customActions", ArgumentSemantic.Strong)]
 		UIDocumentBrowserAction[] CustomActions { get; set; }
