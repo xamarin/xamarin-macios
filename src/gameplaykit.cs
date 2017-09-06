@@ -18,6 +18,7 @@ using Vector2i = global::OpenTK.Vector2i;
 using Vector3 = global::OpenTK.Vector3;
 using Vector3d = global::OpenTK.Vector3d;
 using Matrix3 = global::OpenTK.Matrix3;
+using Simd;
 
 #if MONOMAC
 using SKColor = XamCore.AppKit.NSColor;
@@ -132,8 +133,24 @@ namespace XamCore.GameplayKit {
 		[Export ("rightHanded")]
 		bool RightHanded { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'Rotation3x3' instead.")]
 		[Export ("rotation", ArgumentSemantic.Assign)]
 		Matrix3 Rotation { 
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			set;
+		}
+#endif
+
+		[Export ("rotation", ArgumentSemantic.Assign)]
+#if XAMCORE_4_0
+		MatrixFloat3x3 Rotation {
+#else
+		[Sealed]
+		MatrixFloat3x3 Rotation3x3 {
+#endif
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]

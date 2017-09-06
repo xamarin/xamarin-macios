@@ -212,6 +212,8 @@ namespace Introspection {
 				return true;
 			case "MPVolumeView": // Started failing with Xcode 9 beta 3
 				return true;
+			case "IOSurface": // Only works on device
+				return Runtime.Arch == Arch.SIMULATOR;
 			default:
 				return base.Skip (type);
 			}
@@ -339,7 +341,6 @@ namespace Introspection {
 					return;
 				break;
 			// Xcode 9 Beta 1 to avoid crashes
-			case "AVCaptureInputPort":
 			case "CIImageAccumulator":
 				if (TestRuntime.CheckXcodeVersion (9, 0))
 					return;

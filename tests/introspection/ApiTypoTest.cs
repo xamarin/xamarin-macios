@@ -97,6 +97,7 @@ namespace Introspection
 			"Automapping",
 			"Automounted",
 			"Autoredirect",
+			"Avci", // file type
 			"Aliasable",
 			"Arcball",
 			"Backface",
@@ -104,6 +105,7 @@ namespace Introspection
 			"Bancaires", // french
 			"Bary",
 			"Batc",
+			"Bgra", // acrnym for Blue, Green, Red, Alpha
 			"Bim",
 			"Biquad",
 			"Bitangent",
@@ -132,6 +134,7 @@ namespace Introspection
 			"Conflictserror",
 			"Connnect",
 			"Counterclock",
+			"Copyback",
 			"Craete",
 			"Crosstraining",
 			"Cubemap",
@@ -200,6 +203,8 @@ namespace Introspection
 			"Hdmi",
 			"Hdr",
 			"Hectopascals",
+			"Heic", // file type
+			"Heif", // file type
 			"Hevc", // CMVideoCodecType / High Efficiency Video Coding
 			"Hfp",
 			"Hipass",

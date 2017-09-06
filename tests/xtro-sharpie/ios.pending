@@ -269,6 +269,11 @@
 
 ## Looks like this was removed by apple in Intents iOS 11.0 Beta 1 to Beta 2 - http://codeworkshop.net/objc-diff/sdkdiffs/ios/11.0b2/Intents.html
 !extra-protocol-member! unexpected selector INSetProfileInCarIntentHandling::resolveDefaultProfileForSetProfileInCar:withCompletion: found
+## Same added and removed in iOS 11
+!missing-selector! +INNotebookItemTypeResolutionResult::disambiguationWithValuesToDisambiguate: not bound
+
+## Apple made this protocol member optional in iOS 11 but it is a breaking change for us. Added to XAMCORE_4_0.
+!incorrect-protocol-member! INUIHostedViewControlling::configureWithInteraction:context:completion: is OPTIONAL and should NOT be abstract
 
 # UIKit
 

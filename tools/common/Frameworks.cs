@@ -136,6 +136,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "ModelIO", 10, 11 },
 
 					{ "Intents", 10, 12 },
+					{ "IOSurface", "IOSurface", 10, 12 },
 					{ "SafariServices", "SafariServices", 10, 12 },
 					{ "MediaPlayer", "MediaPlayer", 10, 12, 1 },
 
@@ -244,6 +245,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "UserNotificationsUI", "UserNotificationsUI", 10 },
 				{ "Intents", "Intents", 10 },
 				{ "IntentsUI", "IntentsUI", 10 },
+				{ "IOSurface", "IOSurface", 10 },
 
 				{ "ARKit", "ARKit", 11 },
 				{ "CoreNFC", "CoreNFC", 11 },

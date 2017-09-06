@@ -444,7 +444,7 @@ namespace XamCore.Intents {
 		FailurePaymentsCurrencyUnsupported,
 		FailureNoBankAccount,
 		[iOS (11,0), Watch (4,0)]
-		NotEligible,
+		FailureNotEligible,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1627,7 +1627,13 @@ namespace XamCore.Intents {
 		void HandleBookRestaurantReservation (INBookRestaurantReservationIntent intent, Action<INBookRestaurantReservationIntentResponse> completion);
 
 		[Export ("confirmBookRestaurantReservation:completion:")]
-		void ConfirmBookRestaurantReservation (INBookRestaurantReservationIntent intent, Action<INBookRestaurantReservationIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmBookRestaurantReservation
+#endif
+		(INBookRestaurantReservationIntent intent, Action<INBookRestaurantReservationIntentResponse> completion);
 
 		[Export ("resolveRestaurantForBookRestaurantReservation:withCompletion:")]
 		void ResolveRestaurant (INBookRestaurantReservationIntent intent, Action<INRestaurantResolutionResult> completion);
@@ -1774,7 +1780,13 @@ namespace XamCore.Intents {
 		void HandleCancelWorkout (INCancelWorkoutIntent intent, Action<INCancelWorkoutIntentResponse> completion);
 
 		[Export ("confirmCancelWorkout:completion:")]
-		void ConfirmCancelWorkout (INCancelWorkoutIntent intent, Action<INCancelWorkoutIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmCancelWorkout
+#endif
+		(INCancelWorkoutIntent intent, Action<INCancelWorkoutIntentResponse> completion);
 
 		[Export ("resolveWorkoutNameForCancelWorkout:withCompletion:")]
 		void ResolveWorkoutName (INCancelWorkoutIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -1947,13 +1959,29 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INCarSeatResolutionResult {
 
+		[iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("successWithResolvedCarSeat:")]
+		INCarSeatResolutionResult SuccessWithResolvedCarSeat (INCarSeat resolvedCarSeat);
+
+		[Internal]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
-		INCarSeatResolutionResult GetSuccess (INCarSeat resolvedValue);
+		INCarSeatResolutionResult SuccessWithResolvedValue (INCarSeat resolvedValue);
 
+		[iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("confirmationRequiredWithCarSeatToConfirm:")]
+		INCarSeatResolutionResult ConfirmationRequiredWithCarSeatToConfirm (INCarSeat carSeatToConfirm);
+
+		[Internal]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INCarSeatResolutionResult GetConfirmationRequired (INCarSeat valueToConfirm);
+		INCarSeatResolutionResult ConfirmationRequiredWithValueToConfirm (INCarSeat valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -2159,7 +2187,11 @@ namespace XamCore.Intents {
 	[Introduced (PlatformName.WatchOS, 3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Protocol] 
-	interface INPaymentsDomainHandling : INSendPaymentIntentHandling, INRequestPaymentIntentHandling, INPayBillIntentHandling, INSearchForBillsIntentHandling, INSearchForAccountsIntentHandling, INTransferMoneyIntentHandling {
+	interface INPaymentsDomainHandling : INSendPaymentIntentHandling, INRequestPaymentIntentHandling, INPayBillIntentHandling, INSearchForBillsIntentHandling
+#if XAMCORE_4_0 // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
+	, INSearchForAccountsIntentHandling, INTransferMoneyIntentHandling
+#endif
+	{
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2174,7 +2206,7 @@ namespace XamCore.Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Protocol]
 	interface INRidesharingDomainHandling : INListRideOptionsIntentHandling, INRequestRideIntentHandling, INGetRideStatusIntentHandling 
-#if !WATCH
+#if XAMCORE_4_0 // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
 	, INCancelRideIntentHandling, INSendRideFeedbackIntentHandling
 #endif
 	{
@@ -2287,7 +2319,13 @@ namespace XamCore.Intents {
 		void HandleEndWorkout (INEndWorkoutIntent intent, Action<INEndWorkoutIntentResponse> completion);
 
 		[Export ("confirmEndWorkout:completion:")]
-		void ConfirmEndWorkout (INEndWorkoutIntent intent, Action<INEndWorkoutIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmEndWorkout
+#endif
+		(INEndWorkoutIntent intent, Action<INEndWorkoutIntentResponse> completion);
 
 		[Export ("resolveWorkoutNameForEndWorkout:withCompletion:")]
 		void ResolveWorkoutName (INEndWorkoutIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -2351,7 +2389,13 @@ namespace XamCore.Intents {
 		void HandleAvailableRestaurantReservationBookingDefaults (INGetAvailableRestaurantReservationBookingDefaultsIntent intent, Action<INGetAvailableRestaurantReservationBookingDefaultsIntentResponse> completion);
 
 		[Export ("confirmGetAvailableRestaurantReservationBookingDefaults:completion:")]
-		void ConfirmAvailableRestaurantReservationBookingDefaults (INGetAvailableRestaurantReservationBookingDefaultsIntent intent, Action<INGetAvailableRestaurantReservationBookingDefaultsIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmAvailableRestaurantReservationBookingDefaults
+#endif
+		(INGetAvailableRestaurantReservationBookingDefaultsIntent intent, Action<INGetAvailableRestaurantReservationBookingDefaultsIntentResponse> completion);
 
 		[Export ("resolveRestaurantForGetAvailableRestaurantReservationBookingDefaults:withCompletion:")]
 		void ResolveAvailableRestaurantReservationBookingDefaults (INGetAvailableRestaurantReservationBookingDefaultsIntent intent, Action<INRestaurantResolutionResult> completion);
@@ -2426,7 +2470,13 @@ namespace XamCore.Intents {
 		void HandleAvailableRestaurantReservationBookings (INGetAvailableRestaurantReservationBookingsIntent intent, Action<INGetAvailableRestaurantReservationBookingsIntentResponse> completion);
 
 		[Export ("confirmGetAvailableRestaurantReservationBookings:completion:")]
-		void ConfirmAvailableRestaurantReservationBookings (INGetAvailableRestaurantReservationBookingsIntent intent, Action<INGetAvailableRestaurantReservationBookingsIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmAvailableRestaurantReservationBookings
+#endif
+		(INGetAvailableRestaurantReservationBookingsIntent intent, Action<INGetAvailableRestaurantReservationBookingsIntentResponse> completion);
 
 		[Export ("resolveRestaurantForGetAvailableRestaurantReservationBookings:withCompletion:")]
 		void ResolveAvailableRestaurantReservationBookings (INGetAvailableRestaurantReservationBookingsIntent intent, Action<INRestaurantResolutionResult> completion);
@@ -2482,7 +2532,13 @@ namespace XamCore.Intents {
 		void HandleRestaurantGuest (INGetRestaurantGuestIntent intent, Action<INGetRestaurantGuestIntentResponse> completion);
 
 		[Export ("confirmGetRestaurantGuest:completion:")]
-		void ConfirmRestaurantGuest (INGetRestaurantGuestIntent guestIntent, Action<INGetRestaurantGuestIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmRestaurantGuest
+#endif
+		(INGetRestaurantGuestIntent guestIntent, Action<INGetRestaurantGuestIntentResponse> completion);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2509,7 +2565,12 @@ namespace XamCore.Intents {
 	[Introduced (PlatformName.WatchOS, 3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (INIntent))]
+	[DisableDefaultCtor] // DesignatedInitializer below
 	interface INGetRideStatusIntent {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2531,7 +2592,13 @@ namespace XamCore.Intents {
 		void StopSendingUpdates (INGetRideStatusIntent intent);
 
 		[Export ("confirmGetRideStatus:completion:")]
-		void ConfirmRideStatus (INGetRideStatusIntent intent, Action<INGetRideStatusIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmRideStatus
+#endif
+		(INGetRideStatusIntent intent, Action<INGetRideStatusIntentResponse> completion);
 	}
 
 	interface IINGetRideStatusIntentResponseObserver { }
@@ -2599,7 +2666,13 @@ namespace XamCore.Intents {
 		void HandleUserCurrentRestaurantReservationBookings (INGetUserCurrentRestaurantReservationBookingsIntent intent, Action<INGetUserCurrentRestaurantReservationBookingsIntentResponse> completion);
 
 		[Export ("confirmGetUserCurrentRestaurantReservationBookings:completion:")]
-		void ConfirmUserCurrentRestaurantReservationBookings (INGetUserCurrentRestaurantReservationBookingsIntent intent, Action<INGetUserCurrentRestaurantReservationBookingsIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmUserCurrentRestaurantReservationBookings
+#endif
+		(INGetUserCurrentRestaurantReservationBookingsIntent intent, Action<INGetUserCurrentRestaurantReservationBookingsIntentResponse> completion);
 
 		[Export ("resolveRestaurantForGetUserCurrentRestaurantReservationBookings:withCompletion:")]
 		void ResolveUserCurrentRestaurantReservationBookings (INGetUserCurrentRestaurantReservationBookingsIntent intent, Action<INRestaurantResolutionResult> completion);
@@ -2848,7 +2921,13 @@ namespace XamCore.Intents {
 		void HandleListRideOptions (INListRideOptionsIntent intent, Action<INListRideOptionsIntentResponse> completion);
 
 		[Export ("confirmListRideOptions:completion:")]
-		void ConfirmListRideOptions (INListRideOptionsIntent intent, Action<INListRideOptionsIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmListRideOptions
+#endif
+		(INListRideOptionsIntent intent, Action<INListRideOptionsIntentResponse> completion);
 
 		[Export ("resolvePickupLocationForListRideOptions:withCompletion:")]
 		void ResolvePickupLocation (INListRideOptionsIntent intent, Action<INPlacemarkResolutionResult> completion);
@@ -3061,7 +3140,13 @@ namespace XamCore.Intents {
 		void HandlePauseWorkout (INPauseWorkoutIntent intent, Action<INPauseWorkoutIntentResponse> completion);
 
 		[Export ("confirmPauseWorkout:completion:")]
-		void ConfirmPauseWorkout (INPauseWorkoutIntent intent, Action<INPauseWorkoutIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmPauseWorkout
+#endif
+		(INPauseWorkoutIntent intent, Action<INPauseWorkoutIntentResponse> completion);
 
 		[Export ("resolveWorkoutNameForPauseWorkout:withCompletion:")]
 		void ResolveWorkoutName (INPauseWorkoutIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -3557,7 +3642,13 @@ namespace XamCore.Intents {
 		void HandleRequestPayment (INRequestPaymentIntent intent, Action<INRequestPaymentIntentResponse> completion);
 
 		[Export ("confirmRequestPayment:completion:")]
-		void ConfirmRequestPayment (INRequestPaymentIntent intent, Action<INRequestPaymentIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmRequestPayment
+#endif
+		(INRequestPaymentIntent intent, Action<INRequestPaymentIntentResponse> completion);
 
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ResolvePayer (INRequestPaymentIntent, Action<INRequestPaymentPayerResolutionResult>)' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolvePayer (INRequestPaymentIntent, Action<INRequestPaymentPayerResolutionResult>)' instead.")]
@@ -3646,7 +3737,13 @@ namespace XamCore.Intents {
 		void HandleRequestRide (INRequestRideIntent intent, Action<INRequestRideIntentResponse> completion);
 
 		[Export ("confirmRequestRide:completion:")]
-		void ConfirmRequestRide (INRequestRideIntent intent, Action<INRequestRideIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmRequestRide
+#endif
+		(INRequestRideIntent intent, Action<INRequestRideIntentResponse> completion);
 
 		[Export ("resolvePickupLocationForRequestRide:withCompletion:")]
 		void ResolvePickupLocation (INRequestRideIntent intent, Action<INPlacemarkResolutionResult> completion);
@@ -3948,7 +4045,13 @@ namespace XamCore.Intents {
 		void HandleResumeWorkout (INResumeWorkoutIntent intent, Action<INResumeWorkoutIntentResponse> completion);
 
 		[Export ("confirmResumeWorkout:completion:")]
-		void ConfirmResumeWorkout (INResumeWorkoutIntent intent, Action<INResumeWorkoutIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmResumeWorkout
+#endif
+		(INResumeWorkoutIntent intent, Action<INResumeWorkoutIntentResponse> completion);
 
 		[Export ("resolveWorkoutNameForResumeWorkout:withCompletion:")]
 		void ResolveWorkoutName (INResumeWorkoutIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -4258,7 +4361,13 @@ namespace XamCore.Intents {
 		void HandleSaveProfileInCar (INSaveProfileInCarIntent intent, Action<INSaveProfileInCarIntentResponse> completion);
 
 		[Export ("confirmSaveProfileInCar:completion:")]
-		void ConfirmSaveProfileInCar (INSaveProfileInCarIntent intent, Action<INSaveProfileInCarIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSaveProfileInCar
+#endif
+		(INSaveProfileInCarIntent intent, Action<INSaveProfileInCarIntentResponse> completion);
 
 		[Export ("resolveProfileNumberForSaveProfileInCar:withCompletion:")]
 		void ResolveProfileNumber (INSaveProfileInCarIntent intent, Action<INIntegerResolutionResult> completion);
@@ -4340,7 +4449,13 @@ namespace XamCore.Intents {
 		void HandleSearchCallHistory (INSearchCallHistoryIntent intent, Action<INSearchCallHistoryIntentResponse> completion);
 
 		[Export ("confirmSearchCallHistory:completion:")]
-		void ConfirmSearchCallHistory (INSearchCallHistoryIntent intent, Action<INSearchCallHistoryIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSearchCallHistory
+#endif
+		(INSearchCallHistoryIntent intent, Action<INSearchCallHistoryIntentResponse> completion);
 
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'ResolveCallTypes' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ResolveCallTypes' instead.")]
@@ -4467,7 +4582,13 @@ namespace XamCore.Intents {
 		void HandleSearchForMessages (INSearchForMessagesIntent intent, Action<INSearchForMessagesIntentResponse> completion);
 
 		[Export ("confirmSearchForMessages:completion:")]
-		void ConfirmSearchForMessages (INSearchForMessagesIntent intent, Action<INSearchForMessagesIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSearchForMessages
+#endif
+		(INSearchForMessagesIntent intent, Action<INSearchForMessagesIntentResponse> completion);
 
 		[Export ("resolveRecipientsForSearchForMessages:withCompletion:")]
 		void ResolveRecipients (INSearchForMessagesIntent intent, Action<INPersonResolutionResult []> completion);
@@ -4559,7 +4680,13 @@ namespace XamCore.Intents {
 		void HandleSearchForPhotos (INSearchForPhotosIntent intent, Action<INSearchForPhotosIntentResponse> completion);
 
 		[Export ("confirmSearchForPhotos:completion:")]
-		void ConfirmSearchForPhotos (INSearchForPhotosIntent intent, Action<INSearchForPhotosIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSearchForPhotos
+#endif
+		(INSearchForPhotosIntent intent, Action<INSearchForPhotosIntentResponse> completion);
 
 		[Export ("resolveDateCreatedForSearchForPhotos:withCompletion:")]
 		void ResolveDateCreated (INSearchForPhotosIntent intent, Action<INDateComponentsRangeResolutionResult> completion);
@@ -4651,7 +4778,13 @@ namespace XamCore.Intents {
 		void HandleSendMessage (INSendMessageIntent intent, Action<INSendMessageIntentResponse> completion);
 
 		[Export ("confirmSendMessage:completion:")]
-		void ConfirmSendMessage (INSendMessageIntent intent, Action<INSendMessageIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSendMessage
+#endif
+		(INSendMessageIntent intent, Action<INSendMessageIntentResponse> completion);
 
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ResolveRecipients (INSendMessageIntent, Action<INSendMessageRecipientResolutionResult []>)' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolveRecipients (INSendMessageIntent, Action<INSendMessageRecipientResolutionResult []>)' instead.")]
@@ -4727,7 +4860,13 @@ namespace XamCore.Intents {
 		void HandleSendPayment (INSendPaymentIntent intent, Action<INSendPaymentIntentResponse> completion);
 
 		[Export ("confirmSendPayment:completion:")]
-		void ConfirmSendPayment (INSendPaymentIntent intent, Action<INSendPaymentIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSendPayment
+#endif
+		(INSendPaymentIntent intent, Action<INSendPaymentIntentResponse> completion);
 
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ResolvePayee (INSendPaymentIntent, Action<INSendPaymentPayeeResolutionResult>)' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolvePayee (INSendPaymentIntent, Action<INSendPaymentPayeeResolutionResult>)' instead.")]
@@ -4797,7 +4936,13 @@ namespace XamCore.Intents {
 		void HandleSetAudioSourceInCar (INSetAudioSourceInCarIntent intent, Action<INSetAudioSourceInCarIntentResponse> completion);
 
 		[Export ("confirmSetAudioSourceInCar:completion:")]
-		void ConfirmSetAudioSourceInCar (INSetAudioSourceInCarIntent intent, Action<INSetAudioSourceInCarIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSetAudioSourceInCar
+#endif
+		(INSetAudioSourceInCarIntent intent, Action<INSetAudioSourceInCarIntentResponse> completion);
 
 		[Export ("resolveAudioSourceForSetAudioSourceInCar:withCompletion:")]
 		void ResolveAudioSource (INSetAudioSourceInCarIntent intent, Action<INCarAudioSourceResolutionResult> completion);
@@ -4885,7 +5030,13 @@ namespace XamCore.Intents {
 		void HandleSetClimateSettingsInCar (INSetClimateSettingsInCarIntent intent, Action<INSetClimateSettingsInCarIntentResponse> completion);
 
 		[Export ("confirmSetClimateSettingsInCar:completion:")]
-		void ConfirmSetClimateSettingsInCar (INSetClimateSettingsInCarIntent intent, Action<INSetClimateSettingsInCarIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSetClimateSettingsInCar
+#endif
+		(INSetClimateSettingsInCarIntent intent, Action<INSetClimateSettingsInCarIntentResponse> completion);
 
 		[Export ("resolveEnableFanForSetClimateSettingsInCar:withCompletion:")]
 		void ResolveEnableFan (INSetClimateSettingsInCarIntent intent, Action<INBooleanResolutionResult> completion);
@@ -4966,7 +5117,13 @@ namespace XamCore.Intents {
 		void HandleSetDefrosterSettingsInCar (INSetDefrosterSettingsInCarIntent intent, Action<INSetDefrosterSettingsInCarIntentResponse> completion);
 
 		[Export ("confirmSetDefrosterSettingsInCar:completion:")]
-		void ConfirmSetDefrosterSettingsInCar (INSetDefrosterSettingsInCarIntent intent, Action<INSetDefrosterSettingsInCarIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSetDefrosterSettingsInCar
+#endif
+		(INSetDefrosterSettingsInCarIntent intent, Action<INSetDefrosterSettingsInCarIntentResponse> completion);
 
 		[Export ("resolveEnableForSetDefrosterSettingsInCar:withCompletion:")]
 		void ResolveEnable (INSetDefrosterSettingsInCarIntent intent, Action<INBooleanResolutionResult> completion);
@@ -5018,7 +5175,13 @@ namespace XamCore.Intents {
 		void HandleSetMessageAttribute (INSetMessageAttributeIntent intent, Action<INSetMessageAttributeIntentResponse> completion);
 
 		[Export ("confirmSetMessageAttribute:completion:")]
-		void ConfirmSetMessageAttribute (INSetMessageAttributeIntent intent, Action<INSetMessageAttributeIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSetMessageAttribute
+#endif
+		(INSetMessageAttributeIntent intent, Action<INSetMessageAttributeIntentResponse> completion);
 
 		[Export ("resolveAttributeForSetMessageAttribute:withCompletion:")]
 		void ResolveAttribute (INSetMessageAttributeIntent intent, Action<INMessageAttributeResolutionResult> completion);
@@ -5080,7 +5243,13 @@ namespace XamCore.Intents {
 		void HandleSetProfileInCar (INSetProfileInCarIntent intent, Action<INSetProfileInCarIntentResponse> completion);
 
 		[Export ("confirmSetProfileInCar:completion:")]
-		void ConfirmSetProfileInCar (INSetProfileInCarIntent intent, Action<INSetProfileInCarIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSetProfileInCar
+#endif
+		(INSetProfileInCarIntent intent, Action<INSetProfileInCarIntentResponse> completion);
 
 		[Export ("resolveProfileNumberForSetProfileInCar:withCompletion:")]
 		void ResolveProfileNumber (INSetProfileInCarIntent intent, Action<INIntegerResolutionResult> completion);
@@ -5146,7 +5315,13 @@ namespace XamCore.Intents {
 		void HandleSetRadioStation (INSetRadioStationIntent intent, Action<INSetRadioStationIntentResponse> completion);
 
 		[Export ("confirmSetRadioStation:completion:")]
-		void ConfirmSetRadioStation (INSetRadioStationIntent intent, Action<INSetRadioStationIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSetRadioStation
+#endif
+		(INSetRadioStationIntent intent, Action<INSetRadioStationIntentResponse> completion);
 
 		[Export ("resolveRadioTypeForSetRadioStation:withCompletion:")]
 		void ResolveRadioType (INSetRadioStationIntent intent, Action<INRadioTypeResolutionResult> completion);
@@ -5223,7 +5398,13 @@ namespace XamCore.Intents {
 		void HandleSetSeatSettingsInCar (INSetSeatSettingsInCarIntent intent, Action<INSetSeatSettingsInCarIntentResponse> completion);
 
 		[Export ("confirmSetSeatSettingsInCar:completion:")]
-		void ConfirmSetSeatSettingsInCar (INSetSeatSettingsInCarIntent intent, Action<INSetSeatSettingsInCarIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSetSeatSettingsInCar
+#endif
+		(INSetSeatSettingsInCarIntent intent, Action<INSetSeatSettingsInCarIntentResponse> completion);
 
 		[Export ("resolveEnableHeatingForSetSeatSettingsInCar:withCompletion:")]
 		void ResolveEnableHeating (INSetSeatSettingsInCarIntent intent, Action<INBooleanResolutionResult> completion);
@@ -5395,7 +5576,13 @@ namespace XamCore.Intents {
 		void HandleStartAudioCall (INStartAudioCallIntent intent, Action<INStartAudioCallIntentResponse> completion);
 
 		[Export ("confirmStartAudioCall:completion:")]
-		void ConfirmStartAudioCall (INStartAudioCallIntent intent, Action<INStartAudioCallIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmStartAudioCall
+#endif
+		(INStartAudioCallIntent intent, Action<INStartAudioCallIntentResponse> completion);
 
 		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
 		[Export ("resolveDestinationTypeForStartAudioCall:withCompletion:")]
@@ -5469,7 +5656,13 @@ namespace XamCore.Intents {
 		void HandleStartPhotoPlayback (INStartPhotoPlaybackIntent intent, Action<INStartPhotoPlaybackIntentResponse> completion);
 
 		[Export ("confirmStartPhotoPlayback:completion:")]
-		void ConfirmStartPhotoPlayback (INStartPhotoPlaybackIntent intent, Action<INStartPhotoPlaybackIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmStartPhotoPlayback
+#endif
+		(INStartPhotoPlaybackIntent intent, Action<INStartPhotoPlaybackIntentResponse> completion);
 
 		[Export ("resolveDateCreatedForStartPhotoPlayback:withCompletion:")]
 		void ResolveDateCreated (INStartPhotoPlaybackIntent intent, Action<INDateComponentsRangeResolutionResult> completion);
@@ -5527,7 +5720,13 @@ namespace XamCore.Intents {
 		void HandleStartVideoCall (INStartVideoCallIntent intent, Action<INStartVideoCallIntentResponse> completion);
 
 		[Export ("confirmStartVideoCall:completion:")]
-		void ConfirmStartVideoCall (INStartVideoCallIntent intent, Action<INStartVideoCallIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmStartVideoCall
+#endif
+		(INStartVideoCallIntent intent, Action<INStartVideoCallIntentResponse> completion);
 
 		[Export ("resolveContactsForStartVideoCall:withCompletion:")]
 		void ResolveContacts (INStartVideoCallIntent intent, Action<INPersonResolutionResult []> completion);
@@ -5587,7 +5786,13 @@ namespace XamCore.Intents {
 		void HandleStartWorkout (INStartWorkoutIntent intent, Action<INStartWorkoutIntentResponse> completion);
 
 		[Export ("confirmStartWorkout:completion:")]
-		void ConfirmStartWorkout (INStartWorkoutIntent intent, Action<INStartWorkoutIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmStartWorkout
+#endif
+		(INStartWorkoutIntent intent, Action<INStartWorkoutIntentResponse> completion);
 
 		[Export ("resolveWorkoutNameForStartWorkout:withCompletion:")]
 		void ResolveWorkoutName (INStartWorkoutIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -5885,7 +6090,13 @@ namespace XamCore.Intents {
 		void HandleActivateCarSignal (INActivateCarSignalIntent intent, Action<INActivateCarSignalIntentResponse> completion);
 
 		[Export ("confirmActivateCarSignal:completion:")]
-		void ConfirmActivateCarSignal (INActivateCarSignalIntent intent, Action<INActivateCarSignalIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmActivateCarSignal
+#endif
+		(INActivateCarSignalIntent intent, Action<INActivateCarSignalIntentResponse> completion);
 
 		[Export ("resolveCarNameForActivateCarSignal:withCompletion:")]
 		void ResolveCarName (INActivateCarSignalIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -6119,7 +6330,13 @@ namespace XamCore.Intents {
 		void HandleGetCarLockStatus (INGetCarLockStatusIntent intent, Action<INGetCarLockStatusIntentResponse> completion);
 
 		[Export ("confirmGetCarLockStatus:completion:")]
-		void ConfirmGetCarLockStatus (INGetCarLockStatusIntent intent, Action<INGetCarLockStatusIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmGetCarLockStatus
+#endif
+		(INGetCarLockStatusIntent intent, Action<INGetCarLockStatusIntentResponse> completion);
 
 		[Export ("resolveCarNameForGetCarLockStatus:withCompletion:")]
 		void ResolveCarName (INGetCarLockStatusIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -6173,7 +6390,13 @@ namespace XamCore.Intents {
 		void HandleGetCarPowerLevelStatus (INGetCarPowerLevelStatusIntent intent, Action<INGetCarPowerLevelStatusIntentResponse> completion);
 
 		[Export ("confirmGetCarPowerLevelStatus:completion:")]
-		void ConfirmGetCarPowerLevelStatus (INGetCarPowerLevelStatusIntent intent, Action<INGetCarPowerLevelStatusIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmGetCarPowerLevelStatus
+#endif
+		(INGetCarPowerLevelStatusIntent intent, Action<INGetCarPowerLevelStatusIntentResponse> completion);
 
 		[Export ("resolveCarNameForGetCarPowerLevelStatus:withCompletion:")]
 		void ResolveCarName (INGetCarPowerLevelStatusIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -6260,7 +6483,13 @@ namespace XamCore.Intents {
 		void HandlePayBill (INPayBillIntent intent, Action<INPayBillIntentResponse> completion);
 
 		[Export ("confirmPayBill:completion:")]
-		void ConfirmPayBill (INPayBillIntent intent, Action<INPayBillIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmPayBill
+#endif
+		(INPayBillIntent intent, Action<INPayBillIntentResponse> completion);
 
 		[Export ("resolveBillPayeeForPayBill:withCompletion:")]
 		void ResolveBillPayee (INPayBillIntent intent, Action<INBillPayeeResolutionResult> completion);
@@ -6538,7 +6767,13 @@ namespace XamCore.Intents {
 		void HandleSearch (INSearchForBillsIntent intent, Action<INSearchForBillsIntentResponse> completion);
 
 		[Export ("confirmSearchForBills:completion:")]
-		void ConfirmSearch (INSearchForBillsIntent intent, Action<INSearchForBillsIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSearch
+#endif
+		(INSearchForBillsIntent intent, Action<INSearchForBillsIntentResponse> completion);
 
 		[Export ("resolveBillPayeeForSearchForBills:withCompletion:")]
 		void ResolveBillPayee (INSearchForBillsIntent intent, Action<INBillPayeeResolutionResult> completion);
@@ -6608,7 +6843,13 @@ namespace XamCore.Intents {
 		void HandleSetCarLockStatus (INSetCarLockStatusIntent intent, Action<INSetCarLockStatusIntentResponse> completion);
 
 		[Export ("confirmSetCarLockStatus:completion:")]
-		void ConfirmSetCarLockStatus (INSetCarLockStatusIntent intent, Action<INSetCarLockStatusIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSetCarLockStatus
+#endif
+		(INSetCarLockStatusIntent intent, Action<INSetCarLockStatusIntentResponse> completion);
 
 		[Export ("resolveLockedForSetCarLockStatus:withCompletion:")]
 		void ResolveLocked (INSetCarLockStatusIntent intent, Action<INBooleanResolutionResult> completion);
@@ -6712,7 +6953,7 @@ namespace XamCore.Intents {
 		void HandleAddTasks (INAddTasksIntent intent, Action<INAddTasksIntentResponse> completion);
 
 		[Export ("confirmAddTasks:completion:")]
-		void ConfirmAddTasks (INAddTasksIntent intent, Action<INAddTasksIntentResponse> completion);
+		void Confirm (INAddTasksIntent intent, Action<INAddTasksIntentResponse> completion);
 
 		[Export ("resolveTargetTaskListForAddTasks:withCompletion:")]
 		void ResolveTargetTaskList (INAddTasksIntent intent, Action<INTaskListResolutionResult> completion);
@@ -6770,7 +7011,7 @@ namespace XamCore.Intents {
 		void HandleAppendToNote (INAppendToNoteIntent intent, Action<INAppendToNoteIntentResponse> completion);
 
 		[Export ("confirmAppendToNote:completion:")]
-		void ConfirmAppendToNote (INAppendToNoteIntent intent, Action<INAppendToNoteIntentResponse> completion);
+		void Confirm (INAppendToNoteIntent intent, Action<INAppendToNoteIntentResponse> completion);
 
 		[Export ("resolveTargetNoteForAppendToNote:withCompletion:")]
 		void ResolveTargetNoteForAppend (INAppendToNoteIntent intent, Action<INNoteResolutionResult> completion);
@@ -6969,7 +7210,7 @@ namespace XamCore.Intents {
 		void HandleCancelRide (INCancelRideIntent intent, Action<INCancelRideIntentResponse> completion);
 
 		[Export ("confirmCancelRide:completion:")]
-		void ConfirmCancelRide (INCancelRideIntent intent, Action<INCancelRideIntentResponse> completion);
+		void Confirm (INCancelRideIntent intent, Action<INCancelRideIntentResponse> completion);
 	}
 
 	[NoWatch, NoMac, iOS (11,0)]
@@ -7019,7 +7260,7 @@ namespace XamCore.Intents {
 		void HandleCreateNote (INCreateNoteIntent intent, Action<INCreateNoteIntentResponse> completion);
 
 		[Export ("confirmCreateNote:completion:")]
-		void ConfirmCreateNote (INCreateNoteIntent intent, Action<INCreateNoteIntentResponse> completion);
+		void Confirm (INCreateNoteIntent intent, Action<INCreateNoteIntentResponse> completion);
 
 		[Export ("resolveTitleForCreateNote:withCompletion:")]
 		void ResolveTitle (INCreateNoteIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -7075,7 +7316,7 @@ namespace XamCore.Intents {
 		void HandleCreateTaskList (INCreateTaskListIntent intent, Action<INCreateTaskListIntentResponse> completion);
 
 		[Export ("confirmCreateTaskList:completion:")]
-		void ConfirmCreateTaskList (INCreateTaskListIntent intent, Action<INCreateTaskListIntentResponse> completion);
+		void Confirm (INCreateTaskListIntent intent, Action<INCreateTaskListIntentResponse> completion);
 
 		[Export ("resolveTitleForCreateTaskList:withCompletion:")]
 		void ResolveTitle (INCreateTaskListIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -7157,7 +7398,7 @@ namespace XamCore.Intents {
 		void HandleGetVisualCode (INGetVisualCodeIntent intent, Action<INGetVisualCodeIntentResponse> completion);
 
 		[Export ("confirmGetVisualCode:completion:")]
-		void ConfirmGetVisualCode (INGetVisualCodeIntent intent, Action<INGetVisualCodeIntentResponse> completion);
+		void Confirm (INGetVisualCodeIntent intent, Action<INGetVisualCodeIntentResponse> completion);
 
 		[Export ("resolveVisualCodeTypeForGetVisualCode:withCompletion:")]
 		void ResolveVisualCodeType (INGetVisualCodeIntent intent, Action<INVisualCodeTypeResolutionResult> completion);
@@ -7529,7 +7770,7 @@ namespace XamCore.Intents {
 		void HandleSearchForAccounts (INSearchForAccountsIntent intent, Action<INSearchForAccountsIntentResponse> completion);
 
 		[Export ("confirmSearchForAccounts:completion:")]
-		void ConfirmSearchForAccounts (INSearchForAccountsIntent intent, Action<INSearchForAccountsIntentResponse> completion);
+		void Confirm (INSearchForAccountsIntent intent, Action<INSearchForAccountsIntentResponse> completion);
 
 		[Export ("resolveAccountNicknameForSearchForAccounts:withCompletion:")]
 		void ResolveAccountNickname (INSearchForAccountsIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -7602,7 +7843,7 @@ namespace XamCore.Intents {
 		void HandleSearchForNotebookItems (INSearchForNotebookItemsIntent intent, Action<INSearchForNotebookItemsIntentResponse> completion);
 
 		[Export ("confirmSearchForNotebookItems:completion:")]
-		void ConfirmSearchForNotebookItems (INSearchForNotebookItemsIntent intent, Action<INSearchForNotebookItemsIntentResponse> completion);
+		void Confirm (INSearchForNotebookItemsIntent intent, Action<INSearchForNotebookItemsIntentResponse> completion);
 
 		[Export ("resolveTitleForSearchForNotebookItems:withCompletion:")]
 		void ResolveTitle (INSearchForNotebookItemsIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -7775,7 +8016,7 @@ namespace XamCore.Intents {
 		void HandleSendRideFeedback (INSendRideFeedbackIntent sendRideFeedbackintent, Action<INSendRideFeedbackIntentResponse> completion);
 
 		[Export ("confirmSendRideFeedback:completion:")]
-		void ConfirmSendRideFeedback (INSendRideFeedbackIntent sendRideFeedbackIntent, Action<INSendRideFeedbackIntentResponse> completion);
+		void Confirm (INSendRideFeedbackIntent sendRideFeedbackIntent, Action<INSendRideFeedbackIntentResponse> completion);
 	}
 
 	[NoWatch, NoMac, iOS (11,0)]
@@ -7821,7 +8062,7 @@ namespace XamCore.Intents {
 		void HandleSetTaskAttribute (INSetTaskAttributeIntent intent, Action<INSetTaskAttributeIntentResponse> completion);
 
 		[Export ("confirmSetTaskAttribute:completion:")]
-		void ConfirmSetTaskAttribute (INSetTaskAttributeIntent intent, Action<INSetTaskAttributeIntentResponse> completion);
+		void Confirm (INSetTaskAttributeIntent intent, Action<INSetTaskAttributeIntentResponse> completion);
 
 		[Export ("resolveTargetTaskForSetTaskAttribute:withCompletion:")]
 		void ResolveTargetTask (INSetTaskAttributeIntent intent, Action<INTaskResolutionResult> completion);
@@ -8161,7 +8402,7 @@ namespace XamCore.Intents {
 		void HandleTransferMoney (INTransferMoneyIntent intent, Action<INTransferMoneyIntentResponse> completion);
 
 		[Export ("confirmTransferMoney:completion:")]
-		void ConfirmTransferMoney (INTransferMoneyIntent intent, Action<INTransferMoneyIntentResponse> completion);
+		void Confirm (INTransferMoneyIntent intent, Action<INTransferMoneyIntentResponse> completion);
 
 		[Export ("resolveFromAccountForTransferMoney:withCompletion:")]
 		void ResolveFromAccount (INTransferMoneyIntent intent, Action<INPaymentAccountResolutionResult> completion);

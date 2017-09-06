@@ -79,6 +79,8 @@ namespace XamCore.Metal {
 		InvalidResource = 9,
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
 		Memoryless = 10,
+		[Mac (10,13), NoiOS, NoTV, NoWatch]
+		DeviceRemoved = 11,
 	}
 
 	[Native]
@@ -93,6 +95,8 @@ namespace XamCore.Metal {
 		StoreAndMultisampleResolve,
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 		Unknown,
+		[iOS (11,0), TV (11,0), NoWatch, Mac (10,13)]
+		CustomSampleDepthStore,
 	}
 
 	[Native]
@@ -191,6 +195,29 @@ namespace XamCore.Metal {
 		
 		Int1010102Normalized = 40,
 		UInt1010102Normalized = 41,
+
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		UChar4NormalizedBgra = 42,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		UChar = 45,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		Char = 46,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		UCharNormalized = 47,
+
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		CharNormalized = 48,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		UShort = 49,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		Short = 50,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		UShortNormalized = 51,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		ShortNormalized = 52,
+		
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		Half = 53,
 	}
 
 	[Mac (10,11)]
@@ -246,6 +273,8 @@ namespace XamCore.Metal {
 		RGB10A2Uint = 91,
 		RG11B10Float = 92,
 		RGB9E5Float = 93,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		BGR10A2Unorm = 94,
 		RG32Uint = 103,
 		RG32Sint = 104,
 		RG32Float = 105,
@@ -474,7 +503,7 @@ namespace XamCore.Metal {
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
 		StorageModeMemoryless = MTLStorageMode.Memoryless << 4,
 
-		[iOS (10,0), TV (10,0), NoWatch, NoMac]
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,13)]
 		HazardTrackingModeUntracked = 1 << 8,
 	}
 
@@ -563,7 +592,11 @@ namespace XamCore.Metal {
 		Bool  = 53,
 		Bool2 = 54,
 		Bool3 = 55,
-		Bool4 = 56
+		Bool4 = 56,
+
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch] Texture = 58,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch] Sampler = 59,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch] Pointer = 60,
 	}
 
 	[Native]
@@ -598,15 +631,31 @@ namespace XamCore.Metal {
 		iOS_GPUFamily2_v3 = 6,
 		[iOS (10,0), NoTV, NoWatch, NoMac]
 		iOS_GPUFamily3_v2 = 7,
+		[iOS (11,0), NoTV, NoWatch, NoMac]
+		iOS_GPUFamily1_v4 = 8,
+		[iOS (11,0), NoTV, NoWatch, NoMac]
+		iOS_GPUFamily2_v4 = 9,
+		[iOS (11,0), NoTV, NoWatch, NoMac]
+		iOS_GPUFamily3_v3 = 10,
 
-		[Mac (10,11)]
-		OSX_GPUFamily1_v1 = 10000,
+		[Mac (10,11), NoiOS, NoTV, NoWatch]
+		macOS_GPUFamily1_v1 = 10000,
 		
-		[NoiOS, NoTV, NoWatch, Mac (10,12)]
-		OSX_GPUFamily1_v2 = 10001,
+		[Availability (Introduced = Platform.Mac_10_11, Deprecated = Platform.Mac_10_13, Message="Use 'macOS_GPUFamily1_v1' instead.")]
+		OSX_GPUFamily1_v1 = macOS_GPUFamily1_v1,
 		
-		[NoiOS, NoTV, NoWatch, Mac (10,12)]
-		OSX_ReadWriteTextureTier2 = 10002,
+		[Mac (10,13), NoiOS, NoTV, NoWatch]
+		macOS_GPUFamily1_v2 = 10001,
+		[Availability (Introduced = Platform.Mac_10_12, Deprecated = Platform.Mac_10_13, Message="Use 'macOS_GPUFamily1_v2' instead.")]
+		OSX_GPUFamily1_v2 = macOS_GPUFamily1_v2,
+		
+		[Mac (10,13), NoiOS, NoTV, NoWatch]
+		macOS_ReadWriteTextureTier2 = 10002,
+		[Availability (Introduced = Platform.Mac_10_12, Deprecated = Platform.Mac_10_13, Message="Use 'macOS_ReadWriteTextureTier2' instead.")]
+		OSX_ReadWriteTextureTier2 = macOS_ReadWriteTextureTier2,
+		
+		[Mac (10,13), NoiOS, NoTV, NoWatch]
+		macOS_GPUFamily1_v3 = 10003,
 
 		[TV (9,0)]
 		TVOS_GPUFamily1_v1 = 30000,
@@ -624,6 +673,8 @@ namespace XamCore.Metal {
 		v1_1 = (1 << 16) + 1,
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 		v1_2 = (1 << 16) + 2,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		v2_0 = (2 << 16),
 	}
 
 	[iOS (9,0)][Mac (10,11)]
@@ -764,7 +815,27 @@ namespace XamCore.Metal {
 		UInt3 = 38,
 		UInt4 = 39,
 		Int1010102Normalized = 40,
-		UInt1010102Normalized = 41
+		UInt1010102Normalized = 41,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		UChar4Normalized_Bgra = 42,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		UChar = 45,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		Char = 46,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		UCharNormalized = 47,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		CharNormalized = 48,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		UShort = 49,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		Short = 50,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		UShortNormalized = 51,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		ShortNormalized = 52,
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+		Half = 53,
 	}
 	
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
@@ -786,6 +857,49 @@ namespace XamCore.Metal {
 	public enum MTLRenderStages : nuint {
 		Vertex = (1 << 0),
 		Fragment = (1 << 1)
+	}
+
+	[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+	[Native, Flags]
+	public enum MTLResourceUsage : nuint
+	{
+		Read = 1 << 0,
+		Write = 1 << 1,
+		Sample = 1 << 2,
+	}
+
+	[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+	[Native]
+	public enum MTLMutability : nuint
+	{
+		Default = 0,
+		Mutable = 1,
+		Immutable = 2,
+	}
+
+	[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+	[Native]
+	public enum MTLReadWriteTextureTier : nuint
+	{
+		None = 0,
+		One = 1,
+		Two = 2,
+	}
+
+	[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+	[Native]
+	public enum MTLArgumentBuffersTier : nuint
+	{
+		One = 0,
+		Two = 1,
+	}
+
+	[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
+	[Native, Flags]
+	public enum MTLStoreActionOptions : nuint
+	{
+		None = 0,
+		CustomSamplePositions = 1 << 0,
 	}
 }
 #endif
