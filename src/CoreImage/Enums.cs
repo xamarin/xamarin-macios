@@ -22,6 +22,7 @@
 //
 
 using System;
+using XamCore.ObjCRuntime;
 
 namespace XamCore.CoreImage {
 
@@ -71,5 +72,39 @@ namespace XamCore.CoreImage {
 		RG16 = 20,
 		RGh = 21,
 		RGf = 22
+	}
+
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[Native]
+	public enum CIQRCodeErrorCorrectionLevel : nint {
+		L = 76,
+		M = 77,
+		Q = 81,
+		H = 72,
+	}
+
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[Native]
+	public enum CIDataMatrixCodeEccVersion : nint {
+		V000 = 0,
+		V050 = 50,
+		V080 = 80,
+		V100 = 100,
+		V140 = 140,
+		V200 = 200,
+	}
+
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[Native]
+	public enum CIRenderDestinationAlphaMode : nuint {
+		None = 0,
+		Premultiplied = 1,
+		Unpremultiplied = 2,
 	}
 }

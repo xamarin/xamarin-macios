@@ -206,6 +206,7 @@ namespace Introspection
 			"Heic", // file type
 			"Heif", // file type
 			"Hevc", // CMVideoCodecType / High Efficiency Video Coding
+			"Heif", // High Efficiency Image File Format
 			"Hfp",
 			"Hipass",
 			"Hls",
@@ -415,6 +416,7 @@ namespace Introspection
 			"Unflagged",
 			"Unfocusing",
 			"Unorm",
+			"Unpremultiplied",
 			"Unpremultiplying",
 			"Unprepare",
 			"Unproject",

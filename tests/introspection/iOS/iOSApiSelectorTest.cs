@@ -245,6 +245,37 @@ namespace Introspection {
 #endif
 				}
 				break;
+			case "CIContext":
+				switch (name) {
+				case "render:toIOSurface:bounds:colorSpace:":
+					if (Runtime.Arch == Arch.SIMULATOR)
+						return true;
+					if (!TestRuntime.CheckXcodeVersion (9, 0))
+						return true;
+					break;
+				}
+				break;
+			case "CIImage":
+				switch (name) {
+				case "initWithIOSurface:":
+				case "initWithIOSurface:options:":
+					if (Runtime.Arch == Arch.SIMULATOR)
+						return true;
+					if (!TestRuntime.CheckXcodeVersion (9, 0))
+						return true;
+					break;
+				}
+				break;
+			case "CIRenderDestination":
+				switch (name) {
+				case "initWithIOSurface:":
+					if (Runtime.Arch == Arch.SIMULATOR)
+						return true;
+					if (!TestRuntime.CheckXcodeVersion (9, 0))
+						return true;
+					break;
+				}
+				break;
 			}
 
 			switch (name) {
@@ -690,6 +721,17 @@ namespace Introspection {
 				switch (declaredType.Name) {
 				case "SCNGeometrySource":
 					return true;
+				}
+				break;
+			case "imageWithIOSurface:":
+			case "imageWithIOSurface:options:":
+				switch (declaredType.Name) {
+				case "CIImage":
+					if (Runtime.Arch == Arch.SIMULATOR)
+						return true;
+					if (!TestRuntime.CheckXcodeVersion (9, 0))
+						return true;
+					break;
 				}
 				break;
 #if __WATCHOS__
