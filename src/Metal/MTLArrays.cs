@@ -79,5 +79,17 @@ namespace XamCore.Metal {
 			}
 		}
 	}
+
+	public partial class MTLPipelineBufferDescriptorArray {
+		public MTLPipelineBufferDescriptor this [nuint index]
+		{
+			get {
+				return GetObject (index);
+			}
+			set {
+				SetObject (value, index);
+			}
+		}
+	}
 }
 #endif

@@ -1,6 +1,8 @@
 #import <Foundation/Foundation.h>
 
+#include <objc/objc.h>
 #include <objc/runtime.h>
+#include <objc/message.h>
 #include <zlib.h>
 #include "libtest.h"
 
@@ -14,6 +16,198 @@ void useZLib ()
 {
 	printf ("ZLib version: %s\n", zlibVersion ());
 }
+
+typedef matrix_float2x2 (*func_x_get_matrix_float2x2_msgSend) (id self, SEL sel);
+void
+x_get_matrix_float2x2 (id self, const char *sel,
+		float* r0c0, float* r0c1,
+		float* r1c0, float* r1c1)
+{
+	matrix_float2x2 rv;
+#if __i386__
+	IMP msgSend = (IMP) objc_msgSend_stret;
+#elif __x86_64__
+	IMP msgSend = (IMP) objc_msgSend;
+#elif __arm64__
+	IMP msgSend = (IMP) objc_msgSend;
+#elif __arm__
+	IMP msgSend = (IMP) objc_msgSend_stret;
+#else
+#error unknown architecture
+#endif
+	rv = ((func_x_get_matrix_float2x2_msgSend) msgSend) (self, sel_registerName (sel));
+	*r0c0 = rv.columns[0][0];
+	*r0c1 = rv.columns[1][0];
+	*r1c0 = rv.columns[0][1];
+	*r1c1 = rv.columns[1][1];
+}
+
+typedef matrix_float3x3 (*func_x_get_matrix_float3x3_msgSend) (id self, SEL sel);
+void
+x_get_matrix_float3x3 (id self, const char *sel,
+		float* r0c0, float* r0c1, float* r0c2,
+		float* r1c0, float* r1c1, float* r1c2,
+		float* r2c0, float* r2c1, float* r2c2)
+{
+	matrix_float3x3 rv;
+#if __i386__
+	IMP msgSend = (IMP) objc_msgSend_stret;
+#elif __x86_64__
+	IMP msgSend = (IMP) objc_msgSend_stret;
+#elif __arm64__
+	IMP msgSend = (IMP) objc_msgSend;
+#elif __arm__
+	IMP msgSend = (IMP) objc_msgSend_stret;
+#else
+#error unknown architecture
+#endif
+	rv = ((func_x_get_matrix_float3x3_msgSend) msgSend) (self, sel_registerName (sel));
+	*r0c0 = rv.columns[0][0];
+	*r0c1 = rv.columns[1][0];
+	*r0c2 = rv.columns[2][0];
+
+	*r1c0 = rv.columns[0][1];
+	*r1c1 = rv.columns[1][1];
+	*r1c2 = rv.columns[2][1];
+
+	*r2c0 = rv.columns[0][2];
+	*r2c1 = rv.columns[1][2];
+	*r2c2 = rv.columns[2][2];
+}
+
+typedef matrix_float4x4 (*func_x_get_matrix_float4x4_msgSend) (id self, SEL sel);
+void
+x_get_matrix_float4x4 (id self, const char *sel,
+		float* r0c0, float* r0c1, float* r0c2, float* r0c3,
+		float* r1c0, float* r1c1, float* r1c2, float* r1c3,
+		float* r2c0, float* r2c1, float* r2c2, float* r2c3,
+		float* r3c0, float* r3c1, float* r3c2, float* r3c3)
+{
+	matrix_float4x4 rv;
+#if __i386__
+	IMP msgSend = (IMP) objc_msgSend_stret;
+#elif __x86_64__
+	IMP msgSend = (IMP) objc_msgSend_stret;
+#elif __arm64__
+	IMP msgSend = (IMP) objc_msgSend;
+#elif __arm__
+	IMP msgSend = (IMP) objc_msgSend_stret;
+#else
+#error unknown architecture
+#endif
+	rv = ((func_x_get_matrix_float4x4_msgSend) msgSend) (self, sel_registerName (sel));
+	*r0c0 = rv.columns[0][0];
+	*r0c1 = rv.columns[1][0];
+	*r0c2 = rv.columns[2][0];
+	*r0c3 = rv.columns[3][0];
+
+	*r1c0 = rv.columns[0][1];
+	*r1c1 = rv.columns[1][1];
+	*r1c2 = rv.columns[2][1];
+	*r1c3 = rv.columns[3][1];
+
+	*r2c0 = rv.columns[0][2];
+	*r2c1 = rv.columns[1][2];
+	*r2c2 = rv.columns[2][2];
+	*r2c3 = rv.columns[3][2];
+
+	*r3c0 = rv.columns[0][3];
+	*r3c1 = rv.columns[1][3];
+	*r3c2 = rv.columns[2][3];
+	*r3c3 = rv.columns[3][3];
+}
+
+#if !TARGET_OS_WATCH
+void
+x_mdltransformcomponent_get_local_transform (id<MDLTransformComponent> self, NSTimeInterval time,
+		float* r0c0, float* r0c1, float* r0c2, float* r0c3,
+		float* r1c0, float* r1c1, float* r1c2, float* r1c3,
+		float* r2c0, float* r2c1, float* r2c2, float* r2c3,
+		float* r3c0, float* r3c1, float* r3c2, float* r3c3)
+{
+	matrix_float4x4 rv;
+	rv = [self localTransformAtTime: time];
+	*r0c0 = rv.columns[0][0];
+	*r0c1 = rv.columns[1][0];
+	*r0c2 = rv.columns[2][0];
+	*r0c3 = rv.columns[3][0];
+
+	*r1c0 = rv.columns[0][1];
+	*r1c1 = rv.columns[1][1];
+	*r1c2 = rv.columns[2][1];
+	*r1c3 = rv.columns[3][1];
+
+	*r2c0 = rv.columns[0][2];
+	*r2c1 = rv.columns[1][2];
+	*r2c2 = rv.columns[2][2];
+	*r2c3 = rv.columns[3][2];
+
+	*r3c0 = rv.columns[0][3];
+	*r3c1 = rv.columns[1][3];
+	*r3c2 = rv.columns[2][3];
+	*r3c3 = rv.columns[3][3];
+}
+
+void
+x_mdltransform_create_global_transform (MDLObject *object, NSTimeInterval time,
+		float* r0c0, float* r0c1, float* r0c2, float* r0c3,
+		float* r1c0, float* r1c1, float* r1c2, float* r1c3,
+		float* r2c0, float* r2c1, float* r2c2, float* r2c3,
+		float* r3c0, float* r3c1, float* r3c2, float* r3c3)
+{
+	matrix_float4x4 rv;
+	rv = [MDLTransform globalTransformWithObject: object atTime: time];
+	*r0c0 = rv.columns[0][0];
+	*r0c1 = rv.columns[1][0];
+	*r0c2 = rv.columns[2][0];
+	*r0c3 = rv.columns[3][0];
+
+	*r1c0 = rv.columns[0][1];
+	*r1c1 = rv.columns[1][1];
+	*r1c2 = rv.columns[2][1];
+	*r1c3 = rv.columns[3][1];
+
+	*r2c0 = rv.columns[0][2];
+	*r2c1 = rv.columns[1][2];
+	*r2c2 = rv.columns[2][2];
+	*r2c3 = rv.columns[3][2];
+
+	*r3c0 = rv.columns[0][3];
+	*r3c1 = rv.columns[1][3];
+	*r3c2 = rv.columns[2][3];
+	*r3c3 = rv.columns[3][3];
+}
+
+void
+x_mdltransform_get_rotation_matrix (MDLTransform *self, NSTimeInterval time,
+		float* r0c0, float* r0c1, float* r0c2, float* r0c3,
+		float* r1c0, float* r1c1, float* r1c2, float* r1c3,
+		float* r2c0, float* r2c1, float* r2c2, float* r2c3,
+		float* r3c0, float* r3c1, float* r3c2, float* r3c3)
+{
+	matrix_float4x4 rv;
+	rv = [self rotationMatrixAtTime: time];
+	*r0c0 = rv.columns[0][0];
+	*r0c1 = rv.columns[1][0];
+	*r0c2 = rv.columns[2][0];
+	*r0c3 = rv.columns[3][0];
+
+	*r1c0 = rv.columns[0][1];
+	*r1c1 = rv.columns[1][1];
+	*r1c2 = rv.columns[2][1];
+	*r1c3 = rv.columns[3][1];
+
+	*r2c0 = rv.columns[0][2];
+	*r2c1 = rv.columns[1][2];
+	*r2c2 = rv.columns[2][2];
+	*r2c3 = rv.columns[3][2];
+
+	*r3c0 = rv.columns[0][3];
+	*r3c1 = rv.columns[1][3];
+	*r3c2 = rv.columns[2][3];
+	*r3c3 = rv.columns[3][3];
+}
+#endif // !TARGET_OS_WATCH
 
 @interface UltimateMachine : NSObject {
 

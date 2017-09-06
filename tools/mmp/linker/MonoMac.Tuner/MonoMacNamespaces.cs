@@ -71,6 +71,7 @@ namespace MonoMac.Tuner {
 		{ Constants.PrintCoreLibrary, Namespaces.PrintCore },
 		{ Constants.CoreMLLibrary, Namespaces.CoreML },
 		{ Constants.VisionLibrary, Namespaces.Vision },
+		{ Constants.IOSurfaceLibrary, Namespaces.IOSurface },
 		{ Constants.ExternalAccessoryLibrary, Namespaces.ExternalAccessory },
 	};
 

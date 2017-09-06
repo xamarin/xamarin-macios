@@ -853,6 +853,7 @@ INTENTS_SOURCES = \
 	Intents/INCarAirCirculationModeResolutionResult.cs \
 	Intents/INCarAudioSourceResolutionResult.cs \
 	Intents/INCarDefrosterResolutionResult.cs \
+	Intents/INCarSeatResolutionResult.cs \
 	Intents/INCarSignalOptionsResolutionResult.cs \
 	Intents/INCompat.cs \
 	Intents/INGetCarLockStatusIntentResponse.cs \
@@ -878,6 +879,13 @@ INTENTS_SOURCES = \
 	Intents/INStartWorkoutIntent.cs \
 	Intents/INWorkoutGoalUnitTypeResolutionResult.cs \
 	Intents/INWorkoutLocationTypeResolutionResult.cs \
+
+# IOSurface
+IOSURFACE_CORE_SOURCES = \
+	IOSurface/IODefs.cs
+
+IOSURFACE_SOURCES = \
+	IOSurface/IOSurface.cs
 
 # JavaScriptCore
 
@@ -964,9 +972,12 @@ METAL_CORE_SOURCES = \
 	Metal/Defs.cs \
 
 METAL_SOURCES = \
+	Metal/MTLArgumentEncoder.cs \
 	Metal/MTLCompat.cs \
 	Metal/MTLDevice.cs \
 	Metal/MTLArrays.cs \
+	Metal/MTLRenderCommandEncoder.cs \
+	Metal/MTLRenderPassDescriptor.cs \
 	Metal/MTLVertexDescriptor.cs \
 
 # MetalKit
@@ -998,6 +1009,8 @@ MODELIO_CORE_SOURCES = \
 MODELIO_SOURCES = \
 	ModelIO/MDLAsset.cs \
 	ModelIO/MDLNoiseTexture.cs \
+	ModelIO/MDLTransform.cs \
+	ModelIO/MDLTransformComponent.cs \
 	ModelIO/MDLVertexDescriptor.cs \
 	ModelIO/MDLMesh.cs \
 
@@ -1250,7 +1263,7 @@ SOCIAL_SOURCES = \
 
 # SpriteKit
 
-SPRITEKIT_CORE_SOURCES = \
+SPRITEKIT_API_SOURCES = \
 	SpriteKit/Enums.cs \
 
 SPRITEKIT_SOURCES = \
@@ -1513,6 +1526,9 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/Protocol.cs \
 	ObjCRuntime/Registrar.core.cs \
 	ObjCRuntime/Selector.cs \
+	Simd/MatrixFloat2x2.cs \
+	Simd/MatrixFloat3x3.cs \
+	Simd/MatrixFloat4x4.cs \
 
 SHARED_SOURCES = \
 	../runtime/Delegates.generated.cs \
@@ -1611,6 +1627,7 @@ MAC_FRAMEWORKS =            \
 	ImageIO                 \
 	ImageKit                \
 	Intents                 \
+	IOSurface 		\
 	JavaScriptCore          \
 	LocalAuthentication     \
 	MapKit                  \
@@ -1692,6 +1709,7 @@ IOS_FRAMEWORKS =         \
 	ImageIO \
 	Intents \
 	IntentsUI \
+	IOSurface \
 	JavaScriptCore \
 	LocalAuthentication \
 	MapKit \
@@ -1783,6 +1801,7 @@ TVOS_FRAMEWORKS =           \
 	GameplayKit             \
 	HomeKit                 \
 	ImageIO                 \
+	IOSurface				\
 	JavaScriptCore          \
 	MapKit                  \
 	MediaAccessibility      \

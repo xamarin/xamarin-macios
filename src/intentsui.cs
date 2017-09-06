@@ -41,7 +41,9 @@ namespace XamCore.IntentsUI {
 	[Protocol]
 	interface INUIHostedViewControlling {
 
+#if !XAMCORE_4_0 // Apple made this member optional in iOS 11
 		[Abstract]
+#endif
 		[Export ("configureWithInteraction:context:completion:")]
 		void Configure (INInteraction interaction, INUIHostedViewContext context, Action<CGSize> completion);
 

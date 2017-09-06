@@ -21,7 +21,7 @@ using XamCore.ObjCRuntime;
 using XamCore.ImageIO;
 
 using Vector2 = global::OpenTK.Vector2;
-using Matrix3 = global::OpenTK.Matrix3;
+using Matrix3 = global::Simd.MatrixFloat3x3;
 
 namespace XamCore.Vision {
 

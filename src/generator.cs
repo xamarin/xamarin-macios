@@ -689,7 +689,7 @@ public class NamespaceManager
 			ImplicitNamespaces.Add (Get ("CoreMedia"));
 		if (Frameworks.HaveSecurity && Generator.CurrentPlatform != PlatformName.WatchOS)
 			ImplicitNamespaces.Add (Get ("Security"));
-		if (Frameworks.HaveAVFoundation && Generator.CurrentPlatform != PlatformName.WatchOS)
+		if (Frameworks.HaveAVFoundation)
 			ImplicitNamespaces.Add (Get ("AVFoundation"));
 		if (Frameworks.HaveOpenGL)
 			ImplicitNamespaces.Add (Get ("OpenGL"));

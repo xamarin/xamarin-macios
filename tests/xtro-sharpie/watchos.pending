@@ -123,6 +123,9 @@
 !unknown-type! INRelativeReferenceResolutionResult bound
 !unknown-type! INRelativeSettingResolutionResult bound
 
+## Added and removed in watchOS 4
+!missing-selector! +INNotebookItemTypeResolutionResult::disambiguationWithValuesToDisambiguate: not bound
+
 #PassKit
 
 ## No availability macro is provided for PKLabeledValue on watchOS / radar: https://trello.com/c/MvaHEZlc
