@@ -501,10 +501,10 @@ namespace XamCore.ImageIO {
 		static extern void CGImageDestinationAddAuxiliaryDataInfo (IntPtr /* CGImageDestinationRef* */ idst, IntPtr /* CFStringRef* */ auxiliaryImageDataType, IntPtr /* CFDictionaryRef* */ auxiliaryDataInfoDictionary);
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
-		public void AddAuxiliaryDataInfo (CGImageDestination dest, CGImageAuxiliaryDataType auxiliaryImageDataType, CGImageAuxiliaryDataInfo auxiliaryDataInfo)
+		public void AddAuxiliaryDataInfo (CGImageAuxiliaryDataType auxiliaryImageDataType, CGImageAuxiliaryDataInfo auxiliaryDataInfo)
 		{
 			using (var dict = auxiliaryDataInfo?.ToDictionary ()) {
-				CGImageDestinationAddAuxiliaryDataInfo (dest.GetHandle (), auxiliaryImageDataType.GetConstant ().GetHandle (), dict.GetHandle ());
+				CGImageDestinationAddAuxiliaryDataInfo (Handle, auxiliaryImageDataType.GetConstant ().GetHandle (), dict.GetHandle ());
 			}
 		}
 	}
