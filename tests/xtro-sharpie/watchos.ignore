@@ -8,6 +8,9 @@
 ## types/members marked as deprecated in watchOS 2.0 (even if the framework was not available before 3.0)
 AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions:
 
+## it's not exposed in the API offered by watchOS
+!missing-enum! AVAudioSessionRecordPermission not bound
+
 
 # CoreBluetooth
 

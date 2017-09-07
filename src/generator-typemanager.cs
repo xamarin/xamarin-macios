@@ -253,8 +253,9 @@ public static class TypeManager {
 			ABPerson = Lookup (platform_assembly, "AddressBook", "ABPerson");
 			ABRecord = Lookup (platform_assembly, "AddressBook", "ABRecord");
 		}
+		// misplaced API, it's really in CoreAudio (now available everywhere)
+		AudioBuffers = Lookup (platform_assembly, "AudioToolbox", "AudioBuffers");
 		if (Frameworks.HaveAudioToolbox) {
-			AudioBuffers = Lookup (platform_assembly, "AudioToolbox", "AudioBuffers");
 			MusicSequence = Lookup (platform_assembly, "AudioToolbox", "MusicSequence", true /* may not be found */);
 		}
 		if (Frameworks.HaveAudioUnit) {
