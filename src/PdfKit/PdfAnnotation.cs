@@ -8,6 +8,7 @@
 //
 
 using System;
+using XamCore.CoreGraphics;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
@@ -44,6 +45,28 @@ namespace XamCore.PdfKit {
 		public PdfAnnotationKey AnnotationType {
 			get { return PdfAnnotationKeyExtensions.GetValue ((NSString) Type); }
 			set { Type = value.GetConstant (); }
+		}
+
+		[Mac (10,13)]
+		public CGPoint[] QuadrilateralPoints {
+			get {
+				return NSArray.ArrayFromHandleFunc<CGPoint> (_QuadrilateralPoints, (v) =>
+					{
+						using (var value = new NSValue (v))
+							return value.CGPointValue;
+					});
+			}
+			set {
+				if (value == null) {
+					_QuadrilateralPoints = IntPtr.Zero;
+				} else {
+					using (var arr = new NSMutableArray ()) {
+						for (int i = 0; i < value.Length; i++)
+							arr.Add (NSValue.FromCGPoint (value [i]));
+						_QuadrilateralPoints = arr.Handle;
+					}
+				}
+			}
 		}
 	}
 }

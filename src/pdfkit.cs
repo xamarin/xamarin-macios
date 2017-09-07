@@ -41,7 +41,8 @@ using NSEdgeInsets = XamCore.UIKit.UIEdgeInsets;
 using NSEvent = XamCore.UIKit.UIEvent;
 using NSBezierPath = XamCore.UIKit.UIBezierPath;
 using NSTextAlignment = XamCore.UIKit.UITextAlignment;
-// HACK: to make intermediate dll build
+// HACK: to make intermediate dll build, since we use these 
+// types in a few [NoiOS] members (this way we avoid numerous #ifdefs later)
 using NSPrintInfo = XamCore.Foundation.NSObject;
 using NSPrintOperation = XamCore.Foundation.NSObject;
 #endif
@@ -707,9 +708,10 @@ namespace XamCore.PdfKit {
 		[Export ("iconType", ArgumentSemantic.Assign)]
 		PdfTextAnnotationIconType IconType { get; set; }
 
+		[Internal]
 		[Mac (10,13)]
 		[NullAllowed, Export ("quadrilateralPoints", ArgumentSemantic.Copy)]
-		NSValue [] QuadrilateralPoints { get; set; }
+		IntPtr _QuadrilateralPoints { get; set; }
 
 		[Mac (10,13)]
 		[Export ("markupType", ArgumentSemantic.Assign)]
