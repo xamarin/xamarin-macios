@@ -212,6 +212,7 @@ namespace Introspection {
 				case "MSMessageLiveLayout":
 				case "NSFileProviderDomain": // Conformance not in headers
 				case "FPUIActionExtensionContext": // Conformance not in headers
+				case "UIDocumentBrowserAction": // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -352,6 +353,7 @@ namespace Introspection {
 				case "MSMessageLiveLayout":
 				case "NSFileProviderDomain": // Conformance not in headers
 				case "FPUIActionExtensionContext": // Conformance not in headers
+				case "UIDocumentBrowserAction": // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -438,6 +440,7 @@ namespace Introspection {
 				case "NSFileProviderDomain": // Conformance not in headers
 				case "FPUIActionExtensionContext": // Conformance not in headers
 				case "CXCall": // Conformance not in headers
+				case "UIDocumentBrowserAction": // Conformance not in headers
 					return true;
 
 #if __WATCHOS__
