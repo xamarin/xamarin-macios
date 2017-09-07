@@ -2333,8 +2333,11 @@ namespace XamCore.UIKit {
 	
 	[iOS (8,0)]
 	[BaseType (typeof (UIViewController))]
-	// Should conform to UISpringLoadedInteractionSupporting according to headers but doesn't. Filed //radar: https://trello.com/b/ZXs89x7A
-	partial interface UIAlertController {
+	partial interface UIAlertController
+#if IOS
+		: UISpringLoadedInteractionSupporting
+#endif
+	{
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
@@ -4032,7 +4035,11 @@ namespace XamCore.UIKit {
 	[BaseType (typeof (UIScrollView))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: UICollectionView must be initialized with a non-nil layout parameter
 	[DisableDefaultCtor]
-	interface UICollectionView : NSCoding, UIDataSourceTranslating {
+	interface UICollectionView : NSCoding, UIDataSourceTranslating
+#if IOS
+		, UISpringLoadedInteractionSupporting
+#endif
+	{
 		[DesignatedInitializer]
 		[Export ("initWithFrame:collectionViewLayout:"), PostGet ("CollectionViewLayout")]
 		IntPtr Constructor (CGRect frame, UICollectionViewLayout layout);
@@ -7792,8 +7799,11 @@ namespace XamCore.UIKit {
 	
 #if !WATCH
 	[BaseType (typeof (UIControl))]
-	// Should conform to UISpringLoadedInteractionSupporting according to headers but doesn't. Filed //radar: https://trello.com/b/ZXs89x7A
-	interface UIButton : UIAccessibilityContentSizeCategoryImageAdjusting {
+	interface UIButton : UIAccessibilityContentSizeCategoryImageAdjusting
+#if IOS
+		, UISpringLoadedInteractionSupporting
+#endif
+	{
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
@@ -10771,7 +10781,11 @@ namespace XamCore.UIKit {
 	}
 	
 	[BaseType (typeof(UIControl))]
-	interface UISegmentedControl {
+	interface UISegmentedControl
+#if IOS
+		: UISpringLoadedInteractionSupporting
+#endif
+	{
 		[Export ("initWithItems:")]
 		IntPtr Constructor (NSArray items);
 
@@ -11172,8 +11186,11 @@ namespace XamCore.UIKit {
 	}
 
 	[BaseType (typeof (UIView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UITabBarDelegate)})]
-	// Should conform to UISpringLoadedInteractionSupporting according to headers but doesn't. Filed //radar: https://trello.com/b/ZXs89x7A
-	interface UITabBar {
+	interface UITabBar
+#if IOS
+		: UISpringLoadedInteractionSupporting
+#endif
+	{
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
@@ -11389,7 +11406,11 @@ namespace XamCore.UIKit {
 	}
 	
 	[BaseType (typeof (UIBarItem))]
-	interface UITabBarItem : NSCoding {
+	interface UITabBarItem : NSCoding
+#if IOS
+		, UISpringLoadedInteractionSupporting
+#endif
+	{
 		[Export ("enabled")][Override]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 
@@ -11473,7 +11494,11 @@ namespace XamCore.UIKit {
 	}
 	
 	[BaseType (typeof(UIScrollView))]
-	interface UITableView : NSCoding, UIDataSourceTranslating {
+	interface UITableView : NSCoding, UIDataSourceTranslating
+#if IOS
+		, UISpringLoadedInteractionSupporting
+#endif
+	{
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
