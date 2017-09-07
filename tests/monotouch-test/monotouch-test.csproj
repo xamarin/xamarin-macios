@@ -673,6 +673,7 @@
     <Compile Include="MetalPerformanceShaders\MPSImageHistogramSpecificationTest.cs" />
     <Compile Include="ModelIO\MDLAssetTest.cs" />
     <Compile Include="ModelIO\MDLVoxelArrayTest.cs" />
+    <Compile Include="CoreML\MLMultiArrayTest.cs" />
     <Compile Include="ModelIO\MDLTransformComponentTest.cs" />
     <Compile Include="ModelIO\MDLCameraTest.cs" />
     <Compile Include="ModelIO\MDLStereoscopicCameraTest.cs" />
@@ -744,6 +745,7 @@
     <Folder Include="OpenGLES\" />
     <Folder Include="HomeKit\" />
     <Folder Include="ARKit\" />
+    <Folder Include="CoreML\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />
