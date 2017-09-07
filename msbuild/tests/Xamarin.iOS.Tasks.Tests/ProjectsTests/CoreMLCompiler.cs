@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 using NUnit.Framework;
 
@@ -17,29 +18,32 @@ namespace Xamarin.iOS.Tasks
 
 		void AssertCompiledModelExists (string modelName)
 		{
-			var mlmodelcDir = Path.Combine (AppBundlePath, modelName + ".mlmodelc");
-			var mlmodelc = Path.Combine (mlmodelcDir, "coremldata.bin");
-			var model0 = Path.Combine (mlmodelcDir, "model0", "coremldata.bin");
-			var model1 = Path.Combine (mlmodelcDir, "model1", "coremldata.bin");
+			var expected = new string[] { "coremldata.bin", "model.espresso.net", "model.espresso.shape", "model.espresso.weights", "model/coremldata.bin" };
+			var mlmodelc = Path.Combine (AppBundlePath, modelName + ".mlmodelc");
 
-			Assert.IsTrue (File.Exists (mlmodelc), "{0} does not exist", mlmodelc);
-			Assert.IsTrue (File.Exists (model0), "{0} does not exist", model0);
-			Assert.IsTrue (File.Exists (model1), "{0} does not exist", model1);
+			Assert.IsTrue (Directory.Exists (mlmodelc));
+
+			var files = new HashSet<string> (Directory.EnumerateFiles (mlmodelc, "*.*", SearchOption.AllDirectories));
+
+			Assert.AreEqual (expected.Length, files.Count);
+
+			foreach (var name in expected)
+				Assert.IsTrue (files.Contains (Path.Combine (mlmodelc, name)), "{0} not found", name);
 		}
 
 		[Test]
 		public void RebuildTest ()
 		{
-			BuildProject ("MarsHabitatPricePredictor", Platform, "Debug", clean: true);
+			BuildProject ("MyCoreMLApp", Platform, "Debug", clean: true);
 
-			AssertCompiledModelExists ("MarsHabitatPricer");
+			AssertCompiledModelExists ("SqueezeNet");
 
 			Thread.Sleep (1000);
 
 			// Rebuild w/ no changes
-			BuildProject ("MarsHabitatPricePredictor", Platform, "Debug", clean: false);
+			BuildProject ("MyCoreMLApp", Platform, "Debug", clean: false);
 
-			AssertCompiledModelExists ("MarsHabitatPricer");
+			AssertCompiledModelExists ("SqueezeNet");
 		}
 	}
 }
