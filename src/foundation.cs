@@ -9785,9 +9785,15 @@ namespace XamCore.Foundation
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		string[] WritableTypeIdentifiers { get; }
 
-		[Static]
-		[Export ("itemProviderVisibilityForRepresentationWithTypeIdentifier:")]
-		NSItemProviderRepresentationVisibility GetItemProviderVisibility (string typeIdentifier);
+		// This is an optional method, which means the generator will inline it in any classes
+		// that implements this interface. Unfortunately none of the native classes that implements
+		// the protocol actually implements this method, which means that inlining the method will cause
+		// introspection to complain (rightly). So comment out this method to avoid generator a lot of unusable API.
+		// See also https://bugzilla.xamarin.com/show_bug.cgi?id=59308.
+		//
+		// [Static]
+		// [Export ("itemProviderVisibilityForRepresentationWithTypeIdentifier:")]
+		// NSItemProviderRepresentationVisibility GetItemProviderVisibility (string typeIdentifier);
 
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		// 'WritableTypeIdentifiers' is a nicer name, but there's a static property with that name.
