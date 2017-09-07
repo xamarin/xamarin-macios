@@ -4923,6 +4923,7 @@ namespace XamCore.Foundation
 	[Since (5,0)]
 	[BaseType (typeof (NSObject))]
 #if WATCH
+	[Advice ("Not available on watchOS")]
 	[DisableDefaultCtor] // "NSUbiquitousKeyValueStore is unavailable" is printed to the log.
 #endif
 	interface NSUbiquitousKeyValueStore {
@@ -11400,16 +11401,20 @@ namespace XamCore.Foundation
 		NSString PowerStateDidChangeNotification { get; }
 #endif
 
-#if MONOMAC
 		[Mac (10,10,3)]
+		[Watch (4,0)]
+		[TV (11, 0)]
+		[iOS (11,0)]
 		[Export ("thermalState")]
 		NSProcessInfoThermalState ThermalState { get; }
 
 		[Mac (10,10,3)]
 		[Field ("NSProcessInfoThermalStateDidChangeNotification")]
+		[Watch (4,0)]
+		[TV (11, 0)]
+		[iOS (11,0)]
 		[Notification]
 		NSString ThermalStateDidChangeNotification { get; }
-#endif
 	}
 
 	[NoWatch][NoTV][NoiOS]

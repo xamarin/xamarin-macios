@@ -2281,7 +2281,8 @@ namespace XamCore.UIKit {
 		LayoutMargins,
 	}
 
-	[iOS (11,0), TV (11,0), Watch (4,0)]
+	[NoWatch][NoTV]
+	[iOS (11,0)]
 	[Native]
 	public enum UIPreferredPresentationStyle : nint
 	{
