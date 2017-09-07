@@ -1996,7 +1996,7 @@ namespace Xamarin.Bundler {
 				GenerateMSymManifest (target, target_directory);
 				var msymdir = Path.Combine (target.BuildDirectory, "Msym");
 				if (!Directory.Exists (msymdir)) {
-					ErrorHelper.Warning (97, $"Aot files could not be found at the expected directory '{msymdir}'.");
+					ErrorHelper.Warning (116, $"The directory {msymdir} containing the mono symbols could not be found.");
 					continue;
 				}
 				// copy aot data must be done BEFORE we do copy the msym one
