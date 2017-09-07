@@ -307,9 +307,17 @@ namespace XamCore.SceneKit {
 		[Export ("name", ArgumentSemantic.Copy)]
 		string Name { get; set;  }
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'FieldOfView' or 'FocalLength' instead.")]
+		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use 'FieldOfView' or 'FocalLength' instead.")]
+		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use 'FieldOfView' or 'FocalLength' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use 'FieldOfView' or 'FocalLength' instead.")]
 		[Export ("xFov")]
 		double XFov { get; set;  }
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'FieldOfView' or 'FocalLength' instead.")]
+		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use 'FieldOfView' or 'FocalLength' instead.")]
+		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use 'FieldOfView' or 'FocalLength' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use 'FieldOfView' or 'FocalLength' instead.")]
 		[Export ("yFov")]
 		double YFov { get; set;  }
 
@@ -337,18 +345,34 @@ namespace XamCore.SceneKit {
 		[Export ("orthographicScale")]
 		double OrthographicScale { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'FocusDistance' instead.")]
+		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use 'FocusDistance' instead.")]
+		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use 'FocusDistance' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use 'FocusDistance' instead.")]
 		[iOS (8,0)][Mac (10,9)]
 		[Export ("focalDistance")]
 		nfloat FocalDistance { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'FocusDistance' instead.")]
+		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use 'FocusDistance' instead.")]
+		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use 'FocusDistance' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use 'FocusDistance' instead.")]
 		[iOS (8,0)][Mac (10,9)]
 		[Export ("focalSize")]
 		nfloat FocalSize { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'FStop' instead.")]
+		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use 'FStop' instead.")]
+		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use 'FStop' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use 'FStop' instead.")]
 		[iOS (8,0)][Mac (10,9)]
 		[Export ("focalBlurRadius")]
 		nfloat FocalBlurRadius { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'FStop' instead with FStop = SensorHeight / Aperture.")]
+		[Deprecated (PlatformName.iOS,    11, 0,  message: "Use 'FStop' instead with FStop = SensorHeight / Aperture.")]
+		[Deprecated (PlatformName.TvOS,   11, 0,  message: "Use 'FStop' instead with FStop = SensorHeight / Aperture.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0,  message: "Use 'FStop' instead with FStop = SensorHeight / Aperture.")]
 		[iOS (8,0)][Mac (10,9)]
 		[Export ("aperture")]
 		nfloat Aperture { get; set; }
@@ -443,7 +467,192 @@ namespace XamCore.SceneKit {
 		[Static]
 		[Export ("cameraWithMDLCamera:")]
 		SCNCamera FromModelCamera (MDLCamera modelCamera);
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("fieldOfView")]
+		nfloat FieldOfView { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("projectionDirection", ArgumentSemantic.Assign)]
+		SCNCameraProjectionDirection ProjectionDirection { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("focalLength")]
+		nfloat FocalLength { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("sensorHeight")]
+		nfloat SensorHeight { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("wantsDepthOfField")]
+		bool WantsDepthOfField { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("focusDistance")]
+		nfloat FocusDistance { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("focalBlurSampleCount")]
+		nint FocalBlurSampleCount { get; set; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("fStop")]
+		nfloat FStop { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("apertureBladeCount")]
+		nint ApertureBladeCount { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("screenSpaceAmbientOcclusionIntensity")]
+		nfloat ScreenSpaceAmbientOcclusionIntensity { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("screenSpaceAmbientOcclusionRadius")]
+		nfloat ScreenSpaceAmbientOcclusionRadius { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("screenSpaceAmbientOcclusionBias")]
+		nfloat ScreenSpaceAmbientOcclusionBias { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("screenSpaceAmbientOcclusionDepthThreshold")]
+		nfloat ScreenSpaceAmbientOcclusionDepthThreshold { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("screenSpaceAmbientOcclusionNormalThreshold")]
+		nfloat ScreenSpaceAmbientOcclusionNormalThreshold { get; set; }
+
 #endif
+	}
+
+	interface ISCNCameraControlConfiguration {}
+	
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Protocol]
+	interface SCNCameraControlConfiguration
+	{
+		[Abstract]
+		[Export ("autoSwitchToFreeCamera")]
+		bool AutoSwitchToFreeCamera { get; set; }
+	
+		[Abstract]
+		[Export ("allowsTranslation")]
+		bool AllowsTranslation { get; set; }
+	
+		[Abstract]
+		[Export ("flyModeVelocity")]
+		nfloat FlyModeVelocity { get; set; }
+	
+		[Abstract]
+		[Export ("panSensitivity")]
+		nfloat PanSensitivity { get; set; }
+	
+		[Abstract]
+		[Export ("truckSensitivity")]
+		nfloat TruckSensitivity { get; set; }
+	
+		[Abstract]
+		[Export ("rotationSensitivity")]
+		nfloat RotationSensitivity { get; set; }
+	}
+
+	interface ISCNCameraControllerDelegate {}
+	
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Protocol]
+	[Model] // Figured I would keep the model for convenience, as all the methods here are optional
+	[BaseType (typeof(NSObject))]
+	interface SCNCameraControllerDelegate
+	{
+		[Export ("cameraInertiaWillStartForController:")]
+		void CameraInertiaWillStart (SCNCameraController cameraController);
+	
+		[Export ("cameraInertiaDidEndForController:")]
+		void CameraInertiaDidEnd (SCNCameraController cameraController);
+	}
+	
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface SCNCameraController
+	{
+		[Export ("delegate", ArgumentSemantic.Assign)]
+		[NullAllowed]
+		[Protocolize]
+		SCNCameraControllerDelegate Delegate { get; set; }
+	
+		[NullAllowed, Export ("pointOfView", ArgumentSemantic.Retain)]
+		SCNNode PointOfView { get; set; }
+	
+		[Export ("interactionMode", ArgumentSemantic.Assign)]
+		SCNInteractionMode InteractionMode { get; set; }
+	
+		[Export ("target", ArgumentSemantic.Assign)]
+		SCNVector3 Target { get; set; }
+	
+		[Export ("automaticTarget")]
+		bool AutomaticTarget { get; set; }
+	
+		[Export ("worldUp", ArgumentSemantic.Assign)]
+		SCNVector3 WorldUp { get; set; }
+	
+		[Export ("inertiaEnabled")]
+		bool InertiaEnabled { get; set; }
+
+		[Export ("inertiaFriction")]
+		float InertiaFriction { get; set; }
+	
+		[Export ("inertiaRunning")]
+		bool InertiaRunning { [Bind ("isInertiaRunning")] get; }
+	
+		[Export ("minimumVerticalAngle")]
+		float MinimumVerticalAngle { get; set; }
+	
+		[Export ("maximumVerticalAngle")]
+		float MaximumVerticalAngle { get; set; }
+	
+		[Export ("minimumHorizontalAngle")]
+		float MinimumHorizontalAngle { get; set; }
+	
+		[Export ("maximumHorizontalAngle")]
+		float MaximumHorizontalAngle { get; set; }
+	
+		[Export ("translateInCameraSpaceByX:Y:Z:")]
+		void TranslateInCameraSpace (float deltaX, float deltaY, float deltaZ);
+	
+		[Export ("frameNodes:")]
+		void FrameNodes (SCNNode[] nodes);
+	
+		[Export ("rotateByX:Y:")]
+		void Rotate (float deltaX, float deltaY);
+	
+		[Export ("rollBy:aroundScreenPoint:viewport:")]
+		void Roll (float delta, CGPoint screenPoint, CGSize viewport);
+	
+		[Export ("dollyBy:onScreenPoint:viewport:")]
+		void Dolly (float delta, CGPoint screenPoint, CGSize viewport);
+	
+		[Export ("rollAroundTarget:")]
+		void RollAroundTarget (float delta);
+	
+		[Export ("dollyToTarget:")]
+		void DollyToTarget (float delta);
+	
+		[Export ("clearRoll")]
+		void ClearRoll ();
+	
+		[Export ("stopInertia")]
+		void StopInertia ();
+	
+		[Export ("beginInteraction:withViewport:")]
+		void BeginInteraction (CGPoint location, CGSize viewport);
+	
+		[Export ("continueInteraction:withViewport:sensitivity:")]
+		void ContinueInteraction (CGPoint location, CGSize viewport, nfloat sensitivity);
+	
+		[Export ("endInteraction:withViewport:velocity:")]
+		void EndInteraction (CGPoint location, CGSize viewport, CGPoint velocity);
 	}
 
 	[Watch (3,0)]
@@ -744,6 +953,38 @@ namespace XamCore.SceneKit {
 #endif
 	}
 
+#if XAMCORE_2_0 && !WATCH
+	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface SCNGeometryTessellator : NSCopying, NSSecureCoding
+	{
+		[Export ("tessellationFactorScale")]
+		nfloat TessellationFactorScale { get; set; }
+	
+		[Export ("tessellationPartitionMode", ArgumentSemantic.Assign)]
+		MTLTessellationPartitionMode TessellationPartitionMode { get; set; }
+	
+		[Export ("adaptive")]
+		bool Adaptive { [Bind ("isAdaptive")] get; set; }
+	
+		[Export ("screenSpace")]
+		bool ScreenSpace { [Bind ("isScreenSpace")] get; set; }
+	
+		[Export ("edgeTessellationFactor")]
+		nfloat EdgeTessellationFactor { get; set; }
+	
+		[Export ("insideTessellationFactor")]
+		nfloat InsideTessellationFactor { get; set; }
+	
+		[Export ("maximumEdgeLength")]
+		nfloat MaximumEdgeLength { get; set; }
+	
+		[Export ("smoothingMode", ArgumentSemantic.Assign)]
+		SCNTessellationSmoothingMode SmoothingMode { get; set; }
+	}
+#endif
+	
 	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[Static]
@@ -1134,6 +1375,19 @@ namespace XamCore.SceneKit {
 		[Static]
 		[Export ("materialWithMDLMaterial:")]
 		SCNMaterial FromMaterial (MDLMaterial material);
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("displacement")]
+		SCNMaterialProperty Displacement { get; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("fillMode", ArgumentSemantic.Assign)]
+		SCNFillMode FillMode { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("colorBufferWriteMask", ArgumentSemantic.Assign)]
+		SCNColorMask ColorBufferWriteMask { get; set; }
+
 #endif
 	}
 
@@ -1715,10 +1969,19 @@ namespace XamCore.SceneKit {
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("renderAtTime:viewport:commandBuffer:passDescriptor:")]
 		void Render (double timeInSeconds, CGRect viewport, IMTLCommandBuffer commandBuffer, MTLRenderPassDescriptor renderPassDescriptor);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("renderWithViewport:commandBuffer:passDescriptor:")]
+		void Render (CGRect viewport, IMTLCommandBuffer commandBuffer, MTLRenderPassDescriptor renderPassDescriptor);
 #endif
 		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
 		[Export ("updateProbes:atTime:")]
 		void Update (SCNNode [] lightProbes, double time);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("updateAtTime:")]
+		void Update (double time);
+	
 	}
 
 	[Watch (3,0)]
@@ -2352,6 +2615,11 @@ namespace XamCore.SceneKit {
 		[Mac (10,10)]
 		[Export ("renderer:didSimulatePhysicsAtTime:")]
 		void DidSimulatePhysics ([Protocolize]SCNSceneRenderer renderer, double timeInSeconds);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("renderer:didApplyConstraintsAtTime:")]
+		void DidApplyConstraints ([Protocolize] SCNSceneRenderer renderer, double atTime);
+		
 	}	
 
 	[Watch (3,0)]
@@ -2617,6 +2885,15 @@ namespace XamCore.SceneKit {
 		[iOS (8,0)][Mac (10,10)]
 		[Export ("antialiasingMode")]
 		SCNAntialiasingMode AntialiasingMode { get; set; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("cameraControlConfiguration")]
+		ISCNCameraControlConfiguration CameraControlConfiguration { get; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("defaultCameraController")]
+		SCNCameraController DefaultCameraController { get; }
+		
 	}
 
 	[Mac (10,9), iOS (8,0)]

@@ -477,7 +477,7 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public nint? FocalLength35mmKey {
+		public nint? FocalLength35mm {
 			get {
 				return GetNInt (NSMetadataQuery.FocalLength35mmKey);
 			}
@@ -498,7 +498,7 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double? AltitudeKey {
+		public double? Altitude {
 			get {
 				return GetNullableDouble (NSMetadataQuery.AltitudeKey);
 			}
@@ -715,7 +715,7 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double? MaxApertureKey {
+		public double? MaxAperture {
 			get {
 				return GetNullableDouble (NSMetadataQuery.MaxApertureKey);
 			}
@@ -799,7 +799,7 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double? TempoKey {
+		public double? Tempo {
 			get {
 				return GetNullableDouble (NSMetadataQuery.TempoKey);
 			}
@@ -1001,7 +1001,7 @@ namespace XamCore.Foundation {
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public double? StarRatingKey {
+		public double? StarRating {
 			get {
 				return GetNullableDouble (NSMetadataQuery.StarRatingKey);
 			}

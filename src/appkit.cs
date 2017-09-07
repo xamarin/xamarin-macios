@@ -1201,7 +1201,7 @@ namespace XamCore.AppKit {
 		[Export ("appendBezierPathWithArcFromPoint:toPoint:radius:")]
 		void AppendPathWithArc (CGPoint point1, CGPoint point2, nfloat radius);
 
-		[Availability (Obsoleted = Platform.Mac_10_13, Message = "Use 'AppendBezierPathWithCGGlyph (CGGlyph, NSFont)' instead.")]
+		[Availability (Obsoleted = Platform.Mac_10_13, Message = "Use 'AppendPathWithCGGlyph (CGGlyph, NSFont)' instead.")]
 		[Export ("appendBezierPathWithGlyph:inFont:")]
 		void AppendPathWithGlyph (uint /* NSGlyph = unsigned int */ glyph, NSFont font);
 
@@ -1264,7 +1264,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10,13)]
 		[Export ("appendBezierPathWithCGGlyph:inFont:")]
-		void AppendBezierPathWithCGGlyph (CGGlyph glyph, NSFont font);
+		void AppendPathWithCGGlyph (CGGlyph glyph, NSFont font);
 
 		[Mac (10,13)]
 		[Export ("appendBezierPathWithCGGlyphs:count:inFont:")]

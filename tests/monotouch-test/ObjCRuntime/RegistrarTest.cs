@@ -2529,4 +2529,15 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			block.CleanupBlock ();
 		}
 	}
+
+	[Preserve]
+	class OverloadByStaticity : NSObject
+	{
+		// Two Objective-C methods can have the same selector if one is static and the other instance.
+		[Export ("method")]
+		public void InstanceMethod () { }
+
+		[Export ("method")]
+		public static void StaticMethod () { }
+	}
 }

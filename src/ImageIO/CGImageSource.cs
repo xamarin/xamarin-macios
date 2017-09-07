@@ -382,9 +382,9 @@ namespace XamCore.ImageIO {
 		static extern IntPtr /* CFDictionaryRef* */ CGImageSourceCopyAuxiliaryDataInfoAtIndex (IntPtr /* CGImageSourceRef* */ isrc, nuint index, IntPtr /* CFStringRef* */ auxiliaryImageDataType);
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
-		public CGImageAuxiliaryDataInfo CopyAuxiliaryDataInfo (CGImageSource imageSource, nuint index, CGImageAuxiliaryDataType auxiliaryImageDataType)
+		public CGImageAuxiliaryDataInfo CopyAuxiliaryDataInfo (nuint index, CGImageAuxiliaryDataType auxiliaryImageDataType)
 		{
-			var ptr = CGImageSourceCopyAuxiliaryDataInfoAtIndex (imageSource.GetHandle (), index, auxiliaryImageDataType.GetConstant ().GetHandle ());
+			var ptr = CGImageSourceCopyAuxiliaryDataInfoAtIndex (Handle, index, auxiliaryImageDataType.GetConstant ().GetHandle ());
 			if (ptr == IntPtr.Zero)
 				return null;
 

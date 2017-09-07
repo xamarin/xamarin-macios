@@ -131,23 +131,23 @@ namespace XamCore.CoreML {
 
 		[Static]
 		[Export ("featureValueWithPixelBuffer:")]
-		MLFeatureValue FromPixelBuffer (CVPixelBuffer value);
+		MLFeatureValue Create (CVPixelBuffer value);
 
 		[Static]
 		[Export ("featureValueWithInt64:")]
-		MLFeatureValue FromInt64 (long value);
+		MLFeatureValue Create (long value);
 
 		[Static]
 		[Export ("featureValueWithDouble:")]
-		MLFeatureValue FromDouble (double value);
+		MLFeatureValue Create (double value);
 
 		[Static]
 		[Export ("featureValueWithString:")]
-		MLFeatureValue FromString (string value);
+		MLFeatureValue Create (string value);
 
 		[Static]
 		[Export ("featureValueWithMultiArray:")]
-		MLFeatureValue FromMultiArray (MLMultiArray value);
+		MLFeatureValue Create (MLMultiArray value);
 
 		[Static]
 		[Export ("undefinedFeatureValueWithType:")]
@@ -156,7 +156,7 @@ namespace XamCore.CoreML {
 		[Static]
 		[Export ("featureValueWithDictionary:error:")]
 		[return: NullAllowed]
-		MLFeatureValue FromDictionary (NSDictionary<NSObject, NSNumber> value, out NSError error);
+		MLFeatureValue Create (NSDictionary<NSObject, NSNumber> value, out NSError error);
 
 		[Export ("isEqualToFeatureValue:")]
 		bool IsEqual (MLFeatureValue value);
@@ -172,7 +172,7 @@ namespace XamCore.CoreML {
 		[Static]
 		[Export ("modelWithContentsOfURL:error:")]
 		[return: NullAllowed]
-		MLModel FromUrl (NSUrl url, out NSError error);
+		MLModel Create (NSUrl url, out NSError error);
 
 		[Export ("predictionFromFeatures:error:")]
 		[return: NullAllowed]
@@ -256,11 +256,13 @@ namespace XamCore.CoreML {
 		[Export ("dataType")]
 		MLMultiArrayDataType DataType { get; }
 
+		[Internal]
 		[Export ("shape")]
-		NSNumber [] Shape { get; }
+		IntPtr _Shape { get; }
 
+		[Internal]
 		[Export ("strides")]
-		NSNumber [] Strides { get; }
+		IntPtr _Strides { get; }
 
 		[Export ("count")]
 		nint Count { get; }
@@ -281,11 +283,23 @@ namespace XamCore.CoreML {
 		[Export ("objectForKeyedSubscript:")]
 		NSNumber GetObject (NSNumber [] key);
 
+		[Sealed]
+		[Export ("objectForKeyedSubscript:")]
+		[Internal]
+		// Bind 'key' as IntPtr to avoid multiple conversions (nint[] -> NSNumber[] -> NSArray)
+		NSNumber GetObject (IntPtr key);
+
 		[Export ("setObject:atIndexedSubscript:")]
 		void SetObject (NSNumber obj, nint idx);
 
 		[Export ("setObject:forKeyedSubscript:")]
 		void SetObject (NSNumber obj, NSNumber [] key);
+
+		[Sealed]
+		[Export ("setObject:forKeyedSubscript:")]
+		[Internal]
+		// Bind 'key' as IntPtr to avoid multiple conversions (nint[] -> NSNumber[] -> NSArray)
+		void SetObject (NSNumber obj, IntPtr key);
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -317,8 +331,9 @@ namespace XamCore.CoreML {
 	[BaseType (typeof (NSObject))]
 	interface MLMultiArrayConstraint {
 
+		[Internal]
 		[Export ("shape")]
-		NSNumber [] Shape { get; }
+		IntPtr _Shape { get; }
 
 		[Export ("dataType")]
 		MLMultiArrayDataType DataType { get; }

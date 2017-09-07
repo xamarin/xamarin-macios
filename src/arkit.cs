@@ -203,7 +203,7 @@ namespace XamCore.ARKit {
 		ARHitTestResult[] HitTest (CGPoint point, ARHitTestResultType types);
 
 		[Export ("displayTransformForOrientation:viewportSize:")]
-		CGAffineTransform DisplayTransform (UIInterfaceOrientation orientation, CGSize viewportSize);
+		CGAffineTransform GetDisplayTransform (UIInterfaceOrientation orientation, CGSize viewportSize);
 	}
 
 	[iOS (11,0)]
@@ -434,10 +434,10 @@ namespace XamCore.ARKit {
 		void CameraDidChangeTrackingState (ARSession session, ARCamera camera);
 
 		[Export ("sessionWasInterrupted:")]
-		void SessionWasInterrupted (ARSession session);
+		void WasInterrupted (ARSession session);
 
 		[Export ("sessionInterruptionEnded:")]
-		void SessionInterruptionEnded (ARSession session);
+		void InterruptionEnded (ARSession session);
 
 		[Export ("session:didOutputAudioSampleBuffer:")]
 		void DidOutputAudioSampleBuffer (ARSession session, CMSampleBuffer audioSampleBuffer);
