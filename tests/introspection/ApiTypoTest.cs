@@ -391,6 +391,7 @@ namespace Introspection
 			"Synchronizable",
 			"Symbologies",
 			"Tanh",
+			"Tessellator",
 			"Texcoord",
 			"Texel",
 			"th",
