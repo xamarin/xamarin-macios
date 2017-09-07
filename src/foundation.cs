@@ -9757,8 +9757,7 @@ namespace XamCore.Foundation
 		[Export ("preferredPresentationSize", ArgumentSemantic.Assign)]
 		CGSize PreferredPresentationSize { get; set; }
 
-		[Watch (4,0)]
-		[TV (11,0)]
+		[NoWatch, NoTV]
 		[iOS (11,0)]
 		[Export ("preferredPresentationStyle", ArgumentSemantic.Assign)]
 		UIPreferredPresentationStyle PreferredPresentationStyle { get; set; }
