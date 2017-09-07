@@ -640,6 +640,20 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (8, 0);
 				}
 				break;
+
+			case "UISpringLoadedInteractionSupporting": // types do not conform to protocol but protocol methods work on those types (see monotouch-test)
+				switch (type.Name) {
+				case "UIButton":
+				case "UICollectionView":
+				case "UISegmentedControl":
+				case "UITableView":
+				case "UITabBar":
+				case "UIAlertController":
+				case "PKPaymentButton":
+				case "PKAddPassButton":
+					return true;
+				}
+				break;
 			}
 			return base.Skip (type, protocolName);
 		}
