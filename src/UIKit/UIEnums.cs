@@ -2011,8 +2011,7 @@ namespace XamCore.UIKit {
 		Always
 	}
 	
-	[NoTV, NoWatch]
-	[iOS (11,0)]
+	[iOS (11,0), TV (11,0), Watch (4,0)]
 	[Native]
 	public enum UIAccessibilityContainerType : nint
 	{
@@ -2262,8 +2261,8 @@ namespace XamCore.UIKit {
 		Delegate,
 	}
 
-	[NoWatch, NoTV]
-	[iOS (11,0)]
+	[NoWatch]
+	[iOS (11,0), TV (11,0)]
 	[Native]
 	public enum UINavigationItemLargeTitleDisplayMode : nint
 	{
@@ -2289,6 +2288,14 @@ namespace XamCore.UIKit {
 		Unspecified = 0,
 		Inline,
 		Attachment,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (11,0)]
+	[Native]
+	[ErrorDomain ("UIDocumentBrowserErrorDomain")]
+	public enum UIDocumentBrowserErrorCode : nint
+	{
+		Generic = 1,
 	}
 	
 	

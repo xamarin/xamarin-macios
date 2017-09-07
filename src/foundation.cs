@@ -181,6 +181,9 @@ namespace XamCore.Foundation
 	#if MONOMAC
 		, NSPasteboardReading, NSPasteboardWriting
 	#endif
+	#if IOS
+		, NSItemProviderReading, NSItemProviderWriting
+	#endif
 	{
 #if !WATCH
 		[Static, Export ("attributedStringWithAttachment:")]
