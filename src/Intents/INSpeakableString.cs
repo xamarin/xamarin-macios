@@ -15,6 +15,7 @@ using XamCore.ObjCRuntime;
 namespace XamCore.Intents {
 	public partial class INSpeakableString {
 		public INSpeakableString (string identifier, string spokenPhrase, string pronunciationHint)
+			: base (NSObjectFlag.Empty)
 		{
 #if IOS
 			if (XamCore.UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
