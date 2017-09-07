@@ -956,6 +956,7 @@ namespace XamCore.SceneKit {
 #if XAMCORE_2_0 && !WATCH
 	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface SCNGeometryTessellator : NSCopying, NSSecureCoding
 	{
 		[Export ("tessellationFactorScale")]
@@ -1971,7 +1972,7 @@ namespace XamCore.SceneKit {
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("renderWithViewport:commandBuffer:passDescriptor:")]
-		void RenderWith (CGRect viewport, IMTLCommandBuffer commandBuffer, MTLRenderPassDescriptor renderPassDescriptor);
+		void Render (CGRect viewport, IMTLCommandBuffer commandBuffer, MTLRenderPassDescriptor renderPassDescriptor);
 #endif
 		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
 		[Export ("updateProbes:atTime:")]
