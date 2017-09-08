@@ -683,6 +683,10 @@
     <Compile Include="ModelIO\MDLStereoscopicCameraTest.cs" />
     <Compile Include="UIKit\UISpringLoadedInteractionSupportingTest.cs" />
     <Compile Include="PdfKit\PdfAnnotationTest.cs" />
+    <Compile Include="Simd\VectorDouble2Test.cs" />
+    <Compile Include="Simd\VectorDouble3Test.cs" />
+    <Compile Include="Simd\VectorDouble4Test.cs" />
+    <Compile Include="Simd\MatrixDouble4x4Test.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>

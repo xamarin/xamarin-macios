@@ -84,6 +84,8 @@ typedef struct { vector_float2 columns[2]; } matrix_float2x2;
 typedef struct { vector_float3 columns[3]; } matrix_float3x3;
 typedef struct { vector_float4 columns[4]; } matrix_float4x4;
 
+typedef struct { vector_double4 columns[4]; } matrix_double4x4;
+
 typedef struct { vector_float4 vector; } simd_quatf;
 
 typedef struct {
@@ -176,6 +178,10 @@ struct Matrix4f {
 
 struct MatrixFloat4x4 {
 	Vector4f columns [4];
+};
+
+struct MatrixDouble4x4 {
+	Vector4d columns [4];
 };
 
 struct QuatF {
