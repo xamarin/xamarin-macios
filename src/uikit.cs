@@ -4916,17 +4916,6 @@ namespace XamCore.UIKit {
 		[return: NullAllowed]
 		UIColor FromName (string name);
 
-		// From the NSItemProviderReading protocol, a special constructor.
-		[iOS (11,0), NoWatch, NoTV]
-		[Export ("initWithItemProviderData:typeIdentifier:error:")]
-		IntPtr Constructor (NSData providerData, string typeIdentifier, out NSError outError);
-
-		// From the NSItemProviderReading protocol, a static method.
-		[Static]
-		[iOS (11,0), NoWatch, NoTV]
-		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		string[] ReadableTypeIdentifiers { get; }
-
 #if !WATCH
 		[iOS (11,0), TV (11,0)]
 		[Static]
@@ -5080,10 +5069,33 @@ namespace XamCore.UIKit {
 		bool GetRGBA2 (out nfloat red, out nfloat green, out nfloat blue, out nfloat alpha);
 #endif
 
+		// From the NSItemProviderReading protocol, a static method.
+		[Static]
+		[iOS (11,0), NoWatch, NoTV]
+		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+#if !WATCH && !TVOS
+		new
+#endif
+		string[] ReadableTypeIdentifiers { get; }
+
+		// From the NSItemProviderReading protocol, a static method.
+		[iOS (11,0), NoWatch, NoTV]
+		[Static]
+		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
+		[return: NullAllowed]
+#if !WATCH && !TVOS
+		new
+#endif
+		UIColor GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
+
 		// From the NSItemProviderWriting protocol, a static method.
-		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		// NSItemProviderWriting doesn't seem to be implemented for tvOS/watchOS, even though the headers say otherwise.
+		[NoWatch, NoTV, iOS (11,0)]
 		[Static]
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+#if !WATCH && !TVOS
+		new
+#endif
 		string[] WritableTypeIdentifiers { get; }
 	}
 
@@ -7233,17 +7245,25 @@ namespace XamCore.UIKit {
 		UIImage FromImage (CIImage image);
 #endif // !WATCH
 
-		// From the NSItemProviderReading protocol, a special constructor.
-		[Export ("initWithItemProviderData:typeIdentifier:error:")]
-		[iOS (11,0), NoWatch, NoTV]
-		IntPtr Constructor (NSData providerData, string typeIdentifier, out NSError outError);
-
 		// From the NSItemProviderReading protocol, a static method.
 		[Static]
 		[iOS (11,0), NoWatch, NoTV]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+#if !WATCH && !TVOS
+		new
+#endif
 		string[] ReadableTypeIdentifiers { get; }
 	
+		// From the NSItemProviderReading protocol, a static method.
+		[Static]
+		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
+		[iOS (11,0), NoWatch, NoTV]
+		[return: NullAllowed]
+#if !WATCH && !TVOS
+		new
+#endif
+		UIImage GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
+
 		[Export ("renderingMode")]
 		[ThreadSafe]
 		[Since (7,0)]
@@ -7445,9 +7465,13 @@ namespace XamCore.UIKit {
 #endif
 
 		// From the NSItemProviderWriting protocol, a static method.
-		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		// NSItemProviderWriting doesn't seem to be implemented for tvOS/watchOS, even though the headers say otherwise.
+		[NoWatch, NoTV, iOS (11,0)]
 		[Static]
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+#if !WATCH && !TVOS
+		new
+#endif
 		string[] WritableTypeIdentifiers { get; }
 	}
 
