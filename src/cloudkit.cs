@@ -55,7 +55,6 @@ namespace XamCore.CloudKit {
 
 		[NullAllowed, Export ("userRecordID", ArgumentSemantic.Copy)]
 		CKRecordID UserRecordID { get; }
-
 	}
 
 	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
@@ -75,7 +74,7 @@ namespace XamCore.CloudKit {
 		[Export ("hasiCloudAccount")]
 		bool HasICloudAccount { get; }
 
-		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[Watch (4, 0), NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
 		[Export ("contactIdentifiers", ArgumentSemantic.Copy)]
 		string[] ContactIdentifiers { get; }
 	}
@@ -494,9 +493,8 @@ namespace XamCore.CloudKit {
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (CKOperation))]
-	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 | Platform.Watch_3_0 | Platform.TV_9_0, 
-				   Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
-		Message = "Instead of iterating notifications to enumerate changed record zones, use CKDatabaseSubscription, CKFetchDatabaseChangesOperation, and CKFetchRecordZoneChangesOperation.")]
+	[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+		Message = "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
 	interface CKFetchNotificationChangesOperation {
 		[Export ("initWithPreviousServerChangeToken:")]
 		IntPtr Constructor ([NullAllowed] CKServerChangeToken previousServerChangeToken);
@@ -766,9 +764,8 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (CKOperation))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You must call -[CKMarkNotificationsReadOperation initWithNotificationIDsToMarkRead:]
-	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 | Platform.Watch_3_0 | Platform.TV_9_0, 
-				   Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
-		Message = "Instead of iterating notifications, consider using CKDatabaseSubscription, CKFetchDatabaseChangesOperation, and CKFetchRecordZoneChangesOperation as appropriate.")]
+	[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+		Message = "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
 	interface CKMarkNotificationsReadOperation {
 
 		[DesignatedInitializer]
@@ -789,9 +786,7 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
 	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
 	[BaseType (typeof (CKOperation))]
-	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 | Platform.Watch_3_0 | Platform.TV_9_0, 
-				   Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
-		Message = "No longer supported, will cease working at some point in the future.")]
+	[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0)]
 	interface CKModifyBadgeOperation {
 
 		[Export ("initWithBadgeValue:")]
@@ -983,27 +978,27 @@ namespace XamCore.CloudKit {
 		[NullAllowed, Export ("category")]
 		string Category { get; }
 
-		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[Watch (4, 0), NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
 		[NullAllowed, Export ("title")]
 		string Title { get; }
 
-		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[Watch (4, 0), NoTV, Mac (10, 13, onlyOn64 : true, iOS (11, 0)]
 		[NullAllowed, Export ("titleLocalizationKey")]
 		string TitleLocalizationKey { get; }
 
-		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[Watch (4, 0), NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
 		[NullAllowed, Export ("titleLocalizationArgs", ArgumentSemantic.Copy)]
 		string[] TitleLocalizationArgs { get; }
 
-		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[Watch (4, 0), NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
 		[NullAllowed, Export ("subtitle")]
 		string Subtitle { get; }
 
-		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[Watch (4, 0), NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
 		[NullAllowed, Export ("subtitleLocalizationKey")]
 		string SubtitleLocalizationKey { get; }
 
-		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[Watch (4, 0), NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
 		[NullAllowed, Export ("subtitleLocalizationArgs", ArgumentSemantic.Copy)]
 		string[] SubtitleLocalizationArgs { get; }
 	}
@@ -1095,9 +1090,8 @@ namespace XamCore.CloudKit {
 		// [Export ("activityStart")]
 		// ulong ActivityStart ();
 
-		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 | Platform.Watch_3_0 | Platform.TV_9_0, 
-				   Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
-			Message = "Instead use CKOperationConfiguration.")]
+		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+			Message = "Use 'CKOperationConfiguration' instead.")]
 		[NullAllowed, Export ("container", ArgumentSemantic.Retain)]
 		CKContainer Container { get; set; }
 
@@ -1107,9 +1101,8 @@ namespace XamCore.CloudKit {
 		[Export ("usesBackgroundSession", ArgumentSemantic.UnsafeUnretained)]
 		bool UsesBackgroundSession { get; set; }
 
-		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 | Platform.Watch_3_0 | Platform.TV_9_0, 
-				   Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
-			Message = "Instead use CKOperationConfiguration.")]
+		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+			Message = "Use 'CKOperationConfiguration' instead.")]
 		[Export ("allowsCellularAccess", ArgumentSemantic.UnsafeUnretained)]
 		bool AllowsCellularAccess { get; set; }
 
@@ -1121,36 +1114,33 @@ namespace XamCore.CloudKit {
 		[iOS (9,3)][Mac (10,11,4)]
 		[TV (9,2)]
 		[Export ("longLived")]
-		[Availability (Introduced = Platform.iOS_9_3 | Platform.Mac_10_10 | Platform.Watch_3_0 | Platform.TV_9_2, 
-				   Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
-			Message = "Instead use CKOperationConfiguration.")]
+		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+			Message = "Use 'CKOperationConfiguration' instead.")]
 		bool LongLived { [Bind ("isLongLived")] get; set; }
 
 		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 		[Export ("timeoutIntervalForRequest")]
-		[Availability (Introduced = Platform.iOS_10_0 | Platform.Mac_10_12 | Platform.Watch_3_0 | Platform.TV_10_0, 
-				   Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
-			Message = "Instead use CKOperationConfiguration.")]
+		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+			Message = "Use 'CKOperationConfiguration' instead.")]
 		double TimeoutIntervalForRequest { get; set; }
 
 		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 		[Export ("timeoutIntervalForResource")]
-		[Availability (Introduced = Platform.iOS_10_0 | Platform.Mac_10_12 | Platform.Watch_3_0 | Platform.TV_10_0, 
-				   Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
-			Message = "Instead use CKOperationConfiguration.")]
+		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+			Message = "Use 'CKOperationConfiguration' instead.")]
 		double TimeoutIntervalForResource { get; set; }
 
 		[iOS (9,3)][Mac (10,11,4)]
 		[TV (9,2)]
 		[NullAllowed]
 		[Export ("longLivedOperationWasPersistedBlock", ArgumentSemantic.Strong)]
-		Action LongLivedOperationWasPersistedCallback { get; set; }
+		Action LongLivedOperationWasPersistedCallback { get; set; }		
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		CKOperationConfiguration Configuration { get; set; }
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Watch (4, 0), TV (11, 0), Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
 		[NullAllowed, Export ("group", ArgumentSemantic.Strong)]
 		CKOperationGroup Group { get; set; }
 	}
@@ -1161,7 +1151,7 @@ namespace XamCore.CloudKit {
 	interface CKOperationGroup : NSSecureCoding {
 
 		[Export ("operationGroupID")]
-		string OperationGroupID { get; }
+		string OperationGroupId { get; }
 
 		[Export ("defaultConfiguration", ArgumentSemantic.Copy)]
 		CKOperationConfiguration DefaultConfiguration { get; set; }
@@ -1611,37 +1601,37 @@ namespace XamCore.CloudKit {
 		[NullAllowed, Export ("category")]
 		string Category { get; set; }
 
-		[NoTV, Mac (10, 13), iOS (11, 0)]
+		[NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
 		[NullAllowed, Export ("title")]
 		string Title { get; set; }
 
-		[NoTV, Mac (10, 13), iOS (11, 0)]
+		[NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
 		[NullAllowed, Export ("titleLocalizationKey")]
 		string TitleLocalizationKey { get; set; }
 
-		[NoTV, Mac (10, 13), iOS (11, 0)]
+		[NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
 		[NullAllowed, Export ("titleLocalizationArgs", ArgumentSemantic.Copy)]
 		string[] TitleLocalizationArgs { get; set; }
 
-		[NoTV, Mac (10, 13), iOS (11, 0)]
+		[NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
 		[NullAllowed, Export ("subtitle")]
 		string Subtitle { get; set; }
 
-		[NoTV, Mac (10, 13), iOS (11, 0)]
+		[NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
 		[NullAllowed, Export ("subtitleLocalizationKey")]
 		string SubtitleLocalizationKey { get; set; }
 
-		[NoTV, Mac (10, 13), iOS (11, 0)]
+		[NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
 		[NullAllowed, Export ("subtitleLocalizationArgs", ArgumentSemantic.Copy)]
 		string[] SubtitleLocalizationArgs { get; set; }
 
-		[Mac (10, 13), iOS (11, 0)]
+		[Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
 		[Export ("shouldSendMutableContent")]
 		bool ShouldSendMutableContent { get; set; }
 
-		[Mac (10, 13), iOS (11, 0)]
+		[Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
 		[NullAllowed, Export ("collapseIDKey")]
-		string CollapseIDKey { get; set; }
+		string CollapseIdKey { get; set; }
 	}
 	
 	[Watch (3,0)]
@@ -1795,12 +1785,11 @@ namespace XamCore.CloudKit {
 		[NullAllowed, Export ("changeTokenUpdatedBlock", ArgumentSemantic.Copy)]
 		Action<CKServerChangeToken> ChangeTokenUpdated { get; set; }
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Watch (4, 0), TV (11, 0), Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
 		[NullAllowed, Export ("recordZoneWithIDWasPurgedBlock", ArgumentSemantic.Copy)]
 		Action<CKRecordZoneID> WasPurged { get; set; }
 
 		[NullAllowed, Export ("fetchDatabaseChangesCompletionBlock", ArgumentSemantic.Copy)]
 		CKFetchDatabaseChangesCompletionHandler ChangesCompleted { get; set; }
-
 	}
 }

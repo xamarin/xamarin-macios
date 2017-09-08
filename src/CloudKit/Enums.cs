@@ -228,6 +228,6 @@ namespace XamCore.CloudKit
 		HundredsOfMegabytes,
 		Gigabytes,
 		TensOfGigabytes,
-		HundredsOfGigabytes
+		HundredsOfGigabytes,
 	}
 }
