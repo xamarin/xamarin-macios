@@ -448,6 +448,7 @@ namespace XamCore.Metal {
 		void Wait (IMTLFence fence);
 
 		[Mac (10,13, onlyOn64: true)]
+		[NoTV][NoiOS]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -809,7 +810,7 @@ namespace XamCore.Metal {
 		[Export ("removable")]
 		bool Removable { [Bind ("isRemovable")] get; }
 
-		[Mac (10, 13), NoiOS, NoWatch, NoTV]
+		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -887,6 +888,23 @@ namespace XamCore.Metal {
 #endif
 		[Export ("currentAllocatedSize")]
 		nuint CurrentAllocatedSize { get; }
+
+#if false // https://bugzilla.xamarin.com/show_bug.cgi?id=59342
+		[Mac (10,13, onlyOn64: true), NoiOS, NoTV, NoWatch]
+		[Notification]
+		[Field ("MTLDeviceWasAddedNotification")]
+		NSString DeviceWasAdded { get; }
+
+		[Mac (10,13, onlyOn64: true), NoiOS, NoTV, NoWatch]
+		[Notification]
+		[Field ("MTLDeviceRemovalRequestedNotification")]
+		NSString DeviceRemovalRequested { get; }
+
+		[Mac (10,13, onlyOn64: true), NoiOS, NoTV, NoWatch]
+		[Notification]
+		[Field ("MTLDeviceWasRemovedNotification")]
+		NSString DeviceWasRemoved { get; }
+#endif
 	}
 
 	interface IMTLDrawable {}
@@ -2419,7 +2437,7 @@ namespace XamCore.Metal {
 	}
 
 	[Mac (10,13, onlyOn64: true), iOS (11,0), TV (11,0), NoWatch]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof(MTLType))]
 	interface MTLPointerType
 	{
 		[Export ("elementType")]
@@ -2523,18 +2541,6 @@ namespace XamCore.Metal {
 
 		[Export ("isCapturing")]
 		bool IsCapturing { get; }
-	}
-
-	[Mac (10, 13, onlyOn64: true), NoiOS, NoTV, NoWatch]
-	interface MTLDeviceNotificationName {
-		[Field ("MTLDeviceWasAddedNotification")]
-		NSString DeviceWasAdded { get; set; }
-
-		[Field ("MTLDeviceRemovalRequestedNotification")]
-		NSString DeviceRemovalRequested { get; set; }
-
-		[Field ("MTLDeviceWasRemovedNotification")]
-		NSString MTLDeviceWasRemoved { get; set; }
 	}
 
 	[Mac (10,13, onlyOn64: true), iOS (11,0), TV (11,0), NoWatch]
@@ -2643,6 +2649,7 @@ namespace XamCore.Metal {
 		[Export ("constantDataAtIndex:")]
 		IntPtr GetConstantData (nuint index);
 
+		[NoTV][NoiOS]
 		[Abstract]
 		[Export ("newArgumentEncoderForBufferAtIndex:")]
 		[return: NullAllowed]
