@@ -982,7 +982,7 @@ namespace XamCore.CloudKit {
 		[NullAllowed, Export ("title")]
 		string Title { get; }
 
-		[Watch (4, 0), NoTV, Mac (10, 13, onlyOn64 : true, iOS (11, 0)]
+		[Watch (4, 0), NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
 		[NullAllowed, Export ("titleLocalizationKey")]
 		string TitleLocalizationKey { get; }
 
