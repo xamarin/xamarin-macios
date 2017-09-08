@@ -123,9 +123,9 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			if (exitCode != 0) {
-				// Note: ibtool or actool exited with an error. Dump everything we can to help the user
-				// diagnose the issue and then delete the manifest log file so that rebuilding tries
-				// again (in case of ibtool's infamous spurious errors).
+				// Note: coremlc exited with an error. Dump everything we can to help the user
+				// diagnose the issue and then delete the log file so that rebuilding tries
+				// again.
 				if (errors.Length > 0)
 					Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, "{0}", errors);
 
