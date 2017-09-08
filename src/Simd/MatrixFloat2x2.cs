@@ -13,8 +13,6 @@
 using System;
 using System.Runtime.InteropServices;
 
-using VectorFloat2=global::OpenTK.Vector2;
-
 namespace Simd
 {
 	[StructLayout (LayoutKind.Sequential)]
@@ -30,6 +28,14 @@ namespace Simd
 			0, 1);
 
 		public MatrixFloat2x2 (VectorFloat2 column0, VectorFloat2 column1)
+		{
+			M11 = column0.X;
+			M21 = column0.Y;
+			M12 = column1.X;
+			M22 = column1.Y;
+		}
+
+		public MatrixFloat2x2 (global::OpenTK.Vector2 column0, global::OpenTK.Vector2 column1)
 		{
 			M11 = column0.X;
 			M21 = column0.Y;

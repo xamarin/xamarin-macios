@@ -8,6 +8,9 @@
 ## types/members marked as deprecated in watchOS 2.0 (even if the framework was not available before 3.0)
 AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions:
 
+## it's not exposed in the API offered by watchOS
+!missing-enum! AVAudioSessionRecordPermission not bound
+
 
 # CoreBluetooth
 
@@ -157,6 +160,12 @@ AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions:
 !missing-selector! UIImageDeprecated::leftCapWidth not bound
 !missing-selector! UIImageDeprecated::stretchableImageWithLeftCapWidth:topCapHeight: not bound
 !missing-selector! UIImageDeprecated::topCapHeight not bound
+
+## lack of availabilty macros on NSItemProvder.PreferredPresentationStyle - intro says they are not available
+!missing-selector! NSItemProvider::preferredPresentationStyle not bound
+!missing-selector! NSItemProvider::setPreferredPresentationStyle: not bound
+## and that also means the (enum/returned) type is unused
+!missing-enum! UIPreferredPresentationStyle not bound
 
 
 # WatchConnectivity

@@ -2333,8 +2333,11 @@ namespace XamCore.UIKit {
 	
 	[iOS (8,0)]
 	[BaseType (typeof (UIViewController))]
-	// Should conform to UISpringLoadedInteractionSupporting according to headers but doesn't. Filed //radar: https://trello.com/b/ZXs89x7A
-	partial interface UIAlertController {
+	partial interface UIAlertController
+#if IOS
+		: UISpringLoadedInteractionSupporting
+#endif
+	{
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
@@ -4032,7 +4035,11 @@ namespace XamCore.UIKit {
 	[BaseType (typeof (UIScrollView))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: UICollectionView must be initialized with a non-nil layout parameter
 	[DisableDefaultCtor]
-	interface UICollectionView : NSCoding, UIDataSourceTranslating {
+	interface UICollectionView : NSCoding, UIDataSourceTranslating
+#if IOS
+		, UISpringLoadedInteractionSupporting
+#endif
+	{
 		[DesignatedInitializer]
 		[Export ("initWithFrame:collectionViewLayout:"), PostGet ("CollectionViewLayout")]
 		IntPtr Constructor (CGRect frame, UICollectionViewLayout layout);
@@ -4909,17 +4916,6 @@ namespace XamCore.UIKit {
 		[return: NullAllowed]
 		UIColor FromName (string name);
 
-		// From the NSItemProviderReading protocol, a special constructor.
-		[iOS (11,0), NoWatch, NoTV]
-		[Export ("initWithItemProviderData:typeIdentifier:error:")]
-		IntPtr Constructor (NSData providerData, string typeIdentifier, out NSError outError);
-
-		// From the NSItemProviderReading protocol, a static method.
-		[Static]
-		[iOS (11,0), NoWatch, NoTV]
-		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		string[] ReadableTypeIdentifiers { get; }
-
 #if !WATCH
 		[iOS (11,0), TV (11,0)]
 		[Static]
@@ -5073,10 +5069,33 @@ namespace XamCore.UIKit {
 		bool GetRGBA2 (out nfloat red, out nfloat green, out nfloat blue, out nfloat alpha);
 #endif
 
+		// From the NSItemProviderReading protocol, a static method.
+		[Static]
+		[iOS (11,0), NoWatch, NoTV]
+		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+#if !WATCH && !TVOS
+		new
+#endif
+		string[] ReadableTypeIdentifiers { get; }
+
+		// From the NSItemProviderReading protocol, a static method.
+		[iOS (11,0), NoWatch, NoTV]
+		[Static]
+		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
+		[return: NullAllowed]
+#if !WATCH && !TVOS
+		new
+#endif
+		UIColor GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
+
 		// From the NSItemProviderWriting protocol, a static method.
-		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		// NSItemProviderWriting doesn't seem to be implemented for tvOS/watchOS, even though the headers say otherwise.
+		[NoWatch, NoTV, iOS (11,0)]
 		[Static]
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+#if !WATCH && !TVOS
+		new
+#endif
 		string[] WritableTypeIdentifiers { get; }
 	}
 
@@ -7226,17 +7245,25 @@ namespace XamCore.UIKit {
 		UIImage FromImage (CIImage image);
 #endif // !WATCH
 
-		// From the NSItemProviderReading protocol, a special constructor.
-		[Export ("initWithItemProviderData:typeIdentifier:error:")]
-		[iOS (11,0), NoWatch, NoTV]
-		IntPtr Constructor (NSData providerData, string typeIdentifier, out NSError outError);
-
 		// From the NSItemProviderReading protocol, a static method.
 		[Static]
 		[iOS (11,0), NoWatch, NoTV]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+#if !WATCH && !TVOS
+		new
+#endif
 		string[] ReadableTypeIdentifiers { get; }
 	
+		// From the NSItemProviderReading protocol, a static method.
+		[Static]
+		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
+		[iOS (11,0), NoWatch, NoTV]
+		[return: NullAllowed]
+#if !WATCH && !TVOS
+		new
+#endif
+		UIImage GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
+
 		[Export ("renderingMode")]
 		[ThreadSafe]
 		[Since (7,0)]
@@ -7438,9 +7465,13 @@ namespace XamCore.UIKit {
 #endif
 
 		// From the NSItemProviderWriting protocol, a static method.
-		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		// NSItemProviderWriting doesn't seem to be implemented for tvOS/watchOS, even though the headers say otherwise.
+		[NoWatch, NoTV, iOS (11,0)]
 		[Static]
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+#if !WATCH && !TVOS
+		new
+#endif
 		string[] WritableTypeIdentifiers { get; }
 	}
 
@@ -7792,8 +7823,11 @@ namespace XamCore.UIKit {
 	
 #if !WATCH
 	[BaseType (typeof (UIControl))]
-	// Should conform to UISpringLoadedInteractionSupporting according to headers but doesn't. Filed //radar: https://trello.com/b/ZXs89x7A
-	interface UIButton : UIAccessibilityContentSizeCategoryImageAdjusting {
+	interface UIButton : UIAccessibilityContentSizeCategoryImageAdjusting
+#if IOS
+		, UISpringLoadedInteractionSupporting
+#endif
+	{
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
@@ -10771,7 +10805,11 @@ namespace XamCore.UIKit {
 	}
 	
 	[BaseType (typeof(UIControl))]
-	interface UISegmentedControl {
+	interface UISegmentedControl
+#if IOS
+		: UISpringLoadedInteractionSupporting
+#endif
+	{
 		[Export ("initWithItems:")]
 		IntPtr Constructor (NSArray items);
 
@@ -11172,8 +11210,11 @@ namespace XamCore.UIKit {
 	}
 
 	[BaseType (typeof (UIView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UITabBarDelegate)})]
-	// Should conform to UISpringLoadedInteractionSupporting according to headers but doesn't. Filed //radar: https://trello.com/b/ZXs89x7A
-	interface UITabBar {
+	interface UITabBar
+#if IOS
+		: UISpringLoadedInteractionSupporting
+#endif
+	{
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
@@ -11389,7 +11430,11 @@ namespace XamCore.UIKit {
 	}
 	
 	[BaseType (typeof (UIBarItem))]
-	interface UITabBarItem : NSCoding {
+	interface UITabBarItem : NSCoding
+#if IOS
+		, UISpringLoadedInteractionSupporting
+#endif
+	{
 		[Export ("enabled")][Override]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 
@@ -11473,7 +11518,11 @@ namespace XamCore.UIKit {
 	}
 	
 	[BaseType (typeof(UIScrollView))]
-	interface UITableView : NSCoding, UIDataSourceTranslating {
+	interface UITableView : NSCoding, UIDataSourceTranslating
+#if IOS
+		, UISpringLoadedInteractionSupporting
+#endif
+	{
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 

@@ -3447,7 +3447,7 @@ namespace XamCore.SpriteKit {
 		nfloat YRotation { get; set; }
 
 		[Export ("eulerAngles")]
-		Vector3 EulerAngles {
+		VectorFloat3 EulerAngles {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}

@@ -651,6 +651,10 @@
     <Compile Include="Simd\MatrixFloat2x2Test.cs" />
     <Compile Include="Simd\MatrixFloat3x3Test.cs" />
     <Compile Include="Simd\MatrixFloat4x4Test.cs" />
+    <Compile Include="Simd\VectorFloat2Test.cs" />
+    <Compile Include="Simd\VectorFloat3Test.cs" />
+    <Compile Include="Simd\VectorFloat4Test.cs" />
+    <Compile Include="Simd\VectorInt4Test.cs" />
     <Compile Include="mono\ConfigTest.cs" />
     <Compile Include="OpenGLES\EAGLContext.cs" />
     <Compile Include="CoreText\CTParagraphStyleTests.cs" />
@@ -677,6 +681,8 @@
     <Compile Include="ModelIO\MDLTransformComponentTest.cs" />
     <Compile Include="ModelIO\MDLCameraTest.cs" />
     <Compile Include="ModelIO\MDLStereoscopicCameraTest.cs" />
+    <Compile Include="UIKit\UISpringLoadedInteractionSupportingTest.cs" />
+    <Compile Include="PdfKit\PdfAnnotationTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
@@ -746,6 +752,7 @@
     <Folder Include="HomeKit\" />
     <Folder Include="ARKit\" />
     <Folder Include="CoreML\" />
+    <Folder Include="PdfKit\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />

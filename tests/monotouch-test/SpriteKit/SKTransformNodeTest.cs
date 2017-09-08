@@ -33,11 +33,11 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void EulerAngles ()
 		{
-			Vector3 V3;
+			VectorFloat3 V3 = new VectorFloat3 ();
 
 			using (var obj = new SKTransformNode ()) {
-				Asserts.AreEqual (Vector3.Zero, obj.EulerAngles, "1 EulerAngles");
-				V3 = new Vector3 (1, 2, 3);
+				Asserts.AreEqual (V3, obj.EulerAngles, "1 EulerAngles");
+				V3 = new VectorFloat3 (1, 2, 3);
 				obj.EulerAngles = V3;
 				// The values bellow match what the same code in Swift returns.
 				Assert.AreEqual (-2.14159298f, obj.EulerAngles.X, "#x1");

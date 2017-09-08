@@ -376,6 +376,12 @@
 !missing-selector! UITableViewHeaderFooterView::setTintColor: not bound
 !missing-selector! UITableViewHeaderFooterView::tintColor not bound
 
+## lack of availabilty macros on NSItemProvder.PreferredPresentationStyle - intro says they are not available
+!missing-selector! NSItemProvider::preferredPresentationStyle not bound
+!missing-selector! NSItemProvider::setPreferredPresentationStyle: not bound
+## and that also means the (enum/returned) type is unused
+!missing-enum! UIPreferredPresentationStyle not bound
+
 
 # OpenTK
 

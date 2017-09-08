@@ -253,32 +253,6 @@ namespace XamCore.Foundation
 		[Wrap ("this (data, options == null ? null : options.Dictionary, out resultDocumentAttributes, ref error)")]
 		IntPtr Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 
-		// From the NSItemProviderReading protocol, a static method.
-		[Static]
-		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		[iOS (11,0), NoWatch, NoTV, Mac(10,13)]
-		string[] ReadableTypeIdentifiers { get; }
-
-#if !TVOS && !WATCHOS
-		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-		[Static]
-		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
-		[return: NullAllowed]
-		NSAttributedString FromItemProviderData (NSData itemProviderData, string typeIdentifier, [NullAllowed] out NSError outError);
-#endif
-
-		// From the NSItemProviderWriting protocol, a static method.
-		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-		[Static]
-		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		string[] WritableTypeIdentifiers { get; }
-
-		// From the NSItemProviderWriting protocol, a static method.
-		[NoWatch, NoTV, Mac (10,13), NoiOS]
-		[Static]
-		[Export ("itemProviderVisibilityForRepresentationWithTypeIdentifier:")]
-		NSItemProviderRepresentationVisibility GetItemProviderVisibility (string typeIdentifier);
-		
 		[Since (7,0)]
 		[Export ("dataFromRange:documentAttributes:error:")]
 		NSData GetDataFromRange (NSRange range, NSDictionary attributes, ref NSError error);
@@ -4923,6 +4897,7 @@ namespace XamCore.Foundation
 	[Since (5,0)]
 	[BaseType (typeof (NSObject))]
 #if WATCH
+	[Advice ("Not available on watchOS")]
 	[DisableDefaultCtor] // "NSUbiquitousKeyValueStore is unavailable" is printed to the log.
 #endif
 	interface NSUbiquitousKeyValueStore {
@@ -5305,9 +5280,7 @@ namespace XamCore.Foundation
 #if MONOMAC
 	, NSPasteboardReading, NSPasteboardWriting
 #endif
-#if !WATCH && !TVOS
-	, NSItemProviderWriting
-#endif
+	, NSItemProviderWriting, NSItemProviderReading
 	{
 		[Export ("initWithScheme:host:path:")]
 		IntPtr Constructor (string scheme, string host, string path);
@@ -5998,21 +5971,24 @@ namespace XamCore.Foundation
 		NSString FileProtectionCompleteUntilFirstUserAuthentication { get; }
 #endif
 
+		// From the NSItemProviderReading protocol
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		string[] ReadableTypeIdentifiers { get; }
+		new string[] ReadableTypeIdentifiers { get; }
 
+		// From the NSItemProviderReading protocol
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
 		[return: NullAllowed]
-		NSUrl FromItemProviderData (NSData itemProviderData, string typeIdentifier, [NullAllowed] out NSError outError);
+		new NSUrl GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
 
-		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		// From the NSItemProviderWriting protocol
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		string[] WritableTypeIdentifiers { get; }
+		new string[] WritableTypeIdentifiers { get; }
 	}
 
 	
@@ -7812,9 +7788,7 @@ namespace XamCore.Foundation
 	#if MONOMAC
 		, NSPasteboardReading, NSPasteboardWriting // Documented that it implements NSPasteboard protocols even if header doesn't show it
 	#endif
-#if !WATCH && !TVOS
-		, NSItemProviderWriting
-#endif
+		, NSItemProviderReading, NSItemProviderWriting
 	{
 		[Export ("initWithData:encoding:")]
 		IntPtr Constructor (NSData data, NSStringEncoding encoding);
@@ -8074,21 +8048,24 @@ namespace XamCore.Foundation
 		[Export ("paragraphRangeForRange:")]
 		NSRange GetParagraphRange (NSRange range);
 
+		// From the NSItemProviderReading protocol
+
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		string[] ReadableTypeIdentifiers { get; }
+		new string[] ReadableTypeIdentifiers { get; }
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
 		[return: NullAllowed]
-		NSString FromItemProviderData (NSData itemProviderData, string typeIdentifier, [NullAllowed] out NSError outError);
+		new NSString GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
 
-		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		// From the NSItemProviderWriting protocol
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		string[] WritableTypeIdentifiers { get; }
+		new string[] WritableTypeIdentifiers { get; }
 	}
 
 	[StrongDictionary ("NSString")]
@@ -8137,12 +8114,6 @@ namespace XamCore.Foundation
 
 		[Export ("replaceCharactersInRange:withString:")]
 		void ReplaceCharactersInRange (NSRange range, NSString aString);
-
-		// From the NSItemProviderWriting protocol, a static method.
-		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-		[Static]
-		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		string[] WritableTypeIdentifiers { get; }
 	}
 	
 	[Category, BaseType (typeof (NSString))]
@@ -9780,7 +9751,6 @@ namespace XamCore.Foundation
 	[Protocol]
 	interface NSItemProviderReading
 	{
-		//
 		// This static method has to be implemented on each class that implements
 		// this, this is not a capability that exists in C#.
 		// We are inlining these on each class that implements NSItemProviderReading
@@ -9788,14 +9758,14 @@ namespace XamCore.Foundation
 		// user needs to manually [Export] the selector on a static method, like
 		// they do for the "layer" property on CALayer subclasses.
 		//
-		//[Static, Abstract]
-		//[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		//string[] ReadableTypeIdentifiers { get; }
+		[Static, Abstract]
+		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] ReadableTypeIdentifiers { get; }
 
-		//[Static]
-		//[Export ("objectWithItemProviderData:typeIdentifier:error:")]
-		//[return: NullAllowed]
-		//INSItemProviderReading GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
+		[Static, Abstract]
+		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
+		[return: NullAllowed]
+		INSItemProviderReading GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
 	}
 
 	interface INSItemProviderWriting {}
@@ -9812,20 +9782,29 @@ namespace XamCore.Foundation
 		// user needs to manually [Export] the selector on a static method, like
 		// they do for the "layer" property on CALayer subclasses.
 		//
-		//[Static, Abstract]
-		//[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		//string[] WritableTypeIdentifiersForItemProvider { get; }
+		[Static, Abstract]
+		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		string[] WritableTypeIdentifiers { get; }
 
-		//[Static]
-		//[Export ("itemProviderVisibilityForRepresentationWithTypeIdentifier:")]
-		//NSItemProviderRepresentationVisibility GetItemProviderVisibility (string typeIdentifier);
+		// This is an optional method, which means the generator will inline it in any classes
+		// that implements this interface. Unfortunately none of the native classes that implements
+		// the protocol actually implements this method, which means that inlining the method will cause
+		// introspection to complain (rightly). So comment out this method to avoid generator a lot of unusable API.
+		// See also https://bugzilla.xamarin.com/show_bug.cgi?id=59308.
+		//
+		// [Static]
+		// [Export ("itemProviderVisibilityForRepresentationWithTypeIdentifier:")]
+		// NSItemProviderRepresentationVisibility GetItemProviderVisibility (string typeIdentifier);
 
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
+		// 'WritableTypeIdentifiers' is a nicer name, but there's a static property with that name.
 		string[] WritableTypeIdentifiersForItemProvider { get; }
 
 		[Export ("itemProviderVisibilityForRepresentationWithTypeIdentifier:")]
-		NSItemProviderRepresentationVisibility GetItemProviderVisibility (string typeIdentifier);
+		// 'GetItemProviderVisibility' is a nicer name, but there's a static method with that name.
+		NSItemProviderRepresentationVisibility GetItemProviderVisibilityForTypeIdentifier (string typeIdentifier);
 
+		[Abstract]
 		[Async, Export ("loadDataWithTypeIdentifier:forItemProviderCompletionHandler:")]
 		[return: NullAllowed]
 		NSProgress LoadData (string typeIdentifier, Action<NSData, NSError> completionHandler);
@@ -11400,16 +11379,20 @@ namespace XamCore.Foundation
 		NSString PowerStateDidChangeNotification { get; }
 #endif
 
-#if MONOMAC
 		[Mac (10,10,3)]
+		[Watch (4,0)]
+		[TV (11, 0)]
+		[iOS (11,0)]
 		[Export ("thermalState")]
 		NSProcessInfoThermalState ThermalState { get; }
 
 		[Mac (10,10,3)]
 		[Field ("NSProcessInfoThermalStateDidChangeNotification")]
+		[Watch (4,0)]
+		[TV (11, 0)]
+		[iOS (11,0)]
 		[Notification]
 		NSString ThermalStateDidChangeNotification { get; }
-#endif
 	}
 
 	[NoWatch][NoTV][NoiOS]

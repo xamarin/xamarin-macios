@@ -80,13 +80,12 @@ namespace XamCore.OpenGLES {
 		[Export ("multiThreaded")]
 		bool IsMultiThreaded { [Bind ("isMultiThreaded")] get; set; }
 
-#if false // https://bugzilla.xamarin.com/show_bug.cgi?id=58054
 		// IOSurface (EAGLContext)
 
 		[iOS (11,0)]
+		[TV (11,0)]
 		[Export ("texImageIOSurface:target:internalFormat:width:height:format:type:plane:")]
-		bool TexImage (IOSurface ioSurface, nuint target, nuint internalFormat, uint width, uint height, nuint format, nuint type, uint plane);
-#endif
+		bool TexImage (IOSurface.IOSurface ioSurface, nuint target, nuint internalFormat, uint width, uint height, nuint format, nuint type, uint plane);
 	}
 
 	[Protocol]
