@@ -19,6 +19,7 @@ using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
 using Vector4 = global::OpenTK.Vector4;
 using Vector4i = global::OpenTK.Vector4i;
+using VectorInt4 = global::Simd.VectorInt4;
 using Matrix2 = global::OpenTK.Matrix2;
 using Matrix3 = global::OpenTK.Matrix3;
 using Matrix4 = global::OpenTK.Matrix4;
@@ -270,8 +271,18 @@ namespace XamCore.ModelIO {
 #else
 	public struct MDLVoxelIndexExtent2 {
 #endif
-		public Vector4i MinimumExtent { get; private set; }
-		public Vector4i MaximumExtent { get; private set; }
+		public VectorInt4 MinimumExtent { get; private set; }
+		public VectorInt4 MaximumExtent { get; private set; }
+
+#if XAMCORE_4_0
+		public MDLVoxelIndexExtent (VectorInt4 minimumExtent, VectorInt4 maximumExtent)
+#else
+		public MDLVoxelIndexExtent2 (VectorInt4 minimumExtent, VectorInt4 maximumExtent)
+#endif
+		{
+			this.MinimumExtent = minimumExtent;
+			this.MaximumExtent = maximumExtent;
+		}
 
 #if XAMCORE_4_0
 		public MDLVoxelIndexExtent (Vector4i minimumExtent, Vector4i maximumExtent)
@@ -279,8 +290,8 @@ namespace XamCore.ModelIO {
 		public MDLVoxelIndexExtent2 (Vector4i minimumExtent, Vector4i maximumExtent)
 #endif
 		{
-			this.MinimumExtent = minimumExtent;
-			this.MaximumExtent = maximumExtent;
+			this.MinimumExtent = (VectorInt4) minimumExtent;
+			this.MaximumExtent = (VectorInt4) maximumExtent;
 		}
 	}
 
