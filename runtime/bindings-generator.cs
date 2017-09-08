@@ -88,6 +88,17 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
+					Comment = " // void func (VectorFloat3)",
+					Prefix = "simd__",
+					Variants = Variants.msgSend | Variants.msgSendSuper,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.VectorFloat3 }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
 					Comment = " // void func (Vector3)",
 					Prefix = "simd__",
 					Variants = Variants.msgSend | Variants.msgSendSuper,
