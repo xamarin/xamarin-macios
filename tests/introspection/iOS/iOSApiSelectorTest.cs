@@ -276,6 +276,17 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "EAGLContext":
+				switch (name) {
+				// symbol only exists on devices (not in simulator libraries)
+				case "texImageIOSurface:target:internalFormat:width:height:format:type:plane:":
+					if (Runtime.Arch == Arch.SIMULATOR)
+						return true;
+					if (!TestRuntime.CheckXcodeVersion (9, 0))
+						return true;
+					break;
+				}
+				break;
 			}
 
 			switch (name) {
