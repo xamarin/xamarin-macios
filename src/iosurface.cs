@@ -18,6 +18,7 @@ namespace XamCore.IOSurface {
 	[Internal]
 	// See bug #59201 [iOS (10,0)]
 	[iOS (11, 0)]
+	[TV (11,0)]
 	[Mac (10, 12)]
 	interface IOSurfacePropertyKey {
 		[Field ("IOSurfacePropertyAllocSizeKey")]
@@ -109,7 +110,9 @@ namespace XamCore.IOSurface {
 		bool PixelSizeCastingAllowed { get; set; }
 	}
 
-	[iOS (10,0), Mac(10,12)]
+	[iOS (11,0)]
+	[TV (11,0)]
+	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	interface IOSurface : NSSecureCoding
 	{
