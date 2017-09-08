@@ -17,7 +17,7 @@ using AVFoundation;
 using Foundation;
 using NUnit.Framework;
 using ObjCRuntime;
-using OpenTK;
+using Simd;
 
 namespace MonoTouchFixtures.ARKit {
 
@@ -25,7 +25,7 @@ namespace MonoTouchFixtures.ARKit {
 
 		GCHandle vectorArrayHandle;
 		GCHandle identifiersHandle;
-		Vector4 [] vectorArray;
+		VectorFloat3 [] vectorArray;
 		ulong [] identifiers;
 
 		public ARPointCloudPoker () : base (IntPtr.Zero)
@@ -40,11 +40,10 @@ namespace MonoTouchFixtures.ARKit {
 
 		protected unsafe override IntPtr GetRawPoints ()
 		{
-			vectorArray = new Vector4 [] { new Vector4 (1, 2, 3, -1), new Vector4 (4, 5, 6, -1) };
+			vectorArray = new VectorFloat3 [] { new VectorFloat3 (1, 2, 3), new VectorFloat3 (4, 5, 6) };
 			if (!vectorArrayHandle.IsAllocated)
 				vectorArrayHandle = GCHandle.Alloc (vectorArray, GCHandleType.Pinned);
-			Vector3* addr = (Vector3*)vectorArrayHandle.AddrOfPinnedObject ();
-			return (IntPtr)addr;
+			return vectorArrayHandle.AddrOfPinnedObject ();
 		}
 
 		protected unsafe override IntPtr GetRawIdentifiers ()
@@ -82,8 +81,8 @@ namespace MonoTouchFixtures.ARKit {
 			var cloud = new ARPointCloudPoker ();
 
 			var points = cloud.Points;
-			Assert.AreEqual (new Vector3 (1, 2, 3), cloud.Points [0]);
-			Assert.AreEqual (new Vector3 (4, 5, 6), cloud.Points [1]);
+			Assert.AreEqual (new VectorFloat3 (1, 2, 3), cloud.Points [0]);
+			Assert.AreEqual (new VectorFloat3 (4, 5, 6), cloud.Points [1]);
 		}
 
 		[Test]

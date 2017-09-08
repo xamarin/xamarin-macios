@@ -21,7 +21,7 @@ using XamCore.SpriteKit;
 using XamCore.SceneKit;
 using XamCore.UIKit;
 
-using Vector3 = global::OpenTK.Vector3;
+using Vector3 = global::Simd.VectorFloat3;
 using Matrix3 = global::Simd.MatrixFloat3x3;
 using Matrix4 = global::Simd.MatrixFloat4x4;
 

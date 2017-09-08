@@ -15,7 +15,7 @@ using XamCore.CoreGraphics;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 
-using Vector2 = global::OpenTK.Vector2;
+using Vector2 = global::Simd.VectorFloat2;
 
 namespace XamCore.Vision {
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
