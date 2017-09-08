@@ -898,6 +898,7 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoTV, iOS (11,0)]
+	[NoWatch]
 	[Native]
 	public enum AVCaptureLensStabilizationStatus : nint
 	{

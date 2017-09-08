@@ -454,6 +454,7 @@ namespace XamCore.AVFoundation {
 		Unknown = 5,
 	}
 
+	[NoWatch]
 	enum AVFileTypes {
 		[Field ("AVFileTypeQuickTimeMovie")]
 		QuickTimeMovie = 0,
@@ -884,12 +885,11 @@ namespace XamCore.AVFoundation {
 		nuint Bus { get; }
 	}
 
-	// AudioBufferList is binded as AudioBuffers which is in AudioToolbox, uncomment once bug #59145 is fixed
-#if !WATCH && XAMCORE_2_0
+#if XAMCORE_2_0
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-	delegate AVAudioEngineManualRenderingStatus AVAudioEngineManualRenderingBlock (/* AVAudioFrameCount = uint */ uint numberOfFrames, AudioBuffers outBuffer, [NullAllowed] /* OSStatus */ int outError);
+	delegate AVAudioEngineManualRenderingStatus AVAudioEngineManualRenderingBlock (/* AVAudioFrameCount = uint */ uint numberOfFrames, AudioBuffers outBuffer, [NullAllowed] /* OSStatus */ ref int outError);
 #endif
-	
+
 	[Watch (3,0)]
 	[iOS (8,0)][Mac (10,10)]
 	[BaseType (typeof (NSObject))]
@@ -903,7 +903,8 @@ namespace XamCore.AVFoundation {
 		[Export ("outputNode")]
 		AVAudioOutputNode OutputNode { get; }
 
-		[NoTV, NoWatch]
+		[TV (11,0)]
+		[Watch (4,0)]
 		[Export ("inputNode"), NullAllowed]
 		AVAudioInputNode InputNode { get; }
 
@@ -982,8 +983,7 @@ namespace XamCore.AVFoundation {
 		[Export ("renderOffline:toBuffer:error:")]
 		AVAudioEngineManualRenderingStatus RenderOffline (uint numberOfFrames, AVAudioPcmBuffer buffer, [NullAllowed] out NSError outError);
 
-		// uncomment once bug #59145 is fixed
-#if !WATCH && XAMCORE_2_0
+#if XAMCORE_2_0
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Export ("manualRenderingBlock")]
 		AVAudioEngineManualRenderingBlock ManualRenderingBlock { get; }
@@ -1358,10 +1358,8 @@ namespace XamCore.AVFoundation {
 	interface AVAudioOutputNode {
 
 	}	
-	
-	// AudioBufferList is binded as AudioBuffers which is present in AudioToolbox which is not present on the watch. bug filled: 
-	// https://bugzilla.xamarin.com/show_bug.cgi?id=59145
-#if !WATCH && XAMCORE_2_0
+
+#if XAMCORE_2_0
 	[Watch (4,0), TV (11,0), Mac (10,10), iOS (8,0)]
 	delegate AudioBuffers AVAudioIONodeInputBlock (uint frameCount);
 #endif
@@ -1373,9 +1371,8 @@ namespace XamCore.AVFoundation {
 	// note: sample source (header) suggest it comes from AVAudioEngine properties
 	interface AVAudioInputNode : AVAudioMixing {
 
-		// uncomment once bug 59145 is fixed.
-#if !WATCH && XAMCORE_2_0
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if XAMCORE_2_0
+		[Mac (10,13), iOS (11,0)]
 		[Export ("setManualRenderingInputPCMFormat:inputBlock:")]
 		bool SetManualRenderingInputPcmFormat (AVAudioFormat format, AVAudioIONodeInputBlock block);
 #endif
@@ -1516,7 +1513,8 @@ namespace XamCore.AVFoundation {
 		[Since (7,0), Mac (10,9), Export ("initWithContentsOfURL:fileTypeHint:error:")]
 		IntPtr Constructor (NSUrl url, [NullAllowed] string fileTypeHint, out NSError outError);
 
-		[NoWatch, iOS (10, 0), TV (10,0), Mac (10,12)]
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[Watch (4,0)]
 		[Export ("format")]
 		AVAudioFormat Format { get; }
 	}
@@ -1623,7 +1621,8 @@ namespace XamCore.AVFoundation {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[NoTV, NoWatch]
+	[NoTV]
+	[Watch (4,0)]
 	interface AVAudioRecorder {
 		[Export ("initWithURL:settings:error:")][Internal]
 		IntPtr InitWithUrl (NSUrl url, NSDictionary settings, out NSError error);
@@ -1718,7 +1717,8 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	[NoTV, NoWatch]
+	[NoTV]
+	[Watch (4,0)]
 	interface AVAudioRecorderDelegate {
 		[Export ("audioRecorderDidFinishRecording:successfully:"), CheckDisposed]
 		void FinishedRecording (AVAudioRecorder recorder, bool flag);
@@ -2097,7 +2097,8 @@ namespace XamCore.AVFoundation {
 		[PostGet ("OutputDataSource")]
 		bool SetOutputDataSource ([NullAllowed] AVAudioSessionDataSourceDescription dataSource, out NSError outError);
 
-		[NoTV, NoWatch]
+		[NoTV]
+		[Watch (4,0)]
 		[Since (7,0)]
 		[Export ("requestRecordPermission:")]
 		void RequestRecordPermission (AVPermissionGranted responseCallback);

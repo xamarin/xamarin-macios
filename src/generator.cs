@@ -1762,7 +1762,7 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		// This means you need to add a new MarshalType in the method "Go"
-		throw new BindingException (1002, true, "Unknown kind {0} in method '{1}.{2}'", pi, mi.DeclaringType.FullName, mi.Name.GetSafeParamName ());
+		throw new BindingException (1002, true, "Unknown kind {0} in method '{1}.{2}'", pi.ParameterType.FullName, mi.DeclaringType.FullName, mi.Name.GetSafeParamName ());
 	}
 
 	public bool ParameterNeedsNullCheck (ParameterInfo pi, MethodInfo mi, PropertyInfo propInfo = null)
@@ -2147,8 +2147,8 @@ public partial class Generator : IMemberGatherer {
 		marshal_types.Add (TypeManager.SecIdentity);
 		marshal_types.Add (TypeManager.SecTrust);
 		marshal_types.Add (TypeManager.SecAccessControl);
+		marshal_types.Add (TypeManager.AudioBuffers);
 		if (Frameworks.HaveAudioUnit) {
-			marshal_types.Add (TypeManager.AudioBuffers);
 			marshal_types.Add (TypeManager.AURenderEventEnumerator);
 		}
 
