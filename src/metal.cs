@@ -697,6 +697,14 @@ namespace XamCore.Metal {
 		[return: NullAllowed]
 		IMTLTexture CreateTexture (MTLTextureDescriptor descriptor);
 
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[iOS (11,0), TV (11,0), NoWatch, Mac (10,11)]
+		[return: NullAllowed]
+		[Export ("newTextureWithDescriptor:iosurface:plane:")]
+		IMTLTexture CreateTexture (MTLTextureDescriptor descriptor, XamCore.IOSurface.IOSurface iosurface, nuint plane);
+
 		[Abstract, Export ("newSamplerStateWithDescriptor:")]
 		[return: NullAllowed]
 		IMTLSamplerState CreateSamplerState (MTLSamplerDescriptor descriptor);
@@ -1044,13 +1052,12 @@ namespace XamCore.Metal {
 		[Export ("replaceRegion:mipmapLevel:withBytes:bytesPerRow:")]
 		void ReplaceRegion (MTLRegion region, nuint level, IntPtr pixelBytes, nuint bytesPerRow);
 
-		//FIXME: https://bugzilla.xamarin.com/show_bug.cgi?id=58899
-//		[Mac (10, 11), iOS (11,0), TV (11,0), NoWatch]
-//#if XAMCORE_4_0
-//		[Abstract]
-//#endif
-		//[NullAllowed, Export ("iosurface")]
-		//IOSurfaceRef* */ IOSurface { get; }
+		[Mac (10, 11), iOS (11,0), TV (11,0), NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[NullAllowed, Export ("iosurface")]
+		XamCore.IOSurface.IOSurface IOSurface { get; }
 
 		[Mac (10, 11), iOS (11,0), TV (11,0), NoWatch]
 #if XAMCORE_4_0
