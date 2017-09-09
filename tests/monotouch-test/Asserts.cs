@@ -446,7 +446,7 @@ public static class Asserts {
 		Assert.AreEqual (expected, actual, message + " (M)");
 	}
 
-	public static void AreEqual (double expected, double actual, float delta, string message)
+	public static void AreEqual (double expected, double actual, double delta, string message)
 	{
 		Assert.AreEqual (expected, actual, delta, message);
 	}
@@ -482,7 +482,7 @@ public static class Asserts {
 		Assert.AreEqual (expected.Z, actual.Z, 0.001, message + " (Z)");
 	}
 
-	public static void AreEqual (Vector3d expected, Vector3d actual, float delta, string message)
+	public static void AreEqual (Vector3d expected, Vector3d actual, double delta, string message)
 	{
 		Assert.AreEqual (expected.X, actual.X, delta, message + " (X)");
 		Assert.AreEqual (expected.Y, actual.Y, delta, message + " (Y)");
@@ -510,7 +510,7 @@ public static class Asserts {
 		Assert.AreEqual (expected.Z, actual.Z, 0.001, message + " (Z)");
 	}
 
-	public static void AreEqual (VectorDouble3 expected, VectorDouble3 actual, float delta, string message)
+	public static void AreEqual (VectorDouble3 expected, VectorDouble3 actual, double delta, string message)
 	{
 		Assert.AreEqual (expected.X, actual.X, delta, message + " (X)");
 		Assert.AreEqual (expected.Y, actual.Y, delta, message + " (Y)");
@@ -549,7 +549,7 @@ public static class Asserts {
 		Assert.AreEqual (expected.W, actual.W, message + " (W)");
 	}
 
-	public static void AreEqual (Vector4d expected, Vector4d actual, float delta, string message)
+	public static void AreEqual (Vector4d expected, Vector4d actual, double delta, string message)
 	{
 		Assert.AreEqual (expected.X, actual.X, delta, message + " (X)");
 		Assert.AreEqual (expected.Y, actual.Y, delta, message + " (Y)");
@@ -557,7 +557,7 @@ public static class Asserts {
 		Assert.AreEqual (expected.W, actual.W, delta, message + " (W)");
 	}
 
-	public static void AreEqual (VectorDouble4 expected, VectorDouble4 actual, float delta, string message)
+	public static void AreEqual (VectorDouble4 expected, VectorDouble4 actual, double delta, string message)
 	{
 		Assert.AreEqual (expected.X, actual.X, delta, message + " (X)");
 		Assert.AreEqual (expected.Y, actual.Y, delta, message + " (Y)");
@@ -573,7 +573,7 @@ public static class Asserts {
 		AreEqual (expected.Column3, actual.Column3, message + " (Col3)");
 	}
 
-	public static void AreEqual (Matrix4d expected, Matrix4d actual, float delta, string message)
+	public static void AreEqual (Matrix4d expected, Matrix4d actual, double delta, string message)
 	{
 		AreEqual (expected.Column0, actual.Column0, delta, message + " (Col0)");
 		AreEqual (expected.Column1, actual.Column1, delta, message + " (Col1)");
@@ -601,7 +601,7 @@ public static class Asserts {
 		AreEqual (expected.M44, actual.M44, message + " (M44)");
 	}
 
-	public static void AreEqual (MatrixDouble4x4 expected, MatrixDouble4x4 actual, float delta, string message)
+	public static void AreEqual (MatrixDouble4x4 expected, MatrixDouble4x4 actual, double delta, string message)
 	{
 		AreEqual (expected.M11, actual.M11, delta, message + " (M11)");
 		AreEqual (expected.M21, actual.M21, delta, message + " (M21)");
@@ -641,7 +641,7 @@ public static class Asserts {
 		AreEqual (expected.M44, actual.M44, message + " (M44)");
 	}
 
-	public static void AreEqual (Matrix4d expected, MatrixDouble4x4 actual, float delta, string message)
+	public static void AreEqual (Matrix4d expected, MatrixDouble4x4 actual, double delta, string message)
 	{
 		AreEqual (expected.M11, actual.M11, delta, message + " (M11)");
 		AreEqual (expected.M21, actual.M21, delta, message + " (M21)");
