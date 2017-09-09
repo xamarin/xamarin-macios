@@ -98,8 +98,8 @@ namespace XamCore.SceneKit {
 	[Mac (10,8), iOS (8,0)]
 	delegate void SCNSceneSourceStatusHandler (float /* float, not CGFloat */ totalProgress, SCNSceneSourceStatus status, NSError error, ref bool stopLoading);
 
-	delegate void SCNAnimationDidStartBlock (SCNAnimation animation, SCNAnimatable receiver);
-	delegate void SCNAnimationDidStopBlock (SCNAnimation animation, SCNAnimatable receiver, bool completed);
+	delegate void SCNAnimationDidStartHandler (SCNAnimation animation, SCNAnimatable receiver);
+	delegate void SCNAnimationDidStopHandler (SCNAnimation animation, SCNAnimatable receiver, bool completed);
 
 	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
@@ -156,13 +156,13 @@ namespace XamCore.SceneKit {
 		[Abstract]
 #endif
 		[Introduced (PlatformName.WatchOS, 3, 0)]
-		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use SCNAnimationPlayer.Paused] instead")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use SCNAnimationPlayer.Paused instead")]
 		[Introduced (PlatformName.TvOS, 9, 0)]
-		[Deprecated (PlatformName.TvOS, 11, 0,   message: "Use SCNAnimationPlayer.Paused] instead")]
+		[Deprecated (PlatformName.TvOS, 11, 0,   message: "Use SCNAnimationPlayer.Paused instead")]
 		[Introduced (PlatformName.iOS, 8, 0)]
-		[Deprecated (PlatformName.iOS, 11, 0,    message: "Use SCNAnimationPlayer.Paused] instead")]
+		[Deprecated (PlatformName.iOS, 11, 0,    message: "Use SCNAnimationPlayer.Paused instead")]
 		[Introduced (PlatformName.MacOSX, 10, 9)]
-		[Deprecated (PlatformName.MacOSX, 10, 13,message: "Use SCNAnimationPlayer.Paused] instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 13,message: "Use SCNAnimationPlayer.Paused instead")]
 		[Export ("isAnimationForKeyPaused:")]
 		bool IsAnimationPaused (NSString key);
 
@@ -4421,10 +4421,10 @@ namespace XamCore.SceneKit {
 		bool UsesSceneTimeBase { get; set; }
 	
 		[NullAllowed, Export ("animationDidStart", ArgumentSemantic.Copy)]
-		SCNAnimationDidStartBlock AnimationDidStart { get; set; }
+		SCNAnimationDidStartHandler AnimationDidStart { get; set; }
 	
 		[NullAllowed, Export ("animationDidStop", ArgumentSemantic.Copy)]
-		SCNAnimationDidStopBlock AnimationDidStop { get; set; }
+		SCNAnimationDidStopHandler AnimationDidStop { get; set; }
 	
 		[NullAllowed, Export ("animationEvents", ArgumentSemantic.Copy), NoWatch]
 		SCNAnimationEvent[] AnimationEvents { get; set; }
@@ -4463,6 +4463,6 @@ namespace XamCore.SceneKit {
 		void Stop ();
 	
 		[Export ("stopWithBlendOutDuration:")]
-		void StopWithBlendOutDuration (double duration);
+		void StopWithBlendOutDuration (double seconds);
 	}
 }
