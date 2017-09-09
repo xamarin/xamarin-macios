@@ -98,6 +98,9 @@ namespace XamCore.SceneKit {
 	[Mac (10,8), iOS (8,0)]
 	delegate void SCNSceneSourceStatusHandler (float /* float, not CGFloat */ totalProgress, SCNSceneSourceStatus status, NSError error, ref bool stopLoading);
 
+	delegate void SCNAnimationDidStartBlock (SCNAnimation animation, SCNAnimatable receiver);
+	delegate void SCNAnimationDidStopBlock (SCNAnimation animation, SCNAnimatable receiver, bool completed);
+
 	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[Model, Protocol]
@@ -152,7 +155,14 @@ namespace XamCore.SceneKit {
 #if XAMCORE_2_0
 		[Abstract]
 #endif
-		[Mac (10,9)]
+		[Introduced (PlatformName.WatchOS, 3, 0)]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use SCNAnimationPlayer.Paused] instead")]
+		[Introduced (PlatformName.TvOS, 9, 0)]
+		[Deprecated (PlatformName.TvOS, 11, 0,   message: "Use SCNAnimationPlayer.Paused] instead")]
+		[Introduced (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0,    message: "Use SCNAnimationPlayer.Paused] instead")]
+		[Introduced (PlatformName.MacOSX, 10, 9)]
+		[Deprecated (PlatformName.MacOSX, 10, 13,message: "Use SCNAnimationPlayer.Paused] instead")]
 		[Export ("isAnimationForKeyPaused:")]
 		bool IsAnimationPaused (NSString key);
 
@@ -2997,6 +3007,15 @@ namespace XamCore.SceneKit {
 		[Mac (10,10)]
 		[Export ("influenceFactor")]
 		nfloat InfluenceFactor { get; set; }
+
+		[Mac (10, 10), iOS (8,0), NoTV, NoWatch]
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("incremental")]
+		bool Incremental { [Bind ("isIncremental")] get; set; }
+		
 	}
 
 	[Watch (3,0)]
@@ -3041,6 +3060,18 @@ namespace XamCore.SceneKit {
 
 		[Static, Export ("lookAtConstraintWithTarget:")]
 		SCNLookAtConstraint Create ([NullAllowed] SCNNode target);
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("targetOffset", ArgumentSemantic.Assign)]
+		SCNVector3 TargetOffset { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("localFront", ArgumentSemantic.Assign)]
+		SCNVector3 LocalFront { get; set; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("worldUp", ArgumentSemantic.Assign)]
+		SCNVector3 WorldUp { get; set; }
 	}
 
 	[Mac (10,9), iOS (8,0)]
@@ -3053,6 +3084,17 @@ namespace XamCore.SceneKit {
 	interface SCNTransformConstraint {
 		[Static, Export ("transformConstraintInWorldSpace:withBlock:")]
 		SCNTransformConstraint Create (bool inWorldSpace, SCNTransformConstraintHandler transformHandler);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("positionConstraintInWorldSpace:withBlock:")]
+		SCNTransformConstraint CreatePositionConstraint (bool inWorldSpace, Func<SCNNode, SCNVector3, SCNVector3> transformHandler);
+	
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("orientationConstraintInWorldSpace:withBlock:")]
+		SCNTransformConstraint CreateOrientationConstraint (bool inWorldSpace, Func<SCNNode, SCNQuaternion, SCNQuaternion> transformHandler);
+		
 	}
 
 	[Watch (3,0)]
@@ -4305,5 +4347,122 @@ namespace XamCore.SceneKit {
 		[Abstract]
 		[Export ("writeBytes:length:")]
 		unsafe void Length (IntPtr bytes, nuint length);
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface SCNTimingFunction : NSSecureCoding
+	{
+		[Static]
+		[Export ("functionWithTimingMode:")]
+		SCNTimingFunction Create (SCNActionTimingMode timingMode);
+	
+		[Static, NoWatch]
+		[Export ("functionWithCAMediaTimingFunction:")]
+		SCNTimingFunction Create (CAMediaTimingFunction caTimingFunction);
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface SCNAnimation : NSCopying, NSSecureCoding
+	{
+		[Static]
+		[Export ("animationWithContentsOfURL:")]
+		SCNAnimation FromUrl (NSUrl animationUrl);
+	
+		[Static]
+		[Export ("animationNamed:")]
+		SCNAnimation FromName (string animationName);
+	
+		[Static, NoWatch]
+		[Export ("animationWithCAAnimation:")]
+		SCNAnimation FromCAAnimation (CAAnimation caAnimation);
+	
+		[Export ("duration")]
+		double Duration { get; set; }
+	
+		[NullAllowed, Export ("keyPath")]
+		string KeyPath { get; set; }
+	
+		[Export ("timingFunction", ArgumentSemantic.Retain)]
+		SCNTimingFunction TimingFunction { get; set; }
+	
+		[Export ("blendInDuration")]
+		double BlendInDuration { get; set; }
+	
+		[Export ("blendOutDuration")]
+		double BlendOutDuration { get; set; }
+	
+		[Export ("removedOnCompletion")]
+		bool RemovedOnCompletion { [Bind ("isRemovedOnCompletion")] get; set; }
+	
+		[Export ("appliedOnCompletion")]
+		bool AppliedOnCompletion { [Bind ("isAppliedOnCompletion")] get; set; }
+	
+		[Export ("repeatCount")]
+		nfloat RepeatCount { get; set; }
+	
+		[Export ("autoreverses")]
+		bool Autoreverses { get; set; }
+	
+		[Export ("startDelay")]
+		double StartDelay { get; set; }
+	
+		[Export ("timeOffset")]
+		double TimeOffset { get; set; }
+	
+		[Export ("fillsForward")]
+		bool FillsForward { get; set; }
+	
+		[Export ("fillsBackward")]
+		bool FillsBackward { get; set; }
+	
+		[Export ("usesSceneTimeBase")]
+		bool UsesSceneTimeBase { get; set; }
+	
+		[NullAllowed, Export ("animationDidStart", ArgumentSemantic.Copy)]
+		SCNAnimationDidStartBlock AnimationDidStart { get; set; }
+	
+		[NullAllowed, Export ("animationDidStop", ArgumentSemantic.Copy)]
+		SCNAnimationDidStopBlock AnimationDidStop { get; set; }
+	
+		[NullAllowed, Export ("animationEvents", ArgumentSemantic.Copy), NoWatch]
+		SCNAnimationEvent[] AnimationEvents { get; set; }
+	
+		[Export ("additive")]
+		bool Additive { [Bind ("isAdditive")] get; set; }
+	
+		[Export ("cumulative")]
+		bool Cumulative { [Bind ("isCumulative")] get; set; }
+	}
+	
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface SCNAnimationPlayer : SCNAnimatable, NSCopying, NSSecureCoding
+	{
+		[Static]
+		[Export ("animationPlayerWithAnimation:")]
+		SCNAnimationPlayer FromAnimation (SCNAnimation animation);
+	
+		[Export ("animation")]
+		SCNAnimation Animation { get; }
+	
+		[Export ("speed")]
+		nfloat Speed { get; set; }
+	
+		[Export ("blendFactor")]
+		nfloat BlendFactor { get; set; }
+	
+		[Export ("paused")]
+		bool Paused { get; set; }
+	
+		[Export ("play")]
+		void Play ();
+	
+		[Export ("stop")]
+		void Stop ();
+	
+		[Export ("stopWithBlendOutDuration:")]
+		void StopWithBlendOutDuration (double duration);
 	}
 }
