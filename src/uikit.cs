@@ -333,15 +333,10 @@ namespace XamCore.UIKit {
 
 #if XAMCORE_2_0 && IOS
 
-		[Protected]
 		[iOS (11,0)]
 		[Export ("itemForIdentifier:error:")]
 		[return: NullAllowed]
 		INSFileProviderItem GetItem (NSString identifier, out NSError error);
-
-		[iOS (11,0)]
-		[Wrap ("GetItem (identifier.GetConstant (), out error)")]
-		INSFileProviderItem GetItem (NSFileProviderItemIdentifier identifier, out NSError error);
 
 		// Inlining NSFileProviderExtension (NSFileProviderActions) so we get asyncs
 
@@ -406,11 +401,6 @@ namespace XamCore.UIKit {
 		[Export ("fetchThumbnailsForItemIdentifiers:requestedSize:perThumbnailCompletionHandler:completionHandler:")]
 		[Async]
 		NSProgress FetchThumbnails (NSString [] itemIdentifiers, CGSize size, NSFileProviderExtensionFetchThumbnailsHandler perThumbnailCompletionHandler, Action<NSError> completionHandler);
-
-		[Async]
-		[iOS (11,0)]
-		[Wrap ("FetchThumbnails (itemIdentifiers.GetConstants (), size, perThumbnailCompletionHandler, completionHandler)")]
-		NSProgress FetchThumbnails (NSFileProviderItemIdentifier [] itemIdentifiers, CGSize size, NSFileProviderExtensionFetchThumbnailsHandler perThumbnailCompletionHandler, Action<NSError> completionHandler);
 #endif
 	}
 #endif // !WATCH
