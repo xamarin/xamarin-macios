@@ -30,13 +30,14 @@ namespace XamCore.FileProvider {
 	}
 
 	[iOS (11,0)]
-	enum NSFileProviderItemIdentifier {
+	[Static]
+	interface NSFileProviderItemIdentifier {
 
 		[Field ("NSFileProviderRootContainerItemIdentifier")]
-		RootContainer,
+		NSString RootContainer { get; }
 
 		[Field ("NSFileProviderWorkingSetContainerItemIdentifier")]
-		WorkingSetContainer,
+		NSString WorkingSetContainer { get; }
 	}
 
 	[iOS (11,0)]
@@ -141,12 +142,10 @@ namespace XamCore.FileProvider {
 	[Protocol]
 	interface NSFileProviderItem {
 
-		[Advice ("Use 'NSFileProviderItemIdentifierExtensions.GetValue (ItemIdentifier)' to get a 'NSFileProviderItemIdentifier' enum.")]
 		[Abstract]
 		[Export ("itemIdentifier")]
 		NSString Identifier { get; }
 
-		[Advice ("Use 'NSFileProviderItemIdentifierExtensions.GetValue (ParentItemIdentifier)' to get a 'NSFileProviderItemIdentifier' enum.")]
 		[Abstract]
 		[Export ("parentItemIdentifier")]
 		NSString ParentIdentifier { get; }
@@ -248,21 +247,13 @@ namespace XamCore.FileProvider {
 		[Export ("defaultManager", ArgumentSemantic.Strong)]
 		NSFileProviderManager DefaultManager { get; }
 
-		[Protected]
 		[Export ("signalEnumeratorForContainerItemIdentifier:completionHandler:")]
 		// Not Async'ified on purpose, because this can switch from app to extension.
 		void SignalEnumerator (NSString containerItemIdentifier, Action<NSError> completion);
 
-		[Wrap ("SignalEnumerator (containerItemIdentifier.GetConstant (), completion)")]
-		void SignalEnumerator (NSFileProviderItemIdentifier containerItemIdentifier, Action<NSError> completion);
-
 		// Not Async'ified on purpose, because the task must be accesed while the completion action is performing...
-		[Protected]
 		[Export ("registerURLSessionTask:forItemWithIdentifier:completionHandler:")]
 		void Register (NSUrlSessionTask task, NSString identifier, Action<NSError> completion);
-
-		[Wrap ("Register (task, identifier.GetConstant (), completion)")]
-		void Register (NSUrlSessionTask task, NSFileProviderItemIdentifier identifier, Action<NSError> completion);
 
 		[Export ("providerIdentifier")]
 		string ProviderIdentifier { get; }

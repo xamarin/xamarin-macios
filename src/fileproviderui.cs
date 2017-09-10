@@ -54,12 +54,8 @@ namespace XamCore.FileProviderUI {
 		[Export ("prepareForError:")]
 		void Prepare (NSError error);
 
-		[Protected]
 		[Export ("prepareForActionWithIdentifier:itemIdentifiers:")]
 		void Prepare (string actionIdentifier, NSString [] itemIdentifiers);
-
-		[Wrap ("Prepare (actionIdentifier, itemIdentifiers.GetConstants())")]
-		void Prepare (string actionIdentifier, NSFileProviderItemIdentifier [] itemIdentifiers);
 	}
 }
 #endif
