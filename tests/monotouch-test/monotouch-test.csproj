@@ -684,6 +684,7 @@
     <Compile Include="UIKit\UISpringLoadedInteractionSupportingTest.cs" />
     <Compile Include="PdfKit\PdfAnnotationTest.cs" />
     <Compile Include="FileProvider\NSFileProviderPageTest.cs" />
+    <Compile Include="AVFoundation\AVPlayerLooperTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
@@ -792,7 +793,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Security\openssl_crt.der">
-        <LogicalName>monotouchtest.Security.openssl_crt.der</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

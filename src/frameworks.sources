@@ -262,6 +262,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVTextStyleRule.cs \
 	AVFoundation/DescriptionHelpers.cs \
 	AVFoundation/Events.cs \
+	AVFoundation/AVPlayerLooper.cs \
 
 # AVKit
 
