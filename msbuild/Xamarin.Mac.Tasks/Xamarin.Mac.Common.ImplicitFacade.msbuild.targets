@@ -33,13 +33,35 @@ Copyright (c) 2017 Microsoft Corp. (www.microsoft.com)
 	</PropertyGroup>
 
 	<!-- Implicitly references all portable design-time facades if the user is referencing a System.Runtime-based portable library -->
+
+	<UsingTask
+		TaskName="GetDependsOnNETStandard"
+		Condition="'$(IsXBuild)' != 'true'"
+		AssemblyFile="$(MSBuildExtensionsPath)\Microsoft\Microsoft.NET.Build.Extensions\tools\net46\Microsoft.NET.Build.Extensions.Tasks.dll" />
+
 	<Target Name="ImplicitlyExpandDesignTimeFacades" DependsOnTargets="$(ImplicitlyExpandDesignTimeFacadesDependsOn)">
+		<ItemGroup>
+			<XM_CandidateNETStandardReferences Include="@(Reference);@(_ResolvedProjectReferencePaths)" />
+			<XM_InboxNETStandardFolders Include="$(TargetFrameworkDirectory)" />
+		</ItemGroup>
+
+		<!-- This file is imported for Modern projects, which have have `$(TargetFrameworkIdentifier) != .NETFramework`, so Microsoft.NET.Build.Extensions
+		     (which provides support for ns 2.0 projects) doesn't get imported. So, we need to check if any references depend on `netstandard`. And if so,
+		     add an explicit reference to `netstandard.dll` -->
+		<GetDependsOnNETStandard
+			Condition="'$(IsXBuild)' != 'true' and '$(DependsOnNETStandard)' == '' and '@(XM_CandidateNETStandardReferences)' != ''"
+			References="@(XM_CandidateNETStandardReferences)">
+			<Output TaskParameter="DependsOnNETStandard" PropertyName="XM_DependsOnNETStandard" />
+		</GetDependsOnNETStandard>
+
 		<PropertyGroup>
 			<!-- Does one of our dependencies reference a System.Runtime-based portable library? -->
 			<_HasReferenceToSystemRuntime Condition="'$(DependsOnSystemRuntime)' == 'true' or '%(_ResolvedProjectReferencePaths.TargetPlatformIdentifier)' == 'Portable'">true</_HasReferenceToSystemRuntime>
+
+			<XM_NETStandardInbox Condition="'$(XM_NETStandardInbox)' == '' and Exists('%(XM_InboxNETStandardFolders.Identity)\netstandard.dll')">true</XM_NETStandardInbox>
 		</PropertyGroup>
 
-		<ItemGroup Condition="'$(_HasReferenceToSystemRuntime)' == 'true'">
+		<ItemGroup Condition="'$(_HasReferenceToSystemRuntime)' == 'true' or ('$(XM_NETStandardInbox)' == 'true' and '$(XM_DependsOnNETStandard)' == 'true')">
 			<_DesignTimeFacadeAssemblies Include="%(DesignTimeFacadeDirectories.Identity)*.dll"/>
 
 			<_DesignTimeFacadeAssemblies_Names Include="@(_DesignTimeFacadeAssemblies->'%(FileName)')">

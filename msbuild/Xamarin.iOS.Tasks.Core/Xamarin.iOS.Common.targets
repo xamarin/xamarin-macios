@@ -155,14 +155,34 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<Optimize />
 		</_BundleResourceWithLogicalName>
 	</ItemDefinitionGroup>
-	
+
+	<UsingTask
+		TaskName="GetDependsOnNETStandard"
+		Condition="'$(IsXBuild)' != 'true'"
+		AssemblyFile="$(MSBuildExtensionsPath)\Microsoft\Microsoft.NET.Build.Extensions\tools\net46\Microsoft.NET.Build.Extensions.Tasks.dll" />
+
 	<Target Name="ImplicitlyExpandDesignTimeFacades" Condition="'$(ImplicitlyExpandDesignTimeFacades)' == 'true'" DependsOnTargets="$(ImplicitlyExpandDesignTimeFacadesDependsOn)">
+		<ItemGroup>
+			<XI_CandidateNETStandardReferences Include="@(Reference);@(_ResolvedProjectReferencePaths)" />
+			<XI_InboxNETStandardFolders Include="$(TargetFrameworkDirectory)" />
+		</ItemGroup>
+
+		<!-- XI projects have `$(TargetFrameworkIdentifier) != .NETFramework`, so Microsoft.NET.Build.Extensions (which provides support for ns 2.0 projects) doesn't get
+		     imported. So, we need to check if any references depend on `netstandard`. And if so, add an explicit reference to `netstandard.dll` -->
+		<GetDependsOnNETStandard
+			Condition="'$(IsXBuild)' != 'true' and '$(DependsOnNETStandard)' == '' and '@(XI_CandidateNETStandardReferences)' != ''"
+			References="@(XI_CandidateNETStandardReferences)">
+			<Output TaskParameter="DependsOnNETStandard" PropertyName="XI_DependsOnNETStandard" />
+		</GetDependsOnNETStandard>
+
 		<PropertyGroup>
 			<_HasReferenceToSystemRuntime Condition="'$(DependsOnSystemRuntime)' == 'true' or '%(_ResolvedProjectReferencePaths.TargetPlatformIdentifier)' == 'Portable' 
 								or '%(ReferenceDependencyPaths.Filename)' == 'System.Runtime'">true</_HasReferenceToSystemRuntime>
+
+			<XI_NETStandardInbox Condition="'$(XI_NETStandardInbox)' == '' and Exists('%(XI_InboxNETStandardFolders.Identity)\netstandard.dll')">true</XI_NETStandardInbox>
 		</PropertyGroup>
 
-		<ItemGroup Condition="'$(_HasReferenceToSystemRuntime)' == 'true'">
+		<ItemGroup Condition="'$(_HasReferenceToSystemRuntime)' == 'true' or ('$(XI_NETStandardInbox)' == 'true' and '$(XI_DependsOnNETStandard)' == 'true')">
 			<_DesignTimeFacadeAssemblies Include="%(DesignTimeFacadeDirectories.Identity)*.dll"/>
 			<ReferencePath Remove="@(_DesignTimeFacadeAssemblies)"/>
 			<ReferencePath Include="%(_DesignTimeFacadeAssemblies.Identity)">
