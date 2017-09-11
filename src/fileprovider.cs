@@ -56,6 +56,27 @@ namespace XamCore.FileProvider {
 	}
 
 	[iOS (11,0)]
+	[Static]
+	interface NSFileProviderPage {
+
+		[Internal]
+		[Field ("NSFileProviderInitialPageSortedByName")]
+		IntPtr _InitialPageSortedByName { get; }
+
+		[Static]
+		[Wrap ("Runtime.GetNSObject<NSData> (_InitialPageSortedByName)")]
+		NSData InitialPageSortedByName { get; }
+
+		[Internal]
+		[Field ("NSFileProviderInitialPageSortedByDate")]
+		IntPtr _InitialPageSortedByDate { get; }
+
+		[Static]
+		[Wrap ("Runtime.GetNSObject<NSData> (_InitialPageSortedByDate)")]
+		NSData InitialPageSortedByDate { get; }
+	}
+
+	[iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface NSFileProviderDomain {
