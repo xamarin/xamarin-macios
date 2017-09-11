@@ -37,7 +37,7 @@ namespace MonoTouchFixtures.UIKit {
 
 			var test = new DropSession ();
 			test.CanLoadObjects (typeof (UIImage));
-			test.LoadObjects (typeof (UIImage), null);
+			test.LoadObjects<UIImage> (null);
 		}
 	}
 
