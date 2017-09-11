@@ -16,6 +16,7 @@ namespace XamCore.MetalPerformanceShaders {
 		None									= 0,
 		SkipApiValidation						= 1 << 0,
 		MPSKernelOptionsAllowReducedPrecision	= 1 << 1,
+		Verbose = 1 << 4
 	}
 
 	[iOS (9,0)][Mac (10, 13, onlyOn64: true)]
@@ -36,7 +37,11 @@ namespace XamCore.MetalPerformanceShaders {
 	[iOS (10,0)][TV (10,0)][Mac (10, 13, onlyOn64: true)]
 	public enum MPSDataType : uint { // uint32_t
 		FloatBit = 0x10000000,
+		Float16 = FloatBit | 16,
 		Float32 = FloatBit | 32,
+		NormalizedBit = 1073741824,
+		Unorm1 = NormalizedBit | 1,
+		Unorm8 = NormalizedBit | 8
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13, onlyOn64: true)]
@@ -106,9 +111,112 @@ namespace XamCore.MetalPerformanceShaders {
 		public Vector4 MaxPixelValue;
 	}
 
+	public enum MPSMatrixDecompositionStatus
+	{
+		Success = 0,
+		Failure = -1,
+		Singular = -2,
+		NonPositiveDefinite = -3
+	}
+
 	// MPSTypes.h
 	// FIXME: public delegate IMTLTexture MPSCopyAllocator (MPSKernel filter, IMTLCommandBuffer commandBuffer, IMTLTexture sourceTexture);
 	public delegate NSObject MPSCopyAllocator (MPSKernel filter, NSObject commandBuffer, NSObject sourceTexture);
 	// https://trello.com/c/GqtNId1C/517-generator-our-block-delegates-needs-to-use-wrapper-for-protocols
+
+	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
+	[Native]
+	public enum MPSRNNSequenceDirection : nuint {
+		Forward = 0,
+		Backward
+	}
+
+	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
+	[Native]
+	public enum MPSRNNBidirectionalCombineMode : nuint {
+		None = 0,
+		Add,
+		Concatenate
+	}
+
+	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
+	public enum MPSCnnNeuronType {
+		None = 0,
+		ReLU,
+		Linear,
+		Sigmoid,
+		HardSigmoid,
+		TanH,
+		Absolute,
+		SoftPlus,
+		SoftSign,
+		Elu,
+		PReLU,
+		ReLUN,
+		Count
+	}
+
+	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
+	[Native]
+	public enum MPSCnnBinaryConvolutionFlags : nuint {
+		None = 0,
+		UseBetaScaling = 1 << 0
+	}
+
+	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
+	[Native]
+	public enum MPSCnnBinaryConvolutionType : nuint {
+		BinaryWeights = 0,
+		Xnor,
+		And
+	}
+
+	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
+	[Native]
+	public enum MPSNNPaddingMethod : nuint {
+		AlignCentered = 0,
+		AlignTopLeft = 1,
+		AlignBottomRight = 2,
+		Align_reserved = 3,
+		AddRemainderToTopLeft = 0 << 2,
+		AddRemainderToTopRight = 1 << 2,
+		AddRemainderToBottomLeft = 2 << 2,
+		AddRemainderToBottomRight = 3 << 2,
+		SizeValidOnly = 0,
+		SizeSame = 1 << 4,
+		SizeFull = 2 << 4,
+		Size_reserved = 3 << 4,
+		Custom = (1 << 14),
+		SizeMask = 2032,
+		ExcludeEdges = (1 << 15)
+	}
+
+	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
+	[Native]
+	public enum MPSDataLayout : nuint
+	{
+		HeightxWidthxFeatureChannels = 0,
+		FeatureChannelsxHeightxWidth = 1
+	}
+
+	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
+	public struct MPSMatrixCopyOffsets {
+		public uint SourceRowOffset;
+		public uint SourceColumnOffset;
+		public uint DestinationRowOffset;
+		public uint DestinationColumnOffset;
+	}
+
+	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
+	public struct MPSImageReadWriteParams {
+		public nuint FeatureChannelOffset;
+		public nuint NumberOfFeatureChannelsToReadWrite;
+	}
+
+	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
+	public struct MPSImageKeypointRangeInfo {
+		public nuint MaximumKeypoints;
+		public float MinimumThresholdValue;
+	}
 }
 #endif
