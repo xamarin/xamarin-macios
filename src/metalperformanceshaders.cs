@@ -2063,10 +2063,9 @@ namespace XamCore.MetalPerformanceShaders {
 	[BaseType (typeof(MPSCnnNeuron), Name = "MPSCNNNeuronPReLU")]
 	interface MPSCnnNeuronPReLU
 	{
-		//FIXME: float* -(instancetype _Nonnull)initWithDevice:(id<MTLDevice> _Nonnull)device a:(const float * _Nonnull)a count:(NSUInteger)count __attribute__((objc_designated_initializer));
-		//[Export ("initWithDevice:a:count:")]
-		//[DesignatedInitializer]
-		//unsafe IntPtr Constructor (IMTLDevice device, float* a, nuint count);
+		[Export ("initWithDevice:a:count:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (IMTLDevice device, IntPtr /* float* */ a, nuint count);
 
 		// inlining ctor from base class
 		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2215,9 +2214,8 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("initWithDevice:convolutionData:scaleValue:type:flags:")]
 		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
 
-		//FIXME: float* -(instancetype _Nonnull)initWithDevice:(id<MTLDevice> _Nonnull)device convolutionData:(id<MPSCNNConvolutionDataSource> _Nonnull)convolutionData outputBiasTerms:(const float * _Nullable)outputBiasTerms outputScaleTerms:(const float * _Nullable)outputScaleTerms inputBiasTerms:(const float * _Nullable)inputBiasTerms inputScaleTerms:(const float * _Nullable)inputScaleTerms type:(MPSCNNBinaryConvolutionType)type flags:(MPSCNNBinaryConvolutionFlags)flags;
-		//[Export ("initWithDevice:convolutionData:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags:")]
-		//unsafe IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, [NullAllowed] float* outputBiasTerms, [NullAllowed] float* outputScaleTerms, [NullAllowed] float* inputBiasTerms, [NullAllowed] float* inputScaleTerms,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
+		[Export ("initWithDevice:convolutionData:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags:")]
+		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, [NullAllowed] IntPtr /* float* */ outputBiasTerms, [NullAllowed] IntPtr /* float* */ outputScaleTerms, [NullAllowed] IntPtr /* float* */ inputBiasTerms, [NullAllowed] IntPtr /* float* */ inputScaleTerms,MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
@@ -2229,11 +2227,10 @@ namespace XamCore.MetalPerformanceShaders {
 	interface MPSCnnBinaryFullyConnected
 	{
 		[Export ("initWithDevice:convolutionData:scaleValue:type:flags:")]
-		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
+		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float scaleValue, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
 
-		//FIXME: float* -(instancetype _Nonnull)initWithDevice:(id<MTLDevice> _Nonnull)device convolutionData:(id<MPSCNNConvolutionDataSource> _Nonnull)convolutionData outputBiasTerms:(const float * _Nullable)outputBiasTerms outputScaleTerms:(const float * _Nullable)outputScaleTerms inputBiasTerms:(const float * _Nullable)inputBiasTerms inputScaleTerms:(const float * _Nullable)inputScaleTerms type:(MPSCNNBinaryConvolutionType)type flags:(MPSCNNBinaryConvolutionFlags)flags;
-		//[Export ("initWithDevice:convolutionData:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags:")]
-		//unsafe IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, [NullAllowed] float* outputBiasTerms, [NullAllowed] float* outputScaleTerms, [NullAllowed] float* inputBiasTerms, [NullAllowed] float* inputScaleTerms,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
+		[Export ("initWithDevice:convolutionData:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags:")]
+		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, [NullAllowed] IntPtr /* float* */ outputBiasTerms, [NullAllowed] IntPtr /* float* */ outputScaleTerms, [NullAllowed] IntPtr /* float* */ inputBiasTerms, [NullAllowed] IntPtr /* float* */ inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
@@ -3181,7 +3178,6 @@ namespace XamCore.MetalPerformanceShaders {
 
 	interface IMPSCnnConvolutionDataSource { }
 
-	//FIXME: IntPtrs code-behind
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject), Name = "MPSCNNConvolutionDataSource")]
@@ -3200,10 +3196,9 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("weights")]
 		IntPtr Weights { get; }
 
-		//FIXME: float* @required -(float * _Nullable)biasTerms;
-		//[Abstract]
-		//[NullAllowed, Export ("biasTerms")]
-		//unsafe float* BiasTerms { get; }
+		[Abstract]
+		[NullAllowed, Export ("biasTerms")]
+		IntPtr /* float* */ BiasTerms { get; }
 
 		[Abstract]
 		[Export ("load")]
@@ -3217,14 +3212,13 @@ namespace XamCore.MetalPerformanceShaders {
 		[NullAllowed, Export ("label")]
 		string Label { get; }
 
-		// @optional -(vector_float2 * _Nonnull)rangesForUInt8Kernel;
+		//FIXME: How to bind? @optional -(vector_float2 * _Nonnull)rangesForUInt8Kernel;
 		//[Export ("rangesForUInt8Kernel")]
 		//[Verify (MethodToProperty)]
 		//unsafe [unsupported ExtVector: float __attribute__((ext_vector_type(2)))]* RangesForUInt8Kernel { get; }
 
-		//FIXME: float* @optional -(float * _Nonnull)lookupTableForUInt8Kernel;
-		//[Export ("lookupTableForUInt8Kernel")]
-		//unsafe float* LookupTableForUInt8Kernel { get; }
+		[Export ("lookupTableForUInt8Kernel")]
+		IntPtr /* float* */ LookupTableForUInt8Kernel { get; }
 	}
 
 	interface IMPSNnPadding { }
