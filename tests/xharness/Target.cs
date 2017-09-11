@@ -110,7 +110,7 @@ namespace xharness
 			if (Harness.Mac) {
 				ProjectGuid = "{" + Harness.NewStableGuid ().ToString ().ToUpper () + "}";
 				inputProject.SetProjectGuid (ProjectGuid);
-			} else if (Harness.Mac) {
+			} else {
 				inputProject.FixArchitectures (SimulatorArchitectures, DeviceArchitectures);
 				inputProject.FixInfoPListInclude (Suffix);
 				inputProject.SetExtraLinkerDefs ("extra-linker-defs" + Suffix + ".xml");
