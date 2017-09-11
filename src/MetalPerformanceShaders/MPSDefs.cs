@@ -16,7 +16,7 @@ namespace XamCore.MetalPerformanceShaders {
 		None									= 0,
 		SkipApiValidation						= 1 << 0,
 		MPSKernelOptionsAllowReducedPrecision	= 1 << 1,
-		Verbose = 1 << 4
+		Verbose = 1 << 4,
 	}
 
 	[iOS (9,0)][Mac (10, 13, onlyOn64: true)]
@@ -41,7 +41,7 @@ namespace XamCore.MetalPerformanceShaders {
 		Float32 = FloatBit | 32,
 		NormalizedBit = 1073741824,
 		Unorm1 = NormalizedBit | 1,
-		Unorm8 = NormalizedBit | 8
+		Unorm8 = NormalizedBit | 8,
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13, onlyOn64: true)]
@@ -116,7 +116,7 @@ namespace XamCore.MetalPerformanceShaders {
 		Success = 0,
 		Failure = -1,
 		Singular = -2,
-		NonPositiveDefinite = -3
+		NonPositiveDefinite = -3,
 	}
 
 	// MPSTypes.h
@@ -126,17 +126,17 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 	[Native]
-	public enum MPSRNNSequenceDirection : nuint {
+	public enum MPSRnnSequenceDirection : nuint {
 		Forward = 0,
 		Backward
 	}
 
 	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 	[Native]
-	public enum MPSRNNBidirectionalCombineMode : nuint {
+	public enum MPSRnnBidirectionalCombineMode : nuint {
 		None = 0,
 		Add,
-		Concatenate
+		Concatenate,
 	}
 
 	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
@@ -153,14 +153,14 @@ namespace XamCore.MetalPerformanceShaders {
 		Elu,
 		PReLU,
 		ReLUN,
-		Count
+		Count,
 	}
 
 	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 	[Native]
 	public enum MPSCnnBinaryConvolutionFlags : nuint {
 		None = 0,
-		UseBetaScaling = 1 << 0
+		UseBetaScaling = 1 << 0,
 	}
 
 	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
@@ -168,16 +168,16 @@ namespace XamCore.MetalPerformanceShaders {
 	public enum MPSCnnBinaryConvolutionType : nuint {
 		BinaryWeights = 0,
 		Xnor,
-		And
+		And,
 	}
 
 	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 	[Native]
-	public enum MPSNNPaddingMethod : nuint {
+	public enum MPSNnPaddingMethod : nuint {
 		AlignCentered = 0,
 		AlignTopLeft = 1,
 		AlignBottomRight = 2,
-		Align_reserved = 3,
+		AlignReserved = 3,
 		AddRemainderToTopLeft = 0 << 2,
 		AddRemainderToTopRight = 1 << 2,
 		AddRemainderToBottomLeft = 2 << 2,
@@ -185,10 +185,10 @@ namespace XamCore.MetalPerformanceShaders {
 		SizeValidOnly = 0,
 		SizeSame = 1 << 4,
 		SizeFull = 2 << 4,
-		Size_reserved = 3 << 4,
+		SizeReserved = 3 << 4,
 		Custom = (1 << 14),
 		SizeMask = 2032,
-		ExcludeEdges = (1 << 15)
+		ExcludeEdges = (1 << 15),
 	}
 
 	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
@@ -196,7 +196,7 @@ namespace XamCore.MetalPerformanceShaders {
 	public enum MPSDataLayout : nuint
 	{
 		HeightxWidthxFeatureChannels = 0,
-		FeatureChannelsxHeightxWidth = 1
+		FeatureChannelsxHeightxWidth = 1,
 	}
 
 	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
