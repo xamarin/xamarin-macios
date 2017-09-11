@@ -26,6 +26,7 @@ namespace XamCore.DeviceCheck {
 	delegate void DCDeviceGenerateTokenCompletionHandler ([NullAllowed] NSData token, [NullAllowed] NSError error);
 
 	[TV (11,0), NoWatch, NoMac, iOS (11,0)]
+	[DisableDefaultCtor] // From the documentation it seems the only way to create a usable instance is to use the static CurrentDevice property.
 	[BaseType (typeof (NSObject))]
 	interface DCDevice {
 
