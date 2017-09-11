@@ -702,3 +702,31 @@
 ## 34185961 The header WKSnapshotConfiguration.h is not included inside the umbrella WebKit.h
 !unknown-type! WKSnapshotConfiguration bound
 
+
+# recent xtro changes
+
+## init
+!missing-designated-initializer! CXAction::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! MPSBinaryImageKernel::initWithDevice: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! MPSCNNKernel::initWithDevice: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! MPSImageLanczosScale::initWithDevice: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! MPSUnaryImageKernel::initWithDevice: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! MSMessage::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! PKAddPaymentPassRequest::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! SLComposeSheetConfigurationItem::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIBarButtonItem::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIBarItem::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIBezierPath::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UICollectionViewLayout::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UICubicTimingParameters::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIDragPreviewParameters::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIImageAsset::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIKeyCommand::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UILocalNotification::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIMotionEffect::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIPasteConfiguration::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UISpringTimingParameters::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UITabBarItem::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UITraitCollection::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIUserNotificationAction::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIUserNotificationCategory::init is missing an [DesignatedInitializer] attribute
