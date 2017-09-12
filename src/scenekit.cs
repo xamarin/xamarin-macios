@@ -53,6 +53,7 @@ using OpenTK;
 
 using GLContext = global::XamCore.OpenGL.CGLContext;
 #else
+using XamCore.UIKit;
 
 #if WATCH
 using GLContext = global::XamCore.Foundation.NSObject; // won't be used -> [NoWatch] but must compile
@@ -538,8 +539,9 @@ namespace XamCore.SceneKit {
 	}
 
 	interface ISCNCameraControlConfiguration {}
-	
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+
+	[NoWatch]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[Protocol]
 	interface SCNCameraControlConfiguration
 	{
@@ -1535,7 +1537,11 @@ namespace XamCore.SceneKit {
 	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
-	interface SCNNode : SCNAnimatable, SCNBoundingVolume, SCNActionable, NSCopying, NSSecureCoding {
+	interface SCNNode : SCNAnimatable, SCNBoundingVolume, SCNActionable, NSCopying, NSSecureCoding 
+#if IOS || TVOS
+		, UIFocusItem
+#endif
+	{
 		[Export ("transform")]
 		SCNMatrix4 Transform { get; set;  }
 
@@ -2277,14 +2283,14 @@ namespace XamCore.SceneKit {
 		NSString UseSafeModeKey	 { get; }
 
 		[Mac(10,10)]
-		[Availability (Deprecated = Platform.iOS_8_3)] // header says NA and docs says "Available in iOS 8.0 through iOS 8.2."
-		[NoTV, NoWatch]
+		[iOS (8,0)] // header said NA and docs says "Available in iOS 8.0 through iOS 8.2." but it's back on iOS11
+		[TV (11,0), Watch (4,0)]
 		[Field ("SCNSceneSourceConvertUnitsToMetersKey")]
 		NSString ConvertUnitsToMetersKey { get; }
 
 		[Mac(10,10)]
-		[Availability (Deprecated = Platform.iOS_8_3)] // header says NA and docs says "Available in iOS 8.0 through iOS 8.2."
-		[NoTV, NoWatch]
+		[iOS (8,0)] // header said NA and docs says "Available in iOS 8.0 through iOS 8.2." but it's back on iOS11
+		[TV (11,0), Watch (4,0)]
 		[Field ("SCNSceneSourceConvertToYUpKey")]
 		NSString ConvertToYUpKey { get; }
 
@@ -2906,10 +2912,16 @@ namespace XamCore.SceneKit {
 		
 	}
 
+#if WATCH || XAMCORE_4_0
+	[Watch (4,0)]
+	[Mac (10,9), iOS (8,0)]
+	delegate void SCNAnimationEventHandler (ISCNAnimationProtocol animation, NSObject animatedObject, bool playingBackward);
+#else
 	[Mac (10,9), iOS (8,0)]
 	delegate void SCNAnimationEventHandler (CAAnimation animation, NSObject animatedObject, bool playingBackward);
+#endif
 
-	[NoWatch]
+	[Watch (4,0)]
 	[Mac (10,9), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -3008,7 +3020,8 @@ namespace XamCore.SceneKit {
 		[Export ("influenceFactor")]
 		nfloat InfluenceFactor { get; set; }
 
-		[Mac (10, 10), iOS (8,0), NoTV, NoWatch]
+		[Mac (10, 10), iOS (8,0)]
+		[TV (11,0)][Watch (4,0)]
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 
@@ -4362,9 +4375,16 @@ namespace XamCore.SceneKit {
 		SCNTimingFunction Create (CAMediaTimingFunction caTimingFunction);
 	}
 
+	// Use the Swift name SCNAnimationProtocol since it conflicts with the type name
+	[Protocol (Name="SCNAnimation")]
+	interface SCNAnimationProtocol {
+	}
+
+	interface ISCNAnimationProtocol {}
+
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
-	interface SCNAnimation : NSCopying, NSSecureCoding
+	interface SCNAnimation : SCNAnimationProtocol, NSCopying, NSSecureCoding
 	{
 		[Static]
 		[Export ("animationWithContentsOfURL:")]
@@ -4426,7 +4446,7 @@ namespace XamCore.SceneKit {
 		[NullAllowed, Export ("animationDidStop", ArgumentSemantic.Copy)]
 		SCNAnimationDidStopHandler AnimationDidStop { get; set; }
 	
-		[NullAllowed, Export ("animationEvents", ArgumentSemantic.Copy), NoWatch]
+		[NullAllowed, Export ("animationEvents", ArgumentSemantic.Copy)]
 		SCNAnimationEvent[] AnimationEvents { get; set; }
 	
 		[Export ("additive")]

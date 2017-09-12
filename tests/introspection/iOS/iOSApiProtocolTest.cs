@@ -519,6 +519,9 @@ namespace Introspection {
 				case "SKVideoNode":
 				case "SKSpriteNode":
 					return !TestRuntime.CheckXcodeVersion (8,0);
+				case "SCNNode":
+				case "SCNReferenceNode":
+					return !TestRuntime.CheckXcodeVersion (9,0);
 				}
 				break;
 
@@ -629,6 +632,9 @@ namespace Introspection {
 				case "UIVisualEffectView":
 				case "UIWindow":
 					return !TestRuntime.CheckXcodeVersion (8, 0);
+				case "SCNNode":
+				case "SCNReferenceNode":
+					return !TestRuntime.CheckXcodeVersion (9,0);
 				}
 				break;
 

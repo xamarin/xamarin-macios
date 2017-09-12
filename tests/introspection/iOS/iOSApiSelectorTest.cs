@@ -224,19 +224,20 @@ namespace Introspection {
 					break;
 				}
 				break;
-			case "SKNode":
+			case "SKNode":  // iOS 10+
+			case "SCNNode": // iOS 11+
 				switch (name) {
-				// UIFocus protocol conformance on iOS10+
+				// UIFocus protocol conformance
 				case "didUpdateFocusInContext:withAnimationCoordinator:":
 				case "setNeedsFocusUpdate":
 				case "shouldUpdateFocusInContext:":
 				case "updateFocusIfNeeded":
-#if __TVOS__
 				case "canBecomeFocused":
-#else
+#if !__TVOS__
 				case "preferredFocusedView":
 #endif
-					if (!TestRuntime.CheckXcodeVersion (8, 0))
+					int major = declaredType.Name == "SKNode" ? 8 : 9;
+					if (!TestRuntime.CheckXcodeVersion (major, 0))
 						return true;
 					break;
 #if __TVOS__
