@@ -656,9 +656,7 @@ namespace Introspection {
 				break;
 
 			case "UIPasteConfigurationSupporting": // types do not conform to protocol but protocol methods work on those types (base type tests in monotouch-test)
-					return true; // Skip everything because 'UIResponder' implements 'UIPasteConfigurationSupporting' and that's 130+ types
-				}
-				break;
+				return true; // Skip everything because 'UIResponder' implements 'UIPasteConfigurationSupporting' and that's 130+ types
 			}
 			return base.Skip (type, protocolName);
 		}
