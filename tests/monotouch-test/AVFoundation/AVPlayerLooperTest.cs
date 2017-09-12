@@ -1,4 +1,4 @@
-﻿#if !WATCH
+﻿#if !__WATCHOS__
 using System;
 using System.IO;
 #if XAMCORE_2_0
