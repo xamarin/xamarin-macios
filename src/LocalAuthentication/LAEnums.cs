@@ -30,13 +30,30 @@ namespace XamCore.LocalAuthentication {
 		/// Authentication could not start, because passcode is not set on the device.
 		PasscodeNotSet       = -5,
 		/// Authentication could not start, because Touch ID is not available on the device.
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'BiometryNotAvailable' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'BiometryNotAvailable' instead.")]
 		TouchIDNotAvailable  = -6,	    
+
 		/// Authentication could not start, because Touch ID has no enrolled fingers.
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'BiometryNotEnrolled' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'BiometryNotEnrolled' instead.")]
 		TouchIDNotEnrolled   = -7,
 
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'BiometryLockout' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'BiometryLockout' instead.")]
 		TouchIDLockout       = -8,
 		AppCancel            = -9,
 		InvalidContext       = -10,
+
+		[iOS (11,0), Mac (10,13)]
+		BiometryNotAvailable = TouchIDNotAvailable,
+
+		[iOS (11,0), Mac (10,13)]
+		BiometryNotEnrolled = TouchIDNotEnrolled,
+
+		[iOS (11,0), Mac (10,13)]
+		BiometryLockout = TouchIDLockout,
+
 		NotInteractive       = -1004,
 	}
 
