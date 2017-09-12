@@ -2983,166 +2983,6 @@ namespace XamCore.AVFoundation {
 		AVMediaSelection[] AllMediaSelections { get; }
 	}
 
-	[NoMac, NoWatch, NoTV, iOS (11,0)]
-	[BaseType (typeof(AVCaptureSynchronizedData))]
-	interface AVCaptureSynchronizedDepthData
-	{
-		[Export ("depthData")]
-		AVDepthData DepthData { get; }
-
-		[Export ("depthDataWasDropped")]
-		bool DepthDataWasDropped { get; }
-
-		[Export ("droppedReason")]
-		AVCaptureOutputDataDroppedReason DroppedReason { get; }
-	}
-
-	[NoMac, NoWatch, NoTV, iOS (11,0)]
-	[BaseType (typeof(AVCaptureSynchronizedData))]
-	interface AVCaptureSynchronizedMetadataObjectData
-	{
-		[Export ("metadataObjects")]
-		AVMetadataObject[] MetadataObjects { get; }
-	}
-
-	[NoMac, NoWatch, NoTV, iOS (11,0)]
-	[BaseType (typeof(AVCaptureSynchronizedData))]
-	interface AVCaptureSynchronizedSampleBufferData
-	{
-		[Export ("sampleBuffer")]
-		CMSampleBuffer SampleBuffer { get; }
-
-		[Export ("sampleBufferWasDropped")]
-		bool SampleBufferWasDropped { get; }
-
-		[Export ("droppedReason")]
-		AVCaptureOutputDataDroppedReason DroppedReason { get; }
-	}
-
-	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
-	[BaseType (typeof(NSObject))]
-	interface AVSampleBufferAudioRenderer : AVQueuedSampleBufferRendering
-	{
-		[Export ("status")]
-		AVQueuedSampleBufferRenderingStatus Status { get; }
-
-		[NullAllowed, Export ("error")]
-		NSError Error { get; }
-
-		[Mac (10, 13)]
-		[NullAllowed, Export ("audioOutputDeviceUniqueID")]
-		string AudioOutputDeviceUniqueID { get; set; }
-
-		[Export ("audioTimePitchAlgorithm")]
-		string AudioTimePitchAlgorithm { get; set; }
-	}
-
-	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
-	[BaseType (typeof(NSObject))]
-	interface AVSampleBufferRenderSynchronizer
-	{
-		[Export ("timebase", ArgumentSemantic.Retain)]
-		unsafe CMTimebase Timebase { get; }
-
-		[Export ("rate")]
-		float Rate { get; set; }
-
-		[Export ("setRate:time:")]
-		void SetRate (float rate, CMTime time);
-	}
-
-	interface IAVCaptureDataOutputSynchronizerDelegate {}
-	
-	[NoWatch, NoTV, iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
-	interface AVCaptureDataOutputSynchronizerDelegate
-	{
-		[Abstract]
-		[Export ("dataOutputSynchronizer:didOutputSynchronizedDataCollection:")]
-		void DidOutputSynchronizedDataCollection (AVCaptureDataOutputSynchronizer synchronizer, AVCaptureSynchronizedDataCollection synchronizedDataCollection);
-	}
-
-	[NoWatch, NoTV, iOS (11,0)]
-	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor]
-	interface AVCaptureDataOutputSynchronizer
-	{
-		[Export ("initWithDataOutputs:")]
-		IntPtr Constructor (AVCaptureOutput[] dataOutputs);
-
-		[Export ("dataOutputs", ArgumentSemantic.Retain)]
-		AVCaptureOutput[] DataOutputs { get; }
-
-		[Export ("setDelegate:queue:")]
-		void SetDelegate ([NullAllowed] IAVCaptureDataOutputSynchronizerDelegate del, [NullAllowed] DispatchQueue delegateCallbackQueue);
-
-		[Wrap ("WeakDelegate")]
-		[NullAllowed]
-		IAVCaptureDataOutputSynchronizerDelegate Delegate { get; }
-
-		[NullAllowed, Export ("delegate")]
-		NSObject WeakDelegate { get; }
-
-		[NullAllowed, Export ("delegateCallbackQueue")]
-		DispatchQueue DelegateCallbackQueue { get; }
-	}
-
-	[NoWatch, NoTV, iOS (11,0)]
-	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor]
-	interface AVCaptureSynchronizedData
-	{
-		[Export ("timestamp")]
-		CMTime Timestamp { get; }
-	}
-
-	[NoWatch, NoTV, iOS (11,0)]
-	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor]
-	interface AVCaptureSynchronizedDataCollection : INSFastEnumeration
-	{
-		[Export ("synchronizedDataForCaptureOutput:")]
-		[return: NullAllowed]
-		AVCaptureSynchronizedData From (AVCaptureOutput captureOutput);
-
-		[Export ("objectForKeyedSubscript:")]
-		[return: NullAllowed]
-		AVCaptureSynchronizedData ObjectForKeyedSubscript (AVCaptureOutput key);
-
-		[Export ("count")]
-		nuint Count { get; }
-	}
-
-	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
-	interface AVQueuedSampleBufferRendering {
-		[Abstract]
-		[Export ("timebase", ArgumentSemantic.Retain)]
-		CMTimebase Timebase { get; }
-
-		[Abstract]
-		[Export ("enqueueSampleBuffer:")]
-		void EnqueueSampleBuffer (CMSampleBuffer sampleBuffer);
-
-		[Abstract]
-		[Export ("flush")]
-		void Flush ();
-
-		[Abstract]
-		[Export ("readyForMoreMediaData")]
-		bool ReadyForMoreMediaData { [Bind ("isReadyForMoreMediaData")] get; }
-
-		[Abstract]
-		[Export ("requestMediaDataWhenReadyOnQueue:usingBlock:")]
-		void RequestMediaDataWhenReadyOnQueue (DispatchQueue queue, Action block);
-
-		[Abstract]
-		[Export ("stopRequestingMediaData")]
-		void StopRequestingMediaData ();
-	}
-
 #if MONOMAC
 	[Protocol]
 	[Mac (10,11)]
@@ -3231,6 +3071,108 @@ namespace XamCore.AVFoundation {
 		void DidOutputSampleBuffer (AVCaptureOutput captureOutput, CMSampleBuffer sampleBuffer, AVCaptureConnection connection);
 	}
 
+#endif // MONOMAC
+
+	[NoWatch, NoTV, iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface AVCaptureSynchronizedData
+	{
+		[Export ("timestamp")]
+		CMTime Timestamp { get; }
+	}
+
+	[NoWatch, NoTV, iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface AVCaptureSynchronizedDataCollection : INSFastEnumeration
+	{
+		[Export ("synchronizedDataForCaptureOutput:")]
+		[return: NullAllowed]
+		AVCaptureSynchronizedData From (AVCaptureOutput captureOutput);
+
+		[Export ("objectForKeyedSubscript:")]
+		[return: NullAllowed]
+		AVCaptureSynchronizedData ObjectForKeyedSubscript (AVCaptureOutput key);
+
+		[Export ("count")]
+		nuint Count { get; }
+	}
+
+	interface IAVCaptureDataOutputSynchronizerDelegate {}
+	
+	[NoWatch, NoTV, iOS (11,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface AVCaptureDataOutputSynchronizerDelegate
+	{
+		[Abstract]
+		[Export ("dataOutputSynchronizer:didOutputSynchronizedDataCollection:")]
+		void DidOutputSynchronizedDataCollection (AVCaptureDataOutputSynchronizer synchronizer, AVCaptureSynchronizedDataCollection synchronizedDataCollection);
+	}
+
+	[NoWatch, NoTV, iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface AVCaptureDataOutputSynchronizer
+	{
+		[Export ("initWithDataOutputs:")]
+		IntPtr Constructor (AVCaptureOutput[] dataOutputs);
+
+		[Export ("dataOutputs", ArgumentSemantic.Retain)]
+		AVCaptureOutput[] DataOutputs { get; }
+
+		[Export ("setDelegate:queue:")]
+		void SetDelegate ([NullAllowed] IAVCaptureDataOutputSynchronizerDelegate del, [NullAllowed] DispatchQueue delegateCallbackQueue);
+
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		IAVCaptureDataOutputSynchronizerDelegate Delegate { get; }
+
+		[NullAllowed, Export ("delegate")]
+		NSObject WeakDelegate { get; }
+
+		[NullAllowed, Export ("delegateCallbackQueue")]
+		DispatchQueue DelegateCallbackQueue { get; }
+	}
+
+	[NoMac, NoWatch, NoTV, iOS (11,0)]
+	[BaseType (typeof(AVCaptureSynchronizedData))]
+	interface AVCaptureSynchronizedSampleBufferData
+	{
+		[Export ("sampleBuffer")]
+		CMSampleBuffer SampleBuffer { get; }
+
+		[Export ("sampleBufferWasDropped")]
+		bool SampleBufferWasDropped { get; }
+
+		[Export ("droppedReason")]
+		AVCaptureOutputDataDroppedReason DroppedReason { get; }
+	}
+
+	[NoMac, NoWatch, NoTV, iOS (11,0)]
+	[BaseType (typeof(AVCaptureSynchronizedData))]
+	interface AVCaptureSynchronizedMetadataObjectData
+	{
+		[Export ("metadataObjects")]
+		AVMetadataObject[] MetadataObjects { get; }
+	}
+
+	[NoMac, NoWatch, NoTV, iOS (11,0)]
+	[BaseType (typeof(AVCaptureSynchronizedData))]
+	interface AVCaptureSynchronizedDepthData
+	{
+		[Export ("depthData")]
+		AVDepthData DepthData { get; }
+
+		[Export ("depthDataWasDropped")]
+		bool DepthDataWasDropped { get; }
+
+		[Export ("droppedReason")]
+		AVCaptureOutputDataDroppedReason DroppedReason { get; }
+	}
+
+#if MONOMAC
 	[Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -3280,6 +3222,7 @@ namespace XamCore.AVFoundation {
 		[Export ("overrideTime", ArgumentSemantic.Assign)]
 		CMTime OverrideTime { get; set; }
 	}
+
 #endif
 
 	[NoWatch]
