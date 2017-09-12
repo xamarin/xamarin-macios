@@ -13347,10 +13347,6 @@ namespace XamCore.Foundation
 
 		[MountainLion, Export ("trashItemAtURL:resultingItemURL:error:")]
 		bool TrashItem (NSUrl url, out NSUrl resultingItemUrl, out NSError error);
-
-		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-		[Async, Export ("getFileProviderMessageInterfacesForItemAtURL:completionHandler:")]
-		void GetFileProviderMessageInterfaces (NSUrl url, Action <NSFileProviderMessageInterface[], NSError> completionHandler);
 	}
 
 	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
@@ -15359,29 +15355,5 @@ namespace XamCore.Foundation
 
 		[Export ("stringFromUnit:")]
 		string ToString (NSUnit unit);
-	}
-
-	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-	[BaseType (typeof(NSObject))]
-	interface NSFileProviderMessageInterface : NSSecureCoding
-	{
-		[Export ("name")]
-		string Name { get; }
-	}
-
-	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor]
-	interface NSFileProviderMessenger
-	{
-		[Export ("initWithInterface:protocol:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (NSFileProviderMessageInterface @interface, Protocol protocol);
-
-		[Async, Export ("remoteObjectProxyWithErrorHandler:")]
-		NSObject GetRemoteObjectProxy (Action<NSError> errorHandler);
-
-		[Export ("invalidate")]
-		void Invalidate ();
 	}
 }
