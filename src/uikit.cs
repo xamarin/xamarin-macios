@@ -401,6 +401,19 @@ namespace XamCore.UIKit {
 		[Export ("fetchThumbnailsForItemIdentifiers:requestedSize:perThumbnailCompletionHandler:completionHandler:")]
 		[Async]
 		NSProgress FetchThumbnails (NSString [] itemIdentifiers, CGSize size, NSFileProviderExtensionFetchThumbnailsHandler perThumbnailCompletionHandler, Action<NSError> completionHandler);
+
+		// From NSFileProviderExtension (NSFileProviderService)
+
+		[iOS (11,0)]
+		[Export ("supportedServiceSourcesForItemIdentifier:error:")]
+		[return: NullAllowed]
+		INSFileProviderServiceSource [] GetSupportedServiceSources (string itemIdentifier, out NSError error);
+
+		// From NSFileProviderExtension (NSFileProviderDomain)
+
+		[iOS (11,0)]
+		[NullAllowed, Export ("domain")]
+		NSFileProviderDomain Domain { get; }
 #endif
 	}
 #endif // !WATCH
