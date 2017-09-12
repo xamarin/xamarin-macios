@@ -6,6 +6,13 @@
 !unknown-native-enum! ABAddressBookError bound
 
 
+#ARKit
+
+## new, but deprecated (in beta 5), types - but still in headers
+!missing-type! ARSessionConfiguration not bound
+!missing-type! ARWorldTrackingSessionConfiguration not bound
+
+
 # AssetLibrary
 
 ## typedef is used + untyped enum in ALAssetsLibrary.h: typedef NSUInteger ALAssetsGroupType;
@@ -89,6 +96,12 @@
 
 ## only used on tvOS but exposed in iOS 10 SDK
 !missing-enum! RPPreviewViewControllerMode not bound
+
+
+# Social
+
+## deprecated (was not available on iOS before Xcode9)
+!missing-field! SLServiceTypeLinkedIn not bound
 
 
 # UIKit
