@@ -34,19 +34,19 @@ namespace XamCore.AVFoundation {
 
 		bool loopingEnabled = true;
 
-		[Obsolete ("This selector does not exist in the class and was wrongly added.")]
-		public bool LoopingEnabled { 
+		[Obsolete ("This selector does not exist in the header and was wrongly added.")]
+		public virtual bool LoopingEnabled { 
 			get {
 				return loopingEnabled;
 			}
 		}
 
-		public void DisableLooping () {
+		public virtual void DisableLooping () {
 			_DisableLooping ();
 			// make sure that looping enabled is consistent.
 			loopingEnabled = false;
-#endif
 		}
+#endif
 	}
 }
 #endif // !WATCH

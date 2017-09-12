@@ -10999,7 +10999,6 @@ namespace XamCore.AVFoundation {
 		[Export ("disableLooping")]
 		void DisableLooping ();
 #endif
-
 		[Export ("loopCount")]
 		nint LoopCount { get; }
 
