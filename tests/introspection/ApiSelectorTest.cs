@@ -440,6 +440,14 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "HMCharacteristicEvent":
+				switch (selectorName) {
+				case "copyWithZone:":
+				case "mutableCopyWithZone:":
+					// Added in Xcode9 (i.e. only 64 bits) so skip 32 bits
+					return !TestRuntime.CheckXcodeVersion (9,0);
+				}
+				break;
 			}
 
 			// old binding mistake
