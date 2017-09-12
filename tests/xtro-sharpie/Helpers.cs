@@ -40,6 +40,7 @@ namespace Extrospection {
 			{ "NEVPNIKEv2IntegrityAlgorithm", "NEVpnIke2IntegrityAlgorithm" },
 			{ "NEVPNStatus", "NEVpnStatus" },
 			{ "NSAttributedStringEnumerationOptions", "NSAttributedStringEnumeration" },
+			{ "NSFileProviderErrorCode", "NSFileProviderError" },
 			{ "NSHTTPCookieAcceptPolicy", "NSHttpCookieAcceptPolicy" },
 			{ "NSISO8601DateFormatOptions", "NSIso8601DateFormatOptions" },
 			{ "NSJSONReadingOptions", "NSJsonReadingOptions" },
