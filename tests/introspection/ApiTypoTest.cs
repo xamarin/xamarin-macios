@@ -304,6 +304,7 @@ namespace Introspection
 			"Oid",
 			"Oneup", // TVElementKeyOneupTemplate
 			"Orthographyrange",
+			"Orth",
 			"ove",
 			"Paeth", // PNG filter
 			"Parms", // short for Parameters
@@ -439,6 +440,11 @@ namespace Introspection
 			"Xpc",
 			"xy",
 			"Xyz",
+			"Xzy",
+			"Yxz",
+			"Yzx",
+			"Zxy",
+			"Zyx",
 			"yuvs",
 			"yx",
 			"yy",

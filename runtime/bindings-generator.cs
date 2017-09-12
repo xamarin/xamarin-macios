@@ -2287,6 +2287,213 @@ namespace Xamarin.BindingMethods.Generator
 				}
 			);
 
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, nint, Vector2i, float, float, float, float, float)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.NInt },
+						new ParameterData { TypeData = Types.Vector2i },
+						new ParameterData { TypeData = Types.Float },
+						new ParameterData { TypeData = Types.Float },
+						new ParameterData { TypeData = Types.Float },
+						new ParameterData { TypeData = Types.Float },
+						new ParameterData { TypeData = Types.Float },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // MatrixDouble4x4 func ()",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.MatrixDouble4x4
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // MatrixDouble4x4 func (Double)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.MatrixDouble4x4,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Double }
+					}
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (MatrixDouble4x4, Double)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.MatrixDouble4x4 },
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (MatrixDouble4x4)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.MatrixDouble4x4 }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (VectorFloat2, Double)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.VectorFloat2 },
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (VectorDouble2, Double)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.VectorDouble2 },
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // VectorFloat2 func (Double)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.VectorFloat2,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // VectorDouble2 func (Double)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.VectorDouble2,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (VectorFloat3, Double)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.VectorFloat3 },
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (VectorDouble3, Double)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.VectorDouble3 },
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // VectorFloat3 func (Double)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.VectorFloat3,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // VectorDouble3 func (Double)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.VectorDouble3,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (VectorFloat4, Double)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.VectorFloat4 },
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (VectorDouble4, Double)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.VectorDouble4 },
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // VectorFloat4 func (Double)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.VectorFloat4,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // VectorDouble4 func (Double)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.VectorDouble4,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
 			// We must expand functions with native types to their actual type as well.
 			for (int i = data.Count - 1; i >= 0; i--) {
 				if (!data [i].HasNativeType)

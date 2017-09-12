@@ -1009,6 +1009,7 @@ MODELIO_CORE_SOURCES = \
 	ModelIO/MIEnums.cs \
 
 MODELIO_SOURCES = \
+	ModelIO/MDLAnimatedValueTypes.cs \
 	ModelIO/MDLAsset.cs \
 	ModelIO/MDLNoiseTexture.cs \
 	ModelIO/MDLTransform.cs \
