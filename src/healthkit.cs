@@ -60,6 +60,15 @@ namespace XamCore.HealthKit {
 		Paused,
 	}
 
+	[iOS (11,0)]
+	[Watch (4,0)]
+	[Native]
+	public enum HKHeartRateMotionContext : nint {
+		NotSet = 0,
+		Sedentary,
+		Active,
+	}
+
 	delegate void HKAnchoredObjectResultHandler2 (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error);
 #if XAMCORE_2_0
 	[Obsolete ("Use HKAnchoredObjectResultHandler2 instead")]
@@ -586,6 +595,10 @@ namespace XamCore.HealthKit {
 		[Watch (3,0), iOS (10,0)]
 		[Export ("SwimmingStrokeStyle")]
 		NSString SwimmingStrokeStyle { get; }
+
+		[Watch (4,0), iOS (11,0)]
+		[Export ("HeartRateMotionContext")]
+		HKHeartRateMotionContext HeartRateMotionContext { get; }
 	}
 		
 	[Watch (2,0)]
@@ -680,6 +693,10 @@ namespace XamCore.HealthKit {
 		[Watch (3,0), iOS (10,0)]
 		[Field ("HKMetadataKeySwimmingStrokeStyle")]
 		NSString SwimmingStrokeStyle { get; }
+
+		[Watch (4,0), iOS (11,0)]
+		[Field ("HKMetadataKeyHeartRateMotionContext")]
+		NSString HeartRateMotionContext { get; }
 	}
 
 	[Watch (2,0)]
@@ -1303,6 +1320,18 @@ namespace XamCore.HealthKit {
 
 		[Field ("HKQuantityTypeIdentifierRespiratoryRate")]
 		NSString RespiratoryRate { get; }
+
+		[iOS (11,0), Watch (4,0)]
+		[Field ("HKQuantityTypeIdentifierRestingHeartRate")]
+		NSString RestingHeartRate { get; }
+
+		[iOS (11,0), Watch (4,0)]
+		[Field ("HKQuantityTypeIdentifierWalkingHeartRateAverage")]
+		NSString WalkingHeartRateAverage { get; }
+
+		[iOS (11,0), Watch (4,0)]
+		[Field ("HKQuantityTypeIdentifierHeartRateVariabilitySDNN")]
+		NSString HeartRateVariabilitySdnn { get; }
 
 		[Field ("HKQuantityTypeIdentifierBodyTemperature")]
 		NSString BodyTemperature { get; }
