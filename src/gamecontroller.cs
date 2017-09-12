@@ -325,15 +325,15 @@ namespace XamCore.GameController {
 		[Export ("userAcceleration", ArgumentSemantic.Assign)]
 		Vector3d UserAcceleration { get; }
 
-		[NoTV] // Xcode 7.2
+		[TV (11,0)]
 		[Export ("attitude", ArgumentSemantic.Assign)]
 		Quaterniond Attitude { get; }
 
-		[NoTV] // Xcode 7.2
+		[TV (11,0)]
 		[Export ("rotationRate", ArgumentSemantic.Assign)]
 		Vector3d RotationRate { get; }
 
-		[NoTV]
+		[TV (11,0)]
 		[iOS (11,0)]
 		[Mac (10,13, onlyOn64: true)]
 		[Export ("hasAttitudeAndRotationRate")]
