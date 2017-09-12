@@ -79,6 +79,13 @@
 !missing-selector! NSURLSession::getTasksWithCompletionHandler: not bound
 
 
+# HomeKit
+
+## unrecognized selector - rdar 33883958: https://trello.com/c/TIlzWzrL
+!missing-selector! HMMutablePresenceEvent::setPresenceEventType: not bound
+!missing-selector! HMMutablePresenceEvent::setPresenceUserType: not bound
+
+
 # Photos
 
 ## xcode 8 beta 1-6 defines it but it does not exists in the binaries - rdar #28169810 https://trello.com/c/RwXK6YRX
