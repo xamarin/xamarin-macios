@@ -119,6 +119,8 @@ namespace Xamarin
 		public string AotOtherArguments;
 		public string [] LinkSkip;
 		public string [] XmlDefinitions;
+		public bool? Profiling;
+		public string SymbolList;
 
 #pragma warning restore 649
 
@@ -310,6 +312,12 @@ namespace Xamarin
 					sb.Append (" --nosymbolstrip:").Append (NoSymbolStrip);
 				}
 			}
+
+			if (Profiling.HasValue)
+				sb.Append (" --profiling:").Append (Profiling.Value ? "true" : "false");
+
+			if (!string.IsNullOrEmpty (SymbolList))
+				sb.Append (" --symbollist=").Append (MTouch.Quote (SymbolList));
 
 			if (MSym.HasValue)
 				sb.Append (" --msym:").Append (MSym.Value ? "true" : "false");

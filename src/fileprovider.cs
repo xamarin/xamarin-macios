@@ -19,7 +19,7 @@ namespace XamCore.FileProvider {
 	[iOS (11,0)]
 	[ErrorDomain ("NSFileProviderErrorDomain")]
 	[Native]
-	public enum NSFileProviderError : nint {
+	enum NSFileProviderError : nint {
 		NotAuthenticated = -1000,
 		FilenameCollision = -1001,
 		SyncAnchorExpired = -1002,
@@ -27,6 +27,25 @@ namespace XamCore.FileProvider {
 		InsufficientQuota = -1003,
 		ServerUnreachable = -1004,
 		NoSuchItem = -1005,
+	}
+
+	[iOS (11,0)]
+	[Static]
+	interface NSFileProviderErrorKeys {
+
+		[Field ("NSFileProviderErrorCollidingItemKey")]
+		NSString CollidingItemKey { get; }
+
+		[Field ("NSFileProviderErrorNonExistentItemIdentifierKey")]
+		NSString NonExistentItemIdentifierKey { get; }
+	}
+
+	[iOS (11,0)]
+	[Static]
+	interface NSFileProviderFavoriteRank {
+
+		[Field ("NSFileProviderFavoriteRankUnranked")]
+		ulong Unranked { get; }
 	}
 
 	[iOS (11,0)]
@@ -43,7 +62,7 @@ namespace XamCore.FileProvider {
 	[iOS (11,0)]
 	[Native]
 	[Flags]
-	public enum NSFileProviderItemCapabilities : nuint {
+	enum NSFileProviderItemCapabilities : nuint {
 		Reading = 1 << 0,
 		Writing = 1 << 1,
 		Reparenting = 1 << 2,
@@ -165,11 +184,11 @@ namespace XamCore.FileProvider {
 
 		[Abstract]
 		[Export ("itemIdentifier")]
-		NSString Identifier { get; }
+		string Identifier { get; }
 
 		[Abstract]
 		[Export ("parentItemIdentifier")]
-		NSString ParentIdentifier { get; }
+		string ParentIdentifier { get; }
 
 		[Abstract]
 		[Export ("filename")]
@@ -270,11 +289,11 @@ namespace XamCore.FileProvider {
 
 		[Export ("signalEnumeratorForContainerItemIdentifier:completionHandler:")]
 		// Not Async'ified on purpose, because this can switch from app to extension.
-		void SignalEnumerator (NSString containerItemIdentifier, Action<NSError> completion);
+		void SignalEnumerator (string containerItemIdentifier, Action<NSError> completion);
 
 		// Not Async'ified on purpose, because the task must be accesed while the completion action is performing...
 		[Export ("registerURLSessionTask:forItemWithIdentifier:completionHandler:")]
-		void Register (NSUrlSessionTask task, NSString identifier, Action<NSError> completion);
+		void Register (NSUrlSessionTask task, string identifier, Action<NSError> completion);
 
 		[Export ("providerIdentifier")]
 		string ProviderIdentifier { get; }
@@ -314,6 +333,22 @@ namespace XamCore.FileProvider {
 		[Export ("managerForDomain:")]
 		[return: NullAllowed]
 		NSFileProviderManager FromDomain (NSFileProviderDomain domain);
+	}
+
+	interface INSFileProviderServiceSource {}
+
+	[iOS (11,0)]
+	[Protocol]
+	interface NSFileProviderServiceSource {
+
+		[Abstract]
+		[Export ("serviceName")]
+		string ServiceName { get; }
+
+		[Abstract]
+		[Export ("makeListenerEndpointAndReturnError:")]
+		[return: NullAllowed]
+		NSXpcListenerEndpoint MakeListenerEndpoint (out NSError error);
 	}
 }
 #endif

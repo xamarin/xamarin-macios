@@ -401,6 +401,19 @@ namespace XamCore.UIKit {
 		[Export ("fetchThumbnailsForItemIdentifiers:requestedSize:perThumbnailCompletionHandler:completionHandler:")]
 		[Async]
 		NSProgress FetchThumbnails (NSString [] itemIdentifiers, CGSize size, NSFileProviderExtensionFetchThumbnailsHandler perThumbnailCompletionHandler, Action<NSError> completionHandler);
+
+		// From NSFileProviderExtension (NSFileProviderService)
+
+		[iOS (11,0)]
+		[Export ("supportedServiceSourcesForItemIdentifier:error:")]
+		[return: NullAllowed]
+		INSFileProviderServiceSource [] GetSupportedServiceSources (string itemIdentifier, out NSError error);
+
+		// From NSFileProviderExtension (NSFileProviderDomain)
+
+		[iOS (11,0)]
+		[NullAllowed, Export ("domain")]
+		NSFileProviderDomain Domain { get; }
 #endif
 	}
 #endif // !WATCH
@@ -9798,6 +9811,9 @@ namespace XamCore.UIKit {
 #if !TVOS
 	, UIAccessibilityDragging
 #endif // !TVOS
+#if IOS
+	, UIPasteConfigurationSupporting
+#endif // IOS
 	{
 
 		[Export ("nextResponder")]
@@ -12475,7 +12491,11 @@ namespace XamCore.UIKit {
 	
 	[BaseType (typeof (UIControl), Delegates=new string [] { "WeakDelegate" })]
 	// , Events=new Type [] {typeof(UITextFieldDelegate)})] custom logic needed, see https://bugzilla.xamarin.com/show_bug.cgi?id=53174
-	interface UITextField : UITextInput, UIContentSizeCategoryAdjusting {
+	interface UITextField : UITextInput, UIContentSizeCategoryAdjusting
+#if IOS
+	, UITextDraggable, UITextDroppable, UITextPasteConfigurationSupporting
+#endif // IOS
+	{
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
@@ -12655,7 +12675,11 @@ namespace XamCore.UIKit {
 	}
 	
 	[BaseType (typeof (UIScrollView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UITextViewDelegate)})]
-	interface UITextView : UITextInput, NSCoding, UIContentSizeCategoryAdjusting {
+	interface UITextView : UITextInput, NSCoding, UIContentSizeCategoryAdjusting
+#if IOS
+	, UITextDraggable, UITextDroppable, UITextPasteConfigurationSupporting
+#endif // IOS
+	{
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
@@ -18296,10 +18320,10 @@ namespace XamCore.UIKit {
 		UIPasteConfiguration PasteConfiguration { get; set; }
 
 		[Export ("pasteItemProviders:")]
-		void PasteItemProviders (NSItemProvider[] itemProviders);
+		void Paste (NSItemProvider[] itemProviders);
 
 		[Export ("canPasteItemProviders:")]
-		bool CanPasteItemProviders (NSItemProvider[] itemProviders);
+		bool CanPaste (NSItemProvider[] itemProviders);
 	}
 
 	[NoTV, NoWatch]

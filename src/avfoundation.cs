@@ -181,7 +181,7 @@ namespace XamCore.AVFoundation {
 
 		[iOS (11, 0), Mac (10, 13)]
 		[Field ("AVMediaTypeDepthData")]
-		AVMediaTypeDepthData = 10,
+		DepthData = 10,
 	}
 
 #if !XAMCORE_4_0

@@ -4,6 +4,21 @@
 !missing-field! AVAudioSessionInterruptionWasSuspendedKey not bound
 
 
+# CoreAnimation
+
+## header file removed in xcode9
+!unknown-type! CAEmitterBehavior bound
+!unknown-field! kCAEmitterBehaviorAlignToMotion bound
+!unknown-field! kCAEmitterBehaviorAttractor bound
+!unknown-field! kCAEmitterBehaviorColorOverLife bound
+!unknown-field! kCAEmitterBehaviorDrag bound
+!unknown-field! kCAEmitterBehaviorLight bound
+!unknown-field! kCAEmitterBehaviorSimpleAttractor bound
+!unknown-field! kCAEmitterBehaviorValueOverLife bound
+!unknown-field! kCAEmitterBehaviorWave bound
+
+
+
 # CoreData
 
 ## https://bugzilla.xamarin.com/show_bug.cgi?id=34968
@@ -77,6 +92,22 @@
 
 ## the API exists but is [Sealed], until XAMCORE_4_0, to keep compatible with iOS/Mac profiles
 !missing-selector! NSURLSession::getTasksWithCompletionHandler: not bound
+
+
+# HomeKit
+
+## unrecognized selector - rdar 33883958: https://trello.com/c/TIlzWzrL
+!missing-selector! HMMutablePresenceEvent::setPresenceEventType: not bound
+!missing-selector! HMMutablePresenceEvent::setPresenceUserType: not bound
+
+
+# MetalPerformanceShaders
+
+## new type not yet bound
+!wrong-base-type! MPSImageLanczosScale expected MPSImageScale actual MPSUnaryImageKernel
+
+
+
 
 
 # Photos

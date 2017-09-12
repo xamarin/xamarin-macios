@@ -54,6 +54,9 @@
 ## new Apple abstract member (breaking change) fixed in XAMCORE_4_0
 !incorrect-protocol-member! MTLRenderCommandEncoder::setDepthClipMode: is REQUIRED and should be abstract
 
+## only on macOS (but removing would be a vreaking change)
+!unknown-native-enum! MTLSamplerBorderColor bound
+
 
 # UserNotifications
 
