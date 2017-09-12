@@ -20,7 +20,7 @@ using XamCore.Metal;
 using XamCore.ObjCRuntime;
 using XamCore.ImageIO;
 
-using Matrix3 = global::Simd.MatrixFloat3x3;
+using Matrix3 = global::OpenTK.NMatrix3;
 
 namespace XamCore.Vision {
 

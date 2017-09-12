@@ -11,7 +11,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using Vector3 = global::Simd.VectorFloat3;
+using Vector3 = global::OpenTK.NVector3;
 
 namespace XamCore.ARKit {
 	public partial class ARPointCloud {

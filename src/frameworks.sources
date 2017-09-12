@@ -1531,10 +1531,7 @@ SHARED_CORE_SOURCES = \
 	Simd/MatrixFloat2x2.cs \
 	Simd/MatrixFloat3x3.cs \
 	Simd/MatrixFloat4x4.cs \
-	Simd/VectorFloat2.cs \
 	Simd/VectorFloat3.cs \
-	Simd/VectorFloat4.cs \
-	Simd/VectorInt4.cs \
 
 SHARED_SOURCES = \
 	../runtime/Delegates.generated.cs \

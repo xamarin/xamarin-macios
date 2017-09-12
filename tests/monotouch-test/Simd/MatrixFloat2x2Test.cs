@@ -6,7 +6,7 @@ using Foundation;
 using ObjCRuntime;
 
 using OpenTK;
-using Simd;
+using MatrixFloat2x2 = global::OpenTK.NMatrix2;
 
 using NUnit.Framework;
 
@@ -20,22 +20,11 @@ namespace MonoTouchFixtures.Simd
 		public void Identity ()
 		{
 			var identity = new MatrixFloat2x2 {
-				M11 = 1f,
-				M22 = 1f,
+				R0C0 = 1f,
+				R1C1 = 1f,
 			};
 			Asserts.AreEqual (identity, MatrixFloat2x2.Identity, "identity");
 			Asserts.AreEqual (Matrix2.Identity, MatrixFloat2x2.Identity, "opentk identity");
-		}
-
-		[Test]
-		public void ColumnConstructor ()
-		{
-			var expected = GetTestMatrix ();
-			var actual = new MatrixFloat2x2 (
-				new Vector2 (expected.R0C0, expected.R1C0),
-				new Vector2 (expected.R0C1, expected.R1C1)
-			);
-			Asserts.AreEqual (expected, actual, "ctor 1");
 		}
 
 		[Test]
@@ -62,20 +51,20 @@ namespace MonoTouchFixtures.Simd
 			var expected = GetTestMatrix ();
 			var actual = (MatrixFloat2x2) expected;
 
-			Assert.AreEqual (expected.R0C0, actual.M11, "m11 getter");
-			Assert.AreEqual (expected.R0C1, actual.M12, "m12 getter");
-			Assert.AreEqual (expected.R1C0, actual.M21, "m21 getter");
-			Assert.AreEqual (expected.R1C1, actual.M22, "m22 getter");
+			Assert.AreEqual (expected.R0C0, actual.R0C0, "R0C0 getter");
+			Assert.AreEqual (expected.R0C1, actual.R0C1, "R0C1 getter");
+			Assert.AreEqual (expected.R1C0, actual.R1C0, "R1C0 getter");
+			Assert.AreEqual (expected.R1C1, actual.R1C1, "R1C1 getter");
 
 			var newExpected = GetTestMatrix ();
-			actual.M11 = newExpected.R0C0;
-			actual.M12 = newExpected.R0C1;
-			actual.M21 = newExpected.R1C0;
-			actual.M22 = newExpected.R1C1;
-			Assert.AreEqual (newExpected.R0C0, actual.M11, "m11 setter");
-			Assert.AreEqual (newExpected.R0C1, actual.M12, "m12 setter");
-			Assert.AreEqual (newExpected.R1C0, actual.M21, "m21 setter");
-			Assert.AreEqual (newExpected.R1C1, actual.M22, "m22 setter");
+			actual.R0C0 = newExpected.R0C0;
+			actual.R0C1 = newExpected.R0C1;
+			actual.R1C0 = newExpected.R1C0;
+			actual.R1C1 = newExpected.R1C1;
+			Assert.AreEqual (newExpected.R0C0, actual.R0C0, "R0C0 setter");
+			Assert.AreEqual (newExpected.R0C1, actual.R0C1, "R0C1 setter");
+			Assert.AreEqual (newExpected.R1C0, actual.R1C0, "R1C0 setter");
+			Assert.AreEqual (newExpected.R1C1, actual.R1C1, "R1C1 setter");
 		}
 
 		[Test]

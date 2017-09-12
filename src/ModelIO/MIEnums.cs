@@ -19,7 +19,7 @@ using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
 using Vector4 = global::OpenTK.Vector4;
 using Vector4i = global::OpenTK.Vector4i;
-using VectorInt4 = global::Simd.VectorInt4;
+using VectorInt4 = global::OpenTK.Vector4i;
 using Matrix2 = global::OpenTK.Matrix2;
 using Matrix3 = global::OpenTK.Matrix3;
 using Matrix4 = global::OpenTK.Matrix4;
@@ -282,16 +282,6 @@ namespace XamCore.ModelIO {
 		{
 			this.MinimumExtent = minimumExtent;
 			this.MaximumExtent = maximumExtent;
-		}
-
-#if XAMCORE_4_0
-		public MDLVoxelIndexExtent (Vector4i minimumExtent, Vector4i maximumExtent)
-#else
-		public MDLVoxelIndexExtent2 (Vector4i minimumExtent, Vector4i maximumExtent)
-#endif
-		{
-			this.MinimumExtent = (VectorInt4) minimumExtent;
-			this.MaximumExtent = (VectorInt4) maximumExtent;
 		}
 	}
 
