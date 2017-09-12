@@ -445,7 +445,7 @@ namespace Introspection {
 				case "copyWithZone:":
 				case "mutableCopyWithZone:":
 					// Added in Xcode9 (i.e. only 64 bits) so skip 32 bits
-					return IntPtr.Size == 4;
+					return !TestRuntime.CheckXcodeVersion (9,0);
 				}
 				break;
 			}
