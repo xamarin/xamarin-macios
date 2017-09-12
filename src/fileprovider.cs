@@ -184,11 +184,11 @@ namespace XamCore.FileProvider {
 
 		[Abstract]
 		[Export ("itemIdentifier")]
-		NSString Identifier { get; }
+		string Identifier { get; }
 
 		[Abstract]
 		[Export ("parentItemIdentifier")]
-		NSString ParentIdentifier { get; }
+		string ParentIdentifier { get; }
 
 		[Abstract]
 		[Export ("filename")]
@@ -289,11 +289,11 @@ namespace XamCore.FileProvider {
 
 		[Export ("signalEnumeratorForContainerItemIdentifier:completionHandler:")]
 		// Not Async'ified on purpose, because this can switch from app to extension.
-		void SignalEnumerator (NSString containerItemIdentifier, Action<NSError> completion);
+		void SignalEnumerator (string containerItemIdentifier, Action<NSError> completion);
 
 		// Not Async'ified on purpose, because the task must be accesed while the completion action is performing...
 		[Export ("registerURLSessionTask:forItemWithIdentifier:completionHandler:")]
-		void Register (NSUrlSessionTask task, NSString identifier, Action<NSError> completion);
+		void Register (NSUrlSessionTask task, string identifier, Action<NSError> completion);
 
 		[Export ("providerIdentifier")]
 		string ProviderIdentifier { get; }
@@ -334,6 +334,8 @@ namespace XamCore.FileProvider {
 		[return: NullAllowed]
 		NSFileProviderManager FromDomain (NSFileProviderDomain domain);
 	}
+
+	interface INSFileProviderServiceSource {}
 
 	[iOS (11,0)]
 	[Protocol]
