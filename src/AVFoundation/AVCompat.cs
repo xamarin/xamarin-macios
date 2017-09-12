@@ -68,6 +68,14 @@ namespace XamCore.AVFoundation {
 #endif
 
 #if !XAMCORE_4_0
+	partial class AVCaptureInputPort {
+
+		[Obsolete ("Valid instance of this type cannot be directly created.")]
+		public AVCaptureInputPort ()
+		{
+		}
+	}
+	
 	partial class AVAudioChannelLayout {
 
 		[Obsolete ("Valid instance of this type cannot be directly created.")]
