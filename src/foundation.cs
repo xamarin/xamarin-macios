@@ -15356,4 +15356,10 @@ namespace XamCore.Foundation
 		[Export ("stringFromUnit:")]
 		string ToString (NSUnit unit);
 	}
+
+	[iOS (6,0), Mac (10,8), Watch (2,0), TV (9,0)]
+	[BaseType (typeof (NSObject), Name = "NSXPCListenerEndpoint")]
+	interface NSXpcListenerEndpoint : NSSecureCoding
+	{
+	}
 }
