@@ -116,17 +116,6 @@ namespace Xamarin.iOS.Tasks
 			}
 			EnsureXamarinSdkRoot ();
 
-			Log.LogTaskName ("DetectSdkLocations");
-			Log.LogTaskProperty ("TargetFrameworkIdentifier", TargetFrameworkIdentifier);
-			Log.LogTaskProperty ("TargetArchitectures", TargetArchitectures);
-			Log.LogTaskProperty ("SdkVersion", SdkVersion);
-			Log.LogTaskProperty ("XamarinSdkRoot", XamarinSdkRoot);
-			Log.LogTaskProperty ("SdkRoot", SdkRoot);
-			Log.LogTaskProperty ("SdkDevPath", SdkDevPath);
-			Log.LogTaskProperty ("SdkUsrPath", SdkUsrPath);
-			Log.LogTaskProperty ("SdkPlatform", SdkPlatform);
-			Log.LogTaskProperty ("SdkIsSimulator", SdkIsSimulator);
-
 			return !Log.HasLoggedErrors;
 		}
 

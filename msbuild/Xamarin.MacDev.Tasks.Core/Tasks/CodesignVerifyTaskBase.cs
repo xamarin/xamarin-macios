@@ -58,10 +58,6 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("CodesignVerify");
-			Log.LogTaskProperty ("CodesignAllocate", CodesignAllocate);
-			Log.LogTaskProperty ("Resource", Resource);
-
 			EnvironmentVariables = new string[] {
 				"CODESIGN_ALLOCATE=" + CodesignAllocate
 			};

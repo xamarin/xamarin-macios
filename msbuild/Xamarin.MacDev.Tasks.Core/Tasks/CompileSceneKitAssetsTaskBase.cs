@@ -139,15 +139,6 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("CompileSceneKitAssets");
-			Log.LogTaskProperty ("IntermediateOutputPath", IntermediateOutputPath);
-			Log.LogTaskProperty ("ProjectDir", ProjectDir);
-			Log.LogTaskProperty ("ResourcePrefix", ResourcePrefix);
-			Log.LogTaskProperty ("SceneKitAssets", SceneKitAssets);
-			Log.LogTaskProperty ("SdkDevPath", SdkDevPath);
-			Log.LogTaskProperty ("SdkRoot", SdkRoot);
-			Log.LogTaskProperty ("SdkVersion", SdkVersion);
-
 			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 			var intermediate = Path.Combine (IntermediateOutputPath, ToolName);
 			var bundleResources = new List<ITaskItem> ();

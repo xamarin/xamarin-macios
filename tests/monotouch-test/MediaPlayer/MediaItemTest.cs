@@ -27,6 +27,8 @@ namespace MonoTouchFixtures.MediaPlayer {
 			if (Runtime.Arch != Arch.DEVICE)
 				Assert.Inconclusive ("This test only works on device (the simulator does not have an iPod Music library).");
 
+			TestRuntime.RequestMediaLibraryPermission (true);
+
 			using (var q = new MPMediaQuery ()) {
 				var items = q.Items;
 				if (items == null)

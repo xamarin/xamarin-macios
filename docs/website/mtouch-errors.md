@@ -560,7 +560,19 @@ linker. This will most likely result in native linker errors.
 
 The solution is to remove the `--dynamic-symbol-mode=linker` argument from the additional mtouch arguments in the project's Build options.
 
-<!-- 0116 - 0124: free to use -->
+### <a name="MT0116"/>MT0116: Aot files could not be found at the expected directory '{msymdir}'.
+
+<!-- 0117 - 0122: free to use -->
+
+### <a name="MT0123"/>MT0123: The current language was set to '{language}' according to the LANG environment variable (LANG={LANG}).
+
+No action is required, this message is purely informational.
+
+### <a name="MT0124"/>MT0124: Could not set the current language to '{lang}' (according to LANG={LANG}): {exception}
+
+This is a warning, indicating that the current language couldn't be set to the language in the error message.
+
+The current language will default to the system language.
 
 ### <a name="MT0125"/>MT0125: The --assembly-build-target command-line argument is ignored in the simulator.
 

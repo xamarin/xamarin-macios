@@ -36,10 +36,6 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			EmbeddedResources = new ITaskItem[BundleResources.Length];
 
-			Log.LogTaskName ("CreateEmbeddedResources");
-			Log.LogTaskProperty ("BundleResources", BundleResources);
-			Log.LogTaskProperty ("Prefix", Prefix);
-
 			for (int i = 0; i < BundleResources.Length; i++) {
 				var bundleResource = BundleResources[i];
 

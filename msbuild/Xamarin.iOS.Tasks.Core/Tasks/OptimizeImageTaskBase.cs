@@ -86,12 +86,8 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("OptimizeImage");
-			Log.LogTaskProperty ("InputImages", InputImages);
-			Log.LogTaskProperty ("OutputImages", OutputImages);
-			Log.LogTaskProperty ("SdkDevPath", SdkDevPath);
-
 			var result = true;
+
 			for (var index = 0; index < this.InputImages.Length && index < this.OutputImages.Length; index++) {
 				this.inputImage = this.InputImages[index];
 				this.outputImage = this.OutputImages[index];

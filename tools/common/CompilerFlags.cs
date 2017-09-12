@@ -45,21 +45,13 @@ namespace Xamarin.Utils
 			}
 		}
 
-		public void ReferenceSymbol (string symbol)
-		{
-			if (UnresolvedSymbols == null)
-				UnresolvedSymbols = new HashSet<string> ();
-
-			UnresolvedSymbols.Add (symbol);
-		}
-
 		public void ReferenceSymbols (IEnumerable<Symbol> symbols)
 		{
 			if (UnresolvedSymbols == null)
 				UnresolvedSymbols = new HashSet<string> ();
 
 			foreach (var symbol in symbols)
-				UnresolvedSymbols.Add (symbol.Name);
+				UnresolvedSymbols.Add (symbol.Prefix + symbol.Name);
 		}
 
 		public void AddDefine (string define)
@@ -249,7 +241,7 @@ namespace Xamarin.Utils
 
 			if (UnresolvedSymbols != null) {
 				foreach (var symbol in UnresolvedSymbols)
-					args.Append (" -u ").Append (StringUtils.Quote ("_" + symbol));
+					args.Append (" -u ").Append (StringUtils.Quote (symbol));
 			}
 
 			if (SourceFiles != null) {

@@ -44,13 +44,6 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("CollectBundleResources");
-			Log.LogTaskProperty ("BundleResources", BundleResources);
-			Log.LogTaskProperty ("OptimizePropertyLists", OptimizePropertyLists);
-			Log.LogTaskProperty ("OptimizePNGs", OptimizePNGs);
-			Log.LogTaskProperty ("ProjectDir", ProjectDir);
-			Log.LogTaskProperty ("ResourcePrefix", ResourcePrefix);
-
 			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 			var bundleResources = new List<ITaskItem> ();
 

@@ -8,6 +8,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -128,6 +129,16 @@ namespace Xamarin.Bundler {
 		public static int Concurrency {
 			get {
 				return Jobs == 0 ? Environment.ProcessorCount : Jobs;
+			}
+		}
+
+		public static bool SupportsModernObjectiveC {
+			get {
+#if MONOMAC || MMP
+				return Is64Bit;
+#else
+				return true;
+#endif
 			}
 		}
 
@@ -348,5 +359,36 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		static void SetCurrentLanguage ()
+		{
+			// There's no way to change the current culture from the command-line
+			// without changing the system settings, so honor LANG if set.
+			// This eases testing mtouch/mmp with different locales significantly,
+			// and won't run into issues where changing the system language leaves
+			// the tester with an incomprehensible system.
+			var lang_variable = Environment.GetEnvironmentVariable ("LANG");
+			if (string.IsNullOrEmpty (lang_variable))
+				return;
+
+			// Mimic how mono transforms LANG into a culture name:
+			// https://github.com/mono/mono/blob/fc6e8a27fc55319141ceb29fbb7b5c63a9030b5e/mono/metadata/locales.c#L568-L576
+			var lang = lang_variable;
+			var idx = lang.IndexOf ('.');
+			if (idx >= 0)
+				lang = lang.Substring (0, idx);
+			idx = lang.IndexOf ('@');
+			if (idx >= 0)
+				lang = lang.Substring (0, idx);
+			lang = lang.Replace ('_', '-');
+			try {
+				var culture = CultureInfo.GetCultureInfo (lang);
+				if (culture != null) {
+					CultureInfo.DefaultThreadCurrentCulture = culture;
+					ErrorHelper.Warning (123, $"The current language was set to '{culture.DisplayName}' according to the LANG environment variable (LANG={lang_variable}).");
+				}
+			} catch (Exception e) {
+				ErrorHelper.Warning (124, e, $"Could not set the current language to '{lang}' (according to LANG={lang_variable}): {e.Message}");
+			}
+		}
 	}
 }

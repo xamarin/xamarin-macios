@@ -30,9 +30,6 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("GenerateBundleName");
-			Log.LogTaskProperty ("ProjectName", ProjectName);
-
 			if (string.IsNullOrEmpty (ProjectName)) {
 				Log.LogError ("  AssemblyPath cannot be null or empty");
 				return false;
