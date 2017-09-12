@@ -684,6 +684,7 @@
     <Compile Include="UIKit\UISpringLoadedInteractionSupportingTest.cs" />
     <Compile Include="PdfKit\PdfAnnotationTest.cs" />
     <Compile Include="FileProvider\NSFileProviderPageTest.cs" />
+    <Compile Include="UIKit\UIPasteConfigurationSupportingTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
