@@ -233,7 +233,9 @@ namespace Introspection {
 				case "shouldUpdateFocusInContext:":
 				case "updateFocusIfNeeded":
 				case "canBecomeFocused":
+#if !__TVOS__
 				case "preferredFocusedView":
+#endif
 					int major = declaredType.Name == "SKNode" ? 8 : 9;
 					if (!TestRuntime.CheckXcodeVersion (major, 0))
 						return true;
