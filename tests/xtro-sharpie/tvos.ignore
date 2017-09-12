@@ -101,6 +101,9 @@
 !missing-selector! CKContainer::fetchAllLongLivedOperationIDsWithCompletionHandler: not bound
 !missing-selector! CKContainer::fetchLongLivedOperationWithID:completionHandler: not bound
 
+## deprecated API
+!missing-selector! CKContainer::discoverAllContactUserInfosWithCompletionHandler: not bound
+
 
 # CoreImage
 
@@ -297,6 +300,9 @@
 !missing-selector! MPNowPlayingInfoCenter::playbackState not bound
 !missing-selector! MPNowPlayingInfoCenter::setPlaybackState: not bound
 
+## marked as available in tvOS 11 but the member is not and using a type, MPMusicPlayerQueueDescriptor, that's not available
+!missing-protocol! MPSystemMusicPlayerController not bound
+
 
 # ReplayKit
 
@@ -382,109 +388,16 @@
 ## and that also means the (enum/returned) type is unused
 !missing-enum! UIPreferredPresentationStyle not bound
 
+## Added on UIAccessibility
+!missing-selector! NSObject::accessibilityHeaderElements not bound
+!missing-selector! NSObject::setAccessibilityHeaderElements: not bound
+
 
 # OpenTK
 
 ## never been exposed in XI either
 !missing-pinvoke! CVOpenGLESTextureCacheGetTypeID is not bound
 !missing-pinvoke! CVOpenGLESTextureGetTypeID is not bound
-
-## duplicates by design
-!duplicate-type-name! ActiveAttribType enum exists as both OpenTK.Graphics.ES30.ActiveAttribType and OpenTK.Graphics.ES20.ActiveAttribType
-!duplicate-type-name! ActiveUniformType enum exists as both OpenTK.Graphics.ES30.ActiveUniformType and OpenTK.Graphics.ES20.ActiveUniformType
-!duplicate-type-name! All enum exists as both OpenTK.Graphics.ES20.All and OpenTK.Graphics.ES11.All
-!duplicate-type-name! All enum exists as both OpenTK.Graphics.ES30.All and OpenTK.Graphics.ES11.All
-!duplicate-type-name! BeginMode enum exists as both OpenTK.Graphics.ES20.BeginMode and OpenTK.Graphics.ES11.BeginMode
-!duplicate-type-name! BeginMode enum exists as both OpenTK.Graphics.ES30.BeginMode and OpenTK.Graphics.ES11.BeginMode
-!duplicate-type-name! BlendEquationMode enum exists as both OpenTK.Graphics.ES30.BlendEquationMode and OpenTK.Graphics.ES20.BlendEquationMode
-!duplicate-type-name! BlendEquationSeparate enum exists as both OpenTK.Graphics.ES30.BlendEquationSeparate and OpenTK.Graphics.ES20.BlendEquationSeparate
-!duplicate-type-name! BlendSubtract enum exists as both OpenTK.Graphics.ES30.BlendSubtract and OpenTK.Graphics.ES20.BlendSubtract
-!duplicate-type-name! BlendingFactorDest enum exists as both OpenTK.Graphics.ES20.BlendingFactorDest and OpenTK.Graphics.ES11.BlendingFactorDest
-!duplicate-type-name! BlendingFactorDest enum exists as both OpenTK.Graphics.ES30.BlendingFactorDest and OpenTK.Graphics.ES11.BlendingFactorDest
-!duplicate-type-name! BlendingFactorSrc enum exists as both OpenTK.Graphics.ES20.BlendingFactorSrc and OpenTK.Graphics.ES11.BlendingFactorSrc
-!duplicate-type-name! BlendingFactorSrc enum exists as both OpenTK.Graphics.ES30.BlendingFactorSrc and OpenTK.Graphics.ES11.BlendingFactorSrc
-!duplicate-type-name! Boolean enum exists as both OpenTK.Graphics.ES20.Boolean and OpenTK.Graphics.ES11.Boolean
-!duplicate-type-name! Boolean enum exists as both OpenTK.Graphics.ES30.Boolean and OpenTK.Graphics.ES11.Boolean
-!duplicate-type-name! BufferObjects enum exists as both OpenTK.Graphics.ES20.BufferObjects and OpenTK.Graphics.ES11.BufferObjects
-!duplicate-type-name! BufferObjects enum exists as both OpenTK.Graphics.ES30.BufferObjects and OpenTK.Graphics.ES11.BufferObjects
-!duplicate-type-name! BufferParameterName enum exists as both OpenTK.Graphics.ES30.BufferParameterName and OpenTK.Graphics.ES20.BufferParameterName
-!duplicate-type-name! BufferTarget enum exists as both OpenTK.Graphics.ES30.BufferTarget and OpenTK.Graphics.ES20.BufferTarget
-!duplicate-type-name! BufferUsage enum exists as both OpenTK.Graphics.ES30.BufferUsage and OpenTK.Graphics.ES20.BufferUsage
-!duplicate-type-name! ClearBufferMask enum exists as both OpenTK.Graphics.ES20.ClearBufferMask and OpenTK.Graphics.ES11.ClearBufferMask
-!duplicate-type-name! ClearBufferMask enum exists as both OpenTK.Graphics.ES30.ClearBufferMask and OpenTK.Graphics.ES11.ClearBufferMask
-!duplicate-type-name! CullFaceMode enum exists as both OpenTK.Graphics.ES20.CullFaceMode and OpenTK.Graphics.ES11.CullFaceMode
-!duplicate-type-name! CullFaceMode enum exists as both OpenTK.Graphics.ES30.CullFaceMode and OpenTK.Graphics.ES11.CullFaceMode
-!duplicate-type-name! DataType enum exists as both OpenTK.Graphics.ES20.DataType and OpenTK.Graphics.ES11.DataType
-!duplicate-type-name! DataType enum exists as both OpenTK.Graphics.ES30.DataType and OpenTK.Graphics.ES11.DataType
-!duplicate-type-name! DepthFunction enum exists as both OpenTK.Graphics.ES30.DepthFunction and OpenTK.Graphics.ES20.DepthFunction
-!duplicate-type-name! DrawElementsType enum exists as both OpenTK.Graphics.ES30.DrawElementsType and OpenTK.Graphics.ES20.DrawElementsType
-!duplicate-type-name! EnableCap enum exists as both OpenTK.Graphics.ES20.EnableCap and OpenTK.Graphics.ES11.EnableCap
-!duplicate-type-name! EnableCap enum exists as both OpenTK.Graphics.ES30.EnableCap and OpenTK.Graphics.ES11.EnableCap
-!duplicate-type-name! ErrorCode enum exists as both OpenTK.Graphics.ES20.ErrorCode and OpenTK.Graphics.ES11.ErrorCode
-!duplicate-type-name! ErrorCode enum exists as both OpenTK.Graphics.ES30.ErrorCode and OpenTK.Graphics.ES11.ErrorCode
-!duplicate-type-name! FramebufferErrorCode enum exists as both OpenTK.Graphics.ES30.FramebufferErrorCode and OpenTK.Graphics.ES20.FramebufferErrorCode
-!duplicate-type-name! FramebufferObject enum exists as both OpenTK.Graphics.ES30.FramebufferObject and OpenTK.Graphics.ES20.FramebufferObject
-!duplicate-type-name! FramebufferParameterName enum exists as both OpenTK.Graphics.ES30.FramebufferParameterName and OpenTK.Graphics.ES20.FramebufferParameterName
-!duplicate-type-name! FramebufferSlot enum exists as both OpenTK.Graphics.ES30.FramebufferSlot and OpenTK.Graphics.ES20.FramebufferSlot
-!duplicate-type-name! FramebufferTarget enum exists as both OpenTK.Graphics.ES30.FramebufferTarget and OpenTK.Graphics.ES20.FramebufferTarget
-!duplicate-type-name! FrontFaceDirection enum exists as both OpenTK.Graphics.ES20.FrontFaceDirection and OpenTK.Graphics.ES11.FrontFaceDirection
-!duplicate-type-name! FrontFaceDirection enum exists as both OpenTK.Graphics.ES30.FrontFaceDirection and OpenTK.Graphics.ES11.FrontFaceDirection
-!duplicate-type-name! GetPName enum exists as both OpenTK.Graphics.ES20.GetPName and OpenTK.Graphics.ES11.GetPName
-!duplicate-type-name! GetPName enum exists as both OpenTK.Graphics.ES30.GetPName and OpenTK.Graphics.ES11.GetPName
-!duplicate-type-name! GetTextureParameter enum exists as both OpenTK.Graphics.ES20.GetTextureParameter and OpenTK.Graphics.ES11.GetTextureParameter
-!duplicate-type-name! GetTextureParameter enum exists as both OpenTK.Graphics.ES30.GetTextureParameter and OpenTK.Graphics.ES11.GetTextureParameter
-!duplicate-type-name! HintMode enum exists as both OpenTK.Graphics.ES20.HintMode and OpenTK.Graphics.ES11.HintMode
-!duplicate-type-name! HintMode enum exists as both OpenTK.Graphics.ES30.HintMode and OpenTK.Graphics.ES11.HintMode
-!duplicate-type-name! HintTarget enum exists as both OpenTK.Graphics.ES20.HintTarget and OpenTK.Graphics.ES11.HintTarget
-!duplicate-type-name! HintTarget enum exists as both OpenTK.Graphics.ES30.HintTarget and OpenTK.Graphics.ES11.HintTarget
-!duplicate-type-name! OpenGlEsCoreVersions enum exists as both OpenTK.Graphics.ES20.OpenGlEsCoreVersions and OpenTK.Graphics.ES11.OpenGlEsCoreVersions
-!duplicate-type-name! OpenGlEsCoreVersions enum exists as both OpenTK.Graphics.ES30.OpenGlEsCoreVersions and OpenTK.Graphics.ES11.OpenGlEsCoreVersions
-!duplicate-type-name! OpenGlescoreVersions enum exists as both OpenTK.Graphics.ES20.OpenGlescoreVersions and OpenTK.Graphics.ES11.OpenGlescoreVersions
-!duplicate-type-name! PixelFormat enum exists as both OpenTK.Graphics.ES20.PixelFormat and OpenTK.Graphics.ES11.PixelFormat
-!duplicate-type-name! PixelFormat enum exists as both OpenTK.Graphics.ES30.PixelFormat and OpenTK.Graphics.ES11.PixelFormat
-!duplicate-type-name! PixelInternalFormat enum exists as both OpenTK.Graphics.ES20.PixelInternalFormat and OpenTK.Graphics.ES11.PixelInternalFormat
-!duplicate-type-name! PixelInternalFormat enum exists as both OpenTK.Graphics.ES30.PixelInternalFormat and OpenTK.Graphics.ES11.PixelInternalFormat
-!duplicate-type-name! PixelStoreParameter enum exists as both OpenTK.Graphics.ES20.PixelStoreParameter and OpenTK.Graphics.ES11.PixelStoreParameter
-!duplicate-type-name! PixelStoreParameter enum exists as both OpenTK.Graphics.ES30.PixelStoreParameter and OpenTK.Graphics.ES11.PixelStoreParameter
-!duplicate-type-name! PixelType enum exists as both OpenTK.Graphics.ES20.PixelType and OpenTK.Graphics.ES11.PixelType
-!duplicate-type-name! PixelType enum exists as both OpenTK.Graphics.ES30.PixelType and OpenTK.Graphics.ES11.PixelType
-!duplicate-type-name! ProgramParameter enum exists as both OpenTK.Graphics.ES30.ProgramParameter and OpenTK.Graphics.ES20.ProgramParameter
-!duplicate-type-name! ReadFormat enum exists as both OpenTK.Graphics.ES30.ReadFormat and OpenTK.Graphics.ES20.ReadFormat
-!duplicate-type-name! RenderbufferInternalFormat enum exists as both OpenTK.Graphics.ES30.RenderbufferInternalFormat and OpenTK.Graphics.ES20.RenderbufferInternalFormat
-!duplicate-type-name! RenderbufferParameterName enum exists as both OpenTK.Graphics.ES30.RenderbufferParameterName and OpenTK.Graphics.ES20.RenderbufferParameterName
-!duplicate-type-name! RenderbufferTarget enum exists as both OpenTK.Graphics.ES30.RenderbufferTarget and OpenTK.Graphics.ES20.RenderbufferTarget
-!duplicate-type-name! SeparateBlendFunctions enum exists as both OpenTK.Graphics.ES30.SeparateBlendFunctions and OpenTK.Graphics.ES20.SeparateBlendFunctions
-!duplicate-type-name! ShaderBinary enum exists as both OpenTK.Graphics.ES30.ShaderBinary and OpenTK.Graphics.ES20.ShaderBinary
-!duplicate-type-name! ShaderBinaryFormat enum exists as both OpenTK.Graphics.ES30.ShaderBinaryFormat and OpenTK.Graphics.ES20.ShaderBinaryFormat
-!duplicate-type-name! ShaderParameter enum exists as both OpenTK.Graphics.ES30.ShaderParameter and OpenTK.Graphics.ES20.ShaderParameter
-!duplicate-type-name! ShaderPrecision enum exists as both OpenTK.Graphics.ES30.ShaderPrecision and OpenTK.Graphics.ES20.ShaderPrecision
-!duplicate-type-name! ShaderPrecisionSpecifiedTypes enum exists as both OpenTK.Graphics.ES30.ShaderPrecisionSpecifiedTypes and OpenTK.Graphics.ES20.ShaderPrecisionSpecifiedTypes
-!duplicate-type-name! ShaderSource enum exists as both OpenTK.Graphics.ES30.ShaderSource and OpenTK.Graphics.ES20.ShaderSource
-!duplicate-type-name! ShaderType enum exists as both OpenTK.Graphics.ES30.ShaderType and OpenTK.Graphics.ES20.ShaderType
-!duplicate-type-name! Shaders enum exists as both OpenTK.Graphics.ES30.Shaders and OpenTK.Graphics.ES20.Shaders
-!duplicate-type-name! StencilFunction enum exists as both OpenTK.Graphics.ES30.StencilFunction and OpenTK.Graphics.ES20.StencilFunction
-!duplicate-type-name! StencilOp enum exists as both OpenTK.Graphics.ES20.StencilOp and OpenTK.Graphics.ES11.StencilOp
-!duplicate-type-name! StencilOp enum exists as both OpenTK.Graphics.ES30.StencilOp and OpenTK.Graphics.ES11.StencilOp
-!duplicate-type-name! StringName enum exists as both OpenTK.Graphics.ES20.StringName and OpenTK.Graphics.ES11.StringName
-!duplicate-type-name! StringName enum exists as both OpenTK.Graphics.ES30.StringName and OpenTK.Graphics.ES11.StringName
-!duplicate-type-name! TextureMagFilter enum exists as both OpenTK.Graphics.ES20.TextureMagFilter and OpenTK.Graphics.ES11.TextureMagFilter
-!duplicate-type-name! TextureMagFilter enum exists as both OpenTK.Graphics.ES30.TextureMagFilter and OpenTK.Graphics.ES11.TextureMagFilter
-!duplicate-type-name! TextureMinFilter enum exists as both OpenTK.Graphics.ES20.TextureMinFilter and OpenTK.Graphics.ES11.TextureMinFilter
-!duplicate-type-name! TextureMinFilter enum exists as both OpenTK.Graphics.ES30.TextureMinFilter and OpenTK.Graphics.ES11.TextureMinFilter
-!duplicate-type-name! TextureParameterName enum exists as both OpenTK.Graphics.ES20.TextureParameterName and OpenTK.Graphics.ES11.TextureParameterName
-!duplicate-type-name! TextureParameterName enum exists as both OpenTK.Graphics.ES30.TextureParameterName and OpenTK.Graphics.ES11.TextureParameterName
-!duplicate-type-name! TextureTarget enum exists as both OpenTK.Graphics.ES30.TextureTarget and OpenTK.Graphics.ES20.TextureTarget
-!duplicate-type-name! TextureUnit enum exists as both OpenTK.Graphics.ES20.TextureUnit and OpenTK.Graphics.ES11.TextureUnit
-!duplicate-type-name! TextureUnit enum exists as both OpenTK.Graphics.ES30.TextureUnit and OpenTK.Graphics.ES11.TextureUnit
-!duplicate-type-name! TextureWrapMode enum exists as both OpenTK.Graphics.ES20.TextureWrapMode and OpenTK.Graphics.ES11.TextureWrapMode
-!duplicate-type-name! TextureWrapMode enum exists as both OpenTK.Graphics.ES30.TextureWrapMode and OpenTK.Graphics.ES11.TextureWrapMode
-!duplicate-type-name! UniformTypes enum exists as both OpenTK.Graphics.ES30.UniformTypes and OpenTK.Graphics.ES20.UniformTypes
-!duplicate-type-name! Unknown enum exists as both OpenTK.Graphics.ES20.Unknown and OpenTK.Graphics.ES11.Unknown
-!duplicate-type-name! Unknown enum exists as both OpenTK.Graphics.ES30.Unknown and OpenTK.Graphics.ES11.Unknown
-!duplicate-type-name! VertexArrays enum exists as both OpenTK.Graphics.ES30.VertexArrays and OpenTK.Graphics.ES20.VertexArrays
-!duplicate-type-name! VertexAttribParameter enum exists as both OpenTK.Graphics.ES30.VertexAttribParameter and OpenTK.Graphics.ES20.VertexAttribParameter
-!duplicate-type-name! VertexAttribPointerParameter enum exists as both OpenTK.Graphics.ES30.VertexAttribPointerParameter and OpenTK.Graphics.ES20.VertexAttribPointerParameter
-!duplicate-type-name! VertexAttribPointerType enum exists as both OpenTK.Graphics.ES30.VertexAttribPointerType and OpenTK.Graphics.ES20.VertexAttribPointerType
 
 
 # Non-Apple

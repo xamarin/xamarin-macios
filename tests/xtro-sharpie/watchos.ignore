@@ -167,6 +167,9 @@ AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions:
 ## and that also means the (enum/returned) type is unused
 !missing-enum! UIPreferredPresentationStyle not bound
 
+## UITraitCollection is not available on watchOS
+!missing-selector! +UIColor::colorNamed:inBundle:compatibleWithTraitCollection: not bound
+
 
 # WatchConnectivity
 
