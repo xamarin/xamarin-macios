@@ -10992,13 +10992,11 @@ namespace XamCore.AVFoundation {
 		IntPtr Constructor (AVQueuePlayer player, AVPlayerItem itemToLoop, CMTimeRange loopRange);
 
 #if !XAMCORE_4_0 // This API got introduced in Xcode 8.0 binding but is not currently present nor in Xcode 8.3 or Xcode 9.0 needs research
-		[Internal]
-		[Export ("disableLooping")]
-		void _DisableLooping ();
-#else
+		[PostSnippet ("loopingEnabled = false;")]
+#endif
 		[Export ("disableLooping")]
 		void DisableLooping ();
-#endif
+
 		[Export ("loopCount")]
 		nint LoopCount { get; }
 

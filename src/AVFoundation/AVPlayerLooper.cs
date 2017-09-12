@@ -40,12 +40,6 @@ namespace XamCore.AVFoundation {
 				return loopingEnabled;
 			}
 		}
-
-		public virtual void DisableLooping () {
-			_DisableLooping ();
-			// make sure that looping enabled is consistent.
-			loopingEnabled = false;
-		}
 #endif
 	}
 }
