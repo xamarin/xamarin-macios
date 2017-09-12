@@ -875,10 +875,9 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("cnnConvolutionDescriptorWithKernelWidth:kernelHeight:inputFeatureChannels:outputFeatureChannels:")]
 		MPSCnnConvolutionDescriptor CreateCnnConvolutionDescriptor (nuint kernelWidth, nuint kernelHeight, nuint inputFeatureChannels, nuint outputFeatureChannels);
 
-		//FIXME: float* -(void)setBatchNormalizationParametersForInferenceWithMean:(const float * _Nonnull)mean variance:(const float * _Nonnull)variance gamma:(const float * _Nullable)gamma beta:(const float * _Nullable)beta epsilon:(const float)epsilon __attribute__((availability(tvos, introduced=11.0))) __attribute__((availability(ios, introduced=11.0))) __attribute__((availability(macos, introduced=10.13)));
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("setBatchNormalizationParametersForInferenceWithMean:variance:gamma:beta:epsilon:")]
-		unsafe void SetBatchNormalizationParameters (IntPtr /* float* */ mean, IntPtr /* float* */ variance, [NullAllowed] IntPtr /* float* */ gamma, [NullAllowed] IntPtr /* float* */ beta, float epsilon);
+		void SetBatchNormalizationParameters (IntPtr /* float* */ mean, IntPtr /* float* */ variance, [NullAllowed] IntPtr /* float* */ gamma, [NullAllowed] IntPtr /* float* */ beta, float epsilon);
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("setNeuronType:parameterA:parameterB:")]
@@ -1276,25 +1275,21 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("setPurgeableState:")]
 		MPSPurgeableState SetPurgeableState (MPSPurgeableState state);
 
-		//FIXME: Code behind -(void)readBytes:(void * _Nonnull)dataBytes dataLayout:(MPSDataLayout)dataLayout bytesPerRow:(NSUInteger)bytesPerRow region:(MTLRegion)region featureChannelInfo:(MPSImageReadWriteParams)featureChannelInfo imageIndex:(NSUInteger)imageIndex __attribute__((availability(tvos, introduced=11.0))) __attribute__((availability(ios, introduced=11.0))) __attribute__((availability(macos, introduced=10.13)));
 		[TV (11,0), iOS (11,0)]
 		[Export ("readBytes:dataLayout:bytesPerRow:region:featureChannelInfo:imageIndex:")]
-		void ReadBytes (IntPtr dataBytes, MPSDataLayout dataLayout, nuint bytesPerRow, MTLRegion region, MPSImageReadWriteParams featureChannelInfo, nuint imageIndex);
+		void ReadBytes (IntPtr /* void* */ dataBytes, MPSDataLayout dataLayout, nuint bytesPerRow, MTLRegion region, MPSImageReadWriteParams featureChannelInfo, nuint imageIndex);
 
-		//FIXME: Code behind -(void)writeBytes:(const void * _Nonnull)dataBytes dataLayout:(MPSDataLayout)dataLayout bytesPerRow:(NSUInteger)bytesPerRow region:(MTLRegion)region featureChannelInfo:(MPSImageReadWriteParams)featureChannelInfo imageIndex:(NSUInteger)imageIndex __attribute__((availability(tvos, introduced=11.0))) __attribute__((availability(ios, introduced=11.0))) __attribute__((availability(macos, introduced=10.13)));
 		[TV (11,0), iOS (11,0)]
 		[Export ("writeBytes:dataLayout:bytesPerRow:region:featureChannelInfo:imageIndex:")]
-		void WriteBytes (IntPtr dataBytes, MPSDataLayout dataLayout, nuint bytesPerRow, MTLRegion region, MPSImageReadWriteParams featureChannelInfo, nuint imageIndex);
+		void WriteBytes (IntPtr /* void* */ dataBytes, MPSDataLayout dataLayout, nuint bytesPerRow, MTLRegion region, MPSImageReadWriteParams featureChannelInfo, nuint imageIndex);
 
-		//FIXME: Code behind -(void)readBytes:(void * _Nonnull)dataBytes dataLayout:(MPSDataLayout)dataLayout imageIndex:(NSUInteger)imageIndex __attribute__((availability(tvos, introduced=11.0))) __attribute__((availability(ios, introduced=11.0))) __attribute__((availability(macos, introduced=10.13)));
 		[TV (11,0), iOS (11,0)]
 		[Export ("readBytes:dataLayout:imageIndex:")]
-		void ReadBytes (IntPtr dataBytes, MPSDataLayout dataLayout, nuint imageIndex);
+		void ReadBytes (IntPtr /* void* */ dataBytes, MPSDataLayout dataLayout, nuint imageIndex);
 
-		//FIXME: Code behind -(void)writeBytes:(const void * _Nonnull)dataBytes dataLayout:(MPSDataLayout)dataLayout imageIndex:(NSUInteger)imageIndex __attribute__((availability(tvos, introduced=11.0))) __attribute__((availability(ios, introduced=11.0))) __attribute__((availability(macos, introduced=10.13)));
 		[TV (11,0), iOS (11,0)]
 		[Export ("writeBytes:dataLayout:imageIndex:")]
-		void WriteBytes (IntPtr dataBytes, MPSDataLayout dataLayout, nuint imageIndex);
+		void WriteBytes (IntPtr /* void* */ dataBytes, MPSDataLayout dataLayout, nuint imageIndex);
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13, onlyOn64: true)]
@@ -1387,11 +1382,10 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("matrixDescriptorWithRows:columns:matrices:rowBytes:matrixBytes:dataType:")]
 		MPSMatrixDescriptor GetMatrixDescriptor (nuint rows, nuint columns, nuint matrices, nuint rowBytes, nuint matrixBytes, MPSDataType dataType);
 
-		//FIXME: Method name
-		//[TV (11,0), iOS (11,0)]
-		//[Static]
-		//[Export ("rowBytesForColumns:dataType:")]
-		//nuint GetRowBytes (nuint columns, MPSDataType dataType);
+		[TV (11,0), iOS (11,0)]
+		[Static]
+		[Export ("rowBytesForColumns:dataType:")]
+		nuint GetRowBytesForColumns (nuint columns, MPSDataType dataType);
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13, onlyOn64: true)]
@@ -1825,18 +1819,16 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("keypointRangeInfo")]
 		MPSImageKeypointRangeInfo KeypointRangeInfo { get; }
 
-		//FIXME: code-behind -(instancetype _Nonnull)initWithDevice:(id<MTLDevice> _Nonnull)device info:(const MPSImageKeypointRangeInfo * _Nonnull)info __attribute__((objc_designated_initializer));
 		[Export ("initWithDevice:info:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, /* MPSImageKeypointRangeInfo* */ IntPtr info);
+		IntPtr Constructor (IMTLDevice device, MPSImageKeypointRangeInfo info);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
 
-		//FIXME: Code-behind  -(void)encodeToCommandBuffer:(id<MTLCommandBuffer> _Nonnull)commandBuffer sourceTexture:(id<MTLTexture> _Nonnull)source regions:(const MTLRegion * _Nonnull)regions numberOfRegions:(NSUInteger)numberOfRegions keypointCountBuffer:(id<MTLBuffer> _Nonnull)keypointCountBuffer keypointCountBufferOffset:(NSUInteger)keypointCountBufferOffset keypointDataBuffer:(id<MTLBuffer> _Nonnull)keypointDataBuffer keypointDataBufferOffset:(NSUInteger)keypointDataBufferOffset;
 		[Export ("encodeToCommandBuffer:sourceTexture:regions:numberOfRegions:keypointCountBuffer:keypointCountBufferOffset:keypointDataBuffer:keypointDataBufferOffset:")]
-		unsafe void Encode (IMTLCommandBuffer commandBuffer, IMTLTexture source, /* MTLRegion* */ IntPtr regions, nuint numberOfRegions, IMTLBuffer keypointCountBuffer, nuint keypointCountBufferOffset, IMTLBuffer keypointDataBuffer, nuint keypointDataBufferOffset);
+		void Encode (IMTLCommandBuffer commandBuffer, IMTLTexture source, MTLRegion regions, nuint numberOfRegions, IMTLBuffer keypointCountBuffer, nuint keypointCountBufferOffset, IMTLBuffer keypointDataBuffer, nuint keypointDataBufferOffset);
 	}
 	
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -1909,9 +1901,8 @@ namespace XamCore.MetalPerformanceShaders {
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device);
 
-		//FIXME: code-behind @property (readwrite, nonatomic) const MPSScaleTransform * _Nullable scaleTransform;
 		[NullAllowed, Export ("scaleTransform", ArgumentSemantic.Assign)]
-		/* MPSScaleTransform* */ IntPtr ScaleTransform { get; set; }
+		MPSScaleTransform ScaleTransform { get; set; }
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
@@ -1990,9 +1981,6 @@ namespace XamCore.MetalPerformanceShaders {
 		[Static]
 		[Export ("paddingForTensorflowAveragePooling")]
 		MPSNnDefaultPadding PaddingForTensorflowAveragePooling ();
-
-		[Export ("label")]
-		string Label { get; }
 	}
 	
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -3191,7 +3179,6 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("descriptor")]
 		MPSCnnConvolutionDescriptor Descriptor { get; }
 
-		// @required -(void * _Nonnull)weights;
 		[Abstract]
 		[Export ("weights")]
 		IntPtr Weights { get; }
