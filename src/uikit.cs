@@ -6106,12 +6106,18 @@ namespace XamCore.UIKit {
 	[BaseType (typeof(NSObject))]
 	interface UIGraphicsRendererFormat : NSCopying
 	{
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'PreferredFormat' instead.")]
 		[Static]
 		[Export ("defaultFormat")]
 		UIGraphicsRendererFormat DefaultFormat { get; }
 	
 		[Export ("bounds")]
 		CGRect Bounds { get; }
+
+		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[Static]
+		[Export ("preferredFormat")]
+		UIGraphicsRendererFormat PreferredFormat { get; }
 	}
 
 	[iOS (10,0), TV (10,0)]
@@ -14402,6 +14408,23 @@ namespace XamCore.UIKit {
 		[iOS (11,0)]
 		[Export ("setNeedsUpdateOfScreenEdgesDeferringSystemGestures")]
 		void SetNeedsUpdateOfScreenEdgesDeferringSystemGestures ();
+
+		// UIHomeIndicatorAutoHidden (UIViewController) category
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[NullAllowed, Export ("childViewControllerForHomeIndicatorAutoHidden")]
+		UIViewController ChildViewControllerForHomeIndicatorAutoHidden { get; }
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("prefersHomeIndicatorAutoHidden")]
+		bool PrefersHomeIndicatorAutoHidden { get; }
+
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[Export ("setNeedsUpdateOfHomeIndicatorAutoHidden")]
+		void SetNeedsUpdateOfHomeIndicatorAutoHidden ();
 	}
 
 	[Since (7,0)]
