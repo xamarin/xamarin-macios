@@ -17,9 +17,21 @@ namespace XamCore.UIKit {
 
 	public static class UIDragDropSessionExtensions {
 
-		public static NSProgress LoadObjects (this IUIDropSession session, Type type, Action<INSItemProviderReading []> completion)
+		public static NSProgress LoadObjects<T> (this IUIDropSession session, Action<T []> completion) where T: NSObject, INSItemProviderReading
 		{
-			return session.LoadObjects (new Class (type), completion);
+			return session.LoadObjects (new Class (typeof (T)), (v) =>
+			{
+				var arr = v as T[];
+				if (arr == null && v != null) {
+					arr = new T [v.Length];
+					for (int i = 0; i < arr.Length; i++) {
+						if (v [i] != null)
+							arr [i] = Runtime.ConstructNSObject<T> (v [i].Handle);
+					}
+				}
+
+				completion (arr);
+			});
 		}
 
 		public static bool CanLoadObjects (this IUIDragDropSession session, Type type)

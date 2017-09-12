@@ -9712,11 +9712,6 @@ namespace XamCore.Foundation
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Async, Export ("loadObjectOfClass:completionHandler:")]
 		NSProgress LoadObject (Class aClass, Action<INSItemProviderReading, NSError> completionHandler);
-
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Async, Wrap ("LoadObject (new Class (type), completionHandler)")]
-		NSProgress LoadObject (Type type, Action<INSItemProviderReading, NSError> completionHandler);
-
 #if !MONOMAC
 		// NSItemProvider_UIKitAdditions category
 
