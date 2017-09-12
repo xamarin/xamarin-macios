@@ -683,6 +683,7 @@
     <Compile Include="ModelIO\MDLStereoscopicCameraTest.cs" />
     <Compile Include="UIKit\UISpringLoadedInteractionSupportingTest.cs" />
     <Compile Include="PdfKit\PdfAnnotationTest.cs" />
+    <Compile Include="FileProvider\NSFileProviderPageTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
@@ -753,6 +754,7 @@
     <Folder Include="ARKit\" />
     <Folder Include="CoreML\" />
     <Folder Include="PdfKit\" />
+    <Folder Include="FileProvider\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />
