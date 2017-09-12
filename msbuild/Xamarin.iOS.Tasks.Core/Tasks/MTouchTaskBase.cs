@@ -701,18 +701,20 @@ namespace Xamarin.iOS.Tasks
 
 		static string GetVerbosityLevel (int v) {
 			string result = "";
+			// The values here come from: https://github.com/mono/monodevelop/blob/143f9b6617123a0841a5cc5a2a4e13b309535792/main/src/core/MonoDevelop.Projects.Formats.MSBuild/MonoDevelop.Projects.MSBuild.Shared/RemoteBuildEngineMessages.cs#L186
+			// Assume 'Normal (2)' is the default verbosity (no change), and the other values follow from there.
 			switch (v) {
 			case 0:
-				result = "-q";
+				result = "-q -q -q -q";
 				break;
 			case 1:
-				result = "-v";
+				result = "-q -q";
 				break;
 			case 2:
-				result = "-v -v";
+				result = "";
 				break;
 			case 3:
-				result = "-v -v -v";
+				result = "-v -v";
 				break;
 			case 4:
 				result = "-v -v -v -v";
