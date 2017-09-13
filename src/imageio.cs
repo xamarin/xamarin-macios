@@ -1223,16 +1223,25 @@ namespace XamCore.ImageIO {
 		Disparity,
 	}
 
-	[Partial]
-	[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
+	[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
+	[Static]
+	[Internal]
+	interface CGImageAuxiliaryDataInfoKeys {
+		[Field ("kCGImageAuxiliaryDataInfoData")]
+		NSString DataKey { get; }
+
+		[Field ("kCGImageAuxiliaryDataInfoDataDescription")]
+		NSString DataDescriptionKey { get; }
+
+		[Field ("kCGImageAuxiliaryDataInfoMetadata")]
+		NSString MetadataKey { get; }
+	}
+
+	[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
+	[StrongDictionary ("CGImageAuxiliaryDataInfoKeys")]
 	interface CGImageAuxiliaryDataInfo {
-		[Internal, Field ("kCGImageAuxiliaryDataInfoData")]
-		IntPtr Data { get; }
 
-		[Internal, Field ("kCGImageAuxiliaryDataInfoDataDescription")]
-		IntPtr DataDescription { get; }
-
-		[Internal, Field ("kCGImageAuxiliaryDataInfoMetadata")]
-		IntPtr kMetadata { get; }
+		NSData Data { get; set; }
+		NSDictionary DataDescription { get; set; }
 	}
 }
