@@ -11,16 +11,19 @@
 
 using System;
 using System.ComponentModel;
+using XamCore.AVFoundation;
 using XamCore.CoreFoundation;
 using XamCore.CoreGraphics;
 using XamCore.CoreMedia;
 using XamCore.CoreVideo;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
+using XamCore.Metal;
 using XamCore.SpriteKit;
 using XamCore.SceneKit;
 using XamCore.UIKit;
 
+using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.NVector3;
 using Matrix3 = global::OpenTK.NMatrix3;
 using Matrix4 = global::OpenTK.NMatrix4;
@@ -186,6 +189,12 @@ namespace XamCore.ARKit {
 
 		[Export ("capturedImage")]
 		CVPixelBuffer CapturedImage { get; }
+
+		[NullAllowed, Export ("capturedDepthData", ArgumentSemantic.Strong)]
+		AVDepthData CapturedDepthData { get; }
+
+		[Export ("capturedDepthDataTimestamp")]
+		double CapturedDepthDataTimestamp { get; }
 
 		[Export ("camera", ArgumentSemantic.Copy)]
 		ARCamera Camera { get; }
@@ -508,6 +517,106 @@ namespace XamCore.ARKit {
 
 		[Field ("ARSCNDebugOptionShowFeaturePoints")]
 		SCNDebugOptions ShowFeaturePoints { get; }
+	}
+
+	[iOS (11,0)]
+	[NoWatch, NoTV, NoMac]
+	[Protocol]
+	interface ARTrackable {
+		[Abstract]
+		[Export ("isTracked")]
+		bool IsTracked { get; }
+	}
+
+	[iOS (11,0)]
+	[NoWatch, NoTV, NoMac]
+	[BaseType (typeof(ARConfiguration))]
+	interface ARFaceTrackingConfiguration {}
+
+	[iOS (11,0)]
+	[NoWatch, NoTV, NoMac]
+	[BaseType (typeof(ARAnchor))]
+	interface ARFaceAnchor : ARTrackable {
+		[Export ("geometry")]
+		ARFaceGeometry Geometry { get; }
+
+		/* Will come in next PR
+		// @property (readonly, nonatomic) NSDictionary<ARBlendShapeLocation,NSNumber *> * _Nonnull blendShapes;
+		[Export ("blendShapes")]
+		NSDictionary<NSString, NSNumber> BlendShapes { get; }
+		*/
+	}
+
+	[iOS (11,0)]
+	[NoWatch, NoTV, NoMac]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface ARFaceGeometry : NSCopying {
+		/* Will come in next PR
+		[Export ("initWithBlendShapes:")]
+		IntPtr Constructor (NSDictionary<NSString, NSNumber> blendShapes);
+		*/
+
+		[Export ("vertexCount")]
+		nuint VertexCount { get; }
+
+		// @property (readonly, nonatomic) const vector_float3 * _Nonnull vertices;
+		[Export ("vertices")]
+		Vector3 Vertices {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+
+		[Export ("textureCoordinateCount")]
+		nuint TextureCoordinateCount { get; }
+
+		[Export ("textureCoordinates")]
+		Vector2 TextureCoordinates {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+
+		[Export ("triangleCount")]
+		nuint TriangleCount { get; }
+
+		[Export ("triangleIndices")]
+		short TriangleIndices { get; }
+	}
+
+	[iOS (11,0)]
+	[NoWatch, NoTV, NoMac]
+	[BaseType (typeof(SCNGeometry))]
+	[DisableDefaultCtor]
+	interface ARSCNFaceGeometry {
+		[Static]
+		[Export ("faceGeometryWithDevice:")]
+		[return: NullAllowed]
+		ARSCNFaceGeometry CreateFaceGeometry (IMTLDevice device);
+
+		[Static]
+		[Export ("faceGeometryWithDevice:fillMesh:")]
+		[return: NullAllowed]
+		ARSCNFaceGeometry CreateFaceGeometry (IMTLDevice device, bool fillMesh);
+
+		[Export ("updateFromFaceGeometry:")]
+		void Update (ARFaceGeometry faceGeometry);
+	}
+
+	[iOS (11,0)]
+	[NoWatch, NoTV, NoMac]
+	[BaseType (typeof(ARLightEstimate))]
+	interface ARDirectionalLightEstimate {
+		[Export ("sphericalHarmonicsCoefficients", ArgumentSemantic.Copy)]
+		NSData SphericalHarmonicsCoefficients { get; }
+
+		[Export ("primaryLightDirection")]
+		Vector3 PrimaryLightDirection {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+
+		[Export ("primaryLightIntensity")]
+		nfloat PrimaryLightIntensity { get; }
 	}
 }
 
