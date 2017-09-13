@@ -33,6 +33,8 @@ namespace XamCore.TVServices {
 	public enum TVContentItemImageTrait : nuint {
 		UserInterfaceStyleLight = (1 << 8),
 		UserInterfaceStyleDark = (2 << 8),
+		ScreenScale1x = (1 << 12),
+		ScreenScale2x = (2 << 12),
 	}
 
 	static public class TVContentItemImageShapeExtensions {
