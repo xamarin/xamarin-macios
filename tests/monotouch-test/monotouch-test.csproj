@@ -650,6 +650,7 @@
     <Compile Include="AVFoundation\PlayerItemVideoOutputTest.cs" />
     <Compile Include="Simd\MatrixFloat2x2Test.cs" />
     <Compile Include="Simd\MatrixFloat3x3Test.cs" />
+    <Compile Include="Simd\MatrixFloat4x3Test.cs" />
     <Compile Include="Simd\MatrixFloat4x4Test.cs" />
     <Compile Include="Simd\VectorFloat3Test.cs" />
     <Compile Include="mono\ConfigTest.cs" />

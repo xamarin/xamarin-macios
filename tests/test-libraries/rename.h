@@ -57,6 +57,7 @@
 	#define x_mdltransformcomponent_get_local_transform object_x_mdltransformcomponent_get_local_transform
 	#define x_mdltransform_create_global_transform object_x_mdltransform_create_global_transform
 	#define x_get_matrix_float4x4 object_x_get_matrix_float4x4
+	#define x_get_matrix_float4x3 object_x_get_matrix_float4x3
 	#define x_get_matrix_float3x3 object_x_get_matrix_float3x3
 	#define x_get_matrix_float2x2 object_x_get_matrix_float2x2
 #elif PREFIX == 2
@@ -117,6 +118,7 @@
 	#define x_mdltransformcomponent_get_local_transform ar_x_mdltransformcomponent_get_local_transform
 	#define x_mdltransform_create_global_transform ar_x_mdltransform_create_global_transform
 	#define x_get_matrix_float4x4 ar_x_get_matrix_float4x4
+	#define x_get_matrix_float4x3 ar_x_get_matrix_float4x3
 	#define x_get_matrix_float3x3 ar_x_get_matrix_float3x3
 	#define x_get_matrix_float2x2 ar_x_get_matrix_float2x2
 #else
