@@ -12205,13 +12205,19 @@ namespace XamCore.AVFoundation {
 		CVPixelBuffer PreviewPixelBuffer { get; }
 
 		[NullAllowed, Export ("embeddedThumbnailPhotoFormat")]
-		NSDictionary<NSString, NSObject> EmbeddedThumbnailPhotoFormat { get; }
+		NSDictionary WeakEmbeddedThumbnailPhotoFormat { get; }
+
+		[Wrap ("WeakEmbeddedThumbnailPhotoFormat")]
+		AVVideoSettingsCompressed EmbeddedThumbnailPhotoFormat { get; }
 
 		[NullAllowed, Export ("depthData")]
 		AVDepthData DepthData { get; }
 
 		[Export ("metadata")]
-		NSDictionary<NSString, NSObject> Metadata { get; }
+		NSDictionary WeakMetadata { get; }
+
+		[Wrap ("WeakMetadata")]
+		CoreGraphics.CGImageProperties Properties { get; }
 
 		[NullAllowed, Export ("cameraCalibrationData")]
 		AVCameraCalibrationData CameraCalibrationData { get; }
