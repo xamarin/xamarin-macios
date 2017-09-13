@@ -2287,6 +2287,15 @@ namespace Xamarin.BindingMethods.Generator
 				}
 			);
 
+			data.Add (
+				new FunctionData {
+					Comment = " // MatrixFloat4x3 func ()",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.MatrixFloat4x3,
+				}
+			);
+
 			// We must expand functions with native types to their actual type as well.
 			for (int i = data.Count - 1; i >= 0; i--) {
 				if (!data [i].HasNativeType)
@@ -2362,6 +2371,13 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ("\t\t{0}{2}columns [i].b = {1}.columns [i] [1];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t\t{0}{2}columns [i].c = {1}.columns [i] [2];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t\t{0}{2}columns [i].d = {1}.columns [i] [3];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t}");
+				break;
+			case "MatrixFloat4x3":
+				writer.WriteLine ("\tfor (int i = 0; i < 4; i++) {");
+				writer.WriteLine ("\t\t{0}{2}columns [i].a = {1}.columns [i] [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t\t{0}{2}columns [i].b = {1}.columns [i] [1];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t\t{0}{2}columns [i].c = {1}.columns [i] [2];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t}");
 				break;
 			case "MDLAxisAlignedBoundingBox":
@@ -2484,6 +2500,13 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ("\t\t{0}.columns [i][1] = {1}{2}columns [i].b;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t\t{0}.columns [i][2] = {1}{2}columns [i].c;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t\t{0}.columns [i][3] = {1}{2}columns [i].d;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t}");
+				break;
+			case "MatrixFloat4x3":
+				writer.WriteLine ("\tfor (int i = 0; i < 4; i++) {");
+				writer.WriteLine ("\t\t{0}.columns [i][0] = {1}{2}columns [i].a;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t\t{0}.columns [i][1] = {1}{2}columns [i].b;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t\t{0}.columns [i][2] = {1}{2}columns [i].c;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t}");
 				break;
 			case "MDLAxisAlignedBoundingBox":
@@ -3058,6 +3081,15 @@ namespace Xamarin.BindingMethods.Generator
 				ManagedType = "MatrixFloat4x4",
 				NativeType = "matrix_float4x4",
 				NativeWrapperType = "struct MatrixFloat4x4",
+				RequireMarshal = true,
+				IsARMStret = true,
+				IsX86Stret = true,
+				IsX64Stret = true,
+			};
+			public static TypeData MatrixFloat4x3 = new TypeData {
+				ManagedType = "MatrixFloat4x3",
+				NativeType = "matrix_float4x3",
+				NativeWrapperType = "struct MatrixFloat4x3",
 				RequireMarshal = true,
 				IsARMStret = true,
 				IsX86Stret = true,
