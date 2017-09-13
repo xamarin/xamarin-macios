@@ -476,6 +476,7 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
+	[Abstract]
 	[DisableDefaultCtor]
 	interface ARConfiguration : NSCopying {
 
@@ -496,6 +497,7 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (ARConfiguration))]
+	[DisableDefaultCtor]
 	interface ARWorldTrackingConfiguration {
 
 		[Export ("planeDetection", ArgumentSemantic.Assign)]
@@ -505,6 +507,7 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARConfiguration))]
+	[DisableDefaultCtor]
 	interface AROrientationTrackingConfiguration {}
 
 	[iOS (11,0)]
@@ -531,6 +534,7 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARConfiguration))]
+	[DisableDefaultCtor]
 	interface ARFaceTrackingConfiguration {}
 
 	[iOS (11,0)]
@@ -560,7 +564,6 @@ namespace XamCore.ARKit {
 		[Export ("vertexCount")]
 		nuint VertexCount { get; }
 
-		// @property (readonly, nonatomic) const vector_float3 * _Nonnull vertices;
 		[Export ("vertices")]
 		Vector3 Vertices {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -605,6 +608,7 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARLightEstimate))]
+	[DisableDefaultCtor]
 	interface ARDirectionalLightEstimate {
 		[Export ("sphericalHarmonicsCoefficients", ArgumentSemantic.Copy)]
 		NSData SphericalHarmonicsCoefficients { get; }
