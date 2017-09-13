@@ -91,5 +91,19 @@ namespace XamCore.Metal {
 			}
 		}
 	}
+
+#if !MONOMAC
+	public partial class MTLTileRenderPipelineColorAttachmentDescriptorArray {
+		public MTLTileRenderPipelineColorAttachmentDescriptor this [nuint index]
+		{
+			get {
+				return GetObject (index);
+			}
+			set {
+				SetObject (value, index);
+			}
+		}
+	}
+#endif
 }
 #endif
