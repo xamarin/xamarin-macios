@@ -421,12 +421,6 @@ namespace Introspection {
 					return true;
 				}
 				break;
-			case "AVPlayerLooper": // This API got introduced in Xcode 8.0 binding but is not currently present nor in Xcode 8.3 or Xcode 9.0 needs research
-				switch (selectorName) {
-				case "isLoopingEnabled":
-					return true;
-				}
-				break;
 			case "NSQueryGenerationToken": // A test was added in monotouch tests to ensure the selector works
 				switch (selectorName) {
 				case "encodeWithCoder:":
