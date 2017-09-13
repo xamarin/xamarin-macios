@@ -45,13 +45,8 @@ namespace XamCore.LocalAuthentication {
 		AppCancel            = -9,
 		InvalidContext       = -10,
 
-		[iOS (11,0), Mac (10,13)]
 		BiometryNotAvailable = TouchIDNotAvailable,
-
-		[iOS (11,0), Mac (10,13)]
 		BiometryNotEnrolled = TouchIDNotEnrolled,
-
-		[iOS (11,0), Mac (10,13)]
 		BiometryLockout = TouchIDLockout,
 
 		NotInteractive       = -1004,
