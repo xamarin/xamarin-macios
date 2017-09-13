@@ -12,17 +12,17 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Simd
+namespace OpenTK
 {
 	[StructLayout (LayoutKind.Sequential)]
-	public struct VectorFloat3 : IEquatable<VectorFloat3>
+	public struct NVector3 : IEquatable<NVector3>
 	{
 		public float X;
 		public float Y;
 		public float Z;
 		float dummy;
 
-		public VectorFloat3 (float x, float y, float z)
+		public NVector3 (float x, float y, float z)
 		{
 			X = x;
 			Y = y;
@@ -30,24 +30,24 @@ namespace Simd
 			dummy = 0;
 		}
 
-		public static bool operator == (VectorFloat3 left, VectorFloat3 right)
+		public static bool operator == (NVector3 left, NVector3 right)
 		{
 			return left.Equals (right);
 		}
 
-		public static bool operator != (VectorFloat3 left, VectorFloat3 right)
+		public static bool operator != (NVector3 left, NVector3 right)
 		{
 			return !left.Equals (right);
 		}
 
-		public static explicit operator global::OpenTK.Vector3 (VectorFloat3 value)
+		public static explicit operator global::OpenTK.Vector3 (NVector3 value)
 		{
 			return new global::OpenTK.Vector3 (value.X, value.Y, value.Z);
 		}
 
-		public static explicit operator VectorFloat3 (global::OpenTK.Vector3 value)
+		public static explicit operator NVector3 (global::OpenTK.Vector3 value)
 		{
-			return new VectorFloat3 (value.X, value.Y, value.Z);
+			return new NVector3 (value.X, value.Y, value.Z);
 		}
 
 		public override string ToString ()
@@ -62,13 +62,13 @@ namespace Simd
 
 		public override bool Equals (object obj)
 		{
-			if (!(obj is VectorFloat3))
+			if (!(obj is NVector3))
 				return false;
 
-			return Equals ((VectorFloat3) obj);
+			return Equals ((NVector3) obj);
 		}
 
-		public bool Equals (VectorFloat3 other)
+		public bool Equals (NVector3 other)
 		{
 			return X == other.X && Y == other.Y && Z == other.Z;
 		}

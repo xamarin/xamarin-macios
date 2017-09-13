@@ -14,6 +14,10 @@
 !missing-selector! AVPlayerItem::setExternalSubtitleOptionLanguages: not bound
 !missing-selector! AVPlayerItem::setSelectedExternalSubtitleOptionLanguage: not bound
 
+## this was tvos 10.2 in Xcode 8.3 and changed to iOS-only in Xcode9 betas
+## it's still exposed by AVContentKeySessionDelegate which is available in tvos 10.2
+!unknown-type! AVPersistableContentKeyRequest bound
+
 
 # CloudKit
 
@@ -49,6 +53,9 @@
 
 ## new Apple abstract member (breaking change) fixed in XAMCORE_4_0
 !incorrect-protocol-member! MTLRenderCommandEncoder::setDepthClipMode: is REQUIRED and should be abstract
+
+## only on macOS (but removing would be a vreaking change)
+!unknown-native-enum! MTLSamplerBorderColor bound
 
 
 # UserNotifications

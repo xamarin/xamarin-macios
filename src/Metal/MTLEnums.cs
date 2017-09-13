@@ -713,6 +713,9 @@ namespace XamCore.Metal {
 		Sample0, Min, Max
 	}
 
+#if XAMCORE_4_0
+	[NoiOS][NoTV]
+#endif
 	[Mac (10,12)]
 	[Native]
 	public enum MTLSamplerBorderColor : nuint {

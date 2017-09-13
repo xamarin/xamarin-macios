@@ -954,6 +954,11 @@ namespace XamCore.ObjCRuntime {
 			}
 		}
 
+		internal static T ConstructNSObject<T> (IntPtr ptr) where T: NSObject
+		{
+			return ConstructNSObject<T> (ptr, typeof (T), MissingCtorResolution.ThrowConstructor1NotFound);
+		}
+
 		// The generic argument T is only used to cast the return value.
 		static T ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution) where T: class, INativeObject
 		{

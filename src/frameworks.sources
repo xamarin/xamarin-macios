@@ -248,6 +248,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVCaptureVideoDataOutput.cs \
 	AVFoundation/AVCaptureVideoPreviewLayer.cs \
 	AVFoundation/AVCompat.cs \
+	AVFoundation/AVDepthData.cs \
 	AVFoundation/AVFragmentedAsset.cs \
 	AVFoundation/AVFragmentedAssetTrack.cs \
 	AVFoundation/AVLayerVideoGravity.cs \
@@ -262,6 +263,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVTextStyleRule.cs \
 	AVFoundation/DescriptionHelpers.cs \
 	AVFoundation/Events.cs \
+	AVFoundation/AVPlayerLooper.cs \
 
 # AVKit
 
@@ -605,11 +607,6 @@ EVENTKITUI_SOURCES = \
 
 EXTERNALACCESSORY_API_SOURCES = \
 	ExternalAccessory/EAEnums.cs \
-
-# FileProvider
-
-FILEPROVIDER_SOURCES = \
-	FileProvider/NSFileProviderItemIdentifierExtensions.cs \
 
 # FinderSync
 
@@ -1536,10 +1533,7 @@ SHARED_CORE_SOURCES = \
 	Simd/MatrixFloat2x2.cs \
 	Simd/MatrixFloat3x3.cs \
 	Simd/MatrixFloat4x4.cs \
-	Simd/VectorFloat2.cs \
 	Simd/VectorFloat3.cs \
-	Simd/VectorFloat4.cs \
-	Simd/VectorInt4.cs \
 
 SHARED_SOURCES = \
 	../runtime/Delegates.generated.cs \

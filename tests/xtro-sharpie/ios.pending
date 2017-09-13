@@ -150,6 +150,12 @@
 !wrong-enum-size! MessageComposeResult managed 4 vs native 8
 
 
+# Metal
+
+## only on macOS (but removing would be a vreaking change)
+!unknown-native-enum! MTLSamplerBorderColor bound
+
+
 # Speech
 ## iOS 10 beta 1 - use a non-public type in the signature https://trello.com/c/s6s6YKua
 !missing-selector! SFSpeechRecognizer::prepareWithRequest: not bound
@@ -329,6 +335,10 @@
 
 ## fixed for XAMCORE_4_0
 !incorrect-protocol-member! UIDocumentPickerDelegate::documentPicker:didPickDocumentAtURL: is OPTIONAL and should NOT be abstract
+
+## https://bugzilla.xamarin.com/show_bug.cgi?id=59422
+!missing-pinvoke! UIContentSizeCategoryCompareToCategory is not bound
+!missing-pinvoke! UIContentSizeCategoryIsAccessibilityCategory is not bound
 
 # WatchKit
 

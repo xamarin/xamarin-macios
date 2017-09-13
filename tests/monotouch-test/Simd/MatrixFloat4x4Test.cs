@@ -6,7 +6,7 @@ using Foundation;
 using ObjCRuntime;
 
 using OpenTK;
-using Simd;
+using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 
 using NUnit.Framework;
 
@@ -30,10 +30,10 @@ namespace MonoTouchFixtures.Simd
 		}
 
 		[Test]
-		public void ColumnConstructor ()
+		public void RowConstructor ()
 		{
 			var expected = GetTestMatrix ();
-			var actual = new MatrixFloat4x4 (expected.Column0, expected.Column1, expected.Column2, expected.Column3);
+			var actual = new MatrixFloat4x4 (expected.Row0, expected.Row1, expected.Row2, expected.Row3);
 			Asserts.AreEqual (expected, actual, "ctor 1");
 		}
 

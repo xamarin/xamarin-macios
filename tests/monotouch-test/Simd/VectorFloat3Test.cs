@@ -6,7 +6,7 @@ using Foundation;
 using ObjCRuntime;
 
 using OpenTK;
-using Simd;
+using VectorFloat3 = global::OpenTK.NVector3;
 
 using NUnit.Framework;
 

@@ -9712,11 +9712,6 @@ namespace XamCore.Foundation
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Async, Export ("loadObjectOfClass:completionHandler:")]
 		NSProgress LoadObject (Class aClass, Action<INSItemProviderReading, NSError> completionHandler);
-
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Async, Wrap ("LoadObject (new Class (type), completionHandler)")]
-		NSProgress LoadObject (Type type, Action<INSItemProviderReading, NSError> completionHandler);
-
 #if !MONOMAC
 		// NSItemProvider_UIKitAdditions category
 
@@ -13347,10 +13342,6 @@ namespace XamCore.Foundation
 
 		[MountainLion, Export ("trashItemAtURL:resultingItemURL:error:")]
 		bool TrashItem (NSUrl url, out NSUrl resultingItemUrl, out NSError error);
-
-		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-		[Async, Export ("getFileProviderMessageInterfacesForItemAtURL:completionHandler:")]
-		void GetFileProviderMessageInterfaces (NSUrl url, Action <NSFileProviderMessageInterface[], NSError> completionHandler);
 	}
 
 	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
@@ -15361,27 +15352,10 @@ namespace XamCore.Foundation
 		string ToString (NSUnit unit);
 	}
 
-	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-	[BaseType (typeof(NSObject))]
-	interface NSFileProviderMessageInterface : NSSecureCoding
-	{
-		[Export ("name")]
-		string Name { get; }
-	}
-
-	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-	[BaseType (typeof(NSObject))]
+	[iOS (6,0), Mac (10,8), Watch (2,0), TV (9,0)]
+	[BaseType (typeof (NSObject), Name = "NSXPCListenerEndpoint")]
 	[DisableDefaultCtor]
-	interface NSFileProviderMessenger
+	interface NSXpcListenerEndpoint : NSSecureCoding
 	{
-		[Export ("initWithInterface:protocol:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (NSFileProviderMessageInterface @interface, Protocol protocol);
-
-		[Async, Export ("remoteObjectProxyWithErrorHandler:")]
-		NSObject GetRemoteObjectProxy (Action<NSError> errorHandler);
-
-		[Export ("invalidate")]
-		void Invalidate ();
 	}
 }

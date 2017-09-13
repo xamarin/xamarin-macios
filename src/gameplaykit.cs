@@ -18,7 +18,7 @@ using Vector2i = global::OpenTK.Vector2i;
 using Vector3 = global::OpenTK.Vector3;
 using Vector3d = global::OpenTK.Vector3d;
 using Matrix3 = global::OpenTK.Matrix3;
-using Simd;
+using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 
 #if MONOMAC
 using SKColor = XamCore.AppKit.NSColor;

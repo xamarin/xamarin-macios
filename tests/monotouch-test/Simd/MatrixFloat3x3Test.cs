@@ -6,7 +6,7 @@ using Foundation;
 using ObjCRuntime;
 
 using OpenTK;
-using Simd;
+using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 
 using NUnit.Framework;
 
@@ -20,24 +20,12 @@ namespace MonoTouchFixtures.Simd
 		public void Identity ()
 		{
 			var identity = new MatrixFloat3x3 {
-				M11 = 1f,
-				M22 = 1f,
-				M33 = 1f,
+				R0C0 = 1f,
+				R1C1 = 1f,
+				R2C2 = 1f,
 			};
 			Asserts.AreEqual (identity, MatrixFloat3x3.Identity, "identity");
 			Asserts.AreEqual (Matrix3.Identity, MatrixFloat3x3.Identity, "opentk identity");
-		}
-
-		[Test]
-		public void ColumnConstructor ()
-		{
-			var expected = GetTestMatrix ();
-			var actual = new MatrixFloat3x3 (
-				new Vector3 (expected.R0C0, expected.R1C0, expected.R2C0), 
-				new Vector3 (expected.R0C1, expected.R1C1, expected.R2C1), 
-				new Vector3 (expected.R0C2, expected.R1C2, expected.R2C2)
-			);
-			Asserts.AreEqual (expected, actual, "ctor 1");
 		}
 
 		[Test]
@@ -65,35 +53,35 @@ namespace MonoTouchFixtures.Simd
 			var expected = GetTestMatrix ();
 			var actual = (MatrixFloat3x3) expected;
 
-			Assert.AreEqual (expected.R0C0, actual.M11, "m11 getter");
-			Assert.AreEqual (expected.R0C1, actual.M12, "m12 getter");
-			Assert.AreEqual (expected.R0C2, actual.M13, "m13 getter");
-			Assert.AreEqual (expected.R1C0, actual.M21, "m21 getter");
-			Assert.AreEqual (expected.R1C1, actual.M22, "m22 getter");
-			Assert.AreEqual (expected.R1C2, actual.M23, "m23 getter");
-			Assert.AreEqual (expected.R2C0, actual.M31, "m31 getter");
-			Assert.AreEqual (expected.R2C1, actual.M32, "m32 getter");
-			Assert.AreEqual (expected.R2C2, actual.M33, "m33 getter");
+			Assert.AreEqual (expected.R0C0, actual.R0C0, "R0C0 getter");
+			Assert.AreEqual (expected.R0C1, actual.R0C1, "R0C1 getter");
+			Assert.AreEqual (expected.R0C2, actual.R0C2, "R0C2 getter");
+			Assert.AreEqual (expected.R1C0, actual.R1C0, "R1C0 getter");
+			Assert.AreEqual (expected.R1C1, actual.R1C1, "R1C1 getter");
+			Assert.AreEqual (expected.R1C2, actual.R1C2, "R1C2 getter");
+			Assert.AreEqual (expected.R2C0, actual.R2C0, "R2C0 getter");
+			Assert.AreEqual (expected.R2C1, actual.R2C1, "R2C1 getter");
+			Assert.AreEqual (expected.R2C2, actual.R2C2, "R2C2 getter");
 
 			var newExpected = GetTestMatrix ();
-			actual.M11 = newExpected.R0C0;
-			actual.M12 = newExpected.R0C1;
-			actual.M13 = newExpected.R0C2;
-			actual.M21 = newExpected.R1C0;
-			actual.M22 = newExpected.R1C1;
-			actual.M23 = newExpected.R1C2;
-			actual.M31 = newExpected.R2C0;
-			actual.M32 = newExpected.R2C1;
-			actual.M33 = newExpected.R2C2;
-			Assert.AreEqual (newExpected.R0C0, actual.M11, "m11 setter");
-			Assert.AreEqual (newExpected.R0C1, actual.M12, "m12 setter");
-			Assert.AreEqual (newExpected.R0C2, actual.M13, "m13 setter");
-			Assert.AreEqual (newExpected.R1C0, actual.M21, "m21 setter");
-			Assert.AreEqual (newExpected.R1C1, actual.M22, "m22 setter");
-			Assert.AreEqual (newExpected.R1C2, actual.M23, "m23 setter");
-			Assert.AreEqual (newExpected.R2C0, actual.M31, "m31 setter");
-			Assert.AreEqual (newExpected.R2C1, actual.M32, "m32 setter");
-			Assert.AreEqual (newExpected.R2C2, actual.M33, "m33 setter");
+			actual.R0C0 = newExpected.R0C0;
+			actual.R0C1 = newExpected.R0C1;
+			actual.R0C2 = newExpected.R0C2;
+			actual.R1C0 = newExpected.R1C0;
+			actual.R1C1 = newExpected.R1C1;
+			actual.R1C2 = newExpected.R1C2;
+			actual.R2C0 = newExpected.R2C0;
+			actual.R2C1 = newExpected.R2C1;
+			actual.R2C2 = newExpected.R2C2;
+			Assert.AreEqual (newExpected.R0C0, actual.R0C0, "R0C0 setter");
+			Assert.AreEqual (newExpected.R0C1, actual.R0C1, "R0C1 setter");
+			Assert.AreEqual (newExpected.R0C2, actual.R0C2, "R0C2 setter");
+			Assert.AreEqual (newExpected.R1C0, actual.R1C0, "R1C0 setter");
+			Assert.AreEqual (newExpected.R1C1, actual.R1C1, "R1C1 setter");
+			Assert.AreEqual (newExpected.R1C2, actual.R1C2, "R1C2 setter");
+			Assert.AreEqual (newExpected.R2C0, actual.R2C0, "R2C0 setter");
+			Assert.AreEqual (newExpected.R2C1, actual.R2C1, "R2C1 setter");
+			Assert.AreEqual (newExpected.R2C2, actual.R2C2, "R2C2 setter");
 		}
 
 		[Test]

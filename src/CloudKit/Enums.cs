@@ -80,6 +80,7 @@ namespace XamCore.CloudKit
 		[iOS (10,0), TV (10,0), Mac (10,12)] ReferenceViolation = 31,
 		[iOS (10,0), TV (10,0), Mac (10,12)] ManagedAccountRestricted = 32,
 		[iOS (10,0), TV (10,0), Mac (10,12)] ParticipantMayNeedVerification = 33,
+		[iOS (11,0), TV (11,0), Mac (10,13), Watch (4,0)] ResponseLost = 34,
 	}
 
 	// NSInteger -> CKModifyRecordsOperation.h
@@ -102,7 +103,7 @@ namespace XamCore.CloudKit
 		Query = 1,
 		RecordZone = 2,
 		ReadNotification = 3,
-		[iOS (10,0), TV (10,0), Mac (10,12)] Database = 4,
+		[iOS (10,0), TV (10,0), Mac (10,12), Watch (3,0)] Database = 4,
 	}
 
 	// NSInteger -> CKNotification.h
@@ -214,5 +215,19 @@ namespace XamCore.CloudKit
 		RecordUpdate = 1 << 1,
 		RecordDeletion = 1 << 2,
 		FiresOnce = 1 << 3,
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Native]
+	public enum CKOperationGroupTransferSize : nint
+	{
+		Unknown,
+		Kilobytes,
+		Megabytes,
+		TensOfMegabytes,
+		HundredsOfMegabytes,
+		Gigabytes,
+		TensOfGigabytes,
+		HundredsOfGigabytes,
 	}
 }
