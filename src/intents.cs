@@ -1957,6 +1957,11 @@ namespace XamCore.Intents {
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INCarSeatResolutionResult bound
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
+#if XAMCORE_4_0
+	[NoWatch]
+#else
+	[Obsoleted (PlatformName.WatchOS, message:"'INCarSeatResolutionResult' is not available in watchOS.")]
+#endif
 	interface INCarSeatResolutionResult {
 
 		[iOS (11,0)]
