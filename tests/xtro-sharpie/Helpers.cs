@@ -87,7 +87,15 @@ namespace Extrospection {
 			return index < 0 ? source : source.Substring (0, index) + replace + source.Substring (index + find.Length);
 		}
 
-		public static string Platform { get; set; }
+		public enum Platforms
+		{
+			macOS,
+			iOS,
+			watchOS,
+			tvOS,
+		}
+
+		public static Platforms Platform { get; set; }
 
 		public static bool IsAvailable (this Decl decl)
 		{
@@ -103,13 +111,14 @@ namespace Extrospection {
 				
 			// but right now most frameworks consider tvOS and watchOS like iOS unless 
 			// decorated otherwise so we must check again if we do not get a definitve answer
-			if ((result == null) && ((Platform == "tvos") || (Platform == "watchos")))
-				result = decl.IsAvailable ("ios");
+			if ((result == null) && ((Platform == Platforms.tvOS) || (Platform == Platforms.watchOS)))
+				result = decl.IsAvailable (Platforms.iOS);
 			return !result.HasValue ? true : result.Value;
 		}
 
-		static bool? IsAvailable (this Decl decl, string platform)
+		static bool? IsAvailable (this Decl decl, Platforms platform_value)
 		{
+			var platform = platform_value.ToString ().ToLowerInvariant ();
 			bool? result = null;
 			foreach (var attr in decl.Attrs) {
 				// NS_UNAVAILABLE
