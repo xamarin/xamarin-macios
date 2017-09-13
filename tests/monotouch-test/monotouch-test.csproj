@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -648,13 +648,12 @@
     <Compile Include="PassKit\LabeledValueTest.cs" />
     <Compile Include="System.Net.Http\MessageHandlers.cs" />
     <Compile Include="AVFoundation\PlayerItemVideoOutputTest.cs" />
+    <Compile Include="Simd\MatrixDouble4x4Test.cs" />
     <Compile Include="Simd\MatrixFloat2x2Test.cs" />
     <Compile Include="Simd\MatrixFloat3x3Test.cs" />
     <Compile Include="Simd\MatrixFloat4x4Test.cs" />
-    <Compile Include="Simd\VectorFloat2Test.cs" />
+    <Compile Include="Simd\VectorDouble3Test.cs" />
     <Compile Include="Simd\VectorFloat3Test.cs" />
-    <Compile Include="Simd\VectorFloat4Test.cs" />
-    <Compile Include="Simd\VectorInt4Test.cs" />
     <Compile Include="mono\ConfigTest.cs" />
     <Compile Include="OpenGLES\EAGLContext.cs" />
     <Compile Include="CoreText\CTParagraphStyleTests.cs" />
@@ -683,10 +682,10 @@
     <Compile Include="ModelIO\MDLStereoscopicCameraTest.cs" />
     <Compile Include="UIKit\UISpringLoadedInteractionSupportingTest.cs" />
     <Compile Include="PdfKit\PdfAnnotationTest.cs" />
-    <Compile Include="Simd\VectorDouble2Test.cs" />
-    <Compile Include="Simd\VectorDouble3Test.cs" />
-    <Compile Include="Simd\VectorDouble4Test.cs" />
-    <Compile Include="Simd\MatrixDouble4x4Test.cs" />
+    <Compile Include="FileProvider\NSFileProviderPageTest.cs" />
+    <Compile Include="AVFoundation\AVPlayerLooperTest.cs" />
+    <Compile Include="UIKit\UIPasteConfigurationSupportingTest.cs" />
+    <Compile Include="AVFoundation\AVDepthDataTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
@@ -757,6 +756,7 @@
     <Folder Include="ARKit\" />
     <Folder Include="CoreML\" />
     <Folder Include="PdfKit\" />
+    <Folder Include="FileProvider\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />
@@ -791,6 +791,7 @@
     <BundleResource Include="Resources\xamarin1.png" />
     <BundleResource Include="Resources\xamarin2.png" />
     <BundleResource Include="xamvideotest.mp4" />
+    <BundleResource Include="CoreImage\xamarinmonkey.heic" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Security\openssl_crt.der">

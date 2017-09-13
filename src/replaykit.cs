@@ -159,6 +159,7 @@ namespace XamCore.ReplayKit {
 		[iOS (11,0)]
 		[NoTV]
 		[Static]
+		[Async]
 		[Export ("loadBroadcastActivityViewControllerWithPreferredExtension:handler:")]
 		void LoadBroadcastActivityViewController ([NullAllowed] string preferredExtension, Action<RPBroadcastActivityViewController, NSError> handler);
 	}

@@ -48,6 +48,17 @@ namespace XamCore.Metal {
 		}
 
 #if MONOMAC
+		[Mac (10,11, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		[DllImport (Constants.MetalLibrary)]
+		unsafe static extern IntPtr MTLCopyAllDevices ();
+
+		[Mac (10,11, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		public static IMTLDevice [] GetAllDevices ()
+		{
+			var rv = MTLCopyAllDevices ();
+			return NSArray.ArrayFromHandle<IMTLDevice> (rv);
+		}
+
 		[Mac (10, 13, onlyOn64: true), NoiOS, NoWatch, NoTV]
 		[DllImport (Constants.MetalLibrary)]
 		unsafe static extern IntPtr MTLCopyAllDevicesWithObserver (ref IntPtr observer, void* handler);

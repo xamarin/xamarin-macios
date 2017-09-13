@@ -1,7 +1,7 @@
 # ARKit
 
 ## This method is manually bound.
-!simd-missing-marshaldirective! System.IntPtr ARKit.ARPointCloud::GetRawPoints(): simd type: vector_float3
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPointCloud::GetRawPoints(): simd type: vector_float3
 
 # AVFoundation
 

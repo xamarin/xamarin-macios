@@ -79,20 +79,20 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // VectorFloat3 func ()",
+					Comment = " // NVector3 func ()",
 					Prefix = "simd__",
 					Variants = Variants.All,
-					ReturnType = Types.VectorFloat3,
+					ReturnType = Types.NVector3,
 				}
 			);
 
 			data.Add (
 				new FunctionData {
-					Comment = " // void func (VectorFloat3)",
+					Comment = " // void func (NVector3)",
 					Prefix = "simd__",
 					Variants = Variants.msgSend | Variants.msgSendSuper,
 					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.VectorFloat3 }
+						new ParameterData { TypeData = Types.NVector3 }
 					},
 				}
 			);
@@ -1969,7 +1969,7 @@ namespace Xamarin.BindingMethods.Generator
 					Variants = Variants.All,
 					ReturnType = Types.CGPoint,
 					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.VectorFloat3 },
+						new ParameterData { TypeData = Types.NVector3 },
 						new ParameterData { TypeData = Types.Int32 },
 						new ParameterData { TypeData = Types.CGSize },
 					},
@@ -1983,7 +1983,7 @@ namespace Xamarin.BindingMethods.Generator
 					Variants = Variants.All,
 					ReturnType = Types.CGPoint,
 					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.VectorFloat3 },
+						new ParameterData { TypeData = Types.NVector3 },
 						new ParameterData { TypeData = Types.Int64 },
 						new ParameterData { TypeData = Types.CGSize },
 					},
@@ -2013,21 +2013,21 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // void func (MatrixFloat2x2)",
+					Comment = " // void func (NMatrix2)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					Parameters = new ParameterData [] {
-						new ParameterData { TypeData = Types.MatrixFloat2x2 },
+						new ParameterData { TypeData = Types.NMatrix2 },
 					},
 				}
 			);
 
 			data.Add (
 				new FunctionData {
-					Comment = " // MatrixFloat2x2 func ()",
+					Comment = " // NMatrix2 func ()",
 					Prefix = "simd__",
 					Variants = Variants.All,
-					ReturnType = Types.MatrixFloat2x2,
+					ReturnType = Types.NMatrix2,
 				}
 			);
 
@@ -2046,36 +2046,36 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (IntPtr, MatrixFloat2x2)",
+					Comment = " // IntPtr func (IntPtr, NMatrix2)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					ReturnType = Types.IntPtr,
 					Parameters = new ParameterData [] {
 						new ParameterData { TypeData = Types.IntPtr },
-						new ParameterData { TypeData = Types.MatrixFloat2x2 },
+						new ParameterData { TypeData = Types.NMatrix2 },
 					},
 				}
 			);
 
 			data.Add (
 				new FunctionData {
-					Comment = " // void func (MatrixFloat3x3)",
+					Comment = " // void func (NMatrix3)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					Parameters = new ParameterData [] {
-						new ParameterData { TypeData = Types.MatrixFloat3x3 },
+						new ParameterData { TypeData = Types.NMatrix3 },
 					},
 				}
 			);
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (MatrixFloat3x3)",
+					Comment = " // IntPtr func (NMatrix3)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					ReturnType = Types.IntPtr,
 					Parameters = new ParameterData [] {
-						new ParameterData { TypeData = Types.MatrixFloat3x3 },
+						new ParameterData { TypeData = Types.NMatrix3 },
 					},
 				}
 			);
@@ -2091,10 +2091,10 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // MatrixFloat3x3 func ()",
+					Comment = " // NMatrix3 func ()",
 					Prefix = "simd__",
 					Variants = Variants.All,
-					ReturnType = Types.MatrixFloat3x3,
+					ReturnType = Types.NMatrix3,
 				}
 			);
 
@@ -2111,47 +2111,47 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (IntPtr, MatrixFloat3x3)",
+					Comment = " // IntPtr func (IntPtr, NMatrix3)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					ReturnType = Types.IntPtr,
 					Parameters = new ParameterData [] {
 						new ParameterData { TypeData = Types.IntPtr },
-						new ParameterData { TypeData = Types.MatrixFloat3x3 },
+						new ParameterData { TypeData = Types.NMatrix3 },
 					},
 				}
 			);
 
 			data.Add (
 				new FunctionData {
-					Comment = " // void func (MatrixFloat4x4)",
+					Comment = " // void func (NMatrix4)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.MatrixFloat4x4 },
+						new ParameterData { TypeData = Types.NMatrix4 },
 					},
 				}
 			);
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (MatrixFloat4x4)",
+					Comment = " // IntPtr func (NMatrix4)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					ReturnType = Types.IntPtr,
 					Parameters = new ParameterData[]  {
-						new ParameterData { TypeData = Types.MatrixFloat4x4 },
+						new ParameterData { TypeData = Types.NMatrix4 },
 					},
 				}
 			);
 
 			data.Add (
 				new FunctionData {
-					Comment = " // void func (MatrixFloat4x4, double)",
+					Comment = " // void func (NMatrix4, double)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					Parameters = new ParameterData [] {
-						new ParameterData { TypeData = Types.MatrixFloat4x4 },
+						new ParameterData { TypeData = Types.NMatrix4 },
 						new ParameterData { TypeData = Types.Double },
 					},
 				}
@@ -2159,12 +2159,12 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (MatrixFloat4x4, bool)",
+					Comment = " // IntPtr func (NMatrix4, bool)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					ReturnType = Types.IntPtr,
 					Parameters = new ParameterData [] {
-						new ParameterData { TypeData = Types.MatrixFloat4x4 },
+						new ParameterData { TypeData = Types.NMatrix4 },
 						new ParameterData { TypeData = Types.Bool },
 					},
 				}
@@ -2185,33 +2185,33 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (IntPtr, nuint, MatrixFloat4x4)",
+					Comment = " // IntPtr func (IntPtr, nuint, NMatrix4)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					ReturnType = Types.IntPtr,
 					Parameters = new ParameterData [] {
 						new ParameterData { TypeData = Types.IntPtr },
 						new ParameterData { TypeData = Types.NUInt },
-						new ParameterData { TypeData = Types.MatrixFloat4x4 },
+						new ParameterData { TypeData = Types.NMatrix4 },
 					},
 				}
 			);
 
 			data.Add (
 				new FunctionData {
-					Comment = " // MatrixFloat4x4 func ()",
+					Comment = " // NMatrix4 func ()",
 					Prefix = "simd__",
 					Variants = Variants.All,
-					ReturnType = Types.MatrixFloat4x4,
+					ReturnType = Types.NMatrix4,
 				}
 			);
 
 			data.Add (
 				new FunctionData {
-					Comment = " // MatrixFloat4x4 func (int, CGSize, nfloat, nfloat)",
+					Comment = " // NMatrix4 func (int, CGSize, nfloat, nfloat)",
 					Prefix = "simd__",
 					Variants = Variants.All,
-					ReturnType = Types.MatrixFloat4x4,
+					ReturnType = Types.NMatrix4,
 					Parameters = new ParameterData [] {
 						new ParameterData { TypeData = Types.Int32 },
 						new ParameterData { TypeData = Types.CGSize },
@@ -2223,10 +2223,10 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // MatrixFloat4x4 func (Int64, CGSize, nfloat, nfloat)",
+					Comment = " // NMatrix4 func (Int64, CGSize, nfloat, nfloat)",
 					Prefix = "simd__",
 					Variants = Variants.All,
-					ReturnType = Types.MatrixFloat4x4,
+					ReturnType = Types.NMatrix4,
 					Parameters = new ParameterData [] {
 						new ParameterData { TypeData = Types.Int64 },
 						new ParameterData { TypeData = Types.CGSize },
@@ -2238,10 +2238,10 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // MatrixFloat4x4 func (double)",
+					Comment = " // NMatrix4 func (double)",
 					Prefix = "simd__",
 					Variants = Variants.All,
-					ReturnType = Types.MatrixFloat4x4,
+					ReturnType = Types.NMatrix4,
 					Parameters = new ParameterData [] {
 						new ParameterData { TypeData = Types.Double },
 					},
@@ -2250,10 +2250,10 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // MatrixFloat4x4 func (nint)",
+					Comment = " // NMatrix4 func (nint)",
 					Prefix = "simd__",
 					Variants = Variants.All,
-					ReturnType = Types.MatrixFloat4x4,
+					ReturnType = Types.NMatrix4,
 					Parameters = new ParameterData [] {
 						new ParameterData { TypeData = Types.NInt },
 					},
@@ -2262,27 +2262,27 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (IntPtr, nint, MatrixFloat4x4)",
+					Comment = " // IntPtr func (IntPtr, nint, NMatrix4)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					ReturnType = Types.IntPtr,
 					Parameters = new ParameterData [] {
 						new ParameterData { TypeData = Types.IntPtr },
 						new ParameterData { TypeData = Types.NInt },
-						new ParameterData { TypeData = Types.MatrixFloat4x4 },
+						new ParameterData { TypeData = Types.NMatrix4 },
 					},
 				}
 			);
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (IntPtr, MatrixFloat4x4)",
+					Comment = " // IntPtr func (IntPtr, NMatrix4)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					ReturnType = Types.IntPtr,
 					Parameters = new ParameterData [] {
 						new ParameterData { TypeData = Types.IntPtr },
-						new ParameterData { TypeData = Types.MatrixFloat4x4 },
+						new ParameterData { TypeData = Types.NMatrix4 },
 					},
 				}
 			);
@@ -2310,16 +2310,14 @@ namespace Xamarin.BindingMethods.Generator
 			case "Vector2d":
 			case "Vector2i":
 			case "Vector2":
-			case "VectorFloat2":
-			case "VectorDouble2":
 				writer.WriteLine ("\t{0}{2}a = {1} [0];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t{0}{2}b = {1} [1];", managedVariable, nativeVariable, accessor);
 				break;
 			case "Vector3d":
 			case "Vector3i":
 			case "Vector3":
-			case "VectorFloat3":
-			case "VectorDouble3":
+			case "NVector3":
+			case "NVector3d":
 				writer.WriteLine ("\t{0}{2}a = {1} [0];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t{0}{2}b = {1} [1];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t{0}{2}c = {1} [2];", managedVariable, nativeVariable, accessor);
@@ -2327,8 +2325,6 @@ namespace Xamarin.BindingMethods.Generator
 			case "Vector4d":
 			case "Vector4i":
 			case "Vector4":
-			case "VectorFloat4":
-			case "VectorDouble4":
 				if (type.NativeType == "vector_float3") {
 					writer.WriteLine ("\t{0}{2}a = {1} [0];", managedVariable, nativeVariable, accessor);
 					writer.WriteLine ("\t{0}{2}b = {1} [1];", managedVariable, nativeVariable, accessor);
@@ -2344,14 +2340,14 @@ namespace Xamarin.BindingMethods.Generator
 				}
 				break;
 			case "Matrix2":
-			case "MatrixFloat2x2":
+			case "NMatrix2":
 				writer.WriteLine ("\tfor (int i = 0; i < 2; i++) {");
 				writer.WriteLine ("\t\t{0}{2}columns [i].a = {1}.columns [i] [0];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t\t{0}{2}columns [i].b = {1}.columns [i] [1];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t}");
 				break;
 			case "Matrix3":
-			case "MatrixFloat3x3":
+			case "NMatrix3":
 				writer.WriteLine ("\tfor (int i = 0; i < 3; i++) {");
 				writer.WriteLine ("\t\t{0}{2}columns [i].a = {1}.columns [i] [0];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t\t{0}{2}columns [i].b = {1}.columns [i] [1];", managedVariable, nativeVariable, accessor);
@@ -2359,8 +2355,8 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ("\t}");
 				break;
 			case "Matrix4":
-			case "MatrixFloat4x4":
-			case "MatrixDouble4x4":
+			case "NMatrix4":
+			case "NMatrix4d":
 				writer.WriteLine ("\tfor (int i = 0; i < 4; i++) {");
 				writer.WriteLine ("\t\t{0}{2}columns [i].a = {1}.columns [i] [0];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t\t{0}{2}columns [i].b = {1}.columns [i] [1];", managedVariable, nativeVariable, accessor);
@@ -2437,16 +2433,14 @@ namespace Xamarin.BindingMethods.Generator
 			case "Vector2d":
 			case "Vector2i":
 			case "Vector2":
-			case "VectorFloat2":
-			case "VectorDouble2":
 				writer.WriteLine ("\t{0} [0] = {1}{2}a;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t{0} [1] = {1}{2}b;", nativeVariable, managedVariable, accessor);
 				break;
 			case "Vector3d":
 			case "Vector3i":
 			case "Vector3":
-			case "VectorFloat3":
-			case "VectorDouble3":
+			case "NVector3":
+			case "NVector3d":
 				writer.WriteLine ("\t{0} [0] = {1}{2}a;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t{0} [1] = {1}{2}b;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t{0} [2] = {1}{2}c;", nativeVariable, managedVariable, accessor);
@@ -2454,8 +2448,6 @@ namespace Xamarin.BindingMethods.Generator
 			case "Vector4d":
 			case "Vector4i":
 			case "Vector4":
-			case "VectorFloat4":
-			case "VectorDouble4":
 				if (type.NativeType == "vector_float3") {
 					writer.WriteLine ("\t{0} [0] = {1}{2}a;", nativeVariable, managedVariable, accessor);
 					writer.WriteLine ("\t{0} [1] = {1}{2}b;", nativeVariable, managedVariable, accessor);
@@ -2470,14 +2462,14 @@ namespace Xamarin.BindingMethods.Generator
 				}
 				break;
 			case "Matrix2":
-			case "MatrixFloat2x2":
+			case "NMatrix2":
 				writer.WriteLine ("\tfor (int i = 0; i < 2; i++) {");
 				writer.WriteLine ("\t\t{0}.columns [i][0] = {1}{2}columns [i].a;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t\t{0}.columns [i][1] = {1}{2}columns [i].b;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t}");
 				break;
 			case "Matrix3":
-			case "MatrixFloat3x3":
+			case "NMatrix3":
 				writer.WriteLine ("\tfor (int i = 0; i < 3; i++) {");
 				writer.WriteLine ("\t\t{0}.columns [i][0] = {1}{2}columns [i].a;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t\t{0}.columns [i][1] = {1}{2}columns [i].b;", nativeVariable, managedVariable, accessor);
@@ -2485,8 +2477,8 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ("\t}");
 				break;
 			case "Matrix4":
-			case "MatrixFloat4x4":
-			case "MatrixDouble4x4":
+			case "NMatrix4":
+			case "NMatrix4d":
 				writer.WriteLine ("\tfor (int i = 0; i < 4; i++) {");
 				writer.WriteLine ("\t\t{0}.columns [i][0] = {1}{2}columns [i].a;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t\t{0}.columns [i][1] = {1}{2}columns [i].b;", nativeVariable, managedVariable, accessor);
@@ -2943,33 +2935,20 @@ namespace Xamarin.BindingMethods.Generator
 				RequireMarshal = true,
 				IsX86Stret = true,
 			};
-			public static TypeData VectorFloat2 = new TypeData {
-				ManagedType = "VectorFloat2",
-				NativeType = "vector_float2",
-				NativeWrapperType = "struct Vector2f",
-				RequireMarshal = true,
-				IsX86Stret = true,
-			};
 			public static TypeData Vector3 = new TypeData {
 				ManagedType = "Vector3",
 				NativeType = "vector_float3",
 				NativeWrapperType = "struct Vector3f",
 				RequireMarshal = true,
 			};
-			public static TypeData VectorFloat3 = new TypeData {
-				ManagedType = "VectorFloat3",
+			public static TypeData NVector3 = new TypeData {
+				ManagedType = "NVector3",
 				NativeType = "vector_float3",
-				NativeWrapperType = "struct Vector4f", // Yes, Vector4f, since VectorFloat3 has 4 floats.
+				NativeWrapperType = "struct Vector4f", // Yes, Vector4f, since NVector3 has 4 floats.
 				RequireMarshal = true,
 			};
 			public static TypeData Vector4 = new TypeData {
 				ManagedType = "Vector4",
-				NativeType = "vector_float4",
-				NativeWrapperType = "struct Vector4f",
-				RequireMarshal = true,
-			};
-			public static TypeData VectorFloat4 = new TypeData {
-				ManagedType = "VectorFloat4",
 				NativeType = "vector_float4",
 				NativeWrapperType = "struct Vector4f",
 				RequireMarshal = true,
@@ -3044,10 +3023,10 @@ namespace Xamarin.BindingMethods.Generator
 				IsX86Stret = true,
 				IsX64Stret = false,
 			};
-			public static TypeData MatrixFloat2x2 = new TypeData {
-				ManagedType = "MatrixFloat2x2",
+			public static TypeData NMatrix2 = new TypeData {
+				ManagedType = "NMatrix2",
 				NativeType = "matrix_float2x2",
-				NativeWrapperType = "struct MatrixFloat2x2",
+				NativeWrapperType = "struct NMatrix2",
 				RequireMarshal = true,
 				IsARMStret = true,
 				IsX86Stret = true,
@@ -3062,10 +3041,10 @@ namespace Xamarin.BindingMethods.Generator
 				IsX86Stret = true,
 				IsX64Stret = true,
 			};
-			public static TypeData MatrixFloat3x3 = new TypeData {
-				ManagedType = "MatrixFloat3x3",
+			public static TypeData NMatrix3 = new TypeData {
+				ManagedType = "NMatrix3",
 				NativeType = "matrix_float3x3",
-				NativeWrapperType = "struct MatrixFloat3x3",
+				NativeWrapperType = "struct NMatrix3",
 				RequireMarshal = true,
 				IsARMStret = true,
 				IsX86Stret = true,
@@ -3080,10 +3059,10 @@ namespace Xamarin.BindingMethods.Generator
 				IsX86Stret = true,
 				IsX64Stret = true,
 			};
-			public static TypeData MatrixFloat4x4 = new TypeData {
-				ManagedType = "MatrixFloat4x4",
+			public static TypeData NMatrix4 = new TypeData {
+				ManagedType = "NMatrix4",
 				NativeType = "matrix_float4x4",
-				NativeWrapperType = "struct MatrixFloat4x4",
+				NativeWrapperType = "struct NMatrix4",
 				RequireMarshal = true,
 				IsARMStret = true,
 				IsX86Stret = true,

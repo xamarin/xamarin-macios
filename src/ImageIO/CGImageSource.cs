@@ -388,32 +388,10 @@ namespace XamCore.ImageIO {
 			if (ptr == IntPtr.Zero)
 				return null;
 
-			var info = new CGImageAuxiliaryDataInfo ();
-
-			using (var dictionary = Runtime.GetNSObject<NSDictionary> (ptr)) {
-				bool success;
-
-				NSData data;
-				success = dictionary.TryGetValue<NSData> (new NSString (CGImageAuxiliaryDataInfo.Data), out data);
-
-				if (success)
-					info.DepthData = data;
-
-				NSDictionary dict;
-				success = dictionary.TryGetValue<NSDictionary> (new NSString (CGImageAuxiliaryDataInfo.DataDescription), out dict);
-
-				if (success)
-					info.DepthDataDescription = dict;
-
-				CGImageMetadata metadata;
-				success = dictionary.TryGetValue<CGImageMetadata> (new NSString (CGImageAuxiliaryDataInfo.kMetadata), out metadata);
-
-				if (success)
-					info.Metadata = metadata;
-			}
+			var dictionary = Runtime.GetNSObject<NSDictionary> (ptr);
+			var info = new CGImageAuxiliaryDataInfo (dictionary);
 
 			return info;
-
 		}
 	}
 }

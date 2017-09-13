@@ -53,6 +53,7 @@ using OpenTK;
 
 using GLContext = global::XamCore.OpenGL.CGLContext;
 #else
+using XamCore.UIKit;
 
 #if WATCH
 using GLContext = global::XamCore.Foundation.NSObject; // won't be used -> [NoWatch] but must compile
@@ -97,6 +98,9 @@ namespace XamCore.SceneKit {
 
 	[Mac (10,8), iOS (8,0)]
 	delegate void SCNSceneSourceStatusHandler (float /* float, not CGFloat */ totalProgress, SCNSceneSourceStatus status, NSError error, ref bool stopLoading);
+
+	delegate void SCNAnimationDidStartHandler (SCNAnimation animation, SCNAnimatable receiver);
+	delegate void SCNAnimationDidStopHandler (SCNAnimation animation, SCNAnimatable receiver, bool completed);
 
 	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
@@ -152,7 +156,14 @@ namespace XamCore.SceneKit {
 #if XAMCORE_2_0
 		[Abstract]
 #endif
-		[Mac (10,9)]
+		[Introduced (PlatformName.WatchOS, 3, 0)]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'SCNAnimationPlayer.Paused' instead.")]
+		[Introduced (PlatformName.TvOS, 9, 0)]
+		[Deprecated (PlatformName.TvOS, 11, 0,   message: "Use 'SCNAnimationPlayer.Paused' instead.")]
+		[Introduced (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0,    message: "Use 'SCNAnimationPlayer.Paused' instead.")]
+		[Introduced (PlatformName.MacOSX, 10, 9)]
+		[Deprecated (PlatformName.MacOSX, 10, 13,message: "Use 'SCNAnimationPlayer.Paused' instead.")]
 		[Export ("isAnimationForKeyPaused:")]
 		bool IsAnimationPaused (NSString key);
 
@@ -528,8 +539,9 @@ namespace XamCore.SceneKit {
 	}
 
 	interface ISCNCameraControlConfiguration {}
-	
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+
+	[NoWatch]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[Protocol]
 	interface SCNCameraControlConfiguration
 	{
@@ -1525,7 +1537,11 @@ namespace XamCore.SceneKit {
 	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
-	interface SCNNode : SCNAnimatable, SCNBoundingVolume, SCNActionable, NSCopying, NSSecureCoding {
+	interface SCNNode : SCNAnimatable, SCNBoundingVolume, SCNActionable, NSCopying, NSSecureCoding 
+#if IOS || TVOS
+		, UIFocusItem
+#endif
+	{
 		[Export ("transform")]
 		SCNMatrix4 Transform { get; set;  }
 
@@ -2267,14 +2283,14 @@ namespace XamCore.SceneKit {
 		NSString UseSafeModeKey	 { get; }
 
 		[Mac(10,10)]
-		[Availability (Deprecated = Platform.iOS_8_3)] // header says NA and docs says "Available in iOS 8.0 through iOS 8.2."
-		[NoTV, NoWatch]
+		[iOS (8,0)] // header said NA and docs says "Available in iOS 8.0 through iOS 8.2." but it's back on iOS11
+		[TV (11,0), Watch (4,0)]
 		[Field ("SCNSceneSourceConvertUnitsToMetersKey")]
 		NSString ConvertUnitsToMetersKey { get; }
 
 		[Mac(10,10)]
-		[Availability (Deprecated = Platform.iOS_8_3)] // header says NA and docs says "Available in iOS 8.0 through iOS 8.2."
-		[NoTV, NoWatch]
+		[iOS (8,0)] // header said NA and docs says "Available in iOS 8.0 through iOS 8.2." but it's back on iOS11
+		[TV (11,0), Watch (4,0)]
 		[Field ("SCNSceneSourceConvertToYUpKey")]
 		NSString ConvertToYUpKey { get; }
 
@@ -2896,10 +2912,16 @@ namespace XamCore.SceneKit {
 		
 	}
 
+#if WATCH || XAMCORE_4_0
+	[Watch (4,0)]
+	[Mac (10,9), iOS (8,0)]
+	delegate void SCNAnimationEventHandler (ISCNAnimationProtocol animation, NSObject animatedObject, bool playingBackward);
+#else
 	[Mac (10,9), iOS (8,0)]
 	delegate void SCNAnimationEventHandler (CAAnimation animation, NSObject animatedObject, bool playingBackward);
+#endif
 
-	[NoWatch]
+	[Watch (4,0)]
 	[Mac (10,9), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -2997,6 +3019,16 @@ namespace XamCore.SceneKit {
 		[Mac (10,10)]
 		[Export ("influenceFactor")]
 		nfloat InfluenceFactor { get; set; }
+
+		[Mac (10, 10), iOS (8,0)]
+		[TV (11,0)][Watch (4,0)]
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("incremental")]
+		bool Incremental { [Bind ("isIncremental")] get; set; }
+		
 	}
 
 	[Watch (3,0)]
@@ -3041,6 +3073,18 @@ namespace XamCore.SceneKit {
 
 		[Static, Export ("lookAtConstraintWithTarget:")]
 		SCNLookAtConstraint Create ([NullAllowed] SCNNode target);
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("targetOffset", ArgumentSemantic.Assign)]
+		SCNVector3 TargetOffset { get; set; }
+	
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("localFront", ArgumentSemantic.Assign)]
+		SCNVector3 LocalFront { get; set; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("worldUp", ArgumentSemantic.Assign)]
+		SCNVector3 WorldUp { get; set; }
 	}
 
 	[Mac (10,9), iOS (8,0)]
@@ -3053,6 +3097,17 @@ namespace XamCore.SceneKit {
 	interface SCNTransformConstraint {
 		[Static, Export ("transformConstraintInWorldSpace:withBlock:")]
 		SCNTransformConstraint Create (bool inWorldSpace, SCNTransformConstraintHandler transformHandler);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("positionConstraintInWorldSpace:withBlock:")]
+		SCNTransformConstraint CreatePositionConstraint (bool inWorldSpace, Func<SCNNode, SCNVector3, SCNVector3> transformHandler);
+	
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("orientationConstraintInWorldSpace:withBlock:")]
+		SCNTransformConstraint CreateOrientationConstraint (bool inWorldSpace, Func<SCNNode, SCNQuaternion, SCNQuaternion> transformHandler);
+		
 	}
 
 	[Watch (3,0)]
@@ -4305,5 +4360,129 @@ namespace XamCore.SceneKit {
 		[Abstract]
 		[Export ("writeBytes:length:")]
 		unsafe void Length (IntPtr bytes, nuint length);
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface SCNTimingFunction : NSSecureCoding
+	{
+		[Static]
+		[Export ("functionWithTimingMode:")]
+		SCNTimingFunction Create (SCNActionTimingMode timingMode);
+	
+		[Static, NoWatch]
+		[Export ("functionWithCAMediaTimingFunction:")]
+		SCNTimingFunction Create (CAMediaTimingFunction caTimingFunction);
+	}
+
+	// Use the Swift name SCNAnimationProtocol since it conflicts with the type name
+	[Protocol (Name="SCNAnimation")]
+	interface SCNAnimationProtocol {
+	}
+
+	interface ISCNAnimationProtocol {}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface SCNAnimation : SCNAnimationProtocol, NSCopying, NSSecureCoding
+	{
+		[Static]
+		[Export ("animationWithContentsOfURL:")]
+		SCNAnimation FromUrl (NSUrl animationUrl);
+	
+		[Static]
+		[Export ("animationNamed:")]
+		SCNAnimation FromName (string animationName);
+	
+		[Static, NoWatch]
+		[Export ("animationWithCAAnimation:")]
+		SCNAnimation FromCAAnimation (CAAnimation caAnimation);
+	
+		[Export ("duration")]
+		double Duration { get; set; }
+	
+		[NullAllowed, Export ("keyPath")]
+		string KeyPath { get; set; }
+	
+		[Export ("timingFunction", ArgumentSemantic.Retain)]
+		SCNTimingFunction TimingFunction { get; set; }
+	
+		[Export ("blendInDuration")]
+		double BlendInDuration { get; set; }
+	
+		[Export ("blendOutDuration")]
+		double BlendOutDuration { get; set; }
+	
+		[Export ("removedOnCompletion")]
+		bool RemovedOnCompletion { [Bind ("isRemovedOnCompletion")] get; set; }
+	
+		[Export ("appliedOnCompletion")]
+		bool AppliedOnCompletion { [Bind ("isAppliedOnCompletion")] get; set; }
+	
+		[Export ("repeatCount")]
+		nfloat RepeatCount { get; set; }
+	
+		[Export ("autoreverses")]
+		bool Autoreverses { get; set; }
+	
+		[Export ("startDelay")]
+		double StartDelay { get; set; }
+	
+		[Export ("timeOffset")]
+		double TimeOffset { get; set; }
+	
+		[Export ("fillsForward")]
+		bool FillsForward { get; set; }
+	
+		[Export ("fillsBackward")]
+		bool FillsBackward { get; set; }
+	
+		[Export ("usesSceneTimeBase")]
+		bool UsesSceneTimeBase { get; set; }
+	
+		[NullAllowed, Export ("animationDidStart", ArgumentSemantic.Copy)]
+		SCNAnimationDidStartHandler AnimationDidStart { get; set; }
+	
+		[NullAllowed, Export ("animationDidStop", ArgumentSemantic.Copy)]
+		SCNAnimationDidStopHandler AnimationDidStop { get; set; }
+	
+		[NullAllowed, Export ("animationEvents", ArgumentSemantic.Copy)]
+		SCNAnimationEvent[] AnimationEvents { get; set; }
+	
+		[Export ("additive")]
+		bool Additive { [Bind ("isAdditive")] get; set; }
+	
+		[Export ("cumulative")]
+		bool Cumulative { [Bind ("isCumulative")] get; set; }
+	}
+	
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface SCNAnimationPlayer : SCNAnimatable, NSCopying, NSSecureCoding
+	{
+		[Static]
+		[Export ("animationPlayerWithAnimation:")]
+		SCNAnimationPlayer FromAnimation (SCNAnimation animation);
+	
+		[Export ("animation")]
+		SCNAnimation Animation { get; }
+	
+		[Export ("speed")]
+		nfloat Speed { get; set; }
+	
+		[Export ("blendFactor")]
+		nfloat BlendFactor { get; set; }
+	
+		[Export ("paused")]
+		bool Paused { get; set; }
+	
+		[Export ("play")]
+		void Play ();
+	
+		[Export ("stop")]
+		void Stop ();
+	
+		[Export ("stopWithBlendOutDuration:")]
+		void StopWithBlendOutDuration (double seconds);
 	}
 }

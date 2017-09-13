@@ -519,6 +519,9 @@ namespace Introspection {
 				case "SKVideoNode":
 				case "SKSpriteNode":
 					return !TestRuntime.CheckXcodeVersion (8,0);
+				case "SCNNode":
+				case "SCNReferenceNode":
+					return !TestRuntime.CheckXcodeVersion (9,0);
 				}
 				break;
 
@@ -629,6 +632,9 @@ namespace Introspection {
 				case "UIVisualEffectView":
 				case "UIWindow":
 					return !TestRuntime.CheckXcodeVersion (8, 0);
+				case "SCNNode":
+				case "SCNReferenceNode":
+					return !TestRuntime.CheckXcodeVersion (9,0);
 				}
 				break;
 
@@ -654,6 +660,9 @@ namespace Introspection {
 					return true;
 				}
 				break;
+
+			case "UIPasteConfigurationSupporting": // types do not conform to protocol but protocol methods work on those types (base type tests in monotouch-test)
+				return true; // Skip everything because 'UIResponder' implements 'UIPasteConfigurationSupporting' and that's 130+ types
 			}
 			return base.Skip (type, protocolName);
 		}

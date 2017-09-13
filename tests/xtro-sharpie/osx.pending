@@ -428,6 +428,14 @@
 !missing-selector! MPMediaItemArtwork::imageCropRect not bound
 
 
+# Metal
+
+## [Notification] in protocol - https://bugzilla.xamarin.com/show_bug.cgi?id=59342
+!missing-field! MTLDeviceRemovalRequestedNotification not bound
+!missing-field! MTLDeviceWasAddedNotification not bound
+!missing-field! MTLDeviceWasRemovedNotification not bound
+
+
 # Not available in OS X
 !missing-selector! ACAccount::userFullName not bound
 

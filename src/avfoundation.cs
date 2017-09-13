@@ -181,7 +181,7 @@ namespace XamCore.AVFoundation {
 
 		[iOS (11, 0), Mac (10, 13)]
 		[Field ("AVMediaTypeDepthData")]
-		AVMediaTypeDepthData = 10,
+		DepthData = 10,
 	}
 
 #if !XAMCORE_4_0
@@ -272,17 +272,18 @@ namespace XamCore.AVFoundation {
 		AVDepthData Create (NSDictionary imageSourceAuxDataInfoDictionary, [NullAllowed] out NSError outError);
 
 		[Export ("depthDataByConvertingToDepthDataType:")]
-		AVDepthData Create (CVPixelFormatType depthDataType);
+		AVDepthData ConvertToDepthDataType (CVPixelFormatType depthDataType);
 
 		[Export ("depthDataByApplyingExifOrientation:")]
-		AVDepthData Create (CGImagePropertyOrientation exifOrientation);
+		AVDepthData ApplyExifOrientation (CGImagePropertyOrientation exifOrientation);
 
 		[Export ("depthDataByReplacingDepthDataMapWithPixelBuffer:error:")]
 		[return: NullAllowed]
-		AVDepthData Create (CVPixelBuffer pixelBuffer, [NullAllowed] out NSError outError);
+		AVDepthData ReplaceDepthDataMap (CVPixelBuffer pixelBuffer, [NullAllowed] out NSError outError);
 
+		[Protected]
 		[Export ("availableDepthDataTypes")]
-		NSNumber[] AvailableDepthDataTypes { get; }
+		NSNumber[] WeakAvailableDepthDataTypes { get; }
 
 		[Export ("dictionaryRepresentationForAuxiliaryDataType:")]
 		[return: NullAllowed]
@@ -2834,7 +2835,7 @@ namespace XamCore.AVFoundation {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'GetMetadataForFormat' with enum values AVMetadataFormat.")]
-		[Wrap ("GetMetadataForFormat (new NSString (format))")]
+		[Wrap ("GetMetadataForFormat (new NSString (format))", IsVirtual = true)]
 		AVMetadataItem [] MetadataForFormat (string format);
 #endif
 		[Export ("metadataForFormat:")]
@@ -3071,6 +3072,8 @@ namespace XamCore.AVFoundation {
 		void DidOutputSampleBuffer (AVCaptureOutput captureOutput, CMSampleBuffer sampleBuffer, AVCaptureConnection connection);
 	}
 
+#endif // MONOMAC
+
 	[NoWatch, NoTV, iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -3170,6 +3173,7 @@ namespace XamCore.AVFoundation {
 		AVCaptureOutputDataDroppedReason DroppedReason { get; }
 	}
 
+#if MONOMAC
 	[Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -3219,6 +3223,7 @@ namespace XamCore.AVFoundation {
 		[Export ("overrideTime", ArgumentSemantic.Assign)]
 		CMTime OverrideTime { get; set; }
 	}
+
 #endif
 
 	[NoWatch]
@@ -10991,13 +10996,12 @@ namespace XamCore.AVFoundation {
 		[DesignatedInitializer]
 		IntPtr Constructor (AVQueuePlayer player, AVPlayerItem itemToLoop, CMTimeRange loopRange);
 
+#if !XAMCORE_4_0 // This API got introduced in Xcode 8.0 binding but is not currently present nor in Xcode 8.3 or Xcode 9.0 needs research
+		[PostSnippet ("loopingEnabled = false;")]
+#endif
 		[Export ("disableLooping")]
 		void DisableLooping ();
 
-#if !XAMCORE_4_0 // This API got introduced in Xcode 8.0 binding but is not currently present nor in Xcode 8.3 or Xcode 9.0 needs research
-		[Export ("loopingEnabled")]
-		bool LoopingEnabled { [Bind ("isLoopingEnabled")] get; }
-#endif
 		[Export ("loopCount")]
 		nint LoopCount { get; }
 
@@ -12167,4 +12171,19 @@ namespace XamCore.AVFoundation {
 		AVContentKeyResponse Create (NSData keyData, [NullAllowed] NSData initializationVector);
 	}
 
+	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
+	[DisableDefaultCtor]
+	[BaseType (typeof(NSObject))]
+	interface AVRouteDetector {
+		[Notification]
+		[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
+		[Field ("AVRouteDetectorMultipleRoutesDetectedDidChangeNotification")]
+		NSString MultipleRoutesDetectedDidChange { get; }
+
+		[Export ("routeDetectionEnabled")]
+		bool RouteDetectionEnabled { [Bind ("isRouteDetectionEnabled")] get; set; }
+
+		[Export ("multipleRoutesDetected")]
+		bool MultipleRoutesDetected { get; }
+	}
 }

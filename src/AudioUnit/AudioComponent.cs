@@ -395,6 +395,8 @@ namespace XamCore.AudioUnit
 			return new XamCore.AppKit.NSImage (AudioComponentGetIcon (handle));
 		}
 #endif
+
+#if IOS || MONOMAC
 		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern int /* OSStatus */ AudioUnitExtensionSetComponentList (IntPtr /* CFString */ extensionIdentifier, /* CFArrayRef */ IntPtr audioComponentInfo);
@@ -444,6 +446,7 @@ namespace XamCore.AudioUnit
 				}
 			}
 		}
+#endif
 
 #endif // !COREBUILD
     }
