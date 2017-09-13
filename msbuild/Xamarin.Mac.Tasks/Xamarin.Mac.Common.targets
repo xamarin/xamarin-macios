@@ -95,8 +95,10 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<AssemblySearchPaths Condition="'$(MSBuildRuntimeVersion)' != ''">$(AssemblySearchPaths.Split(';'))</AssemblySearchPaths>
 	</PropertyGroup>
 
+	<Target Name="FixDesignTimeFacades" AfterTargets="GetReferenceAssemblyPaths" Condition="'$(OS)' != 'Windows_NT'" />
+
 	<!-- Location of Libraries -->
-	<Target Name="FixTargetFrameworkDirectory" AfterTargets="GetReferenceAssemblyPaths" Condition="('$(OS)' != 'Windows_NT')">
+	<Target Name="FixTargetFrameworkDirectory" AfterTargets="FixDesignTimeFacades" Condition="('$(OS)' != 'Windows_NT')">
 		<PropertyGroup>
 			<!-- For Modern / Full we overwrite TargetFrameworkDirectory to resolve non XM assemblies from our location only -->
 			<TargetFrameworkDirectory Condition="'$(TargetFrameworkName)' != 'System'">$(MacBclPath);@(DesignTimeFacadeDirectories)</TargetFrameworkDirectory>
