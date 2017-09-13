@@ -12184,4 +12184,52 @@ namespace XamCore.AVFoundation {
 		[Export ("multipleRoutesDetected")]
 		bool MultipleRoutesDetected { get; }
 	}
+
+	[NoTV, iOS (11,0), NoWatch, NoMac]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface AVCapturePhoto
+	{
+		[Export ("timestamp")]
+		CMTime Timestamp { get; }
+
+		[Export ("rawPhoto")]
+		bool RawPhoto { [Bind ("isRawPhoto")] get; }
+
+		[NullAllowed, Export ("pixelBuffer")]
+		CVPixelBuffer PixelBuffer { get; }
+
+		[NullAllowed, Export ("previewPixelBuffer")]
+		CVPixelBuffer PreviewPixelBuffer { get; }
+
+		[NullAllowed, Export ("embeddedThumbnailPhotoFormat")]
+		NSDictionary WeakEmbeddedThumbnailPhotoFormat { get; }
+
+		[Wrap ("WeakEmbeddedThumbnailPhotoFormat")]
+		AVVideoSettingsCompressed EmbeddedThumbnailPhotoFormat { get; }
+
+		[NullAllowed, Export ("depthData")]
+		AVDepthData DepthData { get; }
+
+		[Export ("metadata")]
+		NSDictionary WeakMetadata { get; }
+
+		[Wrap ("WeakMetadata")]
+		CoreGraphics.CGImageProperties Properties { get; }
+
+		[NullAllowed, Export ("cameraCalibrationData")]
+		AVCameraCalibrationData CameraCalibrationData { get; }
+
+		[Export ("resolvedSettings")]
+		AVCaptureResolvedPhotoSettings ResolvedSettings { get; }
+
+		[Export ("photoCount")]
+		nint PhotoCount { get; }
+
+		[NullAllowed, Export ("sourceDeviceType")]
+		NSString WeakSourceDeviceType { get; }
+
+		[Wrap ("AVCaptureDeviceTypeExtensions.GetValue (WeakSourceDeviceType)")]
+		AVCaptureDeviceType SourceDeviceType { get; }
+	}
 }
