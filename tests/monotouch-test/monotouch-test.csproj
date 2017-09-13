@@ -685,6 +685,7 @@
     <Compile Include="PdfKit\PdfAnnotationTest.cs" />
     <Compile Include="FileProvider\NSFileProviderPageTest.cs" />
     <Compile Include="UIKit\UIPasteConfigurationSupportingTest.cs" />
+    <Compile Include="AVFoundation\AVDepthDataTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
@@ -790,6 +791,7 @@
     <BundleResource Include="Resources\xamarin1.png" />
     <BundleResource Include="Resources\xamarin2.png" />
     <BundleResource Include="xamvideotest.mp4" />
+    <BundleResource Include="CoreImage\xamarinmonkey.heic" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Security\openssl_crt.der">

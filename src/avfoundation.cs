@@ -272,17 +272,18 @@ namespace XamCore.AVFoundation {
 		AVDepthData Create (NSDictionary imageSourceAuxDataInfoDictionary, [NullAllowed] out NSError outError);
 
 		[Export ("depthDataByConvertingToDepthDataType:")]
-		AVDepthData Create (CVPixelFormatType depthDataType);
+		AVDepthData ConvertToDepthDataType (CVPixelFormatType depthDataType);
 
 		[Export ("depthDataByApplyingExifOrientation:")]
-		AVDepthData Create (CGImagePropertyOrientation exifOrientation);
+		AVDepthData ApplyExifOrientation (CGImagePropertyOrientation exifOrientation);
 
 		[Export ("depthDataByReplacingDepthDataMapWithPixelBuffer:error:")]
 		[return: NullAllowed]
-		AVDepthData Create (CVPixelBuffer pixelBuffer, [NullAllowed] out NSError outError);
+		AVDepthData ReplaceDepthDataMap (CVPixelBuffer pixelBuffer, [NullAllowed] out NSError outError);
 
+		[Protected]
 		[Export ("availableDepthDataTypes")]
-		NSNumber[] AvailableDepthDataTypes { get; }
+		NSNumber[] WeakAvailableDepthDataTypes { get; }
 
 		[Export ("dictionaryRepresentationForAuxiliaryDataType:")]
 		[return: NullAllowed]
