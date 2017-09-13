@@ -3338,7 +3338,7 @@ namespace XamCore.MetalPerformanceShaders {
 	    MPSImage GetImage (IMTLCommandBuffer cmdBuf, MPSImageDescriptor descriptor, MPSKernel kernel);
 	}
 
-	[TV (11,0), Mac (10,13), iOS (11,0)]
+	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNnStateNode), Name = "MPSCNNConvolutionStateNode")]
 	interface MPSCnnConvolutionStateNode
 	{
@@ -3346,7 +3346,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	interface IMPSImageTransformProvider { }
 
-	[TV (11,0), Mac (10,13), iOS (11,0)]
+	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface MPSImageTransformProvider : NSSecureCoding
@@ -3365,55 +3365,55 @@ namespace XamCore.MetalPerformanceShaders {
 	    IMTLDevice MpsMTLDevice { get; }
 	}
 
-	[TV (11,0), Mac (10,13), iOS (11,0)]
+	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnPoolingNode), Name="MPSCNNPoolingAverageNode")]
 	interface MPSCnnPoolingAverageNode
 	{
 	}
 
-	[TV (11,0), Mac (10,13), iOS (11,0)]
+	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnPoolingNode), Name="MPSCNNPoolingL2NormNode")]
 	interface MPSCnnPoolingL2NormNode
 	{
 	}
 
-	[TV (11,0), Mac (10,13), iOS (11,0)]
+	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnPoolingNode), Name="MPSCNNPoolingMaxNode")]
 	interface MPSCnnPoolingMaxNode
 	{
 	}
 
-	[TV (11,0), Mac (10,13), iOS (11,0)]
+	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNnBinaryArithmeticNode), Name="MPSNNAdditionNode")]
 	interface MPSNnAdditionNode
 	{
 	}
 
-	[TV (11,0), Mac (10,13), iOS (11,0)]
+	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNnScaleNode), Name="MPSNNBilinearScaleNode")]
 	interface MPSNnBilinearScaleNode
 	{
 	}
 
-	[TV (11,0), Mac (10,13), iOS (11,0)]
+	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNnBinaryArithmeticNode), Name="MPSNNDivisionNode")]
 	interface MPSNnDivisionNode
 	{
 	}
 
-	[TV (11,0), Mac (10,13), iOS (11,0)]
+	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNnScaleNode), Name="MPSNNLanczosScaleNode")]
 	interface MPSNnLanczosScaleNode
 	{
 	}
 
-	[TV (11,0), Mac (10,13), iOS (11,0)]
+	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNnBinaryArithmeticNode), Name="MPSNNMultiplicationNode")]
 	interface MPSNnMultiplicationNode
 	{
 	}
 
-	[TV (11,0), Mac (10,13), iOS (11,0)]
+	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNnBinaryArithmeticNode), Name="MPSNNSubtractionNode")]
 	interface MPSNnSubtractionNode
 	{
