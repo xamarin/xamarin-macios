@@ -2834,7 +2834,7 @@ namespace XamCore.AVFoundation {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'GetMetadataForFormat' with enum values AVMetadataFormat.")]
-		[Wrap ("GetMetadataForFormat (new NSString (format))")]
+		[Wrap ("GetMetadataForFormat (new NSString (format))", IsVirtual = true)]
 		AVMetadataItem [] MetadataForFormat (string format);
 #endif
 		[Export ("metadataForFormat:")]
