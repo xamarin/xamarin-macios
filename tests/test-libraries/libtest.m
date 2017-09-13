@@ -117,6 +117,41 @@ x_get_matrix_float4x4 (id self, const char *sel,
 	*r3c3 = rv.columns[3][3];
 }
 
+typedef matrix_float4x3 (*func_x_get_matrix_float4x3_msgSend) (id self, SEL sel);
+void
+x_get_matrix_float4x3 (id self, const char *sel,
+		float* r0c0, float* r0c1, float* r0c2, float* r0c3,
+		float* r1c0, float* r1c1, float* r1c2, float* r1c3,
+		float* r2c0, float* r2c1, float* r2c2, float* r2c3)
+{
+	matrix_float4x3 rv;
+#if __i386__
+	IMP msgSend = (IMP) objc_msgSend_stret;
+#elif __x86_64__
+	IMP msgSend = (IMP) objc_msgSend_stret;
+#elif __arm64__
+	IMP msgSend = (IMP) objc_msgSend;
+#elif __arm__
+	IMP msgSend = (IMP) objc_msgSend_stret;
+#else
+#error unknown architecture
+#endif
+	rv = ((func_x_get_matrix_float4x3_msgSend) msgSend) (self, sel_registerName (sel));
+	*r0c0 = rv.columns[0][0];
+	*r0c1 = rv.columns[1][0];
+	*r0c2 = rv.columns[2][0];
+	*r0c3 = rv.columns[3][0];
+
+	*r1c0 = rv.columns[0][1];
+	*r1c1 = rv.columns[1][1];
+	*r1c2 = rv.columns[2][1];
+	*r1c3 = rv.columns[3][1];
+
+	*r2c0 = rv.columns[0][2];
+	*r2c1 = rv.columns[1][2];
+	*r2c2 = rv.columns[2][2];
+	*r2c3 = rv.columns[3][2];
+}
 #if !TARGET_OS_WATCH
 void
 x_mdltransformcomponent_get_local_transform (id<MDLTransformComponent> self, NSTimeInterval time,

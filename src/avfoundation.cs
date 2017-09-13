@@ -7874,15 +7874,13 @@ namespace XamCore.AVFoundation {
 	interface AVCameraCalibrationData
 	{
 		[Export ("intrinsicMatrix")]
-		Matrix3 GetIntrinsicMatrix { [MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;}
+		NMatrix3 IntrinsicMatrix { [MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get; }
 
 		[Export ("intrinsicMatrixReferenceDimensions")]
 		CGSize IntrinsicMatrixReferenceDimensions { get; }
 
-		/*
 		[Export ("extrinsicMatrix")]
-		Matrix4 GetExtrinsicMatrix { [MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;}; // should be a matrix 4x3
-		*/
+		NMatrix4x3 ExtrinsicMatrix { [MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get; }
 
 		[Export ("pixelSize")]
 		float PixelSize { get; }
