@@ -13,10 +13,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Simd
+namespace OpenTK
 {
 	[StructLayout (LayoutKind.Sequential)]
-	public struct MatrixFloat4x4 : IEquatable<MatrixFloat4x4>
+	public struct NMatrix4 : IEquatable<NMatrix4>
 	{
 		public float M11;
 		public float M21;
@@ -38,54 +38,34 @@ namespace Simd
 		public float M34;
 		public float M44;
 
-		public readonly static MatrixFloat4x4 Identity = new MatrixFloat4x4 {
+		public readonly static NMatrix4 Identity = new NMatrix4 {
 			M11 = 1f,
 			M22 = 1f,
 			M33 = 1f,
 			M44 = 1f,
 		};
 
-		public MatrixFloat4x4 (VectorFloat4 column0, VectorFloat4 column1, VectorFloat4 column2, VectorFloat4 column3)
+		public NMatrix4 (global::OpenTK.Vector4 row0, global::OpenTK.Vector4 row1, global::OpenTK.Vector4 row2, global::OpenTK.Vector4 row3)
 		{
-			M11 = column0.X;
-			M21 = column0.Y;
-			M31 = column0.Z;
-			M41 = column0.W;
-			M12 = column1.X;
-			M22 = column1.Y;
-			M32 = column1.Z;
-			M42 = column1.W;
-			M13 = column2.X;
-			M23 = column2.Y;
-			M33 = column2.Z;
-			M43 = column2.W;
-			M14 = column3.X;
-			M24 = column3.Y;
-			M34 = column3.Z;
-			M44 = column3.W;
+			M11 = row0.X;
+			M21 = row1.X;
+			M31 = row2.X;
+			M41 = row3.X;
+			M12 = row0.Y;
+			M22 = row1.Y;
+			M32 = row2.Y;
+			M42 = row3.Y;
+			M13 = row0.Z;
+			M23 = row1.Z;
+			M33 = row2.Z;
+			M43 = row3.Z;
+			M14 = row0.W;
+			M24 = row1.W;
+			M34 = row2.W;
+			M44 = row3.W;
 		}
 
-		public MatrixFloat4x4 (global::OpenTK.Vector4 column0, global::OpenTK.Vector4 column1, global::OpenTK.Vector4 column2, global::OpenTK.Vector4 column3)
-		{
-			M11 = column0.X;
-			M21 = column0.Y;
-			M31 = column0.Z;
-			M41 = column0.W;
-			M12 = column1.X;
-			M22 = column1.Y;
-			M32 = column1.Z;
-			M42 = column1.W;
-			M13 = column2.X;
-			M23 = column2.Y;
-			M33 = column2.Z;
-			M43 = column2.W;
-			M14 = column3.X;
-			M24 = column3.Y;
-			M34 = column3.Z;
-			M44 = column3.W;
-		}
-
-		public MatrixFloat4x4 (
+		public NMatrix4 (
 			float m11, float m12, float m13, float m14,
 			float m21, float m22, float m23, float m24,
 			float m31, float m32, float m33, float m34,
@@ -107,6 +87,102 @@ namespace Simd
 			M24 = m24;
 			M34 = m34;
 			M44 = m44;
+		}
+
+		public Vector4 Column0 {
+			get {
+				return new Vector4 (M11, M21, M31, M41);
+			}
+			set {
+				M11 = value.X;
+				M21 = value.Y;
+				M31 = value.Z;
+				M41 = value.W;
+			}
+		}
+
+		public Vector4 Column1 {
+			get {
+				return new Vector4 (M12, M22, M32, M42);
+			}
+			set {
+				M12 = value.X;
+				M22 = value.Y;
+				M32 = value.Z;
+				M42 = value.W;
+			}
+		}
+
+		public Vector4 Column2 {
+			get {
+				return new Vector4 (M13, M23, M33, M43);
+			}
+			set {
+				M13 = value.X;
+				M23 = value.Y;
+				M33 = value.Z;
+				M43 = value.W;
+			}
+		}
+
+		public Vector4 Column3 {
+			get {
+				return new Vector4 (M14, M24, M34, M44);
+			}
+			set {
+				M14 = value.X;
+				M24 = value.Y;
+				M34 = value.Z;
+				M44 = value.W;
+			}
+		}
+
+		public Vector4 Row0 {
+			get {
+				return new Vector4 (M11, M12, M13, M14);
+			}
+			set {
+				M11 = value.X;
+				M12 = value.Y;
+				M13 = value.Z;
+				M14 = value.W;
+			}
+		}
+
+		public Vector4 Row1 {
+			get {
+				return new Vector4 (M21, M22, M23, M24);
+			}
+			set {
+				M21 = value.X;
+				M22 = value.Y;
+				M23 = value.Z;
+				M24 = value.W;
+			}
+		}
+
+		public Vector4 Row2 {
+			get {
+				return new Vector4 (M31, M32, M33, M34);
+			}
+			set {
+				M31 = value.X;
+				M32 = value.Y;
+				M33 = value.Z;
+				M34 = value.W;
+			}
+		}
+
+		public Vector4 Row3 {
+			get {
+				return new Vector4 (M41, M42, M43, M44);
+			}
+			set {
+				M41 = value.X;
+				M42 = value.Y;
+				M43 = value.Z;
+				M44 = value.W;
+			}
 		}
 
 		public float Determinant {
@@ -131,14 +207,14 @@ namespace Simd
 			this = Transpose (this);
 		}
 
-		public static MatrixFloat4x4 Transpose (MatrixFloat4x4 mat)
+		public static NMatrix4 Transpose (NMatrix4 mat)
 		{
-			MatrixFloat4x4 result;
+			NMatrix4 result;
 			Transpose (ref mat, out result);
 			return result;
 		}
 
-		public static void Transpose (ref MatrixFloat4x4 mat, out MatrixFloat4x4 result)
+		public static void Transpose (ref NMatrix4 mat, out NMatrix4 result)
 		{
 			result.M11 = mat.M11;
 			result.M21 = mat.M12;
@@ -161,14 +237,14 @@ namespace Simd
 			result.M44 = mat.M44;
 		}
 
-		public static MatrixFloat4x4 Multiply (MatrixFloat4x4 left, MatrixFloat4x4 right)
+		public static NMatrix4 Multiply (NMatrix4 left, NMatrix4 right)
 		{
-			MatrixFloat4x4 result;
+			NMatrix4 result;
 			Multiply (ref left, ref right, out result);
 			return result;
 		}
 
-		public static void Multiply (ref MatrixFloat4x4 left, ref MatrixFloat4x4 right, out MatrixFloat4x4 result)
+		public static void Multiply (ref NMatrix4 left, ref NMatrix4 right, out NMatrix4 result)
 		{
 			result.M11 = left.M11 * right.M11 + left.M12 * right.M21 + left.M13 * right.M31 + left.M14 * right.M41;
 			result.M12 = left.M11 * right.M12 + left.M12 * right.M22 + left.M13 * right.M32 + left.M14 * right.M42;
@@ -191,22 +267,22 @@ namespace Simd
 			result.M44 = left.M41 * right.M14 + left.M42 * right.M24 + left.M43 * right.M34 + left.M44 * right.M44;
 		}
 
-		public static MatrixFloat4x4 operator * (MatrixFloat4x4 left, MatrixFloat4x4 right)
+		public static NMatrix4 operator * (NMatrix4 left, NMatrix4 right)
 		{
 			return Multiply (left, right);
 		}
 
-		public static bool operator == (MatrixFloat4x4 left, MatrixFloat4x4 right)
+		public static bool operator == (NMatrix4 left, NMatrix4 right)
 		{
 			return left.Equals (right);
 		}
 
-		public static bool operator != (MatrixFloat4x4 left, MatrixFloat4x4 right)
+		public static bool operator != (NMatrix4 left, NMatrix4 right)
 		{
 			return !left.Equals (right);
 		}
 
-		public static explicit operator global::OpenTK.Matrix4 (MatrixFloat4x4 value)
+		public static explicit operator global::OpenTK.Matrix4 (NMatrix4 value)
 		{
 			return new global::OpenTK.Matrix4 (
 				value.M11, value.M12, value.M13, value.M14,
@@ -215,9 +291,9 @@ namespace Simd
 				value.M41, value.M42, value.M43, value.M44);
 		}
 
-		public static explicit operator MatrixFloat4x4 (global::OpenTK.Matrix4 value)
+		public static explicit operator NMatrix4 (global::OpenTK.Matrix4 value)
 		{
-			return new MatrixFloat4x4 (value.Column0, value.Column1, value.Column2, value.Column3);
+			return new NMatrix4 (value.Row0, value.Row1, value.Row2, value.Row3);
 		}
 
 		public override string ToString ()
@@ -240,13 +316,13 @@ namespace Simd
 
 		public override bool Equals (object obj)
 		{
-			if (!(obj is MatrixFloat4x4))
+			if (!(obj is NMatrix4))
 				return false;
 
-			return Equals ((MatrixFloat4x4) obj);
+			return Equals ((NMatrix4) obj);
 		}
 
-		public bool Equals (MatrixFloat4x4 other)
+		public bool Equals (NMatrix4 other)
 		{
 			return
 				M11 == other.M11 && M12 == other.M12 && M13 == other.M13 && M14 == other.M14 &&

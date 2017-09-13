@@ -1,6 +1,6 @@
 #if XAMCORE_2_0 && !XAMCORE_4_0
 using OpenTK;
-using Simd;
+using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 
 namespace XamCore.ModelIO {
 	public partial class MDLTransformComponent_Extensions {
