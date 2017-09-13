@@ -537,7 +537,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		Inputs="$(TargetDir)$(TargetFileName)"
 		Outputs="$(_AppBundlePath)Contents\MacOS\$(_AppBundleName)">
 		<ItemGroup>
-			<ReferencesOnly Include="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.Extension)' == '.dll'" />
+			<ReferenceCopyLocalAssemblyPaths Include="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.Extension)' == '.dll'" />
 		</ItemGroup>
 		<Mmp
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -559,7 +559,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			Profiling="$(Profiling)"
 			ExtraArguments="$(MonoBundlingExtraArgs)"
 			NativeReferences="@(NativeReference)"
-			ExplicitReferences="@(ReferencesOnly)"
+			ExplicitReferences="@(ReferenceCopyLocalAssemblyPaths)"
 			SdkRoot="$(_SdkDevPath)"
 			IntermediateOutputPath="$(IntermediateOutputPath)mmp-cache"
 			AppManifest="$(_AppManifest)"
