@@ -497,7 +497,6 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (ARConfiguration))]
-	[DisableDefaultCtor]
 	interface ARWorldTrackingConfiguration {
 
 		[Export ("planeDetection", ArgumentSemantic.Assign)]
@@ -507,7 +506,6 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARConfiguration))]
-	[DisableDefaultCtor]
 	interface AROrientationTrackingConfiguration {}
 
 	[iOS (11,0)]
@@ -534,7 +532,6 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARConfiguration))]
-	[DisableDefaultCtor]
 	interface ARFaceTrackingConfiguration {}
 
 	[iOS (11,0)]
