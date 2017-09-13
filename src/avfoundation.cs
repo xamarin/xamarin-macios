@@ -3071,6 +3071,8 @@ namespace XamCore.AVFoundation {
 		void DidOutputSampleBuffer (AVCaptureOutput captureOutput, CMSampleBuffer sampleBuffer, AVCaptureConnection connection);
 	}
 
+#endif // MONOMAC
+
 	[NoWatch, NoTV, iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -3170,6 +3172,7 @@ namespace XamCore.AVFoundation {
 		AVCaptureOutputDataDroppedReason DroppedReason { get; }
 	}
 
+#if MONOMAC
 	[Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -3219,6 +3222,7 @@ namespace XamCore.AVFoundation {
 		[Export ("overrideTime", ArgumentSemantic.Assign)]
 		CMTime OverrideTime { get; set; }
 	}
+
 #endif
 
 	[NoWatch]
