@@ -14,6 +14,8 @@ using MatrixFloat2x2 = global::OpenTK.NMatrix2;
 using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 using VectorFloat3 = global::OpenTK.NVector3;
+using MatrixDouble4x4 = global::OpenTK.NMatrix4d;
+using VectorDouble3 = global::OpenTK.NVector3d;
 using NUnit.Framework;
 
 public static class Asserts {
@@ -387,24 +389,6 @@ public static class Asserts {
 		Assert.AreEqual (expected.Y, actual.Y, message + " (Y)");
 	}
 
-	public static void AreEqual (Vector2d expected, VectorDouble2 actual, string message)
-	{
-		Assert.AreEqual (expected.X, actual.X, message + " (X)");
-		Assert.AreEqual (expected.Y, actual.Y, message + " (Y)");
-	}
-
-	public static void AreEqual (VectorDouble2 expected, Vector2d actual, string message)
-	{
-		Assert.AreEqual (expected.X, actual.X, message + " (X)");
-		Assert.AreEqual (expected.Y, actual.Y, message + " (Y)");
-	}
-
-	public static void AreEqual (VectorDouble2 expected, VectorDouble2 actual, string message)
-	{
-		Assert.AreEqual (expected.X, actual.X, message + " (X)");
-		Assert.AreEqual (expected.Y, actual.Y, message + " (Y)");
-	}
-
 	public static void AreEqual (Vector3d expected, Vector3d actual, string message)
 	{
 		Assert.AreEqual (expected.X, actual.X, 0.001, message + " (X)");
@@ -455,39 +439,7 @@ public static class Asserts {
 		Assert.AreEqual (expected.W, actual.W, message + " (W)");
 	}
 
-	public static void AreEqual (Vector4d expected, VectorDouble4 actual, string message)
-	{
-		Assert.AreEqual (expected.X, actual.X, message + " (X)");
-		Assert.AreEqual (expected.Y, actual.Y, message + " (Y)");
-		Assert.AreEqual (expected.Z, actual.Z, message + " (Z)");
-		Assert.AreEqual (expected.W, actual.W, message + " (W)");
-	}
-
-	public static void AreEqual (VectorDouble4 expected, Vector4d actual, string message)
-	{
-		Assert.AreEqual (expected.X, actual.X, message + " (X)");
-		Assert.AreEqual (expected.Y, actual.Y, message + " (Y)");
-		Assert.AreEqual (expected.Z, actual.Z, message + " (Z)");
-		Assert.AreEqual (expected.W, actual.W, message + " (W)");
-	}
-
-	public static void AreEqual (VectorDouble4 expected, VectorDouble4 actual, string message)
-	{
-		Assert.AreEqual (expected.X, actual.X, message + " (X)");
-		Assert.AreEqual (expected.Y, actual.Y, message + " (Y)");
-		Assert.AreEqual (expected.Z, actual.Z, message + " (Z)");
-		Assert.AreEqual (expected.W, actual.W, message + " (W)");
-	}
-
 	public static void AreEqual (Vector4d expected, Vector4d actual, double delta, string message)
-	{
-		Assert.AreEqual (expected.X, actual.X, delta, message + " (X)");
-		Assert.AreEqual (expected.Y, actual.Y, delta, message + " (Y)");
-		Assert.AreEqual (expected.Z, actual.Z, delta, message + " (Z)");
-		Assert.AreEqual (expected.W, actual.W, delta, message + " (W)");
-	}
-
-	public static void AreEqual (VectorDouble4 expected, VectorDouble4 actual, double delta, string message)
 	{
 		Assert.AreEqual (expected.X, actual.X, delta, message + " (X)");
 		Assert.AreEqual (expected.Y, actual.Y, delta, message + " (Y)");

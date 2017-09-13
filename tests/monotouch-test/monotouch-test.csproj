@@ -648,11 +648,11 @@
     <Compile Include="PassKit\LabeledValueTest.cs" />
     <Compile Include="System.Net.Http\MessageHandlers.cs" />
     <Compile Include="AVFoundation\PlayerItemVideoOutputTest.cs" />
-    <Compile Include="Simd\MatrixDouble4x4Test.cs" />
+    <Compile Include="Simd\NMatrix4dTest.cs" />
     <Compile Include="Simd\MatrixFloat2x2Test.cs" />
     <Compile Include="Simd\MatrixFloat3x3Test.cs" />
     <Compile Include="Simd\MatrixFloat4x4Test.cs" />
-    <Compile Include="Simd\VectorDouble3Test.cs" />
+    <Compile Include="Simd\NVector3dTest.cs" />
     <Compile Include="Simd\VectorFloat3Test.cs" />
     <Compile Include="mono\ConfigTest.cs" />
     <Compile Include="OpenGLES\EAGLContext.cs" />

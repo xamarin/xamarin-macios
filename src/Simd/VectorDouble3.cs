@@ -2,6 +2,7 @@
 // VectorDouble3.cs:
 //     This represents the native vector_double3 type, which is 32 bytes.
 //
+//
 // Authors:
 //     Rolf Bjarne Kvinge <rolf@xamarin.com>
 //     Alex Soto <alexsoto@microsoft.com>
@@ -12,15 +13,17 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Simd {
+namespace OpenTK
+{
 	[StructLayout (LayoutKind.Sequential)]
-	public struct VectorDouble3 : IEquatable<VectorDouble3> {
+	public struct NVector3d : IEquatable<NVector3d>
+	{
 		public double X;
 		public double Y;
 		public double Z;
 		double dummy;
 
-		public VectorDouble3 (double x, double y, double z)
+		public NVector3d (double x, double y, double z)
 		{
 			X = x;
 			Y = y;
@@ -28,24 +31,24 @@ namespace Simd {
 			dummy = 0;
 		}
 
-		public static bool operator == (VectorDouble3 left, VectorDouble3 right)
+		public static bool operator == (NVector3d left, NVector3d right)
 		{
 			return left.Equals (right);
 		}
 
-		public static bool operator != (VectorDouble3 left, VectorDouble3 right)
+		public static bool operator != (NVector3d left, NVector3d right)
 		{
 			return !left.Equals (right);
 		}
 
-		public static explicit operator global::OpenTK.Vector3d (VectorDouble3 value)
+		public static explicit operator global::OpenTK.Vector3d (NVector3d value)
 		{
 			return new global::OpenTK.Vector3d (value.X, value.Y, value.Z);
 		}
 
-		public static explicit operator VectorDouble3 (global::OpenTK.Vector3d value)
+		public static explicit operator NVector3d (global::OpenTK.Vector3d value)
 		{
-			return new VectorDouble3 (value.X, value.Y, value.Z);
+			return new NVector3d (value.X, value.Y, value.Z);
 		}
 
 		public override string ToString ()
@@ -60,13 +63,13 @@ namespace Simd {
 
 		public override bool Equals (object obj)
 		{
-			if (!(obj is VectorDouble3))
+			if (!(obj is NVector3d))
 				return false;
 
-			return Equals ((VectorDouble3) obj);
+			return Equals ((NVector3d) obj);
 		}
 
-		public bool Equals (VectorDouble3 other)
+		public bool Equals (NVector3d other)
 		{
 			return X == other.X && Y == other.Y && Z == other.Z;
 		}

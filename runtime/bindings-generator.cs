@@ -2984,12 +2984,6 @@ namespace Xamarin.BindingMethods.Generator
 				NativeWrapperType = "struct Vector2d",
 				RequireMarshal = true
 			};
-			public static TypeData VectorDouble2 = new TypeData {
-				ManagedType = "VectorDouble2",
-				NativeType = "vector_double2",
-				NativeWrapperType = "struct Vector2d",
-				RequireMarshal = true,
-			};
 			public static TypeData Vector3d = new TypeData {
 				ManagedType = "Vector3d",
 				NativeType = "vector_double3",
@@ -3004,12 +2998,6 @@ namespace Xamarin.BindingMethods.Generator
 			};
 			public static TypeData Vector4d = new TypeData {
 				ManagedType = "Vector4d",
-				NativeType = "vector_double4",
-				NativeWrapperType = "struct Vector4d",
-				RequireMarshal = true,
-			};
-			public static TypeData VectorDouble4 = new TypeData {
-				ManagedType = "VectorDouble4",
 				NativeType = "vector_double4",
 				NativeWrapperType = "struct Vector4d",
 				RequireMarshal = true,

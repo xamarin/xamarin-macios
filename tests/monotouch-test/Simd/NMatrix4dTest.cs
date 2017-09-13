@@ -6,33 +6,32 @@ using Foundation;
 using ObjCRuntime;
 
 using OpenTK;
-using Simd;
 
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Simd {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class MatrixDouble4x4Test {
+	public class NMatrix4dTest {
 		
 		[Test]
 		public void Identity ()
 		{
-			var identity = new MatrixDouble4x4 {
+			var identity = new NMatrix4d {
 				M11 = 1d,
 				M22 = 1d,
 				M33 = 1d,
 				M44 = 1d,
 			};
-			Asserts.AreEqual (identity, MatrixDouble4x4.Identity, "identity");
-			Asserts.AreEqual (Matrix4d.Identity, MatrixDouble4x4.Identity, "opentk identity");
+			Asserts.AreEqual (identity, NMatrix4d.Identity, "identity");
+			Asserts.AreEqual (Matrix4d.Identity, NMatrix4d.Identity, "opentk identity");
 		}
 
 		[Test]
-		public void ColumnConstructor ()
+		public void RowConstructor ()
 		{
 			var expected = GetTestMatrix ();
-			var actual = new MatrixDouble4x4 (expected.Column0, expected.Column1, expected.Column2, expected.Column3);
+			var actual = new NMatrix4d (expected.Row0, expected.Row1, expected.Row2, expected.Row3);
 			Asserts.AreEqual (expected, actual, "ctor 1");
 		}
 
@@ -40,7 +39,7 @@ namespace MonoTouchFixtures.Simd {
 		public void ElementConstructor ()
 		{
 			var expected = GetTestMatrix ();
-			var actual = new MatrixDouble4x4 (expected.M11, expected.M12, expected.M13, expected.M14,
+			var actual = new NMatrix4d (expected.M11, expected.M12, expected.M13, expected.M14,
 											 expected.M21, expected.M22, expected.M23, expected.M24,
 											 expected.M31, expected.M32, expected.M33, expected.M34,
 											 expected.M41, expected.M42, expected.M43, expected.M44);
@@ -52,7 +51,7 @@ namespace MonoTouchFixtures.Simd {
 		public void Determinant ()
 		{
 			var expected = GetTestMatrix ();
-			var actual = (MatrixDouble4x4) expected;
+			var actual = (NMatrix4d) expected;
 			Assert.AreEqual (expected.Determinant, actual.Determinant, 0.000001d, "determinant\n" + actual);
 
 		}
@@ -61,7 +60,7 @@ namespace MonoTouchFixtures.Simd {
 		public void Elements ()
 		{
 			var expected = GetTestMatrix ();
-			var actual = (MatrixDouble4x4) expected;
+			var actual = (NMatrix4d) expected;
 
 			Assert.AreEqual (expected.M11, actual.M11, "m11 getter");
 			Assert.AreEqual (expected.M12, actual.M12, "m12 getter");
@@ -119,7 +118,7 @@ namespace MonoTouchFixtures.Simd {
 		public void TransposeInstance ()
 		{
 			var expected = GetTestMatrix ();
-			var actual = (MatrixDouble4x4) expected;
+			var actual = (NMatrix4d) expected;
 
 			expected.Transpose ();
 			actual.Transpose ();
@@ -131,17 +130,17 @@ namespace MonoTouchFixtures.Simd {
 		public void TransposeStatic ()
 		{
 			var input = GetTestMatrix ();
-			var inputSimd = (MatrixDouble4x4) input;
+			var inputSimd = (NMatrix4d) input;
 
 			var expected = Matrix4d.Transpose (input);
-			var actual = MatrixDouble4x4.Transpose (inputSimd);
+			var actual = NMatrix4d.Transpose (inputSimd);
 
 			Asserts.AreEqual (expected, actual, "transpose");
 
 			input = GetTestMatrix ();
-			inputSimd = (MatrixDouble4x4) input;
+			inputSimd = (NMatrix4d) input;
 			Matrix4d.Transpose (ref input, out expected);
-			MatrixDouble4x4.Transpose (ref inputSimd, out actual);
+			NMatrix4d.Transpose (ref inputSimd, out actual);
 			Asserts.AreEqual (expected, actual, "transpose out/ref");	             
 		}
 
@@ -149,13 +148,13 @@ namespace MonoTouchFixtures.Simd {
 		public void TransposeStatic_ByRef ()
 		{
 			var input = GetTestMatrix ();
-			var inputSimd = (MatrixDouble4x4) input;
+			var inputSimd = (NMatrix4d) input;
 
 			Matrix4d expected;
-			MatrixDouble4x4 actual;
+			NMatrix4d actual;
 
 			Matrix4d.Transpose (ref input, out expected);
-			MatrixDouble4x4.Transpose (ref inputSimd, out actual);
+			NMatrix4d.Transpose (ref inputSimd, out actual);
 			Asserts.AreEqual (expected, actual, "transpose out/ref");
 		}
 
@@ -164,10 +163,10 @@ namespace MonoTouchFixtures.Simd {
 		{
 			var inputL = GetTestMatrix ();
 			var inputR = GetTestMatrix ();
-			var inputSimdL = (MatrixDouble4x4) inputL;
-			var inputSimdR = (MatrixDouble4x4) inputR;
+			var inputSimdL = (NMatrix4d) inputL;
+			var inputSimdR = (NMatrix4d) inputR;
 			var expected = Matrix4d.Mult (inputL, inputR);
-			var actual = MatrixDouble4x4.Multiply (inputSimdL, inputSimdR);
+			var actual = NMatrix4d.Multiply (inputSimdL, inputSimdR);
 
 			Asserts.AreEqual (expected, actual, "multiply");
 		}
@@ -177,13 +176,13 @@ namespace MonoTouchFixtures.Simd {
 		{
 			var inputL = GetTestMatrix ();
 			var inputR = GetTestMatrix ();
-			var inputSimdL = (MatrixDouble4x4) inputL;
-			var inputSimdR = (MatrixDouble4x4) inputR;
+			var inputSimdL = (NMatrix4d) inputL;
+			var inputSimdR = (NMatrix4d) inputR;
 			Matrix4d expected;
-			MatrixDouble4x4 actual;
+			NMatrix4d actual;
 
 			Matrix4d.Mult (ref inputL, ref inputR, out expected);
-			MatrixDouble4x4.Multiply (ref inputSimdL, ref inputSimdR, out actual);
+			NMatrix4d.Multiply (ref inputSimdL, ref inputSimdR, out actual);
 
 			Asserts.AreEqual (expected, actual, "multiply");
 		}
@@ -194,8 +193,8 @@ namespace MonoTouchFixtures.Simd {
 		{
 			var inputL = GetTestMatrix ();
 			var inputR = GetTestMatrix ();
-			var inputSimdL = (MatrixDouble4x4) inputL;
-			var inputSimdR = (MatrixDouble4x4) inputR;
+			var inputSimdL = (NMatrix4d) inputL;
+			var inputSimdR = (NMatrix4d) inputR;
 			var expected = inputL * inputR;
 			var actual = inputSimdL * inputSimdR;
 
@@ -207,8 +206,8 @@ namespace MonoTouchFixtures.Simd {
 		{
 			var inputL = GetTestMatrix ();
 			var inputR = GetTestMatrix ();
-			var inputSimdL = (MatrixDouble4x4) inputL;
-			var inputSimdR = (MatrixDouble4x4) inputR;
+			var inputSimdL = (NMatrix4d) inputL;
+			var inputSimdR = (NMatrix4d) inputR;
 
 			// matrices are different
 			Assert.AreEqual (inputL == inputR, inputSimdL == inputSimdR, "inequality");
@@ -222,7 +221,7 @@ namespace MonoTouchFixtures.Simd {
 			Assert.IsTrue (inputL == inputR, "equality 2 expected");
 			Assert.IsTrue (inputSimdL == inputSimdR, "equality 2 actual");
 
-			Assert.IsTrue (MatrixDouble4x4.Identity == (MatrixDouble4x4) Matrix4d.Identity, "identity equality");
+			Assert.IsTrue (NMatrix4d.Identity == (NMatrix4d) Matrix4d.Identity, "identity equality");
 		}
 
 		[Test]
@@ -230,8 +229,8 @@ namespace MonoTouchFixtures.Simd {
 		{
 			var inputL = GetTestMatrix ();
 			var inputR = GetTestMatrix ();
-			var inputSimdL = (MatrixDouble4x4) inputL;
-			var inputSimdR = (MatrixDouble4x4) inputR;
+			var inputSimdL = (NMatrix4d) inputL;
+			var inputSimdR = (NMatrix4d) inputR;
 
 			// matrices are different
 			Assert.AreEqual (inputL != inputR, inputSimdL != inputSimdR, "inequality");
@@ -245,19 +244,19 @@ namespace MonoTouchFixtures.Simd {
 			Assert.IsFalse (inputL != inputR, "equality 2 expected");
 			Assert.IsFalse (inputSimdL != inputSimdR, "equality 2 actual");
 
-			Assert.IsFalse (MatrixDouble4x4.Identity != (MatrixDouble4x4) Matrix4d.Identity, "identity equality");
+			Assert.IsFalse (NMatrix4d.Identity != (NMatrix4d) Matrix4d.Identity, "identity equality");
 		}
 
 		[Test]
 		public void Explicit_Operator_ToMatrix4d ()
 		{
-			var expected = (MatrixDouble4x4) GetTestMatrix ();
+			var expected = (NMatrix4d) GetTestMatrix ();
 			var actual = (Matrix4d) expected;
 
 			Asserts.AreEqual (expected, actual, "tomatrix4");
 
-			actual = (Matrix4d) MatrixDouble4x4.Identity;
-			Asserts.AreEqual (MatrixDouble4x4.Identity, actual, "tomatrix4 identity");
+			actual = (Matrix4d) NMatrix4d.Identity;
+			Asserts.AreEqual (NMatrix4d.Identity, actual, "tomatrix4 identity");
 			Asserts.AreEqual (Matrix4d.Identity, actual, "tomatrix4 identity2");
 		}
 
@@ -265,12 +264,12 @@ namespace MonoTouchFixtures.Simd {
 		public void Explicit_Operator_FromMatrix4d ()
 		{
 			var expected = GetTestMatrix ();
-			var actual = (MatrixDouble4x4) expected;
+			var actual = (NMatrix4d) expected;
 
 			Asserts.AreEqual (expected, actual, "frommatrix4");
 
-			actual = (MatrixDouble4x4) Matrix4d.Identity;
-			Asserts.AreEqual (MatrixDouble4x4.Identity, actual, "tomatrix4 identity");
+			actual = (NMatrix4d) Matrix4d.Identity;
+			Asserts.AreEqual (NMatrix4d.Identity, actual, "tomatrix4 identity");
 			Asserts.AreEqual (Matrix4d.Identity, actual, "tomatrix4 identity2");
 		}
 
@@ -278,7 +277,7 @@ namespace MonoTouchFixtures.Simd {
 		public void ToStringTest ()
 		{
 			var expected = GetTestMatrix ();
-			var actual = (MatrixDouble4x4) expected;
+			var actual = (NMatrix4d) expected;
 
 			Assert.AreEqual (expected.ToString (), actual.ToString (), "tostring");
 		}
@@ -290,8 +289,8 @@ namespace MonoTouchFixtures.Simd {
 		{
 			var expectedA = GetTestMatrix ();
 			var expectedB = GetTestMatrix ();
-			var actualA = (MatrixDouble4x4) expectedA;
-			var actualB = (MatrixDouble4x4) expectedB;
+			var actualA = (NMatrix4d) expectedA;
+			var actualB = (NMatrix4d) expectedB;
 
 			Assert.IsTrue (actualA.Equals ((object) actualA), "self");
 			Assert.IsFalse (actualA.Equals ((object) actualB), "other");
@@ -304,8 +303,8 @@ namespace MonoTouchFixtures.Simd {
 		{
 			var expectedA = GetTestMatrix ();
 			var expectedB = GetTestMatrix ();
-			var actualA = (MatrixDouble4x4) expectedA;
-			var actualB = (MatrixDouble4x4) expectedB;
+			var actualA = (NMatrix4d) expectedA;
+			var actualB = (NMatrix4d) expectedB;
 
 			Assert.IsTrue (actualA.Equals (actualA), "self");
 			Assert.IsFalse (actualA.Equals (actualB), "other");
@@ -315,7 +314,7 @@ namespace MonoTouchFixtures.Simd {
 		//
 		// I initially tried randomly generating test matrices, but it turns out
 		// there are accumulative computational differences in the different algorithms
-		// between Matrix4d and MatrixDouble4x4. Since the differences are accumulative,
+		// between Matrix4d and NMatrix4d. Since the differences are accumulative,
 		// I couldn't find a minimal sensible delta values when comparing 
 		// matrices.
 		//
