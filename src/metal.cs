@@ -927,14 +927,14 @@ namespace XamCore.Metal {
 #endif
 		[Export ("newRenderPipelineStateWithTileDescriptor:options:reflection:error:")]
 		[return: NullAllowed]
-		IMTLRenderPipelineState NewRenderPipelineState (MTLTileRenderPipelineDescriptor descriptor, MTLPipelineOption options, [NullAllowed] out MTLRenderPipelineReflection reflection, [NullAllowed] out NSError error);
+		IMTLRenderPipelineState CreateRenderPipelineState (MTLTileRenderPipelineDescriptor descriptor, MTLPipelineOption options, [NullAllowed] out MTLRenderPipelineReflection reflection, [NullAllowed] out NSError error);
 
 		[iOS (11,0), TV (11,0), NoMac, NoWatch]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Async (ResultTypeName="NewRenderPipelineStateResult"), Export ("newRenderPipelineStateWithTileDescriptor:options:completionHandler:")]
-		void NewRenderPipelineState (MTLTileRenderPipelineDescriptor descriptor, MTLPipelineOption options, MTLNewRenderPipelineStateWithReflectionCompletionHandler completionHandler);
+		void CreateRenderPipelineState (MTLTileRenderPipelineDescriptor descriptor, MTLPipelineOption options, MTLNewRenderPipelineStateWithReflectionCompletionHandler completionHandler);
 	}
 
 	interface IMTLDrawable {}
@@ -1349,22 +1349,30 @@ namespace XamCore.Metal {
 		IMTLDevice Device { get; }
 
 		[iOS (11, 0), TV (11,0), NoMac, NoWatch]
+#if XAMCORE_4_0
 		[Abstract]
+#endif
 		[Export ("maxTotalThreadsPerThreadgroup")]
 		nuint MaxTotalThreadsPerThreadgroup { get; }
 
 		[iOS (11, 0), TV (11,0), NoMac, NoWatch]
+#if XAMCORE_4_0
 		[Abstract]
+#endif
 		[Export ("threadgroupSizeMatchesTileSize")]
 		bool ThreadgroupSizeMatchesTileSize { get; }
 
 		[iOS (11, 0), TV (11,0), NoMac, NoWatch]
+#if XAMCORE_4_0
 		[Abstract]
+#endif
 		[Export ("imageblockSampleLength")]
 		nuint ImageblockSampleLength { get; }
 
 		[iOS (11,0), TV (11,0), NoMac, NoWatch]
+#if XAMCORE_4_0
 		[Abstract]
+#endif
 		[Export ("imageblockMemoryLengthForDimensions:")]
 		nuint GetImageblockMemoryLength (MTLSize imageblockDimensions);
 
