@@ -6114,7 +6114,7 @@ namespace XamCore.UIKit {
 		[Export ("bounds")]
 		CGRect Bounds { get; }
 
-		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[TV (11,0), iOS (11,0)]
 		[Static]
 		[Export ("preferredFormat")]
 		UIGraphicsRendererFormat PreferredFormat { get; }
