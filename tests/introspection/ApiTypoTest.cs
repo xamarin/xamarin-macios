@@ -278,6 +278,7 @@ namespace Introspection
 			"Mobike", // acronym
 			"Morpher",
 			"Mpe", // acronym
+			"Mps",
 			"Mtu", // acronym
 			"Mtc", // acronym
 			"Mul",
