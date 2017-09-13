@@ -18,7 +18,8 @@ using MatrixDouble4x4 = global::OpenTK.NMatrix4d;
 using VectorDouble3 = global::OpenTK.NVector3d;
 using NUnit.Framework;
 
-public static class Asserts {
+public static class Asserts
+{
 	public static void AreEqual (bool expected, bool actual, string message)
 	{
 		Assert.AreEqual (expected, actual, message + " (M)");
@@ -563,5 +564,5 @@ public static class Asserts {
 		AreEqual (expected.M44, actual.M44, message + " (M44)");
 	}
 #endregion
- }
+}
 

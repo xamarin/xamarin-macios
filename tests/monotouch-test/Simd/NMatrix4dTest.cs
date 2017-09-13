@@ -13,7 +13,7 @@ namespace MonoTouchFixtures.Simd {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NMatrix4dTest {
-		
+
 		[Test]
 		public void Identity ()
 		{
@@ -141,7 +141,7 @@ namespace MonoTouchFixtures.Simd {
 			inputSimd = (NMatrix4d) input;
 			Matrix4d.Transpose (ref input, out expected);
 			NMatrix4d.Transpose (ref inputSimd, out actual);
-			Asserts.AreEqual (expected, actual, "transpose out/ref");	             
+			Asserts.AreEqual (expected, actual, "transpose out/ref");
 		}
 
 		[Test]
@@ -315,12 +315,12 @@ namespace MonoTouchFixtures.Simd {
 		// I initially tried randomly generating test matrices, but it turns out
 		// there are accumulative computational differences in the different algorithms
 		// between Matrix4d and NMatrix4d. Since the differences are accumulative,
-		// I couldn't find a minimal sensible delta values when comparing 
+		// I couldn't find a minimal sensible delta values when comparing
 		// matrices.
 		//
 		// So I just serialized a few matrices that were randomly generated, and
 		// these have been tested to not produce accumulative computational differences.
-		// 
+		//
 		static Matrix4d [] test_matrices = new [] {
 			new Matrix4d (0.1532144d, 0.5451511d, 0.2004739d, 0.8351463d, 0.9884372d, 0.1313103d, 0.3327205d, 0.01164342d, 0.6563147d, 0.7923161d, 0.6764754d, 0.07481737d, 0.03239552d, 0.7156482d, 0.6136858d, 0.1864168f),
 			new Matrix4d (0.7717745d, 0.559364d, 0.00918373d, 0.6579159d, 0.123461d, 0.9993145d, 0.5487496d, 0.2823398d, 0.9710717d, 0.8750508d, 0.472472d, 0.2608089d, 0.5771761d, 0.5617125d, 0.176998d, 0.1271691f),
