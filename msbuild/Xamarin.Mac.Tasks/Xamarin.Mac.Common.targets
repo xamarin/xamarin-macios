@@ -537,7 +537,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		Inputs="$(TargetDir)$(TargetFileName)"
 		Outputs="$(_AppBundlePath)Contents\MacOS\$(_AppBundleName)">
 		<ItemGroup>
-			<ReferenceCopyLocalAssemblyPaths Include="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.Extension)' == '.dll'" />
+			<ReferenceCopyLocalAssemblyPaths Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
 		</ItemGroup>
 		<Mmp
 			Condition="'$(IsMacEnabled)' == 'true'"
