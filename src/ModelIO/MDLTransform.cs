@@ -1,6 +1,6 @@
 #if XAMCORE_2_0 || !MONOMAC
 using System;
-using Simd;
+using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 
 namespace XamCore.ModelIO {
 	public partial class MDLTransform {

@@ -23,14 +23,16 @@ using Vector3i = global::OpenTK.Vector3i;
 using Vector4 = global::OpenTK.Vector4;
 using Vector4i = global::OpenTK.Vector4i;
 #if XAMCORE_4_0
-using Matrix2 = global::Simd.Matrix2;
-using Matrix3 = global::Simd.Matrix3;
-using Matrix4 = global::Simd.Matrix4;
+using Matrix2 = global::OpenTK.NMatrix2;
+using Matrix3 = global::OpenTK.NMatrix3;
+using Matrix4 = global::OpenTK.NMatrix4;
 #else
 using Matrix2 = global::OpenTK.Matrix2;
 using Matrix3 = global::OpenTK.Matrix3;
 using Matrix4 = global::OpenTK.Matrix4;
-using Simd;
+using MatrixFloat2x2 = global::OpenTK.NMatrix2;
+using MatrixFloat3x3 = global::OpenTK.NMatrix3;
+using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 #endif
 using Quaternion = global::OpenTK.Quaternion;
 using MathHelper = global::OpenTK.MathHelper;

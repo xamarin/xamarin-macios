@@ -11,19 +11,22 @@
 
 using System;
 using System.ComponentModel;
+using XamCore.AVFoundation;
 using XamCore.CoreFoundation;
 using XamCore.CoreGraphics;
 using XamCore.CoreMedia;
 using XamCore.CoreVideo;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
+using XamCore.Metal;
 using XamCore.SpriteKit;
 using XamCore.SceneKit;
 using XamCore.UIKit;
 
-using Vector3 = global::Simd.VectorFloat3;
-using Matrix3 = global::Simd.MatrixFloat3x3;
-using Matrix4 = global::Simd.MatrixFloat4x4;
+using Vector2 = global::OpenTK.Vector2;
+using Vector3 = global::OpenTK.NVector3;
+using Matrix3 = global::OpenTK.NMatrix3;
+using Matrix4 = global::OpenTK.NMatrix4;
 
 namespace XamCore.ARKit {
 
@@ -186,6 +189,12 @@ namespace XamCore.ARKit {
 
 		[Export ("capturedImage")]
 		CVPixelBuffer CapturedImage { get; }
+
+		[NullAllowed, Export ("capturedDepthData", ArgumentSemantic.Strong)]
+		AVDepthData CapturedDepthData { get; }
+
+		[Export ("capturedDepthDataTimestamp")]
+		double CapturedDepthDataTimestamp { get; }
 
 		[Export ("camera", ArgumentSemantic.Copy)]
 		ARCamera Camera { get; }
@@ -467,6 +476,7 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
+	[Abstract]
 	[DisableDefaultCtor]
 	interface ARConfiguration : NSCopying {
 
@@ -508,6 +518,377 @@ namespace XamCore.ARKit {
 
 		[Field ("ARSCNDebugOptionShowFeaturePoints")]
 		SCNDebugOptions ShowFeaturePoints { get; }
+	}
+
+	[iOS (11,0)]
+	[NoWatch, NoTV, NoMac]
+	[Protocol]
+	interface ARTrackable {
+		[Abstract]
+		[Export ("isTracked")]
+		bool IsTracked { get; }
+	}
+
+	[iOS (11,0)]
+	[NoWatch, NoTV, NoMac]
+	[BaseType (typeof(ARConfiguration))]
+	interface ARFaceTrackingConfiguration {}
+
+	[iOS (11,0)]
+	[NoWatch, NoTV, NoMac]
+	[StrongDictionary ("ARBlendShapeLocationKeys")]
+	interface ARBlendShapeLocationOptions {
+
+		float BrowDownLeft { get; set; }
+
+		float BrowDownRight { get; set; }
+
+		float BrowInnerUp { get; set; }
+
+		float BrowOuterUpLeft { get; set; }
+
+		float BrowOuterUpRight { get; set; }
+
+		float CheekPuff { get; set; }
+
+		float CheekSquintLeft { get; set; }
+
+		float CheekSquintRight { get; set; }
+
+		float EyeBlinkLeft { get; set; }
+
+		float EyeBlinkRight { get; set; }
+
+		float EyeLookDownLeft { get; set; }
+
+		float EyeLookDownRight { get; set; }
+
+		float EyeLookInLeft { get; set; }
+
+		float EyeLookInRight { get; set; }
+
+		float EyeLookOutLeft { get; set; }
+
+		float EyeLookOutRight { get; set; }
+
+		float EyeLookUpLeft { get; set; }
+
+		float EyeLookUpRight { get; set; }
+
+		float EyeSquintLeft { get; set; }
+
+		float EyeSquintRight { get; set; }
+
+		float EyeWideLeft { get; set; }
+
+		float EyeWideRight { get; set; }
+
+		float JawForward { get; set; }
+
+		float JawLeft { get; set; }
+
+		float JawOpen { get; set; }
+
+		float JawRight { get; set; }
+
+		float MouthClose { get; set; }
+
+		float MouthDimpleLeft { get; set; }
+
+		float MouthDimpleRight { get; set; }
+
+		float MouthFrownLeft { get; set; }
+
+		float MouthFrownRight { get; set; }
+
+		float MouthFunnel { get; set; }
+
+		float MouthLeft { get; set; }
+
+		float MouthLowerDownLeft { get; set; }
+
+		float MouthLowerDownRight { get; set; }
+
+		float MouthPressLeft { get; set; }
+
+		float MouthPressRight { get; set; }
+
+		float MouthPucker { get; set; }
+
+		float MouthRight { get; set; }
+
+		float MouthRollLower { get; set; }
+
+		float MouthRollUpper { get; set; }
+
+		float MouthShrugLower { get; set; }
+
+		float MouthShrugUpper { get; set; }
+
+		float MouthSmileLeft { get; set; }
+
+		float MouthSmileRight { get; set; }
+
+		float MouthStretchLeft { get; set; }
+
+		float MouthStretchRight { get; set; }
+
+		float MouthUpperUpLeft { get; set; }
+
+		float MouthUpperUpRight { get; set; }
+
+		float NoseSneerLeft { get; set; }
+
+		float NoseSneerRight { get; set; }
+	}
+
+	[iOS (11,0)]
+	[NoWatch, NoTV, NoMac]
+	[Static]
+	[Internal]
+	interface ARBlendShapeLocationKeys {
+
+		[Field ("ARBlendShapeLocationBrowDownLeft")]
+		NSString BrowDownLeftKey { get; }
+
+		[Field ("ARBlendShapeLocationBrowDownRight")]
+		NSString BrowDownRightKey { get; }
+
+		[Field ("ARBlendShapeLocationBrowInnerUp")]
+		NSString BrowInnerUpKey { get; }
+
+		[Field ("ARBlendShapeLocationBrowOuterUpLeft")]
+		NSString BrowOuterUpLeftKey { get; }
+
+		[Field ("ARBlendShapeLocationBrowOuterUpRight")]
+		NSString BrowOuterUpRightKey { get; }
+
+		[Field ("ARBlendShapeLocationCheekPuff")]
+		NSString CheekPuffKey { get; }
+
+		[Field ("ARBlendShapeLocationCheekSquintLeft")]
+		NSString CheekSquintLeftKey { get; }
+
+		[Field ("ARBlendShapeLocationCheekSquintRight")]
+		NSString CheekSquintRightKey { get; }
+
+		[Field ("ARBlendShapeLocationEyeBlinkLeft")]
+		NSString EyeBlinkLeftKey { get; }
+
+		[Field ("ARBlendShapeLocationEyeBlinkRight")]
+		NSString EyeBlinkRightKey { get; }
+
+		[Field ("ARBlendShapeLocationEyeLookDownLeft")]
+		NSString EyeLookDownLeftKey { get; }
+
+		[Field ("ARBlendShapeLocationEyeLookDownRight")]
+		NSString EyeLookDownRightKey { get; }
+
+		[Field ("ARBlendShapeLocationEyeLookInLeft")]
+		NSString EyeLookInLeftKey { get; }
+
+		[Field ("ARBlendShapeLocationEyeLookInRight")]
+		NSString EyeLookInRightKey { get; }
+
+		[Field ("ARBlendShapeLocationEyeLookOutLeft")]
+		NSString EyeLookOutLeftKey { get; }
+
+		[Field ("ARBlendShapeLocationEyeLookOutRight")]
+		NSString EyeLookOutRightKey { get; }
+
+		[Field ("ARBlendShapeLocationEyeLookUpLeft")]
+		NSString EyeLookUpLeftKey { get; }
+
+		[Field ("ARBlendShapeLocationEyeLookUpRight")]
+		NSString EyeLookUpRightKey { get; }
+
+		[Field ("ARBlendShapeLocationEyeSquintLeft")]
+		NSString EyeSquintLeftKey { get; }
+
+		[Field ("ARBlendShapeLocationEyeSquintRight")]
+		NSString EyeSquintRightKey { get; }
+
+		[Field ("ARBlendShapeLocationEyeWideLeft")]
+		NSString EyeWideLeftKey { get; }
+
+		[Field ("ARBlendShapeLocationEyeWideRight")]
+		NSString EyeWideRightKey { get; }
+
+		[Field ("ARBlendShapeLocationJawForward")]
+		NSString JawForwardKey { get; }
+
+		[Field ("ARBlendShapeLocationJawLeft")]
+		NSString JawLeftKey { get; }
+
+		[Field ("ARBlendShapeLocationJawOpen")]
+		NSString JawOpenKey { get; }
+
+		[Field ("ARBlendShapeLocationJawRight")]
+		NSString JawRightKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthClose")]
+		NSString MouthCloseKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthDimpleLeft")]
+		NSString MouthDimpleLeftKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthDimpleRight")]
+		NSString MouthDimpleRightKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthFrownLeft")]
+		NSString MouthFrownLeftKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthFrownRight")]
+		NSString MouthFrownRightKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthFunnel")]
+		NSString MouthFunnelKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthLeft")]
+		NSString MouthLeftKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthLowerDownLeft")]
+		NSString MouthLowerDownLeftKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthLowerDownRight")]
+		NSString MouthLowerDownRightKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthPressLeft")]
+		NSString MouthPressLeftKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthPressRight")]
+		NSString MouthPressRightKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthPucker")]
+		NSString MouthPuckerKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthRight")]
+		NSString MouthRightKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthRollLower")]
+		NSString MouthRollLowerKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthRollUpper")]
+		NSString MouthRollUpperKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthShrugLower")]
+		NSString MouthShrugLowerKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthShrugUpper")]
+		NSString MouthShrugUpperKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthSmileLeft")]
+		NSString MouthSmileLeftKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthSmileRight")]
+		NSString MouthSmileRightKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthStretchLeft")]
+		NSString MouthStretchLeftKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthStretchRight")]
+		NSString MouthStretchRightKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthUpperUpLeft")]
+		NSString MouthUpperUpLeftKey { get; }
+
+		[Field ("ARBlendShapeLocationMouthUpperUpRight")]
+		NSString MouthUpperUpRightKey { get; }
+
+		[Field ("ARBlendShapeLocationNoseSneerLeft")]
+		NSString NoseSneerLeftKey { get; }
+
+		[Field ("ARBlendShapeLocationNoseSneerRight")]
+		NSString NoseSneerRightKey { get; }
+	}
+
+	[iOS (11,0)]
+	[NoWatch, NoTV, NoMac]
+	[BaseType (typeof(ARAnchor))]
+	interface ARFaceAnchor : ARTrackable {
+		[Export ("geometry")]
+		ARFaceGeometry Geometry { get; }
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("blendShapes")]
+		NSDictionary WeakBlendShapes { get; }
+
+		[Wrap ("WeakBlendShapes")]
+		ARBlendShapeLocationOptions BlendShapes { get; }
+	}
+
+	[iOS (11,0)]
+	[NoWatch, NoTV, NoMac]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface ARFaceGeometry : NSCopying {
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("initWithBlendShapes:")]
+		IntPtr Constructor (NSDictionary blendShapes);
+
+		[Wrap ("this ((NSDictionary)blendShapes?.Dictionary)")]
+		IntPtr Constructor (ARBlendShapeLocationOptions blendShapes);
+
+		[Export ("vertexCount")]
+		nuint VertexCount { get; }
+
+		[Export ("vertices")]
+		Vector3 Vertices {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+
+		[Export ("textureCoordinateCount")]
+		nuint TextureCoordinateCount { get; }
+
+		[Export ("textureCoordinates")]
+		Vector2 TextureCoordinates {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+
+		[Export ("triangleCount")]
+		nuint TriangleCount { get; }
+
+		[Export ("triangleIndices")]
+		short TriangleIndices { get; }
+	}
+
+	[iOS (11,0)]
+	[NoWatch, NoTV, NoMac]
+	[BaseType (typeof(SCNGeometry))]
+	[DisableDefaultCtor]
+	interface ARSCNFaceGeometry {
+		[Static]
+		[Export ("faceGeometryWithDevice:")]
+		[return: NullAllowed]
+		ARSCNFaceGeometry CreateFaceGeometry (IMTLDevice device);
+
+		[Static]
+		[Export ("faceGeometryWithDevice:fillMesh:")]
+		[return: NullAllowed]
+		ARSCNFaceGeometry CreateFaceGeometry (IMTLDevice device, bool fillMesh);
+
+		[Export ("updateFromFaceGeometry:")]
+		void Update (ARFaceGeometry faceGeometry);
+	}
+
+	[iOS (11,0)]
+	[NoWatch, NoTV, NoMac]
+	[BaseType (typeof(ARLightEstimate))]
+	[DisableDefaultCtor]
+	interface ARDirectionalLightEstimate {
+		[Export ("sphericalHarmonicsCoefficients", ArgumentSemantic.Copy)]
+		NSData SphericalHarmonicsCoefficients { get; }
+
+		[Export ("primaryLightDirection")]
+		Vector3 PrimaryLightDirection {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+
+		[Export ("primaryLightIntensity")]
+		nfloat PrimaryLightIntensity { get; }
 	}
 }
 

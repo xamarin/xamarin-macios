@@ -6,34 +6,32 @@ using Foundation;
 using ObjCRuntime;
 
 using OpenTK;
-using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.Simd
-{
+namespace MonoTouchFixtures.Simd {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class MatrixFloat4x4Test
-	{
+	public class NMatrix4dTest {
+
 		[Test]
 		public void Identity ()
 		{
-			var identity = new MatrixFloat4x4 {
-				M11 = 1f,
-				M22 = 1f,
-				M33 = 1f,
-				M44 = 1f,
+			var identity = new NMatrix4d {
+				M11 = 1d,
+				M22 = 1d,
+				M33 = 1d,
+				M44 = 1d,
 			};
-			Asserts.AreEqual (identity, MatrixFloat4x4.Identity, "identity");
-			Asserts.AreEqual (Matrix4.Identity, MatrixFloat4x4.Identity, "opentk identity");
+			Asserts.AreEqual (identity, NMatrix4d.Identity, "identity");
+			Asserts.AreEqual (Matrix4d.Identity, NMatrix4d.Identity, "opentk identity");
 		}
 
 		[Test]
 		public void RowConstructor ()
 		{
 			var expected = GetTestMatrix ();
-			var actual = new MatrixFloat4x4 (expected.Row0, expected.Row1, expected.Row2, expected.Row3);
+			var actual = new NMatrix4d (expected.Row0, expected.Row1, expected.Row2, expected.Row3);
 			Asserts.AreEqual (expected, actual, "ctor 1");
 		}
 
@@ -41,7 +39,7 @@ namespace MonoTouchFixtures.Simd
 		public void ElementConstructor ()
 		{
 			var expected = GetTestMatrix ();
-			var actual = new MatrixFloat4x4 (expected.M11, expected.M12, expected.M13, expected.M14,
+			var actual = new NMatrix4d (expected.M11, expected.M12, expected.M13, expected.M14,
 											 expected.M21, expected.M22, expected.M23, expected.M24,
 											 expected.M31, expected.M32, expected.M33, expected.M34,
 											 expected.M41, expected.M42, expected.M43, expected.M44);
@@ -53,8 +51,8 @@ namespace MonoTouchFixtures.Simd
 		public void Determinant ()
 		{
 			var expected = GetTestMatrix ();
-			var actual = (MatrixFloat4x4) expected;
-			Assert.AreEqual (expected.Determinant, actual.Determinant, 0.000001f, "determinant\n" + actual);
+			var actual = (NMatrix4d) expected;
+			Assert.AreEqual (expected.Determinant, actual.Determinant, 0.000001d, "determinant\n" + actual);
 
 		}
 
@@ -62,7 +60,7 @@ namespace MonoTouchFixtures.Simd
 		public void Elements ()
 		{
 			var expected = GetTestMatrix ();
-			var actual = (MatrixFloat4x4) expected;
+			var actual = (NMatrix4d) expected;
 
 			Assert.AreEqual (expected.M11, actual.M11, "m11 getter");
 			Assert.AreEqual (expected.M12, actual.M12, "m12 getter");
@@ -120,7 +118,7 @@ namespace MonoTouchFixtures.Simd
 		public void TransposeInstance ()
 		{
 			var expected = GetTestMatrix ();
-			var actual = (MatrixFloat4x4) expected;
+			var actual = (NMatrix4d) expected;
 
 			expected.Transpose ();
 			actual.Transpose ();
@@ -132,31 +130,31 @@ namespace MonoTouchFixtures.Simd
 		public void TransposeStatic ()
 		{
 			var input = GetTestMatrix ();
-			var inputSimd = (MatrixFloat4x4) input;
+			var inputSimd = (NMatrix4d) input;
 
-			var expected = Matrix4.Transpose (input);
-			var actual = MatrixFloat4x4.Transpose (inputSimd);
+			var expected = Matrix4d.Transpose (input);
+			var actual = NMatrix4d.Transpose (inputSimd);
 
 			Asserts.AreEqual (expected, actual, "transpose");
 
 			input = GetTestMatrix ();
-			inputSimd = (MatrixFloat4x4) input;
-			Matrix4.Transpose (ref input, out expected);
-			MatrixFloat4x4.Transpose (ref inputSimd, out actual);
-			Asserts.AreEqual (expected, actual, "transpose out/ref");	             
+			inputSimd = (NMatrix4d) input;
+			Matrix4d.Transpose (ref input, out expected);
+			NMatrix4d.Transpose (ref inputSimd, out actual);
+			Asserts.AreEqual (expected, actual, "transpose out/ref");
 		}
 
 		[Test]
 		public void TransposeStatic_ByRef ()
 		{
 			var input = GetTestMatrix ();
-			var inputSimd = (MatrixFloat4x4) input;
+			var inputSimd = (NMatrix4d) input;
 
-			Matrix4 expected;
-			MatrixFloat4x4 actual;
+			Matrix4d expected;
+			NMatrix4d actual;
 
-			Matrix4.Transpose (ref input, out expected);
-			MatrixFloat4x4.Transpose (ref inputSimd, out actual);
+			Matrix4d.Transpose (ref input, out expected);
+			NMatrix4d.Transpose (ref inputSimd, out actual);
 			Asserts.AreEqual (expected, actual, "transpose out/ref");
 		}
 
@@ -165,10 +163,10 @@ namespace MonoTouchFixtures.Simd
 		{
 			var inputL = GetTestMatrix ();
 			var inputR = GetTestMatrix ();
-			var inputSimdL = (MatrixFloat4x4) inputL;
-			var inputSimdR = (MatrixFloat4x4) inputR;
-			var expected = Matrix4.Mult (inputL, inputR);
-			var actual = MatrixFloat4x4.Multiply (inputSimdL, inputSimdR);
+			var inputSimdL = (NMatrix4d) inputL;
+			var inputSimdR = (NMatrix4d) inputR;
+			var expected = Matrix4d.Mult (inputL, inputR);
+			var actual = NMatrix4d.Multiply (inputSimdL, inputSimdR);
 
 			Asserts.AreEqual (expected, actual, "multiply");
 		}
@@ -178,13 +176,13 @@ namespace MonoTouchFixtures.Simd
 		{
 			var inputL = GetTestMatrix ();
 			var inputR = GetTestMatrix ();
-			var inputSimdL = (MatrixFloat4x4) inputL;
-			var inputSimdR = (MatrixFloat4x4) inputR;
-			Matrix4 expected;
-			MatrixFloat4x4 actual;
+			var inputSimdL = (NMatrix4d) inputL;
+			var inputSimdR = (NMatrix4d) inputR;
+			Matrix4d expected;
+			NMatrix4d actual;
 
-			Matrix4.Mult (ref inputL, ref inputR, out expected);
-			MatrixFloat4x4.Multiply (ref inputSimdL, ref inputSimdR, out actual);
+			Matrix4d.Mult (ref inputL, ref inputR, out expected);
+			NMatrix4d.Multiply (ref inputSimdL, ref inputSimdR, out actual);
 
 			Asserts.AreEqual (expected, actual, "multiply");
 		}
@@ -195,8 +193,8 @@ namespace MonoTouchFixtures.Simd
 		{
 			var inputL = GetTestMatrix ();
 			var inputR = GetTestMatrix ();
-			var inputSimdL = (MatrixFloat4x4) inputL;
-			var inputSimdR = (MatrixFloat4x4) inputR;
+			var inputSimdL = (NMatrix4d) inputL;
+			var inputSimdR = (NMatrix4d) inputR;
 			var expected = inputL * inputR;
 			var actual = inputSimdL * inputSimdR;
 
@@ -208,8 +206,8 @@ namespace MonoTouchFixtures.Simd
 		{
 			var inputL = GetTestMatrix ();
 			var inputR = GetTestMatrix ();
-			var inputSimdL = (MatrixFloat4x4) inputL;
-			var inputSimdR = (MatrixFloat4x4) inputR;
+			var inputSimdL = (NMatrix4d) inputL;
+			var inputSimdR = (NMatrix4d) inputR;
 
 			// matrices are different
 			Assert.AreEqual (inputL == inputR, inputSimdL == inputSimdR, "inequality");
@@ -223,7 +221,7 @@ namespace MonoTouchFixtures.Simd
 			Assert.IsTrue (inputL == inputR, "equality 2 expected");
 			Assert.IsTrue (inputSimdL == inputSimdR, "equality 2 actual");
 
-			Assert.IsTrue (MatrixFloat4x4.Identity == (MatrixFloat4x4) Matrix4.Identity, "identity equality");
+			Assert.IsTrue (NMatrix4d.Identity == (NMatrix4d) Matrix4d.Identity, "identity equality");
 		}
 
 		[Test]
@@ -231,8 +229,8 @@ namespace MonoTouchFixtures.Simd
 		{
 			var inputL = GetTestMatrix ();
 			var inputR = GetTestMatrix ();
-			var inputSimdL = (MatrixFloat4x4) inputL;
-			var inputSimdR = (MatrixFloat4x4) inputR;
+			var inputSimdL = (NMatrix4d) inputL;
+			var inputSimdR = (NMatrix4d) inputR;
 
 			// matrices are different
 			Assert.AreEqual (inputL != inputR, inputSimdL != inputSimdR, "inequality");
@@ -246,40 +244,40 @@ namespace MonoTouchFixtures.Simd
 			Assert.IsFalse (inputL != inputR, "equality 2 expected");
 			Assert.IsFalse (inputSimdL != inputSimdR, "equality 2 actual");
 
-			Assert.IsFalse (MatrixFloat4x4.Identity != (MatrixFloat4x4) Matrix4.Identity, "identity equality");
+			Assert.IsFalse (NMatrix4d.Identity != (NMatrix4d) Matrix4d.Identity, "identity equality");
 		}
 
 		[Test]
-		public void Explicit_Operator_ToMatrix4 ()
+		public void Explicit_Operator_ToMatrix4d ()
 		{
-			var expected = (MatrixFloat4x4) GetTestMatrix ();
-			var actual = (Matrix4) expected;
+			var expected = (NMatrix4d) GetTestMatrix ();
+			var actual = (Matrix4d) expected;
 
 			Asserts.AreEqual (expected, actual, "tomatrix4");
 
-			actual = (Matrix4) MatrixFloat4x4.Identity;
-			Asserts.AreEqual (MatrixFloat4x4.Identity, actual, "tomatrix4 identity");
-			Asserts.AreEqual (Matrix4.Identity, actual, "tomatrix4 identity2");
+			actual = (Matrix4d) NMatrix4d.Identity;
+			Asserts.AreEqual (NMatrix4d.Identity, actual, "tomatrix4 identity");
+			Asserts.AreEqual (Matrix4d.Identity, actual, "tomatrix4 identity2");
 		}
 
 		[Test]
-		public void Explicit_Operator_FromMatrix4 ()
+		public void Explicit_Operator_FromMatrix4d ()
 		{
 			var expected = GetTestMatrix ();
-			var actual = (MatrixFloat4x4) expected;
+			var actual = (NMatrix4d) expected;
 
 			Asserts.AreEqual (expected, actual, "frommatrix4");
 
-			actual = (MatrixFloat4x4) Matrix4.Identity;
-			Asserts.AreEqual (MatrixFloat4x4.Identity, actual, "tomatrix4 identity");
-			Asserts.AreEqual (Matrix4.Identity, actual, "tomatrix4 identity2");
+			actual = (NMatrix4d) Matrix4d.Identity;
+			Asserts.AreEqual (NMatrix4d.Identity, actual, "tomatrix4 identity");
+			Asserts.AreEqual (Matrix4d.Identity, actual, "tomatrix4 identity2");
 		}
 
 		[Test]
 		public void ToStringTest ()
 		{
 			var expected = GetTestMatrix ();
-			var actual = (MatrixFloat4x4) expected;
+			var actual = (NMatrix4d) expected;
 
 			Assert.AreEqual (expected.ToString (), actual.ToString (), "tostring");
 		}
@@ -291,8 +289,8 @@ namespace MonoTouchFixtures.Simd
 		{
 			var expectedA = GetTestMatrix ();
 			var expectedB = GetTestMatrix ();
-			var actualA = (MatrixFloat4x4) expectedA;
-			var actualB = (MatrixFloat4x4) expectedB;
+			var actualA = (NMatrix4d) expectedA;
+			var actualB = (NMatrix4d) expectedB;
 
 			Assert.IsTrue (actualA.Equals ((object) actualA), "self");
 			Assert.IsFalse (actualA.Equals ((object) actualB), "other");
@@ -305,8 +303,8 @@ namespace MonoTouchFixtures.Simd
 		{
 			var expectedA = GetTestMatrix ();
 			var expectedB = GetTestMatrix ();
-			var actualA = (MatrixFloat4x4) expectedA;
-			var actualB = (MatrixFloat4x4) expectedB;
+			var actualA = (NMatrix4d) expectedA;
+			var actualB = (NMatrix4d) expectedB;
 
 			Assert.IsTrue (actualA.Equals (actualA), "self");
 			Assert.IsFalse (actualA.Equals (actualB), "other");
@@ -316,28 +314,28 @@ namespace MonoTouchFixtures.Simd
 		//
 		// I initially tried randomly generating test matrices, but it turns out
 		// there are accumulative computational differences in the different algorithms
-		// between Matrix4 and MatrixFloat4x4. Since the differences are accumulative,
-		// I couldn't find a minimal sensible delta values when comparing 
+		// between Matrix4d and NMatrix4d. Since the differences are accumulative,
+		// I couldn't find a minimal sensible delta values when comparing
 		// matrices.
 		//
 		// So I just serialized a few matrices that were randomly generated, and
 		// these have been tested to not produce accumulative computational differences.
-		// 
-		static Matrix4 [] test_matrices = new [] {
-			new Matrix4 (0.1532144f, 0.5451511f, 0.2004739f, 0.8351463f, 0.9884372f, 0.1313103f, 0.3327205f, 0.01164342f, 0.6563147f, 0.7923161f, 0.6764754f, 0.07481737f, 0.03239552f, 0.7156482f, 0.6136858f, 0.1864168f),
-			new Matrix4 (0.7717745f, 0.559364f, 0.00918373f, 0.6579159f, 0.123461f, 0.9993145f, 0.5487496f, 0.2823398f, 0.9710717f, 0.8750508f, 0.472472f, 0.2608089f, 0.5771761f, 0.5617125f, 0.176998f, 0.1271691f),
-			new Matrix4 (0.2023053f, 0.4701468f, 0.6618567f, 0.7685714f, 0.8561344f, 0.009231919f, 0.6150167f, 0.7542298f, 0.550727f, 0.3625788f, 0.6639862f, 0.5763468f, 0.9717328f, 0.003812184f, 0.985266f, 0.7540002f),
-			new Matrix4 (9.799572E+08f, 1.64794E+09f, 1.117296E+09f, 1.239858E+09f, 6.389504E+07f, 1.172175E+09f, 1.399567E+09f, 1.187143E+09f, 3.729208E+07f, 5.50313E+08f, 1.847369E+09f, 1.612405E+09f, 1.699488E+08f, 4.952176E+08f, 1.07262E+09f, 2.035059E+09f),
-			new Matrix4 (1.102396E+09f, 3.082477E+08f, 1.126484E+09f, 5.022931E+08f, 1.966322E+09f, 1.1814E+09f, 8.464673E+08f, 1.940651E+09f, 1.229937E+09f, 1.367379E+09f, 1.900015E+09f, 1.516109E+09f, 2.146064E+09f, 1.870971E+09f, 1.046267E+09f, 1.088363E+09f),
-			new Matrix4 (2.263112E+08f, 8.79644E+08f, 1.303282E+09f, 1.654159E+09f, 3.705524E+08f, 1.984941E+09f, 2.175935E+07f, 4.633518E+08f, 1.801243E+09f, 1.616996E+09f, 1.620852E+09f, 7291498f, 1.012728E+09f, 2.834145E+08f, 3.5328E+08f, 1.35012E+09f),
-			new Matrix4 (0.4904693f, 0.841727f, 0.2294401f, 0.5736054f, 0.5406881f, 0.2172498f, 0.1261143f, 0.6736677f, 0.4570194f, 0.9091009f, 0.7669608f, 0.8468134f, 0.01802658f, 0.3850208f, 0.3730424f, 0.2440258f),
-			new Matrix4 (0.1252193f, 0.08986127f, 0.3407605f, 0.9144857f, 0.340791f, 0.2192288f, 0.5144276f, 0.01813344f, 0.07687104f, 0.7971596f, 0.6393988f, 0.9002907f, 0.1011457f, 0.5047605f, 0.7202546f, 0.07729452f),
-			new Matrix4 (8.176959E+08f, 1.386156E+09f, 5.956444E+08f, 4.210506E+08f, 1.212676E+09f, 4.131035E+08f, 1.032453E+09f, 2.074689E+08f, 1.536594E+09f, 3.266183E+07f, 5.222072E+08f, 7.923175E+08f, 1.762531E+09f, 7.901702E+08f, 8.1975E+08f, 1.630734E+09f),
-			new Matrix4 (0.006755914f, 0.07464754f, 0.287938f, 0.3724834f, 0.1496783f, 0.6224982f, 0.7150125f, 0.5554719f, 0.4638171f, 0.4200902f, 0.4867154f, 0.773377f, 0.3558737f, 0.4043404f, 0.04670618f, 0.7695189f),
+		//
+		static Matrix4d [] test_matrices = new [] {
+			new Matrix4d (0.1532144d, 0.5451511d, 0.2004739d, 0.8351463d, 0.9884372d, 0.1313103d, 0.3327205d, 0.01164342d, 0.6563147d, 0.7923161d, 0.6764754d, 0.07481737d, 0.03239552d, 0.7156482d, 0.6136858d, 0.1864168f),
+			new Matrix4d (0.7717745d, 0.559364d, 0.00918373d, 0.6579159d, 0.123461d, 0.9993145d, 0.5487496d, 0.2823398d, 0.9710717d, 0.8750508d, 0.472472d, 0.2608089d, 0.5771761d, 0.5617125d, 0.176998d, 0.1271691f),
+			new Matrix4d (0.2023053d, 0.4701468d, 0.6618567d, 0.7685714d, 0.8561344d, 0.009231919d, 0.6150167d, 0.7542298d, 0.550727d, 0.3625788d, 0.6639862d, 0.5763468d, 0.9717328d, 0.003812184d, 0.985266d, 0.7540002f),
+			new Matrix4d (9.799572E+08d, 1.64794E+09d, 1.117296E+09d, 1.239858E+09d, 6.389504E+07d, 1.172175E+09d, 1.399567E+09d, 1.187143E+09d, 3.729208E+07d, 5.50313E+08d, 1.847369E+09d, 1.612405E+09d, 1.699488E+08d, 4.952176E+08d, 1.07262E+09d, 2.035059E+09f),
+			new Matrix4d (1.102396E+09d, 3.082477E+08d, 1.126484E+09d, 5.022931E+08d, 1.966322E+09d, 1.1814E+09d, 8.464673E+08d, 1.940651E+09d, 1.229937E+09d, 1.367379E+09d, 1.900015E+09d, 1.516109E+09d, 2.146064E+09d, 1.870971E+09d, 1.046267E+09d, 1.088363E+09f),
+			new Matrix4d (2.263112E+08d, 8.79644E+08d, 1.303282E+09d, 1.654159E+09d, 3.705524E+08d, 1.984941E+09d, 2.175935E+07d, 4.633518E+08d, 1.801243E+09d, 1.616996E+09d, 1.620852E+09d, 7291498d, 1.012728E+09d, 2.834145E+08d, 3.5328E+08d, 1.35012E+09f),
+			new Matrix4d (0.4904693d, 0.841727d, 0.2294401d, 0.5736054d, 0.5406881d, 0.2172498d, 0.1261143d, 0.6736677d, 0.4570194d, 0.9091009d, 0.7669608d, 0.8468134d, 0.01802658d, 0.3850208d, 0.3730424d, 0.2440258f),
+			new Matrix4d (0.1252193d, 0.08986127d, 0.3407605d, 0.9144857d, 0.340791d, 0.2192288d, 0.5144276d, 0.01813344d, 0.07687104d, 0.7971596d, 0.6393988d, 0.9002907d, 0.1011457d, 0.5047605d, 0.7202546d, 0.07729452f),
+			new Matrix4d (8.176959E+08d, 1.386156E+09d, 5.956444E+08d, 4.210506E+08d, 1.212676E+09d, 4.131035E+08d, 1.032453E+09d, 2.074689E+08d, 1.536594E+09d, 3.266183E+07d, 5.222072E+08d, 7.923175E+08d, 1.762531E+09d, 7.901702E+08d, 8.1975E+08d, 1.630734E+09f),
+			new Matrix4d (0.006755914d, 0.07464754d, 0.287938d, 0.3724834d, 0.1496783d, 0.6224982d, 0.7150125d, 0.5554719d, 0.4638171d, 0.4200902d, 0.4867154d, 0.773377d, 0.3558737d, 0.4043404d, 0.04670618d, 0.7695189d),
 		};
 
 		static int counter;
-		internal static Matrix4 GetTestMatrix ()
+		internal static Matrix4d GetTestMatrix ()
 		{
 			counter++;
 			if (counter == test_matrices.Length)

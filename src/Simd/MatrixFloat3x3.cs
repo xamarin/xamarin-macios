@@ -13,81 +13,51 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Simd
+using VectorFloat3 = global::OpenTK.NVector3;
+
+namespace OpenTK
 {
 	[StructLayout (LayoutKind.Sequential)]
-	public struct MatrixFloat3x3 : IEquatable<MatrixFloat3x3>
+	public struct NMatrix3 : IEquatable<NMatrix3>
 	{
 		/* Due to memory alignment, vectors of length 3 are 
 		 * represented as vectors of length 4, so we pad here
 		 * with dummy fields.
 		 * See top of /usr/include/simd/matrix_types.h for more information. */
-		public float M11;
-		public float M21;
-		public float M31;
+		public float R0C0;
+		public float R1C0;
+		public float R2C0;
 		float dummy0;
-		public float M12;
-		public float M22;
-		public float M32;
+		public float R0C1;
+		public float R1C1;
+		public float R2C1;
 		float dummy1;
-		public float M13;
-		public float M23;
-		public float M33;
+		public float R0C2;
+		public float R1C2;
+		public float R2C2;
 		float dummy2;
 
-		public readonly static MatrixFloat3x3 Identity = new MatrixFloat3x3 
+		public readonly static NMatrix3 Identity = new NMatrix3 
 		{
-			M11 = 1f,
-			M22 = 1f,
-			M33 = 1f,
+			R0C0 = 1f,
+			R1C1 = 1f,
+			R2C2 = 1f,
 		};
 
-		public MatrixFloat3x3 (VectorFloat3 column0, VectorFloat3 column1, VectorFloat3 column2)
+		public NMatrix3 (
+			float r0c0, float r0c1, float r0c2,
+			float r1c0, float r1c1, float r1c2,
+			float r2c0, float r2c1, float r2c2)
 		{
-			M11 = column0.X;
-			M21 = column0.Y;
-			M31 = column0.Z;
-			M12 = column1.X;
-			M22 = column1.Y;
-			M32 = column1.Z;
-			M13 = column2.X;
-			M23 = column2.Y;
-			M33 = column2.Z;
-			dummy0 = 0;
-			dummy1 = 0;
-			dummy2 = 0;
-		}
-
-		public MatrixFloat3x3 (global::OpenTK.Vector3 column0, global::OpenTK.Vector3 column1, global::OpenTK.Vector3 column2)
-		{
-			M11 = column0.X;
-			M21 = column0.Y;
-			M31 = column0.Z;
-			M12 = column1.X;
-			M22 = column1.Y;
-			M32 = column1.Z;
-			M13 = column2.X;
-			M23 = column2.Y;
-			M33 = column2.Z;
-			dummy0 = 0;
-			dummy1 = 0;
-			dummy2 = 0;
-		}
-
-		public MatrixFloat3x3 (
-			float m11, float m12, float m13,
-			float m21, float m22, float m23,
-			float m31, float m32, float m33)
-		{
-			M11 = m11;
-			M21 = m21;
-			M31 = m31;
-			M12 = m12;
-			M22 = m22;
-			M32 = m32;
-			M13 = m13;
-			M23 = m23;
-			M33 = m33;
+			R0C0 = r0c0;
+			R1C0 = r1c0;
+			R2C0 = r2c0;
+			R0C1 = r0c1;
+			R1C1 = r1c1;
+			R2C1 = r2c1;
+			R0C2 = r0c2;
+			R1C2 = r1c2;
+			R2C2 = r2c2;
 			dummy0 = 0;
 			dummy1 = 0;
 			dummy2 = 0;
@@ -96,9 +66,9 @@ namespace Simd
 		public float Determinant {
 			get {
 				return
-					M11 * (M22 * M33 - M23 * M32) -
-					M12 * (M21 * M33 - M23 * M31) +
-					M13 * (M21 * M32 - M22 * M31);
+					R0C0 * (R1C1 * R2C2 - R1C2 * R2C1) -
+					R0C1 * (R1C0 * R2C2 - R1C2 * R2C0) +
+					R0C2 * (R1C0 * R2C1 - R1C1 * R2C0);
 			}
 		}
 
@@ -107,80 +77,80 @@ namespace Simd
 			this = Transpose (this);
 		}
 
-		public static MatrixFloat3x3 Transpose (MatrixFloat3x3 mat)
+		public static NMatrix3 Transpose (NMatrix3 mat)
 		{
-			MatrixFloat3x3 result = new MatrixFloat3x3 ();
+			NMatrix3 result = new NMatrix3 ();
 			Transpose (ref mat, out result);
 			return result;
 		}
 
-		public static void Transpose (ref MatrixFloat3x3 mat, out MatrixFloat3x3 result)
+		public static void Transpose (ref NMatrix3 mat, out NMatrix3 result)
 		{
-			result.M11 = mat.M11;
-			result.M21 = mat.M12;
-			result.M31 = mat.M13;
-			result.M12 = mat.M21;
-			result.M22 = mat.M22;
-			result.M32 = mat.M23;
-			result.M13 = mat.M31;
-			result.M23 = mat.M32;
-			result.M33 = mat.M33;
+			result.R0C0 = mat.R0C0;
+			result.R1C0 = mat.R0C1;
+			result.R2C0 = mat.R0C2;
+			result.R0C1 = mat.R1C0;
+			result.R1C1 = mat.R1C1;
+			result.R2C1 = mat.R1C2;
+			result.R0C2 = mat.R2C0;
+			result.R1C2 = mat.R2C1;
+			result.R2C2 = mat.R2C2;
 			result.dummy0 = 0;
 			result.dummy1 = 0;
 			result.dummy2 = 0;
 		}
 
-		public static MatrixFloat3x3 Multiply (MatrixFloat3x3 left, MatrixFloat3x3 right)
+		public static NMatrix3 Multiply (NMatrix3 left, NMatrix3 right)
 		{
-			MatrixFloat3x3 result;
+			NMatrix3 result;
 			Multiply (ref left, ref right, out result);
 			return result;
 		}
 
-		public static void Multiply (ref MatrixFloat3x3 left, ref MatrixFloat3x3 right, out MatrixFloat3x3 result)
+		public static void Multiply (ref NMatrix3 left, ref NMatrix3 right, out NMatrix3 result)
 		{
-			result.M11 = left.M11 * right.M11 + left.M12 * right.M21 + left.M13 * right.M31;
-			result.M12 = left.M11 * right.M12 + left.M12 * right.M22 + left.M13 * right.M32;
-			result.M13 = left.M11 * right.M13 + left.M12 * right.M23 + left.M13 * right.M33;
+			result.R0C0 = left.R0C0 * right.R0C0 + left.R0C1 * right.R1C0 + left.R0C2 * right.R2C0;
+			result.R0C1 = left.R0C0 * right.R0C1 + left.R0C1 * right.R1C1 + left.R0C2 * right.R2C1;
+			result.R0C2 = left.R0C0 * right.R0C2 + left.R0C1 * right.R1C2 + left.R0C2 * right.R2C2;
 			result.dummy0 = 0;
 
-			result.M21 = left.M21 * right.M11 + left.M22 * right.M21 + left.M23 * right.M31;
-			result.M22 = left.M21 * right.M12 + left.M22 * right.M22 + left.M23 * right.M32;
-			result.M23 = left.M21 * right.M13 + left.M22 * right.M23 + left.M23 * right.M33;
+			result.R1C0 = left.R1C0 * right.R0C0 + left.R1C1 * right.R1C0 + left.R1C2 * right.R2C0;
+			result.R1C1 = left.R1C0 * right.R0C1 + left.R1C1 * right.R1C1 + left.R1C2 * right.R2C1;
+			result.R1C2 = left.R1C0 * right.R0C2 + left.R1C1 * right.R1C2 + left.R1C2 * right.R2C2;
 			result.dummy1 = 0;
 
-			result.M31 = left.M31 * right.M11 + left.M32 * right.M21 + left.M33 * right.M31;
-			result.M32 = left.M31 * right.M12 + left.M32 * right.M22 + left.M33 * right.M32;
-			result.M33 = left.M31 * right.M13 + left.M32 * right.M23 + left.M33 * right.M33;
+			result.R2C0 = left.R2C0 * right.R0C0 + left.R2C1 * right.R1C0 + left.R2C2 * right.R2C0;
+			result.R2C1 = left.R2C0 * right.R0C1 + left.R2C1 * right.R1C1 + left.R2C2 * right.R2C1;
+			result.R2C2 = left.R2C0 * right.R0C2 + left.R2C1 * right.R1C2 + left.R2C2 * right.R2C2;
 			result.dummy2 = 0;
 		}
 
-		public static MatrixFloat3x3 operator * (MatrixFloat3x3 left, MatrixFloat3x3 right)
+		public static NMatrix3 operator * (NMatrix3 left, NMatrix3 right)
 		{
 			return Multiply (left, right);
 		}
 
-		public static bool operator == (MatrixFloat3x3 left, MatrixFloat3x3 right)
+		public static bool operator == (NMatrix3 left, NMatrix3 right)
 		{
 			return left.Equals (right);
 		}
 
-		public static bool operator != (MatrixFloat3x3 left, MatrixFloat3x3 right)
+		public static bool operator != (NMatrix3 left, NMatrix3 right)
 		{
 			return !left.Equals (right);
 		}
 
-		public static explicit operator global::OpenTK.Matrix3 (MatrixFloat3x3 value)
+		public static explicit operator global::OpenTK.Matrix3 (NMatrix3 value)
 		{
 			return new global::OpenTK.Matrix3 (
-				value.M11, value.M12, value.M13,
-				value.M21, value.M22, value.M23,
-				value.M31, value.M32, value.M33);
+				value.R0C0, value.R0C1, value.R0C2,
+				value.R1C0, value.R1C1, value.R1C2,
+				value.R2C0, value.R2C1, value.R2C2);
 		}
 
-		public static explicit operator MatrixFloat3x3 (global::OpenTK.Matrix3 value)
+		public static explicit operator NMatrix3 (global::OpenTK.Matrix3 value)
 		{
-			return new MatrixFloat3x3 (
+			return new NMatrix3 (
 				value.R0C0, value.R0C1, value.R0C2,
 				value.R1C0, value.R1C1, value.R1C2,
 				value.R2C0, value.R2C1, value.R2C2);
@@ -189,33 +159,33 @@ namespace Simd
 		public override string ToString ()
 		{
 			return
-				$"({M11}, {M12}, {M13})\n" +
-				$"({M21}, {M22}, {M23})\n" +
-				$"({M31}, {M32}, {M33})";
+				$"({R0C0}, {R0C1}, {R0C2})\n" +
+				$"({R1C0}, {R1C1}, {R1C2})\n" +
+				$"({R2C0}, {R2C1}, {R2C2})";
 		}
 
 		public override int GetHashCode ()
 		{
 			return
-				M11.GetHashCode () ^ M12.GetHashCode () ^ M13.GetHashCode () ^
-				M21.GetHashCode () ^ M22.GetHashCode () ^ M23.GetHashCode () ^
-				M31.GetHashCode () ^ M32.GetHashCode () ^ M33.GetHashCode ();
+				R0C0.GetHashCode () ^ R0C1.GetHashCode () ^ R0C2.GetHashCode () ^
+				R1C0.GetHashCode () ^ R1C1.GetHashCode () ^ R1C2.GetHashCode () ^
+				R2C0.GetHashCode () ^ R2C1.GetHashCode () ^ R2C2.GetHashCode ();
 		}
 
 		public override bool Equals (object obj)
 		{
-			if (!(obj is MatrixFloat3x3))
+			if (!(obj is NMatrix3))
 				return false;
 
-			return Equals ((MatrixFloat3x3) obj);
+			return Equals ((NMatrix3) obj);
 		}
 
-		public bool Equals (MatrixFloat3x3 other)
+		public bool Equals (NMatrix3 other)
 		{
 			return
-				M11 == other.M11 && M12 == other.M12 && M13 == other.M13 &&
-				M21 == other.M21 && M22 == other.M22 && M23 == other.M23 &&
-				M31 == other.M31 && M32 == other.M32 && M33 == other.M33;
+				R0C0 == other.R0C0 && R0C1 == other.R0C1 && R0C2 == other.R0C2 &&
+				R1C0 == other.R1C0 && R1C1 == other.R1C1 && R1C2 == other.R1C2 &&
+				R2C0 == other.R2C0 && R2C1 == other.R2C1 && R2C2 == other.R2C2;
 		}
 	}
 }

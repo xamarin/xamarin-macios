@@ -31,13 +31,13 @@ namespace Extrospection {
 			foreach (var assemblyName in assemblyNames) {
 				var name = Path.GetFileNameWithoutExtension (assemblyName);
 				if (name.EndsWith (".iOS", StringComparison.Ordinal))
-					Helpers.Platform = "ios";
+					Helpers.Platform = Helpers.Platforms.iOS;
 				else if (name.EndsWith (".Mac", StringComparison.Ordinal))
-					Helpers.Platform = "osx";
+					Helpers.Platform = Helpers.Platforms.macOS;
 				else if (name.EndsWith (".WatchOS", StringComparison.Ordinal))
-					Helpers.Platform = "watchos";
+					Helpers.Platform = Helpers.Platforms.watchOS;
 				else if (name.EndsWith (".TVOS", StringComparison.Ordinal))
-					Helpers.Platform = "tvos";
+					Helpers.Platform = Helpers.Platforms.tvOS;
 				managed_reader.Load (assemblyName);
 			}
 
@@ -75,7 +75,7 @@ namespace Extrospection {
 			get {
 				if (_exclusionList == null) {
 					switch (Helpers.Platform) {
-					case "osx":
+					case Helpers.Platforms.macOS:
 						_exclusionList = macOSXExclusionList;
 						break;
 					default:

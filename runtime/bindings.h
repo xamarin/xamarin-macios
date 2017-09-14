@@ -83,6 +83,9 @@ typedef __attribute__((__ext_vector_type__(4))) float vector_float4;
 typedef struct { vector_float2 columns[2]; } matrix_float2x2;
 typedef struct { vector_float3 columns[3]; } matrix_float3x3;
 typedef struct { vector_float4 columns[4]; } matrix_float4x4;
+typedef struct { vector_float3 columns[4]; } matrix_float4x3;
+
+typedef struct { vector_double4 columns[4]; } matrix_double4x4;
 
 typedef struct { vector_float4 vector; } simd_quatf;
 
@@ -158,7 +161,7 @@ struct Matrix2f {
 	Vector2f columns [2];
 };
 
-struct MatrixFloat2x2 {
+struct NMatrix2 {
 	Vector2f columns [2];
 };
 
@@ -166,7 +169,7 @@ struct Matrix3f {
 	Vector3f columns [3];
 };
 
-struct MatrixFloat3x3 {
+struct NMatrix3 {
 	Vector4f columns [3];
 };
 
@@ -174,7 +177,16 @@ struct Matrix4f {
 	Vector4f columns [4];
 };
 
-struct MatrixFloat4x4 {
+struct NMatrix4 {
+	Vector4f columns [4];
+};
+
+struct NMatrix4d {
+	Vector4d columns [4];
+};
+
+struct NMatrix4x3 {
+	// Use Vector4f here, since the managed version has padding to match accordingly.
 	Vector4f columns [4];
 };
 

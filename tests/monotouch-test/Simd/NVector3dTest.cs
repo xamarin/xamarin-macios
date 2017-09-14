@@ -6,21 +6,19 @@ using Foundation;
 using ObjCRuntime;
 
 using OpenTK;
-using Simd;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.Simd
-{
+namespace MonoTouchFixtures.Simd {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class VectorInt4Test
-	{
+	public class NVector3dTest {
+
 		[Test]
 		public void ElementConstructor ()
 		{
 			var expected = GetTestVector ();
-			var actual = new VectorInt4 (expected.X, expected.Y, expected.Z, expected.W);
+			var actual = new NVector3d (expected.X, expected.Y, expected.Z);
 			Asserts.AreEqual (expected, actual, "ctor 1");
 		}
 
@@ -29,8 +27,8 @@ namespace MonoTouchFixtures.Simd
 		{
 			var inputL = GetTestVector ();
 			var inputR = GetTestVector ();
-			var inputSimdL = (VectorInt4) inputL;
-			var inputSimdR = (VectorInt4) inputR;
+			var inputSimdL = (NVector3d) inputL;
+			var inputSimdR = (NVector3d) inputR;
 
 			// matrices are different
 			Assert.AreEqual (inputL == inputR, inputSimdL == inputSimdR, "inequality");
@@ -50,8 +48,8 @@ namespace MonoTouchFixtures.Simd
 		{
 			var inputL = GetTestVector ();
 			var inputR = GetTestVector ();
-			var inputSimdL = (VectorInt4) inputL;
-			var inputSimdR = (VectorInt4) inputR;
+			var inputSimdL = (NVector3d) inputL;
+			var inputSimdR = (NVector3d) inputR;
 
 			// matrices are different
 			Assert.AreEqual (inputL != inputR, inputSimdL != inputSimdR, "inequality");
@@ -67,29 +65,29 @@ namespace MonoTouchFixtures.Simd
 		}
 
 		[Test]
-		public void Explicit_Operator_ToVector4i ()
+		public void Explicit_Operator_ToVector3 ()
 		{
 			var expected = GetTestVector ();
-			var actual = (Vector4i) expected;
+			var actual = (Vector3d) expected;
 
-			Asserts.AreEqual (expected, actual, "ToVector4i");
+			Asserts.AreEqual (expected, actual, "ToVector3d");
 		}
 
 		[Test]
-		public void Explicit_Operator_FromVector4i ()
+		public void Explicit_Operator_FromVector3 ()
 		{
-			var expected = new Vector4i (2, 3, 7, 99);
-			var actual = (VectorInt4) expected;
+			var expected = new Vector3d (2, 3, 7.7d);
+			var actual = (NVector3d) expected;
 
-			Asserts.AreEqual (expected, actual, "FromVector4i");
+			Asserts.AreEqual (expected, actual, "FromVector3d");
 		}
 
 		[Test]
 		public void ToStringTest ()
 		{
-			var vector = new VectorInt4 (1, 2, 3, 4);
+			var vector = new NVector3d (1, 2, 3);
 
-			Assert.AreEqual ("(1, 2, 3, 4)", vector.ToString (), "tostring");
+			Assert.AreEqual ("(1, 2, 3)", vector.ToString (), "tostring");
 		}
 
 		// GetHashCode doesn't have to be identical, so no need to test
@@ -99,8 +97,8 @@ namespace MonoTouchFixtures.Simd
 		{
 			var expectedA = GetTestVector ();
 			var expectedB = GetTestVector ();
-			var actualA = (VectorInt4) expectedA;
-			var actualB = (VectorInt4) expectedB;
+			var actualA = (NVector3d) expectedA;
+			var actualB = (NVector3d) expectedB;
 
 			Assert.IsTrue (actualA.Equals ((object) actualA), "self");
 			Assert.IsFalse (actualA.Equals ((object) actualB), "other");
@@ -113,28 +111,28 @@ namespace MonoTouchFixtures.Simd
 		{
 			var expectedA = GetTestVector ();
 			var expectedB = GetTestVector ();
-			var actualA = (VectorInt4) expectedA;
-			var actualB = (VectorInt4) expectedB;
+			var actualA = (NVector3d) expectedA;
+			var actualB = (NVector3d) expectedB;
 
 			Assert.IsTrue (actualA.Equals (actualA), "self");
 			Assert.IsFalse (actualA.Equals (actualB), "other");
 		}
 
-		static VectorInt4 [] test_vectors = new [] {
-			new VectorInt4 (1532144, 5451511, 2004739, 8351463),
-			new VectorInt4 (7717745, 559364, 00918373, 6579159),
-			new VectorInt4 (2023053, 4701468, 6618567, 7685714),
-			new VectorInt4 (4904693, 841727, 2294401, 5736054),
-			new VectorInt4 (1252193, 08986127, 3407605, 9144857),
-			new VectorInt4 (006755914, 07464754, 287938, 3724834),
-			new VectorInt4 (9, 1, 1, 1),
-			new VectorInt4 (1, 3, 1, 5),
-			new VectorInt4 (2, 8, 1, 1),
-			new VectorInt4 (8, 1, 5, 4),
+		static NVector3d [] test_vectors = new [] {
+			new NVector3d (0.1532144d, 0.5451511d, 0.2004739d),
+			new NVector3d (0.7717745d, 0.559364d, 0.00918373d),
+			new NVector3d (0.2023053d, 0.4701468d, 0.6618567d),
+			new NVector3d (0.4904693d, 0.841727d, 0.2294401d),
+			new NVector3d (0.1252193d, 0.08986127d, 0.3407605d),
+			new NVector3d (0.006755914d, 0.07464754d, 0.287938d),
+			new NVector3d (9.799572E+08d, 1.64794E+09d, 1.117296E+09d),
+			new NVector3d (1.102396E+09d, 3.082477E+08d, 1.126484E+09d),
+			new NVector3d (2.263112E+08d, 8.79644E+08d, 1.303282E+09d),
+			new NVector3d (8.176959E+08d, 1.386156E+09d, 5.956444E+08d),
 		};
 
 		static int counter;
-		internal static VectorInt4 GetTestVector ()
+		internal static NVector3d GetTestVector ()
 		{
 			counter++;
 			if (counter == test_vectors.Length)
