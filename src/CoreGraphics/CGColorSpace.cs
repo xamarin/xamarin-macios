@@ -189,6 +189,25 @@ namespace XamCore.CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static /* CGColorSpaceRef __nullable */ IntPtr CGColorSpaceCreateLab (nfloat [] whitepoint, nfloat [] blackpoint, nfloat [] range);
+
+		// Available since the beginning of time
+		public static CGColorSpace CreateLab (nfloat [] whitepoint, nfloat [] blackpoint, nfloat [] range)
+		{
+			if (whitepoint == null)
+				throw new ArgumentNullException (nameof (whitepoint));
+			if (whitepoint.Length != 3)
+				throw new ArgumentException ("Must have 3 values", nameof (whitepoint));
+			if (blackpoint != null && blackpoint.Length != 3)
+				throw new ArgumentException ("Must be null or have 3 values", nameof (blackpoint));
+			if (range != null && range.Length != 4)
+				throw new ArgumentException ("Must be null or have 4 values", nameof (range));
+
+			var ptr = CGColorSpaceCreateLab (whitepoint, blackpoint, range);
+			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateIndexed (/* CGColorSpaceRef */ IntPtr baseSpace,
 			/* size_t */ nint lastIndex, /* const unsigned char* */ byte[] colorTable);
 
