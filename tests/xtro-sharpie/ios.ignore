@@ -85,6 +85,15 @@
 !unknown-native-enum! GKPeerPickerConnectionType bound
 
 
+#Intents
+
+## The following were deprecated in ios(10.0, 10.0)
+!missing-selector! INRideDriver::initWithHandle:displayName:image:rating:phoneNumber: not bound
+!missing-selector! INRideDriver::initWithHandle:nameComponents:image:rating:phoneNumber: not bound
+!missing-selector! INRideOption::identifier not bound
+!missing-selector! INRideOption::setIdentifier: not bound
+
+
 # IntentsUI
 
 ## not exposed by our API (better use the OS version)
