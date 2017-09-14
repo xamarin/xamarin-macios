@@ -122,6 +122,12 @@ AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions:
 !missing-selector! GKVoiceChatService::setRemoteParticipantVolume: not bound
 !missing-selector! GKVoiceChatService::startVoiceChatWithParticipantID:error: not bound
 !missing-selector! GKVoiceChatService::stopVoiceChatWithParticipantID: not bound
+!missing-enum! GKSessionError not bound
+
+# HealthKit
+
+## type was marked as available in 3.0 - but it's now iOS 11 only (even if members are marked with 10.0)
+!unknown-type! HKCDADocument bound
 
 
 #PassKit

@@ -121,19 +121,20 @@ namespace Extrospection {
 					break;
 				}
 				if (is_property) {
-					if (is_static) {
-						g_export = "+" + g_export;
-						s_export = "+" + s_export;
-					}
-					if (g_export != null)
+					if (g_export != null) {
+						if (is_static)
+							g_export = "+" + g_export;
 						map.Add (g_export, is_required);
-					if (s_export != null)
+					}
+					if (s_export != null) {
+						if (is_static)
+							s_export = "+" + s_export;
 						map.Add (s_export, is_required);
-				} else {
+					}
+				} else if (export != null) {
 					if (is_static)
 						export = "+" + export;
-					if (export != null)
-						map.Add (export, is_required);
+					map.Add (export, is_required);
 				}
 			}
 
@@ -152,6 +153,9 @@ namespace Extrospection {
 				// a .NET interface cannot have constructors - so we cannot enforce that on the interface
 				if (IsInit (selector))
 					continue;
+
+				if (method.IsClassMethod)
+					selector = "+" + selector;
 
 				bool is_abstract;
 				if (map.TryGetValue (selector, out is_abstract)) {
