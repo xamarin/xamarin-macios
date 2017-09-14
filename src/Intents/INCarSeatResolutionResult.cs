@@ -7,17 +7,20 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 && IOS
+#if XAMCORE_2_0 && !MONOMAC
 using System;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
-using XamCore.UIKit;
 
 namespace XamCore.Intents {
 	public partial class INCarSeatResolutionResult {
 		public static INCarSeatResolutionResult GetSuccess (INCarSeat resolvedValue)
 		{
-			if (UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
+#if IOS
+			if (XamCore.UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
+#elif WATCH
+			if (XamCore.WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
+#endif
 				return SuccessWithResolvedCarSeat (resolvedValue);
 			else
 				return SuccessWithResolvedValue (resolvedValue);
@@ -25,7 +28,11 @@ namespace XamCore.Intents {
 
 		public static INCarSeatResolutionResult GetConfirmationRequired (INCarSeat valueToConfirm)
 		{
-			if (UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
+#if IOS
+			if (XamCore.UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
+#elif WATCH
+			if (XamCore.WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
+#endif
 				return ConfirmationRequiredWithCarSeatToConfirm (valueToConfirm);
 			else
 				return ConfirmationRequiredWithValueToConfirm (valueToConfirm);
