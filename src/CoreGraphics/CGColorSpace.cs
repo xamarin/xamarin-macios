@@ -366,43 +366,43 @@ namespace XamCore.CoreGraphics {
 			return table;
 		}
 
-		// Old API, removed in iOS 11.0, macro maps CGColorSpaceCreateWithICCData to this name
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CreateIDCCData' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CreateIDCCData' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CreateIDCCData' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CreateIDCCData' instead.")]
 		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateWithICCProfile (/* CFDataRef */ IntPtr data);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateWithICCData (/* CFDataRef */ IntPtr data);
+		[iOS (10,0)][Mac (10,12)][Watch (3,0)][TV (10,0)]
+		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateWithICCData (/* CFTypeRef cg_nullable */ IntPtr data);
 
-#if MONOMAC || IOS
-		static bool versionChecked, use11APIs;
-#else
-		const bool versionChecked = true;
-		const bool use11APIs = false;
-#endif
-	
-		static void Check11 ()
-		{
-#if MONOMAC || IOS
-			if (PlatformHelper.CheckSystemVersion (11, 0))
-				use11APIs = true;
-			versionChecked = true;
-#endif
-		}
-		
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CreateIDCCData' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CreateIDCCData' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CreateIDCCData' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CreateIDCCData' instead.")]
 		public static CGColorSpace CreateICCProfile (NSData data)
 		{
-			// older versions did not throw - so we'll return null
-			if (data == null)
-				return null;
-			if (!versionChecked)
-				Check11();
+			IntPtr ptr = CGColorSpaceCreateWithICCProfile (data.GetHandle ());
+			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
+		}
 
-			IntPtr ptr;
+		[Introduced (PlatformName.iOS, 10, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 12)]
+		public static CGColorSpace CreateICCData (NSData data)
+		{
+			return CreateICCData (data.GetHandle ());
+		}
 
-			if (use11APIs)
-				ptr = CGColorSpaceCreateWithICCData (data.Handle);
-			else 
-				ptr = CGColorSpaceCreateWithICCProfile (data.Handle);
+		[iOS (10,0)][Mac (10,12)][Watch (3,0)][TV (10,0)]
+		public static CGColorSpace CreateICCData (CGDataProvider provider)
+		{
+			return CreateICCData (provider.GetHandle ());
+		}
+
+		static CGColorSpace CreateICCData (IntPtr handle)
+		{
+			var ptr = CGColorSpaceCreateWithICCData (handle);
 			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
 		}
 
@@ -422,17 +422,19 @@ namespace XamCore.CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'GetICCData' instead." )]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'GetICCData' instead." )]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'GetICCData' instead." )]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'GetICCData' instead." )]
 		extern static /* CFDataRef */ IntPtr CGColorSpaceCopyICCProfile (/* CGColorSpaceRef */ IntPtr space);
 
 		[iOS (7,0)] // note: pre-release docs/headers says iOS6 and later, available on OSX since 10.5
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'GetICCData' instead." )]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'GetICCData' instead." )]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'GetICCData' instead." )]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'GetICCData' instead." )]
 		public NSData GetICCProfile ()
 		{
-			if (!versionChecked)
-				Check11 ();
-
-			if (use11APIs)
-				return GetIccData ();
-			
 			IntPtr ptr = CGColorSpaceCopyICCProfile (handle);
 			return (ptr == IntPtr.Zero) ? null : new NSData (ptr, true);
 		}
