@@ -712,6 +712,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSPortMessage.cs \
 	Foundation/NSPredicate.cs \
 	Foundation/NSPropertyListSerialization.cs \
+	Foundation/NSProxy.cs \
 	Foundation/NSRunLoop.cs \
 	Foundation/NSScriptCommandDescription.cs \
 	Foundation/NSScriptCommandArgumentDescription.cs \
