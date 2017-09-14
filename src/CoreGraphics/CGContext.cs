@@ -1387,6 +1387,6 @@ namespace XamCore.CoreGraphics {
 		AllowsContentCopying        = (1 << 4),
 		AllowsContentAccessibility  = (1 << 5),
 		AllowsCommenting            = (1 << 6),
-		AllowsFormFieldEntry        = (1 << 7) 
+		AllowsFormFieldEntry        = (1 << 7),
 	}
 }
