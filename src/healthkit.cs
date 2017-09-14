@@ -13,6 +13,7 @@ using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 using System;
 using System.ComponentModel;
+using XamCore.CoreLocation;
 
 namespace XamCore.HealthKit {
 
@@ -78,6 +79,8 @@ namespace XamCore.HealthKit {
 #endif
 
 	delegate void HKAnchoredObjectUpdateHandler (HKAnchoredObjectQuery query, HKSample[] addedObjects, HKDeletedObject[] deletedObjects, HKQueryAnchor newAnchor, NSError error);
+
+	delegate void HKWorkoutRouteBuilderDataHandler (HKWorkoutRouteQuery query, CLLocation [] routeData, bool done, NSError error);
 
 	[Watch (2,0)]
 	[iOS (8,0)]
@@ -182,6 +185,10 @@ namespace XamCore.HealthKit {
 		[Watch (3,0), iOS (10,0)]
 		[Field ("HKPredicateKeyPathCDACustodianName")]
 		NSString CdaCustodianName { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Field ("HKPredicateKeyPathWorkoutTotalFlightsClimbed")]
+		NSString TotalFlightsClimbed { get; }
 	}
 
 	[NoWatch] // headers says it's available but it's only usable from another, unavailable, type
@@ -596,9 +603,30 @@ namespace XamCore.HealthKit {
 		[Export ("SwimmingStrokeStyle")]
 		NSString SwimmingStrokeStyle { get; }
 
-		[Watch (4,0), iOS (11,0)]
-		[Export ("HeartRateMotionContext")]
-		HKHeartRateMotionContext HeartRateMotionContext { get; }
+		//FIXME: Types for the following properties:
+		[Watch (4, 0), iOS (11, 0)]
+		[Export ("SyncIdentifier")]
+		string SyncIdentifier { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Export ("SyncVersion")]
+		NSNumber SyncVersion { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Export ("InsulinDeliveryReason")]
+		HKInsulinDeliveryReason InsulinDeliveryReason { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Export ("BloodGlucoseMealTime")]
+		HKBloodGlucoseMealTime BloodGlucoseMealTime { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Export ("VO2MaxTestType")]
+		HKVO2MaxTestType VO2MaxTestType { get; }
+        
+        [Watch (4,0), iOS (11,0)]
+        [Export ("HeartRateMotionContext")]
+        HKHeartRateMotionContext HeartRateMotionContext { get; }
 	}
 		
 	[Watch (2,0)]
@@ -694,9 +722,29 @@ namespace XamCore.HealthKit {
 		[Field ("HKMetadataKeySwimmingStrokeStyle")]
 		NSString SwimmingStrokeStyle { get; }
 
-		[Watch (4,0), iOS (11,0)]
-		[Field ("HKMetadataKeyHeartRateMotionContext")]
-		NSString HeartRateMotionContext { get; }
+		[Watch (4, 0), iOS (11, 0)]
+		[Field ("HKMetadataKeySyncIdentifier")]
+		NSString SyncIdentifier { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Field ("HKMetadataKeySyncVersion")]
+		NSString SyncVersion { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Field ("HKMetadataKeyInsulinDeliveryReason")]
+		NSString InsulinDeliveryReason { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Field ("HKMetadataKeyBloodGlucoseMealTime")]
+		NSString BloodGlucoseMealTime { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Field ("HKMetadataKeyVO2MaxTestType")]
+		NSString VO2MaxTestType { get; }
+        
+        [Watch (4,0), iOS (11,0)]
+        [Field ("HKMetadataKeyHeartRateMotionContext")]
+        NSString HeartRateMotionContext { get; }
 	}
 
 	[Watch (2,0)]
@@ -800,6 +848,12 @@ namespace XamCore.HealthKit {
 		[Static]
 		[Export ("activitySummaryType")]
 		HKActivitySummaryType ActivitySummaryType { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Static]
+		[Export ("seriesTypeForIdentifier:")]
+		[return: NullAllowed]
+		HKSeriesType GetSeriesType (string identifier);
 	}
 
 	[Watch (2,0)]
@@ -1024,6 +1078,11 @@ namespace XamCore.HealthKit {
 		[Static]
 		[Export ("predicateForWorkoutsWithOperatorType:totalSwimmingStrokeCount:")]
 		NSPredicate GetPredicateForTotalSwimmingStrokeCount (NSPredicateOperatorType operatorType, HKQuantity totalSwimmingStrokeCount);
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Static]
+		[Export ("predicateForWorkoutsWithOperatorType:totalFlightsClimbed:")]
+		NSPredicate GetPredicateForTotalFlightsClimbed (NSPredicateOperatorType operatorType, HKQuantity totalFlightsClimbed);
 
 		// HKActivitySummaryPredicates
 
@@ -1463,7 +1522,15 @@ namespace XamCore.HealthKit {
 		[Field ("HKQuantityTypeIdentifierUVExposure")]
 		NSString UVExposure { get; }
 
-		// If you add field, add them to the enum too.
+        [Watch (4, 0), iOS (11, 0)]
+		[Field ("HKQuantityTypeIdentifierWaistCircumference")]
+		NSString WaistCircumference { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Field ("HKQuantityTypeIdentifierVO2Max")]
+		NSString VO2Max { get; }
+
+        // If you add field, add them to the enum too.
 	}
 
 	[Watch (2,0)]
@@ -1729,6 +1796,7 @@ namespace XamCore.HealthKit {
 		[Export ("jouleUnit")]
 		HKUnit Joule { get; }
 
+		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Watch_4_0, Message = "Use 'SmallCalorie' or 'LargeCalorie' instead.")]
 		[Static]
 		[Export ("calorieUnit")]
 		HKUnit Calorie { get; }
@@ -1736,6 +1804,16 @@ namespace XamCore.HealthKit {
 		[Static]
 		[Export ("kilocalorieUnit")]
 		HKUnit Kilocalorie { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Static]
+		[Export ("smallCalorieUnit")]
+		HKUnit SmallCalorie { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Static]
+		[Export ("largeCalorieUnit")]
+		HKUnit LargeCalorie { get; }
 
 		// HKUnit (Temperature) Category
 
@@ -1784,6 +1862,12 @@ namespace XamCore.HealthKit {
 
 		[Export ("reciprocalUnit")]
 		HKUnit ReciprocalUnit ();
+
+		// HKUnit (Pharmacology) Category
+		[Watch (4, 0), iOS (11, 0)]
+		[Static]
+		[Export ("internationalUnit")]
+		HKUnit InternationalUnit { get; }
 	}
 
 	[Watch (2,0)]
@@ -1857,6 +1941,16 @@ namespace XamCore.HealthKit {
 		[Wrap ("Create (workoutActivityType, startDate, endDate, workoutEvents, totalEnergyBurned, totalDistance, totalSwimmingStrokeCount, device, metadata == null ? null : metadata.Dictionary)")]
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, HKWorkoutEvent[] workoutEvents, HKQuantity totalEnergyBurned, HKQuantity totalDistance, HKQuantity totalSwimmingStrokeCount, HKDevice device, HKMetadata metadata);
 
+		[Watch (4, 0), iOS (11, 0)]
+		[Static]
+		[Export ("workoutWithActivityType:startDate:endDate:workoutEvents:totalEnergyBurned:totalDistance:totalFlightsClimbed:device:metadata:")]
+		HKWorkout CreateWithFlightsClimbed (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, [NullAllowed] HKWorkoutEvent [] workoutEvents, [NullAllowed] HKQuantity totalEnergyBurned, [NullAllowed] HKQuantity totalDistance, [NullAllowed] HKQuantity totalFlightsClimbed, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary metadata);
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Static]
+		[Wrap ("CreateWithFlightsClimbed (workoutActivityType, startDate, endDate, workoutEvents, totalEnergyBurned, totalDistance, totalFlightsClimbed, device, metadata == null ? null : metadata.Dictionary)")]
+		HKWorkout CreateWithFlightsClimbed (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, [NullAllowed] HKWorkoutEvent [] workoutEvents, [NullAllowed] HKQuantity totalEnergyBurned, [NullAllowed] HKQuantity totalDistance, [NullAllowed] HKQuantity totalFlightsClimbed, [NullAllowed] HKDevice device, [NullAllowed] HKMetadata metadata);
+
 		// TODO: where is this thing used?
 		[Field ("HKWorkoutSortIdentifierDuration")]
 		NSString SortIdentifierDuration { get; }
@@ -1872,6 +1966,14 @@ namespace XamCore.HealthKit {
 		[Watch (3,0), iOS (10,0)]
 		[Field ("HKWorkoutSortIdentifierTotalSwimmingStrokeCount")]
 		NSString SortIdentifierTotalSwimmingStrokeCount { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Field ("HKWorkoutSortIdentifierTotalFlightsClimbed")]
+		NSString SortIdentifierTotalFlightsClimbed { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[NullAllowed, Export ("totalFlightsClimbed", ArgumentSemantic.Strong)]
+		HKQuantity TotalFlightsClimbed { get; }
 	}
 
 	[Watch (2,0)]
@@ -1882,6 +1984,7 @@ namespace XamCore.HealthKit {
 		[Export ("type")]
 		HKWorkoutEventType Type { get; }
 
+		[Availability (Deprecated = Platform.iOS_11_0 | Watch_4_0, Message = "Use 'DateInterval' instead.")]
 		[Export ("date", ArgumentSemantic.Copy)]
 		NSDate Date { get; }
 
@@ -1893,19 +1996,34 @@ namespace XamCore.HealthKit {
 		[Wrap ("WeakMetadata")]
 		HKMetadata Metadata { get; }
 
+		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Watch_4_0, Message = "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
 		[Static, Export ("workoutEventWithType:date:")]
 		HKWorkoutEvent Create (HKWorkoutEventType type, NSDate date);
 
-		[Watch (3,0), iOS (10,0)]
+		[Availability (Introduced = Platform.iOS_10_0 | Platform.Watch_3_0, Deprecated = Platform.iOS_11_0 | Platform.Watch_4_0, Message = "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
 		[Static]
 		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
 		[Export ("workoutEventWithType:date:metadata:")]
 		HKWorkoutEvent Create (HKWorkoutEventType type, NSDate date, NSDictionary metadata);
 
-		[Watch (3,0), iOS (10,0)]
+		[Availability (Introduced = Platform.iOS_10_0 | Platform.Watch_3_0, Deprecated = Platform.iOS_11_0 | Platform.Watch_4_0, Message = "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
 		[Static]
 		[Wrap ("Create (type, date, metadata != null ? metadata.Dictionary : null)")]
 		HKWorkoutEvent Create (HKWorkoutEventType type, NSDate date, HKMetadata metadata);
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Static]
+		[Export ("workoutEventWithType:dateInterval:metadata:")]
+		HKWorkoutEvent Create (HKWorkoutEventType type, NSDateInterval dateInterval, [NullAllowed] NSDictionary metadata);
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Static]
+		[Wrap ("Create (type, dateInterval, metadata != null ? metadata.Dictionary : null)")]
+		HKWorkoutEvent Create (HKWorkoutEventType type, NSDateInterval dateInterval, HKMetadata metadata);
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Export ("dateInterval", ArgumentSemantic.Copy)]
+		NSDateInterval DateInterval { get; }
 	}
 
 	[Watch (2,0)]
@@ -1924,6 +2042,14 @@ namespace XamCore.HealthKit {
 	interface HKDeletedObject : NSSecureCoding {
 		[Export ("UUID", ArgumentSemantic.Strong)]
 		NSUuid Uuid { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[NullAllowed, Export ("metadata", ArgumentSemantic.Copy)]
+		NSDictionary WeakMetadata { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Wrap ("WeakMetadata")]
+		HKMetadata Metadata { get; }
 	}
 
 	[Watch (2,0)]
@@ -2039,6 +2165,30 @@ namespace XamCore.HealthKit {
 
 		[Export ("initWithSource:version:")]
 		IntPtr Constructor (HKSource source, [NullAllowed] string version);
+
+		[Watch (4, 0), iOS (11, 0)]
+		[NullAllowed, Export ("productType")]
+		string ProductType { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Export ("operatingSystemVersion", ArgumentSemantic.Assign)]
+		NSOperatingSystemVersion OperatingSystemVersion { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Export ("initWithSource:version:productType:operatingSystemVersion:")]
+		IntPtr Constructor (HKSource source, [NullAllowed] string version, [NullAllowed] string productType, NSOperatingSystemVersion operatingSystemVersion);
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Field ("HKSourceRevisionAnyVersion")]
+		NSString AnyVersion { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Field ("HKSourceRevisionAnyProductType")]
+		NSString AnyProductType { get; }
+
+		[Watch (4, 0), iOS (11, 0)]
+		[Export ("HKSourceRevisionAnyOperatingSystem")]
+		NSOperatingSystemVersion AnyOperatingSystem { get; }
 	}
 
 	[Watch (2,0)]
@@ -2171,4 +2321,62 @@ namespace XamCore.HealthKit {
 		[NullAllowed, Export ("lapLength", ArgumentSemantic.Copy)]
 		HKQuantity LapLength { get; set; }
 	}
+
+	[Watch (4, 0), iOS (11, 0)]
+	[BaseType (typeof (HKSampleType))]
+	[DisableDefaultCtor]
+	interface HKSeriesType {
+		[Static]
+		[Export ("workoutRouteType")]
+		HKSeriesType WorkoutRouteType { get; }
+	}
+
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface HKSeriesBuilder {
+		[Export ("discard")]
+		void Discard ();
+	}
+
+	[BaseType (typeof(HKSample))]
+	[DisableDefaultCtor]
+	interface HKSeriesSample : NSCopying {
+		[Export ("count")]
+		nuint Count { get; }
+	}
+
+	[BaseType (typeof(HKSeriesSample))]
+	[DisableDefaultCtor]
+	interface HKWorkoutRoute : NSCopying {
+		[Watch (4, 0), iOS (11, 0)]
+		[Field ("HKWorkoutRouteTypeIdentifier")]
+		NSString TypeIdentifier { get; }
+	}
+
+	[Watch (4, 0), iOS (11, 0)]
+	[BaseType (typeof (HKSeriesBuilder))]
+	[DisableDefaultCtor]
+	interface HKWorkoutRouteBuilder {
+		[Export ("initWithHealthStore:device:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (HKHealthStore healthStore, [NullAllowed] HKDevice device);
+
+		[Export ("insertRouteData:completion:")]
+		void InsertRouteData (CLLocation [] routeData, Action<bool, NSError> completion);
+
+		[Export ("finishRouteWithWorkout:metadata:completion:")]
+		void FinishRouteWithWorkout (HKWorkout workout, [NullAllowed] NSDictionary<NSString, NSObject> metadata, Action<HKWorkoutRoute, NSError> completion);
+
+		[Async, Wrap ("FinishRoute (workout, metadata, completion)")]
+		void FinishRoute (HKWorkout workout, HKMetadata metadata, Action<HKWorkoutRoute, NSError> completion);
+	}
+
+	[Watch (4,0), iOS (11,0)]
+	[BaseType (typeof(HKQuery))]
+	interface HKWorkoutRouteQuery {
+		[Export ("initWithRoute:dataHandler:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (HKWorkoutRoute workoutRoute, HKWorkoutRouteBuilderDataHandler dataHandler);
+	}
+
 }
