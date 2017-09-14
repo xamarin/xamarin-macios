@@ -3173,8 +3173,7 @@ namespace XamCore.AVFoundation {
 	}
 
 	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface AVQueuedSampleBufferRendering
 	{
 		[Abstract]
