@@ -25,3 +25,13 @@ namespace XamCore.Foundation {
 	internal abstract class NSProxy : NSObject {
 	}
 }
+
+namespace XamCore.WebKit {
+	// We need to keep NSProxy (avoid linking it) if WKNavigationDelegate or IWKNavigationDelegate
+	// is used. Unfortunately [Preserve] can't help us here because we do not generate partial
+	// interfaces rigth now, so we know WKWebView will be there and can hold a reference to it.
+	public partial class WKWebView {
+		[Preserve (Conditional = true)]
+		static Type hack = typeof (NSProxy);
+	}
+}
