@@ -2570,7 +2570,7 @@ namespace XamCore.Metal {
 	{
 		[Static]
 		[Export ("argumentDescriptor")]
-		MTLArgumentDescriptor ArgumentDescriptor { get; }
+		MTLArgumentDescriptor Create ();
 
 		[Export ("dataType", ArgumentSemantic.Assign)]
 		MTLDataType DataType { get; set; }
