@@ -156,10 +156,12 @@ namespace XamCore.CoreGraphics {
 
 		public static CGColorSpace CreateCalibratedGray (nfloat [] whitepoint, nfloat [] blackpoint, nfloat gamma)
 		{
+			if (whitepoint == null)
+				throw new ArgumentNullException (nameof (whitepoint));
 			if (whitepoint.Length != 3)
-				throw new ArgumentException ("Must have 3 values", "whitepoint");
-			if (blackpoint.Length != 3)
-				throw new ArgumentException ("Must have 3 values", "blackpoint");
+				throw new ArgumentException ("Must be null or have 3 values", nameof (whitepoint));
+			if (blackpoint != null && blackpoint.Length != 3)
+				throw new ArgumentException ("Must be null or have 3 values", nameof (blackpoint));
 			
 			var ptr = CGColorSpaceCreateCalibratedGray (whitepoint, blackpoint, gamma);
 			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
@@ -171,14 +173,16 @@ namespace XamCore.CoreGraphics {
 
 		public static CGColorSpace CreateCalibratedRGB (nfloat [] whitepoint, nfloat [] blackpoint, nfloat [] gamma, nfloat [] matrix)
 		{
+			if (whitepoint == null)
+				throw new ArgumentNullException (nameof (whitepoint));
 			if (whitepoint.Length != 3)
-				throw new ArgumentException ("Must have 3 values", "whitepoint");
-			if (blackpoint.Length != 3)
-				throw new ArgumentException ("Must have 3 values", "blackpoint");
-			if (gamma.Length != 3)
-				throw new ArgumentException ("Must have 3 values", "gamma");
-			if (matrix.Length != 9)
-				throw new ArgumentException ("Must have 9 values", "matrix");
+				throw new ArgumentException ("Must have 3 values", nameof (whitepoint));
+			if (blackpoint != null && blackpoint.Length != 3)
+				throw new ArgumentException ("Must be null or have 3 values", nameof (blackpoint));
+			if (gamma != null && gamma.Length != 3)
+				throw new ArgumentException ("Must be null or have 3 values", nameof (gamma));
+			if (matrix != null && matrix.Length != 9)
+				throw new ArgumentException ("Must be null or have 9 values", nameof (matrix));
 			
 			var ptr = CGColorSpaceCreateCalibratedRGB (whitepoint, blackpoint, gamma, matrix);
 			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
