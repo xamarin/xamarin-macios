@@ -186,6 +186,10 @@ namespace XamCore.CoreGraphics {
 		[Field ("kCGColorSpaceGenericRGBLinear")]
 		NSString GenericRGBLinear { get; }
 #endif
+
+		[iOS (11,0)][Mac (10,13)][Watch (4,0)][TV (11,0)]
+		[Field ("kCGColorSpaceGenericLab")]
+		NSString GenericLab { get; }
 	}
 
 	[Partial]
