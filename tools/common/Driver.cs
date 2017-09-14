@@ -384,7 +384,7 @@ namespace Xamarin.Bundler {
 				var culture = CultureInfo.GetCultureInfo (lang);
 				if (culture != null) {
 					CultureInfo.DefaultThreadCurrentCulture = culture;
-					ErrorHelper.Warning (123, $"The current language was set to '{culture.DisplayName}' according to the LANG environment variable (LANG={lang_variable}).");
+					Log (2, $"The current language was set to '{culture.DisplayName}' according to the LANG environment variable (LANG={lang_variable}).");
 				}
 			} catch (Exception e) {
 				ErrorHelper.Warning (124, e, $"Could not set the current language to '{lang}' (according to LANG={lang_variable}): {e.Message}");
