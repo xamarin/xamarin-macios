@@ -7,19 +7,8 @@
 
 # ARKit
 
-## API_DEPRECATED_WITH_REPLACEMENT("projectionMatrixForOrientation:viewportSize:zNear:zFar:", ios(11.0, 11.0));
-!missing-selector! ARCamera::projectionMatrixWithViewportSize:orientation:zNear:zFar: not bound
-## API_DEPRECATED_WITH_REPLACEMENT("displayTransformForOrientation:viewportSize:", ios(11.0, 11.0));
-!missing-selector! ARFrame::displayTransformWithViewportSize:orientation: not bound
 ## NS_SWIFT_UNAVAILABLE("Use run(_:options:) instead")
 !missing-selector! ARSession::runWithConfiguration: not bound
-
-#ARKit
-
-## new, but deprecated (in beta 5), types - but still in headers
-!missing-type! ARSessionConfiguration not bound
-!missing-type! ARWorldTrackingSessionConfiguration not bound
-
 
 # AssetLibrary
 
