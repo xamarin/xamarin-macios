@@ -1,4 +1,4 @@
-﻿#if !__WATCHOS__
+﻿#if __IOS__
 
 using System;
 
