@@ -11548,10 +11548,6 @@ namespace XamCore.AVFoundation {
 		[NoWatch, NoMac, NoTV, iOS (11,0)]
 		[Export ("URLSession:aggregateAssetDownloadTask:didCompleteForMediaSelection:")]
 		void DidCompleteForMediaSelection (NSUrlSession session, AVAggregateAssetDownloadTask aggregateAssetDownloadTask, AVMediaSelection mediaSelection);
-
-		[NoWatch, NoMac, NoTV, iOS (11,0)]
-		[Export ("URLSession:aggregateDownloadTask:didLoadTimeRange:totalTimeRangesLoaded:timeRangeExpectedToLoad:forMediaSelection:")]
-		void DidLoadTimeRange (NSUrlSession session, AVAggregateAssetDownloadTask aggregateAssetDownloadTask, CMTimeRange timeRange, NSValue[] loadedTimeRanges, CMTimeRange timeRangeExpectedToLoad, AVMediaSelection mediaSelection);
 	}
 
 #endif
