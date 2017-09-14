@@ -92,7 +92,7 @@ namespace XamCore.Metal {
 		}
 	}
 
-#if !MONOMAC
+#if IOS
 	public partial class MTLTileRenderPipelineColorAttachmentDescriptorArray {
 		public MTLTileRenderPipelineColorAttachmentDescriptor this [nuint index]
 		{

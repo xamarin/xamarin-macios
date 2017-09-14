@@ -598,22 +598,22 @@ namespace XamCore.Metal {
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch] Sampler = 59,
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch] Pointer = 60,
 
-		[NoMac, iOS (11,0), TV (11,0), NoWatch] R8Unorm = 62,
-		[NoMac, iOS (11,0), TV (11,0), NoWatch] R8Snorm = 63,
-		[NoMac, iOS (11,0), TV (11,0), NoWatch] R16Unorm = 64,
-		[NoMac, iOS (11,0), TV (11,0), NoWatch] R16Snorm = 65,
-		[NoMac, iOS (11,0), TV (11,0), NoWatch] Rg8Unorm = 66,
-		[NoMac, iOS (11,0), TV (11,0), NoWatch] Rg8Snorm = 67,
-		[NoMac, iOS (11,0), TV (11,0), NoWatch] Rg16Unorm = 68,
-		[NoMac, iOS (11,0), TV (11,0), NoWatch] Rg16Snorm = 69,
-		[NoMac, iOS (11,0), TV (11,0), NoWatch] Rgba8Unorm = 70,
-		[NoMac, iOS (11,0), TV (11,0), NoWatch] Rgba8Unorm_sRgb = 71,
-		[NoMac, iOS (11,0), TV (11,0), NoWatch] Rgba8Snorm = 72,
-		[NoMac, iOS (11,0), TV (11,0), NoWatch] Rgba16Unorm = 73,
-		[NoMac, iOS (11,0), TV (11,0), NoWatch] Rgba16Snorm = 74,
-		[NoMac, iOS (11,0), TV (11,0), NoWatch] Rgb10A2Unorm = 75,
-		[NoMac, iOS (11,0), TV (11,0), NoWatch] Rg11B10Float = 76,
-		[NoMac, iOS (11,0), TV (11,0), NoWatch] Rgb9E5Float = 77,
+		[NoMac, iOS (11,0), NoTV, NoWatch] R8Unorm = 62,
+		[NoMac, iOS (11,0), NoTV, NoWatch] R8Snorm = 63,
+		[NoMac, iOS (11,0), NoTV, NoWatch] R16Unorm = 64,
+		[NoMac, iOS (11,0), NoTV, NoWatch] R16Snorm = 65,
+		[NoMac, iOS (11,0), NoTV, NoWatch] Rg8Unorm = 66,
+		[NoMac, iOS (11,0), NoTV, NoWatch] Rg8Snorm = 67,
+		[NoMac, iOS (11,0), NoTV, NoWatch] Rg16Unorm = 68,
+		[NoMac, iOS (11,0), NoTV, NoWatch] Rg16Snorm = 69,
+		[NoMac, iOS (11,0), NoTV, NoWatch] Rgba8Unorm = 70,
+		[NoMac, iOS (11,0), NoTV, NoWatch] Rgba8Unorm_sRgb = 71,
+		[NoMac, iOS (11,0), NoTV, NoWatch] Rgba8Snorm = 72,
+		[NoMac, iOS (11,0), NoTV, NoWatch] Rgba16Unorm = 73,
+		[NoMac, iOS (11,0), NoTV, NoWatch] Rgba16Snorm = 74,
+		[NoMac, iOS (11,0), NoTV, NoWatch] Rgb10A2Unorm = 75,
+		[NoMac, iOS (11,0), NoTV, NoWatch] Rg11B10Float = 76,
+		[NoMac, iOS (11,0), NoTV, NoWatch] Rgb9E5Float = 77,
 	}
 
 	[Native]
@@ -623,8 +623,8 @@ namespace XamCore.Metal {
 		Texture = 2,
 		Sampler = 3,
 
-		[NoMac, iOS (11,0), TV (11,0), NoWatch] ImageblockData = 16,
-		[NoMac, iOS (11,0), TV (11,0), NoWatch] Imageblock = 17,
+		[NoMac, iOS (11,0), NoTV, NoWatch] ImageblockData = 16,
+		[NoMac, iOS (11,0), NoTV, NoWatch] Imageblock = 17,
 	}
 
 	[Native]
@@ -683,7 +683,10 @@ namespace XamCore.Metal {
 		TVOS_GPUFamily1_v1 = 30000,
 
 		[NoiOS, TV (10,0), NoWatch, NoMac]
-		tvOS_GPUFamily1_v2 = 30001
+		tvOS_GPUFamily1_v2 = 30001,
+
+		[NoiOS, TV (11,0), NoWatch, NoMac]
+		tvOS_GPUFamily2_v1 = 30003,
 	}
 
 	[iOS (9,0)][Mac (10,11)]

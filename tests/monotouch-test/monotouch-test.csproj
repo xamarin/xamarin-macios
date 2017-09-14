@@ -685,6 +685,8 @@
     <Compile Include="PdfKit\PdfAnnotationTest.cs" />
     <Compile Include="FileProvider\NSFileProviderPageTest.cs" />
     <Compile Include="UIKit\UIPasteConfigurationSupportingTest.cs" />
+    <Compile Include="Metal\MTLTileRenderPipelineDescriptor.cs" />
+    <Compile Include="Metal\MTLTileRenderPipelineColorAttachmentDescriptorTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
