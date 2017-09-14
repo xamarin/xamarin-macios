@@ -245,8 +245,8 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "UserNotificationsUI", "UserNotificationsUI", 10 },
 				{ "Intents", "Intents", 10 },
 				{ "IntentsUI", "IntentsUI", 10 },
-				{ "IOSurface", "IOSurface", 10 },
 
+				{ "IOSurface", "IOSurface", 11 },
 				{ "ARKit", "ARKit", 11 },
 				{ "CoreNFC", "CoreNFC", 11 },
 				{ "DeviceCheck", "DeviceCheck", 11 },
@@ -361,8 +361,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "UserNotifications", "UserNotifications", 10 },
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
 					{ "VideoToolbox", "VideoToolbox", 10,2 },
-					{ "IOSurface", "IOSurface", 10 },
 
+					{ "IOSurface", "IOSurface", 11 },
 					{ "DeviceCheck", "DeviceCheck", 11 },
 					{ "CoreML", "CoreML", 11 },
 					{ "Vision", "Vision", 11 },
