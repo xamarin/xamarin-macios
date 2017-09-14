@@ -68,13 +68,25 @@
 !missing-selector! CIKernel::setROISelector: not bound
 
 
+# CoreTelephony
+
+## deprecated in iOS 10 (in favor of CallKit)
+!missing-field! CTCallStateConnected not bound
+!missing-field! CTCallStateDialing not bound
+!missing-field! CTCallStateDisconnected not bound
+!missing-field! CTCallStateIncoming not bound
+
+
 # GameKit
 
 ## typedef is used + untyped enum in GKPeerPickerController.h: typedef NSUInteger GKPeerPickerConnectionType
 !unknown-native-enum! GKPeerPickerConnectionType bound
 
 
-#Intents
+# Intents
+
+## added and deprecated in Xcode9 (but not removed from headers)
+!missing-selector! +INNotebookItemTypeResolutionResult::disambiguationWithValuesToDisambiguate: not bound
 
 ## The following were deprecated in ios(10.0, 10.0)
 !missing-selector! INRideDriver::initWithHandle:displayName:image:rating:phoneNumber: not bound
@@ -96,6 +108,12 @@
 !missing-enum! MPNowPlayingPlaybackState not bound
 !missing-selector! MPNowPlayingInfoCenter::playbackState not bound
 !missing-selector! MPNowPlayingInfoCenter::setPlaybackState: not bound
+
+
+# PushKit
+
+## was @required but now @optional (a replacement was added in Xcode9) - still a breaking change to remove the abstract
+!incorrect-protocol-member! PKPushRegistryDelegate::pushRegistry:didReceiveIncomingPushWithPayload:forType: is OPTIONAL and should NOT be abstract
 
 
 # ReplayKit
