@@ -645,6 +645,7 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[Static]
+	[Internal]
 	interface ARBlendShapeLocationKeys {
 
 		[Field ("ARBlendShapeLocationBrowDownLeft")]
