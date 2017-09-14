@@ -404,7 +404,7 @@ namespace XamCore.CoreGraphics {
 		[TV (10,0)]
 		public string Name {
 			get {
-				return CFString.FetchString (CGColorSpaceCopyName (handle));
+				return CFString.FetchString (CGColorSpaceCopyName (handle), true);
 			}
 		}
 
