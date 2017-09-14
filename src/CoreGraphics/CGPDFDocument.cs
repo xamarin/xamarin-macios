@@ -280,11 +280,11 @@ namespace XamCore.CoreGraphics {
 			return new CGPDFOutlineOptions (Runtime.GetNSObject<NSDictionary> (ptr));
 		}
 
-		[iOS(11,0), Mac(10,3)]
+		[iOS (11,0), Mac(10,3), TV(11,0), Watch(4,0)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static CGPDFAccessPermissions CGPDFDocumentGetAccessPermissions (IntPtr document);
 
-		[iOS(11,0), Mac(10,3)]
+		[iOS (11,0), Mac(10,3), TV(11,0), Watch(4,0)]
 		public CGPDFAccessPermissions GetAccessPermissions ()
 		{
 			return CGPDFDocumentGetAccessPermissions (handle);

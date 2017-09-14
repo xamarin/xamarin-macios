@@ -80,6 +80,7 @@ namespace XamCore.CoreGraphics {
 		public int? EncryptionKeyLength { get; set; }
 		public bool? AllowsPrinting { get; set; }
 		public bool? AllowsCopying { get; set; }
+		public CGPDFAccessPermissions? AccessPermissions { get; set; }
 		//public NSDictionary OutputIntent { get; set; }
 
 		internal override NSMutableDictionary ToDictionary ()
@@ -110,6 +111,8 @@ namespace XamCore.CoreGraphics {
 				ret.LowlevelSetObject (CFBoolean.False.Handle, kCGPDFContextAllowsPrinting);
 			if (AllowsCopying.HasValue && AllowsCopying.Value == false)
 				ret.LowlevelSetObject (CFBoolean.False.Handle, kCGPDFContextAllowsCopying);
+			if (AccessPermissions.HasValue)
+				ret.LowlevelSetObject (NSNumber.FromInt32 ((int) AccessPermissions.Value), kCGPDFContextAccessPermissions);
 			return ret;
 		}
 	}

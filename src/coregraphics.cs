@@ -72,6 +72,10 @@ namespace XamCore.CoreGraphics {
 		kCGPDFXDestinationOutputProfile;
 		kCGPDFContextOutputIntents;
 #endif
+
+		[Mac (10,13)][iOS (11,0)][TV (11,0)][Watch (4,0)]
+		[Internal][Field ("kCGPDFContextAccessPermissions")]
+		IntPtr kCGPDFContextAccessPermissions { get; }
 	}
 
 	[Static]
@@ -250,6 +254,5 @@ namespace XamCore.CoreGraphics {
 #if XAMCORE_2_0
 		CGRect DestinationRect { get; set; }
 #endif
-		CGPDFAccessPermissions AccessPermissions { get; set; }
 	}
 }
