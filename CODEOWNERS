@@ -22,6 +22,8 @@
 /src/addressbook.cs @dalexsoto
 /src/AppKit @chamons @timrisi
 /src/appkit.cs @chamons @timrisi
+/src/ARKit @VincentDondain
+/src/arkit.cs @VincentDondain
 /src/AudioToolbox @dalexsoto
 /src/audiotoolbox.cs @dalexsoto
 /src/AudioUnit @dalexsoto
@@ -56,6 +58,8 @@
 /src/coremedia.cs @dalexsoto
 /src/CoreMIDI @dalexsoto
 /src/coremidi.cs @dalexsoto
+/src/CoreML @dalexsoto
+/src/coreml.cs @dalexsoto
 /src/CoreMotion @spouliot
 /src/coremotion.cs @spouliot
 /src/CoreSpotlight @dalexsoto @spouliot
@@ -78,7 +82,7 @@
 /src/gamekit.cs @VincentDondain
 /src/GameplayKit @dalexsoto
 /src/gameplaykit.cs @dalexsoto
-/src/generator* @dalexsoto @spouliot @rolf
+/src/generator* @dalexsoto @spouliot @rolf @VincentDondain
 /src/GLKit @dalexsoto @spouliot
 /src/glkit.cs @dalexsoto @spouliot
 /src/HealthKit @VincentDondain
@@ -139,8 +143,8 @@
 /src/replaykit.cs @spouliot
 /src/SafariServices @timrisi
 /src/safariservices.cs @timrisi
-/src/SceneKit @dalexsoto
-/src/scenekit.cs @dalexsoto
+/src/SceneKit @dalexsoto @VincentDondain
+/src/scenekit.cs @dalexsoto @VincentDondain
 /src/Security @dalexsoto @spouliot
 /src/security.cs @dalexsoto @spouliot
 /src/Speech @dalexsoto
@@ -149,8 +153,8 @@
 /src/spritekit.cs @VincentDondain
 /src/SystemConfiguration @spouliot
 /src/systemconfiguration.cs @spouliot
-/src/UIKit @dalexsoto @spouliot @rolfbjarne
-/src/uikit.cs @dalexsoto @spouliot @rolfbjarne
+/src/UIKit @dalexsoto @spouliot @rolfbjarne @VincentDondain
+/src/uikit.cs @dalexsoto @spouliot @rolfbjarne @VincentDondain
 /src/UserNotifications @dalexsoto
 /src/usernotifications.cs @dalexsoto
 /src/UserNotificationsUI @dalexsoto
@@ -159,6 +163,8 @@
 /src/videosubscriberaccount.cs @dalexsoto
 /src/VideoToolbox @spouliot
 /src/videotoolbox.cs @spouliot
+/src/Vision @dalexsoto
+/src/vision.cs @dalexsoto
 /src/WatchConnectivity @spouliot @rolfbjarne
 /src/watchconnectivity.cs @spouliot @rolfbjarne
 /src/WatchKit @spouliot @rolf
