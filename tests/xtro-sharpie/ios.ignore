@@ -88,6 +88,12 @@
 ## added and deprecated in Xcode9 (but not removed from headers)
 !missing-selector! +INNotebookItemTypeResolutionResult::disambiguationWithValuesToDisambiguate: not bound
 
+## The following were deprecated in ios(10.0, 10.0)
+!missing-selector! INRideDriver::initWithHandle:displayName:image:rating:phoneNumber: not bound
+!missing-selector! INRideDriver::initWithHandle:nameComponents:image:rating:phoneNumber: not bound
+!missing-selector! INRideOption::identifier not bound
+!missing-selector! INRideOption::setIdentifier: not bound
+
 
 # IntentsUI
 
