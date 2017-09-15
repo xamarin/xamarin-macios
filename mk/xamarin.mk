@@ -1,5 +1,5 @@
 ifdef ENABLE_XAMARIN
-NEEDED_MACCORE_VERSION := 2ff55247b7125da57f162e06b5da34b13c0d4bb8
+NEEDED_MACCORE_VERSION := 93175c63568e00cf7cf7ac4be5a5cbd4d51bb0b9
 NEEDED_MACCORE_BRANCH := master
 
 MACCORE_DIRECTORY := maccore
@@ -17,7 +17,7 @@ check-$(1)::
 			if test x$$(RESET_VERSIONS) != "x"; then \
 				make reset-$(1) || exit 1; \
 			else \
-				echo "Your $(1) checkout is missing, please run 'make reset-$(1)'"; \
+				echo "Your $(1) checkout is $(COLOR_RED)missing$(COLOR_CLEAR), please run 'make reset-$(1)'"; \
 				touch .check-versions-failure; \
 			fi; \
 		else \
@@ -25,7 +25,7 @@ check-$(1)::
 				if test x$$(RESET_VERSIONS) != "x"; then \
 					make reset-$(1) || exit 1; \
 				else \
-					echo "Your $(1) version is out of date, please run 'make reset-$(1)' (found $($(2)_VERSION), expected $(NEEDED_$(2)_VERSION)). Alternatively export IGNORE_$(2)_VERSION=1 to skip this check."; \
+					echo "Your $(1) version is $(COLOR_RED)out of date$(COLOR_CLEAR), please run 'make reset-$(1)' (found $($(2)_VERSION), expected $(NEEDED_$(2)_VERSION)). Alternatively export IGNORE_$(2)_VERSION=1 to skip this check."; \
 					test -z "$(BUILD_REVISION)" || $(MAKE) test-$(1); \
 					touch .check-versions-failure; \
 				fi; \
@@ -34,13 +34,15 @@ check-$(1)::
 					test -z "$(BUILD_REVISION)" || $(MAKE) test-$(1); \
 					make reset-$(1) || exit 1; \
 				else \
-					echo "Your $(1) branch is out of date, please run 'make reset-$(1)' (found $($(2)_BRANCH), expected $(NEEDED_$(2)_BRANCH)). Alternatively export IGNORE_$(2)_VERSION=1 to skip this check."; \
+					echo "Your $(1) branch is $(COLOR_RED)out of date$(COLOR_CLEAR), please run 'make reset-$(1)' (found $($(2)_BRANCH), expected $(NEEDED_$(2)_BRANCH)). Alternatively export IGNORE_$(2)_VERSION=1 to skip this check."; \
 					touch .check-versions-failure; \
 				fi; \
 			else \
-				echo "$(1) is up-to-date."; \
+				echo "$(1) is $(COLOR_GREEN)up-to-date$(COLOR_CLEAR)."; \
 			fi; \
 		fi; \
+	else \
+		echo "$(1) is $(COLOR_GRAY)ignored$(COLOR_CLEAR)."; \
 	fi
 
 test-$(1)::

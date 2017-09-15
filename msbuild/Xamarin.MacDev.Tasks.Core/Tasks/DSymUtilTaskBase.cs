@@ -58,16 +58,5 @@ namespace Xamarin.MacDev.Tasks
 			// TODO: do proper parsing of error messages and such
 			Log.LogMessage (messageImportance, "{0}", singleLine);
 		}
-
-		public override bool Execute ()
-		{
-			Log.LogTaskName ("DSymUtil");
-			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
-			Log.LogTaskProperty ("Architectures", Architectures);
-			Log.LogTaskProperty ("DSymDir", DSymDir);
-			Log.LogTaskProperty ("Executable", Executable);
-
-			return base.Execute ();
-		}
 	}
 }

@@ -90,6 +90,7 @@ namespace Xamarin.Bundler {
 		static LinkerOptions linker_options;
 		static bool? disable_lldb_attach = null;
 		static string machine_config_path = null;
+		static bool bypass_linking_checks = false;
 
 		static bool arch_set = false;
 		static string arch = "i386";
@@ -108,6 +109,7 @@ namespace Xamarin.Bundler {
 
 		static string BundleName { get { return custom_bundle_name != null ? custom_bundle_name : "MonoBundle"; } }
 		static string AppPath { get { return Path.Combine (macos_dir, app_name); } }
+		public static string Arch => arch;
 
 		static string icon;
 		static string certificate_name;
@@ -120,12 +122,6 @@ namespace Xamarin.Bundler {
 		// This must be kept in sync with the system launcher's minimum mono version (in launcher/launcher-system.m)
 		static Version MinimumMonoVersion = new Version (4, 2, 0);
 		const string pkg_config = "/Library/Frameworks/Mono.framework/Commands/pkg-config";
-
-		static HashSet<string> xammac_reference_assemblies = new HashSet<string> {
-			"Xamarin.Mac.dll",
-			"Xamarin.Mac.CFNetwork.dll",
-			"OpenTK.dll"
-		};
 
 		static void ShowHelp (OptionSet os) {
 			Console.WriteLine ("mmp - Xamarin.Mac Packer");
@@ -220,6 +216,7 @@ namespace Xamarin.Bundler {
 		{
 			try {
 				Console.OutputEncoding = new UTF8Encoding (false, false);
+				SetCurrentLanguage ();
 				Main2 (args);
 			}
 			catch (Exception e) {
@@ -348,6 +345,7 @@ namespace Xamarin.Bundler {
 				{ "http-message-handler=", "Specify the default HTTP Message Handler", v => { http_message_provider = v; }},
 				{ "extension", "Specifies an app extension", v => is_extension = true },
 				{ "allow-unsafe-gac-resolution", "Allow MSBuild to resolve from the System GAC", v => {} , true }, // Used in Xamarin.Mac.XM45.targets and must be ignored here. Hidden since it is a total hack. If you can use it, you don't need support
+				{ "force-unsupported-linker", "Bypass safety checkes preventing unsupported linking options.", v => bypass_linking_checks = true , true }, // Undocumented option for a reason, You get to keep the pieces when it breaks
 				{ "disable-lldb-attach=", "Disable automatic lldb attach on crash", v => disable_lldb_attach = ParseBool (v, "disable-lldb-attach")},
 				{ "machine-config=", "Custom machine.config file to copy into MonoBundle/mono/4.5/machine.config. Pass \"\" to copy in a valid \"empty\" config file.", v => machine_config_path = v },
 				{ "runregistrar:", "Runs the registrar on the input assembly and outputs a corresponding native library.",
@@ -482,7 +480,7 @@ namespace Xamarin.Bundler {
 				throw new Exception ("IsClassic/IsUnified/IsUnifiedMobile/IsUnifiedFullSystemFramework/IsUnifiedFullXamMacFramework logic regression");
 
 			ValidateXamarinMacReference ();
-			if (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework) {
+			if (!bypass_linking_checks && (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework)) {
 				switch (App.LinkMode) {
 				case LinkMode.None:
 				case LinkMode.Platform:
@@ -1292,7 +1290,7 @@ namespace Xamarin.Bundler {
 					args.Append ("-weak_framework ").Append (f).Append (' ');
 
 				var requiredSymbols = BuildTarget.GetRequiredSymbols ();
-				Driver.WriteIfDifferent (Path.Combine (App.Cache.Location, "exported-symbols-list"), string.Join ("\n", requiredSymbols.Select ((symbol) => "_" + symbol.Name).ToArray ()));
+				Driver.WriteIfDifferent (Path.Combine (App.Cache.Location, "exported-symbols-list"), string.Join ("\n", requiredSymbols.Select ((symbol) => symbol.Prefix + symbol.Name).ToArray ()));
 				switch (App.SymbolMode) {
 				case SymbolMode.Ignore:
 					break;
@@ -1305,7 +1303,7 @@ namespace Xamarin.Bundler {
 				case SymbolMode.Linker:
 				case SymbolMode.Default:
 					foreach (var symbol in requiredSymbols)
-						args.Append ("-u ").Append (StringUtils.Quote ("_" + symbol.Name)).Append (' ');
+						args.Append ("-u ").Append (StringUtils.Quote (symbol.Prefix + symbol.Name)).Append (' ');
 					break;
 				default:
 					throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol mode: {App.SymbolMode}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
@@ -1424,7 +1422,7 @@ namespace Xamarin.Bundler {
 
 		static IDictionary<string,List<MethodDefinition>> Link ()
 		{
-			var cache = BuildTarget.Resolver.ToResolverCache ();
+			var cache = (Dictionary<string, AssemblyDefinition>) BuildTarget.Resolver.ResolverCache;
 			var resolver = cache != null
 				? new Mono.Linker.AssemblyResolver (cache)
 				: new Mono.Linker.AssemblyResolver ();
@@ -1864,9 +1862,7 @@ namespace Xamarin.Bundler {
 
 		static void GatherAssemblies () {
 			foreach (string asm in references) {
-				var assembly = BuildTarget.Resolver.AddAssembly (SwapOutReferenceAssembly (asm));
-				if (assembly == null)
-					ErrorHelper.Warning (1501, "Can not resolve reference: {0}", asm);
+				AssemblyDefinition assembly = AddAssemblyPathToResolver (asm);
 				ProcessAssemblyReferences (assembly);
 			}
 			if (BuildTarget.Resolver.Exceptions.Count > 0)
@@ -1891,33 +1887,63 @@ namespace Xamarin.Bundler {
 			resolved_assemblies.Add (fqname);
 
 			foreach (AssemblyNameReference reference in assembly.MainModule.AssemblyReferences) {
-				var reference_assembly = BuildTarget.Resolver.Resolve (SwapOutReferenceAssembly (reference.FullName));
+				AssemblyDefinition reference_assembly = AddAssemblyReferenceToResolver (reference.Name);
 				ProcessAssemblyReferences (reference_assembly);
 			}
 		}
 
-		static string SwapOutReferenceAssembly (string assembly)
+		static AssemblyDefinition AddAssemblyPathToResolver (string path)
 		{
-			// Inject the correct Xamarin.Mac.dll - the one in the framework
-			// directory is a reference assembly only (stripped of IL, containing
-			// only API/metadata) and the correct one based on the target
-			// architecture needs to replace it
-			string fileName = Path.GetFileName (assembly);
+			if (AssemblySwapInfo.AssemblyNeedsSwappedOut (path))
+				path = AssemblySwapInfo.GetSwappedAssemblyPath (path);
 
-			if (assembly.Contains ("OpenTK.dll") && IsUnifiedFullXamMacFramework)
-				return assembly;
-			if (IsUnified &&
-				xammac_reference_assemblies.Contains (fileName)) {
-				switch (arch) {
+			var assembly = BuildTarget.Resolver.AddAssembly (path);
+			if (assembly == null)
+				ErrorHelper.Warning (1501, "Can not resolve reference: {0}", path);
+			return assembly;
+		}
+
+		static AssemblyDefinition AddAssemblyReferenceToResolver (string reference)
+		{
+			if (AssemblySwapInfo.ReferencedNeedsSwappedOut (reference))
+				return BuildTarget.Resolver.AddAssembly (AssemblySwapInfo.GetSwappedReference (reference));
+
+			return BuildTarget.Resolver.Resolve (reference);
+		}
+	}
+
+	public static class AssemblySwapInfo {
+		static HashSet<string> xammac_reference_assemblies_names = new HashSet<string> {
+			"Xamarin.Mac",
+			"Xamarin.Mac.CFNetwork",
+			"OpenTK"
+		};
+
+		public static bool AssemblyNeedsSwappedOut (string path) => NeedsSwappedCore (Path.GetFileNameWithoutExtension (path));
+		public static bool ReferencedNeedsSwappedOut (string reference) => NeedsSwappedCore (reference);
+
+		static bool NeedsSwappedCore (string name)
+		{
+			if (name.Contains ("OpenTK") && Driver.IsUnifiedFullXamMacFramework)
+				return false;
+
+			return Driver.IsUnified && xammac_reference_assemblies_names.Contains (name);
+		}
+
+		public static string GetSwappedAssemblyPath (string path) => GetSwappedPathCore (Path.GetFileNameWithoutExtension (path));
+		public static string GetSwappedReference (string reference) => GetSwappedPathCore (reference);
+
+		static string GetSwappedPathCore (string name)
+		{
+			string flavor = (Driver.IsUnifiedFullSystemFramework || Driver.IsUnifiedFullXamMacFramework) ? "full" : "mobile";
+			switch (Driver.Arch) {
 				case "i386":
 				case "x86_64":
-					return Path.Combine (GetXamMacPrefix (), "lib", arch, (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework) ? "full" : "mobile", fileName);
+					return Path.Combine (Driver.GetXamMacPrefix (), "lib", Driver.Arch, flavor, name + ".dll");
 				default:
-					throw new MonoMacException (5205, true, "Invalid architecture '{0}'. " +
-						"Valid architectures are i386 and x86_64 (when --profile=mobile).", arch);
-				}
+					throw new MonoMacException (5205, true, "Invalid architecture '{0}'. " + 
+							"Valid architectures are i386 and x86_64 (when --profile=mobile).", Driver.Arch);
 			}
-			return assembly;
 		}
 	}
 }

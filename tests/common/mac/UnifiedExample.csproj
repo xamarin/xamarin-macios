@@ -27,6 +27,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+%REFERENCES_BEFORE_PLATFORM%
     <Reference Include="Xamarin.Mac" />
 %REFERENCES%
   </ItemGroup>

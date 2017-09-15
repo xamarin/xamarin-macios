@@ -41,6 +41,8 @@ namespace MonoTouchFixtures.Contacts {
 		{
 			string identifier = null;
 
+			TestRuntime.CheckContactsPermission ();
+
 			var fetchKeys = new [] { CNContactKey.Identifier, CNContactKey.GivenName, CNContactKey.FamilyName };
 			NSError error;
 			using (var predicate = CNContact.GetPredicateForContacts ("Appleseed"))

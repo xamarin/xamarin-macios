@@ -20,9 +20,6 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("CreatePkgInfo");
-			Log.LogTaskProperty ("OutputPath", OutputPath);
-
 			if (!File.Exists (OutputPath)) {
 				Directory.CreateDirectory (Path.GetDirectoryName (OutputPath));
 

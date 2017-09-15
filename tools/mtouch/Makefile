@@ -28,6 +28,8 @@ LINKER_SOURCES = \
 	$(MONOLINKER)/Mono.Linker/MarkException.cs			\
 	$(MONOLINKER)/Mono.Linker/MethodAction.cs			\
 	$(MONOLINKER)/Mono.Linker/Pipeline.cs				\
+	$(MONOLINKER)/Mono.Linker/MethodReferenceExtensions.cs		\
+	$(MONOLINKER)/Mono.Linker/TypeReferenceExtensions.cs		\
 	$(MONOLINKER)/Mono.Linker/TypePreserve.cs			\
 	$(MONOLINKER)/Mono.Linker/XApiReader.cs				\
 	$(MONOLINKER)/Mono.Linker.Steps/BaseStep.cs			\

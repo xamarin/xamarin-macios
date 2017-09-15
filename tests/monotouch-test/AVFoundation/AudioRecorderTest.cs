@@ -39,6 +39,8 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void Create ()
 		{
+			TestRuntime.RequestMicrophonePermission ();
+
 			var url =  NSUrl.FromFilename ("/dev/null");
 			NSError error;
 			var audioSettings = new AudioSettings (NSDictionary.FromObjectsAndKeys (Values, Keys));
@@ -51,6 +53,8 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void CreateWithError ()
 		{
+			TestRuntime.RequestMicrophonePermission ();
+
 			var url =  NSUrl.FromFilename ("/dev/fake.wav");
 			NSError error;
 			var audioSettings = new AudioSettings (NSDictionary.FromObjectsAndKeys (Values, Keys));

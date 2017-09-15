@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Diagnostics;
 using System.Text;
@@ -34,6 +35,89 @@ namespace Xamarin
 	public class MTouch
 	{
 		[Test]
+		//[TestCase (Profile.iOS)] // tested as part of the watchOS case below, since that builds both for iOS and watchOS.
+		[TestCase (Profile.tvOS)]
+		[TestCase (Profile.watchOS)]
+		public void Profiling (Profile profile)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var tmpdir = mtouch.CreateTemporaryDirectory ();
+				MTouchTool ext = null;
+				if (profile == Profile.watchOS) {
+					mtouch.Profile = Profile.iOS;
+
+					ext = new MTouchTool ();
+					ext.Profile = profile;
+					ext.Profiling = true;
+					ext.SymbolList = Path.Combine (tmpdir, "extsymbollist.txt");
+					ext.CreateTemporaryWatchKitExtension ();
+					ext.CreateTemporaryDirectory ();
+					mtouch.AppExtensions.Add (ext);
+					ext.AssertExecute (MTouchAction.BuildDev, "ext build");
+				} else {
+					mtouch.Profile = profile;
+				}
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+
+				mtouch.DSym = false; // faster test
+				mtouch.MSym = false; // faster test
+				mtouch.NoStrip = true; // faster test
+
+				mtouch.Profiling = true;
+				mtouch.SymbolList = Path.Combine (tmpdir, "symbollist.txt");
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+
+				var profiler_symbol = "_mono_profiler_startup_log";
+
+				var symbols = File.ReadAllLines (mtouch.SymbolList);
+				Assert.That (symbols, Contains.Item (profiler_symbol), profiler_symbol);
+
+				symbols = ExecutionHelper.Execute ("nm", StringUtils.Quote (mtouch.NativeExecutablePath), hide_output: true).Split ('\n');
+				Assert.That (symbols, Has.Some.EndsWith (" T " + profiler_symbol), $"{profiler_symbol} nm");
+
+				if (ext != null) {
+					symbols = File.ReadAllLines (ext.SymbolList);
+					Assert.That (symbols, Contains.Item (profiler_symbol), $"{profiler_symbol} - extension");
+
+					symbols = ExecutionHelper.Execute ("nm", StringUtils.Quote (ext.NativeExecutablePath), hide_output: true).Split ('\n');
+					Assert.That (symbols, Has.Some.EndsWith (" T " + profiler_symbol), $"{profiler_symbol} extension nm");
+
+				}
+			}
+		}
+
+		[Test]
+		public void ExceptionMarshaling ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var code = @"
+class X : Foundation.NSObject {
+	public X ()
+	{
+		ValueForKey (null); // calls xamarin_IntPtr_objc_msgSend_IntPtr, so that it's not linked away.
+	}
+}
+";
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp (extraCode: code);
+				mtouch.CustomArguments = new string [] { "--marshal-objectivec-exceptions=throwmanagedexception", "--dlsym:+Xamarin.iOS.dll" };
+				mtouch.Debug = false; // make sure the output is stripped
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_xamarin_pinvoke_wrapper_objc_msgSend"), "symbols");
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_xamarin_IntPtr_objc_msgSend_IntPtr"), "symbols 2");
+
+				// build again with llvm enabled
+				mtouch.Abi = "arm64+llvm";
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build llvm");
+
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_xamarin_pinvoke_wrapper_objc_msgSend"), "symbols llvm");
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_xamarin_IntPtr_objc_msgSend_IntPtr"), "symbols llvm 2");
+			}
+		}
+
+		[Test]
 		[TestCase (NormalizationForm.FormC)]
 		[TestCase (NormalizationForm.FormD)]
 		[TestCase (NormalizationForm.FormKC)]
@@ -48,6 +132,43 @@ namespace Xamarin
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.Verbosity = 9;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+			}
+		}
+
+		[Test]
+		public void SymbolCollectionWithDlsym ()
+		{
+			// https://bugzilla.xamarin.com/show_bug.cgi?id=57826
+
+			using (var mtouch = new MTouchTool ()) {
+				var tmpdir = mtouch.CreateTemporaryDirectory ();
+				mtouch.CreateTemporaryCacheDirectory ();
+
+				var externMethod = @"
+class X {
+	[System.Runtime.InteropServices.DllImport (""__Internal"")]
+	static extern void xamarin_start_wwan ();
+}
+";
+
+				var codeDll = externMethod + @"
+public class A {}
+";
+				var codeExe = externMethod + @"
+public class B : A {}
+";
+
+				var dllPath = CompileTestAppLibrary (tmpdir, codeDll, profile: Profile.iOS, appName: "A");
+
+				mtouch.References = new string [] { dllPath };
+				mtouch.CreateTemporaryApp (extraCode: codeExe, extraArg: $"-r:{StringUtils.Quote (dllPath)}");
+				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.Debug = false;
+				mtouch.CustomArguments = new string [] { "--dlsym:+A.dll", "--dlsym:-testApp.exe" };
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+
+				var symbols = ExecutionHelper.Execute ("nm", $"-gUj {StringUtils.Quote (mtouch.NativeExecutablePath)}", hide_output: true).Split ('\n');
+				Assert.That (symbols, Does.Contain ("_xamarin_start_wwan"), "symb");
 			}
 		}
 
@@ -305,6 +426,9 @@ namespace Xamarin
 					//
 					// The code change is minimal: only changes the class name (default: 'TestApp1' changed to 'TestApp2') to minimize the related
 					// changes (there should be no changes in Xamarin.iOS.dll nor mscorlib.dll, even after linking)
+
+					timestamp = DateTime.Now;
+					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
 
 					// Rebuild the extension's .exe
 					extension.CreateTemporaryServiceExtension (extraCode: codeB);
@@ -3186,6 +3310,29 @@ public class TestApp {
 
 				mtouch.CustomArguments = new string [] { "--dynamic-symbol-mode=code" };
 				mtouch.AssertExecute (MTouchAction.BuildSim, "second build");
+			}
+		}
+
+		[Test]
+		[TestCase ("sl_SI")] // Slovenian. Has a strange minus sign.
+		[TestCase ("ur_IN")] // Urdu (India). Right-to-left.
+		public void BuildWithCulture (string culture)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Debug = false; // disables the simlauncher, and makes us produce a main.m
+				mtouch.Verbosity = -200;
+				mtouch.Linker = MTouchLinker.DontLink; // faster
+				mtouch.EnvironmentVariables = new Dictionary<string, string> ();
+				mtouch.EnvironmentVariables ["LANG"] = culture;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build sim");
+				mtouch.AssertWarning (123, $"The current language was set to '{new CultureInfo (culture.Replace ('_', '-')).DisplayName}' according to the LANG environment variable (LANG={culture}).");
+
+				mtouch.Debug = true; // faster
+				mtouch.Linker = MTouchLinker.LinkAll; // faster
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build dev");
+				mtouch.AssertWarning (123, $"The current language was set to '{new CultureInfo (culture.Replace ('_', '-')).DisplayName}' according to the LANG environment variable (LANG={culture}).");
 			}
 		}
 

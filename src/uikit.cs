@@ -8857,7 +8857,11 @@ namespace XamCore.UIKit {
 		// 	inlined both + UIPickerView.cs implements IUITableViewDataSource
 
 		[Export ("tableView:numberOfRowsInSection:")]
+#if XAMCORE_4_0
+		nint RowsInSection (UITableView tableView, nint section);
+#else
 		nint RowsInSection (UITableView tableview, nint section);
+#endif
 
 		[Export ("tableView:cellForRowAtIndexPath:")]
 		UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath);
@@ -11156,7 +11160,11 @@ namespace XamCore.UIKit {
 	interface UITableViewSource {
 		[Export ("tableView:numberOfRowsInSection:")]
 		[Abstract]
+#if XAMCORE_4_0
+		nint RowsInSection (UITableView tableView, nint section);
+#else
 		nint RowsInSection (UITableView tableview, nint section);
+#endif
 
 		[Export ("tableView:cellForRowAtIndexPath:")]
 		[Abstract]
@@ -11333,8 +11341,6 @@ namespace XamCore.UIKit {
 		[Export ("indexPathForPreferredFocusedViewInTableView:")]
 		[return: NullAllowed]
 		NSIndexPath GetIndexPathForPreferredFocusedView (UITableView tableView);
-
-		// WARNING: If you add more methods here, add them to UITableViewController as well.
 	}
 	
 	[BaseType (typeof (UIView))]

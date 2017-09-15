@@ -37,11 +37,6 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("DetectDebugNetworkConfiguration");
-			Log.LogTaskProperty ("DebugOverWiFi", DebugOverWiFi);
-			Log.LogTaskProperty ("DebuggerHosts", DebuggerHosts);
-			Log.LogTaskProperty ("SdkIsSimulator", SdkIsSimulator);
-
 			var ips = new List<string> ();
 
 			if (SdkIsSimulator) {

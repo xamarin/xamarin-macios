@@ -92,11 +92,6 @@ namespace Xamarin.iOS.Tasks
 		{
 			PDictionary plist;
 
-			Log.LogTaskName ("DetectBundleIdentifier");
-			Log.LogTaskProperty ("AppBundleName", AppBundleName);
-			Log.LogTaskProperty ("AppManifest", AppManifest);
-			Log.LogTaskProperty ("SdkIsSimulator", SdkIsSimulator);
-
 			try {
 				plist = PDictionary.FromFile (AppManifest);
 			} catch (Exception ex) {

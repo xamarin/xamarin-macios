@@ -447,6 +447,8 @@ namespace MonoTouchFixtures.Intents {
 		[Test]
 		public void INBillPayeeResolutionResultPropertyTest ()
 		{
+			TestRuntime.AssertXcodeVersion (8, 3);
+
 			using (var needsValue = INBillPayeeResolutionResult.NeedsValue)
 			using (var notRequired = INBillPayeeResolutionResult.NotRequired)
 			using (var unsupported = INBillPayeeResolutionResult.Unsupported) {
@@ -463,6 +465,8 @@ namespace MonoTouchFixtures.Intents {
 		[Test]
 		public void INBillTypeResolutionResultPropertyTest ()
 		{
+			TestRuntime.AssertXcodeVersion (8, 3);
+
 			using (var needsValue = INBillTypeResolutionResult.NeedsValue)
 			using (var notRequired = INBillTypeResolutionResult.NotRequired)
 			using (var unsupported = INBillTypeResolutionResult.Unsupported) {
@@ -479,6 +483,8 @@ namespace MonoTouchFixtures.Intents {
 		[Test]
 		public void INCarSignalOptionsResolutionResultPropertyTest ()
 		{
+			TestRuntime.AssertXcodeVersion (8, 3);
+
 			using (var needsValue = INCarSignalOptionsResolutionResult.NeedsValue)
 			using (var notRequired = INCarSignalOptionsResolutionResult.NotRequired)
 			using (var unsupported = INCarSignalOptionsResolutionResult.Unsupported) {
@@ -495,6 +501,8 @@ namespace MonoTouchFixtures.Intents {
 		[Test]
 		public void INPaymentAmountResolutionResultPropertyTest ()
 		{
+			TestRuntime.AssertXcodeVersion (8, 3);
+
 			using (var needsValue = INPaymentAmountResolutionResult.NeedsValue)
 			using (var notRequired = INPaymentAmountResolutionResult.NotRequired)
 			using (var unsupported = INPaymentAmountResolutionResult.Unsupported) {
@@ -511,6 +519,8 @@ namespace MonoTouchFixtures.Intents {
 		[Test]
 		public void INPaymentStatusResolutionResultPropertyTest ()
 		{
+			TestRuntime.AssertXcodeVersion (8, 3);
+
 			using (var needsValue = INPaymentStatusResolutionResult.NeedsValue)
 			using (var notRequired = INPaymentStatusResolutionResult.NotRequired)
 			using (var unsupported = INPaymentStatusResolutionResult.Unsupported) {
@@ -527,6 +537,8 @@ namespace MonoTouchFixtures.Intents {
 		[Test]
 		public void INPaymentAccountResolutionResultPropertyTest ()
 		{
+			TestRuntime.AssertXcodeVersion (8, 3);
+
 			using (var needsValue = INPaymentAccountResolutionResult.NeedsValue)
 			using (var notRequired = INPaymentAccountResolutionResult.NotRequired)
 			using (var unsupported = INPaymentAccountResolutionResult.Unsupported) {

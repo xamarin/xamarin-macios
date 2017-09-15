@@ -30,7 +30,8 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 	<PropertyGroup>
 		<_GeneratedSourcesFileList>$(GeneratedSourcesDir)sources.list</_GeneratedSourcesFileList>
 
-		<DefineConstants>__MOBILE__;__IOS__;__UNIFIED__;$(DefineConstants)</DefineConstants>
+		<XamarinDefineConstants Condition="'$(XamarinDefineConstants)' == ''">__UNIFIED__;__MOBILE__;__IOS__</XamarinDefineConstants>
+		<DefineConstants>$(XamarinDefineConstants);$(DefineConstants)</DefineConstants>
 
 		<!-- Add our own pre-build steps -->
 		<CompileDependsOn>
@@ -44,7 +45,8 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 	<!-- Override the CoreCompile Target to use btouch -->
 	<Target Name="_GenerateBindings"
 		Inputs="$(MSBuildAllProjects);@(ObjcBindingApiDefinition);@(ObjcBindingCoreSource);@(ReferencePath);@(ObjcBindingNativeLibrary)"
-		Outputs="$(_GeneratedSourcesFileList)">
+		Outputs="$(_GeneratedSourcesFileList)"
+		Condition="'$(DesignTimeBuild)' != 'true'">
 
 		<PropertyGroup>
 			<BTouchEmitDebugInformation>false</BTouchEmitDebugInformation>
@@ -80,7 +82,7 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 		</BTouch>
 	</Target>
 
-	<Target Name="_PrepareNativeReferences">
+	<Target Name="_PrepareNativeReferences" Condition="'$(DesignTimeBuild)' != 'true'">
 		<PrepareNativeReferences
 			SessionId="$(BuildSessionId)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
@@ -132,7 +134,7 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 			Symlinks="true"
 			Sources="%(ObjCBindingNativeFramework.Identity)"
 			OutputFile="$(IntermediateOutputPath)%(ObjCBindingNativeFramework.Filename)%(ObjCBindingNativeFramework.Extension)"
-			WorkingDirectory="%(ObjCBindingNativeFramework.FullPath)" >
+			WorkingDirectory="%(ObjCBindingNativeFramework.Identity)" >
 		</Zip>
 
 		<CreateItem Include="$(IntermediateOutputPath)%(ObjCBindingNativeFramework.Filename)%(ObjCBindingNativeFramework.Extension)">
@@ -141,7 +143,9 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 	</Target>
 	<!-- /OBSOLETE -->
 
-	<Target Name="_CollectGeneratedSources" DependsOnTargets="_GenerateBindings;_CompressNativeFrameworkResources;_CompressObjCBindingNativeFrameworkResources">
+	<Target Name="_CollectGeneratedSources" DependsOnTargets="_GenerateBindings;_CompressNativeFrameworkResources;_CompressObjCBindingNativeFrameworkResources"
+		Condition="'$(DesignTimeBuild)' != 'true'">
+		
 		<ReadLinesFromFile File="$(_GeneratedSourcesFileList)" >
 			<Output TaskParameter="Lines" ItemName="GeneratedSources" />
 		</ReadLinesFromFile>

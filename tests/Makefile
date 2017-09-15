@@ -355,3 +355,21 @@ endif
 
 jenkins: xharness/xharness.exe
 	$(Q) $(SYSTEM_MONO) --debug $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT)
+
+# This will launch xharness' interactive test runner in the system's default browser
+runner: xharness/xharness.exe
+	@echo "Running xharness in server mode. Press Ctrl-C to exit (or click Quit / press Q in the browser page)"
+	$(Q) $(SYSTEM_MONO) --debug $< $(XHARNESS_VERBOSITY) --jenkins:server --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT)
+
+# This makefile target will run the device tests using the Xamarin.iOS version
+# installed on the system.
+vsts-device-tests: xharness/xharness.exe
+	$(Q) $(SYSTEM_MONO) --debug $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-mac-tests,skip-ios-simulator-tests,skip-ios-msbuild-tests,skip-system-permission-tests,run-ios-device-tests,run-bcl-tests --markdown-summary=$(CURDIR)/TestSummary.md
+
+ifdef ENABLE_XAMARIN
+wrench-launch-external wrench-report-external:
+	$(MAKE) -C $(MACCORE_PATH)/tests/external $@
+else
+wrench-launch-external wrench-report-external:
+	@echo "External tests have been disabled"
+endif

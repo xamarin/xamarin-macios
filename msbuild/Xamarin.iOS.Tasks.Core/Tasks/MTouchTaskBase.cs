@@ -633,43 +633,6 @@ namespace Xamarin.iOS.Tasks
 			PDictionary plist;
 			PString value;
 
-			Log.LogTaskName ("MTouch");
-			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
-			Log.LogTaskProperty ("AppExtensionReferences", AppExtensionReferences);
-			Log.LogTaskProperty ("AppManifest", AppManifest);
-			Log.LogTaskProperty ("Architectures", Architectures);
-			Log.LogTaskProperty ("ArchiveSymbols", ArchiveSymbols);
-			Log.LogTaskProperty ("BitcodeEnabled", EnableBitcode);
-			Log.LogTaskProperty ("CompiledEntitlements", CompiledEntitlements);
-			Log.LogTaskProperty ("Debug", Debug);
-			Log.LogTaskProperty ("EnableGenericValueTypeSharing", EnableGenericValueTypeSharing);
-			Log.LogTaskProperty ("EnableSGenConc", EnableSGenConc);
-			Log.LogTaskProperty ("Entitlements", Entitlements);
-			Log.LogTaskProperty ("ExecutableName", ExecutableName);
-			Log.LogTaskProperty ("ExtraArgs", ExtraArgs);
-			Log.LogTaskProperty ("FastDev", FastDev);
-			Log.LogTaskProperty ("HttpClientHandler", HttpClientHandler);
-			Log.LogTaskProperty ("I18n", I18n);
-			Log.LogTaskProperty ("IntermediateOutputPath", IntermediateOutputPath);
-			Log.LogTaskProperty ("IsAppExtension", IsAppExtension);
-			Log.LogTaskProperty ("LinkerDumpDependencies", LinkerDumpDependencies);
-			Log.LogTaskProperty ("LinkMode", LinkMode);
-			Log.LogTaskProperty ("MainAssembly", MainAssembly);
-			Log.LogTaskProperty ("NativeReferences", NativeReferences);
-			Log.LogTaskProperty ("OutputPath", OutputPath);
-			Log.LogTaskProperty ("Profiling", Profiling);
-			Log.LogTaskProperty ("ProjectDir", ProjectDir);
-			Log.LogTaskProperty ("References", References);
-			Log.LogTaskProperty ("SdkIsSimulator", SdkIsSimulator);
-			Log.LogTaskProperty ("SdkRoot", SdkRoot);
-			Log.LogTaskProperty ("SdkVersion", SdkVersion);
-			Log.LogTaskProperty ("SymbolsList", SymbolsList);
-			Log.LogTaskProperty ("TargetFrameworkIdentifier", TargetFrameworkIdentifier);
-			Log.LogTaskProperty ("UseFloat32", UseFloat32);
-			Log.LogTaskProperty ("UseLlvm", UseLlvm);
-			Log.LogTaskProperty ("UseThumb", UseThumb);
-			Log.LogTaskProperty ("Verbosity", Verbosity.ToString ());
-
 			try {
 				plist = PDictionary.FromFile (AppManifest.ItemSpec);
 			} catch (Exception ex) {
@@ -738,18 +701,20 @@ namespace Xamarin.iOS.Tasks
 
 		static string GetVerbosityLevel (int v) {
 			string result = "";
+			// The values here come from: https://github.com/mono/monodevelop/blob/143f9b6617123a0841a5cc5a2a4e13b309535792/main/src/core/MonoDevelop.Projects.Formats.MSBuild/MonoDevelop.Projects.MSBuild.Shared/RemoteBuildEngineMessages.cs#L186
+			// Assume 'Normal (2)' is the default verbosity (no change), and the other values follow from there.
 			switch (v) {
 			case 0:
-				result = "-q";
+				result = "-q -q -q -q";
 				break;
 			case 1:
-				result = "-v";
+				result = "-q -q";
 				break;
 			case 2:
-				result = "-v -v";
+				result = "";
 				break;
 			case 3:
-				result = "-v -v -v";
+				result = "-v -v";
 				break;
 			case 4:
 				result = "-v -v -v -v";

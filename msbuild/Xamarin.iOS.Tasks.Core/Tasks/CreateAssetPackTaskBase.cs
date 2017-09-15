@@ -81,10 +81,6 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("CreateAssetPack");
-			Log.LogTaskProperty ("OutputFile", OutputFile);
-			Log.LogTaskProperty ("Source", Source);
-
 			// We need to delete any existing ipa files, zip will just add to it otherwise
 			if (File.Exists (OutputFile.ItemSpec))
 				File.Delete (OutputFile.ItemSpec);

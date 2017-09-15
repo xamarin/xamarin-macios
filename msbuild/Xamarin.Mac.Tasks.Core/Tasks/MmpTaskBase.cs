@@ -259,35 +259,6 @@ namespace Xamarin.Mac.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("Mmp");
-			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
-			Log.LogTaskProperty ("ApplicationAssembly", ApplicationAssembly);
-			Log.LogTaskProperty ("ApplicationName", ApplicationName);
-			Log.LogTaskProperty ("Architecture", Architecture);
-			Log.LogTaskProperty ("ArchiveSymbols", ArchiveSymbols);
-			Log.LogTaskProperty ("Debug", Debug);
-			Log.LogTaskProperty ("EnableSGenConc", EnableSGenConc);
-			Log.LogTaskProperty ("ExplicitReferences", ExplicitReferences);
-			Log.LogTaskProperty ("ExtraArguments", ExtraArguments);
-			Log.LogTaskProperty ("FrameworkRoot", FrameworkRoot);
-			Log.LogTaskProperty ("I18n", I18n);
-			Log.LogTaskProperty ("IntermediateOutputPath", IntermediateOutputPath);
-			Log.LogTaskProperty ("LinkMode", LinkMode);
-			Log.LogTaskProperty ("OutputPath", OutputPath);
-			Log.LogTaskProperty ("SdkRoot", SdkRoot);
-			Log.LogTaskProperty ("TargetFrameworkIdentifier", TargetFrameworkIdentifier);
-			Log.LogTaskProperty ("TargetFrameworkVersion", TargetFrameworkVersion);
-			Log.LogTaskProperty ("UseXamMacFullFramework", UseXamMacFullFramework);
-			Log.LogTaskProperty ("Profiling", Profiling);
-			Log.LogTaskProperty ("AppManifest", AppManifest);
-			Log.LogTaskProperty ("SdkVersion", SdkVersion);
-			Log.LogTaskProperty ("NativeReferences", NativeReferences);
-			Log.LogTaskProperty ("IsAppExtension", IsAppExtension);
-			Log.LogTaskProperty ("AotScope", AotScope);
-			Log.LogTaskProperty ("HybridAotOption", HybridAotOption);
-			Log.LogTaskProperty ("ExplicitAotAssemblies", ExplicitAotAssemblies);
-
-
 			if (!base.Execute ())
 				return false;
 

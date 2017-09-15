@@ -390,25 +390,24 @@ namespace Xamarin.Bundler {
 						if (Frameworks.Add ("OpenAL"))
 							Driver.Log (3, "Linking with the framework OpenAL because {0} is referenced by a module reference in {1}", file, FileName);
 						break;
-#if MONOMAC
-					case "PrintCore":
-						if (Frameworks.Add ("ApplicationServices"))
-							Driver.Log (3, "Linking with the framework ApplicationServices because {0} is referenced by a module reference in {1}", file, FileName);
-						break;
-					case "SearchKit":
-						if (Frameworks.Add ("CoreServices"))
-							Driver.Log (3, "Linking with the framework CoreServices because {0} is referenced by a module reference in {1}", file, FileName);
-						break;
-					case "CFNetwork":
-						if (Frameworks.Add ("CoreServices"))
-							Driver.Log (3, "Linking with the framework CoreServices because {0} is referenced by a module reference in {1}", file, FileName);
-						break;
-#endif
 					default:
 #if MONOMAC
 						string path = Path.GetDirectoryName (name);
 						if (!path.StartsWith ("/System/Library/Frameworks", StringComparison.Ordinal))
 							continue;
+
+						// CoreServices has multiple sub-frameworks that can be used by customer code
+						if (path.StartsWith ("/System/Library/Frameworks/CoreServices.framework/", StringComparison.Ordinal)) {
+							if (Frameworks.Add ("CoreServices"))
+								Driver.Log (3, "Linking with the framework CoreServices because {0} is referenced by a module reference in {1}", file, FileName);
+							break;
+						}
+						// ApplicationServices has multiple sub-frameworks that can be used by customer code
+						if (path.StartsWith ("/System/Library/Frameworks/ApplicationServices.framework/", StringComparison.Ordinal)) {
+							if (Frameworks.Add ("ApplicationServices"))
+								Driver.Log (3, "Linking with the framework ApplicationServices because {0} is referenced by a module reference in {1}", file, FileName);
+							break;
+						}
 #endif
 
 						// detect frameworks

@@ -31,6 +31,15 @@ namespace Xamarin.MMP.Tests
 			}
 		}
 
+		public string MobileStaticBindingPath {
+			get {
+				string rootDir = TI.FindRootDirectory ();
+				string buildLibPath = Path.Combine (rootDir, "../tests/mac-binding-project/bin/Mobile-static/MobileBinding.dll");
+				Assert.IsTrue (File.Exists (buildLibPath), string.Format ("MobileStaticBindingPath missing? {0}", buildLibPath));
+				return buildLibPath;
+			}
+		}
+
 		string CreateNativeRefInclude (string path, string kind) => string.Format (NativeReferenceTemplate, path, kind);
 		string CreateItemGroup (IEnumerable<string> elements) => string.Format (ItemGroupTemplate, string.Concat (elements));
 		string CreateSingleNativeRef (string path, string kind) => CreateItemGroup (CreateNativeRefInclude (path, kind).FromSingleItem ());
@@ -104,6 +113,19 @@ namespace Xamarin.MMP.Tests
 					string clangLine = s.Split ('\n').First (x => x.Contains ("xcrun -sdk macosx clang"));
 					return clangLine.Contains ("SimpleClassStatic.a");
 				});
+			});
+		}
+
+		[Test]
+		public void Unified_WithStaticNativeRef_32bit ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = "<XamMacArch>i386</XamMacArch>",
+					References = $"<Reference Include=\"SimpleBinding_static\"><HintPath>{MobileStaticBindingPath}</HintPath></Reference>",
+					TestCode = "System.Console.WriteLine (new Simple.SimpleClass ().DoIt ());"
+				};
+				NativeReferenceTestCore (tmpDir, test, "Unified_WithStaticNativeRef_32bit", null, true, false);
 			});
 		}
 

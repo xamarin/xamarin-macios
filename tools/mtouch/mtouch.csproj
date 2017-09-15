@@ -92,6 +92,12 @@
     <Compile Include="..\..\external\linker\linker\Mono.Linker\Pipeline.cs">
       <Link>Mono.Linker\Pipeline.cs</Link>
     </Compile>
+    <Compile Include="..\..\external\linker\linker\Mono.Linker\MethodReferenceExtensions.cs">
+      <Link>Mono.Linker\MethodReferenceExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\linker\linker\Mono.Linker\TypeReferenceExtensions.cs">
+      <Link>Mono.Linker\TypeReferenceExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\..\external\linker\linker\Mono.Linker\AssemblyResolver.cs">
       <Link>Mono.Linker\AssemblyResolver.cs</Link>
     </Compile>

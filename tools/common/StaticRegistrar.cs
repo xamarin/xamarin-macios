@@ -3642,7 +3642,7 @@ namespace XamCore.Registrar {
 			return "__p__" + i.ToString ();
 		}
 
-		public void GeneratePInvokeWrapper (PInvokeWrapperGenerator state, MethodDefinition method)
+		string TryGeneratePInvokeWrapper (PInvokeWrapperGenerator state, MethodDefinition method)
 		{
 			var signatures = state.signatures;
 			var exceptions = state.exceptions;
@@ -3736,6 +3736,18 @@ namespace XamCore.Registrar {
 				// Console.WriteLine ("Signature already processed: {0} for {1}.{2}", signature.ToString (), method.DeclaringType.FullName, method.Name);
 			}
 
+			return wrapperName;
+		}
+
+		public void GeneratePInvokeWrapper (PInvokeWrapperGenerator state, MethodDefinition method)
+		{
+			string wrapperName;
+			try {
+				wrapperName = TryGeneratePInvokeWrapper (state, method);
+			} catch (Exception e) {
+				throw ErrorHelper.CreateError (App, 4169, e, method, $"Failed to generate a P/Invoke wrapper for {GetDescriptiveMethodName (method)}: {e.Message}");
+			}
+
 			// find the module reference to __Internal
 			ModuleReference mr = null;
 			foreach (var mref in method.Module.ModuleReferences) {
@@ -3746,6 +3758,8 @@ namespace XamCore.Registrar {
 			}
 			if (mr == null)
 				method.Module.ModuleReferences.Add (mr = new ModuleReference ("__Internal"));
+
+			var pinfo = method.PInvokeInfo;
 			pinfo.Module = mr;
 			pinfo.EntryPoint = wrapperName;
 		}

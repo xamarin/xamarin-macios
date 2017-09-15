@@ -1,6 +1,3 @@
-$(IOS_BUILD_DIR)/compat/OpenTK.dll.config: ./OpenGLES/OpenTK/OpenTK.dll.config | $(IOS_BUILD_DIR)/compat
-	$(Q) cp $< $@
-
 $(IOS_BUILD_DIR)/compat/OpenTK.dll: Makefile OpenGLES/Makefile.include $(shell cat OpenTK.dll.sources) $(IOS_BUILD_DIR)/compat/monotouch.dll | $(IOS_BUILD_DIR)/compat
 	$(Q_CSC) $(IOS_CSC) -warn:0 -unsafe -target:library -debug:portable -optimize -publicsign -define:MONOTOUCH -define:IPHONE -d:MINIMAL -out:$@ @./$(@F).sources -r:$(IOS_BUILD_DIR)/compat/monotouch.dll -r:$(MONOTOUCH_MONO_PATH)/System.dll -keyfile:$(PRODUCT_KEY_PATH)
 	$(Q) touch $@

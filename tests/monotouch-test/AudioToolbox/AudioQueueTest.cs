@@ -31,6 +31,8 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void Properties ()
 		{
+			TestRuntime.RequestMicrophonePermission ();
+
 			var b = new InputAudioQueue (AudioStreamBasicDescription.CreateLinearPCM ());
 			b.HardwareCodecPolicy = AudioQueueHardwareCodecPolicy.PreferHardware;
 

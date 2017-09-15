@@ -1,34 +1,34 @@
-[submodule "external/llvm"]
-	path = external/llvm
-	url = ../../mono/llvm.git
-	branch = master
-[submodule "external/mono"]
-	path = external/mono
-	url = ../../mono/mono.git
-	branch = 2017-04
 [submodule "external/fsharp"]
-	path = external/fsharp
-	url = ../../fsharp/fsharp.git
-	branch = master
-[submodule "external/MonoTouch.Dialog"]
-	path = external/MonoTouch.Dialog
-	url = ../../migueldeicaza/MonoTouch.Dialog.git
-	branch = master
-[submodule "external/Touch.Unit"]
-	path = external/Touch.Unit
-	url = ../../spouliot/Touch.Unit.git
-	branch = master
-[submodule "external/opentk"]
-	path = external/opentk
-	url = ../../mono/opentk.git
-	branch = master
-[submodule "external/Xamarin.MacDev"]
-	path = external/Xamarin.MacDev
-	url = ../../xamarin/Xamarin.MacDev
-	branch = master
+    path = external/fsharp
+    url = ../../fsharp/fsharp.git
+    branch = master
 [submodule "external/guiunit"]
-	path = external/guiunit
-	url = ../../mono/guiunit.git
+    path = external/guiunit
+    url = ../../mono/guiunit.git
 [submodule "external/linker"]
-	path = external/linker
-	url = ../../mono/linker.git
+    path = external/linker
+    url = ../../mono/linker.git
+[submodule "external/llvm"]
+    path = external/llvm
+    url = ../../mono/llvm.git
+    branch = master
+[submodule "external/mono"]
+    path = external/mono
+    url = ../../mono/mono.git
+    branch = 2017-06
+[submodule "external/MonoTouch.Dialog"]
+    path = external/MonoTouch.Dialog
+    url = ../../migueldeicaza/MonoTouch.Dialog.git
+    branch = master
+[submodule "external/opentk"]
+    path = external/opentk
+    url = ../../mono/opentk.git
+    branch = master
+[submodule "external/Touch.Unit"]
+    path = external/Touch.Unit
+    url = ../../spouliot/Touch.Unit.git
+    branch = master
+[submodule "external/Xamarin.MacDev"]
+    path = external/Xamarin.MacDev
+    url = ../../xamarin/Xamarin.MacDev
+    branch = master

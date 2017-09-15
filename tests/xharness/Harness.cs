@@ -62,6 +62,7 @@ namespace xharness
 		public int Verbosity { get; set; }
 		public Log HarnessLog { get; set; }
 		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
+		public HashSet<string> Labels { get; } = new HashSet<string> ();
 
 		// This is the maccore/tests directory.
 		string root_directory;
@@ -116,7 +117,7 @@ namespace xharness
 
 		// Run
 		public AppRunnerTarget Target { get; set; }
-		public string SdkRoot { get; set; } = "/Applications/Xcode.app";
+		public string SdkRoot { get; set; }
 		public string Configuration { get; set; } = "Debug";
 		public string LogFile { get; set; }
 		public string LogDirectory { get; set; } = Environment.CurrentDirectory;
@@ -125,6 +126,7 @@ namespace xharness
 		public bool DryRun { get; set; } // Most things don't support this. If you need it somewhere, implement it!
 		public string JenkinsConfiguration { get; set; }
 		public Dictionary<string, string> EnvironmentVariables { get; set; } = new Dictionary<string, string> ();
+		public string MarkdownSummaryPath { get; set; }
 
 		public Harness ()
 		{
@@ -254,6 +256,8 @@ namespace xharness
 			INCLUDE_MAC = make_config.ContainsKey ("INCLUDE_MAC") && !string.IsNullOrEmpty (make_config ["INCLUDE_MAC"]);
 			MAC_DESTDIR = make_config ["MAC_DESTDIR"];
 			IOS_DESTDIR = make_config ["IOS_DESTDIR"];
+			if (string.IsNullOrEmpty (SdkRoot))
+				SdkRoot = make_config ["XCODE_DEVELOPER_ROOT"];
 		}
 		 
 		void AutoConfigureMac ()
@@ -735,7 +739,7 @@ namespace xharness
 				return report;
 			}
 
-			var symbolicated = new LogFile ("Symbolicated crash report", report.Path + ".symbolicated");
+			var symbolicated = new LogFile ("Symbolicated crash report", Path.ChangeExtension (report.Path, ".symbolicated.log"));
 			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (XcodeRoot, "Contents", "Developer") } };
 			var rv = await ProcessHelper.ExecuteCommandAsync (symbolicatecrash, StringUtils.Quote (report.Path), symbolicated, TimeSpan.FromMinutes (1), environment);
 			if (rv.Succeeded) {;

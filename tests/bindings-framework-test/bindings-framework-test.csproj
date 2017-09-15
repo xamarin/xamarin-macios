@@ -50,6 +50,9 @@
     <ObjcBindingCoreSource Include="StructsAndEnums.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.ObjCBinding.CSharp.targets" />
+  <PropertyGroup>
+    <TestLibrariesDirectory>..\..\tests\test-libraries</TestLibrariesDirectory>
+  </PropertyGroup>
   <ItemGroup>
     <ObjcBindingNativeFramework Include="..\..\tests\test-libraries\.libs\ios\XTest.framework">
       <Link>XTest.framework</Link>
@@ -80,9 +83,6 @@
     <TestLibrariesOutput Include="..\..\tests\test-libraries\.libs\ios\XSharedObjectTest.framework" />
     <TestLibrariesOutput Include="..\..\tests\test-libraries\.libs\ios\XSharedARTest.framework" />
   </ItemGroup>
-  <PropertyGroup>
-    <TestLibrariesDirectory>..\..\tests\test-libraries</TestLibrariesDirectory>
-  </PropertyGroup>
   <Target Name="BeforeBuild" Inputs="@(TestLibrariesInput)" Outputs="@(TestLibrariesOutput)">
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
   </Target>

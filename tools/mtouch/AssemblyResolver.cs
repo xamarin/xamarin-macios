@@ -73,6 +73,8 @@ namespace MonoTouch.Tuner {
 			return parameters;
 		}
 
+		public IDictionary<string, AssemblyDefinition> ResolverCache { get { return cache; } }
+
 		public IDictionary ToResolverCache ()
 		{
 			var resolver_cache = new Dictionary<string, AssemblyDefinition> (NormalizedStringComparer.OrdinalIgnoreCase);
