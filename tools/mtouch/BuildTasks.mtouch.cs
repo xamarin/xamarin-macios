@@ -336,7 +336,7 @@ namespace Xamarin.Bundler
 			// /System/Library/PrivateFrameworks/JavaScriptCore.framework/JavaScriptCore instead of
 			// /System/Library/Frameworks/JavaScriptCore.framework/JavaScriptCore
 			// more details in https://bugzilla.xamarin.com/show_bug.cgi?id=31036
-			if (Target.WeakFrameworks.Count > 0)
+			if (CompilerFlags.WeakFrameworks.Count > 0)
 				Target.AdjustDylibs ();
 			Driver.Watch ("Native Link", 1);
 		}
