@@ -562,11 +562,7 @@ The solution is to remove the `--dynamic-symbol-mode=linker` argument from the a
 
 ### <a name="MT0116"/>MT0116: Aot files could not be found at the expected directory '{msymdir}'.
 
-<!-- 0117 - 0122: free to use -->
-
-### <a name="MT0123"/>MT0123: The current language was set to '{language}' according to the LANG environment variable (LANG={LANG}).
-
-No action is required, this message is purely informational.
+<!-- 0117 - 0123: free to use -->
 
 ### <a name="MT0124"/>MT0124: Could not set the current language to '{lang}' (according to LANG={LANG}): {exception}
 
