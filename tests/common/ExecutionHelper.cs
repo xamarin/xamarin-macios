@@ -198,6 +198,9 @@ namespace Xamarin.Tests
 				Assert.Fail (string.Format ("The error '{0}{1:0000}: {2}' was not found in the output:\n{3}", prefix, number, message, string.Join ("\n", details.ToArray ())));
 			}
 
+			if (!matches.Where ((msg) => msg.IsError).Any ())
+				Assert.Fail (string.Format ("Found the message '{0}{1:0000}: {2}' as expected, but it's a warning, not an error.", prefix, number, message));
+
 			if (filename != null) {
 				var hasDirectory = filename.IndexOf (Path.DirectorySeparatorChar) > -1;
 				if (!matches.Any ((v) => {
@@ -246,8 +249,12 @@ namespace Xamarin.Tests
 
 		public void AssertWarning (string prefix, int number, string message)
 		{
-			if (!messages.Any ((msg) => msg.Prefix == prefix && msg.Number == number))
+			var matches = messages.Where ((msg) => msg.Prefix == prefix && msg.Number == number);
+			if (!matches.Any ())
 				Assert.Fail (string.Format ("The warning '{0}{1:0000}' was not found in the output.", prefix, number));
+
+			if (!matches.Where ((msg) => msg.IsWarning).Any ())
+				Assert.Fail (string.Format ("Found the message '{0}{1:0000}: {2}' as expected, but it's an error, not a warning.", prefix, number, message));
 
 			if (messages.Any ((msg) => msg.Message == message))
 				return;
