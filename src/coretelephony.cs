@@ -6,11 +6,11 @@ namespace XamCore.CoreTelephony {
 	[Since (4,0)]
 	[BaseType (typeof (NSObject))]
 	interface CTCall {
-		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use CallKit")]
+		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use 'CallKit' instead.")]
 		[Export ("callID")]
 		string CallID { get;  }
 
-		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use CallKit")]
+		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use 'CallKit' instead.")]
 		[Export ("callState")]
 		string CallState { get; }
 
@@ -90,10 +90,11 @@ namespace XamCore.CoreTelephony {
 	delegate void CTCallEventHandler (CTCall call);
 #endif
 
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Replaced by 'CXCallObserver' from 'CallKit'.")]
 	[BaseType (typeof (NSObject))]
 	[Since (4,0)]
 	interface CTCallCenter {
-		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use CallKit")]
+		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use 'CallKit' instead.")]
 		[NullAllowed] // by default this property is null
 		[Export ("callEventHandler")]
 #if XAMCORE_2_0
@@ -102,7 +103,7 @@ namespace XamCore.CoreTelephony {
 		CTCallEventHandler CallEventHandler { get; set; }
 #endif
 
-		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use CallKit")]
+		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use 'CallKit' instead.")]
 		[Export ("currentCalls")]
 		NSSet CurrentCalls { get; }
 

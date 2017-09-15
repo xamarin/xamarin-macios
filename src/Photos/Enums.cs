@@ -18,7 +18,7 @@ namespace XamCore.Photos
 	// NSInteger -> PHImageManager.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[Native]
 	public enum PHImageRequestOptionsVersion : nint {
 		Current = 0,
@@ -29,7 +29,7 @@ namespace XamCore.Photos
 	// NSInteger -> PHImageManager.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[Native]
 	public enum PHImageRequestOptionsDeliveryMode : nint {
 		Opportunistic = 0,
@@ -40,7 +40,7 @@ namespace XamCore.Photos
 	// NSInteger -> PHImageManager.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[Native]
 	public enum PHImageRequestOptionsResizeMode : nint {
 		None = 0,
@@ -96,9 +96,9 @@ namespace XamCore.Photos
 
 #if !XAMCORE_3_0
 		// this was added in the wrong enum type (ref bug #40019)
-		[Obsolete ("Incorrect value (exists in PHAssetCollectionSubtype)")]
+		[Obsolete ("Incorrect value (exists in 'PHAssetCollectionSubtype').")]
 		SmartAlbumSelfPortraits = 210,
-		[Obsolete ("Incorrect value (exists in PHAssetCollectionSubtype)")]
+		[Obsolete ("Incorrect value (exists in 'PHAssetCollectionSubtype').")]
 		SmartAlbumScreenshots = 211,
 #endif
 #if XAMCORE_2_0
@@ -162,10 +162,15 @@ namespace XamCore.Photos
 		SmartAlbumSelfPortraits = 210,
 		[iOS (9,0)]
 		SmartAlbumScreenshots   = 211,
-		[iOS (10,2), TV (10,1)]
+		[iOS (10,2), TV (10,1)][Mac (10,13, onlyOn64 : true)]
 		SmartAlbumDepthEffect   = 212,
-		[iOS (10,3), TV (10,2)]
+		[iOS (10,3), TV (10,2)][Mac (10,13, onlyOn64 : true)]
 		SmartAlbumLivePhotos = 213,
+		[iOS (11,0)][TV(11,0)][NoMac]
+		SmartAlbumAnimated = 214,
+		[iOS (11,0)][TV(11,0)][NoMac]
+		SmartAlbumLongExposures = 215,
+
 #if XAMCORE_2_0
 		Any           = Int64.MaxValue
 #else
@@ -231,7 +236,7 @@ namespace XamCore.Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[Native]
 	public enum PHAuthorizationStatus : nint {
 		NotDetermined, Restricted, Denied, Authorized
@@ -273,5 +278,54 @@ namespace XamCore.Photos
 	public enum PHLivePhotoFrameType : nint {
 		Photo,
 		Video
+	}
+
+	[TV (11,0), iOS (11,0)]
+	[Mac (10,13, onlyOn64 : true)]
+	[Native]
+	public enum PHAssetPlaybackStyle : nint {
+		Unsupported = 0,
+		Image = 1,
+		ImageAnimated = 2,
+		LivePhoto = 3,
+		Video = 4,
+		VideoLooping = 5,
+	}
+
+	[Mac (10,13, onlyOn64 : true)]
+	[NoiOS][NoTV]
+	[Native]
+	public enum PHProjectTextElementType : nint {
+		Body = 0,
+		Title,
+		Subtitle,
+	}
+
+	[Mac (10,13, onlyOn64 : true)]
+	[NoiOS][NoTV]
+	[Native]
+	public enum PHProjectCreationSource : nint {
+		Undefined = 0,
+		UserSelection = 1,
+		Album = 2,
+		Memory = 3,
+		Moment = 4,
+		Project = 20,
+		ProjectBook = 21,
+		ProjectCalendar = 22,
+		ProjectCard = 23,
+		ProjectPrintOrder = 24,
+		ProjectSlideshow = 25,
+		ProjectExtension = 26,
+	}
+
+	[Mac (10,13, onlyOn64 : true)]
+	[NoiOS][NoTV]
+	[Native]
+	public enum PHProjectSectionType : nint {
+		Undefined = 0,
+		Cover = 1,
+		Content = 2,
+		Auxiliary = 3,
 	}
 }

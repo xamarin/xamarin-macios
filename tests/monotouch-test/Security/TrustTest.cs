@@ -63,6 +63,10 @@ namespace MonoTouchFixtures.Security {
 					return result;
 				NSRunLoop.Main.RunUntil (NSDate.Now.AddSeconds (i));
 			}
+			// we have done our best (it has not failed, but did not confirm either)
+			// still it can't recover (we and expected it could) most likely due to external factors (e.g. network)
+			if (result == SecTrustResult.RecoverableTrustFailure && !expect_recoverable)
+				Assert.Inconclusive ("Cannot recover from RecoverableTrustFailure after 8 attempts");
 			return result;
 		}
 
@@ -114,8 +118,12 @@ namespace MonoTouchFixtures.Security {
 					Assert.That (policies.Length, Is.EqualTo (1), "Policies.Length");
 					Assert.That (policies [0].Handle, Is.EqualTo (policy.Handle), "Handle");
 
+					var trust_result = SecTrustResult.Invalid;
+					if (TestRuntime.CheckXcodeVersion (9, 0))
+						trust_result = SecTrustResult.RecoverableTrustFailure; // Result not invalidated starting with Xcode 9 beta 3.
+
 					// since we modified the `trust` instance it's result was invalidated
-					Assert.That (trust.GetTrustResult (), Is.EqualTo (SecTrustResult.Invalid), "GetTrustResult-2");
+					Assert.That (trust.GetTrustResult (), Is.EqualTo (trust_result), "GetTrustResult-2");
 				}
 			}
 		}
@@ -232,6 +240,7 @@ namespace MonoTouchFixtures.Security {
 				SecTrustResult trust_result = SecTrustResult.Unspecified;
 				var ios9 = TestRuntime.CheckXcodeVersion (7, 0);
 				var ios10 = TestRuntime.CheckXcodeVersion (8, 0);
+				var ios11 = TestRuntime.CheckXcodeVersion (9, 0);
 				if (ios10)
 					trust_result = SecTrustResult.FatalTrustFailure;
 				// iOS9 is not fully happy with the basic constraints: `SecTrustEvaluate  [root AnchorTrusted BasicContraints]`
@@ -263,8 +272,13 @@ namespace MonoTouchFixtures.Security {
 					trust.SetAnchorCertificates (certs);
 					Assert.That (trust.GetCustomAnchorCertificates ().Length, Is.EqualTo (certs.Count), "GetCustomAnchorCertificates");
 
-					// since we modified the `trust` instance it's result was invalidated
-					Assert.That (trust.GetTrustResult (), Is.EqualTo (SecTrustResult.Invalid), "GetTrustResult");
+					if (ios11)
+						trust_result = SecTrustResult.Unspecified;
+					else
+						trust_result = SecTrustResult.Invalid;
+
+					// since we modified the `trust` instance it's result was invalidated (marked as unspecified on iOS 11)
+					Assert.That (trust.GetTrustResult (), Is.EqualTo (trust_result), "GetTrustResult-2");
 				}
 			}
 		}

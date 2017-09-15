@@ -249,14 +249,14 @@ namespace XamCore.ImageIO {
 		extern static /* CFDictionaryRef __nullable */ IntPtr CGImageSourceCopyProperties (
 			/* CGImageSourceRef __nonnull */ IntPtr isrc, /* CFDictionaryRef __nullable */ IntPtr options);
 
-		[Advice ("Use GetProperties")]
+		[Advice ("Use 'GetProperties'.")]
 		public NSDictionary CopyProperties (NSDictionary dict)
 		{
 			var result = CGImageSourceCopyProperties (handle, dict == null ? IntPtr.Zero : dict.Handle);
 			return result == IntPtr.Zero ? null : Runtime.GetNSObject<NSDictionary> (result);
 		}
 
-		[Advice ("Use GetProperties")]
+		[Advice ("Use 'GetProperties'.")]
 		public NSDictionary CopyProperties (CGImageOptions options)
 		{
 			if (options == null)
@@ -269,14 +269,14 @@ namespace XamCore.ImageIO {
 			/* CGImageSourceRef __nonnull */ IntPtr isrc, /* size_t */ nint index,
 			/* CFDictionaryRef __nullable */ IntPtr options);
 
-		[Advice ("Use GetProperties")]
+		[Advice ("Use 'GetProperties'.")]
 		public NSDictionary CopyProperties (NSDictionary dict, int imageIndex)
 		{
 			var result = CGImageSourceCopyPropertiesAtIndex (handle, imageIndex, dict == null ? IntPtr.Zero : dict.Handle);
 			return result == IntPtr.Zero ? null : Runtime.GetNSObject<NSDictionary> (result);
 		}
 
-		[Advice ("Use GetProperties")]
+		[Advice ("Use 'GetProperties'.")]
 		public NSDictionary CopyProperties (CGImageOptions options, int imageIndex)
 		{
 			if (options == null)
@@ -375,6 +375,23 @@ namespace XamCore.ImageIO {
 		public CGImageSourceStatus GetStatus (int index)
 		{
 			return CGImageSourceGetStatusAtIndex (handle, index);
+		}
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[DllImport (Constants.ImageIOLibrary)]
+		static extern IntPtr /* CFDictionaryRef* */ CGImageSourceCopyAuxiliaryDataInfoAtIndex (IntPtr /* CGImageSourceRef* */ isrc, nuint index, IntPtr /* CFStringRef* */ auxiliaryImageDataType);
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		public CGImageAuxiliaryDataInfo CopyAuxiliaryDataInfo (nuint index, CGImageAuxiliaryDataType auxiliaryImageDataType)
+		{
+			var ptr = CGImageSourceCopyAuxiliaryDataInfoAtIndex (Handle, index, auxiliaryImageDataType.GetConstant ().GetHandle ());
+			if (ptr == IntPtr.Zero)
+				return null;
+
+			var dictionary = Runtime.GetNSObject<NSDictionary> (ptr);
+			var info = new CGImageAuxiliaryDataInfo (dictionary);
+
+			return info;
 		}
 	}
 }

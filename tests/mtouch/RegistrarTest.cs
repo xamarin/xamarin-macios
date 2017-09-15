@@ -709,8 +709,11 @@ class X : ReplayKit.RPBroadcastControllerDelegate
 				mtouch.Verbosity = 9; // Increase verbosity, otherwise linker warnings aren't shown
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
 				mtouch.AssertNoWarnings ();
-				foreach (var line in mtouch.OutputLines)
+				foreach (var line in mtouch.OutputLines) {
+					if (line.Contains ("warning: method 'paymentAuthorizationViewController:didAuthorizePayment:handler:' in protocol 'PKPaymentAuthorizationViewControllerDelegate' not implemented [-Wprotocol]"))
+						continue; // Xcode 9 beta 1: this method changed from optional to required.
 					Assert.That (line, Does.Not.Match ("warning:"), "no warnings");
+				}
 			}
 		}
 

@@ -66,6 +66,8 @@ namespace Introspection {
 		protected void AddErrorLine (string line)
 		{
 			error_output.AppendLine (line);
+			if (!line.StartsWith ("[FAIL] ", StringComparison.Ordinal))
+				Console.Error.Write ("[FAIL] ");
 			Console.Error.WriteLine (line);
 			Errors++;
 		}
@@ -172,14 +174,13 @@ namespace Introspection {
 			var m = member as MethodInfo;
 
 			if (m == null || // Skip anything that is not a method
-			    !m.Attributes.HasFlag (MethodAttributes.SpecialName) ||
-			    !m.Name.Contains ("get_")) // We want getters with SpecialName Attribute
+			    !m.Attributes.HasFlag (MethodAttributes.SpecialName)) // We want properties with SpecialName Attribute
 				return false;
 
 			// FIXME: In the future we could cache this to reduce memory requirements
 			var property = m.DeclaringType
 			                .GetProperties ()
-			                .SingleOrDefault (p => p.GetGetMethod () == m);
+			                .SingleOrDefault (p => p.GetGetMethod () == m || p.GetSetMethod () == m);
 			return property != null && SkipDueToAttribute (property);
 		}
 
@@ -213,6 +214,10 @@ namespace Introspection {
 #if !MONOMAC
 			case "AudioUnit":
 				libname = "AudioToolbox";
+				break;
+			case "IOSurface":
+				if (!TestRuntime.CheckXcodeVersion (9, 0))
+					prefix = Path.Combine (Path.GetDirectoryName (prefix), "PrivateFrameworks");
 				break;
 #endif
 			case "CoreAnimation":

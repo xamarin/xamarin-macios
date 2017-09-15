@@ -35,7 +35,7 @@ namespace XamCore.NotificationCenter {
 
 		[Export ("widgetMarginInsetsForProposedMarginInsets:"), DelegateName ("NCWidgetProvidingMarginInsets"), DefaultValueFromArgument ("defaultMarginInsets")]
 #if !MONOMAC
-		[Deprecated (PlatformName.iOS, 10,0, message: "Never called on iOS10+")]
+		[Deprecated (PlatformName.iOS, 10,0)]
 		UIEdgeInsets GetWidgetMarginInsets (UIEdgeInsets defaultMarginInsets);
 #else
 		NSEdgeInsets GetWidgetMarginInsets (NSEdgeInsets defaultMarginInsets);

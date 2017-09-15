@@ -334,6 +334,7 @@ namespace xharness
 				"src/generator.cs",
 				"src/generator-enums.cs",
 				"src/generator-filters.cs",
+				"tests/generator",
 			};
 			var mac_binding_project = new string [] {
 				"msbuild",
@@ -443,6 +444,7 @@ namespace xharness
 			foreach (var taskGroup in runSimulatorTasks.GroupBy ((RunSimulatorTask task) => task.Platform)) {
 				Tasks.Add (new AggregatedRunSimulatorTask (taskGroup) {
 					Jenkins = this,
+					TestName = $"Tests for {taskGroup.Key}",
 				});
 			}
 
@@ -557,11 +559,31 @@ namespace xharness
 				Jenkins = this,
 				Platform = TestPlatform.iOS,
 				TestName = "BTouch tests",
-				Target = "wrench-btouch",
-				WorkingDirectory = Harness.RootDirectory,
+				Target = "all",
+				WorkingDirectory = Path.Combine (Harness.RootDirectory, "generator"),
 				Ignored = !IncludeBtouch,
 			};
 			Tasks.Add (runBTouch);
+
+			var buildGenerator = new MakeTask {
+				Jenkins = this,
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "src", "generator-ikvm.sln"))),
+				SpecifyPlatform = false,
+				SpecifyConfiguration = false,
+				Platform = TestPlatform.iOS,
+				Target = "build-unit-tests",
+				WorkingDirectory = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "generator")),
+			};
+			var runGenerator = new NUnitExecuteTask (buildGenerator) {
+				TestLibrary = Path.Combine (Harness.RootDirectory, "generator", "bin", "Debug", "generator-tests.dll"),
+				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
+				WorkingDirectory = Path.Combine (Harness.RootDirectory, "generator", "bin", "Debug"),
+				Platform = TestPlatform.iOS,
+				TestName = "Generator tests",
+				Timeout = TimeSpan.FromMinutes (10),
+				Ignored = !IncludeBtouch,
+			};
+			Tasks.Add (runGenerator);
 
 			var run_mmp = new MakeTask
 			{
@@ -1496,7 +1518,8 @@ function oninitialload ()
 							writer.Write ($"<div class='pdiv'>");
 							writer.Write ($"<span id='button_container2_{modeGroupId}' class='expander' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>{defaultExpander}</span>");
 							writer.Write ($"<span id='x{id_counter++}' class='p2 autorefreshable' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>{modeGroup.Key}{RenderTextStates (modeGroup)}</span>");
-							writer.Write ($" <span><a class='runall' href='javascript: runtest (\"{string.Join (",", modeGroup.Select ((v) => v.ID.ToString ()))}\");'>Run all</a></span>");
+							if (IsServerMode)
+								writer.Write ($" <span><a class='runall' href='javascript: runtest (\"{string.Join (",", modeGroup.Select ((v) => v.ID.ToString ()))}\");'>Run all</a></span>");
 							writer.WriteLine ("</div>");
 
 							writer.WriteLine ($"<div id='test_container2_{modeGroupId}' style='display: {defaultDisplay}; margin-left: 20px;'>");
@@ -1696,7 +1719,7 @@ function oninitialload ()
 		public Jenkins Jenkins;
 		public Harness Harness { get { return Jenkins.Harness; } }
 		public TestProject TestProject;
-		public string ProjectFile { get { return TestProject.Path; } }
+		public string ProjectFile { get { return TestProject?.Path; } }
 		public string ProjectConfiguration;
 		public string ProjectPlatform;
 		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
@@ -1779,6 +1802,8 @@ function oninitialload ()
 					return test_name;
 				
 				var rv = Path.GetFileNameWithoutExtension (ProjectFile);
+				if (rv == null)
+					return $"unknown test name ({GetType ().Name}";
 				switch (Platform) {
 				case TestPlatform.Mac:
 				case TestPlatform.Mac_Classic:
@@ -2278,12 +2303,14 @@ function oninitialload ()
 						ExecutionResult = TestExecutingResult.Running;
 						var result = await proc.RunAsync (log, true, Timeout);
 						if (result.TimedOut) {
-							log.WriteLine ("Execution timed out after {0} minutes.", Timeout.Minutes);
+							FailureMessage = $"Execution timed out after {Timeout.Minutes} minutes.";
+							log.WriteLine (FailureMessage);
 							ExecutionResult = TestExecutingResult.TimedOut;
 						} else if (result.Succeeded) {
 							ExecutionResult = TestExecutingResult.Succeeded;
 						} else {
 							ExecutionResult = TestExecutingResult.Failed;
+							FailureMessage = $"Execution failed with exit code {result.ExitCode}";
 						}
 					}
 					Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
@@ -2819,7 +2846,7 @@ function oninitialload ()
 			if (Platform == TestPlatform.watchOS)
 				CompanionDevice = Jenkins.Simulators.FindCompanionDevice (Jenkins.SimulatorLoadLog, Device);
 
-			var clean_state = false;//Platform == TestPlatform.tvOS;
+			var clean_state = false;//Platform == TestPlatform.watchOS;
 			runner = new AppRunner ()
 			{
 				Harness = Harness,

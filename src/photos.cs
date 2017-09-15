@@ -10,6 +10,9 @@ using XamCore.ImageIO;
 using System;
 #if !MONOMAC
 using XamCore.UIKit;
+using NSImage = XamCore.Foundation.NSObject; // help [NoiOS] and [NoTV]
+#else
+using XamCore.AppKit;
 #endif
 
 namespace XamCore.Photos
@@ -35,7 +38,10 @@ namespace XamCore.Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
+#if MONOMAC
+	[DisableDefaultCtor] // Crashes mac introspection test
+#endif
 	[BaseType (typeof (PHObject))]
 	interface PHAsset {
 
@@ -65,6 +71,10 @@ namespace XamCore.Photos
 
 		[Export ("hidden")]
 		bool Hidden { [Bind ("isHidden")] get; }
+
+		[NoTV][NoiOS]
+		[Export ("syncFailureHidden")]
+		bool SyncFailureHidden { [Bind ("isSyncFailureHidden")] get; }
 
 		[Export ("favorite")]
 		bool Favorite { [Bind ("isFavorite")] get; }
@@ -105,6 +115,9 @@ namespace XamCore.Photos
 		[Export ("fetchAssetsWithOptions:")]
 		PHFetchResult FetchAssets ([NullAllowed] PHFetchOptions options);
 
+		[Deprecated (PlatformName.TvOS, 11,0)]
+		[Deprecated (PlatformName.iOS, 11,0)]
+		[NoMac]
 		[Static]
 		[Export ("fetchAssetsWithALAssetURLs:options:")]
 		PHFetchResult FetchAssets (NSUrl[] assetUrls, [NullAllowed] PHFetchOptions options);
@@ -112,6 +125,14 @@ namespace XamCore.Photos
 		[iOS (9,0)]
 		[Export ("sourceType", ArgumentSemantic.Assign)]
 		PHAssetSourceType SourceType { get; }
+
+		[TV (11,0), iOS (11,0), NoMac]
+		[Export ("playbackStyle", ArgumentSemantic.Assign)]
+		PHAssetPlaybackStyle PlaybackStyle { get; }
+
+		[NoTV][NoiOS]
+		[Field ("PHLocalIdentifierNotFound")]
+		NSString LocalIdentifierNotFound { get; }
 	}
 
 	[iOS (8,0)]
@@ -365,7 +386,7 @@ namespace XamCore.Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface PHChange {
 
@@ -378,7 +399,7 @@ namespace XamCore.Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface PHObjectChangeDetails {
 
@@ -395,12 +416,12 @@ namespace XamCore.Photos
 		bool ObjectWasDeleted { get; }
 	}
 
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	delegate void PHChangeDetailEnumerator (nuint fromIndex, nuint toIndex);
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface PHFetchResultChangeDetails {
 
@@ -444,7 +465,7 @@ namespace XamCore.Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[BaseType (typeof (PHObject))]
 	[DisableDefaultCtor] // not user createable (calling description fails, see below) must be fetched by API
 	// NSInternalInconsistencyException Reason: PHCollection has no identifier
@@ -476,7 +497,7 @@ namespace XamCore.Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[BaseType (typeof (PHCollection))]
 	interface PHAssetCollection {
 
@@ -536,7 +557,7 @@ namespace XamCore.Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[BaseType (typeof (PHCollection))]
 	interface PHCollectionList {
 
@@ -659,8 +680,10 @@ namespace XamCore.Photos
 		[Export ("adjustmentData", ArgumentSemantic.Strong)]
 		PHAdjustmentData AdjustmentData { get; }
 
-#if !MONOMAC
 		[Export ("displaySizeImage", ArgumentSemantic.Strong)]
+#if MONOMAC
+		NSImage DisplaySizeImage { get; }
+#else
 		UIImage DisplaySizeImage { get; }
 #endif
 
@@ -671,7 +694,7 @@ namespace XamCore.Photos
 		XamCore.CoreImage.CIImageOrientation FullSizeImageOrientation { get; }
 
 		[Export ("avAsset", ArgumentSemantic.Strong)]
-		[Availability (Deprecated = Platform.iOS_9_0, Message="In iOS 9, use AudiovisualAsset property instead")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message="Use 'AudiovisualAsset' property instead.")]
 		AVAsset AvAsset { get; }
 
 		[iOS (9,0)]
@@ -681,6 +704,11 @@ namespace XamCore.Photos
 		[iOS (10,0)]
 		[NullAllowed, Export ("livePhoto", ArgumentSemantic.Strong)]
 		PHLivePhoto LivePhoto { get; }
+
+		[TV (11,0), iOS (11,0)]
+		[Mac (10,13, onlyOn64 : true)]
+		[Export ("playbackStyle", ArgumentSemantic.Assign)]
+		PHAssetPlaybackStyle PlaybackStyle { get; }
 	}
 
 	[iOS (8,0)]
@@ -706,7 +734,7 @@ namespace XamCore.Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface PHFetchOptions : NSCopying {
 
@@ -736,12 +764,12 @@ namespace XamCore.Photos
 		nuint FetchLimit { get; set; }
 	}
 
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	delegate void PHFetchResultEnumerator (NSObject element, nuint elementIndex, out bool stop);
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash when calling 'description' and seems to be only returned from iOS (not user created)
 	interface PHFetchResult : NSCopying {
@@ -791,7 +819,7 @@ namespace XamCore.Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface PHImageRequestOptions : NSCopying {
 
@@ -842,7 +870,7 @@ namespace XamCore.Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[Static]
 	interface PHImageKeys {
 
@@ -862,7 +890,9 @@ namespace XamCore.Photos
 		NSString ResultRequestID { get; }
 	}
 
-#if !MONOMAC
+#if MONOMAC
+	delegate void PHImageResultHandler (NSImage result, NSDictionary info);
+#else
 	delegate void PHImageResultHandler (UIImage result, NSDictionary info);
 #endif
 
@@ -877,7 +907,7 @@ namespace XamCore.Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface PHImageManager {
 
@@ -885,25 +915,24 @@ namespace XamCore.Photos
 		[Export ("defaultManager")]
 		PHImageManager DefaultManager { get; }
 
-#if !MONOMAC
 		[Export ("requestImageForAsset:targetSize:contentMode:options:resultHandler:")]
 		int /* PHImageRequestID = int32_t */ RequestImageForAsset (PHAsset asset, CGSize targetSize, PHImageContentMode contentMode, [NullAllowed] PHImageRequestOptions options, PHImageResultHandler resultHandler);
-#endif
 
 		[Export ("cancelImageRequest:")]
 		void CancelImageRequest (int /* PHImageRequestID = int32_t */ requestID);
 
-#if !MONOMAC
 		[Export ("requestImageDataForAsset:options:resultHandler:")]
 		int /* PHImageRequestID = int32_t */ RequestImageData (PHAsset asset, [NullAllowed] PHImageRequestOptions options, PHImageDataHandler handler);
-#endif
 
+		[NoMac]
 		[Export ("requestPlayerItemForVideo:options:resultHandler:")]
 		int /* PHImageRequestID = int32_t */ RequestPlayerItem (PHAsset asset, [NullAllowed] PHVideoRequestOptions options, PHImageManagerRequestPlayerHandler resultHandler);
 
+		[NoMac]
 		[Export ("requestExportSessionForVideo:options:exportPreset:resultHandler:")]
 		int /* PHImageRequestID = int32_t */ RequestExportSession (PHAsset asset, [NullAllowed] PHVideoRequestOptions options, string exportPreset, PHImageManagerRequestExportHandler resultHandler);
 
+		[NoMac]
 		[Export ("requestAVAssetForVideo:options:resultHandler:")]
 #if XAMCORE_4_0
 		int /* PHImageRequestID = int32_t */ RequestAVAsset (PHAsset asset, [NullAllowed] PHVideoRequestOptions options, PHImageManagerRequestAVAssetHandler resultHandler);
@@ -915,11 +944,14 @@ namespace XamCore.Photos
 		CGSize MaximumSize { get; }
 
 		[iOS (9,1)]
+		[NoMac]
 		[Export ("requestLivePhotoForAsset:targetSize:contentMode:options:resultHandler:")]
 		int /* PHImageRequestID = int32_t */ RequestLivePhoto (PHAsset asset, CGSize targetSize, PHImageContentMode contentMode, [NullAllowed] PHLivePhotoRequestOptions options, PHImageManagerRequestLivePhoto resultHandler);
 	}
 
-#if !MONOMAC
+#if MONOMAC
+	delegate void PHImageDataHandler (NSData data, NSString dataUti, CGImagePropertyOrientation orientation, NSDictionary info);
+#else
 	delegate void PHImageDataHandler (NSData data, NSString dataUti, UIImageOrientation orientation, NSDictionary info);
 #endif
 
@@ -944,7 +976,7 @@ namespace XamCore.Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // doc -> "abstract base class"
 	// throws "NSInternalInconsistencyException Reason: PHObject has no identifier"
@@ -967,7 +999,7 @@ namespace XamCore.Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[Protocol]
 	[Model]
 	[BaseType (typeof (NSObject))]
@@ -984,7 +1016,7 @@ namespace XamCore.Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,13, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: -[PHPhotoLibrary init] unsupported
 	interface PHPhotoLibrary {
@@ -1012,6 +1044,19 @@ namespace XamCore.Photos
 
 		[Export ("unregisterChangeObserver:")]
 		void UnregisterChangeObserver ([Protocolize] PHPhotoLibraryChangeObserver observer);
+	}
+
+	[Mac (10,13, onlyOn64 : true)]
+	[NoTV][NoiOS]
+	[Category]
+	[BaseType (typeof (PHPhotoLibrary))]
+	interface PHPhotoLibrary_CloudIdentifiers {
+
+		[Export ("localIdentifiersForCloudIdentifiers:")]
+		string[] GetLocalIdentifiers (PHCloudIdentifier[] cloudIdentifiers);
+
+		[Export ("cloudIdentifiersForLocalIdentifiers:")]
+		PHCloudIdentifier[] GetCloudIdentifiers (string[] localIdentifiers);
 	}
 
 	[iOS (9,1)]
@@ -1104,13 +1149,45 @@ namespace XamCore.Photos
 		[Export ("orientation")]
 		CGImagePropertyOrientation Orientation { get; }
 
-		[Async]
+		[Internal]
 		[Export ("prepareLivePhotoForPlaybackWithTargetSize:options:completionHandler:")]
-		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<PHLivePhoto, NSError> handler);
+		void _PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] NSDictionary options, Action<PHLivePhoto, NSError> handler);
 
 		[Async]
+		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, null, handler)")]
+		void PrepareLivePhotoForPlayback (CGSize targetSize, Action<PHLivePhoto, NSError> handler);
+
+		[Async]
+		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, (NSDictionary)options, handler)", IsVirtual = true)]
+		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<PHLivePhoto, NSError> handler);
+
+#if XAMCORE_2_0
+		// the API existed earlier but the key needed to create the strong dictionary did not work
+		[iOS (11,0)][TV (11,0)][Mac (10,12, onlyOn64 : true)]
+		[Async]
+		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, options?.Dictionary, handler)")]
+		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] PHLivePhotoEditingOption options, Action<PHLivePhoto, NSError> handler);
+#endif
+
+		[Internal]
 		[Export ("saveLivePhotoToOutput:options:completionHandler:")]
+		void _SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] NSDictionary options, Action<bool, NSError> handler);
+
+		[Async]
+		[Wrap ("_SaveLivePhoto (output, null, handler)")]
+		void SaveLivePhoto (PHContentEditingOutput output, Action<bool, NSError> handler);
+
+		[Async]
+		[Wrap ("_SaveLivePhoto (output, options, handler)", IsVirtual = true)]
 		void SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<bool, NSError> handler);
+
+#if XAMCORE_2_0
+		// the API existed earlier but the key needed to create the strong dictionary did not work
+		[iOS (11,0)][TV (11,0)][Mac (10,12, onlyOn64 : true)]
+		[Async]
+		[Wrap ("_SaveLivePhoto (output, options?.Dictionary, handler)")]
+		void SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] PHLivePhotoEditingOption options, Action<bool, NSError> handler);
+#endif
 
 		[Export ("cancel")]
 		void Cancel ();
@@ -1140,16 +1217,66 @@ namespace XamCore.Photos
 		nfloat RenderScale { get; }
 	}
 
-	// TODO returns null on Xcode 8 beta 1-6, rdar #28169810 https://trello.com/c/RwXK6YRX
-	// PHLivePhotoEditingContext.PrepareLivePhotoForPlayback and SaveLivePhoto could use a strong dictionary once it's available
-#if false
-	[iOS (10,0)]
-	[TV (10,0)]
+#if XAMCORE_2_0 // fails to build with mac/classic
+	[iOS (11,0)]
+	[TV (11,0)]
 	[Mac (10,12, onlyOn64 : true)]
-	[Static]
-	interface PHLivePhotoEditingOption {
+	[Static][Internal]
+	interface PHLivePhotoEditingOptionKeys {
 		[Field ("PHLivePhotoShouldRenderAtPlaybackTime")]
-		NSString ShouldRenderAtPlaybackTime { get; }
+		NSString ShouldRenderAtPlaybackTimeKey { get; }
+	}
+
+	[iOS (11,0)]
+	[TV (11,0)]
+	[Mac (10,12, onlyOn64 : true)]
+	[StrongDictionary ("PHLivePhotoEditingOptionKeys")]
+	interface PHLivePhotoEditingOption {
+		bool ShouldRenderAtPlaybackTime { get; }
 	}
 #endif
+
+	[Mac (10,13, onlyOn64 : true)]
+	[NoiOS][NoTV]
+	[BaseType (typeof (PHAssetCollection))]
+	interface PHProject {
+
+		[Export ("projectExtensionData")]
+		NSData ProjectExtensionData { get; }
+	}
+
+	[Mac (10,13, onlyOn64 : true)]
+	[NoiOS][NoTV]
+	[BaseType (typeof (NSObject))]
+	interface PHProjectChangeRequest {
+
+		[Export ("initWithProject:")]
+		IntPtr Constructor (PHProject project);
+
+		[Export ("title")]
+		string Title { get; set; }
+
+		[Export ("projectExtensionData", ArgumentSemantic.Copy)]
+		NSData ProjectExtensionData { get; set; }
+
+		[Export ("setKeyAsset:")]
+		void SetKeyAsset ([NullAllowed] PHAsset keyAsset);
+	}
+
+	[Mac (10,13, onlyOn64 : true)]
+	[NoiOS][NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface PHCloudIdentifier : NSSecureCoding {
+
+		[Static]
+		[Export ("notFoundIdentifier")]
+		PHCloudIdentifier NotFoundIdentifier { get; }
+
+		[Export ("stringValue")]
+		string StringValue { get; }
+
+		[Export ("initWithStringValue:")]
+		IntPtr Constructor (string stringValue);
+	}
 }

@@ -18,7 +18,7 @@ using System;
 
 namespace XamCore.AssetsLibrary {
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Photos API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	interface ALAssetLibraryChangedEventArgs {
 		[Export ("ALAssetLibraryUpdatedAssetsKey")]
 		NSSet UpdatedAssets { get; }
@@ -33,7 +33,7 @@ namespace XamCore.AssetsLibrary {
 		NSSet DeletedAssetGroupsKey { get; }
 	}
 	
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Photos API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ALAssetsLibrary {
 		[Export ("assetForURL:resultBlock:failureBlock:")]
@@ -134,17 +134,17 @@ namespace XamCore.AssetsLibrary {
 	}
 
 #if !XAMCORE_2_0
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Photos API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	delegate void ALAssetsLibraryAssetForURLResultDelegate (ALAsset asset);
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Photos API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	delegate void ALAssetsLibraryAccessFailureDelegate (NSError error);
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Photos API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	delegate void ALAssetsLibraryWriteCompletionDelegate (NSUrl assetURL, NSError error);
 #endif
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Photos API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	delegate void ALAssetsLibraryGroupsEnumerationResultsDelegate (ALAssetsGroup group, ref bool stop);
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Photos API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ALAsset {
 		[Export ("valueForProperty:")]
@@ -243,7 +243,7 @@ namespace XamCore.AssetsLibrary {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Photos API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	interface ALAssetRepresentation {
 		[Export ("UTI")]
 		string Uti { get; }
@@ -287,7 +287,7 @@ namespace XamCore.AssetsLibrary {
 		CGSize Dimensions { get; }
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Photos API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ALAssetsFilter {
 		[Static, Export ("allPhotos")]
@@ -300,20 +300,20 @@ namespace XamCore.AssetsLibrary {
 		ALAssetsFilter AllAssets { get; }
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Photos API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	delegate void ALAssetsEnumerator (ALAsset result, nint index, ref bool stop);
 
 #if !XAMCORE_2_0
 	[Since (5,0)]
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Photos API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	delegate void ALAssetsLibraryGroupResult (ALAssetsGroup group);
 
 	[Since (5,0)]
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Photos API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	delegate void ALAssetsLibraryAccessFailure (NSError error);
 #endif
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Photos API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ALAssetsGroup {
 		[Export ("valueForProperty:"), Internal]

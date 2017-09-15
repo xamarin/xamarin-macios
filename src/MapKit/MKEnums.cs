@@ -38,7 +38,9 @@ namespace XamCore.MapKit {
 		Satellite,
 		Hybrid,
 		SatelliteFlyover,
-		HybridFlyover
+		HybridFlyover,
+		[iOS (11,0)][TV (11,0)][Mac (10,13, onlyOn64: true)]
+		MutedStandard,
 	}
 
 	// NSUInteger -> MKDistanceFormatter.h
@@ -97,7 +99,7 @@ namespace XamCore.MapKit {
 	[NoTV]
 	[NoWatch]
 	[Native]
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the MKPinAnnotationView's PinTintColor instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'MKPinAnnotationView.PinTintColor' instead.")]
 	public enum MKPinAnnotationColor : nuint_compat_int {
 		Red, Green, Purple
 	}
@@ -115,6 +117,28 @@ namespace XamCore.MapKit {
 	public enum MKSearchCompletionFilterType : nint {
 		AndQueries = 0,
 		Only
+	}
+
+	[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+	[Native]
+	public enum MKAnnotationViewCollisionMode : nint {
+		Rectangle,
+		Circle,
+	}
+
+	[TV (11,0)][NoWatch][iOS (11,0)][NoMac]
+	[Native]
+	public enum MKScaleViewAlignment : nint {
+		Leading,
+		Trailing,
+	}
+
+	[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+	[Native]
+	public enum MKFeatureVisibility : nint {
+		Adaptive,
+		Hidden,
+		Visible,
 	}
 }
 

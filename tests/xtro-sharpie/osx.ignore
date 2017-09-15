@@ -1,10 +1,22 @@
 # A large number of assemblies are black listed in xtro-sharpie/Runner.cs 
 
+# CoreBluetooth
+
+## old and different name for CBUUIDCharacteristicValidRangeString, removed in Xcode9 headers (27160443)
+!unknown-field! CBUUIDValidRangeString bound
+
+
 # GameController
 
 ## other CGMicroGamepad API are not available on OSX (looks like a mistake)
 !missing-pinvoke! GCMicroGamepadSnapShotDataV100FromNSData is not bound
 !missing-pinvoke! NSDataFromGCMicroGamepadSnapShotDataV100 is not bound
+
+
+# SpriteKit
+
+## This enum is not used in macOS API so it makes not sense to expose it
+!missing-enum! SKNodeFocusBehavior not bound
 
 
 # fixed in XAMCORE_3_0
@@ -429,3 +441,7 @@
 # Deprecated in the same version of OS X that CBCentral becomes available.  The alternative (Identifier property) is bound and available.
 !missing-selector! CBCentral::UUID not bound
 !missing-selector! CBPeripheral::UUID not bound
+
+## PDFKit
+# The following enums are bound as PdfFoo, lowercase Pdf prefix
+!missing-enum! PDFPrintScalingMode not bound

@@ -67,6 +67,24 @@ namespace Introspection {
 			case "CIDepthOfField":
 			// NSUnknownKeyException [<CISunbeamsGenerator 0x1586d0810> valueForUndefinedKey:]: this class is not key value coding-compliant for the key inputCropAmount.
 			case "CISunbeamsGenerator":
+			case "CIAreaMinMaxRed": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+			case "CIAttributedTextImageGenerator": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+			case "CIBarcodeGenerator": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+			case "CIBicubicScaleTransform": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+			case "CIBlendWithBlueMask": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+			case "CIBlendWithRedMask": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+			case "CIBokehBlur": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+			case "CIColorCubesMixedWithMask": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+			case "CIColorCurves": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+			case "CIDepthBlurEffect": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+			case "CIDepthToDisparity": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+			case "CIDisparityToDepth": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+			case "CIEdgePreserveUpsampleFilter": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+			case "CILabDeltaE": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+			case "CIMorphologyGradient": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+			case "CIMorphologyMaximum": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+			case "CIMorphologyMinimum": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
+			case "CITextImageGenerator": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
 				return true;
 			// FIXME: Remove if fixed.  Doesn't appear to exist in El Capitan.  Reported in radar #22099780
 //			case "CIMaskedVariableBlur":

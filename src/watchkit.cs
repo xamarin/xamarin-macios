@@ -26,10 +26,12 @@ namespace XamCore.WatchKit {
 	[iOS (8,2)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // <quote>To use this class, subclass it</quote> 
-	// FIXME: that's not 100% obvious - OTOH beta2 crash if we call `init`
+	[DisableDefaultCtor] // DesignatedInitializer below
 	interface WKInterfaceController {
 
-		// `init` is now (beta 2) the designated initializer
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 
 		[Export ("awakeWithContext:")]
 		void Awake ([NullAllowed] NSObject context);
@@ -56,13 +58,13 @@ namespace XamCore.WatchKit {
 		[Export ("table:didSelectRowAtIndex:")]
 		void DidSelectRow (WKInterfaceTable table, nint rowIndex);
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use UNUserNotificationCenterDelegate")]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use UNUserNotificationCenterDelegate")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
 		[Export ("handleActionWithIdentifier:forRemoteNotification:")]
 		void HandleRemoteNotificationAction ([NullAllowed] string identifier, NSDictionary remoteNotification);
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use UNUserNotificationCenterDelegate")]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use UNUserNotificationCenterDelegate")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
 		[Export ("handleActionWithIdentifier:forLocalNotification:")]
 		void HandleLocalNotificationAction ([NullAllowed] string identifier, UILocalNotification localNotification);
 
@@ -71,6 +73,7 @@ namespace XamCore.WatchKit {
 		[Export ("handleActionWithIdentifier:forNotification:")]
 		void HandleAction ([NullAllowed] string identifier, UNNotification notification);
 
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'WKExtensionDelegate.HandleUserActivity' instead.")]
 		[Export ("handleUserActivity:")]
 		// This NSDictionary is OK, it is arbitrary and user specific
 		void HandleUserActivity ([NullAllowed] NSDictionary userActivity);
@@ -157,8 +160,14 @@ namespace XamCore.WatchKit {
 		[Static, Export ("openParentApplication:reply:")]
 		bool OpenParentApplication (NSDictionary userInfo, [NullAllowed] Action<NSDictionary, NSError> reply);
 
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'ReloadRootPageControllers' instead.")]
 		[Static, Export ("reloadRootControllersWithNames:contexts:")]
 		void ReloadRootControllers (string [] names, [NullAllowed] NSObject [] contexts);
+
+		[Watch (4,0)][NoiOS]
+		[Static]
+		[Export ("reloadRootPageControllersWithNames:contexts:orientation:pageIndex:")]
+		void ReloadRootPageControllers (string[] names, [NullAllowed] NSObject[] contexts, WKPageOrientation orientation, nint pageIndex);
 
 #if !XAMCORE_3_0
 		// now exposed with the corresponding WKErrorCode enum
@@ -192,9 +201,11 @@ namespace XamCore.WatchKit {
 		[Export ("dismissAddPassesController")]
 		void DismissAddPassesController ();
 
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Glances support was removed.")]
 		[Export ("beginGlanceUpdates")]
 		void BeginGlanceUpdates ();
 
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Glances support was removed.")]
 		[Export ("endGlanceUpdates")]
 		void EndGlanceUpdates ();
 
@@ -215,19 +226,40 @@ namespace XamCore.WatchKit {
 		[Watch (3,0)][NoiOS]
 		[Export ("crownSequencer", ArgumentSemantic.Strong)]
 		WKCrownSequencer CrownSequencer { get; }
+
+		[Watch (4,0)][NoiOS]
+		[Export ("scrollToObject:atScrollPosition:animated:")]
+		void ScrollTo (WKInterfaceObject @object, WKInterfaceScrollPosition scrollPosition, bool animated);
+
+		[Watch (4,0)][NoiOS]
+		[Export ("interfaceDidScrollToTop")]
+		void InterfaceDidScrollToTop ();
+
+		[Watch (4,0)][NoiOS]
+		[Export ("interfaceOffsetDidScrollToTop")]
+		void InterfaceOffsetDidScrollToTop ();
+
+		[Watch (4,0)][NoiOS]
+		[Export ("interfaceOffsetDidScrollToBottom")]
+		void InterfaceOffsetDidScrollToBottom ();
 	}
 
 	[iOS (8,2)]
 	[BaseType (typeof (WKInterfaceController))]
+	[DisableDefaultCtor] // DesignatedInitializer below
 	interface WKUserNotificationInterfaceController {
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use DidReceiveNotification")]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use DidReceiveNotification:")]
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'DidReceiveNotification' instead.")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'DidReceiveNotification' instead.")]
 		[Export ("didReceiveRemoteNotification:withCompletion:")]
 		void DidReceiveRemoteNotification (NSDictionary remoteNotification, Action<WKUserNotificationInterfaceType> completionHandler);
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use DidReceiveNotification")]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use DidReceiveNotification:")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'DidReceiveNotification' instead.")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'DidReceiveNotification' instead.")]
 		[Export ("didReceiveLocalNotification:withCompletion:")]
 		void DidReceiveLocalNotification (UILocalNotification localNotification, Action<WKUserNotificationInterfaceType> completionHandler);
 
@@ -236,12 +268,12 @@ namespace XamCore.WatchKit {
 		void DidReceiveNotification (UNNotification notification, Action<WKUserNotificationInterfaceType> completionHandler);
 
 		[NoiOS]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use overload accepting an UNNotification parameter")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use overload accepting an 'UNNotification' parameter.")]
 		[Export ("suggestionsForResponseToActionWithIdentifier:forRemoteNotification:inputLanguage:")]
 		string[] GetSuggestionsForResponseToAction (string identifier, NSDictionary remoteNotification, string inputLanguage);
 
 		[NoiOS]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use overload accepting an UNNotification parameter")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use overload accepting an 'UNNotification' parameter.")]
 		[Export ("suggestionsForResponseToActionWithIdentifier:forLocalNotification:inputLanguage:")]
 		string[] GetSuggestionsForResponseToAction (string identifier, UILocalNotification localNotification, string inputLanguage);
 
@@ -330,6 +362,11 @@ namespace XamCore.WatchKit {
 		[Notification]
 		[Field ("WKAccessibilityVoiceOverStatusChanged")]
 		NSString VoiceOverStatusChanged { get; }
+
+		[Watch (4,0)][NoiOS]
+		[Notification]
+		[Field ("WKAccessibilityReduceMotionStatusDidChangeNotification")]
+		NSString ReduceMotionStatusDidChangeNotification { get; }
 	}
 
 	[iOS (8,2)]
@@ -414,6 +451,18 @@ namespace XamCore.WatchKit {
 		[Watch (3,0)][NoiOS]
 		[Export ("crownOrientation")]
 		WKInterfaceDeviceCrownOrientation CrownOrientation { get; }
+
+		[Watch (4,0)][NoiOS]
+		[Export ("batteryMonitoringEnabled")]
+		bool BatteryMonitoringEnabled { [Bind ("isBatteryMonitoringEnabled")] get; set; }
+
+		[Watch (4,0)][NoiOS]
+		[Export ("batteryLevel")]
+		float BatteryLevel { get; }
+
+		[Watch (4,0)][NoiOS]
+		[Export ("batteryState")]
+		WKInterfaceDeviceBatteryState BatteryState { get; }
 	}
 
 	[iOS (8,2)]
@@ -830,6 +879,26 @@ namespace XamCore.WatchKit {
 		[Watch (3,0)]
 		[Export ("applicationState")]
 		WKApplicationState ApplicationState { get; }
+
+		[Watch (4,0)]
+		[NullAllowed, Export ("visibleInterfaceController")]
+		WKInterfaceController VisibleInterfaceController { get; }
+
+		[Watch (4,0)]
+		[Export ("isApplicationRunningInDock")]
+		bool IsApplicationRunningInDock { get; }
+
+		[Watch (4,0)]
+		[Export ("autorotating")]
+		bool Autorotating { [Bind ("isAutorotating")] get; set; }
+
+		[Watch (4,0)]
+		[Export ("frontmostTimeoutExtended")]
+		bool FrontmostTimeoutExtended { [Bind ("isFrontmostTimeoutExtended")] get; set; }
+
+		[Watch (4,0)]
+		[Export ("enableWaterLock")]
+		void EnableWaterLock ();
 	}
 
 	[NoiOS]
@@ -892,6 +961,10 @@ namespace XamCore.WatchKit {
 		[Watch (3,0)]
 		[Export ("handleWorkoutConfiguration:")]
 		void HandleWorkoutConfiguration (HKWorkoutConfiguration workoutConfiguration);
+
+		[Watch (4,0)]
+		[Export ("deviceOrientationDidChange")]
+		void DeviceOrientationDidChange ();
 	}
 
 	[Watch (2,2), NoiOS]
@@ -1024,8 +1097,13 @@ namespace XamCore.WatchKit {
 		[NullAllowed, Export ("userInfo")]
 		INSSecureCoding UserInfo { get; }
 
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'SetTaskCompleted (false)' instead.")]
 		[Export ("setTaskCompleted")]
 		void SetTaskCompleted ();
+
+		[Watch (4,0)]
+		[Export ("setTaskCompletedWithSnapshot:")]
+		void SetTaskCompleted (bool refreshSnapshot);
 	}
 
 	[Watch (3,0)][NoiOS]
@@ -1037,8 +1115,13 @@ namespace XamCore.WatchKit {
 	[BaseType (typeof (WKRefreshBackgroundTask))]
 	interface WKSnapshotRefreshBackgroundTask {
 
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'ReasonForSnapshot' instead.")]
 		[Export ("returnToDefaultState")]
 		bool ReturnToDefaultState { get; }
+
+		[Watch (4,0)]
+		[Export ("reasonForSnapshot")]
+		WKSnapshotReason ReasonForSnapshot { get; }
 
 		[Export ("setTaskCompletedWithDefaultStateRestored:estimatedSnapshotExpiration:userInfo:")]
 		void SetTaskCompleted (bool restoredDefaultState, [NullAllowed] NSDate estimatedSnapshotExpiration, [NullAllowed] INSSecureCoding userInfo);

@@ -70,8 +70,11 @@ namespace Xamarin.Mac.Tests
 			// Can't test typeof (NSResponder) since it is abstract
 			List <Type> types = new List<Type> { typeof (NSCell), typeof (NSMenuItem), typeof (NSPathControl),
 				typeof (NSPopUpButton), typeof (NSPopUpButtonCell) };
-			if (IntPtr.Size == 4)
-				types.Add (typeof (NSMenuView)); // NSMenuView is 32-bit only
+			// objc[22864]: Cannot form weak reference to instance (0x4268d0) of class NSMenuView. It is possible that this object was over-released, or is in the process of deallocation.
+			// Error occurs in Xcode as well, so not a result of our code
+			// Radar #33966228: "Thanks for the info, I think it would be best to just exclude this case from testing. We might keep your bug around to cover the case of NSWindow having problems in general with non-weak-compatible classes, but I don’t think we’ll fix it just for NSMenuView."
+			//if (IntPtr.Size == 4)
+			//types.Add (typeof (NSMenuView)); // NSMenuView is 32-bit only
 
 			foreach (Type t in types) {
 				object o = Activator.CreateInstance (t);

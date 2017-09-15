@@ -9,7 +9,7 @@ namespace XamCore.NetworkExtension {
 #if !XAMCORE_4_0
 	public partial class NEPacketTunnelNetworkSettings {
 
-		[Obsolete ("This constructor does not create a valid instance of the type")]
+		[Obsolete ("This constructor does not create a valid instance of the type.")]
 		public NEPacketTunnelNetworkSettings () : base (NSObjectFlag.Empty)
 		{
 		}
@@ -17,7 +17,7 @@ namespace XamCore.NetworkExtension {
 
 	public partial class NEPacketTunnelProvider {
 
-		[Obsolete ("Use the overload accepting a INWTcpConnectionAuthenticationDelegate argument")]
+		[Obsolete ("Use the overload accepting a 'INWTcpConnectionAuthenticationDelegate' argument.")]
 		public virtual NWTcpConnection CreateTcpConnection (NWEndpoint remoteEndpoint, bool enableTls, NWTlsParameters tlsParameters, NWTcpConnectionAuthenticationDelegate @delegate)
 		{
 			return CreateTcpConnection (remoteEndpoint, enableTls, tlsParameters, (INWTcpConnectionAuthenticationDelegate) @delegate);
@@ -26,7 +26,7 @@ namespace XamCore.NetworkExtension {
 
 	public partial class NWTcpConnectionAuthenticationDelegate : NSObject {
 
-		[Obsolete ("Use 'NWTcpConnectionAuthenticationDelegate_Extensions.EvaluateTrustAsync' instead")]
+		[Obsolete ("Use 'NWTcpConnectionAuthenticationDelegate_Extensions.EvaluateTrustAsync' instead.")]
 		public unsafe virtual Task<global::XamCore.Security.SecTrust> EvaluateTrustAsync (NWTcpConnection connection, NSArray peerCertificateChain)
 		{
 			return NWTcpConnectionAuthenticationDelegate_Extensions.EvaluateTrustAsync (this, connection, peerCertificateChain);

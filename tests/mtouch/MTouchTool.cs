@@ -163,7 +163,12 @@ namespace Xamarin
 
 		public void AssertExecute (MTouchAction action, string message = null)
 		{
-			NUnit.Framework.Assert.AreEqual (0, Execute (action), message);
+			var rv = Execute (action);
+			if (rv == 0)
+				return;
+			var errors = Messages.Where ((v) => v.IsError).ToList ();
+			Assert.Fail ($"Expected execution to succeed, but exit code was {rv}, and there were {errors.Count} error(s): {message}\n\t" +
+			             string.Join ("\n\t", errors.Select ((v) => v.ToString ())));
 		}
 
 		public void AssertExecuteFailure (MTouchAction action, string message = null)
@@ -895,6 +900,14 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 			get { 
 				return ExecutionHelper.Execute ("nm", $"-gUj {StringUtils.Quote (NativeExecutablePath)}", hide_output: true).Split ('\n');
 			}
+		}
+
+		protected override string ToolPath {
+			get { return Configuration.MtouchPath; }
+		}
+
+		protected override string MessagePrefix {
+			get { return "MT"; }
 		}
 	}
 }

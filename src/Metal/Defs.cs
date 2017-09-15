@@ -92,6 +92,21 @@ namespace XamCore.Metal {
 		}
 	}
 
+	[StructLayout (LayoutKind.Sequential)]
+	public struct MTLSamplePosition
+	{
+		public float X;
+
+		public float Y;
+
+		public MTLSamplePosition (float x, float y)
+		{
+			this.X = x;
+			this.Y = y;
+		}
+	}
+
+
 	public struct MTLClearColor {
 		public double Red, Green, Blue, Alpha;
 
