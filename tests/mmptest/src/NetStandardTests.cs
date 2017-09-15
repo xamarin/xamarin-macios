@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
@@ -25,6 +26,9 @@ namespace Xamarin.MMP.Tests
 
 		static void NetStandardTestCore (string tmpDir, bool full)
 		{
+			if (!File.Exists ("/usr/local/share/dotnet/dotnet"))
+				Assert.Ignore (".NET Core SDK not installed");
+
 			TI.UnifiedTestConfig config = new TI.UnifiedTestConfig (tmpDir);
 
 			string netStandardProject = TI.GenerateNetStandardProject (config);
