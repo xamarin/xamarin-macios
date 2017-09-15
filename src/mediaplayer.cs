@@ -71,7 +71,7 @@ namespace XamCore.MediaPlayer {
 		[NoTV]
 		[Export ("titlePropertyForGroupingType:")][Static]
 		string GetTitleProperty (MPMediaGrouping groupingType);
-#endif
+
 		[Since (3,0)]
 		[Field ("MPMediaItemPropertyPersistentID")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
