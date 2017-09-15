@@ -194,7 +194,7 @@ namespace XamCore.AudioToolbox {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use AVAudioSession instead")]
+	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'AVAudioSession' instead.")]
 	public static class AudioSession {
 		static bool initialized;
 		public static event EventHandler Interrupted;

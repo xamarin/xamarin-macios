@@ -166,7 +166,7 @@ namespace XamCore.Foundation {
 		}
 		
 #if !XAMCORE_4_0 && !WATCH
-		[Obsolete("ValueWithObject is deprecated, please use EvaluateWith instead.")]
+		[Obsolete("Use 'EvaluateWith' instead.")]
 		public virtual NSExpression ExpressionValueWithObject (NSObject obj, NSMutableDictionary context) {
 			var result = EvaluateWith (obj, context);
 			// if it can be casted, do return an NSEXpression else null

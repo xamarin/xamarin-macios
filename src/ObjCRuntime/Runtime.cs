@@ -556,10 +556,10 @@ namespace XamCore.ObjCRuntime {
 			return ((Selector) ObjectWrapper.Convert (sel)).Handle;
 		}
 
-		static UnmanagedMethodDescription GetMethodForSelector (IntPtr cls, IntPtr sel)
+		static UnmanagedMethodDescription GetMethodForSelector (IntPtr cls, IntPtr sel, bool is_static)
 		{
 			// This is called by the old registrar code.
-			return Registrar.GetMethodDescription (Class.Lookup (cls), sel);
+			return Registrar.GetMethodDescription (Class.Lookup (cls), sel, is_static);
 		}
 
 		static IntPtr GetNSObjectWrapped (IntPtr ptr)
@@ -675,9 +675,9 @@ namespace XamCore.ObjCRuntime {
 			return parameters [parameter].IsOut;
 		}
 
-		static UnmanagedMethodDescription GetMethodAndObjectForSelector (IntPtr klass, IntPtr sel, IntPtr obj, ref IntPtr mthis)
+		static UnmanagedMethodDescription GetMethodAndObjectForSelector (IntPtr klass, IntPtr sel, bool is_static, IntPtr obj, ref IntPtr mthis)
 		{
-			return Registrar.GetMethodDescriptionAndObject (Class.Lookup (klass), sel, obj, ref mthis);
+			return Registrar.GetMethodDescriptionAndObject (Class.Lookup (klass), sel, is_static, obj, ref mthis);
 		}
 
 		static int CreateProductException (int code, string msg)
@@ -952,6 +952,11 @@ namespace XamCore.ObjCRuntime {
 			} else {
 				return new NSObject (ptr);
 			}
+		}
+
+		internal static T ConstructNSObject<T> (IntPtr ptr) where T: NSObject
+		{
+			return ConstructNSObject<T> (ptr, typeof (T), MissingCtorResolution.ThrowConstructor1NotFound);
 		}
 
 		// The generic argument T is only used to cast the return value.

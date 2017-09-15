@@ -3,18 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xtro-sharpie", "xtro-sharpie.csproj", "{D890A042-93C2-4B4B-ABF8-7ECBCBF059D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xtro-plugin", "xtro-plugin.csproj", "{6CBA2C3C-2EC7-42A0-8AA7-85FC62252A18}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6CBA2C3C-2EC7-42A0-8AA7-85FC62252A18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6CBA2C3C-2EC7-42A0-8AA7-85FC62252A18}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6CBA2C3C-2EC7-42A0-8AA7-85FC62252A18}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6CBA2C3C-2EC7-42A0-8AA7-85FC62252A18}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D890A042-93C2-4B4B-ABF8-7ECBCBF059D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D890A042-93C2-4B4B-ABF8-7ECBCBF059D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D890A042-93C2-4B4B-ABF8-7ECBCBF059D8}.Release|Any CPU.ActiveCfg = Release|Any CPU

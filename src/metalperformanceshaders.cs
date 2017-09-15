@@ -157,7 +157,9 @@ namespace XamCore.MetalPerformanceShaders {
 		bool ZeroHistogram { get; set; }
 
 		[Export ("histogramInfo")]
-		MPSImageHistogramInfo HistogramInfo { get; }
+		MPSImageHistogramInfo HistogramInfo {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+		}
 
 		// Could not initialize an instance of the type 'MetalPerformanceShaders.MPSImageHistogram': the native 'initWithDevice:' method returned nil.
 //		[Export ("initWithDevice:")]
@@ -165,6 +167,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Export ("initWithDevice:histogramInfo:")]
 		[DesignatedInitializer]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor (IMTLDevice device, ref MPSImageHistogramInfo histogramInfo);
 
 		[Export ("encodeToCommandBuffer:sourceTexture:histogram:histogramOffset:")]
@@ -180,10 +183,13 @@ namespace XamCore.MetalPerformanceShaders {
 	interface MPSImageHistogramEqualization {
 		[Export ("initWithDevice:histogramInfo:")]
 		[DesignatedInitializer]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor (IMTLDevice device, ref MPSImageHistogramInfo histogramInfo);
 
 		[Export ("histogramInfo")]
-		MPSImageHistogramInfo HistogramInfo { get; }
+		MPSImageHistogramInfo HistogramInfo {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+		}
 
 		[Export ("encodeTransformToCommandBuffer:sourceTexture:histogram:histogramOffset:")]
 		void EncodeTransformToCommandBuffer (IMTLCommandBuffer commandBuffer, IMTLTexture source, IMTLBuffer histogram, nuint histogramOffset);
@@ -195,10 +201,13 @@ namespace XamCore.MetalPerformanceShaders {
 	interface MPSImageHistogramSpecification {
 		[Export ("initWithDevice:histogramInfo:")]
 		[DesignatedInitializer]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor (IMTLDevice device, ref MPSImageHistogramInfo histogramInfo);
 
 		[Export ("histogramInfo")]
-		MPSImageHistogramInfo HistogramInfo { get; }
+		MPSImageHistogramInfo HistogramInfo {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+		}
 
 		[Export ("encodeTransformToCommandBuffer:sourceTexture:sourceHistogram:sourceHistogramOffset:desiredHistogram:desiredHistogramOffset:")]
 		void EncodeTransformToCommandBuffer (IMTLCommandBuffer commandBuffer, IMTLTexture source, IMTLBuffer sourceHistogram, nuint sourceHistogramOffset, IMTLBuffer desiredHistogram, nuint desiredHistogramOffset);
@@ -510,7 +519,7 @@ namespace XamCore.MetalPerformanceShaders {
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface MPSKernel : NSCopying {
+	interface MPSKernel : NSCopying, NSSecureCoding {
 		[Export ("options", ArgumentSemantic.Assign)]
 		MPSKernelOptions Options { get; set; }
 
@@ -657,7 +666,7 @@ namespace XamCore.MetalPerformanceShaders {
 	[iOS (10,0)][TV (10,0)]
 	[BaseType (typeof (NSObject), Name = "MPSCNNConvolutionDescriptor")]
 	[DisableDefaultCtor]
-	interface MPSCnnConvolutionDescriptor : NSCopying {
+	interface MPSCnnConvolutionDescriptor : NSCopying, NSSecureCoding {
 
 		[Export ("kernelWidth")]
 		nuint KernelWidth { get; set; }

@@ -557,6 +557,18 @@ linker. This will most likely result in native linker errors.
 
 The solution is to remove the `--dynamic-symbol-mode=linker` argument from the additional mtouch arguments in the project's Build options.
 
+<h3><a name="MT0116"/>MT0116: Invalid architecture: {arch}. 32-bit architectures are not supported when deployment target is 11 or later. Make sure the project does not build for a 32-bit architecture.</h3>
+
+iOS 11 does not contain support for 32-bit applications, so it's not supported
+to build for a 32-bit application when the deployment target is iOS 11 or
+later.
+
+Either change the target architecture in the project's iOS build options to
+arm64, or change the deployment target in the project's Info.plist to an
+earlier iOS version.
+
+<h3><a name="MT0117"/>MT0117: Can't launch a 32-bit app on a simulator that only supports 64-bit.</h3>
+
 <!-- 0116 - 0124: free to use -->
 
 <h3><a name="MT0125"/>MT0125: The --assembly-build-target command-line argument is ignored in the simulator.</h3>

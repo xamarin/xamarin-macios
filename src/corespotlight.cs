@@ -124,6 +124,16 @@ namespace XamCore.CoreSpotlight {
 
 		[Export ("searchableIndexDidFinishThrottle:")]
 		void DidFinishThrottle (CSSearchableIndex searchableIndex);
+
+		[iOS (11,0), NoTV, Mac (10,13)]
+		[Export ("dataForSearchableIndex:itemIdentifier:typeIdentifier:error:")]
+		[return: NullAllowed]
+		NSData GetData (CSSearchableIndex searchableIndex, string itemIdentifier, string typeIdentifier, out NSError outError);
+
+		[iOS (11,0), NoTV, Mac (10,13)]
+		[Export ("fileURLForSearchableIndex:itemIdentifier:typeIdentifier:inPlace:error:")]
+		[return: NullAllowed]
+		NSUrl GetFileUrl (CSSearchableIndex searchableIndex, string itemIdentifier, string typeIdentifier, bool inPlace, out NSError outError);
 	}
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
@@ -979,6 +989,41 @@ namespace XamCore.CoreSpotlight {
 		[Export ("valueForCustomKey:")]
 		[return: NullAllowed]
 		INSSecureCoding ValueForCustomKey (CSCustomAttributeKey key);
+
+		// CSSearchableItemAttributeSet_CSGeneral
+
+		[iOS (11,0), NoTV, Mac (10, 11)]
+		[NullAllowed, Export ("userCreated", ArgumentSemantic.Strong)]
+		[Internal] // We would like to use [BindAs (typeof (bool?))]
+		NSNumber _IsUserCreated { [Bind ("isUserCreated")] get; set; }
+
+		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[NullAllowed, Export ("userOwned", ArgumentSemantic.Strong)]
+		[Internal] // We would like to use[BindAs (typeof (bool?))]
+		NSNumber _IsUserOwned { [Bind ("isUserOwned")] get; set; }
+
+		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[NullAllowed, Export ("userCurated", ArgumentSemantic.Strong)]
+		[Internal] // We would like to use [BindAs (typeof (bool?))]
+		NSNumber _IsUserCurated { [Bind ("isUserCurated")] get; set; }
+
+		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[NullAllowed, Export ("rankingHint", ArgumentSemantic.Strong)]
+		NSNumber RankingHint { get; set; }
+
+		// CSSearchableItemAttributeSet_CSItemProvider
+
+		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[NullAllowed, Export ("providerDataTypeIdentifiers", ArgumentSemantic.Copy)]
+		string[] ProviderDataTypeIdentifiers { get; set; }
+
+		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[NullAllowed, Export ("providerFileTypeIdentifiers", ArgumentSemantic.Copy)]
+		string[] ProviderFileTypeIdentifiers { get; set; }
+
+		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[NullAllowed, Export ("providerInPlaceFileTypeIdentifiers", ArgumentSemantic.Copy)]
+		string[] ProviderInPlaceFileTypeIdentifiers { get; set; }
 	}
 
 	[NoTV][iOS (10,0)]

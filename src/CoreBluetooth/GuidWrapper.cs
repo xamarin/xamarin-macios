@@ -58,8 +58,8 @@ namespace XamCore.CoreBluetooth {
 			ConnectPeripheral (peripheral, options == null ? null : options.Dictionary);
 		}
 
-#if !TVOS
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0, Message = "Use RetrievePeripheralsWithIdentifiers instead")]
+#if !TVOS && !WATCH
+		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0, Message = "Use 'RetrievePeripheralsWithIdentifiers' instead.")]
 		public void RetrievePeripherals (CBUUID [] peripheralUuids)
 		{
 			if (peripheralUuids == null)
@@ -83,19 +83,19 @@ namespace XamCore.CoreBluetooth {
 #endif
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use the CBUUID overload since Guid internal memory representation is different")]
+		[Obsolete ("Use the 'CBUUID' overload since Guid internal memory representation is different.")]
 		public void RetrievePeripherals (Guid [] peripheralUuids)
 		{
 			CFUUID.WithArray (peripheralUuids, "peripheralUuids", x => RetrievePeripherals (x));
 		}
 
-		[Obsolete ("Use the CBUUID overload since Guid internal memory representation is different")]
+		[Obsolete ("Use the 'CBUUID' overload since Guid internal memory representation is different.")]
 		public void RetrievePeripherals (Guid peripheralUuid)
 		{
 			RetrievePeripherals (new [] { peripheralUuid });
 		}
 
-		[Obsolete ("Use the CBUUID overload since Guid internal memory representation is different")]
+		[Obsolete ("Use the 'CBUUID' overload since Guid internal memory representation is different.")]
 		public void ScanForPeripherals (Guid [] serviceUuids, NSDictionary options)
 		{
 			if (serviceUuids == null)
@@ -104,25 +104,25 @@ namespace XamCore.CoreBluetooth {
 				CFUUID.WithArray (serviceUuids, "serviceUuids", x => ScanForPeripherals (x, options));
 		}
 
-		[Obsolete ("Use the CBUUID overload since Guid internal memory representation is different")]
+		[Obsolete ("Use the 'CBUUID' overload since Guid internal memory representation is different.")]
 		public void ScanForPeripherals (Guid[] serviceUuids, PeripheralScanningOptions options = null)
 		{
 			ScanForPeripherals (serviceUuids, options == null ? null : options.Dictionary);
 		}
 
-		[Obsolete ("Use the CBUUID overload since Guid internal memory representation is different")]
+		[Obsolete ("Use the 'CBUUID' overload since Guid internal memory representation is different.")]
 		public void ScanForPeripherals (Guid [] serviceUuids)
 		{
 			ScanForPeripherals (serviceUuids, null as NSDictionary);
 		}
 
-		[Obsolete ("Use the CBUUID overload since Guid internal memory representation is different")]
+		[Obsolete ("Use the 'CBUUID' overload since Guid internal memory representation is different.")]
 		public void ScanForPeripherals (Guid serviceUuid, NSDictionary options)
 		{
 			ScanForPeripherals (new [] { serviceUuid }, options);
 		}
 
-		[Obsolete ("Use the CBUUID overload since Guid internal memory representation is different")]
+		[Obsolete ("Use the 'CBUUID' overload since Guid internal memory representation is different.")]
 		public void ScanForPeripherals (Guid serviceUuid)
 		{
 			ScanForPeripherals (new [] { serviceUuid }, null as NSDictionary);

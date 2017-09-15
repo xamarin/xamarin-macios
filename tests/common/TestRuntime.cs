@@ -86,9 +86,92 @@ partial class TestRuntime
 		NUnit.Framework.Assert.Ignore ("Requires the platform version shipped with Xcode {0}.{1}", major, minor);
 	}
 
+#if !MONOMAC
+	public static void AssertDevice ()
+	{
+		if (ObjCRuntime.Runtime.Arch == Arch.SIMULATOR)
+			NUnit.Framework.Assert.Ignore ("This test only runs on device.");
+	}
+#endif
+
+	// This function checks if the current Xcode version is exactly (neither higher nor lower) the requested one.
+	public static bool CheckExactXcodeVersion (int major, int minor, int beta = 0)
+	{
+		// Add the Build number minus the one last character, sometimes Apple releases
+		// different builds from the same Beta, for example in Xcode 9 Beta 3 we have
+		// 15A5318g on device and 15A5318e on the simulator
+		var nineb1 = new {
+			Xcode = new { Major = 9, Minor = 0, Beta = 1 },
+			iOS = new { Major = 11, Minor = 0, Build = "15A5278" },
+			tvOS = new { Major = 11, Minor = 0, Build = "?" },
+			macOS = new { Major = 10, Minor = 13, Build = "?" },
+			watchOS = new { Major = 4, Minor = 0, Build = "?" },
+		};
+		var nineb2 = new {
+			Xcode = new { Major = 9, Minor = 0, Beta = 2 },
+			iOS = new { Major = 11, Minor = 0, Build = "15A5304" },
+			tvOS = new { Major = 11, Minor = 0, Build = "?" },
+			macOS = new { Major = 10, Minor = 13, Build = "?" },
+			watchOS = new { Major = 4, Minor = 0, Build = "?" },
+		};
+		var nineb3 = new {
+			Xcode = new { Major = 9, Minor = 0, Beta = 3 },
+			iOS = new { Major = 11, Minor = 0, Build = "15A5318" },
+			tvOS = new { Major = 11, Minor = 0, Build = "?" },
+			macOS = new { Major = 10, Minor = 13, Build = "?" },
+			watchOS = new { Major = 4, Minor = 0, Build = "?" },
+		};
+
+		var versions = new [] {
+			nineb1,
+			nineb2,
+			nineb3,
+		};
+
+		foreach (var v in versions) {
+			if (v.Xcode.Major != major)
+				continue;
+			if (v.Xcode.Minor != minor)
+				continue;
+			if (v.Xcode.Beta != beta)
+				continue;
+
+#if __IOS__
+			if (!CheckExactiOSSystemVersion (v.iOS.Major, v.iOS.Minor))
+				return false;
+			if (v.iOS.Build == "?")
+				throw new NotImplementedException ($"Build number for iOS {v.iOS.Major}.{v.iOS.Minor} beta {beta} (candidate: {GetiOSBuildVersion ()})");
+			var actual = GetiOSBuildVersion ();
+			Console.WriteLine (actual);
+			return actual.StartsWith (v.iOS.Build, StringComparison.Ordinal);
+#else
+			throw new NotImplementedException ();
+#endif
+		}
+
+		throw new NotImplementedException ($"Build information for Xcode version {major}.{minor} beta {beta} not found");
+	}
+
 	public static bool CheckXcodeVersion (int major, int minor, int build = 0)
 	{
 		switch (major) {
+		case 9:
+			switch (minor) {
+			case 0:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (4, 0);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (11, 0);
+#elif __IOS__
+				return CheckiOSSystemVersion (11, 0);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 13, 0);
+#else
+				throw new NotImplementedException ();
+#endif
+			default:
+				throw new NotImplementedException ();
+			}
 		case 8:
 			switch (minor) {
 			case 0:
@@ -292,6 +375,16 @@ partial class TestRuntime
 		if (throwIfOtherPlatform)
 			throw new Exception ("Can't get iOS System version on other platforms.");
 		return true;
+#endif
+	}
+
+	public static bool CheckExactiOSSystemVersion (int major, int minor)
+	{
+#if __IOS__
+		var version = Version.Parse (UIDevice.CurrentDevice.SystemVersion);
+		return version.Major == major && version.Minor == minor;
+#else
+		throw new Exception ("Can't get iOS System version on other platforms.");
 #endif
 	}
 

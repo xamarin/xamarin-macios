@@ -70,10 +70,10 @@ namespace XamCore.MediaAccessibility {
 		// FIXME: make this a real notification
 		public static readonly NSString SettingsChangedNotification;
 
-		[Advice ("Use MediaCharacteristic.DescribesMusicAndSoundForAccessibility getter")]
+		[Advice ("Use 'MediaCharacteristic.DescribesMusicAndSoundForAccessibility' getter.")]
 		public static readonly NSString MediaCharacteristicDescribesMusicAndSoundForAccessibility;
 
-		[Advice ("Use MediaCharacteristic.TranscribesSpokenDialogForAccessibility getter")]
+		[Advice ("Use 'MediaCharacteristic.TranscribesSpokenDialogForAccessibility' getter.")]
 		public static readonly NSString MediaCharacteristicTranscribesSpokenDialogForAccessibility;
 
 		static MACaptionAppearance ()

@@ -68,6 +68,8 @@ namespace XamCore.CallKit {
 		MaximumEntriesExceeded = 5,
 		ExtensionDisabled = 6,
 		CurrentlyLoading = 7,
+		[iOS (11,0)]
+		UnexpectedIncrementalRemoval = 8,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -199,6 +201,16 @@ namespace XamCore.CallKit {
 		[Async]
 		[Export ("requestTransaction:completion:")]
 		void RequestTransaction (CXTransaction transaction, Action<NSError> completion);
+
+		[iOS (11,0)]
+		[Async]
+		[Export ("requestTransactionWithActions:completion:")]
+		void RequestTransaction ([NullAllowed] CXAction[] actions, [NullAllowed] Action<NSError> completion);
+
+		[iOS (11,0)]
+		[Async]
+		[Export ("requestTransactionWithAction:completion:")]
+		void RequestTransaction ([NullAllowed] CXAction action, [NullAllowed] Action<NSError> completion);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -217,6 +229,26 @@ namespace XamCore.CallKit {
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		ICXCallDirectoryExtensionContextDelegate Delegate { get; set; }
+
+		[iOS (11, 0)]
+		[Export ("incremental")]
+		bool Incremental { [Bind ("isIncremental")] get; }
+
+		[iOS (11,0)]
+		[Export ("removeBlockingEntryWithPhoneNumber:")]
+		void RemoveBlockingEntry (/* CXCallDirectoryPhoneNumber -> int64_t */ long phoneNumber);
+
+		[iOS (11,0)]
+		[Export ("removeAllBlockingEntries")]
+		void RemoveAllBlockingEntries ();
+
+		[iOS (11,0)]
+		[Export ("removeIdentificationEntryWithPhoneNumber:")]
+		void RemoveIdentificationEntry (/* CXCallDirectoryPhoneNumber -> int64_t */ long phoneNumber);
+
+		[iOS (11,0)]
+		[Export ("removeAllIdentificationEntries")]
+		void RemoveAllIdentificationEntries ();
 	}
 
 	interface ICXCallDirectoryExtensionContextDelegate {}
@@ -442,12 +474,17 @@ namespace XamCore.CallKit {
 		[Export ("maximumCallsPerCallGroup")]
 		nuint MaximumCallsPerCallGroup { get; set; }
 
+		[iOS (11, 0)]
+		[Export ("includesCallsInRecents")]
+		bool IncludesCallsInRecents { get; set; }
+
 		[Export ("supportsVideo")]
 		bool SupportsVideo { get; set; }
 
 		[Export ("supportedHandleTypes", ArgumentSemantic.Copy)]
 		NSSet<NSNumber> SupportedHandleTypes { get; set; }
 
+		[DesignatedInitializer]
 		[Export ("initWithLocalizedName:")]
 		IntPtr Constructor (string localizedName);
 	}
@@ -461,7 +498,7 @@ namespace XamCore.CallKit {
 		[DesignatedInitializer]
 		IntPtr Constructor (NSUuid callUuid, [NullAllowed] NSUuid callUuidToGroupWith);
 
-		[NullAllowed, Export ("callUUIDToGroupWith", ArgumentSemantic.Assign)]
+		[NullAllowed, Export ("callUUIDToGroupWith", ArgumentSemantic.Copy)]
 		NSUuid CallUuidToGroupWith { get; set; }
 	}
 

@@ -15,7 +15,7 @@ namespace XamCore.SpriteKit {
 #if !XAMCORE_3_0 && !MONOMAC
 	public partial class SKFieldNode  {
 		
-		[Obsolete ("Use the method CreateVortexField instead")]
+		[Obsolete ("Use the method 'CreateVortexField' instead.")]
 		public static SKFieldNode CraeteVortexField ()
 		{
 			return CreateVortexField ();

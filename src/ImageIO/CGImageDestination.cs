@@ -188,6 +188,18 @@ namespace XamCore.ImageIO {
 	}
 #endif
 
+	public partial class CGImageAuxiliaryDataInfo {
+
+		public CGImageMetadata Metadata {
+			get {
+				return GetNativeValue<CGImageMetadata> (CGImageAuxiliaryDataInfoKeys.MetadataKey);
+			}
+			set {
+				SetNativeValue (CGImageAuxiliaryDataInfoKeys.MetadataKey, value);
+			}
+		}
+	}
+
 	public class CGImageDestination : INativeObject, IDisposable {
 		internal IntPtr handle;
 
@@ -468,6 +480,18 @@ namespace XamCore.ImageIO {
 			finally {
 				if (options != null)
 					o.Dispose ();
+			}
+		}
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[DllImport (Constants.ImageIOLibrary)]
+		static extern void CGImageDestinationAddAuxiliaryDataInfo (IntPtr /* CGImageDestinationRef* */ idst, IntPtr /* CFStringRef* */ auxiliaryImageDataType, IntPtr /* CFDictionaryRef* */ auxiliaryDataInfoDictionary);
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		public void AddAuxiliaryDataInfo (CGImageAuxiliaryDataType auxiliaryImageDataType, CGImageAuxiliaryDataInfo auxiliaryDataInfo)
+		{
+			using (var dict = auxiliaryDataInfo?.Dictionary) {
+				CGImageDestinationAddAuxiliaryDataInfo (Handle, auxiliaryImageDataType.GetConstant ().GetHandle (), dict.GetHandle ());
 			}
 		}
 	}

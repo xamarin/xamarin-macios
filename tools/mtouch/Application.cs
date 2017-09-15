@@ -595,7 +595,11 @@ namespace Xamarin.Bundler {
 			switch (Platform) {
 			case ApplePlatform.iOS:
 				if (abis.Count == 0) {
-					abis.Add (IsDeviceBuild ? Abi.ARMv7 : Abi.i386);
+					if (DeploymentTarget == null || DeploymentTarget.Major >= 11) {
+						abis.Add (IsDeviceBuild ? Abi.ARM64 : Abi.x86_64);
+					} else {
+						abis.Add (IsDeviceBuild ? Abi.ARMv7 : Abi.i386);
+					}
 				}
 				break;
 			case ApplePlatform.WatchOS:
@@ -1338,6 +1342,13 @@ namespace Xamarin.Bundler {
 			if (Embeddinator) {
 				// The assembly we're embedding doesn't necessarily reference our platform assembly, but we still need it.
 				RootAssemblies.Add (Path.Combine (Driver.GetPlatformFrameworkDirectory (this), Driver.GetProductAssembly (this) + ".dll"));
+			}
+
+			if (Platform == ApplePlatform.iOS) {
+				if (DeploymentTarget.Major >= 11 && Is32Build) {
+					var invalidArches = abis.Where ((v) => (v & Abi.Arch32Mask) != 0);
+					throw ErrorHelper.CreateError (116, $"Invalid architecture: {invalidArches.First ()}. 32-bit architectures are not supported when deployment target is 11 or later.");
+				}
 			}
 
 			InitializeCommon ();

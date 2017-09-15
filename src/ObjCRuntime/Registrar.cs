@@ -148,7 +148,7 @@ namespace XamCore.Registrar {
 			public List<ObjCMethod> Methods;
 			public List<ObjCProperty> Properties;
 
-			public Dictionary<string, ObjCMember> Map = new Dictionary<string, ObjCMember> ();
+			Dictionary<string, ObjCMember> Map = new Dictionary<string, ObjCMember> ();
 
 			ObjCType superType;
 
@@ -235,8 +235,9 @@ namespace XamCore.Registrar {
 			{
 				// Check if there are any base types with the same property.
 				var base_type = BaseType;
+				var fieldNameInDictionary = (field.IsStatic ? "+" : "-") + field.Name;
 				while (base_type != null) {
-					if (base_type.Fields != null && base_type.Fields.ContainsKey (field.Name)) {
+					if (base_type.Fields != null && base_type.Fields.ContainsKey (fieldNameInDictionary)) {
 						// Maybe we should warn here? Not sure if this is something bad or not.
 						return;
 					}
@@ -248,7 +249,7 @@ namespace XamCore.Registrar {
 				if (Fields == null)
 					Fields = new Dictionary<string, ObjCField> ();
 				// Do fields and methods live in the same objc namespace? // AddToMap (field, errorIfExists);
-				Fields.Add (field.Name, field);
+				Fields.Add (fieldNameInDictionary, field);
 			}
 
 			public bool Add (ObjCMethod method, ref List<Exception> exceptions)
@@ -332,11 +333,20 @@ namespace XamCore.Registrar {
 					AddException (ref exceptions, CreateException (4164, property, "Cannot export the property '{0}' because its selector '{1}' is an Objective-C keyword. Please use a different name.", property.Name, property.Selector));
 			}
 
+			public bool TryGetMember (string selector, bool is_static, out ObjCMember member)
+			{
+				if (is_static)
+					selector = "+" + selector;
+				else
+					selector = "-" + selector;
+				return Map.TryGetValue (selector, out member);
+			}
+
 			bool AddToMap (ObjCMember member, ref List<Exception> exceptions)
 			{
 				ObjCMember existing;
 				bool rv = true;
-				if (Map.TryGetValue (member.Selector, out existing)) {
+				if (TryGetMember (member.Selector, member.IsNativeStatic, out existing)) {
 					if (existing.IsImplicit) {
 						AddException (ref exceptions, CreateException (4141, member, "Cannot register the selector '{0}' on the member '{1}.{2}' because Xamarin.iOS implicitly registers this selector.", member.Selector, Registrar.GetTypeFullName (Type), Registrar.GetMemberName (member)));
 					} else {
@@ -345,7 +355,7 @@ namespace XamCore.Registrar {
 					rv = false;
 				}
 				
-				Map [member.Selector] = member;
+				Map [(member.IsNativeStatic ? "+" : "-") + member.Selector] = member;
 				return rv;
 			}
 
@@ -458,6 +468,7 @@ namespace XamCore.Registrar {
 			}
 
 			public abstract string FullName { get; }
+			public abstract bool IsNativeStatic { get; }
 			public virtual bool IsImplicit { get { return false; } }
 
 			protected string ToSignature (TType type, ref bool success)
@@ -569,6 +580,12 @@ namespace XamCore.Registrar {
 			public bool IsStatic {
 				get { return is_static.HasValue ? is_static.Value : Registrar.IsStatic (Method); }
 				set { is_static = value; }
+			}
+
+			public override bool IsNativeStatic {
+				get {
+					return IsStatic && !IsCategoryInstance;
+				}
 			}
 
 			public bool IsCategoryInstance {
@@ -751,6 +768,10 @@ namespace XamCore.Registrar {
 				set { is_static = value; }
 			}
 
+			public override bool IsNativeStatic {
+				get { return IsStatic; }
+			}
+
 			public ObjCProperty () : base ()
 			{
 			}
@@ -771,11 +792,21 @@ namespace XamCore.Registrar {
 #endif
 			public string FieldType;
 			public bool IsProperty;
+			bool is_static;
 
 			public override string FullName {
 				get {
 					return Registrar.GetTypeFullName (DeclaringType.Type) + "." + Name;
 				}
+			}
+
+			public bool IsStatic {
+				get { return is_static; }
+				set { is_static = value; }
+			}
+
+			public override bool IsNativeStatic {
+				get { return IsStatic; }
 			}
 		}
 
@@ -1618,6 +1649,7 @@ namespace XamCore.Registrar {
 							FieldType = "XamarinObject",// "^v", // void*
 							Name = "__monoObjectGCHandle",
 							IsPrivate = SupportsModernObjectiveC,
+							IsStatic = false,
 						}, ref exceptions);
 					}
 #endif
@@ -1727,6 +1759,7 @@ namespace XamCore.Registrar {
 #endif
 							FieldType = "@",
 							IsProperty = true,
+							IsStatic = IsStatic (property),
 						}, ref exceptions);
 					}
 				}

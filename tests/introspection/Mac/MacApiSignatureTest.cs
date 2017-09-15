@@ -63,6 +63,23 @@ namespace Introspection {
 				return true;
 
 			switch (type.Name) {
+			case "PdfDocument":
+				switch (selector) {
+				case "majorVersion": // radar 32884659
+				case "minorVersion":
+					return true;
+				}
+				break;
+
+			case "NSPopover":
+				switch (selector) {
+				// Apple re-used these selectors for a new property of same size but different type
+				// We've obsoleteted the "old" one
+				case "appearance":
+				case "setAppearance:":
+					return true;
+				}
+				break;
 			case "AVPlayerItemOutput":
 			case "AVPlayerItemVideoOutput":
 			case "NSSharingService":

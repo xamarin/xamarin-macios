@@ -80,7 +80,7 @@ namespace XamCore.StoreKit {
 #if !MONOMAC
 		[Static]
 		[Export ("paymentWithProductIdentifier:")]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_5_0, Message = "Use FromProduct(SKProduct) after fetching the list of available products from SKProductRequest instead")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_5_0, Message = "Use 'FromProduct (SKProduct)'' after fetching the list of available products from 'SKProductRequest' instead.")]
 		SKPayment CreateFrom (string identifier);
 #endif
 
@@ -112,7 +112,7 @@ namespace XamCore.StoreKit {
 
 		[Static]
 		[Export ("paymentWithProductIdentifier:")]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_5_0, Message = "Use PaymentWithProduct(SKProduct) after fetching the list of available products from SKProductRequest instead")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_5_0, Message = "Use 'PaymentWithProduct (SKProduct)' after fetching the list of available products from 'SKProductRequest' instead.")]
 		SKMutablePayment PaymentWithProduct (string identifier);
 
 		[NullAllowed] // by default this property is null
@@ -256,6 +256,10 @@ namespace XamCore.StoreKit {
 		[Since(6,0)]
 		[Export ("paymentQueue:updatedDownloads:")]
 		void UpdatedDownloads (SKPaymentQueue queue, SKDownload [] downloads);
+
+		[iOS (11,0)][TV (11,0)][NoMac]
+		[Export ("paymentQueue:shouldAddStorePayment:forProduct:")]
+		bool ShouldAddStorePayment (SKPaymentQueue queue, SKPayment payment, SKProduct product);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -276,7 +280,7 @@ namespace XamCore.StoreKit {
 		string TransactionIdentifier { get; }
 
 #if !MONOMAC
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0, Message = "Use NSBundle.AppStoreReceiptUrl instead")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSBundle.AppStoreReceiptUrl' instead.")]
 		[Export ("transactionReceipt")]
 		NSData TransactionReceipt { get; }
 #endif
@@ -414,6 +418,10 @@ namespace XamCore.StoreKit {
 		[Field ("SKStoreProductParameterITunesItemIdentifier")]
 		NSString ITunesItemIdentifier { get; }
 
+		[iOS (11,0)][TV (11,0)]
+		[Field ("SKStoreProductParameterProductIdentifier")]
+		NSString ProductIdentifier { get; }
+
 		[iOS (8,0)]
 		[Field ("SKStoreProductParameterAffiliateToken")]
 		NSString AffiliateToken { get; }
@@ -461,14 +469,26 @@ namespace XamCore.StoreKit {
 		[Export ("requestStorefrontIdentifierWithCompletionHandler:")]
 		void RequestStorefrontIdentifier (Action<NSString, NSError> completionHandler);
 
+		[iOS (11,0)][TV (11,0)]
+		[Async]
+		[Export ("requestStorefrontCountryCodeWithCompletionHandler:")]
+		void RequestStorefrontCountryCode (Action<NSString, NSError> completionHandler);
+
 		[Async]
 		[Export ("requestCapabilitiesWithCompletionHandler:")]
 		void RequestCapabilities (Action<SKCloudServiceCapability, NSError> completionHandler);
 
 		[iOS (10,3), TV (10,2)]
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'RequestUserToken' instead.")]
+		[Deprecated (PlatformName.TvOS, 11,0, message: "Use 'RequestUserToken' instead.")]
 		[Async]
 		[Export ("requestPersonalizationTokenForClientToken:withCompletionHandler:")]
 		void RequestPersonalizationToken (string clientToken, Action<NSString, NSError> completionHandler);
+
+		[iOS (11,0)][TV (11,0)]
+		[Async]
+		[Export ("requestUserTokenForDeveloperToken:completionHandler:")]
+		void RequestUserToken (string developerToken, Action<NSString, NSError> completionHandler);
 
 		[Notification]
 		[Field ("SKStorefrontIdentifierDidChangeNotification")]
@@ -477,6 +497,11 @@ namespace XamCore.StoreKit {
 		[Notification]
 		[Field ("SKCloudServiceCapabilitiesDidChangeNotification")]
 		NSString CloudServiceCapabilitiesDidChangeNotification { get; }
+
+		[iOS (11,0)][TV (11,0)]
+		[Notification]
+		[Field ("SKStorefrontCountryCodeDidChangeNotification")]
+		NSString StorefrontCountryCodeDidChangeNotification { get; }
 	}
 
 	[iOS (10,1)]
@@ -523,6 +548,9 @@ namespace XamCore.StoreKit {
 
 		[iOS (10,3)]
 		string CampaignToken { get; set; }
+
+		[iOS (11,0)]
+		string MessageIdentifier { get; set; }
 	}
 
 	[NoTV, iOS (10,1)]
@@ -542,6 +570,10 @@ namespace XamCore.StoreKit {
 		[iOS (10,3)]
 		[Field ("SKCloudServiceSetupOptionsCampaignTokenKey")]
 		NSString CampaignTokenKey { get; }
+
+		[iOS (11,0)]
+		[Field ("SKCloudServiceSetupOptionsMessageIdentifierKey")]
+		NSString MessageIdentifierKey { get; }
 	}
 
 	[NoTV, iOS (10,1)]
@@ -549,6 +581,18 @@ namespace XamCore.StoreKit {
 	{
 		[Field ("SKCloudServiceSetupActionSubscribe")]
 		Subscribe,
+	}
+
+	[iOS (11,0), TV (11,0)]
+	enum SKCloudServiceSetupMessageIdentifier {
+		[Field ("SKCloudServiceSetupMessageIdentifierJoin")]
+		Join,
+		[Field ("SKCloudServiceSetupMessageIdentifierConnect")]
+		Connect,
+		[Field ("SKCloudServiceSetupMessageIdentifierAddMusic")]
+		AddMusic,
+		[Field ("SKCloudServiceSetupMessageIdentifierPlayMusic")]
+		PlayMusic,
 	}
 
 	[iOS (10,3)]
@@ -560,6 +604,31 @@ namespace XamCore.StoreKit {
 		[Static]
 		[Export ("requestReview")]
 		void RequestReview ();
+	}
+
+	[iOS (11,0), TV (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // static Default property is the only documented way to get the controller
+	interface SKProductStorePromotionController {
+		[Static]
+		[Export ("defaultController")]
+		SKProductStorePromotionController Default { get; }
+
+		[Async]
+		[Export ("fetchStorePromotionVisibilityForProduct:completionHandler:")]
+		void FetchStorePromotionVisibility (SKProduct product, [NullAllowed] Action<SKProductStorePromotionVisibility, NSError> completionHandler);
+
+		[Async]
+		[Export ("updateStorePromotionVisibility:forProduct:completionHandler:")]
+		void Update (SKProductStorePromotionVisibility promotionVisibility, SKProduct product, [NullAllowed] Action<NSError> completionHandler);
+
+		[Async]
+		[Export ("fetchStorePromotionOrderWithCompletionHandler:")]
+		void FetchStorePromotionOrder ([NullAllowed] Action<SKProduct [], NSError> completionHandler);
+
+		[Async]
+		[Export ("updateStorePromotionOrder:completionHandler:")]
+		void Update (SKProduct[] storePromotionOrder, [NullAllowed] Action<NSError> completionHandler);
 	}
 #endif
 }

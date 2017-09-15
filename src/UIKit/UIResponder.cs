@@ -35,7 +35,7 @@ namespace XamCore.UIKit {
 		[Obsolete ("Override Paste(NSObject)")]
 		public virtual void Paste ()
 		{
-			Paste (null);
+			Paste ((NSObject)null);
 		}
 
 		[Obsolete ("Override Delete(NSObject)")]

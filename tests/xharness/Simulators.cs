@@ -113,7 +113,7 @@ namespace xharness
 			switch (target) {
 			case AppRunnerTarget.Simulator_iOS32:
 				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5" };
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-10-3";
 				break;
 			case AppRunnerTarget.Simulator_iOS64:
 				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-6" };
@@ -286,7 +286,7 @@ namespace xharness
 					if (devices == null)
 						devices = Enumerable.Simulators.FindAsync (Enumerable.Target, Enumerable.Log).Result;
 					moved = true;
-					return moved;
+					return devices != null;
 				}
 
 				public void Reset ()
@@ -350,7 +350,7 @@ namespace xharness
 		{
 			await ProcessHelper.ExecuteCommandAsync ("launchctl", "remove com.apple.CoreSimulator.CoreSimulatorService", log, TimeSpan.FromSeconds (10));
 
-			var to_kill = new string [] { "iPhone Simulator", "iOS Simulator", "Simulator", "Simulator (Watch)", "com.apple.CoreSimulator.CoreSimulatorService" };
+			var to_kill = new string [] { "iPhone Simulator", "iOS Simulator", "Simulator", "Simulator (Watch)", "com.apple.CoreSimulator.CoreSimulatorService", "ibtoold" };
 
 			await ProcessHelper.ExecuteCommandAsync ("killall", "-9 " + string.Join (" ", to_kill.Select ((v) => StringUtils.Quote (v)).ToArray ()), log, TimeSpan.FromSeconds (10));
 
@@ -422,7 +422,7 @@ namespace xharness
 		{
 			string simulator_app;
 
-			if (IsWatchSimulator) {
+			if (IsWatchSimulator && Harness.XcodeVersion.Major < 9) {
 				simulator_app = Path.Combine (Harness.XcodeRoot, "Contents", "Developer", "Applications", "Simulator (Watch).app");
 			} else {
 				simulator_app = Path.Combine (Harness.XcodeRoot, "Contents", "Developer", "Applications", "Simulator.app");

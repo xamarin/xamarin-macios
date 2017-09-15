@@ -14,7 +14,7 @@ using XamCore.UIKit;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.AddressBookUI {
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public class ABPeoplePickerSelectPersonEventArgs : EventArgs {
 
 		public ABPeoplePickerSelectPersonEventArgs (ABPerson person)
@@ -27,7 +27,7 @@ namespace XamCore.AddressBookUI {
 		public bool Continue {get; set;}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public class ABPeoplePickerPerformActionEventArgs : ABPeoplePickerSelectPersonEventArgs {
 
 		public ABPeoplePickerPerformActionEventArgs (ABPerson person, ABPersonProperty property, int? identifier)
@@ -41,7 +41,7 @@ namespace XamCore.AddressBookUI {
 		public int? Identifier {get; private set;}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public class ABPeoplePickerSelectPerson2EventArgs : EventArgs {
 
 		public ABPeoplePickerSelectPerson2EventArgs (ABPerson person)
@@ -52,7 +52,7 @@ namespace XamCore.AddressBookUI {
 		public ABPerson Person {get; private set;}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public class ABPeoplePickerPerformAction2EventArgs : ABPeoplePickerSelectPerson2EventArgs {
 
 		public ABPeoplePickerPerformAction2EventArgs (ABPerson person, ABPersonProperty property, int? identifier)
@@ -170,7 +170,7 @@ namespace XamCore.AddressBookUI {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	partial class ABPeoplePickerNavigationController {
 
 		DisplayedPropertiesCollection displayedProperties;

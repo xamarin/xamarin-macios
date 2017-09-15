@@ -53,6 +53,13 @@
 	#define CtorChaining1     object_CtorChaining1
 	#define ObjCExceptionTest object_ObjCExceptionTest
 	#define ObjCProtocolClassTest object_ObjCProtocolClassTest
+	#define x_mdltransform_get_rotation_matrix object_x_mdltransform_get_rotation_matrix
+	#define x_mdltransformcomponent_get_local_transform object_x_mdltransformcomponent_get_local_transform
+	#define x_mdltransform_create_global_transform object_x_mdltransform_create_global_transform
+	#define x_get_matrix_float4x4 object_x_get_matrix_float4x4
+	#define x_get_matrix_float4x3 object_x_get_matrix_float4x3
+	#define x_get_matrix_float3x3 object_x_get_matrix_float3x3
+	#define x_get_matrix_float2x2 object_x_get_matrix_float2x2
 #elif PREFIX == 2
 	#define theUltimateAnswer ar_theUltimateAnswer
 	#define useZLib           ar_useZLib
@@ -107,6 +114,13 @@
 	#define CtorChaining1     ar_CtorChaining1
 	#define ObjCExceptionTest ar_ObjCExceptionTest
 	#define ObjCProtocolClassTest ar_ObjCProtocolClassTest
+	#define x_mdltransform_get_rotation_matrix ar_x_mdltransform_get_rotation_matrix
+	#define x_mdltransformcomponent_get_local_transform ar_x_mdltransformcomponent_get_local_transform
+	#define x_mdltransform_create_global_transform ar_x_mdltransform_create_global_transform
+	#define x_get_matrix_float4x4 ar_x_get_matrix_float4x4
+	#define x_get_matrix_float4x3 ar_x_get_matrix_float4x3
+	#define x_get_matrix_float3x3 ar_x_get_matrix_float3x3
+	#define x_get_matrix_float2x2 ar_x_get_matrix_float2x2
 #else
 // keep original names
 #endif
