@@ -30,6 +30,8 @@ namespace XamCore.Metal {
 
 	delegate void MTLDrawablePresentedHandler (IMTLDrawable drawable);
 
+	delegate void MTLNewRenderPipelineStateWithReflectionCompletionHandler (IMTLRenderPipelineState renderPipelineState, MTLRenderPipelineReflection reflection, NSError error);
+
 	interface IMTLCommandEncoder {}
 	
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
@@ -448,7 +450,7 @@ namespace XamCore.Metal {
 		void Wait (IMTLFence fence);
 
 		[Mac (10,13, onlyOn64: true)]
-		[NoTV][NoiOS]
+		[iOS (11,0), NoTV]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -482,6 +484,13 @@ namespace XamCore.Metal {
 #endif
 		[Export ("useHeaps:count:")]
 		void UseHeaps (IMTLHeap[] heaps, nuint count);
+
+		[iOS (11,0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("setImageblockWidth:height:")]
+		void SetImageblock (nuint width, nuint height);
 	}
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
@@ -521,6 +530,13 @@ namespace XamCore.Metal {
 #endif
 		[Export ("staticThreadgroupMemoryLength")]
 		nuint StaticThreadgroupMemoryLength { get; }
+
+		[iOS (11,0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("imageblockMemoryLengthForDimensions:")]
+		nuint GetImageblockMemoryLength (MTLSize imageblockDimensions);
 	}
 
 	interface IMTLBlitCommandEncoder {}
@@ -905,6 +921,21 @@ namespace XamCore.Metal {
 		[Field ("MTLDeviceWasRemovedNotification")]
 		NSString DeviceWasRemoved { get; }
 #endif
+
+		[iOS (11,0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("newRenderPipelineStateWithTileDescriptor:options:reflection:error:")]
+		[return: NullAllowed]
+		IMTLRenderPipelineState CreateRenderPipelineState (MTLTileRenderPipelineDescriptor descriptor, MTLPipelineOption options, [NullAllowed] out MTLRenderPipelineReflection reflection, [NullAllowed] out NSError error);
+
+		[iOS (11,0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("newRenderPipelineStateWithTileDescriptor:options:completionHandler:")]
+		void CreateRenderPipelineState (MTLTileRenderPipelineDescriptor descriptor, MTLPipelineOption options, MTLNewRenderPipelineStateWithReflectionCompletionHandler completionHandler);
 	}
 
 	interface IMTLDrawable {}
@@ -1317,6 +1348,35 @@ namespace XamCore.Metal {
 
 		[Abstract, Export ("device")]
 		IMTLDevice Device { get; }
+
+		[iOS (11, 0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("maxTotalThreadsPerThreadgroup")]
+		nuint MaxTotalThreadsPerThreadgroup { get; }
+
+		[iOS (11, 0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("threadgroupSizeMatchesTileSize")]
+		bool ThreadgroupSizeMatchesTileSize { get; }
+
+		[iOS (11, 0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("imageblockSampleLength")]
+		nuint ImageblockSampleLength { get; }
+
+		[iOS (11,0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("imageblockMemoryLengthForDimensions:")]
+		nuint GetImageblockMemoryLength (MTLSize imageblockDimensions);
+
 	}
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
@@ -2088,6 +2148,104 @@ namespace XamCore.Metal {
 #endif
 		[Export ("useHeaps:count:")]
 		void UseHeaps (IMTLHeap[] heaps, nuint count);
+
+		[iOS (11, 0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("tileWidth")]
+		nuint TileWidth { get; }
+
+		[iOS (11, 0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("tileHeight")]
+		nuint TileHeight { get; }
+
+		[iOS (11, 0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("setTileBytes:length:atIndex:")]
+		void SetTileBytes (IntPtr /* void* */ bytes, nuint length, nuint index);
+
+		[iOS (11, 0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("setTileBuffer:offset:atIndex:")]
+		void SetTileBuffer ([NullAllowed] IMTLBuffer buffer, nuint offset, nuint index);
+
+		[iOS (11, 0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("setTileBufferOffset:atIndex:")]
+		void SetTileBufferOffset (nuint offset, nuint index);
+
+		[iOS (11, 0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("setTileBuffers:offsets:withRange:")]
+		void SetTileBuffers (IMTLBuffer[] buffers, IntPtr offsets, NSRange range);
+
+		[iOS (11, 0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("setTileTexture:atIndex:")]
+		void SetTileTexture ([NullAllowed] IMTLTexture texture, nuint index);
+
+		[iOS (11, 0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("setTileTextures:withRange:")]
+		void SetTileTextures (IMTLTexture[] textures, NSRange range);
+
+		[iOS (11, 0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("setTileSamplerState:atIndex:")]
+		void SetTileSamplerState ([NullAllowed] IMTLSamplerState sampler, nuint index);
+
+		[iOS (11, 0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("setTileSamplerStates:withRange:")]
+		void SetTileSamplerStates (IMTLSamplerState[] samplers, NSRange range);
+
+		[iOS (11, 0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("setTileSamplerState:lodMinClamp:lodMaxClamp:atIndex:")]
+		void SetTileSamplerState ([NullAllowed] IMTLSamplerState sampler, float lodMinClamp, float lodMaxClamp, nuint index);
+
+		[iOS (11, 0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("setTileSamplerStates:lodMinClamps:lodMaxClamps:withRange:")]
+		void SetTileSamplerStates (IMTLSamplerState[] samplers, IntPtr /* float[] */ lodMinClamps, IntPtr /* float[] */ lodMaxClamps, NSRange range);
+
+		[iOS (11, 0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("dispatchThreadsPerTile:")]
+		void DispatchThreadsPerTile (MTLSize threadsPerTile);
+
+		[iOS (11, 0), NoTV, NoMac, NoWatch]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("setThreadgroupMemoryLength:offset:atIndex:")]
+		void SetThreadgroupMemoryLength (nuint length, nuint offset, nuint index);
 	}
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
@@ -2138,6 +2296,10 @@ namespace XamCore.Metal {
 #else
 		NSObject [] FragmentArguments { get; }
 #endif
+
+		[iOS (11, 0), NoTV, NoMac, NoWatch]
+		[NullAllowed, Export ("tileArguments")]
+		MTLArgument[] TileArguments { get; }
 	}
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
@@ -2252,6 +2414,34 @@ namespace XamCore.Metal {
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
 		[Export ("getSamplePositions:count:")]
 		nuint GetSamplePositions ([NullAllowed] IntPtr positions, nuint count);
+
+		[iOS (11, 0), NoTV, NoWatch, NoMac]
+		[Export ("imageblockSampleLength")]
+		nuint ImageblockSampleLength { get; set; }
+
+		[iOS (11, 0), NoTV, NoWatch, NoMac]
+		[Export ("threadgroupMemoryLength")]
+		nuint ThreadgroupMemoryLength { get; set; }
+
+		[iOS (11, 0), NoTV, NoWatch, NoMac]
+		[Export ("tileWidth")]
+		nuint TileWidth { get; set; }
+
+		[iOS (11, 0), NoTV, NoWatch, NoMac]
+		[Export ("tileHeight")]
+		nuint TileHeight { get; set; }
+
+		[iOS (11, 0), NoTV, NoWatch, NoMac]
+		[Export ("defaultRasterSampleCount")]
+		nuint DefaultRasterSampleCount { get; set; }
+
+		[iOS (11, 0), NoTV, NoWatch, NoMac]
+		[Export ("renderTargetWidth")]
+		nuint RenderTargetWidth { get; set; }
+
+		[iOS (11, 0), NoTV, NoWatch, NoMac]
+		[Export ("renderTargetHeight")]
+		nuint RenderTargetHeight { get; set; }
 	}
 
 
@@ -2654,6 +2844,50 @@ namespace XamCore.Metal {
 		[Export ("newArgumentEncoderForBufferAtIndex:")]
 		[return: NullAllowed]
 		IMTLArgumentEncoder CreateArgumentEncoder (nuint index);
+	}
+
+	[iOS (11, 0), NoTV, NoMac, NoWatch]
+	[BaseType (typeof (NSObject))]
+	interface MTLTileRenderPipelineColorAttachmentDescriptor : NSCopying {
+		[Export ("pixelFormat", ArgumentSemantic.Assign)]
+		MTLPixelFormat PixelFormat { get; set; }
+	}
+
+	[iOS (11, 0), NoTV, NoMac, NoWatch]
+	[BaseType (typeof (NSObject))]
+	interface MTLTileRenderPipelineColorAttachmentDescriptorArray {
+		[Internal]
+		[Export ("objectAtIndexedSubscript:")]
+		MTLTileRenderPipelineColorAttachmentDescriptor GetObject (nuint attachmentIndex);
+
+		[Internal]
+		[Export ("setObject:atIndexedSubscript:")]
+		void SetObject (MTLTileRenderPipelineColorAttachmentDescriptor attachment, nuint attachmentIndex);
+	}
+
+	[iOS (11, 0), NoTV, NoMac, NoWatch]
+	[BaseType (typeof (NSObject))]
+	interface MTLTileRenderPipelineDescriptor : NSCopying {
+		[Export ("label")]
+		string Label { get; set; }
+
+		[Export ("tileFunction", ArgumentSemantic.Strong)]
+		IMTLFunction TileFunction { get; set; }
+
+		[Export ("rasterSampleCount")]
+		nuint RasterSampleCount { get; set; }
+
+		[Export ("colorAttachments")]
+		MTLTileRenderPipelineColorAttachmentDescriptorArray ColorAttachments { get; }
+
+		[Export ("threadgroupSizeMatchesTileSize")]
+		bool ThreadgroupSizeMatchesTileSize { get; set; }
+
+		[Export ("tileBuffers")]
+		MTLPipelineBufferDescriptorArray TileBuffers { get; }
+
+		[Export ("reset")]
+		void Reset ();
 	}
 }
 #endif

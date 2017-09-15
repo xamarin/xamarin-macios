@@ -421,6 +421,34 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "MTLTileRenderPipelineColorAttachmentDescriptor":
+				switch (selectorName) {
+				case "pixelFormat":
+				case "setPixelFormat:":
+					return true;
+				}
+				break;
+			case "MTLTileRenderPipelineDescriptor":
+				switch (selectorName) {
+				case "colorAttachments":
+				case "label":
+				case "setLabel:":
+				case "rasterSampleCount":
+				case "setRasterSampleCount:":
+				case "threadgroupSizeMatchesTileSize":
+				case "setThreadgroupSizeMatchesTileSize:":
+				case "tileBuffers":
+				case "tileFunction":
+				case "setTileFunction:":
+					return true;
+				}
+				break;
+			case "AVPlayerLooper": // This API got introduced in Xcode 8.0 binding but is not currently present nor in Xcode 8.3 or Xcode 9.0 needs research
+				switch (selectorName) {
+				case "isLoopingEnabled":
+					return true;
+				}
+				break;
 			case "NSQueryGenerationToken": // A test was added in monotouch tests to ensure the selector works
 				switch (selectorName) {
 				case "encodeWithCoder:":

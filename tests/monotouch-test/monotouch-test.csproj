@@ -686,6 +686,8 @@
     <Compile Include="FileProvider\NSFileProviderPageTest.cs" />
     <Compile Include="AVFoundation\AVPlayerLooperTest.cs" />
     <Compile Include="UIKit\UIPasteConfigurationSupportingTest.cs" />
+    <Compile Include="Metal\MTLTileRenderPipelineDescriptor.cs" />
+    <Compile Include="Metal\MTLTileRenderPipelineColorAttachmentDescriptorTests.cs" />
     <Compile Include="AVFoundation\AVDepthDataTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
