@@ -43,6 +43,14 @@ namespace XamCore.ImageIO {
 			Handle = handle;
 		}
 
+		[Preserve (Conditional = true)]
+		internal CGImageMetadata (IntPtr handle, bool owns)
+		{
+			Handle = handle;
+			if (!owns)
+				CFObject.CFRetain (Handle);
+		}
+
 		[DllImport (Constants.ImageIOLibrary)]
 		static extern /* CGImageMetadataRef __nullable */ IntPtr CGImageMetadataCreateFromXMPData (
 			/* CFDataRef __nonnull */ IntPtr data);

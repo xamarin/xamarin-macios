@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\x86\Debug</OutputPath>
-    <DefineConstants>__UNIFIED__;DEBUG;MONOMAC;XAMCORE_2_0</DefineConstants>
+    <DefineConstants>__UNIFIED__;DEBUG;MONOMAC;XAMCORE_2_0;TEST_BINDINGS_UNAVAILABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -38,7 +38,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\x86\Release</OutputPath>
-    <DefineConstants>__UNIFIED__;MONOMAC;XAMCORE_2_0</DefineConstants>
+    <DefineConstants>__UNIFIED__;MONOMAC;XAMCORE_2_0;TEST_BINDINGS_UNAVAILABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -584,9 +584,6 @@
     <Compile Include="..\monotouch-test\EventKit\AlarmTest.cs">
       <Link>EventKit\AlarmTest.cs</Link>
     </Compile>
-    <Compile Include="..\monotouch-test\EventKit\CalendarItemTest.cs">
-      <Link>EventKit\CalendarItemTest.cs</Link>
-    </Compile>
     <Compile Include="..\monotouch-test\EventKit\CalendarTest.cs">
       <Link>EventKit\CalendarTest.cs</Link>
     </Compile>
@@ -1053,6 +1050,24 @@
     <Compile Include="Unified45.cs" />
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Metal\HeapDescriptorTest.cs">
+      <Link>Metal\HeapDescriptorTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Metal\MTLArgumentDescriptorTest.cs">
+      <Link>Metal\MTLArgumentDescriptorTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Metal\MTLPipelineBufferDescriptorTests.cs">
+      <Link>Metal\MTLPipelineBufferDescriptorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Metal\MTLPointerTypeTests.cs">
+      <Link>Metal\MTLPointerTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Metal\MTLTextureReferenceType.cs">
+      <Link>Metal\MTLTextureReferenceType.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Metal\MTLDeviceTests.cs">
+      <Link>Metal\MTLDeviceTests.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

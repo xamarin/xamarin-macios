@@ -94,7 +94,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public struct ABMultiValueEntry<T>
 	{
 		ABMultiValue<T> self;
@@ -166,7 +166,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public class ABMultiValue<T> : INativeObject, IDisposable, IEnumerable<ABMultiValueEntry<T>>
 	{
 		IntPtr handle;
@@ -286,7 +286,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public class ABMutableMultiValue<T> : ABMultiValue<T>
 	{
 		internal ABMutableMultiValue (IntPtr handle)
@@ -331,7 +331,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public class ABMutableDateMultiValue : ABMutableMultiValue<NSDate> {
 		public ABMutableDateMultiValue ()
 			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiDateTime))
@@ -339,7 +339,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public class ABMutableDictionaryMultiValue : ABMutableMultiValue<NSDictionary> {
 		public ABMutableDictionaryMultiValue ()
 			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiDictionary))
@@ -347,7 +347,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public class ABMutableStringMultiValue : ABMutableMultiValue<string> {
 		public ABMutableStringMultiValue ()
 			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiString), 

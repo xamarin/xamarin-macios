@@ -24,6 +24,7 @@ namespace XamCore.OpenGLES {
 
 		[iOS (6,0)]
 		[Export ("debugLabel")]
+		[NullAllowed]
 		string DebugLabel { get; set; }
 	}
 
@@ -41,6 +42,7 @@ namespace XamCore.OpenGLES {
 		bool SetCurrentContext([NullAllowed] EAGLContext context);
 
 		[Static, Export("currentContext")]
+		[NullAllowed]
 		EAGLContext CurrentContext { get; }
 
 		[Export("API")]
@@ -51,6 +53,7 @@ namespace XamCore.OpenGLES {
 
 		[iOS (6,0)]
 		[Export ("debugLabel")]
+		[NullAllowed]
 		string DebugLabel { get; set; }
 
 		//
@@ -63,10 +66,12 @@ namespace XamCore.OpenGLES {
 		[Export ("presentRenderbuffer:")]
 		bool PresentRenderBuffer (nuint target);
 
+		[iOS (10,0)][TV (10,0)]
 		[Internal]
 		[Export ("presentRenderbuffer:atTime:")]
 		bool _PresentRenderbufferAtTime (nuint target, double presentationTime);
 
+		[iOS (10,3)][TV (10,2)]
 		[Internal]
 		[Export ("presentRenderbuffer:afterMinimumDuration:")]
 		bool _PresentRenderbufferAfterMinimumDuration (nuint target, double duration);
@@ -74,6 +79,13 @@ namespace XamCore.OpenGLES {
 		[Since (7,1)]
 		[Export ("multiThreaded")]
 		bool IsMultiThreaded { [Bind ("isMultiThreaded")] get; set; }
+
+		// IOSurface (EAGLContext)
+
+		[iOS (11,0)]
+		[TV (11,0)]
+		[Export ("texImageIOSurface:target:internalFormat:width:height:format:type:plane:")]
+		bool TexImage (IOSurface.IOSurface ioSurface, nuint target, nuint internalFormat, uint width, uint height, nuint format, nuint type, uint plane);
 	}
 
 	[Protocol]

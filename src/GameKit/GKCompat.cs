@@ -10,7 +10,7 @@ namespace XamCore.GameKit {
 	public partial class GKMatchRequest {
 		
 		[iOS (8,0), Mac (10,10)]
-		[Obsolete ("Use RecipientResponseHandler property")]
+		[Obsolete ("Use 'RecipientResponseHandler' property.")]
 		public virtual void SetRecipientResponseHandler (Action<GKPlayer, GKInviteRecipientResponse> handler)
 		{
 			RecipientResponseHandler = handler;
@@ -19,7 +19,7 @@ namespace XamCore.GameKit {
 
 	public partial class GKMatchmaker {
 		
-		[Obsolete ("Use InviteHandler property")]
+		[Obsolete ("Use 'InviteHandler' property.")]
 		public virtual void SetInviteHandler (GKInviteHandler handler)
 		{
 			InviteHandler = handler;

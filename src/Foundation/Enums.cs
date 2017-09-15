@@ -116,4 +116,13 @@ namespace XamCore.Foundation {
 		[Field ("NSStringTransformStripDiacritics")]
 		StripDiacritics,
 	}
+
+	[NoWatch, NoTV, NoMac, iOS (11, 0)]
+	[Native]
+	public enum NSUrlSessionMultipathServiceType : nint {
+		None = 0,
+		Handover = 1,
+		Interactive = 2,
+		Aggregate = 3,
+	}
 }

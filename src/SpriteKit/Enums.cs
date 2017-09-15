@@ -183,4 +183,14 @@ namespace XamCore.SpriteKit {
 		LowerLeftCorner = Up | Right | LowerRight | Down | LowerLeft | Left | UpperLeft,
 		UpperLeftCorner = Up | UpperRight | Right | Down | LowerLeft | Left | UpperLeft,
 	}
+
+	[NoWatch]
+	[NoMac]
+	[TV (11,0), iOS (11,0)]
+	[Native]
+	public enum SKNodeFocusBehavior : nint {
+		None = 0,
+		Occluding,
+		Focusable,
+	}
 }

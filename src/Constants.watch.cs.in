@@ -42,6 +42,11 @@ namespace ObjCRuntime {
 
 		// WatchOS 3.2
 		public const string IntentsLibrary = "/System/Library/Frameworks/Intents.framework/Intents";
-	
+
+		// WatchOS 4.0
+		public const string CoreBluetoothLibrary = "/System/Library/Frameworks/CoreBluetooth.framework/CoreBluetooth";
+		public const string CoreMLLibrary = "/System/Library/Frameworks/CoreML.framework/CoreML";	
+		public const string CoreVideoLibrary = "/System/Library/Frameworks/CoreVideo.framework/CoreVideo";
+		public const string VisionLibrary = "/System/Library/Frameworks/Vision.framework/Vision";
 	}
 }

@@ -157,8 +157,8 @@ namespace xharness
 		{
 			var pids = new List<int> ();
 			GetChildrenPS (log, pids, pid);
-			log.WriteLine ($"Pids to kill: {string.Join (", ", pids.Select ((v) => v.ToString ()).ToArray ())}");
 			if (diagnostics) {
+				log.WriteLine ($"Pids to kill: {string.Join (", ", pids.Select ((v) => v.ToString ()).ToArray ())}");
 				using (var ps = new Process ()) {
 					log.WriteLine ("Writing process list:");
 					ps.StartInfo.FileName = "ps";

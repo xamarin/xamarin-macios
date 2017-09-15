@@ -135,16 +135,7 @@ namespace MonoTouchFixtures.ModelIO {
 				Assert.IsNotNull (obj, "obj");
 				Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (1.5f, 0, 1.5f), MinBounds = new Vector3 (-1.5f, 0, -1.5f) }, obj.BoundingBox, "BoundingBox");
 				Assert.AreEqual (1, obj.Submeshes.Count, "Submeshes Count");
-#if MONOMAC
-				var vb = 31;
-#else
-				int vb = 1;
-				if (TestRuntime.CheckXcodeVersion (8, 2))
-					vb = 31;
-				else if (TestRuntime.CheckXcodeVersion (8, 0))
-					vb = 1;
-#endif
-				Assert.AreEqual (vb, obj.VertexBuffers.Length, "VertexBuffers Count");
+				Assert.That (obj.VertexBuffers.Length, Is.GreaterThanOrEqualTo (1), "VertexBuffers Count");
 				Assert.AreEqual (16, obj.VertexCount, "VertexCount");
 				Assert.AreEqual (31, obj.VertexDescriptor.Attributes.Count, "VertexDescriptor Attributes Count");
 				Assert.AreEqual (31, obj.VertexDescriptor.Layouts.Count, "VertexDescriptor Layouts Count");
@@ -176,19 +167,16 @@ namespace MonoTouchFixtures.ModelIO {
 				Assert.IsNotNull (obj, "obj");
 #if MONOMAC
 				Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.866025448f, 0.5f, 1f), MinBounds = new Vector3 (-0.866025388f, -0.5f, -0.5f) }, obj.BoundingBox, "BoundingBox");
-				Assert.AreEqual (31, obj.VertexBuffers.Length, "VertexBuffers Count");
 #else
 				if (TestRuntime.CheckXcodeVersion (8, 2)) {
 					Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.866025448f, 0.5f, 1f), MinBounds = new Vector3 (-0.866025388f, -0.5f, -0.5f) }, obj.BoundingBox, "BoundingBox");
-					Assert.AreEqual (31, obj.VertexBuffers.Length, "VertexBuffers Count");
 				} else if (TestRuntime.CheckXcodeVersion (8, 0)) {
 					Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.866025448f, 1.0f, 1f), MinBounds = new Vector3 (-0.866025388f, -1.0f, -0.5f) }, obj.BoundingBox, "BoundingBox");
-					Assert.AreEqual (3, obj.VertexBuffers.Length, "VertexBuffers Count");
 				} else {
 					Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (1f, 0.5f, 1f), MinBounds = new Vector3 (-0.866025388f, -0.5f, -0.866025388f) }, obj.BoundingBox, "BoundingBox");
-					Assert.AreEqual (1, obj.VertexBuffers.Length, "VertexBuffers Count");
 				}
 #endif
+				Assert.That (obj.VertexBuffers.Length, Is.GreaterThanOrEqualTo (1), "VertexBuffers Count");
 				Assert.AreEqual (1, obj.Submeshes.Count, "Submeshes Count");
 				Assert.AreEqual (18, obj.VertexCount, "VertexCount");
 				Assert.AreEqual (31, obj.VertexDescriptor.Attributes.Count, "VertexDescriptor Attributes Count");
@@ -279,7 +267,7 @@ namespace MonoTouchFixtures.ModelIO {
 				Assert.IsNotNull (obj, "obj");
 				Assert.That (obj.VertexCount, Is.GreaterThanOrEqualTo (122), "VertexCount");
 				Assert.AreEqual (1, obj.Submeshes.Count, "Submeshes Count");
-				Assert.That (obj.VertexBuffers.Length, Is.GreaterThanOrEqualTo (3), "VertexBuffers Count");
+				Assert.That (obj.VertexBuffers.Length, Is.GreaterThanOrEqualTo (1), "VertexBuffers Count");
 				Assert.AreEqual (31, obj.VertexDescriptor.Attributes.Count, "VertexDescriptor Attributes Count");
 				Assert.AreEqual (31, obj.VertexDescriptor.Layouts.Count, "VertexDescriptor Layouts Count");
 			}
@@ -296,7 +284,7 @@ namespace MonoTouchFixtures.ModelIO {
 			using (var obj = MDLMesh.CreateCone (V3, V2i, MDLGeometryType.Triangles, true, true, null)) {
 				Assert.IsNotNull (obj, "obj");
 				Assert.AreEqual (1, obj.Submeshes.Count, "Submeshes Count");
-				Assert.That (obj.VertexBuffers.Length, Is.GreaterThanOrEqualTo (3), "VertexBuffers Count");
+				Assert.That (obj.VertexBuffers.Length, Is.GreaterThanOrEqualTo (1), "VertexBuffers Count");
 				Assert.AreEqual (36, obj.VertexCount, "VertexCount");
 				Assert.AreEqual (31, obj.VertexDescriptor.Attributes.Count, "VertexDescriptor Attributes Count");
 				Assert.AreEqual (31, obj.VertexDescriptor.Layouts.Count, "VertexDescriptor Layouts Count");
@@ -314,7 +302,7 @@ namespace MonoTouchFixtures.ModelIO {
 			using (var obj = MDLMesh.CreatePlane (V3, V2i, MDLGeometryType.Triangles, null)) {
 				Assert.IsNotNull (obj, "obj");
 				Assert.AreEqual (1, obj.Submeshes.Count, "Submeshes Count");
-				Assert.That (obj.VertexBuffers.Length, Is.GreaterThanOrEqualTo (3), "VertexBuffers Count");
+				Assert.That (obj.VertexBuffers.Length, Is.GreaterThanOrEqualTo (1), "VertexBuffers Count");
 				Assert.AreEqual (30, obj.VertexCount, "VertexCount");
 				Assert.AreEqual (31, obj.VertexDescriptor.Attributes.Count, "VertexDescriptor Attributes Count");
 				Assert.AreEqual (31, obj.VertexDescriptor.Layouts.Count, "VertexDescriptor Layouts Count");

@@ -2,6 +2,7 @@
 #define __BINDINGS_H__
 
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
 #include <objc/objc.h>
 #include <objc/runtime.h>
 #include <objc/message.h>
@@ -82,6 +83,11 @@ typedef __attribute__((__ext_vector_type__(4))) float vector_float4;
 typedef struct { vector_float2 columns[2]; } matrix_float2x2;
 typedef struct { vector_float3 columns[3]; } matrix_float3x3;
 typedef struct { vector_float4 columns[4]; } matrix_float4x4;
+typedef struct { vector_float3 columns[4]; } matrix_float4x3;
+
+typedef struct { vector_double4 columns[4]; } matrix_double4x4;
+
+typedef struct { vector_float4 vector; } simd_quatf;
 
 typedef struct {
     vector_float3 maxBounds;
@@ -101,6 +107,20 @@ typedef struct {
 typedef struct {
     vector_float3 points[3];
 } GKTriangle;
+
+typedef struct
+{
+    NSUInteger      numberOfHistogramEntries;
+    BOOL            histogramForAlpha;
+    vector_float4   minPixelValue;
+    vector_float4   maxPixelValue;
+} MPSImageHistogramInfo;
+
+typedef vector_int4 MDLVoxelIndex;
+typedef struct {
+    MDLVoxelIndex minimumExtent;
+    MDLVoxelIndex maximumExtent;
+} MDLVoxelIndexExtent;
 
 /*
  * iOS has a vector type (vector_float3) which can't be expressed
@@ -141,12 +161,37 @@ struct Matrix2f {
 	Vector2f columns [2];
 };
 
+struct NMatrix2 {
+	Vector2f columns [2];
+};
+
 struct Matrix3f {
 	Vector3f columns [3];
 };
 
+struct NMatrix3 {
+	Vector4f columns [3];
+};
+
 struct Matrix4f {
 	Vector4f columns [4];
+};
+
+struct NMatrix4 {
+	Vector4f columns [4];
+};
+
+struct NMatrix4d {
+	Vector4d columns [4];
+};
+
+struct NMatrix4x3 {
+	// Use Vector4f here, since the managed version has padding to match accordingly.
+	Vector4f columns [4];
+};
+
+struct QuatF {
+	Vector4f vector;
 };
 
 struct MDLAxisAlignedBoundingBoxWrapper {
@@ -168,6 +213,32 @@ struct GKTriangleWrapper {
 	Vector3f points [3];
 };
 
+struct MPSImageHistogramInfoWrapper {
+	NSUInteger numberOfHistogramEntries;
+	BOOL histogramForAlpha;
+	// The minPixelValue field starts at offset 16, but we can't use
+	// __attribute__ ((aligned (16))), because that will make clang align the
+	// entire struct on a 16-byte boundary, which doesn't match how we've
+	// defined it in managed code (explicit layout, but no specific alignment).
+	// So we need to manually pad the struct to match the managed definition.
+#if defined (__x86_64__) || defined (__arm64__)
+	uint8_t dummy[7];
+#else
+	uint8_t dummy[11];
+#endif
+	Vector4f minPixelValue;
+	Vector4f maxPixelValue;
+};
+
+typedef Vector4i MDLVoxelIndexWrapper;
+
+struct MDLVoxelIndexExtentWrapper {
+    MDLVoxelIndexWrapper minimumExtent;
+    MDLVoxelIndexWrapper maximumExtent;
+};
+
+static_assert (sizeof (MPSImageHistogramInfoWrapper) == sizeof (MPSImageHistogramInfo), "Sizes aren't equal");
+
 struct Vector4f  xamarin_vector_float3__Vector4_objc_msgSend (id self, SEL sel);
 void             xamarin_vector_float3__Vector4_objc_msgSend_stret (struct Vector4f *v4, id self, SEL sel);
 void             xamarin_vector_float3__void_objc_msgSend_Vector4 (id self, SEL sel, struct Vector4f p0);
@@ -185,6 +256,8 @@ void             xamarin_vector_float3__Vector3_objc_msgSendSuper_stret (struct 
 void             xamarin_vector_float3__void_objc_msgSendSuper_Vector3 (struct objc_super *super, SEL sel, struct Vector3f p0);
 void             xamarin_vector_float3__Vector3_objc_msgSendSuper_stret_Vector3 (struct Vector3f *v3, struct objc_super *super, SEL sel, struct Vector3f p0);
 struct Vector3f  xamarin_vector_float3__Vector3_objc_msgSendSuper_Vector3 (struct objc_super *super, SEL sel, struct Vector3f p0);
+CGPoint          xamarin_CGPoint__VNNormalizedFaceBoundingBoxPointForLandmarkPoint_Vector2_CGRect_nuint_nuint_string (struct Vector2f faceLandmarkPoint, CGRect faceBoundingBox, xm_nuint_t imageWidth, xm_nuint_t imageHeight, const char **error_msg);
+CGPoint          xamarin_CGPoint__VNImagePointForFaceLandmarkPoint_Vector2_CGRect_nuint_nuint_string (struct Vector2f faceLandmarkPoint, CGRect faceBoundingBox, xm_nuint_t imageWidth, xm_nuint_t imageHeight, const char **error_msg);
 
 #ifndef XAMCORE_2_0
 #ifdef MONOMAC
