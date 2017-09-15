@@ -487,7 +487,7 @@ namespace xharness
 			case "FILE":
 				var fn = listener_log.FullPath + ".tmp";
 				listener = new SimpleFileListener (fn);
-				args.Append (" -setenv=NUNIT_LOG_FILE=").Append (Harness.Quote (fn));
+				args.Append (" -setenv=NUNIT_LOG_FILE=").Append (StringUtils.Quote (fn));
 				break;
 			case "HTTP":
 				listener = new SimpleHttpListener ();
