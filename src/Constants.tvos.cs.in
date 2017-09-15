@@ -73,16 +73,6 @@ namespace ObjCRuntime {
 		public const string DeviceCheckLibrary = "/System/Library/Frameworks/DeviceCheck.framework/DeviceCheck";
 		public const string CoreMLLibrary = "/System/Library/Frameworks/CoreML.framework/CoreML";
 		public const string VisionLibrary = "/System/Library/Frameworks/Vision.framework/Vision";
-		public static string IOSurfaceLibrary {
-			get {
-// Disabled because of bug #59201
-// #if !COREBUILD && !MTOUCH
-// // Sidenote: this is in /System/Library/Frameworks/IOSurface.framework/IOSurface in macOS 10.12.
-// 				if (!XamCore.UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
-// 					return "/System/Library/PrivateFrameworks/IOSurface.framework/IOSurface";
-// #endif
-				return "/System/Library/Frameworks/IOSurface.framework/IOSurface";
-			}
-		}
+		public const string IOSurfaceLibrary = "/System/Library/Frameworks/IOSurface.framework/IOSurface";
 	}
 }
