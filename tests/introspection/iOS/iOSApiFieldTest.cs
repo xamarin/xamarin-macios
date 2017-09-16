@@ -53,9 +53,15 @@ namespace Introspection {
 			case "MonoTouch.MetalKit":
 			case "MetalPerformanceShaders":
 			case "MonoTouch.MetalPerformanceShaders":
+			case "CoreNFC": // Only available on device
+			case "DeviceCheck": // Only available on device
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;
+			case "IOSurface":
+				// Available in the simulator starting with iOS 11
+				return Runtime.Arch == Arch.SIMULATOR && !TestRuntime.CheckXcodeVersion (9, 0);
+
 			}
 
 			switch (p.Name) {
@@ -104,8 +110,13 @@ namespace Introspection {
 			}
 		}
 
-		protected override bool Skip (string constantName)
+		protected override bool Skip (string constantName, string libraryName)
 		{
+			switch (libraryName) {
+			case "IOSurface":
+				return Runtime.Arch == Arch.SIMULATOR && !TestRuntime.CheckXcodeVersion (9, 0);
+			}
+
 			switch (constantName) {
 			// grep ImageIO binary shows those symbols are not part of the binary
 			// that match older results (nil) when loading them (see above)
@@ -134,6 +145,7 @@ namespace Introspection {
 			case "MTKTextureLoaderOptionTextureCPUCacheMode":
 			case "MTKModelErrorDomain":
 			case "MTKModelErrorKey":
+			case "NFCISO15693TagResponseErrorKey": // Not in simulator since no NFC on it
 				return Runtime.Arch == Arch.SIMULATOR;
 			default:
 				return false;

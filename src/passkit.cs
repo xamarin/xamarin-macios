@@ -8,6 +8,7 @@
 //
 
 using System;
+using System.ComponentModel;
 using XamCore.Contacts;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
@@ -42,8 +43,8 @@ namespace XamCore.PassKit {
 #endif // XAMCORE_2_0
 
 		[iOS (9,2)]
-		[Deprecated (PlatformName.iOS, 10,3, message:"Use SubLocality and SubAdministrativeArea on PostalAddress instead")]
-		[Deprecated (PlatformName.WatchOS, 3,2, message:"Use SubLocality and SubAdministrativeArea on PostalAddress instead")]
+		[Deprecated (PlatformName.iOS, 10,3, message:"Use 'SubLocality' and 'SubAdministrativeArea' on 'PostalAddress' instead.")]
+		[Deprecated (PlatformName.WatchOS, 3,2, message:"Use 'SubLocality' and 'SubAdministrativeArea' on 'PostalAddress' instead.")]
 		[NullAllowed, Export ("supplementarySubLocality", ArgumentSemantic.Strong)]
 		string SupplementarySubLocality { get; set; }
 	}
@@ -89,7 +90,7 @@ namespace XamCore.PassKit {
 
 		[iOS (8,0)]
 		[Static,Export ("isPaymentPassActivationAvailable")]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "On iOS 9 and higher, use the library's instance IsLibraryPaymentPassActivationAvailable property instead")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the library's instance 'IsLibraryPaymentPassActivationAvailable' property instead.")]
 		bool IsPaymentPassActivationAvailable { get; }
 
 		[iOS (9,0)]
@@ -179,12 +180,12 @@ namespace XamCore.PassKit {
 
 		[NoWatch]
 		[Export ("billingAddress", ArgumentSemantic.Assign)]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "On iOS 9 and higher, use BillingContact instead")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'BillingContact' instead.")]
 		ABRecord BillingAddress { get; }
 
 		[NoWatch]
 		[Export ("shippingAddress", ArgumentSemantic.Assign)]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "On iOS 9 and higher, use ShippingContact instead")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'ShippingContact' instead.")]
 		ABRecord ShippingAddress { get; }
 
 		[Export ("shippingMethod", ArgumentSemantic.Strong)]
@@ -211,9 +212,13 @@ namespace XamCore.PassKit {
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface PKPaymentAuthorizationViewControllerDelegate {
+		
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidAuthorizePayment2' instead.")]
 		[Export ("paymentAuthorizationViewController:didAuthorizePayment:completion:")]
 		[EventArgs ("PKPaymentAuthorization")]
+#if !XAMCORE_4_0
 		[Abstract]
+#endif
 		void DidAuthorizePayment (PKPaymentAuthorizationViewController controller, PKPayment payment, 
 #if XAMCORE_2_0
 			Action<PKPaymentAuthorizationStatus> completion);
@@ -221,13 +226,24 @@ namespace XamCore.PassKit {
 			PKPaymentAuthorizationHandler completion);
 #endif
 
+		[iOS (11,0)]
+		[Export ("paymentAuthorizationViewController:didAuthorizePayment:handler:")]
+		[EventArgs ("PKPaymentAuthorizationResult")]
+		void DidAuthorizePayment2 (PKPaymentAuthorizationViewController controller, PKPayment payment, Action<PKPaymentAuthorizationResult> completion);
+
 		[Export ("paymentAuthorizationViewControllerDidFinish:")]
 		[Abstract]
 		void PaymentAuthorizationViewControllerDidFinish (PKPaymentAuthorizationViewController controller);
 
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidSelectShippingMethod2' instead.")]
 		[Export ("paymentAuthorizationViewController:didSelectShippingMethod:completion:")]
 		[EventArgs ("PKPaymentShippingMethodSelected")]
 		void DidSelectShippingMethod (PKPaymentAuthorizationViewController controller, PKShippingMethod shippingMethod, PKPaymentShippingMethodSelected completion);
+
+		[iOS (11,0)]
+		[Export ("paymentAuthorizationViewController:didSelectShippingMethod:handler:")]
+		[EventArgs ("PKPaymentRequestShippingMethodUpdate")]
+		void DidSelectShippingMethod2 (PKPaymentAuthorizationViewController controller, PKShippingMethod shippingMethod, Action<PKPaymentRequestShippingMethodUpdate> completion);
 
 		[Export ("paymentAuthorizationViewController:didSelectShippingAddress:completion:")]
 		[EventArgs ("PKPaymentShippingAddressSelected")]
@@ -241,14 +257,26 @@ namespace XamCore.PassKit {
 		void WillAuthorizePayment (PKPaymentAuthorizationViewController controller);
 
 		[iOS (9,0)]
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidSelectShippingContact' instead.")]
 		[Export ("paymentAuthorizationViewController:didSelectShippingContact:completion:")]
 		[EventArgs ("PKPaymentSelectedContact")]
 		void DidSelectShippingContact (PKPaymentAuthorizationViewController controller, PKContact contact, PKPaymentShippingAddressSelected completion);
 
+		[iOS (11,0)]
+		[Export ("paymentAuthorizationViewController:didSelectShippingContact:handler:")]
+		[EventArgs ("PKPaymentRequestShippingContactUpdate")]
+		void DidSelectShippingContact2 (PKPaymentAuthorizationViewController controller, PKContact contact, Action<PKPaymentRequestShippingContactUpdate> completion);
+
 		[iOS (9,0)]
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidSelectPaymentMethod2' instead.")]
 		[Export ("paymentAuthorizationViewController:didSelectPaymentMethod:completion:")]
 		[EventArgs ("PKPaymentMethodSelected")]
 		void DidSelectPaymentMethod (PKPaymentAuthorizationViewController controller, PKPaymentMethod paymentMethod, Action<PKPaymentSummaryItem[]> completion);
+
+		[iOS (11,0)]
+		[Export ("paymentAuthorizationViewController:didSelectPaymentMethod:handler:")]
+		[EventArgs ("PKPaymentRequestPaymentMethodUpdate")]
+		void DidSelectPaymentMethod2 (PKPaymentAuthorizationViewController controller, PKPaymentMethod paymentMethod, Action<PKPaymentRequestPaymentMethodUpdate> completion);
 	}
 
 	[iOS (8,0)]
@@ -345,22 +373,26 @@ namespace XamCore.PassKit {
 		[Export ("currencyCode")]
 		string CurrencyCode { get; set; }
 
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'RequiredBillingContactFields' instead.")]
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'RequiredBillingContactFields' instead.")]
 		[Export ("requiredBillingAddressFields", ArgumentSemantic.UnsafeUnretained)]
 		PKAddressField RequiredBillingAddressFields { get; set; }
 
 		[NoWatch]
 		[NullAllowed] // by default this property is null
 		[Export ("billingAddress", ArgumentSemantic.Assign)]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "On iOS 9 and higher, use BillingContact instead")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'BillingContact' instead.")]
 		ABRecord BillingAddress { get; set; }
 
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'RequiredShippingContactFields' instead.")]
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'RequiredShippingContactFields' instead.")]
 		[Export ("requiredShippingAddressFields", ArgumentSemantic.UnsafeUnretained)]
 		PKAddressField RequiredShippingAddressFields { get; set; }
 
 		[NoWatch]
 		[NullAllowed] // by default this property is null
 		[Export ("shippingAddress", ArgumentSemantic.Assign)]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "On iOS 9 and higher, use ShippingContact instead")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'ShippingContact' instead.")]
 		ABRecord ShippingAddress { get; set; }
 
 		[NullAllowed] // by default this property is null
@@ -387,6 +419,81 @@ namespace XamCore.PassKit {
 		[Static]
 		[Export ("availableNetworks")]
 		NSString[] AvailableNetworks { get; }
+
+		[Watch (4,0)][iOS (11,0)]
+		[Export ("requiredBillingContactFields", ArgumentSemantic.Strong)]
+		NSSet WeakRequiredBillingContactFields { get; set; }
+
+		[Watch (4,0)][iOS (11,0)]
+		[Export ("requiredShippingContactFields", ArgumentSemantic.Strong)]
+		NSSet WeakRequiredShippingContactFields { get; set; }
+
+		[Watch (4,0)][iOS (11,0)]
+		[NullAllowed, Export ("supportedCountries", ArgumentSemantic.Copy)]
+		NSSet<NSString> SupportedCountries { get; set; }
+
+		[Watch (4,0)][iOS (11,0)]
+		[Static]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("paymentContactInvalidErrorWithContactField:localizedDescription:")]
+		NSError CreatePaymentContactInvalidError (NSString field, [NullAllowed] string localizedDescription);
+
+		[Watch (4,0)][iOS (11,0)]
+		[Static]
+		[Wrap ("CreatePaymentContactInvalidError (contactField.GetConstant (), localizedDescription)")]
+		NSError CreatePaymentContactInvalidError (PKContactFields contactField, [NullAllowed] string localizedDescription);
+
+		[Watch (4,0)][iOS (11,0)]
+		[Static]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("paymentShippingAddressInvalidErrorWithKey:localizedDescription:")]
+		NSError CreatePaymentShippingAddressInvalidError (NSString postalAddressKey, [NullAllowed] string localizedDescription);
+
+#if XAMCORE_2_0
+		[Watch (4,0)][iOS (11,0)]
+		[Static]
+		[Wrap ("CreatePaymentShippingAddressInvalidError (postalAddress.GetConstant (), localizedDescription)")]
+		NSError CreatePaymentShippingAddressInvalidError (CNPostalAddressKeyOption postalAddress, [NullAllowed] string localizedDescription);
+#endif
+
+		[Watch (4,0)][iOS (11,0)]
+		[Static]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("paymentBillingAddressInvalidErrorWithKey:localizedDescription:")]
+		NSError CreatePaymentBillingAddressInvalidError (NSString postalAddressKey, [NullAllowed] string localizedDescription);
+
+#if XAMCORE_2_0
+		[Watch (4,0)][iOS (11,0)]
+		[Static]
+		[Wrap ("CreatePaymentBillingAddressInvalidError (postalAddress.GetConstant (), localizedDescription)")]
+		NSError CreatePaymentBillingAddressInvalidError (CNPostalAddressKeyOption postalAddress, [NullAllowed] string localizedDescription);
+#endif
+
+		[Watch (4,0)][iOS (11,0)]
+		[Static]
+		[Export ("paymentShippingAddressUnserviceableErrorWithLocalizedDescription:")]
+		NSError CreatePaymentShippingAddressUnserviceableError ([NullAllowed] string localizedDescription);
+	}
+
+	[Watch (4,0)][iOS (11,0)]
+	[Flags]
+	enum PKContactFields {
+		None = 0,
+
+		[Field ("PKContactFieldPostalAddress")]
+		PostalAddress = 1 << 0,
+
+		[Field ("PKContactFieldEmailAddress")]
+		EmailAddress = 1 << 1,
+
+		[Field ("PKContactFieldPhoneNumber")]
+		PhoneNumber = 1 << 2,
+
+		[Field ("PKContactFieldName")]
+		Name = 1 << 3,
+
+		[Field ("PKContactFieldPhoneticName")]
+		PhoneticName = 1 << 4,
 	}
 
 	[Watch (3,0)]
@@ -396,12 +503,12 @@ namespace XamCore.PassKit {
 
 		[NoWatch]
 		[Export ("paymentInstrumentName", ArgumentSemantic.Copy)]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "On iOS 9 and higher, use PaymentMethod instead")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'PaymentMethod' instead.")]
 		string PaymentInstrumentName { get; }
 
 		[NoWatch]
 		[Export ("paymentNetwork")]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "On iOS 9 and higher, use PaymentMethod instead")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'PaymentMethod' instead.")]
 		string PaymentNetwork { get; }
 
 		[Export ("transactionIdentifier")]
@@ -594,8 +701,10 @@ namespace XamCore.PassKit {
 		[Export ("localizedValueForFieldKey:")]
 		NSObject GetLocalizedValue (NSString key); // TODO: Should be enum for PKPassLibraryUserInfoKey
 
+#if !XAMCORE_4_0
 		[Field ("PKPassKitErrorDomain")]
 		NSString ErrorDomain { get; }
+#endif
 
 		[Since (7,0)]
 		[Export ("userInfo", ArgumentSemantic.Copy)]
@@ -670,8 +779,14 @@ namespace XamCore.PassKit {
 		NSString Amex { get; }
 
 		[iOS (10,3), Watch (3,2)]
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'CarteBancaires' instead.")]
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'CarteBancaires' instead.")]
 		[Field ("PKPaymentNetworkCarteBancaire")]
 		NSString CarteBancaire { get; }
+
+		[iOS (11,0)][Watch (4,0)]
+		[Field ("PKPaymentNetworkCarteBancaires")]
+		NSString CarteBancaires { get; }
 
 		[iOS (9,2)]
 		[Watch (2,2)]
@@ -801,9 +916,15 @@ namespace XamCore.PassKit {
 	[BaseType (typeof (NSObject))]
 	interface PKPaymentAuthorizationControllerDelegate {
 
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'DidAuthorizePayment' overload with the 'Action<PKPaymentAuthorizationResult>' parameter instead.")]
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidAuthorizePayment' overload with the 'Action<PKPaymentAuthorizationResult>' parameter instead.")]
 		[Abstract]
 		[Export ("paymentAuthorizationController:didAuthorizePayment:completion:")]
 		void DidAuthorizePayment (PKPaymentAuthorizationController controller, PKPayment payment, Action<PKPaymentAuthorizationStatus> completion);
+
+		[Watch (4,0)][iOS (11,0)]
+		[Export ("paymentAuthorizationController:didAuthorizePayment:handler:")]
+		void DidAuthorizePayment (PKPaymentAuthorizationController controller, PKPayment payment, Action<PKPaymentAuthorizationResult> completion);
 
 		[Abstract]
 		[Export ("paymentAuthorizationControllerDidFinish:")]
@@ -812,14 +933,32 @@ namespace XamCore.PassKit {
 		[Export ("paymentAuthorizationControllerWillAuthorizePayment:")]
 		void WillAuthorizePayment (PKPaymentAuthorizationController controller);
 
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'DidSelectShippingMethod' overload with the 'Action<PKPaymentRequestPaymentMethodUpdate>' parameter instead.")]
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidSelectShippingMethod' overload with the 'Action<PKPaymentRequestPaymentMethodUpdate>' parameter instead.")]
 		[Export ("paymentAuthorizationController:didSelectShippingMethod:completion:")]
 		void DidSelectShippingMethod (PKPaymentAuthorizationController controller, PKShippingMethod shippingMethod, Action<PKPaymentAuthorizationStatus, PKPaymentSummaryItem[]> completion);
 
+		[Watch (4,0)][iOS (11,0)]
+		[Export ("paymentAuthorizationController:didSelectShippingMethod:handler:")]
+		void DidSelectShippingMethod (PKPaymentAuthorizationController controller, PKPaymentMethod paymentMethod, Action<PKPaymentRequestPaymentMethodUpdate> completion);
+
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'DidSelectShippingContact' overload with the 'Action<PKPaymentRequestShippingContactUpdate>' parameter instead.")]
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidSelectShippingContact' overload with the 'Action<PKPaymentRequestShippingContactUpdate>' parameter instead.")]
 		[Export ("paymentAuthorizationController:didSelectShippingContact:completion:")]
 		void DidSelectShippingContact (PKPaymentAuthorizationController controller, PKContact contact, Action<PKPaymentAuthorizationStatus, PKShippingMethod[], PKPaymentSummaryItem[]> completion);
 
+		[Watch (4,0)][iOS (11,0)]
+		[Export ("paymentAuthorizationController:didSelectShippingContact:handler:")]
+		void DidSelectShippingContact (PKPaymentAuthorizationController controller, PKContact contact, Action<PKPaymentRequestShippingContactUpdate> completion);
+
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'DidSelectPaymentMethod' overload with the 'Action<PKPaymentRequestPaymentMethodUpdate>' parameter instead.")]
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidSelectPaymentMethod' overload with the 'Action<PKPaymentRequestPaymentMethodUpdate>' parameter instead.")]
 		[Export ("paymentAuthorizationController:didSelectPaymentMethod:completion:")]
 		void DidSelectPaymentMethod (PKPaymentAuthorizationController controller, PKPaymentMethod paymentMethod, Action<PKPaymentSummaryItem[]> completion);
+
+		[Watch (4,0)][iOS (11,0)]
+		[Export ("paymentAuthorizationController:didSelectPaymentMethod:handler:")]
+		void DidSelectPaymentMethod (PKPaymentAuthorizationController controller, PKPaymentMethod paymentMethod, Action<PKPaymentRequestPaymentMethodUpdate> completion);
 	}
 
 	[iOS (10,1)]
@@ -865,5 +1004,86 @@ namespace XamCore.PassKit {
 
 		[Export ("blacklisted")]
 		bool Blacklisted { [Bind ("isBlacklisted")] get; }
+	}
+
+	[Watch (4,0)][iOS (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface PKPaymentAuthorizationResult {
+		[Export ("initWithStatus:errors:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (PKPaymentAuthorizationStatus status, [NullAllowed] NSError[] errors);
+
+		[Export ("status", ArgumentSemantic.Assign)]
+		PKPaymentAuthorizationStatus Status { get; set; }
+
+		[Export ("errors", ArgumentSemantic.Copy)]
+		NSError[] Errors { get; set; }
+	}
+
+	[Watch (4,0)][iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface PKPaymentRequestUpdate {
+
+		[Export ("initWithPaymentSummaryItems:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (PKPaymentSummaryItem[] paymentSummaryItems);
+
+		[Export ("status", ArgumentSemantic.Assign)]
+		PKPaymentAuthorizationStatus Status { get; set; }
+
+		[Export ("paymentSummaryItems", ArgumentSemantic.Copy)]
+		PKPaymentSummaryItem[] PaymentSummaryItems { get; set; }
+	}
+
+	[Watch (4,0)][iOS (11,0)]
+	[BaseType (typeof (PKPaymentRequestUpdate))]
+	[DisableDefaultCtor]
+	interface PKPaymentRequestShippingContactUpdate {
+
+		[Export ("initWithErrors:paymentSummaryItems:shippingMethods:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] NSError[] errors, PKPaymentSummaryItem[] paymentSummaryItems, PKShippingMethod[] shippingMethods);
+
+		[Export ("shippingMethods", ArgumentSemantic.Copy)]
+		PKShippingMethod[] ShippingMethods { get; set; }
+
+		[Export ("errors", ArgumentSemantic.Copy)]
+		NSError[] Errors { get; set; }
+	}
+
+	[Watch (4,0)][iOS (11,0)]
+	[BaseType (typeof (PKPaymentRequestUpdate))]
+	[DisableDefaultCtor]
+	interface PKPaymentRequestShippingMethodUpdate {
+
+		// inlined
+		[Export ("initWithPaymentSummaryItems:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (PKPaymentSummaryItem[] paymentSummaryItems);
+	}
+
+	[Watch (4,0)][iOS (11,0)]
+	[BaseType (typeof (PKPaymentRequestUpdate))]
+	[DisableDefaultCtor]
+	interface PKPaymentRequestPaymentMethodUpdate {
+
+		// inlined
+		[Export ("initWithPaymentSummaryItems:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (PKPaymentSummaryItem[] paymentSummaryItems);
+	}
+
+	[Static] // not to enum'ify - exposed as NSString inside NSError
+	interface PKPaymentErrorKeys {
+
+		[Watch (4,0)][iOS (11,0)]
+		[Field ("PKPaymentErrorContactFieldUserInfoKey")]
+		NSString ContactFieldUserInfoKey { get; }
+
+		[Watch (4,0)][iOS (11,0)]
+		[Field ("PKPaymentErrorPostalAddressUserInfoKey")]
+		NSString PostalAddressUserInfoKey { get; }
 	}
 }

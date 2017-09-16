@@ -132,7 +132,7 @@ namespace XamCore.iAd {
 		bool PresentInView (UIView containerView);
 
 		[Export ("presentFromViewController:")]
-		[Availability (Introduced = Platform.iOS_4_3, Deprecated = Platform.iOS_7_0, Message = "Use extension method UIViewController.RequestInterstitialAdPresentation instead")]
+		[Availability (Introduced = Platform.iOS_4_3, Deprecated = Platform.iOS_7_0, Message = "Use extension method 'UIViewController.RequestInterstitialAdPresentation' instead.")]
 		void PresentFromViewController (UIViewController viewController);
 	}
 
@@ -225,6 +225,7 @@ namespace XamCore.iAd {
 		void SetCanDisplayBannerAds (bool value);
 
 		[Since (7,0), Export ("originalContentView")]
+		[NullAllowed]
 		UIView GetOriginalContentView ();
 
 		[Since (7,0), Export ("isPresentingFullScreenAd")]
@@ -250,11 +251,11 @@ namespace XamCore.iAd {
 		[Export ("sharedClient")]
 		ADClient SharedClient { get; }
 
-		[Availability (Introduced = Platform.iOS_7_1, Deprecated = Platform.iOS_9_0, Message = "Replaced by RequestAttributionDetails")]
+		[Availability (Introduced = Platform.iOS_7_1, Deprecated = Platform.iOS_9_0, Message = "Replaced by 'RequestAttributionDetails'.")]
 		[Export ("determineAppInstallationAttributionWithCompletionHandler:")]
 		void DetermineAppInstallationAttribution (AttributedToiAdCompletionHandler completionHandler);
 
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0, Message = "Replaced by RequestAttributionDetails")]
+		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0, Message = "Replaced by 'RequestAttributionDetails'.")]
 		[Export ("lookupAdConversionDetails:")]
 		[Async (ResultTypeName="ADClientConversionDetailsResult")]
 		void LookupAdConversionDetails (ADConversionDetails onCompleted);

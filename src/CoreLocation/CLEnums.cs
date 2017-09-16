@@ -87,7 +87,7 @@ namespace XamCore.CoreLocation {
 		Restricted,
 		Denied,
 
-		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use AuthorizedAlways instead")]
+		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'AuthorizedAlways' instead.")]
 		Authorized,
 		AuthorizedAlways = Authorized,
 		AuthorizedWhenInUse			

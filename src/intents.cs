@@ -15,6 +15,7 @@ using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 using XamCore.CoreLocation;
 using XamCore.Contacts;
+using XamCore.EventKit;
 
 #if MONOMAC
 using UIImage = XamCore.Foundation.NSObject;
@@ -55,7 +56,11 @@ namespace XamCore.Intents {
 		Unknown = 0,
 		Outgoing,
 		Missed,
-		Received
+		Received,
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		Latest,
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		Voicemail,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -65,10 +70,15 @@ namespace XamCore.Intents {
 	public enum INCancelWorkoutIntentResponseCode : nint {
 		Unspecified = 0,
 		Ready,
+		[Deprecated (PlatformName.iOS, 11, 0, message:"Use 'HandleInApp' instead.")] // yup just iOS
 		ContinueInApp,
 		Failure,
 		FailureRequiringAppLaunch,
-		FailureNoMatchingWorkout
+		FailureNoMatchingWorkout,
+		[NoWatch, iOS (11,0)]
+		Success,
+		[NoWatch, iOS (11,0)]
+		HandleInApp,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -142,10 +152,15 @@ namespace XamCore.Intents {
 	public enum INEndWorkoutIntentResponseCode : nint {
 		Unspecified = 0,
 		Ready,
+		[Deprecated (PlatformName.iOS, 11, 0, message:"Use 'HandleInApp' instead.")] // yup just iOS
 		ContinueInApp,
 		Failure,
 		FailureRequiringAppLaunch,
-		FailureNoMatchingWorkout
+		FailureNoMatchingWorkout,
+		[NoWatch, iOS (11,0)]
+		Success,
+		[NoWatch, iOS (11,0)]
+		HandleInApp,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -182,6 +197,8 @@ namespace XamCore.Intents {
 	public enum INGetRideStatusIntentResponseCode : nint {
 		Unspecified = 0,
 		Ready,
+		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		InProgress,
 		Success,
 		Failure,
@@ -251,6 +268,8 @@ namespace XamCore.Intents {
 	public enum INListRideOptionsIntentResponseCode : nint {
 		Unspecified = 0,
 		Ready,
+		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		InProgress,
 		Success,
 		Failure,
@@ -258,7 +277,9 @@ namespace XamCore.Intents {
 		FailureRequiringAppLaunchMustVerifyCredentials,
 		FailureRequiringAppLaunchNoServiceInArea,
 		FailureRequiringAppLaunchServiceTemporarilyUnavailable,
-		FailureRequiringAppLaunchPreviousRideNeedsCompletion
+		FailureRequiringAppLaunchPreviousRideNeedsCompletion,
+		[iOS (11,0), Watch (4,0)]
+		FailurePreviousRideNeedsFeedback,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -270,7 +291,9 @@ namespace XamCore.Intents {
 		Read,
 		Unread,
 		Flagged,
-		Unflagged
+		Unflagged,
+		[iOS (11,0), Mac (10,13, onlyOn64:true), Watch (4,0)]
+		Played,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -282,7 +305,9 @@ namespace XamCore.Intents {
 		Read = (1 << 0),
 		Unread = (1 << 1),
 		Flagged = (1 << 2),
-		Unflagged = (1 << 3)
+		Unflagged = (1 << 3),
+		[iOS (11,0), Mac (10,13, onlyOn64:true), Watch (4,0)]
+		Played = (1UL << 4),
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -292,10 +317,15 @@ namespace XamCore.Intents {
 	public enum INPauseWorkoutIntentResponseCode : nint {
 		Unspecified = 0,
 		Ready,
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'HandleInApp' instead.")] // yup just iOS
 		ContinueInApp,
 		Failure,
 		FailureRequiringAppLaunch,
-		FailureNoMatchingWorkout
+		FailureNoMatchingWorkout,
+		[NoWatch, iOS (11,0)]
+		Success,
+		[NoWatch, iOS (11,0)]
+		HandleInApp,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -412,7 +442,9 @@ namespace XamCore.Intents {
 		FailurePaymentsAmountBelowMinimum,
 		FailurePaymentsAmountAboveMaximum,
 		FailurePaymentsCurrencyUnsupported,
-		FailureNoBankAccount
+		FailureNoBankAccount,
+		[iOS (11,0), Watch (4,0)]
+		FailureNotEligible,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -422,6 +454,8 @@ namespace XamCore.Intents {
 	public enum INRequestRideIntentResponseCode : nint {
 		Unspecified = 0,
 		Ready,
+		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		InProgress,
 		Success,
 		Failure,
@@ -448,10 +482,15 @@ namespace XamCore.Intents {
 	public enum INResumeWorkoutIntentResponseCode : nint {
 		Unspecified = 0,
 		Ready,
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'HandleInApp' instead.")] // yup just iOS
 		ContinueInApp,
 		Failure,
 		FailureRequiringAppLaunch,
-		FailureNoMatchingWorkout
+		FailureNoMatchingWorkout,
+		[NoWatch, iOS (11,0)]
+		Success,
+		[NoWatch, iOS (11,0)]
+		HandleInApp,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -494,6 +533,10 @@ namespace XamCore.Intents {
 		[Introduced (PlatformName.iOS, 10, 2)]
 		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
 		FailureAppConfigurationRequired,
+		[iOS (11,0), Mac (10,13, onlyOn64:true), Watch (4,0)]
+		InProgress,
+		[iOS (11,0), Mac (10,13, onlyOn64:true), Watch (4,0)]
+		Success,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -507,7 +550,9 @@ namespace XamCore.Intents {
 		Success,
 		Failure,
 		FailureRequiringAppLaunch,
-		FailureMessageServiceNotAvailable
+		FailureMessageServiceNotAvailable,
+		[iOS (11,0), Mac (10,13, onlyOn64:true), Watch (4,0)]
+		FailureMessageTooManyResults,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -555,7 +600,10 @@ namespace XamCore.Intents {
 		FailurePaymentsAmountAboveMaximum,
 		FailurePaymentsCurrencyUnsupported,
 		FailureInsufficientFunds,
-		FailureNoBankAccount
+		FailureNoBankAccount,
+		[Introduced (PlatformName.iOS, 11, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 13, PlatformArchitecture.Arch64)]
+		FailureNotEligible,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -679,6 +727,10 @@ namespace XamCore.Intents {
 		[Introduced (PlatformName.iOS, 10, 2)]
 		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
 		FailureCallingServiceNotAvailable,
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		FailureContactNotSupportedByApp,
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		FailureNoValidNumber,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -711,6 +763,10 @@ namespace XamCore.Intents {
 		[Introduced (PlatformName.iOS, 10, 2)]
 		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
 		FailureCallingServiceNotAvailable,
+		[Watch (4,0), iOS (11,0)]
+		FailureContactNotSupportedByApp,
+		[Watch (4,0), iOS (11,0)]
+		FailureInvalidNumber,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -724,7 +780,11 @@ namespace XamCore.Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		FailureOngoingWorkout,
-		FailureNoMatchingWorkout
+		FailureNoMatchingWorkout,
+		[Watch (4,0), iOS (11,0)]
+		Success,
+		[Watch (4,0), iOS (11,0)]
+		HandleInApp,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -744,6 +804,10 @@ namespace XamCore.Intents {
 		PaymentsOrganizationName = 400,
 		[Introduced (PlatformName.iOS, 10, 3)]
 		PaymentsAccountNickname,
+		[iOS (11,0)]
+		NotebookItemTitle = 500,
+		[iOS (11,0)]
+		NotebookItemGroupName,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -821,6 +885,12 @@ namespace XamCore.Intents {
 		MinimumDue,
 		AmountDue,
 		CurrentBalance,
+		[iOS (11,0), Watch (4,0)]
+		MaximumTransferAmount,
+		[iOS (11,0), Watch (4,0)]
+		MinimumTransferAmount,
+		[iOS (11,0), Watch (4,0)]
+		StatementBalance,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 3)]
@@ -930,6 +1000,324 @@ namespace XamCore.Intents {
 		Success,
 		Failure,
 		FailureRequiringAppLaunch,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INAddTasksIntentResponseCode : nint {
+		Unspecified = 0,
+		Ready,
+		InProgress,
+		Success,
+		Failure,
+		FailureRequiringAppLaunch,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INAppendToNoteIntentResponseCode : nint {
+		Unspecified = 0,
+		Ready,
+		InProgress,
+		Success,
+		Failure,
+		FailureRequiringAppLaunch,
+		FailureCannotUpdatePasswordProtectedNote,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INBalanceType : nint {
+		Unknown = 0,
+		Money,
+		Points,
+		Miles,
+	}
+
+	[Watch (3,2), Mac (10,12, onlyOn64:true), iOS (10,0)]
+	[Native]
+	public enum INCallCapability : nint {
+		Unknown = 0,
+		AudioCall,
+		VideoCall,
+	}
+
+	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+	[Native]
+	public enum INCallDestinationType : nint {
+		Unknown = 0,
+		Normal,
+		Emergency,
+		Voicemail,
+		Redial,
+	}
+
+	[Watch (3,2), Mac (10,12, onlyOn64:true), iOS (10,0)]
+	[Native]
+	[Flags]
+	public enum INCallRecordTypeOptions : nuint {
+		Outgoing = (1 << 0),
+		Missed = (1 << 1),
+		Received = (1 << 2),
+		Latest = (1 << 3),
+		Voicemail = (1 << 4),
+	}
+
+	[NoWatch, NoMac, iOS (11,0)]
+	[Native]
+	public enum INCancelRideIntentResponseCode : nint {
+		Unspecified = 0,
+		Ready,
+		Success,
+		Failure,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INCreateNoteIntentResponseCode : nint {
+		Unspecified = 0,
+		Ready,
+		InProgress,
+		Success,
+		Failure,
+		FailureRequiringAppLaunch,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INCreateTaskListIntentResponseCode : nint {
+		Unspecified = 0,
+		Ready,
+		InProgress,
+		Success,
+		Failure,
+		FailureRequiringAppLaunch,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INDateSearchType : nint {
+		Unknown = 0,
+		ByDueDate,
+		ByModifiedDate,
+		ByCreatedDate,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INGetVisualCodeIntentResponseCode : nint {
+		Unspecified = 0,
+		Ready,
+		ContinueInApp,
+		InProgress,
+		Success,
+		Failure,
+		FailureRequiringAppLaunch,
+		FailureAppConfigurationRequired,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INLocationSearchType : nint {
+		Unknown = 0,
+		ByLocationTrigger,
+	}
+
+	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+	[Native]
+	public enum INMessageType : nint {
+		Unspecified = 0,
+		Text,
+		Audio,
+		DigitalTouch,
+		Handwriting,
+		Sticker,
+		TapbackLiked,
+		TapbackDisliked,
+		TapbackEmphasized,
+		TapbackLoved,
+		TapbackQuestioned,
+		TapbackLaughed,
+		MediaCalendar,
+		MediaLocation,
+		MediaAddressCard,
+		MediaImage,
+		MediaVideo,
+		MediaPass,
+		MediaAudio,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INNoteContentType : nint {
+		Unknown = 0,
+		Text,
+		Image,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INNotebookItemType : nint {
+		Unknown = 0,
+		Note,
+		TaskList,
+		Task,
+	}
+
+	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+	[Native]
+	public enum INRecurrenceFrequency : nint {
+		Unknown = 0,
+		Minute,
+		Hourly,
+		Daily,
+		Weekly,
+		Monthly,
+		Yearly,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INRequestPaymentCurrencyAmountUnsupportedReason : nint {
+		AmountBelowMinimum = 1,
+		AmountAboveMaximum,
+		CurrencyUnsupported,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INRequestPaymentPayerUnsupportedReason : nint {
+		CredentialsUnverified = 1,
+		NoAccount,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INRideFeedbackTypeOptions : nuint {
+		Rate = (1 << 0),
+		Tip = (1 << 1),
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INSearchForAccountsIntentResponseCode : nint {
+		Unspecified = 0,
+		Ready,
+		InProgress,
+		Success,
+		Failure,
+		FailureRequiringAppLaunch,
+		FailureCredentialsUnverified,
+		FailureAccountNotFound,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INSearchForNotebookItemsIntentResponseCode : nint {
+		Unspecified = 0,
+		Ready,
+		InProgress,
+		Success,
+		Failure,
+		FailureRequiringAppLaunch,
+	}
+
+	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+	[Native]
+	public enum INSendMessageRecipientUnsupportedReason : nint {
+		NoAccount = 1,
+		Offline,
+		MessagingServiceNotEnabledForRecipient,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INSendPaymentCurrencyAmountUnsupportedReason : nint {
+		AmountBelowMinimum = 1,
+		AmountAboveMaximum,
+		CurrencyUnsupported,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INSendPaymentPayeeUnsupportedReason : nint {
+		CredentialsUnverified = 1,
+		InsufficientFunds,
+		NoAccount,
+	}
+
+	[NoWatch, NoMac, iOS (11,0)]
+	[Native]
+	public enum INSendRideFeedbackIntentResponseCode : nint {
+		Unspecified = 0,
+		Ready,
+		Success,
+		Failure,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INSetTaskAttributeIntentResponseCode : nint {
+		Unspecified = 0,
+		Ready,
+		InProgress,
+		Success,
+		Failure,
+		FailureRequiringAppLaunch,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INSortType : nint {
+		Unknown = 0,
+		AsIs,
+		ByDate,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INSpatialEvent : nint {
+		Unknown = 0,
+		Arrive,
+		Depart,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INTaskStatus : nint {
+		Unknown = 0,
+		NotCompleted,
+		Completed,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INTaskType : nint {
+		Unknown = 0,
+		NotCompletable,
+		Completable,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INTransferMoneyIntentResponseCode : nint {
+		Unspecified = 0,
+		Ready,
+		InProgress,
+		Success,
+		Failure,
+		FailureRequiringAppLaunch,
+		FailureCredentialsUnverified,
+		FailureInsufficientFunds,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INVisualCodeType : nint {
+		Unknown = 0,
+		Contact,
+		RequestPayment,
+		SendPayment,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1202,6 +1590,10 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntent))]
 	interface INBookRestaurantReservationIntent : NSCopying {
 
+		[iOS (11,0)]
+		[Export ("initWithRestaurant:bookingDateComponents:partySize:bookingIdentifier:guest:selectedOffer:guestProvidedSpecialRequestText:")]
+		IntPtr Constructor (INRestaurant restaurant, NSDateComponents bookingDateComponents, nuint partySize, [NullAllowed] string bookingIdentifier, [NullAllowed] INRestaurantGuest guest, [NullAllowed] INRestaurantOffer selectedOffer, [NullAllowed] string guestProvidedSpecialRequestText);
+
 		[Export ("restaurant", ArgumentSemantic.Copy)]
 		INRestaurant Restaurant { get; set; }
 
@@ -1235,7 +1627,13 @@ namespace XamCore.Intents {
 		void HandleBookRestaurantReservation (INBookRestaurantReservationIntent intent, Action<INBookRestaurantReservationIntentResponse> completion);
 
 		[Export ("confirmBookRestaurantReservation:completion:")]
-		void ConfirmBookRestaurantReservation (INBookRestaurantReservationIntent intent, Action<INBookRestaurantReservationIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmBookRestaurantReservation
+#endif
+		(INBookRestaurantReservationIntent intent, Action<INBookRestaurantReservationIntentResponse> completion);
 
 		[Export ("resolveRestaurantForBookRestaurantReservation:withCompletion:")]
 		void ResolveRestaurant (INBookRestaurantReservationIntent intent, Action<INRestaurantResolutionResult> completion);
@@ -1310,13 +1708,33 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INCallRecordTypeResolutionResult {
 
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("successWithResolvedCallRecordType:")]
+		INCallRecordTypeResolutionResult SuccessWithResolvedCallRecordType (INCallRecordType resolvedCallRecordType);
+
+		[Internal]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
-		INCallRecordTypeResolutionResult GetSuccess (INCallRecordType resolvedValue);
+		INCallRecordTypeResolutionResult SuccessWithResolvedValue (INCallRecordType resolvedValue);
 
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("confirmationRequiredWithCallRecordTypeToConfirm:")]
+		INCallRecordTypeResolutionResult ConfirmationRequiredWithCallRecordTypeToConfirm (INCallRecordType callRecordTypeToConfirm);
+
+		[Internal]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INCallRecordTypeResolutionResult GetConfirmationRequired (INCallRecordType valueToConfirm);
+		INCallRecordTypeResolutionResult ConfirmationRequiredWithValueToConfirm (INCallRecordType valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -1362,7 +1780,13 @@ namespace XamCore.Intents {
 		void HandleCancelWorkout (INCancelWorkoutIntent intent, Action<INCancelWorkoutIntentResponse> completion);
 
 		[Export ("confirmCancelWorkout:completion:")]
-		void ConfirmCancelWorkout (INCancelWorkoutIntent intent, Action<INCancelWorkoutIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmCancelWorkout
+#endif
+		(INCancelWorkoutIntent intent, Action<INCancelWorkoutIntentResponse> completion);
 
 		[Export ("resolveWorkoutNameForCancelWorkout:withCompletion:")]
 		void ResolveWorkoutName (INCancelWorkoutIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -1389,13 +1813,28 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INCarAirCirculationModeResolutionResult {
 
+		[iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("successWithResolvedCarAirCirculationMode:")]
+		INCarAirCirculationModeResolutionResult SuccessWithResolvedCarAirCirculationMode (INCarAirCirculationMode resolvedCarAirCirculationMode);
+
+		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Internal]
 		[Static]
 		[Export ("successWithResolvedValue:")]
-		INCarAirCirculationModeResolutionResult GetSuccess (INCarAirCirculationMode resolvedValue);
+		INCarAirCirculationModeResolutionResult SuccessWithResolvedValue (INCarAirCirculationMode resolvedValue);
 
+		[iOS (11,0)]
+		[Static]
+		[Export ("confirmationRequiredWithCarAirCirculationModeToConfirm:")]
+		INCarAirCirculationModeResolutionResult ConfirmationRequiredWithCarAirCirculationModeToConfirm (INCarAirCirculationMode carAirCirculationModeToConfirm);
+
+		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INCarAirCirculationModeResolutionResult GetConfirmationRequired (INCarAirCirculationMode valueToConfirm);
+		INCarAirCirculationModeResolutionResult ConfirmationRequiredWithValueToConfirm (INCarAirCirculationMode valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -1422,13 +1861,29 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INCarAudioSourceResolutionResult {
 
+		[iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("successWithResolvedCarAudioSource:")]
+		INCarAudioSourceResolutionResult SuccessWithResolvedCarAudioSource (INCarAudioSource resolvedCarAudioSource);
+
+		[Internal]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
-		INCarAudioSourceResolutionResult GetSuccess (INCarAudioSource resolvedValue);
+		INCarAudioSourceResolutionResult SuccessWithResolvedValue (INCarAudioSource resolvedValue);
 
+		[iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("confirmationRequiredWithCarAudioSourceToConfirm:")]
+		INCarAudioSourceResolutionResult ConfirmationRequiredWithCarAudioSourceToConfirm (INCarAudioSource carAudioSourceToConfirm);
+
+		[Internal]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INCarAudioSourceResolutionResult GetConfirmationRequired (INCarAudioSource valueToConfirm);
+		INCarAudioSourceResolutionResult ConfirmationRequiredWithValueToConfirm (INCarAudioSource valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -1455,13 +1910,29 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INCarDefrosterResolutionResult {
 
+		[iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("successWithResolvedCarDefroster:")]
+		INCarDefrosterResolutionResult SuccessWithResolvedCarDefroster (INCarDefroster resolvedCarDefroster);
+
+		[Internal]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
-		INCarDefrosterResolutionResult GetSuccess (INCarDefroster resolvedValue);
+		INCarDefrosterResolutionResult SuccessWithResolvedValue (INCarDefroster resolvedValue);
 
+		[iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("confirmationRequiredWithCarDefrosterToConfirm:")]
+		INCarDefrosterResolutionResult ConfirmationRequiredWithCarDefrosterToConfirm (INCarDefroster carDefrosterToConfirm);
+
+		[Internal]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INCarDefrosterResolutionResult GetConfirmationRequired (INCarDefroster valueToConfirm);
+		INCarDefrosterResolutionResult ConfirmationRequiredWithValueToConfirm (INCarDefroster valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -1488,13 +1959,29 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INCarSeatResolutionResult {
 
+		[iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("successWithResolvedCarSeat:")]
+		INCarSeatResolutionResult SuccessWithResolvedCarSeat (INCarSeat resolvedCarSeat);
+
+		[Internal]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
-		INCarSeatResolutionResult GetSuccess (INCarSeat resolvedValue);
+		INCarSeatResolutionResult SuccessWithResolvedValue (INCarSeat resolvedValue);
 
+		[iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("confirmationRequiredWithCarSeatToConfirm:")]
+		INCarSeatResolutionResult ConfirmationRequiredWithCarSeatToConfirm (INCarSeat carSeatToConfirm);
+
+		[Internal]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INCarSeatResolutionResult GetConfirmationRequired (INCarSeat valueToConfirm);
+		INCarSeatResolutionResult ConfirmationRequiredWithValueToConfirm (INCarSeat valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -1579,14 +2066,31 @@ namespace XamCore.Intents {
 	interface INDateComponentsRange : NSCopying, NSSecureCoding {
 
 		[Export ("initWithStartDateComponents:endDateComponents:")]
-		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] NSDateComponents startDateComponents, [NullAllowed] NSDateComponents endDateComponents);
+
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("initWithEKRecurrenceRule:")]
+		IntPtr Constructor (EKRecurrenceRule recurrenceRule);
+
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("initWithStartDateComponents:endDateComponents:recurrenceRule:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] NSDateComponents startDateComponents, [NullAllowed] NSDateComponents endDateComponents, [NullAllowed] INRecurrenceRule recurrenceRule);
 
 		[NullAllowed, Export ("startDateComponents", ArgumentSemantic.Copy)]
 		NSDateComponents StartDateComponents { get; }
 
 		[NullAllowed, Export ("endDateComponents", ArgumentSemantic.Copy)]
 		NSDateComponents EndDateComponents { get; }
+
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[NullAllowed, Export ("recurrenceRule", ArgumentSemantic.Copy)]
+		INRecurrenceRule RecurrenceRule { get; }
+
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("EKRecurrenceRule")]
+		[NullAllowed]
+		EKRecurrenceRule EKRecurrenceRule { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1683,7 +2187,11 @@ namespace XamCore.Intents {
 	[Introduced (PlatformName.WatchOS, 3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Protocol] 
-	interface INPaymentsDomainHandling : INSendPaymentIntentHandling, INRequestPaymentIntentHandling, INPayBillIntentHandling, INSearchForBillsIntentHandling {
+	interface INPaymentsDomainHandling : INSendPaymentIntentHandling, INRequestPaymentIntentHandling, INPayBillIntentHandling, INSearchForBillsIntentHandling
+#if XAMCORE_4_0 // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
+	, INSearchForAccountsIntentHandling, INTransferMoneyIntentHandling
+#endif
+	{
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1697,7 +2205,21 @@ namespace XamCore.Intents {
 	[Introduced (PlatformName.WatchOS, 3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Protocol]
-	interface INRidesharingDomainHandling : INListRideOptionsIntentHandling, INRequestRideIntentHandling, INGetRideStatusIntentHandling {
+	interface INRidesharingDomainHandling : INListRideOptionsIntentHandling, INRequestRideIntentHandling, INGetRideStatusIntentHandling 
+#if XAMCORE_4_0 // Added in iOS 11 -> #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 110000
+	, INCancelRideIntentHandling, INSendRideFeedbackIntentHandling
+#endif
+	{
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Protocol]
+	interface INNotebookDomainHandling : INCreateNoteIntentHandling, INAppendToNoteIntentHandling, INAddTasksIntentHandling, INCreateTaskListIntentHandling, INSetTaskAttributeIntentHandling, INSearchForNotebookItemsIntentHandling {
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Protocol]
+	interface INVisualCodeDomainHandling : INGetVisualCodeIntentHandling {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1797,7 +2319,13 @@ namespace XamCore.Intents {
 		void HandleEndWorkout (INEndWorkoutIntent intent, Action<INEndWorkoutIntentResponse> completion);
 
 		[Export ("confirmEndWorkout:completion:")]
-		void ConfirmEndWorkout (INEndWorkoutIntent intent, Action<INEndWorkoutIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmEndWorkout
+#endif
+		(INEndWorkoutIntent intent, Action<INEndWorkoutIntentResponse> completion);
 
 		[Export ("resolveWorkoutNameForEndWorkout:withCompletion:")]
 		void ResolveWorkoutName (INEndWorkoutIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -1842,6 +2370,10 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntent))]
 	interface INGetAvailableRestaurantReservationBookingDefaultsIntent {
 
+		[iOS (11,0)]
+		[Export ("initWithRestaurant:")]
+		IntPtr Constructor ([NullAllowed] INRestaurant restaurant);
+
 		[NullAllowed, Export ("restaurant", ArgumentSemantic.Copy)]
 		INRestaurant Restaurant { get; set; }
 	}
@@ -1857,7 +2389,13 @@ namespace XamCore.Intents {
 		void HandleAvailableRestaurantReservationBookingDefaults (INGetAvailableRestaurantReservationBookingDefaultsIntent intent, Action<INGetAvailableRestaurantReservationBookingDefaultsIntentResponse> completion);
 
 		[Export ("confirmGetAvailableRestaurantReservationBookingDefaults:completion:")]
-		void ConfirmAvailableRestaurantReservationBookingDefaults (INGetAvailableRestaurantReservationBookingDefaultsIntent intent, Action<INGetAvailableRestaurantReservationBookingDefaultsIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmAvailableRestaurantReservationBookingDefaults
+#endif
+		(INGetAvailableRestaurantReservationBookingDefaultsIntent intent, Action<INGetAvailableRestaurantReservationBookingDefaultsIntentResponse> completion);
 
 		[Export ("resolveRestaurantForGetAvailableRestaurantReservationBookingDefaults:withCompletion:")]
 		void ResolveAvailableRestaurantReservationBookingDefaults (INGetAvailableRestaurantReservationBookingDefaultsIntent intent, Action<INRestaurantResolutionResult> completion);
@@ -1898,6 +2436,10 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntent))]
 	interface INGetAvailableRestaurantReservationBookingsIntent : NSCopying {
 
+		[iOS (11,0)]
+		[Export ("initWithRestaurant:partySize:preferredBookingDateComponents:maximumNumberOfResults:earliestBookingDateForResults:latestBookingDateForResults:")]
+		IntPtr Constructor (INRestaurant restaurant, nuint partySize, [NullAllowed] NSDateComponents preferredBookingDateComponents, [NullAllowed] NSNumber maximumNumberOfResults, [NullAllowed] NSDate earliestBookingDateForResults, [NullAllowed] NSDate latestBookingDateForResults);
+
 		[Export ("restaurant", ArgumentSemantic.Copy)]
 		INRestaurant Restaurant { get; set; }
 
@@ -1928,7 +2470,13 @@ namespace XamCore.Intents {
 		void HandleAvailableRestaurantReservationBookings (INGetAvailableRestaurantReservationBookingsIntent intent, Action<INGetAvailableRestaurantReservationBookingsIntentResponse> completion);
 
 		[Export ("confirmGetAvailableRestaurantReservationBookings:completion:")]
-		void ConfirmAvailableRestaurantReservationBookings (INGetAvailableRestaurantReservationBookingsIntent intent, Action<INGetAvailableRestaurantReservationBookingsIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmAvailableRestaurantReservationBookings
+#endif
+		(INGetAvailableRestaurantReservationBookingsIntent intent, Action<INGetAvailableRestaurantReservationBookingsIntentResponse> completion);
 
 		[Export ("resolveRestaurantForGetAvailableRestaurantReservationBookings:withCompletion:")]
 		void ResolveAvailableRestaurantReservationBookings (INGetAvailableRestaurantReservationBookingsIntent intent, Action<INRestaurantResolutionResult> completion);
@@ -1984,7 +2532,13 @@ namespace XamCore.Intents {
 		void HandleRestaurantGuest (INGetRestaurantGuestIntent intent, Action<INGetRestaurantGuestIntentResponse> completion);
 
 		[Export ("confirmGetRestaurantGuest:completion:")]
-		void ConfirmRestaurantGuest (INGetRestaurantGuestIntent guestIntent, Action<INGetRestaurantGuestIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmRestaurantGuest
+#endif
+		(INGetRestaurantGuestIntent guestIntent, Action<INGetRestaurantGuestIntentResponse> completion);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2011,7 +2565,12 @@ namespace XamCore.Intents {
 	[Introduced (PlatformName.WatchOS, 3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (INIntent))]
+	[DisableDefaultCtor] // DesignatedInitializer below
 	interface INGetRideStatusIntent {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2033,7 +2592,13 @@ namespace XamCore.Intents {
 		void StopSendingUpdates (INGetRideStatusIntent intent);
 
 		[Export ("confirmGetRideStatus:completion:")]
-		void ConfirmRideStatus (INGetRideStatusIntent intent, Action<INGetRideStatusIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmRideStatus
+#endif
+		(INGetRideStatusIntent intent, Action<INGetRideStatusIntentResponse> completion);
 	}
 
 	interface IINGetRideStatusIntentResponseObserver { }
@@ -2073,6 +2638,14 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntent))]
 	interface INGetUserCurrentRestaurantReservationBookingsIntent : NSCopying {
 
+		[iOS (11,0)]
+		[Export ("initWithRestaurant:reservationIdentifier:maximumNumberOfResults:earliestBookingDateForResults:")]
+		IntPtr Constructor ([NullAllowed] INRestaurant restaurant, [NullAllowed] string reservationIdentifier, [NullAllowed] NSNumber maximumNumberOfResults, [NullAllowed] NSDate earliestBookingDateForResults);
+
+		[iOS (11,0)]
+		[Wrap ("this (restaurant, reservationIdentifier, NSNumber.FromNInt (maximumNumberOfResults), earliestBookingDateForResults)")]
+		IntPtr Constructor ([NullAllowed] INRestaurant restaurant, [NullAllowed] string reservationIdentifier, nint maximumNumberOfResults, [NullAllowed] NSDate earliestBookingDateForResults);
+
 		[NullAllowed, Export ("restaurant", ArgumentSemantic.Copy)]
 		INRestaurant Restaurant { get; set; }
 
@@ -2097,7 +2670,13 @@ namespace XamCore.Intents {
 		void HandleUserCurrentRestaurantReservationBookings (INGetUserCurrentRestaurantReservationBookingsIntent intent, Action<INGetUserCurrentRestaurantReservationBookingsIntentResponse> completion);
 
 		[Export ("confirmGetUserCurrentRestaurantReservationBookings:completion:")]
-		void ConfirmUserCurrentRestaurantReservationBookings (INGetUserCurrentRestaurantReservationBookingsIntent intent, Action<INGetUserCurrentRestaurantReservationBookingsIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmUserCurrentRestaurantReservationBookings
+#endif
+		(INGetUserCurrentRestaurantReservationBookingsIntent intent, Action<INGetUserCurrentRestaurantReservationBookingsIntentResponse> completion);
 
 		[Export ("resolveRestaurantForGetUserCurrentRestaurantReservationBookings:withCompletion:")]
 		void ResolveUserCurrentRestaurantReservationBookings (INGetUserCurrentRestaurantReservationBookingsIntent intent, Action<INRestaurantResolutionResult> completion);
@@ -2140,6 +2719,12 @@ namespace XamCore.Intents {
 		[Export ("imageWithURL:")]
 		INImage FromUrl (NSUrl url);
 
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Static]
+		[Export ("imageWithURL:width:height:")]
+		[return: NullAllowed]
+		INImage FromUrl (NSUrl url, double width, double height);
+
 		// INImage_IntentsUI (IntentsUI)
 
 		[NoMac, NoWatch]
@@ -2156,6 +2741,11 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("imageSizeForIntentResponse:")]
 		CGSize GetImageSize (INIntentResponse response);
+
+		[NoMac, NoWatch, iOS (11,0)]
+		[Async]
+		[Export ("fetchUIImageWithCompletion:")]
+		void FetchImage (Action<UIImage> completion);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2205,6 +2795,10 @@ namespace XamCore.Intents {
 		[Unavailable (PlatformName.MacOSX)]
 		[Wrap ("INIntentIdentifierExtensions.GetValue (IdentifierString)")]
 		INIntentIdentifier? Identifier { get; }
+
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[NullAllowed, Export ("intentDescription")]
+		string IntentDescription { get; }
 	}
 
 	interface INIntentResolutionResult<ObjectType> : INIntentResolutionResult { }
@@ -2294,6 +2888,13 @@ namespace XamCore.Intents {
 
 		[NullAllowed, Export ("groupIdentifier")]
 		string GroupIdentifier { get; set; }
+
+		// From INParameter.h INInteraction ()
+
+		[Internal]
+		[iOS (11,0), Watch (4,0), NoMac]
+		[Export ("parameterValueForParameter:")]
+		IntPtr _GetParameterValue (INParameter parameter);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2324,7 +2925,13 @@ namespace XamCore.Intents {
 		void HandleListRideOptions (INListRideOptionsIntent intent, Action<INListRideOptionsIntentResponse> completion);
 
 		[Export ("confirmListRideOptions:completion:")]
-		void ConfirmListRideOptions (INListRideOptionsIntent intent, Action<INListRideOptionsIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmListRideOptions
+#endif
+		(INListRideOptionsIntent intent, Action<INListRideOptionsIntentResponse> completion);
 
 		[Export ("resolvePickupLocationForListRideOptions:withCompletion:")]
 		void ResolvePickupLocation (INListRideOptionsIntent intent, Action<INPlacemarkResolutionResult> completion);
@@ -2364,12 +2971,24 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INMessage : NSCopying, NSSecureCoding {
 
-		[Export ("initWithIdentifier:content:dateSent:sender:recipients:")]
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:messageType:")]
 		[DesignatedInitializer]
+		IntPtr Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, [NullAllowed] INSpeakableString groupName, INMessageType messageType);
+
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:messageType:")]
+		IntPtr Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, INMessageType messageType);
+
+		[Export ("initWithIdentifier:content:dateSent:sender:recipients:")]
 		IntPtr Constructor (string identifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients);
 
 		[Export ("identifier")]
 		string Identifier { get; }
+
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[NullAllowed, Export ("conversationIdentifier")]
+		string ConversationIdentifier { get; }
 
 		[NullAllowed, Export ("content")]
 		string Content { get; }
@@ -2382,6 +3001,14 @@ namespace XamCore.Intents {
 
 		[NullAllowed, Export ("recipients", ArgumentSemantic.Copy)]
 		INPerson [] Recipients { get; }
+
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[NullAllowed, Export ("groupName", ArgumentSemantic.Copy)]
+		INSpeakableString GroupName { get; }
+
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("messageType")]
+		INMessageType MessageType { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2391,13 +3018,33 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INMessageAttributeOptionsResolutionResult {
 
+		[Watch (4,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("successWithResolvedMessageAttributeOptions:")]
+		INMessageAttributeOptionsResolutionResult SuccessWithResolvedMessageAttributeOptions (INMessageAttributeOptions resolvedMessageAttributeOptions);
+
+		[Internal]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
-		INMessageAttributeOptionsResolutionResult GetSuccess (INMessageAttributeOptions resolvedValue);
+		INMessageAttributeOptionsResolutionResult SuccessWithResolvedValue (INMessageAttributeOptions resolvedValue);
 
+		[Watch (4,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("confirmationRequiredWithMessageAttributeOptionsToConfirm:")]
+		INMessageAttributeOptionsResolutionResult ConfirmationRequiredWithMessageAttributeOptionsToConfirm (INMessageAttributeOptions messageAttributeOptionsToConfirm);
+
+		[Internal]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INMessageAttributeOptionsResolutionResult GetConfirmationRequired (INMessageAttributeOptions valueToConfirm);
+		INMessageAttributeOptionsResolutionResult ConfirmationRequiredWithValueToConfirm (INMessageAttributeOptions valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -2425,13 +3072,33 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INMessageAttributeResolutionResult {
 
+		[Watch (4,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("successWithResolvedMessageAttribute:")]
+		INMessageAttributeResolutionResult SuccessWithResolvedMessageAttribute (INMessageAttribute resolvedMessageAttribute);
+
+		[Internal]
+		[Introduced (PlatformName.MacOSX, 10, 12)]
+		[Introduced (PlatformName.WatchOS, 3, 2)]
+		[Introduced (PlatformName.iOS, 10, 0)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
-		INMessageAttributeResolutionResult GetSuccess (INMessageAttribute resolvedValue);
+		INMessageAttributeResolutionResult SuccessWithResolvedValue (INMessageAttribute resolvedValue);
 
+		[Watch (4,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("confirmationRequiredWithMessageAttributeToConfirm:")]
+		INMessageAttributeResolutionResult ConfirmationRequiredWithMessageAttributeToConfirm (INMessageAttribute messageAttributeToConfirm);
+
+		[Internal]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INMessageAttributeResolutionResult GetConfirmationRequired (INMessageAttribute valueToConfirm);
+		INMessageAttributeResolutionResult ConfirmationRequiredWithValueToConfirm (INMessageAttribute valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -2477,7 +3144,13 @@ namespace XamCore.Intents {
 		void HandlePauseWorkout (INPauseWorkoutIntent intent, Action<INPauseWorkoutIntentResponse> completion);
 
 		[Export ("confirmPauseWorkout:completion:")]
-		void ConfirmPauseWorkout (INPauseWorkoutIntent intent, Action<INPauseWorkoutIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmPauseWorkout
+#endif
+		(INPauseWorkoutIntent intent, Action<INPauseWorkoutIntentResponse> completion);
 
 		[Export ("resolveWorkoutNameForPauseWorkout:withCompletion:")]
 		void ResolveWorkoutName (INPauseWorkoutIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -2618,6 +3291,10 @@ namespace XamCore.Intents {
 		[Unavailable (PlatformName.MacOSX)]
 		[Export ("siriMatches", ArgumentSemantic.Copy), NullAllowed]
 		INPerson [] SiriMatches { get; }
+
+		[Mac (10,13, onlyOn64:true), iOS (11,0), Watch (4,0)]
+		[Export ("isMe")]
+		bool IsMe { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2627,7 +3304,7 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INPersonHandle : NSCopying, NSSecureCoding {
 
-		[Export ("value")]
+		[Export ("value"), NullAllowed]
 		string Value { get; }
 
 		[Export ("type")]
@@ -2652,10 +3329,10 @@ namespace XamCore.Intents {
 		[Introduced (PlatformName.iOS, 10, 2)]
 		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
 		[Export ("initWithValue:type:label:"), Protected]
-		IntPtr Constructor (string value, INPersonHandleType type, [NullAllowed] NSString stringLabel);
+		IntPtr Constructor ([NullAllowed] string value, INPersonHandleType type, [NullAllowed] NSString stringLabel);
 
 		[Export ("initWithValue:type:")]
-		IntPtr Constructor (string value, INPersonHandleType type);
+		IntPtr Constructor ([NullAllowed] string value, INPersonHandleType type);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2797,13 +3474,29 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INRadioTypeResolutionResult {
 
+		[iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("successWithResolvedRadioType:")]
+		INRadioTypeResolutionResult SuccessWithResolvedRadioType (INRadioType resolvedRadioType);
+
+		[Internal]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
-		INRadioTypeResolutionResult GetSuccess (INRadioType resolvedValue);
+		INRadioTypeResolutionResult SuccessWithResolvedValue (INRadioType resolvedValue);
 
+		[iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("confirmationRequiredWithRadioTypeToConfirm:")]
+		INRadioTypeResolutionResult ConfirmationRequiredWithRadioTypeToConfirm (INRadioType radioTypeToConfirm);
+
+		[Internal]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INRadioTypeResolutionResult GetConfirmationRequired (INRadioType valueToConfirm);
+		INRadioTypeResolutionResult ConfirmationRequiredWithValueToConfirm (INRadioType valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -2830,13 +3523,29 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INRelativeReferenceResolutionResult {
 
+		[iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("successWithResolvedRelativeReference:")]
+		INRelativeReferenceResolutionResult SuccessWithResolvedRelativeReference (INRelativeReference resolvedRelativeReference);
+
+		[Internal]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
-		INRelativeReferenceResolutionResult GetSuccess (INRelativeReference resolvedValue);
+		INRelativeReferenceResolutionResult SuccessWithResolvedValue (INRelativeReference resolvedValue);
 
+		[iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("confirmationRequiredWithRelativeReferenceToConfirm:")]
+		INRelativeReferenceResolutionResult ConfirmationRequiredWithRelativeReferenceToConfirm (INRelativeReference relativeReferenceToConfirm);
+
+		[Internal]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INRelativeReferenceResolutionResult GetConfirmationRequired (INRelativeReference valueToConfirm);
+		INRelativeReferenceResolutionResult ConfirmationRequiredWithValueToConfirm (INRelativeReference valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -2863,13 +3572,29 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INRelativeSettingResolutionResult {
 
+		[iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("successWithResolvedRelativeSetting:")]
+		INRelativeSettingResolutionResult SuccessWithResolvedRelativeSetting (INRelativeSetting resolvedRelativeSetting);
+
+		[Internal]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
-		INRelativeSettingResolutionResult GetSuccess (INRelativeSetting resolvedValue);
+		INRelativeSettingResolutionResult SuccessWithResolvedValue (INRelativeSetting resolvedValue);
 
+		[iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("confirmationRequiredWithRelativeSettingToConfirm:")]
+		INRelativeSettingResolutionResult ConfirmationRequiredWithRelativeSettingToConfirm (INRelativeSetting relativeSettingToConfirm);
+
+		[Internal]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INRelativeSettingResolutionResult GetConfirmationRequired (INRelativeSetting valueToConfirm);
+		INRelativeSettingResolutionResult ConfirmationRequiredWithValueToConfirm (INRelativeSetting valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -2921,13 +3646,31 @@ namespace XamCore.Intents {
 		void HandleRequestPayment (INRequestPaymentIntent intent, Action<INRequestPaymentIntentResponse> completion);
 
 		[Export ("confirmRequestPayment:completion:")]
-		void ConfirmRequestPayment (INRequestPaymentIntent intent, Action<INRequestPaymentIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmRequestPayment
+#endif
+		(INRequestPaymentIntent intent, Action<INRequestPaymentIntentResponse> completion);
 
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ResolvePayer (INRequestPaymentIntent, Action<INRequestPaymentPayerResolutionResult>)' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolvePayer (INRequestPaymentIntent, Action<INRequestPaymentPayerResolutionResult>)' instead.")]
 		[Export ("resolvePayerForRequestPayment:withCompletion:")]
 		void ResolvePayer (INRequestPaymentIntent intent, Action<INPersonResolutionResult> completion);
 
+		[Watch (4,0), iOS (11,0)]
+		[Export ("resolvePayerForRequestPayment:completion:")]
+		void ResolvePayer (INRequestPaymentIntent intent, Action<INRequestPaymentPayerResolutionResult> completion);
+
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ResolveCurrencyAmount (INRequestPaymentIntent, Action<INRequestPaymentCurrencyAmountResolutionResult>)' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolveCurrencyAmount (INRequestPaymentIntent, Action<INRequestPaymentCurrencyAmountResolutionResult>)' instead.")]
 		[Export ("resolveCurrencyAmountForRequestPayment:withCompletion:")]
 		void ResolveCurrencyAmount (INRequestPaymentIntent intent, Action<INCurrencyAmountResolutionResult> completion);
+
+		[Watch (4,0), iOS (11,0)]
+		[Export ("resolveCurrencyAmountForRequestPayment:completion:")]
+		void ResolveCurrencyAmount (INRequestPaymentIntent intent, Action<INRequestPaymentCurrencyAmountResolutionResult> completion);
 
 		[Export ("resolveNoteForRequestPayment:withCompletion:")]
 		void ResolveNote (INRequestPaymentIntent intent, Action<INStringResolutionResult> completion);
@@ -2998,7 +3741,13 @@ namespace XamCore.Intents {
 		void HandleRequestRide (INRequestRideIntent intent, Action<INRequestRideIntentResponse> completion);
 
 		[Export ("confirmRequestRide:completion:")]
-		void ConfirmRequestRide (INRequestRideIntent intent, Action<INRequestRideIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmRequestRide
+#endif
+		(INRequestRideIntent intent, Action<INRequestRideIntentResponse> completion);
 
 		[Export ("resolvePickupLocationForRequestRide:withCompletion:")]
 		void ResolvePickupLocation (INRequestRideIntent intent, Action<INPlacemarkResolutionResult> completion);
@@ -3062,6 +3811,7 @@ namespace XamCore.Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (INPerson))]
+	[DisableDefaultCtor] // The base type, INPerson, has no default ctor.
 	interface INRestaurantGuest {
 
 		[Export ("initWithNameComponents:phoneNumber:emailAddress:")]
@@ -3299,7 +4049,13 @@ namespace XamCore.Intents {
 		void HandleResumeWorkout (INResumeWorkoutIntent intent, Action<INResumeWorkoutIntentResponse> completion);
 
 		[Export ("confirmResumeWorkout:completion:")]
-		void ConfirmResumeWorkout (INResumeWorkoutIntent intent, Action<INResumeWorkoutIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmResumeWorkout
+#endif
+		(INResumeWorkoutIntent intent, Action<INResumeWorkoutIntentResponse> completion);
 
 		[Export ("resolveWorkoutNameForResumeWorkout:withCompletion:")]
 		void ResolveWorkoutName (INResumeWorkoutIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -3339,6 +4095,11 @@ namespace XamCore.Intents {
 		[Export ("completedWithOutstandingPaymentAmount:")]
 		INRideCompletionStatus GetOutstandingPaymentAmount (INCurrencyAmount outstandingPaymentAmount);
 
+		[Watch (4,0), iOS (11,0)]
+		[Static]
+		[Export ("completedWithOutstandingFeedbackType:")]
+		INRideCompletionStatus GetCompleted (INRideFeedbackTypeOptions feedbackType);
+
 		[Static]
 		[Export ("canceledByService")]
 		INRideCompletionStatus GetCanceledByService ();
@@ -3366,8 +4127,16 @@ namespace XamCore.Intents {
 		[NullAllowed, Export ("paymentAmount", ArgumentSemantic.Strong)]
 		INCurrencyAmount PaymentAmount { get; }
 
+		[Watch (4,0), iOS (11,0)]
+		[Export ("feedbackType", ArgumentSemantic.Assign)]
+		INRideFeedbackTypeOptions FeedbackType { get; }
+
 		[Export ("outstanding")]
 		bool Outstanding { [Bind ("isOutstanding")] get; }
+
+		[Watch (4,0), iOS (11,0)]
+		[NullAllowed, Export ("defaultTippingOptions", ArgumentSemantic.Strong)]
+		NSSet<INCurrencyAmount> DefaultTippingOptions { get; set; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -3576,7 +4345,7 @@ namespace XamCore.Intents {
 		[NullAllowed, Export ("profileNumber", ArgumentSemantic.Copy)]
 		NSNumber ProfileNumber { get; }
 
-		[Deprecated (PlatformName.iOS, 10,2, message:"Use ProfileName instead")]
+		[Deprecated (PlatformName.iOS, 10,2, message:"Use 'ProfileName' instead.")]
 		[NullAllowed, Export ("profileLabel")]
 		string ProfileLabel { get; }
 
@@ -3596,7 +4365,13 @@ namespace XamCore.Intents {
 		void HandleSaveProfileInCar (INSaveProfileInCarIntent intent, Action<INSaveProfileInCarIntentResponse> completion);
 
 		[Export ("confirmSaveProfileInCar:completion:")]
-		void ConfirmSaveProfileInCar (INSaveProfileInCarIntent intent, Action<INSaveProfileInCarIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSaveProfileInCar
+#endif
+		(INSaveProfileInCarIntent intent, Action<INSaveProfileInCarIntentResponse> completion);
 
 		[Export ("resolveProfileNumberForSaveProfileInCar:withCompletion:")]
 		void ResolveProfileNumber (INSaveProfileInCarIntent intent, Action<INIntegerResolutionResult> completion);
@@ -3627,10 +4402,24 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSearchCallHistoryIntent {
 
-		[Export ("initWithCallType:dateCreated:recipient:callCapabilities:")]
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("initWithDateCreated:recipient:callCapabilities:callTypes:unseen:")]
 		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] INPerson recipient, INCallCapabilityOptions callCapabilities, INCallRecordTypeOptions callTypes, [NullAllowed] NSNumber unseen);
+
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Wrap ("this (dateCreated, recipient, callCapabilities, callTypes, new NSNumber (unseen))")]
+		IntPtr Constructor ([NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] INPerson recipient, INCallCapabilityOptions callCapabilities, INCallRecordTypeOptions callTypes, bool unseen);
+
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use '.ctor (INDateComponentsRange, INPerson, INCallCapabilityOptions, INCallRecordTypeOptions, NSNumber)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use '.ctor (INDateComponentsRange, INPerson, INCallCapabilityOptions, INCallRecordTypeOptions, NSNumber)' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (INDateComponentsRange, INPerson, INCallCapabilityOptions, INCallRecordTypeOptions, NSNumber)' instead.")]
+		[Export ("initWithCallType:dateCreated:recipient:callCapabilities:")]
 		IntPtr Constructor (INCallRecordType callType, [NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] INPerson recipient, INCallCapabilityOptions callCapabilities);
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CallTypes' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CallTypes' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CallTypes' instead.")]
 		[Export ("callType", ArgumentSemantic.Assign)]
 		INCallRecordType CallType { get; }
 
@@ -3642,6 +4431,15 @@ namespace XamCore.Intents {
 
 		[Export ("callCapabilities", ArgumentSemantic.Assign)]
 		INCallCapabilityOptions CallCapabilities { get; }
+
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("callTypes", ArgumentSemantic.Assign)]
+		INCallRecordTypeOptions CallTypes { get; }
+
+		[Protected]
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[NullAllowed, Export ("unseen", ArgumentSemantic.Copy)]
+		NSNumber WeakUnseen { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -3655,8 +4453,17 @@ namespace XamCore.Intents {
 		void HandleSearchCallHistory (INSearchCallHistoryIntent intent, Action<INSearchCallHistoryIntentResponse> completion);
 
 		[Export ("confirmSearchCallHistory:completion:")]
-		void ConfirmSearchCallHistory (INSearchCallHistoryIntent intent, Action<INSearchCallHistoryIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSearchCallHistory
+#endif
+		(INSearchCallHistoryIntent intent, Action<INSearchCallHistoryIntentResponse> completion);
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'ResolveCallTypes' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ResolveCallTypes' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolveCallTypes' instead.")]
 		[Export ("resolveCallTypeForSearchCallHistory:withCompletion:")]
 		void ResolveCallType (INSearchCallHistoryIntent intent, Action<INCallRecordTypeResolutionResult> completion);
 
@@ -3665,6 +4472,14 @@ namespace XamCore.Intents {
 
 		[Export ("resolveRecipientForSearchCallHistory:withCompletion:")]
 		void ResolveRecipient (INSearchCallHistoryIntent intent, Action<INPersonResolutionResult> completion);
+
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("resolveCallTypesForSearchCallHistory:withCompletion:")]
+		void ResolveCallTypes (INSearchCallHistoryIntent intent, Action<INCallRecordTypeOptionsResolutionResult> completion);
+
+		[Watch (4,0), NoMac, iOS (11,0)]
+		[Export ("resolveUnseenForSearchCallHistory:withCompletion:")]
+		void ResolveUnseen (INSearchCallHistoryIntent intent, Action<INBooleanResolutionResult> completion);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -3680,6 +4495,10 @@ namespace XamCore.Intents {
 
 		[Export ("code")]
 		INSearchCallHistoryIntentResponseCode Code { get; }
+
+		[Mac (10,13, onlyOn64:true), iOS (11,0), Watch (4,0)]
+		[NullAllowed, Export ("callRecords", ArgumentSemantic.Copy)]
+		INCallRecord [] CallRecords { get; set; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -3688,8 +4507,15 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSearchForMessagesIntent {
 
-		[Export ("initWithRecipients:senders:searchTerms:attributes:dateTimeRange:identifiers:notificationIdentifiers:groupNames:")]
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("initWithRecipients:senders:searchTerms:attributes:dateTimeRange:identifiers:notificationIdentifiers:speakableGroupNames:")]
 		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] INPerson [] senders, [NullAllowed] string [] searchTerms, INMessageAttributeOptions attributes, [NullAllowed] INDateComponentsRange dateTimeRange, [NullAllowed] string [] identifiers, [NullAllowed] string [] notificationIdentifiers, [NullAllowed] INSpeakableString [] speakableGroupNames);
+
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use '.ctor (INPerson [], INPerson [], string [], INMessageAttributeOptions, INDateComponentsRange, string [], string [], INSpeakableString [])' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use '.ctor (INPerson [], INPerson [], string [], INMessageAttributeOptions, INDateComponentsRange, string [], string [], INSpeakableString [])' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (INPerson [], INPerson [], string [], INMessageAttributeOptions, INDateComponentsRange, string [], string [], INSpeakableString [])' instead.")]
+		[Export ("initWithRecipients:senders:searchTerms:attributes:dateTimeRange:identifiers:notificationIdentifiers:groupNames:")]
 		IntPtr Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] INPerson [] senders, [NullAllowed] string [] searchTerms, INMessageAttributeOptions attributes, [NullAllowed] INDateComponentsRange dateTimeRange, [NullAllowed] string [] identifiers, [NullAllowed] string [] notificationIdentifiers, [NullAllowed] string [] groupNames);
 
 		[NullAllowed, Export ("recipients", ArgumentSemantic.Copy)]
@@ -3728,11 +4554,25 @@ namespace XamCore.Intents {
 		[Export ("notificationIdentifiersOperator", ArgumentSemantic.Assign)]
 		INConditionalOperator NotificationIdentifiersOperator { get; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'SpeakableGroupNames' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'SpeakableGroupNames' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'SpeakableGroupNames' instead.")]
 		[NullAllowed, Export ("groupNames", ArgumentSemantic.Copy)]
 		string [] GroupNames { get; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'SpeakableGroupNamesOperator' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'SpeakableGroupNamesOperator' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'SpeakableGroupNamesOperator' instead.")]
 		[Export ("groupNamesOperator", ArgumentSemantic.Assign)]
 		INConditionalOperator GroupNamesOperator { get; }
+
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[NullAllowed, Export ("speakableGroupNames", ArgumentSemantic.Copy)]
+		INSpeakableString [] SpeakableGroupNames { get; }
+
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("speakableGroupNamesOperator", ArgumentSemantic.Assign)]
+		INConditionalOperator SpeakableGroupNamesOperator { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -3746,7 +4586,13 @@ namespace XamCore.Intents {
 		void HandleSearchForMessages (INSearchForMessagesIntent intent, Action<INSearchForMessagesIntentResponse> completion);
 
 		[Export ("confirmSearchForMessages:completion:")]
-		void ConfirmSearchForMessages (INSearchForMessagesIntent intent, Action<INSearchForMessagesIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSearchForMessages
+#endif
+		(INSearchForMessagesIntent intent, Action<INSearchForMessagesIntentResponse> completion);
 
 		[Export ("resolveRecipientsForSearchForMessages:withCompletion:")]
 		void ResolveRecipients (INSearchForMessagesIntent intent, Action<INPersonResolutionResult []> completion);
@@ -3760,8 +4606,15 @@ namespace XamCore.Intents {
 		[Export ("resolveDateTimeRangeForSearchForMessages:withCompletion:")]
 		void ResolveDateTimeRange (INSearchForMessagesIntent intent, Action<INDateComponentsRangeResolutionResult> completion);
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'ResolveSpeakableGroupNames' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ResolveSpeakableGroupNames' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolveSpeakableGroupNames' instead.")]
 		[Export ("resolveGroupNamesForSearchForMessages:withCompletion:")]
 		void ResolveGroupNames (INSearchForMessagesIntent intent, Action<INStringResolutionResult []> completion);
+
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("resolveSpeakableGroupNamesForSearchForMessages:withCompletion:")]
+		void ResolveSpeakableGroupNames (INSearchForMessagesIntent intent, Action<INSpeakableStringResolutionResult []> completion);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -3831,7 +4684,13 @@ namespace XamCore.Intents {
 		void HandleSearchForPhotos (INSearchForPhotosIntent intent, Action<INSearchForPhotosIntentResponse> completion);
 
 		[Export ("confirmSearchForPhotos:completion:")]
-		void ConfirmSearchForPhotos (INSearchForPhotosIntent intent, Action<INSearchForPhotosIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSearchForPhotos
+#endif
+		(INSearchForPhotosIntent intent, Action<INSearchForPhotosIntentResponse> completion);
 
 		[Export ("resolveDateCreatedForSearchForPhotos:withCompletion:")]
 		void ResolveDateCreated (INSearchForPhotosIntent intent, Action<INDateComponentsRangeResolutionResult> completion);
@@ -3841,6 +4700,10 @@ namespace XamCore.Intents {
 
 		[Export ("resolveAlbumNameForSearchForPhotos:withCompletion:")]
 		void ResolveAlbumName (INSearchForPhotosIntent intent, Action<INStringResolutionResult> completion);
+
+		[Watch (4,0), iOS (11,0)]
+		[Export ("resolveSearchTermsForSearchForPhotos:withCompletion:")]
+		void ResolveSearchTerms (INSearchForPhotosIntent intent, Action<INStringResolutionResult []> completion);
 
 		[Export ("resolvePeopleInPhotoForSearchForPhotos:withCompletion:")]
 		void ResolvePeopleInPhoto (INSearchForPhotosIntent intent, Action<INPersonResolutionResult []> completion);
@@ -3870,8 +4733,15 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSendMessageIntent {
 
-		[Export ("initWithRecipients:content:groupName:serviceName:sender:")]
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("initWithRecipients:content:speakableGroupName:conversationIdentifier:serviceName:sender:")]
 		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] string content, [NullAllowed] INSpeakableString speakableGroupName, [NullAllowed] string conversationIdentifier, [NullAllowed] string serviceName, [NullAllowed] INPerson sender);
+
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use '.ctor (INPerson [], string, INSpeakableString, string, string, INPerson)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use '.ctor (INPerson [], string, INSpeakableString, string, string, INPerson)' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (INPerson [], string, INSpeakableString, string, string, INPerson)' instead.")]
+		[Export ("initWithRecipients:content:groupName:serviceName:sender:")]
 		IntPtr Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] string content, [NullAllowed] string groupName, [NullAllowed] string serviceName, [NullAllowed] INPerson sender);
 
 		[NullAllowed, Export ("recipients", ArgumentSemantic.Copy)]
@@ -3880,6 +4750,17 @@ namespace XamCore.Intents {
 		[NullAllowed, Export ("content")]
 		string Content { get; }
 
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[NullAllowed, Export ("speakableGroupName", ArgumentSemantic.Copy)]
+		INSpeakableString SpeakableGroupName { get; }
+
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[NullAllowed, Export ("conversationIdentifier")]
+		string ConversationIdentifier { get; }
+
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'SpeakableGroupNames' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'SpeakableGroupNames' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'SpeakableGroupNames' instead.")]
 		[NullAllowed, Export ("groupName")]
 		string GroupName { get; }
 
@@ -3901,16 +4782,36 @@ namespace XamCore.Intents {
 		void HandleSendMessage (INSendMessageIntent intent, Action<INSendMessageIntentResponse> completion);
 
 		[Export ("confirmSendMessage:completion:")]
-		void ConfirmSendMessage (INSendMessageIntent intent, Action<INSendMessageIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSendMessage
+#endif
+		(INSendMessageIntent intent, Action<INSendMessageIntentResponse> completion);
 
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ResolveRecipients (INSendMessageIntent, Action<INSendMessageRecipientResolutionResult []>)' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolveRecipients (INSendMessageIntent, Action<INSendMessageRecipientResolutionResult []>)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'ResolveRecipients (INSendMessageIntent, Action<INSendMessageRecipientResolutionResult []>)' instead.")]
 		[Export ("resolveRecipientsForSendMessage:withCompletion:")]
 		void ResolveRecipients (INSendMessageIntent intent, Action<INPersonResolutionResult []> completion);
+
+		[Watch (4,0), iOS (11,0), Mac (10,13, onlyOn64:true)]
+		[Export ("resolveRecipientsForSendMessage:completion:")]
+		void ResolveRecipients (INSendMessageIntent intent, Action<INSendMessageRecipientResolutionResult []> completion);
 
 		[Export ("resolveContentForSendMessage:withCompletion:")]
 		void ResolveContent (INSendMessageIntent intent, Action<INStringResolutionResult> completion);
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'ResolveSpeakableGroupName' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ResolveSpeakableGroupName' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolveSpeakableGroupName' instead.")]
 		[Export ("resolveGroupNameForSendMessage:withCompletion:")]
 		void ResolveGroupName (INSendMessageIntent intent, Action<INStringResolutionResult> completion);
+
+		[Watch (4,0), iOS (11,0), Mac (10,13, onlyOn64:true)]
+		[Export ("resolveSpeakableGroupNameForSendMessage:withCompletion:")]
+		void ResolveSpeakableGroupName (INSendMessageIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -3926,6 +4827,10 @@ namespace XamCore.Intents {
 
 		[Export ("code")]
 		INSendMessageIntentResponseCode Code { get; }
+
+		[Watch (4,0), iOS (11,0), Mac (10,13, onlyOn64:true)]
+		[NullAllowed, Export ("sentMessage", ArgumentSemantic.Copy)]
+		INMessage SentMessage { get; set; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -3959,13 +4864,31 @@ namespace XamCore.Intents {
 		void HandleSendPayment (INSendPaymentIntent intent, Action<INSendPaymentIntentResponse> completion);
 
 		[Export ("confirmSendPayment:completion:")]
-		void ConfirmSendPayment (INSendPaymentIntent intent, Action<INSendPaymentIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSendPayment
+#endif
+		(INSendPaymentIntent intent, Action<INSendPaymentIntentResponse> completion);
 
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ResolvePayee (INSendPaymentIntent, Action<INSendPaymentPayeeResolutionResult>)' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolvePayee (INSendPaymentIntent, Action<INSendPaymentPayeeResolutionResult>)' instead.")]
 		[Export ("resolvePayeeForSendPayment:withCompletion:")]
 		void ResolvePayee (INSendPaymentIntent intent, Action<INPersonResolutionResult> completion);
 
+		[Watch (4,0), iOS (11,0)]
+		[Export ("resolvePayeeForSendPayment:completion:")]
+		void ResolvePayee (INSendPaymentIntent intent, Action<INSendPaymentPayeeResolutionResult> completion);
+
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ResolveCurrencyAmount (INSendPaymentIntent, Action<INSendPaymentCurrencyAmountResolutionResult>)' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'ResolveCurrencyAmount (INSendPaymentIntent, Action<INSendPaymentCurrencyAmountResolutionResult>)' instead.")]
 		[Export ("resolveCurrencyAmountForSendPayment:withCompletion:")]
 		void ResolveCurrencyAmount (INSendPaymentIntent intent, Action<INCurrencyAmountResolutionResult> completion);
+
+		[Watch (4,0), iOS (11,0)]
+		[Export ("resolveCurrencyAmountForSendPayment:completion:")]
+		void ResolveCurrencyAmount (INSendPaymentIntent intent, Action<INSendPaymentCurrencyAmountResolutionResult> completion);
 
 		[Export ("resolveNoteForSendPayment:withCompletion:")]
 		void ResolveNote (INSendPaymentIntent intent, Action<INStringResolutionResult> completion);
@@ -4017,7 +4940,13 @@ namespace XamCore.Intents {
 		void HandleSetAudioSourceInCar (INSetAudioSourceInCarIntent intent, Action<INSetAudioSourceInCarIntentResponse> completion);
 
 		[Export ("confirmSetAudioSourceInCar:completion:")]
-		void ConfirmSetAudioSourceInCar (INSetAudioSourceInCarIntent intent, Action<INSetAudioSourceInCarIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSetAudioSourceInCar
+#endif
+		(INSetAudioSourceInCarIntent intent, Action<INSetAudioSourceInCarIntentResponse> completion);
 
 		[Export ("resolveAudioSourceForSetAudioSourceInCar:withCompletion:")]
 		void ResolveAudioSource (INSetAudioSourceInCarIntent intent, Action<INCarAudioSourceResolutionResult> completion);
@@ -4105,7 +5034,13 @@ namespace XamCore.Intents {
 		void HandleSetClimateSettingsInCar (INSetClimateSettingsInCarIntent intent, Action<INSetClimateSettingsInCarIntentResponse> completion);
 
 		[Export ("confirmSetClimateSettingsInCar:completion:")]
-		void ConfirmSetClimateSettingsInCar (INSetClimateSettingsInCarIntent intent, Action<INSetClimateSettingsInCarIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSetClimateSettingsInCar
+#endif
+		(INSetClimateSettingsInCarIntent intent, Action<INSetClimateSettingsInCarIntentResponse> completion);
 
 		[Export ("resolveEnableFanForSetClimateSettingsInCar:withCompletion:")]
 		void ResolveEnableFan (INSetClimateSettingsInCarIntent intent, Action<INBooleanResolutionResult> completion);
@@ -4186,7 +5121,13 @@ namespace XamCore.Intents {
 		void HandleSetDefrosterSettingsInCar (INSetDefrosterSettingsInCarIntent intent, Action<INSetDefrosterSettingsInCarIntentResponse> completion);
 
 		[Export ("confirmSetDefrosterSettingsInCar:completion:")]
-		void ConfirmSetDefrosterSettingsInCar (INSetDefrosterSettingsInCarIntent intent, Action<INSetDefrosterSettingsInCarIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSetDefrosterSettingsInCar
+#endif
+		(INSetDefrosterSettingsInCarIntent intent, Action<INSetDefrosterSettingsInCarIntentResponse> completion);
 
 		[Export ("resolveEnableForSetDefrosterSettingsInCar:withCompletion:")]
 		void ResolveEnable (INSetDefrosterSettingsInCarIntent intent, Action<INBooleanResolutionResult> completion);
@@ -4238,7 +5179,13 @@ namespace XamCore.Intents {
 		void HandleSetMessageAttribute (INSetMessageAttributeIntent intent, Action<INSetMessageAttributeIntentResponse> completion);
 
 		[Export ("confirmSetMessageAttribute:completion:")]
-		void ConfirmSetMessageAttribute (INSetMessageAttributeIntent intent, Action<INSetMessageAttributeIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSetMessageAttribute
+#endif
+		(INSetMessageAttributeIntent intent, Action<INSetMessageAttributeIntentResponse> completion);
 
 		[Export ("resolveAttributeForSetMessageAttribute:withCompletion:")]
 		void ResolveAttribute (INSetMessageAttributeIntent intent, Action<INMessageAttributeResolutionResult> completion);
@@ -4276,7 +5223,7 @@ namespace XamCore.Intents {
 		[NullAllowed, Export ("profileNumber", ArgumentSemantic.Copy)]
 		NSNumber ProfileNumber { get; }
 
-		[Deprecated (PlatformName.iOS, 10, 2, message: "Use ProfileName instead")]
+		[Deprecated (PlatformName.iOS, 10, 2, message: "Use 'ProfileName' instead.")]
 		[NullAllowed, Export ("profileLabel")]
 		string ProfileLabel { get; }
 
@@ -4300,11 +5247,18 @@ namespace XamCore.Intents {
 		void HandleSetProfileInCar (INSetProfileInCarIntent intent, Action<INSetProfileInCarIntentResponse> completion);
 
 		[Export ("confirmSetProfileInCar:completion:")]
-		void ConfirmSetProfileInCar (INSetProfileInCarIntent intent, Action<INSetProfileInCarIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSetProfileInCar
+#endif
+		(INSetProfileInCarIntent intent, Action<INSetProfileInCarIntentResponse> completion);
 
 		[Export ("resolveProfileNumberForSetProfileInCar:withCompletion:")]
 		void ResolveProfileNumber (INSetProfileInCarIntent intent, Action<INIntegerResolutionResult> completion);
 
+		[Deprecated (PlatformName.iOS, 11, 0, message: "The property doesn't need to be resolved.")]
 		[Export ("resolveDefaultProfileForSetProfileInCar:withCompletion:")]
 		void ResolveDefaultProfile (INSetProfileInCarIntent intent, Action<INBooleanResolutionResult> completion);
 
@@ -4365,7 +5319,13 @@ namespace XamCore.Intents {
 		void HandleSetRadioStation (INSetRadioStationIntent intent, Action<INSetRadioStationIntentResponse> completion);
 
 		[Export ("confirmSetRadioStation:completion:")]
-		void ConfirmSetRadioStation (INSetRadioStationIntent intent, Action<INSetRadioStationIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSetRadioStation
+#endif
+		(INSetRadioStationIntent intent, Action<INSetRadioStationIntentResponse> completion);
 
 		[Export ("resolveRadioTypeForSetRadioStation:withCompletion:")]
 		void ResolveRadioType (INSetRadioStationIntent intent, Action<INRadioTypeResolutionResult> completion);
@@ -4442,7 +5402,13 @@ namespace XamCore.Intents {
 		void HandleSetSeatSettingsInCar (INSetSeatSettingsInCarIntent intent, Action<INSetSeatSettingsInCarIntentResponse> completion);
 
 		[Export ("confirmSetSeatSettingsInCar:completion:")]
-		void ConfirmSetSeatSettingsInCar (INSetSeatSettingsInCarIntent intent, Action<INSetSeatSettingsInCarIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSetSeatSettingsInCar
+#endif
+		(INSetSeatSettingsInCarIntent intent, Action<INSetSeatSettingsInCarIntentResponse> completion);
 
 		[Export ("resolveEnableHeatingForSetSeatSettingsInCar:withCompletion:")]
 		void ResolveEnableHeating (INSetSeatSettingsInCarIntent intent, Action<INBooleanResolutionResult> completion);
@@ -4478,6 +5444,8 @@ namespace XamCore.Intents {
 		INSetSeatSettingsInCarIntentResponseCode Code { get; }
 	}
 
+	interface IINSpeakable { }
+
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[Introduced (PlatformName.WatchOS, 3, 2)]
@@ -4492,7 +5460,26 @@ namespace XamCore.Intents {
 		[NullAllowed, Export ("pronunciationHint")]
 		string PronunciationHint { get; }
 
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+#if XAMCORE_4_0
 		[Abstract]
+#endif
+		[NullAllowed, Export ("vocabularyIdentifier")]
+		string VocabularyIdentifier { get; }
+
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[NullAllowed, Export ("alternativeSpeakableMatches")]
+		IINSpeakable [] AlternativeSpeakableMatches { get; }
+
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'VocabularyIdentifier' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'VocabularyIdentifier' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'VocabularyIdentifier' instead.")]
+#if !XAMCORE_4_0 // Apple made this @optional in iOS 11
+		[Abstract]
+#endif
 		[NullAllowed, Export ("identifier")]
 		string Identifier { get; }
 	}
@@ -4504,9 +5491,14 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INSpeakableString : INSpeakable {
 
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Internal]
+		[Export ("initWithVocabularyIdentifier:spokenPhrase:pronunciationHint:")]
+		IntPtr InitWithVocabularyIdentifier (string vocabularyIdentifier, string spokenPhrase, [NullAllowed] string pronunciationHint);
+
+		[Internal]
 		[Export ("initWithIdentifier:spokenPhrase:pronunciationHint:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (string identifier, string spokenPhrase, [NullAllowed] string pronunciationHint);
+		IntPtr InitWithIdentifier (string identifier, string spokenPhrase, [NullAllowed] string pronunciationHint);
 
 		[Introduced (PlatformName.iOS, 10, 2)]
 		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
@@ -4558,9 +5550,20 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntent))]
 	interface INStartAudioCallIntent {
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use '.ctor (INCallDestinationType, INPerson [])' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use '.ctor (INCallDestinationType, INPerson [])' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (INCallDestinationType, INPerson [])' instead.")]
 		[Export ("initWithContacts:")]
-		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] INPerson [] contacts);
+
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("initWithDestinationType:contacts:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INCallDestinationType destinationType, [NullAllowed] INPerson [] contacts);
+
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("destinationType", ArgumentSemantic.Assign)]
+		INCallDestinationType DestinationType { get; }
 
 		[NullAllowed, Export ("contacts", ArgumentSemantic.Copy)]
 		INPerson [] Contacts { get; }
@@ -4577,7 +5580,17 @@ namespace XamCore.Intents {
 		void HandleStartAudioCall (INStartAudioCallIntent intent, Action<INStartAudioCallIntentResponse> completion);
 
 		[Export ("confirmStartAudioCall:completion:")]
-		void ConfirmStartAudioCall (INStartAudioCallIntent intent, Action<INStartAudioCallIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmStartAudioCall
+#endif
+		(INStartAudioCallIntent intent, Action<INStartAudioCallIntentResponse> completion);
+
+		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("resolveDestinationTypeForStartAudioCall:withCompletion:")]
+		void ResolveDestinationType (INStartAudioCallIntent intent, Action<INCallDestinationTypeResolutionResult> completion);
 
 		[Export ("resolveContactsForStartAudioCall:withCompletion:")]
 		void ResolveContacts (INStartAudioCallIntent intent, Action<INPersonResolutionResult []> completion);
@@ -4647,7 +5660,13 @@ namespace XamCore.Intents {
 		void HandleStartPhotoPlayback (INStartPhotoPlaybackIntent intent, Action<INStartPhotoPlaybackIntentResponse> completion);
 
 		[Export ("confirmStartPhotoPlayback:completion:")]
-		void ConfirmStartPhotoPlayback (INStartPhotoPlaybackIntent intent, Action<INStartPhotoPlaybackIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmStartPhotoPlayback
+#endif
+		(INStartPhotoPlaybackIntent intent, Action<INStartPhotoPlaybackIntentResponse> completion);
 
 		[Export ("resolveDateCreatedForStartPhotoPlayback:withCompletion:")]
 		void ResolveDateCreated (INStartPhotoPlaybackIntent intent, Action<INDateComponentsRangeResolutionResult> completion);
@@ -4705,7 +5724,13 @@ namespace XamCore.Intents {
 		void HandleStartVideoCall (INStartVideoCallIntent intent, Action<INStartVideoCallIntentResponse> completion);
 
 		[Export ("confirmStartVideoCall:completion:")]
-		void ConfirmStartVideoCall (INStartVideoCallIntent intent, Action<INStartVideoCallIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmStartVideoCall
+#endif
+		(INStartVideoCallIntent intent, Action<INStartVideoCallIntentResponse> completion);
 
 		[Export ("resolveContactsForStartVideoCall:withCompletion:")]
 		void ResolveContacts (INStartVideoCallIntent intent, Action<INPersonResolutionResult []> completion);
@@ -4765,7 +5790,13 @@ namespace XamCore.Intents {
 		void HandleStartWorkout (INStartWorkoutIntent intent, Action<INStartWorkoutIntentResponse> completion);
 
 		[Export ("confirmStartWorkout:completion:")]
-		void ConfirmStartWorkout (INStartWorkoutIntent intent, Action<INStartWorkoutIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmStartWorkout
+#endif
+		(INStartWorkoutIntent intent, Action<INStartWorkoutIntentResponse> completion);
 
 		[Export ("resolveWorkoutNameForStartWorkout:withCompletion:")]
 		void ResolveWorkoutName (INStartWorkoutIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -4905,11 +5936,16 @@ namespace XamCore.Intents {
 		[Export ("sharedVocabulary")]
 		INVocabulary SharedVocabulary { get; }
 
-		[Advice ("This API is not allowed in extensions")]
+		[Advice ("This API is not allowed in extensions.")]
 		[Export ("setVocabularyStrings:ofType:")]
 		void SetVocabularyStrings (NSOrderedSet<NSString> vocabulary, INVocabularyStringType type);
 
-		[Advice ("This API is not allowed in extensions")]
+		[Advice ("This API is not allowed in extensions.")]
+		[iOS (11,0)]
+		[Export ("setVocabulary:ofType:")]
+		void SetVocabulary (NSOrderedSet<IINSpeakable> vocabulary, INVocabularyStringType type);
+
+		[Advice ("This API is not allowed in extensions.")]
 		[Export ("removeAllVocabularyStrings")]
 		void RemoveAllVocabularyStrings ();
 	}
@@ -4921,13 +5957,31 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INWorkoutGoalUnitTypeResolutionResult {
 
+		[Watch (4,0), iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("successWithResolvedWorkoutGoalUnitType:")]
+		INWorkoutGoalUnitTypeResolutionResult SuccessWithResolvedWorkoutGoalUnitType (INWorkoutGoalUnitType resolvedWorkoutGoalUnitType);
+
+		[Internal]
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
-		INWorkoutGoalUnitTypeResolutionResult GetSuccess (INWorkoutGoalUnitType resolvedValue);
+		INWorkoutGoalUnitTypeResolutionResult SuccessWithResolvedValue (INWorkoutGoalUnitType resolvedValue);
 
+		[Watch (4,0), iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("confirmationRequiredWithWorkoutGoalUnitTypeToConfirm:")]
+		INWorkoutGoalUnitTypeResolutionResult ConfirmationRequiredWithWorkoutGoalUnitTypeToConfirm (INWorkoutGoalUnitType workoutGoalUnitTypeToConfirm);
+
+		[Internal]
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INWorkoutGoalUnitTypeResolutionResult GetConfirmationRequired (INWorkoutGoalUnitType valueToConfirm);
+		INWorkoutGoalUnitTypeResolutionResult ConfirmationRequiredWithValueToConfirm (INWorkoutGoalUnitType valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -4955,13 +6009,31 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INWorkoutLocationTypeResolutionResult {
 
+		[Watch (4,0), iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("successWithResolvedWorkoutLocationType:")]
+		INWorkoutLocationTypeResolutionResult SuccessWithResolvedWorkoutLocationType (INWorkoutLocationType resolvedWorkoutLocationType);
+
+		[Internal]
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
-		INWorkoutLocationTypeResolutionResult GetSuccess (INWorkoutLocationType resolvedValue);
+		INWorkoutLocationTypeResolutionResult SuccessWithResolvedValue (INWorkoutLocationType resolvedValue);
 
+		[Watch (4,0), iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("confirmationRequiredWithWorkoutLocationTypeToConfirm:")]
+		INWorkoutLocationTypeResolutionResult ConfirmationRequiredWithWorkoutLocationTypeToConfirm (INWorkoutLocationType workoutLocationTypeToConfirm);
+
+		[Internal]
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INWorkoutLocationTypeResolutionResult GetConfirmationRequired (INWorkoutLocationType valueToConfirm);
+		INWorkoutLocationTypeResolutionResult ConfirmationRequiredWithValueToConfirm (INWorkoutLocationType valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -5022,7 +6094,13 @@ namespace XamCore.Intents {
 		void HandleActivateCarSignal (INActivateCarSignalIntent intent, Action<INActivateCarSignalIntentResponse> completion);
 
 		[Export ("confirmActivateCarSignal:completion:")]
-		void ConfirmActivateCarSignal (INActivateCarSignalIntent intent, Action<INActivateCarSignalIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmActivateCarSignal
+#endif
+		(INActivateCarSignalIntent intent, Action<INActivateCarSignalIntentResponse> completion);
 
 		[Export ("resolveCarNameForActivateCarSignal:withCompletion:")]
 		void ResolveCarName (INActivateCarSignalIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -5133,13 +6211,31 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INBillTypeResolutionResult {
 
+		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Internal]
 		[Static]
 		[Export ("successWithResolvedValue:")]
-		INBillTypeResolutionResult GetSuccess (INBillType resolvedValue);
+		INBillTypeResolutionResult SuccessWithResolvedValue (INBillType resolvedValue);
 
+		[iOS (11,0), Watch (4,0)]
+		[Internal]
+		[Static]
+		[Export ("successWithResolvedBillType:")]
+		INBillTypeResolutionResult SuccessWithResolvedBillType (INBillType resolvedBillType);
+
+		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INBillTypeResolutionResult GetConfirmationRequired (INBillType valueToConfirm);
+		INBillTypeResolutionResult ConfirmationRequiredWithValueToConfirm (INBillType valueToConfirm);
+
+		[iOS (11,0), Watch (4,0)]
+		[Internal]
+		[Static]
+		[Export ("confirmationRequiredWithBillTypeToConfirm:")]
+		INBillTypeResolutionResult ConfirmationRequiredWithBillTypeToConfirm (INBillType billTypeToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -5167,13 +6263,31 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INCarSignalOptionsResolutionResult {
 
+		[iOS (11,0), Watch (4,0)]
+		[Internal]
+		[Static]
+		[Export ("successWithResolvedCarSignalOptions:")]
+		INCarSignalOptionsResolutionResult SuccessWithResolvedCarSignalOptions (INCarSignalOptions resolvedCarSignalOptions);
+
+		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Internal]
 		[Static]
 		[Export ("successWithResolvedValue:")]
-		INCarSignalOptionsResolutionResult GetSuccess (INCarSignalOptions resolvedValue);
+		INCarSignalOptionsResolutionResult SuccessWithResolvedValue (INCarSignalOptions resolvedValue);
 
+		[iOS (11,0), Watch (4,0)]
+		[Internal]
+		[Static]
+		[Export ("confirmationRequiredWithCarSignalOptionsToConfirm:")]
+		INCarSignalOptionsResolutionResult ConfirmationRequiredWithCarSignalOptionsToConfirm (INCarSignalOptions carSignalOptionsToConfirm);
+
+		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INCarSignalOptionsResolutionResult GetConfirmationRequired (INCarSignalOptions valueToConfirm);
+		INCarSignalOptionsResolutionResult ConfirmationRequiredWithValueToConfirm (INCarSignalOptions valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -5220,7 +6334,13 @@ namespace XamCore.Intents {
 		void HandleGetCarLockStatus (INGetCarLockStatusIntent intent, Action<INGetCarLockStatusIntentResponse> completion);
 
 		[Export ("confirmGetCarLockStatus:completion:")]
-		void ConfirmGetCarLockStatus (INGetCarLockStatusIntent intent, Action<INGetCarLockStatusIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmGetCarLockStatus
+#endif
+		(INGetCarLockStatusIntent intent, Action<INGetCarLockStatusIntentResponse> completion);
 
 		[Export ("resolveCarNameForGetCarLockStatus:withCompletion:")]
 		void ResolveCarName (INGetCarLockStatusIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -5274,7 +6394,13 @@ namespace XamCore.Intents {
 		void HandleGetCarPowerLevelStatus (INGetCarPowerLevelStatusIntent intent, Action<INGetCarPowerLevelStatusIntentResponse> completion);
 
 		[Export ("confirmGetCarPowerLevelStatus:completion:")]
-		void ConfirmGetCarPowerLevelStatus (INGetCarPowerLevelStatusIntent intent, Action<INGetCarPowerLevelStatusIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmGetCarPowerLevelStatus
+#endif
+		(INGetCarPowerLevelStatusIntent intent, Action<INGetCarPowerLevelStatusIntentResponse> completion);
 
 		[Export ("resolveCarNameForGetCarPowerLevelStatus:withCompletion:")]
 		void ResolveCarName (INGetCarPowerLevelStatusIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -5361,7 +6487,13 @@ namespace XamCore.Intents {
 		void HandlePayBill (INPayBillIntent intent, Action<INPayBillIntentResponse> completion);
 
 		[Export ("confirmPayBill:completion:")]
-		void ConfirmPayBill (INPayBillIntent intent, Action<INPayBillIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmPayBill
+#endif
+		(INPayBillIntent intent, Action<INPayBillIntentResponse> completion);
 
 		[Export ("resolveBillPayeeForPayBill:withCompletion:")]
 		void ResolveBillPayee (INPayBillIntent intent, Action<INBillPayeeResolutionResult> completion);
@@ -5422,9 +6554,15 @@ namespace XamCore.Intents {
 	[BaseType (typeof (NSObject))]
 	interface INPaymentAccount : NSCopying, NSSecureCoding {
 
-		[DesignatedInitializer]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Please use '.ctor (INSpeakableString, string, INAccountType, INSpeakableString, INBalanceAmount, INBalanceAmount)' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Please use '.ctor (INSpeakableString, string, INAccountType, INSpeakableString, INBalanceAmount, INBalanceAmount)' instead.")]
 		[Export ("initWithNickname:number:accountType:organizationName:")]
 		IntPtr Constructor (INSpeakableString nickname, [NullAllowed] string accountNumber, INAccountType accountType, [NullAllowed] INSpeakableString organizationName);
+
+		[Watch (4,0), iOS (11,0)]
+		[Export ("initWithNickname:number:accountType:organizationName:balance:secondaryBalance:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INSpeakableString nickname, [NullAllowed] string accountNumber, INAccountType accountType, [NullAllowed] INSpeakableString organizationName, [NullAllowed] INBalanceAmount balance, [NullAllowed] INBalanceAmount secondaryBalance);
 
 		[Export ("nickname", ArgumentSemantic.Copy), NullAllowed]
 		INSpeakableString Nickname { get; }
@@ -5437,6 +6575,14 @@ namespace XamCore.Intents {
 
 		[Export ("organizationName", ArgumentSemantic.Copy), NullAllowed]
 		INSpeakableString OrganizationName { get; }
+
+		[Watch (4,0), iOS (11,0)]
+		[NullAllowed, Export ("balance", ArgumentSemantic.Copy)]
+		INBalanceAmount Balance { get; }
+
+		[Watch (4,0), iOS (11,0)]
+		[NullAllowed, Export ("secondaryBalance", ArgumentSemantic.Copy)]
+		INBalanceAmount SecondaryBalance { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 3)]
@@ -5540,13 +6686,31 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INPaymentStatusResolutionResult {
 
+		[Watch (4,0), iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("successWithResolvedPaymentStatus:")]
+		INPaymentStatusResolutionResult SuccessWithResolvedPaymentStatus (INPaymentStatus resolvedPaymentStatus);
+
+		[Internal]
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("successWithResolvedValue:")]
-		INPaymentStatusResolutionResult GetSuccess (INPaymentStatus resolvedValue);
+		INPaymentStatusResolutionResult SuccessWithResolvedValue (INPaymentStatus resolvedValue);
 
+		[Watch (4,0), iOS (11,0)]
+		[Internal]
+		[Static]
+		[Export ("confirmationRequiredWithPaymentStatusToConfirm:")]
+		INPaymentStatusResolutionResult ConfirmationRequiredWithPaymentStatusToConfirm (INPaymentStatus paymentStatusToConfirm);
+
+		[Internal]
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INPaymentStatusResolutionResult GetConfirmationRequired (INPaymentStatus valueToConfirm);
+		INPaymentStatusResolutionResult ConfirmationRequiredWithValueToConfirm (INPaymentStatus valueToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -5607,7 +6771,13 @@ namespace XamCore.Intents {
 		void HandleSearch (INSearchForBillsIntent intent, Action<INSearchForBillsIntentResponse> completion);
 
 		[Export ("confirmSearchForBills:completion:")]
-		void ConfirmSearch (INSearchForBillsIntent intent, Action<INSearchForBillsIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSearch
+#endif
+		(INSearchForBillsIntent intent, Action<INSearchForBillsIntentResponse> completion);
 
 		[Export ("resolveBillPayeeForSearchForBills:withCompletion:")]
 		void ResolveBillPayee (INSearchForBillsIntent intent, Action<INBillPayeeResolutionResult> completion);
@@ -5677,7 +6847,13 @@ namespace XamCore.Intents {
 		void HandleSetCarLockStatus (INSetCarLockStatusIntent intent, Action<INSetCarLockStatusIntentResponse> completion);
 
 		[Export ("confirmSetCarLockStatus:completion:")]
-		void ConfirmSetCarLockStatus (INSetCarLockStatusIntent intent, Action<INSetCarLockStatusIntentResponse> completion);
+		void
+#if XAMCORE_4_0 // Follow Swift's naming, fixes bug https://bugzilla.xamarin.com/show_bug.cgi?id=59164
+		Confirm
+#else
+		ConfirmSetCarLockStatus
+#endif
+		(INSetCarLockStatusIntent intent, Action<INSetCarLockStatusIntentResponse> completion);
 
 		[Export ("resolveLockedForSetCarLockStatus:withCompletion:")]
 		void ResolveLocked (INSetCarLockStatusIntent intent, Action<INBooleanResolutionResult> completion);
@@ -5718,5 +6894,1598 @@ namespace XamCore.Intents {
 		[Export ("signals")]
 		INCarSignalOptions Signals { get; set; }
 	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	[DisableDefaultCtor]
+	interface INAccountTypeResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedAccountType:")]
+		INAccountTypeResolutionResult GetSuccess (INAccountType resolvedAccountType);
+
+		[Static]
+		[Export ("confirmationRequiredWithAccountTypeToConfirm:")]
+		INAccountTypeResolutionResult GetConfirmationRequired (INAccountType accountTypeToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INAccountTypeResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INAccountTypeResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INAccountTypeResolutionResult Unsupported { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntent))]
+	interface INAddTasksIntent {
+
+		[Export ("initWithTargetTaskList:taskTitles:spatialEventTrigger:temporalEventTrigger:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] INTaskList targetTaskList, [NullAllowed] INSpeakableString[] taskTitles, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger);
+
+		[NullAllowed, Export ("targetTaskList", ArgumentSemantic.Copy)]
+		INTaskList TargetTaskList { get; }
+
+		[NullAllowed, Export ("taskTitles", ArgumentSemantic.Copy)]
+		INSpeakableString [] TaskTitles { get; }
+
+		[NullAllowed, Export ("spatialEventTrigger", ArgumentSemantic.Copy)]
+		INSpatialEventTrigger SpatialEventTrigger { get; }
+
+		[NullAllowed, Export ("temporalEventTrigger", ArgumentSemantic.Copy)]
+		INTemporalEventTrigger TemporalEventTrigger { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Protocol]
+	interface INAddTasksIntentHandling {
+
+		[Abstract]
+		[Export ("handleAddTasks:completion:")]
+		void HandleAddTasks (INAddTasksIntent intent, Action<INAddTasksIntentResponse> completion);
+
+		[Export ("confirmAddTasks:completion:")]
+		void Confirm (INAddTasksIntent intent, Action<INAddTasksIntentResponse> completion);
+
+		[Export ("resolveTargetTaskListForAddTasks:withCompletion:")]
+		void ResolveTargetTaskList (INAddTasksIntent intent, Action<INTaskListResolutionResult> completion);
+
+		[Export ("resolveTaskTitlesForAddTasks:withCompletion:")]
+		void ResolveTaskTitles (INAddTasksIntent intent, Action<INSpeakableStringResolutionResult []> completion);
+
+		[Export ("resolveSpatialEventTriggerForAddTasks:withCompletion:")]
+		void ResolveSpatialEventTrigger (INAddTasksIntent intent, Action<INSpatialEventTriggerResolutionResult> completion);
+
+		[Export ("resolveTemporalEventTriggerForAddTasks:withCompletion:")]
+		void ResolveTemporalEventTrigger (INAddTasksIntent intent, Action<INTemporalEventTriggerResolutionResult> completion);
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResponse))]
+	[DisableDefaultCtor]
+	interface INAddTasksIntentResponse {
+
+		[Export ("initWithCode:userActivity:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INAddTasksIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INAddTasksIntentResponseCode Code { get; }
+
+		[NullAllowed, Export ("modifiedTaskList", ArgumentSemantic.Copy)]
+		INTaskList ModifiedTaskList { get; set; }
+
+		[NullAllowed, Export ("addedTasks", ArgumentSemantic.Copy)]
+		INTask [] AddedTasks { get; set; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntent))]
+	interface INAppendToNoteIntent {
+
+		[Export ("initWithTargetNote:content:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] INNote targetNote, [NullAllowed] INNoteContent content);
+
+		[NullAllowed, Export ("targetNote", ArgumentSemantic.Copy)]
+		INNote TargetNote { get; }
+
+		[NullAllowed, Export ("content", ArgumentSemantic.Copy)]
+		INNoteContent Content { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Protocol]
+	interface INAppendToNoteIntentHandling {
+
+		[Abstract]
+		[Export ("handleAppendToNote:completion:")]
+		void HandleAppendToNote (INAppendToNoteIntent intent, Action<INAppendToNoteIntentResponse> completion);
+
+		[Export ("confirmAppendToNote:completion:")]
+		void Confirm (INAppendToNoteIntent intent, Action<INAppendToNoteIntentResponse> completion);
+
+		[Export ("resolveTargetNoteForAppendToNote:withCompletion:")]
+		void ResolveTargetNoteForAppend (INAppendToNoteIntent intent, Action<INNoteResolutionResult> completion);
+
+		[Export ("resolveContentForAppendToNote:withCompletion:")]
+		void ResolveContentForAppend (INAppendToNoteIntent intent, Action<INNoteContentResolutionResult> completion);
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResponse))]
+	[DisableDefaultCtor]
+	interface INAppendToNoteIntentResponse {
+
+		[Export ("initWithCode:userActivity:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INAppendToNoteIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INAppendToNoteIntentResponseCode Code { get; }
+
+		[NullAllowed, Export ("note", ArgumentSemantic.Copy)]
+		INNote Note { get; set; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INBalanceAmount : NSCopying, NSSecureCoding {
+
+		[Export ("initWithAmount:balanceType:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSDecimalNumber amount, INBalanceType balanceType);
+
+		[Export ("initWithAmount:currencyCode:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSDecimalNumber amount, string currencyCode);
+
+		[NullAllowed, Export ("amount", ArgumentSemantic.Copy)]
+		NSDecimalNumber Amount { get; }
+
+		[Export ("balanceType", ArgumentSemantic.Assign)]
+		INBalanceType BalanceType { get; }
+
+		[NullAllowed, Export ("currencyCode")]
+		string CurrencyCode { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	[DisableDefaultCtor]
+	interface INBalanceTypeResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedBalanceType:")]
+		INBalanceTypeResolutionResult GetSuccess (INBalanceType resolvedBalanceType);
+
+		[Static]
+		[Export ("confirmationRequiredWithBalanceTypeToConfirm:")]
+		INBalanceTypeResolutionResult GetConfirmationRequired (INBalanceType balanceTypeToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INBalanceTypeResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INBalanceTypeResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INBalanceTypeResolutionResult Unsupported { get; }
+	}
+
+	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	[DisableDefaultCtor]
+	interface INCallDestinationTypeResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedCallDestinationType:")]
+		INCallDestinationTypeResolutionResult GetSuccess (INCallDestinationType resolvedCallDestinationType);
+
+		[Static]
+		[Export ("confirmationRequiredWithCallDestinationTypeToConfirm:")]
+		INCallDestinationTypeResolutionResult GetConfirmationRequired (INCallDestinationType callDestinationTypeToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INCallDestinationTypeResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INCallDestinationTypeResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INCallDestinationTypeResolutionResult Unsupported { get; }
+	}
+
+	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INCallRecord : NSCopying, NSSecureCoding {
+
+		[Export ("initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier, [NullAllowed] NSDate dateCreated, [NullAllowed] INPerson caller, INCallRecordType callRecordType, INCallCapability callCapability, [NullAllowed] NSNumber callDuration, [NullAllowed] NSNumber unseen);
+
+		[Export ("identifier")]
+		string Identifier { get; }
+
+		[NullAllowed, Export ("dateCreated", ArgumentSemantic.Copy)]
+		NSDate DateCreated { get; }
+
+		[NullAllowed, Export ("caller", ArgumentSemantic.Copy)]
+		INPerson Caller { get; }
+
+		[Export ("callRecordType")]
+		INCallRecordType CallRecordType { get; }
+
+		[Export ("callCapability")]
+		INCallCapability CallCapability { get; }
+
+		[Protected]
+		[NullAllowed, Export ("callDuration", ArgumentSemantic.Copy)]
+		NSNumber WeakCallDuration { get; }
+
+		[Protected]
+		[NullAllowed, Export ("unseen", ArgumentSemantic.Copy)]
+		NSNumber WeakUnseen { get; }
+	}
+
+	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	[DisableDefaultCtor]
+	interface INCallRecordTypeOptionsResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedCallRecordTypeOptions:")]
+		INCallRecordTypeOptionsResolutionResult GetSuccess (INCallRecordTypeOptions resolvedCallRecordTypeOptions);
+
+		[Static]
+		[Export ("confirmationRequiredWithCallRecordTypeOptionsToConfirm:")]
+		INCallRecordTypeOptionsResolutionResult GetConfirmationRequired (INCallRecordTypeOptions callRecordTypeOptionsToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INCallRecordTypeOptionsResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INCallRecordTypeOptionsResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INCallRecordTypeOptionsResolutionResult Unsupported { get; }
+	}
+
+	[NoWatch, NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntent))]
+	[DisableDefaultCtor]
+	interface INCancelRideIntent {
+
+		[Export ("initWithRideIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string rideIdentifier);
+
+		[Export ("rideIdentifier")]
+		string RideIdentifier { get; }
+	}
+
+	[NoWatch, NoMac, iOS (11,0)]
+	[Protocol]
+	interface INCancelRideIntentHandling {
+
+		[Abstract]
+		[Export ("handleCancelRide:completion:")]
+		void HandleCancelRide (INCancelRideIntent intent, Action<INCancelRideIntentResponse> completion);
+
+		[Export ("confirmCancelRide:completion:")]
+		void Confirm (INCancelRideIntent intent, Action<INCancelRideIntentResponse> completion);
+	}
+
+	[NoWatch, NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResponse))]
+	[DisableDefaultCtor]
+	interface INCancelRideIntentResponse {
+
+		[Export ("initWithCode:userActivity:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INCancelRideIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INCancelRideIntentResponseCode Code { get; }
+
+		[NullAllowed, Export ("cancellationFee", ArgumentSemantic.Assign)]
+		INCurrencyAmount CancellationFee { get; set; }
+
+		[NullAllowed, Export ("cancellationFeeThreshold", ArgumentSemantic.Assign)]
+		NSDateComponents CancellationFeeThreshold { get; set; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntent))]
+	[DisableDefaultCtor]
+	interface INCreateNoteIntent {
+
+		[Export ("initWithTitle:content:groupName:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] INSpeakableString title, [NullAllowed] INNoteContent content, [NullAllowed] INSpeakableString groupName);
+
+		[NullAllowed, Export ("title", ArgumentSemantic.Copy)]
+		INSpeakableString Title { get; }
+
+		[NullAllowed, Export ("content", ArgumentSemantic.Copy)]
+		INNoteContent Content { get; }
+
+		[NullAllowed, Export ("groupName", ArgumentSemantic.Copy)]
+		INSpeakableString GroupName { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Protocol]
+	interface INCreateNoteIntentHandling {
+
+		[Abstract]
+		[Export ("handleCreateNote:completion:")]
+		void HandleCreateNote (INCreateNoteIntent intent, Action<INCreateNoteIntentResponse> completion);
+
+		[Export ("confirmCreateNote:completion:")]
+		void Confirm (INCreateNoteIntent intent, Action<INCreateNoteIntentResponse> completion);
+
+		[Export ("resolveTitleForCreateNote:withCompletion:")]
+		void ResolveTitle (INCreateNoteIntent intent, Action<INSpeakableStringResolutionResult> completion);
+
+		[Export ("resolveContentForCreateNote:withCompletion:")]
+		void ResolveContent (INCreateNoteIntent intent, Action<INNoteContentResolutionResult> completion);
+
+		[Export ("resolveGroupNameForCreateNote:withCompletion:")]
+		void ResolveGroupName (INCreateNoteIntent intent, Action<INSpeakableStringResolutionResult> completion);
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResponse))]
+	[DisableDefaultCtor]
+	interface INCreateNoteIntentResponse {
+
+		[Export ("initWithCode:userActivity:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INCreateNoteIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INCreateNoteIntentResponseCode Code { get; }
+
+		[NullAllowed, Export ("createdNote", ArgumentSemantic.Copy)]
+		INNote CreatedNote { get; set; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntent))]
+	[DisableDefaultCtor]
+	interface INCreateTaskListIntent {
+
+		[Export ("initWithTitle:taskTitles:groupName:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] INSpeakableString title, [NullAllowed] INSpeakableString [] taskTitles, [NullAllowed] INSpeakableString groupName);
+
+		[NullAllowed, Export ("title", ArgumentSemantic.Copy)]
+		INSpeakableString Title { get; }
+
+		[NullAllowed, Export ("taskTitles", ArgumentSemantic.Copy)]
+		INSpeakableString [] TaskTitles { get; }
+
+		[NullAllowed, Export ("groupName", ArgumentSemantic.Copy)]
+		INSpeakableString GroupName { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Protocol]
+	interface INCreateTaskListIntentHandling {
+
+		[Abstract]
+		[Export ("handleCreateTaskList:completion:")]
+		void HandleCreateTaskList (INCreateTaskListIntent intent, Action<INCreateTaskListIntentResponse> completion);
+
+		[Export ("confirmCreateTaskList:completion:")]
+		void Confirm (INCreateTaskListIntent intent, Action<INCreateTaskListIntentResponse> completion);
+
+		[Export ("resolveTitleForCreateTaskList:withCompletion:")]
+		void ResolveTitle (INCreateTaskListIntent intent, Action<INSpeakableStringResolutionResult> completion);
+
+		[Export ("resolveTaskTitlesForCreateTaskList:withCompletion:")]
+		void ResolveTaskTitles (INCreateTaskListIntent intent, Action<INSpeakableStringResolutionResult []> completion);
+
+		[Export ("resolveGroupNameForCreateTaskList:withCompletion:")]
+		void ResolveGroupName (INCreateTaskListIntent intent, Action<INSpeakableStringResolutionResult> completion);
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResponse))]
+	[DisableDefaultCtor]
+	interface INCreateTaskListIntentResponse {
+
+		[Export ("initWithCode:userActivity:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INCreateTaskListIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INCreateTaskListIntentResponseCode Code { get; }
+
+		[NullAllowed, Export ("createdTaskList", ArgumentSemantic.Copy)]
+		INTaskList CreatedTaskList { get; set; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	[DisableDefaultCtor]
+	interface INDateSearchTypeResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedDateSearchType:")]
+		INDateSearchTypeResolutionResult GetSuccess (INDateSearchType resolvedDateSearchType);
+
+		[Static]
+		[Export ("confirmationRequiredWithDateSearchTypeToConfirm:")]
+		INDateSearchTypeResolutionResult GetConfirmationRequired (INDateSearchType dateSearchTypeToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INDateSearchTypeResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INDateSearchTypeResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INDateSearchTypeResolutionResult Unsupported { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntent))]
+	[DisableDefaultCtor]
+	interface INGetVisualCodeIntent {
+
+		[Export ("initWithVisualCodeType:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INVisualCodeType visualCodeType);
+
+		[Export ("visualCodeType", ArgumentSemantic.Assign)]
+		INVisualCodeType VisualCodeType { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Protocol]
+	interface INGetVisualCodeIntentHandling {
+
+		[Abstract]
+		[Export ("handleGetVisualCode:completion:")]
+		void HandleGetVisualCode (INGetVisualCodeIntent intent, Action<INGetVisualCodeIntentResponse> completion);
+
+		[Export ("confirmGetVisualCode:completion:")]
+		void Confirm (INGetVisualCodeIntent intent, Action<INGetVisualCodeIntentResponse> completion);
+
+		[Export ("resolveVisualCodeTypeForGetVisualCode:withCompletion:")]
+		void ResolveVisualCodeType (INGetVisualCodeIntent intent, Action<INVisualCodeTypeResolutionResult> completion);
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResponse))]
+	[DisableDefaultCtor]
+	interface INGetVisualCodeIntentResponse {
+
+		[Export ("initWithCode:userActivity:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INGetVisualCodeIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INGetVisualCodeIntentResponseCode Code { get; }
+
+		[NullAllowed, Export ("visualCodeImage", ArgumentSemantic.Copy)]
+		INImage VisualCodeImage { get; set; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INNoteContent))]
+	interface INImageNoteContent : NSSecureCoding, NSCopying {
+
+		[Export ("initWithImage:")]
+		IntPtr Constructor (INImage image);
+
+		[NullAllowed, Export ("image", ArgumentSemantic.Copy)]
+		INImage Image { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	[DisableDefaultCtor]
+	interface INLocationSearchTypeResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedLocationSearchType:")]
+		INLocationSearchTypeResolutionResult GetSuccess (INLocationSearchType resolvedLocationSearchType);
+
+		[Static]
+		[Export ("confirmationRequiredWithLocationSearchTypeToConfirm:")]
+		INLocationSearchTypeResolutionResult GetConfirmationRequired (INLocationSearchType locationSearchTypeToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INLocationSearchTypeResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INLocationSearchTypeResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INLocationSearchTypeResolutionResult Unsupported { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (NSObject))]
+	interface INNote : NSCopying, NSSecureCoding {
+
+		[Export ("initWithTitle:contents:groupName:createdDateComponents:modifiedDateComponents:identifier:")]
+		IntPtr Constructor (INSpeakableString title, INNoteContent [] contents, [NullAllowed] INSpeakableString groupName, [NullAllowed] NSDateComponents createdDateComponents, [NullAllowed] NSDateComponents modifiedDateComponents, [NullAllowed] string identifier);
+
+		[Export ("title", ArgumentSemantic.Copy)]
+		INSpeakableString Title { get; }
+
+		[Export ("contents", ArgumentSemantic.Copy)]
+		INNoteContent [] Contents { get; }
+
+		[NullAllowed, Export ("groupName", ArgumentSemantic.Copy)]
+		INSpeakableString GroupName { get; }
+
+		[NullAllowed, Export ("createdDateComponents", ArgumentSemantic.Copy)]
+		NSDateComponents CreatedDateComponents { get; }
+
+		[NullAllowed, Export ("modifiedDateComponents", ArgumentSemantic.Copy)]
+		NSDateComponents ModifiedDateComponents { get; }
+
+		[NullAllowed, Export ("identifier")]
+		string Identifier { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (NSObject))]
+	interface INNoteContent : NSSecureCoding, NSCopying {
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	[DisableDefaultCtor]
+	interface INNoteContentResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedNoteContent:")]
+		INNoteContentResolutionResult GetSuccess (INNoteContent resolvedNoteContent);
+
+		[Static]
+		[Export ("disambiguationWithNoteContentsToDisambiguate:")]
+		INNoteContentResolutionResult GetDisambiguation (INNoteContent [] noteContentsToDisambiguate);
+
+		[Static]
+		[Export ("confirmationRequiredWithNoteContentToConfirm:")]
+		INNoteContentResolutionResult GetConfirmationRequired ([NullAllowed] INNoteContent noteContentToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INNoteContentResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INNoteContentResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INNoteContentResolutionResult Unsupported { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	interface INNoteContentTypeResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedNoteContentType:")]
+		INNoteContentTypeResolutionResult GetSuccess (INNoteContentType resolvedNoteContentType);
+
+		[Static]
+		[Export ("confirmationRequiredWithNoteContentTypeToConfirm:")]
+		INNoteContentTypeResolutionResult GetConfirmationRequired (INNoteContentType noteContentTypeToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INNoteContentTypeResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INNoteContentTypeResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INNoteContentTypeResolutionResult Unsupported { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	interface INNoteResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedNote:")]
+		INNoteResolutionResult GetSuccess (INNote resolvedNote);
+
+		[Static]
+		[Export ("disambiguationWithNotesToDisambiguate:")]
+		INNoteResolutionResult GetDisambiguation (INNote [] notesToDisambiguate);
+
+		[Static]
+		[Export ("confirmationRequiredWithNoteToConfirm:")]
+		INNoteResolutionResult GetConfirmationRequired ([NullAllowed] INNote noteToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INNoteResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INNoteResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INNoteResolutionResult Unsupported { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	interface INNotebookItemTypeResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedNotebookItemType:")]
+		INNotebookItemTypeResolutionResult GetSuccess (INNotebookItemType resolvedNotebookItemType);
+
+		[Static]
+		[Export ("disambiguationWithNotebookItemTypesToDisambiguate:")]
+		INNotebookItemTypeResolutionResult GetDisambiguation (NSNumber[] notebookItemTypesToDisambiguate);
+
+		[Static]
+		[Export ("confirmationRequiredWithNotebookItemTypeToConfirm:")]
+		INNotebookItemTypeResolutionResult GetConfirmationRequired (INNotebookItemType notebookItemTypeToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INNotebookItemTypeResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INNotebookItemTypeResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INNotebookItemTypeResolutionResult Unsupported { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INParameter : NSSecureCoding {
+
+		[Static]
+		[Export ("parameterForClass:keyPath:")]
+		INParameter GetParameter (Class aClass, string keyPath);
+
+		[Static]
+		[Wrap ("GetParameter (new Class (type), keyPath)")]
+		INParameter GetParameter (Type type, string keyPath);
+
+		[Export ("parameterClass")]
+		Class ParameterClass { get; }
+
+		[Wrap ("Class.Lookup (ParameterClass)")]
+		Type ParameterType { get; }
+
+		[Export ("parameterKeyPath")]
+		string ParameterKeyPath { get; }
+
+		[Export ("isEqualToParameter:")]
+		bool IsEqualTo (INParameter parameter);
+
+		[Export ("setIndex:forSubKeyPath:")]
+		void SetIndex (nuint index, string subKeyPath);
+
+		[Export ("indexForSubKeyPath:")]
+		nuint GetIndex (string subKeyPath);
+	}
+
+	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INRecurrenceRule : NSCopying, NSSecureCoding {
+
+		[Export ("initWithInterval:frequency:")]
+		IntPtr Constructor (nuint interval, INRecurrenceFrequency frequency);
+
+		[Export ("interval")]
+		nuint Interval { get; }
+
+		[Export ("frequency")]
+		INRecurrenceFrequency Frequency { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INCurrencyAmountResolutionResult))]
+	[DisableDefaultCtor]
+	interface INRequestPaymentCurrencyAmountResolutionResult {
+
+		[Static]
+		[Export ("unsupportedForReason:")]
+		INRequestPaymentCurrencyAmountResolutionResult GetUnsupported (INRequestPaymentCurrencyAmountUnsupportedReason reason);
+
+		[Export ("initWithCurrencyAmountResolutionResult:")]
+		IntPtr Constructor (INCurrencyAmountResolutionResult currencyAmountResolutionResult);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INRequestPaymentCurrencyAmountResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INRequestPaymentCurrencyAmountResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INRequestPaymentCurrencyAmountResolutionResult Unsupported { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INPersonResolutionResult))]
+	[DisableDefaultCtor]
+	interface INRequestPaymentPayerResolutionResult {
+
+		[Static]
+		[Export ("unsupportedForReason:")]
+		INRequestPaymentPayerResolutionResult GetUnsupported (INRequestPaymentPayerUnsupportedReason reason);
+
+		[Export ("initWithPersonResolutionResult:")]
+		IntPtr Constructor (INPersonResolutionResult personResolutionResult);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INRequestPaymentPayerResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INRequestPaymentPayerResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INRequestPaymentPayerResolutionResult Unsupported { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntent))]
+	interface INSearchForAccountsIntent {
+
+		[Export ("initWithAccountNickname:accountType:organizationName:requestedBalanceType:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] INSpeakableString accountNickname, INAccountType accountType, [NullAllowed] INSpeakableString organizationName, INBalanceType requestedBalanceType);
+
+		[NullAllowed, Export ("accountNickname", ArgumentSemantic.Copy)]
+		INSpeakableString AccountNickname { get; }
+
+		[Export ("accountType", ArgumentSemantic.Assign)]
+		INAccountType AccountType { get; }
+
+		[NullAllowed, Export ("organizationName", ArgumentSemantic.Copy)]
+		INSpeakableString OrganizationName { get; }
+
+		[Export ("requestedBalanceType", ArgumentSemantic.Assign)]
+		INBalanceType RequestedBalanceType { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Protocol]
+	interface INSearchForAccountsIntentHandling {
+
+		[Abstract]
+		[Export ("handleSearchForAccounts:completion:")]
+		void HandleSearchForAccounts (INSearchForAccountsIntent intent, Action<INSearchForAccountsIntentResponse> completion);
+
+		[Export ("confirmSearchForAccounts:completion:")]
+		void Confirm (INSearchForAccountsIntent intent, Action<INSearchForAccountsIntentResponse> completion);
+
+		[Export ("resolveAccountNicknameForSearchForAccounts:withCompletion:")]
+		void ResolveAccountNickname (INSearchForAccountsIntent intent, Action<INSpeakableStringResolutionResult> completion);
+
+		[Export ("resolveAccountTypeForSearchForAccounts:withCompletion:")]
+		void ResolveAccountType (INSearchForAccountsIntent intent, Action<INAccountTypeResolutionResult> completion);
+
+		[Export ("resolveOrganizationNameForSearchForAccounts:withCompletion:")]
+		void ResolveOrganizationName (INSearchForAccountsIntent intent, Action<INSpeakableStringResolutionResult> completion);
+
+		[Export ("resolveRequestedBalanceTypeForSearchForAccounts:withCompletion:")]
+		void ResolveRequestedBalanceType (INSearchForAccountsIntent intent, Action<INBalanceTypeResolutionResult> completion);
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResponse))]
+	[DisableDefaultCtor]
+	interface INSearchForAccountsIntentResponse {
+
+		[Export ("initWithCode:userActivity:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INSearchForAccountsIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INSearchForAccountsIntentResponseCode Code { get; }
+
+		[NullAllowed, Export ("accounts", ArgumentSemantic.Copy)]
+		INPaymentAccount [] Accounts { get; set; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntent))]
+	interface INSearchForNotebookItemsIntent {
+
+		[Export ("initWithTitle:content:itemType:status:location:locationSearchType:dateTime:dateSearchType:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] INSpeakableString title, [NullAllowed] string content, INNotebookItemType itemType, INTaskStatus status, [NullAllowed] CLPlacemark location, INLocationSearchType locationSearchType, [NullAllowed] INDateComponentsRange dateTime, INDateSearchType dateSearchType);
+
+		[NullAllowed, Export ("title", ArgumentSemantic.Copy)]
+		INSpeakableString Title { get; }
+
+		[NullAllowed, Export ("content")]
+		string Content { get; }
+
+		[Export ("itemType", ArgumentSemantic.Assign)]
+		INNotebookItemType ItemType { get; }
+
+		[Export ("status", ArgumentSemantic.Assign)]
+		INTaskStatus Status { get; }
+
+		[NullAllowed, Export ("location", ArgumentSemantic.Copy)]
+		CLPlacemark Location { get; }
+
+		[Export ("locationSearchType", ArgumentSemantic.Assign)]
+		INLocationSearchType LocationSearchType { get; }
+
+		[NullAllowed, Export ("dateTime", ArgumentSemantic.Copy)]
+		INDateComponentsRange DateTime { get; }
+
+		[Export ("dateSearchType", ArgumentSemantic.Assign)]
+		INDateSearchType DateSearchType { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Protocol]
+	interface INSearchForNotebookItemsIntentHandling {
+
+		[Abstract]
+		[Export ("handleSearchForNotebookItems:completion:")]
+		void HandleSearchForNotebookItems (INSearchForNotebookItemsIntent intent, Action<INSearchForNotebookItemsIntentResponse> completion);
+
+		[Export ("confirmSearchForNotebookItems:completion:")]
+		void Confirm (INSearchForNotebookItemsIntent intent, Action<INSearchForNotebookItemsIntentResponse> completion);
+
+		[Export ("resolveTitleForSearchForNotebookItems:withCompletion:")]
+		void ResolveTitle (INSearchForNotebookItemsIntent intent, Action<INSpeakableStringResolutionResult> completion);
+
+		[Export ("resolveContentForSearchForNotebookItems:withCompletion:")]
+		void ResolveContent (INSearchForNotebookItemsIntent intent, Action<INStringResolutionResult> completion);
+
+		[Export ("resolveItemTypeForSearchForNotebookItems:withCompletion:")]
+		void ResolveItemType (INSearchForNotebookItemsIntent intent, Action<INNotebookItemTypeResolutionResult> completion);
+
+		[Export ("resolveStatusForSearchForNotebookItems:withCompletion:")]
+		void ResolveStatus (INSearchForNotebookItemsIntent intent, Action<INTaskStatusResolutionResult> completion);
+
+		[Export ("resolveLocationForSearchForNotebookItems:withCompletion:")]
+		void ResolveLocation (INSearchForNotebookItemsIntent intent, Action<INPlacemarkResolutionResult> completion);
+
+		[Export ("resolveLocationSearchTypeForSearchForNotebookItems:withCompletion:")]
+		void ResolveLocationSearchType (INSearchForNotebookItemsIntent intent, Action<INLocationSearchTypeResolutionResult> completion);
+
+		[Export ("resolveDateTimeForSearchForNotebookItems:withCompletion:")]
+		void ResolveDateTime (INSearchForNotebookItemsIntent intent, Action<INDateComponentsRangeResolutionResult> completion);
+
+		[Export ("resolveDateSearchTypeForSearchForNotebookItems:withCompletion:")]
+		void ResolveDateSearchType (INSearchForNotebookItemsIntent intent, Action<INDateSearchTypeResolutionResult> completion);
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResponse))]
+	[DisableDefaultCtor]
+	interface INSearchForNotebookItemsIntentResponse {
+
+		[Export ("initWithCode:userActivity:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INSearchForNotebookItemsIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INSearchForNotebookItemsIntentResponseCode Code { get; }
+
+		[NullAllowed, Export ("notes", ArgumentSemantic.Copy)]
+		INNote [] Notes { get; set; }
+
+		[NullAllowed, Export ("taskLists", ArgumentSemantic.Copy)]
+		INTaskList [] TaskLists { get; set; }
+
+		[NullAllowed, Export ("tasks", ArgumentSemantic.Copy)]
+		INTask [] Tasks { get; set; }
+
+		[Export ("sortType", ArgumentSemantic.Assign)]
+		INSortType SortType { get; set; }
+	}
+
+	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+	[BaseType (typeof (INPersonResolutionResult))]
+	[DisableDefaultCtor]
+	interface INSendMessageRecipientResolutionResult {
+
+		[Static]
+		[Export ("unsupportedForReason:")]
+		INSendMessageRecipientResolutionResult GetUnsupported (INSendMessageRecipientUnsupportedReason reason);
+
+		[Export ("initWithPersonResolutionResult:")]
+		IntPtr Constructor (INPersonResolutionResult personResolutionResult);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INSendMessageRecipientResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INSendMessageRecipientResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INSendMessageRecipientResolutionResult Unsupported { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INCurrencyAmountResolutionResult))]
+	[DisableDefaultCtor]
+	interface INSendPaymentCurrencyAmountResolutionResult {
+
+		[Static]
+		[Export ("unsupportedForReason:")]
+		INSendPaymentCurrencyAmountResolutionResult GetUnsupported (INSendPaymentCurrencyAmountUnsupportedReason reason);
+
+		[Export ("initWithCurrencyAmountResolutionResult:")]
+		IntPtr Constructor (INCurrencyAmountResolutionResult currencyAmountResolutionResult);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INSendPaymentCurrencyAmountResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INSendPaymentCurrencyAmountResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INSendPaymentCurrencyAmountResolutionResult Unsupported { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INPersonResolutionResult))]
+	[DisableDefaultCtor]
+	interface INSendPaymentPayeeResolutionResult {
+
+		[Static]
+		[Export ("unsupportedForReason:")]
+		INSendPaymentPayeeResolutionResult GetUnsupported (INSendPaymentPayeeUnsupportedReason reason);
+
+		[Export ("initWithPersonResolutionResult:")]
+		IntPtr Constructor (INPersonResolutionResult personResolutionResult);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INSendPaymentPayeeResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INSendPaymentPayeeResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INSendPaymentPayeeResolutionResult Unsupported { get; }
+	}
+
+	[NoWatch, NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntent))]
+	[DisableDefaultCtor]
+	interface INSendRideFeedbackIntent {
+
+		[Export ("initWithRideIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string rideIdentifier);
+
+		[Export ("rideIdentifier")]
+		string RideIdentifier { get; }
+
+		[NullAllowed, Export ("rating", ArgumentSemantic.Copy)]
+		NSNumber Rating { get; set; }
+
+		[NullAllowed, Export ("tip", ArgumentSemantic.Copy)]
+		INCurrencyAmount Tip { get; set; }
+	}
+
+	[NoWatch, NoMac, iOS (11,0)]
+	[Protocol]
+	interface INSendRideFeedbackIntentHandling {
+
+		[Abstract]
+		[Export ("handleSendRideFeedback:completion:")]
+		void HandleSendRideFeedback (INSendRideFeedbackIntent sendRideFeedbackintent, Action<INSendRideFeedbackIntentResponse> completion);
+
+		[Export ("confirmSendRideFeedback:completion:")]
+		void Confirm (INSendRideFeedbackIntent sendRideFeedbackIntent, Action<INSendRideFeedbackIntentResponse> completion);
+	}
+
+	[NoWatch, NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResponse))]
+	[DisableDefaultCtor]
+	interface INSendRideFeedbackIntentResponse {
+
+		[Export ("initWithCode:userActivity:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INSendRideFeedbackIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INSendRideFeedbackIntentResponseCode Code { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntent))]
+	interface INSetTaskAttributeIntent {
+
+		[Export ("initWithTargetTask:status:spatialEventTrigger:temporalEventTrigger:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] INTask targetTask, INTaskStatus status, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger);
+
+		[NullAllowed, Export ("targetTask", ArgumentSemantic.Copy)]
+		INTask TargetTask { get; }
+
+		[Export ("status", ArgumentSemantic.Assign)]
+		INTaskStatus Status { get; }
+
+		[NullAllowed, Export ("spatialEventTrigger", ArgumentSemantic.Copy)]
+		INSpatialEventTrigger SpatialEventTrigger { get; }
+
+		[NullAllowed, Export ("temporalEventTrigger", ArgumentSemantic.Copy)]
+		INTemporalEventTrigger TemporalEventTrigger { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Protocol]
+	interface INSetTaskAttributeIntentHandling {
+
+		[Abstract]
+		[Export ("handleSetTaskAttribute:completion:")]
+		void HandleSetTaskAttribute (INSetTaskAttributeIntent intent, Action<INSetTaskAttributeIntentResponse> completion);
+
+		[Export ("confirmSetTaskAttribute:completion:")]
+		void Confirm (INSetTaskAttributeIntent intent, Action<INSetTaskAttributeIntentResponse> completion);
+
+		[Export ("resolveTargetTaskForSetTaskAttribute:withCompletion:")]
+		void ResolveTargetTask (INSetTaskAttributeIntent intent, Action<INTaskResolutionResult> completion);
+
+		[Export ("resolveStatusForSetTaskAttribute:withCompletion:")]
+		void ResolveStatus (INSetTaskAttributeIntent intent, Action<INTaskStatusResolutionResult> completion);
+
+		[Export ("resolveSpatialEventTriggerForSetTaskAttribute:withCompletion:")]
+		void ResolveSpatialEventTrigger (INSetTaskAttributeIntent intent, Action<INSpatialEventTriggerResolutionResult> completion);
+
+		[Export ("resolveTemporalEventTriggerForSetTaskAttribute:withCompletion:")]
+		void ResolveTemporalEventTrigger (INSetTaskAttributeIntent intent, Action<INTemporalEventTriggerResolutionResult> completion);
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResponse))]
+	[DisableDefaultCtor]
+	interface INSetTaskAttributeIntentResponse {
+
+		[Export ("initWithCode:userActivity:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INSetTaskAttributeIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INSetTaskAttributeIntentResponseCode Code { get; }
+
+		[NullAllowed, Export ("modifiedTask", ArgumentSemantic.Copy)]
+		INTask ModifiedTask { get; set; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INSpatialEventTrigger {
+
+		[Export ("initWithPlacemark:event:")]
+		IntPtr Constructor (CLPlacemark placemark, INSpatialEvent @event);
+
+		[Export ("placemark")]
+		CLPlacemark Placemark { get; }
+
+		[Export ("event")]
+		INSpatialEvent Event { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	[DisableDefaultCtor]
+	interface INSpatialEventTriggerResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedSpatialEventTrigger:")]
+		INSpatialEventTriggerResolutionResult GetSuccess (INSpatialEventTrigger resolvedSpatialEventTrigger);
+
+		[Static]
+		[Export ("disambiguationWithSpatialEventTriggersToDisambiguate:")]
+		INSpatialEventTriggerResolutionResult GetDisambiguation (INSpatialEventTrigger [] spatialEventTriggersToDisambiguate);
+
+		[Static]
+		[Export ("confirmationRequiredWithSpatialEventTriggerToConfirm:")]
+		INSpatialEventTriggerResolutionResult GetConfirmationRequired ([NullAllowed] INSpatialEventTrigger spatialEventTriggerToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INSpatialEventTriggerResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INSpatialEventTriggerResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INSpatialEventTriggerResolutionResult Unsupported { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INTask : NSCopying, NSSecureCoding {
+
+		[Export ("initWithTitle:status:taskType:spatialEventTrigger:temporalEventTrigger:createdDateComponents:modifiedDateComponents:identifier:")]
+		IntPtr Constructor (INSpeakableString title, INTaskStatus status, INTaskType taskType, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger, [NullAllowed] NSDateComponents createdDateComponents, [NullAllowed] NSDateComponents modifiedDateComponents, [NullAllowed] string identifier);
+
+		[Export ("title", ArgumentSemantic.Copy)]
+		INSpeakableString Title { get; }
+
+		[Export ("status")]
+		INTaskStatus Status { get; }
+
+		[Export ("taskType")]
+		INTaskType TaskType { get; }
+
+		[NullAllowed, Export ("spatialEventTrigger", ArgumentSemantic.Copy)]
+		INSpatialEventTrigger SpatialEventTrigger { get; }
+
+		[NullAllowed, Export ("temporalEventTrigger", ArgumentSemantic.Copy)]
+		INTemporalEventTrigger TemporalEventTrigger { get; }
+
+		[NullAllowed, Export ("createdDateComponents", ArgumentSemantic.Copy)]
+		NSDateComponents CreatedDateComponents { get; }
+
+		[NullAllowed, Export ("modifiedDateComponents", ArgumentSemantic.Copy)]
+		NSDateComponents ModifiedDateComponents { get; }
+
+		[NullAllowed, Export ("identifier")]
+		string Identifier { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INTaskList : NSCopying, NSSecureCoding {
+
+		[Export ("initWithTitle:tasks:groupName:createdDateComponents:modifiedDateComponents:identifier:")]
+		IntPtr Constructor (INSpeakableString title, INTask [] tasks, [NullAllowed] INSpeakableString groupName, [NullAllowed] NSDateComponents createdDateComponents, [NullAllowed] NSDateComponents modifiedDateComponents, [NullAllowed] string identifier);
+
+		[Export ("title", ArgumentSemantic.Copy)]
+		INSpeakableString Title { get; }
+
+		[Export ("tasks", ArgumentSemantic.Copy)]
+		INTask [] Tasks { get; }
+
+		[NullAllowed, Export ("groupName", ArgumentSemantic.Copy)]
+		INSpeakableString GroupName { get; }
+
+		[NullAllowed, Export ("createdDateComponents", ArgumentSemantic.Copy)]
+		NSDateComponents CreatedDateComponents { get; }
+
+		[NullAllowed, Export ("modifiedDateComponents", ArgumentSemantic.Copy)]
+		NSDateComponents ModifiedDateComponents { get; }
+
+		[NullAllowed, Export ("identifier")]
+		string Identifier { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	[DisableDefaultCtor]
+	interface INTaskListResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedTaskList:")]
+		INTaskListResolutionResult GetSuccess (INTaskList resolvedTaskList);
+
+		[Static]
+		[Export ("disambiguationWithTaskListsToDisambiguate:")]
+		INTaskListResolutionResult GetDisambiguation (INTaskList [] taskListsToDisambiguate);
+
+		[Static]
+		[Export ("confirmationRequiredWithTaskListToConfirm:")]
+		INTaskListResolutionResult GetConfirmationRequired ([NullAllowed] INTaskList taskListToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INTaskListResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INTaskListResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INTaskListResolutionResult Unsupported { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	[DisableDefaultCtor]
+	interface INTaskResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedTask:")]
+		INTaskResolutionResult GetSuccess (INTask resolvedTask);
+
+		[Static]
+		[Export ("disambiguationWithTasksToDisambiguate:")]
+		INTaskResolutionResult GetDisambiguation (INTask [] tasksToDisambiguate);
+
+		[Static]
+		[Export ("confirmationRequiredWithTaskToConfirm:")]
+		INTaskResolutionResult GetConfirmationRequired ([NullAllowed] INTask taskToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INTaskResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INTaskResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INTaskResolutionResult Unsupported { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	[DisableDefaultCtor]
+	interface INTaskStatusResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedTaskStatus:")]
+		INTaskStatusResolutionResult GetSuccess (INTaskStatus resolvedTaskStatus);
+
+		[Static]
+		[Export ("confirmationRequiredWithTaskStatusToConfirm:")]
+		INTaskStatusResolutionResult GetConfirmationRequired (INTaskStatus taskStatusToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INTaskStatusResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INTaskStatusResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INTaskStatusResolutionResult Unsupported { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INTemporalEventTrigger : NSCopying, NSSecureCoding {
+
+		[Export ("initWithDateComponentsRange:")]
+		IntPtr Constructor (INDateComponentsRange dateComponentsRange);
+
+		[Export ("dateComponentsRange")]
+		INDateComponentsRange DateComponentsRange { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	[DisableDefaultCtor]
+	interface INTemporalEventTriggerResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedTemporalEventTrigger:")]
+		INTemporalEventTriggerResolutionResult GetSuccess (INTemporalEventTrigger resolvedTemporalEventTrigger);
+
+		[Static]
+		[Export ("disambiguationWithTemporalEventTriggersToDisambiguate:")]
+		INTemporalEventTriggerResolutionResult GetDisambiguation (INTemporalEventTrigger [] temporalEventTriggersToDisambiguate);
+
+		[Static]
+		[Export ("confirmationRequiredWithTemporalEventTriggerToConfirm:")]
+		INTemporalEventTriggerResolutionResult GetConfirmationRequired ([NullAllowed] INTemporalEventTrigger temporalEventTriggerToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INTemporalEventTriggerResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INTemporalEventTriggerResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INTemporalEventTriggerResolutionResult Unsupported { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INNoteContent))]
+	[DisableDefaultCtor]
+	interface INTextNoteContent : NSSecureCoding, NSCopying {
+
+		[Export ("initWithText:")]
+		IntPtr Constructor (string text);
+
+		[NullAllowed, Export ("text")]
+		string Text { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntent))]
+	[DisableDefaultCtor]
+	interface INTransferMoneyIntent {
+
+		[Export ("initWithFromAccount:toAccount:transactionAmount:transactionScheduledDate:transactionNote:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] INPaymentAccount fromAccount, [NullAllowed] INPaymentAccount toAccount, [NullAllowed] INPaymentAmount transactionAmount, [NullAllowed] INDateComponentsRange transactionScheduledDate, [NullAllowed] string transactionNote);
+
+		[NullAllowed, Export ("fromAccount", ArgumentSemantic.Copy)]
+		INPaymentAccount FromAccount { get; }
+
+		[NullAllowed, Export ("toAccount", ArgumentSemantic.Copy)]
+		INPaymentAccount ToAccount { get; }
+
+		[NullAllowed, Export ("transactionAmount", ArgumentSemantic.Copy)]
+		INPaymentAmount TransactionAmount { get; }
+
+		[NullAllowed, Export ("transactionScheduledDate", ArgumentSemantic.Copy)]
+		INDateComponentsRange TransactionScheduledDate { get; }
+
+		[NullAllowed, Export ("transactionNote")]
+		string TransactionNote { get; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Protocol]
+	interface INTransferMoneyIntentHandling {
+
+		[Abstract]
+		[Export ("handleTransferMoney:completion:")]
+		void HandleTransferMoney (INTransferMoneyIntent intent, Action<INTransferMoneyIntentResponse> completion);
+
+		[Export ("confirmTransferMoney:completion:")]
+		void Confirm (INTransferMoneyIntent intent, Action<INTransferMoneyIntentResponse> completion);
+
+		[Export ("resolveFromAccountForTransferMoney:withCompletion:")]
+		void ResolveFromAccount (INTransferMoneyIntent intent, Action<INPaymentAccountResolutionResult> completion);
+
+		[Export ("resolveToAccountForTransferMoney:withCompletion:")]
+		void ResolveToAccount (INTransferMoneyIntent intent, Action<INPaymentAccountResolutionResult> completion);
+
+		[Export ("resolveTransactionAmountForTransferMoney:withCompletion:")]
+		void ResolveTransactionAmount (INTransferMoneyIntent intent, Action<INPaymentAmountResolutionResult> completion);
+
+		[Export ("resolveTransactionScheduledDateForTransferMoney:withCompletion:")]
+		void ResolveTransactionScheduledDate (INTransferMoneyIntent intent, Action<INDateComponentsRangeResolutionResult> completion);
+
+		[Export ("resolveTransactionNoteForTransferMoney:withCompletion:")]
+		void ResolveTransactionNote (INTransferMoneyIntent intent, Action<INStringResolutionResult> completion);
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResponse))]
+	[DisableDefaultCtor]
+	interface INTransferMoneyIntentResponse {
+
+		[Export ("initWithCode:userActivity:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INTransferMoneyIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INTransferMoneyIntentResponseCode Code { get; }
+
+		[NullAllowed, Export ("fromAccount", ArgumentSemantic.Copy)]
+		INPaymentAccount FromAccount { get; set; }
+
+		[NullAllowed, Export ("toAccount", ArgumentSemantic.Copy)]
+		INPaymentAccount ToAccount { get; set; }
+
+		[NullAllowed, Export ("transactionAmount", ArgumentSemantic.Copy)]
+		INPaymentAmount TransactionAmount { get; set; }
+
+		[NullAllowed, Export ("transactionScheduledDate", ArgumentSemantic.Copy)]
+		INDateComponentsRange TransactionScheduledDate { get; set; }
+
+		[NullAllowed, Export ("transactionNote")]
+		string TransactionNote { get; set; }
+
+		[NullAllowed, Export ("transferFee", ArgumentSemantic.Copy)]
+		INCurrencyAmount TransferFee { get; set; }
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	[DisableDefaultCtor]
+	interface INVisualCodeTypeResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedVisualCodeType:")]
+		INVisualCodeTypeResolutionResult GetSuccess (INVisualCodeType resolvedVisualCodeType);
+
+		[Static]
+		[Export ("confirmationRequiredWithVisualCodeTypeToConfirm:")]
+		INVisualCodeTypeResolutionResult GetConfirmationRequired (INVisualCodeType visualCodeTypeToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INVisualCodeTypeResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INVisualCodeTypeResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INVisualCodeTypeResolutionResult Unsupported { get; }
+	}
+
 }
 #endif // XAMCORE_2_0

@@ -16,32 +16,75 @@ namespace MonoTouchFixtures.Metal {
 
 	[TestFixture]
 	public class HeapDescriptorTest {
+		MTLHeapDescriptor hd = null;
 
-		[Test]
-		public void Properties ()
+		[SetUp]
+		public void SetUp ()
 		{
+#if !MONOMAC
 			TestRuntime.AssertXcodeVersion (8, 0);
 
 			if (Runtime.Arch == Arch.SIMULATOR)
 				Assert.Ignore ("Type is missing on the simulator");
+#else
+			TestRuntime.AssertXcodeVersion (9, 0);
+#endif
+			hd = new MTLHeapDescriptor ();
+		}
 
-			using (var hd = new MTLHeapDescriptor ()) {
-				Assert.That (hd.CpuCacheMode, Is.EqualTo (MTLCpuCacheMode.DefaultCache), "CpuCacheMode");
-				hd.CpuCacheMode = MTLCpuCacheMode.WriteCombined;
-				Assert.That (hd.StorageMode, Is.EqualTo (MTLStorageMode.Private), "StorageMode");
-				hd.StorageMode = MTLStorageMode.Memoryless;
-				Assert.That (hd.Size, Is.EqualTo (0), "Size");
-				hd.Size = 16;
+		[TearDown]
+		public void TearDown ()
+		{
+			if (hd != null)
+				hd.Dispose ();
+			hd = null;
+		}
 
-				using (var hd2 = (MTLHeapDescriptor) hd.Copy ()) {
-					Assert.That (hd2.CpuCacheMode, Is.EqualTo (MTLCpuCacheMode.WriteCombined), "CpuCacheMode");
-					Assert.That (hd2.StorageMode, Is.EqualTo (MTLStorageMode.Memoryless), "StorageMode");
-					Assert.That (hd2.Size, Is.EqualTo (16), "Size");
+		[Test]
+		public void Properties ()
+		{
+			Assert.That (hd.CpuCacheMode, Is.EqualTo (MTLCpuCacheMode.DefaultCache), "CpuCacheMode");
+			hd.CpuCacheMode = MTLCpuCacheMode.WriteCombined;
+			Assert.That (hd.StorageMode, Is.EqualTo (MTLStorageMode.Private), "StorageMode");
+			hd.StorageMode = MTLStorageMode.Memoryless;
+			Assert.That (hd.Size, Is.EqualTo (0), "Size");
+			hd.Size = 16;
 
-					// NSCopying
-					Assert.That (hd2.Handle, Is.Not.EqualTo (hd.Handle), "Handle");
-				}
+			using (var hd2 = (MTLHeapDescriptor) hd.Copy ()) {
+				Assert.That (hd2.CpuCacheMode, Is.EqualTo (MTLCpuCacheMode.WriteCombined), "CpuCacheMode");
+				Assert.That (hd2.StorageMode, Is.EqualTo (MTLStorageMode.Memoryless), "StorageMode");
+				Assert.That (hd2.Size, Is.EqualTo (16), "Size");
+
+				// NSCopying
+				Assert.That (hd2.Handle, Is.Not.EqualTo (hd.Handle), "Handle");
 			}
+		}
+
+		[Test]
+		public void GetSetCpuCacheModeTest ()
+		{
+			TestRuntime.AssertXcodeVersion (9, 0);
+
+			hd.CpuCacheMode = MTLCpuCacheMode.WriteCombined;
+			Assert.AreEqual (MTLCpuCacheMode.WriteCombined, hd.CpuCacheMode);
+		}
+
+		[Test]
+		public void GetSetSizeTest ()
+		{
+			TestRuntime.AssertXcodeVersion (9, 0);
+
+			hd.Size = 2;
+			Assert.AreEqual (2, hd.Size);
+		}
+
+		[Test]
+		public void GetSetStorageModeTest ()
+		{
+			TestRuntime.AssertXcodeVersion (9, 0);
+
+			hd.StorageMode = MTLStorageMode.Private;
+			Assert.AreEqual (MTLStorageMode.Private, hd.StorageMode);
 		}
 	}
 }

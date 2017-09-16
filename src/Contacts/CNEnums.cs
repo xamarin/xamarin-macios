@@ -94,7 +94,13 @@ namespace XamCore.Contacts {
 		ValidationTypeMismatch = 301,
 		ValidationConfigurationError = 302,
 		PredicateInvalid = 400,
-		PolicyViolation = 500
+		PolicyViolation = 500,
+		[iOS (11,0), Mac (10,13)]
+		ClientIdentifierInvalid = 600,
+		[iOS (11,0), Mac (10,13)]
+		ClientIdentifierDoesNotExist = 601,
+		[iOS (11,0), Mac (10,13)]
+		VCardMalformed = 700,
 	}
 
 	// NSInteger -> CNPostalAddressFormatter.h

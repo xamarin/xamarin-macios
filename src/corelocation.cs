@@ -16,6 +16,9 @@ using XamCore.CoreLocation;
 #if !MONOMAC
 using XamCore.UIKit;
 #endif
+#if XAMCORE_2_0 && !TVOS
+using XamCore.Contacts;
+#endif
 using System;
 
 namespace XamCore.CoreLocation {
@@ -101,7 +104,7 @@ namespace XamCore.CoreLocation {
 
 #if !XAMCORE_2_0
 		[Export ("getDistanceFrom:")]
-		[Availability (Deprecated = Platform.iOS_3_2, Message = "Use DistanceFrom instead")]
+		[Availability (Deprecated = Platform.iOS_3_2, Message = "Use 'DistanceFrom' instead.")]
 		double Distancefrom (CLLocation  location);
 #endif
 
@@ -227,13 +230,13 @@ namespace XamCore.CoreLocation {
 		bool SignificantLocationChangeMonitoringAvailable { get; }
 
 		[NoWatch][NoTV]
-		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use IsMonitoringAvailable instead")]
+		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use 'IsMonitoringAvailable' instead.")]
 		[Export ("regionMonitoringAvailable"), Static]
 		bool RegionMonitoringAvailable { get; }
 
 		[NoWatch][NoTV]
 		[Since (4,0)]
-		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_8, Deprecated = Platform.iOS_6_0 | Platform.Mac_10_10, Message = "Use IsMonitoringAvailable and AuthorizationStatus instead")]
+		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_8, Deprecated = Platform.iOS_6_0 | Platform.Mac_10_10, Message = "Use 'IsMonitoringAvailable' and 'AuthorizationStatus' instead.")]
 		[Export ("regionMonitoringEnabled"), Static]
 		bool RegionMonitoringEnabled { get; }
 
@@ -299,7 +302,8 @@ namespace XamCore.CoreLocation {
 		void StartMonitoring (CLRegion region);
 
 #if !MONOMAC
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (4,0)]
 		[Since (6,0)]
 		[Export ("activityType", ArgumentSemantic.Assign)]
 		CLActivityType ActivityType  { get; set; }
@@ -387,10 +391,14 @@ namespace XamCore.CoreLocation {
 		[Export ("requestLocation")]
 		void RequestLocation ();
 
-		[NoWatch][NoTV]
-		[iOS (9,0)]
+		[NoTV]
+		[iOS (9,0), Watch (4,0)]
 		[Export ("allowsBackgroundLocationUpdates")]
 		bool AllowsBackgroundLocationUpdates { get; set; }
+
+		[NoWatch, NoTV, NoMac, iOS (11,0)]
+		[Export ("showsBackgroundLocationIndicator")]
+		bool ShowsBackgroundLocationIndicator { get; set; }
 #endif
 	}
 	
@@ -503,12 +511,12 @@ namespace XamCore.CoreLocation {
 	[DisableDefaultCtor] // will crash, see CoreLocation.cs for compatibility stubs
 	partial interface CLRegion : NSSecureCoding, NSCopying {
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use CLCircularRegion instead")]
+		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use 'CLCircularRegion' instead.")]
 		[Export ("center")]
 		CLLocationCoordinate2D Center { get;  }
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use CLCircularRegion instead")]
+		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use 'CLCircularRegion' instead.")]
 		[Export ("radius")]
 		double Radius { get;  }
 
@@ -516,12 +524,12 @@ namespace XamCore.CoreLocation {
 		string Identifier { get;  }
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use CLCircularRegion instead")]
+		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use 'CLCircularRegion' instead.")]
 		[Export ("initCircularRegionWithCenter:radius:identifier:")]
 		IntPtr Constructor (CLLocationCoordinate2D center, double radius, string identifier);
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use CLCircularRegion instead")]
+		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use 'CLCircularRegion' instead.")]
 		[Export ("containsCoordinate:")]
 		bool Contains (CLLocationCoordinate2D coordinate);
 
@@ -539,6 +547,9 @@ namespace XamCore.CoreLocation {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // will crash, see CoreLocation.cs for compatibility stubs
 	interface CLPlacemark : NSSecureCoding, NSCopying {
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CLPlacemark' properties to access data.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CLPlacemark' properties to access data.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CLPlacemark' properties to access data.")]
 		[Export("addressDictionary", ArgumentSemantic.Copy)]
 		NSDictionary AddressDictionary { get; }
 
@@ -593,6 +604,12 @@ namespace XamCore.CoreLocation {
 		[Export ("timeZone")]
 		[iOS (9,0), Mac(10,11)]
 		NSTimeZone TimeZone { get; }
+#if XAMCORE_2_0 && !TVOS
+		// From CLPlacemark (ContactsAdditions) category.
+		[Watch (4,0), NoTV, Mac (10,13), iOS (11,0)]
+		[NullAllowed, Export ("postalAddress")]
+		CNPostalAddress PostalAddress { get; }
+#endif
 	}
 
 	[Mac (10,10)]
@@ -684,6 +701,14 @@ namespace XamCore.CoreLocation {
 		[Async]
 		void ReverseGeocodeLocation (CLLocation location, CLGeocodeCompletionHandler completionHandler);
 
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("reverseGeocodeLocation:preferredLocale:completionHandler:")]
+		[Async]
+		void ReverseGeocodeLocation (CLLocation location, [NullAllowed] NSLocale locale, CLGeocodeCompletionHandler completionHandler);
+
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'GeocodeAddress (string, CLRegion, NSLocale, CLGeocodeCompletionHandler)' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'GeocodeAddress (string, CLRegion, NSLocale, CLGeocodeCompletionHandler)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'GeocodeAddress (string, CLRegion, NSLocale, CLGeocodeCompletionHandler)' instead.")]
 		[Export ("geocodeAddressDictionary:completionHandler:")]
 		[Async]
 		void GeocodeAddress (NSDictionary addressDictionary, CLGeocodeCompletionHandler completionHandler);
@@ -696,8 +721,25 @@ namespace XamCore.CoreLocation {
 		[Async]
 		void GeocodeAddress (string addressString, CLRegion region, CLGeocodeCompletionHandler completionHandler);
 
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Async]
+		[Export ("geocodeAddressString:inRegion:preferredLocale:completionHandler:")]
+		void GeocodeAddress (string addressString, [NullAllowed] CLRegion region, [NullAllowed] NSLocale locale, CLGeocodeCompletionHandler completionHandler);
+
 		[Export ("cancelGeocode")]
 		void CancelGeocode ();
+
+#if XAMCORE_2_0 && !TVOS
+		[Watch (4,0), NoTV, Mac (10,13), iOS (11,0)]
+		[Export ("geocodePostalAddress:completionHandler:")]
+		[Async]
+		void GeocodePostalAddress (CNPostalAddress postalAddress, CLGeocodeCompletionHandler completionHandler);
+
+		[Watch (4,0), NoTV, Mac (10,13), iOS (11,0)]
+		[Export ("geocodePostalAddress:preferredLocale:completionHandler:")]
+		[Async]
+		void GeocodePostalAddress (CNPostalAddress postalAddress, [NullAllowed] NSLocale locale, CLGeocodeCompletionHandler completionHandler);
+#endif
 	}
 
 #if !MONOMAC

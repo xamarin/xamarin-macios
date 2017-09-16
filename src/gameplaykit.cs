@@ -18,6 +18,7 @@ using Vector2i = global::OpenTK.Vector2i;
 using Vector3 = global::OpenTK.Vector3;
 using Vector3d = global::OpenTK.Vector3d;
 using Matrix3 = global::OpenTK.Matrix3;
+using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 
 #if MONOMAC
 using SKColor = XamCore.AppKit.NSColor;
@@ -132,8 +133,24 @@ namespace XamCore.GameplayKit {
 		[Export ("rightHanded")]
 		bool RightHanded { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'Rotation3x3' instead.")]
 		[Export ("rotation", ArgumentSemantic.Assign)]
 		Matrix3 Rotation { 
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			set;
+		}
+#endif
+
+		[Export ("rotation", ArgumentSemantic.Assign)]
+#if XAMCORE_4_0
+		MatrixFloat3x3 Rotation {
+#else
+		[Sealed]
+		MatrixFloat3x3 Rotation3x3 {
+#endif
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -981,9 +998,9 @@ namespace XamCore.GameplayKit {
 		[Wrap ("this (nodes: graphNodes, radius: radius)")] // Avoid breaking change
 		IntPtr Constructor (GKGraphNode2D [] graphNodes, float radius);
 
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use GetVector2Point instead")]
-		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use GetVector2Point instead")]
-		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use GetVector2Point instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'GetVector2Point' instead.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use 'GetVector2Point' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'GetVector2Point' instead.")]
 		[Export ("pointAtIndex:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		Vector2 GetPoint (nuint index);

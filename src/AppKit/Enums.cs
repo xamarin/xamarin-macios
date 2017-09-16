@@ -116,7 +116,7 @@ namespace XamCore.AppKit {
 		DestinationAtop,
 		XOR,
 		PlusDarker,
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSCompositeSourceOver instead")]
+		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSCompositeSourceOver instead.")]
 		Highlight,
 		PlusLighter,
 		[Mac (10,10)] Multiply,
@@ -138,7 +138,11 @@ namespace XamCore.AppKit {
 
 	[Native]
 	public enum NSBackingStore : nuint_compat_int {
-		Retained, Nonretained, Buffered
+		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_13, Message = "Use 'Buffered' instead.")]
+		Retained, 
+		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_13, Message = "Use 'Buffered' instead.")]
+		Nonretained, 
+		Buffered,
 	}
 
 	[Native]
@@ -194,7 +198,7 @@ namespace XamCore.AppKit {
 #if !XAMCORE_3_0
 	[Flags]
 	[Native]
-	[Obsolete ("Use NSFileWrapperReadingOptions in Foundation instead")]
+	[Obsolete ("Use NSFileWrapperReadingOptions in Foundation instead.")]
 	public enum NSFileWrapperReadingOptions : nuint_compat_int {
 		Immediate = 1, WithoutMapping = 2
 	}
@@ -223,7 +227,7 @@ namespace XamCore.AppKit {
 
 #if !XAMCORE_4_0
 	[Native]
-	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use formatters instead")]
+	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use formatters instead.")]
 	public enum NSType : nuint_compat_int {
 	    Any			= 0,
 	    Int			= 1,
@@ -929,7 +933,7 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSWindowButton : nuint_compat_int {
 		CloseButton, MiniaturizeButton, ZoomButton, ToolbarButton, DocumentIconButton, DocumentVersionsButton = 6, 
-		[Availability (Deprecated = Platform.Mac_10_12, Message = "The standard window button for FullScreenButton is always null; use ZoomButton instead")]
+		[Availability (Deprecated = Platform.Mac_10_12, Message = "The standard window button for FullScreenButton is always null; use ZoomButton instead.")]
 		FullScreenButton
 	}
 
@@ -1444,6 +1448,7 @@ namespace XamCore.AppKit {
 	[Flags]
 #if !XAMCORE_4_0
 	[Native]
+	[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'NSGlyphProperty' instead.")]
 	public enum NSGlyphStorageOptions : nuint_compat_int {
 #else
 	public enum NSGlyphStorageOptions : int
@@ -1454,7 +1459,7 @@ namespace XamCore.AppKit {
 	}
 
 #if !XAMCORE_4_0
-	[Availability (Deprecated = Platform.Mac_10_11, Message = "Use NSTextStorageEditActions instead")]
+	[Availability (Deprecated = Platform.Mac_10_11, Message = "Use NSTextStorageEditActions instead.")]
 	[Flags]
 	[Native]
 	public enum NSTextStorageEditedFlags : nuint_compat_int {
@@ -1558,7 +1563,10 @@ namespace XamCore.AppKit {
 		MonoSpaceTrait = (1 << 10),
 		VerticalTrait = (1 << 11), 
 		UIOptimizedTrait = (1 << 12),
-		
+		[Mac (10,13)]
+		TraitTightLeading = 1 << 15,
+		[Mac (10,13)]
+		TraitLooseLeading = 1 << 16,
 		UnknownClass = 0 << 28,
 		OldStyleSerifsClass = 1 << 28,
 		TransitionalSerifsClass = 2 << 28,
@@ -1608,7 +1616,7 @@ namespace XamCore.AppKit {
 		Default, Regular, Small
 	}
 
-	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSAlertButtonReturn instead")]
+	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSAlertButtonReturn instead.")]
 #if !XAMCORE_4_0
 	[Native]
 	public enum NSAlertType : nint {
@@ -1622,7 +1630,7 @@ namespace XamCore.AppKit {
 	}
 
 #if !XAMCORE_4_0
-	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSModalResponse instead")]
+	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSModalResponse instead.")]
 	[Native]
 	public enum NSPanelButtonType : nint {
 		Cancel, Ok
@@ -2112,6 +2120,7 @@ namespace XamCore.AppKit {
 	
 	// These constants specify the possible states of a drawer.
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSSplitViewController' instead.")]
 	public enum NSDrawerState : nuint_compat_int {
 		Closed = 0,
 		Opening = 1,
@@ -2148,6 +2157,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
+	[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'NSGlyphProperty' instead.")]
 	public enum NSGlyphInscription : nuint_compat_int {
 		Base, Below, Above, Overstrike, OverBelow
 	}
@@ -2735,4 +2745,100 @@ namespace XamCore.AppKit {
 		Center
 	}
 
+	[Mac (10,13)]
+	public enum NSFontError : int {
+		AssetDownloadError = 66304,
+		ErrorMinimum = 66304,
+		ErrorMaximum = 66335,
+	}
+
+	[Mac (10,13)]
+	[Native]
+	public enum NSAccessibilityAnnotationPosition : nint {
+		FullRange,
+		Start,
+		End,
+	}
+
+	[Mac (10,13)]
+	[Native]
+	public enum NSAccessibilityCustomRotorSearchDirection : nint {
+		Previous,
+		Next,
+	}
+
+	[Mac (10,13)]
+	[Native]
+	public enum NSAccessibilityCustomRotorType : nint {
+		Custom = 0,
+		Any = 1,
+		Annotation,
+		BoldText,
+		Heading,
+		HeadingLevel1,
+		HeadingLevel2,
+		HeadingLevel3,
+		HeadingLevel4,
+		HeadingLevel5,
+		HeadingLevel6,
+		Image,
+		ItalicText,
+		Landmark,
+		Link,
+		List,
+		MisspelledWord,
+		Table,
+		TextField,
+		UnderlinedText,
+		VisitedLink,
+	}
+
+	[Mac (10, 13)]
+	[Native]
+	public enum NSColorType : nint {
+		ComponentBased,
+		Pattern,
+		Catalog,
+	}
+
+	[Mac (10,13)]
+	[Native]
+	[Flags]
+	public enum NSFontAssetRequestOptions : nuint {
+		UsesStandardUI = 1 << 0,
+	}
+
+	[Mac (10,13)]
+	[Native]
+	[Flags]
+	public enum NSFontPanelModeMask : nuint {
+		Face = 1 << 0,
+		Size = 1 << 1,
+		Collection = 1 << 2,
+		UnderlineEffect = 1 << 8,
+		StrikethroughEffect = 1 << 9,
+		TextColorEffect = 1 << 10,
+		DocumentColorEffect = 1 << 11,
+		ShadowEffect = 1 << 12,
+		AllEffects = (nuint)0XFFF00,
+		StandardModes = (nuint)0XFFFF,
+		AllModes = (nuint)0XFFFFFFFF,
+	}
+
+	[Mac (10,13)]
+	[Native]
+	public enum NSLevelIndicatorPlaceholderVisibility : nint {
+		Automatic = 0,
+		Always = 1,
+		WhileEditing = 2,
+	}
+
+	[Mac (10,13)]
+	[Native]
+	public enum NSSegmentDistribution : nint {
+		Fit = 0,
+		Fill,
+		FillEqually,
+		FillProportionally,
+	}
 }
