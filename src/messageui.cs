@@ -46,10 +46,6 @@ namespace XamCore.MessageUI {
 
 		[Export ("addAttachmentData:mimeType:fileName:")]
 		void AddAttachmentData (NSData attachment, string mimeType, string fileName);
-
-		[iOS (11,0)]
-		[Export ("setPreferredSendingEmailAddress:")]
-		void SetPreferredSendingEmailAddress (string emailAddress);
 	}
 
 #if XAMCORE_3_0

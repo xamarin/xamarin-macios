@@ -33,7 +33,7 @@ namespace MonoTouchFixtures.EventKit {
 		[Test]
 		public void NullAllowedTest ()
 		{
-			using (var alarm = EKAlarm.FromTimeInterval (1234)) {
+			using (var alarm = new EKAlarm ()) {
 				alarm.AbsoluteDate = null;
 				alarm.StructuredLocation = null;
 			}

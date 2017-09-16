@@ -29,7 +29,6 @@ namespace XamCore.PdfKit {
 		}
 	}
 
-#if !IOS
 	partial class PdfAnnotationMarkup {
 		CGPoint [] QuadrilateralPoints {
 			get {
@@ -53,6 +52,5 @@ namespace XamCore.PdfKit {
 			}
 		}
 	}
-#endif // !IOS
 }
 #endif

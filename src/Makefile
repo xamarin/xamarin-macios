@@ -767,7 +767,7 @@ WATCHOS_EXTRA_CORE_SOURCES = \
     $(WATCH_BUILD_DIR)/Constants.cs    \
     $(WATCH_BUILD_DIR)/AssemblyInfo.cs \
     $(IOS_OPENTK_1_0_CORE_SOURCES)     \
-    AudioToolbox/AudioBuffers.cs       \
+    CoreVideo/CVPixelFormatType.cs     \
     AudioToolbox/AudioType.cs          \
 	$(SHARED_SYSTEM_DRAWING_SOURCES)   \
 	$(MONO_PATH)/mcs/class/System.Drawing/System.Drawing/Color.cs \

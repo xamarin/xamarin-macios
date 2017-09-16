@@ -157,11 +157,6 @@ namespace Introspection {
 				case "PKPaymentRequest":
 				case "PKPaymentToken":
 				case "PKLabeledValue":
-				case "PKPaymentAuthorizationResult":
-				case "PKPaymentRequestShippingMethodUpdate":
-				case "PKPaymentRequestUpdate":
-				case "PKPaymentRequestPaymentMethodUpdate":
-				case "PKPaymentRequestShippingContactUpdate":
 				// iOS9
 				case "UIFont":
 				case "AVAssetTrackSegment":
@@ -187,32 +182,6 @@ namespace Introspection {
 				// iOS 10.3
 				case "MPMusicPlayerControllerMutableQueue":
 				case "MPMusicPlayerControllerQueue":
-					return true;
-				// iOS 11.0
-				case "UICollectionViewUpdateItem": // Conformance not in headers
-				case "MKMapItem": // Conformance not in headers
-				case "NSConstraintConflict": // Conformance not in headers
-				case "NSQueryGenerationToken": // Conformance not in headers
-				case "NSPersistentHistoryToken": // Conformance not in headers
- 				case "ARCamera":
-				case "HMPresenceEvent":
-				case "HMMutablePresenceEvent":
-				case "HMSignificantTimeEvent":
-				case "HMMutableSignificantTimeEvent":
-				case "HMCalendarEvent":
-				case "HMMutableCalendarEvent":
-				case "HMCharacteristicThresholdRangeEvent":
-				case "HMMutableCharacteristicThresholdRangeEvent":
-				case "HMDurationEvent":
-				case "HMMutableDurationEvent":
-				case "HMMutableCharacteristicEvent":
-				case "HMMutableLocationEvent":
-				case "HMTimeEvent":
-				case "ILMessageFilterExtensionContext": // Conformance not in headers
-				case "MSMessageLiveLayout":
-				case "NSFileProviderDomain": // Conformance not in headers
-				case "FPUIActionExtensionContext": // Conformance not in headers
-				case "UIDocumentBrowserAction": // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -289,11 +258,6 @@ namespace Introspection {
 				case "PKPaymentRequest":
 				case "PKPaymentToken":
 				case "PKLabeledValue":
-				case "PKPaymentAuthorizationResult":
-				case "PKPaymentRequestShippingMethodUpdate":
-				case "PKPaymentRequestUpdate":
-				case "PKPaymentRequestPaymentMethodUpdate":
-				case "PKPaymentRequestShippingContactUpdate":
 				// iOS9
 				case "UIFont":
 				case "AVAssetTrackSegment":
@@ -320,40 +284,6 @@ namespace Introspection {
 				// iOS 10.3
 				case "MPMusicPlayerControllerMutableQueue":
 				case "MPMusicPlayerControllerQueue":
-					return true;
-				// iOS 11.0
-				case "MKMapItem": // Conformance not in headers
-				case "NSQueryGenerationToken": // Conformance not in headers
-				case "NSPersistentHistoryToken": // Conformance not in headers
-				case "ARCamera":
-				case "HMPresenceEvent":
-				case "HMMutablePresenceEvent":
-				case "HMSignificantTimeEvent":
-				case "HMMutableSignificantTimeEvent":
-				case "HMCalendarEvent":
-				case "HMMutableCalendarEvent":
-				case "HMCharacteristicThresholdRangeEvent":
-				case "HMMutableCharacteristicThresholdRangeEvent":
-				case "HMDurationEvent":
-				case "HMMutableDurationEvent":
-				case "HMMutableCharacteristicEvent":
-				case "HMMutableLocationEvent":
-				case "HMTimeEvent":
-				case "ILMessageFilterExtensionContext": // Conformance not in headers
-				case "NSAttributeDescription":
-				case "NSEntityDescription":
-				case "NSExpressionDescription":
-				case "NSFetchedPropertyDescription":
-				case "NSFetchIndexDescription":
-				case "NSFetchIndexElementDescription":
-				case "NSFetchRequest":
-				case "NSManagedObjectModel":
-				case "NSPropertyDescription":
-				case "NSRelationshipDescription":
-				case "MSMessageLiveLayout":
-				case "NSFileProviderDomain": // Conformance not in headers
-				case "FPUIActionExtensionContext": // Conformance not in headers
-				case "UIDocumentBrowserAction": // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -405,6 +335,7 @@ namespace Introspection {
 				switch (type.Name) {
 				// undocumented conformance (up to 7.0) and conformity varies between iOS versions
 				case "MKDirectionsRequest":
+				case "MPMediaItem":
 				case "MPMediaPlaylist":
 				case "MPMediaItemCollection":
 				case "MPMediaEntity":
@@ -432,17 +363,6 @@ namespace Introspection {
 				// iOS 10.2
 				case "VSAccountProviderResponse":
 					return true;
-				// iOS 11.0
-				case "UICollectionViewUpdateItem": // Conformance not in headers
-				case "ACAccountCredential": // b2: Conformance not in headers
-				case "ILMessageFilterExtensionContext": // b2: Conformance not in headers
-				case "HMCharacteristicEvent": // Selectors not available on 32 bit
-				case "NSFileProviderDomain": // Conformance not in headers
-				case "FPUIActionExtensionContext": // Conformance not in headers
-				case "CXCall": // Conformance not in headers
-				case "UIDocumentBrowserAction": // Conformance not in headers
-					return true;
-
 #if __WATCHOS__
 				case "CLKComplicationTimelineEntry":
 					return true;
@@ -455,11 +375,6 @@ namespace Introspection {
 				// iOS 10.3
 				case "MPMusicPlayerControllerMutableQueue":
 				case "MPMusicPlayerControllerQueue":
-				// iOS 11
-				case "INRideDriver":
-				case "INRestaurantGuest":
-				case "INPerson":
-				case "HMCharacteristicEvent": // Selectors not available on 32 bit
 					return true;
 				}
 				break;
@@ -519,9 +434,6 @@ namespace Introspection {
 				case "SKVideoNode":
 				case "SKSpriteNode":
 					return !TestRuntime.CheckXcodeVersion (8,0);
-				case "SCNNode":
-				case "SCNReferenceNode":
-					return !TestRuntime.CheckXcodeVersion (9,0);
 				}
 				break;
 
@@ -632,9 +544,6 @@ namespace Introspection {
 				case "UIVisualEffectView":
 				case "UIWindow":
 					return !TestRuntime.CheckXcodeVersion (8, 0);
-				case "SCNNode":
-				case "SCNReferenceNode":
-					return !TestRuntime.CheckXcodeVersion (9,0);
 				}
 				break;
 
@@ -646,23 +555,6 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (8, 0);
 				}
 				break;
-
-			case "UISpringLoadedInteractionSupporting": // types do not conform to protocol but protocol methods work on those types (see monotouch-test)
-				switch (type.Name) {
-				case "UIButton":
-				case "UICollectionView":
-				case "UISegmentedControl":
-				case "UITableView":
-				case "UITabBar":
-				case "UIAlertController":
-				case "PKPaymentButton":
-				case "PKAddPassButton":
-					return true;
-				}
-				break;
-
-			case "UIPasteConfigurationSupporting": // types do not conform to protocol but protocol methods work on those types (base type tests in monotouch-test)
-				return true; // Skip everything because 'UIResponder' implements 'UIPasteConfigurationSupporting' and that's 130+ types
 			}
 			return base.Skip (type, protocolName);
 		}

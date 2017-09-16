@@ -22,8 +22,7 @@ namespace XamCore.Messages {
 	public enum MSMessagesAppPresentationStyle : nuint
 	{
 		Compact,
-		Expanded,
-		Transcript,
+		Expanded
 	}
 
 	[iOS (10,0)]
@@ -39,7 +38,6 @@ namespace XamCore.Messages {
 	[ErrorDomain ("MSMessagesErrorDomain")]
 	public enum MSMessageErrorCode : nint
 	{
-		Unknown = -1,
 		FileNotFound = 1,
 		FileUnreadable,
 		ImproperFileType,
@@ -48,23 +46,11 @@ namespace XamCore.Messages {
 		StickerFileImproperFileSize,
 		StickerFileImproperFileFormat,
 		UrlExceedsMaxSize,
-		SendWithoutRecentInteraction,
-		SendWhileNotVisible,
-	}
-
-	[iOS (11,0)]
-	[Protocol]
-	interface MSMessagesAppTranscriptPresentation
-	{
-		[iOS (11,0)]
-		[Abstract]
-		[Export ("contentSizeThatFits:")]
-		CGSize GetContentSizeThatFits (CGSize size);
 	}
 
 	[iOS (10,0)]
 	[BaseType (typeof(UIViewController))]
-	interface MSMessagesAppViewController : MSMessagesAppTranscriptPresentation
+	interface MSMessagesAppViewController
 	{
 		// inlined ctor
 		[Export ("initWithNibName:bundle:")]
@@ -144,26 +130,6 @@ namespace XamCore.Messages {
 		[Export ("insertAttachment:withAlternateFilename:completionHandler:")]
 		[Async]
 		void InsertAttachment (NSUrl url, [NullAllowed] string filename, [NullAllowed] Action<NSError> completionHandler);
-
-		[iOS (11,0)]
-		[Export ("sendMessage:completionHandler:")]
-		[Async]
-		void SendMessage (MSMessage message, [NullAllowed] Action<NSError> completionHandler);
-
-		[iOS (11,0)]
-		[Export ("sendSticker:completionHandler:")]
-		[Async]
-		void SendSticker (MSSticker sticker, [NullAllowed] Action<NSError> completionHandler);
-
-		[iOS (11,0)]
-		[Export ("sendText:completionHandler:")]
-		[Async]
-		void SendText (string text, [NullAllowed] Action<NSError> completionHandler);
-
-		[iOS (11,0)]
-		[Export ("sendAttachment:withAlternateFilename:completionHandler:")]
-		[Async]
-		void SendAttachment (NSUrl url, [NullAllowed] string filename, [NullAllowed] Action<NSError> completionHandler);
 	}
 
 	[iOS (10,0)]
@@ -177,10 +143,6 @@ namespace XamCore.Messages {
 
 		[NullAllowed, Export ("session")]
 		MSSession Session { get; }
-
-		[iOS (11,0)]
-		[Export ("pending")]
-		bool Pending { [Bind ("isPending")] get; }
 
 		[Export ("senderParticipantIdentifier")]
 		NSUuid SenderParticipantIdentifier { get; }
@@ -346,19 +308,6 @@ namespace XamCore.Messages {
 
 		[Export ("stickerSize")]
 		MSStickerSize StickerSize { get; }
-	}
-
-	[iOS (11,0)]
-	[BaseType (typeof(MSMessageLayout))]
-	[DisableDefaultCtor]
-	interface MSMessageLiveLayout
-	{
-		[Export ("initWithAlternateLayout:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (MSMessageTemplateLayout alternateLayout);
-
-		[Export ("alternateLayout")]
-		MSMessageTemplateLayout AlternateLayout { get; }
 	}
 }
 #endif // !MONOMAC

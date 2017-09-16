@@ -23,7 +23,6 @@
 			<string>10.1</string>
 			<string>10.2</string>
 			<string>10.3</string>
-			<string>11.0</string>
 		</array>
 		<key>tvOS</key>
 		<array>
@@ -33,7 +32,6 @@
 			<string>10.0</string>
 			<string>10.1</string>
 			<string>10.2</string>
-			<string>11.0</string>
 		</array>
 		<key>watchOS</key>
 		<array>
@@ -44,7 +42,6 @@
 			<string>3.0</string>
 			<string>3.1</string>
 			<string>3.2</string>
-			<string>4.0</string>
 		</array>
 	</dict>
 	<key>RecommendedXcodeVersion</key>

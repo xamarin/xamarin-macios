@@ -1119,7 +1119,7 @@ xamarin_initialize_embedded ()
 
 	Dl_info info;
 	if (dladdr ((void *) xamarin_initialize_embedded, &info) != 0) {
-		const char *last_sep = strrchr (info.dli_fname, '/');
+		char *last_sep = strrchr (info.dli_fname, '/');
 		if (last_sep == NULL) {
 			libname = strdup (info.dli_fname);
 		} else {

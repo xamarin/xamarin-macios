@@ -17,9 +17,6 @@ using Vector4 = global::OpenTK.Vector4;
 using Matrix2 = global::OpenTK.Matrix2;
 using Matrix3 = global::OpenTK.Matrix3;
 using Matrix4 = global::OpenTK.Matrix4;
-using MatrixFloat2x2 = global::OpenTK.NMatrix2;
-using MatrixFloat3x3 = global::OpenTK.NMatrix3;
-using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 
 #if (XAMCORE_2_0 || !MONOMAC) && !WATCH
 namespace XamCore.SpriteKit {
@@ -74,18 +71,9 @@ namespace XamCore.SpriteKit {
 				InitializeHandle (InitWithNameFloatVector4 (name, value), "initWithName:floatVector4:");
 		}
 
-#if !XAMCORE_4_0
 		// Apple deprecated initWithName:floatMatrix2: in macOS10.12/iOS10.0
 		// and made available initWithName:matrixFloat2x2: so we invoke
 		// the right one at runtime depending on which OS version we are running
-		//
-		// Unfortunately our 'initWithName:matrixFloat2x2:' implementation is
-		// incorrect (the matrix is transposed), but changing it would be a
-		// breaking change, so we obsolete this constructor and provide a new
-		// one which implements (only) 'initWithName:matrixFloat2x2:'
-		// correctly. However, this constructor still does the right thing for
-		// < macOS 10.12 / iOS 10.0
-		[Obsolete ("Use the '(string, MatrixFloat2x2)' overload instead.")]
 		public SKUniform (string name, Matrix2 value)
 		{
 			if (CheckSystemVersion ())
@@ -97,14 +85,6 @@ namespace XamCore.SpriteKit {
 		// Apple deprecated initWithName:floatMatrix3: in macOS10.12/iOS10.0
 		// and made available initWithName:matrixFloat3x3: so we invoke
 		// the right one at runtime depending on which OS version we are running
-		//
-		// Unfortunately our 'initWithName:matrixFloat3x3:' implementation is
-		// incorrect (the matrix is transposed), but changing it would be a
-		// breaking change, so we obsolete this constructor and provide a new
-		// one which implements (only) 'initWithName:matrixFloat3x3:'
-		// correctly. However, this constructor still does the right thing for
-		// < macOS 10.12 / iOS 10.0
-		[Obsolete ("Use the '(string, MatrixFloat3x3)' overload instead.")]
 		public SKUniform (string name, Matrix3 value)
 		{
 			if (CheckSystemVersion ())
@@ -116,14 +96,6 @@ namespace XamCore.SpriteKit {
 		// Apple deprecated initWithName:floatMatrix4: in macOS10.12/iOS10.0
 		// and made available initWithName:matrixFloat4x4: so we invoke
 		// the right one at runtime depending on which OS version we are running
-		//
-		// Unfortunately our 'initWithName:matrixFloat4x4:' implementation is
-		// incorrect (the matrix is transposed), but changing it would be a
-		// breaking change, so we obsolete this constructor and provide a new
-		// one which implements (only) 'initWithName:matrixFloat4x4:'
-		// correctly. However, this constructor still does the right thing for
-		// < macOS 10.12 / iOS 10.0
-		[Obsolete ("Use the '(string, MatrixFloat4x4)' overload instead.")]
 		public SKUniform (string name, Matrix4 value)
 		{
 			if (CheckSystemVersion ())
@@ -131,7 +103,6 @@ namespace XamCore.SpriteKit {
 			else
 				InitializeHandle (InitWithNameFloatMatrix4 (name, value), "initWithName:floatMatrix4:");
 		}
-#endif // !XAMCORE_4_0
 
 		// Apple deprecated floatVector2Value in macOS10.12/iOS10.0
 		// and made available vectorFloat2Value so we invoke
@@ -190,29 +161,20 @@ namespace XamCore.SpriteKit {
 			}
 		}
 
-#if !XAMCORE_4_0
 		// Apple deprecated floatMatrix2Value in macOS10.12/iOS10.0
 		// and made available matrixFloat2x2Value so we invoke
 		// the right one at runtime depending on which OS version we are running
-		//
-		// Unfortunately our 'matrixFloat2x2Value' implementation is incorrect
-		// (we return a transposed matrix), but changing it would be a
-		// breaking change, so we obsolete this property and provide a new one
-		// which implements (only) 'matrixFloat4x4Value' correctly. However,
-		// this property still returns the correct matrix for < macOS 10.12 /
-		// iOS 10.0
-		[Obsolete ("Use 'MatrixFloat2x2Value' instead.")]
 		public virtual Matrix2 FloatMatrix2Value
 		{
 			get {
 				if (CheckSystemVersion ())
-					return (Matrix2) MatrixFloat2x2.Transpose (MatrixFloat2x2Value);
+					return _MatrixFloat2x2Value;
 				else
 					return _FloatMatrix2Value;
 			}
 			set {
 				if (CheckSystemVersion ())
-					MatrixFloat2x2Value = MatrixFloat2x2.Transpose ((MatrixFloat2x2) value);
+					_MatrixFloat2x2Value = value;
 				else
 					_FloatMatrix2Value = value;
 			}
@@ -221,25 +183,17 @@ namespace XamCore.SpriteKit {
 		// Apple deprecated floatMatrix3Value in macOS10.12/iOS10.0
 		// and made available matrixFloat3x3Value so we invoke
 		// the right one at runtime depending on which OS version we are running
-		//
-		// Unfortunately our 'matrixFloat3x3Value' implementation is incorrect
-		// (we return a transposed matrix), but changing it would be a
-		// breaking change, so we obsolete this property and provide a new one
-		// which implements (only) 'matrixFloat3x3Value' correctly. However,
-		// this property still returns the correct matrix for < macOS 10.12 /
-		// iOS 10.0
-		[Obsolete ("Use 'MatrixFloat3x3Value' instead.")]
 		public virtual Matrix3 FloatMatrix3Value
 		{
 			get {
 				if (CheckSystemVersion ())
-					return (Matrix3) MatrixFloat3x3.Transpose (MatrixFloat3x3Value);
+					return _MatrixFloat3x3Value;
 				else
 					return _FloatMatrix3Value;
 			}
 			set {
 				if (CheckSystemVersion ())
-					MatrixFloat3x3Value = MatrixFloat3x3.Transpose ((MatrixFloat3x3) value);
+					_MatrixFloat3x3Value = value;
 				else
 					_FloatMatrix3Value = value;
 			}
@@ -248,30 +202,21 @@ namespace XamCore.SpriteKit {
 		// Apple deprecated floatMatrix4Value in macOS10.12/iOS10.0
 		// and made available matrixFloat4x4Value so we invoke
 		// the right one at runtime depending on which OS version we are running
-		//
-		// Unfortunately our 'matrixFloat4x4Value' implementation is incorrect
-		// (we return a transposed matrix), but changing it would be a
-		// breaking change, so we obsolete this property and provide a new one
-		// which implements (only) 'matrixFloat4x4Value' correctly. However,
-		// this property still returns the correct matrix for < macOS 10.12 /
-		// iOS 10.0
-		[Obsolete ("Use 'MatrixFloat4x4Value' instead.")]
 		public virtual Matrix4 FloatMatrix4Value
 		{
 			get {
 				if (CheckSystemVersion ())
-					return (Matrix4) MatrixFloat4x4.Transpose (MatrixFloat4x4Value);
+					return _MatrixFloat4x4Value;
 				else
 					return _FloatMatrix4Value;
 			}
 			set {
 				if (CheckSystemVersion ())
-					MatrixFloat4x4Value = MatrixFloat4x4.Transpose ((MatrixFloat4x4) value);
+					_MatrixFloat4x4Value = value;
 				else
 					_FloatMatrix4Value = value;
 			}
 		}
-#endif // !XAMCORE_4_0
 	}
 }
 #endif // XAMCORE_2_0

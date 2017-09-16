@@ -61,77 +61,6 @@ namespace XamCore.WebKit
 		WKBackForwardListItem ItemAtIndex (nint index);
 	}
 
-	[Mac (10,13), iOS (11,0)]
-	[BaseType (typeof(NSObject))]
-	interface WKContentRuleList
-	{
-		[Export ("identifier")]
-		string Identifier { get; }
-	}
-
-	[Mac (10,13), iOS (11,0)]
-	[BaseType (typeof(NSObject))]
-	interface WKContentRuleListStore
-	{
-		[Static]
-		[Export ("defaultStore")]
-		WKContentRuleListStore DefaultStore { get; }
-	
-		[Static]
-		[Export ("storeWithURL:")]
-		WKContentRuleListStore FromUrl (NSUrl url);
-	
-		[Export ("compileContentRuleListForIdentifier:encodedContentRuleList:completionHandler:")]
-		[Async]
-		void CompileContentRuleList (string identifier, string encodedContentRuleList, Action<WKContentRuleList, NSError> completionHandler);
-	
-		[Export ("lookUpContentRuleListForIdentifier:completionHandler:")]
-		[Async]
-		void LookUpContentRuleList (string identifier, Action<WKContentRuleList, NSError> completionHandler);
-	
-		[Export ("removeContentRuleListForIdentifier:completionHandler:")]
-		[Async]
-		void RemoveContentRuleList (string identifier, Action<NSError> completionHandler);
-	
-		[Export ("getAvailableContentRuleListIdentifiers:")]
-		[Async]
-		void GetAvailableContentRuleListIdentifiers (Action<string []> callback);
-	}
-	
-	[Mac (10,13), iOS (11,0)]
-	[BaseType (typeof(NSObject), Name = "WKHTTPCookieStore")]
-	[DisableDefaultCtor]
-	interface WKHttpCookieStore
-	{
-		[Export ("getAllCookies:")]
-		[Async]
-		void GetAllCookies (Action<NSHttpCookie []> completionHandler);
-	
-		[Export ("setCookie:completionHandler:")]
-		[Async]
-		void SetCookie (NSHttpCookie cookie, [NullAllowed] Action completionHandler);
-	
-		[Export ("deleteCookie:completionHandler:")]
-		[Async]
-		void DeleteCookie (NSHttpCookie cookie, [NullAllowed] Action completionHandler);
-	
-		[Export ("addObserver:")]
-		void AddObserver (IWKHttpCookieStoreObserver observer);
-	
-		[Export ("removeObserver:")]
-		void RemoveObserver (IWKHttpCookieStoreObserver observer);
-	}
-
-	interface IWKHttpCookieStoreObserver {}
-	
-	[Mac (10,13), iOS (11,0)]
-	[Protocol (Name = "WKHTTPCookieStoreObserver")]
-	interface WKHttpCookieStoreObserver
-	{
-		[Export ("cookiesDidChangeInCookieStore:")]
-		void CookiesDidChangeInCookieStore (WKHttpCookieStore cookieStore);
-	}
-	
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
 	interface WKFrameInfo : NSCopying {
@@ -145,10 +74,6 @@ namespace XamCore.WebKit
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		[Export ("securityOrigin")]
 		WKSecurityOrigin SecurityOrigin { get; }
-
-		[iOS (11,0)][Mac (10,13, onlyOn64 : true)]
-		[NullAllowed, Export ("webView", ArgumentSemantic.Weak)]
-		WKWebView WebView { get; }
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
@@ -302,59 +227,6 @@ namespace XamCore.WebKit
 		nint Port { get; }
 	}
 
-	
-	[Mac (10,13), iOS (11,0)]
-	[BaseType (typeof(NSObject))]
-	interface WKSnapshotConfiguration : NSCopying {
-		[Export ("rect")]
-		CGRect Rect { get; set; }
-
-		[Export ("snapshotWidth")]
-		NSNumber SnapshotWidth { get; set; }
-	}
-
-#if XAMCORE_2_0
-	interface IWKUrlSchemeHandler {}
-	[Mac (10,13), iOS (11,0)]
-	[Protocol (Name = "WKURLSchemeHandler")]
-	interface WKUrlSchemeHandler
-	{
-		[Abstract]
-		[Export ("webView:startURLSchemeTask:")]
-		void StartUrlSchemeTask (WKWebView webView, IWKUrlSchemeTask urlSchemeTask);
-	
-		[Abstract]
-		[Export ("webView:stopURLSchemeTask:")]
-		void StopUrlSchemeTask (WKWebView webView, IWKUrlSchemeTask urlSchemeTask);
-	}
-#endif
-	interface IWKUrlSchemeTask {}
-
-	[Mac (10,13), iOS (11,0)]
-	[Protocol (Name = "WKURLSchemeTask")]
-	interface WKUrlSchemeTask
-	{
-		[Abstract]
-		[Export ("request", ArgumentSemantic.Copy)]
-		NSUrlRequest Request { get; }
-	
-		[Abstract]
-		[Export ("didReceiveResponse:")]
-		void DidReceiveResponse (NSUrlResponse response);
-	
-		[Abstract]
-		[Export ("didReceiveData:")]
-		void DidReceiveData (NSData data);
-	
-		[Abstract]
-		[Export ("didFinish")]
-		void DidFinish ();
-	
-		[Abstract]
-		[Export ("didFailWithError:")]
-		void DidFailWithError (NSError error);
-	}
-	
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	interface WKWebsiteDataRecord
@@ -424,10 +296,6 @@ namespace XamCore.WebKit
 		[Export ("removeDataOfTypes:modifiedSince:completionHandler:")]
 		[Async]
 		void RemoveDataOfTypes (NSSet<NSString> websiteDataTypes, NSDate date, Action completionHandler);
-
-		[Mac (10, 13), iOS (11, 0)]
-		[Export ("httpCookieStore")]
-		WKHttpCookieStore HttpCookieStore { get; }
 	}
 
 	[Mac (10,12, onlyOn64 : true)][NoiOS, NoWatch, NoTV]
@@ -498,18 +366,6 @@ namespace XamCore.WebKit
 
 		[Export ("removeScriptMessageHandlerForName:")]
 		void RemoveScriptMessageHandler (string name);
-
-		[Mac (10,13), iOS (11,0)]
-		[Export ("addContentRuleList:")]
-		void AddContentRuleList (WKContentRuleList contentRuleList);
-	
-		[Mac (10,13), iOS (11,0)]
-		[Export ("removeContentRuleList:")]
-		void RemoveContentRuleList (WKContentRuleList contentRuleList);
-	
-		[Mac (10,13), iOS (11,0)]
-		[Export ("removeAllContentRuleLists")]
-		void RemoveAllContentRuleLists ();
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
@@ -662,8 +518,8 @@ namespace XamCore.WebKit
 		string CustomUserAgent { get; set; }
 
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'ServerTrust' property.")]
-		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'ServerTrust' property.")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use ServerTrust property")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use ServerTrust property")]
 		[Export ("certificateChain", ArgumentSemantic.Copy)]
 		SecCertificate[] CertificateChain { get; }
 
@@ -674,23 +530,6 @@ namespace XamCore.WebKit
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		[NullAllowed, Export ("serverTrust")]
 		SecTrust ServerTrust { get; }
-
-#if !MONOMAC
-		[iOS (11,0)]
-		[Async]
-		[Export ("takeSnapshotWithConfiguration:completionHandler:")]
-		void TakeSnapshot ([NullAllowed] WKSnapshotConfiguration snapshotConfiguration, Action<UIImage, NSError> completionHandler);
-#else
-		[Mac (10,13)]
-		[Export ("takeSnapshotWithConfiguration:completionHandler:")]
-		[Async]
-		void TakeSnapshot ([NullAllowed] WKSnapshotConfiguration snapshotConfiguration, Action<NSImage, NSError> completionHandler);
-#endif
-		[Mac (10,13), iOS (11,0)]
-		[Static]
-		[Export ("handlesURLScheme:")]
-		bool HandlesUrlScheme (string urlScheme);
-
 	}
 
 	delegate void WKJavascriptEvaluationResult (NSObject result, NSError error);
@@ -727,18 +566,18 @@ namespace XamCore.WebKit
 		[Export ("allowsInlineMediaPlayback")]
 		bool AllowsInlineMediaPlayback { get; set; }
 
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0, Message = "Use 'RequiresUserActionForMediaPlayback' or 'MediaTypesRequiringUserActionForPlayback' instead.")]
+		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0, Message = "Use RequiresUserActionForMediaPlayback or MediaTypesRequiringUserActionForPlayback")]
 		[Export ("mediaPlaybackRequiresUserAction")]
 		bool MediaPlaybackRequiresUserAction { get; set; }
 
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0, Message = "Use 'AllowsAirPlayForMediaPlayback' instead.")]
+		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0, Message = "Use AllowsAirPlayForMediaPlayback")]
 		[Export ("mediaPlaybackAllowsAirPlay")]
 		bool MediaPlaybackAllowsAirPlay { get; set; }
 
 		[Export ("selectionGranularity")]
 		WKSelectionGranularity SelectionGranularity { get; set; }
 
-		[Availability (Introduced = Platform.iOS_9_0, Deprecated = Platform.iOS_10_0, Message = "Use 'MediaTypesRequiringUserActionForPlayback' instead.")]
+		[Availability (Introduced = Platform.iOS_9_0, Deprecated = Platform.iOS_10_0, Message = "Use MediaTypesRequiringUserActionForPlayback")]
 		[Export ("requiresUserActionForMediaPlayback")]
 		bool RequiresUserActionForMediaPlayback { get; set; }
 
@@ -758,17 +597,6 @@ namespace XamCore.WebKit
 		[NoMac]
 		[Export ("ignoresViewportScaleLimits")]
 		bool IgnoresViewportScaleLimits { get; set; }
-
-#if XAMCORE_2_0
-		[Mac (10,13), iOS (11,0)]
-		[Export ("setURLSchemeHandler:forURLScheme:")]
-		void SetUrlSchemeHandler ([NullAllowed] IWKUrlSchemeHandler urlSchemeHandler, string urlScheme);
-	
-		[Mac (10,13), iOS (11,0)]
-		[Export ("urlSchemeHandlerForURLScheme:")]
-		[return: NullAllowed]
-		IWKUrlSchemeHandler GetUrlSchemeHandler (string urlScheme);
-#endif
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit

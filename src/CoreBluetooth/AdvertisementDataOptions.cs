@@ -37,7 +37,6 @@ namespace XamCore.CoreBluetooth {
 	// It's intentionally not called AdvertisementDataOptions because different options
 	// are valid in different contexts
 	//
-	[Watch (4,0)]
 	[iOS (6,0)]
 	public class StartAdvertisingOptions : DictionaryContainer
 	{

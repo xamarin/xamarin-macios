@@ -88,9 +88,7 @@ namespace XamCore.GameplayKit {
 
 		static void PrepareBuffer<T> (out IntPtr buffer, ref T[] points) where T : struct
 		{
-			var type = typeof (T);
-			// Vector3 is 12 bytes but vector_float3 is 16
-			var size = type == typeof (Vector3) ? 16 : Marshal.SizeOf (type);
+			var size = Marshal.SizeOf (typeof (T));
 			var length = points.Length * size;
 			buffer = Marshal.AllocHGlobal (length);
 

@@ -29,11 +29,9 @@
 using System;
 
 using XamCore.ObjCRuntime;
-#if MONOMAC || (IOS && XAMCORE_2_0)
 
 namespace XamCore.PdfKit {
 
-	[iOS (11,0)]
 	[Native]
 	public enum PdfActionNamedName : nint {
 		None         = 0,
@@ -50,7 +48,6 @@ namespace XamCore.PdfKit {
 		ZoomOut      = 11
 	}
 
-	[iOS (11,0)]
 	[Native]
 	public enum PdfWidgetControlType : nint {
 		Unknown    = -1,
@@ -59,7 +56,6 @@ namespace XamCore.PdfKit {
 		CheckBox    = 2
 	}
 
-	[iOS (11,0)]
 	[Native]
 	public enum PdfLineStyle : nint {
 		None        = 0,
@@ -70,7 +66,6 @@ namespace XamCore.PdfKit {
 		ClosedArrow = 5
 	}
 
-	[iOS (11,0)]
 	[Native]
 	public enum PdfMarkupType : nint {
 		Highlight = 0,
@@ -78,7 +73,6 @@ namespace XamCore.PdfKit {
 		Underline = 2
 	}
 
-	[iOS (11,0)]
 	[Native]
 	public enum PdfTextAnnotationIconType : nint {
 		Comment      = 0,
@@ -90,7 +84,6 @@ namespace XamCore.PdfKit {
 		Insert       = 6
 	}
 
-	[iOS (11,0)]
 	[Native]
 	public enum PdfBorderStyle : nint {
 		Solid     = 0,
@@ -100,7 +93,6 @@ namespace XamCore.PdfKit {
 		Underline = 4
 	}
 
-	[iOS (11,0)]
 	[Native]
 	public enum PdfPrintScalingMode : nint {
 		None      = 0,
@@ -108,7 +100,6 @@ namespace XamCore.PdfKit {
 		DownToFit = 2
 	}
 
-	[iOS (11,0)]
 	[Native]
 	public enum PdfDocumentPermissions : nint {
 		None  = 0,
@@ -116,7 +107,6 @@ namespace XamCore.PdfKit {
 		Owner = 2
 	}
 
-	[iOS (11,0)]
 	[Native]
 	public enum PdfDisplayBox : nint {
 		Media = 0,
@@ -126,7 +116,6 @@ namespace XamCore.PdfKit {
 		Art   = 4
 	}
 
-	[iOS (11,0)]
 	[Native]
 	public enum PdfDisplayMode : nint {
 		SinglePage           = 0,
@@ -135,7 +124,6 @@ namespace XamCore.PdfKit {
 		TwoUpContinuous      = 3
 	}
 
-	[iOS (11,0)]
 	[Flags]
 	[Native]
 	public enum PdfAreaOfInterest : nint {
@@ -150,37 +138,4 @@ namespace XamCore.PdfKit {
 		PopupArea      = 1 << 7,
 		ImageArea      = 1 << 8
 	}
-
-	[Mac (10,13)]
-	[iOS (11,0)]
-	[Native]
-	public enum PdfDisplayDirection : nint {
-		Vertical = 0,
-		Horizontal = 1,
-	}
-
-	[iOS (11,0), Mac (10,7)]
-	[Native]
-	public enum PdfInterpolationQuality : nint {
-		None = 0,
-		Low = 1,
-		High = 2,
-	}
-
-	[NoMac]
-	[iOS (11,0)]
-	[Native]
-	public enum PdfThumbnailLayoutMode : nint {
-		Vertical = 0,
-		Horizontal = 1,
-	}
-
-	[iOS (11,0), Mac (10,12)]
-	[Native]
-	public enum PdfWidgetCellState : nint {
-		Mixed = -1,
-		Off = 0,
-		On = 1,
-	}
 }
-#endif

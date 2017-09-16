@@ -18,7 +18,6 @@ namespace XamCore.MediaPlayer {
 	[Native]
 	[NoMac]
 	[NoTV]
-	[Availability (Deprecated = Platform.iOS_9_0)]
 	public enum MPMoviePlaybackState : nint {
 		Stopped,
 		Playing,
@@ -32,7 +31,6 @@ namespace XamCore.MediaPlayer {
 	[Native]
 	[NoMac]
 	[NoTV]
-	[Availability (Deprecated = Platform.iOS_9_0)]
 	public enum MPMovieLoadState : nint {
 		Unknown        = 0,
 		Playable       = 1 << 0,
@@ -277,8 +275,6 @@ namespace XamCore.MediaPlayer {
 		NoSuchContent = 100,
 		[iOS (9,1)]
 		NoActionableNowPlayingItem = 110,
-		[iOS (11,0)][TV (11,0)][Mac (10,13)]
-		DeviceNotFound = 120,
 		CommandFailed = 200
 	}
 

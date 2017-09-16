@@ -2191,7 +2191,7 @@ namespace XamCore.CoreText {
 
 					var ret = new CTFontDescriptor [n];
 					for (nint i = 0; i < n; i++)
-						ret [i] = new CTFontDescriptor (retArray.GetValue (i), false);
+						ret [i] = new CTFontDescriptor (retArray.GetValue (i), true);
 
 					return ret;
 				}

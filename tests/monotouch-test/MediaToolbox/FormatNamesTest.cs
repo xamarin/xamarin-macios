@@ -32,11 +32,7 @@ namespace MonoTouchFixtures.MediaToolbox {
 
 			Assert.That (CMMediaType.Audio.GetLocalizedName (), Is.EqualTo ("Sound"), "Audio");
 			Assert.That (CMMediaType.ClosedCaption.GetLocalizedName (), Is.EqualTo ("Closed Caption"), "ClosedCaption");
-			if (TestRuntime.CheckXcodeVersion (9, 0)) {
-				Assert.That (CMMediaType.Metadata.GetLocalizedName (), Is.EqualTo ("Metadata"), "Metadata");
-			} else {
-				Assert.That (CMMediaType.Metadata.GetLocalizedName (), Is.EqualTo ("meta"), "Metadata");
-			}
+			Assert.That (CMMediaType.Metadata.GetLocalizedName (), Is.EqualTo ("meta"), "Metadata");
 			Assert.That (CMMediaType.Muxed.GetLocalizedName (), Is.EqualTo ("Muxed"), "Muxed");
 			Assert.That (CMMediaType.Subtitle.GetLocalizedName (), Is.EqualTo ("Subtitle"), "Subtitle");
 			Assert.That (CMMediaType.Text.GetLocalizedName (), Is.EqualTo ("Text"), "Text");

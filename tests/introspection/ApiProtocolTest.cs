@@ -71,7 +71,6 @@ namespace Introspection {
 				case "CAEmitterCell":
 				case "GKAchievement":
 				case "GKScore":
-				case "MPMediaItem":
 				// new in iOS8 and 10.0
 				case "NSExtensionContext":
 				case "NSLayoutAnchor`1":
@@ -82,11 +81,6 @@ namespace Introspection {
 				case "GKCloudPlayer":
 				// iOS 10 : test throw because of generic usage
 				case "NSMeasurement`1":
-				// Xcode 9 - Conformance not in headers
-				case "MLDictionaryConstraint":
-				case "MLImageConstraint":
-				case "MLMultiArrayConstraint":
-				case "VSSubscription":
 					return true; // skip
 				}
 				break;
@@ -120,8 +114,6 @@ namespace Introspection {
 				case "GKGameSession":
 				// iOS 10 : test throw because of generic usage
 				case "NSMeasurement`1":
-				// iOS 11 / tvOS 11
-				case "VSSubscription":
 					return true;
 				}
 				break;
@@ -148,10 +140,6 @@ namespace Introspection {
 				// iOS 10 : test throw because of generic usage
 				case "NSMeasurement`1":
 					return true; // skip
-				// xcode 9
-				case "NSConstraintConflict": // Conformance not in headers
-				case "VSSubscription":
-					return true;
 				}
 				break;
 			// conformance added in Xcode 8 (iOS 10 / macOS 10.12)
@@ -167,10 +155,6 @@ namespace Introspection {
 				case "MTKView":
 					return true;
 				}
-				break;
-			case "NSProgressReporting":
-				if (!TestRuntime.CheckXcodeVersion (9, 0))
-					return true;
 				break;
 			}
 			return false;

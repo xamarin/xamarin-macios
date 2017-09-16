@@ -267,12 +267,10 @@ namespace XamCore.CoreVideo {
 		NSString PlaneAlignmentKey { get; }
 
 #if !MONOMAC || !XAMCORE_2_0
-		[NoWatch]
 		[iOS (6,0)]
 		[Field ("kCVPixelBufferOpenGLESCompatibilityKey")]
 		NSString OpenGLESCompatibilityKey { get; }
 
-		[NoWatch]
 		[iOS (9,0)]
 		[Field ("kCVPixelBufferOpenGLESTextureCacheCompatibilityKey")]
 		NSString OpenGLESTextureCacheCompatibilityKey { get; }
@@ -303,7 +301,6 @@ namespace XamCore.CoreVideo {
 	}
 
 #if !MONOMAC
-	[NoWatch]
 	[Partial]
 	interface CVMetalTextureCache {
 		[Internal]

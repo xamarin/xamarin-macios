@@ -36,7 +36,6 @@ namespace Xamarin.iOS.Tasks
 					"LaunchImage-568h@2x.png",
 					"LaunchImage.png",
 					"LaunchImage@2x.png",
-					"Assets.car",
 				};
 				return files.Select (s => Path.Combine (AppBundlePath, s)).ToArray ();
 			}
@@ -436,7 +435,7 @@ namespace Xamarin.iOS.Tasks
 			var path = Path.Combine (MonoTouchProjectPath, "Info.plist");
 			var plist = PDictionary.FromFile (path);
 
-			plist.SetMinimumOSVersion ("7.0");
+			plist.SetMinimumOSVersion ("6.1");
 			plist.Save (path, true);
 
 			RunTarget (MonoTouchProject, TargetName.CollectBundleResources);
@@ -481,7 +480,7 @@ namespace Xamarin.iOS.Tasks
 
 			// Start without app icon.
 			plist.Remove("XSAppIconAssets");
-			plist.SetMinimumOSVersion ("7.0");
+			plist.SetMinimumOSVersion ("6.1");
 			plist.Save (path, true);
 
 			RunTarget (project, TargetName.CompileImageAssets);
