@@ -23,11 +23,7 @@ namespace XamCore.TVMLKit {
 		Undefined,
 		Left,
 		Center,
-		Right,
-		[TV (11,0)]
-		Leading,
-		[TV (11, 0)]
-		Trailing,
+		Right
 	}
 
 	[TV (9,0)]
@@ -53,19 +49,7 @@ namespace XamCore.TVMLKit {
 		BottomLeft,
 		BottomRight,
 		Header,
-		Footer,
-		[TV (11, 0)]
-		Leading,
-		[TV (11, 0)]
-		Trailing,
-		[TV (11, 0)]
-		TopLeading,
-		[TV (11, 0)]
-		TopTrailing,
-		[TV (11, 0)]
-		BottomLeading,
-		[TV (11, 0)]
-		BottomTrailing,
+		Footer
 	}
 
 	[TV (9,0)]

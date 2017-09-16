@@ -22,9 +22,7 @@ namespace Extrospection {
 			// e.g. WatchKit.WKErrorCode and WebKit.WKErrorCode :-(
 			if (!enums.TryGetValue (name, out td))
 				enums.Add (name, type);
-			else if (td.Namespace.StartsWith ("OpenTK.", StringComparison.Ordinal)) {
-				// OpenTK duplicate a lots of enums between it's versions
-			} else {
+			else {
 				Console.WriteLine ("!duplicate-type-name! {0} enum exists as both {1} and {2}", name, type.FullName, td.FullName);
 			}
 		}
@@ -76,7 +74,6 @@ namespace Extrospection {
 			case "OptionBits": // UInt32
 			case "long":
 			case "FourCharCode":
-			case "OSStatus":
 				break;
 			case "int64_t":
 			case "uint64_t":

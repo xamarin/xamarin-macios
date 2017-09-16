@@ -13,11 +13,13 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.CoreBluetooth {
 
-	[Mac (10,13)]
-	[Watch (4,0)]
+#if !MONOMAC
 	[iOS (10,0)]
 	[Native]
 	public enum CBManagerState : nint {
+#else
+	internal enum CBManagerState {
+#endif
 		Unknown = 0,
 		Resetting,
 		Unsupported,
@@ -28,8 +30,7 @@ namespace XamCore.CoreBluetooth {
 
 	// NSInteger -> CBCentralManager.h
 	[Introduced (PlatformName.iOS, 5, 0)]
-	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CBManagerState' instead.")]
-	[NoWatch]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use CBManagerState instead")]
 	[Native]
 	public enum CBCentralManagerState : nint {
 		Unknown = CBManagerState.Unknown,
@@ -42,8 +43,7 @@ namespace XamCore.CoreBluetooth {
 
 	// NSInteger -> CBPeripheralManager.h
 	[Introduced (PlatformName.iOS, 6, 0)]
-	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CBManagerState' instead.")]
-	[NoWatch]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use CBManagerState instead")]
 	[Native]
 	public enum CBPeripheralManagerState : nint {
 		Unknown = CBManagerState.Unknown,
@@ -55,19 +55,16 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	// NSInteger -> CBPeripheralManager.h
-	[Watch (4,0)]
 	[Native]
 	public enum CBPeripheralState : nint {
 		Disconnected,
 		Connecting,
 		Connected,
-		[iOS (9,0)][Mac (10,13)]
-		Disconnecting,
+		Disconnecting
 	}
 
 #if !XAMCORE_4_0
 	// NSInteger -> CBPeripheralManager.h
-	[Watch (4,0)]
 	[Native]
 	public enum CBPeripheralManagerAuthorizationStatus : nint {
 		NotDetermined,
@@ -78,7 +75,6 @@ namespace XamCore.CoreBluetooth {
 #endif
 
 	// NSUInteger -> CBCharacteristic.h
-	[Watch (4,0)]
 	[Flags]
 	[Native]
 	public enum CBCharacteristicProperties : nuint_compat_int {
@@ -90,13 +86,10 @@ namespace XamCore.CoreBluetooth {
 		Indicate = 32,
 		AuthenticatedSignedWrites = 64,
 		ExtendedProperties = 128,
-		[Mac (10,9)]
 		NotifyEncryptionRequired = 0x100,
-		[Mac (10,9)]
 		IndicateEncryptionRequired = 0x200
 	}
 
-	[Watch (4,0)]
 	[ErrorDomain ("CBErrorDomain")]
 	[Native] // NSInteger -> CBError.h
 	public enum CBError : nint {
@@ -111,15 +104,12 @@ namespace XamCore.CoreBluetooth {
 		PeripheralDisconnected,
 		UUIDNotAllowed,
 		AlreadyAdvertising,
-		[iOS (7,1)][Mac (10,13)]
+		// iOS7.1
 		ConnectionFailed,
-		[iOS (9,0)][Mac (10,13)]
-		ConnectionLimitReached,
-		[iOS (11,0)][TV (11,0)][Mac (10,13)]
-		UnknownDevice,
+		// iOS 9
+		ConnectionLimitReached
 	}
 
-	[Watch (4,0)]
 	[ErrorDomain ("CBATTErrorDomain")]
 	[Native] // NSInteger -> CBError.h
 	public enum CBATTError : nint {
@@ -144,7 +134,6 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	// NSInteger -> CBPeripheral.h
-	[Watch (4,0)]
 	[Native]
 	public enum CBCharacteristicWriteType : nint {
 		WithResponse,
@@ -152,8 +141,6 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	// NSUInteger -> CBCharacteristic.h
-	[Mac (10,9)]
-	[Watch (4,0)]
 	[Flags]
 	[Native]
 	public enum CBAttributePermissions : nuint_compat_int {
@@ -164,7 +151,6 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	// NSInteger -> CBPeripheralManager.h
-	[Watch (4,0)]
 	[Native]
 	public enum CBPeripheralManagerConnectionLatency : nint {
 		Low = 0,

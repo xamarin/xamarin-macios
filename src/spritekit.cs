@@ -21,21 +21,13 @@ using XamCore.CoreFoundation;
 using XamCore.CoreGraphics;
 using XamCore.CoreVideo;
 using XamCore.SceneKit;
-#if !WATCH
-using XamCore.Metal;
-#endif
 
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
 using Matrix2 = global::OpenTK.Matrix2;
 using Matrix3 = global::OpenTK.Matrix3;
 using Matrix4 = global::OpenTK.Matrix4;
-using MatrixFloat2x2 = global::OpenTK.NMatrix2;
-using MatrixFloat3x3 = global::OpenTK.NMatrix3;
-using MatrixFloat4x4 = global::OpenTK.NMatrix4;
-using VectorFloat3 = global::OpenTK.NVector3;
 using Vector4 = global::OpenTK.Vector4;
-using Quaternion = global::OpenTK.Quaternion;
 
 #if MONOMAC
 using XamCore.AppKit;
@@ -45,7 +37,6 @@ using UIView = global::XamCore.AppKit.NSView;
 using pfloat = System.nfloat;
 #else
 using XamCore.UIKit;
-using NSLineBreakMode = global::XamCore.UIKit.UILineBreakMode;
 using pfloat = System.Single;
 #if !WATCH
 using UIView = global::XamCore.UIKit.UIView;
@@ -60,11 +51,6 @@ namespace XamCore.SpriteKit {
 	interface CIFilter {}
 	interface GKPolygonObstacle {}
 	interface UIView {}
-	interface IMTLCommandBuffer {}
-	interface IMTLCommandQueue {}
-	interface IMTLDevice {}
-	interface IMTLRenderCommandEncoder {}
-	interface MTLRenderPassDescriptor {}
 #endif
 
 	delegate void SKNodeChildEnumeratorHandler (SKNode node, out bool stop);
@@ -123,7 +109,6 @@ namespace XamCore.SpriteKit {
 	}
 
 
-	[DisableDefaultCtor] // DesignatedInitializer below
 #if MONOMAC
 	[Mac (10,9, onlyOn64 : true)]
 	[BaseType (typeof (NSResponder))]
@@ -137,10 +122,6 @@ namespace XamCore.SpriteKit {
 	[BaseType (typeof (NSObject))]
 	partial interface SKNode : NSCoding, NSCopying {
 #endif
-		[DesignatedInitializer]
-		[Export ("init")]
-		IntPtr Constructor ();
-
 		[Static, Export ("node")]
 		SKNode Create ();
 
@@ -184,12 +165,6 @@ namespace XamCore.SpriteKit {
 
 		[Export ("userInteractionEnabled")]
 		bool UserInteractionEnabled { [Bind ("isUserInteractionEnabled")] get; set; }
-
-		[NoWatch]
-		[NoMac]
-		[TV (11,0), iOS (11,0)]
-		[Export ("focusBehavior", ArgumentSemantic.Assign)]
-		SKNodeFocusBehavior FocusBehavior { get; set; }
 
 		[Export ("parent")]
 		SKNode Parent { get; }
@@ -284,7 +259,6 @@ namespace XamCore.SpriteKit {
 		[Export ("intersectsNode:")]
 		bool IntersectsNode (SKNode node);
 
-		[iOS (8,3)][TV (9,0)][Mac (10,11)]
 		[Export ("isEqualToNode:")]
 		bool IsEqual (SKNode node);
 
@@ -330,13 +304,11 @@ namespace XamCore.SpriteKit {
 		[Export ("obstaclesFromSpriteTextures:accuracy:")]
 		GKPolygonObstacle[] ObstaclesFromSpriteTextures (SKNode[] sprites, float accuracy);
 
-#if !XAMCORE_4_0
-		[Deprecated (PlatformName.iOS, 10,0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
-		[Deprecated (PlatformName.MacOSX, 10,12, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[iOS (9,0),Mac(10,11)]
 		[Export ("attributeValues", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
 
+#if !XAMCORE_4_0
 		[Deprecated (PlatformName.iOS, 10,0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[iOS (9,0),Mac(10,11)]
@@ -420,10 +392,7 @@ namespace XamCore.SpriteKit {
 		[Export ("shader", ArgumentSemantic.Retain)]
 		SKShader Shader { get; set; }
 
-		[iOS (9,0),Mac(10,11)]
-		[Export ("attributeValues", ArgumentSemantic.Copy)]
-		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
-
+#if XAMCORE_4_0
 		[iOS (9,0), Mac(10,11)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
@@ -432,6 +401,7 @@ namespace XamCore.SpriteKit {
 		[iOS (9,0), Mac(10,11)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
+#endif
 	}
 
 	delegate Vector3 SKFieldForceEvaluator (/* vector_float3 */ Vector4 position, /* vector_float3 */ Vector4 velocity, float /* float, not CGFloat */ mass, float /* float, not CGFloat */ charge, double time);
@@ -488,11 +458,9 @@ namespace XamCore.SpriteKit {
 		SKFieldNode CreateRadialGravityField ();
 
 		[Static, Export ("linearGravityFieldWithVector:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKFieldNode CreateLinearGravityField (/* vector_float3 */ Vector4 direction);
 
 		[Static, Export ("velocityFieldWithVector:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKFieldNode CreateVelocityField (/* vector_float3 */ Vector4 direction);
 
 		[Static, Export ("velocityFieldWithTexture:")]
@@ -771,10 +739,7 @@ namespace XamCore.SpriteKit {
 		[Export ("scaleToSize:")]
 		void ScaleTo (CGSize size);
 
-		[iOS (9,0),Mac(10,11)]
-		[Export ("attributeValues", ArgumentSemantic.Copy)]
-		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
-
+#if XAMCORE_4_0
 		[iOS (9,0), Mac(10,11)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
@@ -783,6 +748,7 @@ namespace XamCore.SpriteKit {
 		[iOS (9,0), Mac(10,11)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
+#endif
 	}
 
 	[Watch (3,0)]
@@ -1007,10 +973,7 @@ namespace XamCore.SpriteKit {
 		[Export ("particleRenderOrder", ArgumentSemantic.Assign)]
 		SKParticleRenderOrder ParticleRenderOrder { get; set; }
 
-		[iOS (9,0),Mac(10,11)]
-		[Export ("attributeValues", ArgumentSemantic.Copy)]
-		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
-
+#if XAMCORE_4_0
 		[iOS (9,0), Mac(10,11)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
@@ -1019,6 +982,7 @@ namespace XamCore.SpriteKit {
 		[iOS (9,0), Mac(10,11)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
+#endif
 	}
 
 	[Watch (3,0)]
@@ -1218,28 +1182,11 @@ namespace XamCore.SpriteKit {
 		[Static, Export ("labelNodeWithText:")]
 		SKLabelNode FromText ([NullAllowed] string text);
 
-		[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
-		[Static]
-		[Export ("labelNodeWithAttributedText:")]
-		SKLabelNode FromText ([NullAllowed] NSAttributedString attributedText);
-
 		[Export ("verticalAlignmentMode")]
 		SKLabelVerticalAlignmentMode VerticalAlignmentMode { get; set; }
 
 		[Export ("horizontalAlignmentMode")]
 		SKLabelHorizontalAlignmentMode HorizontalAlignmentMode { get; set; }
-
-		[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
-		[Export ("numberOfLines")]
-		nint NumberOfLines { get; set; }
-
-		[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
-		[Export ("lineBreakMode", ArgumentSemantic.Assign)]
-		NSLineBreakMode LineBreakMode { get; set; }
-
-		[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
-		[Export ("preferredMaxLayoutWidth")]
-		nfloat PreferredMaxLayoutWidth { get; set; }
 
 		[Export ("fontName", ArgumentSemantic.Copy)]
 		string FontName { get; set; }
@@ -1247,10 +1194,6 @@ namespace XamCore.SpriteKit {
 		[Export ("text", ArgumentSemantic.Copy)]
 		[NullAllowed] // nullable in Xcode7 headers and caught by introspection tests
 		string Text { get; set; }
-
-		[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
-		[NullAllowed, Export ("attributedText", ArgumentSemantic.Copy)]
-		NSAttributedString AttributedText { get; set; }
 
 		[Export ("fontSize")]
 		nfloat FontSize { get; set; }
@@ -1292,27 +1235,13 @@ namespace XamCore.SpriteKit {
 		uint CategoryBitMask { get; set; } /* uint32_t */
 	}
 
-	[Watch (4,0)]
+	[NoWatch]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKVideoNode {
 
-#if WATCH
-		[Static, Export ("videoNodeWithFileNamed:")]
-		SKVideoNode VideoNodeWithFileNamed (string videoFile);
-
-		[Static, Export ("videoNodeWithURL:")]
-		SKVideoNode VideoNodeWithURL (NSUrl videoURL);
-
-		[DesignatedInitializer]
-		[Export ("initWithFileNamed:")]
-		IntPtr Constructor (string videoFile);
-
-		[DesignatedInitializer]
-		[Export ("initWithURL:")]
-		IntPtr Constructor (NSUrl url);
-#else
+		[NoWatch]
 		[Static, Export ("videoNodeWithAVPlayer:")]
 		SKVideoNode FromPlayer (AVPlayer player);
 
@@ -1328,6 +1257,7 @@ namespace XamCore.SpriteKit {
 		[Static, Export ("videoNodeWithURL:"), Internal]
 		SKVideoNode VideoNodeWithURL (NSUrl videoURL);
 
+		[NoWatch]
 		[DesignatedInitializer]
 		[Export ("initWithAVPlayer:")]
 		IntPtr Constructor (AVPlayer player);
@@ -1343,13 +1273,10 @@ namespace XamCore.SpriteKit {
 
 		[Export ("initWithURL:"), Internal]
 		IntPtr InitWithURL (NSUrl url);
-#endif
 
-		[NoWatch]
 		[Export ("play")]
 		void Play ();
 
-		[NoWatch]
 		[Export ("pause")]
 		void Pause ();
 
@@ -1781,19 +1708,14 @@ namespace XamCore.SpriteKit {
 		IntPtr InitWithNameVectorFloat4 (string name, Vector4 value);
 #endif
 
-#if !XAMCORE_4_0
 		[Internal]
 		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatMatrix2:")]
 		IntPtr InitWithNameFloatMatrix2 (string name, Matrix2 value);
-#endif
 
-#if !XAMCORE_4_0
-		[Obsolete ("Use the '(string, MatrixFloat2x2)' overload instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
-		[Sealed]
 		[Export ("initWithName:matrixFloat2x2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #if WATCH
@@ -1802,25 +1724,15 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		IntPtr InitWithNameMatrixFloat2x2 (string name, Matrix2 value);
 #endif
-#endif // !XAMCORE_4_0
 
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
-		[Export ("initWithName:matrixFloat2x2:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (string name, MatrixFloat2x2 value);
-
-#if !XAMCORE_4_0
 		[Internal]
 		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatMatrix3:")]
 		IntPtr InitWithNameFloatMatrix3 (string name, Matrix3 value);
 
-		[Obsolete ("Use the '(string, MatrixFloat3x3)' overload instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
-		[Sealed]
 		[Export ("initWithName:matrixFloat3x3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #if WATCH
@@ -1829,28 +1741,16 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		IntPtr InitWithNameMatrixFloat3x3 (string name, Matrix3 value);
 #endif
-#endif
 
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
-		[Export ("initWithName:matrixFloat3x3:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (string name, MatrixFloat3x3 value);
-
-#if !XAMCORE_4_0
 		[Internal]
 		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatMatrix4:")]
 		IntPtr InitWithNameFloatMatrix4 (string name, Matrix4 value);
-#endif
 
-#if !XAMCORE_4_0
-		[Obsolete ("Use the '(string, MatrixFloat4x4)' overload instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Export ("initWithName:matrixFloat4x4:")]
-		[Sealed]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #if WATCH
 		IntPtr Constructor (string name, Matrix4 value);
@@ -1858,13 +1758,6 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		IntPtr InitWithNameMatrixFloat4x4 (string name, Matrix4 value);
 #endif
-#endif
-
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
-		[Export ("initWithName:matrixFloat4x4:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (string name, MatrixFloat4x4 value);
 
 		[Export ("name")]
 		string Name { get; }
@@ -1935,92 +1828,59 @@ namespace XamCore.SpriteKit {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
-#if !XAMCORE_4_0
 		[Internal]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[NoWatch]
 		[Export ("floatMatrix2Value")]
 		Matrix2 _FloatMatrix2Value { get; set; }
-#endif
 
-#if !XAMCORE_4_0 && WATCH
-		[Obsolete ("Use 'MatrixFloat2x2Value' instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Export ("matrixFloat2x2Value", ArgumentSemantic.Assign)]
+#if WATCH
 		Matrix2 FloatMatrix2x2Value {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
-		}
+#else
+		[Internal]
+		Matrix2 _MatrixFloat2x2Value {
 #endif
-
-#if !XAMCORE_4_0 && WATCH
-		[Sealed] // The selector is already used in the 'FloatMatrix2x2Value' property.
-#endif
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
-		[Export ("matrixFloat2x2Value", ArgumentSemantic.Assign)]
-		MatrixFloat2x2 MatrixFloat2x2Value {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
-#if !XAMCORE_4_0
 		[Internal]
 		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("floatMatrix3Value")]
 		Matrix3 _FloatMatrix3Value { get; set; }
-#endif
 
-#if !XAMCORE_4_0 && WATCH
-		[Obsolete ("Use 'MatrixFloat3x3Value' instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Export ("matrixFloat3x3Value", ArgumentSemantic.Assign)]
+#if WATCH
 		Matrix3 FloatMatrix3x3Value {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
-		}
+#else
+		[Internal]
+		Matrix3 _MatrixFloat3x3Value {
 #endif
-
-#if !XAMCORE_4_0 && WATCH
-		[Sealed] // The selector is already used in the 'FloatMatrix3x3Value' property.
-#endif
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
-		[Export ("matrixFloat3x3Value", ArgumentSemantic.Assign)]
-		MatrixFloat3x3 MatrixFloat3x3Value {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
-#if !XAMCORE_4_0
 		[Internal]
 		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("floatMatrix4Value")]
 		Matrix4 _FloatMatrix4Value { get; set; }
-#endif
 
-#if !XAMCORE_4_0 && WATCH
-		[Obsolete ("Use 'FloatMatrix4x4Value' instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Export ("matrixFloat4x4Value", ArgumentSemantic.Assign)]
+#if WATCH
 		Matrix4 FloatMatrix4x4Value {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
-		}
+#else
+		[Internal]
+		Matrix4 _MatrixFloat4x4Value {
 #endif
-
-#if !XAMCORE_4_0 && WATCH
-		[Sealed] // The selector is already used in the 'FloatMatrix4x4Value' property.
-#endif
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
-		[Export ("matrixFloat4x4Value", ArgumentSemantic.Assign)]
-		MatrixFloat4x4 MatrixFloat4x4Value {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
@@ -2052,50 +1912,23 @@ namespace XamCore.SpriteKit {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, Vector4 value);
 
-#if !XAMCORE_4_0
-		[Obsolete ("Use the '(string, MatrixFloat2x2)' overload instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[Static]
 		[Export ("uniformWithName:matrixFloat2x2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, Matrix2 value);
-#endif
 
-		[iOS (10,0)][Mac (10,12)]
-		[Static]
-		[Export ("uniformWithName:matrixFloat2x2:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		SKUniform Create (string name, MatrixFloat2x2 value);
-
-#if !XAMCORE_4_0
-		[Obsolete ("Use the '(string, MatrixFloat3x3)' overload instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[Static]
 		[Export ("uniformWithName:matrixFloat3x3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, Matrix3 value);
-#endif
 
-		[iOS (10,0)][Mac (10,12)]
-		[Static]
-		[Export ("uniformWithName:matrixFloat3x3:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		SKUniform Create (string name, MatrixFloat3x3 value);
-
-#if !XAMCORE_4_0
-		[Obsolete ("Use 'the '(string, MatrixFloat4x4)' overload instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[Static]
 		[Export ("uniformWithName:matrixFloat4x4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, Matrix4 value);
-#endif
-
-		[iOS (10,0)][Mac (10,12)]
-		[Static]
-		[Export ("uniformWithName:matrixFloat4x4:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		SKUniform Create (string name, MatrixFloat4x4 value);
 	}
 
 	delegate void SKActionDurationHandler (SKNode node, nfloat elapsedTime);
@@ -2992,13 +2825,8 @@ namespace XamCore.SpriteKit {
 
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor] // DesignatedInitializer below
 	interface SKAttributeValue : NSCoding
 	{
-		[DesignatedInitializer]
-		[Export ("init")]
-		IntPtr Constructor ();
-
 		[Static]
 		[Export ("valueWithFloat:")]
 		SKAttributeValue Create (float value);
@@ -3394,78 +3222,6 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		[Export ("gridByReplacingDestPositions:")]
 		SKWarpGeometryGrid _GridByReplacingDestPositions (IntPtr destPositions);
-	}
-
-	// SKRenderer is not available for WatchKit apps and the iOS simulator
-	[NoWatch]
-	[TV (11,0), Mac (10,13), iOS (11,0)]
-	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor]
-	interface SKRenderer {
-		[Static]
-		[Export ("rendererWithDevice:")]
-		SKRenderer FromDevice (IMTLDevice device);
-
-		[Export ("renderWithViewport:commandBuffer:renderPassDescriptor:")]
-		void Render (CGRect viewport, IMTLCommandBuffer commandBuffer, MTLRenderPassDescriptor renderPassDescriptor);
-
-		[Export ("renderWithViewport:renderCommandEncoder:renderPassDescriptor:commandQueue:")]
-		void Render (CGRect viewport, IMTLRenderCommandEncoder renderCommandEncoder, MTLRenderPassDescriptor renderPassDescriptor, IMTLCommandQueue commandQueue);
-
-		[Export ("updateAtTime:")]
-		void Update (double currentTime);
-
-		[NullAllowed, Export ("scene", ArgumentSemantic.Assign)]
-		SKScene Scene { get; set; }
-
-		[Export ("ignoresSiblingOrder")]
-		bool IgnoresSiblingOrder { get; set; }
-
-		[Export ("shouldCullNonVisibleNodes")]
-		bool ShouldCullNonVisibleNodes { get; set; }
-
-		[Export ("showsDrawCount")]
-		bool ShowsDrawCount { get; set; }
-
-		[Export ("showsNodeCount")]
-		bool ShowsNodeCount { get; set; }
-
-		[Export ("showsQuadCount")]
-		bool ShowsQuadCount { get; set; }
-
-		[Export ("showsPhysics")]
-		bool ShowsPhysics { get; set; }
-
-		[Export ("showsFields")]
-		bool ShowsFields { get; set; }
-	}
-
-	[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
-	[BaseType (typeof(SKNode))]
-	interface SKTransformNode {
-		[Export ("xRotation")]
-		nfloat XRotation { get; set; }
-
-		[Export ("yRotation")]
-		nfloat YRotation { get; set; }
-
-		[Export ("eulerAngles")]
-		VectorFloat3 EulerAngles {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
-		}
-
-		[Export ("rotationMatrix")]
-		MatrixFloat3x3 RotationMatrix {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
-		}
-
-		[Export ("quaternion")]
-		Quaternion Quaternion {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
-		}
 	}
 }
 #endif

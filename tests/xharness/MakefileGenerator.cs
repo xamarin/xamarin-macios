@@ -267,7 +267,6 @@ namespace xharness
 
 		public static void CreateMakefile (Harness harness, IEnumerable<UnifiedTarget> unified_targets, IEnumerable<TVOSTarget> tvos_targets, IEnumerable<WatchOSTarget> watchos_targets, IEnumerable<TodayExtensionTarget> today_targets)
 		{
-			var executeSim32 = !harness.InWrench; // Waiting for iOS 10.3 simulator to be installed on wrench
 			var makefile = Path.Combine (harness.RootDirectory, "Makefile.inc");
 			using (var writer = new StreamWriter (makefile, false, new UTF8Encoding (false))) {
 				writer.WriteLine (".stamp-configure-projects: Makefile xharness/xharness.exe");
@@ -369,11 +368,7 @@ namespace xharness
 						writer.WriteLine ();
 
 						writer.WriteTarget ("exec{0}-sim32-{1}", "$(UNIT_SERVER)", make_escaped_suffix, make_escaped_name);
-						if (executeSim32) {
-							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-simulator-32 --sdkroot $(XCODE_DEVELOPER_ROOT) --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --configuration $(CONFIG)", target.ProjectPath, target.Platform);
-						} else {
-							writer.WriteLine ("\t$(Q) echo 'Execution of sim32 has been disabled.'");
-						}
+						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-simulator-32 --sdkroot $(XCODE_DEVELOPER_ROOT) --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --configuration $(CONFIG)", target.ProjectPath, target.Platform); 
 						writer.WriteLine ();
 					} else {
 						writer.WriteTarget ("exec{0}-sim{2}-{1}", "$(UNIT_SERVER)", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);

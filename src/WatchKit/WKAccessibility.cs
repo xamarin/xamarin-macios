@@ -15,15 +15,6 @@ namespace XamCore.WatchKit {
 		static public bool IsVoiceOverRunning {
 			get { return WKAccessibilityIsVoiceOverRunning (); }
 		}
-
-		[Watch (4,0)]
-		[DllImport (Constants.WatchKitLibrary)]
-		static extern bool WKAccessibilityIsReduceMotionEnabled ();
-
-		[Watch (4,0)]
-		static public bool IsReduceMotionEnabled {
-			get { return WKAccessibilityIsReduceMotionEnabled (); }
-		}
 	}
 }
 

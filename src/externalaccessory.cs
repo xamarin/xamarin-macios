@@ -8,13 +8,11 @@ using System;
 using XamCore.Foundation;
 using XamCore.CoreFoundation;
 using XamCore.ObjCRuntime;
-#if !MONOMAC
 using XamCore.UIKit;
-#endif
 
 namespace XamCore.ExternalAccessory {
 
-	[Mac (10, 13)][TV (10,0)]
+	[TV (10,0)]
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(EAAccessoryDelegate)})]
 	// Objective-C exception thrown.  Name: EAAccessoryInitException Reason: -init not supported. EAAccessoryManager is responsible for creating all objects.
 	[DisableDefaultCtor]
@@ -58,7 +56,7 @@ namespace XamCore.ExternalAccessory {
 		string DockType { get; }
 	}
 
-	[Mac (10, 13)][TV (10,0)]
+	[TV (10,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -67,7 +65,7 @@ namespace XamCore.ExternalAccessory {
 		void Disconnected (EAAccessory accessory);
 	}
 
-	[Mac (10, 13)][TV (10,0)]
+	[TV (10,0)]
 	interface EAAccessoryEventArgs {
 		[Export ("EAAccessoryKey")]
 		EAAccessory Accessory { get; }
@@ -77,7 +75,7 @@ namespace XamCore.ExternalAccessory {
 		EAAccessory Selected { get; }
 	}
 	
-	[Mac (10, 13)][TV (10,0)]
+	[TV (10,0)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: EAAccessoryManagerInitException Reason: -init is not supported. Use +sharedAccessoryManager.
 	[DisableDefaultCtor]
@@ -102,21 +100,20 @@ namespace XamCore.ExternalAccessory {
 		[Notification (typeof (EAAccessoryEventArgs))]
 		NSString DidDisconnectNotification { get; }
 
-#if !XAMCORE_3_0 && !MONOMAC
+#if !XAMCORE_3_0
 		// now exposed with the corresponding EABluetoothAccessoryPickerError enum
 		[Since (6,0)]
 		[Field ("EABluetoothAccessoryPickerErrorDomain")]
 		NSString BluetoothAccessoryPickerErrorDomain { get; }
 #endif
 
-		[NoMac]
 		[Since (6,0)]
 		[Export ("showBluetoothAccessoryPickerWithNameFilter:completion:")]
 		[Async]
 		void ShowBluetoothAccessoryPicker ([NullAllowed] NSPredicate predicate, [NullAllowed] Action<NSError> completion);
 	}
 
-	[Mac (10, 13)][TV (10,0)]
+	[TV (10,0)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: EASessionInitException Reason: -init not supported. use -initWithAccessory:forProtocol.
 	[DisableDefaultCtor]
@@ -137,7 +134,6 @@ namespace XamCore.ExternalAccessory {
 		NSOutputStream OutputStream { get; }
 	}
 
-	[NoMac]
 	[TV (10,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
@@ -167,7 +163,6 @@ namespace XamCore.ExternalAccessory {
 	// This class is exposed for tvOS in the headers, but there's no available initializer (so it can't be constructed)
 	// The API is also clearly unusable (you can list the unconfigured accessories, but you can't search for them first...)
 	[NoTV] // [TV (10,0)]
-	[NoMac]
 	[iOS (8,0)]
 #if TVOS
 	[BaseType (typeof (NSObject))]
@@ -206,15 +201,12 @@ namespace XamCore.ExternalAccessory {
 		[Export ("stopSearchingForUnconfiguredAccessories")]
 		void StopSearchingForUnconfiguredAccessories ();
 
-#if !MONOMAC
 		[NoTV]
 		[iOS (8,0)]
 		[Export ("configureAccessory:withConfigurationUIOnViewController:")]
 		void ConfigureAccessory (EAWiFiUnconfiguredAccessory accessory, UIViewController viewController);
-#endif
 	}
 
-	[NoMac]
 	[NoTV] // no member is available
 	[iOS (8,0)]
 	[Protocol, Model]

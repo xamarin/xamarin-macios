@@ -92,7 +92,7 @@ namespace XamCore.CoreGraphics {
 				}));
 		}
 
-		[Advice ("Use the nicer SetCallback(string,Action<CGPDFScanner,object>) API when possible.")]
+		[Advice ("Use the nicer SetCallback(string,Action<CGPDFScanner,object>) API when possible (OSX)")]
 #endif
 		// this API is ugly - but I do not see a better way with the AOT limitation
 		public void SetCallback (string name, Action<IntPtr,IntPtr> callback)

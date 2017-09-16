@@ -1427,12 +1427,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		public class NativeObjectArrayType : NSObject
+		public class NativeObjectArrayType : MKMapView
 		{
 			public IMKAnnotation[] Annotations;
-
-			[Export ("addAnnotations:")]
-			public void AddAnnotations (params IMKAnnotation[] annotations)
+			public override void AddAnnotations(params IMKAnnotation[] annotations)
 			{
 				this.Annotations = annotations;
 			}
@@ -2590,16 +2588,5 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.AreEqual ("v@?@", GetBlockSignature (block), "a");
 			block.CleanupBlock ();
 		}
-	}
-
-	[Preserve]
-	class OverloadByStaticity : NSObject
-	{
-		// Two Objective-C methods can have the same selector if one is static and the other instance.
-		[Export ("method")]
-		public void InstanceMethod () { }
-
-		[Export ("method")]
-		public static void StaticMethod () { }
 	}
 }

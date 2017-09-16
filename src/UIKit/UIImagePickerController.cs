@@ -139,20 +139,6 @@ namespace XamCore.UIKit {
 				return (NSUrl) Info [UIImagePickerController.ReferenceUrl];
 			}
 		}
-
-		[iOS (11,0)]
-		public PHAsset PHAsset {
-			get {
-				return (PHAsset) Info [UIImagePickerController.PHAsset];
-			}
-		}
-
-		[iOS (11,0)]
-		public NSUrl ImageUrl {
-			get {
-				return (NSUrl) Info [UIImagePickerController.ImageUrl];
-			}
-		}
 	}
 }
 

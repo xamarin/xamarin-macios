@@ -1208,10 +1208,6 @@ namespace Xamarin.Bundler
 					// This is because iOS has a forward declaration of NSPortMessage, but no actual declaration.
 					// They still use NSPortMessage in other API though, so it can't just be removed from our bindings.
 					registrar_task.CompilerFlags.AddOtherFlag ("-Wno-receiver-forward-class");
-
-					if (Driver.XcodeVersion >= new Version (9, 0))
-						registrar_task.CompilerFlags.AddOtherFlag ("-Wno-unguarded-availability-new");
-
 					LinkWithTaskOutput (registrar_task);
 				}
 
@@ -1238,11 +1234,8 @@ namespace Xamarin.Bundler
 					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", App.Platform);
 				}
 
-				var lib = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib", library);
-				if (File.Exists (lib)) {
-					registration_methods.Add (method);
-					LinkWithStaticLibrary (lib);
-				}
+				registration_methods.Add (method);
+				LinkWithStaticLibrary (Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib", library));
 			}
 
 			// The main method.

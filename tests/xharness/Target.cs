@@ -107,10 +107,7 @@ namespace xharness
 		protected void CreateExecutableProject ()
 		{
 			ProcessProject ();
-			if (Harness.Mac) {
-				ProjectGuid = "{" + Harness.NewStableGuid ().ToString ().ToUpper () + "}";
-				inputProject.SetProjectGuid (ProjectGuid);
-			} else {
+			if (!Harness.Mac) {
 				inputProject.FixArchitectures (SimulatorArchitectures, DeviceArchitectures);
 				inputProject.FixInfoPListInclude (Suffix);
 				inputProject.SetExtraLinkerDefs ("extra-linker-defs" + Suffix + ".xml");

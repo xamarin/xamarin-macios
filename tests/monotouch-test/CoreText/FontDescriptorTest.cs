@@ -62,7 +62,6 @@ namespace MonoTouchFixtures.CoreText {
 			}
 		}
 
-#if !__TVOS__ // https://bugzilla.xamarin.com/show_bug.cgi?id=58929
 		[Test]
 		public void WithFeature ()
 		{
@@ -90,7 +89,6 @@ namespace MonoTouchFixtures.CoreText {
 				Assert.That (set_feature.FeatureWeak, Is.EqualTo ((int)CTFontFeatureLigatures.Selector.RareLigaturesOn), "#2");
 			}
 		}
-#endif // !__TVOS__
 	}
 }
 

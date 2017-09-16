@@ -7,9 +7,6 @@
 // Copyright 2012-2015 Xamarin Inc
 //
 //
-
-#if !WATCH
-
 using System;
 using System.Runtime.InteropServices;
 
@@ -136,5 +133,3 @@ namespace MonoTouch.CoreVideo {
 	}
 	
 }
-
-#endif

@@ -14,7 +14,6 @@ using XamCore.Foundation;
 
 namespace XamCore.CoreVideo {
 
-	[Watch (4,0)]
 	[iOS (4,0)]
 	public partial class CVPixelBuffer : CVImageBuffer {
 #if !COREBUILD
@@ -455,7 +454,7 @@ namespace XamCore.CoreVideo {
 			/* CVPixelBufferRef __nonnull */ IntPtr pixelBuffer, CVPixelBufferLock lockFlags);
 
 #if !XAMCORE_3_0
-		[Obsolete ("Use 'Lock (CVPixelBufferLock)' instead.")]
+		[Obsolete ("Use Lock(CVPixelBufferLock) instead")]
 		public CVReturn Lock (CVOptionFlags lockFlags)
 		{
 			return CVPixelBufferLockBaseAddress (handle, (CVPixelBufferLock) lockFlags);
@@ -472,7 +471,7 @@ namespace XamCore.CoreVideo {
 			/* CVPixelBufferRef __nonnull */ IntPtr pixelBuffer, CVPixelBufferLock unlockFlags);
 
 #if !XAMCORE_3_0
-		[Obsolete ("Use 'Unlock (CVPixelBufferLock)'.")]
+		[Obsolete ("Use Unlock(CVPixelBufferLock)")]
 		public CVReturn Unlock (CVOptionFlags unlockFlags)
 		{
 			return CVPixelBufferUnlockBaseAddress (handle, (CVPixelBufferLock) unlockFlags);

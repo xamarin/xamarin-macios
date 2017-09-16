@@ -113,10 +113,10 @@ namespace XamCore.CoreBluetooth {
 		}
 	}
 #endif
-#if !WATCH && !XAMCORE_4_0
+#if !MONOMAC && !XAMCORE_4_0
 	public partial class CBCentralManager {
 
-		public new virtual CBCentralManagerState State {
+		public virtual CBCentralManagerState State {
 			get {
 				return (CBCentralManagerState)base.State;
 			}

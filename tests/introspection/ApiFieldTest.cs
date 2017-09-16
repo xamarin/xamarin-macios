@@ -71,7 +71,7 @@ namespace Introspection {
 		/// Override if you want to skip testing the specified constant.
 		/// </summary>
 		/// <param name="constantName">Constant name to ignore.</param>
-		protected virtual bool Skip (string constantName, string libraryName)
+		protected virtual bool Skip (string constantName)
 		{
 			return false;
 		}
@@ -227,7 +227,7 @@ namespace Introspection {
 					continue;
 
 				string name = f.SymbolName;
-				if (Skip (name, f.LibraryName))
+				if (Skip (name))
 					continue;
 
 				string path = FindLibrary (f.LibraryName);

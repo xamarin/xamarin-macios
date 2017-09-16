@@ -82,7 +82,6 @@ namespace MonoTouchFixtures.Foundation {
 		
 		// http://developer.apple.com/library/ios/#documentation/uikit/reference/NSBundle_UIKitAdditions/Introduction/Introduction.html
 		
-#if false // Disabling for now due to Xcode 9 does not support nibs if deployment target == 6.0
 #if !__WATCHOS__
 		[Test]
 		public void LoadNibWithOptions ()
@@ -95,7 +94,6 @@ namespace MonoTouchFixtures.Foundation {
 #endif
 		}
 #endif // !__WATCHOS__
-#endif
 
 #if false
 		// some selectors are only in AppKit but we included them in MonoTouch (and this match Apple documentation)

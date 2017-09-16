@@ -39,7 +39,6 @@ namespace MonoTouchFixtures.UIKit {
 			}
 		}
 
-#if false // Disabling for now due to Xcode 9 does not support nibs if deployment target == 6.0
 		[Test]
 		public void FromName ()
 		{
@@ -72,7 +71,6 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.That (result2.Length, Is.EqualTo (0), "Instantiate");
 			}
 		}
-#endif
 	}
 }
 
