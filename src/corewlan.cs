@@ -409,6 +409,18 @@ namespace XamCore.CoreWlan {
 		 
 		[Export ("commitConfiguration:authorization:error:")]
 		bool CommitConfiguration (CWConfiguration configuration, NSObject authorization, out NSError error);
+
+		[Mac (10,13)]
+		[Export ("scanForNetworksWithSSID:includeHidden:error:")]
+		[return: NullAllowed]
+		[Internal]
+		NSSet _ScanForNetworksWithSsid ([NullAllowed] NSData ssid, bool includeHidden, [NullAllowed] out NSError error);
+
+		[Mac (10,13)]
+		[Export ("scanForNetworksWithName:includeHidden:error:")]
+		[return: NullAllowed]
+		[Internal]
+		NSSet _ScanForNetworksWithName ([NullAllowed] string networkName, bool includeHidden, [NullAllowed] out NSError error);
 	}
 
 	[BaseType (typeof (NSObject))]

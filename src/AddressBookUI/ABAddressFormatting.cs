@@ -16,7 +16,7 @@ using XamCore.ObjCRuntime;
 namespace XamCore.AddressBookUI {
 	
 	// http://developer.apple.com/library/ios/#DOCUMENTATION/AddressBookUI/Reference/AddressBookUI_Functions/Reference/reference.html#//apple_ref/c/func/ABCreateStringWithAddressDictionary
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	static public class ABAddressFormatting {
 		
 		[DllImport (Constants.AddressBookUILibrary)]

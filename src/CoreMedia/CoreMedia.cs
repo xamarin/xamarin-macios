@@ -104,7 +104,7 @@ namespace XamCore.CoreMedia {
 		public static readonly CMTimeRange Zero;
 
 #if !XAMCORE_3_0
-		[Obsolete ("Use InvalidRange")]
+		[Obsolete ("Use 'InvalidRange'.")]
 		public static readonly CMTimeRange Invalid;
 #endif
 		public static readonly CMTimeRange InvalidRange;

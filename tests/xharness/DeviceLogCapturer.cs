@@ -59,7 +59,7 @@ namespace xharness
 			if (process.HasExited)
 				return;
 			
-			process.KillTreeAsync (Harness.HarnessLog).Wait ();
+			process.KillTreeAsync (Harness.HarnessLog, diagnostics: false).Wait ();
 			process.Dispose ();
 		}
 	}

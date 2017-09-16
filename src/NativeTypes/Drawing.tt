@@ -224,13 +224,13 @@ namespace XamCore.CoreGraphics
 		}
 
 #if !XAMCORE_3_0
-		[Obsolete ("Use ToRoundedCGSize instead")]
+		[Obsolete ("Use 'ToRoundedCGSize' instead.")]
 		public CGSize ToSize ()
 		{
 			return ToRoundedCGSize ();
 		}
 
-		[Obsolete ("Use ToCGPoint instead")]
+		[Obsolete ("Use 'ToCGPoint' instead.")]
 		public CGPoint ToPointF ()
 		{
 			return (CGPoint)this;

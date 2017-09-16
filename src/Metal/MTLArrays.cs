@@ -79,5 +79,31 @@ namespace XamCore.Metal {
 			}
 		}
 	}
+
+	public partial class MTLPipelineBufferDescriptorArray {
+		public MTLPipelineBufferDescriptor this [nuint index]
+		{
+			get {
+				return GetObject (index);
+			}
+			set {
+				SetObject (value, index);
+			}
+		}
+	}
+
+#if IOS
+	public partial class MTLTileRenderPipelineColorAttachmentDescriptorArray {
+		public MTLTileRenderPipelineColorAttachmentDescriptor this [nuint index]
+		{
+			get {
+				return GetObject (index);
+			}
+			set {
+				SetObject (value, index);
+			}
+		}
+	}
+#endif
 }
 #endif

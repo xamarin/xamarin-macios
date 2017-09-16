@@ -51,6 +51,10 @@ namespace XamCore.CoreData {
 		Boolean = 800,
 		Date = 900,
 		Binary = 1000,
+		[iOS (11,0), TV (11,0), Mac (10,13), Watch (4,0)]
+		Uuid = 1100,
+		[iOS (11,0), TV (11,0), Mac (10,13), Watch (4,0)]
+		Uri = 1200,
 		Transformable = 1800,
 		ObjectID = 2000
 	}
@@ -147,7 +151,9 @@ namespace XamCore.CoreData {
 		InvalidDate = 1650,
 		StringTooLong = 1660,
 		StringTooShort = 1670,
-		StringPatternMatching = 1680
+		StringPatternMatching = 1680,
+		[iOS (11,0), TV (11,0), Mac (10,13), Watch (4,0)]
+		InvalidUri = 1690,
 	}
 
 	[Native]
@@ -183,6 +189,37 @@ namespace XamCore.CoreData {
 		MigrationManagerDestinationStore = 134160,
 		EntityMigrationPolicy = 134170,
 		InferredMappingModel = 134190,
-		ExternalRecordImport = 134200
+		ExternalRecordImport = 134200,
+		[iOS (11,0), TV (11,0), Mac (10,3), Watch (4,0)]
+		HistoryTokenExpired = 134301,
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Native]
+	public enum NSFetchIndexElementType : nuint
+	{
+		Binary,
+		RTree
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Native]
+	public enum NSPersistentHistoryChangeType : nint
+	{
+		Insert,
+		Update,
+		Delete
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Native]
+	public enum NSPersistentHistoryResultType : nint
+	{
+		StatusOnly = 0,
+		ObjectIds = 1,
+		Count = 2,
+		TransactionsOnly = 3,
+		ChangesOnly = 4,
+		TransactionsAndChanges = 5
 	}
 }

@@ -124,6 +124,11 @@ namespace XamCore.AVKit {
 		[Export ("contentOverlayView")]
 		UIView ContentOverlayView { get; }
 
+		[TV (11,0)]
+		[NoiOS]
+		[NullAllowed, Export ("unobscuredContentGuide")]
+		UILayoutGuide UnobscuredContentGuide { get; }
+
 		[NoTV]
 		[iOS (9,0)]
 		[Export ("allowsPictureInPicturePlayback")]
@@ -133,6 +138,16 @@ namespace XamCore.AVKit {
 		[iOS (10,0)]
 		[Export ("updatesNowPlayingInfoCenter")]
 		bool UpdatesNowPlayingInfoCenter { get; set; }
+
+		[iOS (11,0)]
+		[NoTV]
+		[Export ("entersFullScreenWhenPlaybackBegins")]
+		bool EntersFullScreenWhenPlaybackBegins { get; set; }
+
+		[iOS (11,0)]
+		[NoTV]
+		[Export ("exitsFullScreenWhenPlaybackEnds")]
+		bool ExitsFullScreenWhenPlaybackEnds { get; set; }
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
@@ -175,6 +190,20 @@ namespace XamCore.AVKit {
 		[NoiOS, TV (10, 0), NoWatch, NoMac]
 		[Export ("skipBackwardEnabled")]
 		bool SkipBackwardEnabled { [Bind ("isSkipBackwardEnabled")] get; set; }
+
+		// From AVPlayerViewControllerControls category
+
+		[NoiOS, TV (11, 0), NoWatch, NoMac]
+		[Export ("playbackControlsIncludeTransportBar")]
+		bool PlaybackControlsIncludeTransportBar { get; set; }
+
+		[NoiOS, TV (11, 0), NoWatch, NoMac]
+		[Export ("playbackControlsIncludeInfoViews")]
+		bool PlaybackControlsIncludeInfoViews { get; set; }
+
+		[NoiOS, TV (11, 0), NoWatch, NoMac]
+		[Export ("customInfoViewController", ArgumentSemantic.Assign)]
+		UIViewController CustomInfoViewController { get; set; }
 	}
 
 	[Protocol, Model]
@@ -213,6 +242,21 @@ namespace XamCore.AVKit {
 		[TV (9,0)]
 		[Export ("playerViewController:didPresentInterstitialTimeRange:")]
 		void DidPresentInterstitialTimeRange (AVPlayerViewController playerViewController, AVInterstitialTimeRange interstitial);
+
+		[NoiOS][NoMac]
+		[TV (11,0)]
+		[Export ("playerViewControllerShouldDismiss:")]
+		bool ShouldDismiss ([NullAllowed] AVPlayerViewController playerViewController);
+
+		[NoiOS][NoMac]
+		[TV (11,0)]
+		[Export ("playerViewControllerWillBeginDismissalTransition:")]
+		void WillBeginDismissalTransition ([NullAllowed] AVPlayerViewController playerViewController);
+
+		[NoiOS][NoMac]
+		[TV (11,0)]
+		[Export ("playerViewControllerDidEndDismissalTransition:")]
+		void DidEndDismissalTransition ([NullAllowed] AVPlayerViewController playerViewController);
 
 		[NoiOS][NoMac]
 		[TV (9,0)]
@@ -257,6 +301,21 @@ namespace XamCore.AVKit {
 		[NoiOS, TV (10,0), NoWatch, NoMac]
 		[Export ("playerViewController:didRejectContentProposal:")]
 		void DidRejectContentProposal (AVPlayerViewController playerViewController, AVContentProposal proposal);
+
+		[NoiOS, TV (11,0), NoWatch, NoMac]
+		[Export ("playerViewController:willTransitionToVisibilityOfTransportBar:withAnimationCoordinator:")]
+		void WillTransitionToVisibilityOfTransportBar ([NullAllowed] AVPlayerViewController playerViewController, bool visible, [NullAllowed] IAVPlayerViewControllerAnimationCoordinator coordinator);
+	}
+
+	interface IAVPlayerViewControllerAnimationCoordinator { }
+
+	[NoiOS, TV (11,0), NoWatch, NoMac]
+	[Protocol]
+	interface AVPlayerViewControllerAnimationCoordinator {
+
+		[Abstract]
+		[Export ("addCoordinatedAnimations:completion:")]
+		void AddCoordinatedAnimations (Action animations, Action<bool> completion);
 	}
 
 #else
@@ -286,6 +345,10 @@ namespace XamCore.AVKit {
 		[Mac (10,10)]
 		[Export ("contentOverlayView")]
 		NSView ContentOverlayView { get; }
+
+		[Mac (10,13)]
+		[Export ("updatesNowPlayingInfoCenter")]
+		bool UpdatesNowPlayingInfoCenter { get; set; }
 
 		[Mac (10,9)]
 		[Export ("actionPopUpButtonMenu")]
@@ -388,7 +451,7 @@ namespace XamCore.AVKit {
 	}
 	
 #if !MONOMAC
-	[NoiOS, TV (10,0), NoWatch, NoMac]
+	[NoiOS, TV (10,0), NoWatch]
 	[BaseType (typeof(UIViewController))]
 	interface AVContentProposalViewController
 	{
@@ -416,7 +479,7 @@ namespace XamCore.AVKit {
 	}
 
 	[Static]
-	[NoiOS, TV (10,1), NoWatch, NoMac]
+	[NoiOS, TV (10,1), NoWatch]
 	interface AVKitMetadataIdentifier {
 
 		[Field ("AVKitMetadataIdentifierExternalContentIdentifier")]
@@ -425,7 +488,66 @@ namespace XamCore.AVKit {
 		NSString ExternalUserProfileIdentifier { get; }
 		[Field ("AVKitMetadataIdentifierPlaybackProgress")]
 		NSString PlaybackProgress { get; }
+
+		[TV (11,0)]
+		[Field ("AVKitMetadataIdentifierExactStartDate")]
+		NSString ExactStartDate { get; }
+
+		[TV (11,0)]
+		[Field ("AVKitMetadataIdentifierApproximateStartDate")]
+		NSString ApproximateStartDate { get; }
+
+		[TV (11,0)]
+		[Field ("AVKitMetadataIdentifierExactEndDate")]
+		NSString ExactEndDate { get; }
+
+		[TV (11,0)]
+		[Field ("AVKitMetadataIdentifierApproximateEndDate")]
+		NSString ApproximateEndDate { get; }
+
+		[TV (11,0)]
+		[Field ("AVKitMetadataIdentifierServiceIdentifier")]
+		NSString ServiceIdentifier { get; }
 	}
 
+	[TV (11,0), iOS (11,0)]
+	[BaseType (typeof (UIView))]
+	interface AVRoutePickerView {
+
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frame);
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		IAVRoutePickerViewDelegate Delegate { get; set; }
+
+		[Export ("activeTintColor", ArgumentSemantic.Assign), NullAllowed]
+		UIColor ActiveTintColor { get; set; }
+
+		[NoiOS]
+		[Export ("routePickerButtonStyle", ArgumentSemantic.Assign)]
+		AVRoutePickerViewButtonStyle RoutePickerButtonStyle { get; set; }
+	}
+
+	[TV (11,0), NoiOS]
+	[Native]
+	public enum AVRoutePickerViewButtonStyle : nint {
+		System,
+		Plain,
+		Custom,
+	}
+
+	interface IAVRoutePickerViewDelegate { }
+
+	[TV (11,0), iOS (11,0)]
+	[Protocol, Model]
+	[BaseType (typeof (NSObject))]
+	interface AVRoutePickerViewDelegate {
+
+		[Export ("routePickerViewWillBeginPresentingRoutes:")]
+		void WillBeginPresentingRoutes (AVRoutePickerView routePickerView);
+
+		[Export ("routePickerViewDidEndPresentingRoutes:")]
+		void DidEndPresentingRoutes (AVRoutePickerView routePickerView);
+	}
 #endif
 }

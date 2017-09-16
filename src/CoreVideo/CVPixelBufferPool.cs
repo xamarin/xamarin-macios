@@ -16,6 +16,7 @@ using XamCore.Foundation;
 namespace XamCore.CoreVideo {
 
 	// CVPixelBufferPool.h
+	[Watch (4,0)]
 	[iOS (4,0)]
 	public partial class CVPixelBufferPool : INativeObject
 #if !COREBUILD

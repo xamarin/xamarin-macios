@@ -33,12 +33,14 @@ using XamCore.ObjCRuntime;
 namespace XamCore.CoreVideo {
 
 	// uint32_t -> CVBuffer.h
+	[Watch (4,0)]
 	public enum CVAttachmentMode : uint {
 		ShouldNotPropagate    = 0,
 		ShouldPropagate       = 1,
 	}
 
 	[Flags]
+	[Watch (4,0)]
 #if XAMCORE_4_0
 	public enum CVPixelBufferLock : ulong {
 #else
@@ -51,29 +53,34 @@ namespace XamCore.CoreVideo {
 	}	
 
 	// CVPixelBuffer.h
+	[Watch (4,0)]
 	public struct CVPlanarComponentInfo {
 		public /* int32_t */ int Offset;
 		public /* uint32_t */ uint RowBytes;
 	}
 
 	// CVPixelBuffer.h
+	[Watch (4,0)]
 	public struct CVPlanarPixelBufferInfo {
 		public CVPlanarComponentInfo[] ComponentInfo;
 	}
 
 	// CVPixelBuffer.h
+	[Watch (4,0)]
 	public struct CVPlanarPixelBufferInfo_YCbCrPlanar {
 		public CVPlanarComponentInfo ComponentInfoY;
 		public CVPlanarComponentInfo ComponentInfoCb;
 		public CVPlanarComponentInfo ComponentInfoCr;
 	}
 
+	[Watch (4,0)]
 	public struct CVPlanarPixelBufferInfo_YCbCrBiPlanar {
 		public CVPlanarComponentInfo ComponentInfoY;
 		public CVPlanarComponentInfo ComponentInfoCbCr;
 	}
 
 	// int32_t -> CVReturn.h
+	[Watch (4,0)]
 	public enum CVReturn : int {
 		Success = 0,
 		First = -6660,
@@ -99,10 +106,12 @@ namespace XamCore.CoreVideo {
 
 
 	// uint64_t -> CVBase.h
+	[Watch (4,0)]
 	public enum CVOptionFlags : long {
 		None = 0,
 	}
 
+	[Watch (4,0)]
 	public struct CVTimeStamp {
 		public UInt32		Version;
 		public Int32 		VideoTimeScale;
@@ -115,6 +124,7 @@ namespace XamCore.CoreVideo {
 		public UInt64 		Reserved;
 	}
         
+	[Watch (4,0)]
 	public struct CVSMPTETime {
 		public Int16	Subframes;
 		public Int16	SubframeDivisor;
@@ -128,11 +138,13 @@ namespace XamCore.CoreVideo {
 	}
 
 	[Flags]
+	[Watch (4,0)]
 	public enum CVTimeFlags : int {
 		IsIndefinite = 1 << 0
 	}
 
 	[Flags]
+	[Watch (4,0)]
 #if XAMCORE_2_0
 	public enum CVTimeStampFlags : ulong {
 #else
@@ -150,11 +162,13 @@ namespace XamCore.CoreVideo {
 	}	
 
 	[Flags]
+	[Watch (4,0)]
 	public enum CVSMPTETimeFlags : uint_compat_int {
 		Valid     = (1 << 0),
 		Running   = (1 << 1)
 	}
 
+	[Watch (4,0)]
 	public enum CVSMPTETimeType : uint_compat_int {
 		Type24        = 0,
 		Type25        = 1,
@@ -166,15 +180,18 @@ namespace XamCore.CoreVideo {
 		Type5994      = 7
 	}
 
+	[Watch (4,0)]
 	public struct CVFillExtendedPixelsCallBackData {
 		public nint /* CFIndex */ Version;
 		public CVFillExtendedPixelsCallBack FillCallBack;
 		public IntPtr UserInfo;
 	} 
 
+	[Watch (4,0)]
 	public delegate bool CVFillExtendedPixelsCallBack (IntPtr pixelBuffer, IntPtr refCon);
 
 	// CVOptionFlags (uint64_t) -> CVPixelBufferPool.h
+	[Watch (4,0)]
 	[iOS (9,0)][Mac (10,11)]
 	public enum CVPixelBufferPoolFlushFlags : ulong {
 		FlushExcessBuffers = 1,
