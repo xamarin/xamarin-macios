@@ -136,8 +136,12 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "ModelIO", 10, 11 },
 
 					{ "Intents", 10, 12 },
+					{ "IOSurface", "IOSurface", 10, 12 },
 					{ "SafariServices", "SafariServices", 10, 12 },
 					{ "MediaPlayer", "MediaPlayer", 10, 12, 1 },
+
+					{ "CoreML", "CoreML", 10, 13 },
+					{ "Vision", "Vision", 10, 13 },
 				};
 			}
 			return mac_frameworks;
@@ -241,6 +245,17 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "UserNotificationsUI", "UserNotificationsUI", 10 },
 				{ "Intents", "Intents", 10 },
 				{ "IntentsUI", "IntentsUI", 10 },
+
+				{ "ARKit", "ARKit", 11 },
+				{ "CoreNFC", "CoreNFC", 11 },
+				{ "DeviceCheck", "DeviceCheck", 11 },
+				{ "IdentityLookup", "IdentityLookup", 11 },
+				{ "IOSurface", "IOSurface", 11 },
+				{ "CoreML", "CoreML", 11 },
+				{ "Vision", "Vision", 11 },
+				{ "FileProvider", "FileProvider", 11 },
+				{ "FileProviderUI", "FileProviderUI", 11 },
+				{ "PdfKit", "PDFKit", 11 },
 			};
 		}
 		return ios_frameworks;
@@ -281,6 +296,8 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "SpriteKit", "SpriteKit", 3 },
 				{ "UserNotifications", "UserNotifications", 3 },
 				{ "Intents", "Intents", 3,2 },
+
+				{ "CoreML", "CoreML", 4 },
 			};
 		}
 		return watch_frameworks;
@@ -344,6 +361,11 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "UserNotifications", "UserNotifications", 10 },
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
 					{ "VideoToolbox", "VideoToolbox", 10,2 },
+
+					{ "DeviceCheck", "DeviceCheck", 11 },
+					{ "CoreML", "CoreML", 11 },
+					{ "IOSurface", "IOSurface", 11 },
+					{ "Vision", "Vision", 11 },
 				};
 			}
 			return tvos_frameworks;

@@ -7,9 +7,11 @@ using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
 using UIKit;
+using CoreGraphics;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using MonoTouch.CoreGraphics;
 #endif
 using NUnit.Framework;
 
@@ -54,7 +56,11 @@ namespace MonoTouchFixtures.UIKit {
 		public void EmptySelection ()
 		{
 			using (var tf = new UITextField ()) {
-				Assert.IsNull (tf.SelectedTextRange, "SelectedTextRange");
+				if (TestRuntime.CheckXcodeVersion (9, 0)) {
+					Assert.IsNotNull (tf.SelectedTextRange, "SelectedTextRange 1");
+				} else {
+					Assert.IsNull (tf.SelectedTextRange, "SelectedTextRange");
+				}
 				if (TestRuntime.CheckSystemAndSDKVersion (6,0)) {
 					Assert.IsNull (tf.TypingAttributes, "default");
 					// ^ calling TypingAttributes does not crash like UITextView does, it simply returns null
@@ -83,7 +89,15 @@ namespace MonoTouchFixtures.UIKit {
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=20572
 			using (UITextField tf = new UITextField ()) {
 				var rect = tf.GetCaretRectForPosition (null);
-				Assert.True (rect.IsEmpty, "IsEmpty");
+				if (TestRuntime.CheckXcodeVersion (9, 0)) {
+#if __TVOS__
+					Assert.AreEqual (new CGRect (0, -24, 2, 19), rect, "IsEmpty");
+#else
+					Assert.AreEqual (new CGRect (0, -12, 2, 18.5), rect, "IsEmpty");
+#endif
+				} else {
+					Assert.AreEqual (CGRect.Empty, rect, "IsEmpty");
+				}
 			}
 		}
 

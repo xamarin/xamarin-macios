@@ -53,16 +53,20 @@ namespace XamCore.ClockKit {
 		[Export ("getTimelineEntriesForComplication:afterDate:limit:withHandler:")]
 		void GetTimelineEntriesAfterDate (CLKComplication complication, NSDate afterDate, nuint limit, Action<CLKComplicationTimelineEntry []> handler);
 	
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'WKRefreshBackgroundTask' instead.")]
 		[Export ("getNextRequestedUpdateDateWithHandler:")]
 		void GetNextRequestedUpdateDate (Action<NSDate> handler);
 
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'WKRefreshBackgroundTask' instead.")]
 		[Export ("requestedUpdateDidBegin")]
 		void RequestedUpdateDidBegin ();
 
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'WKRefreshBackgroundTask' instead.")]
 		[Export ("requestedUpdateBudgetExhausted")]
 		void RequestedUpdateBudgetExhausted ();
 
 		// this was @required in watchOS 2.x but is now deprecated and downgraded to @optional in watchOS 3 (betas)
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'GetLocalizableSampleTemplate' instead.")]
 		[Export ("getPlaceholderTemplateForComplication:withHandler:")]
 		void GetPlaceholderTemplate (CLKComplication complication, Action<CLKComplicationTemplate> handler);
 

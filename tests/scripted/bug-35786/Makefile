@@ -38,7 +38,7 @@ bug-35786:
 	@# we lower the ulimit here so that we don't have to create that many assemblies to test with
 	@# the ulimit default on Yosemite is ulimit=256, which requires 300 assemblies to break the stripper, and 400 assemblies to break the AOT compiler.
 	@# with 96 here, we only need 20 assemblies to break the stripper, and 35 to break the AOT compiler, so running the test with 100 assemblies should be more than enough.
-	ulimit -n 96 && $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch --dev libs/bug-35786.app --abi armv7,arm64 libs/bug-35786.exe --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(IOS_SDK_VERSION) -r:$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll
+	ulimit -n 96 && $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch --dev libs/bug-35786.app --targetver=10.3 --abi armv7,arm64 libs/bug-35786.exe --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(IOS_SDK_VERSION) -r:$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll
 
 
 include $(TOP)/mk/rules.mk

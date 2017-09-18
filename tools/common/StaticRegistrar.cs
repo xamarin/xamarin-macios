@@ -1756,8 +1756,13 @@ namespace XamCore.Registrar {
 			case "CoreAnimation":
 				header.WriteLine ("#import <QuartzCore/QuartzCore.h>");
 #if MTOUCH
-				if (App.SdkVersion.Major > 7)
-					header.WriteLine ("#import <QuartzCore/CAEmitterBehavior.h>");
+				switch (App.Platform) {
+				case Xamarin.Utils.ApplePlatform.iOS:
+				case Xamarin.Utils.ApplePlatform.TVOS:
+					if (App.SdkVersion.Major > 7 && App.SdkVersion.Major < 11)
+						header.WriteLine ("#import <QuartzCore/CAEmitterBehavior.h>");
+					break;
+				}
 #endif
 				return;
 			case "CoreMidi":	
@@ -1819,12 +1824,26 @@ namespace XamCore.Registrar {
 				header.WriteLine ("#import <WatchKit/WatchKit.h>");
 				namespaces.Add ("UIKit");
 				return;
+			case "CoreNFC":
+			case "DeviceCheck":
+#if !MONOMAC
+				if (IsSimulator)
+					return; // No headers provided for simulator, which makes sense since there is no NFC on it.
+#endif
+				goto default;
 			case "QTKit":
 #if MONOMAC
 				if (App.SdkVersion >= MacOSTenTwelveVersion)
 					return; // 10.12 removed the header files for QTKit
 #endif
 				goto default;
+			case "IOSurface": // There is no IOSurface.h
+#if !MONOMAC
+				if (IsSimulator)
+					return; // Not available in the simulator (the header is there, but broken).
+#endif
+				h = "<IOSurface/IOSurfaceObjC.h>";
+				break;
 			default:
 				h = string.Format ("<{0}/{0}.h>", ns);
 				break;

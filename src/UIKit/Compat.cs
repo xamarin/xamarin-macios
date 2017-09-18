@@ -62,7 +62,7 @@ namespace XamCore.UIKit {
 
 	public static partial class NSIdentifier {
 
-		[Obsolete ("Use GetIdentifier method")]
+		[Obsolete ("Use 'GetIdentifier' method.")]
 		public static string Identifier (this NSLayoutConstraint This)
 		{
 			return This.GetIdentifier ();
@@ -73,7 +73,7 @@ namespace XamCore.UIKit {
 #if !XAMCORE_4_0 && !WATCH
 	public partial class UIPresentationController {
 
-		[Obsolete ("Removed in iOS10. Use .ctor(UIViewController,UIViewController)")]
+		[Obsolete ("Removed in iOS10. Use '.ctor (UIViewController,UIViewController)'.")]
 		public UIPresentationController ()
 		{
 		}
@@ -81,7 +81,7 @@ namespace XamCore.UIKit {
 
 #if !TVOS
 	public partial class UIPreviewInteraction {
-		[Obsolete ("Use overload accepting a IUICoordinateSpace")]
+		[Obsolete ("Use overload accepting a 'IUICoordinateSpace'.")]
 		public virtual CGPoint GetLocationInCoordinateSpace (UICoordinateSpace coordinateSpace)
 		{
 			return GetLocationInCoordinateSpace ((IUICoordinateSpace) coordinateSpace);
@@ -89,5 +89,17 @@ namespace XamCore.UIKit {
 	}
 #endif
 
+#endif
+
+#if !XAMCORE_4_0 && !WATCH
+	public partial class UICollectionViewFocusUpdateContext {
+		[Obsolete ("This cannot be directly created.")]
+		public UICollectionViewFocusUpdateContext () { }
+	}
+
+	public partial class UIFocusUpdateContext {
+		[Obsolete ("This cannot be directly created.")]
+		public UIFocusUpdateContext () { }
+	}
 #endif
 }

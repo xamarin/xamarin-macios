@@ -809,10 +809,10 @@ namespace XamCore.Registrar {
 				custom_type_map [type] = null;
 		}
 
-		public UnmanagedMethodDescription GetMethodDescriptionAndObject (Type type, IntPtr selector, IntPtr obj, ref IntPtr mthis)
+		public UnmanagedMethodDescription GetMethodDescriptionAndObject (Type type, IntPtr selector, bool is_static, IntPtr obj, ref IntPtr mthis)
 		{
 			var sel = new Selector (selector);
-			var res = GetMethodNoThrow (type, type, sel.Name);
+			var res = GetMethodNoThrow (type, type, sel.Name, is_static);
 			if (res == null)
 				throw ErrorHelper.CreateError (8006, "Failed to find the selector '{0}' on the type '{1}'", sel.Name, type.FullName);
 
@@ -856,10 +856,10 @@ namespace XamCore.Registrar {
 			throw ErrorHelper.CreateError (8003, "Failed to find the closed generic method '{0}' on the type '{1}'.", open_method.Name, closed_type.FullName);
 		}
 
-		public UnmanagedMethodDescription GetMethodDescription (Type type, IntPtr selector)
+		public UnmanagedMethodDescription GetMethodDescription (Type type, IntPtr selector, bool is_static)
 		{
 			var sel = new Selector (selector);
-			var res = GetMethodNoThrow (type, type, sel.Name);
+			var res = GetMethodNoThrow (type, type, sel.Name, is_static);
 			if (res == null)
 				throw ErrorHelper.CreateError (8006, "Failed to find the selector '{0}' on the type '{1}'", sel.Name, type.FullName);
 			if (type.IsGenericType && res.Method is ConstructorInfo)
@@ -868,7 +868,7 @@ namespace XamCore.Registrar {
 			return res.MethodDescription.GetUnmanagedDescription ();
 		}
 
-		ObjCMethod GetMethodNoThrow (Type original_type, Type type, string selector)
+		ObjCMethod GetMethodNoThrow (Type original_type, Type type, string selector, bool is_static)
 		{
 			var objcType = RegisterType (type);
 			
@@ -877,8 +877,8 @@ namespace XamCore.Registrar {
 
 			ObjCMember member = null;
 			
-			if (type.BaseType != typeof (object) && !objcType.Map.TryGetValue (selector, out member))
-				return GetMethodNoThrow (original_type, type.BaseType, selector);
+			if (type.BaseType != typeof (object) && !objcType.TryGetMember (selector, is_static, out member))
+				return GetMethodNoThrow (original_type, type.BaseType, selector, is_static);
 			
 			var method = member as ObjCMethod;
 			

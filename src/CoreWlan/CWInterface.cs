@@ -49,5 +49,24 @@ namespace XamCore.CoreWlan {
 				return networks.ToArray<CWNetwork> ();
 			return null;
 		}
+
+		[Mac (10,13)]
+		public CWNetwork [] ScanForNetworksWithSsid (NSData ssid, bool includeHidden, out NSError error)
+		{
+			NSSet networks = _ScanForNetworksWithSsid (ssid, includeHidden, out error);
+			if (networks != null)
+				return networks.ToArray<CWNetwork> ();
+			return null;
+		}
+
+		[Mac (10,13)]
+		public CWNetwork [] ScanForNetworksWithName (string networkName, bool includeHidden, out NSError error)
+		{
+			NSSet networks = _ScanForNetworksWithName (networkName, includeHidden, out error);
+			if (networks != null)
+				return networks.ToArray<CWNetwork> ();
+			return null;
+		}
+
 	}
 }

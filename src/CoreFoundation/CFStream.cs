@@ -244,7 +244,7 @@ namespace XamCore.CoreFoundation {
 		internal extern static /* CFReadStreamRef __nonnull */ IntPtr CFReadStreamCreateForHTTPRequest (
 			/* CFAllocatorRef __nullable */ IntPtr alloc, /* CFHTTPMessageRef __nonnull */ IntPtr request);
 
-		[Availability (Deprecated = Platform.iOS_9_0 | Platform.Mac_10_11, Message = "Use NSUrlSession")]
+		[Availability (Deprecated = Platform.iOS_9_0 | Platform.Mac_10_11, Message = "Use 'NSUrlSession'.")]
 		public static CFHTTPStream CreateForHTTPRequest (CFHTTPMessage request)
 		{
 			if (request == null)
