@@ -1889,7 +1889,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_CodesignAppBundle" Condition="'$(_RequireCodeSigning)' == 'true' And ('$(IsAppExtension)' == 'false' Or '@(_ResolvedAppExtensionReferences)' != '')" DependsOnTargets="$(_CodesignAppBundleDependsOn)"
+	<Target Name="_CodesignAppBundle" Condition="('$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '') And ('$(IsAppExtension)' == 'false' Or '@(_ResolvedAppExtensionReferences)' != '')" DependsOnTargets="$(_CodesignAppBundleDependsOn)"
 		Inputs="@(_CodesignAppBundleInputs)" Outputs="$(_AppBundlePath)_CodeSignature\CodeResources">
 
 		<PropertyGroup>

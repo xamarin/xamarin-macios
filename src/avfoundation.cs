@@ -7874,15 +7874,13 @@ namespace XamCore.AVFoundation {
 	interface AVCameraCalibrationData
 	{
 		[Export ("intrinsicMatrix")]
-		Matrix3 GetIntrinsicMatrix { [MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;}
+		NMatrix3 IntrinsicMatrix { [MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get; }
 
 		[Export ("intrinsicMatrixReferenceDimensions")]
 		CGSize IntrinsicMatrixReferenceDimensions { get; }
 
-		/*
 		[Export ("extrinsicMatrix")]
-		Matrix4 GetExtrinsicMatrix { [MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;}; // should be a matrix 4x3
-		*/
+		NMatrix4x3 ExtrinsicMatrix { [MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get; }
 
 		[Export ("pixelSize")]
 		float PixelSize { get; }
@@ -8989,11 +8987,17 @@ namespace XamCore.AVFoundation {
 		[Export ("captureOutput:didCapturePhotoForResolvedSettings:")]
 		void DidCapturePhoto (AVCapturePhotoOutput captureOutput, AVCaptureResolvedPhotoSettings resolvedSettings);
 
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use the 'DidFinishProcessingPhoto' overload accepting a 'AVCapturePhoto' instead.")]
 		[Export ("captureOutput:didFinishProcessingPhotoSampleBuffer:previewPhotoSampleBuffer:resolvedSettings:bracketSettings:error:")]
 		void DidFinishProcessingPhoto (AVCapturePhotoOutput captureOutput, [NullAllowed] CMSampleBuffer photoSampleBuffer, [NullAllowed] CMSampleBuffer previewPhotoSampleBuffer, AVCaptureResolvedPhotoSettings resolvedSettings, [NullAllowed] AVCaptureBracketedStillImageSettings bracketSettings, [NullAllowed] NSError error);
 
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use the 'DidFinishProcessingPhoto' overload accepting a 'AVCapturePhoto' instead.")]
 		[Export ("captureOutput:didFinishProcessingRawPhotoSampleBuffer:previewPhotoSampleBuffer:resolvedSettings:bracketSettings:error:")]
 		void DidFinishProcessingRawPhoto (AVCapturePhotoOutput captureOutput, [NullAllowed] CMSampleBuffer rawSampleBuffer, [NullAllowed] CMSampleBuffer previewPhotoSampleBuffer, AVCaptureResolvedPhotoSettings resolvedSettings, [NullAllowed] AVCaptureBracketedStillImageSettings bracketSettings, [NullAllowed] NSError error);
+
+		[iOS (11,0)]
+		[Export ("captureOutput:didFinishProcessingPhoto:error:")]
+		void DidFinishProcessingPhoto (AVCapturePhotoOutput output, AVCapturePhoto photo, [NullAllowed] NSError error);
 
 		[Export ("captureOutput:didFinishRecordingLivePhotoMovieForEventualFileAtURL:resolvedSettings:")]
 		void DidFinishRecordingLivePhotoMovie (AVCapturePhotoOutput captureOutput, NSUrl outputFileUrl, AVCaptureResolvedPhotoSettings resolvedSettings);
@@ -11528,6 +11532,7 @@ namespace XamCore.AVFoundation {
 	interface IAVAssetDownloadDelegate {}
 
 	[NoTV]
+	[NoMac]
 	[NoWatch]
 	[iOS (9,0)]
 	[Protocol, Model]
@@ -11543,16 +11548,16 @@ namespace XamCore.AVFoundation {
 		[Export ("URLSession:assetDownloadTask:didFinishDownloadingToURL:")]
 		void DidFinishDownloadingToUrl (NSUrlSession session, AVAssetDownloadTask assetDownloadTask, NSUrl location);
 
-		[NoWatch, NoMac, NoTV, iOS (11,0)]
+		[iOS (11,0)]
 		[Export ("URLSession:aggregateAssetDownloadTask:willDownloadToURL:")]
 		void WillDownloadToUrl (NSUrlSession session, AVAggregateAssetDownloadTask aggregateAssetDownloadTask, NSUrl location);
 
-		[NoWatch, NoMac, NoTV, iOS (11,0)]
+		[iOS (11,0)]
 		[Export ("URLSession:aggregateAssetDownloadTask:didCompleteForMediaSelection:")]
 		void DidCompleteForMediaSelection (NSUrlSession session, AVAggregateAssetDownloadTask aggregateAssetDownloadTask, AVMediaSelection mediaSelection);
 
-		[NoWatch, NoMac, NoTV, iOS (11,0)]
-		[Export ("URLSession:aggregateDownloadTask:didLoadTimeRange:totalTimeRangesLoaded:timeRangeExpectedToLoad:forMediaSelection:")]
+		[iOS (11,0)]
+		[Export ("URLSession:aggregateAssetDownloadTask:didLoadTimeRange:totalTimeRangesLoaded:timeRangeExpectedToLoad:forMediaSelection:")]
 		void DidLoadTimeRange (NSUrlSession session, AVAggregateAssetDownloadTask aggregateAssetDownloadTask, CMTimeRange timeRange, NSValue[] loadedTimeRanges, CMTimeRange timeRangeExpectedToLoad, AVMediaSelection mediaSelection);
 	}
 
@@ -12185,5 +12190,53 @@ namespace XamCore.AVFoundation {
 
 		[Export ("multipleRoutesDetected")]
 		bool MultipleRoutesDetected { get; }
+	}
+
+	[NoTV, iOS (11,0), NoWatch, NoMac]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface AVCapturePhoto
+	{
+		[Export ("timestamp")]
+		CMTime Timestamp { get; }
+
+		[Export ("rawPhoto")]
+		bool RawPhoto { [Bind ("isRawPhoto")] get; }
+
+		[NullAllowed, Export ("pixelBuffer")]
+		CVPixelBuffer PixelBuffer { get; }
+
+		[NullAllowed, Export ("previewPixelBuffer")]
+		CVPixelBuffer PreviewPixelBuffer { get; }
+
+		[NullAllowed, Export ("embeddedThumbnailPhotoFormat")]
+		NSDictionary WeakEmbeddedThumbnailPhotoFormat { get; }
+
+		[Wrap ("WeakEmbeddedThumbnailPhotoFormat")]
+		AVVideoSettingsCompressed EmbeddedThumbnailPhotoFormat { get; }
+
+		[NullAllowed, Export ("depthData")]
+		AVDepthData DepthData { get; }
+
+		[Export ("metadata")]
+		NSDictionary WeakMetadata { get; }
+
+		[Wrap ("WeakMetadata")]
+		CoreGraphics.CGImageProperties Properties { get; }
+
+		[NullAllowed, Export ("cameraCalibrationData")]
+		AVCameraCalibrationData CameraCalibrationData { get; }
+
+		[Export ("resolvedSettings")]
+		AVCaptureResolvedPhotoSettings ResolvedSettings { get; }
+
+		[Export ("photoCount")]
+		nint PhotoCount { get; }
+
+		[NullAllowed, Export ("sourceDeviceType")]
+		NSString WeakSourceDeviceType { get; }
+
+		[Wrap ("AVCaptureDeviceTypeExtensions.GetValue (WeakSourceDeviceType)")]
+		AVCaptureDeviceType SourceDeviceType { get; }
 	}
 }

@@ -4696,6 +4696,7 @@ namespace XamCore.CoreImage {
 	interface CIXRay {
 	}
 
+#if false // Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
@@ -4952,6 +4953,7 @@ namespace XamCore.CoreImage {
 	interface CIBlendWithRedMask {
 		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
 	}
+#endif // false
 
 	[iOS (11,0)]
 	[Mac (10,13)]

@@ -54,11 +54,16 @@ namespace Extrospection {
 			{ "NSURLRequestCachePolicy", "NSUrlRequestCachePolicy" },
 			{ "NSURLRequestNetworkServiceType", "NSUrlRequestNetworkServiceType" },
 			{ "NSURLSessionAuthChallengeDisposition", "NSUrlSessionAuthChallengeDisposition" },
+			{ "NSURLSessionMultipathServiceType", "NSUrlSessionMultipathServiceType" },
 			{ "NSURLSessionResponseDisposition", "NSUrlSessionResponseDisposition" },
 			{ "NSURLSessionTaskMetricsResourceFetchType", "NSUrlSessionTaskMetricsResourceFetchType" },
 			{ "NSURLSessionTaskState", "NSUrlSessionTaskState" },
 			{ "NWTCPConnectionState", "NWTcpConnectionState" },
 			{ "NWUDPSessionState", "NWUdpSessionState" },
+			{ "PDFDisplayDirection", "PdfDisplayDirection" },
+			{ "PDFInterpolationQuality", "PdfInterpolationQuality" },
+			{ "PDFThumbnailLayoutMode", "PdfThumbnailLayoutMode" },
+			{ "PDFWidgetCellState", "PdfWidgetCellState" },
 			{ "RPRecordingErrorCode", "RPRecordingError" },
 			{ "SecTrustResultType", "SecTrustResult" },
 			{ "SKErrorCode", "SKError" },
@@ -104,9 +109,17 @@ namespace Extrospection {
 
 			// some categories are not decorated (as not available) but they extend types that are
 			if (!result.HasValue) {
-				var category = (decl.DeclContext as ObjCCategoryDecl);
+				// first check if we're checking the category itself
+				var category = decl as ObjCCategoryDecl;
 				if (category != null)
 					result = category.ClassInterface.IsAvailable (Platform);
+
+				if (!result.HasValue) {
+					// then check if we're a method inside a category
+					category = (decl.DeclContext as ObjCCategoryDecl);
+					if (category != null)
+						result = category.ClassInterface.IsAvailable (Platform);
+				}
 			}
 				
 			// but right now most frameworks consider tvOS and watchOS like iOS unless 
