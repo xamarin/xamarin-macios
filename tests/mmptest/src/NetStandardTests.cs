@@ -3,11 +3,9 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	[TestFixture]
-	public partial class NetStandardTests
-	{
+	public partial class NetStandardTests {
 		// [Test] https://bugzilla.xamarin.com/show_bug.cgi?id=53164
 		public void ModernUsingNetStandardLib_SmokeTest ()
 		{
