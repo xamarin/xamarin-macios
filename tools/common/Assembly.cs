@@ -411,6 +411,13 @@ namespace Xamarin.Bundler {
 							break;
 						}
 #endif
+						// Only link against Vision if we're targetting 10.13.
+						if (name.StartsWith ("/System/Library/Frameworks/Vision.framework/", StringComparison.Ordinal)) {
+							if (App.DeploymentTarget < new Version (10, 13)) {
+								Driver.Log (3, "Skipping framework {0} because we're targetting {1}", name, App.SdkVersion);
+								continue;
+							}
+						}
 
 						// detect frameworks
 						int f = name.IndexOf (".framework/", StringComparison.Ordinal);
