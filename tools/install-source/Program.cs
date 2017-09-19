@@ -233,6 +233,8 @@ public class ListSourceFiles {
 				}
 				try {
 					File.Copy (fixedSource, target);
+				} catch (FileNotFoundException e) { 
+					Console.WriteLine ("The file {0} could not be copied to {1} because the file does not exists: {2}", fixedSource, target, e);
 				} catch (PathTooLongException e) {
 					Console.WriteLine ("The file {0} could not be copied to {1} because the file path is too long: {2}", fixedSource, target, e);
 					return 1;
