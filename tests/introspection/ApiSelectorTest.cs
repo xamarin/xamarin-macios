@@ -66,6 +66,18 @@ namespace Introspection {
 			// These concrete (wrapper) subclasses do not implement all of those optional members, but we
 			// still need to provide a binding for them, so that user subclasses can implement those members.
 			switch (type.Name) {
+			case "AVAggregateAssetDownloadTask":
+				switch (selectorName) {
+				case "URLAsset": // added in Xcode 9 and it is present.
+					return true;
+				}
+				break;
+			case "AVAssetDownloadStorageManager":
+				switch (selectorName) {
+				case "sharedDownloadStorageManager": // added in Xcode 9 and it is present.
+					return true;
+				}
+				break;
 			case "MKCircle":
 			case "MKPolygon":
 			case "MKPolyline":
@@ -149,6 +161,26 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			// Xcode 9
+			case "CIQRCodeFeature":
+				switch (selectorName) {
+				case "copyWithZone:":
+				case "encodeWithCoder:":
+					return !TestRuntime.CheckXcodeVersion (9, 0);
+				}
+				break;
+			case "CKFetchRecordZoneChangesOptions":
+				switch (selectorName) {
+				case "copyWithZone:":
+					return !TestRuntime.CheckXcodeVersion (9, 0);
+				}
+				break;
+#if !MONOMAC
+			case "MTLCaptureManager":
+				if (Runtime.Arch == Arch.SIMULATOR)
+					return true;
+				break;
+#endif
 			}
 #endif
 			// This ctors needs to be manually bound
@@ -327,6 +359,115 @@ namespace Introspection {
 				switch (selectorName){
 				case "isDepthTexture":
 					return true;
+				}
+				break;
+			case "MTLArgumentDescriptor":
+				switch (selectorName) {
+				case "access":
+				case "setAccess:":
+				case "arrayLength":
+				case "setArrayLength:":
+				case "constantBlockAlignment":
+				case "setConstantBlockAlignment:":
+				case "dataType":
+				case "setDataType:":
+				case "index":
+				case "setIndex:":
+				case "textureType":
+				case "setTextureType:":
+					return true;
+				}
+				break;
+			case "MTLHeapDescriptor":
+				switch (selectorName) {
+				case "cpuCacheMode":
+				case "setCpuCacheMode:":
+				case "size":
+				case "setSize:":
+				case "storageMode":
+				case "setStorageMode:":
+					return true;
+				}
+				break;
+			case "MTLPipelineBufferDescriptor":
+				switch (selectorName) {
+				case "mutability":
+				case "setMutability:":
+					return true;
+				}
+				break;
+			case "MTLPointerType":
+				switch (selectorName) {
+				case "access":
+				case "alignment":
+				case "dataSize":
+				case "elementIsArgumentBuffer":
+				case "elementType":
+					return true;
+				}
+				break;
+			case "MTLTextureReferenceType":
+				switch (selectorName) {
+				case "access":
+				case "isDepthTexture":
+				case "textureDataType":
+				case "textureType":
+					return true;
+				}
+				break;
+			case "MTLType":
+				switch (selectorName) {
+				case "dataType":
+					return true;
+				}
+				break;
+			case "MTLTileRenderPipelineColorAttachmentDescriptor":
+				switch (selectorName) {
+				case "pixelFormat":
+				case "setPixelFormat:":
+					return true;
+				}
+				break;
+			case "MTLTileRenderPipelineDescriptor":
+				switch (selectorName) {
+				case "colorAttachments":
+				case "label":
+				case "setLabel:":
+				case "rasterSampleCount":
+				case "setRasterSampleCount:":
+				case "threadgroupSizeMatchesTileSize":
+				case "setThreadgroupSizeMatchesTileSize:":
+				case "tileBuffers":
+				case "tileFunction":
+				case "setTileFunction:":
+					return true;
+				}
+				break;
+			case "AVPlayerLooper": // This API got introduced in Xcode 8.0 binding but is not currently present nor in Xcode 8.3 or Xcode 9.0 needs research
+				switch (selectorName) {
+				case "isLoopingEnabled":
+					return true;
+				}
+				break;
+			case "NSQueryGenerationToken": // A test was added in monotouch tests to ensure the selector works
+				switch (selectorName) {
+				case "encodeWithCoder:":
+					return true;
+				}
+				break;
+			case "INSpeakableString":
+				switch (selectorName) {
+				case "initWithVocabularyIdentifier:spokenPhrase:pronunciationHint:":
+				case "initWithIdentifier:spokenPhrase:pronunciationHint:":
+					return true;
+				}
+				break;
+			case "HMCharacteristicEvent":
+				switch (selectorName) {
+				case "copyWithZone:":
+				case "mutableCopyWithZone:":
+					// Added in Xcode9 (i.e. only 64 bits) so skip 32 bits
+					return !TestRuntime.CheckXcodeVersion (9,0);
 				}
 				break;
 			}

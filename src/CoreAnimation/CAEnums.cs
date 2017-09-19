@@ -31,6 +31,7 @@ using System;
 using XamCore.Foundation;
 using System.Runtime.InteropServices;
 using XamCore.CoreGraphics;
+using XamCore.ObjCRuntime;
 
 namespace XamCore.CoreAnimation {
 
@@ -45,6 +46,16 @@ namespace XamCore.CoreAnimation {
 		All = LeftEdge | RightEdge | BottomEdge | TopEdge,
 		LeftRightEdges = LeftEdge | RightEdge,
 		TopBottomEdges = TopEdge | BottomEdge
+	}
+
+	[NoWatch] // headers not updated
+	[iOS (11,0)][TV (11,0)][Mac (10,13)]
+	[Native][Flags]
+	public enum CACornerMask : nuint {
+		MinXMinYCorner = 1 << 0,
+		MaxXMinYCorner = 1 << 1,
+		MinXMaxYCorner = 1 << 2,
+		MaxXMaxYCorner = 1 << 3,
 	}
 
 #if MONOMAC

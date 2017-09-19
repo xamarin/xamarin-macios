@@ -8,6 +8,18 @@
 ## types/members marked as deprecated in watchOS 2.0 (even if the framework was not available before 3.0)
 AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions:
 
+## it's not exposed in the API offered by watchOS
+!missing-enum! AVAudioSessionRecordPermission not bound
+
+
+# CoreBluetooth
+
+## present in headers but already deprecated (we're not exposing them)
+!missing-enum! CBCentralManagerState not bound
+!missing-enum! CBPeripheralManagerState not bound
+!missing-selector! CBPeripheral::RSSI not bound
+!missing-selector! +CBUUID::UUIDWithCFUUID: not bound
+
 
 # Foundation
 
@@ -110,6 +122,12 @@ AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions:
 !missing-selector! GKVoiceChatService::setRemoteParticipantVolume: not bound
 !missing-selector! GKVoiceChatService::startVoiceChatWithParticipantID:error: not bound
 !missing-selector! GKVoiceChatService::stopVoiceChatWithParticipantID: not bound
+!missing-enum! GKSessionError not bound
+
+# HealthKit
+
+## type was marked as available in 3.0 - but it's now iOS 11 only (even if members are marked with 10.0)
+!unknown-type! HKCDADocument bound
 
 
 #PassKit
@@ -117,6 +135,20 @@ AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions:
 ## enums added in Xcode 8.1 but the only API using them are not available on watchOS
 !missing-enum! PKPaymentButtonStyle not bound
 !missing-enum! PKPaymentButtonType not bound
+
+
+# SpriteKit
+
+## AVPlayer is not available on watchOS
+!missing-selector! +SKVideoNode::videoNodeWithAVPlayer: not bound
+!missing-selector! SKVideoNode::initWithAVPlayer: not bound
+
+## Those API are already deprecated - so we're not adding them
+## from a managed point-of-view that's invisible (same .ctor)
+!missing-selector! SKVideoNode::initWithVideoFileNamed: not bound
+!missing-selector! SKVideoNode::initWithVideoURL: not bound
+!missing-selector! +SKVideoNode::videoNodeWithVideoFileNamed: not bound
+!missing-selector! +SKVideoNode::videoNodeWithVideoURL: not bound
 
 
 # UIKit
@@ -134,6 +166,15 @@ AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions:
 !missing-selector! UIImageDeprecated::leftCapWidth not bound
 !missing-selector! UIImageDeprecated::stretchableImageWithLeftCapWidth:topCapHeight: not bound
 !missing-selector! UIImageDeprecated::topCapHeight not bound
+
+## lack of availabilty macros on NSItemProvder.PreferredPresentationStyle - intro says they are not available
+!missing-selector! NSItemProvider::preferredPresentationStyle not bound
+!missing-selector! NSItemProvider::setPreferredPresentationStyle: not bound
+## and that also means the (enum/returned) type is unused
+!missing-enum! UIPreferredPresentationStyle not bound
+
+## UITraitCollection is not available on watchOS
+!missing-selector! +UIColor::colorNamed:inBundle:compatibleWithTraitCollection: not bound
 
 
 # WatchConnectivity

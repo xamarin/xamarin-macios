@@ -4,7 +4,7 @@ using XamCore.ObjCRuntime;
 namespace XamCore.AssetsLibrary {
 
 	// NSInteger -> ALAssetsLibrary.h
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Photos API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	[Native]
 	public enum ALAssetOrientation : nint {
 		Up,
@@ -18,7 +18,7 @@ namespace XamCore.AssetsLibrary {
 	}
 
 	// NSUInteger -> ALAssetsLibrary.h
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Photos API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	[Native]
 	[Flags]
 	public enum ALAssetsGroupType : nuint {
@@ -32,7 +32,7 @@ namespace XamCore.AssetsLibrary {
 	}
 
 	// untyped enum -> ALAssetsLibrary.h
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Photos API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	[ErrorDomain ("ALAssetsLibraryErrorDomain")]
 	public enum ALAssetsError {
 		UnknownError = -1,
@@ -48,7 +48,7 @@ namespace XamCore.AssetsLibrary {
 	}
 
 	// NSInteger -> ALAssetsLibrary.h
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Photos API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	[Native]
 	public enum ALAuthorizationStatus : nint {
 		NotDetermined,

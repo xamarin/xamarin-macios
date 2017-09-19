@@ -338,9 +338,10 @@ namespace MonoTouchFixtures.Foundation {
 			NSDateComponents nextYearComponent = NSCalendar.CurrentCalendar.Components (NSCalendarUnit.Day | NSCalendarUnit.Month | NSCalendarUnit.Year, NSDate.Now);
 			nextYearComponent.Year++;
 			bool delegateHit = false;
-			NSCalendar.CurrentCalendar.EnumerateDatesStartingAfterDate(NSDate.Now, nextYearComponent, NSCalendarOptions.MatchNextTime, (NSDate d, bool exactMatch, ref bool s) => 
+			NSCalendar.CurrentCalendar.EnumerateDatesStartingAfterDate(NSDate.Now, nextYearComponent, NSCalendarOptions.MatchNextTime, (NSDate d, bool exactMatch, ref bool stop) => 
 				{
 					delegateHit = true;
+					stop = true;
 				});
 			Assert.IsTrue (delegateHit, "EnumerateDatesStartingAfterDate delegate called");
 		}

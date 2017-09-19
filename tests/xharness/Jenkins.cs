@@ -469,6 +469,7 @@ namespace xharness
 			foreach (var taskGroup in runSimulatorTasks.GroupBy ((RunSimulatorTask task) => task.Platform)) {
 				Tasks.Add (new AggregatedRunSimulatorTask (taskGroup) {
 					Jenkins = this,
+					TestName = $"Tests for {taskGroup.Key}",
 				});
 			}
 
@@ -1622,7 +1623,8 @@ function oninitialload ()
 							writer.Write ($"<div class='pdiv {ignoredClass}'>");
 							writer.Write ($"<span id='button_container2_{modeGroupId}' class='expander' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>{defaultExpander}</span>");
 							writer.Write ($"<span id='x{id_counter++}' class='p2 autorefreshable' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>{modeGroup.Key}{RenderTextStates (modeGroup)}</span>");
-							writer.Write ($" <span><a class='runall' href='javascript: runtest (\"{string.Join (",", modeGroup.Select ((v) => v.ID.ToString ()))}\");'>Run all</a></span>");
+							if (IsServerMode)
+								writer.Write ($" <span><a class='runall' href='javascript: runtest (\"{string.Join (",", modeGroup.Select ((v) => v.ID.ToString ()))}\");'>Run all</a></span>");
 							writer.WriteLine ("</div>");
 
 							writer.WriteLine ($"<div id='test_container2_{modeGroupId}' style='display: {defaultDisplay}; margin-left: 20px;'>");
@@ -1823,7 +1825,7 @@ function oninitialload ()
 		public Jenkins Jenkins;
 		public Harness Harness { get { return Jenkins.Harness; } }
 		public TestProject TestProject;
-		public string ProjectFile { get { return TestProject.Path; } }
+		public string ProjectFile { get { return TestProject?.Path; } }
 		public string ProjectConfiguration;
 		public string ProjectPlatform;
 		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
@@ -1906,6 +1908,8 @@ function oninitialload ()
 					return test_name;
 				
 				var rv = Path.GetFileNameWithoutExtension (ProjectFile);
+				if (rv == null)
+					return $"unknown test name ({GetType ().Name}";
 				switch (Platform) {
 				case TestPlatform.Mac:
 				case TestPlatform.Mac_Classic:
@@ -2949,7 +2953,7 @@ function oninitialload ()
 			if (Platform == TestPlatform.watchOS)
 				CompanionDevice = Jenkins.Simulators.FindCompanionDevice (Jenkins.SimulatorLoadLog, Device);
 
-			var clean_state = false;//Platform == TestPlatform.tvOS;
+			var clean_state = false;//Platform == TestPlatform.watchOS;
 			runner = new AppRunner ()
 			{
 				Harness = Harness,

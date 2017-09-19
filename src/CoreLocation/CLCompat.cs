@@ -8,7 +8,7 @@ namespace XamCore.CoreLocation {
 #if !XAMCORE_2_0
 	public partial class CLBeaconRegion {
 
-		[Obsolete ("Does not return a valid instance on iOS8")]
+		[Obsolete ("Does not return a valid instance on iOS 8.")]
 		public CLBeaconRegion ()
 		{
 		}
@@ -20,7 +20,7 @@ namespace XamCore.CoreLocation {
 #if !TVOS
 	public partial class CLHeading {
 
-		[Obsolete ("Use the Description property from NSObject")]
+		[Obsolete ("Use the 'Description' property from 'NSObject'.")]
 		public new virtual string Description ()
 		{
 			return base.Description;
@@ -30,7 +30,7 @@ namespace XamCore.CoreLocation {
 
 	public partial class CLLocation {
 
-		[Obsolete ("Use the Description property from NSObject")]
+		[Obsolete ("Use the 'Description' property from 'NSObject'.")]
 		public new virtual string Description ()
 		{
 			return base.Description;

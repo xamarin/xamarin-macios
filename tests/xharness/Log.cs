@@ -244,6 +244,11 @@ namespace xharness
 
 		public void StopCapture ()
 		{
+			if (!File.Exists (CapturePath)) {
+				File.WriteAllText (Path, $"Could not capture the file '{CapturePath}' because it doesn't exist.");
+				return;
+			}
+
 			if (entire_file) {
 				File.Copy (CapturePath, Path, true);
 				return;

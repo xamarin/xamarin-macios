@@ -18,7 +18,7 @@ namespace XamCore.AddressBookUI {
 
 	delegate T ABFunc<T> ();
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public class DisplayedPropertiesCollection : ICollection<ABPersonProperty> {
 
 		ABFunc<NSNumber[]> g;

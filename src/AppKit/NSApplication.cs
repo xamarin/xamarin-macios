@@ -132,7 +132,7 @@ namespace XamCore.AppKit {
 			DiscardEvents ((nuint)(ulong) mask, lastEvent);
 		}
 
-		[Obsolete ("This method does nothing")]
+		[Obsolete ("This method does nothing.")]
 		public static void RestoreWindow (string identifier, Foundation.NSCoder state, NSWindowCompletionHandler onCompletion)
 		{
 		}

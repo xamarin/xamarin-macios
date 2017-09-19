@@ -57,6 +57,7 @@ namespace MonoTouchFixtures.UIKit {
 			}
 		}
 
+#if false // Disabling for now due to Xcode 9 does not support nibs if deployment target == 6.0
 		[Test]
 		public void Ctor_Nib ()
 		{
@@ -66,6 +67,7 @@ namespace MonoTouchFixtures.UIKit {
 				CheckDefault (c);
 			}
 		}
+#endif
 	}
 }
 

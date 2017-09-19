@@ -33,6 +33,7 @@ using XamCore.ObjCRuntime;
 namespace XamCore.CoreVideo {
 
 	// CVBase.h
+	[Watch (4,0)]
 	public struct CVTime {
 
 		public /* int64_t */ long TimeValue;

@@ -18,6 +18,8 @@ using XamCore.ObjCRuntime;
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
 using Vector4 = global::OpenTK.Vector4;
+using Vector4i = global::OpenTK.Vector4i;
+using VectorInt4 = global::OpenTK.Vector4i;
 using Matrix2 = global::OpenTK.Matrix2;
 using Matrix3 = global::OpenTK.Matrix3;
 using Matrix4 = global::OpenTK.Matrix4;
@@ -250,6 +252,8 @@ namespace XamCore.ModelIO {
 		Environment
 	}
 
+#if !XAMCORE_4_0
+	[Obsolete ("Use 'MDLVoxelIndexExtent2' instead.")]
 	[StructLayout(LayoutKind.Sequential)]
 	public struct MDLVoxelIndexExtent {
 		public MDLVoxelIndexExtent (Vector4 minimumExtent, Vector4 maximumExtent)
@@ -258,6 +262,27 @@ namespace XamCore.ModelIO {
 			this.MaximumExtent = maximumExtent;
 		}
 		public Vector4 MinimumExtent, MaximumExtent;
+	}
+#endif
+
+	[StructLayout(LayoutKind.Sequential)]
+#if XAMCORE_4_0
+	public struct MDLVoxelIndexExtent {
+#else
+	public struct MDLVoxelIndexExtent2 {
+#endif
+		public VectorInt4 MinimumExtent { get; private set; }
+		public VectorInt4 MaximumExtent { get; private set; }
+
+#if XAMCORE_4_0
+		public MDLVoxelIndexExtent (VectorInt4 minimumExtent, VectorInt4 maximumExtent)
+#else
+		public MDLVoxelIndexExtent2 (VectorInt4 minimumExtent, VectorInt4 maximumExtent)
+#endif
+		{
+			this.MinimumExtent = minimumExtent;
+			this.MaximumExtent = maximumExtent;
+		}
 	}
 
 	[Native]
