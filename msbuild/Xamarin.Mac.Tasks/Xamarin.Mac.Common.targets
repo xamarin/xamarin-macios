@@ -559,7 +559,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			Profiling="$(Profiling)"
 			ExtraArguments="$(MonoBundlingExtraArgs)"
 			NativeReferences="@(NativeReference)"
-			ExplicitReferences="@(ReferenceCopyLocalAssemblyPaths)"
+			ExplicitReferences="@(ReferencePath);@(ReferenceCopyLocalAssemblyPaths)"
 			SdkRoot="$(_SdkDevPath)"
 			IntermediateOutputPath="$(IntermediateOutputPath)mmp-cache"
 			AppManifest="$(_AppManifest)"
