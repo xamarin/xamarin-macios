@@ -128,7 +128,7 @@ namespace XamCore.MetalPerformanceShaders {
 	[Native]
 	public enum MPSRnnSequenceDirection : nuint {
 		Forward = 0,
-		Backward
+		Backward,
 	}
 
 	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]

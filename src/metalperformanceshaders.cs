@@ -4,6 +4,7 @@ using XamCore.CoreGraphics;
 using XamCore.Foundation;
 using XamCore.Metal;
 using XamCore.ObjCRuntime;
+using Vector4 = global::OpenTK.Vector4;
 
 namespace XamCore.MetalPerformanceShaders {
 	// MPSImageConvolution.h
@@ -216,9 +217,11 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("histogramSizeForSourceFormat:")]
 		nuint HistogramSizeForSourceFormat (MTLPixelFormat sourceFormat);
 
-		//FIXME: Vector @property (readwrite, nonatomic) vector_float4 minPixelThresholdValue;
-		//[Export ("minPixelThresholdValue", ArgumentSemantic.Assign)]
-		//[unsupported ExtVector: float __attribute__((ext_vector_type(4)))] MinPixelThresholdValue { get; set; }
+		[Export ("minPixelThresholdValue", ArgumentSemantic.Assign)]
+		Vector4 MinPixelThresholdValue {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get; 
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set; 
+		}
 	}
 
 	[iOS (9,0)][Mac (10, 13, onlyOn64: true)]
@@ -907,7 +910,7 @@ namespace XamCore.MetalPerformanceShaders {
 		MPSCnnConvolutionDescriptor CreateCnnConvolutionDescriptor (nuint kernelWidth, nuint kernelHeight, nuint inputFeatureChannels, nuint outputFeatureChannels);
 
 		[TV (11, 0), iOS (11, 0)]
-		[Export ("setBatchNormalizationParametersForInferenceWithMean:variance:gamma:beta:epsilon:")]
+		[Internal, Export ("setBatchNormalizationParametersForInferenceWithMean:variance:gamma:beta:epsilon:")]
 		void SetBatchNormalizationParameters (IntPtr /* float* */ mean, IntPtr /* float* */ variance, [NullAllowed] IntPtr /* float* */ gamma, [NullAllowed] IntPtr /* float* */ beta, float epsilon);
 
 		[TV (11, 0), iOS (11, 0)]
@@ -2060,11 +2063,11 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("paddingWithMethod:")]
-		MPSNnDefaultPadding PaddingWithMethod (MPSNnPaddingMethod method);
+		MPSNnDefaultPadding CreatePadding (MPSNnPaddingMethod method);
 
 		[Static]
 		[Export ("paddingForTensorflowAveragePooling")]
-		MPSNnDefaultPadding PaddingForTensorflowAveragePooling ();
+		MPSNnDefaultPadding CreatePaddingForTensorflowAveragePooling ();
 	}
 	
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2136,8 +2139,8 @@ namespace XamCore.MetalPerformanceShaders {
 	interface MPSCnnNeuronPReLU
 	{
 		[Export ("initWithDevice:a:count:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, IntPtr /* float* */ a, nuint count);
+		[Internal]
+		IntPtr InitWith (IMTLDevice device, IntPtr /* float* */ a, nuint count);
 
 		// inlining ctor from base class
 		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2284,10 +2287,10 @@ namespace XamCore.MetalPerformanceShaders {
 		nuint OutputFeatureChannels { get; }
 
 		[Export ("initWithDevice:convolutionData:scaleValue:type:flags:")]
-		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
+		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float scaleValue, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
 
-		[Export ("initWithDevice:convolutionData:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags:")]
-		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, [NullAllowed] IntPtr /* float* */ outputBiasTerms, [NullAllowed] IntPtr /* float* */ outputScaleTerms, [NullAllowed] IntPtr /* float* */ inputBiasTerms, [NullAllowed] IntPtr /* float* */ inputScaleTerms,MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
+		[Internal, Export ("initWithDevice:convolutionData:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags:")]
+		IntPtr InitWith (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, [NullAllowed] IntPtr /* float* */ outputBiasTerms, [NullAllowed] IntPtr /* float* */ outputScaleTerms, [NullAllowed] IntPtr /* float* */ inputBiasTerms, [NullAllowed] IntPtr /* float* */ inputScaleTerms,MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
@@ -2301,8 +2304,8 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("initWithDevice:convolutionData:scaleValue:type:flags:")]
 		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float scaleValue, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
 
-		[Export ("initWithDevice:convolutionData:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags:")]
-		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, [NullAllowed] IntPtr /* float* */ outputBiasTerms, [NullAllowed] IntPtr /* float* */ outputScaleTerms, [NullAllowed] IntPtr /* float* */ inputBiasTerms, [NullAllowed] IntPtr /* float* */ inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
+		[Internal, Export ("initWithDevice:convolutionData:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags:")]
+		IntPtr InitWith (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, [NullAllowed] IntPtr /* float* */ outputBiasTerms, [NullAllowed] IntPtr /* float* */ outputScaleTerms, [NullAllowed] IntPtr /* float* */ inputBiasTerms, [NullAllowed] IntPtr /* float* */ inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
@@ -2635,7 +2638,6 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("exportedNodeWithHandle:")]
 		MPSNnImageNode ExportedNodeWithHandle ([NullAllowed] IMPSHandle handle);
 
-		//FIXME: Property name? @property (readwrite, retain, nonatomic) id<MPSHandle> _Nullable handle;
 		[NullAllowed, Export ("handle", ArgumentSemantic.Retain)]
 		IMPSHandle MPSHandle { get; set; }
 
@@ -2654,7 +2656,6 @@ namespace XamCore.MetalPerformanceShaders {
 	[DisableDefaultCtor]
 	interface MPSNnStateNode
 	{
-		//FIXME: MPSHandle? @property (retain, nonatomic) id<MPSHandle> _Nullable handle;
 		[NullAllowed, Export ("handle", ArgumentSemantic.Retain)]
 		IMPSHandle MPSHandle { get; set; }
 	}
@@ -3283,10 +3284,8 @@ namespace XamCore.MetalPerformanceShaders {
 		[NullAllowed, Export ("label")]
 		string Label { get; }
 
-		//FIXME: How to bind? @optional -(vector_float2 * _Nonnull)rangesForUInt8Kernel;
-		//[Export ("rangesForUInt8Kernel")]
-		//[Verify (MethodToProperty)]
-		//unsafe [unsupported ExtVector: float __attribute__((ext_vector_type(2)))]* RangesForUInt8Kernel { get; }
+		[Export ("rangesForUInt8Kernel")]
+		IntPtr RangesForUInt8Kernel { get; }
 
 		[Export ("lookupTableForUInt8Kernel")]
 		IntPtr /* float* */ LookupTableForUInt8Kernel { get; }
