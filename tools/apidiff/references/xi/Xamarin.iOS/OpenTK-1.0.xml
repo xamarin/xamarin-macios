@@ -48736,6 +48736,7 @@
               <interface name="UIKit.IUIDynamicItem" />
               <interface name="UIKit.IUIFocusEnvironment" />
               <interface name="UIKit.IUIFocusItem" />
+              <interface name="UIKit.IUIPasteConfigurationSupporting" />
               <interface name="UIKit.IUITraitEnvironment" />
             </interfaces>
             <constructors>
