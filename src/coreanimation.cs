@@ -868,11 +868,11 @@ namespace XamCore.CoreAnimation {
 
 		[Internal]
 		[Export ("truncationMode", ArgumentSemantic.Copy)]
-		IntPtr _TruncationMode { get; set; }
+		NSString _TruncationMode { get; set; }
 
 		[Internal]
 		[Export ("alignmentMode", ArgumentSemantic.Copy)]
-		IntPtr _AlignmentMode { get; set; }
+		NSString _AlignmentMode { get; set; }
 
 #if !XAMCORE_4_0 // Use smart enums instead, CATruncationMode and CATextLayerAlignmentMode.
 		[Advice ("Use 'CATextLayerTruncationMode.None.GetConstant ()' instead.")]

@@ -39,6 +39,8 @@ namespace MonoTouchFixtures.CoreAnimation {
 
 			textLayer.TruncationMode = CATextLayer.TruncantionEnd;
 			Assert.AreEqual (CATextLayerTruncationMode.End, textLayer.TextTruncationMode, "TextTruncationMode 2");
+
+			Assert.Throws<ArgumentNullException> (() => textLayer.TruncationMode = null);
 		}
 
 		[Test]
@@ -54,6 +56,8 @@ namespace MonoTouchFixtures.CoreAnimation {
 
 			textLayer.AlignmentMode = CATextLayer.AlignmentNatural;
 			Assert.AreEqual (CATextLayerAlignmentMode.Natural, textLayer.TextAlignmentMode, "TextAlignmentMode 2");
+
+			Assert.Throws<ArgumentNullException> (() => textLayer.AlignmentMode = null);
 		}
 	}
 }
