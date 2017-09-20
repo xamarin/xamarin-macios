@@ -866,13 +866,13 @@ namespace XamCore.CoreAnimation {
 		[Export ("wrapped")]
 		bool Wrapped { [Bind ("isWrapped")] get; set; }
 
-		[Internal]
+		[Protected]
 		[Export ("truncationMode", ArgumentSemantic.Copy)]
-		NSString _TruncationMode { get; set; }
+		NSString WeakTruncationMode { get; set; }
 
-		[Internal]
+		[Protected]
 		[Export ("alignmentMode", ArgumentSemantic.Copy)]
-		NSString _AlignmentMode { get; set; }
+		NSString WeakAlignmentMode { get; set; }
 
 #if !XAMCORE_4_0 // Use smart enums instead, CATruncationMode and CATextLayerAlignmentMode.
 		[Advice ("Use 'CATextLayerTruncationMode.None.GetConstant ()' instead.")]
