@@ -87,21 +87,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<PropertyGroup Condition="'$(TargetFrameworkName)' == 'Full'">
 		<AssemblySearchPaths>$(XamarinMacFrameworkRoot)/lib/reference/full;$(XamarinMacFrameworkRoot)/lib/mono;$(AssemblySearchPaths)</AssemblySearchPaths>
-
-		<!--
-		     This is to handle the case of XM/Full project referencing a netstandard project.
-
-		     For XM/Full, $(TargetFrameworkDirectory) is `lib/mono/4.5` which has `netstandard.dll`.
-		     This causes ImplicitlyExpandNETStandardFacades to skip expanding assuming that when ImplicitlyExpandDesignTimeFacades
-		     expands the facades, `netstandard.dll` would get referenced too.
-
-		     But if the XM project does NOT have any System.Runtime facades, then ImplicitlyExpandDesignTimeFacades will not expand
-		     the facades and so we end up with no `netstandard.dll` reference!
-
-		     With `$(NETStandardInbox) == false`, `ImplicitlyExpandNETStandardFacades` behaves as if `netstandard.dll` was not
-		     available in the framework directories and will expand the facades if required.
-		-->
-		<NETStandardInbox Condition="'$(NETStandardInbox)' == ''">false</NETStandardInbox>
+		<ImplicitlyExpandNETStandardFacades>False</ImplicitlyExpandNETStandardFacades>
 	</PropertyGroup>
 
 	<!-- Do not resolve from the GAC in Modern or Full unless allow-unsafe-gac-resolution is passed in -->
