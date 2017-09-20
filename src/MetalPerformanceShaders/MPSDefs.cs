@@ -39,7 +39,7 @@ namespace XamCore.MetalPerformanceShaders {
 		FloatBit = 0x10000000,
 		Float16 = FloatBit | 16,
 		Float32 = FloatBit | 32,
-		NormalizedBit = 1073741824,
+		NormalizedBit = 0x40000000,
 		Unorm1 = NormalizedBit | 1,
 		Unorm8 = NormalizedBit | 8,
 	}
