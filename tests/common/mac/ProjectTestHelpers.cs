@@ -43,6 +43,7 @@ namespace Xamarin.MMP.Tests
 			public string AssemblyName { get; set; } = "";
 			public string ItemGroup { get; set; } = "";
 			public string SystemMonoVersion { get; set; } = "";
+			public string TargetFrameworkVersion { get; set; } = "";
 
 			// Binding project specific
 			public string APIDefinitionConfig { get; set; }
@@ -147,10 +148,11 @@ namespace Xamarin.MMP.Tests
 		static string ProjectTextReplacement (UnifiedTestConfig config, string text)
 		{
 			return text.Replace ("%CODE%", config.CSProjConfig)
-				       .Replace ("%REFERENCES%", config.References)
-				       .Replace ("%REFERENCES_BEFORE_PLATFORM%", config.ReferencesBeforePlatform)
-				       .Replace ("%NAME%", config.AssemblyName ?? Path.GetFileNameWithoutExtension (config.ProjectName))
-				       .Replace ("%ITEMGROUP%", config.ItemGroup);
+					   .Replace ("%REFERENCES%", config.References)
+					   .Replace ("%REFERENCES_BEFORE_PLATFORM%", config.ReferencesBeforePlatform)
+					   .Replace ("%NAME%", config.AssemblyName ?? Path.GetFileNameWithoutExtension (config.ProjectName))
+					   .Replace ("%ITEMGROUP%", config.ItemGroup)
+					   .Replace ("%TARGET_FRAMEWORK_VERSION%", config.TargetFrameworkVersion);
 		}
 
 		public static string RunEXEAndVerifyGUID (string tmpDir, Guid guid, string path)
@@ -204,6 +206,23 @@ namespace Xamarin.MMP.Tests
 			return CopyFileWithSubstitutions (Path.Combine (sourceDir, config.ProjectName + projectSuffix), Path.Combine (config.TmpDir, config.ProjectName + projectSuffix), text => {
 				return ProjectTextReplacement (config, text);
 			});
+		}
+
+		public static string GenerateNetStandardProject (UnifiedTestConfig config)
+		{
+			const string SourceFile = "Class1.cs";
+			const string ProjectFile = "NetStandardLib.csproj";
+			const string NetStandardSubDir = "NetStandard";
+
+			string sourceDir = FindSourceDirectory ();
+
+			Directory.CreateDirectory (Path.Combine (config.TmpDir, NetStandardSubDir));
+			File.Copy (Path.Combine (sourceDir, NetStandardSubDir, SourceFile), Path.Combine (config.TmpDir, NetStandardSubDir, SourceFile), true);
+
+			string projectPath = Path.Combine (config.TmpDir, NetStandardSubDir, ProjectFile);
+			File.Copy (Path.Combine (sourceDir, NetStandardSubDir, ProjectFile), projectPath, true);
+
+			return projectPath;
 		}
 
 		public static string GetUnifiedExecutableProjectName (UnifiedTestConfig config)
