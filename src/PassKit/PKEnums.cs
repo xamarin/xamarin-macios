@@ -19,6 +19,7 @@ namespace XamCore.PassKit {
 
 	// NSInteger -> PKPass.h
 	[iOS (6,0)]
+	[ErrorDomain ("PKPassKitErrorDomain")]
 	[Native]
 	public enum PKPassKitErrorCode : nint {
 		Unknown = -1,
@@ -54,9 +55,19 @@ namespace XamCore.PassKit {
 	public enum PKPaymentAuthorizationStatus : nint {
 		Success,
 		Failure,
+
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentBillingAddressInvalidError'.")]
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentBillingAddressInvalidError'.")]
 		InvalidBillingPostalAddress,
+
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentShippingAddressInvalidError'.")]
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentShippingAddressInvalidError'.")]
 		InvalidShippingPostalAddress,
+
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentContactInvalidError'.")]
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'Failure' and 'PKPaymentRequest.CreatePaymentContactInvalidError'.")]
 		InvalidShippingContact,
+
 		[iOS (9,2)]
 		PinRequired,
 		[iOS (9,2)]
@@ -80,6 +91,8 @@ namespace XamCore.PassKit {
 	}
 
 	[Watch (3,0)]
+	[Deprecated (PlatformName.iOS, 11,0, message: "Use 'PKContactField' instead.")]
+	[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'PKContactField' instead.")]
 	[Native]
 	[Flags]
 	public enum PKAddressField : nuint {
@@ -174,5 +187,15 @@ namespace XamCore.PassKit {
 	public enum PKAddPassButtonStyle : nint {
 		Black = 0,
 		Outline
+	}
+
+	[Watch (4,0)][iOS (11,0)]
+	[ErrorDomain ("PKPaymentErrorDomain")]
+	[Native]
+	public enum PKPaymentErrorCode : nint {
+		Unknown = -1,
+		ShippingContactInvalid = 1,
+		BillingContactInvalid,
+		ShippingAddressUnserviceable,
 	}
 }

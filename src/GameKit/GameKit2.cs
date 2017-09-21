@@ -272,7 +272,7 @@ namespace XamCore.GameKit {
 	public partial class GKVoiceChat {
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use PlayerStateUpdateHandler property")]
+		[Obsolete ("Use 'PlayerStateUpdateHandler' property.")]
 		public virtual void SetPlayerStateUpdateHandler (GKPlayerStateUpdateHandler handler)
 		{
 			PlayerStateUpdateHandler = handler;
@@ -280,7 +280,7 @@ namespace XamCore.GameKit {
 #endif
 
 #if !XAMCORE_3_0
-		[Obsolete ("Use SetMute(bool,string) method")]
+		[Obsolete ("Use 'SetMute (bool, string)' method.")]
 		public virtual void SetMute (bool isMuted, GKPlayer player)
 		{
 			SetMute (isMuted, player == null ? null : player.PlayerID);

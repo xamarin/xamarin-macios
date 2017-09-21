@@ -33,6 +33,7 @@ using XamCore.Foundation;
 
 namespace XamCore.CoreVideo {
 
+	[Watch (4,0)]
 	[iOS (4,0)]
 	public static class CVPixelFormatDescription {
 #if !COREBUILD

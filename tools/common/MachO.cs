@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 
+#if MLAUNCH
+using Xamarin.Launcher;
+#else
 using Xamarin.Bundler;
+#endif
 
 namespace Xamarin
 {

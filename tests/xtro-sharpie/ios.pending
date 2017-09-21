@@ -150,6 +150,12 @@
 !wrong-enum-size! MessageComposeResult managed 4 vs native 8
 
 
+# Metal
+
+## only on macOS (but removing would be a vreaking change)
+!unknown-native-enum! MTLSamplerBorderColor bound
+
+
 # Speech
 ## iOS 10 beta 1 - use a non-public type in the signature https://trello.com/c/s6s6YKua
 !missing-selector! SFSpeechRecognizer::prepareWithRequest: not bound
@@ -256,17 +262,13 @@
 
 # Intents API iOS 10
 
-## Deprecated in Xcode 8 beta NS_DEPRECATED(10_12, 10_12, 10_0, 10_0) / pragma mark - Deprecated
-!missing-selector! INRideDriver::initWithHandle:displayName:image:rating:phoneNumber: not bound
-!missing-selector! INRideDriver::initWithHandle:nameComponents:image:rating:phoneNumber: not bound
-!missing-selector! INRideOption::identifier not bound
-!missing-selector! INRideOption::setIdentifier: not bound
-
 ## INPayBillIntentHandling && INSearchForBillsIntentHandling are new protocols added in iOS 10.3. This two protocols
 ## were added to the existing Protocol INPaymentsDomainHandling so making this two required would be a breaking change
 !incorrect-protocol-member! INPayBillIntentHandling::handlePayBill:completion: is REQUIRED and should be abstract
 !incorrect-protocol-member! INSearchForBillsIntentHandling::handleSearchForBills:completion: is REQUIRED and should be abstract
 
+## Apple made this protocol member optional in iOS 11 but it is a breaking change for us. Added to XAMCORE_4_0.
+!incorrect-protocol-member! INUIHostedViewControlling::configureWithInteraction:context:completion: is OPTIONAL and should NOT be abstract
 
 # UIKit
 
@@ -305,6 +307,8 @@
 !incorrect-protocol-member! UIViewControllerTransitionCoordinatorContext::isInterruptible is REQUIRED and should be abstract
 !incorrect-protocol-member! UIFocusEnvironment::preferredFocusEnvironments is REQUIRED and should be abstract
 !incorrect-protocol-member! UITextDocumentProxy::documentInputMode is REQUIRED and should be abstract
+!incorrect-protocol-member! UITextDocumentProxy::documentIdentifier is REQUIRED and should be abstract
+!incorrect-protocol-member! UITextDocumentProxy::selectedText is REQUIRED and should be abstract
 !incorrect-protocol-member! UILayoutSupport::bottomAnchor is REQUIRED and should be abstract
 !incorrect-protocol-member! UILayoutSupport::heightAnchor is REQUIRED and should be abstract
 !incorrect-protocol-member! UILayoutSupport::topAnchor is REQUIRED and should be abstract
@@ -318,9 +322,20 @@
 ## exception name, not clear if useful
 !missing-field! UIApplicationInvalidInterfaceOrientationException not bound
 
+## fixed for XAMCORE_4_0
+!incorrect-protocol-member! UIDocumentPickerDelegate::documentPicker:didPickDocumentAtURL: is OPTIONAL and should NOT be abstract
+
+## https://bugzilla.xamarin.com/show_bug.cgi?id=59422
+!missing-pinvoke! UIContentSizeCategoryCompareToCategory is not bound
+!missing-pinvoke! UIContentSizeCategoryIsAccessibilityCategory is not bound
 
 # WatchKit
 
 ## unfortunate duplicated name
 !duplicate-type-name! WKErrorCode enum exists as both WatchKit.WKErrorCode and WebKit.WKErrorCode
 !duplicate-type-name! WKErrorCode enum exists as both WebKit.WKErrorCode and WatchKit.WKErrorCode
+
+#PDFKit
+# PDFAnnotationPopup is not available on iOS also deprecated in macOS 10,12
+!missing-selector! PDFAnnotation::popup not bound
+!missing-selector! PDFAnnotation::setPopup: not bound

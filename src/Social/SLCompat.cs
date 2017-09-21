@@ -8,7 +8,7 @@ namespace XamCore.Social {
 
 	partial class SLComposeSheetConfigurationItem {
 
-		[Obsolete ("Use the TapHandler property")]
+		[Obsolete ("Use the 'TapHandler' property.")]
 		public virtual void SetTapHandler (Action tapHandler)
 		{
 			TapHandler = tapHandler;

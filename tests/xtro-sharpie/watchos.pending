@@ -69,6 +69,12 @@
 !missing-protocol-conformance! CMSensorDataList should conform to NSFastEnumeration
 
 
+# Foundation
+
+## type was not marked as unavailable before Xcode9
+!unknown-type! NSUbiquitousKeyValueStore bound
+
+
 # HealthKit
 
 ## deprecated API (removed in same version it was added)
@@ -110,6 +116,21 @@
 
 ## Waiting on a radar https://trello.com/c/h8xBlKTt
 !missing-selector! +INPreferences::requestSiriAuthorization: not bound
+
+## Bound with no availability information, removing them is a breaking change
+## but I am not sure if they should be in WatchOS since they are from last year
+## and seems that intro did not complain, also there are others INCar* that are
+## explicitly available in WatchOS
+!unknown-type! INCarAirCirculationModeResolutionResult bound
+!unknown-type! INCarAudioSourceResolutionResult bound
+!unknown-type! INCarDefrosterResolutionResult bound
+!unknown-type! INCarSeatResolutionResult bound
+!unknown-type! INRadioTypeResolutionResult bound
+!unknown-type! INRelativeReferenceResolutionResult bound
+!unknown-type! INRelativeSettingResolutionResult bound
+
+## Added and removed in watchOS 4
+!missing-selector! +INNotebookItemTypeResolutionResult::disambiguationWithValuesToDisambiguate: not bound
 
 #PassKit
 

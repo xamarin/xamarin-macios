@@ -805,6 +805,7 @@ SIM_ACVARS = \
 	$(COMMON_ACVARS) \
 	ac_cv_func_clock_nanosleep=no \
 	mono_cv_uscore=yes \
+	ac_cv_func_system=no \
 
 define SimulatorBuildTemplate
 
@@ -1856,6 +1857,7 @@ endif
 
 LLVM_BASE_CONFIGURE_FLAGS=--enable-libcpp --enable-optimized --enable-assertions=no --disable-jit --disable-docs --disable-doxygen
 LLVM_CXXFLAGS=$(CCACHE_CXXFLAGS)
+LLVM_BASE_CONFIGURE_ENVIRONMENT=$(COMMON_ACVARS)
 
 # This is used just for linking with the 32 bit cross compiler
 # FIXME: Avoid building the libs not needed by mono
@@ -1863,6 +1865,7 @@ LLVM_CXXFLAGS=$(CCACHE_CXXFLAGS)
 	@mkdir -p llvm/
 	@echo "Configuring llvm"
 	@cd llvm && \
+	$(LLVM_BASE_CONFIGURE_ENVIRONMENT) \
 	$(abspath $(LLVM_PATH)/configure) --prefix=$$PWD/usr --build=i386-apple-darwin10.7  --enable-targets="arm" $(LLVM_BASE_CONFIGURE_FLAGS) --cache-file=../llvm.config.cache CC="$(CCACHE)clang" CXX="$(CCACHE)clang++" CXXFLAGS="$(LLVM_CXXFLAGS)" > $@.log 2>&1 || (echo "Configuring llvm failed:" && cat $@.log | sed "s/^/    /" && exit 1)
 	$(Q) @touch $@
 	@echo Configured llvm
@@ -1871,6 +1874,7 @@ LLVM_CXXFLAGS=$(CCACHE_CXXFLAGS)
 	@mkdir -p llvm64/
 	@echo "Configuring llvm64"
 	@cd llvm64 && \
+	$(LLVM_BASE_CONFIGURE_ENVIRONMENT) \
 	$(abspath $(LLVM_PATH)/configure) --prefix=$$PWD/usr --enable-targets="arm arm64" $(LLVM_BASE_CONFIGURE_FLAGS) --cache-file=../llvm64.config.cache CC="$(CCACHE)clang" CXX="$(CCACHE)clang++" CXXFLAGS="-Qunused-arguments" > $@.log 2>&1 || (echo "Configuring llvm64 failed:" && cat $@.log | sed "s/^/    /" && exit 1)
 	$(Q) @touch $@
 	@echo "Configured llvm64"

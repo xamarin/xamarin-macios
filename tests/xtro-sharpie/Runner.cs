@@ -25,18 +25,19 @@ namespace Extrospection {
 				new ObjCInterfaceCheck (),
 				new ObjCProtocolCheck (),
 				new SelectorCheck (),
+				new SimdCheck (),
 //				new ListNative (), // for debug
 			};
 			foreach (var assemblyName in assemblyNames) {
 				var name = Path.GetFileNameWithoutExtension (assemblyName);
 				if (name.EndsWith (".iOS", StringComparison.Ordinal))
-					Helpers.Platform = "ios";
+					Helpers.Platform = Helpers.Platforms.iOS;
 				else if (name.EndsWith (".Mac", StringComparison.Ordinal))
-					Helpers.Platform = "osx";
+					Helpers.Platform = Helpers.Platforms.macOS;
 				else if (name.EndsWith (".WatchOS", StringComparison.Ordinal))
-					Helpers.Platform = "watchos";
+					Helpers.Platform = Helpers.Platforms.watchOS;
 				else if (name.EndsWith (".TVOS", StringComparison.Ordinal))
-					Helpers.Platform = "tvos";
+					Helpers.Platform = Helpers.Platforms.tvOS;
 				managed_reader.Load (assemblyName);
 			}
 
@@ -60,7 +61,7 @@ namespace Extrospection {
 			"IOBluetooth", "IOBluetoothUI", "PubSub", "CryptoTokenKit", "DiscRecording", "DiscRecordingUI", "ImageCaptureCore", "OSAKit", "AudioVideoBridging", "Automator", "ImageCapture",
 
 			 // Maybe?
-			"ICADevices", "OpenDirectory", "IMServicePlugIn", "PreferencePanes", "ScreenSaver",
+			"ICADevices", "OpenDirectory", "IMServicePlugIn", "PreferencePanes", "ScreenSaver", "CoreMediaIO", "SecurityInterface",
 
 			 // Nope
 			"InstallerPlugins", "JavaVM", "ExceptionHandling", "JavaFrameEmbedding",
@@ -74,7 +75,7 @@ namespace Extrospection {
 			get {
 				if (_exclusionList == null) {
 					switch (Helpers.Platform) {
-					case "osx":
+					case Helpers.Platforms.macOS:
 						_exclusionList = macOSXExclusionList;
 						break;
 					default:
@@ -193,18 +194,19 @@ namespace Extrospection {
 		
 		public override void VisitDecl (Decl decl)
 		{
-			if (decl is FunctionDecl)
+			if (decl is FunctionDecl) {
 				;
-			else if (decl is VarDecl)
+			} else if (decl is VarDecl) {
 				;
-			else if (decl is ObjCProtocolDecl)
+			} else if (decl is ObjCProtocolDecl) {
 				;
-			else if (decl is ObjCInterfaceDecl)
+			} else if (decl is ObjCInterfaceDecl) {
 				;
-			else if (decl is EnumDecl)
+			} else if (decl is EnumDecl) {
 				;
-			else
+			} else {
 				Console.WriteLine ("{0}\t{1}", decl, decl.GetType ().Name);
+			}
 		}
 	}
 }

@@ -181,6 +181,7 @@ public class B : A {}
 				mtouch.CreateTemporaryApp ();
 				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.Abi = "armv7,arm64";
+				mtouch.TargetVer = "10.3"; // otherwise 32-bit build isn't possible
 				mtouch.DSym = false; // speeds up the test
 				mtouch.MSym = false; // speeds up the test
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
@@ -245,6 +246,7 @@ public class B : A {}
 				mtouch.NoStrip = true; // faster test
 				mtouch.NoSymbolStrip = string.Empty; // faster test
 				mtouch.Verbosity = 4; // This is needed to get mtouch to print the output we're verifying
+				mtouch.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
 				// Check that --llvm is passed to the AOT compiler for every assembly we AOT.
 				var assemblies_checked = 0;
@@ -374,6 +376,7 @@ public class B : A {}
 				extension.CreateTemporaryServiceExtension (extraCode: codeA);
 				extension.CreateTemporaryCacheDirectory ();
 				extension.Abi = abi;
+				extension.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
 				extension.Debug = debug;
 				extension.AssemblyBuildTargets.AddRange (assembly_build_targets);
 				extension.DSym = false; // faster test
@@ -386,6 +389,7 @@ public class B : A {}
 					mtouch.CreateTemporaryApp (extraCode: codeA);
 					mtouch.CreateTemporaryCacheDirectory ();
 					mtouch.Abi = abi;
+					mtouch.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
 					mtouch.Debug = debug;
 					mtouch.AssemblyBuildTargets.AddRange (assembly_build_targets);
 					mtouch.DSym = false; // faster test
@@ -903,6 +907,7 @@ public class B : A {}
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
 				mtouch.Abi = "armv7k";
+				mtouch.TargetVer = "10.3";
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
 				mtouch.AssertError (75, "Invalid architecture 'ARMv7k' for iOS projects. Valid architectures are: ARMv7, ARMv7+Thumb, ARMv7+LLVM, ARMv7+LLVM+Thumb, ARMv7s, ARMv7s+Thumb, ARMv7s+LLVM, ARMv7s+LLVM+Thumb, ARM64, ARM64+LLVM");
 			}
@@ -1002,7 +1007,10 @@ public class B : A {}
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.Sdk = sdk_version;
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
-				mtouch.AssertError (91, String.Format ("This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).", name, GetSdkVersion (profile), Configuration.XcodeVersion));
+				var xcodeVersionString = Configuration.XcodeVersion;
+				if (xcodeVersionString.EndsWith (".0", StringComparison.Ordinal))
+					xcodeVersionString = xcodeVersionString.Substring (0, xcodeVersionString.Length - 2);
+				mtouch.AssertError (91, String.Format ("This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).", name, GetSdkVersion (profile), xcodeVersionString));
 			}
 		}
 
@@ -1357,6 +1365,7 @@ public class B : A {}
 				extension.CreateTemporaryServiceExtension ();
 				extension.CreateTemporaryCacheDirectory ();
 				extension.Abi = extension_abi;
+				extension.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
 				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
 				using (var app = new MTouchTool ()) {
 					app.AppExtensions.Add (extension);
@@ -1364,6 +1373,7 @@ public class B : A {}
 					app.CreateTemporaryCacheDirectory ();
 					app.WarnAsError = new int [] { 113 };
 					app.Abi = app_abi;
+					app.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
 					app.AssertError (113, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the container app does not build for the ABI {error_abi} (while the extension is building for this ABI).");
 				}
@@ -1378,6 +1388,7 @@ public class B : A {}
 				extension.CreateTemporaryServiceExtension ();
 				extension.CreateTemporaryCacheDirectory ();
 				extension.Abi = extension_abi;
+				extension.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
 				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
 				using (var app = new MTouchTool ()) {
 					app.AppExtensions.Add (extension);
@@ -1385,6 +1396,7 @@ public class B : A {}
 					app.CreateTemporaryCacheDirectory ();
 					app.WarnAsError = new int [] { 113 };
 					app.Abi = app_abi;
+					app.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
 					app.AssertError (113, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the container app is building for the ABI {container_error_abi}, which is not compatible with the extension's ABI ({extension_error_abi}).");
 				}
@@ -1447,6 +1459,23 @@ public class B : A {}
 		}
 
 		[Test]
+		[TestCase ("armv7", "ARMv7")]
+		[TestCase ("armv7s", "ARMv7s")]
+		[TestCase ("armv7,armv7s", "ARMv7")]
+		[TestCase ("i386", "i386")]
+		public void MT0116 (string abi, string messageAbi)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.TargetVer = "11.0";
+				mtouch.Abi = abi;
+				mtouch.AssertExecuteFailure (abi == "i386" ? MTouchAction.BuildSim : MTouchAction.BuildDev, "build");
+				mtouch.AssertError (116, $"Invalid architecture: {messageAbi}. 32-bit architectures are not supported when deployment target is 11 or later.");
+			}
+		}
+
+		[Test]
 		public void MT0125 ()
 		{
 			using (var mtouch = new MTouchTool ()) {
@@ -1504,8 +1533,8 @@ public class BindingAppB {
 }
 ";
 
-				var bindingLibA = CreateBindingLibrary (tmpdir, nativeCodeA, null, null, extraCodeA, name: "bindingA");
-				var bindingLibB = CreateBindingLibrary (tmpdir, nativeCodeB, null, null, extraCodeB, name: "bindingB", references: new string [] { bindingLibA });
+				var bindingLibA = CreateBindingLibrary (tmpdir, nativeCodeA, null, null, extraCodeA, name: "bindingA", arch: "arm64");
+				var bindingLibB = CreateBindingLibrary (tmpdir, nativeCodeB, null, null, extraCodeB, name: "bindingB", references: new string [] { bindingLibA }, arch: "arm64");
 				var exe = CompileTestAppExecutable (tmpdir, @"
 public class TestApp { 
 	static void Main () {
@@ -1691,6 +1720,7 @@ public class TestApp {
 		{
 			switch (profile) {
 			case Profile.iOS:
+				return "x86_64";
 			case Profile.watchOS:
 				return "i386";
 			case Profile.tvOS:
@@ -1978,11 +2008,12 @@ public class TestApp {
 			{
 				Profile = Profile.iOS,
 				FastDev = true,
+				TargetVer = "10.3", // otherwise 32-bit build isn't possible
 				Abi = "armv7,arm64",
 			}) {
 				mtouch.CreateTemporaryApp ();
 
-				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev));
+				mtouch.AssertExecute (MTouchAction.BuildDev);
 				var bin = mtouch.NativeExecutablePath;
 				VerifyArchitectures (bin, "arm7s/64", "armv7", "arm64");
 				foreach (var dylib in Directory.GetFileSystemEntries (mtouch.AppPath, "*.dylib")) {
@@ -2037,27 +2068,28 @@ public class TestApp {
 		}
 
 		[Test]
-		[TestCase (Target.Dev, "armv7")]
-		[TestCase (Target.Dev, "armv7s")]
-		[TestCase (Target.Dev, "armv7,armv7s")]
-		[TestCase (Target.Dev, "arm64")]
-		[TestCase (Target.Dev, "arm64+llvm")]
-		[TestCase (Target.Dev, "armv7,arm64")]
-		[TestCase (Target.Dev, "armv7s,arm64")]
-		[TestCase (Target.Dev, "armv7,armv7s,arm64")]
-		[TestCase (Target.Sim, "i386")]
-		[TestCase (Target.Sim, "x86_64")]
-		public void Architectures_Unified (Target target, string abi)
+		[TestCase (Target.Dev, "armv7", "10.3")]
+		[TestCase (Target.Dev, "armv7s", "10.3")]
+		[TestCase (Target.Dev, "armv7,armv7s", "10.3")]
+		[TestCase (Target.Dev, "arm64", null)]
+		[TestCase (Target.Dev, "arm64+llvm", null)]
+		[TestCase (Target.Dev, "armv7,arm64", "10.3")]
+		[TestCase (Target.Dev, "armv7s,arm64", "10.3")]
+		[TestCase (Target.Dev, "armv7,armv7s,arm64", "10.3")]
+		[TestCase (Target.Sim, "i386", "10.3")]
+		[TestCase (Target.Sim, "x86_64", null)]
+		public void Architectures_Unified (Target target, string abi, string deployment_target)
 		{
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = Profile.iOS;
 				mtouch.CreateTemporaryApp ();
 
 				mtouch.Abi = abi;
+				mtouch.TargetVer = deployment_target;
 
 				var bin = Path.Combine (mtouch.AppPath, Path.GetFileNameWithoutExtension (mtouch.RootAssembly));
 
-				Assert.AreEqual (0, mtouch.Execute (target == Target.Dev ? MTouchAction.BuildDev : MTouchAction.BuildSim));
+				mtouch.AssertExecute (target == Target.Dev ? MTouchAction.BuildDev : MTouchAction.BuildSim);
 
 				VerifyArchitectures (bin, abi, abi.Replace ("+llvm", string.Empty).Split (','));
 			}
@@ -2071,6 +2103,7 @@ public class TestApp {
 				mtouch.CreateTemporaryApp ();
 
 				mtouch.Abi = "i386,x86_64";
+				mtouch.TargetVer = "10.3";
 
 				var bin = Path.Combine (mtouch.AppPath, Path.GetFileNameWithoutExtension (mtouch.RootAssembly));
 				var bin32 = Path.Combine (mtouch.AppPath, ".monotouch-32", Path.GetFileNameWithoutExtension (mtouch.RootAssembly));
@@ -2091,6 +2124,7 @@ public class TestApp {
 				mtouch.Profile = Profile.iOS;
 				mtouch.CreateTemporaryApp ();
 
+				mtouch.TargetVer = "10.3";
 				mtouch.Abi = "armv6";
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildDev));
 				mtouch.AssertError ("MT", 15, "Invalid ABI: armv6. Supported ABIs are: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, armv7k+llvm, arm64 and arm64+llvm.");
@@ -2143,6 +2177,7 @@ public class TestApp {
 				extension.CreateTemporaryServiceExtension ();
 				extension.CreateTemporaryCacheDirectory ();
 				extension.Abi = "armv7,arm64";
+				extension.TargetVer = "10.3";
 				extension.Linker = MTouchLinker.LinkAll; // faster test
 				extension.NoStrip = true; // faster test
 				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
@@ -2251,6 +2286,7 @@ public class TestApp {
 				mtouch.Linker = linker;
 				mtouch.Registrar = registrar;
 				mtouch.Abi = abi;
+				mtouch.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
 				mtouch.Timeout = TimeSpan.FromMinutes (5);
 				mtouch.AssertExecute (target == Target.Dev ? MTouchAction.BuildDev : MTouchAction.BuildSim, "build");
 				var fi = new FileInfo (mtouch.NativeExecutablePath);
@@ -2292,7 +2328,7 @@ public class BindingApp {
 	public static extern void DummyMethod ();
 }
 ";
-				var bindingLib = CreateBindingLibrary (tmpdir, nativeCode, null, null, extraCode);
+				var bindingLib = CreateBindingLibrary (tmpdir, nativeCode, null, null, extraCode, arch: "arm64");
 				var exe = CompileTestAppExecutable (tmpdir, @"
 public class TestApp { 
 	static void Main () {
@@ -2407,6 +2443,7 @@ public class TestApp {
 				mtouch.NoFastSim = true;
 				mtouch.Abi = "i386";
 				mtouch.GccFlags = StringUtils.Quote (lib);
+				mtouch.TargetVer = "10.3"; // otherwise 32-bit build isn't possible
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build a");
 				mtouch.AssertWarning (5203, $"Native linking warning: warning: ignoring file {lib}, file was built for archive which is not the architecture being linked (i386): {lib}");
 			}
@@ -2623,6 +2660,7 @@ class Test {
 }
 ";
 				mtouch.Abi = "armv7,arm64";
+				mtouch.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
 				mtouch.CreateTemporaryApp (code: code);
 				mtouch.CreateTemporaryCacheDirectory ();
 
@@ -2710,6 +2748,7 @@ class Test {
 				mtouch.RootAssembly = exe;
 				mtouch.References = new [] { DLL };
 				mtouch.Timeout = TimeSpan.FromMinutes (5);
+				mtouch.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
 
 				foreach (var test in tests) {
 					mtouch.Abi = test.Abi;
@@ -2729,6 +2768,7 @@ class Test {
 				mtouch.CreateTemporaryApp ();
 				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.Abi = "armv7,arm64";
+				mtouch.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
 				FileAssert.Exists (Path.Combine (mtouch.AppPath, "testApp.exe"));
 				// Don't check for mscorlib.dll, there might be two versions of it (since Xamarin.iOS.dll depends on it), or there might not.
@@ -2743,6 +2783,7 @@ class Test {
 				mtouch.CreateTemporaryApp ();
 				mtouch.GccFlags = "-all_load";
 				mtouch.Abi = "armv7,arm64";
+				mtouch.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
 			}
 		}
@@ -3327,12 +3368,12 @@ public class TestApp {
 				mtouch.EnvironmentVariables = new Dictionary<string, string> ();
 				mtouch.EnvironmentVariables ["LANG"] = culture;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build sim");
-				mtouch.AssertWarning (123, $"The current language was set to '{new CultureInfo (culture.Replace ('_', '-')).DisplayName}' according to the LANG environment variable (LANG={culture}).");
+				mtouch.AssertNoWarnings ();
 
 				mtouch.Debug = true; // faster
 				mtouch.Linker = MTouchLinker.LinkAll; // faster
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build dev");
-				mtouch.AssertWarning (123, $"The current language was set to '{new CultureInfo (culture.Replace ('_', '-')).DisplayName}' according to the LANG environment variable (LANG={culture}).");
+				mtouch.AssertNoWarnings ();
 			}
 		}
 
@@ -3435,7 +3476,7 @@ public class Dummy {
     <MtouchDebug>True</MtouchDebug>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchArch>i386, x86_64</MtouchArch>
+    <MtouchArch>x86_64</MtouchArch>
     <MtouchLink>None</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition="" '$(Configuration)|$(Platform)' == 'Debug|iPhone' "">
@@ -3447,7 +3488,7 @@ public class Dummy {
     <MtouchDebug>True</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
+    <MtouchArch>ARM64</MtouchArch>
     <MtouchLink>Full</MtouchLink>
   </PropertyGroup>
   <ItemGroup>
@@ -3520,9 +3561,9 @@ public class Dummy {
 			return assembly;
 		}
 
-		static string CreateBindingLibrary (string targetDirectory, string nativeCode, string bindingCode, string linkWith = null, string extraCode = "", string name = "binding", string[] references = null)
+		static string CreateBindingLibrary (string targetDirectory, string nativeCode, string bindingCode, string linkWith = null, string extraCode = "", string name = "binding", string[] references = null, string arch = "armv7")
 		{
-			var o = CompileNativeLibrary (targetDirectory, nativeCode, name: name);
+			var o = CompileNativeLibrary (targetDirectory, nativeCode, name: name, arch: arch);
 			var cs = Path.Combine (targetDirectory, $"{name}Code.cs");
 			var dll = Path.Combine (targetDirectory, $"{name}Library.dll");
 

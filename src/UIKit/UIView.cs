@@ -118,7 +118,7 @@ namespace XamCore.UIKit {
 			}
 		}
 
-		[Advice ("Use the *Notify method that has `UICompletionHandler completion` parameter, the `bool` will tell you if the operation finished")]
+		[Advice ("Use the *Notify method that has 'UICompletionHandler completion' parameter, the 'bool' will tell you if the operation finished.")]
 		public static void Animate (double duration, NSAction animation, NSAction completion)
 		{
 			// animation null check will be done in AnimateNotify
@@ -128,7 +128,7 @@ namespace XamCore.UIKit {
 			});
 		}
 
-		[Advice ("Use the *Notify method that has `UICompletionHandler completion` parameter, the `bool` will tell you if the operation finished")]
+		[Advice ("Use the *Notify method that has 'UICompletionHandler completion' parameter, the 'bool' will tell you if the operation finished.")]
 		public static void Animate (double duration, double delay, UIViewAnimationOptions options, NSAction animation, NSAction completion)
 		{
 			// animation null check will be done in AnimateNotify
@@ -138,7 +138,7 @@ namespace XamCore.UIKit {
 			});
 		}
 
-		[Advice ("Use the *Notify method that has `UICompletionHandler completion` parameter, the `bool` will tell you if the operation finished")]
+		[Advice ("Use the *Notify method that has 'UICompletionHandler completion' parameter, the 'bool' will tell you if the operation finished.")]
 		public static void Transition (UIView fromView, UIView toView, double duration, UIViewAnimationOptions options, NSAction completion)
 		{
 			TransitionNotify (fromView, toView, duration, options, (x) => {
@@ -147,7 +147,7 @@ namespace XamCore.UIKit {
 			});
 		}
 
-		[Advice ("Use the *Notify method that has `UICompletionHandler completion` parameter, the `bool` will tell you if the operation finished")]
+		[Advice ("Use the *Notify method that has 'UICompletionHandler completion' parameter, the 'bool' will tell you if the operation finished.")]
 		public static void Transition (UIView withView, double duration, UIViewAnimationOptions options, NSAction animation, NSAction completion)
 		{
 			// animation null check will be done in AnimateNotify
@@ -158,14 +158,14 @@ namespace XamCore.UIKit {
 		}
 
 #if !XAMCORE_2_0
-		[Advice ("Use the version with a `ref float actualFontSize`")]
+		[Advice ("Use the version with a 'ref float actualFontSize'.")]
 		public CGSize DrawString (string str, CGPoint point, nfloat width, XamCore.UIKit.UIFont font, nfloat minFontSize, nfloat actualFontSize, XamCore.UIKit.UILineBreakMode breakMode, XamCore.UIKit.UIBaselineAdjustment adjustment)
 		{
 			nfloat temp = actualFontSize;
 			return DrawString (str, point, width, font, minFontSize, ref temp, breakMode, adjustment);
 		}
 
-		[Obsolete ("Use TranslatesAutoresizingMaskIntoConstraints")]
+		[Obsolete ("Use 'TranslatesAutoresizingMaskIntoConstraints'.")]
 		bool TranslatesAutoresizingMaskIntoConstrainst { 
 			get { return TranslatesAutoresizingMaskIntoConstraints; }
 			set { TranslatesAutoresizingMaskIntoConstraints = value; }

@@ -6,26 +6,20 @@ namespace XamCore.HomeKit {
 
 	partial class HMEventTrigger {
 
-		internal static NSString GetEnumConstant (HMSignificantEvent value)
-		{
-			switch (value) {
-			case HMSignificantEvent.Sunrise:
-				return HMSignificantEventInternal.Sunrise;
-			case HMSignificantEvent.Sunset:
-				return HMSignificantEventInternal.Sunset;
-			default:
-				return null;
-			}
-		}
-
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CreatePredicateForEvaluatingTriggerOccurringBeforeSignificantEvent (HMSignificantTimeEvent)' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CreatePredicateForEvaluatingTriggerOccurringBeforeSignificantEvent (HMSignificantTimeEvent)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CreatePredicateForEvaluatingTriggerOccurringBeforeSignificantEvent (HMSignificantTimeEvent)' instead.")]
 		static public NSPredicate CreatePredicateForEvaluatingTriggerOccurringBeforeSignificantEvent (HMSignificantEvent significantEvent, NSDateComponents offset)
 		{
-			return CreatePredicateForEvaluatingTriggerOccurringBeforeSignificantEvent (GetEnumConstant (significantEvent), offset);
+			return CreatePredicateForEvaluatingTriggerOccurringBeforeSignificantEvent (significantEvent.GetConstant (), offset);
 		}
 
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CreatePredicateForEvaluatingTriggerOccurringAfterSignificantEvent (HMSignificantTimeEvent)' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CreatePredicateForEvaluatingTriggerOccurringAfterSignificantEvent (HMSignificantTimeEvent)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CreatePredicateForEvaluatingTriggerOccurringAfterSignificantEvent (HMSignificantTimeEvent)' instead.")]
 		static public NSPredicate CreatePredicateForEvaluatingTriggerOccurringAfterSignificantEvent (HMSignificantEvent significantEvent, NSDateComponents offset)
 		{
-			return CreatePredicateForEvaluatingTriggerOccurringAfterSignificantEvent (GetEnumConstant (significantEvent), offset);
+			return CreatePredicateForEvaluatingTriggerOccurringAfterSignificantEvent (significantEvent.GetConstant (), offset);
 		}
 	}
 }

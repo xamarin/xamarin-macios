@@ -312,7 +312,7 @@ namespace XamCore.Security {
 		InvalidCertAuthority				= -67826,	/* The certificate authority was not valid. */
 		InvalidCRLAuthority					= -67827,	/* The CRL authority was not valid. */
 #if MONOMAC
-		[Obsolete ("Use InvalidCRLAuthority")]
+		[Obsolete ("Use InvalidCRLAuthority.")]
 		InvaldCRLAuthority					= InvalidCRLAuthority,
 #endif
 		InvalidCRLEncoding					= -67828,	/* The CRL encoding was not valid. */
@@ -341,7 +341,7 @@ namespace XamCore.Security {
 		InvalidBaseACLs						= -67851,	/* The base ACLs are not valid. */
 		InvalidTupleCredentials				= -67852,	/* The tuple credentials are not valid. */
 #if MONOMAC
-		[Obsolete ("Use InvalidTupleCredentials")]
+		[Obsolete ("Use InvalidTupleCredentials.")]
 		InvalidTupleCredendtials			= InvalidTupleCredentials,
 #endif
 		InvalidEncoding						= -67853,	/* The encoding was not valid. */
@@ -404,10 +404,10 @@ namespace XamCore.Security {
 		[iOS (8,3)]
 		Raw       = 0x4000,
 
-		[Obsolete ("Hash algorithm is deprecated")][NoTV][NoWatch]
+		[Obsolete ("Don't use hash algorithm.")][NoTV][NoWatch]
 		PKCS1MD2  = 0x8000,
 
-		[Obsolete ("Hash algorithm is deprecated")][NoTV][NoWatch]
+		[Obsolete ("Don't use hash algorithm.")][NoTV][NoWatch]
 		PKCS1MD5  = 0x8001,
 
 		PKCS1SHA1 = 0x8002,

@@ -93,6 +93,7 @@ namespace Extrospection {
 				string s_export = null;
 				bool is_required = false;
 				bool is_property = false;
+				bool is_static = false;
 				switch (ca.Constructor.DeclaringType.Name) {
 				case "ProtocolMemberAttribute":
 					foreach (var p in ca.Properties) {
@@ -112,18 +113,28 @@ namespace Extrospection {
 						case "IsProperty":
 							is_property = (bool)p.Argument.Value;
 							break;
+						case "IsStatic":
+							is_static = (bool)p.Argument.Value;
+							break;
 						}
 					}
 					break;
 				}
 				if (is_property) {
-					if (g_export != null)
+					if (g_export != null) {
+						if (is_static)
+							g_export = "+" + g_export;
 						map.Add (g_export, is_required);
-					if (s_export != null)
+					}
+					if (s_export != null) {
+						if (is_static)
+							s_export = "+" + s_export;
 						map.Add (s_export, is_required);
-				} else {
-					if (export != null)
-						map.Add (export, is_required);
+					}
+				} else if (export != null) {
+					if (is_static)
+						export = "+" + export;
+					map.Add (export, is_required);
 				}
 			}
 
@@ -142,6 +153,9 @@ namespace Extrospection {
 				// a .NET interface cannot have constructors - so we cannot enforce that on the interface
 				if (IsInit (selector))
 					continue;
+
+				if (method.IsClassMethod)
+					selector = "+" + selector;
 
 				bool is_abstract;
 				if (map.TryGetValue (selector, out is_abstract)) {

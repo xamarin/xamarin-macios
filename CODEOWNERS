@@ -1,0 +1,190 @@
+# Xamarin.iOS/Mac Code Owners File
+#
+# GitHub uses this file to determine who to assign for reviews
+# on pull requests. Please keep this file alphabetically sorted.
+#
+# References:
+#
+# https://github.com/blog/2392-introducing-code-owners
+# https://help.github.com/articles/about-codeowners
+
+/builds @rolfbjarne
+
+/docs @spouliot
+
+/mk @rolfbjarne
+
+/msbuild @kzu @jstedfast @emaf @rolfbjarne @VincentDondain
+
+/runtime @rolfbjarne
+
+/src/AddressBook @dalexsoto
+/src/addressbook.cs @dalexsoto
+/src/AppKit @chamons @timrisi
+/src/appkit.cs @chamons @timrisi
+/src/ARKit @VincentDondain
+/src/arkit.cs @VincentDondain
+/src/AudioToolbox @dalexsoto
+/src/audiotoolbox.cs @dalexsoto
+/src/AudioUnit @dalexsoto
+/src/audiounit.cs @dalexsoto
+/src/AVFoundation @mandel-macaque @dalexsoto
+/src/avfoundation.cs @mandel-macaque @dalexsoto
+/src/AVKit @spouliot @dalexsoto
+/src/avkit.cs @spouliot @dalexsoto
+/src/CallKit @dalexsoto
+/src/callkit.cs @dalexsoto
+/src/CFNetwork @spouliot
+/src/cfnetwork.cs @spouliot
+/src/CloudKit @mandel-macaque
+/src/cloudkit.cs @mandel-macaque
+/src/Contacts @dalexsoto @spouliot
+/src/contacts.cs @dalexsoto @spouliot
+/src/CoreAudio @dalexsoto
+/src/coreaudio.cs @dalexsoto
+/src/CoreBluetooth @VincentDondain @dalexsoto
+/src/corebluetooth.cs @VincentDondain @dalexsoto
+/src/CoreData @mandel-macaque
+/src/coredata.cs @mandel-macaque
+/src/CoreFoundation @rolfbjarne @spouliot
+/src/corefoundation.cs @rolfbjarne @spouliot
+/src/CoreGraphics @spouliot
+/src/coregraphics.cs @spouliot
+/src/CoreImage @spouliot
+/src/coreimage.cs @spouliot
+/src/CoreLocation @dalexsoto @spouliot
+/src/corelocation.cs @dalexsoto @spouliot
+/src/CoreMedia @dalexsoto
+/src/coremedia.cs @dalexsoto
+/src/CoreMIDI @dalexsoto
+/src/coremidi.cs @dalexsoto
+/src/CoreML @dalexsoto
+/src/coreml.cs @dalexsoto
+/src/CoreMotion @spouliot
+/src/coremotion.cs @spouliot
+/src/CoreSpotlight @dalexsoto @spouliot
+/src/corespotlight.cs @dalexsoto @spouliot
+/src/CoreTelephony @spouliot
+/src/coretelephony.cs @spouliot
+/src/CoreText @VincentDondain
+/src/coretext.cs @VincentDondain
+/src/CoreVideo @dalexsoto @spouliot @rolfbjarne
+/src/corevideo.cs @dalexsoto @spouliot @rolfbjarne
+/src/EventKit @dalexsoto @spouliot
+/src/eventkit.cs @dalexsoto @spouliot
+/src/ExternalAccessory @dalexsoto @spouliot
+/src/externalaccessory.cs @dalexsoto @spouliot
+/src/Foundation @spouliot @rolfbjarne @chamons
+/src/foundation.cs @spouliot @rolfbjarne @chamons
+/src/GameController @VincentDondain @spouliot
+/src/gamecontroller.cs @VincentDondain @spouliot
+/src/GameKit @VincentDondain
+/src/gamekit.cs @VincentDondain
+/src/GameplayKit @dalexsoto
+/src/gameplaykit.cs @dalexsoto
+/src/generator* @dalexsoto @spouliot @rolf @VincentDondain
+/src/GLKit @dalexsoto @spouliot
+/src/glkit.cs @dalexsoto @spouliot
+/src/HealthKit @VincentDondain
+/src/healthkit.cs @VincentDondain
+/src/HomeKit @VincentDondain
+/src/homekit.cs @VincentDondain
+/src/iad.cs @spouliot
+/src/iAd.framework @spouliot
+/src/ImageIO @spouliot
+/src/imageio.cs @spouliot
+/src/Intents @dalexsoto
+/src/intents.cs @dalexsoto
+/src/IntentsUI @dalexsoto
+/src/intentsui.cs @dalexsoto
+/src/JavaScriptCore @rolfbjarne
+/src/javascriptcore.cs @rolfbjarne
+/src/LocalAuthentication @spouliot
+/src/localauthentication.cs @spouliot
+/src/MapKit @spouliot
+/src/mapkit.cs @spouliot
+/src/MediaPlayer @VincentDondain
+/src/mediaplayer.cs @VincentDondain
+/src/Messages @VincentDondain
+/src/messages.cs @VincentDondain
+/src/MessageUI @VincentDondain
+/src/messageui.cs @VincentDondain
+/src/Metal @mandel-macaque
+/src/metal.cs @mandel-macaque
+/src/MetalKit @spouliot
+/src/metalkit.cs @spouliot
+/src/MetalPerformanceShaders @spouliot
+/src/metalperformanceshaders.cs @spouliot
+/src/MobileCoreServices @spouliot
+/src/mobilecoreservices.cs @spouliot
+/src/ModelIO @VincentDondain
+/src/modelio.cs @VincentDondain
+/src/MultipeerConnectivity @spouliot
+/src/multipeerconnectivity.cs @spouliot
+/src/NetworkExtension @spouliot
+/src/networkextension.cs @spouliot
+/src/NotificationCenter @spouliot
+/src/notificationcenter.cs @spouliot
+/src/OpenGLES @spouliot
+/src/opengles.cs @spouliot
+/src/PassKit @spouliot
+/src/passkit.cs @spouliot
+/src/Photos @dalexsoto @spouliot
+/src/photos.cs @dalexsoto @spouliot
+/src/PhotosUI @dalexsoto @spouliot
+/src/photosui.cs @dalexsoto @spouliot
+/src/PushKit @dalexsoto @spouliot
+/src/pushkit.cs @dalexsoto @spouliot
+/src/QuartzCore @spouliot
+/src/quartzcore.cs @spouliot
+/src/QuickLook @spouliot
+/src/quicklook.cs @spouliot
+/src/ReplayKit @spouliot
+/src/replaykit.cs @spouliot
+/src/SafariServices @timrisi
+/src/safariservices.cs @timrisi
+/src/SceneKit @dalexsoto @VincentDondain
+/src/scenekit.cs @dalexsoto @VincentDondain
+/src/Security @dalexsoto @spouliot
+/src/security.cs @dalexsoto @spouliot
+/src/Speech @dalexsoto
+/src/speech.cs @dalexsoto
+/src/SpriteKit @VincentDondain
+/src/spritekit.cs @VincentDondain
+/src/SystemConfiguration @spouliot
+/src/systemconfiguration.cs @spouliot
+/src/UIKit @dalexsoto @spouliot @rolfbjarne @VincentDondain
+/src/uikit.cs @dalexsoto @spouliot @rolfbjarne @VincentDondain
+/src/UserNotifications @dalexsoto
+/src/usernotifications.cs @dalexsoto
+/src/UserNotificationsUI @dalexsoto
+/src/usernotificationsui.cs @dalexsoto
+/src/VideoSubscriberAccount @dalexsoto
+/src/videosubscriberaccount.cs @dalexsoto
+/src/VideoToolbox @spouliot
+/src/videotoolbox.cs @spouliot
+/src/Vision @dalexsoto
+/src/vision.cs @dalexsoto
+/src/WatchConnectivity @spouliot @rolfbjarne
+/src/watchconnectivity.cs @spouliot @rolfbjarne
+/src/WatchKit @spouliot @rolf
+/src/watchkit.cs @spouliot @rolf
+/src/WebKit @chamons
+/src/webkit.cs @chamons
+/src/WKWebKit @spouliot
+/src/wkwebkit.cs @spouliot
+
+/tests/xharness @rolfbjarne
+/tests/xtro-sharpie @spouliot
+
+/tools/common @rolfbjarne @chamons @spouliot
+/tools/common/StaticRegistrar.cs @rolfbjarne
+/tools/linker @spouliot
+/tools/mmp @chamons
+/tools/mtouch @spouliot @rolfbjarne
+/tools/pmcs @abock
+
+configure @rolfbjarne
+Make.* @rolfbjarne
+Makefile @rolfbjarne
+system-dependencies.sh @rolfbjarne

@@ -42,7 +42,10 @@ namespace XamCore.SceneKit {
 	[Native]
 	public enum SCNTransparencyMode : nint {
 		AOne,
-		RgbZero
+		RgbZero,
+		SingleLayer = 2,
+		DualLayer = 3,
+		Default = AOne,
 	}
 
 	[Watch (3,0)]
@@ -306,7 +309,8 @@ namespace XamCore.SceneKit {
 		Subtract = 2,
 		Multiply = 3,
 		Screen = 4,
-		Replace = 5
+		Replace = 5,
+		Max = 6,
 	}
 
 	[Watch (3,0)]
@@ -321,7 +325,12 @@ namespace XamCore.SceneKit {
 		ShowLightInfluences = 1 << 2,
 		ShowLightExtents = 1 << 3,
 		ShowPhysicsFields = 1 << 4,
-		ShowWireframe = 1 << 5
+		ShowWireframe = 1 << 5,
+		RenderAsWireframe = 1 << 6,
+		ShowSkeletons = 1 << 7,
+		ShowCreases = 1 << 8,
+		ShowConstraints = 1 << 9,
+		ShowCameras = 1 << 10,
 	}
 
 	[Watch (3,0)]
@@ -355,5 +364,72 @@ namespace XamCore.SceneKit {
 	public enum SCNMovabilityHint : nint {
 		Fixed,
 		Movable
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Native]
+	public enum SCNColorMask : nint
+	{
+		None = 0,
+		Red = 1 << 3,
+		Green = 1 << 2,
+		Blue = 1 << 1,
+		Alpha = 1 << 0,
+		All = 15,
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Native]
+	public enum SCNInteractionMode : nint
+	{
+		Fly,
+		OrbitTurntable,
+		OrbitAngleMapping,
+		OrbitCenteredArcball,
+		OrbitArcball,
+		Pan,
+		Truck,
+	}
+		
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Native]
+	public enum SCNFillMode : nuint
+	{
+		Fill = 0,
+		Lines = 1,
+	}
+
+	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+	[Native]
+	public enum SCNTessellationSmoothingMode : nint
+	{
+		None = 0,
+		PNTriangles,
+		Phong,
+	}
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Native]
+	public enum SCNHitTestSearchMode : nint
+	{
+		Closest = 0,
+		All = 1,
+		Any = 2,
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Native]
+	public enum SCNCameraProjectionDirection : nint
+	{
+		Vertical = 0,
+		Horizontal = 1,
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Native]
+	public enum SCNNodeFocusBehavior : nint
+	{
+		None = 0,
+		Occluding,
+		Focusable,
 	}
 }

@@ -33,13 +33,43 @@ Copyright (c) 2017 Microsoft Corp. (www.microsoft.com)
 	</PropertyGroup>
 
 	<!-- Implicitly references all portable design-time facades if the user is referencing a System.Runtime-based portable library -->
+
+	<UsingTask
+		TaskName="GetDependsOnNETStandard"
+		Condition="'$(IsXBuild)' != 'true' and Exists('$(MSBuildExtensionsPath)\Microsoft\Microsoft.NET.Build.Extensions\tools\net46\Microsoft.NET.Build.Extensions.Tasks.dll')"
+		AssemblyFile="$(MSBuildExtensionsPath)\Microsoft\Microsoft.NET.Build.Extensions\tools\net46\Microsoft.NET.Build.Extensions.Tasks.dll" />
+
 	<Target Name="ImplicitlyExpandDesignTimeFacades" DependsOnTargets="$(ImplicitlyExpandDesignTimeFacadesDependsOn)">
+		<ItemGroup>
+			<XM_CandidateNETStandardReferences Include="@(Reference);@(_ResolvedProjectReferencePaths)" />
+			<XM_InboxNETStandardFolders Include="$(TargetFrameworkDirectory)" />
+		</ItemGroup>
+
 		<PropertyGroup>
 			<!-- Does one of our dependencies reference a System.Runtime-based portable library? -->
 			<_HasReferenceToSystemRuntime Condition="'$(DependsOnSystemRuntime)' == 'true' or '%(_ResolvedProjectReferencePaths.TargetPlatformIdentifier)' == 'Portable'">true</_HasReferenceToSystemRuntime>
+
+			<XM_NETStandardInbox Condition="'$(XM_NETStandardInbox)' == '' and Exists('%(XM_InboxNETStandardFolders.Identity)\netstandard.dll')">true</XM_NETStandardInbox>
 		</PropertyGroup>
 
-		<ItemGroup Condition="'$(_HasReferenceToSystemRuntime)' == 'true'">
+		<!--
+		     Facades are expanded if we have a reference that depends on System.Runtime .
+
+		     This file is imported for Modern projects, which have have `$(TargetFrameworkIdentifier) != .NETFramework`, so Microsoft.NET.Build.Extensions
+		     (which provides support for ns 2.0 projects) doesn't get imported. And netstandard.dll reference, even if required, doesn't get added.
+
+		     So, we need to check if any references depend on `netstandard`. And if so, expand the facades, which include netstandard.dll .
+
+		     If $(_HasReferenceToSystemRuntime) is true, then the facades are going to be expanded anyway, so don't run this.
+		-->
+		<GetDependsOnNETStandard
+			Condition="'$(_HasReferenceToSystemRuntime)' != 'true' and '$(IsXBuild)' != 'true' and '$(DependsOnNETStandard)' == '' and '@(XM_CandidateNETStandardReferences)' != '' 
+				and Exists('$(MSBuildExtensionsPath)\Microsoft\Microsoft.NET.Build.Extensions\tools\net46\Microsoft.NET.Build.Extensions.Tasks.dll')"
+			References="@(XM_CandidateNETStandardReferences)">
+			<Output TaskParameter="DependsOnNETStandard" PropertyName="XM_DependsOnNETStandard" />
+		</GetDependsOnNETStandard>
+
+		<ItemGroup Condition="'$(_HasReferenceToSystemRuntime)' == 'true' or ('$(XM_NETStandardInbox)' == 'true' and '$(XM_DependsOnNETStandard)' == 'true')">
 			<_DesignTimeFacadeAssemblies Include="%(DesignTimeFacadeDirectories.Identity)*.dll"/>
 
 			<_DesignTimeFacadeAssemblies_Names Include="@(_DesignTimeFacadeAssemblies->'%(FileName)')">

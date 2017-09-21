@@ -43,6 +43,19 @@ namespace XamCore.AVFoundation {
 				return FromPreset (_Preset3840x2160);
 			}
 		}
+
+		public AVOutputSettingsAssistant PresetHevc1920x1080 {
+			get {
+				return FromPreset (_PresetHevc1920x1080);
+			}
+		}
+
+		public AVOutputSettingsAssistant PresetHevc3840x2160 {
+			get {
+				return FromPreset (_PresetHevc3840x2160);
+			}
+		}
+
 	}
 }
 

@@ -10,6 +10,9 @@
 using System;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
+#if !WATCH && !MONOMAC
+using XamCore.CoreSpotlight;
+#endif
 
 namespace XamCore.CoreData
 {
@@ -122,6 +125,49 @@ namespace XamCore.CoreData
 
 		[Export ("referenceObjectForObjectID:")]
 		NSAtomicStore ReferenceObjectForObjectID (NSManagedObjectID objectID);
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface NSFetchIndexElementDescription : NSCoding
+	{
+		[Export ("initWithProperty:collationType:")]
+		IntPtr Constructor (NSPropertyDescription property, NSFetchIndexElementType collationType);
+
+		[NullAllowed, Export ("property", ArgumentSemantic.Retain)]
+		NSPropertyDescription Property { get; }
+
+		[NullAllowed, Export ("propertyName", ArgumentSemantic.Retain)]
+		string PropertyName { get; }
+
+		[Export ("collationType", ArgumentSemantic.Assign)]
+		NSFetchIndexElementType CollationType { get; set; }
+
+		[Export ("ascending")]
+		bool IsAscending { [Bind ("isAscending")] get; set; }
+
+		[NullAllowed, Export ("indexDescription", ArgumentSemantic.Assign)]
+		NSFetchIndexDescription IndexDescription { get; }
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface NSFetchIndexDescription : NSCoding
+	{
+		[Export ("initWithName:elements:")]
+		IntPtr Constructor (string name, [NullAllowed] NSFetchIndexElementDescription[] elements);
+
+		[Export ("name")]
+		string Name { get; set; }
+
+		[Export ("elements", ArgumentSemantic.Copy)]
+		NSFetchIndexElementDescription[] Elements { get; set; }
+
+		[NullAllowed, Export ("entity", ArgumentSemantic.Assign)]
+		NSEntityDescription Entity { get; }
+
+		[NullAllowed, Export ("partialIndexPredicate", ArgumentSemantic.Copy)]
+		NSPredicate PartialIndexPredicate { get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -263,12 +309,22 @@ namespace XamCore.CoreData
 		[Since(5,0)]
 		[NullAllowed] // by default this property is null
 		[Export ("compoundIndexes", ArgumentSemantic.Retain)]
+		[Availability (Introduced = Platform.iOS_5_0 | Platform.Mac_10_7, Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13, Message = "Use 'NSEntityDescription.Indexes' instead.")]
 		NSPropertyDescription [] CompoundIndexes { get; set; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NullAllowed] // by default this property is null
+		[Export ("indexes", ArgumentSemantic.Copy)]
+		NSFetchIndexDescription[] Indexes { get; set; }
 
 		// @property (strong) NSArray<NSArray<id __nonnull> * __nonnull> * __nonnull uniquenessConstraints __attribute__((availability(ios, introduced=9.0)));
 		[iOS (9,0), Mac (10,11)]
 		[Internal, Export ("uniquenessConstraints", ArgumentSemantic.Strong)]
 		NSArray _UniquenessConstraints { get; set; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("coreSpotlightDisplayNameExpression", ArgumentSemantic.Retain)]
+		NSExpression CoreSpotlightDisplayNameExpression { get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -844,7 +900,7 @@ namespace XamCore.CoreData
 
 	[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
 	[BaseType (typeof(NSObject))]
-	interface NSQueryGenerationToken : NSCopying
+	interface NSQueryGenerationToken : NSSecureCoding, NSCopying
 	{
 		[Static, Export ("currentQueryGenerationToken", ArgumentSemantic.Strong)]
 		NSQueryGenerationToken CurrentToken { get; }
@@ -954,16 +1010,16 @@ namespace XamCore.CoreData
 		bool Save (out NSError error);
 
 #if !WATCH && !TVOS
-		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_4, Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use a queue style context and PerformAndWait instead")]
+		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_4, Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use a queue style context and 'PerformAndWait' instead.")]
 		[Export ("lock")]
 		new void Lock ();
 
-		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_4, Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use a queue style context and PerformAndWait instead")]
+		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_4, Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use a queue style context and 'PerformAndWait' instead.")]
 		[Export ("unlock")]
 		new void Unlock ();
 
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_4, Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use a queue style context and Perform instead")]
+		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_4, Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use a queue style context and 'Perform' instead.")]
 		[Export ("tryLock")]
 		bool TryLock { get; }
 #endif // !WATCH && !TVOS
@@ -1065,6 +1121,10 @@ namespace XamCore.CoreData
 		[iOS (8,3), Mac (10,11)]
 		[Export ("refreshAllObjects")]
 		void RefreshAllObjects ();
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[NullAllowed, Export ("transactionAuthor")]
+		string TransactionAuthor { get; set; }
 	}
 
 	interface NSManagedObjectChangeEventArgs {
@@ -1392,6 +1452,147 @@ namespace XamCore.CoreData
 		bool UsesStoreSpecificMigrationManager { get; set; }
 	}
 
+	[Abstract]
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface NSPersistentHistoryChange : NSCopying
+	{
+		[Export ("changeID")]
+		long ChangeId { get; }
+
+		[Export ("changedObjectID", ArgumentSemantic.Copy)]
+		NSManagedObjectID ChangedObjectId { get; }
+
+		[Export ("changeType")]
+		NSPersistentHistoryChangeType ChangeType { get; }
+
+		[NullAllowed, Export ("tombstone", ArgumentSemantic.Copy)]
+		NSDictionary Tombstone { get; }
+
+		[NullAllowed, Export ("transaction", ArgumentSemantic.Strong)]
+		NSPersistentHistoryTransaction Transaction { get; }
+
+		[NullAllowed, Export ("updatedProperties", ArgumentSemantic.Copy)]
+		NSSet<NSPropertyDescription> UpdatedProperties { get; }
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[BaseType (typeof (NSObject))]
+	interface NSPersistentHistoryToken : NSCopying //, NSSecureCoding TODO: The class does state that it supports the NSSecureCoding YET SupportsSecureCoding returns false, radar 32761925
+	{
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSPersistentStoreRequest))]
+	[DisableDefaultCtor]
+	interface NSPersistentHistoryChangeRequest
+	{
+		[Static]
+		[Export ("fetchHistoryAfterDate:")]
+		NSPersistentHistoryChangeRequest FetchHistoryAfter (NSDate date);
+
+		[Static]
+		[Export ("fetchHistoryAfterToken:")]
+		NSPersistentHistoryChangeRequest FetchHistoryAfter ([NullAllowed] NSPersistentHistoryToken token);
+
+		[Static]
+		[Export ("fetchHistoryAfterTransaction:")]
+		NSPersistentHistoryChangeRequest FetchHistoryAfter ([NullAllowed] NSPersistentHistoryTransaction transaction);
+
+		[Static]
+		[Export ("deleteHistoryBeforeDate:")]
+		NSPersistentHistoryChangeRequest DeleteHistoryBefore (NSDate date);
+
+		[Static]
+		[Export ("deleteHistoryBeforeToken:")]
+		NSPersistentHistoryChangeRequest DeleteHistoryBefore ([NullAllowed] NSPersistentHistoryToken token);
+
+		[Static]
+		[Export ("deleteHistoryBeforeTransaction:")]
+		NSPersistentHistoryChangeRequest DeleteHistoryBefore ([NullAllowed] NSPersistentHistoryTransaction transaction);
+
+		[Export ("resultType", ArgumentSemantic.Assign)]
+		NSPersistentHistoryResultType ResultType { get; set; }
+
+		[NullAllowed, Export ("token", ArgumentSemantic.Strong)]
+		NSPersistentHistoryToken Token { get; }
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSPersistentStoreResult))]
+	interface NSPersistentHistoryResult
+	{
+		[NullAllowed]
+		[Export ("result", ArgumentSemantic.Strong)]
+		NSObject Result { get; }
+
+		[Export ("resultType")]
+		NSPersistentHistoryResultType ResultType { get; }
+	}
+
+	[Abstract]
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface NSPersistentHistoryTransaction : NSCopying
+	{
+		[Export ("timestamp", ArgumentSemantic.Copy)]
+		NSDate Timestamp { get; }
+
+		[NullAllowed, Export ("changes", ArgumentSemantic.Copy)]
+		NSPersistentHistoryChange[] Changes { get; }
+
+		[Export ("transactionNumber")]
+		long TransactionNumber { get; }
+
+		[Export ("storeID")]
+		string StoreId { get; }
+
+		[Export ("bundleID")]
+		string BundleId { get; }
+
+		[Export ("processID")]
+		string ProcessId { get; }
+
+		[NullAllowed, Export ("contextName")]
+		string ContextName { get; }
+
+		[NullAllowed, Export ("author")]
+		string Author { get; }
+
+		[Export ("token", ArgumentSemantic.Strong)]
+		NSPersistentHistoryToken Token { get; }
+
+		[Export ("objectIDNotification")]
+		NSNotification ObjectIdNotification { get; }
+	}
+
+#if !WATCH && !MONOMAC
+	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface NSCoreDataCoreSpotlightDelegate
+	{
+		[Export ("domainIdentifier")]
+		string DomainIdentifier { get; }
+
+		[NullAllowed, Export ("indexName")]
+		string IndexName { get; }
+
+		[Export ("initForStoreWithDescription:model:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSPersistentStoreDescription description, NSManagedObjectModel model);
+
+		[Export ("attributeSetForObject:")]
+		[return: NullAllowed]
+		CSSearchableItemAttributeSet GetAttributeSet (NSManagedObject @object);
+
+		[Export ("searchableIndex:reindexAllSearchableItemsWithAcknowledgementHandler:")]
+		void ReindexAllSearchableItems (CSSearchableIndex searchableIndex, Action acknowledgementHandler);
+
+		[Export ("searchableIndex:reindexSearchableItemsWithIdentifiers:acknowledgementHandler:")]
+		void ReindexSearchableItems (CSSearchableIndex searchableIndex, string[] identifiers, Action acknowledgementHandler);
+	}
+#endif 
+
 	// NSPersistentStore is an abstract type according to Apple's documentation, but Apple
 	// also have internal subclasses of NSPersistentStore, and in those cases our closest
 	// type is NSPersistentStore, which means we must be able to create managed wrappers
@@ -1464,6 +1665,12 @@ namespace XamCore.CoreData
 		[Since (5,0)]
 		[Field ("NSPersistentStoreSaveConflictsErrorKey")]
 		NSString SaveConflictsErrorKey { get; }
+
+#if !WATCH && !MONOMAC
+		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
+		[Export ("coreSpotlightExporter")]
+		NSCoreDataCoreSpotlightDelegate CoreSpotlightExporter { get; }
+#endif
 
 	}
 	
@@ -1585,7 +1792,7 @@ namespace XamCore.CoreData
 		[Static, Export ("registerStoreClass:forStoreType:")]
 		void RegisterStoreClass (Class storeClass, NSString storeType);
 
-		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_5 , Deprecated = Platform.iOS_9_0 | Platform.Mac_10_11, Message = "This method is obsolete, please use the method that takes an out NSError parameter.")]
+		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_5 , Deprecated = Platform.iOS_9_0 | Platform.Mac_10_11, Message = "Use the method that takes an out NSError parameter.")]
 		[Static, Export ("metadataForPersistentStoreOfType:URL:error:")]
 		[return: NullAllowed]
 		NSDictionary MetadataForPersistentStoreOfType (NSString storeType, NSUrl url, out NSError error);
@@ -1595,7 +1802,7 @@ namespace XamCore.CoreData
 		[return: NullAllowed]
 		NSDictionary<NSString, NSObject> GetMetadata (string storeType, NSUrl url, [NullAllowed] NSDictionary options, out NSError error);
 
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_9_0, Message = "This method is obsolete, please use the method that takes an out NSError parameter.")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_9_0, Message = "Use the method that takes an out NSError parameter.")]
 		[Static, Export ("setMetadata:forPersistentStoreOfType:URL:error:")]
 		bool SetMetadata (NSDictionary metadata, NSString storeType, NSUrl url, out NSError error);
 		
@@ -1660,16 +1867,16 @@ namespace XamCore.CoreData
 		NSManagedObjectID ManagedObjectIDForURIRepresentation (NSUrl url);
 
 #if !WATCH && !TVOS
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_8_0, Message="Use PerformAndWait instead")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_8_0, Message="Use 'PerformAndWait' instead.")]
 		[Export ("lock")]
 		new void Lock ();
 
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_8_0, Message="Use PerformAndWait instead")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_8_0, Message="Use 'PerformAndWait' instead.")]
 		[Export ("unlock")]
 		new void Unlock ();
 
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_8_0, Message="Use Perform instead")]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_8_0, Message="Use 'Perform' instead.")]
 		[Export ("tryLock")]
 		bool TryLock { get; }
 #endif // !WATCH && !TVOS
@@ -1687,7 +1894,15 @@ namespace XamCore.CoreData
 #endif	
 		[Field ("NSBinaryStoreType")]
 		NSString BinaryStoreType { get; }
-		
+
+		[Watch (4,0)][TV (11,0)][Mac (10,13)][iOS (11,0)]
+		[Field ("NSBinaryStoreSecureDecodingClasses")]
+		NSString BinaryStoreSecureDecodingClasses { get; }
+
+		[Watch (4,0)][TV (11,0)][Mac (10,13)][iOS (11,0)]
+		[Field ("NSBinaryStoreInsecureDecodingCompatibilityOption")]
+		NSString BinaryStoreInsecureDecodingCompatibilityOption { get; }
+
 		[Field ("NSInMemoryStoreType")]
 		NSString InMemoryStoreType { get; }
 
@@ -1818,7 +2033,23 @@ namespace XamCore.CoreData
 		[NoWatch][NoTV]
 		[Since (7,0), Mavericks]
 		[Field ("NSPersistentStoreUbiquitousContainerIdentifierKey")]
+		[Obsolete ("Use 'UbiquitousContainerIdentifierKey' instead.")]
 		NSString eUbiquitousContainerIdentifierKey { get; }
+
+		[NoWatch][NoTV]
+		[Since (7,0), Mavericks]
+		[Field ("NSPersistentStoreUbiquitousContainerIdentifierKey")]
+		NSString UbiquitousContainerIdentifierKey { get; }
+
+		// 11.0
+
+		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
+		[Field ("NSCoreDataCoreSpotlightExporter")]
+		NSString CoreSpotlightExporter { get; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Field ("NSPersistentHistoryTrackingKey")]
+		NSString HistoryTrackingKey { get; }
 
 		[iOS (8,0), Mac (10,10)]
 		[NullAllowed, Export ("name")]
@@ -1947,6 +2178,7 @@ namespace XamCore.CoreData
 		NSDictionary UserInfo { get; set; }
 
 		[Export ("indexed")]
+		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_5 , Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13, Message = "Use 'NSEntityDescription.Indexes' instead.")]
 		bool Indexed { [Bind ("isIndexed")] get; set; }
 
 		[Export ("versionHash")]
@@ -1966,6 +2198,7 @@ namespace XamCore.CoreData
 
 		[Since (5,0)]
 		[Export ("storedInExternalRecord")]
+		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_5 , Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13, Message = "Use 'CoreSpotlight' integration instead.")]
 		bool StoredInExternalRecord { [Bind ("isStoredInExternalRecord")]get; set; }
 	}
 
