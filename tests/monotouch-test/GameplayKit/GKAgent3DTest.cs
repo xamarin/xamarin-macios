@@ -38,7 +38,7 @@ namespace MonoTouchFixtures.GamePlayKit
 		[SetUp]
 		public void Setup ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("Ignoring GameplayKit tests: Requires iOS9+");
 		}
 
