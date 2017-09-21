@@ -445,3 +445,11 @@
 ## PDFKit
 # The following enums are bound as PdfFoo, lowercase Pdf prefix
 !missing-enum! PDFPrintScalingMode not bound
+
+# Xcode 9
+## xtro simultaniously says missing and existing binding is unknown
+!missing-enum! NSURLSessionDelayedRequestDisposition not bound
+!unknown-native-enum! NSUrlSessionDelayedRequestDisposition bound
+
+## Exists in the headers and documentation for macOS 10.13
+!unknown-type! WKSnapshotConfiguration bound

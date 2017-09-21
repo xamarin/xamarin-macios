@@ -287,6 +287,7 @@ namespace XamCore.Metal {
 		[Export ("renderCommandEncoderWithDescriptor:")]
 		IMTLRenderCommandEncoder CreateRenderCommandEncoder (MTLRenderPassDescriptor renderPassDescriptor);
 
+#if !XAMCORE_4_0 || !MONOMAC
 #if XAMCORE_4_0
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
 #endif
@@ -314,6 +315,7 @@ namespace XamCore.Metal {
 		[iOS (10,3)][TV (10,2)][Mac (10,12,4, onlyOn64 : true)]
 		[Export ("GPUEndTime")]
 		double /* CFTimeInterval */ GpuEndTime { get; }
+#endif
 
 		[Mac (10,13, onlyOn64: true), iOS (11,0), TV (11,0), NoWatch]
 #if XAMCORE_4_0
