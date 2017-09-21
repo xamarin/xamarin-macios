@@ -20090,6 +20090,7 @@ namespace XamCore.AppKit {
 		void RecalculateKeyViewLoop ();
 	
 		[Export ("toolbar")]
+		[NullAllowed]
 		NSToolbar Toolbar { get; set; }
 	
 		[Export ("toggleToolbarShown:")]
