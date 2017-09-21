@@ -26,10 +26,16 @@ namespace xharness
 		public IEnumerable<SimDevice> AvailableDevices => available_devices;
 		public IEnumerable<SimDevicePair> AvailableDevicePairs => available_device_pairs;
 
-		public async Task LoadAsync (Log log)
+		public async Task LoadAsync (Log log, bool force = false)
 		{
-			if (loaded)
-				return;
+			if (loaded) {
+				if (!force)
+					return;
+				supported_runtimes.Reset ();
+				supported_device_types.Reset ();
+				available_devices.Reset ();
+				available_device_pairs.Reset ();
+			}
 			loaded = true;
 
 			await Task.Run (async () =>
@@ -497,10 +503,14 @@ namespace xharness
 			}
 		}
 
-		public async Task LoadAsync (Log log, bool extra_data = false, bool removed_locked = false)
+		public async Task LoadAsync (Log log, bool extra_data = false, bool removed_locked = false, bool force = false)
 		{
-			if (loaded)
-				return;
+			if (loaded) {
+				if (!force)
+					return;
+				connected_devices.Reset ();
+			}
+
 			loaded = true;
 
 			await Task.Run (async () =>
@@ -724,6 +734,12 @@ namespace xharness
 		void WaitForCompletion ()
 		{
 			completed.Task.Wait ();
+		}
+
+		public void Reset ()
+		{
+			completed = new TaskCompletionSource<bool> ();
+			list.Clear ();
 		}
 
 		public IEnumerator<T> GetEnumerator ()
