@@ -169,7 +169,7 @@ namespace xharness
 					Platform = TestPlatform.iOS_Unified32,
 					TestName = project.Name,
 				};
-				rv.Add (new RunDeviceTask (build32, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS)) { Ignored = ignored || !IncludeiOS });
+				rv.Add (new RunDeviceTask (build32, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports32Bit)) { Ignored = ignored || !IncludeiOS });
 
 				var todayProject = project.AsTodayExtensionProject ();
 				var buildToday = new XBuildTask
