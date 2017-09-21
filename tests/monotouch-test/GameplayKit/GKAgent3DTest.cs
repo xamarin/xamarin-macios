@@ -35,6 +35,13 @@ namespace MonoTouchFixtures.GamePlayKit
 	[Preserve (AllMembers = true)]
 	public class GKAgent3DTest
 	{
+		[SetUp]
+		public void Setup ()
+		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Ignoring GameplayKit tests: Requires iOS9+");
+		}
+
 		[Test]
 		public void RotationTest ()
 		{
