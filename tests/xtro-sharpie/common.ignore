@@ -278,3 +278,7 @@
 !missing-enum! PDFTextAnnotationIconType not bound
 !missing-enum! PDFWidgetCellState not bound
 !missing-enum! PDFWidgetControlType not bound
+
+# WebKit
+## Header file missing from umbrella header, but used by WKWebView, which IS included in the umbrella.
+!unknown-type! WKSnapshotConfiguration bound
