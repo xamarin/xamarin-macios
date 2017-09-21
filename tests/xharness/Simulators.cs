@@ -541,6 +541,7 @@ namespace xharness
 								BuildVersion = dev.SelectSingleNode ("BuildVersion")?.InnerText,
 								ProductVersion = dev.SelectSingleNode ("ProductVersion")?.InnerText,
 								ProductType = dev.SelectSingleNode ("ProductType")?.InnerText,
+								InterfaceType = dev.SelectSingleNode ("InterfaceType")?.InnerText,
 								IsUsableForDebugging = usable == null ? (bool?) null : ((bool?) (usable == "True")),
 							};
 							bool.TryParse (dev.SelectSingleNode ("IsLocked")?.InnerText, out d.IsLocked);
@@ -602,10 +603,28 @@ namespace xharness
 		public string BuildVersion;
 		public string ProductVersion;
 		public string ProductType;
+		public string InterfaceType;
 		public bool? IsUsableForDebugging;
 		public bool IsLocked;
 
 		public string UDID { get { return DeviceIdentifier; } set { DeviceIdentifier = value; } }
+
+		// Add a speed property that can be used to sort a list of devices according to speed.
+		public int DebugSpeed {
+			get {
+				var itype = InterfaceType?.ToLowerInvariant ();
+				if (itype == "usb")
+					return 0; // fastest
+
+				if (itype == null)
+					return 1; // mlaunch doesn't know - not sure when this can happen, but wifi is quite slow, so maybe this faster
+
+				if (itype == "wifi")
+					return 2; // wifi is quite slow
+
+				return 3; // Anything else is probably slower than wifi (e.g. watch).
+			}
+		}
 
 		public DevicePlatform DevicePlatform {
 			get {
