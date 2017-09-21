@@ -531,6 +531,7 @@ namespace xharness
 						doc.LoadWithoutNetworkAccess (tmpfile);
 
 						foreach (XmlNode dev in doc.SelectNodes ("/MTouch/Device")) {
+							var usable = dev.SelectSingleNode ("IsUsableForDebugging")?.InnerText;
 							Device d = new Device
 							{
 								DeviceIdentifier = dev.SelectSingleNode ("DeviceIdentifier")?.InnerText,
@@ -540,10 +541,17 @@ namespace xharness
 								BuildVersion = dev.SelectSingleNode ("BuildVersion")?.InnerText,
 								ProductVersion = dev.SelectSingleNode ("ProductVersion")?.InnerText,
 								ProductType = dev.SelectSingleNode ("ProductType")?.InnerText,
+								IsUsableForDebugging = usable == null ? (bool?) null : ((bool?) (usable == "True")),
 							};
 							bool.TryParse (dev.SelectSingleNode ("IsLocked")?.InnerText, out d.IsLocked);
-							if (removed_locked && d.IsLocked)
+							if (removed_locked && d.IsLocked) {
+								log.WriteLine ($"Skipping device {d.Name} ({d.DeviceIdentifier}) because it's locked.");
 								continue;
+							}
+							if (d.IsUsableForDebugging.HasValue && !d.IsUsableForDebugging.Value) {
+								log.WriteLine ($"Skipping device {d.Name} ({d.DeviceIdentifier}) because it's not usable for debugging.");
+								continue;
+							}
 							connected_devices.Add (d);
 						}
 					}
@@ -594,6 +602,7 @@ namespace xharness
 		public string BuildVersion;
 		public string ProductVersion;
 		public string ProductType;
+		public bool? IsUsableForDebugging;
 		public bool IsLocked;
 
 		public string UDID { get { return DeviceIdentifier; } set { DeviceIdentifier = value; } }
