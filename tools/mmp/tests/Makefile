@@ -8,6 +8,7 @@ CECIL_LIB = ../../../external/mono/external/cecil/bin/net_4_0_Release/Mono.Cecil
 
 test_sources = \
 	aot.cs \
+	../../common/StringUtils.cs
 
 ifdef INCLUDE_MAC
 all-local:: run
