@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace xharness
 {
-	public class WatchOSTarget : Target
+	public class WatchOSTarget : iOSTarget
 	{
 		public string AppName { get; private set; }
 		public string ExtensionName { get; private set; }
