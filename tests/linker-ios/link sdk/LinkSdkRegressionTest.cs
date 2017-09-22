@@ -1057,6 +1057,7 @@ namespace LinkSdk {
 		{
 			// a reference to WKWebView will bring the internal NSProxy type
 			var t = typeof (WKWebView);
+			Assert.NotNull (t, "avoid compiler optimization of unused variable"); 
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Foundation.NSProxy");
 			Assert.NotNull (Type.GetType (fqn), fqn);
 		}
