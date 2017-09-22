@@ -932,6 +932,12 @@ namespace xharness
 								}
 							}
 							break;
+						case "/reload-devices":
+							GC.KeepAlive (Devices.LoadAsync (DeviceLoadLog, force: true));
+							break;
+						case "/reload-simulators":
+							GC.KeepAlive (Simulators.LoadAsync (SimulatorLoadLog, force: true));
+							break;
 						case "/quit":
 							using (var writer = new StreamWriter (response.OutputStream)) {
 								writer.WriteLine ("<!DOCTYPE html>");
@@ -1196,7 +1202,7 @@ namespace xharness
 
 #nav {
 	display: inline-block;
-	width: 300px;
+	width: 350px;
 }
 
 #nav > * {
@@ -1512,6 +1518,12 @@ function oninitialload ()
 	<li>Toggle visibility
 		<ul>
 			<li class=""adminitem""><a href='javascript:toggleVisibility (""toggleable-ignored"");'>Ignored tests</a></li>
+		</ul>
+	</li>
+	<li>Reload
+		<ul>
+			<li class=""adminitem""><a href='javascript:sendrequest (""reload-devices"");'>Devices</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""reload-simulators"");'>Simulators</a></li>
 		</ul>
 	</li>
 </ul>");
