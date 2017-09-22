@@ -1388,8 +1388,9 @@ function autorefresh()
 				if (new_obj) {
 					if (ar_obj.innerHTML != new_obj.innerHTML)
 						ar_obj.innerHTML = new_obj.innerHTML;
-					if (ar_obj.style != new_obj.style)
+					if (ar_obj.style.cssText != new_obj.style.cssText) {
 						ar_obj.style = new_obj.style;
+					}
 					
 					var evt = ar_obj.getAttribute ('data-onautorefresh');
 					if (evt != '') {
