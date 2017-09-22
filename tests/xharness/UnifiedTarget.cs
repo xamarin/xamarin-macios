@@ -2,7 +2,7 @@
 
 namespace xharness
 {
-	public class UnifiedTarget : Target
+	public class UnifiedTarget : iOSTarget
 	{
 		public override string Suffix {
 			get {
