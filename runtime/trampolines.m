@@ -761,6 +761,9 @@ exception_handling:
 	return convertedValue;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
+
 // Returns a pointer to the value type, which must be freed using xamarin_free.
 // If called multiple times in succession, the returned pointer can be passed as the second ptr argument, and it need only be freed once done iterating.
 void *xamarin_nsnumber_to_bool   (NSNumber *number, void *ptr, MonoClass *managedType, guint32 *exception_gchandle) {       BOOL *valueptr =       (BOOL *) (ptr ? ptr : xamarin_calloc (sizeof (BOOL)));       *valueptr = [number boolValue];             return valueptr; }
@@ -904,6 +907,8 @@ id xamarin_scnvector4_to_nsvalue             (MonoObject *value, guint32 *except
 id xamarin_uiedgeinsets_to_nsvalue           (MonoObject *value, guint32 *exception_gchandle) { return [NSValue valueWithUIEdgeInsets:        *(UIEdgeInsets *)           mono_object_unbox (value)]; }
 id xamarin_uioffset_to_nsvalue               (MonoObject *value, guint32 *exception_gchandle) { return [NSValue valueWithUIOffset:            *(UIOffset *)               mono_object_unbox (value)]; }
 #endif
+
+#pragma clang diagnostic pop
 
 static void *
 xamarin_get_nsnumber_converter (MonoClass *managedType, MonoMethod *method, bool to_managed, guint32 *exception_gchandle)
