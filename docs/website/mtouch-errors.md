@@ -1217,6 +1217,14 @@ Something unexpected occured when trying to mark the method mentioned in the err
 
 The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
+
+### <a name="MT2103"/>MT2103: Error processing assembly '\*': *
+
+An unexpected error occured when processing an assembly.
+
+The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+
 # MT3xxx: AOT error messages
 
 <!--

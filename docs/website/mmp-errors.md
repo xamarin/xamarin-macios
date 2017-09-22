@@ -153,6 +153,13 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 ### <a name="MM2100"/>MM2100: Xamarin.Mac Classic API does not support Platform Linking.
 
+### <a name="MM2103"/>MM2103: Error processing assembly '\*': *
+
+An unexpected error occured when processing an assembly.
+
+The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+
 # MM3xxx: AOT
 
 ## MM30xx: AOT (general) errors
