@@ -113,6 +113,7 @@ void *xamarin_nsvalue_to_scnvector3             (NSValue *value, void *ptr, Mono
 void *xamarin_nsvalue_to_scnvector4             (NSValue *value, void *ptr, MonoClass *managedType, guint32 *exception_ghandle);
 void *xamarin_nsvalue_to_uiedgeinsets           (NSValue *value, void *ptr, MonoClass *managedType, guint32 *exception_ghandle);
 void *xamarin_nsvalue_to_uioffset               (NSValue *value, void *ptr, MonoClass *managedType, guint32 *exception_ghandle);
+void *xamarin_nsvalue_to_nsdirectionaledgeinsets(NSValue *value, void *ptr, MonoClass *managedType, guint32 *exception_ghandle);
 
 id xamarin_bool_to_nsnumber   (MonoObject *value, guint32 *exception_gchandle);
 id xamarin_sbyte_to_nsnumber  (MonoObject *value, guint32 *exception_gchandle);
@@ -147,6 +148,7 @@ id xamarin_scnvector3_to_nsvalue             (MonoObject *value, guint32 *except
 id xamarin_scnvector4_to_nsvalue             (MonoObject *value, guint32 *exception_gchandle);
 id xamarin_uiedgeinsets_to_nsvalue           (MonoObject *value, guint32 *exception_gchandle);
 id xamarin_uioffset_to_nsvalue               (MonoObject *value, guint32 *exception_gchandle);
+id xamarin_nsdirectionaledgeinsets_to_nsvalue(MonoObject *value, guint32 *exception_gchandle);
 
 /* Copied from SGen */
 

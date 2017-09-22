@@ -684,6 +684,7 @@ namespace XamCore.Registrar {
 					case "SceneKit.SCNVector4":
 					case "UIKit.UIEdgeInsets":
 					case "UIKit.UIOffset":
+					case "UIKit.NSDirectionalEdgeInsets":
 						return true;
 					default:
 						return false;
