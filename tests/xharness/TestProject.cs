@@ -122,6 +122,22 @@ namespace xharness
 		}
 	}
 
+	public class iOSTestProject : TestProject
+	{
+		public bool SkipiOSVariation;
+		public bool SkipwatchOSVariation;
+		public bool SkiptvOSVariation;
+
+		public iOSTestProject ()
+		{
+		}
+
+		public iOSTestProject (string path, bool isExecutableProject = true, bool generateVariations = true)
+			: base (path, isExecutableProject, generateVariations)
+		{
+		}
+	}
+
 	public class MacTestProject : TestProject
 	{
 		public bool SkipXMVariations;
