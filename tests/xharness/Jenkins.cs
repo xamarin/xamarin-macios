@@ -93,7 +93,7 @@ namespace xharness
 				}
 			});
 
-			return Task.WhenAll (simulatorLoadTask, deviceLoadTask);
+			return Task.CompletedTask;
 		}
 
 		IEnumerable<RunSimulatorTask> CreateRunSimulatorTaskAsync (XBuildTask buildTask)
