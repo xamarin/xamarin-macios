@@ -5,6 +5,14 @@ using XamCore.Security;
 
 namespace XamCore.LocalAuthentication {
 
+	[iOS (11,0), NoMac]
+	[Native]
+	public enum LABiometryType : nint {
+		None,
+		TouchId,
+		TypeFaceId,
+	}
+
 	[iOS (8,0), Mac (10,10)]
 	delegate void LAContextReplyHandler (bool success, NSError error);
 
@@ -70,5 +78,16 @@ namespace XamCore.LocalAuthentication {
 		[Export ("maxBiometryFailures")]
 		NSNumber MaxBiometryFailures { get; set; }
 #endif
+		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
+		[Export ("localizedReason")]
+		string LocalizedReason { get; set; }
+
+		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
+		[Export ("interactionNotAllowed")]
+		bool InteractionNotAllowed { get; set; }
+
+		[NoMac, iOS (11,0)]
+		[Export ("biometryType")]
+		LABiometryType BiometryType { get; }
 	}
 }

@@ -33,11 +33,6 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("PrepareResourceRules");
-			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
-			Log.LogTaskProperty ("ResourceRules", ResourceRules);
-			Log.LogTaskProperty ("SdkVersion", SdkVersion);
-
 			if (!string.IsNullOrEmpty (ResourceRules)) {
 				var destination = Path.Combine (AppBundleDir, "ResourceRules.plist");
 

@@ -243,7 +243,7 @@ MonoObject*					xamarin_get_class							(Class ptr, guint32 *exception_gchandle)
 MonoObject*					xamarin_get_selector						(SEL ptr, guint32 *exception_gchandle);
 Class						xamarin_get_class_handle					(MonoObject *obj, guint32 *exception_gchandle);
 SEL							xamarin_get_selector_handle					(MonoObject *obj, guint32 *exception_gchandle);
-void						xamarin_get_method_for_selector				(Class cls, SEL sel, MethodDescription *desc, guint32 *exception_gchandle);
+void						xamarin_get_method_for_selector				(Class cls, SEL sel, bool is_static, MethodDescription *desc, guint32 *exception_gchandle);
 bool						xamarin_has_nsobject 						(id obj, guint32 *exception_gchandle);
 MonoObject*					xamarin_get_nsobject 						(id obj, guint32 *exception_gchandle);
 id							xamarin_get_handle_for_inativeobject		(MonoObject *obj, guint32 *exception_gchandle);
@@ -257,7 +257,7 @@ MonoObject*					xamarin_get_nsobject_with_type				(id obj, void *type, int32_t *
 void						xamarin_dispose								(MonoObject *mobj, guint32 *exception_gchandle);
 bool	 					xamarin_is_parameter_transient				(MonoReflectionMethod *method, int parameter /* 0-based */, guint32 *exception_gchandle);
 bool						xamarin_is_parameter_out                    (MonoReflectionMethod *method, int parameter /* 0-based */, guint32 *exception_gchandle);
-void						xamarin_get_method_and_object_for_selector	(Class cls, SEL sel, id self, MonoObject **mthis, MethodDescription *desc, guint32 *exception_gchandle);
+void						xamarin_get_method_and_object_for_selector	(Class cls, SEL sel, bool is_static, id self, MonoObject **mthis, MethodDescription *desc, guint32 *exception_gchandle);
 guint32 					xamarin_create_product_exception_for_error	(int code, const char *message, guint32 *exception_gchandle);
 
 #ifdef __cplusplus

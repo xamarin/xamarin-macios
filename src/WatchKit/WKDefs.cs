@@ -216,4 +216,38 @@ namespace XamCore.WatchKit {
 		Ipx7,
 		Wr50,
 	}
+
+	[Watch (4,0)][NoiOS]
+	[Native]
+	public enum WKSnapshotReason : nint {
+		AppScheduled = 0,
+		ReturnToDefaultState,
+		ComplicationUpdate,
+		Prelaunch,
+		AppBackgrounded,
+	}
+
+	[Watch (4,0)][NoiOS]
+	[Native]
+	public enum WKPageOrientation : nint {
+		Horizontal,
+		Vertical,
+	}
+
+	[Watch (4,0)][NoiOS]
+	[Native]
+	public enum WKInterfaceScrollPosition : nint {
+		Top,
+		CenteredVertically,
+		Bottom,
+	}
+
+	[Watch (4,0)][NoiOS]
+	[Native]
+	public enum WKInterfaceDeviceBatteryState : nint {
+		Unknown,
+		Unplugged,
+		Charging,
+		Full,
+	}
 }

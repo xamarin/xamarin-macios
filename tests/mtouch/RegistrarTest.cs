@@ -712,80 +712,21 @@ class X : ReplayKit.RPBroadcastControllerDelegate
 		public void MT4169 ()
 		{
 			using (var mtouch = new MTouchTool ()) {
-				var code = @"
-				namespace NS {
-					using System;
-					using Foundation;
-					using ObjCRuntime;
-					class X : NSObject {
-						[Export (""a:"")]
-						void A ([BindAs (typeof (DateTime), OriginalType = typeof (NSNumber))] DateTime value) {}
-						[Export (""b:"")]
-						void B ([BindAs (typeof (DateTime?), OriginalType = typeof (NSNumber))] DateTime? value) {}
-						[Export (""d:"")]
-						void D ([BindAs (typeof (int?[]), OriginalType = typeof (NSNumber[]))] int?[] value) {}
-						[Export (""e:"")]
-						void E ([BindAs (typeof (int), OriginalType = typeof (NSNumber))] ref int value) {}
-						[Export (""f:"")]
-						void F ([BindAs (typeof (int), OriginalType = typeof (NSNumber))] out int value) { throw new NotImplementedException (); }
-						[Export (""g:"")]
-						void G ([BindAs (typeof (int[,]), OriginalType = typeof (NSNumber[,]))] int[,] value) {}
-						[Export (""h:"")]
-						void H ([BindAs (typeof (int?[,]), OriginalType = typeof (NSNumber[,]))] int?[,] value) {}
-					}
-					enum E {
-						V,
-					}
-					class EClass : NSObject {
-						[Export (""a:"")]
-						void A ([BindAs (typeof (E), OriginalType = typeof (NSString))] E value) {}
-						[Export (""d:"")]
-						void D ([BindAs (typeof (E?[]), OriginalType = typeof (NSString[]))] E?[] value) {}
-					}
-				}";
-				mtouch.Linker = MTouchLinker.DontLink; // faster
-				mtouch.Registrar = MTouchRegistrar.Static;
-				mtouch.CreateTemporaryApp (extraCode: code, extraArg: "-debug");
-				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertError (4169, "The registrar can't convert from 'System.DateTime' to 'Foundation.NSNumber' for the parameter 'value' in the method NS.X.A.", "testApp.cs", 8);
-				mtouch.AssertError (4169, "The registrar can't convert from 'System.Nullable`1<System.DateTime>' to 'Foundation.NSNumber' for the parameter 'value' in the method NS.X.B.", "testApp.cs", 10);
-				mtouch.AssertError (4169, "The registrar can't convert from 'System.Nullable`1<System.Int32>[]' to 'Foundation.NSNumber[]' for the parameter 'value' in the method NS.X.D.", "testApp.cs", 12);
-				mtouch.AssertError (4169, "The registrar can't convert from 'System.Int32&' to 'Foundation.NSNumber' for the parameter 'value' in the method NS.X.E.", "testApp.cs", 14);
-				mtouch.AssertError (4169, "The registrar can't convert from 'System.Int32&' to 'Foundation.NSNumber' for the parameter 'value' in the method NS.X.F.", "testApp.cs", 16);
-				mtouch.AssertError (4169, "The registrar can't convert from 'System.Int32[0...,0...]' to 'Foundation.NSNumber[,]' for the parameter 'value' in the method NS.X.G.", "testApp.cs", 18);
-				mtouch.AssertError (4169, "The registrar can't convert from 'System.Nullable`1<System.Int32>[0...,0...]' to 'Foundation.NSNumber[,]' for the parameter 'value' in the method NS.X.H.", "testApp.cs", 20);
-				mtouch.AssertError (4169, "The registrar can't convert from 'NS.E' to 'Foundation.NSString' for the parameter 'value' in the method NS.EClass.A.", "testApp.cs", 27);
-				mtouch.AssertError (4169, "The registrar can't convert from 'System.Nullable`1<NS.E>[]' to 'Foundation.NSString[]' for the parameter 'value' in the method NS.EClass.D.", "testApp.cs", 29);
-				mtouch.AssertErrorCount (9);
-			}
-		}
-
-		[Test]
-		public void MT4170 ()
+				var sb = new StringBuilder ();
+				sb.AppendLine (@"		
+		[Foundation.Preserve (AllMembers = true)]
+		public class C
 		{
-			using (var mtouch = new MTouchTool ()) {
-				var code = @"
-				namespace NS {
-					using System;
-					using Foundation;
-					using ObjCRuntime;
-					class X : NSObject {
-						[Export (""a"")]
-						[return: BindAs (typeof (DateTime), OriginalType = typeof (NSNumber))] 
-						DateTime A () { throw new NotImplementedException (); }
-						[Export (""b"")]
-						[return: BindAs (typeof (DateTime?), OriginalType = typeof (NSNumber))] 
-						DateTime? B () { throw new NotImplementedException (); }
-					}
-				}";
-				mtouch.Linker = MTouchLinker.DontLink; // faster
+			[System.Runtime.InteropServices.DllImport (""/usr/lib/libobjc.dylib"")]
+			static extern void objc_msgSend (object something);
+		}");
+				mtouch.Linker = MTouchLinker.LinkAll; // faster test
+				mtouch.CustomArguments = new string [] { "--marshal-objectivec-exceptions=throwmanaged" };
 				mtouch.Registrar = MTouchRegistrar.Static;
-				mtouch.CreateTemporaryApp (extraCode: code, extraArg: "-debug");
 				mtouch.CreateTemporaryCacheDirectory ();
-				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertError (4170, "The registrar can't convert from 'System.DateTime' to 'Foundation.NSNumber' for the return value in the method NS.X.A.", "testApp.cs", 9);
-				mtouch.AssertError (4170, "The registrar can't convert from 'System.Nullable`1<System.DateTime>' to 'Foundation.NSNumber' for the return value in the method NS.X.B.", "testApp.cs", 12);
-				mtouch.AssertErrorCount (4 /* errors are duplicated */);
+				mtouch.CreateTemporaryApp (extraCode: sb.ToString (), extraArg: "-debug:full");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (4169, $"Failed to generate a P/Invoke wrapper for objc_msgSend(System.Object): The registrar cannot get the ObjectiveC type for managed type `System.Object`.");
 			}
 		}
 
@@ -836,6 +777,59 @@ class X : ReplayKit.RPBroadcastControllerDelegate
 				mtouch.AssertErrorCount (8 /* 2 errors are duplicated */);
 			}
 		}
+
+		[Test]
+		public void MT4172 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var code = @"
+				namespace NS {
+					using System;
+					using Foundation;
+					using ObjCRuntime;
+					class X : NSObject {
+						[Export (""a:"")]
+						void A ([BindAs (typeof (DateTime), OriginalType = typeof (NSNumber))] DateTime value) {}
+						[Export (""b:"")]
+						void B ([BindAs (typeof (DateTime?), OriginalType = typeof (NSNumber))] DateTime? value) {}
+						[Export (""d:"")]
+						void D ([BindAs (typeof (int?[]), OriginalType = typeof (NSNumber[]))] int?[] value) {}
+						[Export (""e:"")]
+						void E ([BindAs (typeof (int), OriginalType = typeof (NSNumber))] ref int value) {}
+						[Export (""f:"")]
+						void F ([BindAs (typeof (int), OriginalType = typeof (NSNumber))] out int value) { throw new NotImplementedException (); }
+						[Export (""g:"")]
+						void G ([BindAs (typeof (int[,]), OriginalType = typeof (NSNumber[,]))] int[,] value) {}
+						[Export (""h:"")]
+						void H ([BindAs (typeof (int?[,]), OriginalType = typeof (NSNumber[,]))] int?[,] value) {}
+					}
+					enum E {
+						V,
+					}
+					class EClass : NSObject {
+						[Export (""a:"")]
+						void A ([BindAs (typeof (E), OriginalType = typeof (NSString))] E value) {}
+						[Export (""d:"")]
+						void D ([BindAs (typeof (E?[]), OriginalType = typeof (NSString[]))] E?[] value) {}
+					}
+				}";
+				mtouch.Linker = MTouchLinker.DontLink; // faster
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: code, extraArg: "-debug");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (4172, "The registrar can't convert from 'System.DateTime' to 'Foundation.NSNumber' for the parameter 'value' in the method NS.X.A.", "testApp.cs", 8);
+				mtouch.AssertError (4172, "The registrar can't convert from 'System.Nullable`1<System.DateTime>' to 'Foundation.NSNumber' for the parameter 'value' in the method NS.X.B.", "testApp.cs", 10);
+				mtouch.AssertError (4172, "The registrar can't convert from 'System.Nullable`1<System.Int32>[]' to 'Foundation.NSNumber[]' for the parameter 'value' in the method NS.X.D.", "testApp.cs", 12);
+				mtouch.AssertError (4172, "The registrar can't convert from 'System.Int32&' to 'Foundation.NSNumber' for the parameter 'value' in the method NS.X.E.", "testApp.cs", 14);
+				mtouch.AssertError (4172, "The registrar can't convert from 'System.Int32&' to 'Foundation.NSNumber' for the parameter 'value' in the method NS.X.F.", "testApp.cs", 16);
+				mtouch.AssertError (4172, "The registrar can't convert from 'System.Int32[0...,0...]' to 'Foundation.NSNumber[,]' for the parameter 'value' in the method NS.X.G.", "testApp.cs", 18);
+				mtouch.AssertError (4172, "The registrar can't convert from 'System.Nullable`1<System.Int32>[0...,0...]' to 'Foundation.NSNumber[,]' for the parameter 'value' in the method NS.X.H.", "testApp.cs", 20);
+				mtouch.AssertError (4172, "The registrar can't convert from 'NS.E' to 'Foundation.NSString' for the parameter 'value' in the method NS.EClass.A.", "testApp.cs", 27);
+				mtouch.AssertError (4172, "The registrar can't convert from 'System.Nullable`1<NS.E>[]' to 'Foundation.NSString[]' for the parameter 'value' in the method NS.EClass.D.", "testApp.cs", 29);
+				mtouch.AssertErrorCount (9);
+			}
+		}
+
 		[Test]
 		public void NoWarnings ()
 		{
@@ -847,8 +841,11 @@ class X : ReplayKit.RPBroadcastControllerDelegate
 				mtouch.Verbosity = 9; // Increase verbosity, otherwise linker warnings aren't shown
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
 				mtouch.AssertNoWarnings ();
-				foreach (var line in mtouch.OutputLines)
+				foreach (var line in mtouch.OutputLines) {
+					if (line.Contains ("warning: method 'paymentAuthorizationViewController:didAuthorizePayment:handler:' in protocol 'PKPaymentAuthorizationViewControllerDelegate' not implemented [-Wprotocol]"))
+						continue; // Xcode 9 beta 1: this method changed from optional to required.
 					Assert.That (line, Does.Not.Match ("warning:"), "no warnings");
+				}
 			}
 		}
 

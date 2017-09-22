@@ -79,6 +79,7 @@
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
+    <Compile Include="src\NetStandardTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

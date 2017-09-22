@@ -159,15 +159,6 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("CodesignNativeLibraries");
-			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
-			Log.LogTaskProperty ("CodesignAllocate", CodesignAllocate);
-			Log.LogTaskProperty ("DisableTimestamp", DisableTimestamp);
-			Log.LogTaskProperty ("IntermediateOutputPath", IntermediateOutputPath);
-			Log.LogTaskProperty ("Keychain", Keychain);
-			Log.LogTaskProperty ("SigningKey", SigningKey);
-			Log.LogTaskProperty ("ExtraArgs", ExtraArgs);
-
 			if (!Directory.Exists (AppBundleDir))
 				return true;
 

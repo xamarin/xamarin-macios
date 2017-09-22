@@ -14,7 +14,7 @@ namespace XamCore.AVFoundation {
 #if !XAMCORE_2_0
 	partial class AVAssetResourceLoadingDataRequest {
 
-		[Obsolete ("Type is not meant to be created by user code")]
+		[Obsolete ("Type is not meant to be created by user code.")]
 		public AVAssetResourceLoadingDataRequest ()
 		{
 		}
@@ -24,7 +24,7 @@ namespace XamCore.AVFoundation {
 #if !XAMCORE_3_0
 	partial class AVAsset {
 
-		[Obsolete ("Use GetChapterMetadataGroups")]
+		[Obsolete ("Use 'GetChapterMetadataGroups'.")]
 		public virtual AVMetadataItem[] ChapterMetadataGroups (NSLocale forLocale, AVMetadataItem[] commonKeys)
 		{
 			return null;
@@ -33,7 +33,7 @@ namespace XamCore.AVFoundation {
 
 	partial class AVAssetTrack {
 
-		[Obsolete ("Use GetAssociatedTracks")]
+		[Obsolete ("Use 'GetAssociatedTracks'.")]
 		public virtual NSString GetAssociatedTracksOfType (NSString avAssetTrackTrackAssociationType)
 		{
 			return null;
@@ -42,7 +42,7 @@ namespace XamCore.AVFoundation {
 
 	partial class AVMutableCompositionTrack {
 
-		[Obsolete ("Use InsertTimeRanges overload accepting an NSValue array")]
+		[Obsolete ("Use 'InsertTimeRanges' overload accepting an 'NSValue' array.")]
 		public virtual bool InsertTimeRanges (NSValue cmTimeRanges, AVAssetTrack[] tracks, CMTime startTime, out NSError error)
 		{
 			return InsertTimeRanges (new NSValue [] { cmTimeRanges }, tracks, startTime, out error);
@@ -52,7 +52,7 @@ namespace XamCore.AVFoundation {
 
 	partial class AVCaptureAudioDataOutputSampleBufferDelegate {
 
-		[Obsolete ("This member only exists for AVCaptureVideoDataOutputSampleBufferDelegate")]
+		[Obsolete ("This member only exists for 'AVCaptureVideoDataOutputSampleBufferDelegate'.")]
 		public virtual void DidDropSampleBuffer (AVCaptureOutput captureOutput, CMSampleBuffer sampleBuffer, AVCaptureConnection connection)
 		{
 		}
@@ -60,7 +60,7 @@ namespace XamCore.AVFoundation {
 
 	static partial class AVCaptureAudioDataOutputSampleBufferDelegate_Extensions {
 
-		[Obsolete ("This member only exists for AVCaptureVideoDataOutputSampleBufferDelegate")]
+		[Obsolete ("This member only exists for 'AVCaptureVideoDataOutputSampleBufferDelegate'.")]
 		public static void DidDropSampleBuffer (IAVCaptureAudioDataOutputSampleBufferDelegate This, AVCaptureOutput captureOutput, CMSampleBuffer sampleBuffer, AVCaptureConnection connection)
 		{
 		}
@@ -68,9 +68,17 @@ namespace XamCore.AVFoundation {
 #endif
 
 #if !XAMCORE_4_0
+	partial class AVCaptureInputPort {
+
+		[Obsolete ("Valid instance of this type cannot be directly created.")]
+		public AVCaptureInputPort ()
+		{
+		}
+	}
+	
 	partial class AVAudioChannelLayout {
 
-		[Obsolete ("Valid instance of this type cannot be directly created")]
+		[Obsolete ("Valid instance of this type cannot be directly created.")]
 		public AVAudioChannelLayout ()
 		{
 		}
@@ -78,7 +86,7 @@ namespace XamCore.AVFoundation {
 
 	partial class AVAudioConnectionPoint {
 
-		[Obsolete ("Valid instance of this type cannot be directly created")]
+		[Obsolete ("Valid instance of this type cannot be directly created.")]
 		public AVAudioConnectionPoint ()
 		{
 		}
@@ -86,8 +94,8 @@ namespace XamCore.AVFoundation {
 
 #if TVOS
 	// tvOS removed some types - we need to keep stubs of them for binary compatibility
-	[Obsolete ("Removed in tvOS 10")]
-	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None, "Removed in tvOS 10")]
+	[Obsolete ("Removed in tvOS 10.")]
+	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
 	public class AVAssetDownloadDelegate : NSObject, IAVAssetDownloadDelegate {
 		public AVAssetDownloadDelegate ()
 		{
@@ -152,13 +160,13 @@ namespace XamCore.AVFoundation {
 		}
 	}
 
-	[Obsolete ("Removed in tvOS 10")]
-	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None, "Removed in tvOS 10")]
+	[Obsolete ("Removed in tvOS 10.")]
+	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
 	public interface IAVAssetDownloadDelegate : INativeObject, IDisposable, INSUrlSessionTaskDelegate, INSUrlSessionDelegate {
 	}
 
-	[Obsolete ("Removed in tvOS 10")]
-	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None, "Removed in tvOS 10")]
+	[Obsolete ("Removed in tvOS 10.")]
+	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
 	public static class AVAssetDownloadDelegate_Extensions {
 
 		public static void DidFinishDownloadingToUrl (this IAVAssetDownloadDelegate This, NSUrlSession session, AVAssetDownloadTask assetDownloadTask, NSUrl location)
@@ -177,8 +185,8 @@ namespace XamCore.AVFoundation {
 		}
 	}
 
-	[Obsolete ("Removed in tvOS 10")]
-	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None, "Removed in tvOS 10")]
+	[Obsolete ("Removed in tvOS 10.")]
+	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
 	public class AVAssetDownloadTask : NSUrlSessionTask {
 
 		public override IntPtr ClassHandle {
@@ -242,8 +250,8 @@ namespace XamCore.AVFoundation {
 		}
 	}
 
-	[Obsolete ("Removed in tvOS 10")]
-	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None, "Removed in tvOS 10")]
+	[Obsolete ("Removed in tvOS 10.")]
+	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
 	public class AVAssetDownloadUrlSession : NSUrlSession {
 
 		public new static NSUrlSession SharedSession {
@@ -280,7 +288,7 @@ namespace XamCore.AVFoundation {
 			throw new NotImplementedException ();
 		}
 
-		[Obsolete ("Use the overload with a `INSUrlSessionDelegate` parameter.")]
+		[Obsolete ("Use the overload with a 'INSUrlSessionDelegate' parameter.")]
 		public new static NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, NSUrlSessionDelegate sessionDelegate, NSOperationQueue delegateQueue)
 		{
 			throw new NotImplementedException ();
@@ -387,104 +395,6 @@ namespace XamCore.AVFoundation {
 		}
 	}
 
-	[Obsolete ("Removed in tvOS 10")]
-	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None, "Removed in tvOS 10")]
-	public class AVAudioInputNode : AVAudioIONode, IAVAudio3DMixing, IAVAudioMixing, IAVAudioStereoMixing {
-
-		public override IntPtr ClassHandle {
-			get {
-				throw new NotImplementedException ();
-			}
-		}
-
-		public virtual float Obstruction {
-			get {
-				throw new NotImplementedException ();
-			}
-			set {
-				throw new NotImplementedException ();
-			}
-		}
-
-		public virtual float Occlusion {
-			get {
-				throw new NotImplementedException ();
-			}
-			set {
-				throw new NotImplementedException ();
-			}
-		}
-
-		public virtual float Pan {
-			get {
-				throw new NotImplementedException ();
-			}
-			set {
-				throw new NotImplementedException ();
-			}
-		}
-
-		public virtual Vector3 Position {
-			get {
-				throw new NotImplementedException ();
-			}
-			set {
-				throw new NotImplementedException ();
-			}
-		}
-
-		public virtual float Rate {
-			get {
-				throw new NotImplementedException ();
-			}
-			set {
-				throw new NotImplementedException ();
-			}
-		}
-
-		public virtual AVAudio3DMixingRenderingAlgorithm RenderingAlgorithm {
-			get {
-				throw new NotImplementedException ();
-			}
-			set {
-				throw new NotImplementedException ();
-			}
-		}
-
-		public virtual float ReverbBlend {
-			get {
-				throw new NotImplementedException ();
-			}
-			set {
-				throw new NotImplementedException ();
-			}
-		}
-
-		public virtual float Volume {
-			get {
-				throw new NotImplementedException ();
-			}
-			set {
-				throw new NotImplementedException ();
-			}
-		}
-
-		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		protected AVAudioInputNode (NSObjectFlag t) : base (t)
-		{
-			throw new NotImplementedException ();
-		}
-
-		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		protected internal AVAudioInputNode (IntPtr handle) : base (handle)
-		{
-		}
-
-		public virtual AVAudioMixingDestination DestinationForMixer (AVAudioNode mixer, nuint bus)
-		{
-			throw new NotImplementedException ();
-		}
-	}
 #endif // TVOS
 #endif // !XAMCORE_4_0
 }

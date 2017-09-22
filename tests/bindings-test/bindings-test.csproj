@@ -55,6 +55,9 @@
     <ObjcBindingCoreSource Include="StructsAndEnums.generated.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.ObjCBinding.CSharp.targets" />
+  <PropertyGroup>
+    <TestLibrariesDirectory>..\..\tests\test-libraries</TestLibrariesDirectory>
+  </PropertyGroup>
   <ItemGroup>
     <ObjcBindingNativeLibrary Include="..\..\tests\test-libraries\.libs\ios\libtest.a">
       <Link>libtest.a</Link>
@@ -99,6 +102,6 @@
     <GeneratedTestOutput Include="StructsAndEnums.generated.cs" />
   </ItemGroup>
   <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)">
-    <Exec Command="make -j8 -C ..\..\tests\test-libraries" />
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
   </Target>
 </Project>

@@ -40,13 +40,6 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("UnpackLibraryResources");
-			Log.LogTaskProperty ("Prefix", Prefix);
-			Log.LogTaskProperty ("IntermediateOutputPath", IntermediateOutputPath);
-			Log.LogTaskProperty ("NoOverwrite", NoOverwrite);
-			Log.LogTaskProperty ("ReferencedLibraries", ReferencedLibraries);
-			Log.LogTaskProperty ("TargetFrameworkDirectory", TargetFrameworkDirectory);
-
 			// TODO: give each assembly its own intermediate output directory
 			// TODO: use list file to avoid re-extracting assemblies but allow FileWrites to work
 			var results = new List<ITaskItem> ();

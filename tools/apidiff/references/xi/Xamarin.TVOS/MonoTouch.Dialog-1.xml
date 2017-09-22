@@ -9,6 +9,11 @@
           <property name="DebuggingFlags" value="IgnoreSymbolStoreSequencePoints" />
         </properties>
       </attribute>
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
+        <properties>
+          <property name="CompilationRelaxations" value="8" />
+        </properties>
+      </attribute>
       <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
       <attribute name="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute">
         <properties>
@@ -1383,6 +1388,7 @@
               <interface name="System.Collections.IEnumerable" />
               <interface name="System.IDisposable" />
               <interface name="System.IEquatable`1[Foundation.NSObject]" />
+              <interface name="UIKit.IUIAccessibilityContentSizeCategoryImageAdjusting" />
               <interface name="UIKit.IUIAccessibilityIdentification" />
               <interface name="UIKit.IUIAppearance" />
               <interface name="UIKit.IUIAppearanceContainer" />
@@ -2813,7 +2819,7 @@
               </method>
               <method name="GetEnumerator()" attrib="486" virtual="true" returntype="System.Collections.IEnumerator">
                 <attributes>
-                  <attribute name="System.Diagnostics.DebuggerHiddenAttribute" />
+                  <attribute name="System.Runtime.CompilerServices.IteratorStateMachineAttribute" />
                 </attributes>
                 <parameters />
               </method>

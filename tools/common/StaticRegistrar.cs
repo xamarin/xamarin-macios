@@ -1881,8 +1881,13 @@ namespace XamCore.Registrar {
 			case "CoreAnimation":
 				header.WriteLine ("#import <QuartzCore/QuartzCore.h>");
 #if MTOUCH
-				if (App.SdkVersion.Major > 7)
-					header.WriteLine ("#import <QuartzCore/CAEmitterBehavior.h>");
+				switch (App.Platform) {
+				case Xamarin.Utils.ApplePlatform.iOS:
+				case Xamarin.Utils.ApplePlatform.TVOS:
+					if (App.SdkVersion.Major > 7 && App.SdkVersion.Major < 11)
+						header.WriteLine ("#import <QuartzCore/CAEmitterBehavior.h>");
+					break;
+				}
 #endif
 				return;
 			case "CoreMidi":	
@@ -1944,12 +1949,26 @@ namespace XamCore.Registrar {
 				header.WriteLine ("#import <WatchKit/WatchKit.h>");
 				namespaces.Add ("UIKit");
 				return;
+			case "CoreNFC":
+			case "DeviceCheck":
+#if !MONOMAC
+				if (IsSimulator)
+					return; // No headers provided for simulator, which makes sense since there is no NFC on it.
+#endif
+				goto default;
 			case "QTKit":
 #if MONOMAC
 				if (App.SdkVersion >= MacOSTenTwelveVersion)
 					return; // 10.12 removed the header files for QTKit
 #endif
 				goto default;
+			case "IOSurface": // There is no IOSurface.h
+#if !MONOMAC
+				if (IsSimulator)
+					return; // Not available in the simulator (the header is there, but broken).
+#endif
+				h = "<IOSurface/IOSurfaceObjC.h>";
+				break;
 			default:
 				h = string.Format ("<{0}/{0}.h>", ns);
 				break;
@@ -4043,7 +4062,7 @@ namespace XamCore.Registrar {
 			return "__p__" + i.ToString ();
 		}
 
-		public void GeneratePInvokeWrapper (PInvokeWrapperGenerator state, MethodDefinition method)
+		string TryGeneratePInvokeWrapper (PInvokeWrapperGenerator state, MethodDefinition method)
 		{
 			var signatures = state.signatures;
 			var exceptions = state.exceptions;
@@ -4137,6 +4156,18 @@ namespace XamCore.Registrar {
 				// Console.WriteLine ("Signature already processed: {0} for {1}.{2}", signature.ToString (), method.DeclaringType.FullName, method.Name);
 			}
 
+			return wrapperName;
+		}
+
+		public void GeneratePInvokeWrapper (PInvokeWrapperGenerator state, MethodDefinition method)
+		{
+			string wrapperName;
+			try {
+				wrapperName = TryGeneratePInvokeWrapper (state, method);
+			} catch (Exception e) {
+				throw ErrorHelper.CreateError (App, 4169, e, method, $"Failed to generate a P/Invoke wrapper for {GetDescriptiveMethodName (method)}: {e.Message}");
+			}
+
 			// find the module reference to __Internal
 			ModuleReference mr = null;
 			foreach (var mref in method.Module.ModuleReferences) {
@@ -4147,6 +4178,8 @@ namespace XamCore.Registrar {
 			}
 			if (mr == null)
 				method.Module.ModuleReferences.Add (mr = new ModuleReference ("__Internal"));
+
+			var pinfo = method.PInvokeInfo;
 			pinfo.Module = mr;
 			pinfo.EntryPoint = wrapperName;
 		}

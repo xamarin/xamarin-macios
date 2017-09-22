@@ -19,9 +19,6 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("GetFullPath");
-			Log.LogTaskProperty ("RelativePath", RelativePath);
-
 			FullPath = Path.GetFullPath (RelativePath);
 
 			return !Log.HasLoggedErrors;

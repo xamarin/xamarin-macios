@@ -48,9 +48,18 @@ endif
 # so disable 'readlinkat' by setting using ac_cv_func_readlinkat=no
 # these can be removed when our min ios/osx version (at runtime) is macOS 10.10+ or iOS 8+
 
+# ld: weak import of symbol '_futimens' not supported because of option: -no_weak_imports for architecture x86_64
+# ld: weak import of symbol '_utimensat' not supported because of option: -no_weak_imports for architecture x86_64
+# headers say these methods were introduced in 10.13:
+# usr/include/sys/stat.h:int	futimens(int __fd, const struct timespec __times[2]) __API_AVAILABLE(macosx(10.13), ios(11.0), tvos(11.0), watchos(4.0));
+# int	utimensat(int __fd, const char *__path, const struct timespec __times[2], int __flag) __API_AVAILABLE(macosx(10.13), ios(11.0), tvos(11.0), watchos(4.0));
+# so disable 'futimens' and 'utimensat'
+
 COMMON_ACVARS =  \
 	ac_cv_func_fstatat=no \
 	ac_cv_func_readlinkat=no \
+	ac_cv_func_futimens=no \
+	ac_cv_func_utimensat=no \
 
 COMMON_LDFLAGS=-Wl,-no_weak_imports
 
@@ -796,6 +805,7 @@ SIM_ACVARS = \
 	$(COMMON_ACVARS) \
 	ac_cv_func_clock_nanosleep=no \
 	mono_cv_uscore=yes \
+	ac_cv_func_system=no \
 
 define SimulatorBuildTemplate
 
@@ -989,7 +999,9 @@ WATCHSIMULATOR_ACVARS =  \
 	ac_cv_func_execv=no \
 	ac_cv_func_execve=no \
 	ac_cv_func_execvp=no \
-	ac_cv_func_signal=no
+	ac_cv_func_signal=no \
+	ac_cv_func_futimens=no \
+	ac_cv_func_utimensat=no \
 
 WATCHSIMULATOR_ENVIRONMENT =                  \
 	$(WATCHSIMULATOR_ACVARS)                         \
@@ -1139,7 +1151,9 @@ TVSIMULATOR_ACVARS =  \
 	ac_cv_func_execv=no \
 	ac_cv_func_execve=no \
 	ac_cv_func_execvp=no \
-	ac_cv_func_signal=no
+	ac_cv_func_signal=no \
+	ac_cv_func_futimens=no \
+	ac_cv_func_utimensat=no \
 
 TVSIMULATOR_ENVIRONMENT =                  \
 	$(TVSIMULATOR_ACVARS)                  \
@@ -1843,6 +1857,7 @@ endif
 
 LLVM_BASE_CONFIGURE_FLAGS=--enable-libcpp --enable-optimized --enable-assertions=no --disable-jit --disable-docs --disable-doxygen
 LLVM_CXXFLAGS=$(CCACHE_CXXFLAGS)
+LLVM_BASE_CONFIGURE_ENVIRONMENT=$(COMMON_ACVARS)
 
 # This is used just for linking with the 32 bit cross compiler
 # FIXME: Avoid building the libs not needed by mono
@@ -1850,6 +1865,7 @@ LLVM_CXXFLAGS=$(CCACHE_CXXFLAGS)
 	@mkdir -p llvm/
 	@echo "Configuring llvm"
 	@cd llvm && \
+	$(LLVM_BASE_CONFIGURE_ENVIRONMENT) \
 	$(abspath $(LLVM_PATH)/configure) --prefix=$$PWD/usr --build=i386-apple-darwin10.7  --enable-targets="arm" $(LLVM_BASE_CONFIGURE_FLAGS) --cache-file=../llvm.config.cache CC="$(CCACHE)clang" CXX="$(CCACHE)clang++" CXXFLAGS="$(LLVM_CXXFLAGS)" > $@.log 2>&1 || (echo "Configuring llvm failed:" && cat $@.log | sed "s/^/    /" && exit 1)
 	$(Q) @touch $@
 	@echo Configured llvm
@@ -1858,6 +1874,7 @@ LLVM_CXXFLAGS=$(CCACHE_CXXFLAGS)
 	@mkdir -p llvm64/
 	@echo "Configuring llvm64"
 	@cd llvm64 && \
+	$(LLVM_BASE_CONFIGURE_ENVIRONMENT) \
 	$(abspath $(LLVM_PATH)/configure) --prefix=$$PWD/usr --enable-targets="arm arm64" $(LLVM_BASE_CONFIGURE_FLAGS) --cache-file=../llvm64.config.cache CC="$(CCACHE)clang" CXX="$(CCACHE)clang++" CXXFLAGS="-Qunused-arguments" > $@.log 2>&1 || (echo "Configuring llvm64 failed:" && cat $@.log | sed "s/^/    /" && exit 1)
 	$(Q) @touch $@
 	@echo "Configured llvm64"
@@ -2197,6 +2214,8 @@ $(eval $(call GenerateCrossOffsets,aarch64-apple-darwin10,$(TOP)/builds/crosstv/
 	$(MAKE) -C crosstv/mono install
 	$(Q) touch $@
 
+build-crosstv: .stamp-build-crosstv
+
 TV_WATCH_TARGETS = \
 	$(PREFIX)/bin/aarch64-unknown-darwin-mono-sgen  \
 
@@ -2208,6 +2227,6 @@ $(PREFIX)/bin/aarch64-unknown-darwin-mono-sgen: $(BUILD_DESTDIR)/crosstv/bin/aar
 install-crosstv: install-llvm $(TV_WATCH_TARGETS)
 
 clean-crosstv:
-	-rm -rf crosstv .stamp-configure-crosstv crosstv.config.cache
+	-rm -rf crosstv .stamp-configure-crosstv .stamp-build-crosstv crosstv.config.cache
 
 crosstv: build-crosstv install-crosstv

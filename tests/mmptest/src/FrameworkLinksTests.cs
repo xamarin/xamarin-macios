@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define ENABLE_STATIC_REGISTRAR_TESTS
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -70,9 +72,11 @@ namespace Xamarin.MMP.Tests
 				string [] clangParts = GetUnifiedProjectClangInvocation (tmpDir);
 				AssertUnlinkedFrameworkStatus (clangParts);
 
+#if ENABLE_STATIC_REGISTRAR_TESTS
 				// Even with static registrar
 				clangParts = GetUnifiedProjectClangInvocation (tmpDir, StaticRegistrarConfig);
 				AssertUnlinkedFrameworkStatus (clangParts);
+#endif
 			});
 		}
 
@@ -96,9 +100,11 @@ namespace Xamarin.MMP.Tests
 				string[] clangParts = GetUnifiedProjectClangInvocation (tmpDir, LinkerEnabledConfig);
 				AssertLinkedFrameworkStatus (clangParts);
 
+#if ENABLE_STATIC_REGISTRAR_TESTS
 				// Even with static registrar
 				clangParts = GetUnifiedProjectClangInvocation (tmpDir, LinkerEnabledConfig + StaticRegistrarConfig);
 				AssertLinkedFrameworkStatus (clangParts);
+#endif
 			});
 		}
 
@@ -125,6 +131,20 @@ namespace Xamarin.MMP.Tests
 	const string MobileDeviceLibrary = ""/System/Library/PrivateFrameworks/MobileDevice.framework/MobileDevice"";
 	[System.Runtime.InteropServices.DllImport (MobileDeviceLibrary)]
 	private static extern void TestMethod ();
+				" };
+
+				TI.TestUnifiedExecutable (test);
+			});
+		}
+
+		[Test]
+		public void ProjectWithSubFramework_ShouldBuild ()
+		{
+			RunMMPTest (tmpDir => {
+
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { TestDecl = @"
+	[System.Runtime.InteropServices.DllImport (""/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/LaunchServices"")]
+	static extern int GetIconRef (short vRefNum, int creator, int iconType, out System.IntPtr iconRef);
 				" };
 
 				TI.TestUnifiedExecutable (test);

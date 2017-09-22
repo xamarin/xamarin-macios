@@ -226,7 +226,7 @@ namespace XamCore.Foundation  {
 		WithoutOverwriting  = 2,
 			
 #if !XAMCORE_2_0
-		[Obsolete ("No longer available")]
+		[Obsolete ("No longer available.")]
 		Coordinated = 1 << 2,
 #endif
 			
@@ -363,6 +363,8 @@ namespace XamCore.Foundation  {
 
 		CoderReadCorruptError = 4864,
 		CoderValueNotFoundError = 4865,
+		[Mac (10,13), iOS (11,0), Watch (4,0), TV (11,0)]
+		CoderInvalidValueError = 4866,
 		CoderErrorMinimum = 4864,
 		CoderErrorMaximum = 4991,
 
@@ -722,7 +724,9 @@ namespace XamCore.Foundation  {
 	[Flags]
 	[Native]
 	public enum NSJsonWritingOptions : nuint_compat_int {
-		PrettyPrinted = 1
+		PrettyPrinted = 1,
+		[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
+		SortedKeys = (1 << 1),
 	}
 
 	[Native]
@@ -805,7 +809,7 @@ namespace XamCore.Foundation  {
 #if !MONOMAC || !XAMCORE_3_0
 	[Native]
 #if MONOMAC
-	[Obsolete ("Use NSWritingDirection in AppKit instead")]
+	[Obsolete ("Use NSWritingDirection in AppKit instead.")]
 #endif
 	public enum NSWritingDirection : nint {
 		Natural = -1, LeftToRight = 0, RightToLeft = 1,
@@ -929,7 +933,7 @@ namespace XamCore.Foundation  {
 	}
 
 #if !XAMCORE_3_0
-	[iOS (7,0)][Deprecated (PlatformName.iOS, 9, 0, message: "Use NSWritingDirectionFormatType")]
+	[iOS (7,0)][Deprecated (PlatformName.iOS, 9, 0, message: "Use 'NSWritingDirectionFormatType'.")]
 	[Flags]
 	[Native]
 	public enum NSTextWritingDirection : nint {
@@ -1109,12 +1113,14 @@ namespace XamCore.Foundation  {
 		}
 	}
 
-#if MONOMAC
+	[Mac (10,10,3)]
+	[Watch (4,0)]
+	[TV (11,0)]
+	[iOS (11,0)]
 	[Native]
 	public enum NSProcessInfoThermalState : nint {
 		Nominal, Fair, Serious, Critical
 	}
-#endif
 
 	[Native]
 #if XAMCORE_2_0
@@ -1235,6 +1241,8 @@ namespace XamCore.Foundation  {
 		DashSeparatorInDate = 1 << 8,
 		ColonSeparatorInTime = 1 << 9,
 		ColonSeparatorInTimeZone = 1 << 10,
+		[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
+		FractionalSeconds = 1 << 11,
 		FullDate = Year | Month | Day | DashSeparatorInDate,
 		FullTime = Time | ColonSeparatorInTime | TimeZone | ColonSeparatorInTimeZone,
 		InternetDateTime = FullDate | FullTime,
@@ -1258,4 +1266,36 @@ namespace XamCore.Foundation  {
 		TemperatureWithoutUnit = (1 << 2)
 	}
 
+
+	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[Native]
+	public enum NSItemProviderRepresentationVisibility : nint {
+		All = 0,
+		Team = 1,
+		Group = 2,
+		OwnProcess = 3,
+	}
+
+	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[Native]
+	public enum NSItemProviderFileOptions : nint {
+		OpenInPlace = 1,
+	}
+
+	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[Native]
+	public enum NSLinguisticTaggerUnit : nint {
+		Word,
+		Sentence,
+		Paragraph,
+		Document,
+	}
+
+	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+	[Native]
+	public enum NSUrlSessionDelayedRequestDisposition : nint {
+		ContinueLoading = 0,
+		UseNewRequest = 1,
+		Cancel = 2,
+	}
 }

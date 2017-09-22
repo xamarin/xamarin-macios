@@ -58,13 +58,6 @@ namespace Xamarin.iOS.Tasks
 			PDictionary plist, device;
 			PString value, os;
 
-			Log.LogTaskName ("ParseDeviceSpecificBuildInformation");
-			Log.LogTaskProperty ("Architectures", Architectures);
-			Log.LogTaskProperty ("IntermediateOutputPath", IntermediateOutputPath);
-			Log.LogTaskProperty ("OutputPath", OutputPath);
-			Log.LogTaskProperty ("TargetFrameworkIdentifier", TargetFrameworkIdentifier);
-			Log.LogTaskProperty ("TargetiOSDevice", TargetiOSDevice);
-
 			switch (PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier)) {
 			case PlatformFramework.WatchOS:
 				targetOperatingSystem = "watchOS";

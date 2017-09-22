@@ -52,14 +52,5 @@ namespace Xamarin.MacDev.Tasks
 			// TODO: do proper parsing of error messages and such
 			Log.LogMessage (messageImportance, "{0}", singleLine);
 		}
-
-		public override bool Execute ()
-		{
-			Log.LogTaskName ("Ditto");
-			Log.LogTaskProperty ("Source", Source);
-			Log.LogTaskProperty ("Destination", Destination);
-
-			return base.Execute ();
-		}
 	}
 }

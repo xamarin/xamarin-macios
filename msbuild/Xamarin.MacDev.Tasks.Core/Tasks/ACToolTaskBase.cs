@@ -256,22 +256,6 @@ namespace Xamarin.MacDev.Tasks
 			var items = new List<ITaskItem> ();
 			var specs = new PArray ();
 
-			Log.LogTaskName ("ACTool");
-			Log.LogTaskProperty ("AppManifest", AppManifest);
-			Log.LogTaskProperty ("DeviceModel", DeviceModel);
-			Log.LogTaskProperty ("DeviceOSVersion", DeviceOSVersion);
-			Log.LogTaskProperty ("EnableOnDemandResources", EnableOnDemandResources);
-			Log.LogTaskProperty ("ImageAssets", ImageAssets);
-			Log.LogTaskProperty ("IntermediateOutputPath", IntermediateOutputPath);
-			Log.LogTaskProperty ("IsWatchApp", IsWatchApp);
-			Log.LogTaskProperty ("OptimizePNGs", OptimizePNGs);
-			Log.LogTaskProperty ("OutputPath", OutputPath);
-			Log.LogTaskProperty ("ProjectDir", ProjectDir);
-			Log.LogTaskProperty ("ResourcePrefix", ResourcePrefix);
-			Log.LogTaskProperty ("SdkBinPath", SdkBinPath);
-			Log.LogTaskProperty ("SdkPlatform", SdkPlatform);
-			Log.LogTaskProperty ("SdkVersion", SdkVersion);
-
 			switch (SdkPlatform) {
 			case "iPhoneSimulator":
 			case "iPhoneOS":

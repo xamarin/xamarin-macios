@@ -72,6 +72,7 @@
 		new XDelegate ("void", "void", "xamarin_get_method_for_selector",
 			"Class", "IntPtr", "cls",
 			"SEL", "IntPtr", "sel",
+			"bool", "bool", "is_static",
 			"MethodDescription *", "IntPtr", "desc"
 		) { WrappedManagedFunction = "GetMethodForSelector" },
 
@@ -141,6 +142,7 @@
 		new XDelegate ("void", "void", "xamarin_get_method_and_object_for_selector",
 			"Class", "IntPtr", "cls",
 			"SEL", "IntPtr", "sel",
+			"bool", "bool", "is_static",
 			"id", "IntPtr", "obj",
 			"MonoObject **", "ref IntPtr", "mthis",
 			"MethodDescription *", "IntPtr", "desc"

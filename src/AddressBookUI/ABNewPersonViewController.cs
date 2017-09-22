@@ -14,7 +14,7 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.AddressBookUI {
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public class ABNewPersonCompleteEventArgs : EventArgs {
 
 		public ABNewPersonCompleteEventArgs (ABPerson person)
@@ -53,7 +53,7 @@ namespace XamCore.AddressBookUI {
 #endif
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	partial class ABNewPersonViewController {
 
 		ABPerson displayedPerson;

@@ -233,6 +233,10 @@ namespace Introspection {
 			if (methodinfo == null && constructorinfo == null)
 				return;
 
+			// Don't check obsolete methods, it could be obsoleted because it was broken.
+			if (m.GetCustomAttributes<ObsoleteAttribute> () != null)
+				return;
+			
 			if (m.DeclaringType != t)
 				return;
 			
@@ -388,9 +392,9 @@ namespace Introspection {
 			case "Vector4":
 			case "Vector4i":
 			case "Vector4d":
-			case "Matrix2":
-			case "Matrix3":
-			case "Matrix4":
+			case "MatrixFloat2x2":
+			case "MatrixFloat3x3":
+			case "MatrixFloat4x4":
 			case "MDLAxisAlignedBoundingBox": // struct { Vector3, Vector3 }
 				return true;
 			default:
@@ -675,6 +679,8 @@ namespace Introspection {
 				case "System.Byte":
 				// GLKBaseEffect 'instance Boolean get_ColorMaterialEnabled()' selector: colorMaterialEnabled == C8@0:4
 				case "System.Boolean":
+				// CoreNFC.NFCTypeNameFormat enum is byte
+				case "CoreNFC.NFCTypeNameFormat":
 					return true;
 				default:
 					return false;
@@ -981,6 +987,10 @@ namespace Introspection {
 			// It does not make sense for this API
 			case "RequestData":
 				return m.DeclaringType.Name == "PHAssetResourceManager";
+			// It does not make sense for this API
+			case "Register":
+			case "SignalEnumerator":
+				return m.DeclaringType.Name == "NSFileProviderManager";
 			}
 			return false;
 		}

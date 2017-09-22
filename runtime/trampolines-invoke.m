@@ -95,9 +95,9 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	free_list = s_list_prepend (free_list, desc);
 
 	if (is_ctor || is_static) {
-		xamarin_get_method_for_selector ([self class], sel, desc, &exception_gchandle);
+		xamarin_get_method_for_selector ([self class], sel, is_static, desc, &exception_gchandle);
 	} else {
-		xamarin_get_method_and_object_for_selector ([self class], sel, self, &mthis, desc, &exception_gchandle);
+		xamarin_get_method_and_object_for_selector ([self class], sel, is_static, self, &mthis, desc, &exception_gchandle);
 	}
 	if (exception_gchandle != 0)
 		goto exception_handling;

@@ -7,7 +7,16 @@ using MonoTouch.ObjCRuntime;
 using System.Runtime.InteropServices;
 
 #if __UNIFIED__
-[assembly: LinkWith ("XTest.framework")]
-[assembly: LinkWith ("XStaticObjectTest.framework", LinkerFlags = "-lz")]
-[assembly: LinkWith ("XStaticArTest.framework")]
+[assembly: LinkWith ("XTest.framework", Frameworks = LinkWithConstants.Frameworks)]
+[assembly: LinkWith ("XStaticObjectTest.framework", LinkerFlags = "-lz", Frameworks = LinkWithConstants.Frameworks)]
+[assembly: LinkWith ("XStaticArTest.framework", Frameworks = LinkWithConstants.Frameworks)]
 #endif
+
+static class LinkWithConstants
+{
+#if __WATCHOS__
+	public const string Frameworks = "";
+#else
+	public const string Frameworks = "ModelIO";
+#endif
+}

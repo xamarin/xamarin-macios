@@ -303,16 +303,6 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("CompileEntitlements");
-			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
-			Log.LogTaskProperty ("AppIdentifier", AppIdentifier);
-			Log.LogTaskProperty ("BundleIdentifier", BundleIdentifier);
-			Log.LogTaskProperty ("CompiledEntitlements", CompiledEntitlements);
-			Log.LogTaskProperty ("Entitlements", Entitlements);
-			Log.LogTaskProperty ("IsAppExtension", IsAppExtension);
-			Log.LogTaskProperty ("ProvisioningProfile", ProvisioningProfile);
-			Log.LogTaskProperty ("SdkVersion", SdkVersion);
-
 			MobileProvision profile;
 			PDictionary template;
 			PDictionary compiled;

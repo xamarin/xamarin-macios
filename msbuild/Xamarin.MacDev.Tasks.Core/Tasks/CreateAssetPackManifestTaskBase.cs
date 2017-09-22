@@ -57,12 +57,6 @@ namespace Xamarin.MacDev.Tasks
 			var resources = new PArray ();
 			bool updateManifest = false;
 
-			Log.LogTaskName ("CreateAssetPackManifest");
-			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
-			Log.LogTaskProperty ("InitialInstallTags", InitialInstallTags);
-			Log.LogTaskProperty ("OutputPath", OutputPath);
-			Log.LogTaskProperty ("PrefetchOrder", PrefetchOrder);
-
 			if (!Directory.Exists (onDemandResourcesDir))
 				return !Log.HasLoggedErrors;
 

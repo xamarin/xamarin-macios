@@ -46,11 +46,6 @@ namespace Xamarin.iOS.Tasks
 			IPhoneSdkVersion version;
 			string sdk_path;
 
-			Log.LogTaskName ("ResolveNativeWatchApp");
-			Log.LogTaskProperty ("SdkIsSimulator", SdkIsSimulator);
-			Log.LogTaskProperty ("SdkVersion", SdkVersion);
-			Log.LogTaskProperty ("TargetFrameworkIdentifier", TargetFrameworkIdentifier);
-
 			if (IsWatchFramework) {
 				if (!IPhoneSdkVersion.TryParse (SdkVersion, out version)) {
 					Log.LogError ("Failed to parse SdkVersion '{0}'.", SdkVersion);

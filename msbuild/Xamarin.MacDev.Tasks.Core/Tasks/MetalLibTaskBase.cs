@@ -64,11 +64,6 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("MetalLib");
-			Log.LogTaskProperty ("Items", Items);
-			Log.LogTaskProperty ("OutputLibrary", OutputLibrary);
-			Log.LogTaskProperty ("SdkDevPath", SdkDevPath);
-
 			var dir = Path.GetDirectoryName (OutputLibrary);
 
 			if (!Directory.Exists (dir))

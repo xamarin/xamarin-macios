@@ -150,6 +150,8 @@ namespace Xamarin.Bundler {
 						case "Metal":
 						case "MetalKit":
 						case "MetalPerformanceShaders":
+						case "CoreNFC":
+						case "DeviceCheck":
 							// some frameworks do not exists on simulators and will result in linker errors if we include them
 							if (App.IsSimulatorBuild)
 								continue;
@@ -237,6 +239,11 @@ namespace Xamarin.Bundler {
 					dynamic_symbols.AddFunction ("xamarin_dyn_objc_msgSend_stret");
 					dynamic_symbols.AddFunction ("xamarin_dyn_objc_msgSendSuper_stret");
 				}
+
+#if MONOTOUCH
+				if (App.EnableProfiling && App.LibProfilerLinkMode == AssemblyBuildTarget.StaticObject)
+					dynamic_symbols.AddFunction ("mono_profiler_startup_log");
+#endif
 
 				dynamic_symbols.Save (cache_location);
 			}

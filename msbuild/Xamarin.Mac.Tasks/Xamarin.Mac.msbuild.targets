@@ -16,21 +16,18 @@ Copyright (c) 2017 Microsoft Corp. (www.microsoft.com)
 
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<!-- MSBuild specific hacks - Teach msbuild where to find our BCL and facades -->
+
+	<!-- Location of mscorlib -->
 	<PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
-		<MacBclPath Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac'">$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
-		<MacBclPath Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">$(XamarinMacFrameworkRoot)/lib/mono/Xamarin.Mac</MacBclPath>
-		<FrameworkPathOverride>$(MacBclPath)</FrameworkPathOverride>
+		<FrameworkPathOverride Condition="'$(TargetFrameworkName)' != 'System'">$(MacBclPath)</FrameworkPathOverride>
 	</PropertyGroup>
-	<Target Name="FixTargetFrameworkDirectory" AfterTargets="GetReferenceAssemblyPaths" Condition="'$(OS)' != 'Windows_NT'">
-    		<ItemGroup>
+
+	<Target Name="FixDesignTimeFacades" AfterTargets="GetReferenceAssemblyPaths" Condition="('$(OS)' != 'Windows_NT')">
+		<ItemGroup>
 			<DesignTimeFacadeDirectories Remove="@(DesignTimeFacadeDirectories)" />
 			<DesignTimeFacadeDirectories Include="$(MacBclPath)/Facades/" />
 		</ItemGroup>
-		<PropertyGroup>	
-			<TargetFrameworkDirectory>$(MacBclPath);@(DesignTimeFacadeDirectories)</TargetFrameworkDirectory>
-		</PropertyGroup>
 	</Target>
 	
-	<!-- Modern/Mobile does not get ImplicitlyExpandDesignTimeFacades as Microsoft.NETFramework.CurrentVersion.targets isn't pulled in -->
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.ImplicitFacade.msbuild.targets" Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'"/>
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.ImplicitFacade.msbuild.targets" Condition="'$(TargetFrameworkName)' == 'Modern' Or '$(TargetFrameworkName)' == 'Full'"/>
 </Project>

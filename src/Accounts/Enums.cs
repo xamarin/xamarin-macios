@@ -29,7 +29,7 @@ namespace XamCore.Accounts {
 #if XAMCORE_3_0
 		MissingTransportMessageId,
 #else
-		[Obsolete ("Use MissingTransportMessageId")]
+		[Obsolete ("Use 'MissingTransportMessageId'.")]
 		MissingMessageID,
 #pragma warning disable 618 // MissingMessageID is obsolete
 		MissingTransportMessageId = MissingMessageID,

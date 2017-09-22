@@ -108,13 +108,6 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("ScnTool");
-			Log.LogTaskProperty ("IntermediateOutputPath", IntermediateOutputPath);
-			Log.LogTaskProperty ("InputScene", InputScene);
-			Log.LogTaskProperty ("OutputScene", OutputScene);
-			Log.LogTaskProperty ("SdkRoot", SdkRoot);
-			Log.LogTaskProperty ("SdkVersion", SdkVersion);
-
 			Directory.CreateDirectory (Path.GetDirectoryName (OutputScene));
 
 			return base.Execute ();

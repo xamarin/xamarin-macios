@@ -70,11 +70,6 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("SmartCopy");
-			Log.LogTaskProperty ("DestinationFiles", DestinationFiles);
-			Log.LogTaskProperty ("DestinationFolder", DestinationFolder);
-			Log.LogTaskProperty ("SourceFiles", SourceFiles);
-
 			if (DestinationFiles != null && DestinationFolder != null) {
 				Log.LogError ("You must specify a DestinationFolder or the DestinationFiles, but not both.");
 				return false;

@@ -7,13 +7,14 @@
 // Copyright 2011, Xamarin Inc
 //
 
+#if XAMCORE_2_0 || !MONOMAC
 
-#if XAMCORE_2_0
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.MediaPlayer {
 
+	[Mac (10,12,2, onlyOn64: true)]
 	public class MPNowPlayingInfo {
 		public MPNowPlayingInfo ()
 		{
@@ -220,10 +221,7 @@ namespace XamCore.MediaPlayer {
 				return new MPNowPlayingInfo (_NowPlayingInfo);
 			}
 			set {
-				if (value == null)
-					_NowPlayingInfo = null;
-				else
-					_NowPlayingInfo = value.ToDictionary ();
+				_NowPlayingInfo = value?.ToDictionary ();
 			}
 		}
 	}

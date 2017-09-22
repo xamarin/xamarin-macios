@@ -101,6 +101,9 @@ namespace XamCore.HomeKit {
 		NotAuthorizedForMicrophoneAccess        = 89,
 		// iOS 10.2
 		IncompatibleNetwork                     = 90,
+		// iOS 11
+		NoHomeHub = 91,
+		IncompatibleHomeHub = 92, // HMErrorCodeNoCompatibleHomeHub introduced and deprecated on iOS 11. HMErrorCodeIncompatibleHomeHub = HMErrorCodeNoCompatibleHomeHub.
 	}
 
 	
@@ -143,7 +146,7 @@ namespace XamCore.HomeKit {
 		[Field ("HMCharacteristicTypeHeatingThreshold")]
 		HeatingThreshold,
 
-		[Obsolete ("This value does not exist anymore and will always return null")]
+		[Obsolete ("This value does not exist anymore and will always return null.")]
 		HeatingCoolingStatus,
 
 		[Field ("HMCharacteristicTypeCurrentRelativeHumidity")]
@@ -164,12 +167,21 @@ namespace XamCore.HomeKit {
 		[Field ("HMCharacteristicTypeName")]
 		Name,
 
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'HMAccessory.Manufacturer' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'HMAccessory.Manufacturer' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'HMAccessory.Manufacturer' instead.")]
 		[Field ("HMCharacteristicTypeManufacturer")]
 		Manufacturer,
 
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'HMAccessory.Model' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'HMAccessory.Model' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'HMAccessory.Model' instead.")]
 		[Field ("HMCharacteristicTypeModel")]
 		Model,
 
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "No longer supported.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "No longer supported.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "No longer supported.")]
 		[Field ("HMCharacteristicTypeSerialNumber")]
 		SerialNumber,
 
@@ -284,6 +296,9 @@ namespace XamCore.HomeKit {
 		CurrentVerticalTilt,
 
 		[iOS (9,0)]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'HMAccessory.FirmwareVersion' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'HMAccessory.FirmwareVersion' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'HMAccessory.FirmwareVersion' instead.")]
 		[Field ("HMCharacteristicTypeFirmwareVersion")]
 		FirmwareVersion,
 
@@ -557,6 +572,10 @@ namespace XamCore.HomeKit {
 		[iOS (10,3), Watch (3,2), TV (10,2)]
 		[Field ("HMCharacteristicTypeLabelIndex")]
 		LabelIndex,
+
+		[iOS (11,0), Watch (4,0), TV (11,0)]
+		[Field ("HMCharacteristicTypeColorTemperature")]
+		ColorTemperature,
 	}
 
 	// conveniance enum (ObjC uses NSString)
@@ -987,7 +1006,7 @@ namespace XamCore.HomeKit {
 		GarageDoorOpener,
 
 #if !WATCH && !TVOS
-		[Obsolete ("Use GarageDoorOpener instead")]
+		[Obsolete ("Use 'GarageDoorOpener' instead.")]
 		DoorOpener = GarageDoorOpener,
 #endif
 
@@ -1055,9 +1074,12 @@ namespace XamCore.HomeKit {
 
 	[iOS (9,0)]
 	[TV (10,0)]
-	// conveniance enum (ObjC uses NSString)
 	public enum HMSignificantEvent {
+
+		[Field ("HMSignificantEventSunrise")]
 		Sunrise,
+
+		[Field ("HMSignificantEventSunset")]
 		Sunset,
 	}
 
@@ -1228,5 +1250,42 @@ namespace XamCore.HomeKit {
 	public enum HMCharacteristicValueLabelNamespace : nint {
 		Dot = 0,
 		Numeral,
+	}
+
+	[Watch (4,0), TV (11,0), iOS (11,0)]
+	[Native]
+	public enum HMEventTriggerActivationState : nuint {
+		Disabled = 0,
+		DisabledNoHomeHub = 1,
+		DisabledNoCompatibleHomeHub = 2,
+		DisabledNoLocationServicesAuthorization = 3,
+		Enabled = 4,
+	}
+
+	[Watch (4,0), TV (11,0), iOS (11,0)]
+	[Native]
+	public enum HMHomeHubState : nuint {
+		NotAvailable = 0,
+		Connected,
+		Disconnected,
+	}
+
+	[Watch (4,0), TV (11,0), iOS (11,0)]
+	[Native]
+	public enum HMPresenceEventType : nuint {
+		EveryEntry = 1,
+		EveryExit = 2,
+		FirstEntry = 3,
+		LastExit = 4,
+		AtHome = FirstEntry,
+		NotAtHome = LastExit,
+	}
+
+	[Watch (4,0), TV (11,0), iOS (11,0)]
+	[Native]
+	public enum HMPresenceEventUserType : nuint {
+		CurrentUser = 1,
+		HomeUsers = 2,
+		CustomUsers = 3,
 	}
 }

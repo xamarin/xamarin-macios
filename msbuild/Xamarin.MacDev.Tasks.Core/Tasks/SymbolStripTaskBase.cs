@@ -49,6 +49,7 @@ namespace Xamarin.MacDev.Tasks
 			if (IsFramework) {
 				// Only remove debug symbols from frameworks.
 				args.AppendSwitch ("-S");
+				args.AppendSwitch ("-x");
 			}
 
 			args.AppendFileNameIfNotNull (Executable);
@@ -60,16 +61,6 @@ namespace Xamarin.MacDev.Tasks
 		{
 			// TODO: do proper parsing of error messages and such
 			Log.LogMessage (messageImportance, "{0}", singleLine);
-		}
-
-		public override bool Execute ()
-		{
-			Log.LogTaskName ("SymbolStrip");
-			Log.LogTaskProperty ("Executable", Executable);
-			Log.LogTaskProperty ("IsFramework", IsFramework);
-			Log.LogTaskProperty ("SymbolFile", SymbolFile);
-
-			return base.Execute ();
 		}
 	}
 }

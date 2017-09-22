@@ -28,6 +28,23 @@ namespace XamCore.CoreMedia {
 			return Runtime.GetNSObject<NSDictionary> (attachments, true);
 		}
 
+#if XAMCORE_2_0
+		// There is some API that needs a more strongly typed version of a NSDictionary
+		// and there is no easy way to downcast from NSDictionary to NSDictionary<TKey, TValue>
+		public static NSDictionary<TKey, TValue> GetAttachments<TKey, TValue> (this ICMAttachmentBearer target, CMAttachmentMode attachmentMode)
+			where TKey : class, INativeObject
+			where TValue : class, INativeObject
+		{
+			if (target == null)
+				throw new ArgumentNullException (nameof (target));
+			var attachments = CMCopyDictionaryOfAttachments (IntPtr.Zero, target.Handle, attachmentMode);
+			if (attachments == IntPtr.Zero)
+				return null;
+
+			return Runtime.GetNSObject<NSDictionary<TKey, TValue>> (attachments, true);
+		}
+#endif
+
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CFTypeRef */ IntPtr CMGetAttachment (/* CMAttachmentBearerRef */ IntPtr target, /* CFStringRef */ IntPtr key,
 			/* CMAttachmentMode */ out CMAttachmentMode attachmentModeOut);
