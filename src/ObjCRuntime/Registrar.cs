@@ -602,7 +602,9 @@ namespace XamCore.Registrar {
 			public TType [] NativeParameters {
 				get {
 					if (native_parameters == null && Parameters != null) {
-						native_parameters = new TType [parameters.Length];
+						// Put the parameters in a temporary variable, and only store them in the instance field once done,
+						// so that if an exception occurs, the same exception will be raised the next time too.
+						var native_parameters = new TType [parameters.Length];
 						for (int i = 0; i < parameters.Length; i++) {
 							var originalType = Registrar.GetBindAsAttribute (this, i)?.OriginalType;
 							if (originalType != null) {
@@ -613,6 +615,7 @@ namespace XamCore.Registrar {
 								native_parameters [i] = parameters [i];
 							}
 						}
+						this.native_parameters = native_parameters;
 					}
 					return native_parameters;
 				}
