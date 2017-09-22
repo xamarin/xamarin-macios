@@ -796,6 +796,7 @@ void *xamarin_nsvalue_to_cgpoint                (NSValue *value, void *ptr, Mono
 void *xamarin_nsvalue_to_cgrect                 (NSValue *value, void *ptr, MonoClass *managedType, guint32 *exception_gchandle) {                 CGRect *valueptr =                 (CGRect *) (ptr ? ptr : xamarin_calloc (sizeof (CGRect)));                 *valueptr = [value CGRectValue];            return valueptr; }
 void *xamarin_nsvalue_to_cgsize                 (NSValue *value, void *ptr, MonoClass *managedType, guint32 *exception_gchandle) {                 CGSize *valueptr =                 (CGSize *) (ptr ? ptr : xamarin_calloc (sizeof (CGSize)));                 *valueptr = [value CGSizeValue];            return valueptr; }
 void *xamarin_nsvalue_to_cgvector               (NSValue *value, void *ptr, MonoClass *managedType, guint32 *exception_gchandle) {               CGVector *valueptr =               (CGVector *) (ptr ? ptr : xamarin_calloc (sizeof (CGVector)));               *valueptr = [value CGVectorValue];          return valueptr; }
+void *xamarin_nsvalue_to_nsdirectionaledgeinsets(NSValue *value, void *ptr, MonoClass *managedType, guint32 *exception_gchandle) {NSDirectionalEdgeInsets *valueptr =(NSDirectionalEdgeInsets *) (ptr ? ptr : xamarin_calloc (sizeof (NSDirectionalEdgeInsets)));*valueptr = [value directionalEdgeInsetsValue];return valueptr; }
 #endif
 #if HAVE_COREANIMATION
 void *xamarin_nsvalue_to_catransform3d          (NSValue *value, void *ptr, MonoClass *managedType, guint32 *exception_gchandle) {          CATransform3D *valueptr =          (CATransform3D *) (ptr ? ptr : xamarin_calloc (sizeof (CATransform3D)));          *valueptr = [value CATransform3DValue];     return valueptr; }
@@ -885,6 +886,7 @@ id xamarin_cgpoint_to_nsvalue                (MonoObject *value, guint32 *except
 id xamarin_cgrect_to_nsvalue                 (MonoObject *value, guint32 *exception_gchandle) { return [NSValue valueWithCGRect:              *(CGRect *)                 mono_object_unbox (value)]; }
 id xamarin_cgsize_to_nsvalue                 (MonoObject *value, guint32 *exception_gchandle) { return [NSValue valueWithCGSize:              *(CGSize *)                 mono_object_unbox (value)]; }
 id xamarin_cgvector_to_nsvalue               (MonoObject *value, guint32 *exception_gchandle) { return [NSValue valueWithCGVector:            *(CGVector *)               mono_object_unbox (value)]; }
+id xamarin_nsdirectionaledgeinsets_to_nsvalue(MonoObject *value, guint32 *exception_gchandle) { return [NSValue valueWithDirectionalEdgeInsets:*(NSDirectionalEdgeInsets *)mono_object_unbox (value)]; }
 #endif
 #if HAVE_COREANIMATION
 id xamarin_catransform3d_to_nsvalue          (MonoObject *value, guint32 *exception_gchandle) { return [NSValue valueWithCATransform3D:       *(CATransform3D *)          mono_object_unbox (value)]; }
@@ -1002,6 +1004,8 @@ xamarin_get_nsvalue_converter (MonoClass *managedType, MonoMethod *method, bool 
 		func = to_managed ? (void *) xamarin_nsvalue_to_cgsize : (void *) xamarin_cgsize_to_nsvalue;
 	} else if (!strcmp (fullname, "CoreGraphics.CGVector")) {
 		func = to_managed ? (void *) xamarin_nsvalue_to_cgvector : (void *) xamarin_cgvector_to_nsvalue;
+	} else if (!strcmp (fullname, "UIKit.NSDirectionalEdgeInsets")) {
+		func = to_managed ? (void *) xamarin_nsvalue_to_nsdirectionaledgeinsets : (void *) xamarin_nsdirectionaledgeinsets_to_nsvalue;
 #endif
 #if HAVE_COREANIMATION
 	} else if (!strcmp (fullname, "CoreAnimation.CATransform3D")) {

@@ -3793,6 +3793,7 @@ namespace XamCore.Registrar {
 			case "SceneKit.SCNVector4": nativeType = "SCNVector4"; return "xamarin_nsvalue_to_scnvector4";
 			case "UIKit.UIEdgeInsets": nativeType = "UIEdgeInsets"; return "xamarin_nsvalue_to_uiedgeinsets";
 			case "UIKit.UIOffset": nativeType = "UIOffset"; return "xamarin_nsvalue_to_uioffset";
+			case "UIKit.NSDirectionalEdgeInsets": nativeType = "NSDirectionalEdgeInsets"; return "xamarin_nsvalue_to_nsdirectionaledgeinsets";
 			default:
 				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 			}
@@ -3826,6 +3827,7 @@ namespace XamCore.Registrar {
 			case "SceneKit.SCNVector4": return "xamarin_scnvector4_to_nsvalue";
 			case "UIKit.UIEdgeInsets": return "xamarin_uiedgeinsets_to_nsvalue";
 			case "UIKit.UIOffset": return "xamarin_uioffset_to_nsvalue";
+			case "UIKit.NSDirectionalEdgeInsets": return "xamarin_nsdirectionaledgeinsets_to_nsvalue";
 			default:
 				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 			}
