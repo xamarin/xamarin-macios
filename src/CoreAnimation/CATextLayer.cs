@@ -135,13 +135,13 @@ namespace XamCore.CoreAnimation {
 			}
 		}
 #if !XAMCORE_4_0
-		[Advice ("Use 'TextTruncationMode' instead.")]
+		[Obsolete ("Use 'TextTruncationMode' instead.")]
 		public virtual string TruncationMode {
 			get { return (string) WeakTruncationMode; }
 			set { WeakTruncationMode = (NSString) value; }
 		}
 
-		[Advice ("Use 'TextAlignmentMode' instead.")]
+		[Obsolete ("Use 'TextAlignmentMode' instead.")]
 		public virtual string AlignmentMode {
 			get { return (string) WeakAlignmentMode; }
 			set { WeakAlignmentMode = (NSString) value; }

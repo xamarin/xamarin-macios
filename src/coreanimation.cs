@@ -875,47 +875,47 @@ namespace XamCore.CoreAnimation {
 		NSString WeakAlignmentMode { get; set; }
 
 #if !XAMCORE_4_0 // Use smart enums instead, CATruncationMode and CATextLayerAlignmentMode.
-		[Advice ("Use 'CATextLayerTruncationMode.None.GetConstant ()' instead.")]
+		[Obsolete ("Use 'CATextLayerTruncationMode.None.GetConstant ()' instead.")]
 		[Static]
 		[Wrap ("CATextLayerTruncationMode.None.GetConstant ()")]
 		NSString TruncationNone { get; }
 		
-		[Advice ("Use 'CATextLayerTruncationMode.Start.GetConstant ()' instead.")]
+		[Obsolete ("Use 'CATextLayerTruncationMode.Start.GetConstant ()' instead.")]
 		[Static]
 		[Wrap ("CATextLayerTruncationMode.Start.GetConstant ()")]
 		NSString TruncantionStart { get; }
 		
-		[Advice ("Use 'CATextLayerTruncationMode.End.GetConstant ()' instead.")]
+		[Obsolete ("Use 'CATextLayerTruncationMode.End.GetConstant ()' instead.")]
 		[Static]
 		[Wrap ("CATextLayerTruncationMode.End.GetConstant ()")]
 		NSString TruncantionEnd { get; }
 		
-		[Advice ("Use 'CATextLayerTruncationMode.Middle.GetConstant ()' instead.")]
+		[Obsolete ("Use 'CATextLayerTruncationMode.Middle.GetConstant ()' instead.")]
 		[Static]
 		[Wrap ("CATextLayerTruncationMode.Middle.GetConstant ()")]
 		NSString TruncantionMiddle { get; }
 		
-		[Advice ("Use 'CATextLayerAlignmentMode.Natural.GetConstant ()' instead.")]
+		[Obsolete ("Use 'CATextLayerAlignmentMode.Natural.GetConstant ()' instead.")]
 		[Static]
 		[Wrap ("CATextLayerAlignmentMode.Natural.GetConstant ()")]
 		NSString AlignmentNatural { get; }
 		
-		[Advice ("Use 'CATextLayerAlignmentMode.Left.GetConstant ()' instead.")]
+		[Obsolete ("Use 'CATextLayerAlignmentMode.Left.GetConstant ()' instead.")]
 		[Static]
 		[Wrap ("CATextLayerAlignmentMode.Left.GetConstant ()")]
 		NSString AlignmentLeft { get; }
 		
-		[Advice ("Use 'CATextLayerAlignmentMode.Right.GetConstant ()' instead.")]
+		[Obsolete ("Use 'CATextLayerAlignmentMode.Right.GetConstant ()' instead.")]
 		[Static]
 		[Wrap ("CATextLayerAlignmentMode.Right.GetConstant ()")]
 		NSString AlignmentRight { get; }
 		
-		[Advice ("Use 'CATextLayerAlignmentMode.Center.GetConstant ()' instead.")]
+		[Obsolete ("Use 'CATextLayerAlignmentMode.Center.GetConstant ()' instead.")]
 		[Static]
 		[Wrap ("CATextLayerAlignmentMode.Center.GetConstant ()")]
 		NSString AlignmentCenter { get; }
 		
-		[Advice ("Use 'CATextLayerAlignmentMode.Justified.GetConstant ()' instead.")]
+		[Obsolete ("Use 'CATextLayerAlignmentMode.Justified.GetConstant ()' instead.")]
 		[Static]
 		[Wrap ("CATextLayerAlignmentMode.Justified.GetConstant ()")]
 		NSString AlignmentJustified { get; }
