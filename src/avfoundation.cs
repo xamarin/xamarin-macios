@@ -3074,6 +3074,9 @@ namespace XamCore.AVFoundation {
 
 #endif // MONOMAC
 
+#if XAMCORE_4_0
+	[Abstract] // Abstract superclass.
+#endif
 	[NoWatch, NoTV, iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -3086,15 +3089,27 @@ namespace XamCore.AVFoundation {
 	[NoWatch, NoTV, iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface AVCaptureSynchronizedDataCollection : INSFastEnumeration
+	interface AVCaptureSynchronizedDataCollection // NSFastEnumeration
 	{
-		[Export ("synchronizedDataForCaptureOutput:")]
-		[return: NullAllowed]
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'GetSynchronizedData' Instead.")]
+		[Wrap ("GetSynchronizedData (captureOutput)", isVirtual: true)]
 		AVCaptureSynchronizedData From (AVCaptureOutput captureOutput);
 
+		// This is not reexposed because it is not needed you can use 'GetSynchronizedData' instead, also from docs:
+		// https://developer.apple.com/documentation/avfoundation/avcapturesynchronizeddatacollection/2873892-objectforkeyedsubscript?language=objc
+		// > This call is equivalent to the synchronizedDataForCaptureOutput: method, but allows subscript syntax.
+		[Obsolete ("Use 'GetSynchronizedData' Instead.")]
 		[Export ("objectForKeyedSubscript:")]
 		[return: NullAllowed]
 		AVCaptureSynchronizedData ObjectForKeyedSubscript (AVCaptureOutput key);
+#endif
+		// This method returns AVCaptureSynchronizedData but usually you will want to downcast
+		// to one of its children classes, downcasting is cumbersome so providing a generic method instead.
+		//[Protected]
+		[Export ("synchronizedDataForCaptureOutput:")]
+		[return: NullAllowed]
+		AVCaptureSynchronizedData GetSynchronizedData (AVCaptureOutput captureOutput);
 
 		[Export ("count")]
 		nuint Count { get; }
@@ -8263,7 +8278,7 @@ namespace XamCore.AVFoundation {
 
 	interface IAVCaptureDepthDataOutputDelegate {}
 	
-	[NoWatch, NoTV, iOS (11,0)]
+	[NoWatch, NoTV, iOS (11,0), Mac (10,13)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface AVCaptureDepthDataOutputDelegate
@@ -8275,9 +8290,8 @@ namespace XamCore.AVFoundation {
 		void DidDropDepthData (AVCaptureDepthDataOutput output, AVDepthData depthData, CMTime timestamp, AVCaptureConnection connection, AVCaptureOutputDataDroppedReason reason);
 	}
 
-	[NoWatch, NoTV, iOS (11,0)]
+	[NoWatch, NoTV, iOS (11,0), Mac (10,13)]
 	[BaseType (typeof(AVCaptureOutput))]
-	[DisableDefaultCtor]
 	interface AVCaptureDepthDataOutput
 	{
 		[Export ("setDelegate:callbackQueue:")]
@@ -9086,6 +9100,15 @@ namespace XamCore.AVFoundation {
 		[Export ("dualCameraFusionSupported")]
 		bool DualCameraFusionSupported { [Bind ("isDualCameraFusionSupported")] get; }
 
+		// From AVCapturePhotoOutput (AVCapturePhotoOutputDepthDataDeliverySupport) Category
+
+		[iOS (11,0)]
+		[Export ("depthDataDeliverySupported")]
+		bool DepthDataDeliverySupported { [Bind ("isDepthDataDeliverySupported")] get; }
+
+		[iOS (11,0)]
+		[Export ("depthDataDeliveryEnabled")]
+		bool DepthDataDeliveryEnabled { [Bind ("isDepthDataDeliveryEnabled")] get; set; }
 	}
 #endif
 	
@@ -9229,6 +9252,12 @@ namespace XamCore.AVFoundation {
 		[iOS (10, 2)]
 		[Field ("AVCaptureDeviceTypeBuiltInDualCamera")]
 		BuiltInDualCamera,
+	}
+
+	[NoTV, iOS (7,0), NoMac, NoWatch] // matches API that uses it.
+	enum AVAuthorizationMediaType {
+		Video,
+		Audio,
 	}
 
 	[NoWatch]
@@ -9444,10 +9473,23 @@ namespace XamCore.AVFoundation {
 		[Static, Export ("authorizationStatusForMediaType:")]
 		AVAuthorizationStatus GetAuthorizationStatus (NSString avMediaTypeToken);
 
+		// Calling this method with any media type other than AVMediaTypeVideo or AVMediaTypeAudio raises an exception.
+		[iOS (7,0)]
+		[Static]
+		[Wrap ("GetAuthorizationStatus (mediaType == AVAuthorizationMediaType.Video ? AVMediaTypes.Video.GetConstant () : AVMediaTypes.Audio.GetConstant ())")]
+		AVAuthorizationStatus GetAuthorizationStatus (AVAuthorizationMediaType mediaType);
+
 		[Since (7,0)]
 		[Static, Export ("requestAccessForMediaType:completionHandler:")]
 		[Async]
 		void RequestAccessForMediaType (NSString avMediaTypeToken, AVRequestAccessStatus completion);
+
+		// Either AVMediaTypeVideo or AVMediaTypeAudio.
+		[iOS (7,0)]
+		[Static]
+		[Wrap ("RequestAccessForMediaType (mediaType == AVAuthorizationMediaType.Video ? AVMediaTypes.Video.GetConstant () : AVMediaTypes.Audio.GetConstant (), completion)")]
+		[Async]
+		void RequestAccessForMediaType (AVAuthorizationMediaType mediaType, AVRequestAccessStatus completion);
 #endif
 
 		[Since (7,0)][Mac (10,7)]
@@ -9672,6 +9714,19 @@ namespace XamCore.AVFoundation {
 		[Export ("activeColorSpace", ArgumentSemantic.Assign)]
 		AVCaptureColorSpace ActiveColorSpace { get; set; }
 
+		// From AVCaptureDevice (AVCaptureDeviceDepthSupport) Category
+
+		[iOS (11,0)]
+		[Export ("activeDepthDataFormat", ArgumentSemantic.Retain), NullAllowed]
+		AVCaptureDeviceFormat ActiveDepthDataFormat { get; set; }
+
+		[iOS (11,0)]
+		[Export ("minAvailableVideoZoomFactor")]
+		nfloat MinAvailableVideoZoomFactor { get; }
+
+		[iOS (11,0)]
+		[Export ("maxAvailableVideoZoomFactor")]
+		nfloat MaxAvailableVideoZoomFactor { get; }
 #endif
 	}
 
