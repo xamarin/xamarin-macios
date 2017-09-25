@@ -55,6 +55,8 @@ namespace Xamarin.Linker.Steps
 		{
 			if (provider is MemberReference member)
 				return member.DeclaringType.FullName + "." + member.Name;
+			if (provider is MethodReturnType returnType)
+				return ProviderToString ((ICustomAttributeProvider) returnType.Method);
 			return provider.ToString ();
 		}
 
