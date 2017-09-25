@@ -298,7 +298,7 @@ public:
 		mono_threads_exit_gc_safe_region (__gc_safe_cookie, &__dummy);	\
 	} while (0)
 
-//#if DEBUG
+#if DEBUG
 	#define MONO_ASSERT_GC_SAFE      mono_threads_assert_gc_safe_region ()
 	#define MONO_ASSERT_GC_SAFE_OR_DETACHED \
 	do { \
@@ -308,10 +308,12 @@ public:
 	#define MONO_ASSERT_GC_UNSAFE    mono_threads_assert_gc_unsafe_region ()
 	#define MONO_ASSERT_GC_STARTING
 	// There's no way to assert STARTING, tls values inside mono aren't initialized so mono's API end up accessing random memory, and thus randomly asserting //  mono_threads_assert_gc_starting_region ()
-//#else
-//	#define MONO_ASSERT_GC_SAFE
-//	#define MONO_ASSERT_GC_UNSAFE
-//#endif /* DEBUG */
+#else
+	#define MONO_ASSERT_GC_SAFE
+	#define MONO_ASSERT_GC_UNSAFE
+	#define MONO_ASSERT_GC_SAFE_OR_DETACHED
+	#define MONO_ASSERT_GC_STARTING
+#endif /* DEBUG */
 
 #endif /* !TARGET_OS_WATCH */
 
