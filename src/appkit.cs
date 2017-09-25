@@ -715,6 +715,9 @@ namespace XamCore.AppKit {
 
 		[Lion, Field ("NSApplicationLaunchRemoteNotificationKey")]
 		NSString LaunchRemoteNotificationKey { get; }
+		
+		[Lion, Field ("NSApplicationLaunchUserNotificationKey")]
+		NSString LaunchUserNotificationKey { get; }
 
 		[Notification, Field ("NSApplicationDidFinishRestoringWindowsNotification")]
 		NSString DidFinishRestoringWindowsNotification { get; }
