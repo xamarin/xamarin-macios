@@ -30,6 +30,7 @@ namespace XamCore.Foundation {
 		IntPtr mutationValue;
 		nuint current;
 		bool started;
+		bool useReadIntPtr = true;
 
 		public NSFastEnumerator (NSObject collection)
 		{
@@ -43,15 +44,26 @@ namespace XamCore.Foundation {
 			count = NSFastEnumerator.objc_msgSend (collection.Handle, Selector.GetHandle ("countByEnumeratingWithState:objects:count:"), ref state, array, (nuint) array.Length);
 			if (!started) {
 				started = true;
-				mutationValue = Marshal.ReadIntPtr (state.mutationsPtr);
+				try {
+					// If Marshal.ReadIntPtr throws we fallback into using the pointer value instead.
+					mutationValue = Marshal.ReadIntPtr (state.mutationsPtr);
+				} catch {
+					useReadIntPtr = false;
+					mutationValue = state.mutationsPtr;
+				}
 			}
 			current = 0;
 		}
 
 		void VerifyNonMutated ()
 		{
-			if (mutationValue != Marshal.ReadIntPtr (state.mutationsPtr))
-				throw new InvalidOperationException ("Collection was modified"); 
+			if (useReadIntPtr) {
+				if (mutationValue != Marshal.ReadIntPtr (state.mutationsPtr))
+					throw new InvalidOperationException ("Collection was modified");
+			} else {
+				if (mutationValue != state.mutationsPtr)
+					throw new InvalidOperationException ("Collection was modified");
+			}
 		}
 
 #region IEnumerator implementation
