@@ -22287,14 +22287,14 @@ namespace XamCore.AppKit {
 		CGRect RectForSmartMagnificationAtPoint (CGPoint atPoint, CGRect inRect);
 	}
 
+#if !XAMCORE_4_0
 	[Category, BaseType (typeof (NSApplication))]
 	partial interface NSRemoteNotifications_NSApplication {
 
-#if !XAMCORE_4_0
 		[MountainLion, Field ("NSApplicationLaunchUserNotificationKey", "AppKit")]
 		NSString NSApplicationLaunchUserNotificationKey { get; }
-#endif
 	}
+#endif
 
 	partial interface NSControlTextEditingEventArgs {
 		[Export ("NSFieldEditor")]
