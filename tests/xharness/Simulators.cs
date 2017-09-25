@@ -619,6 +619,21 @@ namespace xharness
 			get { return Architecture == Architecture.ARM64; }
 		}
 
+		public bool Supports32Bit {
+			get {
+				switch (DevicePlatform) {
+				case DevicePlatform.iOS:
+					return Version.Parse (ProductVersion).Major < 11;
+				case DevicePlatform.tvOS:
+					return false;
+				case DevicePlatform.watchOS:
+					return true;
+				default:
+					throw new NotImplementedException ();
+				}
+			}
+		}
+
 		public Architecture Architecture {
 			get {
 				var model = ProductType;

@@ -134,6 +134,28 @@ namespace XamCore.CoreAnimation {
 				}
 			}
 		}
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'TextTruncationMode' instead.")]
+		public virtual string TruncationMode {
+			get { return (string) WeakTruncationMode; }
+			set { WeakTruncationMode = (NSString) value; }
+		}
+
+		[Obsolete ("Use 'TextAlignmentMode' instead.")]
+		public virtual string AlignmentMode {
+			get { return (string) WeakAlignmentMode; }
+			set { WeakAlignmentMode = (NSString) value; }
+		}
+#endif // !XAMCORE_4_0
+		public CATextLayerTruncationMode TextTruncationMode {
+			get { return CATextLayerTruncationModeExtensions.GetValue (WeakTruncationMode); }
+			set { WeakTruncationMode = value.GetConstant (); }
+		}
+
+		public CATextLayerAlignmentMode TextAlignmentMode {
+			get { return CATextLayerAlignmentModeExtensions.GetValue (WeakAlignmentMode); }
+			set { WeakAlignmentMode = value.GetConstant (); }
+		}
 	}
 }
 
