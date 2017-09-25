@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace xharness
 {
-	public class TVOSTarget : Target
+	public class TVOSTarget : iOSTarget
 	{
 		public override string Suffix {
 			get {
