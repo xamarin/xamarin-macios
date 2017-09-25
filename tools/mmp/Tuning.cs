@@ -269,7 +269,12 @@ namespace MonoMac.Tuner {
 				return;
 			}
 
-			base.ProcessAssembly (assembly);
+			try {
+				base.ProcessAssembly (assembly);
+			}
+			catch (Exception e) {
+				throw new MonoMacException (2103, true, e, $"Error processing assembly '{assembly.FullName}': {e}");
+			}
 		}
 	}
 
