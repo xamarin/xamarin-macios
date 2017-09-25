@@ -83,6 +83,10 @@ namespace Xamarin.Linker.Steps
 					continue;
 				}
 
+				// We only care about enums, BindAs attributes can be used for other types too.
+				if (!managedEnumType.IsEnum)
+					continue;
+
 				Tuple<MethodDefinition, MethodDefinition> pair;
 				if (cache != null && cache.TryGetValue (managedEnumType, out pair)) {
 					Preserve (pair, conditionA, conditionB);
@@ -101,7 +105,7 @@ namespace Xamarin.Linker.Steps
 					break;
 				}
 				if (extensionType == null) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, "Invalid BindAsAttribute found on '{0}': could not find the smart extension type {1}.{2}. Please file a bug report at https://bugzilla.xamarin.com", ProviderToString (provider), managedEnumType.Namespace, extensionName));
+					Driver.Log (1, $"Could not find a smart extension type for the enum {managedEnumType.FullName} (due to BindAs attribute on {ProviderToString (provider)}): most likely this is because the enum isn't a smart enum.");
 					continue;
 				}
 
@@ -130,12 +134,12 @@ namespace Xamarin.Linker.Steps
 				}
 
 				if (getConstant == null) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, "Invalid BindAsAttribute found on '{0}': could not find the GetConstant method in the type {1}. Please file a bug report at https://bugzilla.xamarin.com", ProviderToString (provider), extensionType.FullName));
+					Driver.Log (1, $"Could not find the GetConstant method on the supposedly smart extension type {extensionType.FullName} for the enum {managedEnumType.FullName} (due to BindAs attribute on {ProviderToString (provider)}): most likely this is because the enum isn't a smart enum.");
 					continue;
 				}
 
 				if (getValue == null) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, "Invalid BindAsAttribute found on '{0}': could not find the GetValue method in the type {1}. Please file a bug report at https://bugzilla.xamarin.com", ProviderToString (provider), extensionType.FullName));
+					Driver.Log (1, $"Could not find the GetValue method on the supposedly smart extension type {extensionType.FullName} for the enum {managedEnumType.FullName} (due to BindAs attribute on {ProviderToString (provider)}): most likely this is because the enum isn't a smart enum.");
 					continue;
 				}
 
