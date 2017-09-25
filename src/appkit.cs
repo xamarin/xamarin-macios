@@ -22290,8 +22290,10 @@ namespace XamCore.AppKit {
 	[Category, BaseType (typeof (NSApplication))]
 	partial interface NSRemoteNotifications_NSApplication {
 
+#if !XAMCORE_4_0
 		[MountainLion, Field ("NSApplicationLaunchUserNotificationKey", "AppKit")]
 		NSString NSApplicationLaunchUserNotificationKey { get; }
+#endif
 	}
 
 	partial interface NSControlTextEditingEventArgs {
