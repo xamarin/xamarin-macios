@@ -93,7 +93,7 @@ namespace xharness
 				}
 			});
 
-			return Task.WhenAll (simulatorLoadTask, deviceLoadTask);
+			return Task.CompletedTask;
 		}
 
 		IEnumerable<RunSimulatorTask> CreateRunSimulatorTaskAsync (XBuildTask buildTask)
@@ -148,64 +148,65 @@ namespace xharness
 				bool ignored = !IncludeDevice;
 				if (!IsIncluded (project))
 					ignored = true;
-				
-				var build64 = new XBuildTask
-				{
-					Jenkins = this,
-					TestProject = project,
-					ProjectConfiguration = "Debug64",
-					ProjectPlatform = "iPhone",
-					Platform = TestPlatform.iOS_Unified64,
-					TestName = project.Name,
-				};
-				rv.Add (new RunDeviceTask (build64, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOS });
 
-				var build32 = new XBuildTask
-				{
-					Jenkins = this,
-					TestProject = project,
-					ProjectConfiguration = "Debug32",
-					ProjectPlatform = "iPhone",
-					Platform = TestPlatform.iOS_Unified32,
-					TestName = project.Name,
-				};
-				rv.Add (new RunDeviceTask (build32, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS)) { Ignored = ignored || !IncludeiOS });
+				if (!project.SkipiOSVariation) {
+					var build64 = new XBuildTask {
+						Jenkins = this,
+						TestProject = project,
+						ProjectConfiguration = "Debug64",
+						ProjectPlatform = "iPhone",
+						Platform = TestPlatform.iOS_Unified64,
+						TestName = project.Name,
+					};
+					rv.Add (new RunDeviceTask (build64, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOS });
 
-				var todayProject = project.AsTodayExtensionProject ();
-				var buildToday = new XBuildTask
-				{
-					Jenkins = this,
-					TestProject = todayProject,
-					ProjectConfiguration = "Debug64",
-					ProjectPlatform = "iPhone",
-					Platform = TestPlatform.iOS_TodayExtension64,
-					TestName = project.Name,
-				};
-				rv.Add (new RunDeviceTask (buildToday, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOSExtensions });
+					var build32 = new XBuildTask {
+						Jenkins = this,
+						TestProject = project,
+						ProjectConfiguration = "Debug32",
+						ProjectPlatform = "iPhone",
+						Platform = TestPlatform.iOS_Unified32,
+						TestName = project.Name,
+					};
+					rv.Add (new RunDeviceTask (build32, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports32Bit)) { Ignored = ignored || !IncludeiOS });
 
-				var tvOSProject = project.AsTvOSProject ();
-				var buildTV = new XBuildTask
-				{
-					Jenkins = this,
-					TestProject = tvOSProject,
-					ProjectConfiguration = "Debug",
-					ProjectPlatform = "iPhone",
-					Platform = TestPlatform.tvOS,
-					TestName = project.Name,
-				};
-				rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.tvOS)) { Ignored = ignored || !IncludetvOS });
+					var todayProject = project.AsTodayExtensionProject ();
+					var buildToday = new XBuildTask {
+						Jenkins = this,
+						TestProject = todayProject,
+						ProjectConfiguration = "Debug64",
+						ProjectPlatform = "iPhone",
+						Platform = TestPlatform.iOS_TodayExtension64,
+						TestName = project.Name,
+					};
+					rv.Add (new RunDeviceTask (buildToday, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOSExtensions });
+				}
 
-				var watchOSProject = project.AsWatchOSProject ();
-				var buildWatch = new XBuildTask
-				{
-					Jenkins = this,
-					TestProject = watchOSProject,
-					ProjectConfiguration = "Debug",
-					ProjectPlatform = "iPhone",
-					Platform = TestPlatform.watchOS,
-					TestName = project.Name,
-				};
-				rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.watchOS)){ Ignored = ignored || !IncludewatchOS });
+				if (!project.SkiptvOSVariation) {
+					var tvOSProject = project.AsTvOSProject ();
+					var buildTV = new XBuildTask {
+						Jenkins = this,
+						TestProject = tvOSProject,
+						ProjectConfiguration = "Debug",
+						ProjectPlatform = "iPhone",
+						Platform = TestPlatform.tvOS,
+						TestName = project.Name,
+					};
+					rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.tvOS)) { Ignored = ignored || !IncludetvOS });
+				}
+
+				if (!project.SkipwatchOSVariation) {
+					var watchOSProject = project.AsWatchOSProject ();
+					var buildWatch = new XBuildTask {
+						Jenkins = this,
+						TestProject = watchOSProject,
+						ProjectConfiguration = "Debug",
+						ProjectPlatform = "iPhone",
+						Platform = TestPlatform.watchOS,
+						TestName = project.Name,
+					};
+					rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.watchOS)) { Ignored = ignored || !IncludewatchOS });
+				}
 			}
 
 			var assembly_build_targets = new []
@@ -449,9 +450,12 @@ namespace xharness
 					ignored = true;
 
 				var ps = new List<Tuple<TestProject, TestPlatform, bool>> ();
-				ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored || !IncludeiOS));
-				ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored || !IncludetvOS));
-				ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored || !IncludewatchOS));
+				if (!project.SkipiOSVariation)
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored || !IncludeiOS));
+				if (!project.SkiptvOSVariation)
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored || !IncludetvOS));
+				if (!project.SkipwatchOSVariation)
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored || !IncludewatchOS));
 				foreach (var pair in ps) {
 					var derived = new XBuildTask () {
 						Jenkins = this,
@@ -928,6 +932,12 @@ namespace xharness
 								}
 							}
 							break;
+						case "/reload-devices":
+							GC.KeepAlive (Devices.LoadAsync (DeviceLoadLog, force: true));
+							break;
+						case "/reload-simulators":
+							GC.KeepAlive (Simulators.LoadAsync (SimulatorLoadLog, force: true));
+							break;
 						case "/quit":
 							using (var writer = new StreamWriter (response.OutputStream)) {
 								writer.WriteLine ("<!DOCTYPE html>");
@@ -1192,7 +1202,7 @@ namespace xharness
 
 #nav {
 	display: inline-block;
-	width: 300px;
+	width: 350px;
 }
 
 #nav > * {
@@ -1378,8 +1388,9 @@ function autorefresh()
 				if (new_obj) {
 					if (ar_obj.innerHTML != new_obj.innerHTML)
 						ar_obj.innerHTML = new_obj.innerHTML;
-					if (ar_obj.style != new_obj.style)
+					if (ar_obj.style.cssText != new_obj.style.cssText) {
 						ar_obj.style = new_obj.style;
+					}
 					
 					var evt = ar_obj.getAttribute ('data-onautorefresh');
 					if (evt != '') {
@@ -1508,6 +1519,12 @@ function oninitialload ()
 	<li>Toggle visibility
 		<ul>
 			<li class=""adminitem""><a href='javascript:toggleVisibility (""toggleable-ignored"");'>Ignored tests</a></li>
+		</ul>
+	</li>
+	<li>Reload
+		<ul>
+			<li class=""adminitem""><a href='javascript:sendrequest (""reload-devices"");'>Devices</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""reload-simulators"");'>Simulators</a></li>
 		</ul>
 	</li>
 </ul>");

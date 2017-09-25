@@ -26,10 +26,16 @@ namespace xharness
 		public IEnumerable<SimDevice> AvailableDevices => available_devices;
 		public IEnumerable<SimDevicePair> AvailableDevicePairs => available_device_pairs;
 
-		public async Task LoadAsync (Log log)
+		public async Task LoadAsync (Log log, bool force = false)
 		{
-			if (loaded)
-				return;
+			if (loaded) {
+				if (!force)
+					return;
+				supported_runtimes.Reset ();
+				supported_device_types.Reset ();
+				available_devices.Reset ();
+				available_device_pairs.Reset ();
+			}
 			loaded = true;
 
 			await Task.Run (async () =>
@@ -497,10 +503,14 @@ namespace xharness
 			}
 		}
 
-		public async Task LoadAsync (Log log, bool extra_data = false, bool removed_locked = false)
+		public async Task LoadAsync (Log log, bool extra_data = false, bool removed_locked = false, bool force = false)
 		{
-			if (loaded)
-				return;
+			if (loaded) {
+				if (!force)
+					return;
+				connected_devices.Reset ();
+			}
+
 			loaded = true;
 
 			await Task.Run (async () =>
@@ -511,7 +521,7 @@ namespace xharness
 						process.StartInfo.FileName = Harness.MlaunchPath;
 						process.StartInfo.Arguments = string.Format ("--sdkroot {0} --listdev={1} {2} --output-format=xml", Harness.XcodeRoot, tmpfile, extra_data ? "--list-extra-data" : string.Empty);
 						log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
-						var rv = await process.RunAsync (log, false, timeout: TimeSpan.FromSeconds (30));
+						var rv = await process.RunAsync (log, false, timeout: TimeSpan.FromSeconds (120));
 						if (!rv.Succeeded)
 							throw new Exception ("Failed to list devices.");
 						log.WriteLine ("Result:");
@@ -607,6 +617,21 @@ namespace xharness
 		
 		public bool Supports64Bit {
 			get { return Architecture == Architecture.ARM64; }
+		}
+
+		public bool Supports32Bit {
+			get {
+				switch (DevicePlatform) {
+				case DevicePlatform.iOS:
+					return Version.Parse (ProductVersion).Major < 11;
+				case DevicePlatform.tvOS:
+					return false;
+				case DevicePlatform.watchOS:
+					return true;
+				default:
+					throw new NotImplementedException ();
+				}
+			}
 		}
 
 		public Architecture Architecture {
@@ -724,6 +749,12 @@ namespace xharness
 		void WaitForCompletion ()
 		{
 			completed.Task.Wait ();
+		}
+
+		public void Reset ()
+		{
+			completed = new TaskCompletionSource<bool> ();
+			list.Clear ();
 		}
 
 		public IEnumerator<T> GetEnumerator ()
