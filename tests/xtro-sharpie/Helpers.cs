@@ -77,6 +77,7 @@ namespace Extrospection {
 			// not enums
 			{ "NSMutableURLRequest", "NSMutableUrlRequest" },
 			{ "UIImagePickerControllerImageURLExportPreset", "UIImagePickerControllerImageUrlExportPreset" },
+			{ "NSURLSessionDelayedRequestDisposition", "NSUrlSessionDelayedRequestDisposition" },
 		};
 
 		public static string GetManagedName (string nativeName)
