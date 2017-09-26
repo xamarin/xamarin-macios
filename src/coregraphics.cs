@@ -194,11 +194,58 @@ namespace XamCore.CoreGraphics {
 		[Internal]
 		[Field ("kCGColorConversionBlackPointCompensation")]
 		NSString BlackPointCompensationKey { get; }
+
+#if XAMCORE_2_0
+		[Internal]
+		[Field ("kCGColorConversionTRCSize")]
+		[iOS (11,0), Mac(10,3), TV(11,0), Watch(4,0)]
+		NSString TrcSizeKey { get; }
+#endif
 	}
 
 	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
 	[StrongDictionary ("CGColorConversionInfo")]
 	interface CGColorConversionOptions {
 		bool BlackPointCompensation { get; set; }
+#if XAMCORE_2_0
+		CGSize TrcSize { get; set; }
+#endif
+	}
+
+	[iOS(11,0), Mac(10,13)]
+	[Static]
+	[Internal]
+	public interface CGPDFOutlineKeys {
+		[Internal]
+		[Field ("kCGPDFOutlineTitle")]
+		NSString OutlineTitleKey { get; }
+
+		[Internal]
+		[Field ("kCGPDFOutlineChildren")]
+		NSString OutlineChildrenKey { get; }
+
+		[Internal]
+		[Field ("kCGPDFOutlineDestination")]
+		NSString OutlineDestinationKey { get;}
+
+		[Internal]
+		[Field ("kCGPDFOutlineDestinationRect")]
+		NSString DestinationRectKey { get; }
+
+		[Internal]
+		[Field ("kCGPDFContextAccessPermissions")]
+		NSString AccessPermissionsKey { get; }
+	}
+	
+	[iOS(11,0), Mac(10,13)]
+	[StrongDictionary ("CGPDFOutlineKeys")]
+	interface CGPDFOutlineOptions {
+		string OutlineTitle { get; set; }
+		NSDictionary [] OutlineChildren { get; set; }
+		NSObject OutlineDestination { get; set; }
+#if XAMCORE_2_0
+		CGRect DestinationRect { get; set; }
+#endif
+		CGPDFAccessPermissions AccessPermissions { get; set; }
 	}
 }
