@@ -1235,6 +1235,7 @@ public partial class Generator : IMemberGatherer {
 				if (Frameworks.HaveUIKit) {
 					nsvalue_create_map [TypeManager.UIEdgeInsets] = "UIEdgeInsets";
 					nsvalue_create_map [TypeManager.UIOffset] = "UIOffset";
+					nsvalue_create_map [TypeManager.NSDirectionalEdgeInsets] = "DirectionalEdgeInsets";
 				}
 
 				if (TypeManager.MKCoordinateSpan != null)
@@ -1279,13 +1280,14 @@ public partial class Generator : IMemberGatherer {
 		var isEnum = retType.IsEnum;
 		var parameterName = pi != null ? pi.Name.GetSafeParamName () : "value";
 		var denullify = isNullable ? ".Value" : string.Empty;
+		var nullCheck = isNullable ? $"{parameterName} == null ? null : " : string.Empty;
 
 		if (isNullable || !isValueType)
 			temp = string.Format ("{0} == null ? null : ", parameterName);
 
 		if (originalType == TypeManager.NSNumber) {
 			var enumCast = isEnum ? $"(int)" : string.Empty;
-			temp = string.Format ("new NSNumber ({2}{1}{0});", denullify, parameterName, enumCast);
+			temp = string.Format ("{3}new NSNumber ({2}{1}{0});", denullify, parameterName, enumCast, nullCheck);
 		}
 		else if (originalType == TypeManager.NSValue) {
 			var typeStr = string.Empty;
@@ -1296,17 +1298,19 @@ public partial class Generator : IMemberGatherer {
 				else
 					throw new BindingException (1049, true, GetBindAsExceptionString ("box", retType.Name, originalType.Name, "container", minfo?.mi, pi));
 			}
-			temp = string.Format ("NSValue.From{0} ({2}{1});", typeStr, denullify, parameterName);
+			temp = string.Format ("{3}NSValue.From{0} ({2}{1});", typeStr, denullify, parameterName, nullCheck);
 		} else if (originalType == TypeManager.NSString && IsSmartEnum (retType)) {
-			temp = string.Format ("{1}{0}.GetConstant ();", denullify, parameterName);
+			temp = isNullable ? $"{parameterName} == null ? null : " : string.Empty;
+			temp += $"{FormatType (retType.DeclaringType, retType)}Extensions.GetConstant ({parameterName}{denullify});";
 		} else if (originalType.IsArray) {
 			var arrType = originalType.GetElementType ();
 			var arrRetType = TypeManager.GetUnderlyingNullableType (retType.GetElementType ()) ?? retType.GetElementType ();
 			var valueConverter = string.Empty;
 
-			if (arrType == TypeManager.NSString)
-				valueConverter = $"o{denullify}.GetConstant (), {parameterName});";
-			else if (arrType == TypeManager.NSNumber) {
+			if (arrType == TypeManager.NSString) {
+				valueConverter = isNullable ? "o == null ? null : " : string.Empty;
+				valueConverter += $"{FormatType (retType.DeclaringType, arrRetType)}Extensions.GetConstant (o), {parameterName});";
+			} else if (arrType == TypeManager.NSNumber) {
 				var cast = arrRetType.IsEnum ? "(int)" : string.Empty;
 				valueConverter = $"new NSNumber ({cast}o{denullify}), {parameterName});";
 			} else if (arrType == TypeManager.NSValue) {
@@ -1396,14 +1400,18 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	string GetFromBindAsWrapper (MemberInformation minfo)
+	string GetFromBindAsWrapper (MemberInformation minfo, out string suffix)
 	{
 		var declaringType = minfo.mi.DeclaringType;
 		if (IsMemberInsideProtocol (declaringType))
 			throw new BindingException (1050, true, "[BindAs] cannot be used inside Protocol or Model types. Type: {0}", declaringType.Name);
 
+		suffix = string.Empty;
+
 		var attrib = GetBindAsAttribute (minfo.mi);
-		var retType = TypeManager.GetUnderlyingNullableType (attrib.Type) ?? attrib.Type;
+		var nullableRetType = TypeManager.GetUnderlyingNullableType (attrib.Type);
+		var isNullable = nullableRetType != null;
+		var retType = isNullable ? nullableRetType : attrib.Type;
 		var isValueType = retType.IsValueType;
 		var append = string.Empty;
 		var property = minfo.mi as PropertyInfo;
@@ -1420,6 +1428,8 @@ public partial class Generator : IMemberGatherer {
 				else
 					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi));
 			}
+			if (isNullable)
+				append = $"?{append}";
 		} else if (originalReturnType == TypeManager.NSValue) {
 			if (!NSValueReturnMap.TryGetValue (retType, out append)) {
 				// HACK: These are problematic for X.M due to we do not ship System.Drawing for Full profile
@@ -1428,22 +1438,29 @@ public partial class Generator : IMemberGatherer {
 				else
 					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi));
 			}
+			if (isNullable)
+				append = $"?{append}";
 		} else if (originalReturnType == TypeManager.NSString && IsSmartEnum (retType)) {
 			append = $"{FormatType (retType.DeclaringType, retType)}Extensions.GetValue (";
+			suffix = ")";
 		} else if (originalReturnType.IsArray) {
 			var arrType = originalReturnType.GetElementType ();
-			var arrRetType = TypeManager.GetUnderlyingNullableType (retType.GetElementType ()) ?? retType.GetElementType ();
+			var nullableElementType = TypeManager.GetUnderlyingNullableType (retType.GetElementType ());
+			var arrIsNullable = nullableElementType != null;
+			var arrRetType = arrIsNullable ? nullableElementType : retType.GetElementType ();
 			var valueFetcher = string.Empty;
 			if (arrType == TypeManager.NSString)
 				append = $"ptr => {{\n\tusing (var str = Runtime.GetNSObject<NSString> (ptr)) {{\n\t\treturn {FormatType (arrRetType.DeclaringType, arrRetType)}Extensions.GetValue (str);\n\t}}\n}}";
 			else if (arrType == TypeManager.NSNumber) {
-				if (NSNumberReturnMap.TryGetValue (arrRetType, out valueFetcher) || arrRetType.IsEnum)
-					append = string.Format ("ptr => {{\n\tusing (var num = Runtime.GetNSObject<NSNumber> (ptr)) {{\n\t\treturn ({1}) num{0};\n\t}}\n}}", arrRetType.IsEnum ? ".Int32Value" : valueFetcher, FormatType (arrRetType.DeclaringType, arrRetType));
+				if (NSNumberReturnMap.TryGetValue (arrRetType, out valueFetcher) || arrRetType.IsEnum) {
+					var getterStr = string.Format ("{0}{1}", arrIsNullable ? "?" : string.Empty, arrRetType.IsEnum ? ".Int32Value" : valueFetcher);
+					append = string.Format ("ptr => {{\n\tusing (var num = Runtime.GetNSObject<NSNumber> (ptr)) {{\n\t\treturn ({1}) num{0};\n\t}}\n}}", getterStr, FormatType (arrRetType.DeclaringType, arrRetType));
+				}
 				else
 					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, arrType.Name, "array", minfo.mi));
 			} else if (arrType == TypeManager.NSValue) {
 				if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
-					valueFetcher = $".{arrRetType.Name}Value";
+					valueFetcher = $"{(arrIsNullable ? "?" : string.Empty)}.{arrRetType.Name}Value";
 				else if (!NSValueReturnMap.TryGetValue (arrRetType, out valueFetcher))
 					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, arrType.Name, "array", minfo.mi));
 
@@ -1976,12 +1993,13 @@ public partial class Generator : IMemberGatherer {
 
 		try {
 			if (Compat) {
-				bool arm_stret = Stret.ArmNeedStret (mi);
+				var returnType = mi.ReturnType;
+				bool arm_stret = Stret.ArmNeedStret (returnType);
 				bool is_aligned = AttributeManager.HasAttribute<AlignAttribute> (mi);
 				RegisterMethod (arm_stret, mi, MakeSig (mi, arm_stret, arm_stret && is_aligned), arm_stret && is_aligned);
 				RegisterMethod (arm_stret, mi, MakeSuperSig (mi, arm_stret, arm_stret && is_aligned), arm_stret && is_aligned);
 
-				bool x86_stret = Stret.X86NeedStret (mi);
+				bool x86_stret = Stret.X86NeedStret (returnType);
 				if (x86_stret != arm_stret){
 					RegisterMethod (x86_stret, mi, MakeSig (mi, x86_stret, x86_stret && is_aligned), x86_stret && is_aligned);
 					RegisterMethod (x86_stret, mi, MakeSuperSig (mi, x86_stret, x86_stret && is_aligned), x86_stret && is_aligned);
@@ -3284,7 +3302,7 @@ public partial class Generator : IMemberGatherer {
 		string name = minfo.is_ctor ? GetGeneratedTypeName (mi.DeclaringType) : is_async ? GetAsyncName (mi) : mi.Name;
 
 		// Some codepaths already write preservation info
-		PrintAttributes (minfo.mi, preserve:!alreadyPreserved, advice:true);
+		PrintAttributes (minfo.mi, preserve:!alreadyPreserved, advice:true, bindAs:true);
 
 		if (!minfo.is_ctor && !is_async){
 			var prefix = "";
@@ -3390,8 +3408,10 @@ public partial class Generator : IMemberGatherer {
 			}
 
 			var bindAsAtt = GetBindAsAttribute (pi);
-			if (bindAsAtt != null)
+			if (bindAsAtt != null) {
+				PrintBindAsAttribute (pi, sb);
 				sb.Append (FormatType (bindAsAtt.Type.DeclaringType, bindAsAtt.Type, protocolized));
+			}
 			else
 				sb.Append (FormatType (declaringType, parType, protocolized));
 
@@ -3464,15 +3484,28 @@ public partial class Generator : IMemberGatherer {
 				cast_a = " Runtime.GetINativeObject<" + FormatType (declaringType, GetCorrectGenericType (mi.ReturnType)) + "> (";
 				cast_b = $", {minfo.is_forced_owns})";
 			} else if (minfo != null && minfo.is_bindAs) {
+				var bindAs = GetBindAsAttribute (minfo.mi);
+				var nullableBindAsType = TypeManager.GetUnderlyingNullableType (bindAs.Type);
+				var isNullable = nullableBindAsType != null;
+				var bindAsType = TypeManager.GetUnderlyingNullableType (bindAs.Type) ?? bindAs.Type;
+				var formattedBindAsType = FormatType (declaringType, GetCorrectGenericType (bindAs.Type));
+				string suffix;
+				var wrapper = GetFromBindAsWrapper (minfo, out suffix);
+				var formattedReturnType = FormatType (declaringType, GetCorrectGenericType (mi.ReturnType));
 				if (mi.ReturnType == TypeManager.NSString) {
-					cast_a = $" {GetFromBindAsWrapper (minfo)}Runtime.GetNSObject<{FormatType (declaringType, GetCorrectGenericType (mi.ReturnType))}> (";
-					cast_b = "))";
+					if (isNullable) {
+						print ("IntPtr retvaltmp;");
+						cast_a = "((retvaltmp = ";
+						cast_b = $") == IntPtr.Zero ? default ({formattedBindAsType}) : ({wrapper}Runtime.GetNSObject<{formattedReturnType}> (retvaltmp)){suffix})";
+					} else {
+						cast_a = $"{wrapper}Runtime.GetNSObject<{formattedReturnType}> (";
+						cast_b = $"){suffix}";
+					}
 				} else {
-					var bindAs = GetBindAsAttribute (minfo.mi);
-					var bindAsType = TypeManager.GetUnderlyingNullableType (bindAs.Type) ?? bindAs.Type;
-					var enumCast = (bindAsType.IsEnum && !minfo.type.IsArray) ? $"({FormatType (bindAsType.DeclaringType, GetCorrectGenericType (bindAsType))})" : string.Empty;
-					cast_a = $" {enumCast}Runtime.GetNSObject<{FormatType (declaringType, GetCorrectGenericType (mi.ReturnType))}> (";
-					cast_b = ")" + GetFromBindAsWrapper (minfo);
+					var enumCast = (bindAsType.IsEnum && !minfo.type.IsArray) ? $"({formattedBindAsType}) " : string.Empty;
+					print ("IntPtr retvaltmp;");
+					cast_a = "((retvaltmp = ";
+					cast_b = $") == IntPtr.Zero ? default ({formattedBindAsType}) : ({enumCast}Runtime.GetNSObject<{formattedReturnType}> (retvaltmp){wrapper})){suffix}";
 				}
 			} else {
 				cast_a = " Runtime.GetNSObject<" + FormatType (declaringType, GetCorrectGenericType (mi.ReturnType)) + "> (";
@@ -3491,8 +3524,12 @@ public partial class Generator : IMemberGatherer {
 			Type etype = mai.Type.GetElementType ();
 			if (minfo != null && minfo.is_bindAs) {
 				var bindAsT = GetBindAsAttribute (minfo.mi).Type.GetElementType ();
-				cast_a = $"NSArray.ArrayFromHandleFunc <{FormatType (bindAsT.DeclaringType, bindAsT)}> (";
-				cast_b = $", {GetFromBindAsWrapper (minfo)})";
+				var suffix = string.Empty;
+				print ("IntPtr retvalarrtmp;");
+				cast_a = "((retvalarrtmp = ";
+				cast_b = ") == IntPtr.Zero ? null : (";
+				cast_b += $"NSArray.ArrayFromHandleFunc <{FormatType (bindAsT.DeclaringType, bindAsT)}> (retvalarrtmp, {GetFromBindAsWrapper (minfo, out suffix)})" + suffix;
+				cast_b += "))";
 			} else if (etype == TypeManager.System_String) {
 				cast_a = "NSArray.StringArrayFromHandle (";
 				cast_b = ")";
@@ -3599,8 +3636,9 @@ public partial class Generator : IMemberGatherer {
 			return;
 		}
 
-		bool arm_stret = Stret.ArmNeedStret (mi);
-		bool x86_stret = Stret.X86NeedStret (mi);
+		var returnType = mi.ReturnType;
+		bool arm_stret = Stret.ArmNeedStret (returnType);
+		bool x86_stret = Stret.X86NeedStret (returnType);
 		bool aligned = AttributeManager.HasAttribute<AlignAttribute> (mi);
 
 		if (CurrentPlatform == PlatformName.MacOSX) {
@@ -3626,9 +3664,10 @@ public partial class Generator : IMemberGatherer {
 
 	void GenerateNewStyleInvoke (bool supercall, MethodInfo mi, MemberInformation minfo, string selector, string[] args, bool assign_to_temp, Type category_type)
 	{
-		bool arm_stret = Stret.ArmNeedStret (mi);
-		bool x86_stret = Stret.X86NeedStret (mi);
-		bool x64_stret = Stret.X86_64NeedStret (mi);
+		var returnType = mi.ReturnType;
+		bool arm_stret = Stret.ArmNeedStret (returnType);
+		bool x86_stret = Stret.X86NeedStret (returnType);
+		bool x64_stret = Stret.X86_64NeedStret (returnType);
 		bool dual_enum = HasNativeEnumInSignature (mi);
 		bool is_stret_multi = arm_stret || x86_stret || x64_stret;
 		bool need_multi_path = is_stret_multi || dual_enum;
@@ -3981,7 +4020,7 @@ public partial class Generator : IMemberGatherer {
 	bool CheckNeedStret (MethodInfo mi)
 	{
 		try {
-			return Stret.NeedStret (mi);
+			return Stret.NeedStret (mi.ReturnType);
 		}
 		catch (TypeLoadException ex) {
 			throw new BindingException (0001, true, $"The .NET runtime could not load the {mi.ReturnType.Name} type. Message: {ex.Message}");
@@ -4522,7 +4561,7 @@ public partial class Generator : IMemberGatherer {
 		// we must look if the type has an [Availability] attribute
 		PrintPlatformAttributesIfInlined (minfo);
 
-		PrintAttributes (pi, preserve:true, advice:true);
+		PrintAttributes (pi, preserve:true, advice:true, bindAs:true);
 
 		string propertyTypeName;
 		if (minfo.protocolize) {
@@ -5543,16 +5582,41 @@ public partial class Generator : IMemberGatherer {
 		print ($"[NotImplemented ({Quote (p.Message)})]");
 	}
 
-	public void PrintAttributes (MemberInfo mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false)
+	public void PrintBindAsAttribute (ICustomAttributeProvider mi, StringBuilder sb = null)
+	{
+		var p = GetBindAsAttribute (mi);
+		if (p == null)
+			return;
+
+		var property = mi as PropertyInfo;
+		var method = mi as MethodInfo;
+		var param = mi as ParameterInfo;
+		var originalType = method?.ReturnType ?? property?.PropertyType;
+		originalType = originalType ?? param?.ParameterType;
+
+		var declaringType = (mi as MemberInfo)?.DeclaringType ?? param.Member.DeclaringType;
+		var pReturn = method != null ? "return: " : string.Empty;
+
+		var attribstr = $"[{pReturn}BindAs (typeof ({FormatType (declaringType, p.Type)}), OriginalType = typeof ({FormatType (declaringType, originalType)}))]";
+
+		if (sb != null)
+			sb.Append ($"{attribstr} ");
+		else
+			print (attribstr);
+	}
+
+	public void PrintAttributes (ICustomAttributeProvider mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false, bool bindAs = false)
 	{
 		if (platform)
-			PrintPlatformAttributes (mi);
+			PrintPlatformAttributes (mi as MemberInfo);
 		if (preserve)
 			PrintPreserveAttribute (mi);
 		if (advice)
 			PrintAdviceAttribute (mi);
 		if (notImplemented)
 			PrintNotImplementedAttribute (mi);
+		if (bindAs)
+			PrintBindAsAttribute (mi);
 	}
 
 	public void ComputeLibraryName (FieldAttribute fieldAttr, Type type, string propertyName, out string library_name, out string library_path)

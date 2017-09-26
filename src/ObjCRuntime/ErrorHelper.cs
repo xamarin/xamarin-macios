@@ -119,6 +119,77 @@ namespace XamCore.ObjCRuntime {
 
 		public static ProductException CreateError (Application app, int code, Mono.Cecil.MemberReference member, string message, params object[] args)
 		{
+			return Create (app, code, true, null, member, message, args);
+		}
+
+		public static ProductException CreateError (Application app, int code, Mono.Cecil.MethodDefinition location, string message, params object[] args)
+		{
+			return Create (app, code, true, null, location, message, args);
+		}
+
+		public static ProductException CreateError (Application app, int code, Mono.Cecil.ICustomAttributeProvider provider, string message, params object [] args)
+		{
+			return Create (app, code, true, null, provider, message, args);
+		}
+
+		public static ProductException CreateError (Application app, int code, Exception innerException, Mono.Cecil.MethodDefinition location, string message, params object[] args)
+		{
+			return Create (app, code, true, innerException, location, message, args);
+		}
+
+		public static ProductException CreateError (Application app, int code, Exception innerException, Mono.Cecil.TypeReference location, string message, params object[] args)
+		{
+			return Create (app, code, true, innerException, location, message, args);
+		}
+
+		public static ProductException CreateError (Application app, int code, Exception innerException, Mono.Cecil.ICustomAttributeProvider provider, string message, params object [] args)
+		{
+			return Create (app, code, true, innerException, provider, message, args);
+		}
+
+		public static ProductException CreateWarning (Application app, int code, Mono.Cecil.MemberReference member, string message, params object [] args)
+		{
+			return Create (app, code, false, null, member, message, args);
+		}
+
+		public static ProductException CreateWarning (Application app, int code, Mono.Cecil.MethodDefinition location, string message, params object[] args)
+		{
+			return Create (app, code, false, null, location, message, args);
+		}
+
+		public static ProductException CreateWarning (Application app, int code, Mono.Cecil.ICustomAttributeProvider provider, string message, params object [] args)
+		{
+			return Create (app, code, false, null, provider, message, args);
+		}
+
+		public static ProductException CreateWarning (Application app, int code, Exception innerException, Mono.Cecil.MethodDefinition location, string message, params object[] args)
+		{
+			return Create (app, code, false, innerException, location, message, args);
+		}
+
+		public static ProductException CreateWarning (Application app, int code, Exception innerException, Mono.Cecil.TypeReference location, string message, params object[] args)
+		{
+			return Create (app, code, false, innerException, location, message, args);
+		}
+
+		public static ProductException CreateWarning (Application app, int code, Exception innerException, Mono.Cecil.ICustomAttributeProvider provider, string message, params object [] args)
+		{
+			return Create (app, code, false, innerException, provider, message, args);
+		}
+
+		public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.ICustomAttributeProvider provider, string message, params object [] args)
+		{
+			if (provider is Mono.Cecil.MemberReference member)
+				return Create (app, code, error, innerException, member, message, args);
+
+			if (provider is Mono.Cecil.TypeReference type)
+				return Create (app, code, error, innerException, type, message, args);
+
+			return new ProductException (code, error, innerException, message, args);
+		}
+
+		public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.MemberReference member, string message, params object [] args)
+		{
 			Mono.Cecil.MethodReference method = member as Mono.Cecil.MethodReference;
 			if (method == null) {
 				var property = member as Mono.Cecil.PropertyDefinition;
@@ -128,28 +199,20 @@ namespace XamCore.ObjCRuntime {
 						method = property.SetMethod;
 				}
 			}
-			return CreateError (app, code, method == null ? null : method.Resolve (), message, args);
+			return Create (app, code, error, innerException, method == null ? null : method.Resolve (), message, args);
 		}
 
-		public static ProductException CreateError (Application app, int code, Mono.Cecil.MethodDefinition location, string message, params object[] args)
+		public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.MethodDefinition location, string message, params object [] args)
 		{
-			var e = new ProductException (code, true, message, args);
+			var e = new ProductException (code, error, innerException, message, args);
 			if (location != null)
 				SetLocation (app, e, location);
 			return e;
 		}
 
-		public static ProductException CreateError (Application app, int code, Exception innerException, Mono.Cecil.MethodDefinition location, string message, params object[] args)
+		public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.TypeReference location, string message, params object [] args)
 		{
-			var e = new ProductException (code, true, innerException, message, args);
-			if (location != null)
-				SetLocation (app, e, location);
-			return e;
-		}
-
-		public static ProductException CreateError (Application app, int code, Exception innerException, Mono.Cecil.TypeReference location, string message, params object[] args)
-		{
-			var e = new ProductException (code, true, innerException, message, args);
+			var e = new ProductException (code, error, innerException, message, args);
 			if (location != null) {
 				var td = location.Resolve ();
 

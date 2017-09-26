@@ -64,7 +64,7 @@ namespace XamCore.Foundation {
 			if (nsobjectificator == null)
 				throw new ArgumentNullException (nameof (nsobjectificator));
 			if (items == null)
-				throw new ArgumentNullException (nameof (items));
+				return null;
 
 			var arr = new NSObject [items.Length];
 			for (int i = 0; i < items.Length; i++) {

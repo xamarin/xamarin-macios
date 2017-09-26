@@ -429,6 +429,8 @@ static UltimateMachine *shared;
 		// Nothing to do here.
 	}
 
+#include "libtest.methods.m"
+
 	-(void) outNSErrorOnStack:(int)i1 i:(int)i2 i:(int)i3 i:(int)i4 i:(int)i5 i:(int)i6 err:(NSError **)err
 	{
 		// Nothing to do here

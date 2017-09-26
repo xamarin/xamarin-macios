@@ -41,6 +41,7 @@ GENERATOR_ATTRIBUTE_SOURCES = \
 	$(TOP)/src/Foundation/RegisterAttribute.cs \
 	$(TOP)/src/ObjCRuntime/AlphaAttribute.cs \
 	$(TOP)/src/ObjCRuntime/ArgumentSemantic.cs \
+	$(TOP)/src/ObjCRuntime/BindAsAttribute.cs \
 	$(TOP)/src/ObjCRuntime/LinkWithAttribute.cs \
 	$(TOP)/src/ObjCRuntime/NativeAttribute.cs \
 	$(TOP)/src/ObjCRuntime/PlatformAvailability2.cs \
@@ -223,3 +224,10 @@ $(MAC_BUILD_DIR)/XamMac.BindingAttributes.dll: generator-attributes.cs Makefile.
 $(MAC_BUILD_DIR)/Xamarin.Mac-%.BindingAttributes.dll: generator-attributes.cs Makefile.generator $(PMCS_EXE)
 	$(Q) mkdir -p $(dir $@)
 	$(Q_GEN) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/$*"     -compiler:$(SYSTEM_MCS) -global-replace:"^XamCore.="        -out:$@ -debug generator-attributes.cs -target:library
+
+bgen:	\
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/monotouch.BindingAttributes.dll \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/Xamarin.iOS.BindingAttributes.dll \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe                 \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bgen                          \
+
