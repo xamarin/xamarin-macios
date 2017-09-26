@@ -108,7 +108,15 @@ namespace Xamarin.iOS.Tasks
 			var dtSettings = currentSDK.GetDTSettings ();
 
 			SetValue (plist, ManifestKeys.BuildMachineOSBuild, dtSettings.BuildMachineOSBuild);
-			plist.SetIfNotPresent (ManifestKeys.CFBundleDevelopmentRegion, "en");
+			// We have an issue here, this is for consideration by the platform:
+			// CFLocaleCopyCurrent(), used in the mono code to get the current locale (locale.c line 421), will return the value of the application's CFBundleDevelopmentRegion Info.plist key if all of the following conditions are true:
+			// 
+			// * CFBundleDevelopmentRegion is present in the Info.plist
+			// * The CFBundleDevelopmentRegion language is in the list of preferred languages on the iOS device, but isn't the first one
+			// * There are no localized resources (i.e. no .lproj directory) in the app for the first preferred locale
+			//
+			// This differs from iOS 10 where the presence of the CFBundleDevelopmentRegion key had no effect. Commenting this line out, ensures that CurrentCulture is correct and behaves like the iOS 10 version.
+			// plist.SetIfNotPresent (ManifestKeys.CFBundleDevelopmentRegion, "en");
 
 			plist.SetIfNotPresent (ManifestKeys.CFBundleExecutable, AssemblyName);
 			if (IsIOS) {
