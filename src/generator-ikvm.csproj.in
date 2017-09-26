@@ -16,7 +16,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>build\common</OutputPath>
-    <DefineConstants>DEBUG;IKVM;BGENERATOR;NET_4_0;NO_AUTHENTICODE;STATIC;NO_SYMBOL_WRITER</DefineConstants>
+    <DefineConstants>DEBUG;BGENERATOR;NET_4_0;NO_AUTHENTICODE;STATIC;NO_SYMBOL_WRITER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>

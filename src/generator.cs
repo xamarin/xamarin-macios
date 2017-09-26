@@ -45,12 +45,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-#if IKVM
 using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
-#else
-using System.Reflection;
-#endif
 using System.Text;
 using System.ComponentModel;
 
@@ -1184,7 +1180,26 @@ public partial class Generator : IMemberGatherer {
 	}
 
 	static bool IsSetter (MethodInfo mi) => mi.IsSpecialName && mi.Name.StartsWith ("set_", StringComparison.Ordinal);
-	static string GetBindAsExceptionString (string box, string retType, string containerType, string container, string memberName) => $"Could not {box} type {retType} from {containerType} {container} used on {memberName} member decorated with [BindAs].";
+	static string GetBindAsExceptionString (string box, string retType, string containerType, string container, params ICustomAttributeProvider [] providers)
+	{
+		Type declaringType = null;
+		string memberName = null;
+		foreach (var provider in providers) {
+			if (provider is MemberInfo member) {
+				declaringType = member.DeclaringType;
+				memberName = member.Name;
+			} else if (provider is ParameterInfo parameter) {
+				declaringType = parameter.Member.DeclaringType;
+				memberName = parameter.Member.Name;
+				break;
+			}
+		}
+
+		if (declaringType != null && memberName != null)
+			memberName = declaringType.FullName + "." + memberName;
+
+		return $"Could not {box} type {retType} from {containerType} {container} used on member {memberName} decorated with [BindAs].";
+	}
 	bool IsMemberInsideProtocol (Type type) => IsProtocol (type) || IsModel (type);
 
 	bool IsSmartEnum (Type type)
@@ -1281,7 +1296,7 @@ public partial class Generator : IMemberGatherer {
 				if (retType.Name == "RectangleF" || retType.Name == "SizeF" || retType.Name == "PointF")
 					typeStr = retType.Name;
 				else
-					throw new BindingException (1049, true, GetBindAsExceptionString ("box", retType.Name, originalType.Name, "container", minfo?.mi?.Name ?? pi?.Name));
+					throw new BindingException (1049, true, GetBindAsExceptionString ("box", retType.Name, originalType.Name, "container", minfo?.mi, pi));
 			}
 			temp = string.Format ("{3}NSValue.From{0} ({2}{1});", typeStr, denullify, parameterName, nullCheck);
 		} else if (originalType == TypeManager.NSString && IsSmartEnum (retType)) {
@@ -1304,7 +1319,7 @@ public partial class Generator : IMemberGatherer {
 					if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
 						typeStr = retType.Name;
 					else
-						throw new BindingException (1049, true, GetBindAsExceptionString ("box", arrRetType.Name, originalType.Name, "array", minfo?.mi?.Name ?? pi?.Name));
+						throw new BindingException (1049, true, GetBindAsExceptionString ("box", arrRetType.Name, originalType.Name, "array", minfo?.mi, pi));
 				}
 				valueConverter = $"NSValue.From{typeStr} (o{denullify}), {parameterName});";
 			} else
@@ -1408,10 +1423,10 @@ public partial class Generator : IMemberGatherer {
 				if (retType.IsEnum) {
 					var enumType = TypeManager.GetUnderlyingEnumType (retType);
 					if (!NSNumberReturnMap.TryGetValue (enumType, out append))
-						throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi.Name));
+						throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi));
 				}
 				else
-					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi.Name));
+					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi));
 			}
 			if (isNullable)
 				append = $"?{append}";
@@ -1421,7 +1436,7 @@ public partial class Generator : IMemberGatherer {
 				if (retType.Name == "RectangleF" || retType.Name == "SizeF" || retType.Name == "PointF")
 					append = $".{retType.Name}Value";
 				else
-					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi.Name));
+					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi));
 			}
 			if (isNullable)
 				append = $"?{append}";
@@ -1442,12 +1457,12 @@ public partial class Generator : IMemberGatherer {
 					append = string.Format ("ptr => {{\n\tusing (var num = Runtime.GetNSObject<NSNumber> (ptr)) {{\n\t\treturn ({1}) num{0};\n\t}}\n}}", getterStr, FormatType (arrRetType.DeclaringType, arrRetType));
 				}
 				else
-					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, arrType.Name, "array", minfo.mi.Name));
+					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, arrType.Name, "array", minfo.mi));
 			} else if (arrType == TypeManager.NSValue) {
 				if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
 					valueFetcher = $"{(arrIsNullable ? "?" : string.Empty)}.{arrRetType.Name}Value";
 				else if (!NSValueReturnMap.TryGetValue (arrRetType, out valueFetcher))
-					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, arrType.Name, "array", minfo.mi.Name));
+					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, arrType.Name, "array", minfo.mi));
 
 				append = string.Format ("ptr => {{\n\tusing (var val = Runtime.GetNSObject<NSValue> (ptr)) {{\n\t\treturn val{0};\n\t}}\n}}", valueFetcher);
 			} else
@@ -3437,13 +3452,8 @@ public partial class Generator : IMemberGatherer {
 			// in question actually has that value at least).
 			var type = TypeManager.GetUnderlyingEnumType (mi.ReturnType) == TypeManager.System_UInt64 ? "ulong" : "long";
 			var itype = type == "ulong" ? "uint" : "int";
-#if IKVM
 			var value = type == "ulong" ? (object) ulong.MaxValue : (object) long.MaxValue;
 			if (mi.ReturnType.IsEnumDefined (value)) {
-#else
-			var value = Enum.ToObject (mi.ReturnType, type == "ulong" ? (object) ulong.MaxValue : (object) long.MaxValue);
-			if (Array.IndexOf (Enum.GetValues (mi.ReturnType), value) >= 0) {
-#endif
 				postproc.AppendFormat ("if (({0}) ret == ({0}) {2}.MaxValue) ret = ({1}) {0}.MaxValue;", type, FormatType (mi.DeclaringType, mi.ReturnType), itype);
 				if (type == "long")
 					postproc.AppendFormat ("else if (({0}) ret == ({0}) {2}.MinValue) ret = ({1}) {0}.MinValue;", type, FormatType (mi.DeclaringType, mi.ReturnType), itype);
@@ -7231,7 +7241,6 @@ public partial class Generator : IMemberGatherer {
 		if (def is bool)
 			return (bool) def ? "true" : "false";
 
-#if IKVM
 		if (mi.ReturnType.IsEnum) {
 			if (def is string)
 				return def;
@@ -7242,10 +7251,6 @@ public partial class Generator : IMemberGatherer {
 				return mi.ReturnType.FullName + "." + name;
 			}
 		}
-#else
-		if (def is Enum)
-			return def.GetType ().FullName + "." + def;
-#endif
 
 		return def;
 	}

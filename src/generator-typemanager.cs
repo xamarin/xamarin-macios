@@ -1,12 +1,7 @@
 
 using System;
-#if IKVM
 using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
-#else
-using System.Reflection;
-#endif
-using System.Runtime.InteropServices;
 
 public static class TypeManager {
 	public static Type System_Attribute;
@@ -156,7 +151,6 @@ public static class TypeManager {
 
 	public static Type GetUnderlyingNullableType (Type type)
 	{
-#if IKVM
 		if (!type.IsConstructedGenericType)
 			return null;
 
@@ -171,27 +165,16 @@ public static class TypeManager {
 			return null;
 
 		return type.GenericTypeArguments [0];
-#else
-		return Nullable.GetUnderlyingType (type);
-#endif
 	}
 
 	public static bool IsOutParameter (ParameterInfo pi)
 	{
-#if IKVM
 		return pi.IsOut;
-#else
-		return AttributeManager.HasAttribute<OutAttribute> (pi);
-#endif
 	}
 
 	public static Type GetUnderlyingEnumType (Type type)
 	{
-#if IKVM
 		return type.GetEnumUnderlyingType ();
-#else
-		return Enum.GetUnderlyingType (type);
-#endif
 	}
 
 	public static void Initialize (Assembly api, Assembly corlib, Assembly platform, Assembly system, Assembly binding)

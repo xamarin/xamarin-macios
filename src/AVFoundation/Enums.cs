@@ -873,7 +873,7 @@ namespace XamCore.AVFoundation {
 		CannotDoInCurrentContext = 2
 	}
 
-	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
+	[TV (11,0), NoWatch, NoMac, iOS (11,0)]
 	[Native]
 	public enum AVAudioSessionRouteSharingPolicy : nuint {
 		Default = 0,
