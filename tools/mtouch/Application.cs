@@ -82,6 +82,9 @@ namespace Xamarin.Bundler {
 
 	public partial class Application
 	{
+		public const string ProductName = "Xamarin.iOS";
+		public const string Error91LinkerSuggestion = "Link Framework SDKs Only";
+
 		public string ExecutableName;
 		public BuildTarget BuildTarget;
 
