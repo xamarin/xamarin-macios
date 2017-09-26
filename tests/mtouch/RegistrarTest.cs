@@ -731,6 +731,35 @@ class X : ReplayKit.RPBroadcastControllerDelegate
 		}
 
 		[Test]
+		public void MT4170 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var code = @"
+				namespace NS {
+					using System;
+					using Foundation;
+					using ObjCRuntime;
+					class X : NSObject {
+						[Export (""a"")]
+						[return: BindAs (typeof (DateTime), OriginalType = typeof (NSNumber))] 
+						DateTime A () { throw new NotImplementedException (); }
+						[Export (""b"")]
+						[return: BindAs (typeof (DateTime?), OriginalType = typeof (NSNumber))] 
+						DateTime? B () { throw new NotImplementedException (); }
+					}
+				}";
+				mtouch.Linker = MTouchLinker.DontLink; // faster
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: code, extraArg: "-debug");
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (4170, "The registrar can't convert from 'System.DateTime' to 'Foundation.NSNumber' for the return value in the method NS.X.A.", "testApp.cs", 9);
+				mtouch.AssertError (4170, "The registrar can't convert from 'System.Nullable`1<System.DateTime>' to 'Foundation.NSNumber' for the return value in the method NS.X.B.", "testApp.cs", 12);
+				mtouch.AssertErrorCount (4 /* errors are duplicated */);
+			}
+		}
+
+		[Test]
 		public void MT4171 ()
 		{
 			using (var mtouch = new MTouchTool ()) {
