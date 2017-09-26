@@ -3173,6 +3173,109 @@ namespace XamCore.AVFoundation {
 		AVCaptureOutputDataDroppedReason DroppedReason { get; }
 	}
 
+	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
+	[Protocol]
+	interface AVQueuedSampleBufferRendering
+	{
+		[Abstract]
+		[Export ("timebase", ArgumentSemantic.Retain)]
+		CMTimebase Timebase { get; }
+
+		[Abstract]
+		[Export ("enqueueSampleBuffer:")]
+		void Enqueue (CMSampleBuffer sampleBuffer);
+
+		[Abstract]
+		[Export ("flush")]
+		void Flush ();
+
+		[Abstract]
+		[Export ("readyForMoreMediaData")]
+		bool ReadyForMoreMediaData { [Bind ("isReadyForMoreMediaData")] get; }
+
+		[Abstract]
+		[Export ("requestMediaDataWhenReadyOnQueue:usingBlock:")]
+		void RequestMediaData (DispatchQueue queue, Action block);
+
+		[Abstract]
+		[Export ("stopRequestingMediaData")]
+		void StopRequestingMediaData ();
+	}
+
+	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface AVSampleBufferAudioRenderer : AVQueuedSampleBufferRendering
+	{
+		[Export ("status")]
+		AVQueuedSampleBufferRenderingStatus Status { get; }
+
+		[NullAllowed, Export ("error")]
+		NSError Error { get; }
+
+		[Mac (10, 13)]
+		[NullAllowed, Export ("audioOutputDeviceUniqueID")]
+		string UniqueId { get; set; }
+
+		[Export ("audioTimePitchAlgorithm")]
+		string PitchAlgorithm { get; set; }
+
+		// AVSampleBufferAudioRenderer_AVSampleBufferAudioRendererVolumeControl
+		[Export ("volume")]
+		float Volume { get; set; }
+
+		[Export ("muted")]
+		bool Muted { [Bind ("isMuted")] get; set; }
+
+		// AVSampleBufferAudioRenderer_AVSampleBufferAudioRendererQueueManagement
+
+		[Async]
+		[Export ("flushFromSourceTime:completionHandler:")]
+		void Flush (CMTime time, Action<bool> completionHandler);
+	}
+
+	interface IAVQueuedSampleBufferRendering {}
+
+	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface AVSampleBufferRenderSynchronizer
+	{
+		[Export ("timebase", ArgumentSemantic.Retain)]
+		CMTimebase Timebase { get; }
+
+		[Export ("rate")]
+		float Rate { get; set; }
+
+		[Export ("setRate:time:")]
+		void SetRate (float rate, CMTime time);
+
+		// AVSampleBufferRenderSynchronizer_AVSampleBufferRenderSynchronizerRendererManagement
+
+		[Export ("renderers")]
+		IAVQueuedSampleBufferRendering[] Renderers { get; }
+
+		[Export ("addRenderer:")]
+		void Add (IAVQueuedSampleBufferRendering renderer);
+
+		[Async]
+		[Export ("removeRenderer:atTime:completionHandler:")]
+		void Remove (IAVQueuedSampleBufferRendering renderer, CMTime time, [NullAllowed] Action<bool> completionHandler);
+
+		// AVSampleBufferRenderSynchronizer_AVSampleBufferRenderSynchronizerTimeObservation
+
+		// as per the docs the returned observers are an opaque object that you pass as the argument to 
+		// removeTimeObserver to cancel observation.
+
+		[Async]
+		[Export ("addPeriodicTimeObserverForInterval:queue:usingBlock:")]
+		NSObject AddPeriodicTimeObserver (CMTime interval, [NullAllowed] DispatchQueue queue, Action<CMTime> block);
+
+		[Export ("addBoundaryTimeObserverForTimes:queue:usingBlock:")]
+		NSObject AddBoundaryTimeObserver (NSValue[] times, [NullAllowed] DispatchQueue queue, Action block);
+
+		[Export ("removeTimeObserver:")]
+		void RemoveTimeObserver (NSObject observer);
+	}
+
 #if MONOMAC
 	[Mac (10,10)]
 	[BaseType (typeof (NSObject))]
