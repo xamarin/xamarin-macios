@@ -322,13 +322,6 @@ bin/Debug/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
 	$(Q) mkdir -p bin/Debug
 	$(Q_CSC) $(SYSTEM_CSC) $(MTOUCH_COMPILE_ARGS) -out:$@ -d:DEV
 
-SdkVersions.cs: SdkVersions.cs.in Makefile $(TOP)/Make.config
-	$(Q_GEN) sed \
-		-e 's/@IOS_SDK_VERSION@/$(IOS_SDK_VERSION)/g' -e 's/@WATCHOS_SDK_VERSION@/$(WATCH_SDK_VERSION)/' -e 's/@TVOS_SDK_VERSION@/$(TVOS_SDK_VERSION)/' -e 's/@OSX_SDK_VERSION@/$(OSX_SDK_VERSION)/' \
-		-e 's/@MIN_IOS_SDK_VERSION@/$(MIN_IOS_SDK_VERSION)/g' -e 's/@MIN_WATCHOS_SDK_VERSION@/$(MIN_WATCHOS_SDK_VERSION)/' -e 's/@MIN_TVOS_SDK_VERSION@/$(MIN_TVOS_SDK_VERSION)/' -e 's/@MIN_OSX_SDK_VERSION@/$(MIN_OSX_SDK_VERSION)/' \
-		-e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' \
-		$< > $@ 
-
 # bin/Makefile/mtouch.exe is what we build from the makefile (and end up releasing)
 bin/Makefile/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
 	$(Q) mkdir -p $(dir $@)
@@ -461,6 +454,7 @@ clean-local::
 	$(SYSTEM_XBUILD) /t:Clean /p:Configuration=$(CECIL_CONFIG) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj
 
 include $(TOP)/mk/rules.mk
+include ../common/Make.common
 
 # make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
 # marking those files as .SECONDARY will prevent that deletion.

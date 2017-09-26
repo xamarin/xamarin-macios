@@ -494,6 +494,9 @@ namespace Xamarin.Bundler {
 			ValidateXcode ();
 
 			App.Initialize ();
+
+			// InitializeCommon needs SdkVersion set to something valid
+			ValidateSDKVersion ();
 			App.InitializeCommon ();
 
 			Log ("Xamarin.Mac {0}{1}", Constants.Version, verbose > 0 ? "." + Constants.Revision : string.Empty);
@@ -501,7 +504,6 @@ namespace Xamarin.Bundler {
 			if (verbose > 0)
 				Console.WriteLine ("Selected target framework: {0}; API: {1}", targetFramework, IsClassic ? "Classic" : "Unified");
 
-			ValidateSDKVersion ();
 
 			if (action == Action.RunRegistrar) {
 				App.RootAssemblies.AddRange (unprocessed);

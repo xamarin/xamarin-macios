@@ -38,6 +38,12 @@ namespace Xamarin.Bundler {
 
 	public partial class Application
 	{
+#if MTOUCH
+		public const string ProductName = "Xamarin.iOS";
+#else
+		public const string ProductName = "Xamarin.Mac";
+#endif
+
 		public Cache Cache;
 		public string AppDirectory = ".";
 		public bool DeadStrip = true;
@@ -396,6 +402,14 @@ namespace Xamarin.Bundler {
 
 		public void InitializeCommon ()
 		{
+			if (LinkMode == LinkMode.None && SdkVersion < SdkVersions.GetVersion (Platform)) {
+#if MTOUCH
+				throw ErrorHelper.CreateError (91, "This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).", ProductName, PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode);
+#else
+				throw ErrorHelper.CreateError (91, "This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Platform or Link Framework SDKs Only (to try to avoid the new APIs).", ProductName, PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode);
+#endif
+			}
+
 			if (Platform == ApplePlatform.WatchOS && EnableCoopGC.HasValue && !EnableCoopGC.Value)
 				throw ErrorHelper.CreateError (88, "The GC must be in cooperative mode for watchOS apps. Please remove the --coop:false argument to mtouch.");
 
