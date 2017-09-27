@@ -50,19 +50,21 @@ namespace Xamarin.Linker {
 				case "DeprecatedAttribute":
 				case "IntroducedAttribute":
 					var dict = context.Annotations.GetCustomAnnotations ("Availability");
-					List<CustomAttribute> attribs;
+					List<Tuple<CustomAttribute,TypeReference>> attribs;
 					object attribObjects;
 					if (!dict.TryGetValue (provider, out attribObjects)) {
-						attribs = new List<CustomAttribute> ();
+						attribs = new List<Tuple<CustomAttribute, TypeReference>> ();
 						dict [provider] = attribs;
 					} else {
-						attribs = (List<CustomAttribute>) attribObjects;
+						attribs = (List<Tuple<CustomAttribute, TypeReference>>) attribObjects;
 					}
 					// Make sure the attribute is resolved, since after removing the attribute
 					// it won't be able to do it. The 'CustomAttribute.Resolve' method is private, but fetching
 					// any property will cause it to be called.
+					// We also need to store the constructor's DeclaringType separately, because it may
+					// be nulled out from the constructor by the linker if the attribute type itself is linked away.
 					var dummy = attribute.HasConstructorArguments;
-					attribs.Add (attribute);
+					attribs.Add (new Tuple<CustomAttribute, TypeReference> (attribute, attribute.Constructor.DeclaringType));
 					break;
 				}
 			}
