@@ -516,14 +516,7 @@ namespace XamCore.Registrar {
 		}
 	}
 
-	public interface IStaticRegistrar
-	{
-		void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path);
-		void GenerateSingleAssembly (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly);
-		Mono.Linker.LinkContext LinkContext { get; set; }
-	}
-
-	class StaticRegistrar : Registrar, IStaticRegistrar {
+	class StaticRegistrar : Registrar{
 		public Target Target { get; private set; }
 		public bool IsSingleAssembly { get { return !string.IsNullOrEmpty (single_assembly); } }
 
