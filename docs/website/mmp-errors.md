@@ -62,9 +62,9 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 ### <a name="MM0068">MM0068: Invalid value for target framework: {0}.
 
-### <a name="MM0071">MM0071: Unknown platform: *. This usually indicates a bug in Xamarin.Mac; please file a bug report at http://bugzilla.xamarin.com with a test case.
+### <a name="MM0071">MM0071: Unknown platform: *. This usually indicates a bug in Xamarin.Mac; please file a bug report at https://bugzilla.xamarin.com with a test case.
 
-This usually indicates a bug in Xamarin.Mac; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=Xamarin.Mac) with a test case.
+This usually indicates a bug in Xamarin.Mac; please file a bug report at [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=Xamarin.Mac) with a test case.
 
 ### <a name="MM0079">MM0079: Internal Error - No executable was copied into the app bundle. Please contact 'support@xamarin.com'
 
@@ -73,11 +73,13 @@ This usually indicates a bug in Xamarin.Mac; please file a bug report at [http:/
 <!-- 0088 used by mtouch -->
 <!-- 0089 used by mtouch -->
 
-### <a name="MM0091"/>MM0091: This version of Xamarin.Mac requires the * SDK (shipped with Xcode *). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Platform or Link Framework SDKs Only (to try to avoid the new APIs).
+### <a name="MM0091"/>MM0091: This version of Xamarin.Mac requires the * SDK (shipped with Xcode *). Either upgrade Xcode to get the required header files or use the dynamic registrar or set the managed linker behaviour to Link Platform or Link Framework SDKs Only (to try to avoid the new APIs).
 
-Xamarin.Mac requires the header files, from the SDK version specified in the error message, to build your application. The recommended way to fix this error is to upgrade Xcode to get the required SDK, this will include all the required header files. If you have multiple versions of Xcode installed, or want to use an Xcode in a non-default location, make sure to set the correct Xcode location in your IDE's preferences.
+Xamarin.Mac requires the header files, from the SDK version specified in the error message, to build your application with the static registrar.. The recommended way to fix this error is to upgrade Xcode to get the required SDK, this will include all the required header files. If you have multiple versions of Xcode installed, or want to use an Xcode in a non-default location, make sure to set the correct Xcode location in your IDE's preferences.
 
-A potential, alternative solution is to enable the managed linker. This will remove unused API including, in most cases, the new API where the header files are missing (or incomplete). However this will not work if your project uses API that was introduced in a newer SDK than the one your Xcode provides.
+One potential, alternative solution, is to enable the managed linker. This will remove unused API including, in most cases, the new API where the header files are missing (or incomplete). However this will not work if your project uses API that was introduced in a newer SDK than the one your Xcode provides.
+
+A second potential, alternative solution, is use the dynamic registrar instead. This will impose a startup cost by dynamically registering types but remove the header file requirement. 
 
 A last-straw solution would be to use an older version of Xamarin.Mac, one that supports the SDK your project requires.
 

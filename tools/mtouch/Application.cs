@@ -83,7 +83,7 @@ namespace Xamarin.Bundler {
 	public partial class Application
 	{
 		public const string ProductName = "Xamarin.iOS";
-		public const string Error91LinkerSuggestion = "Link Framework SDKs Only";
+		public const string Error91LinkerSuggestion = "set the managed linker behaviour to Link Framework SDKs Only";
 
 		public string ExecutableName;
 		public BuildTarget BuildTarget;
@@ -151,6 +151,8 @@ namespace Xamarin.Bundler {
 		public bool Is64Build { get { return IsArchEnabled (Abi.Arch64Mask); } } // If we're targetting a 64 bit arch.
 		public bool IsDualBuild { get { return Is32Build && Is64Build; } } // if we're building both a 32 and a 64 bit version.
 		public bool IsLLVM { get { return IsArchEnabled (Abi.LLVM); } }
+
+		bool RequiresXcodeHeaders => LinkMode == LinkMode.None;
 
 		public List<Target> Targets = new List<Target> ();
 
