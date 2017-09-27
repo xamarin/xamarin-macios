@@ -442,7 +442,9 @@ namespace Introspection {
 				case "CXCall": // Conformance not in headers
 				case "UIDocumentBrowserAction": // Conformance not in headers
 					return true;
-
+				// iOS 11.1
+				case "ARDirectionalLightEstimate":
+					return true;
 #if __WATCHOS__
 				case "CLKComplicationTimelineEntry":
 					return true;
