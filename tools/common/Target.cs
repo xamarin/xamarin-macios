@@ -172,6 +172,8 @@ namespace Xamarin.Bundler {
 							var add_to = App.DeploymentTarget >= framework.Version ? asm.Frameworks : asm.WeakFrameworks;
 							add_to.Add (framework.Name);
 							continue;
+						} else {
+							Driver.Log (3, "Not linking with the framework {0} (used by the type {1}) because it was introduced in {2} {3}, and we're using the {2} {4} SDK.", framework.Name, td.FullName, App.PlatformName, framework.Version, App.SdkVersion);
 						}
 					}
 				}
