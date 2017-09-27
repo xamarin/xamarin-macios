@@ -2602,4 +2602,22 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Export ("method")]
 		public static void StaticMethod () { }
 	}
+
+	// It should be possible to use a protocol with a member we can't use yet (because its signature uses a type not in the current SDK)
+	[Protocol]
+	[ProtocolMember (IsRequired = false, IsProperty = false, IsStatic = false, Name = "DetectPremonition", Selector = "detectPremonition:", ParameterType = new Type [] { typeof (FutureClass) }, ParameterByRef = new bool [] { false })]
+	public interface ISomeDelegate : INativeObject, IDisposable
+	{
+	}
+	[Introduced (PlatformName.MacOSX, 100, 0)]
+	[Introduced (PlatformName.iOS, 100, 0)]
+	[Introduced (PlatformName.TvOS, 100, 0)]
+	[Introduced (PlatformName.WatchOS, 100, 0)]
+	public class FutureClass : NSObject
+	{
+	}
+	[Preserve]
+	public class SomeConsumer : NSObject, ISomeDelegate
+	{
+	}
 }
