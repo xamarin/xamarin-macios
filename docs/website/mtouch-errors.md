@@ -1201,6 +1201,10 @@ Something unexpected occured when trying to mark `NSObject` subclasses from the 
 
 Something unexpected occured when trying to inline code from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
+### <a name="MT2100"/>MT2100: Smart Enum Conversion Preserver failed processing `...`.
+
+Something unexpected occured when trying to mark the conversion methods for smart enums from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
 <!-- MT21xx: more linker errors -->
 
 <!--- 2100 used by mmp -->
@@ -1543,6 +1547,29 @@ Please use a valid Objective-C identifier.
 
 Xamarin.iOS failed to generate a P/Invoke wrapper function for the mentioned.
 Please check the reported error message for the underlying cause.
+
+### <a name="MT4170"/>MT4170: The registrar can't convert from '{managed type}' to '{native type}' for the return value in the method {method}.
+
+See the description of error <a href="#MT4172">MT4172</a>.
+
+### <a name="MT4171"/>MT4171: The BindAs attribute on the member {member} is invalid: the BindAs type {type} is different from the property type {type}.
+
+Please make sure the type in the BindAs attribute matches the type of the member it's attached to.
+
+### <a name="MT4172"/>MT4172: The registrar can't convert from '{native type}' to '{managed type}' for the parameter '{parameter name}' in the method {method}.
+
+The registrar does not support converting between the mentioned types.
+
+This is a bug in Xamarin.iOS if the API in question is provided by Xamarin.iOS;
+please file a bug at [http://bugzilla.xamarin.com][1].
+
+If you run into this while developing a binding project for a native library,
+we're open to adding support for new combinations of types. If this is the
+case, please file an enhancement request ([http://bugzilla.xamarin.com][2])
+with a test case and we'll evaluate it.
+
+[1]: https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS
+[2]: https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS&component=General&bug_severity=enhancement
 
 # MT5xxx: GCC and toolchain error messages
 
@@ -2234,3 +2261,8 @@ This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamar
 ### <a name="MT8023"/>MT8023: An instance object is required to construct a closed generic method for the open generic method: * (token reference: *). Please file a bug report at http://bugzilla.xamarin.com.
 
 This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
+### <a name="MT8024"/>MT8024: Could not find a valid extension type for the smart enum '{smart_type}'. Please file a bug at https://bugzilla.xamarin.com.
+
+This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+

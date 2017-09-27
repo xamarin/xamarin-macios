@@ -164,5 +164,60 @@ namespace LinkAll.Attributes {
 			var method = klass.GetMethod ("GetHandle", BindingFlags.Public | BindingFlags.Static);
 			Assert.NotNull (method, "GetHandle");
 		}
+
+		[Test]
+		public void SmartEnumTest ()
+		{
+			var consumer = GetType ().Assembly.GetType ("LinkAll.Attributes.SmartConsumer");
+			Assert.NotNull (consumer, "SmartConsumer");
+			Assert.NotNull (consumer.GetMethod ("GetSmartEnumValue"), "GetSmartEnumValue");
+			Assert.NotNull (consumer.GetMethod ("SetSmartEnumValue"), "SetSmartEnumValue");
+			var smartEnum = GetType ().Assembly.GetType ("LinkAll.Attributes.SmartEnum");
+			Assert.NotNull (smartEnum, "SmartEnum");
+			var smartExtensions = GetType ().Assembly.GetType ("LinkAll.Attributes.SmartEnumExtensions");
+			Assert.NotNull (smartExtensions, "SmartEnumExtensions");
+			Assert.NotNull (smartExtensions.GetMethod ("GetConstant"), "GetConstant");
+			Assert.NotNull (smartExtensions.GetMethod ("GetValue"), "GetValue");
+
+			// Unused smart enums and their extensions should be linked away
+			Assert.IsNull (typeof (NSObject).Assembly.GetType ("AVFoundation.AVMediaTypes"), "AVMediaTypes");
+			Assert.IsNull (typeof (NSObject).Assembly.GetType ("AVFoundation.AVMediaTypesExtensions"), "AVMediaTypesExtensions");
+		}
 	}
+
+	[Preserve (AllMembers = true)]
+	class SmartConsumer : NSObject
+	{
+		// The Smart Get/Set methods should not be linked away, and neither should the Smart enums + extensions
+		[Export ("getSmartEnumValue")]
+		[return: BindAs (typeof (SmartEnum), OriginalType = typeof (NSString))]
+		public SmartEnum GetSmartEnumValue ()
+		{
+			return SmartEnum.Smart;
+		}
+
+		[Export ("setSmartEnumValue:")]
+		public void SetSmartEnumValue ([BindAs (typeof (SmartEnum), OriginalType = typeof (NSString))] SmartEnum value)
+		{
+		}
+	}
+
+	public enum SmartEnum : int
+	{
+		Smart = 0,
+	}
+
+	public static class SmartEnumExtensions
+	{
+		public static NSString GetConstant (this SmartEnum self)
+		{
+			return (NSString) "Smart";
+		}
+
+		public static SmartEnum GetValue (NSString constant)
+		{
+			return SmartEnum.Smart;
+		}
+	}
+
 }
