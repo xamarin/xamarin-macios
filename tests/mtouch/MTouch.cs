@@ -3378,6 +3378,17 @@ public class TestApp {
 		}
 
 		[Test]
+		public void ResponseFile ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.ResponseFile = Path.Combine (mtouch.CreateTemporaryDirectory (), "rspfile");
+				File.WriteAllLines (mtouch.ResponseFile, new string [] { "/version" });
+				mtouch.AssertExecute (MTouchAction.None);
+				mtouch.AssertNoWarnings ();
+			}
+		}
+
+		[Test]
 		[TestCase ("CFNetworkHandler", "CFNetworkHandler")]
 		[TestCase ("NSUrlSessionHandler", "NSUrlSessionHandler")]
 		[TestCase ("HttpClientHandler", "HttpClientHandler")]

@@ -310,6 +310,7 @@ class BindingTouch {
 					}
 				}
 			},
+			new Mono.Options.ResponseFileSource (),
 		};
 
 		try {

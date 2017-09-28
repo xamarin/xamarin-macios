@@ -26,6 +26,7 @@ namespace Xamarin.Tests
 
 		public List<string> ApiDefinitions = new List<string> ();
 		public string TmpDirectory;
+		public string ResponseFile;
 
 		protected override string ToolPath { get { return Configuration.BGenPath; } }
 		protected override string MessagePrefix { get { return "BI"; } }
@@ -72,6 +73,9 @@ namespace Xamarin.Tests
 			
 			if (!string.IsNullOrEmpty (TmpDirectory))
 				sb.Append (" --tmpdir=").Append (StringUtils.Quote (TmpDirectory));
+
+			if (!string.IsNullOrEmpty (ResponseFile))
+				sb.Append (" @").Append (StringUtils.Quote (ResponseFile));
 
 			return sb.ToString ();
 		}

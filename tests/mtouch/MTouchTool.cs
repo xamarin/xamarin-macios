@@ -122,6 +122,7 @@ namespace Xamarin
 		public string [] XmlDefinitions;
 		public bool? Profiling;
 		public string SymbolList;
+		public string ResponseFile;
 
 #pragma warning restore 649
 
@@ -519,6 +520,9 @@ namespace Xamarin
 				foreach (var xd in XmlDefinitions)
 					sb.Append (" --xml:").Append (StringUtils.Quote (xd));
 			}
+
+			if (!string.IsNullOrEmpty (ResponseFile))
+				sb.Append (" @").Append (StringUtils.Quote (ResponseFile));
 
 			return sb.ToString ();
 		}

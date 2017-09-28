@@ -1302,6 +1302,8 @@ namespace Xamarin.Bundler
 			if (app == null)
 				return 0;
 			
+			LogArguments (args);
+
 			if (watch_level > 0) {
 				watch = new Stopwatch ();
 				watch.Start ();

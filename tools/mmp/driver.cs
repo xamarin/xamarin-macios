@@ -378,6 +378,8 @@ namespace Xamarin.Bundler {
 				throw new MonoMacException (10, true, "Could not parse the command line arguments: {0}", e.Message);
 			}
 
+			Driver.LogArguments (args);
+
 			if (aotOptions == null) {
 				string forceAotVariable = Environment.GetEnvironmentVariable ("XM_FORCE_AOT");
 				if (forceAotVariable != null)
