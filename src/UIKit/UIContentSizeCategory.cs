@@ -34,7 +34,11 @@ namespace XamCore.UIKit {
 		[iOS (11, 0), TV (11, 0)]
 		static public bool IsAccessibilityCategory (this UIContentSizeCategory self)
 		{
-			return UIContentSizeCategoryIsAccessibilityCategory (self.GetConstant ().Handle);
+			var c1 = self.GetConstant ();
+			if (c1 == null)
+				throw new ArgumentException ($"Unknown 'UIContentSizeCategory' value");
+
+			return UIContentSizeCategoryIsAccessibilityCategory (c1.Handle);
 		}
 	}
 }
