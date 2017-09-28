@@ -15,6 +15,12 @@ namespace XamCore.UIKit {
 		[iOS (11, 0), TV (11, 0)]
 		public static NSComparisonResult Compare (UIContentSizeCategory category1, UIContentSizeCategory category2)
 		{
+			if (!UIContentSizeCategory.IsDefined (typeof (UIContentSizeCategory), category1))
+				throw new ArgumentException ($"Unknown 'UIContentSizeCategory' value", nameof (category1));
+
+			if (!UIContentSizeCategory.IsDefined (typeof (UIContentSizeCategory), category2))
+				throw new ArgumentException ($"Unknown 'UIContentSizeCategory' value", nameof (category2));
+
 			return (NSComparisonResult)(long)UIContentSizeCategoryCompareToCategory (category1.GetConstant ().Handle, category2.GetConstant ().Handle);
 		}
 

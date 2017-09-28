@@ -7,6 +7,8 @@
 // Copyright 2017 Microsoft. All rights reserved.
 //
 
+#if !__WATCHOS__
+
 using System;
 using Foundation;
 using NUnit.Framework;
@@ -17,6 +19,12 @@ namespace MonoTouchFixtures.UIKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class UIContentSizeCategoryTest {
+
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertXcodeVersion (9, 0);
+		}
 
 		[Test]
 		public void IsAccessibilityCategory ()
@@ -33,6 +41,10 @@ namespace MonoTouchFixtures.UIKit {
 			var small = UIContentSizeCategory.Small;
 			var large = UIContentSizeCategory.Large;
 			Assert.True (UIContentSizeCategoryExtensions.Compare (small, large) == NSComparisonResult.Ascending, "small < large");
+			Assert.Throws<ArgumentException> (() => UIContentSizeCategoryExtensions.Compare ((UIContentSizeCategory)31415, large));
+			Assert.Throws<ArgumentException> (() => UIContentSizeCategoryExtensions.Compare (small, (UIContentSizeCategory)271828));
 		}
 	}
 }
+
+#endif // !__WATCHOS__
