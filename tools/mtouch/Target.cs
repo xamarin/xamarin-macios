@@ -252,6 +252,11 @@ namespace Xamarin.Bundler
 			if (App.LinkMode == LinkMode.None && App.I18n != I18nAssemblies.None)
 				AddI18nAssemblies ();
 
+			if (!App.Embeddinator) {
+				if (!Assemblies.Any ((v) => v.AssemblyDefinition.Name.Name == Driver.GetProductAssembly (App)))
+					throw ErrorHelper.CreateError (123, $"The executable assembly {App.RootAssemblies [0]} does not reference {Driver.GetProductAssembly (App)}.dll.");
+			}
+
 			linker_flags = new CompilerFlags (this);
 		}
 

@@ -576,6 +576,31 @@ earlier iOS version.
 
 <!-- 0119 - 0123: free to use -->
 
+### <a name="MT0123"/>MT0123: The executable assembly * does not reference *.
+
+No reference could be found to the platform assembly (Xamarin.iOS.dll / Xamarin.TVOS.dll / Xamarin.WatchOS.dll) in the executable assembly.
+
+This typically happens where there is no code in the executable project that uses anything from the platform assembly; for instance an empty Main method (and no other code) would show this error:
+
+```csharp
+class Program {
+    void Main (string[] args)
+    {
+    }
+}
+```
+
+Using an API from the platform assembly will solve the error:
+
+```csharp
+class Program {
+    void Main (string[] args)
+    {
+        System.Console.WriteLine (typeof (UIKit.UIWindow));
+    }
+}
+```
+
 ### <a name="MT0124"/>MT0124: Could not set the current language to '{lang}' (according to LANG={LANG}): {exception}
 
 This is a warning, indicating that the current language couldn't be set to the language in the error message.
