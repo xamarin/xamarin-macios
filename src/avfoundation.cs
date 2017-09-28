@@ -3092,14 +3092,14 @@ namespace XamCore.AVFoundation {
 	interface AVCaptureSynchronizedDataCollection
 	{
 #if !XAMCORE_4_0
-		[Obsolete ("Use 'GetSynchronizedData' Instead.")]
+		[Obsolete ("Use 'GetSynchronizedData' instead.")]
 		[Wrap ("GetSynchronizedData (captureOutput)", isVirtual: true)]
 		AVCaptureSynchronizedData From (AVCaptureOutput captureOutput);
 
 		// This is not reexposed because it is not needed you can use 'GetSynchronizedData' instead, also from docs:
 		// https://developer.apple.com/documentation/avfoundation/avcapturesynchronizeddatacollection/2873892-objectforkeyedsubscript?language=objc
 		// > This call is equivalent to the synchronizedDataForCaptureOutput: method, but allows subscript syntax.
-		[Obsolete ("Use 'GetSynchronizedData' Instead.")]
+		[Obsolete ("Use 'GetSynchronizedData' instead.")]
 		[Export ("objectForKeyedSubscript:")]
 		[return: NullAllowed]
 		AVCaptureSynchronizedData ObjectForKeyedSubscript (AVCaptureOutput key);
