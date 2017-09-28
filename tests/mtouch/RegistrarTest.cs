@@ -629,11 +629,7 @@ public struct FooF { public NSObject Obj; }
 			        $".*/Test.cs(.*): error MT4162: The type 'FutureType' (used as a parameter in CurrentType.Foo) is not available in {name} .* (it was introduced in {name} 99.0.0): 'use Z instead'. Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).",
 			        $".*/Test.cs(.*): error MT4162: The type 'FutureType' (used as a parameter in CurrentType.Foo) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).",
 			        $".*/Test.cs(.*): error MT4162: The type 'FutureType' (used as a return type in CurrentType.Bar) is not available in {name} .* (it was introduced in {name} 99.0.0): 'use Z instead'. Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).",
-			        $".*/Test.cs(.*): error MT4162: The type 'FutureType' (used as a return type in CurrentType.Bar) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).",
-					$"error MT4162: The type 'FutureEnum' (used as the property type of IFutureProtocol.FutureProperty) is not available in {name} .* (it was introduced in {name} 99.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).",
-					$"error MT4162: The type 'FutureEnum' (used as a return type in IFutureProtocol.FutureMethod) is not available in {name} .* (it was introduced in {name} 99.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).",
-					$"error MT4162: The type 'FutureEnum' (used as a parameter in IFutureProtocol.FutureMethod) is not available in {name} .* (it was introduced in {name} 99.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode)."
-
+			        $".*/Test.cs(.*): error MT4162: The type 'FutureType' (used as a return type in CurrentType.Bar) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode)."
 			);
 		}
 

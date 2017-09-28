@@ -261,7 +261,9 @@ namespace XamCore.Registrar {
 
 				VerifySelector (method, ref exceptions);
 				method.ValidateSignature (ref exceptions);
-				if (!method.IsPropertyAccessor)
+				// Protocol members don't show up in the generated output, so it doesn't matter if we run into those.
+				// If a class implements a protocol, it will still hit this check on the implemented members.
+				if (!method.IsPropertyAccessor && !method.DeclaringType.IsProtocol)
 					Registrar.VerifyInSdk (ref exceptions, method);
 
 				rv = AddToMap (method, ref exceptions);
@@ -275,7 +277,10 @@ namespace XamCore.Registrar {
 					Properties = new List<ObjCProperty> ();
 				// Do properties and methods live in the same objc namespace? // AddToMap (property, errorIfExists);
 				Properties.Add (property);
-				Registrar.VerifyInSdk (ref exceptions, property);
+				// Protocol members don't show up in the generated output, so it doesn't matter if we run into those.
+				// If a class implements a protocol, it will still hit this check on the implemented members.
+				if (!property.DeclaringType.IsProtocol)
+					Registrar.VerifyInSdk (ref exceptions, property);
 				VerifyIsNotKeyword (ref exceptions, property);
 			}
 

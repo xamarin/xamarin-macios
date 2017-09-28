@@ -880,10 +880,7 @@ namespace Xamarin.Bundler
 			case RegistrarMode.Static:
 			case RegistrarMode.Dynamic:
 			case RegistrarMode.Default:
-				StaticRegistrar = new StaticRegistrar (this)
-				{
-					LinkContext = LinkContext,
-				};
+				StaticRegistrar = new StaticRegistrar (this);
 				break;
 			}
 		}
