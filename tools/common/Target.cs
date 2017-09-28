@@ -119,6 +119,9 @@ namespace Xamarin.Bundler {
 				}
 			}
 
+			if (asm == null)
+				throw ErrorHelper.CreateError (99, $"Internal error: could not find the product assembly {Driver.GetProductAssembly (App)} in the list of assemblies referenced by the executable. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+
 			productAssembly = asm.AssemblyDefinition;
 
 			// *** make sure any change in the above lists (or new list) are also reflected in 
