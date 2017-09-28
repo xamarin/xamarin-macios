@@ -43,6 +43,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.True (UIContentSizeCategoryExtensions.Compare (small, large) == NSComparisonResult.Ascending, "small < large");
 			Assert.Throws<ArgumentException> (() => UIContentSizeCategoryExtensions.Compare ((UIContentSizeCategory)31415, large));
 			Assert.Throws<ArgumentException> (() => UIContentSizeCategoryExtensions.Compare (small, (UIContentSizeCategory)271828));
+			Assert.Throws<ArgumentException> (() => ((UIContentSizeCategory)1234).IsAccessibilityCategory ());
 		}
 	}
 }
