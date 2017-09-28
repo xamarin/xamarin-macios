@@ -53,7 +53,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.Mac" />
     <Reference Include="Mono.Data.Tds" />
-    <Reference Include="MonoTouch.NUnitLite" />
+    <Reference Include="GuiUnit">
       <HintPath>..\..\..\external\guiunit\src\framework\obj\Debug\net-4.5\GuiUnit.exe</HintPath>
     </Reference>
     <Reference Include="Mono.Posix" />
