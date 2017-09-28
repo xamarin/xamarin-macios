@@ -130,6 +130,16 @@ MONO_API <#= export.ReturnType #>
 <# } #>
 	return <#= export.EntryPoint #>_func (<#= export.ArgumentNames #>);
 }
+<# } #>
+
+<# foreach (var export in exports) {
+	if (!export.Optional)
+		continue; #>
+bool
+<#= export.EntryPoint #>_exists ()
+{
+	return <#= export.EntryPoint #>_func != NULL;
+}
 
 <# } #>
 #else

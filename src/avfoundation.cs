@@ -32,14 +32,11 @@
 using System.ComponentModel;
 
 #if !WATCH
-using XamCore.AudioToolbox;
 using XamCore.AudioUnit;
 using XamCore.AVKit;
-using XamCore.Foundation;
 using XamCore.CoreAnimation;
 using XamCore.CoreImage;
 using XamCore.CoreMedia;
-using XamCore.CoreVideo;
 using XamCore.MediaToolbox;
 #endif
 using XamCore.AudioToolbox;
@@ -12176,12 +12173,12 @@ namespace XamCore.AVFoundation {
 		AVContentKeyResponse Create (NSData keyData, [NullAllowed] NSData initializationVector);
 	}
 
-	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
+	[TV (11,0), NoWatch, NoMac, iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
 	interface AVRouteDetector {
 		[Notification]
-		[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
+		[TV (11, 0), NoWatch, NoMac, iOS (11, 0)]
 		[Field ("AVRouteDetectorMultipleRoutesDetectedDidChangeNotification")]
 		NSString MultipleRoutesDetectedDidChange { get; }
 

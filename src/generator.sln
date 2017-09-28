@@ -1,20 +1,23 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "generator", "generator.csproj", "{5FC1B67F-2F54-478D-8C76-2BD21AF8E3C7}"
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "generator", "generator.csproj", "{D2EE02C0-9BFD-477D-AC92-4DE2D8490790}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "generator-tests", "..\tests\generator\generator-tests.csproj", "{10790816-D00E-40A0-8653-2A8AB4DD33A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x86 = Debug|x86
-		Release|x86 = Release|x86
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5FC1B67F-2F54-478D-8C76-2BD21AF8E3C7}.Debug|x86.ActiveCfg = Debug|x86
-		{5FC1B67F-2F54-478D-8C76-2BD21AF8E3C7}.Debug|x86.Build.0 = Debug|x86
-		{5FC1B67F-2F54-478D-8C76-2BD21AF8E3C7}.Release|x86.ActiveCfg = Release|x86
-		{5FC1B67F-2F54-478D-8C76-2BD21AF8E3C7}.Release|x86.Build.0 = Release|x86
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = generator.csproj
+		{D2EE02C0-9BFD-477D-AC92-4DE2D8490790}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2EE02C0-9BFD-477D-AC92-4DE2D8490790}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2EE02C0-9BFD-477D-AC92-4DE2D8490790}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2EE02C0-9BFD-477D-AC92-4DE2D8490790}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10790816-D00E-40A0-8653-2A8AB4DD33A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10790816-D00E-40A0-8653-2A8AB4DD33A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10790816-D00E-40A0-8653-2A8AB4DD33A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10790816-D00E-40A0-8653-2A8AB4DD33A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

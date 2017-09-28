@@ -140,6 +140,12 @@ namespace XamCore.ObjCRuntime {
 			ResourcesPath = Path.Combine (basePath, "Resources");
 			FrameworksPath = Path.Combine (basePath, "Frameworks");
 		}
+
+		[Preserve]
+		static IntPtr GetNullableType (IntPtr type)
+		{
+			return ObjectWrapper.Convert (Registrar.GetNullableType ((Type) ObjectWrapper.Convert (type)));
+		}
 #endif // !COREBUILD
 	}
 }
