@@ -211,24 +211,56 @@ namespace MonoTouchFixtures.CoreGraphics {
 			// has the file(s) so we're not trying (and fialing) to copy it into the bundle
 			using (var icc = NSData.FromFile (Path.Combine (NSBundle.MainBundle.ResourcePath, "LL-171A-B-B797E457-16AB-C708-1E0F-32C19DBD47B5.icc")))
 			using (var cs = CGColorSpace.CreateICCProfile (icc)) {
-				Assert.That (cs.Components, Is.EqualTo ((nint) 3), "Components");
-				Assert.That (cs.Model, Is.EqualTo (CGColorSpaceModel.RGB), "Model");
-				Assert.Null (cs.GetBaseColorSpace (), "GetBaseColorSpace");
-				// not indexed so no color table
-				Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "GetColorTable");
+				TestICC (cs);
+			}
 
-				if (TestRuntime.CheckXcodeVersion (5, 0)) {
-					using (var icc_profile = cs.GetICCProfile ())
-						Assert.That (icc_profile.Length, Is.EqualTo (3284), "GetICCProfile");
-				}
+			using (var space = CGColorSpace.CreateICCProfile ((NSData) null)) {
+				Assert.IsNull (space, "null data");
+			}
+		}
 
-				if (TestRuntime.CheckXcodeVersion (8, 0)) {
-					Assert.Null (cs.Name, "Name");
-					Assert.False (cs.IsWideGamutRgb, "IsWideGamutRgb");
-					Assert.True (cs.SupportsOutput, "SupportsOutput");
-					using (var icc_data = cs.GetIccData ())
-						Assert.That (icc_data.Length, Is.EqualTo (3284), "GetIccData");
+		void TestICC (CGColorSpace cs)
+		{
+			Assert.That (cs.Components, Is.EqualTo ((nint) 3), "Components");
+			Assert.That (cs.Model, Is.EqualTo (CGColorSpaceModel.RGB), "Model");
+			Assert.Null (cs.GetBaseColorSpace (), "GetBaseColorSpace");
+			// not indexed so no color table
+			Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "GetColorTable");
+
+			if (TestRuntime.CheckXcodeVersion (5, 0)) {
+				using (var icc_profile = cs.GetICCProfile ())
+					Assert.That (icc_profile.Length, Is.EqualTo (3284), "GetICCProfile");
+			}
+
+			if (TestRuntime.CheckXcodeVersion (8, 0)) {
+				Assert.Null (cs.Name, "Name");
+				Assert.False (cs.IsWideGamutRgb, "IsWideGamutRgb");
+				Assert.True (cs.SupportsOutput, "SupportsOutput");
+				using (var icc_data = cs.GetIccData ())
+					Assert.That (icc_data.Length, Is.EqualTo (3284), "GetIccData");
+			}
+		}
+
+		[Test]
+		public void CreateICCData ()
+		{
+			using (var icc = NSData.FromFile (Path.Combine (NSBundle.MainBundle.ResourcePath, "LL-171A-B-B797E457-16AB-C708-1E0F-32C19DBD47B5.icc"))) {
+				using (var cs = CGColorSpace.CreateICCData (icc)) {
+					TestICC (cs);
 				}
+				using (var provider = new CGDataProvider (icc)) {
+					using (var cs = CGColorSpace.CreateICCData (provider)) {
+						TestICC (cs);
+					}
+				}
+			}
+
+			using (var space = CGColorSpace.CreateICCData ((NSData) null)) {
+				Assert.IsNull (space, "null data");
+			}
+
+			using (var space = CGColorSpace.CreateICCData ((CGDataProvider) null)) {
+				Assert.IsNull (space, "null data provider");
 			}
 		}
 
@@ -265,6 +297,103 @@ namespace MonoTouchFixtures.CoreGraphics {
 				using (var img = CGImage.FromPNG (dp, null, false, CGColorRenderingIntent.Default)) {
 					CheckIndexedFile (img);
 				}
+			}
+		}
+
+		[Test]
+		public void CalibratedGray ()
+		{
+			var whitepoint = new nfloat [] { 1, 2, 3 };
+			var blackpoint = new nfloat [] { 3, 2, 1 };
+			var gamma = (nfloat) 1;
+
+			Assert.Throws<ArgumentNullException> (() => CGColorSpace.CreateCalibratedGray (null, blackpoint, gamma), "null whitepoint");
+			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateCalibratedGray (new nfloat [0], blackpoint, gamma), "invalid whitepoint0");
+			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateCalibratedGray (new nfloat [4], blackpoint, gamma), "invalid whitepoint4");
+
+			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateCalibratedGray (whitepoint, new nfloat [0], gamma), "invalid blackpoint0");
+			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateCalibratedGray (whitepoint, new nfloat [4], gamma), "invalid blackpoint4");
+
+			using (var space = CGColorSpace.CreateCalibratedGray (whitepoint, blackpoint, gamma)) {
+				Assert.IsNotNull (space, "all non-null");
+			}
+
+			using (var space = CGColorSpace.CreateCalibratedGray (whitepoint, null, gamma)) {
+				Assert.IsNotNull (space, "null blackpoint");
+			}
+		}
+
+		[Test]
+		public void CalibratedRGB ()
+		{
+			var whitepoint = new nfloat [] { 1, 2, 3 };
+			var blackpoint = new nfloat [] { 3, 2, 1 };
+			var gamma = new nfloat [] { 1, 2, 3 };
+			var matrix = new nfloat [] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+			Assert.Throws<ArgumentNullException> (() => CGColorSpace.CreateCalibratedRGB (null, blackpoint, gamma, matrix), "null whitepoint");
+			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateCalibratedRGB (new nfloat [0], blackpoint, gamma, matrix), "invalid whitepoint0");
+			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateCalibratedRGB (new nfloat [4], blackpoint, gamma, matrix), "invalid whitepoint4");
+
+			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateCalibratedRGB (whitepoint, new nfloat [0], gamma, matrix), "invalid blackpoint0");
+			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateCalibratedRGB (whitepoint, new nfloat [4], gamma, matrix), "invalid blackpoint4");
+
+			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateCalibratedRGB (whitepoint, blackpoint, new nfloat [0], matrix), "invalid gamma0");
+			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateCalibratedRGB (whitepoint, blackpoint, new nfloat [4], matrix), "invalid gamma4");
+
+			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateCalibratedRGB (whitepoint, blackpoint, gamma, new nfloat [0]), "invalid matrix0");
+			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateCalibratedRGB (whitepoint, blackpoint, gamma, new nfloat [4]), "invalid matrix4");
+
+			using (var space = CGColorSpace.CreateCalibratedRGB (whitepoint, blackpoint, gamma, matrix)) {
+				Assert.IsNotNull (space, "all non-null");
+			}
+
+			using (var space = CGColorSpace.CreateCalibratedRGB (whitepoint, null, gamma, matrix)) {
+				Assert.IsNotNull (space, "null blackpoint");
+			}
+
+			using (var space = CGColorSpace.CreateCalibratedRGB (whitepoint, blackpoint, null, matrix)) { 
+				Assert.IsNotNull (space, "null gamma");
+			}
+
+			using (var space = CGColorSpace.CreateCalibratedRGB (whitepoint, blackpoint, gamma, null)) {
+				Assert.IsNotNull (space, "all matrix-null");
+			}
+
+			using (var space = CGColorSpace.CreateCalibratedRGB (whitepoint, null, null, null)) {
+				Assert.IsNotNull (space, "all null");
+			}
+		}
+
+		[Test]
+		public void Lab ()
+		{
+			var whitepoint = new nfloat [] { 1, 2, 3 };
+			var blackpoint = new nfloat [] { 3, 2, 1 };
+			var range = new nfloat [] { 1, 2, 3, 4 };
+			Assert.Throws<ArgumentNullException> (() => CGColorSpace.CreateLab (null, blackpoint, range), "null whitepoint");
+			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateLab (new nfloat [0], blackpoint, range), "invalid whitepoint0");
+			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateLab (new nfloat [4], blackpoint, range), "invalid whitepoint4");
+
+			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateLab (whitepoint, new nfloat [0], range), "invalid blackpoint0");
+			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateLab (whitepoint, new nfloat [4], range), "invalid blackpoint4");
+
+			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateLab (whitepoint, blackpoint, new nfloat [0]), "invalid range0");
+			Assert.Throws<ArgumentException> (() => CGColorSpace.CreateLab (whitepoint, blackpoint, new nfloat [3]), "invalid range3");
+
+			using (var space = CGColorSpace.CreateLab (whitepoint, blackpoint, range)) {
+				Assert.IsNotNull (space, "all non-null");
+			}
+
+			using (var space = CGColorSpace.CreateLab (whitepoint, null, range)) {
+				Assert.IsNotNull (space, "null blackpoint");
+			}
+
+			using (var space = CGColorSpace.CreateLab (whitepoint, blackpoint, null)) {
+				Assert.IsNotNull (space, "null gamma");
+			}
+
+			using (var space = CGColorSpace.CreateLab (whitepoint, null, null)) {
+				Assert.IsNotNull (space, "all null");
 			}
 		}
 	}

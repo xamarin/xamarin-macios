@@ -65,6 +65,28 @@ namespace MonoTouchFixtures.CoreGraphics {
 			var info = GetInfo ();
 			UIGraphics.BeginPDFContext("file", RectangleF.Empty, info); 
 		}
+
+		[Test]
+		public void ToDictionaryWithPermissions ()
+		{
+			TestRuntime.AssertXcodeVersion (9, 0);
+
+			var filename = Environment.GetFolderPath (Environment.SpecialFolder.CommonDocuments) + "/t.pdf";
+
+			var info = GetInfo ();
+			info.AccessPermissions = CGPDFAccessPermissions.AllowsContentCopying;
+
+			using (var url = new NSUrl (filename)) {
+				using (var ctx = new CGContextPDF (url, new RectangleF (0, 0, 1000, 1000), info)) {
+					Assert.IsNotNull (ctx, "1");
+				}
+				using (var consumer = new CGDataConsumer (url)) {
+					using (var ctx = new CGContextPDF (consumer, new RectangleF (0, 0, 1000, 1000), info)) {
+						Assert.IsNotNull (ctx, "2ppdf");
+					}
+				}
+			}
+		}
 #endif
 	}
 }

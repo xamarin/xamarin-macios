@@ -58,6 +58,8 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void ResetClip ()
 		{
+			TestRuntime.AssertXcodeVersion (9, 0);
+
 			// Merely tests that the P/Invoke is correct
 			using (var c = Create ()) {
 				var original = c.GetClipBoundingBox ();
