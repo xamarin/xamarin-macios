@@ -5280,7 +5280,9 @@ namespace XamCore.Foundation
 #if MONOMAC
 	, NSPasteboardReading, NSPasteboardWriting
 #endif
+#if !(MONOMAC && !XAMCORE_2_0)
 	, NSItemProviderWriting, NSItemProviderReading
+#endif
 	{
 		[Export ("initWithScheme:host:path:")]
 		IntPtr Constructor (string scheme, string host, string path);
@@ -5972,20 +5974,20 @@ namespace XamCore.Foundation
 #endif
 
 		// From the NSItemProviderReading protocol
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 		[Static]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		new string[] ReadableTypeIdentifiers { get; }
 
 		// From the NSItemProviderReading protocol
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 		[Static]
 		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
 		[return: NullAllowed]
 		new NSUrl GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
 
 		// From the NSItemProviderWriting protocol
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 		[Static]
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		new string[] WritableTypeIdentifiers { get; }
@@ -7788,7 +7790,9 @@ namespace XamCore.Foundation
 	#if MONOMAC
 		, NSPasteboardReading, NSPasteboardWriting // Documented that it implements NSPasteboard protocols even if header doesn't show it
 	#endif
+#if !(MONOMAC && !XAMCORE_2_0)
 		, NSItemProviderReading, NSItemProviderWriting
+#endif
 	{
 		[Export ("initWithData:encoding:")]
 		IntPtr Constructor (NSData data, NSStringEncoding encoding);
@@ -8050,19 +8054,19 @@ namespace XamCore.Foundation
 
 		// From the NSItemProviderReading protocol
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 		[Static]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		new string[] ReadableTypeIdentifiers { get; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 		[Static]
 		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
 		[return: NullAllowed]
 		new NSString GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
 
 		// From the NSItemProviderWriting protocol
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 		[Static]
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
 		new string[] WritableTypeIdentifiers { get; }
@@ -9742,7 +9746,7 @@ namespace XamCore.Foundation
 
 	interface INSItemProviderReading {}
 	
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[Protocol]
 	interface NSItemProviderReading
 	{
@@ -9765,7 +9769,7 @@ namespace XamCore.Foundation
 
 	interface INSItemProviderWriting {}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[Protocol]
 	interface NSItemProviderWriting
 	{
