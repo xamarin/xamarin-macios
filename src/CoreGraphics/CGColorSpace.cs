@@ -381,7 +381,11 @@ namespace XamCore.CoreGraphics {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CreateIDCCData' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CreateIDCCData' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CreateIDCCData' instead.")]
+#if XAMCORE_4_0
+		public static CGColorSpace CreateIccProfile (NSData data)
+#else
 		public static CGColorSpace CreateICCProfile (NSData data)
+#endif
 		{
 			IntPtr ptr = CGColorSpaceCreateWithICCProfile (data.GetHandle ());
 			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
@@ -389,18 +393,18 @@ namespace XamCore.CoreGraphics {
 
 		[Introduced (PlatformName.iOS, 10, 0)]
 		[Introduced (PlatformName.MacOSX, 10, 12)]
-		public static CGColorSpace CreateICCData (NSData data)
+		public static CGColorSpace CreateIccData (NSData data)
 		{
-			return CreateICCData (data.GetHandle ());
+			return CreateIccData (data.GetHandle ());
 		}
 
 		[iOS (10,0)][Mac (10,12)][Watch (3,0)][TV (10,0)]
-		public static CGColorSpace CreateICCData (CGDataProvider provider)
+		public static CGColorSpace CreateIccData (CGDataProvider provider)
 		{
-			return CreateICCData (provider.GetHandle ());
+			return CreateIccData (provider.GetHandle ());
 		}
 
-		static CGColorSpace CreateICCData (IntPtr handle)
+		static CGColorSpace CreateIccData (IntPtr handle)
 		{
 			var ptr = CGColorSpaceCreateWithICCData (handle);
 			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
@@ -412,7 +416,11 @@ namespace XamCore.CoreGraphics {
 			/* CGDataProviderRef __nullable */ IntPtr profile,
 			/* CGColorSpaceRef __nullable */ IntPtr alternate);
 
+#if XAMCORE_4_0
+		public static CGColorSpace CreateIccProfile (nfloat[] range, CGDataProvider profile, CGColorSpace alternate)
+#else
 		public static CGColorSpace CreateICCProfile (nfloat[] range, CGDataProvider profile, CGColorSpace alternate)
+#endif
 		{
 			nint nComponents = range == null ? 0 : range.Length / 2;
 			IntPtr p = profile == null ? IntPtr.Zero : profile.Handle;
@@ -433,7 +441,11 @@ namespace XamCore.CoreGraphics {
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'GetICCData' instead." )]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'GetICCData' instead." )]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'GetICCData' instead." )]
+#if XAMCORE_4_0
+		public NSData GetIccProfile ()
+#else
 		public NSData GetICCProfile ()
+#endif
 		{
 			IntPtr ptr = CGColorSpaceCopyICCProfile (handle);
 			return (ptr == IntPtr.Zero) ? null : new NSData (ptr, true);
