@@ -150,15 +150,19 @@ namespace XamCore.CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFRunLoopSourceRef */ IntPtr CFRunLoopSourceCreate (/* CFAllocatorRef */ IntPtr allocator, /* CFIndex */ nint order, /* CFRunLoopSourceContext* */ IntPtr context);
 
+		static ScheduleCallback ScheduleDelegate = (ScheduleCallback) Schedule;
+		static CancelCallback CancelDelegate = (CancelCallback) Cancel;
+		static PerformCallback PerformDelegate = (PerformCallback) Perform;
+		
 		protected CFRunLoopSourceCustom ()
 			: base (IntPtr.Zero, true)
 		{
 			gch = GCHandle.Alloc (this);
 			var ctx = new CFRunLoopSourceContext ();
 			ctx.Info = GCHandle.ToIntPtr (gch);
-			ctx.Schedule = Marshal.GetFunctionPointerForDelegate ((ScheduleCallback)Schedule);
-			ctx.Cancel = Marshal.GetFunctionPointerForDelegate ((CancelCallback)Cancel);
-			ctx.Perform = Marshal.GetFunctionPointerForDelegate ((PerformCallback)Perform);
+			ctx.Schedule = Marshal.GetFunctionPointerForDelegate (ScheduleDelegate);
+			ctx.Cancel = Marshal.GetFunctionPointerForDelegate (CancelDelegate);
+			ctx.Perform = Marshal.GetFunctionPointerForDelegate (PerformDelegate);
 
 			var ptr = Marshal.AllocHGlobal (Marshal.SizeOf (typeof(CFRunLoopSourceContext)));
 			try {
