@@ -159,9 +159,9 @@ namespace XamCore.CoreGraphics {
 			if (whitepoint == null)
 				throw new ArgumentNullException (nameof (whitepoint));
 			if (whitepoint.Length != 3)
-				throw new ArgumentException ("Must be null or have 3 values", nameof (whitepoint));
+				throw new ArgumentException ("Must have exactly 3 values", nameof (whitepoint));
 			if (blackpoint != null && blackpoint.Length != 3)
-				throw new ArgumentException ("Must be null or have 3 values", nameof (blackpoint));
+				throw new ArgumentException ("Must be null or have exactly 3 values", nameof (blackpoint));
 			
 			var ptr = CGColorSpaceCreateCalibratedGray (whitepoint, blackpoint, gamma);
 			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
@@ -176,13 +176,13 @@ namespace XamCore.CoreGraphics {
 			if (whitepoint == null)
 				throw new ArgumentNullException (nameof (whitepoint));
 			if (whitepoint.Length != 3)
-				throw new ArgumentException ("Must have 3 values", nameof (whitepoint));
+				throw new ArgumentException ("Must have exactly 3 values", nameof (whitepoint));
 			if (blackpoint != null && blackpoint.Length != 3)
-				throw new ArgumentException ("Must be null or have 3 values", nameof (blackpoint));
+				throw new ArgumentException ("Must be null or have exactly 3 values", nameof (blackpoint));
 			if (gamma != null && gamma.Length != 3)
-				throw new ArgumentException ("Must be null or have 3 values", nameof (gamma));
+				throw new ArgumentException ("Must be null or have exactly 3 values", nameof (gamma));
 			if (matrix != null && matrix.Length != 9)
-				throw new ArgumentException ("Must be null or have 9 values", nameof (matrix));
+				throw new ArgumentException ("Must be null or have exactly 9 values", nameof (matrix));
 			
 			var ptr = CGColorSpaceCreateCalibratedRGB (whitepoint, blackpoint, gamma, matrix);
 			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
@@ -197,11 +197,11 @@ namespace XamCore.CoreGraphics {
 			if (whitepoint == null)
 				throw new ArgumentNullException (nameof (whitepoint));
 			if (whitepoint.Length != 3)
-				throw new ArgumentException ("Must have 3 values", nameof (whitepoint));
+				throw new ArgumentException ("Must have exactly 3 values", nameof (whitepoint));
 			if (blackpoint != null && blackpoint.Length != 3)
-				throw new ArgumentException ("Must be null or have 3 values", nameof (blackpoint));
+				throw new ArgumentException ("Must be null or have exactly 3 values", nameof (blackpoint));
 			if (range != null && range.Length != 4)
-				throw new ArgumentException ("Must be null or have 4 values", nameof (range));
+				throw new ArgumentException ("Must be null or have exactly 4 values", nameof (range));
 
 			var ptr = CGColorSpaceCreateLab (whitepoint, blackpoint, range);
 			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
