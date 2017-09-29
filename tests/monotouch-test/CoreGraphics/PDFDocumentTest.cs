@@ -58,7 +58,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 				CheckTamarin (doc);
 			}
 		}
-
+		
 		void CheckTamarin (CGPDFDocument pdf)
 		{
 			Assert.True (pdf.AllowsCopying, "AllowsCopying");

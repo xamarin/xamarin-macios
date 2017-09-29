@@ -365,7 +365,7 @@ namespace XamCore.CoreGraphics {
 			CGColorSpaceGetColorTable (handle, table);
 			return table;
 		}
-
+			
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CreateIDCCData' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CreateIDCCData' instead.")]
