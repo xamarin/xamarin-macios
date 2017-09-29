@@ -9086,6 +9086,15 @@ namespace XamCore.AVFoundation {
 		[Export ("dualCameraFusionSupported")]
 		bool DualCameraFusionSupported { [Bind ("isDualCameraFusionSupported")] get; }
 
+		// From AVCapturePhotoOutput (AVCapturePhotoOutputDepthDataDeliverySupport) Category
+
+		[iOS (11,0)]
+		[Export ("depthDataDeliverySupported")]
+		bool DepthDataDeliverySupported { [Bind ("isDepthDataDeliverySupported")] get; }
+
+		[iOS (11,0)]
+		[Export ("depthDataDeliveryEnabled")]
+		bool DepthDataDeliveryEnabled { [Bind ("isDepthDataDeliveryEnabled")] get; set; }
 	}
 #endif
 	
@@ -9671,6 +9680,20 @@ namespace XamCore.AVFoundation {
 		[iOS (10, 0)]
 		[Export ("activeColorSpace", ArgumentSemantic.Assign)]
 		AVCaptureColorSpace ActiveColorSpace { get; set; }
+
+		// From AVCaptureDevice (AVCaptureDeviceDepthSupport) Category
+
+		[iOS (11,0)]
+		[Export ("activeDepthDataFormat", ArgumentSemantic.Retain), NullAllowed]
+		AVCaptureDeviceFormat ActiveDepthDataFormat { get; set; }
+
+		[iOS (11,0)]
+		[Export ("minAvailableVideoZoomFactor")]
+		nfloat MinAvailableVideoZoomFactor { get; }
+
+		[iOS (11,0)]
+		[Export ("maxAvailableVideoZoomFactor")]
+		nfloat MaxAvailableVideoZoomFactor { get; }
 
 #endif
 	}
