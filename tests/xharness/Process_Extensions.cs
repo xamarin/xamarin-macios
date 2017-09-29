@@ -131,9 +131,8 @@ namespace xharness
 						lock (StderrStream)
 							log.WriteLine ($"Execution timed out after {timeout.Value.TotalSeconds} seconds and the process was killed.");
 					}
-				} else {
-					process.WaitForExit ();
 				}
+				process.WaitForExit ();
 				exit_completion.TrySetResult (true);
 				Task.WaitAll (new Task [] { stderr_completion.Task, stdout_completion.Task }, TimeSpan.FromSeconds (1));
 				stderr_completion.TrySetResult (false);
@@ -144,7 +143,12 @@ namespace xharness
 
 			await Task.WhenAll (stderr_completion.Task, stdout_completion.Task, exit_completion.Task);
 
-			rv.ExitCode = process.ExitCode;
+			try {
+				rv.ExitCode = process.ExitCode;
+			} catch (Exception e) {
+				rv.ExitCode = 12345678;
+				log.WriteLine ($"Failed to get ExitCode: {e}");
+			}
 			return rv;
 		}
 
