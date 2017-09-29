@@ -206,7 +206,7 @@ namespace XamCore.CoreGraphics {
 #if XAMCORE_2_0
 		[Internal]
 		[Field ("kCGColorConversionTRCSize")]
-		[iOS (11,0), Mac(10,3), TV(11,0), Watch(4,0)]
+		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
 		NSString TrcSizeKey { get; }
 #endif
 	}

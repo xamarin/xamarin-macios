@@ -260,31 +260,31 @@ namespace XamCore.CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[iOS (11,0), Mac(10,3), TV(11,0), Watch(4,0)]
+		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
 		extern static void CGPDFContextSetOutline (/* CGPDFDocumentRef */ IntPtr document, IntPtr /* dictionary */ outline);
 
-		[iOS (11,0), Mac(10,3), TV(11,0), Watch(4,0)]
+		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
 		public void SetOutline (CGPDFOutlineOptions options)
 		{
 			CGPDFContextSetOutline (handle, options == null ? IntPtr.Zero : options.Dictionary.Handle);
 		}
 					
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[iOS (11,0), Mac(10,3), TV(11,0), Watch(4,0)]
+		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
 		extern static /* CFDictionaryPtry */ IntPtr CGPDFDocumentGetOutline (/* CGPDFDocumentRef */ IntPtr document);
 
-		[iOS (11,0), Mac(10,3), TV(11,0), Watch(4,0)]
+		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
 		public CGPDFOutlineOptions GetOutline ()
 		{
 			var ptr = CGPDFDocumentGetOutline (handle);
 			return new CGPDFOutlineOptions (Runtime.GetNSObject<NSDictionary> (ptr));
 		}
 
-		[iOS (11,0), Mac(10,3), TV(11,0), Watch(4,0)]
+		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static CGPDFAccessPermissions CGPDFDocumentGetAccessPermissions (IntPtr document);
 
-		[iOS (11,0), Mac(10,3), TV(11,0), Watch(4,0)]
+		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
 		public CGPDFAccessPermissions GetAccessPermissions ()
 		{
 			return CGPDFDocumentGetAccessPermissions (handle);
