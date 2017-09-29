@@ -1360,6 +1360,7 @@ UIKIT_SOURCES = \
 	UIKit/UICollectionViewLayoutAttributes.cs \
 	UIKit/UICollectionViewTransitionLayout.cs \
 	UIKit/UIColor.cs \
+	UIKit/UIContentSizeCategory.cs \
 	UIKit/UIControl.cs \
 	UIKit/UIDevice.cs \
 	UIKit/UIDocumentInteractionController.cs \
