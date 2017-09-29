@@ -942,7 +942,7 @@ namespace XamCore.CoreBluetooth {
 		NSUuid Identifier { get; }
 	}
 
-	// The base type exists on macOS 32 but the fields do not
+	// The type is available in 32bits macOS 10.13 even if most properties are 64 bits only
 	[Watch (4,0)][iOS (11,0)][TV (11,0)][Mac (10,13)]
 	[BaseType (typeof (NSObject), Name = "CBL2CAPChannel")]
 	interface CBL2CapChannel {
