@@ -503,7 +503,7 @@ namespace Xamarin
 				sb.Append (" --bitcode:").Append (Bitcode.ToString ().ToLower ());
 
 			foreach (var abt in AssemblyBuildTargets)
-				sb.Append (" --assembly-build-target ").Append (StringUtils.Quote (abt));
+				sb.Append (" --assembly-build-target=").Append (StringUtils.Quote (abt));
 
 			if (!string.IsNullOrEmpty (AotArguments))
 				sb.Append (" --aot:").Append (StringUtils.Quote (AotArguments));
