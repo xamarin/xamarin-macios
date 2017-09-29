@@ -82,7 +82,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 				}
 				using (var consumer = new CGDataConsumer (url)) {
 					using (var ctx = new CGContextPDF (consumer, new RectangleF (0, 0, 1000, 1000), info)) {
-						Assert.IsNotNull (ctx, "2ppdf");
+						Assert.IsNotNull (ctx, "2");
 					}
 				}
 			}
