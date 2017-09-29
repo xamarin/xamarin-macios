@@ -146,6 +146,43 @@ namespace XamCore.ObjCRuntime {
 		// trampoline must be static, but it's not necessary to keep a ref to it
 		public void SetupBlock (Delegate trampoline, Delegate userDelegate)
 		{
+			if (trampoline == null)
+				throw new ArgumentNullException (nameof (trampoline));
+
+#if !MONOMAC
+			// Check that:
+			// * The trampoline is static
+			// * The trampoline's method has a [MonoPInvokeCallback] attribute
+			// * The delegate in the [MonoPInvokeCallback] has the right signature
+			//
+			// WARNING: the XAMARIN_IOS_SKIP_BLOCK_CHECK will be removed in a future version, 
+			//          if you find you need it, please file a bug with a test case and we'll 
+			//          make sure your scenario works without the environment variable before removing it.
+			if (Runtime.Arch == Arch.SIMULATOR && string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("XAMARIN_IOS_SKIP_BLOCK_CHECK"))) {
+				// It should be enough to run this check in the simulator
+				var method = trampoline.Method;
+				if (!method.IsStatic)
+					throw new ArgumentException ($"The method {method.DeclaringType.FullName}.{method.Name} is not static.", nameof (trampoline));
+				var attrib = method.GetCustomAttribute<MonoPInvokeCallbackAttribute> (false);
+				if (attrib == null)
+					throw new ArgumentException ($"The method {method.DeclaringType.FullName}.{method.Name} does not have a [MonoPInvokeCallback] attribute.", nameof (trampoline));
+
+				Type delegateType = attrib.DelegateType;
+				var signatureMethod = delegateType.GetMethod ("Invoke");
+				if (method.ReturnType != signatureMethod.ReturnType)
+					throw new ArgumentException ($"The method {method.DeclaringType.FullName}.{method.Name}'s return type ({method.ReturnType.FullName}) does not match the return type of the delegate in its [MonoPInvokeCallback] attribute ({signatureMethod.ReturnType.FullName}).", nameof (trampoline));
+
+				var parameters = method.GetParameters ();
+				var signatureParameters = signatureMethod.GetParameters ();
+				if (parameters.Length != signatureParameters.Length)
+					throw new ArgumentException ($"The method {method.DeclaringType.FullName}.{method.Name}'s parameter count ({parameters.Length}) does not match the parameter count of the delegate in its [MonoPInvokeCallback] attribute ({signatureParameters.Length}).", nameof (trampoline));
+
+				for (int i = 0; i < parameters.Length; i++) {
+					if (parameters [i].ParameterType != signatureParameters [i].ParameterType)
+						throw new ArgumentException ($"The method {method.DeclaringType.FullName}.{method.Name}'s parameter #{i + 1}'s type ({parameters [i].ParameterType.FullName}) does not match the corresponding parameter type of the delegate in its [MonoPInvokeCallback] attribute ({signatureParameters [i].ParameterType.FullName}).", nameof (trampoline));
+				}
+			}
+#endif
 			SetupBlock (trampoline, userDelegate, safe: true);
 		}
 
