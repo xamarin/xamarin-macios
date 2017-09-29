@@ -58,14 +58,12 @@ namespace xharness
 	{
 		public static async Task<ProcessExecutionResult> RunAsync (this Process process, Log log, CancellationToken? cancellation_token = null)
 		{
-			var stream = log.GetWriter ();
-			return await RunAsync (process, log, stream, stream, cancellation_token: cancellation_token);
+			return await RunAsync (process, log, log, log, cancellation_token: cancellation_token);
 		}
 
 		public static Task<ProcessExecutionResult> RunAsync (this Process process, Log log, bool append = true, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
 		{
-			var writer = log.GetWriter ();
-			return RunAsync (process, log, writer, writer, timeout, environment_variables, cancellation_token);
+			return RunAsync (process, log, log, log, timeout, environment_variables, cancellation_token);
 		}
 
 		public static async Task<ProcessExecutionResult> RunAsync (this Process process, Log log, TextWriter StdoutStream, TextWriter StderrStream, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
