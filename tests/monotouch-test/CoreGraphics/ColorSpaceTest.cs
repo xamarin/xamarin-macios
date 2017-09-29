@@ -242,24 +242,24 @@ namespace MonoTouchFixtures.CoreGraphics {
 		}
 
 		[Test]
-		public void CreateICCData ()
+		public void CreateIccData ()
 		{
 			using (var icc = NSData.FromFile (Path.Combine (NSBundle.MainBundle.ResourcePath, "LL-171A-B-B797E457-16AB-C708-1E0F-32C19DBD47B5.icc"))) {
-				using (var cs = CGColorSpace.CreateICCData (icc)) {
+				using (var cs = CGColorSpace.CreateIccData (icc)) {
 					TestICC (cs);
 				}
 				using (var provider = new CGDataProvider (icc)) {
-					using (var cs = CGColorSpace.CreateICCData (provider)) {
+					using (var cs = CGColorSpace.CreateIccData (provider)) {
 						TestICC (cs);
 					}
 				}
 			}
 
-			using (var space = CGColorSpace.CreateICCData ((NSData) null)) {
+			using (var space = CGColorSpace.CreateIccData ((NSData) null)) {
 				Assert.IsNull (space, "null data");
 			}
 
-			using (var space = CGColorSpace.CreateICCData ((CGDataProvider) null)) {
+			using (var space = CGColorSpace.CreateIccData ((CGDataProvider) null)) {
 				Assert.IsNull (space, "null data provider");
 			}
 		}
