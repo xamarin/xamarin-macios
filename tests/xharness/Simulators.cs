@@ -580,6 +580,7 @@ namespace xharness
 
 	public enum DevicePlatform
 	{
+		Unknown,
 		iOS,
 		tvOS,
 		watchOS,
@@ -610,7 +611,7 @@ namespace xharness
 				case "Watch":
 					return DevicePlatform.watchOS;
 				default:
-					throw new NotImplementedException ();
+					return DevicePlatform.Unknown;
 				}
 			}
 		}
