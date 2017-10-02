@@ -406,6 +406,7 @@ namespace Introspection
 			"Tlv",
 			"Toi",
 			"Transceive",
+			"Trc",
 			"Truncantion",
 			"Tweening",
 			"tx",

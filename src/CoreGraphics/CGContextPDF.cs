@@ -80,6 +80,7 @@ namespace XamCore.CoreGraphics {
 		public int? EncryptionKeyLength { get; set; }
 		public bool? AllowsPrinting { get; set; }
 		public bool? AllowsCopying { get; set; }
+		public CGPDFAccessPermissions? AccessPermissions { get; set; }
 		//public NSDictionary OutputIntent { get; set; }
 
 		internal override NSMutableDictionary ToDictionary ()
@@ -110,6 +111,8 @@ namespace XamCore.CoreGraphics {
 				ret.LowlevelSetObject (CFBoolean.False.Handle, kCGPDFContextAllowsPrinting);
 			if (AllowsCopying.HasValue && AllowsCopying.Value == false)
 				ret.LowlevelSetObject (CFBoolean.False.Handle, kCGPDFContextAllowsCopying);
+			if (AccessPermissions.HasValue)
+				ret.LowlevelSetObject (NSNumber.FromInt32 ((int) AccessPermissions.Value), kCGPDFContextAccessPermissions);
 			return ret;
 		}
 	}
@@ -123,22 +126,36 @@ namespace XamCore.CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		unsafe extern static /* CGContextRef */ IntPtr CGPDFContextCreate (/* CGDataConsumerRef */ IntPtr consumer, CGRect *mediaBox, /* CFDictionaryRef */ IntPtr auxiliaryInfo);
 
-		public unsafe CGContextPDF (CGDataConsumer dataConsumer, CGRect mediaBox, CGPDFInfo info)
+		unsafe CGContextPDF (CGDataConsumer dataConsumer, CGRect *mediaBox, CGPDFInfo info)
 		{
-			if (dataConsumer == null)
-				throw new ArgumentNullException ("dataConsumer");
-
 			using (var dict = info == null ? null : info.ToDictionary ())
-				Handle = CGPDFContextCreate (dataConsumer.Handle, &mediaBox, dict == null ? IntPtr.Zero : dict.Handle);
+				Handle = CGPDFContextCreate (dataConsumer.GetHandle (), mediaBox, dict.GetHandle ());
+		}
+
+		public unsafe CGContextPDF (CGDataConsumer dataConsumer, CGRect mediaBox, CGPDFInfo info) :
+			this (dataConsumer, &mediaBox, info)
+		{
+		}
+
+		public unsafe CGContextPDF (CGDataConsumer dataConsumer, CGRect mediaBox) :
+			this (dataConsumer, &mediaBox, null)
+		{
+		}
+
+		public unsafe CGContextPDF (CGDataConsumer dataConsumer, CGPDFInfo info) :
+			this (dataConsumer, null, info)
+		{
+		}
+
+		public unsafe CGContextPDF (CGDataConsumer dataConsumer) :
+			this (dataConsumer, null, null)
+		{
 		}
 
 		unsafe CGContextPDF (NSUrl url, CGRect *mediaBox, CGPDFInfo info)
 		{
-			if (url == null)
-				throw new ArgumentNullException ("url");
-
 			using (var dict = info == null ? null : info.ToDictionary ())
-				Handle = CGPDFContextCreateWithURL (url.Handle, mediaBox, dict == null ? IntPtr.Zero : dict.Handle);
+				Handle = CGPDFContextCreateWithURL (url.GetHandle (), mediaBox, dict.GetHandle ());
 		}
 
 		public unsafe CGContextPDF (NSUrl url, CGRect mediaBox, CGPDFInfo info) :
