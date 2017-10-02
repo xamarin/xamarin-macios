@@ -1689,6 +1689,11 @@ function oninitialload ()
 								if (runTest.BuildTask.Duration.Ticks > 0) {
 									writer.WriteLine ($"Project file: {runTest.BuildTask.ProjectFile} <br />");
 									writer.WriteLine ($"Platform: {runTest.BuildTask.ProjectPlatform} Configuration: {runTest.BuildTask.ProjectConfiguration} <br />");
+									IEnumerable<IDevice> candidates = (runTest as RunDeviceTask)?.Candidates;
+									if (candidates == null)
+										candidates = (runTest as RunSimulatorTask)?.Candidates;
+									if (candidates != null)
+										writer.WriteLine ($"Candidate devices: {string.Join (", ", candidates.Select ((v) => v.Name))} <br />");
 									writer.WriteLine ($"Build duration: {runTest.BuildTask.Duration} <br />");
 								}
 								if (test.Duration.Ticks > 0)
@@ -2795,7 +2800,7 @@ function oninitialload ()
 		}
 
 		public RunDeviceTask (XBuildTask build_task, IEnumerable<Device> candidates)
-			: base (build_task, candidates)
+			: base (build_task, candidates.OrderBy ((v) => v.DebugSpeed))
 		{
 			switch (build_task.Platform) {
 			case TestPlatform.iOS:
