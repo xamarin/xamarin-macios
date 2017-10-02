@@ -516,20 +516,12 @@ namespace XamCore.Registrar {
 		}
 	}
 
-	public interface IStaticRegistrar
-	{
-		void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path);
-		void GenerateSingleAssembly (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly);
-		Mono.Linker.LinkContext LinkContext { get; set; }
-	}
-
-	class StaticRegistrar : Registrar, IStaticRegistrar {
+	class StaticRegistrar : Registrar{
 		public Target Target { get; private set; }
 		public bool IsSingleAssembly { get { return !string.IsNullOrEmpty (single_assembly); } }
 
 		string single_assembly;
 		IEnumerable<AssemblyDefinition> input_assemblies;
-		Mono.Linker.LinkContext link_context;
 		Dictionary<IMetadataTokenProvider, object> availability_annotations;
 
 #if MONOMAC
@@ -538,11 +530,15 @@ namespace XamCore.Registrar {
 
 		public Mono.Linker.LinkContext LinkContext {
 			get {
-				return link_context;
+				return Target?.LinkContext;
 			}
-			set {
-				link_context = value;
-				availability_annotations = link_context?.Annotations.GetCustomAnnotations ("Availability");
+		}
+
+		Dictionary<IMetadataTokenProvider, object> AvailabilityAnnotations {
+			get {
+				if (availability_annotations == null)
+					availability_annotations = LinkContext?.Annotations?.GetCustomAnnotations ("Availability");
+				return availability_annotations;
 			}
 		}
 
@@ -1506,9 +1502,9 @@ namespace XamCore.Registrar {
 			if (td.HasCustomAttributes)
 				CollectAvailabilityAttributes (td.CustomAttributes, ref rv);
 			
-			if (availability_annotations != null) {
+			if (AvailabilityAnnotations != null) {
 				object attribObjects;
-				if (availability_annotations.TryGetValue (td, out attribObjects))
+				if (AvailabilityAnnotations.TryGetValue (td, out attribObjects))
 					CollectAvailabilityAttributes ((List<CustomAttribute>) attribObjects, ref rv);
 			}
 
