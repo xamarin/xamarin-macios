@@ -603,7 +603,6 @@ namespace XamCore.HealthKit {
 		[Export ("SwimmingStrokeStyle")]
 		NSString SwimmingStrokeStyle { get; }
 
-		//FIXME: Types for the following properties:
 		[Watch (4, 0), iOS (11, 0)]
 		[Export ("SyncIdentifier")]
 		string SyncIdentifier { get; }
