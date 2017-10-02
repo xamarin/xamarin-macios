@@ -610,7 +610,7 @@ namespace XamCore.HealthKit {
 
 		[Watch (4, 0), iOS (11, 0)]
 		[Export ("SyncVersion")]
-		NSNumber SyncVersion { get; }
+		int SyncVersion { get; }
 
 		[Watch (4, 0), iOS (11, 0)]
 		[Export ("InsulinDeliveryReason")]
@@ -624,9 +624,9 @@ namespace XamCore.HealthKit {
 		[Export ("VO2MaxTestType")]
 		HKVO2MaxTestType VO2MaxTestType { get; }
         
-        [Watch (4,0), iOS (11,0)]
-        [Export ("HeartRateMotionContext")]
-        HKHeartRateMotionContext HeartRateMotionContext { get; }
+		[Watch (4,0), iOS (11,0)]
+		[Export ("HeartRateMotionContext")]
+		HKHeartRateMotionContext HeartRateMotionContext { get; }
 	}
 		
 	[Watch (2,0)]
@@ -742,9 +742,9 @@ namespace XamCore.HealthKit {
 		[Field ("HKMetadataKeyVO2MaxTestType")]
 		NSString VO2MaxTestType { get; }
         
-        [Watch (4,0), iOS (11,0)]
-        [Field ("HKMetadataKeyHeartRateMotionContext")]
-        NSString HeartRateMotionContext { get; }
+		[Watch (4,0), iOS (11,0)]
+		[Field ("HKMetadataKeyHeartRateMotionContext")]
+		NSString HeartRateMotionContext { get; }
 	}
 
 	[Watch (2,0)]
@@ -1522,7 +1522,7 @@ namespace XamCore.HealthKit {
 		[Field ("HKQuantityTypeIdentifierUVExposure")]
 		NSString UVExposure { get; }
 
-        [Watch (4, 0), iOS (11, 0)]
+		[Watch (4, 0), iOS (11, 0)]
 		[Field ("HKQuantityTypeIdentifierWaistCircumference")]
 		NSString WaistCircumference { get; }
 
@@ -1944,12 +1944,12 @@ namespace XamCore.HealthKit {
 		[Watch (4, 0), iOS (11, 0)]
 		[Static]
 		[Export ("workoutWithActivityType:startDate:endDate:workoutEvents:totalEnergyBurned:totalDistance:totalFlightsClimbed:device:metadata:")]
-		HKWorkout CreateWithFlightsClimbed (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, [NullAllowed] HKWorkoutEvent [] workoutEvents, [NullAllowed] HKQuantity totalEnergyBurned, [NullAllowed] HKQuantity totalDistance, [NullAllowed] HKQuantity totalFlightsClimbed, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary metadata);
+		HKWorkout CreateFlightsClimbedWorkout (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, [NullAllowed] HKWorkoutEvent [] workoutEvents, [NullAllowed] HKQuantity totalEnergyBurned, [NullAllowed] HKQuantity totalDistance, [NullAllowed] HKQuantity totalFlightsClimbed, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary metadata);
 
 		[Watch (4, 0), iOS (11, 0)]
 		[Static]
-		[Wrap ("CreateWithFlightsClimbed (workoutActivityType, startDate, endDate, workoutEvents, totalEnergyBurned, totalDistance, totalFlightsClimbed, device, metadata == null ? null : metadata.Dictionary)")]
-		HKWorkout CreateWithFlightsClimbed (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, [NullAllowed] HKWorkoutEvent [] workoutEvents, [NullAllowed] HKQuantity totalEnergyBurned, [NullAllowed] HKQuantity totalDistance, [NullAllowed] HKQuantity totalFlightsClimbed, [NullAllowed] HKDevice device, [NullAllowed] HKMetadata metadata);
+		[Wrap ("CreateFlightsClimbedWorkout (workoutActivityType, startDate, endDate, workoutEvents, totalEnergyBurned, totalDistance, totalFlightsClimbed, device, metadata == null ? null : metadata.Dictionary)")]
+		HKWorkout CreateFlightsClimbedWorkout (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, [NullAllowed] HKWorkoutEvent [] workoutEvents, [NullAllowed] HKQuantity totalEnergyBurned, [NullAllowed] HKQuantity totalDistance, [NullAllowed] HKQuantity totalFlightsClimbed, [NullAllowed] HKDevice device, [NullAllowed] HKMetadata metadata);
 
 		// TODO: where is this thing used?
 		[Field ("HKWorkoutSortIdentifierDuration")]
@@ -2364,10 +2364,10 @@ namespace XamCore.HealthKit {
 		[Export ("insertRouteData:completion:")]
 		void InsertRouteData (CLLocation [] routeData, Action<bool, NSError> completion);
 
-		[Export ("finishRouteWithWorkout:metadata:completion:")]
-		void FinishRouteWithWorkout (HKWorkout workout, [NullAllowed] NSDictionary<NSString, NSObject> metadata, Action<HKWorkoutRoute, NSError> completion);
+		[Protected, Export ("finishRouteWithWorkout:metadata:completion:")]
+		void FinishRoute (HKWorkout workout, [NullAllowed] NSDictionary<NSString, NSObject> metadata, Action<HKWorkoutRoute, NSError> completion);
 
-		[Async, Wrap ("FinishRoute (workout, metadata, completion)")]
+		[Async, Wrap ("FinishRoute (workout, metadata.Dictionary, completion)")]
 		void FinishRoute (HKWorkout workout, HKMetadata metadata, Action<HKWorkoutRoute, NSError> completion);
 	}
 
