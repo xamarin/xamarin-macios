@@ -2176,7 +2176,9 @@ namespace XamCore.HealthKit {
 		[Watch (4, 0), iOS (11, 0)]
 		[Export ("initWithSource:version:productType:operatingSystemVersion:")]
 		IntPtr Constructor (HKSource source, [NullAllowed] string version, [NullAllowed] string productType, NSOperatingSystemVersion operatingSystemVersion);
+	}
 
+	interface HKSourceRevisionInfo {
 		[Watch (4, 0), iOS (11, 0)]
 		[Field ("HKSourceRevisionAnyVersion")]
 		NSString AnyVersion { get; }
@@ -2360,7 +2362,7 @@ namespace XamCore.HealthKit {
 		[DesignatedInitializer]
 		IntPtr Constructor (HKHealthStore healthStore, [NullAllowed] HKDevice device);
 
-		[Export ("insertRouteData:completion:")]
+		[Async, Export ("insertRouteData:completion:")]
 		void InsertRouteData (CLLocation [] routeData, Action<bool, NSError> completion);
 
 		[Async, Protected, Export ("finishRouteWithWorkout:metadata:completion:")]
