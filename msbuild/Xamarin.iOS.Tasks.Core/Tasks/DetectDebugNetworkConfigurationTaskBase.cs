@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -48,12 +49,25 @@ namespace Xamarin.iOS.Tasks
 					hosts = DebuggerHosts.Split (new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
 				if (hosts == null || hosts.Length == 0) {
-					try {
-						ips.AddRange (Dns.GetHostEntry (Dns.GetHostName ()).AddressList.Select ((v) => v.ToString ()));
-					} catch {
-						Log.MTError (7001, "Could not resolve host IPs for WiFi debugger settings.");
-						return false;
-					}
+					var properties = IPGlobalProperties.GetIPGlobalProperties ();
+					var hostName = properties.HostName;
+					IPHostEntry entry;
+
+					do {
+						try {
+							entry = Dns.GetHostEntry (hostName);
+							break;
+						} catch {
+							if (hostName == "localhost") {
+								Log.MTError (7001, "Could not resolve host IPs for WiFi debugger settings.");
+								return false;
+							}
+
+							hostName = "localhost";
+						}
+					} while (true);
+
+					ips.AddRange (entry.AddressList.Select ((v) => v.ToString ()));
 				} else {
 					foreach (var host in hosts) {
 						IPAddress ip;
