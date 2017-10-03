@@ -2363,10 +2363,10 @@ namespace XamCore.HealthKit {
 		[Export ("insertRouteData:completion:")]
 		void InsertRouteData (CLLocation [] routeData, Action<bool, NSError> completion);
 
-		[Protected, Export ("finishRouteWithWorkout:metadata:completion:")]
-		void FinishRoute (HKWorkout workout, [NullAllowed] NSDictionary<NSString, NSObject> metadata, Action<HKWorkoutRoute, NSError> completion);
+		[Async, Protected, Export ("finishRouteWithWorkout:metadata:completion:")]
+		void FinishRoute (HKWorkout workout, [NullAllowed] NSDictionary metadata, Action<HKWorkoutRoute, NSError> completion);
 
-		[Async, Wrap ("FinishRoute (workout, metadata.Dictionary, completion)")]
+		[Async, Wrap ("FinishRoute (workout, metadata != null ? metadata.Dictionary : null, completion)")]
 		void FinishRoute (HKWorkout workout, HKMetadata metadata, Action<HKWorkoutRoute, NSError> completion);
 	}
 
