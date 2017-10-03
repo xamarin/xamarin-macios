@@ -61,7 +61,7 @@ namespace XamCore.WebKit
 		WKBackForwardListItem ItemAtIndex (nint index);
 	}
 
-	[Mac (10,13), iOS (11,0)]
+	[Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	interface WKContentRuleList
 	{
@@ -69,7 +69,7 @@ namespace XamCore.WebKit
 		string Identifier { get; }
 	}
 
-	[Mac (10,13), iOS (11,0)]
+	[Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	interface WKContentRuleListStore
 	{
@@ -303,7 +303,7 @@ namespace XamCore.WebKit
 	}
 
 	
-	[Mac (10,13), iOS (11,0)]
+	[Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	interface WKSnapshotConfiguration : NSCopying {
 		[Export ("rect")]
