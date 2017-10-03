@@ -172,10 +172,11 @@ namespace XamCore.ModelIO {
 		{
 			if (array == null)
 				throw new ArgumentNullException (nameof (array));
+			int typeSize = Marshal.SizeOf (typeof (Vector3));
 
 			unsafe {
 				fixed (Vector3* arrptr = array)
-					MDLMemoryHelper.SetValues<Vector3> ((IntPtr) arrptr, array.Length, time, _SetFloat3Array);
+					MDLMemoryHelper.SetValues (typeSize, (IntPtr) arrptr, array.Length, time, _SetFloat3Array);
 			}
 		}
 
@@ -183,10 +184,11 @@ namespace XamCore.ModelIO {
 		{
 			if (array == null)
 				throw new ArgumentNullException (nameof (array));
+			int typeSize = Marshal.SizeOf (typeof (Vector3d));
 
 			unsafe {
 				fixed (Vector3d* arrptr = array)
-					MDLMemoryHelper.SetValues<Vector3d> ((IntPtr) arrptr, array.Length, time, _SetDouble3Array);
+					MDLMemoryHelper.SetValues (typeSize, (IntPtr) arrptr, array.Length, time, _SetDouble3Array);
 			}
 		}
 
@@ -194,10 +196,11 @@ namespace XamCore.ModelIO {
 		{
 			var count = ElementCount;
 			var timesArr = new Vector3 [(int) count];
+			int typeSize = Marshal.SizeOf (typeof (Vector3));
 
 			unsafe {
 				fixed (Vector3* arrptr = timesArr)
-					MDLMemoryHelper.FetchValues<Vector3> ((IntPtr) arrptr, count, time, _GetFloat3Array);
+					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, time, _GetFloat3Array);
 			}
 
 			return timesArr;
@@ -207,10 +210,11 @@ namespace XamCore.ModelIO {
 		{
 			var count = ElementCount;
 			var timesArr = new Vector3d [(int) count];
+			int typeSize = Marshal.SizeOf (typeof (Vector3d));
 
 			unsafe {
 				fixed (Vector3d* arrptr = timesArr)
-					MDLMemoryHelper.FetchValues<Vector3d> ((IntPtr) arrptr, count, time, _GetDouble3Array);
+					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, time, _GetDouble3Array);
 			}
 
 			return timesArr;
@@ -222,10 +226,11 @@ namespace XamCore.ModelIO {
 				throw new ArgumentNullException (nameof (values));
 			if (times == null)
 				throw new ArgumentNullException (nameof (times));
+			int typeSize = Marshal.SizeOf (typeof (Vector3));
 
 			unsafe {
 				fixed (Vector3* valuesPtr = values)
-					MDLMemoryHelper.Reset<Vector3> ((IntPtr) valuesPtr, values.Length, times, _ResetWithFloat3Array);
+					MDLMemoryHelper.Reset (typeSize, (IntPtr) valuesPtr, values.Length, times, _ResetWithFloat3Array);
 			}
 		}
 
@@ -235,10 +240,11 @@ namespace XamCore.ModelIO {
 				throw new ArgumentNullException (nameof (values));
 			if (times == null)
 				throw new ArgumentNullException (nameof (times));
+			int typeSize = Marshal.SizeOf (typeof (Vector3d));
 
 			unsafe {
 				fixed (Vector3d* valuesPtr = values)
-					MDLMemoryHelper.Reset<Vector3d> ((IntPtr) valuesPtr, values.Length, times, _ResetWithDouble3Array);
+					MDLMemoryHelper.Reset (typeSize, (IntPtr) valuesPtr, values.Length, times, _ResetWithDouble3Array);
 			}
 		}
 
@@ -246,10 +252,11 @@ namespace XamCore.ModelIO {
 		{
 			var count = ElementCount * TimeSampleCount;
 			var timesArr = new Vector3 [(int) count];
+			int typeSize = Marshal.SizeOf (typeof (Vector3));
 
 			unsafe {
 				fixed (Vector3* arrptr = timesArr)
-					MDLMemoryHelper.FetchValues<Vector3> ((IntPtr) arrptr, count, _GetFloat3Array);
+					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetFloat3Array);
 			}
 
 			return timesArr;
@@ -259,10 +266,11 @@ namespace XamCore.ModelIO {
 		{
 			var count = ElementCount * TimeSampleCount;
 			var timesArr = new Vector3d [(int) count];
+			int typeSize = Marshal.SizeOf (typeof (Vector3d));
 
 			unsafe {
 				fixed (Vector3d* arrptr = timesArr)
-					MDLMemoryHelper.FetchValues<Vector3d> ((IntPtr) arrptr, count, _GetDouble3Array);
+					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetDouble3Array);
 			}
 
 			return timesArr;
@@ -275,10 +283,11 @@ namespace XamCore.ModelIO {
 		{
 			if (array == null)
 				throw new ArgumentNullException (nameof (array));
+			int typeSize = Marshal.SizeOf (typeof (Quaternion));
 
 			unsafe {
 				fixed (Quaternion* arrptr = array)
-					MDLMemoryHelper.SetValues<Quaternion> ((IntPtr) arrptr, array.Length, time, _SetFloatQuaternionArray);
+					MDLMemoryHelper.SetValues (typeSize, (IntPtr) arrptr, array.Length, time, _SetFloatQuaternionArray);
 			}
 		}
 
@@ -286,10 +295,11 @@ namespace XamCore.ModelIO {
 		{
 			if (array == null)
 				throw new ArgumentNullException (nameof (array));
+			int typeSize = Marshal.SizeOf (typeof (Quaterniond));
 
 			unsafe {
 				fixed (Quaterniond* arrptr = array)
-					MDLMemoryHelper.SetValues<Quaterniond> ((IntPtr) arrptr, array.Length, time, _SetDoubleQuaternionArray);
+					MDLMemoryHelper.SetValues (typeSize, (IntPtr) arrptr, array.Length, time, _SetDoubleQuaternionArray);
 			}
 		}
 
@@ -297,10 +307,11 @@ namespace XamCore.ModelIO {
 		{
 			var count = ElementCount;
 			var timesArr = new Quaternion [(int) count];
+			int typeSize = Marshal.SizeOf (typeof (Quaternion));
 
 			unsafe {
 				fixed (Quaternion* arrptr = timesArr)
-					MDLMemoryHelper.FetchValues<Quaternion> ((IntPtr) arrptr, count, time, _GetFloatQuaternionArray);
+					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, time, _GetFloatQuaternionArray);
 			}
 
 			return timesArr;
@@ -310,10 +321,11 @@ namespace XamCore.ModelIO {
 		{
 			var count = ElementCount;
 			var timesArr = new Quaterniond [(int) count];
+			int typeSize = Marshal.SizeOf (typeof (Quaterniond));
 
 			unsafe {
 				fixed (Quaterniond* arrptr = timesArr)
-					MDLMemoryHelper.FetchValues<Quaterniond> ((IntPtr) arrptr, count, time, _GetDoubleQuaternionArray);
+					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, time, _GetDoubleQuaternionArray);
 			}
 
 			return timesArr;
@@ -325,10 +337,11 @@ namespace XamCore.ModelIO {
 				throw new ArgumentNullException (nameof (values));
 			if (times == null)
 				throw new ArgumentNullException (nameof (times));
+			int typeSize = Marshal.SizeOf (typeof (Quaternion));
 
 			unsafe {
 				fixed (Quaternion* valuesPtr = values)
-					MDLMemoryHelper.Reset<Quaternion> ((IntPtr) valuesPtr, values.Length, times, _ResetWithFloatQuaternionArray);
+					MDLMemoryHelper.Reset (typeSize, (IntPtr) valuesPtr, values.Length, times, _ResetWithFloatQuaternionArray);
 			}
 		}
 
@@ -338,10 +351,11 @@ namespace XamCore.ModelIO {
 				throw new ArgumentNullException (nameof (values));
 			if (times == null)
 				throw new ArgumentNullException (nameof (times));
+			int typeSize = Marshal.SizeOf (typeof (Quaterniond));
 
 			unsafe {
 				fixed (Quaterniond* valuesPtr = values)
-					MDLMemoryHelper.Reset<Quaterniond> ((IntPtr) valuesPtr, values.Length, times, _ResetWithDoubleQuaternionArray);
+					MDLMemoryHelper.Reset (typeSize, (IntPtr) valuesPtr, values.Length, times, _ResetWithDoubleQuaternionArray);
 			}
 		}
 
@@ -349,10 +363,11 @@ namespace XamCore.ModelIO {
 		{
 			var count = ElementCount * TimeSampleCount;
 			var timesArr = new Quaternion [(int) count];
+			int typeSize = Marshal.SizeOf (typeof (Quaternion));
 
 			unsafe {
 				fixed (Quaternion* arrptr = timesArr)
-					MDLMemoryHelper.FetchValues<Quaternion> ((IntPtr) arrptr, count, _GetFloatQuaternionArray);
+					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetFloatQuaternionArray);
 			}
 
 			return timesArr;
@@ -362,10 +377,11 @@ namespace XamCore.ModelIO {
 		{
 			var count = ElementCount * TimeSampleCount;
 			var timesArr = new Quaterniond [(int) count];
+			int typeSize = Marshal.SizeOf (typeof (Quaterniond));
 
 			unsafe {
 				fixed (Quaterniond* arrptr = timesArr)
-					MDLMemoryHelper.FetchValues<Quaterniond> ((IntPtr) arrptr, count, _GetDoubleQuaternionArray);
+					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetDoubleQuaternionArray);
 			}
 
 			return timesArr;
@@ -436,11 +452,12 @@ namespace XamCore.ModelIO {
 			if (times == null)
 				throw new ArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
-				throw new InvalidOperationException ($"The length of '{nameof (values)}' array and '{nameof (times)}' array must match.");
+				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
+			int typeSize = Marshal.SizeOf (typeof (Vector2));
 
 			unsafe {
 				fixed (Vector2* valuesPtr = values)
-					MDLMemoryHelper.Reset<Vector2> ((IntPtr) valuesPtr, times, _ResetWithFloat2Array);
+					MDLMemoryHelper.Reset (typeSize, (IntPtr) valuesPtr, times, _ResetWithFloat2Array);
 			}
 		}
 
@@ -451,11 +468,12 @@ namespace XamCore.ModelIO {
 			if (times == null)
 				throw new ArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
-				throw new InvalidOperationException ($"The length of '{nameof (values)}' array and '{nameof (times)}' array must match.");
+				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
+			int typeSize = Marshal.SizeOf (typeof (Vector2d));
 
 			unsafe {
 				fixed (Vector2d* valuesPtr = values)
-					MDLMemoryHelper.Reset<Vector2d> ((IntPtr) valuesPtr, times, _ResetWithDouble2Array);
+					MDLMemoryHelper.Reset (typeSize, (IntPtr) valuesPtr, times, _ResetWithDouble2Array);
 			}
 		}
 
@@ -463,10 +481,11 @@ namespace XamCore.ModelIO {
 		{
 			var count = TimeSampleCount;
 			var timesArr = new Vector2 [(int) count];
+			int typeSize = Marshal.SizeOf (typeof (Vector2));
 
 			unsafe {
 				fixed (Vector2* arrptr = timesArr)
-					MDLMemoryHelper.FetchValues<Vector2> ((IntPtr) arrptr, count, _GetFloat2Array);
+					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetFloat2Array);
 			}
 
 			return timesArr;
@@ -476,10 +495,11 @@ namespace XamCore.ModelIO {
 		{
 			var count = TimeSampleCount;
 			var timesArr = new Vector2d [(int) count];
+			int typeSize = Marshal.SizeOf (typeof (Vector2d));
 
 			unsafe {
 				fixed (Vector2d* arrptr = timesArr)
-					MDLMemoryHelper.FetchValues<Vector2d> ((IntPtr) arrptr, count, _GetDouble2Array);
+					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetDouble2Array);
 			}
 
 			return timesArr;
@@ -495,11 +515,12 @@ namespace XamCore.ModelIO {
 			if (times == null)
 				throw new ArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
-				throw new InvalidOperationException ($"The length of '{nameof (values)}' array and '{nameof (times)}' array must match.");
+				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
+			int typeSize = Marshal.SizeOf (typeof (Vector3));
 
 			unsafe {
 				fixed (Vector3* valuesPtr = values)
-					MDLMemoryHelper.Reset<Vector3> ((IntPtr) valuesPtr, times, _ResetWithFloat3Array);
+					MDLMemoryHelper.Reset (typeSize, (IntPtr) valuesPtr, times, _ResetWithFloat3Array);
 			}
 		}
 
@@ -510,11 +531,12 @@ namespace XamCore.ModelIO {
 			if (times == null)
 				throw new ArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
-				throw new InvalidOperationException ($"The length of '{nameof (values)}' array and '{nameof (times)}' array must match.");
+				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
+			int typeSize = Marshal.SizeOf (typeof (Vector3d));
 
 			unsafe {
 				fixed (Vector3d* valuesPtr = values)
-					MDLMemoryHelper.Reset<Vector3d> ((IntPtr) valuesPtr, times, _ResetWithDouble3Array);
+					MDLMemoryHelper.Reset (typeSize, (IntPtr) valuesPtr, times, _ResetWithDouble3Array);
 			}
 		}
 
@@ -522,10 +544,11 @@ namespace XamCore.ModelIO {
 		{
 			var count = TimeSampleCount;
 			var timesArr = new Vector3 [(int) count];
+			int typeSize = Marshal.SizeOf (typeof (Vector3));
 
 			unsafe {
 				fixed (Vector3* arrptr = timesArr)
-					MDLMemoryHelper.FetchValues<Vector3> ((IntPtr) arrptr, count, _GetFloat3Array);
+					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetFloat3Array);
 			}
 
 			return timesArr;
@@ -535,10 +558,11 @@ namespace XamCore.ModelIO {
 		{
 			var count = TimeSampleCount;
 			var timesArr = new Vector3d [(int) count];
+			int typeSize = Marshal.SizeOf (typeof (Vector3d));
 
 			unsafe {
 				fixed (Vector3d* arrptr = timesArr)
-					MDLMemoryHelper.FetchValues<Vector3d> ((IntPtr) arrptr, count, _GetDouble3Array);
+					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetDouble3Array);
 			}
 
 			return timesArr;
@@ -554,11 +578,12 @@ namespace XamCore.ModelIO {
 			if (times == null)
 				throw new ArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
-				throw new InvalidOperationException ($"The length of '{nameof (values)}' array and '{nameof (times)}' array must match.");
+				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
+			int typeSize = Marshal.SizeOf (typeof (Vector4));
 
 			unsafe {
 				fixed (Vector4* valuesPtr = values)
-					MDLMemoryHelper.Reset<Vector4> ((IntPtr) valuesPtr, times, _ResetWithFloat4Array);
+					MDLMemoryHelper.Reset (typeSize, (IntPtr) valuesPtr, times, _ResetWithFloat4Array);
 			}
 		}
 
@@ -569,11 +594,12 @@ namespace XamCore.ModelIO {
 			if (times == null)
 				throw new ArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
-				throw new InvalidOperationException ($"The length of '{nameof (values)}' array and '{nameof (times)}' array must match.");
+				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
+			int typeSize = Marshal.SizeOf (typeof (Vector4d));
 
 			unsafe {
 				fixed (Vector4d* valuesPtr = values)
-					MDLMemoryHelper.Reset<Vector4d> ((IntPtr) valuesPtr, times, _ResetWithDouble4Array);
+					MDLMemoryHelper.Reset (typeSize, (IntPtr) valuesPtr, times, _ResetWithDouble4Array);
 			}
 		}
 
@@ -581,10 +607,11 @@ namespace XamCore.ModelIO {
 		{
 			var count = TimeSampleCount;
 			var timesArr = new Vector4 [(int) count];
+			int typeSize = Marshal.SizeOf (typeof (Vector4));
 
 			unsafe {
 				fixed (Vector4* arrptr = timesArr)
-					MDLMemoryHelper.FetchValues<Vector4> ((IntPtr) arrptr, count, _GetFloat4Array);
+					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetFloat4Array);
 			}
 
 			return timesArr;
@@ -594,10 +621,11 @@ namespace XamCore.ModelIO {
 		{
 			var count = TimeSampleCount;
 			var timesArr = new Vector4d [(int) count];
+			int typeSize = Marshal.SizeOf (typeof (Vector4d));
 
 			unsafe {
 				fixed (Vector4d* arrptr = timesArr)
-					MDLMemoryHelper.FetchValues<Vector4d> ((IntPtr) arrptr, count, _GetDouble4Array);
+					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetDouble4Array);
 			}
 
 			return timesArr;
@@ -613,11 +641,12 @@ namespace XamCore.ModelIO {
 			if (times == null)
 				throw new ArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
-				throw new InvalidOperationException ($"The length of '{nameof (values)}' array and '{nameof (times)}' array must match.");
+				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
+			int typeSize = Marshal.SizeOf (typeof (Matrix4));
 
 			unsafe {
 				fixed (Matrix4* valuesPtr = values)
-					MDLMemoryHelper.Reset<Matrix4> ((IntPtr) valuesPtr, times, _ResetWithFloat4x4Array);
+					MDLMemoryHelper.Reset (typeSize, (IntPtr) valuesPtr, times, _ResetWithFloat4x4Array);
 			}
 		}
 
@@ -628,11 +657,12 @@ namespace XamCore.ModelIO {
 			if (times == null)
 				throw new ArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
-				throw new InvalidOperationException ($"The length of '{nameof (values)}' array and '{nameof (times)}' array must match.");
+				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
+			int typeSize = Marshal.SizeOf (typeof (Matrix4d));
 
 			unsafe {
 				fixed (Matrix4d* valuesPtr = values)
-					MDLMemoryHelper.Reset<Matrix4d> ((IntPtr) valuesPtr, times, _ResetWithDouble4x4Array);
+					MDLMemoryHelper.Reset (typeSize, (IntPtr) valuesPtr, times, _ResetWithDouble4x4Array);
 			}
 		}
 
@@ -640,10 +670,11 @@ namespace XamCore.ModelIO {
 		{
 			var count = TimeSampleCount;
 			var timesArr = new Matrix4 [(int) count];
+			int typeSize = Marshal.SizeOf (typeof (Matrix4));
 
 			unsafe {
 				fixed (Matrix4* arrptr = timesArr)
-					MDLMemoryHelper.FetchValues<Matrix4> ((IntPtr) arrptr, count, _GetFloat4x4Array);
+					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetFloat4x4Array);
 			}
 
 			return timesArr;
@@ -653,10 +684,11 @@ namespace XamCore.ModelIO {
 		{
 			var count = TimeSampleCount;
 			var timesArr = new Matrix4d [(int) count];
+			int typeSize = Marshal.SizeOf (typeof (Matrix4d));
 
 			unsafe {
 				fixed (Matrix4d* arrptr = timesArr)
-					MDLMemoryHelper.FetchValues<Matrix4d> ((IntPtr) arrptr, count, _GetDouble4x4Array);
+					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetDouble4x4Array);
 			}
 
 			return timesArr;
@@ -669,10 +701,11 @@ namespace XamCore.ModelIO {
 		{
 			if (array == null)
 				throw new ArgumentNullException (nameof (array));
+			int typeSize = Marshal.SizeOf (typeof (Matrix4));
 
 			unsafe {
 				fixed (Matrix4* arrptr = array)
-					MDLMemoryHelper.SetValues<Matrix4> ((IntPtr) arrptr, array.Length, _SetFloat4x4Array);
+					MDLMemoryHelper.SetValues (typeSize, (IntPtr) arrptr, array.Length, _SetFloat4x4Array);
 			}
 		}
 
@@ -680,10 +713,11 @@ namespace XamCore.ModelIO {
 		{
 			if (array == null)
 				throw new ArgumentNullException (nameof (array));
+			int typeSize = Marshal.SizeOf (typeof (Matrix4d));
 
 			unsafe {
 				fixed (Matrix4d* arrptr = array)
-					MDLMemoryHelper.SetValues<Matrix4d> ((IntPtr) arrptr, array.Length, _SetDouble4x4Array);
+					MDLMemoryHelper.SetValues (typeSize, (IntPtr) arrptr, array.Length, _SetDouble4x4Array);
 			}
 		}
 
@@ -691,10 +725,11 @@ namespace XamCore.ModelIO {
 		{
 			var count = ElementCount;
 			var timesArr = new Matrix4 [(int) count];
+			int typeSize = Marshal.SizeOf (typeof (Matrix4));
 
 			unsafe {
 				fixed (Matrix4* arrptr = timesArr)
-					MDLMemoryHelper.FetchValues<Matrix4> ((IntPtr) arrptr, count, _GetFloat4x4Array);
+					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetFloat4x4Array);
 			}
 
 			return timesArr;
@@ -704,10 +739,11 @@ namespace XamCore.ModelIO {
 		{
 			var count = ElementCount;
 			var timesArr = new Matrix4d [(int) count];
+			int typeSize = Marshal.SizeOf (typeof (Matrix4d));
 
 			unsafe {
 				fixed (Matrix4d* arrptr = timesArr)
-					MDLMemoryHelper.FetchValues<Matrix4d> ((IntPtr) arrptr, count, _GetDouble4x4Array);
+					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetDouble4x4Array);
 			}
 
 			return timesArr;
@@ -715,90 +751,126 @@ namespace XamCore.ModelIO {
 	}
 
 	static class MDLMemoryHelper {
-		static IntPtr GetAllocedPtrForArray (Type managedArrayType, int managedArrayCount, out int nativeArrayLength, out IntPtr alignedPtr)
+		static IntPtr GetAlignedPtrForArray (int typeSize, int managedArrayCount, out int nativeArrayLength, out IntPtr alignedPtr)
 		{
-			nativeArrayLength = Marshal.SizeOf (managedArrayType) * managedArrayCount;
+			nativeArrayLength = typeSize * managedArrayCount;
 			var ptr = Marshal.AllocHGlobal (nativeArrayLength + 16);
 			alignedPtr = new IntPtr (((nint) (ptr + 15) >> 4) << 4);
 			return ptr;
 		}
 
-		internal static void SetValues<T> (IntPtr arrptr, int arrLength, Action<IntPtr, nuint> setFunc)
+		internal static void SetValues (int typeSize, IntPtr arrptr, int arrLength, Action<IntPtr, nuint> setFunc)
 		{
 			int nativeArrayLength;
-			IntPtr aligned_ptr;
+			IntPtr aligned_ptr = arrptr;
+			var ptr = IntPtr.Zero;
 
-			var ptr = GetAllocedPtrForArray (typeof (T), arrLength, out nativeArrayLength, out aligned_ptr);
-			Runtime.memcpy (aligned_ptr, arrptr, nativeArrayLength);
+			if ((nuint) aligned_ptr % 16 != 0) {
+				ptr = GetAlignedPtrForArray (typeSize, arrLength, out nativeArrayLength, out aligned_ptr);
+				Runtime.memcpy (aligned_ptr, arrptr, nativeArrayLength);
+			}
+
 			setFunc (aligned_ptr, (nuint) arrLength);
 
-			Marshal.FreeHGlobal (ptr);
+			if (ptr != IntPtr.Zero)
+				Marshal.FreeHGlobal (ptr);
 		}
 
-		internal static void SetValues<T> (IntPtr arrptr, int arrLength, double time, Action<IntPtr, nuint, double> setFunc)
+		internal static void SetValues (int typeSize, IntPtr arrptr, int arrLength, double time, Action<IntPtr, nuint, double> setFunc)
 		{
 			int nativeArrayLength;
-			IntPtr aligned_ptr;
+			IntPtr aligned_ptr = arrptr;
+			var ptr = IntPtr.Zero;
 
-			var ptr = GetAllocedPtrForArray (typeof (T), arrLength, out nativeArrayLength, out aligned_ptr);
-			Runtime.memcpy (aligned_ptr, arrptr, nativeArrayLength);
+			if ((nuint) aligned_ptr % 16 != 0) {
+				ptr = GetAlignedPtrForArray (typeSize, arrLength, out nativeArrayLength, out aligned_ptr);
+				Runtime.memcpy (aligned_ptr, arrptr, nativeArrayLength);
+			}
+
 			setFunc (aligned_ptr, (nuint) arrLength, time);
 
-			Marshal.FreeHGlobal (ptr);
+			if (ptr != IntPtr.Zero)
+				Marshal.FreeHGlobal (ptr);
 		}
 
-		internal static nuint FetchValues<T> (IntPtr arrptr, nuint count, Func<IntPtr, nuint, nuint> getFunc) where T : struct
+		internal static nuint FetchValues (int typeSize, IntPtr arrptr, nuint count, Func<IntPtr, nuint, nuint> getFunc)
 		{
 			int nativeArrayLength;
-			IntPtr aligned_ptr;
+			IntPtr aligned_ptr = arrptr;
+			var ptr = IntPtr.Zero;
+			nuint retVal;
 
-			var ptr = GetAllocedPtrForArray (typeof (T), (int) count, out nativeArrayLength, out aligned_ptr);
-			var retVal = getFunc (aligned_ptr, count);
-			Runtime.memcpy (arrptr, aligned_ptr, nativeArrayLength);
-			Marshal.FreeHGlobal (ptr);
+			if ((nuint) aligned_ptr % 16 != 0) {
+				ptr = GetAlignedPtrForArray (typeSize, (int) count, out nativeArrayLength, out aligned_ptr);
+				retVal = getFunc (aligned_ptr, count);
+				Runtime.memcpy (arrptr, aligned_ptr, nativeArrayLength);
+			} else
+				retVal = getFunc (arrptr, count);
+
+			if (ptr != IntPtr.Zero)
+				Marshal.FreeHGlobal (ptr);
 
 			return retVal;
 		}
 
-		internal static nuint FetchValues<T> (IntPtr arrptr, nuint count, double time, Func<IntPtr, nuint, double, nuint> getFunc) where T : struct
+		internal static nuint FetchValues (int typeSize, IntPtr arrptr, nuint count, double time, Func<IntPtr, nuint, double, nuint> getFunc)
 		{
 			int nativeArrayLength;
-			IntPtr aligned_ptr;
+			IntPtr aligned_ptr = arrptr;
+			var ptr = IntPtr.Zero;
+			nuint retVal;
 
-			var ptr = GetAllocedPtrForArray (typeof (T), (int) count, out nativeArrayLength, out aligned_ptr);
-			var retVal = getFunc (aligned_ptr, count, time);
-			Runtime.memcpy (arrptr, aligned_ptr, nativeArrayLength);
-			Marshal.FreeHGlobal (ptr);
+			if ((nuint) aligned_ptr % 16 != 0) {
+				ptr = GetAlignedPtrForArray (typeSize, (int) count, out nativeArrayLength, out aligned_ptr);
+				retVal = getFunc (aligned_ptr, count, time);
+				Runtime.memcpy (arrptr, aligned_ptr, nativeArrayLength);
+			} else
+				retVal = getFunc (arrptr, count, time);
+
+			if (ptr != IntPtr.Zero)
+				Marshal.FreeHGlobal (ptr);
 
 			return retVal;
 		}
 
-		internal static void Reset<T> (IntPtr valuesPtr, double [] times, Action<IntPtr, IntPtr, nuint> resetFunc) where T : struct
+		internal static void Reset (int typeSize, IntPtr valuesPtr, double [] times, Action<IntPtr, IntPtr, nuint> resetFunc)
 		{
 			int nativeArrayLength;
-			IntPtr aligned_ptr;
-			var ptr = GetAllocedPtrForArray (typeof (T), times.Length, out nativeArrayLength, out aligned_ptr);
+			IntPtr aligned_ptr = valuesPtr;
+			var ptr = IntPtr.Zero;
+
+			if ((nuint) aligned_ptr % 16 != 0) {
+				ptr = GetAlignedPtrForArray (typeSize, times.Length, out nativeArrayLength, out aligned_ptr);
+				Runtime.memcpy (aligned_ptr, valuesPtr, nativeArrayLength);
+			}
+
 			unsafe {
-				fixed (double* timesPtr = times) {
-					Runtime.memcpy (aligned_ptr, valuesPtr, nativeArrayLength);
+				fixed (double* timesPtr = times)
 					resetFunc (aligned_ptr, (IntPtr) timesPtr, (nuint) times.Length);
-				}
 			}
-			Marshal.FreeHGlobal (ptr);
+
+			if (ptr != IntPtr.Zero)
+				Marshal.FreeHGlobal (ptr);
 		}
 
-		internal static void Reset<T> (IntPtr valuesPtr, int valuesLength, double [] times, Action<IntPtr, nuint, IntPtr, nuint> resetFunc) where T : struct
+		internal static void Reset (int typeSize, IntPtr valuesPtr, int valuesLength, double [] times, Action<IntPtr, nuint, IntPtr, nuint> resetFunc)
 		{
 			int nativeArrayLength;
-			IntPtr aligned_ptr;
-			var ptr = GetAllocedPtrForArray (typeof (T), valuesLength, out nativeArrayLength, out aligned_ptr);
-			unsafe {
-				fixed (double* timesPtr = times) {
-					Runtime.memcpy (aligned_ptr, valuesPtr, nativeArrayLength);
-					resetFunc (aligned_ptr, (nuint) valuesLength, (IntPtr) timesPtr, (nuint) times.Length);
-				}
+			IntPtr aligned_ptr = valuesPtr;
+			var ptr = IntPtr.Zero;
+
+			if ((nuint) aligned_ptr % 16 != 0) {
+				ptr = GetAlignedPtrForArray (typeSize, valuesLength, out nativeArrayLength, out aligned_ptr);
+				Runtime.memcpy (aligned_ptr, valuesPtr, nativeArrayLength);
 			}
-			Marshal.FreeHGlobal (ptr);
+
+			unsafe {
+				fixed (double* timesPtr = times)
+					resetFunc (aligned_ptr, (nuint) valuesLength, (IntPtr) timesPtr, (nuint) times.Length);
+			}
+
+			if (ptr != IntPtr.Zero)
+				Marshal.FreeHGlobal (ptr);
 		}
 	}
 }
