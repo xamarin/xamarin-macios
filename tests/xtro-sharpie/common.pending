@@ -343,7 +343,64 @@
 
 !incorrect-protocol-member! NSProgressReporting::progress is REQUIRED and should be abstract
 
-
+# fixed in XAMCORE_4_0 - API Break
+!incorrect-protocol-member! MTLBlitCommandEncoder::updateFence: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::waitForFence: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::GPUEndTime is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::GPUStartTime is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::kernelEndTime is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::kernelStartTime is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::popDebugGroup is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::pushDebugGroup: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::dispatchThreads:threadsPerThreadgroup: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::updateFence: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::useHeap: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::useHeaps:count: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::useResource:usage: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::useResources:count:usage: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::waitForFence: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputePipelineState::label is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputePipelineState::staticThreadgroupMemoryLength is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::areProgrammableSamplePositionsSupported is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::areRasterOrderGroupsSupported is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::argumentBuffersSupport is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::currentAllocatedSize is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::getDefaultSamplePositions:count: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::heapBufferSizeAndAlignWithLength:options: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::heapTextureSizeAndAlignWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::isRemovable is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::maxThreadgroupMemoryLength is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::minimumLinearTextureAlignmentForPixelFormat: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newArgumentEncoderWithArguments: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newFence is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newHeapWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newLibraryWithURL:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newTextureWithDescriptor:iosurface:plane: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::readWriteTextureSupport is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::registryID is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLFunction::newArgumentEncoderWithBufferIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLFunction::newArgumentEncoderWithBufferIndex:reflection: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLHeap::currentAllocatedSize is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLParallelRenderCommandEncoder::setColorStoreActionOptions:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLParallelRenderCommandEncoder::setDepthStoreActionOptions: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLParallelRenderCommandEncoder::setStencilStoreActionOptions: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setColorStoreActionOptions:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setDepthStoreActionOptions: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setScissorRects:count: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setStencilStoreActionOptions: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setViewports:count: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::updateFence:afterStages: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::useHeap: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::useHeaps:count: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::useResource:usage: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::useResources:count:usage: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::waitForFence:beforeStages: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLResource::allocatedSize is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLResource::heap is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLResource::isAliasable is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLResource::makeAliasable is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::iosurface is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::iosurfacePlane is REQUIRED and should be abstract
 
 # not public
 !missing-type! NSConstantString not bound

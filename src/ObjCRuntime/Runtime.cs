@@ -305,6 +305,36 @@ namespace XamCore.ObjCRuntime {
 			return Marshal.GetFunctionPointerForDelegate (d);
 		}
 
+		// value_handle: GCHandle to a (smart) enum value
+		// returns: a handle to a native NSString *
+		static IntPtr ConvertSmartEnumToNSString (IntPtr value_handle)
+		{
+			var value = GCHandle.FromIntPtr (value_handle).Target;
+			var smart_type = value.GetType ();
+			MethodBase getConstantMethod, getValueMethod;
+			if (!Registrar.IsSmartEnum (smart_type, out getConstantMethod, out getValueMethod))
+				throw ErrorHelper.CreateError (8024, $"Could not find a valid extension type for the smart enum '{smart_type.FullName}'. Please file a bug at https://bugzilla.xamarin.com.");
+			var rv = (NSString) ((MethodInfo) getConstantMethod).Invoke (null, new object [] { value });
+			if (rv == null)
+				return IntPtr.Zero;
+			rv.DangerousRetain ().DangerousAutorelease ();
+			return rv.Handle;
+		}
+
+
+		// value: native NSString *
+		// returns: GCHandle to a (smart) enum value. Caller must free the GCHandle.
+		static IntPtr ConvertNSStringToSmartEnum (IntPtr value, IntPtr type)
+		{
+			var smart_type = (Type) ObjectWrapper.Convert (type);
+			var str = GetNSObject<NSString> (value);
+			MethodBase getConstantMethod, getValueMethod;
+			if (!Registrar.IsSmartEnum (smart_type, out getConstantMethod, out getValueMethod))
+				throw ErrorHelper.CreateError (8024, $"Could not find a valid extension type for the smart enum '{smart_type.FullName}'. Please file a bug at https://bugzilla.xamarin.com.");
+			var rv = ((MethodInfo) getValueMethod).Invoke (null, new object [] { str });
+			return GCHandle.ToIntPtr (GCHandle.Alloc (rv));
+		}
+
 #region Wrappers for delegate callbacks
 		static void RegisterNSObject (IntPtr managed_obj, IntPtr native_obj)
 		{
@@ -553,10 +583,10 @@ namespace XamCore.ObjCRuntime {
 			return ((Selector) ObjectWrapper.Convert (sel)).Handle;
 		}
 
-		static UnmanagedMethodDescription GetMethodForSelector (IntPtr cls, IntPtr sel, bool is_static)
+		static void GetMethodForSelector (IntPtr cls, IntPtr sel, bool is_static, IntPtr desc)
 		{
 			// This is called by the old registrar code.
-			return Registrar.GetMethodDescription (Class.Lookup (cls), sel, is_static);
+			Registrar.GetMethodDescription (Class.Lookup (cls), sel, is_static, desc);
 		}
 
 		static IntPtr GetNSObjectWrapped (IntPtr ptr)
@@ -672,9 +702,9 @@ namespace XamCore.ObjCRuntime {
 			return parameters [parameter].IsOut;
 		}
 
-		static UnmanagedMethodDescription GetMethodAndObjectForSelector (IntPtr klass, IntPtr sel, bool is_static, IntPtr obj, ref IntPtr mthis)
+		static void GetMethodAndObjectForSelector (IntPtr klass, IntPtr sel, bool is_static, IntPtr obj, ref IntPtr mthis, IntPtr desc)
 		{
-			return Registrar.GetMethodDescriptionAndObject (Class.Lookup (klass), sel, is_static, obj, ref mthis);
+			Registrar.GetMethodDescriptionAndObject (Class.Lookup (klass), sel, is_static, obj, ref mthis, desc);
 		}
 
 		static int CreateProductException (int code, string msg)

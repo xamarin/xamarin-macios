@@ -3,12 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-#if IKVM
 using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
-#else
-using System.Reflection;
-#endif
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 using System.IO;

@@ -89,7 +89,7 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 }
 
 static void
-marshal_return_value (void *context, const char *type, size_t size, void *vvalue, MonoType *mtype, bool retain, MonoMethod *method, guint32 *exception_gchandle)
+marshal_return_value (void *context, const char *type, size_t size, void *vvalue, MonoType *mtype, bool retain, MonoMethod *method, MethodDescription *desc, guint32 *exception_gchandle)
 {
 	MonoObject *value = (MonoObject *) vvalue;
 	struct ParamIterator *it = (struct ParamIterator *) context;
@@ -157,7 +157,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 			break;
 		}
 
-		state->ptr_ret = xamarin_marshal_return_value (mtype, type, value, retain, method, exception_gchandle);
+		state->ptr_ret = xamarin_marshal_return_value (mtype, type, value, retain, method, desc, exception_gchandle);
 		break;
 	case _C_VOID:
 		break;

@@ -90,8 +90,13 @@ xamarin_extension_main_callback xamarin_extension_main = NULL;
 
 /* Local variable */
 
+static MonoImage      *platform_image;
 static MonoClass      *inativeobject_class;
 static MonoClass      *nsobject_class;
+static MonoClass      *nsvalue_class;
+static MonoClass      *nsnumber_class;
+static MonoClass      *nsstring_class;
+static MonoClass      *runtime_class;
 
 static pthread_mutex_t framework_peer_release_lock;
 static MonoGHashTable *xamarin_wrapper_hash;
@@ -240,8 +245,12 @@ xamarin_get_parameter_type (MonoMethod *managed_method, int index)
 	void *iter = NULL;
 	MonoType *p = NULL;
 	
-	for (int i = 0; i < index + 1; i++)
-		p = mono_signature_get_params (msig, &iter);
+	if (index == -1) {
+		p = mono_signature_get_return_type (msig);
+	} else {
+		for (int i = 0; i < index + 1; i++)
+			p = mono_signature_get_params (msig, &iter);
+	}
 	
 	return p;
 }
@@ -345,6 +354,22 @@ void xamarin_framework_peer_unlock ()
 	pthread_mutex_unlock (&framework_peer_release_lock);
 }
 
+MonoClass *
+xamarin_get_nsvalue_class ()
+{
+	if (nsvalue_class == NULL)
+		xamarin_assertion_message ("Internal consistency error, please file a bug (https://bugzilla.xamarin.com). Additional data: can't get the %s class because it's been linked away.\n", "NSValue");
+	return nsvalue_class;
+}
+
+MonoClass *
+xamarin_get_nsnumber_class ()
+{
+	if (nsnumber_class == NULL)
+		xamarin_assertion_message ("Internal consistency error, please file a bug (https://bugzilla.xamarin.com). Additional data: can't get the %s class because it's been linked away.\n", "NSNumber");
+	return nsnumber_class;
+}
+
 bool
 xamarin_is_class_nsobject (MonoClass *cls)
 {
@@ -370,6 +395,88 @@ xamarin_is_class_array (MonoClass *cls)
 	MONO_ASSERT_GC_UNSAFE;
 	
 	return mono_class_is_subclass_of (cls, mono_get_array_class (), false);
+}
+
+bool
+xamarin_is_class_nsnumber (MonoClass *cls)
+{
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
+	if (nsnumber_class == NULL)
+		return false;
+
+	return mono_class_is_subclass_of (cls, nsnumber_class, false);
+}
+
+bool
+xamarin_is_class_nsvalue (MonoClass *cls)
+{
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
+	if (nsvalue_class == NULL)
+		return false;
+
+	return mono_class_is_subclass_of (cls, nsvalue_class, false);
+}
+
+bool
+xamarin_is_class_nsstring (MonoClass *cls)
+{
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
+	if (nsstring_class == NULL)
+		return false;
+
+	return mono_class_is_subclass_of (cls, nsstring_class, false);
+}
+
+// Returns if a MonoClass is nullable.
+// Will also return the element type (it the type is nullable, and if out pointer is not NULL).
+bool
+xamarin_is_class_nullable (MonoClass *cls, MonoClass **element_type, guint32 *exception_gchandle)
+{
+#ifdef DYNAMIC_MONO_RUNTIME
+	// mono_class_is_nullable/mono_class_get_nullable_param are private
+	// functions, and as such we can't call find them in libmono.dylib. In
+	// this case we manually call a managed function to do the work for us (we
+	// don't use the normal delegate mechanism, because how it's currently
+	// implemented it would inflict size costs on all platforms, not just
+	// Xamarin.Mac).
+	if (!mono_class_is_nullable_exists () || !mono_class_get_nullable_param_exists ()) {
+		static MonoMethod *get_nullable_type = NULL;
+
+		if (get_nullable_type == NULL)
+			get_nullable_type = mono_class_get_method_from_name (runtime_class, "GetNullableType", 1);
+
+		void *args [1] { mono_type_get_object (mono_domain_get (), mono_class_get_type (cls)) };
+		MonoObject *exc = NULL;
+		MonoReflectionType *nullable_type = (MonoReflectionType *) mono_runtime_invoke (get_nullable_type, NULL, args, &exc);
+		if (exc != NULL) {
+			*exception_gchandle = mono_gchandle_new (exc, FALSE);
+			return false;
+		}
+
+		if (element_type != NULL && nullable_type != NULL)
+			*element_type = mono_class_from_mono_type (mono_reflection_type_get_type (nullable_type));
+		return nullable_type != NULL;
+	}
+#endif
+
+	bool rv = mono_class_is_nullable (cls);
+	if (rv && element_type)
+		*element_type = mono_class_get_nullable_param (cls);
+	return rv;
+}
+
+MonoClass *
+xamarin_get_nullable_type (MonoClass *cls, guint32 *exception_gchandle)
+{
+	MonoClass *rv = NULL;
+	xamarin_is_class_nullable (cls, &rv, exception_gchandle);
+	return rv;
 }
 
 #define MANAGED_REF_BIT (1 << 31)
@@ -780,11 +887,11 @@ gc_enable_new_refcount (void)
 }
 
 static MonoClass *
-get_class_from_name (MonoImage* image, const char *nmspace, const char *name)
+get_class_from_name (MonoImage* image, const char *nmspace, const char *name, bool optional = false)
 {
 	// COOP: this is a convenience function executed only at startup, I believe the mode here doesn't matter.	
 	MonoClass *rv = mono_class_from_name (image, nmspace, name);
-	if (!rv)
+	if (!rv && !optional)
 		xamarin_assertion_message ("Fatal error: failed to load the class '%s.%s'\n.", nmspace, name);
 	return rv;
 }
@@ -1152,9 +1259,7 @@ xamarin_initialize ()
 	// COOP: accessing managed memory: UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
-	MonoClass *runtime_class;
 	MonoAssembly *assembly = NULL;
-	MonoImage *image;
 	MonoMethod *runtime_initialize;
 	void* params[2];
 	const char *product_dll = NULL;
@@ -1199,14 +1304,17 @@ xamarin_initialize ()
 
 	if (!assembly)
 		xamarin_assertion_message ("Failed to load %s.", product_dll);
-	image = mono_assembly_get_image (assembly);
+	platform_image = mono_assembly_get_image (assembly);
 
 	const char *objcruntime = xamarin_use_new_assemblies ? "ObjCRuntime" : PRODUCT_COMPAT_NAMESPACE ".ObjCRuntime";
 	const char *foundation = xamarin_use_new_assemblies ? "Foundation" : PRODUCT_COMPAT_NAMESPACE ".Foundation";
 
-	runtime_class = get_class_from_name (image, objcruntime, "Runtime");
-	inativeobject_class = get_class_from_name (image, objcruntime, "INativeObject");
-	nsobject_class = get_class_from_name (image, foundation, "NSObject");
+	runtime_class = get_class_from_name (platform_image, objcruntime, "Runtime");
+	inativeobject_class = get_class_from_name (platform_image, objcruntime, "INativeObject");
+	nsobject_class = get_class_from_name (platform_image, foundation, "NSObject");
+	nsnumber_class = get_class_from_name (platform_image, foundation, "NSNumber", true);
+	nsvalue_class = get_class_from_name (platform_image, foundation, "NSValue", true);
+	nsstring_class = get_class_from_name (platform_image, foundation, "NSString", true);
 
 	mono_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::xamarin_release_managed_ref" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::xamarin_release_managed_ref", (const void *) xamarin_release_managed_ref);
 	mono_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::xamarin_create_managed_ref" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::xamarin_create_managed_ref", (const void *) xamarin_create_managed_ref);
@@ -1293,10 +1401,19 @@ xamarin_set_bundle_path (const char *path)
 	x_bundle_path = strdup (path);
 }
 
+void *
+xamarin_calloc (size_t size)
+{
+	// COOP: no managed memory access: any mode
+	return calloc (size, 1);
+}
+
 void
 xamarin_free (void *ptr)
 {
 	// COOP: no managed memory access: any mode
+	// We use this method to free memory returned by mono,
+	// which means we have to use the free function mono expects.
 	if (ptr)
 		free (ptr);
 }

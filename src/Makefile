@@ -69,19 +69,12 @@ IOS_DEFINES = -define:IPHONE -define:IOS -define:MONOTOUCH -d:NET_2_0 -d:__IOS__
 IOS_LIBDIR = $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
 IOS_PMCS = $(IOS_BUILD_DIR)/pmcs
 IOS_BMONO = MONO_PATH=$(IOS_LIBDIR) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch-mono
-ifdef IKVM
 IOS_GENERATOR=build/common/bgen.exe
 IOS_GENERATE=$(SYSTEM_MONO) --debug $(IOS_GENERATOR)
 IOS_compat_GENERATOR=$(IOS_GENERATOR)
 IOS_compat_GENERATE=$(IOS_GENERATE)
 IOS_native_GENERATOR=$(IOS_GENERATOR)
 IOS_native_GENERATE=$(IOS_GENERATE)
-else
-IOS_compat_GENERATOR=$(IOS_BUILD_DIR)/compat/generator.exe
-IOS_compat_GENERATE=$(IOS_BMONO) --debug $(IOS_compat_GENERATOR)
-IOS_native_GENERATOR=$(IOS_BUILD_DIR)/native/generator.exe
-IOS_native_GENERATE=$(IOS_BMONO) --debug $(IOS_native_GENERATOR)
-endif
 $(IOS_BUILD_DIR)/Constants.cs: Constants.iOS.cs.in Makefile $(TOP)/Make.config.inc | $(IOS_BUILD_DIR)
 	$(call Q_PROF_GEN,ios) sed \
 		-e "s/@VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
@@ -506,7 +499,6 @@ xm_full_profile=--target-framework=Xamarin.Mac,Version=v4.5,Profile=Full
 xm_mobile_profile=--target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile
 xm_compat_profile=--target-framework=XamMac,v1.0
 
-ifdef IKVM
 MAC_GENERATOR=build/common/bgen.exe
 MAC_GENERATE=$(SYSTEM_MONO) --debug $(MAC_GENERATOR)
 MAC_compat_GENERATOR=$(MAC_GENERATOR)
@@ -515,14 +507,6 @@ MAC_full_GENERATOR=$(MAC_GENERATOR)
 MAC_full_GENERATE=$(MAC_GENERATE)
 MAC_mobile_GENERATOR=$(MAC_GENERATOR)
 MAC_mobile_GENERATE=$(MAC_GENERATE)
-else
-MAC_compat_GENERATOR=$(MAC_BUILD_DIR)/compat/_bmac.exe
-MAC_compat_GENERATE=$(SYSTEM_MONO) --debug $(MAC_compat_GENERATOR)
-MAC_full_GENERATOR=$(MAC_BUILD_DIR)/full/_bmac.exe
-MAC_full_GENERATE=$(SYSTEM_MONO) --debug $(MAC_full_GENERATOR)
-MAC_mobile_GENERATOR=$(MAC_BUILD_DIR)/mobile/_bmac.exe
-MAC_mobile_GENERATE=$(TOP)/builds/install/mono-mac64 --debug $(MAC_mobile_GENERATOR)
-endif
 
 define MAC_GENERATOR_template
 $(MAC_BUILD_DIR)/$(1)/pmcs: pmcs.in $(PMCS_EXE) Makefile | $(MAC_BUILD_DIR)/$(1)
@@ -754,14 +738,8 @@ WATCH_DEFINES = -define:IPHONE -define:MONOTOUCH -d:NET_2_0 -d:WATCH -d:XAMCORE_
 WATCH_PMCS = $(WATCH_BUILD_DIR)/pmcs
 WATCH_LIBDIR = $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS
 WATCH_BMONO = MONO_PATH=$(WATCH_LIBDIR)/repl $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bwatch-mono
-ifdef IKVM
 WATCH_GENERATOR=build/common/bgen.exe
 WATCH_GENERATE=$(SYSTEM_MONO) --debug $(WATCH_GENERATOR)
-else
-WATCH_GENERATOR=$(WATCH_BUILD_DIR)/watch/generator.exe
-WATCH_GENERATE=$(WATCH_BMONO) --debug $(WATCH_GENERATOR)
-endif
-
 
 WATCHOS_EXTRA_CORE_SOURCES = \
     $(WATCH_BUILD_DIR)/Constants.cs    \
@@ -989,13 +967,8 @@ TVOS_DEFINES = -define:IPHONE -define:MONOTOUCH -d:NET_2_0 -d:TVOS -d:XAMCORE_2_
 TVOS_PMCS = $(TVOS_BUILD_DIR)/pmcs
 TVOS_LIBDIR = $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS
 TVOS_BMONO = MONO_PATH=$(TVOS_LIBDIR)/repl $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btv-mono
-ifdef IKVM
 TVOS_GENERATOR=build/common/bgen.exe
 TVOS_GENERATE=$(SYSTEM_MONO) --debug $(TVOS_GENERATOR)
-else
-TVOS_GENERATOR=$(TVOS_BUILD_DIR)/tvos/generator.exe
-TVOS_GENERATE=$(TVOS_BMONO) --debug $(TVOS_GENERATOR)
-endif
 
 TVOS_EXTRA_CORE_SOURCES = \
 	$(TVOS_BUILD_DIR)/Constants.cs    \

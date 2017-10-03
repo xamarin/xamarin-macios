@@ -61,6 +61,7 @@
     <Compile Include="Tuning.cs" />
     <Compile Include="Assembly.cs" />
     <Compile Include="error.cs" />
+    <Compile Include="SdkVersions.cs" />
     <Compile Include="..\..\external\mono\external\linker\tuner\Mono.Tuner\ApplyPreserveAttributeBase.cs">
       <Link>Mono.Tuner\ApplyPreserveAttributeBase.cs</Link>
     </Compile>
@@ -264,6 +265,9 @@
     </Compile>
     <Compile Include="..\linker\MonoTouch.Tuner\ProcessExportedFields.cs">
       <Link>MonoTouch.Tuner\ProcessExportedFields.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\PreserveSmartEnumConversionsSubStep.cs">
+      <Link>MonoTouch.Tuner\PreserveSmartEnumConversionsSubStep.cs</Link>
     </Compile>
     <Compile Include="..\..\src\build\mac\Constants.cs">
       <Link>external\Constants.cs</Link>

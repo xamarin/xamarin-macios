@@ -94,6 +94,7 @@ tuner_sources = \
 	../linker/MonoTouch.Tuner/Extensions.cs	\
 	../linker/MonoTouch.Tuner/ListExportedSymbols.cs	\
 	../linker/MonoTouch.Tuner/ProcessExportedFields.cs	\
+	../linker/MonoTouch.Tuner/PreserveSmartEnumConversionsSubStep.cs		\
 	../../src/build/mac/Constants.cs
 
 linker_resources = \
@@ -121,6 +122,7 @@ mmp_sources = \
 	$(TOP)/src/ObjCRuntime/RuntimeOptions.cs \
 	Assembly.cs \
 	Application.cs \
+	SdkVersions.cs \
 	$(TOP)/tools/common/Target.cs \
 	$(TOP)/tools/common/Application.cs \
 	$(TOP)/tools/common/Assembly.cs \
@@ -227,6 +229,7 @@ clean-local::
 	$(SYSTEM_XBUILD) /t:Clean /p:Configuration=$(CECIL_CONFIG) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj
 
 include $(TOP)/mk/rules.mk
+include ../common/Make.common
 
 run::
 	$(Q) make -C tests

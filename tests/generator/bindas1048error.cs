@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using Foundation;
 using CoreMedia;
+using ObjCRuntime;
 
 namespace BindAs1048ErrorTests {
 
