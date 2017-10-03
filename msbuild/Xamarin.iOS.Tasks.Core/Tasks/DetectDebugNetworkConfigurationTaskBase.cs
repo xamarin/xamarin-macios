@@ -58,9 +58,9 @@ namespace Xamarin.iOS.Tasks
 
 						ips.AddRange (entry.AddressList.Select (v => v.ToString ()));
 					} catch {
-						using (var socket = new Socket (SocketType.Stream, ProtocolType.Tcp)) {
+						using (var socket = new Socket (SocketType.Dgram, ProtocolType.Udp)) {
 							try {
-								socket.Connect ("www.microsoft.com", 80);
+								socket.Connect ("8.8.8.8", 53);
 
 								var ipEndPoint = (IPEndPoint) socket.LocalEndPoint;
 
