@@ -3924,7 +3924,7 @@ public partial class Generator : IMemberGatherer {
 				}
 				convs.AppendFormat (extra + "block_{0} = new BlockLiteral ();\n", pi.Name);
 				convs.AppendFormat (extra + "block_ptr_{0} = &block_{0};\n", pi.Name);
-				convs.AppendFormat (extra + "block_{0}.SetupBlock (Trampolines.{1}.Handler, {2});\n", pi.Name, trampoline_name, pi.Name.GetSafeParamName ());
+				convs.AppendFormat (extra + "block_{0}.SetupBlockUnsafe (Trampolines.{1}.Handler, {2});\n", pi.Name, trampoline_name, pi.Name.GetSafeParamName ());
 				if (null_allowed)
 					convs.AppendFormat ("}}\n");
 
