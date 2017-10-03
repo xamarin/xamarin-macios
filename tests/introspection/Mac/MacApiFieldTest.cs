@@ -155,6 +155,10 @@ namespace Introspection {
 			// MonoMac.CoreServices.CFHTTPMessage - document in 10.9 but returns null
 			case "_AuthenticationSchemeOAuth1":
 				return true;
+			case "CBUUIDValidRangeString":
+				if (Mac.CheckSystemVersion (10, 13)); // radar 32858911
+					return true;
+				break;
 			default:
 				return base.Skip (p);
 			}
