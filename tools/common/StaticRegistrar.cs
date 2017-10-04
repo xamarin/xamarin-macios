@@ -1356,6 +1356,11 @@ namespace XamCore.Registrar {
 
 		void CollectAvailabilityAttributes (IEnumerable<CustomAttribute> attributes, ref List<AvailabilityBaseAttribute> list)
 		{
+			CollectAvailabilityAttributes (attributes.Select ((v) => new Tuple<CustomAttribute, TypeReference> (v, v.Constructor.DeclaringType)), ref list);
+		}
+
+		void CollectAvailabilityAttributes (IEnumerable<Tuple<CustomAttribute, TypeReference>> attributes, ref List<AvailabilityBaseAttribute> list)
+		{
 			PlatformName currentPlatform;
 #if MTOUCH
 			switch (App.Platform) {
@@ -1375,8 +1380,9 @@ namespace XamCore.Registrar {
 			currentPlatform = global::XamCore.ObjCRuntime.PlatformName.MacOSX;
 #endif
 
-			foreach (var ca in attributes) {
-				var caType = ca.Constructor.DeclaringType.Resolve ();
+			foreach (var tuple in attributes) {
+				var ca = tuple.Item1;
+				var caType = tuple.Item2;
 				if (caType.Namespace != ObjCRuntime)
 					continue;
 				
@@ -1505,7 +1511,7 @@ namespace XamCore.Registrar {
 			if (AvailabilityAnnotations != null) {
 				object attribObjects;
 				if (AvailabilityAnnotations.TryGetValue (td, out attribObjects))
-					CollectAvailabilityAttributes ((List<CustomAttribute>) attribObjects, ref rv);
+					CollectAvailabilityAttributes ((List<Tuple<CustomAttribute, TypeReference>>) attribObjects, ref rv);
 			}
 
 			return rv;
