@@ -1,4 +1,4 @@
-//
+﻿//
 // Test the generated API selectors against typos or non-existing cases
 //
 // Authors:
@@ -206,8 +206,8 @@ namespace Introspection
 			"Hdmi",
 			"Hdr",
 			"Hectopascals",
-            "Heic", // file type
-            "Heif", // file type
+			"Heic", // file type
+			"Heif", // file type
 			"Heightx", // HeightxWidthxFeatureChannels
 			"Hevc", // CMVideoCodecType / High Efficiency Video Coding
 			"Heif", // High Efficiency Image File Format
@@ -402,7 +402,7 @@ namespace Introspection
 			"Synchronizable",
 			"Symbologies",
 			"Tanh",
-            "Tensorflow",
+			"Tensorflow",
 			"Tessellator",
 			"Texcoord",
 			"Texel",

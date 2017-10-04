@@ -687,6 +687,7 @@ namespace XamCore.MetalPerformanceShaders {
 		IntPtr Constructor (IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
+		[return: Release ()]
 		MPSKernel CopyWithZone ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
 	}
 
@@ -2411,7 +2412,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Static]
 		[Export ("createRNNSingleGateDescriptorWithInputFeatureChannels:outputFeatureChannels:")]
-		MPSRnnSingleGateDescriptor CreateRNNSingleGateDescriptor (nuint inputFeatureChannels, nuint outputFeatureChannels);
+		MPSRnnSingleGateDescriptor CreateRnnSingleGateDescriptor (nuint inputFeatureChannels, nuint outputFeatureChannels);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2561,6 +2562,7 @@ namespace XamCore.MetalPerformanceShaders {
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
+		[return: Release ()]
 		MPSRnnImageInferenceLayer Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
 	}
 
@@ -2618,6 +2620,7 @@ namespace XamCore.MetalPerformanceShaders {
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
+		[return: Release ()]
 		MPSRnnMatrixInferenceLayer Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
 	}
 
@@ -2632,11 +2635,11 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Static]
 		[Export ("nodeWithHandle:")]
-		MPSNnImageNode FromHandle ([NullAllowed] IMPSHandle handle);
+		MPSNnImageNode Create ([NullAllowed] IMPSHandle handle);
 
 		[Static]
 		[Export ("exportedNodeWithHandle:")]
-		MPSNnImageNode ExportedNodeWithHandle ([NullAllowed] IMPSHandle handle);
+		MPSNnImageNode GetExportedNode ([NullAllowed] IMPSHandle handle);
 
 		[NullAllowed, Export ("handle", ArgumentSemantic.Retain)]
 		IMPSHandle MPSHandle { get; set; }
@@ -2687,7 +2690,7 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:weights:")]
-		MPSCnnConvolutionNode FromSource (MPSNnImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
+		MPSCnnConvolutionNode Create (MPSNnImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
 
 		[Export ("initWithSource:weights:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
@@ -2702,7 +2705,7 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:weights:")]
-		MPSCnnFullyConnectedNode FromSource (MPSNnImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
+		MPSCnnFullyConnectedNode Create (MPSNnImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
 
 		[Export ("initWithSource:weights:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
@@ -2714,7 +2717,7 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:weights:scaleValue:type:flags:")]
-		MPSCnnBinaryConvolutionNode FromSource (MPSNnImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
+		MPSCnnBinaryConvolutionNode Create (MPSNnImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
 
 		[Export ("initWithSource:weights:scaleValue:type:flags:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
@@ -2726,7 +2729,7 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:weights:scaleValue:type:flags:")]
-		MPSCnnBinaryFullyConnectedNode FromSource (MPSNnImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
+		MPSCnnBinaryFullyConnectedNode Create (MPSNnImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
 
 		[Export ("initWithSource:weights:scaleValue:type:flags:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
@@ -2738,7 +2741,7 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:convolutionState:weights:")]
-		MPSCnnConvolutionTransposeNode FromSource (MPSNnImageNode sourceNode, [NullAllowed]MPSCnnConvolutionStateNode convolutionState, IMPSCnnConvolutionDataSource weights);
+		MPSCnnConvolutionTransposeNode Create (MPSNnImageNode sourceNode, [NullAllowed]MPSCnnConvolutionStateNode convolutionState, IMPSCnnConvolutionDataSource weights);
 
 		[Export ("initWithSource:convolutionState:weights:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode, [NullAllowed]MPSCnnConvolutionStateNode convolutionState, IMPSCnnConvolutionDataSource weights);
@@ -2762,7 +2765,7 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronAbsoluteNode FromSource (MPSNnImageNode sourceNode);
+		MPSCnnNeuronAbsoluteNode Create (MPSNnImageNode sourceNode);
 
 		[Export ("initWithSource:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode);
@@ -2774,11 +2777,11 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:a:")]
-		MPSCnnNeuronELUNode FromSource (MPSNnImageNode sourceNode, float a);
+		MPSCnnNeuronELUNode Create (MPSNnImageNode sourceNode, float a);
 
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronELUNode FromSource (MPSNnImageNode sourceNode);
+		MPSCnnNeuronELUNode Create (MPSNnImageNode sourceNode);
 
 		[Export ("initWithSource:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode);
@@ -2793,14 +2796,14 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:a:b:")]
-		MPSCnnNeuronReLUNNode FromSource (MPSNnImageNode sourceNode, float a, float b);
+		MPSCnnNeuronReLUNNode Create (MPSNnImageNode sourceNode, float a, float b);
 
 		[Export ("initWithSource:a:b:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode, float a, float b);
 
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronReLUNNode FromSource (MPSNnImageNode sourceNode);
+		MPSCnnNeuronReLUNNode Create (MPSNnImageNode sourceNode);
 
 		[Export ("initWithSource:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode);
@@ -2812,14 +2815,14 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:a:b:")]
-		MPSCnnNeuronLinearNode FromSource (MPSNnImageNode sourceNode, float a, float b);
+		MPSCnnNeuronLinearNode Create (MPSNnImageNode sourceNode, float a, float b);
 
 		[Export ("initWithSource:a:b:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode, float a, float b);
 
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronLinearNode FromSource (MPSNnImageNode sourceNode);
+		MPSCnnNeuronLinearNode Create (MPSNnImageNode sourceNode);
 
 		[Export ("initWithSource:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode);
@@ -2831,11 +2834,11 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:a:")]
-		MPSCnnNeuronReLUNode FromSource (MPSNnImageNode sourceNode, float a);
+		MPSCnnNeuronReLUNode Create (MPSNnImageNode sourceNode, float a);
 
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronReLUNode FromSource (MPSNnImageNode sourceNode);
+		MPSCnnNeuronReLUNode Create (MPSNnImageNode sourceNode);
 
 		[Export ("initWithSource:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode);
@@ -2850,7 +2853,7 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronSigmoidNode FromSource (MPSNnImageNode sourceNode);
+		MPSCnnNeuronSigmoidNode Create (MPSNnImageNode sourceNode);
 
 		[Export ("initWithSource:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode);
@@ -2862,14 +2865,14 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:a:b:")]
-		MPSCnnNeuronHardSigmoidNode FromSource (MPSNnImageNode sourceNode, float a, float b);
+		MPSCnnNeuronHardSigmoidNode Create (MPSNnImageNode sourceNode, float a, float b);
 
 		[Export ("initWithSource:a:b:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode, float a, float b);
 
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronHardSigmoidNode FromSource (MPSNnImageNode sourceNode);
+		MPSCnnNeuronHardSigmoidNode Create (MPSNnImageNode sourceNode);
 
 		[Export ("initWithSource:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode);
@@ -2881,14 +2884,14 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:a:b:")]
-		MPSCnnNeuronSoftPlusNode FromSource (MPSNnImageNode sourceNode, float a, float b);
+		MPSCnnNeuronSoftPlusNode Create (MPSNnImageNode sourceNode, float a, float b);
 
 		[Export ("initWithSource:a:b:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode, float a, float b);
 
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronSoftPlusNode FromSource (MPSNnImageNode sourceNode);
+		MPSCnnNeuronSoftPlusNode Create (MPSNnImageNode sourceNode);
 
 		[Export ("initWithSource:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode);
@@ -2900,7 +2903,7 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronSoftSignNode FromSource (MPSNnImageNode sourceNode);
+		MPSCnnNeuronSoftSignNode Create (MPSNnImageNode sourceNode);
 
 		[Export ("initWithSource:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode);
@@ -2912,14 +2915,14 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:a:b:")]
-		MPSCnnNeuronTanHNode FromSource (MPSNnImageNode sourceNode, float a, float b);
+		MPSCnnNeuronTanHNode Create (MPSNnImageNode sourceNode, float a, float b);
 
 		[Export ("initWithSource:a:b:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode, float a, float b);
 
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronTanHNode FromSource (MPSNnImageNode sourceNode);
+		MPSCnnNeuronTanHNode Create (MPSNnImageNode sourceNode);
 
 		[Export ("initWithSource:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode);
@@ -2931,7 +2934,7 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:aData:")]
-		MPSCnnNeuronPReLUNode FromSource (MPSNnImageNode sourceNode, NSData aData);
+		MPSCnnNeuronPReLUNode Create (MPSNnImageNode sourceNode, NSData aData);
 
 		[Export ("initWithSource:aData:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode, NSData aData);
@@ -2943,11 +2946,11 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:filterSize:")]
-		MPSCnnPoolingNode FromSource (MPSNnImageNode sourceNode, nuint size);
+		MPSCnnPoolingNode Create (MPSNnImageNode sourceNode, nuint size);
 
 		[Static]
 		[Export ("nodeWithSource:filterSize:stride:")]
-		MPSCnnPoolingNode FromSource (MPSNnImageNode sourceNode, nuint size, nuint stride);
+		MPSCnnPoolingNode Create (MPSNnImageNode sourceNode, nuint size, nuint stride);
 
 		[Export ("initWithSource:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
@@ -2971,11 +2974,11 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Static]
 		[Export ("nodeWithSource:filterSize:")]
-		MPSCnnDilatedPoolingMaxNode FromSource (MPSNnImageNode sourceNode, nuint size);
+		MPSCnnDilatedPoolingMaxNode Create (MPSNnImageNode sourceNode, nuint size);
 
 		[Static]
 		[Export ("nodeWithSource:filterSize:stride:dilationRate:")]
-		MPSCnnDilatedPoolingMaxNode FromSource (MPSNnImageNode sourceNode, nuint size, nuint stride, nuint dilationRate);
+		MPSCnnDilatedPoolingMaxNode Create (MPSNnImageNode sourceNode, nuint size, nuint stride, nuint dilationRate);
 
 		[Export ("initWithSource:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:dilationRateX:dilationRateY:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, nuint dilationRateX, nuint dilationRateY);
@@ -3002,7 +3005,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNormalizationNode FromSource (MPSNnImageNode sourceNode);
+		MPSCnnNormalizationNode Create (MPSNnImageNode sourceNode);
 
 		[Export ("initWithSource:")]
 		[DesignatedInitializer]
@@ -3021,7 +3024,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Static]
 		[Export ("nodeWithSource:kernelSize:")]
-		MPSCnnSpatialNormalizationNode FromSource (MPSNnImageNode sourceNode, nuint kernelSize);
+		MPSCnnSpatialNormalizationNode Create (MPSNnImageNode sourceNode, nuint kernelSize);
 
 		[Export ("initWithSource:kernelSize:")]
 		[DesignatedInitializer]
@@ -3053,7 +3056,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Static]
 		[Export ("nodeWithSource:kernelSize:")]
-		MPSCnnLocalContrastNormalizationNode FromSource (MPSNnImageNode sourceNode, nuint kernelSize);
+		MPSCnnLocalContrastNormalizationNode Create (MPSNnImageNode sourceNode, nuint kernelSize);
 
 		[Export ("initWithSource:kernelSize:")]
 		[DesignatedInitializer]
@@ -3073,7 +3076,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Static]
 		[Export ("nodeWithSource:kernelSize:")]
-		MPSCnnCrossChannelNormalizationNode FromSource (MPSNnImageNode sourceNode, nuint kernelSize);
+		MPSCnnCrossChannelNormalizationNode Create (MPSNnImageNode sourceNode, nuint kernelSize);
 
 		[Export ("initWithSource:kernelSize:")]
 		[DesignatedInitializer]
@@ -3090,11 +3093,11 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:outputSize:")]
-		MPSNnScaleNode FromSource (MPSNnImageNode sourceNode, MTLSize size);
+		MPSNnScaleNode Create (MPSNnImageNode sourceNode, MTLSize size);
 
 		[Static]
 		[Export ("nodeWithSource:transformProvider:outputSize:")]
-		MPSNnScaleNode FromSource (MPSNnImageNode sourceNode, [NullAllowed] IMPSImageTransformProvider transformProvider, MTLSize size);
+		MPSNnScaleNode Create (MPSNnImageNode sourceNode, [NullAllowed] IMPSImageTransformProvider transformProvider, MTLSize size);
 
 		[Export ("initWithSource:outputSize:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode, MTLSize size);
@@ -3109,11 +3112,11 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSources:")]
-		MPSNnBinaryArithmeticNode FromSources (MPSNnImageNode[] sourceNodes);
+		MPSNnBinaryArithmeticNode Create (MPSNnImageNode[] sourceNodes);
 
 		[Static]
 		[Export ("nodeWithLeftSource:rightSource:")]
-		MPSNnBinaryArithmeticNode FromSources (MPSNnImageNode left, MPSNnImageNode right);
+		MPSNnBinaryArithmeticNode Create (MPSNnImageNode left, MPSNnImageNode right);
 
 		[Export ("initWithSources:")]
 		IntPtr Constructor (MPSNnImageNode[] sourceNodes);
@@ -3128,7 +3131,7 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSources:")]
-		MPSNnConcatenationNode FromSources (MPSNnImageNode[] sourceNodes);
+		MPSNnConcatenationNode Create (MPSNnImageNode[] sourceNodes);
 
 		[Export ("initWithSources:")]
 		IntPtr Constructor (MPSNnImageNode[] sourceNodes);
@@ -3140,7 +3143,7 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnSoftMaxNode FromSource (MPSNnImageNode sourceNode);
+		MPSCnnSoftMaxNode Create (MPSNnImageNode sourceNode);
 
 		[Export ("initWithSource:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode);
@@ -3152,7 +3155,7 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnLogSoftMaxNode FromSource (MPSNnImageNode sourceNode);
+		MPSCnnLogSoftMaxNode Create (MPSNnImageNode sourceNode);
 
 		[Export ("initWithSource:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode);
@@ -3164,7 +3167,7 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:integerScaleFactorX:integerScaleFactorY:")]
-		MPSCnnUpsamplingNearestNode FromSource (MPSNnImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
+		MPSCnnUpsamplingNearestNode Create (MPSNnImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
 
 		[Export ("initWithSource:integerScaleFactorX:integerScaleFactorY:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
@@ -3182,7 +3185,7 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:integerScaleFactorX:integerScaleFactorY:")]
-		MPSCnnUpsamplingBilinearNode FromSource (MPSNnImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
+		MPSCnnUpsamplingBilinearNode Create (MPSNnImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
 
 		[Export ("initWithSource:integerScaleFactorX:integerScaleFactorY:")]
 		IntPtr Constructor (MPSNnImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
