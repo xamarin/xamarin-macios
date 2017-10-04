@@ -9,13 +9,15 @@ using Xamarin.MacDev;
 
 namespace Xamarin.iOS.Tasks
 {
-	[TestFixture ("Debug")]
-	[TestFixture ("Release")]
+	[TestFixture ("iPhone", "Debug")]
+	[TestFixture ("iPhone", "Release")]
+	[TestFixture ("iPhoneSimulator", "Debug")]
+	[TestFixture ("iPhoneSimulator", "Release")]
 	public class CodesignAppBundle : ProjectTest
 	{
 		readonly string config;
 
-		public CodesignAppBundle (string configuration) : base ("iPhone")
+		public CodesignAppBundle (string platform, string configuration) : base (platform)
 		{
 			config = configuration;
 		}
