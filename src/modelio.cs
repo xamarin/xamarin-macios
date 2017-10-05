@@ -17,11 +17,15 @@ using XamCore.CoreAnimation;
 using XamCore.CoreGraphics;
 using XamCore.SceneKit;
 using Vector2i = global::OpenTK.Vector2i;
+using Vector2d = global::OpenTK.Vector2d;
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
 using Vector3i = global::OpenTK.Vector3i;
+using NVector3 = global::OpenTK.NVector3;
+using NVector3d = global::OpenTK.NVector3d;
 using Vector4 = global::OpenTK.Vector4;
 using Vector4i = global::OpenTK.Vector4i;
+using Vector4d = global::OpenTK.Vector4d;
 #if XAMCORE_4_0
 using Matrix2 = global::OpenTK.NMatrix2;
 using Matrix3 = global::OpenTK.NMatrix3;
@@ -35,6 +39,8 @@ using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 #endif
 using Quaternion = global::OpenTK.Quaternion;
+using NMatrix4 = global::OpenTK.NMatrix4;
+using NMatrix4d = global::OpenTK.NMatrix4d;
 using MathHelper = global::OpenTK.MathHelper;
 #if MONOMAC
 using XamCore.AppKit;
@@ -45,6 +51,32 @@ using AUViewControllerBase = XamCore.UIKit.UIViewController;
 #endif
 
 namespace XamCore.ModelIO {
+
+	[iOS (11,0), Mac(10,13, onlyOn64 : true), TV (11,0)]
+	[Native]
+	enum MDLAnimatedValueInterpolation : nuint {
+		Constant,
+		Linear,
+	}
+
+	[iOS (11,0), Mac(10,13, onlyOn64 : true), TV (11,0)]
+	[Native]
+	enum MDLTransformOpRotationOrder : nuint {
+		Xyz = 1,
+		Xzy,
+		Yxz,
+		Yzx,
+		Zxy,
+		Zyx,
+	}
+
+	[iOS (11,0), Mac(10,13, onlyOn64 : true), TV (11,0)]
+	[Native]
+	enum MDLDataPrecision : nuint {
+		Undefined,
+		Float,
+		Double,
+	}
 
 	delegate void MDLObjectHandler (MDLObject mdlObject, ref bool stop);
 
@@ -85,11 +117,15 @@ namespace XamCore.ModelIO {
 		IntPtr Constructor ([NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 
 		[Export ("initWithURL:vertexDescriptor:bufferAllocator:preserveTopology:error:")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] MDLVertexDescriptor vertexDescriptor, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator, bool preserveTopology, out NSError error);
+		IntPtr Constructor ([NullAllowed] NSUrl url, [NullAllowed] MDLVertexDescriptor vertexDescriptor, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator, bool preserveTopology, out NSError error);
 
 		// note: by choice we do not export "exportAssetToURL:"
 		[Export ("exportAssetToURL:error:")]
 		bool ExportAssetToUrl (NSUrl url, out NSError error);
+
+		[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[Export ("objectAtPath:"), NullAllowed]
+		MDLObject GetObject (string atPath);
 
 		[Static]
 		[Export ("canImportFileExtension:")]
@@ -128,6 +164,10 @@ namespace XamCore.ModelIO {
 		[Export ("childObjectsOfClass:")]
 		MDLObject[] GetChildObjects (Class objectClass);
 
+		[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[Export ("loadTextures")]
+		void LoadTextures ();
+
 		[Export ("boundingBoxAtTime:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		MDLAxisAlignedBoundingBox GetBoundingBox (double atTime);
@@ -147,8 +187,21 @@ namespace XamCore.ModelIO {
 		[Export ("endTime")]
 		double EndTime { get; set; }
 
+		[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[Export ("upAxis", ArgumentSemantic.Assign)]
+		NVector3 UpAxis {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			set;
+		}
+
 		[NullAllowed, Export ("URL", ArgumentSemantic.Retain)]
 		NSUrl Url { get; }
+
+		[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[NullAllowed, Export ("resolver", ArgumentSemantic.Retain)]
+		IMDLAssetResolver Resolver { get; set; }
 
 		[Export ("bufferAllocator", ArgumentSemantic.Retain)]
 		IMDLMeshBufferAllocator BufferAllocator { get; }
@@ -177,6 +230,10 @@ namespace XamCore.ModelIO {
 		[TV (10,0)]
 		[Export ("masters", ArgumentSemantic.Retain)]
 		IMDLObjectContainerComponent Masters { get; set; }
+
+		[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[Export ("animations", ArgumentSemantic.Retain)]
+		IMDLObjectContainerComponent Animations { get; set; }
 
 		[iOS (9,0), Mac(10,11)]
 		[Static]
@@ -478,6 +535,14 @@ namespace XamCore.ModelIO {
 		[Export ("removeAllProperties")]
 		void RemoveAllProperties ();
 
+		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("resolveTexturesWithResolver:")]
+		void ResolveTextures ([NullAllowed] IMDLAssetResolver resolver);
+
+		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("loadTexturesUsingResolver:")]
+		void LoadTextures ([NullAllowed] IMDLAssetResolver resolver);
+
 		[Export ("scatteringFunction", ArgumentSemantic.Retain)]
 		MDLScatteringFunction ScatteringFunction { get; }
 
@@ -566,8 +631,12 @@ namespace XamCore.ModelIO {
 		[Export ("semantic", ArgumentSemantic.Assign)]
 		MDLMaterialSemantic Semantic { get; set; }
 
-		[Export ("type")]
+		[Export ("type", ArgumentSemantic.Assign)]
 		MDLMaterialPropertyType Type { get; }
+
+		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("setType:")]
+		void SetType (MDLMaterialPropertyType type);
 
 		[NullAllowed, Export ("stringValue")]
 		string StringValue { get; set; }
@@ -776,14 +845,28 @@ namespace XamCore.ModelIO {
 		[Export ("addTangentBasisForTextureCoordinateAttributeNamed:normalAttributeNamed:tangentAttributeNamed:")]
 		void AddTangentBasisWithNormals (string textureCoordinateAttributeName, string normalAttributeName, string tangentAttributeName);
 
+		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("addOrthTanBasisForTextureCoordinateAttributeNamed:normalAttributeNamed:tangentAttributeNamed:")]
+		void AddOrthTanBasis (string textureCoordinateAttributeName, string normalAttributeName, string tangentAttributeName);
+
 		[iOS (10,0)]
 		[Mac (10,12)]
 		[TV (10,0)]
 		[Export ("addUnwrappedTextureCoordinatesForAttributeNamed:")]
 		void AddUnwrappedTextureCoordinates (string textureCoordinateAttributeName);
 
+		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("flipTextureCoordinatesInAttributeNamed:")]
+		void FlipTextureCoordinates (string inTextureCoordinateAttributeNamed);
+
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use the 'NSError' overload.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use the 'NSError' overload.")]
 		[Export ("makeVerticesUnique")]
 		void MakeVerticesUnique ();
+
+		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("makeVerticesUniqueAndReturnError:")]
+		bool MakeVerticesUnique (out NSError error);
 
 		[iOS (10,0)]
 		[Mac (10,12)]
@@ -1226,6 +1309,10 @@ namespace XamCore.ModelIO {
 		[Export ("generateCubemapFromLight:")]
 		void GenerateCubemap (nuint textureSize);
 
+		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("generateTexture:")]
+		MDLTexture GenerateTexture (nuint textureSize);
+
 		[NullAllowed, Export ("lightCubeMap", ArgumentSemantic.Retain)]
 		MDLTexture LightCubeMap { get; }
 
@@ -1345,6 +1432,11 @@ namespace XamCore.ModelIO {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor ([NullAllowed] string name, MDLTextureChannelEncoding channelEncoding, Vector2i textureDimensions, float turbidity, float sunElevation, float upperAtmosphereScattering, float groundAlbedo);
 
+		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("initWithName:channelEncoding:textureDimensions:turbidity:sunElevation:sunAzimuth:upperAtmosphereScattering:groundAlbedo:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr Constructor ([NullAllowed] string name, MDLTextureChannelEncoding channelEncoding, Vector2i textureDimensions, float turbidity, float sunElevation, float sunAzimuth, float upperAtmosphereScattering, float groundAlbedo);
+
 		[Export ("updateTexture")]
 		void UpdateTexture ();
 
@@ -1353,6 +1445,10 @@ namespace XamCore.ModelIO {
 
 		[Export ("sunElevation")]
 		float SunElevation { get; set; }
+
+		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("sunAzimuth")]
+		float SunAzimuth { get; set; }
 
 		[Export ("upperAtmosphereScattering")]
 		float UpperAtmosphereScattering { get; set; }
@@ -1571,11 +1667,25 @@ namespace XamCore.ModelIO {
 		[Export ("writeToURL:")]
 		bool WriteToUrl (NSUrl url);
 
+		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("writeToURL:level:")]
+		bool WriteToUrl (NSUrl url, nuint level);
+
 		[Export ("writeToURL:type:")]
 		bool WriteToUrl (NSUrl url, string type);
 
-		[NullAllowed, Export ("imageFromTexture")]
+		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("writeToURL:type:level:")]
+		bool WriteToUrl (NSUrl nsurl, string type, nuint level);
+
+		[Export ("imageFromTexture")]
+		[return: NullAllowed]
 		CGImage GetImageFromTexture ();
+
+		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Export ("imageFromTextureAtLevel:")]
+		[return: NullAllowed]
+		CGImage GetImageFromTexture (nuint level);
 
 		[NullAllowed, Export ("texelDataWithTopLeftOrigin")]
 		NSData GetTexelDataWithTopLeftOrigin ();
@@ -1985,10 +2095,11 @@ namespace XamCore.ModelIO {
 	interface MDLVoxelArray
 	{
 
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'new MDLVoxelArray (MDLAsset, int, float)'.")]
 		[Export ("initWithAsset:divisions:interiorShells:exteriorShells:patchRadius:")]
 		IntPtr Constructor (MDLAsset asset, int divisions, int interiorShells, int exteriorShells, float patchRadius);
 
-		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use new MDLVoxelArray (MDLAsset, int, float)")]
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'new MDLVoxelArray (MDLAsset, int, float)'.")]
 		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use new MDLVoxelArray (MDLAsset, int, float)")]
 		[Export ("initWithAsset:divisions:interiorNBWidth:exteriorNBWidth:patchRadius:")]
 		IntPtr Constructor (MDLAsset asset, int divisions, float interiorNBWidth, float exteriorNBWidth, float patchRadius);
@@ -2233,6 +2344,656 @@ namespace XamCore.ModelIO {
 
 		[Export ("holeCount", ArgumentSemantic.Assign)]
 		nuint HoleCount { get; set; }
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (NSObject))]
+	interface MDLAnimatedValue : NSCopying {
+
+		[Export ("isAnimated")]
+		bool IsAnimated { get; }
+
+		[Export ("precision")]
+		MDLDataPrecision Precision { get; }
+
+		[Export ("timeSampleCount")]
+		nuint TimeSampleCount { get; }
+
+		[Export ("minimumTime")]
+		double MinimumTime { get; }
+
+		[Export ("maximumTime")]
+		double MaximumTime { get; }
+
+		[Export ("interpolation", ArgumentSemantic.Assign)]
+		MDLAnimatedValueInterpolation Interpolation { get; set; }
+
+		[Protected]
+		[Export ("keyTimes")]
+		NSNumber [] WeakKeyTimes { get; }
+
+		[Export ("clear")]
+		void Clear ();
+
+		[Internal]
+		[Export ("getTimes:maxCount:")]
+		nuint _GetTimes (IntPtr timesArray, nuint maxCount);
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (MDLAnimatedValue))]
+	interface MDLAnimatedScalarArray {
+
+		[Export ("elementCount")]
+		nuint ElementCount { get; }
+
+		[Export ("initWithElementCount:")]
+		IntPtr Constructor (nuint arrayElementCount);
+
+		[Internal]
+		[Export ("setFloatArray:count:atTime:")]
+		void _SetFloatArray (IntPtr array, nuint count, double time);
+
+		[Internal]
+		[Export ("setDoubleArray:count:atTime:")]
+		void _SetDoubleArray (IntPtr array, nuint count, double time);
+
+		[Internal]
+		[Export ("getFloatArray:maxCount:atTime:")]
+		nuint _GetFloatArray (IntPtr array, nuint maxCount, double time);
+
+		[Internal]
+		[Export ("getDoubleArray:maxCount:atTime:")]
+		nuint _GetDoubleArray (IntPtr array, nuint maxCount, double time);
+
+		[Internal]
+		[Export ("resetWithFloatArray:count:atTimes:count:")]
+		void _ResetWithFloatArray (IntPtr valuesArray, nuint valuesCount, IntPtr timesArray, nuint timesCount);
+
+		[Internal]
+		[Export ("resetWithDoubleArray:count:atTimes:count:")]
+		void _ResetWithDoubleArray (IntPtr valuesArray, nuint valuesCount, IntPtr timesArray, nuint timesCount);
+
+		[Internal]
+		[Export ("getFloatArray:maxCount:")]
+		nuint _GetFloatArray (IntPtr valuesArray, nuint maxCount);
+
+		[Internal]
+		[Export ("getDoubleArray:maxCount:")]
+		nuint _GetDoubleArray (IntPtr valuesArray, nuint maxCount);
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (MDLAnimatedValue))]
+	interface MDLAnimatedVector3Array {
+
+		[Export ("elementCount")]
+		nuint ElementCount { get; }
+
+		[Export ("initWithElementCount:")]
+		IntPtr Constructor (nuint arrayElementCount);
+
+		[Internal]
+		[Export ("setFloat3Array:count:atTime:")]
+		void _SetFloat3Array (IntPtr array, nuint count, double time);
+
+		[Internal]
+		[Export ("setDouble3Array:count:atTime:")]
+		void _SetDouble3Array (IntPtr array, nuint count, double time);
+
+		[Internal]
+		[Export ("getFloat3Array:maxCount:atTime:")]
+		nuint _GetFloat3Array (IntPtr array, nuint maxCount, double time);
+
+		[Internal]
+		[Export ("getDouble3Array:maxCount:atTime:")]
+		nuint _GetDouble3Array (IntPtr array, nuint maxCount, double time);
+
+		[Internal]
+		[Export ("resetWithFloat3Array:count:atTimes:count:")]
+		void _ResetWithFloat3Array (IntPtr valuesArray, nuint valuesCount, IntPtr timesArray, nuint timesCount);
+
+		[Internal]
+		[Export ("resetWithDouble3Array:count:atTimes:count:")]
+		void _ResetWithDouble3Array (IntPtr valuesArray, nuint valuesCount, IntPtr timesArray, nuint timesCount);
+
+		[Internal]
+		[Export ("getFloat3Array:maxCount:")]
+		nuint _GetFloat3Array (IntPtr valuesArray, nuint maxCount);
+
+		[Internal]
+		[Export ("getDouble3Array:maxCount:")]
+		nuint _GetDouble3Array (IntPtr valuesArray, nuint maxCount);
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (MDLAnimatedValue))]
+	interface MDLAnimatedQuaternionArray {
+
+		[Export ("elementCount")]
+		nuint ElementCount { get; }
+
+		[Export ("initWithElementCount:")]
+		IntPtr Constructor (nuint arrayElementCount);
+
+		[Internal]
+		[Export ("setFloatQuaternionArray:count:atTime:")]
+		void _SetFloatQuaternionArray (IntPtr array, nuint count, double time);
+
+		[Internal]
+		[Export ("setDoubleQuaternionArray:count:atTime:")]
+		void _SetDoubleQuaternionArray (IntPtr array, nuint count, double time);
+
+		[Internal]
+		[Export ("getFloatQuaternionArray:maxCount:atTime:")]
+		nuint _GetFloatQuaternionArray (IntPtr array, nuint maxCount, double time);
+
+		[Internal]
+		[Export ("getDoubleQuaternionArray:maxCount:atTime:")]
+		nuint _GetDoubleQuaternionArray (IntPtr array, nuint maxCount, double time);
+
+		[Internal]
+		[Export ("resetWithFloatQuaternionArray:count:atTimes:count:")]
+		void _ResetWithFloatQuaternionArray (IntPtr valuesArray, nuint valuesCount, IntPtr timesArray, nuint timesCount);
+
+		[Internal]
+		[Export ("resetWithDoubleQuaternionArray:count:atTimes:count:")]
+		void _ResetWithDoubleQuaternionArray (IntPtr valuesArray, nuint valuesCount, IntPtr timesArray, nuint timesCount);
+
+		[Internal]
+		[Export ("getFloatQuaternionArray:maxCount:")]
+		nuint _GetFloatQuaternionArray (IntPtr valuesArray, nuint maxCount);
+
+		[Internal]
+		[Export ("getDoubleQuaternionArray:maxCount:")]
+		nuint _GetDoubleQuaternionArray (IntPtr valuesArray, nuint maxCount);
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (MDLAnimatedValue))]
+	interface MDLAnimatedScalar {
+
+		[Export ("setFloat:atTime:")]
+		void SetValue (float value, double time);
+
+		[Export ("setDouble:atTime:")]
+		void SetValue (double value, double time);
+
+		[Export ("floatAtTime:")]
+		float GetFloat (double time);
+
+		[Export ("doubleAtTime:")]
+		double GetDouble (double time);
+
+		[Internal]
+		[Export ("resetWithFloatArray:atTimes:count:")]
+		void _ResetWithFloatArray (IntPtr valuesArray, IntPtr timesArray, nuint count);
+
+		[Internal]
+		[Export ("resetWithDoubleArray:atTimes:count:")]
+		void _ResetWithDoubleArray (IntPtr valuesArray, IntPtr timesArray, nuint count);
+
+		[Internal]
+		[Export ("getFloatArray:maxCount:")]
+		nuint _GetFloatArray (IntPtr valuesArray, nuint maxCount);
+
+		[Internal]
+		[Export ("getDoubleArray:maxCount:")]
+		nuint _GetDoubleArray (IntPtr valuesArray, nuint maxCount);
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (MDLAnimatedValue))]
+	interface MDLAnimatedVector2 {
+
+		[Export ("setFloat2:atTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		void SetValue (Vector2 value, double time);
+
+		[Export ("setDouble2:atTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		void SetValue (Vector2d value, double time);
+
+		[Export ("float2AtTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		Vector2 GetVector2Value (double time);
+
+		[Export ("double2AtTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		Vector2d GetVector2dValue (double time);
+
+		[Internal]
+		[Export ("resetWithFloat2Array:atTimes:count:")]
+		void _ResetWithFloat2Array (IntPtr valuesArray, IntPtr timesArray, nuint count);
+
+		[Internal]
+		[Export ("resetWithDouble2Array:atTimes:count:")]
+		void _ResetWithDouble2Array (IntPtr valuesArray, IntPtr timesArray, nuint count);
+
+		[Internal]
+		[Export ("getFloat2Array:maxCount:")]
+		nuint _GetFloat2Array (IntPtr valuesArray, nuint maxCount);
+
+		[Internal]
+		[Export ("getDouble2Array:maxCount:")]
+		nuint _GetDouble2Array (IntPtr valuesArray, nuint maxCount);
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (MDLAnimatedValue))]
+	interface MDLAnimatedVector3 {
+
+		[Export ("setFloat3:atTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		void SetValue (NVector3 value, double time);
+
+		[Export ("setDouble3:atTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		void SetValue (NVector3d value, double time);
+
+		[Export ("float3AtTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		NVector3 GetNVector3Value (double time);
+
+		[Export ("double3AtTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		NVector3d GetNVector3dValue (double time);
+
+		[Internal]
+		[Export ("resetWithFloat3Array:atTimes:count:")]
+		void _ResetWithFloat3Array (IntPtr valuesArray, IntPtr timesArray, nuint count);
+
+		[Internal]
+		[Export ("resetWithDouble3Array:atTimes:count:")]
+		void _ResetWithDouble3Array (IntPtr valuesArray, IntPtr timesArray, nuint count);
+
+		[Internal]
+		[Export ("getFloat3Array:maxCount:")]
+		nuint _GetFloat3Array (IntPtr valuesArray, nuint maxCount);
+
+		[Internal]
+		[Export ("getDouble3Array:maxCount:")]
+		nuint _GetDouble3Array (IntPtr valuesArray, nuint maxCount);
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (MDLAnimatedValue))]
+	interface MDLAnimatedVector4 {
+
+		[Export ("setFloat4:atTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		void SetValue (Vector4 value, double time);
+
+		[Export ("setDouble4:atTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		void SetValue (Vector4d value, double time);
+
+		[Export ("float4AtTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		Vector4 GetVector4Value (double time);
+
+		[Export ("double4AtTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		Vector4d GetVector4dValue (double time);
+
+		[Internal]
+		[Export ("resetWithFloat4Array:atTimes:count:")]
+		void _ResetWithFloat4Array (IntPtr valuesArray, IntPtr timesArray, nuint count);
+
+		[Internal]
+		[Export ("resetWithDouble4Array:atTimes:count:")]
+		void _ResetWithDouble4Array (IntPtr valuesArray, IntPtr timesArray, nuint count);
+
+		[Internal]
+		[Export ("getFloat4Array:maxCount:")]
+		nuint _GetFloat4Array (IntPtr valuesArray, nuint maxCount);
+
+		[Internal]
+		[Export ("getDouble4Array:maxCount:")]
+		nuint _GetDouble4Array (IntPtr valuesArray, nuint maxCount);
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (MDLAnimatedValue))]
+	interface MDLAnimatedMatrix4x4 {
+
+		[Export ("setFloat4x4:atTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		void SetValue (NMatrix4 value, double time);
+
+		[Export ("setDouble4x4:atTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		void SetValue (NMatrix4d value, double time);
+
+		[Export ("float4x4AtTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		NMatrix4 GetNMatrix4Value (double time);
+
+		[Export ("double4x4AtTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		NMatrix4d GetNMatrix4dValue (double time);
+
+		[Internal]
+		[Export ("resetWithFloat4x4Array:atTimes:count:")]
+		void _ResetWithFloat4x4Array (IntPtr valuesArray, IntPtr timesArray, nuint count);
+
+		[Internal]
+		[Export ("resetWithDouble4x4Array:atTimes:count:")]
+		void _ResetWithDouble4x4Array (IntPtr valuesArray, IntPtr timesArray, nuint count);
+
+		[Internal]
+		[Export ("getFloat4x4Array:maxCount:")]
+		nuint _GetFloat4x4Array (IntPtr valuesArray, nuint maxCount);
+
+		[Internal]
+		[Export ("getDouble4x4Array:maxCount:")]
+		nuint _GetDouble4x4Array (IntPtr valuesArray, nuint maxCount);
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (MDLObject))]
+	[DisableDefaultCtor]
+	interface MDLSkeleton : NSCopying {
+
+		[Export ("jointPaths")]
+		string[] JointPaths { get; }
+
+		[Export ("jointBindTransforms")]
+		MDLMatrix4x4Array JointBindTransforms { get; }
+
+		[Export ("initWithName:jointPaths:")]
+		IntPtr Constructor (string name, string[] jointPaths);
+	}
+
+	interface IMDLJointAnimation { }
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[Protocol]
+	interface MDLJointAnimation {
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (MDLObject))]
+	[DisableDefaultCtor]
+	interface MDLPackedJointAnimation : NSCopying, MDLJointAnimation {
+
+		[Export ("jointPaths")]
+		string [] JointPaths { get; }
+
+		[Export ("translations")]
+		MDLAnimatedVector3Array Translations { get; }
+
+		[Export ("rotations")]
+		MDLAnimatedQuaternionArray Rotations { get; }
+
+		[Export ("scales")]
+		MDLAnimatedVector3Array Scales { get; }
+
+		[Export ("initWithName:jointPaths:")]
+		IntPtr Constructor (string name, string [] jointPaths);
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (NSObject))]
+	interface MDLAnimationBindComponent : NSCopying, MDLComponent {
+
+		[NullAllowed, Export ("skeleton", ArgumentSemantic.Retain)]
+		MDLSkeleton Skeleton { get; set; }
+
+		[NullAllowed, Export ("jointAnimation", ArgumentSemantic.Retain)]
+		IMDLJointAnimation JointAnimation { get; set; }
+
+		[NullAllowed, Export ("jointPaths", ArgumentSemantic.Retain)]
+		string [] JointPaths { get; set; }
+
+		[Export ("geometryBindTransform", ArgumentSemantic.Assign)]
+		NMatrix4d GeometryBindTransform {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			set;
+		}
+	}
+
+	interface IMDLAssetResolver {}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[Protocol]
+	interface MDLAssetResolver {
+
+		[Abstract]
+		[Export ("canResolveAssetNamed:")]
+		bool CanResolveAsset (string name);
+
+		[Abstract]
+		[Export ("resolveAssetNamed:")]
+		NSUrl ResolveAsset (string name);
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MDLRelativeAssetResolver : MDLAssetResolver {
+
+		[Export ("initWithAsset:")]
+		IntPtr Constructor (MDLAsset asset);
+
+		[NullAllowed, Export ("asset", ArgumentSemantic.Weak)]
+		MDLAsset Asset { get; set; }
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MDLPathAssetResolver : MDLAssetResolver {
+
+		[Export ("initWithPath:")]
+		IntPtr Constructor (string path);
+
+		[Export ("path")]
+		string Path { get; set; }
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MDLBundleAssetResolver : MDLAssetResolver {
+
+		[Export ("initWithBundle:")]
+		IntPtr Constructor (string path);
+
+		[Export ("path")]
+		string Path { get; set; }
+	}
+
+	interface IMDLTransformOp {}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[Protocol]
+	interface MDLTransformOp {
+
+		[Abstract]
+		[Export ("name")]
+		string Name { get; }
+
+		[Abstract]
+		[Export ("float4x4AtTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		NMatrix4 GetNMatrix4 (double atTime);
+
+		[Abstract]
+		[Export ("double4x4AtTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		NMatrix4d GetNMatrix4d (double atTime);
+
+		[Abstract]
+		[Export ("IsInverseOp")]
+		bool IsInverseOp { get; }
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (NSObject))]
+	interface MDLTransformRotateXOp : MDLTransformOp {
+
+		// From MDLTransformOp Protocol
+		//[Export ("name")]
+		//string Name { get; }
+
+		[Export ("animatedValue")]
+		MDLAnimatedScalar AnimatedValue { get; }
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (NSObject))]
+	interface MDLTransformRotateYOp : MDLTransformOp {
+
+		// From MDLTransformOp Protocol
+		//[Export ("name")]
+		//string Name { get; }
+
+		[Export ("animatedValue")]
+		MDLAnimatedScalar AnimatedValue { get; }
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (NSObject))]
+	interface MDLTransformRotateZOp : MDLTransformOp {
+
+		// From MDLTransformOp Protocol
+		//[Export ("name")]
+		//string Name { get; }
+
+		[Export ("animatedValue")]
+		MDLAnimatedScalar AnimatedValue { get; }
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (NSObject))]
+	interface MDLTransformRotateOp : MDLTransformOp {
+
+		// From MDLTransformOp Protocol
+		//[Export ("name")]
+		//string Name { get; }
+
+		[Export ("animatedValue")]
+		MDLAnimatedVector3 AnimatedValue { get; }
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (NSObject))]
+	interface MDLTransformTranslateOp : MDLTransformOp {
+
+		// From MDLTransformOp Protocol
+		//[Export ("name")]
+		//string Name { get; }
+
+		[Export ("animatedValue")]
+		MDLAnimatedVector3 AnimatedValue { get; }
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (NSObject))]
+	interface MDLTransformScaleOp : MDLTransformOp {
+
+		// From MDLTransformOp Protocol
+		//[Export ("name")]
+		//string Name { get; }
+
+		[Export ("animatedValue")]
+		MDLAnimatedVector3 AnimatedValue { get; }
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (NSObject))]
+	interface MDLTransformMatrixOp : MDLTransformOp {
+
+		// From MDLTransformOp Protocol
+		//[Export ("name")]
+		//string Name { get; }
+
+		[Export ("animatedValue")]
+		MDLAnimatedMatrix4x4 AnimatedValue { get; }
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (NSObject))]
+	interface MDLTransformStack : NSCopying, MDLTransformComponent {
+
+		[Export ("addTranslateOp:inverse:")]
+		MDLTransformTranslateOp AddTranslateOp (string animatedValueName, bool inverse);
+
+		[Export ("addRotateXOp:inverse:")]
+		MDLTransformRotateXOp AddRotateXOp (string animatedValueName, bool inverse);
+
+		[Export ("addRotateYOp:inverse:")]
+		MDLTransformRotateYOp AddRotateYOp (string animatedValueName, bool inverse);
+
+		[Export ("addRotateZOp:inverse:")]
+		MDLTransformRotateZOp AddRotateZOp (string animatedValueName, bool inverse);
+
+		[Export ("addRotateOp:order:inverse:")]
+		MDLTransformRotateOp AddRotateOp (string animatedValueName, MDLTransformOpRotationOrder order, bool inverse);
+
+		[Export ("addScaleOp:inverse:")]
+		MDLTransformScaleOp AddScaleOp (string animatedValueName, bool inverse);
+
+		[Export ("addMatrixOp:inverse:")]
+		MDLTransformMatrixOp AddMatrixOp (string animatedValueName, bool inverse);
+
+		[Export ("animatedValueWithName:")]
+		MDLAnimatedValue GetAnimatedValue (string name);
+
+		[Export ("float4x4AtTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		NMatrix4 GetNMatrix4 (double atTime);
+
+		[Export ("double4x4AtTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		NMatrix4d GetNMatrix4d (double atTime);
+
+		[Export ("count")]
+		nuint Count { get; }
+
+		// Comes from MDLTransformComponent protocol
+		//[Export ("keyTimes", ArgumentSemantic.Copy)]
+		//NSNumber [] KeyTimes { get; }
+
+		[Export ("transformOps", ArgumentSemantic.Copy)]
+		IMDLTransformOp [] TransformOps { get; }
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MDLMatrix4x4Array : NSCopying {
+
+		[Export ("elementCount")]
+		nuint ElementCount { get; }
+
+		[Export ("precision")]
+		MDLDataPrecision Precision { get; }
+
+		[Export ("clear")]
+		void Clear ();
+
+		[Export ("initWithElementCount:")]
+		IntPtr Constructor (nuint arrayElementCount);
+
+		[Internal]
+		[Export ("setFloat4x4Array:count:")]
+		void _SetFloat4x4Array (IntPtr valuesArray, nuint count);
+
+		[Internal]
+		[Export ("setDouble4x4Array:count:")]
+		void _SetDouble4x4Array (IntPtr valuesArray, nuint count);
+
+		[Internal]
+		[Export ("getFloat4x4Array:maxCount:")]
+		nuint _GetFloat4x4Array (IntPtr valuesArray, nuint maxCount);
+
+		[Internal]
+		[Export ("getDouble4x4Array:maxCount:")]
+		nuint _GetDouble4x4Array (IntPtr valuesArray, nuint maxCount);
 	}
 }
 #endif

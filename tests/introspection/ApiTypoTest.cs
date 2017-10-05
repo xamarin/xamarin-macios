@@ -307,6 +307,7 @@ namespace Introspection
 			"Olus",
 			"Oneup", // TVElementKeyOneupTemplate
 			"Orthographyrange",
+			"Orth",
 			"Ostprandial",
 			"ove",
 			"Paeth", // PNG filter
@@ -446,6 +447,11 @@ namespace Introspection
 			"Xpc",
 			"xy",
 			"Xyz",
+			"Xzy",
+			"Yxz",
+			"Yzx",
+			"Zxy",
+			"Zyx",
 			"yuvs",
 			"yx",
 			"yy",
