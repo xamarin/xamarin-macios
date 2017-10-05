@@ -1887,10 +1887,10 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 		[self release];
 		MONO_EXIT_GC_SAFE;
 	} else {
-		// This lock is needed so that we can safely call retainCount in the toggleref callback.
-		xamarin_framework_peer_lock ();
 		/* If we're a wrapper type, we need to unregister here, since we won't enter the release trampoline */
 		xamarin_unregister_nsobject (self, managed_obj, &exception_gchandle);
+		// This lock is needed so that we can safely call retainCount in the toggleref callback.
+		xamarin_framework_peer_lock ();
 		MONO_ENTER_GC_SAFE;
 		[self release];
 		MONO_EXIT_GC_SAFE;
