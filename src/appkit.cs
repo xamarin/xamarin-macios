@@ -716,6 +716,9 @@ namespace XamCore.AppKit {
 		[Lion, Field ("NSApplicationLaunchRemoteNotificationKey")]
 		NSString LaunchRemoteNotificationKey { get; }
 
+		[Lion, Field ("NSApplicationLaunchUserNotificationKey")]
+		NSString LaunchUserNotificationKey { get; }
+
 		[Notification, Field ("NSApplicationDidFinishRestoringWindowsNotification")]
 		NSString DidFinishRestoringWindowsNotification { get; }
 
@@ -20090,6 +20093,7 @@ namespace XamCore.AppKit {
 		void RecalculateKeyViewLoop ();
 	
 		[Export ("toolbar")]
+		[NullAllowed]
 		NSToolbar Toolbar { get; set; }
 	
 		[Export ("toggleToolbarShown:")]
@@ -22283,12 +22287,14 @@ namespace XamCore.AppKit {
 		CGRect RectForSmartMagnificationAtPoint (CGPoint atPoint, CGRect inRect);
 	}
 
+#if !XAMCORE_4_0
 	[Category, BaseType (typeof (NSApplication))]
 	partial interface NSRemoteNotifications_NSApplication {
 
 		[MountainLion, Field ("NSApplicationLaunchUserNotificationKey", "AppKit")]
 		NSString NSApplicationLaunchUserNotificationKey { get; }
 	}
+#endif
 
 	partial interface NSControlTextEditingEventArgs {
 		[Export ("NSFieldEditor")]

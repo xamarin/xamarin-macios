@@ -163,7 +163,7 @@ Makefile-mac.inc: xharness/xharness.exe
 
 -include Makefile-mac.inc
 
-$(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/mtouch/SdkVersions.cs.in
+$(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	@$(MAKE) -C $(TOP)/tools/mtouch SdkVersions.cs
 
 .stamp-src-project-files:
@@ -171,7 +171,7 @@ $(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/mtouch/SdkVersions.cs.in
 	@touch $@
 
 xharness/xharness.exe: $(wildcard xharness/*.cs) xharness/xharness.csproj $(TOP)/tools/mtouch/SdkVersions.cs test.config test-system.config .stamp-src-project-files
-	$(Q_GEN) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
+	$(Q_GEN) unset MSBuildExtensionsPath && $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
 
 killall:
 	@killall "iPhone Simulator" >/dev/null 2>&1 || true

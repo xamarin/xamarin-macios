@@ -38,6 +38,7 @@ using UIKit;
 #if !__WATCHOS__
 using OpenGLES;
 #endif
+using WebKit;
 #else
 using MonoTouch;
 using MonoTouch.AddressBook;
@@ -50,6 +51,7 @@ using MonoTouch.ObjCRuntime;
 using MonoTouch.MapKit;
 using MonoTouch.UIKit;
 using MonoTouch.OpenGLES;
+using MonoTouch.WebKit;
 #endif
 using NUnit.Framework;
 
@@ -1047,6 +1049,17 @@ namespace LinkSdk {
 			// make test work for classic (monotouch) and unified (iOS, tvOS and watchOS)
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Security.Tls.AppleTlsProvider");
 			Assert.Null (Type.GetType (fqn), "Should be included");
+		}
+
+		[Test]
+		// https://bugzilla.xamarin.com/show_bug.cgi?id=59247
+		public void WebKit_NSProxy ()
+		{
+			// a reference to WKWebView will bring the internal NSProxy type
+			var t = typeof (WKWebView);
+			Assert.NotNull (t, "avoid compiler optimization of unused variable"); 
+			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Foundation.NSProxy");
+			Assert.NotNull (Type.GetType (fqn), fqn);
 		}
 	}
 }

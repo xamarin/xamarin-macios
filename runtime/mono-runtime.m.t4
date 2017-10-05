@@ -125,10 +125,24 @@ MONO_API <#= export.ReturnType #>
 {
 <# if (export.Optional) { #>
 	if (<#= export.EntryPoint #>_func == NULL)
+<# if (!string.IsNullOrEmpty (export.AlternativeEntryPoint)) { #>
+		return <#= export.AlternativeEntryPoint #> (<#= export.ArgumentNames #>);
+<# } else {#>
 		xamarin_assertion_message ("Could not load <#= export.EntryPoint #>\n");
+<# } #>
 
 <# } #>
 	return <#= export.EntryPoint #>_func (<#= export.ArgumentNames #>);
+}
+<# } #>
+
+<# foreach (var export in exports) {
+	if (!export.Optional)
+		continue; #>
+bool
+<#= export.EntryPoint #>_exists ()
+{
+	return <#= export.EntryPoint #>_func != NULL;
 }
 
 <# } #>

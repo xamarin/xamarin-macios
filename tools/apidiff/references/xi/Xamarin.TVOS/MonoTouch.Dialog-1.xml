@@ -1388,6 +1388,7 @@
               <interface name="System.Collections.IEnumerable" />
               <interface name="System.IDisposable" />
               <interface name="System.IEquatable`1[Foundation.NSObject]" />
+              <interface name="UIKit.IUIAccessibilityContentSizeCategoryImageAdjusting" />
               <interface name="UIKit.IUIAccessibilityIdentification" />
               <interface name="UIKit.IUIAppearance" />
               <interface name="UIKit.IUIAppearanceContainer" />

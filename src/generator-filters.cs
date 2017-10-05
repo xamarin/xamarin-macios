@@ -1,12 +1,8 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 using System;
 using System.Collections.Generic;
-#if IKVM
 using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
-#else
-using System.Reflection;
-#endif
 
 using XamCore.Foundation;
 

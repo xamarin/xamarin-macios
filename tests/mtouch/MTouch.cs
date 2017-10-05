@@ -3407,6 +3407,26 @@ public class HandlerTest
 			RunUnitTest (Profile.iOS, testCode, csproj_configuration, csproj_references: new string [] { "System.Net.Http" }, clean_simulator: false);
 		}
 
+		[Test]
+		[TestCase (true)]
+		[TestCase (false)]
+		public void NoProductAssemblyReference (bool nofastsim)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				// The .exe contains no reference to Xamarin.iOS.dll, because no API is used from Xamarin.iOS.dll
+				mtouch.CreateTemporaryApp (code: "public class TestApp { static void Main () { System.Console.WriteLine (\"Hello world\"); } }");
+				mtouch.CreateTemporaryCacheDirectory ();
+				if (nofastsim)
+					mtouch.NoFastSim = nofastsim;
+				mtouch.Debug = true; // makes simlauncher possible (when nofastsim is false)
+				mtouch.Linker = MTouchLinker.DontLink; // faster
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build sim");
+				mtouch.AssertErrorPattern (123, "The executable assembly .*/testApp.exe does not reference Xamarin.iOS.dll.");
+				mtouch.AssertErrorCount (1);
+				mtouch.AssertNoWarnings ();
+			}
+		}
+
 #region Helper functions
 		static void RunUnitTest (Profile profile, string code, string csproj_configuration = "", string [] csproj_references = null, string configuration = "Debug", string platform = "iPhoneSimulator", bool clean_simulator = true)
 		{

@@ -20,7 +20,7 @@ namespace xharness
 		public string ProjectPath { get; protected set; }
 
 		public string ProjectFileExtension { get { return IsFSharp ? "fsproj" : "csproj"; } }
-		public bool IsFSharp { get { return (ProjectPath ?? TemplateProjectPath).EndsWith (".fsproj"); } }
+		public bool IsFSharp { get { return (ProjectPath ?? TemplateProjectPath).EndsWith (".fsproj", StringComparison.Ordinal); } }
 
 		public string TemplateProjectPath { get; set; }
 

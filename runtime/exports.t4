@@ -68,6 +68,10 @@
 			"MonoClass *", "klass"
 		),
 
+		new Export ("MonoType *", "mono_class_enum_basetype",
+			"MonoClass *", "klass"
+		),
+
 		new Export ("int32_t", "mono_class_value_size",
 			"MonoClass *", "klass",
 			"uint32_t *", "align"
@@ -76,7 +80,16 @@
 		new Export ("MonoType *", "mono_class_get_type",
 			"MonoClass *", "klass"
 		),
+		#endregion
 
+		#region metadata/class-internals.h
+		new Export (true, "gboolean", "mono_class_is_nullable",
+			"MonoClass *", "klass"
+		),
+
+		new Export (true, "MonoClass *", "mono_class_get_nullable_param",
+			"MonoClass *", "klass"
+		),
 		#endregion
 
 		#region metadata/debug-helpers.h
@@ -173,6 +186,12 @@
 			"void *", "value"
 		),
 
+		new Export ("MonoObject *", "mono_value_box",
+			"MonoDomain *", "domain",
+			"MonoClass *", "klass",
+			"void *", "val"
+		),
+
 		#endregion
 
 		#region metadata/profiler.h
@@ -222,7 +241,10 @@
 
 		new Export (true, "void", "mono_set_pending_exception",
 			"MonoException *", "exc"
-		),
+		)
+		{
+			AlternativeEntryPoint = "mono_raise_exception",
+		},
 
 		#endregion
 
@@ -348,6 +370,9 @@
 			"MonoType *", "type"
 		),
 
+		new Export ("MonoType *", "mono_reflection_type_get_type",
+			"MonoReflectionType *", "reftype"
+		),
 		#endregion
 
 		#region metadata/metadata.h
@@ -363,6 +388,10 @@
 
 		new Export ("MonoType *", "mono_signature_get_return_type",
 			"MonoMethodSignature *", "sig"
+		),
+
+		new Export ("int", "mono_type_get_type",
+			"MonoType *", "type"
 		),
 
 		#endregion
@@ -645,6 +674,7 @@
 	{
 		public string ReturnType;
 		public string EntryPoint;
+		public string AlternativeEntryPoint;
 		public List<Arg> Arguments;
 		public bool Optional;
 

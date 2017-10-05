@@ -29,6 +29,5 @@ Copyright (c) 2017 Microsoft Corp. (www.microsoft.com)
 		</ItemGroup>
 	</Target>
 	
-	<!-- Modern/Mobile does not get ImplicitlyExpandDesignTimeFacades as Microsoft.NETFramework.CurrentVersion.targets isn't pulled in -->
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.ImplicitFacade.msbuild.targets" Condition="'$(TargetFrameworkName)' == 'Modern'"/>
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.ImplicitFacade.msbuild.targets" Condition="'$(TargetFrameworkName)' == 'Modern' Or '$(TargetFrameworkName)' == 'Full'"/>
 </Project>

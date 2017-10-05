@@ -344,6 +344,21 @@
 !unknown-native-enum! NSType bound
 !unknown-native-enum! SLComposeViewControllerResult bound
 !wrong-base-type! MDLVoxelArray expected MDLObject actual NSObject
+!incorrect-protocol-member! NSAccessibility::accessibilityChildrenInNavigationOrder is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::accessibilityCustomActions is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::accessibilityCustomRotors is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::setAccessibilityChildrenInNavigationOrder: is REQUIRED and should be bstract
+!incorrect-protocol-member! NSAccessibility::setAccessibilityCustomActions: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::setAccessibilityCustomRotors: is REQUIRED and should be abstract
+!incorrect-protocol-member! CIImageProcessorInput::surface is REQUIRED and should be abstract
+!incorrect-protocol-member! CIImageProcessorOutput::surface is REQUIRED and should be abstract
+!incorrect-protocol-member! INSpeakable::alternativeSpeakableMatches is REQUIRED and should be abstract
+!incorrect-protocol-member! INSpeakable::vocabularyIdentifier is REQUIRED and should be abstract
+!wrong-enum-size! NSSpellingState managed 4 vs native 8
+!extra-protocol-member! unexpected selector MTLCommandBuffer::GPUEndTime found
+!extra-protocol-member! unexpected selector MTLCommandBuffer::GPUStartTime found
+!extra-protocol-member! unexpected selector MTLCommandBuffer::kernelEndTime found
+!extra-protocol-member! unexpected selector MTLCommandBuffer::kernelStartTime found
 
 # Bound but commented out until we can test w\ template
 !missing-selector! +SFSafariExtensionManager::getStateOfSafariExtensionWithIdentifier:completionHandler: not bound
