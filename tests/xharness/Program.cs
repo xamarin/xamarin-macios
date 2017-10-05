@@ -20,26 +20,26 @@ namespace xharness
 				{ "configure", "Creates project files and makefiles.", (v) => harness.Action = HarnessAction.Configure },
 				{ "autoconf", "Automatically decide what to configure.", (v) => harness.AutoConf = true },
 				{ "rootdir=", "The root directory for the tests.", (v) => harness.RootDirectory = v },
-				{ "project=", "Add a project file to process. This can be specified multiple times.", (v) => harness.IOSTestProjects.Add (new TestProject (v)) },
+				{ "project=", "Add a project file to process. This can be specified multiple times.", (v) => harness.IOSTestProjects.Add (new iOSTestProject (v)) },
 				{ "watchos-container-template=", "The directory to use as a template for a watchos container app.", (v) => harness.WatchOSContainerTemplate = v },
 				{ "watchos-app-template=", "The directory to use as a template for a watchos app.", (v) => harness.WatchOSAppTemplate = v },
 				// Run
 				{ "run=", "Executes a project.", (v) =>
 					{
 						harness.Action = HarnessAction.Run;
-						harness.IOSTestProjects.Add (new TestProject (v));
+						harness.IOSTestProjects.Add (new iOSTestProject (v));
 					}
 				},
 				{ "install=", "Installs a project.", (v) =>
 					{
 						harness.Action = HarnessAction.Install;
-						harness.IOSTestProjects.Add (new TestProject (v));
+						harness.IOSTestProjects.Add (new iOSTestProject (v));
 					}
 				},
 				{ "uninstall=", "Uninstalls a project.", (v) =>
 					{
 						harness.Action = HarnessAction.Uninstall;
-						harness.IOSTestProjects.Add (new TestProject (v));
+						harness.IOSTestProjects.Add (new iOSTestProject (v));
 					}
 				},
 				{ "sdkroot=", "Where Xcode is", (v) => harness.SdkRoot = v },
@@ -61,6 +61,12 @@ namespace xharness
 						harness.EnvironmentVariables [split [0]] = split [1];
 					}
 				},
+				{ "label=", "Comma-separated list of labels to select which tests to run.", (v) =>
+					{
+						harness.Labels.UnionWith (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+					}
+				},
+				{ "markdown-summary=", "The path where a summary (in Markdown format) will be written.", (v) => harness.MarkdownSummaryPath = v },
 			};
 
 			showHelp = () => {

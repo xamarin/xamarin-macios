@@ -15,6 +15,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 
 using MonoTouch;
@@ -532,6 +534,57 @@ namespace LinkAll {
 			// make test work for classic (monotouch) and unified (iOS, tvOS and watchOS)
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Security.Tls.AppleTlsProvider");
 			Assert.Null (Type.GetType (fqn), "Should NOT be included (no SslStream or Socket support)");
+		}
+
+		[Test]
+		// https://bugzilla.xamarin.com/show_bug.cgi?id=59247
+		public void WebKit_NSProxy ()
+		{
+			// this test works only because "Link all" does not use WebKit
+			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Foundation.NSProxy");
+			Assert.Null (Type.GetType (fqn), fqn);
+		}
+
+		[Test]
+		public void Bug59015 ()
+		{
+			CheckAsyncTaskMethodBuilder (typeof (AsyncTaskMethodBuilder));
+			CheckAsyncTaskMethodBuilder (typeof (AsyncTaskMethodBuilder<int>));
+			var t = typeof (Task);
+			var snfwc = t.GetMethod ("SetNotificationForWaitCompletion", BindingFlags.Instance | BindingFlags.NonPublic);
+#if DEBUG
+			Assert.NotNull (snfwc, "Task.NotifyDebuggerOfWaitCompletion");
+#else
+			// something keeps it from being removed
+			// Assert.Null (snfwc, "Task.NotifyDebuggerOfWaitCompletion");
+#endif
+		}
+
+		void CheckAsyncTaskMethodBuilder (Type atmb)
+		{
+			Assert.NotNull (atmb, "AsyncTaskMethodBuilder");
+			var snfwc = atmb.GetMethod ("SetNotificationForWaitCompletion", BindingFlags.Instance | BindingFlags.NonPublic);
+			var oifd = atmb.GetProperty ("ObjectIdForDebugger", BindingFlags.Instance | BindingFlags.NonPublic);
+#if DEBUG
+			Assert.NotNull (snfwc, atmb.FullName + ".SetNotificationForWaitCompletion");
+			Assert.NotNull (oifd,  atmb.FullName + ".ObjectIdForDebugger");
+#else
+			Assert.Null (snfwc, atmb.FullName + ".SetNotificationForWaitCompletion");
+			Assert.Null (oifd,  atmb.FullName + ".ObjectIdForDebugger");
+#endif
+		}
+	}
+
+	[Introduced (PlatformName.MacOSX, 1, 0, PlatformArchitecture.Arch64)]
+	[Introduced (PlatformName.iOS, 1, 0)]
+	[Introduced (PlatformName.TvOS, 1, 0)]
+	[Introduced (PlatformName.WatchOS, 1, 0)]
+	[Preserve]
+	public class ClassFromThePast : NSObject
+	{
+		[Export ("foo:")]
+		public void Foo (ClassFromThePast obj)
+		{
 		}
 	}
 }

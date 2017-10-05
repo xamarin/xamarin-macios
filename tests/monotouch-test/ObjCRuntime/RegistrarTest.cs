@@ -1427,10 +1427,12 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		public class NativeObjectArrayType : MKMapView
+		public class NativeObjectArrayType : NSObject
 		{
 			public IMKAnnotation[] Annotations;
-			public override void AddAnnotations(params IMKAnnotation[] annotations)
+
+			[Export ("addAnnotations:")]
+			public void AddAnnotations (params IMKAnnotation[] annotations)
 			{
 				this.Annotations = annotations;
 			}
@@ -2588,5 +2590,34 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.AreEqual ("v@?@", GetBlockSignature (block), "a");
 			block.CleanupBlock ();
 		}
+	}
+
+	[Preserve]
+	class OverloadByStaticity : NSObject
+	{
+		// Two Objective-C methods can have the same selector if one is static and the other instance.
+		[Export ("method")]
+		public void InstanceMethod () { }
+
+		[Export ("method")]
+		public static void StaticMethod () { }
+	}
+
+	// It should be possible to use a protocol with a member we can't use yet (because its signature uses a type not in the current SDK)
+	[Protocol]
+	[ProtocolMember (IsRequired = false, IsProperty = false, IsStatic = false, Name = "DetectPremonition", Selector = "detectPremonition:", ParameterType = new Type [] { typeof (FutureClass) }, ParameterByRef = new bool [] { false })]
+	public interface ISomeDelegate : INativeObject, IDisposable
+	{
+	}
+	[Introduced (PlatformName.MacOSX, 100, 0)]
+	[Introduced (PlatformName.iOS, 100, 0)]
+	[Introduced (PlatformName.TvOS, 100, 0)]
+	[Introduced (PlatformName.WatchOS, 100, 0)]
+	public class FutureClass : NSObject
+	{
+	}
+	[Preserve]
+	public class SomeConsumer : NSObject, ISomeDelegate
+	{
 	}
 }

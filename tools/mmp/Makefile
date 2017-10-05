@@ -32,6 +32,8 @@ linker_sources = \
 	$(LINKER_DIR)/Mono.Linker/MethodAction.cs			\
 	$(LINKER_DIR)/Mono.Linker/XApiReader.cs				\
 	$(LINKER_DIR)/Mono.Linker/IXApiVisitor.cs			\
+	$(LINKER_DIR)/Mono.Linker/MethodReferenceExtensions.cs		\
+	$(LINKER_DIR)/Mono.Linker/TypeReferenceExtensions.cs		\
 	$(LINKER_DIR)/Mono.Linker.Steps/BaseStep.cs			\
 	$(LINKER_DIR)/Mono.Linker.Steps/LoadReferencesStep.cs		\
 	$(LINKER_DIR)/Mono.Linker.Steps/LoadI18nAssemblies.cs		\
@@ -92,6 +94,7 @@ tuner_sources = \
 	../linker/MonoTouch.Tuner/Extensions.cs	\
 	../linker/MonoTouch.Tuner/ListExportedSymbols.cs	\
 	../linker/MonoTouch.Tuner/ProcessExportedFields.cs	\
+	../linker/MonoTouch.Tuner/PreserveSmartEnumConversionsSubStep.cs		\
 	../../src/build/mac/Constants.cs
 
 linker_resources = \
@@ -119,6 +122,7 @@ mmp_sources = \
 	$(TOP)/src/ObjCRuntime/RuntimeOptions.cs \
 	Assembly.cs \
 	Application.cs \
+	SdkVersions.cs \
 	$(TOP)/tools/common/Target.cs \
 	$(TOP)/tools/common/Application.cs \
 	$(TOP)/tools/common/Assembly.cs \
@@ -200,10 +204,10 @@ Xamarin.Mac.registrar.full.x86_64.m:   $(TOP)/src/build/mac/full-64/Xamarin.Mac.
 	$(Q) touch Xamarin.Mac.registrar.full.x86_64.m Xamarin.Mac.registrar.full.x86_64.h
 
 Xamarin.Mac.registrar.%.i386.a:   Xamarin.Mac.registrar.%.i386.m
-	$(Q_CC) xcrun -sdk macosx clang -DDEBUG -g -gdwarf-2 -x objective-c++ -o $@ -c -arch i386 $< -Wall -I$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
+	$(Q_CC) xcrun -sdk macosx clang -DDEBUG -g -gdwarf-2 -x objective-c++ -o $@ -c -arch i386 $< -Wall -Wno-unguarded-availability-new -I$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
 
 Xamarin.Mac.registrar.%.x86_64.a: Xamarin.Mac.registrar.%.x86_64.m
-	$(Q_CC) xcrun -sdk macosx clang -DDEBUG -g -gdwarf-2 -x objective-c++ -o $@ -c -arch x86_64 $< -Wall -I$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -fobjc-runtime=macosx
+	$(Q_CC) xcrun -sdk macosx clang -DDEBUG -g -gdwarf-2 -x objective-c++ -o $@ -c -arch x86_64 $< -Wall -Wno-unguarded-availability-new -I$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -fobjc-runtime=macosx
 
 Xamarin.Mac.registrar.%.a: Xamarin.Mac.registrar.%.i386.a Xamarin.Mac.registrar.%.x86_64.a
 	$(Q_LIPO) $(DEVICE_BIN_PATH)/lipo -create -output $@ $^
@@ -225,6 +229,7 @@ clean-local::
 	$(SYSTEM_XBUILD) /t:Clean /p:Configuration=$(CECIL_CONFIG) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj
 
 include $(TOP)/mk/rules.mk
+include ../common/Make.common
 
 run::
 	$(Q) make -C tests

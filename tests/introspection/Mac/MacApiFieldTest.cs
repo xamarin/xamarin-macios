@@ -79,6 +79,8 @@ namespace Introspection {
 			}
 
 			switch (p.Name) {
+			case "CharacteristicValidRangeString":
+				return Mac.CheckSystemVersion (10, 13); // radar 32858911 
 			// NSTableView
 			case "RowViewKey":
 				return true;
@@ -153,14 +155,22 @@ namespace Introspection {
 			// MonoMac.CoreServices.CFHTTPMessage - document in 10.9 but returns null
 			case "_AuthenticationSchemeOAuth1":
 				return true;
+			case "CBUUIDValidRangeString":
+				if (Mac.CheckSystemVersion (10, 13)); // radar 32858911
+					return true;
+				break;
 			default:
 				return base.Skip (p);
 			}
 		}
 
-		protected override bool Skip (string constantName)
+		protected override bool Skip (string constantName, string libraryName)
 		{
 			switch (constantName) {
+			case "CBUUIDValidRangeString":
+				if (Mac.CheckSystemVersion (10, 13)); // radar 32858911
+					return true;
+				break;
 			// Only there for API compat
 			case "kSecUseNoAuthenticationUI":
 			case "kSecUseOperationPrompt":
@@ -177,7 +187,7 @@ namespace Introspection {
 					return true;
 				goto default;
 			default:
-				return base.Skip (constantName);
+				return base.Skip (constantName, libraryName);
 			}
 		}
 

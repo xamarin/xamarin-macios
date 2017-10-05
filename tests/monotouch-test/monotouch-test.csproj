@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -163,6 +163,7 @@
     </None>
     <None Include="Entitlements.plist" />
     <None Include="app.config" />
+    <None Include="EmptyNib.xib" Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -355,7 +356,6 @@
     <Compile Include="MapKit\LocalSearchTest.cs" />
     <Compile Include="MapKit\LocalSearchRequestTest.cs" />
     <Compile Include="Foundation\CalendarTest.cs" />
-    <Compile Include="EventKit\CalendarItemTest.cs" />
     <Compile Include="EventKit\AlarmTest.cs" />
     <Compile Include="CoreGraphics\ContextTest.cs" />
     <Compile Include="CoreGraphics\DataConsumerTest.cs" />
@@ -645,6 +645,7 @@
     <Compile Include="UIKit\GraphicsRendererTest.cs" />
     <Compile Include="Intents\INIntentResolutionResultTests.cs" />
     <Compile Include="MessageUI\MessageComposeViewControllerTest.cs" />
+    <Compile Include="GameplayKit\GKAgent3DTest.cs" />
     <Compile Include="GameplayKit\GKOctreeTests.cs" />
     <Compile Include="GameplayKit\GKQuadTreeTests.cs" />
     <Compile Include="GameplayKit\GKMeshGraphTests.cs" />
@@ -657,10 +658,49 @@
     <Compile Include="PassKit\LabeledValueTest.cs" />
     <Compile Include="System.Net.Http\MessageHandlers.cs" />
     <Compile Include="AVFoundation\PlayerItemVideoOutputTest.cs" />
+    <Compile Include="Simd\NMatrix4dTest.cs" />
+    <Compile Include="Simd\MatrixFloat2x2Test.cs" />
+    <Compile Include="Simd\MatrixFloat3x3Test.cs" />
+    <Compile Include="Simd\MatrixFloat4x3Test.cs" />
+    <Compile Include="Simd\MatrixFloat4x4Test.cs" />
+    <Compile Include="Simd\NVector3dTest.cs" />
+    <Compile Include="Simd\VectorFloat3Test.cs" />
     <Compile Include="mono\ConfigTest.cs" />
     <Compile Include="HttpClient\HttpClientTest.cs" />
     <Compile Include="OpenGLES\EAGLContext.cs" />
     <Compile Include="CoreText\CTParagraphStyleTests.cs" />
+    <Compile Include="CoreData\NSQueryGenerationTokenTest.cs" />
+    <Compile Include="EventKit\EKUIBundleTest.cs" />
+    <Compile Include="HomeKit\HMMutableSignificantTimeEventTest.cs" />
+    <Compile Include="HomeKit\HMSignificantTimeEventTest.cs" />
+    <Compile Include="UIKit\UIDragDropSessionExtensionsTest.cs" />
+    <Compile Include="SpriteKit\SKTransformNodeTest.cs" />
+    <Compile Include="Metal\MTLArgumentDescriptorTest.cs" />
+    <Compile Include="Metal\MTLPipelineBufferDescriptorTests.cs" />
+    <Compile Include="Metal\MTLPointerTypeTests.cs" />
+    <Compile Include="Metal\MTLTextureReferenceType.cs" />
+    <Compile Include="PassKit\PKPaymentRequestTest.cs" />
+    <Compile Include="AudioToolbox\AudioComponentTest.cs" />
+    <Compile Include="UIKit\DirectionalEdgeInsetsTest.cs" />
+    <Compile Include="ARKit\ARPointCloudTest.cs" />
+    <Compile Include="MetalPerformanceShaders\MPSImageHistogramTest.cs" />
+    <Compile Include="MetalPerformanceShaders\MPSImageHistogramEqualizationTest.cs" />
+    <Compile Include="MetalPerformanceShaders\MPSImageHistogramSpecificationTest.cs" />
+    <Compile Include="ModelIO\MDLAssetTest.cs" />
+    <Compile Include="ModelIO\MDLVoxelArrayTest.cs" />
+    <Compile Include="CoreML\MLMultiArrayTest.cs" />
+    <Compile Include="ModelIO\MDLTransformComponentTest.cs" />
+    <Compile Include="ModelIO\MDLCameraTest.cs" />
+    <Compile Include="ModelIO\MDLStereoscopicCameraTest.cs" />
+    <Compile Include="UIKit\UISpringLoadedInteractionSupportingTest.cs" />
+    <Compile Include="PdfKit\PdfAnnotationTest.cs" />
+    <Compile Include="FileProvider\NSFileProviderPageTest.cs" />
+    <Compile Include="AVFoundation\AVPlayerLooperTest.cs" />
+    <Compile Include="UIKit\UIPasteConfigurationSupportingTest.cs" />
+    <Compile Include="Metal\MTLTileRenderPipelineDescriptor.cs" />
+    <Compile Include="Metal\MTLTileRenderPipelineColorAttachmentDescriptorTests.cs" />
+    <Compile Include="AVFoundation\AVDepthDataTests.cs" />
+    <Compile Include="CoreAnimation\CATextLayerTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
@@ -714,6 +754,7 @@
     <Folder Include="VideoToolbox\" />
     <Folder Include="shared\" />
     <Folder Include="shared\ObjCRuntime\" />
+    <Folder Include="Simd\" />
     <Folder Include="PushKit\" />
     <Folder Include="ModelIO\" />
     <Folder Include="GameplayKit\" />
@@ -727,6 +768,11 @@
     <Folder Include="System.Net.Http\" />
     <Folder Include="HttpClient\" />
     <Folder Include="OpenGLES\" />
+    <Folder Include="HomeKit\" />
+    <Folder Include="ARKit\" />
+    <Folder Include="CoreML\" />
+    <Folder Include="PdfKit\" />
+    <Folder Include="FileProvider\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />
@@ -739,7 +785,6 @@
     <Content Include="drum01.mp3" />
   </ItemGroup>
   <ItemGroup>
-    <InterfaceDefinition Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="EmptyNib.xib" />
     <InterfaceDefinition Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="LaunchScreen.storyboard" />
   </ItemGroup>
   <ItemGroup>
@@ -762,6 +807,7 @@
     <BundleResource Include="Resources\xamarin1.png" />
     <BundleResource Include="Resources\xamarin2.png" />
     <BundleResource Include="xamvideotest.mp4" />
+    <BundleResource Include="CoreImage\xamarinmonkey.heic" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Security\openssl_crt.der">
@@ -780,6 +826,9 @@
     <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-76%402x.png" />
     <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-83.5%402x.png" />
   </ItemGroup>
+  <PropertyGroup>
+    <TestLibrariesDirectory>..\..\tests\test-libraries</TestLibrariesDirectory>
+  </PropertyGroup>
   <ItemGroup>
     <GeneratedTestInput Include="..\..\tests\test-libraries\*.m" />
     <GeneratedTestInput Include="..\..\tests\test-libraries\*.h" />
@@ -789,6 +838,6 @@
     <GeneratedTestOutput Include="ObjCRuntime\RegistrarTest.generated.cs" />
   </ItemGroup>
   <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)">
-    <Exec Command="make -j8 -C ..\..\tests\test-libraries" />
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
   </Target>
 </Project>

@@ -1,3 +1,8 @@
+# ARKit
+
+## This method is manually bound.
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPointCloud::GetRawPoints(): simd type: vector_float3
+
 # AVFoundation
 
 ## We only bind "finished" as we cannot use [Bind] here as it would break compatibility with iOS 6.x
@@ -28,6 +33,16 @@
 
 ## native use `NSUInteger` not a real enum - that's why there's a `[Native]`
 !unknown-native-enum! AVAudioSessionInterruptionFlags bound
+
+
+# CoreFoundation
+
+## we already expose the NSURLFileProtection* constants
+!missing-field! kCFURLFileProtectionComplete not bound
+!missing-field! kCFURLFileProtectionCompleteUnlessOpen not bound
+!missing-field! kCFURLFileProtectionCompleteUntilFirstUserAuthentication not bound
+!missing-field! kCFURLFileProtectionKey not bound
+!missing-field! kCFURLFileProtectionNone not bound
 
 
 # CoreGraphics
@@ -68,12 +83,37 @@
 ## part of category GKScore_Deprecated
 !missing-selector! GKScore::playerID not bound
 
-
 # Intents
 
 ## not exposed by our API (better use the OS version)
 !missing-field! IntentsVersionNumber not bound
 !missing-field! IntentsVersionString not bound
+
+## new (Xcode9) @required members of an older type cannot be made abstract
+!incorrect-protocol-member! INSpeakable::alternativeSpeakableMatches is REQUIRED and should be abstract
+!incorrect-protocol-member! INSpeakable::vocabularyIdentifier is REQUIRED and should be abstract
+
+## new types that has deprecated members (likely to be removed from headers at some point)
+!missing-selector! +INCallDestinationTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INCallDestinationTypeResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INCallRecordTypeOptionsResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INCallRecordTypeOptionsResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INAccountTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INAccountTypeResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INBalanceTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INBalanceTypeResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INDateSearchTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INDateSearchTypeResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INLocationSearchTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INLocationSearchTypeResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INNoteContentTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INNoteContentTypeResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INNotebookItemTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INNotebookItemTypeResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INTaskStatusResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INTaskStatusResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INVisualCodeTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INVisualCodeTypeResolutionResult::successWithResolvedValue: not bound
 
 
 # CloudKit
@@ -83,6 +123,13 @@
 ## we offer a better managed API using another selector
 !missing-selector! CKRecord::objectForKeyedSubscript: not bound
 !missing-selector! CKRecord::setObject:forKeyedSubscript: not bound
+
+
+# PassKit
+
+## made optional in xcode9 beta 3 since they were replaced with newer API
+!incorrect-protocol-member! PKPaymentAuthorizationControllerDelegate::paymentAuthorizationController:didAuthorizePayment:completion: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! PKPaymentAuthorizationViewControllerDelegate::paymentAuthorizationViewController:didAuthorizePayment:completion: is OPTIONAL and should NOT be abstract
 
 
 # Metal
@@ -168,7 +215,6 @@
 !incorrect-protocol-member! MDLMeshBufferZone::allocator is REQUIRED and should be abstract
 !incorrect-protocol-member! MDLMeshBufferZone::capacity is REQUIRED and should be abstract
 
-
 # Security
 
 ## part of mscorlib.dll -> mcs/class/corlib/CommonCrypto/CommonCrypto.cs to implement RNGCryptoServiceProvider
@@ -198,6 +244,16 @@
 !missing-selector! +UIView::layerClass not bound
 
 
+# Vision
+
+## we do not expose internal framework versions
+!missing-field! VNVisionVersionNumber not bound
+
+## called indirectly (there's a required native layer for them)
+!missing-pinvoke! VNImagePointForFaceLandmarkPoint is not bound
+!missing-pinvoke! VNNormalizedFaceBoundingBoxPointForLandmarkPoint is not bound
+
+
 # non-imported headers
 
 ## objc runtime
@@ -206,3 +262,23 @@
 ## CoreLocation
 # We have our own managed ctor
 !missing-pinvoke! CLLocationCoordinate2DMake is not bound
+
+## PDFKit
+# The following enums are bound as PdfFoo, lowercase Pdf prefix
+!missing-enum! PDFActionNamedName not bound
+!missing-enum! PDFAreaOfInterest not bound
+!missing-enum! PDFBorderStyle not bound
+!missing-enum! PDFDisplayBox not bound
+!missing-enum! PDFDisplayDirection not bound
+!missing-enum! PDFDisplayMode not bound
+!missing-enum! PDFDocumentPermissions not bound
+!missing-enum! PDFInterpolationQuality not bound
+!missing-enum! PDFLineStyle not bound
+!missing-enum! PDFMarkupType not bound
+!missing-enum! PDFTextAnnotationIconType not bound
+!missing-enum! PDFWidgetCellState not bound
+!missing-enum! PDFWidgetControlType not bound
+
+# WebKit
+## Header file missing from umbrella header, but used by WKWebView, which IS included in the umbrella.
+!unknown-type! WKSnapshotConfiguration bound

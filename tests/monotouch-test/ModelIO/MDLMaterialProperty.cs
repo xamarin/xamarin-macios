@@ -33,6 +33,13 @@ using MonoTouch.ModelIO;
 using MonoTouch.ObjCRuntime;
 #endif
 using OpenTK;
+using MatrixFloat2x2 = global::OpenTK.NMatrix2;
+using MatrixFloat3x3 = global::OpenTK.NMatrix3;
+using MatrixFloat4x4 = global::OpenTK.NMatrix4;
+using VectorFloat3 = global::OpenTK.NVector3;
+#if !TEST_BINDINGS_UNAVAILABLE
+using Bindings.Test;
+#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.ModelIO {
@@ -101,6 +108,7 @@ namespace MonoTouchFixtures.ModelIO {
 			Vector3 V3;
 			Vector4 V4;
 			Matrix4 M4;
+			MatrixFloat4x4 M4x4;
 			MDLTextureSampler tsv;
 			NSUrl url;
 
@@ -122,6 +130,7 @@ namespace MonoTouchFixtures.ModelIO {
 				V3 = new Vector3 (3, 4, 5);
 				V4 = new Vector4 (6, 7, 8, 9);
 				M4 = new Matrix4 (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+				M4x4 = new MatrixFloat4x4 (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
 				tsv = new MDLTextureSampler ();
 				url = new NSUrl ("http://xamarin.com");
 
@@ -161,7 +170,11 @@ namespace MonoTouchFixtures.ModelIO {
 
 				// Looks like the URLValue can't change after construction
 				obj.UrlValue = url;
-				Assert.IsNull (obj.UrlValue, "2 UrlValue");
+				if (TestRuntime.CheckXcodeVersion (9, 0)) {
+					Assert.AreSame (url, obj.UrlValue, "2 UrlValue");
+				} else {
+					Assert.IsNull (obj.UrlValue, "2 UrlValue");
+				}
 			}
 
 
@@ -183,6 +196,17 @@ namespace MonoTouchFixtures.ModelIO {
 				
 			using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, M4)) {
 				Asserts.AreEqual (M4, obj.Matrix4x4, "7 Matrix4x4");
+#if !TEST_BINDINGS_UNAVAILABLE
+				Asserts.AreEqual (CFunctions.GetMatrixFloat4x4 (obj, "matrix4x4"), obj.MatrixFloat4x4, "7b MatrixFloat4x4");
+#endif
+				Asserts.AreEqual (MatrixFloat4x4.Transpose ((MatrixFloat4x4) M4), obj.MatrixFloat4x4, "7c MatrixFloat4x4");
+			}
+
+			using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, M4x4)) {
+#if !TEST_BINDINGS_UNAVAILABLE
+				Asserts.AreEqual (CFunctions.GetMatrixFloat4x4 (obj, "matrix4x4"), obj.MatrixFloat4x4, "7' MatrixFloat4x4");
+#endif
+				Asserts.AreEqual (M4x4, obj.MatrixFloat4x4, "7'b MatrixFloat4x4");
 			}
 
 			using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, V4)) {

@@ -48,9 +48,18 @@ endif
 # so disable 'readlinkat' by setting using ac_cv_func_readlinkat=no
 # these can be removed when our min ios/osx version (at runtime) is macOS 10.10+ or iOS 8+
 
+# ld: weak import of symbol '_futimens' not supported because of option: -no_weak_imports for architecture x86_64
+# ld: weak import of symbol '_utimensat' not supported because of option: -no_weak_imports for architecture x86_64
+# headers say these methods were introduced in 10.13:
+# usr/include/sys/stat.h:int	futimens(int __fd, const struct timespec __times[2]) __API_AVAILABLE(macosx(10.13), ios(11.0), tvos(11.0), watchos(4.0));
+# int	utimensat(int __fd, const char *__path, const struct timespec __times[2], int __flag) __API_AVAILABLE(macosx(10.13), ios(11.0), tvos(11.0), watchos(4.0));
+# so disable 'futimens' and 'utimensat'
+
 COMMON_ACVARS =  \
 	ac_cv_func_fstatat=no \
 	ac_cv_func_readlinkat=no \
+	ac_cv_func_futimens=no \
+	ac_cv_func_utimensat=no \
 
 COMMON_LDFLAGS=-Wl,-no_weak_imports
 
@@ -491,10 +500,7 @@ WATCHBCL_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--cache-file=../watchbcl.config.cache \
 			--with-glib=embedded \
 			--enable-minimal=com	\
-			--with-profile2=no \
-			--with-profile4=no \
 			--with-profile4_x=no \
-			--with-profile4_5=no \
 			--with-monotouch=no \
 			--with-monotouch_watch=yes \
 			--with-monotouch_tv=no \
@@ -639,10 +645,6 @@ IOS_BCL_TARGETS +=                                                              
 	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/repl/$(file).dll)                              \
 	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/repl/$(file).pdb)                          \
 
-ifndef IKVM
-IOS_BCL_TARGETS += $(PREFIX)/bin/btouch-mono
-endif
-
 WATCH_BCL_TARGETS += \
 	$(foreach file,$(WATCHOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/$(file).dll)                                        \
 	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(WATCHOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.WatchOS/$(file).pdb) \
@@ -651,10 +653,6 @@ WATCH_BCL_TARGETS += \
 	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/$(file).dll)                              \
 	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/$(file).pdb)                          \
 
-ifndef IKVM
-WATCH_BCL_TARGETS += $(PREFIX)/bin/bwatch-mono
-endif
-
 TVOS_BCL_TARGETS += \
 	$(foreach file,$(TVOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/$(file).dll)                                        \
 	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(TVOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.TVOS/$(file).pdb) \
@@ -662,10 +660,6 @@ TVOS_BCL_TARGETS += \
 	$(foreach file,$(TVOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/Facades/$(file).dll)                         \
 	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).dll)                              \
 	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).pdb)                          \
-
-ifndef IKVM
-TVOS_BCL_TARGETS += $(PREFIX)/bin/btv-mono
-endif
 
 $(PREFIX)/lib/mono/Xamarin.iOS/repl/%: $(BUILD_DESTDIR)/bcl/monotouch_runtime/% | $(PREFIX)/lib/mono/Xamarin.iOS/repl
 	$(Q) install -m 0755 $< $@
@@ -679,11 +673,6 @@ $(PREFIX)/lib/mono/2.1/repl/%: $(BUILD_DESTDIR)/bcl/monotouch_runtime/% | $(PREF
 $(PREFIX)/lib/mono/2.1/%: $(BUILD_DESTDIR)/bcl/monotouch/% | $(PREFIX)/lib/mono/2.1 $(PREFIX)/lib/mono/2.1/Facades
 	$(Q) install -m 0755 $< $@
 
-ifndef IKVM
-$(PREFIX)/bin/btouch-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
-	$(Q) install -s -m 0755 $< $@
-endif
-
 $(PREFIX)/lib/mono/Xamarin.WatchOS/repl/%: $(BUILD_DESTDIR)/bcl/monotouch_watch_runtime/% | $(PREFIX)/lib/mono/Xamarin.WatchOS/repl
 	$(Q) install -m 0755 $< $@
 
@@ -695,18 +684,6 @@ $(PREFIX)/lib/mono/Xamarin.TVOS/repl/%: $(BUILD_DESTDIR)/bcl/monotouch_tv_runtim
 
 $(PREFIX)/lib/mono/Xamarin.TVOS/%: $(BUILD_DESTDIR)/bcl/monotouch_tv/% | $(PREFIX)/lib/mono/Xamarin.TVOS $(PREFIX)/lib/mono/Xamarin.TVOS/Facades
 	$(Q) install -m 0755 $< $@
-
-ifndef IKVM
-$(PREFIX)/bin/btv-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
-	$(Q) install -s -m 0755 $< $@
-
-ifeq ($(WATCH_MONO_PATH),$(MONO_PATH))
-$(PREFIX)/bin/bwatch-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
-else
-$(PREFIX)/bin/bwatch-mono: $(BUILD_DESTDIR)/watchbcl/bin/mono | $(PREFIX)/bin
-endif
-	$(Q) install -s -m 0755 $< $@
-endif
 
 # copy to temporary directory before signing
 # otherwise we end up re-signing if installing into a different directory.
@@ -796,6 +773,7 @@ SIM_ACVARS = \
 	$(COMMON_ACVARS) \
 	ac_cv_func_clock_nanosleep=no \
 	mono_cv_uscore=yes \
+	ac_cv_func_system=no \
 
 define SimulatorBuildTemplate
 
@@ -989,7 +967,9 @@ WATCHSIMULATOR_ACVARS =  \
 	ac_cv_func_execv=no \
 	ac_cv_func_execve=no \
 	ac_cv_func_execvp=no \
-	ac_cv_func_signal=no
+	ac_cv_func_signal=no \
+	ac_cv_func_futimens=no \
+	ac_cv_func_utimensat=no \
 
 WATCHSIMULATOR_ENVIRONMENT =                  \
 	$(WATCHSIMULATOR_ACVARS)                         \
@@ -1139,7 +1119,9 @@ TVSIMULATOR_ACVARS =  \
 	ac_cv_func_execv=no \
 	ac_cv_func_execve=no \
 	ac_cv_func_execvp=no \
-	ac_cv_func_signal=no
+	ac_cv_func_signal=no \
+	ac_cv_func_futimens=no \
+	ac_cv_func_utimensat=no \
 
 TVSIMULATOR_ENVIRONMENT =                  \
 	$(TVSIMULATOR_ACVARS)                  \
@@ -1843,6 +1825,7 @@ endif
 
 LLVM_BASE_CONFIGURE_FLAGS=--enable-libcpp --enable-optimized --enable-assertions=no --disable-jit --disable-docs --disable-doxygen
 LLVM_CXXFLAGS=$(CCACHE_CXXFLAGS)
+LLVM_BASE_CONFIGURE_ENVIRONMENT=$(COMMON_ACVARS)
 
 # This is used just for linking with the 32 bit cross compiler
 # FIXME: Avoid building the libs not needed by mono
@@ -1850,6 +1833,7 @@ LLVM_CXXFLAGS=$(CCACHE_CXXFLAGS)
 	@mkdir -p llvm/
 	@echo "Configuring llvm"
 	@cd llvm && \
+	$(LLVM_BASE_CONFIGURE_ENVIRONMENT) \
 	$(abspath $(LLVM_PATH)/configure) --prefix=$$PWD/usr --build=i386-apple-darwin10.7  --enable-targets="arm" $(LLVM_BASE_CONFIGURE_FLAGS) --cache-file=../llvm.config.cache CC="$(CCACHE)clang" CXX="$(CCACHE)clang++" CXXFLAGS="$(LLVM_CXXFLAGS)" > $@.log 2>&1 || (echo "Configuring llvm failed:" && cat $@.log | sed "s/^/    /" && exit 1)
 	$(Q) @touch $@
 	@echo Configured llvm
@@ -1858,6 +1842,7 @@ LLVM_CXXFLAGS=$(CCACHE_CXXFLAGS)
 	@mkdir -p llvm64/
 	@echo "Configuring llvm64"
 	@cd llvm64 && \
+	$(LLVM_BASE_CONFIGURE_ENVIRONMENT) \
 	$(abspath $(LLVM_PATH)/configure) --prefix=$$PWD/usr --enable-targets="arm arm64" $(LLVM_BASE_CONFIGURE_FLAGS) --cache-file=../llvm64.config.cache CC="$(CCACHE)clang" CXX="$(CCACHE)clang++" CXXFLAGS="-Qunused-arguments" > $@.log 2>&1 || (echo "Configuring llvm64 failed:" && cat $@.log | sed "s/^/    /" && exit 1)
 	$(Q) @touch $@
 	@echo "Configured llvm64"
@@ -2197,6 +2182,8 @@ $(eval $(call GenerateCrossOffsets,aarch64-apple-darwin10,$(TOP)/builds/crosstv/
 	$(MAKE) -C crosstv/mono install
 	$(Q) touch $@
 
+build-crosstv: .stamp-build-crosstv
+
 TV_WATCH_TARGETS = \
 	$(PREFIX)/bin/aarch64-unknown-darwin-mono-sgen  \
 
@@ -2208,6 +2195,6 @@ $(PREFIX)/bin/aarch64-unknown-darwin-mono-sgen: $(BUILD_DESTDIR)/crosstv/bin/aar
 install-crosstv: install-llvm $(TV_WATCH_TARGETS)
 
 clean-crosstv:
-	-rm -rf crosstv .stamp-configure-crosstv crosstv.config.cache
+	-rm -rf crosstv .stamp-configure-crosstv .stamp-build-crosstv crosstv.config.cache
 
 crosstv: build-crosstv install-crosstv

@@ -91,7 +91,13 @@ namespace XamCore.AppKit {
 
 	// Untyped enum (NSAttributedString.h). Only used as a convience enum in our API.
 	[Flags]
-	public enum NSSpellingState : int {
+	public enum NSSpellingState :
+#if XAMCORE_4_0
+		nint
+#else
+		int
+#endif
+	{
 		None = 0x0,
 		Spelling = 0x1,
 		Grammar = 0x2

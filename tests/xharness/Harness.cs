@@ -62,6 +62,7 @@ namespace xharness
 		public int Verbosity { get; set; }
 		public Log HarnessLog { get; set; }
 		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
+		public HashSet<string> Labels { get; } = new HashSet<string> ();
 
 		// This is the maccore/tests directory.
 		string root_directory;
@@ -89,7 +90,7 @@ namespace xharness
 			}
 		}
 
-		public List<TestProject> IOSTestProjects { get; set; } = new List<TestProject> ();
+		public List<iOSTestProject> IOSTestProjects { get; set; } = new List<iOSTestProject> ();
 		public List<MacTestProject> MacTestProjects { get; set; } = new List<MacTestProject> ();
 
 		public List<BCLTest> IOSBclTests { get; set; } = new List<BCLTest> ();
@@ -116,7 +117,7 @@ namespace xharness
 
 		// Run
 		public AppRunnerTarget Target { get; set; }
-		public string SdkRoot { get; set; } = "/Applications/Xcode.app";
+		public string SdkRoot { get; set; }
 		public string Configuration { get; set; } = "Debug";
 		public string LogFile { get; set; }
 		public string LogDirectory { get; set; } = Environment.CurrentDirectory;
@@ -125,6 +126,7 @@ namespace xharness
 		public bool DryRun { get; set; } // Most things don't support this. If you need it somewhere, implement it!
 		public string JenkinsConfiguration { get; set; }
 		public Dictionary<string, string> EnvironmentVariables { get; set; } = new Dictionary<string, string> ();
+		public string MarkdownSummaryPath { get; set; }
 
 		public Harness ()
 		{
@@ -145,11 +147,23 @@ namespace xharness
 			}
 		}
 
+		Version xcode_version;
+		public Version XcodeVersion {
+			get {
+				if (xcode_version == null) {
+					var doc = new XmlDocument ();
+					doc.Load (Path.Combine (XcodeRoot, "Contents", "version.plist"));
+					xcode_version = Version.Parse (doc.SelectSingleNode ("//key[text() = 'CFBundleShortVersionString']/following-sibling::string").InnerText);
+				}
+				return xcode_version;
+			}
+		}
+
 		object mlaunch_lock = new object ();
 		string DownloadMlaunch ()
 		{
 			// NOTE: the filename part in the url must be unique so that the caching logic works properly.
-			var mlaunch_url = "http://bosstoragemirror.blob.core.windows.net/public-builder/mlaunch/mlaunch-af02fb1c25d31ff3c5b4a3753fdb4b1783294294.zip";
+			var mlaunch_url = "https://dl.xamarin.com/uploads/3euiqmcoizk/mlaunch-18deb964b64886af65fb1760b19adeee58dd8bea.zip";
 			var extraction_dir = Path.Combine (Path.GetTempPath (), Path.GetFileNameWithoutExtension (mlaunch_url));
 			var mlaunch_path = Path.Combine (extraction_dir, "bin", "mlaunch");
 
@@ -254,6 +268,8 @@ namespace xharness
 			INCLUDE_MAC = make_config.ContainsKey ("INCLUDE_MAC") && !string.IsNullOrEmpty (make_config ["INCLUDE_MAC"]);
 			MAC_DESTDIR = make_config ["MAC_DESTDIR"];
 			IOS_DESTDIR = make_config ["IOS_DESTDIR"];
+			if (string.IsNullOrEmpty (SdkRoot))
+				SdkRoot = make_config ["XCODE_DEVELOPER_ROOT"];
 		}
 		 
 		void AutoConfigureMac ()
@@ -292,26 +308,31 @@ namespace xharness
 			var fsharp_test_suites = new string [] { "fsharp" };
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
 			var bcl_suites = new string [] { "mscorlib", "System", "System.Core", "System.Data", "System.Net.Http", "System.Numerics", "System.Runtime.Serialization", "System.Transactions", "System.Web.Services", "System.Xml", "System.Xml.Linq", "Mono.Security", "System.ComponentModel.DataAnnotations", "System.Json", "System.ServiceModel.Web", "Mono.Data.Sqlite" };
-			IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-0.csproj")), false));
-			IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-1.csproj")), false));
+			var bcl_skip_watchos = new string [] {
+				"Mono.Security",
+			};
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-0.csproj")), false));
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-1.csproj")), false));
 			foreach (var p in test_suites)
-				IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj"))));
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj"))));
 			foreach (var p in fsharp_test_suites)
-				IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj"))));
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj"))));
 			foreach (var p in library_projects)
-				IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj")), false));
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj")), false));
 			foreach (var p in fsharp_library_projects)
-				IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false));
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false));
 
 			foreach (var p in bcl_suites) {
-				IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + ".csproj"))));
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + ".csproj"))) {
+					SkipwatchOSVariation = bcl_skip_watchos.Contains (p),
+				});
 				IOSBclTests.Add (new BCLTest (p));
 			}
 			
-			IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
-			IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker-ios", "dont link", "dont link.csproj"))));
-			IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker-ios", "link all", "link all.csproj"))));
-			IOSTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker-ios", "link sdk", "link sdk.csproj"))));
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker-ios", "dont link", "dont link.csproj"))));
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker-ios", "link all", "link all.csproj"))));
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker-ios", "link sdk", "link sdk.csproj"))));
 
 			WatchOSContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchContainer"));
 			WatchOSAppTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchApp"));
@@ -456,34 +477,43 @@ namespace xharness
 				if (!File.Exists (file))
 					throw new FileNotFoundException (file);
 
-				var watchos = new WatchOSTarget () {
-					TemplateProjectPath = file,
-					Harness = this,
-				};
-				watchos.Execute ();
-				watchos_targets.Add (watchos);
+				if (!proj.SkipwatchOSVariation) {
+					var watchos = new WatchOSTarget () {
+						TemplateProjectPath = file,
+						Harness = this,
+						TestProject = proj,
+					};
+					watchos.Execute ();
+					watchos_targets.Add (watchos);
+				}
 
-				var tvos = new TVOSTarget () {
-					TemplateProjectPath = file,
-					Harness = this,
-				};
-				tvos.Execute ();
-				tvos_targets.Add (tvos);
+				if (!proj.SkiptvOSVariation) {
+					var tvos = new TVOSTarget () {
+						TemplateProjectPath = file,
+						Harness = this,
+						TestProject = proj,
+					};
+					tvos.Execute ();
+					tvos_targets.Add (tvos);
+				}
 
-				var unified = new UnifiedTarget () {
-					TemplateProjectPath = file,
-					Harness = this,
-				};
-				unified.Execute ();
-				unified_targets.Add (unified);
+				if (!proj.SkipiOSVariation) {
+					var unified = new UnifiedTarget () {
+						TemplateProjectPath = file,
+						Harness = this,
+						TestProject = proj,
+					};
+					unified.Execute ();
+					unified_targets.Add (unified);
 
-				var today = new TodayExtensionTarget
-				{
-					TemplateProjectPath = file,
-					Harness = this,
-				};
-				today.Execute ();
-				today_targets.Add (today);
+					var today = new TodayExtensionTarget {
+						TemplateProjectPath = file,
+						Harness = this,
+						TestProject = proj,
+					};
+					today.Execute ();
+					today_targets.Add (today);
+				}
 			}
 
 			SolutionGenerator.CreateSolution (this, watchos_targets, "watchos");
@@ -735,7 +765,7 @@ namespace xharness
 				return report;
 			}
 
-			var symbolicated = new LogFile ("Symbolicated crash report", report.Path + ".symbolicated");
+			var symbolicated = new LogFile ("Symbolicated crash report", Path.ChangeExtension (report.Path, ".symbolicated.log"));
 			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (XcodeRoot, "Contents", "Developer") } };
 			var rv = await ProcessHelper.ExecuteCommandAsync (symbolicatecrash, StringUtils.Quote (report.Path), symbolicated, TimeSpan.FromMinutes (1), environment);
 			if (rv.Succeeded) {;

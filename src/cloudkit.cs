@@ -73,6 +73,10 @@ namespace XamCore.CloudKit {
 
 		[Export ("hasiCloudAccount")]
 		bool HasICloudAccount { get; }
+
+		[Watch (4, 0), NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[Export ("contactIdentifiers", ArgumentSemantic.Copy)]
+		string[] ContactIdentifiers { get; }
 	}
 
 	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
@@ -178,7 +182,7 @@ namespace XamCore.CloudKit {
 	interface CKContainer {
 
 		[NoWatch]
-		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use CurrentUserDefaultName instead")]
+		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use 'CurrentUserDefaultName' instead.")]
 		[Field ("CKOwnerDefaultName")]
 		NSString OwnerDefaultName { get; }
 
@@ -236,7 +240,7 @@ namespace XamCore.CloudKit {
 		[Async]
 		void DiscoverAllIdentities (Action<CKUserIdentity[], NSError> completionHandler);
 		
-		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use DiscoverAllIdentities instead")]
+		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use 'DiscoverAllIdentities' instead.")]
 		[NoWatch]
 		[NoTV]
 		[Export ("discoverAllContactUserInfosWithCompletionHandler:")]
@@ -253,7 +257,7 @@ namespace XamCore.CloudKit {
 		[Async]
 		void DiscoverUserIdentityWithPhoneNumber (string phoneNumber, Action<CKUserIdentity, NSError> completionHandler);
 		
-		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use DiscoverUserIdentityWithEmailAddress instead")]
+		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use 'DiscoverUserIdentityWithEmailAddress' instead.")]
 		[NoWatch]
 		[Export ("discoverUserInfoWithEmailAddress:completionHandler:")]
 		[Async]
@@ -264,7 +268,7 @@ namespace XamCore.CloudKit {
 		[Async]
 		void DiscoverUserIdentity (CKRecordID userRecordID, Action<CKUserIdentity, NSError> completionHandler);
 	
-		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use DiscoverUserIdentity instead")]
+		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use 'DiscoverUserIdentity' instead.")]
 		[NoWatch]
 		[Export ("discoverUserInfoWithUserRecordID:completionHandler:")]
 		[Async]
@@ -395,7 +399,7 @@ namespace XamCore.CloudKit {
 
 	[NoWatch]
 	[NoTV]
-	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use CKDiscoverAllUserIdentitiesOperation instead")]
+	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use 'CKDiscoverAllUserIdentitiesOperation' instead.")]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (CKOperation))]
 	interface CKDiscoverAllContactsOperation {
@@ -404,7 +408,7 @@ namespace XamCore.CloudKit {
 		Action<CKDiscoveredUserInfo[], NSError> DiscoverAllContactsHandler { get; set; }
 	}
 
-	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use CKUserIdentity instead")]
+	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use 'CKUserIdentity' instead.")]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
@@ -413,11 +417,11 @@ namespace XamCore.CloudKit {
 		[Export ("userRecordID", ArgumentSemantic.Copy)]
 		CKRecordID UserRecordId { get; }
 
-		[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0, Deprecated = Platform.Mac_10_11 | Platform.iOS_9_0, Message = "Use DisplayContact.GivenName")]
+		[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0, Deprecated = Platform.Mac_10_11 | Platform.iOS_9_0, Message = "Use 'DisplayContact.GivenName'.")]
 		[Export ("firstName", ArgumentSemantic.Copy)]
 		string FirstName { get; }
 
-		[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0, Deprecated = Platform.Mac_10_11 | Platform.iOS_9_0, Message = "Use DisplayContact.FamilyName")]
+		[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0, Deprecated = Platform.Mac_10_11 | Platform.iOS_9_0, Message = "Use 'DisplayContact.FamilyName'.")]
 		[Export ("lastName", ArgumentSemantic.Copy)]
 		string LastName { get; }
 
@@ -435,7 +439,7 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	delegate void CKDiscoverUserInfosCompletionHandler (NSDictionary emailsToUserInfos, NSDictionary userRecordIdsToUserInfos, NSError operationError);
 
-	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use CKDiscoverUserIdentitiesOperation instead")]
+	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use 'CKDiscoverUserIdentitiesOperation' instead.")]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[NoWatch]
 	[BaseType (typeof (CKOperation))]
@@ -489,6 +493,8 @@ namespace XamCore.CloudKit {
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (CKOperation))]
+	[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+		Message = "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
 	interface CKFetchNotificationChangesOperation {
 		[Export ("initWithPreviousServerChangeToken:")]
 		IntPtr Constructor ([NullAllowed] CKServerChangeToken previousServerChangeToken);
@@ -530,7 +536,7 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	delegate void CKFetchRecordChangesHandler (CKServerChangeToken serverChangeToken, NSData clientChangeTokenData, NSError operationError);
 
-	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use CKFetchRecordZoneChangesOperation instead")]
+	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use 'CKFetchRecordZoneChangesOperation' instead.")]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[NoWatch]
 	[BaseType (typeof (CKDatabaseOperation))]
@@ -578,16 +584,16 @@ namespace XamCore.CloudKit {
 		}
 	}
 
-	[iOS (10,0), Watch (3,0), TV (10,0), Mac (12,10, onlyOn64 : true)]
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10, 12, onlyOn64 : true)]
 	delegate void CKFetchRecordZoneChangesWithIDWasDeletedHandler (CKRecordID recordID, NSString recordType);
 
-	[iOS (10,0), Watch (3,0), TV (10,0), Mac (12,10, onlyOn64 : true)]
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 	delegate void CKFetchRecordZoneChangesTokensUpdatedHandler (CKRecordZoneID recordZoneID, CKServerChangeToken serverChangeToken, NSData clientChangeTokenData);
 
-	[iOS (10,0), Watch (3,0), TV (10,0), Mac (12,10, onlyOn64 : true)]
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 	delegate void CKFetchRecordZoneChangesFetchCompletedHandler (CKRecordZoneID recordZoneID, CKServerChangeToken serverChangeToken, NSData clientChangeTokenData, bool moreComing, NSError recordZoneError);
 
-	[iOS (10,0), Watch (3,0), TV (10,0), Mac (12,10, onlyOn64 : true)]
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(CKDatabaseOperation))]
 	interface CKFetchRecordZoneChangesOperation
 	{
@@ -622,7 +628,7 @@ namespace XamCore.CloudKit {
 	
 	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	interface CKFetchRecordZoneChangesOptions : NSSecureCoding
+	interface CKFetchRecordZoneChangesOptions : NSSecureCoding, NSCopying
 	{
 		[NullAllowed, Export ("previousServerChangeToken", ArgumentSemantic.Copy)]
 		CKServerChangeToken PreviousServerChangeToken { get; set; }
@@ -758,6 +764,8 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (CKOperation))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You must call -[CKMarkNotificationsReadOperation initWithNotificationIDsToMarkRead:]
+	[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+		Message = "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
 	interface CKMarkNotificationsReadOperation {
 
 		[DesignatedInitializer]
@@ -778,6 +786,7 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
 	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
 	[BaseType (typeof (CKOperation))]
+	[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0)]
 	interface CKModifyBadgeOperation {
 
 		[Export ("initWithBadgeValue:")]
@@ -794,7 +803,7 @@ namespace XamCore.CloudKit {
 		}
 	}
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[iOS (8,0), Mac (10,10, onlyOn64 : true), Watch (3,0)]
 	delegate void CKModifyRecordsOperationHandler (CKRecord [] savedRecords, CKRecordID [] deletedRecordIds, NSError operationError);
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
@@ -968,6 +977,30 @@ namespace XamCore.CloudKit {
 		[iOS (9,0)][Mac (10,11)]
 		[NullAllowed, Export ("category")]
 		string Category { get; }
+
+		[Watch (4, 0), NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[NullAllowed, Export ("title")]
+		string Title { get; }
+
+		[Watch (4, 0), NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[NullAllowed, Export ("titleLocalizationKey")]
+		string TitleLocalizationKey { get; }
+
+		[Watch (4, 0), NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[NullAllowed, Export ("titleLocalizationArgs", ArgumentSemantic.Copy)]
+		string[] TitleLocalizationArgs { get; }
+
+		[Watch (4, 0), NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[NullAllowed, Export ("subtitle")]
+		string Subtitle { get; }
+
+		[Watch (4, 0), NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[NullAllowed, Export ("subtitleLocalizationKey")]
+		string SubtitleLocalizationKey { get; }
+
+		[Watch (4, 0), NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[NullAllowed, Export ("subtitleLocalizationArgs", ArgumentSemantic.Copy)]
+		string[] SubtitleLocalizationArgs { get; }
 	}
 
 	[Watch (3,0)]
@@ -989,7 +1022,7 @@ namespace XamCore.CloudKit {
 		[NullAllowed, Export ("recordID", ArgumentSemantic.Copy)]
 		CKRecordID RecordId { get; }
 
-		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use DatabaseScope instead")]
+		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use 'DatabaseScope' instead.")]
 		[Export ("isPublicDatabase", ArgumentSemantic.UnsafeUnretained)]
 		bool IsPublicDatabase { get; }
 		
@@ -1021,6 +1054,28 @@ namespace XamCore.CloudKit {
 		CKDatabaseScope DatabaseScope { get; }
 	}
 
+	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64 : true), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface CKOperationConfiguration : NSSecureCoding, NSCopying {
+		[NullAllowed, Export ("container", ArgumentSemantic.Strong)]
+		CKContainer Container { get; set; }
+
+		[Export ("qualityOfService", ArgumentSemantic.Assign)]
+		NSQualityOfService QualityOfService { get; set; }
+
+		[Export ("allowsCellularAccess")]
+		bool AllowsCellularAccess { get; set; }
+
+		[Export ("longLived")]
+		bool LongLived { [Bind ("isLongLived")] get; set; }
+
+		[Export ("timeoutIntervalForRequest")]
+		double TimeoutIntervalForRequest { get; set; }
+
+		[Export ("timeoutIntervalForResource")]
+		double TimeoutIntervalForResource { get; set; }
+	}
+
 	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSOperation))]
@@ -1035,15 +1090,19 @@ namespace XamCore.CloudKit {
 		// [Export ("activityStart")]
 		// ulong ActivityStart ();
 
+		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+			Message = "Use 'CKOperationConfiguration' instead.")]
 		[NullAllowed, Export ("container", ArgumentSemantic.Retain)]
 		CKContainer Container { get; set; }
 
 		[NoWatch]
-		[Deprecated (PlatformName.iOS, 9,0, message: "Use QualityOfService property")]
-		[Deprecated (PlatformName.MacOSX, 10,11, message: "Use QualityOfService property")]
+		[Deprecated (PlatformName.iOS, 9,0, message: "Use 'QualityOfService' property.")]
+		[Deprecated (PlatformName.MacOSX, 10,11, message: "Use 'QualityOfService' property.")]
 		[Export ("usesBackgroundSession", ArgumentSemantic.UnsafeUnretained)]
 		bool UsesBackgroundSession { get; set; }
 
+		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+			Message = "Use 'CKOperationConfiguration' instead.")]
 		[Export ("allowsCellularAccess", ArgumentSemantic.UnsafeUnretained)]
 		bool AllowsCellularAccess { get; set; }
 
@@ -1055,14 +1114,20 @@ namespace XamCore.CloudKit {
 		[iOS (9,3)][Mac (10,11,4)]
 		[TV (9,2)]
 		[Export ("longLived")]
+		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+			Message = "Use 'CKOperationConfiguration' instead.")]
 		bool LongLived { [Bind ("isLongLived")] get; set; }
 
 		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 		[Export ("timeoutIntervalForRequest")]
+		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+			Message = "Use 'CKOperationConfiguration' instead.")]
 		double TimeoutIntervalForRequest { get; set; }
 
 		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 		[Export ("timeoutIntervalForResource")]
+		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+			Message = "Use 'CKOperationConfiguration' instead.")]
 		double TimeoutIntervalForResource { get; set; }
 
 		[iOS (9,3)][Mac (10,11,4)]
@@ -1070,6 +1135,38 @@ namespace XamCore.CloudKit {
 		[NullAllowed]
 		[Export ("longLivedOperationWasPersistedBlock", ArgumentSemantic.Strong)]
 		Action LongLivedOperationWasPersistedCallback { get; set; }		
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[Export ("configuration", ArgumentSemantic.Copy)]
+		CKOperationConfiguration Configuration { get; set; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[NullAllowed, Export ("group", ArgumentSemantic.Strong)]
+		CKOperationGroup Group { get; set; }
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64 : true), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor] 
+	interface CKOperationGroup : NSSecureCoding {
+
+		[Export ("operationGroupID")]
+		string OperationGroupId { get; }
+
+		[Export ("defaultConfiguration", ArgumentSemantic.Copy)]
+		CKOperationConfiguration DefaultConfiguration { get; set; }
+
+		[NullAllowed, Export ("name")]
+		string Name { get; set; }
+
+		[Export ("quantity")]
+		nuint Quantity { get; set; }
+
+		[Export ("expectedSendSize", ArgumentSemantic.Assign)]
+		CKOperationGroupTransferSize ExpectedSendSize { get; set; }
+
+		[Export ("expectedReceiveSize", ArgumentSemantic.Assign)]
+		CKOperationGroupTransferSize ExpectedReceiveSize { get; set; }
 	}
 
 	[Watch (3,0)]
@@ -1187,7 +1284,7 @@ namespace XamCore.CloudKit {
 #if XAMCORE_2_0
 		CKRecordID Id { get; }
 #else
-		[Obsolete ("Use Id instead")]
+		[Obsolete ("Use 'Id' instead.")]
 		CKRecordID RecordId { get; }
 #endif
 
@@ -1400,24 +1497,24 @@ namespace XamCore.CloudKit {
 	[BaseType (typeof (NSObject))]
 	interface CKSubscription : NSSecureCoding, NSCopying {
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use CKQuerySubscription")]
-		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use CKQuerySubscription")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKQuerySubscription'.")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKQuerySubscription'.")]
 		[Export ("initWithRecordType:predicate:options:")]
 		IntPtr Constructor (string recordType, NSPredicate predicate, CKSubscriptionOptions subscriptionOptions);
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use CKQuerySubscription")]
-		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use CKQuerySubscription")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKQuerySubscription'.")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKQuerySubscription'.")]
 		[DesignatedInitializer]
 		[Export ("initWithRecordType:predicate:subscriptionID:options:")]
 		IntPtr Constructor (string recordType, NSPredicate predicate, string subscriptionId, CKSubscriptionOptions subscriptionOptions);
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use CKRecordZoneSubscription")]
-		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use CKRecordZoneSubscription")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKRecordZoneSubscription'.")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKRecordZoneSubscription'.")]
 		[Export ("initWithZoneID:options:")]
 		IntPtr Constructor (CKRecordZoneID zoneId, CKSubscriptionOptions subscriptionOptions);
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use CKRecordZoneSubscription")]
-		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use CKRecordZoneSubscription")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKRecordZoneSubscription'.")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKRecordZoneSubscription'.")]
 		[DesignatedInitializer]
 		[Export ("initWithZoneID:subscriptionID:options:")]
 		IntPtr Constructor (CKRecordZoneID zoneId, string subscriptionId, CKSubscriptionOptions subscriptionOptions);
@@ -1428,18 +1525,18 @@ namespace XamCore.CloudKit {
 		[Export ("subscriptionType", ArgumentSemantic.UnsafeUnretained)]
 		CKSubscriptionType SubscriptionType { get; }
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use CKQuerySubscription")]
-		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use CKQuerySubscription")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKQuerySubscription'.")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKQuerySubscription'.")]
 		[Export ("recordType")]
 		string RecordType { get; }
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use CKQuerySubscription")]
-		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use CKQuerySubscription")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKQuerySubscription'.")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKQuerySubscription'.")]
 		[Export ("predicate", ArgumentSemantic.Copy)]
 		NSPredicate Predicate { get; }
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use CKQuerySubscriptionOptions")]
-		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use CKQuerySubscriptionOptions")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKQuerySubscriptionOptions'.")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKQuerySubscriptionOptions'.")]
 		[Export ("subscriptionOptions", ArgumentSemantic.UnsafeUnretained)]
 		CKSubscriptionOptions SubscriptionOptions { get; }
 
@@ -1447,8 +1544,8 @@ namespace XamCore.CloudKit {
 		[Export ("notificationInfo", ArgumentSemantic.Copy)]
 		CKNotificationInfo NotificationInfo { get; set; }
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use CKRecordZoneSubscription")]
-		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use CKRecordZoneSubscription")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKRecordZoneSubscription'.")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKRecordZoneSubscription'.")]
 		[Export ("zoneID", ArgumentSemantic.Copy)]
 		CKRecordZoneID ZoneID { get; set; }
 	}
@@ -1503,6 +1600,38 @@ namespace XamCore.CloudKit {
 		[iOS (9,0)][Mac (10,11)]
 		[NullAllowed, Export ("category")]
 		string Category { get; set; }
+
+		[NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[NullAllowed, Export ("title")]
+		string Title { get; set; }
+
+		[NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[NullAllowed, Export ("titleLocalizationKey")]
+		string TitleLocalizationKey { get; set; }
+
+		[NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[NullAllowed, Export ("titleLocalizationArgs", ArgumentSemantic.Copy)]
+		string[] TitleLocalizationArgs { get; set; }
+
+		[NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[NullAllowed, Export ("subtitle")]
+		string Subtitle { get; set; }
+
+		[NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[NullAllowed, Export ("subtitleLocalizationKey")]
+		string SubtitleLocalizationKey { get; set; }
+
+		[NoTV, Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[NullAllowed, Export ("subtitleLocalizationArgs", ArgumentSemantic.Copy)]
+		string[] SubtitleLocalizationArgs { get; set; }
+
+		[Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[Export ("shouldSendMutableContent")]
+		bool ShouldSendMutableContent { get; set; }
+
+		[Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[NullAllowed, Export ("collapseIDKey")]
+		string CollapseIdKey { get; set; }
 	}
 	
 	[Watch (3,0)]
@@ -1655,6 +1784,10 @@ namespace XamCore.CloudKit {
 
 		[NullAllowed, Export ("changeTokenUpdatedBlock", ArgumentSemantic.Copy)]
 		Action<CKServerChangeToken> ChangeTokenUpdated { get; set; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[NullAllowed, Export ("recordZoneWithIDWasPurgedBlock", ArgumentSemantic.Copy)]
+		Action<CKRecordZoneID> WasPurged { get; set; }
 
 		[NullAllowed, Export ("fetchDatabaseChangesCompletionBlock", ArgumentSemantic.Copy)]
 		CKFetchDatabaseChangesCompletionHandler ChangesCompleted { get; set; }

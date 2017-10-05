@@ -298,6 +298,9 @@
 !unknown-native-enum! INRelativeSetting bound
 !unknown-type! INRelativeSettingResolutionResult bound
 
+## The signature uses INBooleanResolutionResult which is not available on mac
+!missing-protocol-member! INSearchCallHistoryIntentHandling::resolveUnseenForSearchCallHistory:withCompletion: not found
+
 # Used in sandbox for NSOpen/Save panel but never should have been bound. #if !XAMCORE_3_0'ed
 !unknown-type! NSRemoteOpenPanel bound
 !unknown-type! NSRemoteSavePanel bound
@@ -341,6 +344,21 @@
 !unknown-native-enum! NSType bound
 !unknown-native-enum! SLComposeViewControllerResult bound
 !wrong-base-type! MDLVoxelArray expected MDLObject actual NSObject
+!incorrect-protocol-member! NSAccessibility::accessibilityChildrenInNavigationOrder is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::accessibilityCustomActions is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::accessibilityCustomRotors is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::setAccessibilityChildrenInNavigationOrder: is REQUIRED and should be bstract
+!incorrect-protocol-member! NSAccessibility::setAccessibilityCustomActions: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::setAccessibilityCustomRotors: is REQUIRED and should be abstract
+!incorrect-protocol-member! CIImageProcessorInput::surface is REQUIRED and should be abstract
+!incorrect-protocol-member! CIImageProcessorOutput::surface is REQUIRED and should be abstract
+!incorrect-protocol-member! INSpeakable::alternativeSpeakableMatches is REQUIRED and should be abstract
+!incorrect-protocol-member! INSpeakable::vocabularyIdentifier is REQUIRED and should be abstract
+!wrong-enum-size! NSSpellingState managed 4 vs native 8
+!extra-protocol-member! unexpected selector MTLCommandBuffer::GPUEndTime found
+!extra-protocol-member! unexpected selector MTLCommandBuffer::GPUStartTime found
+!extra-protocol-member! unexpected selector MTLCommandBuffer::kernelEndTime found
+!extra-protocol-member! unexpected selector MTLCommandBuffer::kernelStartTime found
 
 # Bound but commented out until we can test w\ template
 !missing-selector! +SFSafariExtensionManager::getStateOfSafariExtensionWithIdentifier:completionHandler: not bound
@@ -403,9 +421,11 @@
 
 # MediaPlayer API macOS 10.12.2
 
+## MPMediaItem only exposed for fields, it's not really available in macOS
+!wrong-base-type! MPMediaItem expected MPMediaEntity actual NSObject
+
 # These are not available on macOS even if xtro says so.
 !missing-type! MPMediaEntity not bound
-!missing-type! MPMediaItem not bound
 
 !missing-enum! MPErrorCode not bound
 !missing-enum! MPMediaType not bound
@@ -413,46 +433,39 @@
 !missing-field! MPErrorDomain not bound
 !missing-field! MPMediaEntityPropertyPersistentID not bound
 
-!missing-field! MPMediaItemPropertyAlbumArtist not bound
-!missing-field! MPMediaItemPropertyAlbumArtistPersistentID not bound
-!missing-field! MPMediaItemPropertyAlbumPersistentID not bound
-!missing-field! MPMediaItemPropertyAlbumTitle not bound
-!missing-field! MPMediaItemPropertyAlbumTrackCount not bound
-!missing-field! MPMediaItemPropertyAlbumTrackNumber not bound
-!missing-field! MPMediaItemPropertyArtist not bound
-!missing-field! MPMediaItemPropertyArtistPersistentID not bound
-!missing-field! MPMediaItemPropertyArtwork not bound
-!missing-field! MPMediaItemPropertyAssetURL not bound
-!missing-field! MPMediaItemPropertyBeatsPerMinute not bound
-!missing-field! MPMediaItemPropertyBookmarkTime not bound
-!missing-field! MPMediaItemPropertyComments not bound
-!missing-field! MPMediaItemPropertyComposer not bound
-!missing-field! MPMediaItemPropertyComposerPersistentID not bound
-!missing-field! MPMediaItemPropertyDateAdded not bound
-!missing-field! MPMediaItemPropertyDiscCount not bound
-!missing-field! MPMediaItemPropertyDiscNumber not bound
-!missing-field! MPMediaItemPropertyGenre not bound
-!missing-field! MPMediaItemPropertyGenrePersistentID not bound
-!missing-field! MPMediaItemPropertyHasProtectedAsset not bound
-!missing-field! MPMediaItemPropertyIsCloudItem not bound
-!missing-field! MPMediaItemPropertyIsCompilation not bound
-!missing-field! MPMediaItemPropertyIsExplicit not bound
-!missing-field! MPMediaItemPropertyLastPlayedDate not bound
-!missing-field! MPMediaItemPropertyLyrics not bound
-!missing-field! MPMediaItemPropertyMediaType not bound
-!missing-field! MPMediaItemPropertyPersistentID not bound
-!missing-field! MPMediaItemPropertyPlayCount not bound
-!missing-field! MPMediaItemPropertyPlaybackDuration not bound
-!missing-field! MPMediaItemPropertyPodcastPersistentID not bound
-!missing-field! MPMediaItemPropertyPodcastTitle not bound
-!missing-field! MPMediaItemPropertyRating not bound
-!missing-field! MPMediaItemPropertyReleaseDate not bound
-!missing-field! MPMediaItemPropertySkipCount not bound
-!missing-field! MPMediaItemPropertyTitle not bound
-!missing-field! MPMediaItemPropertyUserGrouping not bound
-
+## type not available on macOS
 !missing-selector! +MPMediaEntity::canFilterByProperty: not bound
 !missing-selector! MPMediaEntity::enumerateValuesForProperties:usingBlock: not bound
 !missing-selector! MPMediaEntity::objectForKeyedSubscript: not bound
 !missing-selector! MPMediaEntity::valueForProperty: not bound
+
+## deprecaed in iOS 10, not on macOS
 !missing-selector! MPMediaItemArtwork::imageCropRect not bound
+
+
+# Metal
+
+## [Notification] in protocol - https://bugzilla.xamarin.com/show_bug.cgi?id=59342
+!missing-field! MTLDeviceRemovalRequestedNotification not bound
+!missing-field! MTLDeviceWasAddedNotification not bound
+!missing-field! MTLDeviceWasRemovedNotification not bound
+
+
+# Not available in OS X
+!missing-selector! ACAccount::userFullName not bound
+
+## These are not available on macOS even if xtro says so.
+!missing-selector! EKCalendarItem::UUID not bound
+!missing-selector! EKEvent::birthdayPersonID not bound
+!missing-selector! EKEventStore::calendars not bound
+!missing-selector! EKEventStore::removeEvent:span:error: not bound
+!missing-selector! EKEventStore::saveEvent:span:error: not bound
+!missing-selector! EKSource::calendars not bound
+
+### This is not bound and it is already deprecated
+!missing-selector! EKParticipant::ABPersonInAddressBook: not bound
+
+#PDFKit
+## Deprecated
+!missing-selector! PDFAnnotation::initWithDictionary:forPage: not bound
+

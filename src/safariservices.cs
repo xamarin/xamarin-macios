@@ -59,8 +59,10 @@ namespace XamCore.SafariServices {
 		[Export ("addReadingListItemWithURL:title:previewText:error:")]
 		bool Add (NSUrl url, [NullAllowed] string title, [NullAllowed] string previewText, out NSError error);
 
+#if !XAMCORE_4_0
 		[Field ("SSReadingListErrorDomain")]
 		NSString ErrorDomain { get; }
+#endif
 	}
 
 	[iOS (9,0)]
@@ -71,6 +73,12 @@ namespace XamCore.SafariServices {
 		[PostGet ("NibBundle")]
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
+		[iOS (11,0)]
+		[Export ("initWithURL:configuration:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSUrl url, SFSafariViewControllerConfiguration configuration);
+
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use '.ctor (NSUrl, SFSafariViewControllerConfiguration)' instead.")]
 		[DesignatedInitializer]
 		[Export ("initWithURL:entersReaderIfAvailable:")]
 		IntPtr Constructor (NSUrl url, bool entersReaderIfAvailable);
@@ -87,12 +95,22 @@ namespace XamCore.SafariServices {
 		SFSafariViewControllerDelegate Delegate { get; set; }
 
 		[iOS (10, 0)]
+		[NullAllowed]
 		[Export ("preferredBarTintColor", ArgumentSemantic.Assign)]
 		UIColor PreferredBarTintColor { get; set; }
 
 		[iOS (10, 0)]
+		[NullAllowed]
 		[Export ("preferredControlTintColor", ArgumentSemantic.Assign)]
 		UIColor PreferredControlTintColor { get; set; }
+
+		[iOS (11,0)]
+		[Export ("configuration", ArgumentSemantic.Copy)]
+		SFSafariViewControllerConfiguration Configuration { get; }
+
+		[iOS (11,0)]
+		[Export ("dismissButtonStyle", ArgumentSemantic.Assign)]
+		SFSafariViewControllerDismissButtonStyle DismissButtonStyle { get; set; }
 	}
 
 	[iOS (9,0)]
@@ -108,6 +126,41 @@ namespace XamCore.SafariServices {
 
 		[Export ("safariViewController:didCompleteInitialLoad:")]
 		void DidCompleteInitialLoad (SFSafariViewController controller, bool didLoadSuccessfully);
+
+		[iOS (11,0)]
+		[Export ("safariViewController:excludedActivityTypesForURL:title:")]
+		string[] GetExcludedActivityTypes (SFSafariViewController controller, NSUrl url, [NullAllowed] string title);
+
+		[iOS (11,0)]
+		[Export ("safariViewController:initialLoadDidRedirectToURL:")]
+		void InitialLoadDidRedirectToUrl (SFSafariViewController controller, NSUrl url);
+	}
+
+	[iOS (11,0)]
+	[BaseType (typeof (NSObject))]
+	interface SFSafariViewControllerConfiguration : NSCopying {
+		[Export ("entersReaderIfAvailable")]
+		bool EntersReaderIfAvailable { get; set; }
+
+		[Export ("barCollapsingEnabled")]
+		bool BarCollapsingEnabled { get; set; }
+	}
+
+	[iOS (11,0)]
+	delegate void SFAuthenticationCompletionHandler ([NullAllowed] NSUrl callbackUrl, [NullAllowed] NSError error);
+
+	[iOS (11,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SFAuthenticationSession {
+		[Export ("initWithURL:callbackURLScheme:completionHandler:")]
+		IntPtr Constructor (NSUrl url, [NullAllowed] string callbackUrlScheme, SFAuthenticationCompletionHandler completionHandler);
+
+		[Export ("start")]
+		bool Start ();
+
+		[Export ("cancel")]
+		void Cancel ();
 	}
 #else
 	[Mac (10,12, onlyOn64: true)]
@@ -131,10 +184,17 @@ namespace XamCore.SafariServices {
 		[Export ("showPreferencesForExtensionWithIdentifier:completionHandler:")]
 		void ShowPreferencesForExtension (string identifier, [NullAllowed] Action<NSError> completionHandler);
 
-		[Mac (10, 12, 4)]
+		[Mac (10,12,4, onlyOn64 : true)]
+		[Advice ("Unavailable to extensions.")]
 		[Static][Async]
 		[Export ("dispatchMessageWithName:toExtensionWithIdentifier:userInfo:completionHandler:")]
 		void DispatchMessage (string messageName, string identifier, [NullAllowed] NSDictionary<NSString, NSObject> userInfo, [NullAllowed] Action<NSError> completionHandler);
+
+		[Mac (10,13, onlyOn64 : true)]
+		[Static]
+		[Async]
+		[Export ("getHostApplicationWithCompletionHandler:")]
+		void GetHostApplication (Action<NSRunningApplication> completionHandler);
 	}
 
 	[Mac (10,12, onlyOn64 : true)]
@@ -228,20 +288,25 @@ namespace XamCore.SafariServices {
 	[DisableDefaultCtor]
 	interface SFSafariToolbarItem
 	{
+		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'SetEnabled (bool)' or 'SetBadgeText' instead.")]
 		[Export ("setEnabled:withBadgeText:")]
 		void SetEnabled (bool enabled, [NullAllowed] string badgeText);
 
-		[Mac (10, 12, 4)]
+		[Mac (10,12,4, onlyOn64: true)]
 		[Export ("setEnabled:")]
 		void SetEnabled (bool enabled);
 
-		[Mac (10, 12, 4)]
+		[Mac (10,12,4, onlyOn64: true)]
 		[Export ("setBadgeText:")]
 		void SetBadgeText ([NullAllowed] string badgeText);
 
-		[Mac (10, 12, 4)]
+		[Mac (10,12,4, onlyOn64: true)]
 		[Export ("setImage:")]
 		void SetImage ([NullAllowed] NSImage image);
+
+		[Mac (10,13, onlyOn64: true)]
+		[Export ("setLabel:")]
+		void SetLabel ([NullAllowed] string label);
 	}
 
 	[Mac (10,12, onlyOn64: true)]

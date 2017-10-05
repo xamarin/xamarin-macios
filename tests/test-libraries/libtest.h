@@ -1,6 +1,11 @@
 #import <Foundation/Foundation.h>
+#include <simd/simd.h>
 
 #include "rename.h"
+
+#if !TARGET_OS_WATCH
+#import <ModelIO/ModelIO.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -8,6 +13,17 @@ extern "C" {
 
 int theUltimateAnswer ();
 void useZLib ();
+
+void x_get_matrix_float2x2 (id self, const char *sel, float* r0c0, float* r0c1, float* r1c0, float* r1c1);
+void x_get_matrix_float3x3 (id self, const char *sel, float* r0c0, float* r0c1, float* r0c2, float* r1c0, float* r1c1, float* r1c2, float* r2c0, float* r2c1, float* r2c2);
+void x_get_matrix_float4x4 (id self, const char *sel, float* r0c0, float* r0c1, float* r0c2, float* r0c3, float* r1c0, float* r1c1, float* r1c2, float* r1c3, float* r2c0, float* r2c1, float* r2c2, float* r2c3, float* r3c0, float* r3c1, float* r3c2, float* r3c3);
+void x_get_matrix_float4x3 (id self, const char *sel, float* r0c0, float* r0c1, float* r0c2, float* r0c3, float* r1c0, float* r1c1, float* r1c2, float* r1c3, float* r2c0, float* r2c1, float* r2c2, float* r2c3);
+
+#if !TARGET_OS_WATCH
+void x_mdltransformcomponent_get_local_transform (id<MDLTransformComponent> self, NSTimeInterval time, float* r0c0, float* r0c1, float* r0c2, float* r0c3, float* r1c0, float* r1c1, float* r1c2, float* r1c3, float* r2c0, float* r2c1, float* r2c2, float* r2c3, float* r3c0, float* r3c1, float* r3c2, float* r3c3);
+void x_mdltransform_create_global_transform (MDLObject *object, NSTimeInterval time, float* r0c0, float* r0c1, float* r0c2, float* r0c3, float* r1c0, float* r1c1, float* r1c2, float* r1c3, float* r2c0, float* r2c1, float* r2c2, float* r2c3, float* r3c0, float* r3c1, float* r3c2, float* r3c3);
+void x_mdltransform_get_rotation_matrix (MDLTransform *self, NSTimeInterval time, float* r0c0, float* r0c1, float* r0c2, float* r0c3, float* r1c0, float* r1c1, float* r1c2, float* r1c3, float* r2c0, float* r2c1, float* r2c2, float* r2c3, float* r3c0, float* r3c1, float* r3c2, float* r3c3);
+#endif
 
 /*
  * Various structs used in ObjCRegistrarTest
@@ -85,6 +101,9 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 	-(bool) testBlocks;
 
 	-(void) idAsIntPtr: (id)p1;
+
+#include "libtest.methods.h"
+
 	-(void) outNSErrorOnStack:(int)i1 i:(int)i2 i:(int)i3 i:(int)i4 i:(int)i5 i:(int)i6 err:(NSError **)err; // 6 in regs, 7th (out) in mem (on all architectures)
 	-(void) outNSErrorOnStack:(id)obj1 obj:(id)obj2 obj:(id)obj3 int64:(long long)l4 i:(int)i5 err:(NSError **)err; // 5 in regs, 6th (out) in mem (on at least x86-64)
 @end

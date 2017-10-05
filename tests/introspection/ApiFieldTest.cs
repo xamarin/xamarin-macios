@@ -71,7 +71,7 @@ namespace Introspection {
 		/// Override if you want to skip testing the specified constant.
 		/// </summary>
 		/// <param name="constantName">Constant name to ignore.</param>
-		protected virtual bool Skip (string constantName)
+		protected virtual bool Skip (string constantName, string libraryName)
 		{
 			return false;
 		}
@@ -227,12 +227,15 @@ namespace Introspection {
 					continue;
 
 				string name = f.SymbolName;
-				if (Skip (name))
+				if (Skip (name, f.LibraryName))
 					continue;
 
 				string path = FindLibrary (f.LibraryName);
 				IntPtr lib = Dlfcn.dlopen (path, 0);
-				if (Dlfcn.GetIndirect (lib, name) == IntPtr.Zero) {
+				if (lib == IntPtr.Zero) {
+					ReportError ("Could not open the library '{0}' to find the field '{1}': {2}", path, name, Dlfcn.dlerror ());
+					failed_fields.Add (name);
+				} else if (Dlfcn.GetIndirect (lib, name) == IntPtr.Zero) {
 					ReportError ("Could not find the field '{0}' in {1}", name, path);
 					failed_fields.Add (name);
 				}

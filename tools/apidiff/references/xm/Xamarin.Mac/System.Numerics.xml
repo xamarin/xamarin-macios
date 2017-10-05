@@ -1800,9 +1800,6 @@
                 </parameters>
               </method>
               <method name="Decompose(System.Numerics.Matrix4x4, out System.Numerics.Vector3&amp;, out System.Numerics.Quaternion&amp;, out System.Numerics.Vector3&amp;)" attrib="150" static="true" returntype="System.Boolean">
-                <attributes>
-                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
-                </attributes>
                 <parameters>
                   <parameter name="matrix" position="0" attrib="0" type="System.Numerics.Matrix4x4" />
                   <parameter name="scale" position="1" attrib="2" type="System.Numerics.Vector3" direction="out" />

@@ -29,7 +29,7 @@
 extern "C" {
 #endif
 
-void *xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *retval, bool retain, MonoMethod *method, guint32 *exception_gchandle);
+void *xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *retval, bool retain, MonoMethod *method, MethodDescription *desc, guint32 *exception_gchandle);
 
 #ifdef __cplusplus
 }

@@ -22,11 +22,6 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("ParseExtraMtouchArgs");
-			Log.LogTaskProperty ("ExtraArgs", ExtraArgs);
-			Log.LogTaskProperty ("NoSymbolStrip", NoSymbolStrip);
-			Log.LogTaskProperty ("NoDSymUtil", NoDSymUtil);
-
 			if (string.IsNullOrEmpty (NoSymbolStrip))
 				NoSymbolStrip = "false";
 

@@ -4,9 +4,14 @@
     <attributes>
       <attribute name="System.Diagnostics.DebuggableAttribute">
         <properties>
-          <property name="IsJITTrackingEnabled" value="IgnoreSymbolStoreSequencePoints, DisableOptimizations" />
-          <property name="IsJITOptimizerDisabled" value="IgnoreSymbolStoreSequencePoints, DisableOptimizations" />
-          <property name="DebuggingFlags" value="IgnoreSymbolStoreSequencePoints, DisableOptimizations" />
+          <property name="IsJITTrackingEnabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="IsJITOptimizerDisabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="DebuggingFlags" value="IgnoreSymbolStoreSequencePoints" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
+        <properties>
+          <property name="CompilationRelaxations" value="8" />
         </properties>
       </attribute>
       <attribute name="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute">
@@ -48731,6 +48736,7 @@
               <interface name="UIKit.IUIDynamicItem" />
               <interface name="UIKit.IUIFocusEnvironment" />
               <interface name="UIKit.IUIFocusItem" />
+              <interface name="UIKit.IUIPasteConfigurationSupporting" />
               <interface name="UIKit.IUITraitEnvironment" />
             </interfaces>
             <constructors>

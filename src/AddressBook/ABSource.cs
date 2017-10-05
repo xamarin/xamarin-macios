@@ -39,7 +39,7 @@ using XamCore.ObjCRuntime;
 namespace XamCore.AddressBook {
 	
 	// note: not a true flag
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public enum ABSourceType : int /* typedef int */ {
 		Local		= 0x0,
 		Exchange	= 0x1,
@@ -52,7 +52,7 @@ namespace XamCore.AddressBook {
 		SearchableMask = 0x01000000
 	};	
 	
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public class ABSource : ABRecord {
 #if !XAMCORE_2_0
 		[Advice ("Use ABSourceType.SearchableMask")]
@@ -82,13 +82,13 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public enum ABSourceProperty {
 		Name,
 		Type,
 	}
 	
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	static class ABSourcePropertyId {
 
 		public static int Name { get; private set;}

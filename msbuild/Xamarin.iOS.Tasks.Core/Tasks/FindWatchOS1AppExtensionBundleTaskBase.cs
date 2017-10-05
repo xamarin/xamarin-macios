@@ -31,9 +31,6 @@ namespace Xamarin.iOS.Tasks
 		{
 			var pwd = PathUtils.ResolveSymbolicLinks (Environment.CurrentDirectory);
 
-			Log.LogTaskName ("FindWatchOS1AppExtensionBundle");
-			Log.LogTaskProperty ("AppExtensionReferences", AppExtensionReferences);
-
 			for (int i = 0; i < AppExtensionReferences.Length; i++) {
 				var plist = PDictionary.FromFile (Path.Combine (AppExtensionReferences[i].ItemSpec, "Info.plist"));
 				PString expectedBundleIdentifier, bundleIdentifier, extensionPoint;

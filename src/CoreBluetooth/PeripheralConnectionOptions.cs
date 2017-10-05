@@ -33,6 +33,7 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.CoreBluetooth {
 
+	[Watch (4,0)]
 	public class PeripheralConnectionOptions : DictionaryContainer
 	{
 #if !COREBUILD

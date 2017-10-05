@@ -28,10 +28,6 @@ namespace Xamarin.iOS.Tasks
 		{
 			PDictionary plist;
 
-			Log.LogTaskName ("CreateDebugSettings");
-			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
-			Log.LogTaskProperty ("DebuggerPort", DebuggerPort);
-
 			var path = Path.Combine (AppBundleDir, "Settings.bundle", "Root.plist");
 
 			if (File.Exists (path)) {

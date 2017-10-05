@@ -69,5 +69,10 @@ namespace ObjCRuntime {
 		
 		// tvOS 10.2
 		public const string VideoToolboxLibrary = "/System/Library/Frameworks/VideoToolbox.framework/VideoToolbox";
+		// tvOS 11.0
+		public const string DeviceCheckLibrary = "/System/Library/Frameworks/DeviceCheck.framework/DeviceCheck";
+		public const string CoreMLLibrary = "/System/Library/Frameworks/CoreML.framework/CoreML";
+		public const string VisionLibrary = "/System/Library/Frameworks/Vision.framework/Vision";
+		public const string IOSurfaceLibrary = "/System/Library/Frameworks/IOSurface.framework/IOSurface";
 	}
 }

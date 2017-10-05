@@ -101,6 +101,7 @@ APPKIT_SOURCES = \
 	AppKit/NSSharingServiceDelegate.cs \
 	AppKit/NSDocument.cs \
 	AppKit/NSEvent.cs \
+	AppKit/NSFont.cs \
 	AppKit/NSGestureRecognizer.cs \
 	AppKit/NSGradient.cs \
 	AppKit/NSGraphics.cs \
@@ -149,6 +150,11 @@ APPKIT_SOURCES = \
 	AppKit/NSCollectionViewLayout.cs \
 	AppKit/NSColorPickerTouchBarItem.cs \
 	AppKit/NSSliderTouchBarItem.cs
+
+# ARKit
+
+ARKIT_SOURCES = \
+	ARKit/ARPointCloud.cs \
 
 # AssetsLibrary
 
@@ -242,6 +248,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVCaptureVideoDataOutput.cs \
 	AVFoundation/AVCaptureVideoPreviewLayer.cs \
 	AVFoundation/AVCompat.cs \
+	AVFoundation/AVDepthData.cs \
 	AVFoundation/AVFragmentedAsset.cs \
 	AVFoundation/AVFragmentedAssetTrack.cs \
 	AVFoundation/AVLayerVideoGravity.cs \
@@ -256,6 +263,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVTextStyleRule.cs \
 	AVFoundation/DescriptionHelpers.cs \
 	AVFoundation/Events.cs \
+	AVFoundation/AVPlayerLooper.cs \
 
 # AVKit
 
@@ -306,7 +314,6 @@ CONTACTS_SOURCES = \
 	Contacts/CNContactStore.cs \
 	Contacts/CNInstantMessageAddress.cs \
 	Contacts/CNObsolete.cs \
-	Contacts/CNPostalAddress.cs \
 	Contacts/CNSocialProfile.cs \
 
 # CoreAnimation (this is really Quartz.framework)
@@ -401,6 +408,8 @@ COREGRAPHICS_CORE_SOURCES = \
 	CoreGraphics/CGLayer.cs \
 	CoreGraphics/CGPath.cs \
 	CoreGraphics/CGVector.cs \
+	CoreGraphics/CGPDFDocument.cs \
+	CoreGraphics/CGPDFPage-2.cs \
 
 COREGRAPHICS_SOURCES = \
 	CoreGraphics/CGBitmapContext.cs \
@@ -419,10 +428,8 @@ COREGRAPHICS_SOURCES = \
 	CoreGraphics/CGPDFArray.cs \
 	CoreGraphics/CGPDFContentStream.cs \
 	CoreGraphics/CGPDFDictionary.cs \
-	CoreGraphics/CGPDFDocument.cs \
 	CoreGraphics/CGPDFObject.cs \
 	CoreGraphics/CGPDFOperatorTable.cs \
-	CoreGraphics/CGPDFPage-2.cs \
 	CoreGraphics/CGPDFPage.cs \
 	CoreGraphics/CGPDFScanner.cs \
 	CoreGraphics/CGPDFStream.cs \
@@ -482,6 +489,13 @@ COREMIDI_CORE_SOURCES = \
 	CoreMidi/MidiServices.cs \
 	CoreMidi/MidiThruConnection.cs \
 	CoreMidi/MidiThruConnectionParams.cs \
+
+# CoreML
+
+COREML_SOURCES = \
+	CoreML/MLDictionaryFeatureProvider.cs \
+	CoreML/MLMultiArray.cs \
+	CoreML/MLMultiArrayConstraint.cs \
 
 # CoreMotion
 
@@ -586,6 +600,9 @@ EVENTKIT_SOURCES = \
 EVENTKITUI_CORE_SOURCES = \
 	EventKitUI/Defs.cs \
 
+EVENTKITUI_SOURCES = \
+	EventKitUI/EKUIBundle.cs \
+
 # ExternalAccessory
 
 EXTERNALACCESSORY_API_SOURCES = \
@@ -620,6 +637,7 @@ FOUNDATION_CORE_SOURCES = \
 	Foundation/NSNumber.mac.cs \
 	Foundation/NSNumber2.cs \
 	Foundation/NSObject2.cs \
+	Foundation/NSProgress.cs \
 	Foundation/NSRange.cs \
 	Foundation/NSString.cs \
 	Foundation/NSValue.cs \
@@ -694,6 +712,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSPortMessage.cs \
 	Foundation/NSPredicate.cs \
 	Foundation/NSPropertyListSerialization.cs \
+	Foundation/NSProxy.cs \
 	Foundation/NSRunLoop.cs \
 	Foundation/NSScriptCommandDescription.cs \
 	Foundation/NSScriptCommandArgumentDescription.cs \
@@ -710,6 +729,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSTimeZone.cs \
 	Foundation/NSUbiquitousKeyValueStore.cs \
 	Foundation/NSUndoManager.cs \
+	Foundation/NSUnit.cs \
 	Foundation/NSUrl.cs \
 	Foundation/NSUrlComponents.cs \
 	Foundation/NSUrlConnection.cs \
@@ -802,6 +822,8 @@ HOMEKIT_SOURCES = \
 	HomeKit/HMCharacteristicProperties.cs \
 	HomeKit/HMEventTrigger.cs \
 	HomeKit/HMHome.cs \
+	HomeKit/HMSignificantTimeEvent.cs \
+	HomeKit/HMMutableSignificantTimeEvent.cs \
 	HomeKit/HMService.cs \
 
 # iAd
@@ -830,19 +852,45 @@ IMAGEKIT_CORE_SOURCES = \
 # Intents
 
 INTENTS_SOURCES = \
+	Intents/INBillTypeResolutionResult.cs \
+	Intents/INCallRecord.cs \
+	Intents/INCallRecordTypeResolutionResult.cs \
+	Intents/INCarAirCirculationModeResolutionResult.cs \
+	Intents/INCarAudioSourceResolutionResult.cs \
+	Intents/INCarDefrosterResolutionResult.cs \
+	Intents/INCarSeatResolutionResult.cs \
+	Intents/INCarSignalOptionsResolutionResult.cs \
 	Intents/INCompat.cs \
 	Intents/INGetCarLockStatusIntentResponse.cs \
 	Intents/INGetCarPowerLevelStatusIntentResponse.cs \
 	Intents/INIntentResolutionResult.cs \
+	Intents/INInteraction.cs \
+	Intents/INMessageAttributeOptionsResolutionResult.cs \
+	Intents/INMessageAttributeResolutionResult.cs \
+	Intents/INPaymentStatusResolutionResult.cs \
 	Intents/INPriceRange.cs \
+	Intents/INRadioTypeResolutionResult.cs \
+	Intents/INRelativeReferenceResolutionResult.cs \
+	Intents/INRelativeSettingResolutionResult.cs \
 	Intents/INRideOption.cs \
+	Intents/INSaveProfileInCarIntent.cs \
+	Intents/INSearchCallHistoryIntent.cs \
 	Intents/INSetCarLockStatusIntent.cs \
 	Intents/INSetClimateSettingsInCarIntent.cs \
 	Intents/INSetDefrosterSettingsInCarIntent.cs \
 	Intents/INSetProfileInCarIntent.cs \
 	Intents/INSetSeatSettingsInCarIntent.cs \
+	Intents/INSpeakableString.cs \
 	Intents/INStartWorkoutIntent.cs \
-	Intents/INSaveProfileInCarIntent.cs \
+	Intents/INWorkoutGoalUnitTypeResolutionResult.cs \
+	Intents/INWorkoutLocationTypeResolutionResult.cs \
+
+# IOSurface
+IOSURFACE_CORE_SOURCES = \
+	IOSurface/IODefs.cs
+
+IOSURFACE_SOURCES = \
+	IOSurface/IOSurface.cs
 
 # JavaScriptCore
 
@@ -866,6 +914,7 @@ MAPKIT_CORE_SOURCES = \
 MAPKIT_SOURCES = \
 	MapKit/MKCircle.cs \
 	MapKit/MKDirections.cs \
+	MapKit/MKFeatureDisplayPriority.cs \
 	MapKit/MKGeodesicPolyline.cs \
 	MapKit/MKLocalSearch.cs \
 	MapKit/MKMapItem.cs \
@@ -928,9 +977,12 @@ METAL_CORE_SOURCES = \
 	Metal/Defs.cs \
 
 METAL_SOURCES = \
+	Metal/MTLArgumentEncoder.cs \
 	Metal/MTLCompat.cs \
 	Metal/MTLDevice.cs \
 	Metal/MTLArrays.cs \
+	Metal/MTLRenderCommandEncoder.cs \
+	Metal/MTLRenderPassDescriptor.cs \
 	Metal/MTLVertexDescriptor.cs \
 
 # MetalKit
@@ -962,6 +1014,8 @@ MODELIO_CORE_SOURCES = \
 MODELIO_SOURCES = \
 	ModelIO/MDLAsset.cs \
 	ModelIO/MDLNoiseTexture.cs \
+	ModelIO/MDLTransform.cs \
+	ModelIO/MDLTransformComponent.cs \
 	ModelIO/MDLVertexDescriptor.cs \
 	ModelIO/MDLMesh.cs \
 
@@ -1059,13 +1113,17 @@ OPENGLES_SOURCES = \
 
 PASSKIT_API_SOURCES = \
 	PassKit/PKEnums.cs \
+	
+PASSKIT_SOURCES = \
+	PassKit/PKPaymentRequest.cs	\
 
 # PdfKit
 
-PDFKIT_CORE_SOURCES = \
+PDFKIT_API_SOURCES = \
 	PdfKit/Enums.cs \
 
 PDFKIT_SOURCES = \
+	PdfKit/PdfAnnotation.cs \
 	PdfKit/PdfKit.cs \
 
 # Photos
@@ -1210,7 +1268,7 @@ SOCIAL_SOURCES = \
 
 # SpriteKit
 
-SPRITEKIT_CORE_SOURCES = \
+SPRITEKIT_API_SOURCES = \
 	SpriteKit/Enums.cs \
 
 SPRITEKIT_SOURCES = \
@@ -1307,6 +1365,7 @@ UIKIT_SOURCES = \
 	UIKit/UIDocumentInteractionController.cs \
 	UIKit/UIDocumentMenuViewController.cs \
 	UIKit/UIDocumentPickerViewController.cs \
+	UIKit/UIDragDropSessionExtensions.cs \
 	UIKit/UIDynamicAnimator.cs \
 	UIKit/UIEnumsExtensions.cs \
 	UIKit/UIEvent.cs \
@@ -1383,6 +1442,15 @@ VIDEOTOOLBOX_SOURCES = \
 	VideoToolbox/VTUtilities.cs \
 	VideoToolbox/VTPixelTransferProperties.cs \
 
+# Vision
+
+VISION_SOURCES = \
+	Vision/VNBarcodeSymbologyExtensions.cs \
+	Vision/VNDetectBarcodesRequest.cs \
+	Vision/VNFaceLandmarkRegion2D.cs \
+	Vision/VNRequest.cs \
+	Vision/VNUtils.cs \
+
 # WatchConnectivity
 
 WATCHCONNECTIVITY_CORE_SOURCES = \
@@ -1451,6 +1519,7 @@ SHARED_CORE_SOURCES = \
 	build/common/NativeTypes/Primitives.cs \
 	ObjCRuntime/AlphaAttribute.cs \
 	ObjCRuntime/ArgumentSemantic.cs \
+	ObjCRuntime/BindAsAttribute.cs \
 	ObjCRuntime/Blocks.cs \
 	ObjCRuntime/Class.cs \
 	ObjCRuntime/INativeObject.cs \
@@ -1463,6 +1532,13 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/Protocol.cs \
 	ObjCRuntime/Registrar.core.cs \
 	ObjCRuntime/Selector.cs \
+	Simd/MatrixDouble4x4.cs \
+	Simd/MatrixFloat2x2.cs \
+	Simd/MatrixFloat3x3.cs \
+	Simd/MatrixFloat4x3.cs \
+	Simd/MatrixFloat4x4.cs \
+	Simd/VectorDouble3.cs \
+	Simd/VectorFloat3.cs \
 
 SHARED_SOURCES = \
 	../runtime/Delegates.generated.cs \
@@ -1517,7 +1593,10 @@ SHARED_SOURCES = \
 
 COMMON_FRAMEWORKS =         \
 	AVFoundation            \
+	CoreBluetooth           \
 	CoreFoundation          \
+	CoreML                  \
+	CoreVideo               \
 	Foundation              \
 	GameKit                 \
 	SceneKit                \
@@ -1537,7 +1616,6 @@ MAC_FRAMEWORKS =            \
 	ContactsUI              \
 	CoreAnimation           \
 	CoreAudioKit            \
-	CoreBluetooth           \
 	CoreData                \
 	CoreGraphics            \
 	CoreImage               \
@@ -1546,9 +1624,9 @@ MAC_FRAMEWORKS =            \
 	CoreMidi                \
 	CoreServices            \
 	CoreText                \
-	CoreVideo               \
 	CoreWlan                \
 	EventKit                \
+	ExternalAccessory 	\
 	FinderSync		\
 	GameController          \
 	GameplayKit             \
@@ -1556,6 +1634,7 @@ MAC_FRAMEWORKS =            \
 	ImageIO                 \
 	ImageKit                \
 	Intents                 \
+	IOSurface 		\
 	JavaScriptCore          \
 	LocalAuthentication     \
 	MapKit                  \
@@ -1573,6 +1652,7 @@ MAC_FRAMEWORKS =            \
 	OpenGL                  \
 	PdfKit                  \
 	Photos                  \
+	PhotosUI				\
 	PrintCore		\
 	QTKit                   \
 	QuartzComposer          \
@@ -1586,6 +1666,7 @@ MAC_FRAMEWORKS =            \
 	StoreKit                \
 	SystemConfiguration     \
 	VideoToolbox            \
+	Vision                  \
 	WebKit                  \
 	WKWebKit                \
 
@@ -1597,6 +1678,7 @@ IOS_FRAMEWORKS =         \
 	AdSupport \
 	AddressBook \
 	AddressBookUI \
+	ARKit \
 	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \
@@ -1607,7 +1689,6 @@ IOS_FRAMEWORKS =         \
 	ContactsUI \
 	CoreAnimation \
 	CoreAudioKit \
-	CoreBluetooth \
 	CoreData \
 	CoreGraphics \
 	CoreImage \
@@ -1615,22 +1696,27 @@ IOS_FRAMEWORKS =         \
 	CoreMIDI \
 	CoreMedia \
 	CoreMotion \
+	CoreNFC \
 	CoreSpotlight \
 	CoreTelephony \
 	CoreText \
-	CoreVideo \
+	DeviceCheck \
 	EventKit \
 	EventKitUI \
 	ExternalAccessory \
+	FileProvider \
+	FileProviderUI \
 	GLKit \
 	GameController \
 	GameplayKit \
 	HealthKit \
 	HealthKitUI \
 	HomeKit \
+	IdentityLookup \
 	ImageIO \
 	Intents \
 	IntentsUI \
+	IOSurface \
 	JavaScriptCore \
 	LocalAuthentication \
 	MapKit \
@@ -1650,6 +1736,7 @@ IOS_FRAMEWORKS =         \
 	NotificationCenter \
 	OpenGLES \
 	PassKit \
+	PdfKit \
 	Photos \
 	PhotosUI \
 	PushKit \
@@ -1667,6 +1754,7 @@ IOS_FRAMEWORKS =         \
 	UserNotificationsUI \
 	VideoToolbox \
 	VideoSubscriberAccount \
+	Vision \
 	WatchConnectivity \
 	WatchKit \
 	WKWebKit \
@@ -1706,7 +1794,6 @@ TVOS_FRAMEWORKS =           \
 	CFNetwork               \
 	CloudKit                \
 	CoreAnimation           \
-	CoreBluetooth           \
 	CoreData                \
 	CoreGraphics            \
 	CoreImage               \
@@ -1714,13 +1801,14 @@ TVOS_FRAMEWORKS =           \
 	CoreMedia               \
 	CoreSpotlight			\
 	CoreText                \
-	CoreVideo               \
+	DeviceCheck             \
 	ExternalAccessory       \
 	GLKit                   \
 	GameController          \
 	GameplayKit             \
 	HomeKit                 \
 	ImageIO                 \
+	IOSurface				\
 	JavaScriptCore          \
 	MapKit                  \
 	MediaAccessibility      \
@@ -1745,6 +1833,7 @@ TVOS_FRAMEWORKS =           \
 	UserNotifications       \
 	VideoSubscriberAccount  \
 	VideoToolbox            \
+	Vision            \
 
 #
 # Compute the SOURCES variables.

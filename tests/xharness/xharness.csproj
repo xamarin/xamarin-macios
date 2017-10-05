@@ -82,11 +82,8 @@
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\..\jenkins\nunit-summary.xslt">
-      <Link>nunit-summary.xslt</Link>
-    </EmbeddedResource>
+    <Compile Include="SimpleFileListener.cs" />
+    <Compile Include="iOSTarget.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

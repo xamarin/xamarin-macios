@@ -52,6 +52,21 @@ namespace Introspection {
 				case "SFSafariWindow": // Not declared in header file
 				case "SFContentBlockerState": // Not declared in header file
 				case "NEFlowMetaData": // Not declared in header file
+				case "MKMapItem": // Not declared in header file
+				case "CAConstraintLayoutManager": // Not declared in header file
+				case "NSQueryGenerationToken": // Declared in header file but SupportsSecureCoding returns false - radar 32856944
+				case "NSPersistentHistoryToken": // Conformance not in headers
+				case "NSPropertyDescription": // NSPropertyDescription and children does not declare in header file
+				case "NSAttributeDescription":
+				case "NSExpressionDescription":
+				case "NSFetchedPropertyDescription":
+				case "NSRelationshipDescription":
+				case "NSEntityDescription": // Not declared in header file
+				case "NSFetchIndexDescription": // Not declared in header file
+				case "NSFetchIndexElementDescription": // Not declared in header file
+				case "NSFetchRequest": // Not declared in header file
+				case "NSManagedObjectModel": // Not declared in header file
+				case "NSUserInterfaceCompressionOptions": // Not declared in header file
 					return true;
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
@@ -72,6 +87,7 @@ namespace Introspection {
 				case "EKReminder": // Not declared in header file
 				case "ACAccount": // Not declared in header file
 				case "NEFlowMetaData": // Not declared in header file
+				case "ACAccountCredential": // Not declared in header file
 					return true;
 				}
 				break;
@@ -87,6 +103,7 @@ namespace Introspection {
 				case "EKParticipant": // Not declared in header file
 				case "EKRecurrenceRule": // Not declared in header file
 				case "EKReminder": // Not declared in header file
+				case "INPerson": // Not declared in header file
 					return true;
 				}
 				break;
@@ -114,6 +131,10 @@ namespace Introspection {
 				case "SFSafariToolbarItem": // Not declared in header file
 				case "SFSafariWindow": // Not declared in header file
 				case "NEFlowMetaData": // Not declared in header file
+				case "MKMapItem": // Not declared in header file
+				case "NSConstraintConflict": // Not declared in header file
+				case "NSQueryGenerationToken": // Declared in header file but SupportsSecureCoding returns false - radar 32856944
+				case "NSPersistentHistoryToken": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -180,6 +201,32 @@ namespace Introspection {
 				break;
 			case "NSExtensionRequestHandling":
 				return IntPtr.Size == 4;
+			case "NSAppearanceCustomization":
+				switch (type.Name) {
+				case "NSPopover":
+					if (!Mac.CheckSystemVersion (10, 13)) // Was added in 10.13
+						return true;
+					break;
+				}
+				break;
+			case "NSUserInterfaceValidations":
+				switch (type.Name) {
+				case "NSSplitViewController":
+					if (!Mac.CheckSystemVersion (10, 13)) // Was added in 10.13
+						return true;
+					break;
+				}
+				break;
+			case "NSItemProviderWriting":
+				switch (type.Name) {
+				case "NSMutableString":
+				case "NSString":
+				case "NSUrl":
+					if (IntPtr.Size == 4) // Only on 64-bit version of these types
+						return true;
+					break;
+				}
+				break;
 			}
 
 			switch (type.Name) {

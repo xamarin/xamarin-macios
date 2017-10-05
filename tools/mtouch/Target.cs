@@ -252,6 +252,11 @@ namespace Xamarin.Bundler
 			if (App.LinkMode == LinkMode.None && App.I18n != I18nAssemblies.None)
 				AddI18nAssemblies ();
 
+			if (!App.Embeddinator) {
+				if (!Assemblies.Any ((v) => v.AssemblyDefinition.Name.Name == Driver.GetProductAssembly (App)))
+					throw ErrorHelper.CreateError (123, $"The executable assembly {App.RootAssemblies [0]} does not reference {Driver.GetProductAssembly (App)}.dll.");
+			}
+
 			linker_flags = new CompilerFlags (this);
 		}
 
@@ -448,7 +453,7 @@ namespace Xamarin.Bundler
 
 		public void LinkAssemblies (out List<AssemblyDefinition> assemblies, string output_dir, IEnumerable<Target> sharedCodeTargets)
 		{
-			var cache = Resolver.ToResolverCache ();
+			var cache = (Dictionary<string, AssemblyDefinition>) Resolver.ResolverCache;
 			var resolver = new AssemblyResolver (cache);
 
 			resolver.AddSearchDirectory (Resolver.RootDirectory);
@@ -875,10 +880,7 @@ namespace Xamarin.Bundler
 			case RegistrarMode.Static:
 			case RegistrarMode.Dynamic:
 			case RegistrarMode.Default:
-				StaticRegistrar = new StaticRegistrar (this)
-				{
-					LinkContext = LinkContext,
-				};
+				StaticRegistrar = new StaticRegistrar (this);
 				break;
 			}
 		}
@@ -1208,6 +1210,10 @@ namespace Xamarin.Bundler
 					// This is because iOS has a forward declaration of NSPortMessage, but no actual declaration.
 					// They still use NSPortMessage in other API though, so it can't just be removed from our bindings.
 					registrar_task.CompilerFlags.AddOtherFlag ("-Wno-receiver-forward-class");
+
+					if (Driver.XcodeVersion >= new Version (9, 0))
+						registrar_task.CompilerFlags.AddOtherFlag ("-Wno-unguarded-availability-new");
+
 					LinkWithTaskOutput (registrar_task);
 				}
 
@@ -1234,8 +1240,11 @@ namespace Xamarin.Bundler
 					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", App.Platform);
 				}
 
-				registration_methods.Add (method);
-				LinkWithStaticLibrary (Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib", library));
+				var lib = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib", library);
+				if (File.Exists (lib)) {
+					registration_methods.Add (method);
+					LinkWithStaticLibrary (lib);
+				}
 			}
 
 			// The main method.
@@ -1396,8 +1405,6 @@ namespace Xamarin.Bundler
 				case AssemblyBuildTarget.StaticObject:
 					libprofiler = Path.Combine (libdir, "libmono-profiler-log.a");
 					linker_flags.AddLinkWith (libprofiler);
-					if (!App.EnableBitCode)
-						linker_flags.ReferenceSymbol ("mono_profiler_startup_log");
 					break;
 				case AssemblyBuildTarget.Framework: // We don't ship the profiler as a framework, so this should be impossible.
 				default:

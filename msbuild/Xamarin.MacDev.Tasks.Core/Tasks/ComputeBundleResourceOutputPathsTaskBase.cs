@@ -34,14 +34,6 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("ComputeBundleResourceOutputPaths");
-			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
-			Log.LogTaskProperty ("BundleIdentifier", BundleIdentifier);
-			Log.LogTaskProperty ("BundleResources", BundleResources);
-			Log.LogTaskProperty ("EnableOnDemandResources", EnableOnDemandResources);
-			Log.LogTaskProperty ("IntermediateOutputPath", IntermediateOutputPath);
-			Log.LogTaskProperty ("OutputPath", OutputPath);
-
 			var intermediate = Path.Combine (IntermediateOutputPath, "assetpacks");
 			var bundleResources = new List<ITaskItem> ();
 			var packs = new HashSet<string> ();

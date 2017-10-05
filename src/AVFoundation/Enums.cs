@@ -803,7 +803,11 @@ namespace XamCore.AVFoundation {
 	[TV (10, 2), Mac (10, 12, 4), iOS (10, 3), NoWatch]
 	public enum AVContentKeySystem {
 		[Field ("AVContentKeySystemFairPlayStreaming")]
-		FairPlayStreaming,
+		FairPlayStreaming = 0,
+
+		[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
+		[Field ("AVContentKeySystemClearKey")]
+		AVContentKeySystemClearKey = 1,
 	}
 
 	// Convience enum for native string values 
@@ -836,5 +840,141 @@ namespace XamCore.AVFoundation {
 		AppleM4A = 8, // AVAssetExportPresetAppleM4A
 		[Field ("AVAssetExportPresetPassthrough")]
 		Passthrough = 9, // AVAssetExportPresetPassthrough
+
+		[iOS (11, 0), Mac (10, 13)]
+		[Field ("AVOutputSettingsPresetHEVC1920x1080")]
+		PresetHevc1920x1080 = 11, 
+
+		[iOS (11, 0), Mac (10, 13)]
+		[Field ("AVOutputSettingsPresetHEVC3840x2160")]
+		PresetHevc3840x2160 = 12,
+	}
+
+	[TV (11,0), NoWatch, iOS (11,0)]
+	[Native]
+	public enum AVDepthDataAccuracy : nint {
+		Relative = 0,
+		Absolute = 1,
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Native]
+	public enum AVAudioEngineManualRenderingMode : nint {
+		Offline = 0,
+		Realtime = 1
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Native]
+	public enum AVAudioEngineManualRenderingStatus : nint {
+		Error = -1,
+		Success = 0,
+		InsufficientDataFromInputNode = 1,
+		CannotDoInCurrentContext = 2
+	}
+
+	[TV (11,0), NoWatch, NoMac, iOS (11,0)]
+	[Native]
+	public enum AVAudioSessionRouteSharingPolicy : nuint {
+		Default = 0,
+		LongForm = 1,
+		Independent = 2
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Native]
+	public enum AVAudioPlayerNodeCompletionCallbackType : nint {
+		Consumed = 0,
+		Rendered = 1,
+		PlayedBack = 2
+	}
+
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	public enum AVAudioEngineManualRenderingError
+	{
+		InvalidMode = -80800,
+		Initialized = -80801,
+		NotRunning = -80802,
+	}
+
+	[NoTV, iOS (11,0)]
+	[NoWatch]
+	[Native]
+	public enum AVCaptureLensStabilizationStatus : nint
+	{
+		Unsupported = 0,
+		Off = 1,
+		Active = 2,
+		OutOfRange = 3,
+		Unavailable = 4
+	}
+
+	[NoWatch, NoTV, iOS (11,0)]
+	[Native]
+	public enum AVCaptureOutputDataDroppedReason : nint
+	{
+		None = 0,
+		LateData = 1,
+		OutOfBuffers = 2,
+		Discontinuity = 3,
+	}
+
+	[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
+	public enum AVVideoApertureMode {
+		[Field ("AVVideoApertureModeCleanAperture")]
+		CleanAperture = 0,
+
+		[Field ("AVVideoApertureModeProductionAperture")]
+		ProductionAperture = 1,
+
+		[Field ("AVVideoApertureModeEncodedPixels")]
+		EncodedPixels = 2,
+	}
+
+	/*
+	// Enum values are present in header but missing rdar filed at: https://bugreport.apple.com/web/?problemID=34184435
+	[NoWatch, NoTV, NoMac, iOS (11, 0)]
+	public enum AVAssetDownloadedAssetEvictionPriority {
+		[Field ("AVAssetDownloadedAssetEvictionPriorityDefault")]
+		Default = 0,
+
+		[Field ("AVAssetDownloadedAssetEvictionPriorityImportant")]
+		Important = 1,
+	}
+	*/
+
+	[NoWatch, iOS (11, 0), TV (11,0), Mac (10,13)]
+	public enum AVAssetWriterInputMediaDataLocation {
+		[Field ("AVAssetWriterInputMediaDataLocationInterleavedWithMainMediaData")]
+		InterleavedWithMainMediaData = 0,
+
+		[Field ("AVAssetWriterInputMediaDataLocationBeforeMainMediaDataNotInterleaved")]
+		BeforeMainMediaDataNotInterleaved = 1,
+	}
+
+	[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
+	public enum AVVideoCodecType {
+		[Field ("AVVideoCodecTypeH264")]
+		H264 = 0,
+		
+		[Field ("AVVideoCodecTypeJPEG")]
+		Jpeg = 1,
+
+		[Field ("AVVideoCodecTypeAppleProRes422")]
+		AppleProRes422 = 3,
+
+		[Field ("AVVideoCodecTypeAppleProRes4444")]
+		AppleProRes4444 = 4,
+
+		[Field ("AVVideoCodecTypeHEVC")]
+		Hevc = 5,
+
+	}
+
+	[TV (11,0), NoWatch, iOS (11,0)]
+	[Native]
+	public enum AVDepthDataQuality : nint {
+		Low = 0,
+		High = 1
 	}
 }

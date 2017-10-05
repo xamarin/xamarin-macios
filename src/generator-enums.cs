@@ -3,14 +3,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-#if IKVM
 using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
-#else
-using System.Reflection;
-#endif
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
+using System.IO;
 
 public partial class Generator {
 
@@ -108,13 +105,10 @@ public partial class Generator {
 			print ("static public partial class {0}Extensions {{", type.Name);
 			indent++;
 
-			// note: not every binding namespace will start with ns.Prefix (e.g. MonoTouch.)
-			if (!String.IsNullOrEmpty (ns.Prefix) && library_name.StartsWith (ns.Prefix, StringComparison.Ordinal))
-				library_name = library_name.Substring (ns.Prefix.Length + 1);
+			var field = fields.FirstOrDefault ();
+			var fieldAttr = field.Value;
 
-			// there might not be any other fields in the framework
-			if (!libraries.ContainsKey (library_name))
-				libraries.Add (library_name, null);
+			ComputeLibraryName (fieldAttr, type, field.Key?.Name, out library_name, out string library_path);
 		}
 
 		if (error != null) {
@@ -144,15 +138,21 @@ public partial class Generator {
 				var fa = kvp.Value;
 				// the attributes (availability and field) are important for our tests
 				PrintPlatformAttributes (f);
-				var libname = fa.LibraryName ?? library_name;
-				print ("[Field (\"{0}\", \"{1}\")]", fa.SymbolName, libname);
+				libraries.TryGetValue (library_name, out var libPath);
+				var libname = fa.LibraryName?.Replace ("+", string.Empty);
+				// We need to check for special cases inside FieldAttributes
+				// fa.LibraryName could contain a different framework i.e UITrackingRunLoopMode (UIKit) inside NSRunLoopMode enum (Foundation).
+				// libPath could have a custom path i.e. CoreImage which in macOS is inside Quartz
+				// library_name contains the Framework constant name the Field is inside of, used as fallback.
+				bool useFieldAttrLibName = libname != null && !string.Equals (libname, library_name, StringComparison.OrdinalIgnoreCase);
+				print ("[Field (\"{0}\", \"{1}\")]", fa.SymbolName, useFieldAttrLibName ? libname : libPath ?? library_name);
 				print ("internal unsafe static IntPtr {0} {{", fa.SymbolName);
 				indent++;
 				print ("get {");
 				indent++;
 				print ("fixed (IntPtr *storage = &values [{0}])", n++);
 				indent++;
-				print ("return Dlfcn.CachePointer (Libraries.{0}.Handle, \"{1}\", storage);", libname, fa.SymbolName);
+				print ("return Dlfcn.CachePointer (Libraries.{0}.Handle, \"{1}\", storage);", useFieldAttrLibName ? libname : library_name, fa.SymbolName);
 				indent--;
 				indent--;
 				print ("}");

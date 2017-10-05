@@ -376,6 +376,8 @@ namespace Xamarin.Bundler {
 					case "Metal":
 					case "MetalKit":
 					case "MetalPerformanceShaders":
+					case "CoreNFC":
+					case "DeviceCheck":
 						// some frameworks do not exists on simulators and will result in linker errors if we include them
 #if MTOUCH
 						if (!App.IsSimulatorBuild) {
@@ -413,7 +415,10 @@ namespace Xamarin.Bundler {
 						// detect frameworks
 						int f = name.IndexOf (".framework/", StringComparison.Ordinal);
 						if (f > 0) {
-							if (Frameworks.Add (file))
+							Framework framework;
+							if (Driver.GetFrameworks (App).TryGetValue (file, out framework) && framework.Version > App.SdkVersion)
+								Driver.Log (3, "Not linking with the framework {0} (referenced by a module reference in {1}) because it was introduced in {2} {3}, and we're using the {2} {4} SDK.", file, FileName, App.PlatformName, framework.Version, App.SdkVersion);
+							else if (Frameworks.Add (file))
 								Driver.Log (3, "Linking with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
 						} else {
 							if (UnresolvedModuleReferences == null)

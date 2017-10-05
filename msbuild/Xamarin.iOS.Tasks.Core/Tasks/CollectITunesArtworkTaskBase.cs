@@ -89,9 +89,6 @@ namespace Xamarin.iOS.Tasks
 			var artworkWithLogicalNames = new List<ITaskItem> ();
 			var artwork = new HashSet<string> ();
 
-			Log.LogTaskName ("CollectITunesArtwork");
-			Log.LogTaskProperty ("ITunesArtwork", ITunesArtwork);
-
 			if (ITunesArtwork != null) {
 				foreach (var item in ITunesArtwork) {
 					// We need a physical path here, ignore the Link element

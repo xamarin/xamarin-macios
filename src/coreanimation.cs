@@ -114,7 +114,7 @@ namespace XamCore.CoreAnimation {
 	}
 	
 	[BaseType (typeof (NSObject))]
-	interface CAConstraint : NSCoding {
+	interface CAConstraint : NSSecureCoding {
 		[Export ("attribute")]
 		CAConstraintAttribute Attribute { get;  }
 
@@ -170,9 +170,9 @@ namespace XamCore.CoreAnimation {
 		[Export ("paused")]
 		bool Paused { [Bind ("isPaused")] get; set; }
 	
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use PreferredFramesPerSecond property")]
-		[Deprecated (PlatformName.TvOS, 10,0, message: "Use PreferredFramesPerSecond property")]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use PreferredFramesPerSecond property")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'PreferredFramesPerSecond' property.")]
+		[Deprecated (PlatformName.TvOS, 10,0, message: "Use 'PreferredFramesPerSecond' property.")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'PreferredFramesPerSecond' property.")]
 		[Export ("frameInterval")]
 		nint FrameInterval { get; set;  }
 
@@ -201,7 +201,7 @@ namespace XamCore.CoreAnimation {
 
 	[BaseType (typeof (NSObject))]
 	[Dispose ("OnDispose ();")]
-	interface CALayer : CAMediaTiming, NSCoding {
+	interface CALayer : CAMediaTiming, NSSecureCoding {
 		[Export ("layer")][Static]
 		CALayer Create ();
 
@@ -587,6 +587,11 @@ namespace XamCore.CoreAnimation {
 		[NullAllowed] // by default this property is null
 		[Export ("compositingFilter", ArgumentSemantic.Strong)]
 		NSObject CompositingFilter { get; set; }
+
+		[NoWatch] // headers not updated
+		[TV (11,0)][Mac (10,13)][iOS (11,0)]
+		[Export ("maskedCorners", ArgumentSemantic.Assign)]
+		CACornerMask MaskedCorners { get; set; }
 	}
 
 #if XAMCORE_2_0 || !MONOMAC
@@ -628,6 +633,16 @@ namespace XamCore.CoreAnimation {
 		
 		[Export ("presentsWithTransaction")]
 		bool PresentsWithTransaction { [Bind ("presentsWithTransaction")] get; set; }
+
+		[NoWatch][NoTV][NoiOS]
+		[Mac (10,13)]
+		[Export ("displaySyncEnabled")]
+		bool DisplaySyncEnabled { get; set; }
+
+		[NoWatch] // headers not updated
+		[TV (11,0)][Mac (10,13)][iOS (11,0)]
+		[Export ("allowsNextDrawableTimeout")]
+		bool AllowsNextDrawableTimeout { get; set; }
 	}
 #endif
 
@@ -793,6 +808,37 @@ namespace XamCore.CoreAnimation {
 		CALayer HitTest (CGPoint thePoint);
 	}
 
+	enum CATextLayerTruncationMode {
+		[Field ("kCATruncationNone")]
+		None,
+
+		[Field ("kCATruncationStart")]
+		Start,
+
+		[Field ("kCATruncationMiddle")]
+		Middle,
+
+		[Field ("kCATruncationEnd")]
+		End,
+	}
+
+	enum CATextLayerAlignmentMode {
+		[Field ("kCAAlignmentLeft")]
+		Left,
+
+		[Field ("kCAAlignmentRight")]
+		Right,
+
+		[Field ("kCAAlignmentCenter")]
+		Center,
+
+		[Field ("kCAAlignmentJustified")]
+		Justified,
+
+		[Field ("kCAAlignmentNatural")]
+		Natural,
+	}
+
 	[Since (3,2)]
 	[BaseType (typeof (CALayer))]
 	interface CATextLayer {
@@ -820,38 +866,60 @@ namespace XamCore.CoreAnimation {
 		[Export ("wrapped")]
 		bool Wrapped { [Bind ("isWrapped")] get; set; }
 
+		[Protected]
 		[Export ("truncationMode", ArgumentSemantic.Copy)]
-		string TruncationMode { get; set; }
+		NSString WeakTruncationMode { get; set; }
 
+		[Protected]
 		[Export ("alignmentMode", ArgumentSemantic.Copy)]
-		string AlignmentMode { get; set; }
+		NSString WeakAlignmentMode { get; set; }
 
-		[Field ("kCATruncationNone")]
+#if !XAMCORE_4_0 // Use smart enums instead, CATruncationMode and CATextLayerAlignmentMode.
+		[Obsolete ("Use 'CATextLayerTruncationMode.None.GetConstant ()' instead.")]
+		[Static]
+		[Wrap ("CATextLayerTruncationMode.None.GetConstant ()")]
 		NSString TruncationNone { get; }
 		
-		[Field ("kCATruncationStart")]
+		[Obsolete ("Use 'CATextLayerTruncationMode.Start.GetConstant ()' instead.")]
+		[Static]
+		[Wrap ("CATextLayerTruncationMode.Start.GetConstant ()")]
 		NSString TruncantionStart { get; }
 		
-		[Field ("kCATruncationEnd")]
+		[Obsolete ("Use 'CATextLayerTruncationMode.End.GetConstant ()' instead.")]
+		[Static]
+		[Wrap ("CATextLayerTruncationMode.End.GetConstant ()")]
 		NSString TruncantionEnd { get; }
 		
-		[Field ("kCATruncationMiddle")]
+		[Obsolete ("Use 'CATextLayerTruncationMode.Middle.GetConstant ()' instead.")]
+		[Static]
+		[Wrap ("CATextLayerTruncationMode.Middle.GetConstant ()")]
 		NSString TruncantionMiddle { get; }
 		
-		[Field ("kCAAlignmentNatural")]
+		[Obsolete ("Use 'CATextLayerAlignmentMode.Natural.GetConstant ()' instead.")]
+		[Static]
+		[Wrap ("CATextLayerAlignmentMode.Natural.GetConstant ()")]
 		NSString AlignmentNatural { get; }
 		
-		[Field ("kCAAlignmentLeft")]
+		[Obsolete ("Use 'CATextLayerAlignmentMode.Left.GetConstant ()' instead.")]
+		[Static]
+		[Wrap ("CATextLayerAlignmentMode.Left.GetConstant ()")]
 		NSString AlignmentLeft { get; }
 		
-		[Field ("kCAAlignmentRight")]
+		[Obsolete ("Use 'CATextLayerAlignmentMode.Right.GetConstant ()' instead.")]
+		[Static]
+		[Wrap ("CATextLayerAlignmentMode.Right.GetConstant ()")]
 		NSString AlignmentRight { get; }
 		
-		[Field ("kCAAlignmentCenter")]
+		[Obsolete ("Use 'CATextLayerAlignmentMode.Center.GetConstant ()' instead.")]
+		[Static]
+		[Wrap ("CATextLayerAlignmentMode.Center.GetConstant ()")]
 		NSString AlignmentCenter { get; }
 		
-		[Field ("kCAAlignmentJustified")]
+		[Obsolete ("Use 'CATextLayerAlignmentMode.Justified.GetConstant ()' instead.")]
+		[Static]
+		[Wrap ("CATextLayerAlignmentMode.Justified.GetConstant ()")]
 		NSString AlignmentJustified { get; }
+#endif // !XAMCORE_4_0
 
 		[iOS(9,0)]
 		[Export ("allowsFontSubpixelQuantization")]
@@ -912,7 +980,7 @@ namespace XamCore.CoreAnimation {
 	}
 	
 	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] { typeof (CAAnimationDelegate)})]
-	interface CAAnimation : CAAction, CAMediaTiming, NSCoding, NSMutableCopying {
+	interface CAAnimation : CAAction, CAMediaTiming, NSSecureCoding, NSMutableCopying {
 		[Export ("animation"), Static]
 		CAAnimation CreateAnimation ();
 	
@@ -998,15 +1066,15 @@ namespace XamCore.CoreAnimation {
 		NSString RotateModeAutoReverse { get; }
 
 		#region SceneKitAdditions
-		[iOS (8,0)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("usesSceneTimeBase")]
 		bool UsesSceneTimeBase { get; set; }
 
-		[iOS (8,0)][Mac (10,9)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("fadeInDuration")]
 		nfloat FadeInDuration { get; set; }
 
-		[iOS (8,0)][Mac (10,9)]
+		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("fadeOutDuration")]
 		nfloat FadeOutDuration { get; set; }
 
@@ -1309,7 +1377,7 @@ namespace XamCore.CoreAnimation {
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface CAMediaTimingFunction : NSCoding {
+	interface CAMediaTimingFunction : NSSecureCoding {
 		[Export ("functionWithName:")][Static]
 		CAMediaTimingFunction FromName (NSString  name);
 
@@ -1340,7 +1408,7 @@ namespace XamCore.CoreAnimation {
 	}
 
 	[BaseType (typeof (NSObject))]
-	interface CAValueFunction : NSCoding {
+	interface CAValueFunction : NSSecureCoding {
 		[Export ("functionWithName:"), Static]
 		CAValueFunction FromName (string name);
 
@@ -1414,7 +1482,7 @@ namespace XamCore.CoreAnimation {
 
 	[Since (5,0)]
 	[BaseType (typeof (NSObject))]
-	interface CAEmitterCell : CAMediaTiming, NSCoding {
+	interface CAEmitterCell : CAMediaTiming, NSSecureCoding {
 		[NullAllowed] // by default this property is null
 		[Export ("name", ArgumentSemantic.Copy)]
 		string Name { get; set;  }
@@ -1645,7 +1713,7 @@ namespace XamCore.CoreAnimation {
 
 	[Since(7,0), Mavericks]
 	[BaseType (typeof (NSObject))]
-	interface CAEmitterBehavior : NSCoding {
+	interface CAEmitterBehavior : NSSecureCoding {
 
 		[Export ("initWithType:")]
 		IntPtr Constructor (NSString type);

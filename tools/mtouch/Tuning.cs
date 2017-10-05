@@ -157,6 +157,7 @@ namespace MonoTouch.Tuner {
 			sub.Add (new PreserveSoapHttpClients ());
 			sub.Add (new CoreHttpMessageHandler (options));
 			sub.Add (new InlinerSubStep ());
+			sub.Add (new PreserveSmartEnumConversionsSubStep ());
 			return sub;
 		}
 
@@ -284,7 +285,12 @@ namespace MonoTouch.Tuner {
 				return;
 			}
 
-			base.ProcessAssembly (assembly);
+			try {
+				base.ProcessAssembly (assembly);
+			}
+			catch (Exception e) {
+				throw new MonoTouchException (2103, true, e, $"Error processing assembly '{assembly.FullName}': {e}");
+			}
 		}
 	}
 }

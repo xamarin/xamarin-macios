@@ -30,10 +30,12 @@ namespace xharness
 		public bool IncludeMacBindingProject;
 		public bool IncludeSimulator = true;
 		public bool IncludeDevice;
+		public bool IncludeSystemPermissionTests = true; // tests that require access to system resources (system contacts, photo library, etc) in order to work
 
 		public Logs Logs = new Logs ();
 		public Log MainLog;
 		public Log SimulatorLoadLog;
+		public Log DeviceLoadLog;
 
 		public string LogDirectory {
 			get {
@@ -62,24 +64,41 @@ namespace xharness
 			return new Resources (resources);
 		}
 
-		async Task<IEnumerable<RunSimulatorTask>> CreateRunSimulatorTaskAsync (XBuildTask buildTask)
+		// Loads both simulators and devices in parallel
+		Task LoadSimulatorsAndDevicesAsync ()
 		{
-			var runtasks = new List<RunSimulatorTask> ();
-
 			Simulators.Harness = Harness;
+			Devices.Harness = Harness;
+
 			if (SimulatorLoadLog == null)
 				SimulatorLoadLog = Logs.CreateStream (LogDirectory, "simulator-list.log", "Simulator Listing");
-			try {
-				await Simulators.LoadAsync (SimulatorLoadLog);
-			} catch (Exception e) {
-				SimulatorLoadLog.WriteLine ("Failed to load simulators:");
-				SimulatorLoadLog.WriteLine (e.ToString ());
-				var task = new RunSimulatorTask (buildTask) { ExecutionResult = TestExecutingResult.Failed };
-				var log = task.Logs.CreateFile ("Run log", Path.Combine (task.LogDirectory, "run-" + DateTime.Now.Ticks + ".log"));
-				log.WriteLine ("Failed to load simulators");
-				runtasks.Add (task);
-				return runtasks;
-			}
+
+			var simulatorLoadTask = Task.Run (async () => {
+				try {
+					await Simulators.LoadAsync (SimulatorLoadLog);
+				} catch (Exception e) {
+					SimulatorLoadLog.WriteLine ("Failed to load simulators:");
+					SimulatorLoadLog.WriteLine (e);
+				}
+			});
+
+			if (DeviceLoadLog == null)
+				DeviceLoadLog = Logs.CreateStream (LogDirectory, "device-list.log", "Device Listing");
+			var deviceLoadTask = Task.Run (async () => {
+				try {
+					await Devices.LoadAsync (DeviceLoadLog, removed_locked: true);
+				} catch (Exception e) {
+					DeviceLoadLog.WriteLine ("Failed to load devices:");
+					DeviceLoadLog.WriteLine (e);
+				}
+			});
+
+			return Task.CompletedTask;
+		}
+
+		IEnumerable<RunSimulatorTask> CreateRunSimulatorTaskAsync (XBuildTask buildTask)
+		{
+			var runtasks = new List<RunSimulatorTask> ();
 
 			AppRunnerTarget [] targets;
 			TestPlatform [] platforms;
@@ -107,83 +126,87 @@ namespace xharness
 			return runtasks;
 		}
 
-		async Task<IEnumerable<TestTask>> CreateRunDeviceTasks ()
+		bool IsIncluded (TestProject project)
+		{
+			if (!project.IsExecutableProject)
+				return false;
+
+			if (!IncludeBcl && project.IsBclTest)
+				return false;
+
+			if (!IncludeSystemPermissionTests && project.Name == "introspection")
+				return false;
+
+			return true;
+		}
+
+		IEnumerable<TestTask> CreateRunDeviceTasks ()
 		{
 			var rv = new List<RunDeviceTask> ();
 
-			Devices.Harness = Harness;
-			try {
-				await Devices.LoadAsync (MainLog, removed_locked: true);
-			} catch (Exception e) {
-				MainLog.WriteLine ("Failed to load devices: {0}", e);
-				return rv;
-			}
-
 			foreach (var project in Harness.IOSTestProjects) {
-				if (!project.IsExecutableProject)
-					continue;
-
 				bool ignored = !IncludeDevice;
-				if (!IncludeBcl && project.IsBclTest)
+				if (!IsIncluded (project))
 					ignored = true;
-				
-				var build64 = new XBuildTask
-				{
-					Jenkins = this,
-					TestProject = project,
-					ProjectConfiguration = "Debug64",
-					ProjectPlatform = "iPhone",
-					Platform = TestPlatform.iOS_Unified64,
-					TestName = project.Name,
-				};
-				rv.Add (new RunDeviceTask (build64, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOS });
 
-				var build32 = new XBuildTask
-				{
-					Jenkins = this,
-					TestProject = project,
-					ProjectConfiguration = "Debug32",
-					ProjectPlatform = "iPhone",
-					Platform = TestPlatform.iOS_Unified32,
-					TestName = project.Name,
-				};
-				rv.Add (new RunDeviceTask (build32, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS)) { Ignored = ignored || !IncludeiOS });
+				if (!project.SkipiOSVariation) {
+					var build64 = new XBuildTask {
+						Jenkins = this,
+						TestProject = project,
+						ProjectConfiguration = "Debug64",
+						ProjectPlatform = "iPhone",
+						Platform = TestPlatform.iOS_Unified64,
+						TestName = project.Name,
+					};
+					rv.Add (new RunDeviceTask (build64, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOS });
 
-				var todayProject = project.AsTodayExtensionProject ();
-				var buildToday = new XBuildTask
-				{
-					Jenkins = this,
-					TestProject = todayProject,
-					ProjectConfiguration = "Debug64",
-					ProjectPlatform = "iPhone",
-					Platform = TestPlatform.iOS_TodayExtension64,
-					TestName = project.Name,
-				};
-				rv.Add (new RunDeviceTask (buildToday, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOSExtensions });
+					var build32 = new XBuildTask {
+						Jenkins = this,
+						TestProject = project,
+						ProjectConfiguration = "Debug32",
+						ProjectPlatform = "iPhone",
+						Platform = TestPlatform.iOS_Unified32,
+						TestName = project.Name,
+					};
+					rv.Add (new RunDeviceTask (build32, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports32Bit)) { Ignored = ignored || !IncludeiOS });
 
-				var tvOSProject = project.AsTvOSProject ();
-				var buildTV = new XBuildTask
-				{
-					Jenkins = this,
-					TestProject = tvOSProject,
-					ProjectConfiguration = "Debug",
-					ProjectPlatform = "iPhone",
-					Platform = TestPlatform.tvOS,
-					TestName = project.Name,
-				};
-				rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.tvOS)) { Ignored = ignored || !IncludetvOS });
+					var todayProject = project.AsTodayExtensionProject ();
+					var buildToday = new XBuildTask {
+						Jenkins = this,
+						TestProject = todayProject,
+						ProjectConfiguration = "Debug64",
+						ProjectPlatform = "iPhone",
+						Platform = TestPlatform.iOS_TodayExtension64,
+						TestName = project.Name,
+					};
+					rv.Add (new RunDeviceTask (buildToday, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOSExtensions });
+				}
 
-				var watchOSProject = project.AsWatchOSProject ();
-				var buildWatch = new XBuildTask
-				{
-					Jenkins = this,
-					TestProject = watchOSProject,
-					ProjectConfiguration = "Debug",
-					ProjectPlatform = "iPhone",
-					Platform = TestPlatform.watchOS,
-					TestName = project.Name,
-				};
-				rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.watchOS)){ Ignored = ignored || !IncludewatchOS });
+				if (!project.SkiptvOSVariation) {
+					var tvOSProject = project.AsTvOSProject ();
+					var buildTV = new XBuildTask {
+						Jenkins = this,
+						TestProject = tvOSProject,
+						ProjectConfiguration = "Debug",
+						ProjectPlatform = "iPhone",
+						Platform = TestPlatform.tvOS,
+						TestName = project.Name,
+					};
+					rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.tvOS)) { Ignored = ignored || !IncludetvOS });
+				}
+
+				if (!project.SkipwatchOSVariation) {
+					var watchOSProject = project.AsWatchOSProject ();
+					var buildWatch = new XBuildTask {
+						Jenkins = this,
+						TestProject = watchOSProject,
+						ProjectConfiguration = "Debug",
+						ProjectPlatform = "iPhone",
+						Platform = TestPlatform.watchOS,
+						TestName = project.Name,
+					};
+					rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.watchOS)) { Ignored = ignored || !IncludewatchOS });
+				}
 			}
 
 			var assembly_build_targets = new []
@@ -273,8 +296,7 @@ namespace xharness
 			
 			// Then we check for labels. Labels are manually set, so those override
 			// whatever we did automatically.
-			if (pull_request > 0)
-				SelectTestsByLabel (pull_request);
+			SelectTestsByLabel (pull_request);
 
 			if (!Harness.INCLUDE_IOS) {
 				MainLog.WriteLine ("The iOS build is diabled, so any iOS tests will be disabled as well.");
@@ -363,7 +385,10 @@ namespace xharness
 
 		void SelectTestsByLabel (int pull_request)
 		{
-			var labels = GitHub.GetLabels (Harness, pull_request);
+			var labels = new HashSet<string> ();
+			labels.UnionWith (Harness.Labels);
+			if (pull_request > 0)
+				labels.UnionWith (GitHub.GetLabels (Harness, pull_request));
 
 			MainLog.WriteLine ("Found {1} label(s) in the pull request #{2}: {0}", string.Join (", ", labels.ToArray ()), labels.Count (), pull_request);
 
@@ -374,6 +399,7 @@ namespace xharness
 			SetEnabled (labels, "btouch", ref IncludeBtouch);
 			SetEnabled (labels, "mac-binding-project", ref IncludeMacBindingProject);
 			SetEnabled (labels, "ios-extensions", ref IncludeiOSExtensions);
+			SetEnabled (labels, "ios-device", ref IncludeDevice);
 
 			// enabled by default
 			SetEnabled (labels, "ios", ref IncludeiOS);
@@ -382,9 +408,11 @@ namespace xharness
 			SetEnabled (labels, "mac", ref IncludeMac);
 			SetEnabled (labels, "mac-classic", ref IncludeClassicMac);
 			SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
+			SetEnabled (labels, "ios-simulator", ref IncludeSimulator);
+			SetEnabled (labels, "system-permission", ref IncludeSystemPermissionTests);
 		}
 
-		void SetEnabled (IEnumerable<string> labels, string testname, ref bool value)
+		void SetEnabled (HashSet<string> labels, string testname, ref bool value)
 		{
 			if (labels.Contains ("skip-" + testname + "-tests")) {
 				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-{0}-tests' is set.", testname);
@@ -406,27 +434,28 @@ namespace xharness
 		{
 			// Missing:
 			// api-diff
-			// msbuild tests
 
 			SelectTests ();
+
+			await LoadSimulatorsAndDevicesAsync ();
 
 			var runSimulatorTasks = new List<RunSimulatorTask> ();
 
 			foreach (var project in Harness.IOSTestProjects) {
-				if (!project.IsExecutableProject)
-					continue;
-
 				bool ignored = false;
 				if (!IncludeSimulator)
 					ignored = true;
 
-				if (!IncludeBcl && project.IsBclTest)
+				if (!IsIncluded (project))
 					ignored = true;
 
 				var ps = new List<Tuple<TestProject, TestPlatform, bool>> ();
-				ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored || !IncludeiOS));
-				ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored || !IncludetvOS));
-				ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored || !IncludewatchOS));
+				if (!project.SkipiOSVariation)
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored || !IncludeiOS));
+				if (!project.SkiptvOSVariation)
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored || !IncludetvOS));
+				if (!project.SkipwatchOSVariation)
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored || !IncludewatchOS));
 				foreach (var pair in ps) {
 					var derived = new XBuildTask () {
 						Jenkins = this,
@@ -437,13 +466,14 @@ namespace xharness
 						Ignored = pair.Item3,
 						TestName = project.Name,
 					};
-					runSimulatorTasks.AddRange (await CreateRunSimulatorTaskAsync (derived));
+					runSimulatorTasks.AddRange (CreateRunSimulatorTaskAsync (derived));
 				}
 			}
 
 			foreach (var taskGroup in runSimulatorTasks.GroupBy ((RunSimulatorTask task) => task.Platform)) {
 				Tasks.Add (new AggregatedRunSimulatorTask (taskGroup) {
 					Jenkins = this,
+					TestName = $"Tests for {taskGroup.Key}",
 				});
 			}
 
@@ -469,14 +499,11 @@ namespace xharness
 			Tasks.Add (nunitExecutioniOSMSBuild);
 			
 			foreach (var project in Harness.MacTestProjects) {
-				if (!project.IsExecutableProject)
-					continue;
-
 				bool ignored = !IncludeMac;
 				if (!IncludeMmpTest && project.Path.Contains ("mmptest"))
 					ignored = true;
 
-				if (!IncludeBcl && project.IsBclTest)
+				if (!IsIncluded (project))
 					ignored = true;
 
 				var configurations = project.Configurations;
@@ -566,7 +593,7 @@ namespace xharness
 
 			var buildGenerator = new MakeTask {
 				Jenkins = this,
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "src", "generator-ikvm.sln"))),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "src", "generator.sln"))),
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
@@ -607,7 +634,7 @@ namespace xharness
 			};
 			Tasks.Add (runMacBindingProject);
 			
-			Tasks.AddRange (await CreateRunDeviceTasks ());
+			Tasks.AddRange (CreateRunDeviceTasks ());
 		}
 
 		RunTestTask CloneExecuteTask (RunTestTask task, TestPlatform platform, string suffix, bool ignore)
@@ -680,7 +707,7 @@ namespace xharness
 				}
 				Task.WaitAll (tasks.ToArray ());
 				GenerateReport ();
-				return Tasks.Any ((v) => v.Failed) ? 1 : 0;
+				return Tasks.Any ((v) => v.Failed || v.Skipped) ? 1 : 0;
 			} catch (Exception ex) {
 				MainLog.WriteLine ("Unexpected exception: {0}", ex);
 				Console.WriteLine ("Unexpected exception: {0}", ex);
@@ -905,6 +932,12 @@ namespace xharness
 								}
 							}
 							break;
+						case "/reload-devices":
+							GC.KeepAlive (Devices.LoadAsync (DeviceLoadLog, force: true));
+							break;
+						case "/reload-simulators":
+							GC.KeepAlive (Simulators.LoadAsync (SimulatorLoadLog, force: true));
+							break;
 						case "/quit":
 							using (var writer = new StreamWriter (response.OutputStream)) {
 								writer.WriteLine ("<!DOCTYPE html>");
@@ -950,7 +983,9 @@ namespace xharness
 			};
 			thread.Start ();
 
-			Process.Start ("open", $"http://localhost:{port}/");
+			var url = $"http://localhost:{port}/";
+			Console.WriteLine ($"Launching {url} in the system's default browser.");
+			Process.Start ("open", url);
 
 			return tcs.Task;
 		}
@@ -975,6 +1010,8 @@ namespace xharness
 				return "black";
 			else if (tests.Any ((v) => v.Ignored))
 				return "gray";
+			else if (tests.Any ((v) => v.Skipped))
+				return "orangered";
 			else
 				return "black";
 		}
@@ -1009,7 +1046,7 @@ namespace xharness
 				} else if (test.Waiting) {
 					return "darkgray";
 				} else if (test.Skipped) {
-					return "silver";
+					return "orangered";
 				} else {
 					return "pink";
 				}
@@ -1026,10 +1063,23 @@ namespace xharness
 				lock (report_lock) {
 					var report = Path.Combine (LogDirectory, "index.html");
 					using (var stream = new MemoryStream ()) {
-						GenerateReportImpl (stream);
+						MemoryStream markdown_summary = null;
+						StreamWriter markdown_writer = null;
+						if (!string.IsNullOrEmpty (Harness.MarkdownSummaryPath)) {
+							markdown_summary = new MemoryStream ();
+							markdown_writer = new StreamWriter (markdown_summary);
+						}
+						GenerateReportImpl (stream, markdown_writer);
 						if (File.Exists (report))
 							File.Delete (report);
 						File.WriteAllBytes (report, stream.ToArray ());
+						if (!string.IsNullOrEmpty (Harness.MarkdownSummaryPath)) {
+							markdown_writer.Flush ();
+							if (File.Exists (Harness.MarkdownSummaryPath))
+								File.Delete (Harness.MarkdownSummaryPath);
+							File.WriteAllBytes (Harness.MarkdownSummaryPath, markdown_summary.ToArray ());
+							markdown_writer.Close ();
+						}
 					}
 				}
 			} catch (Exception e) {
@@ -1037,7 +1087,7 @@ namespace xharness
 			}
 		}
 
-		void GenerateReportImpl (Stream stream)
+		void GenerateReportImpl (Stream stream, StreamWriter markdown_summary = null)
 		{
 			var id_counter = 0;
 
@@ -1089,7 +1139,7 @@ namespace xharness
 				allTasks.AddRange (allDeviceTasks);
 			}
 
-			var failedTests = allTasks.Where ((v) => v.Failed);
+			var failedTests = allTasks.Where ((v) => v.Failed || v.Skipped);
 			var unfinishedTests = allTasks.Where ((v) => !v.Finished);
 			var passedTests = allTasks.Where ((v) => v.Succeeded);
 			var runningTests = allTasks.Where ((v) => v.Running && !v.Waiting);
@@ -1097,9 +1147,47 @@ namespace xharness
 			var runningQueuedTests = allTasks.Where ((v) => v.Running && v.Waiting);
 			var buildingQueuedTests = allTasks.Where ((v) => v.Building && v.Waiting);
 
+			if (markdown_summary != null) {
+				markdown_summary.WriteLine ("# Test results");
+				markdown_summary.WriteLine ();
+				if (allTasks.Count == 0) {
+					markdown_summary.WriteLine ($"Loading tests...");
+				} else if (unfinishedTests.Any ()) {
+					var list = new List<string> ();
+					var grouped = allTasks.GroupBy ((v) => v.ExecutionResult).OrderBy ((v) => (int) v.Key);
+					foreach (var @group in grouped)
+						list.Add ($"{@group.Key.ToString ()}: {@group.Count ()}");
+					markdown_summary.Write ($"# Test run in progress: ");
+					markdown_summary.Write (string.Join (", ", list));
+					markdown_summary.WriteLine ();
+				} else if (failedTests.Any ()) {
+					markdown_summary.WriteLine ($"{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed.");
+				} else if (passedTests.Any ()) {
+					markdown_summary.WriteLine ($"# All {passedTests.Count ()} tests passed");
+				} else {
+					markdown_summary.WriteLine ($"# No tests selected.");
+				}
+				markdown_summary.WriteLine ();
+				if (failedTests.Any ()) {
+					markdown_summary.WriteLine ("## Failed tests");
+					markdown_summary.WriteLine ();
+					foreach (var t in failedTests) {
+						markdown_summary.Write ($" * {t.TestName}");
+						if (!string.IsNullOrEmpty (t.Mode))
+							markdown_summary.Write ($"/{t.Mode}");
+						if (!string.IsNullOrEmpty (t.Variation))
+							markdown_summary.Write ($"/{t.Variation}");
+						markdown_summary.Write ($": {t.ExecutionResult}");
+						if (!string.IsNullOrEmpty (t.FailureMessage))
+							markdown_summary.Write ($" ({t.FailureMessage})");
+						markdown_summary.WriteLine ();
+					}
+				}
+			}
+
 			using (var writer = new StreamWriter (stream)) {
 				writer.WriteLine ("<!DOCTYPE html>");
-				writer.WriteLine ("<html onkeypress='keyhandler(event)'>");
+				writer.WriteLine ("<html onkeypress='keyhandler(event)' lang='en'>");
 				if (IsServerMode && populating)
 					writer.WriteLine ("<meta http-equiv=\"refresh\" content=\"1\">");
 				writer.WriteLine (@"<head>
@@ -1114,12 +1202,12 @@ namespace xharness
 
 #nav {
 	display: inline-block;
-	width: 200px;
+	width: 350px;
 }
 
 #nav > * {
 	display: inline;
-	width: 200px;
+	width: 300px;
 }
 
 #nav ul {
@@ -1167,8 +1255,7 @@ namespace xharness
 	text-decoration: underline;
 }
 
-</style>
-</head>");
+</style>");
 				writer.WriteLine ("<title>Test results</title>");
 				writer.WriteLine (@"<script type='text/javascript'>
 var ajax_log = null;
@@ -1232,6 +1319,23 @@ function toggleAjaxLogVisibility()
 		button.innerText = 'Show log';
 	}
 }
+function toggleVisibility (css_class)
+{
+	var objs = document.getElementsByClassName (css_class);
+	
+	for (var i = 0; i < objs.length; i++) {
+		var obj = objs [i];
+		
+		var pname = 'original-' + css_class + '-display';
+		if (obj.hasOwnProperty (pname)) {
+			obj.style.display = obj [pname];
+			delete obj [pname];
+		} else {
+			obj [pname] = obj.style.display;
+			obj.style.display = 'none';
+		}
+	}
+}
 function keyhandler(event)
 {
 	switch (String.fromCharCode (event.keyCode)) {
@@ -1284,8 +1388,9 @@ function autorefresh()
 				if (new_obj) {
 					if (ar_obj.innerHTML != new_obj.innerHTML)
 						ar_obj.innerHTML = new_obj.innerHTML;
-					if (ar_obj.style != new_obj.style)
+					if (ar_obj.style.cssText != new_obj.style.cssText) {
 						ar_obj.style = new_obj.style;
+					}
 					
 					var evt = ar_obj.getAttribute ('data-onautorefresh');
 					if (evt != '') {
@@ -1334,10 +1439,11 @@ function oninitialload ()
 				if (IsServerMode)
 					writer.WriteLine ("setInterval (autorefresh, 1000);");
 				writer.WriteLine ("</script>");
+				writer.WriteLine ("</head>");
 				writer.WriteLine ("<body onload='oninitialload ();'>");
 
 				if (IsServerMode) {
-					writer.WriteLine ("<div id='quit' style='position:absolute; top: 20px; right: 20px;'><a href='javascript:quit()'>Quit</a></br><a id='ajax-log-button' href='javascript:toggleAjaxLogVisibility ();'>Show log</a></div>");
+					writer.WriteLine ("<div id='quit' style='position:absolute; top: 20px; right: 20px;'><a href='javascript:quit()'>Quit</a><br/><a id='ajax-log-button' href='javascript:toggleAjaxLogVisibility ();'>Show log</a></div>");
 					writer.WriteLine ("<div id='ajax-log' style='position:absolute; top: 200px; right: 20px; max-width: 100px; display: none;'></div>");
 				}
 
@@ -1347,7 +1453,9 @@ function oninitialload ()
 					writer.WriteLine ("<a href='{0}' type='text/plain'>{1}</a><br />", log.FullPath.Substring (LogDirectory.Length + 1), log.Description);
 
 				var headerColor = "black";
-				if (failedTests.Any ()) {
+				if (unfinishedTests.Any ()) {
+					; // default
+				} else if (failedTests.Any ()) {
 					headerColor = "red";
 				} else if (passedTests.Any ()) {
 					headerColor = "green";
@@ -1355,11 +1463,12 @@ function oninitialload ()
 					headerColor = "gray";
 				}
 
+				writer.Write ($"<h2 style='color: {headerColor}'>");
 				writer.Write ($"<span id='x{id_counter++}' class='autorefreshable'>");
 				if (allTasks.Count == 0) {
-					writer.Write ($"<h2 style='color: {headerColor}'>Loading tests...");
+					writer.Write ($"Loading tests...");
 				} else if (unfinishedTests.Any ()) {
-					writer.Write ($"<h2>Test run in progress (");
+					writer.Write ($"Test run in progress (");
 					var list = new List<string> ();
 					var grouped = allTasks.GroupBy ((v) => v.ExecutionResult).OrderBy ((v) => (int) v.Key);
 					foreach (var @group in grouped)
@@ -1367,16 +1476,18 @@ function oninitialload ()
 					writer.Write (string.Join (", ", list));
 					writer.Write (")");
 				} else if (failedTests.Any ()) {
-					writer.Write ($"<h2 style='color: {headerColor}'>{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed.");
+					writer.Write ($"{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed.");
 				} else if (passedTests.Any ()) {
-					writer.Write ($"<h2 style='color: {headerColor}'>All {passedTests.Count ()} tests passed");
+					writer.Write ($"All {passedTests.Count ()} tests passed");
 				} else {
-					writer.Write ($"<h2 style='color: {headerColor}'>No tests selected.");
+					writer.Write ($"No tests selected.");
 				}
+				writer.WriteLine ("</span>");
+				writer.WriteLine ("</h2>");
 				if (IsServerMode && allTasks.Count > 0) {
-					writer.WriteLine (@"</h2></span>
+					writer.WriteLine (@"
 <ul id='nav'>
-	<li id=""adminmenu"">Select
+	<li>Select
 		<ul>
 			<li class=""adminitem""><a href='javascript:sendrequest (""select?all"");'>All tests</a></li>
 			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-device"");'>All device tests</a></li>
@@ -1387,7 +1498,7 @@ function oninitialload ()
 			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-mac"");'>All Mac tests</a></li>
 		</ul>
 	</li>
-	<li id=""adminmenu"">Deselect
+	<li>Deselect
 		<ul>
 			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all"");'>All tests</a></li>
 			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-device"");'>All device tests</a></li>
@@ -1398,16 +1509,26 @@ function oninitialload ()
 			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-mac"");'>All Mac tests</a></li>
 		</ul>
 	</li>
-	<li id=""adminmenu"">Run
+	<li>Run
 		<ul>
 			<li class=""adminitem""><a href='javascript:runalltests ();'>All tests</a></li>
 			<li class=""adminitem""><a href='javascript:sendrequest (""runselected"");'>All selected tests</a></li>
 			<li class=""adminitem""><a href='javascript:sendrequest (""runfailed"");'>All failed tests</a></li>
 		</ul>
 	</li>
+	<li>Toggle visibility
+		<ul>
+			<li class=""adminitem""><a href='javascript:toggleVisibility (""toggleable-ignored"");'>Ignored tests</a></li>
+		</ul>
+	</li>
+	<li>Reload
+		<ul>
+			<li class=""adminitem""><a href='javascript:sendrequest (""reload-devices"");'>Devices</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""reload-simulators"");'>Simulators</a></li>
+		</ul>
+	</li>
 </ul>");
 				}
-				writer.WriteLine ("</h2></span>");
 
 				writer.WriteLine ("<div id='test-table' style='width: 100%'>");
 				if (IsServerMode) {
@@ -1494,9 +1615,10 @@ function oninitialload ()
 					// Test header for multiple tests
 					if (!singleTask) {
 						var autoExpand = !IsServerMode && group.Any ((v) => v.Failed);
+						var ignoredClass = group.All ((v) => v.Ignored) ? "toggleable-ignored" : string.Empty;
 						var defaultExpander = autoExpand ? "-" : "+";
 						var defaultDisplay = autoExpand ? "block" : "none";
-						writer.Write ($"<div class='pdiv'>");
+						writer.Write ($"<div class='pdiv {ignoredClass}'>");
 						writer.Write ($"<span id='button_container2_{groupId}' class='expander' onclick='javascript: toggleContainerVisibility2 (\"{groupId}\");'>{defaultExpander}</span>");
 						writer.Write ($"<span id='x{id_counter++}' class='p1 autorefreshable' onclick='javascript: toggleContainerVisibility2 (\"{groupId}\");'>{group.Key}{RenderTextStates (group)}</span>");
 						if (IsServerMode)
@@ -1512,12 +1634,14 @@ function oninitialload ()
 						if (multipleModes) {
 							var modeGroupId = id_counter++.ToString ();
 							var autoExpand = !IsServerMode && modeGroup.Any ((v) => v.Failed);
+							var ignoredClass = modeGroup.All ((v) => v.Ignored) ? "toggleable-ignored" : string.Empty;
 							var defaultExpander = autoExpand ? "-" : "+";
 							var defaultDisplay = autoExpand ? "block" : "none";
-							writer.Write ($"<div class='pdiv'>");
+							writer.Write ($"<div class='pdiv {ignoredClass}'>");
 							writer.Write ($"<span id='button_container2_{modeGroupId}' class='expander' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>{defaultExpander}</span>");
 							writer.Write ($"<span id='x{id_counter++}' class='p2 autorefreshable' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>{modeGroup.Key}{RenderTextStates (modeGroup)}</span>");
-							writer.Write ($" <span><a class='runall' href='javascript: runtest (\"{string.Join (",", modeGroup.Select ((v) => v.ID.ToString ()))}\");'>Run all</a></span>");
+							if (IsServerMode)
+								writer.Write ($" <span><a class='runall' href='javascript: runtest (\"{string.Join (",", modeGroup.Select ((v) => v.ID.ToString ()))}\");'>Run all</a></span>");
 							writer.WriteLine ("</div>");
 
 							writer.WriteLine ($"<div id='test_container2_{modeGroupId}' style='display: {defaultDisplay}; margin-left: 20px;'>");
@@ -1538,10 +1662,11 @@ function oninitialload ()
 							}
 
 							var autoExpand = !IsServerMode && test.Failed;
+							var ignoredClass = test.Ignored ? "toggleable-ignored" : string.Empty;
 							var defaultExpander = autoExpand ? "&nbsp;" : "+";
 							var defaultDisplay = autoExpand ? "block" : "none";
 
-							writer.Write ($"<div class='pdiv'>");
+							writer.Write ($"<div class='pdiv {ignoredClass}'>");
 							writer.Write ($"<span id='button_{log_id}' class='expander' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{defaultExpander}</span>");
 							writer.Write ($"<span id='x{id_counter++}' class='p3 autorefreshable' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{title} (<span style='color: {GetTestColor (test)}'>{state}</span>) </span>");
 							if (IsServerMode && !test.InProgress && !test.Waiting)
@@ -1564,6 +1689,11 @@ function oninitialload ()
 								if (runTest.BuildTask.Duration.Ticks > 0) {
 									writer.WriteLine ($"Project file: {runTest.BuildTask.ProjectFile} <br />");
 									writer.WriteLine ($"Platform: {runTest.BuildTask.ProjectPlatform} Configuration: {runTest.BuildTask.ProjectConfiguration} <br />");
+									IEnumerable<IDevice> candidates = (runTest as RunDeviceTask)?.Candidates;
+									if (candidates == null)
+										candidates = (runTest as RunSimulatorTask)?.Candidates;
+									if (candidates != null)
+										writer.WriteLine ($"Candidate devices: {string.Join (", ", candidates.Select ((v) => v.Name))} <br />");
 									writer.WriteLine ($"Build duration: {runTest.BuildTask.Duration} <br />");
 								}
 								if (test.Duration.Ticks > 0)
@@ -1717,7 +1847,7 @@ function oninitialload ()
 		public Jenkins Jenkins;
 		public Harness Harness { get { return Jenkins.Harness; } }
 		public TestProject TestProject;
-		public string ProjectFile { get { return TestProject.Path; } }
+		public string ProjectFile { get { return TestProject?.Path; } }
 		public string ProjectConfiguration;
 		public string ProjectPlatform;
 		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
@@ -1800,6 +1930,8 @@ function oninitialload ()
 					return test_name;
 				
 				var rv = Path.GetFileNameWithoutExtension (ProjectFile);
+				if (rv == null)
+					return $"unknown test name ({GetType ().Name}";
 				switch (Platform) {
 				case TestPlatform.Mac:
 				case TestPlatform.Mac_Classic:
@@ -2668,7 +2800,7 @@ function oninitialload ()
 		}
 
 		public RunDeviceTask (XBuildTask build_task, IEnumerable<Device> candidates)
-			: base (build_task, candidates)
+			: base (build_task, candidates.OrderBy ((v) => v.DebugSpeed))
 		{
 			switch (build_task.Platform) {
 			case TestPlatform.iOS:
@@ -2696,13 +2828,14 @@ function oninitialload ()
 			Jenkins.MainLog.WriteLine ("Running '{0}' on device (candidates: '{1}')", ProjectFile, string.Join ("', '", Candidates.Select ((v) => v.Name).ToArray ()));
 
 			var install_log = Logs.CreateStream (LogDirectory, $"install-{Timestamp}.log", "Install log");
+			install_log.Timestamp = true;
 			var uninstall_log = Logs.CreateStream (LogDirectory, $"uninstall-{Timestamp}.log", "Uninstall log");
 			using (var device_resource = await NotifyBlockingWaitAsync (Jenkins.GetDeviceResources (Candidates).AcquireAnyConcurrentAsync ())) {
 				try {
 					// Set the device we acquired.
 					Device = Candidates.First ((d) => d.UDID == device_resource.Resource.Name);
 					if (Platform == TestPlatform.watchOS)
-						CompanionDevice = Jenkins.Devices.FindCompanionDevice (Jenkins.MainLog, Device);
+						CompanionDevice = Jenkins.Devices.FindCompanionDevice (Jenkins.DeviceLoadLog, Device);
 					Jenkins.MainLog.WriteLine ("Acquired device '{0}' for '{1}'", Device.Name, ProjectFile);
 
 					runner = new AppRunner
@@ -2715,15 +2848,14 @@ function oninitialload ()
 						DeviceName = Device.Name,
 						CompanionDeviceName = CompanionDevice?.Name,
 						Configuration = ProjectConfiguration,
+						IncludeSystemPermissionTests = Jenkins.IncludeSystemPermissionTests,
 					};
 
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
 					runner.MainLog = uninstall_log;
 					var uninstall_result = await runner.UninstallAsync ();
-					if (!uninstall_result.Succeeded) {
-						FailureMessage = $"Uninstall failed, exit code: {uninstall_result.ExitCode}.";
-						ExecutionResult = TestExecutingResult.Failed;
-					}
+					if (!uninstall_result.Succeeded)
+						MainLog.WriteLine ($"Pre-run uninstall failed, exit code: {uninstall_result.ExitCode} (this hopefully won't affect the test result)");
 
 					if (!Failed) {
 						// Install the app
@@ -2766,6 +2898,7 @@ function oninitialload ()
 								DeviceName = Device.Name,
 								CompanionDeviceName = CompanionDevice?.Name,
 								Configuration = ProjectConfiguration,
+								IncludeSystemPermissionTests = Jenkins.IncludeSystemPermissionTests,
 							};
 							additional_runner = todayRunner;
 							await todayRunner.RunAsync ();
@@ -2843,7 +2976,7 @@ function oninitialload ()
 			if (Platform == TestPlatform.watchOS)
 				CompanionDevice = Jenkins.Simulators.FindCompanionDevice (Jenkins.SimulatorLoadLog, Device);
 
-			var clean_state = false;//Platform == TestPlatform.tvOS;
+			var clean_state = false;//Platform == TestPlatform.watchOS;
 			runner = new AppRunner ()
 			{
 				Harness = Harness,
@@ -2852,6 +2985,7 @@ function oninitialload ()
 				Target = AppRunnerTarget,
 				LogDirectory = LogDirectory,
 				MainLog = Logs.CreateStream (LogDirectory, $"run-{Device.UDID}-{Timestamp}.log", "Run log"),
+				IncludeSystemPermissionTests = Jenkins.IncludeSystemPermissionTests,
 			};
 			runner.Simulators = Simulators;
 			runner.Initialize ();

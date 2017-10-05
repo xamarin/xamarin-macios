@@ -1,12 +1,7 @@
 
 using System;
-#if IKVM
 using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
-#else
-using System.Reflection;
-#endif
-using System.Runtime.InteropServices;
 
 public static class TypeManager {
 	public static Type System_Attribute;
@@ -62,6 +57,8 @@ public static class TypeManager {
 	public static Type CGColor;
 	public static Type CGColorSpace;
 	public static Type CGContext;
+	public static Type CGPDFDocument;
+	public static Type CGPDFPage;
 	public static Type CGGradient;
 	public static Type CGImage;
 	public static Type CGLayer;
@@ -100,6 +97,7 @@ public static class TypeManager {
 	public static Type SecTrust;
 	public static Type UIEdgeInsets;
 	public static Type UIOffset;
+	public static Type NSDirectionalEdgeInsets;
 
 	public static Type CoreGraphics_CGPoint;
 	public static Type CoreGraphics_CGRect;
@@ -153,7 +151,6 @@ public static class TypeManager {
 
 	public static Type GetUnderlyingNullableType (Type type)
 	{
-#if IKVM
 		if (!type.IsConstructedGenericType)
 			return null;
 
@@ -168,27 +165,16 @@ public static class TypeManager {
 			return null;
 
 		return type.GenericTypeArguments [0];
-#else
-		return Nullable.GetUnderlyingType (type);
-#endif
 	}
 
 	public static bool IsOutParameter (ParameterInfo pi)
 	{
-#if IKVM
 		return pi.IsOut;
-#else
-		return AttributeManager.HasAttribute<OutAttribute> (pi);
-#endif
 	}
 
 	public static Type GetUnderlyingEnumType (Type type)
 	{
-#if IKVM
 		return type.GetEnumUnderlyingType ();
-#else
-		return Enum.GetUnderlyingType (type);
-#endif
 	}
 
 	public static void Initialize (Assembly api, Assembly corlib, Assembly platform, Assembly system, Assembly binding)
@@ -250,8 +236,9 @@ public static class TypeManager {
 			ABPerson = Lookup (platform_assembly, "AddressBook", "ABPerson");
 			ABRecord = Lookup (platform_assembly, "AddressBook", "ABRecord");
 		}
+		// misplaced API, it's really in CoreAudio (now available everywhere)
+		AudioBuffers = Lookup (platform_assembly, "AudioToolbox", "AudioBuffers");
 		if (Frameworks.HaveAudioToolbox) {
-			AudioBuffers = Lookup (platform_assembly, "AudioToolbox", "AudioBuffers");
 			MusicSequence = Lookup (platform_assembly, "AudioToolbox", "MusicSequence", true /* may not be found */);
 		}
 		if (Frameworks.HaveAudioUnit) {
@@ -268,6 +255,8 @@ public static class TypeManager {
 		CGColor = Lookup (platform_assembly, "CoreGraphics", "CGColor");
 		CGColorSpace = Lookup (platform_assembly, "CoreGraphics", "CGColorSpace");
 		CGContext = Lookup (platform_assembly, "CoreGraphics", "CGContext");
+		CGPDFDocument = Lookup (platform_assembly, "CoreGraphics", "CGPDFDocument");
+		CGPDFPage = Lookup (platform_assembly, "CoreGraphics", "CGPDFPage");
 		CGGradient = Lookup (platform_assembly, "CoreGraphics", "CGGradient");
 		CGImage = Lookup (platform_assembly, "CoreGraphics", "CGImage");
 		CGLayer = Lookup (platform_assembly, "CoreGraphics", "CGLayer");
@@ -316,6 +305,7 @@ public static class TypeManager {
 		if (Frameworks.HaveUIKit) {
 			UIOffset = Lookup (platform_assembly, "UIKit", "UIOffset");
 			UIEdgeInsets = Lookup (platform_assembly, "UIKit", "UIEdgeInsets");
+			NSDirectionalEdgeInsets = Lookup (platform_assembly, "UIKit", "NSDirectionalEdgeInsets");
 		}
 
 		if (Generator.UnifiedAPI) {

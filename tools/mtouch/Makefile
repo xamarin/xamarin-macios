@@ -28,6 +28,8 @@ LINKER_SOURCES = \
 	$(MONOLINKER)/Mono.Linker/MarkException.cs			\
 	$(MONOLINKER)/Mono.Linker/MethodAction.cs			\
 	$(MONOLINKER)/Mono.Linker/Pipeline.cs				\
+	$(MONOLINKER)/Mono.Linker/MethodReferenceExtensions.cs		\
+	$(MONOLINKER)/Mono.Linker/TypeReferenceExtensions.cs		\
 	$(MONOLINKER)/Mono.Linker/TypePreserve.cs			\
 	$(MONOLINKER)/Mono.Linker/XApiReader.cs				\
 	$(MONOLINKER)/Mono.Linker.Steps/BaseStep.cs			\
@@ -69,6 +71,7 @@ LINKER_SOURCES = \
 	$(LINKER_DIR)/MonoTouch.Tuner/RemoveAttributes.cs		\
 	$(LINKER_DIR)/MonoTouch.Tuner/RemoveCode.cs			\
 	$(LINKER_DIR)/MonoTouch.Tuner/SealerSubStep.cs	\
+	$(LINKER_DIR)/MonoTouch.Tuner/PreserveSmartEnumConversionsSubStep.cs		\
 	$(TOP)/tools/linker/ApplyPreserveAttribute.cs 		\
 	$(TOP)/tools/linker/BaseProfile.cs			\
 	$(TOP)/tools/linker/CoreHttpMessageHandler.cs	\
@@ -270,7 +273,11 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework UserNotifications		\
 	-weak_framework UserNotificationsUI		\
 	-weak_framework Intents					\
-	-weak_framework IntentsUI
+	-weak_framework IntentsUI					\
+						\
+	-weak_framework ARKit					\
+	-weak_framework FileProvider			\
+	-weak_framework FileProviderUI
 
 # note: there _was_ no CoreAudioKit.framework or Metal.framework for the simulator (before recent iOS9 betas)
 # note 2: there's no GameKit, in iOS 9 (beta 3 at least), you're supposed to reference GameCenter instead (looks fixed in beta 4)
@@ -315,13 +322,6 @@ bin/Debug/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
 	$(Q) mkdir -p bin/Debug
 	$(Q_CSC) $(SYSTEM_CSC) $(MTOUCH_COMPILE_ARGS) -out:$@ -d:DEV
 
-SdkVersions.cs: SdkVersions.cs.in Makefile $(TOP)/Make.config
-	$(Q_GEN) sed \
-		-e 's/@IOS_SDK_VERSION@/$(IOS_SDK_VERSION)/g' -e 's/@WATCHOS_SDK_VERSION@/$(WATCH_SDK_VERSION)/' -e 's/@TVOS_SDK_VERSION@/$(TVOS_SDK_VERSION)/' -e 's/@OSX_SDK_VERSION@/$(OSX_SDK_VERSION)/' \
-		-e 's/@MIN_IOS_SDK_VERSION@/$(MIN_IOS_SDK_VERSION)/g' -e 's/@MIN_WATCHOS_SDK_VERSION@/$(MIN_WATCHOS_SDK_VERSION)/' -e 's/@MIN_TVOS_SDK_VERSION@/$(MIN_TVOS_SDK_VERSION)/' -e 's/@MIN_OSX_SDK_VERSION@/$(MIN_OSX_SDK_VERSION)/' \
-		-e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' \
-		$< > $@ 
-
 # bin/Makefile/mtouch.exe is what we build from the makefile (and end up releasing)
 bin/Makefile/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
 	$(Q) mkdir -p $(dir $@)
@@ -358,16 +358,16 @@ bin/Makefile/Mono.Cecil.Mdb.dll: $(MONO_CECIL_MDB_DLL) | bin/Makefile
 	$(Q_LIPO) $(DEVICE_BIN_PATH)/lipo -create -output $@ $^
 
 %.registrar.ios.i386.a:   %.registrar.ios.i386.m      %.registrar.ios.i386.h
-	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATOR86_CFLAGS)    -x objective-c++ -o $@ -c $< -Wall -I$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/include
+	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATOR86_CFLAGS)    -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/include
 
 %.registrar.ios.x86_64.a: %.registrar.ios.x86_64.m    %.registrar.ios.x86_64.h
-	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATOR64_CFLAGS)    -x objective-c++ -o $@ -c $< -Wall -I$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/include
+	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATOR64_CFLAGS)    -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/include
 
 %.registrar.watchos.a:    %.registrar.watchos.m  %.registrar.watchos.h
-	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATORWATCH_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -I$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/include
+	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATORWATCH_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/include
 
 %.registrar.tvos.a:       %.registrar.tvos.m     %.registrar.tvos.h
-	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATORTV_CFLAGS)    -x objective-c++ -o $@ -c $< -Wall -I$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/include
+	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATORTV_CFLAGS)    -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/include
 
 TARGETS = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch                                          \
@@ -454,6 +454,7 @@ clean-local::
 	$(SYSTEM_XBUILD) /t:Clean /p:Configuration=$(CECIL_CONFIG) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj
 
 include $(TOP)/mk/rules.mk
+include ../common/Make.common
 
 # make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
 # marking those files as .SECONDARY will prevent that deletion.

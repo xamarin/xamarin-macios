@@ -154,6 +154,18 @@ namespace Xamarin.Tests
 			return false;
 		}
 
+		public int ErrorCount {
+			get {
+				return messages.Count ((v) => v.IsError);
+			}
+		}
+
+		public int WarningCount {
+			get {
+				return messages.Count ((v) => v.IsWarning);
+			}
+		}
+
 		public bool HasError (string prefix, int number, string message)
 		{
 			foreach (var msg in messages) {
@@ -161,6 +173,11 @@ namespace Xamarin.Tests
 					return true;
 			}
 			return false;
+		}
+
+		public void AssertErrorCount (int count, string message = "errors")
+		{
+			Assert.AreEqual (count, ErrorCount, message);
 		}
 
 		public void AssertErrorPattern (int number, string messagePattern)

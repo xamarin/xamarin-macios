@@ -125,5 +125,12 @@ namespace MonoMac {
 		public const string PhotosLibrary = "/System/Library/Frameworks/Photos.framework/Photos";
 		public const string IntentsLibrary = "/System/Library/Frameworks/Intents.framework/Intents";
 		public const string MediaPlayerLibrary = "/System/Library/Frameworks/MediaPlayer.framework/MediaPlayer";
+
+		// macOS 10.13
+		public const string CoreMLLibrary = "/System/Library/Frameworks/CoreML.framework/CoreML";
+		public const string VisionLibrary = "/System/Library/Frameworks/Vision.framework/Vision";
+		public const string IOSurfaceLibrary = "/System/Library/Frameworks/IOSurface.framework/IOSurface";
+		public const string PhotosUILibrary = "/System/Library/Frameworks/PhotosUI.framework/PhotosUI";
+		public const string ExternalAccessoryLibrary = "/System/Library/Frameworks/ExternalAccessory.framework/ExternalAccessory";
 	}
 }

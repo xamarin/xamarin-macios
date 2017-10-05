@@ -82,6 +82,9 @@ namespace Xamarin.Bundler {
 
 	public partial class Application
 	{
+		public const string ProductName = "Xamarin.iOS";
+		public const string Error91LinkerSuggestion = "set the managed linker behaviour to Link Framework SDKs Only";
+
 		public string ExecutableName;
 		public BuildTarget BuildTarget;
 
@@ -148,6 +151,8 @@ namespace Xamarin.Bundler {
 		public bool Is64Build { get { return IsArchEnabled (Abi.Arch64Mask); } } // If we're targetting a 64 bit arch.
 		public bool IsDualBuild { get { return Is32Build && Is64Build; } } // if we're building both a 32 and a 64 bit version.
 		public bool IsLLVM { get { return IsArchEnabled (Abi.LLVM); } }
+
+		bool RequiresXcodeHeaders => LinkMode == LinkMode.None;
 
 		public List<Target> Targets = new List<Target> ();
 
@@ -595,7 +600,11 @@ namespace Xamarin.Bundler {
 			switch (Platform) {
 			case ApplePlatform.iOS:
 				if (abis.Count == 0) {
-					abis.Add (IsDeviceBuild ? Abi.ARMv7 : Abi.i386);
+					if (DeploymentTarget == null || DeploymentTarget.Major >= 11) {
+						abis.Add (IsDeviceBuild ? Abi.ARM64 : Abi.x86_64);
+					} else {
+						abis.Add (IsDeviceBuild ? Abi.ARMv7 : Abi.i386);
+					}
 				}
 				break;
 			case ApplePlatform.WatchOS:
@@ -1330,14 +1339,18 @@ namespace Xamarin.Bundler {
 			if (EnableBitCode && IsSimulatorBuild)
 				throw ErrorHelper.CreateError (84, "Bitcode is not supported in the simulator. Do not pass --bitcode when building for the simulator.");
 
-			if (LinkMode == LinkMode.None && SdkVersion < SdkVersions.GetVersion (Platform))
-				throw ErrorHelper.CreateError (91, "This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).", PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode);
-
 			Namespaces.Initialize ();
 
 			if (Embeddinator) {
 				// The assembly we're embedding doesn't necessarily reference our platform assembly, but we still need it.
 				RootAssemblies.Add (Path.Combine (Driver.GetPlatformFrameworkDirectory (this), Driver.GetProductAssembly (this) + ".dll"));
+			}
+
+			if (Platform == ApplePlatform.iOS) {
+				if (DeploymentTarget.Major >= 11 && Is32Build) {
+					var invalidArches = abis.Where ((v) => (v & Abi.Arch32Mask) != 0);
+					throw ErrorHelper.CreateError (116, $"Invalid architecture: {invalidArches.First ()}. 32-bit architectures are not supported when deployment target is 11 or later.");
+				}
 			}
 
 			InitializeCommon ();
@@ -1995,6 +2008,10 @@ namespace Xamarin.Bundler {
 			foreach (var target in Targets) {
 				GenerateMSymManifest (target, target_directory);
 				var msymdir = Path.Combine (target.BuildDirectory, "Msym");
+				if (!Directory.Exists (msymdir)) {
+					ErrorHelper.Warning (118, $"The directory {msymdir} containing the mono symbols could not be found.");
+					continue;
+				}
 				// copy aot data must be done BEFORE we do copy the msym one
 				CopyAotData (msymdir, target_directory);
 				

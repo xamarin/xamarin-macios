@@ -63,6 +63,7 @@
     <Compile Include="src\AppKit\NSColor.cs" />
     <Compile Include="src\AppKit\NSControl.cs" />
     <Compile Include="src\AppKit\NSDraggingItem.cs" />
+    <Compile Include="src\AppKit\NSFont.cs" />
     <Compile Include="src\AppKit\NSGradient.cs" />
     <Compile Include="src\AppKit\NSImage.cs" />
     <Compile Include="src\AppKit\NSLayoutManagerTests.cs" />

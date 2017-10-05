@@ -13,6 +13,7 @@ namespace Extrospection {
 		// the original name can be lost and, if not registered (e.g. enums), might not be available
 		static Dictionary<string,string> map = new Dictionary<string, string> () {
 			{ "CFURLPathStyle", "CFUrlPathStyle" },
+			{ "CIDataMatrixCodeECCVersion", "CIDataMatrixCodeEccVersion" },
 			{ "CXPlayDTMFCallActionType", "CXPlayDtmfCallActionType" },
 			{ "EABluetoothAccessoryPickerErrorCode", "EABluetoothAccessoryPickerError" },
 			{ "EKCalendarEventAvailabilityMask", "EKCalendarEventAvailability" },
@@ -39,6 +40,7 @@ namespace Extrospection {
 			{ "NEVPNIKEv2IntegrityAlgorithm", "NEVpnIke2IntegrityAlgorithm" },
 			{ "NEVPNStatus", "NEVpnStatus" },
 			{ "NSAttributedStringEnumerationOptions", "NSAttributedStringEnumeration" },
+			{ "NSFileProviderErrorCode", "NSFileProviderError" },
 			{ "NSHTTPCookieAcceptPolicy", "NSHttpCookieAcceptPolicy" },
 			{ "NSISO8601DateFormatOptions", "NSIso8601DateFormatOptions" },
 			{ "NSJSONReadingOptions", "NSJsonReadingOptions" },
@@ -52,11 +54,16 @@ namespace Extrospection {
 			{ "NSURLRequestCachePolicy", "NSUrlRequestCachePolicy" },
 			{ "NSURLRequestNetworkServiceType", "NSUrlRequestNetworkServiceType" },
 			{ "NSURLSessionAuthChallengeDisposition", "NSUrlSessionAuthChallengeDisposition" },
+			{ "NSURLSessionMultipathServiceType", "NSUrlSessionMultipathServiceType" },
 			{ "NSURLSessionResponseDisposition", "NSUrlSessionResponseDisposition" },
 			{ "NSURLSessionTaskMetricsResourceFetchType", "NSUrlSessionTaskMetricsResourceFetchType" },
 			{ "NSURLSessionTaskState", "NSUrlSessionTaskState" },
 			{ "NWTCPConnectionState", "NWTcpConnectionState" },
 			{ "NWUDPSessionState", "NWUdpSessionState" },
+			{ "PDFDisplayDirection", "PdfDisplayDirection" },
+			{ "PDFInterpolationQuality", "PdfInterpolationQuality" },
+			{ "PDFThumbnailLayoutMode", "PdfThumbnailLayoutMode" },
+			{ "PDFWidgetCellState", "PdfWidgetCellState" },
 			{ "RPRecordingErrorCode", "RPRecordingError" },
 			{ "SecTrustResultType", "SecTrustResult" },
 			{ "SKErrorCode", "SKError" },
@@ -69,6 +76,8 @@ namespace Extrospection {
 			{ "WatchKitErrorCode", "WKErrorCode" }, // WebKit already had that name
 			// not enums
 			{ "NSMutableURLRequest", "NSMutableUrlRequest" },
+			{ "UIImagePickerControllerImageURLExportPreset", "UIImagePickerControllerImageUrlExportPreset" },
+			{ "NSURLSessionDelayedRequestDisposition", "NSUrlSessionDelayedRequestDisposition" },
 		};
 
 		public static string GetManagedName (string nativeName)
@@ -84,7 +93,15 @@ namespace Extrospection {
 			return index < 0 ? source : source.Substring (0, index) + replace + source.Substring (index + find.Length);
 		}
 
-		public static string Platform { get; set; }
+		public enum Platforms
+		{
+			macOS,
+			iOS,
+			watchOS,
+			tvOS,
+		}
+
+		public static Platforms Platform { get; set; }
 
 		public static bool IsAvailable (this Decl decl)
 		{
@@ -93,20 +110,29 @@ namespace Extrospection {
 
 			// some categories are not decorated (as not available) but they extend types that are
 			if (!result.HasValue) {
-				var category = (decl.DeclContext as ObjCCategoryDecl);
+				// first check if we're checking the category itself
+				var category = decl as ObjCCategoryDecl;
 				if (category != null)
 					result = category.ClassInterface.IsAvailable (Platform);
+
+				if (!result.HasValue) {
+					// then check if we're a method inside a category
+					category = (decl.DeclContext as ObjCCategoryDecl);
+					if (category != null)
+						result = category.ClassInterface.IsAvailable (Platform);
+				}
 			}
 				
 			// but right now most frameworks consider tvOS and watchOS like iOS unless 
 			// decorated otherwise so we must check again if we do not get a definitve answer
-			if ((result == null) && ((Platform == "tvos") || (Platform == "watchos")))
-				result = decl.IsAvailable ("ios");
+			if ((result == null) && ((Platform == Platforms.tvOS) || (Platform == Platforms.watchOS)))
+				result = decl.IsAvailable (Platforms.iOS);
 			return !result.HasValue ? true : result.Value;
 		}
 
-		static bool? IsAvailable (this Decl decl, string platform)
+		static bool? IsAvailable (this Decl decl, Platforms platform_value)
 		{
+			var platform = platform_value.ToString ().ToLowerInvariant ();
 			bool? result = null;
 			foreach (var attr in decl.Attrs) {
 				// NS_UNAVAILABLE
@@ -165,7 +191,8 @@ namespace Extrospection {
 				sb.Append ('+');
 			sb.Append ((self.DeclContext as NamedDecl).Name);
 			sb.Append ("::");
-			sb.Append (self.Selector);
+			var sel = self.Selector.ToString ();
+			sb.Append (string.IsNullOrEmpty (sel) ? self.Name : sel);
 			return sb.ToString ();
 		}
 
@@ -186,6 +213,10 @@ namespace Extrospection {
 			} else {
 				foreach (var ca in self.CustomAttributes) {
 					if (ca.Constructor.DeclaringType.Name == "RegisterAttribute") {
+						if (ca.HasConstructorArguments)
+							return (ca.ConstructorArguments [0].Value as string);
+						return self.Name;
+					} else if (ca.Constructor.DeclaringType.Name == "ProtocolAttribute") {
 						if (ca.HasConstructorArguments)
 							return (ca.ConstructorArguments [0].Value as string);
 						return self.Name;
@@ -241,6 +272,48 @@ namespace Extrospection {
 		public static string GetSelector (this ObjCMethodDecl self)
 		{
 			return self.Selector.ToString () ?? (self.IsPropertyAccessor ? self.Name : null);
+		}
+
+		public static bool IsObsolete (this ICustomAttributeProvider provider)
+		{
+			if (provider.HasCustomAttributes) {
+				foreach (var attrib in provider.CustomAttributes) {
+					var attribType = attrib.Constructor.DeclaringType;
+					if (attribType.Namespace == "System" && attribType.Name == "ObsoleteAttribute")
+						return true;
+				}
+			}
+
+			// If we're a property accessor, check the property as well.
+			var prop = FindProperty (provider as MethodReference);
+			if (prop != null)
+				return IsObsolete (prop);
+
+			return false;
+		}
+
+		public static PropertyDefinition FindProperty (this MethodReference method)
+		{
+			var def = method?.Resolve ();
+			if (def == null)
+				return null;
+
+			if (!def.IsSpecialName)
+				return null;
+
+			if (!def.DeclaringType.HasProperties)
+				return null;
+
+			if (!method.Name.StartsWith ("get_", StringComparison.Ordinal) && !method.Name.StartsWith ("set_", StringComparison.Ordinal))
+				return null;
+
+			var propName = method.Name.Substring (4);
+			foreach (var prop in def.DeclaringType.Properties) {
+				if (prop.Name == propName)
+					return prop;
+			}
+
+			return null;
 		}
 	}
 }

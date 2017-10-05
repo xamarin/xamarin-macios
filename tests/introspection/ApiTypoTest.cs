@@ -24,8 +24,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using NUnit.Framework;
 #if XAMCORE_2_0
+using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 #else
@@ -35,6 +37,8 @@ using Foundation;
 #else
 #if MONOMAC
 using MonoMac.AppKit;
+using MonoMac.ObjCRuntime;
+using MonoMac.Foundation;
 #else
 using MonoTouch.UIKit;
 #endif
@@ -58,11 +62,20 @@ namespace Introspection
 			return SkipAllowed (methodName.DeclaringType.Name, methodName.Name, typo);
 		}
 
+		HashSet<string> allowedMemberRule4 = new HashSet<string> {
+			"Platform",
+			"PlatformHelper",
+			"AvailabilityAttribute",
+			"iOSAttribute",
+			"MacAttribute",
+		};
+
 		HashSet<string> allowed = new HashSet<string> () {
 			"Aac",
 			"Accurracy",
 			"Achivements",
 			"Acos",
+			"Acn",
 			"Actionname",
 			"Activitiy",
 			"Addin",
@@ -85,11 +98,15 @@ namespace Introspection
 			"Automapping",
 			"Automounted",
 			"Autoredirect",
+			"Avci", // file type
 			"Aliasable",
+			"Arcball",
 			"Backface",
-			"Bancaire",
+			"Bancaire", // french
+			"Bancaires", // french
 			"Bary",
 			"Batc",
+			"Bgra", // acrnym for Blue, Green, Red, Alpha
 			"Bim",
 			"Biquad",
 			"Bitangent",
@@ -118,6 +135,7 @@ namespace Introspection
 			"Conflictserror",
 			"Connnect",
 			"Counterclock",
+			"Copyback",
 			"Craete",
 			"Crosstraining",
 			"Cubemap",
@@ -158,6 +176,7 @@ namespace Introspection
 			"Ecdh",  // Elliptic Curve Diffie–Hellman
 			"Ecdsa", // Elliptic Curve Digital Signature Algorithm
 			"Ecies", // Elliptic Curve Integrated Encryption Scheme
+			"Editability", 
 			"Eof", // acronym End-Of-File
 			"Emagic",
 			"Emaili",
@@ -181,24 +200,31 @@ namespace Introspection
 			"Gpp",
 			"Gpu",	// acronym for Graphics Processing Unit
 			"Grbg", // acronym for Green-Red-Blue-Green
+			"Greeking",
 			"Hdmi",
 			"Hdr",
 			"Hectopascals",
+			"Heic", // file type
+			"Heif", // file type
 			"Hevc", // CMVideoCodecType / High Efficiency Video Coding
+			"Heif", // High Efficiency Image File Format
 			"Hfp",
 			"Hipass",
 			"Hls",
+			"Hoa",
 			"Hrtf", // acronym used in AUSpatializationAlgorithm
 			"Hvxc", // MPEG4ObjectID
 			"Ies",
 			"Icq",
 			"Identd",
+			"Imageblock",
 			"Imagefor",
 			"Imap",
 			"Imaps",
 			"Img",
 			"Indoorrun",
 			"Indoorcycle",
+			"Inklist",
 			"Indoorwalk",
 			"Inser",
 			"Interac",
@@ -211,6 +237,7 @@ namespace Introspection
 			"Ipp",
 			"Iptc",
 			"Ircs",
+			"Itf",
 			"Itu",
 			"Jcb", // Japanese credit card company
 			"Jfif",
@@ -257,6 +284,7 @@ namespace Introspection
 			"Mtc", // acronym
 			"Mul",
 			"Mult",
+			"Multipath",
 			"Multipeer",
 			"Muxed",
 			"Nanograms",
@@ -267,8 +295,10 @@ namespace Introspection
 			"Ntlm",
 			"Ntsc",
 			"nuint",
+			"Ndef",
 			"Numbernumber",
 			"Nyquist",
+			"Oaep", // Optimal asymmetric encryption padding
 			"Objectfor",
 			"Occlussion",
 			"Ocurrences",
@@ -301,8 +331,10 @@ namespace Introspection
 			"Preseti",
 			"Propogate",
 			"Psec",
+			"Psm", // Protocol/Service Multiplexer
 			"Pvrtc", // MTLBlitOption - PowerVR Texture Compression
 			"Quaterniond",
+			"Quadding",
 			"Qura",
 			"Quic",
 			"Reacquirer",
@@ -321,6 +353,7 @@ namespace Introspection
 			"Rsa", // Rivest, Shamir and Adleman
 			"Rssi",
 			"Rtp",
+			"Rtl",
 			"Rtsp",
 			"Saml", // acronym
 			"Scn",
@@ -359,7 +392,9 @@ namespace Introspection
 			"Superentity",
 			"Sym",
 			"Synchronizable",
+			"Symbologies",
 			"Tanh",
+			"Tessellator",
 			"Texcoord",
 			"Texel",
 			"th",
@@ -371,6 +406,7 @@ namespace Introspection
 			"Tls",
 			"Tlv",
 			"Toi",
+			"Transceive",
 			"Truncantion",
 			"Tweening",
 			"tx",
@@ -381,13 +417,18 @@ namespace Introspection
 			"Undecodable",
 			"Underrun",
 			"Unflagged",
+			"Unfocusing",
 			"Unorm",
+			"Unpremultiplied",
 			"Unpremultiplying",
 			"Unprepare",
 			"Unproject",
+			"Unpublish",
 			"Uterance",
 			"Unentitled",
+			"Untrash",
 			"Utf",
+			"Upce",
 			"Uti",
 			"Varispeed",
 			"Vergence",
@@ -677,6 +718,8 @@ namespace Introspection
 				return false;
 			if (mi.GetCustomAttributes<ObsoleteAttribute> (true).Any ())
 				return true;
+			if (mi.GetCustomAttributes<ObsoletedAttribute> (true).Any ())
+				return true;
 			return IsObsolete (mi.DeclaringType);
 		}
 
@@ -686,7 +729,12 @@ namespace Introspection
 			var types = Assembly.GetTypes ();
 			int totalErrors = 0;
 			foreach (Type t in types) {
-				if (t.IsPublic && !IsObsolete (t)) {
+				if (t.IsPublic) {
+					AttributesMessageTypoRules (t, t.Name, ref totalErrors);
+
+					if (IsObsolete (t))
+						continue;
+
 					string txt = NameCleaner (t.Name);
 					var typo = GetTypo (txt);
 					if (typo.Length > 0 ) {
@@ -698,7 +746,12 @@ namespace Introspection
 
 					var fields = t.GetFields ();
 					foreach (FieldInfo f in fields) {
-					if (!f.IsPublic && !f.IsFamily && !IsObsolete (f))
+						if (!f.IsPublic && !f.IsFamily)
+							continue;
+
+						AttributesMessageTypoRules (f, t.Name, ref totalErrors);
+
+						if (IsObsolete (f))
 							continue;
 						
 						txt = NameCleaner (f.Name);
@@ -713,7 +766,12 @@ namespace Introspection
 
 					var methods = t.GetMethods ();
 					foreach (MethodInfo m in methods) {
-					if (!m.IsPublic && !m.IsFamily && !IsObsolete (m))
+						if (!m.IsPublic && !m.IsFamily)
+							continue;
+
+						AttributesMessageTypoRules (m, t.Name, ref totalErrors);
+
+						if (IsObsolete (m))
 							continue;
 						
 						txt = NameCleaner (m.Name);
@@ -745,6 +803,73 @@ namespace Introspection
 				Console.WriteLine ("Unused entry \"{0}\"", typo);
 #endif
 			Assert.IsTrue ((totalErrors == 0), "We have {0} typos!", totalErrors);
+		}
+
+		string GetMessage (object attribute)
+		{
+			string message = null;
+			if (attribute is AdviceAttribute)
+				message = ((AdviceAttribute)attribute).Message;
+			if (attribute is ObsoleteAttribute)
+				message = ((ObsoleteAttribute)attribute).Message;
+			if (attribute is AvailabilityBaseAttribute)
+				message = ((AvailabilityBaseAttribute)attribute).Message;
+
+			return message;
+		}
+
+		void AttributesMessageTypoRules (MemberInfo mi, string typeName, ref int totalErrors)
+		{
+			if (mi == null)
+				return;
+
+			foreach (object ca in mi.GetCustomAttributes ()) {
+				string message = GetMessage (ca);
+				if (message != null) {
+					var memberAndTypeFormat = mi.Name == typeName ? "Type: {0}" : "Member name: {1}, Type: {0}";
+					var memberAndType = string.Format (memberAndTypeFormat, typeName, mi.Name);
+
+					// Rule 1: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-1
+					// Note: we don't enforce that rule for the Obsolete (not Obsoleted) attribute since the attribute itself doesn't support versions.
+					if (!(ca is ObsoleteAttribute)) {
+						var forbiddenOSNames = new [] { "iOS", "watchOS", "tvOS", "macOS" };
+						if (forbiddenOSNames.Any (s => Regex.IsMatch (message, $"({s} ?)[0-9]+"))) {
+							ReportError ("[Rule 1] Don't put OS information in attribute's message: \"{0}\" - {1}", message, memberAndType);
+							totalErrors++;
+						}
+					}
+
+					// Rule 2: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-2
+					if (message.Contains ('`')) {
+						ReportError ("[Rule 2] Replace grave accent (`) by apostrophe (') in attribute's message: \"{0}\" - {1}", message, memberAndType);
+						totalErrors++;
+					}
+
+					// Rule 3: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-3
+					if (!message.EndsWith (".", StringComparison.Ordinal)) {
+						ReportError ("[Rule 3] Missing '.' in attribute's message: \"{0}\" - {1}", message, memberAndType);
+						totalErrors++;
+					}
+
+					// Rule 4: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-4
+					if (!allowedMemberRule4.Contains (mi.Name)) {
+						var forbiddenAvailabilityKeywords = new [] { "introduced", "deprecated", "obsolete", "obsoleted" };
+						if (forbiddenAvailabilityKeywords.Any (s => Regex.IsMatch (message, $"({s})", RegexOptions.IgnoreCase))) {
+							ReportError ("[Rule 4] Don't use availability keywords in attribute's message: \"{0}\" - {1}", message, memberAndType);
+							totalErrors++;
+						}
+					}
+
+					var forbiddensWords = new [] { "OSX", "OS X" };
+					for (int i = 0; i < forbiddensWords.Length; i++) {
+						var word = forbiddensWords [i];
+						if (Regex.IsMatch (message, $"({word})", RegexOptions.IgnoreCase)) {
+							ReportError ("Don't use {0} in attribute's message: \"{1}\" - {2}", word, message, memberAndType);
+							totalErrors++;
+						}
+					}
+				}
+			}
 		}
 
 		public abstract string GetTypo (string txt);

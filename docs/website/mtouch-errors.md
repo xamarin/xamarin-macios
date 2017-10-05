@@ -560,7 +560,52 @@ linker. This will most likely result in native linker errors.
 
 The solution is to remove the `--dynamic-symbol-mode=linker` argument from the additional mtouch arguments in the project's Build options.
 
-<!-- 0116 - 0124: free to use -->
+### <a name="MT0116"/>MT0116: Invalid architecture: {arch}. 32-bit architectures are not supported when deployment target is 11 or later. Make sure the project does not build for a 32-bit architecture.
+
+iOS 11 does not contain support for 32-bit applications, so it's not supported
+to build for a 32-bit application when the deployment target is iOS 11 or
+later.
+
+Either change the target architecture in the project's iOS build options to
+arm64, or change the deployment target in the project's Info.plist to an
+earlier iOS version.
+
+### <a name="MT0117"/>MT0117: Can't launch a 32-bit app on a simulator that only supports 64-bit.
+
+### <a name="MT0118"/>MT0116: Aot files could not be found at the expected directory '{msymdir}'.
+
+<!-- 0119 - 0123: free to use -->
+
+### <a name="MT0123"/>MT0123: The executable assembly * does not reference *.
+
+No reference could be found to the platform assembly (Xamarin.iOS.dll / Xamarin.TVOS.dll / Xamarin.WatchOS.dll) in the executable assembly.
+
+This typically happens where there is no code in the executable project that uses anything from the platform assembly; for instance an empty Main method (and no other code) would show this error:
+
+```csharp
+class Program {
+    void Main (string[] args)
+    {
+    }
+}
+```
+
+Using an API from the platform assembly will solve the error:
+
+```csharp
+class Program {
+    void Main (string[] args)
+    {
+        System.Console.WriteLine (typeof (UIKit.UIWindow));
+    }
+}
+```
+
+### <a name="MT0124"/>MT0124: Could not set the current language to '{lang}' (according to LANG={LANG}): {exception}
+
+This is a warning, indicating that the current language couldn't be set to the language in the error message.
+
+The current language will default to the system language.
 
 ### <a name="MT0125"/>MT0125: The --assembly-build-target command-line argument is ignored in the simulator.
 
@@ -1181,6 +1226,10 @@ Something unexpected occured when trying to mark `NSObject` subclasses from the 
 
 Something unexpected occured when trying to inline code from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
+### <a name="MT2100"/>MT2100: Smart Enum Conversion Preserver failed processing `...`.
+
+Something unexpected occured when trying to mark the conversion methods for smart enums from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
 <!-- MT21xx: more linker errors -->
 
 <!--- 2100 used by mmp -->
@@ -1196,6 +1245,14 @@ The assembly causing the issue is named in the error message. In order to fix th
 Something unexpected occured when trying to mark the method mentioned in the error message.
 
 The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+
+### <a name="MT2103"/>MT2103: Error processing assembly '\*': *
+
+An unexpected error occured when processing an assembly.
+
+The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
 
 # MT3xxx: AOT error messages
 
@@ -1523,6 +1580,29 @@ Please use a valid Objective-C identifier.
 
 Xamarin.iOS failed to generate a P/Invoke wrapper function for the mentioned.
 Please check the reported error message for the underlying cause.
+
+### <a name="MT4170"/>MT4170: The registrar can't convert from '{managed type}' to '{native type}' for the return value in the method {method}.
+
+See the description of error <a href="#MT4172">MT4172</a>.
+
+### <a name="MT4171"/>MT4171: The BindAs attribute on the member {member} is invalid: the BindAs type {type} is different from the property type {type}.
+
+Please make sure the type in the BindAs attribute matches the type of the member it's attached to.
+
+### <a name="MT4172"/>MT4172: The registrar can't convert from '{native type}' to '{managed type}' for the parameter '{parameter name}' in the method {method}.
+
+The registrar does not support converting between the mentioned types.
+
+This is a bug in Xamarin.iOS if the API in question is provided by Xamarin.iOS;
+please file a bug at [http://bugzilla.xamarin.com][1].
+
+If you run into this while developing a binding project for a native library,
+we're open to adding support for new combinations of types. If this is the
+case, please file an enhancement request ([http://bugzilla.xamarin.com][2])
+with a test case and we'll evaluate it.
+
+[1]: https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS
+[2]: https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS&component=General&bug_severity=enhancement
 
 # MT5xxx: GCC and toolchain error messages
 
@@ -2214,3 +2294,8 @@ This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamar
 ### <a name="MT8023"/>MT8023: An instance object is required to construct a closed generic method for the open generic method: * (token reference: *). Please file a bug report at http://bugzilla.xamarin.com.
 
 This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
+### <a name="MT8024"/>MT8024: Could not find a valid extension type for the smart enum '{smart_type}'. Please file a bug at https://bugzilla.xamarin.com.
+
+This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+

@@ -63,7 +63,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public class ABGroup : ABRecord, IEnumerable<ABRecord> {
 
 		[DllImport (Constants.AddressBookLibrary)]

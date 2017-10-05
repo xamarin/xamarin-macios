@@ -7,6 +7,9 @@ export MSBuildExtensionsPath=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/Ex
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 export XAMMAC_FRAMEWORK_PATH=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 
+# VSfM sets XCODE_DEVELOPER_DIR_PATH, which confuses the command-line tools if it doesn't match xcode-select, so just unset it.
+unexport XCODE_DEVELOPER_DIR_PATH
+
 bin:
 	$(Q) mkdir -p bin
 
@@ -16,10 +19,12 @@ bin/SimpleClassDylib.dylib:  bin
 bin/SimpleClass\ Dylib.dylib: bin/SimpleClassDylib.dylib
 	$(Q) cp bin/SimpleClassDylib.dylib bin/SimpleClass\ Dylib.dylib
 
-bin/SimpleClassStatic.a: bin
-	$(Q) clang -c ../common/mac/SimpleClass.m -o bin/SimpleClass.o -std=gnu99 -mmacosx-version-min=10.9
-	$(Q) xcrun ar -rcs bin/SimpleClassStatic.a bin/SimpleClass.o
-	$(Q) rm bin/SimpleClass.o
+bin/SimpleClass.%.a: ../common/mac/SimpleClass.m bin
+	$(Q) clang -c $< -o bin/SimpleClass.$*.o -std=gnu99 -mmacosx-version-min=10.9 -arch $*
+	$(Q) xcrun ar -rcs $@ bin/SimpleClass.$*.o
+
+bin/SimpleClassStatic.a: bin bin/SimpleClass.i386.a bin/SimpleClass.x86_64.a
+	$(Q) lipo -create bin/SimpleClass.i386.a bin/SimpleClass.x86_64.a -output $@
 
 bin/Mobile-dynamic/MobileBinding.dll: bin/SimpleClassDylib.dylib
 	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_dynamic.csproj

@@ -64,15 +64,52 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<XamarinMacFrameworkRoot>/Library/Frameworks/Xamarin.Mac.framework/Versions/Current</XamarinMacFrameworkRoot>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' != 'true'">
+	<Choose>
+		<When Condition=" '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">
+			<PropertyGroup>
+				<TargetFrameworkName>Modern</TargetFrameworkName>
+				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/Xamarin.Mac</MacBclPath>
+			</PropertyGroup>
+		</When>
+		<When Condition=" '$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' == 'true'">
+			<PropertyGroup>
+				<TargetFrameworkName>Full</TargetFrameworkName>
+				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
+			</PropertyGroup>
+		</When>
+		<Otherwise>
+			<PropertyGroup>
+				<TargetFrameworkName>System</TargetFrameworkName>
+				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
+			</PropertyGroup>
+		</Otherwise>
+	</Choose>
+
+	<PropertyGroup Condition="'$(TargetFrameworkName)' == 'Full'">
 		<AssemblySearchPaths>$(XamarinMacFrameworkRoot)/lib/reference/full;$(XamarinMacFrameworkRoot)/lib/mono;$(AssemblySearchPaths)</AssemblySearchPaths>
+		<ImplicitlyExpandNETStandardFacades>False</ImplicitlyExpandNETStandardFacades>
 	</PropertyGroup>
 
-	<!-- Do not resolve from the GAC under any circumstances in Mobile or XM45 -->
-	<PropertyGroup Condition="(('$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' == 'true') Or '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac') And !$(MonoBundlingExtraArgs.Contains('--allow-unsafe-gac-resolution'))" >
+	<!-- Do not resolve from the GAC in Modern or Full unless allow-unsafe-gac-resolution is passed in -->
+	<PropertyGroup Condition="'$(TargetFrameworkName)' != 'System' And !$(MonoBundlingExtraArgs.Contains('--allow-unsafe-gac-resolution'))" >
 		<AssemblySearchPaths>$([System.String]::Copy('$(AssemblySearchPaths)').Replace('{GAC}',''))</AssemblySearchPaths>
 		<AssemblySearchPaths Condition="'$(MSBuildRuntimeVersion)' != ''">$(AssemblySearchPaths.Split(';'))</AssemblySearchPaths>
 	</PropertyGroup>
+
+	<Target Name="FixDesignTimeFacades" AfterTargets="GetReferenceAssemblyPaths" Condition="'$(OS)' != 'Windows_NT'" />
+
+	<!-- Location of Libraries -->
+	<Target Name="FixTargetFrameworkDirectory" AfterTargets="FixDesignTimeFacades" Condition="('$(OS)' != 'Windows_NT')">
+		<PropertyGroup>
+			<!-- For Modern / Full we overwrite TargetFrameworkDirectory to resolve non XM assemblies from our location only -->
+			<TargetFrameworkDirectory Condition="'$(TargetFrameworkName)' != 'System'">$(MacBclPath);@(DesignTimeFacadeDirectories)</TargetFrameworkDirectory>
+
+			<!-- For system we extend, not overwrite TargetFrameworkDirectory. -->
+			<!-- mscorlib, System, and other BCL libs must come from Mono System to prevent corlib mistmatches. Xamarin.Mac.dll must come from XM/lib/mono/4.5/ -->
+			<!-- If we find cases of other non-XM assemblies being resolved from XM paths, we can look into using CandidateAssemblyFiles but it is msbuild only. -->
+			<TargetFrameworkDirectory Condition="'$(TargetFrameworkName)' == 'System'">$(TargetFrameworkDirectory);$(MacBclPath)</TargetFrameworkDirectory>
+		</PropertyGroup>
+	</Target>
 
 	<PropertyGroup>
 		<_CanOutputAppBundle>False</_CanOutputAppBundle>
@@ -485,6 +522,9 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<Target Name="_CompileToNative" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_GenerateBundleName;ResolveReferences;_CompileEntitlements;_CompileAppManifest"
 		Inputs="$(TargetDir)$(TargetFileName)"
 		Outputs="$(_AppBundlePath)Contents\MacOS\$(_AppBundleName)">
+		<ItemGroup>
+			<ReferenceCopyLocalAssemblyPaths Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
+		</ItemGroup>
 		<Mmp
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
@@ -505,7 +545,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			Profiling="$(Profiling)"
 			ExtraArguments="$(MonoBundlingExtraArgs)"
 			NativeReferences="@(NativeReference)"
-			ExplicitReferences="@(ReferencePath)"
+			ExplicitReferences="@(ReferencePath);@(ReferenceCopyLocalAssemblyPaths)"
 			SdkRoot="$(_SdkDevPath)"
 			IntermediateOutputPath="$(IntermediateOutputPath)mmp-cache"
 			AppManifest="$(_AppManifest)"
@@ -678,13 +718,13 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<AssignProjectConfiguration
 			ProjectReferences = "@(_AppExtensionReference)"
 			SolutionConfigurationContents = "$(CurrentSolutionConfigurationContents)"
-			Condition="'$(BuildingSolutionFile)' == 'true'">
+			Condition="'$(CurrentSolutionConfigurationContents)' != ''">
 
 			<Output TaskParameter="AssignedProjects" ItemName="_AppExtensionReferenceWithConfiguration"/>
 		</AssignProjectConfiguration>
 
 		<!-- Else, just -->
-		<CreateItem Include="@(_AppExtensionReference)" Condition="'$(BuildingSolutionFile)' != 'true'">
+		<CreateItem Include="@(_AppExtensionReference)" Condition="'$(CurrentSolutionConfigurationContents)' == ''">
 			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfiguration"/>
 		</CreateItem>
 

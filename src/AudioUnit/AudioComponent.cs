@@ -38,6 +38,177 @@ using XamCore.Foundation;
 
 namespace XamCore.AudioUnit
 {
+
+#if !COREBUILD
+	// keys are not constants and had to be found in AudioToolbox.framework/Headers/AudioComponent.h
+	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+	public partial class ResourceUsageInfo : DictionaryContainer {
+		static NSString userClientK = new NSString ("iokit.user-client");
+		static NSString globalNameK = new NSString ("mach-lookup.global-name");
+		static NSString networkClientK = new NSString ("network.client");
+		static NSString exceptionK = new NSString ("temporary-exception.files.all.read-write");
+
+		public ResourceUsageInfo () : base () {}
+
+		public ResourceUsageInfo (NSDictionary dic) : base (dic) {}
+
+		public string[] IOKitUserClient { 
+			get {
+				var array = GetNativeValue<NSArray> (userClientK);
+				if (array == null )
+					return null;
+				return NSArray.StringArrayFromHandle (array.Handle);
+			} 
+			set {
+				if (value == null)
+					RemoveValue (userClientK);
+				else
+					SetArrayValue (userClientK, value);
+			}
+		}
+
+		public string[] MachLookUpGlobalName { 
+			get {
+				var array = GetNativeValue<NSArray> (globalNameK);
+				if (array == null)
+					return null;
+				return NSArray.StringArrayFromHandle (array.Handle);
+			} 
+			set {
+				if (value == null)
+					RemoveValue (globalNameK);	
+				else
+					SetArrayValue (globalNameK, value);
+			}
+		}
+
+		public bool? NetworkClient { 
+			get {
+				return GetBoolValue (networkClientK);
+			} 
+			set {
+				SetBooleanValue (networkClientK, value);
+			}
+		}
+
+		public bool? TemporaryExceptionReadWrite { 
+			get {
+				return GetBoolValue (exceptionK);
+			} 
+			set {
+				SetBooleanValue (exceptionK, value);
+			}
+		}
+	}
+
+	// keys are not constants and had to be found in AudioToolbox.framework/Headers/AudioComponent.h
+	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+	public partial class AudioComponentInfo : DictionaryContainer {
+		static NSString typeK = new NSString ("type");
+		static NSString subtypeK = new NSString ("subtype");
+		static NSString manufacturerK = new NSString ("manufacturer");
+		static NSString nameK = new NSString ("name");
+		static NSString versionK = new NSString ("version");
+		static NSString factoryFunctionK = new NSString ("factoryFunction");
+		static NSString sandboxSafeK = new NSString ("sandboxSafe");
+		static NSString resourceUsageK = new NSString ("resourceUsage");
+		static NSString tagsK = new NSString ("tags");
+
+		public AudioComponentInfo () : base () {}
+
+		public AudioComponentInfo (NSDictionary dic) : base (dic) {}
+
+		public string Type { 
+			get {
+				return GetStringValue (typeK);
+			} 
+			set {
+				SetStringValue (typeK, value);
+			}
+		}
+
+		public string Subtype { 
+			get {
+				return GetStringValue (subtypeK);
+			} 
+			set {
+				SetStringValue (subtypeK, value);
+			}
+		}
+
+		public string Manufacturer { 
+			get {
+				return GetStringValue (manufacturerK);
+			} 
+			set {
+				SetStringValue (manufacturerK, value);
+			}
+		}
+
+		public string Name { 
+			get {
+				return GetStringValue (nameK);
+			} 
+			set {
+				SetStringValue (nameK, value);
+			}
+		}
+
+		public nuint? Version { 
+			get {
+				return GetNUIntValue (versionK);
+			} 
+			set {
+				SetNumberValue (versionK, value);
+			}
+		}
+
+		public string FactoryFunction { 
+			get {
+				return GetStringValue (factoryFunctionK);
+			} 
+			set {
+				SetStringValue (factoryFunctionK, value);
+			}
+		}
+
+		public bool? SandboxSafe { 
+			get {
+				return GetBoolValue (sandboxSafeK);
+			} 
+			set {
+				SetBooleanValue (sandboxSafeK, value);
+			}
+		}
+
+		public ResourceUsageInfo ResourceUsage { 
+			get {
+				return GetStrongDictionary<ResourceUsageInfo> (resourceUsageK);
+			} 
+			set {
+				SetNativeValue (resourceUsageK, value?.Dictionary, true);
+			}
+		}
+
+		public string[] Tags { 
+			get {
+				var array = GetNativeValue<NSArray> (tagsK);
+				if (array == null)
+					return null;
+				return NSArray.StringArrayFromHandle (array.Handle);
+			} 
+			set {
+				if (value == null)
+					RemoveValue (tagsK);	
+				else
+					SetArrayValue (tagsK, value);
+			}
+		}
+	}
+
+#endif
+
+
 	public class AudioComponent : INativeObject {
 #if !COREBUILD
 		internal IntPtr handle;
@@ -224,6 +395,59 @@ namespace XamCore.AudioUnit
 			return new XamCore.AppKit.NSImage (AudioComponentGetIcon (handle));
 		}
 #endif
+
+#if IOS || MONOMAC
+		[NoWatch, NoTV, Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[DllImport (Constants.AudioUnitLibrary)]
+		static extern int /* OSStatus */ AudioUnitExtensionSetComponentList (IntPtr /* CFString */ extensionIdentifier, /* CFArrayRef */ IntPtr audioComponentInfo);
+
+		[NoWatch, NoTV, Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[DllImport (Constants.AudioUnitLibrary)]
+		static extern /* CFArrayRef */ IntPtr AudioUnitExtensionCopyComponentList (IntPtr /* CFString */ extensionIdentifier);
+
+		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		public AudioComponentInfo[] ComponentList {
+			get {
+				using (var cfString = new CFString (Name)) {
+					var cHandle = AudioUnitExtensionCopyComponentList (cfString.Handle);
+					if (cHandle == IntPtr.Zero)
+						return null;
+					using (var nsArray = Runtime.GetNSObject<NSArray> (cHandle, owns: true)) {
+						if (nsArray == null)
+							return null;
+						// make things easier for developers since we do not know how to have an implicit conversion from NSObject to AudioComponentInfo
+						var dics = NSArray.FromArray <NSDictionary> (nsArray);
+						var result = new AudioComponentInfo [dics.Length];
+						for (var i = 0; i < result.Length; i++) {
+							result [i] = new AudioComponentInfo (dics[i]);
+						}
+						return result;
+					}
+				}
+			}
+			set {
+				if (value == null)
+					throw new ArgumentNullException	(nameof	(value));
+				using (var cfString = new CFString (Name)) {
+					var dics = new NSDictionary [value.Length];
+					for (var i = 0; i < value.Length; i++) {
+						dics [i] = value [i].Dictionary;
+					}
+					using (var array = NSArray.FromNSObjects (dics)) {
+						var result = (AudioConverterError) AudioUnitExtensionSetComponentList (cfString.Handle, array.Handle);
+						switch (result) {
+						case AudioConverterError.None:
+							return;
+						default:
+							throw new InvalidOperationException ($"ComponentList could not be set, error {result.ToString ()}");
+
+						}
+					}
+				}
+			}
+		}
+#endif
+
 #endif // !COREBUILD
     }
 

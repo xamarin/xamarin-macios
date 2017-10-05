@@ -1,0 +1,62 @@
+using System;
+
+#if MTOUCH || MMP
+using Xamarin.Bundler;
+using Xamarin.Utils;
+#endif
+
+#if MTOUCH
+using MonoTouch;
+#endif
+
+namespace Xamarin {
+	static class SdkVersions {
+		public const string Xcode = "@XCODE_VERSION@";
+		public const string OSX = "@OSX_SDK_VERSION@";
+		public const string iOS = "@IOS_SDK_VERSION@";
+		public const string WatchOS = "@WATCHOS_SDK_VERSION@";
+		public const string TVOS = "@TVOS_SDK_VERSION@";
+
+		public const string MinOSX = "@MIN_OSX_SDK_VERSION@";
+		public const string MiniOS = "@MIN_IOS_SDK_VERSION@";
+		public const string MinWatchOS = "@MIN_WATCHOS_SDK_VERSION@";
+		public const string MinTVOS = "@MIN_TVOS_SDK_VERSION@";
+
+		public static Version OSXVersion { get { return new Version (OSX); }}
+		public static Version iOSVersion { get { return new Version (iOS); }}
+		public static Version WatchOSVersion { get { return new Version (WatchOS); }}
+		public static Version TVOSVersion { get { return new Version (TVOS); }}
+
+		public static Version MinOSXVersion { get { return new Version (MinOSX); }}
+		public static Version MiniOSVersion { get { return new Version (MiniOS); }}
+		public static Version MinWatchOSVersion { get { return new Version (MinWatchOS); }}
+		public static Version MinTVOSVersion { get { return new Version (MinTVOS); }}
+
+		public static Version XcodeVersion { get { return new Version (Xcode); }}
+#if MTOUCH || MMP
+		public static Version GetVersion (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.MacOSX: return OSXVersion;
+			case ApplePlatform.iOS: return iOSVersion;
+			case ApplePlatform.WatchOS: return WatchOSVersion;
+			case ApplePlatform.TVOS: return TVOSVersion;
+			default:
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at http://bugzilla.xamarin.com with a test case.", platform, Application.ProductName);
+			}
+		}
+
+		public static Version GetMinVersion (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.MacOSX: return MinOSXVersion;
+			case ApplePlatform.iOS: return MiniOSVersion;
+			case ApplePlatform.WatchOS: return MinWatchOSVersion;
+			case ApplePlatform.TVOS: return MinTVOSVersion;
+			default:
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at http://bugzilla.xamarin.com with a test case.", platform, Application.ProductName);
+			}
+		}
+#endif
+	}
+}

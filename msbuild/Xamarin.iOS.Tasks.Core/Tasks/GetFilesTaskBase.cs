@@ -27,12 +27,6 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("GetFiles");
-			Log.LogTaskProperty ("Path", Path);
-			Log.LogTaskProperty ("Pattern", Pattern);
-			Log.LogTaskProperty ("Option", Option);
-			Log.LogTaskProperty ("Exclude", Exclude);
-
 			var path = Path.Replace ('\\', '/').TrimEnd ('/');
 			var exclude = new HashSet<string> ();
 			var items = new List<ITaskItem> ();

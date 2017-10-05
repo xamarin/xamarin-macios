@@ -33,12 +33,6 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("FindItemWithLogicalName");
-			Log.LogTaskProperty ("Items", Items);
-			Log.LogTaskProperty ("LogicalName", LogicalName);
-			Log.LogTaskProperty ("ProjectDir", ProjectDir);
-			Log.LogTaskProperty ("ResourcePrefix", ResourcePrefix);
-
 			if (Items != null) {
 				var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 

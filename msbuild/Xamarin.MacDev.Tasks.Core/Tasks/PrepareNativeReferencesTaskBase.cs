@@ -91,10 +91,6 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("PrepareNativeReferences");
-			Log.LogTaskProperty ("IntermediateOutputPath", IntermediateOutputPath);
-			Log.LogTaskProperty ("NativeReferences", NativeReferences);
-
 			if (NativeReferences == null || NativeReferences.Length == 0)
 				return !Log.HasLoggedErrors;
 

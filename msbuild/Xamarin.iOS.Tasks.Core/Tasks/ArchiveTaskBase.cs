@@ -146,17 +146,6 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			Log.LogTaskName ("Archive");
-			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
-			Log.LogTaskProperty ("AppExtensionReferences", AppExtensionReferences);
-			Log.LogTaskProperty ("InsightsApiKey", InsightsApiKey);
-			Log.LogTaskProperty ("ITunesSourceFiles", ITunesSourceFiles);
-			Log.LogTaskProperty ("OutputPath", OutputPath);
-			Log.LogTaskProperty ("ProjectName", ProjectName);
-			Log.LogTaskProperty ("SigningKey", SigningKey);
-			Log.LogTaskProperty ("SolutionPath", SolutionPath);
-			Log.LogTaskProperty ("WatchAppReferences", WatchAppReferences);
-
 			var archiveDir = CreateArchiveDirectory ();
 
 			try {

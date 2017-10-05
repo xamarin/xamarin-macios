@@ -39,7 +39,7 @@ using XamCore.CoreFoundation;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.AddressBook {
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public class ExternalChangeEventArgs : EventArgs {
 		public ExternalChangeEventArgs (ABAddressBook addressBook, NSDictionary info)
 		{
@@ -91,7 +91,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use Contacts API instead")]
+	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
 	public class ABAddressBook : INativeObject, IDisposable, IEnumerable<ABRecord> {
 
 		public static readonly NSString ErrorDomain;
@@ -216,7 +216,7 @@ namespace XamCore.AddressBook {
 				BlockLiteral block_handler;
 				block_handler = new BlockLiteral ();
 				block_ptr_handler = &block_handler;
-				block_handler.SetupBlock (static_completionHandler, onCompleted);
+				block_handler.SetupBlockUnsafe (static_completionHandler, onCompleted);
 
 				ABAddressBookRequestAccessWithCompletion (Handle, (void*) block_ptr_handler);
 				block_ptr_handler->CleanupBlock ();

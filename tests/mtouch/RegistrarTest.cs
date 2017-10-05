@@ -23,6 +23,8 @@ namespace Xamarin
 		public void InvalidParameterTypes ()
 		{
 			var code = @"
+using System;
+using Foundation;
 class Foo : NSObject {
 	[Export (""bar1:"")]
 	public void Bar1 (object[] arg)
@@ -82,20 +84,28 @@ class Foo : NSObject {
 		set {}
 	}
 }
+class C { static void Main () {} }
 ";
-			Verify (R.Static, code, false,
-				".*/Test.cs(.*): error MT4138: The registrar cannot marshal the property type 'System.Object' of the property 'Foo.Bar10'.",
-				".*/Test.cs(.*): error MT4136: The registrar cannot marshal the parameter type 'System.Object[]' of the parameter 'arg' in the method 'Foo.Bar1(System.Object[])'", 
-				".*/Test.cs(.*): error MT4136: The registrar cannot marshal the parameter type 'System.Object&' of the parameter 'arg' in the method 'Foo.Bar2(System.Object&)'",
-				".*/Test.cs(.*): error MT4136: The registrar cannot marshal the parameter type 'System.Object&' of the parameter 'arg' in the method 'Foo.Bar3(System.Object&)'",
-				".*/Test.cs(.*): error MT4136: The registrar cannot marshal the parameter type 'System.Object' of the parameter 'arg' in the method 'Foo.Bar4(System.Object)'",
-				".*/Test.cs(.*): error MT4104: The registrar cannot marshal the return value of type `System.Object` in the method `Foo.Bar5()`.",
-				".*/Test.cs(.*): error MT4136: The registrar cannot marshal the parameter type 'System.Nullable`1<System.Int32>' of the parameter 'arg' in the method 'Foo.Bar6(System.Nullable`1<System.Int32>)'",
-				".*/Test.cs(.*): error MT4104: The registrar cannot marshal the return value of type `System.Nullable`1<System.Int32>` in the method `Foo.Bar7()`.",
-				".*/Test.cs(.*): error MT4136: The registrar cannot marshal the parameter type 'System.Nullable`1<System.Int32>[]&' of the parameter 'arg' in the method 'Foo.Bar8(System.Nullable`1<System.Int32>[]&)'",
-				".*/Test.cs(.*): error MT4136: The registrar cannot marshal the parameter type 'System.Attribute' of the parameter 'attribute' in the method 'Foo.Bar9(System.Attribute)'",
-				".*/Test.cs(.*): error MT4104: The registrar cannot marshal the return value of type `System.Object[]` in the method `Foo.get_Bar11()`.",
-				".*/Test.cs(.*): error MT4136: The registrar cannot marshal the parameter type 'System.Object[]' of the parameter 'value' in the method 'Foo.set_Bar11(System.Object[])'");
+
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Linker = MTouchLinker.DontLink; // faster
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (code: code, extraArg: "-debug");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (4138, "The registrar cannot marshal the property type 'System.Object' of the property 'Foo.Bar10'.", "testApp.cs", 54);
+				mtouch.AssertError (4136, "The registrar cannot marshal the parameter type 'System.Object[]' of the parameter 'arg' in the method 'Foo.Bar1(System.Object[])'", "testApp.cs", 7);
+				mtouch.AssertError (4136, "The registrar cannot marshal the parameter type 'System.Object&' of the parameter 'arg' in the method 'Foo.Bar2(System.Object&)'", "testApp.cs", 12);
+				mtouch.AssertError (4136, "The registrar cannot marshal the parameter type 'System.Object&' of the parameter 'arg' in the method 'Foo.Bar3(System.Object&)'", "testApp.cs", 17);
+				mtouch.AssertError (4136, "The registrar cannot marshal the parameter type 'System.Object' of the parameter 'arg' in the method 'Foo.Bar4(System.Object)'", "testApp.cs", 23);
+				mtouch.AssertError (4104, "The registrar cannot marshal the return value of type `System.Object` in the method `Foo.Bar5()`.", "testApp.cs", 28);
+				mtouch.AssertError (4136, "The registrar cannot marshal the parameter type 'System.Nullable`1<System.Int32>' of the parameter 'arg' in the method 'Foo.Bar6(System.Nullable`1<System.Int32>)'", "testApp.cs", 34);
+				mtouch.AssertError (4104, "The registrar cannot marshal the return value of type `System.Nullable`1<System.Int32>` in the method `Foo.Bar7()`.", "testApp.cs", 39);
+				mtouch.AssertError (4136, "The registrar cannot marshal the parameter type 'System.Nullable`1<System.Int32>[]&' of the parameter 'arg' in the method 'Foo.Bar8(System.Nullable`1<System.Int32>[]&)'", "testApp.cs", 45);
+				mtouch.AssertError (4136, "The registrar cannot marshal the parameter type 'System.Attribute' of the parameter 'attribute' in the method 'Foo.Bar9(System.Attribute)'", "testApp.cs", 50);
+				mtouch.AssertError (4104, "The registrar cannot marshal the return value of type `System.Object[]` in the method `Foo.get_Bar11()`.", "testApp.cs", 58);
+				mtouch.AssertError (4136, "The registrar cannot marshal the parameter type 'System.Object[]' of the parameter 'value' in the method 'Foo.set_Bar11(System.Object[])'", "testApp.cs", 60);
+				mtouch.AssertErrorCount (12);
+			}
 		}
 
 		[Test]
@@ -619,11 +629,7 @@ public struct FooF { public NSObject Obj; }
 			        $".*/Test.cs(.*): error MT4162: The type 'FutureType' (used as a parameter in CurrentType.Foo) is not available in {name} .* (it was introduced in {name} 99.0.0): 'use Z instead'. Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).",
 			        $".*/Test.cs(.*): error MT4162: The type 'FutureType' (used as a parameter in CurrentType.Foo) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).",
 			        $".*/Test.cs(.*): error MT4162: The type 'FutureType' (used as a return type in CurrentType.Bar) is not available in {name} .* (it was introduced in {name} 99.0.0): 'use Z instead'. Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).",
-			        $".*/Test.cs(.*): error MT4162: The type 'FutureType' (used as a return type in CurrentType.Bar) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).",
-					$"error MT4162: The type 'FutureEnum' (used as the property type of IFutureProtocol.FutureProperty) is not available in {name} .* (it was introduced in {name} 99.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).",
-					$"error MT4162: The type 'FutureEnum' (used as a return type in IFutureProtocol.FutureMethod) is not available in {name} .* (it was introduced in {name} 99.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).",
-					$"error MT4162: The type 'FutureEnum' (used as a parameter in IFutureProtocol.FutureMethod) is not available in {name} .* (it was introduced in {name} 99.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode)."
-
+			        $".*/Test.cs(.*): error MT4162: The type 'FutureType' (used as a return type in CurrentType.Bar) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode)."
 			);
 		}
 
@@ -721,6 +727,135 @@ class X : ReplayKit.RPBroadcastControllerDelegate
 		}
 
 		[Test]
+		public void MT4170 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var code = @"
+				namespace NS {
+					using System;
+					using Foundation;
+					using ObjCRuntime;
+					class X : NSObject {
+						[Export (""a"")]
+						[return: BindAs (typeof (DateTime), OriginalType = typeof (NSNumber))] 
+						DateTime A () { throw new NotImplementedException (); }
+						[Export (""b"")]
+						[return: BindAs (typeof (DateTime?), OriginalType = typeof (NSNumber))] 
+						DateTime? B () { throw new NotImplementedException (); }
+					}
+				}";
+				mtouch.Linker = MTouchLinker.DontLink; // faster
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: code, extraArg: "-debug");
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (4170, "The registrar can't convert from 'System.DateTime' to 'Foundation.NSNumber' for the return value in the method NS.X.A.", "testApp.cs", 9);
+				mtouch.AssertError (4170, "The registrar can't convert from 'System.Nullable`1<System.DateTime>' to 'Foundation.NSNumber' for the return value in the method NS.X.B.", "testApp.cs", 12);
+				mtouch.AssertErrorCount (4 /* errors are duplicated */);
+			}
+		}
+
+		[Test]
+		public void MT4171 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var code = @"
+				namespace NS {
+					using System;
+					using Foundation;
+					using ObjCRuntime;
+					class X : NSObject {
+						[Export (""a:"")]
+						void A ([BindAs (typeof (DateTime), OriginalType = typeof (NSNumber))] ConsoleColor value) {}
+
+						[Export (""b:"")]
+						void B ([BindAs (typeof (DateTime?), OriginalType = typeof (NSNumber))] ConsoleColor? value) {}
+
+						[Export (""C"")]
+						[return: BindAs (typeof (DateTime), OriginalType = typeof (NSNumber))] 
+						ConsoleColor C () { throw new NotImplementedException (); }
+
+						[Export (""d"")]
+						[return: BindAs (typeof (DateTime?), OriginalType = typeof (NSNumber))] 
+						ConsoleColor? D () { throw new NotImplementedException (); }
+
+						[Export (""E"")]
+						[BindAs (typeof (DateTime), OriginalType = typeof (NSNumber))] 
+						ConsoleColor E { get; set; }
+
+						[Export (""F"")]
+						[BindAs (typeof (DateTime?), OriginalType = typeof (NSNumber))] 
+						ConsoleColor? F { get; set; }
+					}
+				}";
+				mtouch.Linker = MTouchLinker.DontLink; // faster
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: code, extraArg: "-debug");
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (4138, "The registrar cannot marshal the property type 'System.ConsoleColor' of the property 'NS.X.E'.", "testApp.cs", 23);
+				mtouch.AssertError (4138, "The registrar cannot marshal the property type 'System.Nullable`1<System.ConsoleColor>' of the property 'NS.X.F'.", "testApp.cs", 27);
+				mtouch.AssertError (4171, "The BindAs attribute on the parameter #1 is invalid: the BindAs type System.DateTime is different from the parameter type System.ConsoleColor.", "testApp.cs", 8);
+				mtouch.AssertError (4171, "The BindAs attribute on the parameter #1 is invalid: the BindAs type System.Nullable`1<System.DateTime> is different from the parameter type System.Nullable`1<System.ConsoleColor>.", "testApp.cs", 11);
+				mtouch.AssertError (4171, "The BindAs attribute on the return value of the method NS.X.C is invalid: the BindAs type System.DateTime is different from the return type System.ConsoleColor.", "testApp.cs", 15);
+				mtouch.AssertError (4171, "The BindAs attribute on the return value of the method NS.X.D is invalid: the BindAs type System.Nullable`1<System.DateTime> is different from the return type System.Nullable`1<System.ConsoleColor>.", "testApp.cs", 19);
+				mtouch.AssertErrorCount (8 /* 2 errors are duplicated */);
+			}
+		}
+
+		[Test]
+		public void MT4172 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var code = @"
+				namespace NS {
+					using System;
+					using Foundation;
+					using ObjCRuntime;
+					class X : NSObject {
+						[Export (""a:"")]
+						void A ([BindAs (typeof (DateTime), OriginalType = typeof (NSNumber))] DateTime value) {}
+						[Export (""b:"")]
+						void B ([BindAs (typeof (DateTime?), OriginalType = typeof (NSNumber))] DateTime? value) {}
+						[Export (""d:"")]
+						void D ([BindAs (typeof (int?[]), OriginalType = typeof (NSNumber[]))] int?[] value) {}
+						[Export (""e:"")]
+						void E ([BindAs (typeof (int), OriginalType = typeof (NSNumber))] ref int value) {}
+						[Export (""f:"")]
+						void F ([BindAs (typeof (int), OriginalType = typeof (NSNumber))] out int value) { throw new NotImplementedException (); }
+						[Export (""g:"")]
+						void G ([BindAs (typeof (int[,]), OriginalType = typeof (NSNumber[,]))] int[,] value) {}
+						[Export (""h:"")]
+						void H ([BindAs (typeof (int?[,]), OriginalType = typeof (NSNumber[,]))] int?[,] value) {}
+					}
+					enum E {
+						V,
+					}
+					class EClass : NSObject {
+						[Export (""a:"")]
+						void A ([BindAs (typeof (E), OriginalType = typeof (NSString))] E value) {}
+						[Export (""d:"")]
+						void D ([BindAs (typeof (E?[]), OriginalType = typeof (NSString[]))] E?[] value) {}
+					}
+				}";
+				mtouch.Linker = MTouchLinker.DontLink; // faster
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: code, extraArg: "-debug");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (4172, "The registrar can't convert from 'System.DateTime' to 'Foundation.NSNumber' for the parameter 'value' in the method NS.X.A.", "testApp.cs", 8);
+				mtouch.AssertError (4172, "The registrar can't convert from 'System.Nullable`1<System.DateTime>' to 'Foundation.NSNumber' for the parameter 'value' in the method NS.X.B.", "testApp.cs", 10);
+				mtouch.AssertError (4172, "The registrar can't convert from 'System.Nullable`1<System.Int32>[]' to 'Foundation.NSNumber[]' for the parameter 'value' in the method NS.X.D.", "testApp.cs", 12);
+				mtouch.AssertError (4172, "The registrar can't convert from 'System.Int32&' to 'Foundation.NSNumber' for the parameter 'value' in the method NS.X.E.", "testApp.cs", 14);
+				mtouch.AssertError (4172, "The registrar can't convert from 'System.Int32&' to 'Foundation.NSNumber' for the parameter 'value' in the method NS.X.F.", "testApp.cs", 16);
+				mtouch.AssertError (4172, "The registrar can't convert from 'System.Int32[0...,0...]' to 'Foundation.NSNumber[,]' for the parameter 'value' in the method NS.X.G.", "testApp.cs", 18);
+				mtouch.AssertError (4172, "The registrar can't convert from 'System.Nullable`1<System.Int32>[0...,0...]' to 'Foundation.NSNumber[,]' for the parameter 'value' in the method NS.X.H.", "testApp.cs", 20);
+				mtouch.AssertError (4172, "The registrar can't convert from 'NS.E' to 'Foundation.NSString' for the parameter 'value' in the method NS.EClass.A.", "testApp.cs", 27);
+				mtouch.AssertError (4172, "The registrar can't convert from 'System.Nullable`1<NS.E>[]' to 'Foundation.NSString[]' for the parameter 'value' in the method NS.EClass.D.", "testApp.cs", 29);
+				mtouch.AssertErrorCount (9);
+			}
+		}
+
+		[Test]
 		public void NoWarnings ()
 		{
 			using (var mtouch = new MTouchTool ()) {
@@ -731,8 +866,11 @@ class X : ReplayKit.RPBroadcastControllerDelegate
 				mtouch.Verbosity = 9; // Increase verbosity, otherwise linker warnings aren't shown
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
 				mtouch.AssertNoWarnings ();
-				foreach (var line in mtouch.OutputLines)
+				foreach (var line in mtouch.OutputLines) {
+					if (line.Contains ("warning: method 'paymentAuthorizationViewController:didAuthorizePayment:handler:' in protocol 'PKPaymentAuthorizationViewControllerDelegate' not implemented [-Wprotocol]"))
+						continue; // Xcode 9 beta 1: this method changed from optional to required.
 					Assert.That (line, Does.Not.Match ("warning:"), "no warnings");
+				}
 			}
 		}
 
@@ -988,15 +1126,25 @@ class Open<U> : NSObject
 		public void GenericType_WithInvalidParameterTypes ()
 		{
 			var code = @"
+		using System.Collections.Generic;
+		using Foundation;
 		class Open<U> : NSObject where U: NSObject
 		{
 			[Export (""bar:"")]
 			public void Bar (List<U> arg) {} // Not OK, can't marshal lists.
 		}
+		class C { static void Main () {} }
 ";
 
-			Verify (R.Static, code, false, 
-				".*Test.cs.*: error MT4136: The registrar cannot marshal the parameter type 'System.Collections.Generic.List`1<U>' of the parameter 'arg' in the method 'Open`1.Bar(System.Collections.Generic.List`1<U>)'");
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp (code: code, extraArg: "-debug:full");
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.Linker = MTouchLinker.DontLink; // faster test
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (4136, "The registrar cannot marshal the parameter type 'System.Collections.Generic.List`1<U>' of the parameter 'arg' in the method 'Open`1.Bar(System.Collections.Generic.List`1<U>)'", "testApp.cs", 7);
+				mtouch.AssertErrorCount (1);
+			}
 		}
 
 		[Test]
@@ -1109,6 +1257,7 @@ class GenericMethodClass : NSObject {
 		public void GenericMethods2 ()
 		{
 			var str1 = @"
+using Foundation;
 class NullableGenericTestClass<T> : NSObject where T: struct
 {
 	[Export (""init:"")]
@@ -1148,15 +1297,23 @@ class NullableGenericTestClass<T> : NSObject where T: struct
 	throw new System.NotImplementedException ();
 	}
 }
+class C { static void Main () {} }
 ";
-			Verify (R.Static, str1, false, 
-				".*Test.cs.*: error MT4113: The registrar found a generic method: 'NullableGenericTestClass`1.Z1(System.Nullable`1<Z>)'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes",
-				".*Test.cs.*: error MT4113: The registrar found a generic method: 'NullableGenericTestClass`1.Z2()'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes",
-				".*Test.cs.*: error MT4113: The registrar found a generic method: 'NullableGenericTestClass`1.Z3(Z)'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes",
-				".*Test.cs.*: error MT4128: The registrar found an invalid generic parameter type 'T' in the parameter foo of the method 'NullableGenericTestClass`1.T1(T)'. The generic parameter must have an 'NSObject' constraint.",
-				".*Test.cs.*: error MT4128: The registrar found an invalid generic parameter type 'System.Nullable`1<T>' in the parameter foo of the method 'NullableGenericTestClass`1.T2(System.Nullable`1<T>)'. The generic parameter must have an 'NSObject' constraint.",
-				".*Test.cs.*: error MT4129: The registrar found an invalid generic return type 'T' in the method 'NullableGenericTestClass`1.T3()'. The generic return type must have an 'NSObject' constraint.",
-				".*Test.cs.*: error MT4136: The registrar cannot marshal the parameter type 'System.Nullable`1<T>' of the parameter 'foo' in the method 'NullableGenericTestClass`1..ctor(System.Nullable`1<T>)'");
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp (code: str1, extraArg: "-debug:full");
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.Linker = MTouchLinker.DontLink; // faster test
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (4113, "The registrar found a generic method: 'NullableGenericTestClass`1.Z1(System.Nullable`1<Z>)'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes", "testApp.cs", 12);
+				mtouch.AssertError (4113, "The registrar found a generic method: 'NullableGenericTestClass`1.Z2()'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes", "testApp.cs", 17);
+				mtouch.AssertError (4113, "The registrar found a generic method: 'NullableGenericTestClass`1.Z3(Z)'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes", "testApp.cs", 23);
+				mtouch.AssertError (4128, "The registrar found an invalid generic parameter type 'T' in the parameter foo of the method 'NullableGenericTestClass`1.T1(T)'. The generic parameter must have an 'NSObject' constraint.", "testApp.cs", 28);
+				mtouch.AssertError (4128, "The registrar found an invalid generic parameter type 'System.Nullable`1<T>' in the parameter foo of the method 'NullableGenericTestClass`1.T2(System.Nullable`1<T>)'. The generic parameter must have an 'NSObject' constraint.", "testApp.cs", 33);
+				mtouch.AssertError (4129, "The registrar found an invalid generic return type 'T' in the method 'NullableGenericTestClass`1.T3()'. The generic return type must have an 'NSObject' constraint.", "testApp.cs", 38);
+				mtouch.AssertError (4136, "The registrar cannot marshal the parameter type 'System.Nullable`1<T>' of the parameter 'foo' in the method 'NullableGenericTestClass`1..ctor(System.Nullable`1<T>)'", "testApp.cs", 6);
+				mtouch.AssertErrorCount (7);
+			}
 		}
 
 		[Test]
