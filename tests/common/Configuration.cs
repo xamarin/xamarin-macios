@@ -143,11 +143,30 @@ namespace Xamarin.Tests
 			var settings = new System.Xml.XmlReaderSettings ();
 			settings.DtdProcessing = System.Xml.DtdProcessing.Ignore;
 			var doc = new System.Xml.XmlDocument ();
-			using (var fs = new FileStream (plist, FileMode.Open, FileAccess.Read)) {
+			using (var fs = new StringReader (ReadPListAsXml (plist))) {
 				using (var reader = System.Xml.XmlReader.Create (fs, settings)) {
 					doc.Load (reader);
 					return doc.DocumentElement.SelectSingleNode ($"//dict/key[text()='{key}']/following-sibling::string[1]/text()").Value;
 				}
+			}
+		}
+
+		public static string ReadPListAsXml (string path)
+		{
+			string tmpfile = null;
+			try {
+				tmpfile = Path.GetTempFileName ();
+				File.Copy (path, tmpfile, true);
+				using (var process = new System.Diagnostics.Process ()) {
+					process.StartInfo.FileName = "plutil";
+					process.StartInfo.Arguments = $"-convert xml1 {Xamarin.Utils.StringUtils.Quote (tmpfile)}";
+					process.Start ();
+					process.WaitForExit ();
+					return File.ReadAllText (tmpfile);
+				}
+			} finally {
+				if (tmpfile != null)
+					File.Delete (tmpfile);
 			}
 		}
 
