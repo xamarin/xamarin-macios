@@ -70,7 +70,7 @@ namespace Introspection
 			"MacAttribute",
 		};
 
-		HashSet<string> allowed = new HashSet<string> () {
+		HashSet<string> allowed = new HashSet<string>() {
 			"Aac",
 			"Accurracy",
 			"Achivements",
@@ -88,6 +88,7 @@ namespace Introspection
 			"Anglet",
 			"Arraycollation",
 			"Argb",
+			"Asal",
 			"Asin",
 			"Atan",
 			"Ats",	// App Transport Security
@@ -175,7 +176,7 @@ namespace Introspection
 			"Ecdh",  // Elliptic Curve Diffie–Hellman
 			"Ecdsa", // Elliptic Curve Digital Signature Algorithm
 			"Ecies", // Elliptic Curve Integrated Encryption Scheme
-			"Editability", 
+			"Editability",
 			"Eof", // acronym End-Of-File
 			"Emagic",
 			"Emaili",
@@ -303,9 +304,11 @@ namespace Introspection
 			"Ocurrences",
 			"Octree",
 			"Oid",
+			"Olus",
 			"Oneup", // TVElementKeyOneupTemplate
 			"Orthographyrange",
 			"Orth",
+			"Ostprandial",
 			"ove",
 			"Paeth", // PNG filter
 			"Parms", // short for Parameters
@@ -340,6 +343,7 @@ namespace Introspection
 			"Reacquirer",
 			"Reinvitation",
 			"Reinvite",
+			"Reprandial",
 			"Replayable",
 			"Requestwith",
 			"Ridesharing",
@@ -359,6 +363,7 @@ namespace Introspection
 			"Scn",
 			"Sdk",
 			"Sdtv", // acronym: Standard Definition Tele Vision
+			"Sdnn",
 			"Seekable",
 			"Shadable",
 			"Sharegroup",
