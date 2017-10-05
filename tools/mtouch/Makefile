@@ -295,8 +295,8 @@ simlauncher$(5)$(1): simlauncher.m $(TOP)/runtime/.libs/ios/libxamarin.a $(BUILD
 		-L$(BUILD_DESTDIR)/simulator$(4)/lib/ \
 		-I$(TOP)/runtime \
 		-I$(BUILD_DESTDIR)/simulator$(4)/include/mono-2.0 \
-		-I$(TOP)/builds/simulator$(4)/eglib/src \
-		-I$(MONO_PATH)/eglib/src \
+		-I$(TOP)/builds/simulator$(4)/mono/eglib \
+		-I$(MONO_PATH)/mono/eglib \
 		$(BUILD_DESTDIR)/simulator$(4)/lib/libmono$(3)-2.0.a \
 		$(foreach u,$(UNREFERENCED_SYMBOLS),-u $u)  \
 		$(TOP)/runtime/.libs/ios/libapp.a \

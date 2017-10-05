@@ -243,7 +243,6 @@ $(BUILD_DESTDIR)/mono-$(2): mono-wrapper.in .stamp-configure-$(2) | $(BUILD_DEST
 	$$(Q) chmod +x $$@
 
 .stamp-build-$(2): .stamp-configure-$(2) $(BUILD_DESTDIR)/mono-$(2) $(MONO_DEPENDENCIES)
-	PATH="$(MONO_PREFIX)/bin:$(PATH)" $(MAKE) -C $(2)/eglib/src
 	PATH="$(MONO_PREFIX)/bin:$(PATH)" $(MAKE) -C $(2)/mono
 	PATH="$(MONO_PREFIX)/bin:$(PATH)" $(MAKE) -C $(2)/mono install
 	PATH="$(MONO_PREFIX)/bin:$(PATH)" $(MAKE) -C $(2)/support
@@ -825,10 +824,8 @@ setup-$(2): .stamp-configure-$(2)
 	$(Q) $(SIM$(2)_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh $(2) $(abspath $(MONO_PATH)/configure) $(SIM$(2)_CONFIGURE_FLAGS)
 
 .stamp-build-$(2): .stamp-configure-$(2) $(MONO_DEPENDENCIES)
-	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/eglib all
 	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/mono all
 	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/support all
-	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/eglib install
 	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/mono install
 	$(Q) touch $$@
 
@@ -1005,10 +1002,8 @@ setup-watchsimulator: .stamp-configure-watchsimulator
 .stamp-build-watchsimulator: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
 .stamp-build-watchsimulator: export PATH:="$(WATCHSIMULATOR_BIN_PATH):$(PATH)"
 .stamp-build-watchsimulator: .stamp-configure-watchsimulator $(MONO_DEPENDENCIES)
-	$(Q) $(MAKE) -C watchsimulator/eglib all
 	$(Q) $(MAKE) -C watchsimulator/mono all
 	$(Q) $(MAKE) -C watchsimulator/support all
-	$(Q) $(MAKE) -C watchsimulator/eglib install
 	$(Q) $(MAKE) -C watchsimulator/mono install
 	$(Q) touch $@
 
@@ -1158,10 +1153,8 @@ setup-tvsimulator: .stamp-configure-tvsimulator
 .stamp-build-tvsimulator: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
 .stamp-build-tvsimulator: export PATH:="$(TVSIMULATOR_BIN_PATH):$(PATH)"
 .stamp-build-tvsimulator: .stamp-configure-tvsimulator $(MONO_DEPENDENCIES)
-	$(Q) $(MAKE) -C tvsimulator/eglib all
 	$(Q) $(MAKE) -C tvsimulator/mono all
 	$(Q) $(MAKE) -C tvsimulator/support all
-	$(Q) $(MAKE) -C tvsimulator/eglib install
 	$(Q) $(MAKE) -C tvsimulator/mono install
 	$(Q) touch $@
 
@@ -1304,9 +1297,7 @@ setup-$(2): .stamp-configure-$(2)
 	$(Q) $($(2)_ACVARS) $($(2)_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh $(2) $(abspath $(MONO_PATH)/configure) $($(2)_CONFIGURE_FLAGS)
 
 .stamp-build-$(2): .stamp-configure-$(2) $(MONO_DEPENDENCIES)
-	PATH="$(PLATFORM_BIN):$(PATH)" $(MAKE) -C $(2)/eglib
 	PATH="$(PLATFORM_BIN):$(PATH)" $(MAKE) -C $(2)/mono
-	PATH="$(PLATFORM_BIN):$(PATH)" $(MAKE) -C $(2)/eglib install
 	PATH="$(PLATFORM_BIN):$(PATH)" $(MAKE) -C $(2)/mono install
 	$(Q) touch $$@
 
@@ -1550,9 +1541,7 @@ setup-targetwatch: .stamp-configure-targetwatch
 .stamp-build-targetwatch: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
 .stamp-build-targetwatch: export PATH:="$(WATCHOS_BIN_PATH):$(PATH)"
 .stamp-build-targetwatch: .stamp-configure-targetwatch $(MONO_DEPENDENCIES)
-	$(Q) $(MAKE) -C targetwatch/eglib
 	$(Q) $(MAKE) -C targetwatch/mono
-	$(Q) $(MAKE) -C targetwatch/eglib install
 	$(Q) $(MAKE) -C targetwatch/mono install
 	$(Q) touch $@
 
@@ -1734,9 +1723,7 @@ setup-targettv: .stamp-configure-targettv
 .stamp-build-targettv: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
 .stamp-build-targettv: export PATH:="$(TVOS_BIN_PATH):$(PATH)"
 .stamp-build-targettv: .stamp-configure-targettv $(MONO_DEPENDENCIES)
-	$(Q) $(MAKE) -C targettv/eglib
 	$(Q) $(MAKE) -C targettv/mono
-	$(Q) $(MAKE) -C targettv/eglib install
 	$(Q) $(MAKE) -C targettv/mono install
 	$(Q) touch $@
 
@@ -1974,7 +1961,6 @@ setup-cross: .stamp-configure-cross
 $(eval $(call GenerateCrossOffsets,arm-apple-darwin10,$(TOP)/builds/cross/,cross,$(MONO_PATH)))
 
 .stamp-build-cross: .stamp-configure-cross cross/arm-apple-darwin10.h $(MONO_DEPENDENCIES)
-	$(MAKE) -C cross/eglib
 	$(MAKE) -C cross/mono
 	$(MAKE) -C cross/mono install
 	$(Q) touch $@
@@ -2049,7 +2035,6 @@ install-directories:
 $(eval $(call GenerateCrossOffsets,aarch64-apple-darwin10,$(TOP)/builds/cross64/,cross64,$(MONO_PATH)))
 
 .stamp-build-cross64: .stamp-configure-cross64 cross64/aarch64-apple-darwin10.h $(MONO_DEPENDENCIES)
-	$(MAKE) -C cross64/eglib
 	$(MAKE) -C cross64/mono
 	@$(MAKE) -C cross64/mono install
 	$(Q) touch $@
@@ -2116,7 +2101,6 @@ build-cross: setup-cross
 $(eval $(call GenerateCrossOffsets,armv7k-apple-darwin,$(TOP)/builds/cross-watch/,cross-watch,$(WATCH_MONO_PATH)))
 
 .stamp-build-cross-watch: .stamp-configure-cross-watch cross-watch/armv7k-apple-darwin.h $(MONO_DEPENDENCIES)
-	$(MAKE) -C cross-watch/eglib
 	$(MAKE) -C cross-watch/mono
 	$(MAKE) -C cross-watch/mono install
 	$(Q) touch $@
@@ -2181,7 +2165,6 @@ setup-crosstv: .stamp-configure-crosstv
 $(eval $(call GenerateCrossOffsets,aarch64-apple-darwin10,$(TOP)/builds/crosstv/,crosstv,$(MONO_PATH)))
 
 .stamp-build-crosstv: .stamp-configure-crosstv crosstv/aarch64-apple-darwin10.h $(MONO_DEPENDENCIES)
-	$(MAKE) -C crosstv/eglib
 	$(MAKE) -C crosstv/mono
 	$(MAKE) -C crosstv/mono install
 	$(Q) touch $@
