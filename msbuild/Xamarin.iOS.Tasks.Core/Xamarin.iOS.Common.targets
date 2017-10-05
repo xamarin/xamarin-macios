@@ -781,10 +781,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			AppBundleDir="$(AppBundleDir)"
 			AppManifest="$(_AppBundlePath)Info.plist"
 			Architectures="$(TargetArchitectures)"
-			Entitlements="$(CodesignEntitlements)"
 			ExecutableName="$(_ExecutableName)"
 			NativeExecutable="$(_NativeExecutable)"
-			CompiledEntitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
+			CompiledEntitlements="$(_CompiledEntitlements)"
 			Debug="$(MtouchDebug)"
 			EnableGenericValueTypeSharing="$(MtouchEnableGenericValueTypeSharing)"
 			ExtraArgs="$(MtouchExtraArgs)"
@@ -1422,6 +1421,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkVersion="$(MtouchSdkVersion)"
 			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			>
+			<Output TaskParameter="CompiledEntitlements" PropertyName="_CompiledEntitlements" />
 		</CompileEntitlements>
 	</Target>
 
@@ -1781,6 +1781,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_PrepareCodesignAppExtension" Condition="('$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '') And '$(IsAppExtension)' == 'true' And '@(_ResolvedAppBundleExtensions)' == ''">
 		<!-- For App Extensions, we delay running codesign until it has been copied into the main app bundle... -->
 		<PropertyGroup>
+			<_CompiledEntitlementsFullPath></_CompiledEntitlementsFullPath>
 			<_ResourceRulesFullPath></_ResourceRulesFullPath>
 		</PropertyGroup>
 
@@ -1788,8 +1789,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<Output TaskParameter="FullPath" PropertyName="_AppBundleFullPath" />
 		</GetFullPath>
 
-		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" RelativePath="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent">
-			<Output TaskParameter="FullPath" PropertyName="_EntitlementsFullPath" />
+		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(_CompiledEntitlements)' != ''" RelativePath="$(_CompiledEntitlements)">
+			<Output TaskParameter="FullPath" PropertyName="_CompiledEntitlementsFullPath" />
 		</GetFullPath>
 
 		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(_PreparedResourceRules)' != ''" RelativePath="$(_PreparedResourceRules)">
@@ -1819,7 +1820,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 				<NativeExecutable>$(_NativeExecutableFileName)</NativeExecutable>
 				<CodesignAllocate>$(_CodesignAllocate)</CodesignAllocate>
 				<DisableTimestamp>$(_CodesignDisableTimestamp)</DisableTimestamp>
-				<Entitlements>$(_EntitlementsFullPath)</Entitlements>
+				<Entitlements>$(_CompiledEntitlementsFullPath)</Entitlements>
 				<ResourceRules>$(_ResourceRulesFullPath)</ResourceRules>
 				<Keychain>$(CodesignKeychain)</Keychain>
 				<SigningKey>$(_CodeSigningKey)</SigningKey>
@@ -1859,7 +1860,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			CodesignAllocate="$(_CodesignAllocate)"
 			DisableTimestamp="$(_CodesignDisableTimestamp)"
 			Keychain="$(CodesignKeychain)"
-			Entitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
+			Entitlements="$(_CompiledEntitlements)"
 			ResourceRules="$(_PreparedResourceRules)"
 			Resources="$(AppBundleDir)"
 			SigningKey="$(_CodeSigningKey)"
@@ -1874,7 +1875,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="_CodesignVerify" Condition="('$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '') And ('$(IsAppExtension)' == 'false' Or '@(_ResolvedAppExtensionReferences)' != '')" DependsOnTargets="_CodesignAppBundle">
+	<Target Name="_CodesignVerify" Condition="'$(_RequireCodeSigning)' == 'true' And ('$(IsAppExtension)' == 'false' Or '@(_ResolvedAppExtensionReferences)' != '')" DependsOnTargets="_CodesignAppBundle">
 		<CodesignVerify
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedAppExtensionReferences)' != ''"
@@ -2048,7 +2049,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			CodesignAllocate="$(_CodesignAllocate)"
 			DisableTimestamp="$(_CodesignDisableTimestamp)"
 			Keychain="$(CodesignKeychain)"
-			Entitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
+			Entitlements="$(_CompiledEntitlements)"
 			Resources="@(_AssetPack)"
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
@@ -2075,7 +2076,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			CodesignAllocate="$(_CodesignAllocate)"
 			DisableTimestamp="$(_CodesignDisableTimestamp)"
 			Keychain="$(CodesignKeychain)"
-			Entitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
+			Entitlements="$(_CompiledEntitlements)"
 			ResourceRules="$(_PreparedResourceRules)"
 			Resources="$(_IpaAppBundleDir)"
 			SigningKey="$(_CodeSigningKey)"

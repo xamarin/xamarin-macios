@@ -29,6 +29,7 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string BundleIdentifier { get; set; }
 
+		[Output]
 		[Required]
 		public string CompiledEntitlements { get; set; }
 
