@@ -1750,6 +1750,10 @@ namespace XamCore.Registrar {
 			case "QuickLookUI":
 				h = "<Quartz/Quartz.h>";
 				break;
+#else
+			case "PdfKit":
+				h = "<PDFKit/PDFKit.h>";
+				break;
 #endif
 			case "OpenGLES":
 				return;

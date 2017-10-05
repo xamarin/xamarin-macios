@@ -54,5 +54,21 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Assert.Throws<ArgumentException> (delegate { c.SetLineDash (6.0f, lengths, Int32.MaxValue); }, "max");
 			}
 		}
+
+		[Test]
+		public void ResetClip ()
+		{
+			TestRuntime.AssertXcodeVersion (9, 0);
+
+			// Merely tests that the P/Invoke is correct
+			using (var c = Create ()) {
+				var original = c.GetClipBoundingBox ();
+				var rect = new CGRect (0, 0, 2, 2);
+				c.ClipToRect (rect);
+				Assert.That (rect, Is.EqualTo (c.GetClipBoundingBox ()));
+				c.ResetClip ();
+				Assert.That (original, Is.EqualTo (c.GetClipBoundingBox ()));
+			}
+		}
 	}
 }
