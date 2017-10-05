@@ -241,7 +241,10 @@
 
 		new Export (true, "void", "mono_set_pending_exception",
 			"MonoException *", "exc"
-		),
+		)
+		{
+			AlternativeEntryPoint = "mono_raise_exception",
+		},
 
 		#endregion
 
@@ -671,6 +674,7 @@
 	{
 		public string ReturnType;
 		public string EntryPoint;
+		public string AlternativeEntryPoint;
 		public List<Arg> Arguments;
 		public bool Optional;
 
