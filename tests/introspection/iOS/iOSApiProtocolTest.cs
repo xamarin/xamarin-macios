@@ -214,6 +214,10 @@ namespace Introspection {
 				case "FPUIActionExtensionContext": // Conformance not in headers
 				case "UIDocumentBrowserAction": // Conformance not in headers
 					return true;
+				// Header shows implementing NSSecureCoding, but supportsSecureCoding returns false.  Radar #34800025
+				case "HKSeriesBuilder":
+				case "HKWorkoutRouteBuilder":
+					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
 				case "CLKComplicationTemplateCircularSmallRingImage":
@@ -354,6 +358,10 @@ namespace Introspection {
 				case "NSFileProviderDomain": // Conformance not in headers
 				case "FPUIActionExtensionContext": // Conformance not in headers
 				case "UIDocumentBrowserAction": // Conformance not in headers
+					return true;
+				// Header shows implementing NSSecureCoding, but supportsSecureCoding returns false.  Radar #34800025
+				case "HKSeriesBuilder":
+				case "HKWorkoutRouteBuilder":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
