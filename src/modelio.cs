@@ -2763,11 +2763,11 @@ namespace XamCore.ModelIO {
 
 		[Abstract]
 		[Export ("canResolveAssetNamed:")]
-		bool CanResolveAssetNamed (string name);
+		bool CanResolveAsset (string name);
 
 		[Abstract]
 		[Export ("resolveAssetNamed:")]
-		NSUrl ResolveAssetNamed (string name);
+		NSUrl ResolveAsset (string name);
 	}
 
 	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
