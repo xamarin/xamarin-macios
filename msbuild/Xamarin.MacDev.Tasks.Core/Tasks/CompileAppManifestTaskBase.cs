@@ -26,10 +26,6 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string AppManifest { get; set; }
 
-		// FIXME: obsolete - leaving this property only to avoid merge conflicts with a PR
-		// to remove unnecessary logging.
-		public string Architecture { get; set; }
-
 		[Required]
 		public string AssemblyName { get; set; }
 
