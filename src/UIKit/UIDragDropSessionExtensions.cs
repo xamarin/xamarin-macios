@@ -25,8 +25,14 @@ namespace XamCore.UIKit {
 				if (arr == null && v != null) {
 					arr = new T [v.Length];
 					for (int i = 0; i < arr.Length; i++) {
-						if (v [i] != null)
-							arr [i] = Runtime.ConstructNSObject<T> (v [i].Handle);
+						if (v [i] == null)
+							continue;
+
+						arr [i] = v [i] as T;
+						if (arr [i] != null)
+							continue;
+
+						arr [i] = Runtime.ConstructNSObject<T> (v [i].Handle);
 					}
 				}
 
