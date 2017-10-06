@@ -240,6 +240,10 @@ namespace XamCore.HealthKit
 		DistanceSwimming,
 		[iOS (10,0), Watch (3,0)]
 		SwimmingStrokeCount,
+		[iOS (11,0), Watch (4,0)]
+		WaistCircumference,
+		[iOS (11, 0), Watch (4, 0)]
+		VO2Max,
 	}
 
 	// Convenience enum, ObjC uses NSString
@@ -318,6 +322,7 @@ namespace XamCore.HealthKit
 		Lacrosse,
 		MartialArts,
 		MindAndBody,
+		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Watch_4_0, Message = "Use 'MixedCardio' or 'HighIntensityIntervalTraining' instead.")]
 		MixedMetabolicCardioTraining,
 		PaddleSports,
 		Play,
@@ -374,6 +379,12 @@ namespace XamCore.HealthKit
 		WheelchairWalkPace,
 		[iOS (10,0), Watch (3,0)]
 		WheelchairRunPace,
+		[iOS (11,0), Watch (4,0)]
+		TaiChi,
+		[iOS (11, 0), Watch (4, 0)]
+		MixedCardio,
+		[iOS (11, 0), Watch (4, 0)]
+		HandCycling,
 		[iOS (8,2)]
 		Other = 3000
 	}
@@ -392,6 +403,10 @@ namespace XamCore.HealthKit
 		MotionPaused,
 		[iOS (10,0), Watch (3,0)]
 		MotionResumed,
+		[iOS (11, 0), Watch (4, 0)]
+		Segment,
+		[iOS (11, 0), Watch (4, 0)]
+		PauseOrResumeRequest,
 	}
 
 	[Watch (2,0)]
@@ -513,5 +528,27 @@ namespace XamCore.HealthKit
 		Backstroke,
 		Breaststroke,
 		Butterfly,
+	}
+
+	[Watch (4, 0), iOS (11, 0)]
+	[Native]
+	public enum HKInsulinDeliveryReason : nint {
+		Asal = 1,
+		Olus,
+	}
+
+	[Watch (4, 0), iOS (11, 0)]
+	[Native]
+	public enum HKBloodGlucoseMealTime : nint {
+		Reprandial = 1,
+		Ostprandial,
+	}
+
+	[Watch (4, 0), iOS (11, 0)]
+	[Native]
+	public enum HKVO2MaxTestType : nint {
+		MaxExercise = 1,
+		PredictionSubMaxExercise,
+		PredictionNonExercise,
 	}
 }

@@ -359,6 +359,7 @@ namespace Introspection
 			"Scn",
 			"Sdk",
 			"Sdtv", // acronym: Standard Definition Tele Vision
+			"Sdnn",
 			"Seekable",
 			"Shadable",
 			"Sharegroup",
