@@ -547,6 +547,8 @@ namespace xharness
 				args.Append (isSimulator ? " --launchsim " : " --launchdev ");
 				args.Append (StringUtils.Quote (launchAppPath));
 			}
+			if (!isSimulator)
+				args.Append (" --disable-memory-limits");
 
 			if (isSimulator) {
 				if (!await FindSimulatorAsync ())
