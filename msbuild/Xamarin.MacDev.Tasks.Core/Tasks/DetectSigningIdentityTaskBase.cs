@@ -310,7 +310,7 @@ namespace Xamarin.MacDev.Tasks
 
 			identity.BundleId = plist.GetCFBundleIdentifier ();
 			if (string.IsNullOrEmpty (identity.BundleId)) {
-				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, "{0} does not define CFBundleIdentifier");
+				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, "{0} does not define CFBundleIdentifier", AppManifest);
 				return false;
 			}
 
