@@ -675,7 +675,7 @@ namespace XamCore.VideoToolbox {
 
 		[Mac (10,13), iOS (11,0), TV (11,0)]
 		[Export ("TemporalLevelLimit")]
-		int WeakTemporalLevelLimit { get; set; }
+		int TemporalLevelLimit { get; set; }
 
 		[Export ("SuggestedQualityOfServiceTiers")]
 		NSDictionary[] SuggestedQualityOfServiceTiers { get; }

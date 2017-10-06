@@ -250,28 +250,4 @@ namespace XamCore.VideoToolbox {
 		Decimate,
 		Average
 	}
-
-	[Mac (10,13), iOS (11,0), TV (11,0)]
-	public struct VTInt32Point {
-		public int X { get; set; }
-		public int Y { get; set; }
-
-		public VTInt32Point (int x, int y)
-		{
-			X = x;
-			Y = y;
-		}
-	}
-
-	[Mac (10,13), iOS (11,0), TV (11,0)]
-	public struct VTInt32Size {
-		public int Width { get; set; }
-		public int Height { get; set; }
-
-		public VTInt32Size (int width, int height)
-		{
-			Width = width;
-			Height = height;
-		}
-	}
 }
