@@ -38,11 +38,11 @@ IOS_BINDING_TARGETS = $(wildcard Xamarin.ObjcBinding.Tasks/*.targets)
 IOS_TASK_ASSEMBLIES =         \
 	Xamarin.iOS.Tasks         \
 	Xamarin.iOS.Tasks.Core    \
-	Xamarin.MacDev.Tasks      \
-	Xamarin.MacDev.Tasks.Core \
+	Xamarin.iOSDev.Tasks      \
+	Xamarin.iOSDev.Tasks.Core \
 
 IOS_TASK_REFERENCE_ASSEMBLIES =	\
-	Xamarin.MacDev
+	Xamarin.iOSDev
 
 IOS_DIRECTORIES =                                                                                           \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS                                                  \
@@ -326,7 +326,6 @@ $(foreach dll,$(MSBUILD_TASK_ASSEMBLIES),$(dll)/bin/$(CONFIG)/$(dll).dll): .buil
 .PHONY: $(MSBUILD_SYMLINKS)
 
 # Xamarin.MacDev.dll comes from the Xamarin.MacDev repository
-# Newtonsoft.Json.dll comes from a NuGet
 $(foreach dll,$(sort $(MSBUILD_REFERENCE_ASSEMBLIES)),build/$(notdir $(dll)).dll): .build-stamp | build
 	$(Q) cp Xamarin.MacDev.Tasks.Core/bin/$(CONFIG)/$(notdir $@) $@
 
