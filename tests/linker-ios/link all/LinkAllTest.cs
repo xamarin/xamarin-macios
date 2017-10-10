@@ -533,5 +533,14 @@ namespace LinkAll {
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Security.Tls.AppleTlsProvider");
 			Assert.Null (Type.GetType (fqn), "Should NOT be included (no SslStream or Socket support)");
 		}
+
+		[Test]
+		// https://bugzilla.xamarin.com/show_bug.cgi?id=59247
+		public void WebKit_NSProxy ()
+		{
+			// this test works only because "Link all" does not use WebKit
+			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Foundation.NSProxy");
+			Assert.Null (Type.GetType (fqn), fqn);
+		}
 	}
 }
