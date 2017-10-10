@@ -217,6 +217,16 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "NSItemProviderWriting":
+				switch (type.Name) {
+				case "NSMutableString":
+				case "NSString":
+				case "NSUrl":
+					if (IntPtr.Size == 4) // Only on 64-bit version of these types
+						return true;
+					break;
+				}
+				break;
 			}
 
 			switch (type.Name) {

@@ -185,7 +185,7 @@ namespace XamCore.SafariServices {
 		void ShowPreferencesForExtension (string identifier, [NullAllowed] Action<NSError> completionHandler);
 
 		[Mac (10,12,4, onlyOn64 : true)]
-		[Advice ("Unavailable to extensions")]
+		[Advice ("Unavailable to extensions.")]
 		[Static][Async]
 		[Export ("dispatchMessageWithName:toExtensionWithIdentifier:userInfo:completionHandler:")]
 		void DispatchMessage (string messageName, string identifier, [NullAllowed] NSDictionary<NSString, NSObject> userInfo, [NullAllowed] Action<NSError> completionHandler);
