@@ -198,7 +198,17 @@ namespace Xamarin.MacDev.Tasks
 		{
 			var now = DateTime.Now;
 
-			certs = keychain.FindNamedSigningCertificates (x => StartsWithAny (x, prefixes)).Where (x => now < x.NotAfter).ToList ();
+			certs = keychain.FindNamedSigningCertificates (x => {
+				var rv = StartsWithAny (x, prefixes);
+				if (!rv)
+					Log.LogMessage (MessageImportance.Low, "The certificate '{0}' does not match any of the prefixes '{1}'.", x, string.Join ("', '", prefixes));
+				return rv;
+			}).Where (x => {
+				var rv = now < x.NotAfter;
+				if (!rv)
+					Log.LogMessage (MessageImportance.Low, "The certificate '{0}' has expired ({1})", Xamarin.MacDev.Keychain.GetCertificateCommonName (x), x.NotAfter);
+				return rv;
+			}).ToList ();
 
 			if (certs.Count == 0 && !allowZeroCerts) {
 				var message = "No valid " + PlatformName + " code signing keys found in keychain. You need to request a codesigning certificate from https://developer.apple.com.";
@@ -214,7 +224,17 @@ namespace Xamarin.MacDev.Tasks
 		{
 			var now = DateTime.Now;
 
-			certs = keychain.FindNamedSigningCertificates (x => x == name).Where (x => now < x.NotAfter).ToList ();
+			certs = keychain.FindNamedSigningCertificates (x => {
+				var rv = x == name;
+				if (!rv)
+					Log.LogMessage (MessageImportance.Low, "The certificate '{0}' does not match '{1}'.", x, name);
+				return rv;
+			}).Where (x => {
+				var rv = now < x.NotAfter;
+				if (!rv)
+					Log.LogMessage (MessageImportance.Low, "The certificate '{0}' has expired ({1})",  Xamarin.MacDev.Keychain.GetCertificateCommonName (x), x.NotAfter);
+				return rv;
+			}).ToList ();
 
 			if (certs.Count == 0) {
 				Log.LogError (PlatformName + " code signing key '{0}' not found in keychain.", SigningKey);
@@ -367,6 +387,12 @@ namespace Xamarin.MacDev.Tasks
 			if (!TryGetSigningCertificates (out certs, false))
 				return false;
 
+			if (certs.Count > 0) {
+				Log.LogMessage (MessageImportance.Low, "Available certificates:");
+				foreach (var cert in certs)
+					Log.LogMessage (MessageImportance.Low, "    {0}", Xamarin.MacDev.Keychain.GetCertificateCommonName (cert));
+			}
+
 			if (!IsAutoCodeSignProfile (ProvisioningProfile)) {
 				identity.Profile = MobileProvisionIndex.GetMobileProvision (platform, ProvisioningProfile);
 
@@ -408,15 +434,28 @@ namespace Xamarin.MacDev.Tasks
 				return !Log.HasLoggedErrors;
 			}
 
+			List<string> failures = new List<string> ();
 			if (identity.BundleId != null) {
 				if (certs.Count > 0)
-					profiles = MobileProvisionIndex.GetMobileProvisions (platform, identity.BundleId, type, certs, unique: true);
+					profiles = MobileProvisionIndex.GetMobileProvisions (platform, identity.BundleId, type, certs, unique: true, failures: failures);
 				else
-					profiles = MobileProvisionIndex.GetMobileProvisions (platform, identity.BundleId, type, unique: true);
+					profiles = MobileProvisionIndex.GetMobileProvisions (platform, identity.BundleId, type, unique: true, failures: failures);
 			} else if (certs.Count > 0) {
-				profiles = MobileProvisionIndex.GetMobileProvisions (platform, type, certs, unique: true);
+				profiles = MobileProvisionIndex.GetMobileProvisions (platform, type, certs, unique: true, failures: failures);
 			} else {
-				profiles = MobileProvisionIndex.GetMobileProvisions (platform, type, unique: true);
+				profiles = MobileProvisionIndex.GetMobileProvisions (platform, type, unique: true, failures: failures);
+			}
+
+			if (profiles.Count == 0) {
+				foreach (var f in failures)
+					Log.LogMessage (MessageImportance.Low, "{0}", f);
+				Log.LogError ($"Could not find any available provisioning profiles for {PlatformName}.");
+				return false;
+			} else {
+				Log.LogMessage (MessageImportance.Low, "Available profiles:");
+				foreach (var p in profiles) {
+					Log.LogMessage (MessageImportance.Low, "    {0}", p.Name);
+				}
 			}
 
 			List<CodeSignIdentity> pairs;
