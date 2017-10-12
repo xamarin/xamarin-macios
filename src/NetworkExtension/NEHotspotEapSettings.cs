@@ -19,6 +19,9 @@ namespace XamCore.NetworkExtension {
 				return NSArray.EnumsFromHandle<NEHotspotConfigurationEapType> (_SupportedEapTypes);
 			}
 			set {
+				if (value == null)
+					throw new ArgumentNullException (nameof (value));
+
 				var ret = NSArray.From (value, value.Length);
 				_SupportedEapTypes = ret.Handle;
 			}

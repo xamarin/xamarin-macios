@@ -19,6 +19,9 @@ namespace XamCore.NetworkExtension {
 		[Mac (10,11)]
 		public void SetAuthorization (Authorization authorization)
 		{
+			if (authorization == null)
+				throw new ArgumentNullException (nameof (authorization));
+
 			_SetAuthorization (authorization.Handle);
 		}
 	}
