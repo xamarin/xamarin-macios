@@ -2118,6 +2118,25 @@ function oninitialload ()
 			log.WriteLine ("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
 		}
 
+		public string GuessFailureReason (Log log)
+		{
+			try {
+				using (var reader = log.GetReader ()) {
+					string line;
+					var error_msg = new System.Text.RegularExpressions.Regex ("([A-Z][A-Z][0-9][0-9][0-9][0-9]:.*)");
+					while ((line = reader.ReadLine ()) != null) {
+						var match = error_msg.Match (line);
+						if (match.Success)
+							return match.Groups [1].Captures [0].Value;
+					}
+				}
+			} catch (Exception e) {
+				Harness.Log ("Failed to guess failure reason: {0}", e.Message);
+			}
+
+			return null;
+		}
+
 		// This method will set (and clear) the Waiting flag correctly while waiting on a resource
 		// It will also pause the duration.
 		public async Task<IAcquiredResource> NotifyBlockingWaitAsync (Task<IAcquiredResource> task)
@@ -2881,6 +2900,8 @@ function oninitialload ()
 
 						if (!string.IsNullOrEmpty (runner.FailureMessage))
 							FailureMessage = runner.FailureMessage;
+						else
+							FailureMessage = GuessFailureReason (runner.MainLog);
 
 						if (runner.Result == TestExecutingResult.Succeeded && Platform == TestPlatform.iOS_TodayExtension64) {
 							// For the today extension, the main app is just a single test.
