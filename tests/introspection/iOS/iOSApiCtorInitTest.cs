@@ -213,6 +213,9 @@ namespace Introspection {
 			case "MPVolumeView": // Started failing with Xcode 9 beta 3
 				return true;
 			case "IOSurface": // Only works on device
+			case "NEHotspotEapSettings": // Wireless Accessory Configuration is not supported in the simulator.
+			case "NEHotspotConfigurationManager":
+			case "NEHotspotHS20Settings":
 				return Runtime.Arch == Arch.SIMULATOR;
 			default:
 				return base.Skip (type);

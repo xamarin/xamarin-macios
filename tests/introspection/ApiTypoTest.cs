@@ -125,6 +125,7 @@ namespace Introspection
 			"Cda", // acronym: Clinical Document Architecture
 			"Celp", // MPEG4ObjectID
 			"Characterteristic",
+			"Chapv",
 			"Chromaticities",
 			"Ciff",
 			"Cinepak",
@@ -172,6 +173,7 @@ namespace Introspection
 			"Dtls",
 			"Dtmf", // DTMF
 			"dy",
+			"Eap",
 			"Ebu",
 			"Ecc",   // Elliptic Curve Cryptography
 			"Ecdh",  // Elliptic Curve Diffie–Hellman
@@ -278,6 +280,7 @@ namespace Introspection
 			"Milliohms",
 			"Mimap",
 			"Minification",
+			"Mncs",
 			"Mobike", // acronym
 			"Morpher",
 			"Mpe", // acronym
@@ -288,6 +291,7 @@ namespace Introspection
 			"Multipath",
 			"Multipeer",
 			"Muxed",
+			"Nai",
 			"Nanograms",
 			"Nanowatts",
 			"nfloat",
@@ -313,6 +317,7 @@ namespace Introspection
 			"ove",
 			"Paeth", // PNG filter
 			"Parms", // short for Parameters
+			"Peap",
 			"Perlin",
 			"Persistable",
 			"Pausable",
@@ -381,6 +386,7 @@ namespace Introspection
 			"Sqrt",
 			"Srgb",
 			"Ssid",
+			"Ssids",
 			"Standarize",
 			"Stateful",
 			"Stateright",
@@ -410,6 +416,7 @@ namespace Introspection
 			"Timelapse",
 			"Timelapses",
 			"Tls",
+			"Ttls",
 			"Tlv",
 			"Toi",
 			"Transceive",
@@ -442,6 +449,8 @@ namespace Introspection
 			"Voronoi",
 			"Vnode",
 			"Vpn",
+			"Wep",
+			"Wpa",
 			"Warpable",
 			"Whitespaces",
 			"Writeability",

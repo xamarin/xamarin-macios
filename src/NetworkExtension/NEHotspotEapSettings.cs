@@ -1,0 +1,28 @@
+﻿//
+// NEHotspotEapSettings.cs
+//
+// Authors:
+//	Alex Soto  <alexsoto@microsoft.com>
+//
+// Copyright 2017 Xamarin Inc. All rights reserved.
+//
+
+#if XAMCORE_2_0 && !MONOMAC
+using System;
+using XamCore.Foundation;
+
+namespace XamCore.NetworkExtension {
+	public partial class NEHotspotEapSettings {
+
+		public NEHotspotConfigurationEapType [] SupportedEapTypes {
+			get {
+				return NSArray.EnumsFromHandle<NEHotspotConfigurationEapType> (_SupportedEapTypes);
+			}
+			set {
+				var ret = NSArray.From (value, value.Length);
+				_SupportedEapTypes = ret.Handle;
+			}
+		}
+	}
+}
+#endif
