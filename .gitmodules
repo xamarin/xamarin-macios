@@ -15,7 +15,7 @@
 [submodule "external/mono"]
     path = external/mono
     url = ../../mono/mono.git
-    branch = 2017-06
+    branch = d15-5-2017-06
 [submodule "external/MonoTouch.Dialog"]
     path = external/MonoTouch.Dialog
     url = ../../migueldeicaza/MonoTouch.Dialog.git
