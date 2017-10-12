@@ -329,13 +329,19 @@ $(foreach dll,$(MSBUILD_TASK_ASSEMBLIES),$(dll)/bin/$(CONFIG)/$(dll).dll): .buil
 $(foreach dll,$(sort $(MSBUILD_REFERENCE_ASSEMBLIES)),build/$(notdir $(dll)).dll): .build-stamp | build
 	$(Q) cp Xamarin.MacDev.Tasks.Core/bin/$(CONFIG)/$(notdir $@) $@
 
-define copyToBuild
-build/$(1).dll: $(1)/bin/$(CONFIG)/$(1).dll | build
+define copyiOSToBuild
+build/$(1).dll: Xamarin.iOS.Tasks/bin/$(CONFIG)/$(1).dll | build
+	$$(Q) cp $$< $$@
+endef
+
+define copyMacToBuild
+build/$(1).dll: Xamarin.Mac.Tasks/bin/$(CONFIG)/$(1).dll | build
 	$$(Q) cp $$< $$@
 endef
 
 # Create the rules to copy all the dlls into the 'build' directory. 
-$(foreach dll,$(sort $(MSBUILD_TASK_ASSEMBLIES)),$(eval $(call copyToBuild,$(dll))))
+$(foreach dll,$(sort $(IOS_TASK_ASSEMBLIES)),$(eval $(call copyiOSToBuild,$(dll))))
+$(foreach dll,$(sort $(MAC_TASK_ASSEMBLIES)),$(eval $(call copyMacToBuild,$(dll))))
 
 # this is a directory-creating target.
 $(MSBUILD_DIRECTORIES) build:
