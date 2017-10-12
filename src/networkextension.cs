@@ -1093,11 +1093,11 @@ namespace XamCore.NetworkExtension {
 
 		[iOS (11,0), Mac (10,13, onlyOn64: true)]
 		[Export ("minimumTLSVersion", ArgumentSemantic.Assign)]
-		NEVpnIkev2TlsVersion MinimumTLSVersion { get; set; }
+		NEVpnIkev2TlsVersion MinimumTlsVersion { get; set; }
 
 		[iOS (11,0), Mac (10,13, onlyOn64: true)]
 		[Export ("maximumTLSVersion", ArgumentSemantic.Assign)]
-		NEVpnIkev2TlsVersion MaximumTLSVersion { get; set; }
+		NEVpnIkev2TlsVersion MaximumTlsVersion { get; set; }
 	}
 
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)]
