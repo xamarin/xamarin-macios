@@ -551,7 +551,7 @@ namespace XamCore.CoreMedia {
 			/* CMFormatDescriptionRef* */ out IntPtr formatDescriptionOut);
 
 		[iOS (11,0), Mac (10,13), TV (11,0)]
-		public static CMVideoFormatDescription FromHevcParameterSets (List<byte[]> parameterSets, int nalUnitHeaderLength, NSDictionary extensions,  out CMFormatDescriptionError error)
+		public static CMVideoFormatDescription FromHevcParameterSets (List<byte[]> parameterSets, int nalUnitHeaderLength, NSDictionary extensions, out CMFormatDescriptionError error)
 		{
 			if (parameterSets == null)
 				throw new ArgumentNullException (nameof (parameterSets));
@@ -574,13 +574,13 @@ namespace XamCore.CoreMedia {
 				}
 
 				IntPtr desc;
-				error = CMVideoFormatDescriptionCreateFromHEVCParameterSets (IntPtr.Zero, (nuint) parameterSets.Count, parameterSetPtrs, parameterSetSizes, nalUnitHeaderLength, extensions != null ? extensions.Handle : IntPtr.Zero, out desc);
-				if (error != CMFormatDescriptionError.None)
+				error = CMVideoFormatDescriptionCreateFromHEVCParameterSets (IntPtr.Zero, (nuint) parameterSets.Count, parameterSetPtrs, parameterSetSizes, nalUnitHeaderLength, extensions.GetHandle (), out desc);
+				if (error != CMFormatDescriptionError.None || desc == IntPtr.Zero)
 					return null;
 
 				return new CMVideoFormatDescription (desc, true);
 			} finally {
-				for (int i = 0; i < parameterSets.Count; i++) {
+				for (int i = 0; i < handles.Length; i++) {
 					if (handles [i].IsAllocated)
 						handles [i].Free ();
 				}
