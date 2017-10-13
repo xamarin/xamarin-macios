@@ -12,7 +12,7 @@ namespace XamCore.Foundation {
 
 	public partial class NSUrlCredential {
 #if !XAMCORE_2_0
-		[Obsolete ("Use NSUrlCredential(SecTrust) constructor")]
+		[Obsolete ("Use 'NSUrlCredential(SecTrust)' constructor.")]
 		public NSUrlCredential (IntPtr trust, bool ignored) : base (NSObjectFlag.Empty)
 		{
 			if (IsDirectBinding) {

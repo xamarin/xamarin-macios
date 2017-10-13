@@ -1,4 +1,4 @@
-// 
+﻿// 
 // PeripheralConnectionOptions.cs: Implements strongly typed access for CBConnectPeripheralOption
 //
 // Authors: Marek Safar (marek.safar@gmail.com)
@@ -50,7 +50,7 @@ namespace XamCore.CoreBluetooth {
 #if !MONOMAC
 #if !XAMCORE_2_0
 		[iOS (6,0)]
-		[Obsolete ("use NotifyOnConnection property instead")]
+		[Obsolete ("use NotifyOnConnection property instead.")]
 		public bool NotifyOnConnectionKey {
 			set {
 				NotifyOnConnection = value;
@@ -58,7 +58,7 @@ namespace XamCore.CoreBluetooth {
 		}
 
 		[iOS (6,0)]
-		[Obsolete ("use NotifyOnNotification property instead")]
+		[Obsolete ("use NotifyOnNotification property instead.")]
 		public bool NotifyOnNotificationKey {
 			set {
 				NotifyOnNotification = value;
@@ -101,7 +101,7 @@ namespace XamCore.CoreBluetooth {
 
 #if !XAMCORE_2_0
 		[iOS (5,0)]
-		[Obsolete ("Use NotifyOnDisconnection property instead")]
+		[Obsolete ("Use NotifyOnDisconnection property instead.")]
 		public bool NotifyOnDisconnectionKey {
 			set {
 				NotifyOnDisconnection = value;

@@ -1,4 +1,4 @@
-//
+﻿//
 // C#-like events for AVFoundation classes
 //
 // Author:
@@ -320,7 +320,7 @@ namespace XamCore.AVFoundation {
 			return del;
 		}
 
-		[Obsolete ("Deprecated since iOS 6, Use AVAudioSession.Notification.ObserveInterruptionInstead")]
+		[Obsolete ("Deprecated since iOS 6, Use AVAudioSession.Notification.ObserveInterruptioninstead.")]
 		public event EventHandler BeginInterruption {
 			add {
 				EnsureEventDelegate ().cbBeginInterruption += value;
@@ -330,7 +330,7 @@ namespace XamCore.AVFoundation {
 			}
 		}
 
-		[Obsolete ("Deprecated since iOS 6, Use AVAudioSession.Notification.ObserveInterruptionInstead")]
+		[Obsolete ("Deprecated since iOS 6, Use AVAudioSession.Notification.ObserveInterruptioninstead.")]
 		public event EventHandler EndInterruption {
 			add {
 				EnsureEventDelegate ().cbEndInterruption += value;

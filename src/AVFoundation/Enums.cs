@@ -1,4 +1,4 @@
-// Copyright 2009, Novell, Inc.
+﻿// Copyright 2009, Novell, Inc.
 // Copyright 2010, Novell, Inc.
 // Copyright 2011, 2012, 2014 Xamarin Inc.
 //
@@ -116,13 +116,13 @@ namespace XamCore.AVFoundation {
 
 #if !XAMCORE_2_0
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[Obsolete ("use Locked instead")]
+		[Obsolete ("use Locked instead.")]
 		ModeLocked = Locked,
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[Obsolete ("use AutoFocus instead")]
+		[Obsolete ("use AutoFocus instead.")]
 		ModeAutoFocus = AutoFocus,
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[Obsolete ("use ContinuousAutoFocus instead")]
+		[Obsolete ("use ContinuousAutoFocus instead.")]
 		ModeContinuousAutoFocus = ContinuousAutoFocus
 #endif
 	}

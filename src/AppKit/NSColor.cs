@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
@@ -247,7 +247,7 @@ namespace XamCore.AppKit {
 			}
 		}
 
-		[MountainLion][Obsolete ("Use UnderPageBackgroundColor instead")]
+		[MountainLion][Obsolete ("Use UnderPageBackgroundColor instead.")]
 		public static NSColor UnderPageBackground {
 			get {
 				return UnderPageBackgroundColor;

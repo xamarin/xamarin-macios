@@ -43,7 +43,7 @@ namespace XamCore.CoreAnimation {
 		}
 #endif
 
-		[Advice ("Use FromName(NSString) with one of the CAMediaTimingFunction fields")]
+		[Advice ("Use 'FromName(NSString)' with one of the CAMediaTimingFunction fields.")]
 		static public CAMediaTimingFunction FromName (string name)
 		{
 			using (NSString s = new NSString (name))

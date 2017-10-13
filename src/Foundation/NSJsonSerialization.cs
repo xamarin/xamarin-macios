@@ -1,4 +1,4 @@
-//
+﻿//
 // NSJsonSerialization.cs
 //
 // Authors:
@@ -19,7 +19,7 @@ namespace XamCore.Foundation {
 	public partial class NSJsonSerialization {
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use the Deserialize(NSData,NSJsonReadingOptions,out NSError) overload instead")]
+		[Obsolete ("Use the Deserialize(NSData,NSJsonReadingOptions,out NSError) overload instead.")]
 		public static NSObject Deserialize (NSData data, NSJsonReadingOptions opt, NSError error)
 		{
 			return Deserialize (data, opt, out error);

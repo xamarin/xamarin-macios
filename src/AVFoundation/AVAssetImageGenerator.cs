@@ -1,4 +1,4 @@
-// Copyright 2012, 2014 Xamarin Inc
+﻿// Copyright 2012, 2014 Xamarin Inc
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -30,7 +30,7 @@ namespace XamCore.AVFoundation {
 
 #if !XAMCORE_2_0
 		// compatibility method
-		[Obsolete ("Use the overload that takes NSValue[] instead")]
+		[Obsolete ("Use the overload that takes NSValue[] instead.")]
 		public virtual void GenerateCGImagesAsynchronously (NSValue cmTimesRequestedTimes, AVAssetImageGeneratorCompletionHandler handler)
 		{
 			NSValue[] values = new NSValue[] { cmTimesRequestedTimes };

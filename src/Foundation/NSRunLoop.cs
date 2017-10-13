@@ -1,4 +1,4 @@
-// Copyright 2011, 2012 Xamarin Inc
+﻿// Copyright 2011, 2012 Xamarin Inc
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -40,19 +40,19 @@ namespace XamCore.Foundation {
 				return new NSString (mode);
 		}
 
-		[Advice ("Use AddTimer (NSTimer, NSRunLoopMode)")]
+		[Advice ("Use 'AddTimer (NSTimer, NSRunLoopMode)'.")]
 		public void AddTimer (NSTimer timer, string forMode)
 		{
 			AddTimer (timer, GetRealMode (forMode));
 		}
 
-		[Advice ("Use LimitDateForMode (NSRunLoopMode) instead")]
+		[Advice ("Use 'LimitDateForMode (NSRunLoopMode)' instead.")]
 		public NSDate LimitDateForMode (string mode)
 		{
 			return LimitDateForMode (GetRealMode (mode));
 		}
 
-		[Advice ("Use AcceptInputForMode (NSRunLoopMode, NSDate)")]
+		[Advice ("Use 'AcceptInputForMode (NSRunLoopMode, NSDate)'.")]
 		public void AcceptInputForMode (string mode, NSDate limitDate)
 		{
 			AcceptInputForMode (GetRealMode (mode), limitDate);

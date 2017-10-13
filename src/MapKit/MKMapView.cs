@@ -21,7 +21,7 @@ namespace XamCore.MapKit
 			AddAnnotationObject (annotation);
 		}
 
-		[Obsolete ("Use AddAnnotations")]
+		[Obsolete ("Use AddAnnotations.")]
 		public void AddAnnotation (MKAnnotation [] annotations)
 		{
 			AddAnnotationObjects (annotations);
@@ -39,7 +39,7 @@ namespace XamCore.MapKit
 			AddAnnotationObject (placemark);
 		}
 
-		[Obsolete ("Use AddPlacemarks")]
+		[Obsolete ("Use AddPlacemarks.")]
 		public void AddAnnotation (MKPlacemark [] placemarks)
 		{
 			AddAnnotationObjects (placemarks);
