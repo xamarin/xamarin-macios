@@ -418,7 +418,7 @@ namespace XamCore.NetworkExtension {
 		
 #if XAMCORE_4_0
 	[NoMac] // Not available on mac
-#else
+#elif MONOMAC
 	[Obsolete ("'NEFilterProvider' is not available on macOS and will be removed in a future version.")]
 	[Mac (10,11, onlyOn64 : true)]
 #endif

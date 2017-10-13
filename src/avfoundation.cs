@@ -32,14 +32,11 @@
 using System.ComponentModel;
 
 #if !WATCH
-using XamCore.AudioToolbox;
 using XamCore.AudioUnit;
 using XamCore.AVKit;
-using XamCore.Foundation;
 using XamCore.CoreAnimation;
 using XamCore.CoreImage;
 using XamCore.CoreMedia;
-using XamCore.CoreVideo;
 using XamCore.MediaToolbox;
 #endif
 using XamCore.AudioToolbox;
