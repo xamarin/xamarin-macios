@@ -25,6 +25,8 @@ linker_sources = \
 	$(LINKER_DIR)/Mono.Linker/TypePreserve.cs			\
 	$(LINKER_DIR)/Mono.Linker/Annotations.cs			\
 	$(LINKER_DIR)/Mono.Linker/LinkContext.cs			\
+	$(LINKER_DIR)/Mono.Linker/ILogger.cs				\
+	$(LINKER_DIR)/Mono.Linker/ConsoleLogger.cs			\
 	$(LINKER_DIR)/Mono.Linker/LoadException.cs			\
 	$(LINKER_DIR)/Mono.Linker/MarkException.cs			\
 	$(LINKER_DIR)/Mono.Linker/AssemblyAction.cs			\
