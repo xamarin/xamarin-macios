@@ -145,15 +145,12 @@ namespace XamCore.CoreText {
 				dictionary.Remove (key);
 		}
 
-		public static void SetValue (NSDictionary dictionary, NSObject key, bool? value)
+		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, bool? value)
 		{
-			if (value.HasValue) {
-				AssertWritable (dictionary);
-				CFMutableDictionary.SetValue (dictionary.Handle, key.Handle, value.value ? CFBoolean.True.Handle : CFBoolean.False.Handle);
-			} else {
-				IDictionary<NSObject, NSObject> d = dictionary;
-				d.Remove (key);
-			}
+			if (value.HasValue)
+				dictionary [key] = new NSNumber (value.Value);
+			else
+				dictionary.Remove (key);
 		}
 
 #if XAMCORE_2_0
