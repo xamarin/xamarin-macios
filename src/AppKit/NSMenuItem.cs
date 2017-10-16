@@ -70,5 +70,14 @@ namespace XamCore.AppKit {
 			}
 		}
 
+		public Func <NSMenuItem, bool> ValidateMenuItem {
+			get {
+				return (target as ActionDispatcher)?.ValidateMenuItemFunc;
+			}
+			set {
+				(target as ActionDispatcher).ValidateMenuItemFunc = value;
+			}
+		}
+
 	}
 }
