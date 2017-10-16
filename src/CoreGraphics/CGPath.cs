@@ -193,7 +193,7 @@ namespace XamCore.CoreGraphics {
 		unsafe extern static void CGPathAddLineToPoint (/* CGMutablePathRef */ IntPtr path, CGAffineTransform *m, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y);
 
 #if !XAMCORE_2_0
-		[Advice ("Use AddLineToPoint instead.")] // Bad name
+		[Advice ("Use 'AddLineToPoint' instead.")] // Bad name
 		public void CGPathAddLineToPoint (nfloat x, nfloat y)
 		{
 			AddLineToPoint (x, y);
@@ -211,7 +211,7 @@ namespace XamCore.CoreGraphics {
 		}
 		
 #if !XAMCORE_2_0
-		[Advice ("Use AddLineToPoint instead.")] // Bad name
+		[Advice ("Use 'AddLineToPoint' instead.")] // Bad name
 		public void CGPathAddLineToPoint (CGAffineTransform transform, nfloat x, nfloat y)
 		{
 			AddLineToPoint (transform, x, y);
@@ -373,7 +373,7 @@ namespace XamCore.CoreGraphics {
 			CGPathAddEllipseInRect (handle, &m, rect);
 		}
 #if !XAMCORE_2_0
-		[Obsolete ("Use AddEllipseInRect instead.")]
+		[Obsolete ("Use 'AddEllipseInRect' instead.")]
 		public unsafe void AddElipseInRect (CGAffineTransform m, CGRect rect)
 		{
 			CGPathAddEllipseInRect (handle, &m, rect);
@@ -385,7 +385,7 @@ namespace XamCore.CoreGraphics {
 			CGPathAddEllipseInRect (handle, null, rect);
 		}
 #if !XAMCORE_2_0
-		[Obsolete ("Use AddEllipseInRect instead.")]
+		[Obsolete ("Use 'AddEllipseInRect' instead.")]
 		public unsafe void AddElipseInRect (CGRect rect)
 		{
 			CGPathAddEllipseInRect (handle, null, rect);

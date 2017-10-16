@@ -33,7 +33,7 @@ using System;
 namespace XamCore.AVFoundation {
 
 #if !XAMCORE_2_0
-	[Advice ("Use AudioSettings instead.")]
+	[Advice ("Use 'AudioSettings' instead.")]
 	public class AVAudioRecorderSettings {
 		public AVAudioRecorderSettings ()
 		{

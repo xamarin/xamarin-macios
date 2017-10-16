@@ -3854,7 +3854,7 @@ namespace XamCore.AVFoundation {
 #if XAMCORE_2_0
 		[Internal]
 #endif
-		[Advice ("Use constructor or Create method.")]
+		[Advice ("Use constructor or 'Create' method.")]
 		[Static, Export ("assetWriterInputWithMediaType:outputSettings:")]
 		AVAssetWriterInput FromType (string mediaType, [NullAllowed] NSDictionary outputSettings);
 
