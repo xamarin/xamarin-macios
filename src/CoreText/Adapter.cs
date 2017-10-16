@@ -116,6 +116,11 @@ namespace XamCore.CoreText {
 			return ((NSNumber) value).UInt32Value;
 		}
 
+		public static bool? GetBoolValue (NSDictionary dictionary, NSObject key)
+		{
+			return CFBoolean.GetValue (dictionary.LowlevelObjectForKey (key.Handle));
+		}
+
 		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, int? value)
 		{
 			if (value.HasValue)
@@ -133,6 +138,14 @@ namespace XamCore.CoreText {
 		}
 
 		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, uint? value)
+		{
+			if (value.HasValue)
+				dictionary [key] = new NSNumber (value.Value);
+			else
+				dictionary.Remove (key);
+		}
+
+		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, bool? value)
 		{
 			if (value.HasValue)
 				dictionary [key] = new NSNumber (value.Value);

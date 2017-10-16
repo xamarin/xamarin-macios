@@ -295,6 +295,7 @@ namespace Introspection
 			"Nanograms",
 			"Nanowatts",
 			"nfloat",
+			"Nfnt",
 			"nint",
 			"Nntps",
 			"Ntlm",
