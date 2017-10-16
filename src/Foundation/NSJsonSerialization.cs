@@ -1,4 +1,4 @@
-﻿//
+//
 // NSJsonSerialization.cs
 //
 // Authors:

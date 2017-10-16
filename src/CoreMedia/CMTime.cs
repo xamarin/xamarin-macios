@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CMTime.cs: API for creating and manipulating CMTime structs
 //
 // Authors: Mono Team

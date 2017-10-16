@@ -1,4 +1,4 @@
-﻿//
+//
 // NetworkReachability.cs: NetworkReachability binding
 //
 // Authors:

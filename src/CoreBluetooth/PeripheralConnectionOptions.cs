@@ -1,4 +1,4 @@
-﻿// 
+// 
 // PeripheralConnectionOptions.cs: Implements strongly typed access for CBConnectPeripheralOption
 //
 // Authors: Marek Safar (marek.safar@gmail.com)

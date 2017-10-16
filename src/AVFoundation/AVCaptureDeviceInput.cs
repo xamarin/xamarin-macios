@@ -1,4 +1,4 @@
-﻿//
+//
 // AVCaptureDeviceInput.cs
 //
 // Authors:

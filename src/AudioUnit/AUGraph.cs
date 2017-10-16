@@ -1,4 +1,4 @@
-﻿//
+//
 // AUGraph.cs: AUGraph wrapper class
 //
 // Authors:

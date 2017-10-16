@@ -1,4 +1,4 @@
-﻿//
+//
 // NSFileManager.cs:
 // Author:
 //   Miguel de Icaza

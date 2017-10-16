@@ -1,4 +1,4 @@
-﻿//
+//
 // NSUrlConnection.cs:
 // Author:
 //   Miguel de Icaza

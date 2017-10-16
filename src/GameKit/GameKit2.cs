@@ -1,4 +1,4 @@
-﻿//
+//
 // GameKit.cs: This file describes the API that the generator will produce for GameKit
 //
 // Authors:

@@ -1,4 +1,4 @@
-﻿//
+//
 // coreanimation.cs: API definition for CoreAnimation binding
 //
 // Authors:

@@ -1,4 +1,4 @@
-﻿//
+//
 // AudioUnitEventArgs.cs: AudioUnit callback argument
 //
 // Author:

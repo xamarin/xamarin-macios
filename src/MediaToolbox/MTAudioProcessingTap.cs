@@ -1,4 +1,4 @@
-﻿#if IOS || MONOMAC
+#if IOS || MONOMAC
 #if !XAMCORE_2_0
 // NOTICE: 32-bit only implementation 
 //

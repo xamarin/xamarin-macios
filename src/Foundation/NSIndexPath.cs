@@ -1,4 +1,4 @@
-﻿//
+//
 // NSIndexPath.cs
 //
 // Authors:

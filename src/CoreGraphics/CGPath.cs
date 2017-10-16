@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CGPath.cs: Implements the managed CGPath
 //
 // Authors: Mono Team

@@ -1,4 +1,4 @@
-﻿// Copyright 2009, Novell, Inc.
+// Copyright 2009, Novell, Inc.
 // Copyright 2010, Novell, Inc.
 // Copyright 2011, 2012, 2014 Xamarin Inc.
 //

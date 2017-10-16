@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AVAudioSessionPortDescription.cs
 //
 // Authors: Rolf Bjarne Kvinge <rolf@xamarin.com>

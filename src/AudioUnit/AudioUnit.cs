@@ -1,4 +1,4 @@
-﻿//
+//
 // AudioUnit.cs: AudioUnit wrapper class
 //
 // Authors:

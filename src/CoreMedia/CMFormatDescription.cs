@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CMFormatDescription.cs: Implements the managed CMFormatDescription
 //
 // Authors:

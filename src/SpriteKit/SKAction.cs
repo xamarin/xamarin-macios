@@ -1,4 +1,4 @@
-﻿//
+//
 // SKAction helpers
 //
 // Authors:

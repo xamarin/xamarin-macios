@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CoreMedia.cs: Basic definitions for CoreMedia
 //
 // Authors: Mono Team

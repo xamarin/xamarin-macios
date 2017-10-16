@@ -1,4 +1,4 @@
-﻿//
+//
 // Copyright 2011, Novell, Inc.
 // Copyright 2011, Regan Sarwas
 //

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CALayer.cs: support for CALayer
 //
 // Authors:

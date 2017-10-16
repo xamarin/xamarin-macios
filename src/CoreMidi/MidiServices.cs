@@ -1,4 +1,4 @@
-﻿//
+//
 // MidiServices.cs: Implementation of the MidiObject base class and its derivates
 //
 // Author:

@@ -1,4 +1,4 @@
-﻿//
+//
 // Copyright 2010, Novell, Inc.
 // Copyright 2010, Duane Wandless.
 //

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CGPDFStream.cs: Implements the managed CGPDFStream binding
 //
 // Authors: Miguel de Icaza

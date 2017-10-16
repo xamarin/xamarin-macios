@@ -1,4 +1,4 @@
-﻿//
+//
 // C#-like events for AVFoundation classes
 //
 // Author:

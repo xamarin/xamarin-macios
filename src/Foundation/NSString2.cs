@@ -1,4 +1,4 @@
-﻿//
+//
 // NSString2.cs: Support code added after the generator has run for NSString
 // 
 // Copyright 2009-2010, Novell, Inc.

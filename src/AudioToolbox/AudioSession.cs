@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AudioSession.cs: AudioSession bindings
 //
 // Authors:
