@@ -66,7 +66,6 @@
     <Compile Include="Tasks\CompileSceneKitAssetsTaskBase.cs" />
     <Compile Include="Tasks\CreateDebugConfigurationTaskBase.cs" />
     <Compile Include="Tasks\CreateDebugSettingsTaskBase.cs" />
-    <Compile Include="Tasks\DetectBundleIdentifierTaskBase.cs" />
     <Compile Include="Tasks\DetectSdkLocationsTaskBase.cs" />
     <Compile Include="Tasks\DetectSigningIdentityTaskBase.cs" />
     <Compile Include="Tasks\EmbedMobileProvisionTaskBase.cs" />

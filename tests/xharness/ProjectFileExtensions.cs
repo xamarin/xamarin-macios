@@ -597,6 +597,40 @@ namespace xharness
 			}
 		}
 
+		public static void AddAdditionalDefines (this XmlDocument csproj, string value, string platform, string configuration)
+		{
+			var projnode = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup' and @Condition]/*[local-name() = 'DefineConstants']");
+			foreach (XmlNode xmlnode in projnode) {
+				var parent = xmlnode.ParentNode;
+				if (parent.Attributes ["Condition"] == null)
+					continue;
+				if (!IsNodeApplicable (parent, platform, configuration))
+					continue;
+				
+				if (string.IsNullOrEmpty (xmlnode.InnerText)) {
+					xmlnode.InnerText = value;
+				} else {
+					xmlnode.InnerText += ";" + value;
+				}
+				return;
+			}
+
+			projnode = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup' and @Condition]");
+			foreach (XmlNode xmlnode in projnode) {
+				if (xmlnode.Attributes ["Condition"] == null)
+					continue;
+				if (!IsNodeApplicable (xmlnode, platform, configuration))
+					continue;
+
+				var defines = csproj.CreateElement ("DefineConstants", MSBuild_Namespace);
+				defines.InnerText = value;
+				xmlnode.AppendChild (defines);
+				return;
+			}
+
+			throw new Exception ("Could not find where to add a new DefineConstants node");
+		}
+
 		public static void SetNode (this XmlDocument csproj, string node, string value)
 		{
 			var nodes = csproj.SelectNodes ("/*/*/*[local-name() = '" + node + "']");

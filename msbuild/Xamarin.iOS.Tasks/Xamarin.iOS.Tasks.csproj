@@ -46,7 +46,6 @@
     <Compile Include="Tasks\CreateDebugConfiguration.cs" />
     <Compile Include="Tasks\CreateDebugSettings.cs" />
     <Compile Include="Tasks\CreateEmbeddedResources.cs" />
-    <Compile Include="Tasks\DetectBundleIdentifier.cs" />
     <Compile Include="Tasks\DetectSdkLocations.cs" />
     <Compile Include="Tasks\DetectSigningIdentity.cs" />
     <Compile Include="Tasks\EmbedMobileProvision.cs" />

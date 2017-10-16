@@ -284,7 +284,25 @@ namespace xharness
 			if (mode == "watchos")
 				args.Append (" --device ios,watchos");
 
-			return await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), main_log, TimeSpan.FromMinutes (mode == "watchos" ? 15 : 3));
+			var timeout = TimeSpan.FromMinutes (3);
+			if (mode == "watchos") {
+				var watchApp = Path.Combine (appPath, "Watch");
+				var info = new DirectoryInfo (watchApp);
+				if (info.Exists) {
+					long watchAppSize = 0;
+					foreach (var file in info.EnumerateFiles ("*", SearchOption.AllDirectories))
+						watchAppSize += file.Length;
+					// transfer speed is ~10MB/minute. Add another 50% just because transfer isn't the only thing happening, and also set it to at least 3 minutes
+					var estimatedTransferTime = watchAppSize / 1024 / 1024 / 10.0;
+					timeout = TimeSpan.FromMinutes (Math.Max (3, estimatedTransferTime * 1.5));
+					main_log.WriteLine ($"Estimated transfer speed to be {estimatedTransferTime} minutes based on the watch app size ({watchAppSize} bytes) and a speed of 10MB/s. Thus setting the install timeout to {timeout.TotalMinutes} minutes (giving it a little extra time).");
+				} else {
+					timeout = TimeSpan.FromMinutes (15);
+					main_log.WriteLine ($"Unable to determine watch app size, install timeout will be {timeout.TotalMinutes} minutes.");
+				}
+			}
+
+			return await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), main_log, timeout);
 		}
 
 		public async Task<ProcessExecutionResult> UninstallAsync ()
@@ -547,6 +565,8 @@ namespace xharness
 				args.Append (isSimulator ? " --launchsim " : " --launchdev ");
 				args.Append (StringUtils.Quote (launchAppPath));
 			}
+			if (!isSimulator)
+				args.Append (" --disable-memory-limits");
 
 			if (isSimulator) {
 				if (!await FindSimulatorAsync ())
