@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -52,8 +52,9 @@
     <Reference Include="System.Core" />
     <Reference Include="Mono.Data.Sqlite" />
     <Reference Include="Xamarin.Mac" />
+    <Reference Include="MonoTouch.NUnitLite" />
     <Reference Include="GuiUnit">
-      <HintPath>..\..\..\external\guiunit\src\framework\obj\Debug\net-4.5\GuiUnit.exe</HintPath>
+      <HintPath>..\..\..\external\guiunit\src\framework\obj\Debug\xammac_mobile\GuiUnit.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
