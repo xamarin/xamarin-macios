@@ -116,14 +116,6 @@ namespace XamCore.CoreText {
 			return ((NSNumber) value).UInt32Value;
 		}
 
-		public static float? GetFloatValue (IDictionary<NSObject, NSObject> dictionary, NSObject key)
-		{
-			var value = dictionary [key];
-			if (value == null)
-				return null;
-			return ((NSNumber) value).FloatValue;
-		}
-
 		public static bool? GetBoolValue (NSDictionary dictionary, NSObject key)
 		{
 			return CFBoolean.GetValue (dictionary.LowlevelObjectForKey (key.Handle));
@@ -158,8 +150,7 @@ namespace XamCore.CoreText {
 			if (value.HasValue) {
 				AssertWritable (dictionary);
 				CFMutableDictionary.SetValue (dictionary.Handle, key.Handle, value.value ? CFBoolean.True.Handle : CFBoolean.False.Handle);
-			}
-			else {
+			} else {
 				IDictionary<NSObject, NSObject> d = dictionary;
 				d.Remove (key);
 			}

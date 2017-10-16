@@ -47,7 +47,7 @@ namespace XamCore.CoreText {
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFontManager.h
 	public enum CTFontManagerAutoActivation : uint_compat_int {
 		Default = 0, Disabled = 1, Enabled = 2,
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "It's now threated as 'Default'.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "It's now treated as 'Default'.")]
 		PromptUser = 3,
 	}
 

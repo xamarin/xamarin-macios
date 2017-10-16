@@ -318,7 +318,7 @@ namespace XamCore.CoreText {
 
 		[iOS (11,0), Mac (10,13), TV (11,0), Watch (4,0)]
 		public float? Offset {
-			get { return Adapter.GetFloatValue (Dictionary, CTStringAttributeKey.Offset); }
+			get { return Adapter.GetSingleValue (Dictionary, CTStringAttributeKey.Offset); }
 			set { Adapter.SetValue (Dictionary, CTStringAttributeKey.Offset, value); }
 		}
 
