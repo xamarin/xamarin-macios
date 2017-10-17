@@ -76,14 +76,14 @@ namespace XamCore.AppKit {
 			}
 		}
 
-		[Advice ("The Activated event must be set before setting ValidateMenuItem.")]
+		[Advice ("The 'Activated' event must be set before setting 'ValidateMenuItem'.")]
 		public Func <NSMenuItem, bool> ValidateMenuItem {
 			get {
 				return (target as ActionDispatcher)?.ValidateMenuItemFunc;
 			}
 			set {
 				if (!(target is ActionDispatcher))
-					throw new InvalidOperationException ("Target is not an ActionDispatcher.  ValidateMenuItem may only be set after setting the Activated event.");
+					throw new InvalidOperationException ("Target is not an 'ActionDispatcher'. 'ValidateMenuItem' may only be set after setting the 'Activated' event.");
 
 				(target as ActionDispatcher).ValidateMenuItemFunc = value;
 			}
