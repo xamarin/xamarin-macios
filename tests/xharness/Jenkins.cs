@@ -30,6 +30,7 @@ namespace xharness
 		public bool IncludeMacBindingProject;
 		public bool IncludeSimulator = true;
 		public bool IncludeDevice;
+		public bool IncludeXtro;
 
 		public Logs Logs = new Logs ();
 		public Log MainLog;
@@ -340,12 +341,17 @@ namespace xharness
 				"msbuild",
 				"tests/mac-binding-project",
 			}.Intersect (btouch_prefixes).ToArray ();
+			var xtro_prefixes = new string [] {
+				"tests/xtro-sharpie",
+				"src",
+			};
 
 			SetEnabled (files, mtouch_prefixes, "mtouch", ref IncludeMtouch);
 			SetEnabled (files, mmp_prefixes, "mmp", ref IncludeMmpTest);
 			SetEnabled (files, bcl_prefixes, "bcl", ref IncludeBcl);
 			SetEnabled (files, btouch_prefixes, "btouch", ref IncludeBtouch);
 			SetEnabled (files, mac_binding_project, "mac-binding-project", ref IncludeMacBindingProject);
+			SetEnabled (files, xtro_prefixes, "xtro", ref IncludeXtro);
 		}
 
 		void SetEnabled (IEnumerable<string> files, string [] prefixes, string testname, ref bool value)
@@ -374,6 +380,7 @@ namespace xharness
 			SetEnabled (labels, "btouch", ref IncludeBtouch);
 			SetEnabled (labels, "mac-binding-project", ref IncludeMacBindingProject);
 			SetEnabled (labels, "ios-extensions", ref IncludeiOSExtensions);
+			SetEnabled (labels, "xtro", ref IncludeXtro);
 
 			// enabled by default
 			SetEnabled (labels, "ios", ref IncludeiOS);
@@ -608,6 +615,16 @@ namespace xharness
 			};
 			Tasks.Add (runMacBindingProject);
 			
+			var runXtroTests = new MakeTask {
+				Jenkins = this,
+				Platform = TestPlatform.All,
+				TestName = "Xtro",
+				Target = "wrench",
+				WorkingDirectory = Path.Combine (Harness.RootDirectory, "xtro-sharpie"),
+				Ignored = !IncludeXtro,
+			};
+			Tasks.Add (runXtroTests);
+
 			Tasks.AddRange (await CreateRunDeviceTasks ());
 		}
 
@@ -1947,6 +1964,17 @@ function oninitialload ()
 				process.StartInfo.EnvironmentVariables ["XamarinMacFrameworkRoot"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
 				process.StartInfo.EnvironmentVariables ["XAMMAC_FRAMEWORK_PATH"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
 				break;
+			case TestPlatform.All:
+				// Don't set:
+				//     MSBuildExtensionsPath 
+				//     XBUILD_FRAMEWORK_FOLDERS_PATH
+				// because these values used by both XM and XI and we can't set it to two different values at the same time.
+				// Any test that depends on these values should not be using 'TestPlatform.All'
+				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = Harness.XcodeRoot;
+				process.StartInfo.EnvironmentVariables ["MD_MTOUCH_SDK_ROOT"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current");
+				process.StartInfo.EnvironmentVariables ["XamarinMacFrameworkRoot"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
+				process.StartInfo.EnvironmentVariables ["XAMMAC_FRAMEWORK_PATH"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
+				break;
 			default:
 				throw new NotImplementedException ();
 			}
@@ -3123,6 +3151,8 @@ function oninitialload ()
 	public enum TestPlatform
 	{
 		None,
+		All,
+
 		iOS,
 		iOS_Unified,
 		iOS_Unified32,
