@@ -95,7 +95,7 @@ namespace XamCore.CoreText {
 		internal static readonly NSString BaselineClass;
 		internal static readonly NSString BaselineInfo;
 		internal static readonly NSString BaselineReferenceInfo;
-		internal static readonly NSString Offset;
+		internal static readonly NSString BaselineOffset;
 		internal static readonly NSString WritingDirection;
 
 		static CTStringAttributeKey ()
@@ -121,7 +121,7 @@ namespace XamCore.CoreText {
 				GlyphInfo                   = Dlfcn.GetStringConstant (handle, "kCTGlyphInfoAttributeName");
 				CharacterShape              = Dlfcn.GetStringConstant (handle, "kCTCharacterShapeAttributeName");
 				RunDelegate                 = Dlfcn.GetStringConstant (handle, "kCTRunDelegateAttributeName");
-				Offset                      = Dlfcn.GetStringConstant (handle, "kCTBaselineOffsetAttributeName");
+				BaselineOffset              = Dlfcn.GetStringConstant (handle, "kCTBaselineOffsetAttributeName");
 
 #if !MONOMAC
 				BaselineClass               = Dlfcn.GetStringConstant (handle, "kCTBaselineClassAttributeName");
@@ -317,9 +317,9 @@ namespace XamCore.CoreText {
 		}
 
 		[iOS (11,0), Mac (10,13), TV (11,0), Watch (4,0)]
-		public float? Offset {
-			get { return Adapter.GetSingleValue (Dictionary, CTStringAttributeKey.Offset); }
-			set { Adapter.SetValue (Dictionary, CTStringAttributeKey.Offset, value); }
+		public float? BaselineOffset {
+			get { return Adapter.GetSingleValue (Dictionary, CTStringAttributeKey.BaselineOffset); }
+			set { Adapter.SetValue (Dictionary, CTStringAttributeKey.BaselineOffset, value); }
 		}
 
 		public CTGlyphInfo GlyphInfo {
