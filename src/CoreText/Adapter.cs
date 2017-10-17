@@ -118,7 +118,10 @@ namespace XamCore.CoreText {
 
 		public static bool? GetBoolValue (NSDictionary dictionary, NSObject key)
 		{
-			return CFBoolean.GetValue (dictionary.LowlevelObjectForKey (key.Handle));
+			var value = dictionary [key];
+			if (value == null)
+				return null;
+			return ((NSNumber) value).BoolValue;
 		}
 
 		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, int? value)
