@@ -342,10 +342,10 @@ namespace xharness
 				"System.ServiceModel.Web",
 				"Mono.Data.Sqlite",
 				"Mono.Data.Tds",
-				"Mono.Data.Tds",
 			};
 			var bcl_skip_watchos = new string [] {
 				"Mono.Security",
+				"Mono.Data.Tds",
 			};
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-0.csproj")), false));
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-1.csproj")), false));

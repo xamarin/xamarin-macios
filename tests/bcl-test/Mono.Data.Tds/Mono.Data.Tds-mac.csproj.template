@@ -7,7 +7,6 @@
     <ProjectTypeGuids>{60B24E98-250D-4E81-963D-6570CE7495DD};{BEF8D622-AFAA-44C4-9E86-F360BAAD445C}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
     <RootNamespace>BCL.Tests</RootNamespace>
-    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
     <AssemblyName>Mono.Data.TdsTests</AssemblyName>
     <NoWarn>168,169,219,414,612,618,649,672</NoWarn>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -59,9 +58,6 @@
     <Reference Include="Mono.Posix" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Info-mac.plist">
       <LogicalName>Info.plist</LogicalName>
     </None>
@@ -76,17 +72,5 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <ItemGroup>
-    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\corlib\Test\resources\Resources.es-ES.resx">
-      <Link>Resources\Resources.es-ES.resx</Link>
-      <LogicalName>Resources.es-ES.resources</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\corlib\Test\resources\Resources.nn-NO.resx">
-      <Link>Resources\Resources.nn-NO.resx</Link>
-      <LogicalName>Resources.nn-NO.resources</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\corlib\Test\resources\Resources.resx">
-      <Link>Resources\Resources.resx</Link>
-      <LogicalName>Resources.resources</LogicalName>
-    </EmbeddedResource>
   </ItemGroup>
 </Project>
