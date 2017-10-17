@@ -23,6 +23,8 @@ LINKER_SOURCES = \
 	$(MONOLINKER)/Mono.Linker/AssemblyResolver.cs			\
 	$(MONOLINKER)/Mono.Linker/I18nAssemblies.cs			\
 	$(MONOLINKER)/Mono.Linker/IXApiVisitor.cs			\
+	$(MONOLINKER)/Mono.Linker/ILogger.cs				\
+	$(MONOLINKER)/Mono.Linker/ConsoleLogger.cs			\
 	$(MONOLINKER)/Mono.Linker/LinkContext.cs			\
 	$(MONOLINKER)/Mono.Linker/LoadException.cs			\
 	$(MONOLINKER)/Mono.Linker/MarkException.cs			\
