@@ -169,6 +169,8 @@ public class ListSourceFiles {
 		var alreadyLinked = new List<string> ();
 		foreach (var src in srcs) {
 			var mangler = manglerFactory.GetMangler (src);
+			if (verbose)
+				Console.WriteLine ($"Original source is {src}");
 			var fixedSource = mangler.GetSourcePath (src);
 
 			if (String.IsNullOrEmpty (fixedSource)) { 
