@@ -15,39 +15,45 @@ using MonoTouch.MetalPerformanceShaders;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.MetalPerformanceShaders {
+namespace MonoTouchFixtures.MetalPerformanceShaders
+{
 
 	[TestFixture]
-	public class KernelTest {
+	public class KernelTest
+	{
 
 		[Test]
-		public void RectNoClip ()
+		public void RectNoClip()
 		{
 #if !MONOMAC
 			TestRuntime.AssertXcodeVersion (7,0);
 #else
-			TestRuntime.AssertXcodeVersion (9, 0);
+			TestRuntime.AssertXcodeVersion(9, 0);
 #endif
 
 			var d = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
 			if (d == null)
-				Assert.Inconclusive ("Metal is not supported");
-			
+				Assert.Inconclusive("Metal is not supported");
+
 			var r = MPSKernel.RectNoClip;
 			var o = r.Origin;
-			Assert.That (o.X, Is.EqualTo (0), "X");
-			Assert.That (o.Y, Is.EqualTo (0), "Y");
-			Assert.That (o.Z, Is.EqualTo (0), "Z");
+			Assert.That(o.X, Is.EqualTo(0), "X");
+			Assert.That(o.Y, Is.EqualTo(0), "Y");
+			Assert.That(o.Z, Is.EqualTo(0), "Z");
 			var s = r.Size;
-			Assert.That (s.Depth, Is.EqualTo (-1), "Depth");
-			Assert.That (s.Height, Is.EqualTo (-1), "Height");
-			Assert.That (s.Width, Is.EqualTo (-1), "Width");
+			Assert.That(s.Depth, Is.EqualTo(-1), "Depth");
+			Assert.That(s.Height, Is.EqualTo(-1), "Height");
+			Assert.That(s.Width, Is.EqualTo(-1), "Width");
 		}
 
 		[Test]
 		public void MPSKernelCopyTest()
 		{
+#if !MONOMAC
+			TestRuntime.AssertDevice ();
+#endif
+			
 			TestRuntime.AssertXcodeVersion (9, 0);
 
 			var kernel = new MPSKernel (MTLDevice.SystemDefault);
@@ -58,6 +64,10 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		[Test]
 		public void MPSRnnImageInferenceLayerCopyTest ()
 		{
+#if !MONOMAC
+			TestRuntime.AssertDevice ();
+#endif
+			
 			TestRuntime.AssertXcodeVersion (9, 0);
 
 			var layer = new MPSRnnImageInferenceLayer (MTLDevice.SystemDefault, MPSRnnSingleGateDescriptor.CreateRnnSingleGateDescriptor (1, 1));
@@ -68,6 +78,10 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		[Test]
 		public void MPSRnnMatrixInferenceLayerTest()
 		{
+#if !MONOMAC
+			TestRuntime.AssertDevice ();
+#endif
+			
 			TestRuntime.AssertXcodeVersion(9, 0);
 
 			var layer = new MPSRnnMatrixInferenceLayer (MTLDevice.SystemDefault, MPSRnnSingleGateDescriptor.CreateRnnSingleGateDescriptor (1, 1));
