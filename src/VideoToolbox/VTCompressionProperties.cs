@@ -119,6 +119,10 @@ namespace XamCore.VideoToolbox {
 					return VTProfileLevel.H263Profile0Level45;
 				if (key == VTProfileLevelKeys.H263_Profile3_Level45)
 					return VTProfileLevel.H263Profile3Level45;
+				if (key == VTProfileLevelKeys.Hevc_Main_AutoLevel)
+					return VTProfileLevel.HevcMainAutoLevel;
+				if (key == VTProfileLevelKeys.Hevc_Main10_AutoLevel)
+					return VTProfileLevel.HevcMain10AutoLevel;
 				return VTProfileLevel.Unset;
 			}
 			set {
@@ -266,6 +270,12 @@ namespace XamCore.VideoToolbox {
 					break;
 				case VTProfileLevel.H263Profile3Level45:
 					SetStringValue (VTCompressionPropertyKey.ProfileLevel, VTProfileLevelKeys.H263_Profile3_Level45);
+					break;
+				case VTProfileLevel.HevcMainAutoLevel:
+					SetStringValue (VTCompressionPropertyKey.ProfileLevel, VTProfileLevelKeys.Hevc_Main_AutoLevel);
+					break;
+				case VTProfileLevel.HevcMain10AutoLevel:
+					SetStringValue (VTCompressionPropertyKey.ProfileLevel, VTProfileLevelKeys.Hevc_Main10_AutoLevel);
 					break;
 				default:
 					SetStringValue (VTCompressionPropertyKey.ProfileLevel, null);

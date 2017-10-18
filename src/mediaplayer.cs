@@ -168,7 +168,7 @@ namespace XamCore.MediaPlayer {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString DiscCountProperty { get; }
 
-		[Since (3,0)]
+		[Since (3,0), Mac (10,13,1, onlyOn64: true)]
 		[Field ("MPMediaItemPropertyArtwork")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString ArtworkProperty { get; }
@@ -1460,6 +1460,11 @@ namespace XamCore.MediaPlayer {
 		[Mac (10,12,3, onlyOn64: true)]
 		[Field ("MPNowPlayingInfoPropertyAssetURL")]
 		NSString PropertyAssetUrl { get; }
+
+		[iOS (11,1), TV (11,1), Mac (10,13,1, onlyOn64: true)]
+		[Internal]
+		[Field ("MPNowPlayingInfoPropertyCurrentPlaybackDate")]
+		NSString PropertyCurrentPlaybackDate { get; }
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]

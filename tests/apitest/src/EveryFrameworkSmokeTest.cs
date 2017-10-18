@@ -67,6 +67,7 @@ namespace Xamarin.Mac.Tests
 				case "SocialLibrary":
 				case "SpriteKitLibrary":
 				case "PhotosLibrary":
+				case "PhotosUILibrary":
 				case "IntentsLibrary":
 				case "MediaPlayerLibrary":
 					return LoadStatus.Acceptable;

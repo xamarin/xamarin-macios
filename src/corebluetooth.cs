@@ -59,6 +59,7 @@ namespace XamCore.CoreBluetooth {
 		[Protocolize]
 		CBCentralManagerDelegate Delegate { get; set; }
 		
+		[Mac (10, 7, onlyOn64: true)] // Was removed from 32-bit in 10.13 unannounced
 		[Export ("initWithDelegate:queue:")]
 		[PostGet ("WeakDelegate")]
 		IntPtr Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue);
@@ -482,11 +483,11 @@ namespace XamCore.CoreBluetooth {
 		[Export ("state")]
 		CBPeripheralState State { get; }
 
-		[iOS (11,0)][TV (11,0)][Mac (10,13)]
+		[iOS (11,0)][TV (11,0)][Mac (10,13, onlyOn64: true)]
 		[Export ("canSendWriteWithoutResponse")]
 		bool CanSendWriteWithoutResponse { get; }
 
-		[iOS (11,0)][TV (11,0)][Mac (10,13)]
+		[iOS (11,0)][TV (11,0)][Mac (10,13, onlyOn64: true)]
 		[Export ("openL2CAPChannel:")]
 		void OpenL2CapChannel (ushort psm);
 	}
@@ -779,8 +780,14 @@ namespace XamCore.CoreBluetooth {
 
 	[Watch (4,0)]
 	[Since (6, 0), Mac(10,9)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (CBManager), Delegates=new[] { "WeakDelegate" }, Events=new[] { typeof (CBPeripheralManagerDelegate) })]
 	interface CBPeripheralManager {
+
+		[Mac (10,9, onlyOn64: true)]  // Was removed from 32-bit in 10.13 unannounced
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[NoTV]
 		[NoWatch]
 		[Export ("initWithDelegate:queue:")]
@@ -834,11 +841,11 @@ namespace XamCore.CoreBluetooth {
 		[Export ("updateValue:forCharacteristic:onSubscribedCentrals:")]
 		bool UpdateValue (NSData value, CBMutableCharacteristic characteristic, [NullAllowed] CBCentral[] subscribedCentrals);
 
-		[iOS (11,0)][TV (11,0)][Mac (10,13)]
+		[iOS (11,0)][TV (11,0)][Mac (10,13, onlyOn64: true)]
 		[Export ("publishL2CAPChannelWithEncryption:")]
 		void PublishL2CapChannel (bool encryptionRequired);
 
-		[iOS (11,0)][TV (11,0)][Mac (10,13)]
+		[iOS (11,0)][TV (11,0)][Mac (10,13, onlyOn64: true)]
 		[Export ("unpublishL2CAPChannel:")]
 		void UnpublishL2CapChannel (ushort psm);
 
@@ -935,19 +942,23 @@ namespace XamCore.CoreBluetooth {
 		NSUuid Identifier { get; }
 	}
 
+	// The type is available in 32bits macOS 10.13 even if most properties are 64 bits only
 	[Watch (4,0)][iOS (11,0)][TV (11,0)][Mac (10,13)]
 	[BaseType (typeof (NSObject), Name = "CBL2CAPChannel")]
 	interface CBL2CapChannel {
-
+		[Mac (10,13, onlyOn64: true)]
 		[Export ("peer")]
 		CBPeer Peer { get; }
 
+		[Mac (10,13, onlyOn64: true)]
 		[Export ("inputStream")]
 		NSInputStream InputStream { get; }
 
+		[Mac (10,13, onlyOn64: true)]
 		[Export ("outputStream")]
 		NSOutputStream OutputStream { get; }
 
+		[Mac (10,13, onlyOn64: true)]
 		[Export ("PSM")]
 		/* uint16_t */ ushort Psm { get; }
 	}

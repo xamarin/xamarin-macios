@@ -16,19 +16,6 @@ using XamCore.UIKit;
 
 namespace XamCore.ReplayKit {
 
-	[iOS (11,1), TV (11,1)]
-	[Native]
-	enum RPVideoSampleOrientation : nint {
-		Portrait = 0,
-		PortraitUpsideDown,
-		PortraitXAxisMirror,
-		PortraitYAxisMirror,
-		LandscapeRight,
-		LandscapeRightMirror,
-		LandscapeLeft,
-		LandscapeLeftMirror,
-	}
-
 	[iOS (9,0)]
 	[TV (10,0)]
 	[BaseType (typeof (UIViewController))]
@@ -312,7 +299,7 @@ namespace XamCore.ReplayKit {
 	interface RPBroadcastSampleHandler {
 
 		[iOS (11,1), TV (11,1)]
-		[Field ("kRPVideoSampleOrientationKey")]
+		[Field ("RPVideoSampleOrientationKey")]
 		NSString VideoSampleOrientationKey { get; }
 
 		[Export ("broadcastStartedWithSetupInfo:")]

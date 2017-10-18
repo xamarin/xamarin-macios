@@ -95,6 +95,7 @@ namespace XamCore.Foundation {
 		static IntPtr io = Dlfcn.dlopen (Constants.ModelIOLibrary, 1);
 		static IntPtr nc = Dlfcn.dlopen (Constants.NotificationCenterLibrary, 1);
 		static IntPtr pl = Dlfcn.dlopen (Constants.PhotosLibrary, 1);
+		static IntPtr pu = Dlfcn.dlopen (Constants.PhotosUILibrary, 1);
 		static IntPtr mp = Dlfcn.dlopen (Constants.MediaPlayerLibrary, 1);
 		static IntPtr pc = Dlfcn.dlopen (Constants.PrintCoreLibrary, 1);
 		static IntPtr cml = Dlfcn.dlopen (Constants.CoreMLLibrary, 1);

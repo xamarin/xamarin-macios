@@ -20,6 +20,9 @@ namespace Introspection {
 				return true;
 			case "NSAttributedStringDocumentAttributes": // NSAttributedStringDocumentAttributes.WeakDocumentType is done by hand, not a binding
 				return true;
+			// VNImageOptions is a DictionaryContainer that exposes a Weak* NSDictionary
+			case "VNImageOptions":
+				return true; 
 			}
 			return base.Skip (type);
 		}

@@ -1,4 +1,4 @@
-﻿//
+//
 // Test the generated API selectors against typos or non-existing cases
 //
 // Authors:
@@ -75,6 +75,7 @@ namespace Introspection
 			"Accurracy",
 			"Achivements",
 			"Acos",
+			"Acn",
 			"Actionname",
 			"Activitiy",
 			"Addin",
@@ -124,7 +125,8 @@ namespace Introspection
 			"Cda", // acronym: Clinical Document Architecture
 			"Celp", // MPEG4ObjectID
 			"Channelsx", // FeatureChannelsxHeightxWidth
-			"Characterteristic",
+            "Characterteristic",
+            "Chapv",
 			"Cholesky",
 			"Chromaticities",
 			"Ciff",
@@ -173,6 +175,7 @@ namespace Introspection
 			"Dtls",
 			"Dtmf", // DTMF
 			"dy",
+			"Eap",
 			"Ebu",
 			"Ecc",   // Elliptic Curve Cryptography
 			"Ecdh",  // Elliptic Curve Diffie–Hellman
@@ -283,6 +286,7 @@ namespace Introspection
 			"Milliohms",
 			"Mimap",
 			"Minification",
+			"Mncs",
 			"Mobike", // acronym
 			"Morpher",
 			"Mpe", // acronym
@@ -294,9 +298,11 @@ namespace Introspection
 			"Multipath",
 			"Multipeer",
 			"Muxed",
+			"Nai",
 			"Nanograms",
 			"Nanowatts",
 			"nfloat",
+			"Nfnt",
 			"nint",
 			"Nntps",
 			"Ntlm",
@@ -319,6 +325,7 @@ namespace Introspection
 			"ove",
 			"Paeth", // PNG filter
 			"Parms", // short for Parameters
+			"Peap",
 			"Perlin",
 			"Persistable",
 			"Pausable",
@@ -389,6 +396,7 @@ namespace Introspection
 			"Sqrt",
 			"Srgb",
 			"Ssid",
+			"Ssids",
 			"Standarize",
 			"Stateful",
 			"Stateright",
@@ -419,6 +427,7 @@ namespace Introspection
 			"Timelapse",
 			"Timelapses",
 			"Tls",
+			"Ttls",
 			"Tlv",
 			"Toi",
 			"Transceive",
@@ -451,6 +460,8 @@ namespace Introspection
 			"Voronoi",
 			"Vnode",
 			"Vpn",
+			"Wep",
+			"Wpa",
 			"Warpable",
 			"Whitespaces",
 			"Writeability",
