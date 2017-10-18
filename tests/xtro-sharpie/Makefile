@@ -112,7 +112,7 @@ gen-all: gen-ios gen-tvos gen-watchos gen-macos
 wrench:
 	$(MAKE) classify -j8
 	for i in *.unclassified; do echo $$i; sed 's/^/    /' $$i; done
-	@echo "@MonkyWrench: SetSummary: $(shell grep -e "^!wrong" -e "^!unknown" *.unclassified | wc -l | sed 's/ //g') unknown/wrong API found."
+	@echo "@MonkeyWrench: SetSummary: `grep -e "^!wrong" -e "^!unknown" *.unclassified | wc -l | sed 's/ //g'` unknown/wrong API found."
 	@grep -e "^!wrong" -e "^!unknown" *.unclassified
 
 .stamp-check-sharpie:
