@@ -82,7 +82,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 			TestRuntime.AssertDevice ();
 #endif
 			
-			TestRuntime.AssertXcodeVersion(9, 0);
+			TestRuntime.AssertXcodeVersion (9, 0);
 
 			var layer = new MPSRnnMatrixInferenceLayer (MTLDevice.SystemDefault, MPSRnnSingleGateDescriptor.CreateRnnSingleGateDescriptor (1, 1));
 			var layer2 = layer.Copy (NSZone.Default, MTLDevice.SystemDefault);
