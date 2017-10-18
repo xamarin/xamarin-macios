@@ -94,28 +94,36 @@ namespace XamCore.CoreVideo {
 			if (metalDevice == null)
 				throw new ArgumentNullException (nameof (metalDevice));
 
-			if (CVMetalTextureCacheCreate (IntPtr.Zero,
+			CVReturn err = (CVReturn) CVMetalTextureCacheCreate (IntPtr.Zero,
 								IntPtr.Zero, /* change one day to support cache attributes */
 								metalDevice.Handle,
 								textureAttributes?.Dictionary.Handle ?? IntPtr.Zero,
-								out handle) == 0)
+								out handle);
+			if (err == CVReturn.Success)
 				return;
 
-			throw new Exception ("Could not create the texture cache");
+			throw new Exception ($"Could not create the texture cache, Reason: {err}.");
 		}
 
-		public static CVMetalTextureCache FromDevice (IMTLDevice metalDevice, CVMetalTextureAttributes textureAttributes)
+		public static CVMetalTextureCache FromDevice (IMTLDevice metalDevice, CVMetalTextureAttributes textureAttributes, out CVReturn creationErr)
 		{
 			if (metalDevice == null)
 				throw new ArgumentNullException (nameof (metalDevice));
 			IntPtr handle;
-			if (CVMetalTextureCacheCreate (IntPtr.Zero,
+			creationErr = (CVReturn) CVMetalTextureCacheCreate (IntPtr.Zero,
 								IntPtr.Zero, /* change one day to support cache attributes */
 								metalDevice.Handle,
 								textureAttributes?.Dictionary.Handle ?? IntPtr.Zero,
-								out handle) == 0)
+								out handle);
+			if (creationErr == CVReturn.Success)
 				return new CVMetalTextureCache (handle);
 			return null;
+		}
+
+		public static CVMetalTextureCache FromDevice (IMTLDevice metalDevice, CVMetalTextureAttributes textureAttributes)
+		{
+			CVReturn creationErr;
+			return FromDevice (metalDevice, textureAttributes, out creationErr);
 		}
 #endif
 

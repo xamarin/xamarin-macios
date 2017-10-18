@@ -264,7 +264,7 @@ namespace XamCore.CoreVideo {
 	enum CVImageBufferTransferFunction {
 
 		[Field (null)]
-		Unknown = 2,
+		Unknown = 2, // 2 (the code point for "unknown")
 
 		[Field ("kCVImageBufferTransferFunction_ITU_R_709_2")]
 		ItuR709_2,
@@ -300,7 +300,7 @@ namespace XamCore.CoreVideo {
 	enum CVImageBufferColorPrimaries {
 
 		[Field (null)]
-		Unknown = 2,
+		Unknown = 2, // 2 (the code point for "unknown")
 
 		[Field ("kCVImageBufferColorPrimaries_DCI_P3")]
 		[iOS (9,0)][Mac (10,11)]
@@ -332,7 +332,7 @@ namespace XamCore.CoreVideo {
 	enum CVImageBufferYCbCrMatrix {
 
 		[Field (null)]
-		Unknown = 2,
+		Unknown = 2, // 2 (the code point for "unknown")
 
 		[Field ("kCVImageBufferYCbCrMatrix_ITU_R_709_2")]
 		ItuR709_2,
