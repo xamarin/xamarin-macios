@@ -88,6 +88,37 @@ namespace XamCore.CoreVideo {
 			return null;
 		}
 
+#if XAMCORE_2_0
+		public CVMetalTextureCache (IMTLDevice metalDevice, CVMetalTextureAttributes textureAttributes)
+		{
+			if (metalDevice == null)
+				throw new ArgumentNullException (nameof (metalDevice));
+
+			if (CVMetalTextureCacheCreate (IntPtr.Zero,
+								IntPtr.Zero, /* change one day to support cache attributes */
+								metalDevice.Handle,
+								textureAttributes?.Dictionary.Handle ?? IntPtr.Zero,
+								out handle) == 0)
+				return;
+
+			throw new Exception ("Could not create the texture cache");
+		}
+
+		public static CVMetalTextureCache FromDevice (IMTLDevice metalDevice, CVMetalTextureAttributes textureAttributes)
+		{
+			if (metalDevice == null)
+				throw new ArgumentNullException (nameof (metalDevice));
+			IntPtr handle;
+			if (CVMetalTextureCacheCreate (IntPtr.Zero,
+								IntPtr.Zero, /* change one day to support cache attributes */
+								metalDevice.Handle,
+								textureAttributes?.Dictionary.Handle ?? IntPtr.Zero,
+								out handle) == 0)
+				return new CVMetalTextureCache (handle);
+			return null;
+		}
+#endif
+
 		public CVMetalTexture TextureFromImage (CVImageBuffer imageBuffer, MTLPixelFormat format, nint width, nint height, nint planeIndex, out CVReturn errorCode)
 		{
 			if (imageBuffer == null)
