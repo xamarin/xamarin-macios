@@ -28,7 +28,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 			TestRuntime.AssertDevice ();
 			TestRuntime.AssertXcodeVersion (7, 0);
 #else
-			TestRuntime.AssertXcodeVersion(9, 0);
+			TestRuntime.AssertXcodeVersion (9, 0);
 #endif
 
 			MPSImageHistogramInfo info = new MPSImageHistogramInfo ();

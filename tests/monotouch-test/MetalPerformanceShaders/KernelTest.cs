@@ -26,7 +26,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 #if !MONOMAC
 			TestRuntime.AssertXcodeVersion (7,0);
 #else
-			TestRuntime.AssertXcodeVersion(9, 0);
+			TestRuntime.AssertXcodeVersion (9, 0);
 #endif
 
 			var d = MTLDevice.SystemDefault;
@@ -48,20 +48,20 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		[Test]
 		public void MPSKernelCopyTest()
 		{
-			TestRuntime.AssertXcodeVersion(9, 0);
+			TestRuntime.AssertXcodeVersion (9, 0);
 
-			var kernel = new MPSKernel(MTLDevice.SystemDefault);
-			var kernel2 = kernel.CopyWithZone(NSZone.Default, MTLDevice.SystemDefault);
-			Assert.That(kernel2.RetainCount, Is.EqualTo(1));
+			var kernel = new MPSKernel (MTLDevice.SystemDefault);
+			var kernel2 = kernel.CopyWithZone (NSZone.Default, MTLDevice.SystemDefault);
+			Assert.That (kernel2.RetainCount, Is.EqualTo (1));
 		}
 
 		[Test]
 		public void MPSRnnImageInferenceLayerCopyTest ()
 		{
-			TestRuntime.AssertXcodeVersion(9, 0);
+			TestRuntime.AssertXcodeVersion (9, 0);
 
-			var layer = new MPSRnnImageInferenceLayer(MTLDevice.SystemDefault, MPSRnnSingleGateDescriptor.CreateRnnSingleGateDescriptor(1, 1));
-			var layer2 = layer.Copy(NSZone.Default, MTLDevice.SystemDefault);
+			var layer = new MPSRnnImageInferenceLayer (MTLDevice.SystemDefault, MPSRnnSingleGateDescriptor.CreateRnnSingleGateDescriptor (1, 1));
+			var layer2 = layer.Copy (NSZone.Default, MTLDevice.SystemDefault);
 			Assert.That(layer2.RetainCount, Is.EqualTo (1));
 		}
 
@@ -70,9 +70,9 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		{
 			TestRuntime.AssertXcodeVersion(9, 0);
 
-			var layer = new MPSRnnMatrixInferenceLayer(MTLDevice.SystemDefault, MPSRnnSingleGateDescriptor.CreateRnnSingleGateDescriptor(1, 1));
-			var layer2 = layer.Copy(NSZone.Default, MTLDevice.SystemDefault);
-			Assert.That(layer2.RetainCount, Is.EqualTo(1));
+			var layer = new MPSRnnMatrixInferenceLayer (MTLDevice.SystemDefault, MPSRnnSingleGateDescriptor.CreateRnnSingleGateDescriptor (1, 1));
+			var layer2 = layer.Copy (NSZone.Default, MTLDevice.SystemDefault);
+			Assert.That (layer2.RetainCount, Is.EqualTo (1));
 		}
 	}
 }
