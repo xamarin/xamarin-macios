@@ -7,11 +7,9 @@ using System;
 #if XAMCORE_2_0
 using Metal;
 using MetalPerformanceShaders;
-using UIKit;
 #else
 using MonoTouch.Metal;
 using MonoTouch.MetalPerformanceShaders;
-using MonoTouch.UIKit;
 #endif
 
 using NUnit.Framework;
@@ -26,14 +24,18 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 		[Test]
 		public void Constructors ()
 		{
+#if !MONOMAC
 			TestRuntime.AssertDevice ();
 			TestRuntime.AssertXcodeVersion (7, 0);
+#else
+			TestRuntime.AssertXcodeVersion(9, 0);
+#endif
 
 			MPSImageHistogramInfo info = new MPSImageHistogramInfo ();
 			info.NumberOfHistogramEntries = 256;
 			using (var obj = new MPSImageHistogramSpecification (MTLDevice.SystemDefault, ref info)) {
 				var rv = obj.HistogramInfo;
-				Asserts.AreEqual (info, rv, "HistogramForAlpha");
+				Assert.That(info, Is.EqualTo(rv), "HistogramForAlpha");
 			}
 		}
 	}
