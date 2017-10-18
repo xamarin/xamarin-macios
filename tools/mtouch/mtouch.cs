@@ -802,8 +802,13 @@ namespace Xamarin.Bundler
 		{
 			if (timestamp == null)
 				timestamp = DateTime.Now;
-			foreach (var filename in filenames)
-				new FileInfo (filename).LastWriteTime = timestamp.Value;
+			foreach (var filename in filenames) {
+				try {
+					new FileInfo (filename).LastWriteTime = timestamp.Value;
+				} catch (Exception e) {
+					ErrorHelper.Warning (128, "Could not touch the file '{0}': {1}", filename, e.Message);
+				}
+			}
 		}
 
 		public static void Touch (params string [] filenames)
