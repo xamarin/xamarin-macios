@@ -5,10 +5,10 @@ using XamCore.Foundation;
 
 namespace XamCore.MetalPerformanceShaders {
 	public partial class MPSCnnNeuronPReLU {
-		public unsafe MPSCnnNeuronPReLU (IMTLDevice device, float [] a, nuint count) : this (NSObjectFlag.Empty)
+		public unsafe MPSCnnNeuronPReLU (IMTLDevice device, float [] a) : this (NSObjectFlag.Empty)
 		{
 			fixed (void* aHandle = a)
-				InitializeHandle (InitWith (device, (IntPtr) aHandle, count));
+				InitializeHandle (InitWith (device, (IntPtr) aHandle, (nuint)a.Length));
 		}
 	}
 }

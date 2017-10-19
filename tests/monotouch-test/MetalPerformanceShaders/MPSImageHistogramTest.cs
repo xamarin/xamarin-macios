@@ -35,7 +35,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 			info.NumberOfHistogramEntries = 256;
 			using (var obj = new MPSImageHistogram (MTLDevice.SystemDefault, ref info)) {
 				var rv = obj.HistogramInfo;
-				Assert.That (info, Is.EqualTo (rv), "HistogramForAlpha");
+				Asserts.AreEqual (info, rv, "HistogramForAlpha");
 
 				Assert.IsTrue (obj.ZeroHistogram, "ZeroHistogram");
 				Assert.AreEqual (3072, obj.HistogramSizeForSourceFormat (MTLPixelFormat.RGBA16Sint), "HistogramSizeForSourceFormat");
