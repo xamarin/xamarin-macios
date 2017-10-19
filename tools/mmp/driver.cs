@@ -115,6 +115,7 @@ namespace Xamarin.Bundler {
 		static string certificate_name;
 		static int verbose = 0;
 		public static bool Force;
+		public static bool validate_no_mixed_mode;
 
 		static bool is_extension;
 		static bool frameworks_copied_to_bundle_dir;	// Have we copied any frameworks to Foo.app/Contents/Frameworks?
@@ -461,8 +462,7 @@ namespace Xamarin.Bundler {
 			if (targetFramework == TargetFramework.Empty)
 				throw new MonoMacException (1404, true, "Target framework '{0}' is invalid.", userTargetFramework);
 
-			if (IsClassic && App.LinkMode == LinkMode.Platform)
-				throw new MonoMacException (2100, true, "Xamarin.Mac Classic API does not support Platform Linking.");
+			ValidateLinkMode ();
 
 			// sanity check as this should never happen: we start out by not setting any
 			// Unified/Classic properties, and only IsUnifiedMobile if we are are on the
@@ -531,6 +531,16 @@ namespace Xamarin.Bundler {
 			}
 
 			Log ("bundling complete");
+		}
+
+		static void ValidateLinkMode ()
+		{
+			if (IsClassic && App.LinkMode == LinkMode.Platform)
+				throw new MonoMacException (2100, true, "Xamarin.Mac Classic API does not support Platform Linking.");
+			// Linking all requires loading all assemblies into memory with Cecil, which does not play well with mixed mode assemblies
+			// Idealy we'd validate it here, but since it requires loading all assemblies we'll punt to ProcessAssemblyReferences 
+			if (IsUnified && App.LinkMode != LinkMode.None)
+				validate_no_mixed_mode = true;
 		}
 
 		static void ValidateXamarinMacReference ()
@@ -1889,7 +1899,10 @@ namespace Xamarin.Bundler {
 
 			if (resolved_assemblies.Contains (fqname))
 				return;
-			
+
+			if (validate_no_mixed_mode && (assembly.MainModule.Attributes & ModuleAttributes.ILOnly) == 0)
+				ErrorHelper.Error (2014, "Unable to link assembly '{0}' as it is mixed-mode.", assembly.MainModule.FileName);
+
 			Target.PrintAssemblyReferences (assembly);
 
 			var asm = new Assembly (BuildTarget, assembly);

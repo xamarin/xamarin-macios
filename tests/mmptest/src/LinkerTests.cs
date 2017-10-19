@@ -104,5 +104,31 @@ namespace Xamarin.MMP.Tests
 				}
 			});
 		}
+
+		[Test]
+		public void Linking_ShouldHandleMixedModeAssemblies ()
+		{
+			RunMMPTest(tmpDir => {
+				File.Copy (Path.Combine (TI.FindSourceDirectory(), "LuaInterface.dll"), Path.Combine (tmpDir, "LuaInterface.dll"));
+				File.Copy (Path.Combine (TI.FindSourceDirectory(), "lua51.dll"), Path.Combine (tmpDir, "lua51.dll"));
+
+				foreach (var flavor in new Tuple<string, bool> [] { 
+					new Tuple<string, bool> ("None", false), 
+					new Tuple<string, bool> ("full", true),
+					new Tuple<string, bool> ("platform", true),
+					new Tuple<string, bool> ("sdkonly", true), })
+				{
+					TI.UnifiedTestConfig test = new TI.UnifiedTestConfig(tmpDir)
+					{
+						References = "<Reference Include=\"LuaInterface\"><HintPath>LuaInterface.dll</HintPath></Reference>",
+						CSProjConfig = $"<LinkMode>{flavor.Item1}</LinkMode>",
+						TestCode = "System.Console.WriteLine (typeof (LuaInterface.Lua));",
+					};
+
+					var buildOutput = TI.TestUnifiedExecutable(test, shouldFail: flavor.Item2).BuildOutput;
+					Assert.True (buildOutput.Contains("2014") == flavor.Item2, $"Building with {flavor.Item1} did not give 2014 status {flavor.Item2} as expected.");
+				}
+			});
+		}
 	}
 }
