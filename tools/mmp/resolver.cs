@@ -70,17 +70,13 @@ namespace Xamarin.Bundler {
 			if (cache.TryGetValue (name, out assembly))
 				return assembly;
 
-			var readParams = new ReaderParameters {
-				AssemblyResolver = this,
-				InMemory = new FileInfo (fileName).Length < 1024 * 1024 * 100, // 100 MB
-			};
-
-			if (Driver.EnableDebug) {
-				readParams.ReadSymbols = true;
-				readParams.SymbolReaderProvider = new DefaultSymbolReaderProvider (throwIfNoSymbol: false);
-			}
-
-			assembly = AssemblyDefinition.ReadAssembly (fileName, readParams);
+			assembly = AssemblyDefinition.ReadAssembly (fileName, new ReaderParameters 
+				{
+					AssemblyResolver = this,
+					InMemory = new FileInfo (fileName).Length < 1024 * 1024 * 100, // 100 MB
+					ReadSymbols = true,
+					SymbolReaderProvider = new DefaultSymbolReaderProvider (throwIfNoSymbol: false) 
+				});
 			cache.Add (name, assembly);
 			return assembly;
 		}
