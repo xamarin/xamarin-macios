@@ -278,7 +278,7 @@ namespace xharness
 			foreach (var p in test_suites)
 				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.ProjectFile + "/" + p.ProjectFile + ".sln"))) { Name = p.Name });
 			
-			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), skipXMVariations: true) { Name = "introspection" });
+			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "introspection" });
 
 			var hard_coded_test_suites = new [] {
 				new { ProjectFile = "mmptest", Name = "mmptest", IsNUnit = true, Configurations = (string[]) null },
@@ -296,7 +296,7 @@ namespace xharness
 
 			var bcl_suites = new string[] { "mscorlib", "System", "System.Core", "System.Data", "System.Net.Http", "System.Numerics", "System.Runtime.Serialization", "System.Transactions", "System.Web.Services", "System.Xml", "System.Xml.Linq", "Mono.Security", "System.ComponentModel.DataAnnotations", "System.Json", "System.ServiceModel.Web", "Mono.Data.Sqlite" };
 			foreach (var p in bcl_suites) {
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + "-Mac.csproj")), generateVariations: false) { Name = p });
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + "-Mac.csproj")), targetFrameworkFlavor: MacFlavors.Full, generateVariations: false) { Name = p });
 				MacBclTests.Add (new MacBCLTest (p));
 			}
 		}
@@ -413,16 +413,18 @@ namespace xharness
 
 				foreach (bool thirtyTwoBit in new bool[] { false, true })
 				{
-					var unifiedMobile = new MacUnifiedTarget (true, thirtyTwoBit)
-					{
-						TemplateProjectPath = file,
-						Harness = this,
-						IsNUnitProject = proj.IsNUnitProject,
-					};
-					unifiedMobile.Execute ();
-					unified_targets.Add (unifiedMobile);
+					if (proj.GenerateModern) {
+						var unifiedMobile = new MacUnifiedTarget (true, thirtyTwoBit)
+						{
+							TemplateProjectPath = file,
+							Harness = this,
+							IsNUnitProject = proj.IsNUnitProject,
+						};
+						unifiedMobile.Execute ();
+						unified_targets.Add (unifiedMobile);
+					}
 
-					if (!proj.SkipXMVariations) {
+					if (proj.GenerateFull) {
 						var unifiedXM45 = new MacUnifiedTarget (false, thirtyTwoBit)
 						{
 							TemplateProjectPath = file,
@@ -443,14 +445,14 @@ namespace xharness
  
 			foreach (var proj in MacTestProjects.Where ((v) => !v.GenerateVariations)) {
 				var file = proj.Path;
-				var unifiedMobile = new MacUnifiedTarget (true, false, true)
-				{
- 					TemplateProjectPath = file,
- 					Harness = this,
+
+				var unifiedTarget = new MacUnifiedTarget (proj.GenerateModern, false, true, true) {
+					TemplateProjectPath = file,
+					Harness = this,
 					IsNUnitProject = proj.IsNUnitProject,
- 				};
-				unifiedMobile.Execute ();
-				hardcoded_unified_targets.Add (unifiedMobile);
+				};
+				unifiedTarget.Execute ();
+				hardcoded_unified_targets.Add (unifiedTarget);
  			}
  
 			MakefileGenerator.CreateMacMakefile (this, classic_targets.Union<MacTarget> (unified_targets).Union (hardcoded_unified_targets) );
