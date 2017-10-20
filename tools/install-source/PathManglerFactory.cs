@@ -62,8 +62,8 @@ namespace InstallSources
 
 		public bool IsMonoPath (string path)
 		{
-			return path.StartsWith (MonoSourcePath, StringComparison.Ordinal)
-				&& !path.Contains ("corefx");
+			return (path.StartsWith(MonoSourcePath, StringComparison.Ordinal)
+				&& !path.Contains("corefx")) | path.Contains("/mcs/class/");
 		}
 
 		public bool IsOpenTKPath (string path)

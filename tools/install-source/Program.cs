@@ -166,6 +166,12 @@ public class ListSourceFiles {
 			srcs.UnionWith (assemblySrcs);
 		}
 
+		if (verbose) {
+			Console.WriteLine ("Build paths are:");
+			Console.WriteLine ($"\tMono path:{monopath}");
+			Console.WriteLine ($"\tXamarin path:{xamarinpath}");
+			Console.WriteLine ($"\tOpenTk path:{opentkpath}");
+		}
 		var alreadyLinked = new List<string> ();
 		foreach (var src in srcs) {
 			var mangler = manglerFactory.GetMangler (src);
