@@ -138,18 +138,24 @@ namespace xharness
 		}
 	}
 
+	public enum MacFlavors { All, Modern, Full }
+
 	public class MacTestProject : TestProject
 	{
-		public bool SkipXMVariations;
+		public MacFlavors TargetFrameworkFlavor;
+
+		public bool GenerateModern => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.Modern;
+		public bool GenerateFull => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.Full;
+
 		public string [] Configurations;
 
 		public MacTestProject () : base ()
 		{
 		}
 
-		public MacTestProject (string path, bool isExecutableProject = true, bool generateVariations = true, bool skipXMVariations = false) : base (path, isExecutableProject, generateVariations)
+		public MacTestProject (string path, bool isExecutableProject = true, bool generateVariations = true, MacFlavors targetFrameworkFlavor = MacFlavors.All) : base (path, isExecutableProject, generateVariations)
 		{
-			SkipXMVariations = skipXMVariations;
+			TargetFrameworkFlavor = targetFrameworkFlavor;
 		}
 	}
 }
