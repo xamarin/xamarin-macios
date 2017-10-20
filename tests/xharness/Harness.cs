@@ -446,24 +446,13 @@ namespace xharness
 			foreach (var proj in MacTestProjects.Where ((v) => !v.GenerateVariations)) {
 				var file = proj.Path;
 
-				MacUnifiedTarget unifiedTarget = null;
-				if (proj.GenerateModern) {
-					unifiedTarget = new MacUnifiedTarget (true, false, true, true) {
-						TemplateProjectPath = file,
-						Harness = this,
-						IsNUnitProject = proj.IsNUnitProject,
-					};
-				}
-				else if (proj.GenerateFull) {
-					unifiedTarget = new MacUnifiedTarget (false, false, true, true) {
-						TemplateProjectPath = file,
-						Harness = this,
-						IsNUnitProject = proj.IsNUnitProject,
-					};
-				}
+				MacUnifiedTarget unifiedTarget = new MacUnifiedTarget (proj.GenerateModern, false, true, true) {
+					TemplateProjectPath = file,
+					Harness = this,
+					IsNUnitProject = proj.IsNUnitProject,
+				};
 				unifiedTarget.Execute ();
 				hardcoded_unified_targets.Add (unifiedTarget);
-
  			}
  
 			MakefileGenerator.CreateMacMakefile (this, classic_targets.Union<MacTarget> (unified_targets).Union (hardcoded_unified_targets) );
