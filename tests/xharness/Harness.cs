@@ -446,7 +446,7 @@ namespace xharness
 			foreach (var proj in MacTestProjects.Where ((v) => !v.GenerateVariations)) {
 				var file = proj.Path;
 
-				MacUnifiedTarget unifiedTarget = new MacUnifiedTarget (proj.GenerateModern, false, true, true) {
+				var unifiedTarget = new MacUnifiedTarget (proj.GenerateModern, false, true, true) {
 					TemplateProjectPath = file,
 					Harness = this,
 					IsNUnitProject = proj.IsNUnitProject,
