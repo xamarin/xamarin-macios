@@ -125,8 +125,8 @@ namespace Introspection
 			"Cda", // acronym: Clinical Document Architecture
 			"Celp", // MPEG4ObjectID
 			"Channelsx", // FeatureChannelsxHeightxWidth
-            "Characterteristic",
-            "Chapv",
+			"Characterteristic",
+			"Chapv",
 			"Cholesky",
 			"Chromaticities",
 			"Ciff",

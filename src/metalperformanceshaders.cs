@@ -932,7 +932,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("setNeuronToPReLUWithParametersA:")]
-		void SetNeuronToPReLUWithParametersA (NSData A);
+		void SetNeuronToPReLU (NSData A);
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("dilationRateX")]
@@ -1566,7 +1566,7 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("temporaryMatrixWithCommandBuffer:matrixDescriptor:")]
-		MPSTemporaryMatrix CreateTemporaryMatrix (IMTLCommandBuffer commandBuffer, MPSMatrixDescriptor matrixDescriptor);
+		MPSTemporaryMatrix Create (IMTLCommandBuffer commandBuffer, MPSMatrixDescriptor matrixDescriptor);
 
 		[Static]
 		[Export ("prefetchStorageWithCommandBuffer:matrixDescriptorList:")]
@@ -1833,7 +1833,7 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("descriptorWithSourceMatrix:destinationMatrix:offsets:")]
-		MPSMatrixCopyDescriptor CreateDescriptor (MPSMatrix sourceMatrix, MPSMatrix destinationMatrix, MPSMatrixCopyOffsets offsets);
+		MPSMatrixCopyDescriptor Create (MPSMatrix sourceMatrix, MPSMatrix destinationMatrix, MPSMatrixCopyOffsets offsets);
 
 		[Export ("initWithDevice:count:")]
 		[DesignatedInitializer]
@@ -2064,7 +2064,7 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("paddingWithMethod:")]
-		MPSNnDefaultPadding CreatePadding (MPSNnPaddingMethod method);
+		MPSNnDefaultPadding Create (MPSNnPaddingMethod method);
 
 		[Static]
 		[Export ("paddingForTensorflowAveragePooling")]
@@ -2412,7 +2412,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Static]
 		[Export ("createRNNSingleGateDescriptorWithInputFeatureChannels:outputFeatureChannels:")]
-		MPSRnnSingleGateDescriptor CreateRnnSingleGateDescriptor (nuint inputFeatureChannels, nuint outputFeatureChannels);
+		MPSRnnSingleGateDescriptor Create (nuint inputFeatureChannels, nuint outputFeatureChannels);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2448,7 +2448,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Static]
 		[Export ("createGRUDescriptorWithInputFeatureChannels:outputFeatureChannels:")]
-		MPSGRUDescriptor CreateGRUDescriptor (nuint inputFeatureChannels, nuint outputFeatureChannels);
+		MPSGRUDescriptor Create (nuint inputFeatureChannels, nuint outputFeatureChannels);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2505,7 +2505,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Static]
 		[Export ("createLSTMDescriptorWithInputFeatureChannels:outputFeatureChannels:")]
-		MPSLSTMDescriptor CreateLSTMDescriptor (nuint inputFeatureChannels, nuint outputFeatureChannels);
+		MPSLSTMDescriptor Create (nuint inputFeatureChannels, nuint outputFeatureChannels);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]

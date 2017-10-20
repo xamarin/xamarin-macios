@@ -111,8 +111,7 @@ namespace XamCore.MetalPerformanceShaders {
 		public Vector4 MaxPixelValue;
 	}
 
-	public enum MPSMatrixDecompositionStatus
-	{
+	public enum MPSMatrixDecompositionStatus {
 		Success = 0,
 		Failure = -1,
 		Singular = -2,
@@ -193,8 +192,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 	[Native]
-	public enum MPSDataLayout : nuint
-	{
+	public enum MPSDataLayout : nuint {
 		HeightxWidthxFeatureChannels = 0,
 		FeatureChannelsxHeightxWidth = 1,
 	}

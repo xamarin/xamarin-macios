@@ -8,14 +8,11 @@ namespace XamCore.MetalPerformanceShaders {
 		public unsafe MPSCnnBinaryConvolution (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
 			: base (NSObjectFlag.Empty)
 		{
-			fixed (void *outputBiasTermsHandle = outputBiasTerms) {
-				fixed (void* outputScaleTermsHandle = outputScaleTerms) {
-					fixed (void* inputBiasTermsHandle = inputBiasTerms) {
-						fixed (void* inputScaleTermsHandle = inputScaleTerms)
-							InitializeHandle (InitWith (device, convolutionData, (IntPtr) outputBiasTermsHandle, (IntPtr) outputScaleTermsHandle, (IntPtr) inputBiasTermsHandle, (IntPtr) inputScaleTermsHandle, type, flags));
-					}
-				}
-			}
+			fixed (void *outputBiasTermsHandle = outputBiasTerms)
+			fixed (void* outputScaleTermsHandle = outputScaleTerms)
+			fixed (void* inputBiasTermsHandle = inputBiasTerms)
+			fixed (void* inputScaleTermsHandle = inputScaleTerms)
+				InitializeHandle (InitWith (device, convolutionData, (IntPtr) outputBiasTermsHandle, (IntPtr) outputScaleTermsHandle, (IntPtr) inputBiasTermsHandle, (IntPtr) inputScaleTermsHandle, type, flags));
 		}
 	}
 
@@ -23,14 +20,11 @@ namespace XamCore.MetalPerformanceShaders {
 		public unsafe MPSCnnBinaryFullyConnected (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
 			: base (NSObjectFlag.Empty)
 		{
-			fixed (void *outputBiasTermsHandle = outputBiasTerms) {
-				fixed (void* outputScaleTermsHandle = outputScaleTerms) {
-					fixed (void* inputBiasTermsHandle = inputBiasTerms) {
-						fixed (void* inputScaleTermsHandle = inputScaleTerms)
-							InitializeHandle (InitWith (device, convolutionData, (IntPtr) outputBiasTermsHandle, (IntPtr) outputScaleTermsHandle, (IntPtr) inputBiasTermsHandle, (IntPtr) inputScaleTermsHandle, type, flags));
-					}
-				}
-			}
+			fixed (void *outputBiasTermsHandle = outputBiasTerms)
+			fixed (void* outputScaleTermsHandle = outputScaleTerms)
+			fixed (void* inputBiasTermsHandle = inputBiasTerms)
+			fixed (void* inputScaleTermsHandle = inputScaleTerms)
+				InitializeHandle (InitWith (device, convolutionData, (IntPtr) outputBiasTermsHandle, (IntPtr) outputScaleTermsHandle, (IntPtr) inputBiasTermsHandle, (IntPtr) inputScaleTermsHandle, type, flags));
 		}
 	}
 }
