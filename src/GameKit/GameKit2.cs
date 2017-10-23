@@ -336,7 +336,7 @@ namespace XamCore.GameKit {
 #endif
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use SendDataToAllPlayers")]
+		[Obsolete ("Use 'SendDataToAllPlayers'.")]
 		public virtual bool SendDataToAllPlayer (NSData data, GKMatchSendDataMode mode, out NSError error)
 		{
 			return SendDataToAllPlayers (data, mode, out error);
@@ -344,7 +344,7 @@ namespace XamCore.GameKit {
 
 #if MONOMAC
 		// never been released with XI
-		[Obsolete ("Use SendDataToAllPlayers that takes out NSError")]
+		[Obsolete ("Use 'SendDataToAllPlayers' that takes out NSError.")]
 		public bool SendDataToAllPlayers (NSData data, GKMatchSendDataMode mode, IntPtr ptrToNSErrorHandle)
 		{
 			NSError error = new NSError (ptrToNSErrorHandle);
@@ -357,7 +357,7 @@ namespace XamCore.GameKit {
 
 #if !XAMCORE_2_0
 	public partial class GKScore {
-		[Availability (Introduced = Platform.iOS_4_1 | Platform.Mac_10_8, Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use LeaderboardIdentifier instead")]
+		[Availability (Introduced = Platform.iOS_4_1 | Platform.Mac_10_8, Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use 'LeaderboardIdentifier' instead.")]
 		public string Category {
 			get { return category; }
 			set { category = value; }

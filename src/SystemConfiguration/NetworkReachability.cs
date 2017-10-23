@@ -242,7 +242,7 @@ namespace XamCore.SystemConfiguration {
 		}
 
 #if !XAMCORE_2_0
-		[Advice ("Use SetNotification instead")]
+		[Advice ("Use 'SetNotification' instead.")]
 		public bool SetCallback (Notification callback)
 		{
 			return SetNotification (callback) == StatusCode.OK;

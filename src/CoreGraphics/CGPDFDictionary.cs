@@ -164,7 +164,7 @@ namespace XamCore.CoreGraphics {
 			callback (key, CGPDFObject.FromHandle (pdfObject));
 		}
 
-		[Obsolete ("Use the Apply(Action<string,CGPDFObject> method")]
+		[Obsolete ("Use the 'Apply(Action<string,CGPDFObject>)' method.")]
 		public void Apply (Action<string,object> callback)
 		{
 			GCHandle gch = GCHandle.Alloc (callback);

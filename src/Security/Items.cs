@@ -1427,7 +1427,7 @@ namespace XamCore.Security {
 		}
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use GetValueRef<T> and SetValueRef<T> instead")]
+		[Obsolete ("Use 'GetValueRef<T>' and 'SetValueRef<T>' instead.")]
 		public NSObject ValueRef {
 			get {
 				return FetchObject (SecItem.ValueRef);

@@ -66,7 +66,7 @@ namespace XamCore.CoreGraphics {
 		extern static /* CFDataRef */ IntPtr CGPDFStreamCopyData (/* CGPDFStreamRef */ IntPtr stream, /* CGPDFDataFormat* */ out CGPDFDataFormat format);
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use GetData(out CGPDFDataFormat) instead")]
+		[Obsolete ("Use 'GetData(out CGPDFDataFormat)' instead.")]
 		public NSData Data {
 			get {
 				CGPDFDataFormat format;

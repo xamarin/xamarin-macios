@@ -96,14 +96,14 @@ namespace XamCore.Foundation {
 		}
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use the overload with a NSString constant")]
+		[Obsolete ("Use the overload with an 'NSString' constant.")]
 		public bool TryGetResource (string key, out NSObject value, out NSError error)
 		{
 			using (var nsKey = new NSString (key))
 				return GetResourceValue (out value, nsKey, out error);
 		}
 
-		[Obsolete ("Use the overload with a NSString constant")]
+		[Obsolete ("Use the overload with an 'NSString' constant.")]
 		public bool TryGetResource (string key, out NSObject value)
 		{
 			NSError error;
@@ -111,14 +111,14 @@ namespace XamCore.Foundation {
 				return GetResourceValue (out value, nsKey, out error);
 		}
 
-		[Obsolete ("Use the overload with a NSString constant")]
+		[Obsolete ("Use the overload with an 'NSString' constant.")]
 		public bool SetResource (string key, NSObject value, out NSError error)
 		{
 			using (var nsKey = new NSString (key))
 				return SetResourceValue (value, nsKey, out error);
 		}
 
-		[Obsolete ("Use the overload with a NSString constant")]
+		[Obsolete ("Use the overload with an 'NSString' constant.")]
 		public bool SetResource (string key, NSObject value)
 		{
 			NSError error;

@@ -56,7 +56,7 @@ namespace XamCore.AVFoundation {
 			}
 		}
 
-		[Obsolete ("Use SetActive(bool, out NSError) instead")]
+		[Obsolete ("Use 'SetActive(bool, out NSError)' instead.")]
 		public bool SetActive (bool beActive, NSError outError)
 		{
 			// Effectively discarded due to original binding error
@@ -83,7 +83,7 @@ namespace XamCore.AVFoundation {
 #endif
 		
 #if !XAMCORE_2_0
-		[Obsolete ("Use SetCategory(bool, out NSError) instead")]
+		[Obsolete ("Use 'SetCategory(bool, out NSError)' instead.")]
 		public bool SetCategory (NSString theCategory, NSError outError)
 		{
 			// Effectively discarded due to original binding error
@@ -137,14 +137,14 @@ namespace XamCore.AVFoundation {
 		}
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use SetPreferredSampleRate(bool, out NSError) on iOS 6.0 instead")]
+		[Obsolete ("Use 'SetPreferredSampleRate(bool, out NSError)' on iOS 6.0 instead.")]
 		public bool SetPreferredHardwareSampleRate (double sampleRate, NSError outError)
 		{
 			// Effectively discarded due to original binding error
 			return SetPreferredHardwareSampleRate (sampleRate, out outError);
 		}
 
-		[Obsolete ("Use SetPreferredIOBufferDuration(bool, out NSError) instead")]
+		[Obsolete ("Use 'SetPreferredIOBufferDuration(bool, out NSError)' instead.")]
 		public bool SetPreferredIOBufferDuration (double duration, NSError outError)
 		{
 			// Effectively discarded due to original binding error

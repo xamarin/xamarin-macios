@@ -7208,7 +7208,7 @@ public partial class Generator : IMemberGatherer {
 		if (a == null)
 			throw new BindingException (1006, true, "The delegate method {0}.{1} is missing the [DelegateName] attribute (or EventArgs)", mi.DeclaringType.FullName, mi.Name);
 
-		ErrorHelper.Show (new BindingException (1102, false, "Using the deprecated EventArgs for a delegate signature in {0}.{1}, please use DelegateName instead", mi.DeclaringType.FullName, mi.Name));
+		ErrorHelper.Show (new BindingException (1102, false, "Using the deprecated 'EventArgs' for a delegate signature in {0}.{1}, please use 'DelegateName' instead.", mi.DeclaringType.FullName, mi.Name));
 		return ((EventArgsAttribute) a).ArgName;
 	}
 	
