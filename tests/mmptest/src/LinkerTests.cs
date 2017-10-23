@@ -109,8 +109,7 @@ namespace Xamarin.MMP.Tests
 		public void Linking_ShouldHandleMixedModeAssemblies ()
 		{
 			RunMMPTest(tmpDir => {
-				File.Copy (Path.Combine (TI.FindSourceDirectory(), "LuaInterface.dll"), Path.Combine (tmpDir, "LuaInterface.dll"));
-				File.Copy (Path.Combine (TI.FindSourceDirectory(), "lua51.dll"), Path.Combine (tmpDir, "lua51.dll"));
+				File.Copy (Path.Combine (TI.FindSourceDirectory(), "MixedTestLibrary.dll"), Path.Combine (tmpDir, "MixedTestLibrary.dll"));
 
 				foreach (var flavor in new Tuple<string, bool> [] { 
 					new Tuple<string, bool> ("None", false), 
@@ -120,9 +119,9 @@ namespace Xamarin.MMP.Tests
 				{
 					TI.UnifiedTestConfig test = new TI.UnifiedTestConfig(tmpDir)
 					{
-						References = "<Reference Include=\"LuaInterface\"><HintPath>LuaInterface.dll</HintPath></Reference>",
+						References = "<Reference Include=\"MixedTestLibrary\"><HintPath>MixedTestLibrary.dll</HintPath></Reference>",
 						CSProjConfig = $"<LinkMode>{flavor.Item1}</LinkMode>",
-						TestCode = "System.Console.WriteLine (typeof (LuaInterface.Lua));",
+						TestCode = "System.Console.WriteLine (typeof (MixedTestLibrary.Class1));",
 					};
 
 					var buildOutput = TI.TestUnifiedExecutable(test, shouldFail: flavor.Item2).BuildOutput;
