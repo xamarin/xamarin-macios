@@ -227,7 +227,7 @@ namespace XamCore.CoreText {
 		public NSDictionary Dictionary {get; private set;}
 
 #if !XAMCORE_2_0
-		[Advice ("Use FeatureGroup property instead")]
+		[Advice ("Use 'FeatureGroup' property instead.")]
 		public NSNumber Identifier {
 			get {return (NSNumber) Dictionary [CTFontFeatureKey.Identifier];}
 			set {Adapter.SetValue (Dictionary, CTFontFeatureKey.Identifier, value);}
@@ -1377,7 +1377,7 @@ namespace XamCore.CoreText {
 		public NSDictionary Dictionary {get; private set;}
 
 #if !XAMCORE_2_0
-		[Advice ("Use FeatureGroup property instead")]
+		[Advice ("Use 'FeatureGroup' property instead.")]
 		public NSNumber TypeIdentifier {
 			get {return (NSNumber) Dictionary [CTFontFeatureKey.Identifier];}
 			set {Adapter.SetValue (Dictionary, CTFontFeatureKey.Identifier, value);}
@@ -1391,7 +1391,7 @@ namespace XamCore.CoreText {
 		}
 
 #if !XAMCORE_2_0
-		[Advice ("Use FeatureWeak or FeatureGroup instead")]
+		[Advice ("Use 'FeatureWeak' or 'FeatureGroup' instead.")]
 		public NSNumber SelectorIdentifier {
 			get {return (NSNumber) Dictionary [CTFontFeatureSelectorKey.Identifier];}
 			set {Adapter.SetValue (Dictionary, CTFontFeatureSelectorKey.Identifier, value);}

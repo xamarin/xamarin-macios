@@ -12,18 +12,28 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using CoreBluetooth;
+using ObjCRuntime;
 #else
 using MonoMac.Foundation;
 using MonoMac.CoreBluetooth;
+using MonoMac.ObjCRuntime;
 #endif
 
 using NUnit.Framework;
+using Xamarin.Mac.Tests;
 
 namespace MonoMacFixtures.CoreBluetooth
 {
 	[TestFixture]
 	public class CBUUIDTest
 	{
+		[SetUp]
+		public void SetUp ()
+		{
+			if (IntPtr.Size == 4 && PlatformHelper.CheckSystemVersion(10, 13))
+				Assert.Ignore("CCUUID was removed from 32-bit in macOS 10.13");
+		}
+
 		[Test]
 		public void Roundtrip_16bits ()
 		{

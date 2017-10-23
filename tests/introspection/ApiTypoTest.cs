@@ -262,6 +262,7 @@ namespace Introspection
 			"Lod",
 			"Lopass",
 			"Lowlevel",
+			"Mapbuffer",
 			"Matchingcoalesce",
 			"Megaampere",
 			"Megaamperes",
@@ -375,6 +376,7 @@ namespace Introspection
 			"Shadable",
 			"Sharegroup",
 			"Siemen",
+			"simd",
 			"Sinh",
 			"Sint", // as in "Signed Integer"
 			"Simd",

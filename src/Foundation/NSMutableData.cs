@@ -80,7 +80,7 @@ namespace XamCore.Foundation {
 		}
 #if !XAMCORE_2_0
 		// note: duplicate selector were registered for the method and the Length property setter
-		[Obsolete ("Use the Length property setter")]
+		[Obsolete ("Use the 'Length' property setter.")]
 		public virtual void SetLength (nuint len)
 		{
 			Length = len;

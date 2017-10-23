@@ -1947,11 +1947,11 @@ namespace XamCore.CoreImage {
 	[DisableDefaultCtor] // avoid crashes
 	interface CIKernel {
 #if !XAMCORE_2_0
-		[Obsolete ("Use FromProgramSingle")] // better API
+		[Obsolete ("Use 'FromProgramSingle'.")] // better API
 		[Static, Export ("kernelWithString:")]
 		CIKernel FromProgram (string coreImageShaderProgram);
 
-		[Obsolete ("Use FromProgramMultiple")] // better API
+		[Obsolete ("Use 'FromProgramMultiple'.")] // better API
 		[Static, Export ("kernelsWithString:")]
 		CIKernel [] FromPrograms (string coreImageShaderProgram);
 #endif
