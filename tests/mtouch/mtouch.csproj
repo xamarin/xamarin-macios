@@ -52,6 +52,7 @@
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
+    <Compile Include="LinkerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
