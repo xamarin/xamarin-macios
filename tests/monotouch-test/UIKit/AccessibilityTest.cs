@@ -34,9 +34,9 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.Inconclusive ("Requires iOS7 or later");
 
 			// should not affect execution since it needs to be a "supervised" device (and allowed in MDM)
-			//			UIAccessibility.RequestGuidedAccessSession (true, delegate (bool didSuccess) { 
-			//				Assert.Fail ("should not be reached");
-			//});
+			UIAccessibility.RequestGuidedAccessSession (true, delegate (bool didSuccess) {
+				Assert.False (didSuccess, "devices are not supervised by default");
+			});
 			UIAccessibility.RequestGuidedAccessSession (false, null);
 		}
 	}
