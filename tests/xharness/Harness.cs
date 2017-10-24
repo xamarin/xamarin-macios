@@ -295,6 +295,7 @@ namespace xharness
 				BCLTestInfo bclTestInfo = new BCLTestInfo (this, p);
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + ".csproj"))) {
 					SkipwatchOSVariation = bcl_skip_watchos.Contains (p),
+					BCLInfo = bclTestInfo
 				});
 			}
 			
