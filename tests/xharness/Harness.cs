@@ -258,10 +258,10 @@ namespace xharness
 
 			var bcl_suites = new string[] { "mscorlib", "System", "System.Core", "System.Data", "System.Net.Http", "System.Numerics", "System.Runtime.Serialization", "System.Transactions", "System.Web.Services", "System.Xml", "System.Xml.Linq", "Mono.Security", "System.ComponentModel.DataAnnotations", "System.Json", "System.ServiceModel.Web", "Mono.Data.Sqlite" };
 			foreach (var p in bcl_suites) {
-				foreach (var flavor in new MacFlavors [] { MacFlavors.Full }) {
+				foreach (var flavor in new MacFlavors [] { MacFlavors.Full, MacFlavors.Modern }) {
 					var bclTestInfo = new MacBCLTestInfo (this, p, flavor);
 					var bclTestProject = new MacTestProject (bclTestInfo.ProjectPath, targetFrameworkFlavor: flavor, generateVariations: false) {
-						Name = p, 
+						Name = flavor == MacFlavors.Full ? p : p + "-modern", 
 						BCLInfo = bclTestInfo
 					};
 
@@ -365,7 +365,14 @@ namespace xharness
 			var classic_targets = new List<MacClassicTarget> ();
 			var unified_targets = new List<MacUnifiedTarget> ();
 			var hardcoded_unified_targets = new List<MacUnifiedTarget> ();
- 
+
+			Action<MacTarget, string, bool> configureTarget = (MacTarget target, string file, bool isNUnitProject) => {
+				target.TemplateProjectPath = file;
+				target.Harness = this;
+				target.IsNUnitProject = isNUnitProject;
+				target.Execute ();
+			};
+
  			RootDirectory = Path.GetFullPath (RootDirectory).TrimEnd ('/');
  
  			if (AutoConf)
@@ -382,48 +389,33 @@ namespace xharness
 				foreach (bool thirtyTwoBit in new bool[] { false, true })
 				{
 					if (proj.GenerateModern) {
-						var unifiedMobile = new MacUnifiedTarget (true, thirtyTwoBit)
-						{
-							TemplateProjectPath = file,
-							Harness = this,
-							IsNUnitProject = proj.IsNUnitProject,
-						};
-						unifiedMobile.Execute ();
-						unified_targets.Add (unifiedMobile);
+						var modern = new MacUnifiedTarget (true, thirtyTwoBit);
+						configureTarget (modern, file, proj.IsNUnitProject);
+						unified_targets.Add (modern);
 					}
 
 					if (proj.GenerateFull) {
-						var unifiedXM45 = new MacUnifiedTarget (false, thirtyTwoBit)
-						{
-							TemplateProjectPath = file,
-							Harness = this,
-						};
-						unifiedXM45.Execute ();
-						unified_targets.Add (unifiedXM45);
+						var full = new MacUnifiedTarget (false, thirtyTwoBit);
+						configureTarget (full, file, proj.IsNUnitProject);
+						unified_targets.Add (full);
 					}
 				}
- 
-				var classic = new MacClassicTarget () {
- 					TemplateProjectPath = file,
- 					Harness = this,
- 				};
-				classic.Execute ();
+
+				var classic = new MacClassicTarget ();
+				configureTarget (classic, file, false);
 				classic_targets.Add (classic);
 			}
  
-			foreach (var proj in MacTestProjects.Where ((v) => !v.GenerateVariations)) {
+			foreach (var proj in MacTestProjects.Where (v => !v.GenerateVariations)) {
 				var file = proj.Path;
 
-				var unifiedTarget = new MacUnifiedTarget (proj.GenerateModern, false, true, true) {
-					TemplateProjectPath = file,
-					Harness = this,
-					IsNUnitProject = proj.IsNUnitProject,
-				};
-				unifiedTarget.Execute ();
-				hardcoded_unified_targets.Add (unifiedTarget);
+				var unified = new MacUnifiedTarget (proj.GenerateModern, thirtyTwoBit: false, shouldSkipProjectGeneration: true);
+				unified.BCLInfo = proj.BCLInfo;
+				configureTarget (unified, file, proj.IsNUnitProject);
+				hardcoded_unified_targets.Add (unified);
  			}
  
-			MakefileGenerator.CreateMacMakefile (this, classic_targets.Union<MacTarget> (unified_targets).Union (hardcoded_unified_targets) );
+			MakefileGenerator.CreateMacMakefile (this, classic_targets.Union<MacTarget> (unified_targets).Union (hardcoded_unified_targets));
 		}
 
 		void ConfigureIOS ()

@@ -188,16 +188,37 @@ namespace xharness
 
 		public override void Convert () 
 		{
+			string csprojText = ProcessCSProj (File.ReadAllText (TemplatePath), GetFileList ());
+
+			Harness.Save (csprojText, ProjectPath);
+		}
+
+		string ProcessCSProj (string csprojText, string filesList)
+		{
+			if (Flavor == MacFlavors.Modern) {
+				csprojText = csprojText.Replace (
+@"    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseXamMacFullFramework>true</UseXamMacFullFramework>",
+@"    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>");
+
+				csprojText = csprojText.Replace ("<DefineConstants>XAMCORE_2_0", "<DefineConstants>XAMCORE_2_0;MOBILE");
+
+
+				csprojText = csprojText.Replace ("Tests</AssemblyName>", "-modernTests</AssemblyName>");
+			}
+			return csprojText.Replace ("#FILES#", filesList);
+		}
+
+		string GetFileList ()
+		{
 			var testName = TestName == "mscorlib" ? "corlib" : TestName;
 			var main_test_sources = Path.Combine (MonoPath, "mcs", "class", testName, testName + "_test.dll.sources");
 			var main_test_files = File.ReadAllLines (main_test_sources);
 
-			var csproj_input = File.ReadAllText (TemplatePath);
-
 			var sb = new StringBuilder[2] { new StringBuilder (), new StringBuilder () };
 			Process (main_test_sources, main_test_files, "", sb, 1);
-
-			Harness.Save (csproj_input.Replace ("#FILES#", sb[0].ToString ()), ProjectPath);
+			return sb[0].ToString ();
 		}
 	}
 }
