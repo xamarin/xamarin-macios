@@ -47,7 +47,7 @@ namespace XamCore.Security {
 				BlockLiteral block_onComplete;
 				block_onComplete = new BlockLiteral ();
 				block_ptr_onComplete = &block_onComplete;
-				block_onComplete.SetupBlock (ActionTrampoline.Handler, handler);
+				block_onComplete.SetupBlockUnsafe (ActionTrampoline.Handler, handler);
 
 				using (var nsDomain = new NSString (domainName))
 				using (var nsAccount = new NSString (account)) {
@@ -101,7 +101,7 @@ namespace XamCore.Security {
 				BlockLiteral block_onComplete;
 				block_onComplete = new BlockLiteral ();
 				block_ptr_onComplete = &block_onComplete;
-				block_onComplete.SetupBlock (ArrayErrorActionTrampoline.Handler, onComplete);
+				block_onComplete.SetupBlockUnsafe (ArrayErrorActionTrampoline.Handler, onComplete);
 
 				NSString nsDomain = null;
 				if (domainName != null)

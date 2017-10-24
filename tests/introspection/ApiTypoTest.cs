@@ -75,6 +75,7 @@ namespace Introspection
 			"Accurracy",
 			"Achivements",
 			"Acos",
+			"Acn",
 			"Actionname",
 			"Activitiy",
 			"Addin",

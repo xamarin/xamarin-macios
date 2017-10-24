@@ -81,7 +81,7 @@ namespace Xamarin.Bundler {
 		static string output_dir;
 		static string app_name;
 		static bool generate_plist;
-		static RegistrarMode registrar = RegistrarMode.Default;
+		public static RegistrarMode Registrar { get; private set; } = RegistrarMode.Default;
 		static bool no_executable;
 		static bool embed_mono = true;
 		static bool? profiling = false;
@@ -292,20 +292,20 @@ namespace Xamarin.Bundler {
 					{
 						switch (v) {
 						case "static":
-							registrar = RegistrarMode.Static;
+							Registrar = RegistrarMode.Static;
 							break;
 						case "dynamic":
-							registrar = RegistrarMode.Dynamic;
+							Registrar = RegistrarMode.Dynamic;
 							break;
 						case "partial":
 						case "partial-static":
-							registrar = RegistrarMode.PartialStatic;
+							Registrar = RegistrarMode.PartialStatic;
 							break;
 						case "il":
-							registrar = RegistrarMode.Dynamic;
+							Registrar = RegistrarMode.Dynamic;
 							break;
 						case "default":
-							registrar = RegistrarMode.Default;
+							Registrar = RegistrarMode.Default;
 							break;
 						default:
 							throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--registrar", "il, dynamic, static or default");
@@ -494,6 +494,9 @@ namespace Xamarin.Bundler {
 			ValidateXcode ();
 
 			App.Initialize ();
+
+			// InitializeCommon needs SdkVersion set to something valid
+			ValidateSDKVersion ();
 			App.InitializeCommon ();
 
 			Log ("Xamarin.Mac {0}{1}", Constants.Version, verbose > 0 ? "." + Constants.Revision : string.Empty);
@@ -501,7 +504,6 @@ namespace Xamarin.Bundler {
 			if (verbose > 0)
 				Console.WriteLine ("Selected target framework: {0}; API: {1}", targetFramework, IsClassic ? "Classic" : "Unified");
 
-			ValidateSDKVersion ();
 
 			if (action == Action.RunRegistrar) {
 				App.RootAssemblies.AddRange (unprocessed);
@@ -689,15 +691,15 @@ namespace Xamarin.Bundler {
 			string root_assembly = null;
 			var native_libs = new Dictionary<string, List<MethodDefinition>> ();
 
-			if (registrar == RegistrarMode.Default)
+			if (Registrar == RegistrarMode.Default)
 			{
 				if (!App.EnableDebug)
-					registrar = RegistrarMode.Static;
+					Registrar = RegistrarMode.Static;
 				else if (IsUnified && App.LinkMode == LinkMode.None && embed_mono && App.IsDefaultMarshalManagedExceptionMode && File.Exists (PartialStaticLibrary))
-					registrar = RegistrarMode.PartialStatic;
+					Registrar = RegistrarMode.PartialStatic;
 				else
-					registrar = RegistrarMode.Dynamic;
-				Log (1, $"Defaulting registrar to '{registrar}'");
+					Registrar = RegistrarMode.Dynamic;
+				Log (1, $"Defaulting registrar to '{Registrar}'");
 			}
 			
 			if (no_executable) {
@@ -1090,7 +1092,7 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("#include <xamarin/xamarin.h>");
 				sw.WriteLine ("#import <AppKit/NSAlert.h>");
 				sw.WriteLine ("#import <Foundation/NSDate.h>"); // 10.7 wants this even if not needed on 10.9
-				if (Driver.registrar == RegistrarMode.PartialStatic)
+				if (Driver.Registrar == RegistrarMode.PartialStatic)
 					sw.WriteLine ("extern \"C\" void xamarin_create_classes_Xamarin_Mac ();");
 				sw.WriteLine ();
 				sw.WriteLine ();
@@ -1110,9 +1112,9 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ();
 
 
-				if (Driver.registrar == RegistrarMode.Static)
+				if (Driver.Registrar == RegistrarMode.Static)
 					sw.WriteLine ("\txamarin_create_classes ();");
-				else if (Driver.registrar == RegistrarMode.PartialStatic)
+				else if (Driver.Registrar == RegistrarMode.PartialStatic)
 					sw.WriteLine ("\txamarin_create_classes_Xamarin_Mac ();");
 
 				if (App.EnableDebug)
@@ -1175,10 +1177,9 @@ namespace Xamarin.Bundler {
 			string mainSource = GenerateMain ();
 			string registrarPath = null;
 
-			if (registrar == RegistrarMode.Static) {
+			if (Registrar == RegistrarMode.Static) {
 				registrarPath = Path.Combine (App.Cache.Location, "registrar.m");
 				var registrarH = Path.Combine (App.Cache.Location, "registrar.h");
-				BuildTarget.StaticRegistrar.LinkContext = BuildTarget.LinkContext;
 				BuildTarget.StaticRegistrar.Generate (BuildTarget.Resolver.ResolverCache.Values, registrarH, registrarPath);
 
 				var platform_assembly = BuildTarget.Resolver.ResolverCache.First ((v) => v.Value.Name.Name == BuildTarget.StaticRegistrar.PlatformAssembly).Value;
@@ -1341,7 +1342,7 @@ namespace Xamarin.Bundler {
 					}
 				}
 
-				if (registrar == RegistrarMode.PartialStatic) {
+				if (Registrar == RegistrarMode.PartialStatic) {
 					args.Append (PartialStaticLibrary);
 					args.Append (" -framework Quartz ");
 				}

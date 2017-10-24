@@ -1,9 +1,12 @@
 using System;
 
-#if MTOUCH
-using MonoTouch;
+#if MTOUCH || MMP
 using Xamarin.Bundler;
 using Xamarin.Utils;
+#endif
+
+#if MTOUCH
+using MonoTouch;
 #endif
 
 namespace Xamarin {
@@ -30,7 +33,7 @@ namespace Xamarin {
 		public static Version MinTVOSVersion { get { return new Version (MinTVOS); }}
 
 		public static Version XcodeVersion { get { return new Version (Xcode); }}
-#if MTOUCH
+#if MTOUCH || MMP
 		public static Version GetVersion (ApplePlatform platform)
 		{
 			switch (platform) {
@@ -39,7 +42,7 @@ namespace Xamarin {
 			case ApplePlatform.WatchOS: return WatchOSVersion;
 			case ApplePlatform.TVOS: return TVOSVersion;
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", platform);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at http://bugzilla.xamarin.com with a test case.", platform, Application.ProductName);
 			}
 		}
 
@@ -51,7 +54,7 @@ namespace Xamarin {
 			case ApplePlatform.WatchOS: return MinWatchOSVersion;
 			case ApplePlatform.TVOS: return MinTVOSVersion;
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", platform);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at http://bugzilla.xamarin.com with a test case.", platform, Application.ProductName);
 			}
 		}
 #endif

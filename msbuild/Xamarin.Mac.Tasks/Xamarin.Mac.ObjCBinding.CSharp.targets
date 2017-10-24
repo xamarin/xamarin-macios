@@ -19,6 +19,8 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.Mac.Tasks.PrepareNativeReferences" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 
+	<UsingTask TaskName="Microsoft.Build.Tasks.Delete" AssemblyFile="Xamarin.MacDev.Tasks.dll"/>
+
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
 
@@ -109,7 +111,9 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 		</CreateItem>
 	</Target>
 
-	<Target Name="_CompressFrameworks" Inputs="@(_NativeFrameworkResource)" Outputs="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)" DependsOnTargets="_CollectNativeFrameworkResources" >
+	<Target Name="_CompressFrameworks" Inputs="@(_NativeFrameworkResource)" Outputs="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)" DependsOnTargets="_CollectNativeFrameworkResources">
+		<Delete SessionId="$(BuildSessionId)" Files="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)" />
+
 		<Zip
 			SessionId="$(BuildSessionId)"
 			ToolExe="$(ZipExe)"

@@ -155,6 +155,10 @@ namespace Introspection {
 			case "MonoMac.AppKit.NSMutableFontCollection":
 			case "AppKit.NSMutableFontCollection":
 				return true; // Crashes in 10.12
+			case "CoreBluetooth.CBCentralManager":
+				if (IntPtr.Size == 4 && Mac.CheckSystemVersion (10, 13)) // 32-bit removed unannounced in 10.13
+					return true;
+				break;
 			}
 
 			switch (type.Namespace) {

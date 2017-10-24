@@ -574,4 +574,17 @@ namespace LinkAll {
 #endif
 		}
 	}
+
+	[Introduced (PlatformName.MacOSX, 1, 0, PlatformArchitecture.Arch64)]
+	[Introduced (PlatformName.iOS, 1, 0)]
+	[Introduced (PlatformName.TvOS, 1, 0)]
+	[Introduced (PlatformName.WatchOS, 1, 0)]
+	[Preserve]
+	public class ClassFromThePast : NSObject
+	{
+		[Export ("foo:")]
+		public void Foo (ClassFromThePast obj)
+		{
+		}
+	}
 }

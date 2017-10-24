@@ -277,7 +277,7 @@ namespace XamCore.VideoToolbox {
 			unsafe {
 				var block = new BlockLiteral ();
 				var blockPtr = &block;
-				block.SetupBlock (compressionOutputHandlerTrampoline, outputHandler);
+				block.SetupBlockUnsafe (compressionOutputHandlerTrampoline, outputHandler);
 
 				try {
 					return VTCompressionSessionEncodeFrameWithOutputHandler (Handle,
