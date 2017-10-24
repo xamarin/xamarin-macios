@@ -53,7 +53,7 @@
     <Reference Include="Mono.Data.Sqlite" />
     <Reference Include="Xamarin.Mac" />
     <Reference Include="GuiUnit">
-      <HintPath>..\..\..\external\guiunit\src\framework\obj\Debug\xammac_mobile\GuiUnit.exe</HintPath>
+      <HintPath>..\..\..\external\guiunit\src\framework\obj\Debug\net-4.5\GuiUnit.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
