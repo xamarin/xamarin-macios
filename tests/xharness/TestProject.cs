@@ -128,6 +128,9 @@ namespace xharness
 		public bool SkipwatchOSVariation;
 		public bool SkiptvOSVariation;
 
+		// Optional
+		public BCLTestInfo BCLInfo { get; set; }
+
 		public iOSTestProject ()
 		{
 		}
@@ -143,6 +146,9 @@ namespace xharness
 	public class MacTestProject : TestProject
 	{
 		public MacFlavors TargetFrameworkFlavor;
+
+		// Optional
+		public MacBCLTestInfo BCLInfo { get; set; }
 
 		public bool GenerateModern => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.Modern;
 		public bool GenerateFull => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.Full;

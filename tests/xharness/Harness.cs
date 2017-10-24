@@ -21,41 +21,6 @@ namespace xharness
 		Jenkins,
 	}
 
-	public class BCLTest
-	{
-		public string Name { get; private set; }
-		public BCLTest (string name) 
-		{
-			Name = name;
-		}
-
-		public virtual void Convert (Harness harness) {
-			var target = new BCLTarget () {
-				Harness = harness,
-				MonoPath = harness.MONO_PATH,
-				TestName = Name,
-				WatchMonoPath = harness.WATCH_MONO_PATH
-			};
-			target.Convert ();
-		}
-	}
-
-	public class MacBCLTest : BCLTest
-	{
-		public MacBCLTest (string name) : base (name)
-		{
-		}
-
-		public override void Convert (Harness harness) {
-			var target = new MacBCLTarget () {
-				Harness = harness,
-				MonoPath = harness.MONO_PATH,
-				TestName = Name,
-			};
-			target.Convert ();
-		}
-	}
-
 	public class Harness
 	{
 		public HarnessAction Action { get; set; }
@@ -92,9 +57,6 @@ namespace xharness
 
 		public List<iOSTestProject> IOSTestProjects { get; set; } = new List<iOSTestProject> ();
 		public List<MacTestProject> MacTestProjects { get; set; } = new List<MacTestProject> ();
-
-		public List<BCLTest> IOSBclTests { get; set; } = new List<BCLTest> ();
-		public List<MacBCLTest> MacBclTests { get; set; } = new List<MacBCLTest> ();
 
 		// Configure
 		public bool AutoConf { get; set; }
@@ -296,8 +258,15 @@ namespace xharness
 
 			var bcl_suites = new string[] { "mscorlib", "System", "System.Core", "System.Data", "System.Net.Http", "System.Numerics", "System.Runtime.Serialization", "System.Transactions", "System.Web.Services", "System.Xml", "System.Xml.Linq", "Mono.Security", "System.ComponentModel.DataAnnotations", "System.Json", "System.ServiceModel.Web", "Mono.Data.Sqlite" };
 			foreach (var p in bcl_suites) {
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + "-Mac.csproj")), targetFrameworkFlavor: MacFlavors.Full, generateVariations: false) { Name = p });
-				MacBclTests.Add (new MacBCLTest (p));
+				foreach (var flavor in new MacFlavors [] { MacFlavors.Full }) {
+					var bclTestInfo = new MacBCLTestInfo (this, p, flavor);
+					var bclTestProject = new MacTestProject (bclTestInfo.ProjectPath, targetFrameworkFlavor: flavor, generateVariations: false) {
+						Name = p, 
+						BCLInfo = bclTestInfo
+					};
+
+					MacTestProjects.Add (bclTestProject);
+				}
 			}
 		}
 
@@ -323,10 +292,10 @@ namespace xharness
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false));
 
 			foreach (var p in bcl_suites) {
+				BCLTestInfo bclTestInfo = new BCLTestInfo (this, p);
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + ".csproj"))) {
 					SkipwatchOSVariation = bcl_skip_watchos.Contains (p),
 				});
-				IOSBclTests.Add (new BCLTest (p));
 			}
 			
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
@@ -402,9 +371,8 @@ namespace xharness
  			if (AutoConf)
 				AutoConfigureMac ();
 
-			foreach (var proj in MacBclTests) {
-				proj.Convert (this);
-			}
+			foreach (var bclTestInfo in MacTestProjects.Where (x => x.BCLInfo != null).Select (x => x.BCLInfo))
+				bclTestInfo.Convert ();
  
 			foreach (var proj in MacTestProjects.Where ((v) => v.GenerateVariations)) {
 				var file = Path.ChangeExtension (proj.Path, "csproj");
@@ -470,9 +438,8 @@ namespace xharness
 			if (AutoConf)
 				AutoConfigureIOS ();
 
-			foreach (var proj in IOSBclTests) {
-				proj.Convert (this);
-			}
+			foreach (var bclTestInfo in IOSTestProjects.Where (x => x.BCLInfo != null).Select (x => x.BCLInfo))
+				bclTestInfo.Convert ();
 
 			foreach (var proj in IOSTestProjects) {
 				var file = proj.Path;
