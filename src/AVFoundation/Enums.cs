@@ -643,7 +643,9 @@ namespace XamCore.AVFoundation {
 		VideoDeviceNotAvailableInBackground = 1,
 		AudioDeviceInUseByAnotherClient = 2,
 		VideoDeviceInUseByAnotherClient = 3,
-		VideoDeviceNotAvailableWithMultipleForegroundApps = 4
+		VideoDeviceNotAvailableWithMultipleForegroundApps = 4,
+		[iOS (11, 1)]
+		VideoDeviceNotAvailableDueToSystemPressure = 5,
 	}
 
 	[iOS (9,0)]
@@ -976,5 +978,15 @@ namespace XamCore.AVFoundation {
 	public enum AVDepthDataQuality : nint {
 		Low = 0,
 		High = 1
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (11,1)]
+	[Native]
+	public enum AVCaptureSystemPressureFactors : nuint
+	{
+		None = 0,
+		SystemTemperature = (1 << 0),
+		PeakPower = (1 << 1),
+		DepthModuleTemperature = (1 << 2)
 	}
 }
