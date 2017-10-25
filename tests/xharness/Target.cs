@@ -164,7 +164,7 @@ namespace xharness
 			targetDirectory = Path.GetDirectoryName(TemplateProjectPath);
 			CalculateName ();
 
-			ProjectPath = Path.Combine(targetDirectory, Path.GetFileNameWithoutExtension(TemplateProjectPath) + ProjectFileSuffix + "." + ProjectFileExtension);
+			ProjectPath = Path.Combine (targetDirectory, Path.GetFileNameWithoutExtension (TemplateProjectPath) + ProjectFileSuffix + "." + ProjectFileExtension);
 
 			if (!ShouldSkipProjectGeneration)
 			{
