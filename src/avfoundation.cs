@@ -3285,11 +3285,15 @@ namespace XamCore.AVFoundation {
 		// as per the docs the returned observers are an opaque object that you pass as the argument to 
 		// removeTimeObserver to cancel observation.
 
-		[Async]
+		// Regarding async usage:
+		// The delegate can be called multiple times (once for each value in the times array according to the documentation),
+		// which makes it a bad fit for [Async]
+
+		// [Async] -> not added due to comment above
 		[Export ("addPeriodicTimeObserverForInterval:queue:usingBlock:")]
 		NSObject AddPeriodicTimeObserver (CMTime interval, [NullAllowed] DispatchQueue queue, Action<CMTime> handler);
 
-		[Async]
+		// [Async] -> not added due to comment above
 		[Export ("addBoundaryTimeObserverForTimes:queue:usingBlock:")]
 		NSObject AddBoundaryTimeObserver (NSValue[] times, [NullAllowed] DispatchQueue queue, Action handler);
 
@@ -9089,9 +9093,14 @@ namespace XamCore.AVFoundation {
 		[Export ("livePhotoVideoCodecType")]
 		string LivePhotoVideoCodecType { get; set; }
 
+		[Internal]
 		[iOS (11, 0)]
 		[Export ("availableEmbeddedThumbnailPhotoCodecTypes")]
-		string[] AvailableEmbeddedThumbnailPhotoCodecTypes { get; }
+		NSString[] _GetAvailableEmbeddedThumbnailPhotoCodecTypes { get; }
+
+		[iOS (11, 0)]
+		[Wrap ("Array.ConvertAll (_GetAvailableEmbeddedThumbnailPhotoCodecTypes, s => AVVideoCodecTypeExtensions.GetValue (s))")]
+		AVVideoCodecType[] GetAvailableEmbeddedThumbnailPhotoCodecTypes { get; }
 
 		[iOS (11, 0)]
 		[NullAllowed, Export ("embeddedThumbnailPhotoFormat", ArgumentSemantic.Copy)]
