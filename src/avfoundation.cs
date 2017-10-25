@@ -3289,6 +3289,7 @@ namespace XamCore.AVFoundation {
 		[Export ("addPeriodicTimeObserverForInterval:queue:usingBlock:")]
 		NSObject AddPeriodicTimeObserver (CMTime interval, [NullAllowed] DispatchQueue queue, Action<CMTime> handler);
 
+		[Async]
 		[Export ("addBoundaryTimeObserverForTimes:queue:usingBlock:")]
 		NSObject AddBoundaryTimeObserver (NSValue[] times, [NullAllowed] DispatchQueue queue, Action handler);
 
@@ -7863,7 +7864,7 @@ namespace XamCore.AVFoundation {
 
 		[Mac (10, 13), iOS (11, 0), TV (11, 0)]
 		[Export ("sourceTrackIDForFrameTiming")]
-		int SourceTrackIDForFrameTiming { get; set; }
+		int SourceTrackIdForFrameTiming { get; set; }
 	}
 
 	[NoWatch]
@@ -9082,7 +9083,7 @@ namespace XamCore.AVFoundation {
 
 		[iOS (11, 0)]
 		[Export ("metadata", ArgumentSemantic.Copy)]
-		NSDictionary<NSString, NSObject> Metadata { get; set; }
+		NSDictionary Metadata { get; set; }
 
 		[iOS (11, 0)]
 		[Export ("livePhotoVideoCodecType")]
@@ -9094,7 +9095,7 @@ namespace XamCore.AVFoundation {
 
 		[iOS (11, 0)]
 		[NullAllowed, Export ("embeddedThumbnailPhotoFormat", ArgumentSemantic.Copy)]
-		NSDictionary<NSString, NSObject> EmbeddedThumbnailPhotoFormat { get; set; }
+		NSDictionary EmbeddedThumbnailPhotoFormat { get; set; }
 	}
 	
 #if !MONOMAC
@@ -9276,25 +9277,41 @@ namespace XamCore.AVFoundation {
 		[Export ("depthDataDeliveryEnabled")]
 		bool DepthDataDeliveryEnabled { [Bind ("isDepthDataDeliveryEnabled")] get; set; }
 
+		[Internal]
 		[iOS (11, 0)]
 		[Export ("availablePhotoFileTypes")]
-		string[] AvailablePhotoFileTypes { get; }
+		NSString[] _GetAvailablePhotoFileTypes { get; }
 
 		[iOS (11, 0)]
+		[Wrap ("Array.ConvertAll (_GetAvailablePhotoFileTypes, s => AVFileTypesExtensions.GetValue (s))")]
+		AVFileTypes[] GetAvailablePhotoFileTypes { get; }
+
+
+		[Internal]
+		[iOS (11, 0)]
 		[Export ("availableRawPhotoFileTypes")]
-		string[] AvailableRawPhotoFileTypes { get; }
+		NSString[] _GetAvailableRawPhotoFileTypes { get; }
+
+		[iOS (11, 0)]
+		[Wrap ("Array.ConvertAll (_GetAvailableRawPhotoFileTypes, s => AVFileTypesExtensions.GetValue (s))")]
+		AVFileTypes[] GetAvailableRawPhotoFileTypes { get; }
 
 		[iOS (11,0)]
 		[Export ("supportedPhotoPixelFormatTypesForFileType:")]
-		NSNumber[] SupportedPhotoPixelFormatTypesForFileType (string fileType);
+		NSNumber[] GetSupportedPhotoPixelFormatTypesForFileType (string fileType);
 
+		[Internal]
 		[iOS (11,0)]
 		[Export ("supportedPhotoCodecTypesForFileType:")]
-		string[] SupportedPhotoCodecTypesForFileType (string fileType);
+		NSString[] _GetSupportedPhotoCodecTypesForFileType (string fileType);
+
+		[iOS (11,0)]
+		[Wrap ("Array.ConvertAll (_GetSupportedPhotoCodecTypesForFileType (fileType), s => AVVideoCodecTypeExtensions.GetValue (s))")]
+		AVVideoCodecType[] GetSupportedPhotoCodecTypesForFileType (string fileType);
 
 		[iOS (11,0)]
 		[Export ("supportedRawPhotoPixelFormatTypesForFileType:")]
-		NSNumber[] SupportedRawPhotoPixelFormatTypesForFileType (string fileType);
+		NSNumber[] GetSupportedRawPhotoPixelFormatTypesForFileType (string fileType);
 	}
 #endif
 	
@@ -10643,7 +10660,7 @@ namespace XamCore.AVFoundation {
 		[Export ("preferredPeakBitRate")]
 		double PreferredPeakBitRate { get; set; }
 
-		[iOS (11, 0)]
+		[iOS (11, 0), NoMac, NoTV]
 		[Export ("preferredMaximumResolution", ArgumentSemantic.Assign)]
 		CGSize PreferredMaximumResolution { get; set; }
 
@@ -11534,6 +11551,7 @@ namespace XamCore.AVFoundation {
 		NSString FailedToDecodeNotificationErrorKey { get; }
 
 		[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
+		[Notification]
 		[Field ("AVSampleBufferAudioRendererWasFlushedAutomaticallyNotification")]
 		NSString AudioRendererWasFlushedAutomaticallyNotification { get; }
 

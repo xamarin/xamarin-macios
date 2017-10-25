@@ -981,7 +981,8 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (11,1)]
-	[Native]
+	[Flags]
+	[Native] 
 	public enum AVCaptureSystemPressureFactors : nuint
 	{
 		None = 0,
