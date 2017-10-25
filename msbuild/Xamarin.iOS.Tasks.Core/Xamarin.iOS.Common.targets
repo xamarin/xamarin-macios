@@ -120,7 +120,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<_RequireCodeSigning Condition="'$(ComputedPlatform)' == 'iPhone'">True</_RequireCodeSigning>
 
 		<_RequireProvisioningProfile>False</_RequireProvisioningProfile>
-		<_RequireProvisioningProfile Condition="'$(ComputedPlatform)' == 'iPhone' Or '$(CodesignEntitlements)' != ''">True</_RequireProvisioningProfile>
+		<_RequireProvisioningProfile Condition="'$(ComputedPlatform)' == 'iPhone'">True</_RequireProvisioningProfile>
 
 		<_PreparedResourceRules></_PreparedResourceRules>
 		<_AppBundleName>$(AssemblyName)</_AppBundleName>
@@ -1394,7 +1394,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<CreatePkgInfo SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" OutputPath="$(_AppBundlePath)PkgInfo" />
 	</Target>
 
-	<Target Name="_EmbedMobileProvision" Condition="'$(_RequireCodeSigning)' == 'true'" DependsOnTargets="_GenerateBundleName;_DetectSigningIdentity"
+	<Target Name="_EmbedMobileProvision" Condition="'$(_RequireProvisioningProfile)' == 'true'" DependsOnTargets="_GenerateBundleName;_DetectSigningIdentity"
 		Outputs="$(_AppBundlePath)embedded.mobileprovision">
 		<EmbedMobileProvision
 			SessionId="$(BuildSessionId)"
@@ -1405,7 +1405,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</EmbedMobileProvision>
 	</Target>
 
-	<Target Name="_CompileEntitlements" Condition="'$(_RequireCodeSigning)' == 'true' Or '$(CodesignEntitlements)' != ''" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_DetectSigningIdentity"
+	<Target Name="_CompileEntitlements" Condition="'$(_RequireCodeSigning)' == 'true'" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_DetectSigningIdentity"
 		Outputs="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent">
 		<CompileEntitlements
 			SessionId="$(BuildSessionId)"
@@ -1676,7 +1676,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<PropertyGroup>
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
-			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_CodeSigningKey)' == '-' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
 		</PropertyGroup>
 
 		<CodesignNativeLibraries
@@ -1700,7 +1700,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<PropertyGroup>
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
-			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_CodeSigningKey)' == '-' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
 		</PropertyGroup>
 
 		<Codesign
@@ -1807,7 +1807,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<_NativeExecutableFileName>$([System.IO.Path]::GetFileName('$(_NativeExecutable)'))</_NativeExecutableFileName>
 
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
-			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_CodeSigningKey)' == '-' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
 
 			<_CodesignAppExtensionInputs>@(_AppExtensionBundleFiles);$(_EntitlementsFullPath)</_CodesignAppExtensionInputs>
 		</PropertyGroup>
@@ -1849,7 +1849,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<PropertyGroup>
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
-			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_CodeSigningKey)' == '-' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
 		</PropertyGroup>
 
 		<Codesign
@@ -2005,7 +2005,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<IsStreamable Condition="'$(EmbedOnDemandResources)' == 'false'">true</IsStreamable>
 
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
-			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_CodeSigningKey)' == '-' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
 		</PropertyGroup>
 		
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_IntermediateODRDir)" />

@@ -316,9 +316,6 @@ namespace Xamarin.MacDev.Tasks
 					Log.LogError ("Could not locate the provisioning profile with a Name or UUID of {0}.", ProvisioningProfile);
 					return false;
 				}
-			} else if (Platform == MobileProvisionPlatform.iOS) {
-				Log.LogError ("Provisioning Profiles are REQUIRED for iOS.");
-				return false;
 			} else {
 				profile = null;
 			}
