@@ -247,7 +247,7 @@ namespace Xamarin.Bundler {
 
 #if MONOTOUCH
 				if (App.EnableProfiling && App.LibProfilerLinkMode == AssemblyBuildTarget.StaticObject)
-					dynamic_symbols.AddFunction ("mono_profiler_startup_log");
+					dynamic_symbols.AddFunction ("mono_profiler_init_log");
 #endif
 
 				dynamic_symbols.Save (cache_location);

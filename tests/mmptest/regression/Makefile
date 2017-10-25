@@ -17,6 +17,7 @@ TESTS_4_0 = \
 	link-posix-2 \
 	link-system.web-icalls \
 	link-keep-resources-1 \
+	link-keep-resources-2 \
 	link-preserve-assembly \
 	link-uithread-1 \
 	link-uithread-2 \
@@ -75,7 +76,7 @@ run run-test run-tests:
 	$(MAKE) build
 	$(MAKE) exec
 
-exec-system-mono-profile exec-embedded-mono-profile: export MONO_ENV_OPTIONS=--profile=log:noalloc,nocalls,output=-output.mlpd
+exec-system-mono-profile exec-embedded-mono-profile: export MONO_ENV_OPTIONS=--profile=log:output=output.mlpd
 
 exec-%:
 	@echo Executing $*... | tee $*/$@.log
