@@ -6,7 +6,7 @@
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{6FBF80D5-4E39-4613-8F1D-2B26AC88CCBE}</ProjectGuid>
-    <ProjectTypeGuids>{C4F808E7-0633-4185-881C-E69F34C3196D};{35A38325-CDC8-4865-AACA-A432C941D10C}</ProjectTypeGuids>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
     <RootNamespace>BCL.Tests</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
@@ -155,6 +155,14 @@
   </ItemGroup>
   <ItemGroup>
 #FILES#
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="..\..\..\external\mono\mcs\class\System.IO.Compression\test.nupkg">
+      <Link>test.nupkg</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\..\external\mono\mcs\class\System.IO.Compression\archive.zip">
+      <Link>archive.zip</Link>
+    </BundleResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
