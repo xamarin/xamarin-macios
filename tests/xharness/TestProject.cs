@@ -120,6 +120,11 @@ namespace xharness
 
 			doc.Save (Path);
 		}
+
+		public override string ToString()
+		{
+			return Name;
+		}
 	}
 
 	public class iOSTestProject : TestProject

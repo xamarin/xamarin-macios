@@ -9,8 +9,8 @@ namespace xharness
 	public class BCLTestInfo
 	{
 		public Harness Harness;
-		public string MonoPath; // MONO_PATH
-		public string WatchMonoPath; // WATCH_MONO_PATH
+		public string MonoPath { get { return Harness.MONO_PATH; } }
+		public string WatchMonoPath { get { return Harness.WATCH_MONO_PATH; } }
 		public string TestName;
 
 		static readonly Dictionary<string, string[]> ignored_tests =  new Dictionary<string, string[]> { 
@@ -41,8 +41,6 @@ namespace xharness
 		{
 			Harness = harness;
 			TestName = testName;
-			MonoPath = harness.MONO_PATH;
-			WatchMonoPath = harness.WATCH_MONO_PATH;
 		}
 
 		protected void Process (string test_sources, IEnumerable<string> test_files, string condition, StringBuilder [] sb, int split_count)

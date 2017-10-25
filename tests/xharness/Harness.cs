@@ -261,7 +261,7 @@ namespace xharness
 				foreach (var flavor in new MacFlavors [] { MacFlavors.Full, MacFlavors.Modern }) {
 					var bclTestInfo = new MacBCLTestInfo (this, p, flavor);
 					var bclTestProject = new MacTestProject (bclTestInfo.ProjectPath, targetFrameworkFlavor: flavor, generateVariations: false) {
-						Name = flavor == MacFlavors.Full ? p : p + "-modern", 
+						Name = p,
 						BCLInfo = bclTestInfo
 					};
 
