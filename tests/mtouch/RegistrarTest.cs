@@ -570,6 +570,7 @@ public struct FooF { public NSObject Obj; }
 		[Test]
 		[TestCase (Profile.iOS, "iOS", MTouchLinker.DontLink)]
 		[TestCase (Profile.tvOS, "tvOS", MTouchLinker.DontLink)]
+		[TestCase (Profile.iOS, "iOS", MTouchLinker.LinkAll)]
 		//[TestCase (Profile.WatchOS, "watchOS")] // MT0077 interferes
 		public void MT4162 (Profile profile, string name, MTouchLinker linker)
 		{
