@@ -312,6 +312,7 @@ namespace xharness
 				"Mono.Data.Sqlite",
 				"Mono.Data.Tds",
 				"System.IO.Compression",
+				"System.IO.Compression.FileSystem",
 			};
 			foreach (var p in bcl_suites) {
 				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + "-Mac.csproj")), targetFrameworkFlavor: MacFlavors.Full, generateVariations: false) { Name = p });
@@ -344,6 +345,7 @@ namespace xharness
 				"Mono.Data.Sqlite",
 				"Mono.Data.Tds",
 				"System.IO.Compression",
+				"System.IO.Compression.FileSystem",
 			};
 			var bcl_skip_watchos = new string [] {
 				"Mono.Security",
