@@ -42,8 +42,7 @@ IOS_TASK_ASSEMBLIES =         \
 	Xamarin.MacDev.Tasks.Core \
 
 IOS_TASK_REFERENCE_ASSEMBLIES =	\
-	Xamarin.MacDev              \
-	Newtonsoft.Json             \
+	Xamarin.MacDev
 
 IOS_DIRECTORIES =                                                                                           \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS                                                  \
@@ -166,8 +165,7 @@ MAC_TASK_ASSEMBLIES =         \
 MAC_BINDING_TASK_ASSEMBLIES = 
 
 MAC_TASK_REFERENCE_ASSEMBLIES =	\
-	Xamarin.MacDev              \
-	Newtonsoft.Json             \
+	Xamarin.MacDev
 
 MAC_DIRECTORIES =                                                                                           \
 	$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac                            \

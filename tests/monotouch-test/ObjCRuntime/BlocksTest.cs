@@ -72,6 +72,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
+#if !DEVICE && !MONOMAC // some of these tests cause the AOT compiler to assert
 		// No MonoPInvokeCallback
 		static void InvalidTrampoline1 () { }
 
@@ -90,6 +91,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		// Wrong delegate signature in MonoPInvokeCallback
 		[MonoPInvokeCallback (typeof (Func<IntPtr>))]
 		static int InvalidTrampoline5 () { return 0;  }
+#endif // !DEVICE
 
 		[Test]
 		public void InvalidBlockTrampolines ()
@@ -99,7 +101,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 			Assert.Throws<ArgumentNullException> (() => block.SetupBlock (null, userDelegate), "null trampoline");
 
-#if !MONOMAC
+#if !DEVICE && !MONOMAC
 			if (Runtime.Arch == Arch.SIMULATOR) {
 				// These checks only occur in the simulator
 				Assert.Throws<ArgumentException> (() => block.SetupBlock ((Action) InvalidBlockTrampolines, userDelegate), "instance trampoline");
@@ -109,7 +111,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.Throws<ArgumentException> (() => block.SetupBlock ((Action<int>) InvalidTrampoline4, userDelegate), "invalid trampoline 4");
 				Assert.Throws<ArgumentException> (() => block.SetupBlock ((Func<int>) InvalidTrampoline5, userDelegate), "invalid trampoline 5");
 			}
-#endif
+#endif // !DEVICE
 		}
 	}
 }

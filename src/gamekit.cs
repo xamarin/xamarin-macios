@@ -525,7 +525,7 @@ namespace XamCore.GameKit {
 
 #if !XAMCORE_2_0
 		[NoWatch]
-		// [Availability (Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use Player instead")] - Unlike rest of deprecations we are just ripping out due to poor naming
+		// [Availability (Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use 'Player' instead.")] - Unlike rest of deprecations we are just ripping out due to poor naming
 		[Export ("playerID", ArgumentSemantic.Retain)]
 		string Player { get;  }
 

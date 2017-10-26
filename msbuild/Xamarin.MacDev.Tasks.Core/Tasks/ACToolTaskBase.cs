@@ -1,13 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Json;
 using System.Linq;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
@@ -400,27 +399,25 @@ namespace Xamarin.MacDev.Tasks
 					if (string.IsNullOrEmpty (text))
 						continue;
 
-					var json = JsonConvert.DeserializeObject (text) as JObject;
+					var json = JsonValue.Parse (text) as JsonObject;
+					JsonValue value;
 
-					if (json == null)
+					if (json == null || !json.TryGetValue ("properties", out value) || value.JsonType != JsonType.Object)
 						continue;
 
-					var properties = json.Property ("properties");
+					var properties = (JsonObject) value;
 
-					if (properties == null)
+					if (!properties.TryGetValue ("on-demand-resource-tags", out value) || value.JsonType != JsonType.Array)
 						continue;
 
-					var resourceTags = properties.Value.ToObject<JObject> ().Property ("on-demand-resource-tags");
-
-					if (resourceTags == null || resourceTags.Value.Type != JTokenType.Array)
-						continue;
-
-					var tagArray = resourceTags.Value.ToObject<JArray> ();
+					var resourceTags = (JsonArray) value;
 					var tags = new HashSet<string> ();
 					string hash;
 
-					foreach (var tag in tagArray.Select (token => token.ToObject<string> ()))
-						tags.Add (tag);
+					foreach (var tag in resourceTags) {
+						if (tag.JsonType == JsonType.String)
+							tags.Add ((string) tag);
+					}
 
 					var tagList = tags.ToList ();
 					tagList.Sort ();

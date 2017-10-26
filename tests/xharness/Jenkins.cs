@@ -31,6 +31,7 @@ namespace xharness
 		public bool IncludeSimulator = true;
 		public bool IncludeDevice;
 		public bool IncludeSystemPermissionTests = true; // tests that require access to system resources (system contacts, photo library, etc) in order to work
+		public bool IncludeXtro;
 
 		public Logs Logs = new Logs ();
 		public Log MainLog;
@@ -362,12 +363,17 @@ namespace xharness
 				"msbuild",
 				"tests/mac-binding-project",
 			}.Intersect (btouch_prefixes).ToArray ();
+			var xtro_prefixes = new string [] {
+				"tests/xtro-sharpie",
+				"src",
+			};
 
 			SetEnabled (files, mtouch_prefixes, "mtouch", ref IncludeMtouch);
 			SetEnabled (files, mmp_prefixes, "mmp", ref IncludeMmpTest);
 			SetEnabled (files, bcl_prefixes, "bcl", ref IncludeBcl);
 			SetEnabled (files, btouch_prefixes, "btouch", ref IncludeBtouch);
 			SetEnabled (files, mac_binding_project, "mac-binding-project", ref IncludeMacBindingProject);
+			SetEnabled (files, xtro_prefixes, "xtro", ref IncludeXtro);
 		}
 
 		void SetEnabled (IEnumerable<string> files, string [] prefixes, string testname, ref bool value)
@@ -400,6 +406,7 @@ namespace xharness
 			SetEnabled (labels, "mac-binding-project", ref IncludeMacBindingProject);
 			SetEnabled (labels, "ios-extensions", ref IncludeiOSExtensions);
 			SetEnabled (labels, "ios-device", ref IncludeDevice);
+			SetEnabled (labels, "xtro", ref IncludeXtro);
 
 			// enabled by default
 			SetEnabled (labels, "ios", ref IncludeiOS);
@@ -550,7 +557,7 @@ namespace xharness
 					if (project.GenerateVariations) {
 						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified, "-unified", ignored));
 						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified32, "-unified-32", ignored));
-						if (!project.SkipXMVariations) {
+						if (project.GenerateFull) {
 							Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45", ignored));
 							Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored));
 						}
@@ -633,7 +640,17 @@ namespace xharness
 				Ignored = !IncludeMacBindingProject || !IncludeMac,
 			};
 			Tasks.Add (runMacBindingProject);
-			
+
+			var runXtroTests = new MakeTask {
+				Jenkins = this,
+				Platform = TestPlatform.All,
+				TestName = "Xtro",
+				Target = "wrench",
+				WorkingDirectory = Path.Combine (Harness.RootDirectory, "xtro-sharpie"),
+				Ignored = !IncludeXtro,
+			};
+			Tasks.Add (runXtroTests);
+
 			Tasks.AddRange (CreateRunDeviceTasks ());
 		}
 
@@ -2075,6 +2092,17 @@ function oninitialload ()
 				process.StartInfo.EnvironmentVariables ["XamarinMacFrameworkRoot"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
 				process.StartInfo.EnvironmentVariables ["XAMMAC_FRAMEWORK_PATH"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
 				break;
+			case TestPlatform.All:
+				// Don't set:
+				//     MSBuildExtensionsPath 
+				//     XBUILD_FRAMEWORK_FOLDERS_PATH
+				// because these values used by both XM and XI and we can't set it to two different values at the same time.
+				// Any test that depends on these values should not be using 'TestPlatform.All'
+				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = Harness.XcodeRoot;
+				process.StartInfo.EnvironmentVariables ["MD_MTOUCH_SDK_ROOT"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current");
+				process.StartInfo.EnvironmentVariables ["XamarinMacFrameworkRoot"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
+				process.StartInfo.EnvironmentVariables ["XAMMAC_FRAMEWORK_PATH"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
+				break;
 			default:
 				throw new NotImplementedException ();
 			}
@@ -2116,6 +2144,25 @@ function oninitialload ()
 			foreach (string key in process.StartInfo.EnvironmentVariables.Keys)
 				log.WriteLine ("{0}={1}", key, process.StartInfo.EnvironmentVariables [key]);
 			log.WriteLine ("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
+		}
+
+		public string GuessFailureReason (Log log)
+		{
+			try {
+				using (var reader = log.GetReader ()) {
+					string line;
+					var error_msg = new System.Text.RegularExpressions.Regex ("([A-Z][A-Z][0-9][0-9][0-9][0-9]:.*)");
+					while ((line = reader.ReadLine ()) != null) {
+						var match = error_msg.Match (line);
+						if (match.Success)
+							return match.Groups [1].Captures [0].Value;
+					}
+				}
+			} catch (Exception e) {
+				Harness.Log ("Failed to guess failure reason: {0}", e.Message);
+			}
+
+			return null;
 		}
 
 		// This method will set (and clear) the Waiting flag correctly while waiting on a resource
@@ -2881,6 +2928,8 @@ function oninitialload ()
 
 						if (!string.IsNullOrEmpty (runner.FailureMessage))
 							FailureMessage = runner.FailureMessage;
+						else
+							FailureMessage = GuessFailureReason (runner.MainLog);
 
 						if (runner.Result == TestExecutingResult.Succeeded && Platform == TestPlatform.iOS_TodayExtension64) {
 							// For the today extension, the main app is just a single test.
@@ -3078,16 +3127,17 @@ function oninitialload ()
 				// We need to set the dialog permissions for all the apps
 				// before launching the simulator, because once launched
 				// the simulator caches the values in-memory.
-				foreach (var task in Tasks)
+				var executingTasks = Tasks.Where ((v) => !v.Ignored && !v.Failed);
+				foreach (var task in executingTasks)
 					await task.SelectSimulatorAsync ();
 
-				var devices = Tasks.First ().Simulators;
+				var devices = executingTasks.First ().Simulators;
 				Jenkins.MainLog.WriteLine ("Selected simulator: {0}", devices.Length > 0 ? devices [0].Name : "none");
 
 				foreach (var dev in devices)
-					await dev.PrepareSimulatorAsync (Jenkins.MainLog, Tasks.Where ((v) => !v.Ignored && !v.Failed).Select ((v) => v.BundleIdentifier).ToArray ());
+					await dev.PrepareSimulatorAsync (Jenkins.MainLog, executingTasks.Select ((v) => v.BundleIdentifier).ToArray ());
 
-				foreach (var task in Tasks) {
+				foreach (var task in executingTasks) {
 					task.AcquiredResource = desktop;
 					try {
 						await task.RunAsync ();
@@ -3254,6 +3304,8 @@ function oninitialload ()
 	public enum TestPlatform
 	{
 		None,
+		All,
+
 		iOS,
 		iOS_Unified,
 		iOS_Unified32,

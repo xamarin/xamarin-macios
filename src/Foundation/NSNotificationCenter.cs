@@ -73,7 +73,7 @@ namespace XamCore.Foundation {
 		List <ObservedData> __mt_ObserverList_var = new List <ObservedData> ();
 
 #if !XAMCORE_2_0
-		[Advice ("Use AddObserver(NSString, Action<NSNotification>, NSObject)")]
+		[Advice ("Use 'AddObserver(NSString, Action<NSNotification>, NSObject)'.")]
 		public NSObject AddObserver (string aName, Action<NSNotification> notify, NSObject fromObject)
 		{
 			return AddObserver (new NSString (aName), notify, fromObject);
@@ -98,13 +98,13 @@ namespace XamCore.Foundation {
 		}
 
 #if !XAMCORE_2_0
-		[Advice ("Use AddObserver(NSString, Action<NSNotification>) instead")]
+		[Advice ("Use 'AddObserver(NSString, Action<NSNotification>)' instead.")]
 		public NSObject AddObserver (string aName, Action<NSNotification> notify)
 		{
 			return AddObserver (aName, notify, null);
 		}
 
-		[Advice ("Use AddObserver(NSObject, Selector, NSString, NSObject) instead")]
+		[Advice ("Use 'AddObserver(NSObject, Selector, NSString, NSObject)' instead.")]
 		public void AddObserver (NSObject observer, Selector aSelector, string aname, NSObject anObject)
 		{
 			AddObserver (observer, aSelector, new NSString (aname), anObject);

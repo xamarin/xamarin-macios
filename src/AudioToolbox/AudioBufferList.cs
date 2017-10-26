@@ -34,7 +34,7 @@ using XamCore.ObjCRuntime;
 namespace XamCore.AudioToolbox
 {
 #if !XAMCORE_2_0
-	[Obsolete ("Use AudioBuffers")]
+	[Obsolete ("Use 'AudioBuffers'.")]
 	[StructLayout(LayoutKind.Sequential)]
 	public class AudioBufferList {
 		// Preserve is support, but Conditional is not, on fields and will mark the type (not optimal)
@@ -68,7 +68,7 @@ namespace XamCore.AudioToolbox
 		}
 	}
 
-	[Obsolete ("Use AudioBuffers")]
+	[Obsolete ("Use 'AudioBuffers'.")]
 	public class MutableAudioBufferList : AudioBufferList, IDisposable {
 		public MutableAudioBufferList (int nubuffers, int bufferSize)
 			: base (nubuffers)

@@ -81,6 +81,12 @@ namespace MonoTouchFixtures.AudioToolbox {
 
 			//Assert.That (called, Is.True, "#10");
 		}
+
+		[Test]
+		public void InvalidAudioBasicDescription ()
+		{
+			Assert.Throws<AudioQueueException> (() => new InputAudioQueue (new AudioStreamBasicDescription ()), "A");
+		}
 	}
 }
 

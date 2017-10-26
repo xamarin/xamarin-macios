@@ -32,7 +32,7 @@ using XamCore.Foundation;
 namespace XamCore.AppKit
 {
 	[Register ("__monomac_internal_ActionDispatcher")]
-	internal class ActionDispatcher : NSObject
+	internal class ActionDispatcher : NSObject, INSMenuValidation // INSMenuValidation needed for using the Activated method of NSMenuItems if you want to be able to validate
 	{
 		const string skey = "__monomac_internal_ActionDispatcher_activated:";
 		const string dkey = "__monomac_internal_ActionDispatcher_doubleActivated:";
@@ -40,6 +40,7 @@ namespace XamCore.AppKit
 		public static Selector DoubleAction = new Selector (dkey);
 		public EventHandler Activated;
 		public EventHandler DoubleActivated;
+		public Func<NSMenuItem, bool> ValidateMenuItemFunc;
 
 		[Preserve, Export (skey)]
 		public void OnActivated (NSObject sender)
@@ -103,5 +104,14 @@ namespace XamCore.AppKit
 				return;
 			ctarget.DoubleActivated -= doubleHandler;
 		}
+
+		public bool ValidateMenuItem (NSMenuItem menuItem)
+		{
+			if (ValidateMenuItemFunc != null)
+				return ValidateMenuItemFunc (menuItem);
+
+			return true;
+		}
+
 	}
 }

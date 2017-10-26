@@ -18,7 +18,7 @@ namespace XamCore.Foundation {
 
 	public partial class NSIndexPath {
 #if !XAMCORE_2_0
-		[Advice ("Use NSIndexPath.Create (int[]) instead")]
+		[Advice ("Use 'NSIndexPath.Create (int[])' instead.")]
 		public unsafe NSIndexPath FromIndexes (uint [] indexes)
 		{
 			if (indexes == null)

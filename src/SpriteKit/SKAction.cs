@@ -21,13 +21,13 @@ namespace XamCore.SpriteKit {
 		}
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use Run(Action) instead")]
+		[Obsolete ("Use 'Run(Action)' instead.")]
 		public static SKAction RunBlock (Action block)
 		{
 			return Run (block);
 		}
 
-		[Obsolete ("Use Run(Action,DispatchQueue) instead")]
+		[Obsolete ("Use 'Run(Action,DispatchQueue)' instead.")]
 		public static SKAction RunBlock (Action block, DispatchQueue queue)
 		{
 			return Run (block, queue);

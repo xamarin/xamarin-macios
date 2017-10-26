@@ -2477,11 +2477,11 @@ namespace XamCore.Foundation
 
 #if !XAMCORE_2_0
 		[Field ("NSMetadataQueryUbiquitousDocumentsScope")]
-		[Obsolete ("Use UbiquitousDocumentsScope instead")]
+		[Obsolete ("Use 'UbiquitousDocumentsScope' instead.")]
 		NSString QueryUbiquitousDocumentsScope { get; }
 
 		[Field ("NSMetadataQueryUbiquitousDataScope")]
-		[Obsolete ("Use UbiquitousDataScope instead")]
+		[Obsolete ("Use 'UbiquitousDataScope' instead.")]
 		NSString QueryUbiquitousDataScope { get; }
 #endif
 
@@ -4960,7 +4960,7 @@ namespace XamCore.Foundation
 #if XAMCORE_2_0
 		NSDictionary ToDictionary ();
 #else
-		[Obsolete ("Use ToDictionary instead")]
+		[Obsolete ("Use 'ToDictionary' instead.")]
 		NSDictionary DictionaryRepresentation ();
 #endif
 
@@ -5198,7 +5198,7 @@ namespace XamCore.Foundation
 #if XAMCORE_2_0
 		NSDictionary ToDictionary ();
 #else
-		[Obsolete ("Use ToDictionary instead")]
+		[Obsolete ("Use 'ToDictionary' instead.")]
 		NSDictionary AsDictionary ();
 #endif
 	
@@ -6523,7 +6523,7 @@ namespace XamCore.Foundation
 #if XAMCORE_2_0
 		[Internal]
 #else
-		[Obsolete ("Use NSUrlCredential(SecTrust) constructor")]
+		[Obsolete ("Use 'NSUrlCredential(SecTrust)' constructor.")]
 #endif
 		[Static]
 		[Export ("credentialForTrust:")]
@@ -7814,19 +7814,19 @@ namespace XamCore.Foundation
 #else
 #if !XAMCORE_2_0
 		[Bind ("sizeWithFont:")]
-		//[Obsolete ("Deprecated in iOS7.   Use NSString.GetSizeUsingAttributes (UIStringAttributes) instead")]
+		//[Obsolete ("Deprecated in iOS7.   Use 'NSString.GetSizeUsingAttributes (UIStringAttributes)' instead.")]
 		CGSize StringSize (UIFont font);
 		
 		[Bind ("sizeWithFont:forWidth:lineBreakMode:")]
-		//[Obsolete ("Deprecated in iOS7.   Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes,NSStringDrawingContext) instead.")]
+		//[Obsolete ("Deprecated in iOS7.   Use 'NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes,NSStringDrawingContext)' instead.")]
 		CGSize StringSize (UIFont font, nfloat forWidth, UILineBreakMode breakMode);
 		
 		[Bind ("sizeWithFont:constrainedToSize:")]
-		//[Obsolete ("Deprecated in iOS7.   Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes,NSStringDrawingContext) instead.")]
+		//[Obsolete ("Deprecated in iOS7.   Use 'NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes,NSStringDrawingContext)' instead.")]
 		CGSize StringSize (UIFont font, CGSize constrainedToSize);
 		
 		[Bind ("sizeWithFont:constrainedToSize:lineBreakMode:")]
-		//[Obsolete ("Deprecated in iOS7.   Use NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes,NSStringDrawingContext) instead.")]
+		//[Obsolete ("Deprecated in iOS7.   Use 'NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes,NSStringDrawingContext)' instead.")]
 		CGSize StringSize (UIFont font, CGSize constrainedToSize, UILineBreakMode lineBreakMode);
 
 		[Bind ("sizeWithFont:minFontSize:actualFontSize:forWidth:lineBreakMode:")]
@@ -7835,31 +7835,31 @@ namespace XamCore.Foundation
 		CGSize StringSize (UIFont font, nfloat minFontSize, ref nfloat actualFontSize, nfloat forWidth, UILineBreakMode lineBreakMode);
 
 		[Bind ("drawAtPoint:withFont:")]
-		//[Obsolete ("Deprecated in iOS7.  Use NSString.DrawString(CGPoint, UIStringAttributes) instead")]
+		//[Obsolete ("Deprecated in iOS7.  Use 'NSString.DrawString(CGPoint, UIStringAttributes)' instead.")]
 		CGSize DrawString (CGPoint point, UIFont font);
 
 		[Bind ("drawAtPoint:forWidth:withFont:lineBreakMode:")]
-		//[Obsolete ("Deprecated in iOS7.  Use NSString.DrawString(CGRect, UIStringAttributes) instead")]
+		//[Obsolete ("Deprecated in iOS7.  Use 'NSString.DrawString(CGRect, UIStringAttributes)' instead.")]
 		CGSize DrawString (CGPoint point, nfloat width, UIFont font, UILineBreakMode breakMode);
 
 		[Bind ("drawAtPoint:forWidth:withFont:fontSize:lineBreakMode:baselineAdjustment:")]
-		//[Obsolete ("Deprecated in iOS7.  Use NSString.DrawString(CGRect, UIStringAttributes) instead")]
+		//[Obsolete ("Deprecated in iOS7.  Use 'NSString.DrawString(CGRect, UIStringAttributes)' instead.")]
 		CGSize DrawString (CGPoint point, nfloat width, UIFont font, nfloat fontSize, UILineBreakMode breakMode, UIBaselineAdjustment adjustment);
 
 		[Bind ("drawAtPoint:forWidth:withFont:minFontSize:actualFontSize:lineBreakMode:baselineAdjustment:")]
-		//[Obsolete ("Deprecated in iOS7.  Use NSString.DrawString(CGRect, UIStringAttributes) instead")]
+		//[Obsolete ("Deprecated in iOS7.  Use 'NSString.DrawString(CGRect, UIStringAttributes)' instead.")]
 		CGSize DrawString (CGPoint point, nfloat width, UIFont font, nfloat minFontSize, ref nfloat actualFontSize, UILineBreakMode breakMode, UIBaselineAdjustment adjustment);
 
 		[Bind ("drawInRect:withFont:")]
-		//[Obsolete ("Deprecated in iOS7.  Use NSString.DrawString(CGRect, UIStringAttributes) instead")]
+		//[Obsolete ("Deprecated in iOS7.  Use 'NSString.DrawString(CGRect, UIStringAttributes)' instead.")]
 		CGSize DrawString (CGRect rect, UIFont font);
 
 		[Bind ("drawInRect:withFont:lineBreakMode:")]
-		//[Obsolete ("Deprecated in iOS7.  Use NSString.DrawString(CGRect, UIStringAttributes) instead")]
+		//[Obsolete ("Deprecated in iOS7.  Use 'NSString.DrawString(CGRect, UIStringAttributes)' instead.")]
 		CGSize DrawString (CGRect rect, UIFont font, UILineBreakMode mode);
 
 		[Bind ("drawInRect:withFont:lineBreakMode:alignment:")]
-		//[Obsolete ("Deprecated in iOS7.  Use NSString.DrawString(CGRect, UIStringAttributes) instead")]
+		//[Obsolete ("Deprecated in iOS7.  Use 'NSString.DrawString(CGRect, UIStringAttributes)' instead.")]
 		CGSize DrawString (CGRect rect, UIFont font, UILineBreakMode mode, UITextAlignment alignment);
 #endif
 #endif
@@ -10553,24 +10553,24 @@ namespace XamCore.Foundation
 #if IOS && !XAMCORE_4_0
 		[iOS (9, 3)]
 		[Notification]
-		[Obsolete ("Use NSUserDefaults.SizeLimitExceededNotification instead")]
+		[Obsolete ("Use 'NSUserDefaults.SizeLimitExceededNotification' instead.")]
 		[Field ("NSUserDefaultsSizeLimitExceededNotification")]
 		NSString SizeLimitExceededNotification { get; }
 
 		[iOS (9, 3)]
 		[Notification]
-		[Obsolete ("Use NSUserDefaults.DidChangeAccountsNotification instead")]
+		[Obsolete ("Use 'NSUserDefaults.DidChangeAccountsNotification' instead.")]
 		[Field ("NSUbiquitousUserDefaultsDidChangeAccountsNotification")]
 		NSString DidChangeAccountsNotification { get; }
 
 		[iOS (9, 3)]
 		[Notification]
-		[Obsolete ("Use NSUserDefaults.CompletedInitialSyncNotification instead")]
+		[Obsolete ("Use 'NSUserDefaults.CompletedInitialSyncNotification' instead.")]
 		[Field ("NSUbiquitousUserDefaultsCompletedInitialSyncNotification")]
 		NSString CompletedInitialSyncNotification { get; }
 
 		[Notification]
-		[Obsolete ("Use NSUserDefaults.DidChangeNotification instead")]
+		[Obsolete ("Use 'NSUserDefaults.DidChangeNotification' instead.")]
 		[Field ("NSUserDefaultsDidChangeNotification")]
 		NSString UserDefaultsDidChangeNotification { get; }
 #endif
@@ -11667,7 +11667,7 @@ namespace XamCore.Foundation
 		IntPtr Constructor ([NullAllowed] INSFilePresenter filePresenterOrNil);
 
 #if !XAMCORE_4_0
-		[Obsolete ("Use .ctor(INSFilePresenter) instead")]
+		[Obsolete ("Use '.ctor(INSFilePresenter)' instead.")]
 		[Wrap ("this ((INSFilePresenter) filePresenterOrNil)")]
 		IntPtr Constructor ([NullAllowed] NSFilePresenter filePresenterOrNil);
 #endif
@@ -12420,63 +12420,63 @@ namespace XamCore.Foundation
 		//unsigned long long FileSize ([Target] NSDictionary fileAttributes);
 
 		[Bind ("fileModificationDate")]
-		[Obsolete ("Use ToFileAttributes ().ModificationDate instead")]
+		[Obsolete ("Use 'ToFileAttributes ().ModificationDate' instead.")]
 		NSDate FileModificationDate ([Target] NSDictionary fileAttributes);
 
 		[Bind ("fileType")]
-		[Obsolete ("Use ToFileAttributes ().Type instead")]
+		[Obsolete ("Use 'ToFileAttributes ().Type' instead.")]
 		string FileType ([Target] NSDictionary fileAttributes);
 
 		[Bind ("filePosixPermissions")]
-		[Obsolete ("Use ToFileAttributes ().PosixPermissions instead")]
+		[Obsolete ("Use 'ToFileAttributes ().PosixPermissions' instead.")]
 		uint /* unsigned short */ FilePosixPermissions ([Target] NSDictionary fileAttributes);
 
 		[Bind ("fileOwnerAccountName")]
-		[Obsolete ("Use ToFileAttributes ().OwnerAccountName instead")]
+		[Obsolete ("Use 'ToFileAttributes ().OwnerAccountName' instead.")]
 		string FileOwnerAccountName ([Target] NSDictionary fileAttributes);
 
 		[Bind ("fileGroupOwnerAccountName")]
-		[Obsolete ("Use ToFileAttributes ().GroupOwnerAccountName instead")]
+		[Obsolete ("Use 'ToFileAttributes ().GroupOwnerAccountName' instead.")]
 		string FileGroupOwnerAccountName ([Target] NSDictionary fileAttributes);
 
 		[Bind ("fileSystemNumber")]
-		[Obsolete ("Use ToFileAttributes ().SystemNumber instead")]
+		[Obsolete ("Use 'ToFileAttributes ().SystemNumber' instead.")]
 		nint FileSystemNumber ([Target] NSDictionary fileAttributes);
 
 		[Bind ("fileSystemFileNumber")]
-		[Obsolete ("Use ToFileAttributes ().SystemFileNumber instead")]
+		[Obsolete ("Use 'ToFileAttributes ().SystemFileNumber' instead.")]
 		nuint FileSystemFileNumber ([Target] NSDictionary fileAttributes);
 
 		[Bind ("fileExtensionHidden")]
-		[Obsolete ("Use ToFileAttributes ().ExtensionHidden instead")]
+		[Obsolete ("Use 'ToFileAttributes ().ExtensionHidden' instead.")]
 		bool FileExtensionHidden ([Target] NSDictionary fileAttributes);
 
 		[Bind ("fileHFSCreatorCode")]
-		[Obsolete ("Use ToFileAttributes ().HfsCreatorCode instead")]
+		[Obsolete ("Use 'ToFileAttributes ().HfsCreatorCode' instead.")]
 		nuint FileHfsCreatorCode ([Target] NSDictionary fileAttributes);
 
 		[Bind ("fileHFSTypeCode")]
-		[Obsolete ("Use ToFileAttributes ().HfsTypeCode instead")]
+		[Obsolete ("Use 'ToFileAttributes ().HfsTypeCode' instead.")]
 		nuint FileHfsTypeCode ([Target] NSDictionary fileAttributes);
 
 		[Bind ("fileIsImmutable")]
-		[Obsolete ("Use ToFileAttributes ().IsImmutable instead")]
+		[Obsolete ("Use 'ToFileAttributes ().IsImmutable' instead.")]
 		bool FileIsImmutable ([Target] NSDictionary fileAttributes);
 
 		[Bind ("fileIsAppendOnly")]
-		[Obsolete ("Use ToFileAttributes ().IsAppendOnly instead")]
+		[Obsolete ("Use 'ToFileAttributes ().IsAppendOnly' instead.")]
 		bool FileIsAppendOnly ([Target] NSDictionary fileAttributes);
 
 		[Bind ("fileCreationDate")]
-		[Obsolete ("Use ToFileAttributes ().CreationDate instead")]
+		[Obsolete ("Use 'ToFileAttributes ().CreationDate' instead.")]
 		NSDate FileCreationDate ([Target] NSDictionary fileAttributes);
 
 		[Bind ("fileOwnerAccountID")]
-		[Obsolete ("Use ToFileAttributes ().OwnerAccountID instead")]
+		[Obsolete ("Use 'ToFileAttributes ().OwnerAccountID' instead.")]
 		NSNumber FileOwnerAccountID ([Target] NSDictionary fileAttributes);
 
 		[Bind ("fileGroupOwnerAccountID")]
-		[Obsolete ("Use ToFileAttributes ().GroupOwnerAccountID instead")]
+		[Obsolete ("Use 'ToFileAttributes ().GroupOwnerAccountID' instead.")]
 		NSNumber FileGroupOwnerAccountID ([Target] NSDictionary fileAttributes);
 #endif
 #endif
@@ -13979,7 +13979,7 @@ namespace XamCore.Foundation
 #if XAMCORE_2_0
 		void RemoveEventHandler (AEEventClass eventClass, AEEventID eventID);
 #else
-		[Obsolete ("Use RemoveEventHandler instead")]
+		[Obsolete ("Use 'RemoveEventHandler' instead.")]
 		void RemoveEventHandlerForEventClassandEventID (AEEventClass eventClass, AEEventID eventID);
 #endif
 
