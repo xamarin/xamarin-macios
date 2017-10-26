@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDisplayName</key>
-	<string>corelibtests</string>
+	<string>System.IO.Compression.FileSystemTests</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.xamarin.system.io.compression.filesystem</string>
 	<key>CFBundleName</key>
