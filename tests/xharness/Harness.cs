@@ -312,6 +312,7 @@ namespace xharness
 				"Mono.Data.Sqlite",
 				"Mono.Data.Tds",
 				"System.IO.Compression",
+				"System.IO.Compression.FileSystem",
 				"Mono.CSharp",
 			};
 			foreach (var p in bcl_suites) {
@@ -345,6 +346,7 @@ namespace xharness
 				"Mono.Data.Sqlite",
 				"Mono.Data.Tds",
 				"System.IO.Compression",
+				"System.IO.Compression.FileSystem",
 				"Mono.CSharp",
 			};
 			var bcl_skip_watchos = new string [] {
