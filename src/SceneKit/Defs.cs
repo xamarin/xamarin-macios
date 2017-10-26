@@ -43,8 +43,11 @@ namespace XamCore.SceneKit {
 	public enum SCNTransparencyMode : nint {
 		AOne,
 		RgbZero,
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		SingleLayer = 2,
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		DualLayer = 3,
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		Default = AOne,
 	}
 
@@ -310,6 +313,7 @@ namespace XamCore.SceneKit {
 		Multiply = 3,
 		Screen = 4,
 		Replace = 5,
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		Max = 6,
 	}
 
@@ -326,10 +330,15 @@ namespace XamCore.SceneKit {
 		ShowLightExtents = 1 << 3,
 		ShowPhysicsFields = 1 << 4,
 		ShowWireframe = 1 << 5,
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		RenderAsWireframe = 1 << 6,
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		ShowSkeletons = 1 << 7,
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		ShowCreases = 1 << 8,
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		ShowConstraints = 1 << 9,
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		ShowCameras = 1 << 10,
 	}
 
@@ -368,6 +377,7 @@ namespace XamCore.SceneKit {
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[Native]
+	[Flags]
 	public enum SCNColorMask : nint
 	{
 		None = 0,

@@ -433,7 +433,6 @@
 !missing-selector! NSXMLParserDelegate::parserDidEndDocument: is not bound
 !missing-selector! NSXMLParserDelegate::parserDidStartDocument: is not bound
 
-
 # Accelerate.framework
 !missing-enum! CBLAS_DIAG not bound
 !missing-enum! CBLAS_ORDER not bound
@@ -460,6 +459,9 @@
 !incorrect-protocol-member! SCNSceneRenderer::renderingAPI is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNSceneRenderer::stencilPixelFormat is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNAnimatable::setSpeed:forAnimationKey: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNAnimatable::addAnimationPlayer:forKey: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNAnimatable::animationPlayerForKey: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNAnimatable::removeAnimationForKey:blendOutDuration: is REQUIRED and should be abstract
 
 ## same for SCNActionable, it is required member of a protocol added to XAMCORE_4_0
 !incorrect-protocol-member! SCNActionable::actionKeys is REQUIRED and should be abstract
