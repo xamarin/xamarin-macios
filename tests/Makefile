@@ -353,5 +353,9 @@ else
 	@echo "iOS tests have been disabled [$@]"
 endif
 
+wrench-xtro:
+	git clean -xfdq
+	make -C xtro-sharpie wrench
+
 jenkins: xharness/xharness.exe
 	$(Q) $(SYSTEM_MONO) --debug $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT)
