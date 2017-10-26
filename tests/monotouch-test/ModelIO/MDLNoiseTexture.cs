@@ -22,19 +22,18 @@ using MonoTouch.ObjCRuntime;
 using OpenTK;
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.ModelIO
-{
+namespace MonoTouchFixtures.ModelIO {
 
 	[TestFixture]
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
-	public class MDLNoiseTextureTest
-	{
+	public class MDLNoiseTextureTest {
 		[TestFixtureSetUp]
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (8, 2);
 
+#if !MONOMAC
 			if (Runtime.Arch == Arch.SIMULATOR && IntPtr.Size == 4) {
 				// There's a bug in the i386 version of objc_msgSend where it doesn't preserve SIMD arguments
 				// when resizing the cache of method selectors for a type. So here we call all selectors we can
@@ -56,6 +55,7 @@ namespace MonoTouchFixtures.ModelIO
 				using (var obj = new MDLTexture ()) {
 				}
 			}
+#endif
 		}
 
 		[Test]

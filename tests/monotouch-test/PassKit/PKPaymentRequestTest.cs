@@ -1,4 +1,4 @@
-﻿#if !__TVOS__
+﻿#if !__TVOS__ && !MONOMAC
 
 using System;
 #if XAMCORE_2_0

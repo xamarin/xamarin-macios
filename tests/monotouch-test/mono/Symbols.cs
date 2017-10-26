@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !MONOMAC
+using System;
 using System.Runtime.InteropServices;
 
 #if XAMCORE_2_0
@@ -53,4 +54,4 @@ namespace MonoTouchFixtures {
 		static extern void free (IntPtr ptr);
 	}
 }
-
+#endif

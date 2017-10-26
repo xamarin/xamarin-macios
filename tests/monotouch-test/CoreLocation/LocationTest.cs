@@ -12,13 +12,11 @@ using System;
 using Foundation;
 using CoreLocation;
 using ObjCRuntime;
-using UIKit;
 #else
 using MonoTouch;
 using MonoTouch.CoreLocation;
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 

@@ -9,8 +9,7 @@ using MonoTouch.Foundation;
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
-	public class NSInputStreamTest
-	{
+	public class NSInputStreamTest {
 		[Test]
 		public void SubclassedCtor ()
 		{
@@ -31,6 +30,7 @@ namespace MonoTouchFixtures.Foundation {
 			}
 		}
 
+#if !MONOMAC //NSData.FromFile ("Info.plist") returns null.  Trying the same in xcode also returns nil
 		[Test]
 		public void Data ()
 		{
@@ -40,6 +40,7 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.That (s.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 			}
 		}
+#endif
 
 		[Test]
 		public void Url ()

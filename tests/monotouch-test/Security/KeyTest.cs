@@ -115,7 +115,10 @@ namespace MonoTouchFixtures.Security {
 				if (TestRuntime.CheckXcodeVersion (8,0)) {
 					Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Encrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "public/IsAlgorithmSupported/Encrypt");
 #if MONOMAC
-					Assert.False (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "public/IsAlgorithmSupported/Decrypt");
+					if (TestRuntime.CheckXcodeVersion (9, 0))
+						Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "public/IsAlgorithmSupported/Decrypt");
+					else
+						Assert.False (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "public/IsAlgorithmSupported/Decrypt");
 
 					using (var pub = public_key.GetPublicKey ()) {
 						Assert.That (pub.Handle, Is.EqualTo (public_key.Handle), "public/GetPublicKey");
@@ -214,7 +217,10 @@ namespace MonoTouchFixtures.Security {
 					Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Encrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), "public/IsAlgorithmSupported/Encrypt");
 					// I would have expect false
 #if MONOMAC
-					Assert.False (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), "public/IsAlgorithmSupported/Decrypt");
+					if (TestRuntime.CheckXcodeVersion (9, 0))
+						Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), "public/IsAlgorithmSupported/Decrypt");
+					else
+						Assert.False (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), "public/IsAlgorithmSupported/Decrypt");
 #else
  					Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), "public/IsAlgorithmSupported/Decrypt");
 #endif

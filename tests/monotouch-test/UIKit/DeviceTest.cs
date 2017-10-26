@@ -7,6 +7,7 @@
 // Copyright 2012 Xamarin Inc. All rights reserved.
 //
 
+#if !MONOMAC
 using System;
 using System.IO;
 #if XAMCORE_2_0
@@ -21,7 +22,7 @@ using MonoTouch.UIKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class DeviceTest {
@@ -45,7 +46,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.False (device.BatteryMonitoringEnabled, "false");
 			Assert.That (device.BatteryState, Is.EqualTo (UIDeviceBatteryState.Unknown), "false/Unknown");
 			Assert.That (device.BatteryLevel, Is.EqualTo (-1), "false/-1");
-			
+
 			device.BatteryMonitoringEnabled = true;
 			try {
 				if (Runtime.Arch == Arch.SIMULATOR) {
@@ -55,11 +56,11 @@ namespace MonoTouchFixtures.UIKit {
 					Assert.That (device.BatteryState, Is.Not.EqualTo (UIDeviceBatteryState.Unknown), "true/Unknown");
 					Assert.That (device.BatteryLevel, Is.Not.EqualTo (-1), "true/-1");
 				}
-			}
-			finally {
+			} finally {
 				device.BatteryMonitoringEnabled = false;
 			}
 		}
 #endif // !__TVOS__ && !__WATCHOS__
 	}
 }
+#endif
