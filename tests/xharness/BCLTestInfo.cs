@@ -174,7 +174,7 @@ namespace xharness
 		public MacBCLTestInfo (Harness harness, string testName, MacFlavors flavor) : base (harness, testName)
 		{
 			if (flavor == MacFlavors.All)
-				throw new ArgumentException("Each target must be a specific flavor");
+				throw new ArgumentException ("Each target must be a specific flavor");
 
 			Flavor = flavor;
 		}
