@@ -551,7 +551,7 @@ namespace xharness
 							TestName = project.Name,
 						};
 					}
-					exec.Variation = configurations.Length > 1 ? config : null;
+					exec.Variation = configurations.Length > 1 ? config : project.TargetFrameworkFlavor.ToString ();
 					Tasks.Add (exec);
 
 					if (project.GenerateVariations) {
