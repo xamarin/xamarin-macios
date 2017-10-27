@@ -386,6 +386,7 @@ namespace Introspection
 			"Siemen",
 			"Sinh",
 			"Sint", // as in "Signed Integer"
+			"Simd",
 			"Slerp",
 			"Slomo",
 			"Smpte",

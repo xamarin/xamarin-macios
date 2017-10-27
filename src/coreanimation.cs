@@ -925,7 +925,7 @@ namespace XamCore.CoreAnimation {
 	}
 	
 	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] { typeof (CAAnimationDelegate)})]
-	interface CAAnimation : CAAction, CAMediaTiming, NSSecureCoding, NSMutableCopying {
+	interface CAAnimation : CAAction, CAMediaTiming, NSSecureCoding, NSMutableCopying, SCNAnimationProtocol {
 		[Export ("animation"), Static]
 		CAAnimation CreateAnimation ();
 	
@@ -1011,6 +1011,12 @@ namespace XamCore.CoreAnimation {
 		NSString RotateModeAutoReverse { get; }
 
 		#region SceneKitAdditions
+
+		[TV (11,0), Mac (10,13), iOS (11,0), NoWatch]
+		[Static]
+		[Export ("animationWithSCNAnimation:")]
+		CAAnimation FromSCNAnimation (SCNAnimation animation);
+
 		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("usesSceneTimeBase")]
 		bool UsesSceneTimeBase { get; set; }
