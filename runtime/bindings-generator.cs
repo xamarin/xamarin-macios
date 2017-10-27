@@ -2503,57 +2503,6 @@ namespace Xamarin.BindingMethods.Generator
 				}
 			);
 
-			data.Add (
-				new FunctionData {
-					Comment = " // void func (Quaternion, NVector3)",
-					Prefix = "simd__",
-					Variants = Variants.NonStret,
-					Parameters = new ParameterData [] {
-						new ParameterData { TypeData = Types.QuatF },
-						new ParameterData { TypeData = Types.NVector3 }
-					},
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // void func (NVector3, NVector3, NVector3)",
-					Prefix = "simd__",
-					Variants = Variants.NonStret,
-					Parameters = new ParameterData [] {
-						new ParameterData { TypeData = Types.NVector3 },
-						new ParameterData { TypeData = Types.NVector3 },
-						new ParameterData { TypeData = Types.NVector3 }
-					},
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // NMatrix4 func (NMatrix4, IntPtr)",
-					Prefix = "simd__",
-					Variants = Variants.All,
-					ReturnType = Types.NMatrix4,
-					Parameters = new ParameterData [] {
-						new ParameterData { TypeData = Types.NMatrix4 },
-						new ParameterData { TypeData = Types.IntPtr }
-					},
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // NVector3 func (NVector3, IntPtr)",
-					Prefix = "simd__",
-					Variants = Variants.All,
-					ReturnType = Types.NVector3,
-					Parameters = new ParameterData [] {
-						new ParameterData { TypeData = Types.NVector3 },
-						new ParameterData { TypeData = Types.IntPtr }
-					},
-				}
-			);
-
 			// We must expand functions with native types to their actual type as well.
 			for (int i = data.Count - 1; i >= 0; i--) {
 				if (!data [i].HasNativeType)

@@ -1942,196 +1942,261 @@ namespace XamCore.SceneKit {
 
 		// From SCNNode (SIMD) Category
 		// Unfortunatelly had to prefix some props Simd due to the property name is already taken
-		// by the SCN* version
+		// by the SCN* version.
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdTransform", ArgumentSemantic.Assign)]
-		NMatrix4 SimdTransform {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			set;
-		}
+		// We took the decision to comment the following helpers since they currently do not bring
+		// any benefits over the SCN* versions, actually the SIMD types could potentially be just
+		// a little slower than the SCN* versions due to manual native conversion. If you really
+		// need them please file a bug at htttp://bugzilla.xamarin.com
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdPosition", ArgumentSemantic.Assign)]
-		NVector3 SimdPosition {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			set;
-		}
+		// Please add the following code to runtime/bindings-generator.cs if you reenable the following SIMD methods.
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdRotation", ArgumentSemantic.Assign)]
-		Vector4 SimdRotation {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			set;
-		}
+		/*
+		 * Add to runtime/bindings-generator.cs
+		 *
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdOrientation", ArgumentSemantic.Assign)]
-		Quaternion SimdOrientation {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			set;
-		}
+		data.Add (
+				new FunctionData {
+					Comment = " // void func (Quaternion, NVector3)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.QuatF },
+						new ParameterData { TypeData = Types.NVector3 }
+					},
+				}
+			);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdEulerAngles", ArgumentSemantic.Assign)]
-		NVector3 SimdEulerAngles {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			set;
-		}
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (NVector3, NVector3, NVector3)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.NVector3 },
+						new ParameterData { TypeData = Types.NVector3 },
+						new ParameterData { TypeData = Types.NVector3 }
+					},
+				}
+			);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdScale", ArgumentSemantic.Assign)]
-		NVector3 SimdScale {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			set;
-		}
+			data.Add (
+				new FunctionData {
+					Comment = " // NMatrix4 func (NMatrix4, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.NMatrix4,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.NMatrix4 },
+						new ParameterData { TypeData = Types.IntPtr }
+					},
+				}
+			);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdPivot", ArgumentSemantic.Assign)]
-		NMatrix4 SimdPivot {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			set;
-		}
+			data.Add (
+				new FunctionData {
+					Comment = " // NVector3 func (NVector3, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.NVector3,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.NVector3 },
+						new ParameterData { TypeData = Types.IntPtr }
+					},
+				}
+			);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdWorldPosition", ArgumentSemantic.Assign)]
-		NVector3 SimdWorldPosition {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			set;
-		}
+		 * End of bindings-generator.cs.
+		 */
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdWorldOrientation", ArgumentSemantic.Assign)]
-		Quaternion SimdWorldOrientation {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			set;
-		}
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdTransform", ArgumentSemantic.Assign)]
+		//NMatrix4 SimdTransform {
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	get;
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	set;
+		//}
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdWorldTransform", ArgumentSemantic.Assign)]
-		NMatrix4 SimdWorldTransform {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			set;
-		}
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdPosition", ArgumentSemantic.Assign)]
+		//NVector3 SimdPosition {
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	get;
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	set;
+		//}
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdConvertPosition:toNode:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		NVector3 ConvertPositionToNode (NVector3 position, [NullAllowed] SCNNode node);
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdRotation", ArgumentSemantic.Assign)]
+		//Vector4 SimdRotation {
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	get;
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	set;
+		//}
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdConvertPosition:fromNode:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		NVector3 ConvertPositionFromNode (NVector3 position, [NullAllowed] SCNNode node);
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdOrientation", ArgumentSemantic.Assign)]
+		//Quaternion SimdOrientation {
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	get;
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	set;
+		//}
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdConvertVector:toNode:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		NVector3 ConvertVectorToNode (NVector3 vector, [NullAllowed] SCNNode node);
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdEulerAngles", ArgumentSemantic.Assign)]
+		//NVector3 SimdEulerAngles {
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	get;
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	set;
+		//}
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdConvertVector:fromNode:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		NVector3 ConvertVectorFromNode (NVector3 vector, [NullAllowed] SCNNode node);
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdScale", ArgumentSemantic.Assign)]
+		//NVector3 SimdScale {
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	get;
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	set;
+		//}
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdConvertTransform:toNode:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		NMatrix4 ConvertTransformToNode (NMatrix4 transform, [NullAllowed] SCNNode node);
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdPivot", ArgumentSemantic.Assign)]
+		//NMatrix4 SimdPivot {
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	get;
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	set;
+		//}
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdConvertTransform:fromNode:")]
-		NMatrix4 ConvertTransformFromNode (NMatrix4 transform, [NullAllowed] SCNNode node);
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdWorldPosition", ArgumentSemantic.Assign)]
+		//NVector3 SimdWorldPosition {
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	get;
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	set;
+		//}
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Static]
-		[Export ("simdLocalUp")]
-		NVector3 SimdLocalUp {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get;
-		}
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdWorldOrientation", ArgumentSemantic.Assign)]
+		//Quaternion SimdWorldOrientation {
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	get;
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	set;
+		//}
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Static]
-		[Export ("simdLocalRight")]
-		NVector3 SimdLocalRight {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get;
-		}
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdWorldTransform", ArgumentSemantic.Assign)]
+		//NMatrix4 SimdWorldTransform {
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	get;
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	set;
+		//}
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Static]
-		[Export ("simdLocalFront")]
-		NVector3 SimdLocalFront {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get;
-		}
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdConvertPosition:toNode:")]
+		//[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//NVector3 ConvertPositionToNode (NVector3 position, [NullAllowed] SCNNode node);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdWorldUp")]
-		NVector3 SimdWorldUp {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get;
-		}
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdConvertPosition:fromNode:")]
+		//[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//NVector3 ConvertPositionFromNode (NVector3 position, [NullAllowed] SCNNode node);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdWorldRight")]
-		NVector3 SimdWorldRight {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get;
-		}
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdConvertVector:toNode:")]
+		//[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//NVector3 ConvertVectorToNode (NVector3 vector, [NullAllowed] SCNNode node);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdWorldFront")]
-		NVector3 SimdWorldFront {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get;
-		}
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdConvertVector:fromNode:")]
+		//[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//NVector3 ConvertVectorFromNode (NVector3 vector, [NullAllowed] SCNNode node);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdLookAt:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		void Look (NVector3 worldTarget);
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdConvertTransform:toNode:")]
+		//[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//NMatrix4 ConvertTransformToNode (NMatrix4 transform, [NullAllowed] SCNNode node);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdLookAt:up:localFront:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		void Look (NVector3 worldTarget, NVector3 worldUp, NVector3 localFront);
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdConvertTransform:fromNode:")]
+		//NMatrix4 ConvertTransformFromNode (NMatrix4 transform, [NullAllowed] SCNNode node);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdLocalTranslateBy:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		void LocalTranslate (NVector3 translation);
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Static]
+		//[Export ("simdLocalUp")]
+		//NVector3 SimdLocalUp {
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	get;
+		//}
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdLocalRotateBy:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		void LocalRotate (Quaternion rotation);
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Static]
+		//[Export ("simdLocalRight")]
+		//NVector3 SimdLocalRight {
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	get;
+		//}
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
-		[Export ("simdRotateBy:aroundTarget:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		void Rotate (Quaternion worldRotation, NVector3 worldTarget);
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Static]
+		//[Export ("simdLocalFront")]
+		//NVector3 SimdLocalFront {
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	get;
+		//}
+
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdWorldUp")]
+		//NVector3 SimdWorldUp {
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	get;
+		//}
+
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdWorldRight")]
+		//NVector3 SimdWorldRight {
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	get;
+		//}
+
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdWorldFront")]
+		//NVector3 SimdWorldFront {
+		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//	get;
+		//}
+
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdLookAt:")]
+		//[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//void Look (NVector3 worldTarget);
+
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdLookAt:up:localFront:")]
+		//[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//void Look (NVector3 worldTarget, NVector3 worldUp, NVector3 localFront);
+
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdLocalTranslateBy:")]
+		//[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//void LocalTranslate (NVector3 translation);
+
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdLocalRotateBy:")]
+		//[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//void LocalRotate (Quaternion rotation);
+
+		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Export ("simdRotateBy:aroundTarget:")]
+		//[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		//void Rotate (Quaternion worldRotation, NVector3 worldTarget);
 	}
 
 	[NoWatch]
@@ -5019,7 +5084,7 @@ namespace XamCore.SceneKit {
 
 		[Static]
 		[Export ("jointWithBodyA:frameA:bodyB:frameB:")]
-		SCNPhysicsConeTwistJoint FromBody (SCNPhysicsBody bodyA, SCNMatrix4 frameA, SCNPhysicsBody bodyB, SCNMatrix4 frameB);
+		SCNPhysicsConeTwistJoint FromBodies (SCNPhysicsBody bodyA, SCNMatrix4 frameA, SCNPhysicsBody bodyB, SCNMatrix4 frameB);
 
 		[Static]
 		[Export ("jointWithBody:frame:")]
