@@ -313,6 +313,7 @@ namespace xharness
 				"Mono.Data.Tds",
 				"System.IO.Compression",
 				"System.IO.Compression.FileSystem",
+				"Mono.CSharp",
 			};
 			foreach (var p in bcl_suites) {
 				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + "-Mac.csproj")), targetFrameworkFlavor: MacFlavors.Full, generateVariations: false) { Name = p });
@@ -346,10 +347,12 @@ namespace xharness
 				"Mono.Data.Tds",
 				"System.IO.Compression",
 				"System.IO.Compression.FileSystem",
+				"Mono.CSharp",
 			};
 			var bcl_skip_watchos = new string [] {
 				"Mono.Security",
 				"Mono.Data.Tds",
+				"Mono.CSharp",
 			};
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-0.csproj")), false));
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-1.csproj")), false));
