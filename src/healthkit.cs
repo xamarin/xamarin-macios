@@ -1380,6 +1380,10 @@ namespace XamCore.HealthKit {
 		NSString RespiratoryRate { get; }
 
 		[iOS (11,0), Watch (4,0)]
+		[Field ("HKQuantityTypeIdentifierInsulinDelivery")]
+		NSString InsulinDelivery { get; }
+
+		[iOS (11,0), Watch (4,0)]
 		[Field ("HKQuantityTypeIdentifierRestingHeartRate")]
 		NSString RestingHeartRate { get; }
 
@@ -2178,18 +2182,24 @@ namespace XamCore.HealthKit {
 		IntPtr Constructor (HKSource source, [NullAllowed] string version, [NullAllowed] string productType, NSOperatingSystemVersion operatingSystemVersion);
 	}
 
+	[Watch (4,0), iOS (11,0)]
+	[Static]
 	interface HKSourceRevisionInfo {
-		[Watch (4, 0), iOS (11, 0)]
+
 		[Field ("HKSourceRevisionAnyVersion")]
 		NSString AnyVersion { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[Field ("HKSourceRevisionAnyProductType")]
 		NSString AnyProductType { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
-		[Export ("HKSourceRevisionAnyOperatingSystem")]
-		NSOperatingSystemVersion AnyOperatingSystem { get; }
+		// This key seems broken even in Objc returns a weird value
+		//[Internal]
+		//[Field ("HKSourceRevisionAnyOperatingSystem")]
+		//IntPtr _AnyOperatingSystem { get; }
+
+		//[Static]
+		//[Wrap ("System.Runtime.InteropServices.Marshal.PtrToStructure<NSOperatingSystemVersion> (_AnyOperatingSystem)")]
+		//NSOperatingSystemVersion AnyOperatingSystem { get; }
 	}
 
 	[Watch (2,0)]
@@ -2334,7 +2344,7 @@ namespace XamCore.HealthKit {
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface HKSeriesBuilder {
+	interface HKSeriesBuilder : NSSecureCoding {
 		[Export ("discard")]
 		void Discard ();
 	}
