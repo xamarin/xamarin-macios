@@ -265,6 +265,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/DescriptionHelpers.cs \
 	AVFoundation/Events.cs \
 	AVFoundation/AVPlayerLooper.cs \
+	AVFoundation/AudioRendererWasFlushedAutomaticallyEventArgs.cs \
 
 # AVKit
 

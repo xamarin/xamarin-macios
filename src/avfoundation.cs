@@ -3234,7 +3234,7 @@ namespace XamCore.AVFoundation {
 		NSError Error { get; }
 
 		[NullAllowed, Export ("audioOutputDeviceUniqueID")]
-		string UniqueId { get; set; }
+		string AudioOutputDeviceUniqueId { get; set; }
 
 		[Export ("audioTimePitchAlgorithm")]
 		string PitchAlgorithm { get; set; }
@@ -3251,6 +3251,19 @@ namespace XamCore.AVFoundation {
 		[Async]
 		[Export ("flushFromSourceTime:completionHandler:")]
 		void Flush (CMTime time, Action<bool> completionHandler);
+
+		[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
+		[Notification (typeof (AudioRendererWasFlushedAutomaticallyEventArgs))]
+		[Field ("AVSampleBufferAudioRendererWasFlushedAutomaticallyNotification")]
+		NSString AudioRendererWasFlushedAutomaticallyNotification { get; }
+
+	}
+
+	[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
+	interface AudioRendererWasFlushedAutomaticallyEventArgs {
+		[Internal]
+		[Export ("AVSampleBufferAudioRendererFlushTimeKey")]
+		NSValue _AudioRendererFlushTime { get; set; }
 	}
 
 	interface IAVQueuedSampleBufferRendering {}
@@ -8181,11 +8194,11 @@ namespace XamCore.AVFoundation {
 		[iOS (10, 0)]
 		[Export ("automaticallyConfiguresCaptureDeviceForWideColor")]
 		bool AutomaticallyConfiguresCaptureDeviceForWideColor { get; set; }
+#endif
 
-		[iOS (11, 1)]
+		[iOS (11, 1), NoMac]
 		[Field ("AVCaptureSessionInterruptionSystemPressureStateKey")]
 		NSString InterruptionSystemPressureStateKey { get; }
-#endif
 
 		[Since (7,0)]
 		[Export ("masterClock")]
@@ -11558,16 +11571,6 @@ namespace XamCore.AVFoundation {
 		[iOS (8, 0), Mac (10,0)]
 		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotificationErrorKey")]
 		NSString FailedToDecodeNotificationErrorKey { get; }
-
-		[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
-		[Notification]
-		[Field ("AVSampleBufferAudioRendererWasFlushedAutomaticallyNotification")]
-		NSString AudioRendererWasFlushedAutomaticallyNotification { get; }
-
-		[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
-		[Field ("AVSampleBufferAudioRendererFlushTimeKey")]
-		NSString AudioRendererFlushTimeKey { get; }
-
 	}
 
 	[NoWatch]
@@ -12590,14 +12593,14 @@ namespace XamCore.AVFoundation {
 		[iOS (11, 0)]
 		[NullAllowed, Export ("bracketSettings")]
 		AVCaptureBracketedStillImageSettings BracketSettings { get; }
+#endif
 
-		[iOS (11, 0)]
-		[Export ("sequenceCount")]
-		nint SequenceCount { get; }
-
-		[iOS (11, 0)]
+		[iOS (11, 0), NoMac]
 		[Export ("lensStabilizationStatus")]
 		AVCaptureLensStabilizationStatus LensStabilizationStatus { get; }
-#endif
+
+		[iOS (11, 0), NoMac]
+		[Export ("sequenceCount")]
+		nint SequenceCount { get; }
 	}
 }
