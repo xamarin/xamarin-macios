@@ -1673,7 +1673,7 @@ public partial class Generator : IMemberGatherer {
 				continue;
 			}
 			
-			throw new BindingException (1001, true, "Do not know how to make a trampoline for {0}", pi);
+			throw new BindingException (1001, true, $"Do not know how to make a trampoline for {pi.ParameterType.FullName}");
 		}
 
 		var rt = mi.ReturnType;
