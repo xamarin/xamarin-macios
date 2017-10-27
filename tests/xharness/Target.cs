@@ -156,7 +156,7 @@ namespace xharness
 		{
 			Name = Path.GetFileName (targetDirectory);
 			if (string.Equals (Name, "ios", StringComparison.OrdinalIgnoreCase) || string.Equals (Name, "mac", StringComparison.OrdinalIgnoreCase))
-				Name = Path.GetFileName (Path.GetDirectoryName(targetDirectory));
+				Name = Path.GetFileName (Path.GetDirectoryName (targetDirectory));
 		}
 
 		public void Execute ()
