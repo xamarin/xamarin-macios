@@ -9,7 +9,8 @@ using MonoTouch.Foundation;
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
-	public class NSInputStreamTest {
+	public class NSInputStreamTest
+	{
 		[Test]
 		public void SubclassedCtor ()
 		{

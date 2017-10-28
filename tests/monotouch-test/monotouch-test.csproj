@@ -169,6 +169,8 @@
     <Compile Include="**\*.cs" Exclude="obj\**">
       <Link>%(RecursiveDir)%(Filename).cs</Link>
     </Compile>
+    <Compile Include="ObjCRuntime\TrampolineTest.generated.cs" />
+    <Compile Include="ObjCRuntime\RegistrarTest.generated.cs" />
     <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestPoint.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestPoint.cs</Link>
     </Compile>

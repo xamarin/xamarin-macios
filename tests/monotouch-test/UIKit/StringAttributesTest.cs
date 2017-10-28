@@ -23,9 +23,9 @@ using RectangleF=CoreGraphics.CGRect;
 using SizeF=CoreGraphics.CGSize;
 using PointF=CoreGraphics.CGPoint;
 #else
-using nfloat = global::System.Single;
-using nint = global::System.Int32;
-using nuint = global::System.UInt32;
+using nfloat=global::System.Single;
+using nint=global::System.Int32;
+using nuint=global::System.UInt32;
 #endif
 
 namespace MonoTouchFixtures.UIKit {
@@ -65,7 +65,7 @@ namespace MonoTouchFixtures.UIKit {
 			sa.ParagraphStyle = ps;
 			Assert.That (ps.RetainCount, Is.EqualTo ((nint) 2), "ParagraphStyle-set");
 
-			for (int i = 0; i < 16; i++) {
+			for (int i=0; i < 16; i++) {
 				Assert.NotNull (sa.BackgroundColor, "BackgroundColor-get");
 				Assert.NotNull (sa.ForegroundColor, "ForegroundColor-get");
 				Assert.NotNull (sa.Font, "Font-get");
@@ -113,7 +113,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.That (ta.RetainCount, Is.EqualTo ((nint) 2), "TextAttachment-set");
 #endif // !__WATCHOS__
 
-			for (int i = 0; i < 16; i++) {
+			for (int i=0; i < 16; i++) {
 				Assert.NotNull (sa.UnderlineColor, "UnderlineColor-get");
 				Assert.NotNull (sa.StrikethroughColor, "StrikethroughColor-get");
 				Assert.NotNull (sa.Link, "Link-get");

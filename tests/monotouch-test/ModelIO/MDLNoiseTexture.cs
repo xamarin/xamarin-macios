@@ -22,12 +22,14 @@ using MonoTouch.ObjCRuntime;
 using OpenTK;
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.ModelIO {
+namespace MonoTouchFixtures.ModelIO
+{
 
 	[TestFixture]
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
-	public class MDLNoiseTextureTest {
+	public class MDLNoiseTextureTest
+	{
 		[TestFixtureSetUp]
 		public void Setup ()
 		{
