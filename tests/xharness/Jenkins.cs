@@ -693,6 +693,27 @@ namespace xharness
 			throw new NotImplementedException ();
 		}
 
+		async Task ExecutePeriodicCommandAsync (Log periodic_loc)
+		{
+			//await Task.Delay (Harness.UploadInterval);
+			periodic_loc.WriteLine ($"Starting periodic task with interval {Harness.PeriodicCommandInterval.TotalMinutes} minutes.");
+			while (true) {
+				var watch = Stopwatch.StartNew ();
+				using (var process = new Process ()) {
+					process.StartInfo.FileName = Harness.PeriodicCommand;
+					process.StartInfo.Arguments = Harness.PeriodicCommandArguments;
+					var rv = await process.RunAsync (periodic_loc, null);
+					if (!rv.Succeeded)
+						periodic_loc.WriteLine ($"Periodic command failed with exit code {rv.ExitCode} (Timed out: {rv.TimedOut})");
+				}
+				var ticksLeft = watch.ElapsedTicks - Harness.PeriodicCommandInterval.Ticks;
+				if (ticksLeft < 0)
+					ticksLeft = Harness.PeriodicCommandInterval.Ticks;
+				var wait = TimeSpan.FromTicks (ticksLeft);
+				await Task.Delay (wait);
+			}
+		}
+
 		public int Run ()
 		{
 			try {
@@ -711,6 +732,11 @@ namespace xharness
 							Console.WriteLine ("Still running tests. Please be patient.");
 						}
 					});
+				}
+				if (!string.IsNullOrEmpty (Harness.PeriodicCommand)) {
+					var periodic_log = Logs.CreateFile ("Periodic command log", Path.Combine (LogDirectory, "PeriodicCommand.log"), false);
+					periodic_log.Timestamp = true;
+					Task.Run (async () => await ExecutePeriodicCommandAsync (periodic_log));
 				}
 
 				Task.Run (async () =>
