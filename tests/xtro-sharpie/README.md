@@ -41,8 +41,6 @@ Anything we do not check but for which data is available, e.g.
 
 ## Notes
 
-* To develop you need a checkout of ObjectiveSharpie
-
-* `clang` is only built for 64bits so you need a 64bits mono to execute the tool. The latest mono versions (required to build `xamarin-macios` supply a `mono64` binary);
+* To develop you need to install ObjectiveSharpie. You can install the required version of ObjectiveSharpie by executing `./system-dependencies.sh --provision-sharpie` in this repository's root directory.
 
 * You can use the `gen-[platform]` or `gen-all` target of the `Makefile` to generate C# code for all the API from the headers. You can then copy/paste from the (large) files to create the missing bindings;

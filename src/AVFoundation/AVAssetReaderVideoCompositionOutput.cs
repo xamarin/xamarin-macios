@@ -39,7 +39,7 @@ namespace XamCore.AVFoundation {
 		{
 		}
 
-		[Advice ("Use Create method or constructor")]
+		[Advice ("Use 'Create' method or constructor.")]
 		public AVAssetReaderVideoCompositionOutput FromTracks (AVAssetTrack [] videoTracks, AVVideoSettings videoSettings)
 		{
 			return WeakFromTracks (videoTracks, videoSettings == null ? null : videoSettings.ToDictionary ());

@@ -28,6 +28,7 @@ using System.Linq;
 using System.Security.Cryptography;
 
 using Mono.Cecil;
+using Mono.Cecil.Cil;
 
 namespace Xamarin.Bundler {
 	public partial class MonoMacResolver : IAssemblyResolver {
@@ -72,7 +73,9 @@ namespace Xamarin.Bundler {
 			assembly = AssemblyDefinition.ReadAssembly (fileName, new ReaderParameters 
 				{
 					AssemblyResolver = this,
-					InMemory = new FileInfo (fileName).Length < 1024 * 1024 * 100 // 100 MB
+					InMemory = new FileInfo (fileName).Length < 1024 * 1024 * 100, // 100 MB
+					ReadSymbols = true,
+					SymbolReaderProvider = new DefaultSymbolReaderProvider (throwIfNoSymbol: false) 
 				});
 			cache.Add (name, assembly);
 			return assembly;

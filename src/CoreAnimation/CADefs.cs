@@ -94,7 +94,7 @@ namespace XamCore.CoreAnimation {
 
 	public partial class CAKeyFrameAnimation {
 
-		[Obsolete ("This method in the future will return a CAKeyFrameAnimation, update your source, or use GetFromKeyPath to avoid this warning for now")]
+		[Obsolete ("This method in the future will return a 'CAKeyFrameAnimation', update your source, or use 'GetFromKeyPath' to avoid this warning for now.")]
 		public static CAPropertyAnimation FromKeyPath (string path)
 		{
 			return GetFromKeyPath (path);

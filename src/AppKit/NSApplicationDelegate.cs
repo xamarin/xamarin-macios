@@ -28,7 +28,7 @@ using XamCore.ObjCRuntime;
 namespace XamCore.AppKit {
 	public partial class NSApplicationDelegate : NSObject {
 #if !XAMCORE_2_0
-		[Obsolete ("Use DidFinishLaunching (NSNotification) instead")]
+		[Obsolete ("Use 'DidFinishLaunching (NSNotification)' instead.")]
 		[Export ("applicationDidFinishLaunching:")]
 		public virtual void FinishedLaunching (NSObject notification)
 		{

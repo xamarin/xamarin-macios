@@ -51,7 +51,7 @@ namespace XamCore.Foundation {
 #if XAMCORE_2_0
 		public bool? ExtensionHidden { get ; set; }
 #else
-		[Obsolete ("Use ExtensionHidden instead")]
+		[Obsolete ("Use 'ExtensionHidden' instead.")]
 		public bool? FileExtensionHidden { get; set; }
 		public bool? ExtensionHidden { get { return FileExtensionHidden; } set { FileExtensionHidden = value; } }
 #endif
@@ -63,7 +63,7 @@ namespace XamCore.Foundation {
 #if XAMCORE_2_0
 		public nuint? GroupOwnerAccountID { get ; set; } // unsigned long
 #else
-		[Obsolete ("Use GroupOwnerAccountID instead")]
+		[Obsolete ("Use 'GroupOwnerAccountID' instead.")]
 		public nuint? FileGroupOwnerAccountID { get; set; } // unsigned long
 		public nuint? GroupOwnerAccountID { get { return FileGroupOwnerAccountID; } set { FileGroupOwnerAccountID = value; } }
 #endif
@@ -73,7 +73,7 @@ namespace XamCore.Foundation {
 #if XAMCORE_2_0
 		public nuint? OwnerAccountID { get; set; } // unsigned long
 #else
-		[Obsolete ("Use GroupOwnerAccountID instead")]
+		[Obsolete ("Use 'GroupOwnerAccountID' instead.")]
 		public nuint? FileOwnerAccountID { get; set; } // unsigned long
 		public nuint? OwnerAccountID { get { return FileOwnerAccountID; } set { FileOwnerAccountID = value; } }
 #endif
@@ -93,19 +93,19 @@ namespace XamCore.Foundation {
 		public ulong? Size { get; set; } // unsigned long long
 		public NSFileType? Type { get; set; }
 #else
-		[Obsolete ("Use ReferenceCount instead")]
+		[Obsolete ("Use 'ReferenceCount' instead.")]
 		public nuint? FileReferenceCount { get; set; } // unsigned long
 		public nuint? ReferenceCount { get { return FileReferenceCount; } set { FileReferenceCount = value; } }
 
-		[Obsolete ("Use SystemFileNumber instead")]
+		[Obsolete ("Use 'SystemFileNumber' instead.")]
 		public nuint? FileSystemFileNumber { get; set; } // unsigned long
 		public nuint? SystemFileNumber { get { return FileSystemFileNumber; } set { FileSystemFileNumber = value; } } 
 
-		[Obsolete ("Use Size instead")]
+		[Obsolete ("Use 'Size' instead.")]
 		public ulong? FileSize { get; set; } // unsigned long long
 		public ulong? Size { get { return FileSize; } set { FileSize = value; } }
 
-		[Obsolete ("Use Type instead")]
+		[Obsolete ("Use 'Type' instead.")]
 		public NSFileType? FileType { get; set; }
 		public NSFileType? Type { get { return FileType; } set { FileType = value; } }
 #endif
@@ -283,7 +283,7 @@ namespace XamCore.Foundation {
 #endregion
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use FromDictionary instead")]
+		[Obsolete ("Use FromDictionary instead.")]
 		public static NSFileAttributes FromDict (NSDictionary dict)
 		{
 			return FromDictionary (dict);

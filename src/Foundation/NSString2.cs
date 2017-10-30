@@ -37,7 +37,7 @@ namespace XamCore.Foundation {
 #endif
 
 #if !XAMCORE_2_0
-		[Advice ("Use Encode instead")]
+		[Advice ("Use 'Encode' instead.")]
 		public NSData DataUsingEncoding (NSStringEncoding enc)
 		{
 #if MONOMAC
@@ -47,7 +47,7 @@ namespace XamCore.Foundation {
 #endif
 		}
 
-		[Advice ("Use Encode instead")]
+		[Advice ("Use 'Encode' instead.")]
 		public NSData DataUsingEncoding (NSStringEncoding enc, bool allowLossyConversion)
 		{
 #if MONOMAC

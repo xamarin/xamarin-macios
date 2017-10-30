@@ -317,7 +317,7 @@ namespace XamCore.AudioUnit
         }
 
 #if !XAMCORE_2_0
-        [Obsolete ("Use overload with AudioBuffers")]
+        [Obsolete ("Use overload with 'AudioBuffers'.")]
         public int Read(int numberFrames, AudioBufferList data)
         {
             if (data == null)
@@ -343,7 +343,7 @@ namespace XamCore.AudioUnit
         }
 
 #if !XAMCORE_2_0
-        [Obsolete ("Use overload with AudioBuffers")]
+        [Obsolete ("Use overload with 'AudioBuffers'.")]
         public void WriteAsync(int numberFrames, AudioBufferList data)
         {
             int err = ExtAudioFileWriteAsync(_extAudioFile, numberFrames, data);

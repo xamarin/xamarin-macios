@@ -33,7 +33,7 @@ using System;
 namespace XamCore.AVFoundation {
 
 #if !XAMCORE_2_0
-	[Advice ("Use AudioSettings instead")]
+	[Advice ("Use 'AudioSettings' instead.")]
 	public class AVAudioRecorderSettings {
 		public AVAudioRecorderSettings ()
 		{
@@ -146,7 +146,7 @@ namespace XamCore.AVFoundation {
 		}
 
 #if !XAMCORE_2_0
-		[Advice ("Use Create method")]
+		[Advice ("Use 'Create' method.")]
 		public static AVAudioRecorder ToUrl (NSUrl url, AVAudioRecorderSettings settings, out NSError error)
 		{
 			if (settings == null)
@@ -159,7 +159,7 @@ namespace XamCore.AVFoundation {
 #if XAMCORE_2_0
 		internal
 #else
-		[Advice ("Use Create method")]	
+		[Advice ("Use 'Create' method.")]
 		public
 #endif
 		static AVAudioRecorder ToUrl (NSUrl url, NSDictionary settings, out NSError error)
