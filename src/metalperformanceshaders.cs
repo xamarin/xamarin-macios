@@ -955,11 +955,27 @@ namespace XamCore.MetalPerformanceShaders {
 	[DisableDefaultCtor]
 	interface MPSCnnConvolution {
 
+		[Override]
+		[Export ("kernelWidth")]
+		nuint KernelWidth { get; }
+
+		[Override]
+		[Export ("kernelHeight")]
+		nuint KernelHeight { get; }
+
 		[Export ("inputFeatureChannels")]
 		nuint InputFeatureChannels { get; }
 
 		[Export ("outputFeatureChannels")]
 		nuint OutputFeatureChannels { get; }
+
+		[Override]
+		[Export ("strideInPixelsX")]
+		nuint StrideInPixelsX { get; }
+
+		[Override]
+		[Export ("strideInPixelsY")]
+		nuint StrideInPixelsY { get; }
 
 		[Export ("groups")]
 		nuint Groups { get; }
@@ -1046,6 +1062,22 @@ namespace XamCore.MetalPerformanceShaders {
 	[DisableDefaultCtor]
 	interface MPSCnnPooling {
 
+		[Override]
+		[Export ("kernelWidth")]
+		nuint KernelWidth { get; }
+
+		[Override]
+		[Export ("kernelHeight")]
+		nuint KernelHeight { get; }
+
+		[Override]
+		[Export ("strideInPixelsX")]
+		nuint StrideInPixelsX { get; }
+
+		[Override]
+		[Export ("strideInPixelsY")]
+		nuint StrideInPixelsY { get; }
+
 		[Export ("initWithDevice:kernelWidth:kernelHeight:")]
 		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
 
@@ -1117,6 +1149,14 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("delta")]
 		float Delta { get; set; }
 
+		[Override]
+		[Export ("kernelWidth")]
+		nuint KernelWidth { get; }
+
+		[Override]
+		[Export ("kernelHeight")]
+		nuint KernelHeight { get; }
+
 		[Export ("initWithDevice:kernelWidth:kernelHeight:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
@@ -1151,6 +1191,14 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Export ("ps")]
 		float Ps { get; set; }
+
+		[Override]
+		[Export ("kernelWidth")]
+		nuint KernelWidth { get; }
+
+		[Override]
+		[Export ("kernelHeight")]
+		nuint KernelHeight { get; }
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:")]
 		[DesignatedInitializer]
