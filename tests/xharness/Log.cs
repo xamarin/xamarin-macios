@@ -101,7 +101,7 @@ namespace xharness
 		{
 			Path = path;
 
-			writer = new StreamWriter (new FileStream (Path, append ? FileMode.Append : FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read));
+			writer = new StreamWriter (new FileStream (Path, append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read));
 			writer.AutoFlush = true;
 		}
 
