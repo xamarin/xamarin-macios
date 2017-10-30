@@ -765,19 +765,19 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("kernelWidth")]
-		nuint KernelWidth { get; set; }
+		nuint KernelWidth { get; }
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("kernelHeight")]
-		nuint KernelHeight { get; set; }
+		nuint KernelHeight { get; }
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("strideInPixelsX")]
-		nuint StrideInPixelsX { get; set; }
+		nuint StrideInPixelsX { get; }
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("strideInPixelsY")]
-		nuint StrideInPixelsY { get; set; }
+		nuint StrideInPixelsY { get; }
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13, onlyOn64: true)]
@@ -955,23 +955,11 @@ namespace XamCore.MetalPerformanceShaders {
 	[DisableDefaultCtor]
 	interface MPSCnnConvolution {
 
-		[Export ("kernelWidth")]
-		nuint KernelWidth { get; }
-
-		[Export ("kernelHeight")]
-		nuint KernelHeight { get; }
-
 		[Export ("inputFeatureChannels")]
 		nuint InputFeatureChannels { get; }
 
 		[Export ("outputFeatureChannels")]
 		nuint OutputFeatureChannels { get; }
-
-		[Export ("strideInPixelsX")]
-		nuint StrideInPixelsX { get; }
-
-		[Export ("strideInPixelsY")]
-		nuint StrideInPixelsY { get; }
 
 		[Export ("groups")]
 		nuint Groups { get; }
@@ -1058,18 +1046,6 @@ namespace XamCore.MetalPerformanceShaders {
 	[DisableDefaultCtor]
 	interface MPSCnnPooling {
 
-		[Export ("kernelWidth")]
-		nuint KernelWidth { get; }
-
-		[Export ("kernelHeight")]
-		nuint KernelHeight { get; }
-
-		[Export ("strideInPixelsX")]
-		nuint StrideInPixelsX { get; }
-
-		[Export ("strideInPixelsY")]
-		nuint StrideInPixelsY { get; }
-
 		[Export ("initWithDevice:kernelWidth:kernelHeight:")]
 		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
 
@@ -1141,12 +1117,6 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("delta")]
 		float Delta { get; set; }
 
-		[Export ("kernelWidth")]
-		nuint KernelWidth { get; }
-
-		[Export ("kernelHeight")]
-		nuint KernelHeight { get; }
-
 		[Export ("initWithDevice:kernelWidth:kernelHeight:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device, nuint kernelWidth, nuint kernelHeight);
@@ -1181,12 +1151,6 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Export ("ps")]
 		float Ps { get; set; }
-
-		[Export ("kernelWidth")]
-		nuint KernelWidth { get; }
-
-		[Export ("kernelHeight")]
-		nuint KernelHeight { get; }
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:")]
 		[DesignatedInitializer]
