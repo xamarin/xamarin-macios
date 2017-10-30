@@ -152,12 +152,17 @@ namespace xharness
 			}
 		}
 
-		public void Execute ()
+		protected virtual void CalculateName ()
 		{
-			targetDirectory = Path.GetDirectoryName (TemplateProjectPath);
 			Name = Path.GetFileName (targetDirectory);
 			if (string.Equals (Name, "ios", StringComparison.OrdinalIgnoreCase) || string.Equals (Name, "mac", StringComparison.OrdinalIgnoreCase))
 				Name = Path.GetFileName (Path.GetDirectoryName (targetDirectory));
+		}
+
+		public void Execute ()
+		{
+			targetDirectory = Path.GetDirectoryName(TemplateProjectPath);
+			CalculateName ();
 
 			ProjectPath = Path.Combine (targetDirectory, Path.GetFileNameWithoutExtension (TemplateProjectPath) + ProjectFileSuffix + "." + ProjectFileExtension);
 

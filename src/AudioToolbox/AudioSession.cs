@@ -435,7 +435,7 @@ namespace XamCore.AudioToolbox {
 			}
 		}
 
-		[Availability (Deprecated = Platform.iOS_5_0, Message = "Use InputRoute or OutputRoute instead")]
+		[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'InputRoute' or 'OutputRoute' instead.")]
 		static public string AudioRoute {
 			get {
 				return CFString.FetchString (GetIntPtr (AudioSessionProperty.AudioRoute));

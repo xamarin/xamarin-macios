@@ -198,17 +198,22 @@ namespace Xamarin.MacDev.Tasks
 		{
 			var now = DateTime.Now;
 
-			certs = keychain.FindNamedSigningCertificates (x => {
-				var rv = StartsWithAny (x, prefixes);
-				if (!rv)
-					Log.LogMessage (MessageImportance.Low, "The certificate '{0}' does not match any of the prefixes '{1}'.", x, string.Join ("', '", prefixes));
-				return rv;
-			}).Where (x => {
-				var rv = now < x.NotAfter;
-				if (!rv)
-					Log.LogMessage (MessageImportance.Low, "The certificate '{0}' has expired ({1})", Xamarin.MacDev.Keychain.GetCertificateCommonName (x), x.NotAfter);
-				return rv;
-			}).ToList ();
+			certs = new List<X509Certificate2> ();
+			foreach (var certificate in keychain.GetAllSigningCertificates ()) {
+				var cname = SecKeychain.GetCertificateCommonName (certificate);
+
+				if (!StartsWithAny (cname, prefixes)) {
+					Log.LogMessage (MessageImportance.Low, "The certificate '{0}' does not match any of the prefixes '{1}'.", cname, string.Join ("', '", prefixes));
+					continue;
+				}
+
+				if (now >= certificate.NotAfter) {
+					Log.LogMessage (MessageImportance.Low, "The certificate '{0}' has expired ({1})", cname, certificate.NotAfter);
+					continue;
+				}
+
+				certs.Add (certificate);
+			}
 
 			if (certs.Count == 0 && !allowZeroCerts) {
 				var message = "No valid " + PlatformName + " code signing keys found in keychain. You need to request a codesigning certificate from https://developer.apple.com.";
@@ -224,17 +229,22 @@ namespace Xamarin.MacDev.Tasks
 		{
 			var now = DateTime.Now;
 
-			certs = keychain.FindNamedSigningCertificates (x => {
-				var rv = x == name;
-				if (!rv)
-					Log.LogMessage (MessageImportance.Low, "The certificate '{0}' does not match '{1}'.", x, name);
-				return rv;
-			}).Where (x => {
-				var rv = now < x.NotAfter;
-				if (!rv)
-					Log.LogMessage (MessageImportance.Low, "The certificate '{0}' has expired ({1})",  Xamarin.MacDev.Keychain.GetCertificateCommonName (x), x.NotAfter);
-				return rv;
-			}).ToList ();
+			certs = new List<X509Certificate2> ();
+			foreach (var certificate in keychain.GetAllSigningCertificates ()) {
+				var cname = SecKeychain.GetCertificateCommonName (certificate);
+
+				if (!name.Equals (certificate.Thumbprint, StringComparison.OrdinalIgnoreCase) && name != cname) {
+					Log.LogMessage (MessageImportance.Low, "The certificate '{0}' does not match '{1}'.", cname, name);
+					continue;
+				}
+
+				if (now >= certificate.NotAfter) {
+					Log.LogMessage (MessageImportance.Low, "The certificate '{0}' has expired ({1})", cname, certificate.NotAfter);
+					continue;
+				}
+
+				certs.Add (certificate);
+			}
 
 			if (certs.Count == 0) {
 				Log.LogError (PlatformName + " code signing key '{0}' not found in keychain.", SigningKey);

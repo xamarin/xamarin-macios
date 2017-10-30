@@ -1234,7 +1234,7 @@ namespace XamCore.AudioUnit
 	internal
 #elif XAMCORE_2_0
 	// TODO: Uncomment once bug https://bugzilla.xamarin.com/show_bug.cgi?id=27924 is fixed
-	//[Obsolete ("Please use the strongly typed properties instead")]
+	//[Obsolete ("Please use the strongly typed properties instead.")]
 	public
 #else
 	public

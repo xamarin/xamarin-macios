@@ -345,7 +345,7 @@ namespace XamCore.ImageIO {
 			[MarshalAs (UnmanagedType.I1)] bool final);
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use UpdateDataProvider(CGDataProvider,bool)")]
+		[Obsolete ("Use 'UpdateDataProvider(CGDataProvider,bool)'.")]
 		public void UpdateDataProvider (CGDataProvider provider)
 		{
 			UpdateDataProvider (provider, true);

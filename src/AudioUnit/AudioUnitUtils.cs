@@ -42,7 +42,7 @@ namespace XamCore.AudioUnit
         public const int SampleFractionBits = 24;
 
 #if !XAMCORE_2_0
-        [Advice ("Use AudioStreamBasicDescription::CreateLinearPCM instead")]
+        [Advice ("Use 'AudioStreamBasicDescription::CreateLinearPCM' instead.")]
         public static AudioStreamBasicDescription AUCanonicalASBD(double sampleRate, int channel)
         {
             // setting AudioStreamBasicDescription
@@ -68,7 +68,7 @@ namespace XamCore.AudioUnit
             return audioFormat;
         }
 
-        [Advice ("Use AudioSession::OverrideCategoryDefaultToSpeaker instead")]
+        [Advice ("Use 'AudioSession::OverrideCategoryDefaultToSpeaker' instead.")]
         public static void SetOverrideCategoryDefaultToSpeaker(bool isSpeaker)
         {
 		int val = isSpeaker ? 1 : 0;

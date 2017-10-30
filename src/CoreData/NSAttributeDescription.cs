@@ -38,7 +38,7 @@ namespace XamCore.CoreData {
 		public partial class NSAttributeDescription {
 
 #if !XAMCORE_2_0
-			[Obsolete ("Use the DefaultValue property")]
+			[Obsolete ("Use the 'DefaultValue' property.")]
 			public virtual void SetDefaultValue (NSObject value)
 			{
 				DefaultValue = value;

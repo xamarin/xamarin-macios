@@ -551,7 +551,7 @@ namespace XamCore.AppKit {
 	
 #if !XAMCORE_2_0
 		[Export ("setMainMenu:")]
-		[Obsolete ("Use MainMenu property")]
+		[Obsolete ("Use 'MainMenu' property.")]
 		[Sealed]
 		void SetMainMenu (NSMenu  aMenu);
 #endif
@@ -1689,7 +1689,7 @@ namespace XamCore.AppKit {
 
 #if !XAMCORE_2_0
 		[Export ("setColumnResizingType:")]
-		[Obsolete ("Use the ColumnResizingType property instead")]
+		[Obsolete ("Use the 'ColumnResizingType' property instead.")]
 		[Sealed]
 		void SetColumnResizingType (NSBrowserColumnResizingType columnResizingType);
 #endif
@@ -2002,7 +2002,7 @@ namespace XamCore.AppKit {
 	
 #if !XAMCORE_2_0
 		[Export ("setShowsStateBy:")]
-		[Obsolete ("Use the ShowsStateBy property instead")]
+		[Obsolete ("Use the 'ShowsStateBy' property instead.")]
 		[Sealed]
 		void SetShowsStateBy (nint aType);
 #endif
@@ -5404,7 +5404,7 @@ namespace XamCore.AppKit {
 
 #if !XAMCORE_2_0
 		[Lion, Export ("setDisplayName:")]
-		[Obsolete ("Use the DisplayName property instead")]
+		[Obsolete ("Use the 'DisplayName' property instead.")]
 		[Sealed]
 		void SetDisplayName ([NullAllowed] string displayNameOrNull);
 #endif
@@ -8152,7 +8152,7 @@ namespace XamCore.AppKit {
 
 #if !XAMCORE_2_0
 		[Export ("setEditable:")]
-		[Obsolete ("Use the Editable property instead")]
+		[Obsolete ("Use the 'Editable' property instead.")]
 		[Sealed]
 		void SetEditable (bool editable);
 #endif
@@ -10461,7 +10461,7 @@ namespace XamCore.AppKit {
 #if XAMCORE_2_0
 		uint /* NSGlyph = unsigned int */ GlyphAtIndex (nint glyphIndex, ref bool isValidIndex);
 #else
-		[Obsolete ("Use GlyphAtIndex instead")]
+		[Obsolete ("Use 'GlyphAtIndex' instead.")]
 		uint /* NSGlyph = unsigned int */ GlyphAtIndexisValidIndex (nuint glyphIndex, ref bool isValidIndex);
 #endif
 
@@ -10469,7 +10469,7 @@ namespace XamCore.AppKit {
 #if XAMCORE_2_0
 		uint /* NSGlyph = unsigned int */ GlyphAtIndex (nint glyphIndex);
 #else
-		[Obsolete ("Use GlyphAtIndex instead")]
+		[Obsolete ("Use 'GlyphAtIndex' instead.")]
 		uint /* NSGlyph = unsigned int */ GlyphCount (nint glyphIndex);
 #endif
 
@@ -12370,7 +12370,7 @@ namespace XamCore.AppKit {
 #if XAMCORE_2_0
 		NSObject ValidRequestorForSendType ([NullAllowed] string sendType, [NullAllowed] string returnType);
 #else
-		[Obsolete ("Use ValidRequestorForSendType instead")]
+		[Obsolete ("Use 'ValidRequestorForSendType' instead.")]
 		NSObject ValidRequestorForSendTypereturnType (string sendType, string returnType);
 #endif
 
@@ -21755,7 +21755,7 @@ namespace XamCore.AppKit {
 
 #if !XAMCORE_2_0
 		[Lion, Export ("openDocumentWithContentsOfURL:display:completionHandler:")]
-		[Obsolete ("Use OpenDocument instead")]
+		[Obsolete ("Use 'OpenDocument' instead.")]
 		[Sealed]
 		void OpenDocumentWithContentsOfUrl (NSUrl url, bool displayDocument,
 			OpenDocumentCompletionHandler completionHandler);
