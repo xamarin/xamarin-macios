@@ -244,6 +244,8 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void CreateIccData ()
 		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+
 			using (var icc = NSData.FromFile (Path.Combine (NSBundle.MainBundle.ResourcePath, "LL-171A-B-B797E457-16AB-C708-1E0F-32C19DBD47B5.icc"))) {
 				using (var cs = CGColorSpace.CreateIccData (icc)) {
 					TestICC (cs);
