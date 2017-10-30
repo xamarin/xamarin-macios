@@ -1041,7 +1041,7 @@ namespace XamCore.CoreAnimation {
 				
 #if !XAMCORE_4_0
 		[Field ("kCAAnimationDiscrete")]
-		[Obsolete ("The name has been fixed, use AnimationDiscrete instead")]
+		[Obsolete ("The name has been fixed, use 'AnimationDiscrete' instead.")]
 		NSString AnimationDescrete { get; }
 #endif
 		[Field ("kCAAnimationDiscrete")]
@@ -1250,7 +1250,7 @@ namespace XamCore.CoreAnimation {
 
 #if !XAMCORE_2_0
 		[Wrap ("Filter")]
-		[Obsolete ("The name has been fixed, use Filter instead")]
+		[Obsolete ("The name has been fixed, use 'Filter' instead.")]
 		NSObject filter { get; set; }
 #endif
 	}
@@ -1274,7 +1274,7 @@ namespace XamCore.CoreAnimation {
 		NSString Removed { get; }
 
 #if !XAMCORE_2_0
-		[Availability (Deprecated = Platform.iOS_4_0, Message = "Use CAFillMode.Forwards instead")]
+		[Availability (Deprecated = Platform.iOS_4_0, Message = "Use 'CAFillMode.Forwards' instead.")]
 		[Field ("kCAFillModeFrozen")]
 		NSString Frozen { get; }
 #endif

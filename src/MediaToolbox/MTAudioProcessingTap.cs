@@ -191,7 +191,7 @@ namespace XamCore.MediaToolbox
 			/* AudioBufferList* */ ref AudioBufferList bufferListInOut,
 			out MTAudioProcessingTapFlags flagsOut, out CMTimeRange timeRangeOut, out int numberFramesOut);
 
-		[Obsolete ("Use overload with AudioBuffers")]
+		[Obsolete ("Use overload with 'AudioBuffers'.")]
 		public MTAudioProcessingTapError GetSourceAudio (long frames, ref AudioBufferList bufferList, out MTAudioProcessingTapFlags flags,
 			out CMTimeRange timeRange, long framesProvided)
 		{
@@ -205,7 +205,7 @@ namespace XamCore.MediaToolbox
 			/* AudioBufferList* */ IntPtr bufferListInOut,
 			out MTAudioProcessingTapFlags flagsOut, out CMTimeRange timeRangeOut, out int numberFramesOut);
 			
-		[Obsolete ("Use GetSourceAudio(int,AudioBuffers,out MTAudioProcessingTapFlags, out CMTimeRange, out int) instead")]
+		[Obsolete ("Use 'GetSourceAudio(int,AudioBuffers,out MTAudioProcessingTapFlags, out CMTimeRange, out int)' instead.")]
 		public MTAudioProcessingTapError GetSourceAudio (long frames, AudioBuffers bufferList, out MTAudioProcessingTapFlags flags,
 			out CMTimeRange timeRange, long framesProvided)
 		{
@@ -323,7 +323,7 @@ namespace XamCore.MediaToolbox
 		public MTAudioProcessingTapPrepareCallback Prepare { get; set; }
 		public Action<MTAudioProcessingTap> Unprepare { get; set; }
 
-		[Obsolete ("Use Processing property instead")]
+		[Obsolete ("Use 'Processing' property instead.")]
 		public MTAudioProcessingTapProcessCallback Process { get; private set; }
 
 		public MTAudioProcessingTapProcessDelegate Processing { get; private set; }
@@ -332,7 +332,7 @@ namespace XamCore.MediaToolbox
 	public unsafe delegate void MTAudioProcessingTapInitCallback (MTAudioProcessingTap tap, out void* tapStorage);
 	public delegate void MTAudioProcessingTapPrepareCallback (MTAudioProcessingTap tap, long maxFrames, ref AudioStreamBasicDescription processingFormat);
 
-	[Obsolete ("Use MTAudioProcessingTapProcessDelegate instead")]
+	[Obsolete ("Use 'MTAudioProcessingTapProcessDelegate' instead.")]
 	public delegate void MTAudioProcessingTapProcessCallback (MTAudioProcessingTap tap, long numberFrames, MTAudioProcessingTapFlags flags,
 			ref AudioBufferList bufferList, out long numberFramesOut, out MTAudioProcessingTapFlags flagsOut);
 

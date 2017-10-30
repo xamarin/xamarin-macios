@@ -324,14 +324,14 @@ namespace XamCore.CoreMedia {
 		internal extern static /* Boolean */ bool CMVideoFormatDescriptionMatchesImageBuffer (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc, /* CVImageBufferRef */ IntPtr imageBuffer);
 
 #if !XAMCORE_2_0
-		[Advice ("Use CMVideoFormatDescription")]
+		[Advice ("Use 'CMVideoFormatDescription'.")]
 		public Size  VideoDimensions {
 			get {
 				return CMVideoFormatDescriptionGetDimensions (handle);
 			}
 		}
 
-		[Advice ("Use CMVideoFormatDescription")]
+		[Advice ("Use 'CMVideoFormatDescription'.")]
 		public CGRect GetVideoCleanAperture (bool originIsAtTopLeft)
 		{
 			return CMVideoFormatDescriptionGetCleanAperture (handle, originIsAtTopLeft);
@@ -344,7 +344,7 @@ namespace XamCore.CoreMedia {
 			return NSArray.ArrayFromHandle<NSString> (arr);
 		}
 
-		[Advice ("Use CMVideoFormatDescription")]
+		[Advice ("Use 'CMVideoFormatDescription'.")]
 		public CGSize GetVideoPresentationDimensions (bool usePixelAspectRatio, bool useCleanAperture)
 		{
 			return CMVideoFormatDescriptionGetPresentationDimensions (handle, usePixelAspectRatio, useCleanAperture);

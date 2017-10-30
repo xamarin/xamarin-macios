@@ -108,13 +108,13 @@ namespace XamCore.CoreAnimation {
 		}
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use BeginTime instead")]
+		[Obsolete ("Use 'BeginTime' instead.")]
 		public double CFTimeInterval {
 			get { return BeginTime; }
 			set { BeginTime = value; }
 		}
 		
-		[Obsolete ("Use ConvertRectFromLayer instead")]
+		[Obsolete ("Use 'ConvertRectFromLayer' instead.")]
 		public CGRect ConvertRectfromLayer (CGRect rect, CALayer layer)
 		{
 			return ConvertRectFromLayer (rect, layer);
@@ -132,7 +132,7 @@ namespace XamCore.CoreAnimation {
 		}
 
 #if MONOMAC
-		[Obsolete ("Use AutoresizingMask instead")]
+		[Obsolete ("Use 'AutoresizingMask' instead.")]
 		public virtual CAAutoresizingMask AutoresizinMask { 
 			get {
 				return AutoresizingMask;
@@ -165,7 +165,7 @@ namespace XamCore.CoreAnimation {
 
 #if !XAMCORE_2_0
 	public partial class CAAnimation {
-		[Obsolete ("Use BeginTime instead")]
+		[Obsolete ("Use 'BeginTime' instead.")]
 		public double CFTimeInterval {
 			get { return BeginTime; }
 			set { BeginTime = value; }

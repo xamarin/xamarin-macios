@@ -4147,7 +4147,7 @@ namespace XamCore.Intents {
 	interface INRideDriver : NSCopying, NSSecureCoding {
 
 		[Export ("initWithPersonHandle:nameComponents:displayName:image:rating:phoneNumber:")]
-		[Deprecated (PlatformName.iOS, 10,2, message:"Use the overload signature instead")]
+		[Deprecated (PlatformName.iOS, 10,2, message:"Use the overload signature instead.")]
 		[Unavailable (PlatformName.WatchOS)]
 		IntPtr Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string rating, [NullAllowed] string phoneNumber);
 

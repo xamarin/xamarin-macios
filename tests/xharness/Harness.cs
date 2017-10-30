@@ -21,41 +21,6 @@ namespace xharness
 		Jenkins,
 	}
 
-	public class BCLTest
-	{
-		public string Name { get; private set; }
-		public BCLTest (string name) 
-		{
-			Name = name;
-		}
-
-		public virtual void Convert (Harness harness) {
-			var target = new BCLTarget () {
-				Harness = harness,
-				MonoPath = harness.MONO_PATH,
-				TestName = Name,
-				WatchMonoPath = harness.WATCH_MONO_PATH
-			};
-			target.Convert ();
-		}
-	}
-
-	public class MacBCLTest : BCLTest
-	{
-		public MacBCLTest (string name) : base (name)
-		{
-		}
-
-		public override void Convert (Harness harness) {
-			var target = new MacBCLTarget () {
-				Harness = harness,
-				MonoPath = harness.MONO_PATH,
-				TestName = Name,
-			};
-			target.Convert ();
-		}
-	}
-
 	public class Harness
 	{
 		public HarnessAction Action { get; set; }
@@ -92,9 +57,6 @@ namespace xharness
 
 		public List<iOSTestProject> IOSTestProjects { get; set; } = new List<iOSTestProject> ();
 		public List<MacTestProject> MacTestProjects { get; set; } = new List<MacTestProject> ();
-
-		public List<BCLTest> IOSBclTests { get; set; } = new List<BCLTest> ();
-		public List<MacBCLTest> MacBclTests { get; set; } = new List<MacBCLTest> ();
 
 		// Configure
 		public bool AutoConf { get; set; }
@@ -278,7 +240,7 @@ namespace xharness
 			foreach (var p in test_suites)
 				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.ProjectFile + "/" + p.ProjectFile + ".sln"))) { Name = p.Name });
 			
-			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), skipXMVariations: true) { Name = "introspection" });
+			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "introspection" });
 
 			var hard_coded_test_suites = new [] {
 				new { ProjectFile = "mmptest", Name = "mmptest", IsNUnit = true, Configurations = (string[]) null },
@@ -296,8 +258,15 @@ namespace xharness
 
 			var bcl_suites = new string[] { "mscorlib", "System", "System.Core", "System.Data", "System.Net.Http", "System.Numerics", "System.Runtime.Serialization", "System.Transactions", "System.Web.Services", "System.Xml", "System.Xml.Linq", "Mono.Security", "System.ComponentModel.DataAnnotations", "System.Json", "System.ServiceModel.Web", "Mono.Data.Sqlite" };
 			foreach (var p in bcl_suites) {
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + "-Mac.csproj")), generateVariations: false) { Name = p });
-				MacBclTests.Add (new MacBCLTest (p));
+				foreach (var flavor in new MacFlavors [] { MacFlavors.Full, MacFlavors.Modern }) {
+					var bclTestInfo = new MacBCLTestInfo (this, p, flavor);
+					var bclTestProject = new MacTestProject (bclTestInfo.ProjectPath, targetFrameworkFlavor: flavor, generateVariations: false) {
+						Name = p,
+						BCLInfo = bclTestInfo
+					};
+
+					MacTestProjects.Add (bclTestProject);
+				}
 			}
 		}
 
@@ -323,10 +292,11 @@ namespace xharness
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false));
 
 			foreach (var p in bcl_suites) {
+				BCLTestInfo bclTestInfo = new BCLTestInfo (this, p);
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + ".csproj"))) {
 					SkipwatchOSVariation = bcl_skip_watchos.Contains (p),
+					BCLInfo = bclTestInfo
 				});
-				IOSBclTests.Add (new BCLTest (p));
 			}
 			
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
@@ -396,15 +366,21 @@ namespace xharness
 			var classic_targets = new List<MacClassicTarget> ();
 			var unified_targets = new List<MacUnifiedTarget> ();
 			var hardcoded_unified_targets = new List<MacUnifiedTarget> ();
- 
+
+			Action<MacTarget, string, bool> configureTarget = (MacTarget target, string file, bool isNUnitProject) => {
+				target.TemplateProjectPath = file;
+				target.Harness = this;
+				target.IsNUnitProject = isNUnitProject;
+				target.Execute ();
+			};
+
  			RootDirectory = Path.GetFullPath (RootDirectory).TrimEnd ('/');
  
  			if (AutoConf)
 				AutoConfigureMac ();
 
-			foreach (var proj in MacBclTests) {
-				proj.Convert (this);
-			}
+			foreach (var bclTestInfo in MacTestProjects.Where (x => x.BCLInfo != null).Select (x => x.BCLInfo))
+				bclTestInfo.Convert ();
  
 			foreach (var proj in MacTestProjects.Where ((v) => v.GenerateVariations)) {
 				var file = Path.ChangeExtension (proj.Path, "csproj");
@@ -413,47 +389,34 @@ namespace xharness
 
 				foreach (bool thirtyTwoBit in new bool[] { false, true })
 				{
-					var unifiedMobile = new MacUnifiedTarget (true, thirtyTwoBit)
-					{
-						TemplateProjectPath = file,
-						Harness = this,
-						IsNUnitProject = proj.IsNUnitProject,
-					};
-					unifiedMobile.Execute ();
-					unified_targets.Add (unifiedMobile);
+					if (proj.GenerateModern) {
+						var modern = new MacUnifiedTarget (true, thirtyTwoBit);
+						configureTarget (modern, file, proj.IsNUnitProject);
+						unified_targets.Add (modern);
+					}
 
-					if (!proj.SkipXMVariations) {
-						var unifiedXM45 = new MacUnifiedTarget (false, thirtyTwoBit)
-						{
-							TemplateProjectPath = file,
-							Harness = this,
-						};
-						unifiedXM45.Execute ();
-						unified_targets.Add (unifiedXM45);
+					if (proj.GenerateFull) {
+						var full = new MacUnifiedTarget (false, thirtyTwoBit);
+						configureTarget (full, file, proj.IsNUnitProject);
+						unified_targets.Add (full);
 					}
 				}
- 
-				var classic = new MacClassicTarget () {
- 					TemplateProjectPath = file,
- 					Harness = this,
- 				};
-				classic.Execute ();
+
+				var classic = new MacClassicTarget ();
+				configureTarget (classic, file, false);
 				classic_targets.Add (classic);
 			}
  
-			foreach (var proj in MacTestProjects.Where ((v) => !v.GenerateVariations)) {
+			foreach (var proj in MacTestProjects.Where (v => !v.GenerateVariations)) {
 				var file = proj.Path;
-				var unifiedMobile = new MacUnifiedTarget (true, false, true)
-				{
- 					TemplateProjectPath = file,
- 					Harness = this,
-					IsNUnitProject = proj.IsNUnitProject,
- 				};
-				unifiedMobile.Execute ();
-				hardcoded_unified_targets.Add (unifiedMobile);
+
+				var unified = new MacUnifiedTarget (proj.GenerateModern, thirtyTwoBit: false, shouldSkipProjectGeneration: true);
+				unified.BCLInfo = proj.BCLInfo;
+				configureTarget (unified, file, proj.IsNUnitProject);
+				hardcoded_unified_targets.Add (unified);
  			}
  
-			MakefileGenerator.CreateMacMakefile (this, classic_targets.Union<MacTarget> (unified_targets).Union (hardcoded_unified_targets) );
+			MakefileGenerator.CreateMacMakefile (this, classic_targets.Union<MacTarget> (unified_targets).Union (hardcoded_unified_targets));
 		}
 
 		void ConfigureIOS ()
@@ -468,9 +431,8 @@ namespace xharness
 			if (AutoConf)
 				AutoConfigureIOS ();
 
-			foreach (var proj in IOSBclTests) {
-				proj.Convert (this);
-			}
+			foreach (var bclTestInfo in IOSTestProjects.Where (x => x.BCLInfo != null).Select (x => x.BCLInfo))
+				bclTestInfo.Convert ();
 
 			foreach (var proj in IOSTestProjects) {
 				var file = proj.Path;

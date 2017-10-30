@@ -89,7 +89,7 @@ namespace XamCore.AudioUnit
 		public event EventHandler<AudioGraphEventArgs> RenderCallback;
 #pragma warning restore 612
 
-		[Obsolete ("Use Handle property instead")]
+		[Obsolete ("Use 'Handle' property instead.")]
 		public IntPtr Handler {
 			get {
 				return handle;

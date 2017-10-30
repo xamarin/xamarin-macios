@@ -267,7 +267,7 @@ namespace XamCore.Accelerate {
 									     vImageFlags flags);
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use the overload with 'short[][] kernels' instead")]
+		[Obsolete ("Use the overload with 'short[][] kernels' instead.")]
 		public static vImageError ConvolveMultiKernelARGB8888 (ref vImageBuffer src, 
 			ref vImageBuffer dest, 
 			IntPtr tempBuffer, 
@@ -344,7 +344,7 @@ namespace XamCore.Accelerate {
 									     vImageFlags flags);
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use the overload with 'float[][] kernels' instead")]
+		[Obsolete ("Use the overload with 'float[][] kernels' instead.")]
 		public static vImageError ConvolveMultiKernelARGBFFFF (ref vImageBuffer src,
 			ref vImageBuffer dest, 
 			IntPtr tempBuffer, 
@@ -363,7 +363,7 @@ namespace XamCore.Accelerate {
 #endif
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use the overload with 'float[][] kernels' instead")]
+		[Obsolete ("Use the overload with 'float[][] kernels' instead.")]
 		public static vImageError ConvolveMultiKernelARGBFFFF (ref vImageBuffer src,
 			ref vImageBuffer dest, 
 			IntPtr tempBuffer, 
