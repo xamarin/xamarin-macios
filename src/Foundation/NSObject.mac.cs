@@ -102,7 +102,6 @@ namespace XamCore.Foundation {
 		static IntPtr vn = Dlfcn.dlopen (Constants.VisionLibrary, 1);
 		static IntPtr ios = Dlfcn.dlopen (Constants.IOSurfaceLibrary, 1);
 		static IntPtr ex = Dlfcn.dlopen (Constants.ExternalAccessoryLibrary, 1);
-		static IntPtr ms = Dlfcn.dlopen (Constants.MetalPerformanceShadersLibrary, 1);
 #endif
 		// ** IF YOU ADD ITEMS HERE PLEASE UPDATE linker/ObjCExtensions.cs and mmp/linker/MonoMac.Tuner/MonoMacNamespaces.cs
 

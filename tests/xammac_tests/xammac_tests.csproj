@@ -1069,18 +1069,6 @@
     <Compile Include="..\monotouch-test\Metal\MTLDeviceTests.cs">
       <Link>Metal\MTLDeviceTests.cs</Link>
     </Compile>
-    <Compile Include="..\monotouch-test\MetalPerformanceShaders\KernelTest.cs">
-      <Link>MetalPerformanceShaders\KernelTest.cs</Link>
-    </Compile>
-    <Compile Include="..\monotouch-test\MetalPerformanceShaders\MPSImageHistogramEqualizationTest.cs">
-      <Link>MetalPerformanceShaders\MPSImageHistogramEqualizationTest.cs</Link>
-    </Compile>
-    <Compile Include="..\monotouch-test\MetalPerformanceShaders\MPSImageHistogramSpecificationTest.cs">
-      <Link>MetalPerformanceShaders\MPSImageHistogramSpecificationTest.cs</Link>
-    </Compile>
-    <Compile Include="..\monotouch-test\MetalPerformanceShaders\MPSImageHistogramTest.cs">
-      <Link>MetalPerformanceShaders\MPSImageHistogramTest.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

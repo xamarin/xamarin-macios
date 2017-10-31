@@ -1,4 +1,3 @@
-#if XAMCORE_2_0 || !MONOMAC
 // Copyright 2015-2016 Xamarin Inc. All rights reserved.
 
 using System;
@@ -9,6 +8,7 @@ using XamCore.Metal;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.MetalPerformanceShaders {
+
 	public partial class MPSKernel : NSObject {
 
 #if !COREBUILD
@@ -41,6 +41,7 @@ namespace XamCore.MetalPerformanceShaders {
 			}
 		}
 #endif
+
 		internal unsafe static float [] GetTransform (IntPtr transform)
 		{
 			var t = (float*) transform;
@@ -188,4 +189,3 @@ namespace XamCore.MetalPerformanceShaders {
 	}
 #endif
 }
-#endif
