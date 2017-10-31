@@ -765,19 +765,19 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("kernelWidth")]
-		nuint KernelWidth { get; }
+		nuint KernelWidth { get; set; }
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("kernelHeight")]
-		nuint KernelHeight { get; }
+		nuint KernelHeight { get; set; }
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("strideInPixelsX")]
-		nuint StrideInPixelsX { get; }
+		nuint StrideInPixelsX { get; set; }
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("strideInPixelsY")]
-		nuint StrideInPixelsY { get; }
+		nuint StrideInPixelsY { get; set; }
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13, onlyOn64: true)]
@@ -955,11 +955,9 @@ namespace XamCore.MetalPerformanceShaders {
 	[DisableDefaultCtor]
 	interface MPSCnnConvolution {
 
-		[Override]
 		[Export ("kernelWidth")]
 		nuint KernelWidth { get; }
 
-		[Override]
 		[Export ("kernelHeight")]
 		nuint KernelHeight { get; }
 
@@ -969,11 +967,9 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("outputFeatureChannels")]
 		nuint OutputFeatureChannels { get; }
 
-		[Override]
 		[Export ("strideInPixelsX")]
 		nuint StrideInPixelsX { get; }
 
-		[Override]
 		[Export ("strideInPixelsY")]
 		nuint StrideInPixelsY { get; }
 
@@ -1062,19 +1058,15 @@ namespace XamCore.MetalPerformanceShaders {
 	[DisableDefaultCtor]
 	interface MPSCnnPooling {
 
-		[Override]
 		[Export ("kernelWidth")]
 		nuint KernelWidth { get; }
 
-		[Override]
 		[Export ("kernelHeight")]
 		nuint KernelHeight { get; }
 
-		[Override]
 		[Export ("strideInPixelsX")]
 		nuint StrideInPixelsX { get; }
 
-		[Override]
 		[Export ("strideInPixelsY")]
 		nuint StrideInPixelsY { get; }
 
@@ -1149,11 +1141,9 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("delta")]
 		float Delta { get; set; }
 
-		[Override]
 		[Export ("kernelWidth")]
 		nuint KernelWidth { get; }
 
-		[Override]
 		[Export ("kernelHeight")]
 		nuint KernelHeight { get; }
 
@@ -1192,11 +1182,9 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("ps")]
 		float Ps { get; set; }
 
-		[Override]
 		[Export ("kernelWidth")]
 		nuint KernelWidth { get; }
 
-		[Override]
 		[Export ("kernelHeight")]
 		nuint KernelHeight { get; }
 
