@@ -156,9 +156,13 @@ namespace XamCore.Metal {
 		[Abstract, Export ("didModifyRange:")]
 		void DidModify (NSRange range);
 #endif
+
 		[Mac (10,13, onlyOn64: true)]
 		[return: NullAllowed]
-		[Abstract, Export ("newTextureWithDescriptor:offset:bytesPerRow:")]
+#if !MONOMAC
+		[Abstract]
+#endif
+		[Export ("newTextureWithDescriptor:offset:bytesPerRow:")]
 		IMTLTexture CreateTexture (MTLTextureDescriptor descriptor, nuint offset, nuint bytesPerRow);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
