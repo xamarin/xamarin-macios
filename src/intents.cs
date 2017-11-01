@@ -445,6 +445,8 @@ namespace XamCore.Intents {
 		FailureNoBankAccount,
 		[iOS (11,0), Watch (4,0)]
 		FailureNotEligible,
+		[iOS (11,1), Watch (4,1)]
+		FailureTermsAndConditionsAcceptanceRequired,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -603,7 +605,10 @@ namespace XamCore.Intents {
 		FailureNoBankAccount,
 		[Introduced (PlatformName.iOS, 11, 0)]
 		[Introduced (PlatformName.MacOSX, 10, 13, PlatformArchitecture.Arch64)]
+		[Introduced (PlatformName.WatchOS, 4, 0)]
 		FailureNotEligible,
+		[iOS (11,1), Watch (4,1)]
+		FailureTermsAndConditionsAcceptanceRequired,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1189,6 +1194,8 @@ namespace XamCore.Intents {
 	public enum INRequestPaymentPayerUnsupportedReason : nint {
 		CredentialsUnverified = 1,
 		NoAccount,
+		[Watch (4,1), iOS (11,1)]
+		NoValidHandle,
 	}
 
 	[Watch (4,0), NoMac, iOS (11,0)]
@@ -1244,6 +1251,8 @@ namespace XamCore.Intents {
 		CredentialsUnverified = 1,
 		InsufficientFunds,
 		NoAccount,
+		[Watch (4,1), iOS (11,1)]
+		NoValidHandle,
 	}
 
 	[NoWatch, NoMac, iOS (11,0)]

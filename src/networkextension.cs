@@ -8,6 +8,82 @@ using XamCore.Security;
 
 namespace XamCore.NetworkExtension {
 
+	[ErrorDomain ("NEDNSProxyErrorDomain")]
+	[iOS (11,0), NoMac]
+	[Native]
+	enum NEDnsProxyManagerError : nint {
+		Invalid = 1,
+		Disabled = 2,
+		Stale = 3,
+		CannotBeRemoved = 4,
+	}
+
+	[iOS (11,0), NoMac]
+	[Native]
+	enum NEFilterAction : nint {
+		Invalid = 0,
+		Allow = 1,
+		Drop = 2,
+		Remediate = 3,
+		FilterData = 4,
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64: true)]
+	[Native]
+	enum NEVpnIkev2TlsVersion : nint {
+		Default = 0,
+		Tls1_0 = 1,
+		Tls1_1 = 2,
+		Tls1_2 = 3,
+	}
+
+	[iOS (11,0), NoMac]
+	[Native]
+	enum NEHotspotConfigurationEapType : nint {
+		Tls = 13,
+		Ttls = 21,
+		Peap = 25,
+		Fast = 43,
+	}
+
+	[iOS (11,0), NoMac]
+	[Native]
+	enum NEHotspotConfigurationTtlsInnerAuthenticationType : nint {
+		Pap = 0,
+		Chap = 1,
+		MSChap = 2,
+		MSChapv2 = 3,
+		Eap = 4,
+	}
+
+	[iOS (11,0), NoMac]
+	[Native]
+	enum NEHotspotConfigurationEapTlsVersion : nint {
+		Tls1_0 = 0,
+		Tls1_1 = 1,
+		Tls1_2 = 2,
+	}
+
+	[iOS (11,0), NoMac]
+	[Native]
+	public enum NEHotspotConfigurationError : nint {
+		Invalid = 0,
+		InvalidSsid = 1,
+		InvalidWpaPassphrase = 2,
+		InvalidWepPassphrase = 3,
+		InvalidEapSettings = 4,
+		InvalidHS20Settings = 5,
+		InvalidHS20DomainName = 6,
+		UserDenied = 7,
+		Internal = 8,
+		Pending = 9,
+		SystemConfiguration = 10,
+		Unknown = 11,
+		JoinOnceNotSupported = 12,
+		AlreadyAssociated = 13,
+		ApplicationIsNotInForeground = 14,
+	}
+
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // documented as such and ...
@@ -172,6 +248,10 @@ namespace XamCore.NetworkExtension {
 	
 		[Export ("notifyRulesChanged")]
 		void NotifyRulesChanged ();
+
+		[iOS (11,0)]
+		[Export ("handleReport:")]
+		void HandleReport (NEFilterReport report);
 	}
 
 	[iOS (9,0)]
@@ -249,6 +329,18 @@ namespace XamCore.NetworkExtension {
 	{
 		[NullAllowed, Export ("URL")]
 		NSUrl Url { get; }
+
+		[iOS (11,0)]
+		[NullAllowed, Export ("sourceAppUniqueIdentifier")]
+		NSData SourceAppUniqueIdentifier { get; }
+
+		[iOS (11,0)]
+		[NullAllowed, Export ("sourceAppIdentifier")]
+		string SourceAppIdentifier { get; }
+
+		[iOS (11,0)]
+		[NullAllowed, Export ("sourceAppVersion")]
+		string SourceAppVersion { get; }
 	}
 #endif
 
@@ -324,7 +416,13 @@ namespace XamCore.NetworkExtension {
 	}
 #endif
 		
-	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+#if XAMCORE_4_0
+	[NoMac] // Not available on mac
+#elif MONOMAC
+	[Obsolete ("'NEFilterProvider' is not available on macOS and will be removed in a future version.")]
+	[Mac (10,11, onlyOn64 : true)]
+#endif
+	[iOS (9,0)]
 	[BaseType (typeof(NEProvider))]
 	[Abstract] // documented as such
 	interface NEFilterProvider
@@ -398,6 +496,9 @@ namespace XamCore.NetworkExtension {
 	[BaseType (typeof(NSObject))]
 	interface NEFilterVerdict : NSSecureCoding, NSCopying
 	{
+		[iOS (11,0)]
+		[Export ("shouldReport")]
+		bool ShouldReport { get; set; }
 	}
 #endif
 		
@@ -431,7 +532,7 @@ namespace XamCore.NetworkExtension {
 		[Export ("logoff:")]
 		bool Logoff (NEHotspotNetwork network);
 
-		[Static]
+		[Static, NullAllowed]
 		[Export ("supportedNetworkInterfaces")]
 		NEHotspotNetwork[] SupportedNetworkInterfaces { get; }
 	}
@@ -802,9 +903,10 @@ namespace XamCore.NetworkExtension {
 		[Async]
 		void SaveToPreferences ([NullAllowed] Action<NSError> completionHandler);
 
-#if MONOMAC
-		// - (void)setAuthorization:(AuthorizationRef)authorization NS_AVAILABLE(10_10, NA);
-#endif
+		[Mac (10,11, onlyOn64: true), NoiOS]
+		[Internal]
+		[Export ("setAuthorization:")]
+		void _SetAuthorization (IntPtr auth);
 
 #if !XAMCORE_4_0
 		[Field ("NEVPNErrorDomain")]
@@ -988,6 +1090,14 @@ namespace XamCore.NetworkExtension {
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		[Export ("strictRevocationCheck")]
 		bool StrictRevocationCheck { get; set; }
+
+		[iOS (11,0), Mac (10,13, onlyOn64: true)]
+		[Export ("minimumTLSVersion", ArgumentSemantic.Assign)]
+		NEVpnIkev2TlsVersion MinimumTlsVersion { get; set; }
+
+		[iOS (11,0), Mac (10,13, onlyOn64: true)]
+		[Export ("maximumTLSVersion", ArgumentSemantic.Assign)]
+		NEVpnIkev2TlsVersion MaximumTlsVersion { get; set; }
 	}
 
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)]
@@ -1260,6 +1370,8 @@ namespace XamCore.NetworkExtension {
 	[iOS (9,0)]
 	[BaseType (typeof (NEFilterFlow))]
 	interface NEFilterBrowserFlow {
+
+		[NullAllowed]
 		[Export ("request")]
 		NSUrlRequest Request { get; }
 
@@ -1291,6 +1403,17 @@ namespace XamCore.NetworkExtension {
 
 		[Export ("socketProtocol")]
 		int SocketProtocol { get; set; }
+	}
+
+	[iOS (11,0), NoMac]
+	[BaseType (typeof (NSObject))]
+	interface NEFilterReport : NSSecureCoding, NSCopying {
+
+		[NullAllowed, Export ("flow")]
+		NEFilterFlow Flow { get; }
+
+		[Export ("action")]
+		NEFilterAction Action { get; }
 	}
 #endif
 				
@@ -1400,5 +1523,185 @@ namespace XamCore.NetworkExtension {
 		[NullAllowed, Export ("metadata")]
 		NEFlowMetaData Metadata { get; }
 	}
+
+	[iOS (11,0), NoMac]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject), Name = "NEDNSProxyManager")]
+	interface NEDnsProxyManager {
+
+		[Notification]
+		[Field ("NEDNSProxyConfigurationDidChangeNotification")]
+		NSString ProxyConfigurationDidChangeNotification { get; }
+
+		[Static]
+		[Export ("sharedManager")]
+		NEDnsProxyManager SharedManager { get; }
+
+		[Async]
+		[Export ("loadFromPreferencesWithCompletionHandler:")]
+		void LoadFromPreferences (Action<NSError> completionHandler);
+
+		[Async]
+		[Export ("removeFromPreferencesWithCompletionHandler:")]
+		void RemoveFromPreferences (Action<NSError> completionHandler);
+
+		[Async]
+		[Export ("saveToPreferencesWithCompletionHandler:")]
+		void SaveToPreferences (Action<NSError> completionHandler);
+
+		[NullAllowed, Export ("localizedDescription")]
+		string LocalizedDescription { get; set; }
+
+		[NullAllowed, Export ("providerProtocol", ArgumentSemantic.Strong)]
+		NEDnsProxyProviderProtocol ProviderProtocol { get; set; }
+
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+	}
+
+	[iOS (11,0), NoMac]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NEProvider), Name = "NEDNSProxyProvider")]
+	interface NEDnsProxyProvider {
+
+		[Async]
+		[Export ("startProxyWithOptions:completionHandler:")]
+		void StartProxy ([NullAllowed] NSDictionary options, Action<NSError> completionHandler);
+
+		[Async]
+		[Export ("stopProxyWithReason:completionHandler:")]
+		void StopProxy (NEProviderStopReason reason, Action completionHandler);
+
+		[Export ("cancelProxyWithError:")]
+		void CancelProxy ([NullAllowed] NSError error);
+
+		[Export ("handleNewFlow:")]
+		bool HandleNewFlow (NEAppProxyFlow flow);
+
+		[NullAllowed, Export ("systemDNSSettings")]
+		NEDnsSettings [] SystemDnsSettings { get; }
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64: true)]
+	[BaseType (typeof (NEVpnProtocol), Name = "NEDNSProxyProviderProtocol")]
+	interface NEDnsProxyProviderProtocol {
+
+		[NullAllowed, Export ("providerConfiguration", ArgumentSemantic.Copy)]
+		NSDictionary ProviderConfiguration { get; set; }
+
+		[NullAllowed, Export ("providerBundleIdentifier")]
+		string ProviderBundleIdentifier { get; set; }
+	}
+
+	[iOS (11,0), NoMac]
+	[BaseType (typeof (NSObject))]
+	interface NEHotspotHS20Settings : NSCopying, NSSecureCoding {
+
+		[Export ("domainName")]
+		string DomainName { get; }
+
+		[Export ("roamingEnabled")]
+		bool RoamingEnabled { [Bind ("isRoamingEnabled")] get; set; }
+
+		[Export ("roamingConsortiumOIs", ArgumentSemantic.Copy)]
+		string [] RoamingConsortiumOIs { get; set; }
+
+		[Export ("naiRealmNames", ArgumentSemantic.Copy)]
+		string [] NaiRealmNames { get; set; }
+
+		[Export ("MCCAndMNCs", ArgumentSemantic.Copy)]
+		string [] MccAndMncs { get; set; }
+
+		[Export ("initWithDomainName:roamingEnabled:")]
+		IntPtr Constructor (string domainName, bool roamingEnabled);
+	}
+
+	[iOS (11,0), NoMac]
+	[BaseType (typeof (NSObject), Name = "NEHotspotEAPSettings")]
+	interface NEHotspotEapSettings : NSCopying, NSSecureCoding {
+
+		[Internal]
+		[Export ("supportedEAPTypes", ArgumentSemantic.Copy)]
+		IntPtr _SupportedEapTypes { get; set; }
+
+		[Export ("username")]
+		string Username { get; set; }
+
+		[Export ("outerIdentity")]
+		string OuterIdentity { get; set; }
+
+		[Export ("ttlsInnerAuthenticationType", ArgumentSemantic.Assign)]
+		NEHotspotConfigurationTtlsInnerAuthenticationType TtlsInnerAuthenticationType { get; set; }
+
+		[Export ("password")]
+		string Password { get; set; }
+
+		[Export ("trustedServerNames", ArgumentSemantic.Copy)]
+		string [] TrustedServerNames { get; set; }
+
+		[Export ("tlsClientCertificateRequired")]
+		bool TlsClientCertificateRequired { [Bind ("isTLSClientCertificateRequired")] get; set; }
+
+		[Export ("preferredTLSVersion", ArgumentSemantic.Assign)]
+		NEHotspotConfigurationEapTlsVersion PreferredTlsVersion { get; set; }
+
+		[Export ("setIdentity:")]
+		bool SetIdentity (SecIdentity identity);
+
+		[Export ("setTrustedServerCertificates:")]
+		bool SetTrustedServerCertificates (NSObject [] certificates);
+	}
+
+	[iOS (11,0), NoMac]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject))]
+	interface NEHotspotConfiguration : NSCopying, NSSecureCoding {
+
+		[Export ("SSID")]
+		string Ssid { get; }
+
+		[Export ("joinOnce")]
+		bool JoinOnce { get; set; }
+
+		[Export ("lifeTimeInDays", ArgumentSemantic.Copy)]
+		NSNumber LifeTimeInDays { get; set; }
+
+		[Export ("initWithSSID:")]
+		IntPtr Constructor (string ssid);
+
+		[Export ("initWithSSID:passphrase:isWEP:")]
+		IntPtr Constructor (string ssid, string passphrase, bool isWep);
+
+		[Export ("initWithSSID:eapSettings:")]
+		IntPtr Constructor (string ssid, NEHotspotEapSettings eapSettings);
+
+		[Export ("initWithHS20Settings:eapSettings:")]
+		IntPtr Constructor (NEHotspotHS20Settings hs20Settings, NEHotspotEapSettings eapSettings);
+	}
+
+	[iOS (11,0), NoMac]
+	[BaseType (typeof (NSObject))]
+	interface NEHotspotConfigurationManager {
+
+		[Static]
+		[Export ("sharedManager", ArgumentSemantic.Strong)]
+		NEHotspotConfigurationManager SharedManager { get; }
+
+		[Async]
+		[Export ("applyConfiguration:completionHandler:")]
+		void ApplyConfiguration (NEHotspotConfiguration configuration, [NullAllowed] Action<NSError> completionHandler);
+
+		[Export ("removeConfigurationForSSID:")]
+		void RemoveConfiguration (string ssid);
+
+		[Export ("removeConfigurationForHS20DomainName:")]
+		void RemoveConfigurationForHS20DomainName (string domainName);
+
+		[Async]
+		[Export ("getConfiguredSSIDsWithCompletionHandler:")]
+		void GetConfiguredSsids (Action<string []> completionHandler);
+	}
+
+
 }
 #endif

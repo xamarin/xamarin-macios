@@ -278,9 +278,12 @@ namespace Introspection {
 				}
 				break;
 			case "EAGLContext":
+			case "SCNGeometry":
 				switch (name) {
 				// symbol only exists on devices (not in simulator libraries)
 				case "texImageIOSurface:target:internalFormat:width:height:format:type:plane:":
+				case "setTessellator:":
+				case "tessellator":
 					if (Runtime.Arch == Arch.SIMULATOR)
 						return true;
 					if (!TestRuntime.CheckXcodeVersion (9, 0))

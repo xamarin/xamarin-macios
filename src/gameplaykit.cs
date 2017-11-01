@@ -12,6 +12,7 @@ using System.ComponentModel;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 using XamCore.SpriteKit;
+using XamCore.SceneKit;
 using Vector2 = global::OpenTK.Vector2;
 using Vector2d = global::OpenTK.Vector2d;
 using Vector2i = global::OpenTK.Vector2i;
@@ -361,6 +362,16 @@ namespace XamCore.GameplayKit {
 		[Export ("findActionForAnswers:")]
 		[return: NullAllowed]
 		NSObject FindAction (NSDictionary<NSObject, NSObject> answers);
+
+		[iOS (11,0), TV (11,0)]
+		[Mac (10,13, onlyOn64: true)]
+		[Export ("initWithURL:error:")]
+		IntPtr Constructor (NSUrl url, [NullAllowed] NSError error);
+
+		[iOS (11,0), TV (11,0)]
+		[Mac (10,13, onlyOn64: true)]
+		[Export ("exportToURL:error:")]
+		bool Export (NSUrl url, [NullAllowed] NSError error);
 	}
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
@@ -1786,6 +1797,12 @@ namespace XamCore.GameplayKit {
 		[return: NullAllowed]
 		GKScene FromFile (string filename);
 
+		[iOS (11,0)][TV (11,0)][Mac (10,13, onlyOn64: true)]
+		[Static]
+		[Export ("sceneWithFileNamed:rootNode:")]
+		[return: NullAllowed]
+		GKScene FromFile (string filename, IGKSceneRootNodeType rootNode);
+
 		[Export ("entities")]
 		GKEntity [] Entities { get; }
 
@@ -1808,6 +1825,23 @@ namespace XamCore.GameplayKit {
 		void RemoveGraph (string name);
 	}
 
+	[iOS (11,0)]
+	[TV (11,0)]
+	[Mac (10,13, onlyOn64: true)]
+	[BaseType (typeof(GKComponent))]
+	interface GKSCNNodeComponent : GKAgentDelegate
+	{
+		[Static]
+		[Export ("componentWithNode:")]
+		GKSCNNodeComponent FromNode (SCNNode node);
+
+		[Export ("initWithNode:")]
+		IntPtr Constructor (SCNNode node);
+
+		[Export ("node")]
+		SCNNode Node { get; }
+	}
+
 	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
 	[Category]
 	[BaseType (typeof (SKNode))]
@@ -1826,6 +1860,17 @@ namespace XamCore.GameplayKit {
 		//[Export ("obstaclesFromNodePhysicsBodies:")]
 		//GKPolygonObstacle [] ObstaclesFromNodePhysicsBodies (SKNode [] nodes);
 
+		[Export ("entity")]
+		GKEntity GetEntity ();
+
+		[Export ("setEntity:")]
+		void SetEntity (GKEntity entity);
+	}
+
+	[iOS (11,0), TV (11,0), Mac (10,13, onlyOn64: true)]
+	[Category]
+	[BaseType (typeof (SCNNode))]
+	interface SCNNode_GameplayKit {
 		[Export ("entity")]
 		GKEntity GetEntity ();
 
