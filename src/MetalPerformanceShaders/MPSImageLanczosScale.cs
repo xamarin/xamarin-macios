@@ -1,5 +1,6 @@
-#if XAMCORE_2_0 || !MONOMAC
 // Copyright 2015 Xamarin Inc. All rights reserved.
+
+#if IOS
 
 using System;
 using System.Runtime.InteropServices;
@@ -8,7 +9,9 @@ using XamCore.Metal;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.MetalPerformanceShaders {
+
 	public partial class MPSImageLanczosScale {
+
 		static int size_of_scale_transform = Marshal.SizeOf (typeof(MPSScaleTransform));
 
 		public virtual MPSScaleTransform? ScaleTransform {
@@ -34,4 +37,5 @@ namespace XamCore.MetalPerformanceShaders {
 		}
 	}
 }
+
 #endif

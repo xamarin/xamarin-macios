@@ -2,7 +2,9 @@
 #if XAMCORE_2_0
 #if !__WATCHOS__
 using ModelIO;
+#if !MONOMAC
 using MetalPerformanceShaders;
+#endif
 #endif
 #else
 using MonoTouch.ModelIO;
@@ -186,7 +188,7 @@ public static class Asserts
 		Assert.AreEqual (expected.W, actual.W, message + " (W)");
 	}
 
-#if !__WATCHOS__
+#if !MONOMAC && !__WATCHOS__
 	public static void AreEqual (MPSImageHistogramInfo expected, MPSImageHistogramInfo actual, string message)
 	{
 		Assert.AreEqual (expected.HistogramForAlpha, actual.HistogramForAlpha, message + " HistogramForAlpha");
@@ -194,7 +196,7 @@ public static class Asserts
 		Asserts.AreEqual (expected.MinPixelValue, actual.MinPixelValue, message + " MinPixelValue");
 		Assert.AreEqual (expected.NumberOfHistogramEntries, actual.NumberOfHistogramEntries, message + " NumberOfHistogramEntries");
 	}
-#endif // !__WATCHOS__
+#endif // !MONOMAC && !__WATCHOS__
 
 	public static void AreEqual (MatrixFloat2x2 expected, MatrixFloat2x2 actual, string message)
 	{
