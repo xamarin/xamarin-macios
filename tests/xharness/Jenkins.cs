@@ -641,8 +641,6 @@ namespace xharness
 			};
 			Tasks.Add (runMacBindingProject);
 			
-			Tasks.AddRange (CreateRunDeviceTasks ());
-
 			var runXtroTests = new MakeTask {
 				Jenkins = this,
 				Platform = TestPlatform.All,
@@ -653,7 +651,7 @@ namespace xharness
 			};
 			Tasks.Add (runXtroTests);
 
-			Tasks.AddRange (await CreateRunDeviceTasks ());
+			Tasks.AddRange (CreateRunDeviceTasks ());
 		}
 
 		RunTestTask CloneExecuteTask (RunTestTask task, TestPlatform platform, string suffix, bool ignore)

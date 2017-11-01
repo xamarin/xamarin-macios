@@ -32,10 +32,8 @@
 using System.ComponentModel;
 
 #if !WATCH
-using XamCore.AudioToolbox;
 using XamCore.AudioUnit;
 using XamCore.AVKit;
-using XamCore.Foundation;
 using XamCore.CoreAnimation;
 using XamCore.CoreImage;
 using XamCore.CoreMedia;
@@ -3316,106 +3314,6 @@ namespace XamCore.AVFoundation {
 		void RemoveTimeObserver (NSObject observer);
 	}
 
-#endif // MONOMAC
-
-	[NoWatch, NoTV, iOS (11,0)]
-	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor]
-	interface AVCaptureSynchronizedData
-	{
-		[Export ("timestamp")]
-		CMTime Timestamp { get; }
-	}
-
-	[NoWatch, NoTV, iOS (11,0)]
-	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor]
-	interface AVCaptureSynchronizedDataCollection : INSFastEnumeration
-	{
-		[Export ("synchronizedDataForCaptureOutput:")]
-		[return: NullAllowed]
-		AVCaptureSynchronizedData From (AVCaptureOutput captureOutput);
-
-		[Export ("objectForKeyedSubscript:")]
-		[return: NullAllowed]
-		AVCaptureSynchronizedData ObjectForKeyedSubscript (AVCaptureOutput key);
-
-		[Export ("count")]
-		nuint Count { get; }
-	}
-
-	interface IAVCaptureDataOutputSynchronizerDelegate {}
-	
-	[NoWatch, NoTV, iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
-	interface AVCaptureDataOutputSynchronizerDelegate
-	{
-		[Abstract]
-		[Export ("dataOutputSynchronizer:didOutputSynchronizedDataCollection:")]
-		void DidOutputSynchronizedDataCollection (AVCaptureDataOutputSynchronizer synchronizer, AVCaptureSynchronizedDataCollection synchronizedDataCollection);
-	}
-
-	[NoWatch, NoTV, iOS (11,0)]
-	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor]
-	interface AVCaptureDataOutputSynchronizer
-	{
-		[Export ("initWithDataOutputs:")]
-		IntPtr Constructor (AVCaptureOutput[] dataOutputs);
-
-		[Export ("dataOutputs", ArgumentSemantic.Retain)]
-		AVCaptureOutput[] DataOutputs { get; }
-
-		[Export ("setDelegate:queue:")]
-		void SetDelegate ([NullAllowed] IAVCaptureDataOutputSynchronizerDelegate del, [NullAllowed] DispatchQueue delegateCallbackQueue);
-
-		[Wrap ("WeakDelegate")]
-		[NullAllowed]
-		IAVCaptureDataOutputSynchronizerDelegate Delegate { get; }
-
-		[NullAllowed, Export ("delegate")]
-		NSObject WeakDelegate { get; }
-
-		[NullAllowed, Export ("delegateCallbackQueue")]
-		DispatchQueue DelegateCallbackQueue { get; }
-	}
-
-	[NoMac, NoWatch, NoTV, iOS (11,0)]
-	[BaseType (typeof(AVCaptureSynchronizedData))]
-	interface AVCaptureSynchronizedSampleBufferData
-	{
-		[Export ("sampleBuffer")]
-		CMSampleBuffer SampleBuffer { get; }
-
-		[Export ("sampleBufferWasDropped")]
-		bool SampleBufferWasDropped { get; }
-
-		[Export ("droppedReason")]
-		AVCaptureOutputDataDroppedReason DroppedReason { get; }
-	}
-
-	[NoMac, NoWatch, NoTV, iOS (11,0)]
-	[BaseType (typeof(AVCaptureSynchronizedData))]
-	interface AVCaptureSynchronizedMetadataObjectData
-	{
-		[Export ("metadataObjects")]
-		AVMetadataObject[] MetadataObjects { get; }
-	}
-
-	[NoMac, NoWatch, NoTV, iOS (11,0)]
-	[BaseType (typeof(AVCaptureSynchronizedData))]
-	interface AVCaptureSynchronizedDepthData
-	{
-		[Export ("depthData")]
-		AVDepthData DepthData { get; }
-
-		[Export ("depthDataWasDropped")]
-		bool DepthDataWasDropped { get; }
-
-		[Export ("droppedReason")]
-		AVCaptureOutputDataDroppedReason DroppedReason { get; }
-	}
 
 #if MONOMAC
 	[Mac (10,10)]
@@ -8515,11 +8413,7 @@ namespace XamCore.AVFoundation {
 
 	interface IAVCaptureDepthDataOutputDelegate {}
 	
-<<<<<<< HEAD
-	[NoWatch, NoTV, iOS (11,0)]
-=======
 	[NoWatch, NoTV, iOS (11,0), Mac (10,13)]
->>>>>>> xcode9.1
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface AVCaptureDepthDataOutputDelegate
@@ -8531,14 +8425,8 @@ namespace XamCore.AVFoundation {
 		void DidDropDepthData (AVCaptureDepthDataOutput output, AVDepthData depthData, CMTime timestamp, AVCaptureConnection connection, AVCaptureOutputDataDroppedReason reason);
 	}
 
-<<<<<<< HEAD
-	[NoWatch, NoTV, iOS (11,0)]
-	[BaseType (typeof(AVCaptureOutput))]
-	[DisableDefaultCtor]
-=======
 	[NoWatch, NoTV, iOS (11,0), Mac (10,13)]
 	[BaseType (typeof(AVCaptureOutput))]
->>>>>>> xcode9.1
 	interface AVCaptureDepthDataOutput
 	{
 		[Export ("setDelegate:callbackQueue:")]
@@ -12636,20 +12524,12 @@ namespace XamCore.AVFoundation {
 		AVContentKeyResponse Create (NSData keyData, [NullAllowed] NSData initializationVector);
 	}
 
-<<<<<<< HEAD
-	[TV (11,0), NoWatch, NoMac, iOS (11,0)]
-=======
 	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
->>>>>>> xcode9.1
 	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
 	interface AVRouteDetector {
 		[Notification]
-<<<<<<< HEAD
-		[TV (11, 0), NoWatch, NoMac, iOS (11, 0)]
-=======
 		[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
->>>>>>> xcode9.1
 		[Field ("AVRouteDetectorMultipleRoutesDetectedDidChangeNotification")]
 		NSString MultipleRoutesDetectedDidChange { get; }
 
@@ -12706,8 +12586,6 @@ namespace XamCore.AVFoundation {
 
 		[Wrap ("AVCaptureDeviceTypeExtensions.GetValue (WeakSourceDeviceType)")]
 		AVCaptureDeviceType SourceDeviceType { get; }
-<<<<<<< HEAD
-=======
 
 		// From @interface AVCapturePhotoBracketedCapture (AVCapturePhoto)
 
@@ -12724,6 +12602,5 @@ namespace XamCore.AVFoundation {
 		[iOS (11, 0), NoMac]
 		[Export ("sequenceCount")]
 		nint SequenceCount { get; }
->>>>>>> xcode9.1
 	}
 }
