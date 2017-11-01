@@ -156,7 +156,6 @@ namespace XamCore.Metal {
 		[Abstract, Export ("didModifyRange:")]
 		void DidModify (NSRange range);
 #endif
-
 		[Mac (10,13, onlyOn64: true)]
 		[return: NullAllowed]
 #if XAMCORE_4_0 || !MONOMAC
