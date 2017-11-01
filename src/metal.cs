@@ -159,7 +159,7 @@ namespace XamCore.Metal {
 
 		[Mac (10,13, onlyOn64: true)]
 		[return: NullAllowed]
-#if !MONOMAC
+#if XAMCORE_4_0 || !MONOMAC
 		[Abstract]
 #endif
 		[Export ("newTextureWithDescriptor:offset:bytesPerRow:")]
