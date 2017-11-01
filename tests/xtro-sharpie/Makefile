@@ -12,7 +12,7 @@ clean-local::
 	rm -rf *os*.pch*
 
 bin/Debug/xtro-sharpie.exe build:
-	$(Q_BUILD) msbuild $(XBUILD_VERBOSITY) xtro-sharpie.sln
+	$(Q_BUILD) $(SYSTEM_MSBUILD) $(XBUILD_VERBOSITY) xtro-sharpie.sln
 
 XIOS ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/Xamarin.iOS.dll
 XIOS_GL ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll
