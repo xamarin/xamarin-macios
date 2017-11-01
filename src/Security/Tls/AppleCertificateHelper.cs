@@ -92,7 +92,7 @@ namespace XamCore.Security.Tls
 			}
 
 			var result = trust.Evaluate ();
-			if (result == SecTrustResult.Unspecified)
+			if (result == SecTrustResult.Unspecified || result == SecTrustResult.Proceed)
 				return true;
 
 			errors |= MonoSslPolicyErrors.RemoteCertificateChainErrors;

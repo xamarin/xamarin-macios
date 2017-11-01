@@ -8,6 +8,7 @@
 [submodule "external/linker"]
     path = external/linker
     url = ../../mono/linker.git
+    branch = master
 [submodule "external/llvm"]
     path = external/llvm
     url = ../../mono/llvm.git

@@ -240,7 +240,10 @@ namespace Introspection {
 			switch (type.Namespace) {
 			case "MonoMac.SceneKit":
 			case "SceneKit":
-				return IntPtr.Size == 4; // 64bits should be fine
+				// skip on 32 bits but continue otherwise
+				if (IntPtr.Size == 4)
+					return true;
+				break;
 			}
 
 			return base.Skip (type, protocolName);
