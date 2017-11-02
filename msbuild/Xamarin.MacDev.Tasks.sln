@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.iOS.Tasks.Tests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.MacDev", "..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj", "{CC3D9353-20C4-467A-8522-A9DED6F0C753}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.MacDev.Tasks", "Xamarin.MacDev.Tasks\Xamarin.MacDev.Tasks.csproj", "{534D7C5A-0E1C-4C58-9E48-21B1A98919EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.iOSDev.Tasks", "Xamarin.MacDev.Tasks\Xamarin.iOSDev.Tasks.csproj", "{534D7C5A-0E1C-4C58-9E48-21B1A98919EB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Mac.Tasks", "Xamarin.Mac.Tasks\Xamarin.Mac.Tasks.csproj", "{C8D98DC1-5122-4B10-A152-17196C7BD9AC}"
 EndProject
@@ -18,6 +18,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.MacDev.Tasks.Core", "Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.csproj", "{7B095849-6FDB-4BD2-9B59-569D81A1A809}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Mac.Tasks.Core", "Xamarin.Mac.Tasks.Core\Xamarin.Mac.Tasks.Core.csproj", "{AF1AC7C3-F6DD-4E46-B897-9DBB90B158EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.iOSDev", "..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.iOSDev.csproj", "{78A5AB67-6EC5-4035-8820-337D7D6430AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.iOSDev.Tasks.Core", "Xamarin.MacDev.Tasks.Core\Xamarin.iOSDev.Tasks.Core.csproj", "{FDE6C2CD-DF58-4E8F-8F81-E4D05B0B8796}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +61,14 @@ Global
 		{AF1AC7C3-F6DD-4E46-B897-9DBB90B158EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF1AC7C3-F6DD-4E46-B897-9DBB90B158EC}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{AF1AC7C3-F6DD-4E46-B897-9DBB90B158EC}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{78A5AB67-6EC5-4035-8820-337D7D6430AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78A5AB67-6EC5-4035-8820-337D7D6430AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78A5AB67-6EC5-4035-8820-337D7D6430AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78A5AB67-6EC5-4035-8820-337D7D6430AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDE6C2CD-DF58-4E8F-8F81-E4D05B0B8796}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDE6C2CD-DF58-4E8F-8F81-E4D05B0B8796}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDE6C2CD-DF58-4E8F-8F81-E4D05B0B8796}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDE6C2CD-DF58-4E8F-8F81-E4D05B0B8796}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

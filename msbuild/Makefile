@@ -38,11 +38,11 @@ IOS_BINDING_TARGETS = $(wildcard Xamarin.ObjcBinding.Tasks/*.targets)
 IOS_TASK_ASSEMBLIES =         \
 	Xamarin.iOS.Tasks         \
 	Xamarin.iOS.Tasks.Core    \
-	Xamarin.MacDev.Tasks      \
-	Xamarin.MacDev.Tasks.Core \
+	Xamarin.iOSDev.Tasks      \
+	Xamarin.iOSDev.Tasks.Core \
 
 IOS_TASK_REFERENCE_ASSEMBLIES =	\
-	Xamarin.MacDev
+	Xamarin.iOSDev
 
 IOS_DIRECTORIES =                                                                                           \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS                                                  \
@@ -326,17 +326,22 @@ $(foreach dll,$(MSBUILD_TASK_ASSEMBLIES),$(dll)/bin/$(CONFIG)/$(dll).dll): .buil
 .PHONY: $(MSBUILD_SYMLINKS)
 
 # Xamarin.MacDev.dll comes from the Xamarin.MacDev repository
-# Newtonsoft.Json.dll comes from a NuGet
 $(foreach dll,$(sort $(MSBUILD_REFERENCE_ASSEMBLIES)),build/$(notdir $(dll)).dll): .build-stamp | build
 	$(Q) cp Xamarin.MacDev.Tasks.Core/bin/$(CONFIG)/$(notdir $@) $@
 
-define copyToBuild
-build/$(1).dll: $(1)/bin/$(CONFIG)/$(1).dll | build
+define copyiOSToBuild
+build/$(1).dll: Xamarin.iOS.Tasks/bin/$(CONFIG)/$(1).dll | build
+	$$(Q) cp $$< $$@
+endef
+
+define copyMacToBuild
+build/$(1).dll: Xamarin.Mac.Tasks/bin/$(CONFIG)/$(1).dll | build
 	$$(Q) cp $$< $$@
 endef
 
 # Create the rules to copy all the dlls into the 'build' directory. 
-$(foreach dll,$(sort $(MSBUILD_TASK_ASSEMBLIES)),$(eval $(call copyToBuild,$(dll))))
+$(foreach dll,$(sort $(IOS_TASK_ASSEMBLIES)),$(eval $(call copyiOSToBuild,$(dll))))
+$(foreach dll,$(sort $(MAC_TASK_ASSEMBLIES)),$(eval $(call copyMacToBuild,$(dll))))
 
 # this is a directory-creating target.
 $(MSBUILD_DIRECTORIES) build:
