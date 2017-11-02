@@ -500,7 +500,7 @@ namespace xharness
 				Platform = TestPlatform.iOS,
 				TestName = "MSBuild tests",
 				Mode = "iOS",
-				Timeout = TimeSpan.FromMinutes (30),
+				Timeout = TimeSpan.FromMinutes (60),
 				Ignored = !IncludeiOSMSBuild,
 			};
 			Tasks.Add (nunitExecutioniOSMSBuild);
@@ -626,6 +626,7 @@ namespace xharness
 				Target = "all -j" + Environment.ProcessorCount,
 				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mmptest", "regression"),
 				Ignored = !IncludeMmpTest || !IncludeMac,
+				Timeout = TimeSpan.FromMinutes (15),
 			};
 			run_mmp.Environment.Add ("BUILD_REVISION", "jenkins"); // This will print "@MonkeyWrench: AddFile: <log path>" lines, which we can use to get the log filenames.
 			Tasks.Add (run_mmp);
@@ -648,6 +649,7 @@ namespace xharness
 				Target = "wrench",
 				WorkingDirectory = Path.Combine (Harness.RootDirectory, "xtro-sharpie"),
 				Ignored = !IncludeXtro,
+				Timeout = TimeSpan.FromMinutes (15),
 			};
 			Tasks.Add (runXtroTests);
 
@@ -2312,6 +2314,7 @@ function oninitialload ()
 	{
 		public string Target;
 		public string WorkingDirectory;
+		public TimeSpan Timeout = TimeSpan.FromMinutes (5);
 
 		protected override async Task ExecuteAsync ()
 		{
@@ -2324,7 +2327,7 @@ function oninitialload ()
 					var log = Logs.CreateStream (LogDirectory, $"make-{Platform}-{Timestamp}.txt", "Build log");
 					LogProcessExecution (log, make, "Making {0} in {1}", Target, WorkingDirectory);
 					if (!Harness.DryRun) {
-						var timeout = TimeSpan.FromMinutes (5);
+						var timeout = Timeout;
 						var result = await make.RunAsync (log, true, timeout);
 						if (result.TimedOut) {
 							ExecutionResult = TestExecutingResult.TimedOut;
