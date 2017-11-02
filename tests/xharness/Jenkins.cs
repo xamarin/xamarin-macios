@@ -2928,7 +2928,7 @@ function oninitialload ()
 
 						if (!string.IsNullOrEmpty (runner.FailureMessage))
 							FailureMessage = runner.FailureMessage;
-						else
+						else if (runner.Result != TestExecutingResult.Succeeded)
 							FailureMessage = GuessFailureReason (runner.MainLog);
 
 						if (runner.Result == TestExecutingResult.Succeeded && Platform == TestPlatform.iOS_TodayExtension64) {

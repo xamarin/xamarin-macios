@@ -26,8 +26,6 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string AppManifest { get; set; }
 
-		public string Architecture { get; set; }
-
 		[Required]
 		public string AssemblyName { get; set; }
 

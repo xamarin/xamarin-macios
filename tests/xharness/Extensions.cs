@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+
 namespace xharness
 {
 	public static class Extensions
@@ -78,6 +80,18 @@ namespace xharness
 			default:
 				throw new NotImplementedException ();
 			}
+		}
+
+		// Returns false if timed out
+		public static async Task<bool> TimeoutAfter (this Task task, TimeSpan timeout)
+		{
+			if (timeout.Ticks < -1)
+				return false;
+
+			if (task == await Task.WhenAny (task, Task.Delay (timeout)))
+				return true;
+			else
+				return false;
 		}
 	}
 }
