@@ -1,13 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Collections.Generic;
-
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 using Xamarin.MacDev;
-using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks
 {
