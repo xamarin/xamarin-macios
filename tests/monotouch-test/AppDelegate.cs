@@ -1,4 +1,4 @@
-#if !__WATCHOS__
+#if !__WATCHOS__ && !MONOMAC
 using System;
 using System.Collections.Generic;
 using System.Reflection;

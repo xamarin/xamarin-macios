@@ -7,6 +7,7 @@
 // Copyright 2013 Xamarin Inc.
 //
 
+#if !MONOMAC
 using System;
 #if XAMCORE_2_0
 using Foundation;
@@ -158,3 +159,4 @@ namespace MonoTouchFixtures.UIKit {
 #endif // !__WATCHOS__
 	}
 }
+#endif

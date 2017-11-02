@@ -101,7 +101,10 @@ namespace MonoTouchFixtures.SpriteKit {
 		{
 			using (var n = new SKSpriteNode (UIColor.Blue, SizeF.Empty)) {
 #if MONOMAC
-				Assert.That (n.Color.ToString (), Is.EqualTo ("Device RGB(0.016804177314043,0.198350995779037,1,1)"), "Color-1");
+				if (TestRuntime.CheckXcodeVersion (9, 0))
+					Assert.That (n.Color.ToString (), Is.EqualTo ("Device RGB(0,0,1,1)"), "Color-1");
+				else
+					Assert.That (n.Color.ToString (), Is.EqualTo ("Device RGB(0.016804177314043,0.198350995779037,1,1)"), "Color-1");
 #else
 				Assert.That (n.Color.ToString (), Is.EqualTo ("UIColor [A=255, R=0, G=0, B=255]"), "Color-1");
 #endif

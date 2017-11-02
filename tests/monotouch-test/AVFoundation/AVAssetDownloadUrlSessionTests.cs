@@ -8,7 +8,7 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
-#if !__WATCHOS__ && !__TVOS__
+#if !__WATCHOS__ && !__TVOS__ && !MONOMAC
 
 using System;
 using ObjCRuntime;
