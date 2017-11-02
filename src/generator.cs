@@ -1302,7 +1302,7 @@ public partial class Generator : IMemberGatherer {
 		} else if (originalType == TypeManager.NSString && IsSmartEnum (retType)) {
 			temp = isNullable ? $"{parameterName} == null ? null : " : string.Empty;
 			temp += $"{FormatType (retType.DeclaringType, retType)}Extensions.GetConstant ({parameterName}{denullify});";
-		} else if (originalType.IsArray) {
+		} else if (originalType.IsArray && originalType.GetArrayRank () == 1) {
 			var arrType = originalType.GetElementType ();
 			var arrRetType = TypeManager.GetUnderlyingNullableType (retType.GetElementType ()) ?? retType.GetElementType ();
 			var valueConverter = string.Empty;
@@ -1443,7 +1443,7 @@ public partial class Generator : IMemberGatherer {
 		} else if (originalReturnType == TypeManager.NSString && IsSmartEnum (retType)) {
 			append = $"{FormatType (retType.DeclaringType, retType)}Extensions.GetValue (";
 			suffix = ")";
-		} else if (originalReturnType.IsArray) {
+		} else if (originalReturnType.IsArray && originalReturnType.GetArrayRank () == 1) {
 			var arrType = originalReturnType.GetElementType ();
 			var nullableElementType = TypeManager.GetUnderlyingNullableType (retType.GetElementType ());
 			var arrIsNullable = nullableElementType != null;
