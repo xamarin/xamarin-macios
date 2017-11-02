@@ -8,26 +8,7 @@ using XamCore.ObjCRuntime;
 using XamCore.CoreFoundation;
 using XamCore.Foundation;
 
-#if XAMCORE_2_0
-using xint = System.nuint;
-#else
-using xint = System.Int32;
-#endif
-
 namespace XamCore.Security {
-
-	public partial class SecSharedCredentialInfo {
-
-		public int? Port {
-			get { return _Port?.Int32Value; }
-			set {
-				if (value == null)
-					_Port = null;
-				else
-					_Port = new NSNumber (value.Value);
-			}
-		}
-	}
 
 	public static partial class SecSharedCredential {
 
@@ -120,9 +101,9 @@ namespace XamCore.Security {
 		{
 			Action<NSArray, NSError> onComplete = (NSArray a, NSError e) => {
 				var creds = new SecSharedCredentialInfo [a.Count];
-				for (xint i = 0; i < a.Count; i++) {
-					var dict = a.GetItem<NSDictionary> (i);
-					creds [i] = new SecSharedCredentialInfo (dict);
+				int i = 0;
+				foreach (var dict in NSArray.FromArrayNative<NSDictionary> (a)) {
+					creds [i++] = new SecSharedCredentialInfo (dict);
 				}
 				handler (creds, e);
 			};

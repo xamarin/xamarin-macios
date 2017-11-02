@@ -906,7 +906,7 @@ namespace XamCore.Security {
 		NSString PasswordKey { get; }
 
 		[Field ("kSecAttrPort")]
-		NSString _PortKey { get; }
+		NSString PortKey { get; }
 	}
 
 	[iOS (8,0)][NoTV][NoWatch][NoMac]
@@ -919,8 +919,7 @@ namespace XamCore.Security {
 
 		string Password { get; set; }
 
-		[Internal]
-		NSNumber _Port { get; set; }
+		int Port { get; set; }
 	}
 #endif
 }
