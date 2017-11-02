@@ -887,6 +887,8 @@ Please check if your device is locked.
 
 If you're deploying an enterprise app or using a free provisioning profile, you might have trust the developer (this is explained <a href="http://stackoverflow.com/a/30726375/183422">here</a>).
 
+### <a name="MT1111"/>MT1111: Application launched successfully, but it's not possible to wait for the app to exit as requested because it's not possible to detect app termination when launching using gdbserver.
+
 ### MT12xx: Simulator
 
 <!--
