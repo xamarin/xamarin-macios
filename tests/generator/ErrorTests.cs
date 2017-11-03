@@ -397,5 +397,55 @@ namespace Bug57094 {
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (1014, "Unsupported type for Fields: byte[] for 'Bug57094.FooObject SomeField'.");
 		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		[TestCase (Profile.macClassic)]
+		public void WarnAsError (Profile profile)
+		{
+			const string message = "The SomeMethod member is decorated with [Static] and its container class warnaserrorTests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into warnaserrorTests.FooObject class.";
+			{
+				// Enabled
+				var bgen = new BGenTool ();
+				bgen.Profile = profile;
+				bgen.Defines = BGenTool.GetDefaultDefines (profile);
+				bgen.WarnAsError = string.Empty;
+				bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "warnaserror.cs")));
+				bgen.AssertExecuteError ("build");
+				bgen.AssertError (1117, message);
+			}
+
+			{
+				// Disabled
+				var bgen = new BGenTool ();
+				bgen.Profile = profile;
+				bgen.Defines = BGenTool.GetDefaultDefines (profile);
+				bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "warnaserror.cs")));
+				bgen.AssertExecute ("build");
+				bgen.AssertWarning (1117, message);
+			}
+
+			{
+				// Only 1116
+				var bgen = new BGenTool ();
+				bgen.Profile = profile;
+				bgen.Defines = BGenTool.GetDefaultDefines (profile);
+				bgen.WarnAsError = "1116";
+				bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "warnaserror.cs")));
+				bgen.AssertExecute ("build");
+				bgen.AssertWarning (1117, message);
+			}
+
+			{
+				// Only 1117
+				var bgen = new BGenTool ();
+				bgen.Profile = profile;
+				bgen.Defines = BGenTool.GetDefaultDefines (profile);
+				bgen.WarnAsError = "1117";
+				bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "warnaserror.cs")));
+				bgen.AssertExecuteError ("build");
+				bgen.AssertError (1117, message);
+			}
+		}
 	}
 }
