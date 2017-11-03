@@ -25,7 +25,7 @@ MAC_CLASSIC_GENERATOR = $(MAC_CURRENT_DIR)/bin/bgen --target-framework=XamMac,v1
 MAC_FULL_GENERATOR    = $(MAC_CURRENT_DIR)/bin/bgen --target-framework=Xamarin.Mac,Version=v4.5,Profile=Full
 MAC_MOBILE_GENERATOR  = $(MAC_CURRENT_DIR)/bin/bgen --target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile
 MAC_TESTS = bmac_smoke bmac-with-hyphen-in-name property-redefination-mac NSApplicationPublicEnsureMethods protocol-duplicate-abstract
-MAC_CUSTOM_TESTS = bug31788 protocol-duplicate-method-diff-out protocol-duplicate-method-diff-type protocol-duplicate-method-diff-return
+MAC_CUSTOM_TESTS = bug31788 protocol-duplicate-method-diff-type protocol-duplicate-method-diff-return
 
 ALL_TESTS = 
 ifdef INCLUDE_IOS
@@ -65,7 +65,6 @@ $(1):
 	$(if $(V),,@echo "$$@";) $(MAC_MOBILE_GENERATOR)  -d=MONOMAC -d=XAMCORE_2_0 $(1).cs 2>&1 | grep BI$(2) > /dev/null
 endef
 
-$(eval $(call ProtocolTestTemplate,protocol-duplicate-method-diff-out,1040))
 $(eval $(call ProtocolTestTemplate,protocol-duplicate-method-diff-type,1041))
 $(eval $(call ProtocolTestTemplate,protocol-duplicate-method-diff-return,1038))
 
