@@ -1,5 +1,5 @@
 using System;
-
+using System.IO;
 using NUnit.Framework;
 
 using Xamarin.Tests;
@@ -17,6 +17,16 @@ namespace GeneratorTests
 			bgen.CreateTemporaryBinding ("");
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (86, "A target framework (--target-framework) must be specified.");
+		}
+
+		[Test]
+		public void BI1048 ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bindas1048error.cs")));
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1048, "Unsupported type String decorated with [BindAs]");
 		}
 
 		[Test]
