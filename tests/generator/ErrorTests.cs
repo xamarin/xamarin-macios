@@ -74,6 +74,16 @@ namespace GeneratorTests
 		{
 			var bgen = new BGenTool ();
 			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bug57070.cs")));
+			bgen.AssertExecuteError ("build");
+			bgen.AssertWarning (1061, "The attribute 'ObjCRuntime.iOSAttribute' found on 'SomeClass.DoSomething' is not a valid binding attribute. Please remove this attribute.");
+		}
+
+		[Test]
+		public void BI1117 ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
 			bgen.CreateTemporaryBinding (@"using System;
 using Foundation;
 
