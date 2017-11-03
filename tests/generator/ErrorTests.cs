@@ -30,6 +30,16 @@ namespace GeneratorTests
 		}
 
 		[Test]
+		public void BI1049 ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bindas1049error.cs")));
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1049, "Could not unbox type String from NSNumber container used on member BindAs1049ErrorTests.MyFooClass.StringMethod decorated with [BindAs].");
+		}
+
+		[Test]
 		public void BI1061 ()
 		{
 			var bgen = new BGenTool ();
