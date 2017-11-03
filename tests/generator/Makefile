@@ -20,11 +20,7 @@ IOS_TESTS = bug15283 bug15307 bug15799 bug16036 sof20696157 bug23041 bug27430 bu
 IOS_CUSTOM_TESTS = forum54078 desk63279 desk79124 multiple-api-definitions1 multiple-api-definitions2 bug29493 classNameCollision bi1036 bug37527 bug27986 bug35176 bi1046 virtualwrap bug42742 noasyncinternalwrapper noasyncwarningcs0219 bug53076 bug53076withmodel fieldenumtests smartenumwithframework
 
 MAC_CURRENT_DIR=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
-MAC_GENERATOR = $(MAC_CURRENT_DIR)/bin/bgen
 MAC_CLASSIC_GENERATOR = $(MAC_CURRENT_DIR)/bin/bgen --target-framework=XamMac,v1.0
-MAC_FULL_GENERATOR    = $(MAC_CURRENT_DIR)/bin/bgen --target-framework=Xamarin.Mac,Version=v4.5,Profile=Full
-MAC_MOBILE_GENERATOR  = $(MAC_CURRENT_DIR)/bin/bgen --target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile
-MAC_TESTS = bmac_smoke bmac-with-hyphen-in-name property-redefination-mac NSApplicationPublicEnsureMethods protocol-duplicate-abstract
 MAC_CUSTOM_TESTS = bug31788
 
 ALL_TESTS = 
@@ -32,7 +28,7 @@ ifdef INCLUDE_IOS
 ALL_TESTS += $(IOS_TESTS) $(IOS_CUSTOM_TESTS)
 endif
 ifdef INCLUDE_MAC
-ALL_TESTS += $(MAC_TESTS) $(MAC_CUSTOM_TESTS)
+ALL_TESTS += $(MAC_CUSTOM_TESTS)
 endif
 
 all-local:: $(ALL_TESTS) run-unit-tests
@@ -49,11 +45,6 @@ run-unit-tests: build-unit-tests
 		( xsltproc $(TOP)/tests/HtmlTransform.xslt TestResult.xml  > index.html && \
 		echo "@MonkeyWrench: AddFile: $$PWD/index.html")
 	@[[ ! -e .failed-stamp ]] 
-	
-$(MAC_TESTS):
-	$(if $(V),,@echo "$@";) $(MAC_CLASSIC_GENERATOR) -d=MONOMAC $@.cs
-	$(if $(V),,@echo "$@";) $(MAC_FULL_GENERATOR)    -d=MONOMAC -d=XAMCORE_2_0 $@.cs
-	$(if $(V),,@echo "$@";) $(MAC_MOBILE_GENERATOR)  -d=MONOMAC -d=XAMCORE_2_0 $@.cs
 
 $(IOS_TESTS):
 	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) $@.cs

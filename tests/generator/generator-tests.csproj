@@ -47,6 +47,7 @@
       <Link>StringUtils.cs</Link>
     </Compile>
     <Compile Include="GeneratorTests.cs" />
+    <Compile Include="BGenTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
