@@ -151,6 +151,46 @@ namespace MonoTouchFixtures.CoreMedia {
 		}
 
 		[Test]
+		public void HevcParameterSetsTest ()
+		{
+			TestRuntime.AssertXcodeVersion (9, 0);
+
+			var arr0 = new byte [] { 0x40, 0x01, 0x0C, 0x06, 0xFF, 0xFF, 0x01, 0x60, 0x00, 0x00, 0x03, 0x00, 0xB0, 0x00, 0x00, 0x03, 0x00, 0x00, 0x03, 0x00, 0x5D, 0x00, 0x00, 0x15, 0xC0, 0x90 };
+			var arr1 = new byte [] { 0x42, 0x01, 0x06, 0x01, 0x60, 0x00, 0x00, 0x03, 0x00, 0xB0, 0x00, 0x00, 0x03, 0x00, 0x00, 0x03, 0x00, 0x5D, 0x00, 0x00, 0xA0, 0x02, 0x80, 0x80, 0x2D, 0x16, 0x20, 0x57, 0xB9, 0x16, 0x41, 0x57, 0x20, 0x92, 0x7E, 0x84, 0x95, 0x4D, 0x69, 0x94, 0x92, 0x7E, 0x84, 0x95, 0x4D, 0x69, 0x9C, 0x92, 0x4B, 0x95, 0x4F, 0xA9, 0x49, 0x3E, 0x49, 0xD4, 0x93, 0xEA, 0x72, 0x49, 0x2B, 0x92, 0x5C, 0x97, 0xA9, 0xB8, 0x08, 0x08, 0x35, 0x20, 0x10 };
+			var arr2 = new byte [] { 0x44, 0x01, 0xC0, 0x2C, 0xBC, 0x14, 0xC9 };
+
+			var props = new List<byte []> { arr0, arr1, arr2 };
+			CMFormatDescriptionError error;
+			var desc = CMVideoFormatDescription.FromHevcParameterSets (props, 4, null, out error);
+
+			props = null;
+			Assert.That (error == CMFormatDescriptionError.None, "HevcParameterSetsTest 1");
+			Assert.NotNull (desc, "HevcParameterSetsTest 2");
+			Assert.That (desc.Dimensions.Height == 720 && desc.Dimensions.Width == 1280, "HevcParameterSetsTest 3");
+
+			CMFormatDescriptionError err;
+			nuint paramCount;
+			int nalCount;
+			var bytes = desc.GetHevcParameterSet (0, out paramCount, out nalCount, out err);
+			Assert.That (err == CMFormatDescriptionError.None, "HevcParameterSetsTest arr0 1");
+			Assert.NotNull (bytes, "HevcParameterSetsTest arr0 2");
+			Assert.True (nalCount == 4 && paramCount == 3);
+			Assert.That (arr0, Is.EqualTo (bytes), "HevcParameterSetsTest arr0 roundtrip");
+
+			bytes = desc.GetHevcParameterSet (1, out paramCount, out nalCount, out err);
+			Assert.That (err == CMFormatDescriptionError.None, "HevcParameterSetsTest arr1 1");
+			Assert.NotNull (bytes, "HevcParameterSetsTest arr1 2");
+			Assert.True (nalCount == 4 && paramCount == 3);
+			Assert.That (arr1, Is.EqualTo (bytes), "HevcParameterSetsTest arr1 roundtrip");
+
+			bytes = desc.GetHevcParameterSet (2, out paramCount, out nalCount, out err);
+			Assert.That (err == CMFormatDescriptionError.None, "HevcParameterSetsTest arr2 1");
+			Assert.NotNull (bytes, "HevcParameterSetsTest arr2 2");
+			Assert.True (nalCount == 4 && paramCount == 3);
+			Assert.That (arr2, Is.EqualTo (bytes), "HevcParameterSetsTest arr2 roundtrip");
+		}
+
+		[Test]
 		public void VideoFormatDescriptionConstructors ()
 		{
 #if __UNIFIED__
