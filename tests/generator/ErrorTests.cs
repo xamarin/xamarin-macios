@@ -60,6 +60,16 @@ namespace GeneratorTests
 		}
 
 		[Test]
+		public void BI1060 ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bug42855.cs")));
+			bgen.AssertExecute ("build");
+			bgen.AssertWarning (1060, "The Bug42855Tests.MyFooClass protocol is decorated with [Model], but not [BaseType]. Please verify that [Model] is relevant for this protocol; if so, add [BaseType] as well, otherwise remove [Model].");
+		}
+
+		[Test]
 		public void BI1061 ()
 		{
 			var bgen = new BGenTool ();
