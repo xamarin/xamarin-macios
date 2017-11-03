@@ -20,6 +20,20 @@ namespace GeneratorTests
 		}
 
 		[Test]
+		[TestCase (Profile.macFull)]
+		[TestCase (Profile.macModern)]
+		[TestCase (Profile.macClassic)]
+		public void BI1037 (Profile profile)
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
+			bgen.Defines = BGenTool.GetDefaultDefines (profile);
+			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "protocol-duplicate-abstract-error.cs")));
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1037, "The selector Identifier on type Derived is found multiple times with both read only and write only versions, with no read/write version.");
+		}
+
+		[Test]
 		public void BI1048 ()
 		{
 			var bgen = new BGenTool ();
