@@ -37,6 +37,20 @@ namespace GeneratorTests
 		[TestCase (Profile.macFull)]
 		[TestCase (Profile.macModern)]
 		[TestCase (Profile.macClassic)]
+		public void BI1038 (Profile profile)
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
+			bgen.Defines = BGenTool.GetDefaultDefines (profile);
+			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "protocol-duplicate-method-diff-return.cs")));
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1038, "The selector DoIt on type Derived is found multiple times with different return types.");
+		}
+
+		[Test]
+		[TestCase (Profile.macFull)]
+		[TestCase (Profile.macModern)]
+		[TestCase (Profile.macClassic)]
 		public void BI1039 (Profile profile)
 		{
 			var bgen = new BGenTool ();
