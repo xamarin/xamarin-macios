@@ -62,6 +62,20 @@ namespace GeneratorTests
 		}
 
 		[Test]
+		[TestCase (Profile.macFull)]
+		[TestCase (Profile.macModern)]
+		[TestCase (Profile.macClassic)]
+		public void BI1041 (Profile profile)
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
+			bgen.Defines = BGenTool.GetDefaultDefines (profile);
+			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "protocol-duplicate-method-diff-type.cs")));
+			bgen.AssertExecuteError ("build");
+			bgen.AssertErrorPattern (1041, "The selector doit:with:more: on type Derived is found multiple times with different argument types on argument 2 - System.Int32 : .*Foundation.NSObject.");
+		}
+
+		[Test]
 		public void BI1048 ()
 		{
 			var bgen = new BGenTool ();
