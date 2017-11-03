@@ -17,7 +17,7 @@ export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.fra
 IOS_CURRENT_DIR=$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current
 IOS_GENERATOR = $(IOS_CURRENT_DIR)/bin/bgen /unsafe --target-framework=Xamarin.iOS,v1.0
 IOS_TESTS = bug15283 bug15307 bug15799 bug16036 sof20696157 bug23041 bug27430 bug27428 bug34042 btouch-with-hyphen-in-name property-redefination-ios arrayfromhandlebug bug36457 bug39614 bug40282 bug17232 bug24078-ignore-methods-events strong-dict-support-templated-dicts bug43579 bindastests
-IOS_CUSTOM_TESTS = forum54078 desk63279 desk79124 multiple-api-definitions1 multiple-api-definitions2 bug29493 classNameCollision bi1036 bug37527 bug27986 bug35176 bi1046 virtualwrap bug42742 nowarn noasyncinternalwrapper noasyncwarningcs0219 bug53076 bug53076withmodel fieldenumtests smartenumwithframework
+IOS_CUSTOM_TESTS = forum54078 desk63279 desk79124 multiple-api-definitions1 multiple-api-definitions2 bug29493 classNameCollision bi1036 bug37527 bug27986 bug35176 bi1046 virtualwrap bug42742 noasyncinternalwrapper noasyncwarningcs0219 bug53076 bug53076withmodel fieldenumtests smartenumwithframework
 
 MAC_CURRENT_DIR=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 MAC_GENERATOR = $(MAC_CURRENT_DIR)/bin/bgen
@@ -176,18 +176,6 @@ bug42742:
 	@if [ `grep -r Advice bug42742.tmpdir/bug42742 | wc -l` -ne 24 ]; then \
 		echo "Error: Expected 24 Advice attributes in generated code. If you modified code that generates PreserveAttributes please update the preserve count."; exit 1; \
 	fi
-
-nowarn:
-	$(if $(V),,@echo "iOS $@ Enabled";) !($(IOS_GENERATOR) -d=XAMCORE_2_0 -nowarn $@.cs | grep "warning BI1117" > /dev/null 2>&1)
-	$(if $(V),,@echo "iOS $@ Disabled";) $(IOS_GENERATOR) -d=XAMCORE_2_0 $@.cs | grep "warning BI1117" > /dev/null 2>&1
-	$(if $(V),,@echo "iOS $@ Disabled Warning Found";) $(IOS_GENERATOR) -d=XAMCORE_2_0 $@.cs | grep "warning BI1117" > /dev/null 2>&1
-	$(if $(V),,@echo "iOS $@ Only 1116";) $(IOS_GENERATOR) -d=XAMCORE_2_0 -nowarn:1116 $@.cs | grep "warning BI1117" > /dev/null 2>&1
-	$(if $(V),,@echo "iOS $@ Only 1117";) !($(IOS_GENERATOR) -d=XAMCORE_2_0 -nowarn:1117 $@.cs | grep "warning BI1117" > /dev/null 2>&1)
-	$(if $(V),,@echo "macOS $@ Enabled";) !($(MAC_CLASSIC_GENERATOR) -nowarn $@.cs | grep "warning BI1117" > /dev/null 2>&1)
-	$(if $(V),,@echo "macOS $@ Disabled";) $(MAC_CLASSIC_GENERATOR) $@.cs | grep "warning BI1117" > /dev/null 2>&1
-	$(if $(V),,@echo "macOS $@ Disabled Warning Found";) $(MAC_CLASSIC_GENERATOR) $@.cs | grep "warning BI1117" > /dev/null 2>&1
-	$(if $(V),,@echo "macOS $@ Only 1116";) $(MAC_CLASSIC_GENERATOR) -nowarn:1116 $@.cs | grep "warning BI1117" > /dev/null 2>&1
-	$(if $(V),,@echo "macOS $@ Only 1117";) !($(MAC_CLASSIC_GENERATOR) -nowarn:1117 $@.cs | grep "warning BI1117" > /dev/null 2>&1)
 
 noasyncinternalwrapper:
 	@rm -Rf $@.tmpdir

@@ -447,5 +447,55 @@ namespace Bug57094 {
 				bgen.AssertError (1117, message);
 			}
 		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		[TestCase (Profile.macClassic)]
+		public void NoWarn (Profile profile)
+		{
+			const string message = "The SomeMethod member is decorated with [Static] and its container class nowarnTests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into nowarnTests.FooObject class.";
+			{
+				// Enabled
+				var bgen = new BGenTool ();
+				bgen.Profile = profile;
+				bgen.Defines = BGenTool.GetDefaultDefines (profile);
+				bgen.NoWarn = string.Empty;
+				bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "nowarn.cs")));
+				bgen.AssertExecute ("build");
+				bgen.AssertNoWarnings ();
+			}
+
+			{
+				// Disabled
+				var bgen = new BGenTool ();
+				bgen.Profile = profile;
+				bgen.Defines = BGenTool.GetDefaultDefines (profile);
+				bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "nowarn.cs")));
+				bgen.AssertExecute ("build");
+				bgen.AssertWarning (1117, message);
+			}
+
+			{
+				// Only 1116
+				var bgen = new BGenTool ();
+				bgen.Profile = profile;
+				bgen.Defines = BGenTool.GetDefaultDefines (profile);
+				bgen.NoWarn = "1116";
+				bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "nowarn.cs")));
+				bgen.AssertExecute ("build");
+				bgen.AssertWarning (1117, message);
+			}
+
+			{
+				// Only 1117
+				var bgen = new BGenTool ();
+				bgen.Profile = profile;
+				bgen.Defines = BGenTool.GetDefaultDefines (profile);
+				bgen.NoWarn = "1117";
+				bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "nowarn.cs")));
+				bgen.AssertExecute ("build");
+				bgen.AssertNoWarnings ();
+			}
+		}
 	}
 }
