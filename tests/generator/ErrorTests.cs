@@ -71,5 +71,49 @@ namespace Bug57795Tests {
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (1048, "Unsupported type AVMediaTypes[,] decorated with [BindAs]");
 		}
+
+		[Test]
+		public void BindAsNullableArraysNoErrors ()
+		{
+			// https://bugzilla.xamarin.com/show_bug.cgi?id=57797
+
+			var bgen = new BGenTool {
+				Profile = Profile.iOS,
+				ProcessEnums = true
+			};
+			bgen.CreateTemporaryBinding (@"
+using System;
+using Foundation;
+using ObjCRuntime;
+using AVFoundation;
+using CoreAnimation;
+
+namespace Bug57797Tests {
+
+	[Native]
+	enum Foo : long {
+		One,
+		Two
+	}
+
+	[BaseType (typeof (NSObject))]
+	interface FooObject {
+
+		[BindAs (typeof (AVMediaTypes? []))]
+		[Export (""strongNullableAVMediaTypesProperties"")]
+		NSString [] StrongNullableAVMediaTypesProperties { get; set; }
+
+		[BindAs (typeof (CATransform3D? []))]
+		[Export (""PCATransform3DNullableArray"")]
+		NSValue [] PCATransform3DNullableArrayValue { get; set; }
+
+		[BindAs (typeof (Foo? []))]
+		[Export (""strongNullableAVMediaTypesProperties"")]
+		NSNumber[] StrongNullableFoo { get; set; }
+	}
+}");
+			bgen.AssertExecute ("build");
+			bgen.AssertNoWarnings ();
+		}
 	}
 }

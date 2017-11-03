@@ -1309,7 +1309,7 @@ public partial class Generator : IMemberGatherer {
 
 			if (arrType == TypeManager.NSString) {
 				valueConverter = isNullable ? "o == null ? null : " : string.Empty;
-				valueConverter += $"{FormatType (retType.DeclaringType, arrRetType)}Extensions.GetConstant (o), {parameterName});";
+				valueConverter += $"{FormatType (retType.DeclaringType, arrRetType)}Extensions.GetConstant ({(isNullable ? "o.Value" : "o")}), {parameterName});";
 			} else if (arrType == TypeManager.NSNumber) {
 				var cast = arrRetType.IsEnum ? "(int)" : string.Empty;
 				valueConverter = $"new NSNumber ({cast}o{denullify}), {parameterName});";
