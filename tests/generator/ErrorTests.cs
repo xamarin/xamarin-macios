@@ -118,6 +118,16 @@ namespace Bug52570Tests {
 		}
 
 		[Test]
+		public void BI1117_methodinternal ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bug52570methodinternal.cs")));
+			bgen.AssertExecute ("build");
+			bgen.AssertNoWarnings ();
+		}
+
+		[Test]
 		public void BindAsNoMultidimensionalArrays ()
 		{
 			var bgen = new BGenTool ();
