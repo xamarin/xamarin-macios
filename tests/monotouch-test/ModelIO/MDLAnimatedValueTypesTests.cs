@@ -34,7 +34,6 @@ using MonoTouch.ModelIO;
 using MonoTouch.ObjCRuntime;
 #endif
 using OpenTK;
-using Bindings.Test;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.ModelIO {
