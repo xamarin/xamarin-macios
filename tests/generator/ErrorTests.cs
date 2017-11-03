@@ -50,6 +50,16 @@ namespace GeneratorTests
 		}
 
 		[Test]
+		public void BI1050_protocol ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bindas1050protocolerror.cs")));
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1050, "[BindAs] cannot be used inside Protocol or Model types. Type: MyFooClass");
+		}
+
+		[Test]
 		public void BI1061 ()
 		{
 			var bgen = new BGenTool ();
