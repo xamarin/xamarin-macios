@@ -50,6 +50,8 @@
 ## deprecated (as the name indicates) and not exposed
 !missing-enum! CGGlyphDeprecatedEnum not bound
 
+## there's another P/Invoke that returns the same result according to the documentation (CGColorSpaceCopyName), so no need to bind another one.
+!missing-pinvoke! CGColorSpaceGetName is not bound
 
 # CoreSpotlight
 

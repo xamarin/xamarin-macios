@@ -190,7 +190,7 @@ namespace XamCore.CoreData {
 		EntityMigrationPolicy = 134170,
 		InferredMappingModel = 134190,
 		ExternalRecordImport = 134200,
-		[iOS (11,0), TV (11,0), Mac (10,3), Watch (4,0)]
+		[iOS (11,0), TV (11,0), Mac (10,13), Watch (4,0)]
 		HistoryTokenExpired = 134301,
 	}
 

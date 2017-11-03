@@ -52,6 +52,8 @@ namespace Introspection {
 			case "MTKModelIOVertexDescriptorFromMetal":
 			case "MTKModelIOVertexFormatFromMetal":
 			case "MTKMetalVertexFormatFromModelIO":
+			case "CVPixelBufferGetIOSurface":
+			case "CVPixelBufferCreateWithIOSurface":
 				return simulator;
 
 			// it's not needed for ARM64 and Apple does not have stubs for them in libobjc.dylib

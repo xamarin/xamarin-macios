@@ -68,6 +68,16 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.That (pdf.Pages, Is.EqualTo ((nint) 3), "Pages");
 
 			Assert.That (pdf.GetInfo ().Count, Is.EqualTo (7), "GetInfo");
+
+			if (TestRuntime.CheckXcodeVersion (9, 0)) {
+				// Merely check that the P/Invoke goes through.
+				var perms = pdf.GetAccessPermissions ();
+
+				// Get and set outline
+				var outline = pdf.GetOutline ();
+				pdf.SetOutline (outline);
+			}
+
 		}
 	}
 }
