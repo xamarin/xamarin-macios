@@ -89,6 +89,7 @@ namespace Introspection
 			"Anglet",
 			"Arraycollation",
 			"Argb",
+			"Asal",
 			"Asin",
 			"Atan",
 			"Ats",	// App Transport Security
@@ -124,6 +125,7 @@ namespace Introspection
 			"Cda", // acronym: Clinical Document Architecture
 			"Celp", // MPEG4ObjectID
 			"Characterteristic",
+			"Chapv",
 			"Chromaticities",
 			"Ciff",
 			"Cinepak",
@@ -171,6 +173,7 @@ namespace Introspection
 			"Dtls",
 			"Dtmf", // DTMF
 			"dy",
+			"Eap",
 			"Ebu",
 			"Ecc",   // Elliptic Curve Cryptography
 			"Ecdh",  // Elliptic Curve Diffie–Hellman
@@ -278,6 +281,7 @@ namespace Introspection
 			"Milliohms",
 			"Mimap",
 			"Minification",
+			"Mncs",
 			"Mobike", // acronym
 			"Morpher",
 			"Mpe", // acronym
@@ -288,9 +292,11 @@ namespace Introspection
 			"Multipath",
 			"Multipeer",
 			"Muxed",
+			"Nai",
 			"Nanograms",
 			"Nanowatts",
 			"nfloat",
+			"Nfnt",
 			"nint",
 			"Nntps",
 			"Ntlm",
@@ -305,11 +311,15 @@ namespace Introspection
 			"Ocurrences",
 			"Octree",
 			"Oid",
+			"Olus",
 			"Oneup", // TVElementKeyOneupTemplate
 			"Orthographyrange",
+			"Orth",
+			"Ostprandial",
 			"ove",
 			"Paeth", // PNG filter
 			"Parms", // short for Parameters
+			"Peap",
 			"Perlin",
 			"Persistable",
 			"Pausable",
@@ -341,6 +351,7 @@ namespace Introspection
 			"Reacquirer",
 			"Reinvitation",
 			"Reinvite",
+			"Reprandial",
 			"Replayable",
 			"Requestwith",
 			"Ridesharing",
@@ -360,6 +371,7 @@ namespace Introspection
 			"Scn",
 			"Sdk",
 			"Sdtv", // acronym: Standard Definition Tele Vision
+			"Sdnn",
 			"Seekable",
 			"Shadable",
 			"Sharegroup",
@@ -367,6 +379,7 @@ namespace Introspection
 			"simd",
 			"Sinh",
 			"Sint", // as in "Signed Integer"
+			"Simd",
 			"Slerp",
 			"Slomo",
 			"Smpte",
@@ -377,6 +390,7 @@ namespace Introspection
 			"Sqrt",
 			"Srgb",
 			"Ssid",
+			"Ssids",
 			"Standarize",
 			"Stateful",
 			"Stateright",
@@ -406,9 +420,11 @@ namespace Introspection
 			"Timelapse",
 			"Timelapses",
 			"Tls",
+			"Ttls",
 			"Tlv",
 			"Toi",
 			"Transceive",
+			"Trc",
 			"Truncantion",
 			"Tweening",
 			"tx",
@@ -437,12 +453,19 @@ namespace Introspection
 			"Voronoi",
 			"Vnode",
 			"Vpn",
+			"Wep",
+			"Wpa",
 			"Warpable",
 			"Whitespaces",
 			"Writeability",
 			"Xpc",
 			"xy",
 			"Xyz",
+			"Xzy",
+			"Yxz",
+			"Yzx",
+			"Zxy",
+			"Zyx",
 			"yuvs",
 			"yx",
 			"yy",

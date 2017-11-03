@@ -5977,20 +5977,29 @@ namespace XamCore.Foundation
 		[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 		[Static]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		new string[] ReadableTypeIdentifiers { get; }
+#if XAMCORE_2_0 || !MONOMAC
+		new
+#endif
+		string[] ReadableTypeIdentifiers { get; }
 
 		// From the NSItemProviderReading protocol
 		[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 		[Static]
 		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
 		[return: NullAllowed]
-		new NSUrl GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
+#if XAMCORE_2_0 || !MONOMAC
+		new
+#endif
+		NSUrl GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
 
 		// From the NSItemProviderWriting protocol
 		[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 		[Static]
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		new string[] WritableTypeIdentifiers { get; }
+#if XAMCORE_2_0 || !MONOMAC
+		new
+#endif
+		string[] WritableTypeIdentifiers { get; }
 	}
 
 	
@@ -8057,19 +8066,28 @@ namespace XamCore.Foundation
 		[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 		[Static]
 		[Export ("readableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		new string[] ReadableTypeIdentifiers { get; }
+#if XAMCORE_2_0 || !MONOMAC
+		new
+#endif
+		string[] ReadableTypeIdentifiers { get; }
 
 		[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 		[Static]
 		[Export ("objectWithItemProviderData:typeIdentifier:error:")]
 		[return: NullAllowed]
-		new NSString GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
+#if XAMCORE_2_0 || !MONOMAC
+		new
+#endif
+		NSString GetObject (NSData data, string typeIdentifier, [NullAllowed] out NSError outError);
 
 		// From the NSItemProviderWriting protocol
 		[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 		[Static]
 		[Export ("writableTypeIdentifiersForItemProvider", ArgumentSemantic.Copy)]
-		new string[] WritableTypeIdentifiers { get; }
+#if XAMCORE_2_0 || !MONOMAC
+		new
+#endif
+		string[] WritableTypeIdentifiers { get; }
 	}
 
 	[StrongDictionary ("NSString")]

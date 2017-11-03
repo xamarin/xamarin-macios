@@ -521,7 +521,11 @@ namespace XamCore.SpriteKit {
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (SKEffectNode))]
-	partial interface SKScene {
+	interface SKScene
+#if (XAMCORE_2_0 || !MONOMAC) && !WATCH
+		: GKSceneRootNodeType
+#endif
+	{
 		[Export ("initWithSize:")]
 		IntPtr Constructor (CGSize size);
 

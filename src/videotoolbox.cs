@@ -94,6 +94,10 @@ namespace XamCore.VideoToolbox {
 		[Field ("kVTCompressionPropertyKey_ExpectedDuration")]
 		NSString ExpectedDuration { get; }
 
+		[Mac (10,13), iOS (11,0), TV (11,0)]
+		[Field ("kVTCompressionPropertyKey_BaseLayerFrameRate")]
+		NSString BaseLayerFrameRate { get; }
+
 		// Hardware acceleration
 		// Hardware acceleration is default behavior on iOS. No opt-in required.
 
@@ -134,6 +138,14 @@ namespace XamCore.VideoToolbox {
 		[Field ("kVTCompressionPropertyKey_ICCProfile")]
 		NSString ICCProfile { get; } 
 
+		[Mac (10,13), iOS (11,0), TV (11,0)]
+		[Field ("kVTCompressionPropertyKey_MasteringDisplayColorVolume")]
+		NSString MasteringDisplayColorVolume { get; }
+
+		[Mac (10,13), iOS (11,0), TV (11,0)]
+		[Field ("kVTCompressionPropertyKey_ContentLightLevelInfo")]
+		NSString ContentLightLevelInfo { get; }
+
 		// Pre-compression processing
 
 		[Field ("kVTCompressionPropertyKey_PixelTransferProperties")]
@@ -144,6 +156,12 @@ namespace XamCore.VideoToolbox {
 		[Field ("kVTCompressionPropertyKey_MultiPassStorage")]
 		[Mac (10,10)]
 		NSString MultiPassStorage { get; }
+
+		// Encoder information
+
+		[Field ("kVTCompressionPropertyKey_EncoderID")]
+		[Mac (10,13), iOS (11,0), TV (11,0)]
+		NSString EncoderId { get; }
 	}
 
 	[Mac (10,8), iOS (8,0), TV (10,2)]
@@ -205,6 +223,10 @@ namespace XamCore.VideoToolbox {
 		[Export ("ExpectedDuration")]
 		double ExpectedDuration { get; set; }
 
+		[Mac (10,13), iOS (11,0), TV (11,0)]
+		[Export ("BaseLayerFrameRate")]
+		double BaseLayerFrameRate { get; set; }
+
 		[Export ("UsingHardwareAcceleratedVideoEncoder")]
 		bool UsingHardwareAcceleratedVideoEncoder { get; }
 
@@ -226,13 +248,35 @@ namespace XamCore.VideoToolbox {
 		[Export ("ICCProfile")]
 		NSData ICCProfile { get; set; }
 
+		[Mac (10,13), iOS (11,0), TV (11,0)]
+		[Export ("MasteringDisplayColorVolume")]
+		NSData MasteringDisplayColorVolume { get; set; }
+
+		[Mac (10,13), iOS (11,0), TV (11,0)]
+		[Export ("ContentLightLevelInfo")]
+		NSData ContentLightLevelInfo { get; set; }
+
 		[Export ("PixelTransferProperties")]
 		NSDictionary PixelTransferProperties { get; set; }
+
+		[Mac (10,13), iOS (11,0), TV (11,0)]
+		[Export ("EncoderId")]
+		string EncoderId { get; set; }
 	}
 
 	[Mac (10,8), iOS (8,0), TV (10,2)]
 	[Static]
 	interface VTProfileLevelKeys {
+		// HEVC
+
+		[Mac (10,13), iOS (11,0), TV (11,0)]
+		[Field ("kVTProfileLevel_HEVC_Main_AutoLevel")]
+		NSString Hevc_Main_AutoLevel { get; }
+
+		[Mac (10,13), iOS (11,0), TV (11,0)]
+		[Field ("kVTProfileLevel_HEVC_Main10_AutoLevel")]
+		NSString Hevc_Main10_AutoLevel { get; }
+
 		// H264
 
 		[Field ("kVTProfileLevel_H264_Baseline_1_3")]
@@ -561,6 +605,10 @@ namespace XamCore.VideoToolbox {
 		[Field ("kVTDecompressionProperty_OnlyTheseFrames_KeyFrames")]
 		NSString OnlyTheseFrames_KeyFrames { get; } 
 
+		[Mac (10,13), iOS (11,0), TV (11,0)]
+		[Field ("kVTDecompressionProperty_TemporalLevelLimit")]
+		NSString TemporalLevelLimit { get; }
+
 		[Field ("kVTDecompressionPropertyKey_SuggestedQualityOfServiceTiers")]
 		NSString SuggestedQualityOfServiceTiers { get; }
 
@@ -624,6 +672,10 @@ namespace XamCore.VideoToolbox {
 
 		[Export ("ReducedFrameDelivery")]
 		float ReducedFrameDelivery { get; set; }
+
+		[Mac (10,13), iOS (11,0), TV (11,0)]
+		[Export ("TemporalLevelLimit")]
+		int TemporalLevelLimit { get; set; }
 
 		[Export ("SuggestedQualityOfServiceTiers")]
 		NSDictionary[] SuggestedQualityOfServiceTiers { get; }

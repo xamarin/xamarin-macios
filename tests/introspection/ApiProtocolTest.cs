@@ -172,6 +172,16 @@ namespace Introspection {
 				if (!TestRuntime.CheckXcodeVersion (9, 0))
 					return true;
 				break;
+			case "GKSceneRootNodeType":
+				// it's an empty protocol, defined by a category and does not reply as expected
+				switch (type.Name) {
+				// GameplayKit.framework/Headers/SceneKit+Additions.h
+				case "SCNScene":
+				// GameplayKit.framework/Headers/SpriteKit+Additions.h
+				case "SKScene":
+					return true;
+				}
+				break;
 			}
 			return false;
 		}

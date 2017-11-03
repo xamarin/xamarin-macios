@@ -54,6 +54,11 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion (8, 0))
 						continue;
 					break;
+				case HKQuantityTypeIdentifier.WaistCircumference:
+				case HKQuantityTypeIdentifier.VO2Max:
+					if (!TestRuntime.CheckXcodeVersion(9, 0))
+						continue;
+					break;
 				}
 
 				try {
