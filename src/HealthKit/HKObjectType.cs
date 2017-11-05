@@ -238,6 +238,12 @@ namespace XamCore.HealthKit
 
 			case HKQuantityTypeIdentifier.UVExposure:
 				return HKQuantityTypeIdentifierKey.UVExposure;
+
+			case HKQuantityTypeIdentifier.WaistCircumference:
+				return HKQuantityTypeIdentifierKey.WaistCircumference;
+
+			case HKQuantityTypeIdentifier.VO2Max:
+				return HKQuantityTypeIdentifierKey.VO2Max;
 			}
 			return null;
 		}

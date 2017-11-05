@@ -180,6 +180,14 @@ public static class Asserts
 		Assert.AreEqual (expected.W, actual.W, message + " (W)");
 	}
 
+	public static void AreEqual (Quaterniond expected, Quaterniond actual, string message)
+	{
+		Assert.AreEqual (expected.X, actual.X, message + " (X)");
+		Assert.AreEqual (expected.Y, actual.Y, message + " (Y)");
+		Assert.AreEqual (expected.Z, actual.Z, message + " (Z)");
+		Assert.AreEqual (expected.W, actual.W, message + " (W)");
+	}
+
 #if !MONOMAC && !__WATCHOS__
 	public static void AreEqual (MPSImageHistogramInfo expected, MPSImageHistogramInfo actual, string message)
 	{

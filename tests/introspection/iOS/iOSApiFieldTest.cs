@@ -104,7 +104,9 @@ namespace Introspection {
 			// Apple does not ship a PushKit for every arch on some devices :(
 			case "Voip":
 				return Runtime.Arch == Arch.DEVICE;
-
+			// Just available on device
+			case "UsageKey":
+				return Runtime.Arch == Arch.SIMULATOR;
 			default:
 				return base.Skip (p);
 			}
@@ -136,6 +138,7 @@ namespace Introspection {
 			// there's only partial support for metal on the simulator (on iOS9 beta 5) but most other frameworks
 			// that interop with it are not (yet) supported
 			case "kCVMetalTextureCacheMaximumTextureAgeKey":
+			case "kCVMetalTextureUsage":
 			case "MPSRectNoClip":
 			case "MTKTextureLoaderErrorDomain":
 			case "MTKTextureLoaderErrorKey":

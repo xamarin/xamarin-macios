@@ -1,4 +1,4 @@
-﻿#if !__WATCHOS__ && !MONOMAC
+#if !__WATCHOS__ && !MONOMAC
 
 using System;
 #if XAMCORE_2_0
