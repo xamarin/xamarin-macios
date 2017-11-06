@@ -348,7 +348,7 @@ namespace XamCore.CoreMedia {
 		extern static /* CMFormatDescriptionRef */ IntPtr CMSampleBufferGetFormatDescription (/* CMSampleBufferRef */ IntPtr sbuf);
 
 #if !XAMCORE_2_0
-		[Advice ("Use GetAudioFormatDescription or GetVideoFormatDescription")]		
+		[Advice ("Use 'GetAudioFormatDescription' or 'GetVideoFormatDescription'.")]
 		public CMFormatDescription GetFormatDescription ()
 		{
 			var desc = default(CMFormatDescription);

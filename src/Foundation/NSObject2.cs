@@ -325,7 +325,7 @@ namespace XamCore.Foundation {
 		}
 			
 #if !XAMCORE_2_0
-		[Obsolete ("Low-level API warning: Use at your own risk: this calls the Release method on the underlying object;  Use DangerousRelease to avoid this warning")]	
+		[Obsolete ("Low-level API warning: Use at your own risk: this calls the Release method on the underlying object;  Use DangerousRelease to avoid this warning.")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public void Release ()
 		{
@@ -371,7 +371,7 @@ namespace XamCore.Foundation {
 		}
 
 #if !XAMCORE_2_0
-		[Obsolete ("Low-level API warning: Use at your own risk: this calls the Retain method on the underlying object; Use DangerousRetain to avoid this warning")]
+		[Obsolete ("Low-level API warning: Use at your own risk: this calls the Retain method on the underlying object; Use DangerousRetain to avoid this warning.")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public NSObject Retain ()
 		{
@@ -391,7 +391,7 @@ namespace XamCore.Foundation {
 		}
 
 #if !XAMCORE_2_0
-		[Obsolete ("Low-level API warning: Use at your own risk: this calls the Retain method on the underlying object; Use DangerousAutorelease to avoid this warning")]
+		[Obsolete ("Low-level API warning: Use at your own risk: this calls the Retain method on the underlying object; Use DangerousAutorelease to avoid this warning.")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public NSObject Autorelease ()
 		{

@@ -16,19 +16,19 @@ namespace XamCore.Foundation {
 			};
 		}
 
-		[Obsolete ("Use the override that accept an NSUrlDownloadSessionResponse parameter")]
+		[Obsolete ("Use the override that accept an 'NSUrlDownloadSessionResponse' parameter.")]
 		public virtual NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request, NSUrlSessionResponse completionHandler)
 		{
 			return CreateDownloadTask (request, GetCompletionHandler (completionHandler));
 		}
 
-		[Obsolete ("Use the override that accept an NSUrlDownloadSessionResponse parameter")]
+		[Obsolete ("Use the override that accept an 'NSUrlDownloadSessionResponse' parameter.")]
 		public virtual NSUrlSessionDownloadTask CreateDownloadTask (NSUrl url, NSUrlSessionResponse completionHandler)
 		{
 			return CreateDownloadTask (url, GetCompletionHandler (completionHandler));
 		}
 
-		[Obsolete ("Use the override that accept an NSUrlDownloadSessionResponse parameter")]
+		[Obsolete ("Use the override that accept an 'NSUrlDownloadSessionResponse' parameter.")]
 		public virtual NSUrlSessionDownloadTask CreateDownloadTaskFromResumeData (NSData resumeData, NSUrlSessionResponse completionHandler)
 		{
 			return CreateDownloadTaskFromResumeData (resumeData, GetCompletionHandler (completionHandler));

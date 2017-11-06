@@ -1059,7 +1059,7 @@ namespace XamCore.AudioToolbox {
 		}
 
 #if !XAMCORE_3_0
-		[Obsolete ("Use AudioStreamDescription instead")]
+		[Obsolete ("Use 'AudioStreamDescription' instead.")]
 		public AudioStreamBasicDescription AudioStreamPacketDescription {
 			get {
 				return AudioStreamDescription;
@@ -1164,7 +1164,7 @@ namespace XamCore.AudioToolbox {
 			out AudioStreamBasicDescription outProcessingFormat, out IntPtr outAQTap);
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use CreateProcessingTap (AudioQueueProcessingTapDelegate, AudioQueueProcessingTapFlags, out AudioQueueStatus) instead", true)]
+		[Obsolete ("Use 'CreateProcessingTap (AudioQueueProcessingTapDelegate, AudioQueueProcessingTapFlags, out AudioQueueStatus)' instead.", true)]
 		[iOS (6,0)]
 		public AudioQueueProcessingTap CreateProcessingTap (AudioQueueProcessingTapCallback processingCallback, AudioQueueProcessingTapFlags flags,
 		                                                    out AudioQueueStatus status)
@@ -1202,7 +1202,7 @@ namespace XamCore.AudioToolbox {
 	                                                     out uint outNumberFrames, IntPtr data);
 
 #if !XAMCORE_2_0
-	[Obsolete ("Use AudioQueueProcessingTapDelegate")]
+	[Obsolete ("Use 'AudioQueueProcessingTapDelegate'.")]
 	public delegate uint AudioQueueProcessingTapCallback (AudioQueueProcessingTap audioQueueTap, uint numberOfFrames,
 	                                                      ref AudioTimeStamp timeStamp, ref AudioQueueProcessingTapFlags flags,
 	                                                      AudioBufferList data);
@@ -1269,7 +1269,7 @@ namespace XamCore.AudioToolbox {
 		                                                               out AudioQueueProcessingTapFlags outFlags, out uint outNumberFrames,
 		                                                               AudioBufferList ioData);
 
-		[Obsolete ("Use overload with AudioBuffers")]
+		[Obsolete ("Use overload with 'AudioBuffers'.")]
 		public AudioQueueStatus GetSourceAudio (uint numberOfFrames, ref AudioTimeStamp timeStamp,
 		                                        out AudioQueueProcessingTapFlags flags, out uint parentNumberOfFrames, AudioBufferList data)
 		{

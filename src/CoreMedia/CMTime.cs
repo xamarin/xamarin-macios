@@ -338,7 +338,7 @@ namespace XamCore.CoreMedia {
 		}
 			
 #if !XAMCORE_2_0
-		[Obsolete ("Use ToDictionary instead")]
+		[Obsolete ("Use 'ToDictionary' instead.")]
 		public IntPtr AsDictionary {
 			get {
 				return CMTimeCopyAsDictionary (this, IntPtr.Zero);
@@ -371,7 +371,7 @@ namespace XamCore.CoreMedia {
 		}
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use FromDictionary (NSDictionary) instead")]
+		[Obsolete ("Use 'FromDictionary (NSDictionary)' instead.")]
 		public static CMTime FromDictionary (IntPtr dict)
 		{
 			return CMTimeMakeFromDictionary (dict);

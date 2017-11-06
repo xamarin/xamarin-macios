@@ -166,7 +166,7 @@ namespace XamCore.CoreBluetooth {
 		}
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use the CBUUID overload since Guid internal memory representation is different")]
+		[Obsolete ("Use the 'CBUUID' overload since Guid internal memory representation is different.")]
 		public void DiscoverServices (Guid [] services)
 		{
 			if (services == null)
@@ -185,7 +185,7 @@ namespace XamCore.CoreBluetooth {
 		}
 		
 #if !XAMCORE_2_0
-		[Obsolete ("Use the CBUUID overload since Guid internal memory representation is different")]
+		[Obsolete ("Use the 'CBUUID' overload since Guid internal memory representation is different.")]
 		public void DiscoverIncludedServices (Guid [] includedServiceUUIDs, CBService forService)
 		{
 			if (includedServiceUUIDs == null)
@@ -209,7 +209,7 @@ namespace XamCore.CoreBluetooth {
 		}
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use the CBUUID overload since Guid internal memory representation is different")]
+		[Obsolete ("Use the 'CBUUID' overload since Guid internal memory representation is different.")]
 		public void DiscoverCharacteristics (Guid [] charactersticUUIDs, CBService forService)
 		{
 			if (charactersticUUIDs == null)

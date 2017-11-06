@@ -116,13 +116,13 @@ namespace XamCore.AVFoundation {
 
 #if !XAMCORE_2_0
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[Obsolete ("use Locked instead")]
+		[Obsolete ("Use 'Locked' instead.")]
 		ModeLocked = Locked,
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[Obsolete ("use AutoFocus instead")]
+		[Obsolete ("Use 'AutoFocus' instead.")]
 		ModeAutoFocus = AutoFocus,
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[Obsolete ("use ContinuousAutoFocus instead")]
+		[Obsolete ("Use 'ContinuousAutoFocus' instead.")]
 		ModeContinuousAutoFocus = ContinuousAutoFocus
 #endif
 	}

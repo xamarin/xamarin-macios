@@ -50,7 +50,7 @@ namespace XamCore.CoreLocation {
 	}
 
 #if !XAMCORE_2_0
-	[Obsolete ("Use CLAuthorizationChangedEventArgs")]
+	[Obsolete ("Use 'CLAuthorizationChangedEventArgs'.")]
 	public class CLAuthroziationChangedEventArgs : CLAuthorizationChangedEventArgs
 	{
 		public CLAuthroziationChangedEventArgs (CLAuthorizationStatus status)
