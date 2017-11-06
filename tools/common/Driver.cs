@@ -123,6 +123,9 @@ namespace Xamarin.Bundler {
 			options.Add ("ignore-dynamic-symbol:", "Specify that Xamarin.iOS/Xamarin.Mac should not try to prevent the linker from removing the specified symbol.", (v) => {
 				app.IgnoredSymbols.Add (v);
 			});
+			options.Add ("root-assembly:", "Specifies any root assemblies. There must be at least one root assembly, usually the main executable.", (v) => {
+				app.RootAssemblies.Add (v);
+			});
 			options.Add (new Mono.Options.ResponseFileSource ());
 		}
 

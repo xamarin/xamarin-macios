@@ -367,9 +367,8 @@ namespace Xamarin.Bundler {
 
 			AddSharedOptions (App, os);
 
-			IList<string> unprocessed;
 			try {
-				unprocessed = os.Parse (args);
+				App.RootAssemblies.AddRange (os.Parse (args));
 			}
 			catch (MonoMacException) {
 				throw;
@@ -506,13 +505,12 @@ namespace Xamarin.Bundler {
 			ValidateSDKVersion ();
 
 			if (action == Action.RunRegistrar) {
-				App.RootAssemblies.AddRange (unprocessed);
 				App.Registrar = RegistrarMode.Static;
 				App.RunRegistrar ();
 				return;
 			}
 			try {
-				Pack (unprocessed);
+				Pack (App.RootAssemblies);
 			} finally {
 				if (App.Cache.IsCacheTemporary) {
 					// If we used a temporary directory we created ourselves for the cache

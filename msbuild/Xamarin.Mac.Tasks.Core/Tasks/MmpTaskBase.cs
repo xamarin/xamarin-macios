@@ -196,7 +196,7 @@ namespace Xamarin.Mac.Tasks
 			}
 
 			if (!string.IsNullOrEmpty (ApplicationAssembly.ItemSpec)) {
-				args.AddQuoted (Path.GetFullPath (ApplicationAssembly.ItemSpec));
+				args.AddQuoted ("/root-assembly:" + Path.GetFullPath (ApplicationAssembly.ItemSpec));
 			}
 
 			if (!string.IsNullOrWhiteSpace (ExtraArguments))
