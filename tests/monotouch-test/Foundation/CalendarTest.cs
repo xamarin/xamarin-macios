@@ -34,7 +34,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void DateComponentsTest ()
 		{
 			var cal = new NSCalendar (NSCalendarType.Gregorian);
-			var now = DateTime.Now;
+			var now = DateTime.Now.ToUniversalTime ();
 			NSDateComponents comps;
 
 			comps = cal.Components (NSCalendarUnit.Year | NSCalendarUnit.Month | NSCalendarUnit.Day, NSDate.Now);
