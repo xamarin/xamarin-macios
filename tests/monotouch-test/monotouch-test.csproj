@@ -169,8 +169,8 @@
     <Compile Include="**\*.cs" Exclude="obj\**">
       <Link>%(RecursiveDir)%(Filename).cs</Link>
     </Compile>
-    <Compile Include="ObjCRuntime\TrampolineTest.generated.cs" />
-    <Compile Include="ObjCRuntime\RegistrarTest.generated.cs" />
+    <Compile Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
+    <Compile Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
     <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestPoint.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestPoint.cs</Link>
     </Compile>
@@ -334,8 +334,8 @@
     <GeneratedTestInput Include="..\..\tests\test-libraries\*.h" />
     <GeneratedTestInput Include="..\..\tests\test-libraries\*.cs" />
     <GeneratedTestInput Include="..\..\tests\test-libraries\Makefile" />
-    <GeneratedTestOutput Include="ObjCRuntime\TrampolineTest.generated.cs" />
-    <GeneratedTestOutput Include="ObjCRuntime\RegistrarTest.generated.cs" />
+    <GeneratedTestOutput Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
+    <GeneratedTestOutput Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
   </ItemGroup>
   <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)">
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />

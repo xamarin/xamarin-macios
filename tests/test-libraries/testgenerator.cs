@@ -1448,7 +1448,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		w.AppendLine (@"	}
 }");
 
-		File.WriteAllText ("../monotouch-test/ObjCRuntime/RegistrarTest.generated.cs", w.ToString ());
+		File.WriteAllText ("RegistrarTest.generated.cs", w.ToString ());
 	}
 
 	static void WriteTrampolineTests ()
@@ -1655,7 +1655,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		w.AppendLine (@"	}
 }");
 
-		File.WriteAllText ("../monotouch-test/ObjCRuntime/TrampolineTest.generated.cs", w.ToString ());
+		File.WriteAllText ("TrampolineTest.generated.cs", w.ToString ());
 	}
 
 	static void WriteStretConditions (StringBuilder w, string s, out bool never)
