@@ -121,12 +121,14 @@ namespace XamCore.SceneKit {
 		[Export ("addAnimation:forKey:")]
 		void AddAnimation (CAAnimation animation, [NullAllowed] NSString key);
 
+#if XAMCORE_2_0
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[iOS (11,0), TV (11,0), Watch (4,0), Mac (10,13)]
+		[iOS (11,0), TV (11,0), Watch (4,0), Mac (10,13, onlyOn64, true)]
 		[Export ("addAnimationPlayer:forKey:")]
 		void AddAnimation (SCNAnimationPlayer player, [NullAllowed] NSString key);
+#endif
 
 #if XAMCORE_2_0
 		[Abstract]
@@ -146,13 +148,15 @@ namespace XamCore.SceneKit {
 		[Export ("animationKeys")]
 		NSString [] GetAnimationKeys ();
 
+#if XAMCORE_2_0
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[return: NullAllowed]
-		[iOS (11,0), TV (11,0), Watch (4,0), Mac (10,13)]
+		[iOS (11,0), TV (11,0), Watch (4,0), Mac (10, 13, onlyOn64: true)]
 		[Export ("animationPlayerForKey:")]
 		SCNAnimationPlayer GetAnimationPlayer (NSString key);
+#endif
 
 #if XAMCORE_2_0
 		[Abstract]
@@ -215,7 +219,7 @@ namespace XamCore.SceneKit {
 		[Abstract]
 #endif
 		[return: NullAllowed]
-		[iOS (11,0), TV (11,0), Watch (4,0), Mac (10,13)]
+		[iOS (11,0), TV (11,0), Watch (4,0), Mac (10, 13, onlyOn64: true)]
 		[Export ("removeAnimationForKey:blendOutDuration:")]
 		void RemoveAnimationUsingBlendOutDuration (NSString key, nfloat blendOutDuration);
 
@@ -886,7 +890,7 @@ namespace XamCore.SceneKit {
 		[Export ("edgeCreasesSource", ArgumentSemantic.Retain)]
 		SCNGeometrySource EdgeCreasesSource { get; set; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("wantsAdaptiveSubdivision")]
 		bool WantsAdaptiveSubdivision { get; set; }
 
@@ -897,7 +901,7 @@ namespace XamCore.SceneKit {
 		[Export ("geometryWithMDLMesh:")]
 		SCNGeometry FromMesh (MDLMesh mesh);
 
-		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[NoWatch, NoTV, Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[NullAllowed, Export ("tessellator", ArgumentSemantic.Retain)]
 		SCNGeometryTessellator Tessellator { get; set; }
 #endif
@@ -1013,19 +1017,19 @@ namespace XamCore.SceneKit {
 		[Export ("geometryElementWithData:primitiveType:primitiveCount:bytesPerIndex:")]
 		SCNGeometryElement FromData ([NullAllowed] NSData data, SCNGeometryPrimitiveType primitiveType, nint primitiveCount, nint bytesPerIndex);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("primitiveRange", ArgumentSemantic.Assign)]
 		NSRange PrimitiveRange { get; set; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("pointSize")]
 		nfloat PointSize { get; set; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("minimumPointScreenSpaceRadius")]
 		nfloat MinimumPointScreenSpaceRadius { get; set; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("maximumPointScreenSpaceRadius")]
 		nfloat MaximumPointScreenSpaceRadius { get; set; }
 
@@ -1282,31 +1286,31 @@ namespace XamCore.SceneKit {
 		[Export ("categoryBitMask")]
 		nuint CategoryBitMask { get; set; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("automaticallyAdjustsShadowProjection")]
 		bool AutomaticallyAdjustsShadowProjection { get; set; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("maximumShadowDistance")]
 		nfloat MaximumShadowDistance { get; set; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("forcesBackFaceCasters")]
 		bool ForcesBackFaceCasters { get; set; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("sampleDistributedShadowMaps")]
 		bool SampleDistributedShadowMaps { get; set; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("shadowCascadeCount")]
 		nuint ShadowCascadeCount { get; set; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("shadowCascadeSplittingFactor")]
 		nfloat ShadowCascadeSplittingFactor { get; set; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("sphericalHarmonicsCoefficients", ArgumentSemantic.Copy)]
 		NSData SphericalHarmonicsCoefficients { get; }
 
@@ -1574,7 +1578,7 @@ namespace XamCore.SceneKit {
 		[Export ("maxAnisotropy")]
 		nfloat MaxAnisotropy { get; set; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("textureComponents", ArgumentSemantic.Assign)]
 		SCNColorMask TextureComponents { get; set; }
 
@@ -1653,7 +1657,7 @@ namespace XamCore.SceneKit {
 		[Export ("position")]
 		SCNVector3 Position { get; set;  }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("worldPosition", ArgumentSemantic.Assign)]
 		SCNVector3 WorldPosition { get; set; }
 
@@ -1667,7 +1671,7 @@ namespace XamCore.SceneKit {
 		SCNMatrix4 Pivot { get; set;  }
 
 		[Export ("worldTransform")]
-		SCNMatrix4 WorldTransform { get; [Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)] set; }
+		SCNMatrix4 WorldTransform { get; [Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)] set; }
 
 		[Export ("hidden")]
 		bool Hidden { [Bind ("isHidden")] get; set;  }
@@ -1749,7 +1753,7 @@ namespace XamCore.SceneKit {
 		[Export ("morpher", ArgumentSemantic.Retain)]
 		SCNMorpher Morpher { get; set; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("worldOrientation", ArgumentSemantic.Assign)]
 		SCNQuaternion WorldOrientation { get; set; }
 
@@ -1778,11 +1782,11 @@ namespace XamCore.SceneKit {
 		[Export ("convertPosition:fromNode:")]
 		SCNVector3 ConvertPositionFromNode (SCNVector3 position, [NullAllowed] SCNNode node);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("convertVector:toNode:")]
 		SCNVector3 ConvertVectorToNode (SCNVector3 vector, [NullAllowed] SCNNode node);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("convertVector:fromNode:")]
 		SCNVector3 ConvertVectorFromNode (SCNVector3 vector, [NullAllowed] SCNNode node);
 
@@ -1839,7 +1843,7 @@ namespace XamCore.SceneKit {
 		[Export ("enumerateHierarchyUsingBlock:")]
 		void EnumerateHierarchy (SCNNodeHandler handler);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("focusBehavior", ArgumentSemantic.Assign)]
 		SCNNodeFocusBehavior FocusBehavior { get; set; }
 
@@ -1893,50 +1897,50 @@ namespace XamCore.SceneKit {
 
 		// From SCNNode (Transforms) Category
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Static]
 		[Export ("localUp")]
 		SCNVector3 LocalUp { get; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Static]
 		[Export ("localRight")]
 		SCNVector3 LocalRight { get; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Static]
 		[Export ("localFront")]
 		SCNVector3 LocalFront { get; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("worldUp")]
 		SCNVector3 WorldUp { get; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("worldRight")]
 		SCNVector3 WorldRight { get; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("worldFront")]
 		SCNVector3 WorldFront { get; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("lookAt:")]
 		void Look (SCNVector3 worldTarget);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("lookAt:up:localFront:")]
 		void Look (SCNVector3 worldTarget, SCNVector3 worldUp, SCNVector3 localFront);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("localTranslateBy:")]
 		void LocalTranslate (SCNVector3 translation);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("localRotateBy:")]
 		void LocalRotate (SCNQuaternion rotation);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("rotateBy:aroundTarget:")]
 		void Rotate (SCNQuaternion worldRotation, SCNVector3 worldTarget);
 
@@ -2009,7 +2013,7 @@ namespace XamCore.SceneKit {
 		 * End of bindings-generator.cs.
 		 */
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdTransform", ArgumentSemantic.Assign)]
 		//NMatrix4 SimdTransform {
 		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2018,7 +2022,7 @@ namespace XamCore.SceneKit {
 		//	set;
 		//}
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdPosition", ArgumentSemantic.Assign)]
 		//NVector3 SimdPosition {
 		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2027,7 +2031,7 @@ namespace XamCore.SceneKit {
 		//	set;
 		//}
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdRotation", ArgumentSemantic.Assign)]
 		//Vector4 SimdRotation {
 		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2036,7 +2040,7 @@ namespace XamCore.SceneKit {
 		//	set;
 		//}
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdOrientation", ArgumentSemantic.Assign)]
 		//Quaternion SimdOrientation {
 		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2045,7 +2049,7 @@ namespace XamCore.SceneKit {
 		//	set;
 		//}
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdEulerAngles", ArgumentSemantic.Assign)]
 		//NVector3 SimdEulerAngles {
 		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2054,7 +2058,7 @@ namespace XamCore.SceneKit {
 		//	set;
 		//}
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdScale", ArgumentSemantic.Assign)]
 		//NVector3 SimdScale {
 		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2063,7 +2067,7 @@ namespace XamCore.SceneKit {
 		//	set;
 		//}
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdPivot", ArgumentSemantic.Assign)]
 		//NMatrix4 SimdPivot {
 		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2072,7 +2076,7 @@ namespace XamCore.SceneKit {
 		//	set;
 		//}
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdWorldPosition", ArgumentSemantic.Assign)]
 		//NVector3 SimdWorldPosition {
 		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2081,7 +2085,7 @@ namespace XamCore.SceneKit {
 		//	set;
 		//}
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdWorldOrientation", ArgumentSemantic.Assign)]
 		//Quaternion SimdWorldOrientation {
 		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2090,7 +2094,7 @@ namespace XamCore.SceneKit {
 		//	set;
 		//}
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdWorldTransform", ArgumentSemantic.Assign)]
 		//NMatrix4 SimdWorldTransform {
 		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2099,36 +2103,36 @@ namespace XamCore.SceneKit {
 		//	set;
 		//}
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdConvertPosition:toNode:")]
 		//[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		//NVector3 ConvertPositionToNode (NVector3 position, [NullAllowed] SCNNode node);
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdConvertPosition:fromNode:")]
 		//[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		//NVector3 ConvertPositionFromNode (NVector3 position, [NullAllowed] SCNNode node);
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdConvertVector:toNode:")]
 		//[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		//NVector3 ConvertVectorToNode (NVector3 vector, [NullAllowed] SCNNode node);
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdConvertVector:fromNode:")]
 		//[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		//NVector3 ConvertVectorFromNode (NVector3 vector, [NullAllowed] SCNNode node);
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdConvertTransform:toNode:")]
 		//[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		//NMatrix4 ConvertTransformToNode (NMatrix4 transform, [NullAllowed] SCNNode node);
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdConvertTransform:fromNode:")]
 		//NMatrix4 ConvertTransformFromNode (NMatrix4 transform, [NullAllowed] SCNNode node);
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Static]
 		//[Export ("simdLocalUp")]
 		//NVector3 SimdLocalUp {
@@ -2136,7 +2140,7 @@ namespace XamCore.SceneKit {
 		//	get;
 		//}
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Static]
 		//[Export ("simdLocalRight")]
 		//NVector3 SimdLocalRight {
@@ -2144,7 +2148,7 @@ namespace XamCore.SceneKit {
 		//	get;
 		//}
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Static]
 		//[Export ("simdLocalFront")]
 		//NVector3 SimdLocalFront {
@@ -2152,48 +2156,48 @@ namespace XamCore.SceneKit {
 		//	get;
 		//}
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdWorldUp")]
 		//NVector3 SimdWorldUp {
 		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		//	get;
 		//}
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdWorldRight")]
 		//NVector3 SimdWorldRight {
 		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		//	get;
 		//}
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdWorldFront")]
 		//NVector3 SimdWorldFront {
 		//	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		//	get;
 		//}
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdLookAt:")]
 		//[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		//void Look (NVector3 worldTarget);
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdLookAt:up:localFront:")]
 		//[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		//void Look (NVector3 worldTarget, NVector3 worldUp, NVector3 localFront);
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdLocalTranslateBy:")]
 		//[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		//void LocalTranslate (NVector3 translation);
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdLocalRotateBy:")]
 		//[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		//void LocalRotate (Quaternion rotation);
 
-		//[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		//[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		//[Export ("simdRotateBy:aroundTarget:")]
 		//[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		//void Rotate (Quaternion worldRotation, NVector3 worldTarget);
@@ -3349,7 +3353,7 @@ namespace XamCore.SceneKit {
 		SCNCameraController DefaultCameraController { get; }
 #endif
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("rendersContinuously")]
 		bool RendersContinuously { get; set; }
 	}
@@ -3408,25 +3412,25 @@ namespace XamCore.SceneKit {
 		[Export ("calculationMode")]
 		SCNMorpherCalculationMode CalculationMode { get; set; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("weights", ArgumentSemantic.Retain)]
 		NSNumber [] Weights { get; set; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("unifiesNormals")]
 		bool UnifiesNormals { get; set; }
 
 		[Export ("setWeight:forTargetAtIndex:")]
 		void SetWeight (nfloat weight, nuint targetIndex);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("setWeight:forTargetNamed:")]
 		void SetWeight (nfloat weight, string targetName);
 
 		[Export ("weightForTargetAtIndex:")]
 		nfloat GetWeight (nuint targetIndex);
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("weightForTargetNamed:")]
 		nfloat GetWeight (string targetName);
 	}
@@ -4241,7 +4245,7 @@ namespace XamCore.SceneKit {
 		[Export ("penetrationDistance")]
 		nfloat PenetrationDistance { get; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("sweepTestFraction")]
 		nfloat SweepTestFraction { get; }
 	}
@@ -4665,15 +4669,15 @@ namespace XamCore.SceneKit {
 		[Export ("removeAllModifiers")]
 		void RemoveAllModifiers ();
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("orientationDirection", ArgumentSemantic.Assign)]
 		SCNVector3 OrientationDirection { get; set; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("particleIntensity")]
 		nfloat ParticleIntensity { get; set; }
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("particleIntensityVariation")]
 		nfloat ParticleIntensityVariation { get; set; }
 	}
@@ -4958,7 +4962,7 @@ namespace XamCore.SceneKit {
 		void StopWithBlendOutDuration (double seconds);
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (SCNConstraint))]
 	interface SCNDistanceConstraint {
 
@@ -4976,7 +4980,7 @@ namespace XamCore.SceneKit {
 		nfloat MaximumDistance { get; set; }
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (SCNConstraint))]
 	interface SCNReplicatorConstraint {
 
@@ -5006,7 +5010,7 @@ namespace XamCore.SceneKit {
 		SCNVector3 ScaleOffset { get; set; }
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (SCNConstraint))]
 	interface SCNAccelerationConstraint {
 
@@ -5027,7 +5031,7 @@ namespace XamCore.SceneKit {
 		nfloat Damping { get; set; }
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (SCNConstraint))]
 	interface SCNSliderConstraint {
 
@@ -5047,7 +5051,7 @@ namespace XamCore.SceneKit {
 
 	interface ISCNAvoidOccluderConstraintDelegate { }
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface SCNAvoidOccluderConstraintDelegate {
@@ -5059,7 +5063,7 @@ namespace XamCore.SceneKit {
 		void DidAvoidOccluder (SCNAvoidOccluderConstraint constraint, SCNNode occluder, SCNNode node);
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (SCNConstraint))]
 	interface SCNAvoidOccluderConstraint {
 
@@ -5080,7 +5084,7 @@ namespace XamCore.SceneKit {
 		nfloat Bias { get; set; }
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(SCNPhysicsBehavior))]
 	interface SCNPhysicsConeTwistJoint {
 
