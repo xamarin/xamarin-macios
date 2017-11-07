@@ -218,6 +218,9 @@ namespace Introspection {
 				case "HKSeriesBuilder":
 				case "HKWorkoutRouteBuilder":
 					return true;
+				// Xcode 9.2 undocumented conformance (like due to new base type)
+				case "HMHomeAccessControl":
+					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
 				case "CLKComplicationTemplateCircularSmallRingImage":
@@ -362,6 +365,9 @@ namespace Introspection {
 				// Header shows implementing NSSecureCoding, but supportsSecureCoding returns false.  Radar #34800025
 				case "HKSeriesBuilder":
 				case "HKWorkoutRouteBuilder":
+					return true;
+				// Xcode 9.2 undocumented conformance (like due to new base type)
+				case "HMHomeAccessControl":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
