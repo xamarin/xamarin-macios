@@ -612,10 +612,11 @@ namespace xharness
 
 		public void LogWrench (string message, params object[] args)
 		{
-			if (!InWrench)
-				return;
+			// Disable this for now, since we're not uploading directly to wrench anymore, but instead using the Html Report.
+			//if (!InWrench)
+			//	return;
 
-			Console.WriteLine (message, args);
+			//Console.WriteLine (message, args);
 		}
 
 		public void LogWrench (string message)
