@@ -37,7 +37,7 @@ namespace MonoTouchFixtures.Foundation {
 			var now = DateTime.Now.ToUniversalTime ();
 			NSDateComponents comps;
 
-			comps = cal.Components (NSCalendarUnit.Year | NSCalendarUnit.Month | NSCalendarUnit.Day, NSDate.Now);
+			comps = cal.Components (NSCalendarUnit.Year | NSCalendarUnit.Month | NSCalendarUnit.Day, (NSDate) now);
 			Assert.AreEqual (now.Year, comps.Year, "a year");
 			Assert.AreEqual (now.Month, comps.Month, "a month");
 			Assert.AreEqual (now.Day, comps.Day, "a day");
