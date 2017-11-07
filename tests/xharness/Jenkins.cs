@@ -742,10 +742,10 @@ namespace xharness
 
 			// Try and find an unused port
 			int attemptsLeft = 50;
-			int port = 0;
+			int port = 51234; // Try this port first, to try to not vary between runs just because.
 			Random r = new Random ((int) DateTime.Now.Ticks);
 			while (attemptsLeft-- > 0) {
-				var newPort = r.Next (49152, 65535); // The suggested range for dynamic ports is 49152-65535 (IANA)
+				var newPort = port != 0 ? port : r.Next (49152, 65535); // The suggested range for dynamic ports is 49152-65535 (IANA)
 				server.Prefixes.Clear ();
 				server.Prefixes.Add ("http://*:" + newPort + "/");
 				try {
@@ -754,6 +754,7 @@ namespace xharness
 					break;
 				} catch (Exception ex) {
 					MainLog.WriteLine ("Failed to listen on port {0}: {1}", newPort, ex.Message);
+					port = 0;
 				}
 			}
 			MainLog.WriteLine ($"Created server on localhost:{port}");
