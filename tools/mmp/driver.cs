@@ -537,7 +537,7 @@ namespace Xamarin.Bundler {
 			// Many Xamarin.Mac references are technically valid, so whitelisting risks breaking working project
 			// However, passing in Mobile / Xamarin.Mac folders and resolving full/4.5 or vice versa is 
 			// far from expected. So catch the common cases if we can
-			string reference = references.FirstOrDefault (x => x.EndsWith ("Xamarin.Mac.dll"));
+			string reference = references.FirstOrDefault (x => x.EndsWith ("Xamarin.Mac.dll", StringComparison.Ordinal));
 			if (reference != null) {
 				bool valid = true;
 				if (IsUnifiedMobile)
