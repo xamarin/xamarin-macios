@@ -1307,13 +1307,13 @@ public partial class Generator : IMemberGatherer {
 			var arrRetType = TypeManager.GetUnderlyingNullableType (retType.GetElementType ()) ?? retType.GetElementType ();
 			var valueConverter = string.Empty;
 
-			if (arrType == TypeManager.NSString) {
+			if (arrType == TypeManager.NSString && !isNullable) {
 				valueConverter = isNullable ? "o == null ? null : " : string.Empty;
 				valueConverter += $"{FormatType (retType.DeclaringType, arrRetType)}Extensions.GetConstant ({(isNullable ? "o.Value" : "o")}), {parameterName});";
-			} else if (arrType == TypeManager.NSNumber) {
+			} else if (arrType == TypeManager.NSNumber && !isNullable) {
 				var cast = arrRetType.IsEnum ? "(int)" : string.Empty;
 				valueConverter = $"new NSNumber ({cast}o{denullify}), {parameterName});";
-			} else if (arrType == TypeManager.NSValue) {
+			} else if (arrType == TypeManager.NSValue && !isNullable) {
 				var typeStr = string.Empty;
 				if (!NSValueCreateMap.TryGetValue (arrRetType, out typeStr)) {
 					if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
@@ -1323,7 +1323,7 @@ public partial class Generator : IMemberGatherer {
 				}
 				valueConverter = $"NSValue.From{typeStr} (o{denullify}), {parameterName});";
 			} else
-				throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
+				throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", isNullable ? arrRetType.Name + "?[]" : retType.Name);
 			temp = $"NSArray.FromNSObjects (o => {valueConverter}";
 		} else
 			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
@@ -1449,16 +1449,16 @@ public partial class Generator : IMemberGatherer {
 			var arrIsNullable = nullableElementType != null;
 			var arrRetType = arrIsNullable ? nullableElementType : retType.GetElementType ();
 			var valueFetcher = string.Empty;
-			if (arrType == TypeManager.NSString)
+			if (arrType == TypeManager.NSString && !arrIsNullable)
 				append = $"ptr => {{\n\tusing (var str = Runtime.GetNSObject<NSString> (ptr)) {{\n\t\treturn {FormatType (arrRetType.DeclaringType, arrRetType)}Extensions.GetValue (str);\n\t}}\n}}";
-			else if (arrType == TypeManager.NSNumber) {
+			else if (arrType == TypeManager.NSNumber && !arrIsNullable) {
 				if (NSNumberReturnMap.TryGetValue (arrRetType, out valueFetcher) || arrRetType.IsEnum) {
 					var getterStr = string.Format ("{0}{1}", arrIsNullable ? "?" : string.Empty, arrRetType.IsEnum ? ".Int32Value" : valueFetcher);
 					append = string.Format ("ptr => {{\n\tusing (var num = Runtime.GetNSObject<NSNumber> (ptr)) {{\n\t\treturn ({1}) num{0};\n\t}}\n}}", getterStr, FormatType (arrRetType.DeclaringType, arrRetType));
 				}
 				else
 					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, arrType.Name, "array", minfo.mi));
-			} else if (arrType == TypeManager.NSValue) {
+			} else if (arrType == TypeManager.NSValue && !arrIsNullable) {
 				if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
 					valueFetcher = $"{(arrIsNullable ? "?" : string.Empty)}.{arrRetType.Name}Value";
 				else if (!NSValueReturnMap.TryGetValue (arrRetType, out valueFetcher))
@@ -1466,7 +1466,7 @@ public partial class Generator : IMemberGatherer {
 
 				append = string.Format ("ptr => {{\n\tusing (var val = Runtime.GetNSObject<NSValue> (ptr)) {{\n\t\treturn val{0};\n\t}}\n}}", valueFetcher);
 			} else
-				throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
+				throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", arrIsNullable ? arrRetType.Name + "?[]" : retType.Name);
 		} else
 			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
 		return append;
