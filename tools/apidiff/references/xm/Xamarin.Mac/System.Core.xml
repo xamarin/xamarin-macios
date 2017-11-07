@@ -2792,7 +2792,6 @@
             </interfaces>
             <properties>
               <property name="SafeMemoryMappedFileHandle" attrib="0" ptype="Microsoft.Win32.SafeHandles.SafeMemoryMappedFileHandle">
-                <attributes />
                 <methods>
                   <method name="get_SafeMemoryMappedFileHandle()" attrib="2182" returntype="Microsoft.Win32.SafeHandles.SafeMemoryMappedFileHandle">
                     <parameters />
@@ -17711,6 +17710,9 @@
               <interface name="System.IDisposable" />
             </interfaces>
             <constructors>
+              <constructor name=".ctor()" attrib="6276">
+                <parameters />
+              </constructor>
               <constructor name=".ctor(System.Byte[])" attrib="6276">
                 <parameters>
                   <parameter name="keyBlob" position="0" attrib="0" type="System.Byte[]" />
@@ -17725,6 +17727,12 @@
                 <parameters>
                   <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
                 </parameters>
+              </method>
+              <method name="ExportExplicitParameters()" attrib="454" virtual="true" returntype="System.Security.Cryptography.ECParameters">
+                <parameters />
+              </method>
+              <method name="ExportParameters()" attrib="454" virtual="true" returntype="System.Security.Cryptography.ECParameters">
+                <parameters />
               </method>
               <method name="ToByteArray()" attrib="454" virtual="true" returntype="System.Byte[]">
                 <parameters />
