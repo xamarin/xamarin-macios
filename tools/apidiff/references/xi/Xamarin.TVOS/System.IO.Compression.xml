@@ -185,6 +185,18 @@
                   </method>
                 </methods>
               </property>
+              <property name="ExternalAttributes" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_ExternalAttributes()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_ExternalAttributes(System.Int32)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
               <property name="FullName" attrib="0" ptype="System.String">
                 <methods>
                   <method name="get_FullName()" attrib="2182" returntype="System.String">
