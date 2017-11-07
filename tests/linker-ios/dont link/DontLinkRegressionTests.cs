@@ -78,21 +78,12 @@ namespace DontLink {
 			// this same test existed in linksdk.app and linkall.app to test the linker optimizing IL code
 			// around [Autorelease] decorated methods. However iOS7 changed it's behavior and returns null now
 			using (UIImage img = new UIImage ()) {
-#if __WATCHOS__
-				if (true) {
-#else
-				if (UIDevice.CurrentDevice.CheckSystemVersion (7, 0)) {
-#endif
+				// different versions of iOS returns null or something - so we're not validating the return
+				// value since it's not the goal of the test
 #if !__TVOS__
-					Assert.Null (img.StretchableImage (10, 10), "StretchableImage");
+				img.StretchableImage (10, 10);
 #endif
-					Assert.Null (img.CreateResizableImage (new UIEdgeInsets (1, 2, 3, 4)), "CreateResizableImage");
-				} else {
-#if !__TVOS__
-					Assert.NotNull (img.StretchableImage (10, 10), "StretchableImage");
-#endif
-					Assert.NotNull (img.CreateResizableImage (new UIEdgeInsets (1, 2, 3, 4)), "CreateResizableImage");
-				}
+				img.CreateResizableImage (new UIEdgeInsets (1, 2, 3, 4));
 			}
 		}
 
