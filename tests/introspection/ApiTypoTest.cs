@@ -121,6 +121,7 @@ namespace Introspection
 			"Cabac",
 			"Caf", // acronym: Core Audio Format
 			"Cancellable",
+			"Cartes", // french
 			"Cavlc",
 			"Cda", // acronym: Clinical Document Architecture
 			"Celp", // MPEG4ObjectID
