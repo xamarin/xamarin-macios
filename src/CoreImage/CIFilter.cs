@@ -31,7 +31,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 // Adding new Filters:
-//    * Create new class with the two constructors
+//    * Create a new class/interface in coreimage.cs
 //    * Add it to CIFilter.FromName switch
 //    * Implement properties for each parameter
 //    * Use the documented string in "Parameter" in each section as the key for the get/set methods
@@ -85,6 +85,26 @@
 // Totally* new filters on iOS 9.0
 //    CIPDF417BarcodeGenerator
 //    * most of OSX specicic filters are now available on iOS9
+//
+// New filters on Xcode 9
+//    CIAreaMinMaxRed
+//    CIAttributedTextImageGenerator
+//    CIBarcodeGenerator
+//    CIBicubicScaleTransform
+//    CIBokehBlur
+//    CIColorCubesMixedWithMask
+//    CIColorCurves
+//    CIDepthBlurEffect
+//    CIDepthToDisparity
+//    CIDisparityToDepth
+//    CIEdgePreserveUpsampleFilter
+//    CILabDeltaE
+//    CITextImageGenerator
+//    CIMorphologyGradient
+//    CIMorphologyMaximum
+//    CIMorphologyMinimum
+//    CIBlendWithBlueMask
+//    CIBlendWithRedMask
 //
 using System;
 using System.Diagnostics;
@@ -612,6 +632,42 @@ namespace XamCore.CoreImage {
 			case "CIPDF417BarcodeGenerator":
 			case "CIPdf417BarcodeGenerator":
 				return new CIPdf417BarcodeGenerator (handle);
+			case "CIAreaMinMaxRed":
+				return new CIAreaMinMaxRed (handle);
+			case "CIAttributedTextImageGenerator":
+				return new CIAttributedTextImageGenerator (handle);
+			case "CIBarcodeGenerator":
+				return new CIBarcodeGenerator (handle);
+			case "CIBicubicScaleTransform":
+				return new CIBicubicScaleTransform (handle);
+			case "CIBokehBlur":
+				return new CIBokehBlur (handle);
+			case "CIColorCubesMixedWithMask":
+				return new CIColorCubesMixedWithMask (handle);
+			case "CIColorCurves":
+				return new CIColorCurves (handle);
+			case "CIDepthBlurEffect":
+				return new CIDepthBlurEffect (handle);
+			case "CIDepthToDisparity":
+				return new CIDepthToDisparity (handle);
+			case "CIDisparityToDepth":
+				return new CIDisparityToDepth (handle);
+			case "CIEdgePreserveUpsampleFilter":
+				return new CIEdgePreserveUpsampleFilter (handle);
+			case "CILabDeltaE":
+				return new CILabDeltaE (handle);
+			case "CITextImageGenerator":
+				return new CITextImageGenerator (handle);
+			case "CIMorphologyGradient":
+				return new CIMorphologyGradient (handle);
+			case "CIMorphologyMaximum":
+				return new CIMorphologyMaximum (handle);
+			case "CIMorphologyMinimum":
+				return new CIMorphologyMinimum (handle);
+			case "CIBlendWithBlueMask":
+				return new CIBlendWithBlueMask (handle);
+			case "CIBlendWithRedMask":
+				return new CIBlendWithRedMask (handle);
 			default:
 				throw new NotImplementedException (String.Format ("Unknown filter type returned: `{0}', returning a default CIFilter", filterName));
 			}
