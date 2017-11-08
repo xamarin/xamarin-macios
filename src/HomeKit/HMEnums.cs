@@ -8,6 +8,8 @@ namespace XamCore.HomeKit {
 	[TV (10,0)]
 	[Native]
 	public enum HMError : nint {
+		[Watch (4,2), TV (11,2), iOS (11,2)]
+		UnexpectedError                         = -1,
 		AlreadyExists                           = 1,
 		NotFound                                = 2,
 		InvalidParameter                        = 3,
@@ -576,6 +578,30 @@ namespace XamCore.HomeKit {
 		[iOS (11,0), Watch (4,0), TV (11,0)]
 		[Field ("HMCharacteristicTypeColorTemperature")]
 		ColorTemperature,
+
+		[Watch (4,2), TV (11,2), iOS (11,2)]
+		[Field ("HMCharacteristicTypeProgramMode")]
+		ProgramMode,
+
+		[Watch (4,2), TV (11,2), iOS (11,2)]
+		[Field ("HMCharacteristicTypeInUse")]
+		InUse,
+
+		[Watch (4,2), TV (11,2), iOS (11,2)]
+		[Field ("HMCharacteristicTypeSetDuration")]
+		SetDuration,
+
+		[Watch (4,2), TV (11,2), iOS (11,2)]
+		[Field ("HMCharacteristicTypeRemainingDuration")]
+		RemainingDuration,
+
+		[Watch (4,2), TV (11,2), iOS (11,2)]
+		[Field ("HMCharacteristicTypeValveType")]
+		ValveType,
+
+		[Watch (4,2), TV (11,2), iOS (11,2)]
+		[Field ("HMCharacteristicTypeIsConfigured")]
+		IsConfigured,
 	}
 
 	// conveniance enum (ObjC uses NSString)
@@ -756,6 +782,18 @@ namespace XamCore.HomeKit {
 		[iOS (10,3), Watch (3,2), TV (10,2)]
 		[Field ("HMServiceTypeLabel")]
 		Label,
+
+		[Watch (4,2), TV (11,2), iOS (11,2)]
+		[Field ("HMServiceTypeIrrigationSystem")]
+		IrrigationSystem,
+
+		[Watch (4,2), TV (11,2), iOS (11,2)]
+		[Field ("HMServiceTypeValve")]
+		Valve,
+
+		[Watch (4,2), TV (11,2), iOS (11,2)]
+		[Field ("HMServiceTypeFaucet")]
+		Faucet,
 	}
 
 	// conveniance enum (ObjC uses NSString)
@@ -1070,6 +1108,18 @@ namespace XamCore.HomeKit {
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMAccessoryCategoryTypeAirDehumidifier")]
 		AirDehumidifier,
+
+		[Watch (4,2), TV (11,2), iOS (11,2)]
+		[Field ("HMAccessoryCategoryTypeSprinkler")]
+		Sprinkler,
+
+		[Watch (4,2), TV (11,2), iOS (11,2)]
+		[Field ("HMAccessoryCategoryTypeFaucet")]
+		Faucet,
+
+		[Watch (4,2), TV (11,2), iOS (11,2)]
+		[Field ("HMAccessoryCategoryTypeShowerHead")]
+		ShowerHead,
 	}
 
 	[iOS (9,0)]
@@ -1287,5 +1337,36 @@ namespace XamCore.HomeKit {
 		CurrentUser = 1,
 		HomeUsers = 2,
 		CustomUsers = 3,
+	}
+
+	[Watch (4,2), TV (11,2), iOS (11,2)]
+	[Native]
+	public enum HMCharacteristicValueProgramMode : nint {
+		NotScheduled = 0,
+		Scheduled,
+		ScheduleOverriddenToManual,
+	}
+
+	[Watch (4,2), TV (11,2), iOS (11,2)]
+	[Native]
+	public enum HMCharacteristicValueUsageState : nint {
+		NotInUse = 0,
+		InUse,
+	}
+
+	[Watch (4,2), TV (11,2), iOS (11,2)]
+	[Native]
+	public enum HMCharacteristicValueValveType : nint {
+		GenericValve = 0,
+		Irrigation,
+		ShowerHead,
+		WaterFaucet,
+	}
+
+	[Watch (4,2), TV (11,2), iOS (11,2)]
+	[Native]
+	public enum HMCharacteristicValueConfigurationState : nint {
+		NotConfigured = 0,
+		Configured,
 	}
 }
