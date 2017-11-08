@@ -2720,6 +2720,10 @@ namespace XamCore.SceneKit {
 		[Field ("SCNSceneSourceStrictConformanceKey")]
 		NSString StrictConformanceKey { get; }
 		
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "No longer supported.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "No longer supported.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "No longer supported.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "No longer supported.")]
 		[Field ("SCNSceneSourceUseSafeModeKey")]
 		NSString UseSafeModeKey	 { get; }
 
