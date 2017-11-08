@@ -204,6 +204,10 @@ namespace XamCore.AVKit {
 		[NoiOS, TV (11, 0), NoWatch, NoMac]
 		[Export ("customInfoViewController", ArgumentSemantic.Assign)]
 		UIViewController CustomInfoViewController { get; set; }
+
+		[NoiOS, TV (11,2), NoMac, NoWatch]
+		[Export ("appliesPreferredDisplayCriteriaAutomatically")]
+		bool AppliesPreferredDisplayCriteriaAutomatically { get; set; }
 	}
 
 	[Protocol, Model]
@@ -548,6 +552,26 @@ namespace XamCore.AVKit {
 
 		[Export ("routePickerViewDidEndPresentingRoutes:")]
 		void DidEndPresentingRoutes (AVRoutePickerView routePickerView);
+	}
+
+	[TV (11,2), NoiOS, NoMac, NoWatch]
+	[BaseType (typeof (NSObject))]
+	interface AVDisplayManager {
+
+		[NullAllowed, Export ("preferredDisplayCriteria", ArgumentSemantic.Copy)]
+		AVDisplayCriteria PreferredDisplayCriteria { get; set; }
+
+		[Export ("displayModeSwitchInProgress")]
+		bool DisplayModeSwitchInProgress { [Bind ("isDisplayModeSwitchInProgress")] get; }
+	}
+
+	[TV (11,2), NoiOS, NoMac, NoWatch]
+	[Category]
+	[BaseType (typeof (UIWindow))]
+	interface UIWindow_AVAdditions {
+
+		[Export ("avDisplayManager")]
+		AVDisplayManager GetAVDisplayManager ();
 	}
 #endif
 }
