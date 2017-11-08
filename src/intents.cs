@@ -7818,8 +7818,8 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSearchForNotebookItemsIntent {
 
-		[Deprecated (PlatformName.WatchOS, 4, 2, message: "Use the 'notebookItemIdentifier' .ctor instead.")]
-		[Deprecated (PlatformName.iOS, 11, 2, message: "Use the 'notebookItemIdentifier' .ctor instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 2, message: "Use the constructor with 'string notebookItemIdentifier' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 2, message: "Use the constructor with 'string notebookItemIdentifier' instead.")]
 		[Export ("initWithTitle:content:itemType:status:location:locationSearchType:dateTime:dateSearchType:")]
 		IntPtr Constructor ([NullAllowed] INSpeakableString title, [NullAllowed] string content, INNotebookItemType itemType, INTaskStatus status, [NullAllowed] CLPlacemark location, INLocationSearchType locationSearchType, [NullAllowed] INDateComponentsRange dateTime, INDateSearchType dateSearchType);
 
