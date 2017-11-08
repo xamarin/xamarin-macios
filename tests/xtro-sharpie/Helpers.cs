@@ -12,6 +12,7 @@ namespace Extrospection {
 
 		// the original name can be lost and, if not registered (e.g. enums), might not be available
 		static Dictionary<string,string> map = new Dictionary<string, string> () {
+			{ "AVPlayerHDRMode", "AVPlayerHdrMode" },
 			{ "CFURLPathStyle", "CFUrlPathStyle" },
 			{ "CIDataMatrixCodeECCVersion", "CIDataMatrixCodeEccVersion" },
 			{ "CXPlayDTMFCallActionType", "CXPlayDtmfCallActionType" },

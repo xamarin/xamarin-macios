@@ -243,6 +243,20 @@ namespace XamCore.AVFoundation {
 		UnsupportedOutputSettings = -11861,
 		[NoWatch, iOS (10,0), TV (10,0), Mac (10,12)]
 		OperationNotAllowed = -11862,
+		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
+		ContentIsUnavailable = -11863,
+		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
+		FormatUnsupported = -11864,
+		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
+		MalformedDepth = -11865,
+		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
+		ContentNotUpdated = -11866,
+		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
+		NoLongerPlayable = -11867,
+		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
+		NoCompatibleAlternatesForExternalDisplay = -11868,
+		[NoWatch, iOS (11,2), TV (11,2), Mac (10,13,2)]
+		NoSourceTrack = -11869,
 	}
 
 	[NoWatch]
@@ -989,5 +1003,14 @@ namespace XamCore.AVFoundation {
 		SystemTemperature = (1 << 0),
 		PeakPower = (1 << 1),
 		DepthModuleTemperature = (1 << 2)
+	}
+
+	[TV (11,2), NoWatch, NoMac, iOS (11,2)]
+	[Native]
+	[Flags]
+	public enum AVPlayerHdrMode : nint {
+		Hlg = 0x1,
+		Hdr10 = 0x2,
+		DolbyVision = 0x4,
 	}
 }
