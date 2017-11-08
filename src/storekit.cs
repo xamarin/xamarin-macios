@@ -234,6 +234,14 @@ namespace XamCore.StoreKit {
 		[Export ("downloadContentVersion")]
 #endif
 		string DownloadContentVersion { get;  }
+
+		[iOS (11,2), TV (11,2), NoMac]
+		[NullAllowed, Export ("subscriptionPeriod")]
+		SKProductSubscriptionPeriod SubscriptionPeriod { get; }
+
+		[iOS (11,2), TV (11,2), NoMac]
+		[NullAllowed, Export ("introductoryPrice")]
+		SKProductDiscount IntroductoryPrice { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -631,4 +639,35 @@ namespace XamCore.StoreKit {
 		void Update (SKProduct[] storePromotionOrder, [NullAllowed] Action<NSError> completionHandler);
 	}
 #endif
+
+	[iOS (11,2), TV (11,2), NoMac]
+	[BaseType (typeof (NSObject))]
+	interface SKProductSubscriptionPeriod {
+
+		[Export ("numberOfUnits")]
+		nuint NumberOfUnits { get; }
+
+		[Export ("unit")]
+		SKProductPeriodUnit Unit { get; }
+	}
+
+	[iOS (11,2), TV (11,2), NoMac]
+	[BaseType (typeof (NSObject))]
+	interface SKProductDiscount {
+
+		[Export ("price")]
+		NSDecimalNumber Price { get; }
+
+		[Export ("priceLocale")]
+		NSLocale PriceLocale { get; }
+
+		[Export ("subscriptionPeriod")]
+		SKProductSubscriptionPeriod SubscriptionPeriod { get; }
+
+		[Export ("numberOfPeriods")]
+		nuint NumberOfPeriods { get; }
+
+		[Export ("paymentMode")]
+		SKProductDiscountPaymentMode PaymentMode { get; }
+	}
 }

@@ -67,4 +67,20 @@ namespace XamCore.StoreKit {
 		Hide,
 	}
 #endif
+	[iOS (11,2), TV (11,2), NoMac]
+	[Native]
+	public enum SKProductPeriodUnit : nuint {
+		Day,
+		Week,
+		Month,
+		Year,
+	}
+
+	[iOS (11,2), TV (11,2), NoMac]
+	[Native]
+	public enum SKProductDiscountPaymentMode : nuint {
+		PayAsYouGo,
+		PayUpFront,
+		FreeTrial,
+	}
 }
