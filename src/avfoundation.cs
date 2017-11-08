@@ -8413,7 +8413,7 @@ namespace XamCore.AVFoundation {
 
 	interface IAVCaptureDepthDataOutputDelegate {}
 	
-	[NoWatch, NoTV, iOS (11,0), Mac (10,13)]
+	[NoWatch, NoTV, iOS (11,0), NoMac]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface AVCaptureDepthDataOutputDelegate
@@ -8425,7 +8425,7 @@ namespace XamCore.AVFoundation {
 		void DidDropDepthData (AVCaptureDepthDataOutput output, AVDepthData depthData, CMTime timestamp, AVCaptureConnection connection, AVCaptureOutputDataDroppedReason reason);
 	}
 
-	[NoWatch, NoTV, iOS (11,0), Mac (10,13)]
+	[NoWatch, NoTV, iOS (11,0), NoMac]
 	[BaseType (typeof(AVCaptureOutput))]
 	interface AVCaptureDepthDataOutput
 	{
