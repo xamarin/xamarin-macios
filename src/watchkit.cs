@@ -892,6 +892,10 @@ namespace XamCore.WatchKit {
 		[Export ("autorotating")]
 		bool Autorotating { [Bind ("isAutorotating")] get; set; }
 
+		[Watch (4,2)]
+		[Export ("autorotated")]
+		bool Autorotated { [Bind ("isAutorotated")] get; }
+
 		[Watch (4,0)]
 		[Export ("frontmostTimeoutExtended")]
 		bool FrontmostTimeoutExtended { [Bind ("isFrontmostTimeoutExtended")] get; set; }
