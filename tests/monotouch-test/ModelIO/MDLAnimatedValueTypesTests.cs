@@ -341,7 +341,7 @@ namespace MonoTouchFixtures.ModelIO {
 			var onesDoubleArr = TestMatrices.CreateOnesArray<double> ((int) doubleArr.ElementCount);
 			var timesDoubleArr = new [] { 5d };
 			doubleArr.Reset (onesDoubleArr, timesDoubleArr);
-			var doubleValues = doubleArr.GetFloatValues (5);
+			var doubleValues = doubleArr.GetDoubleValues (5);
 			for (int i = 0; i < onesDoubleArr.Length; i++)
 				Asserts.AreEqual (onesDoubleArr [i], doubleValues [i], $"onesDoubleArr iter: {i}");
 

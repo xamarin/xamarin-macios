@@ -311,7 +311,7 @@ namespace XamCore.Contacts {
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSFormatter))]
-	interface CNContactFormatter {
+	interface CNContactFormatter : NSSecureCoding {
 
 		[Static]
 		[Export ("descriptorForRequiredKeysForStyle:")]
