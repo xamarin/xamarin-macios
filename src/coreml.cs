@@ -18,8 +18,8 @@ using XamCore.Foundation;
 #if !WATCH
 using XamCore.Metal;
 #else
-using IMTLCommandBuffer = XamCore.Foundation.NSObject;
-using IMTLTexture = XamCore.Foundation.NSObject;
+using IMTLCommandBuffer = global::XamCore.Foundation.NSObject; // Won't be used just to make compilation happy.
+using IMTLTexture = global::XamCore.Foundation.NSObject; // Won't be used just to make compilation happy.
 #endif
 
 namespace XamCore.CoreML {
