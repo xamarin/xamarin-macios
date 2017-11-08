@@ -75,8 +75,8 @@ namespace MonoTouchFixtures.Contacts {
 					Assert.False (contact.AreKeysAvailable (CNContactOptions.OrganizationName | CNContactOptions.Note), "AreKeysAvailable-1");
 					Assert.True (contact.AreKeysAvailable (CNContactOptions.None), "AreKeysAvailable-2");
 					Assert.True (contact.AreKeysAvailable (fetchKeys), "AreKeysAvailable-3");
-#endif
 				}
+#endif
 			}
 		}
 	}
