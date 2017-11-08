@@ -11,7 +11,9 @@ namespace XamCore.AppKit
 		[Mac (10, 11)]
 		public virtual NSDragOperation ValidateDrop (NSCollectionView collectionView, NSDraggingInfo draggingInfo, out NSIndexPath proposedDropIndexPath, out NSCollectionViewDropOperation proposedDropOperation)
 		{
-			throw new InvalidOperationException ("Use 'ValidateDropOperation (NSCollectionView collectionView, NSDraggingInfo draggingInfo, ref NSIndexPath proposedDropIndexPath, ref NSCollectionViewDropOperation proposedDropOperation)' instead.");
+			proposedDropIndexPath = null;
+			proposedDropOperation = NSCollectionViewDropOperation.On;
+			return ValidateDropOperation (collectionView, draggingInfo, ref proposedDropIndexPath, ref proposedDropOperation);
 		}
 	}
 
@@ -21,7 +23,9 @@ namespace XamCore.AppKit
 		[Mac (10, 11)]
 		public virtual NSDragOperation ValidateDrop (NSCollectionView collectionView, NSDraggingInfo draggingInfo, out NSIndexPath proposedDropIndexPath, out NSCollectionViewDropOperation proposedDropOperation)
 		{
-			throw new InvalidOperationException ("Use 'ValidateDropOperation (NSCollectionView collectionView, NSDraggingInfo draggingInfo, ref NSIndexPath proposedDropIndexPath, ref NSCollectionViewDropOperation proposedDropOperation)' instead.");
+			proposedDropIndexPath = null;
+			proposedDropOperation = NSCollectionViewDropOperation.On;
+			return ValidateDropOperation (collectionView, draggingInfo, ref proposedDropIndexPath, ref proposedDropOperation);
 		}
 	}
 
@@ -31,7 +35,9 @@ namespace XamCore.AppKit
 		[Mac (10, 11)]
 		public static NSDragOperation ValidateDrop (this INSCollectionViewDelegate This, NSCollectionView collectionView, NSDraggingInfo draggingInfo, out NSIndexPath proposedDropIndexPath, out NSCollectionViewDropOperation proposedDropOperation)
 		{
-			throw new InvalidOperationException ("Use 'ValidateDropOperation (NSCollectionView collectionView, NSDraggingInfo draggingInfo, ref NSIndexPath proposedDropIndexPath, ref NSCollectionViewDropOperation proposedDropOperation)' instead.");
+			proposedDropIndexPath = null;
+			proposedDropOperation = NSCollectionViewDropOperation.On;
+			return This.ValidateDropOperation (collectionView, draggingInfo, ref proposedDropIndexPath, ref proposedDropOperation);
 		}
 	}
 }
