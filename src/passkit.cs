@@ -779,14 +779,20 @@ namespace XamCore.PassKit {
 		NSString Amex { get; }
 
 		[iOS (10,3), Watch (3,2)]
-		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'CarteBancaires' instead.")]
-		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'CarteBancaires' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'CartesBancaires' instead.")]
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'CartesBancaires' instead.")]
 		[Field ("PKPaymentNetworkCarteBancaire")]
 		NSString CarteBancaire { get; }
 
 		[iOS (11,0)][Watch (4,0)]
+		[Deprecated (PlatformName.WatchOS, 4,2, message: "Use 'CartesBancaires' instead.")]
+		[Deprecated (PlatformName.iOS, 11,2, message: "Use 'CartesBancaires' instead.")]
 		[Field ("PKPaymentNetworkCarteBancaires")]
 		NSString CarteBancaires { get; }
+
+		[iOS (11,2)][Watch (4,2)]
+		[Field ("PKPaymentNetworkCartesBancaires")]
+		NSString CartesBancaires { get; }
 
 		[iOS (9,2)]
 		[Watch (2,2)]
