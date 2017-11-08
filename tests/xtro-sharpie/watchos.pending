@@ -213,3 +213,7 @@
 !missing-pinvoke! NSStringFromUIOffset is not bound
 !missing-pinvoke! UIOffsetFromString is not bound
 
+# CoreML
+
+## This protocol uses Metal types and it is not available on watchOS
+!missing-protocol! MLCustomLayer not bound
