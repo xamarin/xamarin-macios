@@ -255,6 +255,7 @@ namespace Introspection {
 				do_not_dispose.Add (obj);
 				break;
 			default:
+				Console.WriteLine (type.FullName);
 				base.Dispose (obj, type);
 				break;
 			}
