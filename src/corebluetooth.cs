@@ -116,6 +116,11 @@ namespace XamCore.CoreBluetooth {
 		[Field ("CBConnectPeripheralOptionNotifyOnNotificationKey")]
 		NSString OptionNotifyOnNotificationKey { get; }
 
+		[NoMac] // xcode 9.2 beta 2 does not include this inside its macOS header files
+		[iOS (6,0)]
+		[Field ("CBConnectPeripheralOptionStartDelayKey")]
+		NSString OptionStartDelayKey { get; }
+
 		[Field ("CBCentralManagerOptionRestoreIdentifierKey")]
 		[Since (7,0)]
 		[Mac (10,13)]
