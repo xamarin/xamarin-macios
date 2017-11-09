@@ -300,6 +300,7 @@ namespace XamCore.UIKit {
 		InfoLight,
 		InfoDark,
 		ContactAdd,
+		[TV (11,0)][NoiOS]
 		Plain,
 		System = RoundedRect,
 	}
