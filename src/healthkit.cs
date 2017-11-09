@@ -626,6 +626,26 @@ namespace XamCore.HealthKit {
 		[Watch (4,0), iOS (11,0)]
 		[Export ("HeartRateMotionContext")]
 		HKHeartRateMotionContext HeartRateMotionContext { get; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Export ("AverageSpeed")]
+		HKQuantity AverageSpeed { get; set; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Export ("MaximumSpeed")]
+		HKQuantity MaximumSpeed { get; set; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Export ("AlpineSlopeGrade")]
+		HKQuantity AlpineSlopeGrade { get; set; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Export ("ElevationAscended")]
+		HKQuantity ElevationAscended { get; set; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Export ("ElevationDescended")]
+		HKQuantity ElevationDescended { get; set; }
 	}
 		
 	[Watch (2,0)]
@@ -744,6 +764,26 @@ namespace XamCore.HealthKit {
 		[Watch (4,0), iOS (11,0)]
 		[Field ("HKMetadataKeyHeartRateMotionContext")]
 		NSString HeartRateMotionContext { get; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Field ("HKMetadataKeyAverageSpeed")]
+		NSString AverageSpeed { get; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Field ("HKMetadataKeyMaximumSpeed")]
+		NSString MaximumSpeed { get; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Field ("HKMetadataKeyAlpineSlopeGrade")]
+		NSString AlpineSlopeGrade { get; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Field ("HKMetadataKeyElevationAscended")]
+		NSString ElevationAscended { get; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Field ("HKMetadataKeyElevationDescended")]
+		NSString ElevationDescended { get; }
 	}
 
 	[Watch (2,0)]
@@ -1532,6 +1572,10 @@ namespace XamCore.HealthKit {
 		[Watch (4, 0), iOS (11, 0)]
 		[Field ("HKQuantityTypeIdentifierVO2Max")]
 		NSString VO2Max { get; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Field ("HKQuantityTypeIdentifierDistanceDownhillSnowSports")]
+		NSString DistanceDownhillSnowSports { get; }
 
         // If you add field, add them to the enum too.
 	}
