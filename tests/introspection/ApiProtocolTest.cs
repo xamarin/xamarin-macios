@@ -122,7 +122,6 @@ namespace Introspection {
 				case "NSMeasurement`1":
 				// iOS 11 / tvOS 11
 				case "VSSubscription":
-				case "HMAccessControl": // not in headers
 					return true;
 				}
 				break;
@@ -152,7 +151,6 @@ namespace Introspection {
 				// xcode 9
 				case "NSConstraintConflict": // Conformance not in headers
 				case "VSSubscription":
-				case "HMAccessControl": // not in headers
 					return true;
 				}
 				break;
