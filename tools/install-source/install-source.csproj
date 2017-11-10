@@ -41,7 +41,6 @@
     <Compile Include="OpenTKSourceMangler.cs" />
     <Compile Include="PathManglerFactory.cs" />
     <Compile Include="XamarinSourcesPathMangler.cs" />
-    <Compile Include="CoreFXPathMangler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

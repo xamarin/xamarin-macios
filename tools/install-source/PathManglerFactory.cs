@@ -13,7 +13,6 @@ namespace InstallSources
 		MonoPathMangler monoMangler;
 		OpenTKSourceMangler openTKMangler;
 		XamarinSourcesPathMangler xamarinPathMangler;
-		CoreFXPathMangler corefxPathMangler;
 
 		MonoPathMangler MonoPathMangler {
 			get {
@@ -48,46 +47,25 @@ namespace InstallSources
 				return xamarinPathMangler;
 			}
 		}
-		
-		CoreFXPathMangler CoreFXPathMangler {
-			get {
-				if (corefxPathMangler == null)
-					corefxPathMangler = new CoreFXPathMangler() {
-						InstallDir = InstallDir,
-						MonoSourcePath = MonoSourcePath
-					};
-				return corefxPathMangler;
-			}
-		}
 
 		public bool IsMonoPath (string path)
 		{
-			return (path.StartsWith(MonoSourcePath, StringComparison.Ordinal)
-				&& !path.Contains("corefx")) | path.Contains("/mcs/class/");
+			return path.StartsWith(MonoSourcePath, StringComparison.Ordinal) || !path.StartsWith(XamarinSourcePath, StringComparison.Ordinal);
 		}
 
 		public bool IsOpenTKPath (string path)
 		{
 			return path.Contains (OpenTKSourcePath);
 		}
-		
-		public bool IsCoreFXPath (string path)
-		{
-			return path.StartsWith (MonoSourcePath, StringComparison.Ordinal)
-				&& path.Contains ("corefx");
-		}
-
 		public IPathMangler GetMangler (string path)
 		{
-			if (IsMonoPath (path) && !IsCoreFXPath (path))
+			if (IsMonoPath(path)) {
 				return MonoPathMangler;
+			}
 
-			if (IsCoreFXPath (path))
-				return CoreFXPathMangler;
-
-			if (IsOpenTKPath (path))
+			if (IsOpenTKPath (path)) {
 				return OpenTKSourceMangler;
-
+			}
 			return XamarinSourcesPathMangler;
 		}
 	}

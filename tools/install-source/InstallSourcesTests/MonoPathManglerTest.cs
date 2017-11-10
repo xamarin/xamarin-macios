@@ -39,7 +39,7 @@ namespace InstallSourcesTests
 			var targetPath = mangler.GetTargetPath (path);
 			Assert.IsFalse (targetPath.StartsWith (monoPath, StringComparison.InvariantCulture), "Path starts with the mono path.");
 			Assert.IsTrue (targetPath.StartsWith (installDir, StringComparison.InvariantCulture), "Path does not start with the install dir");
-			Assert.IsTrue (targetPath.Contains ("/src/mono/"), "Path does not contain 'src'");
+			Assert.IsTrue (!targetPath.Contains ("mono"), "Path does contain 'mono'");
 		}
 	}
 }
