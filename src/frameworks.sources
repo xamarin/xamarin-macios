@@ -145,6 +145,7 @@ APPKIT_SOURCES = \
 	AppKit/NSSavePanel.cs \
 	AppKit/NSWorkspace.cs \
 	AppKit/NSCollectionView.cs \
+	AppKit/NSCollectionViewDelegate.cs \
 	AppKit/NSTextTableBlock.cs \
 	AppKit/NSMutableFontCollection.cs \
 	AppKit/NSCollectionViewLayout.cs \
