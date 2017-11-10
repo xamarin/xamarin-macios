@@ -348,7 +348,7 @@ namespace XamCore.CoreMedia {
 		extern static /* CMFormatDescriptionRef */ IntPtr CMSampleBufferGetFormatDescription (/* CMSampleBufferRef */ IntPtr sbuf);
 
 #if !XAMCORE_2_0
-		[Advice ("Use GetAudioFormatDescription or GetVideoFormatDescription")]		
+		[Advice ("Use 'GetAudioFormatDescription' or 'GetVideoFormatDescription'.")]
 		public CMFormatDescription GetFormatDescription ()
 		{
 			var desc = default(CMFormatDescription);
@@ -841,7 +841,7 @@ namespace XamCore.CoreMedia {
 	public enum LensStabilizationStatus { Active, OutOfRange, Unavailable, Off, None }
 
 #if !COREBUILD
-	public class CMSampleBufferAttachmentSettings : DictionaryContainer {
+	public partial class CMSampleBufferAttachmentSettings : DictionaryContainer {
 
 		internal CMSampleBufferAttachmentSettings (NSMutableDictionary dictionary)
 			: base (dictionary)
@@ -1020,17 +1020,6 @@ namespace XamCore.CoreMedia {
 			}
 		}
 #endif
-	
-		// TODO: Implement remaining selector properties
-		// PostNotificationWhenConsumed
-		// ResumeOutput
-		// TransitionID
-		// TrimDurationAtStart
-		// TrimDurationAtEnd
-		// SpeedMultiplier
-		// SampleReferenceURL
-		// SampleReferenceByteOffset
-		// GradualDecoderRefresh
 	}
 #endif
 }

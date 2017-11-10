@@ -85,7 +85,12 @@ namespace XamCore.CoreText {
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFont.h
 	public enum CTFontTable : uint {
 		BaselineBASE               = 0x42415345,  // 'BASE'
+		ColorBitmapData            = 0x43424454,  // 'CBDT'
+		ColorBitmapLocationData    = 0x43424c43,  // 'CBLC'
 		PostscriptFontProgram      = 0x43464620,  // 'CFF '
+		CompactFontFormat2         = 0x43464632,  // 'CFF2'
+		ColorTable                 = 0x434f4c52,  // 'COLR'
+		ColorPaletteTable          = 0x4350414c,  // 'CPAL'
 		DigitalSignature           = 0x44534947,  // 'DSIG'
 		EmbeddedBitmap             = 0x45424454,  // 'EBDT'
 		EmbeddedBitmapLocation     = 0x45424c43,  // 'EBLC'
@@ -93,14 +98,22 @@ namespace XamCore.CoreText {
 		GlyphDefinition            = 0x47444546,  // 'GDEF'
 		GlyphPositioning           = 0x47504f53,  // 'GPOS'
 		GlyphSubstitution          = 0x47535542,  // 'GSUB'
+		HorizontalMetricsVariations= 0x48564152,  // 'HVAR'
 		JustificationJSTF          = 0x4a535446,  // 'JSTF'
 		LinearThreshold            = 0x4c545348,  // 'LTSH'
+		MathLayoutData             = 0x4d415448,  // 'MATH'
+		Merge                      = 0x4d455247,  // 'MERG'
+		MetricsVariations          = 0x4d564152,  // 'MVAR'
 		WindowsSpecificMetrics     = 0x4f532f32,  // 'OS2 '
 		Pcl5Data                   = 0x50434c54,  // 'PCLT'
 		VerticalDeviceMetrics      = 0x56444d58,  // 'VDMX'
+		StyleAttributes            = 0x53544154,  // 'STAT'
+		ScalableVectorGraphics     = 0x53564720,  // 'SVG '
 		VerticalOrigin             = 0x564f5247,  // 'VORG'
+		VerticalMetricsVariations  = 0x56564152,  // 'VVAR'
 		GlyphReference             = 0x5a617066,  // 'Zapf'
 		AccentAttachment           = 0x61636e74,  // 'Acnt'
+		AnchorPoints               = 0x616e6b72,  // 'ankr'
 		AxisVariation              = 0x61766172,  // 'Avar'
 		BitmapData                 = 0x62646174,  // 'Bdat'
 		BitmapFontHeader           = 0x62686564,  // 'Bhed'
@@ -112,6 +125,7 @@ namespace XamCore.CoreText {
 		FontDescriptor             = 0x66647363,  // 'Fdsc'
 		LayoutFeature              = 0x66656174,  // 'Feat'
 		FontMetrics                = 0x666d7478,  // 'Fmtx'
+		FondAndNfntData            = 0x666f6e64,  // 'fond'
 		FontProgram                = 0x6670676d,  // 'Fpgm'
 		FontVariation              = 0x66766172,  // 'Fvar'
 		GridFitting                = 0x67617370,  // 'Gasp'
@@ -127,7 +141,9 @@ namespace XamCore.CoreText {
 		ExtendedKerning            = 0x6b657278,  // 'Kerx'
 		LigatureCaret              = 0x6c636172,  // 'Lcar'
 		IndexToLocation            = 0x6c6f6361,  // 'Loca'
+		LanguageTags               = 0x6c746167,  // 'ltag'
 		MaximumProfile             = 0x6d617870,  // 'Maxp'
+		Metadata                   = 0x6d657461,  // 'meta'
 		Morph                      = 0x6d6f7274,  // 'Mort'
 		ExtendedMorph              = 0x6d6f7278,  // 'Morx'
 		Name                       = 0x6e616d65,  // 'Name'
@@ -135,12 +151,12 @@ namespace XamCore.CoreText {
 		PostScriptInformation      = 0x706f7374,  // 'Post'
 		ControlValueTableProgram   = 0x70726570,  // 'Prep'
 		Properties                 = 0x70726f70,  // 'Prop'
+		SBitmapData                = 0x73626974,  // 'sbit'
+		SExtendedBitmapData        = 0x73626978,  // 'sbix'
 		Tracking                   = 0x7472616b,  // 'Trak'
 		VerticalHeader             = 0x76686561,  // 'Vhea'
 		VerticalMetrics            = 0x766d7478,  // 'Vmtx'
-		SBitmapData 		   = 0x73626974, // 'sbit'
-		SExtendedBitmapData        = 0x73626978, // 'sbix'
-		AnchorPoints               = 0x616e6b72, // 'ankr'
+		CrossReference             = 0x78726566,  // 'xref'
 	}
 
 	[Flags]
@@ -211,7 +227,7 @@ namespace XamCore.CoreText {
 		public NSDictionary Dictionary {get; private set;}
 
 #if !XAMCORE_2_0
-		[Advice ("Use FeatureGroup property instead")]
+		[Advice ("Use 'FeatureGroup' property instead.")]
 		public NSNumber Identifier {
 			get {return (NSNumber) Dictionary [CTFontFeatureKey.Identifier];}
 			set {Adapter.SetValue (Dictionary, CTFontFeatureKey.Identifier, value);}
@@ -1361,7 +1377,7 @@ namespace XamCore.CoreText {
 		public NSDictionary Dictionary {get; private set;}
 
 #if !XAMCORE_2_0
-		[Advice ("Use FeatureGroup property instead")]
+		[Advice ("Use 'FeatureGroup' property instead.")]
 		public NSNumber TypeIdentifier {
 			get {return (NSNumber) Dictionary [CTFontFeatureKey.Identifier];}
 			set {Adapter.SetValue (Dictionary, CTFontFeatureKey.Identifier, value);}
@@ -1375,7 +1391,7 @@ namespace XamCore.CoreText {
 		}
 
 #if !XAMCORE_2_0
-		[Advice ("Use FeatureWeak or FeatureGroup instead")]
+		[Advice ("Use 'FeatureWeak' or 'FeatureGroup' instead.")]
 		public NSNumber SelectorIdentifier {
 			get {return (NSNumber) Dictionary [CTFontFeatureSelectorKey.Identifier];}
 			set {Adapter.SetValue (Dictionary, CTFontFeatureSelectorKey.Identifier, value);}
@@ -1428,6 +1444,12 @@ namespace XamCore.CoreText {
 		public string Name {
 			get {return Adapter.GetStringValue (Dictionary, CTFontVariationAxisKey.Name);}
 			set {Adapter.SetValue (Dictionary, CTFontVariationAxisKey.Name, value);}
+		}
+
+		[iOS (11,0), Mac (10,13), Watch (4,0), TV (11,0)]
+		public bool? Hidden {
+			get { return Adapter.GetBoolValue (Dictionary, CTFontVariationAxisKey.Hidden); }
+			set { Adapter.SetValue (Dictionary, CTFontVariationAxisKey.Hidden, value); }
 		}
 	}
 

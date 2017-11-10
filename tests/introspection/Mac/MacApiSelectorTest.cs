@@ -602,6 +602,15 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "MonoMac.CoreBluetooth":
+				switch (type.Name) {
+				case "CBCentral":
+				case "CBPeripheral":
+					if (selectorName == "UUID" && Mac.CheckSystemVersion (10, 13)) // UUID removed from headers in 10.13
+						return true;
+					break;
+				}
+				break;
 			}
 			return base.Skip (type, selectorName);
 		}

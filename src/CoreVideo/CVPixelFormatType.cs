@@ -95,5 +95,16 @@ namespace XamCore.CoreVideo {
 		CV14BayerGbrg = 0x67627234, // 'gbr4',
 		// iOS 10.3
 		Argb2101010LEPacked = 0x6C313072, // 'l10r'
+		// iOS 11.0
+		DisparityFloat16 = 0x68646973, // hdis
+		DisparityFloat32 = 0x66646973, // fdis
+		DepthFloat16 = 0x68646570, // hdep
+		DepthFloat32 = 0x66646570, // fdep
+		CV420YpCbCr10BiPlanarVideoRange = 0x78343230, // x420
+		CV422YpCbCr10BiPlanarVideoRange = 0x78343232, // x422
+		CV444YpCbCr10BiPlanarVideoRange = 0x78343434, // x444
+		CV420YpCbCr10BiPlanarFullRange = 0x78663230, // xf20
+		CV422YpCbCr10BiPlanarFullRange = 0x78663232, // xf22
+		CV444YpCbCr10BiPlanarFullRange = 0x78663434, // xf44
 	}
 }

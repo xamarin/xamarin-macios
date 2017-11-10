@@ -177,6 +177,9 @@ namespace Introspection {
 				break;
 #if !MONOMAC
 			case "MTLCaptureManager":
+			case "NEHotspotEapSettings": // Wireless Accessory Configuration is not supported in the simulator.
+			case "NEHotspotConfigurationManager":
+			case "NEHotspotHS20Settings":
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;

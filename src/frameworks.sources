@@ -245,6 +245,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVCaptureDeviceInput.cs \
 	AVFoundation/AVCaptureFileOutput.cs \
 	AVFoundation/AVCaptureMetadataOutput.cs \
+	AVFoundation/AVCaptureSynchronizedDataCollection.cs \
 	AVFoundation/AVCaptureVideoDataOutput.cs \
 	AVFoundation/AVCaptureVideoPreviewLayer.cs \
 	AVFoundation/AVCompat.cs \
@@ -264,6 +265,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/DescriptionHelpers.cs \
 	AVFoundation/Events.cs \
 	AVFoundation/AVPlayerLooper.cs \
+	AVFoundation/AudioRendererWasFlushedAutomaticallyEventArgs.cs \
 
 # AVKit
 
@@ -573,7 +575,9 @@ COREVIDEO_CORE_SOURCES = \
 COREVIDEO_SOURCES = \
 	CoreVideo/CVDisplayLink.cs \
 	CoreVideo/CVMetalTexture.cs \
+	CoreVideo/CVMetalTextureAttributes.cs \
 	CoreVideo/CVMetalTextureCache.cs \
+	CoreVideo/CVPixelBufferIOSurface.cs \
 	CoreVideo/CVPixelBufferPoolSettings.cs \
 	CoreVideo/CVPixelFormatDescription.cs \
 	CoreVideo/CVTime.cs \
@@ -1012,6 +1016,7 @@ MODELIO_CORE_SOURCES = \
 	ModelIO/MIEnums.cs \
 
 MODELIO_SOURCES = \
+	ModelIO/MDLAnimatedValueTypes.cs \
 	ModelIO/MDLAsset.cs \
 	ModelIO/MDLNoiseTexture.cs \
 	ModelIO/MDLTransform.cs \
@@ -1042,6 +1047,8 @@ NETWORKEXTENSION_SOURCES = \
 	NetworkExtension/NECompat.cs \
 	NetworkExtension/NEFilterFlow.cs \
 	NetworkExtension/NEFilterProvider.cs \
+	NetworkExtension/NEHotspotEapSettings.cs \
+	NetworkExtension/NEVpnManager.cs \
 
 # NewsstandKit
 
@@ -1360,6 +1367,7 @@ UIKIT_SOURCES = \
 	UIKit/UICollectionViewLayoutAttributes.cs \
 	UIKit/UICollectionViewTransitionLayout.cs \
 	UIKit/UIColor.cs \
+	UIKit/UIContentSizeCategory.cs \
 	UIKit/UIControl.cs \
 	UIKit/UIDevice.cs \
 	UIKit/UIDocumentInteractionController.cs \

@@ -2397,7 +2397,7 @@ namespace XamCore.WebKit {
 #if XAMCORE_2_0
 		void SetWebScriptValueAtIndex (int /* unsigned int */ index, NSObject value);
 #else
-		[Obsolete ("Use SetWebScriptValueAtIndex instead")]
+		[Obsolete ("Use 'SetWebScriptValueAtIndex' instead.")]
 		void SetWebScriptValueAtIndexvalue (int /* unsigned int */ index, NSObject value);
 #endif
 

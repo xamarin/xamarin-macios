@@ -759,7 +759,7 @@ namespace XamCore.AudioToolbox {
 			[MarshalAs (UnmanagedType.LPArray)] AudioStreamPacketDescription[] packetDescriptions, long startingPacket, ref int numPackets, IntPtr buffer);
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use ReadPacketData instead")]
+		[Obsolete ("Use 'ReadPacketData' instead.")]
 		public AudioFileError ReadPackets (bool useCache, out int numBytes,
 			AudioStreamPacketDescription[] packetDescriptions, long startingPacket, ref int numPackets, IntPtr buffer)
 		{
@@ -1208,7 +1208,7 @@ namespace XamCore.AudioToolbox {
 			}
 		}
 
-		[Advice ("Use DataFormat instead")]
+		[Advice ("Use 'DataFormat' instead.")]
 		public AudioStreamBasicDescription StreamBasicDescription {
 			get {
 				return GetProperty<AudioStreamBasicDescription> (AudioFileProperty.DataFormat) ?? default (AudioStreamBasicDescription);

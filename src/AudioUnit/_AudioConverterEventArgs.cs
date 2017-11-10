@@ -32,7 +32,7 @@ using XamCore.AudioToolbox;
 namespace XamCore.AudioUnitWrapper
 {
 #if !XAMCORE_2_0
-    [Obsolete ("Use AudioConverter")]
+    [Obsolete ("Use 'AudioConverter'.")]
     public class _AudioConverterEventArgs : EventArgs
     {
         #region Variables

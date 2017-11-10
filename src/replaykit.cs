@@ -297,6 +297,11 @@ namespace XamCore.ReplayKit {
 	[TV (10,0)]
 	[BaseType (typeof (RPBroadcastHandler))]
 	interface RPBroadcastSampleHandler {
+
+		[iOS (11,1), TV (11,1)]
+		[Field ("RPVideoSampleOrientationKey")]
+		NSString VideoSampleOrientationKey { get; }
+
 		[Export ("broadcastStartedWithSetupInfo:")]
 		void BroadcastStarted ([NullAllowed] NSDictionary<NSString, NSObject> setupInfo);
 

@@ -6,11 +6,11 @@ using System.Text;
 
 namespace xharness
 {
-	public class BCLTarget
+	public class BCLTestInfo
 	{
 		public Harness Harness;
-		public string MonoPath; // MONO_PATH
-		public string WatchMonoPath; // WATCH_MONO_PATH
+		public string MonoPath { get { return Harness.MONO_PATH; } }
+		public string WatchMonoPath { get { return Harness.WATCH_MONO_PATH; } }
 		public string TestName;
 
 		static readonly Dictionary<string, string[]> ignored_tests =  new Dictionary<string, string[]> { 
@@ -37,8 +37,10 @@ namespace xharness
 			{ "System.Web.Services.Configuration", null }
 		};
 
-		public BCLTarget ()
+		public BCLTestInfo (Harness harness, string testName)
 		{
+			Harness = harness;
+			TestName = testName;
 		}
 
 		protected void Process (string test_sources, IEnumerable<string> test_files, string condition, StringBuilder [] sb, int split_count)
@@ -165,25 +167,56 @@ namespace xharness
 		}
 	}
 
-	public class MacBCLTarget : BCLTarget
+	public class MacBCLTestInfo : BCLTestInfo
 	{
+		public MacFlavors Flavor { get; private set; }
+
+		public MacBCLTestInfo (Harness harness, string testName, MacFlavors flavor) : base (harness, testName)
+		{
+			if (flavor == MacFlavors.All)
+				throw new ArgumentException ("Each target must be a specific flavor");
+
+			Flavor = flavor;
+		}
+
+		public string FlavorSuffix => Flavor == MacFlavors.Full ? "" : "-modern";
+		public string ProjectSuffix =>  "-mac" + FlavorSuffix + ".csproj";
+		public string ProjectPath => Path.Combine (Harness.RootDirectory, "bcl-test", TestName, TestName + ProjectSuffix);
+		public string TemplatePath => Path.Combine (Harness.RootDirectory, "bcl-test", TestName, TestName + "-mac.csproj.template");
+
 		public override void Convert () 
+		{
+			string csprojText = ProcessCSProj (File.ReadAllText (TemplatePath), GetFileList ());
+
+			Harness.Save (csprojText, ProjectPath);
+		}
+
+		string ProcessCSProj (string csprojText, string filesList)
+		{
+			if (Flavor == MacFlavors.Modern) {
+				csprojText = csprojText.Replace (
+@"    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseXamMacFullFramework>true</UseXamMacFullFramework>",
+@"    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>");
+
+				csprojText = csprojText.Replace ("<DefineConstants>XAMCORE_2_0", "<DefineConstants>XAMCORE_2_0;MOBILE");
+
+
+				csprojText = csprojText.Replace ("Tests</AssemblyName>", "-modernTests</AssemblyName>");
+			}
+			return csprojText.Replace ("#FILES#", filesList);
+		}
+
+		string GetFileList ()
 		{
 			var testName = TestName == "mscorlib" ? "corlib" : TestName;
 			var main_test_sources = Path.Combine (MonoPath, "mcs", "class", testName, testName + "_test.dll.sources");
 			var main_test_files = File.ReadAllLines (main_test_sources);
 
-			var template_path = Path.Combine (Harness.RootDirectory, "bcl-test", TestName, TestName + "-mac.csproj.template");
-			var csproj_input = File.ReadAllText (template_path);
-
-			var project_path = Path.Combine (Harness.RootDirectory, "bcl-test", TestName, TestName + "-mac.csproj");
-			var csproj_output = project_path;
-
 			var sb = new StringBuilder[2] { new StringBuilder (), new StringBuilder () };
 			Process (main_test_sources, main_test_files, "", sb, 1);
-
-			Harness.Save (csproj_input.Replace ("#FILES#", sb[0].ToString ()), csproj_output);
+			return sb[0].ToString ();
 		}
 	}
 }
-

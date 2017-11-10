@@ -28213,6 +28213,7 @@
             </interfaces>
             <fields>
               <field name="Ssl3" attrib="32854" fieldtype="System.Net.SecurityProtocolType" value="48" />
+              <field name="SystemDefault" attrib="32854" fieldtype="System.Net.SecurityProtocolType" value="0" />
               <field name="Tls" attrib="32854" fieldtype="System.Net.SecurityProtocolType" value="192" />
               <field name="Tls11" attrib="32854" fieldtype="System.Net.SecurityProtocolType" value="768" />
               <field name="Tls12" attrib="32854" fieldtype="System.Net.SecurityProtocolType" value="3072" />
@@ -36654,7 +36655,7 @@
               </property>
               <property name="TransportContext" attrib="0" ptype="System.Net.TransportContext">
                 <methods>
-                  <method name="get_TransportContext()" attrib="2534" virtual="true" returntype="System.Net.TransportContext">
+                  <method name="get_TransportContext()" attrib="2182" returntype="System.Net.TransportContext">
                     <parameters />
                   </method>
                 </methods>
@@ -36823,7 +36824,10 @@
                   <parameter name="value" position="0" attrib="0" type="System.Int64" />
                 </parameters>
               </method>
-              <method name="Write(System.Byte[])" attrib="486" virtual="true" returntype="System.Void">
+              <method name="ShutdownAsync()" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task">
+                <parameters />
+              </method>
+              <method name="Write(System.Byte[])" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
                 </parameters>
@@ -43969,6 +43973,13 @@
               <property name="Captures" attrib="0" ptype="System.Text.RegularExpressions.CaptureCollection">
                 <methods>
                   <method name="get_Captures()" attrib="2182" returntype="System.Text.RegularExpressions.CaptureCollection">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Name" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Name()" attrib="2182" returntype="System.String">
                     <parameters />
                   </method>
                 </methods>

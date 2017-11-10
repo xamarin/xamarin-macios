@@ -226,13 +226,13 @@ namespace XamCore.AudioUnit
 		}
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use the overload that accept a ref to the AudioComponentDescription parameter")]
+		[Obsolete ("Use the overload that accept a ref to the 'AudioComponentDescription' parameter.")]
 		public static AudioComponent FindNextComponent (AudioComponent cmp, AudioComponentDescription cd)
 		{
 			return FindNextComponent (cmp, ref cd);
 		}
 
-		[Obsolete ("Use the overload that accept a ref to the AudioComponentDescription parameter")]
+		[Obsolete ("Use the overload that accept a ref to the 'AudioComponentDescription' parameter.")]
 		public static AudioComponent FindComponent (AudioComponentDescription cd)
 		{
 			return FindNextComponent (null, ref cd);

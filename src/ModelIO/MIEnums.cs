@@ -232,6 +232,7 @@ namespace XamCore.ModelIO {
 		UInt24 = 3,
 		UInt32 = 4,
 		Float16 = 258,
+		Float16SR = 770,
 		Float32 = 260
 	}
 
