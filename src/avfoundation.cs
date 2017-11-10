@@ -2785,6 +2785,12 @@ namespace XamCore.AVFoundation {
 		NSNumber[] AvailableEncodeChannelLayoutTags { get; }
 	}
 
+	[TV (11,2), NoWatch, NoMac, NoiOS]
+	[Abstract]
+	[BaseType (typeof (NSObject))]
+	interface AVDisplayCriteria : NSCopying {
+	}
+
 	[NoWatch]
 	[Since (4,0)]
 	[BaseType (typeof (NSObject))]
@@ -2806,6 +2812,10 @@ namespace XamCore.AVFoundation {
 		[Export ("naturalSize")]
 		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_7, Deprecated = Platform.iOS_5_0 | Platform.Mac_10_8, Message = "Use 'NaturalSize/PreferredTransform' as appropriate on the video track instead.")]
 		CGSize NaturalSize { get;  }
+
+		[TV (11,2), NoWatch, NoMac, NoiOS]
+		[Export ("preferredDisplayCriteria")]
+		AVDisplayCriteria PreferredDisplayCriteria { get; }
 
 		[Export ("providesPreciseDurationAndTiming")]
 		bool ProvidesPreciseDurationAndTiming { get;  }
@@ -3233,7 +3243,7 @@ namespace XamCore.AVFoundation {
 		[NullAllowed, Export ("error")]
 		NSError Error { get; }
 
-		[NullAllowed, Export ("audioOutputDeviceUniqueID")]
+		[NullAllowed, Export ("audioOutputDeviceUniqueID"), NoWatch, NoTV, NoiOS]
 		string AudioOutputDeviceUniqueId { get; set; }
 
 		[Export ("audioTimePitchAlgorithm")]
@@ -3837,6 +3847,10 @@ namespace XamCore.AVFoundation {
 		[iOS (8,0), Mac (10, 10)]
 		[Export ("renewalDate", ArgumentSemantic.Copy), NullAllowed]
 		NSDate RenewalDate { get; set; }
+
+		[Watch (4,2), TV (11,2), Mac (10,13,2), iOS (11,2)]
+		[NullAllowed, Export ("allowedContentTypes")]
+		string[] AllowedContentTypes { get; }
 	}
 
 	[NoWatch]
@@ -10290,6 +10304,18 @@ namespace XamCore.AVFoundation {
 		[iOS (10, 0), TV (10,0), Mac (10,12)]
 		[Field ("AVPlayerWaitingWithNoItemToPlayReason")]
 		NSString WaitingWithNoItemToPlayReason { get; }
+
+		// From AVPlayer (AVPlayerPlaybackCapabilities) Category
+
+		[TV (11,2), NoWatch, NoMac, iOS (11,2)]
+		[Static]
+		[Export ("availableHDRModes")]
+		AVPlayerHdrMode AvailableHdrModes { get; }
+
+		[TV (11, 2), NoWatch, NoMac, iOS (11, 2)]
+		[Field ("AVPlayerAvailableHDRModesDidChangeNotification")]
+		[Notification]
+		NSString AvailableHdrModesDidChangeNotification { get; }
 	}
 
 	[NoWatch]
@@ -12488,8 +12514,13 @@ namespace XamCore.AVFoundation {
 		[Export ("processContentKeyResponseError:")]
 		void Process (NSError error);
 
-		[Export ("respondByRequestingPersistableContentKeyRequest")]
+		[Deprecated (PlatformName.iOS, 11, 2, message: "Use the 'NSError' overload instead.")]
+		[Export ("respondByRequestingPersistableContentKeyRequest"), NoWatch, NoTV, NoMac]
 		void RespondByRequestingPersistableContentKeyRequest ();
+
+		[NoWatch, NoTV, NoMac, iOS (11,2)]
+		[Export ("respondByRequestingPersistableContentKeyRequestAndReturnError:")]
+		bool RespondByRequestingPersistableContentKeyRequest ([NullAllowed] out NSError error);
 	}
 
 	[Category]
