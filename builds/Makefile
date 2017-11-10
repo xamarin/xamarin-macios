@@ -1252,7 +1252,7 @@ $(eval $(2)_CONFIGURE_FLAGS=--build=i386-apple-darwin10 \
 			--with-monotouch \
 			--with-lazy-gc-thread-creation=yes \
 			--disable-mcs-build \
-			--enable-minimal=ssa,com,jit,reflection_emit_save,reflection_emit,portability,assembly_remapping,attach,verifier,full_messages,appdomains,security,sgen_remset,sgen_marksweep_par,sgen_marksweep_fixed,sgen_marksweep_fixed_par,sgen_copying,logging,remoting,shared_perfcounters \
+			--enable-minimal=ssa,com,interpreter,jit,reflection_emit_save,reflection_emit,portability,assembly_remapping,attach,verifier,full_messages,appdomains,security,sgen_remset,sgen_marksweep_par,sgen_marksweep_fixed,sgen_marksweep_fixed_par,sgen_copying,logging,remoting,shared_perfcounters \
 			--without-ikvm-native \
 			--with-tls=pthread \
 			--without-sigaltstack \
@@ -1480,7 +1480,7 @@ WATCHOS_CONFIGURE_FLAGS =                        \
 	--with-lazy-gc-thread-creation=yes           \
 	--disable-mcs-build                          \
 	--disable-boehm                              \
-	--enable-minimal=ssa,com,jit,reflection_emit_save,reflection_emit,portability,assembly_remapping,attach,verifier,full_messages,appdomains,security,sgen_remset,sgen_marksweep_par,sgen_marksweep_fixed,sgen_marksweep_fixed_par,sgen_copying,logging,remoting,shared_perfcounters \
+	--enable-minimal=ssa,com,interpreter,jit,reflection_emit_save,reflection_emit,portability,assembly_remapping,attach,verifier,full_messages,appdomains,security,sgen_remset,sgen_marksweep_par,sgen_marksweep_fixed,sgen_marksweep_fixed_par,sgen_copying,logging,remoting,shared_perfcounters \
 	--without-ikvm-native                        \
 	--with-tls=pthread                           \
 	--without-sigaltstack                        \
@@ -1660,7 +1660,7 @@ TVOS_CONFIGURE_FLAGS =                           \
 	--with-lazy-gc-thread-creation=yes           \
 	--disable-mcs-build                          \
 	--disable-boehm                              \
-	--enable-minimal=ssa,com,jit,reflection_emit_save,reflection_emit,portability,assembly_remapping,attach,verifier,full_messages,appdomains,security,sgen_remset,sgen_marksweep_par,sgen_marksweep_fixed,sgen_marksweep_fixed_par,sgen_copying,logging,remoting,shared_perfcounters \
+	--enable-minimal=ssa,com,interpreter,jit,reflection_emit_save,reflection_emit,portability,assembly_remapping,attach,verifier,full_messages,appdomains,security,sgen_remset,sgen_marksweep_par,sgen_marksweep_fixed,sgen_marksweep_fixed_par,sgen_copying,logging,remoting,shared_perfcounters \
 	--without-ikvm-native                        \
 	--with-tls=pthread                           \
 	--without-sigaltstack                        \
