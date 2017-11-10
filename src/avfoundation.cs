@@ -3243,12 +3243,7 @@ namespace XamCore.AVFoundation {
 		[NullAllowed, Export ("error")]
 		NSError Error { get; }
 
-#if XAMCORE_4_0
-		[NoWatch, NoTV, NoiOS]
-#elif !MONOMAC
-		[Obsolete ("AudioOutputDeviceUniqueId is unavailable and will be removed in a future version.")]
-#endif
-		[NullAllowed, Export ("audioOutputDeviceUniqueID")]
+		[NullAllowed, Export ("audioOutputDeviceUniqueID"), NoWatch, NoTV, NoiOS]
 		string AudioOutputDeviceUniqueId { get; set; }
 
 		[Export ("audioTimePitchAlgorithm")]
@@ -12519,18 +12514,13 @@ namespace XamCore.AVFoundation {
 		[Export ("processContentKeyResponseError:")]
 		void Process (NSError error);
 
-#if XAMCORE_4_0
-		[NoWatch, NoTV, NoMac]
-#elif !IOS
-		[Obsolete ("Not available and will be removed in a future version.")]
-#endif
 		[Deprecated (PlatformName.iOS, 11, 2, message: "Use the 'NSError' overload instead.")]
-		[Export ("respondByRequestingPersistableContentKeyRequest")]
+		[Export ("respondByRequestingPersistableContentKeyRequest"), NoWatch, NoTV, NoMac]
 		void RespondByRequestingPersistableContentKeyRequest ();
 
 		[NoWatch, NoTV, NoMac, iOS (11,2)]
 		[Export ("respondByRequestingPersistableContentKeyRequestAndReturnError:")]
-		bool RespondByRequestingPersistableContentKeyRequest ([NullAllowed] out NSError outError);
+		bool RespondByRequestingPersistableContentKeyRequest ([NullAllowed] out NSError error);
 	}
 
 	[Category]

@@ -92,6 +92,25 @@ namespace XamCore.AVFoundation {
 		}
 	}
 
+#if !MONOMAC
+	partial class AVSampleBufferAudioRenderer
+	{
+		[Obsolete ("This API is not available on this platform")]
+		public virtual string AudioOutputDeviceUniqueId { get; set; }
+	}
+#endif
+
+#if !IOS
+	partial class AVSampleBufferAudioRenderer
+	{
+		[Obsolete ("This API is not available on this platform")]
+		public virtual void RespondByRequestingPersistableContentKeyRequest ()
+		{
+
+		}
+	}
+#endif
+
 #if TVOS
 	// tvOS removed some types - we need to keep stubs of them for binary compatibility
 	[Obsolete ("Removed in tvOS 10.")]
