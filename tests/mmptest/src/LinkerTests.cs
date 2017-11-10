@@ -109,23 +109,22 @@ namespace Xamarin.MMP.Tests
 		public void Linking_ShouldHandleMixedModeAssemblies ()
 		{
 			RunMMPTest(tmpDir => {
-				File.Copy (Path.Combine (TI.FindSourceDirectory(), "../MixedClassLibrary.dll"), Path.Combine (tmpDir, "MixedClassLibrary.dll"));
+				File.Copy (Path.Combine (TI.FindSourceDirectory (), "../MixedClassLibrary.dll"), Path.Combine (tmpDir, "MixedClassLibrary.dll"));
 
-				foreach (var flavor in new Tuple<string, bool> [] { 
-					new Tuple<string, bool> ("None", false), 
-					new Tuple<string, bool> ("full", true),
-					new Tuple<string, bool> ("platform", true),
-					new Tuple<string, bool> ("sdkonly", true), })
-				{
-					TI.UnifiedTestConfig test = new TI.UnifiedTestConfig(tmpDir)
-					{
+				foreach (var flavor in new Tuple <string, bool> [] { 
+					new Tuple <string, bool> ("None", false), 
+					new Tuple <string, bool> ("full", true),
+					new Tuple <string, bool> ("platform", true),
+					new Tuple <string, bool> ("sdkonly", true), }) {
+
+					TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 						References = "<Reference Include=\"MixedClassLibrary\"><HintPath>MixedClassLibrary.dll</HintPath></Reference>",
 						CSProjConfig = $"<LinkMode>{flavor.Item1}</LinkMode>",
 						TestCode = "System.Console.WriteLine (typeof (MixedClassLibrary.Class1));",
 					};
 
-					var buildOutput = TI.TestUnifiedExecutable(test, shouldFail: flavor.Item2).BuildOutput;
-					Assert.True (buildOutput.Contains("2014") == flavor.Item2, $"Building with {flavor.Item1} did not give 2014 status {flavor.Item2} as expected.\n\n{buildOutput}");
+					var buildOutput = TI.TestUnifiedExecutable (test, shouldFail: flavor.Item2).BuildOutput;
+					Assert.True (buildOutput.Contains ("2014") == flavor.Item2, $"Building with {flavor.Item1} did not give 2014 status {flavor.Item2} as expected.\n\n{buildOutput}");
 				}
 			});
 		}
