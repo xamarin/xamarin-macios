@@ -3432,7 +3432,11 @@ public class HandlerTest
 		[TestCase (false)]
 		public void MixedModeAssembliesCanNotBeLinked (bool nofastsim)
 		{
-			foreach (var linkMode in new MTouchLinker [] { MTouchLinker.LinkAll, MTouchLinker.LinkSdk, MTouchLinker.DontLink }) {
+			foreach (var flavor in new Tuple<MTouchLinker, bool> [] {
+					new Tuple <MTouchLinker, bool> (MTouchLinker.DontLink, false),
+					new Tuple <MTouchLinker, bool> (MTouchLinker.LinkAll, true),
+					new Tuple <MTouchLinker, bool> (MTouchLinker.LinkSdk, true) }) {
+
 				using (var mtouch = new MTouchTool ()) {
 					var tmp = mtouch.CreateTemporaryDirectory ();
 					string libraryPath = Path.Combine (tmp, "MixedClassLibrary.dll");
@@ -3446,9 +3450,9 @@ public class HandlerTest
 						mtouch.NoFastSim = nofastsim;
 					mtouch.Debug = true; // makes simlauncher possible (when nofastsim is false)
 
-					mtouch.Linker = linkMode;
+					mtouch.Linker = flavor.Item1;
 
-					if (linkMode != MTouchLinker.DontLink) {
+					if (flavor.Item2) {
 						mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build sim");
 						mtouch.AssertErrorPattern (2014, "Unable to link assembly .* as it is mixed-mode.");
 						mtouch.AssertErrorCount (1);
