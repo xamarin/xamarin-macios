@@ -556,6 +556,7 @@ namespace XamCore.AVKit {
 
 	[TV (11,2), NoiOS, NoMac, NoWatch]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface AVDisplayManager {
 
 		[NullAllowed, Export ("preferredDisplayCriteria", ArgumentSemantic.Copy)]
