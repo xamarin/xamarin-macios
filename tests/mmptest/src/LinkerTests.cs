@@ -109,7 +109,7 @@ namespace Xamarin.MMP.Tests
 		public void Linking_ShouldHandleMixedModeAssemblies ()
 		{
 			RunMMPTest(tmpDir => {
-				File.Copy (Path.Combine (TI.FindSourceDirectory(), "MixedClassLibrary.dll"), Path.Combine (tmpDir, "MixedClassLibrary.dll"));
+				File.Copy (Path.Combine (TI.FindSourceDirectory(), "../MixedClassLibrary.dll"), Path.Combine (tmpDir, "MixedClassLibrary.dll"));
 
 				foreach (var flavor in new Tuple<string, bool> [] { 
 					new Tuple<string, bool> ("None", false), 
