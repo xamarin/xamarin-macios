@@ -165,5 +165,53 @@ namespace Bug57797Tests {
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (1048, "Unsupported type Foo?[] decorated with [BindAs]");
 		}
+
+		[Test]
+		public void BindAsNoRefParam ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding (@"
+using System;
+using Foundation;
+using CoreGraphics;
+using ObjCRuntime;
+
+namespace Bug57804TestsRef {
+
+	[BaseType (typeof (NSObject))]
+	interface FooObject {
+
+		[Export (""setCGAffineTransformValueRefNonNullable:"")]
+		void SetCGAffineTransformValueRefNonNullable ([BindAs (typeof (CGAffineTransform))] ref NSValue value);
+	}
+}");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1048, "Unsupported type 'ref/out NSValue' decorated with [BindAs]");
+		}
+
+		[Test]
+		public void BindAsNoOutParam ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding (@"
+using System;
+using Foundation;
+using CoreGraphics;
+using ObjCRuntime;
+
+namespace Bug57804TestsRef {
+
+	[BaseType (typeof (NSObject))]
+	interface FooObject {
+
+		[Export (""setCGAffineTransformValueOutNonNullable:"")]
+		void SetCGAffineTransformValueOutNonNullable ([BindAs (typeof (CGAffineTransform))] out NSValue value);
+	}
+}");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1048, "Unsupported type 'ref/out NSValue' decorated with [BindAs]");
+		}
 	}
 }
