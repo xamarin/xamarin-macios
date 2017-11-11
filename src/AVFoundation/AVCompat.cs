@@ -104,7 +104,7 @@ namespace XamCore.AVFoundation {
 #endif
 
 #if !IOS
-	partial class AVContentKeySession
+	partial class AVContentKeyRequest
 	{
 		[Obsolete ("This API is not available on this platform.")]
 		public virtual void RespondByRequestingPersistableContentKeyRequest ()
