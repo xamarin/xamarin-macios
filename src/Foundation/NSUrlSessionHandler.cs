@@ -64,16 +64,14 @@ namespace Foundation {
 		readonly Dictionary<NSUrlSessionTask, InflightData> inflightRequests;
 		readonly object inflightRequestsLock = new object ();
 
-		public NSUrlSessionHandler () : this(NSUrlSessionConfiguration.DefaultSessionConfiguration)
+		public NSUrlSessionHandler () : this (NSUrlSessionConfiguration.DefaultSessionConfiguration)
 		{
 		}
 
 		public NSUrlSessionHandler (NSUrlSessionConfiguration configuration)
 		{
 			if (configuration == null)
-			{
-				throw new ArgumentNullException("configuration");
-			}
+				throw new ArgumentNullException (nameof (configuration));
 
 			AllowAutoRedirect = true;
 
