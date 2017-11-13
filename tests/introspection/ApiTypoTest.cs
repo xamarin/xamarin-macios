@@ -216,7 +216,6 @@ namespace Introspection
 			"Hipass",
 			"Hlg", // Hybrid Log-Gamma
 			"Hls",
-			"Hlg",
 			"Hoa",
 			"Hrtf", // acronym used in AUSpatializationAlgorithm
 			"Hvxc", // MPEG4ObjectID
