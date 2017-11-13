@@ -153,6 +153,11 @@ public class ListSourceFiles {
 			}
 
 			var assemblySrcs = GetFilePathsFromPdb(pdbFile);
+			if (verbose) {
+				Console.WriteLine("Pdb file sources are:");
+				foreach (var p in srcs)
+					Console.WriteLine($"\t{p}");
+			}
 			srcs.UnionWith(assemblySrcs);
 		}
 
@@ -163,6 +168,11 @@ public class ListSourceFiles {
 				continue;
 			}
 			var assemblySrcs = GetFilePathsFromMdb (mdbFile);
+			if (verbose) {
+				Console.WriteLine("Mdb file sources are:");
+				foreach (var p in srcs)
+					Console.WriteLine($"\t{p}");
+			}
 			srcs.UnionWith (assemblySrcs);
 		}
 
