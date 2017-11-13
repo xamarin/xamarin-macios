@@ -46,5 +46,30 @@ namespace Bug52570Tests {
 			bgen.AssertExecute ("build");
 			bgen.AssertWarning (1117, "The SomeMethod member is decorated with [Static] and its container class Bug52570Tests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into Bug52570Tests.FooObject class.");
 		}
+
+		[Test]
+		public void BindAsNoMultidimensionalArrays ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding (@"
+using System;
+using Foundation;
+using AVFoundation;
+using ObjCRuntime;
+
+namespace Bug57795Tests {
+
+	[BaseType (typeof (NSObject))]
+	interface FooObject {
+
+		[BindAs (typeof (AVMediaTypes [,]))]
+		[Export (""strongAVMediaTypesPropertiesMulti:"")]
+		NSString [,] StrongAVMediaTypesPropertiesMulti { get; set; }
+	}
+}");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1048, "Unsupported type AVMediaTypes[,] decorated with [BindAs]");
+		}
 	}
 }

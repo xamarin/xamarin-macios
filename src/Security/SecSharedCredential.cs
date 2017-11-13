@@ -34,6 +34,7 @@ namespace XamCore.Security {
 			} 
 		} 
 
+		[iOS (8,0)]
 		public static void AddSharedWebCredential (string domainName, string account, string password, Action<NSError> handler)
 		{
 			if (domainName == null)
@@ -87,13 +88,24 @@ namespace XamCore.Security {
 			}
 		}
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use the overload accepting a 'SecSharedCredentialInfo' argument.")]
 		public static void RequestSharedWebCredential (string domainName, string account, Action<string[], NSError> handler)
 		{
-			// do not check domain an account because they can be null
+			throw new InvalidOperationException ("Use correct delegate type");
+		}
+#endif
+
+		[iOS (8,0)]
+		public static void RequestSharedWebCredential (string domainName, string account, Action<SecSharedCredentialInfo[], NSError> handler)
+		{
 			Action<NSArray, NSError> onComplete = (NSArray a, NSError e) => {
-				// get a string [] for the user rather than an ugly NSArray
-				var array = NSArray.StringArrayFromHandle (a.Handle);
-				handler (array, e);
+				var creds = new SecSharedCredentialInfo [a.Count];
+				int i = 0;
+				foreach (var dict in NSArray.FromArrayNative<NSDictionary> (a)) {
+					creds [i++] = new SecSharedCredentialInfo (dict);
+				}
+				handler (creds, e);
 			};
 			// we need to create our own block literal.
 			unsafe {
@@ -125,6 +137,7 @@ namespace XamCore.Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* CFStringRef */ SecCreateSharedWebCredentialPassword ();
 
+		[iOS (8,0)]
 		public static string CreateSharedWebCredentialPassword ()
 		{
 			var handle = SecCreateSharedWebCredentialPassword ();
