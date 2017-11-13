@@ -1274,6 +1274,9 @@ public partial class Generator : IMemberGatherer {
 			originalType = pi.ParameterType;
 		}
 
+		if (originalType.IsByRef)
+			throw new BindingException (1048, true, $"Unsupported type 'ref/out {originalType.Name.Replace ("&", string.Empty)}' decorated with [BindAs]");
+
 		var retType = TypeManager.GetUnderlyingNullableType (attrib.Type) ?? attrib.Type;
 		var isNullable = attrib.IsNullable;
 		var isValueType = retType.IsValueType;
