@@ -103,10 +103,6 @@ namespace MonoTouchFixtures.CoreImage {
 			using (var f = new CIColorCubeWithColorSpace ()) {
 				Assert.Null (f.ColorSpace, "ColorSpace/default");
 				using (var cs = CGColorSpace.CreateDeviceGray ()) {
-					var nsname = NSString.CreateNative ("inputColorSpace");
-					// TODO: remove when `CIBarcodeDescriptorTest` passes
-					// This works `inputColorSpace` is set
-					Messaging.void_objc_msgSend_IntPtr_IntPtr (f.Handle, Selector.GetHandle ("setValue:forKey:"), cs.Handle, nsname);
 					f.ColorSpace = cs;
 					var rc = CFGetRetainCount (cs.Handle);
 					for (int i = 0; i < 5; i++)
@@ -125,11 +121,7 @@ namespace MonoTouchFixtures.CoreImage {
 
 			using (var f = new CIBarcodeGenerator ()) {
 				Assert.Null (f.BarcodeDescriptor, "CIBarcodeDescriptor/default");
-				using (var b = new CIQRCodeDescriptor ()) {
-					var nsname = NSString.CreateNative ("inputBarcodeDescriptor");
-					// TODO: remove when `CIBarcodeDescriptorTest` passes
-					// This doesn't work, `inputBarcodeDescriptor` is not set.
-					Messaging.void_objc_msgSend_IntPtr_IntPtr (f.Handle, Selector.GetHandle ("setValue:forKey:"), b.Handle, nsname);
+				using (var b = new CIQRCodeDescriptor (new NSData (), 1, 0, CIQRCodeErrorCorrectionLevel.Q)) {
 					f.BarcodeDescriptor = b;
 					var rc = CFGetRetainCount (b.Handle);
 					for (int i = 0; i < 5; i++)

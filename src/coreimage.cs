@@ -3723,11 +3723,8 @@ namespace XamCore.CoreImage {
 
 	[CoreImageFilter]
 	[iOS (8,3)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CILinearBlur))]
 	interface CIMotionBlur {
-
-		[CoreImageFilterProperty ("inputRadius")]
-		float Radius { get; set; }
 
 		[CoreImageFilterProperty ("inputAngle")]
 		float Angle { get; set; }
@@ -4741,7 +4738,9 @@ namespace XamCore.CoreImage {
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))] // Maybe 'CIScaleTransform' (shared 'Scale' and 'AspectRatio' property)?
+	// Maybe 'typeof (CIFilter)' (shared 'Scale' and 'AspectRatio' property).
+	// It's possible to add ours but it can bite us back in the future if Apple introduce the same with different properties.
+	[BaseType (typeof (CIFilter))]
 	interface CIBicubicScaleTransform {
 		[CoreImageFilterProperty ("inputB")]
 		float B { get; set; }
@@ -4758,11 +4757,8 @@ namespace XamCore.CoreImage {
 
 	[CoreImageFilter]
 	[Abstract]
-	[iOS (11,0)]
-	[Mac (10,13)]
-	[TV (11,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIBlur { // `CIMotionBlur.SuperClass == CILinearBlur` but it's marked as `[NoiOS]` and `[NoMac]` so we have ours
+	interface CILinearBlur {
 		[CoreImageFilterProperty ("inputRadius")]
 		float Radius { get; set; }
 	}
@@ -4771,7 +4767,7 @@ namespace XamCore.CoreImage {
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIBlur))] // `CIBokehBlur` doesn't explicitly have `SuperClass` but it should be `CIBlur` to inherit the `inputRadius` property
+	[BaseType (typeof (CILinearBlur))]
 	interface CIBokehBlur {
 		[CoreImageFilterProperty ("inputSoftness")]
 		float Softness { get; set; }
@@ -4833,9 +4829,10 @@ namespace XamCore.CoreImage {
 		[CoreImageFilterProperty ("inputCalibrationData")]
 		AVCameraCalibrationData CalibrationData { get; set; }
 
-		// FIXME: How to bind this? Strongly typed?
+		// Radar: https://trello.com/c/9eA2BA2o
+		// Don't know how to test this as I don't know which keys are valid.
 		// [CoreImageFilterProperty ("inputTuningParameters")]
-		// NSDictionary TuningParameters { get; set; }
+		// NSDictionary WeakTuningParameters { get; set; }
 
 		[CoreImageFilterProperty ("inputNosePositions")]
 		CIVector NosePositions { get; set; }
