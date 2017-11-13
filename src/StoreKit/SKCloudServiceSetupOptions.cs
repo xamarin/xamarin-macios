@@ -14,10 +14,7 @@ namespace XamCore.StoreKit {
 				return (SKCloudServiceSetupAction?) (SKCloudServiceSetupActionExtensions.GetValue (_Action));
 			}
 			set {
-				if (value != null)
-					_Action = SKCloudServiceSetupActionExtensions.GetConstant (value.Value);
-				else
-					throw new ArgumentNullException ("value");
+				_Action = value != null ? SKCloudServiceSetupActionExtensions.GetConstant (value.Value) : null;
 			}
 		}
 	}
