@@ -254,7 +254,13 @@ namespace Introspection {
 			case "CLBeacon":
 				do_not_dispose.Add (obj);
 				break;
+			// xcode 9.2 bot hangs (not duplicable locally)
+			case "PHCachingImageManager":
+			case "PHImageManager":
+				do_not_dispose.Add (obj);
+				break;
 			default:
+				Console.WriteLine (type.FullName);
 				base.Dispose (obj, type);
 				break;
 			}
