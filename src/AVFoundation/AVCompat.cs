@@ -95,18 +95,21 @@ namespace XamCore.AVFoundation {
 #if !MONOMAC
 	partial class AVSampleBufferAudioRenderer
 	{
-		[Obsolete ("This API is not available on this platform")]
-		public virtual string AudioOutputDeviceUniqueId { get; set; }
+		[Obsolete ("This API is not available on this platform.")]
+		public virtual string AudioOutputDeviceUniqueId {
+			get { throw new NotImplementedException (); }
+			set { throw new NotImplementedException (); }
+		}
 	}
 #endif
 
 #if !IOS
-	partial class AVSampleBufferAudioRenderer
+	partial class AVContentKeyRequest
 	{
-		[Obsolete ("This API is not available on this platform")]
+		[Obsolete ("This API is not available on this platform.")]
 		public virtual void RespondByRequestingPersistableContentKeyRequest ()
 		{
-
+			throw new NotImplementedException ();
 		}
 	}
 #endif
