@@ -704,6 +704,7 @@
     <Compile Include="ModelIO\MDLAnimatedValueTypesTests.cs" />
     <Compile Include="CoreVideo\CVImageBufferTests.cs" />
     <Compile Include="CoreVideo\CVMetalTextureCacheTests.cs" />
+    <Compile Include="StoreKit\SKCloudServiceSetupOptionsTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
