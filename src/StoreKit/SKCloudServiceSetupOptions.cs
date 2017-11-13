@@ -1,4 +1,4 @@
-#if !MONOMAC && !TVOS
+#if __IOS__
 
 using System;
 using XamCore.ObjCRuntime;
@@ -9,15 +9,18 @@ namespace XamCore.StoreKit {
 	partial class SKCloudServiceSetupOptions {
 
 		[iOS (10,1)]
-		public virtual SKCloudServiceSetupAction Action {
+		public virtual SKCloudServiceSetupAction? Action {
 			get {
-				return (SKCloudServiceSetupAction) (SKCloudServiceSetupActionExtensions.GetValue (_Action));
+				return (SKCloudServiceSetupAction?) (SKCloudServiceSetupActionExtensions.GetValue (_Action));
 			}
 			set {
-				_Action = SKCloudServiceSetupActionExtensions.GetConstant (value);
+				if (value != null)
+					_Action = SKCloudServiceSetupActionExtensions.GetConstant (value.Value);
+				else
+					throw new ArgumentNullException ("value");
 			}
 		}
 	}
 }
 
-#endif // !MONOMAC && !TVOS
+#endif // __IOS__
