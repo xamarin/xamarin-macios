@@ -1391,7 +1391,8 @@ Properties flagged with the Field attribute can be of the following types:
 * `CGSize`
 * `System.IntPtr`
 * Enums
-* [Enums backed by a NSString constant](#enum-attributes), setter is not supported.
+
+For [enums backed by NSString constants](#enum-attributes) the setters are not supported but they can be manually bound if needed.
 
 Example:
 
