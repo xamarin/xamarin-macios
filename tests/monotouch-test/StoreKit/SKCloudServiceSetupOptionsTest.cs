@@ -7,6 +7,7 @@
 // Copyright 2017 Microsoft. All rights reserved.
 //
 
+#if __IOS__
 
 using System;
 using Foundation;
@@ -32,3 +33,5 @@ namespace MonoTouchFixtures.StoreKit {
 		}
 	}
 }
+
+#endif // __IOS__
