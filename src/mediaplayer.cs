@@ -1375,7 +1375,7 @@ namespace XamCore.MediaPlayer {
 
 		[NoiOS]
 		[NoTV]
-		[Export ("playbackState", ArgumentSemantic.Assign)]
+		[Export ("playbackState")]
 		MPNowPlayingPlaybackState PlaybackState { get; set; }
 
 		[Internal]
