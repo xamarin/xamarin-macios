@@ -31,7 +31,8 @@ BCL_TEST_SUITES=mscorlib \
 	Mono.Data.Tds \
 	System.IO.Compression \
 	System.IO.Compression.FileSystem \
-	Mono.CSharp
+	Mono.CSharp \
+	System.Security
 ALL_TEST_SUITES=$(TEST_SUITES) $(BCL_TEST_SUITES)
 EXEC_UNIT_SERVER=XCODE_DEVELOPER_ROOT=$(XCODE_DEVELOPER_ROOT) MONOTOUCH_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) $(SYSTEM_MONO) --debug $(UNIT_SERVER)
 
