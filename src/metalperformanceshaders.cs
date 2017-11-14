@@ -1574,6 +1574,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSMatrix))]
+	[DisableDefaultCtor]
 	interface MPSTemporaryMatrix
 	{
 		[Static]
@@ -2149,6 +2150,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnNeuron), Name = "MPSCNNNeuronPReLU")]
+	[DisableDefaultCtor]
 	interface MPSCnnNeuronPReLU
 	{
 		[Export ("initWithDevice:a:count:")]
@@ -2291,6 +2293,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnKernel), Name = "MPSCNNBinaryConvolution")]
+	[DisableDefaultCtor]
 	interface MPSCnnBinaryConvolution
 	{
 		[Export ("inputFeatureChannels")]
@@ -2312,6 +2315,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnBinaryConvolution), Name = "MPSCNNBinaryFullyConnected")]
+	[DisableDefaultCtor]
 	interface MPSCnnBinaryFullyConnected
 	{
 		[Export ("initWithDevice:convolutionData:scaleValue:type:flags:")]

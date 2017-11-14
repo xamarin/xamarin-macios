@@ -99,6 +99,25 @@ namespace Introspection {
 			case "NSUnitPressure": // -init should never be called on NSUnit!
 			case "NSUnitSpeed": // -init should never be called on NSUnit!
 				return true;
+			case "MPSCnnNeuron": // Cannot directly initialize MPSCNNNeuron. Use one of the sub-classes of MPSCNNNeuron
+			case "MPSCnnNeuronPReLU":
+			case "MPSCnnNeuronELU":
+			case "MPSCnnNeuronHardSigmoid":
+			case "MPSCnnNeuronReLUN":
+			case "MPSCnnNeuronSoftPlus":
+				return true;
+			case "MPSCnnBinaryConvolution": // [MPSCNNBinaryConvolution initWithDevice:] is not allowed. Please use initializers that are not marked NS_UNAVAILABLE.
+			case "MPSCnnDilatedPoolingMax": // [MPSCNNDilatedPoolingMax initWithDevice:] is not allowed. Please use initializers that are not marked NS_UNAVAILABLE.
+			case "MPSCnnPoolingL2Norm": // [MPSCNNPoolingL2Norm initWithDevice:] is not allowed. Please use initializers that are not marked NS_UNAVAILABLE.
+				return true;
+			case "MPSCnnBinaryFullyConnected": // Please initialize the MPSCNNBinaryFullyConnected class with initWithDevice:convolutionDescriptor:kernelWeights:biasTerms
+				return true;
+			case "MPSCnnUpsampling": // Cannot directly initialize MPSCNNUpsampling. Use one of the sub-classes of MPSCNNUpsampling
+			case "MPSCnnUpsamplingBilinear":
+			case "MPSCnnUpsamplingNearest":
+				return true;
+			case "MPSImageArithmetic": // Cannot directly initialize MPSImageArithmetic. Use one of the sub-classes of MPSImageArithmetic.
+				return true;
 			}
 
 			return SkipDueToAttribute (type);
