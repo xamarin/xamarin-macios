@@ -213,5 +213,29 @@ namespace Bug57804TestsRef {
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (1048, "Unsupported type 'ref/out NSValue' decorated with [BindAs]");
 		}
+
+		[Test]
+		public void Bug57094Test ()
+		{
+			// https://bugzilla.xamarin.com/show_bug.cgi?id=57094
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding (@"
+using System;
+using Foundation;
+using ObjCRuntime;
+
+namespace Bug57094 {
+
+	[BaseType (typeof (NSObject))]
+	interface FooObject {
+
+		[Field (""SomeField"", ""__Internal"")]
+		byte [] SomeField { get; }
+	}
+}");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1014, "Unsupported type for Fields: byte[] for 'Bug57094.FooObject SomeField'.");
+		}
 	}
 }
