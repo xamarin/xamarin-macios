@@ -3255,7 +3255,7 @@ namespace XamCore.MetalPerformanceShaders {
 	interface IMPSHandle { }
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[Protocol, Model]
+	[Protocol]
 	[BaseType (typeof(NSObject))]
 	interface MPSHandle : NSSecureCoding
 	{
@@ -3309,7 +3309,7 @@ namespace XamCore.MetalPerformanceShaders {
 	interface IMPSNnPadding { }
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[Protocol, Model]
+	[Protocol]
 	[BaseType (typeof(NSObject), Name = "MPSNNPadding")]
 	interface MPSNnPadding : NSSecureCoding
 	{
@@ -3327,7 +3327,7 @@ namespace XamCore.MetalPerformanceShaders {
 	interface IMPSImageSizeEncodingState { }
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[Protocol, Model]
+	[Protocol]
 	[BaseType (typeof(NSObject))]
 	interface MPSImageSizeEncodingState
 	{
@@ -3343,7 +3343,7 @@ namespace XamCore.MetalPerformanceShaders {
 	interface IMPSImageAllocator { }
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[Protocol, Model]
+	[Protocol]
 	[BaseType (typeof(NSObject))]
 	interface MPSImageAllocator : NSSecureCoding
 	{
@@ -3361,7 +3361,7 @@ namespace XamCore.MetalPerformanceShaders {
 	interface IMPSImageTransformProvider { }
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
-	[Protocol, Model]
+	[Protocol]
 	[BaseType (typeof(NSObject))]
 	interface MPSImageTransformProvider : NSSecureCoding
 	{
