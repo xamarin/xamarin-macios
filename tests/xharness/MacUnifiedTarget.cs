@@ -13,12 +13,14 @@ namespace xharness
 
 		bool SkipProjectGeneration;
 		bool ThirtyTwoBit;
+		bool SkipSuffix;
 
-		public MacUnifiedTarget (bool mobile, bool thirtyTwoBit, bool shouldSkipProjectGeneration = false) : base ()
+		public MacUnifiedTarget (bool mobile, bool thirtyTwoBit, bool shouldSkipProjectGeneration = false, bool skipSuffix = false) : base ()
 		{
 			Mobile = mobile;
 			ThirtyTwoBit = thirtyTwoBit;
 			SkipProjectGeneration = shouldSkipProjectGeneration;
+			SkipSuffix = skipSuffix;
 		}
 
 		protected override void CalculateName ()

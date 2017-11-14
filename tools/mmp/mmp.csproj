@@ -110,6 +110,12 @@
     <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\IXApiVisitor.cs">
       <Link>Mono.Linker\IXApiVisitor.cs</Link>
     </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\ILogger.cs">
+      <Link>Mono.Linker\ILogger.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\ConsoleLogger.cs">
+      <Link>Mono.Linker\ConsoleLogger.cs</Link>
+    </Compile>
     <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\LinkContext.cs">
       <Link>Mono.Linker\LinkContext.cs</Link>
     </Compile>
