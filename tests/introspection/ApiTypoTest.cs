@@ -214,8 +214,8 @@ namespace Introspection
 			"Heif", // High Efficiency Image File Format
 			"Hfp",
 			"Hipass",
+			"Hlg", // Hybrid Log-Gamma
 			"Hls",
-			"Hlg",
 			"Hoa",
 			"Hrtf", // acronym used in AUSpatializationAlgorithm
 			"Hvxc", // MPEG4ObjectID
