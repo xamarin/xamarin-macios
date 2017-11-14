@@ -115,8 +115,8 @@
       <Output TaskParameter="FullFrameworkReferenceAssemblyPaths" PropertyName="FullFrameworkReferenceAssemblyPaths" />
     </GetReferenceAssemblyPaths>
     <ItemGroup>
-      <MergedAssemblies Include="@(ReferenceCopyLocalPaths)" Condition="$([System.String]::new('%(FileName)').StartsWith('Xamarin')) And $([System.String]::new('%(FileName)').EndsWith('.dll'))" />
-      <MergedAssemblies Include="@(ReferenceCopyLocalPaths)" Condition="$([System.String]::new('%(FileName)').StartsWith('Mono')) And $([System.String]::new('%(FileName)').EndsWith('.dll'))" />
+      <MergedAssemblies Include="@(ReferenceCopyLocalPaths)" Condition="$([System.String]::new('%(FileName)').StartsWith('Xamarin')) And '%(Extension)' == '.dll'" />
+      <MergedAssemblies Include="@(ReferenceCopyLocalPaths)" Condition="$([System.String]::new('%(FileName)').StartsWith('Mono')) And '%(Extension)' == '.dll'" />
       <ReferenceCopyLocalDirs Include="@(ReferenceCopyLocalPaths -> '%(RootDir)%(Directory)')" />
       <ReferenceCopyLocalPaths Remove="@(MergedAssemblies)" />
       <LibDir Include="@(ReferenceCopyLocalDirs -> Distinct())" />
