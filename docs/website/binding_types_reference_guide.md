@@ -1392,7 +1392,7 @@ Properties flagged with the Field attribute can be of the following types:
 * `System.IntPtr`
 * Enums
 
-For [enums backed by NSString constants](#enum-attributes) the setters are not supported but they can be manually bound if needed.
+Setters are not supported for [enums backed by NSString constants](#enum-attributes), but they can be manually bound if needed.
 
 Example:
 
