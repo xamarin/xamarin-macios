@@ -33,6 +33,7 @@ namespace Xamarin.Tests
 		public bool ProcessEnums;
 
 		public List<string> ApiDefinitions = new List<string> ();
+		public List<string> Sources = new List<string> ();
 		public string [] Defines;
 		public string TmpDirectory;
 		public string ResponseFile;
@@ -96,7 +97,10 @@ namespace Xamarin.Tests
 
 			foreach (var ad in ApiDefinitions)
 				sb.Append (" --api=").Append (StringUtils.Quote (ad));
-			
+
+			foreach (var s in Sources)
+				sb.Append (" -s=").Append (StringUtils.Quote (s));
+
 			if (!string.IsNullOrEmpty (TmpDirectory))
 				sb.Append (" --tmpdir=").Append (StringUtils.Quote (TmpDirectory));
 
