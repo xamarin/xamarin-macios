@@ -16,7 +16,7 @@ export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.fra
 
 IOS_CURRENT_DIR=$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current
 IOS_GENERATOR = $(IOS_CURRENT_DIR)/bin/bgen /unsafe --target-framework=Xamarin.iOS,v1.0
-IOS_CUSTOM_TESTS = multiple-api-definitions1 multiple-api-definitions2 bug29493 classNameCollision bi1036 bug37527 bug27986 bug35176 bi1046 virtualwrap bug42742 noasyncinternalwrapper noasyncwarningcs0219 bug53076 bug53076withmodel fieldenumtests smartenumwithframework
+IOS_CUSTOM_TESTS = bug29493 classNameCollision bi1036 bug37527 bug27986 bug35176 bi1046 virtualwrap bug42742 noasyncinternalwrapper noasyncwarningcs0219 bug53076 bug53076withmodel fieldenumtests smartenumwithframework
 
 ALL_TESTS = 
 ifdef INCLUDE_IOS
@@ -42,16 +42,6 @@ classNameCollision:
 	@rm -Rf $@.tmpdir
 	@mkdir -p $@.tmpdir
 	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) $@.cs -s:classNameCollision-enum.cs -tmpdir=$@.tmpdir 
-
-multiple-api-definitions1:
-	@rm -Rf $@.tmpdir
-	@mkdir -p $@.tmpdir
-	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) --sourceonly:$@.source -tmpdir=$@.tmpdir $@.cs
-
-multiple-api-definitions2:
-	@rm -Rf $@.tmpdir
-	@mkdir -p $@.tmpdir
-	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) --sourceonly:$@.source -tmpdir=$@.tmpdir --api=$@-a.cs --api=$@-b.cs
 
 bug29493:
 	@rm -Rf $@.tmpdir

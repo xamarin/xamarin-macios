@@ -224,6 +224,18 @@ namespace GeneratorTests
 			bgen.AssertType ("Desk79124.WYPopoverBackgroundView/WYPopoverBackgroundViewAppearance");
 		}
 
+		[Test]
+		public void MultipleApiDefinitions1 ()
+		{
+			BuildFile (Profile.iOS, "multiple-api-definitions1.cs");
+		}
+
+		[Test]
+		public void MultipleApiDefinitions2 ()
+		{
+			BuildFile (Profile.iOS, "multiple-api-definitions2-a.cs", "multiple-api-definitions2-b.cs");
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			var bgen = new BGenTool ();
