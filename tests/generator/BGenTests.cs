@@ -402,6 +402,18 @@ namespace GeneratorTests
 			bgen.AssertNoWarnings ();
 		}
 
+		[Test]
+		public void FieldEnumTests ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.ProcessEnums = true;
+			bgen.AddTestApiDefinition ("fieldenumtests.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
+			bgen.AssertNoWarnings ();
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, filenames);

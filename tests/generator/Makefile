@@ -16,7 +16,7 @@ export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.fra
 
 IOS_CURRENT_DIR=$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current
 IOS_GENERATOR = $(IOS_CURRENT_DIR)/bin/bgen /unsafe --target-framework=Xamarin.iOS,v1.0
-IOS_CUSTOM_TESTS = fieldenumtests smartenumwithframework
+IOS_CUSTOM_TESTS = smartenumwithframework
 
 ALL_TESTS = 
 ifdef INCLUDE_IOS
@@ -59,11 +59,6 @@ forcedtype:
 	@if [ `grep -r GetINativeObject forcedtype.tmpdir | wc -l` -ne 12 ]; then \
 		echo "Error: Expected 12 GetINativeObject usages in generated code."; exit 1; \
 	fi
-
-fieldenumtests:
-	@rm -Rf $@.tmpdir
-	@mkdir -p $@.tmpdir
-	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) --sourceonly:$@.source -tmpdir=$@.tmpdir $@.cs --process-enums
 
 smartenumwithframework:
 	@rm -Rf $@.tmpdir
