@@ -23,6 +23,7 @@ namespace Xamarin.Tests
 	class BGenTool : Tool
 	{
 		public Profile Profile;
+		public bool ProcessEnums;
 
 		public List<string> ApiDefinitions = new List<string> ();
 		public string TmpDirectory;
@@ -72,6 +73,9 @@ namespace Xamarin.Tests
 			
 			if (!string.IsNullOrEmpty (TmpDirectory))
 				sb.Append (" --tmpdir=").Append (StringUtils.Quote (TmpDirectory));
+
+			if (ProcessEnums)
+				sb.Append (" --process-enums");
 
 			return sb.ToString ();
 		}

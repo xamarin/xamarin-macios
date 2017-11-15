@@ -256,7 +256,27 @@ namespace xharness
 				});
 			}
 
-			var bcl_suites = new string[] { "mscorlib", "System", "System.Core", "System.Data", "System.Net.Http", "System.Numerics", "System.Runtime.Serialization", "System.Transactions", "System.Web.Services", "System.Xml", "System.Xml.Linq", "Mono.Security", "System.ComponentModel.DataAnnotations", "System.Json", "System.ServiceModel.Web", "Mono.Data.Sqlite" };
+			var bcl_suites = new string[] {
+				"mscorlib",
+				"System",
+				"System.Core",
+				"System.Data",
+				"System.Net.Http",
+				"System.Numerics",
+				"System.Runtime.Serialization",
+				"System.Transactions", "System.Web.Services",
+				"System.Xml",
+				"System.Xml.Linq",
+				"Mono.Security",
+				"System.ComponentModel.DataAnnotations",
+				"System.Json",
+				"System.ServiceModel.Web",
+				"Mono.Data.Sqlite",
+				"Mono.Data.Tds",
+				"System.IO.Compression",
+				"System.IO.Compression.FileSystem",
+				"Mono.CSharp",
+			};
 			foreach (var p in bcl_suites) {
 				foreach (var flavor in new MacFlavors [] { MacFlavors.Full, MacFlavors.Modern }) {
 					var bclTestInfo = new MacBCLTestInfo (this, p, flavor);
@@ -276,9 +296,32 @@ namespace xharness
 			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test", "bindings-test2", "bindings-framework-test" };
 			var fsharp_test_suites = new string [] { "fsharp" };
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
-			var bcl_suites = new string [] { "mscorlib", "System", "System.Core", "System.Data", "System.Net.Http", "System.Numerics", "System.Runtime.Serialization", "System.Transactions", "System.Web.Services", "System.Xml", "System.Xml.Linq", "Mono.Security", "System.ComponentModel.DataAnnotations", "System.Json", "System.ServiceModel.Web", "Mono.Data.Sqlite" };
+			var bcl_suites = new string [] {
+				"mscorlib",
+				"System",
+				"System.Core",
+				"System.Data",
+				"System.Net.Http",
+				"System.Numerics",
+				"System.Runtime.Serialization",
+				"System.Transactions",
+				"System.Web.Services",
+				"System.Xml",
+				"System.Xml.Linq",
+				"Mono.Security",
+				"System.ComponentModel.DataAnnotations",
+				"System.Json",
+				"System.ServiceModel.Web",
+				"Mono.Data.Sqlite",
+				"Mono.Data.Tds",
+				"System.IO.Compression",
+				"System.IO.Compression.FileSystem",
+				"Mono.CSharp",
+			};
 			var bcl_skip_watchos = new string [] {
 				"Mono.Security",
+				"Mono.Data.Tds",
+				"Mono.CSharp",
 			};
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-0.csproj")), false));
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-1.csproj")), false));
@@ -409,7 +452,6 @@ namespace xharness
  
 			foreach (var proj in MacTestProjects.Where (v => !v.GenerateVariations)) {
 				var file = proj.Path;
-
 				var unified = new MacUnifiedTarget (proj.GenerateModern, thirtyTwoBit: false, shouldSkipProjectGeneration: true);
 				unified.BCLInfo = proj.BCLInfo;
 				configureTarget (unified, file, proj.IsNUnitProject);

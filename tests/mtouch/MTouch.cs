@@ -68,7 +68,7 @@ namespace Xamarin
 				mtouch.SymbolList = Path.Combine (tmpdir, "symbollist.txt");
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
 
-				var profiler_symbol = "_mono_profiler_startup_log";
+				var profiler_symbol = "_mono_profiler_init_log";
 
 				var symbols = File.ReadAllLines (mtouch.SymbolList);
 				Assert.That (symbols, Contains.Item (profiler_symbol), profiler_symbol);

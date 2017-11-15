@@ -27,7 +27,7 @@ namespace Xamarin.Mac.Linker.Test {
 			Test.EnsureLinker (true);
 
 			string [] resources = typeof (int).Assembly.GetManifestResourceNames ();
-			Test.Log.WriteLine ("{0}\ti18n {1}/2 data files present: {2}", resources.Length <= 3 ? "[PASS]" : "[FAIL]", resources.Length, string.Join (", ", resources));
+			Test.Log.WriteLine ("{0}\ti18n {1}/3 data files present: {2}", resources.Length <= 3 ? "[PASS]" : "[FAIL]", resources.Length, string.Join (", ", resources));
 
 			var ss = typeof (System.ComponentModel.TypeConverter);
 			resources = ss.Assembly.GetManifestResourceNames ();
