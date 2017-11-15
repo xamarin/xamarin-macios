@@ -230,6 +230,26 @@ namespace GeneratorTests
 		}
 
 		[Test]
+		public void Bug46292 ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.ProcessEnums = true;
+			bgen.AddTestApiDefinition ("bug46292.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
+
+			var allTypes = bgen.ApiAssembly.MainModule.GetTypes ().ToArray ();
+			var allMembers = ((IEnumerable<ICustomAttributeProvider>) allTypes)
+				.Union (allTypes.SelectMany ((type) => type.Methods))
+				.Union (allTypes.SelectMany ((type) => type.Fields))
+				.Union (allTypes.SelectMany ((type) => type.Properties));
+
+			var attribCount = allMembers.Count ((v) => v.HasCustomAttributes && v.CustomAttributes.Any ((ca) => ca.AttributeType.Name == "ObsoleteAttribute"));
+			Assert.AreEqual (2, attribCount, "attribute count");
+		}
+
+		[Test]
 		public void Bug53076 ()
 		{
 			var bgen = BuildFile (Profile.iOS, "bug53076.cs");

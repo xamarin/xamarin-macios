@@ -14,9 +14,6 @@ export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.fra
 #   your test logic.
 #
 
-IOS_CURRENT_DIR=$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current
-IOS_GENERATOR = $(IOS_CURRENT_DIR)/bin/bgen /unsafe --target-framework=Xamarin.iOS,v1.0
-
 all-local:: run-unit-tests
 
 build-unit-tests:
@@ -31,17 +28,6 @@ run-unit-tests: build-unit-tests
 		( xsltproc $(TOP)/tests/HtmlTransform.xslt TestResult.xml  > index.html && \
 		echo "@MonkeyWrench: AddFile: $$PWD/index.html")
 	@[[ ! -e .failed-stamp ]] 
-
-bug46292:
-	@rm -Rf $@.tmpdir
-	@mkdir -p $@.tmpdir
-	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) --sourceonly:$@.source -tmpdir=$@.tmpdir $@.cs --process-enums
-	@if ! grep -r Obsolete bug46292.tmpdir/BindingTests > /dev/null; then \
-		echo "error: Could not find Obsolete attribute in generated code."; exit 1; \
-	fi
-	@if [ `grep -r Obsolete bug46292.tmpdir/BindingTests | wc -l` -ne 2 ]; then \
-		echo "Error: Expected 2 Obsolete attributes in generated code."; exit 1; \
-	fi
 
 clean-local::
 	rm -f *.dll *.source
