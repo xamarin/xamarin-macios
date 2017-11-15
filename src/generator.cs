@@ -1622,6 +1622,13 @@ public partial class Generator : IMemberGatherer {
 					pars.AppendFormat ("{3}{0}{1} {2}", arg_byref, fnt, pi.Name.GetSafeParamName (), marshal);
 					invoke.AppendFormat ("{0} {1}", pi.IsOut ? "out" : "ref", invoke_name);
 					continue;
+				} else if (pi.ParameterType.IsByRef) {
+					var pname = pi.Name.GetSafeParamName ();
+					var refname = $"__xamarin_pref{pi.Position}";
+					convert.Append ($"var {refname} = Runtime.GetINativeObject<{RenderType (nt)}> ({pname}, false);");
+					pars.Append ($"ref IntPtr {pname}");
+					invoke.Append ($"ref {refname}");
+					continue;
 				}
 			} else if (!Compat && IsNativeEnum (pi.ParameterType)) {
 				Type underlyingEnumType = TypeManager.GetUnderlyingEnumType (pi.ParameterType);
