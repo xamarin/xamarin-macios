@@ -216,7 +216,7 @@ namespace Xamarin.Tests
 		void LoadAssembly ()
 		{
 			if (assembly == null)
-				assembly = AssemblyDefinition.ReadAssembly (Path.Combine (TmpDirectory, "api.dll"));
+				assembly = AssemblyDefinition.ReadAssembly (Path.Combine (TmpDirectory, Path.GetFileNameWithoutExtension (ApiDefinitions [0]) + ".dll"));
 		}
 
 		void EnsureTempDir ()
@@ -225,12 +225,14 @@ namespace Xamarin.Tests
 				TmpDirectory = Cache.CreateTemporaryDirectory ();
 		}
 
-		public void CreateTemporaryBinding (string api_definition)
+		public void CreateTemporaryBinding (params string [] api_definition)
 		{
 			EnsureTempDir ();
-			var api = Path.Combine (TmpDirectory, "api.cs");
-			File.WriteAllText (api, api_definition);
-			ApiDefinitions.Add (api);
+			for (int i = 0; i < api_definition.Length; i++) {
+				var api = Path.Combine (TmpDirectory, $"api{i}.cs");
+				File.WriteAllText (api, api_definition [i]);
+				ApiDefinitions.Add (api);
+			}
 			WorkingDirectory = TmpDirectory;
 		}
 

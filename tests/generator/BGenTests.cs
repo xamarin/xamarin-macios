@@ -209,12 +209,18 @@ namespace GeneratorTests
 				Asserts.DoesNotThrowExceptions (method, type.FullName);
 		}
 
-		BGenTool BuildFile (Profile profile, string filename)
+		[Test]
+		public void Desk63279 ()
+		{
+			BuildFile (Profile.iOS, "desk63279A.cs", "desk63279B.cs");
+		}
+
+		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			var bgen = new BGenTool ();
 			bgen.Profile = profile;
 			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
-			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", filename)));
+			bgen.CreateTemporaryBinding (filenames.Select ((filename) => File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", filename))).ToArray ());
 			bgen.AssertExecute ("build");
 			bgen.AssertNoWarnings ();
 			return bgen;
