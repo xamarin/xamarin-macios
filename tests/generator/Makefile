@@ -16,7 +16,7 @@ export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.fra
 
 IOS_CURRENT_DIR=$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current
 IOS_GENERATOR = $(IOS_CURRENT_DIR)/bin/bgen /unsafe --target-framework=Xamarin.iOS,v1.0
-IOS_CUSTOM_TESTS = bi1046 virtualwrap bug42742 noasyncinternalwrapper noasyncwarningcs0219 bug53076 bug53076withmodel fieldenumtests smartenumwithframework
+IOS_CUSTOM_TESTS = virtualwrap bug42742 noasyncinternalwrapper noasyncwarningcs0219 bug53076 bug53076withmodel fieldenumtests smartenumwithframework
 
 ALL_TESTS = 
 ifdef INCLUDE_IOS
@@ -59,9 +59,6 @@ forcedtype:
 	@if [ `grep -r GetINativeObject forcedtype.tmpdir | wc -l` -ne 12 ]; then \
 		echo "Error: Expected 12 GetINativeObject usages in generated code."; exit 1; \
 	fi
-
-bi1046:
-	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) $@.cs --process-enums | grep BI1046 >/dev/null 2>&1
 
 virtualwrap:
 	@rm -Rf $@.tmpdir

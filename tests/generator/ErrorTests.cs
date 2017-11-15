@@ -103,6 +103,18 @@ namespace GeneratorTests
 		}
 
 		[Test]
+		public void BI1046 ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.AddTestApiDefinition ("bi1046.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.ProcessEnums = true;
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1046, "The [Field] constant HMAccessoryCategoryTypeGarageDoorOpener cannot only be used once inside enum HMAccessoryCategoryType.");
+		}
+
+		[Test]
 		public void BI1048 ()
 		{
 			var bgen = new BGenTool ();
