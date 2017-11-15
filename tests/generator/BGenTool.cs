@@ -13,17 +13,18 @@ using Xamarin.Utils;
 
 namespace Xamarin.Tests
 {
-	public enum Profile {
+	public enum Profile
+	{
 		None,
-		iOS, 
-		tvOS, 
+		iOS,
+		tvOS,
 		watchOS,
 		macClassic,
 		macModern,
 		macFull,
 		macSystem,
 	}
-	
+
 	class BGenTool : Tool
 	{
 		AssemblyDefinition assembly;
@@ -92,7 +93,7 @@ namespace Xamarin.Tests
 
 			if (!string.IsNullOrEmpty (targetFramework))
 				sb.Append (" --target-framework=").Append (targetFramework);
-			
+
 			foreach (var ad in ApiDefinitions)
 				sb.Append (" --api=").Append (StringUtils.Quote (ad));
 			
