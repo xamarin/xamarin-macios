@@ -7,6 +7,7 @@ using System.Text;
 using NUnit.Framework;
 
 using Mono.Cecil;
+using Mono.Cecil.Cil;
 
 using Xamarin.Utils;
 
@@ -47,6 +48,13 @@ namespace Xamarin.Tests
 				{ "MD_MTOUCH_SDK_ROOT", Configuration.SdkRootXI },
 				{ "XamarinMacFrameworkRoot", Configuration.SdkRootXM },
 			};
+		}
+
+		public AssemblyDefinition ApiAssembly {
+			get {
+				LoadAssembly ();
+				return assembly;
+			}
 		}
 
 		string BuildArguments ()
@@ -125,6 +133,30 @@ namespace Xamarin.Tests
 		public void AssertExecuteError (string message)
 		{
 			Assert.AreNotEqual (0, Execute (BuildArguments ()), message);
+		}
+
+		public void AssertApiCallsMethod (string caller_namespace, string caller_type, string caller_method, string @called_method, string message)
+		{
+			var type = ApiAssembly.MainModule.GetType (caller_namespace, caller_type);
+			var method = type.Methods.First ((v) => v.Name == caller_method);
+
+			AssertApiCallsMethod (method, called_method, message);
+		}
+
+		public void AssertApiCallsMethod (MethodReference method, string called_method, string message)
+		{
+			var instructions = method.Resolve ().Body.Instructions;
+			foreach (var ins in instructions) {
+				if (ins.OpCode.FlowControl != FlowControl.Call)
+					continue;
+				var mr = ins.Operand as MethodReference;
+				if (mr == null)
+					continue;
+				if (mr.Name == called_method)
+					return;
+			}
+
+			Assert.Fail ($"Could not find any instructions calling {called_method} in {method.FullName}: {message}\n\t{string.Join ("\n\t", instructions)}");
 		}
 
 		public void AssertPublicTypeCount (int count, string message = null)
