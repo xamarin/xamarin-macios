@@ -2,18 +2,6 @@ TOP=../..
 
 include $(TOP)/Make.config
 
-export MD_MTOUCH_SDK_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
-export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
-
-#
-# * Use [IOS|MAC]_TESTS for simple tests that just verify the code can compile / generate.
-#   To add such a test, just add the file, and add the name of the file (without extension) to [IOS|MAC]_TESTS.
-#
-# * Use [IOS|MAC]_CUSTOM_TESTS for more advanced tests that needs more validation.
-#   In this case you additionally need to add a target for the name of the test, with the 
-#   your test logic.
-#
-
 all-local:: run-unit-tests
 
 build-unit-tests:
@@ -30,5 +18,4 @@ run-unit-tests: build-unit-tests
 	@[[ ! -e .failed-stamp ]] 
 
 clean-local::
-	rm -f *.dll *.source
-	rm -Rf *.tmpdir
+	rm -Rf bin
