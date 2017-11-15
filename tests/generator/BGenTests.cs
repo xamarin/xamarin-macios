@@ -306,6 +306,29 @@ namespace GeneratorTests
 			bgen.AssertNoWarnings ();
 		}
 
+		[Test]
+		public void VirtualWrap ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.AddTestApiDefinition ("virtualwrap.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.ProcessEnums = true;
+			bgen.AssertExecute ("build");
+
+			// verify virtual methods
+			var attribs = MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig | MethodAttributes.NewSlot;
+			bgen.AssertMethod ("WrapTest.MyFooClass", "FromUrl", attribs, null, "Foundation.NSUrl");
+			bgen.AssertMethod ("WrapTest.MyFooClass", "FromUrl", attribs, null, "System.String");
+			bgen.AssertMethod ("WrapTest.MyFooClass", "get_FooNSString", attribs | MethodAttributes.SpecialName, "Foundation.NSString");
+			bgen.AssertMethod ("WrapTest.MyFooClass", "get_FooString", attribs | MethodAttributes.SpecialName, "System.String");
+
+			// verify non-virtual methods
+			attribs = MethodAttributes.Public | MethodAttributes.HideBySig;
+			bgen.AssertMethod ("WrapTest.MyFooClass", "FromUrlN", attribs, null, "System.String");
+			bgen.AssertMethod ("WrapTest.MyFooClass", "get_FooNSStringN", attribs | MethodAttributes.SpecialName, "Foundation.NSString");
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, filenames);

@@ -206,6 +206,11 @@ namespace Xamarin.Tests
 
 		public void AssertMethod (string typename, string method, string returnType = null, params string [] parameterTypes)
 		{
+			AssertMethod (typename, method, null, returnType, parameterTypes);
+		}
+
+		public void AssertMethod (string typename, string method, MethodAttributes? attributes = null, string returnType = null, params string [] parameterTypes)
+		{
 			LoadAssembly ();
 
 			var t = assembly.MainModule.Types.First ((v) => v.FullName == typename);
@@ -221,6 +226,8 @@ namespace Xamarin.Tests
 			});
 			if (m == null)
 				Assert.Fail ($"No method '{method}' with signature '{string.Join ("', '", parameterTypes)}' was found.");
+			if (attributes.HasValue)
+				Assert.AreEqual (attributes.Value, m.Attributes, "Attributes for {0}", m.FullName);
 		}
 
 		void LoadAssembly ()
