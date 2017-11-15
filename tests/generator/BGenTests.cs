@@ -243,6 +243,19 @@ namespace GeneratorTests
 		}
 
 		[Test]
+		public void Bug53076WithModel ()
+		{
+			var bgen = BuildFile (Profile.iOS, "bug53076withmodel.cs");
+
+			var allTypes = bgen.ApiAssembly.MainModule.GetTypes ().ToArray ();
+			var allMethods = bgen.ApiAssembly.MainModule.GetTypes ().SelectMany ((type) => type.Methods);
+
+			// Count all *Async methods whose first parameter is 'IMyFooProtocol'.
+			var methodCount = allMethods.Count ((v) => v.Name.EndsWith ("Async", StringComparison.Ordinal) && v.Parameters.Count > 0 && v.Parameters [0].ParameterType.Name == "IMyFooProtocol");
+			Assert.AreEqual (10, methodCount, "Async method count");
+		}
+
+		[Test]
 		public void StackOverflow20696157 ()
 		{
 			BuildFile (Profile.iOS, "sof20696157.cs");
