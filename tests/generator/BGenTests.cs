@@ -5,6 +5,7 @@ using System.Linq;
 using NUnit.Framework;
 
 using Mono.Cecil;
+using Mono.Cecil.Cil;
 
 using Xamarin.Tests;
 
@@ -111,6 +112,31 @@ namespace GeneratorTests
 		public void Bug27430 ()
 		{
 			BuildFile (Profile.iOS, "bug27430.cs");
+		}
+
+		[Test]
+		public void Bug29493 ()
+		{
+			var bgen = BuildFile (Profile.iOS, false, "bug29493.cs");
+
+			// Check that there is no call to Class.GetHandle with a "global::"-prefixed string
+			foreach (var method in bgen.ApiAssembly.MainModule.GetTypes ().SelectMany ((v) => v.Methods)) {
+				if (!method.HasBody)
+					continue;
+				var instructions = method.Body.Instructions;
+				foreach (var ins in instructions) {
+					if (ins.OpCode.FlowControl != FlowControl.Call)
+						continue;
+					var mr = (MethodReference) ins.Operand;
+					if (mr.DeclaringType.Namespace != "ObjCRuntime" && mr.DeclaringType.Name != "Class")
+						continue;
+					if (mr.Name != "GetHandle" && mr.Name != "GetHandleIntrinsic")
+						continue;
+					var str = (string) ins.Previous.Operand;
+					if (str.StartsWith ("global::", StringComparison.Ordinal))
+						Assert.Fail ($"Found a call to Class.GetHandle with an invalid ('global::'-prefixed) string in {method.FullName} at offset {ins.Offset}.\n\t{string.Join ("\n\t", instructions)}");
+				}
+			}
 		}
 
 		[Test]
@@ -238,12 +264,18 @@ namespace GeneratorTests
 
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
+			return BuildFile (profile, true, filenames);
+		}
+
+		BGenTool BuildFile (Profile profile, bool nowarnings, params string [] filenames)
+		{
 			var bgen = new BGenTool ();
 			bgen.Profile = profile;
 			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
 			bgen.CreateTemporaryBinding (filenames.Select ((filename) => File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", filename))).ToArray ());
 			bgen.AssertExecute ("build");
-			bgen.AssertNoWarnings ();
+			if (nowarnings)
+				bgen.AssertNoWarnings ();
 			return bgen;
 		}
 	}
