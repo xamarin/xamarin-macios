@@ -60,6 +60,7 @@
     </Compile>
     <Compile Include="GeneratorTests.cs" />
     <Compile Include="BGenTests.cs" />
+    <Compile Include="Asserts.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

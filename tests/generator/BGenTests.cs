@@ -198,6 +198,17 @@ namespace GeneratorTests
 			BuildFile (Profile.iOS, "bindastests.cs");
 		}
 
+		[Test]
+		public void Forum54078 ()
+		{
+			var bgen = BuildFile (Profile.iOS, "forum54078.cs");
+
+			var api = bgen.ApiAssembly;
+			var type = api.MainModule.GetType ("Test", "CustomController");
+			foreach (var method in type.Methods)
+				Asserts.DoesNotThrowExceptions (method, type.FullName);
+		}
+
 		BGenTool BuildFile (Profile profile, string filename)
 		{
 			var bgen = new BGenTool ();
