@@ -753,7 +753,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("padding", ArgumentSemantic.Retain)]
-		IMPSNnPadding Padding { get; set; }
+		IMPSNNPadding Padding { get; set; }
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("destinationImageAllocator", ArgumentSemantic.Retain)]
@@ -2072,16 +2072,16 @@ namespace XamCore.MetalPerformanceShaders {
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(NSObject), Name = "MPSNNDefaultPadding")]
-	interface MPSNnDefaultPadding : MPSNnPadding
+	[BaseType (typeof(NSObject))]
+	interface MPSNNDefaultPadding : MPSNNPadding
 	{
 		[Static]
 		[Export ("paddingWithMethod:")]
-		MPSNnDefaultPadding Create (MPSNnPaddingMethod method);
+		MPSNNDefaultPadding Create (MPSNNPaddingMethod method);
 
 		[Static]
 		[Export ("paddingForTensorflowAveragePooling")]
-		MPSNnDefaultPadding CreatePaddingForTensorflowAveragePooling ();
+		MPSNNDefaultPadding CreatePaddingForTensorflowAveragePooling ();
 	}
 	
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2132,7 +2132,7 @@ namespace XamCore.MetalPerformanceShaders {
 		bool IsBackwards { get; }
 
 		[Export ("padding", ArgumentSemantic.Retain)]
-		IMPSNnPadding Padding { get; set; }
+		IMPSNNPadding Padding { get; set; }
 
 		[Export ("destinationImageAllocator", ArgumentSemantic.Retain)]
 		IMPSImageAllocator DestinationImageAllocator { get; set; }
@@ -2641,9 +2641,9 @@ namespace XamCore.MetalPerformanceShaders {
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(NSObject), Name = "MPSNNImageNode")]
+	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface MPSNnImageNode
+	interface MPSNNImageNode
 	{
 		[Export ("initWithHandle:")]
 		[DesignatedInitializer]
@@ -2651,11 +2651,11 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Static]
 		[Export ("nodeWithHandle:")]
-		MPSNnImageNode Create ([NullAllowed] IMPSHandle handle);
+		MPSNNImageNode Create ([NullAllowed] IMPSHandle handle);
 
 		[Static]
 		[Export ("exportedNodeWithHandle:")]
-		MPSNnImageNode GetExportedNode ([NullAllowed] IMPSHandle handle);
+		MPSNNImageNode GetExportedNode ([NullAllowed] IMPSHandle handle);
 
 		[NullAllowed, Export ("handle", ArgumentSemantic.Retain)]
 		IMPSHandle MPSHandle { get; set; }
@@ -2671,45 +2671,45 @@ namespace XamCore.MetalPerformanceShaders {
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(NSObject), Name = "MPSNNStateNode")]
+	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface MPSNnStateNode
+	interface MPSNNStateNode
 	{
 		[NullAllowed, Export ("handle", ArgumentSemantic.Retain)]
 		IMPSHandle MPSHandle { get; set; }
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(NSObject), Name = "MPSNNFilterNode")]
+	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface MPSNnFilterNode
+	interface MPSNNFilterNode
 	{
 		[Export ("resultImage")]
-		MPSNnImageNode ResultImage { get; }
+		MPSNNImageNode ResultImage { get; }
 
 		[NullAllowed, Export ("resultState")]
-		MPSNnStateNode ResultState { get; }
+		MPSNNStateNode ResultState { get; }
 
 		[NullAllowed, Export ("resultStates")]
-		MPSNnStateNode[] ResultStates { get; }
+		MPSNNStateNode[] ResultStates { get; }
 
 		[Export ("paddingPolicy", ArgumentSemantic.Retain)]
-		IMPSNnPadding PaddingPolicy { get; set; }
+		IMPSNNPadding PaddingPolicy { get; set; }
 
 		[NullAllowed, Export ("label")]
 		string Label { get; set; }
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(MPSNnFilterNode), Name = "MPSCNNConvolutionNode")]
+	[BaseType (typeof(MPSNNFilterNode), Name = "MPSCNNConvolutionNode")]
 	interface MPSCnnConvolutionNode
 	{
 		[Static]
 		[Export ("nodeWithSource:weights:")]
-		MPSCnnConvolutionNode Create (MPSNnImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
+		MPSCnnConvolutionNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
 
 		[Export ("initWithSource:weights:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
+		IntPtr Constructor (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
 
 		[NullAllowed, Export ("convolutionState")]
 		MPSCnnConvolutionStateNode ConvolutionState { get; }
@@ -2721,10 +2721,10 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:weights:")]
-		MPSCnnFullyConnectedNode Create (MPSNnImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
+		MPSCnnFullyConnectedNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
 
 		[Export ("initWithSource:weights:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
+		IntPtr Constructor (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2733,10 +2733,10 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:weights:scaleValue:type:flags:")]
-		MPSCnnBinaryConvolutionNode Create (MPSNnImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
+		MPSCnnBinaryConvolutionNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
 
 		[Export ("initWithSource:weights:scaleValue:type:flags:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
+		IntPtr Constructor (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2745,10 +2745,10 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:weights:scaleValue:type:flags:")]
-		MPSCnnBinaryFullyConnectedNode Create (MPSNnImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
+		MPSCnnBinaryFullyConnectedNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
 
 		[Export ("initWithSource:weights:scaleValue:type:flags:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
+		IntPtr Constructor (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float scaleValue,MPSCnnBinaryConvolutionType type,MPSCnnBinaryConvolutionFlags flags);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2757,14 +2757,14 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:convolutionState:weights:")]
-		MPSCnnConvolutionTransposeNode Create (MPSNnImageNode sourceNode, [NullAllowed]MPSCnnConvolutionStateNode convolutionState, IMPSCnnConvolutionDataSource weights);
+		MPSCnnConvolutionTransposeNode Create (MPSNNImageNode sourceNode, [NullAllowed]MPSCnnConvolutionStateNode convolutionState, IMPSCnnConvolutionDataSource weights);
 
 		[Export ("initWithSource:convolutionState:weights:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, [NullAllowed]MPSCnnConvolutionStateNode convolutionState, IMPSCnnConvolutionDataSource weights);
+		IntPtr Constructor (MPSNNImageNode sourceNode, [NullAllowed]MPSCnnConvolutionStateNode convolutionState, IMPSCnnConvolutionDataSource weights);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(MPSNnFilterNode), Name = "MPSCNNNeuronNode")]
+	[BaseType (typeof(MPSNNFilterNode), Name = "MPSCNNNeuronNode")]
 	[DisableDefaultCtor]
 	interface MPSCnnNeuronNode
 	{
@@ -2781,10 +2781,10 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronAbsoluteNode Create (MPSNnImageNode sourceNode);
+		MPSCnnNeuronAbsoluteNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode);
+		IntPtr Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2793,17 +2793,17 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:a:")]
-		MPSCnnNeuronELUNode Create (MPSNnImageNode sourceNode, float a);
+		MPSCnnNeuronELUNode Create (MPSNNImageNode sourceNode, float a);
 
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronELUNode Create (MPSNnImageNode sourceNode);
+		MPSCnnNeuronELUNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode);
+		IntPtr Constructor (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:a:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, float a);
+		IntPtr Constructor (MPSNNImageNode sourceNode, float a);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2812,17 +2812,17 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:a:b:")]
-		MPSCnnNeuronReLUNNode Create (MPSNnImageNode sourceNode, float a, float b);
+		MPSCnnNeuronReLUNNode Create (MPSNNImageNode sourceNode, float a, float b);
 
 		[Export ("initWithSource:a:b:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, float a, float b);
+		IntPtr Constructor (MPSNNImageNode sourceNode, float a, float b);
 
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronReLUNNode Create (MPSNnImageNode sourceNode);
+		MPSCnnNeuronReLUNNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode);
+		IntPtr Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2831,17 +2831,17 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:a:b:")]
-		MPSCnnNeuronLinearNode Create (MPSNnImageNode sourceNode, float a, float b);
+		MPSCnnNeuronLinearNode Create (MPSNNImageNode sourceNode, float a, float b);
 
 		[Export ("initWithSource:a:b:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, float a, float b);
+		IntPtr Constructor (MPSNNImageNode sourceNode, float a, float b);
 
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronLinearNode Create (MPSNnImageNode sourceNode);
+		MPSCnnNeuronLinearNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode);
+		IntPtr Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2850,17 +2850,17 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:a:")]
-		MPSCnnNeuronReLUNode Create (MPSNnImageNode sourceNode, float a);
+		MPSCnnNeuronReLUNode Create (MPSNNImageNode sourceNode, float a);
 
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronReLUNode Create (MPSNnImageNode sourceNode);
+		MPSCnnNeuronReLUNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode);
+		IntPtr Constructor (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:a:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, float a);
+		IntPtr Constructor (MPSNNImageNode sourceNode, float a);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2869,10 +2869,10 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronSigmoidNode Create (MPSNnImageNode sourceNode);
+		MPSCnnNeuronSigmoidNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode);
+		IntPtr Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2881,17 +2881,17 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:a:b:")]
-		MPSCnnNeuronHardSigmoidNode Create (MPSNnImageNode sourceNode, float a, float b);
+		MPSCnnNeuronHardSigmoidNode Create (MPSNNImageNode sourceNode, float a, float b);
 
 		[Export ("initWithSource:a:b:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, float a, float b);
+		IntPtr Constructor (MPSNNImageNode sourceNode, float a, float b);
 
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronHardSigmoidNode Create (MPSNnImageNode sourceNode);
+		MPSCnnNeuronHardSigmoidNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode);
+		IntPtr Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2900,17 +2900,17 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:a:b:")]
-		MPSCnnNeuronSoftPlusNode Create (MPSNnImageNode sourceNode, float a, float b);
+		MPSCnnNeuronSoftPlusNode Create (MPSNNImageNode sourceNode, float a, float b);
 
 		[Export ("initWithSource:a:b:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, float a, float b);
+		IntPtr Constructor (MPSNNImageNode sourceNode, float a, float b);
 
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronSoftPlusNode Create (MPSNnImageNode sourceNode);
+		MPSCnnNeuronSoftPlusNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode);
+		IntPtr Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2919,10 +2919,10 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronSoftSignNode Create (MPSNnImageNode sourceNode);
+		MPSCnnNeuronSoftSignNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode);
+		IntPtr Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2931,17 +2931,17 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:a:b:")]
-		MPSCnnNeuronTanHNode Create (MPSNnImageNode sourceNode, float a, float b);
+		MPSCnnNeuronTanHNode Create (MPSNNImageNode sourceNode, float a, float b);
 
 		[Export ("initWithSource:a:b:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, float a, float b);
+		IntPtr Constructor (MPSNNImageNode sourceNode, float a, float b);
 
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronTanHNode Create (MPSNnImageNode sourceNode);
+		MPSCnnNeuronTanHNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode);
+		IntPtr Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2950,36 +2950,36 @@ namespace XamCore.MetalPerformanceShaders {
 	{
 		[Static]
 		[Export ("nodeWithSource:aData:")]
-		MPSCnnNeuronPReLUNode Create (MPSNnImageNode sourceNode, NSData aData);
+		MPSCnnNeuronPReLUNode Create (MPSNNImageNode sourceNode, NSData aData);
 
 		[Export ("initWithSource:aData:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, NSData aData);
+		IntPtr Constructor (MPSNNImageNode sourceNode, NSData aData);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(MPSNnFilterNode), Name = "MPSCNNPoolingNode")]
+	[BaseType (typeof(MPSNNFilterNode), Name = "MPSCNNPoolingNode")]
 	interface MPSCnnPoolingNode
 	{
 		[Static]
 		[Export ("nodeWithSource:filterSize:")]
-		MPSCnnPoolingNode Create (MPSNnImageNode sourceNode, nuint size);
+		MPSCnnPoolingNode Create (MPSNNImageNode sourceNode, nuint size);
 
 		[Static]
 		[Export ("nodeWithSource:filterSize:stride:")]
-		MPSCnnPoolingNode Create (MPSNnImageNode sourceNode, nuint size, nuint stride);
+		MPSCnnPoolingNode Create (MPSNNImageNode sourceNode, nuint size, nuint stride);
 
 		[Export ("initWithSource:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
+		IntPtr Constructor (MPSNNImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
 
 		[Export ("initWithSource:filterSize:stride:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, nuint size, nuint stride);
+		IntPtr Constructor (MPSNNImageNode sourceNode, nuint size, nuint stride);
 
 		[Export ("initWithSource:filterSize:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, nuint size);
+		IntPtr Constructor (MPSNNImageNode sourceNode, nuint size);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(MPSNnFilterNode), Name = "MPSCNNDilatedPoolingMaxNode")]
+	[BaseType (typeof(MPSNNFilterNode), Name = "MPSCNNDilatedPoolingMaxNode")]
 	interface MPSCnnDilatedPoolingMaxNode
 	{
 		[Export ("dilationRateX")]
@@ -2990,24 +2990,24 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Static]
 		[Export ("nodeWithSource:filterSize:")]
-		MPSCnnDilatedPoolingMaxNode Create (MPSNnImageNode sourceNode, nuint size);
+		MPSCnnDilatedPoolingMaxNode Create (MPSNNImageNode sourceNode, nuint size);
 
 		[Static]
 		[Export ("nodeWithSource:filterSize:stride:dilationRate:")]
-		MPSCnnDilatedPoolingMaxNode Create (MPSNnImageNode sourceNode, nuint size, nuint stride, nuint dilationRate);
+		MPSCnnDilatedPoolingMaxNode Create (MPSNNImageNode sourceNode, nuint size, nuint stride, nuint dilationRate);
 
 		[Export ("initWithSource:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:dilationRateX:dilationRateY:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, nuint dilationRateX, nuint dilationRateY);
+		IntPtr Constructor (MPSNNImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, nuint dilationRateX, nuint dilationRateY);
 
 		[Export ("initWithSource:filterSize:stride:dilationRate:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, nuint size, nuint stride, nuint dilationRate);
+		IntPtr Constructor (MPSNNImageNode sourceNode, nuint size, nuint stride, nuint dilationRate);
 
 		[Export ("initWithSource:filterSize:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, nuint size);
+		IntPtr Constructor (MPSNNImageNode sourceNode, nuint size);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(MPSNnFilterNode), Name = "MPSCNNNormalizationNode")]
+	[BaseType (typeof(MPSNNFilterNode), Name = "MPSCNNNormalizationNode")]
 	interface MPSCnnNormalizationNode
 	{
 		[Export ("alpha")]
@@ -3021,11 +3021,11 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNormalizationNode Create (MPSNnImageNode sourceNode);
+		MPSCnnNormalizationNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MPSNnImageNode sourceNode);
+		IntPtr Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -3040,15 +3040,15 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Static]
 		[Export ("nodeWithSource:kernelSize:")]
-		MPSCnnSpatialNormalizationNode Create (MPSNnImageNode sourceNode, nuint kernelSize);
+		MPSCnnSpatialNormalizationNode Create (MPSNNImageNode sourceNode, nuint kernelSize);
 
 		[Export ("initWithSource:kernelSize:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MPSNnImageNode sourceNode, nuint kernelSize);
+		IntPtr Constructor (MPSNNImageNode sourceNode, nuint kernelSize);
 
 		[Export ("initWithSource:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MPSNnImageNode sourceNode);
+		IntPtr Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -3072,15 +3072,15 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Static]
 		[Export ("nodeWithSource:kernelSize:")]
-		MPSCnnLocalContrastNormalizationNode Create (MPSNnImageNode sourceNode, nuint kernelSize);
+		MPSCnnLocalContrastNormalizationNode Create (MPSNNImageNode sourceNode, nuint kernelSize);
 
 		[Export ("initWithSource:kernelSize:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MPSNnImageNode sourceNode, nuint kernelSize);
+		IntPtr Constructor (MPSNNImageNode sourceNode, nuint kernelSize);
 
 		[Export ("initWithSource:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MPSNnImageNode sourceNode);
+		IntPtr Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -3092,101 +3092,106 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Static]
 		[Export ("nodeWithSource:kernelSize:")]
-		MPSCnnCrossChannelNormalizationNode Create (MPSNnImageNode sourceNode, nuint kernelSize);
+		MPSCnnCrossChannelNormalizationNode Create (MPSNNImageNode sourceNode, nuint kernelSize);
 
 		[Export ("initWithSource:kernelSize:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MPSNnImageNode sourceNode, nuint kernelSize);
+		IntPtr Constructor (MPSNNImageNode sourceNode, nuint kernelSize);
 
 		[Export ("initWithSource:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MPSNnImageNode sourceNode);
+		IntPtr Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(MPSNnFilterNode), Name = "MPSNNScaleNode")]
-	interface MPSNnScaleNode
+	[BaseType (typeof(MPSNNFilterNode))]
+	interface MPSNNScaleNode
 	{
 		[Static]
 		[Export ("nodeWithSource:outputSize:")]
-		MPSNnScaleNode Create (MPSNnImageNode sourceNode, MTLSize size);
+		MPSNNScaleNode Create (MPSNNImageNode sourceNode, MTLSize size);
 
 		[Static]
 		[Export ("nodeWithSource:transformProvider:outputSize:")]
-		MPSNnScaleNode Create (MPSNnImageNode sourceNode, [NullAllowed] IMPSImageTransformProvider transformProvider, MTLSize size);
+		MPSNNScaleNode Create (MPSNNImageNode sourceNode, [NullAllowed] IMPSImageTransformProvider transformProvider, MTLSize size);
 
 		[Export ("initWithSource:outputSize:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, MTLSize size);
+		IntPtr Constructor (MPSNNImageNode sourceNode, MTLSize size);
 
 		[Export ("initWithSource:transformProvider:outputSize:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, [NullAllowed] IMPSImageTransformProvider transformProvider, MTLSize size);
+		IntPtr Constructor (MPSNNImageNode sourceNode, [NullAllowed] IMPSImageTransformProvider transformProvider, MTLSize size);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(MPSNnFilterNode), Name = "MPSNNBinaryArithmeticNode")]
-	interface MPSNnBinaryArithmeticNode
+	[BaseType (typeof(MPSNNFilterNode))]
+	[DisableDefaultCtor]
+	interface MPSNNBinaryArithmeticNode
 	{
 		[Static]
 		[Export ("nodeWithSources:")]
-		MPSNnBinaryArithmeticNode Create (MPSNnImageNode[] sourceNodes);
+		MPSNNBinaryArithmeticNode Create (MPSNNImageNode[] sourceNodes);
 
 		[Static]
 		[Export ("nodeWithLeftSource:rightSource:")]
-		MPSNnBinaryArithmeticNode Create (MPSNnImageNode left, MPSNnImageNode right);
+		MPSNNBinaryArithmeticNode Create (MPSNNImageNode left, MPSNNImageNode right);
 
 		[Export ("initWithSources:")]
-		IntPtr Constructor (MPSNnImageNode[] sourceNodes);
+		IntPtr Constructor (MPSNNImageNode[] sourceNodes);
 
 		[Export ("initWithLeftSource:rightSource:")]
-		IntPtr Constructor (MPSNnImageNode left, MPSNnImageNode right);
+		IntPtr Constructor (MPSNNImageNode left, MPSNNImageNode right);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(MPSNnFilterNode), Name = "MPSNNConcatenationNode")]
-	interface MPSNnConcatenationNode
+	[BaseType (typeof(MPSNNFilterNode))]
+[	DisableDefaultCtor]
+	interface MPSNNConcatenationNode
 	{
 		[Static]
 		[Export ("nodeWithSources:")]
-		MPSNnConcatenationNode Create (MPSNnImageNode[] sourceNodes);
+		MPSNNConcatenationNode Create (MPSNNImageNode[] sourceNodes);
 
 		[Export ("initWithSources:")]
-		IntPtr Constructor (MPSNnImageNode[] sourceNodes);
+		IntPtr Constructor (MPSNNImageNode[] sourceNodes);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(MPSNnFilterNode), Name = "MPSCNNSoftMaxNode")]
+	[BaseType (typeof(MPSNNFilterNode), Name = "MPSCNNSoftMaxNode")]
+	[DisableDefaultCtor]
 	interface MPSCnnSoftMaxNode
 	{
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnSoftMaxNode Create (MPSNnImageNode sourceNode);
+		MPSCnnSoftMaxNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode);
+		IntPtr Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(MPSNnFilterNode), Name = "MPSCNNLogSoftMaxNode")]
+	[BaseType (typeof(MPSNNFilterNode), Name = "MPSCNNLogSoftMaxNode")]
+	[DisableDefaultCtor]
 	interface MPSCnnLogSoftMaxNode
 	{
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnLogSoftMaxNode Create (MPSNnImageNode sourceNode);
+		MPSCnnLogSoftMaxNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode);
+		IntPtr Constructor (MPSNNImageNode sourceNode);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(MPSNnFilterNode), Name = "MPSCNNUpsamplingNearestNode")]
+	[BaseType (typeof(MPSNNFilterNode), Name = "MPSCNNUpsamplingNearestNode")]
+	[DisableDefaultCtor]
 	interface MPSCnnUpsamplingNearestNode
 	{
 		[Static]
 		[Export ("nodeWithSource:integerScaleFactorX:integerScaleFactorY:")]
-		MPSCnnUpsamplingNearestNode Create (MPSNnImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
+		MPSCnnUpsamplingNearestNode Create (MPSNNImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
 
 		[Export ("initWithSource:integerScaleFactorX:integerScaleFactorY:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
+		IntPtr Constructor (MPSNNImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
 
 		[Export ("scaleFactorX")]
 		double ScaleFactorX { get; }
@@ -3196,15 +3201,16 @@ namespace XamCore.MetalPerformanceShaders {
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(MPSNnFilterNode), Name = "MPSCNNUpsamplingBilinearNode")]
+	[BaseType (typeof(MPSNNFilterNode), Name = "MPSCNNUpsamplingBilinearNode")]
+	[DisableDefaultCtor]
 	interface MPSCnnUpsamplingBilinearNode
 	{
 		[Static]
 		[Export ("nodeWithSource:integerScaleFactorX:integerScaleFactorY:")]
-		MPSCnnUpsamplingBilinearNode Create (MPSNnImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
+		MPSCnnUpsamplingBilinearNode Create (MPSNNImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
 
 		[Export ("initWithSource:integerScaleFactorX:integerScaleFactorY:")]
-		IntPtr Constructor (MPSNnImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
+		IntPtr Constructor (MPSNNImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
 
 		[Export ("scaleFactorX")]
 		double ScaleFactorX { get; }
@@ -3214,12 +3220,12 @@ namespace XamCore.MetalPerformanceShaders {
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(MPSKernel), Name = "MPSNNGraph")]
-	interface MPSNnGraph : NSCopying, NSSecureCoding
+	[BaseType (typeof(MPSKernel))]
+	interface MPSNNGraph : NSCopying, NSSecureCoding
 	{
 		[Export ("initWithDevice:resultImage:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, MPSNnImageNode resultImage);
+		IntPtr Constructor (IMTLDevice device, MPSNNImageNode resultImage);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
@@ -3259,8 +3265,7 @@ namespace XamCore.MetalPerformanceShaders {
 	interface IMPSHandle { }
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface MPSHandle : NSCoding
 	{
 		[Abstract]
@@ -3310,29 +3315,27 @@ namespace XamCore.MetalPerformanceShaders {
 		IntPtr /* float* */ LookupTableForUInt8Kernel { get; }
 	}
 
-	interface IMPSNnPadding { }
+	interface IMPSNNPadding { }
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[Protocol]
-	[BaseType (typeof(NSObject), Name = "MPSNNPadding")]
-	interface MPSNnPadding : NSSecureCoding
+	interface MPSNNPadding : NSSecureCoding
 	{
 		[Abstract]
 		[Export ("paddingMethod")]
-		MPSNnPaddingMethod PaddingMethod { get; }
+		MPSNNPaddingMethod PaddingMethod { get; }
 
 		[Export ("label")]
 		string Label { get; }
 
-		[Export ("destinationImageDescriptorForSourceImages:sourceStates:forKernel:suggestedDescriptor:")]
+		[Export ("destinationImageDescriptorForSourceImages:sourcetates:fornKernel:suggestedDescriptor:")]
 		MPSImageDescriptor SourceStates (MPSImage[] sourceImages, [NullAllowed] MPSState[] sourceStates, MPSKernel kernel, MPSImageDescriptor inDescriptor);
 	}
 
 	interface IMPSImageSizeEncodingState { }
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface MPSImageSizeEncodingState
 	{
 		[Abstract]
@@ -3347,17 +3350,16 @@ namespace XamCore.MetalPerformanceShaders {
 	interface IMPSImageAllocator { }
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface MPSImageAllocator : NSSecureCoding
 	{
-	    [Abstract]
-	    [Export ("imageForCommandBuffer:imageDescriptor:kernel:")]
-	    MPSImage GetImage (IMTLCommandBuffer cmdBuf, MPSImageDescriptor descriptor, MPSKernel kernel);
+		[Abstract]
+		[Export ("imageForCommandBuffer:imageDescriptor:kernel:")]
+		MPSImage GetImage (IMTLCommandBuffer cmdBuf, MPSImageDescriptor descriptor, MPSKernel kernel);
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(MPSNnStateNode), Name = "MPSCNNConvolutionStateNode")]
+	[BaseType (typeof(MPSNNStateNode), Name = "MPSCNNConvolutionStateNode")]
 	interface MPSCnnConvolutionStateNode
 	{
 	}
@@ -3365,76 +3367,129 @@ namespace XamCore.MetalPerformanceShaders {
 	interface IMPSImageTransformProvider { }
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface MPSImageTransformProvider : NSCoding
 	{
-	    [Abstract]
-	    [Export ("transformForSourceImage:handle:")]
-	    MPSScaleTransform GetTransform (MPSImage image, [NullAllowed] IMPSHandle handle);
+		[Abstract]
+		[Export ("transformForSourceImage:handle:")]
+		MPSScaleTransform GetTransform (MPSImage image, [NullAllowed] IMPSHandle handle);
 	}
 
 	[TV (11, 0), Mac (10,13, onlyOn64: true), iOS (11, 0)]
 	[Protocol]
 	interface MPSDeviceProvider
 	{
-	    [Abstract]
-	    [Export ("mpsMTLDevice")]
-	    IMTLDevice MpsMTLDevice { get; }
+		[Abstract]
+		[Export ("mpsMTLDevice")]
+		IMTLDevice GetMTLDevice ();
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnPoolingNode), Name="MPSCNNPoolingAverageNode")]
 	interface MPSCnnPoolingAverageNode
 	{
+		[Export ("initWithSource:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
+		IntPtr Constructor (MPSNNImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
+
+		[Export ("initWithSource:filterSize:stride:")]
+		IntPtr Constructor (MPSNNImageNode sourceNode, nuint size, nuint stride);
+
+		[Export ("initWithSource:filterSize:")]
+		IntPtr Constructor (MPSNNImageNode sourceNode, nuint size);
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnPoolingNode), Name="MPSCNNPoolingL2NormNode")]
 	interface MPSCnnPoolingL2NormNode
 	{
+		[Export ("initWithSource:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
+		IntPtr Constructor (MPSNNImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
+
+		[Export ("initWithSource:filterSize:stride:")]
+		IntPtr Constructor (MPSNNImageNode sourceNode, nuint size, nuint stride);
+
+		[Export ("initWithSource:filterSize:")]
+		IntPtr Constructor (MPSNNImageNode sourceNode, nuint size);
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnPoolingNode), Name="MPSCNNPoolingMaxNode")]
 	interface MPSCnnPoolingMaxNode
 	{
+		[Export ("initWithSource:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
+		IntPtr Constructor (MPSNNImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
+
+		[Export ("initWithSource:filterSize:stride:")]
+		IntPtr Constructor (MPSNNImageNode sourceNode, nuint size, nuint stride);
+
+		[Export ("initWithSource:filterSize:")]
+		IntPtr Constructor (MPSNNImageNode sourceNode, nuint size);
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(MPSNnBinaryArithmeticNode), Name="MPSNNAdditionNode")]
-	interface MPSNnAdditionNode
+	[BaseType (typeof(MPSNNBinaryArithmeticNode))]
+	interface MPSNNAdditionNode
 	{
+		[Export ("initWithSources:")]
+		IntPtr Constructor (MPSNNImageNode[] sourceNodes);
+
+		[Export ("initWithLeftSource:rightSource:")]
+		IntPtr Constructor (MPSNNImageNode left, MPSNNImageNode right);
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(MPSNnScaleNode), Name="MPSNNBilinearScaleNode")]
-	interface MPSNnBilinearScaleNode
+	[BaseType (typeof(MPSNNScaleNode))]
+	interface MPSNNBilinearScaleNode
 	{
+		[Export ("initWithSource:outputSize:")]
+		IntPtr Constructor (MPSNNImageNode sourceNode, MTLSize size);
+
+		[Export ("initWithSource:transformProvider:outputSize:")]
+		IntPtr Constructor (MPSNNImageNode sourceNode, [NullAllowed] IMPSImageTransformProvider transformProvider, MTLSize size);
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(MPSNnBinaryArithmeticNode), Name="MPSNNDivisionNode")]
-	interface MPSNnDivisionNode
+	[BaseType (typeof(MPSNNBinaryArithmeticNode))]
+	interface MPSNNDivisionNode
 	{
+		[Export ("initWithSources:")]
+		IntPtr Constructor (MPSNNImageNode[] sourceNodes);
+
+		[Export ("initWithLeftSource:rightSource:")]
+		IntPtr Constructor (MPSNNImageNode left, MPSNNImageNode right);
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(MPSNnScaleNode), Name="MPSNNLanczosScaleNode")]
-	interface MPSNnLanczosScaleNode
+	[BaseType (typeof(MPSNNScaleNode))]
+	interface MPSNNLanczosScaleNode
 	{
+		[Export ("initWithSource:outputSize:")]
+		IntPtr Constructor (MPSNNImageNode sourceNode, MTLSize size);
+
+		[Export ("initWithSource:transformProvider:outputSize:")]
+		IntPtr Constructor (MPSNNImageNode sourceNode, [NullAllowed] IMPSImageTransformProvider transformProvider, MTLSize size);
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(MPSNnBinaryArithmeticNode), Name="MPSNNMultiplicationNode")]
-	interface MPSNnMultiplicationNode
+	[BaseType (typeof(MPSNNBinaryArithmeticNode))]
+	interface MPSNNMultiplicationNode
 	{
+		[Export ("initWithSources:")]
+		IntPtr Constructor (MPSNNImageNode[] sourceNodes);
+
+		[Export ("initWithLeftSource:rightSource:")]
+		IntPtr Constructor (MPSNNImageNode left, MPSNNImageNode right);
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
-	[BaseType (typeof(MPSNnBinaryArithmeticNode), Name="MPSNNSubtractionNode")]
-	interface MPSNnSubtractionNode
+	[BaseType (typeof(MPSNNBinaryArithmeticNode))]
+	interface MPSNNSubtractionNode
 	{
+		[Export ("initWithSources:")]
+		IntPtr Constructor (MPSNNImageNode[] sourceNodes);
+
+		[Export ("initWithLeftSource:rightSource:")]
+		IntPtr Constructor (MPSNNImageNode left, MPSNNImageNode right);
 	}
 }
 #endif

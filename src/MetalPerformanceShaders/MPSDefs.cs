@@ -172,7 +172,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 	[Native]
-	public enum MPSNnPaddingMethod : nuint {
+	public enum MPSNNPaddingMethod : nuint {
 		AlignCentered = 0,
 		AlignTopLeft = 1,
 		AlignBottomRight = 2,
