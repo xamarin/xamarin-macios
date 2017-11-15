@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -112,6 +113,21 @@ namespace GeneratorTests
 		public void Bug27430 ()
 		{
 			BuildFile (Profile.iOS, "bug27430.cs");
+		}
+
+		[Test]
+		public void Bug27986 ()
+		{
+			var bgen = BuildFile (Profile.iOS, false, "bug27986.cs");
+
+			var allTypes = bgen.ApiAssembly.MainModule.GetTypes ().ToArray ();
+			var allMembers = ((IEnumerable<ICustomAttributeProvider>) allTypes)
+				.Union (allTypes.SelectMany ((type) => type.Methods))
+				.Union (allTypes.SelectMany ((type) => type.Fields))
+				.Union (allTypes.SelectMany ((type) => type.Properties));
+
+			var preserves = allMembers.Count ((v) => v.HasCustomAttributes && v.CustomAttributes.Any ((ca) => ca.AttributeType.Name == "PreserveAttribute"));
+			Assert.AreEqual (28, preserves, "Preserve attribute count"); // If you modified code that generates PreserveAttributes please update the preserve count
 		}
 
 		[Test]

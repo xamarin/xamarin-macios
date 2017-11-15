@@ -16,7 +16,7 @@ export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.fra
 
 IOS_CURRENT_DIR=$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current
 IOS_GENERATOR = $(IOS_CURRENT_DIR)/bin/bgen /unsafe --target-framework=Xamarin.iOS,v1.0
-IOS_CUSTOM_TESTS = bug27986 bug35176 bi1046 virtualwrap bug42742 noasyncinternalwrapper noasyncwarningcs0219 bug53076 bug53076withmodel fieldenumtests smartenumwithframework
+IOS_CUSTOM_TESTS = bug35176 bi1046 virtualwrap bug42742 noasyncinternalwrapper noasyncwarningcs0219 bug53076 bug53076withmodel fieldenumtests smartenumwithframework
 
 ALL_TESTS = 
 ifdef INCLUDE_IOS
@@ -37,17 +37,6 @@ run-unit-tests: build-unit-tests
 		( xsltproc $(TOP)/tests/HtmlTransform.xslt TestResult.xml  > index.html && \
 		echo "@MonkeyWrench: AddFile: $$PWD/index.html")
 	@[[ ! -e .failed-stamp ]] 
-
-bug27986:
-	@rm -Rf $@.tmpdir
-	@mkdir -p $@.tmpdir
-	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) --sourceonly:$@.source -tmpdir=$@.tmpdir $@.cs
-	@if ! grep -r Preserve bug27986.tmpdir/bug27986 > /dev/null; then \
-		echo "error: Could not find Preserve attribute in generated code."; exit 1; \
-	fi
-	@if [ `grep -r Preserve bug27986.tmpdir/bug27986 | wc -l` -ne 28 ]; then \
-		echo "Error: Expected 28 Preserve attributes in generated code. If you modified code that generates PreserveAttributes please update the preserve count."; exit 1; \
-	fi
 
 bug35176:
 	@rm -Rf $@.tmpdir
