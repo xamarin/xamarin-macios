@@ -176,6 +176,21 @@ namespace GeneratorTests
 		}
 
 		[Test]
+		public void Bug35176 ()
+		{
+			var bgen = BuildFile (Profile.iOS, "bug35176.cs");
+
+			var allTypes = bgen.ApiAssembly.MainModule.GetTypes ().ToArray ();
+			var allMembers = ((IEnumerable<ICustomAttributeProvider>) allTypes)
+				.Union (allTypes.SelectMany ((type) => type.Methods))
+				.Union (allTypes.SelectMany ((type) => type.Fields))
+				.Union (allTypes.SelectMany ((type) => type.Properties));
+
+			var preserves = allMembers.Sum ((v) => v.CustomAttributes.Count ((ca) => ca.AttributeType.Name == "IntroducedAttribute"));
+			Assert.AreEqual (8, preserves, "Introduced attribute count"); // If you modified code that generates IntroducedAttributes please update the attribute count
+		}
+
+		[Test]
 		public void Bug36457 ()
 		{
 			BuildFile (Profile.iOS, "bug36457.cs");
