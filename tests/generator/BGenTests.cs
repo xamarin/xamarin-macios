@@ -428,6 +428,28 @@ namespace GeneratorTests
 			bgen.AssertApiLoadsField ("SmartEnumWithFramework.FooEnumTestExtensions", "get_Second", "ObjCRuntime.Libraries/CoreImage", "Handle", "Second getter");
 		}
 
+		[Test]
+		public void ForcedType ()
+		{
+			var bgen = BuildFile (Profile.iOS, false, "forcedtype.cs");
+
+			var allMethods = bgen.ApiAssembly.MainModule.GetTypes ().SelectMany ((type) => type.Methods);
+
+			// Count the number of calls to GetINativeObject
+			var getINativeObjectCalls = allMethods.Sum ((method) => {
+				if (!method.HasBody)
+					return 0;
+				return method.Body.Instructions.Count ((ins) => {
+					if (ins.OpCode.FlowControl != FlowControl.Call)
+						return false;
+					var mr = (MethodReference) ins.Operand;
+					return mr.Name == "GetINativeObject";
+				});
+			});
+
+			Assert.AreEqual (12, getINativeObjectCalls, "Preserve attribute count"); // If you modified code that generates PreserveAttributes please update the preserve count
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, filenames);
