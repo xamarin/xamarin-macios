@@ -41,6 +41,14 @@ namespace Xamarin.Tests
 		protected override string MessagePrefix { get { return "BI"; } }
 		protected override string MessageToolName { get { return "bgen"; } }
 
+		public BGenTool ()
+		{
+			EnvironmentVariables = new Dictionary<string, string> {
+				{ "MD_MTOUCH_SDK_ROOT", Configuration.SdkRootXI },
+				{ "XamarinMacFrameworkRoot", Configuration.SdkRootXM },
+			};
+		}
+
 		string BuildArguments ()
 		{
 			var sb = new StringBuilder ();
