@@ -105,27 +105,23 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-		[Test]
-		public void Linking_ShouldHandleMixedModeAssemblies ()
+		[TestCase ("None", false)]
+		[TestCase ("full", true)]
+		[TestCase ("platform", true)]
+		[TestCase ("sdkonly", true)]
+		public void Linking_ShouldHandleMixedModeAssemblies (string linker, bool builds_successfully)
 		{
 			RunMMPTest(tmpDir => {
-				File.Copy (Path.Combine (TI.FindSourceDirectory (), "../MixedClassLibrary.dll"), Path.Combine (tmpDir, "MixedClassLibrary.dll"));
+				string libraryPath = Path.Combine (TI.FindSourceDirectory (), "../MixedClassLibrary.dll");
 
-				foreach (var flavor in new Tuple <string, bool> [] { 
-					new Tuple <string, bool> ("None", false), 
-					new Tuple <string, bool> ("full", true),
-					new Tuple <string, bool> ("platform", true),
-					new Tuple <string, bool> ("sdkonly", true), }) {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					References = $"<Reference Include=\"MixedClassLibrary\"><HintPath>{libraryPath}</HintPath></Reference>",
+					CSProjConfig = $"<LinkMode>{linker}</LinkMode>",
+					TestCode = "System.Console.WriteLine (typeof (MixedClassLibrary.Class1));",
+				};
 
-					TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-						References = "<Reference Include=\"MixedClassLibrary\"><HintPath>MixedClassLibrary.dll</HintPath></Reference>",
-						CSProjConfig = $"<LinkMode>{flavor.Item1}</LinkMode>",
-						TestCode = "System.Console.WriteLine (typeof (MixedClassLibrary.Class1));",
-					};
-
-					var buildOutput = TI.TestUnifiedExecutable (test, shouldFail: flavor.Item2).BuildOutput;
-					Assert.True (buildOutput.Contains ("2014") == flavor.Item2, $"Building with {flavor.Item1} did not give 2014 status {flavor.Item2} as expected.\n\n{buildOutput}");
-				}
+				var buildOutput = TI.TestUnifiedExecutable (test, shouldFail: builds_successfully).BuildOutput;
+				Assert.True (buildOutput.Contains ("2014") == builds_successfully, $"Building with {linker} did not give 2014 status {builds_successfully} as expected.\n\n{buildOutput}");
 			});
 		}
 	}

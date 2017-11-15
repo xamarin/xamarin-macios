@@ -3428,42 +3428,39 @@ public class HandlerTest
 		}
 
 		[Test]
-		[TestCase (true)]
-		[TestCase (false)]
-		public void MixedModeAssembliesCanNotBeLinked (bool nofastsim)
+		[TestCase (true, MTouchLinker.DontLink, false)]
+		[TestCase (true, MTouchLinker.LinkAll, true)]
+		[TestCase (true, MTouchLinker.LinkSdk, true)]
+		[TestCase (false, MTouchLinker.DontLink, false)]
+		[TestCase (false, MTouchLinker.LinkAll, true)]
+		[TestCase (false, MTouchLinker.LinkSdk, true)]
+		public void MixedModeAssembliesCanNotBeLinked (bool nofastsim, MTouchLinker linker, bool builds_successfully)
 		{
-			foreach (var flavor in new Tuple<MTouchLinker, bool> [] {
-					new Tuple <MTouchLinker, bool> (MTouchLinker.DontLink, false),
-					new Tuple <MTouchLinker, bool> (MTouchLinker.LinkAll, true),
-					new Tuple <MTouchLinker, bool> (MTouchLinker.LinkSdk, true) }) {
+			using (var mtouch = new MTouchTool ()) {
+				var tmp = mtouch.CreateTemporaryDirectory ();
+				string libraryPath = Path.Combine (Configuration.SourceRoot, "tests", "common", "MixedClassLibrary.dll");
 
-				using (var mtouch = new MTouchTool ()) {
-					var tmp = mtouch.CreateTemporaryDirectory ();
-					string libraryPath = Path.Combine (tmp, "MixedClassLibrary.dll");
-					File.Copy (Path.Combine (Configuration.SourceRoot, "tests/common/MixedClassLibrary.dll"), Path.Combine (tmp, "MixedClassLibrary.dll"));
+				mtouch.CreateTemporaryApp (code: "public class TestApp { static void Main () { System.Console.WriteLine (typeof (MixedClassLibrary.Class1)); System.Console.WriteLine (typeof (ObjCRuntime.Runtime)); } }",
+										   extraArg: $"-r:Xamarin.iOS.dll -r:{StringUtils.Quote (libraryPath)}");
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.References = new string [] { libraryPath };
+				if (nofastsim)
+					mtouch.NoFastSim = nofastsim;
+				mtouch.Debug = true; // makes simlauncher possible (when nofastsim is false)
 
-					mtouch.CreateTemporaryApp (code: "public class TestApp { static void Main () { System.Console.WriteLine (typeof (MixedClassLibrary.Class1)); System.Console.WriteLine (typeof (ObjCRuntime.Runtime)); } }",
-											   extraArg: $"-r:Xamarin.iOS.dll -r:{StringUtils.Quote (libraryPath)}");
-					mtouch.CreateTemporaryCacheDirectory ();
-					mtouch.References = new string [] { libraryPath };
-					if (nofastsim)
-						mtouch.NoFastSim = nofastsim;
-					mtouch.Debug = true; // makes simlauncher possible (when nofastsim is false)
+				mtouch.Linker = linker;
 
-					mtouch.Linker = flavor.Item1;
-
-					if (flavor.Item2) {
-						mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build sim");
-						mtouch.AssertErrorPattern (2014, "Unable to link assembly .* as it is mixed-mode.");
-						mtouch.AssertErrorCount (1);
-					}
-					else {
-						mtouch.AssertExecute (MTouchAction.BuildSim, "build sim");
-						mtouch.AssertErrorCount (0);
-					}
-
-					mtouch.AssertNoWarnings ();
+				if (builds_successfully) {
+					mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build sim");
+					mtouch.AssertErrorPattern (2014, "Unable to link assembly .* as it is mixed-mode.");
+					mtouch.AssertErrorCount (1);
 				}
+				else {
+					mtouch.AssertExecute (MTouchAction.BuildSim, "build sim");
+					mtouch.AssertErrorCount (0);
+				}
+
+				mtouch.AssertNoWarnings ();
 			}
 		}
 
