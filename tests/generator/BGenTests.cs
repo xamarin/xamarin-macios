@@ -209,6 +209,21 @@ namespace GeneratorTests
 		}
 
 		[Test]
+		public void Bug42742 ()
+		{
+			var bgen = BuildFile (Profile.iOS, "bug42742.cs");
+
+			var allTypes = bgen.ApiAssembly.MainModule.GetTypes ().ToArray ();
+			var allMembers = ((IEnumerable<ICustomAttributeProvider>) allTypes)
+				.Union (allTypes.SelectMany ((type) => type.Methods))
+				.Union (allTypes.SelectMany ((type) => type.Fields))
+				.Union (allTypes.SelectMany ((type) => type.Properties));
+
+			var preserves = allMembers.Sum ((v) => v.CustomAttributes.Count ((ca) => ca.AttributeType.Name == "AdviceAttribute"));
+			Assert.AreEqual (24, preserves, "Advice attribute count"); // If you modified code that generates AdviceAttributes please update the attribute count
+		}
+
+		[Test]
 		public void Bug43579 ()
 		{
 			BuildFile (Profile.iOS, "bug43579.cs");
