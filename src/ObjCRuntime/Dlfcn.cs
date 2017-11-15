@@ -211,7 +211,18 @@ namespace XamCore.ObjCRuntime {
 			return (ulong) Marshal.ReadInt64 (indirect);
 		}
 
+#if !XAMCORE_4_0
 		public static void SetUInt64 (IntPtr handle, string symbol, long value)
+		{
+			var indirect = dlsym (handle, symbol);
+			if (indirect == IntPtr.Zero)
+				return;
+
+			Marshal.WriteInt64 (indirect, (long) value);
+		}
+#endif
+
+		public static void SetUInt64 (IntPtr handle, string symbol, ulong value)
 		{
 			var indirect = dlsym (handle, symbol);
 			if (indirect == IntPtr.Zero)
