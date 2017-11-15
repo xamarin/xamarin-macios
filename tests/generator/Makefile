@@ -18,7 +18,7 @@ all-local:: run-unit-tests
 
 build-unit-tests:
 	$(Q) $(SYSTEM_MONO) /Library/Frameworks//Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore $(TOP)/src/generator.sln
-	$(SYSTEM_XBUILD) generator-tests.csproj $(XBUILD_VERBOSITY)
+	$(SYSTEM_MSBUILD) generator-tests.csproj $(XBUILD_VERBOSITY)
 
 run-unit-tests: build-unit-tests
 	rm -f .failed-stamp
