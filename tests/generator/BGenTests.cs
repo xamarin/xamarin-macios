@@ -4,6 +4,8 @@ using System.Linq;
 
 using NUnit.Framework;
 
+using Mono.Cecil;
+
 using Xamarin.Tests;
 
 namespace GeneratorTests
@@ -213,6 +215,13 @@ namespace GeneratorTests
 		public void Desk63279 ()
 		{
 			BuildFile (Profile.iOS, "desk63279A.cs", "desk63279B.cs");
+		}
+
+		[Test]
+		public void Desk79124 ()
+		{
+			var bgen = BuildFile (Profile.iOS, "desk79124.cs");
+			bgen.AssertType ("Desk79124.WYPopoverBackgroundView/WYPopoverBackgroundViewAppearance");
 		}
 
 		BGenTool BuildFile (Profile profile, params string [] filenames)
