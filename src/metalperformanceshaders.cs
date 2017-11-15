@@ -2154,7 +2154,7 @@ namespace XamCore.MetalPerformanceShaders {
 	interface MPSCnnNeuronPReLU
 	{
 		[Export ("initWithDevice:a:count:")]
-		[Internal]
+		[Internal, Sealed]
 		IntPtr InitWith (IMTLDevice device, IntPtr /* float* */ a, nuint count);
 
 		// inlining ctor from base class
@@ -2305,7 +2305,7 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("initWithDevice:convolutionData:scaleValue:type:flags:")]
 		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float scaleValue, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
 
-		[Internal, Export ("initWithDevice:convolutionData:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags:")]
+		[Internal, Sealed, Export ("initWithDevice:convolutionData:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags:")]
 		IntPtr InitWith (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, [NullAllowed] IntPtr /* float* */ outputBiasTerms, [NullAllowed] IntPtr /* float* */ outputScaleTerms, [NullAllowed] IntPtr /* float* */ inputBiasTerms, [NullAllowed] IntPtr /* float* */ inputScaleTerms,MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
 
 		[Export ("initWithCoder:device:")]
@@ -2321,7 +2321,7 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("initWithDevice:convolutionData:scaleValue:type:flags:")]
 		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float scaleValue, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
 
-		[Internal, Export ("initWithDevice:convolutionData:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags:")]
+		[Internal, Sealed, Export ("initWithDevice:convolutionData:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags:")]
 		IntPtr InitWith (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, [NullAllowed] IntPtr /* float* */ outputBiasTerms, [NullAllowed] IntPtr /* float* */ outputScaleTerms, [NullAllowed] IntPtr /* float* */ inputBiasTerms, [NullAllowed] IntPtr /* float* */ inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
 
 		[Export ("initWithCoder:device:")]
@@ -3259,9 +3259,9 @@ namespace XamCore.MetalPerformanceShaders {
 	interface IMPSHandle { }
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[Protocol]
+	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
-	interface MPSHandle : NSSecureCoding
+	interface MPSHandle : NSCoding
 	{
 		[Abstract]
 		[NullAllowed, Export ("label")]
@@ -3331,7 +3331,7 @@ namespace XamCore.MetalPerformanceShaders {
 	interface IMPSImageSizeEncodingState { }
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[Protocol]
+	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface MPSImageSizeEncodingState
 	{
@@ -3347,7 +3347,7 @@ namespace XamCore.MetalPerformanceShaders {
 	interface IMPSImageAllocator { }
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
-	[Protocol]
+	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface MPSImageAllocator : NSSecureCoding
 	{
@@ -3365,9 +3365,9 @@ namespace XamCore.MetalPerformanceShaders {
 	interface IMPSImageTransformProvider { }
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
-	[Protocol]
+	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
-	interface MPSImageTransformProvider : NSSecureCoding
+	interface MPSImageTransformProvider : NSCoding
 	{
 	    [Abstract]
 	    [Export ("transformForSourceImage:handle:")]
