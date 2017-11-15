@@ -20,6 +20,19 @@ namespace GeneratorTests
 		}
 
 		[Test]
+		[TestCase (Profile.iOS)]
+		public void BI1036 (Profile profile)
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
+			bgen.Defines = BGenTool.GetDefaultDefines (profile);
+			bgen.ApiDefinitions.Add (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bi1036.cs"));
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1036, "The last parameter in the method 'NS.Foo.Method' must be a delegate (it's 'System.String').");
+		}
+
+		[Test]
 		[TestCase (Profile.macFull)]
 		[TestCase (Profile.macModern)]
 		[TestCase (Profile.macClassic)]
