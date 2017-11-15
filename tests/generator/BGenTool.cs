@@ -52,6 +52,11 @@ namespace Xamarin.Tests
 			};
 		}
 
+		public void AddTestApiDefinition (string filename)
+		{
+			ApiDefinitions.Add (Path.Combine (Configuration.SourceRoot, "tests", "generator", filename));
+		}
+
 		public AssemblyDefinition ApiAssembly {
 			get {
 				LoadAssembly ();

@@ -163,6 +163,28 @@ namespace GeneratorTests
 		}
 
 		[Test]
+		public void BI1112_Bug37527_WrongProperty ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.AddTestApiDefinition ("bug37527-wrong-property.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1112, "Property 'TestProperty' should be renamed to 'Delegate' for BaseType.Events and BaseType.Delegates to work.");
+		}
+
+		[Test]
+		public void BI1113_Bug37527_MissingProperty ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.AddTestApiDefinition ("bug37527-missing-property.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1113, "BaseType.Delegates were set but no properties could be found. Do ensure that the WrapAttribute is used on the right properties.");
+		}
+
+		[Test]
 		public void BI1117 ()
 		{
 			var bgen = new BGenTool ();
