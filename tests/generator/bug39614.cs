@@ -1,6 +1,8 @@
 using System;
 using Foundation;
 
+namespace FixWarningAboutNoNamespace {
+
 [BaseType (typeof (NSObject))]
 public interface FooType<GenType>
 	where GenType : NSObject {
@@ -19,3 +21,4 @@ public interface FooType<GenType>
 	GenType GetBar (string bar);
 }
 
+}

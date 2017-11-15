@@ -16,13 +16,8 @@ namespace Test
 	
 	[StrongDictionary ("AdvertisementDataKeys")]
 	interface AdvertisementData {
-#if XAMCORE_2_0
-		// property under tests, the generator should create a compilable property
-		NSDictionary <CBUUID, NSData> ServiceData { get; set; }
-#else
 		// ensure that the generator continues to work with classic
 		NSDictionary ServiceData { get; set; }
-#endif
 	}
 
 	[Static, Internal]
