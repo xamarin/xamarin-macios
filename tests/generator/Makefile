@@ -16,14 +16,8 @@ export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.fra
 
 IOS_CURRENT_DIR=$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current
 IOS_GENERATOR = $(IOS_CURRENT_DIR)/bin/bgen /unsafe --target-framework=Xamarin.iOS,v1.0
-IOS_CUSTOM_TESTS = smartenumwithframework
 
-ALL_TESTS = 
-ifdef INCLUDE_IOS
-ALL_TESTS += $(IOS_CUSTOM_TESTS)
-endif
-
-all-local:: $(ALL_TESTS) run-unit-tests
+all-local:: run-unit-tests
 
 build-unit-tests:
 	$(Q) $(SYSTEM_MONO) /Library/Frameworks//Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore $(TOP)/src/generator.sln
@@ -58,14 +52,6 @@ forcedtype:
 	fi
 	@if [ `grep -r GetINativeObject forcedtype.tmpdir | wc -l` -ne 12 ]; then \
 		echo "Error: Expected 12 GetINativeObject usages in generated code."; exit 1; \
-	fi
-
-smartenumwithframework:
-	@rm -Rf $@.tmpdir
-	@mkdir -p $@.tmpdir
-	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) --sourceonly:$@.source -tmpdir=$@.tmpdir $@.cs --process-enums
-	@if [ `grep -r "Libraries.CoreImage.Handle" $@.tmpdir/SmartEnumWithFramework | wc -l` -ne 2 ]; then \
-		echo "Error: Expected 2 'Libraries.CoreImage.Handle'."; exit 1; \
 	fi
 
 clean-local::

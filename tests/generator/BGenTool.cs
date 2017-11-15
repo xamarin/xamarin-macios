@@ -169,6 +169,32 @@ namespace Xamarin.Tests
 			Assert.Fail ($"Could not find any instructions calling {called_method} in {method.FullName}: {message}\n\t{string.Join ("\n\t", instructions)}");
 		}
 
+		public void AssertApiLoadsField (string caller_type, string caller_method, string declaring_type, string field, string message)
+		{
+			var type = ApiAssembly.MainModule.GetTypes ().First ((v) => v.FullName == caller_type);
+			var method = type.Methods.First ((v) => v.Name == caller_method);
+
+			AssertApiLoadsField (method, declaring_type, field, message);
+		}
+
+		public void AssertApiLoadsField (MethodReference method, string declaring_type, string field, string message)
+		{
+			var instructions = method.Resolve ().Body.Instructions;
+			foreach (var ins in instructions) {
+				if (ins.OpCode.Code != Code.Ldsfld && ins.OpCode.Code != Code.Ldfld)
+					continue;
+				var fr = ins.Operand as FieldReference;
+				if (fr == null)
+					continue;
+				if (fr.DeclaringType.FullName != declaring_type)
+					continue;
+				if (fr.Name == field)
+					return;
+			}
+
+			Assert.Fail ($"Could not find any instructions loading the field {declaring_type}.{field} in {method.FullName}: {message}\n\t{string.Join ("\n\t", instructions)}");
+		}
+
 		public void AssertPublicTypeCount (int count, string message = null)
 		{
 			LoadAssembly ();

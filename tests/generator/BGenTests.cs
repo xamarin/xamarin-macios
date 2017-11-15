@@ -414,6 +414,20 @@ namespace GeneratorTests
 			bgen.AssertNoWarnings ();
 		}
 
+		[Test]
+		public void SmartEnumWithFramework ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.ProcessEnums = true;
+			bgen.AddTestApiDefinition ("smartenumwithframework.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
+
+			bgen.AssertApiLoadsField ("SmartEnumWithFramework.FooEnumTestExtensions", "get_First", "ObjCRuntime.Libraries/CoreImage", "Handle", "First getter");
+			bgen.AssertApiLoadsField ("SmartEnumWithFramework.FooEnumTestExtensions", "get_Second", "ObjCRuntime.Libraries/CoreImage", "Handle", "Second getter");
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, filenames);
