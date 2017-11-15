@@ -49,11 +49,11 @@ MAC_MDB_FILES = \
 
 install-source-ios: install-source.exe
 	@echo "Installing source files for Xamarin.iOS"
-	$(Q) $(SYSTEM_MONO) install-source.exe $(IOS_ASSEMBLIES) --link:$(USE_SOURCE_LINKS) -v --mono-path=$(abspath $(MONO_PATH)) --opentk-path=$(abspath $(OPENTK_PATH)/Source) --xamarin-path=$(abspath $(SRC_PATH)) --install-dir=$(abspath $(IOS_DESTDIR))$(abspath $(MONOTOUCH_PREFIX))
+	$(Q) $(SYSTEM_MONO) install-source.exe $(IOS_ASSEMBLIES) --link:$(USE_SOURCE_LINKS) --mono-path=$(abspath $(MONO_PATH)) --opentk-path=$(abspath $(OPENTK_PATH)/Source) --xamarin-path=$(abspath $(SRC_PATH)) --install-dir=$(abspath $(IOS_DESTDIR))$(abspath $(MONOTOUCH_PREFIX))
 
 install-source-mac: install-source.exe
 	@echo "Installing source files for Xamarin.Mac"
-	$(Q) $(SYSTEM_MONO) install-source.exe $(MAC_ASSEMBLIES) --link:$(USE_SOURCE_LINKS) -v --mono-path=$(abspath $(MONO_PATH)) --opentk-path=$(abspath $(OPENTK_PATH)/Source) --xamarin-path=$(abspath $(SRC_PATH)) --install-dir=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)) 
+	$(Q) $(SYSTEM_MONO) install-source.exe $(MAC_ASSEMBLIES) --link:$(USE_SOURCE_LINKS) --mono-path=$(abspath $(MONO_PATH)) --opentk-path=$(abspath $(OPENTK_PATH)/Source) --xamarin-path=$(abspath $(SRC_PATH)) --install-dir=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)) 
 
 
 IOS_SOURCES = \
