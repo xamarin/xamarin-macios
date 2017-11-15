@@ -344,6 +344,27 @@ namespace GeneratorTests
 			bgen.AssertMethod ("WrapTest.MyFooClass", "get_FooNSStringN", attribs | MethodAttributes.SpecialName, "Foundation.NSString");
 		}
 
+		[Test]
+		public void NoAsyncInternalWrapper ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.AddTestApiDefinition ("noasyncinternalwrapper.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
+
+			var allTypes = bgen.ApiAssembly.MainModule.GetTypes ().ToArray ();
+			var allMembers = ((IEnumerable<MemberReference>) allTypes)
+				.Union (allTypes.SelectMany ((type) => type.Methods))
+				.Union (allTypes.SelectMany ((type) => type.Fields))
+				.Union (allTypes.SelectMany ((type) => type.Properties));
+
+			Assert.AreEqual (1, allMembers.Count ((member) => member.Name == "RequiredMethodAsync"), "Expected 1 RequiredMethodAsync members in generated code. If you modified code that generates RequiredMethodAsync (AsyncAttribute) please update the RequiredMethodAsync count.");
+
+			var attribs = MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig;
+			bgen.AssertMethod ("NoAsyncInternalWrapperTests.MyFooDelegate_Extensions", "RequiredMethodAsync", attribs, "System.Threading.Tasks.Task", "NoAsyncInternalWrapperTests.IMyFooDelegate", "System.Int32");
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, filenames);

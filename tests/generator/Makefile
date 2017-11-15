@@ -16,7 +16,7 @@ export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.fra
 
 IOS_CURRENT_DIR=$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current
 IOS_GENERATOR = $(IOS_CURRENT_DIR)/bin/bgen /unsafe --target-framework=Xamarin.iOS,v1.0
-IOS_CUSTOM_TESTS = noasyncinternalwrapper noasyncwarningcs0219 bug53076 bug53076withmodel fieldenumtests smartenumwithframework
+IOS_CUSTOM_TESTS = noasyncwarningcs0219 bug53076 bug53076withmodel fieldenumtests smartenumwithframework
 
 ALL_TESTS = 
 ifdef INCLUDE_IOS
@@ -58,14 +58,6 @@ forcedtype:
 	fi
 	@if [ `grep -r GetINativeObject forcedtype.tmpdir | wc -l` -ne 12 ]; then \
 		echo "Error: Expected 12 GetINativeObject usages in generated code."; exit 1; \
-	fi
-
-noasyncinternalwrapper:
-	@rm -Rf $@.tmpdir
-	@mkdir -p $@.tmpdir
-	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) --sourceonly:$@.source -tmpdir=$@.tmpdir $@.cs
-	@if [ `grep -r RequiredMethodAsync $@.tmpdir/NoAsyncInternalWrapperTests | wc -l` -ne 1 ]; then \
-		echo "Error: Expected 1 RequiredMethodAsync members in generated code. If you modified code that generates RequiredMethodAsync (AsyncAttribute) please update the RequiredMethodAsync count."; exit 1; \
 	fi
 
 noasyncwarningcs0219:
