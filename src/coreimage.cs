@@ -25,6 +25,7 @@
 //
 
 using System;
+using System.ComponentModel;
 using System.Reflection;
 using XamCore.AVFoundation;
 using XamCore.Foundation;
@@ -1270,6 +1271,7 @@ namespace XamCore.CoreImage {
 		[Export ("imageWithCGImage:")]
 		CIImage FromCGImage (CGImage image);
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithCGImage:options:")]
 		CIImage FromCGImage (CGImage image, [NullAllowed] NSDictionary d);
@@ -1306,6 +1308,7 @@ namespace XamCore.CoreImage {
 		[Export ("imageWithContentsOfURL:")]
 		CIImage FromUrl (NSUrl url);
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithContentsOfURL:options:")]
 		CIImage FromUrl (NSUrl url, [NullAllowed] NSDictionary d);
@@ -1318,6 +1321,7 @@ namespace XamCore.CoreImage {
 		[Export ("imageWithData:")]
 		CIImage FromData (NSData data);
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithData:options:")]
 		CIImage FromData (NSData data, [NullAllowed] NSDictionary d);
@@ -1332,18 +1336,21 @@ namespace XamCore.CoreImage {
 		CIImage FromImageBuffer (CVImageBuffer imageBuffer);
 
 #if MONOMAC && !XAMCORE_4_0
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Mac(10,4)]
 		[Export ("imageWithCVImageBuffer:options:")]
 		CIImage FromImageBuffer (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary dict);
 #else
 #if XAMCORE_2_0
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[iOS(9,0)]
 		[Internal] // This overload is needed for our strong dictionary support (but only for Unified, since for Classic the generic version is transformed to this signature)
 		[Export ("imageWithCVImageBuffer:options:")]
 		CIImage FromImageBuffer (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary dict);
 #endif
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[iOS(9,0)]
 		[Export ("imageWithCVImageBuffer:options:")]
@@ -1359,6 +1366,7 @@ namespace XamCore.CoreImage {
 		[Export ("imageWithCVPixelBuffer:")]
 		CIImage FromImageBuffer (CVPixelBuffer buffer);
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithCVPixelBuffer:options:")]
 		CIImage FromImageBuffer (CVPixelBuffer buffer, [NullAllowed] NSDictionary dict);
@@ -1377,6 +1385,7 @@ namespace XamCore.CoreImage {
 		[iOS (11,0)]
 		[TV (11,0)]
 		[Mac (10,13)]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithIOSurface:options:")]
 		CIImage FromSurface (IOSurface.IOSurface surface, NSDictionary options);
@@ -1399,6 +1408,7 @@ namespace XamCore.CoreImage {
 		[Export ("initWithCGImage:")]
 		IntPtr Constructor (CGImage image);
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithCGImage:options:")]
 		IntPtr Constructor (CGImage image, [NullAllowed] NSDictionary d);
 
@@ -1409,6 +1419,7 @@ namespace XamCore.CoreImage {
 		[Export ("initWithCGLayer:")]
 		IntPtr Constructor (CGLayer layer);
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithCGLayer:options:")]
 		IntPtr Constructor (CGLayer layer, [NullAllowed] NSDictionary d);
 
