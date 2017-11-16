@@ -4738,7 +4738,7 @@ namespace XamCore.CoreImage {
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	// Maybe 'typeof (CIFilter)' (shared 'Scale' and 'AspectRatio' property).
+	// Maybe 'typeof (CIScaleTransform)' (shared 'Scale' and 'AspectRatio' property).
 	// It's possible to add ours but it can bite us back in the future if Apple introduce the same with different properties.
 	[BaseType (typeof (CIFilter))]
 	interface CIBicubicScaleTransform {
