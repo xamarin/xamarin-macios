@@ -70,7 +70,9 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 
 ### <a name='BI1013'/>BI1013: Unsupported type for Fields (string), you probably meant NSString
 
-### <a name='BI1014'/>BI1014: Unsupported type for Fields: *
+### <a name='BI1014'/>BI1014: Unsupported type for Fields: * for '*'.
+
+Please go to [[FieldAttribute]](https://developer.xamarin.com/guides/cross-platform/macios/binding/binding-types-reference/#FieldAttribute) documentation to see supported types.
 
 ### <a name='BI1015'/>BI1015: In class * You specified the Events property, but did not bind those to names with Delegates
 

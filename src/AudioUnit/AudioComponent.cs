@@ -226,13 +226,13 @@ namespace XamCore.AudioUnit
 		}
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use the overload that accept a ref to the AudioComponentDescription parameter")]
+		[Obsolete ("Use the overload that accept a ref to the 'AudioComponentDescription' parameter.")]
 		public static AudioComponent FindNextComponent (AudioComponent cmp, AudioComponentDescription cd)
 		{
 			return FindNextComponent (cmp, ref cd);
 		}
 
-		[Obsolete ("Use the overload that accept a ref to the AudioComponentDescription parameter")]
+		[Obsolete ("Use the overload that accept a ref to the 'AudioComponentDescription' parameter.")]
 		public static AudioComponent FindComponent (AudioComponentDescription cd)
 		{
 			return FindNextComponent (null, ref cd);
@@ -397,11 +397,11 @@ namespace XamCore.AudioUnit
 #endif
 
 #if IOS || MONOMAC
-		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[NoWatch, NoTV, Mac (10,13, onlyOn64: true), iOS (11,0)]
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern int /* OSStatus */ AudioUnitExtensionSetComponentList (IntPtr /* CFString */ extensionIdentifier, /* CFArrayRef */ IntPtr audioComponentInfo);
 
-		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+		[NoWatch, NoTV, Mac (10,13, onlyOn64: true), iOS (11,0)]
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern /* CFArrayRef */ IntPtr AudioUnitExtensionCopyComponentList (IntPtr /* CFString */ extensionIdentifier);
 

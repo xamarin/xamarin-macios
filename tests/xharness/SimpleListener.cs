@@ -93,6 +93,12 @@ $@"[Local Date/Time:	{DateTime.Now}]
 			return stopped.Task.Wait (ts);
 		}
 
+		public Task CompletionTask {
+			get {
+				return stopped.Task;
+			}
+		}
+
 		public void Cancel ()
 		{
 			try {

@@ -521,7 +521,11 @@ namespace XamCore.SpriteKit {
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (SKEffectNode))]
-	partial interface SKScene {
+	interface SKScene
+#if (XAMCORE_2_0 || !MONOMAC) && !WATCH
+		: GKSceneRootNodeType
+#endif
+	{
 		[Export ("initWithSize:")]
 		IntPtr Constructor (CGSize size);
 
@@ -3398,7 +3402,7 @@ namespace XamCore.SpriteKit {
 
 	// SKRenderer is not available for WatchKit apps and the iOS simulator
 	[NoWatch]
-	[TV (11,0), Mac (10,13), iOS (11,0)]
+	[TV (11,0), Mac (10,13, onlyOn64 : true), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface SKRenderer {

@@ -7,7 +7,7 @@
 // Copyright 2013 Xamarin Inc.
 //
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !MONOMAC
 
 using System;
 #if XAMCORE_2_0

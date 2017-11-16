@@ -37,7 +37,7 @@ using XamCore.ObjCRuntime;
 namespace XamCore.AVFoundation {
 	public partial class AVCaptureDeviceInput {
 #if !XAMCORE_2_0
-		[Obsolete ("Use FromDevice (AVCaptureDevice, out NSError) instead")]
+		[Obsolete ("Use 'FromDevice (AVCaptureDevice, out NSError)' instead.")]
 		static public AVCaptureDeviceInput FromDevice (AVCaptureDevice device, IntPtr handle)
 		{
 			NSError error;
@@ -53,7 +53,7 @@ namespace XamCore.AVFoundation {
 
 #if !XAMCORE_2_0
 		static NSError globalerr;
-		[Obsolete ("Use AVCaptureDeviceInput (AVCaptureDevice, out NSError) instead")]
+		[Obsolete ("Use 'AVCaptureDeviceInput (AVCaptureDevice, out NSError)' instead.")]
 		public AVCaptureDeviceInput (AVCaptureDevice device, IntPtr handle) : this (device, out globalerr)
 		{
 		}

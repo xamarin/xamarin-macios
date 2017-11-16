@@ -418,7 +418,7 @@ namespace XamCore.CoreMidi {
 		}
 
 #if !XAMCORE_2_0
-		[Obsolete ("Use the (int) overload instead")]
+		[Obsolete ("Use the (int) overload instead.")]
 		public MidiObject (IntPtr handle)
 			: this ((int) handle, true)
 		{
@@ -565,7 +565,7 @@ namespace XamCore.CoreMidi {
 		}
 
 #if !XAMCORE_2_0
-		[Obsolete ("It is better to use CreateVirtualSource (string name, out MidiError statusCode) to flag errors")]
+		[Obsolete ("It is better to use 'CreateVirtualSource (string name, out MidiError statusCode)' to flag errors.")]
 		public MidiEndpoint CreateVirtualSource (string name)
 		{
 			using (var nsstr = new NSString (name)){

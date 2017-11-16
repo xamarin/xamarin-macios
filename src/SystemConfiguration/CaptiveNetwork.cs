@@ -60,7 +60,7 @@ namespace XamCore.SystemConfiguration {
 		extern static IntPtr /* CFArrayRef __nullable */ CNCopySupportedInterfaces ();
 		
 #if !XAMCORE_2_0
-		[Obsolete ("Replaced by TryGetSupportedInterfaces")]
+		[Obsolete ("Replaced by 'TryGetSupportedInterfaces'.")]
 		[Mac (10,8)]
 		static public string[] GetSupportedInterfaces ()
 		{

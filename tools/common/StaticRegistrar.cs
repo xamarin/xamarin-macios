@@ -1356,6 +1356,11 @@ namespace XamCore.Registrar {
 
 		void CollectAvailabilityAttributes (IEnumerable<CustomAttribute> attributes, ref List<AvailabilityBaseAttribute> list)
 		{
+			CollectAvailabilityAttributes (attributes.Select ((v) => new Tuple<CustomAttribute, TypeReference> (v, v.Constructor.DeclaringType)), ref list);
+		}
+
+		void CollectAvailabilityAttributes (IEnumerable<Tuple<CustomAttribute, TypeReference>> attributes, ref List<AvailabilityBaseAttribute> list)
+		{
 			PlatformName currentPlatform;
 #if MTOUCH
 			switch (App.Platform) {
@@ -1375,8 +1380,9 @@ namespace XamCore.Registrar {
 			currentPlatform = global::XamCore.ObjCRuntime.PlatformName.MacOSX;
 #endif
 
-			foreach (var ca in attributes) {
-				var caType = ca.Constructor.DeclaringType.Resolve ();
+			foreach (var tuple in attributes) {
+				var ca = tuple.Item1;
+				var caType = tuple.Item2;
 				if (caType.Namespace != ObjCRuntime)
 					continue;
 				
@@ -1505,7 +1511,7 @@ namespace XamCore.Registrar {
 			if (AvailabilityAnnotations != null) {
 				object attribObjects;
 				if (AvailabilityAnnotations.TryGetValue (td, out attribObjects))
-					CollectAvailabilityAttributes ((List<CustomAttribute>) attribObjects, ref rv);
+					CollectAvailabilityAttributes ((List<Tuple<CustomAttribute, TypeReference>>) attribObjects, ref rv);
 			}
 
 			return rv;
@@ -1870,6 +1876,10 @@ namespace XamCore.Registrar {
 			case "QuartzComposer":
 			case "QuickLookUI":
 				h = "<Quartz/Quartz.h>";
+				break;
+#else
+			case "PdfKit":
+				h = "<PDFKit/PDFKit.h>";
 				break;
 #endif
 			case "OpenGLES":
@@ -2376,6 +2386,7 @@ namespace XamCore.Registrar {
 		static bool IsQTKitType (ObjCType type) => IsTypeCore (type, "QTKit");
 		static bool IsMapKitType (ObjCType type) => IsTypeCore (type, "MapKit");
 		static bool IsIntentsType (ObjCType type) => IsTypeCore (type, "Intents");
+		static bool IsExternalAccessoryType (ObjCType type) => IsTypeCore (type, "ExternalAccessory");
 
 		static bool IsMetalType (ObjCType type)
 		{
@@ -2434,7 +2445,7 @@ namespace XamCore.Registrar {
 
 				// These are 64-bit frameworks that extend NSExtensionContext / NSUserActivity, which you can't do
 				// if the header doesn't declare them. So hack it away, since they are useless in 64-bit anyway
-				if (!Is64Bits && (IsMapKitType (@class) || IsIntentsType (@class)))
+				if (!Is64Bits && (IsMapKitType (@class) || IsIntentsType (@class) || IsExternalAccessoryType (@class)))
 					continue;
 #endif
 

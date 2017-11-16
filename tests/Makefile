@@ -12,7 +12,26 @@ MTOUCH=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/mtouch
 UNIT_SERVER_DIR=$(TOUCH_UNIT_PATH)/Touch.Server
 UNIT_SERVER=$(UNIT_SERVER_DIR)/bin/Debug/Touch.Server.exe
 TEST_SUITES=monotouch-test link\ sdk link\ all dont\ link framework-test mini
-BCL_TEST_SUITES=mscorlib System System.Core System.Data System.Net.Http System.Numerics System.Runtime.Serialization System.Transactions System.Web.Services System.Xml System.Xml.Linq Mono.Security System.ComponentModel.DataAnnotations System.Json System.ServiceModel.Web Mono.Data.Sqlite
+BCL_TEST_SUITES=mscorlib \
+	System \
+	System.Core \
+	System.Data \
+	System.Net.Http \
+	System.Numerics \
+	System.Runtime.Serialization \
+	System.Transactions \
+	System.Web.Services \
+	System.Xml \
+	System.Xml.Linq \
+	Mono.Security \
+	System.ComponentModel.DataAnnotations \
+	System.Json \
+	System.ServiceModel.Web \
+	Mono.Data.Sqlite \
+	Mono.Data.Tds \
+	System.IO.Compression \
+	System.IO.Compression.FileSystem \
+	Mono.CSharp
 ALL_TEST_SUITES=$(TEST_SUITES) $(BCL_TEST_SUITES)
 EXEC_UNIT_SERVER=XCODE_DEVELOPER_ROOT=$(XCODE_DEVELOPER_ROOT) MONOTOUCH_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) $(SYSTEM_MONO) --debug $(UNIT_SERVER)
 
@@ -163,7 +182,7 @@ Makefile-mac.inc: xharness/xharness.exe
 
 -include Makefile-mac.inc
 
-$(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/mtouch/SdkVersions.cs.in
+$(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	@$(MAKE) -C $(TOP)/tools/mtouch SdkVersions.cs
 
 .stamp-src-project-files:
@@ -171,7 +190,7 @@ $(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/mtouch/SdkVersions.cs.in
 	@touch $@
 
 xharness/xharness.exe: $(wildcard xharness/*.cs) xharness/xharness.csproj $(TOP)/tools/mtouch/SdkVersions.cs test.config test-system.config .stamp-src-project-files
-	$(Q_GEN) unset MSBuildExtensionsPath && $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
+	$(Q_GEN) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
 
 killall:
 	@killall "iPhone Simulator" >/dev/null 2>&1 || true
@@ -352,6 +371,10 @@ ifdef INCLUDE_IOS
 else
 	@echo "iOS tests have been disabled [$@]"
 endif
+
+wrench-xtro:
+	git clean -xfdq
+	make -C xtro-sharpie wrench
 
 jenkins: xharness/xharness.exe
 	$(Q) $(SYSTEM_MONO) --debug $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT)

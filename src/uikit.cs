@@ -16323,6 +16323,10 @@ namespace XamCore.UIKit {
 		[Export ("primaryLanguage")]
 		string PrimaryLanguage { get; set; }
 
+		[iOS (11,1), TV (11,1)]
+		[Export ("hasDictationKey")]
+		bool HasDictationKey { get; set; }
+
 		[iOS (10,0), TV (10,0)]
 		[Export ("handleInputModeListFromView:withEvent:")]
 		void HandleInputModeList (UIView fromView, UIEvent withEvent);

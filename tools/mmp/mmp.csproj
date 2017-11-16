@@ -61,6 +61,7 @@
     <Compile Include="Tuning.cs" />
     <Compile Include="Assembly.cs" />
     <Compile Include="error.cs" />
+    <Compile Include="SdkVersions.cs" />
     <Compile Include="..\..\external\mono\external\linker\tuner\Mono.Tuner\ApplyPreserveAttributeBase.cs">
       <Link>Mono.Tuner\ApplyPreserveAttributeBase.cs</Link>
     </Compile>
@@ -108,6 +109,12 @@
     </Compile>
     <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\IXApiVisitor.cs">
       <Link>Mono.Linker\IXApiVisitor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\ILogger.cs">
+      <Link>Mono.Linker\ILogger.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\ConsoleLogger.cs">
+      <Link>Mono.Linker\ConsoleLogger.cs</Link>
     </Compile>
     <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\LinkContext.cs">
       <Link>Mono.Linker\LinkContext.cs</Link>

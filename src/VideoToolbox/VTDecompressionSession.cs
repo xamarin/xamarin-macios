@@ -269,7 +269,7 @@ namespace XamCore.VideoToolbox {
 			unsafe {
 				var block = new BlockLiteral ();
 				var blockPtr = &block;
-				block.SetupBlock (decompressionOutputHandlerTrampoline, outputHandler);
+				block.SetupBlockUnsafe (decompressionOutputHandlerTrampoline, outputHandler);
 
 				try {
 					return VTDecompressionSessionDecodeFrameWithOutputHandler (Handle,
@@ -336,6 +336,16 @@ namespace XamCore.VideoToolbox {
 				throw new ArgumentNullException ("options");
 
 			return VTSessionSetProperties (Handle, options.Dictionary.Handle);
+		}
+
+		[Mac (10,13), iOS (11,0), TV (11,0)]
+		[DllImport (Constants.VideoToolboxLibrary)]
+		extern static bool VTIsHardwareDecodeSupported (CMVideoCodecType codecType);
+
+		[Mac (10,13), iOS (11,0), TV (11,0)]
+		public static bool IsHardwareDecodeSupported (CMVideoCodecType codecType)
+		{
+			return VTIsHardwareDecodeSupported (codecType);
 		}
 	}
 }

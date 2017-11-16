@@ -26,11 +26,13 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void AvailableDepthDataTypesTest ()
 		{
+#if !MONOMAC
 			TestRuntime.AssertDevice ();
+#endif
 			TestRuntime.AssertXcodeVersion (9, 0);
 
 			// xamarinmonkey.heic is the new photo format, also this one includes depth data
-			var imgdata = NSData.FromFile ("CoreImage/xamarinmonkey.heic");
+			var imgdata = NSData.FromUrl (NSBundle.MainBundle.GetUrlForResource ("xamarinmonkey", "heic", "CoreImage"));
 			Assert.NotNull (imgdata, "imgdata");
 
 			var imageSource = CGImageSource.FromData (imgdata);

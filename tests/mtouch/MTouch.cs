@@ -68,7 +68,7 @@ namespace Xamarin
 				mtouch.SymbolList = Path.Combine (tmpdir, "symbollist.txt");
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
 
-				var profiler_symbol = "_mono_profiler_startup_log";
+				var profiler_symbol = "_mono_profiler_init_log";
 
 				var symbols = File.ReadAllLines (mtouch.SymbolList);
 				Assert.That (symbols, Contains.Item (profiler_symbol), profiler_symbol);
@@ -3555,10 +3555,12 @@ public class Dummy {
 			ExecutionHelper.Execute ("mono", $"{StringUtils.Quote (Path.Combine (Configuration.RootPath, "tests", "xharness", "xharness.exe"))} --run {StringUtils.Quote (csprojpath)} --target ios-simulator-64 --sdkroot {Configuration.xcode_root} --logdirectory {StringUtils.Quote (Path.Combine (tmpdir, "log.txt"))} --configuration {configuration}", environmentVariables: environment_variables);
 		}
 
-		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null)
+		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null)
 		{
 			if (code == null)
 				code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
+			if (usings != null)
+				code = usings + "\n" + code;
 			if (extraCode != null)
 				code += extraCode;
 

@@ -26,7 +26,7 @@ namespace XamCore.CoreMedia {
 		TimeCode      = 1953325924, // 'tmcd'
 #if !XAMCORE_2_0
 		// not part of the header file anymore
-		[Obsolete ("Use Metadata instead")]
+		[Obsolete ("Use 'Metadata' instead.")]
 		TimedMetadata = 1953326452, // 'tmet'
 #endif
 		// note: the 4CC was obsoleted, i.e. Metadata is a new 4CC

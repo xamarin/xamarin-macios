@@ -74,5 +74,26 @@ namespace MonoTouchFixtures.CoreGraphics {
 				ctx.Close ();
 			}
 		}
+
+		[Test]
+		public void Constructors ()
+		{
+			Assert.Throws<Exception> (() => new CGContextPDF ((CGDataConsumer) null), "null CGDataConsumer");
+
+			Assert.Throws<Exception> (() => new CGContextPDF ((CGDataConsumer) null, RectangleF.Empty), "null CGDataConsumer, Empty");
+
+			Assert.Throws<Exception> (() => new CGContextPDF ((CGDataConsumer) null, RectangleF.Empty, null), "null CGDataConsumer, Empty, null");
+
+			Assert.Throws<Exception> (() => new CGContextPDF ((CGDataConsumer) null, null), "null CGDataConsumer, null");
+
+			Assert.Throws<Exception> (() => new CGContextPDF ((NSUrl) null), "null NSUrl");
+
+			Assert.Throws<Exception> (() => new CGContextPDF ((NSUrl) null, RectangleF.Empty), "null NSUrl, Empty");
+
+			Assert.Throws<Exception> (() => new CGContextPDF ((NSUrl) null, RectangleF.Empty, null), "null NSUrl, Empty, null");
+
+			Assert.Throws<Exception> (() => new CGContextPDF ((NSUrl) null, null), "null NSUrl, null");
+
+		}
 	}
 }

@@ -30,7 +30,7 @@ namespace XamCore.AVFoundation {
 
 #if !XAMCORE_2_0
 		// compatibility method
-		[Obsolete ("Use the overload that takes NSValue[] instead")]
+		[Obsolete ("Use the overload that takes 'NSValue[]' instead.")]
 		public virtual void GenerateCGImagesAsynchronously (NSValue cmTimesRequestedTimes, AVAssetImageGeneratorCompletionHandler handler)
 		{
 			NSValue[] values = new NSValue[] { cmTimesRequestedTimes };

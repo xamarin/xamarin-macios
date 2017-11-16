@@ -742,7 +742,7 @@ namespace XamCore.AudioToolbox {
 		}
 
 #if !WATCH
-		[Advice ("Use the strongly typed AudioTag instead")]
+		[Advice ("Use the strongly typed 'AudioTag' instead.")]
 		public int Tag {
 			get {
 				return (int) AudioTag;
@@ -752,7 +752,7 @@ namespace XamCore.AudioToolbox {
 			}
 		}
 
-		[Advice ("Use ChannelUsage instead")]
+		[Advice ("Use 'ChannelUsage' instead.")]
 		public int Bitmap {
 			get {
 				return (int) ChannelUsage;

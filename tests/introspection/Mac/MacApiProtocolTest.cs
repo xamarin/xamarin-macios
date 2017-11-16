@@ -217,6 +217,16 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "NSItemProviderWriting":
+				switch (type.Name) {
+				case "NSMutableString":
+				case "NSString":
+				case "NSUrl":
+					if (IntPtr.Size == 4) // Only on 64-bit version of these types
+						return true;
+					break;
+				}
+				break;
 			}
 
 			switch (type.Name) {
@@ -230,7 +240,10 @@ namespace Introspection {
 			switch (type.Namespace) {
 			case "MonoMac.SceneKit":
 			case "SceneKit":
-				return IntPtr.Size == 4; // 64bits should be fine
+				// skip on 32 bits but continue otherwise
+				if (IntPtr.Size == 4)
+					return true;
+				break;
 			}
 
 			return base.Skip (type, protocolName);

@@ -490,7 +490,6 @@
 !missing-selector! NSXMLParserDelegate::parserDidEndDocument: is not bound
 !missing-selector! NSXMLParserDelegate::parserDidStartDocument: is not bound
 
-
 # Accelerate.framework
 !missing-enum! CBLAS_DIAG not bound
 !missing-enum! CBLAS_ORDER not bound
@@ -517,6 +516,9 @@
 !incorrect-protocol-member! SCNSceneRenderer::renderingAPI is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNSceneRenderer::stencilPixelFormat is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNAnimatable::setSpeed:forAnimationKey: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNAnimatable::addAnimationPlayer:forKey: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNAnimatable::animationPlayerForKey: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNAnimatable::removeAnimationForKey:blendOutDuration: is REQUIRED and should be abstract
 
 ## same for SCNActionable, it is required member of a protocol added to XAMCORE_4_0
 !incorrect-protocol-member! SCNActionable::actionKeys is REQUIRED and should be abstract
@@ -536,6 +538,45 @@
 !missing-pinvoke! SCNMatrix4ToGLKMatrix4 is not bound
 !missing-pinvoke! SCNVector3EqualToVector3 is not bound
 !missing-pinvoke! SCNVector4EqualToVector4 is not bound
+
+## SIMD helpers that we decided not to bind for now
+!missing-selector! +SCNNode::simdLocalFront not bound
+!missing-selector! +SCNNode::simdLocalRight not bound
+!missing-selector! +SCNNode::simdLocalUp not bound
+!missing-selector! SCNNode::setSimdEulerAngles: not bound
+!missing-selector! SCNNode::setSimdOrientation: not bound
+!missing-selector! SCNNode::setSimdPivot: not bound
+!missing-selector! SCNNode::setSimdPosition: not bound
+!missing-selector! SCNNode::setSimdRotation: not bound
+!missing-selector! SCNNode::setSimdScale: not bound
+!missing-selector! SCNNode::setSimdTransform: not bound
+!missing-selector! SCNNode::setSimdWorldOrientation: not bound
+!missing-selector! SCNNode::setSimdWorldPosition: not bound
+!missing-selector! SCNNode::setSimdWorldTransform: not bound
+!missing-selector! SCNNode::simdConvertPosition:fromNode: not bound
+!missing-selector! SCNNode::simdConvertPosition:toNode: not bound
+!missing-selector! SCNNode::simdConvertTransform:fromNode: not bound
+!missing-selector! SCNNode::simdConvertTransform:toNode: not bound
+!missing-selector! SCNNode::simdConvertVector:fromNode: not bound
+!missing-selector! SCNNode::simdConvertVector:toNode: not bound
+!missing-selector! SCNNode::simdEulerAngles not bound
+!missing-selector! SCNNode::simdLocalRotateBy: not bound
+!missing-selector! SCNNode::simdLocalTranslateBy: not bound
+!missing-selector! SCNNode::simdLookAt: not bound
+!missing-selector! SCNNode::simdLookAt:up:localFront: not bound
+!missing-selector! SCNNode::simdOrientation not bound
+!missing-selector! SCNNode::simdPivot not bound
+!missing-selector! SCNNode::simdPosition not bound
+!missing-selector! SCNNode::simdRotateBy:aroundTarget: not bound
+!missing-selector! SCNNode::simdRotation not bound
+!missing-selector! SCNNode::simdScale not bound
+!missing-selector! SCNNode::simdTransform not bound
+!missing-selector! SCNNode::simdWorldFront not bound
+!missing-selector! SCNNode::simdWorldOrientation not bound
+!missing-selector! SCNNode::simdWorldPosition not bound
+!missing-selector! SCNNode::simdWorldRight not bound
+!missing-selector! SCNNode::simdWorldTransform not bound
+!missing-selector! SCNNode::simdWorldUp not bound
 
 # Security
 

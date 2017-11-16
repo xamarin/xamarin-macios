@@ -465,7 +465,7 @@ namespace XamCore.CoreText {
 		static extern IntPtr CTFontDescriptorCreateCopyWithFeature (IntPtr original, IntPtr featureTypeIdentifier, IntPtr featureSelectorIdentifier);
 
 #if !XAMCORE_2_0
-		[Advice ("Use WithFeature with specific selector")]
+		[Advice ("Use 'WithFeature' with specific selector.")]
 		public CTFontDescriptor WithFeature (NSNumber featureTypeIdentifier, NSNumber featureSelectorIdentifier)
 		{
 			if (featureTypeIdentifier == null)
@@ -492,7 +492,7 @@ namespace XamCore.CoreText {
 		}
 
 #if !XAMCORE_2_0
-		[Obsolete ("Deprecated")]
+		[Obsolete]
 		public CTFontDescriptor WithFeature (CTFontFeatureLetterCase.Selector featureSelector)
 		{
 			return WithFeature (FontFeatureGroup.LetterCase, (int) featureSelector);

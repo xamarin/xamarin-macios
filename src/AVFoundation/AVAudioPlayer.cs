@@ -28,7 +28,7 @@ using System;
 
 namespace XamCore.AVFoundation {
 #if !XAMCORE_2_0
-	[Advice ("Use AudioSettings instead")]
+	[Advice ("Use 'AudioSettings' instead.")]
 	public class AVAudioPlayerSettings {
 		NSDictionary dict;
 		
@@ -139,13 +139,13 @@ namespace XamCore.AVFoundation {
 		}
 
 #if !XAMCORE_2_0
-		[Obsolete ("This method had an invalid signature in MonoMac 1.0.3, use AVAudioPlayer.FromUrl instead")]
+		[Obsolete ("This method had an invalid signature in MonoMac 1.0.3, use 'AVAudioPlayer.FromUrl' instead.")]
 		public AVAudioPlayer (NSUrl url, NSError error) : this (url, IntPtr.Zero)
 		{
 			
 		}
 
-		[Obsolete ("This method had an invalid signature in MonoMac 1.0.3, use AVAudioPlayer.FromData instead")]
+		[Obsolete ("This method had an invalid signature in MonoMac 1.0.3, use 'AVAudioPlayer.FromData' instead.")]
 		public AVAudioPlayer (NSData data, NSError error) : this (data, IntPtr.Zero)
 		{
 			
@@ -158,7 +158,7 @@ namespace XamCore.AVFoundation {
 			}
 		}
 
-		[Advice ("This method was incorrectly named, use PlayAtTime instead")]
+		[Advice ("This method was incorrectly named, use 'PlayAtTime' instead.")]
 		public bool PlayAtTimetime (double time)
 		{
 			return PlayAtTime (time);

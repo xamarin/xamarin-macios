@@ -469,3 +469,9 @@
 ## Deprecated
 !missing-selector! PDFAnnotation::initWithDictionary:forPage: not bound
 
+# NetworkExtension
+## Will be removed in XAMCORE_4_0
+!unknown-field! NEFilterProviderRemediationMapRemediationButtonTexts bound
+!unknown-field! NEFilterProviderRemediationMapRemediationURLs bound
+!unknown-type! NEFilterProvider bound
+

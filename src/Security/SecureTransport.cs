@@ -11,7 +11,7 @@ namespace XamCore.Security {
 		Unknown = 0,
 		Ssl_3_0 = 2,
 #if !XAMCORE_2_0
-		[Obsolete ("Use Ssl_3_0")]
+		[Obsolete ("Use 'Ssl_3_0'.")]
 		Ssl3_0 = Ssl_3_0,
 #endif
 		Tls_1_0 = 4,

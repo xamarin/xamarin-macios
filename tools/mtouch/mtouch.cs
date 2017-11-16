@@ -627,7 +627,7 @@ namespace Xamarin.Bundler
 					// we're building with bitcode (even when bitcode is disabled, we still build with the
 					// bitcode marker, which makes the linker reject -u).
 					if (app.EnableProfiling) {
-						sw.WriteLine ("extern \"C\" { void mono_profiler_startup_log (); }");
+						sw.WriteLine ("extern \"C\" { void mono_profiler_init_log (); }");
 						sw.WriteLine ("typedef void (*xamarin_profiler_symbol_def)();");
 						sw.WriteLine ("extern xamarin_profiler_symbol_def xamarin_profiler_symbol;");
 						sw.WriteLine ("xamarin_profiler_symbol_def xamarin_profiler_symbol = NULL;");
@@ -637,7 +637,7 @@ namespace Xamarin.Bundler
 					sw.WriteLine ("{");
 
 					if (app.EnableProfiling)
-						sw.WriteLine ("\txamarin_profiler_symbol = mono_profiler_startup_log;");
+						sw.WriteLine ("\txamarin_profiler_symbol = mono_profiler_init_log;");
 
 					if (app.EnableLLVMOnlyBitCode)
 						sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_LLVMONLY);");
@@ -802,8 +802,13 @@ namespace Xamarin.Bundler
 		{
 			if (timestamp == null)
 				timestamp = DateTime.Now;
-			foreach (var filename in filenames)
-				new FileInfo (filename).LastWriteTime = timestamp.Value;
+			foreach (var filename in filenames) {
+				try {
+					new FileInfo (filename).LastWriteTime = timestamp.Value;
+				} catch (Exception e) {
+					ErrorHelper.Warning (128, "Could not touch the file '{0}': {1}", filename, e.Message);
+				}
+			}
 		}
 
 		public static void Touch (params string [] filenames)

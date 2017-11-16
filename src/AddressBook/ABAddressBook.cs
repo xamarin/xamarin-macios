@@ -216,7 +216,7 @@ namespace XamCore.AddressBook {
 				BlockLiteral block_handler;
 				block_handler = new BlockLiteral ();
 				block_ptr_handler = &block_handler;
-				block_handler.SetupBlock (static_completionHandler, onCompleted);
+				block_handler.SetupBlockUnsafe (static_completionHandler, onCompleted);
 
 				ABAddressBookRequestAccessWithCompletion (Handle, (void*) block_ptr_handler);
 				block_ptr_handler->CleanupBlock ();
