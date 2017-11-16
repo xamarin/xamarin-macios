@@ -3223,7 +3223,7 @@ namespace XamCore.MetalPerformanceShaders {
 		IntPtr GetRangesForUInt8Kernel ();
 
 		[Export ("lookupTableForUInt8Kernel")]
-		string Label { get; }IntPtr /* float* */ GetLookupTableForUInt8Kernel ();
+		IntPtr /* float* */ GetLookupTableForUInt8Kernel ();
 	}
 
 	interface IMPSNNPadding { }
