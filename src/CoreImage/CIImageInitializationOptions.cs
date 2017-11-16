@@ -34,30 +34,21 @@ using XamCore.CoreGraphics;
 
 namespace XamCore.CoreImage {
 
-	public class CIImageInitializationOptions : DictionaryContainer
+	public partial class CIImageInitializationOptions
 	{
 #if !COREBUILD
-		public CIImageInitializationOptions ()
-			: base (new NSMutableDictionary ())
-		{
-		}
-
-		public CIImageInitializationOptions (NSDictionary dictionary)
-			: base (dictionary)
-		{
-		}
-
 		public CGColorSpace ColorSpace {
 			get {
-				return GetNativeValue<CGColorSpace> (CIImage.CIImageColorSpaceKey);
+				return GetNativeValue<CGColorSpace> (CIImageInitializationOptionsKeys.ColorSpaceKey);
 			}
 			set {
-				SetNativeValue (CIImage.CIImageColorSpaceKey, value == null ? null : value);
+				SetNativeValue (CIImageInitializationOptionsKeys.ColorSpaceKey, value == null ? null : value);
 			}
 		}
 #endif
 	}
 
+	// Keeping 'CIImageInitializationOptionsWithMetadata' to avoid breaking change
 	public class CIImageInitializationOptionsWithMetadata : CIImageInitializationOptions
 	{
 #if !COREBUILD
@@ -68,18 +59,6 @@ namespace XamCore.CoreImage {
 		public CIImageInitializationOptionsWithMetadata (NSDictionary dictionary)
 			: base (dictionary)
 		{
-		}
-
-		public CGImageProperties Properties {
-			get {
-				var dict = GetNativeValue<NSDictionary> (CIImage.CIImagePropertiesKey);
-				if (dict == null)
-					return null;
-				return new CGImageProperties (dict);
-			}
-			set {
-				SetNativeValue (CIImage.CIImagePropertiesKey, value == null ? null : value.Dictionary, false);
-			}
 		}
 #endif
 	}

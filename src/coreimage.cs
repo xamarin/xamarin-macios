@@ -942,6 +942,14 @@ namespace XamCore.CoreImage {
 		[Since (7,0)]
 		[Field ("kCIInputExtentKey", "+CoreImage")]
 		NSString Extent  { get; }
+
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		[Field ("kCIInputDepthImageKey", "+CoreImage")]
+		NSString DepthImage { get; }
+
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		[Field ("kCIInputDisparityImageKey", "+CoreImage")]
+		NSString DisparityImage { get; }
 	}
 		
 	[Since (5,0)]
@@ -1261,6 +1269,54 @@ namespace XamCore.CoreImage {
 
 		[Export ("extent")]
 		CGRect Extent { get; }
+	}
+
+	[StrongDictionary ("CIImageInitializationOptionsKeys")]
+	interface CIImageInitializationOptions {
+		// Bug #60726: [Generator] Support INativeObject in StrongDictionary
+		// (https://bugzilla.xamarin.com/show_bug.cgi?id=60726)
+		// CGColorSpace ColorSpace { get; set; }
+
+		CoreGraphics.CGImageProperties Properties { get; set; }
+
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		bool ApplyOrientationProperty { get; set; }
+
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		bool NearestSampling { get; set; }
+
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		bool AuxiliaryDepth { get; set; }
+
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		bool AuxiliaryDisparity { get; set; }
+	}
+
+	[Internal]
+	[Static]
+	interface CIImageInitializationOptionsKeys {
+		[Field ("kCIImageColorSpace")]
+		NSString ColorSpaceKey { get; }
+
+		[MountainLion]
+		[Field ("kCIImageProperties")]
+		NSString PropertiesKey { get; }
+
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		[Field ("kCIImageNearestSampling")]
+		NSString NearestSamplingKey { get; }
+
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		[Field ("kCIImageApplyOrientationProperty")]
+		NSString ApplyOrientationPropertyKey { get; }
+
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		[Field ("kCIImageAuxiliaryDepth")]
+		NSString AuxiliaryDepthKey { get; }
+
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		[Field ("kCIImageAuxiliaryDisparity")]
+		NSString AuxiliaryDisparityKey { get; }
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -1691,13 +1747,6 @@ namespace XamCore.CoreImage {
 
 		[Export ("autoAdjustmentFiltersWithOptions:"), Internal]
 		NSArray _GetAutoAdjustmentFilters ([NullAllowed] NSDictionary opts);
-
-		[Field ("kCIImageColorSpace"), Internal]
-		NSString CIImageColorSpaceKey { get; }
-
-		[MountainLion]
-		[Field ("kCIImageProperties"), Internal]
-		NSString CIImagePropertiesKey { get; }
 
 		[Since (6,0)] // publicly documented in 7.0 but really available since 6.0
 		[Mac (10,12)]

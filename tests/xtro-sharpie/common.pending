@@ -65,14 +65,6 @@
 !missing-selector! CISampler::initWithImage:keysAndValues: not bound
 !missing-selector! +CISampler::samplerWithImage:keysAndValues: not bound
 
-## https://bugzilla.xamarin.com/show_bug.cgi?id=59296
-!missing-field! kCIImageApplyOrientationProperty not bound
-!missing-field! kCIImageAuxiliaryDepth not bound
-!missing-field! kCIImageAuxiliaryDisparity not bound
-!missing-field! kCIImageNearestSampling not bound
-!missing-field! kCIInputDepthImageKey not bound
-!missing-field! kCIInputDisparityImageKey not bound
-
 
 # Foundation
 
