@@ -65,26 +65,6 @@ namespace Introspection {
 			// Both reported in radar #21548819
 			//  NSUnknownKeyException [<CIDepthOfField 0x158586970> valueForUndefinedKey:]: this class is not key value coding-compliant for the key inputPoint2.
 			case "CIDepthOfField":
-			// NSUnknownKeyException [<CISunbeamsGenerator 0x1586d0810> valueForUndefinedKey:]: this class is not key value coding-compliant for the key inputCropAmount.
-			case "CISunbeamsGenerator":
-			case "CIAreaMinMaxRed": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-			case "CIAttributedTextImageGenerator": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-			case "CIBarcodeGenerator": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-			case "CIBicubicScaleTransform": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-			case "CIBlendWithBlueMask": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-			case "CIBlendWithRedMask": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-			case "CIBokehBlur": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-			case "CIColorCubesMixedWithMask": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-			case "CIColorCurves": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-			case "CIDepthBlurEffect": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-			case "CIDepthToDisparity": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-			case "CIDisparityToDepth": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-			case "CIEdgePreserveUpsampleFilter": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-			case "CILabDeltaE": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-			case "CIMorphologyGradient": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-			case "CIMorphologyMaximum": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-			case "CIMorphologyMinimum": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-			case "CITextImageGenerator": // https://bugzilla.xamarin.com/show_bug.cgi?id=57350
 				return true;
 			// FIXME: Remove if fixed.  Doesn't appear to exist in El Capitan.  Reported in radar #22099780
 //			case "CIMaskedVariableBlur":
@@ -121,6 +101,7 @@ namespace Introspection {
 		public void CheckManagedFilters ()
 		{
 			List<string> filters = new List<string> (CIFilter.FilterNamesInCategories (null));
+			var superFilters = new List<string> ();
 			var nspace = CIFilterType.Namespace;
 			var types = CIFilterType.Assembly.GetTypes ();
 			foreach (Type t in types) {
@@ -144,8 +125,14 @@ namespace Introspection {
 				// check base type - we might have our own base type or different names, so it's debug only (not failure)
 				var super = new Class (obj.Class.SuperClass).Name;
 				var bt = t.BaseType.Name;
-				if ((super != bt) && (bt == "CIFilter")) // check if we should (like Apple) use a non-default base type for filters
+				if ((super != bt) && (bt == "CIFilter")) { // check if we should (like Apple) use a non-default base type for filters
 					Console.WriteLine ("[WARN] {0}.SuperClass == {1} (native) and {2} managed", t.Name, super, bt);
+					if (!superFilters.Contains (super)) {
+						superFilters.Add (super);
+						Console.WriteLine ("[GENERATED] {0}", super);
+						GenerateBinding (CIFilter.FromName (super), Console.Out);
+					}
+				}
 #endif
 				int result = filters.RemoveAll (s => StringComparer.OrdinalIgnoreCase.Compare (t.Name, s) == 0);
 				Assert.That (result, Is.GreaterThan (0), t.Name);
@@ -206,7 +193,7 @@ namespace Introspection {
 				writer.WriteLine ();
 				var dict = attributes [k] as NSDictionary;
 				var type = dict [(NSString) "CIAttributeClass"];
-				writer.WriteLine ("\t[CoreImageProperty (\"{0}\")]", key);
+				writer.WriteLine ("\t[CoreImageFilterProperty (\"{0}\")]", key);
 
 				// by default we drop the "input" prefix, but keep the "output" prefix to avoid confusion
 				if (key.StartsWith ("input", StringComparison.Ordinal))
