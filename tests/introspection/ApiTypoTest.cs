@@ -107,6 +107,8 @@ namespace Introspection
 			"Bancaires", // french
 			"Bary",
 			"Batc",
+			"Behaviors",
+			"Bezeled",
 			"Bgra", // acrnym for Blue, Green, Red, Alpha
 			"Bim",
 			"Biquad",
@@ -125,6 +127,7 @@ namespace Introspection
 			"Cavlc",
 			"Cda", // acronym: Clinical Document Architecture
 			"Celp", // MPEG4ObjectID
+			"Centering",
 			"Characterteristic",
 			"Chapv",
 			"Chromaticities",
@@ -189,6 +192,7 @@ namespace Introspection
 			"Exp",
 			"Felica", // Japanese contactless RFID smart card system
 			"Femtowatts",
+			"Flavor",
 			"Flipside",
 			"Formati",
 			"Fov",
@@ -378,10 +382,12 @@ namespace Introspection
 			"Shadable",
 			"Sharegroup",
 			"Siemen",
+			"Signaling",
 			"simd",
 			"Sinh",
 			"Sint", // as in "Signed Integer"
 			"Simd",
+			"Sizable",
 			"Slerp",
 			"Slomo",
 			"Smpte",
