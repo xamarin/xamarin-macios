@@ -799,6 +799,8 @@ namespace Xamarin.Bundler {
 
 			BuildTarget.StaticRegistrar = new StaticRegistrar (BuildTarget);
 
+			BuildTarget.ValidateAssembliesBeforeLink ();
+
 			if (!no_executable) {
 				foreach (var nr in native_references) {
 					if (!native_libs.ContainsKey (nr))

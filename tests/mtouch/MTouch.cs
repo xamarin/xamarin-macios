@@ -3438,6 +3438,43 @@ public class HandlerTest
 			}
 		}
 
+		[Test]
+		[TestCase (true, MTouchLinker.DontLink, false)]
+		[TestCase (true, MTouchLinker.LinkAll, true)]
+		[TestCase (true, MTouchLinker.LinkSdk, true)]
+		[TestCase (false, MTouchLinker.DontLink, false)]
+		[TestCase (false, MTouchLinker.LinkAll, true)]
+		[TestCase (false, MTouchLinker.LinkSdk, true)]
+		public void MixedModeAssembliesCanNotBeLinked (bool nofastsim, MTouchLinker linker, bool builds_successfully)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var tmp = mtouch.CreateTemporaryDirectory ();
+				string libraryPath = Path.Combine (Configuration.SourceRoot, "tests", "common", "MixedClassLibrary.dll");
+
+				mtouch.CreateTemporaryApp (code: "public class TestApp { static void Main () { System.Console.WriteLine (typeof (MixedClassLibrary.Class1)); System.Console.WriteLine (typeof (ObjCRuntime.Runtime)); } }",
+										   extraArg: $"-r:Xamarin.iOS.dll -r:{StringUtils.Quote (libraryPath)}");
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.References = new string [] { libraryPath };
+				if (nofastsim)
+					mtouch.NoFastSim = nofastsim;
+				mtouch.Debug = true; // makes simlauncher possible (when nofastsim is false)
+
+				mtouch.Linker = linker;
+
+				if (builds_successfully) {
+					mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build sim");
+					mtouch.AssertErrorPattern (2014, "Unable to link assembly .* as it is mixed-mode.");
+					mtouch.AssertErrorCount (1);
+				}
+				else {
+					mtouch.AssertExecute (MTouchAction.BuildSim, "build sim");
+					mtouch.AssertErrorCount (0);
+				}
+
+				mtouch.AssertNoWarnings ();
+			}
+		}
+
 #region Helper functions
 		static void RunUnitTest (Profile profile, string code, string csproj_configuration = "", string [] csproj_references = null, string configuration = "Debug", string platform = "iPhoneSimulator", bool clean_simulator = true)
 		{
