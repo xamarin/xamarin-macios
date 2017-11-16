@@ -288,6 +288,11 @@ namespace Introspection {
 					goto default;
 				do_not_dispose.Add (obj);
 				break;
+			case "AppKit.NSTextInputContext":
+			case "MonoMac.AppKit.NSTextInputContext":
+				if (Mac.CheckSystemVersion (10, 13))
+					do_not_dispose.Add (obj);
+				break;
 			default:
 				base.Dispose (obj, type);
 				break;
