@@ -23,6 +23,9 @@ namespace Xamarin.Mac.Tests
 		[Test]
 		public void GetBoundingRect_SmokeTest ()
 		{
+			if (!PlatformHelper.CheckSystemVersion (10, 13))
+				return;
+
 			CGFont cgFont = CGFont.CreateWithFontName ("Arial");
 			ushort [] glyphs = new ushort [5];
 			for (int i = 0 ; i < 5 ; ++i)
@@ -40,6 +43,9 @@ namespace Xamarin.Mac.Tests
 		[Test]
 		public void GetBoundingRect_WithEmptyGlyphs ()
 		{
+			if (!PlatformHelper.CheckSystemVersion (10, 13))
+				return;
+
 			CGFont cgFont = CGFont.CreateWithFontName ("Arial");
 			ushort [] glyphs = new ushort [] {};
 
