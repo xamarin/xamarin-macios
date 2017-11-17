@@ -303,7 +303,6 @@ namespace Introspection
 			"Mult",
 			"Multipath",
 			"Multipeer",
-			"Musthold",
 			"Muxed",
 			"Nai",
 			"Nanograms",
@@ -595,7 +594,6 @@ namespace Introspection
 			"Succesfully",
 			"Supression",
 			"Targetand",
-			"Timestampe", // Existing binding so we can't just remove it.
 			"Tkip",
 			"Tsn",
 			"Tunesi",
@@ -750,11 +748,13 @@ namespace Introspection
 			"Attributest",
 			"Failwith",
 			"Imageimage",
+			"Musthold",
 			"Pathpath",
 			"Rangefor",
 			"Failwith",
 			"Tearm",
 			"Theevent",
+			"Timestampe", // Existing binding so we can't just remove it.
 			"Toplevel",
 			"Tripple",
 #endif
