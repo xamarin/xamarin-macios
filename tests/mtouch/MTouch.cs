@@ -1015,6 +1015,69 @@ public class B : A {}
 		}
 
 		[Test]
+		public void MT0095_SharedCode ()
+		{
+			using (var exttool = new MTouchTool ()) {
+				exttool.Profile = Profile.iOS;
+				exttool.CreateTemporaryCacheDirectory ();
+				exttool.Linker = MTouchLinker.LinkAll;
+
+				exttool.CreateTemporaryServiceExtension ();
+				exttool.MSym = true;
+				exttool.Debug = false;
+				exttool.AssertExecute (MTouchAction.BuildDev, "build extension");
+
+				using (var apptool = new MTouchTool ()) {
+					apptool.Profile = Profile.iOS;
+					apptool.MSym = true;
+					apptool.Debug = false;
+					apptool.CreateTemporaryCacheDirectory ();
+					apptool.CreateTemporaryApp ();
+					apptool.AppExtensions.Add (exttool);
+					apptool.Linker = MTouchLinker.LinkAll;
+					apptool.AssertExecute (MTouchAction.BuildDev, "build app");
+					
+					Assert.IsTrue(Directory.Exists(Path.Combine(apptool.Cache, "Build", "Msym")), "App Msym dir");
+					Assert.IsFalse(Directory.Exists(Path.Combine(exttool.Cache, "Build", "Msym")), "Extenson Msym dir");
+					exttool.AssertNoWarnings();
+					apptool.AssertNoWarnings();
+				}
+			}
+		}
+		
+		[Test]
+		public void MT0095_NotSharedCode ()
+		{
+			using (var exttool = new MTouchTool ()) {
+				exttool.Profile = Profile.iOS;
+				exttool.CreateTemporaryCacheDirectory ();
+				exttool.Linker = MTouchLinker.LinkAll;
+				exttool.CustomArguments = new string [] { "--nodevcodeshare" };
+				exttool.CreateTemporaryServiceExtension ();
+				exttool.MSym = true;
+				exttool.Debug = false;
+				exttool.AssertExecute (MTouchAction.BuildDev, "build extension");
+
+				using (var apptool = new MTouchTool ()) {
+					apptool.Profile = Profile.iOS;
+					apptool.MSym = true;
+					apptool.Debug = false;
+					apptool.CreateTemporaryCacheDirectory ();
+					apptool.CreateTemporaryApp ();
+					apptool.AppExtensions.Add (exttool);
+					apptool.Linker = MTouchLinker.LinkAll;
+					apptool.CustomArguments = new string [] { "--nodevcodeshare" };
+					apptool.AssertExecute (MTouchAction.BuildDev, "build app");
+					
+					Assert.IsTrue(Directory.Exists(Path.Combine(apptool.Cache, "Build", "Msym")), "App Msym dir");
+					Assert.IsTrue(Directory.Exists(Path.Combine(exttool.Cache, "Build", "Msym")), "Extenson Msym dir");
+					exttool.AssertNoWarnings();
+					apptool.AssertNoWarnings();
+				}
+			}
+		}
+		
+		[Test]
 		public void MT0096 ()
 		{
 			using (var mtouch = new MTouchTool ()) {
