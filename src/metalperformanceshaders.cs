@@ -32,7 +32,7 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("initWithDevice:")]
 		IntPtr Constructor (IMTLDevice device);
 
-		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
+		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -761,7 +761,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("encodeToCommandBuffer:sourceImage:")]
-		MPSImage Encode (IMTLCommandBuffer commandBuffer, MPSImage sourceImage);
+		MPSImage EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSImage sourceImage);
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("kernelWidth")]
@@ -1002,7 +1002,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("encodeToCommandBuffer:sourceImage:destinationImage:state:")]
-		void Encode (IMTLCommandBuffer commandBuffer, MPSImage sourceImage, MPSImage destinationImage, out MPSCnnConvolutionState state);
+		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSImage sourceImage, MPSImage destinationImage, out MPSCnnConvolutionState state);
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("dilationRateX")]
@@ -1454,7 +1454,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Static]
 		[Export ("rowBytesFromColumns:dataType:")]
-		nuint GetRowBytes (nuint columns, MPSDataType dataType);
+		nuint GetRowBytesFromColumns (nuint columns, MPSDataType dataType);
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("matrices")]
@@ -1615,6 +1615,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface MPSVectorDescriptor {
 		[Export ("length")]
 		nuint Length { get; set; }
@@ -1630,11 +1631,11 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Static]
 		[Export ("vectorDescriptorWithLength:dataType:")]
-		MPSVectorDescriptor GetVectorDescriptor (nuint length, MPSDataType dataType);
+		MPSVectorDescriptor Create (nuint length, MPSDataType dataType);
 
 		[Static]
 		[Export ("vectorDescriptorWithLength:vectors:vectorBytes:dataType:")]
-		MPSVectorDescriptor GetVectorDescriptor (nuint length, nuint vectors, nuint vectorBytes, MPSDataType dataType);
+		MPSVectorDescriptor Create (nuint length, nuint vectors, nuint vectorBytes, MPSDataType dataType);
 
 		[Static]
 		[Export ("vectorBytesForLength:dataType:")]
@@ -1708,7 +1709,7 @@ namespace XamCore.MetalPerformanceShaders {
 		IntPtr Constructor (IMTLDevice device, nuint rows, nuint columns);
 
 		[Export ("encodeToCommandBuffer:inputMatrix:inputVector:resultVector:")]
-		void Encode (IMTLCommandBuffer commandBuffer, MPSMatrix inputMatrix, MPSVector inputVector, MPSVector resultVector);
+		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix inputMatrix, MPSVector inputVector, MPSVector resultVector);
 
 		// inlining ctor from base class
 		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -1729,7 +1730,7 @@ namespace XamCore.MetalPerformanceShaders {
 		IntPtr Constructor (IMTLDevice device, bool right, bool upper, bool transpose, bool unit, nuint order, nuint numberOfRightHandSides, double alpha);
 
 		[Export ("encodeToCommandBuffer:sourceMatrix:rightHandSideMatrix:solutionMatrix:")]
-		void Encode (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSMatrix rightHandSideMatrix, MPSMatrix solutionMatrix);
+		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSMatrix rightHandSideMatrix, MPSMatrix solutionMatrix);
 
 		// inlining ctor from base class
 		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -1750,7 +1751,7 @@ namespace XamCore.MetalPerformanceShaders {
 		IntPtr Constructor (IMTLDevice device, bool transpose, nuint order, nuint numberOfRightHandSides);
 
 		[Export ("encodeToCommandBuffer:sourceMatrix:rightHandSideMatrix:pivotIndices:solutionMatrix:")]
-		void Encode (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSMatrix rightHandSideMatrix, MPSMatrix pivotIndices, MPSMatrix solutionMatrix);
+		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSMatrix rightHandSideMatrix, MPSMatrix pivotIndices, MPSMatrix solutionMatrix);
 
 		// inlining ctor from base class
 		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -1771,7 +1772,7 @@ namespace XamCore.MetalPerformanceShaders {
 		IntPtr Constructor (IMTLDevice device, bool upper, nuint order, nuint numberOfRightHandSides);
 
 		[Export ("encodeToCommandBuffer:sourceMatrix:rightHandSideMatrix:solutionMatrix:")]
-		void Encode (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSMatrix rightHandSideMatrix, MPSMatrix solutionMatrix);
+		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSMatrix rightHandSideMatrix, MPSMatrix solutionMatrix);
 
 		// inlining ctor from base class
 		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -1792,7 +1793,7 @@ namespace XamCore.MetalPerformanceShaders {
 		IntPtr Constructor (IMTLDevice device, nuint rows, nuint columns);
 
 		[Export ("encodeToCommandBuffer:sourceMatrix:resultMatrix:pivotIndices:status:")]
-		void Encode (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSMatrix resultMatrix, MPSMatrix pivotIndices, [NullAllowed] IMTLBuffer status);
+		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSMatrix resultMatrix, MPSMatrix pivotIndices, [NullAllowed] IMTLBuffer status);
 
 		// inlining ctor from base class
 		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -1813,7 +1814,7 @@ namespace XamCore.MetalPerformanceShaders {
 		IntPtr Constructor (IMTLDevice device, bool lower, nuint order);
 
 		[Export ("encodeToCommandBuffer:sourceMatrix:resultMatrix:status:")]
-		void Encode (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSMatrix resultMatrix, [NullAllowed] IMTLBuffer status);
+		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSMatrix resultMatrix, [NullAllowed] IMTLBuffer status);
 
 		// inlining ctor from base class
 		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -1867,7 +1868,7 @@ namespace XamCore.MetalPerformanceShaders {
 		bool DestinationsAreTransposed { get; }
 
 		[Export ("encodeToCommandBuffer:copyDescriptor:")]
-		void Encode (IMTLCommandBuffer cmdBuf, MPSMatrixCopyDescriptor copyDescriptor);
+		void EncodeToCommandBuffer (IMTLCommandBuffer cmdBuf, MPSMatrixCopyDescriptor copyDescriptor);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
@@ -1875,6 +1876,7 @@ namespace XamCore.MetalPerformanceShaders {
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof(MPSKernel))]
 	interface MPSImageCopyToMatrix {
 		[Export ("destinationMatrixOrigin", ArgumentSemantic.Assign)]
@@ -1895,7 +1897,7 @@ namespace XamCore.MetalPerformanceShaders {
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("encodeToCommandBuffer:sourceImage:destinationMatrix:")]
-		void Encode (IMTLCommandBuffer commandBuffer, MPSImage sourceImage, MPSMatrix destinationMatrix);
+		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSImage sourceImage, MPSMatrix destinationMatrix);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -1913,11 +1915,12 @@ namespace XamCore.MetalPerformanceShaders {
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("encodeToCommandBuffer:sourceTexture:regions:numberOfRegions:keypointCountBuffer:keypointCountBufferOffset:keypointDataBuffer:keypointDataBufferOffset:")]
-		void Encode (IMTLCommandBuffer commandBuffer, IMTLTexture source, MTLRegion regions, nuint numberOfRegions, IMTLBuffer keypointCountBuffer, nuint keypointCountBufferOffset, IMTLBuffer keypointDataBuffer, nuint keypointDataBufferOffset);
+		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, IMTLTexture source, MTLRegion regions, nuint numberOfRegions, IMTLBuffer keypointCountBuffer, nuint keypointCountBufferOffset, IMTLBuffer keypointDataBuffer, nuint keypointDataBufferOffset);
 	}
 	
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSBinaryImageKernel))]
+	[DisableDefaultCtor]
 	interface MPSImageArithmetic {
 		[Export ("primaryScale")]
 		float PrimaryScale { get; set; }
@@ -1943,6 +1946,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSImageArithmetic))]
+	[DisableDefaultCtor]
 	interface MPSImageAdd {
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
@@ -1951,6 +1955,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSImageArithmetic))]
+	[DisableDefaultCtor]
 	interface MPSImageSubtract {
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
@@ -1959,6 +1964,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSImageArithmetic))]
+	[DisableDefaultCtor]
 	interface MPSImageMultiply {
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
@@ -1967,6 +1973,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSImageArithmetic))]
+	[DisableDefaultCtor]
 	interface MPSImageDivide {
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
@@ -1975,6 +1982,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSUnaryImageKernel))]
+	[DisableDefaultCtor]
 	interface MPSImageScale {
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
@@ -1990,6 +1998,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSImageScale))]
+	[DisableDefaultCtor]
 	interface MPSImageBilinearScale {
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
@@ -2002,6 +2011,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSUnaryImageKernel))]
+	[DisableDefaultCtor]
 	interface MPSImageStatisticsMinAndMax {
 		[Export ("clipRectSource", ArgumentSemantic.Assign)]
 		MTLRegion ClipRectSource { get; set; }
@@ -2017,6 +2027,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSUnaryImageKernel))]
+	[DisableDefaultCtor]
 	interface MPSImageStatisticsMeanAndVariance {
 		[Export ("clipRectSource", ArgumentSemantic.Assign)]
 		MTLRegion ClipRectSource { get; set; }
@@ -2032,6 +2043,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSUnaryImageKernel))]
+	[DisableDefaultCtor]
 	interface MPSImageStatisticsMean {
 		[Export ("clipRectSource", ArgumentSemantic.Assign)]
 		MTLRegion ClipRectSource { get; set; }
@@ -2047,6 +2059,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface MPSNNDefaultPadding : MPSNNPadding {
 		[Static]
 		[Export ("paddingWithMethod:")]
@@ -2059,6 +2072,7 @@ namespace XamCore.MetalPerformanceShaders {
 	
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSKernel), Name = "MPSCNNBinaryKernel")]
+	[DisableDefaultCtor]
 	interface MPSCnnBinaryKernel {
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
@@ -2114,7 +2128,7 @@ namespace XamCore.MetalPerformanceShaders {
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("encodeToCommandBuffer:primaryImage:secondaryImage:destinationImage:")]
-		void Encode (IMTLCommandBuffer commandBuffer, MPSImage primaryImage, MPSImage secondaryImage, MPSImage destinationImage);
+		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSImage primaryImage, MPSImage secondaryImage, MPSImage destinationImage);
 
 		[Export ("encodeToCommandBuffer:primaryImage:secondaryImage:")]
 		MPSImage EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSImage primaryImage, MPSImage secondaryImage);
@@ -2137,6 +2151,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnNeuron), Name = "MPSCNNNeuronHardSigmoid")]
+	[DisableDefaultCtor]
 	interface MPSCnnNeuronHardSigmoid {
 		[Export ("a")]
 		float A { get; }
@@ -2151,6 +2166,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnNeuron), Name = "MPSCNNNeuronSoftPlus")]
+	[DisableDefaultCtor]
 	interface MPSCnnNeuronSoftPlus {
 		[Export ("a")]
 		float A { get; }
@@ -2165,6 +2181,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnNeuron), Name = "MPSCNNNeuronSoftSign")]
+	[DisableDefaultCtor]
 	interface MPSCnnNeuronSoftSign {
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
@@ -2173,7 +2190,8 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnNeuron), Name = "MPSCNNNeuronELU")]
-	interface MPSCnnNeuronELU {
+	[DisableDefaultCtor]
+	interface MPSCnnNeuronElu {
 		[Export ("a")]
 		float A { get; }
 
@@ -2184,7 +2202,8 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnNeuron), Name = "MPSCNNNeuronReLUN")]
-	interface MPSCnnNeuronReLUN {
+	[DisableDefaultCtor]
+	interface MPSCnnNeuronReLun {
 		[Export ("a")]
 		float A { get; }
 
@@ -2198,6 +2217,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnConvolutionDescriptor), Name = "MPSCNNSubPixelConvolutionDescriptor")]
+	[DisableDefaultCtor]
 	interface MPSCnnSubPixelConvolutionDescriptor {
 		[Export ("subPixelScaleFactor")]
 		nuint SubPixelScaleFactor { get; set; }
@@ -2205,6 +2225,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnConvolutionDescriptor), Name = "MPSCNNDepthWiseConvolutionDescriptor")]
+	[DisableDefaultCtor]
 	interface MPSCnnDepthWiseConvolutionDescriptor {
 		[Export ("channelMultiplier")]
 		nuint ChannelMultiplier { get; }
@@ -2212,6 +2233,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSState), Name = "MPSCNNConvolutionState")]
+	[DisableDefaultCtor]
 	interface MPSCnnConvolutionState : MPSImageSizeEncodingState {
 		[Export ("kernelWidth")]
 		nuint KernelWidth { get; }
@@ -2250,7 +2272,7 @@ namespace XamCore.MetalPerformanceShaders {
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("encodeToCommandBuffer:sourceImage:convolutionState:")]
-		MPSImage Encode (IMTLCommandBuffer commandBuffer, MPSImage sourceImage, [NullAllowed]MPSCnnConvolutionState convolutionState);
+		MPSImage EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSImage sourceImage, [NullAllowed]MPSCnnConvolutionState convolutionState);
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -2744,17 +2766,17 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnNeuronNode), Name = "MPSCNNNeuronReLUNNode")]
-	interface MPSCnnNeuronReLUNNode {
+	interface MPSCnnNeuronReLunNode {
 		[Static]
 		[Export ("nodeWithSource:a:b:")]
-		MPSCnnNeuronReLUNNode Create (MPSNNImageNode sourceNode, float a, float b);
+		MPSCnnNeuronReLunNode Create (MPSNNImageNode sourceNode, float a, float b);
 
 		[Export ("initWithSource:a:b:")]
 		IntPtr Constructor (MPSNNImageNode sourceNode, float a, float b);
 
 		[Static]
 		[Export ("nodeWithSource:")]
-		MPSCnnNeuronReLUNNode Create (MPSNNImageNode sourceNode);
+		MPSCnnNeuronReLunNode Create (MPSNNImageNode sourceNode);
 
 		[Export ("initWithSource:")]
 		IntPtr Constructor (MPSNNImageNode sourceNode);
@@ -3166,10 +3188,10 @@ namespace XamCore.MetalPerformanceShaders {
 		IMPSImageAllocator DestinationImageAllocator { get; set; }
 
 		[Export ("encodeToCommandBuffer:sourceImages:sourceStates:intermediateImages:destinationStates:")]
-		MPSImage Encode (IMTLCommandBuffer commandBuffer, MPSImage[] sourceImages, [NullAllowed] MPSState[] sourceStates, [NullAllowed] NSMutableArray<MPSImage> intermediateImages, [NullAllowed] NSMutableArray<MPSState> destinationStates);
+		MPSImage EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSImage[] sourceImages, [NullAllowed] MPSState[] sourceStates, [NullAllowed] NSMutableArray<MPSImage> intermediateImages, [NullAllowed] NSMutableArray<MPSState> destinationStates);
 
 		[Export ("encodeToCommandBuffer:sourceImages:")]
-		MPSImage Encode (IMTLCommandBuffer commandBuffer, MPSImage[] sourceImages);
+		MPSImage EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSImage[] sourceImages);
 
 		[Async, Export ("executeAsyncWithSourceImages:completionHandler:")]
 		MPSImage Execute (MPSImage[] sourceImages, Action<MPSImage, NSError> handler);
@@ -3268,6 +3290,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNNStateNode), Name = "MPSCNNConvolutionStateNode")]
+	[DisableDefaultCtor]
 	interface MPSCnnConvolutionStateNode {
 	}
 

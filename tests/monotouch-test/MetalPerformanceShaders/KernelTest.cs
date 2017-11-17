@@ -15,15 +15,13 @@ using MonoTouch.MetalPerformanceShaders;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.MetalPerformanceShaders
-{
+namespace MonoTouchFixtures.MetalPerformanceShaders {
 
 	[TestFixture]
-	public class KernelTest
-	{
+	public class KernelTest {
 
 		[Test]
-		public void RectNoClip()
+		public void RectNoClip ()
 		{
 #if !MONOMAC
 			TestRuntime.AssertXcodeVersion (7,0);
@@ -35,7 +33,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 			// some older hardware won't have a default
 			if (d == null)
 				Assert.Inconclusive ("Metal is not supported");
-
+			
 			var r = MPSKernel.RectNoClip;
 			var o = r.Origin;
 			Assert.That (o.X, Is.EqualTo (0), "X");
@@ -48,7 +46,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 		}
 
 		[Test]
-		public void MPSKernelCopyTest()
+		public void MPSKernelCopyTest ()
 		{
 #if !MONOMAC
 			TestRuntime.AssertDevice ();
@@ -76,7 +74,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 		}
 
 		[Test]
-		public void MPSRnnMatrixInferenceLayerTest()
+		public void MPSRnnMatrixInferenceLayerTest ()
 		{
 #if !MONOMAC
 			TestRuntime.AssertDevice ();
