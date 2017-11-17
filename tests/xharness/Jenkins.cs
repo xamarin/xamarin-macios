@@ -2579,6 +2579,12 @@ function oninitialload ()
 					// parallel execution for these tests.
 					return false;
 				}
+				if (BCLTest) {
+					// We run the BCL tests in multiple flavors (Full/Modern),
+					// and the BCL tests are not written to support parallel execution,
+					// so disable parallel execution for these tests.
+					return false;
+				}
 
 				return base.SupportsParallelExecution;
 			}
