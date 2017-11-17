@@ -1983,8 +1983,8 @@ namespace XamCore.AppKit {
 	}
 
 	public enum NSOpenGLPixelFormatAttribute : uint_compat_int { // uint32_t NSOpenGLPixelFormatAttribute
-		AllRenderers = 1,
-		DoubleBuffer = 5,
+		AllRenderers       =   1,
+		DoubleBuffer       =   5,
 #if !XAMCORE_4_0
 		[Lion] TrippleBuffer = 3,
 #else

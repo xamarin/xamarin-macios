@@ -310,7 +310,7 @@ namespace XamCore.CoreGraphics {
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		extern static void CGEventSetTimestamp (IntPtr handle, ulong timeStampp);
-
+		
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'Timestamp' instead.")]
 		public ulong Timestampe {
