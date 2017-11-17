@@ -31,7 +31,8 @@ namespace Introspection
 		public override string GetTypo (string txt)
 		{
 			var checkRange = new NSRange (0, txt.Length);
-			var typoRange = checker.CheckSpelling (txt, 0);
+			nint wordCount;
+			var typoRange = checker.CheckSpelling (txt, 0, "en_US", false, 0, out wordCount);
 			if (typoRange.Length == 0)
 				return String.Empty;
 			return txt.Substring ((int)typoRange.Location, (int)typoRange.Length);

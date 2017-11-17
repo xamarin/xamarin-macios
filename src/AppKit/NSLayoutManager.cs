@@ -5,7 +5,8 @@ using XamCore.Foundation;
 using XamCore.CoreGraphics;
 
 namespace XamCore.AppKit {
-	partial class NSLayoutManager {
+	partial class NSLayoutManager
+	{
 #if !XAMCORE_2_0
 		public uint GlyphAtIndex (nint glyphIndex, ref bool isValidIndex)
 		{
@@ -29,7 +30,7 @@ namespace XamCore.AppKit {
 			var returnArray = new CGRect [rectCount];
 
 			unsafe {
-				float *ptr = (float*) retHandle;
+				float* ptr = (float*) retHandle;
 				for (nuint i = 0; i < rectCount; ++i) {
 					returnArray [i] = new CGRect (ptr [0], ptr [1], ptr [2], ptr [3]);
 					ptr += 4;
@@ -37,5 +38,13 @@ namespace XamCore.AppKit {
 			}
 			return returnArray;
 		}
+
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'GetIntAttribute' instead.")]
+		public virtual nint IntAttributeforGlyphAtIndex (nint attributeTag, nint glyphIndex)
+		{
+			return GetIntAttribute (attributeTag, glyphIndex);
+		}
+#endif
 	}
 }

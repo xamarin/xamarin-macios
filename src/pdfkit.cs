@@ -917,11 +917,19 @@ namespace XamCore.PdfKit {
 		[Export ("paths")]
 		NSBezierPath [] Paths { get; }
 
+#if !XAMCORE_4_0
 		[Export ("addBezierPath:")]
 		void AddBezierPathpath (NSBezierPath path);
 
 		[Export ("removeBezierPath:")]
 		void RemoveBezierPathpath (NSBezierPath path);
+#else
+		[Export ("addBezierPath:")]
+		void AddBezierPath (NSBezierPath path);
+
+		[Export ("removeBezierPath:")]
+		void RemoveBezierPath (NSBezierPath path);
+#endif
 	}
 
 	[NoiOS]

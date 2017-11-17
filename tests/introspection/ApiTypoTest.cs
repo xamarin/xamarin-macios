@@ -83,6 +83,7 @@ namespace Introspection
 			"Adjustmentfor",
 			"Aifc",
 			"Aiff",
+			"Aio",
 			"Alg", // short for Algorithm
 			"Amete",
 			"Amr",
@@ -99,9 +100,11 @@ namespace Introspection
 			"Automapping",
 			"Automounted",
 			"Autoredirect",
+			"Autospace",
 			"Avci", // file type
 			"Aliasable",
 			"Arcball",
+			"Avg",
 			"Backface",
 			"Bancaire", // french
 			"Bancaires", // french
@@ -132,6 +135,7 @@ namespace Introspection
 			"Cinepak",
 			"Clearcoat",
 			"Cnn", // Convolutional Neural Network
+			"Cns",
 			"Colos",
 			"Commerical",
 			"Composable",
@@ -160,6 +164,7 @@ namespace Introspection
 			"dlerror",
 			"Dlfcn",
 			"dlopen",
+			"Dls",
 			"Dlsym",
 			"dlsym",
 			"Dng",
@@ -194,6 +199,7 @@ namespace Introspection
 			"Fov",
 			"Framebuffer",
 			"Framesetter",
+			"Froms", // NSMetadataItemWhereFromsKey
 			"Freq",
 			"Ftps",
 			"Func",
@@ -202,9 +208,11 @@ namespace Introspection
 			"Geocoder",
 			"Gigapascals",
 			"Gpp",
+			"Gps",
 			"Gpu",	// acronym for Graphics Processing Unit
 			"Grbg", // acronym for Green-Red-Blue-Green
 			"Greeking",
+			"Hardlink",
 			"Hdmi",
 			"Hdr",
 			"Hectopascals",
@@ -230,7 +238,9 @@ namespace Introspection
 			"Indoorrun",
 			"Indoorcycle",
 			"Inklist",
+			"Indeterm",
 			"Indoorwalk",
+			"Inode",
 			"Inser",
 			"Interac",
 			"Interframe",
@@ -293,6 +303,7 @@ namespace Introspection
 			"Mult",
 			"Multipath",
 			"Multipeer",
+			"Musthold",
 			"Muxed",
 			"Nai",
 			"Nanograms",
@@ -305,6 +316,7 @@ namespace Introspection
 			"Ntsc",
 			"nuint",
 			"Ndef",
+			"Nop",
 			"Numbernumber",
 			"Nyquist",
 			"Oaep", // Optimal asymmetric encryption padding
@@ -342,6 +354,7 @@ namespace Introspection
 			"Preds", // short for Predicates
 			"Prerolls",
 			"Preseti",
+			"Prev",
 			"Propogate",
 			"Psec",
 			"Psm", // Protocol/Service Multiplexer
@@ -353,6 +366,7 @@ namespace Introspection
 			"Reacquirer",
 			"Reinvitation",
 			"Reinvite",
+			"Rel",
 			"Reprandial",
 			"Replayable",
 			"Requestwith",
@@ -405,6 +419,8 @@ namespace Introspection
 			"Submesh",
 			"Submeshes",
 			"Subpixel",
+			"Subresource",
+			"Subresources",
 			"Subsec",
 			"Suica", // Japanese contactless smart card type
 			"Superentity",
@@ -449,6 +465,7 @@ namespace Introspection
 			"Untrash",
 			"Utf",
 			"Upce",
+			"Uri",
 			"Uti",
 			"Varispeed",
 			"Vergence",
@@ -578,6 +595,7 @@ namespace Introspection
 			"Succesfully",
 			"Supression",
 			"Targetand",
+			"Timestampe", // Existing binding so we can't just remove it.
 			"Tkip",
 			"Tsn",
 			"Tunesi",
@@ -589,6 +607,7 @@ namespace Introspection
 			"Usedby",
 			"Viewwrite",
 			"Wep",
+			"Wlan",
 			"Wme",
 			"Writeln",
 			"Xattr",
@@ -724,6 +743,20 @@ namespace Introspection
 			"Ycbcr",
 			"Ycrcba",
 #endif
+#endif
+#if !XAMCORE_4_0
+			"Actionfrom",
+			"Attributefor",
+			"Attributest",
+			"Failwith",
+			"Imageimage",
+			"Pathpath",
+			"Rangefor",
+			"Failwith",
+			"Tearm",
+			"Theevent",
+			"Toplevel",
+			"Tripple",
 #endif
 		};
 

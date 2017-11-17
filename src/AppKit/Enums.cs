@@ -1223,7 +1223,11 @@ namespace XamCore.AppKit {
 
 	// NSStackView.h:typedef float NSStackViewVisibilityPriority
 	public enum NSStackViewVisibilityPriority : int {
+#if !XAMCORE_4_0
 		Musthold = 1000,
+#else
+		MustHold = 1000,
+#endif
 		DetachOnlyIfNecessary = 900,
 		NotVisible = 0
 	}
@@ -1979,9 +1983,13 @@ namespace XamCore.AppKit {
 	}
 
 	public enum NSOpenGLPixelFormatAttribute : uint_compat_int { // uint32_t NSOpenGLPixelFormatAttribute
-		AllRenderers       =   1,
-		DoubleBuffer       =   5,
+		AllRenderers = 1,
+		DoubleBuffer = 5,
+#if !XAMCORE_4_0
 		[Lion] TrippleBuffer = 3,
+#else
+		[Lion] TripleBuffer = 3,
+#endif
 		Stereo             =   6,
 		AuxBuffers         =   7,
 		ColorSize          =   8,
