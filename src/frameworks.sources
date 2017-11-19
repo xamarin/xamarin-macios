@@ -1304,6 +1304,7 @@ STOREKIT_CORE_SOURCES = \
 
 STOREKIT_SOURCES = \
 	StoreKit/NativeMethods.cs \
+	StoreKit/SKCloudServiceSetupOptions.cs \
 	StoreKit/SKPayment.cs \
 	StoreKit/SKPaymentTransactionObserver.cs \
 

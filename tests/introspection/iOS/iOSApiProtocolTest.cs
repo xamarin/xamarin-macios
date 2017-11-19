@@ -220,6 +220,7 @@ namespace Introspection {
 					return true;
 				// Xcode 9.2 undocumented conformance (like due to new base type)
 				case "HMHomeAccessControl":
+				case "HMAccessControl":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -368,6 +369,7 @@ namespace Introspection {
 					return true;
 				// Xcode 9.2 undocumented conformance (like due to new base type)
 				case "HMHomeAccessControl":
+				case "HMAccessControl":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":

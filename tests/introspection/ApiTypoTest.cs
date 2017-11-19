@@ -218,7 +218,7 @@ namespace Introspection
 			"Heif", // High Efficiency Image File Format
 			"Hfp",
 			"Hipass",
-			"Hlg",
+			"Hlg", // Hybrid Log-Gamma
 			"Hls",
 			"Hoa",
 			"Hrtf", // acronym used in AUSpatializationAlgorithm
@@ -270,6 +270,7 @@ namespace Introspection
 			"Lod",
 			"Lopass",
 			"Lowlevel",
+			"Lun",
 			"Mapbuffer",
 			"Matchingcoalesce",
 			"Megaampere",

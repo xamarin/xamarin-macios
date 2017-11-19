@@ -1331,7 +1331,7 @@ namespace XamCore.HomeKit {
 
 	[iOS (9,0)]
 	[TV (10,0)]
-	[BaseType (typeof (NSObject))]
+	[BaseType (typeof (HMAccessControl))]
 	[DisableDefaultCtor]
 	interface HMHomeAccessControl {
 		[Export ("administrator")]
@@ -1748,4 +1748,13 @@ namespace XamCore.HomeKit {
 		[Export ("offset", ArgumentSemantic.Strong)]
 		NSDateComponents Offset { get; set; }
 	}
+
+	[Watch (4,2), TV (11,2), iOS (11,2)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface HMAccessControl {
+
+	}
+
+
 }

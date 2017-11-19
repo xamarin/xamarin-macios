@@ -546,7 +546,11 @@ namespace XamCore.StoreKit {
 	interface SKCloudServiceSetupOptions
 	{
 		// Headers comment: Action for setup entry point (of type SKCloudServiceSetupAction).
-		SKCloudServiceSetupAction Action { get; set; }
+		// FIXME: Once https://bugzilla.xamarin.com/show_bug.cgi?id=57870 is fixed we should have a wrapper on a new property
+		// `SKCloudServiceSetupAction Action { get; set; }` and avoid manual code.
+		[Internal]
+		[Export ("ActionKey")]
+		NSString _Action { get; set; }
 
 		// Headers comment: Identifier of the iTunes Store item the user is trying to access which requires cloud service setup (NSNumber).
 		nint ITunesItemIdentifier { get; set; }

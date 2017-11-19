@@ -2615,7 +2615,7 @@ namespace XamCore.CoreImage {
 		CIVector Extent { get; set; }
 	}
 
-	[CoreImageFilter]
+	[CoreImageFilter (StringCtorVisibility = MethodAttributes.Public)]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIAreaMaximum {
@@ -3723,11 +3723,8 @@ namespace XamCore.CoreImage {
 
 	[CoreImageFilter]
 	[iOS (8,3)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CILinearBlur))]
 	interface CIMotionBlur {
-
-		[CoreImageFilterProperty ("inputRadius")]
-		float Radius { get; set; }
 
 		[CoreImageFilterProperty ("inputAngle")]
 		float Angle { get; set; }
@@ -4696,31 +4693,35 @@ namespace XamCore.CoreImage {
 	interface CIXRay {
 	}
 
-#if false // Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIAreaMaximum))]
 	interface CIAreaMinMaxRed {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputExtent")]
-		//CIVector Extent { get; set; }
+		[CoreImageFilterProperty ("inputExtent")]
+		CIVector Extent { get; set; }
+	}
+
+	[CoreImageFilter]
+	[Abstract]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIImageGenerator {
+		[CoreImageFilterProperty ("inputScaleFactor")]
+		float ScaleFactor { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIImageGenerator))]
 	interface CIAttributedTextImageGenerator {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputText")]
-		//NSAttributedString Text { get; set; }
-
-		//[CoreImageProperty ("inputScaleFactor")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float ScaleFactor { get; set; }
+		[CoreImageFilterProperty ("inputText")]
+		NSAttributedString Text { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -4729,70 +4730,75 @@ namespace XamCore.CoreImage {
 	[TV (11,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIBarcodeGenerator {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputBarcodeDescriptor")]
-		//CIBarcodeDescriptor BarcodeDescriptor { get; set; }
+		[CoreImageFilterProperty ("inputBarcodeDescriptor")]
+		CIBarcodeDescriptor BarcodeDescriptor { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
+	// Maybe 'typeof (CIScaleTransform)' (shared 'Scale' and 'AspectRatio' property).
+	// It's possible to add ours but it can bite us back in the future if Apple introduce the same with different properties.
 	[BaseType (typeof (CIFilter))]
 	interface CIBicubicScaleTransform {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputB")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float B { get; set; }
-		//[CoreImageProperty ("inputScale")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float Scale { get; set; }
-		//[CoreImageProperty ("inputC")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float C { get; set; }
-		//[CoreImageProperty ("inputAspectRatio")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float AspectRatio { get; set; }
+		[CoreImageFilterProperty ("inputB")]
+		float B { get; set; }
+
+		[CoreImageFilterProperty ("inputC")]
+		float C { get; set; }
+
+		[CoreImageFilterProperty ("inputScale")]
+		float Scale { get; set; }
+
+		[CoreImageFilterProperty ("inputAspectRatio")]
+		float AspectRatio { get; set; }
+	}
+
+	[CoreImageFilter]
+	[Abstract]
+	[BaseType (typeof (CIFilter))]
+	interface CILinearBlur {
+		[CoreImageFilterProperty ("inputRadius")]
+		float Radius { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CILinearBlur))]
 	interface CIBokehBlur {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputSoftness")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float Softness { get; set; }
-		//[CoreImageProperty ("inputRadius")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float Radius { get; set; }
-		//[CoreImageProperty ("inputRingSize")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float RingSize { get; set; }
-		//[CoreImageProperty ("inputRingAmount")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float RingAmount { get; set; }
+		[CoreImageFilterProperty ("inputSoftness")]
+		float Softness { get; set; }
+
+		[CoreImageFilterProperty ("inputRingSize")]
+		float RingSize { get; set; }
+
+		[CoreImageFilterProperty ("inputRingAmount")]
+		float RingAmount { get; set; }
 	}
+
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIFilter))] // Could almost be typeof 'CIColorCube' but property is 'inputCube0Data' not 'inputCubeData'
 	interface CIColorCubesMixedWithMask {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputCubeDimension")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float CubeDimension { get; set; }
-		//[CoreImageProperty ("inputMaskImage")]
-		//CIImage MaskImage { get; set; }
-		//[CoreImageProperty ("inputCube0Data")]
-		//NSData Cube0Data { get; set; }
-		//[CoreImageProperty ("inputCube1Data")]
-		//NSData Cube1Data { get; set; }
-		//[CoreImageProperty ("inputColorSpace")]
-		//NSObject ColorSpace { get; set; }
+		[CoreImageFilterProperty ("inputCubeDimension")]
+		float CubeDimension { get; set; }
+
+		[CoreImageFilterProperty ("inputMaskImage")]
+		CIImage MaskImage { get; set; }
+
+		[CoreImageFilterProperty ("inputCube0Data")]
+		NSData Cube0Data { get; set; }
+
+		[CoreImageFilterProperty ("inputCube1Data")]
+		NSData Cube1Data { get; set; }
+
+		[CoreImageFilterProperty ("inputColorSpace")]
+		CGColorSpace ColorSpace { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -4801,13 +4807,14 @@ namespace XamCore.CoreImage {
 	[TV (11,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIColorCurves {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputColorSpace")]
-		//NSObject ColorSpace { get; set; }
-		//[CoreImageProperty ("inputCurvesDomain")]
-		//CIVector CurvesDomain { get; set; }
-		//[CoreImageProperty ("inputCurvesData")]
-		//NSData CurvesData { get; set; }
+		[CoreImageFilterProperty ("inputColorSpace")]
+		CGColorSpace ColorSpace { get; set; }
+
+		[CoreImageFilterProperty ("inputCurvesDomain")]
+		CIVector CurvesDomain { get; set; }
+
+		[CoreImageFilterProperty ("inputCurvesData")]
+		NSData CurvesData { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -4816,67 +4823,78 @@ namespace XamCore.CoreImage {
 	[TV (11,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIDepthBlurEffect {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputAperture")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float Aperture { get; set; }
-		//[CoreImageProperty ("inputCalibrationData")]
-		//AVCameraCalibrationData CalibrationData { get; set; }
-		//[CoreImageProperty ("inputTuningParameters")]
-		//NSDictionary TuningParameters { get; set; }
-		//[CoreImageProperty ("inputNosePositions")]
-		//CIVector NosePositions { get; set; }
-		//[CoreImageProperty ("inputLumaNoiseScale")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float LumaNoiseScale { get; set; }
-		//[CoreImageProperty ("inputChinPositions")]
-		//CIVector ChinPositions { get; set; }
-		//[CoreImageProperty ("inputDisparityImage")]
-		//CIImage DisparityImage { get; set; }
-		//[CoreImageProperty ("inputScaleFactor")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float ScaleFactor { get; set; }
-		//[CoreImageProperty ("inputRightEyePositions")]
-		//CIVector RightEyePositions { get; set; }
-		//[CoreImageProperty ("inputLeftEyePositions")]
-		//CIVector LeftEyePositions { get; set; }
-		//[CoreImageProperty ("inputFocusRect")]
-		//CIVector FocusRect { get; set; }
+		[CoreImageFilterProperty ("inputAperture")]
+		float Aperture { get; set; }
+
+		[CoreImageFilterProperty ("inputCalibrationData")]
+		AVCameraCalibrationData CalibrationData { get; set; }
+
+		// Radar: https://trello.com/c/9eA2BA2o
+		// Don't know how to test this as I don't know which keys are valid.
+		// [CoreImageFilterProperty ("inputTuningParameters")]
+		// NSDictionary WeakTuningParameters { get; set; }
+
+		[CoreImageFilterProperty ("inputNosePositions")]
+		CIVector NosePositions { get; set; }
+
+		[CoreImageFilterProperty ("inputLumaNoiseScale")]
+		float LumaNoiseScale { get; set; }
+
+		[CoreImageFilterProperty ("inputChinPositions")]
+		CIVector ChinPositions { get; set; }
+
+		[CoreImageFilterProperty ("inputDisparityImage")]
+		CIImage DisparityImage { get; set; }
+
+		[CoreImageFilterProperty ("inputScaleFactor")]
+		float ScaleFactor { get; set; }
+
+		[CoreImageFilterProperty ("inputRightEyePositions")]
+		CIVector RightEyePositions { get; set; }
+
+		[CoreImageFilterProperty ("inputLeftEyePositions")]
+		CIVector LeftEyePositions { get; set; }
+
+		[CoreImageFilterProperty ("inputFocusRect")]
+		CIVector FocusRect { get; set; }
 	}
+
+	[CoreImageFilter]
+	[Abstract]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIDepthDisparityConverter {}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
-	interface CIDepthToDisparity {
-		// TODO: Needs review
-	}
+	[BaseType (typeof (CIDepthDisparityConverter))]
+	interface CIDepthToDisparity {}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
-	interface CIDisparityToDepth {
-		// TODO: Needs review
-	}
+	[BaseType (typeof (CIDepthDisparityConverter))]
+	interface CIDisparityToDepth {}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
-	[NoMac]
+	[Mac (10,13)]
 	[TV (11,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIEdgePreserveUpsampleFilter {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputLumaSigma")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float LumaSigma { get; set; }
-		//[CoreImageProperty ("inputSmallImage")]
-		//CIImage SmallImage { get; set; }
-		//[CoreImageProperty ("inputSpatialSigma")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float SpatialSigma { get; set; }
+		[CoreImageFilterProperty ("inputLumaSigma")]
+		float LumaSigma { get; set; }
+
+		[CoreImageFilterProperty ("inputSmallImage")]
+		CIImage SmallImage { get; set; }
+
+		[CoreImageFilterProperty ("inputSpatialSigma")]
+		float SpatialSigma { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -4885,75 +4903,71 @@ namespace XamCore.CoreImage {
 	[TV (11,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CILabDeltaE {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputImage2")]
-		//CIImage Image2 { get; set; }
+		[CoreImageFilterProperty ("inputImage2")]
+		CIImage Image2 { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIImageGenerator))]
 	interface CITextImageGenerator {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputText")]
-		//NSString Text { get; set; }
-		//[CoreImageProperty ("inputFontName")]
-		//NSString FontName { get; set; }
-		//[CoreImageProperty ("inputScaleFactor")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float ScaleFactor { get; set; }
-		//[CoreImageProperty ("inputFontSize")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float FontSize { get; set; }
+		[CoreImageFilterProperty ("inputText")]
+		string Text { get; set; }
+
+		[CoreImageFilterProperty ("inputFontName")]
+		string FontName { get; set; }
+
+		[CoreImageFilterProperty ("inputFontSize")]
+		float FontSize { get; set; }
+	}
+
+	[CoreImageFilter]
+	[Abstract]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIMorphology {
+		[CoreImageFilterProperty ("inputRadius")]
+		float Radius { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
-	interface CIMorphologyGradient {
-		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-	}
+	[BaseType (typeof (CIMorphology))]
+	interface CIMorphologyGradient {}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
-	interface CIMorphologyMaximum {
-		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-	}
+	[BaseType (typeof (CIMorphology))]
+	interface CIMorphologyMaximum {}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
-	interface CIMorphologyMinimum {
-		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-	}
+	[BaseType (typeof (CIMorphology))]
+	interface CIMorphologyMinimum {}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
-	interface CIBlendWithBlueMask {
-		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-	}
+	[BaseType (typeof (CIBlendWithMask))]
+	interface CIBlendWithBlueMask {}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
-	interface CIBlendWithRedMask {
-		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-	}
-#endif // false
+	[BaseType (typeof (CIBlendWithMask))]
+	interface CIBlendWithRedMask {}
 
 	[iOS (11,0)]
 	[Mac (10,13)]

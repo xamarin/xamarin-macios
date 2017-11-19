@@ -294,6 +294,10 @@ namespace xharness
 						if (read > 0) {
 							writer.Write (buffer, 0, read);
 							availableLength -= read;
+						} else {
+							// There's nothing more to read.
+							// I can't see how we get here, since we calculate the amount to read based on what's available, but it does happen randomly.
+							break;
 						}
 					}
 				}
