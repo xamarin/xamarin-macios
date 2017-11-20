@@ -78,11 +78,11 @@ public class ListSourceFiles {
 	// returns the source paths used to create an assembly that has a pdb file
 	public static HashSet<String> GetFilePathsFromPdb (string pdbFile)
 	{
-		var pdb = pdbFile.Replace (".pdb", ".dll");
+		var pdb = Path.ChangeExtension (pdbFile, ".dll");
 
 		var result = new HashSet<String> (StringComparer.OrdinalIgnoreCase);
 
-		if (!File.Exists (pdbFile) || !File.Exists (pdbFile))
+		if (!File.Exists (pdbFile))
 			return result;
 
 		var assemblyResolver = new DefaultAssemblyResolver ();
@@ -185,6 +185,11 @@ public class ListSourceFiles {
 		var alreadyLinked = new List<string> ();
 		foreach (var src in srcs) {
 			var mangler = manglerFactory.GetMangler (src);
+			if (mangler == null) { // we are ignoring this file
+				if (verbose)
+					Console.WriteLine ($"Ignoring path {src}");
+				continue;
+			}
 			if (verbose)
 				Console.WriteLine ($"Original source is {src}");
 			var fixedSource = mangler.GetSourcePath (src);
@@ -253,6 +258,10 @@ public class ListSourceFiles {
 					File.Copy (fixedSource, target);
 				} catch (FileNotFoundException e) { 
 					Console.WriteLine ("The file {0} could not be copied to {1} because the file does not exists: {2}", fixedSource, target, e);
+					Console.WriteLine ("Debugging info:");
+					Console.WriteLine ("\tSource is {0}", src);
+					Console.WriteLine ("\tFixed source is {0}", fixedSource);
+					Console.WriteLine ("\tPath mangler type is {0}", mangler.GetType().Name);
 				} catch (PathTooLongException e) {
 					Console.WriteLine ("The file {0} could not be copied to {1} because the file path is too long: {2}", fixedSource, target, e);
 					return 1;

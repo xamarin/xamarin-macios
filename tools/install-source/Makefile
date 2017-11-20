@@ -17,7 +17,7 @@ MONO_CECIL_PDB_FILES=$(wildcard $(CECIL_PATH)/symbols/pdb/*.cs) $(wildcard $(CEC
 
 Mono.Cecil.Pdb.dll: $(MONO_CECIL_PDB_FILES)
 	$(Q_XBUILD) cd $(CECIL_PATH)/symbols/pdb/ && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) Mono.Cecil.Pdb.csproj $(XBUILD_VERBOSITY)
-	$(Q) cp $(CECIL_PATH)/symbols/pdb/obj/$(CECIL_CONFIG)/*.dll $(dir $@)
+	$(Q) cp $(CECIL_PATH)/bin/$(CECIL_CONFIG)/*.dll $(dir $@)
 
 $(MONO_CECIL_DLL): $(CECIL_PATH)/Mono.Cecil.csproj $(MONO_CECIL_FILES)
 	$(Q_XBUILD) cd $(CECIL_PATH) && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) Mono.Cecil.csproj $(XBUILD_VERBOSITY)

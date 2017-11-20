@@ -50,22 +50,37 @@ namespace InstallSources
 
 		public bool IsMonoPath (string path)
 		{
-			return path.StartsWith(MonoSourcePath, StringComparison.Ordinal) || !path.StartsWith(XamarinSourcePath, StringComparison.Ordinal);
+			if (path.StartsWith(XamarinSourcePath, StringComparison.Ordinal))
+				return false;
+			var xamarinRuntimePath = XamarinSourcePath.Replace ("/src/", "/runtime/");
+			if (path.StartsWith(xamarinRuntimePath, StringComparison.Ordinal))
+				return false;
+			return path.StartsWith(MonoSourcePath, StringComparison.Ordinal);
 		}
 
 		public bool IsOpenTKPath (string path)
 		{
 			return path.Contains (OpenTKSourcePath);
 		}
+		
+		public bool IsIgnored (string path)
+		{
+			return path.Contains ("/mcs/mcs/");
+		}
+		
 		public IPathMangler GetMangler (string path)
 		{
-			if (IsMonoPath(path)) {
-				return MonoPathMangler;
-			}
+			if (IsIgnored(path))
+				return null;
 
 			if (IsOpenTKPath (path)) {
 				return OpenTKSourceMangler;
 			}
+			
+			if (IsMonoPath(path)) {
+				return MonoPathMangler;
+			}
+			
 			return XamarinSourcesPathMangler;
 		}
 	}
