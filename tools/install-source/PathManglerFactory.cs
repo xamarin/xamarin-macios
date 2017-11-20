@@ -50,12 +50,12 @@ namespace InstallSources
 
 		public bool IsMonoPath (string path)
 		{
-			if (path.StartsWith(XamarinSourcePath, StringComparison.Ordinal))
+			if (path.StartsWith (XamarinSourcePath, StringComparison.Ordinal))
 				return false;
 			var xamarinRuntimePath = XamarinSourcePath.Replace ("/src/", "/runtime/");
-			if (path.StartsWith(xamarinRuntimePath, StringComparison.Ordinal))
+			if (path.StartsWith (xamarinRuntimePath, StringComparison.Ordinal))
 				return false;
-			return path.StartsWith(MonoSourcePath, StringComparison.Ordinal);
+			return path.StartsWith (MonoSourcePath, StringComparison.Ordinal);
 		}
 
 		public bool IsOpenTKPath (string path)

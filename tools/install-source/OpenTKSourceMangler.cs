@@ -26,7 +26,7 @@ namespace InstallSources
 		public string GetSourcePath (string path)
 		{
 			bool iosFramework = true;
-			if (path.StartsWith(OpenTKSourcePath, StringComparison.Ordinal)) 
+			if (path.StartsWith (OpenTKSourcePath, StringComparison.Ordinal)) 
 				return path;
 			// we are dealing with a package build
 			var index = path.IndexOf (iOSFramework, StringComparison.Ordinal);
@@ -43,7 +43,7 @@ namespace InstallSources
 			var relativePath = path.Substring (OpenTKSourcePath.Length);
 			if (relativePath.StartsWith ("/", StringComparison.Ordinal))
 				relativePath = relativePath.Remove (0, 1);
-			var target = Path.Combine (InstallDir, "src", (InstallDir.Contains("Xamarin.iOS")?"Xamarin.iOS":"Xamarin.Mac"), relativePath);
+			var target = Path.Combine (InstallDir, "src", (InstallDir.Contains ("Xamarin.iOS") ? "Xamarin.iOS" : "Xamarin.Mac"), relativePath);
 			return target;
 		}
 	}
