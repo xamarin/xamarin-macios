@@ -587,17 +587,6 @@ namespace xharness
 			};
 			Tasks.Add (nunitExecutionMTouch);
 
-			var runBTouch = new MakeTask
-			{
-				Jenkins = this,
-				Platform = TestPlatform.iOS,
-				TestName = "BTouch tests",
-				Target = "all",
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "generator"),
-				Ignored = !IncludeBtouch,
-			};
-			Tasks.Add (runBTouch);
-
 			var buildGenerator = new MakeTask {
 				Jenkins = this,
 				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "src", "generator.sln"))),

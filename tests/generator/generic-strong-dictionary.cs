@@ -1,23 +1,13 @@
-#if !XAMCORE_2_0
-#if MONOMAC
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#else
 using Foundation;
 using ObjCRuntime;
-#endif
-#else
-using Foundation;
-using ObjCRuntime;
-#endif
 
 namespace Test
 {
 	
 	[StrongDictionary ("AdvertisementDataKeys")]
 	interface AdvertisementData {
-		// ensure that the generator continues to work with classic
-		NSDictionary ServiceData { get; set; }
+		// property under tests, the generator should create a compilable property
+		NSDictionary <CBUUID, NSData> ServiceData { get; set; }
 	}
 
 	[Static, Internal]
