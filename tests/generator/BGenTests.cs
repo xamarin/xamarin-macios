@@ -199,7 +199,12 @@ namespace GeneratorTests
 		[Test]
 		public void Bug39614 ()
 		{
-			BuildFile (Profile.iOS, "bug39614.cs");
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.AddTestApiDefinition ("bug39614.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
+			bgen.AssertWarning (1103, "'FooType`1' does not live under a namespace; namespaces are a highly recommended .NET best practice");
 		}
 
 		[Test]
