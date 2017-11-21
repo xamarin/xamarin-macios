@@ -19,17 +19,18 @@ using XamCore.ObjCRuntime;
 using XamCore.UIKit;
 #endif
 
-namespace XamCore.Registrar {
+namespace XamCore.Registrar
+{
 	// Somewhere to put shared code between the old and the new dynamic registrars.
 	// Putting code in either of those classes will increase the executable size,
 	// since unused code will be pulled in by the linker.
-	static class SharedDynamic {
+	static class SharedDynamic
+	{
 		public static Dictionary<MethodBase, List<MethodBase>> PrepareInterfaceMethodMapping (Type type)
 		{
 			Dictionary<MethodBase, List<MethodBase>> rv = null;
-			var ifaces = type.FindInterfaces ((v, o) =>
-			                                  {
-				var attribs = v.GetCustomAttributes (typeof(ProtocolAttribute), true);
+			var ifaces = type.FindInterfaces ((v, o) => {
+				var attribs = v.GetCustomAttributes (typeof (ProtocolAttribute), true);
 				return attribs != null && attribs.Length > 0;
 			}, null);
 
@@ -55,7 +56,7 @@ namespace XamCore.Registrar {
 
 			return rv;
 		}
-		
+
 		public static T GetOneAttribute<T> (ICustomAttributeProvider provider) where T : Attribute
 		{
 			var attribs = provider.GetCustomAttributes (typeof (T), false);
@@ -74,7 +75,8 @@ namespace XamCore.Registrar {
 		}
 	}
 
-	class DynamicRegistrar : Registrar {
+	class DynamicRegistrar : Registrar
+	{
 		Dictionary<IntPtr, ObjCType> type_map;
 		Dictionary <string, object> registered_assemblies; // Use Dictionary instead of HashSet to avoid pulling in System.Core.dll.
 
@@ -83,14 +85,14 @@ namespace XamCore.Registrar {
 		// so that it's not queried and mutated at the same time from multiple threads.
 		// Note that the registrar is already making sure it's not _mutated_ from
 		// multiple threads at the same time.
-		Dictionary <Type, object> custom_type_map; // Use Dictionary instead of HashSet to avoid pulling in System.Core.dll.
+		Dictionary<Type, object> custom_type_map; // Use Dictionary instead of HashSet to avoid pulling in System.Core.dll.
 
 		protected object lock_obj = new object ();
 
 		public DynamicRegistrar ()
 		{
 			type_map = new Dictionary<IntPtr, ObjCType> (Runtime.IntPtrEqualityComparer);
-			custom_type_map = new Dictionary <Type, object> (Runtime.TypeEqualityComparer);
+			custom_type_map = new Dictionary<Type, object> (Runtime.TypeEqualityComparer);
 		}
 
 		protected override bool SkipRegisterAssembly (Assembly assembly)
