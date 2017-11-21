@@ -43,6 +43,9 @@ namespace Introspection {
 			// the selector starts with `weak`
 			case "WeakRelatedUniqueIdentifier":
 				return property.DeclaringType.Name == "CSSearchableItemAttributeSet";
+			// this is a weakly typed API (not a weak reference) with a [NotImplemented] so there's no [Export]
+			case "WeakSignificantEvent":
+				return property.DeclaringType.Name == "HMSignificantTimeEvent";
 			}
 			return false;
 		}
