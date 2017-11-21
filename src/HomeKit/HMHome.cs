@@ -78,7 +78,7 @@ namespace XamCore.HomeKit {
 			if ((serviceTypes & HMServiceType.Slats) == HMServiceType.Slats)
 				arr.Add (HMServiceType.Slats.GetConstant ());
 
-			return _ServicesWithTypes (arr.ToArray ());
+			return GetServices (arr.ToArray ());
 		}
 	}
 }

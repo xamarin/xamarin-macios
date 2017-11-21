@@ -148,8 +148,10 @@ namespace XamCore.HomeKit {
 		[Field ("HMCharacteristicTypeHeatingThreshold")]
 		HeatingThreshold,
 
+#if !XAMCORE_4_0
 		[Obsolete ("This value does not exist anymore and will always return null.")]
 		HeatingCoolingStatus,
+#endif
 
 		[Field ("HMCharacteristicTypeCurrentRelativeHumidity")]
 		CurrentRelativeHumidity,
