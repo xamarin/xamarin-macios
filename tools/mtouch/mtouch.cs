@@ -945,7 +945,6 @@ namespace Xamarin.Bundler
 		{
 			var action = Action.None;
 			var app = new Application (args);
-			var assemblies = new List<string> ();
 
 			if (extra_args != null) {
 				var l = new List<string> (args);
@@ -1265,7 +1264,7 @@ namespace Xamarin.Bundler
 			AddSharedOptions (app, os);
 
 			try {
-				assemblies = os.Parse (args);
+				app.RootAssemblies.AddRange (os.Parse (args));
 			}
 			catch (MonoTouchException) {
 				throw;
@@ -1291,9 +1290,8 @@ namespace Xamarin.Bundler
 			app.RuntimeOptions = RuntimeOptions.Create (app, http_message_handler, tls_provider);
 
 			if (action == Action.Build || action == Action.RunRegistrar) {
-				if (assemblies.Count == 0)
+				if (app.RootAssemblies.Count == 0)
 					throw new MonoTouchException (17, true, "You should provide a root assembly.");
-				app.RootAssemblies = assemblies;
 			}
 
 			return app;
@@ -1307,6 +1305,8 @@ namespace Xamarin.Bundler
 			if (app == null)
 				return 0;
 			
+			LogArguments (args);
+
 			if (watch_level > 0) {
 				watch = new Stopwatch ();
 				watch.Start ();

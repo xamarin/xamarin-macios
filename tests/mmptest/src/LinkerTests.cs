@@ -104,5 +104,25 @@ namespace Xamarin.MMP.Tests
 				}
 			});
 		}
+
+		[TestCase ("None", false)]
+		[TestCase ("full", true)]
+		[TestCase ("platform", true)]
+		[TestCase ("sdkonly", true)]
+		public void Linking_ShouldHandleMixedModeAssemblies (string linker, bool builds_successfully)
+		{
+			RunMMPTest(tmpDir => {
+				string libraryPath = Path.Combine (TI.FindSourceDirectory (), "../MixedClassLibrary.dll");
+
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					References = $"<Reference Include=\"MixedClassLibrary\"><HintPath>{libraryPath}</HintPath></Reference>",
+					CSProjConfig = $"<LinkMode>{linker}</LinkMode>",
+					TestCode = "System.Console.WriteLine (typeof (MixedClassLibrary.Class1));",
+				};
+
+				var buildOutput = TI.TestUnifiedExecutable (test, shouldFail: builds_successfully).BuildOutput;
+				Assert.True (buildOutput.Contains ("2014") == builds_successfully, $"Building with {linker} did not give 2014 status {builds_successfully} as expected.\n\n{buildOutput}");
+			});
+		}
 	}
 }

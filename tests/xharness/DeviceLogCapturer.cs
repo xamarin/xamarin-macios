@@ -30,6 +30,7 @@ namespace xharness
 			process.StartInfo.UseShellExecute = false;
 			process.StartInfo.RedirectStandardOutput = true;
 			process.StartInfo.RedirectStandardError = true;
+			process.StartInfo.RedirectStandardInput = true;
 			process.OutputDataReceived += (object sender, DataReceivedEventArgs e) => {
 				if (e.Data == null) {
 					streamEnds.Signal ();
@@ -58,7 +59,11 @@ namespace xharness
 		{
 			if (process.HasExited)
 				return;
-			
+
+			process.StandardInput.WriteLine ();
+			if (process.WaitForExit ((int) TimeSpan.FromSeconds (5).TotalMilliseconds))
+				return;
+
 			process.KillTreeAsync (Harness.HarnessLog, diagnostics: false).Wait ();
 			process.Dispose ();
 		}

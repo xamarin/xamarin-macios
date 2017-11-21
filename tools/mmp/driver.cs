@@ -366,9 +366,8 @@ namespace Xamarin.Bundler {
 
 			AddSharedOptions (App, os);
 
-			IList<string> unprocessed;
 			try {
-				unprocessed = os.Parse (args);
+				App.RootAssemblies.AddRange (os.Parse (args));
 			}
 			catch (MonoMacException) {
 				throw;
@@ -376,6 +375,8 @@ namespace Xamarin.Bundler {
 			catch (Exception e) {
 				throw new MonoMacException (10, true, "Could not parse the command line arguments: {0}", e.Message);
 			}
+
+			Driver.LogArguments (args);
 
 			if (aotOptions == null) {
 				string forceAotVariable = Environment.GetEnvironmentVariable ("XM_FORCE_AOT");
@@ -505,13 +506,12 @@ namespace Xamarin.Bundler {
 
 
 			if (action == Action.RunRegistrar) {
-				App.RootAssemblies.AddRange (unprocessed);
 				App.Registrar = RegistrarMode.Static;
 				App.RunRegistrar ();
 				return;
 			}
 			try {
-				Pack (unprocessed);
+				Pack (App.RootAssemblies);
 			} finally {
 				if (App.Cache.IsCacheTemporary) {
 					// If we used a temporary directory we created ourselves for the cache
@@ -798,6 +798,8 @@ namespace Xamarin.Bundler {
 			ExtractNativeLinkInfo ();
 
 			BuildTarget.StaticRegistrar = new StaticRegistrar (BuildTarget);
+
+			BuildTarget.ValidateAssembliesBeforeLink ();
 
 			if (!no_executable) {
 				foreach (var nr in native_references) {

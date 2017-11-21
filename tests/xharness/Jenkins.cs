@@ -587,17 +587,6 @@ namespace xharness
 			};
 			Tasks.Add (nunitExecutionMTouch);
 
-			var runBTouch = new MakeTask
-			{
-				Jenkins = this,
-				Platform = TestPlatform.iOS,
-				TestName = "BTouch tests",
-				Target = "all",
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "generator"),
-				Ignored = !IncludeBtouch,
-			};
-			Tasks.Add (runBTouch);
-
 			var buildGenerator = new MakeTask {
 				Jenkins = this,
 				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "src", "generator.sln"))),
@@ -2577,6 +2566,12 @@ function oninitialload ()
 					// These tests are not written to support parallel execution
 					// (there are hard coded paths used for instance), so disable
 					// parallel execution for these tests.
+					return false;
+				}
+				if (BCLTest) {
+					// We run the BCL tests in multiple flavors (Full/Modern),
+					// and the BCL tests are not written to support parallel execution,
+					// so disable parallel execution for these tests.
 					return false;
 				}
 

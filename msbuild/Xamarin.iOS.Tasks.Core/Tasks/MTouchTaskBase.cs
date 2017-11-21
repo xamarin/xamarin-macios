@@ -371,18 +371,15 @@ namespace Xamarin.iOS.Tasks
 			if (!string.IsNullOrEmpty (IntermediateOutputPath)) {
 				Directory.CreateDirectory (IntermediateOutputPath);
 
-				args.Add ("--cache");
-				args.AddQuoted (Path.GetFullPath (IntermediateOutputPath));
+				args.AddQuoted ("--cache=" + Path.GetFullPath (IntermediateOutputPath));
 			}
 
-			args.Add (SdkIsSimulator ? "--sim" : "--dev");
-			args.AddQuoted (Path.GetFullPath (AppBundleDir));
+			args.AddQuoted ((SdkIsSimulator ? "--sim=" : "--dev=") + Path.GetFullPath (AppBundleDir));
 
 			if (AppleSdkSettings.XcodeVersion.Major >= 5 && IPhoneSdks.MonoTouch.Version.CompareTo (new IPhoneSdkVersion (6, 3, 7)) < 0)
-				args.Add ("--compiler", "clang");
+				args.Add ("--compiler=clang");
 
-			args.Add ("--executable");
-			args.AddQuoted (ExecutableName);
+			args.AddQuoted ("--executable=" + ExecutableName);
 
 			if (IsAppExtension)
 				args.Add ("--extension");
@@ -408,21 +405,15 @@ namespace Xamarin.iOS.Tasks
 			case "none":    args.Add ("--nolink"); break;
 			}
 
-			if (!string.IsNullOrEmpty (I18n)) {
-				args.Add ("--i18n");
-				args.AddQuotedFormat (I18n);
-			}
+			if (!string.IsNullOrEmpty (I18n))
+				args.AddQuotedFormat ("--i18n=" + I18n);
 
-			args.Add ("--sdkroot");
-			args.AddQuoted (SdkRoot);
+			args.AddQuoted ("--sdkroot=" + SdkRoot);
 
-			args.Add ("--sdk");
-			args.AddQuoted (SdkVersion);
+			args.AddQuoted ("--sdk=" + SdkVersion);
 
-			if (!minimumOSVersion.IsUseDefault) {
-				args.Add ("--targetver");
-				args.AddQuoted (minimumOSVersion.ToString ());
-			}
+			if (!minimumOSVersion.IsUseDefault)
+				args.AddQuoted ("--targetver=" + minimumOSVersion.ToString ());
 
 			if (UseFloat32 /* We want to compile 32-bit floating point code to use 32-bit floating point operations */)
 				args.Add ("--aot-options=-O=float32");
@@ -496,8 +487,7 @@ namespace Xamarin.iOS.Tasks
 			args.Add ("--abi=" + abi);
 
 			// output symbols to preserve when stripping
-			args.Add ("--symbollist");
-			args.AddQuoted (Path.GetFullPath (SymbolsList));
+			args.AddQuoted ("--symbollist=" + Path.GetFullPath (SymbolsList));
 
 			// don't have mtouch generate the dsyms...
 			args.Add ("--dsym=no");
@@ -572,15 +562,11 @@ namespace Xamarin.iOS.Tasks
 			BuildNativeReferenceFlags (gcc);
 			BuildEntitlementFlags (gcc);
 
-			foreach (var framework in gcc.Frameworks) {
-				args.Add ("-framework");
-				args.AddQuoted (framework);
-			}
+			foreach (var framework in gcc.Frameworks)
+				args.AddQuoted ("--framework=" + framework);
 
-			foreach (var framework in gcc.WeakFrameworks) {
-				args.Add ("-weak-framework");
-				args.AddQuoted (framework);
-			}
+			foreach (var framework in gcc.WeakFrameworks)
+				args.AddQuoted ("--weak-framework=" + framework);
 
 			if (gcc.Cxx)
 				args.Add ("--cxx");
@@ -591,23 +577,19 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			foreach (var asm in References) {
-				args.Add ("-r");
 				if (IsFrameworkItem(asm)) {
-					args.AddQuoted (ResolveFrameworkFile(asm.ItemSpec));
+					args.AddQuoted ("-r=" + ResolveFrameworkFile(asm.ItemSpec));
 				} else {
-					args.AddQuoted (Path.GetFullPath (asm.ItemSpec));
+					args.AddQuoted ("-r=" + Path.GetFullPath (asm.ItemSpec));
 				}
 			}
 
-			foreach (var ext in AppExtensionReferences) {
-				args.Add ("--app-extension");
-				args.AddQuoted (Path.GetFullPath (ext.ItemSpec));
-			}
+			foreach (var ext in AppExtensionReferences)
+				args.AddQuoted ("--app-extension=" + Path.GetFullPath (ext.ItemSpec));
 
-			args.Add ("--target-framework");
-			args.Add (TargetFrameworkIdentifier + "," + TargetFrameworkVersion);
+			args.Add ("--target-framework=" + TargetFrameworkIdentifier + "," + TargetFrameworkVersion);
 
-			args.AddQuoted (Path.GetFullPath (MainAssembly.ItemSpec));
+			args.AddQuoted ("--root-assembly=" + Path.GetFullPath (MainAssembly.ItemSpec));
 
 			// We give the priority to the ExtraArgs to set the mtouch verbosity.
 			if (string.IsNullOrEmpty (ExtraArgs) || (!string.IsNullOrEmpty (ExtraArgs) && !ExtraArgs.Contains ("-q") && !ExtraArgs.Contains ("-v")))

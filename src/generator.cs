@@ -6941,14 +6941,14 @@ public partial class Generator : IMemberGatherer {
 						}
 					}
 					if (props.Count () == 1)
-						throw new BindingException (1112,
+						throw new BindingException (1112, true,
 							"Property {0} should be renamed to 'Delegate' for BaseType.Events and BaseType.Delegates to work.", props[0], false);
 					else if (props.Count () > 1)
-						throw new BindingException (1112,
+						throw new BindingException (1112, true,
 							"Properties {0} should be renamed to 'Delegate' for BaseType.Events and BaseType.Delegates to work.",
 							String.Join (", ", props.ToArray ()), false);
 					else
-						throw new BindingException (1113,
+						throw new BindingException (1113, true,
 							"BaseType.Delegates were set but no properties could be found. Do ensure that the WrapAttribute is used on the right properties.", false);
 				} else
 					throw new BindingException (1114, "Binding error: test unable to find property: {0} on {1}", propertyName, type, false);
