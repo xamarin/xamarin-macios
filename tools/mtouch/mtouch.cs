@@ -627,7 +627,7 @@ namespace Xamarin.Bundler
 					// we're building with bitcode (even when bitcode is disabled, we still build with the
 					// bitcode marker, which makes the linker reject -u).
 					if (app.EnableProfiling) {
-						sw.WriteLine ("extern \"C\" { void mono_profiler_startup_log (); }");
+						sw.WriteLine ("extern \"C\" { void mono_profiler_init_log (); }");
 						sw.WriteLine ("typedef void (*xamarin_profiler_symbol_def)();");
 						sw.WriteLine ("extern xamarin_profiler_symbol_def xamarin_profiler_symbol;");
 						sw.WriteLine ("xamarin_profiler_symbol_def xamarin_profiler_symbol = NULL;");
@@ -637,7 +637,7 @@ namespace Xamarin.Bundler
 					sw.WriteLine ("{");
 
 					if (app.EnableProfiling)
-						sw.WriteLine ("\txamarin_profiler_symbol = mono_profiler_startup_log;");
+						sw.WriteLine ("\txamarin_profiler_symbol = mono_profiler_init_log;");
 
 					if (app.EnableLLVMOnlyBitCode)
 						sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_LLVMONLY);");
@@ -945,7 +945,6 @@ namespace Xamarin.Bundler
 		{
 			var action = Action.None;
 			var app = new Application (args);
-			var assemblies = new List<string> ();
 
 			if (extra_args != null) {
 				var l = new List<string> (args);
@@ -1265,7 +1264,7 @@ namespace Xamarin.Bundler
 			AddSharedOptions (app, os);
 
 			try {
-				assemblies = os.Parse (args);
+				app.RootAssemblies.AddRange (os.Parse (args));
 			}
 			catch (MonoTouchException) {
 				throw;
@@ -1291,9 +1290,8 @@ namespace Xamarin.Bundler
 			app.RuntimeOptions = RuntimeOptions.Create (app, http_message_handler, tls_provider);
 
 			if (action == Action.Build || action == Action.RunRegistrar) {
-				if (assemblies.Count == 0)
+				if (app.RootAssemblies.Count == 0)
 					throw new MonoTouchException (17, true, "You should provide a root assembly.");
-				app.RootAssemblies = assemblies;
 			}
 
 			return app;
@@ -1307,6 +1305,8 @@ namespace Xamarin.Bundler
 			if (app == null)
 				return 0;
 			
+			LogArguments (args);
+
 			if (watch_level > 0) {
 				watch = new Stopwatch ();
 				watch.Start ();

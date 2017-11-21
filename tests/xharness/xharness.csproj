@@ -59,7 +59,7 @@
       <Link>SdkVersions.cs</Link>
     </Compile>
     <Compile Include="SimpleTcpListener.cs" />
-    <Compile Include="BCLTarget.cs" />
+    <Compile Include="BCLTestInfo.cs" />
     <Compile Include="DeviceLogCapturer.cs" />
     <Compile Include="MakefileGenerator.cs" />
     <Compile Include="SolutionGenerator.cs" />

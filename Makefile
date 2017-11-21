@@ -3,6 +3,8 @@ SUBDIRS=builds runtime fsharp src tools msbuild
 include $(TOP)/Make.config
 include $(TOP)/mk/versions.mk
 
+MONO_VERSION="`grep AC_INIT $(MONO_PATH)/configure.ac | sed -e 's/.*\[//' -e 's/\].*//'`"
+
 #
 # Xamarin.iOS
 #
@@ -63,7 +65,7 @@ $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/updateinfo: Make.config.inc
 
 $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist: Versions-ios.plist.in Makefile $(TOP)/Make.config versions-check.csharp
 	$(Q) ./versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(IOS_SDK_VERSION)" "$(MIN_TVOS_SDK_VERSION)" "$(TVOS_SDK_VERSION)" "$(MIN_WATCH_OS_VERSION)" "$(WATCH_SDK_VERSION)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)"
-	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' $< > $@
+	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(MONO_VERSION)/g" $< > $@
 
 ifdef INCLUDE_IOS
 TARGETS += $(IOS_TARGETS)
@@ -106,7 +108,7 @@ $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Version: Make.config.inc
 
 $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist: Versions-mac.plist.in Makefile $(TOP)/Make.config versions-check.csharp
 	$(Q) ./versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(IOS_SDK_VERSION)" "$(MIN_TVOS_SDK_VERSION)" "$(TVOS_SDK_VERSION)" "$(MIN_WATCH_OS_VERSION)" "$(WATCH_SDK_VERSION)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)"
-	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' $< > $@
+	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(MONO_VERSION)/g" $< > $@
 
 ifdef INCLUDE_MAC
 TARGETS += $(MAC_TARGETS)

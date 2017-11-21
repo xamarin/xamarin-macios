@@ -3008,9 +3008,15 @@ namespace XamCore.AppKit {
 		[Export ("collectionView:draggingImageForItemsAtIndexPaths:withEvent:offset:")]
 		NSImage GetDraggingImage (NSCollectionView collectionView, NSSet indexPaths, NSEvent theEvent, ref CGPoint dragImageOffset);
 
+#if !XAMCORE_4_0
 		[Mac (10,11)]
 		[Export ("collectionView:validateDrop:proposedIndexPath:dropOperation:")]
-		NSDragOperation ValidateDrop (NSCollectionView collectionView, [Protocolize (4)] NSDraggingInfo draggingInfo, out NSIndexPath proposedDropIndexPath, out NSCollectionViewDropOperation proposedDropOperation);
+		NSDragOperation ValidateDropOperation (NSCollectionView collectionView, [Protocolize (4)] NSDraggingInfo draggingInfo, ref NSIndexPath proposedDropIndexPath, ref NSCollectionViewDropOperation proposedDropOperation);
+#else
+		[Mac (10,11)]
+		[Export ("collectionView:validateDrop:proposedIndexPath:dropOperation:")]
+		NSDragOperation ValidateDrop (NSCollectionView collectionView, INSDraggingInfo draggingInfo, ref NSIndexPath proposedDropIndexPath, ref NSCollectionViewDropOperation proposedDropOperation);
+#endif
 
 		[Mac (10,11)]
 		[Export ("collectionView:acceptDrop:indexPath:dropOperation:")]

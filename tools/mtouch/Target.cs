@@ -802,6 +802,8 @@ namespace Xamarin.Bundler
 			if (!Directory.Exists (TargetDirectory))
 				Directory.CreateDirectory (TargetDirectory);
 
+			ValidateAssembliesBeforeLink ();
+
 			ManagedLink ();
 
 			GatherFrameworks ();

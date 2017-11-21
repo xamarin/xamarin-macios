@@ -3,18 +3,18 @@ builds_root=$(TOP)/builds
 
 # helpful rules to compile things for the various architectures
 
-COMMON_I:= -I. -I$(mono_root) -I$(mono_root)/eglib/src -I$(mono_root)/mono/metadata 
-SIM32_I := $(COMMON_I) -I$(BUILD_DESTDIR)/simulator86/include/mono-2.0 -I$(builds_root)/simulator86 -I$(builds_root)/simulator86/eglib/src 
-SIM64_I := $(COMMON_I) -I$(BUILD_DESTDIR)/simulator64/include/mono-2.0 -I$(builds_root)/simulator64 -I$(builds_root)/simulator64/eglib/src
-DEV7_I  := $(COMMON_I) -I$(BUILD_DESTDIR)/target7/include/mono-2.0  -I$(builds_root)/target7  -I$(builds_root)/target7/eglib/src 
-DEV7s_I := $(COMMON_I) -I$(BUILD_DESTDIR)/target7s/include/mono-2.0 -I$(builds_root)/target7s -I$(builds_root)/target7s/eglib/src
-DEV64_I := $(COMMON_I) -I$(BUILD_DESTDIR)/target64/include/mono-2.0 -I$(builds_root)/target64 -I$(builds_root)/target64/eglib/src
+COMMON_I:= -I. -I$(mono_root) -I$(mono_root)/mono/eglib -I$(mono_root)/mono/metadata 
+SIM32_I := $(COMMON_I) -I$(BUILD_DESTDIR)/simulator86/include/mono-2.0 -I$(builds_root)/simulator86 -I$(builds_root)/simulator86/mono/eglib 
+SIM64_I := $(COMMON_I) -I$(BUILD_DESTDIR)/simulator64/include/mono-2.0 -I$(builds_root)/simulator64 -I$(builds_root)/simulator64/mono/eglib
+DEV7_I  := $(COMMON_I) -I$(BUILD_DESTDIR)/target7/include/mono-2.0  -I$(builds_root)/target7  -I$(builds_root)/target7/mono/eglib 
+DEV7s_I := $(COMMON_I) -I$(BUILD_DESTDIR)/target7s/include/mono-2.0 -I$(builds_root)/target7s -I$(builds_root)/target7s/mono/eglib
+DEV64_I := $(COMMON_I) -I$(BUILD_DESTDIR)/target64/include/mono-2.0 -I$(builds_root)/target64 -I$(builds_root)/target64/mono/eglib
 
-SIMW_I  := $(COMMON_I) -I$(BUILD_DESTDIR)/watchsimulator/include/mono-2.0 -I$(builds_root)/watchsimulator -I$(builds_root)/watchsimulator/eglib/src
-DEVW_I  := $(COMMON_I) -I$(BUILD_DESTDIR)/targetwatch/include/mono-2.0    -I$(builds_root)/targetwatch    -I$(builds_root)/targetwatch/eglib/src
+SIMW_I  := $(COMMON_I) -I$(BUILD_DESTDIR)/watchsimulator/include/mono-2.0 -I$(builds_root)/watchsimulator -I$(builds_root)/watchsimulator/mono/eglib
+DEVW_I  := $(COMMON_I) -I$(BUILD_DESTDIR)/targetwatch/include/mono-2.0    -I$(builds_root)/targetwatch    -I$(builds_root)/targetwatch/mono/eglib
 
-SIM_TV_I:= $(COMMON_I) -I$(BUILD_DESTDIR)/tvsimulator/include/mono-2.0 -I$(builds_root)/tvsimulator -I$(builds_root)/tvsimulator/eglib/src
-DEV_TV_I:= $(COMMON_I) -I$(BUILD_DESTDIR)/targettv/include/mono-2.0    -I$(builds_root)/targettv    -I$(builds_root)/targettv/eglib/src
+SIM_TV_I:= $(COMMON_I) -I$(BUILD_DESTDIR)/tvsimulator/include/mono-2.0 -I$(builds_root)/tvsimulator -I$(builds_root)/tvsimulator/mono/eglib
+DEV_TV_I:= $(COMMON_I) -I$(BUILD_DESTDIR)/targettv/include/mono-2.0    -I$(builds_root)/targettv    -I$(builds_root)/targettv/mono/eglib
 
 define NativeCompilationTemplate
 

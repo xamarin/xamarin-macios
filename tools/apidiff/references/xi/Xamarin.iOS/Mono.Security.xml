@@ -3794,6 +3794,13 @@
                   </method>
                 </methods>
               </property>
+              <property name="SslStream" attrib="0" ptype="System.Net.Security.SslStream">
+                <methods>
+                  <method name="get_SslStream()" attrib="3526" abstract="true" virtual="true" returntype="System.Net.Security.SslStream">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="TransportContext" attrib="0" ptype="System.Net.TransportContext">
                 <methods>
                   <method name="get_TransportContext()" attrib="3526" abstract="true" virtual="true" returntype="System.Net.TransportContext">
@@ -3956,6 +3963,9 @@
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.Int64" />
                 </parameters>
+              </method>
+              <method name="ShutdownAsync()" attrib="1478" abstract="true" virtual="true" returntype="System.Threading.Tasks.Task">
+                <parameters />
               </method>
               <method name="Write(System.Byte[])" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
@@ -4298,15 +4308,10 @@
                   <parameter name="settings" position="2" attrib="4112" type="Mono.Security.Interface.MonoTlsSettings" optional="true" defaultValue="NULL" />
                 </parameters>
               </method>
-              <method name="GetDefaultProvider()" attrib="150" static="true" returntype="Mono.Security.Interface.MonoTlsProvider">
-                <attributes>
-                  <attribute name="System.ObsoleteAttribute">
-                    <properties>
-                      <property name="Message" value="Use GetProvider() instead." />
-                    </properties>
-                  </attribute>
-                </attributes>
-                <parameters />
+              <method name="GetMonoSslStream(System.Net.HttpListenerContext)" attrib="150" static="true" returntype="Mono.Security.Interface.IMonoSslStream">
+                <parameters>
+                  <parameter name="context" position="0" attrib="0" type="System.Net.HttpListenerContext" />
+                </parameters>
               </method>
               <method name="GetMonoSslStream(System.Net.Security.SslStream)" attrib="150" static="true" returntype="Mono.Security.Interface.IMonoSslStream">
                 <parameters>
@@ -4334,18 +4339,6 @@
                   <parameter name="provider" position="0" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="SetDefaultProvider(System.String)" attrib="150" static="true" returntype="System.Void">
-                <attributes>
-                  <attribute name="System.ObsoleteAttribute">
-                    <properties>
-                      <property name="Message" value="Use Initialize(string provider) instead." />
-                    </properties>
-                  </attribute>
-                </attributes>
-                <parameters>
-                  <parameter name="name" position="0" attrib="0" type="System.String" />
-                </parameters>
-              </method>
             </methods>
           </class>
           <class name="MonoTlsSettings" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
@@ -4363,6 +4356,24 @@
                   <method name="set_CallbackNeedsCertificateChain(System.Boolean)" attrib="2182" returntype="System.Void">
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="CertificateValidationTime" attrib="0" ptype="System.Nullable`1[System.DateTime]">
+                <methods>
+                  <method name="get_CertificateValidationTime()" attrib="2182" returntype="System.Nullable`1[System.DateTime]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_CertificateValidationTime(System.Nullable`1[System.DateTime])" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Nullable`1[System.DateTime]" />
                     </parameters>
                   </method>
                 </methods>

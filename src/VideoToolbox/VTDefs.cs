@@ -128,7 +128,11 @@ namespace XamCore.VideoToolbox {
 		MP4VAdvancedSimpleL4,
 		H263Profile0Level10,
 		H263Profile0Level45,
-		H263Profile3Level45
+		H263Profile3Level45,
+		[Mac (10,13), iOS (11,0), TV (11,0)]
+		HevcMainAutoLevel,
+		[Mac (10,13), iOS (11,0), TV (11,0)]
+		HevcMain10AutoLevel,
 	}
 
 	// Strongly Typed VTH264EntropyModeKeys

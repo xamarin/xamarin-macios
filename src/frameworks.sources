@@ -145,6 +145,7 @@ APPKIT_SOURCES = \
 	AppKit/NSSavePanel.cs \
 	AppKit/NSWorkspace.cs \
 	AppKit/NSCollectionView.cs \
+	AppKit/NSCollectionViewDelegate.cs \
 	AppKit/NSTextTableBlock.cs \
 	AppKit/NSMutableFontCollection.cs \
 	AppKit/NSCollectionViewLayout.cs \
@@ -245,6 +246,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVCaptureDeviceInput.cs \
 	AVFoundation/AVCaptureFileOutput.cs \
 	AVFoundation/AVCaptureMetadataOutput.cs \
+	AVFoundation/AVCaptureSynchronizedDataCollection.cs \
 	AVFoundation/AVCaptureVideoDataOutput.cs \
 	AVFoundation/AVCaptureVideoPreviewLayer.cs \
 	AVFoundation/AVCompat.cs \
@@ -264,6 +266,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/DescriptionHelpers.cs \
 	AVFoundation/Events.cs \
 	AVFoundation/AVPlayerLooper.cs \
+	AVFoundation/AudioRendererWasFlushedAutomaticallyEventArgs.cs \
 
 # AVKit
 
@@ -573,7 +576,9 @@ COREVIDEO_CORE_SOURCES = \
 COREVIDEO_SOURCES = \
 	CoreVideo/CVDisplayLink.cs \
 	CoreVideo/CVMetalTexture.cs \
+	CoreVideo/CVMetalTextureAttributes.cs \
 	CoreVideo/CVMetalTextureCache.cs \
+	CoreVideo/CVPixelBufferIOSurface.cs \
 	CoreVideo/CVPixelBufferPoolSettings.cs \
 	CoreVideo/CVPixelFormatDescription.cs \
 	CoreVideo/CVTime.cs \
@@ -1012,6 +1017,7 @@ MODELIO_CORE_SOURCES = \
 	ModelIO/MIEnums.cs \
 
 MODELIO_SOURCES = \
+	ModelIO/MDLAnimatedValueTypes.cs \
 	ModelIO/MDLAsset.cs \
 	ModelIO/MDLNoiseTexture.cs \
 	ModelIO/MDLTransform.cs \
@@ -1042,6 +1048,8 @@ NETWORKEXTENSION_SOURCES = \
 	NetworkExtension/NECompat.cs \
 	NetworkExtension/NEFilterFlow.cs \
 	NetworkExtension/NEFilterProvider.cs \
+	NetworkExtension/NEHotspotEapSettings.cs \
+	NetworkExtension/NEVpnManager.cs \
 
 # NewsstandKit
 
@@ -1360,6 +1368,7 @@ UIKIT_SOURCES = \
 	UIKit/UICollectionViewLayoutAttributes.cs \
 	UIKit/UICollectionViewTransitionLayout.cs \
 	UIKit/UIColor.cs \
+	UIKit/UIContentSizeCategory.cs \
 	UIKit/UIControl.cs \
 	UIKit/UIDevice.cs \
 	UIKit/UIDocumentInteractionController.cs \
@@ -1496,17 +1505,6 @@ WKWEBKIT_SOURCES = \
 	WKWebKit/WKWindowFeatures.cs \
 
 #
-# AppleTls
-#
-
-APPLETLS_SOURCES = \
-	Security/Tls/AppleTlsContext.cs \
-	Security/Tls/AppleTlsProvider.cs \
-	Security/Tls/AppleTlsStream.cs \
-	Security/Tls/AppleCertificateHelper.cs \
-	Security/Tls/OldTlsProvider.cs \
-
-#
 # SHARED_[CORE_]SOURCES: source code needed in core.dll or the platform assembly
 # that's not from any framework.
 #
@@ -1578,8 +1576,7 @@ SHARED_SOURCES = \
 	ObjCRuntime/ThreadSafeAttribute.cs \
 	ObjCRuntime/TransientAttribute.cs \
 	ObjCRuntime/TypeConverter.cs \
-	ObjCRuntime/UserDelegateTypeAttribute.cs \
-	$(APPLETLS_SOURCES)
+	ObjCRuntime/UserDelegateTypeAttribute.cs
 
 #
 # Here we list the frameworks each platform contains.

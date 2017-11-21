@@ -7,6 +7,9 @@
 using System;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
+#if XAMCORE_2_0 && !WATCH
+using XamCore.Metal;
+#endif
 
 namespace XamCore.CoreVideo {
 
@@ -103,38 +106,45 @@ namespace XamCore.CoreVideo {
 		[Field ("kCVImageBufferYCbCrMatrixKey")]
 		NSString YCbCrMatrixKey { get; }
 
-		[Field ("kCVImageBufferYCbCrMatrix_ITU_R_709_2")]
+		[Static]
+		[Wrap ("CVImageBufferYCbCrMatrix.ItuR709_2.GetConstant ()")]
 		NSString YCbCrMatrix_ITU_R_709_2 { get; }
 
-		[Field ("kCVImageBufferYCbCrMatrix_ITU_R_601_4")]
+		[Static]
+		[Wrap ("CVImageBufferYCbCrMatrix.ItuR601_4.GetConstant ()")]
 		NSString YCbCrMatrix_ITU_R_601_4 { get; }
 
-		[Field ("kCVImageBufferYCbCrMatrix_SMPTE_240M_1995")]
+		[Static]
+		[Wrap ("CVImageBufferYCbCrMatrix.Smpte240M1995.GetConstant ()")]
 		NSString YCbCrMatrix_SMPTE_240M_1995 { get; }
 
-#if !MONOMAC
-		[Field ("kCVImageBufferYCbCrMatrix_DCI_P3")]
-		[iOS (9,0)]
+		[Static]
+		[Wrap ("CVImageBufferYCbCrMatrix.DciP3.GetConstant ()")]
+		[iOS (9,0), Mac (10,11)]
 		NSString YCbCrMatrix_DCI_P3 { get; }
 
-		[Field ("kCVImageBufferYCbCrMatrix_P3_D65")]
-		[iOS (9,0)]
+		[Static]
+		[Wrap ("CVImageBufferYCbCrMatrix.P3D65.GetConstant ()")]
+		[iOS (9,0), Mac (10,11)]
 		NSString YCbCrMatrix_P3_D65 { get; }
-#endif
 
-		[Field ("kCVImageBufferYCbCrMatrix_ITU_R_2020")]
+		[Static]
+		[Wrap ("CVImageBufferYCbCrMatrix.ItuR2020.GetConstant ()")]
 		[iOS (9,0), Mac (10,11)]
 		NSString YCbCrMatrix_ITU_R_2020 { get; }
 
-		[Field ("kCVImageBufferColorPrimaries_DCI_P3")]
+		[Static]
+		[Wrap ("CVImageBufferColorPrimaries.DciP3.GetConstant ()")]
 		[iOS (9,0)][Mac (10,11)]
 		NSString ColorPrimaries_DCI_P3 { get; }
 
-		[Field ("kCVImageBufferColorPrimaries_ITU_R_2020")]
+		[Static]
+		[Wrap ("CVImageBufferColorPrimaries.ItuR2020.GetConstant ()")]
 		[iOS (9,0)][Mac (10,11)]
 		NSString ColorPrimaries_ITU_R_2020 { get; }
 
-		[Field ("kCVImageBufferColorPrimaries_P3_D65")]
+		[Static]
+		[Wrap ("CVImageBufferColorPrimaries.P3D65.GetConstant ()")]
 		[iOS (9,0)][Mac (10,11)]
 		NSString ColorPrimaries_P3_D65 { get; }
 
@@ -153,24 +163,42 @@ namespace XamCore.CoreVideo {
 		[Field ("kCVImageBufferTransferFunctionKey")]
 		NSString TransferFunctionKey { get; }
 
-		[Field ("kCVImageBufferTransferFunction_ITU_R_709_2")]
+		[Static]
+		[Wrap ("CVImageBufferTransferFunction.ItuR709_2.GetConstant ()")]
 		NSString TransferFunction_ITU_R_709_2 { get; }
 
-		[Field ("kCVImageBufferTransferFunction_SMPTE_240M_1995")]
+		[Static]
+		[Wrap ("CVImageBufferTransferFunction.Smpte240M1995.GetConstant ()")]
 		NSString TransferFunction_SMPTE_240M_1995 { get; }
 
-		[Field ("kCVImageBufferTransferFunction_UseGamma")]
+		[Static]
+		[Wrap ("CVImageBufferTransferFunction.UseGamma.GetConstant ()")]
 		NSString TransferFunction_UseGamma { get; }
 
-		[iOS (9,0), Mac (10,11)]
-		[TV (10,0)]
-		[Field ("kCVImageBufferTransferFunction_ITU_R_2020")]
+		[iOS (9,0), Mac (10,11), TV (10,0)]
+		[Static]
+		[Wrap ("CVImageBufferTransferFunction.ItuR2020.GetConstant ()")]
 		NSString TransferFunction_ITU_R_2020 { get; }
 
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
-		[Field ("kCVImageBufferTransferFunction_SMPTE_ST_428_1")]
+		[iOS (10,0), Mac (10,12), TV (10,0)]
+		[Static]
+		[Wrap ("CVImageBufferTransferFunction.SmpteST428_1.GetConstant ()")]
 		NSString TransferFunction_SMPTE_ST_428_1 { get; }
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[Static]
+		[Wrap ("CVImageBufferTransferFunction.SRgb.GetConstant ()")]
+		NSString TransferFunction_sRGB { get; }
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[Static]
+		[Wrap ("CVImageBufferTransferFunction.SmpteST2084PQ.GetConstant ()")]
+		NSString TransferFunction_SMPTE_ST_2084_PQ { get; }
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[Static]
+		[Wrap ("CVImageBufferTransferFunction.ItuR2100Hlg.GetConstant ()")]
+		NSString TransferFunction_ITU_R_2100_HLG { get; }
 
 		[Field ("kCVImageBufferChromaLocationTopFieldKey")]
 		NSString ChromaLocationTopFieldKey { get; }
@@ -202,23 +230,130 @@ namespace XamCore.CoreVideo {
 		[Field ("kCVImageBufferColorPrimariesKey")]
 		NSString ColorPrimariesKey { get; }
 
-		[Field ("kCVImageBufferColorPrimaries_ITU_R_709_2")]
+		[Static]
+		[Wrap ("CVImageBufferColorPrimaries.ItuR709_2.GetConstant ()")]
 		NSString ColorPrimaries_ITU_R_709_2 { get; }
 
-		[Field ("kCVImageBufferColorPrimaries_EBU_3213")]
+		[Static]
+		[Wrap ("CVImageBufferColorPrimaries.Ebu3213.GetConstant ()")]
 		NSString ColorPrimaries_EBU_3213 { get; }
 
-		[Field ("kCVImageBufferColorPrimaries_SMPTE_C")]
+		[Static]
+		[Wrap ("CVImageBufferColorPrimaries.SmpteC.GetConstant ()")]
 		NSString ColorPrimaries_SMPTE_C { get; }
 
+		[Static]
+		[Wrap ("CVImageBufferColorPrimaries.P22.GetConstant ()")]
 		[iOS (6,0), Mac (10,8)]
-		[Field ("kCVImageBufferColorPrimaries_P22")]
 		NSString ColorPrimaries_P22 { get; }
 
 		[iOS (8,0), Mac (10,10)]
 		[Field ("kCVImageBufferAlphaChannelIsOpaque")]
 		NSString AlphaChannelIsOpaque { get; }
-		
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[Field ("kCVImageBufferMasteringDisplayColorVolumeKey")]
+		NSString MasteringDisplayColorVolumeKey { get; }
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[Field ("kCVImageBufferContentLightLevelInfoKey")]
+		NSString ContentLightLevelInfoKey { get; }
+	}
+
+	[Watch (4,0)]
+	enum CVImageBufferTransferFunction {
+
+		[Field (null)]
+		Unknown = 2, // 2 (the code point for "unknown")
+
+		[Field ("kCVImageBufferTransferFunction_ITU_R_709_2")]
+		ItuR709_2,
+
+		[Field ("kCVImageBufferTransferFunction_SMPTE_240M_1995")]
+		Smpte240M1995,
+
+		[Field ("kCVImageBufferTransferFunction_UseGamma")]
+		UseGamma,
+
+		[iOS (9,0), Mac (10,11), TV (10,0)]
+		[Field ("kCVImageBufferTransferFunction_ITU_R_2020")]
+		ItuR2020,
+
+		[iOS (10,0), Mac (10,12), TV (10,0)]
+		[Field ("kCVImageBufferTransferFunction_SMPTE_ST_428_1")]
+		SmpteST428_1,
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[Field ("kCVImageBufferTransferFunction_sRGB")]
+		SRgb,
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[Field ("kCVImageBufferTransferFunction_SMPTE_ST_2084_PQ")]
+		SmpteST2084PQ,
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[Field ("kCVImageBufferTransferFunction_ITU_R_2100_HLG")]
+		ItuR2100Hlg,
+	}
+
+	[Watch (4,0)]
+	enum CVImageBufferColorPrimaries {
+
+		[Field (null)]
+		Unknown = 2, // 2 (the code point for "unknown")
+
+		[Field ("kCVImageBufferColorPrimaries_DCI_P3")]
+		[iOS (9,0)][Mac (10,11)]
+		DciP3,
+
+		[Field ("kCVImageBufferColorPrimaries_ITU_R_2020")]
+		[iOS (9,0)][Mac (10,11)]
+		ItuR2020,
+
+		[Field ("kCVImageBufferColorPrimaries_P3_D65")]
+		[iOS (9,0)][Mac (10,11)]
+		P3D65,
+
+		[Field ("kCVImageBufferColorPrimaries_ITU_R_709_2")]
+		ItuR709_2,
+
+		[Field ("kCVImageBufferColorPrimaries_EBU_3213")]
+		Ebu3213,
+
+		[Field ("kCVImageBufferColorPrimaries_SMPTE_C")]
+		SmpteC,
+
+		[iOS (6,0), Mac (10,8)]
+		[Field ("kCVImageBufferColorPrimaries_P22")]
+		P22,
+	}
+
+	[Watch (4,0)]
+	enum CVImageBufferYCbCrMatrix {
+
+		[Field (null)]
+		Unknown = 2, // 2 (the code point for "unknown")
+
+		[Field ("kCVImageBufferYCbCrMatrix_ITU_R_709_2")]
+		ItuR709_2,
+
+		[Field ("kCVImageBufferYCbCrMatrix_ITU_R_601_4")]
+		ItuR601_4,
+
+		[Field ("kCVImageBufferYCbCrMatrix_SMPTE_240M_1995")]
+		Smpte240M1995,
+
+		[Field ("kCVImageBufferYCbCrMatrix_DCI_P3")]
+		[iOS (9,0), Mac (10,11)]
+		DciP3,
+
+		[Field ("kCVImageBufferYCbCrMatrix_P3_D65")]
+		[iOS (9,0), Mac (10,11)]
+		P3D65,
+
+		[Field ("kCVImageBufferYCbCrMatrix_ITU_R_2020")]
+		[iOS (9,0), Mac (10,11)]
+		ItuR2020,
 	}
 
 	[Partial]
@@ -320,5 +455,18 @@ namespace XamCore.CoreVideo {
 	// }
 #endif
 
+	[iOS (11,0), Mac (10,13, onlyOn64:true), TV (11,0), NoWatch]
+	[Static, Internal]
+	interface CVMetalTextureAttributesKeys {
+
+		[Field ("kCVMetalTextureUsage")]
+		NSString UsageKey { get; }
+	}
+
+	[iOS (11,0), Mac (10,13, onlyOn64:true), TV (11,0), NoWatch]
+	[StrongDictionary ("CVMetalTextureAttributesKeys")]
+	interface CVMetalTextureAttributes {
+		// Create stub DictionaryContainer class
+	}
 #endif
 }

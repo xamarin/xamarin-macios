@@ -7,7 +7,7 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__
+#if !__TVOS__ && !MONOMAC
 
 using System;
 
@@ -52,6 +52,11 @@ namespace MonoTouchFixtures.HealthKit {
 				case HKQuantityTypeIdentifier.DistanceSwimming:
 				case HKQuantityTypeIdentifier.SwimmingStrokeCount:
 					if (!TestRuntime.CheckXcodeVersion (8, 0))
+						continue;
+					break;
+				case HKQuantityTypeIdentifier.WaistCircumference:
+				case HKQuantityTypeIdentifier.VO2Max:
+					if (!TestRuntime.CheckXcodeVersion(9, 0))
 						continue;
 					break;
 				}

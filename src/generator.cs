@@ -1274,6 +1274,9 @@ public partial class Generator : IMemberGatherer {
 			originalType = pi.ParameterType;
 		}
 
+		if (originalType.IsByRef)
+			throw new BindingException (1048, true, $"Unsupported type 'ref/out {originalType.Name.Replace ("&", string.Empty)}' decorated with [BindAs]");
+
 		var retType = TypeManager.GetUnderlyingNullableType (attrib.Type) ?? attrib.Type;
 		var isNullable = attrib.IsNullable;
 		var isValueType = retType.IsValueType;
@@ -1302,18 +1305,18 @@ public partial class Generator : IMemberGatherer {
 		} else if (originalType == TypeManager.NSString && IsSmartEnum (retType)) {
 			temp = isNullable ? $"{parameterName} == null ? null : " : string.Empty;
 			temp += $"{FormatType (retType.DeclaringType, retType)}Extensions.GetConstant ({parameterName}{denullify});";
-		} else if (originalType.IsArray) {
+		} else if (originalType.IsArray && originalType.GetArrayRank () == 1) {
 			var arrType = originalType.GetElementType ();
 			var arrRetType = TypeManager.GetUnderlyingNullableType (retType.GetElementType ()) ?? retType.GetElementType ();
 			var valueConverter = string.Empty;
 
-			if (arrType == TypeManager.NSString) {
+			if (arrType == TypeManager.NSString && !isNullable) {
 				valueConverter = isNullable ? "o == null ? null : " : string.Empty;
-				valueConverter += $"{FormatType (retType.DeclaringType, arrRetType)}Extensions.GetConstant (o), {parameterName});";
-			} else if (arrType == TypeManager.NSNumber) {
+				valueConverter += $"{FormatType (retType.DeclaringType, arrRetType)}Extensions.GetConstant ({(isNullable ? "o.Value" : "o")}), {parameterName});";
+			} else if (arrType == TypeManager.NSNumber && !isNullable) {
 				var cast = arrRetType.IsEnum ? "(int)" : string.Empty;
 				valueConverter = $"new NSNumber ({cast}o{denullify}), {parameterName});";
-			} else if (arrType == TypeManager.NSValue) {
+			} else if (arrType == TypeManager.NSValue && !isNullable) {
 				var typeStr = string.Empty;
 				if (!NSValueCreateMap.TryGetValue (arrRetType, out typeStr)) {
 					if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
@@ -1323,7 +1326,7 @@ public partial class Generator : IMemberGatherer {
 				}
 				valueConverter = $"NSValue.From{typeStr} (o{denullify}), {parameterName});";
 			} else
-				throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
+				throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", isNullable ? arrRetType.Name + "?[]" : retType.Name);
 			temp = $"NSArray.FromNSObjects (o => {valueConverter}";
 		} else
 			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
@@ -1443,22 +1446,22 @@ public partial class Generator : IMemberGatherer {
 		} else if (originalReturnType == TypeManager.NSString && IsSmartEnum (retType)) {
 			append = $"{FormatType (retType.DeclaringType, retType)}Extensions.GetValue (";
 			suffix = ")";
-		} else if (originalReturnType.IsArray) {
+		} else if (originalReturnType.IsArray && originalReturnType.GetArrayRank () == 1) {
 			var arrType = originalReturnType.GetElementType ();
 			var nullableElementType = TypeManager.GetUnderlyingNullableType (retType.GetElementType ());
 			var arrIsNullable = nullableElementType != null;
 			var arrRetType = arrIsNullable ? nullableElementType : retType.GetElementType ();
 			var valueFetcher = string.Empty;
-			if (arrType == TypeManager.NSString)
+			if (arrType == TypeManager.NSString && !arrIsNullable)
 				append = $"ptr => {{\n\tusing (var str = Runtime.GetNSObject<NSString> (ptr)) {{\n\t\treturn {FormatType (arrRetType.DeclaringType, arrRetType)}Extensions.GetValue (str);\n\t}}\n}}";
-			else if (arrType == TypeManager.NSNumber) {
+			else if (arrType == TypeManager.NSNumber && !arrIsNullable) {
 				if (NSNumberReturnMap.TryGetValue (arrRetType, out valueFetcher) || arrRetType.IsEnum) {
 					var getterStr = string.Format ("{0}{1}", arrIsNullable ? "?" : string.Empty, arrRetType.IsEnum ? ".Int32Value" : valueFetcher);
 					append = string.Format ("ptr => {{\n\tusing (var num = Runtime.GetNSObject<NSNumber> (ptr)) {{\n\t\treturn ({1}) num{0};\n\t}}\n}}", getterStr, FormatType (arrRetType.DeclaringType, arrRetType));
 				}
 				else
 					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, arrType.Name, "array", minfo.mi));
-			} else if (arrType == TypeManager.NSValue) {
+			} else if (arrType == TypeManager.NSValue && !arrIsNullable) {
 				if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
 					valueFetcher = $"{(arrIsNullable ? "?" : string.Empty)}.{arrRetType.Name}Value";
 				else if (!NSValueReturnMap.TryGetValue (arrRetType, out valueFetcher))
@@ -1466,7 +1469,7 @@ public partial class Generator : IMemberGatherer {
 
 				append = string.Format ("ptr => {{\n\tusing (var val = Runtime.GetNSObject<NSValue> (ptr)) {{\n\t\treturn val{0};\n\t}}\n}}", valueFetcher);
 			} else
-				throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
+				throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", arrIsNullable ? arrRetType.Name + "?[]" : retType.Name);
 		} else
 			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
 		return append;
@@ -1673,7 +1676,7 @@ public partial class Generator : IMemberGatherer {
 				continue;
 			}
 			
-			throw new BindingException (1001, true, "Do not know how to make a trampoline for {0}", pi);
+			throw new BindingException (1001, true, $"Do not know how to make a trampoline for {pi.ParameterType.FullName}");
 		}
 
 		var rt = mi.ReturnType;
@@ -6220,7 +6223,7 @@ public partial class Generator : IMemberGatherer {
 							else if (btype == TypeManager.System_nuint || btype == TypeManager.System_UInt64)
 								print ($"return ({fieldTypeName}) (ulong) Dlfcn.GetNUInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");");
 							else
-								throw new BindingException (1014, true, "Unsupported type for Fields: {0}", fieldTypeName);
+								throw new BindingException (1014, true, $"Unsupported type for Fields: {fieldTypeName} for '{field_pi}'.");
 						} else {
 							if (btype == TypeManager.System_Int32)
 								print ($"return ({fieldTypeName}) Dlfcn.GetInt32 (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");");
@@ -6231,13 +6234,13 @@ public partial class Generator : IMemberGatherer {
 							else if (btype == TypeManager.System_UInt64)
 								print ($"return ({fieldTypeName}) Dlfcn.GetUInt64 (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");");
 							else
-								throw new BindingException (1014, true, "Unsupported type for Fields: {0}", fieldTypeName);
+								throw new BindingException (1014, true, $"Unsupported type for Fields: {fieldTypeName} for '{field_pi}'.");
 						}
 					} else {
 						if (field_pi.PropertyType == TypeManager.System_String)
 							throw new BindingException (1013, true, "Unsupported type for Fields (string), you probably meant NSString");
 						else
-							throw new BindingException (1014, true, "Unsupported type for Fields: {0}", fieldTypeName);
+							throw new BindingException (1014, true, $"Unsupported type for Fields: {fieldTypeName} for '{field_pi}'.");
 					}
 					
 					indent--;
@@ -6938,14 +6941,14 @@ public partial class Generator : IMemberGatherer {
 						}
 					}
 					if (props.Count () == 1)
-						throw new BindingException (1112,
+						throw new BindingException (1112, true,
 							"Property {0} should be renamed to 'Delegate' for BaseType.Events and BaseType.Delegates to work.", props[0], false);
 					else if (props.Count () > 1)
-						throw new BindingException (1112,
+						throw new BindingException (1112, true,
 							"Properties {0} should be renamed to 'Delegate' for BaseType.Events and BaseType.Delegates to work.",
 							String.Join (", ", props.ToArray ()), false);
 					else
-						throw new BindingException (1113,
+						throw new BindingException (1113, true,
 							"BaseType.Delegates were set but no properties could be found. Do ensure that the WrapAttribute is used on the right properties.", false);
 				} else
 					throw new BindingException (1114, "Binding error: test unable to find property: {0} on {1}", propertyName, type, false);

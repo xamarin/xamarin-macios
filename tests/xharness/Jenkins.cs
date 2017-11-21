@@ -500,7 +500,7 @@ namespace xharness
 				Platform = TestPlatform.iOS,
 				TestName = "MSBuild tests",
 				Mode = "iOS",
-				Timeout = TimeSpan.FromMinutes (30),
+				Timeout = TimeSpan.FromMinutes (60),
 				Ignored = !IncludeiOSMSBuild,
 			};
 			Tasks.Add (nunitExecutioniOSMSBuild);
@@ -551,7 +551,7 @@ namespace xharness
 							TestName = project.Name,
 						};
 					}
-					exec.Variation = configurations.Length > 1 ? config : null;
+					exec.Variation = configurations.Length > 1 ? config : project.TargetFrameworkFlavor.ToString ();
 					Tasks.Add (exec);
 
 					if (project.GenerateVariations) {
@@ -587,17 +587,6 @@ namespace xharness
 			};
 			Tasks.Add (nunitExecutionMTouch);
 
-			var runBTouch = new MakeTask
-			{
-				Jenkins = this,
-				Platform = TestPlatform.iOS,
-				TestName = "BTouch tests",
-				Target = "all",
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "generator"),
-				Ignored = !IncludeBtouch,
-			};
-			Tasks.Add (runBTouch);
-
 			var buildGenerator = new MakeTask {
 				Jenkins = this,
 				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "src", "generator.sln"))),
@@ -626,6 +615,7 @@ namespace xharness
 				Target = "all -j" + Environment.ProcessorCount,
 				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mmptest", "regression"),
 				Ignored = !IncludeMmpTest || !IncludeMac,
+				Timeout = TimeSpan.FromMinutes (15),
 			};
 			run_mmp.Environment.Add ("BUILD_REVISION", "jenkins"); // This will print "@MonkeyWrench: AddFile: <log path>" lines, which we can use to get the log filenames.
 			Tasks.Add (run_mmp);
@@ -648,6 +638,7 @@ namespace xharness
 				Target = "wrench",
 				WorkingDirectory = Path.Combine (Harness.RootDirectory, "xtro-sharpie"),
 				Ignored = !IncludeXtro,
+				Timeout = TimeSpan.FromMinutes (15),
 			};
 			Tasks.Add (runXtroTests);
 
@@ -742,10 +733,10 @@ namespace xharness
 
 			// Try and find an unused port
 			int attemptsLeft = 50;
-			int port = 0;
+			int port = 51234; // Try this port first, to try to not vary between runs just because.
 			Random r = new Random ((int) DateTime.Now.Ticks);
 			while (attemptsLeft-- > 0) {
-				var newPort = r.Next (49152, 65535); // The suggested range for dynamic ports is 49152-65535 (IANA)
+				var newPort = port != 0 ? port : r.Next (49152, 65535); // The suggested range for dynamic ports is 49152-65535 (IANA)
 				server.Prefixes.Clear ();
 				server.Prefixes.Add ("http://*:" + newPort + "/");
 				try {
@@ -754,6 +745,7 @@ namespace xharness
 					break;
 				} catch (Exception ex) {
 					MainLog.WriteLine ("Failed to listen on port {0}: {1}", newPort, ex.Message);
+					port = 0;
 				}
 			}
 			MainLog.WriteLine ($"Created server on localhost:{port}");
@@ -2312,6 +2304,7 @@ function oninitialload ()
 	{
 		public string Target;
 		public string WorkingDirectory;
+		public TimeSpan Timeout = TimeSpan.FromMinutes (5);
 
 		protected override async Task ExecuteAsync ()
 		{
@@ -2324,7 +2317,7 @@ function oninitialload ()
 					var log = Logs.CreateStream (LogDirectory, $"make-{Platform}-{Timestamp}.txt", "Build log");
 					LogProcessExecution (log, make, "Making {0} in {1}", Target, WorkingDirectory);
 					if (!Harness.DryRun) {
-						var timeout = TimeSpan.FromMinutes (5);
+						var timeout = Timeout;
 						var result = await make.RunAsync (log, true, timeout);
 						if (result.TimedOut) {
 							ExecutionResult = TestExecutingResult.TimedOut;
@@ -2573,6 +2566,12 @@ function oninitialload ()
 					// These tests are not written to support parallel execution
 					// (there are hard coded paths used for instance), so disable
 					// parallel execution for these tests.
+					return false;
+				}
+				if (BCLTest) {
+					// We run the BCL tests in multiple flavors (Full/Modern),
+					// and the BCL tests are not written to support parallel execution,
+					// so disable parallel execution for these tests.
 					return false;
 				}
 
@@ -2928,7 +2927,7 @@ function oninitialload ()
 
 						if (!string.IsNullOrEmpty (runner.FailureMessage))
 							FailureMessage = runner.FailureMessage;
-						else
+						else if (runner.Result != TestExecutingResult.Succeeded)
 							FailureMessage = GuessFailureReason (runner.MainLog);
 
 						if (runner.Result == TestExecutingResult.Succeeded && Platform == TestPlatform.iOS_TodayExtension64) {

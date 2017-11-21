@@ -2001,6 +2001,9 @@ namespace Xamarin.Bundler {
 			if (!EnableMSym)
 				return;
 
+			if (IsExtension && IsCodeShared) // we already have the data from the app
+				return;
+
 			var target_directory = string.Format ("{0}.mSYM", AppDirectory);
 			if (!Directory.Exists (target_directory))
 				Directory.CreateDirectory (target_directory);

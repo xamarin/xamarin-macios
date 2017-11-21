@@ -12,7 +12,26 @@ MTOUCH=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/mtouch
 UNIT_SERVER_DIR=$(TOUCH_UNIT_PATH)/Touch.Server
 UNIT_SERVER=$(UNIT_SERVER_DIR)/bin/Debug/Touch.Server.exe
 TEST_SUITES=monotouch-test link\ sdk link\ all dont\ link framework-test mini
-BCL_TEST_SUITES=mscorlib System System.Core System.Data System.Net.Http System.Numerics System.Runtime.Serialization System.Transactions System.Web.Services System.Xml System.Xml.Linq Mono.Security System.ComponentModel.DataAnnotations System.Json System.ServiceModel.Web Mono.Data.Sqlite
+BCL_TEST_SUITES=mscorlib \
+	System \
+	System.Core \
+	System.Data \
+	System.Net.Http \
+	System.Numerics \
+	System.Runtime.Serialization \
+	System.Transactions \
+	System.Web.Services \
+	System.Xml \
+	System.Xml.Linq \
+	Mono.Security \
+	System.ComponentModel.DataAnnotations \
+	System.Json \
+	System.ServiceModel.Web \
+	Mono.Data.Sqlite \
+	Mono.Data.Tds \
+	System.IO.Compression \
+	System.IO.Compression.FileSystem \
+	Mono.CSharp
 ALL_TEST_SUITES=$(TEST_SUITES) $(BCL_TEST_SUITES)
 EXEC_UNIT_SERVER=XCODE_DEVELOPER_ROOT=$(XCODE_DEVELOPER_ROOT) MONOTOUCH_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) $(SYSTEM_MONO) --debug $(UNIT_SERVER)
 
@@ -368,7 +387,7 @@ runner: xharness/xharness.exe
 # This makefile target will run the device tests using the Xamarin.iOS version
 # installed on the system.
 vsts-device-tests: xharness/xharness.exe
-	$(Q) $(SYSTEM_MONO) --debug $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-mac-tests,skip-ios-simulator-tests,skip-ios-msbuild-tests,skip-system-permission-tests,run-ios-device-tests,run-bcl-tests --markdown-summary=$(CURDIR)/TestSummary.md
+	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --debug $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-mac-tests,skip-ios-simulator-tests,skip-ios-msbuild-tests,skip-system-permission-tests,run-ios-device-tests,run-bcl-tests --markdown-summary=$(CURDIR)/TestSummary.md
 
 ifdef ENABLE_XAMARIN
 wrench-launch-external wrench-report-external:

@@ -887,6 +887,8 @@ Please check if your device is locked.
 
 If you're deploying an enterprise app or using a free provisioning profile, you might have trust the developer (this is explained <a href="http://stackoverflow.com/a/30726375/183422">here</a>).
 
+### <a name="MT1111"/>MT1111: Application launched successfully, but it's not possible to wait for the app to exit as requested because it's not possible to detect app termination when launching using gdbserver.
+
 ### MT12xx: Simulator
 
 <!--
@@ -1259,6 +1261,11 @@ An unexpected error occured when processing an assembly.
 
 The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
+### <a name="MT2104"/>MM2104: Unable to link assembly '{0}' as it is mixed-mode.
+
+Mixed-mode assemblies can not be processed by the linker.
+
+See https://msdn.microsoft.com/en-us/library/x0w2664k.aspx for more information on mixed-mode assemblies.
 
 # MT3xxx: AOT error messages
 

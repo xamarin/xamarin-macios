@@ -2296,6 +2296,213 @@ namespace Xamarin.BindingMethods.Generator
 				}
 			);
 
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, nint, Vector2i, float, float, float, float, float)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.NInt },
+						new ParameterData { TypeData = Types.Vector2i },
+						new ParameterData { TypeData = Types.Float },
+						new ParameterData { TypeData = Types.Float },
+						new ParameterData { TypeData = Types.Float },
+						new ParameterData { TypeData = Types.Float },
+						new ParameterData { TypeData = Types.Float },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // NMatrix4d func ()",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.NMatrix4d
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // NMatrix4d func (Double)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.NMatrix4d,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Double }
+					}
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (NMatrix4d, Double)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.NMatrix4d },
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (NMatrix4d)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.NMatrix4d }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (Vector2, Double)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Vector2 },
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (Vector2d, Double)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Vector2d },
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // Vector2 func (Double)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.Vector2,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // Vector2d func (Double)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.Vector2d,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (NVector3, Double)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.NVector3 },
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (NVector3d, Double)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.NVector3d },
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // NVector3 func (Double)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.NVector3,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // NVector3d func (Double)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.NVector3d,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (Vector4, Double)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Vector4 },
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (Vector4d, Double)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Vector4d },
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // Vector4 func (Double)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.Vector4,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // Vector4d func (Double)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.Vector4d,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
 			// We must expand functions with native types to their actual type as well.
 			for (int i = data.Count - 1; i >= 0; i--) {
 				if (!data [i].HasNativeType)
@@ -3013,10 +3220,10 @@ namespace Xamarin.BindingMethods.Generator
 				NativeWrapperType = "struct Vector3d",
 				RequireMarshal = true,
 			};
-			public static TypeData VectorDouble3 = new TypeData {
-				ManagedType = "VectorDouble3",
+			public static TypeData NVector3d = new TypeData {
+				ManagedType = "NVector3d",
 				NativeType = "vector_double3",
-				NativeWrapperType = "struct Vector3d",
+				NativeWrapperType = "struct Vector4d", // Yes, Vector4d, since NVector3d has 4 doubles.
 				RequireMarshal = true,
 			};
 			public static TypeData Vector4d = new TypeData {
