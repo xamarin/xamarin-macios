@@ -46,7 +46,7 @@ namespace MyCoreMLApp {
 		{
 			switch (featureName) {
 			case "image":
-				return MLFeatureValue.FromPixelBuffer (Image);
+				return MLFeatureValue.Create (Image);
 			default:
 				return null;
 			}
@@ -112,12 +112,12 @@ namespace MyCoreMLApp {
 
 			switch (featureName) {
 			case "classLabelProbs":
-				value = MLFeatureValue.FromDictionary (ClassLabelProbs, out err);
+				value = MLFeatureValue.Create (ClassLabelProbs, out err);
 				if (err != null)
 					err.Dispose ();
 				return value;
 			case "classLabel":
-				return MLFeatureValue.FromString (ClassLabel);
+				return MLFeatureValue.Create (ClassLabel);
 			default:
 				return null;
 			}
@@ -148,7 +148,7 @@ namespace MyCoreMLApp {
 			var url = NSBundle.MainBundle.GetUrlForResource ("SqueezeNet", "mlmodelc");
 			NSError err;
 
-			model = MLModel.FromUrl (url, out err);
+			model = MLModel.Create (url, out err);
 		}
 
 		SqueezeNet (MLModel model)
@@ -161,7 +161,7 @@ namespace MyCoreMLApp {
 			if (url == null)
 				throw new ArgumentNullException (nameof (url));
 
-			var model = MLModel.FromUrl (url, out error);
+			var model = MLModel.Create (url, out error);
 
 			if (model == null)
 				return null;
