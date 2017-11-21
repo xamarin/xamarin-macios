@@ -499,7 +499,7 @@ namespace XamCore.ImageKit {
 
 	[BaseType (typeof (NSObject))]
 	[Model]
-	[Protocol]
+	[Protocol (IsInformal = true)]
 	interface IKImageBrowserDataSource {
 		[Abstract]
 		[Export ("numberOfItemsInImageBrowser:")]
@@ -550,7 +550,7 @@ namespace XamCore.ImageKit {
 
 	[BaseType (typeof (NSObject))]
 	[Model]
-	[Protocol]
+	[Protocol (IsInformal = true)]
 	interface IKImageBrowserItem {
 		[Abstract]
 		[Export ("imageUID")]
