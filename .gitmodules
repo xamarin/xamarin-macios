@@ -30,5 +30,6 @@
     url = ../../xamarin/Xamarin.MacDev
     branch = master
 [submodule "external/macios-binaries"]
-	path = external/macios-binaries
-	url = https://github.com/xamarin/macios-binaries
+    path = external/macios-binaries
+    url = ../../xamarin/macios-binaries
+    branch = master
