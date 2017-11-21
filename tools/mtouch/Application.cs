@@ -112,7 +112,10 @@ namespace Xamarin.Bundler {
 		public bool ManagedStrip = true;
 		public List<string> NoSymbolStrip = new List<string> ();
 		
-		public bool? ThreadCheck;
+		public bool? ThreadCheck {
+			get { return Optimizations.RemoveUIThreadChecks.HasValue ? !Optimizations.RemoveUIThreadChecks.Value : (bool?) null; } 
+			set { Optimizations.RemoveUIThreadChecks = value.HasValue ? !value.Value : (bool?) null; }
+		}
 		public DlsymOptions DlsymOptions;
 		public List<Tuple<string, bool>> DlsymAssemblies;
 		public bool? UseMonoFramework;

@@ -78,7 +78,7 @@ namespace XamCore.Registrar
 	class DynamicRegistrar : Registrar
 	{
 		Dictionary<IntPtr, ObjCType> type_map;
-		Dictionary <string, object> registered_assemblies; // Use Dictionary instead of HashSet to avoid pulling in System.Core.dll.
+		static Dictionary<string, object> registered_assemblies; // Use Dictionary instead of HashSet to avoid pulling in System.Core.dll.
 
 		// custom_type_map can be accessed from multiple threads, and at the
 		// same time mutated by the registrar, so any accesses needs to be locked
@@ -100,7 +100,7 @@ namespace XamCore.Registrar
 			return registered_assemblies != null && registered_assemblies.ContainsKey (GetAssemblyName (assembly));
 		}
 
-		public void SetAssemblyRegistered (string assembly)
+		public static void SetAssemblyRegistered (string assembly)
 		{
 			if (registered_assemblies == null)
 				registered_assemblies = new Dictionary<string, object> ();
@@ -143,24 +143,6 @@ namespace XamCore.Registrar
 		protected override bool Is64Bits {
 			get {
 				return IntPtr.Size == 8;
-			}
-		}
-
-		protected override bool IsDualBuildImpl {
-			get {
-				return NSObject.PlatformAssembly.GetName ().Name == 
-#if MONOMAC
-					"Xamarin.Mac";
-#elif TVOS
-					"Xamarin.TVOS";
-#elif WATCH
-					"Xamarin.WatchOS";
-#elif IOS
-					"Xamarin.iOS";
-#else
-	#error unknown platform
-					"unknown platform";
-#endif
 			}
 		}
 
@@ -623,7 +605,7 @@ namespace XamCore.Registrar
 		{
 			isNativeEnum = false;
 			if (type.IsEnum)
-				isNativeEnum = IsDualBuildImpl && type.IsDefined (typeof (NativeAttribute), false);
+				isNativeEnum = IsDualBuild && type.IsDefined (typeof (NativeAttribute), false);
 			return type.IsEnum;
 		}
 
@@ -988,9 +970,9 @@ namespace XamCore.Registrar
 					bool is_custom_type;
 					var tp = Class.FindType (@class, out is_custom_type);
 					if (tp != null) {
-						type = RegisterType (tp);
-						if (is_custom_type)
-							AddCustomType (tp);
+						//type = RegisterType (tp);
+						//if (is_custom_type)
+							//AddCustomType (tp);
 						return tp;
 					}
 

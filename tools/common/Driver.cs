@@ -126,6 +126,15 @@ namespace Xamarin.Bundler {
 			options.Add ("root-assembly:", "Specifies any root assemblies. There must be at least one root assembly, usually the main executable.", (v) => {
 				app.RootAssemblies.Add (v);
 			});
+			options.Add ("linker-optimize=", "A comma-delimited list of optimizations to enable/disable. Example: --optimize=+remove-uithread-checks will make the linker remove the UI thread checks. Use 'all' to enable or disable all optimizations.\n" +
+					"Available optimizations:\n" +
+					"    remove-uithread-checks: By default enabled for release builds. Remove all UI Thread checks (makes the app smaller, and slightly faster at runtime).\n" +
+					"    remove-dynamic-registrar: By default enabled when the static registrar is enabled. Removes the dynamic registrar (makes the app smaller).\n" +
+					"    inline-setupblock-calls: By default enabled when removing the dynamic registrar (this is a required optimization to be able to remove the dynamic registrar). Does some work at build time to avoid doing the same work at runtime (faster at runtime, at the cost of a very small code increase per SetupBlock call, which is compensated for many times over if the dynamic registrar is successfully removed). There may be certain cases where calls to SetupBlock can't be inlined, in which case you'll get a build error if attempting to remove the dynamic registrar (asking you to disable the 'remove dynamic registrar' optimization)\n" +
+					"    inline-isdirectbinding: By default enabled for release builds. HELP HELP HELP.\n",
+					(v) => {
+						app.Optimizations.Parse (v.Split (','));
+					});
 			options.Add (new Mono.Options.ResponseFileSource ());
 		}
 

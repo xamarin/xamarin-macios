@@ -357,6 +357,9 @@
     <Compile Include="..\common\CoreResolver.cs">
       <Link>common\CoreResolver.cs</Link>
     </Compile>
+    <Compile Include="..\common\Optimizations.cs">
+      <Link>external\Optimizations.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />

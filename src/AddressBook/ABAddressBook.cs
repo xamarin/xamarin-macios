@@ -207,6 +207,7 @@ namespace XamCore.AddressBook {
 		extern unsafe static void ABAddressBookRequestAccessWithCompletion (IntPtr addressbook, void * completion);
 
 		[iOS (6,0)]
+		[LinkerOptimize]
 		public void RequestAccess (Action<bool,NSError> onCompleted)
 		{
 			if (onCompleted == null)
@@ -223,6 +224,7 @@ namespace XamCore.AddressBook {
 			}
 		}
 
+		[UserDelegateType (typeof (Action<bool, NSError>))]
 		internal delegate void InnerCompleted (IntPtr block, bool success, IntPtr error);
 		static readonly InnerCompleted static_completionHandler = TrampolineCompletionHandler;
 		[MonoPInvokeCallback (typeof (InnerCompleted))]

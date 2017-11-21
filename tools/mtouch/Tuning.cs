@@ -148,8 +148,6 @@ namespace MonoTouch.Tuner {
 			sub.Add (new CoreRemoveSecurity ());
 			sub.Add (new OptimizeGeneratedCodeSubStep (options));
 			sub.Add (new RemoveUserResourcesSubStep (options));
-			// OptimizeGeneratedCodeSubStep and RemoveUserResourcesSubStep needs [GeneratedCode] so it must occurs before RemoveAttributes
-			sub.Add (new RemoveAttributes ());
 			// http://bugzilla.xamarin.com/show_bug.cgi?id=1408
 			if (options.LinkAway)
 				sub.Add (new RemoveCode (options));
@@ -195,6 +193,15 @@ namespace MonoTouch.Tuner {
 				pipeline.AppendStep (new MonoTouchTypeMapStep ());
 
 				pipeline.AppendStep (GetSubSteps (options));
+
+				// RemoveUserResourcesSubStep needs [GeneratedCode] so it must occurs before RemoveAttributes
+				// OptimizeGeneratedCodeSubStep also needs several other attributes to properly inline code
+				// Unfortunately SubStepDispatcher doesn't process substeps sequentially (it first runs all the substeps for all fields, then for all methods, etc)
+				// which means that the only way to ensure no attributes are removed before running the OptimizeGeneratedCodeSubStep 
+				// is to put it in a different SubStepDispatcher
+				var attributeRemover = new SubStepDispatcher ();
+				attributeRemover.Add (new RemoveAttributes ());
+				pipeline.AppendStep (attributeRemover);
 
 				pipeline.AppendStep (new PreserveCode (options));
 

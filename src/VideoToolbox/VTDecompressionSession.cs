@@ -256,6 +256,7 @@ namespace XamCore.VideoToolbox {
 		}
 
 		[Mac (10,11), iOS (9,0)]
+		[LinkerOptimize]
 		public VTStatus DecodeFrame (CMSampleBuffer sampleBuffer, VTDecodeFrameFlags decodeFlags,
 			out VTDecodeInfoFlags infoFlags, VTDecompressionOutputHandler outputHandler)
 		{

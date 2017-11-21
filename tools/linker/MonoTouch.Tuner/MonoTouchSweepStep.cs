@@ -50,5 +50,16 @@ namespace MonoTouch.Tuner {
 					attributes.RemoveAt (i--);
 			}
 		}
+
+		protected override void InterfaceRemoved (TypeDefinition type, InterfaceImplementation iface)
+		{
+			base.InterfaceRemoved (type, iface);
+
+			List<TypeDefinition> list;
+			if (!LinkContext.ProtocolImplementations.TryGetValue (type, out list))
+				LinkContext.ProtocolImplementations [type] = list = new List<TypeDefinition> ();
+			list.Add (iface.InterfaceType.Resolve ());
+			System.Console.WriteLine ($"Removed interface implementation: {type.FullName} does not implement {iface.InterfaceType.FullName} anymore.");
+		}
 	}
 }

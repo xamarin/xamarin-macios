@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 using Mono.Cecil;
 using Mono.Linker;
@@ -18,12 +19,21 @@ namespace Xamarin.Tuner
 		List<ICustomAttributeProvider> srs_data_contract = new List<ICustomAttributeProvider> ();
 		List<ICustomAttributeProvider> xml_serialization = new List<ICustomAttributeProvider> ();
 
-		HashSet<TypeDefinition> cached_isnsobject;
 		// Tristate:
 		//   null = don't know, must check at runtime (can't inline)
 		//   true/false = corresponding constant value
 		Dictionary<TypeDefinition, bool?> isdirectbinding_value;
-		HashSet<MethodDefinition> generated_code;
+		HashSet<TypeDefinition> cached_isnsobject;
+
+		public Dictionary<TypeDefinition, List<TypeDefinition>> ProtocolImplementations { get; private set; } = new Dictionary<TypeDefinition, List<TypeDefinition>> ();
+
+		public bool DynamicRegistrationSupported { get { return App.DynamicRegistrationSupported; } }
+
+		public Application App {
+			get {
+				return Target.App;
+			}
+		}
 
 		public HashSet<TypeDefinition> CachedIsNSObject {
 			get { return cached_isnsobject; }
@@ -33,11 +43,6 @@ namespace Xamarin.Tuner
 		public Dictionary<TypeDefinition, bool?> IsDirectBindingValue {
 			get { return isdirectbinding_value; }
 			set { isdirectbinding_value = value; }
-		}
-
-		public HashSet<MethodDefinition> GeneratedCode {
-			get { return generated_code; }
-			set { generated_code = value; }
 		}
 
 		public IList<ICustomAttributeProvider> DataContract {
@@ -64,6 +69,32 @@ namespace Xamarin.Tuner
 			: base (pipeline, resolver)
 		{
 			UserAction = AssemblyAction.Link;
+		}
+
+		public List<ICustomAttribute> GetCustomAttributes (ICustomAttributeProvider provider, string attribute_namespace, string attribute_name)
+		{
+			var annotations = Annotations?.GetCustomAnnotations (attribute_name);
+			object storage = null;
+			if (annotations?.TryGetValue (provider, out storage) != true)
+				return null;
+			return (List<ICustomAttribute>) storage;
+		}
+
+		public void StoreProtocolMethods (TypeDefinition type)
+		{
+			var attribs = Annotations.GetCustomAnnotations ("ProtocolMethods");
+			object value;
+			if (!attribs.TryGetValue (type, out value))
+				attribs [type] = type.Methods.ToArray (); // Make a copy of the collection, since the linker may remove methods from it.
+		}
+
+		public IList<MethodDefinition> GetProtocolMethods (TypeDefinition type)
+		{
+			var attribs = Annotations.GetCustomAnnotations ("ProtocolMethods");
+			object value;
+			if (attribs.TryGetValue (type, out value))
+				return (MethodDefinition []) value;
+			return null;
 		}
 	}
 }

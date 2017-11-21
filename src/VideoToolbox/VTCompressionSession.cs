@@ -263,6 +263,7 @@ namespace XamCore.VideoToolbox {
 		}
 
 		[Mac (10,11), iOS (9,0)]
+		[LinkerOptimize]
 		public VTStatus EncodeFrame (CVImageBuffer imageBuffer, CMTime presentationTimestamp, CMTime duration,
 			NSDictionary frameProperties, IntPtr sourceFrame, out VTEncodeInfoFlags infoFlags,
 			VTCompressionOutputHandler outputHandler)

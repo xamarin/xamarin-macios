@@ -669,6 +669,7 @@ namespace Xamarin.Bundler
 						sw.WriteLine ("\tsetenv (\"MONO_GC_PARAMS\", \"{0}\", 1);", app.MonoGCParams);
 					foreach (var kvp in app.EnvironmentVariables)
 						sw.WriteLine ("\tsetenv (\"{0}\", \"{1}\", 1);", kvp.Key.Replace ("\"", "\\\""), kvp.Value.Replace ("\"", "\\\""));
+					sw.WriteLine ("\txamarin_supports_dynamic_registration = {0};", app.DynamicRegistrationSupported ? "TRUE" : "FALSE");
 					sw.WriteLine ("}");
 					sw.WriteLine ();
 					sw.Write ("int ");
@@ -941,11 +942,21 @@ namespace Xamarin.Bundler
 			return 0;
 		}
 
+		public static void Dump (string msg, params string[] extra)
+		{
+			//var t = ((global::Mono.Cecil.TypeDefinitionCollection) Xamarin.Bundler.Driver.Application.Targets [0].Assemblies ["Xamarin.iOS"].AssemblyDefinition.MainModule.Types).GetType ("ObjCRuntime", "Trampolines").NestedTypes [1470];
+			//Console.WriteLine ($"{msg} {t.FullName}: {t.CustomAttributes.Count} {string.Join (", ", extra)}");
+			//if (t.CustomAttributes.Count < 2)
+				//Console.WriteLine ("STOP");
+		}
+
+		public static Application Application;
 		static Application ParseArguments (string [] args, out Action a)
 		{
 			var action = Action.None;
+			var assemblies = new List<string> ();
 			var app = new Application (args);
-
+			Application = app;
 			if (extra_args != null) {
 				var l = new List<string> (args);
 				foreach (var s in extra_args.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries))

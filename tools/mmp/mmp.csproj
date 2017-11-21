@@ -317,6 +317,9 @@
     <Compile Include="..\common\DerivedLinkContext.cs">
       <Link>external\DerivedLinkContext.cs</Link>
     </Compile>
+    <Compile Include="..\common\Optimizations.cs">
+      <Link>external\Optimizations.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\ObjCRuntime\Registrar.core.cs">
       <Link>external\Registrar.core.cs</Link>
     </Compile>

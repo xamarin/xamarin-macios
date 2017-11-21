@@ -21,6 +21,7 @@ namespace XamCore.CoreFoundation {
 		// You must invoke ->CleanupBlock after you have transferred ownership to
 		// the unmanaged code to release the resources allocated on the managed side
 		//
+		[LinkerOptimize]
 		public static unsafe void Invoke (Action codeToRun, Action<IntPtr> invoker)
 		{
 			BlockLiteral *block_ptr;

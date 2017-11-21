@@ -69,6 +69,12 @@ namespace XamCore.ObjCRuntime {
 		internal extern static IntPtr objc_getProtocol (string name);
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
+		internal extern static IntPtr objc_getProtocol (IntPtr ptr);
+
+		[DllImport ("/usr/lib/libobjc.dylib")]
+		internal extern static bool protocol_conformsToProtocol (IntPtr proto, IntPtr other);
+
+		[DllImport ("/usr/lib/libobjc.dylib")]
 		internal extern static IntPtr objc_allocateProtocol (string name);
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
