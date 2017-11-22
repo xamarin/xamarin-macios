@@ -82,11 +82,6 @@ namespace MonoTouch.Tuner {
 				case Code.Ldsfld:
 					ProcessLoadStaticField (method, i);
 					break;
-				// for classic only (this is a property in unified)
-				case Code.Ldfld:
-					if (!isdirectbinding_check_required)
-						ProcessLoadField (method, i);
-					break;
 				}
 			}
 		}
@@ -237,21 +232,6 @@ namespace MonoTouch.Tuner {
 				Nop (ins);
 				ins = ins.Next;
 			}
-		}
-
-		// this optimization only works on classic - where IsDirectBinding was a field (not a property)
-		// https://app.asana.com/0/77259014252/108629697657
-		static void ProcessLoadField (MethodDefinition caller, int i)
-		{
-			var instructions = caller.Body.Instructions;
-			Instruction ins = instructions [i];
-			if (!IsField (ins, Namespaces.Foundation, "NSObject", "IsDirectBinding"))
-				return;
-
-#if DEBUG
-			Console.WriteLine ("NSObject.IsDirectBinding checked inside {0}", caller);
-#endif
-			ProcessIsDirectBinding (caller, ins);
 		}
 
 		static void ProcessIsDirectBinding (MethodDefinition caller, Instruction ins)
