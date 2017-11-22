@@ -246,9 +246,9 @@ namespace xharness
 			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "introspection" });
 
 			var hard_coded_test_suites = new [] {
-				new { ProjectFile = "mmptest", Name = "mmptest", IsNUnit = true, Configurations = (string[]) null },
-				new { ProjectFile = "msbuild-mac", Name = "MSBuild tests", IsNUnit = false, Configurations = (string[]) null },
-				new { ProjectFile = "xammac_tests", Name = "xammac tests", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }},
+				new { ProjectFile = "mmptest", Name = "mmptest", IsNUnit = true, Configurations = (string[]) null, Platform = "x86", },
+				new { ProjectFile = "msbuild-mac", Name = "MSBuild tests", IsNUnit = false, Configurations = (string[]) null, Platform = "x86" },
+				new { ProjectFile = "xammac_tests", Name = "xammac tests", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "AnyCPU" },
 			};
 			foreach (var p in hard_coded_test_suites) {
 				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.ProjectFile + "/" + p.ProjectFile + ".csproj")), generateVariations: false) {
@@ -256,6 +256,7 @@ namespace xharness
 					IsNUnitProject = p.IsNUnit,
 					SolutionPath = Path.GetFullPath (Path.Combine (RootDirectory, "tests-mac.sln")),
 					Configurations = p.Configurations,
+					Platform = p.Platform,
 				});
 			}
 
@@ -285,7 +286,8 @@ namespace xharness
 					var bclTestInfo = new MacBCLTestInfo (this, p, flavor);
 					var bclTestProject = new MacTestProject (bclTestInfo.ProjectPath, targetFrameworkFlavor: flavor, generateVariations: false) {
 						Name = p,
-						BCLInfo = bclTestInfo
+						BCLInfo = bclTestInfo,
+						Platform = "AnyCPU",
 					};
 
 					MacTestProjects.Add (bclTestProject);

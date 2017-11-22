@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
 
 namespace xharness
 {
@@ -179,33 +180,32 @@ namespace xharness
 			Flavor = flavor;
 		}
 
-		public string FlavorSuffix => Flavor == MacFlavors.Full ? "" : "-modern";
+		public string FlavorSuffix => Flavor == MacFlavors.Full ? "-full" : "-modern";
 		public string ProjectSuffix =>  "-mac" + FlavorSuffix + ".csproj";
 		public string ProjectPath => Path.Combine (Harness.RootDirectory, "bcl-test", TestName, TestName + ProjectSuffix);
 		public string TemplatePath => Path.Combine (Harness.RootDirectory, "bcl-test", TestName, TestName + "-mac.csproj.template");
 
 		public override void Convert () 
 		{
-			string csprojText = ProcessCSProj (File.ReadAllText (TemplatePath), GetFileList ());
+			var inputProject = new XmlDocument ();
 
-			Harness.Save (csprojText, ProjectPath);
-		}
+			var xml = File.ReadAllText (TemplatePath);
+			xml = xml.Replace ("#FILES#", GetFileList ());
+			inputProject.LoadXmlWithoutNetworkAccess (xml);
 
-		string ProcessCSProj (string csprojText, string filesList)
-		{
-			if (Flavor == MacFlavors.Modern) {
-				csprojText = csprojText.Replace (
-@"    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <UseXamMacFullFramework>true</UseXamMacFullFramework>",
-@"    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>");
-
-				csprojText = csprojText.Replace ("<DefineConstants>XAMCORE_2_0", "<DefineConstants>XAMCORE_2_0;MOBILE");
-
-
-				csprojText = csprojText.Replace ("Tests</AssemblyName>", "-modernTests</AssemblyName>");
+			switch (Flavor) {
+			case MacFlavors.Modern:
+				inputProject.SetTargetFrameworkIdentifier ("Xamarin.Mac");
+				inputProject.SetTargetFrameworkVersion ("v2.0");
+				inputProject.RemoveNode ("UseXamMacFullFramework");
+				inputProject.AddAdditionalDefines ("MOBILE");
+				break;
 			}
-			return csprojText.Replace ("#FILES#", filesList);
+			inputProject.SetOutputPath ("bin\\$(Platform)\\$(Configuration)" + FlavorSuffix);
+			inputProject.SetIntermediateOutputPath ("obj\\$(Platform)\\$(Configuration)" + FlavorSuffix);
+			inputProject.SetAssemblyName (inputProject.GetAssemblyName () + FlavorSuffix);
+
+			Harness.Save (inputProject, ProjectPath);
 		}
 
 		string GetFileList ()

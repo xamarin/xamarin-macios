@@ -529,7 +529,7 @@ namespace xharness
 					build.TestProject = project;
 					build.SolutionPath = project.SolutionPath;
 					build.ProjectConfiguration = config;
-					build.ProjectPlatform = "x86";
+					build.ProjectPlatform = project.Platform;
 					build.SpecifyPlatform = false;
 					build.SpecifyConfiguration = build.ProjectConfiguration != "Debug";
 					RunTestTask exec;
@@ -2637,10 +2637,15 @@ function oninitialload ()
 				suffix = "-unifiedXM45-32";
 				break;
 			}
-			if (BCLTest)
-				Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), "bin", BuildTask.ProjectConfiguration + suffix, name + "Tests.app", "Contents", "MacOS", name + "Tests");
-			else
+			if (ProjectFile.EndsWith (".sln")) {
 				Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), "bin", BuildTask.ProjectPlatform, BuildTask.ProjectConfiguration + suffix, name + ".app", "Contents", "MacOS", name);
+			} else {
+				var project = new System.Xml.XmlDocument ();
+				project.LoadWithoutNetworkAccess (ProjectFile);
+				var outputPath = project.GetOutputPath (BuildTask.ProjectPlatform, BuildTask.ProjectConfiguration).Replace ('\\', '/');
+				var assemblyName = project.GetAssemblyName ();
+				Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), outputPath, assemblyName + ".app", "Contents", "MacOS", assemblyName);
+			}
 
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				using (var proc = new Process ()) {
