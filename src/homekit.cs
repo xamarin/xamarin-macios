@@ -344,11 +344,11 @@ namespace XamCore.HomeKit {
 	[BaseType (typeof (NSObject))]
 	partial interface HMCharacteristic {
 
-		[Internal]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("characteristicType", ArgumentSemantic.Copy)]
-		NSString _CharacteristicType { get; }
+		NSString WeakCharacteristicType { get; }
 
-		[Wrap ("HMCharacteristicTypeExtensions.GetValue (_CharacteristicType)")]
+		[Wrap ("HMCharacteristicTypeExtensions.GetValue (WeakCharacteristicType)")]
 		HMCharacteristicType CharacteristicType { get; }
 
 		[Export ("service", ArgumentSemantic.Weak)]
@@ -583,9 +583,9 @@ namespace XamCore.HomeKit {
 		[Export ("assignAccessory:toRoom:completionHandler:")]
 		void AssignAccessory (HMAccessory accessory, HMRoom room, Action<NSError> completion);
 
-		[Internal]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("servicesWithTypes:")]
-		HMService [] _ServicesWithTypes (NSString [] serviceTypes);
+		HMService [] GetServices (NSString [] serviceTypes);
 
 		[NoTV]
 		[NoWatch]
@@ -871,11 +871,11 @@ namespace XamCore.HomeKit {
 		[Export ("accessory", ArgumentSemantic.Weak)]
 		HMAccessory Accessory { get; }
 
-		[Internal]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("serviceType", ArgumentSemantic.Copy)]
-		NSString _ServiceType { get; }
+		NSString WeakServiceType { get; }
 
-		[Wrap ("HMServiceTypeExtensions.GetValue (_ServiceType)")]
+		[Wrap ("HMServiceTypeExtensions.GetValue (WeakServiceType)")]
 		HMServiceType ServiceType { get; }
 
 		[Export ("name")]
@@ -1140,11 +1140,11 @@ namespace XamCore.HomeKit {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: init is unavailable
 	interface HMAccessoryCategory {
-		[Internal]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("categoryType")]
-		NSString _CategoryType { get; }
+		NSString WeakCategoryType { get; }
 
-		[Wrap ("HMAccessoryCategoryTypeExtensions.GetValue (_CategoryType)")]
+		[Wrap ("HMAccessoryCategoryTypeExtensions.GetValue (WeakCategoryType)")]
 		HMAccessoryCategoryType CategoryType { get; }
 
 		[Export ("localizedDescription")]
@@ -1711,12 +1711,12 @@ namespace XamCore.HomeKit {
 		[Wrap ("this (HMSignificantEventExtensions.GetConstant (significantEvent), offset)")]
 		IntPtr Constructor (HMSignificantEvent significantEvent, [NullAllowed] NSDateComponents offset);
 
-		[Internal]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("significantEvent", ArgumentSemantic.Strong)]
-		NSString _SignificantEvent { get; [NotImplemented] set; }
+		NSString WeakSignificantEvent { get; [NotImplemented] set; }
 
 		// FIXME: Bug https://bugzilla.xamarin.com/show_bug.cgi?id=57870
-		// [Wrap ("HMSignificantEventExtensions.GetValue (_SignificantEvent)")]
+		// [Wrap ("HMSignificantEventExtensions.GetValue (WeakSignificantEvent)")]
 		// HMSignificantEvent SignificantEvent { get; [NotImplemented] set; }
 
 		[NullAllowed, Export ("offset", ArgumentSemantic.Strong)]
@@ -1734,14 +1734,14 @@ namespace XamCore.HomeKit {
 		[Wrap ("this (HMSignificantEventExtensions.GetConstant (significantEvent), offset)")]
 		IntPtr Constructor (HMSignificantEvent significantEvent, [NullAllowed] NSDateComponents offset);
 
-		[Internal]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Override]
 		[Export ("significantEvent", ArgumentSemantic.Strong)]
-		NSString _SignificantEvent { get; set; }
+		NSString WeakSignificantEvent { get; set; }
 
 		// FIXME: Bug https://bugzilla.xamarin.com/show_bug.cgi?id=57870
 		// [Override]
-		// [Wrap ("HMSignificantEventExtensions.GetValue (_SignificantEvent)")]
+		// [Wrap ("HMSignificantEventExtensions.GetValue (WeakSignificantEvent)")]
 		// HMSignificantEvent SignificantEvent { get; set; }
 
 		[Override]
