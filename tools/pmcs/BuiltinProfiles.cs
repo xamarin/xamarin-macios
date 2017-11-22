@@ -69,7 +69,6 @@ namespace Xamarin.Pmcs.Profiles
 	{
 		protected XamCore3Common (ArchDefine arch) : base (arch)
 		{
-			CompilerOptions.Add ("-define:XAMCORE_3_0");
 		}
 	}
 
@@ -77,14 +76,8 @@ namespace Xamarin.Pmcs.Profiles
 	{
 		protected XamCore2Common (ArchDefine arch)
 		{
-			CompilerOptions.Add ("-define:XAMCORE_2_0");
-			CompilerOptions.Add ("-define:__UNIFIED__");
-
 			if (arch != ArchDefine.None)
 				CompilerOptions.Add ("-define:" + arch.ToString ());
-
-			IgnorePaths.Add ("Compat.mac.cs");
-			IgnorePaths.Add ("Compat.iOS.cs");
 
 			GlobalReplacements.Add (new Xamarin20Replacement ());
 			EnumBackingTypeReplacements.Add (new Xamarin20Replacement ());

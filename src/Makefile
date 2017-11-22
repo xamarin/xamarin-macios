@@ -58,14 +58,13 @@ IOS_EXTRA_SOURCES = \
 	$(IOS_OPENTK_1_0_CORE_SOURCES)   \
 	$(IOS_BUILD_DIR)/Constants.cs    \
 	$(IOS_BUILD_DIR)/AssemblyInfo.cs \
-	Compat.iOS.cs                    \
 	$(SHARED_SYSTEM_DRAWING_SOURCES) \
 
 IOS_CORE_SOURCES += $(IOS_EXTRA_SOURCES)
 IOS_SOURCES += $(IOS_EXTRA_SOURCES)
 
-IOS_GENERATOR_FLAGS = -inline-selectors -d:IOS -process-enums -warnaserror:$(IOS_GENERATOR_WARNASERROR)
-IOS_DEFINES = -define:IPHONE -define:IOS -define:MONOTOUCH -d:NET_2_0 -d:__IOS__ $(APPLETLS_DEFINES)
+IOS_GENERATOR_FLAGS = -inline-selectors -d:IOS -process-enums -warnaserror:$(IOS_GENERATOR_WARNASERROR) -d:XAMCORE_2_0 -d:__UNIFIED__
+IOS_DEFINES = -define:IPHONE -define:IOS -define:MONOTOUCH -d:NET_2_0 -d:__IOS__ $(APPLETLS_DEFINES) -d:XAMCORE_2_0 -d:__UNIFIED__
 IOS_LIBDIR = $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
 IOS_PMCS = $(IOS_BUILD_DIR)/pmcs
 IOS_BMONO = MONO_PATH=$(IOS_LIBDIR) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch-mono
@@ -461,7 +460,7 @@ MAC_WARNINGS_TO_FIX := 114,108
 # 4014 is "The statement is not awaited and execution of current method continues before the call is completed. Consider using `await' operator or calling `Wait' method"
 MAC_WARNINGS_TO_FIX := $(MAC_WARNINGS_TO_FIX),4014
 
-MAC_COMMON_DEFINES = -define:NET_2_0,XAMARIN_MAC,MONOMAC
+MAC_COMMON_DEFINES = -define:NET_2_0,XAMARIN_MAC,MONOMAC,XAMCORE_2_0,__UNIFIED__
 MAC_BOOTSTRAP_DEFINES = $(MAC_COMMON_DEFINES),COREBUILD
 
 SN_KEY = $(PRODUCT_KEY_PATH)
@@ -477,7 +476,6 @@ MAC_CORE_SOURCES += \
 MAC_SOURCES += \
 	$(MAC_EXTRA_CORE_SOURCES) \
 	$(MAC_BUILD_DIR)/AssemblyInfo.cs \
-	Compat.mac.cs \
 	Obsoletes.cs \
 	Darwin/KernelNotification.cs \
 	Darwin/SystemLog.cs \
@@ -552,6 +550,7 @@ $(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_$(1)_GENERATOR) $(MAC_APIS) $(MA
 	$$(call Q_PROF_GEN,mac/$(1)) PMCS_PROFILE=$(6) $$(MAC_$(1)_GENERATE) \
 		-d:MONOMAC \
 		-d:XAMARIN_MAC \
+		-d:XAMCORE_2_0 -d:__UNIFIED__ \
 		-compiler:$(MAC_BUILD_DIR)/$(1)/pmcs \
 		-process-enums \
 		-warnaserror:$(MAC_GENERATOR_WARNASERROR) \
@@ -825,6 +824,7 @@ $(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $
 		-sourceonly=$@                                           \
 		-compiler=$(WATCH_PMCS)                                    \
 		-nostdlib -noconfig                                      \
+		-d:XAMCORE_2_0 -d:__UNIFIED__ \
 		-no-mono-path                                            \
 		-tmpdir=$(WATCH_BUILD_DIR)/watch                         \
 		-baselib=$(WATCH_BUILD_DIR)/watch/core.dll               \
@@ -1050,6 +1050,7 @@ $(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_
 		-compiler=$(TVOS_PMCS)                                    \
 		-nostdlib -noconfig                                      \
 		-no-mono-path                                            \
+		-d:XAMCORE_2_0 -d:__UNIFIED__				 \
 		-tmpdir=$(TVOS_BUILD_DIR)/tvos                         \
 		-baselib=$(TVOS_BUILD_DIR)/tvos/core.dll               \
 		-attributelib=$(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll \
