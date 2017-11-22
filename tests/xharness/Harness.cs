@@ -89,6 +89,9 @@ namespace xharness
 		public string JenkinsConfiguration { get; set; }
 		public Dictionary<string, string> EnvironmentVariables { get; set; } = new Dictionary<string, string> ();
 		public string MarkdownSummaryPath { get; set; }
+		public string PeriodicCommand { get; set; }
+		public string PeriodicCommandArguments { get; set; }
+		public TimeSpan PeriodicCommandInterval { get; set; }
 
 		public Harness ()
 		{
@@ -609,10 +612,11 @@ namespace xharness
 
 		public void LogWrench (string message, params object[] args)
 		{
-			if (!InWrench)
-				return;
+			// Disable this for now, since we're not uploading directly to wrench anymore, but instead using the Html Report.
+			//if (!InWrench)
+			//	return;
 
-			Console.WriteLine (message, args);
+			//Console.WriteLine (message, args);
 		}
 
 		public void LogWrench (string message)

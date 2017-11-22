@@ -67,6 +67,9 @@ namespace xharness
 					}
 				},
 				{ "markdown-summary=", "The path where a summary (in Markdown format) will be written.", (v) => harness.MarkdownSummaryPath = v },
+				{ "periodic-command=", "A command to execute periodically.", (v) => harness.PeriodicCommand = v },
+				{ "periodic-command-arguments=", "Arguments to the command to execute periodically.", (v) => harness.PeriodicCommandArguments = v },
+				{ "periodic-interval=", "An interval (in minutes) between every attempt to execute the periodic command.", (v) => harness.PeriodicCommandInterval = TimeSpan.FromMinutes (double.Parse (v)) },
 			};
 
 			showHelp = () => {
