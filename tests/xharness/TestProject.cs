@@ -158,6 +158,7 @@ namespace xharness
 		public bool GenerateModern => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.Modern;
 		public bool GenerateFull => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.Full;
 
+		public string Platform = "x86";
 		public string [] Configurations;
 
 		public MacTestProject () : base ()

@@ -252,25 +252,22 @@ endif
 #XI
 ifdef INCLUDE_IOS
 wrench-mtouch:
-	cd mtouch && $(MAKE)
-	git clean -xfdq
+	@echo Not here anymore
 
 wrench-btouch:
-	cd generator && $(MAKE) 
-	cd generator && git clean -xfdq
+	@echo Not here anymore
 
 wrench-build-unit-test-dev:
-	$(MAKE) build-dev-bots
-	git clean -xfdq
+	@echo Not here anymore
 
 wrench-sim-linksdk:
-	$(Q) $(MAKE) wrench-sim-link\ sdk
+	@echo Not here anymore
 
 wrench-sim-linkall:
-	$(Q) $(MAKE) wrench-sim-link\ all
+	@echo Not here anymore
 
 wrench-sim-dontlink:
-	$(Q) $(MAKE) wrench-sim-dont\ link
+	@echo Not here anymore
 
 else
 wrench-mtouch wrench-btouch wrench-build-unit-test-dev:
@@ -280,9 +277,7 @@ endif
 ## XM
 ifdef INCLUDE_MAC
 wrench-mac-dontlink:
-	$(Q) $(MAKE) run-mac-dontlink
-	$(Q) $(MAKE) clean-mac-dontlink
-	git clean -xfdq
+	@echo Not here anymore
 
 wrench-mac-mmp:
 	@echo Now part of wrench-mac-mmptest
@@ -297,29 +292,19 @@ wrench-mac-drm:
 	@echo "The DRM tests have all been removed."
 
 wrench-mac-api:
-	$(Q) $(MAKE) run-mac-apitest
-	$(Q) $(MAKE) clean-mac-apitest
-	git clean -xfdq
+	@echo Not here anymore
 
 wrench-mac-mmptest:
-	$(Q) $(MAKE) run-mac-mmptest
-	$(Q) $(MAKE) clean-mac-mmptest
-	$(Q) $(MAKE) -C mmptest/regression
-	git clean -xfdq
+	@echo Not here anymore
 
 wrench-mac-msbuild:
-	$(Q) $(MAKE) run-mac-msbuild
-	$(Q) $(MAKE) clean-mac-msbuild
-	git clean -xfdq
+	@echo Not here anymore
 
 wrench-mac-binding-project:
-	cd mac-binding-project && $(MAKE)
-	cd mac-binding-project && git clean -xfdq
+	@echo Not here anymore
 
 wrench-mac-introspection:
-	$(Q) $(MAKE) run-mac-introspection
-	$(Q) $(MAKE) clean-mac-introspection
-	git clean -xfdq
+	@echo Not here anymore
 
 else
 wrench-mac-%:
@@ -327,13 +312,7 @@ wrench-mac-%:
 endif
 
 wrench-msbuild:
-	$(MAKE) -C $(TOP)/msbuild .stamp-test-xml
-ifdef INCLUDE_IOS
-	$(MAKE) test-ios-tasks
-else
-	@echo "iOS tests have been disabled [$@]"
-endif
-	cd $(TOP)/msbuild && git clean -xfdq
+	@echo Not here anymore
 
 wrench-docs:
 ifdef ENABLE_XAMARIN
@@ -348,31 +327,20 @@ endif
 
 # the wrenchhelper-* targets are generated.
 wrench-sim-%:
-	git clean -xfdq
-ifdef INCLUDE_IOS
-	unset LD_LIBRARY_PATH && script -q /dev/null $(MAKE) "wrenchhelper-$*"
-else
-	@echo "iOS tests have been disabled [$@]"
-endif	
+	@echo Not here anymore
 
 wrench-bcl-sim-%:
-	git clean -xfdq
-ifdef INCLUDE_IOS
-	unset LD_LIBRARY_PATH && script -q /dev/null $(MAKE) "wrenchhelper-$*"
-else
-	@echo "iOS tests have been disabled [$@]"
-endif	
+	@echo Not here anymore
 
 wrench-%:
-	git clean -xfdq
-ifdef INCLUDE_IOS
-	touch "exec-$*.log"
-	echo "@MonkeyWrench: AddFile: $(PWD)/exec-$*.log"
-	unset LD_LIBRARY_PATH && script -q /dev/null $(MAKE) "run-$*"
-	echo "Test succeeded"
-else
-	@echo "iOS tests have been disabled [$@]"
-endif
+	@echo Not here anymore
+
+wrench-jenkins: xharness/xharness.exe
+	$(Q) rm -f $@-failed.stamp
+	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --debug $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --label run-all-tests,skip-ios-device-tests --markdown-summary=$(abspath $(CURDIR))/TestSummary.md $(TESTS_PERIODIC_COMMAND) || echo "$$?" > $@-failed.stamp
+	@echo "@MonkeyWrench: SetSummary: <br/>`cat $(abspath $(CURDIR))/TestSummary.md | awk 1 ORS='<br/>'`"
+	@echo "@MonkeyWrench: AddFile: $(abspath $(CURDIR))/TestSummary.md"
+	$(Q) if test -e $@-failed.stamp; then EC=`cat $@-failed.stamp`; rm -f $@-failed.stamp; exit $$EC; fi
 
 wrench-xtro:
 	git clean -xfdq
