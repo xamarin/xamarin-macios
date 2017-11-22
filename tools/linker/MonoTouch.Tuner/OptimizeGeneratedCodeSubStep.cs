@@ -9,8 +9,9 @@ using Xamarin.Bundler;
 namespace MonoTouch.Tuner {
 	
 	public class OptimizeGeneratedCodeSubStep : CoreOptimizeGeneratedCode {
-		
-		bool isdirectbinding_check_required;
+		// If the type currently being processed is a direct binding or not.
+		// A null value means it's not a constant value, and can't be inlined.
+		bool? isdirectbinding_constant;
 		
 		public OptimizeGeneratedCodeSubStep (LinkerOptions options)
 		{
@@ -63,7 +64,7 @@ namespace MonoTouch.Tuner {
 			if (!HasGeneratedCode)
 				return;
 
-			isdirectbinding_check_required = type.IsDirectBindingCheckRequired (LinkContext);
+			isdirectbinding_constant = type.IsNSObject (LinkContext) ? type.GetIsDirectBindingConstant (LinkContext) : null;
 			base.Process (type);
 		}
 
@@ -193,8 +194,8 @@ namespace MonoTouch.Tuner {
 		{
 			const string operation = "inline IsDirectBinding";
 
-			// We can't inline if the IsDirectBinding check is required
-			if (isdirectbinding_check_required)
+			// If we don't know the constant isdirectbinding value, then we can't inline anything
+			if (!isdirectbinding_constant.HasValue)
 				return;
 
 			// Verify we're checking the right get_IsDirectBinding call
@@ -213,7 +214,7 @@ namespace MonoTouch.Tuner {
 			// ldarg.0
 			Nop (ins.Previous);
 			// call System.Boolean Foundation.NSObject::get_IsDirectBinding()
-			ins.OpCode = OpCodes.Ldc_I4_1;
+			ins.OpCode = isdirectbinding_constant.Value ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0;
 			ins.Operand = null;
 		}
 	}
