@@ -1,16 +1,10 @@
-﻿using System;
+#if XAMCORE_2_0
+using System;
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using AppKit;
-#else
-using MonoMac;
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-using MonoMac.AppKit;
-#endif
 
 namespace Introspection
 {
@@ -47,3 +41,4 @@ namespace Introspection
 		}
 	}
 }
+#endif
