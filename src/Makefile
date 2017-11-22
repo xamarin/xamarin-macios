@@ -154,13 +154,12 @@ $(IOS_BUILD_DIR)/$(1)/generated_sources: $$(IOS_$(1)_GENERATOR) $$(IOS_APIS) $(I
 		$$(xi_$(1)_profile) \
 		$$(IOS_APIS)
 endef
-$(eval $(call IOS_GENERATOR_template,compat,--ns=MonoTouch.ObjCRuntime -p,compat-ios,monotouch.BindingAttributes.dll))
 $(eval $(call IOS_GENERATOR_template,native,--ns=ObjCRuntime,native,Xamarin.iOS.BindingAttributes.dll))
 
 define IOS_TARGETS_template
 IOS_VARIANTS_TARGETS += $(IOS_BUILD_DIR)/$(1)/$(3)
 
-# monotouch.dll | Xamarin.iOS.dll
+# Xamarin.iOS.dll
 $(IOS_BUILD_DIR)/$(1)/$(3): $$(IOS_SOURCES) $(IOS_BUILD_DIR)/$(4)/generated_sources $(PRODUCT_KEY_PATH)
 	@mkdir -p $(IOS_BUILD_DIR)/$(1)
 	$$(call Q_PROF_PMCS,ios/$(1)) PMCS_PROFILE=$(5) $$(IOS_PMCS) -out:$$@ -target:library -debug -unsafe -optimize \
@@ -176,7 +175,18 @@ $(IOS_BUILD_DIR)/$(1)/$(3).pdb: $(IOS_BUILD_DIR)/$(1)/$(3).dll
 
 endef
 
-$(eval $(call IOS_TARGETS_template,compat,--ns=MonoTouch.ObjCRuntime,monotouch.dll,compat,compat-ios))
+$(IOS_BUILD_DIR)/compat/monotouch.dll: $(MACIOS_BINARIES_PATH)/monotouch.dll | $(IOS_BUILD_DIR)/compat
+	$(Q) cp $< $@
+
+$(IOS_BUILD_DIR)/compat/monotouch.dll.mdb: $(MACIOS_BINARIES_PATH)/monotouch.dll.mdb | $(IOS_BUILD_DIR)/compat
+	$(Q) cp $< $@
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/monotouch.dll: $(IOS_BUILD_DIR)/compat/monotouch.dll
+	$(Q) cp $< $@
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/monotouch.dll.mdb : $(IOS_BUILD_DIR)/compat/monotouch.dll.mdb
+	$(Q) cp $< $@
+
 $(eval $(call IOS_TARGETS_template,native-32,--ns=ObjCRuntime,Xamarin.iOS.dll,native,native-32))
 $(eval $(call IOS_TARGETS_template,native-64,--ns=ObjCRuntime,Xamarin.iOS.dll,native,native-64))
 
@@ -212,7 +222,19 @@ $(IOS_BUILD_DIR)/$(1)/System.Drawing.dll: $$(IOS_SYSTEM_DRAWING_SOURCES) monotou
 		$$(IOS_SYSTEM_DRAWING_SOURCES)
 endef
 
-$(eval $(call IOS_LIBS_template,compat,--ns=MonoTouch.ObjCRuntime,monotouch.dll,MonoTouch.Dialog-1.dll,MonoTouch.NUnitLite.dll))
+$(IOS_BUILD_DIR)/compat/MonoTouch.Dialog-1.dll: $(MACIOS_BINARIES_PATH)/MonoTouch.Dialog-1.dll | $(IOS_BUILD_DIR)/compat
+	$(Q) cp $< $@
+
+$(IOS_BUILD_DIR)/compat/MonoTouch.Dialog-1.pdb: $(MACIOS_BINARIES_PATH)/MonoTouch.Dialog-1.pdb | $(IOS_BUILD_DIR)/compat
+	$(Q) cp $< $@
+
+$(IOS_BUILD_DIR)/compat/MonoTouch.NUnitLite.dll: $(MACIOS_BINARIES_PATH)/MonoTouch.NUnitLite.dll | $(IOS_BUILD_DIR)/compat
+	$(Q) cp $< $@
+
+$(IOS_BUILD_DIR)/compat/MonoTouch.NUnitLite.pdb: $(MACIOS_BINARIES_PATH)/MonoTouch.NUnitLite.pdb | $(IOS_BUILD_DIR)/compat
+	$(Q) cp $< $@
+
+
 $(eval $(call IOS_LIBS_template,reference,--ns=ObjCRuntime,Xamarin.iOS.dll,MonoTouch.Dialog-1.dll,MonoTouch.NUnitLite.dll,-define:XAMCORE_2_0 -define:__UNIFIED__))
 
 $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.dll

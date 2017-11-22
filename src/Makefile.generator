@@ -97,7 +97,6 @@ IOS_TARGETS_DIRS +=                              \
 
 IOS_TARGETS +=                                                          \
 	generator.csproj                                               \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/monotouch.BindingAttributes.dll \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/Xamarin.iOS.BindingAttributes.dll \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe                 \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bgen                          \
@@ -129,10 +128,6 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe: build/common/bgen.exe | $(I
 $(IOS_BUILD_DIR)/native/Xamarin.iOS.BindingAttributes.dll: generator-attributes.cs Makefile.generator $(PMCS_EXE)
 	$(Q) mkdir -p $(dir $@)
 	$(Q_GEN) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/native"     -compiler:$(IOS_MCS) -global-replace:"^XamCore.="        -out:$@ -debug generator-attributes.cs -target:library
-
-$(IOS_BUILD_DIR)/native/monotouch.BindingAttributes.dll: generator-attributes.cs Makefile.generator $(PMCS_EXE)
-	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/compat-ios"     -compiler:$(IOS_MCS) -global-replace:"^XamCore.=MonoTouch."        -out:$@ -debug generator-attributes.cs -target:library
 
 #
 # Xamarin.Watch (bwatch)
@@ -217,9 +212,10 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/%.exe: build/common/bgen.exe
 	$(Q) install -m 0755 $< $@
 	$(Q) install -m 0644 $< $(@:.exe=.pdb)
 
-$(MAC_BUILD_DIR)/XamMac.BindingAttributes.dll: generator-attributes.cs Makefile.generator $(PMCS_EXE)
+$(MAC_BUILD_DIR)/XamMac.BindingAttributes.dll: $(MACIOS_BINARIES_PATH)/XamMac.BindingAttributes.dll
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/compat-mac"     -compiler:$(SYSTEM_MCS) -global-replace:"^XamCore.=MonoMac."        -out:$@ -debug generator-attributes.cs -target:library
+	$(Q) cp $< $@
+	$(Q) cp $<.mdb $@.mdb
 
 $(MAC_BUILD_DIR)/Xamarin.Mac-%.BindingAttributes.dll: generator-attributes.cs Makefile.generator $(PMCS_EXE)
 	$(Q) mkdir -p $(dir $@)
@@ -231,7 +227,6 @@ bgen:	\
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/XamMac.BindingAttributes.dll     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/Xamarin.Mac-full.BindingAttributes.dll     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/Xamarin.Mac-mobile.BindingAttributes.dll     \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/monotouch.BindingAttributes.dll \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/Xamarin.iOS.BindingAttributes.dll \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/Xamarin.TVOS.BindingAttributes.dll \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/Xamarin.WatchOS.BindingAttributes.dll \
