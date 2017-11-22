@@ -30,7 +30,7 @@ namespace XamCore.Photos {
 
 	public partial class PHLivePhotoEditingContext {
 
-		[Obsolete ("Use 'FrameProcessor2' instead.")]
+		[Obsolete ("Use 'FrameProcessor2' instead.", true)]
 		public virtual PHLivePhotoFrameProcessingBlock FrameProcessor { get; set; }
 	}
 #endif
