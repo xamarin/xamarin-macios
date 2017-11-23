@@ -79,6 +79,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <Target Name="AfterBuild">
-    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutputPath)\System.IO.CompressionTests.app\Contents\MonoBundle" />
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutputPath)\$(AssemblyName).app\Contents\MonoBundle" />
   </Target>
 </Project>
