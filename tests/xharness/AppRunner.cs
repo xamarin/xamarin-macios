@@ -722,6 +722,7 @@ namespace xharness
 				}
 
 				logdev.StopCapture ();
+				device_system_log.Dispose ();
 
 				// Upload the system log
 				if (File.Exists (device_system_log.FullPath)) {
