@@ -529,7 +529,7 @@ namespace xharness
 					build.TestProject = project;
 					build.SolutionPath = project.SolutionPath;
 					build.ProjectConfiguration = config;
-					build.ProjectPlatform = "x86";
+					build.ProjectPlatform = project.Platform;
 					build.SpecifyPlatform = false;
 					build.SpecifyConfiguration = build.ProjectConfiguration != "Debug";
 					RunTestTask exec;
@@ -586,17 +586,6 @@ namespace xharness
 				Ignored = !IncludeMtouch,
 			};
 			Tasks.Add (nunitExecutionMTouch);
-
-			var runBTouch = new MakeTask
-			{
-				Jenkins = this,
-				Platform = TestPlatform.iOS,
-				TestName = "BTouch tests",
-				Target = "all",
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "generator"),
-				Ignored = !IncludeBtouch,
-			};
-			Tasks.Add (runBTouch);
 
 			var buildGenerator = new MakeTask {
 				Jenkins = this,
@@ -693,11 +682,35 @@ namespace xharness
 			throw new NotImplementedException ();
 		}
 
+		async Task ExecutePeriodicCommandAsync (Log periodic_loc)
+		{
+			//await Task.Delay (Harness.UploadInterval);
+			periodic_loc.WriteLine ($"Starting periodic task with interval {Harness.PeriodicCommandInterval.TotalMinutes} minutes.");
+			while (true) {
+				var watch = Stopwatch.StartNew ();
+				using (var process = new Process ()) {
+					process.StartInfo.FileName = Harness.PeriodicCommand;
+					process.StartInfo.Arguments = Harness.PeriodicCommandArguments;
+					var rv = await process.RunAsync (periodic_loc, null);
+					if (!rv.Succeeded)
+						periodic_loc.WriteLine ($"Periodic command failed with exit code {rv.ExitCode} (Timed out: {rv.TimedOut})");
+				}
+				var ticksLeft = watch.ElapsedTicks - Harness.PeriodicCommandInterval.Ticks;
+				if (ticksLeft < 0)
+					ticksLeft = Harness.PeriodicCommandInterval.Ticks;
+				var wait = TimeSpan.FromTicks (ticksLeft);
+				await Task.Delay (wait);
+			}
+		}
+
 		public int Run ()
 		{
 			try {
 				Directory.CreateDirectory (LogDirectory);
-				Harness.HarnessLog = MainLog = Logs.CreateStream (LogDirectory, "Harness.log", "Harness log");
+				Log log = Logs.CreateStream (LogDirectory, "Harness.log", "Harness log");
+				if (Harness.InWrench)
+					log = Log.CreateAggregatedLog (log, new ConsoleLog ());
+				Harness.HarnessLog = MainLog = log;
 				Harness.HarnessLog.Timestamp = true;
 
 				var tasks = new List<Task> ();
@@ -711,6 +724,11 @@ namespace xharness
 							Console.WriteLine ("Still running tests. Please be patient.");
 						}
 					});
+				}
+				if (!string.IsNullOrEmpty (Harness.PeriodicCommand)) {
+					var periodic_log = Logs.CreateFile ("Periodic command log", Path.Combine (LogDirectory, "PeriodicCommand.log"), false);
+					periodic_log.Timestamp = true;
+					Task.Run (async () => await ExecutePeriodicCommandAsync (periodic_log));
 				}
 
 				Task.Run (async () =>
@@ -2326,6 +2344,7 @@ function oninitialload ()
 					make.StartInfo.Arguments = Target;
 					SetEnvironmentVariables (make);
 					var log = Logs.CreateStream (LogDirectory, $"make-{Platform}-{Timestamp}.txt", "Build log");
+					log.Timestamp = true;
 					LogProcessExecution (log, make, "Making {0} in {1}", Target, WorkingDirectory);
 					if (!Harness.DryRun) {
 						var timeout = Timeout;
@@ -2461,6 +2480,7 @@ function oninitialload ()
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				var xmlLog = Logs.CreateFile ("XML log", Path.Combine (LogDirectory, "log.xml"));
 				var log = Logs.CreateStream (LogDirectory, $"execute-{Timestamp}.txt", "Execution log");
+				log.Timestamp = true;
 				using (var proc = new Process ()) {
 
 					proc.StartInfo.WorkingDirectory = WorkingDirectory;
@@ -2617,10 +2637,15 @@ function oninitialload ()
 				suffix = "-unifiedXM45-32";
 				break;
 			}
-			if (BCLTest)
-				Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), "bin", BuildTask.ProjectConfiguration + suffix, name + "Tests.app", "Contents", "MacOS", name + "Tests");
-			else
+			if (ProjectFile.EndsWith (".sln")) {
 				Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), "bin", BuildTask.ProjectPlatform, BuildTask.ProjectConfiguration + suffix, name + ".app", "Contents", "MacOS", name);
+			} else {
+				var project = new System.Xml.XmlDocument ();
+				project.LoadWithoutNetworkAccess (ProjectFile);
+				var outputPath = project.GetOutputPath (BuildTask.ProjectPlatform, BuildTask.ProjectConfiguration).Replace ('\\', '/');
+				var assemblyName = project.GetAssemblyName ();
+				Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), outputPath, assemblyName + ".app", "Contents", "MacOS", assemblyName);
+			}
 
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				using (var proc = new Process ()) {
@@ -2646,7 +2671,7 @@ function oninitialload ()
 								ExecutionResult = TestExecutingResult.Succeeded;
 							} else {
 								ExecutionResult = TestExecutingResult.Failed;
-								FailureMessage = result.ExitCode != 1 ? "Test run crashed." : "Test run failed.";
+								FailureMessage = result.ExitCode != 1 ? $"Test run crashed (exit code: {result.ExitCode})." : "Test run failed.";
 								log.WriteLine (FailureMessage);
 							}
 						} finally {

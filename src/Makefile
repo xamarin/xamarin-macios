@@ -497,7 +497,6 @@ $(MAC_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in
 # We can't pass the --target-framework values as parameters to the templates, because the commas interfere with Make's parameter parsing.
 xm_full_profile=--target-framework=Xamarin.Mac,Version=v4.5,Profile=Full
 xm_mobile_profile=--target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile
-xm_compat_profile=--target-framework=XamMac,v1.0
 
 MAC_GENERATOR=build/common/bgen.exe
 MAC_GENERATE=$(SYSTEM_MONO) --debug $(MAC_GENERATOR)
@@ -547,7 +546,6 @@ $(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_$(1)_GENERATOR) $(MAC_APIS) $(MA
 		$(MAC_APIS)
 endef
 
-$(eval $(call MAC_GENERATOR_template,compat,--ns=MonoMac.ObjCRuntime,-r:/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/System.Drawing.dll,,,compat-mac,XamMac.BindingAttributes.dll))
 $(eval $(call MAC_GENERATOR_template,full,--ns=ObjCRuntime,-d:NO_SYSTEM_DRAWING,,,full,Xamarin.Mac-full.BindingAttributes.dll))
 $(eval $(call MAC_GENERATOR_template,mobile,--ns=ObjCRuntime,$(SHARED_SYSTEM_DRAWING_SOURCES),-nostdlib -r:mscorlib.dll -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac,,mobile,Xamarin.Mac-mobile.BindingAttributes.dll))
 
@@ -564,7 +562,6 @@ $(MAC_BUILD_DIR)/$(1)/$(2): $(MAC_BUILD_DIR)/$(3)/generated-sources $(MAC_SOURCE
 		@$$< $$(MAC_SOURCES)
 endef
 
-$(eval $(call MAC_TARGETS_template,compat,XamMac.dll,compat,-r:System.Drawing -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5 $(MAC_CLASSIC_SOURCES),compat-mac))
 $(eval $(call MAC_TARGETS_template,mobile-32,Xamarin.Mac.dll,mobile,-r:System.Net.Http -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac $(MAC_CFNETWORK_SOURCES) $(MAC_MODERNHTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,mobile-32))
 $(eval $(call MAC_TARGETS_template,mobile-64,Xamarin.Mac.dll,mobile,-r:System.Net.Http -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac $(MAC_CFNETWORK_SOURCES) $(MAC_MODERNHTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,mobile-64))
 $(eval $(call MAC_TARGETS_template,full-32,Xamarin.Mac.dll,full,-r:System.Net.Http -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5 $(MAC_CFNETWORK_SOURCES) $(MAC_MODERNHTTP_SOURCES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,full-32))
@@ -594,14 +591,13 @@ $(MONO_PATH)/mcs/class/lib/xammac/reference_Facades/netstandard.dll: $(MAC_BUILD
 $(MAC_BUILD_DIR)/mobile/Facades/netstandard.dll: $(MONO_PATH)/mcs/class/lib/xammac/reference_Facades/netstandard.dll $(MAC_BUILD_DIR)/mobile/Facades
 	$(Q) cp $< $@
 
-$(MAC_BUILD_DIR)/compat/XamMac.CFNetwork.dll: $(MAC_CFNETWORK_SOURCES) $(MAC_BUILD_DIR)/compat/XamMac.dll $(SN_KEY)
-	$(call Q_PROF_PMCS,mac/compat) PMCS_PROFILE=compat-mac $(MAC_BUILD_DIR)/compat/pmcs -sdk:4.5 -out:$@ -target:library -debug \
-		$(MAC_COMMON_DEFINES) \
-		-keyfile:$(SN_KEY) \
-		-nowarn:$(MAC_WARNINGS_TO_FIX) \
-		-r:$(MAC_BUILD_DIR)/compat/XamMac.dll \
-		-r:System.Net.Http \
-		$(MAC_CFNETWORK_SOURCES)
+$(MAC_BUILD_DIR)/compat/XamMac.CFNetwork.dll: $(MACIOS_BINARIES_PATH)/XamMac.CFNetwork.dll | $(MAC_BUILD_DIR)/compat
+	$(Q) cp $< $@
+	$(Q) cp $<.mdb $@.mdb
+
+$(MAC_BUILD_DIR)/compat/XamMac.dll: $(MACIOS_BINARIES_PATH)/XamMac.dll | $(MAC_BUILD_DIR)/compat
+	$(Q) cp $< $@
+	$(Q) cp $<.mdb $@.mdb
 
 MAC_VARIANTS_TARGETS = \
 	$(MAC_BUILD_DIR)/compat/XamMac.dll \
