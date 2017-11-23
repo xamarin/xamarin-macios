@@ -16,6 +16,15 @@ namespace Xamarin.Tests.Utils {
 			// unless only the major part is provided
 			v = StringUtils.ParseVersion ("6");
 			Assert.That (v.ToString (), Is.EqualTo ("6.0"), "6.0");
+			// with major and minor
+			v = StringUtils.ParseVersion ("7.1");
+			Assert.That (v.ToString (), Is.EqualTo ("7.1"), "7.1");
+			// with major and minor
+			v = StringUtils.ParseVersion ("7.1");
+			Assert.That (v.ToString (), Is.EqualTo ("7.1"), "7.1");
+			// with major, minor and build
+			v = StringUtils.ParseVersion ("10.13.2");
+			Assert.That (v.ToString (), Is.EqualTo ("10.13.2"), "10.13.2");
 		}
 	}
 }
