@@ -549,6 +549,7 @@ namespace xharness
 							Ignored = ignored || !IncludeClassicMac,
 							BCLTest = project.IsBclTest,
 							TestName = project.Name,
+							IsUnitTest = true,
 						};
 					}
 					exec.Variation = configurations.Length > 1 ? config : project.TargetFrameworkFlavor.ToString ();
@@ -663,6 +664,7 @@ namespace xharness
 				return new MacExecuteTask (build) {
 					Ignored = ignore,
 					TestName = task.TestName,
+					IsUnitTest = macExec.IsUnitTest,
 				};
 			}
 			var nunit = task as NUnitExecuteTask;
@@ -1830,6 +1832,28 @@ function oninitialload ()
 										} catch (Exception ex) {
 											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", System.Web.HttpUtility.HtmlEncode (ex.Message));
 										}
+									} else if (log.Description == "NUnit results") {
+										try {
+											var doc = new System.Xml.XmlDocument ();
+											doc.LoadWithoutNetworkAccess (log.FullPath);
+											var failures = doc.SelectNodes ("//test-case[@result='Error' or @result='Failure']").Cast<System.Xml.XmlNode> ().ToArray ();
+											if (failures.Length > 0) {
+												writer.WriteLine ("<div style='padding-left: 15px;'>");
+												foreach (var failure in failures) {
+													var test_name = failure.Attributes ["name"]?.Value;
+													var message = failure.SelectSingleNode ("failure/message")?.InnerText;
+													writer.Write (System.Web.HttpUtility.HtmlEncode (test_name));
+													if (!string.IsNullOrEmpty (message)) {
+														writer.Write (": ");
+														writer.Write (System.Web.HttpUtility.HtmlEncode (message));
+													}
+													writer.WriteLine ("<br />");
+												}
+												writer.WriteLine ("</div>");
+											}
+										} catch (Exception ex) {
+											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {System.Web.HttpUtility.HtmlEncode (ex.Message)}</span><br />");
+										}
 									}
 								}
 							}
@@ -2584,6 +2608,7 @@ function oninitialload ()
 	{
 		public string Path;
 		public bool BCLTest;
+		public bool IsUnitTest;
 
 		public MacExecuteTask (BuildToolTask build_task)
 			: base (build_task)
@@ -2650,6 +2675,10 @@ function oninitialload ()
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				using (var proc = new Process ()) {
 					proc.StartInfo.FileName = Path;
+					if (IsUnitTest) {
+						using (var xml = Logs.CreateFile ("NUnit results", System.IO.Path.Combine (LogDirectory, $"test-{Platform}-{Timestamp}.xml"), false))
+							proc.StartInfo.Arguments = $"-result={StringUtils.Quote (xml.FullPath)}";
+					}
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					var log = Logs.CreateStream (LogDirectory, $"execute-{Platform}-{Timestamp}.txt", "Execution log");
 					log.WriteLine ("{0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments);
