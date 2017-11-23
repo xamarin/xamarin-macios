@@ -198,7 +198,10 @@ namespace xharness
 				inputProject.SetTargetFrameworkIdentifier ("Xamarin.Mac");
 				inputProject.SetTargetFrameworkVersion ("v2.0");
 				inputProject.RemoveNode ("UseXamMacFullFramework");
-				inputProject.AddAdditionalDefines ("MOBILE");
+				inputProject.AddAdditionalDefines ("MOBILE;XAMMAC");
+				break;
+			case MacFlavors.Full:
+				inputProject.AddAdditionalDefines ("XAMMAC_4_5");
 				break;
 			}
 			inputProject.SetOutputPath ("bin\\$(Platform)\\$(Configuration)" + FlavorSuffix);
