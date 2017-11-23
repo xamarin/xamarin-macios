@@ -730,8 +730,13 @@ namespace XamCore.ImageKit {
 		[Export ("backgroundColor", ArgumentSemantic.Assign)]
 		NSColor BackgroundColor { get; set;  }
 
+#if !XAMCORE_4_0
 		[Export ("setImage:imageProperties:")]
 		void SetImageimageProperties (CGImage image, NSDictionary metaData);
+#else
+		[Export ("setImage:imageProperties:")]
+		void SetImage (CGImage image, NSDictionary metaData);
+#endif
 
 		[Export ("setImageWithURL:")]
 		void SetImageWithURL (NSUrl url);
