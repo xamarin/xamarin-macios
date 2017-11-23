@@ -2671,7 +2671,7 @@ function oninitialload ()
 								ExecutionResult = TestExecutingResult.Succeeded;
 							} else {
 								ExecutionResult = TestExecutingResult.Failed;
-								FailureMessage = result.ExitCode != 1 ? "Test run crashed." : "Test run failed.";
+								FailureMessage = result.ExitCode != 1 ? $"Test run crashed (exit code: {result.ExitCode})." : "Test run failed.";
 								log.WriteLine (FailureMessage);
 							}
 						} finally {
