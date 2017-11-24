@@ -2080,6 +2080,7 @@ function oninitialload ()
 					log.WriteLine (FailureMessage);
 				}
 			} finally {
+				MainLog.Dispose ();
 				duration.Stop ();
 			}
 
@@ -2349,6 +2350,7 @@ function oninitialload ()
 					}
 					Jenkins.MainLog.WriteLine ("Built {0} ({1})", TestName, Mode);
 				}
+				log.Dispose ();
 			}
 		}
 	}
@@ -2425,6 +2427,8 @@ function oninitialload ()
 					}
 					Jenkins.MainLog.WriteLine ("Built {0} ({1})", TestName, Mode);
 				}
+
+				log.Dispose ();
 			}
 		}
 
@@ -3035,6 +3039,9 @@ function oninitialload ()
 					// Also clean up after us locally.
 					if (Harness.InJenkins || Harness.InWrench || Succeeded)
 						await BuildTask.CleanAsync ();
+
+					uninstall_log.Dispose ();
+					install_log.Dispose ();
 				}
 			}
 		}
