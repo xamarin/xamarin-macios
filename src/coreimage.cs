@@ -2238,10 +2238,6 @@ namespace XamCore.CoreImage {
 		[Export ("vectorWithString:")]
 		CIVector FromString (string representation);
 
-		[DesignatedInitializer]
-		[Internal, Export ("initWithValues:count:")]
-		IntPtr Constructor (IntPtr values, nint count);
-
 		[Mac (10,9)]
 		[iOS (5,0)]
 		[Export ("initWithCGPoint:")]
