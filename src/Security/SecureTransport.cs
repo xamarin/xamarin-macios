@@ -18,6 +18,8 @@ namespace XamCore.Security {
 		Tls_1_1 = 7, 
 		Tls_1_2 = 8, 
 		Dtls_1_0 = 9,
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		Tls_1_3 = 10,
 		
 		/* Obsolete on iOS */
 		Ssl_2_0 = 1,          
@@ -107,6 +109,9 @@ namespace XamCore.Security {
 
 		[iOS (10,0)][Mac (10,12)]
 		AllowRenegotiation = 8,
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		EnableSessionTickets = 9,
 	}
 
 	// Security.framework/Headers/SecureTransport.h
@@ -266,6 +271,10 @@ namespace XamCore.Security {
 		TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384		= 0xC030,	// iOS 9+
 		TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256		= 0xC031,	// iOS 9+
 		TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384		= 0xC032,	// iOS 9+
+
+		// https://tools.ietf.org/html/rfc7905
+		TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256	= 0xCCA8,	// Xcode 9+
+		TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256	= 0xCCA9,	// Xcode 9+
 
 		TLS_AES_128_GCM_SHA256						= 0x1301,	// iOS 11+
 		TLS_AES_256_GCM_SHA384						= 0x1302,	// iOS 11+

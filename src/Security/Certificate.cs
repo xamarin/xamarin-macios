@@ -343,6 +343,10 @@ namespace XamCore.Security {
 #endif
 		[iOS (10,3)]
 		[Mac (10,7)]
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'GetSerialNumber(out NSError)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'GetSerialNumber(out NSError)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'GetSerialNumber(out NSError)' instead.")]
+		[Deprecated (PlatformName.TvOS, 11,0, message: "Use 'GetSerialNumber(out NSError)' instead.")]
 		public NSData GetSerialNumber ()
 		{
 #if MONOMAC
@@ -350,6 +354,19 @@ namespace XamCore.Security {
 #else
 			IntPtr data = SecCertificateCopySerialNumber (handle);
 #endif
+			return (data == IntPtr.Zero) ? null : new NSData (data, true);
+		}
+
+		[iOS (10,3)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumberData (IntPtr /* SecCertificateRef */ certificate, ref IntPtr /* CFErrorRef * */ error);
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		public NSData GetSerialNumber (out NSError error)
+		{
+			IntPtr err = IntPtr.Zero;
+			IntPtr data = SecCertificateCopySerialNumberData (handle, ref err);
+			error = Runtime.GetNSObject<NSError> (err);
 			return (data == IntPtr.Zero) ? null : new NSData (data, true);
 		}
 

@@ -134,9 +134,10 @@ namespace XamCore.Security {
 		[Field ("kSecTrustCertificateTransparency")]
 		NSString CertificateTransparency { get; }
 
-		[iOS (10,0)][Mac (10,12)]
-		[Watch (3,0)]
-		[TV (10,0)]
+		[iOS (10,0)][Deprecated (PlatformName.iOS, 11,0)]
+		[Mac (10,12)][Deprecated (PlatformName.MacOSX, 10,13)]
+		[Watch (3,0)][Deprecated (PlatformName.WatchOS, 4,0)]
+		[TV (10,0)][Deprecated (PlatformName.TvOS, 11,0)]
 		[Field ("kSecTrustCertificateTransparencyWhiteList")]
 		NSString CertificateTransparencyWhiteList { get; }
 	}
@@ -503,6 +504,11 @@ namespace XamCore.Security {
 		[TV (10,0)]
 		[Field ("kSecAttrAccessGroupToken")]
 		IntPtr AccessGroupToken { get; }
+
+		// note: kSecAttrPersistentReference (beta 1) is a typo that was not removed
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[Field ("kSecAttrPersistentReference")]
+		IntPtr PersistentReference { get; }
 	}
 
 	[Static][Internal]
@@ -828,10 +834,86 @@ namespace XamCore.Security {
 
 		[Field ("kSecKeyAlgorithmECDHKeyExchangeCofactorX963SHA512")]
 		EcdhKeyExchangeCofactorX963Sha512,
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[Field ("kSecKeyAlgorithmRSASignatureDigestPSSSHA1")]
+		RsaSignatureDigestPssSha1,
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[Field ("kSecKeyAlgorithmRSASignatureDigestPSSSHA224")]
+		RsaSignatureDigestPssSha224,
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[Field ("kSecKeyAlgorithmRSASignatureDigestPSSSHA256")]
+		RsaSignatureDigestPssSha256,
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[Field ("kSecKeyAlgorithmRSASignatureDigestPSSSHA384")]
+		RsaSignatureDigestPssSha384,
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[Field ("kSecKeyAlgorithmRSASignatureDigestPSSSHA512")]
+		RsaSignatureDigestPssSha512,
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[Field ("kSecKeyAlgorithmRSASignatureMessagePSSSHA1")]
+		RsaSignatureMessagePssSha1,
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[Field ("kSecKeyAlgorithmRSASignatureMessagePSSSHA224")]
+		RsaSignatureMessagePssSha224,
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[Field ("kSecKeyAlgorithmRSASignatureMessagePSSSHA256")]
+		RsaSignatureMessagePssSha256,
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[Field ("kSecKeyAlgorithmRSASignatureMessagePSSSHA384")]
+		RsaSignatureMessagePssSha384,
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[Field ("kSecKeyAlgorithmRSASignatureMessagePSSSHA512")]
+		RsaSignatureMessagePssSha512,
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[Field ("kSecKeyAlgorithmECIESEncryptionStandardVariableIVX963SHA224AESGCM")]
+		EciesEncryptionStandardVariableIvx963Sha224AesGcm,
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[Field ("kSecKeyAlgorithmECIESEncryptionStandardVariableIVX963SHA256AESGCM")]
+		EciesEncryptionStandardVariableIvx963Sha256AesGcm,
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[Field ("kSecKeyAlgorithmECIESEncryptionStandardVariableIVX963SHA384AESGCM")]
+		EciesEncryptionStandardVariableIvx963Sha384AesGcm,
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[Field ("kSecKeyAlgorithmECIESEncryptionStandardVariableIVX963SHA512AESGCM")]
+		EciesEncryptionStandardVariableIvx963Sha512AesGcm,
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[Field ("kSecKeyAlgorithmECIESEncryptionCofactorVariableIVX963SHA224AESGCM")]
+		EciesEncryptionCofactorVariableIvx963Sha224AesGcm,
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[Field ("kSecKeyAlgorithmECIESEncryptionCofactorVariableIVX963SHA256AESGCM")]
+		EciesEncryptionCofactorVariableIvx963Sha256AesGcm,
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[Field ("kSecKeyAlgorithmECIESEncryptionCofactorVariableIVX963SHA384AESGCM")]
+		EciesEncryptionCofactorVariableIvx963Sha384AesGcm,
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[Field ("kSecKeyAlgorithmECIESEncryptionCofactorVariableIVX963SHA512AESGCM")]
+		EciesEncryptionCofactorVariableIvx963Sha512AesGcm,
 	}
 
 	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
 	enum SslSessionConfig {
+		[Deprecated (PlatformName.iOS, 11,0)]
+		[Deprecated (PlatformName.MacOSX, 10,13)]
+		[Deprecated (PlatformName.WatchOS, 4,0)]
+		[Deprecated (PlatformName.TvOS, 11,0)]
 		[Field ("kSSLSessionConfig_default")]
 		Default,
 
@@ -844,12 +926,20 @@ namespace XamCore.Security {
 		[Field ("kSSLSessionConfig_standard")]
 		Standard,
 
+		[Deprecated (PlatformName.iOS, 11,0)]
+		[Deprecated (PlatformName.MacOSX, 10,13)]
+		[Deprecated (PlatformName.WatchOS, 4,0)]
+		[Deprecated (PlatformName.TvOS, 11,0)]
 		[Field ("kSSLSessionConfig_RC4_fallback")]
 		RC4Fallback,
 
 		[Field ("kSSLSessionConfig_TLSv1_fallback")]
 		Tls1Fallback,
 
+		[Deprecated (PlatformName.iOS, 11,0)]
+		[Deprecated (PlatformName.MacOSX, 10,13)]
+		[Deprecated (PlatformName.WatchOS, 4,0)]
+		[Deprecated (PlatformName.TvOS, 11,0)]
 		[Field ("kSSLSessionConfig_TLSv1_RC4_fallback")]
 		Tls1RC4Fallback,
 
@@ -864,11 +954,19 @@ namespace XamCore.Security {
 
 		[iOS (10,2)][TV (10,1)][Mac (10,12,2)]
 		[Watch (3,2)]
+		[Deprecated (PlatformName.iOS, 11,0)]
+		[Deprecated (PlatformName.MacOSX, 10,13)]
+		[Deprecated (PlatformName.WatchOS, 4,0)]
+		[Deprecated (PlatformName.TvOS, 11,0)]
 		[Field ("kSSLSessionConfig_3DES_fallback")]
 		ThreeDesFallback,
 
 		[iOS (10,2)][TV (10,1)][Mac (10,12,2)]
 		[Watch (3,2)]
+		[Deprecated (PlatformName.iOS, 11,0)]
+		[Deprecated (PlatformName.MacOSX, 10,13)]
+		[Deprecated (PlatformName.WatchOS, 4,0)]
+		[Deprecated (PlatformName.TvOS, 11,0)]
 		[Field ("kSSLSessionConfig_TLSv1_3DES_fallback")]
 		Tls1ThreeDesFallback,
 	}

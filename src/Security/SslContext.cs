@@ -608,5 +608,71 @@ namespace XamCore.Security {
 			}
 			return result;
 		}
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* OSStatus */ int SSLSetSessionTicketsEnabled (IntPtr /* SSLContextRef */ context, [MarshalAs (UnmanagedType.I1)] bool /* Boolean */ enabled);
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		public int SetSessionTickets (bool enabled)
+		{
+			return SSLSetSessionTicketsEnabled (Handle, enabled);
+		}
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* OSStatus */ int SSLSetError (IntPtr /* SSLContextRef */ context, SecStatusCode /* OSStatus */ status);
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		public int SetError (SecStatusCode status)
+		{
+			return SSLSetError (Handle, status);
+		}
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* OSStatus */ int SSLSetOCSPResponse (IntPtr /* SSLContextRef */ context, IntPtr /* CFDataRef __nonnull */ response);
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		public int SetOcspResponse (NSData response)
+		{
+			if (response == null)
+				throw new ArgumentNullException (nameof (response));
+			return SSLSetOCSPResponse (Handle, response.Handle);
+		}
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* OSStatus */ int SSLSetALPNProtocols (IntPtr /* SSLContextRef */ context, IntPtr /* CFArrayRef */ protocols);
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		public int SetAlpnProtocols (string[] protocols)
+		{
+			using (var array = NSArray.FromStrings (protocols))
+				return SSLSetALPNProtocols (Handle, array.Handle);
+		}
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* OSStatus */ int SSLCopyALPNProtocols (IntPtr /* SSLContextRef */ context, ref IntPtr /* CFArrayRef* */ protocols);
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		public string[] GetAlpnProtocols (out int error)
+		{
+			IntPtr protocols = IntPtr.Zero; // must be null, CFArray allocated by SSLCopyALPNProtocols
+			error = SSLCopyALPNProtocols (Handle, ref protocols);
+			if (protocols == IntPtr.Zero)
+				return Array.Empty<string> ();
+			var result = NSArray.StringArrayFromHandle (protocols);
+			CFObject.CFRelease (protocols);
+			return result;
+		}
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		public string[] GetAlpnProtocols ()
+		{
+			int error;
+			return GetAlpnProtocols (out error);
+		}
 	}
 }
