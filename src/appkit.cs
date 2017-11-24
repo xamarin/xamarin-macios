@@ -20700,10 +20700,10 @@ namespace XamCore.AppKit {
 		bool OpenFile (string fullPath);
 		
 		[Export ("openFile:withApplication:"), ThreadSafe]
-		bool OpenFile (string fullPath, string appName);
+		bool OpenFile (string fullPath, [NullAllowed] string appName);
 		
 		[Export ("openFile:withApplication:andDeactivate:"), ThreadSafe]
-		bool OpenFile (string fullPath, string appName, bool deactivate);
+		bool OpenFile (string fullPath, [NullAllowed] string appName, bool deactivate);
 		
 		[Export ("openFile:fromImage:at:inView:"), ThreadSafe]
 		bool OpenFile (string fullPath, NSImage anImage, CGPoint point, NSView aView);
