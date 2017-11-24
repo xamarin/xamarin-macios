@@ -51,6 +51,7 @@
     <Compile Include="..\XamarinSourcesPathMangler.cs">
       <Link>XamarinSourcesPathMangler.cs</Link>
     </Compile>
+    <Compile Include="PathManglerFactoryTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
