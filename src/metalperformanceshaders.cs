@@ -1029,6 +1029,10 @@ namespace XamCore.MetalPerformanceShaders {
 		float NeuronParameterB { get; }
 
 		[TV (11, 0), iOS (11, 0)]
+		[Export ("neuronParameterC")]
+		float NeuronParameterC { get; }
+
+		[TV (11, 0), iOS (11, 0)]
 		[Export ("subPixelScaleFactor")]
 		nuint SubPixelScaleFactor { get; }
 	}
@@ -1644,6 +1648,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSKernel))]
+	[DisableDefaultCtor] // According to docs needs a Metal Device so initWithDevice: makes more sense.
 	interface MPSMatrixUnaryKernel {
 		[Export ("sourceMatrixOrigin", ArgumentSemantic.Assign)]
 		MTLOrigin SourceMatrixOrigin { get; set; }
@@ -1658,12 +1663,10 @@ namespace XamCore.MetalPerformanceShaders {
 		nuint BatchSize { get; set; }
 
 		// inlining ctor from base class
-		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device);
 
-		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -1671,6 +1674,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSKernel))]
+	[DisableDefaultCtor] // According to docs needs a Metal Device so initWithDevice: makes more sense.
 	interface MPSMatrixBinaryKernel {
 		[Export ("primarySourceMatrixOrigin", ArgumentSemantic.Assign)]
 		MTLOrigin PrimarySourceMatrixOrigin { get; set; }
@@ -1688,12 +1692,10 @@ namespace XamCore.MetalPerformanceShaders {
 		nuint BatchSize { get; set; }
 
 		// inlining ctor from base class
-		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device);
 
-		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -1701,6 +1703,7 @@ namespace XamCore.MetalPerformanceShaders {
 	
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSMatrixBinaryKernel))]
+	[DisableDefaultCtor] // According to docs needs a Metal Device so initWithDevice: makes more sense.
 	interface MPSMatrixVectorMultiplication {
 		[Export ("initWithDevice:transpose:rows:columns:alpha:beta:")]
 		IntPtr Constructor (IMTLDevice device, bool transpose, nuint rows, nuint columns, double alpha, double beta);
@@ -1712,12 +1715,10 @@ namespace XamCore.MetalPerformanceShaders {
 		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix inputMatrix, MPSVector inputVector, MPSVector resultVector);
 
 		// inlining ctor from base class
-		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device);
 
-		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -1725,6 +1726,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSMatrixBinaryKernel))]
+	[DisableDefaultCtor] // According to docs needs a Metal Device so initWithDevice: makes more sense.
 	interface MPSMatrixSolveTriangular {
 		[Export ("initWithDevice:right:upper:transpose:unit:order:numberOfRightHandSides:alpha:")]
 		IntPtr Constructor (IMTLDevice device, bool right, bool upper, bool transpose, bool unit, nuint order, nuint numberOfRightHandSides, double alpha);
@@ -1733,12 +1735,10 @@ namespace XamCore.MetalPerformanceShaders {
 		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSMatrix rightHandSideMatrix, MPSMatrix solutionMatrix);
 
 		// inlining ctor from base class
-		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device);
 
-		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -1746,6 +1746,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSMatrixBinaryKernel))]
+	[DisableDefaultCtor] // According to docs needs a Metal Device so initWithDevice: makes more sense.
 	interface MPSMatrixSolveLU {
 		[Export ("initWithDevice:transpose:order:numberOfRightHandSides:")]
 		IntPtr Constructor (IMTLDevice device, bool transpose, nuint order, nuint numberOfRightHandSides);
@@ -1754,12 +1755,10 @@ namespace XamCore.MetalPerformanceShaders {
 		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSMatrix rightHandSideMatrix, MPSMatrix pivotIndices, MPSMatrix solutionMatrix);
 
 		// inlining ctor from base class
-		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device);
 
-		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -1767,6 +1766,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSMatrixBinaryKernel))]
+	[DisableDefaultCtor] // According to docs needs a Metal Device so initWithDevice: makes more sense.
 	interface MPSMatrixSolveCholesky {
 		[Export ("initWithDevice:upper:order:numberOfRightHandSides:")]
 		IntPtr Constructor (IMTLDevice device, bool upper, nuint order, nuint numberOfRightHandSides);
@@ -1775,12 +1775,10 @@ namespace XamCore.MetalPerformanceShaders {
 		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSMatrix rightHandSideMatrix, MPSMatrix solutionMatrix);
 
 		// inlining ctor from base class
-		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device);
 
-		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -1788,6 +1786,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSMatrixUnaryKernel))]
+	[DisableDefaultCtor] // According to docs needs a Metal Device so initWithDevice: makes more sense.
 	interface MPSMatrixDecompositionLU {
 		[Export ("initWithDevice:rows:columns:")]
 		IntPtr Constructor (IMTLDevice device, nuint rows, nuint columns);
@@ -1796,12 +1795,10 @@ namespace XamCore.MetalPerformanceShaders {
 		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSMatrix resultMatrix, MPSMatrix pivotIndices, [NullAllowed] IMTLBuffer status);
 
 		// inlining ctor from base class
-		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device);
 
-		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -1809,6 +1806,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSMatrixUnaryKernel))]
+	[DisableDefaultCtor] // According to docs needs a Metal Device so initWithDevice: makes more sense.
 	interface MPSMatrixDecompositionCholesky {
 		[Export ("initWithDevice:lower:order:")]
 		IntPtr Constructor (IMTLDevice device, bool lower, nuint order);
@@ -1817,12 +1815,10 @@ namespace XamCore.MetalPerformanceShaders {
 		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix sourceMatrix, MPSMatrix resultMatrix, [NullAllowed] IMTLBuffer status);
 
 		// inlining ctor from base class
-		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device);
 
-		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -1850,6 +1846,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSKernel))]
+	[DisableDefaultCtor] // There is a DesignatedInitializer, file a bug if needed.
 	interface MPSMatrixCopy {
 		[Export ("initWithDevice:copyRows:copyColumns:sourcesAreTransposed:destinationsAreTransposed:")]
 		[DesignatedInitializer]
@@ -1869,6 +1866,9 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Export ("encodeToCommandBuffer:copyDescriptor:")]
 		void EncodeToCommandBuffer (IMTLCommandBuffer cmdBuf, MPSMatrixCopyDescriptor copyDescriptor);
+
+		[Export ("encodeToCommandBuffer:copyDescriptor:rowPermuteIndices:rowPermuteOffset:columnPermuteIndices:columnPermuteOffset:")]
+		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrixCopyDescriptor copyDescriptor, [NullAllowed] MPSVector rowPermuteIndices, nuint rowPermuteOffset, [NullAllowed] MPSVector columnPermuteIndices, nuint columnPermuteOffset);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
@@ -1902,6 +1902,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSKernel))]
+	[DisableDefaultCtor] // There is a DesignatedInitializer, file a bug if needed.
 	interface MPSImageFindKeypoints {
 		[Export ("keypointRangeInfo")]
 		MPSImageKeypointRangeInfo KeypointRangeInfo { get; }
@@ -1938,7 +1939,6 @@ namespace XamCore.MetalPerformanceShaders {
 		MTLSize SecondaryStrideInPixels { get; set; }
 
 		//inlining ctor from base class
-		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -2143,7 +2143,6 @@ namespace XamCore.MetalPerformanceShaders {
 		IntPtr InitWith (IMTLDevice device, IntPtr /* float* */ a, nuint count);
 
 		// inlining ctor from base class
-		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -2247,6 +2246,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnKernel), Name = "MPSCNNConvolutionTranspose")]
+	[DisableDefaultCtor] // There is a DesignatedInitializer, file a bug if needed.
 	interface MPSCnnConvolutionTranspose {
 		[Export ("inputFeatureChannels")]
 		nuint InputFeatureChannels { get; }
@@ -2313,6 +2313,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnPooling), Name = "MPSCNNPoolingL2Norm")]
+	[DisableDefaultCtor] // failed assertion.
 	interface MPSCnnPoolingL2Norm {
 		[Export ("initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
 		[DesignatedInitializer]
@@ -2325,6 +2326,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnPooling), Name = "MPSCNNDilatedPoolingMax")]
+	[DisableDefaultCtor] // failed assertion.
 	interface MPSCnnDilatedPoolingMax {
 		[Export ("dilationRateX")]
 		nuint DilationRateX { get; }
@@ -2343,6 +2345,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnKernel), Name = "MPSCNNUpsampling")]
+	[DisableDefaultCtor] // failed assertion
 	interface MPSCnnUpsampling {
 		[Export ("scaleFactorX")]
 		double ScaleFactorX { get; }
@@ -2351,7 +2354,6 @@ namespace XamCore.MetalPerformanceShaders {
 		double ScaleFactorY { get; }
 
 		// inlining ctor from base class
-		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -2359,6 +2361,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnUpsampling), Name = "MPSCNNUpsamplingNearest")]
+	[DisableDefaultCtor] // failed assertion.
 	interface MPSCnnUpsamplingNearest {
 		[Export ("initWithDevice:integerScaleFactorX:integerScaleFactorY:")]
 		[DesignatedInitializer]
@@ -2367,6 +2370,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnUpsampling), Name = "MPSCNNUpsamplingBilinear")]
+	[DisableDefaultCtor] // failed assertion.
 	interface MPSCnnUpsamplingBilinear {
 		[Export ("initWithDevice:integerScaleFactorX:integerScaleFactorY:")]
 		[DesignatedInitializer]
@@ -2492,6 +2496,9 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("cellToOutputNeuronParamB")]
 		float CellToOutputNeuronParamB { get; set; }
 
+		[Export ("cellToOutputNeuronParamC")]
+		float CellToOutputNeuronParamC { get; set; }
+
 		[Static]
 		[Export ("createLSTMDescriptorWithInputFeatureChannels:outputFeatureChannels:")]
 		MPSLSTMDescriptor Create (nuint inputFeatureChannels, nuint outputFeatureChannels);
@@ -2499,6 +2506,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSState), Name = "MPSRNNRecurrentImageState")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSRnnRecurrentImageState {
 		[Export ("getRecurrentOutputImageForLayerIndex:")]
 		[return: NullAllowed]
@@ -2511,6 +2519,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnKernel), Name = "MPSRNNImageInferenceLayer")]
+	[DisableDefaultCtor] // There is a DesignatedInitializer, file a bug if needed.
 	interface MPSRnnImageInferenceLayer {
 		[Export ("inputFeatureChannels")]
 		nuint InputFeatureChannels { get; }
@@ -2555,6 +2564,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSState), Name = "MPSRNNRecurrentMatrixState")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSRnnRecurrentMatrixState {
 		[Export ("getRecurrentOutputMatrixForLayerIndex:")]
 		[return: NullAllowed]
@@ -2567,6 +2577,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSKernel), Name = "MPSRNNMatrixInferenceLayer")]
+	[DisableDefaultCtor] // There is a DesignatedInitializer, file a bug if needed.
 	interface MPSRnnMatrixInferenceLayer {
 		[Export ("inputFeatureChannels")]
 		nuint InputFeatureChannels { get; }
@@ -2668,6 +2679,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNNFilterNode), Name = "MPSCNNConvolutionNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnConvolutionNode {
 		[Static]
 		[Export ("nodeWithSource:weights:")]
@@ -2682,6 +2694,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnConvolutionNode), Name = "MPSCNNFullyConnectedNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnFullyConnectedNode {
 		[Static]
 		[Export ("nodeWithSource:weights:")]
@@ -2693,6 +2706,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnConvolutionNode), Name = "MPSCNNBinaryConvolutionNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnBinaryConvolutionNode {
 		[Static]
 		[Export ("nodeWithSource:weights:scaleValue:type:flags:")]
@@ -2704,6 +2718,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnBinaryConvolutionNode), Name = "MPSCNNBinaryFullyConnectedNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnBinaryFullyConnectedNode {
 		[Static]
 		[Export ("nodeWithSource:weights:scaleValue:type:flags:")]
@@ -2715,6 +2730,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnConvolutionNode), Name = "MPSCNNConvolutionTransposeNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnConvolutionTransposeNode {
 		[Static]
 		[Export ("nodeWithSource:convolutionState:weights:")]
@@ -2733,10 +2749,14 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Export ("b")]
 		float B { get; }
+
+		[Export ("c")]
+		float C { get; }
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnNeuronNode), Name = "MPSCNNNeuronAbsoluteNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnNeuronAbsoluteNode {
 		[Static]
 		[Export ("nodeWithSource:")]
@@ -2748,6 +2768,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnNeuronNode), Name = "MPSCNNNeuronELUNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnNeuronELUNode {
 		[Static]
 		[Export ("nodeWithSource:a:")]
@@ -2766,6 +2787,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnNeuronNode), Name = "MPSCNNNeuronReLUNNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnNeuronReLunNode {
 		[Static]
 		[Export ("nodeWithSource:a:b:")]
@@ -2784,6 +2806,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnNeuronNode), Name = "MPSCNNNeuronLinearNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnNeuronLinearNode {
 		[Static]
 		[Export ("nodeWithSource:a:b:")]
@@ -2802,6 +2825,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnNeuronNode), Name = "MPSCNNNeuronReLUNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnNeuronReLUNode {
 		[Static]
 		[Export ("nodeWithSource:a:")]
@@ -2820,6 +2844,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnNeuronNode), Name = "MPSCNNNeuronSigmoidNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnNeuronSigmoidNode {
 		[Static]
 		[Export ("nodeWithSource:")]
@@ -2831,6 +2856,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnNeuronNode), Name = "MPSCNNNeuronHardSigmoidNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnNeuronHardSigmoidNode {
 		[Static]
 		[Export ("nodeWithSource:a:b:")]
@@ -2849,6 +2875,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnNeuronNode), Name = "MPSCNNNeuronSoftPlusNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnNeuronSoftPlusNode {
 		[Static]
 		[Export ("nodeWithSource:a:b:")]
@@ -2867,6 +2894,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnNeuronNode), Name = "MPSCNNNeuronSoftSignNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnNeuronSoftSignNode {
 		[Static]
 		[Export ("nodeWithSource:")]
@@ -2878,6 +2906,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnNeuronNode), Name = "MPSCNNNeuronTanHNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnNeuronTanHNode {
 		[Static]
 		[Export ("nodeWithSource:a:b:")]
@@ -2896,6 +2925,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnNeuronNode), Name = "MPSCNNNeuronPReLUNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnNeuronPReLUNode {
 		[Static]
 		[Export ("nodeWithSource:aData:")]
@@ -2907,6 +2937,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNNFilterNode), Name = "MPSCNNPoolingNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnPoolingNode {
 		[Static]
 		[Export ("nodeWithSource:filterSize:")]
@@ -2928,6 +2959,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNNFilterNode), Name = "MPSCNNDilatedPoolingMaxNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnDilatedPoolingMaxNode {
 		[Export ("dilationRateX")]
 		nuint DilationRateX { get; }
@@ -2955,6 +2987,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNNFilterNode), Name = "MPSCNNNormalizationNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnNormalizationNode {
 		[Export ("alpha")]
 		float Alpha { get; set; }
@@ -2976,6 +3009,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnNormalizationNode), Name = "MPSCNNSpatialNormalizationNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnSpatialNormalizationNode {
 		[Export ("kernelWidth")]
 		nuint KernelWidth { get; set; }
@@ -2998,6 +3032,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnNormalizationNode), Name = "MPSCNNLocalContrastNormalizationNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnLocalContrastNormalizationNode {
 		[Export ("pm")]
 		float Pm { get; set; }
@@ -3029,6 +3064,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (MPSCnnNormalizationNode), Name = "MPSCNNCrossChannelNormalizationNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnCrossChannelNormalizationNode {
 		[Export ("kernelSizeInFeatureChannels")]
 		nuint KernelSizeInFeatureChannels { get; set; }
@@ -3048,6 +3084,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNNFilterNode))]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSNNScaleNode {
 		[Static]
 		[Export ("nodeWithSource:outputSize:")]
@@ -3157,6 +3194,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSKernel))]
+	[DisableDefaultCtor] // There is a DesignatedInitializer, file a bug if needed.
 	interface MPSNNGraph : NSCopying, NSSecureCoding {
 		[Export ("initWithDevice:resultImage:")]
 		[DesignatedInitializer]
@@ -3260,7 +3298,7 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("label")]
 		string GetLabel ();
 
-		[Export ("destinationImageDescriptorForSourceImages:sourcetates:fornKernel:suggestedDescriptor:")]
+		[Export ("destinationImageDescriptorForSourceImages:sourceStates:forKernel:suggestedDescriptor:")]
 		MPSImageDescriptor GetDestinationImageDescriptor (MPSImage[] sourceImages, [NullAllowed] MPSState[] sourceStates, MPSKernel kernel, MPSImageDescriptor inDescriptor);
 	}
 
@@ -3314,6 +3352,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnPoolingNode), Name="MPSCNNPoolingAverageNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnPoolingAverageNode {
 		[Export ("initWithSource:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
 		IntPtr Constructor (MPSNNImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
@@ -3327,6 +3366,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnPoolingNode), Name="MPSCNNPoolingL2NormNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnPoolingL2NormNode {
 		[Export ("initWithSource:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
 		IntPtr Constructor (MPSNNImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
@@ -3340,6 +3380,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSCnnPoolingNode), Name="MPSCNNPoolingMaxNode")]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnPoolingMaxNode {
 		[Export ("initWithSource:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
 		IntPtr Constructor (MPSNNImageNode sourceNode, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY);
@@ -3353,6 +3394,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNNBinaryArithmeticNode))]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSNNAdditionNode {
 		[Export ("initWithSources:")]
 		IntPtr Constructor (MPSNNImageNode[] sourceNodes);
@@ -3363,6 +3405,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNNScaleNode))]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSNNBilinearScaleNode {
 		[Export ("initWithSource:outputSize:")]
 		IntPtr Constructor (MPSNNImageNode sourceNode, MTLSize size);
@@ -3373,6 +3416,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNNBinaryArithmeticNode))]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSNNDivisionNode {
 		[Export ("initWithSources:")]
 		IntPtr Constructor (MPSNNImageNode[] sourceNodes);
@@ -3383,6 +3427,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNNScaleNode))]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSNNLanczosScaleNode {
 		[Export ("initWithSource:outputSize:")]
 		IntPtr Constructor (MPSNNImageNode sourceNode, MTLSize size);
@@ -3393,6 +3438,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNNBinaryArithmeticNode))]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSNNMultiplicationNode {
 		[Export ("initWithSources:")]
 		IntPtr Constructor (MPSNNImageNode[] sourceNodes);
@@ -3403,12 +3449,249 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNNBinaryArithmeticNode))]
+	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSNNSubtractionNode {
 		[Export ("initWithSources:")]
 		IntPtr Constructor (MPSNNImageNode[] sourceNodes);
 
 		[Export ("initWithLeftSource:rightSource:")]
 		IntPtr Constructor (MPSNNImageNode left, MPSNNImageNode right);
+	}
+
+	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[BaseType (typeof (MPSVector))]
+	[DisableDefaultCtor]
+	interface MPSTemporaryVector {
+
+		[Static]
+		[Export ("temporaryVectorWithCommandBuffer:descriptor:")]
+		MPSTemporaryVector Create (IMTLCommandBuffer commandBuffer, MPSVectorDescriptor descriptor);
+
+		[Static]
+		[Export ("prefetchStorageWithCommandBuffer:descriptorList:")]
+		void PrefetchStorage (IMTLCommandBuffer commandBuffer, MPSVectorDescriptor[] descriptorList);
+
+		[Export ("readCount")]
+		nuint ReadCount { get; set; }
+	}
+
+	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[BaseType (typeof(MPSKernel))]
+	[DisableDefaultCtor]
+	interface MPSMatrixSum {
+
+		[Export ("initWithDevice:count:rows:columns:transpose:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (IMTLDevice device, nuint count, nuint rows, nuint columns, bool transpose);
+
+		[Export ("rows")]
+		nuint Rows { get; }
+
+		[Export ("columns")]
+		nuint Columns { get; }
+
+		[Export ("count")]
+		nuint Count { get; }
+
+		[Export ("transpose")]
+		bool Transpose { get; }
+
+		[Export ("setNeuronType:parameterA:parameterB:parameterC:")]
+		void SetNeuronType (MPSCnnNeuronType neuronType, float parameterA, float parameterB, float parameterC);
+
+		[Export ("neuronType")]
+		MPSCnnNeuronType NeuronType { get; }
+
+		[Export ("neuronParameterA")]
+		float NeuronParameterA { get; }
+
+		[Export ("neuronParameterB")]
+		float NeuronParameterB { get; }
+
+		[Export ("neuronParameterC")]
+		float NeuronParameterC { get; }
+
+		// Keeping the same name as in the parent class so it ends up in an overload
+		[Export ("encodeToCommandBuffer:sourceMatrices:resultMatrix:scaleVector:offsetVector:biasVector:startIndex:")]
+		void EncodeToCommandBuffer (IMTLCommandBuffer buffer, MPSMatrix[] sourceMatrices, MPSMatrix resultMatrix, [NullAllowed] MPSVector scaleVector, [NullAllowed] MPSVector offsetVector, [NullAllowed] MPSVector biasVector, nuint startIndex);
+
+		[Export ("initWithCoder:device:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+	}
+
+	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[BaseType (typeof(MPSMatrixUnaryKernel))]
+	[DisableDefaultCtor]
+	interface MPSMatrixSoftMax {
+
+		[Export ("sourceRows")]
+		nuint SourceRows { get; set; }
+
+		[Export ("sourceColumns")]
+		nuint SourceColumns { get; set; }
+
+		[Export ("initWithDevice:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (IMTLDevice device);
+
+		// Keeping the same name as in the parent class so it ends up in an overload
+		[Export ("encodeToCommandBuffer:inputMatrix:resultMatrix:")]
+		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix inputMatrix, MPSMatrix resultMatrix);
+
+		[Export ("initWithCoder:device:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+
+		[Export ("copyWithZone:device:")]
+		[return: Release ()]
+		MPSMatrixSoftMax CopyWithZone ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
+	}
+
+	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[BaseType (typeof (MPSMatrixUnaryKernel))]
+	[DisableDefaultCtor]
+	interface MPSMatrixNeuron {
+
+		[Export ("sourceNumberOfFeatureVectors")]
+		nuint SourceNumberOfFeatureVectors { get; set; }
+
+		[Export ("sourceInputFeatureChannels")]
+		nuint SourceInputFeatureChannels { get; set; }
+
+		[Export ("alpha")]
+		double Alpha { get; set; }
+
+		[Export ("setNeuronType:parameterA:parameterB:parameterC:")]
+		void SetNeuronType (MPSCnnNeuronType neuronType, float parameterA, float parameterB, float parameterC);
+
+		[Export ("neuronType")]
+		MPSCnnNeuronType NeuronType { get; }
+
+		[Export ("neuronParameterA")]
+		float NeuronParameterA { get; }
+
+		[Export ("neuronParameterB")]
+		float NeuronParameterB { get; }
+
+		[Export ("neuronParameterC")]
+		float NeuronParameterC { get; }
+
+		[Export ("setNeuronToPReLUWithParametersA:")]
+		void SetNeuronToPReLU (NSData parametersA);
+
+		[Export ("initWithDevice:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (IMTLDevice device);
+
+		// Keeping the same name as in the parent class so it ends up in an overload
+		[Export ("encodeToCommandBuffer:inputMatrix:biasVector:resultMatrix:")]
+		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix inputMatrix, [NullAllowed] MPSVector biasVector, MPSMatrix resultMatrix);
+
+		[Export ("initWithCoder:device:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+
+		[Export ("copyWithZone:device:")]
+		[return: Release ()]
+		MPSMatrixNeuron CopyWithZone ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
+	}
+
+	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[BaseType (typeof (MPSMatrixSoftMax))]
+	[DisableDefaultCtor]
+	interface MPSMatrixLogSoftMax {
+
+		[Export ("initWithDevice:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (IMTLDevice device);
+
+		[Export ("initWithCoder:device:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+	}
+
+	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[BaseType (typeof (MPSMatrixBinaryKernel))]
+	[DisableDefaultCtor]
+	interface MPSMatrixFullyConnected {
+
+		[Export ("sourceNumberOfFeatureVectors")]
+		nuint SourceNumberOfFeatureVectors { get; set; }
+
+		[Export ("sourceInputFeatureChannels")]
+		nuint SourceInputFeatureChannels { get; set; }
+
+		[Export ("sourceOutputFeatureChannels")]
+		nuint SourceOutputFeatureChannels { get; set; }
+
+		[Export ("alpha")]
+		double Alpha { get; set; }
+
+		[Export ("setNeuronType:parameterA:parameterB:parameterC:")]
+		void SetNeuronType (MPSCnnNeuronType neuronType, float parameterA, float parameterB, float parameterC);
+
+		[Export ("neuronType")]
+		MPSCnnNeuronType NeuronType { get; }
+
+		[Export ("neuronParameterA")]
+		float NeuronParameterA { get; }
+
+		[Export ("neuronParameterB")]
+		float NeuronParameterB { get; }
+
+		[Export ("neuronParameterC")]
+		float NeuronParameterC { get; }
+
+		[Export ("initWithDevice:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (IMTLDevice device);
+
+		// Keeping the same name as in the parent class so it ends up in an overload
+		[Export ("encodeToCommandBuffer:inputMatrix:weightMatrix:biasVector:resultMatrix:")]
+		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix inputMatrix, MPSMatrix weightMatrix, [NullAllowed] MPSVector biasVector, MPSMatrix resultMatrix);
+
+		[Export ("initWithCoder:device:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+
+		[Export ("copyWithZone:device:")]
+		[return: Release ()]
+		MPSMatrixFullyConnected CopyWithZone ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
+	}
+
+	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[BaseType (typeof (MPSMatrixUnaryKernel))]
+	[DisableDefaultCtor]
+	interface MPSMatrixFindTopK {
+
+		[Export ("sourceRows")]
+		nuint SourceRows { get; set; }
+
+		[Export ("sourceColumns")]
+		nuint SourceColumns { get; set; }
+
+		[Export ("indexOffset")]
+		nuint IndexOffset { get; set; }
+
+		[Export ("numberOfTopKValues")]
+		nuint NumberOfTopKValues { get; set; }
+
+		[Export ("initWithDevice:numberOfTopKValues:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (IMTLDevice device, nuint numberOfTopKValues);
+
+		// Keeping the same name as in the parent class so it ends up in an overload
+		[Export ("encodeToCommandBuffer:inputMatrix:resultIndexMatrix:resultValueMatrix:")]
+		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix inputMatrix, MPSMatrix resultIndexMatrix, MPSMatrix resultValueMatrix);
+
+		[Export ("initWithCoder:device:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
+
+		[Export ("copyWithZone:device:")]
+		[return: Release ()]
+		MPSMatrixFindTopK CopyWithZone ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
 	}
 }
 #endif

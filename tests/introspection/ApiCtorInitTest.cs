@@ -21,6 +21,8 @@
 
 using System;
 using System.Reflection;
+using System.Linq;
+using System.Text;
 
 using NUnit.Framework;
 
@@ -407,6 +409,83 @@ namespace Introspection {
 					return true;
 			}
 			return false;
+		}
+
+		[Test]
+		public void ShouldNotExposeDefaultCtorTest ()
+		{
+			Errors = 0;
+			int n = 0;
+
+			// Set to 'true' to generate alloc/init ObjC code of types that fail this test.
+			bool genObjCTestCode = false;
+			var objCCode = genObjCTestCode ? new StringBuilder () : null;
+
+			var types = Assembly.GetTypes ();
+			var cifiltertype = types.FirstOrDefault (c => c.Name == "CIFilter");
+			foreach (Type t in types) {
+				// TODO: Remove this MPS check in the future, at the time of writing this we currently only care about MPS.
+				if (!t.Name.StartsWith ("MPS", StringComparison.OrdinalIgnoreCase))
+					continue;
+
+				if (!t.IsPublic || !NSObjectType.IsAssignableFrom (t))
+					continue;
+
+				// ignore CIFilter derived subclasses since they are specially generated
+				if (cifiltertype != null && t.IsSubclassOf (cifiltertype))
+					continue;
+
+				if (SkipCheckShouldNotExposeDefaultCtor (t))
+					continue;
+
+				var ctor = t.GetConstructor (Type.EmptyTypes);
+				if (SkipDueToAttribute (ctor))
+					continue;
+
+				if (ctor == null || ctor.IsAbstract) {
+					if (LogUntestedTypes)
+						Console.WriteLine ("[WARNING] {0} was skipped because it had no default constructor", t);
+					continue;
+				}
+
+				if (LogProgress)
+					Console.WriteLine ($"{n}: {t.FullName}");
+
+				var parentType = t.BaseType;
+				var parentCtor = parentType.GetConstructor (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, Type.EmptyTypes, null);
+
+				if (parentCtor == null) {
+					ReportError ($"Type '{t.FullName}' is a possible candidate for [DisableDefaultCtor] because its BaseType '{parentType.FullName}' does not have one.");
+
+					// Useful to test in Xcode
+					if (genObjCTestCode) {
+						var export = t.GetCustomAttribute<RegisterAttribute> ();
+						var typeName = export?.Name ?? t.Name;
+						objCCode.AppendLine ($"{typeName}* test{n} = [[{typeName} alloc] init];");
+					}
+				}
+				n++;
+			}
+			Assert.AreEqual (0, Errors, $"{Errors} potential errors found in {n} BaseType empty ctor validated: \n{ErrorData}\n{(genObjCTestCode ? $"\n\n{objCCode}\n" : string.Empty)}");
+		}
+
+		protected virtual bool SkipCheckShouldNotExposeDefaultCtor (Type type)
+		{
+			if (type.ContainsGenericParameters)
+				return true;
+
+			foreach (object ca in type.GetCustomAttributes (false)) {
+				if (ca is ProtocolAttribute || ca is ModelAttribute)
+					return true;
+			}
+
+			// Add Skipped types here
+			//switch (type.Namespace) {
+			//case "":
+			//	return true;
+			//}
+
+			return SkipDueToAttribute (type);
 		}
 	}
 }
