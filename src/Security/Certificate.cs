@@ -357,7 +357,7 @@ namespace XamCore.Security {
 			return (data == IntPtr.Zero) ? null : new NSData (data, true);
 		}
 
-		[iOS (10,3)]
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumberData (IntPtr /* SecCertificateRef */ certificate, ref IntPtr /* CFErrorRef * */ error);
 

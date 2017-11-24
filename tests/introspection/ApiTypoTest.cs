@@ -85,6 +85,7 @@ namespace Introspection
 			"Aiff",
 			"Aio",
 			"Alg", // short for Algorithm
+			"Alpn", // Application-Layer Protocol Negotiation RFC7301
 			"Amete",
 			"Amr",
 			"Anglet",
@@ -322,6 +323,7 @@ namespace Introspection
 			"Objectfor",
 			"Occlussion",
 			"Ocurrences",
+			"Ocsp", // Online Certificate Status Protocol
 			"Octree",
 			"Oid",
 			"Olus",
