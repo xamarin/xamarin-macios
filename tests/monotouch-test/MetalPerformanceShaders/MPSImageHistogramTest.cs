@@ -38,7 +38,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 				Asserts.AreEqual (info, rv, "HistogramForAlpha");
 
 				Assert.IsTrue (obj.ZeroHistogram, "ZeroHistogram");
-				Assert.AreEqual (3072, obj.HistogramSizeForSourceFormat (MTLPixelFormat.RGBA16Sint), "HistogramSizeForSourceFormat");
+				Assert.AreEqual (3072, obj.GetHistogramSize (MTLPixelFormat.RGBA16Sint), "HistogramSizeForSourceFormat");
 				var crs = obj.ClipRectSource;
 				Assert.AreEqual (0, crs.Origin.X, "ClipRectSource.Origin.X");
 				Assert.AreEqual (0, crs.Origin.Y, "ClipRectSource.Origin.Y");

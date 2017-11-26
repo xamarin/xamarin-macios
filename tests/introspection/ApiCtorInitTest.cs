@@ -103,9 +103,7 @@ namespace Introspection {
 				return true;
 			case "MPSCnnNeuron": // Cannot directly initialize MPSCNNNeuron. Use one of the sub-classes of MPSCNNNeuron
 			case "MPSCnnNeuronPReLU":
-			case "MPSCnnNeuronELU":
 			case "MPSCnnNeuronHardSigmoid":
-			case "MPSCnnNeuronReLUN":
 			case "MPSCnnNeuronSoftPlus":
 				return true;
 			case "MPSCnnBinaryConvolution": // [MPSCNNBinaryConvolution initWithDevice:] is not allowed. Please use initializers that are not marked NS_UNAVAILABLE.

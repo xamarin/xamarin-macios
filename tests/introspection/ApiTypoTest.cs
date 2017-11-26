@@ -125,7 +125,6 @@ namespace Introspection
 			"Cavlc",
 			"Cda", // acronym: Clinical Document Architecture
 			"Celp", // MPEG4ObjectID
-			"Channelsx", // FeatureChannelsxHeightxWidth
 			"Characterteristic",
 			"Chapv",
 			"Cholesky",
@@ -213,7 +212,6 @@ namespace Introspection
 			"Hectopascals",
 			"Heic", // file type
 			"Heif", // file type
-			"Heightx", // HeightxWidthxFeatureChannels
 			"Hevc", // CMVideoCodecType / High Efficiency Video Coding
 			"Heif", // High Efficiency Image File Format
 			"Hfp",

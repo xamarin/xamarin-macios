@@ -20,27 +20,6 @@ namespace XamCore.MetalPerformanceShaders {
 			return MPSSupportsMTLDevice (device == null ? IntPtr.Zero : device.Handle);
 		}
 
-		internal static IntPtr GetPtr (float [] values, bool throwOnNull)
-		{
-			if (throwOnNull && (values == null))
-				throw new ArgumentNullException ("values");
-			unsafe {
-				fixed (float *ptr = values)
-					return (IntPtr) ptr;
-			}
-		}
-
-#if XAMCORE_2_0
-		internal static IntPtr GetPtr (nfloat [] values, bool throwOnNull)
-		{
-			if (throwOnNull && (values == null))
-				throw new ArgumentNullException ("values");
-			unsafe {
-				fixed (nfloat *ptr = values)
-					return (IntPtr) ptr;
-			}
-		}
-#endif
 		internal unsafe static float [] GetTransform (IntPtr transform)
 		{
 			var t = (float*) transform;
@@ -68,8 +47,15 @@ namespace XamCore.MetalPerformanceShaders {
 	public partial class MPSImageDilate {
 
 		public MPSImageDilate (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] values)
-			: this (device, kernelWidth, kernelHeight, MPSKernel.GetPtr (values, true))
+			: base (NSObjectFlag.Empty)
 		{
+			if (values == null)
+				throw new ArgumentNullException (nameof (values));
+
+			unsafe {
+				fixed (float* ptr = values)
+					InitializeHandle (InitWithDevice (device, kernelWidth, kernelHeight, (IntPtr) ptr), "initWithDevice:kernelWidth:kernelHeight:values:");
+			}
 		}
 	}
 
@@ -84,8 +70,14 @@ namespace XamCore.MetalPerformanceShaders {
 	public partial class MPSImageThresholdBinary {
 
 		public MPSImageThresholdBinary (IMTLDevice device, float thresholdValue, float maximumValue, /*[NullAllowed]*/ float[] transform)
-			: this (device, thresholdValue, maximumValue, MPSKernel.GetPtr (transform, false))
+			: base (NSObjectFlag.Empty)
 		{
+			// From: https://github.com/dotnet/csharplang/blob/master/spec/unsafe-code.md#unsafe-code
+			// If the array expression is null or if the array has zero elements, the initializer computes an address equal to zero.
+			unsafe {
+				fixed (float* ptr = transform)
+					InitializeHandle (InitWithDevice (device, thresholdValue, maximumValue, (IntPtr) ptr), "initWithDevice:thresholdValue:maximumValue:linearGrayColorTransform:");
+			}
 		}
 
 		public float[] Transform {
@@ -96,8 +88,12 @@ namespace XamCore.MetalPerformanceShaders {
 	public partial class MPSImageThresholdBinaryInverse {
 
 		public MPSImageThresholdBinaryInverse (IMTLDevice device, float thresholdValue, float maximumValue, /*[NullAllowed]*/ float[] transform)
-			: this (device, thresholdValue, maximumValue, MPSKernel.GetPtr (transform, false))
+			: base (NSObjectFlag.Empty)
 		{
+			unsafe {
+				fixed (float* ptr = transform)
+					InitializeHandle (InitWithDevice (device, thresholdValue, maximumValue, (IntPtr) ptr), "initWithDevice:thresholdValue:maximumValue:linearGrayColorTransform:");
+			}
 		}
 
 		public float[] Transform {
@@ -108,8 +104,12 @@ namespace XamCore.MetalPerformanceShaders {
 	public partial class MPSImageThresholdTruncate {
 
 		public MPSImageThresholdTruncate (IMTLDevice device, float thresholdValue, /*[NullAllowed]*/ float[] transform)
-			: this (device, thresholdValue, MPSKernel.GetPtr (transform, false))
+			: base (NSObjectFlag.Empty)
 		{
+			unsafe {
+				fixed (float* ptr = transform)
+					InitializeHandle (InitWithDevice (device, thresholdValue, (IntPtr) ptr), "initWithDevice:thresholdValue:linearGrayColorTransform:");
+			}
 		}
 
 		public float[] Transform {
@@ -120,8 +120,12 @@ namespace XamCore.MetalPerformanceShaders {
 	public partial class MPSImageThresholdToZero {
 
 		public MPSImageThresholdToZero (IMTLDevice device, float thresholdValue, /*[NullAllowed]*/ float[] transform)
-			: this (device, thresholdValue, MPSKernel.GetPtr (transform, false))
+			: base (NSObjectFlag.Empty)
 		{
+			unsafe {
+				fixed (float* ptr = transform)
+					InitializeHandle (InitWithDevice (device, thresholdValue, (IntPtr) ptr), "initWithDevice:thresholdValue:linearGrayColorTransform:");
+			}
 		}
 
 		public float[] Transform {
@@ -132,8 +136,12 @@ namespace XamCore.MetalPerformanceShaders {
 	public partial class MPSImageThresholdToZeroInverse {
 
 		public MPSImageThresholdToZeroInverse (IMTLDevice device, float thresholdValue, /*[NullAllowed]*/ float[] transform)
-			: this (device, thresholdValue, MPSKernel.GetPtr (transform, false))
+			: base (NSObjectFlag.Empty)
 		{
+			unsafe {
+				fixed (float* ptr = transform)
+					InitializeHandle (InitWithDevice (device, thresholdValue, (IntPtr) ptr), "initWithDevice:thresholdValue:linearGrayColorTransform:");
+			}
 		}
 
 		public float[] Transform {
@@ -143,8 +151,15 @@ namespace XamCore.MetalPerformanceShaders {
 
 	public partial class MPSImageSobel {
 		public MPSImageSobel (IMTLDevice device, float[] transform)
-			: this (device, MPSKernel.GetPtr (transform, true))
+			: base (NSObjectFlag.Empty)
 		{
+			if (transform == null)
+				throw new ArgumentNullException (nameof (transform));
+
+			unsafe {
+				fixed (float* ptr = transform)
+					InitializeHandle (InitWithDevice (device, (IntPtr) ptr), "initWithDevice:linearGrayColorTransform:");
+			}
 		}
 
 		public float[] ColorTransform {
@@ -154,36 +169,70 @@ namespace XamCore.MetalPerformanceShaders {
 
 	public partial class MPSCnnConvolution {
 		public MPSCnnConvolution (IMTLDevice device, MPSCnnConvolutionDescriptor convolutionDescriptor, float[] kernelWeights, float[] biasTerms, MPSCnnConvolutionFlags flags)
-			: this (device, convolutionDescriptor, MPSKernel.GetPtr (kernelWeights, true), MPSKernel.GetPtr (biasTerms, false), flags)
+			: base (NSObjectFlag.Empty)
 		{
+			if (kernelWeights == null)
+				throw new ArgumentNullException (nameof (kernelWeights));
+
+			unsafe {
+				fixed (float* kernelWeightsptr = kernelWeights)
+				fixed (float* biasTermsptr = biasTerms)
+					InitializeHandle (InitWithDevice (device, convolutionDescriptor, (IntPtr) kernelWeightsptr, (IntPtr) biasTermsptr, flags), "initWithDevice:convolutionDescriptor:kernelWeights:biasTerms:flags:");
+			}
 		}
 	}
 
 	public partial class MPSCnnFullyConnected {
 		public MPSCnnFullyConnected (IMTLDevice device, MPSCnnConvolutionDescriptor convolutionDescriptor, float[] kernelWeights, float[] biasTerms, MPSCnnConvolutionFlags flags)
-			: this (device, convolutionDescriptor, MPSKernel.GetPtr (kernelWeights, true), MPSKernel.GetPtr (biasTerms, false), flags)
+			: base (NSObjectFlag.Empty)
 		{
+			if (kernelWeights == null)
+				throw new ArgumentNullException (nameof (kernelWeights));
+
+			unsafe {
+				fixed (float* kernelWeightsptr = kernelWeights)
+				fixed (float* biasTermsptr = biasTerms)
+					InitializeHandle (InitWithDevice (device, convolutionDescriptor, (IntPtr) kernelWeightsptr, (IntPtr) biasTermsptr, flags), "initWithDevice:convolutionDescriptor:kernelWeights:biasTerms:flags:");
+			}
 		}
 	}
 
 	public partial class MPSImageConversion {
 		public MPSImageConversion (IMTLDevice device, MPSAlphaType srcAlpha, MPSAlphaType destAlpha, nfloat[] backgroundColor, CGColorConversionInfo conversionInfo)
-			: this (device, srcAlpha, destAlpha, MPSKernel.GetPtr (backgroundColor, false), conversionInfo)
+			: base (NSObjectFlag.Empty)
 		{
+			unsafe {
+				fixed (nfloat* ptr = backgroundColor)
+					InitializeHandle (InitWithDevice (device, srcAlpha, destAlpha, (IntPtr) ptr, conversionInfo), "initWithDevice:srcAlpha:destAlpha:backgroundColor:conversionInfo:");
+			}
 		}
 	}
 
 	public partial class MPSImagePyramid {
 		public MPSImagePyramid (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights)
-			: this (device, kernelWidth, kernelHeight, MPSKernel.GetPtr (kernelWeights, true))
+			: base (NSObjectFlag.Empty)
 		{
+			if (kernelWeights == null)
+				throw new ArgumentNullException (nameof (kernelWeights));
+
+			unsafe {
+				fixed (float* ptr = kernelWeights)
+					InitializeHandle (InitWithDevice (device, kernelWidth, kernelHeight, (IntPtr) ptr), "initWithDevice:kernelWidth:kernelHeight:weights:");
+			}
 		}
 	}
 
 	public partial class MPSImageGaussianPyramid {
 		public MPSImageGaussianPyramid (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights)
-			: this (device, kernelWidth, kernelHeight, MPSKernel.GetPtr (kernelWeights, true))
+			: base (NSObjectFlag.Empty)
 		{
+			if (kernelWeights == null)
+				throw new ArgumentNullException (nameof (kernelWeights));
+
+			unsafe {
+				fixed (float* ptr = kernelWeights)
+					InitializeHandle (InitWithDevice (device, kernelWidth, kernelHeight, (IntPtr) ptr), "initWithDevice:kernelWidth:kernelHeight:weights:");
+			}
 		}
 	}
 #endif
