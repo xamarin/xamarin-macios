@@ -90,6 +90,22 @@ namespace MonoTouchFixtures.Security {
 				Assert.That ((int)ssl.SetDatagramHelloCookie (new byte [32]), Is.EqualTo (-50), "no cookie in stream");
 
 				// Assert.Null (ssl.GetDistinguishedNames<string> (), "GetDistinguishedNames");
+
+				if (TestRuntime.CheckXcodeVersion (9,0)) {
+					Assert.That (ssl.SetSessionTickets (false), Is.EqualTo (0), "SetSessionTickets");
+					Assert.That (ssl.SetError (SecStatusCode.Success), Is.EqualTo (0), "SetError");
+
+					Assert.Throws<ArgumentNullException> (() => ssl.SetOcspResponse (null), "SetOcspResponse/null");
+					using (var data = new NSData ())
+						Assert.That (ssl.SetOcspResponse (data), Is.EqualTo (0), "SetOcspResponse/empty");
+
+					int error;
+					var alpn = ssl.GetAlpnProtocols (out error);
+					Assert.That (alpn, Is.Empty, "alpn");
+					Assert.That (error, Is.EqualTo ((int) SecStatusCode.Param), "GetAlpnProtocols");
+					var protocols = new [] { "HTTP/1.1", "SPDY/1" };
+					Assert.That (ssl.SetAlpnProtocols (protocols), Is.EqualTo (0), "SetAlpnProtocols");
+				}
 			}
 		}
 
