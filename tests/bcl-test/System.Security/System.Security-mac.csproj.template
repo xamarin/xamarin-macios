@@ -88,7 +88,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <Target Name="AfterBuild">
-    <Copy SourceFiles="@(FilesToCopyEncryptedXml)" DestinationFolder="$(OutputPath)\System.SecurityTests.app\Contents\MonoBundle\Test\System.Security.Cryptography.Xml" />
-    <Copy SourceFiles="@(FilesToCopyCryptographyPkcs)" DestinationFolder="$(OutputPath)\System.SecurityTests.app\Contents\MonoBundle\Test\System.Security.Cryptography.Pkcs" />
+    <Copy SourceFiles="@(FilesToCopyEncryptedXml)" DestinationFolder="$(OutputPath)\$(AssemblyName).app\Contents\MonoBundle\Test\System.Security.Cryptography.Xml" />
+    <Copy SourceFiles="@(FilesToCopyCryptographyPkcs)" DestinationFolder="$(OutputPath)\$(AssemblyName).app\Contents\MonoBundle\Test\System.Security.Cryptography.Pkcs" />
   </Target>
 </Project>
