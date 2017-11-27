@@ -332,6 +332,7 @@ namespace xharness
 			// Add entries here to check for more prefixes.
 			var mtouch_prefixes = new string [] {
 				"tests/mtouch",
+				"tests/common",
 				"tools/mtouch",
 				"tools/common",
 				"tools/linker",
@@ -341,6 +342,7 @@ namespace xharness
 			};
 			var mmp_prefixes = new string [] {
 				"tests/mmptest",
+				"tests/common",
 				"tools/mmp",
 				"tools/common",
 				"tools/linker",
@@ -349,6 +351,7 @@ namespace xharness
 			};
 			var bcl_prefixes = new string [] {
 				"tests/bcl-test",
+				"tests/common",
 				"external/mono",
 				"external/llvm",
 			};
@@ -358,10 +361,12 @@ namespace xharness
 				"src/generator-enums.cs",
 				"src/generator-filters.cs",
 				"tests/generator",
+				"tests/common",
 			};
 			var mac_binding_project = new string [] {
 				"msbuild",
 				"tests/mac-binding-project",
+				"tests/common/mac",
 			}.Intersect (btouch_prefixes).ToArray ();
 			var xtro_prefixes = new string [] {
 				"tests/xtro-sharpie",
