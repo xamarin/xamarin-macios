@@ -4850,6 +4850,23 @@ public partial class Generator : IMemberGatherer {
 		var mi = original_minfo.method;
 		var minfo = new AsyncMethodInfo (this, original_minfo.type, mi, original_minfo.category_extension_type, original_minfo.is_extension_method);
 		var is_void = mi.ReturnType == TypeManager.System_Void;
+
+		// Print a error if any of the method parameters or handler parameters is ref/out, it should not be asyncified.
+		if (minfo.async_initial_params != null) {
+			foreach (var param in minfo.async_initial_params) {
+				if (param.ParameterType.IsByRef) {
+					ErrorHelper.Show (new BindingException (1062, true, $"The '{original_minfo.type.Name}.{mi.Name}' member contains ref/out parameters and must not be decorated with [Async]."));
+					break;
+				}
+			}
+		}
+		foreach (var param in minfo.async_completion_params) {
+			if (param.ParameterType.IsByRef) {
+				ErrorHelper.Show (new BindingException (1062, true, $"The '{original_minfo.type.Name}.{mi.Name}' member contains ref/out parameters and must not be decorated with [Async]."));
+				break;
+			}
+		}
+
 		PrintMethodAttributes (minfo);
 
 		PrintAsyncHeader (minfo, asyncKind);

@@ -446,6 +446,106 @@ namespace Bug57094 {
 		}
 
 		[Test]
+		public void BI1062_NoAsyncMethodRefHandlerTest ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding (@"
+using System;
+using Foundation;
+
+namespace BI1062Tests {
+
+	delegate void MyHandler (ref bool staaph, NSError error);
+
+	[BaseType (typeof (NSObject))]
+	interface FooObject {
+
+		[Async]
+		[Export (""fooMethod:"")]
+		void FooMethod (MyHandler handler);
+	}
+}");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1062, "The 'FooObject.FooMethod' member contains ref/out parameters and must not be decorated with [Async].");
+		}
+
+		[Test]
+		public void BI1062_NoAsyncMethodOutHandlerTest ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding (@"
+using System;
+using Foundation;
+
+namespace BI1062Tests {
+
+	delegate void MyHandler (out bool staaph, NSError error);
+
+	[BaseType (typeof (NSObject))]
+	interface FooObject {
+
+		[Async]
+		[Export (""fooMethod:"")]
+		void FooMethod (MyHandler handler);
+	}
+}");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1062, "The 'FooObject.FooMethod' member contains ref/out parameters and must not be decorated with [Async].");
+		}
+
+		[Test]
+		public void BI1062_NoAsyncMethodOutParameterTest ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding (@"
+using System;
+using Foundation;
+
+namespace BI1062Tests {
+
+	delegate void MyHandler (bool staaph, NSError error);
+
+	[BaseType (typeof (NSObject))]
+	interface FooObject {
+
+		[Async]
+		[Export (""fooMethod:completion:"")]
+		void FooMethod (out NSObject obj, MyHandler handler);
+	}
+}");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1062, "The 'FooObject.FooMethod' member contains ref/out parameters and must not be decorated with [Async].");
+		}
+
+		[Test]
+		public void BI1062_NoAsyncMethodRefParameterTest ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding (@"
+using System;
+using Foundation;
+
+namespace BI1062Tests {
+
+	delegate void MyHandler (bool staaph, NSError error);
+
+	[BaseType (typeof (NSObject))]
+	interface FooObject {
+
+		[Async]
+		[Export (""fooMethod:completion:"")]
+		void FooMethod (ref NSObject obj, Action<bool, NSError> handler);
+	}
+}");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1062, "The 'FooObject.FooMethod' member contains ref/out parameters and must not be decorated with [Async].");
+		}
+
+		[Test]
 		[TestCase (Profile.iOS)]
 		[TestCase (Profile.macClassic)]
 		public void WarnAsError (Profile profile)
