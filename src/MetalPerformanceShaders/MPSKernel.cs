@@ -46,6 +46,7 @@ namespace XamCore.MetalPerformanceShaders {
 #if !COREBUILD
 	public partial class MPSImageDilate {
 
+		[DesignatedInitializer]
 		public MPSImageDilate (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] values)
 			: base (NSObjectFlag.Empty)
 		{
@@ -87,6 +88,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	public partial class MPSImageThresholdBinaryInverse {
 
+		[DesignatedInitializer]
 		public MPSImageThresholdBinaryInverse (IMTLDevice device, float thresholdValue, float maximumValue, /*[NullAllowed]*/ float[] transform)
 			: base (NSObjectFlag.Empty)
 		{
@@ -103,6 +105,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	public partial class MPSImageThresholdTruncate {
 
+		[DesignatedInitializer]
 		public MPSImageThresholdTruncate (IMTLDevice device, float thresholdValue, /*[NullAllowed]*/ float[] transform)
 			: base (NSObjectFlag.Empty)
 		{
@@ -119,6 +122,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	public partial class MPSImageThresholdToZero {
 
+		[DesignatedInitializer]
 		public MPSImageThresholdToZero (IMTLDevice device, float thresholdValue, /*[NullAllowed]*/ float[] transform)
 			: base (NSObjectFlag.Empty)
 		{
@@ -135,6 +139,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	public partial class MPSImageThresholdToZeroInverse {
 
+		[DesignatedInitializer]
 		public MPSImageThresholdToZeroInverse (IMTLDevice device, float thresholdValue, /*[NullAllowed]*/ float[] transform)
 			: base (NSObjectFlag.Empty)
 		{
@@ -150,6 +155,8 @@ namespace XamCore.MetalPerformanceShaders {
 	}
 
 	public partial class MPSImageSobel {
+
+		[DesignatedInitializer]
 		public MPSImageSobel (IMTLDevice device, float[] transform)
 			: base (NSObjectFlag.Empty)
 		{
@@ -168,6 +175,8 @@ namespace XamCore.MetalPerformanceShaders {
 	}
 
 	public partial class MPSCnnConvolution {
+
+		[DesignatedInitializer]
 		public MPSCnnConvolution (IMTLDevice device, MPSCnnConvolutionDescriptor convolutionDescriptor, float[] kernelWeights, float[] biasTerms, MPSCnnConvolutionFlags flags)
 			: base (NSObjectFlag.Empty)
 		{
@@ -183,6 +192,8 @@ namespace XamCore.MetalPerformanceShaders {
 	}
 
 	public partial class MPSCnnFullyConnected {
+
+		[DesignatedInitializer]
 		public MPSCnnFullyConnected (IMTLDevice device, MPSCnnConvolutionDescriptor convolutionDescriptor, float[] kernelWeights, float[] biasTerms, MPSCnnConvolutionFlags flags)
 			: base (NSObjectFlag.Empty)
 		{
@@ -209,6 +220,8 @@ namespace XamCore.MetalPerformanceShaders {
 	}
 
 	public partial class MPSImagePyramid {
+
+		[DesignatedInitializer]
 		public MPSImagePyramid (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights)
 			: base (NSObjectFlag.Empty)
 		{
@@ -223,6 +236,8 @@ namespace XamCore.MetalPerformanceShaders {
 	}
 
 	public partial class MPSImageGaussianPyramid {
+
+		[DesignatedInitializer]
 		public MPSImageGaussianPyramid (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights)
 			: base (NSObjectFlag.Empty)
 		{

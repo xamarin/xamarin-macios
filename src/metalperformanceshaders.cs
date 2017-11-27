@@ -125,7 +125,6 @@ namespace XamCore.MetalPerformanceShaders {
 		IntPtr Constructor (IMTLDevice device);
 
 		[Export ("initWithDevice:linearGrayColorTransform:")]
-		[DesignatedInitializer]
 		[Internal]
 		IntPtr InitWithDevice (IMTLDevice device, IntPtr /* float* */ transform);
 
@@ -150,7 +149,6 @@ namespace XamCore.MetalPerformanceShaders {
 		IntPtr Constructor (IMTLDevice device, float centerWeight);
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:weights:")]
-		[DesignatedInitializer]
 		[Internal]
 		IntPtr InitWithDevice (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, /* float* */ IntPtr kernelWeights);
 
@@ -169,7 +167,6 @@ namespace XamCore.MetalPerformanceShaders {
 		// inlining .ctor from base class
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:weights:")]
-		[DesignatedInitializer]
 		[Internal]
 		IntPtr initWithDevice (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, /* float* */ IntPtr kernelWeights);
 
@@ -472,7 +469,6 @@ namespace XamCore.MetalPerformanceShaders {
 		nuint KernelWidth { get; }
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:values:")]
-		[DesignatedInitializer]
 		[Internal]
 		IntPtr InitWithDevice (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, IntPtr values);
 
@@ -536,7 +532,6 @@ namespace XamCore.MetalPerformanceShaders {
 	[DisableDefaultCtor]
 	interface MPSImageThresholdBinary {
 		[Export ("initWithDevice:thresholdValue:maximumValue:linearGrayColorTransform:")]
-		[DesignatedInitializer]
 		[Internal]
 		IntPtr InitWithDevice (IMTLDevice device, float thresholdValue, float maximumValue, /* [NullAllowed] float* */ IntPtr transform);
 
@@ -564,7 +559,6 @@ namespace XamCore.MetalPerformanceShaders {
 	[DisableDefaultCtor]
 	interface MPSImageThresholdBinaryInverse {
 		[Export ("initWithDevice:thresholdValue:maximumValue:linearGrayColorTransform:")]
-		[DesignatedInitializer]
 		[Internal]
 		IntPtr InitWithDevice (IMTLDevice device, float thresholdValue, float maximumValue, /* [NullAllowed] float* */ IntPtr transform);
 
@@ -592,7 +586,6 @@ namespace XamCore.MetalPerformanceShaders {
 	[DisableDefaultCtor]
 	interface MPSImageThresholdTruncate {
 		[Export ("initWithDevice:thresholdValue:linearGrayColorTransform:")]
-		[DesignatedInitializer]
 		[Internal]
 		IntPtr InitWithDevice (IMTLDevice device, float thresholdValue, /* [NullAllowed] float* */ IntPtr transform);
 
@@ -617,7 +610,6 @@ namespace XamCore.MetalPerformanceShaders {
 	[DisableDefaultCtor]
 	interface MPSImageThresholdToZero {
 		[Export ("initWithDevice:thresholdValue:linearGrayColorTransform:")]
-		[DesignatedInitializer]
 		[Internal]
 		IntPtr InitWithDevice (IMTLDevice device, float thresholdValue, /* [NullAllowed] float* */ IntPtr transform);
 
@@ -642,7 +634,6 @@ namespace XamCore.MetalPerformanceShaders {
 	[DisableDefaultCtor]
 	interface MPSImageThresholdToZeroInverse {
 		[Export ("initWithDevice:thresholdValue:linearGrayColorTransform:")]
-		[DesignatedInitializer]
 		[Internal]
 		IntPtr InitWithDevice (IMTLDevice device, float thresholdValue, /* [NullAllowed] float* */ IntPtr transform);
 
@@ -984,7 +975,6 @@ namespace XamCore.MetalPerformanceShaders {
 		MPSCnnNeuron Neuron { get; }
 
 		[Export ("initWithDevice:convolutionDescriptor:kernelWeights:biasTerms:flags:")]
-		[DesignatedInitializer]
 		[Internal]
 		IntPtr InitWithDevice (IMTLDevice device, MPSCnnConvolutionDescriptor convolutionDescriptor, /* float* */ IntPtr kernelWeights, [NullAllowed] /* float* */ IntPtr biasTerms, MPSCnnConvolutionFlags flags);
 
@@ -1043,7 +1033,6 @@ namespace XamCore.MetalPerformanceShaders {
 	interface MPSCnnFullyConnected {
 		
 		[Export ("initWithDevice:convolutionDescriptor:kernelWeights:biasTerms:flags:")]
-		[DesignatedInitializer]
 		[Internal]
 		IntPtr InitWithDevice (IMTLDevice device, MPSCnnConvolutionDescriptor fullyConnectedDescriptor, /* float* */ IntPtr kernelWeights, [NullAllowed] /* float* */ IntPtr biasTerms, MPSCnnConvolutionFlags flags);
 
@@ -3546,10 +3535,9 @@ namespace XamCore.MetalPerformanceShaders {
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
 
-		// TODO: Fix registrar error https://gist.github.com/dalexsoto/046ded627b485e89bf3b4cb6b039a6c3
-		//[Export ("copyWithZone:device:")]
-		//[return: Release ()]
-		//MPSMatrixSoftMax Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
+		[Export ("copyWithZone:device:")]
+		[return: Release ()]
+		MPSMatrixSoftMax Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
 	}
 
 	[TV (11,2), Mac (10,13,2, onlyOn64: true), iOS (11,2)]
@@ -3596,10 +3584,9 @@ namespace XamCore.MetalPerformanceShaders {
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
 
-		// TODO: Fix registrar error https://gist.github.com/dalexsoto/046ded627b485e89bf3b4cb6b039a6c3
-		//[Export ("copyWithZone:device:")]
-		//[return: Release ()]
-		//MPSMatrixNeuron Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
+		[Export ("copyWithZone:device:")]
+		[return: Release ()]
+		MPSMatrixNeuron Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
 	}
 
 	[TV (11,2), Mac (10,13,2, onlyOn64: true), iOS (11,2)]
@@ -3660,10 +3647,9 @@ namespace XamCore.MetalPerformanceShaders {
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
 
-		// TODO: Fix registrar error https://gist.github.com/dalexsoto/046ded627b485e89bf3b4cb6b039a6c3
-		//[Export ("copyWithZone:device:")]
-		//[return: Release ()]
-		//MPSMatrixFullyConnected Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
+		[Export ("copyWithZone:device:")]
+		[return: Release ()]
+		MPSMatrixFullyConnected Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
 	}
 
 	[TV (11,2), Mac (10,13,2, onlyOn64: true), iOS (11,2)]
@@ -3695,10 +3681,9 @@ namespace XamCore.MetalPerformanceShaders {
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
 
-		// TODO: Fix registrar error https://gist.github.com/dalexsoto/046ded627b485e89bf3b4cb6b039a6c3
-		//[Export ("copyWithZone:device:")]
-		//[return: Release ()]
-		//MPSMatrixFindTopK Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
+		[Export ("copyWithZone:device:")]
+		[return: Release ()]
+		MPSMatrixFindTopK Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
 	}
 }
 #endif
