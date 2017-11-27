@@ -12,7 +12,7 @@ namespace XamCore.MetalPerformanceShaders {
 			fixed (void* outputScaleTermsHandle = outputScaleTerms)
 			fixed (void* inputBiasTermsHandle = inputBiasTerms)
 			fixed (void* inputScaleTermsHandle = inputScaleTerms)
-				InitializeHandle (InitWith (device, convolutionData, (IntPtr) outputBiasTermsHandle, (IntPtr) outputScaleTermsHandle, (IntPtr) inputBiasTermsHandle, (IntPtr) inputScaleTermsHandle, type, flags));
+				InitializeHandle (InitWithDevice (device, convolutionData, (IntPtr) outputBiasTermsHandle, (IntPtr) outputScaleTermsHandle, (IntPtr) inputBiasTermsHandle, (IntPtr) inputScaleTermsHandle, type, flags));
 		}
 	}
 
@@ -24,7 +24,7 @@ namespace XamCore.MetalPerformanceShaders {
 			fixed (void* outputScaleTermsHandle = outputScaleTerms)
 			fixed (void* inputBiasTermsHandle = inputBiasTerms)
 			fixed (void* inputScaleTermsHandle = inputScaleTerms)
-				InitializeHandle (InitWith (device, convolutionData, (IntPtr) outputBiasTermsHandle, (IntPtr) outputScaleTermsHandle, (IntPtr) inputBiasTermsHandle, (IntPtr) inputScaleTermsHandle, type, flags));
+				InitializeHandle (InitWithDevice (device, convolutionData, (IntPtr) outputBiasTermsHandle, (IntPtr) outputScaleTermsHandle, (IntPtr) inputBiasTermsHandle, (IntPtr) inputScaleTermsHandle, type, flags));
 		}
 	}
 }

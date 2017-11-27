@@ -8,7 +8,7 @@ namespace XamCore.MetalPerformanceShaders {
 		public unsafe MPSCnnNeuronPReLU (IMTLDevice device, float [] a) : this (NSObjectFlag.Empty)
 		{
 			fixed (void* aHandle = a)
-				InitializeHandle (InitWith (device, (IntPtr) aHandle, (nuint)a.Length));
+				InitializeHandle (InitWithDevice (device, (IntPtr) aHandle, (nuint)a.Length));
 		}
 	}
 }

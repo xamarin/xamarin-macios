@@ -168,7 +168,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:weights:")]
 		[Internal]
-		IntPtr initWithDevice (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, /* float* */ IntPtr kernelWeights);
+		IntPtr InitWithDevice (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, /* float* */ IntPtr kernelWeights);
 
 		// inlining ctor from base class
 		[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
@@ -214,6 +214,7 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("histogramSizeForSourceFormat:")]
 		nuint GetHistogramSize (MTLPixelFormat sourceFormat);
 
+		[TV (11,0), iOS (11,0)]
 		[Export ("minPixelThresholdValue", ArgumentSemantic.Assign)]
 		Vector4 MinPixelThresholdValue {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get; 
@@ -1848,10 +1849,10 @@ namespace XamCore.MetalPerformanceShaders {
 		nuint CopyColumns { get; }
 
 		[Export ("sourcesAreTransposed")]
-		bool SourcesAreTransposed { get; }
+		bool AreSourcesTransposed { get; }
 
 		[Export ("destinationsAreTransposed")]
-		bool DestinationsAreTransposed { get; }
+		bool AreDestinationsTransposed { get; }
 
 		[Export ("encodeToCommandBuffer:copyDescriptor:")]
 		void EncodeToCommandBuffer (IMTLCommandBuffer cmdBuf, MPSMatrixCopyDescriptor copyDescriptor);
@@ -2130,7 +2131,7 @@ namespace XamCore.MetalPerformanceShaders {
 	interface MPSCnnNeuronPReLU {
 		[Export ("initWithDevice:a:count:")]
 		[Internal, Sealed]
-		IntPtr InitWith (IMTLDevice device, IntPtr /* float* */ a, nuint count);
+		IntPtr InitWithDevice (IMTLDevice device, IntPtr /* float* */ a, nuint count);
 
 		// inlining ctor from base class
 		[Export ("initWithCoder:device:")]
@@ -2279,7 +2280,7 @@ namespace XamCore.MetalPerformanceShaders {
 		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float scaleValue, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
 
 		[Internal, Sealed, Export ("initWithDevice:convolutionData:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags:")]
-		IntPtr InitWith (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, [NullAllowed] IntPtr /* float* */ outputBiasTerms, [NullAllowed] IntPtr /* float* */ outputScaleTerms, [NullAllowed] IntPtr /* float* */ inputBiasTerms, [NullAllowed] IntPtr /* float* */ inputScaleTerms,MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
+		IntPtr InitWithDevice (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, [NullAllowed] IntPtr /* float* */ outputBiasTerms, [NullAllowed] IntPtr /* float* */ outputScaleTerms, [NullAllowed] IntPtr /* float* */ inputBiasTerms, [NullAllowed] IntPtr /* float* */ inputScaleTerms,MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
@@ -2294,7 +2295,7 @@ namespace XamCore.MetalPerformanceShaders {
 		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float scaleValue, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
 
 		[Internal, Sealed, Export ("initWithDevice:convolutionData:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags:")]
-		IntPtr InitWith (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, [NullAllowed] IntPtr /* float* */ outputBiasTerms, [NullAllowed] IntPtr /* float* */ outputScaleTerms, [NullAllowed] IntPtr /* float* */ inputBiasTerms, [NullAllowed] IntPtr /* float* */ inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
+		IntPtr InitWithDevice (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, [NullAllowed] IntPtr /* float* */ outputBiasTerms, [NullAllowed] IntPtr /* float* */ outputScaleTerms, [NullAllowed] IntPtr /* float* */ inputBiasTerms, [NullAllowed] IntPtr /* float* */ inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
@@ -2522,7 +2523,7 @@ namespace XamCore.MetalPerformanceShaders {
 		nuint NumberOfLayers { get; }
 
 		[Export ("recurrentOutputIsTemporary")]
-		bool RecurrentOutputIsTemporary { get; set; }
+		bool IsRecurrentOutputTemporary { get; set; }
 
 		[Export ("storeAllIntermediateStates")]
 		bool StoreAllIntermediateStates { get; set; }
@@ -2580,7 +2581,7 @@ namespace XamCore.MetalPerformanceShaders {
 		nuint NumberOfLayers { get; }
 
 		[Export ("recurrentOutputIsTemporary")]
-		bool RecurrentOutputIsTemporary { get; set; }
+		bool IsRecurrentOutputTemporary { get; set; }
 
 		[Export ("storeAllIntermediateStates")]
 		bool StoreAllIntermediateStates { get; set; }
@@ -3114,7 +3115,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNNFilterNode))]
-[	DisableDefaultCtor]
+	[DisableDefaultCtor]
 	interface MPSNNConcatenationNode {
 		[Static]
 		[Export ("nodeWithSources:")]
@@ -3212,7 +3213,7 @@ namespace XamCore.MetalPerformanceShaders {
 		IMPSHandle ResultHandle { get; }
 
 		[Export ("outputStateIsTemporary")]
-		bool OutputStateIsTemporary { get; set; }
+		bool IsOutputStateTemporary { get; set; }
 
 		[Export ("destinationImageAllocator", ArgumentSemantic.Retain)]
 		IMPSImageAllocator DestinationImageAllocator { get; set; }
