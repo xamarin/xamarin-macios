@@ -103,10 +103,6 @@ namespace Xamarin.Pmcs.Profiles
 		public MacMobileFrameworkXamCore2 (ArchDefine arch) : base (arch)
 		{
 			CompilerExecutable = "../builds/mcs-mac32";
-
-			CompilerOptions.Add ("-nostdlib");
-			CompilerOptions.Add ("-r:mscorlib");
-			CompilerOptions.Add ("-lib:../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac");
 		}
 	}
 
@@ -114,9 +110,6 @@ namespace Xamarin.Pmcs.Profiles
 	{
 		public MacFullFrameworkXamCore2 (ArchDefine arch) : base (arch)
 		{
-			CompilerOptions.Add ("-sdk:4.5");
-			CompilerOptions.Add ("-define:NO_SYSTEM_DRAWING");
-			CompilerOptions.Add ("-define:XAMMAC_SYSTEM_MONO");
 		}
 	}
 
