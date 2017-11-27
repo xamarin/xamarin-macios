@@ -617,6 +617,7 @@ namespace xharness
 				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mmptest", "regression"),
 				Ignored = !IncludeMmpTest || !IncludeMac,
 				Timeout = TimeSpan.FromMinutes (30),
+				SupportsParallelExecution = false, // Already doing parallel execution by running "make -jX"
 			};
 			run_mmp.Environment.Add ("BUILD_REVISION", "jenkins"); // This will print "@MonkeyWrench: AddFile: <log path>" lines, which we can use to get the log filenames.
 			Tasks.Add (run_mmp);
@@ -1906,6 +1907,8 @@ function oninitialload ()
 		static int counter;
 		public readonly int ID = counter++;
 
+		bool? supports_parallel_execution;
+
 		public Jenkins Jenkins;
 		public Harness Harness { get { return Jenkins.Harness; } }
 		public TestProject TestProject;
@@ -2229,7 +2232,10 @@ function oninitialload ()
 
 		public virtual bool SupportsParallelExecution {
 			get {
-				return true;
+				return supports_parallel_execution ?? true;
+			}
+			set {
+				supports_parallel_execution = value;
 			}
 		}
 
