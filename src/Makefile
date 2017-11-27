@@ -48,6 +48,9 @@ COMMON_TARGET_DIRS = \
 	build/common             \
 	build/common/NativeTypes \
 
+32_ARGS = -define:ARCH_32
+64_ARGS = -define:ARCH_64
+
 #
 # Xamarin.iOS
 #
@@ -163,6 +166,7 @@ $(IOS_BUILD_DIR)/$(1)/$(3): $$(IOS_SOURCES) $(IOS_BUILD_DIR)/$(4)/generated_sour
 	@mkdir -p $(IOS_BUILD_DIR)/$(1)
 	$$(call Q_PROF_PMCS,ios/$(1)) PMCS_PROFILE=$(5) $$(IOS_PMCS) -out:$$@ -target:library -debug -unsafe -optimize \
 		-r:$(IOS_LIBDIR)/Mono.Security.dll \
+		$$($(6)_ARGS) \
 		-keyfile:$(PRODUCT_KEY_PATH) $$(IOS_DEFINES) \
 		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$$(IOS_SOURCES) @$(IOS_BUILD_DIR)/$(4)/generated_sources
@@ -174,9 +178,11 @@ $(IOS_BUILD_DIR)/$(1)/$(3).pdb: $(IOS_BUILD_DIR)/$(1)/$(3).dll
 
 endef
 
-$(IOS_BUILD_DIR)/compat/monotouch.dll: $(MACIOS_BINARIES_PATH)/monotouch.dll | $(IOS_BUILD_DIR)/compat
+$(IOS_BUILD_DIR)/compat/monotouch.dll: $(MACIOS_BINARIES_PATH)/monotouch.dll | $(IOS_BUILD_DIR)/compat $(IOS_BUILD_DIR)/compat/monotouch.dll.mdb
 	$(Q) cp $< $@
-	$(Q) cp $<.mdb $@.mdb
+
+$(IOS_BUILD_DIR)/compat/monotouch.dll.mdb: $(MACIOS_BINARIES_PATH)/monotouch.dll.mdb | $(IOS_BUILD_DIR)/compat
+	$(Q) cp $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/monotouch.dll: $(IOS_BUILD_DIR)/compat/monotouch.dll
 	$(Q) cp $< $@
@@ -184,8 +190,8 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/monotouch.dll: $(IOS_BUILD_DIR)/c
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/monotouch.dll.mdb : $(IOS_BUILD_DIR)/compat/monotouch.dll.mdb
 	$(Q) cp $< $@
 
-$(eval $(call IOS_TARGETS_template,native-32,--ns=ObjCRuntime,Xamarin.iOS.dll,native,native-32))
-$(eval $(call IOS_TARGETS_template,native-64,--ns=ObjCRuntime,Xamarin.iOS.dll,native,native-64))
+$(eval $(call IOS_TARGETS_template,native-32,--ns=ObjCRuntime,Xamarin.iOS.dll,native,native-32,32))
+$(eval $(call IOS_TARGETS_template,native-64,--ns=ObjCRuntime,Xamarin.iOS.dll,native,native-64,64))
 
 define IOS_LIBS_template
 IOS_VARIANTS_TARGETS += $(addprefix $(IOS_BUILD_DIR)/$(1)/,$(4) $(5))
@@ -592,16 +598,17 @@ $(MAC_BUILD_DIR)/$(1)/$(2): $(MAC_BUILD_DIR)/$(3)/generated-sources $(MAC_SOURCE
 		$$(MAC_COMMON_DEFINES),OBJECT_REF_TRACKING \
 		-r:Mono.Security.dll \
 		$$(MAC_$(3)_ARGS) \
+		$$($(6)_ARGS) \
 		-keyfile:$(SN_KEY) \
 		-nowarn:3021,1635,612,618,0219,0414,$(MAC_WARNINGS_TO_FIX) \
 		$(4) \
 		@$$< $$(MAC_SOURCES)
 endef
 
-$(eval $(call MAC_TARGETS_template,mobile-32,Xamarin.Mac.dll,mobile,-r:System.Net.Http -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac $(MAC_CFNETWORK_SOURCES) $(MAC_MODERNHTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,mobile-32))
-$(eval $(call MAC_TARGETS_template,mobile-64,Xamarin.Mac.dll,mobile,-r:System.Net.Http -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac $(MAC_CFNETWORK_SOURCES) $(MAC_MODERNHTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,mobile-64))
-$(eval $(call MAC_TARGETS_template,full-32,Xamarin.Mac.dll,full,-r:System.Net.Http -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5 $(MAC_CFNETWORK_SOURCES) $(MAC_MODERNHTTP_SOURCES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,full-32))
-$(eval $(call MAC_TARGETS_template,full-64,Xamarin.Mac.dll,full,-r:System.Net.Http -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5 $(MAC_CFNETWORK_SOURCES) $(MAC_MODERNHTTP_SOURCES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,full-64))
+$(eval $(call MAC_TARGETS_template,mobile-32,Xamarin.Mac.dll,mobile,-r:System.Net.Http -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac $(MAC_CFNETWORK_SOURCES) $(MAC_MODERNHTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,mobile-32,32))
+$(eval $(call MAC_TARGETS_template,mobile-64,Xamarin.Mac.dll,mobile,-r:System.Net.Http -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac $(MAC_CFNETWORK_SOURCES) $(MAC_MODERNHTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,mobile-64,64))
+$(eval $(call MAC_TARGETS_template,full-32,Xamarin.Mac.dll,full,-r:System.Net.Http -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5 $(MAC_CFNETWORK_SOURCES) $(MAC_MODERNHTTP_SOURCES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,full-32,32))
+$(eval $(call MAC_TARGETS_template,full-64,Xamarin.Mac.dll,full,-r:System.Net.Http -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5 $(MAC_CFNETWORK_SOURCES) $(MAC_MODERNHTTP_SOURCES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,full-64,64))
 
 $(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/%-64/Xamarin.Mac.dll
 	@mkdir -p $(@D)
@@ -855,6 +862,7 @@ $(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $
 $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.dll: $(WATCHOS_SOURCES) $(WATCH_BUILD_DIR)/watch/generated_sources $(PRODUCT_KEY_PATH) | $(WATCH_BUILD_DIR)/watch-32
 	$(call Q_PROF_PMCS,watch) PMCS_PROFILE=watch-32 $(WATCH_PMCS) -out:$@ -target:library -debug -unsafe -optimize \
 		-keyfile:$(PRODUCT_KEY_PATH) $(WATCH_DEFINES) \
+		$(32_ARGS) \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$(WATCHOS_SOURCES) @$(WATCH_BUILD_DIR)/watch/generated_sources
 
@@ -1081,6 +1089,7 @@ $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.dll: $(TVOS_SOURCES) $(TVOS_BUILD_DIR)/tv
 	$(call Q_PROF_PMCS,tvos) PMCS_PROFILE=tvos-64 $(TVOS_PMCS) -out:$@ -target:library -debug -unsafe -optimize \
 		-keyfile:$(PRODUCT_KEY_PATH) $(TVOS_DEFINES) \
 		-r:$(TVOS_LIBDIR)/Mono.Security.dll \
+		$(64_ARGS) \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$(TVOS_SOURCES) @$(TVOS_BUILD_DIR)/tvos/generated_sources
 

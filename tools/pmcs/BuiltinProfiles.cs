@@ -15,101 +15,23 @@ namespace Xamarin.Pmcs.Profiles
 		public static Profile Get (string profileName)
 		{
 			switch (profileName) {
-			// Watch
-			case "watch":
-				return new WatchXamCore3 (ArchDefine.None);
-			case "watch-32":
-				return new WatchXamCore3 (ArchDefine.ARCH_32);
-
-			// TVOS
-			case "tvos":
-				return new WatchXamCore3 (ArchDefine.None);
-			case "tvos-64":
-				return new WatchXamCore3 (ArchDefine.ARCH_64);
-
-			// iOS
-			case "native":
-				return new IosXamCore2 (ArchDefine.None);
-			case "native-64":
-				return new IosXamCore2 (ArchDefine.ARCH_64);
-			case "native-32":
-				return new IosXamCore2 (ArchDefine.ARCH_32);
-
-			// Mac
-			case "mobile":
-				return new MacMobileFrameworkXamCore2 (ArchDefine.None);
-			case "mobile-64":
-				return new MacMobileFrameworkXamCore2 (ArchDefine.ARCH_64);
-			case "mobile-32":
-				return new MacMobileFrameworkXamCore2 (ArchDefine.ARCH_32);
-			case "full":
-				return new MacFullFrameworkXamCore2 (ArchDefine.None);
-			case "full-64":
-				return new MacFullFrameworkXamCore2 (ArchDefine.ARCH_64);
-			case "full-32":
-				return new MacFullFrameworkXamCore2 (ArchDefine.ARCH_32);
-
 			case "compat-ios":
 			case "compat-mac":
 				throw new InvalidOperationException ("Classic should not be building");
+			default:
+				return new XamCore2Common ();
 			}
 
 			return null;
 		}
 	}
 
-	public enum ArchDefine
+	class XamCore2Common : Profile
 	{
-		None,
-		ARCH_32,
-		ARCH_64
-	}
-
-	abstract class XamCore3Common : XamCore2Common
-	{
-		protected XamCore3Common (ArchDefine arch) : base (arch)
+		public XamCore2Common ()
 		{
-		}
-	}
-
-	abstract class XamCore2Common : Profile
-	{
-		protected XamCore2Common (ArchDefine arch)
-		{
-			if (arch != ArchDefine.None)
-				CompilerOptions.Add ("-define:" + arch.ToString ());
-
 			GlobalReplacements.Add (new Xamarin20Replacement ());
 			EnumBackingTypeReplacements.Add (new Xamarin20Replacement ());
-		}
-	}
-
-	sealed class WatchXamCore3 : XamCore3Common
-	{
-		public WatchXamCore3 (ArchDefine arch) : base (arch)
-		{
-		}
-	}
-
-	sealed class IosXamCore2 : XamCore2Common
-	{
-		public IosXamCore2 (ArchDefine arch) : base (arch)
-		{
-		}
-	}
-
-	sealed class MacMobileFrameworkXamCore2 : XamCore2Common
-	{
-		public MacMobileFrameworkXamCore2 (ArchDefine arch) : base (arch)
-		{
-			CompilerExecutable = "../builds/mcs-mac32";
-		}
-	}
-
-	sealed class MacFullFrameworkXamCore2 : XamCore2Common
-	{
-		public MacFullFrameworkXamCore2 (ArchDefine arch) : base (arch)
-		{
 		}
 	}
 
