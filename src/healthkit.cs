@@ -2400,10 +2400,11 @@ namespace XamCore.HealthKit {
 		nuint Count { get; }
 	}
 
+	[Watch (4, 0), iOS (11, 0)]
 	[BaseType (typeof(HKSeriesSample))]
 	[DisableDefaultCtor]
 	interface HKWorkoutRoute : NSCopying {
-		[Watch (4, 0), iOS (11, 0)]
+
 		[Field ("HKWorkoutRouteTypeIdentifier")]
 		NSString TypeIdentifier { get; }
 	}
