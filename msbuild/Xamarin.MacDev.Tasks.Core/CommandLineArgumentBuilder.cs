@@ -7,7 +7,7 @@ namespace Xamarin.MacDev
 	/// <summary>
 	/// Builds a process argument string.
 	/// </summary>
-	public class ProcessArgumentBuilder
+	public class CommandLineArgumentBuilder
 	{
 		static readonly char[] QuoteSpecials = new char[] { ' ', '\\', '\'', '"', ',', ';' };
 
@@ -18,11 +18,11 @@ namespace Xamarin.MacDev
 			get; private set;
 		}
 
-		public ProcessArgumentBuilder ()
+		public CommandLineArgumentBuilder ()
 		{
 		}
 
-		public ProcessArgumentBuilder (string processPath)
+		public CommandLineArgumentBuilder (string processPath)
 		{
 			ProcessPath = processPath;
 		}

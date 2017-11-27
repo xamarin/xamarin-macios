@@ -496,6 +496,7 @@ namespace xharness
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
+				UseMSBuild = true,
 			};
 			var nunitExecutioniOSMSBuild = new NUnitExecuteTask (buildiOSMSBuild)
 			{
@@ -2405,6 +2406,8 @@ function oninitialload ()
 
 	class XBuildTask : BuildProjectTask
 	{
+		public bool UseMSBuild;
+
 		protected override async Task ExecuteAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
@@ -2413,7 +2416,7 @@ function oninitialload ()
 				await RestoreNugetsAsync (log, resource);
 
 				using (var xbuild = new Process ()) {
-					xbuild.StartInfo.FileName = "xbuild";
+					xbuild.StartInfo.FileName = UseMSBuild ? "msbuild" : "xbuild";
 					var args = new StringBuilder ();
 					args.Append ("/verbosity:diagnostic ");
 					if (SpecifyPlatform)
@@ -2423,6 +2426,8 @@ function oninitialload ()
 					args.Append (StringUtils.Quote (ProjectFile));
 					xbuild.StartInfo.Arguments = args.ToString ();
 					SetEnvironmentVariables (xbuild);
+					if (UseMSBuild)
+						xbuild.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = null;
 					LogProcessExecution (log, xbuild, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (15);

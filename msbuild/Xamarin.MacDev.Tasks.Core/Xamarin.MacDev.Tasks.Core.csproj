@@ -111,7 +111,7 @@
     <Compile Include="LoggingExtensions.cs" />
     <Compile Include="NativeReferenceKind.cs" />
     <Compile Include="PathUtils.cs" />
-    <Compile Include="ProcessArgumentBuilder.cs" />
+    <Compile Include="CommandLineArgumentBuilder.cs" />
     <Compile Include="ProcessUtils.cs" />
     <Compile Include="StringParserService.cs" />
     <Compile Include="PlatformFramework.cs" />
