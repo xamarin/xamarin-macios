@@ -1832,7 +1832,7 @@ function oninitialload ()
 										} catch (Exception ex) {
 											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", System.Web.HttpUtility.HtmlEncode (ex.Message));
 										}
-									} else if (log.Description == "NUnit results") {
+									} else if (log.Description == "NUnit results" || log.Description == "XML log") {
 										try {
 											var doc = new System.Xml.XmlDocument ();
 											doc.LoadWithoutNetworkAccess (log.FullPath);
