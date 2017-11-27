@@ -57,7 +57,7 @@ namespace xharness
 			int i;
 			int total = 0;
 			NetworkStream stream = client.GetStream ();
-			var fs = OutputWriter.BaseStream;
+			var fs = OutputWriter;
 			while ((i = stream.Read (buffer, 0, buffer.Length)) != 0) {
 				fs.Write (buffer, 0, i);
 				fs.Flush ();

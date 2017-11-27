@@ -29,6 +29,12 @@ namespace xharness
 		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
 		public HashSet<string> Labels { get; } = new HashSet<string> ();
 
+		public static string Timestamp {
+			get {
+				return $"{DateTime.Now:yyyyMMdd_HHmmss}";
+			}
+		}
+
 		// This is the maccore/tests directory.
 		string root_directory;
 		public string RootDirectory {
@@ -761,12 +767,12 @@ namespace xharness
 			return ProcessHelper.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, log, timeout: timeout);
 		}
 
-		public async Task ShowSimulatorList (LogStream log)
+		public async Task ShowSimulatorList (Log log)
 		{
 			await ExecuteXcodeCommandAsync ("simctl", "list", log, TimeSpan.FromSeconds (10));
 		}
 
-		public async Task<LogFile> SymbolicateCrashReportAsync (Log log, LogFile report)
+		public async Task<LogFile> SymbolicateCrashReportAsync (Logs logs, Log log, LogFile report)
 		{
 			var symbolicatecrash = Path.Combine (XcodeRoot, "Contents/SharedFrameworks/DTDeviceKitBase.framework/Versions/A/Resources/symbolicatecrash");
 			if (!File.Exists (symbolicatecrash))
@@ -777,7 +783,8 @@ namespace xharness
 				return report;
 			}
 
-			var symbolicated = new LogFile ("Symbolicated crash report", Path.ChangeExtension (report.Path, ".symbolicated.log"));
+			var name = Path.GetFileName (report.Path);
+			var symbolicated = logs.Create (Path.ChangeExtension (name, ".symbolicated.log"), $"Symbolicated crash report: {name}");
 			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (XcodeRoot, "Contents", "Developer") } };
 			var rv = await ProcessHelper.ExecuteCommandAsync (symbolicatecrash, StringUtils.Quote (report.Path), symbolicated, TimeSpan.FromMinutes (1), environment);
 			if (rv.Succeeded) {;
@@ -851,16 +858,15 @@ namespace xharness
 					if (!Device) {
 						crash_reports = new List<LogFile> (end_crashes.Count);
 						foreach (var path in end_crashes) {
-							var logPath = Path.Combine (LogDirectory, Path.GetFileName (path));
-							File.Copy (path, logPath, true);
-							crash_reports.Add (Logs.CreateFile ("Crash report: " + Path.GetFileName (path), logPath));
+							Logs.AddFile (path, $"Crash report: {Path.GetFileName (path)}");
 						}
 					} else {
 						// Download crash reports from the device. We put them in the project directory so that they're automatically deleted on wrench
 						// (if we put them in /tmp, they'd never be deleted).
 						var downloaded_crash_reports = new List<LogFile> ();
 						foreach (var file in end_crashes) {
-							var crash_report_target = Logs.CreateFile ("Crash report: " + Path.GetFileName (file), Path.Combine (LogDirectory, Path.GetFileName (file)));
+							var name = Path.GetFileName (file);
+							var crash_report_target = Logs.Create (name, $"Crash report: {name}");
 							var sb = new StringBuilder ();
 							sb.Append (" --download-crash-report=").Append (StringUtils.Quote (file));
 							sb.Append (" --download-crash-report-to=").Append (StringUtils.Quote (crash_report_target.Path));
@@ -870,8 +876,7 @@ namespace xharness
 							var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, sb.ToString (), Log, TimeSpan.FromMinutes (1));
 							if (result.Succeeded) {
 								Log.WriteLine ("Downloaded crash report {0} to {1}", file, crash_report_target.Path);
-								crash_report_target = await Harness.SymbolicateCrashReportAsync (Log, crash_report_target);
-								Logs.Add (crash_report_target);
+								crash_report_target = await Harness.SymbolicateCrashReportAsync (Logs, Log, crash_report_target);
 								downloaded_crash_reports.Add (crash_report_target);
 							} else {
 								Log.WriteLine ("Could not download crash report {0}", file);

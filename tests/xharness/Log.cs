@@ -8,28 +8,39 @@ namespace xharness
 {
 	public abstract class Log : TextWriter
 	{
+		public Logs Logs { get; private set; }
 		public string Description;
 		public bool Timestamp;
 
-		protected Log ()
+		protected Log (Logs logs)
 		{
+			Logs = logs;
 		}
 
-		protected Log (string description)
+		protected Log (Logs logs, string description)
 		{
+			Logs = logs;
 			Description = description;
 		}
 
 		public abstract string FullPath { get; }
 
-		protected abstract void WriteImpl (string value);
+		protected virtual void WriteImpl (string value)
+		{
+			Write (Encoding.UTF8.GetBytes (value));
+		}
 
-		public virtual StreamReader GetReader ()
+		public virtual void Write (byte [] buffer)
+		{
+			Write (buffer, 0, buffer.Length);
+		}
+
+		public virtual void Write (byte[] buffer, int offset, int count)
 		{
 			throw new NotSupportedException ();
 		}
 
-		public virtual StreamWriter GetWriter ()
+		public virtual StreamReader GetReader ()
 		{
 			throw new NotSupportedException ();
 		}
@@ -77,6 +88,7 @@ namespace xharness
 			Log [] logs;
 
 			public AggregatedLog (params Log [] logs)
+				: base (null)
 			{
 				this.logs = logs;
 			}
@@ -88,28 +100,52 @@ namespace xharness
 				foreach (var log in logs)
 					log.WriteImpl (value);
 			}
+
+			public override void Write (byte [] buffer, int offset, int count)
+			{
+				foreach (var log in logs)
+					log.Write (buffer, offset, count);
+			}
 		}
 	}
 
 	public class LogFile : Log
 	{
 		object lock_obj = new object ();
-		bool append;
-		public string Path;
-		StreamWriter writer;
+		public string Path { get; private set; }
+		FileStream writer;
+		bool disposed;
 
-		public LogFile (string description, string path, bool append = true)
-			: base (description)
+		public LogFile (Logs logs, string description, string path, bool append = true)
+			: base (logs, description)
 		{
 			Path = path;
-			this.append = append;
 			if (!append)
 				File.WriteAllText (path, string.Empty);
 		}
 
-		protected override void WriteImpl (string value)
+		public override void Write (byte [] buffer, int offset, int count)
 		{
-			GetWriter ().Write (value);
+			try {
+				// We don't want to open the file every time someone writes to the log, so we keep it as an instance
+				// variable until we're disposed. Due to the async nature of how we run tests, writes may still
+				// happen after we're disposed, in which case we create a temporary stream we close after writing
+				lock (lock_obj) {
+					var fs = writer;
+					if (fs == null) {
+						fs = new FileStream (Path, FileMode.Append, FileAccess.Write, FileShare.Read);
+					}
+					fs.Write (buffer, offset, count);
+					if (disposed) {
+						fs.Dispose ();
+					} else {
+						writer = fs;
+					}
+				}
+			} catch (Exception e) {
+				Console.WriteLine ($"Failed to write to the file {Path}: {e.Message}.");
+				return;
+			}
 		}
 
 		public override string FullPath {
@@ -123,59 +159,6 @@ namespace xharness
 			return new StreamReader (new FileStream (Path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
 		}
 
-		public override StreamWriter GetWriter ()
-		{
-			lock (lock_obj) {
-				if (writer == null) {
-					writer = new StreamWriter (new FileStream (Path, append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read));
-					writer.AutoFlush = true;
-				}
-			}
-			return writer;
-		}
-
-		protected override void Dispose (bool disposing)
-		{
-			base.Dispose (disposing);
-
-			if (writer != null) {
-				writer.Dispose ();
-				writer = null;
-			}
-		}
-	}
-
-	public class LogStream : Log
-	{
-		string path;
-		FileStream fs;
-		StreamWriter writer;
-
-		public override StreamReader GetReader ()
-		{
-			return new StreamReader (new FileStream (path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
-		}
-
-		public override StreamWriter GetWriter ()
-		{
-			return writer ?? (writer = new StreamWriter (fs) { AutoFlush = true });
-		}
-
-		public LogStream (string description, string path)
-			: base (description)
-		{
-			this.path = path;
-
-			fs = new FileStream (path, FileMode.Create, FileAccess.Write, FileShare.Read);
-		}
-
-		protected override void WriteImpl (string value)
-		{
-			var w = GetWriter ();
-			w.Write (value);
-			w.Flush ();
-		}
-
 		protected override void Dispose (bool disposing)
 		{
 			base.Dispose (disposing);
@@ -185,40 +168,82 @@ namespace xharness
 				writer = null;
 			}
 
-			if (fs != null) {
-				fs.Dispose ();
-				fs = null;
-			}
-		}
-
-		public override string FullPath {
-			get {
-				return path;
-			}
+			disposed = true;
 		}
 	}
 
-	public class Logs : List<Log>
+	public class Logs : List<Log>, IDisposable
 	{
-		public LogStream CreateStream (string directory, string filename, string name)
+		public string Directory;
+
+		public Logs (string directory)
 		{
-			Directory.CreateDirectory (directory);
-			var rv = new LogStream (name, Path.GetFullPath (Path.Combine (directory, filename)));
+			Directory = directory;
+		}
+
+		// Create a new log backed with a file
+		public LogFile Create (string filename, string name)
+		{
+			return Create (Directory, filename, name);
+		}
+
+		LogFile Create (string directory, string filename, string name)
+		{
+			System.IO.Directory.CreateDirectory (directory);
+			var rv = new LogFile (this, name, Path.GetFullPath (Path.Combine (directory, filename)));
 			Add (rv);
 			return rv;
 		}
 
-		public LogFile CreateFile (string description, string path, bool append = true)
+		// Adds an existing file to this collection of logs.
+		// If the file is not inside the log directory, then it's copied there.
+		// 'path' must be a full path to the file.
+		public LogFile AddFile (string path)
 		{
-			var rv = new LogFile (description, path, append);
-			Add (rv);
-			return rv;
+			return AddFile (path, Path.GetFileName (path));
+		}
+
+		// Adds an existing file to this collection of logs.
+		// If the file is not inside the log directory, then it's copied there.
+		// 'path' must be a full path to the file.
+		public LogFile AddFile (string path, string name)
+		{
+			if (!path.StartsWith (Directory, StringComparison.Ordinal)) {
+				var newPath = Path.Combine (Directory, Path.GetFileNameWithoutExtension (path) + "-" + Harness.Timestamp + Path.GetExtension (path));
+				File.Copy (path, newPath, true);
+				path = newPath;
+			}
+
+			var log = new LogFile (this, name, path, true);
+			Add (log);
+			return log;
+		}
+
+		// Create an empty file in the log directory and return the full path to the file
+		public string CreateFile (string path, string description)
+		{
+			using (var rv = new LogFile (this, description, Path.Combine (Directory, path), false)) {
+				Add (rv);
+				return rv.FullPath;
+			}
+		}
+
+		public void Dispose ()
+		{
+			foreach (var log in this)
+				log.Dispose ();
 		}
 	}
 
+	// A log that writes to standard output
 	public class ConsoleLog : Log
 	{
 		StringBuilder captured = new StringBuilder ();
+
+		public ConsoleLog ()
+			: base (null)
+		{
+		}
 
 		protected override void WriteImpl (string value)
 		{
@@ -232,11 +257,6 @@ namespace xharness
 			}
 		}
 
-		public override StreamWriter GetWriter ()
-		{
-			return new StreamWriter (Console.OpenStandardOutput ());
-		}
-
 		public override StreamReader GetReader ()
 		{
 			var str = new MemoryStream (System.Text.Encoding.UTF8.GetBytes (captured.ToString ()));
@@ -244,6 +264,8 @@ namespace xharness
 		}
 	}
 
+	// A log that captures data written to a separate file between two moments in time
+	// (between StartCapture and StopCapture).
 	public class CaptureLog : Log
 	{
 		public string CapturePath { get; private set; }
@@ -253,7 +275,8 @@ namespace xharness
 		long endPosition;
 		bool entire_file;
 
-		public CaptureLog (string capture_path, bool entire_file = false)
+		public CaptureLog (Logs logs, string capture_path, bool entire_file = false)
+			: base (logs)
 		{
 			CapturePath = capture_path;
 			this.entire_file = entire_file;
@@ -349,11 +372,13 @@ namespace xharness
 		}
 	}
 
+	// A log that forwards all written data to a callback
 	public class CallbackLog : Log
 	{
 		public Action<string> OnWrite;
 
 		public CallbackLog (Action<string> onWrite)
+			: base (null)
 		{
 			OnWrite = onWrite;
 		}
