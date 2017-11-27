@@ -56,6 +56,7 @@
     <Compile Include="..\common\ProductTests.cs">
       <Link>ProductTests.cs</Link>
     </Compile>
+    <Compile Include="StringUtilsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

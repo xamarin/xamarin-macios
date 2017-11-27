@@ -316,11 +316,11 @@ public class Tuple<A,B> {
 // The Invoke contains the invocation steps necessary to invoke the method
 //
 public class TrampolineInfo {
-	public string UserDelegate, DelegateName, TrampolineName, Parameters, Convert, Invoke, ReturnType, DelegateReturnType, ReturnFormat, Clear, OutReturnType;
+	public string UserDelegate, DelegateName, TrampolineName, Parameters, Convert, Invoke, ReturnType, DelegateReturnType, ReturnFormat, Clear, OutReturnType, PostConvert;
 	public string UserDelegateTypeAttribute;
 	public Type Type;
 	
-	public TrampolineInfo (string userDelegate, string delegateName, string trampolineName, string pars, string convert, string invoke, string returnType, string delegateReturnType, string returnFormat, string clear, Type type)
+	public TrampolineInfo (string userDelegate, string delegateName, string trampolineName, string pars, string convert, string invoke, string returnType, string delegateReturnType, string returnFormat, string clear, string postConvert, Type type)
 	{
 		UserDelegate = userDelegate;
 		DelegateName = delegateName;
@@ -332,6 +332,7 @@ public class TrampolineInfo {
 		DelegateReturnType = delegateReturnType;
 		ReturnFormat = returnFormat;
 		Clear = clear;
+		PostConvert = postConvert;
 		this.Type = type;
 
 		TrampolineName = "Invoke";
@@ -1530,6 +1531,7 @@ public partial class Generator : IMemberGatherer {
 		var convert = new StringBuilder ();
 		var invoke = new StringBuilder ();
 		var clear = new StringBuilder  ();
+		var postConvert = new StringBuilder ();
 		string returntype;
 		var returnformat = "return {0};";
 
@@ -1622,6 +1624,14 @@ public partial class Generator : IMemberGatherer {
 					pars.AppendFormat ("{3}{0}{1} {2}", arg_byref, fnt, pi.Name.GetSafeParamName (), marshal);
 					invoke.AppendFormat ("{0} {1}", pi.IsOut ? "out" : "ref", invoke_name);
 					continue;
+				} else if (pi.ParameterType.IsByRef) {
+					var pname = pi.Name.GetSafeParamName ();
+					var refname = $"__xamarin_pref{pi.Position}";
+					convert.Append ($"var {refname} = Runtime.GetINativeObject<{RenderType (nt)}> ({pname}, false);");
+					pars.Append ($"ref IntPtr {pname}");
+					postConvert.Append ($"error = {refname}.GetHandle ();");
+					invoke.Append ($"ref {refname}");
+					continue;
 				}
 			} else if (!Compat && IsNativeEnum (pi.ParameterType)) {
 				Type underlyingEnumType = TypeManager.GetUnderlyingEnumType (pi.ParameterType);
@@ -1692,6 +1702,7 @@ public partial class Generator : IMemberGatherer {
 		                             delegateReturnType: rts,
 					     returnFormat: returnformat,
 					     clear: clear.ToString (),
+		                             postConvert: postConvert.ToString (),
 					     type: t);
 					     
 
@@ -2518,6 +2529,8 @@ public partial class Generator : IMemberGatherer {
 				if (ti.Convert.Length > 0)
 					print (ti.Convert);
 				print ("{0} retval = del ({1});", ti.DelegateReturnType, ti.Invoke);
+				if (ti.PostConvert.Length > 0)
+					print (ti.PostConvert);
 				print (ti.ReturnFormat, "retval");
 			}
 			indent--;

@@ -177,6 +177,20 @@ namespace xharness
 
 		public static void SetIntermediateOutputPath (this XmlDocument csproj, string value)
 		{
+			// Set any existing IntermediateOutputPath
+			var nodes = csproj.SelectNodes ("/*/*/*[local-name() = 'IntermediateOutputPath']");
+			var hasToplevel = false;
+			if (nodes.Count != 0) {
+				foreach (XmlNode n in nodes) {
+					n.InnerText = value;
+					hasToplevel |= n.Attributes ["Condition"] == null;
+				}
+			}
+
+			if (hasToplevel)
+				return;
+			
+			// Make sure there's a top-level version too.
 			var project = csproj.ChildNodes [1];
 			var property_group = project.ChildNodes [0];
 
@@ -188,6 +202,11 @@ namespace xharness
 		public static void SetTargetFrameworkIdentifier (this XmlDocument csproj, string value)
 		{
 			SetTopLevelPropertyGroupValue (csproj, "TargetFrameworkIdentifier", value);
+		}
+
+		public static void SetTargetFrameworkVersion (this XmlDocument csproj, string value)
+		{
+			SetTopLevelPropertyGroupValue (csproj, "TargetFrameworkVersion", value);
 		}
 
 		public static void SetTopLevelPropertyGroupValue (this XmlDocument csproj, string key, string value)

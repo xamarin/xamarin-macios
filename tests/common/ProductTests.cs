@@ -4,6 +4,7 @@
 
 using System;
 using System.IO;
+using System.Xml;
 
 using NUnit.Framework;
 
@@ -16,11 +17,19 @@ namespace Xamarin.Tests
 		public void MonoVersion ()
 		{
 			// Verify that the mono version is in the Versions.plist, and that it's a parsable version number.
+			var settings = new XmlReaderSettings () {
+				XmlResolver = null,
+				DtdProcessing = DtdProcessing.Parse
+			};
+
 			var plist = Path.Combine (Configuration.SdkRoot, "Versions.plist");
-			var xml = new System.Xml.XmlDocument ();
-			xml.Load (plist);
-			var version = xml.SelectSingleNode ("//dict/key[text()='MonoVersion']")?.NextSibling?.InnerText;
-			Assert.DoesNotThrow (() => Version.Parse (version), "version");
+			var xml = new XmlDocument ();
+			using (var sr = new StringReader (plist))
+			using (var reader = XmlReader.Create (sr, settings)) {
+				xml.Load (reader);
+				var version = xml.SelectSingleNode ("//dict/key[text()='MonoVersion']")?.NextSibling?.InnerText;
+				Assert.DoesNotThrow (() => Version.Parse (version), "version");
+			}
 		}
 	}
 }

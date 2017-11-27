@@ -70,6 +70,7 @@ $(eval $(call CheckSubmoduleTemplate,Touch.Unit,TOUCH_UNIT))
 $(eval $(call CheckSubmoduleTemplate,opentk,OPENTK))
 $(eval $(call CheckSubmoduleTemplate,Xamarin.MacDev,XAMARIN_MACDEV))
 $(eval $(call CheckSubmoduleTemplate,guiunit,GUI_UNIT))
+$(eval $(call CheckSubmoduleTemplate,macios-binaries,MACIOS_BINARIES))
 
 include $(TOP)/mk/xamarin.mk
 

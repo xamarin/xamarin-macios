@@ -93,6 +93,8 @@ namespace xharness
 
 	public class LogFile : Log
 	{
+		object lock_obj = new object ();
+		bool append;
 		public string Path;
 		StreamWriter writer;
 
@@ -100,14 +102,14 @@ namespace xharness
 			: base (description)
 		{
 			Path = path;
-
-			writer = new StreamWriter (new FileStream (Path, append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read));
-			writer.AutoFlush = true;
+			this.append = append;
+			if (!append)
+				File.WriteAllText (path, string.Empty);
 		}
 
 		protected override void WriteImpl (string value)
 		{
-			writer.Write (value);
+			GetWriter ().Write (value);
 		}
 
 		public override string FullPath {
@@ -123,6 +125,12 @@ namespace xharness
 
 		public override StreamWriter GetWriter ()
 		{
+			lock (lock_obj) {
+				if (writer == null) {
+					writer = new StreamWriter (new FileStream (Path, append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read));
+					writer.AutoFlush = true;
+				}
+			}
 			return writer;
 		}
 
@@ -142,12 +150,6 @@ namespace xharness
 		string path;
 		FileStream fs;
 		StreamWriter writer;
-
-		public FileStream FileStream {
-			get {
-				return fs;
-			}
-		}
 
 		public override StreamReader GetReader ()
 		{
@@ -206,9 +208,9 @@ namespace xharness
 			return rv;
 		}
 
-		public LogFile CreateFile (string description, string path)
+		public LogFile CreateFile (string description, string path, bool append = true)
 		{
-			var rv = new LogFile (description, path);
+			var rv = new LogFile (description, path, append);
 			Add (rv);
 			return rv;
 		}

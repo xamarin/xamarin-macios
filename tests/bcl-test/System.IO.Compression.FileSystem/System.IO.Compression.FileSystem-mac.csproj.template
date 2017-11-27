@@ -80,7 +80,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <Target Name="AfterBuild">
-    <Copy SourceFiles="@(FilesToCopyFoo)" DestinationFolder="$(OutputPath)\System.IO.Compression.FileSystemTests.app\Contents\MonoBundle\foo" />
-    <Copy SourceFiles="@(FilesToCopyFooBar)" DestinationFolder="$(OutputPath)\System.IO.Compression.FileSystemTests.app\Contents\MonoBundle\foo\foobar" />
+    <Copy SourceFiles="@(FilesToCopyFoo)" DestinationFolder="$(OutputPath)\$(AssemblyName).app\Contents\MonoBundle\foo" />
+    <Copy SourceFiles="@(FilesToCopyFooBar)" DestinationFolder="$(OutputPath)\$(AssemblyName).app\Contents\MonoBundle\foo\foobar" />
   </Target>
 </Project>

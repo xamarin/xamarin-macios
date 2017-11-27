@@ -1046,18 +1046,18 @@ namespace Xamarin.Bundler
 			{ "sdk=", "Specifies the name of the SDK to compile against (version, for example \"3.2\")",
 				v => {
 					try {
-						app.SdkVersion = Version.Parse (v);
+						app.SdkVersion = StringUtils.ParseVersion (v);
 					} catch (Exception ex) {
-						ErrorHelper.Error (26, ex, "Could not parse the command line argument '{0}': {1}", "-sdk", ex.Message);
+						ErrorHelper.Error (26, ex, $"Could not parse the command line argument '-sdk:{v}': {ex.Message}");
 					}
 				}
 			},
 			{ "targetver=", "Specifies the name of the minimum deployment target (version, for example \"" + Xamarin.SdkVersions.iOS.ToString () + "\")",
 				v => {
 					try {
-						app.DeploymentTarget = Version.Parse (v);
+						app.DeploymentTarget = StringUtils.ParseVersion (v);
 					} catch (Exception ex) {
-						throw new MonoTouchException (26, true, ex, "Could not parse the command line argument '{0}': {1}", "-targetver", ex.Message);
+						throw new MonoTouchException (26, true, ex,  $"Could not parse the command line argument '-targetver:{v}': {ex.Message}");
 					}
 				}
 			},
