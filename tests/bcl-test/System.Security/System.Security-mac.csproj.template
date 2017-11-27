@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F8C6A5B3-2D9B-4B7A-8D89-7062400E995C}</ProjectGuid>
+    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>BCL.Tests</RootNamespace>
+    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+    <AssemblyName>System.SecurityTests</AssemblyName>
+    <NoWarn>67,168,169,219,414,612,618,649,672</NoWarn>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseXamMacFullFramework>true</UseXamMacFullFramework>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
+    <DefineConstants>XAMCORE_2_0;ADD_BCL_EXCLUSIONS</DefineConstants>
+  </PropertyGroup>
+ <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;MONOMAC;DISABLE_CAS_USE;NO_GUI_TESTING;$(DefineConstants)</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CreatePackage>false</CreatePackage>
+    <LinkMode>None</LinkMode>
+    <XamMacArch>x86_64</XamMacArch>
+    <I18n>cjk,mideast,other,rare,west</I18n>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;MONOMAC;DISABLE_CAS_USE;NO_GUI_TESTING;$(DefineConstants)</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <LinkMode>None</LinkMode>
+    <CreatePackage>false</CreatePackage>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <I18n>cjk,mideast,other,rare,west</I18n>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Security" />
+    <Reference Include="Xamarin.Mac" />
+    <Reference Include="GuiUnit">
+      <HintPath>..\..\..\external\guiunit\src\framework\obj\Debug\net-4.5\GuiUnit.exe</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info-mac.plist">
+      <LogicalName>Info.plist</LogicalName>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../../common/mac/MacTestMain.cs">
+      <Link>MacTestMain.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\Assert.cs">
+      <Link>Assert.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+#FILES#
+  </ItemGroup>
+  <ItemGroup>
+    <FilesToCopyEncryptedXml Include="..\..\..\external\mono\mcs\class\System.Security\Test\System.Security.Cryptography.Xml\sample.pfx" />
+    <FilesToCopyEncryptedXml Include="..\..\..\external\mono\mcs\class\System.Security\Test\System.Security.Cryptography.Xml\EncryptedXmlSample1.xml" />
+    <FilesToCopyEncryptedXml Include="..\..\..\external\mono\mcs\class\System.Security\Test\System.Security.Cryptography.Xml\EncryptedXmlSample2.xml" />
+    <FilesToCopyEncryptedXml Include="..\..\..\external\mono\mcs\class\System.Security\Test\System.Security.Cryptography.Xml\EncryptedXmlSample3.xml" />
+    <FilesToCopyCryptographyPkcs Include="..\..\..\external\mono\mcs\class\System.Security\Test\System.Security.Cryptography.Pkcs\detached.data" />
+    <FilesToCopyCryptographyPkcs Include="..\..\..\external\mono\mcs\class\System.Security\Test\System.Security.Cryptography.Pkcs\detached.p7" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+  <Target Name="AfterBuild">
+    <Copy SourceFiles="@(FilesToCopyEncryptedXml)" DestinationFolder="$(OutputPath)\$(AssemblyName).app\Contents\MonoBundle\Test\System.Security.Cryptography.Xml" />
+    <Copy SourceFiles="@(FilesToCopyCryptographyPkcs)" DestinationFolder="$(OutputPath)\$(AssemblyName).app\Contents\MonoBundle\Test\System.Security.Cryptography.Pkcs" />
+  </Target>
+</Project>

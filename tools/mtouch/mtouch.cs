@@ -627,7 +627,7 @@ namespace Xamarin.Bundler
 					// we're building with bitcode (even when bitcode is disabled, we still build with the
 					// bitcode marker, which makes the linker reject -u).
 					if (app.EnableProfiling) {
-						sw.WriteLine ("extern \"C\" { void mono_profiler_startup_log (); }");
+						sw.WriteLine ("extern \"C\" { void mono_profiler_init_log (); }");
 						sw.WriteLine ("typedef void (*xamarin_profiler_symbol_def)();");
 						sw.WriteLine ("extern xamarin_profiler_symbol_def xamarin_profiler_symbol;");
 						sw.WriteLine ("xamarin_profiler_symbol_def xamarin_profiler_symbol = NULL;");
@@ -637,7 +637,7 @@ namespace Xamarin.Bundler
 					sw.WriteLine ("{");
 
 					if (app.EnableProfiling)
-						sw.WriteLine ("\txamarin_profiler_symbol = mono_profiler_startup_log;");
+						sw.WriteLine ("\txamarin_profiler_symbol = mono_profiler_init_log;");
 
 					if (app.EnableLLVMOnlyBitCode)
 						sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_LLVMONLY);");
@@ -802,8 +802,13 @@ namespace Xamarin.Bundler
 		{
 			if (timestamp == null)
 				timestamp = DateTime.Now;
-			foreach (var filename in filenames)
-				new FileInfo (filename).LastWriteTime = timestamp.Value;
+			foreach (var filename in filenames) {
+				try {
+					new FileInfo (filename).LastWriteTime = timestamp.Value;
+				} catch (Exception e) {
+					ErrorHelper.Warning (128, "Could not touch the file '{0}': {1}", filename, e.Message);
+				}
+			}
 		}
 
 		public static void Touch (params string [] filenames)
@@ -940,7 +945,6 @@ namespace Xamarin.Bundler
 		{
 			var action = Action.None;
 			var app = new Application (args);
-			var assemblies = new List<string> ();
 
 			if (extra_args != null) {
 				var l = new List<string> (args);
@@ -1042,18 +1046,18 @@ namespace Xamarin.Bundler
 			{ "sdk=", "Specifies the name of the SDK to compile against (version, for example \"3.2\")",
 				v => {
 					try {
-						app.SdkVersion = Version.Parse (v);
+						app.SdkVersion = StringUtils.ParseVersion (v);
 					} catch (Exception ex) {
-						ErrorHelper.Error (26, ex, "Could not parse the command line argument '{0}': {1}", "-sdk", ex.Message);
+						ErrorHelper.Error (26, ex, $"Could not parse the command line argument '-sdk:{v}': {ex.Message}");
 					}
 				}
 			},
 			{ "targetver=", "Specifies the name of the minimum deployment target (version, for example \"" + Xamarin.SdkVersions.iOS.ToString () + "\")",
 				v => {
 					try {
-						app.DeploymentTarget = Version.Parse (v);
+						app.DeploymentTarget = StringUtils.ParseVersion (v);
 					} catch (Exception ex) {
-						throw new MonoTouchException (26, true, ex, "Could not parse the command line argument '{0}': {1}", "-targetver", ex.Message);
+						throw new MonoTouchException (26, true, ex,  $"Could not parse the command line argument '-targetver:{v}': {ex.Message}");
 					}
 				}
 			},
@@ -1260,7 +1264,7 @@ namespace Xamarin.Bundler
 			AddSharedOptions (app, os);
 
 			try {
-				assemblies = os.Parse (args);
+				app.RootAssemblies.AddRange (os.Parse (args));
 			}
 			catch (MonoTouchException) {
 				throw;
@@ -1286,9 +1290,8 @@ namespace Xamarin.Bundler
 			app.RuntimeOptions = RuntimeOptions.Create (app, http_message_handler, tls_provider);
 
 			if (action == Action.Build || action == Action.RunRegistrar) {
-				if (assemblies.Count == 0)
+				if (app.RootAssemblies.Count == 0)
 					throw new MonoTouchException (17, true, "You should provide a root assembly.");
-				app.RootAssemblies = assemblies;
 			}
 
 			return app;
@@ -1302,6 +1305,8 @@ namespace Xamarin.Bundler
 			if (app == null)
 				return 0;
 			
+			LogArguments (args);
+
 			if (watch_level > 0) {
 				watch = new Stopwatch ();
 				watch.Start ();

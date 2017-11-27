@@ -1380,7 +1380,19 @@ static library, use "__Internal" as the `libraryName` parameter.
 
 The generated properties are always static.
 
-Properties flagged with the Field attribute can be of type `NSString`, `NSArray`, `nint`, `double`, `nfloat` or `System.IntPtr`.
+Properties flagged with the Field attribute can be of the following types:
+
+* `NSString`
+* `NSArray`
+* `nint` / `int` / `long`
+* `nuint` / `uint` / `ulong`
+* `nfloat` / `float`
+* `double`
+* `CGSize`
+* `System.IntPtr`
+* Enums
+
+Setters are not supported for [enums backed by NSString constants](#enum-attributes), but they can be manually bound if needed.
 
 Example:
 

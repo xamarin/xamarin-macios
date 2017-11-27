@@ -70,6 +70,9 @@ namespace Xamarin.Mac.Tests
 				case "PhotosUILibrary":
 				case "IntentsLibrary":
 				case "MediaPlayerLibrary":
+				case "VisionLibrary":
+				case "CoreMLLibrary":
+				case "ExternalAccessoryLibrary":
 					return LoadStatus.Acceptable;
 				}
 			}

@@ -568,10 +568,11 @@ public struct FooF { public NSObject Obj; }
 
 
 		[Test]
-		[TestCase (Profile.iOS, "iOS")]
-		[TestCase (Profile.tvOS, "tvOS")]
+		[TestCase (Profile.iOS, "iOS", MTouchLinker.DontLink)]
+		[TestCase (Profile.tvOS, "tvOS", MTouchLinker.DontLink)]
+		[TestCase (Profile.iOS, "iOS", MTouchLinker.LinkAll)]
 		//[TestCase (Profile.WatchOS, "watchOS")] // MT0077 interferes
-		public void MT4162 (Profile profile, string name)
+		public void MT4162 (Profile profile, string name, MTouchLinker linker)
 		{
 			var code = @"
 	[Introduced (PlatformName.iOS, 99, 0, 0, PlatformArchitecture.All, ""use Z instead"")]
@@ -621,16 +622,21 @@ public struct FooF { public NSObject Obj; }
 	}
 ";
 			
-			Verify (R.Static, profile, code, false,
-			        $"error MT4162: The type 'FutureType' (used as a base type of CurrentType) is not available in {name} .* (it was introduced in {name} 99.0.0): 'use Z instead'. Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).",
-			        $"error MT4162: The type 'FutureType' (used as a base type of CurrentType) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).",
-			        $".*/Test.cs(.*): error MT4162: The type 'FutureType' (used as the property type of CurrentType.Zap) is not available in {name} .* (it was introduced in {name} 99.0.0): 'use Z instead'. Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).",
-			        $".*/Test.cs(.*): error MT4162: The type 'FutureType' (used as the property type of CurrentType.Zap) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).",
-			        $".*/Test.cs(.*): error MT4162: The type 'FutureType' (used as a parameter in CurrentType.Foo) is not available in {name} .* (it was introduced in {name} 99.0.0): 'use Z instead'. Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).",
-			        $".*/Test.cs(.*): error MT4162: The type 'FutureType' (used as a parameter in CurrentType.Foo) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).",
-			        $".*/Test.cs(.*): error MT4162: The type 'FutureType' (used as a return type in CurrentType.Bar) is not available in {name} .* (it was introduced in {name} 99.0.0): 'use Z instead'. Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).",
-			        $".*/Test.cs(.*): error MT4162: The type 'FutureType' (used as a return type in CurrentType.Bar) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode)."
-			);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = profile;
+				mtouch.Linker = linker;
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: code, extraArg: "-debug", usings: "using System;\nusing Foundation;\nusing ObjCRuntime;\n");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a base type of CurrentType) is not available in {name} .* (it was introduced in {name} 99.0.0): 'use Z instead'. Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", custom_pattern_syntax: true);
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a base type of CurrentType) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", custom_pattern_syntax: true);
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as the property type of CurrentType.Zap) is not available in {name} .* (it was introduced in {name} 99.0.0): 'use Z instead'. Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as the property type of CurrentType.Zap) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a parameter in CurrentType.Foo) is not available in {name} .* (it was introduced in {name} 99.0.0): 'use Z instead'. Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a parameter in CurrentType.Foo) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a return type in CurrentType.Bar) is not available in {name} .* (it was introduced in {name} 99.0.0): 'use Z instead'. Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a return type in CurrentType.Bar) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
+			}
 		}
 
 		static string [] objective_c_keywords = new string [] {

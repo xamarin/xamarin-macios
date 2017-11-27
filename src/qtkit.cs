@@ -972,7 +972,7 @@ namespace XamCore.QTKit
 		IntPtr Constructor (NSDictionary attributes, out NSError error);
 
 #if !XAMCORE_3_0
-		[Obsolete ("Use the MoveWithTimeRange method instead")]
+		[Obsolete ("Use the 'MoveWithTimeRange' method instead.")]
 		[Export ("movieWithTimeRange:error:")]
 		IntPtr Constructor (QTTimeRange range, out NSError error);
 #endif

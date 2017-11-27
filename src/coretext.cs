@@ -71,5 +71,9 @@ namespace XamCore.CoreText {
 
 		[Field ("kCTFontVariationAxisNameKey")]
 		NSString Name { get; }
+
+		[iOS (11,0), Mac (10,13), Watch (4,0), TV (11,0)]
+		[Field ("kCTFontVariationAxisHiddenKey")]
+		NSString Hidden { get; }
 	}
 }

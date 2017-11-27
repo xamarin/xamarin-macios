@@ -339,3 +339,8 @@
 # PDFAnnotationPopup is not available on iOS also deprecated in macOS 10,12
 !missing-selector! PDFAnnotation::popup not bound
 !missing-selector! PDFAnnotation::setPopup: not bound
+
+#HealthKit
+## This key seems broken even in Objc returns a weird value
+!missing-field! HKSourceRevisionAnyOperatingSystem not bound
+

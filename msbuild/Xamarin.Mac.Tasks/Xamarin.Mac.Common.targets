@@ -512,7 +512,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			AppBundleName="$(_AppBundleName)"
 			AppBundleDir="$(AppBundleDir)"
 			AppManifest="$(_AppManifest)"
-			Architecture="$(XamMacArch)"
 			AssemblyName="$(TargetName)"
 			BundleIdentifier="$(_BundleIdentifier)"
 			IsAppExtension="$(IsAppExtension)"

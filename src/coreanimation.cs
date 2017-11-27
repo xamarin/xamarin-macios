@@ -980,7 +980,7 @@ namespace XamCore.CoreAnimation {
 	}
 	
 	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] { typeof (CAAnimationDelegate)})]
-	interface CAAnimation : CAAction, CAMediaTiming, NSSecureCoding, NSMutableCopying {
+	interface CAAnimation : CAAction, CAMediaTiming, NSSecureCoding, NSMutableCopying, SCNAnimationProtocol {
 		[Export ("animation"), Static]
 		CAAnimation CreateAnimation ();
 	
@@ -1041,7 +1041,7 @@ namespace XamCore.CoreAnimation {
 				
 #if !XAMCORE_4_0
 		[Field ("kCAAnimationDiscrete")]
-		[Obsolete ("The name has been fixed, use AnimationDiscrete instead")]
+		[Obsolete ("The name has been fixed, use 'AnimationDiscrete' instead.")]
 		NSString AnimationDescrete { get; }
 #endif
 		[Field ("kCAAnimationDiscrete")]
@@ -1066,6 +1066,12 @@ namespace XamCore.CoreAnimation {
 		NSString RotateModeAutoReverse { get; }
 
 		#region SceneKitAdditions
+
+		[TV (11,0), Mac (10,13), iOS (11,0, onlyOn64: true), NoWatch]
+		[Static]
+		[Export ("animationWithSCNAnimation:")]
+		CAAnimation FromSCNAnimation (SCNAnimation animation);
+
 		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("usesSceneTimeBase")]
 		bool UsesSceneTimeBase { get; set; }
@@ -1250,7 +1256,7 @@ namespace XamCore.CoreAnimation {
 
 #if !XAMCORE_2_0
 		[Wrap ("Filter")]
-		[Obsolete ("The name has been fixed, use Filter instead")]
+		[Obsolete ("The name has been fixed, use 'Filter' instead.")]
 		NSObject filter { get; set; }
 #endif
 	}
@@ -1274,7 +1280,7 @@ namespace XamCore.CoreAnimation {
 		NSString Removed { get; }
 
 #if !XAMCORE_2_0
-		[Availability (Deprecated = Platform.iOS_4_0, Message = "Use CAFillMode.Forwards instead")]
+		[Availability (Deprecated = Platform.iOS_4_0, Message = "Use 'CAFillMode.Forwards' instead.")]
 		[Field ("kCAFillModeFrozen")]
 		NSString Frozen { get; }
 #endif

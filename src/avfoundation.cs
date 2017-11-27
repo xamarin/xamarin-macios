@@ -300,6 +300,9 @@ namespace XamCore.AVFoundation {
 
 		[NullAllowed, Export ("cameraCalibrationData")]
 		AVCameraCalibrationData CameraCalibrationData { get; }
+
+		[Export ("depthDataQuality")]
+		AVDepthDataQuality DepthDataQuality { get; }
 	}
 
 	// values are manually given since not some are platform specific
@@ -864,6 +867,14 @@ namespace XamCore.AVFoundation {
 	
 		[NullAllowed, Export ("packetDescriptions")]
 		AudioStreamPacketDescription PacketDescriptions { get; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("byteCapacity")]
+		uint ByteCapacity { get; }
+
+		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Export ("byteLength")]
+		uint ByteLength { get; set; }
 	}
 
 	[Watch (3,0)]
@@ -1662,7 +1673,7 @@ namespace XamCore.AVFoundation {
 		AudioSettings Settings { get; }
 #else
 		[Export ("settings")]
-		[Advice ("Use AudioSettings")]
+		[Advice ("Use 'AudioSettings' property instead.")]
 		NSDictionary Settings { get;  }
 
 		[Wrap ("Settings")]
@@ -3071,6 +3082,9 @@ namespace XamCore.AVFoundation {
 
 #endif // MONOMAC
 
+#if XAMCORE_4_0
+	[Abstract] // Abstract superclass.
+#endif
 	[NoWatch, NoTV, iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -3083,15 +3097,25 @@ namespace XamCore.AVFoundation {
 	[NoWatch, NoTV, iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface AVCaptureSynchronizedDataCollection : INSFastEnumeration
+	interface AVCaptureSynchronizedDataCollection
 	{
-		[Export ("synchronizedDataForCaptureOutput:")]
-		[return: NullAllowed]
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'GetSynchronizedData' instead.")]
+		[Wrap ("GetSynchronizedData (captureOutput)", isVirtual: true)]
 		AVCaptureSynchronizedData From (AVCaptureOutput captureOutput);
 
+		// This is not reexposed because it is not needed you can use 'GetSynchronizedData' instead, also from docs:
+		// https://developer.apple.com/documentation/avfoundation/avcapturesynchronizeddatacollection/2873892-objectforkeyedsubscript?language=objc
+		// > This call is equivalent to the synchronizedDataForCaptureOutput: method, but allows subscript syntax.
+		[Obsolete ("Use 'GetSynchronizedData' instead.")]
 		[Export ("objectForKeyedSubscript:")]
 		[return: NullAllowed]
 		AVCaptureSynchronizedData ObjectForKeyedSubscript (AVCaptureOutput key);
+#endif
+
+		[Export ("synchronizedDataForCaptureOutput:")]
+		[return: NullAllowed]
+		AVCaptureSynchronizedData GetSynchronizedData (AVCaptureOutput captureOutput);
 
 		[Export ("count")]
 		nuint Count { get; }
@@ -3169,6 +3193,127 @@ namespace XamCore.AVFoundation {
 		[Export ("droppedReason")]
 		AVCaptureOutputDataDroppedReason DroppedReason { get; }
 	}
+
+	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
+	[Protocol]
+	interface AVQueuedSampleBufferRendering
+	{
+		[Abstract]
+		[Export ("timebase", ArgumentSemantic.Retain)]
+		CMTimebase Timebase { get; }
+
+		[Abstract]
+		[Export ("enqueueSampleBuffer:")]
+		void Enqueue (CMSampleBuffer sampleBuffer);
+
+		[Abstract]
+		[Export ("flush")]
+		void Flush ();
+
+		[Abstract]
+		[Export ("readyForMoreMediaData")]
+		bool ReadyForMoreMediaData { [Bind ("isReadyForMoreMediaData")] get; }
+
+		[Abstract]
+		[Export ("requestMediaDataWhenReadyOnQueue:usingBlock:")]
+		void RequestMediaData (DispatchQueue queue, Action handler);
+
+		[Abstract]
+		[Export ("stopRequestingMediaData")]
+		void StopRequestingMediaData ();
+	}
+
+	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface AVSampleBufferAudioRenderer : AVQueuedSampleBufferRendering
+	{
+		[Export ("status")]
+		AVQueuedSampleBufferRenderingStatus Status { get; }
+
+		[NullAllowed, Export ("error")]
+		NSError Error { get; }
+
+		[NullAllowed, Export ("audioOutputDeviceUniqueID")]
+		string AudioOutputDeviceUniqueId { get; set; }
+
+		[Export ("audioTimePitchAlgorithm")]
+		string PitchAlgorithm { get; set; }
+
+		// AVSampleBufferAudioRenderer_AVSampleBufferAudioRendererVolumeControl
+		[Export ("volume")]
+		float Volume { get; set; }
+
+		[Export ("muted")]
+		bool Muted { [Bind ("isMuted")] get; set; }
+
+		// AVSampleBufferAudioRenderer_AVSampleBufferAudioRendererQueueManagement
+
+		[Async]
+		[Export ("flushFromSourceTime:completionHandler:")]
+		void Flush (CMTime time, Action<bool> completionHandler);
+
+		[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
+		[Notification (typeof (AudioRendererWasFlushedAutomaticallyEventArgs))]
+		[Field ("AVSampleBufferAudioRendererWasFlushedAutomaticallyNotification")]
+		NSString AudioRendererWasFlushedAutomaticallyNotification { get; }
+
+	}
+
+	[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
+	interface AudioRendererWasFlushedAutomaticallyEventArgs {
+		[Internal]
+		[Export ("AVSampleBufferAudioRendererFlushTimeKey")]
+		NSValue _AudioRendererFlushTime { get; set; }
+	}
+
+	interface IAVQueuedSampleBufferRendering {}
+
+	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
+	[BaseType (typeof(NSObject))]
+	interface AVSampleBufferRenderSynchronizer
+	{
+		[Export ("timebase", ArgumentSemantic.Retain)]
+		CMTimebase Timebase { get; }
+
+		[Export ("rate")]
+		float Rate { get; set; }
+
+		[Export ("setRate:time:")]
+		void SetRate (float rate, CMTime time);
+
+		// AVSampleBufferRenderSynchronizer_AVSampleBufferRenderSynchronizerRendererManagement
+
+		[Export ("renderers")]
+		IAVQueuedSampleBufferRendering[] Renderers { get; }
+
+		[Export ("addRenderer:")]
+		void Add (IAVQueuedSampleBufferRendering renderer);
+
+		[Async]
+		[Export ("removeRenderer:atTime:completionHandler:")]
+		void Remove (IAVQueuedSampleBufferRendering renderer, CMTime time, [NullAllowed] Action<bool> completionHandler);
+
+		// AVSampleBufferRenderSynchronizer_AVSampleBufferRenderSynchronizerTimeObservation
+
+		// as per the docs the returned observers are an opaque object that you pass as the argument to 
+		// removeTimeObserver to cancel observation.
+
+		// Regarding async usage:
+		// The delegate can be called multiple times (once for each value in the times array according to the documentation),
+		// which makes it a bad fit for [Async]
+
+		// [Async] -> not added due to comment above
+		[Export ("addPeriodicTimeObserverForInterval:queue:usingBlock:")]
+		NSObject AddPeriodicTimeObserver (CMTime interval, [NullAllowed] DispatchQueue queue, Action<CMTime> handler);
+
+		// [Async] -> not added due to comment above
+		[Export ("addBoundaryTimeObserverForTimes:queue:usingBlock:")]
+		NSObject AddBoundaryTimeObserver (NSValue[] times, [NullAllowed] DispatchQueue queue, Action handler);
+
+		[Export ("removeTimeObserver:")]
+		void RemoveTimeObserver (NSObject observer);
+	}
+
 
 #if MONOMAC
 	[Mac (10,10)]
@@ -3854,7 +3999,7 @@ namespace XamCore.AVFoundation {
 #if XAMCORE_2_0
 		[Internal]
 #endif
-		[Advice ("Use constructor or Create method")]
+		[Advice ("Use constructor or 'Create' method instead.")]
 		[Static, Export ("assetWriterInputWithMediaType:outputSettings:")]
 		AVAssetWriterInput FromType (string mediaType, [NullAllowed] NSDictionary outputSettings);
 
@@ -4079,7 +4224,7 @@ namespace XamCore.AVFoundation {
 #if XAMCORE_2_0
 		[Internal]
 #endif
-		[Advice ("Use Create or constructor")]
+		[Advice ("Use constructor or 'Create' method instead.")]
 		[Static, Export ("URLAssetWithURL:options:")]
 		AVUrlAsset FromUrl (NSUrl url, [NullAllowed] NSDictionary options);
 
@@ -7733,6 +7878,10 @@ namespace XamCore.AVFoundation {
 		[iOS (10, 0), TV (10,0), Mac (10,12)]
 		[NullAllowed, Export ("colorTransferFunction")]
 		string ColorTransferFunction { get; set; }
+
+		[Mac (10, 13), iOS (11, 0), TV (11, 0)]
+		[Export ("sourceTrackIDForFrameTiming")]
+		int SourceTrackIdForFrameTiming { get; set; }
 	}
 
 	[NoWatch]
@@ -8047,6 +8196,10 @@ namespace XamCore.AVFoundation {
 		bool AutomaticallyConfiguresCaptureDeviceForWideColor { get; set; }
 #endif
 
+		[iOS (11, 1), NoMac]
+		[Field ("AVCaptureSessionInterruptionSystemPressureStateKey")]
+		NSString InterruptionSystemPressureStateKey { get; }
+
 		[Since (7,0)]
 		[Export ("masterClock")]
 		CMClock MasterClock { get; }
@@ -8260,7 +8413,7 @@ namespace XamCore.AVFoundation {
 
 	interface IAVCaptureDepthDataOutputDelegate {}
 	
-	[NoWatch, NoTV, iOS (11,0)]
+	[NoWatch, NoTV, iOS (11,0), NoMac]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface AVCaptureDepthDataOutputDelegate
@@ -8272,9 +8425,8 @@ namespace XamCore.AVFoundation {
 		void DidDropDepthData (AVCaptureDepthDataOutput output, AVDepthData depthData, CMTime timestamp, AVCaptureConnection connection, AVCaptureOutputDataDroppedReason reason);
 	}
 
-	[NoWatch, NoTV, iOS (11,0)]
+	[NoWatch, NoTV, iOS (11,0), NoMac]
 	[BaseType (typeof(AVCaptureOutput))]
-	[DisableDefaultCtor]
 	interface AVCaptureDepthDataOutput
 	{
 		[Export ("setDelegate:callbackQueue:")]
@@ -8468,7 +8620,7 @@ namespace XamCore.AVFoundation {
 		void SetSessionWithNoConnection (AVCaptureSession session);
 
 #if !XAMCORE_2_0
-		[Advice ("Use LayerVideoGravity")]
+		[Advice ("Use 'LayerVideoGravity' property instead.")]
 		[Export ("videoGravity", ArgumentSemantic.Copy)][Sealed]
 		string VideoGravity { get; set; }
 #endif
@@ -8879,6 +9031,11 @@ namespace XamCore.AVFoundation {
 		[Export ("photoSettingsFromPhotoSettings:")]
 		AVCapturePhotoSettings FromPhotoSettings (AVCapturePhotoSettings photoSettings);
 
+		[iOS (11,0)]
+		[Static]
+		[Export ("photoSettingsWithRawPixelFormatType:rawFileType:processedFormat:processedFileType:")]
+		AVCapturePhotoSettings FromRawPixelFormatType (uint rawPixelFormatType, [NullAllowed] string rawFileType, [NullAllowed] NSDictionary<NSString, NSObject> processedFormat, [NullAllowed] string processedFileType);
+
 		[Export ("uniqueID")]
 		long UniqueID { get; }
 
@@ -8912,6 +9069,55 @@ namespace XamCore.AVFoundation {
 		[iOS (10, 2)]
 		[Export ("autoDualCameraFusionEnabled")]
 		bool AutoDualCameraFusionEnabled { [Bind ("isAutoDualCameraFusionEnabled")] get; set; }
+
+		[iOS (11, 0)]
+		[NullAllowed, Export ("processedFileType")]
+		string ProcessedFileType { get; }
+
+		[iOS (11, 0)]
+		[NullAllowed, Export ("rawFileType")]
+		string RawFileType { get; }
+
+		[iOS (11, 0)]
+		[Export ("dualCameraDualPhotoDeliveryEnabled")]
+		bool DualCameraDualPhotoDeliveryEnabled { [Bind ("isDualCameraDualPhotoDeliveryEnabled")] get; set; }
+
+		[iOS (11, 0)]
+		[Export ("depthDataDeliveryEnabled")]
+		bool DepthDataDeliveryEnabled { [Bind ("isDepthDataDeliveryEnabled")] get; set; }
+
+		[iOS (11, 0)]
+		[Export ("embedsDepthDataInPhoto")]
+		bool EmbedsDepthDataInPhoto { get; set; }
+
+		[iOS (11, 0)]
+		[Export ("depthDataFiltered")]
+		bool DepthDataFiltered { [Bind ("isDepthDataFiltered")] get; set; }
+
+		[iOS (11, 0)]
+		[Export ("cameraCalibrationDataDeliveryEnabled")]
+		bool CameraCalibrationDataDeliveryEnabled { [Bind ("isCameraCalibrationDataDeliveryEnabled")] get; set; }
+
+		[iOS (11, 0)]
+		[Export ("metadata", ArgumentSemantic.Copy)]
+		NSDictionary Metadata { get; set; }
+
+		[iOS (11, 0)]
+		[Export ("livePhotoVideoCodecType")]
+		string LivePhotoVideoCodecType { get; set; }
+
+		[Internal]
+		[iOS (11, 0)]
+		[Export ("availableEmbeddedThumbnailPhotoCodecTypes")]
+		NSString[] _GetAvailableEmbeddedThumbnailPhotoCodecTypes { get; }
+
+		[iOS (11, 0)]
+		[Wrap ("Array.ConvertAll (_GetAvailableEmbeddedThumbnailPhotoCodecTypes, s => AVVideoCodecTypeExtensions.GetValue (s))")]
+		AVVideoCodecType[] GetAvailableEmbeddedThumbnailPhotoCodecTypes { get; }
+
+		[iOS (11, 0)]
+		[NullAllowed, Export ("embeddedThumbnailPhotoFormat", ArgumentSemantic.Copy)]
+		NSDictionary EmbeddedThumbnailPhotoFormat { get; set; }
 	}
 	
 #if !MONOMAC
@@ -9083,6 +9289,51 @@ namespace XamCore.AVFoundation {
 		[Export ("dualCameraFusionSupported")]
 		bool DualCameraFusionSupported { [Bind ("isDualCameraFusionSupported")] get; }
 
+		// From AVCapturePhotoOutput (AVCapturePhotoOutputDepthDataDeliverySupport) Category
+
+		[iOS (11,0)]
+		[Export ("depthDataDeliverySupported")]
+		bool DepthDataDeliverySupported { [Bind ("isDepthDataDeliverySupported")] get; }
+
+		[iOS (11,0)]
+		[Export ("depthDataDeliveryEnabled")]
+		bool DepthDataDeliveryEnabled { [Bind ("isDepthDataDeliveryEnabled")] get; set; }
+
+		[Internal]
+		[iOS (11, 0)]
+		[Export ("availablePhotoFileTypes")]
+		NSString[] _GetAvailablePhotoFileTypes { get; }
+
+		[iOS (11, 0)]
+		[Wrap ("Array.ConvertAll (_GetAvailablePhotoFileTypes, s => AVFileTypesExtensions.GetValue (s))")]
+		AVFileTypes[] GetAvailablePhotoFileTypes { get; }
+
+
+		[Internal]
+		[iOS (11, 0)]
+		[Export ("availableRawPhotoFileTypes")]
+		NSString[] _GetAvailableRawPhotoFileTypes { get; }
+
+		[iOS (11, 0)]
+		[Wrap ("Array.ConvertAll (_GetAvailableRawPhotoFileTypes, s => AVFileTypesExtensions.GetValue (s))")]
+		AVFileTypes[] GetAvailableRawPhotoFileTypes { get; }
+
+		[iOS (11,0)]
+		[Export ("supportedPhotoPixelFormatTypesForFileType:")]
+		NSNumber[] GetSupportedPhotoPixelFormatTypesForFileType (string fileType);
+
+		[Internal]
+		[iOS (11,0)]
+		[Export ("supportedPhotoCodecTypesForFileType:")]
+		NSString[] _GetSupportedPhotoCodecTypesForFileType (string fileType);
+
+		[iOS (11,0)]
+		[Wrap ("Array.ConvertAll (_GetSupportedPhotoCodecTypesForFileType (fileType), s => AVVideoCodecTypeExtensions.GetValue (s))")]
+		AVVideoCodecType[] GetSupportedPhotoCodecTypesForFileType (string fileType);
+
+		[iOS (11,0)]
+		[Export ("supportedRawPhotoPixelFormatTypesForFileType:")]
+		NSNumber[] GetSupportedRawPhotoPixelFormatTypesForFileType (string fileType);
 	}
 #endif
 	
@@ -9226,6 +9477,16 @@ namespace XamCore.AVFoundation {
 		[iOS (10, 2)]
 		[Field ("AVCaptureDeviceTypeBuiltInDualCamera")]
 		BuiltInDualCamera,
+
+		[iOS (11, 1)]
+		[Field ("AVCaptureDeviceTypeBuiltInTrueDepthCamera")]
+		BuiltInTrueDepthCamera,
+	}
+
+	[NoTV, iOS (7,0), NoMac, NoWatch] // matches API that uses it.
+	enum AVAuthorizationMediaType {
+		Video,
+		Audio,
 	}
 
 	[NoWatch]
@@ -9441,10 +9702,23 @@ namespace XamCore.AVFoundation {
 		[Static, Export ("authorizationStatusForMediaType:")]
 		AVAuthorizationStatus GetAuthorizationStatus (NSString avMediaTypeToken);
 
+		// Calling this method with any media type other than AVMediaTypeVideo or AVMediaTypeAudio raises an exception.
+		[iOS (7,0)]
+		[Static]
+		[Wrap ("GetAuthorizationStatus (mediaType == AVAuthorizationMediaType.Video ? AVMediaTypes.Video.GetConstant () : AVMediaTypes.Audio.GetConstant ())")]
+		AVAuthorizationStatus GetAuthorizationStatus (AVAuthorizationMediaType mediaType);
+
 		[Since (7,0)]
 		[Static, Export ("requestAccessForMediaType:completionHandler:")]
 		[Async]
 		void RequestAccessForMediaType (NSString avMediaTypeToken, AVRequestAccessStatus completion);
+
+		// Either AVMediaTypeVideo or AVMediaTypeAudio.
+		[iOS (7,0)]
+		[Static]
+		[Wrap ("RequestAccessForMediaType (mediaType == AVAuthorizationMediaType.Video ? AVMediaTypes.Video.GetConstant () : AVMediaTypes.Audio.GetConstant (), completion)")]
+		[Async]
+		void RequestAccessForMediaType (AVAuthorizationMediaType mediaType, AVRequestAccessStatus completion);
 #endif
 
 		[Since (7,0)][Mac (10,7)]
@@ -9669,7 +9943,64 @@ namespace XamCore.AVFoundation {
 		[Export ("activeColorSpace", ArgumentSemantic.Assign)]
 		AVCaptureColorSpace ActiveColorSpace { get; set; }
 
+		// From AVCaptureDevice (AVCaptureDeviceDepthSupport) Category
+
+		[iOS (11,0)]
+		[Export ("activeDepthDataFormat", ArgumentSemantic.Retain), NullAllowed]
+		AVCaptureDeviceFormat ActiveDepthDataFormat { get; set; }
+
+		[iOS (11,0)]
+		[Export ("minAvailableVideoZoomFactor")]
+		nfloat MinAvailableVideoZoomFactor { get; }
+
+		[iOS (11,0)]
+		[Export ("maxAvailableVideoZoomFactor")]
+		nfloat MaxAvailableVideoZoomFactor { get; }
+
+		// From  AVCaptureDevice (AVCaptureDeviceSystemPressure) Category
+		[NoWatch, NoTV, NoMac, iOS (11, 1)]
+		[Export ("systemPressureState")]
+		AVCaptureSystemPressureState SystemPressureState { get; }
+
+		[iOS (11, 0)]
+		[Export ("dualCameraSwitchOverVideoZoomFactor")]
+		nfloat DualCameraSwitchOverVideoZoomFactor { get; }
+
 #endif
+	}
+
+	[NoTV, iOS (11, 1), NoMac, NoWatch]
+	enum AVCaptureSystemPressureLevel {
+		[Field ("AVCaptureSystemPressureLevelNominal")]
+		Nominal,
+
+		[Field ("AVCaptureSystemPressureLevelFair")]
+		Fair,
+
+		[Field ("AVCaptureSystemPressureLevelSerious")]
+		Serious,
+
+		[Field ("AVCaptureSystemPressureLevelCritical")]
+		Critical,
+
+		[Field ("AVCaptureSystemPressureLevelShutdown")]
+		Shutdown,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (11,1)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface AVCaptureSystemPressureState
+	{
+		[Internal]
+		[Export ("level")]
+		NSString _Level { get; }
+
+		[Wrap ("AVCaptureSystemPressureLevelExtensions.GetValue (_Level)")]
+		AVCaptureSystemPressureLevel Level { get; }
+
+		[Export ("factors")]
+		AVCaptureSystemPressureFactors Factors { get; }
 	}
 
 	[NoWatch]
@@ -9739,6 +10070,22 @@ namespace XamCore.AVFoundation {
 		[iOS (10, 0)]
 		[Export ("supportedColorSpaces")]
 		NSNumber[] SupportedColorSpaces { get; }
+
+		[iOS (11, 0)]
+		[Export ("videoMinZoomFactorForDepthDataDelivery")]
+		nfloat VideoMinZoomFactorForDepthDataDelivery { get; }
+
+		[iOS (11, 0)]
+		[Export ("videoMaxZoomFactorForDepthDataDelivery")]
+		nfloat VideoMaxZoomFactorForDepthDataDelivery { get; }
+
+		[iOS (11, 0)]
+		[Export ("supportedDepthDataFormats")]
+		AVCaptureDeviceFormat[] SupportedDepthDataFormats { get; }
+
+		[iOS (11, 0)]
+		[Export ("unsupportedCaptureOutputClasses")]
+		Class[] UnsupportedCaptureOutputClasses { get; }
 #endif
 	}
 
@@ -10335,6 +10682,10 @@ namespace XamCore.AVFoundation {
 		[Export ("preferredPeakBitRate")]
 		double PreferredPeakBitRate { get; set; }
 
+		[iOS (11, 0), NoMac, NoTV]
+		[Export ("preferredMaximumResolution", ArgumentSemantic.Assign)]
+		CGSize PreferredMaximumResolution { get; set; }
+
 #region AVPlayerViewControllerAdditions
 		[NoiOS][NoMac]
 		[TV (9,0)]
@@ -10366,6 +10717,7 @@ namespace XamCore.AVFoundation {
 		[TV (9,2)]
 		[Export ("mediaDataCollectors")]
 		AVPlayerItemMediaDataCollector[] MediaDataCollectors { get; }
+
 #if !MONOMAC
 		[NoiOS, TV (10, 0), NoWatch, NoMac]
 		[NullAllowed, Export ("nextContentProposal", ArgumentSemantic.Assign)]
@@ -10950,7 +11302,7 @@ namespace XamCore.AVFoundation {
 		AVPlayerLayer FromPlayer ([NullAllowed] AVPlayer player);
 
 #if !XAMCORE_2_0
-		[Advice ("Use LayerVideoGravity")]
+		[Advice ("Use 'LayerVideoGravity' property instead.")]
 		[Export ("videoGravity", ArgumentSemantic.Copy)][Sealed]
 		string VideoGravity { get; set; }
 #endif
@@ -11219,7 +11571,6 @@ namespace XamCore.AVFoundation {
 		[iOS (8, 0), Mac (10,0)]
 		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotificationErrorKey")]
 		NSString FailedToDecodeNotificationErrorKey { get; }
-
 	}
 
 	[NoWatch]
@@ -12173,12 +12524,12 @@ namespace XamCore.AVFoundation {
 		AVContentKeyResponse Create (NSData keyData, [NullAllowed] NSData initializationVector);
 	}
 
-	[TV (11,0), NoWatch, NoMac, iOS (11,0)]
+	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
 	interface AVRouteDetector {
 		[Notification]
-		[TV (11, 0), NoWatch, NoMac, iOS (11, 0)]
+		[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
 		[Field ("AVRouteDetectorMultipleRoutesDetectedDidChangeNotification")]
 		NSString MultipleRoutesDetectedDidChange { get; }
 
@@ -12235,5 +12586,21 @@ namespace XamCore.AVFoundation {
 
 		[Wrap ("AVCaptureDeviceTypeExtensions.GetValue (WeakSourceDeviceType)")]
 		AVCaptureDeviceType SourceDeviceType { get; }
+
+		// From @interface AVCapturePhotoBracketedCapture (AVCapturePhoto)
+
+#if !MONOMAC
+		[iOS (11, 0)]
+		[NullAllowed, Export ("bracketSettings")]
+		AVCaptureBracketedStillImageSettings BracketSettings { get; }
+#endif
+
+		[iOS (11, 0), NoMac]
+		[Export ("lensStabilizationStatus")]
+		AVCaptureLensStabilizationStatus LensStabilizationStatus { get; }
+
+		[iOS (11, 0), NoMac]
+		[Export ("sequenceCount")]
+		nint SequenceCount { get; }
 	}
 }

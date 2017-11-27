@@ -12,7 +12,7 @@
 [submodule "external/mono"]
     path = external/mono
     url = ../../mono/mono.git
-    branch = 2017-06
+    branch = 2017-10
 [submodule "external/MonoTouch.Dialog"]
     path = external/MonoTouch.Dialog
     url = ../../migueldeicaza/MonoTouch.Dialog.git
@@ -28,4 +28,8 @@
 [submodule "external/Xamarin.MacDev"]
     path = external/Xamarin.MacDev
     url = ../../xamarin/Xamarin.MacDev
+    branch = master
+[submodule "external/macios-binaries"]
+    path = external/macios-binaries
+    url = ../../xamarin/macios-binaries
     branch = master

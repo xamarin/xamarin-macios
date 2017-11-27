@@ -545,8 +545,8 @@ namespace XamCore.PdfKit {
 		[Wrap ("this (bounds, annotationType.GetConstant (), properties)")]
 		IntPtr Constructor (CGRect bounds, PdfAnnotationKey annotationType, [NullAllowed] NSDictionary properties);
 
-		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead.")]
 		[Export ("initWithBounds:")]
 		IntPtr Constructor (CGRect bounds);
 

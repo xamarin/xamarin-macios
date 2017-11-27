@@ -23,6 +23,8 @@ LINKER_SOURCES = \
 	$(MONOLINKER)/Mono.Linker/AssemblyResolver.cs			\
 	$(MONOLINKER)/Mono.Linker/I18nAssemblies.cs			\
 	$(MONOLINKER)/Mono.Linker/IXApiVisitor.cs			\
+	$(MONOLINKER)/Mono.Linker/ILogger.cs				\
+	$(MONOLINKER)/Mono.Linker/ConsoleLogger.cs			\
 	$(MONOLINKER)/Mono.Linker/LinkContext.cs			\
 	$(MONOLINKER)/Mono.Linker/LoadException.cs			\
 	$(MONOLINKER)/Mono.Linker/MarkException.cs			\
@@ -295,8 +297,8 @@ simlauncher$(5)$(1): simlauncher.m $(TOP)/runtime/.libs/ios/libxamarin.a $(BUILD
 		-L$(BUILD_DESTDIR)/simulator$(4)/lib/ \
 		-I$(TOP)/runtime \
 		-I$(BUILD_DESTDIR)/simulator$(4)/include/mono-2.0 \
-		-I$(TOP)/builds/simulator$(4)/eglib/src \
-		-I$(MONO_PATH)/eglib/src \
+		-I$(TOP)/builds/simulator$(4)/mono/eglib \
+		-I$(MONO_PATH)/mono/eglib \
 		$(BUILD_DESTDIR)/simulator$(4)/lib/libmono$(3)-2.0.a \
 		$(foreach u,$(UNREFERENCED_SYMBOLS),-u $u)  \
 		$(TOP)/runtime/.libs/ios/libapp.a \
@@ -305,8 +307,8 @@ simlauncher$(5)$(1): simlauncher.m $(TOP)/runtime/.libs/ios/libxamarin.a $(BUILD
 
 endef
 
-$(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator86/lib/libmono-profiler-log.a -u _mono_profiler_startup -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.a,sgen,86,32))
-$(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator64/lib/libmono-profiler-log.a -u _mono_profiler_startup -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.a,sgen,64,64))
+$(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator86/lib/libmono-profiler-log.a -u _mono_profiler_init_log -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.a,sgen,86,32))
+$(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator64/lib/libmono-profiler-log.a -u _mono_profiler_init_log -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.a,sgen,64,64))
 
 IOS_DEFINES = -d:MONOTOUCH -d:MTOUCH $(APPLETLS_DEFINES)
 

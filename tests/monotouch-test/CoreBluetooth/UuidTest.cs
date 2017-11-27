@@ -40,7 +40,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 				Assert.That (uuid.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 				Assert.IsNotNull (uuid.Data, "Data");
 #if MONOMAC
-				var expected = "Unknown (<1234>)";
+				var expected = !TestRuntime.CheckXcodeVersion (9, 0) ? "Unknown (<1234>)" : "1234";
 #else
 				var expected = UIDevice.CurrentDevice.CheckSystemVersion (7, 1) ? "1234" : "Unknown (<1234>)";
 #endif
@@ -60,7 +60,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 				Assert.That (uuid.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 				Assert.IsNotNull (uuid.Data, "Data");
 #if MONOMAC
-				var expected = "Unknown (<12345678 90abcdef cafec80c 20443d0b>)";
+				var expected = !TestRuntime.CheckXcodeVersion (9, 0) ? "Unknown (<12345678 90abcdef cafec80c 20443d0b>)" : "12345678-90AB-CDEF-CAFE-C80C20443D0B";
 #else
 				var expected = UIDevice.CurrentDevice.CheckSystemVersion (7, 1) ? "12345678-90AB-CDEF-CAFE-C80C20443D0B" : "Unknown (<12345678 90abcdef cafec80c 20443d0b>)";
 #endif

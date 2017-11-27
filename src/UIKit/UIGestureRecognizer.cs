@@ -46,7 +46,6 @@ namespace XamCore.UIKit {
 		}
 		
 		[Register ("__UIGestureRecognizerToken")]
-		[Preserve (Conditional = true)]
 		public class Token : NSObject {
 			public Token ()
 			{
@@ -55,7 +54,6 @@ namespace XamCore.UIKit {
 		}
 
 		[Register ("__UIGestureRecognizerParameterlessToken")]
-		[Preserve (Conditional = true)]
 		public class ParameterlessDispatch : Token {
 			NSAction action;
 			
@@ -73,7 +71,6 @@ namespace XamCore.UIKit {
 		}
 
 		[Register ("__UIGestureRecognizerParametrizedToken")]
-		[Preserve (Conditional = true)]
 		public class ParametrizedDispatch : Token {
 			Action<UIGestureRecognizer> action;
 			
@@ -148,7 +145,6 @@ namespace XamCore.UIKit {
 		public UIRotationGestureRecognizer (Action<UIRotationGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback (action)) {}
 
 		[Register ("__UIRotationGestureRecognizer")]
-		[Preserve (Conditional = true)]
 		class Callback : Token {
 			Action<UIRotationGestureRecognizer> action;
 			
@@ -172,7 +168,6 @@ namespace XamCore.UIKit {
 		public UILongPressGestureRecognizer (Action<UILongPressGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback (action)) {}
 
 		[Register ("__UILongPressGestureRecognizer")]
-		[Preserve (Conditional = true)]
 		class Callback : Token {
 			Action<UILongPressGestureRecognizer> action;
 			
@@ -195,7 +190,6 @@ namespace XamCore.UIKit {
 		public UITapGestureRecognizer (Action<UITapGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback (action)) {}
 
 		[Register ("__UITapGestureRecognizer")]
-		[Preserve (Conditional = true)]
 		class Callback : Token {
 			Action<UITapGestureRecognizer> action;
 			
@@ -220,7 +214,6 @@ namespace XamCore.UIKit {
 		internal UIPanGestureRecognizer (IntPtr sel, Token token) : base (token, sel) {}
 
 		[Register ("__UIPanGestureRecognizer")]
-		[Preserve (Conditional = true)]
 		class Callback : Token {
 			Action<UIPanGestureRecognizer> action;
 			
@@ -244,7 +237,6 @@ namespace XamCore.UIKit {
 		public UIPinchGestureRecognizer (Action<UIPinchGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback (action)) {}
 
 		[Register ("__UIPinchGestureRecognizer")]
-		[Preserve (Conditional = true)]
 		class Callback : Token {
 			Action<UIPinchGestureRecognizer> action;
 			
@@ -268,7 +260,6 @@ namespace XamCore.UIKit {
 		public UISwipeGestureRecognizer (Action<UISwipeGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback (action)) {}
 
 		[Register ("__UISwipeGestureRecognizer")]
-		[Preserve (Conditional = true)]
 		class Callback : Token {
 			Action<UISwipeGestureRecognizer> action;
 			
@@ -292,7 +283,6 @@ namespace XamCore.UIKit {
 		public UIScreenEdgePanGestureRecognizer (Action<UIScreenEdgePanGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback (action)) {}
 
 		[Register ("__UIScreenEdgePanGestureRecognizer")]
-		[Preserve (Conditional = true)]
 		class Callback : Token {
 			Action<UIScreenEdgePanGestureRecognizer> action;
 

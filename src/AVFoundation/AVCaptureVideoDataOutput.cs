@@ -42,16 +42,16 @@ namespace XamCore.AVFoundation {
 		{
 		}
 
-		[Advice ("Use PixelBufferAttributes")]
+		[Advice ("Use 'PixelBufferAttributes'.")]
 		public AVVideoSettings (CVPixelFormatType formatType)
 		{
 			PixelFormat = formatType;
 		}
 
-		[Advice ("Use PixelBufferAttributes")]		
+		[Advice ("Use 'PixelBufferAttributes'.")]
 		public CVPixelFormatType? PixelFormat { get; set; }
 		
-		[Advice ("Use PixelBufferAttributes")]		
+		[Advice ("Use 'PixelBufferAttributes'.")]
 		public NSDictionary ToDictionary ()
 		{
 			if (!PixelFormat.HasValue)
@@ -62,7 +62,7 @@ namespace XamCore.AVFoundation {
 	}
 	
 	public partial class AVCaptureVideoDataOutput {
-		[Advice ("Use SetSampleBufferDelegate")]
+		[Advice ("Use 'SetSampleBufferDelegate'.")]
 		public void SetSampleBufferDelegateAndQueue (AVCaptureVideoDataOutputSampleBufferDelegate sampleBufferDelegate, DispatchQueue queue)
 		{
 			SetSampleBufferDelegate (sampleBufferDelegate, queue);

@@ -88,7 +88,7 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			AppleSdkSettings.CheckChanged ();
+			AppleSdkSettings.Init ();
 			IPhoneSdks.Reload ();
 
 			TargetArchitecture architectures;

@@ -156,10 +156,12 @@ namespace XamCore.CoreGraphics {
 
 		public static CGColorSpace CreateCalibratedGray (nfloat [] whitepoint, nfloat [] blackpoint, nfloat gamma)
 		{
+			if (whitepoint == null)
+				throw new ArgumentNullException (nameof (whitepoint));
 			if (whitepoint.Length != 3)
-				throw new ArgumentException ("Must have 3 values", "whitepoint");
-			if (blackpoint.Length != 3)
-				throw new ArgumentException ("Must have 3 values", "blackpoint");
+				throw new ArgumentException ("Must have exactly 3 values", nameof (whitepoint));
+			if (blackpoint != null && blackpoint.Length != 3)
+				throw new ArgumentException ("Must be null or have exactly 3 values", nameof (blackpoint));
 			
 			var ptr = CGColorSpaceCreateCalibratedGray (whitepoint, blackpoint, gamma);
 			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
@@ -171,16 +173,37 @@ namespace XamCore.CoreGraphics {
 
 		public static CGColorSpace CreateCalibratedRGB (nfloat [] whitepoint, nfloat [] blackpoint, nfloat [] gamma, nfloat [] matrix)
 		{
+			if (whitepoint == null)
+				throw new ArgumentNullException (nameof (whitepoint));
 			if (whitepoint.Length != 3)
-				throw new ArgumentException ("Must have 3 values", "whitepoint");
-			if (blackpoint.Length != 3)
-				throw new ArgumentException ("Must have 3 values", "blackpoint");
-			if (gamma.Length != 3)
-				throw new ArgumentException ("Must have 3 values", "gamma");
-			if (matrix.Length != 9)
-				throw new ArgumentException ("Must have 9 values", "matrix");
+				throw new ArgumentException ("Must have exactly 3 values", nameof (whitepoint));
+			if (blackpoint != null && blackpoint.Length != 3)
+				throw new ArgumentException ("Must be null or have exactly 3 values", nameof (blackpoint));
+			if (gamma != null && gamma.Length != 3)
+				throw new ArgumentException ("Must be null or have exactly 3 values", nameof (gamma));
+			if (matrix != null && matrix.Length != 9)
+				throw new ArgumentException ("Must be null or have exactly 9 values", nameof (matrix));
 			
 			var ptr = CGColorSpaceCreateCalibratedRGB (whitepoint, blackpoint, gamma, matrix);
+			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static /* CGColorSpaceRef __nullable */ IntPtr CGColorSpaceCreateLab (nfloat [] whitepoint, nfloat [] blackpoint, nfloat [] range);
+
+		// Available since the beginning of time
+		public static CGColorSpace CreateLab (nfloat [] whitepoint, nfloat [] blackpoint, nfloat [] range)
+		{
+			if (whitepoint == null)
+				throw new ArgumentNullException (nameof (whitepoint));
+			if (whitepoint.Length != 3)
+				throw new ArgumentException ("Must have exactly 3 values", nameof (whitepoint));
+			if (blackpoint != null && blackpoint.Length != 3)
+				throw new ArgumentException ("Must be null or have exactly 3 values", nameof (blackpoint));
+			if (range != null && range.Length != 4)
+				throw new ArgumentException ("Must be null or have exactly 4 values", nameof (range));
+
+			var ptr = CGColorSpaceCreateLab (whitepoint, blackpoint, range);
 			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
 		}
 
@@ -344,14 +367,46 @@ namespace XamCore.CoreGraphics {
 		}
 			
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CreateIDCCData' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CreateIDCCData' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CreateIDCCData' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CreateIDCCData' instead.")]
 		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateWithICCProfile (/* CFDataRef */ IntPtr data);
 
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		[iOS (10,0)][Mac (10,12)][Watch (3,0)][TV (10,0)]
+		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateWithICCData (/* CFTypeRef cg_nullable */ IntPtr data);
+
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CreateIDCCData' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CreateIDCCData' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'CreateIDCCData' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CreateIDCCData' instead.")]
+#if XAMCORE_4_0
+		public static CGColorSpace CreateIccProfile (NSData data)
+#else
 		public static CGColorSpace CreateICCProfile (NSData data)
+#endif
 		{
-			// older versions did not throw - so we'll return null
-			if (data == null)
-				return null;
-			var ptr = CGColorSpaceCreateWithICCProfile (data.Handle);
+			IntPtr ptr = CGColorSpaceCreateWithICCProfile (data.GetHandle ());
+			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
+		}
+
+		[Introduced (PlatformName.iOS, 10, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 12)]
+		public static CGColorSpace CreateIccData (NSData data)
+		{
+			return CreateIccData (data.GetHandle ());
+		}
+
+		[iOS (10,0)][Mac (10,12)][Watch (3,0)][TV (10,0)]
+		public static CGColorSpace CreateIccData (CGDataProvider provider)
+		{
+			return CreateIccData (provider.GetHandle ());
+		}
+
+		static CGColorSpace CreateIccData (IntPtr handle)
+		{
+			var ptr = CGColorSpaceCreateWithICCData (handle);
 			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
 		}
 
@@ -361,7 +416,11 @@ namespace XamCore.CoreGraphics {
 			/* CGDataProviderRef __nullable */ IntPtr profile,
 			/* CGColorSpaceRef __nullable */ IntPtr alternate);
 
+#if XAMCORE_4_0
+		public static CGColorSpace CreateIccProfile (nfloat[] range, CGDataProvider profile, CGColorSpace alternate)
+#else
 		public static CGColorSpace CreateICCProfile (nfloat[] range, CGDataProvider profile, CGColorSpace alternate)
+#endif
 		{
 			nint nComponents = range == null ? 0 : range.Length / 2;
 			IntPtr p = profile == null ? IntPtr.Zero : profile.Handle;
@@ -371,10 +430,22 @@ namespace XamCore.CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'GetICCData' instead." )]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'GetICCData' instead." )]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'GetICCData' instead." )]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'GetICCData' instead." )]
 		extern static /* CFDataRef */ IntPtr CGColorSpaceCopyICCProfile (/* CGColorSpaceRef */ IntPtr space);
 
 		[iOS (7,0)] // note: pre-release docs/headers says iOS6 and later, available on OSX since 10.5
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'GetICCData' instead." )]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'GetICCData' instead." )]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'GetICCData' instead." )]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'GetICCData' instead." )]
+#if XAMCORE_4_0
+		public NSData GetIccProfile ()
+#else
 		public NSData GetICCProfile ()
+#endif
 		{
 			IntPtr ptr = CGColorSpaceCopyICCProfile (handle);
 			return (ptr == IntPtr.Zero) ? null : new NSData (ptr, true);
@@ -404,7 +475,7 @@ namespace XamCore.CoreGraphics {
 		[TV (10,0)]
 		public string Name {
 			get {
-				return CFString.FetchString (CGColorSpaceCopyName (handle));
+				return CFString.FetchString (CGColorSpaceCopyName (handle), true);
 			}
 		}
 

@@ -71,5 +71,47 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				class_addMethod (cls, Selector.GetHandle ("testBlocks:"), imp, "v@:^v");
 			}
 		}
+
+#if !DEVICE && !MONOMAC // some of these tests cause the AOT compiler to assert
+		// No MonoPInvokeCallback
+		static void InvalidTrampoline1 () { }
+
+		// Wrong delegate signature in MonoPInvokeCallback
+		[MonoPInvokeCallback (typeof (Action<IntPtr>))]
+		static void InvalidTrampoline2 () { }
+
+		// Wrong delegate signature in MonoPInvokeCallback
+		[MonoPInvokeCallback (typeof (Func<IntPtr>))]
+		static void InvalidTrampoline3 () { }
+
+		// Wrong delegate signature in MonoPInvokeCallback
+		[MonoPInvokeCallback (typeof (Action<IntPtr>))]
+		static void InvalidTrampoline4 (int x) { }
+
+		// Wrong delegate signature in MonoPInvokeCallback
+		[MonoPInvokeCallback (typeof (Func<IntPtr>))]
+		static int InvalidTrampoline5 () { return 0;  }
+#endif // !DEVICE
+
+		[Test]
+		public void InvalidBlockTrampolines ()
+		{
+			BlockLiteral block = new BlockLiteral ();
+			Action userDelegate = new Action (() => Console.WriteLine ("Hello world!"));
+
+			Assert.Throws<ArgumentNullException> (() => block.SetupBlock (null, userDelegate), "null trampoline");
+
+#if !DEVICE && !MONOMAC
+			if (Runtime.Arch == Arch.SIMULATOR) {
+				// These checks only occur in the simulator
+				Assert.Throws<ArgumentException> (() => block.SetupBlock ((Action) InvalidBlockTrampolines, userDelegate), "instance trampoline");
+				Assert.Throws<ArgumentException> (() => block.SetupBlock ((Action) InvalidTrampoline1, userDelegate), "invalid trampoline 1");
+				Assert.Throws<ArgumentException> (() => block.SetupBlock ((Action) InvalidTrampoline2, userDelegate), "invalid trampoline 2");
+				Assert.Throws<ArgumentException> (() => block.SetupBlock ((Action) InvalidTrampoline3, userDelegate), "invalid trampoline 3");
+				Assert.Throws<ArgumentException> (() => block.SetupBlock ((Action<int>) InvalidTrampoline4, userDelegate), "invalid trampoline 4");
+				Assert.Throws<ArgumentException> (() => block.SetupBlock ((Func<int>) InvalidTrampoline5, userDelegate), "invalid trampoline 5");
+			}
+#endif // !DEVICE
+		}
 	}
 }

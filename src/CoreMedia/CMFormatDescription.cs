@@ -324,14 +324,14 @@ namespace XamCore.CoreMedia {
 		internal extern static /* Boolean */ bool CMVideoFormatDescriptionMatchesImageBuffer (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc, /* CVImageBufferRef */ IntPtr imageBuffer);
 
 #if !XAMCORE_2_0
-		[Advice ("Use CMVideoFormatDescription")]
+		[Advice ("Use 'CMVideoFormatDescription'.")]
 		public Size  VideoDimensions {
 			get {
 				return CMVideoFormatDescriptionGetDimensions (handle);
 			}
 		}
 
-		[Advice ("Use CMVideoFormatDescription")]
+		[Advice ("Use 'CMVideoFormatDescription'.")]
 		public CGRect GetVideoCleanAperture (bool originIsAtTopLeft)
 		{
 			return CMVideoFormatDescriptionGetCleanAperture (handle, originIsAtTopLeft);
@@ -344,7 +344,7 @@ namespace XamCore.CoreMedia {
 			return NSArray.ArrayFromHandle<NSString> (arr);
 		}
 
-		[Advice ("Use CMVideoFormatDescription")]
+		[Advice ("Use 'CMVideoFormatDescription'.")]
 		public CGSize GetVideoPresentationDimensions (bool usePixelAspectRatio, bool useCleanAperture)
 		{
 			return CMVideoFormatDescriptionGetPresentationDimensions (handle, usePixelAspectRatio, useCleanAperture);
@@ -538,6 +538,82 @@ namespace XamCore.CoreMedia {
 			return CMVideoFormatDescriptionMatchesImageBuffer (handle, imageBuffer.Handle);
 		}
 #endif
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionCreateFromHEVCParameterSets (
+			/* CFAllocatorRef */ IntPtr allocator, 
+			/* size_t  */ nuint parameterSetCount,
+			/* const uint8_t* const* */ IntPtr [] parameterSetPointers,
+			/* size_t*  */ nuint[] parameterSetSizes,
+			/* int */ int NALUnitHeaderLength,
+			/* CFDictionaryRef */ IntPtr extensions,
+			/* CMFormatDescriptionRef* */ out IntPtr formatDescriptionOut);
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		public static CMVideoFormatDescription FromHevcParameterSets (List<byte[]> parameterSets, int nalUnitHeaderLength, NSDictionary extensions, out CMFormatDescriptionError error)
+		{
+			if (parameterSets == null)
+				throw new ArgumentNullException (nameof (parameterSets));
+
+			if (parameterSets.Count < 3)
+				throw new ArgumentException ($"{nameof (parameterSets)} must contain at least three elements");
+
+			if (nalUnitHeaderLength != 1 && nalUnitHeaderLength != 2 && nalUnitHeaderLength != 4)
+				throw new ArgumentOutOfRangeException (nameof (nalUnitHeaderLength), "must be 1, 2 or 4");
+
+			var handles = new GCHandle [parameterSets.Count];
+			try {
+				var parameterSetSizes = new nuint [parameterSets.Count];
+				var parameterSetPtrs = new IntPtr [parameterSets.Count];
+
+				for (int i = 0; i < parameterSets.Count; i++) {
+					handles [i] = GCHandle.Alloc (parameterSets [i], GCHandleType.Pinned); // This can't use unsafe code because we need to get the pointer for an unbound number of objects.
+					parameterSetPtrs [i] = handles [i].AddrOfPinnedObject ();
+					parameterSetSizes [i] = (nuint) parameterSets [i].Length;
+				}
+
+				IntPtr desc;
+				error = CMVideoFormatDescriptionCreateFromHEVCParameterSets (IntPtr.Zero, (nuint) parameterSets.Count, parameterSetPtrs, parameterSetSizes, nalUnitHeaderLength, extensions.GetHandle (), out desc);
+				if (error != CMFormatDescriptionError.None || desc == IntPtr.Zero)
+					return null;
+
+				return new CMVideoFormatDescription (desc, true);
+			} finally {
+				for (int i = 0; i < handles.Length; i++) {
+					if (handles [i].IsAllocated)
+						handles [i].Free ();
+				}
+			}
+		}
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionGetHEVCParameterSetAtIndex (
+			/* CMFormatDescriptionRef */ IntPtr videoDesc, 
+			/* size_t  */ nuint parameterSetIndex,
+			/* const uint8_t** */ out IntPtr parameterSetPointerOut,
+			/* size_t* */ out nuint parameterSetSizeOut,
+			/* size_t* */ out nuint parameterSetCountOut,
+			/* int* */ out int nalUnitHeaderLengthOut);
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		public byte [] GetHevcParameterSet (nuint index, out nuint parameterSetCount, out int nalUnitHeaderLength, out CMFormatDescriptionError error)
+		{
+			if (Handle == IntPtr.Zero)
+				throw new ObjectDisposedException ("VideoFormatDescription");
+
+			IntPtr ret;
+			nuint parameterSetSizeOut;
+			error = CMVideoFormatDescriptionGetHEVCParameterSetAtIndex (Handle, index, out ret, out parameterSetSizeOut, out parameterSetCount, out nalUnitHeaderLength);
+			if (error != CMFormatDescriptionError.None)
+				return null;
+
+			var arr = new byte [(int) parameterSetSizeOut];
+			Marshal.Copy (ret, arr, 0, (int) parameterSetSizeOut);
+
+			return arr;
+		}
 #endif
 	}
 }

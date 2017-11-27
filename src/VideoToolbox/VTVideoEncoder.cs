@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using XamCore.CoreFoundation;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
+using XamCore.CoreMedia;
 
 namespace XamCore.VideoToolbox {
 	[Mac (10,8), iOS (8,0), TV (10,2)]
@@ -56,5 +57,45 @@ namespace XamCore.VideoToolbox {
 			EncoderId = encoderId;
 			EncoderName = encoderName;
 		}
+
+		[Mac (10,13), iOS (11,0), TV (11,0)]
+		[DllImport (Constants.VideoToolboxLibrary)]
+		static extern /* OSStatus */ VTStatus VTCopySupportedPropertyDictionaryForEncoder (
+			/* int32_t */ int width,
+			/* int32_t */ int height,
+			/* CMVideoCodecType */ CMVideoCodecType codecType,
+			/* CFDictionaryRef */ IntPtr encoderSpecification,
+			/* CFStringRef */ out IntPtr outEncoderId,
+			/* CFDictionaryRef */ out IntPtr outSupportedProperties
+		);
+
+		public static VTSupportedEncoderProperties GetSupportedEncoderProperties (int width, int height, CMVideoCodecType codecType, NSDictionary encoderSpecification = null)
+		{
+			IntPtr encoderIdPtr = IntPtr.Zero;
+			IntPtr supportedPropertiesPtr = IntPtr.Zero;
+			var result = VTCopySupportedPropertyDictionaryForEncoder (width, height, codecType, encoderSpecification == null ? IntPtr.Zero : encoderSpecification.Handle, out encoderIdPtr, out supportedPropertiesPtr);
+
+			if (result != VTStatus.Ok) {
+				if (encoderIdPtr != IntPtr.Zero)
+					CFObject.CFRelease (encoderIdPtr);
+				if (supportedPropertiesPtr != IntPtr.Zero)
+					CFObject.CFRelease (supportedPropertiesPtr);
+
+				return null;
+			}
+
+			// The caller must CFRelease the returned supported properties and encoder ID.
+			var ret = new VTSupportedEncoderProperties {
+				EncoderId = CFString.FetchString (encoderIdPtr, releaseHandle:true),
+				SupportedProperties = Runtime.GetNSObject<NSDictionary> (supportedPropertiesPtr, owns: true)
+			};
+			return ret;
+		}
+	}
+
+	[Mac (10,13), iOS (11,0), TV (11,0)]
+	public class VTSupportedEncoderProperties {
+		public string EncoderId { get; set; }
+		public NSDictionary SupportedProperties { get; set; }
 	}
 }

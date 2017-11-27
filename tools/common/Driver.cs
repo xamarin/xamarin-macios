@@ -123,6 +123,10 @@ namespace Xamarin.Bundler {
 			options.Add ("ignore-dynamic-symbol:", "Specify that Xamarin.iOS/Xamarin.Mac should not try to prevent the linker from removing the specified symbol.", (v) => {
 				app.IgnoredSymbols.Add (v);
 			});
+			options.Add ("root-assembly:", "Specifies any root assemblies. There must be at least one root assembly, usually the main executable.", (v) => {
+				app.RootAssemblies.Add (v);
+			});
+			options.Add (new Mono.Options.ResponseFileSource ());
 		}
 
 		static int Jobs;
@@ -388,6 +392,28 @@ namespace Xamarin.Bundler {
 				}
 			} catch (Exception e) {
 				ErrorHelper.Warning (124, e, $"Could not set the current language to '{lang}' (according to LANG={lang_variable}): {e.Message}");
+			}
+		}
+
+		static void LogArguments (string [] arguments)
+		{
+			if (Verbosity < 2)
+				return;
+			if (!arguments.Any ((v) => v.Length > 0 && v [0] == '@'))
+				return; // no need to print arguments unless we get response files
+			LogArguments (arguments, 1);
+		}
+
+		static void LogArguments (string [] arguments, int indentation)
+		{
+			Log ("Provided arguments:");
+			var indent = new string (' ', indentation * 4);
+			foreach (var arg in arguments) {
+				Log (indent + StringUtils.Quote (arg));
+				if (arg.Length > 0 && arg [0] == '@') {
+					var fn = arg.Substring (1);
+					LogArguments (File.ReadAllLines (fn), indentation + 1);
+				}
 			}
 		}
 	}

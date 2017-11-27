@@ -11,8 +11,8 @@ GENERATED_FILES = \
 	libtest.properties.h \
 	../bindings-test/ApiDefinition.generated.cs \
 	../bindings-test/StructsAndEnums.generated.cs \
-	../monotouch-test/ObjCRuntime/RegistrarTest.generated.cs \
-	../monotouch-test/ObjCRuntime/TrampolineTest.generated.cs \
+	RegistrarTest.generated.cs \
+	TrampolineTest.generated.cs \
 
 GENERATED_FILES_PATTERN = \
 	libtest.structs%h \
@@ -20,8 +20,8 @@ GENERATED_FILES_PATTERN = \
 	libtest.properties%h \
 	../bindings-test/ApiDefinition.generated%cs \
 	../bindings-test/StructsAndEnums.generated%cs \
-	../monotouch-test/ObjCRuntime/RegistrarTest.generated%cs \
-	../monotouch-test/ObjCRuntime/TrampolineTest.generated%cs \
+	RegistrarTest.generated%cs \
+	TrampolineTest.generated%cs \
 
 testgenerator.exe: testgenerator.cs Makefile
 	$(Q) mcs -out:$@ $<

@@ -65,10 +65,36 @@ namespace xharness
 				return System.Text.Encoding.UTF8;
 			}
 		}
+
+		public static Log CreateAggregatedLog (params Log [] logs)
+		{
+			return new AggregatedLog (logs);
+		}
+
+		// Log that will duplicate log output to multiple other logs.
+		class AggregatedLog : Log
+		{
+			Log [] logs;
+
+			public AggregatedLog (params Log [] logs)
+			{
+				this.logs = logs;
+			}
+
+			public override string FullPath => throw new NotImplementedException ();
+
+			protected override void WriteImpl (string value)
+			{
+				foreach (var log in logs)
+					log.WriteImpl (value);
+			}
+		}
 	}
 
 	public class LogFile : Log
 	{
+		object lock_obj = new object ();
+		bool append;
 		public string Path;
 		StreamWriter writer;
 
@@ -76,14 +102,14 @@ namespace xharness
 			: base (description)
 		{
 			Path = path;
-
-			writer = new StreamWriter (new FileStream (Path, append ? FileMode.Append : FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read));
-			writer.AutoFlush = true;
+			this.append = append;
+			if (!append)
+				File.WriteAllText (path, string.Empty);
 		}
 
 		protected override void WriteImpl (string value)
 		{
-			writer.Write (value);
+			GetWriter ().Write (value);
 		}
 
 		public override string FullPath {
@@ -99,6 +125,12 @@ namespace xharness
 
 		public override StreamWriter GetWriter ()
 		{
+			lock (lock_obj) {
+				if (writer == null) {
+					writer = new StreamWriter (new FileStream (Path, append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read));
+					writer.AutoFlush = true;
+				}
+			}
 			return writer;
 		}
 
@@ -118,12 +150,6 @@ namespace xharness
 		string path;
 		FileStream fs;
 		StreamWriter writer;
-
-		public FileStream FileStream {
-			get {
-				return fs;
-			}
-		}
 
 		public override StreamReader GetReader ()
 		{
@@ -182,9 +208,9 @@ namespace xharness
 			return rv;
 		}
 
-		public LogFile CreateFile (string description, string path)
+		public LogFile CreateFile (string description, string path, bool append = true)
 		{
-			var rv = new LogFile (description, path);
+			var rv = new LogFile (description, path, append);
 			Add (rv);
 			return rv;
 		}
@@ -294,6 +320,10 @@ namespace xharness
 						if (read > 0) {
 							writer.Write (buffer, 0, read);
 							availableLength -= read;
+						} else {
+							// There's nothing more to read.
+							// I can't see how we get here, since we calculate the amount to read based on what's available, but it does happen randomly.
+							break;
 						}
 					}
 				}
@@ -316,6 +346,23 @@ namespace xharness
 			get {
 				return Path;
 			}
+		}
+	}
+
+	public class CallbackLog : Log
+	{
+		public Action<string> OnWrite;
+
+		public CallbackLog (Action<string> onWrite)
+		{
+			OnWrite = onWrite;
+		}
+
+		public override string FullPath => throw new NotImplementedException ();
+
+		protected override void WriteImpl (string value)
+		{
+			OnWrite (value);
 		}
 	}
 }

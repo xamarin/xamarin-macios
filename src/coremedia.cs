@@ -76,22 +76,22 @@ namespace XamCore.CoreMedia {
 		NSString DrainAfterDecoding { get; }
 
 		[Field ("kCMSampleBufferAttachmentKey_PostNotificationWhenConsumed")]
-		NSString PostNotificationWhenConsumed { get; }
+		NSString PostNotificationWhenConsumedKey { get; }
 
 		[Field ("kCMSampleBufferAttachmentKey_ResumeOutput")]
-		NSString ResumeOutput { get; }
+		NSString ResumeOutputKey { get; }
 
 		[Field ("kCMSampleBufferAttachmentKey_TransitionID")]
-		NSString TransitionID { get; }
+		NSString TransitionIdKey { get; }
 
 		[Field ("kCMSampleBufferAttachmentKey_TrimDurationAtStart")]
-		NSString TrimDurationAtStart { get; }
+		NSString TrimDurationAtStartKey { get; }
 
 		[Field ("kCMSampleBufferAttachmentKey_TrimDurationAtEnd")]
-		NSString TrimDurationAtEnd { get; }
+		NSString TrimDurationAtEndKey { get; }
 
 		[Field ("kCMSampleBufferAttachmentKey_SpeedMultiplier")]
-		NSString SpeedMultiplier { get; }
+		NSString SpeedMultiplierKey { get; }
 
 		[Field ("kCMSampleBufferAttachmentKey_Reverse")]
 		NSString Reverse { get; }
@@ -112,39 +112,127 @@ namespace XamCore.CoreMedia {
 		NSString EndsPreviousSampleDuration { get; }
 
 		[Field ("kCMSampleBufferAttachmentKey_SampleReferenceURL")]
-		NSString SampleReferenceURL { get; }
+		NSString SampleReferenceUrlKey { get; }
 
 		[Field ("kCMSampleBufferAttachmentKey_SampleReferenceByteOffset")]
-		NSString SampleReferenceByteOffset { get; }
+		NSString SampleReferenceByteOffsetKey { get; }
 
 		[Field ("kCMSampleBufferAttachmentKey_GradualDecoderRefresh")]
-		NSString GradualDecoderRefresh { get; }
+		NSString GradualDecoderRefreshKey { get; }
 
-#if !MONOMAC
-		[iOS (6,0)]
+		[iOS (6,0)][NoMac]
 		[Field ("kCMSampleBufferAttachmentKey_DroppedFrameReason")]
 		NSString DroppedFrameReason { get; }
 
-		[iOS (9,0)]
+		[iOS (9,0)][NoMac]
 		[Field ("kCMSampleBufferAttachmentKey_StillImageLensStabilizationInfo")]
 		NSString StillImageLensStabilizationInfo { get; }
 
-		[iOS (9,0)]
+		[iOS (9,0)][NoMac]
 		[Field ("kCMSampleBufferLensStabilizationInfo_Active")]
 		NSString BufferLensStabilizationInfo_Active { get; }
 
-		[iOS (9,0)]
+		[iOS (9,0)][NoMac]
 		[Field ("kCMSampleBufferLensStabilizationInfo_OutOfRange")]
 		NSString BufferLensStabilizationInfo_OutOfRange { get; }
 
-		[iOS (9,0)]
+		[iOS (9,0)][NoMac]
 		[Field ("kCMSampleBufferLensStabilizationInfo_Unavailable")]
 		NSString BufferLensStabilizationInfo_Unavailable { get; }
 
-		[iOS (9,0)]
+		[iOS (9,0)][NoMac]
 		[Field ("kCMSampleBufferLensStabilizationInfo_Off")]
 		NSString BufferLensStabilizationInfo_Off { get; }
-#endif
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[Field ("kCMSampleAttachmentKey_HEVCTemporalLevelInfo")]
+		NSString HevcTemporalLevelInfoKey { get; }
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[Field ("kCMSampleAttachmentKey_HEVCTemporalSubLayerAccess")]
+		NSString HevcTemporalSubLayerAccessKey { get; }
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[Field ("kCMSampleAttachmentKey_HEVCStepwiseTemporalSubLayerAccess")]
+		NSString HevcStepwiseTemporalSubLayerAccessKey { get; }
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[Field ("kCMSampleAttachmentKey_HEVCSyncSampleNALUnitType")]
+		NSString HevcSyncSampleNalUnitTypeKey { get; }
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[Field ("kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix")]
+		NSString CameraIntrinsicMatrixKey { get; }
+	}
+
+	[StrongDictionary ("CMSampleAttachmentKey")]
+	interface CMSampleBufferAttachmentSettings {
+
+		NSDictionary PostNotificationWhenConsumed { get; set; }
+		bool ResumeOutput { get; set; }
+		int TransitionId { get; set; }
+		NSDictionary TrimDurationAtStart { get; set; }
+		NSDictionary TrimDurationAtEnd { get; set; }
+		float SpeedMultiplier { get; set; }
+		NSUrl SampleReferenceUrl { get; set; }
+		int SampleReferenceByteOffset { get; set; }
+		NSNumber GradualDecoderRefresh { get; set; }
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[StrongDictionary]
+		CMHevcTemporalLevelInfoSettings HevcTemporalLevelInfo { get; set; }
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		bool HevcTemporalSubLayerAccess { get; set; }
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		bool HevcStepwiseTemporalSubLayerAccess { get; set; }
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		int HevcSyncSampleNalUnitType { get; set; }
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		NSData CameraIntrinsicMatrix { get; set; }
+	}
+
+	[Internal]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
+	[Static]
+	interface CMHevcTemporalLevelInfoKeys {
+
+		[Field ("kCMHEVCTemporalLevelInfoKey_TemporalLevel")]
+		NSString TemporalLevelKey { get; }
+
+		[Field ("kCMHEVCTemporalLevelInfoKey_ProfileSpace")]
+		NSString ProfileSpaceKey { get; }
+
+		[Field ("kCMHEVCTemporalLevelInfoKey_TierFlag")]
+		NSString TierFlagKey { get; }
+
+		[Field ("kCMHEVCTemporalLevelInfoKey_ProfileIndex")]
+		NSString ProfileIndexKey { get; }
+
+		[Field ("kCMHEVCTemporalLevelInfoKey_ProfileCompatibilityFlags")]
+		NSString ProfileCompatibilityFlagsKey { get; }
+
+		[Field ("kCMHEVCTemporalLevelInfoKey_ConstraintIndicatorFlags")]
+		NSString ConstraintIndicatorFlagsKey { get; }
+
+		[Field ("kCMHEVCTemporalLevelInfoKey_LevelIndex")]
+		NSString LevelIndexKey { get; }
+	}
+
+	[iOS (11,0), Mac (10,13), TV (11,0)]
+	[StrongDictionary ("CMHevcTemporalLevelInfoKeys")]
+	interface CMHevcTemporalLevelInfoSettings {
+
+		int TemporalLevel { get; set; }
+		int ProfileSpace { get; set; }
+		int TierFlag { get; set; }
+		int ProfileIndex { get; set; }
+		NSData ProfileCompatibilityFlags { get; set; }
+		NSData ConstraintIndicatorFlags { get; set; }
+		int LevelIndex { get; set; }
 	}
 
 #if false
