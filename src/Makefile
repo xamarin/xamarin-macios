@@ -482,6 +482,7 @@ MAC_COMMON_DEFINES = -define:NET_2_0,XAMARIN_MAC,MONOMAC,XAMCORE_2_0,__UNIFIED__
 MAC_full_ARGS = -sdk:4.5 -define:NO_SYSTEM_DRAWING -define:XAMMAC_SYSTEM_MONO
 MAC_mobile_ARGS = -nostdlib -r:mscorlib -lib:../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac
 MAC_BOOTSTRAP_DEFINES = $(MAC_COMMON_DEFINES),COREBUILD
+MAC_GENERATED_DEFINES = -d:MONOMAC -d:XAMARIN_MAC -d:XAMCORE_2_0 -d:__UNIFIED__
 
 SN_KEY = $(PRODUCT_KEY_PATH)
 
@@ -568,9 +569,7 @@ $(MAC_BUILD_DIR)/$(1)/_bmac.exe: $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_APIS) $(GE
 
 $(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_$(1)_GENERATOR) $(MAC_APIS) $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_BUILD_DIR)/$(1)/pmcs $(MAC_BUILD_DIR)/$(7)
 	$$(call Q_PROF_GEN,mac/$(1)) PMCS_PROFILE=$(6) $$(MAC_$(1)_GENERATE) \
-		-d:MONOMAC \
-		-d:XAMARIN_MAC \
-		-d:XAMCORE_2_0 -d:__UNIFIED__ \
+		$(MAC_GENERATED_DEFINES) \
 		-compiler:$(MAC_BUILD_DIR)/$(1)/pmcs \
 		-process-enums \
 		-warnaserror:$(MAC_GENERATOR_WARNASERROR) \
@@ -779,6 +778,7 @@ WATCH_LIBDIR = $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS
 WATCH_BMONO = MONO_PATH=$(WATCH_LIBDIR)/repl $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bwatch-mono
 WATCH_GENERATOR=build/common/bgen.exe
 WATCH_GENERATE=$(SYSTEM_MONO) --debug $(WATCH_GENERATOR)
+WATCH_GENERATED_DEFINES= -d:WATCH -d:XAMCORE_3_0 -d:XAMCORE_2_0 -d:__UNIFIED__
 
 WATCHOS_EXTRA_CORE_SOURCES = \
     $(WATCH_BUILD_DIR)/Constants.cs    \
@@ -854,8 +854,7 @@ $(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $
 		-r=$(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/System.dll \
 		-ns=MonoTouch.ObjCRuntime                                \
 		-native-exception-marshalling                            \
-		-d:WATCH                                                 \
-		-d:XAMCORE_3_0 -d:XAMCORE_2_0 -d:__UNIFIED__ \
+		$(WATCH_GENERATED_DEFINES)				\
 		--ns:ObjCRuntime                                         \
 		$(WATCHOS_APIS)                                            \
 		--target-framework=Xamarin.WatchOS,v1.0                     \
@@ -1011,6 +1010,7 @@ TVOS_LIBDIR = $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS
 TVOS_BMONO = MONO_PATH=$(TVOS_LIBDIR)/repl $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btv-mono
 TVOS_GENERATOR=build/common/bgen.exe
 TVOS_GENERATE=$(SYSTEM_MONO) --debug $(TVOS_GENERATOR)
+TVOS_GENERATED_DEFINES= -d:TVOS -d:XAMCORE_3_0 -d:XAMCORE_2_0 -d:__UNIFIED__
 
 TVOS_EXTRA_CORE_SOURCES = \
 	$(TVOS_BUILD_DIR)/Constants.cs    \
@@ -1074,14 +1074,13 @@ $(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_
 		-compiler=$(TVOS_PMCS)                                    \
 		-nostdlib -noconfig                                      \
 		-no-mono-path                                            \
-		-d:XAMCORE_3_0 -d:XAMCORE_2_0 -d:__UNIFIED__				 \
 		-tmpdir=$(TVOS_BUILD_DIR)/tvos                         \
 		-baselib=$(TVOS_BUILD_DIR)/tvos/core.dll               \
 		-attributelib=$(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll \
 		-r=$(MONO_PATH)/mcs/class/lib/monotouch_tv/System.dll \
+		$(TVOS_GENERATED_DEFINES)				\
 		-ns=MonoTouch.ObjCRuntime                                \
 		-native-exception-marshalling                            \
-		-d:TVOS                                                  \
 		--ns:ObjCRuntime                                         \
 		$(TVOS_APIS)                                            \
 		--target-framework=Xamarin.TVOS,v1.0                     \
