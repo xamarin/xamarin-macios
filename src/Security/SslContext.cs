@@ -641,22 +641,22 @@ namespace XamCore.Security {
 			return SSLSetOCSPResponse (Handle, response.Handle);
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][NoMac] //[Mac (10,13)] Apple forgot to export SSLSetALPNProtocols. https://bugs.swift.org/browse/SR-6131
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SSLSetALPNProtocols (IntPtr /* SSLContextRef */ context, IntPtr /* CFArrayRef */ protocols);
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][NoMac] //[Mac (10,13)]  Apple forgot to export SSLSetALPNProtocols. https://bugs.swift.org/browse/SR-6131
 		public int SetAlpnProtocols (string[] protocols)
 		{
 			using (var array = NSArray.FromStrings (protocols))
 				return SSLSetALPNProtocols (Handle, array.Handle);
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][NoMac] //[Mac (10,13)] Apple forgot to export SSLCopyALPNProtocols.
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SSLCopyALPNProtocols (IntPtr /* SSLContextRef */ context, ref IntPtr /* CFArrayRef* */ protocols);
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][NoMac] //[Mac (10,13)] Apple forgot to export the SSLCopyALPNProtocols.
 		public string[] GetAlpnProtocols (out int error)
 		{
 			IntPtr protocols = IntPtr.Zero; // must be null, CFArray allocated by SSLCopyALPNProtocols
