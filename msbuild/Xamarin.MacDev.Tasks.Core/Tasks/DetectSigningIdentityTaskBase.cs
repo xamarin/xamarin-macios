@@ -353,7 +353,7 @@ namespace Xamarin.MacDev.Tasks
 				return !Log.HasLoggedErrors;
 			}
 
-			if (!RequireProvisioningProfile && string.IsNullOrEmpty (ProvisioningProfile)) {
+			if (!RequireProvisioningProfile) {
 				if (SdkIsSimulator && AppleSdkSettings.XcodeVersion.Major >= 8) {
 					// Note: Starting with Xcode 8.0, we need to codesign iOS Simulator builds in order for them to run.
 					// The "-" key is a special value allowed by the codesign utility that allows us to get away with
