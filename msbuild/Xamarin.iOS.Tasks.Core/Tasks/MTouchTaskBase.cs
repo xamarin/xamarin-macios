@@ -40,14 +40,14 @@ namespace Xamarin.iOS.Tasks
 	{
 		class GccOptions
 		{
-			public ProcessArgumentBuilder Arguments { get; private set; }
+			public CommandLineArgumentBuilder Arguments { get; private set; }
 			public HashSet<string> WeakFrameworks { get; private set; }
 			public HashSet<string> Frameworks { get; private set; }
 			public bool Cxx { get; set; }
 
 			public GccOptions ()
 			{
-				Arguments = new ProcessArgumentBuilder ();
+				Arguments = new CommandLineArgumentBuilder ();
 				WeakFrameworks = new HashSet<string> ();
 				Frameworks = new HashSet<string> ();
 			}
@@ -285,7 +285,7 @@ namespace Xamarin.iOS.Tasks
 				// Note: these get merged into gccArgs by our caller
 				value = item.GetMetadata ("LinkerFlags");
 				if (!string.IsNullOrEmpty (value)) {
-					var linkerFlags = ProcessArgumentBuilder.Parse (value);
+					var linkerFlags = CommandLineArgumentBuilder.Parse (value);
 
 					foreach (var flag in linkerFlags)
 						gcc.Arguments.AddQuoted (flag);
@@ -356,7 +356,7 @@ namespace Xamarin.iOS.Tasks
 
 		protected override string GenerateCommandLineCommands ()
 		{
-			var args = new ProcessArgumentBuilder ();
+			var args = new CommandLineArgumentBuilder ();
 			TargetArchitecture architectures;
 			bool msym;
 
@@ -498,7 +498,7 @@ namespace Xamarin.iOS.Tasks
 			var gcc = new GccOptions ();
 
 			if (!string.IsNullOrEmpty (ExtraArgs)) {
-				var extraArgs = ProcessArgumentBuilder.Parse (ExtraArgs);
+				var extraArgs = CommandLineArgumentBuilder.Parse (ExtraArgs);
 				var target = MainAssembly.ItemSpec;
 				string projectDir;
 
@@ -547,7 +547,7 @@ namespace Xamarin.iOS.Tasks
 						}
 
 						if (!string.IsNullOrEmpty (flags)) {
-							var gccArgs = ProcessArgumentBuilder.Parse (flags);
+							var gccArgs = CommandLineArgumentBuilder.Parse (flags);
 
 							for (int j = 0; j < gccArgs.Length; j++)
 								gcc.Arguments.Add (StringParserService.Parse (gccArgs[j], customTags));

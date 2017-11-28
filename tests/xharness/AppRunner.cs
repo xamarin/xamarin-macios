@@ -94,9 +94,14 @@ namespace xharness
 			set { log_directory = value; }
 		}
 
-		Log main_log;
-		public Logs Logs = new Logs ();
+		Logs logs;
+		public Logs Logs {
+			get {
+				return logs ?? (logs = new Logs (LogDirectory));
+			}
+		}
 
+		Log main_log;
 		public Log MainLog {
 			get { return main_log; }
 			set { main_log = value; }
@@ -123,7 +128,7 @@ namespace xharness
 			var sims = new Simulators () {
 				Harness = Harness,
 			};
-			await sims.LoadAsync (Logs.CreateStream (LogDirectory, "simulator-list.log", "Simulator list"));
+			await sims.LoadAsync (Logs.Create ("simulator-list.log", "Simulator list"));
 			simulators = await sims.FindAsync (Target, main_log);
 
 			return simulators != null;
@@ -336,7 +341,7 @@ namespace xharness
 				ensure_clean_simulator_state = value;
 			}
 		}
-		public bool TestsSucceeded (LogStream listener_log, bool timed_out, bool crashed)
+		public bool TestsSucceeded (Log listener_log, bool timed_out, bool crashed)
 		{
 			string log;
 			using (var reader = listener_log.GetReader ())
@@ -372,9 +377,9 @@ namespace xharness
 						mainResultNode.Attributes ["name"].Value = Target.AsString ();
 						// store a clean version of the logs, later this will be used by the bots to show results in github/web
 						var path = listener_log.FullPath;
-						path = path.Replace (".log", ".xml");
+						path = Path.ChangeExtension (path, "xml");
 						testsResults.Save (path);
-						Logs.Add (new LogFile ("Test xml", path));
+						Logs.AddFile (path, "Test xml");
 					}
 				} catch (Exception e) {
 					main_log.WriteLine ("Could not parse xml result file: {0}", e);
@@ -433,8 +438,8 @@ namespace xharness
 		public async Task<int> RunAsync ()
 		{
 			CrashReportSnapshot crash_reports;
-			LogStream device_system_log = null;
-			LogStream listener_log = null;
+			Log device_system_log = null;
+			Log listener_log = null;
 			Log run_log = main_log;
 
 			Initialize ();
@@ -498,7 +503,7 @@ namespace xharness
 			args.AppendFormat (" -argument=-app-arg:-transport:{0}", transport);
 			args.AppendFormat (" -setenv=NUNIT_TRANSPORT={0}", transport);
 
-			listener_log = Logs.CreateStream (LogDirectory, string.Format ("test-{0}-{1:yyyyMMdd_HHmmss}.log", mode, DateTime.Now), "Test log");
+			listener_log = Logs.Create ($"test-{mode}-{Harness.Timestamp}.log", "Test log");
 
 			SimpleListener listener;
 			switch (transport) {
@@ -578,10 +583,10 @@ namespace xharness
 						args.Append (" --stdout=").Append (StringUtils.Quote (stderr_tty));
 						args.Append (" --stderr=").Append (StringUtils.Quote (stderr_tty));
 					} else {
-						var stdout_log = Logs.CreateFile ("Standard output", Path.Combine (LogDirectory, "stdout.log"));
-						var stderr_log = Logs.CreateFile ("Standard error", Path.Combine (LogDirectory, "stderr.log"));
-						args.Append (" --stdout=").Append (StringUtils.Quote (stdout_log.FullPath));
-						args.Append (" --stderr=").Append (StringUtils.Quote (stderr_log.FullPath));
+						var stdout_log = Logs.CreateFile ($"stdout-{Harness.Timestamp}.log", "Standard output");
+						var stderr_log = Logs.CreateFile ($"stderr-{Harness.Timestamp}.log", "Standard error");
+						args.Append (" --stdout=").Append (StringUtils.Quote (stdout_log));
+						args.Append (" --stderr=").Append (StringUtils.Quote (stderr_log));
 					}
 				}
 
@@ -591,7 +596,7 @@ namespace xharness
 					main_log.WriteLine ("System log for the '{1}' simulator is: {0}", sim.SystemLog, sim.Name);
 					bool isCompanion = sim != simulator;
 
-					var log = new CaptureLog (sim.SystemLog, entire_file: Harness.Action != HarnessAction.Jenkins)
+					var log = new CaptureLog (Logs, sim.SystemLog, entire_file: Harness.Action != HarnessAction.Jenkins)
 					{
 						Path = Path.Combine (LogDirectory, sim.Name + ".log"),
 						Description = isCompanion ? "System log (companion)" : "System log",
@@ -678,7 +683,7 @@ namespace xharness
 				
 				AddDeviceName (args);
 
-				device_system_log = Logs.CreateStream (LogDirectory, $"device-{device_name}-{DateTime.Now:yyyyMMdd_HHmmss}.log", "Device log");
+				device_system_log = Logs.Create ($"device-{device_name}-{Harness.Timestamp}.log", "Device log");
 				var logdev = new DeviceLogCapturer () {
 					Harness =  Harness,
 					Log = device_system_log,
