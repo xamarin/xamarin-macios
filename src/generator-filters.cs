@@ -78,16 +78,9 @@ public partial class Generator {
 		print ("public {0} (NSCoder coder) : base (NSObjectFlag.Empty)", type_name);
 		print ("{");
 		indent++;
+		print ("IsDirectBinding = false;");
 		print ("IntPtr h;");
-		print ("if (IsDirectBinding) {");
-		indent++;
-		print ("h = global::{0}.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle (\"initWithCoder:\"), coder.Handle);", ns.CoreObjCRuntime);
-		indent--;
-		print ("} else {");
-		indent++;
 		print ("h = global::{0}.Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, Selector.GetHandle (\"initWithCoder:\"), coder.Handle);", ns.CoreObjCRuntime);
-		indent--;
-		print ("}");
 		print ("InitializeHandle (h, \"initWithCoder:\");");
 		indent--;
 		print ("}");
@@ -247,6 +240,7 @@ public partial class Generator {
 	void PrintEmptyBody ()
 	{
 		print ("{");
+		print ("\tIsDirectBinding = false;");
 		print ("}");
 		print ("");
 	}
