@@ -5,6 +5,7 @@
 using System;
 using System.IO;
 using System.Xml;
+using System.Text;
 
 using NUnit.Framework;
 
@@ -24,7 +25,7 @@ namespace Xamarin.Tests
 
 			var plist = Path.Combine (Configuration.SdkRoot, "Versions.plist");
 			var xml = new XmlDocument ();
-			using (var sr = new StringReader (plist))
+			using (var sr = new StreamReader (plist, Encoding.UTF8, true))
 			using (var reader = XmlReader.Create (sr, settings)) {
 				xml.Load (reader);
 				var version = xml.SelectSingleNode ("//dict/key[text()='MonoVersion']")?.NextSibling?.InnerText;
