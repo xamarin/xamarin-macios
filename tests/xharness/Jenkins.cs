@@ -30,7 +30,6 @@ namespace xharness
 		public bool IncludeMacBindingProject;
 		public bool IncludeSimulator = true;
 		public bool IncludeDevice;
-		public bool IncludeSystemPermissionTests = true; // tests that require access to system resources (system contacts, photo library, etc) in order to work
 		public bool IncludeXtro;
 
 		public Logs Logs = new Logs ();
@@ -135,7 +134,7 @@ namespace xharness
 			if (!IncludeBcl && project.IsBclTest)
 				return false;
 
-			if (!IncludeSystemPermissionTests && project.Name == "introspection")
+			if (!Harness.IncludeSystemPermissionTests && project.Name == "introspection")
 				return false;
 
 			return true;
@@ -416,7 +415,9 @@ namespace xharness
 			SetEnabled (labels, "mac-classic", ref IncludeClassicMac);
 			SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
 			SetEnabled (labels, "ios-simulator", ref IncludeSimulator);
-			SetEnabled (labels, "system-permission", ref IncludeSystemPermissionTests);
+			bool inc_permission_tests = Harness.IncludeSystemPermissionTests;
+			SetEnabled (labels, "system-permission", ref inc_permission_tests);
+			Harness.IncludeSystemPermissionTests = inc_permission_tests;
 		}
 
 		void SetEnabled (HashSet<string> labels, string testname, ref bool value)
@@ -2857,7 +2858,6 @@ function oninitialload ()
 						DeviceName = Device.Name,
 						CompanionDeviceName = CompanionDevice?.Name,
 						Configuration = ProjectConfiguration,
-						IncludeSystemPermissionTests = Jenkins.IncludeSystemPermissionTests,
 					};
 
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
@@ -2907,7 +2907,6 @@ function oninitialload ()
 								DeviceName = Device.Name,
 								CompanionDeviceName = CompanionDevice?.Name,
 								Configuration = ProjectConfiguration,
-								IncludeSystemPermissionTests = Jenkins.IncludeSystemPermissionTests,
 							};
 							additional_runner = todayRunner;
 							await todayRunner.RunAsync ();
@@ -2994,7 +2993,6 @@ function oninitialload ()
 				Target = AppRunnerTarget,
 				LogDirectory = LogDirectory,
 				MainLog = Logs.CreateStream (LogDirectory, $"run-{Device.UDID}-{Timestamp}.log", "Run log"),
-				IncludeSystemPermissionTests = Jenkins.IncludeSystemPermissionTests,
 			};
 			runner.Simulators = Simulators;
 			runner.Initialize ();
