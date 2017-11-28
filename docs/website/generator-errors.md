@@ -174,7 +174,7 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 
 ### <a name='BI1061'/>BI1061: The attribute '{attribute}' found on '{member}' is not a valid binding attribute. Please remove this attribute.
 
-### <a name='BI1118'/>BI1062: The '*' member contains ref/out parameters and must not be decorated with [Async].
+### <a name='BI1062'/>BI1062: The '*' member contains ref/out parameters and must not be decorated with [Async].
 
 # BI11xx: warnings
 
