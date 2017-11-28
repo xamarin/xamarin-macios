@@ -67,8 +67,10 @@ IOS_EXTRA_SOURCES = \
 IOS_CORE_SOURCES += $(IOS_EXTRA_SOURCES)
 IOS_SOURCES += $(IOS_EXTRA_SOURCES)
 
-IOS_GENERATOR_FLAGS = -inline-selectors -d:IOS -process-enums -warnaserror:$(IOS_GENERATOR_WARNASERROR) -d:XAMCORE_2_0 -d:__UNIFIED__
-IOS_DEFINES = -define:IPHONE -define:IOS -define:MONOTOUCH -d:NET_2_0 -d:__IOS__ $(APPLETLS_DEFINES) -d:XAMCORE_2_0 -d:__UNIFIED__
+IOS_GENERATOR_FLAGS = -inline-selectors -d:IOS -process-enums -warnaserror:$(IOS_GENERATOR_WARNASERROR)
+IOS_GENERATOR_native_FLAGS = -d:XAMCORE_2_0 -d:__UNIFIED__
+IOS_DEFINES = -define:IPHONE -define:IOS -define:MONOTOUCH -d:NET_2_0 -d:__IOS__ $(APPLETLS_DEFINES)
+IOS_native_DEFINES = -d:XAMCORE_2_0 -d:__UNIFIED__
 IOS_LIBDIR = $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
 IOS_PMCS = $(IOS_BUILD_DIR)/pmcs
 IOS_BMONO = MONO_PATH=$(IOS_LIBDIR) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch-mono
@@ -122,6 +124,7 @@ $(IOS_BUILD_DIR)/$(1)/core.dll: $$(IOS_PMCS) $$(IOS_CORE_SOURCES) frameworks.sou
 		-r:$(IOS_LIBDIR)/Mono.Security.dll \
 		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		-define:COREBUILD $$(IOS_DEFINES) \
+		$$(IOS_$(1)_DEFINES) \
 		$$(IOS_CORE_SOURCES)
 
 # generator.exe
@@ -142,6 +145,7 @@ xi_native_profile=--target-framework=Xamarin.iOS,v1.0
 $(IOS_BUILD_DIR)/$(1)/generated_sources: $$(IOS_$(1)_GENERATOR) $$(IOS_APIS) $(IOS_BUILD_DIR)/$(1)/core.dll $(IOS_PMCS) $(IOS_BUILD_DIR)/native/$(4)
 	$$(call Q_PROF_GEN,ios/$(1)) PMCS_PROFILE=$(3) $$(IOS_$(1)_GENERATE) \
 		$$(IOS_GENERATOR_FLAGS) \
+		$$(IOS_GENERATOR_$(1)_FLAGS) \
 		-core \
 		-sourceonly=$$@ \
 		-compiler=$$(IOS_PMCS) \
@@ -157,18 +161,20 @@ $(IOS_BUILD_DIR)/$(1)/generated_sources: $$(IOS_$(1)_GENERATOR) $$(IOS_APIS) $(I
 		$$(xi_$(1)_profile) \
 		$$(IOS_APIS)
 endef
+$(eval $(call IOS_GENERATOR_template,compat,--ns=MonoTouch.ObjCRuntime -p,compat-ios,monotouch.BindingAttributes.dll)) 
 $(eval $(call IOS_GENERATOR_template,native,--ns=ObjCRuntime,native,Xamarin.iOS.BindingAttributes.dll))
 
 define IOS_TARGETS_template
 IOS_VARIANTS_TARGETS += $(IOS_BUILD_DIR)/$(1)/$(3)
 
-# Xamarin.iOS.dll
+# monotouch.dll | Xamarin.iOS.dll
 $(IOS_BUILD_DIR)/$(1)/$(3): $$(IOS_SOURCES) $(IOS_BUILD_DIR)/$(4)/generated_sources $(PRODUCT_KEY_PATH)
 	@mkdir -p $(IOS_BUILD_DIR)/$(1)
 	$$(call Q_PROF_PMCS,ios/$(1)) PMCS_PROFILE=$(5) $$(IOS_PMCS) -out:$$@ -target:library -debug -unsafe -optimize \
 		-r:$(IOS_LIBDIR)/Mono.Security.dll \
 		$$($(6)_ARGS) \
 		-keyfile:$(PRODUCT_KEY_PATH) $$(IOS_DEFINES) \
+		$$(IOS_$(4)_DEFINES) \
 		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$$(IOS_SOURCES) @$(IOS_BUILD_DIR)/$(4)/generated_sources
 
