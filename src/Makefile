@@ -834,6 +834,7 @@ $(WATCH_BUILD_DIR)/watch/generator.exe: $(GENERATOR_SOURCES) $(WATCH_BUILD_DIR)/
 	$(call Q_PROF_PMCS,watch) PMCS_PROFILE=watch $(WATCH_PMCS) -out:$@ -debug -unsafe \
 		-r:$(WATCH_BUILD_DIR)/watch/core.dll \
 		$(GENERATOR_SOURCES)                  \
+		$(WATCH_DEFINES)     \
 		$(GENERATOR_DEFINES)                  \
 
 # generated_sources
@@ -846,7 +847,6 @@ $(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $
 		-sourceonly=$@                                           \
 		-compiler=$(WATCH_PMCS)                                    \
 		-nostdlib -noconfig                                      \
-		-d:XAMCORE_2_0 -d:__UNIFIED__ \
 		-no-mono-path                                            \
 		-tmpdir=$(WATCH_BUILD_DIR)/watch                         \
 		-baselib=$(WATCH_BUILD_DIR)/watch/core.dll               \
@@ -855,6 +855,7 @@ $(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $
 		-ns=MonoTouch.ObjCRuntime                                \
 		-native-exception-marshalling                            \
 		-d:WATCH                                                 \
+		-d:XAMCORE_3_0 -d:XAMCORE_2_0 -d:__UNIFIED__ \
 		--ns:ObjCRuntime                                         \
 		$(WATCHOS_APIS)                                            \
 		--target-framework=Xamarin.WatchOS,v1.0                     \
@@ -1073,7 +1074,7 @@ $(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_
 		-compiler=$(TVOS_PMCS)                                    \
 		-nostdlib -noconfig                                      \
 		-no-mono-path                                            \
-		-d:XAMCORE_2_0 -d:__UNIFIED__				 \
+		-d:XAMCORE_3_0 -d:XAMCORE_2_0 -d:__UNIFIED__				 \
 		-tmpdir=$(TVOS_BUILD_DIR)/tvos                         \
 		-baselib=$(TVOS_BUILD_DIR)/tvos/core.dll               \
 		-attributelib=$(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll \
@@ -1089,6 +1090,7 @@ $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.dll: $(TVOS_SOURCES) $(TVOS_BUILD_DIR)/tv
 	$(call Q_PROF_PMCS,tvos) PMCS_PROFILE=tvos-64 $(TVOS_PMCS) -out:$@ -target:library -debug -unsafe -optimize \
 		-keyfile:$(PRODUCT_KEY_PATH) $(TVOS_DEFINES) \
 		-r:$(TVOS_LIBDIR)/Mono.Security.dll \
+		-d:XAMCORE_3_0 -d:XAMCORE_2_0 -d:__UNIFIED__				 \
 		$(64_ARGS) \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$(TVOS_SOURCES) @$(TVOS_BUILD_DIR)/tvos/generated_sources
