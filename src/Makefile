@@ -1089,7 +1089,6 @@ $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.dll: $(TVOS_SOURCES) $(TVOS_BUILD_DIR)/tv
 	$(call Q_PROF_PMCS,tvos) PMCS_PROFILE=tvos-64 $(TVOS_PMCS) -out:$@ -target:library -debug -unsafe -optimize \
 		-keyfile:$(PRODUCT_KEY_PATH) $(TVOS_DEFINES) \
 		-r:$(TVOS_LIBDIR)/Mono.Security.dll \
-		-d:XAMCORE_3_0 -d:XAMCORE_2_0 -d:__UNIFIED__				 \
 		$(64_ARGS) \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$(TVOS_SOURCES) @$(TVOS_BUILD_DIR)/tvos/generated_sources
