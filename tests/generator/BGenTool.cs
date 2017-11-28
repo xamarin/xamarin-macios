@@ -259,7 +259,7 @@ namespace Xamarin.Tests
 		void LoadAssembly ()
 		{
 			if (assembly == null)
-				assembly = AssemblyDefinition.ReadAssembly (Path.Combine (TmpDirectory, Path.GetFileNameWithoutExtension (ApiDefinitions [0]) + ".dll"));
+				assembly = AssemblyDefinition.ReadAssembly (Path.Combine (TmpDirectory, Path.GetFileNameWithoutExtension (ApiDefinitions [0]).Replace ('-', '_') + ".dll"));
 		}
 
 		void EnsureTempDir ()

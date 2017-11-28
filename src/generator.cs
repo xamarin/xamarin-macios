@@ -53,6 +53,16 @@ using System.ComponentModel;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 
+public static class GeneratorExtensions
+{
+	public static StreamWriter Write (this StreamWriter sw, char c, int count)
+	{
+		for (int i = 0; i < count; i++)
+			sw.Write (c);
+		return sw;
+	}
+}
+
 public static class ReflectionExtensions {
 	public static BaseTypeAttribute GetBaseTypeAttribute (Type type)
 	{
@@ -910,7 +920,8 @@ public partial class Generator : IMemberGatherer {
 	//
 	// Properties and definitions to support binding third-party Objective-C libraries
 	//
-	string init_binding_type;
+	string is_direct_binding_value; // An expression that calculates the IsDirectBinding value. Might not be a constant expression. This will be added to every constructor for a type.
+	bool? is_direct_binding; // If a constant value for IsDirectBinding is known, it's stored here. Will be null if no constant value is known.
 
 	// Whether to use ZeroCopy for strings, defaults to false
 	public bool ZeroCopyStrings;
@@ -2199,8 +2210,6 @@ public partial class Generator : IMemberGatherer {
 			marshal_types.Add (TypeManager.AURenderEventEnumerator);
 		}
 
-		init_binding_type = String.Format ("IsDirectBinding = GetType ().Assembly == global::{0}.this_assembly;", ns.Messaging);
-
 		m = GetOutputStream ("ObjCRuntime", "Messaging");
 		Header (m);
 		print (m, "namespace {0} {{", ns.ObjCRuntime);
@@ -3029,6 +3038,40 @@ public partial class Generator : IMemberGatherer {
 		for (int i=0; i < tabs; i++)
 			sw.Write ('\t');
 		sw.WriteLine ("[CompilerGenerated]");
+	}
+
+	static void WriteIsDirectBindingCondition (StreamWriter sw, ref int tabs, bool? is_direct_binding, string is_direct_binding_value, Func<string> trueCode, Func<string> falseCode)
+	{
+		if (is_direct_binding_value != null)
+			sw.Write ('\t', tabs).WriteLine ("IsDirectBinding = {0};", is_direct_binding_value);
+		
+		// If we don't know the IsDirectBinding value, we need the condition
+		if (!is_direct_binding.HasValue) {
+			sw.Write ('\t', tabs).WriteLine ("if (IsDirectBinding) {");
+			tabs++;
+		}
+
+		// We need the true part if we don't know, or if we know it's true
+		if (is_direct_binding != false) {
+			var code = trueCode ();
+			if (!string.IsNullOrEmpty (code))
+				sw.Write ('\t', tabs).WriteLine (code);
+		}
+		
+		if (!is_direct_binding.HasValue)
+			sw.Write ('\t', tabs - 1).WriteLine ("} else {");
+
+		// We need the false part if we don't know, or if we know it's false
+		if (is_direct_binding != true) {
+			var code = falseCode ();
+			if (!string.IsNullOrEmpty (code))
+				sw.Write ('\t', tabs).WriteLine (code);
+		}
+		
+		if (!is_direct_binding.HasValue) {
+			tabs--;
+			sw.Write ('\t', tabs).WriteLine ("}");
+		}
 	}
 	
 	public void print_generated_code ()
@@ -4196,26 +4239,18 @@ public partial class Generator : IMemberGatherer {
 					GenerateInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type);
 				}
 			} else {
-				if (BindThirdPartyLibrary && mi.Name == "Constructor"){
-					print (init_binding_type);
-				}
-				
 				var may_throw = ShouldMarshalNativeExceptions (mi);
 				var null_handle = may_throw && mi.Name == "Constructor";
 				if (null_handle) {
 					print ("try {");
 					indent++;
 				}
-				
-				print ("if (IsDirectBinding) {{", type.Name);
-				indent++;
-				GenerateInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type);
-				indent--;
-				print ("} else {");
-				indent++;
-				GenerateInvoke (true, mi, minfo, sel, argsArray, needs_temp, category_type);
-				indent--;
-				print ("}");
+
+				WriteIsDirectBindingCondition (sw, ref indent, is_direct_binding,
+							       mi.Name == "Constructor" ? is_direct_binding_value : null, // We only need to print the is_direct_binding value in constructors
+				                               () => { GenerateInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type); return null; },
+				                               () => { GenerateInvoke (true, mi, minfo, sel, argsArray, needs_temp, category_type); return null; }
+							      );
 				
 				if (null_handle) {
 					indent--;
@@ -5762,6 +5797,11 @@ public partial class Generator : IMemberGatherer {
 
 			bool core_image_filter = false;
 			string class_mod = null;
+
+			is_direct_binding_value = null;
+			is_direct_binding = null;
+			if (BindThirdPartyLibrary)
+				is_direct_binding_value = string.Format ("GetType ().Assembly == global::{0}.this_assembly", ns.Messaging);
 			if (is_static_class || is_category_class || is_partial) {
 				base_type = TypeManager.System_Object;
 				if (!is_partial)
@@ -5770,14 +5810,24 @@ public partial class Generator : IMemberGatherer {
 				if (is_protocol)
 					print ("[Protocol]");
 				core_image_filter = AttributeManager.HasAttribute<CoreImageFilterAttribute> (type);
-				if (!type.IsEnum && !core_image_filter)
-					print ("[Register(\"{0}\", {1})]", objc_type_name, AttributeManager.HasAttribute<SyntheticAttribute> (type) || is_model ? "false" : "true");
+				if (!type.IsEnum && !core_image_filter) {
+					if (is_model || AttributeManager.HasAttribute<SyntheticAttribute> (type)) {
+						is_direct_binding = false;
+						is_direct_binding_value = "false";
+					}
+					print ("[Register(\"{0}\", {1})]", objc_type_name, is_direct_binding == false ? "false" : "true");
+				}
 				if (is_abstract || need_abstract.ContainsKey (type))
 					class_mod = "abstract ";
 				else if (is_sealed)
 					class_mod = "sealed ";
 			} 
 			
+			if (is_sealed && is_direct_binding == null) {
+				is_direct_binding = true;
+				is_direct_binding_value = "true";
+			}
+				
 			if (is_model){
 				if (is_category_class)
 					ErrorHelper.Show (new BindingException (1022, true, "Category classes can not use the [Model] attribute"));
@@ -5942,6 +5992,8 @@ public partial class Generator : IMemberGatherer {
 							sw.WriteLine ("\t\t[Export (\"init\")]");
 							sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, TypeName);
 							sw.WriteLine ("\t\t{");
+							if (is_direct_binding_value != null)
+								sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
 							if (debug)
 								sw.WriteLine ("\t\t\tConsole.WriteLine (\"{0}.ctor ()\");", TypeName);
 							sw.WriteLine ("\t\t\tInitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::{2}.{0}), \"init\");", initSelector, ns.Messaging, ns.CoreObjCRuntime);
@@ -5955,15 +6007,11 @@ public partial class Generator : IMemberGatherer {
 							sw.WriteLine ("\t\t[Export (\"init\")]");
 							sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, TypeName);
 							sw.WriteLine ("\t\t{");
-							if (BindThirdPartyLibrary)
-								sw.WriteLine ("\t\t\t{0}", init_binding_type);
-							if (debug)
-								sw.WriteLine ("\t\t\tConsole.WriteLine (\"{0}.ctor ()\");", TypeName);
-							sw.WriteLine ("\t\t\tif (IsDirectBinding) {");
-							sw.WriteLine ("\t\t\t\tInitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::{2}.{0}), \"init\");", initSelector, ns.Messaging, ns.CoreObjCRuntime);
-							sw.WriteLine ("\t\t\t} else {");
-							sw.WriteLine ("\t\t\t\tInitializeHandle (global::{1}.IntPtr_objc_msgSendSuper (this.SuperHandle, global::{2}.{0}), \"init\");", initSelector, ns.Messaging, ns.CoreObjCRuntime);
-							sw.WriteLine ("\t\t\t}");
+							var indentation = 3;
+							WriteIsDirectBindingCondition (sw, ref indentation, is_direct_binding, is_direct_binding_value,
+							                               () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::{2}.{0}), \"init\");", initSelector, ns.Messaging, ns.CoreObjCRuntime),
+							                               () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSendSuper (this.SuperHandle, global::{2}.{0}), \"init\");", initSelector, ns.Messaging, ns.CoreObjCRuntime));
+
 							WriteMarkDirtyIfDerived (sw, type);
 							sw.WriteLine ("\t\t}");
 							sw.WriteLine ();
@@ -5982,16 +6030,13 @@ public partial class Generator : IMemberGatherer {
 							sw.WriteLine ("\t\t{0} {1} (NSCoder coder) : base (NSObjectFlag.Empty)", UnifiedAPI ? v : "public", TypeName);
 							sw.WriteLine ("\t\t{");
 							if (nscoding) {
-								if (BindThirdPartyLibrary)
-									sw.WriteLine ("\t\t\t{0}", init_binding_type);
 								if (debug)
 									sw.WriteLine ("\t\t\tConsole.WriteLine (\"{0}.ctor (NSCoder)\");", TypeName);
 								sw.WriteLine ();
-								sw.WriteLine ("\t\t\tif (IsDirectBinding) {");
-								sw.WriteLine ("\t\t\t\tInitializeHandle (global::{1}.IntPtr_objc_msgSend_IntPtr (this.Handle, {0}, coder.Handle), \"initWithCoder:\");", initWithCoderSelector, ns.Messaging);
-								sw.WriteLine ("\t\t\t} else {");
-								sw.WriteLine ("\t\t\t\tInitializeHandle (global::{1}.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, {0}, coder.Handle), \"initWithCoder:\");", initWithCoderSelector, ns.Messaging);
-								sw.WriteLine ("\t\t\t}");
+								var indentation = 3;
+								WriteIsDirectBindingCondition (sw, ref indentation, is_direct_binding, is_direct_binding_value,
+								                               () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSend_IntPtr (this.Handle, {0}, coder.Handle), \"initWithCoder:\");", initWithCoderSelector, ns.Messaging),
+								                               () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, {0}, coder.Handle), \"initWithCoder:\");", initWithCoderSelector, ns.Messaging));
 								WriteMarkDirtyIfDerived (sw, type);
 							} else {
 								sw.WriteLine ("\t\t\tthrow new InvalidOperationException (\"Type does not conform to NSCoding\");");
@@ -6005,8 +6050,8 @@ public partial class Generator : IMemberGatherer {
 						sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 						sw.WriteLine ("\t\t{0} {1} (NSObjectFlag t) : base (t)", UnifiedAPI ? "protected" : "public", TypeName);
 						sw.WriteLine ("\t\t{");
-						if (BindThirdPartyLibrary)
-							sw.WriteLine ("\t\t\t{0}", init_binding_type);
+						if (is_direct_binding_value != null)
+							sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
 						WriteMarkDirtyIfDerived (sw, type);
 						sw.WriteLine ("\t\t}");
 						sw.WriteLine ();
@@ -6015,8 +6060,8 @@ public partial class Generator : IMemberGatherer {
 					sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 					sw.WriteLine ("\t\t{0} {1} (IntPtr handle) : base (handle)", UnifiedAPI ? "protected internal" : "public", TypeName);
 					sw.WriteLine ("\t\t{");
-					if (BindThirdPartyLibrary)
-						sw.WriteLine ("\t\t\t{0}", init_binding_type);
+					if (is_direct_binding_value != null)
+						sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
 					WriteMarkDirtyIfDerived (sw, type);
 					sw.WriteLine ("\t\t}");
 					sw.WriteLine ();
