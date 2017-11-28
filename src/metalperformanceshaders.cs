@@ -1840,7 +1840,7 @@ namespace XamCore.MetalPerformanceShaders {
 	interface MPSMatrixCopy {
 		[Export ("initWithDevice:copyRows:copyColumns:sourcesAreTransposed:destinationsAreTransposed:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMTLDevice device, nuint copyRows, nuint copyColumns, bool sourcesAreTransposed, bool destinationsAreTransposed);
+		IntPtr Constructor (IMTLDevice device, nuint copyRows, nuint copyColumns, bool areSourcesTransposed, bool areDestinationsTransposed);
 
 		[Export ("copyRows")]
 		nuint CopyRows { get; }
@@ -2440,7 +2440,7 @@ namespace XamCore.MetalPerformanceShaders {
 	[BaseType (typeof(MPSRnnDescriptor))]
 	interface MPSLSTMDescriptor {
 		[Export ("memoryWeightsAreDiagonal")]
-		bool MemoryWeightsAreDiagonal { get; set; }
+		bool AreMemoryWeightsDiagonal { get; set; }
 
 		[NullAllowed, Export ("inputGateInputWeights", ArgumentSemantic.Retain)]
 		IMPSCnnConvolutionDataSource InputGateInputWeights { get; set; }
