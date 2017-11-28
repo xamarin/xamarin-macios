@@ -161,7 +161,7 @@ $(IOS_BUILD_DIR)/$(1)/generated_sources: $$(IOS_$(1)_GENERATOR) $$(IOS_APIS) $(I
 		$$(xi_$(1)_profile) \
 		$$(IOS_APIS)
 endef
-$(eval $(call IOS_GENERATOR_template,compat,--ns=MonoTouch.ObjCRuntime -p,compat-ios,monotouch.BindingAttributes.dll)) 
+$(eval $(call IOS_GENERATOR_template,compat,--ns=MonoTouch.ObjCRuntime -p,compat-ios,monotouch.BindingAttributes.dll))
 $(eval $(call IOS_GENERATOR_template,native,--ns=ObjCRuntime,native,Xamarin.iOS.BindingAttributes.dll))
 
 define IOS_TARGETS_template
