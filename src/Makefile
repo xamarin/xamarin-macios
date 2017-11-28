@@ -178,16 +178,10 @@ $(IOS_BUILD_DIR)/$(1)/$(3).pdb: $(IOS_BUILD_DIR)/$(1)/$(3).dll
 
 endef
 
-$(IOS_BUILD_DIR)/compat/monotouch.dll: $(MACIOS_BINARIES_PATH)/monotouch.dll | $(IOS_BUILD_DIR)/compat $(IOS_BUILD_DIR)/compat/monotouch.dll.mdb
+$(IOS_BUILD_DIR)/compat/%: $(MACIOS_BINARIES_PATH)/% | $(IOS_BUILD_DIR)/compat
 	$(Q) cp $< $@
 
-$(IOS_BUILD_DIR)/compat/monotouch.dll.mdb: $(MACIOS_BINARIES_PATH)/monotouch.dll.mdb | $(IOS_BUILD_DIR)/compat
-	$(Q) cp $< $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/monotouch.dll: $(IOS_BUILD_DIR)/compat/monotouch.dll
-	$(Q) cp $< $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/monotouch.dll.mdb : $(IOS_BUILD_DIR)/compat/monotouch.dll.mdb
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/%: $(IOS_BUILD_DIR)/compat/%
 	$(Q) cp $< $@
 
 $(eval $(call IOS_TARGETS_template,native-32,--ns=ObjCRuntime,Xamarin.iOS.dll,native,native-32,32))
@@ -224,33 +218,6 @@ $(IOS_BUILD_DIR)/$(1)/System.Drawing.dll: $$(IOS_SYSTEM_DRAWING_SOURCES) monotou
 		-nowarn:114,169,414,1635 $$(IOS_DEFINES) \
 		$$(IOS_SYSTEM_DRAWING_SOURCES)
 endef
-
-$(IOS_BUILD_DIR)/compat/MonoTouch.Dialog-1.dll: $(MACIOS_BINARIES_PATH)/MonoTouch.Dialog-1.dll | $(IOS_BUILD_DIR)/compat
-	$(Q) cp $< $@
-
-$(IOS_BUILD_DIR)/compat/MonoTouch.Dialog-1.pdb: $(MACIOS_BINARIES_PATH)/MonoTouch.Dialog-1.pdb | $(IOS_BUILD_DIR)/compat
-	$(Q) cp $< $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/MonoTouch.Dialog-1.dll: $(IOS_BUILD_DIR)/compat/MonoTouch.Dialog-1.dll
-	$(Q) cp $< $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/MonoTouch.Dialog-1.pdb : $(IOS_BUILD_DIR)/compat/MonoTouch.Dialog-1.pdb
-	$(Q) cp $< $@
-
-
-$(IOS_BUILD_DIR)/compat/MonoTouch.NUnitLite.dll: $(MACIOS_BINARIES_PATH)/MonoTouch.NUnitLite.dll | $(IOS_BUILD_DIR)/compat
-	$(Q) cp $< $@
-
-$(IOS_BUILD_DIR)/compat/MonoTouch.NUnitLite.pdb: $(MACIOS_BINARIES_PATH)/MonoTouch.NUnitLite.pdb | $(IOS_BUILD_DIR)/compat
-	$(Q) cp $< $@
-	
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/MonoTouch.NUnitLite.dll: $(IOS_BUILD_DIR)/compat/MonoTouch.NUnitLite.dll
-	$(Q) cp $< $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/MonoTouch.NUnitLite.pdb : $(IOS_BUILD_DIR)/compat/MonoTouch.NUnitLite.pdb
-	$(Q) cp $< $@
-
-
 
 $(eval $(call IOS_LIBS_template,reference,--ns=ObjCRuntime,Xamarin.iOS.dll,MonoTouch.Dialog-1.dll,MonoTouch.NUnitLite.dll,-define:XAMCORE_2_0 -define:__UNIFIED__))
 
@@ -480,7 +447,7 @@ MAC_WARNINGS_TO_FIX := $(MAC_WARNINGS_TO_FIX),4014
 
 MAC_COMMON_DEFINES = -define:NET_2_0,XAMARIN_MAC,MONOMAC,XAMCORE_2_0,__UNIFIED__
 MAC_full_ARGS = -sdk:4.5 -define:NO_SYSTEM_DRAWING -define:XAMMAC_SYSTEM_MONO
-MAC_mobile_ARGS = -nostdlib -r:mscorlib -lib:../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac
+MAC_mobile_ARGS = -nostdlib -r:mscorlib -lib:$(abspath $(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac)
 MAC_BOOTSTRAP_DEFINES = $(MAC_COMMON_DEFINES),COREBUILD
 MAC_GENERATED_DEFINES = -d:MONOMAC -d:XAMARIN_MAC -d:XAMCORE_2_0 -d:__UNIFIED__
 
