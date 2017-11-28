@@ -300,6 +300,11 @@ wrench-mac-introspection:
 	$(Q) $(MAKE) clean-mac-introspection
 	git clean -xfdq
 
+wrench-mac-xammac_tests:
+	@# This entire target can be removed when merging to master.
+	$(Q) $(MAKE) run-mac-xammac_tests
+	$(Q) $(MAKE) clean-mac-xammac_tests
+	git clean -xfdq
 else
 wrench-mac-%:
 	@echo "Mac tests have been disabled [$@]"
