@@ -106,8 +106,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void BundleDevelopmentRegion ()
 		{
-			Assert.That (CompiledPlist.ContainsKey (ManifestKeys.CFBundleDevelopmentRegion), "#1");
-			Assert.IsNotNullOrEmpty (CompiledPlist.Get<PString> (ManifestKeys.CFBundleDevelopmentRegion).Value, "#2");
+			Assert.IsFalse (CompiledPlist.ContainsKey (ManifestKeys.CFBundleDevelopmentRegion), "#1");
 		}
 
 		[Test]
