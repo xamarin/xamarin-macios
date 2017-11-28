@@ -280,6 +280,7 @@ namespace Introspection
 			"Lopass",
 			"Lowlevel",
 			"Lun",
+			"Luma",
 			"Mapbuffer",
 			"Matchingcoalesce",
 			"Megaampere",
