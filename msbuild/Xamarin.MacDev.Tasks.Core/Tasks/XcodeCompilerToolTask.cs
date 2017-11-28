@@ -161,11 +161,11 @@ namespace Xamarin.MacDev.Tasks
 
 				using (var stdout = File.CreateText (manifest.ItemSpec)) {
 					using (var stderr = new StringWriter (errors)) {
-						var process = ProcessUtils.StartProcess (startInfo, stdout, stderr);
+						using (var process = ProcessUtils.StartProcess (startInfo, stdout, stderr)) {
+							process.Wait ();
 
-						process.Wait ();
-
-						exitCode = process.Result;
+							exitCode = process.Result;
+						}
 					}
 
 					Log.LogMessage (MessageImportance.Low, "Tool {0} execution finished (exit code = {1}).", startInfo.FileName, exitCode);

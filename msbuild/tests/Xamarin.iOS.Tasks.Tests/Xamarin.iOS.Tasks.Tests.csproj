@@ -95,6 +95,7 @@
     <Compile Include="ProjectsTests\LinkedAssets.cs" />
     <Compile Include="ProjectsTests\CodesignAppBundle.cs" />
     <Compile Include="ProjectsTests\BindingReferences.cs" />
+    <Compile Include="ProjectsTests\CoreMLCompiler.cs" />
     <Compile Include="..\..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>

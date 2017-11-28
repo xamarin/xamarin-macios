@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -69,12 +69,13 @@
     <Compile Include="Tasks\BTouchTaskBase.cs" />
     <Compile Include="Tasks\CodesignTaskBase.cs" />
     <Compile Include="Tasks\CodesignVerifyTaskBase.cs" />
-    <Compile Include="Tasks\CompileAppManifestTaskBase.cs" />
-    <Compile Include="Tasks\ComputeBundleResourceOutputPathsTaskBase.cs" />
     <Compile Include="Tasks\CollectBundleResourcesTaskBase.cs" />
     <Compile Include="Tasks\CollectFrameworksBase.cs" />
+    <Compile Include="Tasks\CompileAppManifestTaskBase.cs" />
     <Compile Include="Tasks\CompileEntitlementsTaskBase.cs" />
     <Compile Include="Tasks\CompileSceneKitAssetsTaskBase.cs" />
+    <Compile Include="Tasks\ComputeBundleResourceOutputPathsTaskBase.cs" />
+    <Compile Include="Tasks\CoreMLCompilerTaskBase.cs" />
     <Compile Include="Tasks\CreateAssetPackManifestTaskBase.cs" />
     <Compile Include="Tasks\CreateEmbeddedResourcesTaskBase.cs" />
     <Compile Include="Tasks\CreateInstallerPackageTaskBase.cs" />
@@ -93,14 +94,14 @@
     <Compile Include="Tasks\PackLibraryResourcesTaskBase.cs" />
     <Compile Include="Tasks\PrepareNativeReferencesTaskBase.cs" />
     <Compile Include="Tasks\PropertyListEditorTaskBase.cs" />
-    <Compile Include="Tasks\ScnToolTaskBase.cs" />
     <Compile Include="Tasks\ReadItemsFromFileBase.cs" />
-    <Compile Include="Tasks\WriteItemsToFileBase.cs" />
+    <Compile Include="Tasks\ScnToolTaskBase.cs" />
     <Compile Include="Tasks\SmartCopyTaskBase.cs" />
     <Compile Include="Tasks\SpotlightIndexerTaskBase.cs" />
     <Compile Include="Tasks\SymbolStripTaskBase.cs" />
     <Compile Include="Tasks\TextureAtlasTaskBase.cs" />
     <Compile Include="Tasks\UnpackLibraryResourcesTaskBase.cs" />
+    <Compile Include="Tasks\WriteItemsToFileBase.cs" />
     <Compile Include="Tasks\XcodeCompilerToolTask.cs" />
     <Compile Include="Tasks\XcodeToolTaskBase.cs" />
     <Compile Include="Tasks\ZipTaskBase.cs" />
@@ -114,7 +115,6 @@
     <Compile Include="CommandLineArgumentBuilder.cs" />
     <Compile Include="ProcessUtils.cs" />
     <Compile Include="StringParserService.cs" />
-    <Compile Include="PlatformFramework.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
