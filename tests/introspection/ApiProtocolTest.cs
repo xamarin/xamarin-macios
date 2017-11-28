@@ -152,6 +152,8 @@ namespace Introspection {
 				case "NSConstraintConflict": // Conformance not in headers
 				case "VSSubscription":
 					return true;
+				case "MPSImageAllocator": // Header shows NSSecureCoding, but intro gives: MPSImageAllocator conforms to NSSecureCoding but SupportsSecureCoding returned false
+					return true;
 				}
 				break;
 			// conformance added in Xcode 8 (iOS 10 / macOS 10.12)

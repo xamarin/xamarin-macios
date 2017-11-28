@@ -1,4 +1,4 @@
-﻿//
+//
 // Test the generated API selectors against typos or non-existing cases
 //
 // Authors:
@@ -131,6 +131,7 @@ namespace Introspection
 			"Celp", // MPEG4ObjectID
 			"Characterteristic",
 			"Chapv",
+			"Cholesky",
 			"Chromaticities",
 			"Ciff",
 			"Cinepak",
@@ -188,6 +189,7 @@ namespace Introspection
 			"Ecies", // Elliptic Curve Integrated Encryption Scheme
 			"Editability", 
 			"Eof", // acronym End-Of-File
+			"Elu",
 			"Emagic",
 			"Emaili",
 			"Eppc",
@@ -260,6 +262,8 @@ namespace Introspection
 			"Json",
 			"Keyerror",
 			"Keyi",
+			"Keypoint",
+			"Keypoints",
 			"Keyspace",
 			"ks",
 			"Kiloampere",
@@ -275,6 +279,7 @@ namespace Introspection
 			"Lod",
 			"Lopass",
 			"Lowlevel",
+			"Lun",
 			"Mapbuffer",
 			"Matchingcoalesce",
 			"Megaampere",
@@ -298,6 +303,7 @@ namespace Introspection
 			"Mobike", // acronym
 			"Morpher",
 			"Mpe", // acronym
+			"Mps",
 			"Mtu", // acronym
 			"Mtc", // acronym
 			"Mul",
@@ -349,6 +355,7 @@ namespace Introspection
 			"Pkcs",
 			"Placemark",
 			"Playthrough",
+			"Pnorm",
 			"Pointillize",
 			"Polyline",
 			"Popularimeter",
@@ -375,6 +382,7 @@ namespace Introspection
 			"Rgb",
 			"Rgba",
 			"Rggb", // acronym for Red, Green, Green, Blue
+			"Rnn",
 			"Roi",
 			"Romm", // acronym: Reference Output Medium Metric
 			"Rpa",
@@ -429,6 +437,7 @@ namespace Introspection
 			"Synchronizable",
 			"Symbologies",
 			"Tanh",
+			"Tensorflow",
 			"Tessellator",
 			"Texcoord",
 			"Texel",
@@ -478,6 +487,7 @@ namespace Introspection
 			"Warpable",
 			"Whitespaces",
 			"Writeability",
+			"Xnor",
 			"Xpc",
 			"xy",
 			"Xyz",
