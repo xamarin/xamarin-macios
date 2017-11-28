@@ -70,6 +70,7 @@ namespace xharness
 				{ "periodic-command=", "A command to execute periodically.", (v) => harness.PeriodicCommand = v },
 				{ "periodic-command-arguments=", "Arguments to the command to execute periodically.", (v) => harness.PeriodicCommandArguments = v },
 				{ "periodic-interval=", "An interval (in minutes) between every attempt to execute the periodic command.", (v) => harness.PeriodicCommandInterval = TimeSpan.FromMinutes (double.Parse (v)) },
+				{ "include-system-permission-tests:", "If tests that require system permissions (which could cause the OS to launch dialogs that hangs the test) should be executed or not. Default is to include such tests.", (v) => harness.IncludeSystemPermissionTests = ParseBool (v, "include-system-permission-tests") },
 			};
 
 			showHelp = () => {
@@ -87,6 +88,39 @@ namespace xharness
 			Environment.SetEnvironmentVariable ("XCODE_DEVELOPER_DIR_PATH", null);
 
 			return harness.Execute ();
+		}
+
+		internal static bool TryParseBool (string value, out bool result)
+		{
+			if (string.IsNullOrEmpty (value)) {
+				result = true;
+				return true;
+			}
+
+			switch (value.ToLowerInvariant ()) {
+			case "1":
+			case "yes":
+			case "true":
+			case "enable":
+				result = true;
+				return true;
+			case "0":
+			case "no":
+			case "false":
+			case "disable":
+				result = false;
+				return true;
+			default:
+				return bool.TryParse (value, out result);
+			}
+		}
+
+		internal static bool ParseBool (string value, string name, bool show_error = true)
+		{
+			bool result;
+			if (!TryParseBool (value, out result))
+				throw new Exception ($"Could not parse the command line argument '-{name}:{value}'");
+			return result;
 		}
 	}
 }
