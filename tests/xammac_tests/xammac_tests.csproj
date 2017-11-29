@@ -692,9 +692,6 @@
     <Compile Include="..\monotouch-test\ObjCRuntime\RegistrarTest.cs">
       <Link>ObjCRuntime\RegistrarTest.cs</Link>
     </Compile>
-    <Compile Include="..\api-shared\ObjCRuntime\Registrar.cs">
-      <Link>api-shared\ObjCRuntime\Registrar.cs</Link>
-    </Compile>
     <Compile Include="..\api-shared\ObjCRuntime\RegistrarTest.cs">
       <Link>api-shared\ObjCRuntime\RegistrarTest.cs</Link>
     </Compile>

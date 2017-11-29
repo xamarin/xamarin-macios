@@ -39,12 +39,9 @@ namespace MonoTouchFixtures.CoreBluetooth {
 			using (CBUUID uuid = CBUUID.FromString ("1234")) {
 				Assert.That (uuid.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 				Assert.IsNotNull (uuid.Data, "Data");
-#if MONOMAC
-				var expected = "Unknown (<1234>)";
-#else
-				var expected = UIDevice.CurrentDevice.CheckSystemVersion (7, 1) ? "1234" : "Unknown (<1234>)";
-#endif
-				Assert.That (uuid.Description, Is.EqualTo (expected), "Description");
+				var firstExpected = "Unknown (<1234>)";
+				var secondExpected = "1234";
+				Assert.That (uuid.Description, Is.EqualTo (firstExpected).Or.EqualTo (secondExpected), "Description");
 				Assert.That (uuid.ToString (false), Is.EqualTo ("1234"), "ToString(false)");
 				Assert.That (uuid.ToString (true), Is.EqualTo ("00001234-0000-1000-8000-00805f9b34fb"), "ToString(true)");
 				using (CBUUID u2 = CBUUID.FromString (uuid.ToString ())) {
@@ -59,12 +56,9 @@ namespace MonoTouchFixtures.CoreBluetooth {
 			using (CBUUID uuid = CBUUID.FromString ("12345678-90AB-CDEF-cafe-c80c20443d0b")) {
 				Assert.That (uuid.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 				Assert.IsNotNull (uuid.Data, "Data");
-#if MONOMAC
-				var expected = "Unknown (<12345678 90abcdef cafec80c 20443d0b>)";
-#else
-				var expected = UIDevice.CurrentDevice.CheckSystemVersion (7, 1) ? "12345678-90AB-CDEF-CAFE-C80C20443D0B" : "Unknown (<12345678 90abcdef cafec80c 20443d0b>)";
-#endif
-				Assert.That (uuid.Description, Is.EqualTo (expected), "Description");
+				var firstExpected = "Unknown (<12345678 90abcdef cafec80c 20443d0b>)";
+				var secondExpected = "12345678-90AB-CDEF-CAFE-C80C20443D0B";
+				Assert.That (uuid.Description, Is.EqualTo (firstExpected).Or.EqualTo (secondExpected), "Description");
 				Assert.That (uuid.ToString (false), Is.EqualTo (uuid.ToString (true)), "ToString");
 				using (CBUUID u2 = CBUUID.FromString (uuid.ToString ())) {
 					Assert.That (u2.ToString (), Is.EqualTo (uuid.ToString ()), "Roundtrip");
