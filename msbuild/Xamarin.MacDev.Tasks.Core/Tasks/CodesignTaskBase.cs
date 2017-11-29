@@ -74,7 +74,7 @@ namespace Xamarin.MacDev.Tasks
 
 		string GenerateCommandLineArguments (ITaskItem item)
 		{
-			var args = new CommandLineArgumentBuilder ();
+			var args = new ProcessArgumentBuilder ();
 
 			args.Add ("-v");
 			args.Add ("--force");

@@ -40,7 +40,7 @@ namespace Xamarin.MacDev.Tasks
 		// Note: Xamarin.Mac and Xamarin.iOS should both override this method to do pass platform-specific verify rules
 		protected override string GenerateCommandLineCommands ()
 		{
-			var args = new CommandLineArgumentBuilder ();
+			var args = new ProcessArgumentBuilder ();
 
 			args.Add ("--verify");
 			args.Add ("-vvvv");

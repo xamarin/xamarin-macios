@@ -85,7 +85,7 @@ namespace Xamarin.MacDev.Tasks
 		{
 			Log.LogMessage ("Creating installer package");
 
-			var args = new CommandLineArgumentBuilder ();
+			var args = new ProcessArgumentBuilder ();
 
 			if (!string.IsNullOrEmpty(ProductDefinition)) {
 				args.Add ("--product");
@@ -116,11 +116,11 @@ namespace Xamarin.MacDev.Tasks
 			return args.ToString ();
 		}
 
-		void AppendExtraArgs (CommandLineArgumentBuilder args, string extraArgs)
+		void AppendExtraArgs (ProcessArgumentBuilder args, string extraArgs)
 		{
 			var target = this.MainAssembly.ItemSpec;
 
-			string[] argv = CommandLineArgumentBuilder.Parse (extraArgs);
+			string[] argv = ProcessArgumentBuilder.Parse (extraArgs);
 			var customTags = new Dictionary<string, string> (StringComparer.OrdinalIgnoreCase) {
 				{ "projectdir",   Path.GetDirectoryName (this.ProjectPath) },
 			// Apparently msbuild doesn't propagate the solution path, so we can't get it. - MTouchTaskBase.cs

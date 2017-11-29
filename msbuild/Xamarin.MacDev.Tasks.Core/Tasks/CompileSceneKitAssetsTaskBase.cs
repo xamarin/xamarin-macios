@@ -96,7 +96,7 @@ namespace Xamarin.MacDev.Tasks
 		int CopySceneKitAssets (string scnassets, string output, string intermediate)
 		{
 			var environment = new Dictionary<string, string> ();
-			var args = new CommandLineArgumentBuilder ();
+			var args = new ProcessArgumentBuilder ();
 
 			environment.Add ("PATH", DeveloperRootBinDir);
 			environment.Add ("DEVELOPER_DIR", SdkDevPath);

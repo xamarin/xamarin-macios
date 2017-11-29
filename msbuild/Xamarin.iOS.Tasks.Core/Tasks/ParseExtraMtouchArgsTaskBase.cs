@@ -29,7 +29,7 @@ namespace Xamarin.iOS.Tasks
 				NoDSymUtil = "false";
 
 			if (!string.IsNullOrEmpty (ExtraArgs)) {
-				var args = CommandLineArgumentBuilder.Parse (ExtraArgs);
+				var args = ProcessArgumentBuilder.Parse (ExtraArgs);
 
 				for (int i = 0; i < args.Length; i++) {
 					string arg;

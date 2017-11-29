@@ -75,8 +75,6 @@ namespace xharness
 			}
 		}
 
-		public bool IncludeSystemPermissionTests { get; set; } = true;
-
 		// For watch apps we end up with 2 simulators, the watch simulator (the main one), and the iphone simulator (the companion one).
 		SimDevice[] simulators;
 		SimDevice simulator { get { return simulators [0]; } }
@@ -476,7 +474,7 @@ namespace xharness
 				args.Append (" -setenv=NUNIT_ENABLE_XML_MODE=wrapped");
 			}
 
-			if (!IncludeSystemPermissionTests)
+			if (!Harness.IncludeSystemPermissionTests)
 				args.Append (" -setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1");
 
 			if (isSimulator) {

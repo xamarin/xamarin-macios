@@ -19,6 +19,7 @@ MSBUILD_PRODUCTS             =
 MSBUILD_DIRECTORIES          =
 MSBUILD_SYMLINKS             =
 MSBUILD_TASK_ASSEMBLIES      =
+MSBUILD_REFERENCE_ASSEMBLIES =
 
 ALL_SOURCES = $(wildcard $(TOP)/msbuild/*/*.cs) $(wildcard $(TOP)/msbuild/*/*/*.cs) $(wildcard $(TOP)/msbuild/*/*/*/*.cs) *.sln $(wildcard */*.csproj) $(wildcard */packages.config)
 CONFIG      = Debug
@@ -34,7 +35,14 @@ IOS_TARGETS =                                                      \
 
 IOS_BINDING_TARGETS = $(wildcard Xamarin.ObjcBinding.Tasks/*.targets)
 
-IOS_TASK_ASSEMBLIES = Xamarin.iOS.Tasks
+IOS_TASK_ASSEMBLIES =         \
+	Xamarin.iOS.Tasks         \
+	Xamarin.iOS.Tasks.Core    \
+	Xamarin.MacDev.Tasks      \
+	Xamarin.MacDev.Tasks.Core \
+
+IOS_TASK_REFERENCE_ASSEMBLIES =	\
+	Xamarin.MacDev
 
 IOS_DIRECTORIES =                                                                                           \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS                                                  \
@@ -57,6 +65,7 @@ IOS_PRODUCTS =                                                                  
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/FrameworkList.xml                                                       \
 	$(foreach target,$(IOS_TARGETS)               ,$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/$(notdir $(target)))     \
 	$(foreach target,$(IOS_BINDING_TARGETS)       ,$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/$(notdir $(target)))     \
+	$(foreach dll,$(IOS_TASK_REFERENCE_ASSEMBLIES),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/$(dll).dll)              \
 	$(foreach dll,$(IOS_TASK_ASSEMBLIES)          ,$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/$(dll).dll)              \
 	$(IOS_SYMLINKS)
 
@@ -68,6 +77,7 @@ MSBUILD_PRODUCTS += all-ios
 MSBUILD_DIRECTORIES += $(IOS_DIRECTORIES)
 MSBUILD_SYMLINKS += symlinks-ios
 MSBUILD_TASK_ASSEMBLIES += $(IOS_TASK_ASSEMBLIES)
+MSBUILD_REFERENCE_ASSEMBLIES += $(IOS_TASK_REFERENCE_ASSEMBLIES)
 endif
 
 ##
@@ -146,9 +156,16 @@ endif
 MAC_TARGETS = $(wildcard Xamarin.Mac.Tasks/*.props) $(wildcard Xamarin.Mac.Tasks/*.targets)
 MAC_BINDING_TARGETS =
 
-MAC_TASK_ASSEMBLIES = Xamarin.Mac.Tasks
+MAC_TASK_ASSEMBLIES =         \
+	Xamarin.Mac.Tasks         \
+	Xamarin.Mac.Tasks.Core    \
+	Xamarin.MacDev.Tasks      \
+	Xamarin.MacDev.Tasks.Core \
 
 MAC_BINDING_TASK_ASSEMBLIES = 
+
+MAC_TASK_REFERENCE_ASSEMBLIES =	\
+	Xamarin.MacDev
 
 MAC_DIRECTORIES =                                                                                           \
 	$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac                            \
@@ -161,6 +178,7 @@ MAC_SYMLINKS =                                                                  
 	$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.Mac/v2.0/RedistList/FrameworkList.xml                        \
 	$(foreach target,$(MAC_TARGETS)               ,$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac/$(notdir $(target))) \
 	$(foreach target,$(MAC_BINDING_TARGETS)       ,$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac/$(notdir $(target))) \
+	$(foreach dll,$(MAC_TASK_REFERENCE_ASSEMBLIES),$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac/$(dll).dll)          \
 	$(foreach dll,$(MAC_TASK_ASSEMBLIES)          ,$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac/$(dll).dll)          \
 	$(foreach dll,$(MAC_BINDING_TASK_ASSEMBLIES)  ,$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac/$(dll).dll)          \
 
@@ -170,6 +188,7 @@ MAC_PRODUCTS =                                                                  
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/4.5/machine.config                                                     \
 	$(foreach target,$(MAC_TARGETS)               ,$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/$(notdir $(target))) \
 	$(foreach target,$(MAC_BINDING_TARGETS)       ,$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/$(notdir $(target))) \
+	$(foreach dll,$(MAC_TASK_REFERENCE_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/$(dll).dll)          \
 	$(foreach dll,$(MAC_TASK_ASSEMBLIES)          ,$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/$(dll).dll)          \
 	$(foreach dll,$(MAC_BINDING_TASK_ASSEMBLIES)  ,$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/$(dll).dll)          \
 	$(MAC_SYMLINKS)                                                                                                            \
@@ -182,6 +201,7 @@ MSBUILD_PRODUCTS += all-mac
 MSBUILD_DIRECTORIES += $(MAC_DIRECTORIES)
 MSBUILD_SYMLINKS += symlinks-mac
 MSBUILD_TASK_ASSEMBLIES += $(MAC_TASK_ASSEMBLIES) $(MAC_BINDING_TASK_ASSEMBLIES)
+MSBUILD_REFERENCE_ASSEMBLIES += $(MAC_TASK_REFERENCE_ASSEMBLIES)
 endif
 
 ##
@@ -296,7 +316,7 @@ all-local:: $(MSBUILD_PRODUCTS) .stamp-test-xml
 
 .build-stamp: $(ALL_SOURCES)
 	$(Q) $(SYSTEM_MONO) /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore
-	$(Q) $(SYSTEM_MSBUILD) $(XBUILD_VERBOSITY)
+	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY)
 	$(Q) touch $@
 
 # make all the target assemblies build when any of the sources have changed
@@ -304,6 +324,11 @@ $(foreach dll,$(MSBUILD_TASK_ASSEMBLIES),$(dll)/bin/$(CONFIG)/$(dll).dll): .buil
 
 # Always remake the symlinks
 .PHONY: $(MSBUILD_SYMLINKS)
+
+# Xamarin.MacDev.dll comes from the Xamarin.MacDev repository
+# Newtonsoft.Json.dll comes from a NuGet
+$(foreach dll,$(sort $(MSBUILD_REFERENCE_ASSEMBLIES)),build/$(notdir $(dll)).dll): .build-stamp | build
+	$(Q) cp Xamarin.MacDev.Tasks.Core/bin/$(CONFIG)/$(notdir $@) $@
 
 define copyToBuild
 build/$(1).dll: $(1)/bin/$(CONFIG)/$(1).dll | build
@@ -328,4 +353,4 @@ install-local:: $(MSBUILD_PRODUCTS)
 
 # make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
 # marking those files as .SECONDARY will prevent that deletion.
-.SECONDARY: $(foreach file,$(MSBUILD_TASK_ASSEMBLIES),unbuild/$(file).dll) $(foreach file,$(MSBUILD_TASK_ASSEMBLIES),build/$(file).dll)
+.SECONDARY: $(foreach file,$(MSBUILD_TASK_ASSEMBLIES) $(MSBUILD_REFERENCE_ASSEMBLIES),unbuild/$(file).dll) $(foreach file,$(MSBUILD_TASK_ASSEMBLIES) $(MSBUILD_REFERENCE_ASSEMBLIES),build/$(file).dll)

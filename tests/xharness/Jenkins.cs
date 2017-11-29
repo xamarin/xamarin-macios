@@ -30,7 +30,6 @@ namespace xharness
 		public bool IncludeMacBindingProject;
 		public bool IncludeSimulator = true;
 		public bool IncludeDevice;
-		public bool IncludeSystemPermissionTests = true; // tests that require access to system resources (system contacts, photo library, etc) in order to work
 		public bool IncludeXtro;
 
 		public Log MainLog;
@@ -142,7 +141,7 @@ namespace xharness
 			if (!IncludeBcl && project.IsBclTest)
 				return false;
 
-			if (!IncludeSystemPermissionTests && project.Name == "introspection")
+			if (!Harness.IncludeSystemPermissionTests && project.Name == "introspection")
 				return false;
 
 			return true;
@@ -428,7 +427,9 @@ namespace xharness
 			SetEnabled (labels, "mac-classic", ref IncludeClassicMac);
 			SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
 			SetEnabled (labels, "ios-simulator", ref IncludeSimulator);
-			SetEnabled (labels, "system-permission", ref IncludeSystemPermissionTests);
+			bool inc_permission_tests = Harness.IncludeSystemPermissionTests;
+			SetEnabled (labels, "system-permission", ref inc_permission_tests);
+			Harness.IncludeSystemPermissionTests = inc_permission_tests;
 		}
 
 		void SetEnabled (HashSet<string> labels, string testname, ref bool value)
@@ -503,7 +504,6 @@ namespace xharness
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
-				UseMSBuild = true,
 			};
 			var nunitExecutioniOSMSBuild = new NUnitExecuteTask (buildiOSMSBuild)
 			{
@@ -2417,8 +2417,6 @@ function oninitialload ()
 
 	class XBuildTask : BuildProjectTask
 	{
-		public bool UseMSBuild;
-
 		protected override async Task ExecuteAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
@@ -2427,7 +2425,7 @@ function oninitialload ()
 				await RestoreNugetsAsync (log, resource);
 
 				using (var xbuild = new Process ()) {
-					xbuild.StartInfo.FileName = UseMSBuild ? "msbuild" : "xbuild";
+					xbuild.StartInfo.FileName = "xbuild";
 					var args = new StringBuilder ();
 					args.Append ("/verbosity:diagnostic ");
 					if (SpecifyPlatform)
@@ -2437,8 +2435,6 @@ function oninitialload ()
 					args.Append (StringUtils.Quote (ProjectFile));
 					xbuild.StartInfo.Arguments = args.ToString ();
 					SetEnvironmentVariables (xbuild);
-					if (UseMSBuild)
-						xbuild.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = null;
 					LogProcessExecution (log, xbuild, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (15);
@@ -2988,7 +2984,6 @@ function oninitialload ()
 						DeviceName = Device.Name,
 						CompanionDeviceName = CompanionDevice?.Name,
 						Configuration = ProjectConfiguration,
-						IncludeSystemPermissionTests = Jenkins.IncludeSystemPermissionTests,
 					};
 
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
@@ -3040,7 +3035,6 @@ function oninitialload ()
 								DeviceName = Device.Name,
 								CompanionDeviceName = CompanionDevice?.Name,
 								Configuration = ProjectConfiguration,
-								IncludeSystemPermissionTests = Jenkins.IncludeSystemPermissionTests,
 							};
 							additional_runner = todayRunner;
 							await todayRunner.RunAsync ();
@@ -3127,7 +3121,6 @@ function oninitialload ()
 				Target = AppRunnerTarget,
 				LogDirectory = LogDirectory,
 				MainLog = Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log"),
-				IncludeSystemPermissionTests = Jenkins.IncludeSystemPermissionTests,
 			};
 			runner.Simulators = Simulators;
 			runner.Initialize ();

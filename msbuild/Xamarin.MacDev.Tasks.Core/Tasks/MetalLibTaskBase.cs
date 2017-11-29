@@ -45,7 +45,7 @@ namespace Xamarin.MacDev.Tasks
 
 		protected override string GenerateCommandLineCommands ()
 		{
-			var args = new CommandLineArgumentBuilder ();
+			var args = new ProcessArgumentBuilder ();
 
 			args.Add ("-o");
 			args.AddQuoted (OutputLibrary);

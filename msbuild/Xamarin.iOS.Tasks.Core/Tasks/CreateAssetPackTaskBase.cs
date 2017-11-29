@@ -42,7 +42,7 @@ namespace Xamarin.iOS.Tasks
 
 		protected override string GenerateCommandLineCommands ()
 		{
-			var args = new CommandLineArgumentBuilder ();
+			var args = new ProcessArgumentBuilder ();
 
 			args.Add ("-r", "-y");
 			args.AddQuoted (OutputFile.GetMetadata ("FullPath"));

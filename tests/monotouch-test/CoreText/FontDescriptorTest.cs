@@ -62,15 +62,13 @@ namespace MonoTouchFixtures.CoreText {
 			}
 		}
 
-#if !__TVOS__ // https://bugzilla.xamarin.com/show_bug.cgi?id=58929
+#if __TVOS__
+		[Ignore ("No font with ligatures are available on the platform")] // more details in https://bugzilla.xamarin.com/show_bug.cgi?id=58929
+#endif
 		[Test]
 		public void WithFeature ()
 		{
-#if __TVOS__
-			var fontName = "Gujarati Sangam MN";
-#else
 			var fontName = "HoeflerText-Regular";
-#endif
 
 			using (var font = new CTFont (fontName, 10)) {
 				var f1 = font.GetFeatures ();
@@ -90,7 +88,6 @@ namespace MonoTouchFixtures.CoreText {
 				Assert.That (set_feature.FeatureWeak, Is.EqualTo ((int)CTFontFeatureLigatures.Selector.RareLigaturesOn), "#2");
 			}
 		}
-#endif // !__TVOS__
 	}
 }
 
