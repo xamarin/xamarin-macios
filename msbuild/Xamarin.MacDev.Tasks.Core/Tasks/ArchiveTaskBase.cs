@@ -86,7 +86,7 @@ namespace Xamarin.MacDev.Tasks
 
 		protected static int Ditto (string source, string destination)
 		{
-			var args = new CommandLineArgumentBuilder ();
+			var args = new ProcessArgumentBuilder ();
 
 			args.Add ("-rsrc");
 

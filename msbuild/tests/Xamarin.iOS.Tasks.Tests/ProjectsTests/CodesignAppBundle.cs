@@ -23,7 +23,7 @@ namespace Xamarin.iOS.Tasks
 		static bool IsCodesigned (string path)
 		{
 			var psi = new ProcessStartInfo ("/usr/bin/codesign");
-			var args = new CommandLineArgumentBuilder ();
+			var args = new ProcessArgumentBuilder ();
 
 			args.Add ("--verify");
 			args.AddQuoted (path);
