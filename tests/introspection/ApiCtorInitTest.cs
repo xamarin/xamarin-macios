@@ -57,6 +57,16 @@ namespace Introspection {
 			if (type.ContainsGenericParameters)
 				return true;
 
+#if !XAMCORE_2_0
+			// skip delegate (and other protocol references)
+			foreach (object ca in type.GetCustomAttributes (false)) {
+				if (ca is ProtocolAttribute)
+					return true;
+				if (ca is ModelAttribute)
+					return true;
+			}
+#endif
+
 			switch (type.Name) {
 			case "JSExport":
 				// This is interesting: Apple defines a private JSExport class - if you try to define your own in an Objective-C project you get this warning at startup:
