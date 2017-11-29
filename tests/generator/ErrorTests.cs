@@ -221,7 +221,7 @@ namespace Bug52570Tests {
 	}
 }");
 			bgen.AssertExecute ("build");
-			bgen.AssertWarning (1117, "The SomeMethod member is decorated with [Static] and its container class Bug52570Tests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into Bug52570Tests.FooObject class.");
+			bgen.AssertWarning (1117, "The member 'SomeMethod' is decorated with [Static] and its container class Bug52570Tests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into Bug52570Tests.FooObject class.");
 		}
 
 		[Test]
@@ -467,7 +467,7 @@ namespace BI1062Tests {
 	}
 }");
 			bgen.AssertExecuteError ("build");
-			bgen.AssertError (1062, "The 'FooObject.FooMethod' member contains ref/out parameters and must not be decorated with [Async].");
+			bgen.AssertError (1062, "The member 'FooObject.FooMethod' contains ref/out parameters and must not be decorated with [Async].");
 		}
 
 		[Test]
@@ -492,7 +492,7 @@ namespace BI1062Tests {
 	}
 }");
 			bgen.AssertExecuteError ("build");
-			bgen.AssertError (1062, "The 'FooObject.FooMethod' member contains ref/out parameters and must not be decorated with [Async].");
+			bgen.AssertError (1062, "The member 'FooObject.FooMethod' contains ref/out parameters and must not be decorated with [Async].");
 		}
 
 		[Test]
@@ -517,7 +517,7 @@ namespace BI1062Tests {
 	}
 }");
 			bgen.AssertExecuteError ("build");
-			bgen.AssertError (1062, "The 'FooObject.FooMethod' member contains ref/out parameters and must not be decorated with [Async].");
+			bgen.AssertError (1062, "The member 'FooObject.FooMethod' contains ref/out parameters and must not be decorated with [Async].");
 		}
 
 		[Test]
@@ -542,7 +542,7 @@ namespace BI1062Tests {
 	}
 }");
 			bgen.AssertExecuteError ("build");
-			bgen.AssertError (1062, "The 'FooObject.FooMethod' member contains ref/out parameters and must not be decorated with [Async].");
+			bgen.AssertError (1062, "The member 'FooObject.FooMethod' contains ref/out parameters and must not be decorated with [Async].");
 		}
 
 		[Test]
@@ -550,7 +550,7 @@ namespace BI1062Tests {
 		[TestCase (Profile.macClassic)]
 		public void WarnAsError (Profile profile)
 		{
-			const string message = "The SomeMethod member is decorated with [Static] and its container class warnaserrorTests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into warnaserrorTests.FooObject class.";
+			const string message = "The member 'SomeMethod' is decorated with [Static] and its container class warnaserrorTests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into warnaserrorTests.FooObject class.";
 			{
 				// Enabled
 				var bgen = new BGenTool ();
@@ -600,7 +600,7 @@ namespace BI1062Tests {
 		[TestCase (Profile.macClassic)]
 		public void NoWarn (Profile profile)
 		{
-			const string message = "The SomeMethod member is decorated with [Static] and its container class nowarnTests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into nowarnTests.FooObject class.";
+			const string message = "The member 'SomeMethod' is decorated with [Static] and its container class nowarnTests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into nowarnTests.FooObject class.";
 			{
 				// Enabled
 				var bgen = new BGenTool ();

@@ -4067,7 +4067,7 @@ public partial class Generator : IMemberGatherer {
 		var hasStaticAtt = AttributeManager.HasAttribute<StaticAttribute> (mi);
 		if (category_type != null && hasStaticAtt && !minfo.ignore_category_static_warnings) {
 			var baseTypeAtt = AttributeManager.GetCustomAttribute<BaseTypeAttribute> (minfo.type);
-			ErrorHelper.Show (new BindingException (1117, "The {0} member is decorated with [Static] and its container class {1} is decorated with [Category] this leads to hard to use code. Please inline {0} into {2} class.", mi.Name, type.FullName, baseTypeAtt?.BaseType.FullName));
+			ErrorHelper.Show (new BindingException (1117, "The member '{0}' is decorated with [Static] and its container class {1} is decorated with [Category] this leads to hard to use code. Please inline {0} into {2} class.", mi.Name, type.FullName, baseTypeAtt?.BaseType.FullName));
 		}
 
 		indent++;
@@ -4855,15 +4855,13 @@ public partial class Generator : IMemberGatherer {
 		if (minfo.async_initial_params != null) {
 			foreach (var param in minfo.async_initial_params) {
 				if (param.ParameterType.IsByRef) {
-					ErrorHelper.Show (new BindingException (1062, true, $"The '{original_minfo.type.Name}.{mi.Name}' member contains ref/out parameters and must not be decorated with [Async]."));
-					break;
+					throw new BindingException (1062, true, $"The member '{original_minfo.type.Name}.{mi.Name}' contains ref/out parameters and must not be decorated with [Async].");
 				}
 			}
 		}
 		foreach (var param in minfo.async_completion_params) {
 			if (param.ParameterType.IsByRef) {
-				ErrorHelper.Show (new BindingException (1062, true, $"The '{original_minfo.type.Name}.{mi.Name}' member contains ref/out parameters and must not be decorated with [Async]."));
-				break;
+				throw new BindingException (1062, true, $"The member '{original_minfo.type.Name}.{mi.Name}' contains ref/out parameters and must not be decorated with [Async].");
 			}
 		}
 
