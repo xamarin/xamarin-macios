@@ -38,6 +38,11 @@ namespace Introspection {
 		protected override bool Skip (Type type)
 		{
 			switch (type.FullName) {
+#if !XAMCORE_4_0
+			case "AppKit.NSDraggingInfo":
+			case "MonoMac.AppKit.NSDraggingInfo": // binding mistakes.
+				return true;
+#endif
 			// Random failures on build machine
 			case "QuickLookUI.QLPreviewPanel":
 			case "MonoMac.QuickLookUI.QLPreviewPanel":
