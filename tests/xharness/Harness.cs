@@ -127,6 +127,8 @@ namespace xharness
 		public string JenkinsConfiguration { get; set; }
 		public Dictionary<string, string> EnvironmentVariables { get; set; } = new Dictionary<string, string> ();
 		public string MarkdownSummaryPath { get; set; }
+		// whether tests that require access to system resources (system contacts, photo library, etc) should be executed or not
+		public bool IncludeSystemPermissionTests { get; set; } = true;
 
 		public Harness ()
 		{
