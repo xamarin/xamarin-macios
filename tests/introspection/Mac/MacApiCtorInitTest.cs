@@ -248,6 +248,11 @@ namespace Introspection {
 		{
 			switch (type.FullName) {
 			// FIXME: those crash the application when Dispose is called
+			case "MonoMac.AppKit.NSTextInputContext":
+			case "AppKit.NSTextInputContext":
+				if (Mac.CheckSystemVersion (10, 13))
+					goto case "MonoMac.ImageKit.IKScannerDeviceView"; // fallthrough
+				goto default;
 			case "MonoMac.JavaScriptCore.JSManagedValue":
 			case "JavaScriptCore.JSManagedValue":
 				// JSManagedValue crashes in Yosemite (b7), but not Mavericks.

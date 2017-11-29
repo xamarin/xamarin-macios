@@ -31,6 +31,7 @@ namespace Introspection {
 			switch (protocolName) {
 			case "NSSecureCoding":
 				switch (type.Name) {
+				case "CNContactFormatter": // Not declared in header file
 				case "NSCachedImageRep": // Not declared in header file
 				case "NSCIImageRep":
 				case "NSCustomImageRep":
