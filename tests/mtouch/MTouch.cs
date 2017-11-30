@@ -1731,10 +1731,14 @@ public class TestApp {
 			}
 		}
 
-		public static string GetCompiler (Profile profile, StringBuilder args)
+		public static string GetCompiler (Profile profile, StringBuilder args, bool use_csc = false)
 		{
 			args.Append (" -lib:").Append (Path.GetDirectoryName (GetBaseLibrary (profile))).Append (' ');
-			return "/Library/Frameworks/Mono.framework/Commands/mcs";
+			if (use_csc) {
+				return "/Library/Frameworks/Mono.framework/Commands/csc";
+			} else {
+				return "/Library/Frameworks/Mono.framework/Commands/mcs";
+			}
 		}
 
 		static string GetConfiguration (Profile profile)
@@ -3538,6 +3542,57 @@ public class HandlerTest
 			}
 		}
 
+		[Test]
+		[TestCase (true)]
+		[TestCase (false)]
+		public void SymbolsOutOfDate1 (bool use_csc)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				// Compile the managed executable twice, the second time without debugging symbols, which will cause the debugging symbols to become stale
+				mtouch.CreateTemporaryApp (extraArg: "/debug:full", use_csc: use_csc);
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.DontLink; // makes the test faster
+				mtouch.Debug = true; // makes the test faster because it makes simlauncher possible
+				mtouch.AssertExecute (MTouchAction.BuildSim);
+			}
+		}
+
+		[Test]
+		[TestCase (true)]
+		[TestCase (false)]
+		public void SymbolsOutOfDate2 (bool use_csc)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				// Compile the managed executable twice, both times with debugging symbols, but restore the debugging symbols from the first build so that they're stale
+				mtouch.CreateTemporaryApp (extraArg: "/debug:full", use_csc: use_csc);
+				var symbol_file = use_csc ? Path.ChangeExtension (mtouch.RootAssembly, "pdb") : mtouch.RootAssembly + ".mdb";
+				var symbols = File.ReadAllBytes (symbol_file);
+				mtouch.CreateTemporaryApp (extraArg: "/debug:full", use_csc: use_csc);
+				File.WriteAllBytes (symbol_file, symbols);
+				mtouch.Linker = MTouchLinker.DontLink; // makes the test faster
+				mtouch.Debug = true; // makes the test faster because it makes simlauncher possible
+				mtouch.AssertExecute (MTouchAction.BuildSim);
+			}
+		}
+
+		[Test]
+		[TestCase (true, true)]
+		[TestCase (false, true)]
+		[TestCase (true, false)]
+		[TestCase (false, false)]
+		public void SymbolsBroken1 (bool use_csc, bool compile_with_debug_symbols)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				// (Over)write invalid data in the debug symbol file
+				mtouch.CreateTemporaryApp (use_csc, extraArg: compile_with_debug_symbols ? "/debug:full" : string.Empty);
+				var symbol_file = use_csc ? Path.ChangeExtension (mtouch.RootAssembly, "pdb") : mtouch.RootAssembly + ".mdb";
+				File.WriteAllText (symbol_file, "invalid stuff");
+				mtouch.Linker = MTouchLinker.DontLink; // makes the test faster
+				mtouch.Debug = true; // makes the test faster because it makes simlauncher possible
+				mtouch.AssertExecute (MTouchAction.BuildSim);
+			}
+		}
+
 #region Helper functions
 		static void RunUnitTest (Profile profile, string code, string csproj_configuration = "", string [] csproj_references = null, string configuration = "Debug", string platform = "iPhoneSimulator", bool clean_simulator = true)
 		{
@@ -3655,7 +3710,7 @@ public class Dummy {
 			ExecutionHelper.Execute ("mono", $"{StringUtils.Quote (Path.Combine (Configuration.RootPath, "tests", "xharness", "xharness.exe"))} --run {StringUtils.Quote (csprojpath)} --target ios-simulator-64 --sdkroot {Configuration.xcode_root} --logdirectory {StringUtils.Quote (Path.Combine (tmpdir, "log.txt"))} --configuration {configuration}", environmentVariables: environment_variables);
 		}
 
-		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null)
+		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null, bool use_csc = false)
 		{
 			if (code == null)
 				code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
@@ -3664,7 +3719,7 @@ public class Dummy {
 			if (extraCode != null)
 				code += extraCode;
 
-			return CompileTestAppCode ("exe", targetDirectory, code, extraArg, profile, appName);
+			return CompileTestAppCode ("exe", targetDirectory, code, extraArg, profile, appName, use_csc);
 		}
 
 		public static string CompileTestAppLibrary (string targetDirectory, string code, string extraArg = null, Profile profile = Profile.iOS, string appName = "testApp")
@@ -3672,7 +3727,7 @@ public class Dummy {
 			return CompileTestAppCode ("library", targetDirectory, code, extraArg, profile, appName);
 		}
 
-		public static string CompileTestAppCode (string target, string targetDirectory, string code, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp")
+		public static string CompileTestAppCode (string target, string targetDirectory, string code, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", bool use_csc = false)
 		{
 			var ext = target == "exe" ? "exe" : "dll";
 			var cs = Path.Combine (targetDirectory, "testApp.cs");
@@ -3683,7 +3738,7 @@ public class Dummy {
 
 			string output;
 			StringBuilder args = new StringBuilder ();
-			string fileName = GetCompiler (profile, args);
+			string fileName = GetCompiler (profile, args, use_csc);
 			args.AppendFormat ($" /noconfig /t:{target} /nologo /out:{StringUtils.Quote (assembly)} /r:{StringUtils.Quote (root_library)} {StringUtils.Quote (cs)} {extraArg}");
 			if (ExecutionHelper.Execute (fileName, args.ToString (), out output) != 0) {
 				Console.WriteLine ("{0} {1}", fileName, args);
