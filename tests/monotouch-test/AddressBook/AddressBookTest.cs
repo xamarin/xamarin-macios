@@ -34,6 +34,7 @@ namespace MonoTouchFixtures.AddressBook {
 		[Test]
 		public void GetAllSources ()
 		{
+			TestRuntime.CheckAddressBookPermission ();
 			ABAddressBook ab = new ABAddressBook ();
 			var sources = ab.GetAllSources ();
 			int value = Runtime.Arch == Arch.DEVICE || TestRuntime.CheckSystemAndSDKVersion (7,0) ? 0 : 1;
@@ -43,6 +44,7 @@ namespace MonoTouchFixtures.AddressBook {
 		[Test]
 		public void GetDefaultSource ()
 		{
+			TestRuntime.CheckAddressBookPermission ();
 			ABAddressBook ab = new ABAddressBook ();
 			Assert.NotNull (ab.GetDefaultSource (), "GetDefaultSource");
 		}
@@ -50,6 +52,7 @@ namespace MonoTouchFixtures.AddressBook {
 		[Test]
 		public void GetSource ()
 		{
+			TestRuntime.CheckAddressBookPermission ();
 			ABAddressBook ab = new ABAddressBook ();
 			Assert.Null (ab.GetSource (-1), "-1");
 			// GetSource(0) is not reliable across device/simulator and iOS versions
