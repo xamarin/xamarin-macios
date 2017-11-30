@@ -5766,7 +5766,8 @@ public partial class Generator : IMemberGatherer {
 			bool is_static_class = AttributeManager.HasAttribute<StaticAttribute> (type) || is_category_class;
 			bool is_partial = AttributeManager.HasAttribute<PartialAttribute> (type);
 			bool is_model = AttributeManager.HasAttribute<ModelAttribute> (type);
-			bool is_protocol = AttributeManager.HasAttribute<ProtocolAttribute> (type);
+			var protocol = AttributeManager.GetCustomAttribute<ProtocolAttribute> (type);
+			bool is_protocol = protocol != null;
 			bool is_abstract = AttributeManager.HasAttribute<AbstractAttribute> (type);
 			bool is_sealed = AttributeManager.HasAttribute<SealedAttribute> (type);
 			string class_visibility = type.IsInternal () ? "internal" : "public";
@@ -5783,7 +5784,6 @@ public partial class Generator : IMemberGatherer {
 				if (is_model && base_type == TypeManager.System_Object)
 					ErrorHelper.Show (new BindingException (1060, "The {0} protocol is decorated with [Model], but not [BaseType]. Please verify that [Model] is relevant for this protocol; if so, add [BaseType] as well, otherwise remove [Model].", type.FullName));
 
-				var protocol = AttributeManager.GetCustomAttribute<ProtocolAttribute> (type);
 				GenerateProtocolTypes (type, class_visibility, TypeName, protocol.Name ?? objc_type_name, protocol);
 			}
 
@@ -5808,7 +5808,7 @@ public partial class Generator : IMemberGatherer {
 					class_mod = "static ";
 			} else {
 				if (is_protocol)
-					print ("[Protocol]");
+					print ("[Protocol({0})]", !string.IsNullOrEmpty (protocol.Name) ? $"Name = \"{protocol.Name}\"" : string.Empty);
 				core_image_filter = AttributeManager.HasAttribute<CoreImageFilterAttribute> (type);
 				if (!type.IsEnum && !core_image_filter) {
 					if (is_model || AttributeManager.HasAttribute<SyntheticAttribute> (type)) {
