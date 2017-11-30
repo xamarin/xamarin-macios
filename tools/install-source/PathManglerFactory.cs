@@ -54,7 +54,7 @@ namespace InstallSources
 			// remove the intall dir and append the mono source path
 			if (path.StartsWith(InstallDir, StringComparison.Ordinal)) {
 				// dealing with the jenkins paths
-				var srcDir = Path.Combine (InstallDir, (InstallDir.Contains("Xamarin.iOS") ? "Xamarin.iOS" : "Xamarin.Mac"), "src");
+				var srcDir = Path.Combine (InstallDir, "src", (InstallDir.Contains("Xamarin.iOS") ? "Xamarin.iOS" : "Xamarin.Mac"));
 				var relative = path.Remove (0, srcDir.Length);
 				if (relative.StartsWith("/", StringComparison.Ordinal))
 					relative = path.Remove (0, 1);
@@ -74,7 +74,7 @@ namespace InstallSources
 		{
 			if (path.StartsWith(InstallDir, StringComparison.Ordinal)) {
 				// dealing with the jenkins paths
-				var srcDir = Path.Combine (InstallDir, (InstallDir.Contains("Xamarin.iOS") ? "Xamarin.iOS" : "Xamarin.Mac"), "src");
+				var srcDir = Path.Combine (InstallDir, "src", (InstallDir.Contains("Xamarin.iOS") ? "Xamarin.iOS" : "Xamarin.Mac"));
 				var relative = path.Remove (0, srcDir.Length);
 				if (relative.StartsWith("/", StringComparison.Ordinal))
 					relative = path.Remove (0, 1);
