@@ -42,7 +42,7 @@ namespace MonoTouch.Tuner {
 		protected override void Process (AssemblyDefinition assembly)
 		{
 			// The "get_Size" is a performance (over size) optimization.
-			// It always makes sense for plaftorm assemblies because:
+			// It always makes sense for platform assemblies because:
 			// * Xamarin.TVOS.dll only ship the 64 bits code paths (all 32 bits code is extra weight better removed)
 			// * Xamarin.WatchOS.dll only ship the 32 bits code paths (all 64 bits code is extra weight better removed)
 			// * Xamarin.iOS.dll  ship different 32/64 bits versions of the assembly anyway (nint... support)
