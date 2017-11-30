@@ -1067,7 +1067,7 @@ namespace XamCore.CoreAnimation {
 
 		#region SceneKitAdditions
 
-		[TV (11,0), Mac (10,13), iOS (11,0, onlyOn64: true), NoWatch]
+		[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0, onlyOn64: true), NoWatch]
 		[Static]
 		[Export ("animationWithSCNAnimation:")]
 		CAAnimation FromSCNAnimation (SCNAnimation animation);
