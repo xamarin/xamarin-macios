@@ -5952,7 +5952,7 @@ namespace XamCore.UIKit {
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 		
 		[Export ("state")]
-		UIGestureRecognizerState State { get; set; }
+		UIGestureRecognizerState State { get; [Advice ("For Subclass Use")] set; }
 		
 		[Export ("view")]
 		[Transient]
