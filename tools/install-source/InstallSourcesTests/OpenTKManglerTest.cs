@@ -37,7 +37,7 @@ namespace InstallSourcesTests
 			var targetPath = mangler.GetTargetPath (path);
 			Assert.IsFalse (targetPath.StartsWith (openTKPath, StringComparison.InvariantCulture), "Path starts with the opentk path.");
 			Assert.IsTrue (targetPath.StartsWith (installDir, StringComparison.InvariantCulture), "Path does not start with the install dir");
-			Assert.IsTrue (targetPath.Contains ("/src/OpenTK/"), "Path does not contain 'src'");
+			Assert.IsTrue (targetPath.Contains ("/src/Xamarin.iOS/"), "Path does not contain 'src'");
 		}
 	}
 }

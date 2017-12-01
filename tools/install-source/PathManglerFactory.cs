@@ -73,7 +73,7 @@ namespace InstallSources
 				if (Verbose)
 					Console.WriteLine($"Relative path is {relative}");
 				if (relative.StartsWith("/", StringComparison.Ordinal))
-					relative = path.Remove(0, 1);
+					relative = relative.Remove(0, 1);
 				var monoPath = Path.Combine(MonoSourcePath, relative);
 				if (Verbose)
 					Console.WriteLine($"Mono path is {monoPath}");
@@ -95,7 +95,7 @@ namespace InstallSources
 					(InstallDir.Contains(xamariniOSDir) ? xamariniOSDir : xamarinMacDir));
 				var relative = path.Remove (0, srcDir.Length);
 				if (relative.StartsWith("/", StringComparison.Ordinal))
-					relative = path.Remove (0, 1);
+					relative = relative.Remove (0, 1);
 				var openTKPath = Path.Combine (OpenTKSourcePath, relative);
 				return File.Exists(openTKPath);
 			} else {
