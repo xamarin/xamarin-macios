@@ -289,6 +289,7 @@ namespace xharness
 				"System.IO.Compression.FileSystem",
 				"Mono.CSharp",
 				"System.Security",
+				"System.ServiceModel",
 			};
 			foreach (var p in bcl_suites) {
 				foreach (var flavor in new MacFlavors [] { MacFlavors.Full, MacFlavors.Modern }) {
@@ -332,6 +333,7 @@ namespace xharness
 				"System.IO.Compression.FileSystem",
 				"Mono.CSharp",
 				"System.Security",
+				"System.ServiceModel",
 			};
 			var bcl_skip_watchos = new string [] {
 				"Mono.Security",
