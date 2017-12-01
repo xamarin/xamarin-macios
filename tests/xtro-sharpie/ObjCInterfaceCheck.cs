@@ -114,7 +114,13 @@ namespace Extrospection {
 				return false;
 			if (td.HasInterfaces) {
 				foreach (var intf in td.Interfaces) {
-					if (protocol == GetProtocolName (intf?.InterfaceType.Resolve ()))
+					TypeReference ifaceType;
+#if CECIL_0_10
+					ifaceType = intf?.InterfaceType;
+#else
+					ifaceType = intf;
+#endif
+					if (protocol == GetProtocolName (ifaceType?.Resolve ()))
 						return true;
 				}
 			}
