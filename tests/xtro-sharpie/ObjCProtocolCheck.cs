@@ -41,6 +41,11 @@ namespace Extrospection {
 			if (!type.HasCustomAttributes)
 				return;
 
+			if (!type.IsInterface) {
+				// Only interfaces map to protocols, but unfortunately we add [Protocol] to generated model classes too, so we need to skip those.
+				return;
+			}
+
 			string pname = null;
 			bool informal = false;
 
