@@ -138,6 +138,7 @@ public class ListSourceFiles {
 		opentkpath = FixPathEnding (opentkpath);
 
 		var manglerFactory = new PathManglerFactory {
+			Verbose = verbose,
 			InstallDir = installDir,
 			MonoSourcePath = monopath,
 			XamarinSourcePath = xamarinpath,
