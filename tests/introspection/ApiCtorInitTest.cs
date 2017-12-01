@@ -150,9 +150,6 @@ namespace Introspection {
 		protected virtual void CheckIsDirectBinding (NSObject obj)
 		{
 			var attrib = obj.GetType ().GetCustomAttribute<RegisterAttribute> (false);
-			// only check types that we register - that way we avoid the 118 MonoTouch.CoreImagge.CI* "special" types
-			if (attrib == null)
-				return;
 			var is_wrapper = attrib != null && attrib.IsWrapper;
 			var is_direct_binding = GetIsDirectBinding (obj);
 			if (is_direct_binding != is_wrapper)
