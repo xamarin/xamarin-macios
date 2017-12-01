@@ -31,6 +31,7 @@ namespace Introspection {
 			switch (protocolName) {
 			case "NSSecureCoding":
 				switch (type.Name) {
+				case "CNContactFormatter": // iOS declares but macOS header does not. Failure was missed :(
 				case "NSCachedImageRep": // Not declared in header file
 				case "NSCIImageRep":
 				case "NSCustomImageRep":
