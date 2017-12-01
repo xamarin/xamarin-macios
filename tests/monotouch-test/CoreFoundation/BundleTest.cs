@@ -155,7 +155,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void TestDevelopmentRegion ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.IsFalse (String.IsNullOrEmpty (main.DevelopmentRegion));
+			Assert.IsTrue (String.IsNullOrEmpty (main.DevelopmentRegion));
 		}
 
 		[Test]
@@ -163,8 +163,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			var main = CFBundle.GetMain ();
 			var localizations = CFBundle.GetLocalizations (main.Url);
-			Assert.IsTrue (localizations.Length > 0);
-			Assert.That (localizations, Has.Exactly (1).EqualTo ("en"));
+			Assert.AreEqual (0, localizations.Length);
 		}
 
 		[Test]
