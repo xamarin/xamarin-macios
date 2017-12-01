@@ -99,9 +99,6 @@ namespace MonoTouch.Tuner {
 		{
 			var mr = ins.Operand as MethodReference;
 			switch (mr?.Name) {
-			case "IsNewRefcountEnabled":
-				ProcessIsNewRefcountEnabled (caller, ins);
-				break;
 			case "EnsureUIThread":
 				ProcessEnsureUIThread (caller, ins);
 				break;
@@ -164,24 +161,6 @@ namespace MonoTouch.Tuner {
 
 			// This is simple: just remove the call
 			Nop (ins); // call void UIKit.UIApplication::EnsureUIThread()
-		}
-
-		void ProcessIsNewRefcountEnabled (MethodDefinition caller, Instruction ins)
-		{
-			const string operation = "inline NSObject.IsNewRefcountEnabled";
-
-			// Verify we're checking the right get_IsNewRefcountEnabled call
-			var mr = ins.Operand as MethodReference;
-			if (!mr.DeclaringType.Is (Namespaces.Foundation, "NSObject"))
-				return;
-
-			// Verify a few assumptions before doing anything
-			if (!ValidateInstruction (caller, ins, operation, Code.Call))
-				return;
-
-			// We're fine, inline the get_IsNewRefcountEnabled condition
-			ins.OpCode = OpCodes.Ldc_I4_1;
-			ins.Operand = null;
 		}
 
 		void ProcessIntPtrSize (MethodDefinition caller, Instruction ins)
