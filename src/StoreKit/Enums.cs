@@ -67,7 +67,7 @@ namespace XamCore.StoreKit {
 		Hide,
 	}
 #endif
-	[iOS (11,2), TV (11,2), NoMac]
+	[iOS (11,2), TV (11,2), Mac (10,13,2)]
 	[Native]
 	public enum SKProductPeriodUnit : nuint {
 		Day,
@@ -76,7 +76,7 @@ namespace XamCore.StoreKit {
 		Year,
 	}
 
-	[iOS (11,2), TV (11,2), NoMac]
+	[iOS (11,2), TV (11,2), Mac (10,13,2)]
 	[Native]
 	public enum SKProductDiscountPaymentMode : nuint {
 		PayAsYouGo,
