@@ -90,8 +90,6 @@ namespace InstallSources
 			} else {
 				var pos = path.IndexOf ($"/{frameworkPrefix}/", StringComparison.InvariantCulture);
 				var src = path.Remove (0, pos + $"/{frameworkPrefix}/".Length); // 3 for src and 1  for /
-				Console.WriteLine($"Path is {path}");
-				Console.WriteLine($"src is {src}");
 				src = Path.Combine (XamarinSourcePath, src);
 				return src;
 			}
@@ -215,17 +213,11 @@ namespace InstallSources
 		public string GetTargetPath (string path)
 		{
 			if (IsRunrime(path))
-			{	Console.WriteLine("IsRuntime");
 				return GetTargetPathForRuntimeSource(path);
-			}
 			if (IsGeneratedPath(path))
-			{	Console.WriteLine ("IsGenerated");
 				return GetTargetPathForGeneratedPath(path);
-			}
 			if (IsManualSource(path))
-			{	Console.WriteLine("IsManual");
 				return GetTargetPathForManualSource(path);
-			}
 			return GetTargetPathForNativeType (path);
 		}
 
