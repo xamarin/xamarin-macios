@@ -21,7 +21,7 @@
 <!--
 1. Place cursor below this comment block.
 
-2. Paste full build logs.
+2. Attach build log or link to gist (https://gist.github.com/) of the log.
 -->
 
 ### Example Project (If Possible)
