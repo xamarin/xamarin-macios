@@ -7,6 +7,7 @@ namespace InstallSources
 	{
 		public bool Verbose { get; set; }
 		public string InstallDir { get; set; }
+		public string DestinationDir { get; set; }
 		public string MonoSourcePath { get; set; }
 		public string XamarinSourcePath { get; set; }
 		public string FrameworkPath { get; set; }
@@ -26,6 +27,7 @@ namespace InstallSources
 				if (monoMangler == null)
 					monoMangler = new MonoPathMangler {
 						InstallDir = InstallDir,
+						DestinationDir = DestinationDir,
 						MonoSourcePath = MonoSourcePath
 					};
 				return monoMangler;
@@ -37,6 +39,7 @@ namespace InstallSources
 				if (openTKMangler == null)
 					openTKMangler = new OpenTKSourceMangler {
 						InstallDir = InstallDir,
+						DestinationDir = DestinationDir,
 						OpenTKSourcePath = OpenTKSourcePath
 					};
 				return openTKMangler;
@@ -48,6 +51,7 @@ namespace InstallSources
 				if (xamarinPathMangler == null)
 					xamarinPathMangler = new XamarinSourcesPathMangler {
 						InstallDir = InstallDir,
+						DestinationDir = DestinationDir,
 						XamarinSourcePath = XamarinSourcePath,
 						FrameworkPath = FrameworkPath
 					};

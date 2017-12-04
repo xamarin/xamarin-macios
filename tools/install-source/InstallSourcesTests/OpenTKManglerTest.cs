@@ -11,15 +11,18 @@ namespace InstallSourcesTests
 		OpenTKSourceMangler mangler;
 		string openTKPath;
 		string installDir;
+		string destinationDir;
 
 		[SetUp]
 		public void SetUp ()
 		{
 			openTKPath = "/Users/test/xamarin-macios/external/opentk/Source/";
 			installDir = "/Users/test/xamarin-macios/_ios-build//Library/Frameworks/Xamarin.iOS.framework/Versions/git";
+			destinationDir = "/Users/test/xamarin-macios/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git";
 			mangler = new OpenTKSourceMangler {
 				InstallDir = installDir,
-				OpenTKSourcePath = openTKPath
+				OpenTKSourcePath = openTKPath,
+				DestinationDir = destinationDir,
 			};
 		}
 
@@ -36,7 +39,7 @@ namespace InstallSourcesTests
 		{
 			var targetPath = mangler.GetTargetPath (path);
 			Assert.IsFalse (targetPath.StartsWith (openTKPath, StringComparison.InvariantCulture), "Path starts with the opentk path.");
-			Assert.IsTrue (targetPath.StartsWith (installDir, StringComparison.InvariantCulture), "Path does not start with the install dir");
+			Assert.IsTrue (targetPath.StartsWith (destinationDir, StringComparison.InvariantCulture), "Path does not start with the install dir");
 			Assert.IsTrue (targetPath.Contains ("/src/Xamarin.iOS/"), "Path does not contain 'src'");
 		}
 	}

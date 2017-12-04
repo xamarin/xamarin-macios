@@ -22,6 +22,12 @@ namespace InstallSources
 		/// </summary>
 		/// <value>The install dir.</value>
 		public string InstallDir { get; set;}
+		
+		/// <summary>
+		/// Gets or sets the frame work dir.
+		/// </summary>
+		/// <value>The frame work dir.</value>
+		public string DestinationDir { get; set; }
 
 		public string GetSourcePath (string path)
 		{
@@ -43,7 +49,7 @@ namespace InstallSources
 			var relativePath = path.Substring (OpenTKSourcePath.Length);
 			if (relativePath.StartsWith ("/", StringComparison.Ordinal))
 				relativePath = relativePath.Remove (0, 1);
-			var target = Path.Combine (InstallDir, "src", (InstallDir.Contains ("Xamarin.iOS") ? "Xamarin.iOS" : "Xamarin.Mac"), relativePath);
+			var target = Path.Combine (DestinationDir, "src", (InstallDir.Contains ("Xamarin.iOS") ? "Xamarin.iOS" : "Xamarin.Mac"), relativePath);
 			return target;
 		}
 	}

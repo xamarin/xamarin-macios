@@ -12,6 +12,12 @@ namespace InstallSources
 		/// </summary>
 		/// <value>The mono source path.</value>
 		public string MonoSourcePath { get; set; }
+		
+		/// <summary>
+		/// Gets or sets the frame work dir.
+		/// </summary>
+		/// <value>The frame work dir.</value>
+		public string DestinationDir { get; set; }
 
 		/// <summary>
 		/// Gets or sets the install dir.
@@ -39,7 +45,7 @@ namespace InstallSources
 			var relativePath = path.Substring (MonoSourcePath.Length);
 			if (relativePath.StartsWith ("/", StringComparison.Ordinal))
 				relativePath = relativePath.Remove (0, 1);
-			var target = Path.Combine (InstallDir, "src", (InstallDir.Contains("Xamarin.iOS")?"Xamarin.iOS":"Xamarin.Mac"), relativePath);
+			var target = Path.Combine (DestinationDir, "src", (InstallDir.Contains("Xamarin.iOS")?"Xamarin.iOS":"Xamarin.Mac"), relativePath);
 			return target;
 		}
 	}

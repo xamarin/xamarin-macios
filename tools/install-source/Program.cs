@@ -117,6 +117,7 @@ public class ListSourceFiles {
 		string opentkpath = null;
 		string xamarinpath = null;
 		string installDir = null;
+		string destinationDir = null;
 		bool verbose = false;
 
 		var os = new OptionSet () {
@@ -125,6 +126,7 @@ public class ListSourceFiles {
 			{ "opentk-path=", "The path of the opentk checkout.", v => opentkpath = v},
 			{ "xamarin-path=", "The path of the xamarin source.", v => xamarinpath = v },
 			{ "install-dir=", "The directory to install into. The files will be put into a src subdirectory of this directory.", v => installDir = v },
+			{ "destination-dir=", "The path to the directory used for the -pathmap at build time.", v => destinationDir = v},
 			{ "v|erbose", "Enable verbose output", v => verbose = true },
 		};
 
@@ -140,6 +142,7 @@ public class ListSourceFiles {
 		var manglerFactory = new PathManglerFactory {
 			Verbose = verbose,
 			InstallDir = installDir,
+			DestinationDir = destinationDir,
 			MonoSourcePath = monopath,
 			XamarinSourcePath = xamarinpath,
 			FrameworkPath = (installDir.Contains ("Xamarin.iOS.framework")) ? "Xamarin.iOS.framework" : "Xamarin.Mac.framework",
@@ -182,6 +185,7 @@ public class ListSourceFiles {
 			Console.WriteLine ($"\tMono path:{monopath}");
 			Console.WriteLine ($"\tXamarin path:{xamarinpath}");
 			Console.WriteLine ($"\tOpenTk path:{opentkpath}");
+			Console.WriteLine ($"\tDestination path:{destinationDir}");
 		}
 		var alreadyLinked = new List<string> ();
 		foreach (var src in srcs) {

@@ -30,6 +30,12 @@ namespace InstallSources
 		/// </summary>
 		/// <value>The install dir.</value>
 		public string InstallDir { get; set; }
+		
+		/// <summary>
+		/// Gets or sets the frame work dir.
+		/// </summary>
+		/// <value>The frame work dir.</value>
+		public string DestinationDir { get; set; }
 		 
 		/// <summary>
 		/// Returns if the provided path was compiler generated or not.
@@ -174,7 +180,7 @@ namespace InstallSources
 			var pos = path.IndexOf (subpath, StringComparison.InvariantCulture);
 			if (pos >= 0) {
 				var relativePath = path.Remove (0, pos + subpath.Length + 1);
-				return Path.Combine (InstallDir, "src", FrameworkPath.Remove (FrameworkPath.IndexOf (".framework", StringComparison.InvariantCulture)), relativePath);
+				return Path.Combine (DestinationDir, "src", FrameworkPath.Remove (FrameworkPath.IndexOf (".framework", StringComparison.InvariantCulture)), relativePath);
 			}
 			return null;
 		}
@@ -184,7 +190,7 @@ namespace InstallSources
 			var pos = path.IndexOf (XamarinSourcePath, StringComparison.InvariantCulture);
 			if (pos >= 0) {
 				var relativePath = path.Remove (0, pos + XamarinSourcePath.Length);
-				return Path.Combine (InstallDir, "src", FrameworkPath.Remove (FrameworkPath.IndexOf (".framework", StringComparison.InvariantCulture)), relativePath);
+				return Path.Combine (DestinationDir, "src", FrameworkPath.Remove (FrameworkPath.IndexOf (".framework", StringComparison.InvariantCulture)), relativePath);
 			}
 			return null;
 		}
@@ -194,7 +200,7 @@ namespace InstallSources
 			var pos = path.IndexOf (NativeTypeSubpath, StringComparison.InvariantCulture);
 			if (pos >= 0) {
 				var relativePath = path.Remove (0, pos);
-				return Path.Combine (InstallDir, "src", FrameworkPath.Remove (FrameworkPath.IndexOf (".framework", StringComparison.InvariantCulture)), relativePath);	
+				return Path.Combine (DestinationDir, "src", FrameworkPath.Remove (FrameworkPath.IndexOf (".framework", StringComparison.InvariantCulture)), relativePath);	
 			}
 			return null;
 		}
@@ -204,7 +210,7 @@ namespace InstallSources
 			var pos = path.IndexOf (RuntimeSubpath, StringComparison.InvariantCulture);
 			if (pos >= 0) {
 				var relativePath = path.Remove (0, pos + 1); // +1 is used to remove the leading / from RuntimeSubpath
-				var result = Path.Combine (InstallDir, "src", FrameworkPath.Remove (FrameworkPath.IndexOf (".framework", StringComparison.InvariantCulture)), relativePath);
+				var result = Path.Combine (DestinationDir, "src", FrameworkPath.Remove (FrameworkPath.IndexOf (".framework", StringComparison.InvariantCulture)), relativePath);
 				return result;
 			}
 			return null;

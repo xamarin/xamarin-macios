@@ -11,6 +11,7 @@ namespace InstallSourcesTests
 		string frameworkPath;
 		string xamarinSourcePath;
 		string installDir;
+		string destinationDir;
 		XamarinSourcesPathMangler mangler;
 
 		[SetUp]
@@ -19,11 +20,13 @@ namespace InstallSourcesTests
 			frameworkPath = "Xamarin.iOS.framework";
 			xamarinSourcePath = "/Users/test/xamarin-macios/src/";
 			installDir = "/Library/Frameworks/Xamarin.iOS.framework/Versions/4.1.0.402";
+			destinationDir = "/Users/test/xamarin-macios/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git";
 
 			mangler = new XamarinSourcesPathMangler {
 				FrameworkPath = frameworkPath,
 				XamarinSourcePath = xamarinSourcePath,
-				InstallDir = installDir
+				InstallDir = installDir,
+				DestinationDir = destinationDir,
 			};
 		}
 
@@ -33,11 +36,9 @@ namespace InstallSourcesTests
 		    "/Users/test/xamarin-macios/src/build/ios/native/AVFoundation/AVMutableTimedMetadataGroup.g.cs")]
 		[TestCase ("/Users/test/xamarin-macios/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/src/Xamarin.iOS/build/ios/native/CloudKit/CKRecordZoneNotification.g.cs",
 		    "/Users/test/xamarin-macios/src/build/ios/native/CloudKit/CKRecordZoneNotification.g.cs")]
-		
 		public void TestGetSourcePathGeneratediOSCode (string path, string expectedPath)
 		{
 			var result = mangler.GetSourcePath (path);
-			Console.WriteLine (result);
 			Assert.IsTrue (result.Contains ("/build/"), "Path does not contain '/build/'");
 			Assert.IsTrue (result.StartsWith(xamarinSourcePath, StringComparison.InvariantCulture), "Path does not start with the XamarinPath '{0}'", xamarinSourcePath);
 			Assert.AreEqual (result, expectedPath);
@@ -95,28 +96,29 @@ namespace InstallSourcesTests
 			Assert.AreEqual (result, expectedPath);
 		}
 
-		[TestCase ("/Users/test/xamarin-macios/src/build/ios/native/AVFoundation/AVMutableMetadataItem.g.cs", "/Library/Frameworks/Xamarin.iOS.framework/Versions/4.1.0.402/src/Xamarin.iOS/AVFoundation/AVMutableMetadataItem.g.cs")]
-		[TestCase ("/Users/test/xamarin-macios/src/AVFoundation/AVCaptureDeviceInput.cs", "/Library/Frameworks/Xamarin.iOS.framework/Versions/4.1.0.402/src/Xamarin.iOS/AVFoundation/AVCaptureDeviceInput.cs")]
-		[TestCase ("/Users/test/xamarin-macios/src/NativeTypes/NMath.cs", "/Library/Frameworks/Xamarin.iOS.framework/Versions/4.1.0.402/src/Xamarin.iOS/NativeTypes/NMath.cs")]
+		[TestCase ("/Users/test/xamarin-macios/src/build/ios/native/AVFoundation/AVMutableMetadataItem.g.cs", "/Users/test/xamarin-macios/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/src/Xamarin.iOS/AVFoundation/AVMutableMetadataItem.g.cs")]
+		[TestCase ("/Users/test/xamarin-macios/src/AVFoundation/AVCaptureDeviceInput.cs", "/Users/test/xamarin-macios/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/src/Xamarin.iOS/AVFoundation/AVCaptureDeviceInput.cs")]
+		[TestCase ("/Users/test/xamarin-macios/src/NativeTypes/NMath.cs", "/Users/test/xamarin-macios/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/src/Xamarin.iOS/NativeTypes/NMath.cs")]
 		public void TestGetTargetPathiOS (string src, string expectedTarget)
 		{
 			var target = mangler.GetTargetPath (src);
 
-			Assert.IsTrue (target.StartsWith (installDir, StringComparison.InvariantCulture), "Does not contain the install dir.");
+			Assert.IsTrue (target.StartsWith (destinationDir, StringComparison.InvariantCulture), "Does not contain the install dir.");
 			Assert.AreEqual (expectedTarget, target, "Target is not the expected one.");
 		}
 
-		[TestCase ("/Users/test/xamarin-macios/src/build/mac/full/AVFoundation/AVMutableMetadataItem.g.cs", "/Library/Frameworks/Xamarin.Mac.framework/src/Xamarin.Mac/AVFoundation/AVMutableMetadataItem.g.cs")]
-		[TestCase ("/Users/test/xamarin-macios/src/AVFoundation/AVCaptureDeviceInput.cs", "/Library/Frameworks/Xamarin.Mac.framework/src/Xamarin.Mac/AVFoundation/AVCaptureDeviceInput.cs")]
-		[TestCase ("/Users/test/xamarin-macios/src/NativeTypes/NMath.cs", "/Library/Frameworks/Xamarin.Mac.framework/src/Xamarin.Mac/NativeTypes/NMath.cs")]
+		[TestCase ("/Users/test/xamarin-macios/src/build/mac/full/AVFoundation/AVMutableMetadataItem.g.cs", "/Users/test/xamarin-macios/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/src/Xamarin.Mac/AVFoundation/AVMutableMetadataItem.g.cs")]
+		[TestCase ("/Users/test/xamarin-macios/src/AVFoundation/AVCaptureDeviceInput.cs", "/Users/test/xamarin-macios/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/src/Xamarin.Mac/AVFoundation/AVCaptureDeviceInput.cs")]
+		[TestCase ("/Users/test/xamarin-macios/src/NativeTypes/NMath.cs", "/Users/test/xamarin-macios/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/src/Xamarin.Mac/NativeTypes/NMath.cs")]
 		public void TestGetTargetPathMac (string src, string expectedTarget)
 		{
 			mangler.FrameworkPath = "Xamarin.Mac.framework"; // dealing with mac sources
 			mangler.InstallDir = "/Library/Frameworks/Xamarin.Mac.framework";
+			mangler.DestinationDir = "/Users/test/xamarin-macios/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git";
 
 			var target = mangler.GetTargetPath (src);
 
-			Assert.IsTrue (target.StartsWith (mangler.InstallDir, StringComparison.InvariantCulture), "Does not contain the install dir.");
+			Assert.IsTrue (target.StartsWith (mangler.DestinationDir, StringComparison.InvariantCulture), "Does not contain the install dir.");
 			Assert.AreEqual (expectedTarget, target, "Target is not the expected one.");
 		}
 

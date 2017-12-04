@@ -11,15 +11,18 @@ namespace InstallSourcesTests
 		MonoPathMangler mangler;
 		string monoPath;
 		string installDir;
+		string destinationDir;
 
 		[SetUp]
 		public void SetUp ()
 		{
 			monoPath = "/Users/test/xamarin-macios/external/mono/";
 			installDir = "/Users/test/xamarin-macios/_ios-build//Library/Frameworks/Xamarin.iOS.framework/Versions/git";
+			destinationDir = "/Users/test/xamarin-macios/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git";
 			mangler = new MonoPathMangler { 
 				InstallDir = installDir,
-				MonoSourcePath = monoPath 
+				MonoSourcePath = monoPath,
+				DestinationDir = destinationDir,
 			};
 		}
 
@@ -38,7 +41,7 @@ namespace InstallSourcesTests
 		{
 			var targetPath = mangler.GetTargetPath (path);
 			Assert.IsFalse (targetPath.StartsWith (monoPath, StringComparison.InvariantCulture), "Path starts with the mono path.");
-			Assert.IsTrue (targetPath.StartsWith (installDir, StringComparison.InvariantCulture), "Path does not start with the install dir");
+			Assert.IsTrue (targetPath.StartsWith (destinationDir, StringComparison.InvariantCulture), "Path does not start with the install dir");
 			Assert.IsTrue (!targetPath.Contains ("mono"), "Path does contain 'mono'");
 		}
 	}
