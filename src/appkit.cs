@@ -7457,7 +7457,7 @@ namespace XamCore.AppKit {
 		Selector Action { get; set; }
 
 		[Export ("state")]
-		NSGestureRecognizerState State { get; }
+		NSGestureRecognizerState State { get; [Advice ("Only subclasses of 'NSGestureRecognizer' can set this property.")] set; }
 
 		[Export ("delegate", ArgumentSemantic.Weak)]
 		[NullAllowed]
