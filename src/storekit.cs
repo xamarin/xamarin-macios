@@ -235,11 +235,11 @@ namespace XamCore.StoreKit {
 #endif
 		string DownloadContentVersion { get;  }
 
-		[iOS (11,2), TV (11,2), NoMac]
+		[iOS (11,2), TV (11,2), Mac (10,13,2)]
 		[NullAllowed, Export ("subscriptionPeriod")]
 		SKProductSubscriptionPeriod SubscriptionPeriod { get; }
 
-		[iOS (11,2), TV (11,2), NoMac]
+		[iOS (11,2), TV (11,2), Mac (10,13,2)]
 		[NullAllowed, Export ("introductoryPrice")]
 		SKProductDiscount IntroductoryPrice { get; }
 	}
@@ -644,7 +644,7 @@ namespace XamCore.StoreKit {
 	}
 #endif
 
-	[iOS (11,2), TV (11,2), NoMac]
+	[iOS (11,2), TV (11,2), Mac (10,13,2)]
 	[BaseType (typeof (NSObject))]
 	interface SKProductSubscriptionPeriod {
 
@@ -655,7 +655,7 @@ namespace XamCore.StoreKit {
 		SKProductPeriodUnit Unit { get; }
 	}
 
-	[iOS (11,2), TV (11,2), NoMac]
+	[iOS (11,2), TV (11,2), Mac (10,13,2)]
 	[BaseType (typeof (NSObject))]
 	interface SKProductDiscount {
 
