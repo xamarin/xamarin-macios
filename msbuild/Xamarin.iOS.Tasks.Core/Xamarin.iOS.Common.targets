@@ -91,14 +91,16 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
 
 	<!-- *** Code Analysis Setup *** -->
+	<!-- Library projects aren't supported, if we enable Xamarin.Analysis on them, we'll need to revisit the rules and deactivate some (e.g XIA0002). -->
 
 	<PropertyGroup>
-		<XamarinAnalysisTargetsFile Condition="Exists ('$(MSBuildThisFileDirectory)Xamarin.iOS.Analysis.targets')">$(MSBuildThisFileDirectory)Xamarin.iOS.Analysis.targets</XamarinAnalysisTargetsFile>
+		<!-- '$(OutputType)' == 'Exe' because we don't want to run Xamarin.Analysis on library projects, the XIA rules don't apply. -->
+		<XamarinAnalysisTargetsFile Condition="Exists ('$(MSBuildThisFileDirectory)Xamarin.iOS.Analysis.targets') And '$(OutputType)' == 'Exe'">$(MSBuildThisFileDirectory)Xamarin.iOS.Analysis.targets</XamarinAnalysisTargetsFile>
 		<IsXBuild Condition="'$(MSBuildRuntimeVersion)' == ''">true</IsXBuild>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Analysis.targets"
-			Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Analysis.targets')" />
+			Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Analysis.targets') And '$(OutputType)' == 'Exe'" />
 
 	<PropertyGroup>
 		<!-- Switching to a new property allows us to potentially switch from iPhone to simulator builds
