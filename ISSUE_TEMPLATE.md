@@ -15,7 +15,7 @@
 Visual Studio: Help > About Microsoft Visual Studio > Copy Info [button]
 Visual Studio for Mac: Visual Studio > About Visual Studio > Show Details > Copy Information [button]
 
-2. Paste below this comment block.
+2. Paste into the code block below (between ```)
 -->
 
 ```
