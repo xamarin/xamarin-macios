@@ -518,6 +518,26 @@ namespace xharness
 			};
 			Tasks.Add (nunitExecutioniOSMSBuild);
 			
+			var buildInstallSources = new XBuildTask ()
+			{
+				Jenkins = this,
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "InstallSourcesTests.csproj"))),
+				SpecifyPlatform = false,
+				SpecifyConfiguration = false,
+				Platform = TestPlatform.iOS,
+			};
+			var nunitExecutionInstallSource = new NUnitExecuteTask (buildInstallSources)
+			{
+				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "bin", "Release", "InstallSourcesTests.dll"),
+				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners.2.6.4", "tools", "nunit-console.exe"),
+				WorkingDirectory = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners.2.6.4", "tools", "lib"),
+				Platform = TestPlatform.iOS,
+				TestName = "Install Sources tests",
+				Mode = "iOS",
+				Timeout = TimeSpan.FromMinutes (60),
+			};
+			Tasks.Add (nunitExecutionInstallSource);
+
 			foreach (var project in Harness.MacTestProjects) {
 				bool ignored = !IncludeMac;
 				if (!IncludeMmpTest && project.Path.Contains ("mmptest"))
