@@ -11,12 +11,17 @@
 ### Environment
 
 <!--
-1. From the Visual Studio main menu, select: Help > Visual Studio > Show Details > Copy Info (https://developer.xamarin.com/guides/cross-platform/troubleshooting/questions/version-logs/)
+1.
+Visual Studio: Help > About Microsoft Visual Studio > Copy Info [button]
+Visual Studio for Mac: Visual Studio > About Visual Studio > Show Details > Copy Information [button]
 
 2. Paste below this comment block.
 -->
 
-### Log File
+```
+```
+
+### Build Logs
 
 <!--
 1. Place cursor below this comment block.
