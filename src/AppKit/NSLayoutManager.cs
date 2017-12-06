@@ -37,5 +37,13 @@ namespace XamCore.AppKit {
 			}
 			return returnArray;
 		}
+
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'GetIntAttribute' instead.")]
+		public virtual nint IntAttributeforGlyphAtIndex (nint attributeTag, nint glyphIndex)
+		{
+			return GetIntAttribute (attributeTag, glyphIndex);
+		}
+#endif
 	}
 }

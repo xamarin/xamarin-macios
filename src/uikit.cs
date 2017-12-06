@@ -14206,8 +14206,8 @@ namespace XamCore.UIKit {
 		bool ExtendedLayoutIncludesOpaqueBars { get; set; }
 	
 		[Since (7,0)]
-		[Deprecated (PlatformName.iOS, 11, 0, message: "Use UIScrollView's 'ContentInsetAdjustmentBehavior' instead.")]
-		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use UIScrollView's 'ContentInsetAdjustmentBehavior' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'UIScrollView.ContentInsetAdjustmentBehavior' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'UIScrollView.ContentInsetAdjustmentBehavior' instead.")]
 		[Export ("automaticallyAdjustsScrollViewInsets", ArgumentSemantic.Assign)]
 		bool AutomaticallyAdjustsScrollViewInsets { get; set; }
 
@@ -14254,14 +14254,14 @@ namespace XamCore.UIKit {
 		UIViewController ChildViewControllerForStatusBarHidden ();
 
 		[Since (7,0)]
-		[Deprecated (PlatformName.iOS, 11, 0, message: "Use UIView's 'SafeAreaLayoutGuide' instead.")]
-		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use UIView's 'SafeAreaLayoutGuide' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'UIView.SafeAreaLayoutGuide.TopAnchor' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'UIView.SafeAreaLayoutGuide.TopAnchor' instead.")]
 		[Export ("topLayoutGuide")]
 		IUILayoutSupport TopLayoutGuide { get; }
 
 		[Since (7,0)]
-		[Deprecated (PlatformName.iOS, 11, 0, message: "Use UIView's 'SafeAreaLayoutGuide' instead.")]
-		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use UIView's 'SafeAreaLayoutGuide' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'UIView.SafeAreaLayoutGuide.BottomAnchor' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'UIView.SafeAreaLayoutGuide.BottomAnchor' instead.")]
 		[Export ("bottomLayoutGuide")]
 		IUILayoutSupport BottomLayoutGuide { get; }
 		

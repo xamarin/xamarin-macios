@@ -1,16 +1,10 @@
-﻿using System;
+#if XAMCORE_2_0
+using System;
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using AppKit;
-#else
-using MonoMac;
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-using MonoMac.AppKit;
-#endif
 
 namespace Introspection
 {
@@ -31,7 +25,8 @@ namespace Introspection
 		public override string GetTypo (string txt)
 		{
 			var checkRange = new NSRange (0, txt.Length);
-			var typoRange = checker.CheckSpelling (txt, 0);
+			nint wordCount;
+			var typoRange = checker.CheckSpelling (txt, 0, "en_US", false, 0, out wordCount);
 			if (typoRange.Length == 0)
 				return String.Empty;
 			return txt.Substring ((int)typoRange.Location, (int)typoRange.Length);
@@ -46,3 +41,4 @@ namespace Introspection
 		}
 	}
 }
+#endif

@@ -21,6 +21,7 @@ namespace Xamarin.Tests {
 		static PlatformInfo host => PlatformInfo.Host;
 
 		public static bool CheckSystemVersion (int major, int minor) => host.Version >= new Version (major, minor);
+		public static bool CheckSystemVersion (int major, int minor, int build) => host.Version >= new Version (major, minor, build);
 		public static bool Is32BitMavericks => host.IsArch32 && IsAtLeast (Version_10_9);
 		public static bool IsYosemiteOrHigher => IsAtLeast (Version_10_10);
 		public static bool IsElCapitanOrHigher => IsAtLeast (Version_10_11);

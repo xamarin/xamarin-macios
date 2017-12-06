@@ -59,6 +59,7 @@ namespace Xamarin.Mac.Tests
 				case "MapKitLibrary":
 				case "MediaLibraryLibrary":
 				case "MetalKitLibrary":
+				case "MetalPerformanceShadersLibrary":
 				case "ModelIOLibrary":
 				case "MultipeerConnectivityLibrary":
 				case "NetworkExtensionLibrary":

@@ -234,6 +234,14 @@ namespace XamCore.StoreKit {
 		[Export ("downloadContentVersion")]
 #endif
 		string DownloadContentVersion { get;  }
+
+		[iOS (11,2), TV (11,2), Mac (10,13,2)]
+		[NullAllowed, Export ("subscriptionPeriod")]
+		SKProductSubscriptionPeriod SubscriptionPeriod { get; }
+
+		[iOS (11,2), TV (11,2), Mac (10,13,2)]
+		[NullAllowed, Export ("introductoryPrice")]
+		SKProductDiscount IntroductoryPrice { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -538,7 +546,11 @@ namespace XamCore.StoreKit {
 	interface SKCloudServiceSetupOptions
 	{
 		// Headers comment: Action for setup entry point (of type SKCloudServiceSetupAction).
-		SKCloudServiceSetupAction Action { get; set; }
+		// FIXME: Once https://bugzilla.xamarin.com/show_bug.cgi?id=57870 is fixed we should have a wrapper on a new property
+		// `SKCloudServiceSetupAction Action { get; set; }` and avoid manual code.
+		[Internal]
+		[Export ("ActionKey")]
+		NSString _Action { get; set; }
 
 		// Headers comment: Identifier of the iTunes Store item the user is trying to access which requires cloud service setup (NSNumber).
 		nint ITunesItemIdentifier { get; set; }
@@ -631,4 +643,35 @@ namespace XamCore.StoreKit {
 		void Update (SKProduct[] storePromotionOrder, [NullAllowed] Action<NSError> completionHandler);
 	}
 #endif
+
+	[iOS (11,2), TV (11,2), Mac (10,13,2)]
+	[BaseType (typeof (NSObject))]
+	interface SKProductSubscriptionPeriod {
+
+		[Export ("numberOfUnits")]
+		nuint NumberOfUnits { get; }
+
+		[Export ("unit")]
+		SKProductPeriodUnit Unit { get; }
+	}
+
+	[iOS (11,2), TV (11,2), Mac (10,13,2)]
+	[BaseType (typeof (NSObject))]
+	interface SKProductDiscount {
+
+		[Export ("price")]
+		NSDecimalNumber Price { get; }
+
+		[Export ("priceLocale")]
+		NSLocale PriceLocale { get; }
+
+		[Export ("subscriptionPeriod")]
+		SKProductSubscriptionPeriod SubscriptionPeriod { get; }
+
+		[Export ("numberOfPeriods")]
+		nuint NumberOfPeriods { get; }
+
+		[Export ("paymentMode")]
+		SKProductDiscountPaymentMode PaymentMode { get; }
+	}
 }

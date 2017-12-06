@@ -473,6 +473,78 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (9,0);
 				}
 				break;
+			case "MPSCnnConvolution":
+				switch (selectorName) {
+				case "initWithDevice:convolutionDescriptor:kernelWeights:biasTerms:flags:":
+					return true;
+				}
+				break;
+			case "MPSCnnFullyConnected":
+				switch (selectorName) {
+				case "initWithDevice:convolutionDescriptor:kernelWeights:biasTerms:flags:":
+					return true;
+				}
+				break;
+			case "MPSImageConversion":
+				switch (selectorName) {
+				case "initWithDevice:srcAlpha:destAlpha:backgroundColor:conversionInfo:":
+					return true;
+				}
+				break;
+			case "MPSImageDilate":
+				switch (selectorName) {
+				case "initWithDevice:kernelWidth:kernelHeight:values:":
+					return true;
+				}
+				break;
+			case "MPSImageGaussianPyramid":
+				switch (selectorName) {
+				case "initWithDevice:kernelWidth:kernelHeight:weights:":
+					return true;
+				}
+				break;
+			case "MPSImagePyramid":
+				switch (selectorName) {
+				case "initWithDevice:kernelWidth:kernelHeight:weights:":
+					return true;
+				}
+				break;
+			case "MPSImageSobel":
+				switch (selectorName) {
+				case "initWithDevice:linearGrayColorTransform:":
+					return true;
+				}
+				break;
+			case "MPSImageThresholdBinary":
+				switch (selectorName) {
+				case "initWithDevice:thresholdValue:maximumValue:linearGrayColorTransform:":
+					return true;
+				}
+				break;
+			case "MPSImageThresholdBinaryInverse":
+				switch (selectorName) {
+				case "initWithDevice:thresholdValue:maximumValue:linearGrayColorTransform:":
+					return true;
+				}
+				break;
+			case "MPSImageThresholdToZero":
+				switch (selectorName) {
+				case "initWithDevice:thresholdValue:linearGrayColorTransform:":
+					return true;
+				}
+				break;
+			case "MPSImageThresholdToZeroInverse":
+				switch (selectorName) {
+				case "initWithDevice:thresholdValue:linearGrayColorTransform:":
+					return true;
+				}
+				break;
+			case "MPSImageThresholdTruncate":
+				switch (selectorName) {
+				case "initWithDevice:thresholdValue:linearGrayColorTransform:":
+					return true;
+				}
+				break;
 			}
 
 			// old binding mistake

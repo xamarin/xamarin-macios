@@ -144,7 +144,7 @@ namespace XamCore.CoreImage {
 				throw new ArgumentNullException ("colorSpace");
 			
 			using (var arr = NSArray.FromIntPtrs (new IntPtr [] { colorSpace.Handle })){
-				using (var keys = NSArray.FromIntPtrs (new IntPtr [] { CIImageColorSpaceKey.Handle } )){
+				using (var keys = NSArray.FromIntPtrs (new IntPtr [] { CIImageInitializationOptionsKeys.ColorSpaceKey.Handle } )){
 					using (var dict = NSDictionary.FromObjectsAndKeysInternal (arr, keys)){
 						return FromCGImage (image, dict);
 					}

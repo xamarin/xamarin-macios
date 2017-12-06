@@ -27,6 +27,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
+using XamCore.Foundation;
+using XamCore.ObjCRuntime;
 
 namespace XamCore.CoreImage {
 	public partial class CIVector {
@@ -35,24 +37,38 @@ namespace XamCore.CoreImage {
 				return ValueAtIndex (index);
 			}
 		}
-		
-		static IntPtr GetPtr (nfloat [] values)
+
+		public CIVector (nfloat [] values) :
+			this (values, values == null ? 0 : values.Length)
+		{
+		}
+
+		[DesignatedInitializer]
+		[Export ("initWithValues:count:")]
+		public unsafe CIVector (nfloat [] values, nint count) : base (NSObjectFlag.Empty)
+		{
+			if (values == null)
+				throw new ArgumentNullException (@nameof (values));
+			if (count > values.Length)
+				throw new ArgumentOutOfRangeException (@nameof (count));
+
+			fixed (nfloat *ptr = values) {
+				var handle = IntPtr.Zero;
+				if (IsDirectBinding) {
+					handle = Messaging.IntPtr_objc_msgSend_IntPtr_nint (Handle, Selector.GetHandle ("initWithValues:count:"), (IntPtr) ptr, count);
+				} else {
+					handle = Messaging.IntPtr_objc_msgSendSuper_IntPtr_nint (SuperHandle, Selector.GetHandle ("initWithValues:count:"), (IntPtr) ptr, count);
+				}
+				InitializeHandle (handle, "initWithValues:count:");
+			}
+		}
+
+		public unsafe static CIVector FromValues (nfloat [] values)
 		{
 			if (values == null)
 				throw new ArgumentNullException ("values");
-			unsafe {
-				fixed (nfloat *ptr = values)
-					return (IntPtr) ptr;
-			}
-		}
-		
-		public CIVector (nfloat [] values) : this (GetPtr (values), values.Length)
-		{
-		}
-	
-		public static CIVector FromValues (nfloat [] values)
-		{
-			return _FromValues (GetPtr (values), values.Length);
+			fixed (nfloat *ptr = values)
+				return _FromValues ((IntPtr) ptr, values.Length);
 		}
 		
 		public override string ToString ()

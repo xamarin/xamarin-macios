@@ -51,7 +51,7 @@ namespace XamCore.ObjCRuntime {
 		static public class System {
 			static public readonly IntPtr Handle = Dlfcn.dlopen (Constants.libSystemLibrary, 0);
 		}
-#if IOS || TVOS
+#if !WATCH
 		static public class MetalPerformanceShaders {
 			static public readonly IntPtr Handle = Dlfcn.dlopen (Constants.MetalPerformanceShadersLibrary, 0);
 		}
