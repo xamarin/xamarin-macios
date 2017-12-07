@@ -14,14 +14,18 @@ using System.IO;
 using System.Runtime.InteropServices;
 
 #if XAMCORE_2_0
+using AVFoundation;
 using CoreGraphics;
 using CoreImage;
+using CoreText;
 using Foundation;
 using ObjCRuntime;
 #else
 using MonoTouch;
+using MonoTouch.AVFoundation;
 using MonoTouch.CoreGraphics;
 using MonoTouch.CoreImage;
+using MonoTouch.CoreText;
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
 #endif
@@ -107,6 +111,43 @@ namespace MonoTouchFixtures.CoreImage {
 					f.ColorSpace = null;
 				}
 				Assert.Null (f.ColorSpace, "ColorSpace/reset-null");
+			}
+		}
+
+		[Test]
+		public void CIBarcodeDescriptorTest ()
+		{
+			TestRuntime.AssertXcodeVersion (9, 0);
+
+			using (var f = new CIBarcodeGenerator ()) {
+				Assert.Null (f.BarcodeDescriptor, "CIBarcodeDescriptor/default");
+				using (var b = new CIQRCodeDescriptor (new NSData (), 1, 0, CIQRCodeErrorCorrectionLevel.Q)) {
+					f.BarcodeDescriptor = b;
+					var rc = CFGetRetainCount (b.Handle);
+					for (int i = 0; i < 5; i++)
+						Assert.NotNull (f.BarcodeDescriptor, i.ToString ());
+					Assert.That (CFGetRetainCount (b.Handle), Is.EqualTo (rc), "RetainCount");
+					f.BarcodeDescriptor = null;
+				}
+				Assert.Null (f.BarcodeDescriptor, "CIBarcodeDescriptor/reset-null");
+			}
+		}
+
+		[Test]
+		public void CIAttributedTextImageGenerator ()
+		{
+			TestRuntime.AssertXcodeVersion (9, 0);
+
+			using (var f = new CIAttributedTextImageGenerator ()) {
+				Assert.Null (f.Text, "NSAttributedString/default");
+				var attr = new CTStringAttributes () {
+					ForegroundColorFromContext = true,
+					Font = new CTFont ("Arial", 24)
+				};
+				using (var s = new NSAttributedString ("testString", attr)) {
+					f.Text = s;
+					Assert.NotNull (f.Text, "NSAttributedString/not-null");
+				}
 			}
 		}
 	}

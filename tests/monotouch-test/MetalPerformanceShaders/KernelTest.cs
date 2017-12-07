@@ -3,15 +3,14 @@
 #if !__WATCHOS__ && !MONOMAC
 
 using System;
+using Foundation;
 
 #if XAMCORE_2_0
 using Metal;
 using MetalPerformanceShaders;
-using UIKit;
 #else
 using MonoTouch.Metal;
 using MonoTouch.MetalPerformanceShaders;
-using MonoTouch.UIKit;
 #endif
 
 using NUnit.Framework;
@@ -24,7 +23,11 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		[Test]
 		public void RectNoClip ()
 		{
+#if !MONOMAC
 			TestRuntime.AssertXcodeVersion (7,0);
+#else
+			TestRuntime.AssertXcodeVersion (9, 0);
+#endif
 
 			var d = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
@@ -40,6 +43,48 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 			Assert.That (s.Depth, Is.EqualTo (-1), "Depth");
 			Assert.That (s.Height, Is.EqualTo (-1), "Height");
 			Assert.That (s.Width, Is.EqualTo (-1), "Width");
+		}
+
+		[Test]
+		public void MPSKernelCopyTest ()
+		{
+#if !MONOMAC
+			TestRuntime.AssertDevice ();
+#endif
+			
+			TestRuntime.AssertXcodeVersion (9, 0);
+
+			var kernel = new MPSKernel (MTLDevice.SystemDefault);
+			var kernel2 = kernel.CopyWithZone (NSZone.Default, MTLDevice.SystemDefault);
+			Assert.That (kernel2.RetainCount, Is.EqualTo (1));
+		}
+
+		[Test]
+		public void MPSRnnImageInferenceLayerCopyTest ()
+		{
+#if !MONOMAC
+			TestRuntime.AssertDevice ();
+#endif
+			
+			TestRuntime.AssertXcodeVersion (9, 0);
+
+			var layer = new MPSRnnImageInferenceLayer (MTLDevice.SystemDefault, MPSRnnSingleGateDescriptor.Create (1, 1));
+			var layer2 = layer.Copy (NSZone.Default, MTLDevice.SystemDefault);
+			Assert.That (layer2.RetainCount, Is.EqualTo (1));
+		}
+
+		[Test]
+		public void MPSRnnMatrixInferenceLayerTest ()
+		{
+#if !MONOMAC
+			TestRuntime.AssertDevice ();
+#endif
+			
+			TestRuntime.AssertXcodeVersion (9, 0);
+
+			var layer = new MPSRnnMatrixInferenceLayer (MTLDevice.SystemDefault, MPSRnnSingleGateDescriptor.Create (1, 1));
+			var layer2 = layer.Copy (NSZone.Default, MTLDevice.SystemDefault);
+			Assert.That (layer2.RetainCount, Is.EqualTo (1));
 		}
 	}
 }

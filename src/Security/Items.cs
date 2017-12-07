@@ -1306,6 +1306,16 @@ namespace XamCore.Security {
 			}
 		}
 
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		public bool PersistentReference {
+			get {
+				return Fetch (SecAttributeKey.PersistentReference) == CFBoolean.True.Handle;
+			}
+			set {
+				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKey.PersistentReference);
+			}
+		}
+
 		//
 		// Matches
 		//

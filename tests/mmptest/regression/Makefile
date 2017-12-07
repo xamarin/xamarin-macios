@@ -17,7 +17,6 @@ TESTS_4_0 = \
 	link-posix-2 \
 	link-system.web-icalls \
 	link-keep-resources-1 \
-	link-keep-resources-2 \
 	link-preserve-assembly \
 	link-uithread-1 \
 	link-uithread-2 \

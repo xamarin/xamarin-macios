@@ -155,11 +155,16 @@ namespace XamCore.ScriptingBridge {
 	[Model]
 	[Protocol]
 	interface SBApplicationDelegate {
+#if !XAMCORE_4_0
 		[Abstract]
 		[Export ("eventDidFail:withError:"), DelegateName ("SBApplicationError"), DefaultValue (null)]
 		//NSObject EventDidFailwithError (const AppleEvent event, NSError error);
 		NSObject EventDidFailwithError (IntPtr appleEvent, NSError error);
-
+#else
+		[Abstract]
+		[Export ("eventDidFail:withError:"), DelegateName ("SBApplicationError"), DefaultValue (null)]
+		NSObject EventFailed (IntPtr appleEvent, NSError error);
+#endif
 	}
 	
 }
