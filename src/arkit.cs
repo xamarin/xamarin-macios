@@ -850,8 +850,17 @@ namespace XamCore.ARKit {
 		[Export ("triangleCount")]
 		nuint TriangleCount { get; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use the 'GetTriangleIndices' method that return a 'short' array instead.")]
 		[Export ("triangleIndices")]
+		[Sealed] // Just to avoid the duplicate selector error
 		short TriangleIndices { get; }
+#endif
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("triangleIndices")]
+		// Calling this one 'GetTriangleIndexes' so it matches the 'TriangleIndexes' property in 'ARFaceGeometry.cs'.
+		IntPtr GetTriangleIndexes ();
 	}
 
 	[iOS (11,0)]
