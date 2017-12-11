@@ -832,26 +832,42 @@ namespace XamCore.ARKit {
 		[Export ("vertexCount")]
 		nuint VertexCount { get; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use the 'GetVertices' method instead.")]
 		[Export ("vertices")]
+		[Sealed] // Just to avoid the duplicate selector error
 		Vector3 Vertices {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
 		}
+#endif
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("vertices")]
+		IntPtr GetRawVertices ();
 
 		[Export ("textureCoordinateCount")]
 		nuint TextureCoordinateCount { get; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use the 'GetTextureCoordinates' method instead.")]
 		[Export ("textureCoordinates")]
+		[Sealed] // Just to avoid the duplicate selector error
 		Vector2 TextureCoordinates {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
 		}
+#endif
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("textureCoordinates")]
+		IntPtr GetRawTextureCoordinates ();
 
 		[Export ("triangleCount")]
 		nuint TriangleCount { get; }
 
 #if !XAMCORE_4_0
-		[Obsolete ("Use the 'GetTriangleIndices' method that return a 'short' array instead.")]
+		[Obsolete ("Use the 'GetTriangleIndices' method instead.")]
 		[Export ("triangleIndices")]
 		[Sealed] // Just to avoid the duplicate selector error
 		short TriangleIndices { get; }
@@ -859,8 +875,7 @@ namespace XamCore.ARKit {
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("triangleIndices")]
-		// Calling this one 'GetTriangleIndexes' so it matches the 'TriangleIndexes' property in 'ARFaceGeometry.cs'.
-		IntPtr GetTriangleIndexes ();
+		IntPtr GetRawTriangleIndices ();
 	}
 
 	[iOS (11,0)]

@@ -17,26 +17,49 @@ using Foundation;
 using NUnit.Framework;
 using ObjCRuntime;
 
+using VectorFloat2 = global::OpenTK.Vector2;
+using VectorFloat3 = global::OpenTK.NVector3;
+
 namespace MonoTouchFixtures.ARKit {
 
 	class ARFaceGeometryPoker : ARFaceGeometry {
 
+		GCHandle verticesArrayHandle;
+		GCHandle textureCoordinatesArrayHandle;
 		GCHandle indicesArrayHandle;
+		VectorFloat3 [] vertices;
+		VectorFloat2 [] textureCoordinates;
 		short [] indices;
 
 		public ARFaceGeometryPoker () : base (IntPtr.Zero)
 		{
 		}
 
-		public override nuint TriangleCount {
-			get {
-				// There are always 3x more 'TriangleIndices' than 'TriangleCount' since 'TriangleIndices' represents Triangles (set of three indices).
-				// So 2 'TriangleCount' = 6 'TriangleIndices'.
-				return 2;
-			}
+		public override nuint VertexCount => 2;
+
+		public override nuint TextureCoordinateCount => 2;
+
+		// There are always 3x more 'TriangleIndices' than 'TriangleCount' since 'TriangleIndices' represents Triangles (set of three indices).
+		// So 2 'TriangleCount' = 6 'TriangleIndices'.
+		public override nuint TriangleCount => 2;
+
+		public override IntPtr GetRawVertices ()
+		{
+			vertices = new VectorFloat3 [] { new VectorFloat3 (1, 2, 3), new VectorFloat3 (4, 5, 6) };
+			if (!verticesArrayHandle.IsAllocated)
+				verticesArrayHandle = GCHandle.Alloc (vertices, GCHandleType.Pinned);
+			return verticesArrayHandle.AddrOfPinnedObject ();
 		}
 
-		public unsafe override IntPtr GetTriangleIndexes ()
+		public override IntPtr GetRawTextureCoordinates ()
+		{
+			textureCoordinates = new VectorFloat2 [] { new VectorFloat2 (1, 2), new VectorFloat2 (3, 4) };
+			if (!textureCoordinatesArrayHandle.IsAllocated)
+				textureCoordinatesArrayHandle = GCHandle.Alloc (textureCoordinates, GCHandleType.Pinned);
+			return textureCoordinatesArrayHandle.AddrOfPinnedObject ();
+		}
+
+		public override IntPtr GetRawTriangleIndices ()
 		{
 			// Two triangles (set of 3 indices)
 			indices = new short [] { 1, 2, 3, 4, 5, 6 };
@@ -48,6 +71,10 @@ namespace MonoTouchFixtures.ARKit {
 		protected override void Dispose (bool disposing)
 		{
 			base.Dispose (disposing);
+			if (verticesArrayHandle.IsAllocated)
+				verticesArrayHandle.Free ();
+			if (textureCoordinatesArrayHandle.IsAllocated)
+				textureCoordinatesArrayHandle.Free ();
 			if (indicesArrayHandle.IsAllocated)
 				indicesArrayHandle.Free ();
 		}
@@ -64,11 +91,28 @@ namespace MonoTouchFixtures.ARKit {
 		}
 
 		[Test]
+		public void VerticesTest ()
+		{
+			var face = new ARFaceGeometryPoker ();
+			var vertices = face.GetVertices ();
+			Assert.AreEqual (new VectorFloat3 (1, 2, 3), vertices [0]);
+			Assert.AreEqual (new VectorFloat3 (4, 5, 6), vertices [1]);
+		}
+
+		[Test]
+		public void TextureCoordinatesTest ()
+		{
+			var face = new ARFaceGeometryPoker ();
+			var textureCoordinates = face.GetTextureCoordinates ();
+			Assert.AreEqual (new VectorFloat2 (1, 2), textureCoordinates [0]);
+			Assert.AreEqual (new VectorFloat2 (3, 4), textureCoordinates [1]);
+		}
+
+		[Test]
 		public void TriangleIndicesTest ()
 		{
 			var face = new ARFaceGeometryPoker ();
-			var indices = face.TriangleIndexes;
-			Assert.AreEqual (new short [] { 1, 2, 3, 4, 5, 6 }, indices);
+			Assert.AreEqual (new short [] { 1, 2, 3, 4, 5, 6 }, face.GetTriangleIndices ());
 		}
 	}
 }
