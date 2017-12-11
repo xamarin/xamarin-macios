@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 using Mono.Cecil;
@@ -83,7 +84,6 @@ namespace Extrospection {
 			{ "MPSCNNBinaryConvolutionFlags", "MPSCnnBinaryConvolutionFlags"},
 			{ "MPSCNNBinaryConvolutionType", "MPSCnnBinaryConvolutionType" },
 			{ "MPSCNNNeuronType", "MPSCnnNeuronType" },
-			{ "MPSNNPaddingMethod", "MPSNnPaddingMethod" },
 			{ "MPSRNNBidirectionalCombineMode", "MPSRnnBidirectionalCombineMode" },
 			{ "MPSRNNSequenceDirection", "MPSRnnSequenceDirection" },
 			// not enums
@@ -94,8 +94,7 @@ namespace Extrospection {
 
 		public static string GetManagedName (string nativeName)
 		{
-			string result;
-			map.TryGetValue (nativeName, out result);
+			map.TryGetValue (nativeName, out var result);
 			return result ?? nativeName;
 		}
 
@@ -326,6 +325,68 @@ namespace Extrospection {
 			}
 
 			return null;
+		}
+
+		public static string GetFramework (TypeDefinition type)
+		{
+			var framework = type.Namespace;
+			if (String.IsNullOrEmpty (framework))
+				framework = type.DeclaringType.Namespace;
+			return MapFramework (framework);
+		}
+
+		public static string GetFramework (MethodDefinition method)
+		{
+			string framework = null;
+			if (method.HasPInvokeInfo)
+				framework = Path.GetFileNameWithoutExtension (method.PInvokeInfo.Module.Name);
+			else
+				framework = GetFramework (method.DeclaringType);
+			return MapFramework (framework);
+		}
+
+		public static string GetFramework (Decl decl)
+		{
+			var header_file = decl.PresumedLoc.FileName;
+			var fxh = header_file.IndexOf (".framework/Headers/", StringComparison.Ordinal);
+			if (fxh <= 0)
+				return null;
+			
+			var start = header_file.LastIndexOf ('/', fxh) + 1;
+			return MapFramework (header_file.Substring (start, fxh - start));
+		}
+
+		public static string MapFramework (string candidate)
+		{
+			switch (candidate) {
+			case "AVFAudio":
+				return "AVFoundation";
+			case "libc": // dispatch_*
+				return "CoreFoundation";
+			case "libobjc":
+			case "libSystem": // dlopen, dlerror, dlsym, dlclose
+				return "ObjCRuntime";
+			case "libsystem_kernel": // getxattr, removexattr and setxattr
+				return "Foundation";
+			case "MPSCore":
+			case "MPSImage":
+			case "MPSNeuralNetwork":
+				return "MetalPerformanceShaders";
+			case "QuartzCore":
+				return "CoreAnimation";
+			case "OpenTK.Platform.iPhoneOS":
+				return "OpenGLES";
+			default:
+				return candidate;
+			}
+		}
+
+		public static (string, string) Sort (string s1, string s2)
+		{
+			if (StringComparer.Ordinal.Compare (s1, s2) < 0)
+				return (s1, s2);
+			else
+				return (s2, s1);
 		}
 	}
 }

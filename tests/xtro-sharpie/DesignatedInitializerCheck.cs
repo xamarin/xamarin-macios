@@ -27,15 +27,13 @@ namespace Extrospection {
 
 		static TypeDefinition GetType (ObjCInterfaceDecl decl)
 		{
-			TypeDefinition td;
-			types.TryGetValue (decl.Name, out td);
+			types.TryGetValue (decl.Name, out var td);
 			return td;
 		}
 
 		static MethodDefinition GetMethod (ObjCMethodDecl decl)
 		{
-			MethodDefinition md;
-			methods.TryGetValue (decl.GetName (), out md);
+			methods.TryGetValue (decl.GetName (), out var md);
 			return md;
 		}
 
@@ -65,17 +63,21 @@ namespace Extrospection {
 			if (method == null)
 				return;
 
+			var framework = Helpers.GetFramework (decl);
+			if (framework == null)
+				return;
+
 			var designated_initializer = method.IsDesignatedInitializer ();
 
 			if (!method.IsConstructor) {
 				if (designated_initializer)
-					Console.WriteLine ("!incorrect-designated-initializer! {0} is not a constructor", method.GetName ());
+					Log.On (framework).Add ($"!incorrect-designated-initializer! {method.GetName ()} is not a constructor");
 			} else if (decl.IsDesignatedInitializer) {
 				if (!designated_initializer)
-					Console.WriteLine ("!missing-designated-initializer! {0} is missing an [DesignatedInitializer] attribute", method.GetName ());
+					Log.On (framework).Add ($"!missing-designated-initializer! {method.GetName ()} is missing an [DesignatedInitializer] attribute");
 			} else {
 				if (designated_initializer)
-					Console.WriteLine ("!extra-designated-initializer! {0} is incorrectly decorated with an [DesignatedInitializer] attribute", method.GetName ());
+					Log.On (framework).Add ($"!extra-designated-initializer! {method.GetName ()} is incorrectly decorated with an [DesignatedInitializer] attribute");
 			}
 		}
 	}

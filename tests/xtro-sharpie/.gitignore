@@ -2,3 +2,5 @@
 *.pch*
 *.unclassified
 *.g.cs
+*.html
+report/
