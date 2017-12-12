@@ -327,7 +327,7 @@ namespace Extrospection {
 			return null;
 		}
 
-		public static string GetFramework (TypeDefinition type)
+		public static string GetFramework (TypeReference type)
 		{
 			var framework = type.Namespace;
 			if (String.IsNullOrEmpty (framework))
@@ -342,6 +342,12 @@ namespace Extrospection {
 				framework = Path.GetFileNameWithoutExtension (method.PInvokeInfo.Module.Name);
 			else
 				framework = GetFramework (method.DeclaringType);
+			return MapFramework (framework);
+		}
+
+		public static string GetFramework (MemberReference member)
+		{
+			string framework = GetFramework (member.DeclaringType);
 			return MapFramework (framework);
 		}
 

@@ -91,7 +91,6 @@ namespace Extrospection {
 
 		static readonly string [] Platforms = new [] { "iOS", "tvOS", "watchOS", "macOS" };
 
-
 		public static bool ProcessFramework (string framework)
 		{
 			bool data = false;
@@ -167,16 +166,11 @@ namespace Extrospection {
 
 			log.WriteLine ("<thead>");
 			log.WriteLine ("<tr>");
-			log.WriteLine ("<td rowspan='3' color='lightgrey'>Frameworks</td>");
+			log.WriteLine ("<td rowspan='3' bgcolor='lightgrey'>Frameworks</td>");
 			if (full)
 				log.WriteLine ($"<td align='center' bgcolor='green' colspan='{Platforms.Length + 1}'>REVIEWED (ignored)</td>"); 
 			log.WriteLine ($"<td align='center' bgcolor='red' colspan='{Platforms.Length}'>FIXME (unclassified)</td>"); 
 			log.WriteLine ($"<td align='center' bgcolor='orange' colspan='{Platforms.Length}'>TODO (milestone)</td>"); 
-			log.WriteLine ("</tr>");
-
-			var cols = (full ? 3 : 2) * Platforms.Length + (full ? 1 : 0);
-			log.WriteLine ("<tr>");
-			log.WriteLine ($"<td colspan='{cols + 1}'>&nbsp;</td>");
 			log.WriteLine ("</tr>");
 
 			log.WriteLine ("<tr>");
@@ -207,6 +201,12 @@ namespace Extrospection {
 			foreach (var platform in Platforms)
 				log.WriteLine ($"<td align='center' bgcolor='orange' width='{width}%'>{platform}</td>");
 			log.WriteLine ("</tr>");
+
+			var cols = (full ? 3 : 2) * Platforms.Length + (full ? 1 : 0);
+			log.WriteLine ("<tr>");
+			log.WriteLine ($"<td colspan='{cols + 1}' cellspanning='4'></td>");
+			log.WriteLine ("</tr>");
+
 			log.WriteLine ("</thead>");
 
 			var ignored = new int [Platforms.Length + 1];
@@ -274,7 +274,7 @@ namespace Extrospection {
 			}
 			log.WriteLine ("<tfoot>");
 			log.WriteLine ("<tr>");
-			log.WriteLine ($"<td colspan='{cols}'>&nbsp;</td>");
+			log.WriteLine ($"<td colspan='{cols}' cellspanning='4'></td>");
 			log.WriteLine ("</tr>");
 			log.WriteLine ("<tr>");
 			log.WriteLine ("<td>Total (per platform)</td>");
@@ -323,7 +323,7 @@ namespace Extrospection {
 			log.WriteLine ("</tr>");
 
 			log.WriteLine ("<tr>");
-			log.WriteLine ($"<td colspan='{cols}'>&nbsp;</td>");
+			log.WriteLine ($"<td colspan='{cols}' cellspanning='4'></td>");
 			log.WriteLine ("</tr>");
 
 			log.WriteLine ("<tr>");

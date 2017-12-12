@@ -83,7 +83,6 @@ namespace Extrospection {
 				return;
 
 			var name = decl.ToString ();
-			//MemberReference mr;
 			if (!fields.TryGetValue (name, out var mr)) {
 				Log.On (framework).Add ($"!missing-field! {name} not bound");
 			} else
@@ -94,7 +93,9 @@ namespace Extrospection {
 		{
 			// at this stage anything else we have is not something we could find in Apple's headers
 			foreach (var kvp in fields) {
-				Log.On (kvp.Value.DeclaringType.Namespace).Add ($"!unknown-field! {kvp.Key} bound");
+				var extra = kvp.Key;
+				var framework = Helpers.GetFramework (kvp.Value);
+				Log.On (framework).Add ($"!unknown-field! {extra} bound");
 			}
 		}
 	}
