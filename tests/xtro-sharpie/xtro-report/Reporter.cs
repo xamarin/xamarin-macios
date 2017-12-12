@@ -148,7 +148,8 @@ namespace Extrospection {
 		{
 			var directory = args.Length == 0 ? "." : args [0];
 
-			bool full = true;
+			// collapse the ignored entries on jenkins bots - focus in on what's needs fixing (for the PR) and the work 'to do'
+			bool full = String.IsNullOrEmpty (Environment.GetEnvironmentVariable ("JENKINS_SERVER_COOKIE"));
 
 			int width = 100 / ((full ? 2 : 1) + (full ? 3 : 2) * Platforms.Length);
 
