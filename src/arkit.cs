@@ -832,26 +832,23 @@ namespace XamCore.ARKit {
 		[Export ("vertexCount")]
 		nuint VertexCount { get; }
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("vertices")]
-		Vector3 Vertices {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get;
-		}
+		IntPtr GetRawVertices ();
 
 		[Export ("textureCoordinateCount")]
 		nuint TextureCoordinateCount { get; }
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("textureCoordinates")]
-		Vector2 TextureCoordinates {
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get;
-		}
+		IntPtr GetRawTextureCoordinates ();
 
 		[Export ("triangleCount")]
 		nuint TriangleCount { get; }
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("triangleIndices")]
-		short TriangleIndices { get; }
+		IntPtr GetRawTriangleIndices ();
 	}
 
 	[iOS (11,0)]
