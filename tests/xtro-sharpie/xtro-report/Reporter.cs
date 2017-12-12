@@ -343,7 +343,7 @@ namespace Extrospection {
 			log.Flush ();
 
 			Console.WriteLine ($"@MonkeyWrench: SetSummary: {errors} unclassified found.");
-			return errors;
+			return 0;
 		}
 	}
 }
