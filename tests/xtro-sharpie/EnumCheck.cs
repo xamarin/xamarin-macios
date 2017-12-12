@@ -9,7 +9,7 @@ namespace Extrospection {
 
 	class EnumCheck : BaseVisitor {
 
-		Dictionary<string,TypeDefinition> enums = new Dictionary<string, TypeDefinition> ();
+		Dictionary<string,TypeDefinition> enums = new Dictionary<string, TypeDefinition> (StringComparer.InvariantCultureIgnoreCase);
 
 		public override void VisitManagedType (TypeDefinition type)
 		{
@@ -18,14 +18,15 @@ namespace Extrospection {
 				return;
 			
 			var name = type.Name;
-			TypeDefinition td;
 			// e.g. WatchKit.WKErrorCode and WebKit.WKErrorCode :-(
-			if (!enums.TryGetValue (name, out td))
+			if (!enums.TryGetValue (name, out var td))
 				enums.Add (name, type);
 			else if (td.Namespace.StartsWith ("OpenTK.", StringComparison.Ordinal)) {
 				// OpenTK duplicate a lots of enums between it's versions
 			} else {
-				Log.On (type.Namespace).Add ($"!duplicate-type-name! {name} enum exists as both {type.FullName} and {td.FullName}");
+				var sorted = Helpers.Sort (type.FullName, td.FullName);
+				var framework = Helpers.GetFramework (type);
+				Log.On (framework).Add ($"!duplicate-type-name! {name} enum exists as both {sorted.Item1} and {sorted.Item2}");
 			}
 		}
 
@@ -49,8 +50,7 @@ namespace Extrospection {
 				return;
 			
 			var mname = Helpers.GetManagedName (name);
-			TypeDefinition type;
-			if (!enums.TryGetValue (mname, out type)) {
+			if (!enums.TryGetValue (mname, out var type)) {
 				Log.On (framework).Add ($"!missing-enum! {name} not bound");
 				return;
 			} else
@@ -167,8 +167,10 @@ namespace Extrospection {
 			// e.g. a typo in the name
 			foreach (var extra in enums) {
 				var t = extra.Value;
-				if (IsNative (t))
-					Log.On (t.Namespace).Add ($"!unknown-native-enum! {extra.Key} bound");
+				if (!IsNative (t))
+					continue;
+				var framework = Helpers.GetFramework (t);
+				Log.On (framework).Add ($"!unknown-native-enum! {extra.Key} bound");
 			}
 		}
 	}
