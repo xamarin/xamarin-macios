@@ -1,0 +1,5 @@
+!missing-protocol-member! INSearchCallHistoryIntentHandling::resolveUnseenForSearchCallHistory:withCompletion: not found
+!unknown-native-enum! INMessageAttribute bound
+!unknown-native-enum! INSetMessageAttributeIntentResponseCode bound
+!unknown-protocol! INCallsDomainHandling bound
+!unknown-type! INMessageAttributeResolutionResult bound

@@ -1,0 +1,447 @@
+## only a subset of the old, pre WKWebKit, is bound for macOS
+
+!incorrect-protocol-member! WebOpenPanelResultListener::cancel is REQUIRED and should be abstract
+!incorrect-protocol-member! WebOpenPanelResultListener::chooseFilename: is REQUIRED and should be abstract
+!incorrect-protocol-member! WebOpenPanelResultListener::chooseFilenames: is REQUIRED and should be abstract
+!incorrect-protocol-member! WebPolicyDecisionListener::download is REQUIRED and should be abstract
+!incorrect-protocol-member! WebPolicyDecisionListener::ignore is REQUIRED and should be abstract
+!incorrect-protocol-member! WebPolicyDecisionListener::use is REQUIRED and should be abstract
+!missing-enum! DOMEventExceptionCode not bound
+!missing-enum! DOMExceptionCode not bound
+!missing-enum! DOMRangeExceptionCode not bound
+!missing-enum! DOMXPathExceptionCode not bound
+!missing-enum! WebViewInsertAction not bound
+!missing-enum! WKUserInterfaceDirectionPolicy not bound
+!missing-enum-native! WebDragDestinationAction
+!missing-enum-native! WebDragSourceAction
+!missing-enum-native! WebNavigationType
+!missing-field! DOMEventException not bound
+!missing-field! DOMException not bound
+!missing-field! DOMRangeException not bound
+!missing-field! DOMXPathException not bound
+!missing-field! WebArchivePboardType not bound
+!missing-field! WebElementDOMNodeKey not bound
+!missing-field! WebElementFrameKey not bound
+!missing-field! WebElementImageAltStringKey not bound
+!missing-field! WebElementImageKey not bound
+!missing-field! WebElementImageRectKey not bound
+!missing-field! WebElementImageURLKey not bound
+!missing-field! WebElementIsSelectedKey not bound
+!missing-field! WebElementLinkLabelKey not bound
+!missing-field! WebElementLinkTargetFrameKey not bound
+!missing-field! WebElementLinkTitleKey not bound
+!missing-field! WebElementLinkURLKey not bound
+!missing-field! WebHistoryAllItemsRemovedNotification not bound
+!missing-field! WebHistoryItemsAddedNotification not bound
+!missing-field! WebHistoryItemsKey not bound
+!missing-field! WebHistoryItemsRemovedNotification not bound
+!missing-field! WebHistoryLoadedNotification not bound
+!missing-field! WebHistorySavedNotification not bound
+!missing-field! WebKitErrorDomain not bound
+!missing-field! WebKitErrorMIMETypeKey not bound
+!missing-field! WebKitErrorPlugInNameKey not bound
+!missing-field! WebKitErrorPlugInPageURLStringKey not bound
+!missing-field! WebPlugInAttributesKey not bound
+!missing-field! WebPlugInBaseURLKey not bound
+!missing-field! WebPlugInContainerKey not bound
+!missing-field! WebPlugInContainingElementKey not bound
+!missing-field! WebPlugInShouldLoadMainResourceKey not bound
+!missing-field! WebPreferencesChangedNotification not bound
+!missing-field! WebViewDidBeginEditingNotification not bound
+!missing-field! WebViewDidChangeNotification not bound
+!missing-field! WebViewDidChangeSelectionNotification not bound
+!missing-field! WebViewDidChangeTypingStyleNotification not bound
+!missing-field! WebViewDidEndEditingNotification not bound
+!missing-field! WebViewProgressEstimateChangedNotification not bound
+!missing-field! WebViewProgressFinishedNotification not bound
+!missing-field! WebViewProgressStartedNotification not bound
+!missing-pinvoke! NPN_Construct is not bound
+!missing-pinvoke! NPN_ConvertPoint is not bound
+!missing-pinvoke! NPN_CreateObject is not bound
+!missing-pinvoke! NPN_DestroyStream is not bound
+!missing-pinvoke! NPN_Enumerate is not bound
+!missing-pinvoke! NPN_Evaluate is not bound
+!missing-pinvoke! NPN_ForceRedraw is not bound
+!missing-pinvoke! NPN_GetAuthenticationInfo is not bound
+!missing-pinvoke! NPN_GetIntIdentifier is not bound
+!missing-pinvoke! NPN_GetJavaEnv is not bound
+!missing-pinvoke! NPN_GetJavaPeer is not bound
+!missing-pinvoke! NPN_GetProperty is not bound
+!missing-pinvoke! NPN_GetStringIdentifier is not bound
+!missing-pinvoke! NPN_GetStringIdentifiers is not bound
+!missing-pinvoke! NPN_GetURL is not bound
+!missing-pinvoke! NPN_GetURLNotify is not bound
+!missing-pinvoke! NPN_GetValue is not bound
+!missing-pinvoke! NPN_GetValueForURL is not bound
+!missing-pinvoke! NPN_HandleEvent is not bound
+!missing-pinvoke! NPN_HasMethod is not bound
+!missing-pinvoke! NPN_HasProperty is not bound
+!missing-pinvoke! NPN_IdentifierIsString is not bound
+!missing-pinvoke! NPN_IntFromIdentifier is not bound
+!missing-pinvoke! NPN_InvalidateRect is not bound
+!missing-pinvoke! NPN_InvalidateRegion is not bound
+!missing-pinvoke! NPN_Invoke is not bound
+!missing-pinvoke! NPN_InvokeDefault is not bound
+!missing-pinvoke! NPN_MemAlloc is not bound
+!missing-pinvoke! NPN_MemFlush is not bound
+!missing-pinvoke! NPN_MemFree is not bound
+!missing-pinvoke! NPN_NewStream is not bound
+!missing-pinvoke! NPN_PluginThreadAsyncCall is not bound
+!missing-pinvoke! NPN_PopPopupsEnabledState is not bound
+!missing-pinvoke! NPN_PopUpContextMenu is not bound
+!missing-pinvoke! NPN_PostURL is not bound
+!missing-pinvoke! NPN_PostURLNotify is not bound
+!missing-pinvoke! NPN_PushPopupsEnabledState is not bound
+!missing-pinvoke! NPN_ReleaseObject is not bound
+!missing-pinvoke! NPN_ReleaseVariantValue is not bound
+!missing-pinvoke! NPN_ReloadPlugins is not bound
+!missing-pinvoke! NPN_RemoveProperty is not bound
+!missing-pinvoke! NPN_RequestRead is not bound
+!missing-pinvoke! NPN_RetainObject is not bound
+!missing-pinvoke! NPN_ScheduleTimer is not bound
+!missing-pinvoke! NPN_SetException is not bound
+!missing-pinvoke! NPN_SetProperty is not bound
+!missing-pinvoke! NPN_SetValue is not bound
+!missing-pinvoke! NPN_SetValueForURL is not bound
+!missing-pinvoke! NPN_Status is not bound
+!missing-pinvoke! NPN_UnfocusInstance is not bound
+!missing-pinvoke! NPN_UnscheduleTimer is not bound
+!missing-pinvoke! NPN_URLRedirectResponse is not bound
+!missing-pinvoke! NPN_UserAgent is not bound
+!missing-pinvoke! NPN_UTF8FromIdentifier is not bound
+!missing-pinvoke! NPN_Version is not bound
+!missing-pinvoke! NPN_Write is not bound
+!missing-pinvoke! NPP_ClearSiteData is not bound
+!missing-pinvoke! NPP_Destroy is not bound
+!missing-pinvoke! NPP_DestroyStream is not bound
+!missing-pinvoke! NPP_GetJavaClass is not bound
+!missing-pinvoke! NPP_GetSitesWithData is not bound
+!missing-pinvoke! NPP_GetValue is not bound
+!missing-pinvoke! NPP_GotFocus is not bound
+!missing-pinvoke! NPP_HandleEvent is not bound
+!missing-pinvoke! NPP_Initialize is not bound
+!missing-pinvoke! NPP_LostFocus is not bound
+!missing-pinvoke! NPP_New is not bound
+!missing-pinvoke! NPP_NewStream is not bound
+!missing-pinvoke! NPP_Print is not bound
+!missing-pinvoke! NPP_SetValue is not bound
+!missing-pinvoke! NPP_SetWindow is not bound
+!missing-pinvoke! NPP_Shutdown is not bound
+!missing-pinvoke! NPP_StreamAsFile is not bound
+!missing-pinvoke! NPP_URLNotify is not bound
+!missing-pinvoke! NPP_URLRedirectNotify is not bound
+!missing-pinvoke! NPP_Write is not bound
+!missing-pinvoke! NPP_WriteReady is not bound
+!missing-protocol! DOMXPathNSResolver not bound
+!missing-protocol! WebDocumentSearching not bound
+!missing-protocol! WebDocumentText not bound
+!missing-protocol! WebDocumentView not bound
+!missing-protocol! WebEditingDelegate not bound
+!missing-protocol! WebPlugInViewFactory not bound
+!missing-protocol-member! DOMEventTarget::addEventListener::: not found
+!missing-protocol-member! DOMEventTarget::removeEventListener::: not found
+!missing-protocol-member! WebUIDelegate::webView:runOpenPanelForFileButtonWithResultListener:allowMultipleFiles: not found
+!missing-selector! +NSObject::isKeyExcludedFromWebScript: not bound
+!missing-selector! +NSObject::isSelectorExcludedFromWebScript: not bound
+!missing-selector! +NSObject::webScriptNameForKey: not bound
+!missing-selector! +NSObject::webScriptNameForSelector: not bound
+!missing-selector! DOMCharacterData::deleteData:: not bound
+!missing-selector! DOMCharacterData::insertData:: not bound
+!missing-selector! DOMCharacterData::replaceData::: not bound
+!missing-selector! DOMCharacterData::substringData:: not bound
+!missing-selector! DOMCounter::identifier not bound
+!missing-selector! DOMCounter::listStyle not bound
+!missing-selector! DOMCounter::separator not bound
+!missing-selector! DOMCSSMediaRule::insertRule:: not bound
+!missing-selector! DOMCSSPageRule::setSelectorText: not bound
+!missing-selector! DOMCSSPrimitiveValue::getFloatValue: not bound
+!missing-selector! DOMCSSPrimitiveValue::primitiveType not bound
+!missing-selector! DOMCSSPrimitiveValue::setFloatValue:: not bound
+!missing-selector! DOMCSSPrimitiveValue::setFloatValue:floatValue: not bound
+!missing-selector! DOMCSSPrimitiveValue::setStringValue:: not bound
+!missing-selector! DOMCSSPrimitiveValue::setStringValue:stringValue: not bound
+!missing-selector! DOMCSSStyleDeclaration::setAzimuth: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBackground: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBackgroundAttachment: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBackgroundColor: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBackgroundImage: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBackgroundPosition: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBackgroundRepeat: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorder: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderBottom: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderBottomColor: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderBottomStyle: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderBottomWidth: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderCollapse: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderColor: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderLeft: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderLeftColor: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderLeftStyle: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderLeftWidth: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderRight: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderRightColor: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderRightStyle: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderRightWidth: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderSpacing: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderStyle: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderTop: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderTopColor: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderTopStyle: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderTopWidth: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBorderWidth: not bound
+!missing-selector! DOMCSSStyleDeclaration::setBottom: not bound
+!missing-selector! DOMCSSStyleDeclaration::setCaptionSide: not bound
+!missing-selector! DOMCSSStyleDeclaration::setClear: not bound
+!missing-selector! DOMCSSStyleDeclaration::setClip: not bound
+!missing-selector! DOMCSSStyleDeclaration::setColor: not bound
+!missing-selector! DOMCSSStyleDeclaration::setContent: not bound
+!missing-selector! DOMCSSStyleDeclaration::setCounterIncrement: not bound
+!missing-selector! DOMCSSStyleDeclaration::setCounterReset: not bound
+!missing-selector! DOMCSSStyleDeclaration::setCssFloat: not bound
+!missing-selector! DOMCSSStyleDeclaration::setCue: not bound
+!missing-selector! DOMCSSStyleDeclaration::setCueAfter: not bound
+!missing-selector! DOMCSSStyleDeclaration::setCueBefore: not bound
+!missing-selector! DOMCSSStyleDeclaration::setCursor: not bound
+!missing-selector! DOMCSSStyleDeclaration::setDirection: not bound
+!missing-selector! DOMCSSStyleDeclaration::setDisplay: not bound
+!missing-selector! DOMCSSStyleDeclaration::setElevation: not bound
+!missing-selector! DOMCSSStyleDeclaration::setEmptyCells: not bound
+!missing-selector! DOMCSSStyleDeclaration::setFont: not bound
+!missing-selector! DOMCSSStyleDeclaration::setFontFamily: not bound
+!missing-selector! DOMCSSStyleDeclaration::setFontSize: not bound
+!missing-selector! DOMCSSStyleDeclaration::setFontSizeAdjust: not bound
+!missing-selector! DOMCSSStyleDeclaration::setFontStretch: not bound
+!missing-selector! DOMCSSStyleDeclaration::setFontStyle: not bound
+!missing-selector! DOMCSSStyleDeclaration::setFontVariant: not bound
+!missing-selector! DOMCSSStyleDeclaration::setFontWeight: not bound
+!missing-selector! DOMCSSStyleDeclaration::setHeight: not bound
+!missing-selector! DOMCSSStyleDeclaration::setLeft: not bound
+!missing-selector! DOMCSSStyleDeclaration::setLetterSpacing: not bound
+!missing-selector! DOMCSSStyleDeclaration::setLineHeight: not bound
+!missing-selector! DOMCSSStyleDeclaration::setListStyle: not bound
+!missing-selector! DOMCSSStyleDeclaration::setListStyleImage: not bound
+!missing-selector! DOMCSSStyleDeclaration::setListStylePosition: not bound
+!missing-selector! DOMCSSStyleDeclaration::setListStyleType: not bound
+!missing-selector! DOMCSSStyleDeclaration::setMargin: not bound
+!missing-selector! DOMCSSStyleDeclaration::setMarginBottom: not bound
+!missing-selector! DOMCSSStyleDeclaration::setMarginLeft: not bound
+!missing-selector! DOMCSSStyleDeclaration::setMarginRight: not bound
+!missing-selector! DOMCSSStyleDeclaration::setMarginTop: not bound
+!missing-selector! DOMCSSStyleDeclaration::setMarkerOffset: not bound
+!missing-selector! DOMCSSStyleDeclaration::setMarks: not bound
+!missing-selector! DOMCSSStyleDeclaration::setMaxHeight: not bound
+!missing-selector! DOMCSSStyleDeclaration::setMaxWidth: not bound
+!missing-selector! DOMCSSStyleDeclaration::setMinHeight: not bound
+!missing-selector! DOMCSSStyleDeclaration::setMinWidth: not bound
+!missing-selector! DOMCSSStyleDeclaration::setOrphans: not bound
+!missing-selector! DOMCSSStyleDeclaration::setOutline: not bound
+!missing-selector! DOMCSSStyleDeclaration::setOutlineColor: not bound
+!missing-selector! DOMCSSStyleDeclaration::setOutlineStyle: not bound
+!missing-selector! DOMCSSStyleDeclaration::setOutlineWidth: not bound
+!missing-selector! DOMCSSStyleDeclaration::setOverflow: not bound
+!missing-selector! DOMCSSStyleDeclaration::setPadding: not bound
+!missing-selector! DOMCSSStyleDeclaration::setPaddingBottom: not bound
+!missing-selector! DOMCSSStyleDeclaration::setPaddingLeft: not bound
+!missing-selector! DOMCSSStyleDeclaration::setPaddingRight: not bound
+!missing-selector! DOMCSSStyleDeclaration::setPaddingTop: not bound
+!missing-selector! DOMCSSStyleDeclaration::setPage: not bound
+!missing-selector! DOMCSSStyleDeclaration::setPageBreakAfter: not bound
+!missing-selector! DOMCSSStyleDeclaration::setPageBreakBefore: not bound
+!missing-selector! DOMCSSStyleDeclaration::setPageBreakInside: not bound
+!missing-selector! DOMCSSStyleDeclaration::setPause: not bound
+!missing-selector! DOMCSSStyleDeclaration::setPauseAfter: not bound
+!missing-selector! DOMCSSStyleDeclaration::setPauseBefore: not bound
+!missing-selector! DOMCSSStyleDeclaration::setPitch: not bound
+!missing-selector! DOMCSSStyleDeclaration::setPitchRange: not bound
+!missing-selector! DOMCSSStyleDeclaration::setPlayDuring: not bound
+!missing-selector! DOMCSSStyleDeclaration::setPosition: not bound
+!missing-selector! DOMCSSStyleDeclaration::setProperty::: not bound
+!missing-selector! DOMCSSStyleDeclaration::setQuotes: not bound
+!missing-selector! DOMCSSStyleDeclaration::setRichness: not bound
+!missing-selector! DOMCSSStyleDeclaration::setRight: not bound
+!missing-selector! DOMCSSStyleDeclaration::setSize: not bound
+!missing-selector! DOMCSSStyleDeclaration::setSpeak: not bound
+!missing-selector! DOMCSSStyleDeclaration::setSpeakHeader: not bound
+!missing-selector! DOMCSSStyleDeclaration::setSpeakNumeral: not bound
+!missing-selector! DOMCSSStyleDeclaration::setSpeakPunctuation: not bound
+!missing-selector! DOMCSSStyleDeclaration::setSpeechRate: not bound
+!missing-selector! DOMCSSStyleDeclaration::setStress: not bound
+!missing-selector! DOMCSSStyleDeclaration::setTableLayout: not bound
+!missing-selector! DOMCSSStyleDeclaration::setTextAlign: not bound
+!missing-selector! DOMCSSStyleDeclaration::setTextDecoration: not bound
+!missing-selector! DOMCSSStyleDeclaration::setTextIndent: not bound
+!missing-selector! DOMCSSStyleDeclaration::setTextShadow: not bound
+!missing-selector! DOMCSSStyleDeclaration::setTextTransform: not bound
+!missing-selector! DOMCSSStyleDeclaration::setTop: not bound
+!missing-selector! DOMCSSStyleDeclaration::setUnicodeBidi: not bound
+!missing-selector! DOMCSSStyleDeclaration::setVerticalAlign: not bound
+!missing-selector! DOMCSSStyleDeclaration::setVisibility: not bound
+!missing-selector! DOMCSSStyleDeclaration::setVoiceFamily: not bound
+!missing-selector! DOMCSSStyleDeclaration::setVolume: not bound
+!missing-selector! DOMCSSStyleDeclaration::setWhiteSpace: not bound
+!missing-selector! DOMCSSStyleDeclaration::setWidows: not bound
+!missing-selector! DOMCSSStyleDeclaration::setWidth: not bound
+!missing-selector! DOMCSSStyleDeclaration::setWordSpacing: not bound
+!missing-selector! DOMCSSStyleDeclaration::setZIndex: not bound
+!missing-selector! DOMCSSStyleRule::setSelectorText: not bound
+!missing-selector! DOMCSSStyleSheet::insertRule:: not bound
+!missing-selector! DOMCSSValueList::item: not bound
+!missing-selector! DOMCSSValueList::length not bound
+!missing-selector! DOMDocument::activeElement not bound
+!missing-selector! DOMDocument::createAttributeNS:: not bound
+!missing-selector! DOMDocument::createElementNS:: not bound
+!missing-selector! DOMDocument::createExpression:: not bound
+!missing-selector! DOMDocument::createExpression:resolver: not bound
+!missing-selector! DOMDocument::createNodeIterator:::: not bound
+!missing-selector! DOMDocument::createNSResolver: not bound
+!missing-selector! DOMDocument::createProcessingInstruction:: not bound
+!missing-selector! DOMDocument::createTreeWalker:::: not bound
+!missing-selector! DOMDocument::createTreeWalker:whatToShow:filter:expandEntityReferences: not bound
+!missing-selector! DOMDocument::evaluate::::: not bound
+!missing-selector! DOMDocument::evaluate:contextNode:resolver:type:inResult: not bound
+!missing-selector! DOMDocument::getComputedStyle:: not bound
+!missing-selector! DOMDocument::getElementsByTagNameNS:: not bound
+!missing-selector! DOMDocument::getOverrideStyle:: not bound
+!missing-selector! DOMDocument::importNode:: not bound
+!missing-selector! DOMDocument::URLWithAttributeString: not bound
+!missing-selector! DOMDocument::webFrame not bound
+!missing-selector! DOMElement::getAttributeNodeNS:: not bound
+!missing-selector! DOMElement::getAttributeNS:: not bound
+!missing-selector! DOMElement::getElementsByTagNameNS:: not bound
+!missing-selector! DOMElement::hasAttributeNS:: not bound
+!missing-selector! DOMElement::innerHTML not bound
+!missing-selector! DOMElement::outerHTML not bound
+!missing-selector! DOMElement::removeAttributeNS:: not bound
+!missing-selector! DOMElement::setAttribute:: not bound
+!missing-selector! DOMElement::setAttributeNS::: not bound
+!missing-selector! DOMElement::setInnerHTML: not bound
+!missing-selector! DOMElement::setOuterHTML: not bound
+!missing-selector! DOMEntity::notationName not bound
+!missing-selector! DOMEntity::publicId not bound
+!missing-selector! DOMEntity::systemId not bound
+!missing-selector! DOMEvent::initEvent::: not bound
+!missing-selector! DOMHTMLDocument::createDocumentFragmentWithMarkupString:baseURL: not bound
+!missing-selector! DOMHTMLDocument::createDocumentFragmentWithText: not bound
+!missing-selector! DOMHTMLElement::accessKey not bound
+!missing-selector! DOMHTMLElement::setAccessKey: not bound
+!missing-selector! DOMHTMLFrameElement::contentFrame not bound
+!missing-selector! DOMHTMLIFrameElement::contentFrame not bound
+!missing-selector! DOMHTMLObjectElement::contentFrame not bound
+!missing-selector! DOMHTMLSelectElement::add:: not bound
+!missing-selector! DOMHTMLTextAreaElement::autofocus not bound
+!missing-selector! DOMHTMLTextAreaElement::selectionEnd not bound
+!missing-selector! DOMHTMLTextAreaElement::selectionStart not bound
+!missing-selector! DOMHTMLTextAreaElement::setAutofocus: not bound
+!missing-selector! DOMHTMLTextAreaElement::setSelectionEnd: not bound
+!missing-selector! DOMHTMLTextAreaElement::setSelectionRange:end: not bound
+!missing-selector! DOMHTMLTextAreaElement::setSelectionStart: not bound
+!missing-selector! DOMHTMLTextAreaElement::willValidate not bound
+!missing-selector! DOMHTMLTitleElement::setText: not bound
+!missing-selector! DOMHTMLTitleElement::text not bound
+!missing-selector! DOMHTMLUListElement::compact not bound
+!missing-selector! DOMHTMLUListElement::setCompact: not bound
+!missing-selector! DOMHTMLUListElement::setType: not bound
+!missing-selector! DOMHTMLUListElement::type not bound
+!missing-selector! DOMImplementation::createCSSStyleSheet:: not bound
+!missing-selector! DOMImplementation::createDocument::: not bound
+!missing-selector! DOMImplementation::createDocumentType::: not bound
+!missing-selector! DOMImplementation::hasFeature:: not bound
+!missing-selector! DOMKeyboardEvent::initKeyboardEvent:canBubble:cancelable:view:keyIdentifier:location:ctrlKey:altKey:shiftKey:metaKey: not bound
+!missing-selector! DOMKeyboardEvent::initKeyboardEvent:canBubble:cancelable:view:keyIdentifier:location:ctrlKey:altKey:shiftKey:metaKey:altGraphKey: not bound
+!missing-selector! DOMKeyboardEvent::location not bound
+!missing-selector! DOMMouseEvent::initMouseEvent::::::::::::::: not bound
+!missing-selector! DOMMutationEvent::attrChange not bound
+!missing-selector! DOMMutationEvent::attrName not bound
+!missing-selector! DOMMutationEvent::initMutationEvent:::::::: not bound
+!missing-selector! DOMMutationEvent::initMutationEvent:canBubble:cancelable:relatedNode:prevValue:newValue:attrName:attrChange: not bound
+!missing-selector! DOMMutationEvent::newValue not bound
+!missing-selector! DOMMutationEvent::prevValue not bound
+!missing-selector! DOMMutationEvent::relatedNode not bound
+!missing-selector! DOMNamedNodeMap::getNamedItemNS:: not bound
+!missing-selector! DOMNamedNodeMap::removeNamedItemNS:: not bound
+!missing-selector! DOMNode::contains: not bound
+!missing-selector! DOMNode::insertBefore:: not bound
+!missing-selector! DOMNode::isSupported:: not bound
+!missing-selector! DOMNode::replaceChild:: not bound
+!missing-selector! DOMNode::webArchive not bound
+!missing-selector! DOMObject::sheet not bound
+!missing-selector! DOMRange::compareBoundaryPoints:: not bound
+!missing-selector! DOMRange::markupString not bound
+!missing-selector! DOMRange::setEnd:: not bound
+!missing-selector! DOMRange::setStart:: not bound
+!missing-selector! DOMRange::webArchive not bound
+!missing-selector! DOMRect::bottom not bound
+!missing-selector! DOMRect::left not bound
+!missing-selector! DOMRect::right not bound
+!missing-selector! DOMRect::top not bound
+!missing-selector! DOMRGBColor::alpha not bound
+!missing-selector! DOMRGBColor::blue not bound
+!missing-selector! DOMRGBColor::color not bound
+!missing-selector! DOMRGBColor::green not bound
+!missing-selector! DOMRGBColor::red not bound
+!missing-selector! DOMTreeWalker::currentNode not bound
+!missing-selector! DOMTreeWalker::expandEntityReferences not bound
+!missing-selector! DOMTreeWalker::filter not bound
+!missing-selector! DOMTreeWalker::root not bound
+!missing-selector! DOMTreeWalker::setCurrentNode: not bound
+!missing-selector! DOMTreeWalker::whatToShow not bound
+!missing-selector! DOMUIEvent::initUIEvent::::: not bound
+!missing-selector! DOMUIEvent::pageY not bound
+!missing-selector! DOMXPathExpression::evaluate::: not bound
+!missing-selector! DOMXPathExpression::evaluate:type:inResult: not bound
+!missing-selector! DOMXPathResult::booleanValue not bound
+!missing-selector! DOMXPathResult::invalidIteratorState not bound
+!missing-selector! DOMXPathResult::numberValue not bound
+!missing-selector! DOMXPathResult::resultType not bound
+!missing-selector! DOMXPathResult::singleNodeValue not bound
+!missing-selector! DOMXPathResult::snapshotItem: not bound
+!missing-selector! DOMXPathResult::snapshotLength not bound
+!missing-selector! DOMXPathResult::stringValue not bound
+!missing-selector! NSObject::invokeDefaultMethodWithArguments: not bound
+!missing-selector! NSObject::invokeUndefinedMethodFromWebScript:withArguments: not bound
+!missing-selector! NSObject::objectForWebScript not bound
+!missing-selector! NSObject::webFrame not bound
+!missing-selector! NSObject::webPlugInContainerLoadRequest:inFrame: not bound
+!missing-selector! NSObject::webPlugInContainerSelectionColor not bound
+!missing-selector! NSObject::webPlugInContainerShowStatus: not bound
+!missing-selector! NSObject::webPlugInMainResourceDidFailWithError: not bound
+!missing-selector! NSObject::webPlugInMainResourceDidReceiveData: not bound
+!missing-selector! NSObject::webPlugInMainResourceDidReceiveResponse: not bound
+!missing-selector! NSObject::webPlugInSetIsSelected: not bound
+!missing-selector! WebBackForwardList::setPageCacheSize: not bound
+!missing-selector! WebPreferences::allowsAirPlayForMediaPlayback not bound
+!missing-selector! WebPreferences::setAllowsAirPlayForMediaPlayback: not bound
+!missing-selector! WebPreferences::setSuppressesIncrementalRendering: not bound
+!missing-selector! WebPreferences::suppressesIncrementalRendering not bound
+!missing-selector! WebView::computedStyleForElement:pseudoElement: not bound
+!missing-selector! WebView::copy: not bound
+!missing-selector! WebView::editableDOMRangeForPoint: not bound
+!missing-selector! WebView::goBack: not bound
+!missing-selector! WebView::goForward: not bound
+!missing-selector! WebView::overWrite: not bound
+!missing-selector! WebView::replaceSelectionWithNode: not bound
+!missing-selector! WebView::replaceSelectionWithText: not bound
+!missing-selector! WebView::stopLoading: not bound
+!missing-selector! WebView::takeStringURLFrom: not bound
+!missing-selector! WKWebView::goBack: not bound
+!missing-selector! WKWebView::goForward: not bound
+!missing-selector! WKWebView::reload: not bound
+!missing-selector! WKWebView::reloadFromOrigin: not bound
+!missing-selector! WKWebView::stopLoading: not bound
+!missing-selector! WKWebViewConfiguration::setUserInterfaceDirectionPolicy: not bound
+!missing-selector! WKWebViewConfiguration::userInterfaceDirectionPolicy not bound
+!missing-type! DOMCounter not bound
+!missing-type! DOMCSSPrimitiveValue not bound
+!missing-type! DOMCSSValueList not bound
+!missing-type! DOMEntity not bound
+!missing-type! DOMHTMLTitleElement not bound
+!missing-type! DOMHTMLUListElement not bound
+!missing-type! DOMMutationEvent not bound
+!missing-type! DOMRect not bound
+!missing-type! DOMRGBColor not bound
+!missing-type! DOMTreeWalker not bound
+!missing-type! DOMXPathExpression not bound
+!missing-type! DOMXPathResult not bound
+!missing-type! WebUndefined not bound
+!unknown-native-enum! WKSelectionGranularity bound
+!wrong-enum-size! WebNavigationType managed 4 vs native 8

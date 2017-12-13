@@ -1,0 +1,29 @@
+!extra-protocol-member! unexpected selector UIApplicationDelegate::accessibilityPerformMagicTap found
+!extra-protocol-member! unexpected selector UIImagePickerControllerDelegate::imagePickerController:didFinishPickingImage:editingInfo: found
+!extra-protocol-member! unexpected selector UITableViewDelegate::tableView:accessoryTypeForRowWithIndexPath: found
+!incorrect-protocol-member! UIDocumentMenuDelegate::documentMenuWasCancelled: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UIDocumentPickerDelegate::documentPicker:didPickDocumentAtURL: is OPTIONAL and should NOT be abstract
+!missing-designated-initializer! UIDragPreviewParameters::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UILocalNotification::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UISpringTimingParameters::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIUserNotificationAction::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIUserNotificationCategory::init is missing an [DesignatedInitializer] attribute
+!missing-field! UIApplicationInvalidInterfaceOrientationException not bound
+!missing-protocol-conformance! UIDocumentInteractionController should conform to UIActionSheetDelegate
+!missing-selector! NSObject::accessibilityDragSourceDescriptors not bound
+!missing-selector! NSObject::accessibilityDropPointDescriptors not bound
+!missing-selector! NSObject::setAccessibilityDragSourceDescriptors: not bound
+!missing-selector! NSObject::setAccessibilityDropPointDescriptors: not bound
+!missing-selector! UIAlertView::initWithTitle:message:delegate:cancelButtonTitle:otherButtonTitles: not bound
+!missing-selector! UIRefreshControl::setTintColor: not bound
+!missing-selector! UIRefreshControl::tintColor not bound
+!missing-selector! UIStepper::setTintColor: not bound
+!missing-selector! UIStepper::tintColor not bound
+!missing-selector! UISwitch::setTintColor: not bound
+!missing-selector! UISwitch::tintColor not bound
+!missing-selector! UIToolbar::setTintColor: not bound
+!missing-selector! UIToolbar::tintColor not bound
+!unknown-field! UIKeyboardBoundsUserInfoKey bound
+!unknown-field! UIKeyboardCenterBeginUserInfoKey bound
+!unknown-field! UIKeyboardCenterEndUserInfoKey bound
+!unknown-native-enum! UIToolbarPosition bound

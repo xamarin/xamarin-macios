@@ -1,0 +1,14 @@
+!missing-field! HKDetailedCDAValidationErrorKey not bound
+!missing-field! HKSourceRevisionAnyOperatingSystem not bound
+!missing-selector! +HKObjectType::documentTypeForIdentifier: not bound
+!missing-selector! HKAnchoredObjectQuery::initWithType:predicate:anchor:limit:completionHandler: not bound
+!missing-selector! HKDocumentQuery::includeDocumentData not bound
+!missing-selector! HKDocumentQuery::initWithDocumentType:predicate:limit:sortDescriptors:includeDocumentData:resultsHandler: not bound
+!missing-selector! HKDocumentQuery::limit not bound
+!missing-selector! HKDocumentQuery::sortDescriptors not bound
+!missing-selector! HKDocumentSample::documentType not bound
+!missing-type! HKDocumentQuery not bound
+!missing-type! HKDocumentType not bound
+
+## type was marked as available in 3.0 - but it's now iOS 11 only (even if members are marked with 10.0)
+!unknown-type! HKCDADocument bound

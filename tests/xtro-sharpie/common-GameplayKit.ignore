@@ -1,0 +1,8 @@
+!incorrect-protocol-member! GKGameModelPlayer::playerId is REQUIRED and should be abstract
+!missing-designated-initializer! GKEntity::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! GKRandomSource::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! GKRuleSystem::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! GKState::init is missing an [DesignatedInitializer] attribute
+!missing-protocol-conformance! GKBehavior should conform to NSFastEnumeration
+!missing-protocol-conformance! GKComponentSystem should conform to NSFastEnumeration
+!unknown-type! GKHybridStrategist bound

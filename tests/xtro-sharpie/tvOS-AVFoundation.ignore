@@ -1,0 +1,4 @@
+!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
+!missing-selector! AVPlayerItem::preferredMaximumResolution not bound
+!missing-selector! AVPlayerItem::setPreferredMaximumResolution: not bound
+!unknown-type! AVPersistableContentKeyRequest bound

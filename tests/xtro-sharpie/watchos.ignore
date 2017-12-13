@@ -12,13 +12,6 @@ AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions:
 !missing-enum! AVAudioSessionRecordPermission not bound
 
 
-# CoreBluetooth
-
-## present in headers but already deprecated (we're not exposing them)
-!missing-enum! CBCentralManagerState not bound
-!missing-enum! CBPeripheralManagerState not bound
-!missing-selector! CBPeripheral::RSSI not bound
-!missing-selector! +CBUUID::UUIDWithCFUUID: not bound
 
 
 # Foundation
@@ -124,32 +117,6 @@ AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions:
 !missing-selector! GKVoiceChatService::stopVoiceChatWithParticipantID: not bound
 !missing-enum! GKSessionError not bound
 
-# HealthKit
-
-## type was marked as available in 3.0 - but it's now iOS 11 only (even if members are marked with 10.0)
-!unknown-type! HKCDADocument bound
-
-
-#PassKit
-
-## enums added in Xcode 8.1 but the only API using them are not available on watchOS
-!missing-enum! PKPaymentButtonStyle not bound
-!missing-enum! PKPaymentButtonType not bound
-
-
-# SpriteKit
-
-## AVPlayer is not available on watchOS
-!missing-selector! +SKVideoNode::videoNodeWithAVPlayer: not bound
-!missing-selector! SKVideoNode::initWithAVPlayer: not bound
-
-## Those API are already deprecated - so we're not adding them
-## from a managed point-of-view that's invisible (same .ctor)
-!missing-selector! SKVideoNode::initWithVideoFileNamed: not bound
-!missing-selector! SKVideoNode::initWithVideoURL: not bound
-!missing-selector! +SKVideoNode::videoNodeWithVideoFileNamed: not bound
-!missing-selector! +SKVideoNode::videoNodeWithVideoURL: not bound
-
 
 # UIKit
 
@@ -176,11 +143,6 @@ AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions:
 ## UITraitCollection is not available on watchOS
 !missing-selector! +UIColor::colorNamed:inBundle:compatibleWithTraitCollection: not bound
 
-
-# WatchConnectivity
-
-## It was _upgraded_ to required in iOS 10 beta 1
-!incorrect-protocol-member! WCSessionDelegate::session:activationDidCompleteWithState:error: is REQUIRED and should be abstract
 
 
 # Apple internals (we do not expose them)

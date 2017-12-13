@@ -1,0 +1,5 @@
+!missing-protocol! GKFriendRequestComposeViewControllerDelegate not bound
+!missing-protocol! GKSavedGameListener not bound
+!missing-protocol! GKSessionDelegate not bound
+!missing-protocol! GKVoiceChatClient not bound
+!unknown-native-enum! GKPeerPickerConnectionType bound

@@ -308,7 +308,6 @@
 # Fixed in XAMCORE_4_0
 !wrong-enum-size! NSEventSubtype managed 8 vs native 2
 !wrong-enum-size! WebNavigationType managed 4 vs native 8
-!unknown-field! AVKitErrorDomain bound
 !unknown-native-enum! AVAudioSessionCategoryOptions bound
 !unknown-native-enum! AVAudioSessionInterruptionType bound
 !unknown-native-enum! AVAudioSessionErrorCode bound
@@ -318,10 +317,8 @@
 !unknown-native-enum! AVAudioSessionRouteChangeReason bound
 !unknown-native-enum! AVAudioSessionRecordPermission bound
 !unknown-native-enum! AVAudioSessionSilenceSecondaryAudioHintType bound
-!unknown-native-enum! AVKitError bound
 !unknown-native-enum! AVSpeechBoundary bound
 !unknown-native-enum! CBPeripheralManagerAuthorizationStatus bound
-!unknown-native-enum! MidiNetworkConnectionPolicy bound
 !unknown-native-enum! NSAlertButtonReturn bound
 !unknown-native-enum! NSAlertType bound
 !unknown-native-enum! NSApplicationLayoutDirection bound
@@ -336,8 +333,6 @@
 !unknown-native-enum! NSTextStorageEditedFlags bound
 !unknown-native-enum! NSTextWritingDirection bound
 !unknown-native-enum! WKSelectionGranularity bound
-!unknown-native-enum! SKCloudServiceAuthorizationStatus bound
-!unknown-native-enum! SKCloudServiceCapability bound
 !unknown-native-enum! NSWindowStyle bound
 !unknown-native-enum! NSPanelButtonType bound
 !unknown-native-enum! NSWindowNumberListOptions bound
@@ -468,10 +463,3 @@
 #PDFKit
 ## Deprecated
 !missing-selector! PDFAnnotation::initWithDictionary:forPage: not bound
-
-# NetworkExtension
-## Will be removed in XAMCORE_4_0
-!unknown-field! NEFilterProviderRemediationMapRemediationButtonTexts bound
-!unknown-field! NEFilterProviderRemediationMapRemediationURLs bound
-!unknown-type! NEFilterProvider bound
-

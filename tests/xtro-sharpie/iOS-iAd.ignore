@@ -1,0 +1,8 @@
+## API changed, fixed in XAMCORE_4_0 not to cause an API break
+!incorrect-protocol-member! ADInterstitialAdDelegate::interstitialAdActionDidFinish: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! ADInterstitialAdDelegate::interstitialAdActionShouldBegin:willLeaveApplication: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! ADInterstitialAdDelegate::interstitialAdDidLoad: is OPTIONAL and should NOT be abstract
+
+## Deprecated in iOS 4.2 - removed from XAMCORE_3_0
+!unknown-field! ADBannerContentSizeIdentifier320x50 bound
+!unknown-field! ADBannerContentSizeIdentifier480x32 bound

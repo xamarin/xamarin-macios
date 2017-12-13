@@ -1,0 +1,6 @@
+!missing-enum! AVAudioSessionRecordPermission not bound
+!missing-field! AVAudioUnitComponentTagsDidChangeNotification not bound
+!missing-protocol! AVAudio3DMixing not bound
+!missing-protocol-member! AVAudioRecorderDelegate::audioRecorderEndInterruption:withOptions: not found
+!unknown-native-enum! AVAudioSessionFlags bound
+!unknown-native-enum! AVAudioSessionInterruptionFlags bound

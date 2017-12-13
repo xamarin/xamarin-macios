@@ -1,0 +1,3 @@
+!unknown-pinvoke! CGColorCreateGenericGray bound
+!unknown-pinvoke! CGColorCreateGenericRGB bound
+!unknown-pinvoke! CGColorGetConstantColor bound

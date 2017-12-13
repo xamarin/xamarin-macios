@@ -53,11 +53,6 @@
 ## there's another P/Invoke that returns the same result according to the documentation (CGColorSpaceCopyName), so no need to bind another one.
 !missing-pinvoke! CGColorSpaceGetName is not bound
 
-# CoreSpotlight
-
-## low value (should use OS version for any checks)
-!missing-field! CoreSpotlightVersionNumber not bound
-!missing-field! CoreSpotlightVersionString not bound
 
 
 # Foundation
@@ -223,15 +218,6 @@
 !missing-pinvoke! SecRandomCopyBytes is not bound
 
 
-# SpriteKit
-
-## both introduced and deprecated in Xcode8
-!missing-selector! SKView::preferredFrameRate not bound
-!missing-selector! SKView::setPreferredFrameRate: not bound
-
-## it's an internal that is called from a non-generated binding
-!incorrect-designated-initializer! SKWarpGeometryGrid::initWithColumns:rows:sourcePositions:destPositions: is not a constructor
-
 
 # UIKit
 
@@ -246,41 +232,12 @@
 !missing-selector! +UIView::layerClass not bound
 
 
-# Vision
-
-## we do not expose internal framework versions
-!missing-field! VNVisionVersionNumber not bound
-
-## called indirectly (there's a required native layer for them)
-!missing-pinvoke! VNImagePointForFaceLandmarkPoint is not bound
-!missing-pinvoke! VNNormalizedFaceBoundingBoxPointForLandmarkPoint is not bound
 
 
 # non-imported headers
 
-## objc runtime
-!unknown-pinvoke! class_addProperty bound
 
 ## CoreLocation
 # We have our own managed ctor
 !missing-pinvoke! CLLocationCoordinate2DMake is not bound
 
-## PDFKit
-# The following enums are bound as PdfFoo, lowercase Pdf prefix
-!missing-enum! PDFActionNamedName not bound
-!missing-enum! PDFAreaOfInterest not bound
-!missing-enum! PDFBorderStyle not bound
-!missing-enum! PDFDisplayBox not bound
-!missing-enum! PDFDisplayDirection not bound
-!missing-enum! PDFDisplayMode not bound
-!missing-enum! PDFDocumentPermissions not bound
-!missing-enum! PDFInterpolationQuality not bound
-!missing-enum! PDFLineStyle not bound
-!missing-enum! PDFMarkupType not bound
-!missing-enum! PDFTextAnnotationIconType not bound
-!missing-enum! PDFWidgetCellState not bound
-!missing-enum! PDFWidgetControlType not bound
-
-# WebKit
-## Header file missing from umbrella header, but used by WKWebView, which IS included in the umbrella.
-!unknown-type! WKSnapshotConfiguration bound

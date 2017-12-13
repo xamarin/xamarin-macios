@@ -1,0 +1,7 @@
+!missing-enum! MPNowPlayingPlaybackState not bound
+!missing-field! MPMediaPlaylistPropertyAuthorDisplayName not bound
+!missing-field! MPMediaPlaylistPropertyDescriptionText not bound
+!missing-protocol! MPSystemMusicPlayerController not bound
+!missing-selector! MPNowPlayingInfoCenter::playbackState not bound
+!missing-selector! MPNowPlayingInfoCenter::setPlaybackState: not bound
+!unknown-type! MPMediaItem bound

@@ -1,0 +1,9 @@
+!missing-designated-initializer! UILocalNotification::init is missing an [DesignatedInitializer] attribute
+!missing-enum! NSTextWritingDirection not bound
+!missing-enum! UIPreferredPresentationStyle not bound
+!missing-selector! +UIColor::colorNamed:inBundle:compatibleWithTraitCollection: not bound
+!missing-selector! NSAttributedString::initWithFileURL:options:documentAttributes:error: not bound
+!missing-selector! NSItemProvider::preferredPresentationStyle not bound
+!missing-selector! NSItemProvider::setPreferredPresentationStyle: not bound
+!unknown-native-enum! UILineBreakMode bound
+!unknown-native-enum! UITextAlignment bound

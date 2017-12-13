@@ -2,21 +2,7 @@
 
 # hacks around Apple - because we want better API :)
 
-## untyped enum, we took the prefix from values in ABPerson.h
-!unknown-native-enum! ABAddressBookError bound
 
-# ARKit
-
-## NS_SWIFT_UNAVAILABLE("Use run(_:options:) instead")
-!missing-selector! ARSession::runWithConfiguration: not bound
-
-# AssetLibrary
-
-## typedef is used + untyped enum in ALAssetsLibrary.h: typedef NSUInteger ALAssetsGroupType;
-!unknown-native-enum! ALAssetsGroupType bound
-
-## was returned by `valueForProperty:` on error condition. API deprecated in iOS9
-!missing-field! ALErrorInvalidProperty not bound
 
 
 # AudioUnit
@@ -61,21 +47,6 @@
 !extra-protocol-member! unexpected selector CBPeripheralDelegate::peripheralDidInvalidateServices: found
 
 
-# CoreImage
-
-## OSX-only API, rdar #22524785
-## see https://trello.com/c/kpksFWto/6-22524785-coreimage-headers-discrepancies
-!missing-selector! CIKernel::setROISelector: not bound
-
-
-# CoreTelephony
-
-## deprecated in iOS 10 (in favor of CallKit)
-!missing-field! CTCallStateConnected not bound
-!missing-field! CTCallStateDialing not bound
-!missing-field! CTCallStateDisconnected not bound
-!missing-field! CTCallStateIncoming not bound
-
 
 # GameKit
 
@@ -114,12 +85,6 @@
 
 ## was @required but now @optional (a replacement was added in Xcode9) - still a breaking change to remove the abstract
 !incorrect-protocol-member! PKPushRegistryDelegate::pushRegistry:didReceiveIncomingPushWithPayload:forType: is OPTIONAL and should NOT be abstract
-
-
-# ReplayKit
-
-## only used on tvOS but exposed in iOS 10 SDK
-!missing-enum! RPPreviewViewControllerMode not bound
 
 
 # Social
@@ -215,19 +180,6 @@
 !missing-selector! NSObject::setShouldGroupAccessibilityChildren: not bound
 !missing-selector! NSObject::shouldGroupAccessibilityChildren not bound
 
-# WatchConnectivity
-
-## They were _upgraded_ to required in iOS 10 beta 1
-!incorrect-protocol-member! WCSessionDelegate::session:activationDidCompleteWithState:error: is REQUIRED and should be abstract
-!incorrect-protocol-member! WCSessionDelegate::sessionDidBecomeInactive: is REQUIRED and should be abstract
-!incorrect-protocol-member! WCSessionDelegate::sessionDidDeactivate: is REQUIRED and should be abstract
-
-
-# WatchKit
-
-## the returned type WKCrownSequencer is not available on iOS (watchOS only)
-!missing-selector! WKInterfaceController::crownSequencer not bound
-
 
 ## methods are [Sealed] so we can't reflect the selector
 ### Docs: This method is intended to be called, not overridden.
@@ -240,7 +192,6 @@
 
 ## OSX-only enums
 !unknown-native-enum! AVCaptureDeviceTransportControlsPlaybackMode bound
-!unknown-native-enum! AVPlayerViewControlsStyle bound
 !unknown-native-enum! AVVideoFieldMode bound
 
 ## OSX-only functions - fixed in maccore/master a0ab1a7027fb2afdd240d2bc54ca2bb048d98da4
@@ -444,10 +395,6 @@
 # Apple docs: Available in iOS 8.0 through iOS 8.2.
 !unknown-field! SCNSceneSourceConvertToYUpKey bound
 !unknown-field! SCNSceneSourceConvertUnitsToMetersKey bound
-
-# Apple docs: Deprecated in iOS 4.2.
-!unknown-field! ADBannerContentSizeIdentifier320x50 bound
-!unknown-field! ADBannerContentSizeIdentifier480x32 bound
 
 # Apple docs: Deprecated in iOS 3.2
 !unknown-field! UIKeyboardBoundsUserInfoKey bound

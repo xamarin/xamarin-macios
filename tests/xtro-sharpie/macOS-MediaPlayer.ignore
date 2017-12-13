@@ -1,0 +1,4 @@
+!missing-enum! MPErrorCode not bound
+!missing-field! MPErrorDomain not bound
+!missing-selector! MPMediaItemArtwork::imageCropRect not bound
+!unknown-type! MPMediaItem bound

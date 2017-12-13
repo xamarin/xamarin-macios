@@ -1,0 +1,6 @@
+!missing-selector! +NSURLConnection::sendSynchronousRequest:returningResponse:error: not bound
+!missing-selector! NSFileProviderService::getFileProviderConnectionWithCompletionHandler: not bound
+!unknown-native-enum! NSBundleExecutableArchitecture bound
+!unknown-pinvoke! getxattr bound
+!unknown-pinvoke! removexattr bound
+!unknown-pinvoke! setxattr bound

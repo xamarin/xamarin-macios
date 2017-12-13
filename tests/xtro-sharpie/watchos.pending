@@ -7,68 +7,6 @@
 !missing-field! AVAudioUnitComponentTagsDidChangeNotification not bound
 
 
-# CloudKit
-
-## Types (and members) added and deprecated in the same version (iOS headers are already cleaned in most cases)
-!missing-type! CKDiscoverAllContactsOperation not bound
-!missing-selector! CKDiscoverAllContactsOperation::discoverAllContactsCompletionBlock not bound
-!missing-selector! CKDiscoverAllContactsOperation::setDiscoverAllContactsCompletionBlock: not bound
-!missing-type! CKDiscoverUserInfosOperation not bound
-!missing-selector! CKDiscoverUserInfosOperation::discoverUserInfosCompletionBlock not bound
-!missing-selector! CKDiscoverUserInfosOperation::emailAddresses not bound
-!missing-selector! CKDiscoverUserInfosOperation::initWithEmailAddresses:userRecordIDs: not bound
-!missing-selector! CKDiscoverUserInfosOperation::setDiscoverUserInfosCompletionBlock: not bound
-!missing-selector! CKDiscoverUserInfosOperation::setEmailAddresses: not bound
-!missing-selector! CKDiscoverUserInfosOperation::setUserRecordIDs: not bound
-!missing-selector! CKDiscoverUserInfosOperation::userRecordIDs not bound
-!missing-type! CKDiscoveredUserInfo not bound
-!missing-selector! CKDiscoveredUserInfo::firstName not bound
-!missing-selector! CKDiscoveredUserInfo::lastName not bound
-!missing-selector! CKDiscoveredUserInfo::userRecordID not bound
-!missing-type! CKFetchRecordChangesOperation not bound
-!missing-selector! CKFetchRecordChangesOperation::desiredKeys not bound
-!missing-selector! CKFetchRecordChangesOperation::fetchRecordChangesCompletionBlock not bound
-!missing-selector! CKFetchRecordChangesOperation::initWithRecordZoneID:previousServerChangeToken: not bound
-!missing-selector! CKFetchRecordChangesOperation::moreComing not bound
-!missing-selector! CKFetchRecordChangesOperation::previousServerChangeToken not bound
-!missing-selector! CKFetchRecordChangesOperation::recordChangedBlock not bound
-!missing-selector! CKFetchRecordChangesOperation::recordWithIDWasDeletedBlock not bound
-!missing-selector! CKFetchRecordChangesOperation::recordZoneID not bound
-!missing-selector! CKFetchRecordChangesOperation::resultsLimit not bound
-!missing-selector! CKFetchRecordChangesOperation::setDesiredKeys: not bound
-!missing-selector! CKFetchRecordChangesOperation::setFetchRecordChangesCompletionBlock: not bound
-!missing-selector! CKFetchRecordChangesOperation::setPreviousServerChangeToken: not bound
-!missing-selector! CKFetchRecordChangesOperation::setRecordChangedBlock: not bound
-!missing-selector! CKFetchRecordChangesOperation::setRecordWithIDWasDeletedBlock: not bound
-!missing-selector! CKFetchRecordChangesOperation::setRecordZoneID: not bound
-!missing-selector! CKFetchRecordChangesOperation::setResultsLimit: not bound
-!missing-selector! CKContainer::discoverAllContactUserInfosWithCompletionHandler: not bound
-!missing-selector! CKContainer::discoverUserInfoWithEmailAddress:completionHandler: not bound
-!missing-selector! CKContainer::discoverUserInfoWithUserRecordID:completionHandler: not bound
-!missing-selector! CKOperation::setUsesBackgroundSession: not bound
-!missing-selector! CKOperation::usesBackgroundSession not bound
-!missing-field! CKOwnerDefaultName not bound
-
-## lots of stuff moved into CKSubscription_CKSubscriptionDeprecated which we won't bring into watchOS
-!missing-selector! CKSubscription::initWithCoder: not bound
-!missing-selector! CKSubscription::initWithRecordType:predicate:options: not bound
-!missing-selector! CKSubscription::initWithRecordType:predicate:subscriptionID:options: not bound
-!missing-selector! CKSubscription::initWithZoneID:options: not bound
-!missing-selector! CKSubscription::initWithZoneID:subscriptionID:options: not bound
-!missing-selector! CKSubscription::predicate not bound
-!missing-selector! CKSubscription::recordType not bound
-!missing-selector! CKSubscription::setZoneID: not bound
-!missing-selector! CKSubscription::subscriptionOptions not bound
-!missing-selector! CKSubscription::zoneID not bound
-
-
-
-# CoreMotion
-
-## NSFastEnumeration - see bug https://bugzilla.xamarin.com/show_bug.cgi?id=34555
-!missing-protocol-conformance! CMSensorDataList should conform to NSFastEnumeration
-
-
 # Foundation
 
 ## type was not marked as unavailable before Xcode9
@@ -100,12 +38,6 @@
 !missing-field! HKSourceRevisionAnyOperatingSystem not bound
 
 
-# HomeKit
-
-## This was added and deprecated at the same time recommending the use of UpdateAudioStreamSetting.
-## We decided not to bind it, as it could be that Apple is just keeping it around because it's needed
-## somewhere else.
-!missing-selector! HMCameraStream::setAudioStreamSetting: not bound
 
 # Intents
 
@@ -142,15 +74,6 @@
 
 ## Added and removed in watchOS 4
 !missing-selector! +INNotebookItemTypeResolutionResult::disambiguationWithValuesToDisambiguate: not bound
-
-#PassKit
-
-## No availability macro is provided for PKLabeledValue on watchOS / radar: https://trello.com/c/MvaHEZlc
-## on iOS it's only used in PKAddPaymentPassRequestConfiguration which is not part of watchOS
-!missing-selector! PKLabeledValue::initWithLabel:value: not bound
-!missing-selector! PKLabeledValue::label not bound
-!missing-selector! PKLabeledValue::value not bound
-!missing-type! PKLabeledValue not bound
 
 
 # SceneKit
@@ -192,12 +115,6 @@
 !missing-selector! UIColor::initWithDisplayP3Red:green:blue:alpha: not bound
 
 
-# WatchKit
-
-## Xcode 8.2 beta 1 iOS headers marked it as not available on watchOS, OTOH watchOS headers were not updated (fix in C9)
-!missing-selector! WKInterfaceController::handleActionWithIdentifier:forNotification: not bound
-
-
 # others
 
 ## might not be usable unless our ToString output is parsable as an input (includes locale issues)
@@ -212,8 +129,3 @@
 !missing-pinvoke! NSStringFromCGSize is not bound
 !missing-pinvoke! NSStringFromUIOffset is not bound
 !missing-pinvoke! UIOffsetFromString is not bound
-
-# CoreML
-
-## This protocol uses Metal types and it is not available on watchOS
-!missing-protocol! MLCustomLayer not bound

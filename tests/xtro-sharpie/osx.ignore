@@ -318,28 +318,6 @@
 !unknown-pinvoke! kqueue bound
 !unknown-pinvoke! _NSGetExecutablePath bound
 
-# CWErr in header file 
-!unknown-native-enum! CWStatus bound
-
-# In header file under different capitalization 
-!unknown-native-enum! CWIbssModeSecurity bound
-!missing-enum! CWIBSSModeSecurity not bound
-!unknown-native-enum! CWPhyMode bound
-!missing-enum! CWPHYMode not bound
-!unknown-native-enum! NSTiffCompression bound
-!missing-enum! NSTIFFCompression not bound
-!unknown-native-enum! PdfActionNamedName bound
-!unknown-native-enum! PdfAreaOfInterest bound
-!unknown-native-enum! PdfBorderStyle bound
-!unknown-native-enum! PdfDisplayBox bound
-!unknown-native-enum! PdfDisplayMode bound
-!unknown-native-enum! PdfDocumentPermissions bound
-!unknown-native-enum! PdfLineStyle bound
-!unknown-native-enum! PdfMarkupType bound
-!unknown-native-enum! PdfPrintScalingMode bound
-!unknown-native-enum! PdfTextAnnotationIconType bound
-!unknown-native-enum! PdfWidgetControlType bound
-
 # In header as old style unnamaed enum
 !unknown-native-enum! IKCellsStyle bound
 !unknown-native-enum! IKGroupStyle bound
@@ -384,9 +362,6 @@
 # Proxy class for NSGraphicsContext internal to AppKit
 !unknown-type! NSPrintPreviewGraphicsContext bound
 
-# Removed in 10.10
-!unknown-type! CW8021XProfile bound
-!unknown-type! CWWirelessProfile bound
 
 # Not declared in header for macOS unlike iOS but in Security.framework anyway (via nm)
 !unknown-pinvoke! SecKeyDecrypt bound

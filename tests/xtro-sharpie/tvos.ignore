@@ -94,30 +94,6 @@
 !missing-selector! AVCaptureStillImageOutput::setLensStabilizationDuringBracketedCaptureEnabled: not bound
 
 
-# CloudKit
-
-## shown as available in iOS 9.3 in tvOS header files (from Xcode 7.3) so normally available in tvOS 9.2 
-## In reality the selectors only answer in the simulator, not on AppleTV devices
-!missing-selector! CKContainer::fetchAllLongLivedOperationIDsWithCompletionHandler: not bound
-!missing-selector! CKContainer::fetchLongLivedOperationWithID:completionHandler: not bound
-
-## deprecated API
-!missing-selector! CKContainer::discoverAllContactUserInfosWithCompletionHandler: not bound
-
-
-# CoreImage
-
-## Apple bug (mac only) - https://trello.com/c/kpksFWto/6-22524785-coreimage-headers-discrepancies
-!missing-selector! CIKernel::setROISelector: not bound
-
-
-# ExternalAccessory
-
-## it's unusable (no way to create instances, no static methods, not even any usable instance methods)
-!missing-type! EAWiFiUnconfiguredAccessoryBrowser not bound
-!missing-selector! EAWiFiUnconfiguredAccessoryBrowser::unconfiguredAccessories not bound
-
-
 # Foundation
 
 ## does not exists in iOS (or watchOS) as a type - but some API refers to it (messy)
@@ -302,29 +278,6 @@
 
 ## marked as available in tvOS 11 but the member is not and using a type, MPMusicPlayerQueueDescriptor, that's not available
 !missing-protocol! MPSystemMusicPlayerController not bound
-
-
-# ReplayKit
-
-## Not used on tvOS (no camera)
-!missing-enum! RPCameraPosition not bound
-
-
-# StoreKit
-
-## SKStoreProductViewController is not in tvOS and the only member of the delegate is not either
-## but the delegate itself is not marked (so it's reported as missing)
-!missing-protocol! SKStoreProductViewControllerDelegate not bound
-
-## SKCloudServiceSetupViewController is not in tvOS and the only member of the delegate is not either
-## but the delegate itself is not marked (so it's reported as missing)
-!missing-field! SKCloudServiceSetupActionSubscribe not bound
-!missing-field! SKCloudServiceSetupOptionsActionKey not bound
-!missing-field! SKCloudServiceSetupOptionsITunesItemIdentifierKey not bound
-!missing-field! SKCloudServiceSetupOptionsAffiliateTokenKey not bound
-!missing-field! SKCloudServiceSetupOptionsCampaignTokenKey not bound
-!missing-field! SKCloudServiceSetupOptionsMessageIdentifierKey not bound
-!missing-protocol! SKCloudServiceSetupViewControllerDelegate not bound
 
 
 # UIKit

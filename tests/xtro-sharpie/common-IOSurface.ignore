@@ -1,0 +1,81 @@
+!missing-enum! IOSurfaceComponentName not bound
+!missing-enum! IOSurfaceComponentRange not bound
+!missing-enum! IOSurfaceComponentType not bound
+!missing-enum! IOSurfaceSubsampling not bound
+!missing-field! kIOSurfaceAllocSize not bound
+!missing-field! kIOSurfaceBytesPerElement not bound
+!missing-field! kIOSurfaceBytesPerRow not bound
+!missing-field! kIOSurfaceCacheMode not bound
+!missing-field! kIOSurfaceElementHeight not bound
+!missing-field! kIOSurfaceElementWidth not bound
+!missing-field! kIOSurfaceHeight not bound
+!missing-field! kIOSurfaceIsGlobal not bound
+!missing-field! kIOSurfaceOffset not bound
+!missing-field! kIOSurfacePixelFormat not bound
+!missing-field! kIOSurfacePixelSizeCastingAllowed not bound
+!missing-field! kIOSurfacePlaneBase not bound
+!missing-field! kIOSurfacePlaneBitsPerElement not bound
+!missing-field! kIOSurfacePlaneBytesPerElement not bound
+!missing-field! kIOSurfacePlaneBytesPerRow not bound
+!missing-field! kIOSurfacePlaneComponentBitDepths not bound
+!missing-field! kIOSurfacePlaneComponentBitOffsets not bound
+!missing-field! kIOSurfacePlaneComponentNames not bound
+!missing-field! kIOSurfacePlaneComponentRanges not bound
+!missing-field! kIOSurfacePlaneComponentTypes not bound
+!missing-field! kIOSurfacePlaneElementHeight not bound
+!missing-field! kIOSurfacePlaneElementWidth not bound
+!missing-field! kIOSurfacePlaneHeight not bound
+!missing-field! kIOSurfacePlaneInfo not bound
+!missing-field! kIOSurfacePlaneOffset not bound
+!missing-field! kIOSurfacePlaneSize not bound
+!missing-field! kIOSurfacePlaneWidth not bound
+!missing-field! kIOSurfaceSubsampling not bound
+!missing-field! kIOSurfaceWidth not bound
+!missing-pinvoke! IOSurfaceAlignProperty is not bound
+!missing-pinvoke! IOSurfaceAllowsPixelSizeCasting is not bound
+!missing-pinvoke! IOSurfaceCopyAllValues is not bound
+!missing-pinvoke! IOSurfaceCopyValue is not bound
+!missing-pinvoke! IOSurfaceCreate is not bound
+!missing-pinvoke! IOSurfaceCreateMachPort is not bound
+!missing-pinvoke! IOSurfaceDecrementUseCount is not bound
+!missing-pinvoke! IOSurfaceGetAllocSize is not bound
+!missing-pinvoke! IOSurfaceGetBaseAddress is not bound
+!missing-pinvoke! IOSurfaceGetBaseAddressOfPlane is not bound
+!missing-pinvoke! IOSurfaceGetBitDepthOfComponentOfPlane is not bound
+!missing-pinvoke! IOSurfaceGetBitOffsetOfComponentOfPlane is not bound
+!missing-pinvoke! IOSurfaceGetBytesPerElement is not bound
+!missing-pinvoke! IOSurfaceGetBytesPerElementOfPlane is not bound
+!missing-pinvoke! IOSurfaceGetBytesPerRow is not bound
+!missing-pinvoke! IOSurfaceGetBytesPerRowOfPlane is not bound
+!missing-pinvoke! IOSurfaceGetElementHeight is not bound
+!missing-pinvoke! IOSurfaceGetElementHeightOfPlane is not bound
+!missing-pinvoke! IOSurfaceGetElementWidth is not bound
+!missing-pinvoke! IOSurfaceGetElementWidthOfPlane is not bound
+!missing-pinvoke! IOSurfaceGetHeight is not bound
+!missing-pinvoke! IOSurfaceGetHeightOfPlane is not bound
+!missing-pinvoke! IOSurfaceGetID is not bound
+!missing-pinvoke! IOSurfaceGetNameOfComponentOfPlane is not bound
+!missing-pinvoke! IOSurfaceGetNumberOfComponentsOfPlane is not bound
+!missing-pinvoke! IOSurfaceGetPixelFormat is not bound
+!missing-pinvoke! IOSurfaceGetPlaneCount is not bound
+!missing-pinvoke! IOSurfaceGetPropertyAlignment is not bound
+!missing-pinvoke! IOSurfaceGetPropertyMaximum is not bound
+!missing-pinvoke! IOSurfaceGetRangeOfComponentOfPlane is not bound
+!missing-pinvoke! IOSurfaceGetSeed is not bound
+!missing-pinvoke! IOSurfaceGetSubsampling is not bound
+!missing-pinvoke! IOSurfaceGetTypeID is not bound
+!missing-pinvoke! IOSurfaceGetTypeOfComponentOfPlane is not bound
+!missing-pinvoke! IOSurfaceGetUseCount is not bound
+!missing-pinvoke! IOSurfaceGetWidth is not bound
+!missing-pinvoke! IOSurfaceGetWidthOfPlane is not bound
+!missing-pinvoke! IOSurfaceIncrementUseCount is not bound
+!missing-pinvoke! IOSurfaceIsInUse is not bound
+!missing-pinvoke! IOSurfaceLock is not bound
+!missing-pinvoke! IOSurfaceLookup is not bound
+!missing-pinvoke! IOSurfaceLookupFromMachPort is not bound
+!missing-pinvoke! IOSurfaceRemoveAllValues is not bound
+!missing-pinvoke! IOSurfaceRemoveValue is not bound
+!missing-pinvoke! IOSurfaceSetPurgeable is not bound
+!missing-pinvoke! IOSurfaceSetValue is not bound
+!missing-pinvoke! IOSurfaceSetValues is not bound
+!missing-pinvoke! IOSurfaceUnlock is not bound

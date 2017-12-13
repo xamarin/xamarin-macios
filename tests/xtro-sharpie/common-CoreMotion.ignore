@@ -1,0 +1,3 @@
+## Only iOS and watchOS supports CoreMotion
+
+!missing-protocol-conformance! CMSensorDataList should conform to NSFastEnumeration

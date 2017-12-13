@@ -1,0 +1,51 @@
+!incorrect-protocol-member! AVFragmentMinding::isAssociatedWithFragmentMinder is REQUIRED and should be abstract
+!missing-field! AVMediaCharacteristicEasyToRead not bound
+!missing-field! AVVideoDecompressionPropertiesKey not bound
+!missing-selector! +AVMetadataItem::metadataItemsFromArray:filteredByMetadataItemFilter: not bound
+!missing-selector! AVAudioEngine::musicSequence not bound
+!missing-selector! AVAudioEngine::setMusicSequence: not bound
+!missing-selector! AVAudioPlayer::currentDevice not bound
+!missing-selector! AVAudioPlayer::setCurrentDevice: not bound
+!missing-selector! AVAudioUnitComponent::componentURL not bound
+!missing-selector! AVCaptureConnection::isVideoMaxFrameDurationSupported not bound
+!missing-selector! AVCaptureConnection::setVideoMaxFrameDuration: not bound
+!missing-selector! AVCaptureConnection::videoMaxFrameDuration not bound
+!missing-selector! AVMetadataGroup::classifyingLabel not bound
+!missing-selector! AVMetadataGroup::uniqueID not bound
+!missing-selector! AVMutableMovieTrack::replaceFormatDescription:withFormatDescription: not bound
+!missing-selector! AVPlayerItem::addMediaDataCollector: not bound
+!missing-selector! AVPlayerItem::contentAuthorizationRequestStatus not bound
+!missing-selector! AVPlayerItem::isApplicationAuthorizedForPlayback not bound
+!missing-selector! AVPlayerItem::isAuthorizationRequiredForPlayback not bound
+!missing-selector! AVPlayerItem::isContentAuthorizedForPlayback not bound
+!missing-selector! AVPlayerItem::mediaDataCollectors not bound
+!missing-selector! AVPlayerItem::preferredMaximumResolution not bound
+!missing-selector! AVPlayerItem::removeMediaDataCollector: not bound
+!missing-selector! AVPlayerItem::requestContentAuthorizationAsynchronouslyWithTimeoutInterval:completionHandler: not bound
+!missing-selector! AVPlayerItem::setPreferredMaximumResolution: not bound
+!missing-selector! AVPlayerItemOutput::itemTimeForCVTimeStamp: not bound
+!unknown-field! AVMediaTypeTimedMetadata bound
+!unknown-native-enum! AVAudioSessionCategoryOptions bound
+!unknown-native-enum! AVAudioSessionErrorCode bound
+!unknown-native-enum! AVAudioSessionFlags bound
+!unknown-native-enum! AVAudioSessionInterruptionFlags bound
+!unknown-native-enum! AVAudioSessionInterruptionOptions bound
+!unknown-native-enum! AVAudioSessionInterruptionType bound
+!unknown-native-enum! AVAudioSessionPortOverride bound
+!unknown-native-enum! AVAudioSessionRecordPermission bound
+!unknown-native-enum! AVAudioSessionRouteChangeReason bound
+!unknown-native-enum! AVAudioSessionRouteSharingPolicy bound
+!unknown-native-enum! AVAudioSessionSetActiveOptions bound
+!unknown-native-enum! AVAudioSessionSilenceSecondaryAudioHintType bound
+!unknown-native-enum! AVAuthorizationStatus bound
+!unknown-native-enum! AVCaptureAutoFocusRangeRestriction bound
+!unknown-native-enum! AVCaptureAutoFocusSystem bound
+!unknown-native-enum! AVCaptureLensStabilizationStatus bound
+!unknown-native-enum! AVCaptureOutputDataDroppedReason bound
+!unknown-native-enum! AVCaptureVideoStabilizationMode bound
+!unknown-native-enum! AVSpeechBoundary bound
+!unknown-protocol! AVCaptureDataOutputSynchronizerDelegate bound
+!unknown-type! AVCaptureDataOutputSynchronizer bound
+!unknown-type! AVCaptureSynchronizedData bound
+!unknown-type! AVCaptureSynchronizedDataCollection bound
+!unknown-type! AVPersistableContentKeyRequest bound
