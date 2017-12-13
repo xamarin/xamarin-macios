@@ -1534,6 +1534,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/Messaging.mac.cs \
 	ObjCRuntime/Messaging.watch.cs \
 	ObjCRuntime/NativeAttribute.cs \
+	ObjCRuntime/PlatformAvailability.cs \
 	ObjCRuntime/PlatformAvailability2.cs \
 	ObjCRuntime/Protocol.cs \
 	ObjCRuntime/Registrar.core.cs \
@@ -1568,7 +1569,6 @@ SHARED_SOURCES = \
 	ObjCRuntime/MethodDescription.cs \
 	ObjCRuntime/NSStringMarshal.cs \
 	ObjCRuntime/ObjectWrapper.cs \
-	ObjCRuntime/PlatformAvailability.cs \
 	ObjCRuntime/Registrar.cs \
 	ObjCRuntime/ReleaseAttribute.cs \
 	ObjCRuntime/RequiredFrameworkAttribute.cs \

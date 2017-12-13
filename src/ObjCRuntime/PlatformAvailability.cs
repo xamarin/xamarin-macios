@@ -12,7 +12,7 @@
 //
 // Copyright 2013-2014 Xamarin Inc.
 
-#if !XAMCORE_3_0
+#if COREBUILD || !XAMCORE_3_0
 
 using System;
 using System.Globalization;
@@ -39,7 +39,9 @@ namespace XamCore.ObjCRuntime
 	// Only iOS and Mac versions and architectures can be ORed together.
 	//
 	[Flags]
+#if !COREBUILD
 	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName.")]
+#endif
 	public enum Platform : ulong
 	{
 		None = 0,
@@ -348,7 +350,9 @@ namespace XamCore.ObjCRuntime
 	}
 
 	[AttributeUsage (AttributeTargets.All, AllowMultiple = true)]
+#if !COREBUILD
 	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName.")]
+#endif
 	public class AvailabilityAttribute : Attribute
 	{
 		public static AvailabilityAttribute Merge (IEnumerable<object> attrs)
@@ -548,7 +552,9 @@ namespace XamCore.ObjCRuntime
 		}
 	}
 
+#if !COREBUILD
 	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName.")]
+#endif
 	public sealed class iOSAttribute : AvailabilityAttribute
 	{
 		public iOSAttribute (byte major, byte minor)
@@ -560,9 +566,23 @@ namespace XamCore.ObjCRuntime
 			: base ((Platform)((ulong)major << 16 | (ulong)minor << 8 | (ulong)subminor))
 		{
 		}
+
+		public iOSAttribute (byte major, byte minor, bool onlyOn64 = false)
+			: this (major, minor, 0, onlyOn64)
+		{
+		}
+
+
+		public iOSAttribute (byte major, byte minor, byte subminor, bool onlyOn64)
+			: base ((Platform)((ulong)major << 48 | (ulong)minor << 40 | (ulong)subminor << 32) | (onlyOn64 ? Platform.iOS_Arch64 : Platform.None))
+		{
+		}
+
 	}
 
+#if !COREBUILD
 	[Obsolete ("Use [Introduced|Deprecated|Obsoleted|Unavailable] attributes with PlatformName.")]
+#endif
 	public sealed class MacAttribute : AvailabilityAttribute
 	{
 		public MacAttribute (byte major, byte minor)
