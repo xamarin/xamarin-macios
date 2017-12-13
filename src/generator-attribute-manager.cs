@@ -101,13 +101,13 @@ public static class AttributeManager
 		switch (attribute.AttributeType.Name) {
 		case "SinceAttribute":
 		case "iOSAttribute":
-			return AttributeConversionManager.ConvertPlatformAttribute (attribute, 2 /* PlatformName.iOS */).Yield ();
+			return AttributeConversionManager.ConvertPlatformAttribute (attribute, PlatformName.iOS).Yield ();
 		case "MacAttribute":
-			return AttributeConversionManager.ConvertPlatformAttribute (attribute, 1 /* PlatformName.MacOSX */).Yield ();
+			return AttributeConversionManager.ConvertPlatformAttribute (attribute, PlatformName.MacOSX).Yield ();
 		case "WatchAttribute":
-			return AttributeConversionManager.ConvertPlatformAttribute (attribute, 3 /* PlatformName.WatchOS */).Yield ();
+			return AttributeConversionManager.ConvertPlatformAttribute (attribute, PlatformName.WatchOS).Yield ();
 		case "TVAttribute":
-			return AttributeConversionManager.ConvertPlatformAttribute (attribute, 4 /* PlatformName.TvOS */).Yield ();
+			return AttributeConversionManager.ConvertPlatformAttribute (attribute, PlatformName.TvOS).Yield ();
 		case "LionAttribute":
 			return AttributeFactory.CreateNewIntroducedAttribute (PlatformName.MacOSX, 10, 7).Yield ();
 		case "MountainLionAttribute":
@@ -115,13 +115,13 @@ public static class AttributeManager
 		case "MavericksAttribute":
 			return AttributeFactory.CreateNewIntroducedAttribute (PlatformName.MacOSX, 10, 9).Yield ();
 		case "NoMacAttribute":
-			return AttributeFactory.CreateUnavilableAttribute (PlatformName.MacOSX).Yield ();
+			return AttributeFactory.CreateUnavailableAttribute (PlatformName.MacOSX).Yield ();
 		case "NoiOSAttribute":
-			return AttributeFactory.CreateUnavilableAttribute (PlatformName.iOS).Yield ();
+			return AttributeFactory.CreateUnavailableAttribute (PlatformName.iOS).Yield ();
 		case "NoWatchAttribute":
-			return AttributeFactory.CreateUnavilableAttribute (PlatformName.WatchOS).Yield ();
+			return AttributeFactory.CreateUnavailableAttribute (PlatformName.WatchOS).Yield ();
 		case "NoTVAttribute":
-			return AttributeFactory.CreateUnavilableAttribute (PlatformName.TvOS).Yield ();
+			return AttributeFactory.CreateUnavailableAttribute (PlatformName.TvOS).Yield ();
 		case "AvailabilityAttribute":
 			return AttributeConversionManager.ConvertAvailability (attribute);
 		default:
@@ -371,29 +371,29 @@ public static class AttributeConversionManager
 		return constructorArguments;
 	}
 
-	static void FormatNewStyleArguments (object [] oldCtorValues, byte platformName, out object [] ctorValues, out System.Type [] ctorTypes)
+	static void FormatNewStyleArguments (object [] oldCtorValues, PlatformName platform, out object [] ctorValues, out System.Type [] ctorTypes)
 	{
 		var platformEnum = typeof (TypeManager).Assembly.GetType ("XamCore.ObjCRuntime.PlatformName");
 		var platformArch = typeof (TypeManager).Assembly.GetType ("XamCore.ObjCRuntime.PlatformArchitecture");
 
 		switch (oldCtorValues.Length) {
 		case 2:
-			ctorValues = new object [] { platformName, (int) (byte) oldCtorValues [0], (int) (byte) oldCtorValues [1], (byte) 0xff, "" };
+			ctorValues = new object [] { (byte)platform, (int) (byte) oldCtorValues [0], (int) (byte) oldCtorValues [1], (byte) 0xff, "" };
 			ctorTypes = new System.Type [] { platformEnum, typeof (int), typeof (int), platformArch, typeof (string) };
 			break;
 		case 3:
 			if (oldCtorValues [2] is byte) {
-				ctorValues = new object [] { platformName, (int) (byte) oldCtorValues [0], (int) (byte) oldCtorValues [1], (int) (byte) oldCtorValues [2], (byte) 0xff, "" };
+				ctorValues = new object [] { (byte) platform, (int) (byte) oldCtorValues [0], (int) (byte) oldCtorValues [1], (int) (byte) oldCtorValues [2], (byte) 0xff, "" };
 				ctorTypes = new System.Type [] { platformEnum, typeof (int), typeof (int), typeof (int), platformArch, typeof (string) };
 			} else {
 				byte arch = (bool) oldCtorValues [2] ? (byte) 2 : (byte) 0xff;
-				ctorValues = new object [] { platformName, (int) (byte) oldCtorValues [0], (int) (byte) oldCtorValues [1], arch, "" };
+				ctorValues = new object [] { (byte) platform, (int) (byte) oldCtorValues [0], (int) (byte) oldCtorValues [1], arch, "" };
 				ctorTypes = new System.Type [] { platformEnum, typeof (int), typeof (int), platformArch, typeof (string) };
 			}
 			break;
 		case 4: {
 				byte arch = (bool) oldCtorValues [3] ? (byte) 2 : (byte) 0xff;
-				ctorValues = new object [] { platformName, (int) (byte) oldCtorValues [0], (int) (byte) oldCtorValues [1], (int) (byte) oldCtorValues [2], arch, "" };
+				ctorValues = new object [] { (byte) platform, (int) (byte) oldCtorValues [0], (int) (byte) oldCtorValues [1], (int) (byte) oldCtorValues [2], arch, "" };
 				ctorTypes = new System.Type [] { platformEnum, typeof (int), typeof (int), typeof (int), platformArch, typeof (string) };
 				break;
 			}
@@ -502,7 +502,7 @@ public static class AttributeConversionManager
 			}
 			case "Unavailable": {
 				ParsedAvailabilityInfo availInfo = DetermineOldAvailabilityVersion (arg);
-				yield return AttributeFactory.CreateUnavilableAttribute (availInfo.Platform, message: message);
+				yield return AttributeFactory.CreateUnavailableAttribute (availInfo.Platform, message: message);
 				continue;
 			}
 			case "Message":
@@ -513,12 +513,12 @@ public static class AttributeConversionManager
 		}
 	}
 
-	public static System.Attribute ConvertPlatformAttribute (CustomAttributeData attribute, byte platformName)
+	public static System.Attribute ConvertPlatformAttribute (CustomAttributeData attribute, PlatformName platform)
 	{
 		object [] oldCtorValues = HarvestOldAttributeValues (attribute);
 		object [] ctorValues;
 		System.Type [] ctorTypes;
-		FormatNewStyleArguments (oldCtorValues, platformName, out ctorValues, out ctorTypes);
+		FormatNewStyleArguments (oldCtorValues, platform, out ctorValues, out ctorTypes);
 		return AttributeFactory.CreateNewAttribute (AttributeFactory.IntroducedAttributeType, ctorTypes, ctorValues);
 	}
 }
@@ -565,7 +565,7 @@ static class AttributeFactory
 		return CreateMajorMinorAttribute (DeprecatedAttributeType, platform, major, minor, arch, message);
 	}
 
-	public static System.Attribute CreateUnavilableAttribute (PlatformName platformName, byte arch = 0xff, string message = "")
+	public static System.Attribute CreateUnavailableAttribute (PlatformName platformName, byte arch = 0xff, string message = "")
 	{
 		var ctorValues = new object [] { (byte)platformName, arch, message };
 		var ctorTypes = new System.Type [] { PlatformEnum, PlatformArch, typeof (string) };
