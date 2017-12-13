@@ -436,7 +436,8 @@ namespace XamCore.Security {
 		Invalid,
 		Proceed,
 
-		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_9)]
+		[Availability (Deprecated = Platform.iOS_7_0)]
+		[Availability (Deprecated = Platform.Mac_10_9)]
 		Confirm,
 		Deny,
 		Unspecified,

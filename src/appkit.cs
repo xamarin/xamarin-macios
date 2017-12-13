@@ -7991,7 +7991,7 @@ namespace XamCore.AppKit {
 
 	}
 
-	[Availability (Introduced = Platform.Mac_10_0 | Platform.Mac_Arch32)]
+	[IntroducedAttribute (PlatformName.MacOSX, 10, 0, PlatformArchitecture.Arch32)] 
 	[BaseType (typeof (NSView))]
 	interface NSMenuView {
 		[Static]
@@ -21868,12 +21868,12 @@ namespace XamCore.AppKit {
 		void RemoveItems (NSIndexSet indexes, [NullAllowed] NSObject parent, NSTableViewAnimationOptions animationOptions);
 
 		// - (void)insertRowsAtIndexes:(NSIndexSet *)indexes withAnimation:(NSTableViewAnimationOptions)animationOptions UNAVAILABLE_ATTRIBUTE;
-		[Availability (Unavailable = Platform.iOS_Version | Platform.Mac_Version)]
+		[Availability (Unavailable = Platform.Mac_Version)]
 		[Export ("insertRowsAtIndexes:withAnimation:")]
 		void InsertRows (NSIndexSet indexes, NSTableViewAnimationOptions animationOptions);
 
 		// - (void)removeRowsAtIndexes:(NSIndexSet *)indexes withAnimation:(NSTableViewAnimationOptions)animationOptions UNAVAILABLE_ATTRIBUTE;
-		[Availability (Unavailable = Platform.iOS_Version | Platform.Mac_Version)]
+		[Availability (Unavailable = Platform.Mac_Version)]
 		[Export ("removeRowsAtIndexes:withAnimation:")]
 		void RemoveRows (NSIndexSet indexes, NSTableViewAnimationOptions animationOptions);
 #else
@@ -21883,11 +21883,11 @@ namespace XamCore.AppKit {
 		[Lion, Export ("removeItemsAtIndexes:inParent:withAnimation:")]
 		void RemoveItems (NSIndexSet indexes, [NullAllowed] NSObject parent, NSTableViewAnimation animationOptions);
 
-		[Availability (Unavailable = Platform.iOS_Version | Platform.Mac_Version)]
+		[Availability (Unavailable = Platform.Mac_Version)]
 		[Export ("insertRowsAtIndexes:withAnimation:")]
 		void InsertRows (NSIndexSet indexes, NSTableViewAnimation animationOptions);
 
-		[Availability (Unavailable = Platform.iOS_Version | Platform.Mac_Version)]
+		[Availability (Unavailable = Platform.Mac_Version)]
 		[Export ("removeRowsAtIndexes:withAnimation:")]
 		void RemoveRows (NSIndexSet indexes, NSTableViewAnimation animationOptions);
 #endif

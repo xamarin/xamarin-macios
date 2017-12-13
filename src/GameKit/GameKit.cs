@@ -62,14 +62,16 @@ namespace XamCore.GameKit {
 #endif
 
 	// untyped enum -> GKPublicConstants.h
-	[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10)]
+	[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0)]
+	[Availability (Introduced = Platform.Mac_10_8, Deprecated = Platform.Mac_10_10)]
 	public enum GKSendDataMode {
 		Reliable,
 		Unreliable,
 	} 
 
 	// untyped enum -> GKPublicConstants.h
-	[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10)]
+	[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0)]
+	[Availability (Introduced = Platform.Mac_10_8, Deprecated = Platform.Mac_10_10)]
 	public enum GKSessionMode {
 	    Server, 
 	    Client,
@@ -77,7 +79,8 @@ namespace XamCore.GameKit {
 	}
 
 	// untyped enum -> GKPublicConstants.h
-	[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10)]
+	[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0)]
+	[Availability (Introduced = Platform.Mac_10_8, Deprecated = Platform.Mac_10_10)]
 	public enum GKPeerConnectionState {
 		Available,
 		Unavailable,
@@ -179,7 +182,8 @@ namespace XamCore.GameKit {
 	}
 
 	// NSInteger -> GKMatch.h
-	[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10)]
+	[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_7_0)]
+	[Availability (Introduced = Platform.Mac_10_8, Deprecated = Platform.Mac_10_10)]
 	[Native]
 	public enum GKMatchSendDataMode : nint {
 		Reliable, Unreliable

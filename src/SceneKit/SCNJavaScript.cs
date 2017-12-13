@@ -24,7 +24,8 @@ using XamCore.JavaScriptCore;
 
 namespace XamCore.SceneKit
 {
-	[Availability (Platform.Mac_10_10 | Platform.iOS_8_0)]
+	[Availability (Platform.Mac_10_10)]
+	[Availability (Platform.iOS_8_0)]
 	public static class SCNJavaScript
 	{
 		[DllImport (Constants.SceneKitLibrary)]

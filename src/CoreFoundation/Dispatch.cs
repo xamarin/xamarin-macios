@@ -266,7 +266,8 @@ namespace XamCore.CoreFoundation {
 			}
 		}
 	
-		[Availability (Deprecated = Platform.iOS_6_0 | Platform.Mac_10_9)]
+		[Availability (Deprecated = Platform.iOS_6_0)]
+		[Availability (Deprecated = Platform.Mac_10_9)]
 		public static DispatchQueue CurrentQueue {
 			get {
 				return new DispatchQueue (dispatch_get_current_queue (), false);
