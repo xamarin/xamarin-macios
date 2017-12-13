@@ -12,6 +12,9 @@ using XamCore.AVFoundation;
 using XamCore.CoreFoundation;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
+using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
+using Platform = XamCore.ObjCRuntime.Extensions.Platform;
+
 
 #if XAMCORE_2_0
 namespace XamCore.CallKit {

@@ -7,6 +7,9 @@ using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
+using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
+using Platform = XamCore.ObjCRuntime.Extensions.Platform;
+
 using System.IO;
 
 public partial class Generator {

@@ -2,6 +2,9 @@ using System;
 using System.ComponentModel;
 using XamCore.CoreGraphics;
 using XamCore.ObjCRuntime;
+using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
+using Platform = XamCore.ObjCRuntime.Extensions.Platform;
+
 using XamCore.Foundation;
 
 #if !MONOMAC

@@ -28,6 +28,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using XamCore.ObjCRuntime;
+using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
+using Platform = XamCore.ObjCRuntime.Extensions.Platform;
+
 using XamCore.Foundation;
 using XamCore.CoreGraphics;
 #if MONOMAC

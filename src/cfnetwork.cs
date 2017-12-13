@@ -7,6 +7,9 @@
 using System;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
+using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
+using Platform = XamCore.ObjCRuntime.Extensions.Platform;
+
 
 // Both CFHttpStream and CFHTTPMessage are in CFNetwork.framework, no idea why they ended up in CoreServices when they were bound.
 #if XAMCORE_4_0

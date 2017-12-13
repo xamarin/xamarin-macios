@@ -18,6 +18,9 @@ using XamCore.CoreMedia;
 using XamCore.CoreVideo;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
+using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
+using Platform = XamCore.ObjCRuntime.Extensions.Platform;
+
 using XamCore.Metal;
 using XamCore.SpriteKit;
 using XamCore.SceneKit;

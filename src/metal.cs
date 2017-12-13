@@ -22,6 +22,9 @@ using XamCore.CoreImage;
 using XamCore.CoreLocation;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
+using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
+using Platform = XamCore.ObjCRuntime.Extensions.Platform;
+
 
 namespace XamCore.Metal {
 	delegate void MTLDeallocator (IntPtr pointer, nuint length);

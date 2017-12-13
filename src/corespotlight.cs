@@ -10,6 +10,9 @@
 using System;
 using System.ComponentModel;
 using XamCore.ObjCRuntime;
+using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
+using Platform = XamCore.ObjCRuntime.Extensions.Platform;
+
 using XamCore.Foundation;
 
 namespace XamCore.CoreSpotlight {

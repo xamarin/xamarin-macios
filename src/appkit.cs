@@ -34,6 +34,9 @@ using System.Diagnostics;
 using System.ComponentModel;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
+using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
+using Platform = XamCore.ObjCRuntime.Extensions.Platform;
+
 using XamCore.CoreGraphics;
 using XamCore.CoreImage;
 using XamCore.CoreAnimation;

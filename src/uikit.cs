@@ -9,6 +9,9 @@
 // Copyrigh 2011-2013, Xamarin Inc.
 //
 using XamCore.ObjCRuntime;
+using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
+using Platform = XamCore.ObjCRuntime.Extensions.Platform;
+
 using XamCore.Foundation;
 using XamCore.CoreGraphics;
 using XamCore.CoreLocation;

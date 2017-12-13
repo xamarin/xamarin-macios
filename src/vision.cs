@@ -18,6 +18,9 @@ using XamCore.CoreVideo;
 using XamCore.Foundation;
 using XamCore.Metal;
 using XamCore.ObjCRuntime;
+using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
+using Platform = XamCore.ObjCRuntime.Extensions.Platform;
+
 using XamCore.ImageIO;
 
 using Matrix3 = global::OpenTK.NMatrix3;

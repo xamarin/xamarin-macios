@@ -5,6 +5,9 @@ using XamCore.CoreGraphics;
 using XamCore.Foundation;
 using XamCore.HealthKit;
 using XamCore.ObjCRuntime;
+using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
+using Platform = XamCore.ObjCRuntime.Extensions.Platform;
+
 using XamCore.UIKit;
 
 namespace XamCore.HealthKitUI {

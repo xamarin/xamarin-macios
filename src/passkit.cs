@@ -11,6 +11,9 @@ using System;
 using System.ComponentModel;
 using XamCore.Contacts;
 using XamCore.ObjCRuntime;
+using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
+using Platform = XamCore.ObjCRuntime.Extensions.Platform;
+
 using XamCore.Foundation;
 using XamCore.UIKit;
 #if !WATCH

@@ -4,6 +4,9 @@ using XamCore.CoreGraphics;
 using XamCore.Foundation;
 using XamCore.Metal;
 using XamCore.ObjCRuntime;
+using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
+using Platform = XamCore.ObjCRuntime.Extensions.Platform;
+
 using Vector4 = global::OpenTK.Vector4;
 
 namespace XamCore.MetalPerformanceShaders {

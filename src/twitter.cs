@@ -8,6 +8,9 @@
 using System;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
+using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
+using Platform = XamCore.ObjCRuntime.Extensions.Platform;
+
 using XamCore.UIKit;
 using XamCore.Twitter;
 using XamCore.Accounts;
