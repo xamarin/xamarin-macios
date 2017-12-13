@@ -60,12 +60,12 @@ namespace XamCore.SafariServices {
 	}
 
 	[NoiOS]
-	[Mac (10,12,4, only64: true)]
+	[Mac (10,12,4, onlyOn64: true)]
 	[Native]
 	public enum SFSafariServicesVersion : nint {
 		V10_0,
 		V10_1,
-		[Mac (10,13, only64: true)]
+		[Mac (10,13, onlyOn64: true)]
 		V11_0,
 	}
 }

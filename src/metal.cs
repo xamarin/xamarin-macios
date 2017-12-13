@@ -357,7 +357,8 @@ namespace XamCore.Metal {
 		[return: NullAllowed]
 		IMTLCommandBuffer CommandBufferWithUnretainedReferences ();
 
-		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13, Message = "Use 'MTLCaptureScope' instead.")]
+		[Availability (Deprecated = Platform.iOS_11_0, Message = "Use 'MTLCaptureScope' instead.")]
+		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'MTLCaptureScope' instead.")]
 		[Abstract, Export ("insertDebugCaptureBoundary")]
 		void InsertDebugCaptureBoundary ();
 	}

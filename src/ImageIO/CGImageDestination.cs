@@ -57,13 +57,16 @@ namespace XamCore.ImageIO {
 		[iOS (7,0), Mac (10,8)]
 		public DateTime? DateTime { get; set; }
 
-		[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
+		[Availability (Introduced = Platform.Mac_10_10)]
+		[Availability (Introduced = Platform.iOS_8_0)]
 		public int? ImageMaxPixelSize { get; set; }
 
-		[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
+		[Availability (Introduced = Platform.Mac_10_10)]
+		[Availability (Introduced = Platform.iOS_8_0)]
 		public bool EmbedThumbnail { get; set; }
 
-		[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
+		[Availability (Introduced = Platform.Mac_10_10)]
+		[Availability (Introduced = Platform.iOS_8_0)]
 		public bool ShouldExcludeGPS { get; set; }
 
 		[iOS (9,3)][Mac (10,12)]
@@ -147,7 +150,8 @@ namespace XamCore.ImageIO {
 		[iOS (7,0), Mac (10,8)]
 		public bool ShouldExcludeXMP { get; set; }
 
-		[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
+		[Availability (Introduced = Platform.Mac_10_10)]
+		[Availability (Introduced = Platform.iOS_8_0)]
 		public bool ShouldExcludeGPS { get; set; }
 
 		[iOS (7,0), Mac (10,8)]

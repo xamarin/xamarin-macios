@@ -322,7 +322,8 @@ namespace XamCore.HealthKit
 		Lacrosse,
 		MartialArts,
 		MindAndBody,
-		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Watch_4_0, Message = "Use 'MixedCardio' or 'HighIntensityIntervalTraining' instead.")]
+		[Availability (Deprecated = Platform.iOS_11_0, Message = "Use 'MixedCardio' or 'HighIntensityIntervalTraining' instead.")]
+		[Availability (Deprecated = Platform.Watch_4_0, Message = "Use 'MixedCardio' or 'HighIntensityIntervalTraining' instead.")]
 		MixedMetabolicCardioTraining,
 		PaddleSports,
 		Play,

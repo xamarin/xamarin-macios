@@ -161,7 +161,8 @@ namespace XamCore.AVFoundation {
 		Timecode = 5,
 
 		[NoTV]
-		[Availability (Obsoleted = Platform.iOS_6_0 | Platform.Mac_10_8)]
+		[Availability (Obsoleted = Platform.iOS_6_0)]
+		[Availability (Obsoleted = Platform.Mac_10_8)]
 		[Field ("AVMediaTypeTimedMetadata")] // last header where I can find this: iOS 5.1 SDK, 10.7 only on Mac
 		TimedMetadata = 6,
 
@@ -207,7 +208,8 @@ namespace XamCore.AVFoundation {
 
 		[NoTV][NoWatch]
 		[Field ("AVMediaTypeTimedMetadata")] // last header where I can find this: iOS 5.1 SDK, 10.7 only on Mac
-		[Availability (Obsoleted = Platform.iOS_6_0 | Platform.Mac_10_8)]
+		[Availability (Obsoleted = Platform.iOS_6_0)]
+		[Availability (Obsoleted = Platform.Mac_10_8)]
 		NSString TimedMetadata { get; }
 
 		[Field ("AVMediaTypeMuxed")]
@@ -669,15 +671,21 @@ namespace XamCore.AVFoundation {
 		[Field ("AVVideoH264EntropyModeKey")]
 		NSString H264EntropyModeKey { get; }
 
-		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_7 | Platform.TV_9_0, Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.TV_11_0, Message = "Use 'AVVideoCodecType' enum instead.")]
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_11_0, Message = "Use 'AVVideoCodecType' enum instead.")]
+		[Availability (Introduced = Platform.Mac_10_7, Deprecated = Platform.Mac_10_13, Message = "Use 'AVVideoCodecType' enum instead.")]
+		[Availability (Introduced = Platform.TV_9_0, Deprecated = Platform.TV_11_0, Message = "Use 'AVVideoCodecType' enum instead.")]
 		[Field ("AVVideoCodecH264")]
 		NSString CodecH264 { get; }
 		
-		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_7 | Platform.TV_9_0, Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.TV_11_0, Message = "Use 'AVVideoCodecType' enum instead.")]
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_11_0, Message = "Use 'AVVideoCodecType' enum instead.")]
+		[Availability (Introduced = Platform.Mac_10_7, Deprecated = Platform.Mac_10_13, Message = "Use 'AVVideoCodecType' enum instead.")]
+		[Availability (Introduced = Platform.TV_9_0, Deprecated = Platform.TV_11_0, Message = "Use 'AVVideoCodecType' enum instead.")]
 		[Field ("AVVideoCodecJPEG")]
 		NSString CodecJPEG { get; }
 		
-		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_7 | Platform.TV_9_0, Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.TV_11_0, Message = "Use 'AVVideoCodecType' enum instead.")]
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_11_0, Message = "Use 'AVVideoCodecType' enum instead.")]
+		[Availability (Introduced = Platform.Mac_10_7, Deprecated = Platform.Mac_10_13, Message = "Use 'AVVideoCodecType' enum instead.")]
+		[Availability (Introduced = Platform.TV_9_0, Deprecated = Platform.TV_11_0, Message = "Use 'AVVideoCodecType' enum instead.")]
 		[NoiOS, NoTV, Mac (10,7)]
 		[Field ("AVVideoCodecAppleProRes4444")]
 		NSString AppleProRes4444 { get; }
@@ -2810,7 +2818,8 @@ namespace XamCore.AVFoundation {
 		CGAffineTransform PreferredTransform { get;  }
 
 		[Export ("naturalSize")]
-		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_7, Deprecated = Platform.iOS_5_0 | Platform.Mac_10_8, Message = "Use 'NaturalSize/PreferredTransform' as appropriate on the video track instead.")]
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_5_0, Message = "Use 'NaturalSize/PreferredTransform' as appropriate on the video track instead.")]
+		[Availability (Introduced = Platform.Mac_10_7, Deprecated = Platform.Mac_10_8, Message = "Use 'NaturalSize/PreferredTransform' as appropriate on the video track instead.")]
 		CGSize NaturalSize { get;  }
 
 		[TV (11,2), NoWatch, NoMac, NoiOS]
@@ -5209,7 +5218,8 @@ namespace XamCore.AVFoundation {
 		[Field ("AVMetadataID3MetadataKeyCommercial")]
 		NSString ID3MetadataKeyCommercial { get; }
 
-		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_7, Deprecated = Platform.iOS_9_0 | Platform.Mac_10_11)]
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_9_0)]
+		[Availability (Introduced = Platform.Mac_10_7, Deprecated = Platform.Mac_10_11)]
 		[Field ("AVMetadataID3MetadataKeyCommerical")]
 		NSString ID3MetadataKeyCommerical { get; }
 		
@@ -6097,7 +6107,8 @@ namespace XamCore.AVFoundation {
 			[Field ("AVMetadataIdentifierID3MetadataCommercial")]
 			NSString Commercial { get; }
 
-			[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10, Deprecated = Platform.iOS_9_0 | Platform.Mac_10_11)]
+			[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
+			[Availability (Introduced = Platform.Mac_10_10, Deprecated = Platform.Mac_10_11)]
 			[Field ("AVMetadataIdentifierID3MetadataCommerical")]
 			NSString Commerical { get; }
 			
@@ -8298,7 +8309,8 @@ namespace XamCore.AVFoundation {
 		bool _SupportsVideoMinFrameDuration { [Bind ("isVideoMinFrameDurationSupported")] get;  }
 
 		[Since (5,0)]
-		[Availability (Introduced = Platform.iOS_5_0 | Platform.Mac_10_7, Deprecated = Platform.iOS_7_0 /* Only deprecated on iOS */)]
+		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_7_0 /* Only deprecated on iOS */)]
+		[Availability (Introduced = Platform.Mac_10_7, Deprecated = Platform.iOS_7_0 /* Only deprecated on iOS */)]
 		[Export ("videoMinFrameDuration")]
 		CMTime VideoMinFrameDuration { get; set;  }
 #if !MONOMAC
@@ -8308,7 +8320,7 @@ namespace XamCore.AVFoundation {
 
 		[Since (5,0)]
 		[Export ("videoMaxFrameDuration")]
-		[Availability (Introduced = Platform.iOS_5_0 | Platform.Mac_10_7, Deprecated = Platform.iOS_7_0 /* Only deprecated on iOS */)]
+		[Availability (Introduced = Platform.Mac_10_7, Deprecated = Platform.iOS_7_0 /* Only deprecated on iOS */)]
 		CMTime VideoMaxFrameDuration { get; set;  }
 
 		[Since (5,0)]
@@ -11154,7 +11166,8 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (NSObject))]
 	[Since (4,3)]
 	interface AVPlayerItemAccessLogEvent : NSCopying {
-		[Availability (Introduced = Platform.iOS_4_3 | Platform.Mac_10_7, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_9, Message = "Use 'NumberOfMediaRequests' instead.")]
+		[Availability (Introduced = Platform.iOS_4_3, Deprecated = Platform.iOS_7_0, Message = "Use 'NumberOfMediaRequests' instead.")]
+		[Availability (Introduced = Platform.Mac_10_7, Deprecated = Platform.Mac_10_9, Message = "Use 'NumberOfMediaRequests' instead.")]
 		[Export ("numberOfSegmentsDownloaded")]
 		nint SegmentedDownloadedCount { get; }
 

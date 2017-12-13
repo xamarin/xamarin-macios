@@ -230,13 +230,15 @@ namespace XamCore.CoreLocation {
 		bool SignificantLocationChangeMonitoringAvailable { get; }
 
 		[NoWatch][NoTV]
-		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use 'IsMonitoringAvailable' instead.")]
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_7_0, Message = "Use 'IsMonitoringAvailable' instead.")]
+		[Availability (Introduced = Platform.Mac_10_8, Deprecated = Platform.Mac_10_10, Message = "Use 'IsMonitoringAvailable' instead.")]
 		[Export ("regionMonitoringAvailable"), Static]
 		bool RegionMonitoringAvailable { get; }
 
 		[NoWatch][NoTV]
 		[Since (4,0)]
-		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_8, Deprecated = Platform.iOS_6_0 | Platform.Mac_10_10, Message = "Use 'IsMonitoringAvailable' and 'AuthorizationStatus' instead.")]
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0, Message = "Use 'IsMonitoringAvailable' and 'AuthorizationStatus' instead.")]
+		[Availability (Introduced = Platform.Mac_10_8, Deprecated = Platform.Mac_10_10, Message = "Use 'IsMonitoringAvailable' and 'AuthorizationStatus' instead.")]
 		[Export ("regionMonitoringEnabled"), Static]
 		bool RegionMonitoringEnabled { get; }
 
@@ -511,12 +513,14 @@ namespace XamCore.CoreLocation {
 	[DisableDefaultCtor] // will crash, see CoreLocation.cs for compatibility stubs
 	partial interface CLRegion : NSSecureCoding, NSCopying {
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use 'CLCircularRegion' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'CLCircularRegion' instead.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use 'CLCircularRegion' instead.")]
 		[Export ("center")]
 		CLLocationCoordinate2D Center { get;  }
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use 'CLCircularRegion' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'CLCircularRegion' instead.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use 'CLCircularRegion' instead.")]
 		[Export ("radius")]
 		double Radius { get;  }
 
@@ -524,12 +528,14 @@ namespace XamCore.CoreLocation {
 		string Identifier { get;  }
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use 'CLCircularRegion' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'CLCircularRegion' instead.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use 'CLCircularRegion' instead.")]
 		[Export ("initCircularRegionWithCenter:radius:identifier:")]
 		IntPtr Constructor (CLLocationCoordinate2D center, double radius, string identifier);
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use 'CLCircularRegion' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'CLCircularRegion' instead.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use 'CLCircularRegion' instead.")]
 		[Export ("containsCoordinate:")]
 		bool Contains (CLLocationCoordinate2D coordinate);
 

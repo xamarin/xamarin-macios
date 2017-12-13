@@ -65,9 +65,11 @@ namespace XamCore.CoreData {
 	public enum NSFetchRequestResultType : nuint {
 		ManagedObject = 0x00,
 		ManagedObjectID = 0x01,
-		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_6)]
+		[Availability (Introduced = Platform.iOS_3_0)]
+		[Availability (Introduced = Platform.Mac_10_6)]
 		DictionaryResultType = 0x02,
-		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_6)]
+		[Availability (Introduced = Platform.iOS_3_0)]
+		[Availability (Introduced = Platform.Mac_10_6)]
 		NSCountResultType = 0x04
 	}
 

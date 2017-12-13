@@ -117,7 +117,8 @@ namespace XamCore.AudioUnit
 		ParametricEQ=0x706d6571, // 'pmeq'
 		Delay=0x64656c79, // 'dely'
 
-		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_5)]
+		[Availability (Introduced = Platform.iOS_8_0)]
+		[Availability (Introduced = Platform.Mac_10_5)]
 		SampleDelay=0x73646c79, // 'sdly'
 		Distortion=0x64697374, // 'dist'
 		BandPassFilter=0x62706173, // 'bpas'

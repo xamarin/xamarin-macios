@@ -153,7 +153,8 @@ namespace XamCore.CloudKit
 	// NSInteger -> CKSubscription.h
 
 	[NoWatch]
-	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use 'CKQuerySubscriptionOptions' instead.")]
+	[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_10_0, Message = "Use 'CKQuerySubscriptionOptions' instead.")]
+	[Availability (Introduced = Platform.Mac_10_10 , Deprecated = Platform.Mac_10_12, Message = "Use 'CKQuerySubscriptionOptions' instead.")]
 	[Flags]
 	[Native]
 	public enum CKSubscriptionOptions : nuint {
