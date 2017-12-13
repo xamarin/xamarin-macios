@@ -22,6 +22,11 @@ namespace Extrospection {
 			{ "LAError", "LAStatus" },
 			{ "MCErrorCode", "MCError" },
 			{ "MPMovieMediaTypeMask", "MPMovieMediaType" },
+			{ "NEVPNIKEv2CertificateType", "NEVpnIke2CertificateType" },
+			{ "NEVPNIKEv2DeadPeerDetectionRate", "NEVpnIke2DeadPeerDetectionRate" },
+			{ "NEVPNIKEv2DiffieHellmanGroup", "NEVpnIke2DiffieHellman" },
+			{ "NEVPNIKEv2EncryptionAlgorithm", "NEVpnIke2EncryptionAlgorithm" },
+			{ "NEVPNIKEv2IntegrityAlgorithm", "NEVpnIke2IntegrityAlgorithm" },
 			{ "NSAttributedStringEnumerationOptions", "NSAttributedStringEnumeration" },
 			{ "NSFileProviderErrorCode", "NSFileProviderError" },
 			{ "NSUbiquitousKeyValueStoreChangeReason", "NSUbiquitousKeyValueStore" },
@@ -327,6 +332,8 @@ namespace Extrospection {
 				return "CoreAnimation";
 			case "OpenTK.Platform.iPhoneOS":
 				return "OpenGLES";
+			case "vImage":
+				return "Accelerate";
 			default:
 				return candidate;
 			}

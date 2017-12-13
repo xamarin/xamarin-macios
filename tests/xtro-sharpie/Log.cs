@@ -40,10 +40,10 @@ namespace Extrospection {
 		{
 			if (!File.Exists (file))
 				return;
-			var data = File.ReadAllLines (file);
-			// TODO: only process lines starting with '!'
-			foreach (var line in data)
-				list.Remove (line);
+			foreach (var line in File.ReadAllLines (file)) {
+				if (line.StartsWith ("!", StringComparison.Ordinal))
+					list.Remove (line);
+			}
 		}
 	}
 }
