@@ -119,7 +119,7 @@ namespace XamCore.CoreLocation {
 		// Apple keep changing the 'introduction' of this field (5.0->8.0->5.0) but it was not available in 6.1
 		// nor in 7.0 - but it works on my iPad3 running iOS 7.1
 		[NoTV][NoWatch]
-		[iOS (7,1)][MountainLion]
+		[iOS (7,1)][Mac (10, 8)]
 		[Field ("kCLErrorUserInfoAlternateRegionKey")]
 		NSString ErrorUserInfoAlternateRegionKey { get; }
 

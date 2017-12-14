@@ -47,7 +47,7 @@ namespace XamCore.CoreBluetooth {
 
 	[Watch (4,0)]
 	[Since (5,0)]
-	[Lion]
+	[Mac (10, 7)]
 	[BaseType (typeof (CBManager), Delegates=new[] {"WeakDelegate"}, Events = new[] { typeof (CBCentralManagerDelegate)})]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
 	interface CBCentralManager {

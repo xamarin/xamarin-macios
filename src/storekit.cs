@@ -93,7 +93,7 @@ namespace XamCore.StoreKit {
 		[Export ("quantity")]
 		nint Quantity { get; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("applicationUsername", ArgumentSemantic.Copy)]
 		string ApplicationUsername { get; }
 
@@ -127,7 +127,7 @@ namespace XamCore.StoreKit {
 		[Override]
 		NSData RequestData { get; set; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[NullAllowed] // by default this property is null
 		[Export ("applicationUsername", ArgumentSemantic.Copy)][New]
 		string ApplicationUsername { get; set; }
@@ -153,7 +153,7 @@ namespace XamCore.StoreKit {
 		[Export ("restoreCompletedTransactions")]
 		void RestoreCompletedTransactions ();
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("restoreCompletedTransactionsWithApplicationUsername:")]
 		void RestoreCompletedTransactions ([NullAllowed] string username);
 

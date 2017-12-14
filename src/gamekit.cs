@@ -698,7 +698,7 @@ namespace XamCore.GameKit {
 
 	[Watch (3,0)]
 	[Since (4,2)]
-	[MountainLion]
+	[Mac (10, 8)]
 	[BaseType (typeof (GKPlayer))]
 	interface GKLocalPlayer {
 		[Export ("authenticated")]
@@ -1331,7 +1331,7 @@ namespace XamCore.GameKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[Since (4,2)][MountainLion]
+	[Since (4,2)][Mac (10, 8)]
 	[Watch (3,0)]
 	interface GKAchievement : NSSecureCoding {
 		[NoTV]
@@ -1482,7 +1482,7 @@ namespace XamCore.GameKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[Since (4,2)][MountainLion]
+	[Since (4,2)][Mac (10, 8)]
 	[Watch (3,0)]
 	interface GKAchievementDescription : NSSecureCoding {
 		[Export ("identifier", ArgumentSemantic.Copy)]
@@ -2016,7 +2016,7 @@ namespace XamCore.GameKit {
 	}
 
 	[NoWatch]
-	[Since (6,0)][Mavericks]
+	[Since (6,0)][Mac (10, 9)]
 	[BaseType (typeof (NSObject))]
 	interface GKChallenge : NSSecureCoding {
 		[NoTV]
@@ -2060,7 +2060,7 @@ namespace XamCore.GameKit {
 	}
 
 	[NoWatch]
-	[Since (6,0)][Mavericks]
+	[Since (6,0)][Mac (10, 9)]
 	[BaseType (typeof (GKChallenge))]
 	interface GKScoreChallenge {
 
@@ -2069,7 +2069,7 @@ namespace XamCore.GameKit {
 	}
 
 	[NoWatch]
-	[Since (6,0)][Mavericks]
+	[Since (6,0)][Mac (10, 9)]
 	[BaseType (typeof (GKChallenge))]
 	interface GKAchievementChallenge {
 

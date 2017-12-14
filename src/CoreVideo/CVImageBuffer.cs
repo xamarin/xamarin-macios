@@ -212,7 +212,7 @@ namespace XamCore.CoreVideo {
 #endif
 
 #if MONOMAC 
-		[MountainLion]
+		[Mac (10, 8)]
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CVImageBufferCreateColorSpaceFromAttachments (/* CFDictionaryRef */ IntPtr attachments);
 

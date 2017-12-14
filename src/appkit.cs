@@ -732,12 +732,12 @@ namespace XamCore.AppKit {
 		bool RestoreWindowWithIdentifier (string identifier, NSCoder state, NSWindowCompletionHandler onCompletion);
 
 		// This one comes from the NSRestorableStateExtension category ('@interface NSApplication (NSRestorableStateExtension)')
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("extendStateRestoration")]
 		void ExtendStateRestoration ();
 
 		// This one comes from the NSRestorableStateExtension category ('@interface NSApplication (NSRestorableStateExtension)')
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("completeStateRestoration")]
 		void CompleteStateRestoration ();
 
@@ -2679,7 +2679,7 @@ namespace XamCore.AppKit {
 		bool Selected { [Bind ("isSelected")]get; set; }
 
 		[Export ("imageView", ArgumentSemantic.Assign)]
-		[Lion]
+		[Mac (10, 7)]
 		NSImageView ImageView { get; set;  }
 
 		[Export ("textField", ArgumentSemantic.Assign)]
@@ -2755,7 +2755,7 @@ namespace XamCore.AppKit {
 		[Export ("backgroundColors", ArgumentSemantic.Copy), NullAllowed]
 		NSColor [] BackgroundColors { get; set; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("frameForItemAtIndex:withNumberOfItems:")]
 		CGRect FrameForItemAtIndex (nint index, nint numberOfItems);
 
@@ -3871,7 +3871,7 @@ namespace XamCore.AppKit {
 		[Export ("patternImage")]
 		NSImage PatternImage { get; }
 
-		[MountainLion]
+		[Mac (10, 8)]
 		[Export ("CGColor")]
 		CGColor CGColor { get; }
 
@@ -4588,7 +4588,7 @@ namespace XamCore.AppKit {
 		[Export ("takeIntegerValueFrom:")]
 		void TakeIntegerValueFrom (NSObject sender);
 
-		[Export ("invalidateIntrinsicContentSizeForCell:"), Lion]
+		[Export ("invalidateIntrinsicContentSizeForCell:"), Mac (10, 7)]
 		void InvalidateIntrinsicContentSizeForCell (NSCell cell);
 
 		//Detected properties
@@ -4800,7 +4800,7 @@ namespace XamCore.AppKit {
 		[Export ("contextualMenuCursor")]
 		NSCursor ContextualMenuCursor { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Static]
 		[Export ("IBeamCursorForVerticalLayout")]
 		NSCursor IBeamCursorForVerticalLayout { get; }
@@ -5293,7 +5293,7 @@ namespace XamCore.AppKit {
 		void ShouldCloseWindowController (NSWindowController windowController, NSObject delegateObject, Selector shouldCloseSelector, IntPtr contextInfo);
 
 		[Export ("displayName")]
-		string DisplayName { get; [Lion][NullAllowed] set; }
+		string DisplayName { get; [Mac (10, 7)][NullAllowed] set; }
 
 		[Export ("windowForSheet")]
 		NSWindow WindowForSheet { get; }
@@ -5525,7 +5525,7 @@ namespace XamCore.AppKit {
 		[Export ("openDocumentWithContentsOfURL:display:error:")]
 		NSObject OpenDocument (NSUrl url, bool displayDocument, out NSError outError);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("openDocumentWithContentsOfURL:display:completionHandler:")]
 		void OpenDocument (NSUrl url, bool display, OpenDocumentCompletionHandler completionHandler);
 
@@ -5597,7 +5597,7 @@ namespace XamCore.AppKit {
 		double AutosavingDelay { get; set; }
 	}
 
-	[Lion]
+	[Mac (10, 7)]
 	[BaseType (typeof (NSObject))]
 	interface NSDraggingImageComponent {
 		[Export ("key", ArgumentSemantic.Copy)]
@@ -5718,25 +5718,25 @@ namespace XamCore.AppKit {
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("animatesToDestination")]
 		bool AnimatesToDestination { get; set; }
 
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("numberOfValidItemsForDrop")]
 		nint NumberOfValidItemsForDrop { get; set; }
 
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("draggingFormation")]
 		NSDraggingFormation DraggingFormation { get; set; } 
 
-		[Lion]
+		[Mac (10, 7)]
 		[Internal]
 		[Export ("enumerateDraggingItemsWithOptions:forView:classes:searchOptions:usingBlock:")]
 		void EnumerateDraggingItems (NSDraggingItemEnumerationOptions enumOpts, NSView view, IntPtr classArray,
@@ -6229,7 +6229,7 @@ namespace XamCore.AppKit {
 		void _GetAdvancements (IntPtr advancements, IntPtr glyphs, nuint glyphCount);
 	}
 
-	[Lion]
+	[Mac (10, 7)]
 	interface NSFontCollectionChangedEventArgs {
 		[Internal, Export ("NSFontCollectionActionKey")]
 		NSString _Action { get; }
@@ -6244,7 +6244,7 @@ namespace XamCore.AppKit {
 		NSNumber _Visibility { get; }
 	}
 
-	[Lion]
+	[Mac (10, 7)]
 	[BaseType (typeof (NSObject))]
 	interface NSFontCollection : NSSecureCoding, NSMutableCopying {
 		[Static]
@@ -6348,7 +6348,7 @@ namespace XamCore.AppKit {
 		
 	}
 
-	[Lion]
+	[Mac (10, 7)]
 	[BaseType (typeof (NSFontCollection))]
 	[DisableDefaultCtor]
 	interface NSMutableFontCollection {
@@ -7380,42 +7380,42 @@ namespace XamCore.AppKit {
 		[Export ("mouseCoalescingEnabled")]
 		bool MouseCoalescingEnabled { [Bind ("isMouseCoalescingEnabled")]get; set; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("hasPreciseScrollingDeltas")]
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		bool HasPreciseScrollingDeltas { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("scrollingDeltaX")]
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		nfloat ScrollingDeltaX { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("scrollingDeltaY")]
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		nfloat ScrollingDeltaY { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("momentumPhase")]
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		NSEventPhase MomentumPhase { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("isDirectionInvertedFromDevice")]
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		bool IsDirectionInvertedFromDevice { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("phase")]
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		NSEventPhase Phase { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Static]
 		[Export ("isSwipeTrackingFromScrollEventsEnabled")]
 		bool IsSwipeTrackingFromScrollEventsEnabled { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("trackSwipeEventWithOptions:dampenAmountThresholdMin:max:usingHandler:")]
 		void TrackSwipeEvent (NSEventSwipeTrackingOptions options, nfloat minDampenThreshold, nfloat maxDampenThreshold, NSEventTrackHandler trackingHandler);
 
@@ -8615,7 +8615,7 @@ namespace XamCore.AppKit {
 		[Export ("outlineView:dataCellForTableColumn:item:"), NoDefaultValue]
 		NSCell GetCell (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("outlineView:viewForTableColumn:item:"), NoDefaultValue]
 		NSView GetView (NSOutlineView outlineView, [NullAllowed] NSTableColumn tableColumn, NSObject item);
 	
@@ -10247,7 +10247,7 @@ namespace XamCore.AppKit {
 	}
 #endif // XAMCORE_2_0
 
-	[Lion]
+	[Mac (10, 7)]
 	[BaseType (typeof (NSObject))]
 	interface NSLayoutConstraint : NSAnimatablePropertyContainer {
 		[Static]
@@ -12513,7 +12513,7 @@ namespace XamCore.AppKit {
 		[Lion, Export ("restorableStateKeyPaths", ArgumentSemantic.Copy)]
 		string [] RestorableStateKeyPaths ();
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("wantsForwardedScrollEventsForAxis:")]
 		bool WantsForwardedScrollEventsForAxis (NSEventGestureAxis axis);
 
@@ -14860,7 +14860,7 @@ namespace XamCore.AppKit {
 		string Identifier { get; set; }
 	}
 
-	[Lion]
+	[Mac (10, 7)]
 	[Protocol]
 #if !XAMCORE_4_0
 	[Model]
@@ -14970,20 +14970,20 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSObject)), Model, Protocol]
 	partial interface NSTextFinderBarContainer {
-		[Abstract, Export ("findBarVisible"), Lion]
+		[Abstract, Export ("findBarVisible"), Mac (10, 7)]
 		bool FindBarVisible { [Bind ("isFindBarVisible")] get; set;  }
 
-		[Abstract, Export ("findBarView", ArgumentSemantic.Retain), Lion]
+		[Abstract, Export ("findBarView", ArgumentSemantic.Retain), Mac (10, 7)]
 		NSView FindBarView { get; set; }
 
-		[Abstract, Export ("findBarViewDidChangeHeight"), Lion]
+		[Abstract, Export ("findBarViewDidChangeHeight"), Mac (10, 7)]
 		void FindBarViewDidChangeHeight ();
 
 		[Export ("contentView")]
 		NSView ContentView { get; }
 	}
 
-	[Lion]
+	[Mac (10, 7)]
 	[BaseType (typeof (NSObject))]
 	partial interface NSTextFinder : NSCoding {
 		[Export ("client", ArgumentSemantic.Assign)]
@@ -16140,7 +16140,7 @@ namespace XamCore.AppKit {
 
 	interface INSViewControllerPresentationAnimator {}
 
-	[MountainLion]
+	[Mac (10, 8)]
 	[BaseType (typeof (NSViewController),
 		Delegates = new [] { "WeakDelegate" },
 		Events = new [] { typeof (NSPageControllerDelegate) })]
@@ -16285,7 +16285,7 @@ namespace XamCore.AppKit {
 		string Title { get; set; }
 	}
 
-	[Lion]
+	[Mac (10, 7)]
 	[BaseType (typeof (NSView))]
 	interface NSTableRowView : NSAccessibilityRow {
 		[Export ("selectionHighlightStyle")]
@@ -16345,7 +16345,7 @@ namespace XamCore.AppKit {
 		bool NextRowSelected { [Bind ("isNextRowSelected")] get; set; }
 	}
 
-	[Lion]
+	[Mac (10, 7)]
 	[BaseType (typeof (NSView))]
 	partial interface NSTableCellView {
 		[Export ("backgroundStyle")]
@@ -16665,61 +16665,61 @@ namespace XamCore.AppKit {
 		[Export ("focusedColumn")]
 		nint FocusedColumn { get; set; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("effectiveRowSizeStyle")]
 		NSTableViewRowSizeStyle EffectiveRowSizeStyle { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("viewAtColumn:row:makeIfNecessary:")]
 		NSView GetView (nint column, nint row, bool makeIfNecessary);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("rowViewAtRow:makeIfNecessary:")]
 		NSTableRowView GetRowView (nint row, bool makeIfNecessary);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("rowForView:")]
 		nint RowForView (NSView view);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("columnForView:")]
 		nint ColumnForView (NSView view);
 
 		// According to the header identifier should be non-null but example in 
 		// https://bugzilla.xamarin.com/show_bug.cgi?id=36496 shows actual behavior differs
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("makeViewWithIdentifier:owner:")]
 		NSView MakeView ([NullAllowed]string identifier, [NullAllowed]NSObject owner);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("enumerateAvailableRowViewsUsingBlock:")]
 		void EnumerateAvailableRowViews (NSTableViewRowHandler callback);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("beginUpdates")]
 		void BeginUpdates ();
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("endUpdates")]
 		void EndUpdates ();
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("insertRowsAtIndexes:withAnimation:")]
 		void InsertRows (NSIndexSet indexes, NSTableViewAnimation animationOptions);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("removeRowsAtIndexes:withAnimation:")]
 		void RemoveRows (NSIndexSet indexes, NSTableViewAnimation animationOptions);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("moveRowAtIndex:toIndex:")]
 		void MoveRow (nint oldIndex, nint newIndex);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("rowSizeStyle")]
 		NSTableViewRowSizeStyle RowSizeStyle { get; set; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("floatsGroupRows")]
 		bool FloatsGroupRows { get; set; }
 
@@ -16844,19 +16844,19 @@ namespace XamCore.AppKit {
 		[Export ("tableViewSelectionIsChanging:"), EventArgs ("NSNotification")]
 		void SelectionIsChanging (NSNotification notification);
 
-		[Lion]
+		[Mac (10, 7)]
                 [Export ("tableView:viewForTableColumn:row:"), DelegateName ("NSTableViewViewGetter"), NoDefaultValue]
                 NSView GetViewForItem (NSTableView tableView, NSTableColumn tableColumn, nint row);
 
-		[Lion]
+		[Mac (10, 7)]
                 [Export ("tableView:rowViewForRow:"), DelegateName ("NSTableViewRowGetter"), DefaultValue (null)]
                 NSTableRowView CoreGetRowView (NSTableView tableView, nint row);
 
-		[Lion]
+		[Mac (10, 7)]
                 [Export ("tableView:didAddRowView:forRow:"), EventArgs ("NSTableViewRow")]
                 void DidAddRowView (NSTableView tableView, NSTableRowView rowView, nint row);
 
-		[Lion]
+		[Mac (10, 7)]
                 [Export ("tableView:didRemoveRowView:forRow:"), EventArgs ("NSTableViewRow")]
                 void DidRemoveRowView (NSTableView tableView, NSTableRowView rowView, nint row);
 
@@ -16894,7 +16894,7 @@ namespace XamCore.AppKit {
 		[Export ("tableView:namesOfPromisedFilesDroppedAtDestination:forDraggedRowsWithIndexes:")]
 		string [] FilesDropped (NSTableView tableView, NSUrl dropDestination, NSIndexSet indexSet );
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:pasteboardWriterForRow:")]
 #if XAMCORE_2_0
 		INSPasteboardWriting GetPasteboardWriterForRow (NSTableView tableView, nint row);
@@ -16902,15 +16902,15 @@ namespace XamCore.AppKit {
 		NSPasteboardWriting GetPasteboardWriterForRow (NSTableView tableView, nint row);
 #endif
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:draggingSession:willBeginAtPoint:forRowIndexes:")]
 		void DraggingSessionWillBegin (NSTableView tableView, NSDraggingSession draggingSession, CGPoint willBeginAtScreenPoint, NSIndexSet rowIndexes);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:draggingSession:endedAtPoint:operation:")]
 		void DraggingSessionEnded (NSTableView tableView, NSDraggingSession draggingSession, CGPoint endedAtScreenPoint, NSDragOperation operation);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:updateDraggingItemsForDrag:")]
 		void UpdateDraggingItems (NSTableView tableView, [Protocolize (4)] NSDraggingInfo draggingInfo);
 	}
@@ -17024,23 +17024,23 @@ namespace XamCore.AppKit {
 		[Export ("tableView:namesOfPromisedFilesDroppedAtDestination:forDraggedRowsWithIndexes:")]
 		string [] FilesDropped (NSTableView tableView, NSUrl dropDestination, NSIndexSet indexSet );
 		
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:viewForTableColumn:row:")]
 		NSView GetViewForItem (NSTableView tableView, NSTableColumn tableColumn, nint row);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:rowViewForRow:")]
 		NSTableRowView GetRowView (NSTableView tableView, nint row);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:didAddRowView:forRow:")]
 		void DidAddRowView (NSTableView tableView, NSTableRowView rowView, nint row);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:didRemoveRowView:forRow:")]
 		void DidRemoveRowView (NSTableView tableView, NSTableRowView rowView, nint row);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:pasteboardWriterForRow:")]
 #if XAMCORE_2_0
 		INSPasteboardWriting GetPasteboardWriterForRow (NSTableView tableView, nint row);
@@ -17048,15 +17048,15 @@ namespace XamCore.AppKit {
 		NSPasteboardWriting GetPasteboardWriterForRow (NSTableView tableView, nint row);
 #endif
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:draggingSession:willBeginAtPoint:forRowIndexes:")]
 		void DraggingSessionWillBegin (NSTableView tableView, NSDraggingSession draggingSession, CGPoint willBeginAtScreenPoint, NSIndexSet rowIndexes);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:draggingSession:endedAtPoint:operation:")]
 		void DraggingSessionEnded (NSTableView tableView, NSDraggingSession draggingSession, CGPoint endedAtScreenPoint, NSDragOperation operation);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:updateDraggingItemsForDrag:")]
 		void UpdateDraggingItems (NSTableView tableView, [Protocolize (4)] NSDraggingInfo draggingInfo);
 	}
@@ -20424,7 +20424,7 @@ namespace XamCore.AppKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	[Lion]
+	[Mac (10, 7)]
 	partial interface NSWindowRestoration {
 		[Static]
 		[Export ("restoreWindowWithIdentifier:state:completionHandler:")]
@@ -20847,11 +20847,11 @@ namespace XamCore.AppKit {
 		[Export ("runningApplications"), ThreadSafe]
 		NSRunningApplication [] RunningApplications { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("frontmostApplication")]
 		NSRunningApplication FrontmostApplication { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("menuBarOwningApplication")]
 		NSRunningApplication MenuBarOwningApplication { get; }
 
@@ -21325,10 +21325,10 @@ namespace XamCore.AppKit {
 
 	// Start of NSSharingService.h
 	
-	[MountainLion]
+	[Mac (10, 8)]
 	delegate void NSSharingServiceHandler ();
 	
-	[MountainLion]
+	[Mac (10, 8)]
 	[BaseType (typeof (NSObject),
 	           Delegates=new string [] {"WeakDelegate"},
 	Events=new Type [] { typeof (NSSharingServiceDelegate) })]
@@ -21446,7 +21446,7 @@ namespace XamCore.AppKit {
 		NSString NSSharingServiceNameCloudSharing { get; }
 	}
 	
-	[MountainLion]
+	[Mac (10, 8)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -21495,7 +21495,7 @@ namespace XamCore.AppKit {
 		void Stopped (NSSharingService sharingService, CKShare share);
 	}
 
-	[MountainLion]
+	[Mac (10, 8)]
 	[BaseType (typeof (NSObject),
 	           Delegates=new string [] {"WeakDelegate"},
 	Events=new Type [] { typeof (NSSharingServicePickerDelegate) })]
@@ -21517,7 +21517,7 @@ namespace XamCore.AppKit {
 
 	interface INSSharingServicePickerDelegate {}
 
-	[MountainLion]
+	[Mac (10, 8)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]

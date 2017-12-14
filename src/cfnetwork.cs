@@ -92,7 +92,7 @@ namespace XamCore.CoreServices {
 		// OSX headers says it's 10.9 only
 		// iOS headers says it's iOS 7.0 only (but comments talks about OSX)
 		// yet both 7.0+ and 10.9 returns null
-		[Mavericks][Since (7,0)]
+		[Mac (10, 9)][Since (7,0)]
 		[Internal][Field ("kCFHTTPAuthenticationSchemeOAuth1", "CFNetwork")]
 		NSString _AuthenticationSchemeOAuth1 { get; }
 	}

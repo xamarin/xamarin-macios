@@ -2869,7 +2869,7 @@ namespace XamCore.WebKit {
 		[Export ("form", ArgumentSemantic.Retain)]
 		DomHtmlFormElement Form { get; }
 
-		[Export ("files", ArgumentSemantic.Retain), Mavericks]
+		[Export ("files", ArgumentSemantic.Retain), Mac (10, 9)]
 		DomFileList Files { get; set; }
 	}
 

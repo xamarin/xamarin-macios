@@ -576,11 +576,11 @@ namespace XamCore.CoreAnimation {
 		[Export ("drawsAsynchronously")]
 		bool DrawsAsynchronously { get; set; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("allowsEdgeAntialiasing")]
 		bool AllowsEdgeAntialiasing { get; set; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("allowsGroupOpacity")]
 		bool AllowsGroupOpacity { get; set; }
 
@@ -1055,11 +1055,11 @@ namespace XamCore.CoreAnimation {
 		[Field ("kCAAnimationPaced")]
 		NSString AnimationPaced { get; }
 
-		[Lion] // iOS 4.0
+		[Mac (10, 7)] // iOS 4.0
 		[Field ("kCAAnimationCubic")]
 		NSString AnimationCubic { get; }
 
-		[Lion] // iOS 4.0
+		[Mac (10, 7)] // iOS 4.0
 		[Field ("kCAAnimationCubicPaced")]
 		NSString AnimationCubicPaced { get; }
 
@@ -1722,7 +1722,7 @@ namespace XamCore.CoreAnimation {
 		NSString RenderAdditive { get; }			
 	}
 
-	[Since(7,0), Mavericks]
+	[Since(7,0), Mac (10, 9)]
 	[BaseType (typeof (NSObject))]
 	interface CAEmitterBehavior : NSSecureCoding {
 

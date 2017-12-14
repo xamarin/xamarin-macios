@@ -1304,7 +1304,7 @@ namespace XamCore.CoreData
 
 	}
 
-	[Since(5,0)][Lion]
+	[Since(5,0)][Mac (10, 7)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSMergeConflict {
@@ -2010,40 +2010,40 @@ namespace XamCore.CoreData
 		// 7.0
 
 		[NoWatch][NoTV]
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Field ("NSPersistentStoreUbiquitousPeerTokenOption")]
 		NSString PersistentStoreUbiquitousPeerTokenOption { get; }
 
 		[NoWatch][NoTV]
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Static]
 		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_10_0, Message = "Please see the release notes and Core Data documentation.")]
 		[Export ("removeUbiquitousContentAndPersistentStoreAtURL:options:error:")]
 		bool RemoveUbiquitousContentAndPersistentStore (NSUrl storeUrl, NSDictionary options, out NSError error);
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Notification (typeof (NSPersistentStoreCoordinatorStoreChangeEventArgs))]
 		[Field ("NSPersistentStoreCoordinatorStoresWillChangeNotification")]
 		NSString StoresWillChangeNotification { get; }
 
 		[NoWatch][NoTV]
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Field ("NSPersistentStoreRebuildFromUbiquitousContentOption")]
 		NSString RebuildFromUbiquitousContentOption { get; }
 
 		[NoWatch][NoTV]
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Field ("NSPersistentStoreRemoveUbiquitousMetadataOption")]
 		NSString RemoveUbiquitousMetadataOption { get; }
 
 		[NoWatch][NoTV]
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Field ("NSPersistentStoreUbiquitousContainerIdentifierKey")]
 		[Obsolete ("Use 'UbiquitousContainerIdentifierKey' instead.")]
 		NSString eUbiquitousContainerIdentifierKey { get; }
 
 		[NoWatch][NoTV]
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Field ("NSPersistentStoreUbiquitousContainerIdentifierKey")]
 		NSString UbiquitousContainerIdentifierKey { get; }
 

@@ -1299,7 +1299,7 @@ namespace XamCore.CoreImage {
 		[Field ("kCIImageColorSpace")]
 		NSString ColorSpaceKey { get; }
 
-		[MountainLion]
+		[Mac (10, 8)]
 		[Field ("kCIImageProperties")]
 		NSString PropertiesKey { get; }
 
@@ -1729,15 +1729,15 @@ namespace XamCore.CoreImage {
 		IntPtr Constructor (UIImage image, [NullAllowed] CIImageInitializationOptions options);
 #endif
 	
-		[MountainLion]
+		[Mac (10, 8)]
 		[Field ("kCIImageAutoAdjustFeatures"), Internal]
 		NSString AutoAdjustFeaturesKey { get; }
 
-		[MountainLion]
+		[Mac (10, 8)]
 		[Field ("kCIImageAutoAdjustRedEye"), Internal]
 		NSString AutoAdjustRedEyeKey { get; }
 
-		[MountainLion]
+		[Mac (10, 8)]
 		[Field ("kCIImageAutoAdjustEnhance"), Internal]
 		NSString AutoAdjustEnhanceKey { get; }
 
@@ -2321,7 +2321,7 @@ namespace XamCore.CoreImage {
 		[Field ("CIDetectorTypeFace"), Internal]
 		NSString TypeFace { get; }
 
-		[MountainLion]
+		[Mac (10, 8)]
 		[Field ("CIDetectorImageOrientation"), Internal]
 		NSString ImageOrientation { get; }
 
@@ -2350,11 +2350,11 @@ namespace XamCore.CoreImage {
 		[Field ("CIDetectorMaxFeatureCount"), Internal]
 		NSString MaxFeatureCount { get; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Field ("CIDetectorEyeBlink"), Internal]
 		NSString EyeBlink { get; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Field ("CIDetectorSmile"), Internal]
 		NSString Smile { get; }
 
@@ -2451,27 +2451,27 @@ namespace XamCore.CoreImage {
 		[Export ("trackingFrameCount", ArgumentSemantic.Assign)]
 		int TrackingFrameCount { get; } /* int, not NSInteger */
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("bounds", ArgumentSemantic.Assign)]
 		CGRect Bounds { get; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("faceAngle", ArgumentSemantic.Assign)]
 		float FaceAngle { get; } /* float, not CGFloat */
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("hasFaceAngle", ArgumentSemantic.Assign)]
 		bool HasFaceAngle { get; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("hasSmile", ArgumentSemantic.Assign)]
 		bool HasSmile { get; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("leftEyeClosed", ArgumentSemantic.Assign)]
 		bool LeftEyeClosed { get; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("rightEyeClosed", ArgumentSemantic.Assign)]
 		bool RightEyeClosed { get; }
 	}

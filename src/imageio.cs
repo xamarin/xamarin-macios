@@ -833,22 +833,22 @@ namespace XamCore.ImageIO {
 		[Field ("kCGImagePropertyMakerCanonAspectRatioInfo")]
 		NSString MakerCanonAspectRatioInfo { get; }
 
-		[Since(7,0), Mavericks]
+		[Since(7,0), Mac (10, 9)]
 		[Field ("kCGImagePropertyExifISOSpeed")]
 		NSString ExifISOSpeed { get; }
-		[Since(7,0), Mavericks]
+		[Since(7,0), Mac (10, 9)]
 		[Field ("kCGImagePropertyExifISOSpeedLatitudeyyy")]
 		NSString ExifISOSpeedLatitudeYyy { get; }
-		[Since(7,0), Mavericks]
+		[Since(7,0), Mac (10, 9)]
 		[Field ("kCGImagePropertyExifISOSpeedLatitudezzz")]
 		NSString ExifISOSpeedLatitudeZzz { get; }
-		[Since(7,0), Mavericks]
+		[Since(7,0), Mac (10, 9)]
 		[Field ("kCGImagePropertyExifRecommendedExposureIndex")]
 		NSString ExifRecommendedExposureIndex { get; }
-		[Since(7,0), Mavericks]
+		[Since(7,0), Mac (10, 9)]
 		[Field ("kCGImagePropertyExifSensitivityType")]
 		NSString ExifSensitivityType { get; }
-		[Since(7,0), Mavericks]
+		[Since(7,0), Mac (10, 9)]
 		[Field ("kCGImagePropertyExifStandardOutputSensitivity")]
 		NSString ExifStandardOutputSensitivity { get; }
 
@@ -903,7 +903,7 @@ namespace XamCore.ImageIO {
 		NSString FileContentsDictionary { get; }
 	}
 
-	[Since (7,0), MountainLion]
+	[Since (7,0), Mac (10, 8)]
 	[Static]
 	interface CGImageMetadataTagNamespaces {
 		[Field ("kCGImageMetadataNamespaceExif")]
@@ -926,7 +926,7 @@ namespace XamCore.ImageIO {
 		NSString XMPRights { get; }
 	}
 
-	[Since (7,0), MountainLion]
+	[Since (7,0), Mac (10, 8)]
 	[Static]
 	interface CGImageMetadataTagPrefixes {
 		[Field ("kCGImageMetadataPrefixExif")]
@@ -949,7 +949,7 @@ namespace XamCore.ImageIO {
 		NSString XMPRights { get; }
 	}
 
-	[Since (7,0), MountainLion]
+	[Since (7,0), Mac (10, 8)]
 	interface CGImageMetadata {
 		[Field ("kCFErrorDomainCGImageMetadata")]
 		NSString ErrorDomain { get; }
@@ -1006,23 +1006,23 @@ namespace XamCore.ImageIO {
 		[Internal][Field ("kCGImageDestinationBackgroundColor")]
 		IntPtr kBackgroundColor { get; }
 
-		[Since (7,0), MountainLion]
+		[Since (7,0), Mac (10, 8)]
 		[Internal][Field ("kCGImageDestinationDateTime")]
 		IntPtr kDateTime { get; }
 
-		[Since (7,0), MountainLion]
+		[Since (7,0), Mac (10, 8)]
 		[Internal][Field ("kCGImageDestinationMergeMetadata")]
 		IntPtr kMergeMetadata { get; }
 
-		[Since (7,0), MountainLion]
+		[Since (7,0), Mac (10, 8)]
 		[Internal][Field ("kCGImageDestinationMetadata")]
 		IntPtr kMetadata { get; }
 
-		[Since (7,0), MountainLion]
+		[Since (7,0), Mac (10, 8)]
 		[Internal][Field ("kCGImageDestinationOrientation")]
 		IntPtr kOrientation { get; }
 
-		[Since (7,0), MountainLion]
+		[Since (7,0), Mac (10, 8)]
 		[Internal][Field ("kCGImageMetadataShouldExcludeXMP")]
 		IntPtr kShouldExcludeXMP { get; }
 
@@ -1188,15 +1188,15 @@ namespace XamCore.ImageIO {
 	[Partial]
 	interface CGCopyImageSourceOptions {
 
-		[Since (7,0), MountainLion]
+		[Since (7,0), Mac (10, 8)]
 		[Internal][Field ("kCGImageDestinationMetadata")]
 		IntPtr kMetadata { get; }
 
-		[Since (7,0), MountainLion]
+		[Since (7,0), Mac (10, 8)]
 		[Internal][Field ("kCGImageDestinationMergeMetadata")]
 		IntPtr kMergeMetadata { get; }
 
-		[Since (7,0), MountainLion]
+		[Since (7,0), Mac (10, 8)]
 		[Internal][Field ("kCGImageMetadataShouldExcludeXMP")]
 		IntPtr kShouldExcludeXMP { get; }
 
@@ -1204,11 +1204,11 @@ namespace XamCore.ImageIO {
 		[Internal][Field ("kCGImageMetadataShouldExcludeGPS")]
 		IntPtr kShouldExcludeGPS { get; }
 
-		[Since (7,0), MountainLion]
+		[Since (7,0), Mac (10, 8)]
 		[Internal][Field ("kCGImageDestinationDateTime")]
 		IntPtr kDateTime { get; }
 
-		[Since (7,0), MountainLion]
+		[Since (7,0), Mac (10, 8)]
 		[Internal][Field ("kCGImageDestinationOrientation")]
 		IntPtr kOrientation { get; }
 	}

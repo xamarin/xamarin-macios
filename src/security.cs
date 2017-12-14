@@ -51,11 +51,11 @@ namespace XamCore.Security {
 		[Field ("kSecPolicyAppleIDValidation")]
 		NSString AppleIDValidation { get; }
 			
-		[MountainLion]
+		[Mac (10, 8)]
 		[Field ("kSecPolicyAppleTimeStamping")]
 		NSString AppleTimeStamping { get; }
 
-		[Mavericks]
+		[Mac (10, 9)]
 		[Field ("kSecPolicyAppleRevocation")]
 		NSString AppleRevocation { get; }
 
@@ -80,7 +80,7 @@ namespace XamCore.Security {
 		[Field ("kSecPolicyClient")]
 		NSString Client { get; }
 
-		[Mavericks]
+		[Mac (10, 9)]
 		[Field ("kSecPolicyRevocationFlags")]
 		NSString RevocationFlags { get; }
 
@@ -109,7 +109,7 @@ namespace XamCore.Security {
 	}
 
 	[Static]
-	[Since (7,0), Mavericks]
+	[Since (7,0), Mac (10, 9)]
 	interface SecTrustResultKey {
 		[Field ("kSecTrustEvaluationDate")]
 		NSString EvaluationDate { get; }

@@ -11,7 +11,7 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.AppKit {
 
-	[Lion]
+	[Mac (10, 7)]
 	[Native]
 	public enum NSTextLayoutOrientation : nint {
 		Horizontal,
@@ -33,14 +33,14 @@ namespace XamCore.AppKit {
 	}
 #endif
 
-	[Lion]
+	[Mac (10, 7)]
 	[Native]
 	public enum NSPrintRenderingQuality : nint {
 		Best,
 		Responsive
 	}
 
-	[Lion]
+	[Mac (10, 7)]
 	[Native]
 	public enum NSCorrectionIndicatorType : nint {
 		Default = 0,
@@ -48,7 +48,7 @@ namespace XamCore.AppKit {
 		Guesses
 	}
 
-	[Lion]
+	[Mac (10, 7)]
 	[Native]
 	public enum NSCorrectionResponse : nint {
 		None,
@@ -59,7 +59,7 @@ namespace XamCore.AppKit {
 		Reverted
 	}
 
-	[Lion]
+	[Mac (10, 7)]
 	[Native]
 	public enum NSTextFinderMatchingType : nint {
 		Contains = 0,

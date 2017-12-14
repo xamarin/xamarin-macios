@@ -1443,27 +1443,27 @@ namespace XamCore.Foundation
 		[Since (4,0)]
 		NSRange Find (NSData dataToFind, NSDataSearchOptions searchOptions, NSRange searchRange);
 
-		[Since (7,0), Mavericks] // 10.9
+		[Since (7,0), Mac (10, 9)] // 10.9
 		[Export ("initWithBase64EncodedString:options:")]
 		IntPtr Constructor (string base64String, NSDataBase64DecodingOptions options);
 
-		[Since (7,0), Mavericks] // 10.9
+		[Since (7,0), Mac (10, 9)] // 10.9
 		[Export ("initWithBase64EncodedData:options:")]
 		IntPtr Constructor (NSData base64Data, NSDataBase64DecodingOptions options);
 
-		[Since (7,0), Mavericks] // 10.9
+		[Since (7,0), Mac (10, 9)] // 10.9
 		[Export ("base64EncodedDataWithOptions:")]
 		NSData GetBase64EncodedData (NSDataBase64EncodingOptions options);
 
-		[Since (7,0), Mavericks] // 10.9
+		[Since (7,0), Mac (10, 9)] // 10.9
 		[Export ("base64EncodedStringWithOptions:")]
 		string GetBase64EncodedString (NSDataBase64EncodingOptions options);
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("enumerateByteRangesUsingBlock:")]
 		void EnumerateByteRange (NSDataByteRangeEnumerator enumerator);
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("initWithBytesNoCopy:length:deallocator:")]
 		IntPtr Constructor (IntPtr bytes, nuint length, Action<IntPtr,nuint> deallocator);
 	}
@@ -2293,11 +2293,11 @@ namespace XamCore.Foundation
 		[Export ("classNameForClass:")]
 		string GetClassName (Class kls);
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Field ("NSKeyedArchiveRootObjectKey")]
 		NSString RootObjectKey { get; }
 
-		[Since (6,0), MountainLion] // Yup, right, this is being "back-supported" to iOS 6
+		[Since (6,0), Mac (10, 8)] // Yup, right, this is being "back-supported" to iOS 6
 		[Export ("setRequiresSecureCoding:")]
 		void SetRequiresSecureCoding (bool requireSecureEncoding);
 
@@ -2349,7 +2349,7 @@ namespace XamCore.Foundation
 		[Export ("classForClassName:")]
 		Class GetClass (string codedName);
 
-		[Since (6,0), MountainLion] // Yup, right, this is being "back-supported" to iOS 6
+		[Since (6,0), Mac (10, 8)] // Yup, right, this is being "back-supported" to iOS 6
 		[Export ("setRequiresSecureCoding:")]
 		void SetRequiresSecureCoding (bool requireSecureEncoding);
 
@@ -3198,18 +3198,18 @@ namespace XamCore.Foundation
 		[Field ("NSMetadataUbiquitousSharedItemPermissionsReadWrite")]
 		NSString UbiquitousSharedItemPermissionsReadWrite { get; }
 		
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[NullAllowed] // by default this property is null
 		[Export ("searchItems", ArgumentSemantic.Copy)]
 		// DOC: object is a mixture of NSString, NSMetadataItem, NSUrl
 		NSObject [] SearchItems { get; set; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[NullAllowed] // by default this property is null
 		[Export ("operationQueue", ArgumentSemantic.Retain)]
 		NSOperationQueue OperationQueue { get; set; }
 		
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("enumerateResultsUsingBlock:")]
 		void EnumerateResultsUsingBlock (NSMetadataQueryEnumerationCallback callback);
 
@@ -3946,7 +3946,7 @@ namespace XamCore.Foundation
 		[Static, Export ("expressionForBlock:arguments:")]
 		NSExpression FromFunction (NSExpressionCallbackHandler target, NSExpression[] parameters);
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Static]
 		[Export ("expressionForAnyKey")]
 		NSExpression FromAnyKey ();
@@ -3956,7 +3956,7 @@ namespace XamCore.Foundation
 		[Export ("expressionForConditional:trueExpression:falseExpression:")]
 		NSExpression FromConditional (NSPredicate predicate, NSExpression trueExpression, NSExpression falseExpression);
 			
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("allowEvaluation")]
 		void AllowEvaluation ();
 		
@@ -4734,7 +4734,7 @@ namespace XamCore.Foundation
 		[Export ("reversedSortDescriptor")]
 		NSObject ReversedSortDescriptor { get; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("allowEvaluation")]
 		void AllowEvaluation ();
 	}
@@ -4809,7 +4809,7 @@ namespace XamCore.Foundation
 		[Export ("userInfo")]
 		NSObject UserInfo { get; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("tolerance")]
 		double Tolerance { get; set; }
 	}
@@ -5138,7 +5138,7 @@ namespace XamCore.Foundation
 		IntPtr InitWithUserName (string username);
 
 		[Internal]
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("initWithSuiteName:")]
 		IntPtr InitWithSuiteName (string suiteName);
 
@@ -5385,28 +5385,28 @@ namespace XamCore.Foundation
 		[Export ("URLByDeletingPathExtension")]
 		NSUrl RemovePathExtension ();
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("getFileSystemRepresentation:maxLength:")]
 		bool GetFileSystemRepresentation (IntPtr buffer, nint maxBufferLength);
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("fileSystemRepresentation")]
 		IntPtr GetFileSystemRepresentationAsUtf8Ptr { get; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("removeCachedResourceValueForKey:")]
 		void RemoveCachedResourceValueForKey (NSString key);
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("removeAllCachedResourceValues")]
 		void RemoveAllCachedResourceValues ();
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("setTemporaryResourceValue:forKey:")]
 		void SetTemporaryResourceValue (NSObject value, NSString key);
 
 		[DesignatedInitializer]
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("initFileURLWithFileSystemRepresentation:isDirectory:relativeToURL:")]
 		IntPtr Constructor (IntPtr ptrUtf8path, bool isDir, NSUrl baseURL);
 
@@ -5842,7 +5842,7 @@ namespace XamCore.Foundation
 		NSString UbiquitousSharedItemPermissionsReadWrite { get; }
 
 		[Since (5,1)]
-		[MountainLion]
+		[Mac (10, 8)]
 		[Field ("NSURLIsExcludedFromBackupKey")]
 		NSString IsExcludedFromBackupKey { get; }
 
@@ -5853,30 +5853,30 @@ namespace XamCore.Foundation
 		IntPtr Constructor (NSData bookmarkData, NSUrlBookmarkResolutionOptions resolutionOptions, [NullAllowed] NSUrl relativeUrl, out bool bookmarkIsStale, out NSError error);
 
 		[Field ("NSURLPathKey")]
-		[Since (6,0)][MountainLion]
+		[Since (6,0)][Mac (10, 8)]
 		NSString PathKey { get; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Field ("NSURLUbiquitousItemDownloadingStatusKey")]
 		NSString UbiquitousItemDownloadingStatusKey { get; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Field ("NSURLUbiquitousItemDownloadingErrorKey")]
 		NSString UbiquitousItemDownloadingErrorKey { get; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Field ("NSURLUbiquitousItemUploadingErrorKey")]
 		NSString UbiquitousItemUploadingErrorKey { get; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Field ("NSURLUbiquitousItemDownloadingStatusNotDownloaded")]
 		NSString UbiquitousItemDownloadingStatusNotDownloaded { get; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Field ("NSURLUbiquitousItemDownloadingStatusDownloaded")]
 		NSString UbiquitousItemDownloadingStatusDownloaded { get; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Field ("NSURLUbiquitousItemDownloadingStatusCurrent")]
 		NSString UbiquitousItemDownloadingStatusCurrent { get; }
 
@@ -6115,7 +6115,7 @@ namespace XamCore.Foundation
 		void RemoveCachedResponse (NSUrlSessionDataTask dataTask);
 	}
 	
-	[Since (7,0), Mavericks]
+	[Since (7,0), Mac (10, 9)]
 	[BaseType (typeof (NSObject), Name="NSURLComponents")]
 	partial interface NSUrlComponents : NSCopying {
 		[Export ("initWithURL:resolvingAgainstBaseURL:")]
@@ -6573,11 +6573,11 @@ namespace XamCore.Foundation
 		[Export ("setDefaultCredential:forProtectionSpace:")]
 		void SetDefaultCredential (NSUrlCredential credential, NSUrlProtectionSpace forProtectionSpace);
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("removeCredential:forProtectionSpace:options:")]
 		void RemoveCredential (NSUrlCredential credential, NSUrlProtectionSpace forProtectionSpace, NSDictionary options);
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Field ("NSURLCredentialStorageRemoveSynchronizableCredentials")]
 		NSString RemoveSynchronizableCredentials { get; }
 
@@ -10365,22 +10365,22 @@ namespace XamCore.Foundation
 		NSRange RangeValue { get; }
 
 #if MONOMAC
-		[Static, Export ("valueWithCMTime:"), Lion]
+		[Static, Export ("valueWithCMTime:"), Mac (10, 7)]
 		NSValue FromCMTime (CMTime time);
 		
-		[Export ("CMTimeValue"), Lion]
+		[Export ("CMTimeValue"), Mac (10, 7)]
 		CMTime CMTimeValue { get; }
 		
-		[Static, Export ("valueWithCMTimeMapping:"), Lion]
+		[Static, Export ("valueWithCMTimeMapping:"), Mac (10, 7)]
 		NSValue FromCMTimeMapping (CMTimeMapping timeMapping);
 		
-		[Export ("CMTimeMappingValue"), Lion]
+		[Export ("CMTimeMappingValue"), Mac (10, 7)]
 		CMTimeMapping CMTimeMappingValue { get; }
 		
-		[Static, Export ("valueWithCMTimeRange:"), Lion]
+		[Static, Export ("valueWithCMTimeRange:"), Mac (10, 7)]
 		NSValue FromCMTimeRange (CMTimeRange timeRange);
 		
-		[Export ("CMTimeRangeValue"), Lion]
+		[Export ("CMTimeRangeValue"), Mac (10, 7)]
 		CMTimeRange CMTimeRangeValue { get; }
 
 		[Export ("valueWithRect:"), Static]
@@ -11362,15 +11362,15 @@ namespace XamCore.Foundation
 		[Export ("systemUptime")]
 		double SystemUptime { get; }
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("beginActivityWithOptions:reason:")]
 		NSObject BeginActivity (NSActivityOptions options, string reason);
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("endActivity:")]
 		void EndActivity (NSObject activity);
 
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("performActivityWithOptions:reason:usingBlock:")]
 		void PerformActivity (NSActivityOptions options, string reason, NSAction runCode);
 
@@ -11442,7 +11442,7 @@ namespace XamCore.Foundation
 		string GetFullUserName ();
 	}
 
-	[Since (7,0), Mavericks]
+	[Since (7,0), Mac (10, 9)]
 	[BaseType (typeof (NSObject))]
 	partial interface NSProgress {
 	
@@ -11742,7 +11742,7 @@ namespace XamCore.Foundation
 		void Cancel ();
 
 		[Since (6,0)]
-		[MountainLion]
+		[Mac (10, 8)]
 		[Export ("itemAtURL:willMoveToURL:")]
 		void WillMove (NSUrl oldUrl, NSUrl newUrl);
 
@@ -12073,17 +12073,17 @@ namespace XamCore.Foundation
                 NSUrl GetUrlForPublishingUbiquitousItem (NSUrl url, out NSDate expirationDate, out NSError error);
 
 		[Since (6,0)]
-		[MountainLion]
+		[Mac (10, 8)]
 		[Export ("ubiquityIdentityToken")]
 		NSObject UbiquityIdentityToken { get; }
 
 		[Since (6,0)]
-		[MountainLion]
+		[Mac (10, 8)]
 		[Field ("NSUbiquityIdentityDidChangeNotification")]
 		[Notification]
 		NSString UbiquityIdentityDidChangeNotification { get; }
 
-		[Since (7,0), MountainLion]
+		[Since (7,0), Mac (10, 8)]
 		[Export ("containerURLForSecurityApplicationGroupIdentifier:")]
 		NSUrl GetContainerUrl (string securityApplicationGroupIdentifier);
 
@@ -12550,11 +12550,11 @@ namespace XamCore.Foundation
 #if MONOMAC
 		// 10.9+
 		[Static]
-		[Mavericks]
+		[Mac (10, 9)]
 		[Export ("predicateFromMetadataQueryString:")]
 		NSPredicate FromMetadataQueryString (string query);
 #endif
-		[Since (7,0), Mavericks]
+		[Since (7,0), Mac (10, 9)]
 		[Export ("allowEvaluation")]
 		void AllowEvaluation ();
 	}
@@ -14153,7 +14153,7 @@ namespace XamCore.Foundation
 		NSString DidTerminateNotification { get; }
 	}
 
-	[MountainLion]
+	[Mac (10, 8)]
 	[BaseType (typeof (NSObject))]
 	interface NSUserNotification : NSCoding, NSCopying {
 		[Export ("title", ArgumentSemantic.Copy)]
@@ -14248,7 +14248,7 @@ namespace XamCore.Foundation
 		string Title { get; }
 	}
 	
-	[MountainLion]
+	[Mac (10, 8)]
 	[BaseType (typeof (NSObject),
 	           Delegates=new string [] {"WeakDelegate"},
 	Events=new Type [] { typeof (NSUserNotificationCenterDelegate) })]
@@ -14287,7 +14287,7 @@ namespace XamCore.Foundation
 		void RemoveAllDeliveredNotifications ();
 	}
 	
-	[MountainLion]
+	[Mac (10, 8)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
