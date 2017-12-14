@@ -666,7 +666,7 @@ namespace xharness
 			};
 			Tasks.Add (runMacBindingProject);
 
-			var runXtroTests = new MakeTask {
+			var buildXtroTests = new MakeTask {
 				Jenkins = this,
 				Platform = TestPlatform.All,
 				TestName = "Xtro",
@@ -675,7 +675,14 @@ namespace xharness
 				Ignored = !IncludeXtro,
 				Timeout = TimeSpan.FromMinutes (15),
 			};
-			Tasks.Add (runXtroTests);
+			var runXtroReporter = new RunXtroTask (buildXtroTests) {
+				Jenkins = this,
+				Platform = TestPlatform.Mac,
+				TestName = buildXtroTests.TestName,
+				Ignored = buildXtroTests.Ignored,
+				WorkingDirectory = buildXtroTests.WorkingDirectory,
+			};
+			Tasks.Add (runXtroReporter);
 
 			Tasks.AddRange (CreateRunDeviceTasks ());
 		}
@@ -2707,7 +2714,7 @@ function oninitialload ()
 				suffix = "-unifiedXM45-32";
 				break;
 			}
-			if (ProjectFile.EndsWith (".sln")) {
+			if (ProjectFile.EndsWith (".sln", StringComparison.Ordinal)) {
 				Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), "bin", BuildTask.ProjectPlatform, BuildTask.ProjectConfiguration + suffix, name + ".app", "Contents", "MacOS", name);
 			} else {
 				var project = new System.Xml.XmlDocument ();
@@ -2753,6 +2760,64 @@ function oninitialload ()
 						}
 					}
 					Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
+				}
+			}
+		}
+	}
+
+	class RunXtroTask : MacExecuteTask {
+
+		public string WorkingDirectory;
+
+		public RunXtroTask (BuildToolTask build_task) : base (build_task)
+		{
+		}
+
+		protected override async Task RunTestAsync ()
+		{
+			var projectDir = System.IO.Path.GetDirectoryName (ProjectFile);
+			var name = System.IO.Path.GetFileName (projectDir);
+
+			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
+				using (var proc = new Process ()) {
+					proc.StartInfo.FileName = "/Library/Frameworks/Mono.framework/Commands/mono";
+					var reporter = System.IO.Path.Combine (WorkingDirectory, "xtro-report/bin/Debug/xtro-report.exe");
+					var results = System.IO.Path.Combine (Jenkins.LogDirectory, "..", "xtro");
+					proc.StartInfo.Arguments = $"{reporter} {results}";
+
+					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
+					var log = Logs.Create ($"execute-xtro-{Timestamp}.txt", "Execution log");
+					log.WriteLine ("{0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments);
+					if (!Harness.DryRun) {
+						ExecutionResult = TestExecutingResult.Running;
+
+						var snapshot = new CrashReportSnapshot () { Device = false, Harness = Harness, Log = log, Logs = Logs, LogDirectory = LogDirectory };
+						await snapshot.StartCaptureAsync ();
+
+						try {
+							var timeout = TimeSpan.FromMinutes (20);
+
+							var result = await proc.RunAsync (log, true, timeout);
+							if (result.TimedOut) {
+								FailureMessage = $"Execution timed out after {timeout.TotalSeconds} seconds.";
+								log.WriteLine (FailureMessage);
+								ExecutionResult = TestExecutingResult.TimedOut;
+							} else if (result.Succeeded) {
+								ExecutionResult = TestExecutingResult.Succeeded;
+							} else {
+								ExecutionResult = TestExecutingResult.Failed;
+								FailureMessage = result.ExitCode != 1 ? $"Test run crashed (exit code: {result.ExitCode})." : "Test run failed.";
+								log.WriteLine (FailureMessage);
+							}
+						} finally {
+							await snapshot.EndCaptureAsync (TimeSpan.FromSeconds (Succeeded ? 0 : 5));
+						}
+					}
+					Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
+
+					var output = Logs.Create ($"Report-{Timestamp}.html", "HTML Report");
+					var report = System.IO.Path.GetFullPath (System.IO.Path.Combine (results, "index.html"));
+					output.WriteLine ($"<html><head><meta http-equiv=\"refresh\" content=\"0; url={results}\" /></head></html>");
 				}
 			}
 		}
