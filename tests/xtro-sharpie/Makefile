@@ -73,9 +73,7 @@ gen-macos: macos-$(OSX_SDK_VERSION).g.cs .stamp-check-sharpie
 gen-all: gen-ios gen-tvos gen-watchos gen-macos
 	
 
-wrench: all
-	$(Q) mkdir -p $(JENKINS_RESULTS_DIRECTORY)/xtro
-	$(Q) cp -R report/ $(JENKINS_RESULTS_DIRECTORY)/xtro
+wrench: classify
 
 report: build
 	rm -rf report/
@@ -83,14 +81,15 @@ report: build
 
 report-short:
 	JENKINS_SERVER_COOKIE=1 make report
-	
-all: build $(XIOS_PCH) $(XWATCHOS_PCH) $(XTVOS_PCH) $(XMAC_PCH)
+
+classify: build $(XIOS_PCH) $(XWATCHOS_PCH) $(XTVOS_PCH) $(XMAC_PCH)
 	rm -f *.unclassified
 	$(MONO) bin/Debug/xtro-sharpie.exe $(XIOS_PCH) $(XIOS) $(XIOS_GL)
 	$(MONO) bin/Debug/xtro-sharpie.exe $(XWATCHOS_PCH) $(XWATCHOS)
 	$(MONO) bin/Debug/xtro-sharpie.exe $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
 	$(MONO) bin/Debug/xtro-sharpie.exe $(XMAC_PCH) $(XMAC)
-	make report
+
+all: classify report
 
 .stamp-check-sharpie:
 	@$(TOP)/system-dependencies.sh --ignore-all --enforce-sharpie
