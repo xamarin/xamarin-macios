@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Extrospection {
 
@@ -21,7 +22,7 @@ namespace Extrospection {
 		{
 			foreach (var kvp in lists) {
 				var framework = kvp.Key;
-				var list = kvp.Value;
+				var list = kvp.Value.Distinct ().ToList ();
 				// load ignore and pending files and remove them
 				// 1. common.framework.ignore - long term (shared cross platforms) **preferred**
 				Remove (list, $"common-{framework}.ignore");

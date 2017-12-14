@@ -330,8 +330,11 @@ namespace Extrospection {
 				return "MetalPerformanceShaders";
 			case "QuartzCore":
 				return "CoreAnimation";
+			case "OpenAL":
+			case "OpenGL":
+			case "OpenGLES":
 			case "OpenTK.Platform.iPhoneOS":
-				return "OpenGLES";
+				return "OpenGL[ES]";
 			case "vImage":
 				return "Accelerate";
 			default:
