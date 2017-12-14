@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace Extrospection {
-	class Program {
+	class Reporter {
 
 		public static bool Filter (string fx)
 		{
@@ -129,7 +129,7 @@ namespace Extrospection {
 			if (!File.Exists (filename))
 				return 0;
 			int count = 0;
-			var output = Path.Combine (ReportFolder, filename) + ".html";
+			var output = Path.Combine (ReportFolder, Path.GetFileName (filename)) + ".html";
 			var name = Path.GetFileNameWithoutExtension (filename);
 			List<string> html = new List<string> ();
 			html.Add ($"<html><head><title>{name}</title></head>");
