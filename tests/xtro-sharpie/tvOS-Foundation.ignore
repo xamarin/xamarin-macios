@@ -2,3 +2,6 @@
 !missing-field! NSUbiquitousUserDefaultsDidChangeAccountsNotification not bound
 !missing-field! NSUserDefaultsSizeLimitExceededNotification not bound
 !missing-selector! +NSURLConnection::sendSynchronousRequest:returningResponse:error: not bound
+
+## does not exists in iOS (or tvOS) as a type - but some API refers to it (messy)
+!unknown-type! NSPortMessage bound

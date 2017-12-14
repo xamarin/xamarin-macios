@@ -1,4 +1,3 @@
-
 ## Breaking changes fixed in XAMCORE_4_0
 ## we cannot add abstract members to existing SCNSceneRenderer or SCNAnimatable protocols (breaking changes)
 !incorrect-protocol-member! SCNAnimatable::addAnimationPlayer:forKey: is REQUIRED and should be abstract
@@ -28,7 +27,6 @@
 !missing-field! SCNMatrix4Identity not bound
 !missing-field! SCNVector3Zero not bound
 !missing-field! SCNVector4Zero not bound
-!missing-pinvoke! SCNExportJavaScriptModule is not bound
 !missing-pinvoke! SCNMatrix4EqualToMatrix4 is not bound
 !missing-pinvoke! SCNMatrix4Invert is not bound
 !missing-pinvoke! SCNMatrix4IsIdentity is not bound
@@ -41,16 +39,11 @@
 !missing-pinvoke! SCNMatrix4FromGLKMatrix4 is not bound
 !missing-pinvoke! SCNMatrix4ToGLKMatrix4 is not bound
 
-
-!missing-protocol! SCNNodeRendererDelegate not bound
-!missing-protocol-member! SCNAnimatable::addAnimation:forKey: not found
 !missing-selector! +SCNNode::simdLocalFront not bound
 !missing-selector! +SCNNode::simdLocalRight not bound
 !missing-selector! +SCNNode::simdLocalUp not bound
 !missing-selector! +SCNTransaction::completionBlock not bound
 !missing-selector! +SCNTransaction::valueForKey: not bound
-!missing-selector! SCNNode::rendererDelegate not bound
-!missing-selector! SCNNode::setRendererDelegate: not bound
 !missing-selector! SCNNode::setSimdEulerAngles: not bound
 !missing-selector! SCNNode::setSimdOrientation: not bound
 !missing-selector! SCNNode::setSimdPivot: not bound
@@ -87,8 +80,6 @@
 !missing-selector! SCNNode::simdWorldRight not bound
 !missing-selector! SCNNode::simdWorldTransform not bound
 !missing-selector! SCNNode::simdWorldUp not bound
-
-!missing-selector! SCNTechnique::handleBindingOfSymbol:usingBlock: not bound
 
 ## untyped enum (SceneKitTypes.h) but described as the value of `code` for `NSError` which is an NSInteger
 !unknown-native-enum! SCNErrorCode bound

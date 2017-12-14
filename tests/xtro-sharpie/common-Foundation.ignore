@@ -857,6 +857,5 @@
 !unknown-protocol! NSObject bound
 !unknown-type! InternalNSNotificationHandler bound
 !unknown-type! NSObject bound
-!unknown-type! NSPortMessage bound
 !unknown-type! NSUbiquitousKeyValueStore bound
 !wrong-base-type! NSProxy expected  actual NSObject
