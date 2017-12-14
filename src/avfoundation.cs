@@ -8320,7 +8320,8 @@ namespace XamCore.AVFoundation {
 
 		[Since (5,0)]
 		[Export ("videoMaxFrameDuration")]
-		[Availability (Introduced = Platform.Mac_10_7, Deprecated = Platform.iOS_7_0 /* Only deprecated on iOS */)]
+		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_7_0 /* Only deprecated on iOS */)] 
+		[Availability (Introduced = Platform.Mac_10_7)] 
 		CMTime VideoMaxFrameDuration { get; set;  }
 
 		[Since (5,0)]
