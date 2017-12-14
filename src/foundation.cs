@@ -10325,10 +10325,10 @@ namespace XamCore.Foundation
 	// init returns NIL
 	[DisableDefaultCtor]
 	partial interface NSValue : NSSecureCoding, NSCopying {
-		[Availability (Deprecated = Platform.Mac_10_13, Message="Potential for buffer overruns. Use 'StoreValueAtAddress (IntPtr, nuint)' instead.")]
-		[Availability (Deprecated = Platform.iOS_11_0, Message="Potential for buffer overruns. Use 'StoreValueAtAddress (IntPtr, nuint)' instead.")]
-		[Availability (Deprecated = Platform.TV_11_0, Message="Potential for buffer overruns. Use 'StoreValueAtAddress (IntPtr, nuint)' instead.")]
-		[Availability (Deprecated = Platform.Watch_4_0, Message="Potential for buffer overruns. Use 'StoreValueAtAddress (IntPtr, nuint)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message:"Potential for buffer overruns. Use 'StoreValueAtAddress (IntPtr, nuint)' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message:"Potential for buffer overruns. Use 'StoreValueAtAddress (IntPtr, nuint)' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message:"Potential for buffer overruns. Use 'StoreValueAtAddress (IntPtr, nuint)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message:"Potential for buffer overruns. Use 'StoreValueAtAddress (IntPtr, nuint)' instead.")]
 		[Export ("getValue:")]
 		void StoreValueAtAddress (IntPtr value);
 
@@ -13631,10 +13631,10 @@ namespace XamCore.Foundation
 		CGAffineTransform TransformStruct { get; set; }
 	}
 
-	[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSXpcConnection' instead.")]
-	[Availability (Deprecated = Platform.iOS_11_0, Message = "Use 'NSXpcConnection' instead.")]
-	[Availability (Deprecated = Platform.Watch_2_0, Message = "Use 'NSXpcConnection' instead.")]
-	[Availability (Deprecated = Platform.TV_11_0, Message = "Use 'NSXpcConnection' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'NSXpcConnection' instead.")]
+	[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'NSXpcConnection' instead.")]
+	[Deprecated (PlatformName.WatchOS, 2, 0, message : "Use 'NSXpcConnection' instead.")]
+	[Deprecated (PlatformName.TvOS, 11, 0, message : "Use 'NSXpcConnection' instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSConnection {
@@ -13738,10 +13738,10 @@ namespace XamCore.Foundation
 		NSConnectionDelegate Delegate { get; set; }
 	}
 
-	[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSXpcConnection' instead.")]
-	[Availability (Deprecated = Platform.iOS_11_0, Message = "Use 'NSXpcConnection' instead.")]
-	[Availability (Deprecated = Platform.Watch_2_0, Message = "Use 'NSXpcConnection' instead.")]
-	[Availability (Deprecated = Platform.TV_11_0, Message = "Use 'NSXpcConnection' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'NSXpcConnection' instead.")]
+	[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'NSXpcConnection' instead.")]
+	[Deprecated (PlatformName.WatchOS, 2, 0, message : "Use 'NSXpcConnection' instead.")]
+	[Deprecated (PlatformName.TvOS, 11, 0, message : "Use 'NSXpcConnection' instead.")]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -13765,10 +13765,10 @@ namespace XamCore.Foundation
 		bool AllowNewConnection (NSConnection newConnection, NSConnection parentConnection);
 	}
 
-	[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'NSXpcConnection' instead.")]
-	[Availability (Deprecated = Platform.iOS_11_0, Message = "Use 'NSXpcConnection' instead.")]
-	[Availability (Deprecated = Platform.Watch_2_0, Message = "Use 'NSXpcConnection' instead.")]
-	[Availability (Deprecated = Platform.TV_11_0, Message = "Use 'NSXpcConnection' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'NSXpcConnection' instead.")]
+	[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'NSXpcConnection' instead.")]
+	[Deprecated (PlatformName.WatchOS, 2, 0, message : "Use 'NSXpcConnection' instead.")]
+	[Deprecated (PlatformName.TvOS, 11, 0, message : "Use 'NSXpcConnection' instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSDistantObjectRequest {

@@ -671,26 +671,33 @@ namespace XamCore.AVFoundation {
 		[Field ("AVVideoH264EntropyModeKey")]
 		NSString H264EntropyModeKey { get; }
 
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_11_0, Message = "Use 'AVVideoCodecType' enum instead.")]
-		[Availability (Introduced = Platform.Mac_10_7, Deprecated = Platform.Mac_10_13, Message = "Use 'AVVideoCodecType' enum instead.")]
-		[Availability (Introduced = Platform.TV_9_0, Deprecated = Platform.TV_11_0, Message = "Use 'AVVideoCodecType' enum instead.")]
+		[iOS (4, 0)]
+		[Mac (10, 7)]
+		[TV (9, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'AVVideoCodecType' enum instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'AVVideoCodecType' enum instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message : "Use 'AVVideoCodecType' enum instead.")]
 		[Field ("AVVideoCodecH264")]
 		NSString CodecH264 { get; }
 		
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_11_0, Message = "Use 'AVVideoCodecType' enum instead.")]
-		[Availability (Introduced = Platform.Mac_10_7, Deprecated = Platform.Mac_10_13, Message = "Use 'AVVideoCodecType' enum instead.")]
-		[Availability (Introduced = Platform.TV_9_0, Deprecated = Platform.TV_11_0, Message = "Use 'AVVideoCodecType' enum instead.")]
+		[iOS (4, 0)]
+		[Mac (10, 7)]
+		[TV (9, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'AVVideoCodecType' enum instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'AVVideoCodecType' enum instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message : "Use 'AVVideoCodecType' enum instead.")]
 		[Field ("AVVideoCodecJPEG")]
 		NSString CodecJPEG { get; }
 		
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_11_0, Message = "Use 'AVVideoCodecType' enum instead.")]
-		[Availability (Introduced = Platform.Mac_10_7, Deprecated = Platform.Mac_10_13, Message = "Use 'AVVideoCodecType' enum instead.")]
-		[Availability (Introduced = Platform.TV_9_0, Deprecated = Platform.TV_11_0, Message = "Use 'AVVideoCodecType' enum instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'AVVideoCodecType' enum instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'AVVideoCodecType' enum instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message : "Use 'AVVideoCodecType' enum instead.")]
 		[NoiOS, NoTV, Mac (10,7)]
 		[Field ("AVVideoCodecAppleProRes4444")]
 		NSString AppleProRes4444 { get; }
 
-		[Availability (Introduced = Platform.Mac_10_7, Deprecated = Platform.Mac_10_13, Message = "Use 'AVVideoCodecType' enum instead.")]
+		[Mac (10, 7)]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'AVVideoCodecType' enum instead.")]
 		[NoiOS, NoTV, Mac (10,7)]
 		[Field ("AVVideoCodecAppleProRes422")]
 		NSString AppleProRes422 { get; }
