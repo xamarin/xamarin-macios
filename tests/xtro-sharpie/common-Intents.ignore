@@ -1,32 +1,41 @@
-!incorrect-protocol-member! INPayBillIntentHandling::handlePayBill:completion: is REQUIRED and should be abstract
-!incorrect-protocol-member! INSearchForBillsIntentHandling::handleSearchForBills:completion: is REQUIRED and should be abstract
-!incorrect-protocol-member! INSpeakable::alternativeSpeakableMatches is REQUIRED and should be abstract
-!incorrect-protocol-member! INSpeakable::identifier is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! INSpeakable::vocabularyIdentifier is REQUIRED and should be abstract
+## not exposed by our API (better use the OS version)
 !missing-field! IntentsVersionNumber not bound
 !missing-field! IntentsVersionString not bound
-!missing-selector! +CLPlacemark::placemarkWithLocation:name:postalAddress: not bound
-!missing-selector! +INAccountTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
-!missing-selector! +INAccountTypeResolutionResult::successWithResolvedValue: not bound
-!missing-selector! +INBalanceTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
-!missing-selector! +INBalanceTypeResolutionResult::successWithResolvedValue: not bound
+
+## new (Xcode9) @required members of an older type cannot be made abstract
+!incorrect-protocol-member! INSpeakable::alternativeSpeakableMatches is REQUIRED and should be abstract
+!incorrect-protocol-member! INSpeakable::vocabularyIdentifier is REQUIRED and should be abstract
+
+## new types that has deprecated members (likely to be removed from headers at some point)
 !missing-selector! +INCallDestinationTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
 !missing-selector! +INCallDestinationTypeResolutionResult::successWithResolvedValue: not bound
 !missing-selector! +INCallRecordTypeOptionsResolutionResult::confirmationRequiredWithValueToConfirm: not bound
 !missing-selector! +INCallRecordTypeOptionsResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INAccountTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INAccountTypeResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INBalanceTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INBalanceTypeResolutionResult::successWithResolvedValue: not bound
 !missing-selector! +INDateSearchTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
 !missing-selector! +INDateSearchTypeResolutionResult::successWithResolvedValue: not bound
 !missing-selector! +INLocationSearchTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
 !missing-selector! +INLocationSearchTypeResolutionResult::successWithResolvedValue: not bound
-!missing-selector! +INNotebookItemTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
-!missing-selector! +INNotebookItemTypeResolutionResult::disambiguationWithValuesToDisambiguate: not bound
-!missing-selector! +INNotebookItemTypeResolutionResult::successWithResolvedValue: not bound
 !missing-selector! +INNoteContentTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
 !missing-selector! +INNoteContentTypeResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INNotebookItemTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INNotebookItemTypeResolutionResult::successWithResolvedValue: not bound
 !missing-selector! +INTaskStatusResolutionResult::confirmationRequiredWithValueToConfirm: not bound
 !missing-selector! +INTaskStatusResolutionResult::successWithResolvedValue: not bound
 !missing-selector! +INVisualCodeTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
 !missing-selector! +INVisualCodeTypeResolutionResult::successWithResolvedValue: not bound
+
+
+## unsorted
+
+!incorrect-protocol-member! INPayBillIntentHandling::handlePayBill:completion: is REQUIRED and should be abstract
+!incorrect-protocol-member! INSearchForBillsIntentHandling::handleSearchForBills:completion: is REQUIRED and should be abstract
+!incorrect-protocol-member! INSpeakable::identifier is OPTIONAL and should NOT be abstract
+!missing-selector! +CLPlacemark::placemarkWithLocation:name:postalAddress: not bound
+!missing-selector! +INNotebookItemTypeResolutionResult::disambiguationWithValuesToDisambiguate: not bound
 !missing-selector! INPerson::handle not bound
 !missing-selector! INPerson::initWithHandle:displayName:contactIdentifier: not bound
 !missing-selector! INPerson::initWithHandle:nameComponents:contactIdentifier: not bound

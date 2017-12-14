@@ -4,21 +4,6 @@
 !missing-field! AVAudioSessionInterruptionWasSuspendedKey not bound
 
 
-# CoreAnimation
-
-## header file removed in xcode9
-!unknown-type! CAEmitterBehavior bound
-!unknown-field! kCAEmitterBehaviorAlignToMotion bound
-!unknown-field! kCAEmitterBehaviorAttractor bound
-!unknown-field! kCAEmitterBehaviorColorOverLife bound
-!unknown-field! kCAEmitterBehaviorDrag bound
-!unknown-field! kCAEmitterBehaviorLight bound
-!unknown-field! kCAEmitterBehaviorSimpleAttractor bound
-!unknown-field! kCAEmitterBehaviorValueOverLife bound
-!unknown-field! kCAEmitterBehaviorWave bound
-
-
-
 # CoreData
 
 ## https://bugzilla.xamarin.com/show_bug.cgi?id=34968
@@ -358,9 +343,6 @@
 !missing-type! NSConstantString not bound
 !missing-type! NSSimpleCString not bound
 
-# special case, see bug https://bugzilla.xamarin.com/show_bug.cgi?id=22940
-!missing-type! NSProxy not bound
-
 # Protocols we decided not to expose
 !missing-protocol! NSFastEnumeration not bound
 !missing-protocol-conformance! AVCaptureSynchronizedDataCollection should conform to NSFastEnumeration
@@ -458,31 +440,8 @@
 !unknown-type! __MonoTouch_UIImageStatusDispatcher bound
 !unknown-type! __MonoTouch_UIVideoStatusDispatcher bound
 !unknown-type! __Xamarin_NSTimerActionDispatcher bound
-!unknown-type! UIControlEventProxy bound
 !unknown-type! InternalNSNotificationHandler bound
 !unknown-type! MonoTouch_GKSession_ReceivedObject bound
-
-
-# internal functions
-!unknown-pinvoke! xamarin_init_nsthread bound
-!unknown-pinvoke! xamarin_start_wwan bound
-!unknown-pinvoke! xamarin_release_managed_ref bound
-!unknown-pinvoke! xamarin_create_managed_ref bound
-!unknown-pinvoke! xamarin_get_block_descriptor bound
-!unknown-pinvoke! xamarin_IntPtr_objc_msgSend_IntPtr bound
-!unknown-pinvoke! xamarin_IntPtr_objc_msgSendSuper_IntPtr bound
-!unknown-pinvoke! xamarin_IntPtr_objc_msgSend_IntPtr_IntPtr_UInt32 bound
-!unknown-pinvoke! xamarin_IntPtr_objc_msgSendSuper_IntPtr_IntPtr_UInt32 bound
-!unknown-pinvoke! xamarin_IntPtr_objc_msgSend_IntPtr_IntPtr_UInt64 bound
-!unknown-pinvoke! xamarin_IntPtr_objc_msgSendSuper_IntPtr_IntPtr_UInt64 bound
-!unknown-pinvoke! xamarin_IntPtr_objc_msgSend_IntPtr_nint_nint_nint_UInt32 bound
-!unknown-pinvoke! xamarin_IntPtr_objc_msgSendSuper_IntPtr_nint_nint_nint_UInt32 bound
-!unknown-pinvoke! xamarin_IntPtr_objc_msgSend_IntPtr_nint_nint_nint_UInt64 bound
-!unknown-pinvoke! xamarin_IntPtr_objc_msgSendSuper_IntPtr_nint_nint_nint_UInt64 bound
-!unknown-pinvoke! xamarin_IntPtr_objc_msgSend_IntPtr_UInt32_nint_UInt32 bound
-!unknown-pinvoke! xamarin_IntPtr_objc_msgSendSuper_IntPtr_UInt32_nint_UInt32 bound
-!unknown-pinvoke! xamarin_IntPtr_objc_msgSend_IntPtr_UInt64_nint_UInt64 bound
-!unknown-pinvoke! xamarin_IntPtr_objc_msgSendSuper_IntPtr_UInt64_nint_UInt64 bound
 
 
 # should we bother ?

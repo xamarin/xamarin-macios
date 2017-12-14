@@ -457,9 +457,6 @@
 !missing-selector! EKEventStore::saveEvent:span:error: not bound
 !missing-selector! EKSource::calendars not bound
 
-### This is not bound and it is already deprecated
-!missing-selector! EKParticipant::ABPersonInAddressBook: not bound
-
 #PDFKit
 ## Deprecated
 !missing-selector! PDFAnnotation::initWithDictionary:forPage: not bound

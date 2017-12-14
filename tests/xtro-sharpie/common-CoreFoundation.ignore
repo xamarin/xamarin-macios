@@ -1,3 +1,13 @@
+## we already expose the NSURLFileProtection* constants
+!missing-field! kCFURLFileProtectionComplete not bound
+!missing-field! kCFURLFileProtectionCompleteUnlessOpen not bound
+!missing-field! kCFURLFileProtectionCompleteUntilFirstUserAuthentication not bound
+!missing-field! kCFURLFileProtectionKey not bound
+!missing-field! kCFURLFileProtectionNone not bound
+
+
+## unsorted
+
 !missing-enum! __CFByteOrder not bound
 !missing-enum! CFCalendarUnit not bound
 !missing-enum! CFCharacterSetPredefinedSet not bound
@@ -226,11 +236,6 @@
 !missing-field! kCFURLFileLength not bound
 !missing-field! kCFURLFileOwnerID not bound
 !missing-field! kCFURLFilePOSIXMode not bound
-!missing-field! kCFURLFileProtectionComplete not bound
-!missing-field! kCFURLFileProtectionCompleteUnlessOpen not bound
-!missing-field! kCFURLFileProtectionCompleteUntilFirstUserAuthentication not bound
-!missing-field! kCFURLFileProtectionKey not bound
-!missing-field! kCFURLFileProtectionNone not bound
 !missing-field! kCFURLFileResourceIdentifierKey not bound
 !missing-field! kCFURLFileResourceTypeBlockSpecial not bound
 !missing-field! kCFURLFileResourceTypeCharacterSpecial not bound

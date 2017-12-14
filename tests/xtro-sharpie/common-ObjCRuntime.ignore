@@ -19,8 +19,6 @@
 !unknown-pinvoke! objc_getProtocol bound
 !unknown-pinvoke! objc_msgSend bound
 !unknown-pinvoke! objc_msgSendSuper bound
-!unknown-pinvoke! objc_msgSend_stret bound
-!unknown-pinvoke! objc_msgSendSuper_stret bound
 !unknown-pinvoke! objc_registerClassPair bound
 !unknown-pinvoke! objc_registerProtocol bound
 !unknown-pinvoke! object_getClass bound
@@ -31,6 +29,10 @@
 !unknown-pinvoke! sel_getName bound
 !unknown-pinvoke! sel_isMapped bound
 !unknown-pinvoke! sel_registerName bound
+
+## not part of the ARM64 API (which we use for iOS and tvOS extro)
+!unknown-pinvoke! objc_msgSend_stret bound
+!unknown-pinvoke! objc_msgSendSuper_stret bound
 
 ## only on iOS and macOS
 !unknown-pinvoke! object_getInstanceVariable bound

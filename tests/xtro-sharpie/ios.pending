@@ -118,20 +118,9 @@
 !unknown-type! GKQuadTreeNode bound
 
 
-# MessageUI
-
-## [Native] available on XAMCORE_4_0
-!missing-enum-native! MFMailComposeErrorCode
-!missing-enum-native! MFMailComposeResult
-!missing-enum-native! MessageComposeResult
-!wrong-enum-size! MFMailComposeErrorCode managed 4 vs native 8
-!wrong-enum-size! MFMailComposeResult managed 4 vs native 8
-!wrong-enum-size! MessageComposeResult managed 4 vs native 8
-
-
 # Metal
 
-## only on macOS (but removing would be a vreaking change)
+## only on macOS (but removing would be a breaking change)
 !unknown-native-enum! MTLSamplerBorderColor bound
 
 
@@ -147,12 +136,6 @@
 !missing-field! kEAGLColorFormatSRGBA8 not bound
 !missing-field! kEAGLDrawablePropertyColorFormat not bound
 !missing-field! kEAGLDrawablePropertyRetainedBacking not bound
-
-
-# Quicklook
-
-## fixed for XAMCORE_4_0
-!incorrect-protocol-member! QLPreviewItem::previewItemTitle is OPTIONAL and should NOT be abstract
 
 
 # VideoToolbox
@@ -197,9 +180,6 @@
 !missing-selector! UIColor::getRed:green:blue:alpha: not bound
 
 
-# does not exists in iOS as a type - but some API refers to it (messy)
-!unknown-type! NSPortMessage bound
-
 
 
 # Apple renamed it from UILineBreakMode and we kept the old name
@@ -210,7 +190,6 @@
 
 
 # fixed in XAMCORE_4_0 - API break
-!incorrect-protocol-member! PKPaymentAuthorizationViewControllerDelegate::paymentAuthorizationViewControllerWillAuthorizePayment: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! UIDocumentMenuDelegate::documentMenuWasCancelled: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! UIDynamicAnimatorDelegate::dynamicAnimatorDidPause: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! UIDynamicAnimatorDelegate::dynamicAnimatorWillResume: is OPTIONAL and should NOT be abstract
@@ -291,10 +270,3 @@
 ## https://bugzilla.xamarin.com/show_bug.cgi?id=59422
 !missing-pinvoke! UIContentSizeCategoryCompareToCategory is not bound
 !missing-pinvoke! UIContentSizeCategoryIsAccessibilityCategory is not bound
-
-
-#PDFKit
-# PDFAnnotationPopup is not available on iOS also deprecated in macOS 10,12
-!missing-selector! PDFAnnotation::popup not bound
-!missing-selector! PDFAnnotation::setPopup: not bound
-

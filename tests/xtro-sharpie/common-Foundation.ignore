@@ -1,3 +1,15 @@
+# special case, see bug https://bugzilla.xamarin.com/show_bug.cgi?id=22940
+!wrong-base-type! NSProxy expected  actual NSObject
+!missing-selector! +NSProxy::allocWithZone: not bound
+!missing-selector! +NSProxy::respondsToSelector: not bound
+!missing-selector! NSProxy::debugDescription not bound
+!missing-selector! NSProxy::description not bound
+!missing-selector! NSProxy::forwardInvocation: not bound
+!missing-selector! NSProxy::methodSignatureForSelector: not bound
+
+
+## unsorted
+
 !extra-designated-initializer! NSSortDescriptor::initWithCoder: is incorrectly decorated with an [DesignatedInitializer] attribute
 !incorrect-protocol-member! NSProgressReporting::progress is REQUIRED and should be abstract
 !missing-designated-initializer! NSArray::init is missing an [DesignatedInitializer] attribute
@@ -215,8 +227,6 @@
 !missing-selector! +NSPredicate::predicateWithFormat:arguments: not bound
 !missing-selector! +NSPropertyListSerialization::dataFromPropertyList:format:errorDescription: not bound
 !missing-selector! +NSPropertyListSerialization::propertyListFromData:mutabilityOption:format:errorDescription: not bound
-!missing-selector! +NSProxy::allocWithZone: not bound
-!missing-selector! +NSProxy::respondsToSelector: not bound
 !missing-selector! +NSRegularExpression::regularExpressionWithPattern:options:error: not bound
 !missing-selector! +NSScanner::localizedScannerWithString: not bound
 !missing-selector! +NSScanner::scannerWithString: not bound
@@ -617,10 +627,6 @@
 !missing-selector! NSProgress::cancellationHandler not bound
 !missing-selector! NSProgress::pausingHandler not bound
 !missing-selector! NSProgress::resumingHandler not bound
-!missing-selector! NSProxy::debugDescription not bound
-!missing-selector! NSProxy::description not bound
-!missing-selector! NSProxy::forwardInvocation: not bound
-!missing-selector! NSProxy::methodSignatureForSelector: not bound
 !missing-selector! NSRunLoop::addPort:forMode: not bound
 !missing-selector! NSRunLoop::cancelPerformSelector:target:argument: not bound
 !missing-selector! NSRunLoop::cancelPerformSelectorsWithTarget: not bound
@@ -858,4 +864,3 @@
 !unknown-type! InternalNSNotificationHandler bound
 !unknown-type! NSObject bound
 !unknown-type! NSUbiquitousKeyValueStore bound
-!wrong-base-type! NSProxy expected  actual NSObject

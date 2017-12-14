@@ -3,6 +3,9 @@
 !missing-protocol! GKInviteEventListener not bound
 !missing-protocol! GKGameSessionEventListener not bound
 
+## enum size declared after the enum, e.g. `typedef NSInteger GKPhotoSize;`, so we miss the metadata
+!unknown-native-enum! GKPhotoSize bound
+
 ## types/members marked as deprecated in watchOS 2.0 (even if the framework was not available before 3.0)
 ## or deprecated well before that (and have alternatives). The last ones might be there but it seems better
 ## to avoid exposing them (since they might be removed later) as better API exists
@@ -83,4 +86,3 @@
 !missing-selector! GKVoiceChatService::setRemoteParticipantVolume: not bound
 !missing-selector! GKVoiceChatService::startVoiceChatWithParticipantID:error: not bound
 !missing-selector! GKVoiceChatService::stopVoiceChatWithParticipantID: not bound
-!missing-enum! GKSessionError not bound

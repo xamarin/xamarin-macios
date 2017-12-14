@@ -1,9 +1,41 @@
+## we do not (need to) redefine the tintColor at every level, it will be dispatched to the right type
+!missing-selector! UIButton::setTintColor: not bound
+!missing-selector! UIButton::tintColor not bound
+!missing-selector! UIImageView::setTintColor: not bound
+!missing-selector! UIImageView::tintColor not bound
+!missing-selector! UINavigationBar::setTintColor: not bound
+!missing-selector! UINavigationBar::tintColor not bound
+!missing-selector! UISearchBar::setTintColor: not bound
+!missing-selector! UISearchBar::tintColor not bound
+!missing-selector! UISegmentedControl::setTintColor: not bound
+!missing-selector! UISegmentedControl::tintColor not bound
+!missing-selector! UITabBar::setTintColor: not bound
+!missing-selector! UITabBar::tintColor not bound
+
+## no point in having p/invoke calls that can be implement with a type cast (byte vs nint)
+!missing-pinvoke! NSTextAlignmentFromCTTextAlignment is not bound
+!missing-pinvoke! NSTextAlignmentToCTTextAlignment is not bound
+
+## this was (pre iOS10) a required member that was deprecated and made optional
+!incorrect-protocol-member! UIFocusEnvironment::preferredFocusedView is OPTIONAL and should NOT be abstract
+
+## https://bugzilla.xamarin.com/show_bug.cgi?id=43788
+!missing-selector! +UIView::layerClass not bound
+
+## internal (xamarin) type
+!unknown-type! UIControlEventProxy bound
+
+## typedef is used (no value) in UITextInput.h: typedef NSInteger UITextDirection
+!unknown-native-enum! UITextDirection bound
+
+
+## unsorted
+
 !incorrect-protocol-member! +UIPopoverBackgroundViewMethods::arrowBase is REQUIRED and should be abstract
 !incorrect-protocol-member! +UIPopoverBackgroundViewMethods::arrowHeight is REQUIRED and should be abstract
 !incorrect-protocol-member! +UIPopoverBackgroundViewMethods::contentViewInsets is REQUIRED and should be abstract
 !incorrect-protocol-member! UIDynamicAnimatorDelegate::dynamicAnimatorDidPause: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! UIDynamicAnimatorDelegate::dynamicAnimatorWillResume: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! UIFocusEnvironment::preferredFocusedView is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! UIFocusEnvironment::preferredFocusEnvironments is REQUIRED and should be abstract
 !incorrect-protocol-member! UIInputViewAudioFeedback::enableInputClicksWhenVisible is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! UILayoutSupport::bottomAnchor is REQUIRED and should be abstract
@@ -58,13 +90,10 @@
 !missing-pinvoke! NSStringFromCGRect is not bound
 !missing-pinvoke! NSStringFromCGSize is not bound
 !missing-pinvoke! NSStringFromUIOffset is not bound
-!missing-pinvoke! NSTextAlignmentFromCTTextAlignment is not bound
-!missing-pinvoke! NSTextAlignmentToCTTextAlignment is not bound
 !missing-pinvoke! UIApplicationMain is not bound
 !missing-pinvoke! UIOffsetFromString is not bound
 !missing-protocol! UIResponderStandardEditActions not bound
 !missing-protocol-conformance! UIResponder should conform to UIResponderStandardEditActions
-!missing-selector! +UIView::layerClass not bound
 !missing-selector! NSLayoutManager::fillBackgroundRectArray:count:forCharacterRange:color: not bound
 !missing-selector! NSObject::accessibilityActivationPoint not bound
 !missing-selector! NSObject::accessibilityAttributedHint not bound
@@ -107,26 +136,12 @@
 !missing-selector! NSObject::setIsAccessibilityElement: not bound
 !missing-selector! NSObject::setShouldGroupAccessibilityChildren: not bound
 !missing-selector! NSObject::shouldGroupAccessibilityChildren not bound
-!missing-selector! UIButton::setTintColor: not bound
-!missing-selector! UIButton::tintColor not bound
 !missing-selector! UIColor::getHue:saturation:brightness:alpha: not bound
 !missing-selector! UIColor::getRed:green:blue:alpha: not bound
 !missing-selector! UIColor::initWithDisplayP3Red:green:blue:alpha: not bound
 !missing-selector! UIColor::initWithHue:saturation:brightness:alpha: not bound
 !missing-selector! UIGestureRecognizer::ignorePress:forEvent: not bound
 !missing-selector! UIImageView::isUserInteractionEnabled not bound
-!missing-selector! UIImageView::setTintColor: not bound
 !missing-selector! UIImageView::setUserInteractionEnabled: not bound
-!missing-selector! UIImageView::tintColor not bound
 !missing-selector! UILabel::isUserInteractionEnabled not bound
 !missing-selector! UILabel::setUserInteractionEnabled: not bound
-!missing-selector! UINavigationBar::setTintColor: not bound
-!missing-selector! UINavigationBar::tintColor not bound
-!missing-selector! UISearchBar::setTintColor: not bound
-!missing-selector! UISearchBar::tintColor not bound
-!missing-selector! UISegmentedControl::setTintColor: not bound
-!missing-selector! UISegmentedControl::tintColor not bound
-!missing-selector! UITabBar::setTintColor: not bound
-!missing-selector! UITabBar::tintColor not bound
-!unknown-native-enum! UITextDirection bound
-!unknown-type! UIControlEventProxy bound

@@ -21,7 +21,6 @@
 !missing-selector! GKChallengesViewController::challengeDelegate not bound
 !missing-selector! GKChallengesViewController::setChallengeDelegate: not bound
 !missing-selector! GKLeaderboardSet::loadImageWithCompletionHandler: not bound
-!missing-selector! GKScore::playerID not bound
 !missing-selector! GKSession::acceptConnectionFromPeer:error: not bound
 !missing-selector! GKSession::cancelConnectToPeer: not bound
 !missing-selector! GKSession::connectToPeer:withTimeout: not bound
