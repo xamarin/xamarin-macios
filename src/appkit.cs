@@ -7492,7 +7492,7 @@ namespace XamCore.AppKit {
 		bool DelaysRotationEvents { get; set; }
 
 		[Export ("locationInView:")]
-		CGPoint LocationInView (NSView view);
+		CGPoint LocationInView ([NullAllowed] NSView view);
 
 		[Export ("reset")]
 		void Reset ();
