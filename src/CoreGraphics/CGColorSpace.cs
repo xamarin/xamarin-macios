@@ -391,8 +391,8 @@ namespace XamCore.CoreGraphics {
 			return ptr == IntPtr.Zero ? null : new CGColorSpace (ptr, true);
 		}
 
-		[Introduced (PlatformName.iOS, 10, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 12)]
+		[iOS (10, 0)]
+		[Mac (10, 12)]
 		public static CGColorSpace CreateIccData (NSData data)
 		{
 			return CreateIccData (data.GetHandle ());

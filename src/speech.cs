@@ -16,7 +16,7 @@ using XamCore.ObjCRuntime;
 namespace XamCore.Speech {
 
 	[Native]
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	public enum SFSpeechRecognitionTaskState : nint {
 		Starting = 0,
 		Running = 1,
@@ -26,7 +26,7 @@ namespace XamCore.Speech {
 	}
 
 	[Native]
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	public enum SFSpeechRecognitionTaskHint : nint {
 		Unspecified = 0,
 		Dictation = 1,
@@ -35,7 +35,7 @@ namespace XamCore.Speech {
 	}
 
 	[Native]
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	public enum SFSpeechRecognizerAuthorizationStatus : nint {
 		NotDetermined,
 		Denied,
@@ -43,7 +43,7 @@ namespace XamCore.Speech {
 		Authorized
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[DisableDefaultCtor]
 	[Abstract] // no docs (yet) but it has no means (init*) to create it, unlike its subclasses
 	[BaseType (typeof (NSObject))]
@@ -62,7 +62,7 @@ namespace XamCore.Speech {
 		string InteractionIdentifier { get; set; }
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (SFSpeechRecognitionRequest), Name = "SFSpeechURLRecognitionRequest")]
 	[DisableDefaultCtor]
 	interface SFSpeechUrlRecognitionRequest {
@@ -75,7 +75,7 @@ namespace XamCore.Speech {
 		NSUrl Url { get; }
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (SFSpeechRecognitionRequest))]
 	interface SFSpeechAudioBufferRecognitionRequest {
 
@@ -92,7 +92,7 @@ namespace XamCore.Speech {
 		void EndAudio ();
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognitionResult : NSCopying, NSSecureCoding {
 
@@ -106,7 +106,7 @@ namespace XamCore.Speech {
 		bool Final { [Bind ("isFinal")] get; }
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognitionTask {
 
@@ -131,7 +131,7 @@ namespace XamCore.Speech {
 
 	interface ISFSpeechRecognitionTaskDelegate { }
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognitionTaskDelegate {
@@ -157,7 +157,7 @@ namespace XamCore.Speech {
 
 	interface ISFSpeechRecognizerDelegate { }
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognizerDelegate {
@@ -166,7 +166,7 @@ namespace XamCore.Speech {
 		void AvailabilityDidChange (SFSpeechRecognizer speechRecognizer, bool available);
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognizer {
 
@@ -209,7 +209,7 @@ namespace XamCore.Speech {
 		NSOperationQueue Queue { get; set; }
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (NSObject))]
 	interface SFTranscription : NSCopying, NSSecureCoding {
 
@@ -220,7 +220,7 @@ namespace XamCore.Speech {
 		SFTranscriptionSegment [] Segments { get; }
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (NSObject))]
 	interface SFTranscriptionSegment : NSCopying, NSSecureCoding {
 

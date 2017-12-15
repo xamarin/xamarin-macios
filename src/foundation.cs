@@ -1528,9 +1528,9 @@ namespace XamCore.Foundation
 		nint Nanosecond { get; set; }
 
 		[Export ("week")]
-		[Introduced (PlatformName.MacOSX, 10, 4)]
+		[Mac (10, 4)]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use 'WeekOfMonth' or 'WeekOfYear' instead.")]
-		[Introduced (PlatformName.iOS, 2, 0)]
+		[iOS (2, 0)]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'WeekOfMonth' or 'WeekOfYear' instead.")]
 		nint Week { get; set; }
 
@@ -5798,15 +5798,15 @@ namespace XamCore.Foundation
 		NSString UbiquitousItemIsUploadingKey { get; }
 
 		[Field ("NSURLUbiquitousItemPercentDownloadedKey")]
-		[Introduced (PlatformName.iOS, 5, 0)]
+		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'NSMetadataQuery.UbiquitousItemPercentDownloadedKey' on 'NSMetadataItem' instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[Mac (10, 7)]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'NSMetadataQuery.UbiquitousItemPercentDownloadedKey' on 'NSMetadataItem' instead.")]
 		NSString UbiquitousItemPercentDownloadedKey { get; }
 
-		[Introduced (PlatformName.iOS, 5, 0)]
+		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'NSMetadataQuery.UbiquitousItemPercentUploadedKey' on 'NSMetadataItem' instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[Mac (10, 7)]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'NSMetadataQuery.UbiquitousItemPercentUploadedKey' on 'NSMetadataItem' instead.")]
 		[Field ("NSURLUbiquitousItemPercentUploadedKey")]
 		NSString UbiquitousItemPercentUploadedKey { get; }
@@ -10021,9 +10021,9 @@ namespace XamCore.Foundation
 		void Publish (NSNetServiceOptions options);
 
 		[Export ("resolve")]
-		[Introduced (PlatformName.iOS, 2, 0)]
+		[iOS (2, 0)]
 		[Deprecated (PlatformName.iOS, 2, 0, message : "Use 'Resolve (double)' instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 2)]
+		[Mac (10, 2)]
 		[Deprecated (PlatformName.MacOSX, 10, 4, message : "Use 'Resolve (double)' instead.")]
 		[NoWatch]
 		void Resolve ();
@@ -12874,8 +12874,8 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // An uncaught exception was raised: *** -range cannot be sent to an abstract object of class NSTextCheckingResult: Create a concrete instance!
-	[Introduced (PlatformName.iOS, 4, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 6)]
+	[iOS (4, 0)]
+	[Mac (10, 6)]
 	interface NSTextCheckingResult : NSSecureCoding, NSCopying {
 		[Export ("resultType")]
 		NSTextCheckingType ResultType { get;  }
@@ -12900,8 +12900,8 @@ namespace XamCore.Foundation
 		double TimeInterval { get; }
 
 		[Export ("components")]
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[iOS (4, 0)]
+		[Mac (10, 7)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSDictionary WeakComponents { get; }
 
@@ -12915,19 +12915,19 @@ namespace XamCore.Foundation
 		string ReplacementString { get; }
 
 		[Export ("alternativeStrings")]
-		[Introduced (PlatformName.iOS, 7, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 9)]
+		[iOS (7, 0)]
+		[Mac (10, 9)]
 		string [] AlternativeStrings { get; }
 
 //		NSRegularExpression isn't bound
 //		[Export ("regularExpression")]
-//		[Introduced (PlatformName.iOS, 4, 0)]
-//		[Introduced (PlatformName.MacOSX, 10, 7)]
+//		[iOS (4, 0)]
+//		[Mac (10, 7)]
 //		NSRegularExpression RegularExpression { get; }
 
 		[Export ("phoneNumber")]
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[iOS (4, 0)]
+		[Mac (10, 7)]
 		string PhoneNumber { get; }
 
 		[Export ("addressComponents")]
@@ -12938,18 +12938,18 @@ namespace XamCore.Foundation
 		NSTextCheckingAddressComponents AddressComponents { get; }
 
 		[Export ("numberOfRanges")]
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[iOS (4, 0)]
+		[Mac (10, 7)]
 		nuint NumberOfRanges { get; }
 
 		[Export ("rangeAtIndex:")]
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[iOS (4, 0)]
+		[Mac (10, 7)]
 		NSRange RangeAtIndex (nuint idx);
 
 		[Export ("resultByAdjustingRangesWithOffset:")]
-		[Introduced (PlatformName.iOS, 5, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[iOS (5, 0)]
+		[Mac (10, 7)]
 		NSTextCheckingResult ResultByAdjustingRanges (nint offset);
 
 		// From the NSTextCheckingResultCreation category on NSTextCheckingResult
@@ -13005,27 +13005,27 @@ namespace XamCore.Foundation
 
 		[Static]
 		[Export ("correctionCheckingResultWithRange:replacementString:alternativeStrings:")]
-		[Introduced (PlatformName.iOS, 7, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 9)]
+		[iOS (7, 0)]
+		[Mac (10, 9)]
 		NSTextCheckingResult CorrectionCheckingResult (NSRange range, string replacementString, string[] alternativeStrings);
 
 //		NSRegularExpression isn't bound
 //		[Export ("regularExpressionCheckingResultWithRanges:count:regularExpression:")]
-//		[Introduced (PlatformName.iOS, 4, 0)]
-//		[Introduced (PlatformName.MacOSX, 10, 7)]
+//		[iOS (4, 0)]
+//		[Mac (10, 7)]
 //		[Internal] // FIXME
 //		NSTextCheckingResult RegularExpressionCheckingResult (ref NSRange ranges, nuint count, NSRegularExpression regularExpression);
 
 		[Static]
 		[Export ("phoneNumberCheckingResultWithRange:phoneNumber:")]
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[iOS (4, 0)]
+		[Mac (10, 7)]
 		NSTextCheckingResult PhoneNumberCheckingResult (NSRange range, string phoneNumber);
 
 		[Static]
 		[Export ("transitInformationCheckingResultWithRange:components:")]
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[iOS (4, 0)]
+		[Mac (10, 7)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSTextCheckingResult TransitInformationCheckingResult (NSRange range, NSDictionary components);
 
@@ -13041,110 +13041,110 @@ namespace XamCore.Foundation
 
 	[StrongDictionary ("NSTextChecking")]
 	interface NSTextCheckingTransitComponents {
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[iOS (4, 0)]
+		[Mac (10, 7)]
 		string Airline { get; }
 
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[iOS (4, 0)]
+		[Mac (10, 7)]
 		string Flight { get; }
 	}
 
 	[StrongDictionary ("NSTextChecking")]
 	interface NSTextCheckingAddressComponents {
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 6)]
+		[iOS (4, 0)]
+		[Mac (10, 6)]
 		string Name { get; }
 
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 6)]
+		[iOS (4, 0)]
+		[Mac (10, 6)]
 		string JobTitle { get; }
 
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 6)]
+		[iOS (4, 0)]
+		[Mac (10, 6)]
 		string Organization { get; }
 
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 6)]
+		[iOS (4, 0)]
+		[Mac (10, 6)]
 		string Street { get; }
 
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 6)]
+		[iOS (4, 0)]
+		[Mac (10, 6)]
 		string City { get; }
 
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 6)]
+		[iOS (4, 0)]
+		[Mac (10, 6)]
 		string State { get; }
 
 		[Export ("ZipKey")]
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 6)]
+		[iOS (4, 0)]
+		[Mac (10, 6)]
 		string ZIP { get; }
 
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 6)]
+		[iOS (4, 0)]
+		[Mac (10, 6)]
 		string Country { get; }
 
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 6)]
+		[iOS (4, 0)]
+		[Mac (10, 6)]
 		string Phone { get; }
 	}
 
 	[Static]
 	interface NSTextChecking {
 		[Field ("NSTextCheckingNameKey")]
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 6)]
+		[iOS (4, 0)]
+		[Mac (10, 6)]
 		NSString NameKey { get; }
 
 		[Field ("NSTextCheckingJobTitleKey")]
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 6)]
+		[iOS (4, 0)]
+		[Mac (10, 6)]
 		NSString JobTitleKey { get; }
 
 		[Field ("NSTextCheckingOrganizationKey")]
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 6)]
+		[iOS (4, 0)]
+		[Mac (10, 6)]
 		NSString OrganizationKey { get; }
 
 		[Field ("NSTextCheckingStreetKey")]
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 6)]
+		[iOS (4, 0)]
+		[Mac (10, 6)]
 		NSString StreetKey { get; }
 
 		[Field ("NSTextCheckingCityKey")]
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 6)]
+		[iOS (4, 0)]
+		[Mac (10, 6)]
 		NSString CityKey { get; }
 
 		[Field ("NSTextCheckingStateKey")]
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 6)]
+		[iOS (4, 0)]
+		[Mac (10, 6)]
 		NSString StateKey { get; }
 
 		[Field ("NSTextCheckingZIPKey")]
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 6)]
+		[iOS (4, 0)]
+		[Mac (10, 6)]
 		NSString ZipKey { get; }
 
 		[Field ("NSTextCheckingCountryKey")]
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 6)]
+		[iOS (4, 0)]
+		[Mac (10, 6)]
 		NSString CountryKey { get; }
 
 		[Field ("NSTextCheckingPhoneKey")]
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 6)]
+		[iOS (4, 0)]
+		[Mac (10, 6)]
 		NSString PhoneKey { get; }
 
 		[Field ("NSTextCheckingAirlineKey")]
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[iOS (4, 0)]
+		[Mac (10, 7)]
 		NSString AirlineKey { get; }
 
 		[Field ("NSTextCheckingFlightKey")]
-		[Introduced (PlatformName.iOS, 4, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[iOS (4, 0)]
+		[Mac (10, 7)]
 		NSString FlightKey { get; }
 	}
 

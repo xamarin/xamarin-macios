@@ -7988,7 +7988,7 @@ namespace XamCore.AppKit {
 
 	}
 
-	[Introduced (PlatformName.MacOSX, 10, 0, PlatformArchitecture.Arch32)] 
+	[Mac (10, 0, PlatformArchitecture.Arch32)] 
 	[BaseType (typeof (NSView))]
 	interface NSMenuView {
 		[Static]
@@ -23849,7 +23849,7 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityDocumentAttribute")]
 		NSString DocumentAttribute { get; }
 
-		[Introduced (PlatformName.MacOSX, 10, 10)]
+		[Mac (10, 10)]
 		[Field ("NSAccessibilityActivationPointAttribute")]
 		NSString ActivationPointAttribute { get; }
 
@@ -24659,11 +24659,11 @@ namespace XamCore.AppKit {
 
 	[Static]
 	interface NSAccessibilityNotificationUserInfoKeys {
-		[Introduced (PlatformName.MacOSX, 10, 9)]
+		[Mac (10, 9)]
 		[Field ("NSAccessibilityUIElementsKey")]
 		NSString UIElementsKey { get; }
 
-		[Introduced (PlatformName.MacOSX, 10, 9)]
+		[Mac (10, 9)]
 		[Field ("NSAccessibilityPriorityKey")]
 		NSString PriorityKey { get; }
 

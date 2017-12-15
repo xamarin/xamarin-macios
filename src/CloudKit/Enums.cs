@@ -153,9 +153,9 @@ namespace XamCore.CloudKit
 	// NSInteger -> CKSubscription.h
 
 	[NoWatch]
-	[Introduced (PlatformName.iOS, 8, 0)]
+	[iOS (8, 0)]
 	[Deprecated (PlatformName.iOS, 10, 0, message : "Use 'CKQuerySubscriptionOptions' instead.")]
-	[Introduced (PlatformName.MacOSX, 10, 10)]
+	[Mac (10, 10)]
 	[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'CKQuerySubscriptionOptions' instead.")]
 	[Flags]
 	[Native]

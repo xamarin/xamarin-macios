@@ -357,9 +357,9 @@ namespace XamCore.GameKit {
 
 #if !XAMCORE_2_0
 	public partial class GKScore {
-		[Introduced (PlatformName.iOS, 4, 1)]
+		[iOS (4, 1)]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'LeaderboardIdentifier' instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 8)]
+		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'LeaderboardIdentifier' instead.")]
 		public string Category {
 			get { return category; }

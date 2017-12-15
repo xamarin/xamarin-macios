@@ -286,9 +286,9 @@ namespace XamCore.CoreImage {
 		void Render (CIImage image, IMTLTexture texture, [NullAllowed] IMTLCommandBuffer commandBuffer, CGRect bounds, [NullAllowed] CGColorSpace colorSpace);
 #endif
 
-		[Introduced (PlatformName.iOS, 5, 0)]
+		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'DrawImage (image, CGRect, CGRect)' instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 4)]
+		[Mac (10, 4)]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'DrawImage (image, CGRect, CGRect)' instead.")]
 		[Export ("drawImage:atPoint:fromRect:")]
 		void DrawImage (CIImage image, CGPoint atPoint, CGRect fromRect);

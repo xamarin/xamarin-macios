@@ -2825,9 +2825,9 @@ namespace XamCore.AVFoundation {
 		CGAffineTransform PreferredTransform { get;  }
 
 		[Export ("naturalSize")]
-		[Introduced (PlatformName.iOS, 4, 0)]
+		[iOS (4, 0)]
 		[Deprecated (PlatformName.iOS, 5, 0, message : "Use 'NaturalSize/PreferredTransform' as appropriate on the video track instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[Mac (10, 7)]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'NaturalSize/PreferredTransform' as appropriate on the video track instead.")]
 		CGSize NaturalSize { get;  }
 
@@ -5227,9 +5227,9 @@ namespace XamCore.AVFoundation {
 		[Field ("AVMetadataID3MetadataKeyCommercial")]
 		NSString ID3MetadataKeyCommercial { get; }
 
-		[Introduced (PlatformName.iOS, 4, 0)]
+		[iOS (4, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[Mac (10, 7)]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Field ("AVMetadataID3MetadataKeyCommerical")]
 		NSString ID3MetadataKeyCommerical { get; }
@@ -6118,9 +6118,9 @@ namespace XamCore.AVFoundation {
 			[Field ("AVMetadataIdentifierID3MetadataCommercial")]
 			NSString Commercial { get; }
 
-			[Introduced (PlatformName.iOS, 8, 0)]
+			[iOS (8, 0)]
 			[Deprecated (PlatformName.iOS, 9, 0)]
-			[Introduced (PlatformName.MacOSX, 10, 10)]
+			[Mac (10, 10)]
 			[Deprecated (PlatformName.MacOSX, 10, 11)]
 			[Field ("AVMetadataIdentifierID3MetadataCommerical")]
 			NSString Commerical { get; }
@@ -7135,7 +7135,7 @@ namespace XamCore.AVFoundation {
 		[Field ("AVFragmentedMovieTrackSegmentsDidChangeNotification")]
 		NSString SegmentsDidChangeNotification { get; }
 
-		[Introduced (PlatformName.MacOSX, 10, 10)]
+		[Mac (10, 10)]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use either 'AVFragmentedMovieTrackTimeRangeDidChangeNotification' or 'AVFragmentedMovieTrackSegmentsDidChangeNotification' instead. In either case, you can assume that the sender's 'TotalSampleDataLength' has changed.")]
 		[Field ("AVFragmentedMovieTrackTotalSampleDataLengthDidChangeNotification")]
 		NSString TotalSampleDataLengthDidChangeNotification { get; }
@@ -8322,9 +8322,9 @@ namespace XamCore.AVFoundation {
 		bool _SupportsVideoMinFrameDuration { [Bind ("isVideoMinFrameDurationSupported")] get;  }
 
 		[Since (5,0)]
-		[Introduced (PlatformName.iOS, 5, 0)]
+		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)]
-		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[Mac (10, 7)]
 		[Export ("videoMinFrameDuration")]
 		CMTime VideoMinFrameDuration { get; set;  }
 #if !MONOMAC
@@ -8334,9 +8334,9 @@ namespace XamCore.AVFoundation {
 
 		[Since (5,0)]
 		[Export ("videoMaxFrameDuration")]
-		[Introduced (PlatformName.iOS, 5, 0)]
+		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)] 
-		[Introduced (PlatformName.MacOSX, 10, 7)] 
+		[Mac (10, 7)] 
 		CMTime VideoMaxFrameDuration { get; set;  }
 
 		[Since (5,0)]
@@ -9511,7 +9511,7 @@ namespace XamCore.AVFoundation {
 		[Field ("AVCaptureDeviceTypeBuiltInTelephotoCamera")]
 		BuiltInTelephotoCamera,
 
-		[Introduced (PlatformName.iOS, 10, 0, message: "Use 'BuiltInDualCamera' instead.")]
+		[iOS (10, 0, message: "Use 'BuiltInDualCamera' instead.")]
 		[Deprecated (PlatformName.iOS, 10, 2, message: "Use 'BuiltInDualCamera' instead.")]
 		[Field ("AVCaptureDeviceTypeBuiltInDuoCamera")]
 		BuiltInDuoCamera,
@@ -11182,9 +11182,9 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (NSObject))]
 	[Since (4,3)]
 	interface AVPlayerItemAccessLogEvent : NSCopying {
-		[Introduced (PlatformName.iOS, 4, 3)]
+		[iOS (4, 3)]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'NumberOfMediaRequests' instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[Mac (10, 7)]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use 'NumberOfMediaRequests' instead.")]
 		[Export ("numberOfSegmentsDownloaded")]
 		nint SegmentedDownloadedCount { get; }

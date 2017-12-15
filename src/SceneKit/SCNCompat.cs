@@ -18,14 +18,14 @@ namespace XamCore.SceneKit {
 	}
 #elif TVOS && !XAMCORE_4_0
 	partial class SCNMaterialProperty {
-	[Introduced (PlatformName.iOS, 8, 0)]
+	[iOS (8, 0)]
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "This API has been totally removed on tvOS.")]
 		public virtual NSObject BorderColor { get; set; }
 	}
 
 	partial class SCNRenderer {
-		[Introduced (PlatformName.iOS, 8, 0)]
+		[iOS (8, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "This API has been totally removed on tvOS.")]
 		public virtual void Render ()
@@ -55,15 +55,15 @@ namespace XamCore.SceneKit {
 #if !XAMCORE_4_0
 #if XAMCORE_2_0 || !MONOMAC
 	public abstract partial class SCNSceneRenderer : NSObject {
-		[Introduced (PlatformName.MacOSX, 10, 10)]
+		[Mac (10, 10)]
 		[Obsolete ("Use 'SCNSceneRenderer_Extensions.PrepareAsync' instead.")]
 		public unsafe virtual Task<bool> PrepareAsync (NSObject[] objects)
 		{
 			return SCNSceneRenderer_Extensions.PrepareAsync (this, objects);
 		}
 
-		[Introduced (PlatformName.iOS, 9, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 11, PlatformArchitecture.Arch64)]
+		[iOS (9, 0)]
+		[Mac (10, 11, PlatformArchitecture.Arch64)]
 		[Obsolete ("Use 'SCNSceneRenderer_Extensions.PresentSceneAsync' instead.")]
 		public unsafe virtual Task PresentSceneAsync (SCNScene scene, global::XamCore.SpriteKit.SKTransition transition, SCNNode pointOfView)
 		{

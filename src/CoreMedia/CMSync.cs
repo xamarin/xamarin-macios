@@ -212,9 +212,9 @@ namespace XamCore.CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CMTimebaseRef */ IntPtr CMTimebaseGetMasterTimebase (/* CMTimebaseRef */ IntPtr timebase);
 
-		[Introduced (PlatformName.iOS, 6, 0)]
+		[iOS (6, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'CopyMasterTimebase' instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 8)]
+		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'CopyMasterTimebase' instead.")]
 		public CMTimebase GetMasterTimebase ()
 		{
@@ -228,9 +228,9 @@ namespace XamCore.CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CMClockRef */ IntPtr CMTimebaseGetMasterClock (/* CMTimebaseRef */ IntPtr timebase);
 
-		[Introduced (PlatformName.iOS, 6, 0)]
+		[iOS (6, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'CopyMasterClock' instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 8)]
+		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'CopyMasterClock' instead.")]
 		public CMClock GetMasterClock ()
 		{
@@ -244,9 +244,9 @@ namespace XamCore.CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CMClockOrTimebaseRef */ IntPtr CMTimebaseGetMaster (/* CMTimebaseRef */ IntPtr timebase);
 
-		[Introduced (PlatformName.iOS, 6, 0)]
+		[iOS (6, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'CopyMaster' instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 8)]
+		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'CopyMaster' instead.")]
 		public CMClockOrTimebase GetMaster ()
 		{
@@ -260,9 +260,9 @@ namespace XamCore.CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CMClockRef */ IntPtr CMTimebaseGetUltimateMasterClock (/* CMTimebaseRef */ IntPtr timebase);
 
-		[Introduced (PlatformName.iOS, 6, 0)]
+		[iOS (6, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'CopyUltimateMasterClock' instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 8)]
+		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'CopyUltimateMasterClock' instead.")]
 		public CMClock GetUltimateMasterClock ()
 		{

@@ -230,18 +230,18 @@ namespace XamCore.CoreLocation {
 		bool SignificantLocationChangeMonitoringAvailable { get; }
 
 		[NoWatch][NoTV]
-		[Introduced (PlatformName.iOS, 4, 0)]
+		[iOS (4, 0)]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'IsMonitoringAvailable' instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 8)]
+		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'IsMonitoringAvailable' instead.")]
 		[Export ("regionMonitoringAvailable"), Static]
 		bool RegionMonitoringAvailable { get; }
 
 		[NoWatch][NoTV]
 		[Since (4,0)]
-		[Introduced (PlatformName.iOS, 4, 0)]
+		[iOS (4, 0)]
 		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'IsMonitoringAvailable' and 'AuthorizationStatus' instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 8)]
+		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'IsMonitoringAvailable' and 'AuthorizationStatus' instead.")]
 		[Export ("regionMonitoringEnabled"), Static]
 		bool RegionMonitoringEnabled { get; }

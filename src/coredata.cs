@@ -53,9 +53,9 @@ namespace XamCore.CoreData
 
 	[NoWatch][NoTV]
 	[Native] // NUInteger -> NSPersistentStoreCoordinator.h
-	[Introduced (PlatformName.iOS, 7, 0)]
+	[iOS (7, 0)]
 	[Deprecated (PlatformName.iOS, 10, 0, message : "Please see the release notes and Core Data documentation.")]
-	[Introduced (PlatformName.MacOSX, 10, 9)]
+	[Mac (10, 9)]
 	[Deprecated (PlatformName.MacOSX, 10, 12, message : "Please see the release notes and Core Data documentation.")]
 	public enum NSPersistentStoreUbiquitousTransitionType : nuint_compat_int {
 		AccountAdded = 1,
@@ -312,9 +312,9 @@ namespace XamCore.CoreData
 		[Since(5,0)]
 		[NullAllowed] // by default this property is null
 		[Export ("compoundIndexes", ArgumentSemantic.Retain)]
-		[Introduced (PlatformName.iOS, 5, 0)]
+		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[Mac (10, 7)]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'NSEntityDescription.Indexes' instead.")]
 		NSPropertyDescription [] CompoundIndexes { get; set; }
 
@@ -1016,24 +1016,24 @@ namespace XamCore.CoreData
 		bool Save (out NSError error);
 
 #if !WATCH && !TVOS
-		[Introduced (PlatformName.iOS, 3, 0)]
+		[iOS (3, 0)]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use a queue style context and 'PerformAndWait' instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 4)]
+		[Mac (10, 4)]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use a queue style context and 'PerformAndWait' instead.")]
 		[Export ("lock")]
 		new void Lock ();
 
-		[Introduced (PlatformName.iOS, 3, 0)]
+		[iOS (3, 0)]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use a queue style context and 'PerformAndWait' instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 4)]
+		[Mac (10, 4)]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use a queue style context and 'PerformAndWait' instead.")]
 		[Export ("unlock")]
 		new void Unlock ();
 
 		[NoTV]
-		[Introduced (PlatformName.iOS, 3, 0)]
+		[iOS (3, 0)]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use a queue style context and 'Perform' instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 4)]
+		[Mac (10, 4)]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use a queue style context and 'Perform' instead.")]
 		[Export ("tryLock")]
 		bool TryLock { get; }
@@ -1807,9 +1807,9 @@ namespace XamCore.CoreData
 		[Static, Export ("registerStoreClass:forStoreType:")]
 		void RegisterStoreClass (Class storeClass, NSString storeType);
 
-		[Introduced (PlatformName.iOS, 3, 0)]
+		[iOS (3, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use the method that takes an out NSError parameter.")]
-		[Introduced (PlatformName.MacOSX, 10, 5)]
+		[Mac (10, 5)]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use the method that takes an out NSError parameter.")]
 		[Static, Export ("metadataForPersistentStoreOfType:URL:error:")]
 		[return: NullAllowed]
@@ -2196,9 +2196,9 @@ namespace XamCore.CoreData
 		NSDictionary UserInfo { get; set; }
 
 		[Export ("indexed")]
-		[Introduced (PlatformName.iOS, 3, 0)]
+		[iOS (3, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 5)]
+		[Mac (10, 5)]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'NSEntityDescription.Indexes' instead.")]
 		bool Indexed { [Bind ("isIndexed")] get; set; }
 
@@ -2219,9 +2219,9 @@ namespace XamCore.CoreData
 
 		[Since (5,0)]
 		[Export ("storedInExternalRecord")]
-		[Introduced (PlatformName.iOS, 3, 0)]
+		[iOS (3, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'CoreSpotlight' integration instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 5)]
+		[Mac (10, 5)]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'CoreSpotlight' integration instead.")]
 		bool StoredInExternalRecord { [Bind ("isStoredInExternalRecord")]get; set; }
 	}

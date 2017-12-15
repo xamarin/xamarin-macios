@@ -193,13 +193,13 @@ namespace XamCore.SceneKit {
 #if XAMCORE_2_0
 		[Abstract]
 #endif
-		[Introduced (PlatformName.WatchOS, 3, 0)]
+		[Watch (3, 0)]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'SCNAnimationPlayer.Paused' instead.")]
-		[Introduced (PlatformName.TvOS, 9, 0)]
+		[TV (9, 0)]
 		[Deprecated (PlatformName.TvOS, 11, 0,   message: "Use 'SCNAnimationPlayer.Paused' instead.")]
-		[Introduced (PlatformName.iOS, 8, 0)]
+		[iOS (8, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0,    message: "Use 'SCNAnimationPlayer.Paused' instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 9)]
+		[Mac (10, 9)]
 		[Deprecated (PlatformName.MacOSX, 10, 13,message: "Use 'SCNAnimationPlayer.Paused' instead.")]
 		[Export ("isAnimationForKeyPaused:")]
 		bool IsAnimationPaused (NSString key);

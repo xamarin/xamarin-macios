@@ -1272,15 +1272,15 @@ namespace XamCore.AudioUnit
 		ParameterHistoryInfo = 53,
 		Nickname = 54,
 		OfflineRender = 37,
-		[Introduced (PlatformName.iOS, 8, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 3)]
+		[iOS (8, 0)]
+		[Mac (10, 3)]
 		ParameterIDName = 34,
-		[Introduced (PlatformName.iOS, 8, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 3)]
+		[iOS (8, 0)]
+		[Mac (10, 3)]
 		ParameterStringFromValue = 33,
 		ParameterClumpName = 35,
-		[Introduced (PlatformName.iOS, 8, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 3)]
+		[iOS (8, 0)]
+		[Mac (10, 3)]
 		ParameterValueFromString = 38,
 		ContextName = 25,
 		PresentationLatency = 40,
@@ -1667,14 +1667,14 @@ namespace XamCore.AudioUnit
 		BeganToRender = 0x02,
 		BeganToRenderLate = 0x04,
 
-		[Introduced (PlatformName.iOS, 8, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 		Loop                   = 0x08,
-		[Introduced (PlatformName.iOS, 8, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 		Interrupt              = 0x10,
-		[Introduced (PlatformName.iOS, 8, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 		InterruptAtLoop        = 0x20
 	}
 

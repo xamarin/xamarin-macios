@@ -2050,15 +2050,15 @@ namespace XamCore.HealthKit {
 		[Static, Export ("workoutEventWithType:date:")]
 		HKWorkoutEvent Create (HKWorkoutEventType type, NSDate date);
 
-		[Introduced (PlatformName.iOS, 10, 0, message: "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
-		[Introduced (PlatformName.WatchOS, 3, 0, message: "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
+		[iOS (10, 0, message: "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
+		[Watch (3, 0, message: "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
 		[Static]
 		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
 		[Export ("workoutEventWithType:date:metadata:")]
 		HKWorkoutEvent Create (HKWorkoutEventType type, NSDate date, NSDictionary metadata);
 
-		[Introduced (PlatformName.iOS, 10, 0, message: "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
-		[Introduced (PlatformName.WatchOS, 3, 0, message: "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
+		[iOS (10, 0, message: "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
+		[Watch (3, 0, message: "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
 		[Static]
 		[Wrap ("Create (type, date, metadata != null ? metadata.Dictionary : null)")]
 		HKWorkoutEvent Create (HKWorkoutEventType type, NSDate date, HKMetadata metadata);

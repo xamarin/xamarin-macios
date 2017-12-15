@@ -15,8 +15,8 @@ using XamCore.ObjCRuntime;
 namespace XamCore.SpriteKit {
 	public partial class SKShapeNode : SKNode {
 
-		[Introduced (PlatformName.iOS, 8, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 		public static SKShapeNode FromPoints (CGPoint [] points)
 		{
 			if (points == null)
@@ -25,8 +25,8 @@ namespace XamCore.SpriteKit {
 			return FromPoints (ref points[0], (nuint) points.Length);
 		}
 
-		[Introduced (PlatformName.iOS, 8, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 		public static SKShapeNode FromPoints (CGPoint [] points, int offset, int length)
 		{
 			if (points == null)
@@ -37,8 +37,8 @@ namespace XamCore.SpriteKit {
 			return FromPoints (ref points [offset], (nuint) length);
 		}
 
-		[Introduced (PlatformName.iOS, 8, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 		public static SKShapeNode FromSplinePoints (CGPoint [] points)
 		{
 			if (points == null)
@@ -47,8 +47,8 @@ namespace XamCore.SpriteKit {
 			return FromSplinePoints (ref points[0], (nuint) points.Length);
 		}
 
-		[Introduced (PlatformName.iOS, 8, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 		public static SKShapeNode FromSplinePoints (CGPoint [] points, int offset, int length)
 		{
 			if (points == null)
