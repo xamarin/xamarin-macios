@@ -13,8 +13,8 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.WebKit
 {
-	[Availability (Platform.Mac_10_10)]
-	[Availability (Platform.iOS_8_0)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
 	[Native]
 	public enum WKNavigationType : nint {
 		LinkActivated,
@@ -25,32 +25,32 @@ namespace XamCore.WebKit
 		Other = -1
 	}
 
-	[Availability (Platform.Mac_10_10)]
-	[Availability (Platform.iOS_8_0)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
 	[Native]
 	public enum WKNavigationActionPolicy : nint {
 		Cancel,
 		Allow
 	}
 
-	[Availability (Platform.Mac_10_10)]
-	[Availability (Platform.iOS_8_0)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
 	[Native]
 	public enum WKNavigationResponsePolicy : nint {
 		Cancel,
 		Allow
 	}
 
-	[Availability (Platform.Mac_10_10)]
-	[Availability (Platform.iOS_8_0)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
 	[Native]
 	public enum WKUserScriptInjectionTime : nint {
 		AtDocumentStart,
 		AtDocumentEnd
 	}
 
-	[Availability (Platform.Mac_10_10)]
-	[Availability (Platform.iOS_8_0)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
 	[Native]
 	[ErrorDomain ("WKErrorDomain")]
 	public enum WKErrorCode : nint {
@@ -72,7 +72,7 @@ namespace XamCore.WebKit
 	}
 
 #if !MONOMAC || !XAMCORE_4_0
-	[Availability (Platform.iOS_8_0)]
+	[iOS (8, 0)]
 	[Native]
 	public enum WKSelectionGranularity : nint {
 		Dynamic, Character

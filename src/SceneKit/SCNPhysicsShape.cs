@@ -76,8 +76,8 @@ namespace XamCore.SceneKit
 		}
 	}
 
-	[Availability (Platform.Mac_10_10)]
-	[Availability (Platform.iOS_8_0)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
 	public enum SCNPhysicsShapeType
 	{
 		ConvexHull,
@@ -85,8 +85,8 @@ namespace XamCore.SceneKit
 		ConcavePolyhedron
 	}
 
-	[Availability (Platform.Mac_10_10)]
-	[Availability (Platform.iOS_8_0)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
 	public class SCNPhysicsShapeOptions
 	{
 		public SCNPhysicsShapeType? ShapeType { get; set; }
