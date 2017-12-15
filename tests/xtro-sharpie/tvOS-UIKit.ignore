@@ -1,0 +1,25 @@
+!missing-designated-initializer! UISpringTimingParameters::init is missing an [DesignatedInitializer] attribute
+!missing-enum! UIImpactFeedbackStyle not bound
+!missing-enum! UINotificationFeedbackType not bound
+!missing-enum! UIPreferredPresentationStyle not bound
+!missing-protocol! UIActivityItemSource not bound
+!missing-protocol! UIPreviewInteractionDelegate not bound
+!missing-protocol-member! UIApplicationDelegate::application:handleIntent:completionHandler: not found
+!missing-selector! NSItemProvider::preferredPresentationStyle not bound
+!missing-selector! NSItemProvider::setPreferredPresentationStyle: not bound
+!missing-selector! NSObject::accessibilityHeaderElements not bound
+!missing-selector! NSObject::setAccessibilityHeaderElements: not bound
+!missing-selector! UIInputViewController::requestSupplementaryLexiconWithCompletion: not bound
+!missing-selector! UIScrollView::pinchGestureRecognizer not bound
+!missing-selector! UITouch::altitudeAngle not bound
+!missing-selector! UITouch::azimuthAngleInView: not bound
+!missing-selector! UITouch::azimuthUnitVectorInView: not bound
+!missing-selector! UITouch::estimatedProperties not bound
+!missing-selector! UITouch::estimatedPropertiesExpectingUpdates not bound
+!missing-selector! UITouch::estimationUpdateIndex not bound
+!missing-selector! UITouch::preciseLocationInView: not bound
+!missing-selector! UITouch::precisePreviousLocationInView: not bound
+!missing-selector! UIViewController::popoverPresentationController not bound
+!unknown-native-enum! UICloudSharingPermissionOptions bound
+!unknown-native-enum! UILineBreakMode bound
+!unknown-native-enum! UITextAlignment bound

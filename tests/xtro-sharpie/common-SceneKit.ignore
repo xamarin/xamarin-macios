@@ -1,0 +1,85 @@
+## Breaking changes fixed in XAMCORE_4_0
+## we cannot add abstract members to existing SCNSceneRenderer or SCNAnimatable protocols (breaking changes)
+!incorrect-protocol-member! SCNAnimatable::addAnimationPlayer:forKey: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNAnimatable::animationPlayerForKey: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNAnimatable::removeAnimationForKey:blendOutDuration: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNAnimatable::setSpeed:forAnimationKey: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::audioEngine is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::audioListener is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::debugOptions is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::nodesInsideFrustumWithPointOfView: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::presentScene:withTransition:incomingPointOfView:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::renderingAPI is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::setAudioListener: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::setDebugOptions: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::audioEnvironmentNode is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::colorPixelFormat is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::commandQueue is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::currentRenderCommandEncoder is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::depthPixelFormat is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::device is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::stencilPixelFormat is REQUIRED and should be abstract
+
+## same for SCNActionable, it is required member of a protocol added to XAMCORE_4_0
+!incorrect-protocol-member! SCNActionable::actionKeys is REQUIRED and should be abstract
+
+## We have managed counterparts that comes from OpenTK code
+!missing-field! SCNMatrix4Identity not bound
+!missing-field! SCNVector3Zero not bound
+!missing-field! SCNVector4Zero not bound
+!missing-pinvoke! SCNMatrix4EqualToMatrix4 is not bound
+!missing-pinvoke! SCNMatrix4Invert is not bound
+!missing-pinvoke! SCNMatrix4IsIdentity is not bound
+!missing-pinvoke! SCNMatrix4MakeRotation is not bound
+!missing-pinvoke! SCNMatrix4Mult is not bound
+!missing-pinvoke! SCNMatrix4Rotate is not bound
+!missing-pinvoke! SCNMatrix4Scale is not bound
+!missing-pinvoke! SCNVector3EqualToVector3 is not bound
+!missing-pinvoke! SCNVector4EqualToVector4 is not bound
+!missing-pinvoke! SCNMatrix4FromGLKMatrix4 is not bound
+!missing-pinvoke! SCNMatrix4ToGLKMatrix4 is not bound
+
+!missing-selector! +SCNNode::simdLocalFront not bound
+!missing-selector! +SCNNode::simdLocalRight not bound
+!missing-selector! +SCNNode::simdLocalUp not bound
+!missing-selector! +SCNTransaction::completionBlock not bound
+!missing-selector! +SCNTransaction::valueForKey: not bound
+!missing-selector! SCNNode::setSimdEulerAngles: not bound
+!missing-selector! SCNNode::setSimdOrientation: not bound
+!missing-selector! SCNNode::setSimdPivot: not bound
+!missing-selector! SCNNode::setSimdPosition: not bound
+!missing-selector! SCNNode::setSimdRotation: not bound
+!missing-selector! SCNNode::setSimdScale: not bound
+!missing-selector! SCNNode::setSimdTransform: not bound
+!missing-selector! SCNNode::setSimdWorldOrientation: not bound
+!missing-selector! SCNNode::setSimdWorldPosition: not bound
+!missing-selector! SCNNode::setSimdWorldTransform: not bound
+
+## SIMD helpers that we decided not to bind for now
+!missing-selector! SCNNode::simdConvertPosition:fromNode: not bound
+!missing-selector! SCNNode::simdConvertPosition:toNode: not bound
+!missing-selector! SCNNode::simdConvertTransform:fromNode: not bound
+!missing-selector! SCNNode::simdConvertTransform:toNode: not bound
+!missing-selector! SCNNode::simdConvertVector:fromNode: not bound
+!missing-selector! SCNNode::simdConvertVector:toNode: not bound
+!missing-selector! SCNNode::simdEulerAngles not bound
+!missing-selector! SCNNode::simdLocalRotateBy: not bound
+!missing-selector! SCNNode::simdLocalTranslateBy: not bound
+!missing-selector! SCNNode::simdLookAt: not bound
+!missing-selector! SCNNode::simdLookAt:up:localFront: not bound
+!missing-selector! SCNNode::simdOrientation not bound
+!missing-selector! SCNNode::simdPivot not bound
+!missing-selector! SCNNode::simdPosition not bound
+!missing-selector! SCNNode::simdRotateBy:aroundTarget: not bound
+!missing-selector! SCNNode::simdRotation not bound
+!missing-selector! SCNNode::simdScale not bound
+!missing-selector! SCNNode::simdTransform not bound
+!missing-selector! SCNNode::simdWorldFront not bound
+!missing-selector! SCNNode::simdWorldOrientation not bound
+!missing-selector! SCNNode::simdWorldPosition not bound
+!missing-selector! SCNNode::simdWorldRight not bound
+!missing-selector! SCNNode::simdWorldTransform not bound
+!missing-selector! SCNNode::simdWorldUp not bound
+
+## untyped enum (SceneKitTypes.h) but described as the value of `code` for `NSError` which is an NSInteger
+!unknown-native-enum! SCNErrorCode bound

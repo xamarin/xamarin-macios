@@ -8,12 +8,6 @@
 !missing-field! AVCaptureMaxAvailableTorchLevel not bound
 !missing-field! AVCaptureWhiteBalanceGainsCurrent not bound
 
-## inside AVPlayerViewControllerDeprecated
-!missing-selector! AVPlayerItem::externalSubtitleOptionLanguages not bound
-!missing-selector! AVPlayerItem::selectedExternalSubtitleOptionLanguage not bound
-!missing-selector! AVPlayerItem::setExternalSubtitleOptionLanguages: not bound
-!missing-selector! AVPlayerItem::setSelectedExternalSubtitleOptionLanguage: not bound
-
 ## this was tvos 10.2 in Xcode 8.3 and changed to iOS-only in Xcode9 betas
 ## it's still exposed by AVContentKeySessionDelegate which is available in tvos 10.2
 !unknown-type! AVPersistableContentKeyRequest bound
@@ -30,14 +24,6 @@
 ## kCMFormatDescription* are not bound for iOS either (common.unclassified)
 !missing-field! kCMFormatDescriptionYCbCrMatrix_DCI_P3 not bound
 !missing-field! kCMFormatDescriptionYCbCrMatrix_P3_D65 not bound
-
-
-# ExternalAccessory
-
-## delegate is empty (nothing is available on tvOS) so we hide it (and the code that get/set it)
-!missing-protocol! EAWiFiUnconfiguredAccessoryBrowserDelegate not bound
-!missing-selector! EAWiFiUnconfiguredAccessoryBrowser::delegate not bound
-!missing-selector! EAWiFiUnconfiguredAccessoryBrowser::setDelegate: not bound
 
 
 # GameplayKit
@@ -58,13 +44,6 @@
 !unknown-native-enum! MTLSamplerBorderColor bound
 
 
-# UserNotifications
-
-## While these keys are present in the SDK, the class that uses them UNNotificationAttachment is __TVOS_PROHIBITED
-!missing-field! UNNotificationAttachmentOptionsThumbnailClippingRectKey not bound
-!missing-field! UNNotificationAttachmentOptionsThumbnailHiddenKey not bound
-!missing-field! UNNotificationAttachmentOptionsThumbnailTimeKey not bound
-!missing-field! UNNotificationAttachmentOptionsTypeHintKey not bound
 
 
 # Security

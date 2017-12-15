@@ -1,0 +1,9 @@
+!missing-enum! INBookRestaurantReservationIntentCode not bound
+!missing-selector! INRideDriver::initWithPersonHandle:nameComponents:displayName:image:rating:phoneNumber: not bound
+!unknown-type! INCarAirCirculationModeResolutionResult bound
+!unknown-type! INCarAudioSourceResolutionResult bound
+!unknown-type! INCarDefrosterResolutionResult bound
+!unknown-type! INCarSeatResolutionResult bound
+!unknown-type! INRadioTypeResolutionResult bound
+!unknown-type! INRelativeReferenceResolutionResult bound
+!unknown-type! INRelativeSettingResolutionResult bound

@@ -1,0 +1,977 @@
+## we already expose the NSURLFileProtection* constants
+!missing-field! kCFURLFileProtectionComplete not bound
+!missing-field! kCFURLFileProtectionCompleteUnlessOpen not bound
+!missing-field! kCFURLFileProtectionCompleteUntilFirstUserAuthentication not bound
+!missing-field! kCFURLFileProtectionKey not bound
+!missing-field! kCFURLFileProtectionNone not bound
+
+
+## unsorted
+
+!missing-enum! __CFByteOrder not bound
+!missing-enum! CFCalendarUnit not bound
+!missing-enum! CFCharacterSetPredefinedSet not bound
+!missing-enum! CFComparisonResult not bound
+!missing-enum! CFDataSearchFlags not bound
+!missing-enum! CFDateFormatterStyle not bound
+!missing-enum! CFFileSecurityClearOptions not bound
+!missing-enum! CFGregorianUnitFlags not bound
+!missing-enum! CFISO8601DateFormatOptions not bound
+!missing-enum! CFLocaleLanguageDirection not bound
+!missing-enum! CFNumberFormatterOptionFlags not bound
+!missing-enum! CFNumberFormatterPadPosition not bound
+!missing-enum! CFNumberFormatterRoundingMode not bound
+!missing-enum! CFNumberFormatterStyle not bound
+!missing-enum! CFNumberType not bound
+!missing-enum! CFPropertyListFormat not bound
+!missing-enum! CFPropertyListMutabilityOptions not bound
+!missing-enum! CFRunLoopActivity not bound
+!missing-enum! CFRunLoopRunResult not bound
+!missing-enum! CFStreamErrorDomain not bound
+!missing-enum! CFStringBuiltInEncodings not bound
+!missing-enum! CFStringCompareFlags not bound
+!missing-enum! CFStringEncodings not bound
+!missing-enum! CFStringNormalizationForm not bound
+!missing-enum! CFStringTokenizerTokenType not bound
+!missing-enum! CFTimeZoneNameStyle not bound
+!missing-enum! CFURLBookmarkCreationOptions not bound
+!missing-enum! CFURLBookmarkResolutionOptions not bound
+!missing-enum! CFURLComponentType not bound
+!missing-enum! CFURLEnumeratorOptions not bound
+!missing-enum! CFURLEnumeratorResult not bound
+!missing-enum! CFURLError not bound
+!missing-field! kCFAbsoluteTimeIntervalSince1904 not bound
+!missing-field! kCFAbsoluteTimeIntervalSince1970 not bound
+!missing-field! kCFAllocatorUseContext not bound
+!missing-field! kCFBooleanFalse not bound
+!missing-field! kCFBooleanTrue not bound
+!missing-field! kCFBuddhistCalendar not bound
+!missing-field! kCFBundleDevelopmentRegionKey not bound
+!missing-field! kCFBundleExecutableKey not bound
+!missing-field! kCFBundleIdentifierKey not bound
+!missing-field! kCFBundleInfoDictionaryVersionKey not bound
+!missing-field! kCFBundleLocalizationsKey not bound
+!missing-field! kCFBundleNameKey not bound
+!missing-field! kCFBundleVersionKey not bound
+!missing-field! kCFChineseCalendar not bound
+!missing-field! kCFCopyStringBagCallBacks not bound
+!missing-field! kCFCopyStringDictionaryKeyCallBacks not bound
+!missing-field! kCFCopyStringSetCallBacks not bound
+!missing-field! kCFCoreFoundationVersionNumber not bound
+!missing-field! kCFDateFormatterAMSymbol not bound
+!missing-field! kCFDateFormatterCalendar not bound
+!missing-field! kCFDateFormatterCalendarName not bound
+!missing-field! kCFDateFormatterDefaultDate not bound
+!missing-field! kCFDateFormatterDefaultFormat not bound
+!missing-field! kCFDateFormatterDoesRelativeDateFormattingKey not bound
+!missing-field! kCFDateFormatterEraSymbols not bound
+!missing-field! kCFDateFormatterGregorianStartDate not bound
+!missing-field! kCFDateFormatterIsLenient not bound
+!missing-field! kCFDateFormatterLongEraSymbols not bound
+!missing-field! kCFDateFormatterMonthSymbols not bound
+!missing-field! kCFDateFormatterPMSymbol not bound
+!missing-field! kCFDateFormatterQuarterSymbols not bound
+!missing-field! kCFDateFormatterShortMonthSymbols not bound
+!missing-field! kCFDateFormatterShortQuarterSymbols not bound
+!missing-field! kCFDateFormatterShortStandaloneMonthSymbols not bound
+!missing-field! kCFDateFormatterShortStandaloneQuarterSymbols not bound
+!missing-field! kCFDateFormatterShortStandaloneWeekdaySymbols not bound
+!missing-field! kCFDateFormatterShortWeekdaySymbols not bound
+!missing-field! kCFDateFormatterStandaloneMonthSymbols not bound
+!missing-field! kCFDateFormatterStandaloneQuarterSymbols not bound
+!missing-field! kCFDateFormatterStandaloneWeekdaySymbols not bound
+!missing-field! kCFDateFormatterTimeZone not bound
+!missing-field! kCFDateFormatterTwoDigitStartDate not bound
+!missing-field! kCFDateFormatterVeryShortMonthSymbols not bound
+!missing-field! kCFDateFormatterVeryShortStandaloneMonthSymbols not bound
+!missing-field! kCFDateFormatterVeryShortStandaloneWeekdaySymbols not bound
+!missing-field! kCFDateFormatterVeryShortWeekdaySymbols not bound
+!missing-field! kCFDateFormatterWeekdaySymbols not bound
+!missing-field! kCFErrorDescriptionKey not bound
+!missing-field! kCFErrorDomainCocoa not bound
+!missing-field! kCFErrorDomainMach not bound
+!missing-field! kCFErrorDomainOSStatus not bound
+!missing-field! kCFErrorDomainPOSIX not bound
+!missing-field! kCFErrorFilePathKey not bound
+!missing-field! kCFErrorLocalizedDescriptionKey not bound
+!missing-field! kCFErrorLocalizedFailureKey not bound
+!missing-field! kCFErrorLocalizedFailureReasonKey not bound
+!missing-field! kCFErrorLocalizedRecoverySuggestionKey not bound
+!missing-field! kCFErrorUnderlyingErrorKey not bound
+!missing-field! kCFErrorURLKey not bound
+!missing-field! kCFGregorianCalendar not bound
+!missing-field! kCFHebrewCalendar not bound
+!missing-field! kCFIndianCalendar not bound
+!missing-field! kCFIslamicCalendar not bound
+!missing-field! kCFIslamicCivilCalendar not bound
+!missing-field! kCFIslamicTabularCalendar not bound
+!missing-field! kCFIslamicUmmAlQuraCalendar not bound
+!missing-field! kCFISO8601Calendar not bound
+!missing-field! kCFJapaneseCalendar not bound
+!missing-field! kCFLocaleAlternateQuotationBeginDelimiterKey not bound
+!missing-field! kCFLocaleAlternateQuotationEndDelimiterKey not bound
+!missing-field! kCFLocaleCalendar not bound
+!missing-field! kCFLocaleCalendarIdentifier not bound
+!missing-field! kCFLocaleCollationIdentifier not bound
+!missing-field! kCFLocaleCollatorIdentifier not bound
+!missing-field! kCFLocaleCountryCode not bound
+!missing-field! kCFLocaleCurrencyCode not bound
+!missing-field! kCFLocaleCurrencySymbol not bound
+!missing-field! kCFLocaleCurrentLocaleDidChangeNotification not bound
+!missing-field! kCFLocaleDecimalSeparator not bound
+!missing-field! kCFLocaleExemplarCharacterSet not bound
+!missing-field! kCFLocaleGroupingSeparator not bound
+!missing-field! kCFLocaleIdentifier not bound
+!missing-field! kCFLocaleLanguageCode not bound
+!missing-field! kCFLocaleMeasurementSystem not bound
+!missing-field! kCFLocaleQuotationBeginDelimiterKey not bound
+!missing-field! kCFLocaleQuotationEndDelimiterKey not bound
+!missing-field! kCFLocaleScriptCode not bound
+!missing-field! kCFLocaleUsesMetricSystem not bound
+!missing-field! kCFLocaleVariantCode not bound
+!missing-field! kCFNull not bound
+!missing-field! kCFNumberFormatterAlwaysShowDecimalSeparator not bound
+!missing-field! kCFNumberFormatterCurrencyCode not bound
+!missing-field! kCFNumberFormatterCurrencyDecimalSeparator not bound
+!missing-field! kCFNumberFormatterCurrencyGroupingSeparator not bound
+!missing-field! kCFNumberFormatterCurrencySymbol not bound
+!missing-field! kCFNumberFormatterDecimalSeparator not bound
+!missing-field! kCFNumberFormatterDefaultFormat not bound
+!missing-field! kCFNumberFormatterExponentSymbol not bound
+!missing-field! kCFNumberFormatterFormatWidth not bound
+!missing-field! kCFNumberFormatterGroupingSeparator not bound
+!missing-field! kCFNumberFormatterGroupingSize not bound
+!missing-field! kCFNumberFormatterInfinitySymbol not bound
+!missing-field! kCFNumberFormatterInternationalCurrencySymbol not bound
+!missing-field! kCFNumberFormatterIsLenient not bound
+!missing-field! kCFNumberFormatterMaxFractionDigits not bound
+!missing-field! kCFNumberFormatterMaxIntegerDigits not bound
+!missing-field! kCFNumberFormatterMaxSignificantDigits not bound
+!missing-field! kCFNumberFormatterMinFractionDigits not bound
+!missing-field! kCFNumberFormatterMinIntegerDigits not bound
+!missing-field! kCFNumberFormatterMinSignificantDigits not bound
+!missing-field! kCFNumberFormatterMinusSign not bound
+!missing-field! kCFNumberFormatterMultiplier not bound
+!missing-field! kCFNumberFormatterNaNSymbol not bound
+!missing-field! kCFNumberFormatterNegativePrefix not bound
+!missing-field! kCFNumberFormatterNegativeSuffix not bound
+!missing-field! kCFNumberFormatterPaddingCharacter not bound
+!missing-field! kCFNumberFormatterPaddingPosition not bound
+!missing-field! kCFNumberFormatterPercentSymbol not bound
+!missing-field! kCFNumberFormatterPerMillSymbol not bound
+!missing-field! kCFNumberFormatterPlusSign not bound
+!missing-field! kCFNumberFormatterPositivePrefix not bound
+!missing-field! kCFNumberFormatterPositiveSuffix not bound
+!missing-field! kCFNumberFormatterRoundingIncrement not bound
+!missing-field! kCFNumberFormatterRoundingMode not bound
+!missing-field! kCFNumberFormatterSecondaryGroupingSize not bound
+!missing-field! kCFNumberFormatterUseGroupingSeparator not bound
+!missing-field! kCFNumberFormatterUseSignificantDigits not bound
+!missing-field! kCFNumberFormatterZeroSymbol not bound
+!missing-field! kCFNumberNaN not bound
+!missing-field! kCFNumberNegativeInfinity not bound
+!missing-field! kCFNumberPositiveInfinity not bound
+!missing-field! kCFPersianCalendar not bound
+!missing-field! kCFPlugInDynamicRegisterFunctionKey not bound
+!missing-field! kCFPlugInDynamicRegistrationKey not bound
+!missing-field! kCFPlugInFactoriesKey not bound
+!missing-field! kCFPlugInTypesKey not bound
+!missing-field! kCFPlugInUnloadFunctionKey not bound
+!missing-field! kCFPreferencesAnyApplication not bound
+!missing-field! kCFPreferencesAnyHost not bound
+!missing-field! kCFPreferencesAnyUser not bound
+!missing-field! kCFPreferencesCurrentApplication not bound
+!missing-field! kCFPreferencesCurrentHost not bound
+!missing-field! kCFPreferencesCurrentUser not bound
+!missing-field! kCFRepublicOfChinaCalendar not bound
+!missing-field! kCFSocketCommandKey not bound
+!missing-field! kCFSocketErrorKey not bound
+!missing-field! kCFSocketNameKey not bound
+!missing-field! kCFSocketRegisterCommand not bound
+!missing-field! kCFSocketResultKey not bound
+!missing-field! kCFSocketRetrieveCommand not bound
+!missing-field! kCFSocketValueKey not bound
+!missing-field! kCFStreamPropertyAppendToFile not bound
+!missing-field! kCFStreamPropertyDataWritten not bound
+!missing-field! kCFStreamPropertyFileCurrentOffset not bound
+!missing-field! kCFStreamPropertySocketNativeHandle not bound
+!missing-field! kCFStreamPropertySocketRemoteHostName not bound
+!missing-field! kCFStreamPropertySocketRemotePortNumber not bound
+!missing-field! kCFStringBinaryHeapCallBacks not bound
+!missing-field! kCFStringTransformFullwidthHalfwidth not bound
+!missing-field! kCFStringTransformHiraganaKatakana not bound
+!missing-field! kCFStringTransformLatinArabic not bound
+!missing-field! kCFStringTransformLatinCyrillic not bound
+!missing-field! kCFStringTransformLatinGreek not bound
+!missing-field! kCFStringTransformLatinHangul not bound
+!missing-field! kCFStringTransformLatinHebrew not bound
+!missing-field! kCFStringTransformLatinHiragana not bound
+!missing-field! kCFStringTransformLatinKatakana not bound
+!missing-field! kCFStringTransformLatinThai not bound
+!missing-field! kCFStringTransformMandarinLatin not bound
+!missing-field! kCFStringTransformStripCombiningMarks not bound
+!missing-field! kCFStringTransformStripDiacritics not bound
+!missing-field! kCFStringTransformToLatin not bound
+!missing-field! kCFStringTransformToUnicodeName not bound
+!missing-field! kCFStringTransformToXMLHex not bound
+!missing-field! kCFTimeZoneSystemTimeZoneDidChangeNotification not bound
+!missing-field! kCFTypeArrayCallBacks not bound
+!missing-field! kCFTypeBagCallBacks not bound
+!missing-field! kCFTypeDictionaryKeyCallBacks not bound
+!missing-field! kCFTypeDictionaryValueCallBacks not bound
+!missing-field! kCFTypeSetCallBacks not bound
+!missing-field! kCFURLAddedToDirectoryDateKey not bound
+!missing-field! kCFURLAttributeModificationDateKey not bound
+!missing-field! kCFURLCanonicalPathKey not bound
+!missing-field! kCFURLContentAccessDateKey not bound
+!missing-field! kCFURLContentModificationDateKey not bound
+!missing-field! kCFURLCreationDateKey not bound
+!missing-field! kCFURLCustomIconKey not bound
+!missing-field! kCFURLDocumentIdentifierKey not bound
+!missing-field! kCFURLEffectiveIconKey not bound
+!missing-field! kCFURLFileAllocatedSizeKey not bound
+!missing-field! kCFURLFileDirectoryContents not bound
+!missing-field! kCFURLFileExists not bound
+!missing-field! kCFURLFileLastModificationTime not bound
+!missing-field! kCFURLFileLength not bound
+!missing-field! kCFURLFileOwnerID not bound
+!missing-field! kCFURLFilePOSIXMode not bound
+!missing-field! kCFURLFileResourceIdentifierKey not bound
+!missing-field! kCFURLFileResourceTypeBlockSpecial not bound
+!missing-field! kCFURLFileResourceTypeCharacterSpecial not bound
+!missing-field! kCFURLFileResourceTypeDirectory not bound
+!missing-field! kCFURLFileResourceTypeKey not bound
+!missing-field! kCFURLFileResourceTypeNamedPipe not bound
+!missing-field! kCFURLFileResourceTypeRegular not bound
+!missing-field! kCFURLFileResourceTypeSocket not bound
+!missing-field! kCFURLFileResourceTypeSymbolicLink not bound
+!missing-field! kCFURLFileResourceTypeUnknown not bound
+!missing-field! kCFURLFileSecurityKey not bound
+!missing-field! kCFURLFileSizeKey not bound
+!missing-field! kCFURLGenerationIdentifierKey not bound
+!missing-field! kCFURLHasHiddenExtensionKey not bound
+!missing-field! kCFURLHTTPStatusCode not bound
+!missing-field! kCFURLHTTPStatusLine not bound
+!missing-field! kCFURLIsAliasFileKey not bound
+!missing-field! kCFURLIsApplicationKey not bound
+!missing-field! kCFURLIsDirectoryKey not bound
+!missing-field! kCFURLIsExcludedFromBackupKey not bound
+!missing-field! kCFURLIsExecutableKey not bound
+!missing-field! kCFURLIsHiddenKey not bound
+!missing-field! kCFURLIsMountTriggerKey not bound
+!missing-field! kCFURLIsPackageKey not bound
+!missing-field! kCFURLIsReadableKey not bound
+!missing-field! kCFURLIsRegularFileKey not bound
+!missing-field! kCFURLIsSymbolicLinkKey not bound
+!missing-field! kCFURLIsSystemImmutableKey not bound
+!missing-field! kCFURLIsUbiquitousItemKey not bound
+!missing-field! kCFURLIsUserImmutableKey not bound
+!missing-field! kCFURLIsVolumeKey not bound
+!missing-field! kCFURLIsWritableKey not bound
+!missing-field! kCFURLKeysOfUnsetValuesKey not bound
+!missing-field! kCFURLLabelColorKey not bound
+!missing-field! kCFURLLabelNumberKey not bound
+!missing-field! kCFURLLinkCountKey not bound
+!missing-field! kCFURLLocalizedLabelKey not bound
+!missing-field! kCFURLLocalizedNameKey not bound
+!missing-field! kCFURLLocalizedTypeDescriptionKey not bound
+!missing-field! kCFURLNameKey not bound
+!missing-field! kCFURLParentDirectoryURLKey not bound
+!missing-field! kCFURLPathKey not bound
+!missing-field! kCFURLPreferredIOBlockSizeKey not bound
+!missing-field! kCFURLTotalFileAllocatedSizeKey not bound
+!missing-field! kCFURLTotalFileSizeKey not bound
+!missing-field! kCFURLTypeIdentifierKey not bound
+!missing-field! kCFURLUbiquitousItemDownloadingErrorKey not bound
+!missing-field! kCFURLUbiquitousItemDownloadingStatusCurrent not bound
+!missing-field! kCFURLUbiquitousItemDownloadingStatusDownloaded not bound
+!missing-field! kCFURLUbiquitousItemDownloadingStatusKey not bound
+!missing-field! kCFURLUbiquitousItemDownloadingStatusNotDownloaded not bound
+!missing-field! kCFURLUbiquitousItemHasUnresolvedConflictsKey not bound
+!missing-field! kCFURLUbiquitousItemIsDownloadedKey not bound
+!missing-field! kCFURLUbiquitousItemIsDownloadingKey not bound
+!missing-field! kCFURLUbiquitousItemIsUploadedKey not bound
+!missing-field! kCFURLUbiquitousItemIsUploadingKey not bound
+!missing-field! kCFURLUbiquitousItemPercentDownloadedKey not bound
+!missing-field! kCFURLUbiquitousItemPercentUploadedKey not bound
+!missing-field! kCFURLUbiquitousItemUploadingErrorKey not bound
+!missing-field! kCFURLVolumeAvailableCapacityKey not bound
+!missing-field! kCFURLVolumeCreationDateKey not bound
+!missing-field! kCFURLVolumeIdentifierKey not bound
+!missing-field! kCFURLVolumeIsAutomountedKey not bound
+!missing-field! kCFURLVolumeIsBrowsableKey not bound
+!missing-field! kCFURLVolumeIsEjectableKey not bound
+!missing-field! kCFURLVolumeIsEncryptedKey not bound
+!missing-field! kCFURLVolumeIsInternalKey not bound
+!missing-field! kCFURLVolumeIsJournalingKey not bound
+!missing-field! kCFURLVolumeIsLocalKey not bound
+!missing-field! kCFURLVolumeIsReadOnlyKey not bound
+!missing-field! kCFURLVolumeIsRemovableKey not bound
+!missing-field! kCFURLVolumeIsRootFileSystemKey not bound
+!missing-field! kCFURLVolumeLocalizedFormatDescriptionKey not bound
+!missing-field! kCFURLVolumeLocalizedNameKey not bound
+!missing-field! kCFURLVolumeMaximumFileSizeKey not bound
+!missing-field! kCFURLVolumeNameKey not bound
+!missing-field! kCFURLVolumeResourceCountKey not bound
+!missing-field! kCFURLVolumeSupportsAccessPermissionsKey not bound
+!missing-field! kCFURLVolumeSupportsAdvisoryFileLockingKey not bound
+!missing-field! kCFURLVolumeSupportsCasePreservedNamesKey not bound
+!missing-field! kCFURLVolumeSupportsCaseSensitiveNamesKey not bound
+!missing-field! kCFURLVolumeSupportsCompressionKey not bound
+!missing-field! kCFURLVolumeSupportsExclusiveRenamingKey not bound
+!missing-field! kCFURLVolumeSupportsExtendedSecurityKey not bound
+!missing-field! kCFURLVolumeSupportsFileCloningKey not bound
+!missing-field! kCFURLVolumeSupportsHardLinksKey not bound
+!missing-field! kCFURLVolumeSupportsImmutableFilesKey not bound
+!missing-field! kCFURLVolumeSupportsJournalingKey not bound
+!missing-field! kCFURLVolumeSupportsPersistentIDsKey not bound
+!missing-field! kCFURLVolumeSupportsRenamingKey not bound
+!missing-field! kCFURLVolumeSupportsRootDirectoryDatesKey not bound
+!missing-field! kCFURLVolumeSupportsSparseFilesKey not bound
+!missing-field! kCFURLVolumeSupportsSwapRenamingKey not bound
+!missing-field! kCFURLVolumeSupportsSymbolicLinksKey not bound
+!missing-field! kCFURLVolumeSupportsVolumeSizesKey not bound
+!missing-field! kCFURLVolumeSupportsZeroRunsKey not bound
+!missing-field! kCFURLVolumeTotalCapacityKey not bound
+!missing-field! kCFURLVolumeURLForRemountingKey not bound
+!missing-field! kCFURLVolumeURLKey not bound
+!missing-field! kCFURLVolumeUUIDStringKey not bound
+!missing-pinvoke! CFAbsoluteTimeAddGregorianUnits is not bound
+!missing-pinvoke! CFAbsoluteTimeGetCurrent is not bound
+!missing-pinvoke! CFAbsoluteTimeGetDayOfWeek is not bound
+!missing-pinvoke! CFAbsoluteTimeGetDayOfYear is not bound
+!missing-pinvoke! CFAbsoluteTimeGetDifferenceAsGregorianUnits is not bound
+!missing-pinvoke! CFAbsoluteTimeGetGregorianDate is not bound
+!missing-pinvoke! CFAbsoluteTimeGetWeekOfYear is not bound
+!missing-pinvoke! CFAllocatorCreate is not bound
+!missing-pinvoke! CFAllocatorGetContext is not bound
+!missing-pinvoke! CFAllocatorGetDefault is not bound
+!missing-pinvoke! CFAllocatorGetPreferredSizeForSize is not bound
+!missing-pinvoke! CFAllocatorReallocate is not bound
+!missing-pinvoke! CFAllocatorSetDefault is not bound
+!missing-pinvoke! CFArrayAppendArray is not bound
+!missing-pinvoke! CFArrayAppendValue is not bound
+!missing-pinvoke! CFArrayApplyFunction is not bound
+!missing-pinvoke! CFArrayBSearchValues is not bound
+!missing-pinvoke! CFArrayContainsValue is not bound
+!missing-pinvoke! CFArrayCreateCopy is not bound
+!missing-pinvoke! CFArrayCreateMutable is not bound
+!missing-pinvoke! CFArrayCreateMutableCopy is not bound
+!missing-pinvoke! CFArrayExchangeValuesAtIndices is not bound
+!missing-pinvoke! CFArrayGetCountOfValue is not bound
+!missing-pinvoke! CFArrayGetFirstIndexOfValue is not bound
+!missing-pinvoke! CFArrayGetLastIndexOfValue is not bound
+!missing-pinvoke! CFArrayGetValues is not bound
+!missing-pinvoke! CFArrayInsertValueAtIndex is not bound
+!missing-pinvoke! CFArrayRemoveAllValues is not bound
+!missing-pinvoke! CFArrayRemoveValueAtIndex is not bound
+!missing-pinvoke! CFArrayReplaceValues is not bound
+!missing-pinvoke! CFArraySetValueAtIndex is not bound
+!missing-pinvoke! CFArraySortValues is not bound
+!missing-pinvoke! CFAttributedStringBeginEditing is not bound
+!missing-pinvoke! CFAttributedStringCreate is not bound
+!missing-pinvoke! CFAttributedStringCreateCopy is not bound
+!missing-pinvoke! CFAttributedStringCreateMutable is not bound
+!missing-pinvoke! CFAttributedStringCreateMutableCopy is not bound
+!missing-pinvoke! CFAttributedStringCreateWithSubstring is not bound
+!missing-pinvoke! CFAttributedStringEndEditing is not bound
+!missing-pinvoke! CFAttributedStringGetAttribute is not bound
+!missing-pinvoke! CFAttributedStringGetAttributeAndLongestEffectiveRange is not bound
+!missing-pinvoke! CFAttributedStringGetAttributes is not bound
+!missing-pinvoke! CFAttributedStringGetAttributesAndLongestEffectiveRange is not bound
+!missing-pinvoke! CFAttributedStringGetLength is not bound
+!missing-pinvoke! CFAttributedStringGetMutableString is not bound
+!missing-pinvoke! CFAttributedStringGetString is not bound
+!missing-pinvoke! CFAttributedStringGetTypeID is not bound
+!missing-pinvoke! CFAttributedStringRemoveAttribute is not bound
+!missing-pinvoke! CFAttributedStringReplaceAttributedString is not bound
+!missing-pinvoke! CFAttributedStringReplaceString is not bound
+!missing-pinvoke! CFAttributedStringSetAttribute is not bound
+!missing-pinvoke! CFAttributedStringSetAttributes is not bound
+!missing-pinvoke! CFAutorelease is not bound
+!missing-pinvoke! CFBagAddValue is not bound
+!missing-pinvoke! CFBagApplyFunction is not bound
+!missing-pinvoke! CFBagContainsValue is not bound
+!missing-pinvoke! CFBagCreate is not bound
+!missing-pinvoke! CFBagCreateCopy is not bound
+!missing-pinvoke! CFBagCreateMutable is not bound
+!missing-pinvoke! CFBagCreateMutableCopy is not bound
+!missing-pinvoke! CFBagGetCount is not bound
+!missing-pinvoke! CFBagGetCountOfValue is not bound
+!missing-pinvoke! CFBagGetTypeID is not bound
+!missing-pinvoke! CFBagGetValue is not bound
+!missing-pinvoke! CFBagGetValueIfPresent is not bound
+!missing-pinvoke! CFBagGetValues is not bound
+!missing-pinvoke! CFBagRemoveAllValues is not bound
+!missing-pinvoke! CFBagRemoveValue is not bound
+!missing-pinvoke! CFBagReplaceValue is not bound
+!missing-pinvoke! CFBagSetValue is not bound
+!missing-pinvoke! CFBinaryHeapAddValue is not bound
+!missing-pinvoke! CFBinaryHeapApplyFunction is not bound
+!missing-pinvoke! CFBinaryHeapContainsValue is not bound
+!missing-pinvoke! CFBinaryHeapCreate is not bound
+!missing-pinvoke! CFBinaryHeapCreateCopy is not bound
+!missing-pinvoke! CFBinaryHeapGetCount is not bound
+!missing-pinvoke! CFBinaryHeapGetCountOfValue is not bound
+!missing-pinvoke! CFBinaryHeapGetMinimum is not bound
+!missing-pinvoke! CFBinaryHeapGetMinimumIfPresent is not bound
+!missing-pinvoke! CFBinaryHeapGetTypeID is not bound
+!missing-pinvoke! CFBinaryHeapGetValues is not bound
+!missing-pinvoke! CFBinaryHeapRemoveAllValues is not bound
+!missing-pinvoke! CFBinaryHeapRemoveMinimumValue is not bound
+!missing-pinvoke! CFBitVectorContainsBit is not bound
+!missing-pinvoke! CFBitVectorCreate is not bound
+!missing-pinvoke! CFBitVectorCreateCopy is not bound
+!missing-pinvoke! CFBitVectorCreateMutable is not bound
+!missing-pinvoke! CFBitVectorCreateMutableCopy is not bound
+!missing-pinvoke! CFBitVectorFlipBitAtIndex is not bound
+!missing-pinvoke! CFBitVectorFlipBits is not bound
+!missing-pinvoke! CFBitVectorGetBitAtIndex is not bound
+!missing-pinvoke! CFBitVectorGetBits is not bound
+!missing-pinvoke! CFBitVectorGetCount is not bound
+!missing-pinvoke! CFBitVectorGetCountOfBit is not bound
+!missing-pinvoke! CFBitVectorGetFirstIndexOfBit is not bound
+!missing-pinvoke! CFBitVectorGetLastIndexOfBit is not bound
+!missing-pinvoke! CFBitVectorGetTypeID is not bound
+!missing-pinvoke! CFBitVectorSetAllBits is not bound
+!missing-pinvoke! CFBitVectorSetBitAtIndex is not bound
+!missing-pinvoke! CFBitVectorSetBits is not bound
+!missing-pinvoke! CFBitVectorSetCount is not bound
+!missing-pinvoke! CFBundleCloseBundleResourceMap is not bound
+!missing-pinvoke! CFBundleCopyBundleLocalizations is not bound
+!missing-pinvoke! CFBundleCopyExecutableArchitecturesForURL is not bound
+!missing-pinvoke! CFBundleCopyInfoDictionaryInDirectory is not bound
+!missing-pinvoke! CFBundleGetDataPointerForName is not bound
+!missing-pinvoke! CFBundleGetDataPointersForNames is not bound
+!missing-pinvoke! CFBundleGetFunctionPointerForName is not bound
+!missing-pinvoke! CFBundleGetFunctionPointersForNames is not bound
+!missing-pinvoke! CFBundleGetPackageInfoInDirectory is not bound
+!missing-pinvoke! CFBundleGetPlugIn is not bound
+!missing-pinvoke! CFBundleGetTypeID is not bound
+!missing-pinvoke! CFBundleGetValueForInfoDictionaryKey is not bound
+!missing-pinvoke! CFBundleGetVersionNumber is not bound
+!missing-pinvoke! CFBundleLoadExecutable is not bound
+!missing-pinvoke! CFBundleOpenBundleResourceFiles is not bound
+!missing-pinvoke! CFBundleOpenBundleResourceMap is not bound
+!missing-pinvoke! CFCalendarAddComponents is not bound
+!missing-pinvoke! CFCalendarComposeAbsoluteTime is not bound
+!missing-pinvoke! CFCalendarCopyCurrent is not bound
+!missing-pinvoke! CFCalendarCopyLocale is not bound
+!missing-pinvoke! CFCalendarCopyTimeZone is not bound
+!missing-pinvoke! CFCalendarCreateWithIdentifier is not bound
+!missing-pinvoke! CFCalendarDecomposeAbsoluteTime is not bound
+!missing-pinvoke! CFCalendarGetComponentDifference is not bound
+!missing-pinvoke! CFCalendarGetFirstWeekday is not bound
+!missing-pinvoke! CFCalendarGetIdentifier is not bound
+!missing-pinvoke! CFCalendarGetMaximumRangeOfUnit is not bound
+!missing-pinvoke! CFCalendarGetMinimumDaysInFirstWeek is not bound
+!missing-pinvoke! CFCalendarGetMinimumRangeOfUnit is not bound
+!missing-pinvoke! CFCalendarGetOrdinalityOfUnit is not bound
+!missing-pinvoke! CFCalendarGetRangeOfUnit is not bound
+!missing-pinvoke! CFCalendarGetTimeRangeOfUnit is not bound
+!missing-pinvoke! CFCalendarGetTypeID is not bound
+!missing-pinvoke! CFCalendarSetFirstWeekday is not bound
+!missing-pinvoke! CFCalendarSetLocale is not bound
+!missing-pinvoke! CFCalendarSetMinimumDaysInFirstWeek is not bound
+!missing-pinvoke! CFCalendarSetTimeZone is not bound
+!missing-pinvoke! CFCharacterSetAddCharactersInRange is not bound
+!missing-pinvoke! CFCharacterSetAddCharactersInString is not bound
+!missing-pinvoke! CFCharacterSetCreateBitmapRepresentation is not bound
+!missing-pinvoke! CFCharacterSetCreateCopy is not bound
+!missing-pinvoke! CFCharacterSetCreateInvertedSet is not bound
+!missing-pinvoke! CFCharacterSetCreateMutable is not bound
+!missing-pinvoke! CFCharacterSetCreateMutableCopy is not bound
+!missing-pinvoke! CFCharacterSetCreateWithBitmapRepresentation is not bound
+!missing-pinvoke! CFCharacterSetCreateWithCharactersInRange is not bound
+!missing-pinvoke! CFCharacterSetCreateWithCharactersInString is not bound
+!missing-pinvoke! CFCharacterSetGetPredefined is not bound
+!missing-pinvoke! CFCharacterSetGetTypeID is not bound
+!missing-pinvoke! CFCharacterSetHasMemberInPlane is not bound
+!missing-pinvoke! CFCharacterSetIntersect is not bound
+!missing-pinvoke! CFCharacterSetInvert is not bound
+!missing-pinvoke! CFCharacterSetIsCharacterMember is not bound
+!missing-pinvoke! CFCharacterSetIsLongCharacterMember is not bound
+!missing-pinvoke! CFCharacterSetIsSupersetOfSet is not bound
+!missing-pinvoke! CFCharacterSetRemoveCharactersInRange is not bound
+!missing-pinvoke! CFCharacterSetRemoveCharactersInString is not bound
+!missing-pinvoke! CFCharacterSetUnion is not bound
+!missing-pinvoke! CFCopyHomeDirectoryURL is not bound
+!missing-pinvoke! CFCopyTypeIDDescription is not bound
+!missing-pinvoke! CFDataAppendBytes is not bound
+!missing-pinvoke! CFDataCreateMutable is not bound
+!missing-pinvoke! CFDataCreateMutableCopy is not bound
+!missing-pinvoke! CFDataDeleteBytes is not bound
+!missing-pinvoke! CFDataFind is not bound
+!missing-pinvoke! CFDataGetBytes is not bound
+!missing-pinvoke! CFDataGetMutableBytePtr is not bound
+!missing-pinvoke! CFDataIncreaseLength is not bound
+!missing-pinvoke! CFDataReplaceBytes is not bound
+!missing-pinvoke! CFDataSetLength is not bound
+!missing-pinvoke! CFDateCompare is not bound
+!missing-pinvoke! CFDateCreate is not bound
+!missing-pinvoke! CFDateFormatterCopyProperty is not bound
+!missing-pinvoke! CFDateFormatterCreate is not bound
+!missing-pinvoke! CFDateFormatterCreateDateFormatFromTemplate is not bound
+!missing-pinvoke! CFDateFormatterCreateDateFromString is not bound
+!missing-pinvoke! CFDateFormatterCreateISO8601Formatter is not bound
+!missing-pinvoke! CFDateFormatterCreateStringWithAbsoluteTime is not bound
+!missing-pinvoke! CFDateFormatterCreateStringWithDate is not bound
+!missing-pinvoke! CFDateFormatterGetAbsoluteTimeFromString is not bound
+!missing-pinvoke! CFDateFormatterGetDateStyle is not bound
+!missing-pinvoke! CFDateFormatterGetFormat is not bound
+!missing-pinvoke! CFDateFormatterGetLocale is not bound
+!missing-pinvoke! CFDateFormatterGetTimeStyle is not bound
+!missing-pinvoke! CFDateFormatterGetTypeID is not bound
+!missing-pinvoke! CFDateFormatterSetFormat is not bound
+!missing-pinvoke! CFDateFormatterSetProperty is not bound
+!missing-pinvoke! CFDateGetAbsoluteTime is not bound
+!missing-pinvoke! CFDateGetTimeIntervalSinceDate is not bound
+!missing-pinvoke! CFDictionaryAddValue is not bound
+!missing-pinvoke! CFDictionaryApplyFunction is not bound
+!missing-pinvoke! CFDictionaryContainsValue is not bound
+!missing-pinvoke! CFDictionaryCreateCopy is not bound
+!missing-pinvoke! CFDictionaryCreateMutable is not bound
+!missing-pinvoke! CFDictionaryCreateMutableCopy is not bound
+!missing-pinvoke! CFDictionaryGetCountOfKey is not bound
+!missing-pinvoke! CFDictionaryGetCountOfValue is not bound
+!missing-pinvoke! CFDictionaryGetValueIfPresent is not bound
+!missing-pinvoke! CFDictionaryRemoveAllValues is not bound
+!missing-pinvoke! CFDictionaryRemoveValue is not bound
+!missing-pinvoke! CFDictionaryReplaceValue is not bound
+!missing-pinvoke! CFErrorCreate is not bound
+!missing-pinvoke! CFErrorCreateWithUserInfoKeysAndValues is not bound
+!missing-pinvoke! CFErrorGetTypeID is not bound
+!missing-pinvoke! CFFileDescriptorCreate is not bound
+!missing-pinvoke! CFFileDescriptorCreateRunLoopSource is not bound
+!missing-pinvoke! CFFileDescriptorDisableCallBacks is not bound
+!missing-pinvoke! CFFileDescriptorEnableCallBacks is not bound
+!missing-pinvoke! CFFileDescriptorGetContext is not bound
+!missing-pinvoke! CFFileDescriptorGetNativeDescriptor is not bound
+!missing-pinvoke! CFFileDescriptorGetTypeID is not bound
+!missing-pinvoke! CFFileDescriptorInvalidate is not bound
+!missing-pinvoke! CFFileDescriptorIsValid is not bound
+!missing-pinvoke! CFFileSecurityClearProperties is not bound
+!missing-pinvoke! CFFileSecurityCopyAccessControlList is not bound
+!missing-pinvoke! CFFileSecurityCopyGroupUUID is not bound
+!missing-pinvoke! CFFileSecurityCopyOwnerUUID is not bound
+!missing-pinvoke! CFFileSecurityCreate is not bound
+!missing-pinvoke! CFFileSecurityCreateCopy is not bound
+!missing-pinvoke! CFFileSecurityGetGroup is not bound
+!missing-pinvoke! CFFileSecurityGetMode is not bound
+!missing-pinvoke! CFFileSecurityGetOwner is not bound
+!missing-pinvoke! CFFileSecurityGetTypeID is not bound
+!missing-pinvoke! CFFileSecuritySetAccessControlList is not bound
+!missing-pinvoke! CFFileSecuritySetGroup is not bound
+!missing-pinvoke! CFFileSecuritySetGroupUUID is not bound
+!missing-pinvoke! CFFileSecuritySetMode is not bound
+!missing-pinvoke! CFFileSecuritySetOwner is not bound
+!missing-pinvoke! CFFileSecuritySetOwnerUUID is not bound
+!missing-pinvoke! CFGetAllocator is not bound
+!missing-pinvoke! CFGetRetainCount is not bound
+!missing-pinvoke! CFGregorianDateGetAbsoluteTime is not bound
+!missing-pinvoke! CFGregorianDateIsValid is not bound
+!missing-pinvoke! CFHash is not bound
+!missing-pinvoke! CFLocaleCopyAvailableLocaleIdentifiers is not bound
+!missing-pinvoke! CFLocaleCopyCommonISOCurrencyCodes is not bound
+!missing-pinvoke! CFLocaleCopyCurrent is not bound
+!missing-pinvoke! CFLocaleCopyDisplayNameForPropertyValue is not bound
+!missing-pinvoke! CFLocaleCopyISOCountryCodes is not bound
+!missing-pinvoke! CFLocaleCopyISOCurrencyCodes is not bound
+!missing-pinvoke! CFLocaleCopyISOLanguageCodes is not bound
+!missing-pinvoke! CFLocaleCopyPreferredLanguages is not bound
+!missing-pinvoke! CFLocaleCreate is not bound
+!missing-pinvoke! CFLocaleCreateCanonicalLanguageIdentifierFromString is not bound
+!missing-pinvoke! CFLocaleCreateCanonicalLocaleIdentifierFromScriptManagerCodes is not bound
+!missing-pinvoke! CFLocaleCreateCanonicalLocaleIdentifierFromString is not bound
+!missing-pinvoke! CFLocaleCreateComponentsFromLocaleIdentifier is not bound
+!missing-pinvoke! CFLocaleCreateCopy is not bound
+!missing-pinvoke! CFLocaleCreateLocaleIdentifierFromComponents is not bound
+!missing-pinvoke! CFLocaleCreateLocaleIdentifierFromWindowsLocaleCode is not bound
+!missing-pinvoke! CFLocaleGetIdentifier is not bound
+!missing-pinvoke! CFLocaleGetLanguageCharacterDirection is not bound
+!missing-pinvoke! CFLocaleGetLanguageLineDirection is not bound
+!missing-pinvoke! CFLocaleGetSystem is not bound
+!missing-pinvoke! CFLocaleGetTypeID is not bound
+!missing-pinvoke! CFLocaleGetValue is not bound
+!missing-pinvoke! CFLocaleGetWindowsLocaleCodeFromLocaleIdentifier is not bound
+!missing-pinvoke! CFMachPortCreate is not bound
+!missing-pinvoke! CFMachPortCreateWithPort is not bound
+!missing-pinvoke! CFMachPortGetContext is not bound
+!missing-pinvoke! CFMachPortGetInvalidationCallBack is not bound
+!missing-pinvoke! CFMachPortGetTypeID is not bound
+!missing-pinvoke! CFMachPortSetInvalidationCallBack is not bound
+!missing-pinvoke! CFMakeCollectable is not bound
+!missing-pinvoke! CFMessagePortGetTypeID is not bound
+!missing-pinvoke! CFNotificationCenterGetTypeID is not bound
+!missing-pinvoke! CFNotificationCenterPostNotification is not bound
+!missing-pinvoke! CFNotificationCenterRemoveEveryObserver is not bound
+!missing-pinvoke! CFNullGetTypeID is not bound
+!missing-pinvoke! CFNumberCompare is not bound
+!missing-pinvoke! CFNumberCreate is not bound
+!missing-pinvoke! CFNumberFormatterCopyProperty is not bound
+!missing-pinvoke! CFNumberFormatterCreate is not bound
+!missing-pinvoke! CFNumberFormatterCreateNumberFromString is not bound
+!missing-pinvoke! CFNumberFormatterCreateStringWithNumber is not bound
+!missing-pinvoke! CFNumberFormatterCreateStringWithValue is not bound
+!missing-pinvoke! CFNumberFormatterGetDecimalInfoForCurrencyCode is not bound
+!missing-pinvoke! CFNumberFormatterGetFormat is not bound
+!missing-pinvoke! CFNumberFormatterGetLocale is not bound
+!missing-pinvoke! CFNumberFormatterGetStyle is not bound
+!missing-pinvoke! CFNumberFormatterGetTypeID is not bound
+!missing-pinvoke! CFNumberFormatterGetValueFromString is not bound
+!missing-pinvoke! CFNumberFormatterSetFormat is not bound
+!missing-pinvoke! CFNumberFormatterSetProperty is not bound
+!missing-pinvoke! CFNumberGetByteSize is not bound
+!missing-pinvoke! CFNumberGetType is not bound
+!missing-pinvoke! CFNumberIsFloatType is not bound
+!missing-pinvoke! CFPlugInAddInstanceForFactory is not bound
+!missing-pinvoke! CFPlugInCreate is not bound
+!missing-pinvoke! CFPlugInFindFactoriesForPlugInType is not bound
+!missing-pinvoke! CFPlugInFindFactoriesForPlugInTypeInPlugIn is not bound
+!missing-pinvoke! CFPlugInGetBundle is not bound
+!missing-pinvoke! CFPlugInGetTypeID is not bound
+!missing-pinvoke! CFPlugInInstanceCreate is not bound
+!missing-pinvoke! CFPlugInInstanceCreateWithInstanceDataSize is not bound
+!missing-pinvoke! CFPlugInInstanceGetFactoryName is not bound
+!missing-pinvoke! CFPlugInInstanceGetInstanceData is not bound
+!missing-pinvoke! CFPlugInInstanceGetInterfaceFunctionTable is not bound
+!missing-pinvoke! CFPlugInInstanceGetTypeID is not bound
+!missing-pinvoke! CFPlugInIsLoadOnDemand is not bound
+!missing-pinvoke! CFPlugInRegisterFactoryFunction is not bound
+!missing-pinvoke! CFPlugInRegisterFactoryFunctionByName is not bound
+!missing-pinvoke! CFPlugInRegisterPlugInType is not bound
+!missing-pinvoke! CFPlugInRemoveInstanceForFactory is not bound
+!missing-pinvoke! CFPlugInSetLoadOnDemand is not bound
+!missing-pinvoke! CFPlugInUnregisterFactory is not bound
+!missing-pinvoke! CFPlugInUnregisterPlugInType is not bound
+!missing-pinvoke! CFPreferencesCopyApplicationList is not bound
+!missing-pinvoke! CFPreferencesCopyKeyList is not bound
+!missing-pinvoke! CFPreferencesCopyMultiple is not bound
+!missing-pinvoke! CFPreferencesCopyValue is not bound
+!missing-pinvoke! CFPreferencesSetMultiple is not bound
+!missing-pinvoke! CFPreferencesSetValue is not bound
+!missing-pinvoke! CFPreferencesSynchronize is not bound
+!missing-pinvoke! CFPropertyListCreateData is not bound
+!missing-pinvoke! CFPropertyListCreateDeepCopy is not bound
+!missing-pinvoke! CFPropertyListCreateFromStream is not bound
+!missing-pinvoke! CFPropertyListCreateFromXMLData is not bound
+!missing-pinvoke! CFPropertyListCreateWithData is not bound
+!missing-pinvoke! CFPropertyListCreateWithStream is not bound
+!missing-pinvoke! CFPropertyListCreateXMLData is not bound
+!missing-pinvoke! CFPropertyListIsValid is not bound
+!missing-pinvoke! CFPropertyListWrite is not bound
+!missing-pinvoke! CFPropertyListWriteToStream is not bound
+!missing-pinvoke! CFReadStreamCreateWithBytesNoCopy is not bound
+!missing-pinvoke! CFReadStreamCreateWithFile is not bound
+!missing-pinvoke! CFReadStreamGetBuffer is not bound
+!missing-pinvoke! CFReadStreamGetError is not bound
+!missing-pinvoke! CFReadStreamGetTypeID is not bound
+!missing-pinvoke! CFRunLoopAddCommonMode is not bound
+!missing-pinvoke! CFRunLoopAddObserver is not bound
+!missing-pinvoke! CFRunLoopAddTimer is not bound
+!missing-pinvoke! CFRunLoopContainsObserver is not bound
+!missing-pinvoke! CFRunLoopContainsTimer is not bound
+!missing-pinvoke! CFRunLoopCopyAllModes is not bound
+!missing-pinvoke! CFRunLoopCopyCurrentMode is not bound
+!missing-pinvoke! CFRunLoopGetNextTimerFireDate is not bound
+!missing-pinvoke! CFRunLoopGetTypeID is not bound
+!missing-pinvoke! CFRunLoopObserverCreate is not bound
+!missing-pinvoke! CFRunLoopObserverCreateWithHandler is not bound
+!missing-pinvoke! CFRunLoopObserverDoesRepeat is not bound
+!missing-pinvoke! CFRunLoopObserverGetActivities is not bound
+!missing-pinvoke! CFRunLoopObserverGetContext is not bound
+!missing-pinvoke! CFRunLoopObserverGetOrder is not bound
+!missing-pinvoke! CFRunLoopObserverGetTypeID is not bound
+!missing-pinvoke! CFRunLoopObserverInvalidate is not bound
+!missing-pinvoke! CFRunLoopObserverIsValid is not bound
+!missing-pinvoke! CFRunLoopPerformBlock is not bound
+!missing-pinvoke! CFRunLoopRemoveObserver is not bound
+!missing-pinvoke! CFRunLoopRemoveTimer is not bound
+!missing-pinvoke! CFRunLoopSourceGetContext is not bound
+!missing-pinvoke! CFRunLoopSourceGetTypeID is not bound
+!missing-pinvoke! CFRunLoopTimerCreate is not bound
+!missing-pinvoke! CFRunLoopTimerCreateWithHandler is not bound
+!missing-pinvoke! CFRunLoopTimerDoesRepeat is not bound
+!missing-pinvoke! CFRunLoopTimerGetContext is not bound
+!missing-pinvoke! CFRunLoopTimerGetInterval is not bound
+!missing-pinvoke! CFRunLoopTimerGetNextFireDate is not bound
+!missing-pinvoke! CFRunLoopTimerGetOrder is not bound
+!missing-pinvoke! CFRunLoopTimerGetTolerance is not bound
+!missing-pinvoke! CFRunLoopTimerGetTypeID is not bound
+!missing-pinvoke! CFRunLoopTimerInvalidate is not bound
+!missing-pinvoke! CFRunLoopTimerIsValid is not bound
+!missing-pinvoke! CFRunLoopTimerSetNextFireDate is not bound
+!missing-pinvoke! CFRunLoopTimerSetTolerance is not bound
+!missing-pinvoke! CFSetAddValue is not bound
+!missing-pinvoke! CFSetApplyFunction is not bound
+!missing-pinvoke! CFSetContainsValue is not bound
+!missing-pinvoke! CFSetCreate is not bound
+!missing-pinvoke! CFSetCreateCopy is not bound
+!missing-pinvoke! CFSetCreateMutable is not bound
+!missing-pinvoke! CFSetCreateMutableCopy is not bound
+!missing-pinvoke! CFSetGetCount is not bound
+!missing-pinvoke! CFSetGetCountOfValue is not bound
+!missing-pinvoke! CFSetGetTypeID is not bound
+!missing-pinvoke! CFSetGetValue is not bound
+!missing-pinvoke! CFSetGetValueIfPresent is not bound
+!missing-pinvoke! CFSetGetValues is not bound
+!missing-pinvoke! CFSetRemoveAllValues is not bound
+!missing-pinvoke! CFSetRemoveValue is not bound
+!missing-pinvoke! CFSetReplaceValue is not bound
+!missing-pinvoke! CFSetSetValue is not bound
+!missing-pinvoke! CFShow is not bound
+!missing-pinvoke! CFShowStr is not bound
+!missing-pinvoke! CFSocketCopyAddress is not bound
+!missing-pinvoke! CFSocketCopyPeerAddress is not bound
+!missing-pinvoke! CFSocketCopyRegisteredSocketSignature is not bound
+!missing-pinvoke! CFSocketCopyRegisteredValue is not bound
+!missing-pinvoke! CFSocketCreateWithSocketSignature is not bound
+!missing-pinvoke! CFSocketGetContext is not bound
+!missing-pinvoke! CFSocketGetDefaultNameRegistryPortNumber is not bound
+!missing-pinvoke! CFSocketGetTypeID is not bound
+!missing-pinvoke! CFSocketInvalidate is not bound
+!missing-pinvoke! CFSocketIsValid is not bound
+!missing-pinvoke! CFSocketRegisterSocketSignature is not bound
+!missing-pinvoke! CFSocketRegisterValue is not bound
+!missing-pinvoke! CFSocketSetDefaultNameRegistryPortNumber is not bound
+!missing-pinvoke! CFSocketUnregister is not bound
+!missing-pinvoke! CFStringAppend is not bound
+!missing-pinvoke! CFStringAppendCharacters is not bound
+!missing-pinvoke! CFStringAppendCString is not bound
+!missing-pinvoke! CFStringAppendFormat is not bound
+!missing-pinvoke! CFStringAppendFormatAndArguments is not bound
+!missing-pinvoke! CFStringAppendPascalString is not bound
+!missing-pinvoke! CFStringCapitalize is not bound
+!missing-pinvoke! CFStringCompare is not bound
+!missing-pinvoke! CFStringCompareWithOptions is not bound
+!missing-pinvoke! CFStringCompareWithOptionsAndLocale is not bound
+!missing-pinvoke! CFStringConvertEncodingToIANACharSetName is not bound
+!missing-pinvoke! CFStringConvertEncodingToNSStringEncoding is not bound
+!missing-pinvoke! CFStringConvertEncodingToWindowsCodepage is not bound
+!missing-pinvoke! CFStringConvertIANACharSetNameToEncoding is not bound
+!missing-pinvoke! CFStringConvertNSStringEncodingToEncoding is not bound
+!missing-pinvoke! CFStringConvertWindowsCodepageToEncoding is not bound
+!missing-pinvoke! CFStringCreateArrayBySeparatingStrings is not bound
+!missing-pinvoke! CFStringCreateArrayWithFindResults is not bound
+!missing-pinvoke! CFStringCreateByCombiningStrings is not bound
+!missing-pinvoke! CFStringCreateCopy is not bound
+!missing-pinvoke! CFStringCreateExternalRepresentation is not bound
+!missing-pinvoke! CFStringCreateFromExternalRepresentation is not bound
+!missing-pinvoke! CFStringCreateMutable is not bound
+!missing-pinvoke! CFStringCreateMutableCopy is not bound
+!missing-pinvoke! CFStringCreateMutableWithExternalCharactersNoCopy is not bound
+!missing-pinvoke! CFStringCreateWithBytes is not bound
+!missing-pinvoke! CFStringCreateWithBytesNoCopy is not bound
+!missing-pinvoke! CFStringCreateWithCharactersNoCopy is not bound
+!missing-pinvoke! CFStringCreateWithCString is not bound
+!missing-pinvoke! CFStringCreateWithCStringNoCopy is not bound
+!missing-pinvoke! CFStringCreateWithFileSystemRepresentation is not bound
+!missing-pinvoke! CFStringCreateWithFormat is not bound
+!missing-pinvoke! CFStringCreateWithFormatAndArguments is not bound
+!missing-pinvoke! CFStringCreateWithPascalString is not bound
+!missing-pinvoke! CFStringCreateWithPascalStringNoCopy is not bound
+!missing-pinvoke! CFStringCreateWithSubstring is not bound
+!missing-pinvoke! CFStringDelete is not bound
+!missing-pinvoke! CFStringFind is not bound
+!missing-pinvoke! CFStringFindAndReplace is not bound
+!missing-pinvoke! CFStringFindCharacterFromSet is not bound
+!missing-pinvoke! CFStringFindWithOptions is not bound
+!missing-pinvoke! CFStringFindWithOptionsAndLocale is not bound
+!missing-pinvoke! CFStringFold is not bound
+!missing-pinvoke! CFStringGetBytes is not bound
+!missing-pinvoke! CFStringGetCString is not bound
+!missing-pinvoke! CFStringGetCStringPtr is not bound
+!missing-pinvoke! CFStringGetDoubleValue is not bound
+!missing-pinvoke! CFStringGetFastestEncoding is not bound
+!missing-pinvoke! CFStringGetFileSystemRepresentation is not bound
+!missing-pinvoke! CFStringGetHyphenationLocationBeforeIndex is not bound
+!missing-pinvoke! CFStringGetIntValue is not bound
+!missing-pinvoke! CFStringGetLineBounds is not bound
+!missing-pinvoke! CFStringGetListOfAvailableEncodings is not bound
+!missing-pinvoke! CFStringGetMaximumSizeForEncoding is not bound
+!missing-pinvoke! CFStringGetMaximumSizeOfFileSystemRepresentation is not bound
+!missing-pinvoke! CFStringGetMostCompatibleMacStringEncoding is not bound
+!missing-pinvoke! CFStringGetNameOfEncoding is not bound
+!missing-pinvoke! CFStringGetParagraphBounds is not bound
+!missing-pinvoke! CFStringGetPascalString is not bound
+!missing-pinvoke! CFStringGetPascalStringPtr is not bound
+!missing-pinvoke! CFStringGetRangeOfComposedCharactersAtIndex is not bound
+!missing-pinvoke! CFStringGetSmallestEncoding is not bound
+!missing-pinvoke! CFStringGetSystemEncoding is not bound
+!missing-pinvoke! CFStringHasPrefix is not bound
+!missing-pinvoke! CFStringHasSuffix is not bound
+!missing-pinvoke! CFStringInsert is not bound
+!missing-pinvoke! CFStringIsEncodingAvailable is not bound
+!missing-pinvoke! CFStringIsHyphenationAvailableForLocale is not bound
+!missing-pinvoke! CFStringLowercase is not bound
+!missing-pinvoke! CFStringNormalize is not bound
+!missing-pinvoke! CFStringPad is not bound
+!missing-pinvoke! CFStringReplace is not bound
+!missing-pinvoke! CFStringReplaceAll is not bound
+!missing-pinvoke! CFStringSetExternalCharactersNoCopy is not bound
+!missing-pinvoke! CFStringTokenizerAdvanceToNextToken is not bound
+!missing-pinvoke! CFStringTokenizerCopyBestStringLanguage is not bound
+!missing-pinvoke! CFStringTokenizerCopyCurrentTokenAttribute is not bound
+!missing-pinvoke! CFStringTokenizerCreate is not bound
+!missing-pinvoke! CFStringTokenizerGetCurrentSubTokens is not bound
+!missing-pinvoke! CFStringTokenizerGetCurrentTokenRange is not bound
+!missing-pinvoke! CFStringTokenizerGetTypeID is not bound
+!missing-pinvoke! CFStringTokenizerGoToTokenAtIndex is not bound
+!missing-pinvoke! CFStringTokenizerSetString is not bound
+!missing-pinvoke! CFStringTransform is not bound
+!missing-pinvoke! CFStringTrim is not bound
+!missing-pinvoke! CFStringTrimWhitespace is not bound
+!missing-pinvoke! CFStringUppercase is not bound
+!missing-pinvoke! CFTimeZoneCopyAbbreviation is not bound
+!missing-pinvoke! CFTimeZoneCopyAbbreviationDictionary is not bound
+!missing-pinvoke! CFTimeZoneCopyDefault is not bound
+!missing-pinvoke! CFTimeZoneCopyKnownNames is not bound
+!missing-pinvoke! CFTimeZoneCopyLocalizedName is not bound
+!missing-pinvoke! CFTimeZoneCopySystem is not bound
+!missing-pinvoke! CFTimeZoneCreate is not bound
+!missing-pinvoke! CFTimeZoneCreateWithName is not bound
+!missing-pinvoke! CFTimeZoneCreateWithTimeIntervalFromGMT is not bound
+!missing-pinvoke! CFTimeZoneGetData is not bound
+!missing-pinvoke! CFTimeZoneGetDaylightSavingTimeOffset is not bound
+!missing-pinvoke! CFTimeZoneGetName is not bound
+!missing-pinvoke! CFTimeZoneGetNextDaylightSavingTimeTransition is not bound
+!missing-pinvoke! CFTimeZoneGetSecondsFromGMT is not bound
+!missing-pinvoke! CFTimeZoneGetTypeID is not bound
+!missing-pinvoke! CFTimeZoneIsDaylightSavingTime is not bound
+!missing-pinvoke! CFTimeZoneResetSystem is not bound
+!missing-pinvoke! CFTimeZoneSetAbbreviationDictionary is not bound
+!missing-pinvoke! CFTimeZoneSetDefault is not bound
+!missing-pinvoke! CFTreeAppendChild is not bound
+!missing-pinvoke! CFTreeApplyFunctionToChildren is not bound
+!missing-pinvoke! CFTreeCreate is not bound
+!missing-pinvoke! CFTreeFindRoot is not bound
+!missing-pinvoke! CFTreeGetChildAtIndex is not bound
+!missing-pinvoke! CFTreeGetChildCount is not bound
+!missing-pinvoke! CFTreeGetChildren is not bound
+!missing-pinvoke! CFTreeGetContext is not bound
+!missing-pinvoke! CFTreeGetFirstChild is not bound
+!missing-pinvoke! CFTreeGetNextSibling is not bound
+!missing-pinvoke! CFTreeGetParent is not bound
+!missing-pinvoke! CFTreeGetTypeID is not bound
+!missing-pinvoke! CFTreeInsertSibling is not bound
+!missing-pinvoke! CFTreePrependChild is not bound
+!missing-pinvoke! CFTreeRemove is not bound
+!missing-pinvoke! CFTreeRemoveAllChildren is not bound
+!missing-pinvoke! CFTreeSetContext is not bound
+!missing-pinvoke! CFTreeSortChildren is not bound
+!missing-pinvoke! CFURLCanBeDecomposed is not bound
+!missing-pinvoke! CFURLClearResourcePropertyCache is not bound
+!missing-pinvoke! CFURLClearResourcePropertyCacheForKey is not bound
+!missing-pinvoke! CFURLCopyAbsoluteURL is not bound
+!missing-pinvoke! CFURLCopyFragment is not bound
+!missing-pinvoke! CFURLCopyHostName is not bound
+!missing-pinvoke! CFURLCopyLastPathComponent is not bound
+!missing-pinvoke! CFURLCopyNetLocation is not bound
+!missing-pinvoke! CFURLCopyParameterString is not bound
+!missing-pinvoke! CFURLCopyPassword is not bound
+!missing-pinvoke! CFURLCopyPath is not bound
+!missing-pinvoke! CFURLCopyPathExtension is not bound
+!missing-pinvoke! CFURLCopyQueryString is not bound
+!missing-pinvoke! CFURLCopyResourcePropertiesForKeys is not bound
+!missing-pinvoke! CFURLCopyResourcePropertyForKey is not bound
+!missing-pinvoke! CFURLCopyResourceSpecifier is not bound
+!missing-pinvoke! CFURLCopyScheme is not bound
+!missing-pinvoke! CFURLCopyStrictPath is not bound
+!missing-pinvoke! CFURLCopyUserName is not bound
+!missing-pinvoke! CFURLCreateAbsoluteURLWithBytes is not bound
+!missing-pinvoke! CFURLCreateBookmarkData is not bound
+!missing-pinvoke! CFURLCreateBookmarkDataFromFile is not bound
+!missing-pinvoke! CFURLCreateByResolvingBookmarkData is not bound
+!missing-pinvoke! CFURLCreateCopyAppendingPathComponent is not bound
+!missing-pinvoke! CFURLCreateCopyAppendingPathExtension is not bound
+!missing-pinvoke! CFURLCreateCopyDeletingLastPathComponent is not bound
+!missing-pinvoke! CFURLCreateCopyDeletingPathExtension is not bound
+!missing-pinvoke! CFURLCreateData is not bound
+!missing-pinvoke! CFURLCreateDataAndPropertiesFromResource is not bound
+!missing-pinvoke! CFURLCreateFilePathURL is not bound
+!missing-pinvoke! CFURLCreateFileReferenceURL is not bound
+!missing-pinvoke! CFURLCreateFromFileSystemRepresentation is not bound
+!missing-pinvoke! CFURLCreateFromFileSystemRepresentationRelativeToBase is not bound
+!missing-pinvoke! CFURLCreateFromFSRef is not bound
+!missing-pinvoke! CFURLCreatePropertyFromResource is not bound
+!missing-pinvoke! CFURLCreateResourcePropertiesForKeysFromBookmarkData is not bound
+!missing-pinvoke! CFURLCreateResourcePropertyForKeyFromBookmarkData is not bound
+!missing-pinvoke! CFURLCreateStringByAddingPercentEscapes is not bound
+!missing-pinvoke! CFURLCreateStringByReplacingPercentEscapes is not bound
+!missing-pinvoke! CFURLCreateStringByReplacingPercentEscapesUsingEncoding is not bound
+!missing-pinvoke! CFURLCreateWithBytes is not bound
+!missing-pinvoke! CFURLCreateWithFileSystemPathRelativeToBase is not bound
+!missing-pinvoke! CFURLDestroyResource is not bound
+!missing-pinvoke! CFURLEnumeratorCreateForDirectoryURL is not bound
+!missing-pinvoke! CFURLEnumeratorCreateForMountedVolumes is not bound
+!missing-pinvoke! CFURLEnumeratorGetDescendentLevel is not bound
+!missing-pinvoke! CFURLEnumeratorGetNextURL is not bound
+!missing-pinvoke! CFURLEnumeratorGetSourceDidChange is not bound
+!missing-pinvoke! CFURLEnumeratorGetTypeID is not bound
+!missing-pinvoke! CFURLEnumeratorSkipDescendents is not bound
+!missing-pinvoke! CFURLGetBaseURL is not bound
+!missing-pinvoke! CFURLGetByteRangeForComponent is not bound
+!missing-pinvoke! CFURLGetBytes is not bound
+!missing-pinvoke! CFURLGetFileSystemRepresentation is not bound
+!missing-pinvoke! CFURLGetFSRef is not bound
+!missing-pinvoke! CFURLGetPortNumber is not bound
+!missing-pinvoke! CFURLHasDirectoryPath is not bound
+!missing-pinvoke! CFURLResourceIsReachable is not bound
+!missing-pinvoke! CFURLSetResourcePropertiesForKeys is not bound
+!missing-pinvoke! CFURLSetResourcePropertyForKey is not bound
+!missing-pinvoke! CFURLSetTemporaryResourcePropertyForKey is not bound
+!missing-pinvoke! CFURLStartAccessingSecurityScopedResource is not bound
+!missing-pinvoke! CFURLStopAccessingSecurityScopedResource is not bound
+!missing-pinvoke! CFURLWriteBookmarkDataToFile is not bound
+!missing-pinvoke! CFURLWriteDataAndPropertiesToResource is not bound
+!missing-pinvoke! CFUUIDCreate is not bound
+!missing-pinvoke! CFUUIDCreateFromUUIDBytes is not bound
+!missing-pinvoke! CFUUIDCreateString is not bound
+!missing-pinvoke! CFUUIDCreateWithBytes is not bound
+!missing-pinvoke! CFUUIDGetConstantUUIDWithBytes is not bound
+!missing-pinvoke! CFUUIDGetTypeID is not bound
+!missing-pinvoke! CFUUIDGetUUIDBytes is not bound
+!missing-pinvoke! CFWriteStreamCopyProperty is not bound
+!missing-pinvoke! CFWriteStreamCreateWithAllocatedBuffers is not bound
+!missing-pinvoke! CFWriteStreamCreateWithBuffer is not bound
+!missing-pinvoke! CFWriteStreamCreateWithFile is not bound
+!missing-pinvoke! CFWriteStreamGetError is not bound
+!missing-pinvoke! CFWriteStreamGetTypeID is not bound
+!unknown-pinvoke! close bound
+!unknown-pinvoke! dispatch_after_f bound
+!unknown-pinvoke! dispatch_apply_f bound
+!unknown-pinvoke! dispatch_async_f bound
+!unknown-pinvoke! dispatch_barrier_async_f bound
+!unknown-pinvoke! dispatch_get_context bound
+!unknown-pinvoke! dispatch_get_current_queue bound
+!unknown-pinvoke! dispatch_get_global_queue bound
+!unknown-pinvoke! dispatch_group_async_f bound
+!unknown-pinvoke! dispatch_group_create bound
+!unknown-pinvoke! dispatch_group_enter bound
+!unknown-pinvoke! dispatch_group_leave bound
+!unknown-pinvoke! dispatch_group_notify_f bound
+!unknown-pinvoke! dispatch_group_wait bound
+!unknown-pinvoke! dispatch_queue_create bound
+!unknown-pinvoke! dispatch_queue_get_label bound
+!unknown-pinvoke! dispatch_release bound
+!unknown-pinvoke! dispatch_resume bound
+!unknown-pinvoke! dispatch_retain bound
+!unknown-pinvoke! dispatch_set_context bound
+!unknown-pinvoke! dispatch_set_target_queue bound
+!unknown-pinvoke! dispatch_source_cancel bound
+!unknown-pinvoke! dispatch_source_create bound
+!unknown-pinvoke! dispatch_source_get_data bound
+!unknown-pinvoke! dispatch_source_get_handle bound
+!unknown-pinvoke! dispatch_source_get_mask bound
+!unknown-pinvoke! dispatch_source_merge_data bound
+!unknown-pinvoke! dispatch_source_set_cancel_handler bound
+!unknown-pinvoke! dispatch_source_set_event_handler bound
+!unknown-pinvoke! dispatch_source_set_event_handler_f bound
+!unknown-pinvoke! dispatch_source_set_registration_handler bound
+!unknown-pinvoke! dispatch_source_set_timer bound
+!unknown-pinvoke! dispatch_source_testcancel bound
+!unknown-pinvoke! dispatch_suspend bound
+!unknown-pinvoke! dispatch_sync_f bound
+!unknown-pinvoke! dispatch_time bound
+!unknown-pinvoke! dispatch_walltime bound
+!unknown-pinvoke! open bound

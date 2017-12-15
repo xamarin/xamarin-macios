@@ -92,13 +92,6 @@
 !missing-field! kABSourceTypeProperty not bound
 
 
-# CallKit
-
-## +@property (nonatomic, strong, nullable) NSData *iconMaskImageData API_DEPRECATED_WITH_REPLACEMENT("iconTemplateImageData", ios(10.0, 10.0)); // Note: will be removed in a future beta SDK
-!missing-selector! CXProviderConfiguration::iconMaskImageData not bound
-!missing-selector! CXProviderConfiguration::setIconMaskImageData: not bound
-
-
 # CoreMedia
 
 !missing-field! kCMMetadataKeySpace_HLSDateRange not bound
@@ -125,34 +118,9 @@
 !unknown-type! GKQuadTreeNode bound
 
 
-# HomeKit
-
-## This was added and deprecated at the same time recommending the use of UpdateAudioStreamSetting.
-## We decided not to bind it, as it could be that Apple is just keeping it around because it's needed
-## somewhere else.
-!missing-selector! HMCameraStream::setAudioStreamSetting: not bound
-
-
-# Messages
-
-## No enum to attach the domain with.
-!missing-field! MSStickersErrorDomain not bound
-
-
-# MessageUI
-
-## [Native] available on XAMCORE_4_0
-!missing-enum-native! MFMailComposeErrorCode
-!missing-enum-native! MFMailComposeResult
-!missing-enum-native! MessageComposeResult
-!wrong-enum-size! MFMailComposeErrorCode managed 4 vs native 8
-!wrong-enum-size! MFMailComposeResult managed 4 vs native 8
-!wrong-enum-size! MessageComposeResult managed 4 vs native 8
-
-
 # Metal
 
-## only on macOS (but removing would be a vreaking change)
+## only on macOS (but removing would be a breaking change)
 !unknown-native-enum! MTLSamplerBorderColor bound
 
 
@@ -168,12 +136,6 @@
 !missing-field! kEAGLColorFormatSRGBA8 not bound
 !missing-field! kEAGLDrawablePropertyColorFormat not bound
 !missing-field! kEAGLDrawablePropertyRetainedBacking not bound
-
-
-# Quicklook
-
-## fixed for XAMCORE_4_0
-!incorrect-protocol-member! QLPreviewItem::previewItemTitle is OPTIONAL and should NOT be abstract
 
 
 # VideoToolbox
@@ -218,15 +180,7 @@
 !missing-selector! UIColor::getRed:green:blue:alpha: not bound
 
 
-# does not exists in iOS as a type - but some API refers to it (messy)
-!unknown-type! NSPortMessage bound
 
-# untyped enum but used as a NSInteger in the API, forcing us to use [Native]
-!unknown-native-enum! TWRequestMethod bound
-
-# unfortunate (but required for API compatibility) it also means one seems to be missing (same key)
-!duplicate-type-name! WKErrorCode enum exists as both WatchKit.WKErrorCode and WebKit.WKErrorCode
-!missing-enum! WKErrorCode not bound
 
 # Apple renamed it from UILineBreakMode and we kept the old name
 !missing-enum! NSLineBreakMode not bound
@@ -236,10 +190,6 @@
 
 
 # fixed in XAMCORE_4_0 - API break
-!incorrect-protocol-member! ADInterstitialAdDelegate::interstitialAdActionDidFinish: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! ADInterstitialAdDelegate::interstitialAdActionShouldBegin:willLeaveApplication: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! ADInterstitialAdDelegate::interstitialAdDidLoad: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! PKPaymentAuthorizationViewControllerDelegate::paymentAuthorizationViewControllerWillAuthorizePayment: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! UIDocumentMenuDelegate::documentMenuWasCancelled: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! UIDynamicAnimatorDelegate::dynamicAnimatorDidPause: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! UIDynamicAnimatorDelegate::dynamicAnimatorWillResume: is OPTIONAL and should NOT be abstract
@@ -253,12 +203,6 @@
 !missing-pinvoke! CVOpenGLESTextureCacheGetTypeID is not bound
 !missing-pinvoke! CVOpenGLESTextureGetTypeID is not bound
 
-## availability macro says iOS 8.0 but constants are under a #if !TARGET_OS_IPHONE define.
-## introspection does not report them as missing...
-!unknown-field! kVTCompressionPropertyKey_UsingHardwareAcceleratedVideoEncoder bound
-!unknown-field! kVTDecompressionPropertyKey_UsingHardwareAcceleratedVideoDecoder bound
-!unknown-field! kVTVideoDecoderSpecification_EnableHardwareAcceleratedVideoDecoder bound
-!unknown-field! kVTVideoDecoderSpecification_RequireHardwareAcceleratedVideoDecoder bound
 
 # Intents API iOS 10
 
@@ -267,8 +211,6 @@
 !incorrect-protocol-member! INPayBillIntentHandling::handlePayBill:completion: is REQUIRED and should be abstract
 !incorrect-protocol-member! INSearchForBillsIntentHandling::handleSearchForBills:completion: is REQUIRED and should be abstract
 
-## Apple made this protocol member optional in iOS 11 but it is a breaking change for us. Added to XAMCORE_4_0.
-!incorrect-protocol-member! INUIHostedViewControlling::configureWithInteraction:context:completion: is OPTIONAL and should NOT be abstract
 
 # UIKit
 
@@ -328,19 +270,3 @@
 ## https://bugzilla.xamarin.com/show_bug.cgi?id=59422
 !missing-pinvoke! UIContentSizeCategoryCompareToCategory is not bound
 !missing-pinvoke! UIContentSizeCategoryIsAccessibilityCategory is not bound
-
-# WatchKit
-
-## unfortunate duplicated name
-!duplicate-type-name! WKErrorCode enum exists as both WatchKit.WKErrorCode and WebKit.WKErrorCode
-!duplicate-type-name! WKErrorCode enum exists as both WebKit.WKErrorCode and WatchKit.WKErrorCode
-
-#PDFKit
-# PDFAnnotationPopup is not available on iOS also deprecated in macOS 10,12
-!missing-selector! PDFAnnotation::popup not bound
-!missing-selector! PDFAnnotation::setPopup: not bound
-
-#HealthKit
-## This key seems broken even in Objc returns a weird value
-!missing-field! HKSourceRevisionAnyOperatingSystem not bound
-

@@ -1,0 +1,77 @@
+## /usr/include/dispatch/queue.h
+!unknown-pinvoke! dispatch_get_main_queue bound
+!unknown-pinvoke! dispatch_main bound
+
+## dlfcn.h
+!unknown-pinvoke! dladdr bound
+
+
+## unsorted
+
+!missing-enum! CFXMLEntityTypeCode not bound
+!missing-enum! CFXMLNodeTypeCode not bound
+!missing-enum! CFXMLParserOptions not bound
+!missing-enum! CFXMLParserStatusCode not bound
+!missing-field! kCFURLApplicationIsScriptableKey not bound
+!missing-field! kCFURLQuarantinePropertiesKey not bound
+!missing-field! kCFURLTagNamesKey not bound
+!missing-field! kCFURLVolumeAvailableCapacityForImportantUsageKey not bound
+!missing-field! kCFURLVolumeAvailableCapacityForOpportunisticUsageKey not bound
+!missing-field! kCFUserNotificationAlertHeaderKey not bound
+!missing-field! kCFUserNotificationAlertMessageKey not bound
+!missing-field! kCFUserNotificationAlternateButtonTitleKey not bound
+!missing-field! kCFUserNotificationCheckBoxTitlesKey not bound
+!missing-field! kCFUserNotificationDefaultButtonTitleKey not bound
+!missing-field! kCFUserNotificationIconURLKey not bound
+!missing-field! kCFUserNotificationLocalizationURLKey not bound
+!missing-field! kCFUserNotificationOtherButtonTitleKey not bound
+!missing-field! kCFUserNotificationPopUpSelectionKey not bound
+!missing-field! kCFUserNotificationPopUpTitlesKey not bound
+!missing-field! kCFUserNotificationProgressIndicatorValueKey not bound
+!missing-field! kCFUserNotificationSoundURLKey not bound
+!missing-field! kCFUserNotificationTextFieldTitlesKey not bound
+!missing-field! kCFUserNotificationTextFieldValuesKey not bound
+!missing-field! kCFXMLTreeErrorDescription not bound
+!missing-field! kCFXMLTreeErrorLineNumber not bound
+!missing-field! kCFXMLTreeErrorLocation not bound
+!missing-field! kCFXMLTreeErrorStatusCode not bound
+!missing-pinvoke! CFURLCreateBookmarkDataFromAliasRecord is not bound
+!missing-pinvoke! CFUserNotificationCancel is not bound
+!missing-pinvoke! CFUserNotificationCreate is not bound
+!missing-pinvoke! CFUserNotificationCreateRunLoopSource is not bound
+!missing-pinvoke! CFUserNotificationDisplayAlert is not bound
+!missing-pinvoke! CFUserNotificationDisplayNotice is not bound
+!missing-pinvoke! CFUserNotificationGetResponseDictionary is not bound
+!missing-pinvoke! CFUserNotificationGetResponseValue is not bound
+!missing-pinvoke! CFUserNotificationGetTypeID is not bound
+!missing-pinvoke! CFUserNotificationReceiveResponse is not bound
+!missing-pinvoke! CFUserNotificationUpdate is not bound
+!missing-pinvoke! CFXMLCreateStringByEscapingEntities is not bound
+!missing-pinvoke! CFXMLCreateStringByUnescapingEntities is not bound
+!missing-pinvoke! CFXMLNodeCreate is not bound
+!missing-pinvoke! CFXMLNodeCreateCopy is not bound
+!missing-pinvoke! CFXMLNodeGetInfoPtr is not bound
+!missing-pinvoke! CFXMLNodeGetString is not bound
+!missing-pinvoke! CFXMLNodeGetTypeCode is not bound
+!missing-pinvoke! CFXMLNodeGetTypeID is not bound
+!missing-pinvoke! CFXMLNodeGetVersion is not bound
+!missing-pinvoke! CFXMLParserAbort is not bound
+!missing-pinvoke! CFXMLParserCopyErrorDescription is not bound
+!missing-pinvoke! CFXMLParserCreate is not bound
+!missing-pinvoke! CFXMLParserCreateWithDataFromURL is not bound
+!missing-pinvoke! CFXMLParserGetCallBacks is not bound
+!missing-pinvoke! CFXMLParserGetContext is not bound
+!missing-pinvoke! CFXMLParserGetDocument is not bound
+!missing-pinvoke! CFXMLParserGetLineNumber is not bound
+!missing-pinvoke! CFXMLParserGetLocation is not bound
+!missing-pinvoke! CFXMLParserGetSourceURL is not bound
+!missing-pinvoke! CFXMLParserGetStatusCode is not bound
+!missing-pinvoke! CFXMLParserGetTypeID is not bound
+!missing-pinvoke! CFXMLParserParse is not bound
+!missing-pinvoke! CFXMLTreeCreateFromData is not bound
+!missing-pinvoke! CFXMLTreeCreateFromDataWithError is not bound
+!missing-pinvoke! CFXMLTreeCreateWithDataFromURL is not bound
+!missing-pinvoke! CFXMLTreeCreateWithNode is not bound
+!missing-pinvoke! CFXMLTreeCreateXMLData is not bound
+!missing-pinvoke! CFXMLTreeGetNode is not bound
+!unknown-pinvoke! _NSGetExecutablePath bound

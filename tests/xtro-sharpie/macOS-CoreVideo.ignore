@@ -1,0 +1,54 @@
+!missing-field! kCVImageBufferTransferFunction_EBU_3213 not bound
+!missing-field! kCVImageBufferTransferFunction_SMPTE_C not bound
+!missing-field! kCVMetalTextureCacheMaximumTextureAgeKey not bound
+!missing-field! kCVOpenGLBufferHeight not bound
+!missing-field! kCVOpenGLBufferInternalFormat not bound
+!missing-field! kCVOpenGLBufferMaximumMipmapLevel not bound
+!missing-field! kCVOpenGLBufferPoolMaximumBufferAgeKey not bound
+!missing-field! kCVOpenGLBufferPoolMinimumBufferCountKey not bound
+!missing-field! kCVOpenGLBufferTarget not bound
+!missing-field! kCVOpenGLBufferWidth not bound
+!missing-field! kCVOpenGLTextureCacheChromaSamplingModeAutomatic not bound
+!missing-field! kCVOpenGLTextureCacheChromaSamplingModeBestPerformance not bound
+!missing-field! kCVOpenGLTextureCacheChromaSamplingModeHighestQuality not bound
+!missing-field! kCVOpenGLTextureCacheChromaSamplingModeKey not bound
+!missing-field! kCVPixelBufferIOSurfaceOpenGLFBOCompatibilityKey not bound
+!missing-field! kCVPixelBufferIOSurfaceOpenGLTextureCompatibilityKey not bound
+!missing-pinvoke! CVDisplayLinkCreateWithCGDisplay is not bound
+!missing-pinvoke! CVDisplayLinkCreateWithCGDisplays is not bound
+!missing-pinvoke! CVDisplayLinkCreateWithOpenGLDisplayMask is not bound
+!missing-pinvoke! CVDisplayLinkGetTypeID is not bound
+!missing-pinvoke! CVDisplayLinkSetOutputHandler is not bound
+!missing-pinvoke! CVDisplayLinkTranslateTime is not bound
+!missing-pinvoke! CVMetalTextureCacheCreate is not bound
+!missing-pinvoke! CVMetalTextureCacheCreateTextureFromImage is not bound
+!missing-pinvoke! CVMetalTextureCacheFlush is not bound
+!missing-pinvoke! CVMetalTextureGetCleanTexCoords is not bound
+!missing-pinvoke! CVMetalTextureGetTexture is not bound
+!missing-pinvoke! CVMetalTextureIsFlipped is not bound
+!missing-pinvoke! CVOpenGLBufferAttach is not bound
+!missing-pinvoke! CVOpenGLBufferCreate is not bound
+!missing-pinvoke! CVOpenGLBufferGetAttributes is not bound
+!missing-pinvoke! CVOpenGLBufferGetTypeID is not bound
+!missing-pinvoke! CVOpenGLBufferPoolCreate is not bound
+!missing-pinvoke! CVOpenGLBufferPoolCreateOpenGLBuffer is not bound
+!missing-pinvoke! CVOpenGLBufferPoolGetAttributes is not bound
+!missing-pinvoke! CVOpenGLBufferPoolGetOpenGLBufferAttributes is not bound
+!missing-pinvoke! CVOpenGLBufferPoolGetTypeID is not bound
+!missing-pinvoke! CVOpenGLBufferPoolRelease is not bound
+!missing-pinvoke! CVOpenGLBufferPoolRetain is not bound
+!missing-pinvoke! CVOpenGLBufferRelease is not bound
+!missing-pinvoke! CVOpenGLBufferRetain is not bound
+!missing-pinvoke! CVOpenGLTextureCacheCreate is not bound
+!missing-pinvoke! CVOpenGLTextureCacheCreateTextureFromImage is not bound
+!missing-pinvoke! CVOpenGLTextureCacheFlush is not bound
+!missing-pinvoke! CVOpenGLTextureCacheGetTypeID is not bound
+!missing-pinvoke! CVOpenGLTextureCacheRelease is not bound
+!missing-pinvoke! CVOpenGLTextureCacheRetain is not bound
+!missing-pinvoke! CVOpenGLTextureGetCleanTexCoords is not bound
+!missing-pinvoke! CVOpenGLTextureGetName is not bound
+!missing-pinvoke! CVOpenGLTextureGetTarget is not bound
+!missing-pinvoke! CVOpenGLTextureGetTypeID is not bound
+!missing-pinvoke! CVOpenGLTextureIsFlipped is not bound
+!missing-pinvoke! CVOpenGLTextureRelease is not bound
+!missing-pinvoke! CVOpenGLTextureRetain is not bound

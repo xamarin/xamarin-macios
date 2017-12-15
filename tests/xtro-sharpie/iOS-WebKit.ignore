@@ -1,0 +1,3 @@
+# unfortunate (but required for API compatibility) it also means one seems to be missing (same key)
+!duplicate-type-name! WKErrorCode enum exists as both WatchKit.WKErrorCode and WebKit.WKErrorCode
+!missing-enum! WKErrorCode not bound

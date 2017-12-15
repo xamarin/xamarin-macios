@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 using Mono.Cecil;
@@ -12,10 +13,6 @@ namespace Extrospection {
 
 		// the original name can be lost and, if not registered (e.g. enums), might not be available
 		static Dictionary<string,string> map = new Dictionary<string, string> () {
-			{ "AVPlayerHDRMode", "AVPlayerHdrMode" },
-			{ "CFURLPathStyle", "CFUrlPathStyle" },
-			{ "CIDataMatrixCodeECCVersion", "CIDataMatrixCodeEccVersion" },
-			{ "CXPlayDTMFCallActionType", "CXPlayDtmfCallActionType" },
 			{ "EABluetoothAccessoryPickerErrorCode", "EABluetoothAccessoryPickerError" },
 			{ "EKCalendarEventAvailabilityMask", "EKCalendarEventAvailability" },
 			{ "GKErrorCode", "GKError" },
@@ -24,78 +21,30 @@ namespace Extrospection {
 			{ "HMErrorCode", "HMError" },
 			{ "LAError", "LAStatus" },
 			{ "MCErrorCode", "MCError" },
-			{ "MIDINotificationMessageID", "MidiNotificationMessageId" },
-			{ "MIDIObjectType", "MidiObjectType" },
-			{ "MIDITransformControlType", "MidiTransformControlType" },
-			{ "MIDITransformType", "MidiTransformType" },
-			{ "MIDINetworkConnectionPolicy", "MidiNetworkConnectionPolicy" },
 			{ "MPMovieMediaTypeMask", "MPMovieMediaType" },
-			{ "MPSCNNConvolutionFlags", "MPSCnnConvolutionFlags" },
-			{ "MTLCPUCacheMode", "MTLCpuCacheMode" },
-			{ "NEVPNError", "NEVpnError" },
-			{ "NEVPNIKEv2TLSVersion", "NEVpnIkev2TlsVersion" },
-			{ "NEDNSProxyManagerError", "NEDnsProxyManagerError" },
-			{ "NEHotspotConfigurationEAPTLSVersion", "NEHotspotConfigurationEapTlsVersion" },
-			{ "NEHotspotConfigurationEAPType", "NEHotspotConfigurationEapType" },
-			{ "NEHotspotConfigurationTTLSInnerAuthenticationType", "NEHotspotConfigurationTtlsInnerAuthenticationType" },
-			{ "NEVPNIKEAuthenticationMethod", "NEVpnIkeAuthenticationMethod" },
 			{ "NEVPNIKEv2CertificateType", "NEVpnIke2CertificateType" },
 			{ "NEVPNIKEv2DeadPeerDetectionRate", "NEVpnIke2DeadPeerDetectionRate" },
 			{ "NEVPNIKEv2DiffieHellmanGroup", "NEVpnIke2DiffieHellman" },
 			{ "NEVPNIKEv2EncryptionAlgorithm", "NEVpnIke2EncryptionAlgorithm" },
 			{ "NEVPNIKEv2IntegrityAlgorithm", "NEVpnIke2IntegrityAlgorithm" },
-			{ "NEVPNStatus", "NEVpnStatus" },
 			{ "NSAttributedStringEnumerationOptions", "NSAttributedStringEnumeration" },
 			{ "NSFileProviderErrorCode", "NSFileProviderError" },
-			{ "NSHTTPCookieAcceptPolicy", "NSHttpCookieAcceptPolicy" },
-			{ "NSISO8601DateFormatOptions", "NSIso8601DateFormatOptions" },
-			{ "NSJSONReadingOptions", "NSJsonReadingOptions" },
-			{ "NSJSONWritingOptions", "NSJsonWritingOptions" },
 			{ "NSUbiquitousKeyValueStoreChangeReason", "NSUbiquitousKeyValueStore" },
-			{ "NSURLBookmarkCreationOptions", "NSUrlBookmarkCreationOptions" },
-			{ "NSURLBookmarkResolutionOptions", "NSUrlBookmarkResolutionOptions" },
-			{ "NSURLCacheStoragePolicy", "NSUrlCacheStoragePolicy" },
-			{ "NSURLCredentialPersistence", "NSUrlCredentialPersistence" },
-			{ "NSURLRelationship", "NSUrlRelationship" },
-			{ "NSURLRequestCachePolicy", "NSUrlRequestCachePolicy" },
-			{ "NSURLRequestNetworkServiceType", "NSUrlRequestNetworkServiceType" },
-			{ "NSURLSessionAuthChallengeDisposition", "NSUrlSessionAuthChallengeDisposition" },
-			{ "NSURLSessionMultipathServiceType", "NSUrlSessionMultipathServiceType" },
-			{ "NSURLSessionResponseDisposition", "NSUrlSessionResponseDisposition" },
-			{ "NSURLSessionTaskMetricsResourceFetchType", "NSUrlSessionTaskMetricsResourceFetchType" },
-			{ "NSURLSessionTaskState", "NSUrlSessionTaskState" },
-			{ "NWTCPConnectionState", "NWTcpConnectionState" },
-			{ "NWUDPSessionState", "NWUdpSessionState" },
-			{ "PDFDisplayDirection", "PdfDisplayDirection" },
-			{ "PDFInterpolationQuality", "PdfInterpolationQuality" },
-			{ "PDFThumbnailLayoutMode", "PdfThumbnailLayoutMode" },
-			{ "PDFWidgetCellState", "PdfWidgetCellState" },
 			{ "RPRecordingErrorCode", "RPRecordingError" },
 			{ "SecTrustResultType", "SecTrustResult" },
 			{ "SKErrorCode", "SKError" },
 			{ "SSReadingListErrorCode", "SSReadingListError" },
-			{ "SCNRenderingAPI", "SCNRenderingApi" },
 			{ "UIDataDetectorTypes", "UIDataDetectorType" },
 			{ "UIControlEvents", "UIControlEvent" },
 			{ "UITableViewCellAccessoryType", "UITableViewCellAccessory" },
 			{ "UITableViewCellStateMask", "UITableViewCellState" },
 			{ "WatchKitErrorCode", "WKErrorCode" }, // WebKit already had that name
-			{ "MPSCNNBinaryConvolutionFlags", "MPSCnnBinaryConvolutionFlags"},
-			{ "MPSCNNBinaryConvolutionType", "MPSCnnBinaryConvolutionType" },
-			{ "MPSCNNNeuronType", "MPSCnnNeuronType" },
-			{ "MPSNNPaddingMethod", "MPSNnPaddingMethod" },
-			{ "MPSRNNBidirectionalCombineMode", "MPSRnnBidirectionalCombineMode" },
-			{ "MPSRNNSequenceDirection", "MPSRnnSequenceDirection" },
 			// not enums
-			{ "NSMutableURLRequest", "NSMutableUrlRequest" },
-			{ "UIImagePickerControllerImageURLExportPreset", "UIImagePickerControllerImageUrlExportPreset" },
-			{ "NSURLSessionDelayedRequestDisposition", "NSUrlSessionDelayedRequestDisposition" },
 		};
 
 		public static string GetManagedName (string nativeName)
 		{
-			string result;
-			map.TryGetValue (nativeName, out result);
+			map.TryGetValue (nativeName, out var result);
 			return result ?? nativeName;
 		}
 
@@ -326,6 +275,79 @@ namespace Extrospection {
 			}
 
 			return null;
+		}
+
+		public static string GetFramework (TypeReference type)
+		{
+			var framework = type.Namespace;
+			if (String.IsNullOrEmpty (framework))
+				framework = type.DeclaringType.Namespace;
+			return MapFramework (framework);
+		}
+
+		public static string GetFramework (MethodDefinition method)
+		{
+			string framework = null;
+			if (method.HasPInvokeInfo)
+				framework = Path.GetFileNameWithoutExtension (method.PInvokeInfo.Module.Name);
+			else
+				framework = GetFramework (method.DeclaringType);
+			return MapFramework (framework);
+		}
+
+		public static string GetFramework (MemberReference member)
+		{
+			string framework = GetFramework (member.DeclaringType);
+			return MapFramework (framework);
+		}
+
+		public static string GetFramework (Decl decl)
+		{
+			var header_file = decl.PresumedLoc.FileName;
+			var fxh = header_file.IndexOf (".framework/Headers/", StringComparison.Ordinal);
+			if (fxh <= 0)
+				return null;
+			
+			var start = header_file.LastIndexOf ('/', fxh) + 1;
+			return MapFramework (header_file.Substring (start, fxh - start));
+		}
+
+		public static string MapFramework (string candidate)
+		{
+			switch (candidate) {
+			case "AVFAudio":
+				return "AVFoundation";
+			case "libc": // dispatch_*
+				return "CoreFoundation";
+			case "libobjc":
+			case "libSystem": // dlopen, dlerror, dlsym, dlclose
+				return "ObjCRuntime";
+			case "libsystem_kernel": // getxattr, removexattr and setxattr
+				return "Foundation";
+			case "MPSCore":
+			case "MPSImage":
+			case "MPSNeuralNetwork":
+				return "MetalPerformanceShaders";
+			case "QuartzCore":
+				return "CoreAnimation";
+			case "OpenAL":
+			case "OpenGL":
+			case "OpenGLES":
+			case "OpenTK.Platform.iPhoneOS":
+				return "OpenGL[ES]";
+			case "vImage":
+				return "Accelerate";
+			default:
+				return candidate;
+			}
+		}
+
+		public static (string, string) Sort (string s1, string s2)
+		{
+			if (StringComparer.Ordinal.Compare (s1, s2) < 0)
+				return (s1, s2);
+			else
+				return (s2, s1);
 		}
 	}
 }

@@ -1,0 +1,76 @@
+## All members of the protocol are marked as not available on watchOS (but the protocols themselves are not decorated)
+!missing-protocol! GKChallengeListener not bound
+!missing-protocol! GKInviteEventListener not bound
+!missing-protocol! GKGameSessionEventListener not bound
+
+## enum size declared after the enum, e.g. `typedef NSInteger GKPhotoSize;`, so we miss the metadata
+!unknown-native-enum! GKPhotoSize bound
+
+## types/members marked as deprecated in watchOS 2.0 (even if the framework was not available before 3.0)
+## or deprecated well before that (and have alternatives). The last ones might be there but it seems better
+## to avoid exposing them (since they might be removed later) as better API exists
+!missing-type! GKSession not bound
+!missing-protocol! GKSessionDelegate not bound
+!missing-selector! GKSession::acceptConnectionFromPeer:error: not bound
+!missing-selector! GKSession::cancelConnectToPeer: not bound
+!missing-selector! GKSession::connectToPeer:withTimeout: not bound
+!missing-selector! GKSession::delegate not bound
+!missing-selector! GKSession::denyConnectionFromPeer: not bound
+!missing-selector! GKSession::disconnectPeerFromAllPeers: not bound
+!missing-selector! GKSession::disconnectTimeout not bound
+!missing-selector! GKSession::displayName not bound
+!missing-selector! GKSession::displayNameForPeer: not bound
+!missing-selector! GKSession::initWithSessionID:displayName:sessionMode: not bound
+!missing-selector! GKSession::isAvailable not bound
+!missing-selector! GKSession::peerID not bound
+!missing-selector! GKSession::peersWithConnectionState: not bound
+!missing-selector! GKSession::sendData:toPeers:withDataMode:error: not bound
+!missing-selector! GKSession::sendDataToAllPeers:withDataMode:error: not bound
+!missing-selector! GKSession::sessionID not bound
+!missing-selector! GKSession::sessionMode not bound
+!missing-selector! GKSession::setAvailable: not bound
+!missing-selector! GKSession::setDataReceiveHandler:withContext: not bound
+!missing-selector! GKSession::setDelegate: not bound
+!missing-selector! GKSession::setDisconnectTimeout: not bound
+!missing-protocol-member! GKTurnBasedEventListener::player:didRequestMatchWithPlayers: not found
+!missing-selector! GKAchievement::reportAchievementWithCompletionHandler: not bound
+!missing-selector! GKLeaderboard::category not bound
+!missing-selector! GKLeaderboard::initWithPlayerIDs: not bound
+!missing-selector! GKLeaderboard::setCategory: not bound
+!missing-selector! +GKLeaderboard::loadCategoriesWithCompletionHandler: not bound
+!missing-selector! +GKLeaderboard::setDefaultLeaderboard:withCompletionHandler: not bound
+!missing-selector! GKLocalPlayer::authenticateWithCompletionHandler: not bound
+!missing-selector! GKLocalPlayer::friends not bound
+!missing-selector! GKLocalPlayer::loadDefaultLeaderboardCategoryIDWithCompletionHandler: not bound
+!missing-selector! GKLocalPlayer::loadFriendsWithCompletionHandler: not bound
+!missing-selector! GKLocalPlayer::setDefaultLeaderboardCategoryID:completionHandler: not bound
+!missing-selector! GKPlayer::isFriend not bound
+!missing-selector! GKMatchRequest::inviteeResponseHandler not bound
+!missing-selector! GKMatchRequest::playersToInvite not bound
+!missing-selector! GKMatchRequest::setInviteeResponseHandler: not bound
+!missing-selector! GKMatchRequest::setPlayersToInvite: not bound
+!missing-selector! GKScore::category not bound
+!missing-selector! GKScore::initWithCategory: not bound
+!missing-selector! GKScore::initWithLeaderboardIdentifier:forPlayer: not bound
+!missing-selector! GKScore::reportScoreWithCompletionHandler: not bound
+!missing-selector! GKScore::setCategory: not bound
+!missing-type! GKVoiceChatService not bound
+!missing-protocol! GKVoiceChatClient not bound
+!missing-selector! GKVoiceChatService::acceptCallID:error: not bound
+!missing-selector! GKVoiceChatService::client not bound
+!missing-selector! GKVoiceChatService::denyCallID: not bound
+!missing-selector! GKVoiceChatService::inputMeterLevel not bound
+!missing-selector! GKVoiceChatService::isInputMeteringEnabled not bound
+!missing-selector! GKVoiceChatService::isMicrophoneMuted not bound
+!missing-selector! GKVoiceChatService::isOutputMeteringEnabled not bound
+!missing-selector! GKVoiceChatService::outputMeterLevel not bound
+!missing-selector! GKVoiceChatService::receivedData:fromParticipantID: not bound
+!missing-selector! GKVoiceChatService::receivedRealTimeData:fromParticipantID: not bound
+!missing-selector! GKVoiceChatService::remoteParticipantVolume not bound
+!missing-selector! GKVoiceChatService::setClient: not bound
+!missing-selector! GKVoiceChatService::setInputMeteringEnabled: not bound
+!missing-selector! GKVoiceChatService::setMicrophoneMuted: not bound
+!missing-selector! GKVoiceChatService::setOutputMeteringEnabled: not bound
+!missing-selector! GKVoiceChatService::setRemoteParticipantVolume: not bound
+!missing-selector! GKVoiceChatService::startVoiceChatWithParticipantID:error: not bound
+!missing-selector! GKVoiceChatService::stopVoiceChatWithParticipantID: not bound
