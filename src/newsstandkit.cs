@@ -11,7 +11,7 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.NewsstandKit {
 
-	[Since (5,0)]
+	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	// <quote>You create an NKAssetDownload instance using the NKIssue method addAssetWithRequest:</quote> -> http://developer.apple.com/library/ios/#documentation/StoreKit/Reference/NKAssetDownload_Class/NKAssetDownload/NKAssetDownload.html
 	// init returns NIL
@@ -33,7 +33,7 @@ namespace XamCore.NewsstandKit {
 		NSUrlConnection DownloadWithDelegate ([Protocolize] NSUrlConnectionDownloadDelegate downloadDelegate);
 	}
 
-	[Since (5,0)]
+	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	// <quote>An NKIssue object must have a name and a date. When you create the object using the addIssueWithName:date: method of the NKLibrary class, you must supply these two values.</quote>
 	// http://developer.apple.com/library/ios/#documentation/StoreKit/Reference/NKIssue_Class/NKIssue/NKIssue.html#//apple_ref/occ/cl/NKIssue
@@ -63,7 +63,7 @@ namespace XamCore.NewsstandKit {
 		NSString DownloadCompletedNotification { get; }
 	}
 
-	[Since (5,0)]
+	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	// init returns NIL -> sharedLibrary
 	[DisableDefaultCtor]

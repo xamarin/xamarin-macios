@@ -18,7 +18,7 @@ using XamCore.UIKit;
 
 namespace XamCore.GameController {
 
-	[Since (7,0)]
+	[iOS (7,0)]
 	[Mac (10,9, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // The GCControllerElement class is never instantiated directly.
@@ -35,7 +35,7 @@ namespace XamCore.GameController {
 
 	delegate void GCControllerAxisValueChangedHandler (GCControllerAxisInput axis, float /* float, not CGFloat */ value);
 
-	[Since (7,0)]
+	[iOS (7,0)]
 	[Mac (10,9, onlyOn64: true)]
 	[BaseType (typeof (GCControllerElement))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
@@ -50,7 +50,7 @@ namespace XamCore.GameController {
 
 	delegate void GCControllerButtonValueChanged (GCControllerButtonInput button, float /* float, not CGFloat */ buttonValue, bool pressed);
 
-	[Since (7,0), Mac (10,9, onlyOn64: true)]
+	[iOS (7,0), Mac (10,9, onlyOn64: true)]
 	[BaseType (typeof (GCControllerElement))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
 	partial interface GCControllerButtonInput {
@@ -86,7 +86,7 @@ namespace XamCore.GameController {
 
 	delegate void GCControllerDirectionPadValueChangedHandler (GCControllerDirectionPad dpad, float /* float, not CGFloat */ xValue, float /* float, not CGFloat */ yValue);
 
-	[Since (7,0)]
+	[iOS (7,0)]
 	[Mac (10,9, onlyOn64: true)]
 	[BaseType (typeof (GCControllerElement))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
@@ -116,7 +116,7 @@ namespace XamCore.GameController {
 
 	delegate void GCGamepadValueChangedHandler (GCGamepad gamepad, GCControllerElement element);
 
-	[Since (7,0)]
+	[iOS (7,0)]
 	[Mac (10,9, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
@@ -153,7 +153,7 @@ namespace XamCore.GameController {
 		GCControllerButtonInput RightShoulder { get; }
 	}
 
-	[Since (7,0)]
+	[iOS (7,0)]
 	[Mac (10,9, onlyOn64: true)]
 	[BaseType (typeof (GCGamepad))]
 	[DisableDefaultCtor]
@@ -171,7 +171,7 @@ namespace XamCore.GameController {
 
 	delegate void GCExtendedGamepadValueChangedHandler (GCExtendedGamepad gamepad, GCControllerElement element);
 
-	[Since (7,0)]
+	[iOS (7,0)]
 	[Mac (10,9, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
@@ -220,7 +220,7 @@ namespace XamCore.GameController {
 		GCControllerButtonInput RightTrigger { get; }
 	}
 
-	[Since (7,0)]
+	[iOS (7,0)]
 	[Mac (10,9, onlyOn64: true)]
 	[BaseType (typeof (GCExtendedGamepad))]
 	[DisableDefaultCtor]
@@ -240,7 +240,7 @@ namespace XamCore.GameController {
 	delegate void GCControllerPausedHandler (GCController controller);
 #endif
 
-	[Since (7,0), Mac (10,9, onlyOn64: true)]
+	[iOS (7,0), Mac (10,9, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	partial interface GCController {
 

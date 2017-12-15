@@ -42,7 +42,7 @@ namespace XamCore.SafariServices {
 	}
 
 #if !MONOMAC
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSGenericException Misuse of SSReadingList interface. Use class method defaultReadingList.
 	partial interface SSReadingList {

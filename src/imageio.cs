@@ -34,7 +34,7 @@ using System;
 
 namespace XamCore.ImageIO {
 
-	[Since (4,0)]
+	[iOS (4,0)]
 	[Static]
 	// Bad name should end with Keys
 	interface CGImageProperties {
@@ -515,19 +515,19 @@ namespace XamCore.ImageIO {
 		NSString PNGsRGBIntent { get; }
 		[Field ("kCGImagePropertyPNGChromaticities")]
 		NSString PNGChromaticities { get; }
-		[Since (5,0)][Field ("kCGImagePropertyPNGAuthor")]
+		[iOS (5,0)][Field ("kCGImagePropertyPNGAuthor")]
 		NSString PNGAuthor { get; }
-		[Since (5,0)][Field ("kCGImagePropertyPNGCopyright")]
+		[iOS (5,0)][Field ("kCGImagePropertyPNGCopyright")]
 		NSString PNGCopyright { get; }
-		[Since (5,0)][Field ("kCGImagePropertyPNGCreationTime")]
+		[iOS (5,0)][Field ("kCGImagePropertyPNGCreationTime")]
 		NSString PNGCreationTime { get; }
-		[Since (5,0)][Field ("kCGImagePropertyPNGDescription")]
+		[iOS (5,0)][Field ("kCGImagePropertyPNGDescription")]
 		NSString PNGDescription { get; }
-		[Since (5,0)][Field ("kCGImagePropertyPNGModificationTime")]
+		[iOS (5,0)][Field ("kCGImagePropertyPNGModificationTime")]
 		NSString PNGModificationTime { get; }
-		[Since (5,0)][Field ("kCGImagePropertyPNGSoftware")]
+		[iOS (5,0)][Field ("kCGImagePropertyPNGSoftware")]
 		NSString PNGSoftware { get; }
-		[Since (5,0)][Field ("kCGImagePropertyPNGTitle")]
+		[iOS (5,0)][Field ("kCGImagePropertyPNGTitle")]
 		NSString PNGTitle { get; }
 
 		[iOS (9,0)][Mac (10,11)]
@@ -903,7 +903,7 @@ namespace XamCore.ImageIO {
 		NSString FileContentsDictionary { get; }
 	}
 
-	[Since (7,0), Mac (10, 8)]
+	[iOS (7,0), Mac (10, 8)]
 	[Static]
 	interface CGImageMetadataTagNamespaces {
 		[Field ("kCGImageMetadataNamespaceExif")]
@@ -926,7 +926,7 @@ namespace XamCore.ImageIO {
 		NSString XMPRights { get; }
 	}
 
-	[Since (7,0), Mac (10, 8)]
+	[iOS (7,0), Mac (10, 8)]
 	[Static]
 	interface CGImageMetadataTagPrefixes {
 		[Field ("kCGImageMetadataPrefixExif")]
@@ -949,7 +949,7 @@ namespace XamCore.ImageIO {
 		NSString XMPRights { get; }
 	}
 
-	[Since (7,0), Mac (10, 8)]
+	[iOS (7,0), Mac (10, 8)]
 	interface CGImageMetadata {
 		[Field ("kCFErrorDomainCGImageMetadata")]
 		NSString ErrorDomain { get; }
@@ -1006,23 +1006,23 @@ namespace XamCore.ImageIO {
 		[Internal][Field ("kCGImageDestinationBackgroundColor")]
 		IntPtr kBackgroundColor { get; }
 
-		[Since (7,0), Mac (10, 8)]
+		[iOS (7,0), Mac (10, 8)]
 		[Internal][Field ("kCGImageDestinationDateTime")]
 		IntPtr kDateTime { get; }
 
-		[Since (7,0), Mac (10, 8)]
+		[iOS (7,0), Mac (10, 8)]
 		[Internal][Field ("kCGImageDestinationMergeMetadata")]
 		IntPtr kMergeMetadata { get; }
 
-		[Since (7,0), Mac (10, 8)]
+		[iOS (7,0), Mac (10, 8)]
 		[Internal][Field ("kCGImageDestinationMetadata")]
 		IntPtr kMetadata { get; }
 
-		[Since (7,0), Mac (10, 8)]
+		[iOS (7,0), Mac (10, 8)]
 		[Internal][Field ("kCGImageDestinationOrientation")]
 		IntPtr kOrientation { get; }
 
-		[Since (7,0), Mac (10, 8)]
+		[iOS (7,0), Mac (10, 8)]
 		[Internal][Field ("kCGImageMetadataShouldExcludeXMP")]
 		IntPtr kShouldExcludeXMP { get; }
 
@@ -1188,15 +1188,15 @@ namespace XamCore.ImageIO {
 	[Partial]
 	interface CGCopyImageSourceOptions {
 
-		[Since (7,0), Mac (10, 8)]
+		[iOS (7,0), Mac (10, 8)]
 		[Internal][Field ("kCGImageDestinationMetadata")]
 		IntPtr kMetadata { get; }
 
-		[Since (7,0), Mac (10, 8)]
+		[iOS (7,0), Mac (10, 8)]
 		[Internal][Field ("kCGImageDestinationMergeMetadata")]
 		IntPtr kMergeMetadata { get; }
 
-		[Since (7,0), Mac (10, 8)]
+		[iOS (7,0), Mac (10, 8)]
 		[Internal][Field ("kCGImageMetadataShouldExcludeXMP")]
 		IntPtr kShouldExcludeXMP { get; }
 
@@ -1204,11 +1204,11 @@ namespace XamCore.ImageIO {
 		[Internal][Field ("kCGImageMetadataShouldExcludeGPS")]
 		IntPtr kShouldExcludeGPS { get; }
 
-		[Since (7,0), Mac (10, 8)]
+		[iOS (7,0), Mac (10, 8)]
 		[Internal][Field ("kCGImageDestinationDateTime")]
 		IntPtr kDateTime { get; }
 
-		[Since (7,0), Mac (10, 8)]
+		[iOS (7,0), Mac (10, 8)]
 		[Internal][Field ("kCGImageDestinationOrientation")]
 		IntPtr kOrientation { get; }
 	}

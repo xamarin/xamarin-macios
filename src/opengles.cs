@@ -76,7 +76,7 @@ namespace XamCore.OpenGLES {
 		[Export ("presentRenderbuffer:afterMinimumDuration:")]
 		bool _PresentRenderbufferAfterMinimumDuration (nuint target, double duration);
 
-		[Since (7,1)]
+		[iOS (7,1)]
 		[Export ("multiThreaded")]
 		bool IsMultiThreaded { [Bind ("isMultiThreaded")] get; set; }
 

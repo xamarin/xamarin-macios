@@ -93,7 +93,7 @@ namespace XamCore.StoreKit {
 		[Export ("quantity")]
 		nint Quantity { get; }
 
-		[Since (7,0), Mac (10, 9)]
+		[iOS (7,0), Mac (10, 9)]
 		[Export ("applicationUsername", ArgumentSemantic.Copy)]
 		string ApplicationUsername { get; }
 
@@ -127,7 +127,7 @@ namespace XamCore.StoreKit {
 		[Override]
 		NSData RequestData { get; set; }
 
-		[Since (7,0), Mac (10, 9)]
+		[iOS (7,0), Mac (10, 9)]
 		[NullAllowed] // by default this property is null
 		[Export ("applicationUsername", ArgumentSemantic.Copy)][New]
 		string ApplicationUsername { get; set; }
@@ -153,7 +153,7 @@ namespace XamCore.StoreKit {
 		[Export ("restoreCompletedTransactions")]
 		void RestoreCompletedTransactions ();
 
-		[Since (7,0), Mac (10, 9)]
+		[iOS (7,0), Mac (10, 9)]
 		[Export ("restoreCompletedTransactionsWithApplicationUsername:")]
 		void RestoreCompletedTransactions ([NullAllowed] string username);
 
@@ -328,7 +328,7 @@ namespace XamCore.StoreKit {
 		void RequestFailed (SKRequest request, NSError error);
 	}
 		
-	[Since (7,0)]
+	[iOS (7,0)]
 	[Mac (10,9)]
 	[BaseType (typeof (SKRequest))]
 	interface SKReceiptRefreshRequest {
@@ -345,7 +345,7 @@ namespace XamCore.StoreKit {
 		SKReceiptProperties ReceiptProperties { get; }
 	}
 
-	[Since (7,0)]
+	[iOS (7,0)]
 	[Mac (10,9)]
 	[Static, Internal]
 	interface _SKReceiptProperty {
@@ -391,7 +391,7 @@ namespace XamCore.StoreKit {
 
 #if !MONOMAC
 	[NoTV]
-	[Since (6,0)]
+	[iOS (6,0)]
 	[BaseType (typeof (UIViewController),
 		   Delegates=new string [] { "WeakDelegate" },
 		   Events   =new Type   [] { typeof (SKStoreProductViewControllerDelegate) })]
@@ -419,7 +419,7 @@ namespace XamCore.StoreKit {
 		void LoadProduct (StoreProductParameters parameters, [NullAllowed] Action<bool,NSError> callback);
 	}
 
-	[Since (6,0)]
+	[iOS (6,0)]
 	[Static]
 	interface SKStoreProductParameterKey
 	{

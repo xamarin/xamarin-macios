@@ -1058,28 +1058,28 @@ namespace XamCore.CoreData
 		void MergeChangesFromContextDidSaveNotification (NSNotification notification);
 
 		[DesignatedInitializer]
-		[Since (5,0)]
+		[iOS (5,0)]
 		[Export ("initWithConcurrencyType:")]
 		IntPtr Constructor (NSManagedObjectContextConcurrencyType ct);
 
-		[Since (5,0)]
+		[iOS (5,0)]
 		[Export ("performBlock:")]
 		void Perform (/* non null */ NSAction action);
 
-		[Since (5,0)]
+		[iOS (5,0)]
 		[Export ("performBlockAndWait:")]
 		void PerformAndWait (/* non null */ NSAction action);
 
-		[Since (5,0)]
+		[iOS (5,0)]
 		[Export ("userInfo", ArgumentSemantic.Strong)]
 		NSMutableDictionary UserInfo { get; }
 
-		[Since (5,0)]
+		[iOS (5,0)]
 		[Export ("concurrencyType")]
 		NSManagedObjectContextConcurrencyType ConcurrencyType { get; }
 
 		//Detected properties
-		[Since (5,0)]
+		[iOS (5,0)]
 		// default is null, but setting it to null again would crash the app
 		[NullAllowed, Export ("parentContext", ArgumentSemantic.Retain)]
 		NSManagedObjectContext ParentContext { get; set; }
@@ -1677,7 +1677,7 @@ namespace XamCore.CoreData
 		[Export ("willRemoveFromPersistentStoreCoordinator:")]
 		void WillRemoveFromPersistentStoreCoordinator ([NullAllowed] NSPersistentStoreCoordinator coordinator);
 
-		[Since (5,0)]
+		[iOS (5,0)]
 		[Field ("NSPersistentStoreSaveConflictsErrorKey")]
 		NSString SaveConflictsErrorKey { get; }
 
@@ -2014,7 +2014,7 @@ namespace XamCore.CoreData
 #endif
 
 #if !MONOMAC
-		[Since (5,0)]
+		[iOS (5,0)]
 		[Field ("NSPersistentStoreFileProtectionKey")]
 		NSString PersistentStoreFileProtectionKey { get; }
 #endif
@@ -2022,40 +2022,40 @@ namespace XamCore.CoreData
 		// 7.0
 
 		[NoWatch][NoTV]
-		[Since (7,0), Mac (10, 9)]
+		[iOS (7,0), Mac (10, 9)]
 		[Field ("NSPersistentStoreUbiquitousPeerTokenOption")]
 		NSString PersistentStoreUbiquitousPeerTokenOption { get; }
 
 		[NoWatch][NoTV]
-		[Since (7,0), Mac (10, 9)]
+		[iOS (7,0), Mac (10, 9)]
 		[Static]
 		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_10_0, Message = "Please see the release notes and Core Data documentation.")]
 		[Export ("removeUbiquitousContentAndPersistentStoreAtURL:options:error:")]
 		bool RemoveUbiquitousContentAndPersistentStore (NSUrl storeUrl, NSDictionary options, out NSError error);
 
-		[Since (7,0), Mac (10, 9)]
+		[iOS (7,0), Mac (10, 9)]
 		[Notification (typeof (NSPersistentStoreCoordinatorStoreChangeEventArgs))]
 		[Field ("NSPersistentStoreCoordinatorStoresWillChangeNotification")]
 		NSString StoresWillChangeNotification { get; }
 
 		[NoWatch][NoTV]
-		[Since (7,0), Mac (10, 9)]
+		[iOS (7,0), Mac (10, 9)]
 		[Field ("NSPersistentStoreRebuildFromUbiquitousContentOption")]
 		NSString RebuildFromUbiquitousContentOption { get; }
 
 		[NoWatch][NoTV]
-		[Since (7,0), Mac (10, 9)]
+		[iOS (7,0), Mac (10, 9)]
 		[Field ("NSPersistentStoreRemoveUbiquitousMetadataOption")]
 		NSString RemoveUbiquitousMetadataOption { get; }
 
 		[NoWatch][NoTV]
-		[Since (7,0), Mac (10, 9)]
+		[iOS (7,0), Mac (10, 9)]
 		[Field ("NSPersistentStoreUbiquitousContainerIdentifierKey")]
 		[Obsolete ("Use 'UbiquitousContainerIdentifierKey' instead.")]
 		NSString eUbiquitousContainerIdentifierKey { get; }
 
 		[NoWatch][NoTV]
-		[Since (7,0), Mac (10, 9)]
+		[iOS (7,0), Mac (10, 9)]
 		[Field ("NSPersistentStoreUbiquitousContainerIdentifierKey")]
 		NSString UbiquitousContainerIdentifierKey { get; }
 
@@ -2213,11 +2213,11 @@ namespace XamCore.CoreData
 		string RenamingIdentifier { get; set; }
 
 		// 5.0
-		[Since (5,0)]
+		[iOS (5,0)]
 		[Export ("indexedBySpotlight")]
 		bool IndexedBySpotlight { [Bind ("isIndexedBySpotlight")]get; set; }
 
-		[Since (5,0)]
+		[iOS (5,0)]
 		[Export ("storedInExternalRecord")]
 		[iOS (3, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'CoreSpotlight' integration instead.")]
@@ -2269,7 +2269,7 @@ namespace XamCore.CoreData
 		NSData VersionHash { get; }
 
 		// 5.0
-		[Since (5,0)]
+		[iOS (5,0)]
 		[Export ("ordered")]
 		bool Ordered { [Bind ("isOrdered")]get; set; }
 	}

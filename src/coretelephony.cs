@@ -3,7 +3,7 @@ using XamCore.ObjCRuntime;
 using System;
 
 namespace XamCore.CoreTelephony {
-	[Since (4,0)]
+	[iOS (4,0)]
 	[BaseType (typeof (NSObject))]
 	interface CTCall {
 		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use 'CallKit' instead.")]
@@ -32,7 +32,7 @@ namespace XamCore.CoreTelephony {
 #endif
 
 	[Static]
-	[Since (7,0)]
+	[iOS (7,0)]
 	interface CTRadioAccessTechnology {
 		[Field ("CTRadioAccessTechnologyGPRS")]
 		NSString GPRS { get; }
@@ -69,7 +69,7 @@ namespace XamCore.CoreTelephony {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[Since (4,0)]
+	[iOS (4,0)]
 	interface CTTelephonyNetworkInfo {
 		[Export ("subscriberCellularProvider", ArgumentSemantic.Retain)]
 		CTCarrier SubscriberCellularProvider { get; }
@@ -82,7 +82,7 @@ namespace XamCore.CoreTelephony {
 		CTCarrierEventHandler CellularProviderUpdatedEventHandler { get; set; }
 #endif
 
-		[Since (7,0), Export ("currentRadioAccessTechnology")]
+		[iOS (7,0), Export ("currentRadioAccessTechnology")]
 		NSString CurrentRadioAccessTechnology { get; }
 	}
 
@@ -92,7 +92,7 @@ namespace XamCore.CoreTelephony {
 
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Replaced by 'CXCallObserver' from 'CallKit'.")]
 	[BaseType (typeof (NSObject))]
-	[Since (4,0)]
+	[iOS (4,0)]
 	interface CTCallCenter {
 		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use 'CallKit' instead.")]
 		[NullAllowed] // by default this property is null
@@ -110,7 +110,7 @@ namespace XamCore.CoreTelephony {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[Since (4,0)]
+	[iOS (4,0)]
 	interface CTCarrier {
 		[Export ("mobileCountryCode")]
 		string MobileCountryCode { get;  }
@@ -129,9 +129,9 @@ namespace XamCore.CoreTelephony {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[Since (7,0)]
+	[iOS (7,0)]
 	partial interface CTSubscriber {
-		[Since (7,0), Export ("carrierToken")]
+		[iOS (7,0), Export ("carrierToken")]
 		NSData CarrierToken { get; }
 	}
 
@@ -139,7 +139,7 @@ namespace XamCore.CoreTelephony {
 	delegate void SimAuthenticationCallback (NSDictionary dictionary);
 #endif
 
-	[Since (6,0), BaseType (typeof (NSObject))]
+	[iOS (6,0), BaseType (typeof (NSObject))]
 	partial interface CTSubscriberInfo {
 		[Static]
 		[Export ("subscriber")]

@@ -129,7 +129,7 @@ namespace XamCore.SpriteKit {
 	[BaseType (typeof (NSResponder))]
 	partial interface SKNode : NSCoding, NSCopying {
 #elif IOS || TVOS
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (UIResponder))]
 	partial interface SKNode : NSCoding, NSCopying, UIFocusItem {
 #else // WATCHOS
@@ -380,7 +380,7 @@ namespace XamCore.SpriteKit {
 	}
 #elif !WATCH
 	[NoWatch]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[Category, BaseType (typeof (UITouch))]
 	partial interface SKNodeTouches_UITouch {
 
@@ -394,7 +394,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKEffectNode : SKWarpable {
 
@@ -519,7 +519,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKEffectNode))]
 	interface SKScene
 #if (XAMCORE_2_0 || !MONOMAC) && !WATCH
@@ -683,7 +683,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKSpriteNode : SKWarpable {
 
@@ -791,7 +791,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	partial interface SKKeyframeSequence : NSCoding, NSCopying {
 
@@ -842,7 +842,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKEmitterNode {
 
@@ -1027,7 +1027,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKShapeNode {
 
@@ -1207,7 +1207,7 @@ namespace XamCore.SpriteKit {
 	}
 
 	[Watch (3,0)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKLabelNode {
@@ -1298,7 +1298,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (4,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKVideoNode {
 
@@ -1409,7 +1409,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKCropNode {
 
@@ -1420,7 +1420,7 @@ namespace XamCore.SpriteKit {
 
 	[NoWatch]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (UIView))]
 #if XAMCORE_3_0
 	[DisableDefaultCtor]
@@ -1442,7 +1442,7 @@ namespace XamCore.SpriteKit {
 		[Export ("showsNodeCount")]
 		bool ShowsNodeCount { get; set; }
 
-		[Since (7,1), Mac(10,10)]
+		[iOS (7,1), Mac(10,10)]
 		[Export ("showsPhysics")]
 		bool ShowsPhysics { get; set; }
 
@@ -1521,7 +1521,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	partial interface SKTransition : NSCopying {
@@ -1578,7 +1578,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	partial interface SKTexture : NSCoding, NSCopying {
@@ -1685,7 +1685,7 @@ namespace XamCore.SpriteKit {
 		
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	partial interface SKTextureAtlas : NSCoding {
 
@@ -2118,7 +2118,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // <quote>To create an action, call the class method for the action you are interested in. </quote>
 	partial interface SKAction : NSCoding, NSCopying {
@@ -2533,7 +2533,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[DisableDefaultCtor] // see https://bugzilla.xamarin.com/show_bug.cgi?id=14502
 	[BaseType (typeof (NSObject))]
 	partial interface SKPhysicsBody : NSCoding, NSCopying {
@@ -2675,7 +2675,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // <quote>An SKPhysicsContact object is created automatically by Scene Kit</quote>
 	partial interface SKPhysicsContact {
@@ -2700,7 +2700,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -2718,7 +2718,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject),
 		   Delegates=new string [] {"WeakContactDelegate"},
 		   Events=new Type [] {typeof (SKPhysicsContactDelegate)})]
@@ -2776,7 +2776,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // <quote>You never instantiate objects of this class directly</quote>
 	partial interface SKPhysicsJoint : NSCoding {
@@ -2798,7 +2798,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKPhysicsJoint))]
 	[DisableDefaultCtor] // impossible to set the `anchor` using the default ctor (see #14511) 
 	partial interface SKPhysicsJointPin {
@@ -2825,7 +2825,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKPhysicsJoint))]
 	[DisableDefaultCtor] // impossible to set the `anchorA` and `anchorB` using the default ctor (see #14511) 
 	partial interface SKPhysicsJointSpring {
@@ -2842,7 +2842,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKPhysicsJoint))]
 	[DisableDefaultCtor] // https://bugzilla.xamarin.com/show_bug.cgi?id=14511
 	partial interface SKPhysicsJointFixed {
@@ -2853,7 +2853,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKPhysicsJoint))]
 	[DisableDefaultCtor] // impossible to set the `anchor` and `axis` using the default ctor (see #14511) 
 	partial interface SKPhysicsJointSliding {
@@ -2873,7 +2873,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKPhysicsJoint))]
 	[DisableDefaultCtor] // impossible to set the `anchorA` and `anchorB` using the default ctor (see #14511) 
 	partial interface SKPhysicsJointLimit {

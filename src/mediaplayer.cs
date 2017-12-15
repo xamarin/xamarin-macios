@@ -37,7 +37,7 @@ namespace XamCore.MediaPlayer {
 		[Export ("valueForProperty:")]
 		NSObject ValueForProperty (NSString property);
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("enumerateValuesForProperties:usingBlock:")]
 		void EnumerateValues (NSSet propertiesToEnumerate, MPMediaItemEnumerator enumerator);
 
@@ -59,115 +59,115 @@ namespace XamCore.MediaPlayer {
 	interface MPMediaItem {
 #endif
 		[NoMac][NoTV]
-		[Since (4,2)]
+		[iOS (4,2)]
 		[NoMac]
 		[NoTV]
 		[Export ("persistentIDPropertyForGroupingType:")][Static]
 		string GetPersistentIDProperty (MPMediaGrouping groupingType);
 
 		[NoMac][NoTV]
-		[Since (4,2)]
+		[iOS (4,2)]
 		[NoMac]
 		[NoTV]
 		[Export ("titlePropertyForGroupingType:")][Static]
 		string GetTitleProperty (MPMediaGrouping groupingType);
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyPersistentID")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString PersistentIDProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyAlbumPersistentID")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString AlbumPersistentIDProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyArtistPersistentID")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString ArtistPersistentIDProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyAlbumArtistPersistentID")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString AlbumArtistPersistentIDProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyGenrePersistentID")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString GenrePersistentIDProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyComposerPersistentID")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString ComposerPersistentIDProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyPodcastPersistentID")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString PodcastPersistentIDProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyMediaType")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString MediaTypeProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyTitle")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString TitleProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyAlbumTitle")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString AlbumTitleProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyArtist")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString ArtistProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyAlbumArtist")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString AlbumArtistProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyGenre")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString GenreProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyComposer")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString ComposerProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyPlaybackDuration")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString PlaybackDurationProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyAlbumTrackNumber")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString AlbumTrackNumberProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyAlbumTrackCount")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString AlbumTrackCountProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyDiscNumber")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString DiscNumberProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyDiscCount")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString DiscCountProperty { get; }
 
-		[Since (3,0), Mac (10,13,1, onlyOn64: true)]
+		[iOS (3,0), Mac (10,13,1, onlyOn64: true)]
 		[Field ("MPMediaItemPropertyArtwork")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString ArtworkProperty { get; }
@@ -177,72 +177,72 @@ namespace XamCore.MediaPlayer {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString IsExplicitProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyLyrics")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString LyricsProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyIsCompilation")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString IsCompilationProperty { get; }
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Field ("MPMediaItemPropertyReleaseDate")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString ReleaseDateProperty { get; }
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Field ("MPMediaItemPropertyBeatsPerMinute")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString BeatsPerMinuteProperty { get; }
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Field ("MPMediaItemPropertyComments")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString CommentsProperty { get; }
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Field ("MPMediaItemPropertyAssetURL")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString AssetURLProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyPlayCount")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString PlayCountProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertySkipCount")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString SkipCountProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyRating")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString RatingProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyLastPlayedDate")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString LastPlayedDateProperty { get; }
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Field ("MPMediaItemPropertyUserGrouping")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString UserGroupingProperty { get; }
 
-		[Since (3,0)]
+		[iOS (3,0)]
 		[Field ("MPMediaItemPropertyPodcastTitle")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString PodcastTitleProperty { get; }
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Field ("MPMediaItemPropertyBookmarkTime")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString BookmarkTimeProperty { get; }
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Field ("MPMediaItemPropertyIsCloudItem")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString IsCloudItemProperty { get; }
@@ -409,11 +409,11 @@ namespace XamCore.MediaPlayer {
 		[Export ("prompt", ArgumentSemantic.Copy)]
 		string Prompt { get; set; }
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("showsCloudItems")]
 		bool ShowsCloudItems { get; set; }
 
-		[Since (9,2)]
+		[iOS (9,2)]
 		[Export ("showsItemsWithProtectedAssets")]
 		bool ShowsItemsWithProtectedAssets { get; set; }
 	}
@@ -588,11 +588,11 @@ namespace XamCore.MediaPlayer {
 		[Export ("genresQuery")][Static]
 		MPMediaQuery genresQuery { get; }
 #endif
-		[Since (4,2)]
+		[iOS (4,2)]
 		[Export ("collectionSections")]
 		MPMediaQuerySection [] CollectionSections { get; }
 
-		[Since (4,2)]
+		[iOS (4,2)]
 		[Export ("itemSections")]
 		MPMediaQuerySection [] ItemSections { get; }
 	}
@@ -778,42 +778,42 @@ namespace XamCore.MediaPlayer {
 		void Stop ();
 
 		[Abstract]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("pause")]
 		void Pause ();
 		
 		[Abstract]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("prepareToPlay")]
 		void PrepareToPlay ();
 
 		[Abstract]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("isPreparedToPlay")]
 		bool IsPreparedToPlay { get; }
 
 		[Abstract]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("currentPlaybackTime")]
 		double CurrentPlaybackTime { get; set; }
 
 		[Abstract]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("currentPlaybackRate")]
 		float CurrentPlaybackRate { get; set; } // float, not CGFloat
 
 		[Abstract]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("beginSeekingForward")]
 		void BeginSeekingForward ();
 
 		[Abstract]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("beginSeekingBackward")]
 		void BeginSeekingBackward ();
 
 		[Abstract]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("endSeeking")]
 		void EndSeeking ();
 	}
@@ -839,40 +839,40 @@ namespace XamCore.MediaPlayer {
 		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_3_2, Obsoleted = Platform.iOS_8_0, Message = "Do not use; this API was removed.")]
 		MPMovieControlMode MovieControlMode { get; set; }
 
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("initialPlaybackTime")]
 		double InitialPlaybackTime { get; set; }
 
-		[Since (3,2)]
+		[iOS (3,2)]
 		[NullAllowed] // by default this property is null
 		[Export ("contentURL", ArgumentSemantic.Copy)]
 		NSUrl ContentUrl { get; set; }
 
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("view")]
 		UIView View { get; }
 
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("backgroundView")]
 		UIView BackgroundView { get; }
 		
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("playbackState")]
 		MPMoviePlaybackState PlaybackState { get; }
 
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("loadState")]
 		MPMovieLoadState LoadState { get; }
 
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("controlStyle")]
 		MPMovieControlStyle ControlStyle { get; set; }
 
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("repeatMode")]
 		MPMovieRepeatMode RepeatMode { get; set; }
 
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("shouldAutoplay")]
 		bool ShouldAutoplay { get; set; }
 
@@ -880,15 +880,15 @@ namespace XamCore.MediaPlayer {
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		bool UseApplicationAudioSession { get; set; }
 
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("fullscreen")]
 		bool Fullscreen { [Bind ("isFullscreen")] get; set; }
 
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("setFullscreen:animated:")]
 		void SetFullscreen (bool fullscreen, bool animated);
 
-		[Since (4,3)]
+		[iOS (4,3)]
 		[Export ("allowsAirPlay")]
 		bool AllowsAirPlay { get; set; }
 
@@ -897,12 +897,12 @@ namespace XamCore.MediaPlayer {
 		bool AirPlayVideoActive { [Bind ("isAirPlayVideoActive")] get; }
 
 		[Availability (Deprecated = Platform.iOS_9_0)]
-		[Since (4,3)]
+		[iOS (4,3)]
 		[Export ("accessLog")]
 		MPMovieAccessLog AccessLog { get; }
 
 		[Availability (Deprecated = Platform.iOS_9_0)]
-		[Since (4,3)]
+		[iOS (4,3)]
 		[Export ("errorLog")]
 		MPMovieErrorLog ErrorLog { get; }
 
@@ -912,42 +912,42 @@ namespace XamCore.MediaPlayer {
 		[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_7_0, Message = "Use 'RequestThumbnails' instead.")]
 		UIImage ThumbnailImageAt (double time, MPMovieTimeOption timeOption);
 
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("requestThumbnailImagesAtTimes:timeOption:")]
 		void RequestThumbnails (NSNumber [] doubleNumbers, MPMovieTimeOption timeOption);
 
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("cancelAllThumbnailImageRequests")]
 		void CancelAllThumbnailImageRequests ();
 
 		//
 		// From interface MPMovieProperties
 		//
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("movieMediaTypes")]
 		MPMovieMediaType MovieMediaTypes { get; }
 
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("movieSourceType")]
 		MPMovieSourceType SourceType { get; set; }
 
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("duration")]
 		double Duration { get; }
 
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("playableDuration")]
 		double PlayableDuration { get; }
 
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("naturalSize")]
 		CGSize NaturalSize { get; }
 
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("endPlaybackTime")]
 		double EndPlaybackTime { get; set; }
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("timedMetadata")]
 		MPTimedMetadata [] TimedMetadata { get; }
 
@@ -962,141 +962,141 @@ namespace XamCore.MediaPlayer {
 		NSString PlaybackDidFinishNotification { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Field ("MPMoviePlayerPlaybackDidFinishReasonUserInfoKey")] // NSNumber (MPMovieFinishReason)
 		NSString PlaybackDidFinishReasonUserInfoKey { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Field ("MPMoviePlayerPlaybackStateDidChangeNotification")]
 		[Notification]
 		NSString PlaybackStateDidChangeNotification { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Field ("MPMoviePlayerLoadStateDidChangeNotification")]
 		[Notification]
 		NSString LoadStateDidChangeNotification { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Field ("MPMoviePlayerNowPlayingMovieDidChangeNotification")]
 		[Notification]
 		NSString NowPlayingMovieDidChangeNotification { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Field ("MPMoviePlayerWillEnterFullscreenNotification")]
 		[Notification (typeof (MPMoviePlayerFullScreenEventArgs))]
 		[Notification]
 		NSString WillEnterFullscreenNotification { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Field ("MPMoviePlayerDidEnterFullscreenNotification")]
 		[Notification]
 		NSString DidEnterFullscreenNotification { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Field ("MPMoviePlayerWillExitFullscreenNotification")]
 		[Notification (typeof (MPMoviePlayerFullScreenEventArgs))]
 		NSString WillExitFullscreenNotification { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Field ("MPMoviePlayerDidExitFullscreenNotification")]
 		[Notification]
 		NSString DidExitFullscreenNotification { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Field ("MPMoviePlayerFullscreenAnimationDurationUserInfoKey")]
 		NSString FullscreenAnimationDurationUserInfoKey { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Field ("MPMoviePlayerFullscreenAnimationCurveUserInfoKey")]
 		NSString FullscreenAnimationCurveUserInfoKey { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Field ("MPMovieMediaTypesAvailableNotification")]
 		[Notification]
 		NSString TypesAvailableNotification { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Field ("MPMovieSourceTypeAvailableNotification")]
 		[Notification]
 		NSString SourceTypeAvailableNotification { get; }
 
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Field ("MPMovieDurationAvailableNotification")]
 		[Notification]
 		NSString DurationAvailableNotification { get;  }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Field ("MPMovieNaturalSizeAvailableNotification")]
 		[Notification]
 		NSString NaturalSizeAvailableNotification { get;  }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Field ("MPMoviePlayerThumbnailImageRequestDidFinishNotification")]
 		[Notification (typeof (MPMoviePlayerThumbnailEventArgs))]
 		NSString ThumbnailImageRequestDidFinishNotification { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Field ("MPMoviePlayerThumbnailImageKey")]
 		NSString ThumbnailImageKey { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Field ("MPMoviePlayerThumbnailTimeKey")]
 		NSString ThumbnailTimeKey { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Field ("MPMoviePlayerThumbnailErrorKey")]
 		NSString ThumbnailErrorKey { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Field ("MPMoviePlayerTimedMetadataUpdatedNotification")]
 		[Notification (typeof (MPMoviePlayerTimedMetadataEventArgs))]
 		NSString TimedMetadataUpdatedNotification { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Field ("MPMoviePlayerTimedMetadataUserInfoKey")]
 		NSString TimedMetadataUserInfoKey { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Field ("MPMoviePlayerTimedMetadataKeyName")]
 		NSString TimedMetadataKeyName { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Field ("MPMoviePlayerTimedMetadataKeyInfo")]
 		NSString TimedMetadataKeyInfo { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Field ("MPMoviePlayerTimedMetadataKeyMIMEType")]
 		NSString TimedMetadataKeyMIMEType { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Field ("MPMoviePlayerTimedMetadataKeyDataType")]
 		NSString TimedMetadataKeyDataType { get; }
 		
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Field ("MPMoviePlayerTimedMetadataKeyLanguageCode")]
 		NSString TimedMetadataKeyLanguageCode { get; }
 
@@ -1110,7 +1110,7 @@ namespace XamCore.MediaPlayer {
 		bool ReadyForDisplay { get;  }
 
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Field ("MPMoviePlayerReadyForDisplayDidChangeNotification")]
 		[Notification]
 		NSString MoviePlayerReadyForDisplayDidChangeNotification { get; }
@@ -1277,69 +1277,69 @@ namespace XamCore.MediaPlayer {
 		[Export ("showsVolumeSlider")]
 		bool ShowsVolumeSlider { get; set; }
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("setMinimumVolumeSliderImage:forState:")]
 		void SetMinimumVolumeSliderImage ([NullAllowed] UIImage image, UIControlState state);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("setMaximumVolumeSliderImage:forState:")]
 		void SetMaximumVolumeSliderImage ([NullAllowed] UIImage image, UIControlState state);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("setVolumeThumbImage:forState:")]
 		void SetVolumeThumbImage ([NullAllowed] UIImage image, UIControlState state);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("minimumVolumeSliderImageForState:")]
 		UIImage GetMinimumVolumeSliderImage (UIControlState state);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("maximumVolumeSliderImageForState:")]
 		UIImage GetMaximumVolumeSliderImage (UIControlState state);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("volumeThumbImageForState:")]
 		UIImage GetVolumeThumbImage (UIControlState state);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("volumeSliderRectForBounds:")]
 		CGRect GetVolumeSliderRect (CGRect bounds);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("volumeThumbRectForBounds:volumeSliderRect:value:")]
 		CGRect GetVolumeThumbRect (CGRect bounds, CGRect columeSliderRect, float /* float, not CGFloat */ value);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("setRouteButtonImage:forState:")]
 		void SetRouteButtonImage ([NullAllowed] UIImage image, UIControlState state);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("routeButtonImageForState:")]
 		UIImage GetRouteButtonImage (UIControlState state);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("routeButtonRectForBounds:")]
 		CGRect GetRouteButtonRect (CGRect bounds);
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Export ("wirelessRoutesAvailable")]
 		bool AreWirelessRoutesAvailable { [Bind ("areWirelessRoutesAvailable")] get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Export ("wirelessRouteActive")]
 		bool IsWirelessRouteActive { [Bind ("isWirelessRouteActive")] get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[NullAllowed] // by default this property is null
 		[Export ("volumeWarningSliderImage", ArgumentSemantic.Retain)]
 		UIImage VolumeWarningSliderImage { get; set; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Notification]
 		[Field ("MPVolumeViewWirelessRoutesAvailableDidChangeNotification")]
 		NSString WirelessRoutesAvailableDidChangeNotification { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Notification]
 		[Field ("MPVolumeViewWirelessRouteActiveDidChangeNotification")]
 		NSString WirelessRouteActiveDidChangeNotification { get; }
@@ -1348,7 +1348,7 @@ namespace XamCore.MediaPlayer {
 
 	[NoMac]
 	[NoTV]
-	[Since (4,2)]
+	[iOS (4,2)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: MPMediaQuerySection is a read-only object
 	[DisableDefaultCtor]
@@ -1361,7 +1361,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[Since (5,0)]
+	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -init is not supported, use +defaultCenter
 	[DisableDefaultCtor]
@@ -1467,7 +1467,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[Since (7,1)]
+	[iOS (7,1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash if used
 	interface MPContentItem {
@@ -1510,7 +1510,7 @@ namespace XamCore.MediaPlayer {
 
 	[NoMac]
 	[NoTV]
-	[Since (7,1)]
+	[iOS (7,1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -1550,7 +1550,7 @@ namespace XamCore.MediaPlayer {
 
 	[NoMac]
 	[NoTV]
-	[Since (7,1)]
+	[iOS (7,1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -1574,7 +1574,7 @@ namespace XamCore.MediaPlayer {
 
 	[NoMac]
 	[NoTV]
-	[Since (7,1)]
+	[iOS (7,1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -init is invalid. Use +sharedManager. <- [sic]
 	interface MPPlayableContentManager {
@@ -1640,7 +1640,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[Since (7,1)]
+	[iOS (7,1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRemoteCommands cannot be initialized externally.
 	interface MPRemoteCommand {
@@ -1662,7 +1662,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[Since (7,1)]
+	[iOS (7,1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangePlaybackRateCommands cannot be initialized externally.
 	interface MPChangePlaybackRateCommand {
@@ -1692,7 +1692,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[Since (7,1)]
+	[iOS (7,1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPFeedbackCommands cannot be initialized externally.
 	interface MPFeedbackCommand {
@@ -1709,7 +1709,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[Since (7,1)]
+	[iOS (7,1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRatingCommands cannot be initialized externally.
 	interface MPRatingCommand {
@@ -1722,7 +1722,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[Since (7,1)]
+	[iOS (7,1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPSkipIntervalCommands cannot be initialized externally.
 	interface MPSkipIntervalCommand {
@@ -1735,7 +1735,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[Since (7,1)]
+	[iOS (7,1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MPRemoteCommandCenter {
@@ -1811,7 +1811,7 @@ namespace XamCore.MediaPlayer {
 	}
 	
 	[Mac (10,12,2, onlyOn64: true)]
-	[Since (7,1)]
+	[iOS (7,1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRemoteCommandEvents cannot be initialized externally.
 	interface MPRemoteCommandEvent {
@@ -1824,7 +1824,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[Since (7,1)]
+	[iOS (7,1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangePlaybackRateCommandEvents cannot be initialized externally.
 	interface MPChangePlaybackRateCommandEvent {
@@ -1834,7 +1834,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[Since (7,1)]
+	[iOS (7,1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRatingCommandEvents cannot be initialized externally.
 	interface MPRatingCommandEvent {
@@ -1844,7 +1844,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[Since (7,1)]
+	[iOS (7,1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // Name: NSGenericException Reason: MPSeekCommandEvents cannot be initialized externally.
 	interface MPSeekCommandEvent {
@@ -1854,7 +1854,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[Since (7,1)]
+	[iOS (7,1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPSkipIntervalCommandEvents cannot be initialized externally.
 	interface MPSkipIntervalCommandEvent {
@@ -1864,7 +1864,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[Since (7,1)]
+	[iOS (7,1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor]
 	interface MPFeedbackCommandEvent {

@@ -8,7 +8,7 @@ using XamCore.Foundation;
 
 namespace XamCore.Accounts {
 	
-	[Since (5,0)]
+	[iOS (5,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccount : NSSecureCoding {
@@ -42,13 +42,13 @@ namespace XamCore.Accounts {
 #endif
 
 #if !MONOMAC
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Export ("userFullName")]
 		string UserFullName { get; }
 #endif
 	}
 
-	[Since (5,0)]
+	[iOS (5,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountCredential : NSSecureCoding {
@@ -69,7 +69,7 @@ namespace XamCore.Accounts {
 	delegate void ACAccountStoreRemoveCompletionHandler (bool success, NSError error);
 	delegate void ACRequestCompletionHandler (bool granted, NSError error);
 	
-	[Since (5,0)]
+	[iOS (5,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountStore {
@@ -120,7 +120,7 @@ namespace XamCore.Accounts {
 		void RemoveAccount (ACAccount account, ACAccountStoreRemoveCompletionHandler completionHandler);
 	}
 
-	[Since (5,0)]
+	[iOS (5,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountType : NSSecureCoding {
@@ -140,19 +140,19 @@ namespace XamCore.Accounts {
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Sina Weibo SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Sina Weibo SDK instead.")]
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Field ("ACAccountTypeIdentifierSinaWeibo")]
 		NSString SinaWeibo { get; }
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Field ("ACAccountTypeIdentifierFacebook")]
 		NSString Facebook { get; }
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Tencent Weibo SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Tencent Weibo SDK instead.")]
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Mac (10,9)]
 		[Field ("ACAccountTypeIdentifierTencentWeibo")]
 		NSString TencentWeibo { get; }
@@ -167,7 +167,7 @@ namespace XamCore.Accounts {
 
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
-	[Since (6,0)]
+	[iOS (6,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[Static]
 	interface ACFacebookKey {
@@ -184,7 +184,7 @@ namespace XamCore.Accounts {
 
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
-	[Since (6,0)]
+	[iOS (6,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[Static]
 	interface ACFacebookAudienceValue
@@ -201,7 +201,7 @@ namespace XamCore.Accounts {
 
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use Tencent Weibo SDK instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Tencent Weibo SDK instead.")]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Static]
 	interface ACTencentWeiboKey {

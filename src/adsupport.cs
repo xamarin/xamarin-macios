@@ -13,7 +13,7 @@ using System;
 
 namespace XamCore.AdSupport {
 
-	[Since (6,0)]
+	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ASIdentifierManager {
