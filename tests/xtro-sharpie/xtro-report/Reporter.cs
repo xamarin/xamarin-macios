@@ -87,6 +87,7 @@ namespace Extrospection {
 			}
 		}
 
+		static string InputDirectory { get; set; }
 		static string ReportFolder { get; set; }
 
 		static readonly string [] Platforms = new [] { "iOS", "tvOS", "watchOS", "macOS" };
@@ -97,7 +98,7 @@ namespace Extrospection {
 			// merge the shared and specialized ignore data into a single html page
 			List<string> ignore = new List<string> ();
 			ignore.Add ($"<h1>{framework}</h1>"); 
-			var filename = $"common-{framework}.ignore";
+			var filename = Path.Combine (InputDirectory, $"common-{framework}.ignore");
 			if (File.Exists (filename)) {
 				data = true;
 				ignore.Add ("<h2>Common (shared) ignored results</h2>");
@@ -146,7 +147,7 @@ namespace Extrospection {
 
 		public static int Main (string [] args)
 		{
-			var directory = args.Length == 0 ? "." : args [0];
+			InputDirectory = args.Length == 0 ? "." : args [0];
 
 			// collapse the ignored entries on jenkins bots - focus in on what's needs fixing (for the PR) and the work 'to do'
 			bool full = String.IsNullOrEmpty (Environment.GetEnvironmentVariable ("JENKINS_SERVER_COOKIE"));
@@ -179,7 +180,7 @@ namespace Extrospection {
 				log.WriteLine ($"<td align='center' bgcolor='green' width='{width}%'>Common</td>");
 				foreach (var platform in Platforms) {
 					log.WriteLine ($"<td align='center' bgcolor='green' width='{width}%'>{platform}</td>");
-					var files = Directory.GetFiles (directory, $"{platform}-*.ignore");
+					var files = Directory.GetFiles (InputDirectory, $"{platform}-*.ignore");
 					foreach (var file in files) {
 						var filename = Path.GetFileNameWithoutExtension (file);
 						var fx = filename.Substring (filename.IndexOf ('-') + 1);
@@ -190,7 +191,7 @@ namespace Extrospection {
 			}
 			foreach (var platform in Platforms) {
 				log.WriteLine ($"<td align='center' bgcolor='red' width='{width}%'>{platform}</td>");
-				var files = Directory.GetFiles (directory, $"{platform}-*.unclassified");
+				var files = Directory.GetFiles (InputDirectory, $"{platform}-*.unclassified");
 				foreach (var file in files) {
 					allfiles.Add (file);
 					var filename = Path.GetFileNameWithoutExtension (file);
@@ -249,7 +250,7 @@ namespace Extrospection {
 					}
 				}
 				for (int i = 0; i < Platforms.Length; i++) {
-					string filename = $"{directory}/{Platforms [i]}-{fx}.unclassified";
+					string filename = $"{InputDirectory}/{Platforms [i]}-{fx}.unclassified";
 					var count = ProcessFile (filename);
 					log.Write ("<td align='center'");
 					if (count < 1)
@@ -261,7 +262,7 @@ namespace Extrospection {
 					errors += count;
 				}
 				for (int i = 0; i < Platforms.Length; i++) {
-					string filename = $"{directory}/{Platforms [i]}-{fx}.todo";
+					string filename = $"{InputDirectory}/{Platforms [i]}-{fx}.todo";
 					var count = ProcessFile (filename);
 					log.Write ("<td align='center' ");
 					if (count <= 0)
