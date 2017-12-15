@@ -1,4 +1,4 @@
-# special case, see bug https://bugzilla.xamarin.com/show_bug.cgi?id=22940
+## special case, see bug https://bugzilla.xamarin.com/show_bug.cgi?id=22940
 !wrong-base-type! NSProxy expected  actual NSObject
 !missing-selector! +NSProxy::allocWithZone: not bound
 !missing-selector! +NSProxy::respondsToSelector: not bound
@@ -6,6 +6,9 @@
 !missing-selector! NSProxy::description not bound
 !missing-selector! NSProxy::forwardInvocation: not bound
 !missing-selector! NSProxy::methodSignatureForSelector: not bound
+
+## Xamarin (not Apple) type
+!unknown-type! InternalNSNotificationHandler bound
 
 
 ## unsorted
@@ -860,6 +863,5 @@
 !unknown-native-enum! NSUbiquitousKeyValueStoreChangeReason bound
 !unknown-native-enum! NSUrlErrorCancelledReason bound
 !unknown-protocol! NSObject bound
-!unknown-type! InternalNSNotificationHandler bound
 !unknown-type! NSObject bound
 !unknown-type! NSUbiquitousKeyValueStore bound

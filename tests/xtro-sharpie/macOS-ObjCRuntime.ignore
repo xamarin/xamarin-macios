@@ -1,3 +1,4 @@
+## defined in /usr/include/asl.h
 !unknown-pinvoke! asl_add_log_file bound
 !unknown-pinvoke! asl_close bound
 !unknown-pinvoke! asl_free bound
@@ -16,6 +17,8 @@
 !unknown-pinvoke! asl_unset bound
 !unknown-pinvoke! aslresponse_free bound
 !unknown-pinvoke! aslresponse_next bound
+
+
 !unknown-pinvoke! close bound
 !unknown-pinvoke! kevent bound
 !unknown-pinvoke! kqueue bound

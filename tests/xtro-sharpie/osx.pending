@@ -445,10 +445,6 @@
 !missing-field! MTLDeviceWasAddedNotification not bound
 !missing-field! MTLDeviceWasRemovedNotification not bound
 
-
-# Not available in OS X
-!missing-selector! ACAccount::userFullName not bound
-
 ## These are not available on macOS even if xtro says so.
 !missing-selector! EKCalendarItem::UUID not bound
 !missing-selector! EKEvent::birthdayPersonID not bound

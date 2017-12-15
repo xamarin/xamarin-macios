@@ -15,19 +15,3 @@
 
 !missing-field! _NSConstantStringClassReference not bound
 
-
-# Non-Apple
-
-## Xamarin (not Apple) type
-!unknown-type! CADisplayLinkTimeSource bound
-!unknown-type! InternalNSNotificationHandler bound
-
-## Xamarin generic collection subclasses
-!unknown-type! NSArray`1 bound
-!unknown-type! NSDictionary`2 bound
-!unknown-type! NSMutableArray`1 bound
-!unknown-type! NSMutableDictionary`2 bound
-!unknown-type! NSMutableOrderedSet`1 bound
-!unknown-type! NSMutableSet`1 bound
-!unknown-type! NSOrderedSet`1 bound
-!unknown-type! NSSet`1 bound

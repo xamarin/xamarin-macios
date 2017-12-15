@@ -34,18 +34,4 @@
 !missing-selector! CKContainer::discoverAllContactUserInfosWithCompletionHandler: not bound
 !missing-selector! CKContainer::discoverUserInfoWithEmailAddress:completionHandler: not bound
 !missing-selector! CKContainer::discoverUserInfoWithUserRecordID:completionHandler: not bound
-!missing-selector! CKOperation::setUsesBackgroundSession: not bound
-!missing-selector! CKOperation::usesBackgroundSession not bound
 !missing-field! CKOwnerDefaultName not bound
-
-## lots of stuff moved into CKSubscription_CKSubscriptionDeprecated which we won't bring into watchOS
-!missing-selector! CKSubscription::initWithCoder: not bound
-!missing-selector! CKSubscription::initWithRecordType:predicate:options: not bound
-!missing-selector! CKSubscription::initWithRecordType:predicate:subscriptionID:options: not bound
-!missing-selector! CKSubscription::initWithZoneID:options: not bound
-!missing-selector! CKSubscription::initWithZoneID:subscriptionID:options: not bound
-!missing-selector! CKSubscription::predicate not bound
-!missing-selector! CKSubscription::recordType not bound
-!missing-selector! CKSubscription::setZoneID: not bound
-!missing-selector! CKSubscription::subscriptionOptions not bound
-!missing-selector! CKSubscription::zoneID not bound

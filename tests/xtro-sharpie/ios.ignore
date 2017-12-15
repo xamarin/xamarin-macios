@@ -200,9 +200,6 @@
 !missing-enum! EKAlarmType not bound
 !missing-enum! NSProcessInfoThermalState not bound
 
-## Xamarin (not Apple) type
-!unknown-type! CADisplayLinkTimeSource bound
-
 ## HACK (as documented in uikit.cs)
 !incorrect-protocol-member! UITextInputTraits::setAutocapitalizationType: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! UITextInputTraits::setAutocorrectionType: is OPTIONAL and should NOT be abstract
