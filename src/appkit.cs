@@ -7991,7 +7991,7 @@ namespace XamCore.AppKit {
 
 	}
 
-	[Introduced (PlatformName.MacOSX, 10, 0, PlatformArchitecture.Arch32)] 
+	[IntroducedAttribute (PlatformName.MacOSX, 10, 0, PlatformArchitecture.Arch32)] 
 	[BaseType (typeof (NSView))]
 	interface NSMenuView {
 		[Static]

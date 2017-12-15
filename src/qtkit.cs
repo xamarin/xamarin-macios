@@ -263,6 +263,7 @@ namespace XamCore.QTKit
 		NSString InputSourceLocalizedDisplayNameKey { get; }
 		
 		[IntroducedAttribute (PlatformName.MacOSX, 10, 5, PlatformArchitecture.Arch32)] 
+		[DeprecatedAttribute (PlatformName.MacOSX, 10, 9)] 
 		[Field ("QTCaptureDeviceLegacySequenceGrabberAttribute")]
 		NSString LegacySequenceGrabberAttribute { get; }
 
@@ -615,7 +616,7 @@ namespace XamCore.QTKit
 	[BaseType (typeof (NSObject))]
 	interface QTMedia {
 		[IntroducedAttribute (PlatformName.MacOSX, 10, 3, PlatformArchitecture.Arch32)] 
-		[DeprecatedAttribute (PlatformName.MacOSX, 10, 9)] 
+		[DeprecatedAttribute (PlatformName.MacOSX, 10, 5)] 
 		[Static, Export ("mediaWithQuickTimeMedia:error:")]
 		NSObject FromQuickTimeMedia (IntPtr quicktimeMedia, out NSError error);
 
