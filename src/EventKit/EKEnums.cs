@@ -79,8 +79,8 @@ namespace XamCore.EventKit {
 
 	// untyped enum -> EKTypes.h
 	// Special note: some API (like `dayOfWeek:` and `dayOfWeek:weekNumber:` use an `NSInteger` instead of the enum
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'EKWeekday'.")]
-	[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'EKWeekday'.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'EKWeekday'.")]
+	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'EKWeekday'.")]
 	public enum EKDay {
 		NotSet = 0,
 		Sunday = 1,

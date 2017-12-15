@@ -2825,8 +2825,10 @@ namespace XamCore.AVFoundation {
 		CGAffineTransform PreferredTransform { get;  }
 
 		[Export ("naturalSize")]
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_5_0, Message = "Use 'NaturalSize/PreferredTransform' as appropriate on the video track instead.")]
-		[Availability (Introduced = Platform.Mac_10_7, Deprecated = Platform.Mac_10_8, Message = "Use 'NaturalSize/PreferredTransform' as appropriate on the video track instead.")]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Deprecated (PlatformName.iOS, 5, 0, message : "Use 'NaturalSize/PreferredTransform' as appropriate on the video track instead.")]
+		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'NaturalSize/PreferredTransform' as appropriate on the video track instead.")]
 		CGSize NaturalSize { get;  }
 
 		[TV (11,2), NoWatch, NoMac, NoiOS]
@@ -5225,8 +5227,10 @@ namespace XamCore.AVFoundation {
 		[Field ("AVMetadataID3MetadataKeyCommercial")]
 		NSString ID3MetadataKeyCommercial { get; }
 
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_9_0)]
-		[Availability (Introduced = Platform.Mac_10_7, Deprecated = Platform.Mac_10_11)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Field ("AVMetadataID3MetadataKeyCommerical")]
 		NSString ID3MetadataKeyCommerical { get; }
 		
@@ -6114,8 +6118,10 @@ namespace XamCore.AVFoundation {
 			[Field ("AVMetadataIdentifierID3MetadataCommercial")]
 			NSString Commercial { get; }
 
-			[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
-			[Availability (Introduced = Platform.Mac_10_10, Deprecated = Platform.Mac_10_11)]
+			[Introduced (PlatformName.iOS, 8, 0)]
+			[Deprecated (PlatformName.iOS, 9, 0)]
+			[Introduced (PlatformName.MacOSX, 10, 10)]
+			[Deprecated (PlatformName.MacOSX, 10, 11)]
 			[Field ("AVMetadataIdentifierID3MetadataCommerical")]
 			NSString Commerical { get; }
 			
@@ -8316,8 +8322,9 @@ namespace XamCore.AVFoundation {
 		bool _SupportsVideoMinFrameDuration { [Bind ("isVideoMinFrameDurationSupported")] get;  }
 
 		[Since (5,0)]
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_7_0 /* Only deprecated on iOS */)]
-		[Availability (Introduced = Platform.Mac_10_7, Deprecated = Platform.iOS_7_0 /* Only deprecated on iOS */)]
+		[Introduced (PlatformName.iOS, 5, 0)]
+		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)]
+		[Introduced (PlatformName.MacOSX, 10, 7)]
 		[Export ("videoMinFrameDuration")]
 		CMTime VideoMinFrameDuration { get; set;  }
 #if !MONOMAC
@@ -8327,8 +8334,9 @@ namespace XamCore.AVFoundation {
 
 		[Since (5,0)]
 		[Export ("videoMaxFrameDuration")]
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_7_0 /* Only deprecated on iOS */)] 
-		[Availability (Introduced = Platform.Mac_10_7)] 
+		[Introduced (PlatformName.iOS, 5, 0)]
+		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)] 
+		[Introduced (PlatformName.MacOSX, 10, 7)] 
 		CMTime VideoMaxFrameDuration { get; set;  }
 
 		[Since (5,0)]
@@ -11174,8 +11182,10 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (NSObject))]
 	[Since (4,3)]
 	interface AVPlayerItemAccessLogEvent : NSCopying {
-		[Availability (Introduced = Platform.iOS_4_3, Deprecated = Platform.iOS_7_0, Message = "Use 'NumberOfMediaRequests' instead.")]
-		[Availability (Introduced = Platform.Mac_10_7, Deprecated = Platform.Mac_10_9, Message = "Use 'NumberOfMediaRequests' instead.")]
+		[Introduced (PlatformName.iOS, 4, 3)]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'NumberOfMediaRequests' instead.")]
+		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use 'NumberOfMediaRequests' instead.")]
 		[Export ("numberOfSegmentsDownloaded")]
 		nint SegmentedDownloadedCount { get; }
 

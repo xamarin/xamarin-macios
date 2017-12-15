@@ -546,8 +546,8 @@ namespace XamCore.WebKit
 		IntPtr Constructor (CGRect frame, WKWebViewConfiguration configuration);
 
 		// (instancetype)initWithCoder:(NSCoder *)coder NS_UNAVAILABLE;
-		// [Availability (Unavailable = Platform.iOS)]
-		// [Availability (Unavailable = Platform.Mac)]
+		// [Unavailable (PlatformName.iOS)]
+		// [Unavailable (PlatformName.MacOSX)]
 		// [Export ("initWithCoder:")]
 		// IntPtr Constructor (NSCoder coder);
 

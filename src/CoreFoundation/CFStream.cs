@@ -239,14 +239,14 @@ namespace XamCore.CoreFoundation {
 		}
 #if !WATCH
 		// CFHTTPStream.h in CFNetwork.framework (not CoreFoundation)
-		[Availability (Deprecated = Platform.iOS_9_0)]
-		[Availability (Deprecated = Platform.Mac_10_11)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[DllImport (Constants.CFNetworkLibrary)]
 		internal extern static /* CFReadStreamRef __nonnull */ IntPtr CFReadStreamCreateForHTTPRequest (
 			/* CFAllocatorRef __nullable */ IntPtr alloc, /* CFHTTPMessageRef __nonnull */ IntPtr request);
 
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'NSUrlSession'.")]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'NSUrlSession'.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'NSUrlSession'.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSUrlSession'.")]
 		public static CFHTTPStream CreateForHTTPRequest (CFHTTPMessage request)
 		{
 			if (request == null)

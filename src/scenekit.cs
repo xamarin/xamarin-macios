@@ -2395,8 +2395,8 @@ namespace XamCore.SceneKit {
 
 		[NoWatch, NoTV]
 		[Export ("render")]
-		[Availability (Deprecated = Platform.Mac_10_11)]
-		[Availability (Deprecated = Platform.iOS_9_0)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		void Render ();
 
 		[Mac (10,10)]

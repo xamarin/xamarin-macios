@@ -53,8 +53,10 @@ namespace XamCore.CoreData
 
 	[NoWatch][NoTV]
 	[Native] // NUInteger -> NSPersistentStoreCoordinator.h
-	[Availability (Introduced = Platform.iOS_7_0, Deprecated = Platform.iOS_10_0, Message = "Please see the release notes and Core Data documentation.")]
-	[Availability (Introduced = Platform.Mac_10_9 , Deprecated = Platform.Mac_10_12, Message = "Please see the release notes and Core Data documentation.")]
+	[Introduced (PlatformName.iOS, 7, 0)]
+	[Deprecated (PlatformName.iOS, 10, 0, message : "Please see the release notes and Core Data documentation.")]
+	[Introduced (PlatformName.MacOSX, 10, 9)]
+	[Deprecated (PlatformName.MacOSX, 10, 12, message : "Please see the release notes and Core Data documentation.")]
 	public enum NSPersistentStoreUbiquitousTransitionType : nuint_compat_int {
 		AccountAdded = 1,
 		AccountRemoved,
@@ -310,8 +312,10 @@ namespace XamCore.CoreData
 		[Since(5,0)]
 		[NullAllowed] // by default this property is null
 		[Export ("compoundIndexes", ArgumentSemantic.Retain)]
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_11_0, Message = "Use 'NSEntityDescription.Indexes' instead.")]
-		[Availability (Introduced = Platform.Mac_10_7, Deprecated = Platform.Mac_10_13, Message = "Use 'NSEntityDescription.Indexes' instead.")]
+		[Introduced (PlatformName.iOS, 5, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
+		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'NSEntityDescription.Indexes' instead.")]
 		NSPropertyDescription [] CompoundIndexes { get; set; }
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
@@ -1012,19 +1016,25 @@ namespace XamCore.CoreData
 		bool Save (out NSError error);
 
 #if !WATCH && !TVOS
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_8_0, Message = "Use a queue style context and 'PerformAndWait' instead.")]
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10, Message = "Use a queue style context and 'PerformAndWait' instead.")]
+		[Introduced (PlatformName.iOS, 3, 0)]
+		[Deprecated (PlatformName.iOS, 8, 0, message : "Use a queue style context and 'PerformAndWait' instead.")]
+		[Introduced (PlatformName.MacOSX, 10, 4)]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use a queue style context and 'PerformAndWait' instead.")]
 		[Export ("lock")]
 		new void Lock ();
 
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_8_0, Message = "Use a queue style context and 'PerformAndWait' instead.")]
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10, Message = "Use a queue style context and 'PerformAndWait' instead.")]
+		[Introduced (PlatformName.iOS, 3, 0)]
+		[Deprecated (PlatformName.iOS, 8, 0, message : "Use a queue style context and 'PerformAndWait' instead.")]
+		[Introduced (PlatformName.MacOSX, 10, 4)]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use a queue style context and 'PerformAndWait' instead.")]
 		[Export ("unlock")]
 		new void Unlock ();
 
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_8_0, Message = "Use a queue style context and 'Perform' instead.")]
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10, Message = "Use a queue style context and 'Perform' instead.")]
+		[Introduced (PlatformName.iOS, 3, 0)]
+		[Deprecated (PlatformName.iOS, 8, 0, message : "Use a queue style context and 'Perform' instead.")]
+		[Introduced (PlatformName.MacOSX, 10, 4)]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use a queue style context and 'Perform' instead.")]
 		[Export ("tryLock")]
 		bool TryLock { get; }
 #endif // !WATCH && !TVOS
@@ -1797,8 +1807,10 @@ namespace XamCore.CoreData
 		[Static, Export ("registerStoreClass:forStoreType:")]
 		void RegisterStoreClass (Class storeClass, NSString storeType);
 
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_9_0, Message = "Use the method that takes an out NSError parameter.")]
-		[Availability (Introduced = Platform.Mac_10_5 , Deprecated = Platform.Mac_10_11, Message = "Use the method that takes an out NSError parameter.")]
+		[Introduced (PlatformName.iOS, 3, 0)]
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use the method that takes an out NSError parameter.")]
+		[Introduced (PlatformName.MacOSX, 10, 5)]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use the method that takes an out NSError parameter.")]
 		[Static, Export ("metadataForPersistentStoreOfType:URL:error:")]
 		[return: NullAllowed]
 		NSDictionary MetadataForPersistentStoreOfType (NSString storeType, NSUrl url, out NSError error);
@@ -2184,8 +2196,10 @@ namespace XamCore.CoreData
 		NSDictionary UserInfo { get; set; }
 
 		[Export ("indexed")]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_11_0, Message = "Use 'NSEntityDescription.Indexes' instead.")]
-		[Availability (Introduced = Platform.Mac_10_5 , Deprecated = Platform.Mac_10_13, Message = "Use 'NSEntityDescription.Indexes' instead.")]
+		[Introduced (PlatformName.iOS, 3, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
+		[Introduced (PlatformName.MacOSX, 10, 5)]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'NSEntityDescription.Indexes' instead.")]
 		bool Indexed { [Bind ("isIndexed")] get; set; }
 
 		[Export ("versionHash")]
@@ -2205,8 +2219,10 @@ namespace XamCore.CoreData
 
 		[Since (5,0)]
 		[Export ("storedInExternalRecord")]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_11_0, Message = "Use 'CoreSpotlight' integration instead.")]
-		[Availability (Introduced = Platform.Mac_10_5 , Deprecated = Platform.Mac_10_13, Message = "Use 'CoreSpotlight' integration instead.")]
+		[Introduced (PlatformName.iOS, 3, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'CoreSpotlight' integration instead.")]
+		[Introduced (PlatformName.MacOSX, 10, 5)]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'CoreSpotlight' integration instead.")]
 		bool StoredInExternalRecord { [Bind ("isStoredInExternalRecord")]get; set; }
 	}
 

@@ -212,8 +212,10 @@ namespace XamCore.CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CMTimebaseRef */ IntPtr CMTimebaseGetMasterTimebase (/* CMTimebaseRef */ IntPtr timebase);
 
-		[Availability (Introduced = Platform.iOS_6_0, Deprecated = Platform.iOS_9_0, Message="Use 'CopyMasterTimebase' instead.")]
-		[Availability (Introduced = Platform.Mac_10_8, Deprecated = Platform.Mac_10_11, Message="Use 'CopyMasterTimebase' instead.")]
+		[Introduced (PlatformName.iOS, 6, 0)]
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'CopyMasterTimebase' instead.")]
+		[Introduced (PlatformName.MacOSX, 10, 8)]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'CopyMasterTimebase' instead.")]
 		public CMTimebase GetMasterTimebase ()
 		{
 			var ptr = CMTimebaseGetMasterTimebase (Handle);
@@ -226,8 +228,10 @@ namespace XamCore.CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CMClockRef */ IntPtr CMTimebaseGetMasterClock (/* CMTimebaseRef */ IntPtr timebase);
 
-		[Availability (Introduced = Platform.iOS_6_0, Deprecated = Platform.iOS_9_0, Message="Use 'CopyMasterClock' instead.")]
-		[Availability (Introduced = Platform.Mac_10_8, Deprecated = Platform.Mac_10_11, Message="Use 'CopyMasterClock' instead.")]
+		[Introduced (PlatformName.iOS, 6, 0)]
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'CopyMasterClock' instead.")]
+		[Introduced (PlatformName.MacOSX, 10, 8)]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'CopyMasterClock' instead.")]
 		public CMClock GetMasterClock ()
 		{
 			var ptr = CMTimebaseGetMasterClock (Handle);
@@ -240,8 +244,10 @@ namespace XamCore.CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CMClockOrTimebaseRef */ IntPtr CMTimebaseGetMaster (/* CMTimebaseRef */ IntPtr timebase);
 
-		[Availability (Introduced = Platform.iOS_6_0, Deprecated = Platform.iOS_9_0, Message="Use 'CopyMaster' instead.")]
-		[Availability (Introduced = Platform.Mac_10_8, Deprecated = Platform.Mac_10_11, Message="Use 'CopyMaster' instead.")]
+		[Introduced (PlatformName.iOS, 6, 0)]
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'CopyMaster' instead.")]
+		[Introduced (PlatformName.MacOSX, 10, 8)]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'CopyMaster' instead.")]
 		public CMClockOrTimebase GetMaster ()
 		{
 			var ptr = CMTimebaseGetMaster (Handle);
@@ -254,8 +260,10 @@ namespace XamCore.CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CMClockRef */ IntPtr CMTimebaseGetUltimateMasterClock (/* CMTimebaseRef */ IntPtr timebase);
 
-		[Availability (Introduced = Platform.iOS_6_0, Deprecated = Platform.iOS_9_0, Message="Use 'CopyUltimateMasterClock' instead.")]
-		[Availability (Introduced = Platform.Mac_10_8, Deprecated = Platform.Mac_10_11, Message="Use 'CopyUltimateMasterClock' instead.")]
+		[Introduced (PlatformName.iOS, 6, 0)]
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'CopyUltimateMasterClock' instead.")]
+		[Introduced (PlatformName.MacOSX, 10, 8)]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'CopyUltimateMasterClock' instead.")]
 		public CMClock GetUltimateMasterClock ()
 		{
 			var ptr  = CMTimebaseGetUltimateMasterClock (Handle);

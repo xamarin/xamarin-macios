@@ -1528,8 +1528,10 @@ namespace XamCore.Foundation
 		nint Nanosecond { get; set; }
 
 		[Export ("week")]
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_9, Message = "Use 'WeekOfMonth' or 'WeekOfYear' instead.")]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'WeekOfMonth' or 'WeekOfYear' instead.")]
+		[Introduced (PlatformName.MacOSX, 10, 4)]
+		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use 'WeekOfMonth' or 'WeekOfYear' instead.")]
+		[Introduced (PlatformName.iOS, 2, 0)]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'WeekOfMonth' or 'WeekOfYear' instead.")]
 		nint Week { get; set; }
 
 		[Export ("weekday")]
@@ -2533,8 +2535,8 @@ namespace XamCore.Foundation
 		[Field ("NSMetadataUbiquitousItemHasUnresolvedConflictsKey")]
 		NSString UbiquitousItemHasUnresolvedConflictsKey { get; }
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message="Use 'UbiquitousItemDownloadingStatusKey' instead.")]
-		[Availability (Deprecated = Platform.Mac_10_9, Message="Use 'UbiquitousItemDownloadingStatusKey' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'UbiquitousItemDownloadingStatusKey' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use 'UbiquitousItemDownloadingStatusKey' instead.")]
 		[Field ("NSMetadataUbiquitousItemIsDownloadedKey")]
 		NSString UbiquitousItemIsDownloadedKey { get; }
 
@@ -5219,8 +5221,8 @@ namespace XamCore.Foundation
 		[Export ("removeVolatileDomainForName:")]
 		void RemoveVolatileDomain (string domainName);
 	
-		[Availability (Deprecated = Platform.iOS_7_0)]
-		[Availability (Deprecated = Platform.Mac_10_9)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("persistentDomainNames")]
 		string [] PersistentDomainNames ();
 	
@@ -5796,12 +5798,16 @@ namespace XamCore.Foundation
 		NSString UbiquitousItemIsUploadingKey { get; }
 
 		[Field ("NSURLUbiquitousItemPercentDownloadedKey")]
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_6_0, Message = "Use 'NSMetadataQuery.UbiquitousItemPercentDownloadedKey' on 'NSMetadataItem' instead.")]
-		[Availability (Introduced = Platform.Mac_10_7, Deprecated = Platform.Mac_10_8, Message = "Use 'NSMetadataQuery.UbiquitousItemPercentDownloadedKey' on 'NSMetadataItem' instead.")]
+		[Introduced (PlatformName.iOS, 5, 0)]
+		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'NSMetadataQuery.UbiquitousItemPercentDownloadedKey' on 'NSMetadataItem' instead.")]
+		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'NSMetadataQuery.UbiquitousItemPercentDownloadedKey' on 'NSMetadataItem' instead.")]
 		NSString UbiquitousItemPercentDownloadedKey { get; }
 
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_6_0, Message = "Use 'NSMetadataQuery.UbiquitousItemPercentUploadedKey' on 'NSMetadataItem' instead.")]
-		[Availability (Introduced = Platform.Mac_10_7, Deprecated = Platform.Mac_10_8, Message = "Use 'NSMetadataQuery.UbiquitousItemPercentUploadedKey' on 'NSMetadataItem' instead.")]
+		[Introduced (PlatformName.iOS, 5, 0)]
+		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'NSMetadataQuery.UbiquitousItemPercentUploadedKey' on 'NSMetadataItem' instead.")]
+		[Introduced (PlatformName.MacOSX, 10, 7)]
+		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'NSMetadataQuery.UbiquitousItemPercentUploadedKey' on 'NSMetadataItem' instead.")]
 		[Field ("NSURLUbiquitousItemPercentUploadedKey")]
 		NSString UbiquitousItemPercentUploadedKey { get; }
 
@@ -6981,8 +6987,8 @@ namespace XamCore.Foundation
 		NSUrlSessionConfiguration EphemeralSessionConfiguration { get; }
 	
 		[Static, Export ("backgroundSessionConfiguration:")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'CreateBackgroundSessionConfiguration' instead.")]
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use 'CreateBackgroundSessionConfiguration' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'CreateBackgroundSessionConfiguration' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'CreateBackgroundSessionConfiguration' instead.")]
 		NSUrlSessionConfiguration BackgroundSessionConfiguration (string identifier);
 	
 		[Export ("identifier", ArgumentSemantic.Copy), NullAllowed]
@@ -10015,8 +10021,10 @@ namespace XamCore.Foundation
 		void Publish (NSNetServiceOptions options);
 
 		[Export ("resolve")]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_2_0, Message = "Use 'Resolve (double)' instead.")]
-		[Availability (Introduced = Platform.Mac_10_2, Deprecated = Platform.Mac_10_4, Message = "Use 'Resolve (double)' instead.")]
+		[Introduced (PlatformName.iOS, 2, 0)]
+		[Deprecated (PlatformName.iOS, 2, 0, message : "Use 'Resolve (double)' instead.")]
+		[Introduced (PlatformName.MacOSX, 10, 2)]
+		[Deprecated (PlatformName.MacOSX, 10, 4, message : "Use 'Resolve (double)' instead.")]
 		[NoWatch]
 		void Resolve ();
 
@@ -11337,13 +11345,13 @@ namespace XamCore.Foundation
 		[Export ("hostName")]
 		string HostName { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message="Use 'OperatingSystemVersion' or 'IsOperatingSystemAtLeastVersion' instead.")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'OperatingSystemVersion' or 'IsOperatingSystemAtLeastVersion' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'OperatingSystemVersion' or 'IsOperatingSystemAtLeastVersion' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'OperatingSystemVersion' or 'IsOperatingSystemAtLeastVersion' instead.")]
 		[Export ("operatingSystem")]
 		nint OperatingSystem { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message="Use 'OperatingSystemVersionString' instead.")]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'OperatingSystemVersionString' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'OperatingSystemVersionString' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'OperatingSystemVersionString' instead.")]
 		[Export ("operatingSystemName")]
 		string OperatingSystemName { get; }
 
@@ -12866,8 +12874,8 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // An uncaught exception was raised: *** -range cannot be sent to an abstract object of class NSTextCheckingResult: Create a concrete instance!
-	[Availability (Introduced = Platform.iOS_4_0)]
-	[Availability (Introduced = Platform.Mac_10_6)]
+	[Introduced (PlatformName.iOS, 4, 0)]
+	[Introduced (PlatformName.MacOSX, 10, 6)]
 	interface NSTextCheckingResult : NSSecureCoding, NSCopying {
 		[Export ("resultType")]
 		NSTextCheckingType ResultType { get;  }
@@ -12892,8 +12900,8 @@ namespace XamCore.Foundation
 		double TimeInterval { get; }
 
 		[Export ("components")]
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_7)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 7)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSDictionary WeakComponents { get; }
 
@@ -12907,19 +12915,19 @@ namespace XamCore.Foundation
 		string ReplacementString { get; }
 
 		[Export ("alternativeStrings")]
-		[Availability (Introduced = Platform.iOS_7_0)]
-		[Availability (Introduced = Platform.Mac_10_9)]
+		[Introduced (PlatformName.iOS, 7, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 9)]
 		string [] AlternativeStrings { get; }
 
 //		NSRegularExpression isn't bound
 //		[Export ("regularExpression")]
-//		[Availability (Introduced = Platform.iOS_4_0)]
-//		[Availability (Introduced = Platform.Mac_10_7)]
+//		[Introduced (PlatformName.iOS, 4, 0)]
+//		[Introduced (PlatformName.MacOSX, 10, 7)]
 //		NSRegularExpression RegularExpression { get; }
 
 		[Export ("phoneNumber")]
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_7)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 7)]
 		string PhoneNumber { get; }
 
 		[Export ("addressComponents")]
@@ -12930,18 +12938,18 @@ namespace XamCore.Foundation
 		NSTextCheckingAddressComponents AddressComponents { get; }
 
 		[Export ("numberOfRanges")]
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_7)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 7)]
 		nuint NumberOfRanges { get; }
 
 		[Export ("rangeAtIndex:")]
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_7)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 7)]
 		NSRange RangeAtIndex (nuint idx);
 
 		[Export ("resultByAdjustingRangesWithOffset:")]
-		[Availability (Introduced = Platform.iOS_5_0)]
-		[Availability (Introduced = Platform.Mac_10_7)]
+		[Introduced (PlatformName.iOS, 5, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 7)]
 		NSTextCheckingResult ResultByAdjustingRanges (nint offset);
 
 		// From the NSTextCheckingResultCreation category on NSTextCheckingResult
@@ -12997,27 +13005,27 @@ namespace XamCore.Foundation
 
 		[Static]
 		[Export ("correctionCheckingResultWithRange:replacementString:alternativeStrings:")]
-		[Availability (Introduced = Platform.iOS_7_0)]
-		[Availability (Introduced = Platform.Mac_10_9)]
+		[Introduced (PlatformName.iOS, 7, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 9)]
 		NSTextCheckingResult CorrectionCheckingResult (NSRange range, string replacementString, string[] alternativeStrings);
 
 //		NSRegularExpression isn't bound
 //		[Export ("regularExpressionCheckingResultWithRanges:count:regularExpression:")]
-//		[Availability (Introduced = Platform.iOS_4_0)]
-//		[Availability (Introduced = Platform.Mac_10_7)]
+//		[Introduced (PlatformName.iOS, 4, 0)]
+//		[Introduced (PlatformName.MacOSX, 10, 7)]
 //		[Internal] // FIXME
 //		NSTextCheckingResult RegularExpressionCheckingResult (ref NSRange ranges, nuint count, NSRegularExpression regularExpression);
 
 		[Static]
 		[Export ("phoneNumberCheckingResultWithRange:phoneNumber:")]
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_7)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 7)]
 		NSTextCheckingResult PhoneNumberCheckingResult (NSRange range, string phoneNumber);
 
 		[Static]
 		[Export ("transitInformationCheckingResultWithRange:components:")]
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_7)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 7)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSTextCheckingResult TransitInformationCheckingResult (NSRange range, NSDictionary components);
 
@@ -13033,110 +13041,110 @@ namespace XamCore.Foundation
 
 	[StrongDictionary ("NSTextChecking")]
 	interface NSTextCheckingTransitComponents {
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_7)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 7)]
 		string Airline { get; }
 
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_7)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 7)]
 		string Flight { get; }
 	}
 
 	[StrongDictionary ("NSTextChecking")]
 	interface NSTextCheckingAddressComponents {
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_6)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 6)]
 		string Name { get; }
 
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_6)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 6)]
 		string JobTitle { get; }
 
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_6)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 6)]
 		string Organization { get; }
 
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_6)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 6)]
 		string Street { get; }
 
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_6)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 6)]
 		string City { get; }
 
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_6)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 6)]
 		string State { get; }
 
 		[Export ("ZipKey")]
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_6)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 6)]
 		string ZIP { get; }
 
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_6)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 6)]
 		string Country { get; }
 
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_6)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 6)]
 		string Phone { get; }
 	}
 
 	[Static]
 	interface NSTextChecking {
 		[Field ("NSTextCheckingNameKey")]
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_6)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 6)]
 		NSString NameKey { get; }
 
 		[Field ("NSTextCheckingJobTitleKey")]
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_6)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 6)]
 		NSString JobTitleKey { get; }
 
 		[Field ("NSTextCheckingOrganizationKey")]
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_6)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 6)]
 		NSString OrganizationKey { get; }
 
 		[Field ("NSTextCheckingStreetKey")]
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_6)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 6)]
 		NSString StreetKey { get; }
 
 		[Field ("NSTextCheckingCityKey")]
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_6)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 6)]
 		NSString CityKey { get; }
 
 		[Field ("NSTextCheckingStateKey")]
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_6)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 6)]
 		NSString StateKey { get; }
 
 		[Field ("NSTextCheckingZIPKey")]
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_6)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 6)]
 		NSString ZipKey { get; }
 
 		[Field ("NSTextCheckingCountryKey")]
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_6)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 6)]
 		NSString CountryKey { get; }
 
 		[Field ("NSTextCheckingPhoneKey")]
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_6)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 6)]
 		NSString PhoneKey { get; }
 
 		[Field ("NSTextCheckingAirlineKey")]
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_7)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 7)]
 		NSString AirlineKey { get; }
 
 		[Field ("NSTextCheckingFlightKey")]
-		[Availability (Introduced = Platform.iOS_4_0)]
-		[Availability (Introduced = Platform.Mac_10_7)]
+		[Introduced (PlatformName.iOS, 4, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 7)]
 		NSString FlightKey { get; }
 	}
 

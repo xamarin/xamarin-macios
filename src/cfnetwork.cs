@@ -18,38 +18,38 @@ namespace XamCore.CoreServices {
 	[Partial]
 	interface CFHTTPStream {
 
-		[Availability (Deprecated = Platform.iOS_9_0)]
-		[Availability (Deprecated = Platform.Mac_10_11)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Internal][Field ("kCFStreamPropertyHTTPAttemptPersistentConnection", "CFNetwork")]
 		NSString _AttemptPersistentConnection { get; }
 
-		[Availability (Deprecated = Platform.iOS_9_0)]
-		[Availability (Deprecated = Platform.Mac_10_11)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Internal][Field ("kCFStreamPropertyHTTPFinalURL", "CFNetwork")]
 		NSString _FinalURL { get; }
 
-		[Availability (Deprecated = Platform.iOS_9_0)]
-		[Availability (Deprecated = Platform.Mac_10_11)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Internal][Field ("kCFStreamPropertyHTTPFinalRequest", "CFNetwork")]
 		NSString _FinalRequest { get; }
 
-		[Availability (Deprecated = Platform.iOS_9_0)]
-		[Availability (Deprecated = Platform.Mac_10_11)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Internal][Field ("kCFStreamPropertyHTTPProxy", "CFNetwork")]
 		NSString _Proxy { get; }
 
-		[Availability (Deprecated = Platform.iOS_9_0)]
-		[Availability (Deprecated = Platform.Mac_10_11)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Internal][Field ("kCFStreamPropertyHTTPRequestBytesWrittenCount", "CFNetwork")]
 		NSString _RequestBytesWrittenCount { get; }
 
-		[Availability (Deprecated = Platform.iOS_9_0)]
-		[Availability (Deprecated = Platform.Mac_10_11)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Internal][Field ("kCFStreamPropertyHTTPResponseHeader", "CFNetwork")]
 		NSString _ResponseHeader { get; }
 
-		[Availability (Deprecated = Platform.iOS_9_0)]
-		[Availability (Deprecated = Platform.Mac_10_11)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Internal][Field ("kCFStreamPropertyHTTPShouldAutoredirect", "CFNetwork")]
 		NSString _ShouldAutoredirect { get; }
 	}
