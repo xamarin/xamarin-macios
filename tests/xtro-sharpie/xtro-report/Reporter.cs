@@ -109,7 +109,7 @@ namespace Extrospection {
 				ignore.Add ("</xmp>");
 			}
 			foreach (var platform in Platforms) {
-				filename = $"{platform}-{framework}.ignore";
+				filename = Path.Combine (InputDirectory, $"{platform}-{framework}.ignore");
 				if (File.Exists (filename)) {
 					data = true;
 					ignore.Add ($"<h2>{platform} specific ignored results</h2>");
