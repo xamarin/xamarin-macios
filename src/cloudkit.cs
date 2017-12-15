@@ -185,8 +185,7 @@ namespace XamCore.CloudKit {
 	interface CKContainer {
 
 		[NoWatch]
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_10_0, Message = "Use 'CurrentUserDefaultName' instead.")]
-		[Availability (Introduced = Platform.Mac_10_10, Deprecated = Platform.Mac_10_12, Message = "Use 'CurrentUserDefaultName' instead.")]
+		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use 'CurrentUserDefaultName' instead.")]
 		[Field ("CKOwnerDefaultName")]
 		NSString OwnerDefaultName { get; }
 
@@ -244,8 +243,7 @@ namespace XamCore.CloudKit {
 		[Async]
 		void DiscoverAllIdentities (Action<CKUserIdentity[], NSError> completionHandler);
 		
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_10_0, Message = "Use 'DiscoverAllIdentities' instead.")]
-		[Availability (Introduced = Platform.Mac_10_10, Deprecated = Platform.Mac_10_12, Message = "Use 'DiscoverAllIdentities' instead.")]
+		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use 'DiscoverAllIdentities' instead.")]
 		[NoWatch]
 		[NoTV]
 		[Export ("discoverAllContactUserInfosWithCompletionHandler:")]
@@ -262,8 +260,7 @@ namespace XamCore.CloudKit {
 		[Async]
 		void DiscoverUserIdentityWithPhoneNumber (string phoneNumber, Action<CKUserIdentity, NSError> completionHandler);
 		
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_10_0, Message = "Use 'DiscoverUserIdentityWithEmailAddress' instead.")]
-		[Availability (Introduced = Platform.Mac_10_10, Deprecated = Platform.Mac_10_12, Message = "Use 'DiscoverUserIdentityWithEmailAddress' instead.")]
+		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use 'DiscoverUserIdentityWithEmailAddress' instead.")]
 		[NoWatch]
 		[Export ("discoverUserInfoWithEmailAddress:completionHandler:")]
 		[Async]
@@ -274,8 +271,7 @@ namespace XamCore.CloudKit {
 		[Async]
 		void DiscoverUserIdentity (CKRecordID userRecordID, Action<CKUserIdentity, NSError> completionHandler);
 	
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_10_0, Message = "Use 'DiscoverUserIdentity' instead.")]
-		[Availability (Introduced = Platform.Mac_10_10, Deprecated = Platform.Mac_10_12, Message = "Use 'DiscoverUserIdentity' instead.")]
+		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use 'DiscoverUserIdentity' instead.")]
 		[NoWatch]
 		[Export ("discoverUserInfoWithUserRecordID:completionHandler:")]
 		[Async]
@@ -406,8 +402,7 @@ namespace XamCore.CloudKit {
 
 	[NoWatch]
 	[NoTV]
-	[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_10_0, Message = "Use 'CKDiscoverAllUserIdentitiesOperation' instead.")]
-	[Availability (Introduced = Platform.Mac_10_10, Deprecated = Platform.Mac_10_12, Message = "Use 'CKDiscoverAllUserIdentitiesOperation' instead.")]
+	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use 'CKDiscoverAllUserIdentitiesOperation' instead.")]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (CKOperation))]
 	interface CKDiscoverAllContactsOperation {
@@ -416,8 +411,7 @@ namespace XamCore.CloudKit {
 		Action<CKDiscoveredUserInfo[], NSError> DiscoverAllContactsHandler { get; set; }
 	}
 
-	[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_10_0, Message = "Use 'CKUserIdentity' instead.")]
-	[Availability (Introduced = Platform.Mac_10_10, Deprecated = Platform.Mac_10_12, Message = "Use 'CKUserIdentity' instead.")]
+	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use 'CKUserIdentity' instead.")]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
@@ -426,13 +420,11 @@ namespace XamCore.CloudKit {
 		[Export ("userRecordID", ArgumentSemantic.Copy)]
 		CKRecordID UserRecordId { get; }
 
-		[Availability (Introduced = Platform.Mac_10_10, Deprecated = Platform.Mac_10_11, Message = "Use 'DisplayContact.GivenName'.")]
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0, Message = "Use 'DisplayContact.GivenName'.")]
+		[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0, Deprecated = Platform.Mac_10_11 | Platform.iOS_9_0, Message = "Use 'DisplayContact.GivenName'.")]
 		[Export ("firstName", ArgumentSemantic.Copy)]
 		string FirstName { get; }
 
-		[Availability (Introduced = Platform.Mac_10_10, Deprecated = Platform.Mac_10_11, Message = "Use 'DisplayContact.FamilyName'.")]
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0, Message = "Use 'DisplayContact.FamilyName'.")]
+		[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0, Deprecated = Platform.Mac_10_11 | Platform.iOS_9_0, Message = "Use 'DisplayContact.FamilyName'.")]
 		[Export ("lastName", ArgumentSemantic.Copy)]
 		string LastName { get; }
 
@@ -450,8 +442,7 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	delegate void CKDiscoverUserInfosCompletionHandler (NSDictionary emailsToUserInfos, NSDictionary userRecordIdsToUserInfos, NSError operationError);
 
-	[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_10_0, Message = "Use 'CKDiscoverUserIdentitiesOperation' instead.")]
-	[Availability (Introduced = Platform.Mac_10_10, Deprecated = Platform.Mac_10_12, Message = "Use 'CKDiscoverUserIdentitiesOperation' instead.")]
+	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use 'CKDiscoverUserIdentitiesOperation' instead.")]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[NoWatch]
 	[BaseType (typeof (CKOperation))]
@@ -505,10 +496,8 @@ namespace XamCore.CloudKit {
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (CKOperation))]
-	[Availability (Deprecated = Platform.iOS_11_0, Message = "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
-	[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
-	[Availability (Deprecated = Platform.Watch_4_0, Message = "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
-	[Availability (Deprecated = Platform.TV_11_0, Message = "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
+	[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+		Message = "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
 	interface CKFetchNotificationChangesOperation {
 		[Export ("initWithPreviousServerChangeToken:")]
 		IntPtr Constructor ([NullAllowed] CKServerChangeToken previousServerChangeToken);
@@ -550,8 +539,7 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	delegate void CKFetchRecordChangesHandler (CKServerChangeToken serverChangeToken, NSData clientChangeTokenData, NSError operationError);
 
-	[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_10_0, Message = "Use 'CKFetchRecordZoneChangesOperation' instead.")]
-	[Availability (Introduced = Platform.Mac_10_10, Deprecated = Platform.Mac_10_12, Message = "Use 'CKFetchRecordZoneChangesOperation' instead.")]
+	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use 'CKFetchRecordZoneChangesOperation' instead.")]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[NoWatch]
 	[BaseType (typeof (CKDatabaseOperation))]
@@ -779,10 +767,8 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (CKOperation))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You must call -[CKMarkNotificationsReadOperation initWithNotificationIDsToMarkRead:]
-	[Availability (Deprecated = Platform.iOS_11_0, Message = "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
-	[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
-	[Availability (Deprecated = Platform.Watch_4_0, Message = "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
-	[Availability (Deprecated = Platform.TV_11_0, Message = "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
+	[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+		Message = "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
 	interface CKMarkNotificationsReadOperation {
 
 		[DesignatedInitializer]
@@ -803,10 +789,7 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
 	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
 	[BaseType (typeof (CKOperation))]
-	[Availability (Deprecated = Platform.iOS_11_0)]
-	[Availability (Deprecated = Platform.Mac_10_13)]
-	[Availability (Deprecated = Platform.Watch_4_0)]
-	[Availability (Deprecated = Platform.TV_11_0)]
+	[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0)]
 	interface CKModifyBadgeOperation {
 
 		[Export ("initWithBadgeValue:")]
@@ -1042,8 +1025,7 @@ namespace XamCore.CloudKit {
 		[NullAllowed, Export ("recordID", ArgumentSemantic.Copy)]
 		CKRecordID RecordId { get; }
 
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_10_0, Message = "Use 'DatabaseScope' instead.")]
-		[Availability (Introduced = Platform.Mac_10_10, Deprecated = Platform.Mac_10_12, Message = "Use 'DatabaseScope' instead.")]
+		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use 'DatabaseScope' instead.")]
 		[Export ("isPublicDatabase", ArgumentSemantic.UnsafeUnretained)]
 		bool IsPublicDatabase { get; }
 		
@@ -1111,10 +1093,8 @@ namespace XamCore.CloudKit {
 		// [Export ("activityStart")]
 		// ulong ActivityStart ();
 
-		[Availability (Deprecated = Platform.iOS_11_0, Message = "Use 'CKOperationConfiguration' instead.")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'CKOperationConfiguration' instead.")]
-		[Availability (Deprecated = Platform.Watch_4_0, Message = "Use 'CKOperationConfiguration' instead.")]
-		[Availability (Deprecated = Platform.TV_11_0, Message = "Use 'CKOperationConfiguration' instead.")]
+		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+			Message = "Use 'CKOperationConfiguration' instead.")]
 		[NullAllowed, Export ("container", ArgumentSemantic.Retain)]
 		CKContainer Container { get; set; }
 
@@ -1124,10 +1104,8 @@ namespace XamCore.CloudKit {
 		[Export ("usesBackgroundSession", ArgumentSemantic.UnsafeUnretained)]
 		bool UsesBackgroundSession { get; set; }
 
-		[Availability (Deprecated = Platform.iOS_11_0, Message = "Use 'CKOperationConfiguration' instead.")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'CKOperationConfiguration' instead.")]
-		[Availability (Deprecated = Platform.Watch_4_0, Message = "Use 'CKOperationConfiguration' instead.")]
-		[Availability (Deprecated = Platform.TV_11_0, Message = "Use 'CKOperationConfiguration' instead.")]
+		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+			Message = "Use 'CKOperationConfiguration' instead.")]
 		[Export ("allowsCellularAccess", ArgumentSemantic.UnsafeUnretained)]
 		bool AllowsCellularAccess { get; set; }
 
@@ -1139,26 +1117,20 @@ namespace XamCore.CloudKit {
 		[iOS (9,3)][Mac (10,11,4)]
 		[TV (9,2)]
 		[Export ("longLived")]
-		[Availability (Deprecated = Platform.iOS_11_0, Message = "Use 'CKOperationConfiguration' instead.")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'CKOperationConfiguration' instead.")]
-		[Availability (Deprecated = Platform.Watch_4_0, Message = "Use 'CKOperationConfiguration' instead.")]
-		[Availability (Deprecated = Platform.TV_11_0, Message = "Use 'CKOperationConfiguration' instead.")]
+		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+			Message = "Use 'CKOperationConfiguration' instead.")]
 		bool LongLived { [Bind ("isLongLived")] get; set; }
 
 		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 		[Export ("timeoutIntervalForRequest")]
-		[Availability (Deprecated = Platform.iOS_11_0, Message = "Use 'CKOperationConfiguration' instead.")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'CKOperationConfiguration' instead.")]
-		[Availability (Deprecated = Platform.Watch_4_0, Message = "Use 'CKOperationConfiguration' instead.")]
-		[Availability (Deprecated = Platform.TV_11_0, Message = "Use 'CKOperationConfiguration' instead.")]
+		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+			Message = "Use 'CKOperationConfiguration' instead.")]
 		double TimeoutIntervalForRequest { get; set; }
 
 		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 		[Export ("timeoutIntervalForResource")]
-		[Availability (Deprecated = Platform.iOS_11_0, Message = "Use 'CKOperationConfiguration' instead.")]
-		[Availability (Deprecated = Platform.Mac_10_13, Message = "Use 'CKOperationConfiguration' instead.")]
-		[Availability (Deprecated = Platform.Watch_4_0, Message = "Use 'CKOperationConfiguration' instead.")]
-		[Availability (Deprecated = Platform.TV_11_0, Message = "Use 'CKOperationConfiguration' instead.")]
+		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Mac_10_13 | Platform.Watch_4_0 | Platform.TV_11_0, 
+			Message = "Use 'CKOperationConfiguration' instead.")]
 		double TimeoutIntervalForResource { get; set; }
 
 		[iOS (9,3)][Mac (10,11,4)]

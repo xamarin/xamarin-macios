@@ -1739,8 +1739,7 @@ namespace XamCore.SpriteKit {
 
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0)]
-		[Availability (Deprecated = Platform.Mac_10_12)]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatVector2:")]
 		IntPtr InitWithNameFloatVector2 (string name, Vector2 value);
 
@@ -1757,8 +1756,7 @@ namespace XamCore.SpriteKit {
 
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0)]
-		[Availability (Deprecated = Platform.Mac_10_12)]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatVector3:")]
 		IntPtr InitWithNameFloatVector3 (string name, Vector3 value);
 
@@ -1775,8 +1773,7 @@ namespace XamCore.SpriteKit {
 		
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0)]
-		[Availability (Deprecated = Platform.Mac_10_12)]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatVector4:")]
 		IntPtr InitWithNameFloatVector4 (string name, Vector4 value);
 
@@ -1794,8 +1791,7 @@ namespace XamCore.SpriteKit {
 #if !XAMCORE_4_0
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0)]
-		[Availability (Deprecated = Platform.Mac_10_12)]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatMatrix2:")]
 		IntPtr InitWithNameFloatMatrix2 (string name, Matrix2 value);
 #endif
@@ -1824,8 +1820,7 @@ namespace XamCore.SpriteKit {
 #if !XAMCORE_4_0
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0)]
-		[Availability (Deprecated = Platform.Mac_10_12)]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatMatrix3:")]
 		IntPtr InitWithNameFloatMatrix3 (string name, Matrix3 value);
 
@@ -1852,8 +1847,7 @@ namespace XamCore.SpriteKit {
 #if !XAMCORE_4_0
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0)]
-		[Availability (Deprecated = Platform.Mac_10_12)]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatMatrix4:")]
 		IntPtr InitWithNameFloatMatrix4 (string name, Matrix4 value);
 #endif
@@ -1893,8 +1887,7 @@ namespace XamCore.SpriteKit {
 
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0)]
-		[Availability (Deprecated = Platform.Mac_10_12)]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("floatVector2Value")]
 		Vector2 _FloatVector2Value { get; set; }
 
@@ -1913,8 +1906,7 @@ namespace XamCore.SpriteKit {
 
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0)]
-		[Availability (Deprecated = Platform.Mac_10_12)]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("floatVector3Value")]
 		Vector3 _FloatVector3Value { get; set; }
 
@@ -1933,8 +1925,7 @@ namespace XamCore.SpriteKit {
 
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0)]
-		[Availability (Deprecated = Platform.Mac_10_12)]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("floatVector4Value")]
 		Vector4 _FloatVector4Value { get; set; }
 
@@ -1953,8 +1944,7 @@ namespace XamCore.SpriteKit {
 
 #if !XAMCORE_4_0
 		[Internal]
-		[Availability (Deprecated = Platform.iOS_10_0)]
-		[Availability (Deprecated = Platform.Mac_10_12)]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[NoWatch]
 		[Export ("floatMatrix2Value")]
 		Matrix2 _FloatMatrix2Value { get; set; }
@@ -1985,8 +1975,7 @@ namespace XamCore.SpriteKit {
 #if !XAMCORE_4_0
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0)]
-		[Availability (Deprecated = Platform.Mac_10_12)]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("floatMatrix3Value")]
 		Matrix3 _FloatMatrix3Value { get; set; }
 #endif
@@ -2016,8 +2005,7 @@ namespace XamCore.SpriteKit {
 #if !XAMCORE_4_0
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0)]
-		[Availability (Deprecated = Platform.Mac_10_12)]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("floatMatrix4Value")]
 		Matrix4 _FloatMatrix4Value { get; set; }
 #endif

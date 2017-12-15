@@ -1846,8 +1846,7 @@ namespace XamCore.HealthKit {
 		[Export ("jouleUnit")]
 		HKUnit Joule { get; }
 
-		[Availability (Deprecated = Platform.iOS_11_0, Message = "Use 'SmallCalorie' or 'LargeCalorie' instead.")]
-		[Availability (Deprecated = Platform.Watch_4_0, Message = "Use 'SmallCalorie' or 'LargeCalorie' instead.")]
+		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Watch_4_0, Message = "Use 'SmallCalorie' or 'LargeCalorie' instead.")]
 		[Static]
 		[Export ("calorieUnit")]
 		HKUnit Calorie { get; }
@@ -2035,8 +2034,7 @@ namespace XamCore.HealthKit {
 		[Export ("type")]
 		HKWorkoutEventType Type { get; }
 
-		[Availability (Deprecated = Platform.iOS_11_0, Message = "Use 'DateInterval' instead.")]
-		[Availability (Deprecated = Platform.Watch_4_0, Message = "Use 'DateInterval' instead.")]
+		[Availability (Deprecated = Platform.iOS_11_0 | Watch_4_0, Message = "Use 'DateInterval' instead.")]
 		[Export ("date", ArgumentSemantic.Copy)]
 		NSDate Date { get; }
 
@@ -2048,20 +2046,17 @@ namespace XamCore.HealthKit {
 		[Wrap ("WeakMetadata")]
 		HKMetadata Metadata { get; }
 
-		[Availability (Deprecated = Platform.iOS_11_0, Message = "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
-		[Availability (Deprecated = Platform.Watch_4_0, Message = "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
+		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Watch_4_0, Message = "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
 		[Static, Export ("workoutEventWithType:date:")]
 		HKWorkoutEvent Create (HKWorkoutEventType type, NSDate date);
 
-		[Availability (Introduced = Platform.iOS_10_0, Deprecated = Platform.iOS_11_0, Message = "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
-		[Availability (Introduced = Platform.Watch_3_0, Deprecated = Platform.Watch_4_0, Message = "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
+		[Availability (Introduced = Platform.iOS_10_0 | Platform.Watch_3_0, Deprecated = Platform.iOS_11_0 | Platform.Watch_4_0, Message = "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
 		[Static]
 		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
 		[Export ("workoutEventWithType:date:metadata:")]
 		HKWorkoutEvent Create (HKWorkoutEventType type, NSDate date, NSDictionary metadata);
 
-		[Availability (Introduced = Platform.iOS_10_0, Deprecated = Platform.iOS_11_0, Message = "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
-		[Availability (Introduced = Platform.Watch_3_0, Deprecated = Platform.Watch_4_0, Message = "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
+		[Availability (Introduced = Platform.iOS_10_0 | Platform.Watch_3_0, Deprecated = Platform.iOS_11_0 | Platform.Watch_4_0, Message = "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
 		[Static]
 		[Wrap ("Create (type, date, metadata != null ? metadata.Dictionary : null)")]
 		HKWorkoutEvent Create (HKWorkoutEventType type, NSDate date, HKMetadata metadata);

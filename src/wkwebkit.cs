@@ -549,8 +549,7 @@ namespace XamCore.WebKit
 		IntPtr Constructor (CGRect frame, WKWebViewConfiguration configuration);
 
 		// (instancetype)initWithCoder:(NSCoder *)coder NS_UNAVAILABLE;
-		// [Availability (Unavailable = Platform.iOS)]
-		// [Availability (Unavailable = Platform.Mac)]
+		// [Availability (Unavailable = Platform.iOS | Platform.Mac)]
 		// [Export ("initWithCoder:")]
 		// IntPtr Constructor (NSCoder coder);
 
@@ -754,7 +753,7 @@ namespace XamCore.WebKit
 		[Export ("dataDetectorTypes", ArgumentSemantic.Assign)]
 		WKDataDetectorTypes DataDetectorTypes { get; set; }
 #endif
-		[iOS (10,0)][Mac (10,12, onlyOn64: true)]
+		[iOS (10,0)][Mac (10,12, only64: true)]
 		[Export ("mediaTypesRequiringUserActionForPlayback", ArgumentSemantic.Assign)]
 		WKAudiovisualMediaTypes MediaTypesRequiringUserActionForPlayback { get; set; }
 

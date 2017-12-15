@@ -877,8 +877,7 @@ namespace XamCore.NetworkExtension {
 
 		[NullAllowed]
 		[Export ("protocol", ArgumentSemantic.Retain)]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'ProtocolConfiguration' instead.")]
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'ProtocolConfiguration' instead.")]
+		[Availability (Deprecated = Platform.iOS_9_0 | Platform.Mac_10_11, Message = "Use 'ProtocolConfiguration' instead.")]
 		NEVpnProtocol Protocol { get; set; }
 
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
