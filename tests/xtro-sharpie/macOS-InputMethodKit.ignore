@@ -22,7 +22,6 @@
 !missing-selector! IMKCandidates::setAttributes: not bound
 !missing-selector! IMKCandidates::setCandidateData: not bound
 !missing-selector! IMKCandidates::setCandidateFrameTopLeft: not bound
-!missing-selector! IMKCandidates::setCandidateFrameTopLeft: not bound
 !missing-selector! IMKCandidates::setDismissesAutomatically: not bound
 !missing-selector! IMKCandidates::setPanelType: not bound
 !missing-selector! IMKCandidates::setSelectionKeys: not bound

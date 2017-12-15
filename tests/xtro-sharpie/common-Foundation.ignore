@@ -127,7 +127,6 @@
 !missing-pinvoke! NSLog is not bound
 !missing-pinvoke! NSLogPageSize is not bound
 !missing-pinvoke! NSLogv is not bound
-!missing-pinvoke! NSLogv is not bound
 !missing-pinvoke! NSOpenStepRootDirectory is not bound
 !missing-pinvoke! NSPageSize is not bound
 !missing-pinvoke! NSProtocolFromString is not bound
