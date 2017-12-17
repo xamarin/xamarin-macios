@@ -23,6 +23,11 @@ namespace Extrospection {
 			foreach (var kvp in lists) {
 				var framework = kvp.Key;
 				var list = kvp.Value.Distinct ().ToList ();
+
+				// not generally useful but we want to keep the data sane
+				var raw = $"{Helpers.Platform}-{framework}.raw";
+				File.WriteAllLines (raw, list);
+
 				// load ignore and pending files and remove them
 				// 1. common.framework.ignore - long term (shared cross platforms) **preferred**
 				Remove (list, $"common-{framework}.ignore");
