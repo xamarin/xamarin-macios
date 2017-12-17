@@ -1,3 +1,16 @@
+## OSX-only enums - fixed in XAMCORE_3_0
+!unknown-native-enum! AVCaptureDeviceTransportControlsPlaybackMode bound
+!unknown-native-enum! AVVideoFieldMode bound
+
+## OSX only - but only the member is marked (not the protocol itself)
+!missing-protocol! AVFragmentMinding not bound
+
+# from iOS 4.0 to 5.1
+!unknown-field! AVMediaTypeTimedMetadata bound
+
+
+## unsorted
+
 !missing-field! AVAssetDownloadedAssetEvictionPriorityDefault not bound
 !missing-field! AVAssetDownloadedAssetEvictionPriorityImportant not bound
 !missing-protocol-conformance! AVCaptureSynchronizedDataCollection should conform to NSFastEnumeration
@@ -15,8 +28,5 @@
 !missing-selector! AVMetadataMachineReadableCodeObject::descriptor not bound
 !missing-selector! AVMutableAssetDownloadStorageManagementPolicy::priority not bound
 !missing-selector! AVMutableAssetDownloadStorageManagementPolicy::setPriority: not bound
-!unknown-field! AVMediaTypeTimedMetadata bound
 !unknown-native-enum! AVAudioSessionFlags bound
 !unknown-native-enum! AVAudioSessionInterruptionFlags bound
-!unknown-native-enum! AVCaptureDeviceTransportControlsPlaybackMode bound
-!unknown-native-enum! AVVideoFieldMode bound

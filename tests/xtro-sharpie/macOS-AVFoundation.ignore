@@ -1,3 +1,9 @@
+# from iOS 4.0 to 5.1
+!unknown-field! AVMediaTypeTimedMetadata bound
+
+
+## unsorted
+
 !incorrect-protocol-member! AVFragmentMinding::isAssociatedWithFragmentMinder is REQUIRED and should be abstract
 !missing-field! AVMediaCharacteristicEasyToRead not bound
 !missing-field! AVVideoDecompressionPropertiesKey not bound
@@ -19,12 +25,9 @@
 !missing-selector! AVPlayerItem::isAuthorizationRequiredForPlayback not bound
 !missing-selector! AVPlayerItem::isContentAuthorizedForPlayback not bound
 !missing-selector! AVPlayerItem::mediaDataCollectors not bound
-!missing-selector! AVPlayerItem::preferredMaximumResolution not bound
 !missing-selector! AVPlayerItem::removeMediaDataCollector: not bound
 !missing-selector! AVPlayerItem::requestContentAuthorizationAsynchronouslyWithTimeoutInterval:completionHandler: not bound
-!missing-selector! AVPlayerItem::setPreferredMaximumResolution: not bound
 !missing-selector! AVPlayerItemOutput::itemTimeForCVTimeStamp: not bound
-!unknown-field! AVMediaTypeTimedMetadata bound
 !unknown-native-enum! AVAudioSessionCategoryOptions bound
 !unknown-native-enum! AVAudioSessionErrorCode bound
 !unknown-native-enum! AVAudioSessionFlags bound

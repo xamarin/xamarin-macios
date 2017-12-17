@@ -1,3 +1,9 @@
+## new Apple abstract member (breaking change) fixed in XAMCORE_4_0
+!incorrect-protocol-member! MTLRenderCommandEncoder::setDepthClipMode: is REQUIRED and should be abstract
+
+
+## unsorted
+
 !incorrect-protocol-member! MTLBlitCommandEncoder::copyFromBuffer:sourceOffset:sourceBytesPerRow:sourceBytesPerImage:sourceSize:toTexture:destinationSlice:destinationLevel:destinationOrigin:options: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLBlitCommandEncoder::copyFromTexture:sourceSlice:sourceLevel:sourceOrigin:sourceSize:toBuffer:destinationOffset:destinationBytesPerRow:destinationBytesPerImage:options: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLBlitCommandEncoder::updateFence: is REQUIRED and should be abstract
@@ -71,7 +77,6 @@
 !incorrect-protocol-member! MTLRenderCommandEncoder::drawPrimitives:vertexStart:vertexCount:instanceCount:baseInstance: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::setColorStoreAction:atIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::setColorStoreActionOptions:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setDepthClipMode: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::setDepthStoreAction: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::setDepthStoreActionOptions: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::setStencilFrontReferenceValue:backReferenceValue: is REQUIRED and should be abstract
@@ -102,4 +107,3 @@
 !incorrect-protocol-member! MTLTexture::usage is REQUIRED and should be abstract
 !unknown-field! MTLRenderPipelineErrorDomain bound
 !unknown-native-enum! MTLRenderPipelineError bound
-!unknown-native-enum! MTLSamplerBorderColor bound

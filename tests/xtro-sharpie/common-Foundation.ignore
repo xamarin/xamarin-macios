@@ -1,3 +1,20 @@
+## NSLinguisticAnalysis category over NSString https://bugzilla.xamarin.com/show_bug.cgi?id=35009
+!missing-selector! NSString::linguisticTagsInRange:scheme:options:orthography:tokenRanges: not bound
+!missing-selector! NSString::enumerateLinguisticTagsInRange:scheme:options:orthography:usingBlock: not bound
+
+## https://bugzilla.xamarin.com/show_bug.cgi?id=35021
+!missing-selector! NSFileWrapper::initWithSerializedRepresentation: not bound
+
+## the API exists but is [Sealed], until XAMCORE_4_0, to keep compatible with iOS/Mac profiles
+!missing-selector! NSURLSession::getTasksWithCompletionHandler: not bound
+
+# missing - pending decision for implementation
+!missing-type! NSAssertionHandler not bound
+!missing-field! NSAssertionHandlerKey not bound
+!missing-selector! +NSAssertionHandler::currentHandler not bound
+!missing-selector! NSAssertionHandler::handleFailureInFunction:file:lineNumber:description: not bound
+!missing-selector! NSAssertionHandler::handleFailureInMethod:object:file:lineNumber:description: not bound
+
 ## special case, see bug https://bugzilla.xamarin.com/show_bug.cgi?id=22940
 !wrong-base-type! NSProxy expected  actual NSObject
 !missing-selector! +NSProxy::allocWithZone: not bound
@@ -10,26 +27,16 @@
 ## Xamarin (not Apple) type
 !unknown-type! InternalNSNotificationHandler bound
 
+# Apple internals (we do not expose them)
+!missing-field! _NSConstantStringClassReference not bound
+!missing-type! NSConstantString not bound
+!missing-type! NSSimpleCString not bound
+
 
 ## unsorted
 
 !extra-designated-initializer! NSSortDescriptor::initWithCoder: is incorrectly decorated with an [DesignatedInitializer] attribute
 !incorrect-protocol-member! NSProgressReporting::progress is REQUIRED and should be abstract
-!missing-designated-initializer! NSArray::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSDate::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSDictionary::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSISO8601DateFormatter::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSItemProvider::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSMutableArray::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSMutableDictionary::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSMutableOrderedSet::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSMutableSet::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSOrderedSet::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSOutputStream::initToMemory is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSSet::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSString::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSThread::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSUUID::init is missing an [DesignatedInitializer] attribute
 !missing-enum! NSBinarySearchingOptions not bound
 !missing-enum! NSMachPortOptions not bound
 !missing-enum! NSNetServicesError not bound
@@ -40,8 +47,6 @@
 !missing-enum! NSXMLParserError not bound
 !missing-enum! NSXMLParserExternalEntityResolvingPolicy not bound
 !missing-enum! NSXPCConnectionOptions not bound
-!missing-field! _NSConstantStringClassReference not bound
-!missing-field! NSAssertionHandlerKey not bound
 !missing-field! NSAverageKeyValueOperator not bound
 !missing-field! NSBuddhistCalendar not bound
 !missing-field! NSBundleDidLoadNotification not bound
@@ -167,7 +172,6 @@
 !missing-selector! +NSArray::arrayWithContentsOfURL: not bound
 !missing-selector! +NSArray::arrayWithObject: not bound
 !missing-selector! +NSArray::arrayWithObjects: not bound
-!missing-selector! +NSAssertionHandler::currentHandler not bound
 !missing-selector! +NSAutoreleasePool::addObject: not bound
 !missing-selector! +NSBundle::preferredLocalizationsFromArray: not bound
 !missing-selector! +NSBundle::preferredLocalizationsFromArray:forPreferences: not bound
@@ -317,8 +321,6 @@
 !missing-selector! NSArray::sortedArrayWithOptions:usingComparator: not bound
 !missing-selector! NSArray::subarrayWithRange: not bound
 !missing-selector! NSArray::writeToURL:atomically: not bound
-!missing-selector! NSAssertionHandler::handleFailureInFunction:file:lineNumber:description: not bound
-!missing-selector! NSAssertionHandler::handleFailureInMethod:object:file:lineNumber:description: not bound
 !missing-selector! NSAutoreleasePool::addObject: not bound
 !missing-selector! NSBundle::executableArchitectures not bound
 !missing-selector! NSBundle::loadAndReturnError: not bound
@@ -413,7 +415,6 @@
 !missing-selector! NSFileManager::fileSystemRepresentationWithPath: not bound
 !missing-selector! NSFileManager::stringWithFileSystemRepresentation:length: not bound
 !missing-selector! NSFileSecurity::initWithCoder: not bound
-!missing-selector! NSFileWrapper::initWithSerializedRepresentation: not bound
 !missing-selector! NSHashTable::addObject: not bound
 !missing-selector! NSHashTable::allObjects not bound
 !missing-selector! NSHashTable::anyObject not bound
@@ -694,7 +695,6 @@
 !missing-selector! NSString::description not bound
 !missing-selector! NSString::doubleValue not bound
 !missing-selector! NSString::enumerateLinesUsingBlock: not bound
-!missing-selector! NSString::enumerateLinguisticTagsInRange:scheme:options:orthography:usingBlock: not bound
 !missing-selector! NSString::enumerateSubstringsInRange:options:usingBlock: not bound
 !missing-selector! NSString::fastestEncoding not bound
 !missing-selector! NSString::fileSystemRepresentation not bound
@@ -724,7 +724,6 @@
 !missing-selector! NSString::intValue not bound
 !missing-selector! NSString::isEqualToString: not bound
 !missing-selector! NSString::lengthOfBytesUsingEncoding: not bound
-!missing-selector! NSString::linguisticTagsInRange:scheme:options:orthography:tokenRanges: not bound
 !missing-selector! NSString::localizedCaseInsensitiveCompare: not bound
 !missing-selector! NSString::localizedCompare: not bound
 !missing-selector! NSString::localizedStandardCompare: not bound
@@ -782,7 +781,6 @@
 !missing-selector! NSURLProtocol::initWithTask:cachedResponse:client: not bound
 !missing-selector! NSURLProtocol::task not bound
 !missing-selector! NSURLRequest::HTTPShouldUsePipelining not bound
-!missing-selector! NSURLSession::getTasksWithCompletionHandler: not bound
 !missing-selector! NSUUID::initWithUUIDBytes: not bound
 !missing-selector! NSValue::getValue:size: not bound
 !missing-selector! NSValue::initWithBytes:objCType: not bound
@@ -835,8 +833,6 @@
 !missing-selector! NSXPCListener::delegate not bound
 !missing-selector! NSXPCListener::endpoint not bound
 !missing-selector! NSXPCListener::setDelegate: not bound
-!missing-type! NSAssertionHandler not bound
-!missing-type! NSConstantString not bound
 !missing-type! NSCountedSet not bound
 !missing-type! NSDecimalNumberHandler not bound
 !missing-type! NSFileSecurity not bound
@@ -847,7 +843,6 @@
 !missing-type! NSPointerArray not bound
 !missing-type! NSPointerFunctions not bound
 !missing-type! NSScanner not bound
-!missing-type! NSSimpleCString not bound
 !missing-type! NSXMLParser not bound
 !missing-type! NSXPCConnection not bound
 !missing-type! NSXPCInterface not bound
@@ -864,4 +859,3 @@
 !unknown-native-enum! NSUrlErrorCancelledReason bound
 !unknown-protocol! NSObject bound
 !unknown-type! NSObject bound
-!unknown-type! NSUbiquitousKeyValueStore bound

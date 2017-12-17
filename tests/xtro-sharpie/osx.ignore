@@ -9,10 +9,6 @@
 
 # fixed in XAMCORE_3_0
 
-## 8a6099b8027fa8e1ad1e032c731c7f750619303e
-!duplicate-type-name! NSFileWrapperReadingOptions enum exists as both AppKit.NSFileWrapperReadingOptions and Foundation.NSFileWrapperReadingOptions
-!duplicate-type-name! NSWritingDirection enum exists as both AppKit.NSWritingDirection and Foundation.NSWritingDirection
-
 # Defined in NSObject (NSDeprecatedTextStorageDelegateInterface
 !extra-protocol-member! unexpected selector NSTextStorageDelegate::textStorageDidProcessEditing: found
 !extra-protocol-member! unexpected selector NSTextStorageDelegate::textStorageWillProcessEditing: found
@@ -54,12 +50,6 @@
 !extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:shouldShowFilename: found
 
 
-
-# Easily proven via man
-!unknown-pinvoke! kevent bound
-!unknown-pinvoke! kqueue bound
-!unknown-pinvoke! _NSGetExecutablePath bound
-
 # In header as old style unnamaed enum
 !unknown-native-enum! IKCellsStyle bound
 !unknown-native-enum! IKGroupStyle bound
@@ -98,11 +88,8 @@
 !unknown-field! NSOperationNumber bound
 !unknown-field! NSTableColumn bound
 !unknown-field! NSTextMovement bound
-!unknown-field! PDFAnnotationHit bound
 !unknown-field! item bound
 
-# Proxy class for NSGraphicsContext internal to AppKit
-!unknown-type! NSPrintPreviewGraphicsContext bound
 
 
 # Not declared in header for macOS unlike iOS but in Security.framework anyway (via nm)
@@ -154,7 +141,3 @@
 !missing-selector! MTLRenderPassDepthAttachmentDescriptor::setDepthResolveFilter: not bound
 !missing-selector! MTLSamplerDescriptor::lodAverage not bound
 !missing-selector! MTLSamplerDescriptor::setLodAverage: not bound
-
-# Deprecated in the same version of OS X that CBCentral becomes available.  The alternative (Identifier property) is bound and available.
-!missing-selector! CBCentral::UUID not bound
-!missing-selector! CBPeripheral::UUID not bound

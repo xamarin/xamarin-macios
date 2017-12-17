@@ -1,4 +1,11 @@
-!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
-!missing-selector! AVPlayerItem::preferredMaximumResolution not bound
-!missing-selector! AVPlayerItem::setPreferredMaximumResolution: not bound
+## OSX only - but only the member is marked (not the protocol itself)
+!missing-protocol! AVFragmentMinding not bound
+
+## this was tvos 10.2 in Xcode 8.3 and changed to iOS-only in Xcode9 betas
+## it's still exposed by AVContentKeySessionDelegate which is available in tvos 10.2
 !unknown-type! AVPersistableContentKeyRequest bound
+
+
+## unsorted
+
+!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found

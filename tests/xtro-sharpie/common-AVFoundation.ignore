@@ -7,7 +7,6 @@
 !missing-field! AVVideoCodecHEVC not bound
 !missing-field! AVVideoTransferFunction_ITU_R_2100_HLG not bound
 !missing-field! AVVideoTransferFunction_SMPTE_ST_2084_PQ not bound
-!missing-protocol! AVFragmentMinding not bound
 !missing-protocol! AVVideoCompositionInstruction not bound
 !missing-protocol-conformance! AVAsset should conform to AVAsynchronousKeyValueLoading
 !missing-protocol-conformance! AVAssetTrack should conform to AVAsynchronousKeyValueLoading
