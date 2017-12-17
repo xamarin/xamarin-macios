@@ -52,10 +52,10 @@ namespace Extrospection {
 				if (!type_map.TryGetValue (rname, out td))
 					type_map.Add (rname, type);
 				else {
-					var framework = Helpers.GetFramework (type);
 					// always report in the same order (for unique error messages)
-					var sorted = Helpers.Sort (type.FullName, td.FullName);
-					Log.On (framework).Add ($"!duplicate-register! {rname} exists as both {sorted.Item1} and {sorted.Item2}");
+					var sorted = Helpers.Sort (type, td);
+					var framework = Helpers.GetFramework (sorted.Item1);
+					Log.On (framework).Add ($"!duplicate-register! {rname} exists as both {sorted.Item1.FullName} and {sorted.Item2.FullName}");
 				}
 			}
 		}

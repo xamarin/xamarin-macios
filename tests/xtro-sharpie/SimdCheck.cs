@@ -134,9 +134,9 @@ namespace Extrospection
 			ManagedSimdInfo existing;
 			if (managed_methods.TryGetValue (key, out existing)) {
 				if (very_strict) {
-					var framework = method.DeclaringType.Namespace;
-					var sorted = Helpers.Sort (existing.Method.FullName, method.FullName);
-					Log.On (framework).Add ($"!duplicate-type-mapping! same key '{key}' for both '{sorted.Item1}' and '{sorted.Item2}'");
+					var sorted = Helpers.Sort (existing.Method, method);
+					var framework = sorted.Item1.DeclaringType.Namespace;
+					Log.On (framework).Add ($"!duplicate-type-mapping! same key '{key}' for both '{sorted.Item1.FullName}' and '{sorted.Item2.FullName}'");
 				}
 			} else {
 				managed_methods [key] = new ManagedSimdInfo {

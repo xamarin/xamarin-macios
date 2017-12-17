@@ -24,9 +24,9 @@ namespace Extrospection {
 			else if (td.Namespace.StartsWith ("OpenTK.", StringComparison.Ordinal)) {
 				// OpenTK duplicate a lots of enums between it's versions
 			} else {
-				var sorted = Helpers.Sort (type.FullName, td.FullName);
-				var framework = Helpers.GetFramework (type);
-				Log.On (framework).Add ($"!duplicate-type-name! {name} enum exists as both {sorted.Item1} and {sorted.Item2}");
+				var sorted = Helpers.Sort (type, td);
+				var framework = Helpers.GetFramework (sorted.Item1);
+				Log.On (framework).Add ($"!duplicate-type-name! {name} enum exists as both {sorted.Item1.FullName} and {sorted.Item2.FullName}");
 			}
 		}
 

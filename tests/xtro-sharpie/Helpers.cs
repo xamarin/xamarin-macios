@@ -342,12 +342,12 @@ namespace Extrospection {
 			}
 		}
 
-		public static (string, string) Sort (string s1, string s2)
+		public static (T, T) Sort<T> (T o1, T o2)
 		{
-			if (StringComparer.Ordinal.Compare (s1, s2) < 0)
-				return (s1, s2);
+			if (StringComparer.Ordinal.Compare (o1.ToString (), o2.ToString ()) < 0)
+				return (o2, o1);
 			else
-				return (s2, s1);
+				return (o1, o2);
 		}
 	}
 }
