@@ -123,6 +123,7 @@ namespace MonoMac.Tuner {
 		{
 			var context = new MonoMacLinkContext (pipeline, options.Resolver);
 			context.CoreAction = AssemblyAction.Link;
+			context.UserAction = AssemblyAction.Link;
 			context.LinkSymbols = options.LinkSymbols;
 			if (options.LinkSymbols) {
 				context.SymbolReaderProvider = new DefaultSymbolReaderProvider ();
