@@ -301,8 +301,8 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void Trust2_Leaf_Only ()
 		{
-			X509Certificate2 x = new X509Certificate2 (CertificateTest.api_imgur_com);
-			using (var policy = SecPolicy.CreateSslPolicy (true, "api.imgur.com"))
+			X509Certificate x = new X509Certificate2 (CertificateTest.mail_google_com);
+			using (var policy = SecPolicy.CreateSslPolicy (true, "mail.google.com"))
 			using (var trust = new SecTrust (x, policy)) {
 				Trust_Leaf_Only (trust, policy);
 			}
