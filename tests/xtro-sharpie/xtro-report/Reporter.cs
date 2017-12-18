@@ -90,6 +90,8 @@ namespace Extrospection {
 		static string InputDirectory { get; set; }
 		static string ReportFolder { get; set; }
 
+		static List<string> Frameworks = new List<string> ();
+
 		static readonly string [] Platforms = new [] { "iOS", "tvOS", "watchOS", "macOS" };
 
 		public static bool ProcessFramework (string framework)
@@ -145,6 +147,14 @@ namespace Extrospection {
 			return count;
 		}
 
+		static void AddFramework (string file)
+		{
+			var filename = Path.GetFileNameWithoutExtension (file);
+			var fx = filename.Substring (filename.IndexOf ('-') + 1);
+			if (!Frameworks.Contains (fx))
+				Frameworks.Add (fx); 
+		}
+
 		public static int Main (string [] args)
 		{
 			InputDirectory = args.Length == 0 ? "." : args [0];
@@ -154,7 +164,6 @@ namespace Extrospection {
 
 			int width = 100 / ((full ? 2 : 1) + (full ? 3 : 2) * Platforms.Length);
 
-			var frameworks = new List<string> ();
 			var allfiles = new List<string> ();
 
 			ReportFolder = args.Length > 1 ? args [1] : "report";
@@ -176,17 +185,14 @@ namespace Extrospection {
 			log.WriteLine ("</tr>");
 
 			log.WriteLine ("<tr>");
-			if (full) {
+			if (full)
 				log.WriteLine ($"<td align='center' bgcolor='green' width='{width}%'>Common</td>");
-				foreach (var platform in Platforms) {
+			foreach (var platform in Platforms) {
+				if (full)
 					log.WriteLine ($"<td align='center' bgcolor='green' width='{width}%'>{platform}</td>");
-					var files = Directory.GetFiles (InputDirectory, $"{platform}-*.ignore");
-					foreach (var file in files) {
-						var filename = Path.GetFileNameWithoutExtension (file);
-						var fx = filename.Substring (filename.IndexOf ('-') + 1);
-						if (!frameworks.Contains (fx))
-							frameworks.Add (fx); 
-					}
+				var files = Directory.GetFiles (InputDirectory, $"{platform}-*.ignore");
+				foreach (var file in files) {
+					AddFramework (file);
 				}
 			}
 			foreach (var platform in Platforms) {
@@ -194,10 +200,11 @@ namespace Extrospection {
 				var files = Directory.GetFiles (InputDirectory, $"{platform}-*.unclassified");
 				foreach (var file in files) {
 					allfiles.Add (file);
-					var filename = Path.GetFileNameWithoutExtension (file);
-					var fx = filename.Substring (filename.IndexOf ('-') + 1);
-					if (!frameworks.Contains (fx))
-						frameworks.Add (fx); 
+					AddFramework (file);
+				}
+				var todos = Directory.GetFiles (InputDirectory, $"{platform}-*.todo");
+				foreach (var file in todos) {
+					AddFramework (file);
 				}
 			}
 			foreach (var platform in Platforms)
@@ -216,8 +223,8 @@ namespace Extrospection {
 			var todo = new int [Platforms.Length];
 			int errors = 0;
 
-			frameworks.Sort ();
-			foreach (var fx in frameworks) {
+			Frameworks.Sort ();
+			foreach (var fx in Frameworks) {
 				if (Filter (fx))
 					continue;
 				log.WriteLine ("<tr>");
@@ -250,8 +257,8 @@ namespace Extrospection {
 					}
 				}
 				for (int i = 0; i < Platforms.Length; i++) {
-					string filename = $"{InputDirectory}/{Platforms [i]}-{fx}.unclassified";
-					var count = ProcessFile (filename);
+					string filename = $"{Platforms [i]}-{fx}.unclassified";
+					var count = ProcessFile (Path.Combine (InputDirectory, filename));
 					log.Write ("<td align='center'");
 					if (count < 1)
 						log.Write (" bgcolor='salmon'>-");
@@ -262,8 +269,8 @@ namespace Extrospection {
 					errors += count;
 				}
 				for (int i = 0; i < Platforms.Length; i++) {
-					string filename = $"{InputDirectory}/{Platforms [i]}-{fx}.todo";
-					var count = ProcessFile (filename);
+					string filename = $"{Platforms [i]}-{fx}.todo";
+					var count = ProcessFile (Path.Combine (InputDirectory, filename));
 					log.Write ("<td align='center' ");
 					if (count <= 0)
 						log.Write ("bgcolor='peachpuff'>-");

@@ -1,3 +1,4 @@
+## more deprecated (iOS 7) constants
 !missing-field! kAudioSession_AudioRouteChangeKey_CurrentRouteDescription not bound
 !missing-field! kAudioSession_AudioRouteChangeKey_PreviousRouteDescription not bound
 !missing-field! kAudioSession_AudioRouteKey_Inputs not bound
@@ -8,6 +9,8 @@
 !missing-field! kAudioSession_OutputDestinationKey_Description not bound
 !missing-field! kAudioSession_OutputDestinationKey_ID not bound
 !missing-field! kAudioSession_RouteChangeKey_Reason not bound
+
+## all kAudioSession[In|Out]putRoute* were deprecated in iOS 7 - not worth binding
 !missing-field! kAudioSessionInputRoute_BluetoothHFP not bound
 !missing-field! kAudioSessionInputRoute_BuiltInMic not bound
 !missing-field! kAudioSessionInputRoute_HeadsetMic not bound
@@ -22,5 +25,11 @@
 !missing-field! kAudioSessionOutputRoute_Headphones not bound
 !missing-field! kAudioSessionOutputRoute_LineOut not bound
 !missing-field! kAudioSessionOutputRoute_USBAudio not bound
+
+## deprecated in iOS 7
 !missing-pinvoke! AudioSessionRemovePropertyListenerWithUserData is not bound
+
+
+## unsorted
+
 !missing-pinvoke! MusicTrackGetDestMIDIEndpoint is not bound

@@ -88,6 +88,11 @@ classify: build $(XIOS_PCH) $(XWATCHOS_PCH) $(XTVOS_PCH) $(XMAC_PCH)
 	$(MONO) bin/Debug/xtro-sharpie.exe $(XWATCHOS_PCH) $(XWATCHOS)
 	$(MONO) bin/Debug/xtro-sharpie.exe $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
 	$(MONO) bin/Debug/xtro-sharpie.exe $(XMAC_PCH) $(XMAC)
+	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe .
+	rm -f *.raw
+
+insane:
+	XTRO_SANITY_SKIP=1 make all
 
 all: classify report
 

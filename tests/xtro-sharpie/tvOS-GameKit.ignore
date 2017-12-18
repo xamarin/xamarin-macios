@@ -1,5 +1,15 @@
+## typedef is used + untyped enum in GKPeerPickerController.h: typedef NSUInteger GKPeerPickerConnectionType
+!unknown-native-enum! GKPeerPickerConnectionType bound
+
+## GKVoiceChatService is not in tvOS so nothing uses GKVoiceChatClient
+!missing-protocol! GKVoiceChatClient not bound
+
+## all members are not available so the protocol is empty
+## however this is confusing because some protocols have no members (so it can't just be ignored)
 !missing-protocol! GKFriendRequestComposeViewControllerDelegate not bound
 !missing-protocol! GKSavedGameListener not bound
+
+## GKSession is not in the tvOS API but the GKSessionDelegate is not marked
+## looks like mistakes as the API is not used anywhere else
+## easier to add later, if needed, than remove
 !missing-protocol! GKSessionDelegate not bound
-!missing-protocol! GKVoiceChatClient not bound
-!unknown-native-enum! GKPeerPickerConnectionType bound

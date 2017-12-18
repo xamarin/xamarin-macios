@@ -1,6 +1,12 @@
-!duplicate-register! _NSDatePickerCellDelegate exists as both AppKit.NSDatePicker/_NSDatePickerCellDelegate and AppKit.NSDatePickerCell/_NSDatePickerCellDelegate
-!duplicate-type-name! NSFileWrapperReadingOptions enum exists as both AppKit.NSFileWrapperReadingOptions and Foundation.NSFileWrapperReadingOptions
-!duplicate-type-name! NSWritingDirection enum exists as both AppKit.NSWritingDirection and Foundation.NSWritingDirection
+# https://bugzilla.xamarin.com/show_bug.cgi?id=30717 
+!duplicate-register! _NSDatePickerCellDelegate exists as both AppKit.NSDatePickerCell/_NSDatePickerCellDelegate and AppKit.NSDatePicker/_NSDatePickerCellDelegate
+
+# Proxy class for NSGraphicsContext internal to AppKit
+!unknown-type! NSPrintPreviewGraphicsContext bound
+
+
+## unsorted
+
 !extra-enum-native! NSEventSubtype
 !extra-protocol-member! unexpected selector NSApplicationDelegate::orderFrontStandardAboutPanel: found
 !extra-protocol-member! unexpected selector NSApplicationDelegate::orderFrontStandardAboutPanelWithOptions: found
@@ -1264,7 +1270,6 @@
 !unknown-native-enum! NSWindowLevel bound
 !unknown-native-enum! NSWindowStyle bound
 !unknown-type! NSMenuView bound
-!unknown-type! NSPrintPreviewGraphicsContext bound
 !unknown-type! NSRemoteOpenPanel bound
 !unknown-type! NSRemoteSavePanel bound
 !wrong-enum-size! NSEventSubtype managed 8 vs native 2

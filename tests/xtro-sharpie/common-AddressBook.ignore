@@ -1,3 +1,8 @@
+## Apple headers: Deprecated in iOS 9
+!unknown-native-enum! ABPersonImageFormat bound
+
+## constants were manually bound and this framework is deprecated (Contact)
+## so it's not worth updating the binding code for them
 !missing-field! kABGroupNameProperty not bound
 !missing-field! kABHomeLabel not bound
 !missing-field! kABOtherLabel not bound
@@ -87,4 +92,3 @@
 !missing-field! kABSourceNameProperty not bound
 !missing-field! kABSourceTypeProperty not bound
 !missing-field! kABWorkLabel not bound
-!unknown-native-enum! ABPersonImageFormat bound
