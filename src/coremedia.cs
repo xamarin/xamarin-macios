@@ -19,7 +19,7 @@ namespace XamCore.CoreMedia {
 	}
 
 	[Static][Internal]
-	[Mavericks, iOS (6,0)]
+	[Mac (10, 9), iOS (6,0)]
 	interface CMTextMarkupAttributesKeys {
 		[Internal][Field ("kCMTextMarkupAttribute_ForegroundColorARGB")]
 		NSString ForegroundColorARGB { get; }

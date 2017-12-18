@@ -238,7 +238,6 @@ namespace XamCore.CoreLocation {
 		bool RegionMonitoringAvailable { get; }
 
 		[NoWatch][NoTV]
-		[iOS (4,0)]
 		[iOS (4, 0)]
 		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'IsMonitoringAvailable' and 'AuthorizationStatus' instead.")]
 		[Mac (10, 8)]

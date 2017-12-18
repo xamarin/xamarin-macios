@@ -3215,7 +3215,7 @@ namespace XamCore.Foundation
 		[Export ("enumerateResultsUsingBlock:")]
 		void EnumerateResultsUsingBlock (NSMetadataQueryEnumerationCallback callback);
 
-		[iOS (7,0), Mavericks, Export ("enumerateResultsWithOptions:usingBlock:")]
+		[iOS (7,0), Mac (10, 9), Export ("enumerateResultsWithOptions:usingBlock:")]
 		void EnumerateResultsWithOptions (NSEnumerationOptions opts, NSMetadataQueryEnumerationCallback block);
 
 		//
@@ -5412,7 +5412,7 @@ namespace XamCore.Foundation
 		[Export ("initFileURLWithFileSystemRepresentation:isDirectory:relativeToURL:")]
 		IntPtr Constructor (IntPtr ptrUtf8path, bool isDir, NSUrl baseURL);
 
-		[iOS (7,0), Mavericks, Static, Export ("fileURLWithFileSystemRepresentation:isDirectory:relativeToURL:")]
+		[iOS (7,0), Mac (10, 9), Static, Export ("fileURLWithFileSystemRepresentation:isDirectory:relativeToURL:")]
 		NSUrl FromUTF8Pointer (IntPtr ptrUtf8path, bool isDir, NSUrl baseURL);
 
 #if MONOMAC
@@ -13240,7 +13240,7 @@ namespace XamCore.Foundation
 #if MONOMAC
 	partial interface NSBundle {
 		// - (NSImage *)imageForResource:(NSString *)name NS_AVAILABLE_MAC(10_7);
-		[Lion, Export ("imageForResource:")]
+		[Mac (10, 7), Export ("imageForResource:")]
 		NSImage ImageForResource (string name);
 	}
 #endif
@@ -13248,7 +13248,7 @@ namespace XamCore.Foundation
 	partial interface NSAttributedString {
 
 #if MONOMAC
-		[Lion, Field ("NSTextLayoutSectionOrientation", "AppKit")]
+		[Mac (10, 7), Field ("NSTextLayoutSectionOrientation", "AppKit")]
 #else
 		[iOS (7,0)]
 		[Field ("NSTextLayoutSectionOrientation", "UIKit")]
@@ -13256,7 +13256,7 @@ namespace XamCore.Foundation
 		NSString TextLayoutSectionOrientation { get; }
 
 #if MONOMAC
-		[Lion, Field ("NSTextLayoutSectionRange", "AppKit")]
+		[Mac (10, 7), Field ("NSTextLayoutSectionRange", "AppKit")]
 #else
 		[iOS (7,0)]
 		[Field ("NSTextLayoutSectionRange", "UIKit")]
@@ -13264,7 +13264,7 @@ namespace XamCore.Foundation
 		NSString TextLayoutSectionRange { get; }
 
 #if MONOMAC
-		[Lion, Field ("NSTextLayoutSectionsAttribute", "AppKit")]
+		[Mac (10, 7), Field ("NSTextLayoutSectionsAttribute", "AppKit")]
 #else
 		[iOS (7,0)]
 		[Field ("NSTextLayoutSectionsAttribute", "UIKit")]
@@ -13281,7 +13281,7 @@ namespace XamCore.Foundation
 		[Field ("NSSpellingStateAttributeName", "AppKit")]
 		NSString SpellingStateAttributeName { get; }
 
-		[MountainLion, Field ("NSTextAlternativesAttributeName", "AppKit")]
+		[Mac (10, 8), Field ("NSTextAlternativesAttributeName", "AppKit")]
 		NSString TextAlternativesAttributeName { get; }
 		#endif
 
@@ -13422,7 +13422,7 @@ namespace XamCore.Foundation
 	[Mac (10,8), iOS (11,0), NoWatch, NoTV]
 	partial interface NSFileManager {
 
-		[MountainLion, Export ("trashItemAtURL:resultingItemURL:error:")]
+		[Mac (10, 8), Export ("trashItemAtURL:resultingItemURL:error:")]
 		bool TrashItem (NSUrl url, out NSUrl resultingItemUrl, out NSError error);
 	}
 
@@ -13439,7 +13439,7 @@ namespace XamCore.Foundation
 #if MONOMAC
 	partial interface NSFilePresenter {
 
-		[MountainLion, Export ("primaryPresentedItemURL")]
+		[Mac (10, 8), Export ("primaryPresentedItemURL")]
 		NSUrl PrimaryPresentedItemUrl { get; }
 	}
 

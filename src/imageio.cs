@@ -910,7 +910,7 @@ namespace XamCore.ImageIO {
 		NSString Exif { get; }
 		[Field ("kCGImageMetadataNamespaceExifAux")]
 		NSString ExifAux { get; }
-		[Mavericks, Field ("kCGImageMetadataNamespaceExifEX")]
+		[Mac (10, 9), Field ("kCGImageMetadataNamespaceExifEX")]
 		NSString ExifEx { get; }
 		[Field ("kCGImageMetadataNamespaceDublinCore")]
 		NSString DublinCore { get; }
@@ -933,7 +933,7 @@ namespace XamCore.ImageIO {
 		NSString Exif { get; }
 		[Field ("kCGImageMetadataPrefixExifAux")]
 		NSString ExifAux { get; }
-		[Mavericks, Field ("kCGImageMetadataPrefixExifEX")]
+		[Mac (10, 9), Field ("kCGImageMetadataPrefixExifEX")]
 		NSString ExifEx { get; }
 		[Field ("kCGImageMetadataPrefixDublinCore")]
 		NSString DublinCore { get; }

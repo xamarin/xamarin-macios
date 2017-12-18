@@ -19,7 +19,7 @@ namespace XamCore.AppKit {
 	}
 
 #if !XAMCORE_2_0
-	[Lion, Flags]
+	[Mac (10, 7), Flags]
 	[Native]
 	public enum NSTableViewAnimationOptions : nuint_compat_int {
 		EffectFade = 0x1,

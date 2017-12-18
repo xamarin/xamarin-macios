@@ -914,7 +914,7 @@ namespace XamCore.WebKit {
 		[Export ("scrollHeight")]
 		int ScrollHeight { get; } /* int, not NSInteger */
 
-		[Mavericks, Export ("className", ArgumentSemantic.Copy)]
+		[Mac (10, 9), Export ("className", ArgumentSemantic.Copy)]
 		string ClassName { get; set; }
 
 		[Export ("firstElementChild", ArgumentSemantic.Retain)]

@@ -4172,7 +4172,7 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[DisableDefaultCtor] // Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -[AVAssetWriterInputGroup initWithInputs:defaultInput:] invalid parameter not satisfying: inputs != ((void*)0)
-	[iOS (7,0), Mavericks, BaseType (typeof (AVMediaSelectionGroup))]
+	[iOS (7,0), Mac (10, 9), BaseType (typeof (AVMediaSelectionGroup))]
 	interface AVAssetWriterInputGroup {
 	
 		[Static, Export ("assetWriterInputGroupWithInputs:defaultInput:")]
@@ -7995,7 +7995,7 @@ namespace XamCore.AVFoundation {
 		[Export ("getOpacityRampForTime:startOpacity:endOpacity:timeRange:")]
 		bool GetOpacityRamp (CMTime time, ref float /* defined as 'float*' */ startOpacity, ref float /* defined as 'float*' */ endOpacity, ref CMTimeRange timeRange);
 
-		[iOS (7,0), Mavericks, Export ("getCropRectangleRampForTime:startCropRectangle:endCropRectangle:timeRange:")]
+		[iOS (7,0), Mac (10, 9), Export ("getCropRectangleRampForTime:startCropRectangle:endCropRectangle:timeRange:")]
 		bool GetCrop (CMTime time, ref CGRect startCropRectangle, ref CGRect endCropRectangle, ref CMTimeRange timeRange);
 	}
 
@@ -8321,7 +8321,6 @@ namespace XamCore.AVFoundation {
 		[Export ("supportsVideoMinFrameDuration"), Internal]
 		bool _SupportsVideoMinFrameDuration { [Bind ("isVideoMinFrameDurationSupported")] get;  }
 
-		[iOS (5,0)]
 		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)]
 		[Mac (10, 7)]
@@ -8332,7 +8331,6 @@ namespace XamCore.AVFoundation {
 		[Export ("supportsVideoMaxFrameDuration"), Internal]
 		bool _SupportsVideoMaxFrameDuration { [Bind ("isVideoMaxFrameDurationSupported")] get;  }
 
-		[iOS (5,0)]
 		[Export ("videoMaxFrameDuration")]
 		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)] 
@@ -8449,7 +8447,7 @@ namespace XamCore.AVFoundation {
 		[Export ("input")]
 		AVCaptureInput Input  { get; }
 
-		[iOS (7,0), Mavericks, Export ("clock", ArgumentSemantic.Copy)]
+		[iOS (7,0), Mac (10, 9), Export ("clock", ArgumentSemantic.Copy)]
 		CMClock Clock { get; }
 	}
 
