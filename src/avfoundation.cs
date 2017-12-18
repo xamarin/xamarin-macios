@@ -6556,43 +6556,43 @@ namespace XamCore.AVFoundation {
 		[Field ("AVMetadataObjectTypeFace"), Mac (10,10)]
 		NSString TypeFace { get; }
 
-		[NoTV, Since(7,0), NoMac]
+		[NoTV, iOS (7,0), NoMac]
 		[Field ("AVMetadataObjectTypeAztecCode")]
 		NSString TypeAztecCode { get; }
 		
-		[NoTV, Since(7,0), NoMac]
+		[NoTV, iOS (7,0), NoMac]
 		[Field ("AVMetadataObjectTypeCode128Code")]
 		NSString TypeCode128Code { get; }
 		
-		[NoTV, Since(7,0), NoMac]
+		[NoTV, iOS (7,0), NoMac]
 		[Field ("AVMetadataObjectTypeCode39Code")]
 		NSString TypeCode39Code { get; }
 		
-		[NoTV, Since(7,0), NoMac]
+		[NoTV, iOS (7,0), NoMac]
 		[Field ("AVMetadataObjectTypeCode39Mod43Code")]
 		NSString TypeCode39Mod43Code { get; }
 		
-		[NoTV, Since(7,0), NoMac]
+		[NoTV, iOS (7,0), NoMac]
 		[Field ("AVMetadataObjectTypeCode93Code")]
 		NSString TypeCode93Code { get; }
 		
-		[NoTV, Since(7,0), NoMac]
+		[NoTV, iOS (7,0), NoMac]
 		[Field ("AVMetadataObjectTypeEAN13Code")]
 		NSString TypeEAN13Code { get; }
 		
-		[NoTV, Since(7,0), NoMac]
+		[NoTV, iOS (7,0), NoMac]
 		[Field ("AVMetadataObjectTypeEAN8Code")]
 		NSString TypeEAN8Code { get; }
 		
 		[Field ("AVMetadataObjectTypePDF417Code")]
-		[NoTV, Since(7,0), NoMac]
+		[NoTV, iOS (7,0), NoMac]
 		NSString TypePDF417Code { get; }
 		
-		[NoTV, Since(7,0), NoMac]
+		[NoTV, iOS (7,0), NoMac]
 		[Field ("AVMetadataObjectTypeQRCode")]
 		NSString TypeQRCode { get; }
 		
-		[NoTV, Since(7,0), NoMac]
+		[NoTV, iOS (7,0), NoMac]
 		[Field ("AVMetadataObjectTypeUPCECode")]
 		NSString TypeUPCECode { get; }
 
@@ -9668,20 +9668,20 @@ namespace XamCore.AVFoundation {
 		[Export ("subjectAreaChangeMonitoringEnabled")]
 		bool SubjectAreaChangeMonitoringEnabled { [Bind ("isSubjectAreaChangeMonitoringEnabled")] get; set; }
 		
-		[Since(5,0)]
+		[iOS (5,0)]
 		[Export ("isFlashAvailable")]
 		bool FlashAvailable { get;  }
 
 		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_10_0, Message="Use 'AVCapturePhotoOutput.IsFlashScene' instead.")]
-		[Since(5,0)]
+		[iOS (5,0)]
 		[Export ("isFlashActive")]
 		bool FlashActive { get; }
 
-		[Since(5,0)]
+		[iOS (5,0)]
 		[Export ("isTorchAvailable")]
 		bool TorchAvailable { get; }
 
-		[Since(5,0)]
+		[iOS (5,0)]
 		[Export ("torchLevel")]
 		float TorchLevel { get; } // defined as 'float'
 

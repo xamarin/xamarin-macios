@@ -129,11 +129,11 @@ namespace XamCore.EventKit {
 		[Export ("removeRecurrenceRule:")]
 		void RemoveRecurrenceRule (EKRecurrenceRule rule);
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("calendarItemIdentifier")]
 		string CalendarItemIdentifier { get;  }
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("calendarItemExternalIdentifier")]
 		string CalendarItemExternalIdentifier { get;  }
 	}

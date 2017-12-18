@@ -833,27 +833,27 @@ namespace XamCore.ImageIO {
 		[Field ("kCGImagePropertyMakerCanonAspectRatioInfo")]
 		NSString MakerCanonAspectRatioInfo { get; }
 
-		[Since(7,0), Mac (10, 9)]
+		[iOS (7,0), Mac (10, 9)]
 		[Field ("kCGImagePropertyExifISOSpeed")]
 		NSString ExifISOSpeed { get; }
-		[Since(7,0), Mac (10, 9)]
+		[iOS (7,0), Mac (10, 9)]
 		[Field ("kCGImagePropertyExifISOSpeedLatitudeyyy")]
 		NSString ExifISOSpeedLatitudeYyy { get; }
-		[Since(7,0), Mac (10, 9)]
+		[iOS (7,0), Mac (10, 9)]
 		[Field ("kCGImagePropertyExifISOSpeedLatitudezzz")]
 		NSString ExifISOSpeedLatitudeZzz { get; }
-		[Since(7,0), Mac (10, 9)]
+		[iOS (7,0), Mac (10, 9)]
 		[Field ("kCGImagePropertyExifRecommendedExposureIndex")]
 		NSString ExifRecommendedExposureIndex { get; }
-		[Since(7,0), Mac (10, 9)]
+		[iOS (7,0), Mac (10, 9)]
 		[Field ("kCGImagePropertyExifSensitivityType")]
 		NSString ExifSensitivityType { get; }
-		[Since(7,0), Mac (10, 9)]
+		[iOS (7,0), Mac (10, 9)]
 		[Field ("kCGImagePropertyExifStandardOutputSensitivity")]
 		NSString ExifStandardOutputSensitivity { get; }
 
 #if !MONOMAC
-		[Since(7,0)]
+		[iOS (7,0)]
 		[Field ("kCGImagePropertyMakerAppleDictionary")]
 		NSString MakerAppleDictionary { get; }
 #endif

@@ -19,7 +19,7 @@ using System;
 
 namespace XamCore.StoreKit {
 
-	[Since(6,0)]
+	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	partial interface SKDownload {
 #if MONOMAC
@@ -172,19 +172,19 @@ namespace XamCore.StoreKit {
 		//
 		// iOS 6.0
 		//
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("startDownloads:")]
 		void StartDownloads (SKDownload [] downloads);
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("pauseDownloads:")]
 		void PauseDownloads (SKDownload [] downloads);
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("resumeDownloads:")]
 		void ResumeDownloads (SKDownload [] downloads);
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("cancelDownloads:")]
 		void CancelDownloads (SKDownload [] downloads);
 
@@ -208,7 +208,7 @@ namespace XamCore.StoreKit {
 		[Export ("productIdentifier")]
 		string ProductIdentifier { get; }
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("downloadable")]
 		bool Downloadable {
 #if MONOMAC
@@ -219,7 +219,7 @@ namespace XamCore.StoreKit {
 #endif
 		}
 
-		[Since(6,0)]
+		[iOS (6,0)]
 #if MONOMAC
 		[Export ("contentLengths")]
 #else
@@ -227,7 +227,7 @@ namespace XamCore.StoreKit {
 #endif
 		NSNumber [] DownloadContentLengths { get;  }
 
-		[Since(6,0)]
+		[iOS (6,0)]
 #if MONOMAC
 		[Export ("contentVersion")]
 #else
@@ -261,7 +261,7 @@ namespace XamCore.StoreKit {
 		[Export ("paymentQueueRestoreCompletedTransactionsFinished:")]
 		void RestoreCompletedTransactionsFinished (SKPaymentQueue queue);
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("paymentQueue:updatedDownloads:")]
 		void UpdatedDownloads (SKPaymentQueue queue, SKDownload [] downloads);
 
@@ -296,7 +296,7 @@ namespace XamCore.StoreKit {
 		[Export ("transactionState")]
 		SKPaymentTransactionState TransactionState { get; }
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("downloads")]
 		SKDownload [] Downloads { get;  }
 	}

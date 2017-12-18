@@ -449,7 +449,7 @@ namespace XamCore.CoreLocation {
 		void MonitoringFailed (CLLocationManager manager, CLRegion region, NSError error);
 
 		[NoWatch][NoTV]
-		[Since(5,0)]
+		[iOS (5,0)]
 		[Mac (10,8)]
 		[Export ("locationManager:didStartMonitoringForRegion:"), EventArgs ("CLRegion")]
 		void DidStartMonitoringForRegion (CLLocationManager manager, CLRegion region);

@@ -1105,7 +1105,7 @@ namespace XamCore.MediaPlayer {
 		[Notification]
 		NSString MediaPlaybackIsPreparedToPlayDidChangeNotification { get; }
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("readyForDisplay")]
 		bool ReadyForDisplay { get;  }
 

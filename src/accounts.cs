@@ -55,11 +55,11 @@ namespace XamCore.Accounts {
 		[Export ("initWithOAuthToken:tokenSecret:")]
 		IntPtr Constructor (string oauthToken, string tokenSecret);
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("initWithOAuth2Token:refreshToken:expiryDate:")]
 		IntPtr Constructor (string oauth2Token, string refreshToken, NSDate expiryDate);
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[NullAllowed] // by default this property is null
 		[Export ("oauthToken", ArgumentSemantic.Copy)]
 		string OAuthToken { get; set;  }
@@ -98,18 +98,18 @@ namespace XamCore.Accounts {
 		[Notification]
 		NSString ChangeNotification { get; }
 		
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("renewCredentialsForAccount:completion:")]
 		[Async]
 		void RenewCredentials (ACAccount account, Action<ACAccountCredentialRenewResult,NSError> completionHandler);
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Protected]
 		[Export ("requestAccessToAccountsWithType:options:completion:")]
 		[Async]
 		void RequestAccess (ACAccountType accountType, [NullAllowed] NSDictionary options, ACRequestCompletionHandler completion);
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Wrap ("RequestAccess (accountType, options == null ? null : options.Dictionary, completion)")]
 		[Async]
 		void RequestAccess (ACAccountType accountType, [NullAllowed] AccountStoreOptions options, ACRequestCompletionHandler completion);

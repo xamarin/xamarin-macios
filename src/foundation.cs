@@ -6805,7 +6805,7 @@ namespace XamCore.Foundation
 		NSUrlSessionStreamTask CreateBidirectionalStream (NSNetService service);
 	}
 
-	[Since(9,0)]
+	[iOS (9,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSUrlSessionTaskDelegate), Name="NSURLSessionStreamDelegate")]
 	interface NSUrlSessionStreamDelegate

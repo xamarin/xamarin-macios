@@ -1722,7 +1722,7 @@ namespace XamCore.CoreAnimation {
 		NSString RenderAdditive { get; }			
 	}
 
-	[Since(7,0), Mac (10, 9)]
+	[iOS (7,0), Mac (10, 9)]
 	[BaseType (typeof (NSObject))]
 	interface CAEmitterBehavior : NSSecureCoding {
 

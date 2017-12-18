@@ -221,7 +221,7 @@ namespace XamCore.CoreData
 		[Export ("valueTransformerName")]
 		string ValueTransformerName { get; set; }
 
-		[Since(5,0)]
+		[iOS (5,0)]
 		[Export ("allowsExternalBinaryDataStorage")]
 		bool AllowsExternalBinaryDataStorage { get; set; }
 	}
@@ -309,7 +309,7 @@ namespace XamCore.CoreData
 		[Export ("versionHashModifier")]
 		string VersionHashModifier { get; set; }
 
-		[Since(5,0)]
+		[iOS (5,0)]
 		[NullAllowed] // by default this property is null
 		[Export ("compoundIndexes", ArgumentSemantic.Retain)]
 		[iOS (5, 0)]
@@ -499,34 +499,34 @@ namespace XamCore.CoreData
 		[NullAllowed]
 		NSPropertyDescription [] PropertiesToFetch { get; set; }
 
-		[Since(5,0)]
+		[iOS (5,0)]
 		[Static]
 		[Export ("fetchRequestWithEntityName:")]
 		// note: Xcode 6.3 changed the return value type from `NSFetchRequest*` to `instancetype`
 		NSFetchRequest FromEntityName (string entityName);
 
-		[Since(5,0)]
+		[iOS (5,0)]
 		[Export ("initWithEntityName:")]
 		IntPtr Constructor (string entityName);
 
-		[Since(5,0)]
+		[iOS (5,0)]
 		[NullAllowed, Export ("entityName", ArgumentSemantic.Strong)]
 		string EntityName { get; }
 
-		[Since(5,0)]
+		[iOS (5,0)]
 		[Export ("fetchBatchSize")]
 		nint FetchBatchSize { get; set; }
 
-		[Since(5,0)]
+		[iOS (5,0)]
 		[Export ("shouldRefreshRefetchedObjects")]
 		bool ShouldRefreshRefetchedObjects { get; set; }
 
-		[Since(5,0)]
+		[iOS (5,0)]
 		[Export ("havingPredicate", ArgumentSemantic.Retain)]
 		[NullAllowed]
 		NSPredicate HavingPredicate { get; set; }
 
-		[Since(5,0)]
+		[iOS (5,0)]
 		[Export ("propertiesToGroupBy", ArgumentSemantic.Copy)]
 		[NullAllowed]
 		NSPropertyDescription [] PropertiesToGroupBy { get; set; }
@@ -647,7 +647,7 @@ namespace XamCore.CoreData
 
 	interface INSFetchedResultsSectionInfo {}
 #endif
-	[Since(5,0)]
+	[iOS (5,0)]
 	// 	NSInvalidArgumentException *** -loadMetadata: cannot be sent to an abstract object of class NSIncrementalStore: Create a concrete instance!
 	//	Apple doc quote: "NSIncrementalStore is an abstract superclass..."
 #if XAMCORE_4_0 // bad API -> should be an abstract type (breaking change)
@@ -702,7 +702,7 @@ namespace XamCore.CoreData
 
 	}
 
-	[Since(5,0)]
+	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSIncrementalStoreNode {
 		[Export ("initWithObjectID:withValues:version:")]
@@ -883,7 +883,7 @@ namespace XamCore.CoreData
 		[Export ("validateForUpdate:")]
 		bool ValidateForUpdate (out NSError error);
 
-		[Since(5,0)]
+		[iOS (5,0)]
 		[Export ("hasChanges")]
 		bool HasChanges { get; }
 
@@ -1314,7 +1314,7 @@ namespace XamCore.CoreData
 
 	}
 
-	[Since(5,0)][Mac (10, 7)]
+	[iOS (5,0)][Mac (10, 7)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSMergeConflict {
@@ -1357,7 +1357,7 @@ namespace XamCore.CoreData
 #endif
 	}
 
-	[Since(5,0)]
+	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSMergePolicy {
@@ -1462,7 +1462,7 @@ namespace XamCore.CoreData
 		void CancelMigrationWithError (NSError error);
 
 		// 5.0
-		[Since(5,0)]
+		[iOS (5,0)]
 		[Export ("usesStoreSpecificMigrationManager")]
 		bool UsesStoreSpecificMigrationManager { get; set; }
 	}
@@ -1984,7 +1984,7 @@ namespace XamCore.CoreData
 		NSString WillRemoveStoreNotification { get; }
 		
 		// 5.0
-		[Since(5,0)]
+		[iOS (5,0)]
 		[Export ("executeRequest:withContext:error:")]
 		[return: NullAllowed]
 #if XAMCORE_4_0
