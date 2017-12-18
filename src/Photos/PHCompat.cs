@@ -23,7 +23,7 @@ namespace XamCore.Photos {
 	}
 #endif
 
-#if !XAMCORE_4_0 && !MONOMAC
+#if !XAMCORE_4_0
 	// incorrect signature, should have been `ref NSError`
 	[Obsolete ("Use 'PHLivePhotoFrameProcessingBlock2' instead.")]
 	public delegate CIImage PHLivePhotoFrameProcessingBlock (IPHLivePhotoFrame frame, NSError error);
