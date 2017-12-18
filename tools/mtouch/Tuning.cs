@@ -131,6 +131,7 @@ namespace MonoTouch.Tuner {
 		{
 			var context = new MonoTouchLinkContext (pipeline, options.Resolver);
 			context.CoreAction = options.LinkMode == LinkMode.None ? AssemblyAction.Copy : AssemblyAction.Link;
+			context.UserAction = options.LinkMode == LinkMode.None ? AssemblyAction.Copy : AssemblyAction.Link;
 			context.LinkSymbols = options.LinkSymbols;
 			context.OutputDirectory = options.OutputDirectory;
 			context.SetParameter ("debug-build", options.DebugBuild.ToString ());
