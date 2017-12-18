@@ -259,7 +259,7 @@ namespace XamCore.QTKit
 		[Field ("QTCaptureDeviceInputSourceLocalizedDisplayNameKey")]
 		NSString InputSourceLocalizedDisplayNameKey { get; }
 		
-		[IntroducedAttribute (PlatformName.MacOSX, 10, 5, PlatformArchitecture.Arch32)] 
+		[Mac (10, 5, PlatformArchitecture.Arch32)] 
 		[Field ("QTCaptureDeviceLegacySequenceGrabberAttribute")]
 		NSString LegacySequenceGrabberAttribute { get; }
 
@@ -611,20 +611,20 @@ namespace XamCore.QTKit
 
 	[BaseType (typeof (NSObject))]
 	interface QTMedia {
-		[IntroducedAttribute (PlatformName.MacOSX, 10, 3, PlatformArchitecture.Arch32)] 
-		[DeprecatedAttribute (PlatformName.MacOSX, 10, 9)] 
+		[Mac (10, 3, PlatformArchitecture.Arch32)] 
+		[Deprecated (PlatformName.MacOSX, 10, 9)] 
 		[Static, Export ("mediaWithQuickTimeMedia:error:")]
 		NSObject FromQuickTimeMedia (IntPtr quicktimeMedia, out NSError error);
 
 #if !XAMCORE_3_0
-		[IntroducedAttribute (PlatformName.MacOSX, 10, 3, PlatformArchitecture.Arch32)] 
-		[DeprecatedAttribute (PlatformName.MacOSX, 10, 9)] 
+		[Mac (10, 3, PlatformArchitecture.Arch32)] 
+		[Deprecated (PlatformName.MacOSX, 10, 9)] 
 		[Export ("initWithQuickTimeMedia:error:")]
 		IntPtr Conditions (IntPtr quicktimeMedia, out NSError error);
 #endif
 		[Sealed] // For the duplicate selector error
-		[IntroducedAttribute (PlatformName.MacOSX, 10, 3, PlatformArchitecture.Arch32)] 
-		[DeprecatedAttribute (PlatformName.MacOSX, 10, 9)] 
+		[Mac (10, 3, PlatformArchitecture.Arch32)] 
+		[Deprecated (PlatformName.MacOSX, 10, 9)] 
 		[Export ("initWithQuickTimeMedia:error:")]
 		IntPtr Constructors (IntPtr quicktimeMedia, out NSError error);
 
@@ -640,8 +640,8 @@ namespace XamCore.QTKit
 		[Export ("hasCharacteristic:")]
 		bool HasCharacteristic (string characteristic);
 
-		[IntroducedAttribute (PlatformName.MacOSX, 10, 3, PlatformArchitecture.Arch32)] 
-		[DeprecatedAttribute (PlatformName.MacOSX, 10, 9)] 
+		[Mac (10, 3, PlatformArchitecture.Arch32)] 
+		[Deprecated (PlatformName.MacOSX, 10, 9)] 
 		[Export ("quickTimeMedia")]
 		IntPtr QuickTimeMedia { get; }
 
@@ -1517,13 +1517,13 @@ namespace XamCore.QTKit
 
 	[BaseType (typeof (NSObject))]
 	interface QTTrack {
-		[IntroducedAttribute (PlatformName.MacOSX, 10, 3, PlatformArchitecture.Arch32)] 
-		[DeprecatedAttribute (PlatformName.MacOSX, 10, 9)] 
+		[Mac (10, 3, PlatformArchitecture.Arch32)] 
+		[Deprecated (PlatformName.MacOSX, 10, 9)] 
 		[Static, Export ("trackWithQuickTimeTrack:error:")]
 		NSObject FromQuickTimeTrack (IntPtr quicktimeTrack, out NSError error);
 
-		[IntroducedAttribute (PlatformName.MacOSX, 10, 3, PlatformArchitecture.Arch32)] 
-		[DeprecatedAttribute (PlatformName.MacOSX, 10, 9)] 
+		[Mac (10, 3, PlatformArchitecture.Arch32)] 
+		[Deprecated (PlatformName.MacOSX, 10, 9)] 
 		[Export ("initWithQuickTimeTrack:error:")]
 		IntPtr Constructor (IntPtr quicktimeTrack, out NSError error);
 
@@ -1539,8 +1539,8 @@ namespace XamCore.QTKit
 		[Export ("setAttribute:forKey:")]
 		void SetAttribute (NSObject value, string attributeKey);
 
-		[IntroducedAttribute (PlatformName.MacOSX, 10, 3, PlatformArchitecture.Arch32)] 
-		[DeprecatedAttribute (PlatformName.MacOSX, 10, 9)] 
+		[Mac (10, 3, PlatformArchitecture.Arch32)] 
+		[Deprecated (PlatformName.MacOSX, 10, 9)] 
 		[Export ("quickTimeTrack")]
 		IntPtr QuickTimeTrack { get; }
 
