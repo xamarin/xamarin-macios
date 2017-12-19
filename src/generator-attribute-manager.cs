@@ -325,7 +325,7 @@ public static class AttributeManager
 
 public static class AttributeConversionManager
 {
-	static object [] HarvestOldAttributeValues (CustomAttributeData attribute)
+	public static System.Attribute ConvertPlatformAttribute (CustomAttributeData attribute, PlatformName platform)
 	{
 		var constructorArguments = new object [attribute.ConstructorArguments.Count];
 		for (int i = 0; i < attribute.ConstructorArguments.Count; ++i)
@@ -334,73 +334,74 @@ public static class AttributeConversionManager
 		Func<string> createErrorMessage = () => {
 			var b = new System.Text.StringBuilder (" Types { ");
 			for (int i = 0; i < constructorArguments.Length; ++i)
-				b.Append (constructorArguments [i].GetType ().ToString () + " ");
+				b.Append (constructorArguments[i].GetType ().ToString () + " ");
 			b.Append ("}");
 			return b.ToString ();
 		};
 
+		Func<string> unknownFormatError = () => $"Unknown format for old style availability attribute {attribute.AttributeType.FullName} {attribute.ConstructorArguments.Count} {createErrorMessage ()}";
+
+		object [] ctorValues;
+		System.Type [] ctorTypes;
+
 		switch (attribute.ConstructorArguments.Count) {
 		case 2:
 			if (constructorArguments [0].GetType () == typeof (byte) &&
-			    constructorArguments [1].GetType () == typeof (byte))
+			    constructorArguments [1].GetType () == typeof (byte)) {
+				ctorValues = new object [] { (byte)platform, (int)(byte)constructorArguments [0], (int)(byte)constructorArguments [1], (byte)0xff, "" };
+				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
 				break;
-			throw new NotImplementedException ($"Unknown format for old style availability attribute {attribute.AttributeType.FullName} {attribute.ConstructorArguments.Count} {createErrorMessage ()}");
+			}
+			throw new NotImplementedException (unknownFormatError ());
 		case 3:
 			if (constructorArguments [0].GetType () == typeof (byte) &&
 			    constructorArguments [1].GetType () == typeof (byte) &&
-			    constructorArguments [2].GetType () == typeof (byte))
+			    constructorArguments [2].GetType () == typeof (byte)) {
+				ctorValues = new object [] { (byte) platform, (int)(byte)constructorArguments [0], (int)(byte)constructorArguments [1], (int)(byte)constructorArguments [2], (byte) 0xff, "" };
+				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
 				break;
+			}
 			if (constructorArguments [0].GetType () == typeof (byte) &&
 			    constructorArguments [1].GetType () == typeof (byte) &&
-			    constructorArguments [2].GetType () == typeof (bool))
+			    constructorArguments [2].GetType () == typeof (bool)) {
+				byte arch = (bool) constructorArguments [2] ? (byte) 2 : (byte) 0xff;
+				ctorValues = new object [] { (byte)platform, (int)(byte) constructorArguments [0], (int)(byte)constructorArguments [1], arch, "" };
+				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
 				break;
-
-			throw new NotImplementedException ($"Unknown format for old style availability attribute {attribute.AttributeType.FullName} {attribute.ConstructorArguments.Count} {createErrorMessage ()}");
+			}
+			if (constructorArguments [0].GetType () == typeof (byte) &&
+			    constructorArguments [1].GetType () == typeof (byte) &&
+			    constructorArguments [2].GetType () == typeof (byte) /* ObjCRuntime.PlatformArchitecture */) {
+				ctorValues = new object [] { (byte)platform, (int)(byte) constructorArguments [0], (int)(byte)constructorArguments [1], constructorArguments [2], "" };
+				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
+				break;
+			}
+			throw new NotImplementedException (unknownFormatError ());
 		case 4:
 			if (constructorArguments [0].GetType () == typeof (byte) &&
 			    constructorArguments [1].GetType () == typeof (byte) &&
 			    constructorArguments [2].GetType () == typeof (byte) &&
-			    constructorArguments [3].GetType () == typeof (bool))
+			    constructorArguments [3].GetType () == typeof (bool)) {
+				byte arch = (bool) constructorArguments [3] ? (byte) 2 : (byte) 0xff;
+				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int)(byte) constructorArguments [1], (int)(byte) constructorArguments [2], arch, "" };
+				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
 				break;
+			}
+			if (constructorArguments [0].GetType () == typeof (byte) &&
+			    constructorArguments [1].GetType () == typeof (byte) &&
+			    constructorArguments [2].GetType () == typeof (byte) &&
+			    constructorArguments [3].GetType () == typeof (byte) /* ObjCRuntime.PlatformArchitecture */) {
+				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int)(byte) constructorArguments [1], (int)(byte) constructorArguments [2], constructorArguments [3], "" };
+				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
+				break;
+			}
 
-			throw new NotImplementedException ($"Unknown format for old style availability attribute {attribute.AttributeType.FullName} {attribute.ConstructorArguments.Count} {createErrorMessage ()}");
+			throw new NotImplementedException (unknownFormatError ());
 		default:
 			throw new NotImplementedException ($"Unknown count {attribute.ConstructorArguments.Count} {createErrorMessage ()}");
 		}
 
-		return constructorArguments;
-	}
-
-	static void FormatNewStyleArguments (object [] oldCtorValues, PlatformName platform, out object [] ctorValues, out System.Type [] ctorTypes)
-	{
-		var platformEnum = typeof (TypeManager).Assembly.GetType ("XamCore.ObjCRuntime.PlatformName");
-		var platformArch = typeof (TypeManager).Assembly.GetType ("XamCore.ObjCRuntime.PlatformArchitecture");
-
-		switch (oldCtorValues.Length) {
-		case 2:
-			ctorValues = new object [] { (byte)platform, (int) (byte) oldCtorValues [0], (int) (byte) oldCtorValues [1], (byte) 0xff, "" };
-			ctorTypes = new System.Type [] { platformEnum, typeof (int), typeof (int), platformArch, typeof (string) };
-			break;
-		case 3:
-			if (oldCtorValues [2] is byte) {
-				ctorValues = new object [] { (byte) platform, (int) (byte) oldCtorValues [0], (int) (byte) oldCtorValues [1], (int) (byte) oldCtorValues [2], (byte) 0xff, "" };
-				ctorTypes = new System.Type [] { platformEnum, typeof (int), typeof (int), typeof (int), platformArch, typeof (string) };
-			} else {
-				byte arch = (bool) oldCtorValues [2] ? (byte) 2 : (byte) 0xff;
-				ctorValues = new object [] { (byte) platform, (int) (byte) oldCtorValues [0], (int) (byte) oldCtorValues [1], arch, "" };
-				ctorTypes = new System.Type [] { platformEnum, typeof (int), typeof (int), platformArch, typeof (string) };
-			}
-			break;
-		case 4: {
-				byte arch = (bool) oldCtorValues [3] ? (byte) 2 : (byte) 0xff;
-				ctorValues = new object [] { (byte) platform, (int) (byte) oldCtorValues [0], (int) (byte) oldCtorValues [1], (int) (byte) oldCtorValues [2], arch, "" };
-				ctorTypes = new System.Type [] { platformEnum, typeof (int), typeof (int), typeof (int), platformArch, typeof (string) };
-				break;
-			}
-		default:
-			throw new NotImplementedException ("FormatNewStyleArguments recieved unexpected arguments");
-		}
-
+		return AttributeFactory.CreateNewAttribute (AttributeFactory.IntroducedAttributeType, ctorTypes, ctorValues);
 	}
 
 	struct ParsedAvailabilityInfo
@@ -512,22 +513,13 @@ public static class AttributeConversionManager
 			}
 		}
 	}
-
-	public static System.Attribute ConvertPlatformAttribute (CustomAttributeData attribute, PlatformName platform)
-	{
-		object [] oldCtorValues = HarvestOldAttributeValues (attribute);
-		object [] ctorValues;
-		System.Type [] ctorTypes;
-		FormatNewStyleArguments (oldCtorValues, platform, out ctorValues, out ctorTypes);
-		return AttributeFactory.CreateNewAttribute (AttributeFactory.IntroducedAttributeType, ctorTypes, ctorValues);
-	}
 }
 
 
 static class AttributeFactory
 {
-	static System.Type PlatformEnum = typeof (TypeManager).Assembly.GetType ("XamCore.ObjCRuntime.PlatformName");
-	static System.Type PlatformArch = typeof (TypeManager).Assembly.GetType ("XamCore.ObjCRuntime.PlatformArchitecture");
+	public static System.Type PlatformEnum = typeof (TypeManager).Assembly.GetType ("XamCore.ObjCRuntime.PlatformName");
+	public static System.Type PlatformArch = typeof (TypeManager).Assembly.GetType ("XamCore.ObjCRuntime.PlatformArchitecture");
 
 	public static System.Type IntroducedAttributeType = typeof (TypeManager).Assembly.GetType ("XamCore.ObjCRuntime.IntroducedAttribute");
 	public static System.Type UnavailableAttributeType = typeof (TypeManager).Assembly.GetType ("XamCore.ObjCRuntime.UnavailableAttribute");

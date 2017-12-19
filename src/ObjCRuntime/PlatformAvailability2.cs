@@ -298,6 +298,11 @@ namespace XamCore.ObjCRuntime.Extensions
 			: base (PlatformName.MacOSX, (int)major, (int)minor, onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All)
 		{
 		}
+		
+		public MacAttribute (byte major, byte minor, PlatformArchitecture arch)
+			: base (PlatformName.MacOSX, (int)major, (int)minor, arch)
+		{
+		}
 
 		public MacAttribute (byte major, byte minor, byte subminor)
 			: base (PlatformName.MacOSX, (int)major, (int)minor, subminor)
@@ -309,6 +314,10 @@ namespace XamCore.ObjCRuntime.Extensions
 		{
 		}
 
+		public MacAttribute (byte major, byte minor, byte subminor, PlatformArchitecture arch)
+			: base (PlatformName.MacOSX, (int)major, (int)minor, (int)subminor, arch)
+		{
+		}
 	}
 	
 	public sealed class iOSAttribute : IntroducedAttribute
@@ -330,30 +339,6 @@ namespace XamCore.ObjCRuntime.Extensions
 
 		public iOSAttribute (byte major, byte minor, byte subminor, bool onlyOn64)
 			: base (PlatformName.iOS, (int)major, (int)minor, (int)subminor, onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All)
-		{
-		}
-	}
-	
-	public sealed class MavericksAttribute : IntroducedAttribute
-	{
-		public MavericksAttribute ()
-			: base (PlatformName.MacOSX, 10, 9)
-		{
-		}
-	}
-
-	public sealed class MountainLionAttribute : IntroducedAttribute
-	{
-		public MountainLionAttribute ()
-			: base (PlatformName.MacOSX, 10, 8)
-		{
-		}
-	}
-
-	public sealed class LionAttribute : IntroducedAttribute
-	{
-		public LionAttribute ()
-			: base (PlatformName.MacOSX, 10, 7)
 		{
 		}
 	}
@@ -446,8 +431,5 @@ namespace XamCore.ObjCRuntime.Extensions
 			Obsoleted = obsoleted;
 			Unavailable = unavailable;
 		}
-
-
 	}
-
 }

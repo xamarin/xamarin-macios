@@ -594,6 +594,11 @@ namespace XamCore.ObjCRuntime
 			: this (major, minor, 0, onlyOn64)
 		{
 		}
+		
+		public MacAttribute (byte major, byte minor, PlatformArchitecture arch)
+			: this (major, minor, 0, arch)
+		{
+		}
 
 		public MacAttribute (byte major, byte minor, byte subminor)
 			: this (major, minor, subminor, false)
@@ -604,6 +609,12 @@ namespace XamCore.ObjCRuntime
 			: base ((Platform)((ulong)major << 48 | (ulong)minor << 40 | (ulong)subminor << 32) | (onlyOn64 ? Platform.Mac_Arch64 : Platform.None))
 		{
 		}
+
+		public MacAttribute (byte major, byte minor, byte subminor, PlatformArchitecture arch)
+			: base ((Platform)((ulong)major << 48 | (ulong)minor << 40 | (ulong)subminor << 32) | (arch == PlatformArchitecture.Arch64 ? Platform.Mac_Arch64 : Platform.None))
+		{
+		}
+
 	}
 
 	// !XAMCORE_2_0 -> needed for classic (as public attributes)
