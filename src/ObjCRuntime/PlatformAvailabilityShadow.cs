@@ -3,8 +3,11 @@ using PlatformArchitecture = XamCore.ObjCRuntime.PlatformArchitecture;
 using PlatformName = XamCore.ObjCRuntime.PlatformName;
 
 // These _must_ be in a less nested namespace than the copies they are shadowing in PlatformAvailability.cs
-
-public sealed class MacAttribute : XamCore.ObjCRuntime.IntroducedAttribute
+// Since those are in ObjcRuntime these must be global
+#if COREBUILD
+public
+#endif
+sealed class MacAttribute : XamCore.ObjCRuntime.IntroducedAttribute
 {
 	public MacAttribute (byte major, byte minor)
 		: base (PlatformName.MacOSX, (int)major, (int)minor)
@@ -36,8 +39,10 @@ public sealed class MacAttribute : XamCore.ObjCRuntime.IntroducedAttribute
 	{
 	}
 }
-
-public sealed class iOSAttribute : XamCore.ObjCRuntime.IntroducedAttribute
+#if COREBUILD
+public
+#endif
+sealed class iOSAttribute : XamCore.ObjCRuntime.IntroducedAttribute
 {
 	public iOSAttribute (byte major, byte minor)
 		: base (PlatformName.iOS, (int)major, (int)minor)
@@ -60,7 +65,10 @@ public sealed class iOSAttribute : XamCore.ObjCRuntime.IntroducedAttribute
 	}
 }
 
-public enum Platform : ulong
+#if COREBUILD
+public
+#endif
+enum Platform : ulong
 {
 	None =  0x0,
 	// Processed in generator-attribute-manager.cs
@@ -127,7 +135,10 @@ public enum Platform : ulong
 }
 
 [AttributeUsage (AttributeTargets.All, AllowMultiple = true)]
-public class AvailabilityAttribute : Attribute
+#if COREBUILD
+public
+#endif
+class AvailabilityAttribute : Attribute
 {
 	public AvailabilityAttribute () { }
 
