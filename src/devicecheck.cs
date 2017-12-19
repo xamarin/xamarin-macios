@@ -10,9 +10,6 @@
 #if XAMCORE_2_0
 using System;
 using XamCore.ObjCRuntime;
-using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
-using Platform = XamCore.ObjCRuntime.Extensions.Platform;
-
 using XamCore.Foundation;
 
 namespace XamCore.DeviceCheck {

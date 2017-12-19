@@ -11,9 +11,6 @@ using System;
 using XamCore.CoreFoundation;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
-using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
-using Platform = XamCore.ObjCRuntime.Extensions.Platform;
-
 using OpenTK;
 #if !MONOMAC
 using XamCore.UIKit;

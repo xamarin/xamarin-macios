@@ -48,9 +48,6 @@ using NSPrintOperation = XamCore.Foundation.NSObject;
 #endif
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
-using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
-using Platform = XamCore.ObjCRuntime.Extensions.Platform;
-
 using XamCore.CoreGraphics;
 
 // Verify/Test Delegate Models

@@ -33,9 +33,6 @@ using XamCore.AVFoundation;
 using XamCore.CoreFoundation;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
-using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
-using Platform = XamCore.ObjCRuntime.Extensions.Platform;
-
 
 using NMatrix4 = global::OpenTK.NMatrix4;
 using NVector3 = global::OpenTK.NVector3;

@@ -13,9 +13,6 @@ using System;
 using XamCore.CoreGraphics;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
-using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
-using Platform = XamCore.ObjCRuntime.Extensions.Platform;
-
 using XamCore.CoreLocation;
 using XamCore.Contacts;
 using XamCore.EventKit;

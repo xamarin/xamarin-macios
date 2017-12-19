@@ -11,9 +11,6 @@
 using System;
 
 using XamCore.ObjCRuntime;
-using AvailabilityAttribute = XamCore.ObjCRuntime.Extensions.AvailabilityAttribute;
-using Platform = XamCore.ObjCRuntime.Extensions.Platform;
-
 using XamCore.Foundation;
 using XamCore.CoreGraphics;
 using XamCore.Security;
