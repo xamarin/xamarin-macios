@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
-using Platform = XamCore.ObjCRuntime.Extensions.Platform;
 using PlatformName = XamCore.ObjCRuntime.PlatformName;
 
 public static class AttributeManager
@@ -88,11 +87,10 @@ public static class AttributeManager
 
 	static IEnumerable<System.Attribute> ConvertOldAttributes (CustomAttributeData attribute)
 	{
-		switch (attribute.AttributeType.Namespace) {
+ 		switch (attribute.AttributeType.Namespace) {
+		case null: // Root namespace such as PlatformAvailabilityShadow.cs
 		case "MonoTouch.ObjCRuntime":
 		case "ObjCRuntime":
-		case "MonoTouch.ObjCRuntime.Extensions":
-		case "ObjCRuntime.Extensions":
 			break;
 		default:
 			return Enumerable.Empty<System.Attribute> ();
