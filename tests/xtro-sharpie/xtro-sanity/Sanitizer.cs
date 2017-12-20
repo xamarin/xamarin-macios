@@ -95,6 +95,31 @@ namespace Extrospection {
 			}
 		}
 
+		static void NoFixedTodo ()
+		{
+			foreach (var file in Directory.GetFiles (directory, "*.todo")) {
+				var last = file.LastIndexOf ('-');
+				var fx = file.Substring (last + 1, file.Length - last - 6);
+				var raw = Path.ChangeExtension (file, ".raw");
+				if (File.Exists (raw)) {
+					var specific = new List<string> (File.ReadAllLines (raw));
+					foreach (var entry in File.ReadAllLines (file)) {
+						if (!IsEntry (entry))
+							continue;
+						if (!specific.Contains (entry))
+							Log ($"?fixed-todo? Entry '{entry}' in '{Path.GetFileName (file)}' is not found in corresponding '{Path.GetFileName (raw)}' file");
+					}
+				} else {
+					// no .raw then everything is fixed
+					foreach (var entry in File.ReadAllLines (file)) {
+						if (!IsEntry (entry))
+							continue;
+						Log ($"?fixed-todo? Entry '{entry}' in '{Path.GetFileName (file)}' might be fixed since there's no corresponding '{Path.GetFileName (raw)}' file");
+					}
+				}
+			}
+		}
+
 		static string directory;
 		static Dictionary<string, List<string>> commons = new Dictionary<string, List<string>> ();
 		static int count;
@@ -201,7 +226,8 @@ namespace Extrospection {
 			// entries in .todo files should *not* be present in *.ignore files
 			NoIgnoredTodo ();
 
-			// TODO entries in .todo should be found in .raw files
+			// entries in .todo should be found in .raw files - else it's likely fixed (and out of date)
+			NoFixedTodo ();
 
 			if (count == 0)
 				Console.WriteLine ("Sanity check passed");
