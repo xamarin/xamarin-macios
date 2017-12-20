@@ -778,15 +778,26 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void BuildUnified_BelowMinDeploymentTargetShouldFail ()
 		{
-			RunMMPTest(tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig(tmpDir)
-				{
-					PlistReplaceStrings = new Dictionary<string, string>
-					{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					PlistReplaceStrings = new Dictionary<string, string> {
 						{ "<string>10.7</string>", "<string>10.4</string>"}
 					}
 				};
-				TI.TestUnifiedExecutable(test, shouldFail: true);
+				TI.TestUnifiedExecutable (test, shouldFail: true);
+			});
+		}
+
+		[Test]
+		public void BuildUnified_AboveSDKDeploymentTargetShouldFail ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					PlistReplaceStrings = new Dictionary<string, string> {
+						{ "<string>10.7</string>", "<string>11.0</string>"}
+					}
+				};
+				TI.TestUnifiedExecutable (test, shouldFail: true);
 			});
 		}
 	}
