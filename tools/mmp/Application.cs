@@ -13,7 +13,7 @@ namespace Xamarin.Bundler {
 
 		internal void Initialize ()
 		{
-			if (DeploymentTarget == null)
+			if (DeploymentTarget == null) 
 				DeploymentTarget = new Version (10, 7);
 			else if (DeploymentTarget < SdkVersions.GetMinVersion (Platform))
 				throw new MonoMacException (73, true, "Xamarin.Mac {0} does not support a deployment target of {1} for {3} (the minimum is {2}). Please select a newer deployment target in your project's Info.plist.", Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (Platform), PlatformName);
