@@ -1,24 +1,26 @@
 ## new Apple abstract member (breaking change) fixed in XAMCORE_4_0
 !incorrect-protocol-member! MTLRenderCommandEncoder::setDepthClipMode: is REQUIRED and should be abstract
 
-
-## unsorted
+# fixed in XAMCORE_3_0 - API break
 
 !incorrect-protocol-member! MTLBlitCommandEncoder::copyFromBuffer:sourceOffset:sourceBytesPerRow:sourceBytesPerImage:sourceSize:toTexture:destinationSlice:destinationLevel:destinationOrigin:options: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLBlitCommandEncoder::copyFromTexture:sourceSlice:sourceLevel:sourceOrigin:sourceSize:toBuffer:destinationOffset:destinationBytesPerRow:destinationBytesPerImage:options: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newComputePipelineStateWithDescriptor:options:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newComputePipelineStateWithDescriptor:options:reflection:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsTextureSampleCount: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setStencilFrontReferenceValue:backReferenceValue: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::newTextureViewWithPixelFormat:textureType:levels:slices: is REQUIRED and should be abstract
+
+# fixed in XAMCORE_4_0 - API Break
 !incorrect-protocol-member! MTLBlitCommandEncoder::updateFence: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLBlitCommandEncoder::waitForFence: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLBuffer::addDebugMarker:range: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLBuffer::removeAllDebugMarkers is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLCommandBuffer::GPUEndTime is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLCommandBuffer::GPUStartTime is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLCommandBuffer::kernelEndTime is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLCommandBuffer::kernelStartTime is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLCommandBuffer::popDebugGroup is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLCommandBuffer::presentDrawable:afterMinimumDuration: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLCommandBuffer::pushDebugGroup: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLComputeCommandEncoder::dispatchThreadgroupsWithIndirectBuffer:indirectBufferOffset:threadsPerThreadgroup: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLComputeCommandEncoder::setStageInRegion: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::dispatchThreads:threadsPerThreadgroup: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputeCommandEncoder::updateFence: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputeCommandEncoder::useHeap: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputeCommandEncoder::useHeaps:count: is REQUIRED and should be abstract
@@ -34,56 +36,27 @@
 !incorrect-protocol-member! MTLDevice::getDefaultSamplePositions:count: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::heapBufferSizeAndAlignWithLength:options: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::heapTextureSizeAndAlignWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::isRemovable is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::maxThreadgroupMemoryLength is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::maxThreadsPerThreadgroup is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::minimumLinearTextureAlignmentForPixelFormat: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newArgumentEncoderWithArguments: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newComputePipelineStateWithDescriptor:options:completionHandler: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newComputePipelineStateWithDescriptor:options:reflection:error: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newDefaultLibraryWithBundle:error: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newFence is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newHeapWithDescriptor: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newLibraryWithURL:error: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newTextureWithDescriptor:iosurface:plane: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::readWriteTextureSupport is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::registryID is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::supportsTextureSampleCount: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDrawable::addPresentedHandler: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDrawable::drawableID is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDrawable::presentAfterMinimumDuration: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDrawable::presentedTime is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLFunction::functionConstantsDictionary is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLFunction::label is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLFunction::newArgumentEncoderWithBufferIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLFunction::newArgumentEncoderWithBufferIndex:reflection: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLFunction::patchControlPointCount is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLFunction::patchType is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLFunction::setLabel: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLFunction::stageInputAttributes is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLHeap::currentAllocatedSize is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLLibrary::newFunctionWithName:constantValues:completionHandler: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLLibrary::newFunctionWithName:constantValues:error: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLParallelRenderCommandEncoder::setColorStoreAction:atIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLParallelRenderCommandEncoder::setColorStoreActionOptions:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLParallelRenderCommandEncoder::setDepthStoreAction: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLParallelRenderCommandEncoder::setDepthStoreActionOptions: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLParallelRenderCommandEncoder::setStencilStoreAction: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLParallelRenderCommandEncoder::setStencilStoreActionOptions: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::drawIndexedPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:instanceCount:baseInstance: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::drawIndexedPrimitives:indexCount:indexType:indexBuffer:indexBufferOffset:instanceCount:baseVertex:baseInstance: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::drawIndexedPrimitives:indexType:indexBuffer:indexBufferOffset:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::drawPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:instanceCount:baseInstance: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::drawPrimitives:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::drawPrimitives:vertexStart:vertexCount:instanceCount:baseInstance: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setColorStoreAction:atIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::setColorStoreActionOptions:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setDepthStoreAction: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::setDepthStoreActionOptions: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setStencilFrontReferenceValue:backReferenceValue: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setStencilStoreAction: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setScissorRects:count: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::setStencilStoreActionOptions: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTessellationFactorBuffer:offset:instanceStride: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTessellationFactorScale: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setViewports:count: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::updateFence:afterStages: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::useHeap: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::useHeaps:count: is REQUIRED and should be abstract
@@ -94,16 +67,53 @@
 !incorrect-protocol-member! MTLResource::heap is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLResource::isAliasable is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLResource::makeAliasable is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLResource::storageMode is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::iosurface is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::iosurfacePlane is REQUIRED and should be abstract
+
+
+## unsorted
+
+!incorrect-protocol-member! MTLBuffer::addDebugMarker:range: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBuffer::removeAllDebugMarkers is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDrawable::addPresentedHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDrawable::drawableID is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDrawable::presentAfterMinimumDuration: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDrawable::presentedTime is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLFunction::functionConstantsDictionary is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLFunction::label is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLFunction::patchControlPointCount is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLFunction::patchType is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLFunction::setLabel: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLFunction::stageInputAttributes is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLLibrary::newFunctionWithName:constantValues:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLLibrary::newFunctionWithName:constantValues:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLParallelRenderCommandEncoder::setDepthStoreAction: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLParallelRenderCommandEncoder::setStencilStoreAction: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::buffer is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::bufferBytesPerRow is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::bufferOffset is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLTexture::iosurface is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLTexture::iosurfacePlane is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLTexture::newTextureViewWithPixelFormat:textureType:levels:slices: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::parentRelativeLevel is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::parentRelativeSlice is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::parentTexture is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::usage is REQUIRED and should be abstract
 !unknown-field! MTLRenderPipelineErrorDomain bound
 !unknown-native-enum! MTLRenderPipelineError bound
+
+!incorrect-protocol-member! MTLCommandBuffer::presentDrawable:afterMinimumDuration: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::dispatchThreadgroupsWithIndirectBuffer:indirectBufferOffset:threadsPerThreadgroup: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::setStageInRegion: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::maxThreadsPerThreadgroup is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newDefaultLibraryWithBundle:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLParallelRenderCommandEncoder::setColorStoreAction:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawIndexedPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:instanceCount:baseInstance: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawIndexedPrimitives:indexCount:indexType:indexBuffer:indexBufferOffset:instanceCount:baseVertex:baseInstance: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawIndexedPrimitives:indexType:indexBuffer:indexBufferOffset:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:instanceCount:baseInstance: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawPrimitives:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawPrimitives:vertexStart:vertexCount:instanceCount:baseInstance: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setColorStoreAction:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setDepthStoreAction: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setStencilStoreAction: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTessellationFactorBuffer:offset:instanceStride: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTessellationFactorScale: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLResource::storageMode is REQUIRED and should be abstract

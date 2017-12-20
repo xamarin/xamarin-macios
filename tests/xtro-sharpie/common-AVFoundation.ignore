@@ -1,5 +1,13 @@
+## there's a type of the same name (like NSObject, check what Swift did)
+!missing-protocol! AVVideoCompositionInstruction not bound
+
+# fixed in XAMCORE_3_0 - API break
 !incorrect-protocol-member! AVAssetResourceLoaderDelegate::resourceLoader:shouldWaitForLoadingOfRequestedResource: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! AVAudioMixing::destinationForMixer:bus: is REQUIRED and should be abstract
+
+
+## unsorted
+
 !missing-designated-initializer! AVAudioEnvironmentNode::init is missing an [DesignatedInitializer] attribute
 !missing-designated-initializer! AVAudioMixerNode::init is missing an [DesignatedInitializer] attribute
 !missing-designated-initializer! AVAudioPlayerNode::init is missing an [DesignatedInitializer] attribute
@@ -7,7 +15,6 @@
 !missing-field! AVVideoCodecHEVC not bound
 !missing-field! AVVideoTransferFunction_ITU_R_2100_HLG not bound
 !missing-field! AVVideoTransferFunction_SMPTE_ST_2084_PQ not bound
-!missing-protocol! AVVideoCompositionInstruction not bound
 !missing-protocol-conformance! AVAsset should conform to AVAsynchronousKeyValueLoading
 !missing-protocol-conformance! AVAssetTrack should conform to AVAsynchronousKeyValueLoading
 !missing-protocol-conformance! AVMetadataItem should conform to AVAsynchronousKeyValueLoading
