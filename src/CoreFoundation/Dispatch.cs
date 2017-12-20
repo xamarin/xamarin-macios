@@ -443,7 +443,7 @@ namespace XamCore.CoreFoundation {
 		extern static IntPtr dispatch_get_global_queue (nint priority, nuint flags);
 
 #if MONOMAC
-		[Availability (Obsoleted = Platform.Mac_10_7)]
+		[Obsoleted (PlatformName.MacOSX, 10, 7)]
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_get_main_queue ();
 #endif

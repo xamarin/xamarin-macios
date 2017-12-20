@@ -195,7 +195,8 @@ namespace XamCore.CoreVideo {
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CVImageBufferGetColorSpace (/* CVImageBufferRef */ IntPtr imageBuffer);
 		
-		[Availability (Deprecated = Platform.Mac_10_4, Unavailable = Platform.iOS_Version)]
+		[Deprecated (PlatformName.MacOSX, 10, 4)]
+		[Unavailable (PlatformName.iOS)]
 		public CGColorSpace ColorSpace {
 			get {
 				var h = CVImageBufferGetColorSpace (handle);
@@ -203,7 +204,8 @@ namespace XamCore.CoreVideo {
 			}
 		}
 #elif !XAMCORE_3_0
-		[Availability (Deprecated = Platform.Mac_10_4, Unavailable = Platform.iOS_Version)]
+		[Deprecated (PlatformName.MacOSX, 10, 4)]
+		[Unavailable (PlatformName.iOS)]
 		public CGColorSpace ColorSpace {
 			get {
 				return null;

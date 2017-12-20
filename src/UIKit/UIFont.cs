@@ -145,35 +145,35 @@ namespace XamCore.UIKit {
 		// so one can be disposed without affecting others
 		// ref: https://bugzilla.xamarin.com/show_bug.cgi?id=25511
 
-		[Availability (Introduced = Platform.iOS_7_0)]
+		[iOS (7, 0)]
 		public static UIFont GetPreferredFontForTextStyle (NSString uiFontTextStyle)
 		{
 			var ptr = _GetPreferredFontForTextStyle (uiFontTextStyle);
 			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
 		}
 
-		[Availability (Introduced = Platform.iOS_7_0)]
+		[iOS (7, 0)]
 		public static UIFont GetPreferredFontForTextStyle (UIFontTextStyle uiFontTextStyle)
 		{
 			return GetPreferredFontForTextStyle (uiFontTextStyle.GetConstant ());
 		}
 
 #if !WATCH
-		[Availability (Introduced = Platform.iOS_7_0)]
+		[iOS (7, 0)]
 		public static UIFont GetPreferredFontForTextStyle (NSString uiFontTextStyle, UITraitCollection traitCollection)
 		{
 			var ptr = _GetPreferredFontForTextStyle (uiFontTextStyle, traitCollection);
 			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
 		}
 
-		[Availability (Introduced = Platform.iOS_7_0)]
+		[iOS (7, 0)]
 		public static UIFont GetPreferredFontForTextStyle (UIFontTextStyle uiFontTextStyle, UITraitCollection traitCollection)
 		{
 			return GetPreferredFontForTextStyle (uiFontTextStyle.GetConstant (), traitCollection);
 		}
 #endif
 
-		[Availability (Introduced = Platform.iOS_7_0)]
+		[iOS (7, 0)]
 		public static UIFont FromDescriptor (UIFontDescriptor descriptor, nfloat pointSize)
 		{
 			var ptr = _FromDescriptor (descriptor, pointSize);
