@@ -49,11 +49,6 @@
           <property name="InformationalVersion" value="4.0.50524.0" />
         </properties>
       </attribute>
-      <attribute name="System.Reflection.AssemblyKeyFileAttribute">
-        <properties>
-          <property name="KeyFile" value="../msfinal.pub" />
-        </properties>
-      </attribute>
       <attribute name="System.Reflection.AssemblyProductAttribute">
         <properties>
           <property name="Product" value="Mono Common Language Infrastructure" />
