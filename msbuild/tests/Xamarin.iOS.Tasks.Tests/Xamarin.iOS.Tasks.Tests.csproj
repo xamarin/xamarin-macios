@@ -112,9 +112,11 @@
     <Compile Include="ProjectsTests\LinkedAssets.cs" />
     <Compile Include="ProjectsTests\CodesignAppBundle.cs" />
     <Compile Include="ProjectsTests\BindingReferences.cs" />
+    <Compile Include="ProjectsTests\CoreMLCompiler.cs" />
     <Compile Include="..\..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
+    <Compile Include="ProjectsTests\Bug60536.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

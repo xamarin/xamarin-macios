@@ -2784,7 +2784,7 @@ namespace XamCore.AppKit {
 		[Mac (10,11)]
 		[Export ("layoutAttributesForSupplementaryElementOfKind:atIndexPath:")]
 		[return: NullAllowed]
-		NSCollectionViewLayoutAttributes GetLayoutAttributest (string kind, NSIndexPath indexPath);
+		NSCollectionViewLayoutAttributes GetLayoutAttributes (string kind, NSIndexPath indexPath);
 
 		// -(NSInteger)numberOfSections __attribute__((availability(macosx, introduced=10.11)));
 		[Mac (10,11)]
@@ -7457,7 +7457,7 @@ namespace XamCore.AppKit {
 		Selector Action { get; set; }
 
 		[Export ("state")]
-		NSGestureRecognizerState State { get; }
+		NSGestureRecognizerState State { get; [Advice ("Only subclasses of 'NSGestureRecognizer' can set this property.")] set; }
 
 		[Export ("delegate", ArgumentSemantic.Weak)]
 		[NullAllowed]
@@ -10489,7 +10489,7 @@ namespace XamCore.AppKit {
 		nuint GlyphIndexForCharacterAtIndex (nint charIndex);
 
 		[Export ("intAttribute:forGlyphAtIndex:")]
-		nint IntAttributeforGlyphAtIndex (nint attributeTag, nint glyphIndex);
+		nint GetIntAttribute (nint attributeTag, nint glyphIndex);
 
 		[Export ("setTextContainer:forGlyphRange:")]
 		void SetTextContainerForRange (NSTextContainer container, NSRange glyphRange);
@@ -14959,9 +14959,13 @@ namespace XamCore.AppKit {
 
 #if !XAMCORE_4_0
 		[Abstract]
-#endif
 		[Export ("drawCharactersInRange:forContentView:")]
 		void DrawCharactersInRangeforContentView (NSRange range, NSView view);
+#else
+		[Export ("drawCharactersInRange:forContentView:")]
+		void DrawCharacters (NSRange range, NSView view);
+#endif
+
 	}
 
 	[BaseType (typeof (NSObject)), Model, Protocol]
@@ -18885,8 +18889,13 @@ namespace XamCore.AppKit {
 		[Export ("textView:didCheckTextInRange:types:options:results:orthography:wordCount:"), DelegateName ("NSTextViewTextChecked"), DefaultValueFromArgument ("results")]
 		NSTextCheckingResult [] DidCheckText (NSTextView view, NSRange range, NSTextCheckingTypes checkingTypes, NSDictionary options, NSTextCheckingResult [] results, NSOrthography orthography, nint wordCount);
 
+#if !XAMCORE_4_0
 		[Export ("textView:draggedCell:inRect:event:"), EventArgs ("NSTextViewDraggedCell")]
 		void DraggedCell (NSTextView view, NSTextAttachmentCell cell, CGRect rect, NSEvent theevent);
+#else
+		[Export ("textView:draggedCell:inRect:event:"), EventArgs ("NSTextViewDraggedCell")]
+		void DraggedCell (NSTextView view, NSTextAttachmentCell cell, CGRect rect, NSEvent theEvent);
+#endif
 
 		[Export ("undoManagerForTextView:"), DelegateName ("NSTextViewGetUndoManager"), DefaultValue (null)]
 		NSUndoManager GetUndoManager (NSTextView view);
@@ -20700,10 +20709,10 @@ namespace XamCore.AppKit {
 		bool OpenFile (string fullPath);
 		
 		[Export ("openFile:withApplication:"), ThreadSafe]
-		bool OpenFile (string fullPath, string appName);
+		bool OpenFile (string fullPath, [NullAllowed] string appName);
 		
 		[Export ("openFile:withApplication:andDeactivate:"), ThreadSafe]
-		bool OpenFile (string fullPath, string appName, bool deactivate);
+		bool OpenFile (string fullPath, [NullAllowed] string appName, bool deactivate);
 		
 		[Export ("openFile:fromImage:at:inView:"), ThreadSafe]
 		bool OpenFile (string fullPath, NSImage anImage, CGPoint point, NSView aView);
@@ -23762,8 +23771,14 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityWindowAttribute")]
 		NSString WindowAttribute { get; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'TopLevelUIElementAttribute' instead.")]
 		[Field ("NSAccessibilityTopLevelUIElementAttribute")]
 		NSString ToplevelUIElementAttribute { get; }
+#endif
+
+		[Field ("NSAccessibilityTopLevelUIElementAttribute")]
+		NSString TopLevelUIElementAttribute { get; }
 
 		[Field ("NSAccessibilitySelectedChildrenAttribute")]
 		NSString SelectedChildrenAttribute { get; }

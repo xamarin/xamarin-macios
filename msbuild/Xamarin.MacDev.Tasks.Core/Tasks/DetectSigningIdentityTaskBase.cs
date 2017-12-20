@@ -353,7 +353,7 @@ namespace Xamarin.MacDev.Tasks
 				return !Log.HasLoggedErrors;
 			}
 
-			if (!RequireProvisioningProfile && string.IsNullOrEmpty (ProvisioningProfile)) {
+			if (!RequireProvisioningProfile) {
 				if (SdkIsSimulator && AppleSdkSettings.XcodeVersion.Major >= 8) {
 					// Note: Starting with Xcode 8.0, we need to codesign iOS Simulator builds in order for them to run.
 					// The "-" key is a special value allowed by the codesign utility that allows us to get away with
@@ -473,7 +473,12 @@ namespace Xamarin.MacDev.Tasks
 			if (certs.Count > 0) {
 				pairs = (from p in profiles
 						 from c in certs
-						 where p.DeveloperCertificates.Any (d => d.Thumbprint == c.Thumbprint)
+					         where p.DeveloperCertificates.Any (d => {
+							var rv = d.Thumbprint == c.Thumbprint;
+							if (!rv)
+								Log.LogMessage (MessageImportance.Low, "'{0}' doesn't match '{1}'.", d.Thumbprint, c.Thumbprint);
+							return rv;
+						 })
 						 select new CodeSignIdentity { SigningKey = c, Profile = p }).ToList ();
 
 				if (pairs.Count == 0) {
@@ -489,20 +494,30 @@ namespace Xamarin.MacDev.Tasks
 			int matchLength;
 
 			// find matching provisioning profiles with compatible appid, keeping only those with the longest matching (wildcard) ids
+			Log.LogMessage (MessageImportance.Low, "Finding matching provisioning profiles with compatible AppID, keeping only those with the longest matching (wildcard) IDs.");
 			foreach (var pair in pairs) {
 				var appid = ConstructValidAppId (pair.Profile, identity.BundleId, out matchLength);
-				if (appid != null && matchLength >= bestMatchLength) {
-					if (matchLength > bestMatchLength) {
-						bestMatchLength = matchLength;
-						matches.Clear ();
+				if (appid != null) {
+					if (matchLength >= bestMatchLength) {
+						if (matchLength > bestMatchLength) {
+							bestMatchLength = matchLength;
+							foreach (var previousMatch in matches)
+								Log.LogMessage (MessageImportance.Low, "AppID: {0} was ruled out because we found a better match: {1}.", previousMatch.AppId, appid);
+							matches.Clear ();
+						}
+
+						var match = identity.Clone ();
+						match.SigningKey = pair.SigningKey;
+						match.Profile = pair.Profile;
+						match.AppId = appid;
+
+						matches.Add (match);
+					} else {
+						string currentMatches = "";
+						foreach (var match in matches)
+							currentMatches += $"{match}; ";
+						Log.LogMessage (MessageImportance.Low, "AppID: {0} was ruled out because we already found better matches: ", appid, currentMatches);
 					}
-
-					var match = identity.Clone ();
-					match.SigningKey = pair.SigningKey;
-					match.Profile = pair.Profile;
-					match.AppId = appid;
-
-					matches.Add (match);
 				}
 			}
 

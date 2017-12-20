@@ -14,5 +14,7 @@
 	<string>10.7</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>LSUIElement</key>
+	<string>1</string>
 </dict>
 </plist>

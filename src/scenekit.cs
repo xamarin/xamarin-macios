@@ -121,12 +121,14 @@ namespace XamCore.SceneKit {
 		[Export ("addAnimation:forKey:")]
 		void AddAnimation (CAAnimation animation, [NullAllowed] NSString key);
 
+#if XAMCORE_2_0
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[iOS (11,0), TV (11,0), Watch (4,0), Mac (10,13, onlyOn64: true)]
 		[Export ("addAnimationPlayer:forKey:")]
 		void AddAnimation (SCNAnimationPlayer player, [NullAllowed] NSString key);
+#endif
 
 #if XAMCORE_2_0
 		[Abstract]
@@ -146,6 +148,7 @@ namespace XamCore.SceneKit {
 		[Export ("animationKeys")]
 		NSString [] GetAnimationKeys ();
 
+#if XAMCORE_2_0
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -153,6 +156,7 @@ namespace XamCore.SceneKit {
 		[iOS (11,0), TV (11,0), Watch (4,0), Mac (10,13, onlyOn64: true)]
 		[Export ("animationPlayerForKey:")]
 		SCNAnimationPlayer GetAnimationPlayer (NSString key);
+#endif
 
 #if XAMCORE_2_0
 		[Abstract]
@@ -2716,6 +2720,10 @@ namespace XamCore.SceneKit {
 		[Field ("SCNSceneSourceStrictConformanceKey")]
 		NSString StrictConformanceKey { get; }
 		
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.TvOS, 11, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Field ("SCNSceneSourceUseSafeModeKey")]
 		NSString UseSafeModeKey	 { get; }
 
@@ -3340,11 +3348,11 @@ namespace XamCore.SceneKit {
 		SCNAntialiasingMode AntialiasingMode { get; set; }
 
 #if XAMCORE_2_0
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Watch (4, 0), TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 		[Export ("cameraControlConfiguration")]
 		ISCNCameraControlConfiguration CameraControlConfiguration { get; }
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Watch (4, 0), TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 		[Export ("defaultCameraController")]
 		SCNCameraController DefaultCameraController { get; }
 #endif
@@ -4833,7 +4841,7 @@ namespace XamCore.SceneKit {
 		unsafe void Length (IntPtr bytes, nuint length);
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10, 13), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	interface SCNTimingFunction : NSSecureCoding
 	{
@@ -4853,7 +4861,7 @@ namespace XamCore.SceneKit {
 
 	interface ISCNAnimationProtocol {}
 
-	[Watch (4,0), TV (11,0), Mac (10, 13), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	interface SCNAnimation : SCNAnimationProtocol, NSCopying, NSSecureCoding
 	{
@@ -4927,7 +4935,7 @@ namespace XamCore.SceneKit {
 		bool Cumulative { [Bind ("isCumulative")] get; set; }
 	}
 	
-	[Watch (4,0), TV (11,0), Mac (10, 13), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	interface SCNAnimationPlayer : SCNAnimatable, NSCopying, NSSecureCoding
 	{

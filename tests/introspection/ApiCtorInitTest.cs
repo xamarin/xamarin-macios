@@ -21,6 +21,8 @@
 
 using System;
 using System.Reflection;
+using System.Linq;
+using System.Text;
 
 using NUnit.Framework;
 
@@ -56,7 +58,8 @@ namespace Introspection {
 		{
 			if (type.ContainsGenericParameters)
 				return true;
-			
+
+#if !XAMCORE_2_0
 			// skip delegate (and other protocol references)
 			foreach (object ca in type.GetCustomAttributes (false)) {
 				if (ca is ProtocolAttribute)
@@ -64,8 +67,16 @@ namespace Introspection {
 				if (ca is ModelAttribute)
 					return true;
 			}
+#endif
 
 			switch (type.Name) {
+			case "JSExport":
+				// This is interesting: Apple defines a private JSExport class - if you try to define your own in an Objective-C project you get this warning at startup:
+				//     objc[334]: Class JSExport is implemented in both /Applications/Xcode91.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/Library/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/JavaScriptCore.framework/JavaScriptCore (0x112c1e430) and /Users/rolf/Library/Developer/CoreSimulator/Devices/AC5323CF-225F-44D9-AA18-A37B7C28CA68/data/Containers/Bundle/Application/DEF9EAFC-CB5C-454F-97F5-669BBD00A609/jsexporttest.app/jsexporttest (0x105b49df0). One of the two will be used. Which one is undefined.
+				// Due to how we treat models, we'll always look the Objective-C type up at runtime (even with the static registrar),
+				// see that there's an existing JSExport type, and use that one instead of creating a new type.
+				// This is problematic, because Apple's JSExport is completely unusable, and will crash if you try to do anything.
+				return true;
 #if !XAMCORE_2_0
 			case "AVAssetResourceLoader": // We have DisableDefaultCtor in XAMCORE_2_0 but can't change in compat because of backwards compat
 			case "AVAssetResourceLoadingRequest":
@@ -98,6 +109,23 @@ namespace Introspection {
 			case "NSUnitPower": // -init should never be called on NSUnit!
 			case "NSUnitPressure": // -init should never be called on NSUnit!
 			case "NSUnitSpeed": // -init should never be called on NSUnit!
+				return true;
+			case "MPSCnnNeuron": // Cannot directly initialize MPSCNNNeuron. Use one of the sub-classes of MPSCNNNeuron
+			case "MPSCnnNeuronPReLU":
+			case "MPSCnnNeuronHardSigmoid":
+			case "MPSCnnNeuronSoftPlus":
+				return true;
+			case "MPSCnnBinaryConvolution": // [MPSCNNBinaryConvolution initWithDevice:] is not allowed. Please use initializers that are not marked NS_UNAVAILABLE.
+			case "MPSCnnDilatedPoolingMax": // [MPSCNNDilatedPoolingMax initWithDevice:] is not allowed. Please use initializers that are not marked NS_UNAVAILABLE.
+			case "MPSCnnPoolingL2Norm": // [MPSCNNPoolingL2Norm initWithDevice:] is not allowed. Please use initializers that are not marked NS_UNAVAILABLE.
+				return true;
+			case "MPSCnnBinaryFullyConnected": // Please initialize the MPSCNNBinaryFullyConnected class with initWithDevice:convolutionDescriptor:kernelWeights:biasTerms
+				return true;
+			case "MPSCnnUpsampling": // Cannot directly initialize MPSCNNUpsampling. Use one of the sub-classes of MPSCNNUpsampling
+			case "MPSCnnUpsamplingBilinear":
+			case "MPSCnnUpsamplingNearest":
+				return true;
+			case "MPSImageArithmetic": // Cannot directly initialize MPSImageArithmetic. Use one of the sub-classes of MPSImageArithmetic.
 				return true;
 			}
 
@@ -388,6 +416,83 @@ namespace Introspection {
 					return true;
 			}
 			return false;
+		}
+
+		[Test]
+		public void ShouldNotExposeDefaultCtorTest ()
+		{
+			Errors = 0;
+			int n = 0;
+
+			// Set to 'true' to generate alloc/init ObjC code of types that fail this test.
+			bool genObjCTestCode = false;
+			var objCCode = genObjCTestCode ? new StringBuilder () : null;
+
+			var types = Assembly.GetTypes ();
+			var cifiltertype = types.FirstOrDefault (c => c.Name == "CIFilter");
+			foreach (Type t in types) {
+				// TODO: Remove this MPS check in the future, at the time of writing this we currently only care about MPS.
+				if (!t.Name.StartsWith ("MPS", StringComparison.OrdinalIgnoreCase))
+					continue;
+
+				if (!t.IsPublic || !NSObjectType.IsAssignableFrom (t))
+					continue;
+
+				// ignore CIFilter derived subclasses since they are specially generated
+				if (cifiltertype != null && t.IsSubclassOf (cifiltertype))
+					continue;
+
+				if (SkipCheckShouldNotExposeDefaultCtor (t))
+					continue;
+
+				var ctor = t.GetConstructor (Type.EmptyTypes);
+				if (SkipDueToAttribute (ctor))
+					continue;
+
+				if (ctor == null || ctor.IsAbstract) {
+					if (LogUntestedTypes)
+						Console.WriteLine ("[WARNING] {0} was skipped because it had no default constructor", t);
+					continue;
+				}
+
+				if (LogProgress)
+					Console.WriteLine ($"{n}: {t.FullName}");
+
+				var parentType = t.BaseType;
+				var parentCtor = parentType.GetConstructor (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, Type.EmptyTypes, null);
+
+				if (parentCtor == null) {
+					ReportError ($"Type '{t.FullName}' is a possible candidate for [DisableDefaultCtor] because its BaseType '{parentType.FullName}' does not have one.");
+
+					// Useful to test in Xcode
+					if (genObjCTestCode) {
+						var export = t.GetCustomAttribute<RegisterAttribute> ();
+						var typeName = export?.Name ?? t.Name;
+						objCCode.AppendLine ($"{typeName}* test{n} = [[{typeName} alloc] init];");
+					}
+				}
+				n++;
+			}
+			Assert.AreEqual (0, Errors, $"{Errors} potential errors found in {n} BaseType empty ctor validated: \n{ErrorData}\n{(genObjCTestCode ? $"\n\n{objCCode}\n" : string.Empty)}");
+		}
+
+		protected virtual bool SkipCheckShouldNotExposeDefaultCtor (Type type)
+		{
+			if (type.ContainsGenericParameters)
+				return true;
+
+			foreach (object ca in type.GetCustomAttributes (false)) {
+				if (ca is ProtocolAttribute || ca is ModelAttribute)
+					return true;
+			}
+
+			// Add Skipped types here
+			//switch (type.Namespace) {
+			//case "":
+			//	return true;
+			//}
+
+			return SkipDueToAttribute (type);
 		}
 	}
 }

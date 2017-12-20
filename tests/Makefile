@@ -31,7 +31,9 @@ BCL_TEST_SUITES=mscorlib \
 	Mono.Data.Tds \
 	System.IO.Compression \
 	System.IO.Compression.FileSystem \
-	Mono.CSharp
+	Mono.CSharp \
+	System.Security \
+
 ALL_TEST_SUITES=$(TEST_SUITES) $(BCL_TEST_SUITES)
 EXEC_UNIT_SERVER=XCODE_DEVELOPER_ROOT=$(XCODE_DEVELOPER_ROOT) MONOTOUCH_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) $(SYSTEM_MONO) --debug $(UNIT_SERVER)
 
@@ -204,6 +206,13 @@ test-ios-tasks:
 	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(NUNIT_MSBUILD_DIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml > $(TOP)/tests/index.html && echo "@MonkeyWrench: AddFile: $$PWD/index.html" )
 	@if test -e $(NUNIT_MSBUILD_DIR)/.failed-stamp; then rm $(NUNIT_MSBUILD_DIR)/.failed-stamp; exit 1; fi
 
+test-install-sources:
+	$(SYSTEM_XBUILD) $(TOP)/tools/install-source/InstallSourcesTests/InstallSourcesTests.csproj
+	cd $(NUNIT_MSBUILD_DIR) && $(SYSTEM_MONO) ../nunit-console.exe ../../../../tools/install-source/InstallSourcesTests/bin/Release/InstallSourcesTests.dll -xml=TestResults_InstallSourcesTests.xml -labels $(TEST_FIXTURE) || touch .failed-stamp
+	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(NUNIT_MSBUILD_DIR)/TestResults_InstallSourcesTests.xml > $(TOP)/tests/index.html && echo "@MonkeyWrench: AddFile: $$PWD/index.html" )
+	@if test -e $(NUNIT_MSBUILD_DIR)/.failed-stamp; then rm $(NUNIT_MSBUILD_DIR)/.failed-stamp; exit 1; fi
+
+
 ifdef ENABLE_XAMARIN
 ifdef INCLUDE_IOS
 qa-test-dependencies.zip:
@@ -304,6 +313,11 @@ wrench-mac-binding-project:
 wrench-mac-introspection:
 	@echo Not here anymore
 
+wrench-mac-xammac_tests:
+	@# This entire target can be removed when merging to master.
+	$(Q) $(MAKE) run-mac-xammac_tests
+	$(Q) $(MAKE) clean-mac-xammac_tests
+	git clean -xfdq
 else
 wrench-mac-%:
 	@echo "Mac tests have been disabled [$@]"
@@ -355,7 +369,7 @@ runner: xharness/xharness.exe
 # This makefile target will run the device tests using the Xamarin.iOS version
 # installed on the system.
 vsts-device-tests: xharness/xharness.exe
-	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --debug $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-mac-tests,skip-ios-simulator-tests,skip-ios-msbuild-tests,skip-system-permission-tests,run-ios-device-tests,run-bcl-tests --markdown-summary=$(CURDIR)/TestSummary.md
+	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --debug $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-mac-tests,skip-ios-simulator-tests,skip-ios-msbuild-tests,skip-system-permission-tests,run-ios-device-tests,run-bcl-tests --markdown-summary=$(CURDIR)/TestSummary.md $(TESTS_PERIODIC_COMMAND)
 
 ifdef ENABLE_XAMARIN
 wrench-launch-external wrench-report-external:

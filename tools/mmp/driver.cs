@@ -265,9 +265,9 @@ namespace Xamarin.Bundler {
 				{ "minos=", "Minimum supported version of Mac OS X", 
 					v => {
 						try {
-							App.DeploymentTarget = Version.Parse (v);
+							App.DeploymentTarget = StringUtils.ParseVersion (v);
 						} catch (Exception ex) {
-							ErrorHelper.Error (26, ex, "Could not parse the command line argument '{0}': {1}", "-minos", ex.Message);
+							ErrorHelper.Error (26, ex, $"Could not parse the command line argument '-minos:{v}': {ex.Message}");
 						}
 					}
 				},
@@ -314,9 +314,9 @@ namespace Xamarin.Bundler {
 				{ "sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\")",
 					v => {
 						try {
-							App.SdkVersion = Version.Parse (v);
+							App.SdkVersion = StringUtils.ParseVersion (v);
 						} catch (Exception ex) {
-							ErrorHelper.Error (26, ex, "Could not parse the command line argument '{0}': {1}", "-sdk", ex.Message);
+							ErrorHelper.Error (26, ex, $"Could not parse the command line argument '-sdk:{v}': {ex.Message}");
 						}
 					}
 				},
@@ -628,6 +628,8 @@ namespace Xamarin.Bundler {
 		static Version MutateSDKVersionToPointRelease (Version rv)
 		{
 			if (rv.Major == 10 && (rv.Revision == 0 || rv.Revision == -1)) {
+				if (rv.Minor == 13 && XcodeVersion >= new Version (9, 2))
+					return new Version (rv.Major, rv.Minor, 2);
 				if (rv.Minor == 12 && XcodeVersion >= new Version (8, 3))
 					return new Version (rv.Major, rv.Minor, 4);
 				if (rv.Minor == 12 && XcodeVersion >= new Version (8, 2))

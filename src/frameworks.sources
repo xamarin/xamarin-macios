@@ -155,6 +155,8 @@ APPKIT_SOURCES = \
 # ARKit
 
 ARKIT_SOURCES = \
+	ARKit/ARCompat.cs \
+	ARKit/ARFaceGeometry.cs \
 	ARKit/ARPointCloud.cs \
 
 # AssetsLibrary
@@ -1005,6 +1007,11 @@ METALPERFORMANCESHADERS_CORE_SOURCES = \
 
 METALPERFORMANCESHADERS_SOURCES = \
 	MetalPerformanceShaders/MPSImageLanczosScale.cs \
+	MetalPerformanceShaders/MPSCnnConvolutionDescriptor.cs \
+	MetalPerformanceShaders/MPSCnnNeuron.cs \
+	MetalPerformanceShaders/MPSCnnKernel.cs \
+	MetalPerformanceShaders/MPSMatrixDescriptor.cs \
+	MetalPerformanceShaders/MPSImageHistogram.cs \
 
 # MobileCoreServices
 
@@ -1301,6 +1308,7 @@ STOREKIT_CORE_SOURCES = \
 
 STOREKIT_SOURCES = \
 	StoreKit/NativeMethods.cs \
+	StoreKit/SKCloudServiceSetupOptions.cs \
 	StoreKit/SKPayment.cs \
 	StoreKit/SKPaymentTransactionObserver.cs \
 
@@ -1641,6 +1649,7 @@ MAC_FRAMEWORKS =            \
 	MediaToolbox            \
 	Metal                   \
 	MetalKit                \
+	MetalPerformanceShaders \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity	\

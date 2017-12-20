@@ -42,7 +42,7 @@ namespace MonoTouch.Tuner {
 		protected override void Process (AssemblyDefinition assembly)
 		{
 			// The "get_Size" is a performance (over size) optimization.
-			// It always makes sense for plaftorm assemblies because:
+			// It always makes sense for platform assemblies because:
 			// * Xamarin.TVOS.dll only ship the 64 bits code paths (all 32 bits code is extra weight better removed)
 			// * Xamarin.WatchOS.dll only ship the 32 bits code paths (all 64 bits code is extra weight better removed)
 			// * Xamarin.iOS.dll  ship different 32/64 bits versions of the assembly anyway (nint... support)
@@ -81,11 +81,6 @@ namespace MonoTouch.Tuner {
 					break;
 				case Code.Ldsfld:
 					ProcessLoadStaticField (method, i);
-					break;
-				// for classic only (this is a property in unified)
-				case Code.Ldfld:
-					if (!isdirectbinding_check_required)
-						ProcessLoadField (method, i);
 					break;
 				}
 			}
@@ -237,21 +232,6 @@ namespace MonoTouch.Tuner {
 				Nop (ins);
 				ins = ins.Next;
 			}
-		}
-
-		// this optimization only works on classic - where IsDirectBinding was a field (not a property)
-		// https://app.asana.com/0/77259014252/108629697657
-		static void ProcessLoadField (MethodDefinition caller, int i)
-		{
-			var instructions = caller.Body.Instructions;
-			Instruction ins = instructions [i];
-			if (!IsField (ins, Namespaces.Foundation, "NSObject", "IsDirectBinding"))
-				return;
-
-#if DEBUG
-			Console.WriteLine ("NSObject.IsDirectBinding checked inside {0}", caller);
-#endif
-			ProcessIsDirectBinding (caller, ins);
 		}
 
 		static void ProcessIsDirectBinding (MethodDefinition caller, Instruction ins)

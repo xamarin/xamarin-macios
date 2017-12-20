@@ -19,6 +19,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Codesign" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CollectBundleResources" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ComputeBundleResourceOutputPaths" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.CoreMLCompiler" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreateAssetPackManifest" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreatePkgInfo" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Ditto" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
@@ -90,14 +91,16 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
 
 	<!-- *** Code Analysis Setup *** -->
+	<!-- Library projects aren't supported, if we enable Xamarin.Analysis on them, we'll need to revisit the rules and deactivate some (e.g XIA0002). -->
 
 	<PropertyGroup>
-		<XamarinAnalysisTargetsFile Condition="Exists ('$(MSBuildThisFileDirectory)Xamarin.iOS.Analysis.targets')">$(MSBuildThisFileDirectory)Xamarin.iOS.Analysis.targets</XamarinAnalysisTargetsFile>
+		<!-- '$(OutputType)' == 'Exe' because we don't want to run Xamarin.Analysis on library projects, the XIA rules don't apply. -->
+		<XamarinAnalysisTargetsFile Condition="Exists ('$(MSBuildThisFileDirectory)Xamarin.iOS.Analysis.targets') And '$(OutputType)' == 'Exe'">$(MSBuildThisFileDirectory)Xamarin.iOS.Analysis.targets</XamarinAnalysisTargetsFile>
 		<IsXBuild Condition="'$(MSBuildRuntimeVersion)' == ''">true</IsXBuild>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Analysis.targets"
-			Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Analysis.targets')" />
+			Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Analysis.targets') And '$(OutputType)' == 'Exe'" />
 
 	<PropertyGroup>
 		<!-- Switching to a new property allows us to potentially switch from iPhone to simulator builds
@@ -228,6 +231,10 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<_ACTool_PartialAppManifestCache>$(DeviceSpecificIntermediateOutputPath)actool\_PartialAppManifest.items</_ACTool_PartialAppManifestCache>
 			<_ACTool_BundleResourceCache>$(DeviceSpecificIntermediateOutputPath)actool\_BundleResourceWithLogicalName.items</_ACTool_BundleResourceCache>
 
+			<!-- coremlc output caches -->
+			<_CoreMLModel_PartialAppManifestCache>$(DeviceSpecificIntermediateOutputPath)coremlc\_PartialAppManifest.items</_CoreMLModel_PartialAppManifestCache>
+			<_CoreMLModel_BundleResourceCache>$(DeviceSpecificIntermediateOutputPath)coremlc\_BundleResourceWithLogicalName.items</_CoreMLModel_BundleResourceCache>
+
 			<!-- ibtool output caches -->
 			<_IBToolCache>$(DeviceSpecificIntermediateOutputPath)ibtool\_BundleResourceWithLogicalName.items</_IBToolCache>
 
@@ -324,6 +331,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_SmeltMetal;
 			_ForgeMetal;
 			_TemperMetal;
+			_CompileCoreMLModels;
 			_PrepareResourceRules;
 			_CompileEntitlements;
 			_CompileAppManifest;
@@ -429,6 +437,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Directories="$(DeviceSpecificIntermediateOutputPath)actool;
 					$(DeviceSpecificIntermediateOutputPath)assetpacks;
 					$(DeviceSpecificIntermediateOutputPath)codesign;
+					$(DeviceSpecificIntermediateOutputPath)coremlc;
 					$(DeviceSpecificIntermediateOutputPath)ibtool;
 					$(DeviceSpecificIntermediateOutputPath)ibtool-link;
 					$(DeviceSpecificIntermediateOutputPath)ibtool-manifests;
@@ -455,6 +464,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CompileColladaAssets;
 			_CompileSceneKitAssets;
 			_CompileTextureAtlases;
+			_CompileCoreMLModels;
 		</_CollectBundleResourcesDependsOn>
 	</PropertyGroup>
 
@@ -654,6 +664,11 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<Output TaskParameter="DetectedDistributionType" PropertyName="_DistributionType" />
 			<Output TaskParameter="DetectedProvisioningProfile" PropertyName="_ProvisioningProfile" />
 		</DetectSigningIdentity>
+
+		<PropertyGroup>
+			<!-- Always use '-' as the signing key for iOS Simulator builds -->
+			<_CodeSigningKey Condition="'$(_SdkIsSimulator)' == 'true'">-</_CodeSigningKey>
+		</PropertyGroup>
 	</Target>
 	
 	<Target Name="_GenerateBundleName" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures">
@@ -781,10 +796,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			AppBundleDir="$(AppBundleDir)"
 			AppManifest="$(_AppBundlePath)Info.plist"
 			Architectures="$(TargetArchitectures)"
-			Entitlements="$(CodesignEntitlements)"
 			ExecutableName="$(_ExecutableName)"
 			NativeExecutable="$(_NativeExecutable)"
-			CompiledEntitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
+			CompiledEntitlements="$(_CompiledEntitlements)"
 			Debug="$(MtouchDebug)"
 			EnableGenericValueTypeSharing="$(MtouchEnableGenericValueTypeSharing)"
 			ExtraArgs="$(MtouchExtraArgs)"
@@ -1246,7 +1260,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_ReadCoreCompileSceneKitAssets"
 		DependsOnTargets="_BeforeCoreCompileSceneKitAssets">
 
-		<!-- If _BeforeCoreCompileImageAssets did not delete the generated items lists from _CoreCompileImageAsset, then we read them
+		<!-- If _BeforeCoreCompileSceneKitAssets did not delete the generated items lists from _CoreCompileSceneKitAssets, then we read them
 		     since that target won't run and we need to the output items that are cached in those files which includes full metadata -->
 		<ReadItemsFromFile File="$(_SceneKitCache)" Condition="Exists('$(_SceneKitCache)')">
 			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
@@ -1391,6 +1405,61 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</ItemGroup>
 	</Target>
 
+	<Target Name="_CompileCoreMLModels" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCompileCoreMLModels;_ReadCompileCoreMLModels;_CoreCompileCoreMLModels" />
+
+	<Target Name="_BeforeCompileCoreMLModels"
+		Inputs="@(CoreMLModel);$(_AppManifest)"
+		Outputs="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)">
+		<!-- If any CoreMLModel or AppManifest is newer than the generated items list, we delete them so that the _CoreCompileCoreMLModels
+		     target runs again and updates those lists for the next run
+		-->
+		<Delete Files="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)" />
+		<RemoveDir Directories="$(DeviceSpecificIntermediateOutputPath)coremlc" />
+	</Target>
+
+	<Target Name="_ReadCompileCoreMLModels"	DependsOnTargets="_BeforeCompileCoreMLModels">
+		<!-- If _BeforeCompileCoreMLModels did not delete the generated items lists from _CoreCompileCoreMLModels, then we read them
+		     since that target won't run and we need the output items that are cached in those files, which includes full metadata -->
+		<ReadItemsFromFile File="$(_CoreMLModel_PartialAppManifestCache)" Condition="Exists('$(_CoreMLModel_PartialAppManifestCache)')">
+			<Output TaskParameter="Items" ItemName="_PartialAppManifest" />
+		</ReadItemsFromFile>
+		<ReadItemsFromFile File="$(_CoreMLModel_BundleResourceCache)" Condition="Exists('$(_CoreMLModel_BundleResourceCache)')">
+			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
+		</ReadItemsFromFile>
+	</Target>
+
+	<Target Name="_CoreCompileCoreMLModels" 
+		Inputs="@(CoreMLModel);$(_AppManifest)"
+		Outputs="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)"
+		DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCompileCoreMLModels">
+
+		<CoreMLCompiler
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			ToolExe="$(CoreMLCompilerExe)"
+			ToolPath="$(CoreMLCompilerPath)"
+			Models="@(CoreMLModel)"
+			EnableOnDemandResources="$(EnableOnDemandResources)"
+			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(IPhoneResourcePrefix)"
+			SdkDevPath="$(_SdkDevPath)">
+			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
+			<Output TaskParameter="PartialAppManifests" ItemName="_PartialAppManifest" />
+
+			<!-- Local items to be persisted to items files -->
+			<Output TaskParameter="PartialAppManifests" ItemName="_CoreMLModel_PartialAppManifest" />
+			<Output TaskParameter="BundleResources" ItemName="_CoreMLModel_BundleResources" />
+		</CoreMLCompiler>
+
+		<!-- Cache the generated outputs items for incremental build support -->
+		<WriteItemsToFile Items="@(_CoreMLModel_PartialAppManifest)" ItemName="_PartialAppManifest" File="$(_CoreMLModel_PartialAppManifestCache)" Overwrite="true" IncludeMetadata="true" />
+		<WriteItemsToFile Items="@(_CoreMLModel_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_CoreMLModel_BundleResourceCache)" Overwrite="true" IncludeMetadata="true" />
+		<ItemGroup>
+			<FileWrites Include="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)" />
+		</ItemGroup>
+	</Target>
+
 	<Target Name="_CreatePkgInfo" Condition="'$(IsAppExtension)' == 'false'" DependsOnTargets="_GenerateBundleName" Outputs="$(_AppBundlePath)PkgInfo">
 		<CreatePkgInfo SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" OutputPath="$(_AppBundlePath)PkgInfo" />
 	</Target>
@@ -1422,6 +1491,15 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkVersion="$(MtouchSdkVersion)"
 			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			>
+
+			<!-- We output the same task parameter to 2 different properties because they will be used differently -->
+
+			<!-- $(_CompiledEntitlements) will be passed to the MTouch task (only really needed for iOS Simulator builds,
+				 but does not cause harm when set for device builds). -->
+			<Output TaskParameter="CompiledEntitlements" PropertyName="_CompiledEntitlements" />
+
+			<!-- $(_CompiledCodesignEntitlements) will be used only with Codesign tasks when building for device. MUST NOT BE SET for iOS Simulator builds. -->
+			<Output TaskParameter="CompiledEntitlements" PropertyName="_CompiledCodesignEntitlements" Condition="'$(_SdkIsSimulator)' == 'false'" />
 		</CompileEntitlements>
 	</Target>
 
@@ -1735,7 +1813,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</ReadItemsFromFile>
 	</Target>
 
-	<Target Name="_CodesignAppExtensions" Condition="'$(_RequireCodeSigning)' == 'true' And '@(_AppExtensionCodesignProperties)' != ''"
+	<Target Name="_CodesignAppExtensions" Condition="('$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '') And '@(_AppExtensionCodesignProperties)' != ''"
 		DependsOnTargets="_DetectSigningIdentity;_ReadAppExtensionCodesignProperties"
 		Inputs="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\%(_AppExtensionCodesignProperties.NativeExecutable);%(_AppExtensionCodesignProperties.CodesignAppExtensionInputs)"
 		Outputs="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources">
@@ -1773,14 +1851,15 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<Touch
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_RequireCodeSigning)' == 'true' And Exists ('$(AppBundleDir)\..\%(_AppExtensionCodesignProperties.Identity).dSYM\Contents\Info.plist')"
+			Condition="'$(IsMacEnabled)' == 'true' And ('$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '') And Exists ('$(AppBundleDir)\..\%(_AppExtensionCodesignProperties.Identity).dSYM\Contents\Info.plist')"
 			Files="$(AppBundleDir)\..\%(_AppExtensionCodesignProperties.Identity).dSYM\Contents\Info.plist"
 		/>
 	</Target>
 
-	<Target Name="_PrepareCodesignAppExtension" Condition="'$(_RequireCodeSigning)' == 'true' And '$(IsAppExtension)' == 'true' And '@(_ResolvedAppBundleExtensions)' == ''">
+	<Target Name="_PrepareCodesignAppExtension" Condition="('$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '') And '$(IsAppExtension)' == 'true' And '@(_ResolvedAppBundleExtensions)' == ''">
 		<!-- For App Extensions, we delay running codesign until it has been copied into the main app bundle... -->
 		<PropertyGroup>
+			<_CompiledEntitlementsFullPath></_CompiledEntitlementsFullPath>
 			<_ResourceRulesFullPath></_ResourceRulesFullPath>
 		</PropertyGroup>
 
@@ -1788,8 +1867,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<Output TaskParameter="FullPath" PropertyName="_AppBundleFullPath" />
 		</GetFullPath>
 
-		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" RelativePath="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent">
-			<Output TaskParameter="FullPath" PropertyName="_EntitlementsFullPath" />
+		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(_CompiledCodesignEntitlements)' != ''" RelativePath="$(_CompiledCodesignEntitlements)">
+			<Output TaskParameter="FullPath" PropertyName="_CompiledEntitlementsFullPath" />
 		</GetFullPath>
 
 		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(_PreparedResourceRules)' != ''" RelativePath="$(_PreparedResourceRules)">
@@ -1819,7 +1898,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 				<NativeExecutable>$(_NativeExecutableFileName)</NativeExecutable>
 				<CodesignAllocate>$(_CodesignAllocate)</CodesignAllocate>
 				<DisableTimestamp>$(_CodesignDisableTimestamp)</DisableTimestamp>
-				<Entitlements>$(_EntitlementsFullPath)</Entitlements>
+				<Entitlements>$(_CompiledEntitlementsFullPath)</Entitlements>
 				<ResourceRules>$(_ResourceRulesFullPath)</ResourceRules>
 				<Keychain>$(CodesignKeychain)</Keychain>
 				<SigningKey>$(_CodeSigningKey)</SigningKey>
@@ -1837,7 +1916,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="_CalculateCodesignAppBundleInputs" Condition="'$(_RequireCodeSigning)' == 'true' And ('$(IsAppExtension)' == 'false' Or '@(_ResolvedAppExtensionReferences)' != '')">
+	<Target Name="_CalculateCodesignAppBundleInputs" Condition="('$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '') And ('$(IsAppExtension)' == 'false' Or '@(_ResolvedAppExtensionReferences)' != '')">
 		<ItemGroup>
 			<_CodesignAppBundleInputs Include="$(_AppBundlePath)**\*.*" Exclude="$(_AppBundlePath)_CodeSignature\CodeResources" />
 		</ItemGroup>
@@ -1859,7 +1938,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			CodesignAllocate="$(_CodesignAllocate)"
 			DisableTimestamp="$(_CodesignDisableTimestamp)"
 			Keychain="$(CodesignKeychain)"
-			Entitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
+			Entitlements="$(_CompiledCodesignEntitlements)"
 			ResourceRules="$(_PreparedResourceRules)"
 			Resources="$(AppBundleDir)"
 			SigningKey="$(_CodeSigningKey)"
@@ -2048,7 +2127,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			CodesignAllocate="$(_CodesignAllocate)"
 			DisableTimestamp="$(_CodesignDisableTimestamp)"
 			Keychain="$(CodesignKeychain)"
-			Entitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
+			Entitlements="$(_CompiledCodesignEntitlements)"
 			Resources="@(_AssetPack)"
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
@@ -2075,7 +2154,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			CodesignAllocate="$(_CodesignAllocate)"
 			DisableTimestamp="$(_CodesignDisableTimestamp)"
 			Keychain="$(CodesignKeychain)"
-			Entitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
+			Entitlements="$(_CompiledCodesignEntitlements)"
 			ResourceRules="$(_PreparedResourceRules)"
 			Resources="$(_IpaAppBundleDir)"
 			SigningKey="$(_CodeSigningKey)"

@@ -70,7 +70,6 @@ namespace Xamarin.iOS.Tasks
 
 		public string ArchiveSymbols { get; set; }
 
-		[Required]
 		public string CompiledEntitlements { get; set; }
 
 		[Required]
@@ -81,8 +80,6 @@ namespace Xamarin.iOS.Tasks
 
 		[Required]
 		public bool EnableGenericValueTypeSharing { get; set; }
-
-		public string Entitlements { get; set; }
 
 		public string License { get; set; }
 

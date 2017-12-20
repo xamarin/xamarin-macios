@@ -1119,7 +1119,11 @@ namespace XamCore.Photos
 		NSString CancelledKey { get; }
 	}
 
-	delegate CIImage PHLivePhotoFrameProcessingBlock (IPHLivePhotoFrame frame, NSError error);
+#if XAMCORE_4_0
+	delegate CIImage PHLivePhotoFrameProcessingBlock (IPHLivePhotoFrame frame, ref NSError error);
+#else
+	delegate CIImage PHLivePhotoFrameProcessingBlock2 (IPHLivePhotoFrame frame, ref NSError error);
+#endif
 
 	[iOS (10,0)]
 	[TV (10,0)]
@@ -1141,7 +1145,11 @@ namespace XamCore.Photos
 		CMTime PhotoTime { get; }
 
 		[NullAllowed, Export ("frameProcessor", ArgumentSemantic.Copy)]
+#if XAMCORE_4_0
 		PHLivePhotoFrameProcessingBlock FrameProcessor { get; set; }
+#else
+		PHLivePhotoFrameProcessingBlock2 FrameProcessor2 { get; set; }
+#endif
 
 		[Export ("audioVolume")]
 		float AudioVolume { get; set; }

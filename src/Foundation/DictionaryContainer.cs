@@ -237,6 +237,8 @@ namespace XamCore.Foundation {
 				throw new ArgumentNullException ("key");
 
 			var dict = GetNSDictionary (key);
+			if (dict == null)
+				return null;
 			T value = (T)Activator.CreateInstance (typeof(T),
 				new object[] { dict }
 			);

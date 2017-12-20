@@ -32,6 +32,7 @@ namespace MonoTouchFixtures.AddressBook {
 		[Test]
 		public void UpdateAddressLine ()
 		{
+			TestRuntime.CheckAddressBookPermission ();
 			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
 				Assert.Inconclusive ("System.EntryPointNotFoundException : ABAddressBookCreateWithOptions before 6.0");
 

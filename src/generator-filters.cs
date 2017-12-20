@@ -168,8 +168,10 @@ public partial class Generator {
 			indent--;
 			print ("return new CGAffineTransform (1, 0, 0, 1, 0, 0);");
 			break;
-		// NSObject should not be added - the only case it's found (right now) is for CGColorSpace
+		// NSObject should not be added
+		case "AVCameraCalibrationData":
 		case "CGColorSpace":
+		case "CIBarcodeDescriptor":
 			print ("return Runtime.GetINativeObject <{0}> (GetHandle (\"{1}\"), true);", propertyType, propertyName);
 			break;
 		case "CIColor":
@@ -187,11 +189,13 @@ public partial class Generator {
 		case "int":
 			print ("return GetInt (\"{0}\");", propertyName);
 			break;
+		case "NSAttributedString":
 		case "NSData":
 			// NSNumber should not be added - it should be bound as a float (common), int32 or bool
 			print ("return ValueForKey (\"{0}\") as {1};", propertyName, propertyType);
 			break;
 		case "string":
+			// NSString should not be added - it should be bound as a string
 			print ("return (string) (ValueForKey (\"{0}\") as NSString);", propertyName);
 			break;
 		default:
@@ -220,18 +224,22 @@ public partial class Generator {
 		case "int":
 			print ("SetInt (\"{0}\", value);", propertyName);
 			break;
-		// NSObject should not be added - the only case it's found (right now) is for CGColorSpace
+		// NSObject should not be added
+		case "AVCameraCalibrationData":
 		case "CGColorSpace":
+		case "CIBarcodeDescriptor":
 			print ("SetHandle (\"{0}\", value == null ? IntPtr.Zero : value.Handle);", propertyName);
 			break;
 		case "CIColor":
 		case "CIImage":
 		case "CIVector":
+		case "NSAttributedString":
 		case "NSData":
 		// NSNumber should not be added - it should be bound as a int or a float
 			print ("SetValue (\"{0}\", value);", propertyName);
 			break;
 		case "string":
+			// NSString should not be added - it should be bound as a string
 			print ("using (var ns = new NSString (value))");
 			indent++;
 			print ("SetValue (\"{0}\", ns);", propertyName);

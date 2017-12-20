@@ -1,4 +1,4 @@
-﻿//
+//
 // Test the generated API selectors against typos or non-existing cases
 //
 // Authors:
@@ -83,7 +83,9 @@ namespace Introspection
 			"Adjustmentfor",
 			"Aifc",
 			"Aiff",
+			"Aio",
 			"Alg", // short for Algorithm
+			"Alpn", // Application-Layer Protocol Negotiation RFC7301
 			"Amete",
 			"Amr",
 			"Anglet",
@@ -99,9 +101,11 @@ namespace Introspection
 			"Automapping",
 			"Automounted",
 			"Autoredirect",
+			"Autospace",
 			"Avci", // file type
 			"Aliasable",
 			"Arcball",
+			"Avg",
 			"Backface",
 			"Bancaire", // french
 			"Bancaires", // french
@@ -121,16 +125,19 @@ namespace Introspection
 			"Cabac",
 			"Caf", // acronym: Core Audio Format
 			"Cancellable",
+			"Cartes", // french
 			"Cavlc",
 			"Cda", // acronym: Clinical Document Architecture
 			"Celp", // MPEG4ObjectID
 			"Characterteristic",
 			"Chapv",
+			"Cholesky",
 			"Chromaticities",
 			"Ciff",
 			"Cinepak",
 			"Clearcoat",
 			"Cnn", // Convolutional Neural Network
+			"Cns",
 			"Colos",
 			"Commerical",
 			"Composable",
@@ -159,6 +166,7 @@ namespace Introspection
 			"dlerror",
 			"Dlfcn",
 			"dlopen",
+			"Dls",
 			"Dlsym",
 			"dlsym",
 			"Dng",
@@ -181,6 +189,7 @@ namespace Introspection
 			"Ecies", // Elliptic Curve Integrated Encryption Scheme
 			"Editability", 
 			"Eof", // acronym End-Of-File
+			"Elu",
 			"Emagic",
 			"Emaili",
 			"Eppc",
@@ -193,6 +202,7 @@ namespace Introspection
 			"Fov",
 			"Framebuffer",
 			"Framesetter",
+			"Froms", // NSMetadataItemWhereFromsKey
 			"Freq",
 			"Ftps",
 			"Func",
@@ -201,9 +211,11 @@ namespace Introspection
 			"Geocoder",
 			"Gigapascals",
 			"Gpp",
+			"Gps",
 			"Gpu",	// acronym for Graphics Processing Unit
 			"Grbg", // acronym for Green-Red-Blue-Green
 			"Greeking",
+			"Hardlink",
 			"Hdmi",
 			"Hdr",
 			"Hectopascals",
@@ -229,7 +241,9 @@ namespace Introspection
 			"Indoorrun",
 			"Indoorcycle",
 			"Inklist",
+			"Indeterm",
 			"Indoorwalk",
+			"Inode",
 			"Inser",
 			"Interac",
 			"Interframe",
@@ -248,6 +262,8 @@ namespace Introspection
 			"Json",
 			"Keyerror",
 			"Keyi",
+			"Keypoint",
+			"Keypoints",
 			"Keyspace",
 			"ks",
 			"Kiloampere",
@@ -263,6 +279,8 @@ namespace Introspection
 			"Lod",
 			"Lopass",
 			"Lowlevel",
+			"Lun",
+			"Luma",
 			"Mapbuffer",
 			"Matchingcoalesce",
 			"Megaampere",
@@ -286,6 +304,7 @@ namespace Introspection
 			"Mobike", // acronym
 			"Morpher",
 			"Mpe", // acronym
+			"Mps",
 			"Mtu", // acronym
 			"Mtc", // acronym
 			"Mul",
@@ -304,12 +323,14 @@ namespace Introspection
 			"Ntsc",
 			"nuint",
 			"Ndef",
+			"Nop",
 			"Numbernumber",
 			"Nyquist",
 			"Oaep", // Optimal asymmetric encryption padding
 			"Objectfor",
 			"Occlussion",
 			"Ocurrences",
+			"Ocsp", // Online Certificate Status Protocol
 			"Octree",
 			"Oid",
 			"Olus",
@@ -335,12 +356,14 @@ namespace Introspection
 			"Pkcs",
 			"Placemark",
 			"Playthrough",
+			"Pnorm",
 			"Pointillize",
 			"Polyline",
 			"Popularimeter",
 			"Preds", // short for Predicates
 			"Prerolls",
 			"Preseti",
+			"Prev",
 			"Propogate",
 			"Psec",
 			"Psm", // Protocol/Service Multiplexer
@@ -352,6 +375,7 @@ namespace Introspection
 			"Reacquirer",
 			"Reinvitation",
 			"Reinvite",
+			"Rel",
 			"Reprandial",
 			"Replayable",
 			"Requestwith",
@@ -359,6 +383,7 @@ namespace Introspection
 			"Rgb",
 			"Rgba",
 			"Rggb", // acronym for Red, Green, Green, Blue
+			"Rnn",
 			"Roi",
 			"Romm", // acronym: Reference Output Medium Metric
 			"Rpa",
@@ -404,6 +429,8 @@ namespace Introspection
 			"Submesh",
 			"Submeshes",
 			"Subpixel",
+			"Subresource",
+			"Subresources",
 			"Subsec",
 			"Suica", // Japanese contactless smart card type
 			"Superentity",
@@ -411,6 +438,7 @@ namespace Introspection
 			"Synchronizable",
 			"Symbologies",
 			"Tanh",
+			"Tensorflow",
 			"Tessellator",
 			"Texcoord",
 			"Texel",
@@ -448,6 +476,7 @@ namespace Introspection
 			"Untrash",
 			"Utf",
 			"Upce",
+			"Uri",
 			"Uti",
 			"Varispeed",
 			"Vergence",
@@ -459,6 +488,7 @@ namespace Introspection
 			"Warpable",
 			"Whitespaces",
 			"Writeability",
+			"Xnor",
 			"Xpc",
 			"xy",
 			"Xyz",
@@ -588,6 +618,7 @@ namespace Introspection
 			"Usedby",
 			"Viewwrite",
 			"Wep",
+			"Wlan",
 			"Wme",
 			"Writeln",
 			"Xattr",
@@ -723,6 +754,22 @@ namespace Introspection
 			"Ycbcr",
 			"Ycrcba",
 #endif
+#endif
+#if !XAMCORE_4_0
+			"Actionfrom",
+			"Attributefor",
+			"Attributest",
+			"Failwith",
+			"Imageimage",
+			"Musthold",
+			"Pathpath",
+			"Rangefor",
+			"Failwith",
+			"Tearm",
+			"Theevent",
+			"Timestampe", // Existing binding so we can't just remove it.
+			"Toplevel",
+			"Tripple",
 #endif
 		};
 
