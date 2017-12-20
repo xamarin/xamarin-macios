@@ -66,6 +66,12 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 This usually indicates a bug in Xamarin.Mac; please file a bug report at [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=Xamarin.Mac) with a test case.
 
+### <a name="MM0073"/>MM0073: Xamarin.Mac * does not support a deployment target of * (the minimum is *). Please select a newer deployment target in your project's Info.plist.
+
+The minimum deployment target is the one specified in the error message; please select a newer deployment target in the project's Info.plist.
+
+If updating the deployment target is not possible, then please use an older version of Xamarin.Mac.
+
 ### <a name="MM0079">MM0079: Internal Error - No executable was copied into the app bundle. Please contact 'support@xamarin.com'
 
 ### <a name="MM0080">MM0080: Disabling NewRefCount, --new-refcount:false, is deprecated.

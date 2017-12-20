@@ -44,6 +44,7 @@ namespace Xamarin.MMP.Tests
 			public string ItemGroup { get; set; } = "";
 			public string SystemMonoVersion { get; set; } = "";
 			public string TargetFrameworkVersion { get; set; } = "";
+			public Dictionary<string, string> PlistReplaceStrings { get; set; } = new Dictionary<string, string>();
 
 			// Binding project specific
 			public string APIDefinitionConfig { get; set; }
@@ -174,7 +175,18 @@ namespace Xamarin.MMP.Tests
 			WriteMainFile (config.TestDecl, config.TestCode, true, config.FSharp, Path.Combine (config.TmpDir, config.FSharp ? "Main.fs" : "Main.cs"));
 
 			string sourceDir = FindSourceDirectory ();
-			File.Copy (Path.Combine (sourceDir, "Info-Unified.plist"), Path.Combine (config.TmpDir, "Info.plist"), true);
+			var projectPlistPath = Path.Combine(config.TmpDir, "Info.plist");
+			File.Copy (Path.Combine (sourceDir, "Info-Unified.plist"), projectPlistPath, true);
+
+			if (config.PlistReplaceStrings.Any())
+			{
+				string text = File.ReadAllText(projectPlistPath);
+
+				foreach (var key in config.PlistReplaceStrings.Keys)
+					text = text.Replace(key, config.PlistReplaceStrings[key]);
+
+				File.WriteAllText(projectPlistPath, text);
+			}
 
 			return CopyFileWithSubstitutions (Path.Combine (sourceDir, config.ProjectName), Path.Combine (config.TmpDir, config.ProjectName), text =>
 				{

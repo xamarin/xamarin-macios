@@ -774,5 +774,20 @@ namespace Xamarin.MMP.Tests
 				TI.TestUnifiedExecutable (test, shouldFail: false, configuration: "Debug", environment: new string [] { "MD_APPLE_SDK_ROOT", Path.GetDirectoryName (Path.GetDirectoryName (oldXcode)) });
 			});
 		}
+
+		[Test]
+		public void BuildUnified_BelowMinDeploymentTargetShouldFail ()
+		{
+			RunMMPTest(tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig(tmpDir)
+				{
+					PlistReplaceStrings = new Dictionary<string, string>
+					{
+						{ "<string>10.7</string>", "<string>10.4</string>"}
+					}
+				};
+				TI.TestUnifiedExecutable(test, shouldFail: true);
+			});
+		}
 	}
 }
