@@ -119,8 +119,13 @@ namespace MonoTouchFixtures.Security {
 
 						using (var pub = public_key.GetPublicKey ())
 						{
+#if !MONOMAC
 							// a new native instance of the key is returned (so having a new managed SecKey is fine)
 							Assert.That (pub.Handle == public_key.Handle, Is.Not.EqualTo (v), "public/GetPublicKey");
+#else
+							// a new native instance of the key is returned (so having a new managed SecKey is fine)
+							Assert.That(pub.Handle == public_key.Handle, Is.Not.EqualTo(TestRuntime.CheckMacSystemVersion(10, 13) ? false : v), "public/GetPublicKey");
+#endif
 						}
 					};
 #if MONOMAC
