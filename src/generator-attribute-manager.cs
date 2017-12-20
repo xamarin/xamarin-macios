@@ -367,13 +367,6 @@ public static class AttributeConversionManager
 				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
 				break;
 			}
-			if (constructorArguments [0].GetType () == typeof (byte) &&
-			    constructorArguments [1].GetType () == typeof (byte) &&
-			    constructorArguments [2].GetType () == typeof (byte) /* ObjCRuntime.PlatformArchitecture */) {
-				ctorValues = new object [] { (byte)platform, (int)(byte) constructorArguments [0], (int)(byte)constructorArguments [1], constructorArguments [2], "" };
-				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), AttributeFactory.PlatformArch, typeof (string) };
-				break;
-			}
 			throw new NotImplementedException (unknownFormatError ());
 		case 4:
 			if (constructorArguments [0].GetType () == typeof (byte) &&

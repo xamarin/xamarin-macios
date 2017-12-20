@@ -19,10 +19,13 @@ sealed class MacAttribute : XamCore.ObjCRuntime.IntroducedAttribute
 	{
 	}
 	
+	/* This variant can _not_ exist as the AttributeConversionManager.ConvertPlatformAttribute sees PlatformArchitecture as a byte
+	   and byte,byte,byte already exists below
 	public MacAttribute (byte major, byte minor, PlatformArchitecture arch)
 		: base (PlatformName.MacOSX, (int)major, (int)minor, arch)
 	{
 	}
+	*/
 
 	public MacAttribute (byte major, byte minor, byte subminor)
 		: base (PlatformName.MacOSX, (int)major, (int)minor, subminor)

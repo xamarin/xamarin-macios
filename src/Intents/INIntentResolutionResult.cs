@@ -14,7 +14,7 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.Intents {
 	[iOS (10, 0)]
-	[Mac (10, 12, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Register ("INIntentResolutionResult", SkipRegistration = true)]
 	public sealed partial class INIntentResolutionResult<ObjectType> : INIntentResolutionResult
