@@ -20,7 +20,7 @@ using XamCore.AppKit;
 #endif
 
 namespace XamCore.Social {
-	[Since (6,0)]
+	[iOS (6,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[Static]
 	interface SLServiceType {
@@ -44,7 +44,7 @@ namespace XamCore.Social {
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Tencent Weibo SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Tencent Weibo SDK instead.")]
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("SLServiceTypeTencentWeibo")]
 		[Mac (10,9)]
 		NSString TencentWeibo { get; }
@@ -57,7 +57,7 @@ namespace XamCore.Social {
 #endif
 	}
 	
-	[Since (6,0)]
+	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	// init -> Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: SLRequestMultiPart must be obtained through!
 	[DisableDefaultCtor]
@@ -92,7 +92,7 @@ namespace XamCore.Social {
 	}
 
 #if !MONOMAC
-	[Since (6,0)]
+	[iOS (6,0)]
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor] // see note on 'composeViewControllerForServiceType:'
 	interface SLComposeViewController {

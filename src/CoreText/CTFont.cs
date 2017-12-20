@@ -172,7 +172,8 @@ namespace XamCore.CoreText {
 		AllTypographicFeatures   = 0,
 		Ligatures                = 1,
 		CursiveConnection        = 2,
-		[Availability (Deprecated = Platform.iOS_6_0 | Platform.Mac_10_7)]
+		[Deprecated (PlatformName.iOS, 6, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		LetterCase               = 3,
 		VerticalSubstitution     = 4,
 		LinguisticRearrangement  = 5,
@@ -480,7 +481,8 @@ namespace XamCore.CoreText {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_6_0 | Platform.Mac_10_7)]
+	[Deprecated (PlatformName.iOS, 6, 0)]
+	[Deprecated (PlatformName.MacOSX, 10, 7)]
 	public class CTFontFeatureLetterCase : CTFontFeatureSelectors
 	{
 		public enum Selector
@@ -1056,9 +1058,11 @@ namespace XamCore.CoreText {
 	{
 		public enum Selector
 		{
-			[Availability (Deprecated = Platform.iOS_5_1 | Platform.Mac_10_8)]
+			[Deprecated (PlatformName.iOS, 5, 1)]
+			[Deprecated (PlatformName.MacOSX, 10, 8)]
 			NoRubyKana           = 0,
-			[Availability (Deprecated = Platform.iOS_5_1 | Platform.Mac_10_8)]
+			[Deprecated (PlatformName.iOS, 5, 1)]
+			[Deprecated (PlatformName.MacOSX, 10, 8)]
 			RubyKana             = 1,
 			RubyKanaOn           = 2,
 			RubyKanaOff          = 3
@@ -1148,9 +1152,11 @@ namespace XamCore.CoreText {
 	{
 		public enum Selector
 		{
-			[Availability (Deprecated = Platform.iOS_5_1 | Platform.Mac_10_8)]
+			[Deprecated (PlatformName.iOS, 5, 1)]
+			[Deprecated (PlatformName.MacOSX, 10, 8)]
 			NoCJKItalicRoman     = 0,
-			[Availability (Deprecated = Platform.iOS_5_1 | Platform.Mac_10_8)]
+			[Deprecated (PlatformName.iOS, 5, 1)]
+			[Deprecated (PlatformName.MacOSX, 10, 8)]
 			CJKItalicRoman       = 1,
 			CJKItalicRomanOn     = 2,
 			CJKItalicRomanOff    = 3

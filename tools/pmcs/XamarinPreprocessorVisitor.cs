@@ -131,14 +131,25 @@ namespace Xamarin.Pmcs
 			);
 
 			foreach (var onlyOn64 in invocationExpression.Arguments.Skip (isTripleVersion ? 4 : 3).Take (2)) {
-				var onlyOn64BoolValue = onlyOn64 as LiteralExpression;
+				var onlyOn64Value = onlyOn64 as LiteralExpression;
 				if (onlyOn64 is NamedExpression)
-					onlyOn64BoolValue = onlyOn64.GetChild<Expression> (
+					onlyOn64Value = onlyOn64.GetChild<Expression> (
 						BinaryExpression.RightOperandRole) as LiteralExpression;
-				if (onlyOn64BoolValue != null && onlyOn64BoolValue.Value == "true")
-					invocationExpression.AddArgument (
-						new LiteralExpression ("PlatformArchitecture.Arch64"));
-				if (onlyOn64BoolValue != null)
+				if (onlyOn64Value.Value != null) {
+					switch (onlyOn64Value.Value) {
+					case "true":
+						invocationExpression.AddArgument (new LiteralExpression ("PlatformArchitecture.Arch64"));
+						break;
+					case "PlatformArchitecture.None":
+					case "PlatformArchitecture.Arch32":
+					case "PlatformArchitecture.Arch64":
+					case "PlatformArchitecture.ALl":
+						invocationExpression.AddArgument (new LiteralExpression (onlyOn64Value.Value));
+						break;
+					}
+
+				}
+				if (onlyOn64Value != null)
 					onlyOn64.Remove ();
 			}
 		}

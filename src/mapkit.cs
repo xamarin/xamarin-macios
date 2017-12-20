@@ -82,7 +82,7 @@ namespace XamCore.MapKit {
 		// optional, not implemented by MKPolygon, MKPolyline and MKCircle
 		// implemented by MKTileOverlay (and defined there)
 		[OptionalImplementation]
-		[Since (7,0), Export ("canReplaceMapContent")]
+		[iOS (7,0), Export ("canReplaceMapContent")]
 		bool CanReplaceMapContent { get; }
 #endif
 	}
@@ -154,17 +154,17 @@ namespace XamCore.MapKit {
 		UIView RightCalloutAccessoryView { get; set; }
 	
 		[NoTV]
-		[Since (4,2)]
+		[iOS (4,2)]
 		[Export ("setDragState:animated:")]
 		void SetDragState (MKAnnotationViewDragState newDragState, bool animated);
 
 		[Export ("dragState")]
 		[NoTV]
-		[Since (4,0)]
+		[iOS (4,0)]
 		MKAnnotationViewDragState DragState { get; set;  }
 
 		[NoTV]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("draggable")]
 		bool Draggable { [Bind ("isDraggable")] get; set;  }
 
@@ -205,7 +205,7 @@ namespace XamCore.MapKit {
 
 	[ThreadSafe]
 	[TV (9,2)]
-	[Since (4,0)]
+	[iOS (4,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[BaseType (typeof (MKShape))]
 	interface MKCircle : MKOverlay {
@@ -244,17 +244,17 @@ namespace XamCore.MapKit {
 #endif
 	
 	[TV (9,2)]
-	[Since (6,0)]
+	[iOS (6,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface MKDirectionsRequest {
 		[NullAllowed] // by default this property is null
 		[Export ("destination")]
-		MKMapItem Destination { get; [Since (7,0)] set; }
+		MKMapItem Destination { get; [iOS (7,0)] set; }
 
 		[NullAllowed] // by default this property is null
 		[Export ("source")]
-		MKMapItem Source { get; [Since (7,0)] set; }
+		MKMapItem Source { get; [iOS (7,0)] set; }
 
 		[Export ("initWithContentsOfURL:")]
 		IntPtr Constructor (NSUrl url);
@@ -263,24 +263,24 @@ namespace XamCore.MapKit {
 		[Export ("isDirectionsRequestURL:")]
 		bool IsDirectionsRequestUrl (NSUrl url);
 
-		[Since (7,0), Export ("transportType")]
+		[iOS (7,0), Export ("transportType")]
 		MKDirectionsTransportType TransportType { get; set; }
 
-		[Since (7,0), Export ("requestsAlternateRoutes")]
+		[iOS (7,0), Export ("requestsAlternateRoutes")]
 		bool RequestsAlternateRoutes { get; set; }
 
 		[NullAllowed] // by default this property is null
-		[Since (7,0), Export ("departureDate", ArgumentSemantic.Copy)]
+		[iOS (7,0), Export ("departureDate", ArgumentSemantic.Copy)]
 		NSDate DepartureDate { get; set; }
 
 		[NullAllowed] // by default this property is null
-		[Since (7,0), Export ("arrivalDate", ArgumentSemantic.Copy)]
+		[iOS (7,0), Export ("arrivalDate", ArgumentSemantic.Copy)]
 		NSDate ArrivalDate { get; set; }
 	}
 #endif // !WATCH
 
 	[BaseType (typeof (NSObject))]
-	[Since (6,0)]
+	[iOS (6,0)]
 	[TV (9,2)]
 	[Mac (10,9, onlyOn64 : true)]
 	interface MKMapItem 
@@ -527,7 +527,7 @@ namespace XamCore.MapKit {
 		[Export ("annotationVisibleRect")]
 		CGRect AnnotationVisibleRect { get; }
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("addOverlay:")][PostGet ("Overlays")]
 #if XAMCORE_2_0
 		void AddOverlay (IMKOverlay overlay);
@@ -535,7 +535,7 @@ namespace XamCore.MapKit {
 		void AddOverlay (NSObject overlay);
 #endif
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("addOverlays:")][PostGet ("Overlays")]
 #if XAMCORE_2_0
 		void AddOverlays (IMKOverlay [] overlays);
@@ -543,7 +543,7 @@ namespace XamCore.MapKit {
 		void AddOverlays (NSObject [] overlays);
 #endif
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("removeOverlay:")][PostGet ("Overlays")]
 #if XAMCORE_2_0
 		void RemoveOverlay (IMKOverlay overlay);
@@ -551,7 +551,7 @@ namespace XamCore.MapKit {
 		void RemoveOverlay (NSObject overlay);
 #endif
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("removeOverlays:")][PostGet ("Overlays")]
 #if XAMCORE_2_0
 		void RemoveOverlays ([Params] IMKOverlay [] overlays);
@@ -559,7 +559,7 @@ namespace XamCore.MapKit {
 		void RemoveOverlays ([Params] NSObject [] overlays);
 #endif
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("overlays")]
 #if XAMCORE_2_0
 		IMKOverlay [] Overlays { get;  }
@@ -567,7 +567,7 @@ namespace XamCore.MapKit {
 		NSObject [] Overlays { get;  }
 #endif
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("insertOverlay:atIndex:")][PostGet ("Overlays")]
 #if XAMCORE_2_0
 		void InsertOverlay (IMKOverlay overlay, nint index);
@@ -575,7 +575,7 @@ namespace XamCore.MapKit {
 		void InsertOverlay (NSObject overlay, nint index);
 #endif
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("insertOverlay:aboveOverlay:")][PostGet ("Overlays")]
 #if XAMCORE_2_0
 		void InsertOverlayAbove (IMKOverlay overlay, IMKOverlay sibling);
@@ -583,7 +583,7 @@ namespace XamCore.MapKit {
 		void InsertOverlayAbove (NSObject overlay, NSObject sibling);
 #endif
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("insertOverlay:belowOverlay:")][PostGet ("Overlays")]
 #if XAMCORE_2_0
 		void InsertOverlayBelow (IMKOverlay overlay, IMKOverlay sibling);
@@ -591,23 +591,23 @@ namespace XamCore.MapKit {
 		void InsertOverlayBelow (NSObject overlay, NSObject sibling);
 #endif
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("exchangeOverlayAtIndex:withOverlayAtIndex:")]
 		void ExchangeOverlays (nint index1, nint index2);
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("mapRectThatFits:")]
 		MKMapRect MapRectThatFits (MKMapRect mapRect);
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("setVisibleMapRect:edgePadding:animated:")]
 		void SetVisibleMapRect (MKMapRect mapRect, UIEdgeInsets edgePadding, bool animate);
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("setVisibleMapRect:animated:")]
 		void SetVisibleMapRect (MKMapRect mapRect, bool animate);
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("mapRectThatFits:edgePadding:")]
 		MKMapRect MapRectThatFits (MKMapRect mapRect, UIEdgeInsets edgePadding);
 
@@ -621,68 +621,68 @@ namespace XamCore.MapKit {
 #endif
 #endif // !MONOMAC && !TVOS
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("visibleMapRect")]
 		MKMapRect VisibleMapRect { get; set;  }
 
-		[Since (4,2)]
+		[iOS (4,2)]
 		[Export ("annotationsInMapRect:")]
 		NSSet GetAnnotations (MKMapRect mapRect);
 
 #if !MONOMAC
-		[Since (5,0)]
+		[iOS (5,0)]
 		[Export ("userTrackingMode")]
 		MKUserTrackingMode UserTrackingMode { get; set; }
 		
-		[Since (5,0)]
+		[iOS (5,0)]
 		[Export ("setUserTrackingMode:animated:")]
 		void SetUserTrackingMode (MKUserTrackingMode trackingMode, bool animated);
 #endif
 
-		[Since (7,0), Export ("camera", ArgumentSemantic.Copy)]
+		[iOS (7,0), Export ("camera", ArgumentSemantic.Copy)]
 		MKMapCamera Camera { get; set; }
 
-		[Since (7,0), Export ("setCamera:animated:")]
+		[iOS (7,0), Export ("setCamera:animated:")]
 		void SetCamera (MKMapCamera camera, bool animated);
 
 		[NoTV]
-		[Since (7,0), Export ("rotateEnabled")]
+		[iOS (7,0), Export ("rotateEnabled")]
 		bool RotateEnabled { [Bind ("isRotateEnabled")] get; set; }
 
 		[NoTV]
-		[Since (7,0), Export ("pitchEnabled")]
+		[iOS (7,0), Export ("pitchEnabled")]
 		bool PitchEnabled { [Bind ("isPitchEnabled")] get; set; }
 
-		[Since (7,0), Export ("showAnnotations:animated:")]
+		[iOS (7,0), Export ("showAnnotations:animated:")]
 		void ShowAnnotations (IMKAnnotation [] annotations, bool animated);
 
-		[Since (7,0), Export ("addOverlay:level:")]
+		[iOS (7,0), Export ("addOverlay:level:")]
 		[PostGet ("Overlays")]
 		void AddOverlay (IMKOverlay overlay, MKOverlayLevel level);
 
-		[Since (7,0), Export ("addOverlays:level:")]
+		[iOS (7,0), Export ("addOverlays:level:")]
 		[PostGet ("Overlays")]
 		void AddOverlays (IMKOverlay [] overlays, MKOverlayLevel level);
 
-		[Since (7,0), Export ("exchangeOverlay:withOverlay:")]
+		[iOS (7,0), Export ("exchangeOverlay:withOverlay:")]
 		[PostGet ("Overlays")]
 		void ExchangeOverlay (IMKOverlay overlay1, IMKOverlay overlay2);
 
-		[Since (7,0), Export ("insertOverlay:atIndex:level:")]
+		[iOS (7,0), Export ("insertOverlay:atIndex:level:")]
 		[PostGet ("Overlays")]
 		void InsertOverlay (IMKOverlay overlay, nuint index, MKOverlayLevel level);
 
-		[Since (7,0), Export ("overlaysInLevel:")]
+		[iOS (7,0), Export ("overlaysInLevel:")]
 		IMKOverlay [] OverlaysInLevel (MKOverlayLevel level);
 
-		[Since (7,0), Export ("rendererForOverlay:")]
+		[iOS (7,0), Export ("rendererForOverlay:")]
 		MKOverlayRenderer RendererForOverlay (IMKOverlay overlay);
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Export ("showsPointsOfInterest")]
 		bool ShowsPointsOfInterest { get; set; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Export ("showsBuildings")]
 		bool ShowsBuildings { get; set; }
 
@@ -758,7 +758,7 @@ namespace XamCore.MapKit {
 #endif // !MONOMAC
 
 		[NoTV]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("mapView:annotationView:didChangeDragState:fromOldState:"), EventArgs ("MKMapViewDragState")]
 		void ChangedDragState (MKMapView mapView, MKAnnotationView annotationView, MKAnnotationViewDragState newState, MKAnnotationViewDragState oldState);
 
@@ -776,32 +776,32 @@ namespace XamCore.MapKit {
 		void DidAddOverlayViews (MKMapView mapView, MKOverlayView overlayViews);
 #endif // !MONOMAC && !TVOS
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("mapView:didSelectAnnotationView:"), EventArgs ("MKAnnotationView")]
 		void DidSelectAnnotationView (MKMapView mapView, MKAnnotationView view);
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("mapView:didFailToLocateUserWithError:"), EventArgs ("NSError", true)]
 		void DidFailToLocateUser (MKMapView mapView, NSError error);
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("mapView:didDeselectAnnotationView:"), EventArgs ("MKAnnotationView")]
 		void DidDeselectAnnotationView (MKMapView mapView, MKAnnotationView view);
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("mapViewWillStartLocatingUser:")]
 		void WillStartLocatingUser (MKMapView mapView);
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("mapViewDidStopLocatingUser:")]
 		void DidStopLocatingUser (MKMapView mapView);
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("mapView:didUpdateUserLocation:"), EventArgs ("MKUserLocation")]
 		void DidUpdateUserLocation (MKMapView mapView, MKUserLocation userLocation);
 
 #if !MONOMAC
-		[Since (5,0)]
+		[iOS (5,0)]
 		[Export ("mapView:didChangeUserTrackingMode:animated:"), EventArgs ("MMapViewUserTracking")]
 #if XAMCORE_2_0
 		void DidChangeUserTrackingMode (MKMapView mapView, MKUserTrackingMode mode, bool animated);
@@ -810,16 +810,16 @@ namespace XamCore.MapKit {
 #endif // XAMCORE_2_0
 #endif // !MONOMAC
 
-		[Since (7,0), Export ("mapView:rendererForOverlay:"), DelegateName ("MKRendererForOverlayDelegate"), DefaultValue (null)]
+		[iOS (7,0), Export ("mapView:rendererForOverlay:"), DelegateName ("MKRendererForOverlayDelegate"), DefaultValue (null)]
 		MKOverlayRenderer OverlayRenderer (MKMapView mapView, IMKOverlay overlay);
 
-		[Since (7,0), Export ("mapView:didAddOverlayRenderers:"), EventArgs ("MKDidAddOverlayRenderers")]
+		[iOS (7,0), Export ("mapView:didAddOverlayRenderers:"), EventArgs ("MKDidAddOverlayRenderers")]
 		void DidAddOverlayRenderers (MKMapView mapView, MKOverlayRenderer [] renderers);
 
-		[Since (7,0), Export ("mapViewWillStartRenderingMap:")]
+		[iOS (7,0), Export ("mapViewWillStartRenderingMap:")]
 		void WillStartRenderingMap (MKMapView mapView);
 
-		[Since (7,0), Export ("mapViewDidFinishRenderingMap:fullyRendered:"), EventArgs ("MKDidFinishRenderingMap")]
+		[iOS (7,0), Export ("mapViewDidFinishRenderingMap:fullyRendered:"), EventArgs ("MKDidFinishRenderingMap")]
 		void DidFinishRenderingMap (MKMapView mapView, bool fullyRendered);
 
 		[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13, onlyOn64: true)]
@@ -950,7 +950,7 @@ namespace XamCore.MapKit {
 		[Export ("cancel")]
 		void Cancel ();
 	
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("placemark")]
 		MKPlacemark Placemark { get; }
 	}
@@ -1087,7 +1087,7 @@ namespace XamCore.MapKit {
 
 #if !WATCH
 	[TV (9,2)]
-	[Since (4,0)]
+	[iOS (4,0)]
 	[Mac (10,9, onlyOn64 : true)]
 #if XAMCORE_2_0 || MONOMAC
 	[BaseType (typeof (NSObject))]
@@ -1114,7 +1114,7 @@ namespace XamCore.MapKit {
 
 	[TV (9,2)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (4,0)]
+	[iOS (4,0)]
 	[BaseType (typeof (MKShape))]
 	interface MKPointAnnotation {
 		[Export ("coordinate")]
@@ -1139,7 +1139,7 @@ namespace XamCore.MapKit {
 
 	[ThreadSafe]
 	[TV (9,2)]
-	[Since (4,0)]
+	[iOS (4,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[BaseType (typeof (MKMultiPoint))]
 	interface MKPolygon : MKOverlay {
@@ -1176,7 +1176,7 @@ namespace XamCore.MapKit {
 
 	[ThreadSafe]
 	[TV (9,2)]
-	[Since (4,0)]
+	[iOS (4,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[BaseType (typeof (MKMultiPoint))]
 	interface MKPolyline : MKOverlay {
@@ -1215,7 +1215,7 @@ namespace XamCore.MapKit {
 
 	[BaseType (typeof (MKShape))]
 	[TV (9,2)]
-	[Since (4,0)]
+	[iOS (4,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	interface MKMultiPoint {
 		[Export ("points"), Internal]
@@ -1249,14 +1249,14 @@ namespace XamCore.MapKit {
 		string Subtitle { get; set; }
 		
 		[NoTV]
-		[Since (5,0)]
+		[iOS (5,0)]
 		[Export ("heading", ArgumentSemantic.Retain)]
 		CLHeading Heading { get; }
 	}
 
 #if !MONOMAC
 	[NoTV]
-	[Since (5,0)]
+	[iOS (5,0)]
 	[BaseType (typeof (UIBarButtonItem))]
 	interface MKUserTrackingBarButtonItem {
 		[NullAllowed] // by default this property is null
@@ -1273,7 +1273,7 @@ namespace XamCore.MapKit {
 	delegate void MKLocalSearchCompletionHandler (MKLocalSearchResponse response, NSError error);
 
 	[TV (9,2)]
-	[Since (6,1)]
+	[iOS (6,1)]
 	[Mac (10,9, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe]
@@ -1299,7 +1299,7 @@ namespace XamCore.MapKit {
 	}
 
 	[TV (9,2)]
-	[Since (6,1)]
+	[iOS (6,1)]
 	[Mac (10,9, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe]
@@ -1321,7 +1321,7 @@ namespace XamCore.MapKit {
 	}
 
 	[TV (9,2)]
-	[Since (6,1)]
+	[iOS (6,1)]
 	[Mac (10,9, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe]
@@ -1340,7 +1340,7 @@ namespace XamCore.MapKit {
 	}
 
 	[TV (9,2)]
-	[Since (7,0), BaseType (typeof (MKOverlayPathRenderer))]
+	[iOS (7,0), BaseType (typeof (MKOverlayPathRenderer))]
 	[Mac (10,9, onlyOn64 : true)]
 	partial interface MKCircleRenderer {
 
@@ -1352,7 +1352,7 @@ namespace XamCore.MapKit {
 	}
 
 	[TV (9,2)]
-	[Since (7,0), BaseType (typeof (NSObject))]
+	[iOS (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9, onlyOn64 : true)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: Cannot initialize MKDirections with nil request
 	partial interface MKDirections {
@@ -1381,7 +1381,7 @@ namespace XamCore.MapKit {
 	delegate void MKETAHandler (MKETAResponse response, NSError error);
 
 	[TV (9,2)]
-	[Since (7,0), BaseType (typeof (NSObject))]
+	[iOS (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9, onlyOn64 : true)]
 	partial interface MKETAResponse {
 		[Export ("source")]
@@ -1411,7 +1411,7 @@ namespace XamCore.MapKit {
 	}
 
 	[TV (9,2)]
-	[Since (7,0), BaseType (typeof (NSObject))]
+	[iOS (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9, onlyOn64 : true)]
 	partial interface MKDirectionsResponse {
 
@@ -1426,7 +1426,7 @@ namespace XamCore.MapKit {
 	}
 
 	[TV (9,2)]
-	[Since (7,0), BaseType (typeof (NSObject))]
+	[iOS (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9, onlyOn64 : true)]
 	partial interface MKRoute {
 
@@ -1453,7 +1453,7 @@ namespace XamCore.MapKit {
 	}
 
 	[TV (9,2)]
-	[Since (7,0), BaseType (typeof (NSObject))]
+	[iOS (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9, onlyOn64 : true)]
 	partial interface MKRouteStep {
 
@@ -1476,7 +1476,7 @@ namespace XamCore.MapKit {
 #endif // !WATCH
 
 	[TV (9,2)]
-	[Since (7,0), BaseType (typeof (NSFormatter))]
+	[iOS (7,0), BaseType (typeof (NSFormatter))]
 	[Mac (10,9, onlyOn64 : true)]
 	partial interface MKDistanceFormatter {
 
@@ -1498,7 +1498,7 @@ namespace XamCore.MapKit {
 
 #if !WATCH
 	[TV (9,2)]
-	[Since (7,0), BaseType (typeof (MKPolyline))]
+	[iOS (7,0), BaseType (typeof (MKPolyline))]
 	[Mac (10,9, onlyOn64 : true)]
 	partial interface MKGeodesicPolyline {
 
@@ -1512,7 +1512,7 @@ namespace XamCore.MapKit {
 	}
 
 	[TV (9,2)]
-	[Since (7,0), BaseType (typeof (NSObject))]
+	[iOS (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9, onlyOn64 : true)]
 	partial interface MKMapCamera : NSCopying, NSSecureCoding {
 
@@ -1542,7 +1542,7 @@ namespace XamCore.MapKit {
 	}
 
 	[TV (9,2)]
-	[Since (7,0), BaseType (typeof (NSObject))]
+	[iOS (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9, onlyOn64 : true)]
 	partial interface MKMapSnapshot {
 
@@ -1554,7 +1554,7 @@ namespace XamCore.MapKit {
 	}
 
 	[TV (9,2)]
-	[Since (7,0), BaseType (typeof (NSObject))]
+	[iOS (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9, onlyOn64 : true)]
 	partial interface MKMapSnapshotOptions : NSCopying {
 
@@ -1586,7 +1586,7 @@ namespace XamCore.MapKit {
 	}
 
 	[TV (9,2)]
-	[Since (7,0), BaseType (typeof (NSObject))]
+	[iOS (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9, onlyOn64 : true)]
 	partial interface MKMapSnapshotter {
 
@@ -1612,7 +1612,7 @@ namespace XamCore.MapKit {
 	delegate void MKMapSnapshotCompletionHandler (MKMapSnapshot snapshot, NSError error);
 
 	[TV (9,2)]
-	[Since (7,0), BaseType (typeof (MKOverlayRenderer))]
+	[iOS (7,0), BaseType (typeof (MKOverlayRenderer))]
 	[Mac (10,9, onlyOn64 : true)]
 	[ThreadSafe]
 	partial interface MKOverlayPathRenderer {
@@ -1671,7 +1671,7 @@ namespace XamCore.MapKit {
 	}
 
 	[TV (9,2)]
-	[Since (7,0), BaseType (typeof (NSObject))]
+	[iOS (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9, onlyOn64 : true)]
 	partial interface MKOverlayRenderer {
 
@@ -1722,7 +1722,7 @@ namespace XamCore.MapKit {
 	}
 
 	[TV (9,2)]
-	[Since (7,0), BaseType (typeof (MKOverlayPathRenderer))]
+	[iOS (7,0), BaseType (typeof (MKOverlayPathRenderer))]
 	[Mac (10,9, onlyOn64 : true)]
 	partial interface MKPolygonRenderer {
 
@@ -1734,7 +1734,7 @@ namespace XamCore.MapKit {
 	}
 
 	[TV (9,2)]
-	[Since (7,0), BaseType (typeof (MKOverlayPathRenderer))]
+	[iOS (7,0), BaseType (typeof (MKOverlayPathRenderer))]
 	[Mac (10,9, onlyOn64 : true)]
 	partial interface MKPolylineRenderer {
 
@@ -1749,10 +1749,10 @@ namespace XamCore.MapKit {
 	[TV (9,2)]
 	[Mac (10,9, onlyOn64 : true)]
 #if XAMCORE_2_0 || MONOMAC
-	[Since (7,0), BaseType (typeof (NSObject))]
+	[iOS (7,0), BaseType (typeof (NSObject))]
 	partial interface MKTileOverlay : MKOverlay {
 #else
-	[Since (7,0), BaseType (typeof (MKOverlay))]
+	[iOS (7,0), BaseType (typeof (MKOverlay))]
 	partial interface MKTileOverlay {
 #endif
 		[DesignatedInitializer]
@@ -1795,7 +1795,7 @@ namespace XamCore.MapKit {
 	delegate void MKTileOverlayLoadTileCompletionHandler (NSData tileData, NSError error);
 
 	[TV (9,2)]
-	[Since (7,0), BaseType (typeof (MKOverlayRenderer))]
+	[iOS (7,0), BaseType (typeof (MKOverlayRenderer))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: Expected a MKTileOverlay but got (null)
 	[DisableDefaultCtor] // throw in iOS8 beta 1 ^
 	[Mac (10,9, onlyOn64 : true)]

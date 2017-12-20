@@ -15,8 +15,8 @@ using XamCore.UIKit;
 namespace XamCore.VideoSubscriberAccount {
 
 	[Native]
-	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.TvOS, 10, 0)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[ErrorDomain ("VSErrorDomain")]
 	public enum VSErrorCode : nint {
@@ -29,8 +29,8 @@ namespace XamCore.VideoSubscriberAccount {
 	}
 
 	[Native]
-	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.TvOS, 10, 0)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	public enum VSAccountAccessStatus : nint {
 		NotDetermined = 0,
@@ -39,8 +39,8 @@ namespace XamCore.VideoSubscriberAccount {
 		Granted = 3
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.TvOS, 10, 0)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Static]
 	[Internal]
@@ -60,8 +60,8 @@ namespace XamCore.VideoSubscriberAccount {
 		NSString AccountProviderResponseKey { get; }
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.TvOS, 10, 0)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[StrongDictionary ("VSErrorInfoKeys")]
 	interface VSErrorInfo {
@@ -79,8 +79,8 @@ namespace XamCore.VideoSubscriberAccount {
 	interface IVSAccountManagerDelegate { }
 
 	[Protocol, Model]
-	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.TvOS, 10, 0)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (NSObject))]
 	interface VSAccountManagerDelegate {
@@ -98,8 +98,8 @@ namespace XamCore.VideoSubscriberAccount {
 		bool ShouldAuthenticateAccountProvider (VSAccountManager accountManager, string accountProviderIdentifier);
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.TvOS, 10, 0)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (NSObject))]
 	interface VSAccountManager {
@@ -116,8 +116,8 @@ namespace XamCore.VideoSubscriberAccount {
 		VSAccountManagerResult Enqueue (VSAccountMetadataRequest accountMetadataRequest, Action<VSAccountMetadata, NSError> completionHandler);
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.TvOS, 10, 0)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Static]
 	[Internal]
@@ -127,8 +127,8 @@ namespace XamCore.VideoSubscriberAccount {
 		NSString CheckAccessOptionPrompt { get; }
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.TvOS, 10, 0)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[StrongDictionary ("VSCheckAccessOptionKeys")]
 	interface VSAccountManagerAccessOptions {
@@ -137,8 +137,8 @@ namespace XamCore.VideoSubscriberAccount {
 		bool CheckAccessOptionPrompt { get; set; }
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.TvOS, 10, 0)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -148,8 +148,8 @@ namespace XamCore.VideoSubscriberAccount {
 		void Cancel ();
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.TvOS, 10, 0)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (NSObject))]
 	interface VSAccountMetadata {
@@ -171,8 +171,8 @@ namespace XamCore.VideoSubscriberAccount {
 		VSAccountProviderResponse AccountProviderResponse { get; }
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.TvOS, 10, 0)]
+	[iOS (10, 0)]
+	[TV (10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (NSObject))]
 	interface VSAccountMetadataRequest {

@@ -50,9 +50,9 @@ namespace XamCore.UIKit {
 			
 #if !XAMCORE_2_0
 		[CompilerGenerated]
-		[Since (4,2)]
+		[iOS (4,2)]
 		public virtual bool EnableInputClicksWhenVisible {
-			[Since (4,2)]
+			[iOS (4,2)]
 			[Export ("enableInputClicksWhenVisible")]
 			get {
 				global::MonoTouch.UIKit.UIApplication.EnsureUIThread ();

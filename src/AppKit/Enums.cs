@@ -1968,13 +1968,13 @@ namespace XamCore.AppKit {
 		SurfaceOrder = 235,
 		SurfaceOpacity = 236,
 
-		[Lion] SurfaceBackingSize = 304,
-		[Lion] ReclaimResources = 308,
-		[Lion] CurrentRendererID = 309,
-		[Lion] GpuVertexProcessing = 310,
-		[Lion] GpuFragmentProcessing = 311,
-		[Lion] HasDrawable = 314,
-		[Lion] MpsSwapsInFlight = 315
+		[Mac (10, 7)] SurfaceBackingSize = 304,
+		[Mac (10, 7)] ReclaimResources = 308,
+		[Mac (10, 7)] CurrentRendererID = 309,
+		[Mac (10, 7)] GpuVertexProcessing = 310,
+		[Mac (10, 7)] GpuFragmentProcessing = 311,
+		[Mac (10, 7)] HasDrawable = 314,
+		[Mac (10, 7)] MpsSwapsInFlight = 315
 	}
 	
 	public enum NSSurfaceOrder {
@@ -1985,10 +1985,10 @@ namespace XamCore.AppKit {
 	public enum NSOpenGLPixelFormatAttribute : uint_compat_int { // uint32_t NSOpenGLPixelFormatAttribute
 		AllRenderers       =   1,
 		DoubleBuffer       =   5,
-		[Lion] TripleBuffer = 3,
+		[Mac (10, 7)] TripleBuffer = 3,
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'TripleBuffer' instead.")]
-		[Lion] TrippleBuffer = TripleBuffer,
+		[Mac (10, 7)] TrippleBuffer = TripleBuffer,
 #endif
 		Stereo             =   6,
 		AuxBuffers         =   7,
@@ -2030,7 +2030,7 @@ namespace XamCore.AppKit {
 		AcceleratedCompute =  97,
 
 		// Specify the profile
-		[Lion] OpenGLProfile = 99,
+		[Mac (10, 7)] OpenGLProfile = 99,
 		VirtualScreenCount = 128,
 
 		[Availability (Deprecated = Platform.Mac_10_5)]
@@ -2067,7 +2067,7 @@ namespace XamCore.AppKit {
 		FormatCacheSize = 501,
 		ClearFormatCache = 502,
 		RetainRenderers = 503,
-		[Lion] UseBuildCache = 506,
+		[Mac (10, 7)] UseBuildCache = 506,
 		[Availability (Deprecated = Platform.Mac_10_4)]
 		ResetLibrary = 504
 	}
@@ -2370,7 +2370,7 @@ namespace XamCore.AppKit {
 		Default = 0, None = 2, DocumentWindow, UtilityWindow, AlertPanel
 	}
 
-	[Lion]
+	[Mac (10, 7)]
 	[Native]
 	public enum NSTextFinderAction : nint {
 		ShowFindInterface = 1,

@@ -18,18 +18,18 @@ using XamCore.AVKit;
 
 namespace XamCore.iAd {
 
-	[Since (4,0)]
+	[iOS (4,0)]
 	[Deprecated (PlatformName.iOS, 10, 0)]
 	[BaseType (typeof (UIView), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (ADBannerViewDelegate)})]
 	interface ADBannerView {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 		
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("adType")]
 		ADAdType AdType { get;  }
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("initWithAdType:")]
 		IntPtr Constructor (ADAdType type);
 
@@ -86,7 +86,7 @@ namespace XamCore.iAd {
 		NSString SizeIdentifierPortrait { get; }
 	}
 
-	[Since (4,0)]
+	[iOS (4,0)]
 	[Deprecated (PlatformName.iOS, 10, 0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -104,7 +104,7 @@ namespace XamCore.iAd {
 		[Export ("bannerViewActionDidFinish:")]
 		void ActionFinished (ADBannerView banner);
 
-		[Since (5,0)]
+		[iOS (5,0)]
 		[Export ("bannerViewWillLoadAd:"), EventArgs ("EventArgs", true, true)]
 		void WillLoad (ADBannerView bannerView);
 	}
@@ -167,7 +167,7 @@ namespace XamCore.iAd {
 		[Export ("interstitialAdActionDidFinish:")]
 		void ActionFinished (ADInterstitialAd interstitialAd);
 
-		[Since (5,0)]
+		[iOS (5,0)]
 		[Export ("interstitialAdWillLoad:"), EventArgs ("EventArgs", true, true)]
 		void WillLoad (ADInterstitialAd interstitialAd);
 	}
@@ -181,10 +181,10 @@ namespace XamCore.iAd {
 #else
 		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
 #endif
-		[Since (7,0), Static, Export ("preparePrerollAds")]
+		[iOS (7,0), Static, Export ("preparePrerollAds")]
 		void PreparePrerollAds ();
 
-		[Since (7,0), Export ("playPrerollAdWithCompletionHandler:")]
+		[iOS (7,0), Export ("playPrerollAdWithCompletionHandler:")]
 #if XAMCORE_2_0
 		void PlayPrerollAd (Action<NSError> completionHandler);
 #else
@@ -209,41 +209,41 @@ namespace XamCore.iAd {
 #else
 		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
 #endif
-		[Since (7,0), Static, Export ("prepareInterstitialAds")]
+		[iOS (7,0), Static, Export ("prepareInterstitialAds")]
 		void PrepareInterstitialAds ();
 
-		[Since (7,0), Export ("interstitialPresentationPolicy")]
+		[iOS (7,0), Export ("interstitialPresentationPolicy")]
 		ADInterstitialPresentationPolicy GetInterstitialPresentationPolicy ();
 		
-		[Since (7,0), Export ("setInterstitialPresentationPolicy:")]
+		[iOS (7,0), Export ("setInterstitialPresentationPolicy:")]
 		void SetInterstitialPresentationPolicy (ADInterstitialPresentationPolicy policy);
 
-		[Since (7,0), Export ("canDisplayBannerAds")]
+		[iOS (7,0), Export ("canDisplayBannerAds")]
 		bool GetCanDisplayBannerAds ();
 
-		[Since (7,0), Export ("setCanDisplayBannerAds:")]
+		[iOS (7,0), Export ("setCanDisplayBannerAds:")]
 		void SetCanDisplayBannerAds (bool value);
 
-		[Since (7,0), Export ("originalContentView")]
+		[iOS (7,0), Export ("originalContentView")]
 		[NullAllowed]
 		UIView GetOriginalContentView ();
 
-		[Since (7,0), Export ("isPresentingFullScreenAd")]
+		[iOS (7,0), Export ("isPresentingFullScreenAd")]
 		bool PresentingFullScreenAd ();
 
-		[Since (7,0), Export ("isDisplayingBannerAd")]
+		[iOS (7,0), Export ("isDisplayingBannerAd")]
 		bool DisplayingBannerAd ();
 
-		[Since (7,0), Export ("requestInterstitialAdPresentation")]
+		[iOS (7,0), Export ("requestInterstitialAdPresentation")]
 		bool RequestInterstitialAdPresentation ();
 
-		[Since (7,0), Export ("shouldPresentInterstitialAd")]
+		[iOS (7,0), Export ("shouldPresentInterstitialAd")]
 		bool ShouldPresentInterstitialAd ();
 	}
 
 	delegate void ADConversionDetails (NSDate appPurchaseDate, NSDate iAdImpressionDate);
 	
-	[Since (7,1)]
+	[iOS (7,1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ADClient {

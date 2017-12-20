@@ -108,18 +108,18 @@ namespace XamCore.CoreLocation {
 		double Distancefrom (CLLocation  location);
 #endif
 
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Export ("distanceFromLocation:")]
 		double DistanceFrom (CLLocation location);
 
-		[Since (4,2)]
+		[iOS (4,2)]
 		[Export ("initWithCoordinate:altitude:horizontalAccuracy:verticalAccuracy:course:speed:timestamp:")]
 		IntPtr Constructor (CLLocationCoordinate2D coordinate, double altitude, double hAccuracy, double vAccuracy, double course, double speed, NSDate timestamp);
 
 		// Apple keep changing the 'introduction' of this field (5.0->8.0->5.0) but it was not available in 6.1
 		// nor in 7.0 - but it works on my iPad3 running iOS 7.1
 		[NoTV][NoWatch]
-		[iOS (7,1)][MountainLion]
+		[iOS (7,1)][Mac (10, 8)]
 		[Field ("kCLErrorUserInfoAlternateRegionKey")]
 		NSString ErrorUserInfoAlternateRegionKey { get; }
 
@@ -186,7 +186,7 @@ namespace XamCore.CoreLocation {
 		[Export ("stopUpdatingLocation")]
 		void StopUpdatingLocation ();
 
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("locationServicesEnabled"), Static]
 		bool LocationServicesEnabled { get; }
 
@@ -209,7 +209,7 @@ namespace XamCore.CoreLocation {
 #endif
 	
 		[NoWatch][NoTV]
-		[Since (3,2)]
+		[iOS (3,2)]
 		[Mac (10,7)]
 		[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_6_0)]
 		// Default property value is null but it cannot be set to that value
@@ -218,85 +218,90 @@ namespace XamCore.CoreLocation {
 		string Purpose { get; set; }
 
 		[NoWatch][NoTV]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Mac (10,7)]
 		[Export ("headingAvailable"), Static]
 		bool HeadingAvailable { get; }
 
 		[NoWatch][NoTV]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Mac (10,7)]
 		[Export ("significantLocationChangeMonitoringAvailable"), Static]
 		bool SignificantLocationChangeMonitoringAvailable { get; }
 
 		[NoWatch][NoTV]
-		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use 'IsMonitoringAvailable' instead.")]
+		[iOS (4, 0)]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'IsMonitoringAvailable' instead.")]
+		[Mac (10, 8)]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'IsMonitoringAvailable' instead.")]
 		[Export ("regionMonitoringAvailable"), Static]
 		bool RegionMonitoringAvailable { get; }
 
 		[NoWatch][NoTV]
-		[Since (4,0)]
-		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_8, Deprecated = Platform.iOS_6_0 | Platform.Mac_10_10, Message = "Use 'IsMonitoringAvailable' and 'AuthorizationStatus' instead.")]
+		[iOS (4, 0)]
+		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'IsMonitoringAvailable' and 'AuthorizationStatus' instead.")]
+		[Mac (10, 8)]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'IsMonitoringAvailable' and 'AuthorizationStatus' instead.")]
 		[Export ("regionMonitoringEnabled"), Static]
 		bool RegionMonitoringEnabled { get; }
 
 #if !MONOMAC
 		[NoWatch][NoTV]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Export ("headingOrientation", ArgumentSemantic.Assign)]
 		CLDeviceOrientation HeadingOrientation { get; set; }
 
 		[NoWatch][NoTV]
 		[Export ("heading", ArgumentSemantic.Copy)]
-		[Since (4,0)]
+		[iOS (4,0)]
 		CLHeading Heading { get; }
 #endif
 
 		[NoWatch][NoTV]
 		[Export ("maximumRegionMonitoringDistance")]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Mac (10,8)]
 		double MaximumRegionMonitoringDistance { get; }
 
 		[NoWatch][NoTV]
 		[Export ("monitoredRegions", ArgumentSemantic.Copy)]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Mac (10,8)]
 		NSSet MonitoredRegions { get; }
 
 		[NoWatch][NoTV]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Mac (10,7)]
 		[Export ("startMonitoringSignificantLocationChanges")]
 		void StartMonitoringSignificantLocationChanges ();
 
 		[NoWatch][NoTV]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Mac (10,7)]
 		[Export ("stopMonitoringSignificantLocationChanges")]
 		void StopMonitoringSignificantLocationChanges ();
 
 #if !MONOMAC
 		[NoWatch][NoTV]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0)]
 		[Export ("startMonitoringForRegion:desiredAccuracy:")]
 		void StartMonitoring (CLRegion region, double desiredAccuracy);
 #endif
 
 		[NoWatch][NoTV]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Mac (10,8)]
 		[Export ("stopMonitoringForRegion:")]
 		void StopMonitoring (CLRegion region);
 
-		[Since (4,2)]
+		[iOS (4,2)]
 		[Mac (10,7)]
 		[Export ("authorizationStatus")][Static]
 		CLAuthorizationStatus Status { get; }
 
 		[NoWatch][NoTV]
-		[Since (5,0)]
+		[iOS (5,0)]
 		[Mac (10,8)]
 		[Export ("startMonitoringForRegion:")]
 		void StartMonitoring (CLRegion region);
@@ -304,62 +309,62 @@ namespace XamCore.CoreLocation {
 #if !MONOMAC
 		[NoTV]
 		[Watch (4,0)]
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("activityType", ArgumentSemantic.Assign)]
 		CLActivityType ActivityType  { get; set; }
 
 		[NoWatch][NoTV]
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("pausesLocationUpdatesAutomatically", ArgumentSemantic.Assign)]
 		bool PausesLocationUpdatesAutomatically { get; set; }
 
 		[NoWatch][NoTV]
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("allowDeferredLocationUpdatesUntilTraveled:timeout:")]
 		void AllowDeferredLocationUpdatesUntil (double distance, double timeout);
 
 		[NoWatch][NoTV]
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("disallowDeferredLocationUpdates")]
 		void DisallowDeferredLocationUpdates ();
 #endif
 
 		[NoWatch][NoTV]
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Mac (10,9)]
 		[Static]
 		[Export ("deferredLocationUpdatesAvailable")]
 		bool DeferredLocationUpdatesAvailable { get; }
 
 #if !MONOMAC
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Field ("CLTimeIntervalMax")]
 		double MaxTimeInterval { get; }
 #endif
 
 		[NoWatch][NoTV]
 		[Mac (10,10)]
-		[Since (7,0), Static, Export ("isMonitoringAvailableForClass:")]
+		[iOS (7,0), Static, Export ("isMonitoringAvailableForClass:")]
 		bool IsMonitoringAvailable (Class regionClass);
 
 #if !MONOMAC
 		[NoWatch][NoTV]
-		[Since (7,0), Export ("rangedRegions", ArgumentSemantic.Copy)]
+		[iOS (7,0), Export ("rangedRegions", ArgumentSemantic.Copy)]
 		NSSet RangedRegions { get; }
 #endif
 
 		[Mac (10,10)]
 		[NoWatch][NoTV]
-		[Since (7,0), Export ("requestStateForRegion:")]
+		[iOS (7,0), Export ("requestStateForRegion:")]
 		void RequestState (CLRegion region);
 
 #if !MONOMAC
 		[NoWatch][NoTV]
-		[Since (7,0), Export ("startRangingBeaconsInRegion:")]
+		[iOS (7,0), Export ("startRangingBeaconsInRegion:")]
 		void StartRangingBeacons (CLBeaconRegion region);
 
 		[NoWatch][NoTV]
-		[Since (7,0), Export ("stopRangingBeaconsInRegion:")]
+		[iOS (7,0), Export ("stopRangingBeaconsInRegion:")]
 		void StopRangingBeacons (CLBeaconRegion region);
 
 		[NoWatch][NoTV]
@@ -426,41 +431,41 @@ namespace XamCore.CoreLocation {
 		void Failed (CLLocationManager manager, NSError error);
 
 		[NoWatch][NoTV]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Mac (10,8)]
 		[Export ("locationManager:didEnterRegion:"), EventArgs ("CLRegion")]
 		void RegionEntered (CLLocationManager manager, CLRegion region);
 
 		[NoWatch][NoTV]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Mac (10,8)]
 		[Export ("locationManager:didExitRegion:"), EventArgs ("CLRegion")]
 		void RegionLeft (CLLocationManager manager, CLRegion region);
 
 		[NoWatch][NoTV]
-		[Since (4,0)]
+		[iOS (4,0)]
 		[Mac (10,8)]
 		[Export ("locationManager:monitoringDidFailForRegion:withError:"), EventArgs ("CLRegionError")]
 		void MonitoringFailed (CLLocationManager manager, CLRegion region, NSError error);
 
 		[NoWatch][NoTV]
-		[Since(5,0)]
+		[iOS (5,0)]
 		[Mac (10,8)]
 		[Export ("locationManager:didStartMonitoringForRegion:"), EventArgs ("CLRegion")]
 		void DidStartMonitoringForRegion (CLLocationManager manager, CLRegion region);
 
 		[NoWatch][NoTV]
 		[Mac (10,10)]
-		[Since (7,0), Export ("locationManager:didDetermineState:forRegion:"), EventArgs ("CLRegionStateDetermined")]
+		[iOS (7,0), Export ("locationManager:didDetermineState:forRegion:"), EventArgs ("CLRegionStateDetermined")]
 		void DidDetermineState (CLLocationManager manager, CLRegionState state, CLRegion region);
 
 #if !MONOMAC
 		[NoWatch][NoTV]
-		[Since (7,0), Export ("locationManager:didRangeBeacons:inRegion:"), EventArgs ("CLRegionBeaconsRanged")]
+		[iOS (7,0), Export ("locationManager:didRangeBeacons:inRegion:"), EventArgs ("CLRegionBeaconsRanged")]
 		void DidRangeBeacons (CLLocationManager manager, CLBeacon [] beacons, CLBeaconRegion region);
 
 		[NoWatch][NoTV]
-		[Since (7,0), Export ("locationManager:rangingBeaconsDidFailForRegion:withError:"), EventArgs ("CLRegionBeaconsFailed")]
+		[iOS (7,0), Export ("locationManager:rangingBeaconsDidFailForRegion:withError:"), EventArgs ("CLRegionBeaconsFailed")]
 		void RangingBeaconsDidFailForRegion (CLLocationManager manager, CLBeaconRegion region, NSError error);
 
 		[NoWatch][NoTV]
@@ -469,26 +474,26 @@ namespace XamCore.CoreLocation {
 		void DidVisit (CLLocationManager manager, CLVisit visit);
 #endif
 
-		[Since (4,2)]
+		[iOS (4,2)]
 		[Export ("locationManager:didChangeAuthorizationStatus:"), EventArgs ("CLAuthorizationChanged")]
 		void AuthorizationChanged (CLLocationManager manager, CLAuthorizationStatus status);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("locationManager:didUpdateLocations:"), EventArgs ("CLLocationsUpdated")]
 		void LocationsUpdated (CLLocationManager manager, CLLocation[] locations);
 
 		[NoWatch][NoTV]
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("locationManagerDidPauseLocationUpdates:"), EventArgs ("")]
 		void LocationUpdatesPaused (CLLocationManager manager);
 
 		[NoWatch][NoTV]
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("locationManagerDidResumeLocationUpdates:"), EventArgs ("")]
 		void LocationUpdatesResumed (CLLocationManager manager);
 
 		[NoWatch][NoTV]
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("locationManager:didFinishDeferredUpdatesWithError:"), EventArgs ("NSError", true)]
 		void DeferredUpdatesFinished (CLLocationManager manager, NSError error);
 	}
@@ -496,7 +501,7 @@ namespace XamCore.CoreLocation {
 	[Static]
 	partial interface CLLocationDistance {
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Mac (10,9)]
 		[Field ("CLLocationDistanceMax")]
 		double MaxDistance { get; }
@@ -505,18 +510,20 @@ namespace XamCore.CoreLocation {
 		double FilterNone { get; }
 	}
 		
-	[Since (4,0)]
+	[iOS (4,0)]
 	[Mac (10,7)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // will crash, see CoreLocation.cs for compatibility stubs
 	partial interface CLRegion : NSSecureCoding, NSCopying {
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use 'CLCircularRegion' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'CLCircularRegion' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'CLCircularRegion' instead.")]
 		[Export ("center")]
 		CLLocationCoordinate2D Center { get;  }
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use 'CLCircularRegion' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'CLCircularRegion' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'CLCircularRegion' instead.")]
 		[Export ("radius")]
 		double Radius { get;  }
 
@@ -524,25 +531,27 @@ namespace XamCore.CoreLocation {
 		string Identifier { get;  }
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use 'CLCircularRegion' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'CLCircularRegion' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'CLCircularRegion' instead.")]
 		[Export ("initCircularRegionWithCenter:radius:identifier:")]
 		IntPtr Constructor (CLLocationCoordinate2D center, double radius, string identifier);
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use 'CLCircularRegion' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'CLCircularRegion' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'CLCircularRegion' instead.")]
 		[Export ("containsCoordinate:")]
 		bool Contains (CLLocationCoordinate2D coordinate);
 
-		[Since (7,0), Export ("notifyOnEntry", ArgumentSemantic.Assign)]
+		[iOS (7,0), Export ("notifyOnEntry", ArgumentSemantic.Assign)]
 		[Mac (10,10)]
 		bool NotifyOnEntry { get; set; }
 
-		[Since (7,0), Export ("notifyOnExit", ArgumentSemantic.Assign)]
+		[iOS (7,0), Export ("notifyOnExit", ArgumentSemantic.Assign)]
 		[Mac (10,10)]
 		bool NotifyOnExit { get; set; }
 	}
 
-	[Since (5,0)]
+	[iOS (5,0)]
 	[Mac (10,8)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // will crash, see CoreLocation.cs for compatibility stubs
@@ -613,7 +622,7 @@ namespace XamCore.CoreLocation {
 	}
 
 	[Mac (10,10)]
-	[Since (7,0), BaseType (typeof (CLRegion))]
+	[iOS (7,0), BaseType (typeof (CLRegion))]
 #if MONOMAC
 	[DisableDefaultCtor]
 #endif
@@ -634,7 +643,7 @@ namespace XamCore.CoreLocation {
 
 #if !MONOMAC
 	[NoWatch][NoMac][NoTV]
-	[Since (7,0), BaseType (typeof (CLRegion))]
+	[iOS (7,0), BaseType (typeof (CLRegion))]
 	[DisableDefaultCtor] // nil-Handle on iOS8 if 'init' is used
 	partial interface CLBeaconRegion {
 
@@ -664,7 +673,7 @@ namespace XamCore.CoreLocation {
 	}
 
 	[NoWatch][NoMac][NoTV]
-	[Since (7,0), BaseType (typeof (NSObject))]
+	[iOS (7,0), BaseType (typeof (NSObject))]
 	partial interface CLBeacon : NSCopying, NSSecureCoding {
 
 		[Export ("proximityUUID", ArgumentSemantic.Copy)]
@@ -691,7 +700,7 @@ namespace XamCore.CoreLocation {
 	delegate void CLGeocodeCompletionHandler (CLPlacemark [] placemarks, NSError error);
 
 	[Mac (10,8)]
-	[Since (5,0)]
+	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	interface CLGeocoder {
 		[Export ("isGeocoding")]

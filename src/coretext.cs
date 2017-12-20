@@ -18,7 +18,7 @@ namespace XamCore.CoreText {
 #else
 	[Partial]
 #endif
-	[Since (3,2)]
+	[iOS (3,2)]
 	interface CTFontFeatureKey {
 		[Field ("kCTFontFeatureTypeIdentifierKey")]
 		NSString Identifier { get; }
@@ -38,7 +38,7 @@ namespace XamCore.CoreText {
 #else
 	[Partial]
 #endif
-	[Since (3,2)]
+	[iOS (3,2)]
 	interface CTFontFeatureSelectorKey {
 		[Field ("kCTFontFeatureSelectorIdentifierKey")]
 		NSString Identifier { get; }
@@ -54,7 +54,7 @@ namespace XamCore.CoreText {
 	}
 
 	[Static]
-	[Since (3,2)]
+	[iOS (3,2)]
 	interface CTFontVariationAxisKey {
 
 		[Field ("kCTFontVariationAxisIdentifierKey")]
