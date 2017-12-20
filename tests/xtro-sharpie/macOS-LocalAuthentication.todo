@@ -1,0 +1,2 @@
+!missing-enum! LABiometryType not bound
+!missing-selector! LAContext::biometryType not bound

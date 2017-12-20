@@ -1,0 +1,17 @@
+!missing-field! kSecAttrPersistantReference not bound
+!missing-field! kSecPrivateKeyAttrs not bound
+!missing-field! kSecPublicKeyAttrs not bound
+!missing-field! kSecRandomDefault not bound
+
+!missing-pinvoke! SecTrustCopyProperties is not bound
+!missing-pinvoke! SSLAddDistinguishedName is not bound
+!missing-pinvoke! SSLCopyDistinguishedNames is not bound
+
+## used in mscorlib.dll mcs/class/corlib/CommonCrypto/CommonCrypto.cs
+!missing-pinvoke! SecRandomCopyBytes is not bound
+
+## *GetTypeID are generally not bound
+!missing-pinvoke! SecAccessControlGetTypeID is not bound
+
+## untyped enum in Security.framework/Headers/SecPolicy.h but the API use CFOptionFlags
+!unknown-native-enum! SecRevocation bound

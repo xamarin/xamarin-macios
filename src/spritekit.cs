@@ -129,7 +129,7 @@ namespace XamCore.SpriteKit {
 	[BaseType (typeof (NSResponder))]
 	partial interface SKNode : NSCoding, NSCopying {
 #elif IOS || TVOS
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (UIResponder))]
 	partial interface SKNode : NSCoding, NSCopying, UIFocusItem {
 #else // WATCHOS
@@ -380,7 +380,7 @@ namespace XamCore.SpriteKit {
 	}
 #elif !WATCH
 	[NoWatch]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[Category, BaseType (typeof (UITouch))]
 	partial interface SKNodeTouches_UITouch {
 
@@ -394,7 +394,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKEffectNode : SKWarpable {
 
@@ -519,7 +519,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKEffectNode))]
 	interface SKScene
 #if (XAMCORE_2_0 || !MONOMAC) && !WATCH
@@ -683,7 +683,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKSpriteNode : SKWarpable {
 
@@ -791,7 +791,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	partial interface SKKeyframeSequence : NSCoding, NSCopying {
 
@@ -842,7 +842,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKEmitterNode {
 
@@ -1027,7 +1027,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKShapeNode {
 
@@ -1207,7 +1207,7 @@ namespace XamCore.SpriteKit {
 	}
 
 	[Watch (3,0)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKLabelNode {
@@ -1298,7 +1298,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (4,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKVideoNode {
 
@@ -1409,7 +1409,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKCropNode {
 
@@ -1420,7 +1420,7 @@ namespace XamCore.SpriteKit {
 
 	[NoWatch]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (UIView))]
 #if XAMCORE_3_0
 	[DisableDefaultCtor]
@@ -1442,7 +1442,7 @@ namespace XamCore.SpriteKit {
 		[Export ("showsNodeCount")]
 		bool ShowsNodeCount { get; set; }
 
-		[Since (7,1), Mac(10,10)]
+		[iOS (7,1), Mac(10,10)]
 		[Export ("showsPhysics")]
 		bool ShowsPhysics { get; set; }
 
@@ -1521,7 +1521,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	partial interface SKTransition : NSCopying {
@@ -1578,7 +1578,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	partial interface SKTexture : NSCoding, NSCopying {
@@ -1685,7 +1685,7 @@ namespace XamCore.SpriteKit {
 		
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	partial interface SKTextureAtlas : NSCoding {
 
@@ -1736,7 +1736,8 @@ namespace XamCore.SpriteKit {
 
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("initWithName:floatVector2:")]
 		IntPtr InitWithNameFloatVector2 (string name, Vector2 value);
 
@@ -1753,7 +1754,8 @@ namespace XamCore.SpriteKit {
 
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("initWithName:floatVector3:")]
 		IntPtr InitWithNameFloatVector3 (string name, Vector3 value);
 
@@ -1770,7 +1772,8 @@ namespace XamCore.SpriteKit {
 		
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("initWithName:floatVector4:")]
 		IntPtr InitWithNameFloatVector4 (string name, Vector4 value);
 
@@ -1788,7 +1791,8 @@ namespace XamCore.SpriteKit {
 #if !XAMCORE_4_0
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("initWithName:floatMatrix2:")]
 		IntPtr InitWithNameFloatMatrix2 (string name, Matrix2 value);
 #endif
@@ -1817,7 +1821,8 @@ namespace XamCore.SpriteKit {
 #if !XAMCORE_4_0
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("initWithName:floatMatrix3:")]
 		IntPtr InitWithNameFloatMatrix3 (string name, Matrix3 value);
 
@@ -1844,7 +1849,8 @@ namespace XamCore.SpriteKit {
 #if !XAMCORE_4_0
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("initWithName:floatMatrix4:")]
 		IntPtr InitWithNameFloatMatrix4 (string name, Matrix4 value);
 #endif
@@ -1884,7 +1890,8 @@ namespace XamCore.SpriteKit {
 
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("floatVector2Value")]
 		Vector2 _FloatVector2Value { get; set; }
 
@@ -1903,7 +1910,8 @@ namespace XamCore.SpriteKit {
 
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("floatVector3Value")]
 		Vector3 _FloatVector3Value { get; set; }
 
@@ -1922,7 +1930,8 @@ namespace XamCore.SpriteKit {
 
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("floatVector4Value")]
 		Vector4 _FloatVector4Value { get; set; }
 
@@ -1941,7 +1950,8 @@ namespace XamCore.SpriteKit {
 
 #if !XAMCORE_4_0
 		[Internal]
-		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[NoWatch]
 		[Export ("floatMatrix2Value")]
 		Matrix2 _FloatMatrix2Value { get; set; }
@@ -1972,7 +1982,8 @@ namespace XamCore.SpriteKit {
 #if !XAMCORE_4_0
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("floatMatrix3Value")]
 		Matrix3 _FloatMatrix3Value { get; set; }
 #endif
@@ -2002,7 +2013,8 @@ namespace XamCore.SpriteKit {
 #if !XAMCORE_4_0
 		[Internal]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("floatMatrix4Value")]
 		Matrix4 _FloatMatrix4Value { get; set; }
 #endif
@@ -2106,7 +2118,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // <quote>To create an action, call the class method for the action you are interested in. </quote>
 	partial interface SKAction : NSCoding, NSCopying {
@@ -2521,7 +2533,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[DisableDefaultCtor] // see https://bugzilla.xamarin.com/show_bug.cgi?id=14502
 	[BaseType (typeof (NSObject))]
 	partial interface SKPhysicsBody : NSCoding, NSCopying {
@@ -2663,7 +2675,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // <quote>An SKPhysicsContact object is created automatically by Scene Kit</quote>
 	partial interface SKPhysicsContact {
@@ -2688,7 +2700,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -2706,7 +2718,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject),
 		   Delegates=new string [] {"WeakContactDelegate"},
 		   Events=new Type [] {typeof (SKPhysicsContactDelegate)})]
@@ -2764,7 +2776,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // <quote>You never instantiate objects of this class directly</quote>
 	partial interface SKPhysicsJoint : NSCoding {
@@ -2786,7 +2798,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKPhysicsJoint))]
 	[DisableDefaultCtor] // impossible to set the `anchor` using the default ctor (see #14511) 
 	partial interface SKPhysicsJointPin {
@@ -2813,7 +2825,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKPhysicsJoint))]
 	[DisableDefaultCtor] // impossible to set the `anchorA` and `anchorB` using the default ctor (see #14511) 
 	partial interface SKPhysicsJointSpring {
@@ -2830,7 +2842,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKPhysicsJoint))]
 	[DisableDefaultCtor] // https://bugzilla.xamarin.com/show_bug.cgi?id=14511
 	partial interface SKPhysicsJointFixed {
@@ -2841,7 +2853,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKPhysicsJoint))]
 	[DisableDefaultCtor] // impossible to set the `anchor` and `axis` using the default ctor (see #14511) 
 	partial interface SKPhysicsJointSliding {
@@ -2861,7 +2873,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (SKPhysicsJoint))]
 	[DisableDefaultCtor] // impossible to set the `anchorA` and `anchorB` using the default ctor (see #14511) 
 	partial interface SKPhysicsJointLimit {

@@ -255,17 +255,17 @@ namespace XamCore.AppKit {
 		[Export ("duration")]
 		double Duration { get; set; }
 
-		[Lion, Export ("completionHandler", ArgumentSemantic.Copy)]
+		[Mac (10, 7), Export ("completionHandler", ArgumentSemantic.Copy)]
 		NSAction CompletionHandler { get; set; }
 
 		[Static]
-		[Lion, Export ("runAnimationGroup:completionHandler:")]
+		[Mac (10, 7), Export ("runAnimationGroup:completionHandler:")]
 		void RunAnimation (Action<NSAnimationContext> changes, [NullAllowed] NSAction completionHandler);
 
-		[Lion, Export ("timingFunction", ArgumentSemantic.Strong)]
+		[Mac (10, 7), Export ("timingFunction", ArgumentSemantic.Strong)]
 		CAMediaTimingFunction TimingFunction { get; set; }
 
-		[MountainLion, Export ("allowsImplicitAnimation")]
+		[Mac (10, 8), Export ("allowsImplicitAnimation")]
 		bool AllowsImplicitAnimation { get; set; }
 	}
 
@@ -653,19 +653,19 @@ namespace XamCore.AppKit {
 		[Export ("orderFrontColorPanel:")]
 		void OrderFrontColorPanel (NSObject sender);
 
-		[Lion, Export ("disableRelaunchOnLogin"), ThreadSafe]
+		[Mac (10, 7), Export ("disableRelaunchOnLogin"), ThreadSafe]
 		void DisableRelaunchOnLogin ();
 
-		[Lion, Export ("enableRelaunchOnLogin"), ThreadSafe]
+		[Mac (10, 7), Export ("enableRelaunchOnLogin"), ThreadSafe]
 		void EnableRelaunchOnLogin ();
 
-		[Lion, Export ("enabledRemoteNotificationTypes")]
+		[Mac (10, 7), Export ("enabledRemoteNotificationTypes")]
 		NSRemoteNotificationType EnabledRemoteNotificationTypes ();
 
-		[Lion, Export ("registerForRemoteNotificationTypes:")]
+		[Mac (10, 7), Export ("registerForRemoteNotificationTypes:")]
 		void RegisterForRemoteNotificationTypes (NSRemoteNotificationType types);
 
-		[Lion, Export ("unregisterForRemoteNotifications")]
+		[Mac (10, 7), Export ("unregisterForRemoteNotifications")]
 		void UnregisterForRemoteNotifications ();
 
 		[Notification, Field ("NSApplicationDidBecomeActiveNotification")]
@@ -710,13 +710,13 @@ namespace XamCore.AppKit {
 		[Notification, Field ("NSApplicationDidChangeScreenParametersNotification")]
 		NSString DidChangeScreenParametersNotification { get; }
 
-		[Lion, Field ("NSApplicationLaunchIsDefaultLaunchKey")]
+		[Mac (10, 7), Field ("NSApplicationLaunchIsDefaultLaunchKey")]
 		NSString LaunchIsDefaultLaunchKey  { get; }
 
-		[Lion, Field ("NSApplicationLaunchRemoteNotificationKey")]
+		[Mac (10, 7), Field ("NSApplicationLaunchRemoteNotificationKey")]
 		NSString LaunchRemoteNotificationKey { get; }
 
-		[Lion, Field ("NSApplicationLaunchUserNotificationKey")]
+		[Mac (10, 7), Field ("NSApplicationLaunchUserNotificationKey")]
 		NSString LaunchUserNotificationKey { get; }
 
 		[Notification, Field ("NSApplicationDidFinishRestoringWindowsNotification")]
@@ -732,12 +732,12 @@ namespace XamCore.AppKit {
 		bool RestoreWindowWithIdentifier (string identifier, NSCoder state, NSWindowCompletionHandler onCompletion);
 
 		// This one comes from the NSRestorableStateExtension category ('@interface NSApplication (NSRestorableStateExtension)')
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("extendStateRestoration")]
 		void ExtendStateRestoration ();
 
 		// This one comes from the NSRestorableStateExtension category ('@interface NSApplication (NSRestorableStateExtension)')
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("completeStateRestoration")]
 		void CompleteStateRestoration ();
 
@@ -899,19 +899,19 @@ namespace XamCore.AppKit {
 		void OrderFrontStandardAboutPanelWithOptions (NSDictionary optionsDictionary);
 #endif
 
-		[Lion, Export ("application:didRegisterForRemoteNotificationsWithDeviceToken:"), EventArgs ("NSData")]
+		[Mac (10, 7), Export ("application:didRegisterForRemoteNotificationsWithDeviceToken:"), EventArgs ("NSData")]
 		void RegisteredForRemoteNotifications (NSApplication application, NSData deviceToken);
 
-		[Lion, Export ("application:didFailToRegisterForRemoteNotificationsWithError:"), EventArgs ("NSError", true)]
+		[Mac (10, 7), Export ("application:didFailToRegisterForRemoteNotificationsWithError:"), EventArgs ("NSError", true)]
 		void FailedToRegisterForRemoteNotifications (NSApplication application, NSError error);
 
-		[Lion, Export ("application:didReceiveRemoteNotification:"), EventArgs ("NSDictionary")]
+		[Mac (10, 7), Export ("application:didReceiveRemoteNotification:"), EventArgs ("NSDictionary")]
 		void ReceivedRemoteNotification (NSApplication application, NSDictionary userInfo);
 
-		[Lion, Export ("application:willEncodeRestorableState:"), EventArgs ("NSCoder")]
+		[Mac (10, 7), Export ("application:willEncodeRestorableState:"), EventArgs ("NSCoder")]
 		void WillEncodeRestorableState (NSApplication app, NSCoder encoder);
 
-		[Lion, Export ("application:didDecodeRestorableState:"), EventArgs ("NSCoder")]
+		[Mac (10, 7), Export ("application:didDecodeRestorableState:"), EventArgs ("NSCoder")]
 		void DecodedRestorableState (NSApplication app, NSCoder state);
 
 #if XAMCORE_2_0
@@ -2560,13 +2560,13 @@ namespace XamCore.AppKit {
 		[Export ("interiorBackgroundStyle")]
 		NSBackgroundStyle InteriorBackgroundStyle { get; }
 	
-		[Lion, Export ("draggingImageComponentsWithFrame:inView:")]
+		[Mac (10, 7), Export ("draggingImageComponentsWithFrame:inView:")]
 		NSDraggingImageComponent [] GenerateDraggingImageComponents (CGRect frame, NSView view);
 
-		[Lion, Export ("drawFocusRingMaskWithFrame:inView:")]
+		[Mac (10, 7), Export ("drawFocusRingMaskWithFrame:inView:")]
 		void DrawFocusRing (CGRect cellFrameMask, NSView inControlView);
 
-		[Lion, Export ("focusRingMaskBoundsForFrame:inView:")]
+		[Mac (10, 7), Export ("focusRingMaskBoundsForFrame:inView:")]
 		CGRect GetFocusRingMaskBounds (CGRect cellFrame, NSView controlView);
 	}
 
@@ -2679,7 +2679,7 @@ namespace XamCore.AppKit {
 		bool Selected { [Bind ("isSelected")]get; set; }
 
 		[Export ("imageView", ArgumentSemantic.Assign)]
-		[Lion]
+		[Mac (10, 7)]
 		NSImageView ImageView { get; set;  }
 
 		[Export ("textField", ArgumentSemantic.Assign)]
@@ -2755,7 +2755,7 @@ namespace XamCore.AppKit {
 		[Export ("backgroundColors", ArgumentSemantic.Copy), NullAllowed]
 		NSColor [] BackgroundColors { get; set; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("frameForItemAtIndex:withNumberOfItems:")]
 		CGRect FrameForItemAtIndex (nint index, nint numberOfItems);
 
@@ -3871,7 +3871,7 @@ namespace XamCore.AppKit {
 		[Export ("patternImage")]
 		NSImage PatternImage { get; }
 
-		[MountainLion]
+		[Mac (10, 8)]
 		[Export ("CGColor")]
 		CGColor CGColor { get; }
 
@@ -4588,7 +4588,7 @@ namespace XamCore.AppKit {
 		[Export ("takeIntegerValueFrom:")]
 		void TakeIntegerValueFrom (NSObject sender);
 
-		[Export ("invalidateIntrinsicContentSizeForCell:"), Lion]
+		[Export ("invalidateIntrinsicContentSizeForCell:"), Mac (10, 7)]
 		void InvalidateIntrinsicContentSizeForCell (NSCell cell);
 
 		//Detected properties
@@ -4800,7 +4800,7 @@ namespace XamCore.AppKit {
 		[Export ("contextualMenuCursor")]
 		NSCursor ContextualMenuCursor { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Static]
 		[Export ("IBeamCursorForVerticalLayout")]
 		NSCursor IBeamCursorForVerticalLayout { get; }
@@ -5293,7 +5293,7 @@ namespace XamCore.AppKit {
 		void ShouldCloseWindowController (NSWindowController windowController, NSObject delegateObject, Selector shouldCloseSelector, IntPtr contextInfo);
 
 		[Export ("displayName")]
-		string DisplayName { get; [Lion][NullAllowed] set; }
+		string DisplayName { get; [Mac (10, 7)][NullAllowed] set; }
 
 		[Export ("windowForSheet")]
 		NSWindow WindowForSheet { get; }
@@ -5340,86 +5340,86 @@ namespace XamCore.AppKit {
 		[Export ("hasUndoManager")]
 		bool HasUndoManager { get; set; }
 
-		[Lion, Export ("performActivityWithSynchronousWaiting:usingBlock:")]
+		[Mac (10, 7), Export ("performActivityWithSynchronousWaiting:usingBlock:")]
 		void PerformActivity (bool waitSynchronously, NSAction activityCompletionHandler);
 
-		[Lion, Export ("continueActivityUsingBlock:")]
+		[Mac (10, 7), Export ("continueActivityUsingBlock:")]
 		void ContinueActivity (NSAction resume);
 
-		[Lion, Export ("continueAsynchronousWorkOnMainThreadUsingBlock:")]
+		[Mac (10, 7), Export ("continueAsynchronousWorkOnMainThreadUsingBlock:")]
 		void ContinueAsynchronousWorkOnMainThread (NSAction work);
 
-		[Lion, Export ("performSynchronousFileAccessUsingBlock:")]
+		[Mac (10, 7), Export ("performSynchronousFileAccessUsingBlock:")]
 		void PerformSynchronousFileAccess (NSAction fileAccessCallback);
 
-		[Lion, Export ("performAsynchronousFileAccessUsingBlock:")]
+		[Mac (10, 7), Export ("performAsynchronousFileAccessUsingBlock:")]
 		void PerformAsynchronousFileAccess (NSAction ioCode);
 
-		[Lion, Export ("isEntireFileLoaded")]
+		[Mac (10, 7), Export ("isEntireFileLoaded")]
 		bool IsEntireFileLoaded { get; }
 
-		[Lion, Export ("unblockUserInteraction")]
+		[Mac (10, 7), Export ("unblockUserInteraction")]
 		void UnblockUserInteraction ();
 
-		[Lion, Export ("autosavingIsImplicitlyCancellable")]
+		[Mac (10, 7), Export ("autosavingIsImplicitlyCancellable")]
 		bool AutosavingIsImplicitlyCancellable { get; }
 
-		[Lion, Export ("saveToURL:ofType:forSaveOperation:completionHandler:")]
+		[Mac (10, 7), Export ("saveToURL:ofType:forSaveOperation:completionHandler:")]
 		void SaveTo (NSUrl url, string typeName, NSSaveOperationType saveOperation, NSDocumentCompletionHandler completionHandler);
 
-		[Lion, Export ("canAsynchronouslyWriteToURL:ofType:forSaveOperation:")]
+		[Mac (10, 7), Export ("canAsynchronouslyWriteToURL:ofType:forSaveOperation:")]
 		bool CanWriteAsynchronously (NSUrl toUrl, string typeName, NSSaveOperationType saveOperation);
 
-		[Lion, Export ("checkAutosavingSafetyAndReturnError:")]
+		[Mac (10, 7), Export ("checkAutosavingSafetyAndReturnError:")]
 		bool CheckAutosavingSafety (out NSError outError);
 
-		[Lion, Export ("scheduleAutosaving")]
+		[Mac (10, 7), Export ("scheduleAutosaving")]
 		void ScheduleAutosaving ();
 
-		[Lion, Export ("autosaveWithImplicitCancellability:completionHandler:")]
+		[Mac (10, 7), Export ("autosaveWithImplicitCancellability:completionHandler:")]
 		void Autosave (bool autosavingIsImplicitlyCancellable, NSDocumentCompletionHandler completionHandler);
 
 		[Static]
-		[Lion, Export ("autosavesInPlace")]
+		[Mac (10, 7), Export ("autosavesInPlace")]
 		bool AutosavesInPlace ();
 
 		[Static]
-		[Lion, Export ("preservesVersions")]
+		[Mac (10, 7), Export ("preservesVersions")]
 		bool PreservesVersions ();
 
-		[Lion, Export ("duplicateDocument:")]
+		[Mac (10, 7), Export ("duplicateDocument:")]
 		void DuplicateDocument (NSObject sender);
 
-		[Lion, Export ("duplicateDocumentWithDelegate:didDuplicateSelector:contextInfo:"), Internal]
+		[Mac (10, 7), Export ("duplicateDocumentWithDelegate:didDuplicateSelector:contextInfo:"), Internal]
 		void _DuplicateDocument ([NullAllowed] NSObject cbackobject, [NullAllowed] Selector didDuplicateSelector, IntPtr contextInfo);
 
-		[Lion, Export ("duplicateAndReturnError:")]
+		[Mac (10, 7), Export ("duplicateAndReturnError:")]
 		NSDocument Duplicate (out NSError outError);
 
-		[Lion, Export ("isInViewingMode")]
+		[Mac (10, 7), Export ("isInViewingMode")]
 		bool IsInViewingMode { get; }
 
-		[Lion, Export ("changeCountTokenForSaveOperation:")]
+		[Mac (10, 7), Export ("changeCountTokenForSaveOperation:")]
 		NSObject ChangeCountToken (NSSaveOperationType saveOperation);
 
-		[Lion, Export ("updateChangeCountWithToken:forSaveOperation:")]
+		[Mac (10, 7), Export ("updateChangeCountWithToken:forSaveOperation:")]
 		void UpdateChangeCount (NSObject changeCountToken, NSSaveOperationType saveOperation);
 
-		[Lion, Export ("willNotPresentError:")]
+		[Mac (10, 7), Export ("willNotPresentError:")]
 		void WillNotPresentError (NSError error);
 
 #if !XAMCORE_2_0
-		[Lion, Export ("setDisplayName:")]
+		[Mac (10, 7), Export ("setDisplayName:")]
 		[Obsolete ("Use the 'DisplayName' property instead.")]
 		[Sealed]
 		void SetDisplayName ([NullAllowed] string displayNameOrNull);
 #endif
 
-		[Lion, Export ("restoreDocumentWindowWithIdentifier:state:completionHandler:")]
+		[Mac (10, 7), Export ("restoreDocumentWindowWithIdentifier:state:completionHandler:")]
 		void RestoreDocumentWindow (string identifier, NSCoder state, NSWindowCompletionHandler completionHandler);
 
 		// This one comes from the NSRestorableState category ('@interface NSResponder (NSRestorableState)')
-		[Lion, Export ("encodeRestorableStateWithCoder:")]
+		[Mac (10, 7), Export ("encodeRestorableStateWithCoder:")]
 		void EncodeRestorableState (NSCoder coder);
 
 		// This one comes from the NSRestorableState category ('@interface NSResponder (NSRestorableState)')
@@ -5525,7 +5525,7 @@ namespace XamCore.AppKit {
 		[Export ("openDocumentWithContentsOfURL:display:error:")]
 		NSObject OpenDocument (NSUrl url, bool displayDocument, out NSError outError);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("openDocumentWithContentsOfURL:display:completionHandler:")]
 		void OpenDocument (NSUrl url, bool display, OpenDocumentCompletionHandler completionHandler);
 
@@ -5597,7 +5597,7 @@ namespace XamCore.AppKit {
 		double AutosavingDelay { get; set; }
 	}
 
-	[Lion]
+	[Mac (10, 7)]
 	[BaseType (typeof (NSObject))]
 	interface NSDraggingImageComponent {
 		[Export ("key", ArgumentSemantic.Copy)]
@@ -5718,25 +5718,25 @@ namespace XamCore.AppKit {
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("animatesToDestination")]
 		bool AnimatesToDestination { get; set; }
 
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("numberOfValidItemsForDrop")]
 		nint NumberOfValidItemsForDrop { get; set; }
 
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("draggingFormation")]
 		NSDraggingFormation DraggingFormation { get; set; } 
 
-		[Lion]
+		[Mac (10, 7)]
 		[Internal]
 		[Export ("enumerateDraggingItemsWithOptions:forView:classes:searchOptions:usingBlock:")]
 		void EnumerateDraggingItems (NSDraggingItemEnumerationOptions enumOpts, NSView view, IntPtr classArray,
@@ -6229,7 +6229,7 @@ namespace XamCore.AppKit {
 		void _GetAdvancements (IntPtr advancements, IntPtr glyphs, nuint glyphCount);
 	}
 
-	[Lion]
+	[Mac (10, 7)]
 	interface NSFontCollectionChangedEventArgs {
 		[Internal, Export ("NSFontCollectionActionKey")]
 		NSString _Action { get; }
@@ -6244,7 +6244,7 @@ namespace XamCore.AppKit {
 		NSNumber _Visibility { get; }
 	}
 
-	[Lion]
+	[Mac (10, 7)]
 	[BaseType (typeof (NSObject))]
 	interface NSFontCollection : NSSecureCoding, NSMutableCopying {
 		[Static]
@@ -6348,7 +6348,7 @@ namespace XamCore.AppKit {
 		
 	}
 
-	[Lion]
+	[Mac (10, 7)]
 	[BaseType (typeof (NSFontCollection))]
 	[DisableDefaultCtor]
 	interface NSMutableFontCollection {
@@ -7380,42 +7380,42 @@ namespace XamCore.AppKit {
 		[Export ("mouseCoalescingEnabled")]
 		bool MouseCoalescingEnabled { [Bind ("isMouseCoalescingEnabled")]get; set; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("hasPreciseScrollingDeltas")]
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		bool HasPreciseScrollingDeltas { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("scrollingDeltaX")]
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		nfloat ScrollingDeltaX { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("scrollingDeltaY")]
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		nfloat ScrollingDeltaY { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("momentumPhase")]
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		NSEventPhase MomentumPhase { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("isDirectionInvertedFromDevice")]
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		bool IsDirectionInvertedFromDevice { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("phase")]
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		NSEventPhase Phase { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Static]
 		[Export ("isSwipeTrackingFromScrollEventsEnabled")]
 		bool IsSwipeTrackingFromScrollEventsEnabled { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("trackSwipeEventWithOptions:dampenAmountThresholdMin:max:usingHandler:")]
 		void TrackSwipeEvent (NSEventSwipeTrackingOptions options, nfloat minDampenThreshold, nfloat maxDampenThreshold, NSEventTrackHandler trackingHandler);
 
@@ -7492,7 +7492,7 @@ namespace XamCore.AppKit {
 		bool DelaysRotationEvents { get; set; }
 
 		[Export ("locationInView:")]
-		CGPoint LocationInView (NSView view);
+		CGPoint LocationInView ([NullAllowed] NSView view);
 
 		[Export ("reset")]
 		void Reset ();
@@ -7988,7 +7988,7 @@ namespace XamCore.AppKit {
 
 	}
 
-	[Availability (Introduced = Platform.Mac_10_0 | Platform.Mac_Arch32)]
+	[Mac (10, 0, PlatformArchitecture.Arch32)] 
 	[BaseType (typeof (NSView))]
 	interface NSMenuView {
 		[Static]
@@ -8615,7 +8615,7 @@ namespace XamCore.AppKit {
 		[Export ("outlineView:dataCellForTableColumn:item:"), NoDefaultValue]
 		NSCell GetCell (NSOutlineView outlineView, NSTableColumn tableColumn, NSObject item);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("outlineView:viewForTableColumn:item:"), NoDefaultValue]
 		NSView GetView (NSOutlineView outlineView, [NullAllowed] NSTableColumn tableColumn, NSObject item);
 	
@@ -8664,13 +8664,13 @@ namespace XamCore.AppKit {
 		[Export ("outlineViewSelectionDidChange:")]
 		void SelectionDidChange (NSNotification notification);
 
-		[Lion, Export ("outlineView:rowViewForItem:")]
+		[Mac (10, 7), Export ("outlineView:rowViewForItem:")]
 		NSTableRowView RowViewForItem (NSOutlineView outlineView, NSObject item);
 
-		[Lion, Export ("outlineView:didAddRowView:forRow:")]
+		[Mac (10, 7), Export ("outlineView:didAddRowView:forRow:")]
 		void DidAddRowView (NSOutlineView outlineView, NSTableRowView rowView, nint row);
 
-		[Lion, Export ("outlineView:didRemoveRowView:forRow:")]
+		[Mac (10, 7), Export ("outlineView:didRemoveRowView:forRow:")]
 		void DidRemoveRowView (NSOutlineView outlineView, NSTableRowView rowView, nint row);
 	}
 	
@@ -10247,7 +10247,7 @@ namespace XamCore.AppKit {
 	}
 #endif // XAMCORE_2_0
 
-	[Lion]
+	[Mac (10, 7)]
 	[BaseType (typeof (NSObject))]
 	interface NSLayoutConstraint : NSAnimatablePropertyContainer {
 		[Static]
@@ -12500,20 +12500,20 @@ namespace XamCore.AppKit {
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		NSMenu Menu { get; set; }
 
-		[Lion, Export ("encodeRestorableStateWithCoder:")]
+		[Mac (10, 7), Export ("encodeRestorableStateWithCoder:")]
 		void EncodeRestorableState (NSCoder coder);
 
-		[Lion, Export ("restoreStateWithCoder:")]
+		[Mac (10, 7), Export ("restoreStateWithCoder:")]
 		void RestoreState (NSCoder coder);
 
-		[Lion, Export ("invalidateRestorableState")]
+		[Mac (10, 7), Export ("invalidateRestorableState")]
 		void InvalidateRestorableState ();
 
 		[Static]
-		[Lion, Export ("restorableStateKeyPaths", ArgumentSemantic.Copy)]
+		[Mac (10, 7), Export ("restorableStateKeyPaths", ArgumentSemantic.Copy)]
 		string [] RestorableStateKeyPaths ();
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("wantsForwardedScrollEventsForAxis:")]
 		bool WantsForwardedScrollEventsForAxis (NSEventGestureAxis axis);
 
@@ -12874,16 +12874,16 @@ namespace XamCore.AppKit {
 		[Export ("userSpaceScaleFactor")]
 		nfloat UserSpaceScaleFactor { get; }
 
-		[Lion, Export ("convertRectToBacking:")]
+		[Mac (10, 7), Export ("convertRectToBacking:")]
 		CGRect ConvertRectToBacking (CGRect aRect);
 
-		[Lion, Export ("convertRectFromBacking:")]
+		[Mac (10, 7), Export ("convertRectFromBacking:")]
 		CGRect ConvertRectfromBacking (CGRect aRect);
 
-		[Lion, Export ("backingAlignedRect:options:")]
+		[Mac (10, 7), Export ("backingAlignedRect:options:")]
 		CGRect GetBackingAlignedRect (CGRect globalScreenCoordRect, NSAlignmentOptions options);
 
-		[Lion, Export ("backingScaleFactor")]
+		[Mac (10, 7), Export ("backingScaleFactor")]
 		nfloat BackingScaleFactor { get; }
 
 		[Mac (10,9)]
@@ -12961,21 +12961,21 @@ namespace XamCore.AppKit {
 		nfloat KnobProportion { get; set; }
 		
 		[Static]
-		[Lion, Export ("isCompatibleWithOverlayScrollers")]
+		[Mac (10, 7), Export ("isCompatibleWithOverlayScrollers")]
 		bool CompatibleWithOverlayScrollers { get; }
 		
-		[Lion, Export ("knobStyle")]
+		[Mac (10, 7), Export ("knobStyle")]
 		NSScrollerKnobStyle KnobStyle { get; set; }
 		
 		[Static]
-		[Lion, Export ("preferredScrollerStyle")]
+		[Mac (10, 7), Export ("preferredScrollerStyle")]
 		NSScrollerStyle PreferredScrollerStyle { get; }
 		
 		[Export ("scrollerStyle")]
 		NSScrollerStyle ScrollerStyle { get; set; }
 		
 		[Static]
-		[Lion, Export ("scrollerWidthForControlSize:scrollerStyle:")]
+		[Mac (10, 7), Export ("scrollerWidthForControlSize:scrollerStyle:")]
 		nfloat GetScrollerWidth (NSControlSize forControlSize, NSScrollerStyle scrollerStyle);
 		
 		[Notification, Field ("NSPreferredScrollerStyleDidChangeNotification")]
@@ -13084,56 +13084,56 @@ namespace XamCore.AppKit {
 		NSRulerView VerticalRulerView { get; set; }
 
 		[Static]
-		[Lion, Export ("contentSizeForFrameSize:horizontalScrollerClass:verticalScrollerClass:borderType:controlSize:scrollerStyle:")]
+		[Mac (10, 7), Export ("contentSizeForFrameSize:horizontalScrollerClass:verticalScrollerClass:borderType:controlSize:scrollerStyle:")]
 		CGSize GetContentSizeForFrame (CGSize forFrameSize, Class horizontalScrollerClass, Class verticalScrollerClass, NSBorderType borderType, NSControlSize controlSize, NSScrollerStyle scrollerStyle);
         
-        	[Lion, Export ("findBarPosition")]
+        	[Mac (10, 7), Export ("findBarPosition")]
         	NSScrollViewFindBarPosition FindBarPosition { get; set; }
 
-        	[Lion, Export ("flashScrollers")]
+        	[Mac (10, 7), Export ("flashScrollers")]
         	void FlashScrollers ();
         
 		[Static]
-		[Lion, Export ("frameSizeForContentSize:horizontalScrollerClass:verticalScrollerClass:borderType:controlSize:scrollerStyle:")]
+		[Mac (10, 7), Export ("frameSizeForContentSize:horizontalScrollerClass:verticalScrollerClass:borderType:controlSize:scrollerStyle:")]
 		CGSize GetFrameSizeForContent (CGSize contentSize, Class horizontalScrollerClass, Class verticalScrollerClass, NSBorderType borderType, NSControlSize controlSize, NSScrollerStyle scrollerStyle);
 		
-		[Lion, Export ("horizontalScrollElasticity")]
+		[Mac (10, 7), Export ("horizontalScrollElasticity")]
 		NSScrollElasticity HorizontalScrollElasticity { get; set; }
         
-        	[Lion, Export ("scrollerKnobStyle")]
+        	[Mac (10, 7), Export ("scrollerKnobStyle")]
         	NSScrollerKnobStyle ScrollerKnobStyle { get; set; }
         
-        	[Lion, Export ("scrollerStyle")]
+        	[Mac (10, 7), Export ("scrollerStyle")]
         	NSScrollerStyle ScrollerStyle { get; set; }
         
-		[Lion, Export ("usesPredominantAxisScrolling")]
+		[Mac (10, 7), Export ("usesPredominantAxisScrolling")]
         	bool UsesPredominantAxisScrolling { get; set; }
 
-		[Lion, Export ("verticalScrollElasticity")]
+		[Mac (10, 7), Export ("verticalScrollElasticity")]
 		NSScrollElasticity VerticalScrollElasticity { get; set; }
 
-		[MountainLion, Export ("allowsMagnification")]
+		[Mac (10, 8), Export ("allowsMagnification")]
 		bool AllowsMagnification { get; set; }
 
-		[MountainLion, Export ("magnification")]
+		[Mac (10, 8), Export ("magnification")]
 		nfloat Magnification { get; set; }
 
-		[MountainLion, Export ("maxMagnification")]
+		[Mac (10, 8), Export ("maxMagnification")]
 		nfloat MaxMagnification { get; set; }
 
-		[MountainLion, Export ("minMagnification")]
+		[Mac (10, 8), Export ("minMagnification")]
 		nfloat MinMagnification { get; set; }
 
-		[MountainLion, Export ("magnifyToFitRect:")]
+		[Mac (10, 8), Export ("magnifyToFitRect:")]
 		void MagnifyToFitRect (CGRect rect);
 
-		[MountainLion, Export ("setMagnification:centeredAtPoint:")]
+		[Mac (10, 8), Export ("setMagnification:centeredAtPoint:")]
 		void SetMagnification (nfloat magnification, CGPoint centeredAtPoint);
 
-		[MountainLion, Notification, Field ("NSScrollViewWillStartLiveMagnifyNotification")]
+		[Mac (10, 8), Notification, Field ("NSScrollViewWillStartLiveMagnifyNotification")]
 		NSString WillStartLiveMagnifyNotification { get; }
 
-		[MountainLion, Notification, Field ("NSScrollViewDidEndLiveMagnifyNotification")]
+		[Mac (10, 8), Notification, Field ("NSScrollViewDidEndLiveMagnifyNotification")]
 		NSString DidEndLiveMagnifyNotification { get; }
 
 		[Mac (10,9), Notification, Field ("NSScrollViewDidLiveScrollNotification")]
@@ -14184,14 +14184,14 @@ namespace XamCore.AppKit {
 		[Export ("removeArrangedSubview:")]
 		void RemoveArrangedSubview (NSView view);
 
-		[MountainLion, Export ("holdingPriorityForSubviewAtIndex:")]
+		[Mac (10, 8), Export ("holdingPriorityForSubviewAtIndex:")]
 		#if XAMCORE_2_0
 				float /*NSLayoutPriority*/ HoldingPriorityForSubview (nint subviewIndex);
 #else
 		float /*NSLayoutPriority*/ HoldingPriorityForSubviewAtIndex (nint subviewIndex);
 		#endif
 
-		[MountainLion, Export ("setHoldingPriority:forSubviewAtIndex:")]
+		[Mac (10, 8), Export ("setHoldingPriority:forSubviewAtIndex:")]
 		void SetHoldingPriority (float /*NSLayoutPriority*/ priority, nint subviewIndex);
 
 		[Notification (typeof (NSSplitViewDividerIndexEventArgs))]
@@ -14856,11 +14856,11 @@ namespace XamCore.AppKit {
 
 	[Protocol]
 	interface NSUserInterfaceItemIdentification {
-		[Lion, Export ("identifier", ArgumentSemantic.Copy)]
+		[Mac (10, 7), Export ("identifier", ArgumentSemantic.Copy)]
 		string Identifier { get; set; }
 	}
 
-	[Lion]
+	[Mac (10, 7)]
 	[Protocol]
 #if !XAMCORE_4_0
 	[Model]
@@ -14970,20 +14970,20 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSObject)), Model, Protocol]
 	partial interface NSTextFinderBarContainer {
-		[Abstract, Export ("findBarVisible"), Lion]
+		[Abstract, Export ("findBarVisible"), Mac (10, 7)]
 		bool FindBarVisible { [Bind ("isFindBarVisible")] get; set;  }
 
-		[Abstract, Export ("findBarView", ArgumentSemantic.Retain), Lion]
+		[Abstract, Export ("findBarView", ArgumentSemantic.Retain), Mac (10, 7)]
 		NSView FindBarView { get; set; }
 
-		[Abstract, Export ("findBarViewDidChangeHeight"), Lion]
+		[Abstract, Export ("findBarViewDidChangeHeight"), Mac (10, 7)]
 		void FindBarViewDidChangeHeight ();
 
 		[Export ("contentView")]
 		NSView ContentView { get; }
 	}
 
-	[Lion]
+	[Mac (10, 7)]
 	[BaseType (typeof (NSObject))]
 	partial interface NSTextFinder : NSCoding {
 		[Export ("client", ArgumentSemantic.Assign)]
@@ -15532,87 +15532,87 @@ namespace XamCore.AppKit {
 		[Notification, Field ("NSViewDidUpdateTrackingAreasNotification")]
 		NSString UpdatedTrackingAreasNotification { get; }
 
-		[Lion, Export ("constraints")]
+		[Mac (10, 7), Export ("constraints")]
 		NSLayoutConstraint [] Constraints { get; }
 		
-		[Lion, Export ("addConstraint:")][PostGet ("Constraints")]
+		[Mac (10, 7), Export ("addConstraint:")][PostGet ("Constraints")]
 		void AddConstraint (NSLayoutConstraint constraint);
 
-		[Lion, Export ("addConstraints:")][PostGet ("Constraints")]
+		[Mac (10, 7), Export ("addConstraints:")][PostGet ("Constraints")]
 		void AddConstraints (NSLayoutConstraint [] constraints);
 
-		[Lion, Export ("removeConstraint:")][PostGet ("Constraints")]
+		[Mac (10, 7), Export ("removeConstraint:")][PostGet ("Constraints")]
 		void RemoveConstraint (NSLayoutConstraint constraint);
 
-		[Lion, Export ("removeConstraints:")][PostGet ("Constraints")]
+		[Mac (10, 7), Export ("removeConstraints:")][PostGet ("Constraints")]
 		void RemoveConstraints (NSLayoutConstraint [] constraints);
 
-		[Lion, Export ("layoutSubtreeIfNeeded")]
+		[Mac (10, 7), Export ("layoutSubtreeIfNeeded")]
 		void LayoutSubtreeIfNeeded ();
 
-		[Lion, Export ("layout")]
+		[Mac (10, 7), Export ("layout")]
 		void Layout ();
 
-		[Lion, Export ("needsUpdateConstraints")]
+		[Mac (10, 7), Export ("needsUpdateConstraints")]
 		bool NeedsUpdateConstraints { get; set; }
 
-		[Lion, Export ("needsLayout")]
+		[Mac (10, 7), Export ("needsLayout")]
 		bool NeedsLayout { get; set; }
 
-		[Lion, Export ("updateConstraints")]
+		[Mac (10, 7), Export ("updateConstraints")]
 		void UpdateConstraints ();
 
-		[Lion, Export ("updateConstraintsForSubtreeIfNeeded")]
+		[Mac (10, 7), Export ("updateConstraintsForSubtreeIfNeeded")]
 		void UpdateConstraintsForSubtreeIfNeeded ();
 
 		[Static]
-		[Lion, Export ("requiresConstraintBasedLayout")]
+		[Mac (10, 7), Export ("requiresConstraintBasedLayout")]
 		bool RequiresConstraintBasedLayout ();
 
 		//Detected properties
-		[Lion, Export ("translatesAutoresizingMaskIntoConstraints")]
+		[Mac (10, 7), Export ("translatesAutoresizingMaskIntoConstraints")]
 		bool TranslatesAutoresizingMaskIntoConstraints { get; set; }
 
-		[Lion, Export ("alignmentRectForFrame:")]
+		[Mac (10, 7), Export ("alignmentRectForFrame:")]
 		CGRect GetAlignmentRectForFrame (CGRect frame);
 
-		[Lion, Export ("frameForAlignmentRect:")]
+		[Mac (10, 7), Export ("frameForAlignmentRect:")]
 		CGRect GetFrameForAlignmentRect (CGRect alignmentRect);
 
-		[Lion, Export ("alignmentRectInsets")]
+		[Mac (10, 7), Export ("alignmentRectInsets")]
 		NSEdgeInsets AlignmentRectInsets { get; }
 
-		[Lion, Export ("baselineOffsetFromBottom")]
+		[Mac (10, 7), Export ("baselineOffsetFromBottom")]
 		nfloat BaselineOffsetFromBottom { get; }
 
-		[Lion, Export ("intrinsicContentSize")]
+		[Mac (10, 7), Export ("intrinsicContentSize")]
 		CGSize IntrinsicContentSize { get; }
 
-		[Lion, Export ("invalidateIntrinsicContentSize")]
+		[Mac (10, 7), Export ("invalidateIntrinsicContentSize")]
 		void InvalidateIntrinsicContentSize ();
 
-		[Lion, Export ("contentHuggingPriorityForOrientation:")]
+		[Mac (10, 7), Export ("contentHuggingPriorityForOrientation:")]
 		float /* NSLayoutPriority = float */ GetContentHuggingPriorityForOrientation (NSLayoutConstraintOrientation orientation);
 
-		[Lion, Export ("setContentHuggingPriority:forOrientation:")]
+		[Mac (10, 7), Export ("setContentHuggingPriority:forOrientation:")]
 		void SetContentHuggingPriorityForOrientation (float /* NSLayoutPriority = float */ priority, NSLayoutConstraintOrientation orientation);
 
-		[Lion, Export ("contentCompressionResistancePriorityForOrientation:")]
+		[Mac (10, 7), Export ("contentCompressionResistancePriorityForOrientation:")]
 		float /* NSLayoutPriority = float */ GetContentCompressionResistancePriority (NSLayoutConstraintOrientation orientation);
 
-		[Lion, Export ("setContentCompressionResistancePriority:forOrientation:")]
+		[Mac (10, 7), Export ("setContentCompressionResistancePriority:forOrientation:")]
 		void SetContentCompressionResistancePriority (float /* NSLayoutPriority = float */ priority, NSLayoutConstraintOrientation orientation);
 
-		[Lion, Export ("fittingSize")]
+		[Mac (10, 7), Export ("fittingSize")]
 		CGSize FittingSize { get; }
 
-		[Lion, Export ("constraintsAffectingLayoutForOrientation:")]
+		[Mac (10, 7), Export ("constraintsAffectingLayoutForOrientation:")]
 		NSLayoutConstraint [] GetConstraintsAffectingLayout (NSLayoutConstraintOrientation orientation);
 
-		[Lion, Export ("hasAmbiguousLayout")]
+		[Mac (10, 7), Export ("hasAmbiguousLayout")]
 		bool HasAmbiguousLayout { get; }
 
-		[Lion, Export ("exerciseAmbiguityInLayout")]
+		[Mac (10, 7), Export ("exerciseAmbiguityInLayout")]
 		void ExerciseAmbiguityInLayout ();
 
 		[Availability (Deprecated = Platform.Mac_10_8)]
@@ -15652,7 +15652,7 @@ namespace XamCore.AppKit {
 		[Export ("noteFocusRingMaskChanged")]
 		void NoteFocusRingMaskChanged ();
 
-		[Lion, Export ("isDrawingFindIndicator")]
+		[Mac (10, 7), Export ("isDrawingFindIndicator")]
 		bool IsDrawingFindIndicator { get; }
 		
 		[Export ("dataWithEPSInsideRect:")]
@@ -15718,46 +15718,46 @@ namespace XamCore.AppKit {
 		[Export ("locationOfPrintRect:")]
 		CGPoint LocationOfPrintRect (CGRect aRect);
 
-		[Lion, Export ("wantsBestResolutionOpenGLSurface")]
+		[Mac (10, 7), Export ("wantsBestResolutionOpenGLSurface")]
 		bool WantsBestResolutionOpenGLSurface { get; set; }
 
-		[Lion, Export ("backingAlignedRect:options:")]
+		[Mac (10, 7), Export ("backingAlignedRect:options:")]
 		CGRect BackingAlignedRect (CGRect aRect, NSAlignmentOptions options);
 
-		[Lion, Export ("convertRectFromBacking:")]
+		[Mac (10, 7), Export ("convertRectFromBacking:")]
 		CGRect ConvertRectFromBacking (CGRect aRect);
 
-		[Lion, Export ("convertRectToBacking:")]
+		[Mac (10, 7), Export ("convertRectToBacking:")]
 		CGRect ConvertRectToBacking (CGRect aRect);
 
-		[Lion, Export ("convertRectFromLayer:")]
+		[Mac (10, 7), Export ("convertRectFromLayer:")]
 		CGRect ConvertRectFromLayer (CGRect aRect);
 
-		[Lion, Export ("convertRectToLayer:")]
+		[Mac (10, 7), Export ("convertRectToLayer:")]
 		CGRect ConvertRectToLayer (CGRect aRect);
 
-		[Lion, Export ("convertPointFromBacking:")]
+		[Mac (10, 7), Export ("convertPointFromBacking:")]
 		CGPoint ConvertPointFromBacking (CGPoint aPoint);
 
-		[Lion, Export ("convertPointToBacking:")]
+		[Mac (10, 7), Export ("convertPointToBacking:")]
 		CGPoint ConvertPointToBacking (CGPoint aPoint);
 
-		[Lion, Export ("convertPointFromLayer:")]
+		[Mac (10, 7), Export ("convertPointFromLayer:")]
 		CGPoint ConvertPointFromLayer (CGPoint aPoint);
 
-		[Lion, Export ("convertPointToLayer:")]
+		[Mac (10, 7), Export ("convertPointToLayer:")]
 		CGPoint ConvertPointToLayer (CGPoint aPoint);
 
-		[Lion, Export ("convertSizeFromBacking:")]
+		[Mac (10, 7), Export ("convertSizeFromBacking:")]
 		CGSize ConvertSizeFromBacking (CGSize aSize);
 
-		[Lion, Export ("convertSizeToBacking:")]
+		[Mac (10, 7), Export ("convertSizeToBacking:")]
 		CGSize ConvertSizeToBacking (CGSize aSize);
 
-		[Lion, Export ("convertSizeFromLayer:")]
+		[Mac (10, 7), Export ("convertSizeFromLayer:")]
 		CGSize ConvertSizeFromLayer (CGSize aSize);
 
-		[Lion, Export ("convertSizeToLayer:")]
+		[Mac (10, 7), Export ("convertSizeToLayer:")]
 		CGSize ConvertSizeToLayer (CGSize aSize);
 
 		[Availability (Introduced = Platform.Mac_10_7)]
@@ -16140,7 +16140,7 @@ namespace XamCore.AppKit {
 
 	interface INSViewControllerPresentationAnimator {}
 
-	[MountainLion]
+	[Mac (10, 8)]
 	[BaseType (typeof (NSViewController),
 		Delegates = new [] { "WeakDelegate" },
 		Events = new [] { typeof (NSPageControllerDelegate) })]
@@ -16227,11 +16227,11 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSObject))]
 	partial interface NSTableColumn : NSUserInterfaceItemIdentification, NSCoding {
-		[Lion, Export ("initWithIdentifier:")]
+		[Mac (10, 7), Export ("initWithIdentifier:")]
 		[Sealed]
 		IntPtr Constructor (string identifier);
 
-		[Lion, Export ("initWithIdentifier:")]
+		[Mac (10, 7), Export ("initWithIdentifier:")]
 		IntPtr Constructor (NSString identifier);
 
 #if !XAMCORE_2_0
@@ -16285,7 +16285,7 @@ namespace XamCore.AppKit {
 		string Title { get; set; }
 	}
 
-	[Lion]
+	[Mac (10, 7)]
 	[BaseType (typeof (NSView))]
 	interface NSTableRowView : NSAccessibilityRow {
 		[Export ("selectionHighlightStyle")]
@@ -16345,7 +16345,7 @@ namespace XamCore.AppKit {
 		bool NextRowSelected { [Bind ("isNextRowSelected")] get; set; }
 	}
 
-	[Lion]
+	[Mac (10, 7)]
 	[BaseType (typeof (NSView))]
 	partial interface NSTableCellView {
 		[Export ("backgroundStyle")]
@@ -16665,61 +16665,61 @@ namespace XamCore.AppKit {
 		[Export ("focusedColumn")]
 		nint FocusedColumn { get; set; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("effectiveRowSizeStyle")]
 		NSTableViewRowSizeStyle EffectiveRowSizeStyle { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("viewAtColumn:row:makeIfNecessary:")]
 		NSView GetView (nint column, nint row, bool makeIfNecessary);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("rowViewAtRow:makeIfNecessary:")]
 		NSTableRowView GetRowView (nint row, bool makeIfNecessary);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("rowForView:")]
 		nint RowForView (NSView view);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("columnForView:")]
 		nint ColumnForView (NSView view);
 
 		// According to the header identifier should be non-null but example in 
 		// https://bugzilla.xamarin.com/show_bug.cgi?id=36496 shows actual behavior differs
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("makeViewWithIdentifier:owner:")]
 		NSView MakeView ([NullAllowed]string identifier, [NullAllowed]NSObject owner);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("enumerateAvailableRowViewsUsingBlock:")]
 		void EnumerateAvailableRowViews (NSTableViewRowHandler callback);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("beginUpdates")]
 		void BeginUpdates ();
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("endUpdates")]
 		void EndUpdates ();
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("insertRowsAtIndexes:withAnimation:")]
 		void InsertRows (NSIndexSet indexes, NSTableViewAnimation animationOptions);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("removeRowsAtIndexes:withAnimation:")]
 		void RemoveRows (NSIndexSet indexes, NSTableViewAnimation animationOptions);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("moveRowAtIndex:toIndex:")]
 		void MoveRow (nint oldIndex, nint newIndex);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("rowSizeStyle")]
 		NSTableViewRowSizeStyle RowSizeStyle { get; set; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("floatsGroupRows")]
 		bool FloatsGroupRows { get; set; }
 
@@ -16844,19 +16844,19 @@ namespace XamCore.AppKit {
 		[Export ("tableViewSelectionIsChanging:"), EventArgs ("NSNotification")]
 		void SelectionIsChanging (NSNotification notification);
 
-		[Lion]
+		[Mac (10, 7)]
                 [Export ("tableView:viewForTableColumn:row:"), DelegateName ("NSTableViewViewGetter"), NoDefaultValue]
                 NSView GetViewForItem (NSTableView tableView, NSTableColumn tableColumn, nint row);
 
-		[Lion]
+		[Mac (10, 7)]
                 [Export ("tableView:rowViewForRow:"), DelegateName ("NSTableViewRowGetter"), DefaultValue (null)]
                 NSTableRowView CoreGetRowView (NSTableView tableView, nint row);
 
-		[Lion]
+		[Mac (10, 7)]
                 [Export ("tableView:didAddRowView:forRow:"), EventArgs ("NSTableViewRow")]
                 void DidAddRowView (NSTableView tableView, NSTableRowView rowView, nint row);
 
-		[Lion]
+		[Mac (10, 7)]
                 [Export ("tableView:didRemoveRowView:forRow:"), EventArgs ("NSTableViewRow")]
                 void DidRemoveRowView (NSTableView tableView, NSTableRowView rowView, nint row);
 
@@ -16894,7 +16894,7 @@ namespace XamCore.AppKit {
 		[Export ("tableView:namesOfPromisedFilesDroppedAtDestination:forDraggedRowsWithIndexes:")]
 		string [] FilesDropped (NSTableView tableView, NSUrl dropDestination, NSIndexSet indexSet );
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:pasteboardWriterForRow:")]
 #if XAMCORE_2_0
 		INSPasteboardWriting GetPasteboardWriterForRow (NSTableView tableView, nint row);
@@ -16902,15 +16902,15 @@ namespace XamCore.AppKit {
 		NSPasteboardWriting GetPasteboardWriterForRow (NSTableView tableView, nint row);
 #endif
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:draggingSession:willBeginAtPoint:forRowIndexes:")]
 		void DraggingSessionWillBegin (NSTableView tableView, NSDraggingSession draggingSession, CGPoint willBeginAtScreenPoint, NSIndexSet rowIndexes);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:draggingSession:endedAtPoint:operation:")]
 		void DraggingSessionEnded (NSTableView tableView, NSDraggingSession draggingSession, CGPoint endedAtScreenPoint, NSDragOperation operation);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:updateDraggingItemsForDrag:")]
 		void UpdateDraggingItems (NSTableView tableView, [Protocolize (4)] NSDraggingInfo draggingInfo);
 	}
@@ -17024,23 +17024,23 @@ namespace XamCore.AppKit {
 		[Export ("tableView:namesOfPromisedFilesDroppedAtDestination:forDraggedRowsWithIndexes:")]
 		string [] FilesDropped (NSTableView tableView, NSUrl dropDestination, NSIndexSet indexSet );
 		
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:viewForTableColumn:row:")]
 		NSView GetViewForItem (NSTableView tableView, NSTableColumn tableColumn, nint row);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:rowViewForRow:")]
 		NSTableRowView GetRowView (NSTableView tableView, nint row);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:didAddRowView:forRow:")]
 		void DidAddRowView (NSTableView tableView, NSTableRowView rowView, nint row);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:didRemoveRowView:forRow:")]
 		void DidRemoveRowView (NSTableView tableView, NSTableRowView rowView, nint row);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:pasteboardWriterForRow:")]
 #if XAMCORE_2_0
 		INSPasteboardWriting GetPasteboardWriterForRow (NSTableView tableView, nint row);
@@ -17048,15 +17048,15 @@ namespace XamCore.AppKit {
 		NSPasteboardWriting GetPasteboardWriterForRow (NSTableView tableView, nint row);
 #endif
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:draggingSession:willBeginAtPoint:forRowIndexes:")]
 		void DraggingSessionWillBegin (NSTableView tableView, NSDraggingSession draggingSession, CGPoint willBeginAtScreenPoint, NSIndexSet rowIndexes);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:draggingSession:endedAtPoint:operation:")]
 		void DraggingSessionEnded (NSTableView tableView, NSDraggingSession draggingSession, CGPoint endedAtScreenPoint, NSDragOperation operation);
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("tableView:updateDraggingItemsForDrag:")]
 		void UpdateDraggingItems (NSTableView tableView, [Protocolize (4)] NSDraggingInfo draggingInfo);
 	}
@@ -17718,7 +17718,7 @@ namespace XamCore.AppKit {
 		[Export ("importsGraphics")]
 		bool ImportsGraphics { get; set; }
 
-		[MountainLion, Export ("preferredMaxLayoutWidth")]
+		[Mac (10, 8), Export ("preferredMaxLayoutWidth")]
 		nfloat PreferredMaxLayoutWidth { get; set; }
 
 		[Mac (10,10)]
@@ -20130,53 +20130,53 @@ namespace XamCore.AppKit {
 		IntPtr WindowRef { get; }
 
 		// This one comes from the NSUserInterfaceRestoration category ('@interface NSWindow (NSUserInterfaceRestoration)')
-		[Lion, Export ("disableSnapshotRestoration")]
+		[Mac (10, 7), Export ("disableSnapshotRestoration")]
 		void DisableSnapshotRestoration ();
 
 		// This one comes from the NSUserInterfaceRestoration category ('@interface NSWindow (NSUserInterfaceRestoration)')
-		[Lion, Export ("enableSnapshotRestoration")]
+		[Mac (10, 7), Export ("enableSnapshotRestoration")]
 		void EnableSnapshotRestoration ();
 
 		// This one comes from the NSUserInterfaceRestoration category ('@interface NSWindow (NSUserInterfaceRestoration)')
-		[Lion, Export ("restorable")]
+		[Mac (10, 7), Export ("restorable")]
 		bool Restorable { [Bind ("isRestorable")]get; set; }
 
 		// This one comes from the NSUserInterfaceRestoration category ('@interface NSWindow (NSUserInterfaceRestoration)')
-		[Lion, Export ("restorationClass")]
+		[Mac (10, 7), Export ("restorationClass")]
 		Class RestorationClass { get; set; }
 
 		//Detected properties
-		[Lion, Export ("updateConstraintsIfNeeded")]
+		[Mac (10, 7), Export ("updateConstraintsIfNeeded")]
 		void UpdateConstraintsIfNeeded ();
 
-		[Lion, Export ("layoutIfNeeded")]
+		[Mac (10, 7), Export ("layoutIfNeeded")]
 		void LayoutIfNeeded ();
 
-		[Lion, Export ("setAnchorAttribute:forOrientation:")]
+		[Mac (10, 7), Export ("setAnchorAttribute:forOrientation:")]
 		void SetAnchorAttribute (NSLayoutAttribute layoutAttribute, NSLayoutConstraintOrientation forOrientation);
 
-		[Lion, Export ("visualizeConstraints:")]
+		[Mac (10, 7), Export ("visualizeConstraints:")]
 		void VisualizeConstraints ([NullAllowed] NSLayoutConstraint [] constraints);
 
-		[Lion, Export ("convertRectToScreen:")]
+		[Mac (10, 7), Export ("convertRectToScreen:")]
 		CGRect ConvertRectToScreen (CGRect aRect);
 
-		[Lion, Export ("convertRectFromScreen:")]
+		[Mac (10, 7), Export ("convertRectFromScreen:")]
 		CGRect ConvertRectFromScreen (CGRect aRect);
 
-		[Lion, Export ("convertRectToBacking:")]
+		[Mac (10, 7), Export ("convertRectToBacking:")]
 		CGRect ConvertRectToBacking (CGRect aRect);
 
-		[Lion, Export ("convertRectFromBacking:")]
+		[Mac (10, 7), Export ("convertRectFromBacking:")]
 		CGRect ConvertRectFromBacking (CGRect aRect);
 
-		[Lion, Export ("backingAlignedRect:options:")]
+		[Mac (10, 7), Export ("backingAlignedRect:options:")]
 		CGRect BackingAlignedRect (CGRect aRect, NSAlignmentOptions options);
 
-		[Lion, Export ("backingScaleFactor")]
+		[Mac (10, 7), Export ("backingScaleFactor")]
 		nfloat BackingScaleFactor { get; }
 
-		[Lion, Export ("toggleFullScreen:")]
+		[Mac (10, 7), Export ("toggleFullScreen:")]
 		void ToggleFullScreen ([NullAllowed] NSObject sender);
 
 		//Detected properties
@@ -20247,25 +20247,25 @@ namespace XamCore.AppKit {
 		[Field ("NSWindowWillEnterFullScreenNotification")]
 		NSString WillEnterFullScreenNotification { get; }
 
-		[Lion, Field ("NSWindowDidEnterFullScreenNotification")]
+		[Mac (10, 7), Field ("NSWindowDidEnterFullScreenNotification")]
 		NSString DidEnterFullScreenNotification { get; }
 
-		[Lion, Field ("NSWindowWillExitFullScreenNotification")]
+		[Mac (10, 7), Field ("NSWindowWillExitFullScreenNotification")]
 		NSString WillExitFullScreenNotification { get; }
 
-		[Lion, Field ("NSWindowDidExitFullScreenNotification")]
+		[Mac (10, 7), Field ("NSWindowDidExitFullScreenNotification")]
 		NSString DidExitFullScreenNotification { get; }
 
-		[Lion, Field ("NSWindowWillEnterVersionBrowserNotification")]
+		[Mac (10, 7), Field ("NSWindowWillEnterVersionBrowserNotification")]
 		NSString WillEnterVersionBrowserNotification { get; }
 
-		[Lion, Field ("NSWindowDidEnterVersionBrowserNotification")]
+		[Mac (10, 7), Field ("NSWindowDidEnterVersionBrowserNotification")]
 		NSString DidEnterVersionBrowserNotification { get; }
 
-		[Lion, Field ("NSWindowWillExitVersionBrowserNotification")]
+		[Mac (10, 7), Field ("NSWindowWillExitVersionBrowserNotification")]
 		NSString WillExitVersionBrowserNotification { get; }
 
-		[Lion, Field ("NSWindowDidExitVersionBrowserNotification")]
+		[Mac (10, 7), Field ("NSWindowDidExitVersionBrowserNotification")]
 		NSString DidExitVersionBrowserNotification { get; }
 #endif
 
@@ -20424,7 +20424,7 @@ namespace XamCore.AppKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	[Lion]
+	[Mac (10, 7)]
 	partial interface NSWindowRestoration {
 		[Static]
 		[Export ("restoreWindowWithIdentifier:state:completionHandler:")]
@@ -20600,61 +20600,61 @@ namespace XamCore.AppKit {
 		[Export ("windowDidEndLiveResize:"), EventArgs ("NSNotification")]
 		void DidEndLiveResize (NSNotification notification);
 
-		[Lion, Export ("windowWillEnterFullScreen:"), EventArgs ("NSNotification")]
+		[Mac (10, 7), Export ("windowWillEnterFullScreen:"), EventArgs ("NSNotification")]
 		void WillEnterFullScreen (NSNotification notification);
 
-		[Lion, Export ("windowDidEnterFullScreen:"), EventArgs ("NSNotification")]
+		[Mac (10, 7), Export ("windowDidEnterFullScreen:"), EventArgs ("NSNotification")]
 		void DidEnterFullScreen (NSNotification notification);
 
-		[Lion, Export ("windowWillExitFullScreen:"), EventArgs ("NSNotification")]
+		[Mac (10, 7), Export ("windowWillExitFullScreen:"), EventArgs ("NSNotification")]
 		void WillExitFullScreen (NSNotification  notification);
 		
-		[Lion, Export ("windowDidExitFullScreen:"), EventArgs ("NSNotification")]
+		[Mac (10, 7), Export ("windowDidExitFullScreen:"), EventArgs ("NSNotification")]
 		void DidExitFullScreen (NSNotification notification);
 
-		[Lion, Export ("windowDidFailToEnterFullScreen:"), EventArgs ("NSWindow")]
+		[Mac (10, 7), Export ("windowDidFailToEnterFullScreen:"), EventArgs ("NSWindow")]
 		void DidFailToEnterFullScreen (NSWindow window);
 
-		[Lion, Export ("windowDidFailToExitFullScreen:"), EventArgs ("NSWindow")]
+		[Mac (10, 7), Export ("windowDidFailToExitFullScreen:"), EventArgs ("NSWindow")]
 		void DidFailToExitFullScreen (NSWindow window);
 		
-		[Lion, Export ("window:willUseFullScreenContentSize:"), DelegateName ("NSWindowSize"), DefaultValueFromArgument ("proposedSize")]
+		[Mac (10, 7), Export ("window:willUseFullScreenContentSize:"), DelegateName ("NSWindowSize"), DefaultValueFromArgument ("proposedSize")]
 		CGSize WillUseFullScreenContentSize (NSWindow  window, CGSize proposedSize);
 		
-		[Lion, Export ("window:willUseFullScreenPresentationOptions:"), DelegateName ("NSWindowApplicationPresentationOptions"), DefaultValueFromArgument ("proposedOptions")]
+		[Mac (10, 7), Export ("window:willUseFullScreenPresentationOptions:"), DelegateName ("NSWindowApplicationPresentationOptions"), DefaultValueFromArgument ("proposedOptions")]
 		NSApplicationPresentationOptions WillUseFullScreenPresentationOptions (NSWindow  window, NSApplicationPresentationOptions proposedOptions);
 		
-		[Lion, Export ("customWindowsToEnterFullScreenForWindow:"), DelegateName ("NSWindowWindows"), DefaultValue (null)]
+		[Mac (10, 7), Export ("customWindowsToEnterFullScreenForWindow:"), DelegateName ("NSWindowWindows"), DefaultValue (null)]
 		NSWindow[] CustomWindowsToEnterFullScreen (NSWindow  window);
 
-		[Lion, Export ("customWindowsToExitFullScreenForWindow:"), DelegateName ("NSWindowWindows"), DefaultValue (null)]
+		[Mac (10, 7), Export ("customWindowsToExitFullScreenForWindow:"), DelegateName ("NSWindowWindows"), DefaultValue (null)]
 		NSWindow[] CustomWindowsToExitFullScreen (NSWindow  window);
 
-		[Lion, Export ("window:startCustomAnimationToEnterFullScreenWithDuration:"), EventArgs("NSWindowDuration")]
+		[Mac (10, 7), Export ("window:startCustomAnimationToEnterFullScreenWithDuration:"), EventArgs("NSWindowDuration")]
 		void StartCustomAnimationToEnterFullScreen (NSWindow  window, double duration);
 
-		[Lion, Export ("window:startCustomAnimationToExitFullScreenWithDuration:"), EventArgs("NSWindowDuration")]
+		[Mac (10, 7), Export ("window:startCustomAnimationToExitFullScreenWithDuration:"), EventArgs("NSWindowDuration")]
 		void StartCustomAnimationToExitFullScreen (NSWindow  window, double duration);
 
-		[Lion, Export ("window:willEncodeRestorableState:"), EventArgs ("NSWindowCoder")]
+		[Mac (10, 7), Export ("window:willEncodeRestorableState:"), EventArgs ("NSWindowCoder")]
 		void WillEncodeRestorableState(NSWindow window, NSCoder coder);
 		
-		[Lion, Export ("window:didDecodeRestorableState:"), EventArgs ("NSWindowCoder")]
+		[Mac (10, 7), Export ("window:didDecodeRestorableState:"), EventArgs ("NSWindowCoder")]
 		void DidDecodeRestorableState(NSWindow window, NSCoder coder);
 		
-		[Lion, Export ("window:willResizeForVersionBrowserWithMaxPreferredSize:maxAllowedSize:"), DelegateName ("NSWindowSizeSize"), DefaultValueFromArgument ("maxPreferredSize")]
+		[Mac (10, 7), Export ("window:willResizeForVersionBrowserWithMaxPreferredSize:maxAllowedSize:"), DelegateName ("NSWindowSizeSize"), DefaultValueFromArgument ("maxPreferredSize")]
 		CGSize WillResizeForVersionBrowser(NSWindow window, CGSize maxPreferredSize, CGSize maxAllowedSize);
 		
-		[Lion, Export ("windowWillEnterVersionBrowser:"), EventArgs ("NSNotification")]
+		[Mac (10, 7), Export ("windowWillEnterVersionBrowser:"), EventArgs ("NSNotification")]
 		void WillEnterVersionBrowser (NSNotification notification);
 		
-		[Lion, Export ("windowDidEnterVersionBrowser:"), EventArgs ("NSNotification")]
+		[Mac (10, 7), Export ("windowDidEnterVersionBrowser:"), EventArgs ("NSNotification")]
 		void DidEnterVersionBrowser (NSNotification notification);
 		
-		[Lion, Export ("windowWillExitVersionBrowser:"), EventArgs ("NSNotification")]
+		[Mac (10, 7), Export ("windowWillExitVersionBrowser:"), EventArgs ("NSNotification")]
 		void WillExitVersionBrowser (NSNotification notification);
 		
-		[Lion, Export ("windowDidExitVersionBrowser:"), EventArgs ("NSNotification")]
+		[Mac (10, 7), Export ("windowDidExitVersionBrowser:"), EventArgs ("NSNotification")]
 		void DidExitVersionBrowser (NSNotification notification);
 
 		[Availability (Introduced = Platform.Mac_10_7)]
@@ -20847,11 +20847,11 @@ namespace XamCore.AppKit {
 		[Export ("runningApplications"), ThreadSafe]
 		NSRunningApplication [] RunningApplications { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("frontmostApplication")]
 		NSRunningApplication FrontmostApplication { get; }
 
-		[Lion]
+		[Mac (10, 7)]
 		[Export ("menuBarOwningApplication")]
 		NSRunningApplication MenuBarOwningApplication { get; }
 
@@ -21325,10 +21325,10 @@ namespace XamCore.AppKit {
 
 	// Start of NSSharingService.h
 	
-	[MountainLion]
+	[Mac (10, 8)]
 	delegate void NSSharingServiceHandler ();
 	
-	[MountainLion]
+	[Mac (10, 8)]
 	[BaseType (typeof (NSObject),
 	           Delegates=new string [] {"WeakDelegate"},
 	Events=new Type [] { typeof (NSSharingServiceDelegate) })]
@@ -21446,7 +21446,7 @@ namespace XamCore.AppKit {
 		NSString NSSharingServiceNameCloudSharing { get; }
 	}
 	
-	[MountainLion]
+	[Mac (10, 8)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -21495,7 +21495,7 @@ namespace XamCore.AppKit {
 		void Stopped (NSSharingService sharingService, CKShare share);
 	}
 
-	[MountainLion]
+	[Mac (10, 8)]
 	[BaseType (typeof (NSObject),
 	           Delegates=new string [] {"WeakDelegate"},
 	Events=new Type [] { typeof (NSSharingServicePickerDelegate) })]
@@ -21517,7 +21517,7 @@ namespace XamCore.AppKit {
 
 	interface INSSharingServicePickerDelegate {}
 
-	[MountainLion]
+	[Mac (10, 8)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -21733,30 +21733,30 @@ namespace XamCore.AppKit {
 	}
 
 	partial interface NSCollectionViewDelegate {
-		[Lion, Export ("collectionView:pasteboardWriterForItemAtIndex:")]
+		[Mac (10, 7), Export ("collectionView:pasteboardWriterForItemAtIndex:")]
 #if XAMCORE_2_0
 		INSPasteboardWriting PasteboardWriterForItem (NSCollectionView collectionView, nuint index);
 #else
 		NSPasteboardWriting PasteboardWriterForItemAtIndex (NSCollectionView collectionView, nuint index);
 #endif
 
-		[Lion, Export ("collectionView:updateDraggingItemsForDrag:")]
+		[Mac (10, 7), Export ("collectionView:updateDraggingItemsForDrag:")]
 		void UpdateDraggingItemsForDrag (NSCollectionView collectionView, [Protocolize (4)] NSDraggingInfo draggingInfo);
 
-		[Lion, Export ("collectionView:draggingSession:willBeginAtPoint:forItemsAtIndexes:")]
+		[Mac (10, 7), Export ("collectionView:draggingSession:willBeginAtPoint:forItemsAtIndexes:")]
 		void DraggingSessionWillBegin (NSCollectionView collectionView, NSDraggingSession draggingSession,
 			CGPoint screenPoint, NSIndexSet indexes);
 
-		[Lion, Export ("collectionView:draggingSession:endedAtPoint:dragOperation:")]
+		[Mac (10, 7), Export ("collectionView:draggingSession:endedAtPoint:dragOperation:")]
 		void DraggingSessionEnded (NSCollectionView collectionView, NSDraggingSession draggingSession,
 			CGPoint screenPoint, NSDragOperation dragOperation);
 	}
 
 	partial interface NSColor {
-		[Lion, Static, Export ("colorWithGenericGamma22White:alpha:")]
+		[Mac (10, 7), Static, Export ("colorWithGenericGamma22White:alpha:")]
 		NSColor FromGamma22White (nfloat white, nfloat alpha);
 
-		[Lion, Static, Export ("colorWithSRGBRed:green:blue:alpha:")]
+		[Mac (10, 7), Static, Export ("colorWithSRGBRed:green:blue:alpha:")]
 		NSColor FromSrgb (nfloat red, nfloat green, nfloat blue, nfloat alpha);
 
 		[Notification, Field ("NSSystemColorsDidChangeNotification")]
@@ -21764,24 +21764,24 @@ namespace XamCore.AppKit {
 	}
 
 	partial interface NSDocumentController {
-		[Lion, Export ("duplicateDocumentWithContentsOfURL:copying:displayName:error:")]
+		[Mac (10, 7), Export ("duplicateDocumentWithContentsOfURL:copying:displayName:error:")]
 		NSDocument DuplicateDocumentWithContentsOfUrl (NSUrl url, bool duplicateByCopying,
 			[NullAllowed] string displayName, out NSError error);
 
 #if !XAMCORE_2_0
-		[Lion, Export ("openDocumentWithContentsOfURL:display:completionHandler:")]
+		[Mac (10, 7), Export ("openDocumentWithContentsOfURL:display:completionHandler:")]
 		[Obsolete ("Use 'OpenDocument' instead.")]
 		[Sealed]
 		void OpenDocumentWithContentsOfUrl (NSUrl url, bool displayDocument,
 			OpenDocumentCompletionHandler completionHandler);
 #endif
 
-		[Lion, Export ("reopenDocumentForURL:withContentsOfURL:display:completionHandler:")]
+		[Mac (10, 7), Export ("reopenDocumentForURL:withContentsOfURL:display:completionHandler:")]
 		void ReopenDocumentForUrl ([NullAllowed] NSUrl url, NSUrl contentsUrl,
 			bool displayDocument, OpenDocumentCompletionHandler completionHandler);
 	}
 
-	[Lion, Model]
+	[Mac (10, 7), Model]
 	interface NSTextLayoutOrientationProvider {
 		[Export ("layoutOrientation")]
 		NSTextLayoutOrientation LayoutOrientation { get; }
@@ -21793,7 +21793,7 @@ namespace XamCore.AppKit {
 		//   ./AppKit/NSLayoutManager.g.cs(1015,44): error CS1503: Argument `#1'
 		//   cannot convert `ushort[]' expression to type `MonoMac.Foundation.NSObject[]'
 		//
-		// [Lion, Export ("showCGGlyphs:positions:count:font:matrix:attributes:inContext:")]
+		// [Mac (10, 7), Export ("showCGGlyphs:positions:count:font:matrix:attributes:inContext:")]
 		// void ShowCGGlyphs (CGGlyph [] glyphs, CGPoint [] positions, uint glyphCount, NSFont font,
 		// 	NSAffineTransform textMatrix, NSDictionary attributes, NSGraphicsContext graphicsContext);
 	}
@@ -21852,39 +21852,35 @@ namespace XamCore.AppKit {
 		NSString ItemDidCollapseNotification { get; }
 
 		// - (void)moveItemAtIndex:(NSInteger)fromIndex inParent:(id)oldParent toIndex:(NSInteger)toIndex inParent:(id)newParent NS_AVAILABLE_MAC(10_7);
-		[Lion, Export ("moveItemAtIndex:inParent:toIndex:inParent:")]
+		[Mac (10, 7), Export ("moveItemAtIndex:inParent:toIndex:inParent:")]
 		void MoveItem (nint fromIndex, [NullAllowed] NSObject oldParent, nint toIndex, [NullAllowed] NSObject newParent);
 
 #if !XAMCORE_2_0
 		// - (void)insertItemsAtIndexes:(NSIndexSet *)indexes inParent:(id)parent withAnimation:(NSTableViewAnimationOptions)animationOptions NS_AVAILABLE_MAC(10_7);
-		[Lion, Export ("insertItemsAtIndexes:inParent:withAnimation:")]
+		[Mac (10, 7), Export ("insertItemsAtIndexes:inParent:withAnimation:")]
 		void InsertItems (NSIndexSet indexes, [NullAllowed] NSObject parent, NSTableViewAnimationOptions animationOptions);
 
 		// - (void)removeItemsAtIndexes:(NSIndexSet *)indexes inParent:(id)parent withAnimation:(NSTableViewAnimationOptions)animationOptions NS_AVAILABLE_MAC(10_7);
-		[Lion, Export ("removeItemsAtIndexes:inParent:withAnimation:")]
+		[Mac (10, 7), Export ("removeItemsAtIndexes:inParent:withAnimation:")]
 		void RemoveItems (NSIndexSet indexes, [NullAllowed] NSObject parent, NSTableViewAnimationOptions animationOptions);
 
 		// - (void)insertRowsAtIndexes:(NSIndexSet *)indexes withAnimation:(NSTableViewAnimationOptions)animationOptions UNAVAILABLE_ATTRIBUTE;
-		[Availability (Unavailable = Platform.iOS_Version | Platform.Mac_Version)]
 		[Export ("insertRowsAtIndexes:withAnimation:")]
 		void InsertRows (NSIndexSet indexes, NSTableViewAnimationOptions animationOptions);
 
 		// - (void)removeRowsAtIndexes:(NSIndexSet *)indexes withAnimation:(NSTableViewAnimationOptions)animationOptions UNAVAILABLE_ATTRIBUTE;
-		[Availability (Unavailable = Platform.iOS_Version | Platform.Mac_Version)]
 		[Export ("removeRowsAtIndexes:withAnimation:")]
 		void RemoveRows (NSIndexSet indexes, NSTableViewAnimationOptions animationOptions);
 #else
-		[Lion, Export ("insertItemsAtIndexes:inParent:withAnimation:")]
+		[Mac (10, 7), Export ("insertItemsAtIndexes:inParent:withAnimation:")]
 		void InsertItems (NSIndexSet indexes, [NullAllowed] NSObject parent, NSTableViewAnimation animationOptions);
 
-		[Lion, Export ("removeItemsAtIndexes:inParent:withAnimation:")]
+		[Mac (10, 7), Export ("removeItemsAtIndexes:inParent:withAnimation:")]
 		void RemoveItems (NSIndexSet indexes, [NullAllowed] NSObject parent, NSTableViewAnimation animationOptions);
 
-		[Availability (Unavailable = Platform.iOS_Version | Platform.Mac_Version)]
 		[Export ("insertRowsAtIndexes:withAnimation:")]
 		void InsertRows (NSIndexSet indexes, NSTableViewAnimation animationOptions);
 
-		[Availability (Unavailable = Platform.iOS_Version | Platform.Mac_Version)]
 		[Export ("removeRowsAtIndexes:withAnimation:")]
 		void RemoveRows (NSIndexSet indexes, NSTableViewAnimation animationOptions);
 #endif
@@ -21896,7 +21892,7 @@ namespace XamCore.AppKit {
 
 	partial interface NSOutlineViewDataSource {
 		// - (id <NSPasteboardWriting>)outlineView:(NSOutlineView *)outlineView pasteboardWriterForItem:(id)item NS_AVAILABLE_MAC(10_7);
-		[Lion, Export ("outlineView:pasteboardWriterForItem:")]
+		[Mac (10, 7), Export ("outlineView:pasteboardWriterForItem:")]
 #if XAMCORE_2_0
 		INSPasteboardWriting PasteboardWriterForItem (NSOutlineView outlineView, NSObject item);
 #else
@@ -21904,15 +21900,15 @@ namespace XamCore.AppKit {
 #endif
 
 		// - (void)outlineView:(NSOutlineView *)outlineView draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forItems:(NSArray *)draggedItems NS_AVAILABLE_MAC(10_7);
-		[Lion, Export ("outlineView:draggingSession:willBeginAtPoint:forItems:")]
+		[Mac (10, 7), Export ("outlineView:draggingSession:willBeginAtPoint:forItems:")]
 		void DraggingSessionWillBegin (NSOutlineView outlineView, NSDraggingSession session, CGPoint screenPoint, NSArray draggedItems);
 
 		// - (void)outlineView:(NSOutlineView *)outlineView draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint operation:(NSDragOperation)operation NS_AVAILABLE_MAC(10_7);
-		[Lion, Export ("outlineView:draggingSession:endedAtPoint:operation:")]
+		[Mac (10, 7), Export ("outlineView:draggingSession:endedAtPoint:operation:")]
 		void DraggingSessionEnded (NSOutlineView outlineView, NSDraggingSession session, CGPoint screenPoint, NSDragOperation operation);
 
 		// - (void)outlineView:(NSOutlineView *)outlineView updateDraggingItemsForDrag:(id <NSDraggingInfo>)draggingInfo NS_AVAILABLE_MAC(10_7);
-		[Lion, Export ("outlineView:updateDraggingItemsForDrag:")]
+		[Mac (10, 7), Export ("outlineView:updateDraggingItemsForDrag:")]
 		void UpdateDraggingItemsForDrag (NSOutlineView outlineView, [Protocolize (4)] NSDraggingInfo draggingInfo);
 	}
 
@@ -22013,35 +22009,35 @@ namespace XamCore.AppKit {
 		[Notification]
 		NSString WillEnterFullScreenNotification { get; }
 
-		[Lion, Field ("NSWindowDidEnterFullScreenNotification")]
+		[Mac (10, 7), Field ("NSWindowDidEnterFullScreenNotification")]
 		[Notification]
 		NSString DidEnterFullScreenNotification { get; }
 
-		[Lion, Field ("NSWindowWillExitFullScreenNotification")]
+		[Mac (10, 7), Field ("NSWindowWillExitFullScreenNotification")]
 		[Notification]
 		NSString WillExitFullScreenNotification { get; }
 
-		[Lion, Field ("NSWindowDidExitFullScreenNotification")]
+		[Mac (10, 7), Field ("NSWindowDidExitFullScreenNotification")]
 		[Notification]
 		NSString DidExitFullScreenNotification { get; }
 
-		[Lion, Field ("NSWindowWillEnterVersionBrowserNotification")]
+		[Mac (10, 7), Field ("NSWindowWillEnterVersionBrowserNotification")]
 		[Notification]
 		NSString WillEnterVersionBrowserNotification { get; }
 
-		[Lion, Field ("NSWindowDidEnterVersionBrowserNotification")]
+		[Mac (10, 7), Field ("NSWindowDidEnterVersionBrowserNotification")]
 		[Notification]
 		NSString DidEnterVersionBrowserNotification { get; }
 
-		[Lion, Field ("NSWindowWillExitVersionBrowserNotification")]
+		[Mac (10, 7), Field ("NSWindowWillExitVersionBrowserNotification")]
 		[Notification]
 		NSString WillExitVersionBrowserNotification { get; }
 
-		[Lion, Field ("NSWindowDidExitVersionBrowserNotification")]
+		[Mac (10, 7), Field ("NSWindowDidExitVersionBrowserNotification")]
 		[Notification]
 		NSString DidExitVersionBrowserNotification { get; }
 
-		[Lion, Field ("NSWindowDidChangeBackingPropertiesNotification")]
+		[Mac (10, 7), Field ("NSWindowDidChangeBackingPropertiesNotification")]
 		[Notification (typeof (NSWindowBackingPropertiesEventArgs))]
 		NSString DidChangeBackingPropertiesNotification { get; }
 
@@ -22109,84 +22105,84 @@ namespace XamCore.AppKit {
 	}
 
 	partial interface NSPrintOperation {
-		[Lion, Export ("preferredRenderingQuality")]
+		[Mac (10, 7), Export ("preferredRenderingQuality")]
 		NSPrintRenderingQuality PreferredRenderingQuality { get; }
 	}
 
 	[Category, BaseType (typeof (NSResponder))]
 	partial interface NSControlEditingSupport {
-		[Lion, Export ("validateProposedFirstResponder:forEvent:")]
+		[Mac (10, 7), Export ("validateProposedFirstResponder:forEvent:")]
 		bool ValidateProposedFirstResponder (NSResponder responder, [NullAllowed] NSEvent forEvent);
 	}
 
 	partial interface NSResponder {
-		[Lion, Export ("wantsScrollEventsForSwipeTrackingOnAxis:")]
+		[Mac (10, 7), Export ("wantsScrollEventsForSwipeTrackingOnAxis:")]
 		bool WantsScrollEventsForSwipeTrackingOnAxis (NSEventGestureAxis axis);
 
-		[Lion, Export ("supplementalTargetForAction:sender:")]
+		[Mac (10, 7), Export ("supplementalTargetForAction:sender:")]
 		NSObject SupplementalTargetForAction (Selector action, [NullAllowed] NSObject sender);
 
-		[MountainLion, Export ("smartMagnifyWithEvent:")]
+		[Mac (10, 8), Export ("smartMagnifyWithEvent:")]
 		void SmartMagnify (NSEvent withEvent);
 
-		[MountainLion, Export ("quickLookWithEvent:")]
+		[Mac (10, 8), Export ("quickLookWithEvent:")]
 		void QuickLook (NSEvent withEvent);
 	}
 
 	[Category, BaseType (typeof (NSResponder))]
 	partial interface NSStandardKeyBindingMethods {
-		[MountainLion, Export ("quickLookPreviewItems:")]
+		[Mac (10, 8), Export ("quickLookPreviewItems:")]
 		void QuickLookPreviewItems (NSObject sender);
 	}
 
 	[Category, BaseType (typeof (NSView))]
 	partial interface NSRulerMarkerClientViewDelegation {
-		[Lion, Export ("rulerView:locationForPoint:")]
+		[Mac (10, 7), Export ("rulerView:locationForPoint:")]
 		nfloat RulerViewLocation (NSRulerView ruler, CGPoint locationForPoint);
 
-		[Lion, Export ("rulerView:pointForLocation:")]
+		[Mac (10, 7), Export ("rulerView:pointForLocation:")]
 		CGPoint RulerViewPoint (NSRulerView ruler, nfloat pointForLocation);
 	}
 
 	[Category, BaseType (typeof (NSResponder))]
 	partial interface NSTextFinderSupport {
-		[Lion, Export ("performTextFinderAction:")]
+		[Mac (10, 7), Export ("performTextFinderAction:")]
 		void PerformTextFinderAction ([NullAllowed] NSObject sender);
 	}
 
 	partial interface NSRunningApplication {
-		[Lion, Static, Export ("terminateAutomaticallyTerminableApplications")]
+		[Mac (10, 7), Static, Export ("terminateAutomaticallyTerminableApplications")]
 		void TerminateAutomaticallyTerminableApplications ();
 	}
 
 	partial interface NSPasteboard {
-		[Lion, Field ("NSPasteboardTypeTextFinderOptions")]
+		[Mac (10, 7), Field ("NSPasteboardTypeTextFinderOptions")]
 		NSString PasteboardTypeTextFinderOptions { get; }
 	}
 
 	delegate void NSSpellCheckerShowCorrectionIndicatorOfTypeHandler (string acceptedString);
 
 	partial interface NSSpellChecker {
-		[Lion, Export ("correctionForWordRange:inString:language:inSpellDocumentWithTag:")]
+		[Mac (10, 7), Export ("correctionForWordRange:inString:language:inSpellDocumentWithTag:")]
 		string GetCorrection (NSRange forWordRange, string inString, string language, nint inSpellDocumentWithTag);
 
-		[Lion, Export ("languageForWordRange:inString:orthography:")]
+		[Mac (10, 7), Export ("languageForWordRange:inString:orthography:")]
 		string GetLanguage (NSRange forWordRange, string inString, NSOrthography orthography);
 
-		[Lion, Export ("recordResponse:toCorrection:forWord:language:inSpellDocumentWithTag:")]
+		[Mac (10, 7), Export ("recordResponse:toCorrection:forWord:language:inSpellDocumentWithTag:")]
 		void RecordResponse (NSCorrectionResponse response, string toCorrection, string forWord, string language, nint inSpellDocumentWithTag);
 
-		[Lion, Export ("dismissCorrectionIndicatorForView:")]
+		[Mac (10, 7), Export ("dismissCorrectionIndicatorForView:")]
 		void DismissCorrectionIndicator (NSView forView);
 
-		[Lion, Export ("showCorrectionIndicatorOfType:primaryString:alternativeStrings:forStringInRect:view:completionHandler:")]
+		[Mac (10, 7), Export ("showCorrectionIndicatorOfType:primaryString:alternativeStrings:forStringInRect:view:completionHandler:")]
 		void ShowCorrectionIndicatorOfType (NSCorrectionIndicatorType type, string primaryString, string [] alternativeStrings,
 			CGRect forStringInRect, NSRulerView view, NSSpellCheckerShowCorrectionIndicatorOfTypeHandler completionHandler);
 
-		[Lion, Static, Export ("isAutomaticTextReplacementEnabled")]
+		[Mac (10, 7), Static, Export ("isAutomaticTextReplacementEnabled")]
 		bool IsAutomaticTextReplacementEnabled { get; }
 
-		[Lion, Static, Export ("isAutomaticSpellingCorrectionEnabled")]
+		[Mac (10, 7), Static, Export ("isAutomaticSpellingCorrectionEnabled")]
 		bool IsAutomaticSpellingCorrectionEnabled { get; }
 
 		[Field ("NSTextCheckingOrthographyKey")]
@@ -22213,13 +22209,13 @@ namespace XamCore.AppKit {
 		[Field ("NSTextCheckingDocumentAuthorKey")]
 		NSString TextCheckingDocumentAuthorKey { get; }
 
-		[Lion, Field ("NSTextCheckingRegularExpressionsKey")]
+		[Mac (10, 7), Field ("NSTextCheckingRegularExpressionsKey")]
 		NSString TextCheckingRegularExpressionsKey { get; }
 
-		[Lion, Notification, Field ("NSSpellCheckerDidChangeAutomaticSpellingCorrectionNotification")]
+		[Mac (10, 7), Notification, Field ("NSSpellCheckerDidChangeAutomaticSpellingCorrectionNotification")]
 		NSString DidChangeAutomaticSpellingCorrectionNotification { get; }
 
-		[Lion, Notification, Field ("NSSpellCheckerDidChangeAutomaticTextReplacementNotification")]
+		[Mac (10, 7), Notification, Field ("NSSpellCheckerDidChangeAutomaticTextReplacementNotification")]
 		NSString DidChangeAutomaticTextReplacementNotification { get; }
 
 		[Mac (10, 12)]
@@ -22257,25 +22253,25 @@ namespace XamCore.AppKit {
 	}
 
 	partial interface NSTextView : NSTextLayoutOrientationProvider {
-		[Lion, Export ("setLayoutOrientation:")]
+		[Mac (10, 7), Export ("setLayoutOrientation:")]
 		void SetLayoutOrientation (NSTextLayoutOrientation theOrientation);
 
-		[Lion, Export ("changeLayoutOrientation:")]
+		[Mac (10, 7), Export ("changeLayoutOrientation:")]
 		void ChangeLayoutOrientation (NSObject sender);
 
-		[Lion, Export ("usesInspectorBar")]
+		[Mac (10, 7), Export ("usesInspectorBar")]
 		bool UsesInspectorBar { get; set; }
 
-		[Lion, Export ("usesFindBar")]
+		[Mac (10, 7), Export ("usesFindBar")]
 		bool UsesFindBar { get; set; }
 
-		[Lion, Export ("incrementalSearchingEnabled")]
+		[Mac (10, 7), Export ("incrementalSearchingEnabled")]
 		bool IsIncrementalSearchingEnabled {[Bind ("isIncrementalSearchingEnabled")]get; set; }
 
-		[Lion, Export ("quickLookPreviewableItemsInRanges:")]
+		[Mac (10, 7), Export ("quickLookPreviewableItemsInRanges:")]
 		NSArray QuickLookPreviewableItemsInRanges (NSArray ranges);
 
-		[Lion, Export ("updateQuickLookPreviewPanel")]
+		[Mac (10, 7), Export ("updateQuickLookPreviewPanel")]
 		void UpdateQuickLookPreviewPanel ();
 
 		[Notification (typeof (NSTextViewWillChangeNotifyingTextViewEventArgs))]
@@ -22292,13 +22288,13 @@ namespace XamCore.AppKit {
 
 	partial interface NSView {
 
-		[MountainLion, Export ("wantsUpdateLayer")]
+		[Mac (10, 8), Export ("wantsUpdateLayer")]
 		bool WantsUpdateLayer { get; }
 
-		[MountainLion, Export ("updateLayer")]
+		[Mac (10, 8), Export ("updateLayer")]
 		void UpdateLayer ();
 
-		[MountainLion, Export ("rectForSmartMagnificationAtPoint:inRect:")]
+		[Mac (10, 8), Export ("rectForSmartMagnificationAtPoint:inRect:")]
 		CGRect RectForSmartMagnificationAtPoint (CGPoint atPoint, CGRect inRect);
 	}
 
@@ -22306,7 +22302,7 @@ namespace XamCore.AppKit {
 	[Category, BaseType (typeof (NSApplication))]
 	partial interface NSRemoteNotifications_NSApplication {
 
-		[MountainLion, Field ("NSApplicationLaunchUserNotificationKey", "AppKit")]
+		[Mac (10, 8), Field ("NSApplicationLaunchUserNotificationKey", "AppKit")]
 		NSString NSApplicationLaunchUserNotificationKey { get; }
 	}
 #endif
@@ -22330,34 +22326,34 @@ namespace XamCore.AppKit {
 		[Field ("NSControlTextDidChangeNotification")]
 		NSString TextDidChangeNotification { get; }
 
-		[MountainLion, Export ("allowsExpansionToolTips")]
+		[Mac (10, 8), Export ("allowsExpansionToolTips")]
 		bool AllowsExpansionToolTips { get; set; }
 	}
 
 	partial interface NSMatrix {
 
-		[MountainLion, Export ("autorecalculatesCellSize")]
+		[Mac (10, 8), Export ("autorecalculatesCellSize")]
 		bool AutoRecalculatesCellSize { get; set; }
 	}
 
 	partial interface NSForm {
 
-		[MountainLion, Export ("preferredTextFieldWidth")]
+		[Mac (10, 8), Export ("preferredTextFieldWidth")]
 		nfloat PreferredTextFieldWidth { get; set; }
 	}
 
 	partial interface NSFormCell {
 
-		[MountainLion, Export ("preferredTextFieldWidth")]
+		[Mac (10, 8), Export ("preferredTextFieldWidth")]
 		nfloat PreferredTextFieldWidth { get; set; }
 	}
 
 	partial interface NSColor {
 
-		[MountainLion, Static, Export ("underPageBackgroundColor")]
+		[Mac (10, 8), Static, Export ("underPageBackgroundColor")]
 		NSColor UnderPageBackgroundColor { get; }
 
-		[MountainLion, Static, Export ("colorWithCGColor:")]
+		[Mac (10, 8), Static, Export ("colorWithCGColor:")]
 		NSColor FromCGColor (CGColor cgColor);
 	}
 
@@ -22365,10 +22361,10 @@ namespace XamCore.AppKit {
 
 	partial interface NSCustomImageRep {
 
-		[MountainLion, Export ("initWithSize:flipped:drawingHandler:")]
+		[Mac (10, 8), Export ("initWithSize:flipped:drawingHandler:")]
 		IntPtr Constructor (CGSize size, bool flipped, NSCustomImageRepDrawingHandler drawingHandler);
 
-		[MountainLion, Export ("drawingHandler")]
+		[Mac (10, 8), Export ("drawingHandler")]
 		NSCustomImageRepDrawingHandler DrawingHandler { get; }
 	}
 
@@ -22381,58 +22377,58 @@ namespace XamCore.AppKit {
 
 	partial interface NSDocument {
 
-		[MountainLion, Export ("draft")]
+		[Mac (10, 8), Export ("draft")]
 		bool IsDraft { [Bind ("isDraft")] get; set; }
 
-		[MountainLion, Export ("backupFileURL")]
+		[Mac (10, 8), Export ("backupFileURL")]
 		NSUrl BackupFileUrl { get; }
 
-		[MountainLion, Export ("browseDocumentVersions:")]
+		[Mac (10, 8), Export ("browseDocumentVersions:")]
 		void BrowseDocumentVersions (NSObject sender);
 
-		[MountainLion, Static, Export ("autosavesDrafts")]
+		[Mac (10, 8), Static, Export ("autosavesDrafts")]
 		bool AutoSavesDrafts { get; }
 
-		[MountainLion, Export ("renameDocument:")]
+		[Mac (10, 8), Export ("renameDocument:")]
 		void RenameDocument (NSObject sender);
 
-		[MountainLion, Export ("moveDocumentToUbiquityContainer:")]
+		[Mac (10, 8), Export ("moveDocumentToUbiquityContainer:")]
 		void MoveDocumentToUbiquityContainer (NSObject sender);
 
-		[MountainLion, Export ("moveDocument:")]
+		[Mac (10, 8), Export ("moveDocument:")]
 		void MoveDocument (NSObject sender);
 
-		[MountainLion, Export ("moveDocumentWithCompletionHandler:")]
+		[Mac (10, 8), Export ("moveDocumentWithCompletionHandler:")]
 		void MoveDocumentWithCompletionHandler (NSDocumentMoveCompletionHandler completionHandler);
 
-		[MountainLion, Export ("moveToURL:completionHandler:")]
+		[Mac (10, 8), Export ("moveToURL:completionHandler:")]
 		void MoveToUrl (NSUrl url, NSDocumentMoveToUrlCompletionHandler completionHandler);
 
-		[MountainLion, Export ("lockDocument:")]
+		[Mac (10, 8), Export ("lockDocument:")]
 		void LockDocument (NSObject sender);
 
-		[MountainLion, Export ("unlockDocument:")]
+		[Mac (10, 8), Export ("unlockDocument:")]
 		void UnlockDocument (NSObject sender);
 
-		[MountainLion, Export ("lockDocumentWithCompletionHandler:")]
+		[Mac (10, 8), Export ("lockDocumentWithCompletionHandler:")]
 		void LockDocumentWithCompletionHandler (NSDocumentLockDocumentCompletionHandler completionHandler);
 
-		[MountainLion, Export ("lockWithCompletionHandler:")]
+		[Mac (10, 8), Export ("lockWithCompletionHandler:")]
 		void LockWithCompletionHandler (NSDocumentLockCompletionHandler completionHandler);
 
-		[MountainLion, Export ("unlockDocumentWithCompletionHandler:")]
+		[Mac (10, 8), Export ("unlockDocumentWithCompletionHandler:")]
 		void UnlockDocumentWithCompletionHandler (NSDocumentUnlockDocumentCompletionHandler completionHandler);
 
-		[MountainLion, Export ("unlockWithCompletionHandler:")]
+		[Mac (10, 8), Export ("unlockWithCompletionHandler:")]
 		void UnlockWithCompletionHandler (NSDocumentUnlockCompletionHandler completionHandler);
 
-		[MountainLion, Export ("isLocked")]
+		[Mac (10, 8), Export ("isLocked")]
 		bool IsLocked { get; }
 
-		[MountainLion, Export ("defaultDraftName")]
+		[Mac (10, 8), Export ("defaultDraftName")]
 		string DefaultDraftName { get; }
 
-		[MountainLion, Static, Export ("usesUbiquitousStorage")]
+		[Mac (10, 8), Static, Export ("usesUbiquitousStorage")]
 		bool UsesUbiquitousStorage { get; }
 
 		[Mac (10,13)]
@@ -22445,10 +22441,10 @@ namespace XamCore.AppKit {
 
 	partial interface NSDocumentController {
 
-		[MountainLion, Export ("beginOpenPanelWithCompletionHandler:")]
+		[Mac (10, 8), Export ("beginOpenPanelWithCompletionHandler:")]
 		void BeginOpenPanelWithCompletionHandler (NSDocumentControllerOpenPanelWithCompletionHandler completionHandler);
 
-		[MountainLion, Export ("beginOpenPanel:forTypes:completionHandler:")]
+		[Mac (10, 8), Export ("beginOpenPanel:forTypes:completionHandler:")]
 		void BeginOpenPanel (NSOpenPanel openPanel, NSArray inTypes, NSDocumentControllerOpenPanelResultHandler completionHandler);
 
 		[Mac (10, 13)]
@@ -22462,7 +22458,7 @@ namespace XamCore.AppKit {
 
 	partial interface NSImage {
 
-		[MountainLion, Static, Export ("imageWithSize:flipped:drawingHandler:")]
+		[Mac (10, 8), Static, Export ("imageWithSize:flipped:drawingHandler:")]
 #if XAMCORE_2_0
 		NSImage ImageWithSize (CGSize size, bool flipped, NSCustomImageRepDrawingHandler drawingHandler);
 #else
@@ -22472,7 +22468,7 @@ namespace XamCore.AppKit {
 
 	partial interface NSNib {
 
-		[MountainLion, Export ("initWithNibData:bundle:")]
+		[Mac (10, 8), Export ("initWithNibData:bundle:")]
 		IntPtr Constructor (NSData nibData, NSBundle bundle);
 	}
 
@@ -22491,62 +22487,62 @@ namespace XamCore.AppKit {
 	[Category, BaseType (typeof (NSSegmentedCell))]
 	partial interface NSSegmentBackgroundStyle_NSSegmentedCell {
 
-		[MountainLion, Field ("NSSharingServiceNamePostOnFacebook")]
+		[Mac (10, 8), Field ("NSSharingServiceNamePostOnFacebook")]
 		NSString SharingServiceNamePostOnFacebook { get; }
 
-		[MountainLion, Field ("NSSharingServiceNamePostOnTwitter")]
+		[Mac (10, 8), Field ("NSSharingServiceNamePostOnTwitter")]
 		NSString SharingServiceNamePostOnTwitter { get; }
 
-		[MountainLion, Field ("NSSharingServiceNamePostOnSinaWeibo")]
+		[Mac (10, 8), Field ("NSSharingServiceNamePostOnSinaWeibo")]
 		NSString SharingServiceNamePostOnSinaWeibo { get; }
 
-		[MountainLion, Field ("NSSharingServiceNameComposeEmail")]
+		[Mac (10, 8), Field ("NSSharingServiceNameComposeEmail")]
 		NSString SharingServiceNameComposeEmail { get; }
 
-		[MountainLion, Field ("NSSharingServiceNameComposeMessage")]
+		[Mac (10, 8), Field ("NSSharingServiceNameComposeMessage")]
 		NSString SharingServiceNameComposeMessage { get; }
 
-		[MountainLion, Field ("NSSharingServiceNameSendViaAirDrop")]
+		[Mac (10, 8), Field ("NSSharingServiceNameSendViaAirDrop")]
 		NSString SharingServiceNameSendViaAirDrop { get; }
 
-		[MountainLion, Field ("NSSharingServiceNameAddToSafariReadingList")]
+		[Mac (10, 8), Field ("NSSharingServiceNameAddToSafariReadingList")]
 		NSString SharingServiceNameAddToSafariReadingList { get; }
 
-		[MountainLion, Field ("NSSharingServiceNameAddToIPhoto")]
+		[Mac (10, 8), Field ("NSSharingServiceNameAddToIPhoto")]
 		NSString SharingServiceNameAddToIPhoto { get; }
 
-		[MountainLion, Field ("NSSharingServiceNameAddToAperture")]
+		[Mac (10, 8), Field ("NSSharingServiceNameAddToAperture")]
 		NSString SharingServiceNameAddToAperture { get; }
 
-		[MountainLion, Field ("NSSharingServiceNameUseAsTwitterProfileImage")]
+		[Mac (10, 8), Field ("NSSharingServiceNameUseAsTwitterProfileImage")]
 		NSString SharingServiceNameUseAsTwitterProfileImage { get; }
 
-		[MountainLion, Field ("NSSharingServiceNameUseAsDesktopPicture")]
+		[Mac (10, 8), Field ("NSSharingServiceNameUseAsDesktopPicture")]
 		NSString SharingServiceNameUseAsDesktopPicture { get; }
 
-		[MountainLion, Field ("NSSharingServiceNamePostImageOnFlickr")]
+		[Mac (10, 8), Field ("NSSharingServiceNamePostImageOnFlickr")]
 		NSString SharingServiceNamePostImageOnFlickr { get; }
 
-		[MountainLion, Field ("NSSharingServiceNamePostVideoOnVimeo")]
+		[Mac (10, 8), Field ("NSSharingServiceNamePostVideoOnVimeo")]
 		NSString SharingServiceNamePostVideoOnVimeo { get; }
 
-		[MountainLion, Field ("NSSharingServiceNamePostVideoOnYouku")]
+		[Mac (10, 8), Field ("NSSharingServiceNamePostVideoOnYouku")]
 		NSString SharingServiceNamePostVideoOnYouku { get; }
 
-		[MountainLion, Field ("NSSharingServiceNamePostVideoOnTudou")]
+		[Mac (10, 8), Field ("NSSharingServiceNamePostVideoOnTudou")]
 		NSString SharingServiceNamePostVideoOnTudou { get; }
 	}
 
 	[Category, BaseType (typeof (NSTextView))]
 	partial interface NSTextView_SharingService {
 
-		[MountainLion, Export ("orderFrontSharingServicePicker:")]
+		[Mac (10, 8), Export ("orderFrontSharingServicePicker:")]
 		void OrderFrontSharingServicePicker (NSObject sender);
 	}
 
 	/*partial interface NSTextViewDelegate {
 
-		[MountainLion, Export ("textView:willShowSharingServicePicker:forItems:"), DelegateName (...)]
+		[Mac (10, 8), Export ("textView:willShowSharingServicePicker:forItems:"), DelegateName (...)]
 		NSSharingServicePicker WillShowSharingService (NSTextView textView,
 			NSSharingServicePicker servicePicker, NSArray forItems);
 	}*/
@@ -22556,7 +22552,7 @@ namespace XamCore.AppKit {
 		string AlternativeString { get; }
 	}
 
-	[MountainLion, BaseType (typeof (NSObject))]
+	[Mac (10, 8), BaseType (typeof (NSObject))]
 	partial interface NSTextAlternatives {
 
 		[Export ("initWithPrimaryString:alternativeStrings:")]
@@ -22571,7 +22567,7 @@ namespace XamCore.AppKit {
 		[Export ("noteSelectedAlternativeString:")]
 		void NoteSelectedAlternativeString (string alternativeString);
 
-		[MountainLion, Notification (typeof (NSTextAlternativesSelectedAlternativeStringEventArgs)),
+		[Mac (10, 8), Notification (typeof (NSTextAlternativesSelectedAlternativeStringEventArgs)),
 			Field ("NSTextAlternativesSelectedAlternativeStringNotification")]
 		NSString SelectedAlternativeStringNotification { get; }
 	}
@@ -23853,7 +23849,7 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityDocumentAttribute")]
 		NSString DocumentAttribute { get; }
 
-		[Introduced (PlatformName.MacOSX, 10, 10)]
+		[Mac (10, 10)]
 		[Field ("NSAccessibilityActivationPointAttribute")]
 		NSString ActivationPointAttribute { get; }
 
@@ -24663,11 +24659,11 @@ namespace XamCore.AppKit {
 
 	[Static]
 	interface NSAccessibilityNotificationUserInfoKeys {
-		[Introduced (PlatformName.MacOSX, 10, 9)]
+		[Mac (10, 9)]
 		[Field ("NSAccessibilityUIElementsKey")]
 		NSString UIElementsKey { get; }
 
-		[Introduced (PlatformName.MacOSX, 10, 9)]
+		[Mac (10, 9)]
 		[Field ("NSAccessibilityPriorityKey")]
 		NSString PriorityKey { get; }
 

@@ -1,0 +1,2 @@
+## the returned type WKCrownSequencer is not available on iOS (watchOS only)
+!missing-selector! WKInterfaceController::crownSequencer not bound

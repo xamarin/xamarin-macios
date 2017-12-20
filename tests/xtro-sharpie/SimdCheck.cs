@@ -125,15 +125,19 @@ namespace Extrospection
 
 				if (contains_simd_types && very_strict) {
 					// We can't map this method to a native function.
-					Console.WriteLine ($"!missing-simd-native-signature! {method}");
+					var framework = method.DeclaringType.Namespace;
+					Log.On (framework).Add ($"!missing-simd-native-signature! {method}");
 				}
 				return;
 			}
 
 			ManagedSimdInfo existing;
 			if (managed_methods.TryGetValue (key, out existing)) {
-				if (very_strict)
-					Console.WriteLine ($"!duplicate-type-mapping! same key '{key}' for both '{existing.Method}' and '{method}'");
+				if (very_strict) {
+					var sorted = Helpers.Sort (existing.Method, method);
+					var framework = sorted.Item1.DeclaringType.Namespace;
+					Log.On (framework).Add ($"!duplicate-type-mapping! same key '{key}' for both '{sorted.Item1.FullName}' and '{sorted.Item2.FullName}'");
+				}
 			} else {
 				managed_methods [key] = new ManagedSimdInfo {
 					Method = method, ContainsInvalidMappingForSimd = invalid_simd_type
@@ -162,17 +166,17 @@ namespace Extrospection
 
 		bool ContainsSimdTypes (ObjCMethodDecl decl, ref string simd_type, ref bool requires_marshal_directive)
 		{
-			if (IsSimdType (decl.ReturnQualType, ref simd_type, ref requires_marshal_directive))
+			if (IsSimdType (decl, decl.ReturnQualType, ref simd_type, ref requires_marshal_directive))
 				return true;
 
 			var is_simd_type = false;
 			foreach (var param in decl.Parameters)
-				is_simd_type |= IsSimdType (param.QualType, ref simd_type, ref requires_marshal_directive);
+				is_simd_type |= IsSimdType (decl, param.QualType, ref simd_type, ref requires_marshal_directive);
 
 			return is_simd_type;
 		}
 
-		bool IsExtVector (QualType type, ref string simd_type)
+		bool IsExtVector (Decl decl, QualType type, ref string simd_type)
 		{
 			var rv = false;
 			var t = type.CanonicalQualType.Type;
@@ -206,8 +210,10 @@ namespace Extrospection
 
 			var typeName = type.ToString ();
 
-			if (!rv && typeName.Contains ("simd"))
-				Console.WriteLine ($"!unknown-simd-type! Could not detect that {typeName} is a Simd type, but its name contains 'simd'. Something needs fixing in SimdCheck.cs");
+			if (!rv && typeName.Contains ("simd")) {
+				var framework = Helpers.GetFramework (decl);
+				Log.On (framework).Add ($"!unknown-simd-type! Could not detect that {typeName} is a Simd type, but its name contains 'simd'. Something needs fixing in SimdCheck.cs");
+			}
 			
 			if (rv)
 				simd_type = typeName;
@@ -215,7 +221,7 @@ namespace Extrospection
 			return rv;
 		}
 
-		bool IsSimdType (QualType type, ref string simd_type, ref bool requires_marshal_directive)
+		bool IsSimdType (Decl decl, QualType type, ref string simd_type, ref bool requires_marshal_directive)
 		{
 			var str = Undecorate (type.ToString ());
 
@@ -225,8 +231,10 @@ namespace Extrospection
 				return true;
 			}
 
-			if (IsExtVector (type, ref simd_type))
-				Console.WriteLine ($"!unknown-simd-type-mapping! The Simd type {simd_type} does not have a mapping to a managed type. Please add one in SimdCheck.cs");
+			if (IsExtVector (decl, type, ref simd_type)) {
+				var framework = Helpers.GetFramework (decl);
+				Log.On (framework).Add ($"!unknown-simd-type-mapping! The Simd type {simd_type} does not have a mapping to a managed type. Please add one in SimdCheck.cs");
+			}
 
 			return false;
 		}
@@ -303,7 +311,8 @@ namespace Extrospection
 			if (!anyCalls)
 				return;
 
-			Console.WriteLine ($"!wrong-simd-missing-marshaldirective! {method}: simd type: {simd_type}");
+			var framework = method.DeclaringType.Namespace;
+			Log.On (framework).Add ($"!wrong-simd-missing-marshaldirective! {method}: simd type: {simd_type}");
 		}
 
 		public override void VisitObjCMethodDecl (ObjCMethodDecl decl, VisitKind visitKind)
@@ -313,6 +322,10 @@ namespace Extrospection
 
 			// don't process methods (or types) that are unavailable for the current platform
 			if (!decl.IsAvailable () || !(decl.DeclContext as Decl).IsAvailable ())
+				return;
+
+			var framework = Helpers.GetFramework (decl);
+			if (framework == null)
 				return;
 
 			var simd_type = string.Empty;
@@ -359,7 +372,7 @@ namespace Extrospection
 					return;
 				if (!strict)
 					return;
-				Console.WriteLine ($"!missing-simd-managed-method! {decl}: could not find a managed method for the native method {decl.GetName ()} (selector: {decl.Selector}). Found the simd type '{simd_type}' in the native signature.");
+				Log.On (framework).Add ($"!missing-simd-managed-method! {decl}: could not find a managed method for the native method {decl.GetName ()} (selector: {decl.Selector}). Found the simd type '{simd_type}' in the native signature.");
 				return;
 			}
 
@@ -379,7 +392,7 @@ namespace Extrospection
 				CheckMarshalDirective (method, simd_type);
 			
 			// We have a potentially broken managed method. This needs fixing/investigation.
-			Console.WriteLine ($"!unknown-simd-type-in-signature! {method}: the native signature has a simd type ({simd_type}), while the corresponding managed method is using an incorrect (non-simd) type.");
+			Log.On (framework).Add ($"!unknown-simd-type-in-signature! {method}: the native signature has a simd type ({simd_type}), while the corresponding managed method is using an incorrect (non-simd) type.");
 		}
 	}
 }

@@ -16,7 +16,7 @@ using XamCore.ObjCRuntime;
 #if XAMCORE_2_0
 namespace XamCore.CallKit {
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[Native]
 	public enum CXCallDirectoryEnabledStatus : nint {
 		Unknown = 0,
@@ -24,14 +24,14 @@ namespace XamCore.CallKit {
 		Enabled = 2
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[ErrorDomain ("CXErrorDomain")]
 	[Native]
 	public enum CXErrorCode : nint {
 		Unknown = 0
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[ErrorDomain ("CXErrorDomainIncomingCall")]
 	[Native]
 	public enum CXErrorCodeIncomingCallError : nint {
@@ -42,7 +42,7 @@ namespace XamCore.CallKit {
 		FilteredByBlockList = 4
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[ErrorDomain ("CXErrorDomainRequestTransaction")]
 	[Native]
 	public enum CXErrorCodeRequestTransactionError : nint {
@@ -56,7 +56,7 @@ namespace XamCore.CallKit {
 		MaximumCallGroupsReached = 7
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[ErrorDomain ("CXErrorDomainCallDirectoryManager")]
 	[Native]
 	public enum CXErrorCodeCallDirectoryManagerError : nint {
@@ -72,7 +72,7 @@ namespace XamCore.CallKit {
 		UnexpectedIncrementalRemoval = 8,
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[Native]
 	public enum CXPlayDtmfCallActionType : nint {
 		SingleTone = 1,
@@ -80,7 +80,7 @@ namespace XamCore.CallKit {
 		HardPause = 3
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[Native]
 	public enum CXCallEndedReason : nint {
 		Failed = 1,
@@ -90,7 +90,7 @@ namespace XamCore.CallKit {
 		DeclinedElsewhere = 5
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[Native]
 	public enum CXHandleType : nint {
 		Generic = 1,
@@ -98,7 +98,7 @@ namespace XamCore.CallKit {
 		EmailAddress = 3
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CXHandle : NSCopying, NSSecureCoding {
@@ -117,7 +117,7 @@ namespace XamCore.CallKit {
 		bool IsEqual (CXHandle handle);
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CXAction : NSCopying, NSSecureCoding {
 
@@ -137,7 +137,7 @@ namespace XamCore.CallKit {
 		void Fail ();
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (CXCallAction))]
 	[DisableDefaultCtor]
 	interface CXAnswerCallAction {
@@ -150,7 +150,7 @@ namespace XamCore.CallKit {
 		void Fulfill (NSDate dateConnected);
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CXCall {
@@ -174,7 +174,7 @@ namespace XamCore.CallKit {
 		bool IsEqual (CXCall call);
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (CXAction))]
 	[DisableDefaultCtor]
 	interface CXCallAction {
@@ -187,7 +187,7 @@ namespace XamCore.CallKit {
 		IntPtr Constructor (NSUuid callUuid);
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CXCallController {
 
@@ -213,7 +213,7 @@ namespace XamCore.CallKit {
 		void RequestTransaction ([NullAllowed] CXAction action, [NullAllowed] Action<NSError> completion);
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (NSExtensionContext))]
 	interface CXCallDirectoryExtensionContext {
 
@@ -253,7 +253,7 @@ namespace XamCore.CallKit {
 
 	interface ICXCallDirectoryExtensionContextDelegate {}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[Protocol][Model]
 	[BaseType (typeof (NSObject))]
 	interface CXCallDirectoryExtensionContextDelegate {
@@ -263,7 +263,7 @@ namespace XamCore.CallKit {
 		void RequestFailed (CXCallDirectoryExtensionContext extensionContext, NSError error);
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CXCallDirectoryManager {
 
@@ -280,7 +280,7 @@ namespace XamCore.CallKit {
 		void GetEnabledStatusForExtension (string identifier, Action<CXCallDirectoryEnabledStatus, NSError> completion);
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CXCallDirectoryProvider : NSExtensionRequestHandling {
 
@@ -288,7 +288,7 @@ namespace XamCore.CallKit {
 
 	interface ICXCallObserverDelegate { }
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface CXCallObserverDelegate {
@@ -298,7 +298,7 @@ namespace XamCore.CallKit {
 		void CallChanged (CXCallObserver callObserver, CXCall call);
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CXCallObserver {
 
@@ -309,7 +309,7 @@ namespace XamCore.CallKit {
 		void SetDelegate ([NullAllowed] ICXCallObserverDelegate aDelegate, [NullAllowed] DispatchQueue queue);
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CXCallUpdate : NSCopying {
 
@@ -335,7 +335,7 @@ namespace XamCore.CallKit {
 		bool HasVideo { get; set; }
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CXCallAction))]
 	interface CXEndCallAction {
@@ -348,7 +348,7 @@ namespace XamCore.CallKit {
 		void Fulfill (NSDate dateEnded);
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CXCallAction), Name = "CXPlayDTMFCallAction")]
 	interface CXPlayDtmfCallAction {
@@ -367,7 +367,7 @@ namespace XamCore.CallKit {
 	interface ICXProviderDelegate { }
 
 	[Protocol, Model]
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CXProviderDelegate {
 
@@ -412,7 +412,7 @@ namespace XamCore.CallKit {
 		void DidDeactivateAudioSession (CXProvider provider, AVAudioSession audioSession);
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CXProvider {
@@ -453,7 +453,7 @@ namespace XamCore.CallKit {
 		CXCallAction [] GetPendingCallActions (Class callActionClass, NSUuid callUuid);
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CXProviderConfiguration : NSCopying {
@@ -489,7 +489,7 @@ namespace XamCore.CallKit {
 		IntPtr Constructor (string localizedName);
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (CXCallAction))]
 	[DisableDefaultCtor]
 	interface CXSetGroupCallAction {
@@ -502,7 +502,7 @@ namespace XamCore.CallKit {
 		NSUuid CallUuidToGroupWith { get; set; }
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CXCallAction))]
 	interface CXSetHeldCallAction {
@@ -515,7 +515,7 @@ namespace XamCore.CallKit {
 		bool OnHold { [Bind ("isOnHold")] get; set; }
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (CXCallAction))]
 	[DisableDefaultCtor]
 	interface CXSetMutedCallAction {
@@ -528,7 +528,7 @@ namespace XamCore.CallKit {
 		bool Muted { [Bind ("isMuted")] get; set; }
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CXCallAction))]
 	interface CXStartCallAction {
@@ -552,7 +552,7 @@ namespace XamCore.CallKit {
 		void Fulfill (NSDate dateStarted);
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // there's a designated initializer that does not accept null
 	interface CXTransaction : NSCopying, NSSecureCoding {

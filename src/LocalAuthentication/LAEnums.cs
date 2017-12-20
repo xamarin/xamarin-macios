@@ -5,7 +5,7 @@ using XamCore.Foundation;
 namespace XamCore.LocalAuthentication {
 
 	[iOS (8,0)]
-	[Availability (Platform.Mac_10_10)]
+	[Mac (10, 10)]
 	[Native]
 	public enum LAPolicy : nint {
 		[Mac (10,12,2)]
@@ -14,7 +14,7 @@ namespace XamCore.LocalAuthentication {
 	}
 
 	[iOS (8,0)]
-	[Availability (Platform.Mac_10_10)]
+	[Mac (10, 10)]
 	[Native]
 	[ErrorDomain ("LAErrorDomain")]
 	public enum LAStatus : nint {

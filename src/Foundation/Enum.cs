@@ -183,26 +183,36 @@ namespace XamCore.Foundation  {
 		Hour = 32,
 		Minute = 64,
 		Second = 128,
-		[Availability (Introduced = Platform.Mac_10_4 | Platform.iOS_2_0, Deprecated = Platform.Mac_10_10 | Platform.iOS_8_0)]
+		[Mac (10, 4)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
+		[iOS (2, 0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
 		Week = 256,
 		Weekday = 512,
 		WeekdayOrdinal = 1024,
-		[Availability (Introduced = Platform.Mac_10_6 | Platform.iOS_4_0)]
+		[Mac (10, 6)]
+		[iOS (4, 0)]
 		Quarter = 2048,
 
-		[Availability (Introduced = Platform.Mac_10_7 | Platform.iOS_5_0)]
+		[Mac (10, 7)]
+		[iOS (5, 0)]
 		WeekOfMonth = (1 << 12),
-		[Availability (Introduced = Platform.Mac_10_7 | Platform.iOS_5_0)]
+		[Mac (10, 7)]
+		[iOS (5, 0)]
 		WeekOfYear = (1 << 13),
-		[Availability (Introduced = Platform.Mac_10_7 | Platform.iOS_5_0)]
+		[Mac (10, 7)]
+		[iOS (5, 0)]
 		YearForWeakOfYear = (1 << 14),
 
-		[Availability (Introduced = Platform.Mac_10_7 | Platform.iOS_5_0)]
+		[Mac (10, 7)]
+		[iOS (5, 0)]
 		Nanosecond = (1 << 15),
 
-		[Availability (Introduced = Platform.Mac_10_7 | Platform.iOS_5_0)]
+		[Mac (10, 7)]
+		[iOS (5, 0)]
 		Calendar = (1 << 20),
-		[Availability (Introduced = Platform.Mac_10_7 | Platform.iOS_5_0)]
+		[Mac (10, 7)]
+		[iOS (5, 0)]
 		TimeZone = (1 << 21),
 	}
 
@@ -683,9 +693,11 @@ namespace XamCore.Foundation  {
 	public enum NSFileCoordinatorReadingOptions : nuint_compat_int {
 		WithoutChanges = 1,
 		ResolvesSymbolicLink = 1 << 1,
-		[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
+		[Mac (10, 10)]
+		[iOS (8, 0)]
 		ImmediatelyAvailableMetadataOnly = 1 << 2,
-		[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
+		[Mac (10, 10)]
+		[iOS (8, 0)]
 		ForUploading = 1 << 3
 	}
 
@@ -877,21 +889,28 @@ namespace XamCore.Foundation  {
 		None = 0,
 		WrapCalendarComponents = 1 << 0,
 
-		[Availability (Introduced = Platform.Mac_10_9 | Platform.iOS_7_0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 		MatchStrictly = 1 << 1,
-		[Availability (Introduced = Platform.Mac_10_9 | Platform.iOS_7_0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 		SearchBackwards = 1 << 2,
 
-		[Availability (Introduced = Platform.Mac_10_9 | Platform.iOS_7_0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 		MatchPreviousTimePreservingSmallerUnits = 1 << 8,
-		[Availability (Introduced = Platform.Mac_10_9 | Platform.iOS_7_0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 		MatchNextTimePreservingSmallerUnits = 1 << 9,
-		[Availability (Introduced = Platform.Mac_10_9 | Platform.iOS_7_0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 		MatchNextTime = 1 << 10,
 
-		[Availability (Introduced = Platform.Mac_10_9 | Platform.iOS_7_0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 		MatchFirst = 1 << 12,
-		[Availability (Introduced = Platform.Mac_10_9 | Platform.iOS_7_0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 		MatchLast = 1 << 13,
 	}
 	
@@ -1003,7 +1022,8 @@ namespace XamCore.Foundation  {
 	}
 
 	[Native]
-	[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
 	public enum NSDateComponentsFormatterUnitsStyle : nint {
 		Positional = 0,
 		Abbreviated,
@@ -1016,7 +1036,8 @@ namespace XamCore.Foundation  {
 
 	[Flags]
 	[Native]
-	[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
 	public enum NSDateComponentsFormatterZeroFormattingBehavior : nuint {
 		None = (0),
 		Default = (1 << 0),
@@ -1028,7 +1049,8 @@ namespace XamCore.Foundation  {
 	}
 
 	[Native]
-	[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
 	public enum NSFormattingContext : nint {
 		Unknown = 0,
 		Dynamic = 1,
@@ -1038,7 +1060,8 @@ namespace XamCore.Foundation  {
 		MiddleOfSentence = 5
 	}
 
-	[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
 	[Native]
 	public enum NSDateIntervalFormatterStyle : nuint {
 		None = 0,
@@ -1048,7 +1071,8 @@ namespace XamCore.Foundation  {
 		Full = 4
 	}
 
-	[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
 	[Native]
 	public enum NSEnergyFormatterUnit : nint {
 		Joule = 11,
@@ -1057,7 +1081,8 @@ namespace XamCore.Foundation  {
 		Kilocalorie = (7 << 8) + 2
 	}
 
-	[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
 	[Native]
 	public enum NSFormattingUnitStyle : nint {
 		Short = 1,
@@ -1144,11 +1169,14 @@ namespace XamCore.Foundation  {
 		Dash          = 1 << 7,
 		Replacement   = 1 << 8,
 		Correction    = 1 << 9,
-		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_7)]
+		[iOS (4, 0)]
+		[Mac (10, 7)]
 		RegularExpression  = 1 << 10,
-		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_7)]
+		[iOS (4, 0)]
+		[Mac (10, 7)]
 		PhoneNumber        = 1 << 11,
-		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_7)]
+		[iOS (4, 0)]
+		[Mac (10, 7)]
 		TransitInformation = 1 << 12,
 	}
 

@@ -1,0 +1,11 @@
+## JavaScriptCore is not available in watchOS 3
+!missing-pinvoke! SCNExportJavaScriptModule is not bound
+
+## CoreAnimation (CAAAnimation) is not in available watchOS 3
+!missing-protocol-member! SCNAnimatable::addAnimation:forKey: not found
+
+## SCNNodeRenderer is not available on watchOS 3
+!missing-protocol! SCNNodeRendererDelegate not bound
+!missing-selector! SCNNode::rendererDelegate not bound
+!missing-selector! SCNNode::setRendererDelegate: not bound
+!missing-selector! SCNTechnique::handleBindingOfSymbol:usingBlock: not bound

@@ -21,7 +21,7 @@ namespace Extrospection {
 				new DesignatedInitializerCheck (),
 				new DllImportCheck (),
 				new EnumCheck (),
-				new FieldCheck (), // very noisy now, some stuff are still manually bound / harder to detect
+				new FieldCheck (),
 				new ObjCInterfaceCheck (),
 				new ObjCProtocolCheck (),
 				new SelectorCheck (),
@@ -44,7 +44,6 @@ namespace Extrospection {
 			var reader = new AstReader ();
 			foreach (var v in managed_reader) {
 				reader.TranslationUnitParsed += tu => {
-					tu.DeclFilter = ModuleExclusionList.DeclFilter;
 					tu.Accept (v);
 				};
 			}
@@ -52,49 +51,8 @@ namespace Extrospection {
 			reader.Load (pchFile);
 
 			managed_reader.End ();
-		}
-	}
 
-	class ModuleExclusionList {
-		static List<string> macOSXExclusionList = new List<string> () {
-			 // Nice to have someday
-			"IOBluetooth", "IOBluetoothUI", "PubSub", "CryptoTokenKit", "DiscRecording", "DiscRecordingUI", "ImageCaptureCore", "OSAKit", "AudioVideoBridging", "Automator", "ImageCapture",
-
-			 // Maybe?
-			"ICADevices", "OpenDirectory", "IMServicePlugIn", "PreferencePanes", "ScreenSaver", "CoreMediaIO", "SecurityInterface",
-
-			 // Nope
-			"InstallerPlugins", "JavaVM", "ExceptionHandling", "JavaFrameEmbedding",
-
-			// Deprecated so double Nope
-			"SyncServices", "CalendarStore",
-		};
-
-		static IEnumerable<string> _exclusionList;
-		static IEnumerable<string> ExclusionList {
-			get {
-				if (_exclusionList == null) {
-					switch (Helpers.Platform) {
-					case Helpers.Platforms.macOS:
-						_exclusionList = macOSXExclusionList;
-						break;
-					default:
-						_exclusionList = Enumerable.Empty <string> ();
-						break;
-					}
-				}
-				return _exclusionList;
-			}
-		}
-
-		public static bool DeclFilter (Decl d)
-		{
-			if (d.OwningModule != null) {
-				foreach (var item in ExclusionList)
-					if (d.InModule (item))
-						return false;
-			}
-			return true;
+			Log.Save ();
 		}
 	}
 
@@ -174,17 +132,6 @@ namespace Extrospection {
 		// last chance to report errors
 		public virtual void End ()
 		{
-		}
-
-		protected string GetDeclaringHeaderFile (Decl decl)
-		{
-			var header_file = decl.PresumedLoc.FileName;
-			var fxh = header_file.IndexOf (".framework/Headers/", StringComparison.Ordinal);
-			if (fxh > 0) {
-				var start = header_file.LastIndexOf ('/', fxh) + 1;
-				return header_file.Substring (start, fxh - start);
-			}
-			return null;
 		}
 	}
 

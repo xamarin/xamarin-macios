@@ -1,0 +1,32 @@
+## OSX-only enums - fixed in XAMCORE_3_0
+!unknown-native-enum! AVCaptureDeviceTransportControlsPlaybackMode bound
+!unknown-native-enum! AVVideoFieldMode bound
+
+## OSX only - but only the member is marked (not the protocol itself)
+!missing-protocol! AVFragmentMinding not bound
+
+# from iOS 4.0 to 5.1
+!unknown-field! AVMediaTypeTimedMetadata bound
+
+
+## unsorted
+
+!missing-field! AVAssetDownloadedAssetEvictionPriorityDefault not bound
+!missing-field! AVAssetDownloadedAssetEvictionPriorityImportant not bound
+!missing-protocol-conformance! AVCaptureSynchronizedDataCollection should conform to NSFastEnumeration
+!missing-protocol-member! AVAudioRecorderDelegate::audioRecorderEndInterruption:withOptions: not found
+!missing-selector! +AVCapturePhotoBracketSettings::photoBracketSettingsWithRawPixelFormatType:rawFileType:processedFormat:processedFileType:bracketedSettings: not bound
+!missing-selector! AVAssetDownloadStorageManagementPolicy::priority not bound
+!missing-selector! AVCapturePhoto::fileDataRepresentationWithReplacementMetadata:replacementEmbeddedThumbnailPhotoFormat:replacementEmbeddedThumbnailPixelBuffer:replacementDepthData: not bound
+!missing-selector! AVCapturePhotoOutput::availableLivePhotoVideoCodecTypes not bound
+!missing-selector! AVCapturePhotoOutput::isCameraCalibrationDataDeliverySupported not bound
+!missing-selector! AVCapturePhotoOutput::isDualCameraDualPhotoDeliveryEnabled not bound
+!missing-selector! AVCapturePhotoOutput::isDualCameraDualPhotoDeliverySupported not bound
+!missing-selector! AVCapturePhotoOutput::setDualCameraDualPhotoDeliveryEnabled: not bound
+!missing-selector! AVCaptureResolvedPhotoSettings::embeddedThumbnailDimensions not bound
+!missing-selector! AVCaptureResolvedPhotoSettings::expectedPhotoCount not bound
+!missing-selector! AVMetadataMachineReadableCodeObject::descriptor not bound
+!missing-selector! AVMutableAssetDownloadStorageManagementPolicy::priority not bound
+!missing-selector! AVMutableAssetDownloadStorageManagementPolicy::setPriority: not bound
+!unknown-native-enum! AVAudioSessionFlags bound
+!unknown-native-enum! AVAudioSessionInterruptionFlags bound

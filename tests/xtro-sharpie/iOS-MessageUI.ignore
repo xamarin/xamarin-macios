@@ -1,0 +1,7 @@
+## [Native] available on XAMCORE_4_0
+!missing-enum-native! MessageComposeResult
+!missing-enum-native! MFMailComposeErrorCode
+!missing-enum-native! MFMailComposeResult
+!wrong-enum-size! MessageComposeResult managed 4 vs native 8
+!wrong-enum-size! MFMailComposeErrorCode managed 4 vs native 8
+!wrong-enum-size! MFMailComposeResult managed 4 vs native 8

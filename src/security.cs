@@ -14,7 +14,7 @@ using XamCore.ObjCRuntime;
 namespace XamCore.Security {
 
 	[Static]
-	[Since (7,0)]
+	[iOS (7,0)]
 	interface SecPolicyIdentifier {
 		// they are CFString -> https://github.com/Apple-FOSS-Mirror/libsecurity_keychain/blob/master/lib/SecPolicy.cpp
 
@@ -51,11 +51,11 @@ namespace XamCore.Security {
 		[Field ("kSecPolicyAppleIDValidation")]
 		NSString AppleIDValidation { get; }
 			
-		[MountainLion]
+		[Mac (10, 8)]
 		[Field ("kSecPolicyAppleTimeStamping")]
 		NSString AppleTimeStamping { get; }
 
-		[Mavericks]
+		[Mac (10, 9)]
 		[Field ("kSecPolicyAppleRevocation")]
 		NSString AppleRevocation { get; }
 
@@ -69,7 +69,7 @@ namespace XamCore.Security {
 	}
 
 	[Static]
-	[Since (7,0)]
+	[iOS (7,0)]
 	interface SecPolicyPropertyKey {
 		[Field ("kSecPolicyOid")]
 		NSString Oid { get; }
@@ -80,7 +80,7 @@ namespace XamCore.Security {
 		[Field ("kSecPolicyClient")]
 		NSString Client { get; }
 
-		[Mavericks]
+		[Mac (10, 9)]
 		[Field ("kSecPolicyRevocationFlags")]
 		NSString RevocationFlags { get; }
 
@@ -90,7 +90,7 @@ namespace XamCore.Security {
 	}
 	
 	[Static]
-	[Since (8,0), NoMac, NoWatch]
+	[iOS (8,0), NoMac, NoWatch]
 	[NoTV] // removed in tvOS 10
 	interface SecSharedCredential {
 		[Field ("kSecSharedPassword")]
@@ -99,7 +99,7 @@ namespace XamCore.Security {
 	
 
 	[Static]
-	[Since (7,0)]
+	[iOS (7,0)]
 	interface SecTrustPropertyKey {
 		[Field ("kSecPropertyTypeTitle")]
 		NSString Title { get; }
@@ -109,7 +109,7 @@ namespace XamCore.Security {
 	}
 
 	[Static]
-	[Since (7,0), Mavericks]
+	[iOS (7,0), Mac (10, 9)]
 	interface SecTrustResultKey {
 		[Field ("kSecTrustEvaluationDate")]
 		NSString EvaluationDate { get; }

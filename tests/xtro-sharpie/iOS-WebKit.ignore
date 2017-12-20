@@ -1,0 +1,4 @@
+## unfortunate (but required for API compatibility) the name exists in both WatchKit and WebKit namespaces
+## it's reported as missing here because it's removed from the list when processing WatchKit
+!duplicate-type-name! WKErrorCode enum exists as both WebKit.WKErrorCode and WatchKit.WKErrorCode
+!missing-enum! WKErrorCode not bound

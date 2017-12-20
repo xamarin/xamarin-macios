@@ -1,0 +1,24 @@
+!missing-field! kCTCharacterShapeAttributeName not bound
+!missing-field! kCTFontCollectionDisallowAutoActivationOption not bound
+!missing-field! kCTFontCollectionIncludeDisabledFontsOption not bound
+!missing-field! kCTFontManagerBundleIdentifier not bound
+!missing-field! kCTTypesetterOptionDisableBidiProcessing not bound
+!missing-pinvoke! CTFontCollectionCopyExclusionDescriptors is not bound
+!missing-pinvoke! CTFontCollectionCopyFontAttribute is not bound
+!missing-pinvoke! CTFontCollectionCopyFontAttributes is not bound
+!missing-pinvoke! CTFontCollectionCopyQueryDescriptors is not bound
+!missing-pinvoke! CTFontCollectionCreateMatchingFontDescriptorsForFamily is not bound
+!missing-pinvoke! CTFontCollectionCreateMatchingFontDescriptorsWithOptions is not bound
+!missing-pinvoke! CTFontCollectionCreateMutableCopy is not bound
+!missing-pinvoke! CTFontCollectionSetExclusionDescriptors is not bound
+!missing-pinvoke! CTFontCollectionSetQueryDescriptors is not bound
+!missing-pinvoke! CTFontCreateWithPlatformFont is not bound
+!missing-pinvoke! CTFontCreateWithQuickdrawInstance is not bound
+!missing-pinvoke! CTFontGetPlatformFont is not bound
+!missing-pinvoke! CTFontManagerCompareFontFamilyNames is not bound
+!missing-pinvoke! CTFontManagerCopyAvailableFontURLs is not bound
+!missing-pinvoke! CTFontManagerCreateFontRequestRunLoopSource is not bound
+!missing-pinvoke! CTFontManagerEnableFontDescriptors is not bound
+!missing-pinvoke! CTFontManagerGetAutoActivationSetting is not bound
+!missing-pinvoke! CTFontManagerGetScopeForURL is not bound
+!missing-pinvoke! CTFontManagerSetAutoActivationSetting is not bound
