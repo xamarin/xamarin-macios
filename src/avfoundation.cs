@@ -9509,7 +9509,7 @@ namespace XamCore.AVFoundation {
 		[Field ("AVCaptureDeviceTypeBuiltInTelephotoCamera")]
 		BuiltInTelephotoCamera,
 
-		[iOS (10, 0, message: "Use 'BuiltInDualCamera' instead.")]
+		[iOS (10, 0)]
 		[Deprecated (PlatformName.iOS, 10, 2, message: "Use 'BuiltInDualCamera' instead.")]
 		[Field ("AVCaptureDeviceTypeBuiltInDuoCamera")]
 		BuiltInDuoCamera,
