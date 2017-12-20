@@ -72,6 +72,12 @@ The minimum deployment target is the one specified in the error message; please 
 
 If updating the deployment target is not possible, then please use an older version of Xamarin.Mac.
 
+### <a name="MM0074"/>MM0074: Xamarin.Mac * does not support a minimum deployment target of * (the maximum is *). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.Mac.
+
+Xamarin.Mac does not support setting the minimum deployment target to a higher version than the version this particular version of Xamarin.Mac was built for.
+
+Please select an older minimum deployment target in the project's Info.plist, or upgrade to a newer version of Xamarin.Mac.
+
 ### <a name="MM0079">MM0079: Internal Error - No executable was copied into the app bundle. Please contact 'support@xamarin.com'
 
 ### <a name="MM0080">MM0080: Disabling NewRefCount, --new-refcount:false, is deprecated.
