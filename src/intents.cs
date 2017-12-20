@@ -39,7 +39,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
 	[Flags]
@@ -49,7 +49,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
 	public enum INCallRecordType : nint {
@@ -136,7 +136,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
 	public enum INConditionalOperator : nint {
@@ -218,7 +218,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
 	[ErrorDomain ("INIntentErrorDomain")]
@@ -239,7 +239,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
 	public enum INIntentHandlingStatus : nint {
@@ -252,7 +252,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
 	public enum INInteractionDirection : nint {
@@ -283,7 +283,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
 	public enum INMessageAttribute : nint {
@@ -297,7 +297,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
 	[Flags]
@@ -523,7 +523,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
 	public enum INSearchCallHistoryIntentResponseCode : nint {
@@ -542,7 +542,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
 	public enum INSearchForMessagesIntentResponseCode : nint {
@@ -573,7 +573,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
 	public enum INSendMessageIntentResponseCode : nint {
@@ -604,7 +604,7 @@ namespace XamCore.Intents {
 		FailureInsufficientFunds,
 		FailureNoBankAccount,
 		[iOS (11, 0)]
-		[Mac (10, 13, 0, PlatformArchitecture.Arch64)]
+		[Mac (10, 13, PlatformArchitecture.Arch64)]
 		[Watch (4, 0)]
 		FailureNotEligible,
 		[iOS (11,1), Watch (4,1)]
@@ -651,7 +651,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Native]
 	public enum INSetMessageAttributeIntentResponseCode : nint {
@@ -717,7 +717,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
 	public enum INStartAudioCallIntentResponseCode : nint {
@@ -753,7 +753,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Native]
 	public enum INStartVideoCallIntentResponseCode : nint {
@@ -844,7 +844,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
 	public enum INPersonHandleType : nint {
@@ -1330,7 +1330,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	public enum INIntentIdentifier {
 		[Unavailable (PlatformName.MacOSX)]
@@ -1711,7 +1711,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
@@ -2068,7 +2068,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -2103,7 +2103,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
@@ -2141,7 +2141,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Protocol]
 	interface INCallsDomainHandling : INStartAudioCallIntentHandling, INSearchCallHistoryIntentHandling
@@ -2709,7 +2709,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -2792,7 +2792,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Abstract]
 	[BaseType (typeof (NSObject))]
@@ -2813,7 +2813,7 @@ namespace XamCore.Intents {
 	interface INIntentResolutionResult<ObjectType> : INIntentResolutionResult { }
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Abstract]
 	[BaseType (typeof (NSObject))]
@@ -2837,7 +2837,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Abstract]
 	[BaseType (typeof (NSObject))]
@@ -2848,7 +2848,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -2974,7 +2974,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -3021,7 +3021,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
@@ -3075,7 +3075,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
@@ -3245,7 +3245,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -3307,7 +3307,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -3345,7 +3345,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
@@ -3383,7 +3383,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
@@ -4406,7 +4406,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (INIntent))]
 	interface INSearchCallHistoryIntent {
@@ -4452,7 +4452,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Protocol]
 	interface INSearchCallHistoryIntentHandling {
@@ -4492,7 +4492,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
@@ -4511,7 +4511,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (INIntent))]
 	interface INSearchForMessagesIntent {
@@ -4585,7 +4585,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Protocol]
 	interface INSearchForMessagesIntentHandling {
@@ -4627,7 +4627,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
@@ -4737,7 +4737,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (INIntent))]
 	interface INSendMessageIntent {
@@ -4781,7 +4781,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Protocol]
 	interface INSendMessageIntentHandling {
@@ -4824,7 +4824,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
@@ -5456,7 +5456,7 @@ namespace XamCore.Intents {
 	interface IINSpeakable { }
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Protocol]
 	interface INSpeakable {
@@ -5494,7 +5494,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -5516,7 +5516,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
@@ -5554,7 +5554,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (INIntent))]
 	interface INStartAudioCallIntent {
@@ -5579,7 +5579,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Protocol]
 	interface INStartAudioCallIntentHandling {
@@ -5606,7 +5606,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
@@ -5709,7 +5709,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (INIntent))]
 	interface INStartVideoCallIntent {
@@ -5723,7 +5723,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Protocol]
 	interface INStartVideoCallIntentHandling {
@@ -5746,7 +5746,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
@@ -5839,7 +5839,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (INIntentResolutionResult))]
@@ -6064,7 +6064,7 @@ namespace XamCore.Intents {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+	[Mac (10, 12, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Category]
 	[BaseType (typeof (NSUserActivity))]
