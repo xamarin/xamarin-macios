@@ -137,11 +137,9 @@ enum Platform : ulong
 	TV_11_0 =      0x30000000000b0000,
 }
 
+#if COREBUILD // As this does not derive from IntroducedAttribute or friends it can not be used in non-generated code
 [AttributeUsage (AttributeTargets.All, AllowMultiple = true)]
-#if COREBUILD
-public
-#endif
-class AvailabilityAttribute : Attribute
+public class AvailabilityAttribute : Attribute
 {
 	public AvailabilityAttribute () { }
 
@@ -163,3 +161,4 @@ class AvailabilityAttribute : Attribute
 		Unavailable = unavailable;
 	}
 }
+#endif
