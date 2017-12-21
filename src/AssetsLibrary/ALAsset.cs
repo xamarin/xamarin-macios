@@ -17,12 +17,12 @@ using XamCore.MediaPlayer;
 namespace XamCore.AssetsLibrary {
 
 	// internally used (not exposed by ObjC)
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Photos' API instead.")]
 	public enum ALAssetType {
 		Video, Photo, Unknown
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Photos' API instead.")]
 	public partial class ALAsset {
 		public ALAssetType AssetType {
 			get {

@@ -23,7 +23,7 @@ namespace XamCore.UIKit {
 		}
 
 #if !TVOS
-		[Availability (Deprecated = Platform.iOS_3_2)]
+		[Deprecated (PlatformName.iOS, 3, 2)]
 		public static CGRect BoundsFromNotification (NSNotification n)
 		{
 			return RectangleFFrom (BoundsUserInfoKey, n);
@@ -61,13 +61,13 @@ namespace XamCore.UIKit {
 		}
 
 #if !TVOS
-		[Availability (Deprecated = Platform.iOS_3_2)]
+		[Deprecated (PlatformName.iOS, 3, 2)]
 		static public CGPoint CenterBeginFromNotification (NSNotification n)
 		{
 			return PointFFrom (CenterBeginUserInfoKey, n);
 		}
 
-		[Availability (Deprecated = Platform.iOS_3_2)]
+		[Deprecated (PlatformName.iOS, 3, 2)]
 		static public CGPoint CenterEndFromNotification (NSNotification n)
 		{
 			return PointFFrom (CenterEndUserInfoKey, n);

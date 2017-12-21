@@ -161,7 +161,7 @@ namespace XamCore.AVFoundation {
 	[NoTV]
 	[iOS (4,0)]
 	[Native]
-	[Availability (Deprecated = Platform.iOS_6_0)]
+	[Deprecated (PlatformName.iOS, 6, 0)]
 	// NSUInteger - AVAudioSession.h
 	public enum AVAudioSessionInterruptionFlags : nuint_compat_int {
 		ShouldResume = 1
@@ -282,7 +282,7 @@ namespace XamCore.AVFoundation {
 	[Flags]
 	[iOS (4,0)]
 	[Native]
-	[Availability (Deprecated = Platform.iOS_6_0)]
+	[Deprecated (PlatformName.iOS, 6, 0)]
 	// declared as AVAudioSessionSetActiveOptions (NSUInteger) - AVAudioSession.h
 	public enum AVAudioSessionFlags : nuint_compat_int {
 		NotifyOthersOnDeactivation = 1
@@ -416,7 +416,7 @@ namespace XamCore.AVFoundation {
 		MissingEntitlement = 0x656e743f,
 		SiriIsRecording = 0x73697269,
 		CannotStartPlaying = 0x21706c61,
-		[Availability (Introduced = Platform.iOS_7_0)]
+		[iOS (7, 0)]
 		CannotStartRecording = 0x21726563,
 		BadParam = -50,
 		Unspecified = 0x77686174,

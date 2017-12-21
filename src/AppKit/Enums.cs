@@ -116,7 +116,8 @@ namespace XamCore.AppKit {
 		DestinationAtop,
 		XOR,
 		PlusDarker,
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSCompositeSourceOver instead.")]
+		[Mac (10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use NSCompositeSourceOver instead.")]
 		Highlight,
 		PlusLighter,
 		[Mac (10,10)] Multiply,
@@ -138,9 +139,11 @@ namespace XamCore.AppKit {
 
 	[Native]
 	public enum NSBackingStore : nuint_compat_int {
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_13, Message = "Use 'Buffered' instead.")]
+		[Mac (10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'Buffered' instead.")]
 		Retained, 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_13, Message = "Use 'Buffered' instead.")]
+		[Mac (10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'Buffered' instead.")]
 		Nonretained, 
 		Buffered,
 	}
@@ -227,7 +230,8 @@ namespace XamCore.AppKit {
 
 #if !XAMCORE_4_0
 	[Native]
-	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use formatters instead.")]
+	[Mac (10, 0)]
+	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use formatters instead.")]
 	public enum NSType : nuint_compat_int {
 	    Any			= 0,
 	    Int			= 1,
@@ -933,7 +937,7 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSWindowButton : nuint_compat_int {
 		CloseButton, MiniaturizeButton, ZoomButton, ToolbarButton, DocumentIconButton, DocumentVersionsButton = 6, 
-		[Availability (Deprecated = Platform.Mac_10_12, Message = "The standard window button for FullScreenButton is always null; use ZoomButton instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 12, message : "The standard window button for FullScreenButton is always null; use ZoomButton instead.")]
 		FullScreenButton
 	}
 
@@ -1026,7 +1030,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	[Availability (Deprecated = Platform.Mac_10_12, Message = "The GradientType property is unused, and setting it has no effect.")]
+	[Deprecated (PlatformName.MacOSX, 10, 12, message : "The GradientType property is unused, and setting it has no effect.")]
 	public enum NSGradientType : nuint_compat_int {
 		None,
 		ConcaveWeak,
@@ -1397,12 +1401,12 @@ namespace XamCore.AppKit {
 		CcittFax4 = 4,
 		Lzw = 5,
 
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		Jpeg		= 6,
 		Next		= 32766,
 		PackBits	= 32773,
 
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		OldJpeg		= 32865
 	}
 
@@ -1452,7 +1456,7 @@ namespace XamCore.AppKit {
 	[Flags]
 #if !XAMCORE_4_0
 	[Native]
-	[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'NSGlyphProperty' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSGlyphProperty' instead.")]
 	public enum NSGlyphStorageOptions : nuint_compat_int {
 #else
 	public enum NSGlyphStorageOptions : int
@@ -1463,7 +1467,7 @@ namespace XamCore.AppKit {
 	}
 
 #if !XAMCORE_4_0
-	[Availability (Deprecated = Platform.Mac_10_11, Message = "Use NSTextStorageEditActions instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use NSTextStorageEditActions instead.")]
 	[Flags]
 	[Native]
 	public enum NSTextStorageEditedFlags : nuint_compat_int {
@@ -1620,7 +1624,8 @@ namespace XamCore.AppKit {
 		Default, Regular, Small
 	}
 
-	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSAlertButtonReturn instead.")]
+	[Mac (10, 0)]
+	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use NSAlertButtonReturn instead.")]
 #if !XAMCORE_4_0
 	[Native]
 	public enum NSAlertType : nint {
@@ -1634,7 +1639,8 @@ namespace XamCore.AppKit {
 	}
 
 #if !XAMCORE_4_0
-	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSModalResponse instead.")]
+	[Mac (10, 0)]
+	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use NSModalResponse instead.")]
 	[Native]
 	public enum NSPanelButtonType : nint {
 		Cancel, Ok
@@ -1819,12 +1825,14 @@ namespace XamCore.AppKit {
 	public enum NSPathStyle : nint {
 #if XAMCORE_2_0
 		Standard,
-		[Availability (Introduced = Platform.Mac_10_5, Deprecated = Platform.Mac_10_7)]
+		[Mac (10, 5)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		NavigationBar,
 		PopUp
 #else
 		NSPathStyleStandard,
-		[Availability (Introduced = Platform.Mac_10_5, Deprecated = Platform.Mac_10_7)]
+		[Mac (10, 5)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		NSPathStyleNavigationBar,
 		NSPathStylePopUp
 #endif
@@ -1953,15 +1961,15 @@ namespace XamCore.AppKit {
 
 	[Native]
 	public enum NSOpenGLContextParameter : nuint_compat_int {
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		SwapRectangle = 200,
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		SwapRectangleEnable = 201,
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		RasterizationEnable = 221,
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		StateValidation = 301,
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		SurfaceSurfaceVolatile = 306,
 
 		SwapInterval = 222,
@@ -1999,9 +2007,11 @@ namespace XamCore.AppKit {
 		AccumSize          =  14,
 		MinimumPolicy      =  51,
 		MaximumPolicy      =  52,
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_7)]
+		[Mac (10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		OffScreen          =  53,
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_6)]
+		[Mac (10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 6)]
 		FullScreen         =  54,
 		SampleBuffers      =  55,
 		Samples            =  56,
@@ -2011,20 +2021,25 @@ namespace XamCore.AppKit {
 		Supersample        =  60,
 		SampleAlpha        =  61,
 		RendererID         =  70,
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_9)]
+		[Mac (10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		SingleRenderer     =  71,
 		NoRecovery         =  72,
 		Accelerated        =  73,
 		ClosestPolicy      =  74,
 		BackingStore       =  76,
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_9)]
+		[Mac (10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		Window             =  80,
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_9)]
+		[Mac (10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		Compliant          =  83,
 		ScreenMask         =  84,
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_7)]
+		[Mac (10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		PixelBuffer        =  90,
-		[Availability (Introduced = Platform.Mac_10_3, Deprecated = Platform.Mac_10_7)]
+		[Mac (10, 3)]
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		RemotePixelBuffer  =  91,
 		AllowOfflineRenderers = 96,
 		AcceleratedCompute =  97,
@@ -2033,11 +2048,11 @@ namespace XamCore.AppKit {
 		[Mac (10, 7)] OpenGLProfile = 99,
 		VirtualScreenCount = 128,
 
-		[Availability (Deprecated = Platform.Mac_10_5)]
+		[Deprecated (PlatformName.MacOSX, 10, 5)]
 		Robust  =  75,
-		[Availability (Deprecated = Platform.Mac_10_5)]
+		[Deprecated (PlatformName.MacOSX, 10, 5)]
 		MPSafe  =  78,
-		[Availability (Deprecated = Platform.Mac_10_5)]
+		[Deprecated (PlatformName.MacOSX, 10, 5)]
 		MultiScreen =  81
 	}
 
@@ -2068,7 +2083,7 @@ namespace XamCore.AppKit {
 		ClearFormatCache = 502,
 		RetainRenderers = 503,
 		[Mac (10, 7)] UseBuildCache = 506,
-		[Availability (Deprecated = Platform.Mac_10_4)]
+		[Deprecated (PlatformName.MacOSX, 10, 4)]
 		ResetLibrary = 504
 	}
 
@@ -2165,7 +2180,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	[Availability (Deprecated = Platform.Mac_10_11, Message = "Use 'NSGlyphProperty' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSGlyphProperty' instead.")]
 	public enum NSGlyphInscription : nuint_compat_int {
 		Base, Below, Above, Overstrike, OverBelow
 	}

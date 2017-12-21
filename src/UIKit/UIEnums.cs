@@ -57,7 +57,7 @@ namespace XamCore.UIKit {
 	public enum UIBarButtonItemStyle : nint {
 		Plain,
 
-		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'UIBarButtonItemStyle.Plain' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'UIBarButtonItemStyle.Plain' instead.")]
 		Bordered,
 			
 		Done,
@@ -283,10 +283,12 @@ namespace XamCore.UIKit {
 		DefaultPrompt = 101,
 		CompactPrompt,
 
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_8_0, Message = "Use 'UIBarMetrics.Compat' instead.")]
+		[iOS (5, 0)]
+		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'UIBarMetrics.Compat' instead.")]
 		LandscapePhone = Compact,
 
-		[Availability (Introduced = Platform.iOS_7_0, Deprecated = Platform.iOS_8_0, Message = "Use 'UIBarMetrics.CompactPrompt' instead.")]
+		[iOS (7, 0)]
+		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'UIBarMetrics.CompactPrompt' instead.")]
 		LandscapePhonePrompt = CompactPrompt
 	}
 
@@ -428,11 +430,11 @@ namespace XamCore.UIKit {
 		Black,
 
 		// The header doesn't say when it was deprecated, but the earliest headers I have (iOS 5.1) it is already deprecated.
-		[Availability (Deprecated = Platform.iOS_5_1, Message = "Use 'UIBarStyle.Black'.")]
+		[Deprecated (PlatformName.iOS, 5, 1, message : "Use 'UIBarStyle.Black'.")]
 		BlackOpaque      = 1,
 
 		// The header doesn't say when it was deprecated, but the earliest headers I have (iOS 5.1) it is already deprecated.
-		[Availability (Deprecated = Platform.iOS_5_1, Message = "Use 'UIBarStyle.Black' and set the translucency property to true.")]
+		[Deprecated (PlatformName.iOS, 5, 1, message : "Use 'UIBarStyle.Black' and set the translucency property to true.")]
 		BlackTranslucent = 2,
 	}
 
@@ -496,7 +498,7 @@ namespace XamCore.UIKit {
 	// NSInteger -> UISegmentedControl.h
 	[Native]
 	[NoTV][NoWatch]
-	[Availability (Deprecated = Platform.iOS_7_0, Message = "This no longer has any effect.")]
+	[Deprecated (PlatformName.iOS, 7, 0, message : "This no longer has any effect.")]
 	public enum UISegmentedControlStyle : nint {
 		Plain,
 		Bordered,
@@ -797,12 +799,12 @@ namespace XamCore.UIKit {
 	public enum UIStatusBarStyle : nint {
 		Default,
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'LightContent' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'LightContent' instead.")]
 		BlackTranslucent = 1,
 
 		LightContent = 1,
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'LightContent' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'LightContent' instead.")]
 		BlackOpaque = 2,
 	}
 

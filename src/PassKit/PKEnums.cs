@@ -8,7 +8,7 @@ namespace XamCore.PassKit {
 
 	// untyped enum -> PKError.h
 	// This never seemed to be deprecatd, yet in iOS8 it's obsoleted
-	[Availability (Obsoleted = Platform.iOS_8_0)]
+	[Obsoleted (PlatformName.iOS, 8, 0)]
 	[iOS (6,0)]
 	public enum PKErrorCode {
 		None = 0,

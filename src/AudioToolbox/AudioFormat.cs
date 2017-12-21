@@ -381,7 +381,7 @@ namespace XamCore.AudioToolbox {
 		ID3TagToDictionary			= 0x69643364,	// 'id3d' // TODO:
 
 #if !MONOMAC
-		[Availability (Deprecated = Platform.iOS_8_0)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
 		HardwareCodecCapabilities	= 0x68776363,	// 'hwcc'
 #endif
 	}

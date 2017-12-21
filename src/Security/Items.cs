@@ -946,7 +946,8 @@ namespace XamCore.Security {
 			}
 		}
 
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0, Message = "Use AuthenticationUI property")]
+		[iOS (8, 0)]
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use AuthenticationUI property")]
 		public bool UseNoAuthenticationUI {
 			get {
 				return Fetch (SecItem.UseNoAuthenticationUI) == CFBoolean.True.Handle;

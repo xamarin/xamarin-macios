@@ -49,11 +49,6 @@
           <property name="InformationalVersion" value="4.0.50524.0" />
         </properties>
       </attribute>
-      <attribute name="System.Reflection.AssemblyKeyFileAttribute">
-        <properties>
-          <property name="KeyFile" value="../msfinal.pub" />
-        </properties>
-      </attribute>
       <attribute name="System.Reflection.AssemblyProductAttribute">
         <properties>
           <property name="Product" value="Mono Common Language Infrastructure" />
@@ -1389,6 +1384,11 @@
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
+              </constructor>
+              <constructor name=".ctor(Foundation.NSUrlSessionConfiguration)" attrib="6278">
+                <parameters>
+                  <parameter name="configuration" position="0" attrib="0" type="Foundation.NSUrlSessionConfiguration" />
+                </parameters>
               </constructor>
             </constructors>
             <properties>

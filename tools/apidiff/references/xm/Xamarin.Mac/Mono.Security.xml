@@ -34,11 +34,6 @@
           <property name="Description" value="Mono.Security.dll" />
         </properties>
       </attribute>
-      <attribute name="System.Reflection.AssemblyKeyFileAttribute">
-        <properties>
-          <property name="KeyFile" value="../mono.pub" />
-        </properties>
-      </attribute>
       <attribute name="System.Reflection.AssemblyProductAttribute">
         <properties>
           <property name="Product" value="MONO CLI" />
@@ -3116,90 +3111,6 @@
               <field name="Warning" attrib="32854" fieldtype="Mono.Security.Interface.AlertLevel" value="1" />
             </fields>
           </class>
-          <class name="BufferOffsetSize" type="class" base="Mono.Security.Interface.SecretParameters" charset="Ansi" layout="Auto">
-            <interfaces>
-              <interface name="Mono.Security.Interface.IBufferOffsetSize" />
-              <interface name="System.IDisposable" />
-            </interfaces>
-            <constructors>
-              <constructor name=".ctor(System.Byte[])" attrib="6278">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
-                </parameters>
-              </constructor>
-              <constructor name=".ctor(System.Int32)" attrib="6278">
-                <parameters>
-                  <parameter name="size" position="0" attrib="0" type="System.Int32" />
-                </parameters>
-              </constructor>
-              <constructor name=".ctor(System.Byte[], System.Int32, System.Int32)" attrib="6278">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="size" position="2" attrib="0" type="System.Int32" />
-                </parameters>
-              </constructor>
-            </constructors>
-            <properties>
-              <property name="Buffer" attrib="0" ptype="System.Byte[]">
-                <methods>
-                  <method name="get_Buffer()" attrib="2534" virtual="true" returntype="System.Byte[]">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
-                    <parameters />
-                  </method>
-                </methods>
-              </property>
-              <property name="EndOffset" attrib="0" ptype="System.Int32">
-                <methods>
-                  <method name="get_EndOffset()" attrib="2182" returntype="System.Int32">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
-                    <parameters />
-                  </method>
-                </methods>
-              </property>
-              <property name="Offset" attrib="0" ptype="System.Int32">
-                <methods>
-                  <method name="get_Offset()" attrib="2534" virtual="true" returntype="System.Int32">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
-                    <parameters />
-                  </method>
-                </methods>
-              </property>
-              <property name="Size" attrib="0" ptype="System.Int32">
-                <methods>
-                  <method name="get_Size()" attrib="2534" virtual="true" returntype="System.Int32">
-                    <parameters />
-                  </method>
-                </methods>
-              </property>
-            </properties>
-            <methods>
-              <method name="Clear()" attrib="196" virtual="true" is-override="true" returntype="System.Void">
-                <parameters />
-              </method>
-              <method name="GetBuffer()" attrib="134" returntype="System.Byte[]">
-                <parameters />
-              </method>
-              <method name="SetBuffer(System.Byte[], System.Int32, System.Int32)" attrib="132" returntype="System.Void">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="size" position="2" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
-              <method name="TruncateTo(System.Int32)" attrib="134" returntype="System.Void">
-                <parameters>
-                  <parameter name="newSize" position="0" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
-            </methods>
-          </class>
           <class name="CertificateValidationHelper" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
             <properties>
               <property name="SupportsTrustAnchors" attrib="0" ptype="System.Boolean">
@@ -3551,31 +3462,6 @@
               <field name="Sha512" attrib="32854" fieldtype="Mono.Security.Interface.HashAlgorithmType" value="6" />
               <field name="Unknown" attrib="32854" fieldtype="Mono.Security.Interface.HashAlgorithmType" value="255" />
             </fields>
-          </class>
-          <class name="IBufferOffsetSize" type="interface" abstract="true" charset="Ansi" layout="Auto">
-            <properties>
-              <property name="Buffer" attrib="0" ptype="System.Byte[]">
-                <methods>
-                  <method name="get_Buffer()" attrib="3526" abstract="true" virtual="true" returntype="System.Byte[]">
-                    <parameters />
-                  </method>
-                </methods>
-              </property>
-              <property name="Offset" attrib="0" ptype="System.Int32">
-                <methods>
-                  <method name="get_Offset()" attrib="3526" abstract="true" virtual="true" returntype="System.Int32">
-                    <parameters />
-                  </method>
-                </methods>
-              </property>
-              <property name="Size" attrib="0" ptype="System.Int32">
-                <methods>
-                  <method name="get_Size()" attrib="3526" abstract="true" virtual="true" returntype="System.Int32">
-                    <parameters />
-                  </method>
-                </methods>
-              </property>
-            </properties>
           </class>
           <class name="ICertificateValidator" type="interface" abstract="true" charset="Ansi" layout="Auto">
             <properties>
@@ -3936,9 +3822,6 @@
                   <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
                 </parameters>
               </method>
-              <method name="Flush()" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
-                <parameters />
-              </method>
               <method name="GetConnectionInfo()" attrib="1478" abstract="true" virtual="true" returntype="Mono.Security.Interface.MonoTlsConnectionInfo">
                 <parameters />
               </method>
@@ -3969,17 +3852,13 @@
                   <parameter name="count" position="2" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-            </methods>
-          </class>
-          <class name="IMonoTlsEventSink" type="interface" abstract="true" charset="Ansi" layout="Auto">
-            <methods>
-              <method name="Error(System.Exception)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+              <method name="WriteAsync(System.Byte[], System.Int32, System.Int32, System.Threading.CancellationToken)" attrib="1478" abstract="true" virtual="true" returntype="System.Threading.Tasks.Task">
                 <parameters>
-                  <parameter name="exception" position="0" attrib="0" type="System.Exception" />
+                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="cancellationToken" position="3" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
-              </method>
-              <method name="ReceivedCloseNotify()" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
-                <parameters />
               </method>
             </methods>
           </class>
@@ -4579,321 +4458,6 @@
               </method>
             </methods>
           </class>
-          <class name="SecretParameters" type="class" base="System.Object" abstract="true" charset="Ansi" layout="Auto">
-            <interfaces>
-              <interface name="System.IDisposable" />
-            </interfaces>
-            <constructors>
-              <constructor name=".ctor()" attrib="6276">
-                <parameters />
-              </constructor>
-            </constructors>
-            <methods>
-              <method name="CheckDisposed()" attrib="132" returntype="System.Void">
-                <parameters />
-              </method>
-              <method name="Clear()" attrib="1476" abstract="true" virtual="true" returntype="System.Void">
-                <parameters />
-              </method>
-              <method name="Clear(System.Byte[])" attrib="148" static="true" returntype="System.Void">
-                <parameters>
-                  <parameter name="array" position="0" attrib="0" type="System.Byte[]" />
-                </parameters>
-              </method>
-              <method name="Dispose()" attrib="486" virtual="true" returntype="System.Void">
-                <parameters />
-              </method>
-              <method name="~SecretParameters()" attrib="196" virtual="true" returntype="System.Void">
-                <parameters />
-              </method>
-            </methods>
-          </class>
-          <class name="SecureBuffer" type="class" base="Mono.Security.Interface.SecretParameters" charset="Ansi" layout="Auto">
-            <interfaces>
-              <interface name="Mono.Security.Interface.IBufferOffsetSize" />
-              <interface name="System.IDisposable" />
-            </interfaces>
-            <constructors>
-              <constructor name=".ctor(System.Byte[])" attrib="6278">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
-                </parameters>
-              </constructor>
-              <constructor name=".ctor(System.Int32)" attrib="6278">
-                <parameters>
-                  <parameter name="size" position="0" attrib="0" type="System.Int32" />
-                </parameters>
-              </constructor>
-            </constructors>
-            <properties>
-              <property name="Buffer" attrib="0" ptype="System.Byte[]">
-                <methods>
-                  <method name="get_Buffer()" attrib="2534" virtual="true" returntype="System.Byte[]">
-                    <parameters />
-                  </method>
-                </methods>
-              </property>
-              <property name="Size" attrib="0" ptype="System.Int32">
-                <methods>
-                  <method name="get_Size()" attrib="2534" virtual="true" returntype="System.Int32">
-                    <parameters />
-                  </method>
-                </methods>
-              </property>
-            </properties>
-            <methods>
-              <method name="Clear()" attrib="196" virtual="true" is-override="true" returntype="System.Void">
-                <parameters />
-              </method>
-              <method name="CreateCopy(System.Byte[])" attrib="150" static="true" returntype="Mono.Security.Interface.SecureBuffer">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
-                </parameters>
-              </method>
-              <method name="StealBuffer()" attrib="134" returntype="System.Byte[]">
-                <parameters />
-              </method>
-            </methods>
-          </class>
-          <class name="TlsBuffer" type="class" base="Mono.Security.Interface.SecretParameters" charset="Ansi" layout="Auto">
-            <interfaces>
-              <interface name="System.IDisposable" />
-            </interfaces>
-            <fields>
-              <field name="EmptyArray" attrib="54" fieldtype="System.Byte[]" />
-            </fields>
-            <constructors>
-              <constructor name=".ctor()" attrib="6276">
-                <parameters />
-              </constructor>
-              <constructor name=".ctor(Mono.Security.Interface.IBufferOffsetSize)" attrib="6278">
-                <parameters>
-                  <parameter name="bos" position="0" attrib="0" type="Mono.Security.Interface.IBufferOffsetSize" />
-                </parameters>
-              </constructor>
-              <constructor name=".ctor(System.Byte[])" attrib="6278">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
-                </parameters>
-              </constructor>
-              <constructor name=".ctor(System.Int32)" attrib="6278">
-                <parameters>
-                  <parameter name="size" position="0" attrib="0" type="System.Int32" />
-                </parameters>
-              </constructor>
-              <constructor name=".ctor(System.Byte[], System.Int32, System.Int32)" attrib="6278">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="size" position="2" attrib="0" type="System.Int32" />
-                </parameters>
-              </constructor>
-            </constructors>
-            <properties>
-              <property name="Buffer" attrib="0" ptype="System.Byte[]">
-                <methods>
-                  <method name="get_Buffer()" attrib="2182" returntype="System.Byte[]">
-                    <parameters />
-                  </method>
-                </methods>
-              </property>
-              <property name="EndOffset" attrib="0" ptype="System.Int32">
-                <methods>
-                  <method name="get_EndOffset()" attrib="2182" returntype="System.Int32">
-                    <parameters />
-                  </method>
-                </methods>
-              </property>
-              <property name="Offset" attrib="0" ptype="System.Int32">
-                <methods>
-                  <method name="get_Offset()" attrib="2182" returntype="System.Int32">
-                    <parameters />
-                  </method>
-                </methods>
-              </property>
-              <property name="Position" attrib="0" ptype="System.Int32">
-                <methods>
-                  <method name="get_Position()" attrib="2182" returntype="System.Int32">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
-                    <parameters />
-                  </method>
-                  <method name="set_Position(System.Int32)" attrib="2182" returntype="System.Void">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
-                    <parameters>
-                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
-                    </parameters>
-                  </method>
-                </methods>
-              </property>
-              <property name="Remaining" attrib="0" ptype="System.Int32">
-                <methods>
-                  <method name="get_Remaining()" attrib="2182" returntype="System.Int32">
-                    <parameters />
-                  </method>
-                </methods>
-              </property>
-              <property name="Size" attrib="0" ptype="System.Int32">
-                <methods>
-                  <method name="get_Size()" attrib="2182" returntype="System.Int32">
-                    <parameters />
-                  </method>
-                </methods>
-              </property>
-            </properties>
-            <methods>
-              <method name="Clear()" attrib="196" virtual="true" is-override="true" returntype="System.Void">
-                <parameters />
-              </method>
-              <method name="Compare(Mono.Security.Interface.IBufferOffsetSize, Mono.Security.Interface.IBufferOffsetSize)" attrib="150" static="true" returntype="System.Boolean">
-                <parameters>
-                  <parameter name="buffer1" position="0" attrib="0" type="Mono.Security.Interface.IBufferOffsetSize" />
-                  <parameter name="buffer2" position="1" attrib="0" type="Mono.Security.Interface.IBufferOffsetSize" />
-                </parameters>
-              </method>
-              <method name="Compare(System.Byte[], System.Byte[])" attrib="150" static="true" returntype="System.Boolean">
-                <parameters>
-                  <parameter name="buffer1" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="buffer2" position="1" attrib="0" type="System.Byte[]" />
-                </parameters>
-              </method>
-              <method name="Compare(System.Byte[], System.Int32, System.Int32, System.Byte[], System.Int32, System.Int32)" attrib="150" static="true" returntype="System.Boolean">
-                <parameters>
-                  <parameter name="buffer1" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="offset1" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="size1" position="2" attrib="0" type="System.Int32" />
-                  <parameter name="buffer2" position="3" attrib="0" type="System.Byte[]" />
-                  <parameter name="offset2" position="4" attrib="0" type="System.Int32" />
-                  <parameter name="size2" position="5" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
-              <method name="ConstantTimeCompare(System.Byte[], System.Int32, System.Int32, System.Byte[], System.Int32, System.Int32)" attrib="150" static="true" returntype="System.Int32">
-                <parameters>
-                  <parameter name="buffer1" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="offset1" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="size1" position="2" attrib="0" type="System.Int32" />
-                  <parameter name="buffer2" position="3" attrib="0" type="System.Byte[]" />
-                  <parameter name="offset2" position="4" attrib="0" type="System.Int32" />
-                  <parameter name="size2" position="5" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
-              <method name="GetRemaining()" attrib="134" returntype="Mono.Security.Interface.IBufferOffsetSize">
-                <parameters />
-              </method>
-              <method name="MakeRoomInternal(System.Int32)" attrib="452" virtual="true" returntype="System.Void">
-                <parameters>
-                  <parameter name="size" position="0" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
-              <method name="ReadBuffer(System.Int32)" attrib="134" returntype="Mono.Security.Interface.TlsBuffer">
-                <parameters>
-                  <parameter name="length" position="0" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
-              <method name="ReadByte()" attrib="134" returntype="System.Byte">
-                <parameters />
-              </method>
-              <method name="ReadBytes(System.Int32)" attrib="134" returntype="System.Byte[]">
-                <parameters>
-                  <parameter name="count" position="0" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
-              <method name="ReadInt16()" attrib="134" returntype="System.Int16">
-                <parameters />
-              </method>
-              <method name="ReadInt24()" attrib="134" returntype="System.Int32">
-                <parameters />
-              </method>
-              <method name="ReadInt32()" attrib="134" returntype="System.Int32">
-                <parameters />
-              </method>
-              <method name="ReadSecureBuffer(System.Int32)" attrib="134" returntype="Mono.Security.Interface.SecureBuffer">
-                <parameters>
-                  <parameter name="count" position="0" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
-              <method name="SetBuffer(System.Byte[], System.Int32, System.Int32)" attrib="132" returntype="System.Void">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="size" position="2" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
-              <method name="Write(Mono.Security.Interface.IBufferOffsetSize)" attrib="134" returntype="System.Void">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="Mono.Security.Interface.IBufferOffsetSize" />
-                </parameters>
-              </method>
-              <method name="Write(System.Byte)" attrib="134" returntype="System.Void">
-                <parameters>
-                  <parameter name="value" position="0" attrib="0" type="System.Byte" />
-                </parameters>
-              </method>
-              <method name="Write(System.Byte[])" attrib="134" returntype="System.Void">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
-                </parameters>
-              </method>
-              <method name="Write(System.Int16)" attrib="134" returntype="System.Void">
-                <parameters>
-                  <parameter name="value" position="0" attrib="0" type="System.Int16" />
-                </parameters>
-              </method>
-              <method name="Write(System.Int32)" attrib="134" returntype="System.Void">
-                <parameters>
-                  <parameter name="value" position="0" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
-              <method name="Write(System.UInt64)" attrib="134" returntype="System.Void">
-                <parameters>
-                  <parameter name="value" position="0" attrib="0" type="System.UInt64" />
-                </parameters>
-              </method>
-              <method name="Write(System.Byte[], System.Int32, System.Int32)" attrib="134" returntype="System.Void">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="size" position="2" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
-              <method name="WriteInt16(System.Byte[], System.Int32, System.Int16)" attrib="150" static="true" returntype="System.Void">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="value" position="2" attrib="0" type="System.Int16" />
-                </parameters>
-              </method>
-              <method name="WriteInt24(System.Int32)" attrib="134" returntype="System.Void">
-                <parameters>
-                  <parameter name="value" position="0" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
-              <method name="WriteInt24(System.Byte[], System.Int32, System.Int32)" attrib="150" static="true" returntype="System.Void">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="value" position="2" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
-              <method name="WriteInt32(System.Byte[], System.Int32, System.Int32)" attrib="150" static="true" returntype="System.Void">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="value" position="2" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
-              <method name="WriteInt64(System.Byte[], System.Int32, System.UInt64)" attrib="150" static="true" returntype="System.Void">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="value" position="2" attrib="0" type="System.UInt64" />
-                </parameters>
-              </method>
-            </methods>
-          </class>
           <class name="TlsException" type="class" base="System.Exception" sealed="true" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="System.Runtime.Serialization.ISerializable" />
@@ -4948,60 +4512,6 @@
                 </methods>
               </property>
             </properties>
-          </class>
-          <class name="TlsMultiBuffer" type="class" base="System.Object" charset="Ansi" layout="Auto">
-            <constructors>
-              <constructor name=".ctor()" attrib="6278">
-                <parameters />
-              </constructor>
-            </constructors>
-            <properties>
-              <property name="IsEmpty" attrib="0" ptype="System.Boolean">
-                <methods>
-                  <method name="get_IsEmpty()" attrib="2182" returntype="System.Boolean">
-                    <parameters />
-                  </method>
-                </methods>
-              </property>
-              <property name="IsSingle" attrib="0" ptype="System.Boolean">
-                <methods>
-                  <method name="get_IsSingle()" attrib="2182" returntype="System.Boolean">
-                    <parameters />
-                  </method>
-                </methods>
-              </property>
-            </properties>
-            <methods>
-              <method name="Add(Mono.Security.Interface.TlsBuffer)" attrib="134" returntype="System.Void">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="Mono.Security.Interface.TlsBuffer" />
-                </parameters>
-              </method>
-              <method name="Add(System.Byte[])" attrib="134" returntype="System.Void">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
-                </parameters>
-              </method>
-              <method name="Add(System.Byte[], System.Int32, System.Int32)" attrib="134" returntype="System.Void">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="size" position="2" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
-              <method name="Clear()" attrib="134" returntype="System.Void">
-                <parameters />
-              </method>
-              <method name="GetBuffer()" attrib="134" returntype="Mono.Security.Interface.BufferOffsetSize">
-                <parameters />
-              </method>
-              <method name="GetBufferArray()" attrib="134" returntype="Mono.Security.Interface.BufferOffsetSize[]">
-                <parameters />
-              </method>
-              <method name="StealBuffer()" attrib="134" returntype="Mono.Security.Interface.BufferOffsetSize">
-                <parameters />
-              </method>
-            </methods>
           </class>
           <class name="TlsProtocolCode" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int16">
             <interfaces>

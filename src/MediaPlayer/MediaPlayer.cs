@@ -18,7 +18,7 @@ namespace XamCore.MediaPlayer {
 	[Native]
 	[NoMac]
 	[NoTV]
-	[Availability (Deprecated = Platform.iOS_9_0)]
+	[Deprecated (PlatformName.iOS, 9, 0)]
 	public enum MPMoviePlaybackState : nint {
 		Stopped,
 		Playing,
@@ -32,7 +32,7 @@ namespace XamCore.MediaPlayer {
 	[Native]
 	[NoMac]
 	[NoTV]
-	[Availability (Deprecated = Platform.iOS_9_0)]
+	[Deprecated (PlatformName.iOS, 9, 0)]
 	public enum MPMovieLoadState : nint {
 		Unknown        = 0,
 		Playable       = 1 << 0,
@@ -43,7 +43,7 @@ namespace XamCore.MediaPlayer {
 	// NSInteger -> MPMoviePlayerController.h
 	[NoMac]
 	[NoTV]
-	[Availability (Deprecated = Platform.iOS_9_0)]
+	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
 	public enum MPMovieRepeatMode : nint {
 		None, One
@@ -53,7 +53,7 @@ namespace XamCore.MediaPlayer {
 	[Native]
 	[NoMac]
 	[NoTV]
-	[Availability (Deprecated = Platform.iOS_9_0)]
+	[Deprecated (PlatformName.iOS, 9, 0)]
 	public enum MPMovieControlStyle : nint {
 		None, Embedded, Fullscreen, Default = Embedded
 	}
@@ -61,7 +61,7 @@ namespace XamCore.MediaPlayer {
 	// NSInteger -> MPMoviePlayerController.h
 	[NoMac]
 	[NoTV]
-	[Availability (Deprecated = Platform.iOS_9_0)]
+	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
 	public enum MPMovieFinishReason : nint {
 		PlaybackEnded, PlaybackError, UserExited
@@ -70,7 +70,7 @@ namespace XamCore.MediaPlayer {
 	// NSInteger -> MPMoviePlayerController.h
 	[NoMac]
 	[NoTV]
-	[Availability (Deprecated = Platform.iOS_9_0)]
+	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
 	[Flags]
 	public enum MPMovieMediaType : nint {
@@ -82,7 +82,7 @@ namespace XamCore.MediaPlayer {
 	// NSInteger -> MPMoviePlayerController.h
 	[NoMac]
 	[NoTV]
-	[Availability (Deprecated = Platform.iOS_9_0)]
+	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
 	public enum MPMovieSourceType : nint {
 		Unknown, File, Streaming
@@ -91,7 +91,7 @@ namespace XamCore.MediaPlayer {
 	// NSInteger -> MPMoviePlayerController.h
 	[NoMac]
 	[NoTV]
-	[Availability (Deprecated = Platform.iOS_9_0)]
+	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
 	public enum MPMovieTimeOption : nint {
 		NearestKeyFrame,
@@ -185,7 +185,7 @@ namespace XamCore.MediaPlayer {
 	// NSInteger -> MPMoviePlayerController.h
 	[NoMac]
 	[NoTV]
-	[Availability (Deprecated = Platform.iOS_9_0)]
+	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
 	public enum MPMovieScalingMode : nint {
 		None,
@@ -205,7 +205,7 @@ namespace XamCore.MediaPlayer {
 	// NSInteger -> /MPMusicPlayerController.h
 	[NoMac]
 	[NoTV]
-	[Availability (Deprecated = Platform.iOS_9_0)]
+	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
 	public enum MPMusicPlaybackState : nint {
 		Stopped,
