@@ -112,7 +112,7 @@ namespace XamCore.AudioUnit
 		HighPassFilter=0x68706173, // 'hpas'
 		HighShelfFilter=0x68736866, // 'hshf'
 		LowShelfFilter=0x6c736866, // 'lshf'
-		[Availability (Obsoleted = Platform.iOS_7_0)]
+		[Obsoleted (PlatformName.iOS, 7, 0)]
 		DCFilter=0x6463666c, // 'dcfl'
 		ParametricEQ=0x706d6571, // 'pmeq'
 		Delay=0x64656c79, // 'dely'
@@ -143,10 +143,10 @@ namespace XamCore.AudioUnit
 		Spacial=0x3364656d, // Same as Embedded3D
 #if MONOMAC
 		Stereo=0x736d7872, // 'smxr'
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use 'Spacial' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'Spacial' instead.")]
 		ThreeD=0x33646d78, // '3dmx'
 #else
-		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'Spacial' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'Spacial' instead.")]
 		Embedded3D=0x3364656d, // '3dem'
 #endif
 	}

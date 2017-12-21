@@ -18,7 +18,8 @@ namespace XamCore.AppKit {
 		}
 #endif
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_11)]
+		[Mac (10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		public CGRect [] GetRectArray (NSRange glyphRange, NSRange selectedGlyphRange, NSTextContainer textContainer)
 		{
 			if (textContainer == null)

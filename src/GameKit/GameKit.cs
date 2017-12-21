@@ -24,14 +24,16 @@ namespace XamCore.GameKit {
 #endif
 	[NoWatch]
 	[Native]
-	[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0)]
+	[iOS (3, 0)]
+	[Deprecated (PlatformName.iOS, 7, 0)]
 	public enum GKPeerPickerConnectionType : nuint_compat_int {
 		Online = 1 << 0,
 		Nearby = 1 << 1
 	}
 
 	// untyped enum -> GKPublicConstants.h
-	[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0)]
+	[iOS (3, 0)]
+	[Deprecated (PlatformName.iOS, 7, 0)]
 	[ErrorDomain ("GKVoiceChatServiceErrorDomain")]
 	public enum GKVoiceChatServiceError {
 		Internal = 32000,	
