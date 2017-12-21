@@ -323,6 +323,7 @@ namespace Introspection
 			"Ntsc",
 			"nuint",
 			"Ndef",
+			"Noi", // From NoiOSAttribute
 			"Nop",
 			"Numbernumber",
 			"Nyquist",
