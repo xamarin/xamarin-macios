@@ -4364,7 +4364,7 @@ public partial class Generator : IMemberGatherer {
 
 	static PropertyInfo GetProperty (PostGetAttribute @this, Type type)
 	{
-		if (type == null)
+		if (type == null || type == TypeManager.System_Object)
 			return null;
 
 		var props = type.GetProperties ();
