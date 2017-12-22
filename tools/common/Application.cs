@@ -482,7 +482,7 @@ namespace Xamarin.Bundler {
 
 			var registrar_m = RegistrarOutputLibrary;
 			var RootAssembly = RootAssemblies [0];
-			var resolvedAssemblies = new List<AssemblyDefinition> ();
+			var resolvedAssemblies = new HashSet<AssemblyDefinition> ();
 			var resolver = new PlatformResolver () {
 				FrameworkDirectory = Driver.GetPlatformFrameworkDirectory (this),
 				RootDirectory = Path.GetDirectoryName (RootAssembly),
@@ -506,8 +506,9 @@ namespace Xamarin.Bundler {
 				if (index == 0 && rootName != Driver.GetProductAssembly (this))
 					throw ErrorHelper.CreateError (66, "Invalid build registrar assembly: {0}", RootAssembly);
 
-				resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ()));
-				Driver.Log (3, "Loaded {0}", resolvedAssemblies [resolvedAssemblies.Count - 1].MainModule.FileName);
+				AssemblyDefinition lastAssembly = ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ());
+				if (resolvedAssemblies.Add (lastAssembly))
+					Driver.Log (3, "Loaded {0}", lastAssembly.MainModule.FileName);
 				index++;
 			}
 
