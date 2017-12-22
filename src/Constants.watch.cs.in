@@ -44,6 +44,7 @@ namespace ObjCRuntime {
 		public const string IntentsLibrary = "/System/Library/Frameworks/Intents.framework/Intents";
 
 		// WatchOS 4.0
+		public const string AccelerateImageLibrary = "/System/Library/Frameworks/Accelerate.framework/Frameworks/vImage.framework/vImage";
 		public const string CoreBluetoothLibrary = "/System/Library/Frameworks/CoreBluetooth.framework/CoreBluetooth";
 		public const string CoreMLLibrary = "/System/Library/Frameworks/CoreML.framework/CoreML";	
 		public const string CoreVideoLibrary = "/System/Library/Frameworks/CoreVideo.framework/CoreVideo";
