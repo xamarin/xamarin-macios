@@ -1439,17 +1439,17 @@ namespace Xamarin.Bundler
 			build_tasks.Add (link_task);
 		}
 
-		public void AdjustDylibs ()
+		public static void AdjustDylibs (string output)
 		{
 			var sb = new StringBuilder ();
-			foreach (var dependency in Xamarin.MachO.GetNativeDependencies (Executable)) {
+			foreach (var dependency in Xamarin.MachO.GetNativeDependencies (output)) {
 				if (!dependency.StartsWith ("/System/Library/PrivateFrameworks/", StringComparison.Ordinal))
 					continue;
 				var fixed_dep = dependency.Replace ("/PrivateFrameworks/", "/Frameworks/");
 				sb.Append (" -change ").Append (dependency).Append (' ').Append (fixed_dep);
 			}
 			if (sb.Length > 0) {
-				var quoted_name = StringUtils.Quote (Executable);
+				var quoted_name = StringUtils.Quote (output);
 				sb.Append (' ').Append (quoted_name);
 				Driver.XcodeRun ("install_name_tool", sb.ToString ());
 				sb.Clear ();
