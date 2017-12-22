@@ -127,11 +127,15 @@ public static class AttributeManager
 		}
 	}
 
-	static IEnumerable<System.Attribute> CreateAttributeInstance (CustomAttributeData attribute, ICustomAttributeProvider provider)
+	static IEnumerable<T> CreateAttributeInstance <T> (CustomAttributeData attribute, ICustomAttributeProvider provider) where T : System.Attribute
 	{
 		var convertedAttributes = ConvertOldAttributes (attribute);
 		if (convertedAttributes.Any ())
-			return convertedAttributes;
+			return convertedAttributes.OfType<T> ();
+
+		var expectedType = ConvertType (typeof (T), provider);
+		if (attribute.AttributeType != expectedType && !IsSubclassOf (expectedType, attribute.AttributeType))
+			return Enumerable.Empty<T> ();
 
 		System.Type attribType = ConvertType (attribute.AttributeType, provider);
 
@@ -206,7 +210,7 @@ public static class AttributeManager
 			}
 		}
 
-		return ((System.Attribute) instance).Yield ();
+		return ((T) instance).Yield ();
 	}
 
 	static T [] FilterAttributes<T> (IList<CustomAttributeData> attributes, ICustomAttributeProvider provider) where T : System.Attribute
@@ -214,18 +218,12 @@ public static class AttributeManager
 		if (attributes == null || attributes.Count == 0)
 			return Array.Empty<T> ();
 
-		var type = ConvertType (typeof (T), provider);
 		List<T> list = null;
 		for (int i = 0; i < attributes.Count; i++) {
-			var attrib = attributes [i];
-
-			foreach (var newAttribute in CreateAttributeInstance (attributes [i], provider)) {
-				if (attrib.AttributeType != type && !IsSubclassOf (type, attrib.AttributeType) && !(newAttribute is T))
-					continue;
-
+			foreach (var attrib in CreateAttributeInstance<T> (attributes [i], provider)) {
 				if (list == null)
 					list = new List<T> ();
-				list.Add ((T) newAttribute);
+				list.Add (attrib);
 			}
 		}
 
