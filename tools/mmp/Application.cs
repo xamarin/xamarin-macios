@@ -13,6 +13,8 @@ namespace Xamarin.Bundler {
 
 		internal void Initialize ()
 		{
+			if (DeploymentTarget == null)
+				DeploymentTarget = new Version (10, 7);
 		}
 	}
 }

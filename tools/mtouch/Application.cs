@@ -1252,6 +1252,9 @@ namespace Xamarin.Bundler {
 				DeploymentTarget = new Version (9, 0);
 #endif
 
+			if (DeploymentTarget == null)
+				DeploymentTarget = Xamarin.SdkVersions.GetVersion (Platform);
+
 			if (Platform == ApplePlatform.iOS && (HasDynamicLibraries || HasFrameworks) && DeploymentTarget.Major < 8) {
 				ErrorHelper.Warning (78, "Incremental builds are enabled with a deployment target < 8.0 (currently {0}). This is not supported (the resulting application will not launch on iOS 9), so the deployment target will be set to 8.0.", DeploymentTarget);
 				DeploymentTarget = new Version (8, 0);
