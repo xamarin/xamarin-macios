@@ -1,20 +1,23 @@
+## [Notification] in protocol - https://bugzilla.xamarin.com/show_bug.cgi?id=59342
+!missing-field! MTLDeviceRemovalRequestedNotification not bound
+!missing-field! MTLDeviceWasAddedNotification not bound
+!missing-field! MTLDeviceWasRemovedNotification not bound
+
+## fixed in XAMCORE_4_0
 !extra-protocol-member! unexpected selector MTLCommandBuffer::GPUEndTime found
 !extra-protocol-member! unexpected selector MTLCommandBuffer::GPUStartTime found
 !extra-protocol-member! unexpected selector MTLCommandBuffer::kernelEndTime found
 !extra-protocol-member! unexpected selector MTLCommandBuffer::kernelStartTime found
+
+
+## unsorted
+
 !incorrect-protocol-member! MTLBuffer::newTextureWithDescriptor:offset:bytesPerRow: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLComputeCommandEncoder::dispatchThreads:threadsPerThreadgroup: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::isDepth24Stencil8PixelFormatSupported is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::isHeadless is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::isLowPower is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::isRemovable is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::recommendedMaxWorkingSetSize is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::drawIndexedPatches:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::drawPatches:patchIndexBuffer:patchIndexBufferOffset:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setScissorRects:count: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setViewports:count: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::textureBarrier is REQUIRED and should be abstract
-!missing-field! MTLDeviceRemovalRequestedNotification not bound
-!missing-field! MTLDeviceWasAddedNotification not bound
-!missing-field! MTLDeviceWasRemovedNotification not bound
 !unknown-native-enum! MTLMultisampleDepthResolveFilter bound

@@ -1,9 +1,4 @@
-!extra-protocol-member! unexpected selector GKMatchDelegate::xamarin:selector:removed: found
 !extra-protocol-member! unexpected selector GKTurnBasedEventListener::player:didRequestMatchWithPlayers: found
-!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindPlayers: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! GKTurnBasedEventHandlerDelegate::handleTurnEventForMatch:didBecomeActive: is REQUIRED and should be abstract
-!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:playerQuitForMatch: is OPTIONAL and should NOT be abstract
 !missing-field! GKVoiceChatServiceErrorDomain not bound
 !missing-protocol! GKChallengeEventHandlerDelegate not bound
 !missing-protocol! GKChallengesViewControllerDelegate not bound
