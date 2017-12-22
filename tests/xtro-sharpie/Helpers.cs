@@ -280,7 +280,7 @@ namespace Extrospection {
 		public static string GetFramework (TypeReference type)
 		{
 			var framework = type.Namespace;
-			if (String.IsNullOrEmpty (framework))
+			if (String.IsNullOrEmpty (framework) && type.IsNested)
 				framework = type.DeclaringType.Namespace;
 			return MapFramework (framework);
 		}

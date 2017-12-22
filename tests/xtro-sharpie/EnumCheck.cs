@@ -23,6 +23,8 @@ namespace Extrospection {
 				enums.Add (name, type);
 			else if (td.Namespace.StartsWith ("OpenTK.", StringComparison.Ordinal)) {
 				// OpenTK duplicate a lots of enums between it's versions
+			} else if (type.IsNotPublic && String.IsNullOrEmpty (type.Namespace)) {
+				// ignore special, non exposed types
 			} else {
 				var sorted = Helpers.Sort (type, td);
 				var framework = Helpers.GetFramework (sorted.Item1);
