@@ -689,7 +689,7 @@ namespace XamCore.Registrar {
 			get {
 				if (IsSingleAssembly)
 					return App.Is64Build;
-				return Target.Is64Build;
+				return Target != null ? Target.Is64Build : App.Is64Build;
 			}
 		}
 
