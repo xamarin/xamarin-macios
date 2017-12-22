@@ -72,7 +72,7 @@ The minimum deployment target is the one specified in the error message; please 
 
 If updating the deployment target is not possible, then please use an older version of Xamarin.Mac.
 
-### <a name="MM0074"/>MM0074: Xamarin.Mac * does not support a minimum deployment target of * (the maximum is *). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.Mac.
+### <a name="MM0074"/>MM0074: Xamarin.Mac * does not support a deployment target of * (the maximum is *). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.Mac.
 
 Xamarin.Mac does not support setting the minimum deployment target to a higher version than the version this particular version of Xamarin.Mac was built for.
 

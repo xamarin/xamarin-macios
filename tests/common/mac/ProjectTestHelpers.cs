@@ -175,18 +175,13 @@ namespace Xamarin.MMP.Tests
 			WriteMainFile (config.TestDecl, config.TestCode, true, config.FSharp, Path.Combine (config.TmpDir, config.FSharp ? "Main.fs" : "Main.cs"));
 
 			string sourceDir = FindSourceDirectory ();
-			var projectPlistPath = Path.Combine(config.TmpDir, "Info.plist");
-			File.Copy (Path.Combine (sourceDir, "Info-Unified.plist"), projectPlistPath, true);
 
-			if (config.PlistReplaceStrings.Any())
-			{
-				string text = File.ReadAllText(projectPlistPath);
-
+			CopyFileWithSubstitutions (Path.Combine (sourceDir, "Info-Unified.plist"), Path.Combine (config.TmpDir, "Info.plist"), text => {
 				foreach (var key in config.PlistReplaceStrings.Keys)
-					text = text.Replace(key, config.PlistReplaceStrings[key]);
+					text = text.Replace (key, config.PlistReplaceStrings [key]);
 
-				File.WriteAllText(projectPlistPath, text);
-			}
+				return text;
+			});
 
 			return CopyFileWithSubstitutions (Path.Combine (sourceDir, config.ProjectName), Path.Combine (config.TmpDir, config.ProjectName), text =>
 				{

@@ -800,5 +800,18 @@ namespace Xamarin.MMP.Tests
 				TI.TestUnifiedExecutable (test, shouldFail: true);
 			});
 		}
+
+		[Test]
+		public void BuildUnified_ValidSDKDeploymentTargetShouldFail ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					PlistReplaceStrings = new Dictionary<string, string> {
+						{ "<string>10.7</string>", "<string>10.12</string>"}
+					}
+				};
+				TI.TestUnifiedExecutable (test, shouldFail: false);
+			});
+		}
 	}
 }
