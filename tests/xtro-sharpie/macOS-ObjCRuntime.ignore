@@ -18,7 +18,5 @@
 !unknown-pinvoke! aslresponse_free bound
 !unknown-pinvoke! aslresponse_next bound
 
-
-!unknown-pinvoke! close bound
 !unknown-pinvoke! kevent bound
 !unknown-pinvoke! kqueue bound

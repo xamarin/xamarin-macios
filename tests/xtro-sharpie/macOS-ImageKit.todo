@@ -37,7 +37,3 @@
 !missing-selector! NSObject::numberOfGroupsInImageBrowser: not bound
 !missing-selector! NSObject::numberOfItemsInImageBrowser: not bound
 !missing-selector! NSObject::saveOptions:shouldShowUTType: not bound
-!unknown-native-enum! IKCellsStyle bound
-!unknown-native-enum! IKGroupStyle bound
-!unknown-protocol! IKImageBrowserDataSource bound
-!unknown-protocol! IKImageBrowserItem bound

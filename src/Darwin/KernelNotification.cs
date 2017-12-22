@@ -151,9 +151,6 @@ namespace XamCore.Darwin {
 		[DllImport (Constants.SystemLibrary)]
 		extern static int /* int */ kqueue ();
 
-		[DllImport (Constants.SystemLibrary)]
-		extern static int /* int */ close (int /* int */ fd);
-
 		public KernelQueue ()
 		{
 			handle = kqueue ();
@@ -173,7 +170,7 @@ namespace XamCore.Darwin {
 		protected virtual void Dispose (bool disposing)
 		{
 			if (handle != -1){
-				close (handle);
+				CoreFoundation.DispatchSource.VnodeMonitor.close (handle);
 				handle = -1;
 			}
 		}

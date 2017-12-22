@@ -114,20 +114,24 @@ namespace MonoTouchFixtures.Security {
 				byte [] cipher;
 				if (TestRuntime.CheckXcodeVersion (8,0)) {
 					Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Encrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "public/IsAlgorithmSupported/Encrypt");
-					Action<bool> decryptTest = v => {
-						Assert.That (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), Is.EqualTo (v), "public/IsAlgorithmSupported/Decrypt");
 
-						using (var pub = public_key.GetPublicKey ())
-						{
-							// a new native instance of the key is returned (so having a new managed SecKey is fine)
-							Assert.That (pub.Handle == public_key.Handle, Is.Not.EqualTo (v), "public/GetPublicKey");
-						}
-					};
 #if MONOMAC
-					decryptTest (TestRuntime.CheckMacSystemVersion (10, 13));
+					Assert.That (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), Is.EqualTo (TestRuntime.CheckMacSystemVersion (10, 13)), "public/IsAlgorithmSupported/Decrypt");
+
+					using (var pub = public_key.GetPublicKey ()) {
+						// a new native instance of the key is returned (so having a new managed SecKey is fine)
+						Assert.True (pub.Handle == public_key.Handle, "public/GetPublicKey");
+					}
 #else
-					decryptTest (true);
+					Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "public/IsAlgorithmSupported/Decrypt");
+
+					using (var pub = public_key.GetPublicKey ())
+					{
+						// a new native instance of the key is returned (so having a new managed SecKey is fine)
+						Assert.False (pub.Handle == public_key.Handle, "public/GetPublicKey");
+					}
 #endif
+
 					using (var attrs = public_key.GetAttributes ()) {
 						Assert.That (attrs.Count, Is.GreaterThan (0), "public/GetAttributes");
 					}

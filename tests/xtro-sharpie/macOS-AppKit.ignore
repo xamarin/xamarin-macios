@@ -4,6 +4,40 @@
 # Proxy class for NSGraphicsContext internal to AppKit
 !unknown-type! NSPrintPreviewGraphicsContext bound
 
+# 32-bit only, and marked correctly in binding
+!unknown-type! NSMenuView bound
+
+# In header as old style unnamaed enum
+!unknown-native-enum! NSModalResponse bound
+!unknown-native-enum! NSWindowLevel bound
+
+# Defined in NSObject(NSDraggingSourceDeprecated)
+!extra-protocol-member! unexpected selector NSDraggingSource::draggingSourceOperationMaskForLocal: found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:beganAt: found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:endedAt:operation: found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:movedTo: found
+!extra-protocol-member! unexpected selector NSDraggingSource::ignoreModifierKeysWhileDragging found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:endedAt:deposited: found
+
+# Defined in NSObject(NSDraggingSourceDeprecated)
+!extra-protocol-member! unexpected selector NSDraggingSource::namesOfPromisedFilesDroppedAtDestination: found
+
+# Defined in NSObject(NSSavePanelDelegateDeprecated)
+!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:compareFilename:with:caseSensitive: found
+!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:directoryDidChange: found
+!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:isValidFilename: found
+!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:shouldShowFilename: found
+
+# Defined in NSObject (NSDeprecatedTextStorageDelegate)
+!extra-protocol-member! unexpected selector NSTextStorageDelegate::textStorageDidProcessEditing: found
+!extra-protocol-member! unexpected selector NSTextStorageDelegate::textStorageWillProcessEditing: found
+!missing-selector! NSObject::textStorageDidProcessEditing: not bound
+!missing-selector! NSObject::textStorageWillProcessEditing: not bound
+
+# Used in sandbox for NSOpen/Save panel but never should have been bound. #if !XAMCORE_3_0'ed
+!unknown-type! NSRemoteOpenPanel bound
+!unknown-type! NSRemoteSavePanel bound
+
 
 ## unsorted
 
@@ -13,18 +47,7 @@
 !extra-protocol-member! unexpected selector NSApplicationDelegate::readSelectionFromPasteboard: found
 !extra-protocol-member! unexpected selector NSApplicationDelegate::registerServicesMenuSendTypes:returnTypes: found
 !extra-protocol-member! unexpected selector NSApplicationDelegate::writeSelectionToPasteboard:types: found
-!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:beganAt: found
-!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:endedAt:deposited: found
-!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:endedAt:operation: found
-!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:movedTo: found
-!extra-protocol-member! unexpected selector NSDraggingSource::draggingSourceOperationMaskForLocal: found
-!extra-protocol-member! unexpected selector NSDraggingSource::ignoreModifierKeysWhileDragging found
-!extra-protocol-member! unexpected selector NSDraggingSource::namesOfPromisedFilesDroppedAtDestination: found
 !extra-protocol-member! unexpected selector NSGestureRecognizerDelegate::xamarinselector:removed: found
-!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:compareFilename:with:caseSensitive: found
-!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:directoryDidChange: found
-!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:isValidFilename: found
-!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:shouldShowFilename: found
 !extra-protocol-member! unexpected selector NSPasteboardReading::xamarinselector:removed: found
 !extra-protocol-member! unexpected selector NSRuleEditorDelegate::controlTextDidBeginEditing: found
 !extra-protocol-member! unexpected selector NSRuleEditorDelegate::controlTextDidChange: found
@@ -39,8 +62,6 @@
 !extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidBeginEditing: found
 !extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidChange: found
 !extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidEndEditing: found
-!extra-protocol-member! unexpected selector NSTextStorageDelegate::textStorageDidProcessEditing: found
-!extra-protocol-member! unexpected selector NSTextStorageDelegate::textStorageWillProcessEditing: found
 !incorrect-protocol-member! +NSPasteboardReading::readableTypesForPasteboard: is REQUIRED and should be abstract
 !incorrect-protocol-member! +NSWindowRestoration::restoreWindowWithIdentifier:state:completionHandler: is REQUIRED and should be abstract
 !incorrect-protocol-member! NSAccessibility::accessibilityChildrenInNavigationOrder is REQUIRED and should be abstract
@@ -953,8 +974,6 @@
 !missing-selector! NSObject::pasteboard:provideDataForType: not bound
 !missing-selector! NSObject::pasteboardChangedOwner: not bound
 !missing-selector! NSObject::tableView:writeRows:toPasteboard: not bound
-!missing-selector! NSObject::textStorageDidProcessEditing: not bound
-!missing-selector! NSObject::textStorageWillProcessEditing: not bound
 !missing-selector! NSObject::validateMenuItem: not bound
 !missing-selector! NSObject::validateToolbarItem: not bound
 !missing-selector! NSObject::view:stringForToolTip:point:userData: not bound
@@ -1257,7 +1276,6 @@
 !unknown-native-enum! NSImageScale bound
 !unknown-native-enum! NSKey bound
 !unknown-native-enum! NSMenuProperty bound
-!unknown-native-enum! NSModalResponse bound
 !unknown-native-enum! NSPanelButtonType bound
 !unknown-native-enum! NSRunResponse bound
 !unknown-native-enum! NSSystemDefinedEvents bound
@@ -1267,10 +1285,6 @@
 !unknown-native-enum! NSTextStorageEditedFlags bound
 !unknown-native-enum! NSType bound
 !unknown-native-enum! NSViewResizingMask bound
-!unknown-native-enum! NSWindowLevel bound
 !unknown-native-enum! NSWindowStyle bound
-!unknown-type! NSMenuView bound
-!unknown-type! NSRemoteOpenPanel bound
-!unknown-type! NSRemoteSavePanel bound
 !wrong-enum-size! NSEventSubtype managed 8 vs native 2
 !wrong-enum-size! NSSpellingState managed 4 vs native 8

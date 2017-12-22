@@ -1598,6 +1598,7 @@ SHARED_SOURCES = \
 #
 
 COMMON_FRAMEWORKS =         \
+	Accelerate              \
 	AVFoundation            \
 	CoreBluetooth           \
 	CoreFoundation          \
@@ -1610,7 +1611,6 @@ COMMON_FRAMEWORKS =         \
 
 MAC_FRAMEWORKS =            \
 	$(COMMON_FRAMEWORKS)    \
-	Accelerate              \
 	Accounts                \
 	AppKit                  \
 	AudioToolbox            \
@@ -1680,7 +1680,6 @@ MAC_FRAMEWORKS =            \
 IOS_FRAMEWORKS =         \
 	$(COMMON_FRAMEWORKS) \
 	AVKit \
-	Accelerate \
 	Accounts \
 	AdSupport \
 	AddressBook \
@@ -1794,7 +1793,6 @@ WATCHOS_FRAMEWORKS =        \
 TVOS_FRAMEWORKS =           \
 	$(COMMON_FRAMEWORKS)    \
 	AVKit                   \
-	Accelerate              \
 	AdSupport               \
 	AudioToolbox            \
 	AudioUnit               \

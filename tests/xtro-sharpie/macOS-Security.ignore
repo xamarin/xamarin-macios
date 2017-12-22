@@ -1,3 +1,12 @@
+## Not declared in header for macOS unlike iOS but in Security.framework anyway (via nm)
+!unknown-pinvoke! SecKeyDecrypt bound
+!unknown-pinvoke! SecKeyEncrypt bound
+!unknown-pinvoke! SecKeyRawSign bound
+!unknown-pinvoke! SecKeyRawVerify bound
+
+
+## unsorted
+
 !missing-enum! __CE_CrlDistributionPointNameType not bound
 !missing-enum! __CE_DataType not bound
 !missing-enum! __CE_GeneralNameType not bound
@@ -1525,7 +1534,3 @@
 !missing-pinvoke! SSLSetProtocolVersionEnabled is not bound
 !missing-pinvoke! SSLSetRsaBlinding is not bound
 !missing-pinvoke! SSLSetTrustedRoots is not bound
-!unknown-pinvoke! SecKeyDecrypt bound
-!unknown-pinvoke! SecKeyEncrypt bound
-!unknown-pinvoke! SecKeyRawSign bound
-!unknown-pinvoke! SecKeyRawVerify bound
