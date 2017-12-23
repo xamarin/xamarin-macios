@@ -31,6 +31,8 @@ namespace Xamarin.Bundler {
 		public static bool IsClassic { get { return Driver.IsClassic; } }
 		public static bool IsUnified { get { return Driver.IsUnified; } }
 
+		public List<string> ExtraSearchDirectories { get; } = new List<string> ();
+
 		public List <string> CommandLineAssemblies { get; set; }
 		public List<Exception> Exceptions = new List<Exception> ();
 
@@ -85,7 +87,42 @@ namespace Xamarin.Bundler {
 			if (assembly != null)
 				return assembly;
 
+			foreach (var directory in ExtraSearchDirectories) {
+				assembly = SearchDirectory (name, directory, true);
+				if (assembly != null)
+					return assembly;
+			}
+
 			return null;
 		}
+<<<<<<< HEAD
+=======
+
+		AssemblyDefinition SearchDirectory (string name, string directory, bool recursive = false)
+		{
+			var file = DirectoryGetFile (directory, name + ".dll", recursive);
+			if (file.Length > 0)
+				return AddAssembly (file);
+
+			file = DirectoryGetFile (directory, name + ".exe", recursive);
+			if (file.Length > 0)
+				return AddAssembly (file);
+
+			return null;
+		}
+
+		static string DirectoryGetFile (string directory, string file, bool recursive)
+		{
+			var files = Directory.GetFiles (directory, file, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+			if (files != null && files.Length > 0)
+				return files [0];
+
+			return "";
+		}
+
+		public void Dispose ()
+		{
+		}
+>>>>>>> [Mmp] Add support for recursive extra search directories.
 	}
 }

@@ -82,6 +82,7 @@ namespace Xamarin.Bundler {
 		static string app_name;
 		static bool generate_plist;
 		public static RegistrarMode Registrar { get; private set; } = RegistrarMode.Default;
+		public static List<string> ExtraSearchDirectories { get; } = new List<string> ();
 		static bool no_executable;
 		static bool embed_mono = true;
 		static bool? profiling = false;
@@ -308,6 +309,10 @@ namespace Xamarin.Bundler {
 						default:
 							throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--registrar", "dynamic, static, partial, or default");
 						}
+					}
+				},
+				{ "extra-directories:", "Specify extra search directories to use when probing assemblies", v => {
+						ExtraSearchDirectories.AddRange (v.Split (Path.PathSeparator));
 					}
 				},
 				{ "sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\")",
