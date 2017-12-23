@@ -478,7 +478,7 @@ namespace Xamarin.Bundler {
 				throw new PlatformException (67, "Invalid registrar: {0}", Registrar); // this is only called during our own build
 
 			if (RootAssemblies.Count < 1)
-				throw ErrorHelper.CreateError (8, "You should provide one root assembly only, found {0} assemblies: '{1}'", RootAssemblies.Count, string.Join ("', '", RootAssemblies.ToArray ()));
+				throw ErrorHelper.CreateError (130, "No assemblies found. You should provide at least one assembly.");
 
 			var registrar_m = RegistrarOutputLibrary;
 			var RootAssembly = RootAssemblies [0];
@@ -500,17 +500,20 @@ namespace Xamarin.Bundler {
 			ps.AssemblyResolver = resolver;
 			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse ("mscorlib"), new ReaderParameters ()));
 
-			int index = 0;
+			var productAssembly = Driver.GetProductAssembly (this);
+			bool foundProductAssembly = false;
 			foreach (var asm in RootAssemblies) {
 				var rootName = Path.GetFileNameWithoutExtension (asm);
-				if (index == 0 && rootName != Driver.GetProductAssembly (this))
-					throw ErrorHelper.CreateError (66, "Invalid build registrar assembly: {0}", RootAssembly);
+				if (rootName == productAssembly)
+					foundProductAssembly = true;
 
 				AssemblyDefinition lastAssembly = ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ());
 				if (resolvedAssemblies.Add (lastAssembly))
 					Driver.Log (3, "Loaded {0}", lastAssembly.MainModule.FileName);
-				index++;
 			}
+
+			if (!foundProductAssembly)
+				throw ErrorHelper.CreateError (131, "Product assembly '{0}' not found in assembly list: '{1}'", productAssembly, string.Join ("', '", RootAssemblies.ToArray ()));
 
 #if MONOTOUCH
 			BuildTarget = BuildTarget.Simulator;
