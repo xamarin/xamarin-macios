@@ -507,9 +507,13 @@ namespace Xamarin.Bundler {
 				if (rootName == productAssembly)
 					foundProductAssembly = true;
 
-				AssemblyDefinition lastAssembly = ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ());
-				if (resolvedAssemblies.Add (lastAssembly))
-					Driver.Log (3, "Loaded {0}", lastAssembly.MainModule.FileName);
+				try {
+					AssemblyDefinition lastAssembly = ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ());
+					if (resolvedAssemblies.Add (lastAssembly))
+						Driver.Log (3, "Loaded {0}", lastAssembly.MainModule.FileName);
+				} catch (Exception e) {
+					Driver.Log (3, "Failed to load assembly {0}{1}{2}", rootName, Environment.NewLine, e.ToString ());
+				}
 			}
 
 			if (!foundProductAssembly)
