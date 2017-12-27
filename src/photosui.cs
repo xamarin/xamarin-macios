@@ -52,7 +52,7 @@ namespace XamCore.PhotosUI {
 
 	[TV (10,0)]
 	[iOS (9,1)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64: true)]
 #if MONOMAC
 	[BaseType (typeof (NSView))]
 #else
@@ -93,25 +93,21 @@ namespace XamCore.PhotosUI {
 		[Export ("stopPlayback")]
 		void StopPlayback ();
 
-		[Mac (10,12)]
 		[NoiOS]
 		[NoTV]
 		[Export ("stopPlaybackAnimated:")]
 		void StopPlayback (bool animated);
 
-		[Mac (10,12)]
 		[NoiOS]
 		[NoTV]
 		[Export ("contentMode", ArgumentSemantic.Assign)]
 		PHLivePhotoViewContentMode ContentMode { get; set; }
 
-		[Mac (10,12)]
 		[NoiOS]
 		[NoTV]
 		[Export ("audioVolume")]
 		float AudioVolume { get; set; }
 
-		[Mac (10,12)]
 		[NoiOS]
 		[NoTV]
 		[NullAllowed, Export ("livePhotoBadgeView", ArgumentSemantic.Strong)]
