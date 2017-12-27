@@ -114,9 +114,8 @@ namespace XamCore.AppKit
 		}
 
 		[Preserve]
-		public bool WorksWhenModal
-		{
-			[Export("worksWhenModal")]
+		public bool WorksWhenModal {
+			[Export ("worksWhenModal")]
 			get { return true; }
 		}
 	}
