@@ -44,7 +44,7 @@ namespace Introspection {
 		public ApiAvailabilityTest ()
 		{
 #if __IOS__
-			Minimum = new Version (3,0);
+			Minimum = new Version (4,0);
 			Maximum = new Version (11,2);
 			Filter = (AvailabilityBaseAttribute arg) => {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.iOS);
@@ -109,7 +109,7 @@ namespace Introspection {
 					if (aa.Version < Minimum)
 						AddErrorLine ($"[FAIL] {aa.Version} < {Minimum} (Min) on '{cap}'.");
 					if (aa.Version > Maximum)
-						AddErrorLine ($"[FAIL] {aa.Version} > {Maximum} (Max) on '{cap}.'");
+						AddErrorLine ($"[FAIL] {aa.Version} > {Maximum} (Max) on '{cap}'.");
 					return aa;
 				}
 			}

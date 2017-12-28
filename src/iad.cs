@@ -129,7 +129,7 @@ namespace XamCore.iAd {
 		bool PresentInView (UIView containerView);
 
 		[Export ("presentFromViewController:")]
-		[Availability (Introduced = Platform.iOS_4_3, Deprecated = Platform.iOS_7_0, Message = "Use extension method 'UIViewController.RequestInterstitialAdPresentation' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use extension method 'UIViewController.RequestInterstitialAdPresentation' instead.")]
 		void PresentFromViewController (UIViewController viewController);
 	}
 

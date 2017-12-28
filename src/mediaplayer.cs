@@ -1029,7 +1029,7 @@ namespace XamCore.MediaPlayer {
 
 	[NoMac]
 	[NoTV]
-	[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_9_0)]
+	[Availability (Deprecated = Platform.iOS_9_0)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSGenericException Reason: MPTimedMetadata cannot be created directly
 	[DisableDefaultCtor]

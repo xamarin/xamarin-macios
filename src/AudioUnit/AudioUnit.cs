@@ -1382,13 +1382,10 @@ namespace XamCore.AudioUnit
 		ReverbRoomType = 10,
 		UsesInternalReverb = 1005,
 		SpatializationAlgorithm = 3000,
-		[iOS (3, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		DistanceParams = 3010,
-		[iOS (3, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		AttenuationCurve = 3013,
-		[iOS (3, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		RenderingFlags = 3003,
 
@@ -1660,7 +1657,6 @@ namespace XamCore.AudioUnit
 	[iOS (8, 0)]
 	public enum SpatialMixerRenderingFlags {
 		InterAuralDelay = (1 << 0),
-		[iOS (3, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		DistanceAttenuation = (1 << 2),
 	}
