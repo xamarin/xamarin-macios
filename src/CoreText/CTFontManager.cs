@@ -51,7 +51,6 @@ namespace XamCore.CoreText {
 		PromptUser = 3,
 	}
 
-	[iOS (4,1)]
 	public partial class CTFontManager {
 
 #if MONOMAC

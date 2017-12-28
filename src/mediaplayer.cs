@@ -1251,7 +1251,6 @@ namespace XamCore.MediaPlayer {
 
 	[NoMac]
 	[NoTV]
-	[iOS (4,2)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: MPMediaQuerySection is a read-only object
 	[DisableDefaultCtor]
@@ -1264,7 +1263,6 @@ namespace XamCore.MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -init is not supported, use +defaultCenter
 	[DisableDefaultCtor]

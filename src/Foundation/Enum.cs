@@ -190,28 +190,21 @@ namespace XamCore.Foundation  {
 		Weekday = 512,
 		WeekdayOrdinal = 1024,
 		[Mac (10, 6)]
-		[iOS (4, 0)]
 		Quarter = 2048,
 
 		[Mac (10, 7)]
-		[iOS (5, 0)]
 		WeekOfMonth = (1 << 12),
 		[Mac (10, 7)]
-		[iOS (5, 0)]
 		WeekOfYear = (1 << 13),
 		[Mac (10, 7)]
-		[iOS (5, 0)]
 		YearForWeakOfYear = (1 << 14),
 
 		[Mac (10, 7)]
-		[iOS (5, 0)]
 		Nanosecond = (1 << 15),
 
 		[Mac (10, 7)]
-		[iOS (5, 0)]
 		Calendar = (1 << 20),
 		[Mac (10, 7)]
-		[iOS (5, 0)]
 		TimeZone = (1 << 21),
 	}
 
@@ -239,21 +232,15 @@ namespace XamCore.Foundation  {
 		Coordinated = 1 << 2,
 #endif
 			
-		[iOS (4,0)]
 		FileProtectionNone = 0x10000000,
-		[iOS (4,0)]
 		FileProtectionComplete = 0x20000000,
-		[iOS (4,0)]
 		FileProtectionMask = 0xf0000000,
-		[iOS (5,0)]
 		FileProtectionCompleteUnlessOpen = 0x30000000,
-		[iOS (5,0)]
 		FileProtectionCompleteUntilFirstUserAuthentication = 0x40000000,
 	}
 	
 	public delegate void NSSetEnumerator (NSObject obj, ref bool stop);
 
-	[iOS (4,0)]
 	[Native]
 	public enum NSOperationQueuePriority : nint {
 		VeryLow = -8, Low = -4, Normal = 0, High = 4, VeryHigh = 8
@@ -556,7 +543,6 @@ namespace XamCore.Foundation  {
 		Or
 	}	
 
-	[iOS (4,0)]
 	[Flags]
 	[Native]
 	public enum NSVolumeEnumerationOptions : nuint_compat_int {
@@ -566,7 +552,6 @@ namespace XamCore.Foundation  {
 		ProduceFileReferenceUrls = 1 << 2,
 	}
 
-	[iOS (4,0)]
 	[Flags]
 	[Native]
 	public enum NSDirectoryEnumerationOptions : nuint_compat_int {
@@ -576,7 +561,6 @@ namespace XamCore.Foundation  {
 		SkipsHiddenFiles             = 1 << 2,
 	}
 
-	[iOS (4,0)]
 	[Flags]
 	[Native]
 	public enum NSFileManagerItemReplacementOptions : nuint_compat_int {
@@ -1168,13 +1152,10 @@ namespace XamCore.Foundation  {
 		Dash          = 1 << 7,
 		Replacement   = 1 << 8,
 		Correction    = 1 << 9,
-		[iOS (4, 0)]
 		[Mac (10, 7)]
 		RegularExpression  = 1 << 10,
-		[iOS (4, 0)]
 		[Mac (10, 7)]
 		PhoneNumber        = 1 << 11,
-		[iOS (4, 0)]
 		[Mac (10, 7)]
 		TransitInformation = 1 << 12,
 	}

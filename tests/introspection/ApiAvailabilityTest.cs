@@ -44,7 +44,7 @@ namespace Introspection {
 		public ApiAvailabilityTest ()
 		{
 #if __IOS__
-			Minimum = new Version (4,0);
+			Minimum = new Version (5,0);
 			Maximum = new Version (11,2);
 			Filter = (AvailabilityBaseAttribute arg) => {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.iOS);

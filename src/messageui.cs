@@ -69,7 +69,6 @@ namespace XamCore.MessageUI {
 		bool TextMessageAvailability { get; }
 	}
 	
-	[iOS (4,0)]
 	[BaseType (typeof (UINavigationController))]
 	interface MFMessageComposeViewController : UIAppearance {
 		[Export ("messageComposeDelegate", ArgumentSemantic.Assign), NullAllowed]

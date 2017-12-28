@@ -185,7 +185,6 @@ namespace XamCore.AVFoundation {
 #if !XAMCORE_4_0
 	[Obsolete ("Use AVMediaTypes enum values")]
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))][Static]
 	interface AVMediaType {
 		[Field ("AVMediaTypeVideo")]
@@ -326,27 +325,27 @@ namespace XamCore.AVFoundation {
 		[Field ("AVMediaCharacteristicUsesWideGamutColorSpace")]
 		UsesWideGamutColorSpace = 4,
 
-		[Mac (10, 8), iOS (5,0)]
+		[Mac (10, 8)]
 		[Field ("AVMediaCharacteristicIsMainProgramContent")]
 		IsMainProgramContent = 5,
 
-		[Mac (10, 8)][iOS (5,0)]
+		[Mac (10, 8)]
 		[Field ("AVMediaCharacteristicIsAuxiliaryContent")]
 		IsAuxiliaryContent = 6,
 
-		[Mac (10, 8)][iOS (5,0)]
+		[Mac (10, 8)]
 		[Field ("AVMediaCharacteristicContainsOnlyForcedSubtitles")]
 		ContainsOnlyForcedSubtitles = 7,
 
-		[Mac (10, 8)][iOS (5,0)]
+		[Mac (10, 8)]
 		[Field ("AVMediaCharacteristicTranscribesSpokenDialogForAccessibility")]
 		TranscribesSpokenDialogForAccessibility = 8,
 
-		[Mac (10, 8)][iOS (5,0)]
+		[Mac (10, 8)]
 		[Field ("AVMediaCharacteristicDescribesMusicAndSoundForAccessibility")]
 		DescribesMusicAndSoundForAccessibility = 9,
 
-		[Mac (10, 8)][iOS (5,0)]
+		[Mac (10, 8)]
 		[Field ("AVMediaCharacteristicDescribesVideoForAccessibility")]
 		DescribesVideoForAccessibility = 10,
 
@@ -371,7 +370,6 @@ namespace XamCore.AVFoundation {
 #if !XAMCORE_4_0
 	[Obsolete ("Use AVMediaCharacteristics enum values")]
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))][Static]
 	interface AVMediaCharacteristic {
 		[Field ("AVMediaCharacteristicVisual")]
@@ -390,27 +388,27 @@ namespace XamCore.AVFoundation {
 		[Field ("AVMediaCharacteristicUsesWideGamutColorSpace")]
 		NSString UsesWideGamutColorSpace { get; }
 
-		[Mac (10, 8)][iOS (5,0)]
+		[Mac (10, 8)]
 		[Field ("AVMediaCharacteristicIsMainProgramContent")]
 		NSString IsMainProgramContent { get; }
 
-		[Mac (10, 8)][iOS (5,0)]
+		[Mac (10, 8)]
 		[Field ("AVMediaCharacteristicIsAuxiliaryContent")]
 		NSString IsAuxiliaryContent { get; }
 
-		[Mac (10, 8)][iOS (5,0)]
+		[Mac (10, 8)]
 		[Field ("AVMediaCharacteristicContainsOnlyForcedSubtitles")]
 		NSString ContainsOnlyForcedSubtitles { get; }
 
-		[Mac (10, 8)][iOS (5,0)]
+		[Mac (10, 8)]
 		[Field ("AVMediaCharacteristicTranscribesSpokenDialogForAccessibility")]
 		NSString TranscribesSpokenDialogForAccessibility { get; }
 
-		[Mac (10, 8)][iOS (5,0)]
+		[Mac (10, 8)]
 		[Field ("AVMediaCharacteristicDescribesMusicAndSoundForAccessibility")]
 		NSString DescribesMusicAndSoundForAccessibility { get; }
 
-		[Mac (10, 8)][iOS (5,0)]
+		[Mac (10, 8)]
 		[Field ("AVMediaCharacteristicDescribesVideoForAccessibility")]
 		NSString DescribesVideoForAccessibility { get;  }
 #if !MONOMAC
@@ -537,7 +535,6 @@ namespace XamCore.AVFoundation {
 
 #if !XAMCORE_4_0
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))][Static]
 	[Obsolete ("Use AVFileTypes enum values")]
 	interface AVFileType {
@@ -626,7 +623,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))][Static]
 	interface AVVideo {
 		[Field ("AVVideoCodecKey")]
@@ -671,7 +667,6 @@ namespace XamCore.AVFoundation {
 		[Field ("AVVideoH264EntropyModeKey")]
 		NSString H264EntropyModeKey { get; }
 
-		[iOS (4, 0)]
 		[Mac (10, 7)]
 		[TV (9, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'AVVideoCodecType' enum instead.")]
@@ -680,7 +675,6 @@ namespace XamCore.AVFoundation {
 		[Field ("AVVideoCodecH264")]
 		NSString CodecH264 { get; }
 		
-		[iOS (4, 0)]
 		[Mac (10, 7)]
 		[TV (9, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'AVVideoCodecType' enum instead.")]
@@ -708,7 +702,6 @@ namespace XamCore.AVFoundation {
 		[Field ("AVVideoHeightKey")]
 		NSString HeightKey { get; }
 
-		[iOS (5,0)]
 		[Field ("AVVideoScalingModeKey")]
 		NSString ScalingModeKey { get; }
 		
@@ -724,7 +717,6 @@ namespace XamCore.AVFoundation {
 		[Field ("AVVideoProfileLevelKey")]
 		NSString ProfileLevelKey { get; }
 
-		[iOS (5,0)]
 		[Field ("AVVideoQualityKey")]
 		NSString QualityKey { get; }
 		
@@ -740,15 +732,13 @@ namespace XamCore.AVFoundation {
 		[Field ("AVVideoProfileLevelH264Main31")]
 		NSString ProfileLevelH264Main31 { get; }
 
-		[iOS (5,0)]
 		[Field ("AVVideoProfileLevelH264Baseline41")]
 		NSString ProfileLevelH264Baseline41 { get; }
 
-		[iOS (5,0)][Mac (10, 8)]
+		[Mac (10, 8)]
 		[Field ("AVVideoProfileLevelH264Main32")]
 		NSString ProfileLevelH264Main32 { get; }
 
-		[iOS (5,0)]
 		[Field ("AVVideoProfileLevelH264Main41")]
 		NSString ProfileLevelH264Main41 { get; }
 
@@ -799,7 +789,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (5,0)]
 	[Static]
 	interface AVVideoScalingModeKey
 	{
@@ -1500,30 +1489,24 @@ namespace XamCore.AVFoundation {
 		[Export ("averagePowerForChannel:")]
 		float AveragePower (nuint channelNumber); // defined as 'float'
 
-		[iOS (4,0)]
 		[Export ("deviceCurrentTime")]
 		double DeviceCurrentTime { get;  }
 
-		[iOS (4,0)]
 		[Export ("pan")]
 		float Pan { get; set; } // defined as 'float'
 
-		[iOS (4,0)]
 		[Export ("playAtTime:")]
 		bool PlayAtTime (double time);
 
-		[iOS (4,0)]
 		[Export ("settings")][Protected]
 		NSDictionary WeakSettings { get;  }
 
 		[Wrap ("WeakSettings")]
 		AudioSettings SoundSetting { get; }
 
-		[iOS (5,0)]
 		[Export ("enableRate")]
 		bool EnableRate { get; set; }
 
-		[iOS (5,0)]
 		[Export ("rate")]
 		float Rate { get; set; } // defined as 'float'		
 #if !MONOMAC
@@ -1565,7 +1548,6 @@ namespace XamCore.AVFoundation {
 
 		// Deprecated in iOS 6.0 but we have same C# signature
 		[NoTV]
-		[iOS (4,0)]
 		[Export ("audioPlayerEndInterruption:withFlags:")]
 		void EndInterruption (AVAudioPlayer player, AVAudioSessionInterruptionFlags flags);
 
@@ -1761,7 +1743,6 @@ namespace XamCore.AVFoundation {
 
 		// Deprecated in iOS 6.0 but we have same C# signature as a method that was deprecated in iOS 8.0
 		[Availability (Deprecated = Platform.iOS_8_0)]
-		[iOS (4,0)]
 		[Export ("audioRecorderEndInterruption:withFlags:")]
 		void EndInterruption (AVAudioRecorder recorder, AVAudioSessionInterruptionFlags flags);
 
@@ -1827,11 +1808,9 @@ namespace XamCore.AVFoundation {
 		[Export ("category")]
 		NSString Category { get;  }
 
-		[iOS (5,0)]
 		[Export ("mode")]
 		NSString Mode { get; }
 
-		[iOS (5,0)]
 		[Export ("setMode:error:")]
 		bool SetMode (NSString mode, out NSError error);
 	
@@ -1884,23 +1863,18 @@ namespace XamCore.AVFoundation {
 		[Field ("AVAudioSessionCategoryAudioProcessing")]
 		NSString CategoryAudioProcessing { get; }
 
-		[iOS (5,0)]
 		[Field ("AVAudioSessionModeDefault")]
 		NSString ModeDefault { get; }
 
-		[iOS (5,0)]
 		[Field ("AVAudioSessionModeVoiceChat")]
 		NSString ModeVoiceChat { get; }
 
-		[iOS (5,0)]
 		[Field ("AVAudioSessionModeVideoRecording")]
 		NSString ModeVideoRecording { get; }
 
-		[iOS (5,0)]
 		[Field ("AVAudioSessionModeMeasurement")]
 		NSString ModeMeasurement { get; }
 
-		[iOS (5,0)]
 		[Field ("AVAudioSessionModeGameChat")]
 		NSString ModeGameChat { get; }
 
@@ -2317,7 +2291,6 @@ namespace XamCore.AVFoundation {
 		[Export ("inputIsAvailableChanged:")]
 		void InputIsAvailableChanged (bool isInputAvailable);
 	
-		[iOS (4,0)]
 		[Export ("endInterruptionWithFlags:")]
 		void EndInterruption (AVAudioSessionInterruptionFlags flags);
 	}
@@ -2807,7 +2780,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** initialization method -init cannot be sent to an abstract object of class AVAsset: Create a concrete instance!
 	[DisableDefaultCtor]
@@ -2825,7 +2797,6 @@ namespace XamCore.AVFoundation {
 		CGAffineTransform PreferredTransform { get;  }
 
 		[Export ("naturalSize")]
-		[iOS (4, 0)]
 		[Deprecated (PlatformName.iOS, 5, 0, message : "Use 'NaturalSize/PreferredTransform' as appropriate on the video track instead.")]
 		[Mac (10, 7)]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'NaturalSize/PreferredTransform' as appropriate on the video track instead.")]
@@ -2880,60 +2851,47 @@ namespace XamCore.AVFoundation {
 		[Wrap ("GetMetadataForFormat (new NSString (format.GetConstant ()))")]
 		AVMetadataItem [] GetMetadataForFormat (AVMetadataFormat format);
 
-		[iOS (4,2)]
 		[Export ("hasProtectedContent")]
 		bool ProtectedContent { get; }
 
-		[iOS (4,3)]
 		[Export ("availableChapterLocales")]
 		NSLocale [] AvailableChapterLocales { get; }
 
-		[iOS (4,3)]
 		[Export ("chapterMetadataGroupsWithTitleLocale:containingItemsWithCommonKeys:")]
 		AVTimedMetadataGroup [] GetChapterMetadataGroups (NSLocale forLocale, [NullAllowed] AVMetadataItem [] commonKeys);
 
-		[iOS (4,3)]
 		[Export ("isPlayable")]
 		bool Playable { get; }
 
-		[iOS (4,3)]
 		[Export ("isExportable")]
 		bool Exportable { get; }
 
-		[iOS (4,3)]
 		[Export ("isReadable")]
 		bool Readable { get; }
 
-		[iOS (4,3)]
 		[Export ("isComposable")]
 		bool Composable { get; }
 
 		// 5.0 APIs:
-		[iOS (5,0)]
 		[Static, Export ("assetWithURL:")]
 		AVAsset FromUrl (NSUrl url);
 
-		[iOS (5, 0)]
 		[Mac (10,8)]
 		[Export ("availableMediaCharacteristicsWithMediaSelectionOptions")]
 		string [] AvailableMediaCharacteristicsWithMediaSelectionOptions { get; }
 
 #if !MONOMAC
-		[iOS (5,0)]
 		[Export ("compatibleWithSavedPhotosAlbum")]
 		bool CompatibleWithSavedPhotosAlbum  { [Bind ("isCompatibleWithSavedPhotosAlbum")] get; }
 #endif
 
-		[iOS (5, 0)]
 		[Mac (10,8)]
 		[Export ("creationDate"), NullAllowed]
 		AVMetadataItem CreationDate { get; }
 
-		[iOS (5,0)]
 		[Export ("referenceRestrictions")]
 		AVAssetReferenceRestrictions ReferenceRestrictions { get; }
 
-		[iOS (5,0)]
 		[Mac (10,8)]
 		[return: NullAllowed]
 		[Export ("mediaSelectionGroupForMediaCharacteristic:")]
@@ -3442,11 +3400,9 @@ namespace XamCore.AVFoundation {
 		NSString ApertureModeEncodedPixels { get; }
 
 		// 5.0 APIs
-		[iOS (5,0)]
 		[Export ("requestedTimeToleranceBefore", ArgumentSemantic.Assign)]
 		CMTime RequestedTimeToleranceBefore { get; set;  }
 
-		[iOS (5,0)]
 		[Export ("requestedTimeToleranceAfter", ArgumentSemantic.Assign)]
 		CMTime RequestedTimeToleranceAfter { get; set;  }
 
@@ -3463,7 +3419,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,1)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -[AVAssetReader initWithAsset:error:] invalid parameter not satisfying: asset != ((void*)0)
 	[DisableDefaultCtor]
@@ -3505,7 +3460,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,1)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** initialization method -init cannot be sent to an abstract object of class AVAssetReaderOutput: Create a concrete instance!
 	[DisableDefaultCtor]
@@ -3517,7 +3471,6 @@ namespace XamCore.AVFoundation {
 		[Export ("copyNextSampleBuffer")]
 		CMSampleBuffer CopyNextSampleBuffer ();
 
-		[iOS (5,0)]
 		[Export ("alwaysCopiesSampleData")]
 		bool AlwaysCopiesSampleData { get; set; }
 
@@ -3573,7 +3526,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,1)]
 	[BaseType (typeof (AVAssetReaderOutput))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -[AVAssetReaderTrackOutput initWithTrack:outputSettings:] invalid parameter not satisfying: track != ((void*)0)
 	[DisableDefaultCtor]
@@ -3615,7 +3567,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,1)]
 	[BaseType (typeof (AVAssetReaderOutput))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -[AVAssetReaderAudioMixOutput initWithAudioTracks:audioSettings:] invalid parameter not satisfying: audioTracks != ((void*)0)
 	[DisableDefaultCtor]
@@ -3661,7 +3612,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,1)]
 	[BaseType (typeof (AVAssetReaderOutput))]
 	// crash application if 'init' is called
 	[DisableDefaultCtor]
@@ -3872,7 +3822,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,1)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -[AVAssetWriter initWithURL:fileType:error:] invalid parameter not satisfying: outputURL != ((void*)0)
 	[DisableDefaultCtor]
@@ -3976,7 +3925,7 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,1), Mac (10, 7)]
+	[Mac (10, 7)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -[AVAssetWriterInput initWithMediaType:outputSettings:] invalid parameter not satisfying: mediaType != ((void*)0)
 	[DisableDefaultCtor]
@@ -4190,7 +4139,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,1)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -[AVAssetWriterInputPixelBufferAdaptor initWithAssetWriterInput:sourcePixelBufferAttributes:] invalid parameter not satisfying: input != ((void*)0)
 	[DisableDefaultCtor]
@@ -4240,7 +4188,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (AVAsset), Name="AVURLAsset")]
 	// 'init' returns NIL
 	[DisableDefaultCtor]
@@ -4285,19 +4232,15 @@ namespace XamCore.AVFoundation {
 		[Field ("AVURLAssetPreferPreciseDurationAndTimingKey")]
 		NSString PreferPreciseDurationAndTimingKey { get; }
 
-		[iOS (5,0)]
 		[Field ("AVURLAssetReferenceRestrictionsKey")]
 		NSString ReferenceRestrictionsKey { get; }
 
-		[iOS (5,0)]
 		[Static, Export ("audiovisualMIMETypes")]
 		string [] AudiovisualMimeTypes { get; }
 
-		[iOS (5,0)]
 		[Static, Export ("audiovisualTypes")]
 		string [] AudiovisualTypes { get; }
 
-		[iOS (5,0)]
 		[Static, Export ("isPlayableExtendedMIMEType:")]
 		bool IsPlayable (string extendedMimeType);
 
@@ -4403,7 +4346,6 @@ namespace XamCore.AVFoundation {
 		[Export ("metadataForFormat:")]
 		AVMetadataItem [] MetadataForFormat (string format);
 
-		[iOS (5,0)]
 		[Export ("isPlayable")]
 		bool Playable { get; }
 
@@ -4562,7 +4504,7 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (5,0), Mac (10, 8)]
+	[Mac (10, 8)]
 	[BaseType (typeof (NSObject))]
 	interface AVMediaSelectionGroup : NSCopying {
 		[Export ("options")]
@@ -4605,7 +4547,7 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (5,0), Mac (10, 8)]
+	[Mac (10, 8)]
 	[BaseType (typeof (NSObject))]
 	interface AVMediaSelectionOption : NSCopying {
 		[Export ("mediaType")]
@@ -4847,7 +4789,7 @@ namespace XamCore.AVFoundation {
 		[Field ("AVMetadataQuickTimeUserDataKeyPhonogramRights")]
 		NSString QuickTimeUserDataKeyPhonogramRights { get; }
 
-		[Mac (10, 8)][iOS (5,0)]
+		[Mac (10, 8)]
 		[Field ("AVMetadataQuickTimeUserDataKeyTaggedCharacteristic")]
 		NSString QuickTimeUserDataKeyTaggedCharacteristic { get; }
 		
@@ -5227,7 +5169,6 @@ namespace XamCore.AVFoundation {
 		[Field ("AVMetadataID3MetadataKeyCommercial")]
 		NSString ID3MetadataKeyCommercial { get; }
 
-		[iOS (4, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Mac (10, 7)]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
@@ -6400,7 +6341,7 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)][Mac (10,7)]
+	[Mac (10,7)]
 	[BaseType (typeof (NSObject))]
 	interface AVMetadataItem : NSMutableCopying {
 		[Export ("commonKey", ArgumentSemantic.Copy), NullAllowed]
@@ -6450,7 +6391,6 @@ namespace XamCore.AVFoundation {
 		AVMetadataItem [] FilterWithItemFilter (AVMetadataItem [] metadataItems, AVMetadataItemFilter metadataItemFilter);
 #endif
 
-		[iOS (4,2)]
 		[Export ("duration")]
 		CMTime Duration { get; [NotImplemented] set; }
 
@@ -7143,7 +7083,6 @@ namespace XamCore.AVFoundation {
 #endif
 
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (AVMetadataItem))]
 	interface AVMutableMetadataItem {
 		[NullAllowed] // by default this property is null
@@ -7154,7 +7093,6 @@ namespace XamCore.AVFoundation {
 		[Export ("metadataItem"), Static]
 		AVMutableMetadataItem Create ();
 
-		[iOS (4,2)]
 		[Export ("duration")]
 		[Override]
 		CMTime Duration { get; set; }
@@ -7207,7 +7145,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (AVAssetTrack))]
 	// 'init' returns NIL
 	[DisableDefaultCtor]
@@ -7217,7 +7154,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (AVCompositionTrack))]
 	// 'init' returns NIL
 	[DisableDefaultCtor]
@@ -7262,7 +7198,6 @@ namespace XamCore.AVFoundation {
 		float PreferredVolume { get; set; } // defined as 'float'
 
 		// 5.0
-		[iOS (5,0)]
 		[Export ("insertTimeRanges:ofTracks:atTime:error:")]
 		bool InsertTimeRanges (NSValue[] cmTimeRanges, AVAssetTrack [] tracks, CMTime startTime, out NSError error);
 	}
@@ -7317,7 +7252,6 @@ namespace XamCore.AVFoundation {
 	}
 	
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))]
 	interface AVAssetTrackSegment {
 		[Export ("empty")]
@@ -7329,7 +7263,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (AVAsset))]
 	interface AVComposition : NSMutableCopying {
 		[Export ("tracks")]
@@ -7369,7 +7302,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (AVComposition))]
 	interface AVMutableComposition {
 		
@@ -7431,7 +7363,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (AVAssetTrackSegment))]
 	interface AVCompositionTrackSegment {
 		[Export ("sourceURL"), NullAllowed]
@@ -7461,7 +7392,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))]
 	// 'init' returns NIL
 	[DisableDefaultCtor]
@@ -7591,11 +7521,9 @@ namespace XamCore.AVFoundation {
 		NSString PresetPassthrough { get; }
 
 		// 5.0 APIs
-		[iOS (5,0)]
 		[Export ("asset", ArgumentSemantic.Retain)]
 		AVAsset Asset { get; }
 
-		[iOS (5,0)]
 		[Export ("estimatedOutputFileLength")]
 		long EstimatedOutputFileLength { get; }
 
@@ -7664,14 +7592,12 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
-	[iOS (4,0)]
 	interface AVAudioMix : NSMutableCopying {
 		[Export ("inputParameters", ArgumentSemantic.Copy)]
 		AVAudioMixInputParameters [] InputParameters { get;  }
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (AVAudioMix))]
 	interface AVMutableAudioMix {
 		[NullAllowed] // by default this property is null
@@ -7683,7 +7609,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))]
 	interface AVAudioMixInputParameters : NSMutableCopying {
 		[Export ("trackID")]
@@ -7767,7 +7692,6 @@ namespace XamCore.AVFoundation {
 	}
 	
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))]
 	interface AVVideoComposition : NSMutableCopying {
 		[Export ("frameDuration")]
@@ -7785,7 +7709,6 @@ namespace XamCore.AVFoundation {
 		[Export ("renderScale")]
 		float RenderScale { get; [NotImplemented] set; } // defined as 'float'
 #endif
-		[iOS (5,0)]
 		[Export ("isValidForAsset:timeRange:validationDelegate:")]
 		bool IsValidForAsset ([NullAllowed] AVAsset asset, CMTimeRange timeRange, [Protocolize] [NullAllowed] AVVideoCompositionValidationHandling validationDelegate);
 
@@ -7846,7 +7769,6 @@ namespace XamCore.AVFoundation {
 	}
 	
 	[NoWatch]
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -7866,7 +7788,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (AVVideoComposition))]
 	interface AVMutableVideoComposition {
 		[Export ("frameDuration", ArgumentSemantic.Assign)]
@@ -7923,7 +7844,7 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0), Mac (10, 7)]
+	[Mac (10, 7)]
 	[BaseType (typeof (NSObject))]
 	interface AVVideoCompositionInstruction : NSSecureCoding, NSMutableCopying {
 		[Export ("timeRange")]
@@ -7957,7 +7878,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (AVVideoCompositionInstruction))]
 	interface AVMutableVideoCompositionInstruction {
 		[Export ("timeRange", ArgumentSemantic.Assign)]
@@ -7983,7 +7903,7 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0), Mac (10, 7)]
+	[Mac (10, 7)]
 	[BaseType (typeof (NSObject))]
 	interface AVVideoCompositionLayerInstruction : NSSecureCoding, NSMutableCopying {
 		[Export ("trackID", ArgumentSemantic.Assign)]
@@ -8000,7 +7920,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (AVVideoCompositionLayerInstruction))]
 	interface AVMutableVideoCompositionLayerInstruction {
 		[Export ("trackID", ArgumentSemantic.Assign)]
@@ -8036,7 +7955,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))]
 	interface AVVideoCompositionCoreAnimationTool {
 		[Static]
@@ -8087,7 +8005,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))]
 	interface AVCaptureSession {
 
@@ -8154,11 +8071,9 @@ namespace XamCore.AVFoundation {
 		[Field ("AVCaptureSessionPreset640x480")]
 		NSString Preset640x480 { get; }
 		
-		[iOS (4,0)]
 		[Field ("AVCaptureSessionPreset1280x720")]
 		NSString Preset1280x720 { get; }
 #if !MONOMAC
-		[iOS (5,0)]
 		[Field ("AVCaptureSessionPreset1920x1080")]
 		NSString Preset1920x1080 { get; }
 
@@ -8167,15 +8082,12 @@ namespace XamCore.AVFoundation {
 		NSString Preset3840x2160 { get; }
 #endif
 
-		[iOS (5,0)]
 		[Field ("AVCaptureSessionPresetiFrame960x540")]
 		NSString PresetiFrame960x540 { get; }
 
-		[iOS (5,0)]
 		[Field ("AVCaptureSessionPresetiFrame1280x720")]
 		NSString PresetiFrame1280x720 { get; }
 
-		[iOS (5,0)]
 		[Field ("AVCaptureSessionPreset352x288")]
 		NSString Preset352x288 { get; }
 
@@ -8269,7 +8181,6 @@ namespace XamCore.AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
-	[iOS (4,0)]
 	interface AVCaptureConnection {
 		
 		[iOS (8,0), Mac (10,7)]
@@ -8317,31 +8228,25 @@ namespace XamCore.AVFoundation {
 		[Export ("isVideoOrientationSupported")]
 		bool SupportsVideoOrientation { get; }
 
-		[iOS (5,0)]
 		[Export ("supportsVideoMinFrameDuration"), Internal]
 		bool _SupportsVideoMinFrameDuration { [Bind ("isVideoMinFrameDurationSupported")] get;  }
 
-		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)]
 		[Mac (10, 7)]
 		[Export ("videoMinFrameDuration")]
 		CMTime VideoMinFrameDuration { get; set;  }
 #if !MONOMAC
-		[iOS (5,0)]
 		[Export ("supportsVideoMaxFrameDuration"), Internal]
 		bool _SupportsVideoMaxFrameDuration { [Bind ("isVideoMaxFrameDurationSupported")] get;  }
 
 		[Export ("videoMaxFrameDuration")]
-		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 7, 0 /* Only deprecated on iOS */)] 
 		[Mac (10, 7)] 
 		CMTime VideoMaxFrameDuration { get; set;  }
 
-		[iOS (5,0)]
 		[Export ("videoMaxScaleAndCropFactor")]
 		nfloat VideoMaxScaleAndCropFactor { get;  }
 
-		[iOS (5,0)]
 		[Export ("videoScaleAndCropFactor")]
 		nfloat VideoScaleAndCropFactor { get; set;  }
 #endif
@@ -8397,7 +8302,6 @@ namespace XamCore.AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
-	[iOS (4,0)]
 	interface AVCaptureAudioChannel {
 		[Export ("peakHoldLevel")]
 		float PeakHoldLevel { get;  } // defined as 'float'
@@ -8417,7 +8321,6 @@ namespace XamCore.AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
-	[iOS (4,0)]
 	// Objective-C exception thrown.  Name: NSGenericException Reason: Cannot instantiate AVCaptureInput because it is an abstract superclass.
 	[DisableDefaultCtor]
 	interface AVCaptureInput {
@@ -8431,7 +8334,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVCaptureInputPort {
@@ -8490,7 +8392,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[BaseType (typeof (AVCaptureInput))]
 	// crash application if 'init' is called
 	[DisableDefaultCtor]
@@ -8584,7 +8485,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))]
 #if XAMCORE_4_0
 	[Abstract] // as per docs
@@ -8595,7 +8495,6 @@ namespace XamCore.AVFoundation {
 		[Export ("connections")]
 		AVCaptureConnection [] Connections { get; }
 
-		[iOS (5,0)]
 		[Export ("connectionWithMediaType:")]
 		AVCaptureConnection ConnectionFromMediaType (NSString avMediaType);
 
@@ -8648,7 +8547,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[BaseType (typeof (CALayer))]
 	interface AVCaptureVideoPreviewLayer {
 		[NullAllowed] // by default this property is null
@@ -8734,7 +8632,6 @@ namespace XamCore.AVFoundation {
 
 	[NoTV]
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (AVCaptureOutput))]
 	interface AVCaptureVideoDataOutput {
 		[Export ("sampleBufferDelegate")]
@@ -8808,7 +8705,6 @@ namespace XamCore.AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
-	[iOS (4,0)]
 	[Model]
 	[Protocol]
 	interface AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -8825,7 +8721,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[BaseType (typeof (AVCaptureOutput))]
 	interface AVCaptureAudioDataOutput {
 		[Export ("sampleBufferDelegate")]
@@ -8869,7 +8764,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -8925,7 +8819,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[BaseType (typeof (AVCaptureOutput))]
-	[iOS (4,0)]
 	// Objective-C exception thrown.  Name: NSGenericException Reason: Cannot instantiate AVCaptureFileOutput because it is an abstract superclass.
 	[DisableDefaultCtor]
 	[NoTV]
@@ -8970,7 +8863,6 @@ namespace XamCore.AVFoundation {
 
 	[BaseType (typeof (NSObject))]
 	[Model]
-	[iOS (4, 0)]
 	[Protocol]
 	[NoTV]
 	[NoWatch]
@@ -9377,7 +9269,6 @@ namespace XamCore.AVFoundation {
 	}
 #endif
 	
-	[iOS (4,0)]
 	[BaseType (typeof (AVCaptureFileOutput))]
 	[NoTV]
 	[NoWatch]
@@ -9414,7 +9305,6 @@ namespace XamCore.AVFoundation {
 
 	[NoTV]
 	[NoWatch]
-	[iOS (4,0)]
 	[Availability (Deprecated = Platform.iOS_10_0, Message = "Use 'AVCapturePhotoOutput' instead.")]
 	[BaseType (typeof (AVCaptureOutput))]
 	interface AVCaptureStillImageOutput {
@@ -9532,7 +9422,6 @@ namespace XamCore.AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
-	[iOS (4,0)]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: Cannot instantiate a AVCaptureDevice directly.
 	[DisableDefaultCtor]
 	interface AVCaptureDevice {
@@ -9668,20 +9557,16 @@ namespace XamCore.AVFoundation {
 		[Export ("subjectAreaChangeMonitoringEnabled")]
 		bool SubjectAreaChangeMonitoringEnabled { [Bind ("isSubjectAreaChangeMonitoringEnabled")] get; set; }
 		
-		[iOS (5,0)]
 		[Export ("isFlashAvailable")]
 		bool FlashAvailable { get;  }
 
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_10_0, Message="Use 'AVCapturePhotoOutput.IsFlashScene' instead.")]
-		[iOS (5,0)]
+		[Availability (Deprecated = Platform.iOS_10_0, Message="Use 'AVCapturePhotoOutput.IsFlashScene' instead.")]
 		[Export ("isFlashActive")]
 		bool FlashActive { get; }
 
-		[iOS (5,0)]
 		[Export ("isTorchAvailable")]
 		bool TorchAvailable { get; }
 
-		[iOS (5,0)]
 		[Export ("torchLevel")]
 		float TorchLevel { get; } // defined as 'float'
 
@@ -10135,7 +10020,6 @@ namespace XamCore.AVFoundation {
 	delegate void AVCaptureCompletionHandler (CMSampleBuffer imageDataSampleBuffer, NSError error);
 
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))]
 	interface AVPlayer {
 		[Export ("currentItem"), NullAllowed]
@@ -10228,12 +10112,10 @@ namespace XamCore.AVFoundation {
 		bool UsesAirPlayVideoWhileAirPlayScreenIsActive { get; set;  }
 #endif
 
-		[iOS (5,0)]
 		[Export ("seekToTime:completionHandler:")]
 		[Async]
 		void Seek (CMTime time, AVCompletion completion);
 
-		[iOS (5,0)]
 		[Export ("seekToTime:toleranceBefore:toleranceAfter:completionHandler:")]
 		[Async]
 		void Seek (CMTime time, CMTime toleranceBefore, CMTime toleranceAfter, AVCompletion completion);
@@ -10438,7 +10320,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[BaseType (typeof (AVMetadataGroup))]
-	[iOS (4,3)]
 	interface AVTimedMetadataGroup : NSMutableCopying {
 		[Export ("timeRange")]
 		CMTimeRange TimeRange { get; [NotImplemented] set; }
@@ -10482,7 +10363,6 @@ namespace XamCore.AVFoundation {
 	}
 		
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))]
 	// 'init' returns NIL
 	[DisableDefaultCtor]
@@ -10572,64 +10452,52 @@ namespace XamCore.AVFoundation {
 		[Notification]
 		NSString DidPlayToEndTimeNotification { get; }
 
-		[iOS (4,3)]
 		[Field ("AVPlayerItemFailedToPlayToEndTimeNotification")]
 		[Notification (typeof (AVPlayerItemErrorEventArgs))]
 		NSString ItemFailedToPlayToEndTimeNotification { get; }
 
-		[iOS (4,3)]
 		[Field ("AVPlayerItemFailedToPlayToEndTimeErrorKey")]
 		NSString ItemFailedToPlayToEndTimeErrorKey { get; }
 
-		[iOS (4,3)]
 		[Export ("accessLog"), NullAllowed]
 		AVPlayerItemAccessLog AccessLog { get; }
 
-		[iOS (4,3)]
 		[Export ("errorLog"), NullAllowed]
 		AVPlayerItemErrorLog ErrorLog { get; }
 
-		[iOS (4,3)]
 		[Export ("currentDate"), NullAllowed]
 		NSDate CurrentDate { get; }
 
-		[iOS (4,3)]
 		[Export ("duration")]
 		CMTime Duration { get; }
 
-		[iOS (5,0)]
 		[Export ("canPlayFastReverse")]
 		bool CanPlayFastReverse { get;  }
 
-		[iOS (5,0)]
 		[Export ("canPlayFastForward")]
 		bool CanPlayFastForward { get; }
 
-		[iOS (5,0)]
 		[Field ("AVPlayerItemTimeJumpedNotification")]
 		[Notification]
 		NSString TimeJumpedNotification { get; }
 
-		[iOS (5,0)]
 		[Export ("seekToTime:completionHandler:")]
 		[Async]
 		void Seek (CMTime time, AVCompletion completion);
 
-		[iOS (5,0)]
 		[Export ("cancelPendingSeeks")]
 		void CancelPendingSeeks ();
 
-		[iOS (5,0)]
 		[Export ("seekToTime:toleranceBefore:toleranceAfter:completionHandler:")]
 		[Async]
 		void Seek (CMTime time, CMTime toleranceBefore, CMTime toleranceAfter, AVCompletion completion);
 
-		[iOS (5,0), Mac (10, 8)]
+		[Mac (10, 8)]
 		[Export ("selectMediaOption:inMediaSelectionGroup:")]
 		void SelectMediaOption ([NullAllowed] AVMediaSelectionOption mediaSelectionOption, AVMediaSelectionGroup mediaSelectionGroup);
 
 		[return: NullAllowed]
-		[iOS (5,0), Mac (10, 8)]
+		[Mac (10, 8)]
 		[Export ("selectedMediaOptionInMediaSelectionGroup:")]
 		AVMediaSelectionOption SelectedMediaOption (AVMediaSelectionGroup inMediaSelectionGroup);
 
@@ -11025,7 +10893,6 @@ namespace XamCore.AVFoundation {
 		[Field ("AVVideoCodecKey")]
 		NSString CodecKey { get; }
 		
-		[iOS (5,0)]
 		[Field ("AVVideoScalingModeKey")]
 		NSString ScalingModeKey { get; }
 		
@@ -11149,7 +11016,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
-	[iOS (4,3)]
 	interface AVPlayerItemAccessLog : NSCopying {
 		
 		[Export ("events")]
@@ -11164,7 +11030,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
-	[iOS (4,3)]
 	interface AVPlayerItemErrorLog : NSCopying {
 		[Export ("events")]
 		AVPlayerItemErrorLogEvent [] Events { get; }
@@ -11178,9 +11043,7 @@ namespace XamCore.AVFoundation {
 	
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
-	[iOS (4,3)]
 	interface AVPlayerItemAccessLogEvent : NSCopying {
-		[iOS (4, 3)]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'NumberOfMediaRequests' instead.")]
 		[Mac (10, 7)]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use 'NumberOfMediaRequests' instead.")]
@@ -11283,7 +11146,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
-	[iOS (4,3)]
 	interface AVPlayerItemErrorLogEvent : NSCopying {
 		[Export ("date"), NullAllowed]
 		NSDate Date { get; }
@@ -11346,7 +11208,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (CALayer))]
 	interface AVPlayerLayer {
 		[NullAllowed] // by default this property is null
@@ -11424,7 +11285,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))]
 	interface AVPlayerItemTrack {
 		[Export ("enabled", ArgumentSemantic.Assign)]
@@ -11451,7 +11311,6 @@ namespace XamCore.AVFoundation {
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[Model]
-	[iOS (4,0)]
 	[Protocol]
 	interface AVAsynchronousKeyValueLoading {
 		[Abstract]
@@ -11467,7 +11326,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,1)]
 	[BaseType (typeof (AVPlayer))]
 	interface AVQueuePlayer {
 		
@@ -11629,7 +11487,7 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0), BaseType (typeof (CALayer))]
+	[BaseType (typeof (CALayer))]
 	interface AVSynchronizedLayer {
 		[Static, Export ("synchronizedLayerWithPlayerItem:")]
 		AVSynchronizedLayer FromPlayerItem (AVPlayerItem playerItem);

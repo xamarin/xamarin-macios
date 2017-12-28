@@ -78,7 +78,6 @@ namespace XamCore.AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABGroupCreateInSource (IntPtr source);
 
-		[iOS (4,0)]
 		public ABGroup (ABRecord source)
 			: base (IntPtr.Zero, true)
 		{
@@ -107,7 +106,6 @@ namespace XamCore.AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABGroupCopySource (IntPtr group);
 
-		[iOS (4,0)]
 		public ABRecord Source {
 			get {
 				var h = ABGroupCopySource (Handle);

@@ -41,12 +41,8 @@ namespace XamCore.CoreLocation {
 		Denied,              
 		Network,             
 		HeadingFailure,
-
-		[iOS (4,0)]
 		RegionMonitoringDenied,
-		[iOS (4,0)]
 		RegionMonitoringFailure,
-		[iOS (4,0)]
 		RegionMonitoringSetupDelayed,
 		
 		// ios5 osx10.8

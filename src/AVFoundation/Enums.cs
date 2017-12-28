@@ -41,7 +41,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVAssetExportSession.h
 	public enum AVAssetExportSessionStatus : nint {
@@ -54,7 +53,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVAssetReader.h
 	public enum AVAssetReaderStatus : nint {
@@ -66,7 +64,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,1)]
 	[Native]
 	// NSInteger - AVAssetWriter.h
 	public enum AVAssetWriterStatus : nint {
@@ -78,7 +75,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoTV, NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureSession.h
 	public enum AVCaptureVideoOrientation : nint {
@@ -90,7 +86,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureFlashMode : nint {
@@ -99,7 +94,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureTorchMode : nint {
@@ -108,7 +102,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureFocusMode : nint {
@@ -129,7 +122,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureDevicePosition : nint {
@@ -140,7 +132,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureExposureMode : nint {
@@ -149,7 +140,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureWhiteBalanceMode : nint {
@@ -159,7 +149,6 @@ namespace XamCore.AVFoundation {
 #if !MONOMAC || !XAMCORE_4_0
 	[Flags]
 	[NoTV]
-	[iOS (4,0)]
 	[Native]
 	[Deprecated (PlatformName.iOS, 6, 0)]
 	// NSUInteger - AVAudioSession.h
@@ -213,7 +202,6 @@ namespace XamCore.AVFoundation {
 		DecoderTemporarilyUnavailable = -11839,
 		EncoderTemporarilyUnavailable = -11840,
 		InvalidVideoComposition = -11841,
-		//[iOS (5,1)]
 		ReferenceForbiddenByReferencePolicy = -11842,
 		InvalidOutputURLPathExtension = -11843,
 		ScreenCaptureFailed = -11844,
@@ -260,7 +248,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVPlayer.h
 	public enum AVPlayerActionAtItemEnd : nint {
@@ -270,7 +257,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVPlayerItem.h
 	public enum AVPlayerItemStatus : nint {
@@ -280,7 +266,6 @@ namespace XamCore.AVFoundation {
 #if !MONOMAC || !XAMCORE_4_0
 	[NoTV]
 	[Flags]
-	[iOS (4,0)]
 	[Native]
 	[Deprecated (PlatformName.iOS, 6, 0)]
 	// declared as AVAudioSessionSetActiveOptions (NSUInteger) - AVAudioSession.h
@@ -290,7 +275,6 @@ namespace XamCore.AVFoundation {
 #endif
 
 	[NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVAsynchronousKeyValueLoading.h
 	public enum AVKeyValueStatus : nint {
@@ -298,7 +282,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVPlayer.h
 	public enum AVPlayerStatus : nint {

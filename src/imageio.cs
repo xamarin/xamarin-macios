@@ -34,7 +34,6 @@ using System;
 
 namespace XamCore.ImageIO {
 
-	[iOS (4,0)]
 	[Static]
 	// Bad name should end with Keys
 	interface CGImageProperties {
