@@ -684,83 +684,83 @@ namespace XamCore.Foundation
 		NSString IslamicUmmAlQuraCalendar { get; }
 
 		[Export ("eraSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] EraSymbols { get; }
 
 		[Export ("longEraSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] LongEraSymbols { get; }
 
 		[Export ("monthSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] MonthSymbols { get; }
 
 		[Export ("shortMonthSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] ShortMonthSymbols { get; }
 
 		[Export ("veryShortMonthSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] VeryShortMonthSymbols { get; }
 
 		[Export ("standaloneMonthSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] StandaloneMonthSymbols { get; }
 
 		[Export ("shortStandaloneMonthSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] ShortStandaloneMonthSymbols { get; }
 
 		[Export ("veryShortStandaloneMonthSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] VeryShortStandaloneMonthSymbols { get; }
 
 		[Export ("weekdaySymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] WeekdaySymbols { get; }
 
 		[Export ("shortWeekdaySymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] ShortWeekdaySymbols { get; }
 
 		[Export ("veryShortWeekdaySymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] VeryShortWeekdaySymbols { get; }
 
 		[Export ("standaloneWeekdaySymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] StandaloneWeekdaySymbols { get; }
 
 		[Export ("shortStandaloneWeekdaySymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] ShortStandaloneWeekdaySymbols { get; }
 
 		[Export ("veryShortStandaloneWeekdaySymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] VeryShortStandaloneWeekdaySymbols { get; }
 
 		[Export ("quarterSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] QuarterSymbols { get; }
 
 		[Export ("shortQuarterSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] ShortQuarterSymbols { get; }
 
 		[Export ("standaloneQuarterSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] StandaloneQuarterSymbols { get; }
 
 		[Export ("shortStandaloneQuarterSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] ShortStandaloneQuarterSymbols { get; }
 
 		[Export ("AMSymbol")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string AMSymbol { get; }
 
 		[Export ("PMSymbol")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string PMSymbol { get; }
 
 		[Export ("compareDate:toDate:toUnitGranularity:")]
@@ -1516,7 +1516,7 @@ namespace XamCore.Foundation
 		nint Second { get; set; }
 
 		[Export ("nanosecond")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		nint Nanosecond { get; set; }
 
 		[Export ("week")]
@@ -1531,15 +1531,15 @@ namespace XamCore.Foundation
 		[Export ("weekdayOrdinal")]
 		nint WeekdayOrdinal { get; set; }
 
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		[Export ("weekOfMonth")]
 		nint WeekOfMonth { get; set; }
 
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		[Export ("weekOfYear")]
 		nint WeekOfYear { get; set; }
 		
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		[Export ("yearForWeekOfYear")]
 		nint YearForWeekOfYear { get; set; }
 

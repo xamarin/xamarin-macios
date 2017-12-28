@@ -44,7 +44,7 @@ namespace Introspection {
 		public ApiAvailabilityTest ()
 		{
 #if __IOS__
-			Minimum = new Version (5,0);
+			Minimum = new Version (6,0);
 			Maximum = new Version (11,2);
 			Filter = (AvailabilityBaseAttribute arg) => {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.iOS);
@@ -62,7 +62,7 @@ namespace Introspection {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.WatchOS);
 			};
 #else
-			Minimum = new Version (10,6);
+			Minimum = new Version (10,7);
 			Maximum = new Version (10,13);
 			Filter = (AvailabilityBaseAttribute arg) => {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.MacOSX);
@@ -87,11 +87,13 @@ namespace Introspection {
 						continue;
 					// Duplicate checks, e.g. same attribute on member and type (extranous metadata)
 					if (ma.Version == ta.Version) {
+// about 4000
 //						AddErrorLine ($"[FAIL] {ma.Version} (Member) == {ta.Version} (Type) on '{m}'.");
 					}
 					// Consistency checks, e.g. member lower than type
 					// note: that's valid in some cases, like a new base type being introduced
 					if (ma.Version < ta.Version) {
+// about 8000
 //						AddErrorLine ($"[FAIL] {ma.Version} (Member) < {ta.Version} (Type) on '{m}'.");
 					}
 				}

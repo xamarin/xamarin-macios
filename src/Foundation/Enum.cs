@@ -213,10 +213,7 @@ namespace XamCore.Foundation  {
 	public enum NSDataReadingOptions : nuint {
 		Mapped =   1 << 0,
 		Uncached = 1 << 1,
-
-		[iOS (5,0)]
 		Coordinated = 1 << 2,
-		[iOS (5,0)]
 		MappedAlways = 1 << 3
 	}
 

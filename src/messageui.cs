@@ -124,12 +124,10 @@ namespace XamCore.MessageUI {
 		[Export ("disableUserAttachments")]
 		void DisableUserAttachments ();
 
-		[iOS (5,0)]
 		[Field ("MFMessageComposeViewControllerTextMessageAvailabilityDidChangeNotification")]
 		[Notification (typeof (MFMessageAvailabilityChangedEventArgs))]
 		NSString TextMessageAvailabilityDidChangeNotification { get; }
 
-		[iOS (5,0)]
 		[Field ("MFMessageComposeViewControllerTextMessageAvailabilityKey")]
 		NSString TextMessageAvailabilityKey { get; }
 

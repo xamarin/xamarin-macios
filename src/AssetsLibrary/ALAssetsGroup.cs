@@ -40,7 +40,6 @@ namespace XamCore.AssetsLibrary {
 			}
 		}
 
-		[iOS (5,0)]
 		public NSUrl PropertyUrl {
 			get {
 				return (NSUrl) ValueForProperty (_PropertyUrl);

@@ -10099,15 +10099,15 @@ namespace XamCore.AVFoundation {
 
 #if !MONOMAC
 		// 5.0
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_6_0, Message = "Use 'AllowsExternalPlayback' instead.")]
+		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'AllowsExternalPlayback' instead.")]
 		[Export ("allowsAirPlayVideo")]
 		bool AllowsAirPlayVideo { get; set;  }
 
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_6_0, Message = "Use 'ExternalPlaybackActive' instead.")]
+		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'ExternalPlaybackActive' instead.")]
 		[Export ("airPlayVideoActive")]
 		bool AirPlayVideoActive { [Bind ("isAirPlayVideoActive")] get;  }
 
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_6_0, Message = "Use 'UsesExternalPlaybackWhileExternalScreenIsActive' instead.")]
+		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'UsesExternalPlaybackWhileExternalScreenIsActive' instead.")]
 		[Export ("usesAirPlayVideoWhileAirPlayScreenIsActive")]
 		bool UsesAirPlayVideoWhileAirPlayScreenIsActive { get; set;  }
 #endif

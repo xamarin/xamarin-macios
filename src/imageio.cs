@@ -514,19 +514,19 @@ namespace XamCore.ImageIO {
 		NSString PNGsRGBIntent { get; }
 		[Field ("kCGImagePropertyPNGChromaticities")]
 		NSString PNGChromaticities { get; }
-		[iOS (5,0)][Field ("kCGImagePropertyPNGAuthor")]
+		[Field ("kCGImagePropertyPNGAuthor")]
 		NSString PNGAuthor { get; }
-		[iOS (5,0)][Field ("kCGImagePropertyPNGCopyright")]
+		[Field ("kCGImagePropertyPNGCopyright")]
 		NSString PNGCopyright { get; }
-		[iOS (5,0)][Field ("kCGImagePropertyPNGCreationTime")]
+		[Field ("kCGImagePropertyPNGCreationTime")]
 		NSString PNGCreationTime { get; }
-		[iOS (5,0)][Field ("kCGImagePropertyPNGDescription")]
+		[Field ("kCGImagePropertyPNGDescription")]
 		NSString PNGDescription { get; }
-		[iOS (5,0)][Field ("kCGImagePropertyPNGModificationTime")]
+		[Field ("kCGImagePropertyPNGModificationTime")]
 		NSString PNGModificationTime { get; }
-		[iOS (5,0)][Field ("kCGImagePropertyPNGSoftware")]
+		[Field ("kCGImagePropertyPNGSoftware")]
 		NSString PNGSoftware { get; }
-		[iOS (5,0)][Field ("kCGImagePropertyPNGTitle")]
+		[Field ("kCGImagePropertyPNGTitle")]
 		NSString PNGTitle { get; }
 
 		[iOS (9,0)][Mac (10,11)]

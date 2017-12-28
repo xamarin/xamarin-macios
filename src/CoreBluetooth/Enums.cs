@@ -27,7 +27,6 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	// NSInteger -> CBCentralManager.h
-	[iOS (5, 0)]
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CBManagerState' instead.")]
 	[NoWatch]
 	[Native]

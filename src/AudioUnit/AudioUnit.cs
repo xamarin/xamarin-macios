@@ -727,7 +727,6 @@ namespace XamCore.AudioUnit
 			return AudioUnitSetProperty (handle, AudioUnitPropertyIDType.SampleRate, scope, 0, ref sampleRate, sizeof (double));
 		}
 
-		[iOS (5,0)]
 		public AudioUnitStatus MusicDeviceMIDIEvent (uint status, uint data1, uint data2, uint offsetSampleFrame = 0)
 		{
 			return MusicDeviceMIDIEvent (handle, status, data1, data2, offsetSampleFrame);
