@@ -9,7 +9,6 @@ namespace XamCore.Foundation {
 	}
 
 	public partial class NSUserDefaults {
-		[iOS (2, 0)]
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Mac (10, 9)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]

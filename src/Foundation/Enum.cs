@@ -185,7 +185,6 @@ namespace XamCore.Foundation  {
 		Second = 128,
 		[Mac (10, 4)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
-		[iOS (2, 0)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		Week = 256,
 		Weekday = 512,

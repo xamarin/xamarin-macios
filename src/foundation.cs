@@ -1530,7 +1530,6 @@ namespace XamCore.Foundation
 		[Export ("week")]
 		[Mac (10, 4)]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use 'WeekOfMonth' or 'WeekOfYear' instead.")]
-		[iOS (2, 0)]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'WeekOfMonth' or 'WeekOfYear' instead.")]
 		nint Week { get; set; }
 
@@ -10021,7 +10020,6 @@ namespace XamCore.Foundation
 		void Publish (NSNetServiceOptions options);
 
 		[Export ("resolve")]
-		[iOS (2, 0)]
 		[Deprecated (PlatformName.iOS, 2, 0, message : "Use 'Resolve (double)' instead.")]
 		[Mac (10, 2)]
 		[Deprecated (PlatformName.MacOSX, 10, 4, message : "Use 'Resolve (double)' instead.")]
@@ -13206,7 +13204,6 @@ namespace XamCore.Foundation
 		string Name { get; [NullAllowed] set; }
 	}
 
-	[iOS (2,0)]
 	[BaseType (typeof(NSObject))]
 	interface NSCondition : NSLocking
 	{

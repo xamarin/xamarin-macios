@@ -82,7 +82,7 @@ namespace XamCore.GameKit {
 	[NoWatch]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
-	[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0, Message = "Use 'MCBrowserViewController' from the 'MultipeerConnectivity' framework instead.")]
+	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MCBrowserViewController' from the 'MultipeerConnectivity' framework instead.")]
 	interface GKPeerPickerController {
 		[Export ("connectionTypesMask", ArgumentSemantic.Assign)]
 		GKPeerPickerConnectionType ConnectionTypesMask { get; set; }
@@ -136,7 +136,7 @@ namespace XamCore.GameKit {
 	[NoWatch] // deprecated in 2.0 (but framework not added before 3.0)
 	[NoTV]
 	[BaseType (typeof (NSObject))]
-	[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0, Message = "Use 'GKVoiceChat' instead.")]
+	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'GKVoiceChat' instead.")]
 	interface GKVoiceChatService {
 
 		[Export ("defaultVoiceChatService")][Static]
@@ -218,7 +218,6 @@ namespace XamCore.GameKit {
 	[NoTV]
 	[NoWatch] // deprecated in 2.0 (but framework not added before 3.0)
 	[BaseType (typeof (NSObject))]
-	[iOS (3, 0)]
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'MultipeerConnectivity.MCSession' instead.")]
 	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'MultipeerConnectivity.MCSession' instead.")]
@@ -879,7 +878,6 @@ namespace XamCore.GameKit {
 	}
 
 	[NoWatch]
-	[iOS (4,2)]
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(GKMatchDelegate)})]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -[__NSCFDictionary setObject:forKey:]: attempt to insert nil value (key: 1500388194)
 	// <quote>Your application never directly allocates GKMatch objects.</quote> http://developer.apple.com/library/ios/#documentation/GameKit/Reference/GKMatch_Ref/Reference/Reference.html
@@ -945,7 +943,6 @@ namespace XamCore.GameKit {
 	}
 
 	[NoWatch]
-	[iOS (4,2)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -987,7 +984,6 @@ namespace XamCore.GameKit {
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'ShouldReinviteDisconnectedPlayer' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'ShouldReinviteDisconnectedPlayer' instead.")]
-		[iOS (5,0)]
 		[Export ("match:shouldReinvitePlayer:"), DelegateName ("GKMatchReinvitation"), DefaultValue (true)]
 		bool ShouldReinvitePlayer (GKMatch match, string playerId);
 
@@ -995,7 +991,7 @@ namespace XamCore.GameKit {
 		[Export ("match:didReceiveData:fromRemotePlayer:"), EventArgs ("GKMatchReceivedDataFromRemotePlayer")]
 		void DataReceivedFromPlayer (GKMatch match, NSData data, GKPlayer player);
 
-		[iOS (4,1), Mac (10,8)] //Yes, the header file says it was available in 4.1 and 10.8...
+		[Mac (10,8)] //Yes, the header file says it was available in 4.1 and 10.8...
 		[Export ("match:player:didChangeConnectionState:"), EventArgs ("GKMatchConnectionChanged")]
 		void StateChangedForPlayer (GKMatch match, GKPlayer player, GKPlayerConnectionState state);
 
@@ -1011,7 +1007,6 @@ namespace XamCore.GameKit {
 	}
 
 	[NoWatch]
-	[iOS (4,2)]
 	[BaseType (typeof (NSObject))]
 	interface GKVoiceChat {
 		[Export ("name", ArgumentSemantic.Copy)]
@@ -1237,7 +1232,6 @@ namespace XamCore.GameKit {
 	[Mac (10,8)]
 #else
 	[BaseType (typeof (UINavigationController), Delegates=new string [] { "WeakMatchmakerDelegate" }, Events=new Type [] {typeof(GKMatchmakerViewControllerDelegate)})]
-	[iOS (4,2)]
 #endif
 	// iOS 6 -> Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: <GKMatchmakerViewController: 0x16101160>: must use one of the designated initializers
 	[DisableDefaultCtor]

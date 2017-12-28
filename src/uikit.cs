@@ -1367,7 +1367,7 @@ namespace XamCore.UIKit {
 #if !WATCH
 	[NoTV]
 	[BaseType (typeof (NSObject))]
-	[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_5_0, Message = "Use 'CoreMotion' instead.")]
+	[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'CoreMotion' instead.")]
 	interface UIAcceleration {
 		[Export ("timestamp")]
 		double Time { get; }
@@ -1384,7 +1384,7 @@ namespace XamCore.UIKit {
 
 	[NoTV]
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIAccelerometerDelegate)})]
-	[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_5_0, Message = "Use 'CoreMotion' instead.")]
+	[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'CoreMotion' instead.")]
 	interface UIAccelerometer {
 		[Static] [Export ("sharedAccelerometer")]
 		UIAccelerometer SharedAccelerometer { get; }
@@ -2804,7 +2804,6 @@ namespace XamCore.UIKit {
 	}
 
 	[NoWatch]
-	[iOS (2,0)]
 	[BaseType (typeof (UIResponder))]
 	interface UIApplication {
 		[Static, ThreadSafe]
@@ -2883,7 +2882,7 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[Export ("setStatusBarHidden:animated:")]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_3_2, Message = "Use 'SetStatusBarHidden (bool, UIStatusBarAnimation)' instead.")]
+		[Availability (Deprecated = Platform.iOS_3_2, Message = "Use 'SetStatusBarHidden (bool, UIStatusBarAnimation)' instead.")]
 		void SetStatusBarHidden (bool hidden, bool animated);
 
 		[NoTV]
@@ -5033,19 +5032,19 @@ namespace XamCore.UIKit {
 		[Export ("groupTableViewBackgroundColor")][Static]
 		UIColor GroupTableViewBackgroundColor { get; }
 
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0)]
+		[Availability (Deprecated = Platform.iOS_7_0)]
 		[NoWatch][NoTV]
 		[Export ("viewFlipsideBackgroundColor")][Static]
 		UIColor ViewFlipsideBackgroundColor { get; }
 
 		[iOS (3,2)]
-		[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_7_0)]
+		[Availability (Deprecated = Platform.iOS_7_0)]
 		[NoWatch][NoTV]
 		[Export ("scrollViewTexturedBackgroundColor")][Static]
 		UIColor ScrollViewTexturedBackgroundColor { get; }
 
 		[iOS (5,0)]
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_7_0)]
+		[Availability (Deprecated = Platform.iOS_7_0)]
 		[NoWatch][NoTV]
 		[Static, Export ("underPageBackgroundColor")]
 		UIColor UnderPageBackgroundColor { get; }
@@ -6445,17 +6444,17 @@ namespace XamCore.UIKit {
 		//
 
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_3_2)]
+		[Availability (Deprecated = Platform.iOS_3_2)]
 		[Field ("UIKeyboardCenterBeginUserInfoKey")]
 		NSString CenterBeginUserInfoKey { get; }
 
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_3_2)]
+		[Availability (Deprecated = Platform.iOS_3_2)]
 		[Field ("UIKeyboardCenterEndUserInfoKey")]
 		NSString CenterEndUserInfoKey { get; }
 
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_3_2)]
+		[Availability (Deprecated = Platform.iOS_3_2)]
 		[Field ("UIKeyboardBoundsUserInfoKey")]
 		NSString BoundsUserInfoKey { get; }
 #endif
@@ -8024,7 +8023,7 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[Export ("minimumFontSize")]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_6_0, Message = "Use 'MinimumScaleFactor' instead.")]
+		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'MinimumScaleFactor' instead.")]
 		nfloat MinimumFontSize { get; set; }
 
 		[Export ("baselineAdjustment")]
@@ -8343,11 +8342,11 @@ namespace XamCore.UIKit {
 	[iOS (3,2)]
 	[Protocol]
 	interface UIDocumentInteractionControllerDelegate {
-		[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_6_0)]
+		[Availability (Deprecated = Platform.iOS_6_0)]
 		[Export ("documentInteractionController:canPerformAction:"), DelegateName ("UIDocumentInteractionProbe"), DefaultValue (false)]
 		bool CanPerformAction (UIDocumentInteractionController controller, [NullAllowed] Selector action);
 
-		[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_6_0)]
+		[Availability (Deprecated = Platform.iOS_6_0)]
 		[Export ("documentInteractionController:performAction:"), DelegateName ("UIDocumentInteractionProbe"), DefaultValue (false)]
 		bool PerformAction (UIDocumentInteractionController controller, [NullAllowed] Selector action);
 		
@@ -8408,7 +8407,7 @@ namespace XamCore.UIKit {
 
 #if !XAMCORE_3_0
 		[Export ("allowsImageEditing")]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_3_1)]
+		[Availability (Deprecated = Platform.iOS_3_1)]
 		bool AllowsImageEditing { get; set; }
 #endif
 
@@ -8514,7 +8513,7 @@ namespace XamCore.UIKit {
 	[Protocol]
 	interface UIImagePickerControllerDelegate {
 #if !XAMCORE_3_0
-		[Availability (Introduced = Platform.iOS_2_0, Obsoleted = Platform.iOS_3_0)]
+		[Availability (Obsoleted = Platform.iOS_3_0)]
 		[Export ("imagePickerController:didFinishPickingImage:editingInfo:"), EventArgs ("UIImagePickerImagePicked")]
 		void FinishedPickingImage (UIImagePickerController picker, UIImage image, NSDictionary editingInfo);
 #endif
@@ -10834,7 +10833,7 @@ namespace XamCore.UIKit {
 
 		[Export ("segmentedControlStyle")]
 		[NoTV][NoWatch]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "The 'SegmentedControlStyle' property no longer has any effect.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "The 'SegmentedControlStyle' property no longer has any effect.")]
 		UISegmentedControlStyle ControlStyle { get; set; }
 
 		[Export ("momentary")]
@@ -11479,19 +11478,19 @@ namespace XamCore.UIKit {
 		string BadgeValue { get; set; } 
 
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_7_0, Message = "Use the '(string, UIImage, UIImage)' constructor or the 'Image' and 'SelectedImage' properties along with 'RenderingMode = UIImageRenderingMode.AlwaysOriginal'.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use the '(string, UIImage, UIImage)' constructor or the 'Image' and 'SelectedImage' properties along with 'RenderingMode = UIImageRenderingMode.AlwaysOriginal'.")]
 		[Export ("setFinishedSelectedImage:withFinishedUnselectedImage:")]
 		[PostGet ("FinishedSelectedImage")]
 		[PostGet ("FinishedUnselectedImage")]
 		void SetFinishedImages ([NullAllowed] UIImage selectedImage, [NullAllowed] UIImage unselectedImage);
 
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_7_0)]
+		[Availability (Deprecated = Platform.iOS_7_0)]
 		[Export ("finishedSelectedImage")]
 		UIImage FinishedSelectedImage { get; }
 
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_7_0)]
+		[Availability (Deprecated = Platform.iOS_7_0)]
 		[Export ("finishedUnselectedImage")]
 		UIImage FinishedUnselectedImage { get; }
 
@@ -11955,7 +11954,7 @@ namespace XamCore.UIKit {
 		UIView GetViewForFooter (UITableView tableView, nint section);
 
 #if !XAMCORE_3_0
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_3_0)]
+		[Availability (Deprecated = Platform.iOS_3_0)]
 		[Export ("tableView:accessoryTypeForRowWithIndexPath:")]
 		UITableViewCellAccessory AccessoryForRow (UITableView tableView, NSIndexPath indexPath);
 #endif
@@ -12307,7 +12306,7 @@ namespace XamCore.UIKit {
 		UIView GetViewForFooter (UITableView tableView, nint section);
 
 #if !XAMCORE_3_0
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_3_0)]
+		[Availability (Deprecated = Platform.iOS_3_0)]
 		[Export ("tableView:accessoryTypeForRowWithIndexPath:")]
 		UITableViewCellAccessory AccessoryForRow (UITableView tableView, NSIndexPath indexPath);
 #endif
@@ -13312,7 +13311,7 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[Export ("contentStretch")]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_6_0, Message = "Use 'CreateResizableImage' instead.")]
+		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'CreateResizableImage' instead.")]
 		CGRect ContentStretch { get; set; }
 
 		[Static] [Export ("beginAnimations:context:")]
@@ -13822,7 +13821,7 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[Export ("viewDidUnload")]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_6_0)]
+		[Availability (Deprecated = Platform.iOS_6_0)]
 		void ViewDidUnload ();
 
 		[Export ("isViewLoaded")]
@@ -13855,12 +13854,12 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[Export ("presentModalViewController:animated:")]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_6_0, Message = "Use 'PresentViewController (UIViewController, bool, NSAction)' instead and set the 'ModalViewController' property to true.")]
+		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'PresentViewController (UIViewController, bool, NSAction)' instead and set the 'ModalViewController' property to true.")]
 		void PresentModalViewController (UIViewController modalViewController, bool animated);
 
 		[NoTV]
 		[Export ("dismissModalViewControllerAnimated:")]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_6_0, Message = "Use 'DismissViewController (bool, NSAction)' instead.")]
+		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'DismissViewController (bool, NSAction)' instead.")]
 #if XAMCORE_2_0
 		void DismissModalViewController (bool animated);
 #else
@@ -13869,7 +13868,7 @@ namespace XamCore.UIKit {
 		
 		[NoTV]
 		[Export ("modalViewController")]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_6_0, Message = "Use 'PresentedViewController' instead.")]
+		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'PresentedViewController' instead.")]
 		UIViewController ModalViewController { get; }
 
 		[Export ("modalTransitionStyle", ArgumentSemantic.Assign)]
@@ -13877,7 +13876,7 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[Export ("wantsFullScreenLayout", ArgumentSemantic.Assign)]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0, Message = "Use 'EdgesForExtendedLayout', 'ExtendedLayoutIncludesOpaqueBars' and 'AutomaticallyAdjustsScrollViewInsets' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'EdgesForExtendedLayout', 'ExtendedLayoutIncludesOpaqueBars' and 'AutomaticallyAdjustsScrollViewInsets' instead.")]
 		bool WantsFullScreenLayout { get; set; }
 
 		[Export ("parentViewController")][NullAllowed]
@@ -13890,7 +13889,7 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[Export ("shouldAutorotateToInterfaceOrientation:")]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_6_0, Message = "Use both 'GetSupportedInterfaceOrientations' and 'PreferredInterfaceOrientationForPresentation' instead.")]
+		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use both 'GetSupportedInterfaceOrientations' and 'PreferredInterfaceOrientationForPresentation' instead.")]
 		bool ShouldAutorotateToInterfaceOrientation (UIInterfaceOrientation toInterfaceOrientation);
 
 		[NoTV]
@@ -14001,7 +14000,7 @@ namespace XamCore.UIKit {
 
 		// This is defined in a category in UIPopoverSupport.h: UIViewController (UIPopoverController)
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_7_0, Message = "Use 'PreferredContentSize' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'PreferredContentSize' instead.")]
 		[Export ("contentSizeForViewInPopover")]
 		CGSize ContentSizeForViewInPopover { get; set; }
 
@@ -14036,7 +14035,7 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		[iOS (5,0)]
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_6_0)]
+		[Availability (Deprecated = Platform.iOS_6_0)]
 		[Export ("viewWillUnload")]
 		void ViewWillUnload ();
 
@@ -14090,7 +14089,7 @@ namespace XamCore.UIKit {
 		void AttemptRotationToDeviceOrientation ();
 
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_6_0)]
+		[Availability (Deprecated = Platform.iOS_6_0)]
 		[Export ("automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers")]
 		/*PROTECTED*/ bool AutomaticallyForwardAppearanceAndRotationMethodsToChildViewControllers { get; }
 
@@ -15614,7 +15613,7 @@ namespace XamCore.UIKit {
 	[BaseType (typeof (NSObject))]
 	interface UITextInputMode : NSSecureCoding {
 		[Export ("currentInputMode"), NullAllowed][Static]
-		[Availability (Introduced = Platform.iOS_4_2, Deprecated = Platform.iOS_7_0)]
+		[Availability (Deprecated = Platform.iOS_7_0)]
 		[NoTV]
 		UITextInputMode CurrentInputMode { get; }
 
@@ -16151,73 +16150,73 @@ namespace XamCore.UIKit {
 	interface UIStringDrawing {
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGPoint, UIStringAttributes)' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGPoint, UIStringAttributes)' instead.")]
 		[Export ("drawAtPoint:withFont:")]
 		CGSize DrawString (CGPoint point, UIFont font);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
 		[Export ("drawAtPoint:forWidth:withFont:lineBreakMode:")]
 		CGSize DrawString (CGPoint point, nfloat width, UIFont font, UILineBreakMode breakMode);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
 		[Export ("drawAtPoint:forWidth:withFont:fontSize:lineBreakMode:baselineAdjustment:")]
 		CGSize DrawString (CGPoint point, nfloat width, UIFont font, nfloat fontSize, UILineBreakMode breakMode, UIBaselineAdjustment adjustment);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
 		[Export ("drawAtPoint:forWidth:withFont:minFontSize:actualFontSize:lineBreakMode:baselineAdjustment:")]
 		CGSize DrawString (CGPoint point, nfloat width, UIFont font, nfloat minFontSize, ref nfloat actualFontSize, UILineBreakMode breakMode, UIBaselineAdjustment adjustment);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
 		[Export ("drawInRect:withFont:")]
 		CGSize DrawString (CGRect rect, UIFont font);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
 		[Export ("drawInRect:withFont:lineBreakMode:")]
 		CGSize DrawString (CGRect rect, UIFont font, UILineBreakMode mode);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.DrawString (CGRect, UIStringAttributes)' instead.")]
 		[Export ("drawInRect:withFont:lineBreakMode:alignment:")]
 		CGSize DrawString (CGRect rect, UIFont font, UILineBreakMode mode, UITextAlignment alignment);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.GetSizeUsingAttributes (UIStringAttributes)' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.GetSizeUsingAttributes (UIStringAttributes)' instead.")]
 		[Export ("sizeWithFont:")]
 		CGSize StringSize (UIFont font);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext)' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext)' instead.")]
 		[Export ("sizeWithFont:forWidth:lineBreakMode:")]
 		CGSize StringSize (UIFont font, nfloat forWidth, UILineBreakMode breakMode);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext)' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext)' instead.")]
 		[Export ("sizeWithFont:constrainedToSize:")]
 		CGSize StringSize (UIFont font, CGSize constrainedToSize);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext)' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSString.GetBoundingRect (CGSize, NSStringDrawingOptions, UIStringAttributes, NSStringDrawingContext)' instead.")]
 		[Export ("sizeWithFont:constrainedToSize:lineBreakMode:")]
 		CGSize StringSize (UIFont font, CGSize constrainedToSize, UILineBreakMode lineBreakMode);
 
 		// note: duplicate from maccore's foundation.cs where it's binded on NSString2 (for Classic)
 		[ThreadSafe]
-		[Availability (Introduced = Platform.iOS_2_0, Deprecated = Platform.iOS_7_0)]
+		[Availability (Deprecated = Platform.iOS_7_0)]
 		// Wait for guidance here: https://devforums.apple.com/thread/203655
 		//[Obsolete ("Deprecated on iOS7.   No guidance.")]
 		[Export ("sizeWithFont:minFontSize:actualFontSize:forWidth:lineBreakMode:")]
