@@ -3,9 +3,15 @@ using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 #if !MONOMAC
 using XamCore.UIKit;
+// ease compilation for [NoiOS] and [NoTV] decorated members
+using NSView = XamCore.Foundation.NSObject;
+using PHLivePhotoViewContentMode = XamCore.Foundation.NSObject;
 #else
 using XamCore.AppKit;
 using UIImage = XamCore.AppKit.NSImage;
+// ease compilation for [NoMac] decorated members
+using UIGestureRecognizer = XamCore.Foundation.NSObject;
+using PHLivePhotoBadgeOptions = XamCore.Foundation.NSObject;
 #endif
 using XamCore.Photos;
 using System;
@@ -44,16 +50,21 @@ namespace XamCore.PhotosUI {
 		bool ShouldShowCancelConfirmation { get; }
 	}
 
-#if !MONOMAC
 	[TV (10,0)]
 	[iOS (9,1)]
+	[Mac (10,12, onlyOn64: true)]
+#if MONOMAC
+	[BaseType (typeof (NSView))]
+#else
 	[BaseType (typeof (UIView))]
+#endif
 	interface PHLivePhotoView {
 
 		// inlined (designated initializer)
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
+		[NoMac]
 		[Static]
 		[Export ("livePhotoBadgeImageWithOptions:")]
 		UIImage GetLivePhotoBadgeImage (PHLivePhotoBadgeOptions badgeOptions);
@@ -69,6 +80,7 @@ namespace XamCore.PhotosUI {
 		[NullAllowed, Export ("livePhoto", ArgumentSemantic.Strong)]
 		PHLivePhoto LivePhoto { get; set; }
 
+		[NoMac]
 		[Export ("playbackGestureRecognizer", ArgumentSemantic.Strong)]
 		UIGestureRecognizer PlaybackGestureRecognizer { get; }
 
@@ -80,10 +92,31 @@ namespace XamCore.PhotosUI {
 
 		[Export ("stopPlayback")]
 		void StopPlayback ();
+
+		[NoiOS]
+		[NoTV]
+		[Export ("stopPlaybackAnimated:")]
+		void StopPlayback (bool animated);
+
+		[NoiOS]
+		[NoTV]
+		[Export ("contentMode", ArgumentSemantic.Assign)]
+		PHLivePhotoViewContentMode ContentMode { get; set; }
+
+		[NoiOS]
+		[NoTV]
+		[Export ("audioVolume")]
+		float AudioVolume { get; set; }
+
+		[NoiOS]
+		[NoTV]
+		[NullAllowed, Export ("livePhotoBadgeView", ArgumentSemantic.Strong)]
+		NSView LivePhotoBadgeView { get; }
 	}
 
 	[TV (10,0)]
-	[iOS (9,1)][NoMac]
+	[iOS (9,1)]
+	[Mac (10,12)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface PHLivePhotoViewDelegate {
@@ -93,7 +126,6 @@ namespace XamCore.PhotosUI {
 		[Export ("livePhotoView:didEndPlaybackWithStyle:")]
 		void DidEndPlayback (PHLivePhotoView livePhotoView, PHLivePhotoViewPlaybackStyle playbackStyle);
 	}
-#endif
 
 	[Mac (10,13, onlyOn64: true)][NoiOS][NoTV][NoWatch]
 	[Static]

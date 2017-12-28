@@ -21,14 +21,16 @@ namespace Extrospection {
 			// e.g. WatchKit.WKErrorCode and WebKit.WKErrorCode :-(
 			if (!enums.TryGetValue (name, out var td))
 				enums.Add (name, type);
-			else if (td.Namespace.StartsWith ("OpenTK.", StringComparison.Ordinal)) {
-				// OpenTK duplicate a lots of enums between it's versions
-			} else if (type.IsNotPublic && String.IsNullOrEmpty (type.Namespace)) {
-				// ignore special, non exposed types
-			} else {
-				var sorted = Helpers.Sort (type, td);
-				var framework = Helpers.GetFramework (sorted.Item1);
-				Log.On (framework).Add ($"!duplicate-type-name! {name} enum exists as both {sorted.Item1.FullName} and {sorted.Item2.FullName}");
+			else {
+				var (t1, t2) = Helpers.Sort (type, td);
+				if (t1.Namespace.StartsWith ("OpenTK.", StringComparison.Ordinal)) {
+					// OpenTK duplicate a lots of enums between it's versions
+				} else if (t1.IsNotPublic && String.IsNullOrEmpty (t1.Namespace)) {
+					// ignore special, non exposed types
+				} else {
+					var framework = Helpers.GetFramework (t1);
+					Log.On (framework).Add ($"!duplicate-type-name! {name} enum exists as both {t1.FullName} and {t2.FullName}");
+				}
 			}
 		}
 
