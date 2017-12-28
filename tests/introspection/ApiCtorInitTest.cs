@@ -395,6 +395,14 @@ namespace Introspection {
 				if (ctor.ToString () == "Void .ctor(PKPaymentSummaryItem[])")
 					return true;
 				break;
+			case "MDLNoiseTexture":
+			case "MDLSkyCubeTexture":
+			case "MDLNormalMapTexture":
+			case "MDLUrlTexture":
+			case "MDLCheckerboardTexture":
+			case "MDLColorSwatchTexture":
+				// they don't make sense without extra arguments
+				return true;
 			}
 
 			var ep = ctor.GetParameters ();

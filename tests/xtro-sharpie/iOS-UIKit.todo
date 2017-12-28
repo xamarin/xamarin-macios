@@ -2,7 +2,6 @@
 !missing-designated-initializer! NSShadow::init is missing an [DesignatedInitializer] attribute
 !missing-designated-initializer! UIBarButtonItem::init is missing an [DesignatedInitializer] attribute
 !missing-designated-initializer! UIBarItem::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! UIBezierPath::init is missing an [DesignatedInitializer] attribute
 !missing-designated-initializer! UICollectionViewLayout::init is missing an [DesignatedInitializer] attribute
 !missing-designated-initializer! UICubicTimingParameters::init is missing an [DesignatedInitializer] attribute
 !missing-designated-initializer! UIImageAsset::init is missing an [DesignatedInitializer] attribute
@@ -13,7 +12,5 @@
 !missing-designated-initializer! UITraitCollection::init is missing an [DesignatedInitializer] attribute
 
 !missing-designated-initializer! UIDragPreviewParameters::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! UILocalNotification::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! UISpringTimingParameters::init is missing an [DesignatedInitializer] attribute
 !missing-designated-initializer! UIUserNotificationAction::init is missing an [DesignatedInitializer] attribute
 !missing-designated-initializer! UIUserNotificationCategory::init is missing an [DesignatedInitializer] attribute

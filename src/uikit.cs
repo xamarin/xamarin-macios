@@ -6923,7 +6923,13 @@ namespace XamCore.UIKit {
 	[iOS (4,0)]
 	[BaseType (typeof (NSObject))]
 	[Availability (Deprecated = Platform.iOS_10_0, Message = "Use 'UserNotifications.UNNotificationRequest' instead.")]
+	[DisableDefaultCtor] // designated
 	interface UILocalNotification : NSCoding, NSCopying {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("fireDate", ArgumentSemantic.Copy)]
 		[NullAllowed]
 		NSDate FireDate { get; set;  }
@@ -7717,7 +7723,13 @@ namespace XamCore.UIKit {
 	[iOS (3,2)]
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe]
+	[DisableDefaultCtor] // designated
 	interface UIBezierPath : NSSecureCoding, NSCopying {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		// initWithFrame: --> unrecognized selector
 
 		[Export ("bezierPath"), Static]
@@ -16129,8 +16141,13 @@ namespace XamCore.UIKit {
 
 	[iOS (10,0), TV (10,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor] // designated
 	interface UISpringTimingParameters : UITimingCurveProvider
 	{
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("initialVelocity")]
 		CGVector InitialVelocity { get; }
 

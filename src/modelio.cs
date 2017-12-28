@@ -1631,8 +1631,13 @@ namespace XamCore.ModelIO {
 
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor] // designated
 	interface MDLTexture : MDLNamed
 	{
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Static]
 		[Export ("textureNamed:")]
 		MDLTexture FromBundle (string name);

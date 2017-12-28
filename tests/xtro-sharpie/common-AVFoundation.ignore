@@ -8,9 +8,6 @@
 
 ## unsorted
 
-!missing-designated-initializer! AVAudioEnvironmentNode::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! AVAudioMixerNode::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! AVAudioPlayerNode::init is missing an [DesignatedInitializer] attribute
 !missing-field! AVCoreAnimationBeginTimeAtZero not bound
 !missing-field! AVVideoCodecHEVC not bound
 !missing-field! AVVideoTransferFunction_ITU_R_2100_HLG not bound

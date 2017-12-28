@@ -48,6 +48,5 @@
 
 ## unsorted
 
-!missing-designated-initializer! UISpringTimingParameters::init is missing an [DesignatedInitializer] attribute
 !unknown-native-enum! UILineBreakMode bound
 !unknown-native-enum! UITextAlignment bound

@@ -564,8 +564,13 @@ namespace XamCore.PassKit {
 
 	[iOS (9,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor] // designated
 	interface PKAddPaymentPassRequest : NSSecureCoding
 	{
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[NullAllowed, Export ("encryptedPassData", ArgumentSemantic.Copy)]
 		NSData EncryptedPassData { get; set; }
 	

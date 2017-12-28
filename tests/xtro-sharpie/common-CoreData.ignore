@@ -1,5 +1,3 @@
-!missing-designated-initializer! NSFetchRequest::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSManagedObjectModel::init is missing an [DesignatedInitializer] attribute
 !missing-field! NSAffectedObjectsErrorKey not bound
 !missing-field! NSCoreDataVersionNumber not bound
 !missing-field! NSErrorMergePolicy not bound
