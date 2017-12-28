@@ -79,6 +79,10 @@ namespace XamCore.Social {
 		[Export ("parameters")]
 		NSDictionary Parameters { get;  }
 
+		[NoiOS] // just macOS
+		[Export ("addMultipartData:withName:type:")]
+		void AddMultipartData (NSData data, string partName, string partType);
+
 		[Export ("addMultipartData:withName:type:filename:")]
 		void AddMultipartData (NSData data, string partName, string partType, string filename);
 
@@ -130,6 +134,7 @@ namespace XamCore.Social {
 		[Export ("removeAllURLs")]
 		bool RemoveAllUrls ();
 	}
+#endif
 
 	[Mac (10,10, onlyOn64 : true)]
 	[iOS (8,0)]
@@ -209,13 +214,18 @@ namespace XamCore.Social {
 		UIViewController AutoCompletionViewController { get; set; }
 #endif
 	}
-#endif
 
 
 #if !MONOMAC
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // designated
 	interface SLComposeSheetConfigurationItem {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[NullAllowed] // by default this property is null
 		[Export ("title")]
 		string Title { get; set; }
