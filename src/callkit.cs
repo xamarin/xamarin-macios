@@ -119,7 +119,12 @@ namespace XamCore.CallKit {
 
 	[iOS (10, 0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // designated
 	interface CXAction : NSCopying, NSSecureCoding {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 
 		[Export ("UUID", ArgumentSemantic.Copy)]
 		NSUuid Uuid { get; }

@@ -448,8 +448,13 @@ namespace XamCore.CoreData
 	[Protocol]
 	interface NSFetchRequestResult {}
 
+	[DisableDefaultCtor] // designated
 	[BaseType (typeof (NSPersistentStoreRequest))]
 	interface NSFetchRequest : NSCoding {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 
 		[Export ("entity", ArgumentSemantic.Retain)]
 		[NullAllowed]
@@ -1183,7 +1188,12 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // designated
 	interface NSManagedObjectModel : NSCoding, NSCopying {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 
 		[Static, Export ("mergedModelFromBundles:")]
 		[return: NullAllowed]

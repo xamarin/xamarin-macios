@@ -415,7 +415,13 @@ namespace XamCore.CloudKit {
 	[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'CKDiscoverAllUserIdentitiesOperation' instead.")]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (CKOperation))]
+	[DisableDefaultCtor] // designated
 	interface CKDiscoverAllContactsOperation {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[NullAllowed] // by default this property is null
 		[Export ("discoverAllContactsCompletionBlock", ArgumentSemantic.Copy)]
 		Action<CKDiscoveredUserInfo[], NSError> DiscoverAllContactsHandler { get; set; }
@@ -426,7 +432,12 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // designated
 	interface CKDiscoveredUserInfo : NSCoding, NSCopying, NSSecureCoding {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 
 		[Export ("userRecordID", ArgumentSemantic.Copy)]
 		CKRecordID UserRecordId { get; }
@@ -464,7 +475,12 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[NoWatch]
 	[BaseType (typeof (CKOperation))]
+	[DisableDefaultCtor] // designated
 	interface CKDiscoverUserInfosOperation {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 
 		[Export ("initWithEmailAddresses:userRecordIDs:")]
 		IntPtr Constructor (string [] emailAddresses, CKRecordID [] userRecordIDs);
@@ -518,7 +534,13 @@ namespace XamCore.CloudKit {
 	[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
 	[Deprecated (PlatformName.WatchOS, 4, 0, message : "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
 	[Deprecated (PlatformName.TvOS, 11, 0, message : "Use 'CKDatabaseSubscription', 'CKFetchDatabaseChangesOperation' and 'CKFetchRecordZoneChangesOperation' instead.")]
+	[DisableDefaultCtor] // designated
 	interface CKFetchNotificationChangesOperation {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("initWithPreviousServerChangeToken:")]
 		IntPtr Constructor ([NullAllowed] CKServerChangeToken previousServerChangeToken);
 
@@ -564,7 +586,12 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[NoWatch]
 	[BaseType (typeof (CKDatabaseOperation))]
+	[DisableDefaultCtor] // designated
 	interface CKFetchRecordChangesOperation {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 
 		[Export ("initWithRecordZoneID:previousServerChangeToken:")]
 		IntPtr Constructor (CKRecordZoneID recordZoneID, [NullAllowed] CKServerChangeToken previousServerChangeToken);
@@ -619,8 +646,13 @@ namespace XamCore.CloudKit {
 
 	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(CKDatabaseOperation))]
+	[DisableDefaultCtor] // designated
 	interface CKFetchRecordZoneChangesOperation
 	{
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("initWithRecordZoneIDs:optionsByRecordZoneID:")]
 		IntPtr Constructor (CKRecordZoneID[] recordZoneIDs, [NullAllowed] NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesOptions> optionsByRecordZoneID);
 
@@ -668,11 +700,15 @@ namespace XamCore.CloudKit {
 	delegate void CKFetchRecordsCompletedHandler (NSDictionary recordsByRecordId, NSError error);
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
-#if XAMCORE_4_0 || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
-	[DisableDefaultCtor]
-#endif
+	[DisableDefaultCtor] // designated
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchRecordsOperation {
+
+#if !WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+#endif
 
 		[Export ("initWithRecordIDs:")]
 		IntPtr Constructor (CKRecordID [] recordIds);
@@ -715,11 +751,16 @@ namespace XamCore.CloudKit {
 	delegate void CKRecordZoneCompleteHandler (NSDictionary recordZonesByZoneId, NSError operationError);
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
-#if XAMCORE_4_0 || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
-	[DisableDefaultCtor]
-#endif
 	[BaseType (typeof (CKDatabaseOperation))]
+	[DisableDefaultCtor] // designated
 	interface CKFetchRecordZonesOperation {
+
+#if !WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+#endif
+
 		[Export ("initWithRecordZoneIDs:")]
 		IntPtr Constructor (CKRecordZoneID [] zoneIds);
 
@@ -746,7 +787,12 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[NoWatch]
 	[BaseType (typeof (CKDatabaseOperation))]
+	[DisableDefaultCtor] // designated
 	interface CKFetchSubscriptionsOperation {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 
 		[Export ("initWithSubscriptionIDs:")]
 		IntPtr Constructor (string [] subscriptionIds);
@@ -917,7 +963,12 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[NoWatch]
 	[BaseType (typeof (CKDatabaseOperation))]
+	[DisableDefaultCtor] // designated
 	interface CKModifySubscriptionsOperation {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 
 		[Export ("initWithSubscriptionsToSave:subscriptionIDsToDelete:")]
 		IntPtr Constructor ([NullAllowed] CKSubscription [] subscriptionsToSave, [NullAllowed] string [] subscriptionIdsToDelete);
@@ -1232,11 +1283,15 @@ namespace XamCore.CloudKit {
 	}
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
-#if XAMCORE_4_0 || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
-	[DisableDefaultCtor]
-#endif
 	[BaseType (typeof (CKDatabaseOperation))]
+	[DisableDefaultCtor] // designated
 	interface CKQueryOperation {
+
+#if !WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+#endif
 
 		[Field ("CKQueryOperationMaximumResults")][Internal]
 		IntPtr _MaximumResults { get; set; }
@@ -1690,7 +1745,12 @@ namespace XamCore.CloudKit {
 	[TV (9,1)]
 	[Watch (3,0)]
 	[BaseType (typeof (CKDatabaseOperation))]
+	[DisableDefaultCtor] // designated
 	interface CKFetchWebAuthTokenOperation {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 
 		[Export ("initWithAPIToken:")]
 		IntPtr Constructor (string token);
@@ -1706,8 +1766,13 @@ namespace XamCore.CloudKit {
 
 	[iOS (10,0), TV (10,0), Watch (3,0), Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(CKOperation))]
+	[DisableDefaultCtor] // designated
 	interface CKDiscoverUserIdentitiesOperation
 	{
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("initWithUserIdentityLookupInfos:")]
 		IntPtr Constructor (CKUserIdentityLookupInfo[] userIdentityLookupInfos);
 
@@ -1723,8 +1788,13 @@ namespace XamCore.CloudKit {
 
 	[NoTV, iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(CKOperation))]
+	[DisableDefaultCtor] // designated
 	interface CKDiscoverAllUserIdentitiesOperation
 	{
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[NullAllowed, Export ("userIdentityDiscoveredBlock", ArgumentSemantic.Copy)]
 		Action<CKUserIdentity> Discovered { get; set; }
 
@@ -1734,8 +1804,13 @@ namespace XamCore.CloudKit {
 
 	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(CKOperation))]
+	[DisableDefaultCtor] // designated
 	interface CKFetchShareParticipantsOperation
 	{
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("initWithUserIdentityLookupInfos:")]
 		IntPtr Constructor (CKUserIdentityLookupInfo[] userIdentityLookupInfos);
 
@@ -1755,8 +1830,13 @@ namespace XamCore.CloudKit {
 
 	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(CKOperation))]
+	[DisableDefaultCtor] // designated
 	interface CKAcceptSharesOperation
 	{
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("initWithShareMetadatas:")]
 		IntPtr Constructor (CKShareMetadata[] shareMetadatas);
 
@@ -1776,8 +1856,13 @@ namespace XamCore.CloudKit {
 
 	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(CKOperation))]
+	[DisableDefaultCtor] // designated
 	interface CKFetchShareMetadataOperation
 	{
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("initWithShareURLs:")]
 		IntPtr Constructor (NSUrl[] shareUrls);
 
@@ -1803,8 +1888,13 @@ namespace XamCore.CloudKit {
 
 	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(CKDatabaseOperation))]
+	[DisableDefaultCtor] // designated
 	interface CKFetchDatabaseChangesOperation
 	{
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("initWithPreviousServerChangeToken:")]
 		IntPtr Constructor ([NullAllowed] CKServerChangeToken previousServerChangeToken);
 

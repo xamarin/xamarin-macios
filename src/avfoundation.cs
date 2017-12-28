@@ -1037,7 +1037,13 @@ namespace XamCore.AVFoundation {
 	[NoWatch]
 	[iOS (8,0)][Mac (10,10)]
 	[BaseType (typeof (AVAudioNode))]
+	[DisableDefaultCtor] // designated
 	interface AVAudioEnvironmentNode : AVAudioMixing {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("nextAvailableInputBus")]
 		nuint NextAvailableInputBus { get; }
 
@@ -1366,7 +1372,13 @@ namespace XamCore.AVFoundation {
 	[Watch (3,0)]
 	[iOS (8,0)][Mac (10,10)]
 	[BaseType (typeof (AVAudioNode))]
+	[DisableDefaultCtor] // designated
 	interface AVAudioMixerNode : AVAudioMixing {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("outputVolume")]
 		float OutputVolume { get; set; } /* float, not CGFloat */
 
@@ -1579,7 +1591,12 @@ namespace XamCore.AVFoundation {
 	[Watch (3,0)]
 	[iOS (8,0)][Mac (10,10)]
 	[BaseType (typeof (AVAudioNode))]
+	[DisableDefaultCtor] // designated
 	interface AVAudioPlayerNode : AVAudioMixing {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 
 		[Export ("playing")]
 		bool Playing { [Bind ("isPlaying")] get; }
