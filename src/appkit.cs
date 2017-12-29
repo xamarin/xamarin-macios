@@ -2214,7 +2214,6 @@ namespace XamCore.AppKit {
 		[Export ("imageHugsTitle")]
 		bool ImageHugsTitle { get; set; }
 
-		[Mac (10,5)]
 		[Export ("imageScaling")]
 		NSImageScale ImageScaling { get; set; }
 
@@ -5048,7 +5047,6 @@ namespace XamCore.AppKit {
 		bool ExplicitlyIncluded { [Bind ("isExplicitlyIncluded")] get; }
 	}
 
-	[Mac (10,5)]
 	[BaseType (typeof(NSArrayController))]
 	interface NSDictionaryController
 	{
@@ -19177,7 +19175,6 @@ namespace XamCore.AppKit {
 		bool Autovalidates { get; set; }
 	}
 
-	[Mac (10,5)]
 	[BaseType (typeof (NSToolbarItem))]
 	interface NSToolbarItemGroup
 	{
@@ -23800,7 +23797,6 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityShownMenuAttribute")]
 		NSString ShownMenuAttribute { get; }
 
-		[Mac (10, 5)]
 		[Field ("NSAccessibilityValueDescriptionAttribute")]
 		NSString ValueDescriptionAttribute { get; }
 
@@ -23911,7 +23907,6 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityInsertionPointLineNumberAttribute")]
 		NSString InsertionPointLineNumberAttribute { get; }
 
-		[Mac (10, 5)]
 		[Field ("NSAccessibilitySelectedTextRangesAttribute")]
 		NSString SelectedTextRangesAttribute { get; }
 
@@ -24480,7 +24475,6 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityTextLinkSubrole")]
 		NSString TextLinkSubrole { get; }
 
-		[Mac (10, 5)]
 		[Field ("NSAccessibilityTimelineSubrole")]
 		NSString TimelineSubrole { get; }
 

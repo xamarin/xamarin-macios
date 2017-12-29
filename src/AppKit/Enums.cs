@@ -1819,13 +1819,11 @@ namespace XamCore.AppKit {
 	public enum NSPathStyle : nint {
 #if XAMCORE_2_0
 		Standard,
-		[Mac (10, 5)]
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		NavigationBar,
 		PopUp
 #else
 		NSPathStyleStandard,
-		[Mac (10, 5)]
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		NSPathStyleNavigationBar,
 		NSPathStylePopUp

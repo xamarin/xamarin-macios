@@ -424,11 +424,9 @@ namespace XamCore.WebKit {
 		[Export ("expandEntityReferences")]
 		bool ExpandEntityReferences { get; }
 
-		[Mac (10,5)]
 		[Export ("referenceNode", ArgumentSemantic.Retain)]
 		DomNode ReferenceNode { get; }
 
-		[Mac (10,5)]
 		[Export ("pointerBeforeReferenceNode")]
 		bool PointerBeforeReferenceNode { get; }
 
@@ -2909,39 +2907,30 @@ namespace XamCore.WebKit {
 		[Export ("accessKey")]
 		string AccessKey { get; set; }
 
-		[Mac (10,5)]
 		[Export ("hashName")]
 		string HashName { get; }
 
-		[Mac (10,5)]
 		[Export ("host")]
 		string Host { get; }
 
-		[Mac (10,5)]
 		[Export ("hostname")]
 		string Hostname { get; }
 
-		[Mac (10,5)]
 		[Export ("pathname")]
 		string Pathname { get; }
 
-		[Mac (10,5)]
 		[Export ("port")]
 		string Port { get; }
 
-		[Mac (10,5)]
 		[Export ("protocol")]
 		string Protocol { get; }
 
-		[Mac (10,5)]
 		[Export ("search")]
 		string Search { get; }
 
-		[Mac (10,5)]
 		[Export ("text")]
 		string Text { get; }
 
-		[Mac (10,5)]
 		[Export ("absoluteLinkURL", ArgumentSemantic.Copy)]
 		NSUrl AbsoluteImageUrl { get; }
 	}
@@ -3010,27 +2999,21 @@ namespace XamCore.WebKit {
 		[Export ("accessKey")]
 		string AccessKey { get; set; }
 
-		[Mac (10,5)]
 		[Export ("hashName")]
 		string HashName { get; }
 
-		[Mac (10,5)]
 		[Export ("host")]
 		string Host { get; }
 
-		[Mac (10,5)]
 		[Export ("hostname")]
 		string Hostname { get; }
 
-		[Mac (10,5)]
 		[Export ("pathname")]
 		string Pathname { get; }
 
-		[Mac (10,5)]
 		[Export ("port")]
 		string Port { get; }
 
-		[Mac (10,5)]
 		[Export ("protocol")]
 		string Protocol { get; }
 
@@ -3379,35 +3362,27 @@ namespace XamCore.WebKit {
 		[Export ("width")]
 		int Width { get; set; } /* int, not NSInteger */
 
-		[Mac (10,5)]
 		[Export ("complete")]
 		bool Complete { get; }
 
-		[Mac (10,5)]
 		[Export ("lowsrc")]
 		string Lowsrc { get; set; }
 
-		[Mac (10,5)]
 		[Export ("naturalHeight")]
 		int NaturalHeight { get; } /* int, not NSInteger */
 
-		[Mac (10,5)]
 		[Export ("naturalWidth")]
 		int NaturalWidth { get; } /* int, not NSInteger */
 
-		[Mac (10,5)]
 		[Export ("x")]
 		int X { get; } /* int, not NSInteger */
 
-		[Mac (10,5)]
 		[Export ("y")]
 		int Y { get; } /* int, not NSInteger */
 
-		[Mac (10,5)]
 		[Export ("altDisplayString")]
 		string AltDisplayString { get; }
 
-		[Mac (10,5)]
 		[Export ("absoluteImageURL", ArgumentSemantic.Copy)]
 		NSUrl AbsoluteImageUrl { get; }
 	}
@@ -3795,19 +3770,15 @@ namespace XamCore.WebKit {
 		[Export ("value")]
 		string Value { get; set; }
 
-		[Mac (10,6)]
 		[Export ("willValidate")]
 		bool WillValidate { get; }
 
-		[Mac (10,6)]
 		[Export ("item:")]
 		DomNode GetItem (uint /* unsigned int */ index);
 
-		[Mac (10,6)]
 		[Export ("namedItem:")]
 		DomNode NamedItem (string name);
 
-		[Mac (10,5)]
 		[Export ("add:before:")]
 		void Add (DomHtmlElement element, DomHtmlElement before);
 

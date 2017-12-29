@@ -82,7 +82,6 @@ namespace XamCore.CoreText {
 		MaximumLineHeight       = 8,
 		MinimumLineHeight       = 9,
 		[Deprecated (PlatformName.iOS, 6, 0, message : "Please use MaximumLineSpacing")]
-		[Mac (10, 5)]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Please use MaximumLineSpacing")]
 		LineSpacing             = 10,
 		ParagraphSpacing        = 11,
