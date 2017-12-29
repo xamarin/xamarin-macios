@@ -1,6 +1,7 @@
 ifdef ENABLE_XAMARIN
-NEEDED_MACCORE_VERSION := 62c4393c94ed274acbc1edce259a3c22a461f922
-NEEDED_MACCORE_BRANCH := master
+-include $(MACCORE_PATH)/mk/versions.mk
+NEEDED_MACCORE_VERSION := 5a97b45faf02315eb266d3670fd1492e34228f0f
+NEEDED_MACCORE_BRANCH := 2017-12
 
 MACCORE_DIRECTORY := maccore
 MACCORE_MODULE    := git@github.com:xamarin/maccore.git
@@ -58,6 +59,9 @@ test-$(1)::
 	@echo "   $(2)_PATH=$($(2)_PATH) => $(abspath $($(2)_PATH))"
 
 reset-$(1)::
+	@echo "   NEEDED_MONO_EXTENSIONS_VERSION=$(NEEDED_MONO_EXTENSIONS_VERSION)"
+	@echo "   NEEDED_MONO_EXTENSIONS_BRANCH=$(NEEDED_MONO_EXTENSIONS_BRANCH)"
+	@echo "   NEEDED_MONO_EXTENSIONS_REMOTE=$(NEEDED_MONO_EXTENSIONS_REMOTE)"
 	@if test -d $($(2)_PATH); then \
 		if ! (cd $($(2)_PATH) && git show $(NEEDED_$(2)_VERSION) >/dev/null 2>&1 && git log -1 $(NEEDED_$(2)_REMOTE) >/dev/null 2>&1) ; then \
 			echo "*** git fetch `basename $$($(2)_PATH)`" && (cd $($(2)_PATH) && git fetch); \
@@ -91,6 +95,5 @@ $(MACCORE_PATH):
 	$(Q) $(MAKE) reset-maccore
 
 $(eval $(call CheckVersionTemplate,maccore,MACCORE))
--include $(MACCORE_PATH)/mk/versions.mk
 $(MACCORE_PATH)/mk/versions.mk: | $(MACCORE_PATH)
 endif
