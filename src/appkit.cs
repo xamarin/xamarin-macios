@@ -23982,7 +23982,6 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityMisspelledTextAttribute")]
 		NSString MisspelledTextAttribute { get; }
 
-		[Mac (10, 4)]
 		[Field ("NSAccessibilityMarkedMisspelledTextAttribute")]
 		NSString MarkedMisspelledTextAttribute { get; }	
 
@@ -24382,22 +24381,18 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityLinkRole")]
 		NSString LinkRole { get; }
 
-		[Mac (10, 5)]
 		[Field ("NSAccessibilityDisclosureTriangleRole")]
 		NSString DisclosureTriangleRole { get; }
 
-		[Mac (10, 5)]
 		[Field ("NSAccessibilityGridRole")]
 		NSString GridRole { get; }
 
 		[Field ("NSAccessibilityRelevanceIndicatorRole")]
 		NSString RelevanceIndicatorRole { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityLevelIndicatorRole")]
 		NSString LevelIndicatorRole { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityCellRole")]
 		NSString CellRole { get; }
 
@@ -24405,15 +24400,12 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityPopoverRole")]
 		NSString PopoverRole { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityLayoutAreaRole")]
 		NSString LayoutAreaRole { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityLayoutItemRole")]
 		NSString LayoutItemRole { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityHandleRole")]
 		NSString HandleRole { get; }
 

@@ -896,82 +896,82 @@ namespace XamCore.Foundation
 
 #if MONOMAC
 	// Obsolete, but the only API surfaced by WebKit.WebHistory.
-	[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10, Message="Use NSCalendar and NSDateComponents.")]
+	[Availability (Deprecated = Platform.Mac_10_10, Message="Use NSCalendar and NSDateComponents.")]
 	[BaseType (typeof (NSDate))]
 	interface NSCalendarDate {
 		[Export ("initWithString:calendarFormat:locale:")]
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		IntPtr Constructor (string description, string calendarFormat, NSObject locale);
 
 		[Export ("initWithString:calendarFormat:")]
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		IntPtr Constructor (string description, string calendarFormat);
 
 		[Export ("initWithString:")]
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		IntPtr Constructor (string description);
 
 		[Export ("initWithYear:month:day:hour:minute:second:timeZone:")]
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		IntPtr Constructor (nint year, nuint month, nuint day, nuint hour, nuint minute, nuint second, NSTimeZone aTimeZone);
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("dateByAddingYears:months:days:hours:minutes:seconds:")]
 		NSCalendarDate DateByAddingYears (nint year, nint month, nint day, nint hour, nint minute, nint second);
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("dayOfCommonEra")]
 		nint DayOfCommonEra { get; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("dayOfMonth")]
 		nint DayOfMonth { get; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("dayOfWeek")]
 		nint DayOfWeek { get; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("dayOfYear")]
 		nint DayOfYear { get; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("hourOfDay")]
 		nint HourOfDay { get; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("minuteOfHour")]
 		nint MinuteOfHour { get; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("monthOfYear")]
 		nint MonthOfYear { get; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("secondOfMinute")]
 		nint SecondOfMinute { get; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("yearOfCommonEra")]
 		nint YearOfCommonEra { get; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("calendarFormat")]
 		string CalendarFormat { get; set; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("descriptionWithCalendarFormat:locale:")]
 		string GetDescription (string calendarFormat, NSObject locale);
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("descriptionWithCalendarFormat:")]
 		string GetDescription (string calendarFormat);
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("descriptionWithLocale:")]
 		string GetDescription (NSLocale locale);
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("timeZone")]
 		NSTimeZone TimeZone { get; set; }
 	}
@@ -1520,7 +1520,6 @@ namespace XamCore.Foundation
 		nint Nanosecond { get; set; }
 
 		[Export ("week")]
-		[Mac (10, 4)]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use 'WeekOfMonth' or 'WeekOfYear' instead.")]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'WeekOfMonth' or 'WeekOfYear' instead.")]
 		nint Week { get; set; }

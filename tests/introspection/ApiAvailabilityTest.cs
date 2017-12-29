@@ -36,27 +36,25 @@ namespace Introspection {
 
 		public ApiAvailabilityTest ()
 		{
+			Maximum = Version.Parse (Constants.SdkVersion);
 #if __IOS__
 			Minimum = new Version (6,0);
-			Maximum = new Version (11,2);
 			Filter = (AvailabilityBaseAttribute arg) => {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.iOS);
 			};
 #elif __TVOS__
 			Minimum = new Version (9,0);
-			Maximum = new Version (11,2);
 			Filter = (AvailabilityBaseAttribute arg) => {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.TvOS);
 			};
 #elif __WATCHOS__
 			Minimum = new Version (2,0);
-			Maximum = new Version (4,2);
 			Filter = (AvailabilityBaseAttribute arg) => {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.WatchOS);
 			};
 #else
-			Minimum = new Version (10,4);
-			Maximum = new Version (10,13,2);
+			Minimum = new Version (10,5);
+			Maximum = new Version (10,13,2); // setting OSX_SDK_VERSION to 10.13.2 (instead of 10.13 breaks other assumptions)
 			Filter = (AvailabilityBaseAttribute arg) => {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.MacOSX);
 			};

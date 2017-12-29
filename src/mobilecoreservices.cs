@@ -388,7 +388,7 @@ namespace XamCore.MobileCoreServices {
 		NSString Presentation { get; }
 		
 		[Field ("kUTTypeDatabase", "+CoreServices")]
-		[Mac (10,4), iOS(8,0)]
+		[iOS(8,0)]
 		NSString Database { get; }
 		
 		[Field ("kUTTypeVCard", "+CoreServices")]

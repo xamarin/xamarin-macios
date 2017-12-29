@@ -285,7 +285,6 @@ namespace XamCore.CoreImage {
 #endif
 
 		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'DrawImage (image, CGRect, CGRect)' instead.")]
-		[Mac (10, 4)]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'DrawImage (image, CGRect, CGRect)' instead.")]
 		[Export ("drawImage:atPoint:fromRect:")]
 		void DrawImage (CIImage image, CGPoint atPoint, CGRect fromRect);
@@ -544,7 +543,6 @@ namespace XamCore.CoreImage {
 		NSUrl FilterLocalizedReferenceDocumentation (string filterName);
 
 #if MONOMAC && !XAMCORE_4_0
-		[Mac(10,4)]
 		[Static]
 		[Export ("registerFilterName:constructor:classAttributes:")]
 		void RegisterFilterName (string name, NSObject constructorObject, NSDictionary classAttributes);
@@ -1388,7 +1386,6 @@ namespace XamCore.CoreImage {
 #if MONOMAC && !XAMCORE_4_0
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
-		[Mac(10,4)]
 		[Export ("imageWithCVImageBuffer:options:")]
 		CIImage FromImageBuffer (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary dict);
 #else
@@ -1525,7 +1522,6 @@ namespace XamCore.CoreImage {
 		IntPtr Constructor (CVImageBuffer imageBuffer);
 
 #if MONOMAC && !XAMCORE_4_0
-		[Mac(10,4)]
 		[Export ("initWithCVImageBuffer:options:")]
 		IntPtr Constructor (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary dict);
 #else

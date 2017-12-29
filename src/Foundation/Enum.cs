@@ -183,7 +183,6 @@ namespace XamCore.Foundation  {
 		Hour = 32,
 		Minute = 64,
 		Second = 128,
-		[Mac (10, 4)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		Week = 256,

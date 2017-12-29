@@ -1870,7 +1870,7 @@ namespace XamCore.CoreData
 #endif // !WATCH && !TVOS
 
 #if MONOMAC
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_5)]
+		[Availability (Deprecated = Platform.Mac_10_5)]
 		[Static, Export ("metadataForPersistentStoreWithURL:error:")]
 		NSDictionary MetadataForPersistentStoreWithUrl (NSUrl url, out NSError error);
 #endif
