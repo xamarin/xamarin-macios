@@ -5095,12 +5095,10 @@ namespace XamCore.Foundation
 		
 	[BaseType (typeof (NSObject))]
 	interface NSUserDefaults {
-		[Mac (10,6)]
 		[Export ("URLForKey:")]
 		[return: NullAllowed]
 		NSUrl URLForKey (string defaultName);
 
-		[Mac (10,6)]
 		[Export ("setURL:forKey:")]
 		void SetURL ([NullAllowed] NSUrl url, string defaultName);
 
@@ -9221,7 +9219,6 @@ namespace XamCore.Foundation
 		[Export ("pathForSoundResource:")]
 		string PathForSoundResource (string resource);
 
-		[Mac (10,6)]
 		[Export ("URLForImageResource:")]
 		NSUrl GetUrlForImageResource (string resource);
 
@@ -12735,7 +12732,6 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // An uncaught exception was raised: *** -range cannot be sent to an abstract object of class NSTextCheckingResult: Create a concrete instance!
-	[Mac (10, 6)]
 	interface NSTextCheckingResult : NSSecureCoding, NSCopying {
 		[Export ("resultType")]
 		NSTextCheckingType ResultType { get;  }
@@ -12901,71 +12897,53 @@ namespace XamCore.Foundation
 
 	[StrongDictionary ("NSTextChecking")]
 	interface NSTextCheckingAddressComponents {
-		[Mac (10, 6)]
 		string Name { get; }
 
-		[Mac (10, 6)]
 		string JobTitle { get; }
 
-		[Mac (10, 6)]
 		string Organization { get; }
 
-		[Mac (10, 6)]
 		string Street { get; }
 
-		[Mac (10, 6)]
 		string City { get; }
 
-		[Mac (10, 6)]
 		string State { get; }
 
 		[Export ("ZipKey")]
-		[Mac (10, 6)]
 		string ZIP { get; }
 
-		[Mac (10, 6)]
 		string Country { get; }
 
-		[Mac (10, 6)]
 		string Phone { get; }
 	}
 
 	[Static]
 	interface NSTextChecking {
 		[Field ("NSTextCheckingNameKey")]
-		[Mac (10, 6)]
 		NSString NameKey { get; }
 
 		[Field ("NSTextCheckingJobTitleKey")]
-		[Mac (10, 6)]
 		NSString JobTitleKey { get; }
 
 		[Field ("NSTextCheckingOrganizationKey")]
-		[Mac (10, 6)]
 		NSString OrganizationKey { get; }
 
 		[Field ("NSTextCheckingStreetKey")]
-		[Mac (10, 6)]
 		NSString StreetKey { get; }
 
 		[Field ("NSTextCheckingCityKey")]
-		[Mac (10, 6)]
 		NSString CityKey { get; }
 
 		[Field ("NSTextCheckingStateKey")]
-		[Mac (10, 6)]
 		NSString StateKey { get; }
 
 		[Field ("NSTextCheckingZIPKey")]
-		[Mac (10, 6)]
 		NSString ZipKey { get; }
 
 		[Field ("NSTextCheckingCountryKey")]
-		[Mac (10, 6)]
 		NSString CountryKey { get; }
 
 		[Field ("NSTextCheckingPhoneKey")]
-		[Mac (10, 6)]
 		NSString PhoneKey { get; }
 
 		[Field ("NSTextCheckingAirlineKey")]

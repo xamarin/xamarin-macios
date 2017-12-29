@@ -53,7 +53,7 @@ namespace Introspection {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.WatchOS);
 			};
 #else
-			Minimum = new Version (10,6);
+			Minimum = new Version (10,7);
 			Maximum = new Version (10,13,2); // setting OSX_SDK_VERSION to 10.13.2 (instead of 10.13 breaks other assumptions)
 			Filter = (AvailabilityBaseAttribute arg) => {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.MacOSX);

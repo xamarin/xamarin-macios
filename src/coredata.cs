@@ -750,7 +750,6 @@ namespace XamCore.CoreData
 		[Export ("objectID", ArgumentSemantic.Strong)]
 		NSManagedObjectID ObjectID { get; }
 		
-		[Mac (10,6)]
 		[Static, Export ("contextShouldIgnoreUnmodeledPropertyChanges")]
 		bool ContextShouldIgnoreUnModeledPropertyChanges { get; }
 

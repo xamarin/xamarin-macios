@@ -11300,59 +11300,45 @@ namespace XamCore.AppKit {
 		[Field ("NSPasteboardNameDrag")]
 		NSString NSPasteboardNameDrag { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeString")]
 		NSString NSPasteboardTypeString { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypePDF")]
 		NSString NSPasteboardTypePDF { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeTIFF")]
 		NSString NSPasteboardTypeTIFF { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypePNG")]
 		NSString NSPasteboardTypePNG { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeRTF")]
 		NSString NSPasteboardTypeRTF { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeRTFD")]
 		NSString NSPasteboardTypeRTFD { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeHTML")]
 		NSString NSPasteboardTypeHTML { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeTabularText")]
 		NSString NSPasteboardTypeTabularText { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeFont")]
 		NSString NSPasteboardTypeFont { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeRuler")]
 		NSString NSPasteboardTypeRuler { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeColor")]
 		NSString NSPasteboardTypeColor { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeSound")]
 		NSString NSPasteboardTypeSound { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeMultipleTextSelection")]
 		NSString NSPasteboardTypeMultipleTextSelection { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeFindPanelSearchOptions")]
 		NSString NSPasteboardTypeFindPanelSearchOptions { get; }
 
@@ -13901,7 +13887,6 @@ namespace XamCore.AppKit {
 		[Wrap ("CheckString (stringToCheck, range, checkingTypes, options == null ? null : options.Dictionary, tag, out orthography, out wordCount)")]
 		NSTextCheckingResult [] CheckString (string stringToCheck, NSRange range, NSTextCheckingTypes checkingTypes, NSTextCheckingOptions options, nint tag, out NSOrthography orthography, out nint wordCount);
 
-		[Mac (10,6)]
 		[Export ("requestCheckingOfString:range:types:options:inSpellDocumentWithTag:completionHandler:")]
 		nint RequestChecking (string stringToCheck, NSRange range, NSTextCheckingTypes checkingTypes, [NullAllowed] NSDictionary options, nint tag, Action<nint, NSTextCheckingResult [], NSOrthography, nint> completionHandler);
 
@@ -17303,7 +17288,6 @@ namespace XamCore.AppKit {
 		[Export ("sizeOfLabel:")]
 		CGSize SizeOfLabel (bool computeMin);
 
-		[Mac (10,6)]
 		[Export ("toolTip")]
 		string ToolTip { get; set; }
 
@@ -18820,7 +18804,6 @@ namespace XamCore.AppKit {
 		[Export ("windowLevel")]
 		NSWindowLevel WindowLevel { get; }
 
-		[Mac (10,6)]
 		[Export ("drawsVerticallyForCharacterAtIndex:")]
 		bool DrawsVertically (nuint charIndex);
 	}
@@ -20936,19 +20919,15 @@ namespace XamCore.AppKit {
 		[Notification ("SharedWorkspace.NotificationCenter")]
 		NSString ActiveSpaceDidChangeNotification { get; }
 
-		[Mac (10,6)]
 		[Field ("NSWorkspaceLaunchConfigurationAppleEvent")]
 		NSString LaunchConfigurationAppleEvent { get; }
 
-		[Mac (10,6)]
 		[Field ("NSWorkspaceLaunchConfigurationArguments")]
 		NSString LaunchConfigurationArguments { get; }
 
-		[Mac (10,6)]
 		[Field ("NSWorkspaceLaunchConfigurationEnvironment")]
 		NSString LaunchConfigurationEnvironment { get; }
 
-		[Mac (10,6)]
 		[Field ("NSWorkspaceLaunchConfigurationArchitecture")]
 		NSString LaunchConfigurationArchitecture { get; }
 		
@@ -23633,27 +23612,22 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilitySelectedColumnsChangedNotification")]
 		NSString SelectedColumnsChangedNotification { get; }
 
-		[Mac (10, 6)]
 		[Notification]
 		[Field ("NSAccessibilityRowExpandedNotification")]
 		NSString RowExpandedNotification { get; }
 
-		[Mac (10, 6)]
 		[Notification]
 		[Field ("NSAccessibilityRowCollapsedNotification")]
 		NSString RowCollapsedNotification { get; }
 
-		[Mac (10, 6)]
 		[Notification]
 		[Field ("NSAccessibilitySelectedCellsChangedNotification")]
 		NSString SelectedCellsChangedNotification { get; }
 
-		[Mac (10, 6)]
 		[Notification]
 		[Field ("NSAccessibilityUnitsChangedNotification")]
 		NSString UnitsChangedNotification { get; }
 
-		[Mac (10, 6)]
 		[Notification]
 		[Field ("NSAccessibilitySelectedChildrenMovedNotification")]
 		NSString SelectedChildrenMovedNotification { get; }
@@ -24075,67 +24049,51 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilitySortDirectionAttribute")]
 		NSString SortDirectionAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilitySelectedCellsAttribute")]
 		NSString SelectedCellsAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityVisibleCellsAttribute")]
 		NSString VisibleCellsAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityRowHeaderUIElementsAttribute")]
 		NSString RowHeaderUIElementsAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityColumnHeaderUIElementsAttribute")]
 		NSString ColumnHeaderUIElementsAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityCellForColumnAndRowParameterizedAttribute")]
 		NSString CellForColumnAndRowParameterizedAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityRowIndexRangeAttribute")]
 		NSString RowIndexRangeAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityColumnIndexRangeAttribute")]
 		NSString ColumnIndexRangeAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityHorizontalUnitsAttribute")]
 		NSString HorizontalUnitsAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityVerticalUnitsAttribute")]
 		NSString VerticalUnitsAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityHorizontalUnitDescriptionAttribute")]
 		NSString HorizontalUnitDescriptionAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityVerticalUnitDescriptionAttribute")]
 		NSString VerticalUnitDescriptionAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityLayoutPointForScreenPointParameterizedAttribute")]
 		NSString LayoutPointForScreenPointParameterizedAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityLayoutSizeForScreenSizeParameterizedAttribute")]
 		NSString LayoutSizeForScreenSizeParameterizedAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityScreenPointForLayoutPointParameterizedAttribute")]
 		NSString ScreenPointForLayoutPointParameterizedAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityScreenSizeForLayoutSizeParameterizedAttribute")]
 		NSString ScreenSizeForLayoutSizeParameterizedAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityHandlesAttribute")]
 		NSString HandlesAttribute { get; }
 
@@ -24478,19 +24436,15 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityTimelineSubrole")]
 		NSString TimelineSubrole { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilitySortButtonSubrole")]
 		NSString SortButtonSubrole { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityRatingIndicatorSubrole")]
 		NSString RatingIndicatorSubrole { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityContentListSubrole")]
 		NSString ContentListSubrole { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityDefinitionListSubrole")]
 		NSString DefinitionListSubrole { get; }
 
@@ -24608,23 +24562,18 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilitySelectedColumnsChangedNotification")]
 		NSString SelectedColumnsChangedNotification { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityRowExpandedNotification")]
 		NSString RowExpandedNotification { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityRowCollapsedNotification")]
 		NSString RowCollapsedNotification { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilitySelectedCellsChangedNotification")]
 		NSString SelectedCellsChangedNotification { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityUnitsChangedNotification")]
 		NSString UnitsChangedNotification { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilitySelectedChildrenMovedNotification")]
 		NSString SelectedChildrenMovedNotification { get; }
 
@@ -25115,7 +25064,6 @@ namespace XamCore.AppKit {
 	}
 #endif
 
-	[Mac (10,6)]
 	[BaseType (typeof(CAOpenGLLayer))]
 	interface NSOpenGLLayer
 	{

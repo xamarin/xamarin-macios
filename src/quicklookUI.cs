@@ -33,7 +33,6 @@ namespace XamCore.QuickLookUI {
 		NSObject TransitionImageForPreviewItem (QLPreviewPanel panel, [Protocolize] QLPreviewItem item, CGRect contentRect);
 	}
 	
-	[Mac (10,6)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface QLPreviewItem {
@@ -61,7 +60,6 @@ namespace XamCore.QuickLookUI {
 		void EndPreviewPanelControl (QLPreviewPanel panel);
 	}
 
-	[Mac (10,6)]
 	[BaseType (typeof (NSPanel))]
 	interface QLPreviewPanel {
 		[Export ("currentController")]

@@ -3084,7 +3084,6 @@ namespace XamCore.WebKit {
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlButtonElement {
 
-		[Mac (10,6)]
 		[Export ("autofocus")]
 		bool Autofocus { get; set; }
 
@@ -3103,7 +3102,6 @@ namespace XamCore.WebKit {
 		[Export ("value")]
 		string Value { get; set; }
 
-		[Mac (10,6)]
 		[Export ("willValidate")]
 		bool WillValidate { get; }
 
@@ -3317,7 +3315,6 @@ namespace XamCore.WebKit {
 		[Export ("contentDocument", ArgumentSemantic.Retain)]
 		DomDocument ContentDocument { get; }
 
-		[Mac (10,6)]
 		[Export ("contentWindow", ArgumentSemantic.Retain)]
 		DomAbstractView ContentWindow { get; }
 	}

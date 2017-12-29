@@ -188,7 +188,6 @@ namespace XamCore.Foundation  {
 		Week = 256,
 		Weekday = 512,
 		WeekdayOrdinal = 1024,
-		[Mac (10, 6)]
 		Quarter = 2048,
 
 		[Mac (10, 7)]
