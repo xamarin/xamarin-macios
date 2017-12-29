@@ -63,7 +63,7 @@ namespace Introspection {
 			};
 #else
 			Minimum = new Version (10,7);
-			Maximum = new Version (10,13);
+			Maximum = new Version (10,13,2);
 			Filter = (AvailabilityBaseAttribute arg) => {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.MacOSX);
 			};
@@ -101,6 +101,15 @@ namespace Introspection {
 			AssertIfErrors ("{0} API with unneeded or incorrect version information", Errors);
 		}
 
+#if XAMCORE_4_0
+		[Test]
+		public void Deprecated ()
+		{
+			// TODO warn about any API deprecated before the minimum (e.g. < iOS 6).
+			// Those should not be exposed in future profiles.
+		}
+#endif
+
 		protected AvailabilityBaseAttribute CheckAvailability (ICustomAttributeProvider cap)
 		{
 			var attrs = cap.GetCustomAttributes (false);
@@ -108,8 +117,10 @@ namespace Introspection {
 				if (a is AvailabilityBaseAttribute aa) {
 					if (Filter (aa))
 						continue;
+#if !MONOMAC
 					if (aa.Version < Minimum)
 						AddErrorLine ($"[FAIL] {aa.Version} < {Minimum} (Min) on '{cap}'.");
+#endif
 					if (aa.Version > Maximum)
 						AddErrorLine ($"[FAIL] {aa.Version} > {Maximum} (Max) on '{cap}'.");
 					return aa;
