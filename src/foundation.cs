@@ -9918,7 +9918,6 @@ namespace XamCore.Foundation
 
 		[Export ("resolve")]
 		[Deprecated (PlatformName.iOS, 2, 0, message : "Use 'Resolve (double)' instead.")]
-		[Mac (10, 2)]
 		[Deprecated (PlatformName.MacOSX, 10, 4, message : "Use 'Resolve (double)' instead.")]
 		[NoWatch]
 		void Resolve ();

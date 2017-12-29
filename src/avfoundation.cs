@@ -8596,7 +8596,7 @@ namespace XamCore.AVFoundation {
 		[Internal]
 		IntPtr InitWithConnection (AVCaptureSession session);
 
-		[iOS (8,0), Mac (10,2)]
+		[iOS (8,0), Mac (10,7)]
 		[Internal]
 		[Export ("initWithSessionWithNoConnection:")]
 		IntPtr InitWithNoConnection (AVCaptureSession session);
@@ -11481,7 +11481,7 @@ namespace XamCore.AVFoundation {
 		[Notification]
 		NSString FailedToDecodeNotification { get; }
 
-		[iOS (8, 0), Mac (10,0)]
+		[iOS (8, 0), Mac (10,10)]
 		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotificationErrorKey")]
 		NSString FailedToDecodeNotificationErrorKey { get; }
 	}

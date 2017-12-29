@@ -19,19 +19,12 @@
 // limitations under the License.
 //
 
+#if XAMCORE_2_0
+
 using System;
 using System.Reflection;
 using NUnit.Framework;
-
-#if XAMCORE_2_0
 using ObjCRuntime;
-#else
-#if MONOMAC
-using MonoMac.ObjCRuntime;
-#else
-using MonoTouch.ObjCRuntime;
-#endif
-#endif
 
 namespace Introspection {
 
@@ -62,7 +55,7 @@ namespace Introspection {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.WatchOS);
 			};
 #else
-			Minimum = new Version (10,7);
+			Minimum = new Version (10,4);
 			Maximum = new Version (10,13,2);
 			Filter = (AvailabilityBaseAttribute arg) => {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.MacOSX);
@@ -105,8 +98,9 @@ namespace Introspection {
 		[Test]
 		public void Deprecated ()
 		{
-			// TODO warn about any API deprecated before the minimum (e.g. < iOS 6).
+			// Warn about any API deprecated before the minimum (e.g. < iOS 6).
 			// Those should not be exposed in future profiles.
+			Assert.Fail ("TODO");
 		}
 #endif
 
@@ -117,10 +111,18 @@ namespace Introspection {
 				if (a is AvailabilityBaseAttribute aa) {
 					if (Filter (aa))
 						continue;
-#if !MONOMAC
-					if (aa.Version < Minimum)
-						AddErrorLine ($"[FAIL] {aa.Version} < {Minimum} (Min) on '{cap}'.");
-#endif
+					if (aa.Version < Minimum) {
+						switch (aa.Architecture) {
+						case PlatformArchitecture.All:
+						case PlatformArchitecture.None:
+							AddErrorLine ($"[FAIL] {aa.Version} < {Minimum} (Min) on '{cap}'.");
+							break;
+						default:
+							// An old API still needs the annotations when not available on all architectures
+							// e.g. NSMenuView is macOS 10.0 but only 32 bits
+							break;
+						}
+					}
 					if (aa.Version > Maximum)
 						AddErrorLine ($"[FAIL] {aa.Version} > {Maximum} (Max) on '{cap}'.");
 					return aa;
@@ -130,3 +132,6 @@ namespace Introspection {
 		}
 	}
 }
+
+#endif
+

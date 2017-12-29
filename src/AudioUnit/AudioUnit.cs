@@ -1272,14 +1272,11 @@ namespace XamCore.AudioUnit
 		Nickname = 54,
 		OfflineRender = 37,
 		[iOS (8, 0)]
-		[Mac (10, 3)]
 		ParameterIDName = 34,
 		[iOS (8, 0)]
-		[Mac (10, 3)]
 		ParameterStringFromValue = 33,
 		ParameterClumpName = 35,
 		[iOS (8, 0)]
-		[Mac (10, 3)]
 		ParameterValueFromString = 38,
 		ContextName = 25,
 		PresentationLatency = 40,
