@@ -31,8 +31,6 @@
 !missing-selector! AVPlayerItem::removeMediaDataCollector: not bound
 !unknown-native-enum! AVAudioSessionCategoryOptions bound
 !unknown-native-enum! AVAudioSessionErrorCode bound
-!unknown-native-enum! AVAudioSessionFlags bound
-!unknown-native-enum! AVAudioSessionInterruptionFlags bound
 !unknown-native-enum! AVAudioSessionInterruptionOptions bound
 !unknown-native-enum! AVAudioSessionInterruptionType bound
 !unknown-native-enum! AVAudioSessionPortOverride bound

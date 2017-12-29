@@ -138,7 +138,6 @@
 !unknown-native-enum! NSPanelButtonType bound
 !unknown-native-enum! NSWindowNumberListOptions bound
 !unknown-native-enum! NSType bound
-!wrong-base-type! MDLVoxelArray expected MDLObject actual NSObject
 !incorrect-protocol-member! NSAccessibility::accessibilityChildrenInNavigationOrder is REQUIRED and should be abstract
 !incorrect-protocol-member! NSAccessibility::accessibilityCustomActions is REQUIRED and should be abstract
 !incorrect-protocol-member! NSAccessibility::accessibilityCustomRotors is REQUIRED and should be abstract
