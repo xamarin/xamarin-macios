@@ -35,7 +35,6 @@ using XamCore.CoreGraphics;
 namespace XamCore.CoreVideo {
 
 	// CVImageBuffer.h
-	[iOS (4,0)]
 	[Watch (4,0)]
 	public partial class CVImageBuffer : CVBuffer {
 #if !COREBUILD

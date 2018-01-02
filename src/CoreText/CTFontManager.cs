@@ -51,7 +51,6 @@ namespace XamCore.CoreText {
 		PromptUser = 3,
 	}
 
-	[iOS (4,1)]
 	public partial class CTFontManager {
 
 #if MONOMAC
@@ -169,12 +168,10 @@ namespace XamCore.CoreText {
 			}
 		}
 
-		[Mac (10,6)]
 		[iOS (7,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CFArrayRef */ IntPtr CTFontManagerCreateFontDescriptorsFromURL (/* CFURLRef */ IntPtr fileURL);
 
-		[Mac (10,6)]
 		[iOS (7,0)]
 		public static CTFontDescriptor[] GetFonts (NSUrl url)
 		{

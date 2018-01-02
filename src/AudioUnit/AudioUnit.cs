@@ -727,7 +727,6 @@ namespace XamCore.AudioUnit
 			return AudioUnitSetProperty (handle, AudioUnitPropertyIDType.SampleRate, scope, 0, ref sampleRate, sizeof (double));
 		}
 
-		[iOS (5,0)]
 		public AudioUnitStatus MusicDeviceMIDIEvent (uint status, uint data1, uint data2, uint offsetSampleFrame = 0)
 		{
 			return MusicDeviceMIDIEvent (handle, status, data1, data2, offsetSampleFrame);
@@ -1273,14 +1272,11 @@ namespace XamCore.AudioUnit
 		Nickname = 54,
 		OfflineRender = 37,
 		[iOS (8, 0)]
-		[Mac (10, 3)]
 		ParameterIDName = 34,
 		[iOS (8, 0)]
-		[Mac (10, 3)]
 		ParameterStringFromValue = 33,
 		ParameterClumpName = 35,
 		[iOS (8, 0)]
-		[Mac (10, 3)]
 		ParameterValueFromString = 38,
 		ContextName = 25,
 		PresentationLatency = 40,
@@ -1382,13 +1378,10 @@ namespace XamCore.AudioUnit
 		ReverbRoomType = 10,
 		UsesInternalReverb = 1005,
 		SpatializationAlgorithm = 3000,
-		[iOS (3, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		DistanceParams = 3010,
-		[iOS (3, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		AttenuationCurve = 3013,
-		[iOS (3, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		RenderingFlags = 3003,
 
@@ -1660,7 +1653,6 @@ namespace XamCore.AudioUnit
 	[iOS (8, 0)]
 	public enum SpatialMixerRenderingFlags {
 		InterAuralDelay = (1 << 0),
-		[iOS (3, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		DistanceAttenuation = (1 << 2),
 	}

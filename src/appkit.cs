@@ -274,7 +274,7 @@ namespace XamCore.AppKit {
 		[Static, Export ("alertWithError:")]
 		NSAlert WithError (NSError  error);
 	
-		[Availability (Introduced = Platform.Mac_10_3, Deprecated = Platform.Mac_10_10, Message = "Use constructor instead.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use constructor instead.")]
 		[Static, Export ("alertWithMessageText:defaultButton:alternateButton:otherButton:informativeTextWithFormat:")]
 		NSAlert WithMessage([NullAllowed] string message, [NullAllowed] string defaultButton, [NullAllowed] string alternateButton, [NullAllowed]  string otherButton, string full);
 	
@@ -324,7 +324,7 @@ namespace XamCore.AppKit {
 		[Export ("runModal")]
 		nint RunModal ();
 	
-		[Availability (Introduced = Platform.Mac_10_3, Deprecated = Platform.Mac_10_10, Message = "Use BeginSheetModalForWindow (NSWindow sheetWindow, Action<nint> handler) instead.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use BeginSheetModalForWindow (NSWindow sheetWindow, Action<nint> handler) instead.")]
 		[Export ("beginSheetModalForWindow:modalDelegate:didEndSelector:contextInfo:")]
 		void BeginSheet ([NullAllowed] NSWindow  window, [NullAllowed] NSObject modalDelegate, [NullAllowed] Selector didEndSelector, IntPtr contextInfo);
 
@@ -505,15 +505,15 @@ namespace XamCore.AppKit {
 		[Export ("cancelUserAttentionRequest:")]
 		void CancelUserAttentionRequest (nint request);
 	
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSWindow.BeginSheet instead.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use NSWindow.BeginSheet instead.")]
 		[Export ("beginSheet:modalForWindow:modalDelegate:didEndSelector:contextInfo:")]
 		void BeginSheet (NSWindow sheet, NSWindow docWindow, [NullAllowed] NSObject modalDelegate, [NullAllowed] Selector didEndSelector, IntPtr contextInfo);
 	
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSWindow.EndSheet instead.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use NSWindow.EndSheet instead.")]
 		[Export ("endSheet:")]
 		void EndSheet (NSWindow sheet);
 	
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_9)]
+		[Availability (Deprecated = Platform.Mac_10_9)]
 		[Export ("endSheet:returnCode:")]
 		void EndSheet (NSWindow  sheet, nint returnCode);
 	
@@ -1634,11 +1634,11 @@ namespace XamCore.AppKit {
 		[Export ("lastVisibleColumn")]
 		nint LastVisibleColumn { get; }
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use the item based NSBrowser instead.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use the item based NSBrowser instead.")]
 		[Export ("columnOfMatrix:")]
 		nint ColumnOfMatrix (NSMatrix matrix);
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use the item based NSBrowser instead.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use the item based NSBrowser instead.")]
 		[Export ("matrixInColumn:")]
 		NSMatrix MatrixInColumn (nint column);
 
@@ -1745,7 +1745,7 @@ namespace XamCore.AppKit {
 		[Export ("doubleAction")]
 		Selector DoubleAction { get; set; }
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use the item based NSBrowser instead.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use the item based NSBrowser instead.")]
 		[Export ("matrixClass")]
 		Class MatrixClass { get; [Bind ("setMatrixClass:")] set; }
 
@@ -2214,7 +2214,6 @@ namespace XamCore.AppKit {
 		[Export ("imageHugsTitle")]
 		bool ImageHugsTitle { get; set; }
 
-		[Mac (10,5)]
 		[Export ("imageScaling")]
 		NSImageScale ImageScaling { get; set; }
 
@@ -2636,7 +2635,7 @@ namespace XamCore.AppKit {
 		[Export ("autoscroll:")]
 		bool Autoscroll (NSEvent  theEvent);
 	
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use ConstrainBoundsRect instead.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use ConstrainBoundsRect instead.")]
 		[Export ("constrainScrollPoint:")]
 		CGPoint ConstrainScrollPoint (CGPoint newOrigin);
 
@@ -2661,7 +2660,7 @@ namespace XamCore.AppKit {
 
 	[Category, BaseType (typeof (NSCoder))]
 	partial interface NSCoderAppKitAddons {
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_9)]
+		[Availability (Deprecated = Platform.Mac_10_9)]
 		[Export ("decodeNXColor")]
 		NSColor DecodeNXColor ();
 	}
@@ -5048,7 +5047,6 @@ namespace XamCore.AppKit {
 		bool ExplicitlyIncluded { [Bind ("isExplicitlyIncluded")] get; }
 	}
 
-	[Mac (10,5)]
 	[BaseType (typeof(NSArrayController))]
 	interface NSDictionaryController
 	{
@@ -6659,7 +6657,7 @@ namespace XamCore.AppKit {
 		nfloat Black { get; }
 	}
 
-	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+	[Availability (Deprecated = Platform.Mac_10_10)]
 	[BaseType (typeof (NSMatrix))]
 	partial interface NSForm  {
 		[Export ("initWithFrame:")]
@@ -6852,7 +6850,7 @@ namespace XamCore.AppKit {
 		[Static, Export ("restoreGraphicsState")]
 		void GlobalRestoreGraphicsState ();
 	
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Static, Export ("setGraphicsState:")]
 		void SetGraphicsState (nint gState);
 	
@@ -7109,7 +7107,7 @@ namespace XamCore.AppKit {
 		[Export ("initWithData:")]
 		IntPtr Constructor (NSData epsData);
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("prepareGState")]
 		void PrepareGState ();
 
@@ -7988,7 +7986,7 @@ namespace XamCore.AppKit {
 
 	}
 
-	[Mac (10, 0, 0, PlatformArchitecture.Arch32)] 
+	[Mac (10, 0, 0, PlatformArchitecture.Arch32)] // kept for the arch limitation
 	[BaseType (typeof (NSView))]
 	interface NSMenuView {
 		[Static]
@@ -8222,7 +8220,7 @@ namespace XamCore.AppKit {
 		CGLPixelFormat CGLPixelFormat { get; }
 	}
 
-	[Availability (Introduced = Platform.Mac_10_2, Deprecated = Platform.Mac_10_7)]
+	[Availability (Deprecated = Platform.Mac_10_7)]
 	[BaseType (typeof (NSObject))]
 	interface NSOpenGLPixelBuffer {
 		[Export ("initWithTextureTarget:textureInternalFormat:textureMaxMipMapLevel:pixelsWide:pixelsHigh:")]
@@ -8261,11 +8259,11 @@ namespace XamCore.AppKit {
 		// [Export ("initWithCGLContextObj:")]
 		// IntPtr Constructor (IntPtr cglContext);
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_7)]
+		[Availability (Deprecated = Platform.Mac_10_7)]
 		[Export ("setFullScreen")]
 		void SetFullScreen ();
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_7)]
+		[Availability (Deprecated = Platform.Mac_10_7)]
 		[Export ("setOffScreen:width:height:rowbytes:")]
 		void SetOffScreen (IntPtr baseaddr, int /* GLsizei = int32_t */ width, int /* GLsizei = int32_t */ height, int /* GLint = int32_t */ rowbytes);
 
@@ -8290,7 +8288,7 @@ namespace XamCore.AppKit {
 		[Export ("currentContext")]
 		NSOpenGLContext CurrentContext { get; }
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_8)]
+		[Availability (Deprecated = Platform.Mac_10_8)]
 		[Export ("copyAttributesFromContext:withMask:")]
 		void CopyAttributes (NSOpenGLContext context, uint /* GLbitfield = uint32_t */ mask);
 
@@ -8300,32 +8298,32 @@ namespace XamCore.AppKit {
 		[Export ("getValues:forParameter:")]
 		void GetValues (IntPtr vals, NSOpenGLContextParameter param);
 
-		[Availability (Introduced = Platform.Mac_10_2, Deprecated = Platform.Mac_10_8)]
+		[Availability (Deprecated = Platform.Mac_10_8)]
 		[Export ("createTexture:fromView:internalFormat:")]
 		void CreateTexture (int /* GLenum = uint32_t */ targetIdentifier, NSView view, int /* GLenum = uint32_t */ format);
 
 		[Export ("CGLContextObj")]
 		CGLContext CGLContext { get; }
 
-		[Availability (Introduced = Platform.Mac_10_3, Deprecated = Platform.Mac_10_7)]
+		[Availability (Deprecated = Platform.Mac_10_7)]
 		[Export ("setPixelBuffer:cubeMapFace:mipMapLevel:currentVirtualScreen:")]
 		void SetPixelBuffer (NSOpenGLPixelBuffer pixelBuffer, NSGLTextureCubeMap face, int /* GLint = int32_t */ level, int /* GLint = int32_t */ screen);
 
-		[Availability (Introduced = Platform.Mac_10_3, Deprecated = Platform.Mac_10_7)]
+		[Availability (Deprecated = Platform.Mac_10_7)]
 		[Export ("pixelBuffer")]
 		NSOpenGLPixelBuffer PixelBuffer { get; }
 
-		[Availability (Introduced = Platform.Mac_10_3, Deprecated = Platform.Mac_10_7)]
+		[Availability (Deprecated = Platform.Mac_10_7)]
 		[Export ("pixelBufferCubeMapFace")]
 		int PixelBufferCubeMapFace { get; } /* GLenum = uint32_t */
 
-		[Availability (Introduced = Platform.Mac_10_3, Deprecated = Platform.Mac_10_7)]
+		[Availability (Deprecated = Platform.Mac_10_7)]
 		[Export ("pixelBufferMipMapLevel")]
 		int PixelBufferMipMapLevel { get; } /* GLint = int32_t */
 
 		// TODO: fixme enumerations
 		// GL_FRONT, GL_BACK, GL_AUX0
-		[Availability (Introduced = Platform.Mac_10_3, Deprecated = Platform.Mac_10_7)]
+		[Availability (Deprecated = Platform.Mac_10_7)]
 		[Export ("setTextureImageToPixelBuffer:colorBuffer:")]
 		void SetTextureImage (NSOpenGLPixelBuffer pixelBuffer, NSGLColorBuffer source);
 
@@ -8867,22 +8865,22 @@ namespace XamCore.AppKit {
 		[Export ("bestRepresentationForDevice:")]
 		NSImageRep BestRepresentationForDevice ([NullAllowed] NSDictionary deviceDescription);
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Static]
 		[Export ("imageUnfilteredFileTypes")]
 		NSObject [] ImageUnfilteredFileTypes ();
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Static]
 		[Export ("imageUnfilteredPasteboardTypes")]
 		string [] ImageUnfilteredPasteboardTypes ();
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Static]
 		[Export ("imageFileTypes")]
 		string [] ImageFileTypes { get; }
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Static]
 		[Export ("imagePasteboardTypes")]
 		string [] ImagePasteboardTypes { get; }
@@ -9645,12 +9643,12 @@ namespace XamCore.AppKit {
 		//[Export ("registeredImageRepClasses")]
 		//Class [] RegisteredImageRepClasses ();
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Static]
 		[Export ("imageRepClassForFileType:")]
 		Class ImageRepClassForFileType (string type);
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Static]
 		[Export ("imageRepClassForPasteboardType:")]
 		Class ImageRepClassForPasteboardType (string type);
@@ -9667,22 +9665,22 @@ namespace XamCore.AppKit {
 		[Export ("canInitWithData:")]
 		bool CanInitWithData (NSData data);
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Static]
 		[Export ("imageUnfilteredFileTypes")]
 		string [] ImageUnfilteredFileTypes { get; }
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Static]
 		[Export ("imageUnfilteredPasteboardTypes")]
 		string [] ImageUnfilteredPasteboardTypes { get; }
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Static]
 		[Export ("imageFileTypes")]
 		string [] ImageFileTypes { get; }
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Static]
 		[Export ("imagePasteboardTypes")]
 		string [] ImagePasteboardTypes { get; }
@@ -10601,7 +10599,7 @@ namespace XamCore.AppKit {
 
 		[Internal]
 		[Export ("rectArrayForGlyphRange:withinSelectedGlyphRange:inTextContainer:rectCount:")]
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_11)]
+		[Availability (Deprecated = Platform.Mac_10_11)]
 		IntPtr GetRectArray (NSRange glyphRange, NSRange selectedGlyphRange, IntPtr textContainerHandle, out nuint rectCount);
 
 		[Export ("boundingRectForGlyphRange:inTextContainer:")]
@@ -11302,59 +11300,45 @@ namespace XamCore.AppKit {
 		[Field ("NSPasteboardNameDrag")]
 		NSString NSPasteboardNameDrag { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeString")]
 		NSString NSPasteboardTypeString { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypePDF")]
 		NSString NSPasteboardTypePDF { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeTIFF")]
 		NSString NSPasteboardTypeTIFF { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypePNG")]
 		NSString NSPasteboardTypePNG { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeRTF")]
 		NSString NSPasteboardTypeRTF { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeRTFD")]
 		NSString NSPasteboardTypeRTFD { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeHTML")]
 		NSString NSPasteboardTypeHTML { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeTabularText")]
 		NSString NSPasteboardTypeTabularText { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeFont")]
 		NSString NSPasteboardTypeFont { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeRuler")]
 		NSString NSPasteboardTypeRuler { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeColor")]
 		NSString NSPasteboardTypeColor { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeSound")]
 		NSString NSPasteboardTypeSound { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeMultipleTextSelection")]
 		NSString NSPasteboardTypeMultipleTextSelection { get; }
 
-		[Mac (10,6)]
 		[Field ("NSPasteboardTypeFindPanelSearchOptions")]
 		NSString NSPasteboardTypeFindPanelSearchOptions { get; }
 
@@ -12900,12 +12884,12 @@ namespace XamCore.AppKit {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_7, Message = "Use GetScrollerWidth instead.")]
+		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use GetScrollerWidth instead.")]
 		[Static]
 		[Export ("scrollerWidth")]
 		nfloat ScrollerWidth { get; }
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_7, Message = "Use GetScrollerWidth instead.")]
+		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use GetScrollerWidth instead.")]
 		[Static]
 		[Export ("scrollerWidthForControlSize:")]
 		nfloat ScrollerWidthForControlSize (NSControlSize controlSize);
@@ -12985,12 +12969,12 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSView))]
 	partial interface NSScrollView : NSTextFinderBarContainer {
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_7)]
+		[Availability (Deprecated = Platform.Mac_10_7)]
 		[Static]
 		[Export ("frameSizeForContentSize:hasHorizontalScroller:hasVerticalScroller:borderType:")]
 		CGSize FrameSizeForContentSize (CGSize cSize, bool hFlag, bool vFlag, NSBorderType aType);
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_7)]
+		[Availability (Deprecated = Platform.Mac_10_7)]
 		[Static]
 		[Export ("contentSizeForFrameSize:hasHorizontalScroller:hasVerticalScroller:borderType:")]
 		CGSize ContentSizeForFrame (CGSize fSize, bool hFlag, bool vFlag, NSBorderType aType);
@@ -13903,7 +13887,6 @@ namespace XamCore.AppKit {
 		[Wrap ("CheckString (stringToCheck, range, checkingTypes, options == null ? null : options.Dictionary, tag, out orthography, out wordCount)")]
 		NSTextCheckingResult [] CheckString (string stringToCheck, NSRange range, NSTextCheckingTypes checkingTypes, NSTextCheckingOptions options, nint tag, out NSOrthography orthography, out nint wordCount);
 
-		[Mac (10,6)]
 		[Export ("requestCheckingOfString:range:types:options:inSpellDocumentWithTag:completionHandler:")]
 		nint RequestChecking (string stringToCheck, NSRange range, NSTextCheckingTypes checkingTypes, [NullAllowed] NSDictionary options, nint tag, Action<nint, NSTextCheckingResult [], NSOrthography, nint> completionHandler);
 
@@ -15156,27 +15139,27 @@ namespace XamCore.AppKit {
 		[Export ("centerScanRect:")]
 		CGRect CenterScanRect (CGRect aRect);
 
-		[Availability (Introduced = Platform.Mac_10_5, Deprecated = Platform.Mac_10_7)]
+		[Availability (Deprecated = Platform.Mac_10_7)]
 		[Export ("convertPointToBase:")]
 		CGPoint ConvertPointToBase (CGPoint aPoint);
 
-		[Availability (Introduced = Platform.Mac_10_5, Deprecated = Platform.Mac_10_7)]
+		[Availability (Deprecated = Platform.Mac_10_7)]
 		[Export ("convertPointFromBase:")]
 		CGPoint ConvertPointFromBase (CGPoint aPoint);
 
-		[Availability (Introduced = Platform.Mac_10_5, Deprecated = Platform.Mac_10_7)]
+		[Availability (Deprecated = Platform.Mac_10_7)]
 		[Export ("convertSizeToBase:")]
 		CGSize ConvertSizeToBase (CGSize aSize);
 
-		[Availability (Introduced = Platform.Mac_10_5, Deprecated = Platform.Mac_10_7)]
+		[Availability (Deprecated = Platform.Mac_10_7)]
 		[Export ("convertSizeFromBase:")]
 		CGSize ConvertSizeFromBase (CGSize aSize);
 
-		[Availability (Introduced = Platform.Mac_10_5, Deprecated = Platform.Mac_10_7)]
+		[Availability (Deprecated = Platform.Mac_10_7)]
 		[Export ("convertRectToBase:")]
 		CGRect ConvertRectToBase (CGRect aRect);
 
-		[Availability (Introduced = Platform.Mac_10_5, Deprecated = Platform.Mac_10_7)]
+		[Availability (Deprecated = Platform.Mac_10_7)]
 		[Export ("convertRectFromBase:")]
 		CGRect ConvertRectFromBase (CGRect aRect);
 
@@ -15246,23 +15229,23 @@ namespace XamCore.AppKit {
 		[Export ("viewWillDraw")]
 		void ViewWillDraw ();
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("gState")]
 		nint GState ();
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("allocateGState")]
 		void AllocateGState ();
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("releaseGState")]
 		void ReleaseGState ();
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("setUpGState")]
 		void SetUpGState ();
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("renewGState")]
 		void RenewGState ();
 
@@ -15344,7 +15327,7 @@ namespace XamCore.AppKit {
 		[Export ("updateTrackingAreas")]
 		void UpdateTrackingAreas ();
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("shouldDrawColor")]
 		bool ShouldDrawColor { get; }
 
@@ -15482,7 +15465,7 @@ namespace XamCore.AppKit {
 		[Export ("beginDraggingSessionWithItems:event:source:")]
 		NSDraggingSession BeginDraggingSession (NSDraggingItem [] items, NSEvent evnt, [Protocolize] NSDraggingSource source);
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_7, Message = "Use BeginDraggingSession instead.")]
+		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use BeginDraggingSession instead.")]
 		[Export ("dragImage:at:offset:event:pasteboard:source:slideBack:")]
 		void DragImage (NSImage anImage, CGPoint viewLocation, CGSize initialOffset, NSEvent theEvent, NSPasteboard pboard, NSObject sourceObj, bool slideFlag);
 
@@ -16530,35 +16513,35 @@ namespace XamCore.AppKit {
 		[Export ("frameOfCellAtColumn:row:")]
 		CGRect GetCellFrame (nint column, nint row);
 	
-		[Availability (Introduced = Platform.Mac_10_5, Deprecated = Platform.Mac_10_10, Message = "Use View Based TableView and GetView.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use View Based TableView and GetView.")]
 		[Export ("preparedCellAtColumn:row:")]
 		NSCell GetCell (nint column, nint row );
 	
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView with an NSTextField.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView with an NSTextField.")]
 		[Export ("textShouldBeginEditing:")]
 		bool TextShouldBeginEditing (NSText textObject);
 	
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView with an NSTextField.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView with an NSTextField.")]
 		[Export ("textShouldEndEditing:")]
 		bool TextShouldEndEditing (NSText textObject);
 	
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView with an NSTextField.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView with an NSTextField.")]
 		[Export ("textDidBeginEditing:")]
 		void TextDidBeginEditing (NSNotification notification);
 	
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView with an NSTextField.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView with an NSTextField.")]
 		[Export ("textDidEndEditing:")]
 		void TextDidEndEditing (NSNotification notification);
 	
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView with an NSTextField.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView with an NSTextField.")]
 		[Export ("textDidChange:")]
 		void TextDidChange (NSNotification notification);
 	
-		[Availability (Introduced = Platform.Mac_10_6, Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView; observe the window’s firstResponder for focus change notifications.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView; observe the window’s firstResponder for focus change notifications.")]
 		[Export ("shouldFocusCell:atColumn:row:")]
 		bool ShouldFocusCell (NSCell cell, nint column, nint row );
 	
-		[Availability (Introduced = Platform.Mac_10_6, Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView; directly interact with a particular view as required and call PerformClick on it, if necessary.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView; directly interact with a particular view as required and call PerformClick on it, if necessary.")]
 		[Export ("performClickOnCellAtColumn:row:")]
 		void PerformClick (nint column, nint row );
 	
@@ -16661,7 +16644,7 @@ namespace XamCore.AppKit {
 		[Export ("autosaveTableColumns")]
 		bool AutosaveTableColumns { get; set; }
 	
-		[Availability (Introduced = Platform.Mac_10_5, Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView; observe the window’s firstResponder.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use a View Based TableView; observe the window’s firstResponder.")]
 		[Export ("focusedColumn")]
 		nint FocusedColumn { get; set; }
 
@@ -17305,7 +17288,6 @@ namespace XamCore.AppKit {
 		[Export ("sizeOfLabel:")]
 		CGSize SizeOfLabel (bool computeMin);
 
-		[Mac (10,6)]
 		[Export ("toolTip")]
 		string ToolTip { get; set; }
 
@@ -18822,7 +18804,6 @@ namespace XamCore.AppKit {
 		[Export ("windowLevel")]
 		NSWindowLevel WindowLevel { get; }
 
-		[Mac (10,6)]
 		[Export ("drawsVerticallyForCharacterAtIndex:")]
 		bool DrawsVertically (nuint charIndex);
 	}
@@ -19177,7 +19158,6 @@ namespace XamCore.AppKit {
 		bool Autovalidates { get; set; }
 	}
 
-	[Mac (10,5)]
 	[BaseType (typeof (NSToolbarItem))]
 	interface NSToolbarItemGroup
 	{
@@ -19647,7 +19627,7 @@ namespace XamCore.AppKit {
 		[Export ("contentAspectRatio")]
 		CGSize ContentAspectRatio  { get; set; }
 	
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("useOptimizedDrawing:")]
 		void UseOptimizedDrawing (bool flag);
 	
@@ -19826,11 +19806,11 @@ namespace XamCore.AppKit {
 		[Export ("preventsApplicationTerminationWhenModal")]
 		bool PreventsApplicationTerminationWhenModal  { get; set; }
 	
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_7, Message = "Use ConvertRectToScreen instead.")]
+		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use ConvertRectToScreen instead.")]
 		[Export ("convertBaseToScreen:")]
 		CGPoint ConvertBaseToScreen (CGPoint aPoint);
 	
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_7, Message = "Use ConvertRectFromScreen instead.")]
+		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use ConvertRectFromScreen instead.")]
 		[Export ("convertScreenToBase:")]
 		CGPoint ConvertScreenToBase (CGPoint aPoint);
 	
@@ -19843,7 +19823,7 @@ namespace XamCore.AppKit {
 		[Export ("performZoom:")]
 		void PerformZoom ([NullAllowed] NSObject sender);
 	
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("gState")]
 		nint GState ();
 	
@@ -19901,7 +19881,7 @@ namespace XamCore.AppKit {
 		[Export ("deepestScreen")]
 		NSScreen DeepestScreen { get; }
 	
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("canStoreColor")]
 		bool CanStoreColor { get; }
 	
@@ -20059,7 +20039,7 @@ namespace XamCore.AppKit {
 		[Export ("graphicsContext")]
 		NSGraphicsContext GraphicsContext { get; }
 	
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_7)]
+		[Availability (Deprecated = Platform.Mac_10_7)]
 		[Export ("userSpaceScaleFactor")]
 		nfloat UserSpaceScaleFactor { get; }
 	
@@ -20939,19 +20919,15 @@ namespace XamCore.AppKit {
 		[Notification ("SharedWorkspace.NotificationCenter")]
 		NSString ActiveSpaceDidChangeNotification { get; }
 
-		[Mac (10,6)]
 		[Field ("NSWorkspaceLaunchConfigurationAppleEvent")]
 		NSString LaunchConfigurationAppleEvent { get; }
 
-		[Mac (10,6)]
 		[Field ("NSWorkspaceLaunchConfigurationArguments")]
 		NSString LaunchConfigurationArguments { get; }
 
-		[Mac (10,6)]
 		[Field ("NSWorkspaceLaunchConfigurationEnvironment")]
 		NSString LaunchConfigurationEnvironment { get; }
 
-		[Mac (10,6)]
 		[Field ("NSWorkspaceLaunchConfigurationArchitecture")]
 		NSString LaunchConfigurationArchitecture { get; }
 		
@@ -23636,27 +23612,22 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilitySelectedColumnsChangedNotification")]
 		NSString SelectedColumnsChangedNotification { get; }
 
-		[Mac (10, 6)]
 		[Notification]
 		[Field ("NSAccessibilityRowExpandedNotification")]
 		NSString RowExpandedNotification { get; }
 
-		[Mac (10, 6)]
 		[Notification]
 		[Field ("NSAccessibilityRowCollapsedNotification")]
 		NSString RowCollapsedNotification { get; }
 
-		[Mac (10, 6)]
 		[Notification]
 		[Field ("NSAccessibilitySelectedCellsChangedNotification")]
 		NSString SelectedCellsChangedNotification { get; }
 
-		[Mac (10, 6)]
 		[Notification]
 		[Field ("NSAccessibilityUnitsChangedNotification")]
 		NSString UnitsChangedNotification { get; }
 
-		[Mac (10, 6)]
 		[Notification]
 		[Field ("NSAccessibilitySelectedChildrenMovedNotification")]
 		NSString SelectedChildrenMovedNotification { get; }
@@ -23800,7 +23771,6 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityShownMenuAttribute")]
 		NSString ShownMenuAttribute { get; }
 
-		[Mac (10, 5)]
 		[Field ("NSAccessibilityValueDescriptionAttribute")]
 		NSString ValueDescriptionAttribute { get; }
 
@@ -23911,7 +23881,6 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityInsertionPointLineNumberAttribute")]
 		NSString InsertionPointLineNumberAttribute { get; }
 
-		[Mac (10, 5)]
 		[Field ("NSAccessibilitySelectedTextRangesAttribute")]
 		NSString SelectedTextRangesAttribute { get; }
 
@@ -23982,7 +23951,6 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityMisspelledTextAttribute")]
 		NSString MisspelledTextAttribute { get; }
 
-		[Mac (10, 4)]
 		[Field ("NSAccessibilityMarkedMisspelledTextAttribute")]
 		NSString MarkedMisspelledTextAttribute { get; }	
 
@@ -24081,67 +24049,51 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilitySortDirectionAttribute")]
 		NSString SortDirectionAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilitySelectedCellsAttribute")]
 		NSString SelectedCellsAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityVisibleCellsAttribute")]
 		NSString VisibleCellsAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityRowHeaderUIElementsAttribute")]
 		NSString RowHeaderUIElementsAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityColumnHeaderUIElementsAttribute")]
 		NSString ColumnHeaderUIElementsAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityCellForColumnAndRowParameterizedAttribute")]
 		NSString CellForColumnAndRowParameterizedAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityRowIndexRangeAttribute")]
 		NSString RowIndexRangeAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityColumnIndexRangeAttribute")]
 		NSString ColumnIndexRangeAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityHorizontalUnitsAttribute")]
 		NSString HorizontalUnitsAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityVerticalUnitsAttribute")]
 		NSString VerticalUnitsAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityHorizontalUnitDescriptionAttribute")]
 		NSString HorizontalUnitDescriptionAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityVerticalUnitDescriptionAttribute")]
 		NSString VerticalUnitDescriptionAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityLayoutPointForScreenPointParameterizedAttribute")]
 		NSString LayoutPointForScreenPointParameterizedAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityLayoutSizeForScreenSizeParameterizedAttribute")]
 		NSString LayoutSizeForScreenSizeParameterizedAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityScreenPointForLayoutPointParameterizedAttribute")]
 		NSString ScreenPointForLayoutPointParameterizedAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityScreenSizeForLayoutSizeParameterizedAttribute")]
 		NSString ScreenSizeForLayoutSizeParameterizedAttribute { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityHandlesAttribute")]
 		NSString HandlesAttribute { get; }
 
@@ -24166,13 +24118,11 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityLabelValueAttribute")]
 		NSString LabelValueAttribute { get; }
 
-		[Mac (10, 1)]
-		[Obsolete]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'NSAccessibility' methods instead.")]
 		[Field ("NSAccessibilityMatteHoleAttribute")]
 		NSString MatteHoleAttribute { get; }
 
-		[Mac (10, 1)]
-		[Obsolete]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'NSAccessibility' methods instead.")]
 		[Field ("NSAccessibilityMatteContentUIElementAttribute")]
 		NSString MatteContentUIElementAttribute { get; }
 
@@ -24384,22 +24334,18 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityLinkRole")]
 		NSString LinkRole { get; }
 
-		[Mac (10, 5)]
 		[Field ("NSAccessibilityDisclosureTriangleRole")]
 		NSString DisclosureTriangleRole { get; }
 
-		[Mac (10, 5)]
 		[Field ("NSAccessibilityGridRole")]
 		NSString GridRole { get; }
 
 		[Field ("NSAccessibilityRelevanceIndicatorRole")]
 		NSString RelevanceIndicatorRole { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityLevelIndicatorRole")]
 		NSString LevelIndicatorRole { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityCellRole")]
 		NSString CellRole { get; }
 
@@ -24407,15 +24353,12 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityPopoverRole")]
 		NSString PopoverRole { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityLayoutAreaRole")]
 		NSString LayoutAreaRole { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityLayoutItemRole")]
 		NSString LayoutItemRole { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityHandleRole")]
 		NSString HandleRole { get; }
 
@@ -24490,23 +24433,18 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityTextLinkSubrole")]
 		NSString TextLinkSubrole { get; }
 
-		[Mac (10, 5)]
 		[Field ("NSAccessibilityTimelineSubrole")]
 		NSString TimelineSubrole { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilitySortButtonSubrole")]
 		NSString SortButtonSubrole { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityRatingIndicatorSubrole")]
 		NSString RatingIndicatorSubrole { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityContentListSubrole")]
 		NSString ContentListSubrole { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityDefinitionListSubrole")]
 		NSString DefinitionListSubrole { get; }
 
@@ -24624,23 +24562,18 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilitySelectedColumnsChangedNotification")]
 		NSString SelectedColumnsChangedNotification { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityRowExpandedNotification")]
 		NSString RowExpandedNotification { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityRowCollapsedNotification")]
 		NSString RowCollapsedNotification { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilitySelectedCellsChangedNotification")]
 		NSString SelectedCellsChangedNotification { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilityUnitsChangedNotification")]
 		NSString UnitsChangedNotification { get; }
 
-		[Mac (10, 6)]
 		[Field ("NSAccessibilitySelectedChildrenMovedNotification")]
 		NSString SelectedChildrenMovedNotification { get; }
 
@@ -25131,7 +25064,6 @@ namespace XamCore.AppKit {
 	}
 #endif
 
-	[Mac (10,6)]
 	[BaseType (typeof(CAOpenGLLayer))]
 	interface NSOpenGLLayer
 	{

@@ -401,7 +401,6 @@ namespace XamCore.WebKit {
 
 	interface IDomNodeFilter {}
 
-	[Mac (10,4)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject), Name="DOMNodeFilter")]
 	interface DomNodeFilter {
@@ -410,7 +409,6 @@ namespace XamCore.WebKit {
 		short AcceptNode (DomNode n);
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomObject), Name="DOMNodeIterator")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomNodeIterator {
@@ -426,11 +424,9 @@ namespace XamCore.WebKit {
 		[Export ("expandEntityReferences")]
 		bool ExpandEntityReferences { get; }
 
-		[Mac (10,5)]
 		[Export ("referenceNode", ArgumentSemantic.Retain)]
 		DomNode ReferenceNode { get; }
 
-		[Mac (10,5)]
 		[Export ("pointerBeforeReferenceNode")]
 		bool PointerBeforeReferenceNode { get; }
 
@@ -2873,7 +2869,6 @@ namespace XamCore.WebKit {
 		DomFileList Files { get; set; }
 	}
 
-		[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLAnchorElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlAnchorElement {
@@ -2908,48 +2903,38 @@ namespace XamCore.WebKit {
 		[Export ("type")]
 		string Type { get; set; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_8)]
+		[Availability (Deprecated = Platform.Mac_10_8)]
 		[Export ("accessKey")]
 		string AccessKey { get; set; }
 
-		[Mac (10,5)]
 		[Export ("hashName")]
 		string HashName { get; }
 
-		[Mac (10,5)]
 		[Export ("host")]
 		string Host { get; }
 
-		[Mac (10,5)]
 		[Export ("hostname")]
 		string Hostname { get; }
 
-		[Mac (10,5)]
 		[Export ("pathname")]
 		string Pathname { get; }
 
-		[Mac (10,5)]
 		[Export ("port")]
 		string Port { get; }
 
-		[Mac (10,5)]
 		[Export ("protocol")]
 		string Protocol { get; }
 
-		[Mac (10,5)]
 		[Export ("search")]
 		string Search { get; }
 
-		[Mac (10,5)]
 		[Export ("text")]
 		string Text { get; }
 
-		[Mac (10,5)]
 		[Export ("absoluteLinkURL", ArgumentSemantic.Copy)]
 		NSUrl AbsoluteImageUrl { get; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLAppletElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlAppletElement {
@@ -2988,7 +2973,6 @@ namespace XamCore.WebKit {
 		string Width { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLAreaElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlAreaElement {
@@ -3011,44 +2995,35 @@ namespace XamCore.WebKit {
 		[Export ("target")]
 		string Target { get; set; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_8)]
+		[Availability (Deprecated = Platform.Mac_10_8)]
 		[Export ("accessKey")]
 		string AccessKey { get; set; }
 
-		[Mac (10,5)]
 		[Export ("hashName")]
 		string HashName { get; }
 
-		[Mac (10,5)]
 		[Export ("host")]
 		string Host { get; }
 
-		[Mac (10,5)]
 		[Export ("hostname")]
 		string Hostname { get; }
 
-		[Mac (10,5)]
 		[Export ("pathname")]
 		string Pathname { get; }
 
-		[Mac (10,5)]
 		[Export ("port")]
 		string Port { get; }
 
-		[Mac (10,5)]
 		[Export ("protocol")]
 		string Protocol { get; }
 
-		[Mac (10,5)]
 		[Export ("search")]
 		string Search { get; }
 
-		[Mac (10,5)]
 		[Export ("absoluteLinkURL", ArgumentSemantic.Copy)]
 		NSUrl AbsoluteImageUrl { get; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLBRElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlBRElement {
@@ -3057,7 +3032,6 @@ namespace XamCore.WebKit {
 		string Clear { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLBaseElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlBaseElement {
@@ -3069,7 +3043,6 @@ namespace XamCore.WebKit {
 		string Target { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLBaseFontElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlBaseFontElement {
@@ -3084,7 +3057,6 @@ namespace XamCore.WebKit {
 		string Size { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLBodyElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlBodyElement {
@@ -3108,12 +3080,10 @@ namespace XamCore.WebKit {
 		string VLink { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLButtonElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlButtonElement {
 
-		[Mac (10,6)]
 		[Export ("autofocus")]
 		bool Autofocus { get; set; }
 
@@ -3132,20 +3102,17 @@ namespace XamCore.WebKit {
 		[Export ("value")]
 		string Value { get; set; }
 
-		[Mac (10,6)]
 		[Export ("willValidate")]
 		bool WillValidate { get; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_8)]
+		[Availability (Deprecated = Platform.Mac_10_8)]
 		[Export ("accessKey")]
 		string AccessKey { get; set; }
 
-		[Mac (10,5)]
 		[Export ("click")]
 		void Click ();
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLDListElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlDListElement {
@@ -3154,7 +3121,6 @@ namespace XamCore.WebKit {
 		bool Compact { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLDirectoryElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlDirectoryElement {
@@ -3163,7 +3129,6 @@ namespace XamCore.WebKit {
 		bool Compact { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLDivElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlDivElement {
@@ -3172,7 +3137,6 @@ namespace XamCore.WebKit {
 		string Align { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLEmbedElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlEmbedElement {
@@ -3196,7 +3160,6 @@ namespace XamCore.WebKit {
 		int Width { get; set; } /* int, not NSInteger */
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLFieldSetElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlFieldSetElement {
@@ -3205,7 +3168,6 @@ namespace XamCore.WebKit {
 		DomHtmlFormElement Form { get; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLFontElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlFontElement {
@@ -3220,7 +3182,6 @@ namespace XamCore.WebKit {
 		string Size { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLFrameElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlFrameElement {
@@ -3252,24 +3213,19 @@ namespace XamCore.WebKit {
 		[Export ("contentDocument", ArgumentSemantic.Retain)]
 		DomDocument ContentDocument { get; }
 
-		[Mac (10,5)]
 		[Export ("contentWindow", ArgumentSemantic.Retain)]
 		DomAbstractView ContentWindow { get; }
 
-		[Mac (10,5)]
 		[Export ("location")]
 		string Location { get; set; }
 
-		[Mac (10,5)]
 		[Export ("width")]
 		int Width { get; } /* int, not NSInteger */
 
-		[Mac (10,5)]
 		[Export ("height")]
 		int Height { get; } /* int, not NSInteger */
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLFrameSetElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlFrameSetElement {
@@ -3281,7 +3237,6 @@ namespace XamCore.WebKit {
 		string Rows { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLHRElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlHRElement {
@@ -3299,7 +3254,6 @@ namespace XamCore.WebKit {
 		string Width { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLHeadElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlHeadElement {
@@ -3308,7 +3262,6 @@ namespace XamCore.WebKit {
 		string Profile { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLHeadingElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlHeadingElement {
@@ -3317,7 +3270,6 @@ namespace XamCore.WebKit {
 		string Align { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLHtmlElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlHtmlElement {
@@ -3326,7 +3278,6 @@ namespace XamCore.WebKit {
 		string Version { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLIFrameElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlIFrameElement {
@@ -3364,12 +3315,10 @@ namespace XamCore.WebKit {
 		[Export ("contentDocument", ArgumentSemantic.Retain)]
 		DomDocument ContentDocument { get; }
 
-		[Mac (10,6)]
 		[Export ("contentWindow", ArgumentSemantic.Retain)]
 		DomAbstractView ContentWindow { get; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLImageElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlImageElement {
@@ -3410,40 +3359,31 @@ namespace XamCore.WebKit {
 		[Export ("width")]
 		int Width { get; set; } /* int, not NSInteger */
 
-		[Mac (10,5)]
 		[Export ("complete")]
 		bool Complete { get; }
 
-		[Mac (10,5)]
 		[Export ("lowsrc")]
 		string Lowsrc { get; set; }
 
-		[Mac (10,5)]
 		[Export ("naturalHeight")]
 		int NaturalHeight { get; } /* int, not NSInteger */
 
-		[Mac (10,5)]
 		[Export ("naturalWidth")]
 		int NaturalWidth { get; } /* int, not NSInteger */
 
-		[Mac (10,5)]
 		[Export ("x")]
 		int X { get; } /* int, not NSInteger */
 
-		[Mac (10,5)]
 		[Export ("y")]
 		int Y { get; } /* int, not NSInteger */
 
-		[Mac (10,5)]
 		[Export ("altDisplayString")]
 		string AltDisplayString { get; }
 
-		[Mac (10,5)]
 		[Export ("absoluteImageURL", ArgumentSemantic.Copy)]
 		NSUrl AbsoluteImageUrl { get; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLLIElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlLIElement {
@@ -3455,7 +3395,6 @@ namespace XamCore.WebKit {
 		int Value { get; set; } /* int, not NSInteger */
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLLabelElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlLabelElement {
@@ -3466,12 +3405,11 @@ namespace XamCore.WebKit {
 		[Export ("htmlFor")]
 		string HtmlFor { get; set; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_8)]
+		[Availability (Deprecated = Platform.Mac_10_8)]
 		[Export ("accessKey")]
 		string AccessKey { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLLegendElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlLegendElement {
@@ -3482,12 +3420,11 @@ namespace XamCore.WebKit {
 		[Export ("align")]
 		string Align { get; set; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_8)]
+		[Availability (Deprecated = Platform.Mac_10_8)]
 		[Export ("accessKey")]
 		string AccessKey { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLLinkElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlLinkElement {
@@ -3519,16 +3456,13 @@ namespace XamCore.WebKit {
 		[Export ("type")]
 		string Type { get; set; }
 
-		[Mac (10,4)]
 		[Export ("sheet", ArgumentSemantic.Retain)]
 		DomStyleSheet Sheet { get; }
 
-		[Mac (10,5)]
 		[Export ("absoluteLinkURL", ArgumentSemantic.Copy)]
 		NSUrl AbsoluteImageUrl { get; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLMapElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlMapElement {
@@ -3540,7 +3474,6 @@ namespace XamCore.WebKit {
 		string Name { get; set; }
 	}
 
-	[Mac (10,5)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLMarqueeElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlMarqueeElement {
@@ -3552,7 +3485,6 @@ namespace XamCore.WebKit {
 		void Stop ();
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLMenuElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlMenuElement {
@@ -3561,7 +3493,6 @@ namespace XamCore.WebKit {
 		bool Compact { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLMetaElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlMetaElement {
@@ -3579,7 +3510,6 @@ namespace XamCore.WebKit {
 		string Scheme { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLModElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlModElement {
@@ -3591,7 +3521,6 @@ namespace XamCore.WebKit {
 		string DateTime { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLOListElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlOListElement {
@@ -3606,7 +3535,6 @@ namespace XamCore.WebKit {
 		string Type { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLObjectElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlObjectElement {
@@ -3665,12 +3593,10 @@ namespace XamCore.WebKit {
 		[Export ("contentDocument", ArgumentSemantic.Retain)]
 		DomDocument ContentDocument { get; }
 
-		[Mac (10,5)]
 		[Export ("absoluteImageURL", ArgumentSemantic.Copy)]
 		NSUrl AbsoluteImageUrl { get; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLOptGroupElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlOptGroupElement {
@@ -3682,7 +3608,6 @@ namespace XamCore.WebKit {
 		string Label { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLOptionElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlOptionElement {
@@ -3712,12 +3637,10 @@ namespace XamCore.WebKit {
 		int Index { get; } /* int, not NSInteger */
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomObject), Name="DOMHTMLOptionsCollection")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlOptionsCollection {
 
-		[Mac (10,5)]
 		[Export ("selectedIndex")]
 		int SelectedIndex { get; set; } /* int, not NSInteger */
 
@@ -3727,11 +3650,9 @@ namespace XamCore.WebKit {
 		[Export ("namedItem:")]
 		DomNode NamedItem (string name);
 
-		[Mac (10,5)]
 		[Export ("add:index:")]
 		void Add (DomHtmlOptionElement option, uint /* unsigned int */ index);
 
-		[Mac (10,6)]
 		[Export ("remove:")]
 		void Remove (uint /* unsigned int */ index);
 
@@ -3739,7 +3660,6 @@ namespace XamCore.WebKit {
 		DomNode GetItem (uint /* unsigned int */ index);
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLParagraphElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlParagraphElement {
@@ -3748,7 +3668,6 @@ namespace XamCore.WebKit {
 		string Align { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLParamElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlParamElement {
@@ -3766,7 +3685,6 @@ namespace XamCore.WebKit {
 		string ValueType { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLPreElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlPreElement {
@@ -3774,12 +3692,10 @@ namespace XamCore.WebKit {
 		[Export ("width")]
 		int Width { get; set; } /* int, not NSInteger */
 
-		[Mac (10,5)]
 		[Export ("wrap")]
 		bool Wrap { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLQuoteElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlQuoteElement {
@@ -3788,7 +3704,6 @@ namespace XamCore.WebKit {
 		string Cite { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLScriptElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlScriptElement {
@@ -3815,12 +3730,10 @@ namespace XamCore.WebKit {
 		string Type { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLSelectElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlSelectElement {
 
-		[Mac (10,6)]
 		[Export ("autofocus")]
 		bool Autofocus { get; set; }
 
@@ -3854,19 +3767,15 @@ namespace XamCore.WebKit {
 		[Export ("value")]
 		string Value { get; set; }
 
-		[Mac (10,6)]
 		[Export ("willValidate")]
 		bool WillValidate { get; }
 
-		[Mac (10,6)]
 		[Export ("item:")]
 		DomNode GetItem (uint /* unsigned int */ index);
 
-		[Mac (10,6)]
 		[Export ("namedItem:")]
 		DomNode NamedItem (string name);
 
-		[Mac (10,5)]
 		[Export ("add:before:")]
 		void Add (DomHtmlElement element, DomHtmlElement before);
 
@@ -3874,7 +3783,6 @@ namespace XamCore.WebKit {
 		void Remove (int /* int, not NSInteger */ index);
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLStyleElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlStyleElement {
@@ -3888,12 +3796,10 @@ namespace XamCore.WebKit {
 		[Export ("type")]
 		string Type { get; set; }
 
-		[Mac (10,4)]
 		[Export ("sheet", ArgumentSemantic.Retain)]
 		DomStyleSheet Sheet { get; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLTableCaptionElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlTableCaptionElement {
@@ -3902,7 +3808,6 @@ namespace XamCore.WebKit {
 		string Align { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLTableCellElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlTableCellElement {
@@ -3953,7 +3858,6 @@ namespace XamCore.WebKit {
 		string Width { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLTableColElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlTableColElement {
@@ -3977,7 +3881,6 @@ namespace XamCore.WebKit {
 		string Width { get; set; }
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLTableElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlTableElement {
@@ -4049,7 +3952,6 @@ namespace XamCore.WebKit {
 		void DeleteRow (int /* int, not NSInteger */ index);
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLTableRowElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlTableRowElement {
@@ -4085,7 +3987,6 @@ namespace XamCore.WebKit {
 		void DeleteCell (int /* int, not NSInteger */ index);
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLTableSectionElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlTableSectionElement {
