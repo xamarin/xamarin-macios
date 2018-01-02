@@ -3001,10 +3001,12 @@ namespace XamCore.UIKit {
 		double BackgroundTimeRemaining { get; }
 
 		[iOS (4,0), ThreadSafe]
+		[RequiresSuper]
 		[Export ("beginBackgroundTaskWithExpirationHandler:")]
 		nint BeginBackgroundTask ([NullAllowed] NSAction backgroundTimeExpired);
 
 		[iOS (4,0), ThreadSafe]
+		[RequiresSuper]
 		[Export ("endBackgroundTask:")]
 		void EndBackgroundTask (nint taskId);
 
@@ -3179,6 +3181,7 @@ namespace XamCore.UIKit {
 		
 		[ThreadSafe]
 		[iOS (7,0)]
+		[RequiresSuper]
 		[Export ("beginBackgroundTaskWithName:expirationHandler:")]
 		nint BeginBackgroundTask (string taskName, NSAction expirationHandler);
 
@@ -10176,7 +10179,7 @@ namespace XamCore.UIKit {
 
 		[iOS (11,0), TV (11,0)]
 		[Export ("adjustedContentInsetDidChange")]
-		[Advice ("You must call the base method when overriding.")] // [RequiresSuper]
+		[RequiresSuper]
 		void AdjustedContentInsetDidChange ();
 
 		[iOS (11,0), TV (11,0)]
@@ -12144,7 +12147,8 @@ namespace XamCore.UIKit {
 #else
 		string ReuseIdentifier { get; }
 #endif
-		
+
+		[RequiresSuper]
 		[Export ("prepareForReuse")]
 		void PrepareForReuse ();
 
@@ -12486,7 +12490,7 @@ namespace XamCore.UIKit {
 		[Export ("initWithReuseIdentifier:")]
 		IntPtr Constructor (NSString reuseIdentifier);
 
-		[Advice ("You must call the base method when overriding.")] // [RequiresSuper]
+		[RequiresSuper]
 		[Export ("prepareForReuse")]
 		void PrepareForReuse ();
 

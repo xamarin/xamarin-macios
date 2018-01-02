@@ -1573,6 +1573,7 @@ SHARED_SOURCES = \
 	ObjCRuntime/Registrar.cs \
 	ObjCRuntime/ReleaseAttribute.cs \
 	ObjCRuntime/RequiredFrameworkAttribute.cs \
+	ObjCRuntime/RequiresSuperAttribute.cs \
 	ObjCRuntime/Runtime.cs \
 	ObjCRuntime/Runtime.iOS.cs \
 	ObjCRuntime/Runtime.mac.cs \

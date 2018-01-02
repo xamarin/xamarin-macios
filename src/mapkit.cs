@@ -199,7 +199,7 @@ namespace XamCore.MapKit {
 
 		[TV (11,0)][iOS (11,0)][Mac (10,13, onlyOn64: true)]
 		[Export ("prepareForDisplay")]
-		[Advice ("You must call the base method when overriding.")] // [RequiresSuper]
+		[RequiresSuper]
 		void PrepareForDisplay ();
 	}
 
