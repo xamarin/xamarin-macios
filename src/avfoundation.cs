@@ -908,10 +908,9 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (NSObject))]
 	interface AVAudioEngine {
 
-#if !MONOMAC && !WATCH
+		[NoWatch]
 		[Export ("musicSequence"), NullAllowed]
 		MusicSequence MusicSequence { get; set; }
-#endif
 
 		[Export ("outputNode")]
 		AVAudioOutputNode OutputNode { get; }
