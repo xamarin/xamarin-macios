@@ -1,48 +1,3 @@
-# AVFoundation
-
-## We only bind "finished" as we cannot use [Bind] here as it would break compatibility with iOS 6.x
-## `isFinished` was only added in iOS 7.0 SDK and cannot be called in earlier versions
-!missing-selector! AVAssetResourceLoadingRequest::isFinished not bound
-
-## it's already defined in the base class, it's fine even if it returns mutable tracks in this case 
-!missing-selector! AVMutableComposition::tracks not bound
-
-## AVVideoCompositionInstruction is both a class and a protocol - so we have duplicate entries
-## and right now only implement the type (protocol can't have the same name anyway)
-!missing-selector! AVVideoCompositionInstruction::enablePostProcessing not bound
-!missing-selector! AVVideoCompositionInstruction::passthroughTrackID not bound
-!missing-selector! AVVideoCompositionInstruction::requiredSourceTrackIDs not bound
-!missing-selector! AVVideoCompositionInstruction::timeRange not bound
-
-## AVAudioPlayer INTERRUPTION NOTIFICATIONS ARE DEPRECATED - Use AVAudioSession instead. 
-
-### deprecated in iOS8
-!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
-### deprecated in iOS6, replaced by above
-!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions: not found
-## deprecated in iOS8
-!missing-protocol-member! AVAudioRecorderDelegate::audioRecorderEndInterruption:withOptions: not found
-
-## Used only once in a deprecated API, native use `NSInteger` not a real enum - that's why there's a `[Native]`
-!unknown-native-enum! AVAudioSessionFlags bound
-
-## native use `NSUInteger` not a real enum - that's why there's a `[Native]`
-!unknown-native-enum! AVAudioSessionInterruptionFlags bound
-
-
-# Foundation
-
-## native long is same size as int (.net long is long long)
-!missing-selector! NSNumber::initWithLong: not bound
-!missing-selector! NSNumber::initWithUnsignedLong: not bound
-
-## should not have been [Native] it's 32bits only values -> XAMCORE_4_0
-!unknown-native-enum! NSBundleExecutableArchitecture bound
-
-## enum was [re]named to NSCalendarOptions - excluding from XAMCORE_4_0
-!unknown-native-enum! NSDateComponentsWrappingBehavior bound
-
-
 # Metal
 
 ## New @required (abstract) methods in existing types (breaking changes)
@@ -104,25 +59,3 @@
 !incorrect-protocol-member! MTLTexture::parentRelativeSlice is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::parentTexture is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::usage is REQUIRED and should be abstract
-
-
-# ModelIO
-
-## we only export the overload that expose an NSError
-!missing-selector! MDLAsset::exportAssetToURL: not bound
-
-## those are just doing the same as the setComponent:forProtocol: and componentConformingToProtocol:
-## objectForKeyedSubscript:'s description is: "Allows shorthand [key] syntax for componentConformingToProtocol:"
-!missing-selector! MDLAsset::objectForKeyedSubscript: not bound
-!missing-selector! MDLAsset::setObject:forKeyedSubscript: not bound
-!missing-selector! MDLObject::objectForKeyedSubscript: not bound
-!missing-selector! MDLObject::setObject:forKeyedSubscript: not bound
-
-## old @optional methods that became @required (abstract) in existing types (breaking changes)
-!incorrect-protocol-member! MDLMeshBuffer::allocator is REQUIRED and should be abstract
-!incorrect-protocol-member! MDLMeshBuffer::length is REQUIRED and should be abstract
-!incorrect-protocol-member! MDLMeshBuffer::type is REQUIRED and should be abstract
-!incorrect-protocol-member! MDLMeshBuffer::zone is REQUIRED and should be abstract
-!incorrect-protocol-member! MDLMeshBufferZone::allocator is REQUIRED and should be abstract
-!incorrect-protocol-member! MDLMeshBufferZone::capacity is REQUIRED and should be abstract
-

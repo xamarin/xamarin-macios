@@ -45,8 +45,8 @@
 ## property not decorated as unavailable but UIPinchGestureRecognizer, the returned type, is not available in tvOS
 !missing-selector! UIScrollView::pinchGestureRecognizer not bound
 
-
-## unsorted
-
+## Apple renamed NSLineBreakMode from UILineBreakMode and we kept the old name
 !unknown-native-enum! UILineBreakMode bound
+
+## Apple renamed NSTextAlignment from NSTextAlignment and we kept the old name
 !unknown-native-enum! UITextAlignment bound

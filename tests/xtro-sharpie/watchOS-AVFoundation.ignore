@@ -4,12 +4,5 @@
 ## all members are marked as not available on watchOS (but not the protocol itself)
 !missing-protocol! AVAudio3DMixing not bound
 
-## types/members marked as deprecated in watchOS 2.0 (even if the framework was not available before 3.0)
-!missing-protocol-member! AVAudioRecorderDelegate::audioRecorderEndInterruption:withOptions: not found
-
 ## it's not exposed in the API offered by watchOS
 !missing-enum! AVAudioSessionRecordPermission not bound
-
-
-!unknown-native-enum! AVAudioSessionFlags bound
-!unknown-native-enum! AVAudioSessionInterruptionFlags bound
