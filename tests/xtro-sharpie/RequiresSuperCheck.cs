@@ -55,9 +55,6 @@ namespace Extrospection {
 			if (framework == null)
 				return;
 
-			if (method.Name == "AdjustedContentInsetDidChange")
-				Console.WriteLine ();
-
 			if (!decl.HasAttr<ObjCRequiresSuperAttr> ()) {
 				if (method.RequiresSuper ())
 					Log.On (framework).Add ($"!extra-requires-super! {method.GetName ()} is incorrectly decorated with an [RequiresSuper] attribute");
