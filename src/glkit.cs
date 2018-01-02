@@ -64,7 +64,6 @@ namespace XamCore.GLKit {
 	}
 
 	[Mac (10,8, onlyOn64 : true)]
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	interface GLKBaseEffect : GLKNamedEffect {
 		[Export ("colorMaterialEnabled", ArgumentSemantic.Assign)]
@@ -120,13 +119,11 @@ namespace XamCore.GLKit {
 	}
 
 	[Mac (10,8, onlyOn64 : true)]
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	interface GLKEffectProperty {
 	}
 
 	[Mac (10,8, onlyOn64 : true)]
-	[iOS (5,0)]
 	[BaseType (typeof (GLKEffectProperty))]
 	interface GLKEffectPropertyFog {
 		[Export ("mode", ArgumentSemantic.Assign)]
@@ -149,7 +146,6 @@ namespace XamCore.GLKit {
 	}
 
 	[Mac (10,8, onlyOn64 : true)]
-	[iOS (5,0)]
 	[BaseType (typeof (GLKEffectProperty))]
 	interface GLKEffectPropertyLight {
 		[Export ("position", ArgumentSemantic.Assign)]
@@ -192,7 +188,6 @@ namespace XamCore.GLKit {
 	}
 
 	[Mac (10,8, onlyOn64 : true)]
-	[iOS (5,0)]
 	[BaseType (typeof (GLKEffectProperty))]
 	interface GLKEffectPropertyMaterial {
 		[Export ("diffuseColor", ArgumentSemantic.Assign)]
@@ -212,7 +207,6 @@ namespace XamCore.GLKit {
 	}
 
 	[Mac (10,8, onlyOn64 : true)]
-	[iOS (5,0)]
 	[BaseType (typeof (GLKEffectProperty))]
 	interface GLKEffectPropertyTexture {
 		[Export ("target", ArgumentSemantic.Assign)]
@@ -230,7 +224,6 @@ namespace XamCore.GLKit {
 	}
 
 	[Mac (10,8, onlyOn64 : true)]
-	[iOS (5,0)]
 	[BaseType (typeof (GLKEffectProperty))]
 	interface GLKEffectPropertyTransform {
 		[Export ("normalMatrix")]
@@ -293,7 +286,6 @@ namespace XamCore.GLKit {
 	{
 	}
 		
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -304,7 +296,6 @@ namespace XamCore.GLKit {
 	}
 
 	[Mac (10,8, onlyOn64 : true)]
-	[iOS (5,0)]
 	[BaseType (typeof (GLKBaseEffect))]
 	interface GLKReflectionMapEffect : GLKNamedEffect {
 		[Export ("textureCubeMap")]
@@ -315,7 +306,6 @@ namespace XamCore.GLKit {
 	}
 	
 	[Mac (10,8, onlyOn64 : true)]
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	interface GLKSkyboxEffect : GLKNamedEffect {
 		[Export ("center", ArgumentSemantic.Assign)]
@@ -378,7 +368,6 @@ namespace XamCore.GLKit {
 	}
 	
 	[Mac (10,8, onlyOn64 : true)]
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	interface GLKTextureInfo : NSCopying {
 		[Export ("width")]
@@ -420,7 +409,6 @@ namespace XamCore.GLKit {
 
 	delegate void GLKTextureLoaderCallback (GLKTextureInfo textureInfo, NSError error);
 
-	[iOS (5,0)]
 	[Mac (10, 8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface GLKTextureLoader {
@@ -525,7 +513,6 @@ namespace XamCore.GLKit {
 	}
 
 #if !MONOMAC
-	[iOS (5,0)]
 	[BaseType (typeof (UIView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof (GLKViewDelegate)})]
 	interface GLKView {
 		[Export ("initWithFrame:")]
@@ -579,7 +566,6 @@ namespace XamCore.GLKit {
 		void DeleteDrawable ();
 	}
 
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -589,7 +575,6 @@ namespace XamCore.GLKit {
 		void DrawInRect (GLKView view, CGRect rect);
 	}
 
-	[iOS (5,0)]
 	[BaseType (typeof (UIViewController))]
 	interface GLKViewController : GLKViewDelegate {
 		[Export ("initWithNibName:bundle:")]
@@ -638,7 +623,6 @@ namespace XamCore.GLKit {
 		void Update ();
 	}
 
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]

@@ -175,7 +175,6 @@ namespace XamCore.Foundation
 	interface NSAttributedStringDocumentAttributes { }
 #endif
 
-	[iOS (3,2)]
 	[BaseType (typeof (NSObject))]
 	partial interface NSAttributedString : NSCoding, NSMutableCopying, NSSecureCoding
 	#if MONOMAC
@@ -516,7 +515,6 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject),
 		   Delegates=new string [] { "WeakDelegate" },
 		   Events=new Type [] { typeof (NSCacheDelegate)} )]
-	[iOS (4,0)]
 	interface NSCache {
 		[Export ("objectForKey:")]
 		NSObject ObjectForKey (NSObject key);
@@ -686,83 +684,83 @@ namespace XamCore.Foundation
 		NSString IslamicUmmAlQuraCalendar { get; }
 
 		[Export ("eraSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] EraSymbols { get; }
 
 		[Export ("longEraSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] LongEraSymbols { get; }
 
 		[Export ("monthSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] MonthSymbols { get; }
 
 		[Export ("shortMonthSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] ShortMonthSymbols { get; }
 
 		[Export ("veryShortMonthSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] VeryShortMonthSymbols { get; }
 
 		[Export ("standaloneMonthSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] StandaloneMonthSymbols { get; }
 
 		[Export ("shortStandaloneMonthSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] ShortStandaloneMonthSymbols { get; }
 
 		[Export ("veryShortStandaloneMonthSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] VeryShortStandaloneMonthSymbols { get; }
 
 		[Export ("weekdaySymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] WeekdaySymbols { get; }
 
 		[Export ("shortWeekdaySymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] ShortWeekdaySymbols { get; }
 
 		[Export ("veryShortWeekdaySymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] VeryShortWeekdaySymbols { get; }
 
 		[Export ("standaloneWeekdaySymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] StandaloneWeekdaySymbols { get; }
 
 		[Export ("shortStandaloneWeekdaySymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] ShortStandaloneWeekdaySymbols { get; }
 
 		[Export ("veryShortStandaloneWeekdaySymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] VeryShortStandaloneWeekdaySymbols { get; }
 
 		[Export ("quarterSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] QuarterSymbols { get; }
 
 		[Export ("shortQuarterSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] ShortQuarterSymbols { get; }
 
 		[Export ("standaloneQuarterSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] StandaloneQuarterSymbols { get; }
 
 		[Export ("shortStandaloneQuarterSymbols")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string [] ShortStandaloneQuarterSymbols { get; }
 
 		[Export ("AMSymbol")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string AMSymbol { get; }
 
 		[Export ("PMSymbol")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		string PMSymbol { get; }
 
 		[Export ("compareDate:toDate:toUnitGranularity:")]
@@ -898,88 +896,87 @@ namespace XamCore.Foundation
 
 #if MONOMAC
 	// Obsolete, but the only API surfaced by WebKit.WebHistory.
-	[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10, Message="Use NSCalendar and NSDateComponents.")]
+	[Availability (Deprecated = Platform.Mac_10_10, Message="Use NSCalendar and NSDateComponents.")]
 	[BaseType (typeof (NSDate))]
 	interface NSCalendarDate {
 		[Export ("initWithString:calendarFormat:locale:")]
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		IntPtr Constructor (string description, string calendarFormat, NSObject locale);
 
 		[Export ("initWithString:calendarFormat:")]
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		IntPtr Constructor (string description, string calendarFormat);
 
 		[Export ("initWithString:")]
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		IntPtr Constructor (string description);
 
 		[Export ("initWithYear:month:day:hour:minute:second:timeZone:")]
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		IntPtr Constructor (nint year, nuint month, nuint day, nuint hour, nuint minute, nuint second, NSTimeZone aTimeZone);
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("dateByAddingYears:months:days:hours:minutes:seconds:")]
 		NSCalendarDate DateByAddingYears (nint year, nint month, nint day, nint hour, nint minute, nint second);
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("dayOfCommonEra")]
 		nint DayOfCommonEra { get; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("dayOfMonth")]
 		nint DayOfMonth { get; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("dayOfWeek")]
 		nint DayOfWeek { get; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("dayOfYear")]
 		nint DayOfYear { get; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("hourOfDay")]
 		nint HourOfDay { get; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("minuteOfHour")]
 		nint MinuteOfHour { get; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("monthOfYear")]
 		nint MonthOfYear { get; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("secondOfMinute")]
 		nint SecondOfMinute { get; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("yearOfCommonEra")]
 		nint YearOfCommonEra { get; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("calendarFormat")]
 		string CalendarFormat { get; set; }
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("descriptionWithCalendarFormat:locale:")]
 		string GetDescription (string calendarFormat, NSObject locale);
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("descriptionWithCalendarFormat:")]
 		string GetDescription (string calendarFormat);
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("descriptionWithLocale:")]
 		string GetDescription (NSLocale locale);
 
-		[Availability (Introduced = Platform.Mac_10_4, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("timeZone")]
 		NSTimeZone TimeZone { get; set; }
 	}
 #endif
 
-	[iOS (3,2)]
 	[BaseType (typeof (NSObject))]
 	interface NSCharacterSet : NSSecureCoding, NSMutableCopying {
 		[Static, Export ("alphanumericCharacterSet", ArgumentSemantic.Copy)]
@@ -1440,7 +1437,6 @@ namespace XamCore.Foundation
 		void GetBytes (IntPtr buffer, NSRange range);
 
 		[Export ("rangeOfData:options:range:")]
-		[iOS (4,0)]
 		NSRange Find (NSData dataToFind, NSDataSearchOptions searchOptions, NSRange searchRange);
 
 		[iOS (7,0), Mac (10, 9)] // 10.9
@@ -1483,22 +1479,18 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof (NSObject))]
 	interface NSDateComponents : NSSecureCoding, NSCopying, INSCopying, INSSecureCoding, INativeObject {
-		[iOS (4,0)]
 		[NullAllowed] // by default this property is null
 		[Export ("timeZone", ArgumentSemantic.Copy)]
 		NSTimeZone TimeZone { get; set; }
 
 		[NullAllowed] // by default this property is null
 		[Export ("calendar", ArgumentSemantic.Copy)]
-		[iOS (4,0)]
 		NSCalendar Calendar { get; set; }
 
 		[Export ("quarter")]
-		[iOS (4,0)]
 		nint Quarter { get; set; }
 
 		[Export ("date")]
-		[iOS (4,0)]
 		NSDate Date { get; }
 
 		//Detected properties
@@ -1524,13 +1516,11 @@ namespace XamCore.Foundation
 		nint Second { get; set; }
 
 		[Export ("nanosecond")]
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		nint Nanosecond { get; set; }
 
 		[Export ("week")]
-		[Mac (10, 4)]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use 'WeekOfMonth' or 'WeekOfYear' instead.")]
-		[iOS (2, 0)]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'WeekOfMonth' or 'WeekOfYear' instead.")]
 		nint Week { get; set; }
 
@@ -1540,15 +1530,15 @@ namespace XamCore.Foundation
 		[Export ("weekdayOrdinal")]
 		nint WeekdayOrdinal { get; set; }
 
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		[Export ("weekOfMonth")]
 		nint WeekOfMonth { get; set; }
 
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		[Export ("weekOfYear")]
 		nint WeekOfYear { get; set; }
 		
-		[Mac(10,7)][iOS(5,0)]
+		[Mac(10,7)]
 		[Export ("yearForWeekOfYear")]
 		nint YearForWeekOfYear { get; set; }
 
@@ -1995,7 +1985,6 @@ namespace XamCore.Foundation
 		[Export ("fileDescriptor")]
 		int FileDescriptor { get; } /* int, not NSInteger */
 
-		[iOS (5,0)]
 		[Export ("setReadabilityHandler:")]
 #if XAMCORE_2_0
 		void SetReadabilityHandler ([NullAllowed] Action<NSFileHandle> readCallback);
@@ -2003,7 +1992,6 @@ namespace XamCore.Foundation
 		void SetReadabilityHandler ([NullAllowed] NSFileHandleUpdateHandler readCallback);
 #endif
 
-		[iOS (5,0)]
 		[Export ("setWriteabilityHandler:")]
 #if XAMCORE_2_0
 		void SetWriteabilityHandle ([NullAllowed] Action<NSFileHandle> writeCallback);
@@ -2361,7 +2349,6 @@ namespace XamCore.Foundation
 
 	}
 
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSMetadataQueryDelegate)})]
 	interface NSMetadataQuery {
 		[Export ("startQuery")]
@@ -3234,7 +3221,6 @@ namespace XamCore.Foundation
 		NSString QueryUpdateRemovedItemsKey { get; }
 	}
 
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -3246,7 +3232,6 @@ namespace XamCore.Foundation
 		NSObject ReplacementValueForAttributevalue (NSMetadataQuery query, string attributeName, NSObject value);
 	}
 
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 #if XAMCORE_4_0
 	[DisableDefaultCtor] // points to nothing so access properties crash the apps
@@ -3273,7 +3258,6 @@ namespace XamCore.Foundation
 		NSObject [] Attributes { get; }
 	}
 
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSMetadataQueryAttributeValueTuple {
 		[Export ("attribute")]
@@ -3286,7 +3270,6 @@ namespace XamCore.Foundation
 		nint Count { get; }
 	}
 
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSMetadataQueryResultGroup {
 		[Export ("attribute")]
@@ -3377,7 +3360,6 @@ namespace XamCore.Foundation
 	
 	interface NSMutableArray<TValue> : NSMutableArray {}
 
-	[iOS (3,2)]
 	[BaseType (typeof (NSAttributedString))]
 	interface NSMutableAttributedString {
 		[Export ("initWithString:")]
@@ -4125,7 +4107,6 @@ namespace XamCore.Foundation
 
 	delegate void NSLingusticEnumerator (NSString tag, NSRange tokenRange, NSRange sentenceRange, ref bool stop);
 
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSLinguisticTagger {
 		[DesignatedInitializer]
@@ -4219,7 +4200,6 @@ namespace XamCore.Foundation
 
 	delegate void LinguisticTagEnumerator (string tag, NSRange tokenRange, bool stop);
 
-	[iOS (5,0)]
 	[Static]
 	interface NSLinguisticTag {
 		[Field ("NSLinguisticTagSchemeTokenType")]
@@ -4672,7 +4652,6 @@ namespace XamCore.Foundation
 		bool IsSubsetOf (NSSet other);
 		
 		[Export ("enumerateObjectsUsingBlock:")]
-		[iOS (4,0)]
 		void Enumerate (NSSetEnumerator enumerator);
 
 		[Internal]
@@ -4743,7 +4722,6 @@ namespace XamCore.Foundation
 	
 	[Category, BaseType (typeof (NSOrderedSet))]
 	partial interface NSKeyValueSorting_NSOrderedSet {
-		[iOS (5,0)]
 		[Export ("sortedArrayUsingDescriptors:")]
 		NSObject [] GetSortedArray (NSSortDescriptor [] sortDescriptors);
 	}
@@ -4752,13 +4730,13 @@ namespace XamCore.Foundation
 	[Category, BaseType (typeof (NSMutableArray))]
 #pragma warning restore 618
 	partial interface NSSortDescriptorSorting_NSMutableArray {
-		[iOS (5,0), Export ("sortUsingDescriptors:")]
+		[Export ("sortUsingDescriptors:")]
 		void SortUsingDescriptors (NSSortDescriptor [] sortDescriptors);
 	}
 
 	[Category, BaseType (typeof (NSMutableOrderedSet))]
 	partial interface NSKeyValueSorting_NSMutableOrderedSet {
-		[iOS (5,0), Export ("sortUsingDescriptors:")]
+		[Export ("sortUsingDescriptors:")]
 		void SortUsingDescriptors (NSSortDescriptor [] sortDescriptors);
 	}
 	
@@ -4901,7 +4879,6 @@ namespace XamCore.Foundation
 		NSUbiquitousKeyValueStoreChangeReason ChangeReason { get; }
 	}
 
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 #if WATCH
 	[Advice ("Not available on watchOS")]
@@ -5118,12 +5095,10 @@ namespace XamCore.Foundation
 		
 	[BaseType (typeof (NSObject))]
 	interface NSUserDefaults {
-		[Mac (10,6)][iOS (4,0)]
 		[Export ("URLForKey:")]
 		[return: NullAllowed]
 		NSUrl URLForKey (string defaultName);
 
-		[Mac (10,6)][iOS (4,0)]
 		[Export ("setURL:forKey:")]
 		void SetURL ([NullAllowed] NSUrl url, string defaultName);
 
@@ -5581,155 +5556,117 @@ namespace XamCore.Foundation
 		NSString VolumeSupportsCasePreservedNamesKey { get; }
 
 		// 5.0 Additions
-		[iOS (5,0)]
 		[Field ("NSURLKeysOfUnsetValuesKey")]
 		NSString KeysOfUnsetValuesKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLFileResourceIdentifierKey")]
 		NSString FileResourceIdentifierKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLVolumeIdentifierKey")]
 		NSString VolumeIdentifierKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLPreferredIOBlockSizeKey")]
 		NSString PreferredIOBlockSizeKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLIsReadableKey")]
 		NSString IsReadableKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLIsWritableKey")]
 		NSString IsWritableKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLIsExecutableKey")]
 		NSString IsExecutableKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLIsMountTriggerKey")]
 		NSString IsMountTriggerKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLFileSecurityKey")]
 		NSString FileSecurityKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLFileResourceTypeKey")]
 		NSString FileResourceTypeKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLFileResourceTypeNamedPipe")]
 		NSString FileResourceTypeNamedPipe { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLFileResourceTypeCharacterSpecial")]
 		NSString FileResourceTypeCharacterSpecial { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLFileResourceTypeDirectory")]
 		NSString FileResourceTypeDirectory { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLFileResourceTypeBlockSpecial")]
 		NSString FileResourceTypeBlockSpecial { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLFileResourceTypeRegular")]
 		NSString FileResourceTypeRegular { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLFileResourceTypeSymbolicLink")]
 		NSString FileResourceTypeSymbolicLink { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLFileResourceTypeSocket")]
 		NSString FileResourceTypeSocket { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLFileResourceTypeUnknown")]
 		NSString FileResourceTypeUnknown { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLTotalFileSizeKey")]
 		NSString TotalFileSizeKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLTotalFileAllocatedSizeKey")]
 		NSString TotalFileAllocatedSizeKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLVolumeSupportsRootDirectoryDatesKey")]
 		NSString VolumeSupportsRootDirectoryDatesKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLVolumeSupportsVolumeSizesKey")]
 		NSString VolumeSupportsVolumeSizesKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLVolumeSupportsRenamingKey")]
 		NSString VolumeSupportsRenamingKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLVolumeSupportsAdvisoryFileLockingKey")]
 		NSString VolumeSupportsAdvisoryFileLockingKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLVolumeSupportsExtendedSecurityKey")]
 		NSString VolumeSupportsExtendedSecurityKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLVolumeIsBrowsableKey")]
 		NSString VolumeIsBrowsableKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLVolumeMaximumFileSizeKey")]
 		NSString VolumeMaximumFileSizeKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLVolumeIsEjectableKey")]
 		NSString VolumeIsEjectableKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLVolumeIsRemovableKey")]
 		NSString VolumeIsRemovableKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLVolumeIsInternalKey")]
 		NSString VolumeIsInternalKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLVolumeIsAutomountedKey")]
 		NSString VolumeIsAutomountedKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLVolumeIsLocalKey")]
 		NSString VolumeIsLocalKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLVolumeIsReadOnlyKey")]
 		NSString VolumeIsReadOnlyKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLVolumeCreationDateKey")]
 		NSString VolumeCreationDateKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLVolumeURLForRemountingKey")]
 		NSString VolumeURLForRemountingKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLVolumeUUIDStringKey")]
 		NSString VolumeUUIDStringKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLVolumeNameKey")]
 		NSString VolumeNameKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLVolumeLocalizedNameKey")]
 		NSString VolumeLocalizedNameKey { get; }
 
@@ -5773,38 +5710,31 @@ namespace XamCore.Foundation
 		[Field ("NSURLVolumeAvailableCapacityForOpportunisticUsageKey")]
 		NSString VolumeAvailableCapacityForOpportunisticUsageKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLIsUbiquitousItemKey")]
 		NSString IsUbiquitousItemKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLUbiquitousItemHasUnresolvedConflictsKey")]
 		NSString UbiquitousItemHasUnresolvedConflictsKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLUbiquitousItemIsDownloadedKey")]
 		NSString UbiquitousItemIsDownloadedKey { get; }
 
 		[Field ("NSURLUbiquitousItemIsDownloadingKey")]
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_7_0)]
+		[Availability (Deprecated = Platform.iOS_7_0)]
 		NSString UbiquitousItemIsDownloadingKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLUbiquitousItemIsUploadedKey")]
 		NSString UbiquitousItemIsUploadedKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSURLUbiquitousItemIsUploadingKey")]
 		NSString UbiquitousItemIsUploadingKey { get; }
 
 		[Field ("NSURLUbiquitousItemPercentDownloadedKey")]
-		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'NSMetadataQuery.UbiquitousItemPercentDownloadedKey' on 'NSMetadataItem' instead.")]
 		[Mac (10, 7)]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'NSMetadataQuery.UbiquitousItemPercentDownloadedKey' on 'NSMetadataItem' instead.")]
 		NSString UbiquitousItemPercentDownloadedKey { get; }
 
-		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'NSMetadataQuery.UbiquitousItemPercentUploadedKey' on 'NSMetadataItem' instead.")]
 		[Mac (10, 7)]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'NSMetadataQuery.UbiquitousItemPercentUploadedKey' on 'NSMetadataItem' instead.")]
@@ -5847,7 +5777,6 @@ namespace XamCore.Foundation
 		[Field ("NSURLUbiquitousSharedItemPermissionsReadWrite")]
 		NSString UbiquitousSharedItemPermissionsReadWrite { get; }
 
-		[iOS (5,1)]
 		[Mac (10, 8)]
 		[Field ("NSURLIsExcludedFromBackupKey")]
 		NSString IsExcludedFromBackupKey { get; }
@@ -6301,7 +6230,6 @@ namespace XamCore.Foundation
 		[Export ("cancelAuthenticationChallenge:")]
 		void CancelAuthenticationChallenge (NSUrlAuthenticationChallenge challenge);
 
-		[iOS (5,0)]
 		[Export ("performDefaultHandlingForAuthenticationChallenge:")]
 #if XAMCORE_2_0
 		void PerformDefaultHandling (NSUrlAuthenticationChallenge challenge);
@@ -6310,7 +6238,6 @@ namespace XamCore.Foundation
 		void PerformDefaultHandlingForChallenge (NSUrlAuthenticationChallenge challenge);
 #endif
 
-		[iOS (5,0)]
 		[Export ("rejectProtectionSpaceAndContinueWithChallenge:")]
 #if XAMCORE_2_0
 		void RejectProtectionSpaceAndContinue (NSUrlAuthenticationChallenge challenge);
@@ -6369,20 +6296,16 @@ namespace XamCore.Foundation
 		void Unschedule (NSRunLoop aRunLoop, NSRunLoopMode forMode);
 
 #if !MONOMAC
-		[iOS (5,0)]
 		[Export ("originalRequest")]
 		NSUrlRequest OriginalRequest { get; }
 
-		[iOS (5,0)]
 		[Export ("currentRequest")]
 		NSUrlRequest CurrentRequest { get; }
 #endif
 		[Export ("setDelegateQueue:")]
-		[iOS (5,0)]
 		void SetDelegateQueue (NSOperationQueue queue);
 
 		[NoWatch]
-		[iOS (5,0)]
 		[Static]
 		[Export ("sendAsynchronousRequest:queue:completionHandler:")]
 		[Async (ResultTypeName = "NSUrlAsyncResult", MethodName="SendRequestAsync")]
@@ -6390,7 +6313,6 @@ namespace XamCore.Foundation
 		
 #if IOS
 		// Extension from iOS5, NewsstandKit
-		[iOS (5,0)]
 		[Export ("newsstandAssetDownload", ArgumentSemantic.Weak)]
 		XamCore.NewsstandKit.NKAssetDownload NewsstandAssetDownload { get; }
 #endif
@@ -7303,23 +7225,18 @@ namespace XamCore.Foundation
 		[Notification]
 		NSString WillUndoChangeNotification { get; }
 
-		[iOS (5,0)]
 		[Export ("setActionIsDiscardable:")]
 		void SetActionIsDiscardable (bool discardable);
 
-		[iOS (5,0)]
 		[Export ("undoActionIsDiscardable")]
 		bool UndoActionIsDiscardable { get; }
 
-		[iOS (5,0)]
 		[Export ("redoActionIsDiscardable")]
 		bool RedoActionIsDiscardable { get; }
 
-		[iOS (5,0)]
 		[Field ("NSUndoManagerGroupIsDiscardableKey")]
 		NSString GroupIsDiscardableKey { get; }
 
-		[iOS (5,0)]
 		[Field ("NSUndoManagerDidCloseUndoGroupNotification")]
 		[Notification (typeof (NSUndoManagerCloseUndoGroupEventArgs))]
 		NSString DidCloseUndoGroupNotification { get; }
@@ -7777,15 +7694,12 @@ namespace XamCore.Foundation
 		[Advanced, Field ("NSStreamNetworkServiceTypeVoIP")]
 		NSString NetworkServiceTypeVoIP { get; }
 
-		[iOS (5,0)]
 		[Advanced, Field ("NSStreamNetworkServiceTypeVideo")]
 		NSString NetworkServiceTypeVideo { get; }
 
-		[iOS (5,0)]
 		[Advanced, Field ("NSStreamNetworkServiceTypeBackground")]
 		NSString NetworkServiceTypeBackground { get; }
 
-		[iOS (5,0)]
 		[Advanced, Field ("NSStreamNetworkServiceTypeVoice")]
 		NSString NetworkServiceTypeVoice { get; }
 
@@ -8588,7 +8502,6 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-	[iOS (4,0)]
 	interface NSOperation {
 		[Export ("start")]
 		void Start ();
@@ -8652,7 +8565,6 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSOperation))]
-	[iOS (4,0)]
 	interface NSBlockOperation {
 		[Static]
 		[Export ("blockOperationWithBlock:")]
@@ -8666,7 +8578,6 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-	[iOS (4,0)]
 	interface NSOperationQueue {
 		[Export ("addOperation:")][PostGet ("Operations")]
 		void AddOperation ([NullAllowed] NSOperation op);
@@ -8722,7 +8633,6 @@ namespace XamCore.Foundation
 	interface NSOrderedSet<TKey> : NSOrderedSet {}
 #endif
 
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSOrderedSet : NSSecureCoding, NSMutableCopying {
 		[Export ("initWithObject:")]
@@ -8817,7 +8727,6 @@ namespace XamCore.Foundation
 	interface NSMutableOrderedSet<TKey> : NSMutableOrderedSet {}
 #endif
 
-	[iOS (5,0)]
 	[BaseType (typeof (NSOrderedSet))]
 	interface NSMutableOrderedSet {
 		[Export ("initWithObject:")]
@@ -9147,7 +9056,6 @@ namespace XamCore.Foundation
 		[Export ("cookieAcceptPolicy")]
 		NSHttpCookieAcceptPolicy AcceptPolicy { get; set; }
 
-		[iOS (5,0)]
 		[Export ("sortedCookiesUsingDescriptors:")]
 		NSHttpCookie [] GetSortedCookies (NSSortDescriptor [] sortDescriptors);
 
@@ -9187,7 +9095,6 @@ namespace XamCore.Foundation
 		[Export ("initWithURL:MIMEType:expectedContentLength:textEncodingName:")]
 		IntPtr Constructor (NSUrl url, string mimetype, nint expectedContentLength, [NullAllowed] string textEncodingName);
 
-		[iOS (5,0)]
 		[Export ("initWithURL:statusCode:HTTPVersion:headerFields:")]
 		IntPtr Constructor (NSUrl url, nint statusCode, string httpVersion, NSDictionary headerFields);
 		
@@ -9312,7 +9219,6 @@ namespace XamCore.Foundation
 		[Export ("pathForSoundResource:")]
 		string PathForSoundResource (string resource);
 
-		[Mac (10,6)]
 		[Export ("URLForImageResource:")]
 		NSUrl GetUrlForImageResource (string resource);
 
@@ -9326,43 +9232,33 @@ namespace XamCore.Foundation
 #endif
 
 		[Export ("bundleURL")]
-		[iOS (4,0)]
 		NSUrl BundleUrl { get; }
 		
 		[Export ("resourceURL")]
-		[iOS (4,0)]
 		NSUrl ResourceUrl { get; }
 
 		[Export ("executableURL")]
-		[iOS (4,0)]
 		NSUrl ExecutableUrl { get; }
 
 		[Export ("URLForAuxiliaryExecutable:")]
-		[iOS (4,0)]
 		NSUrl UrlForAuxiliaryExecutable (string executable);
 
 		[Export ("privateFrameworksURL")]
-		[iOS (4,0)]
 		NSUrl PrivateFrameworksUrl { get; }
 
 		[Export ("sharedFrameworksURL")]
-		[iOS (4,0)]
 		NSUrl SharedFrameworksUrl { get; }
 
 		[Export ("sharedSupportURL")]
-		[iOS (4,0)]
 		NSUrl SharedSupportUrl { get; }
 
 		[Export ("builtInPlugInsURL")]
-		[iOS (4,0)]
 		NSUrl BuiltInPluginsUrl { get; }
 
 		[Export ("initWithURL:")]
-		[iOS (4,0)]
 		IntPtr Constructor (NSUrl url);
 		
 		[Static, Export ("bundleWithURL:")]
-		[iOS (4,0)]
 		NSBundle FromUrl (NSUrl url);
 
 		[Export ("preferredLocalizations")]
@@ -9580,15 +9476,12 @@ namespace XamCore.Foundation
 		[Export ("containsIndexes:")]
 		bool Contains (NSIndexSet indexes);
 
-		[iOS (5,0)]
 		[Export ("enumerateRangesUsingBlock:")]
 		void EnumerateRanges (NSRangeIterator iterator);
 
-		[iOS (5,0)]
 		[Export ("enumerateRangesWithOptions:usingBlock:")]
 		void EnumerateRanges (NSEnumerationOptions opts, NSRangeIterator iterator);
 
-		[iOS (5,0)]
 		[Export ("enumerateRangesInRange:options:usingBlock:")]
 		void EnumerateRanges (NSRange range, NSEnumerationOptions opts, NSRangeIterator iterator);
 
@@ -9898,7 +9791,6 @@ namespace XamCore.Foundation
 		IntPtr MethodReturnType { get; }
 	}
 
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject), Name="NSJSONSerialization")]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** +[NSJSONSerialization allocWithZone:]: Do not create instances of NSJSONSerialization in this release
 	[DisableDefaultCtor]
@@ -10021,9 +9913,7 @@ namespace XamCore.Foundation
 		void Publish (NSNetServiceOptions options);
 
 		[Export ("resolve")]
-		[iOS (2, 0)]
 		[Deprecated (PlatformName.iOS, 2, 0, message : "Use 'Resolve (double)' instead.")]
-		[Mac (10, 2)]
 		[Deprecated (PlatformName.MacOSX, 10, 4, message : "Use 'Resolve (double)' instead.")]
 		[NoWatch]
 		void Resolve ();
@@ -10225,7 +10115,6 @@ namespace XamCore.Foundation
 		[PostSnippet ("RemoveObserversFromList (observer, aName, anObject);")]
 		void RemoveObserver (NSObject observer, [NullAllowed] string aName, [NullAllowed] NSObject anObject);
 
-		[iOS (4,0)]
 		[Export ("addObserverForName:object:queue:usingBlock:")]
 #if XAMCORE_2_0
 		NSObject AddObserver ([NullAllowed] string name, [NullAllowed] NSObject obj, [NullAllowed] NSOperationQueue queue, Action<NSNotification> handler);
@@ -10420,22 +10309,22 @@ namespace XamCore.Foundation
 #endif
 #else
 #if !WATCH
-		[Static, Export ("valueWithCMTime:"), iOS (4,0)]
+		[Static, Export ("valueWithCMTime:")]
 		NSValue FromCMTime (CMTime time);
 		
-		[Export ("CMTimeValue"), iOS (4,0)]
+		[Export ("CMTimeValue")]
 		CMTime CMTimeValue { get; }
 		
-		[Static, Export ("valueWithCMTimeMapping:"), iOS (4,0)]
+		[Static, Export ("valueWithCMTimeMapping:")]
 		NSValue FromCMTimeMapping (CMTimeMapping timeMapping);
 		
-		[Export ("CMTimeMappingValue"), iOS (4,0)]
+		[Export ("CMTimeMappingValue")]
 		CMTimeMapping CMTimeMappingValue { get; }
 		
-		[Static, Export ("valueWithCMTimeRange:"), iOS (4,0)]
+		[Static, Export ("valueWithCMTimeRange:")]
 		NSValue FromCMTimeRange (CMTimeRange timeRange);
 		
-		[Export ("CMTimeRangeValue"), iOS (4,0)]
+		[Export ("CMTimeRangeValue")]
 		CMTimeRange CMTimeRangeValue { get; }
 #endif
 		
@@ -10460,11 +10349,9 @@ namespace XamCore.Foundation
 		[Export ("valueWithDirectionalEdgeInsets:")]
 		NSValue FromDirectionalEdgeInsets (NSDirectionalEdgeInsets insets);
 
-		[iOS (5,0)]
 		[Export ("valueWithUIOffset:")][Static]
 		NSValue FromUIOffset (UIKit.UIOffset insets);
 
-		[iOS (5,0)]
 		[Export ("UIOffsetValue")]
 		UIOffset UIOffsetValue { get; }
 
@@ -11661,7 +11548,6 @@ namespace XamCore.Foundation
 	}
 	
 	[BaseType (typeof (NSMutableData))]
-	[iOS (4,0)]
 	interface NSPurgeableData : NSSecureCoding, NSMutableCopying, NSDiscardableContent {
 	}
 
@@ -11691,7 +11577,6 @@ namespace XamCore.Foundation
 
 	interface INSFilePresenter {}
 
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSFileCoordinator {
 		[Static, Export ("addFilePresenter:")][PostGet ("FilePresenters")]
@@ -11754,7 +11639,7 @@ namespace XamCore.Foundation
 		[Export ("itemAtURL:willMoveToURL:")]
 		void WillMove (NSUrl oldUrl, NSUrl newUrl);
 
-		[iOS (5,0)][Mac (10,7)]
+		[Mac (10,7)]
 		[Export ("purposeIdentifier")]
 		string PurposeIdentifier { get; set; }
 
@@ -11858,23 +11743,18 @@ namespace XamCore.Foundation
 		NSString Busy { get; }
 
 #if !MONOMAC
-		[iOS (4,0)]
 		[Field ("NSFileProtectionKey")]
 		NSString FileProtectionKey { get; }
 
-		[iOS (4,0)]
 		[Field ("NSFileProtectionNone")]
 		NSString FileProtectionNone { get; }
 
-		[iOS (4,0)]
 		[Field ("NSFileProtectionComplete")]
 		NSString FileProtectionComplete { get; }
 
-		[iOS (5,0)]
 		[Field ("NSFileProtectionCompleteUnlessOpen")]
 		NSString FileProtectionCompleteUnlessOpen { get; }
 
-		[iOS (5,0)]
 		[Field ("NSFileProtectionCompleteUntilFirstUserAuthentication")]
 		NSString FileProtectionCompleteUntilFirstUserAuthentication  { get; }
 #endif
@@ -11995,27 +11875,21 @@ namespace XamCore.Foundation
 		[Export ("createFileAtPath:contents:attributes:")]
 		bool CreateFile (string path, NSData data, [NullAllowed] NSDictionary attr);
 
-		[iOS (4,0)]
 		[Export ("contentsOfDirectoryAtURL:includingPropertiesForKeys:options:error:")]
 		NSUrl[] GetDirectoryContent (NSUrl url, [NullAllowed] NSArray properties, NSDirectoryEnumerationOptions options, out NSError error);
 
-		[iOS (4,0)]
 		[Export ("copyItemAtURL:toURL:error:")]
 		bool Copy (NSUrl srcUrl, NSUrl dstUrl, out NSError error);
 
-		[iOS (4,0)]
 		[Export ("moveItemAtURL:toURL:error:")]
 		bool Move (NSUrl srcUrl, NSUrl dstUrl, out NSError error);
 
-		[iOS (4,0)]
 		[Export ("linkItemAtURL:toURL:error:")]
 		bool Link (NSUrl srcUrl, NSUrl dstUrl, out NSError error);
 
-		[iOS (4,0)]
 		[Export ("removeItemAtURL:error:")]
 		bool Remove ([NullAllowed] NSUrl url, out NSError error);
 
-		[iOS (4,0)]
 		[Export ("enumeratorAtURL:includingPropertiesForKeys:options:errorHandler:")]
 #if XAMCORE_2_0
 		NSDirectoryEnumerator GetEnumerator (NSUrl url, [NullAllowed] NSString[] keys, NSDirectoryEnumerationOptions options, [NullAllowed] NSEnumerateErrorHandler handler);
@@ -12023,19 +11897,15 @@ namespace XamCore.Foundation
 		NSDirectoryEnumerator GetEnumerator (NSUrl url, [NullAllowed] NSArray properties, NSDirectoryEnumerationOptions options, [NullAllowed] NSEnumerateErrorHandler handler);
 #endif
 
-		[iOS (4,0)]
 		[Export ("URLForDirectory:inDomain:appropriateForURL:create:error:")]
 		NSUrl GetUrl (NSSearchPathDirectory directory, NSSearchPathDomain domain, [NullAllowed] NSUrl url, bool shouldCreate, out NSError error);
 
-		[iOS (4,0)]
 		[Export ("URLsForDirectory:inDomains:")]
 		NSUrl[] GetUrls (NSSearchPathDirectory directory, NSSearchPathDomain domains);
 
-		[iOS (4,0)]
 		[Export ("replaceItemAtURL:withItemAtURL:backupItemName:options:resultingItemURL:error:")]
 		bool Replace (NSUrl originalItem, NSUrl newItem, [NullAllowed] string backupItemName, NSFileManagerItemReplacementOptions options, out NSUrl resultingURL, out NSError error);
 
-		[iOS (4,0)]
 		[Export ("mountedVolumeURLsIncludingResourceValuesForKeys:options:")]
 		NSUrl[] GetMountedVolumes ([NullAllowed] NSArray properties, NSVolumeEnumerationOptions options);
 
@@ -12048,35 +11918,27 @@ namespace XamCore.Foundation
 		//[Export ("stringWithFileSystemRepresentation:length:")]
 		//string StringWithFileSystemRepresentation (const char str, uint len);
 
-		[iOS (5,0)]
 		[Export ("createDirectoryAtURL:withIntermediateDirectories:attributes:error:")]
 		bool CreateDirectory (NSUrl url, bool createIntermediates, [NullAllowed] NSDictionary attributes, out NSError error);
 
-		[iOS (5,0)]
                 [Export ("createSymbolicLinkAtURL:withDestinationURL:error:")]
                 bool CreateSymbolicLink (NSUrl url, NSUrl destURL, out NSError error);
 
-		[iOS (5,0)]
                 [Export ("setUbiquitous:itemAtURL:destinationURL:error:")]
                 bool SetUbiquitous (bool flag, NSUrl url, NSUrl destinationUrl, out NSError error);
 
-		[iOS (5,0)]
                 [Export ("isUbiquitousItemAtURL:")]
                 bool IsUbiquitous (NSUrl url);
 
-		[iOS (5,0)]
                 [Export ("startDownloadingUbiquitousItemAtURL:error:")]
                 bool StartDownloadingUbiquitous (NSUrl url, out NSError error);
 
-		[iOS (5,0)]
                 [Export ("evictUbiquitousItemAtURL:error:")]
                 bool EvictUbiquitous (NSUrl url, out NSError error);
 
-		[iOS (5,0)]
                 [Export ("URLForUbiquityContainerIdentifier:")]
                 NSUrl GetUrlForUbiquityContainer ([NullAllowed] string containerIdentifier);
 
-		[iOS (5,0)]
                 [Export ("URLForPublishingUbiquitousItemAtURL:expirationDate:error:")]
                 NSUrl GetUrlForPublishingUbiquitousItem (NSUrl url, out NSDate expirationDate, out NSError error);
 
@@ -12272,7 +12134,6 @@ namespace XamCore.Foundation
 
 	delegate void NSFileVersionNonlocalVersionsCompletionHandler ([NullAllowed] NSFileVersion[] nonlocalFileVersions, [NullAllowed] NSError error);
 
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSGenericException Reason: -[NSFileVersion init]: You have to use one of the factory methods to instantiate NSFileVersion.
 	[DisableDefaultCtor]
@@ -12529,7 +12390,6 @@ namespace XamCore.Foundation
 	delegate bool NSPredicateEvaluator (NSObject evaluatedObject, NSDictionary bindings);
 	
 	[BaseType (typeof (NSObject))]
-	[iOS (4,0)]
 	// 'init' returns NIL
 	[DisableDefaultCtor]
 	interface NSPredicate : NSSecureCoding, NSCopying {
@@ -12569,14 +12429,12 @@ namespace XamCore.Foundation
 
 	[Category, BaseType (typeof (NSOrderedSet))]
 	partial interface NSPredicateSupport_NSOrderedSet {
-		[iOS (5,0)]
 		[Export ("filteredOrderedSetUsingPredicate:")]
 		NSOrderedSet FilterUsingPredicate (NSPredicate p);
 	}
 	
 	[Category, BaseType (typeof (NSMutableOrderedSet))]
 	partial interface NSPredicateSupport_NSMutableOrderedSet {
-		[iOS (5,0)]
 		[Export ("filterUsingPredicate:")]
 		void FilterUsingPredicate (NSPredicate p);
 	}
@@ -12874,8 +12732,6 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // An uncaught exception was raised: *** -range cannot be sent to an abstract object of class NSTextCheckingResult: Create a concrete instance!
-	[iOS (4, 0)]
-	[Mac (10, 6)]
 	interface NSTextCheckingResult : NSSecureCoding, NSCopying {
 		[Export ("resultType")]
 		NSTextCheckingType ResultType { get;  }
@@ -12900,7 +12756,6 @@ namespace XamCore.Foundation
 		double TimeInterval { get; }
 
 		[Export ("components")]
-		[iOS (4, 0)]
 		[Mac (10, 7)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSDictionary WeakComponents { get; }
@@ -12921,12 +12776,10 @@ namespace XamCore.Foundation
 
 //		NSRegularExpression isn't bound
 //		[Export ("regularExpression")]
-//		[iOS (4, 0)]
 //		[Mac (10, 7)]
 //		NSRegularExpression RegularExpression { get; }
 
 		[Export ("phoneNumber")]
-		[iOS (4, 0)]
 		[Mac (10, 7)]
 		string PhoneNumber { get; }
 
@@ -12938,17 +12791,14 @@ namespace XamCore.Foundation
 		NSTextCheckingAddressComponents AddressComponents { get; }
 
 		[Export ("numberOfRanges")]
-		[iOS (4, 0)]
 		[Mac (10, 7)]
 		nuint NumberOfRanges { get; }
 
 		[Export ("rangeAtIndex:")]
-		[iOS (4, 0)]
 		[Mac (10, 7)]
 		NSRange RangeAtIndex (nuint idx);
 
 		[Export ("resultByAdjustingRangesWithOffset:")]
-		[iOS (5, 0)]
 		[Mac (10, 7)]
 		NSTextCheckingResult ResultByAdjustingRanges (nint offset);
 
@@ -13011,20 +12861,17 @@ namespace XamCore.Foundation
 
 //		NSRegularExpression isn't bound
 //		[Export ("regularExpressionCheckingResultWithRanges:count:regularExpression:")]
-//		[iOS (4, 0)]
 //		[Mac (10, 7)]
 //		[Internal] // FIXME
 //		NSTextCheckingResult RegularExpressionCheckingResult (ref NSRange ranges, nuint count, NSRegularExpression regularExpression);
 
 		[Static]
 		[Export ("phoneNumberCheckingResultWithRange:phoneNumber:")]
-		[iOS (4, 0)]
 		[Mac (10, 7)]
 		NSTextCheckingResult PhoneNumberCheckingResult (NSRange range, string phoneNumber);
 
 		[Static]
 		[Export ("transitInformationCheckingResultWithRange:components:")]
-		[iOS (4, 0)]
 		[Mac (10, 7)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSTextCheckingResult TransitInformationCheckingResult (NSRange range, NSDictionary components);
@@ -13041,109 +12888,69 @@ namespace XamCore.Foundation
 
 	[StrongDictionary ("NSTextChecking")]
 	interface NSTextCheckingTransitComponents {
-		[iOS (4, 0)]
 		[Mac (10, 7)]
 		string Airline { get; }
 
-		[iOS (4, 0)]
 		[Mac (10, 7)]
 		string Flight { get; }
 	}
 
 	[StrongDictionary ("NSTextChecking")]
 	interface NSTextCheckingAddressComponents {
-		[iOS (4, 0)]
-		[Mac (10, 6)]
 		string Name { get; }
 
-		[iOS (4, 0)]
-		[Mac (10, 6)]
 		string JobTitle { get; }
 
-		[iOS (4, 0)]
-		[Mac (10, 6)]
 		string Organization { get; }
 
-		[iOS (4, 0)]
-		[Mac (10, 6)]
 		string Street { get; }
 
-		[iOS (4, 0)]
-		[Mac (10, 6)]
 		string City { get; }
 
-		[iOS (4, 0)]
-		[Mac (10, 6)]
 		string State { get; }
 
 		[Export ("ZipKey")]
-		[iOS (4, 0)]
-		[Mac (10, 6)]
 		string ZIP { get; }
 
-		[iOS (4, 0)]
-		[Mac (10, 6)]
 		string Country { get; }
 
-		[iOS (4, 0)]
-		[Mac (10, 6)]
 		string Phone { get; }
 	}
 
 	[Static]
 	interface NSTextChecking {
 		[Field ("NSTextCheckingNameKey")]
-		[iOS (4, 0)]
-		[Mac (10, 6)]
 		NSString NameKey { get; }
 
 		[Field ("NSTextCheckingJobTitleKey")]
-		[iOS (4, 0)]
-		[Mac (10, 6)]
 		NSString JobTitleKey { get; }
 
 		[Field ("NSTextCheckingOrganizationKey")]
-		[iOS (4, 0)]
-		[Mac (10, 6)]
 		NSString OrganizationKey { get; }
 
 		[Field ("NSTextCheckingStreetKey")]
-		[iOS (4, 0)]
-		[Mac (10, 6)]
 		NSString StreetKey { get; }
 
 		[Field ("NSTextCheckingCityKey")]
-		[iOS (4, 0)]
-		[Mac (10, 6)]
 		NSString CityKey { get; }
 
 		[Field ("NSTextCheckingStateKey")]
-		[iOS (4, 0)]
-		[Mac (10, 6)]
 		NSString StateKey { get; }
 
 		[Field ("NSTextCheckingZIPKey")]
-		[iOS (4, 0)]
-		[Mac (10, 6)]
 		NSString ZipKey { get; }
 
 		[Field ("NSTextCheckingCountryKey")]
-		[iOS (4, 0)]
-		[Mac (10, 6)]
 		NSString CountryKey { get; }
 
 		[Field ("NSTextCheckingPhoneKey")]
-		[iOS (4, 0)]
-		[Mac (10, 6)]
 		NSString PhoneKey { get; }
 
 		[Field ("NSTextCheckingAirlineKey")]
-		[iOS (4, 0)]
 		[Mac (10, 7)]
 		NSString AirlineKey { get; }
 
 		[Field ("NSTextCheckingFlightKey")]
-		[iOS (4, 0)]
 		[Mac (10, 7)]
 		NSString FlightKey { get; }
 	}
@@ -13206,7 +13013,6 @@ namespace XamCore.Foundation
 		string Name { get; [NullAllowed] set; }
 	}
 
-	[iOS (2,0)]
 	[BaseType (typeof(NSObject))]
 	interface NSCondition : NSLocking
 	{

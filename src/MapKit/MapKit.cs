@@ -78,7 +78,6 @@ namespace XamCore.MapKit {
 
 	// MKGeometry.h
 	[StructLayout (LayoutKind.Sequential)]
-	[iOS (4,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	public struct MKMapPoint {
 		public double X, Y;
@@ -131,7 +130,6 @@ namespace XamCore.MapKit {
 
 	// MKGeometry.h
 	[StructLayout (LayoutKind.Sequential)]
-	[iOS (4,0)]
 	public struct MKMapSize {
 		public double Width, Height;
 		
@@ -180,7 +178,6 @@ namespace XamCore.MapKit {
 
 	// MKGeometry.h
 	[StructLayout (LayoutKind.Sequential)]
-	[iOS (4,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	public struct MKMapRect {
 		[TV (9,2)]

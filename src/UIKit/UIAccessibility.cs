@@ -50,7 +50,6 @@ namespace XamCore.UIKit {
 		[DllImport (Constants.UIKitLibrary)]
 		extern static /* BOOL */ bool UIAccessibilityIsMonoAudioEnabled ();
 
-		[iOS (5,0)]
 		static public bool IsMonoAudioEnabled {
 			get {
 				return UIAccessibilityIsMonoAudioEnabled ();
@@ -86,7 +85,6 @@ namespace XamCore.UIKit {
 		[DllImport (Constants.UIKitLibrary)]
 		extern static /* BOOL */ bool UIAccessibilityIsClosedCaptioningEnabled ();
 
-		[iOS (5,0)]
 		static public bool IsClosedCaptioningEnabled {
 			get {
 				return UIAccessibilityIsClosedCaptioningEnabled ();
@@ -153,14 +151,12 @@ namespace XamCore.UIKit {
 		[DllImport (Constants.UIKitLibrary)]
 		extern static void UIAccessibilityZoomFocusChanged (/* UIAccessibilityZoomType */ IntPtr type, CGRect frame, IntPtr view);
 
-		[iOS (5,0)]
 		public static void ZoomFocusChanged (UIAccessibilityZoomType type, CGRect frame, UIView view)
 		{
 			UIAccessibilityZoomFocusChanged ((IntPtr) type, frame, view != null ? view.Handle : IntPtr.Zero);
 		}
 
 		// UIAccessibilityZoom.h
-		[iOS (5,0)]
 		[DllImport (Constants.UIKitLibrary, EntryPoint = "UIAccessibilityRegisterGestureConflictWithZoom")]
 		extern public static void RegisterGestureConflictWithZoom ();
 

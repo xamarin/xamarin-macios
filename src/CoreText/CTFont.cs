@@ -2068,7 +2068,6 @@ namespace XamCore.CoreText {
 			[In] CGGlyph [] glyphs, [In] CGPoint [] positions, nint count,
 			/* CGContextRef __nonnull */ IntPtr context);
 
-		[iOS(4,2)]
 		public void DrawGlyphs (CGContext context, CGGlyph [] glyphs, CGPoint [] positions)
 		{
 			if (context == null)
@@ -2086,7 +2085,6 @@ namespace XamCore.CoreText {
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern nint CTFontGetLigatureCaretPositions (IntPtr handle, CGGlyph glyph, [Out] nfloat [] positions, nint max);
 
-		[iOS(4,2)]
 		public nint GetLigatureCaretPositions (CGGlyph glyph, nfloat [] positions)
 		{
 			if (positions == null)

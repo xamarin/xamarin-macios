@@ -116,7 +116,6 @@ namespace XamCore.AppKit {
 		DestinationAtop,
 		XOR,
 		PlusDarker,
-		[Mac (10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use NSCompositeSourceOver instead.")]
 		Highlight,
 		PlusLighter,
@@ -139,10 +138,8 @@ namespace XamCore.AppKit {
 
 	[Native]
 	public enum NSBackingStore : nuint_compat_int {
-		[Mac (10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'Buffered' instead.")]
 		Retained, 
-		[Mac (10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'Buffered' instead.")]
 		Nonretained, 
 		Buffered,
@@ -230,7 +227,6 @@ namespace XamCore.AppKit {
 
 #if !XAMCORE_4_0
 	[Native]
-	[Mac (10, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use formatters instead.")]
 	public enum NSType : nuint_compat_int {
 	    Any			= 0,
@@ -1624,7 +1620,6 @@ namespace XamCore.AppKit {
 		Default, Regular, Small
 	}
 
-	[Mac (10, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use NSAlertButtonReturn instead.")]
 #if !XAMCORE_4_0
 	[Native]
@@ -1639,7 +1634,6 @@ namespace XamCore.AppKit {
 	}
 
 #if !XAMCORE_4_0
-	[Mac (10, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use NSModalResponse instead.")]
 	[Native]
 	public enum NSPanelButtonType : nint {
@@ -1825,13 +1819,11 @@ namespace XamCore.AppKit {
 	public enum NSPathStyle : nint {
 #if XAMCORE_2_0
 		Standard,
-		[Mac (10, 5)]
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		NavigationBar,
 		PopUp
 #else
 		NSPathStyleStandard,
-		[Mac (10, 5)]
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		NSPathStyleNavigationBar,
 		NSPathStylePopUp
@@ -2007,10 +1999,8 @@ namespace XamCore.AppKit {
 		AccumSize          =  14,
 		MinimumPolicy      =  51,
 		MaximumPolicy      =  52,
-		[Mac (10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		OffScreen          =  53,
-		[Mac (10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 6)]
 		FullScreen         =  54,
 		SampleBuffers      =  55,
@@ -2021,24 +2011,19 @@ namespace XamCore.AppKit {
 		Supersample        =  60,
 		SampleAlpha        =  61,
 		RendererID         =  70,
-		[Mac (10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		SingleRenderer     =  71,
 		NoRecovery         =  72,
 		Accelerated        =  73,
 		ClosestPolicy      =  74,
 		BackingStore       =  76,
-		[Mac (10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		Window             =  80,
-		[Mac (10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		Compliant          =  83,
 		ScreenMask         =  84,
-		[Mac (10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		PixelBuffer        =  90,
-		[Mac (10, 3)]
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		RemotePixelBuffer  =  91,
 		AllowOfflineRenderers = 96,
