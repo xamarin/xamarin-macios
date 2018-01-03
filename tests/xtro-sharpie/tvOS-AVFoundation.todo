@@ -1,2 +1,0 @@
-!missing-selector! AVPlayerItem::preferredMaximumResolution not bound
-!missing-selector! AVPlayerItem::setPreferredMaximumResolution: not bound

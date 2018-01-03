@@ -148,7 +148,6 @@ namespace XamCore.AVFoundation {
 
 #if !MONOMAC || !XAMCORE_4_0
 	[Flags]
-	[NoTV]
 	[Native]
 	[Deprecated (PlatformName.iOS, 6, 0)]
 	// NSUInteger - AVAudioSession.h
@@ -685,7 +684,7 @@ namespace XamCore.AVFoundation {
 		ChannelsToTracks = (1 << 0)
 	}
 			
-#if MONOMAC
+	[NoiOS][NoTV][NoWatch]
 	[Mac (10,11)]
 	[Native]
 	public enum AVMovieWritingOptions : nuint
@@ -694,7 +693,8 @@ namespace XamCore.AVFoundation {
 		TruncateDestinationToMovieHeaderOnly = (1 << 0)
 	}
 
-	[Mac (10,10)]
+	[NoiOS][NoTV][NoWatch]
+	[Mac (10, 7)]
 	[Native]
 	public enum AVContentAuthorizationStatus : nint {
 		Unknown,
@@ -706,6 +706,7 @@ namespace XamCore.AVFoundation {
 		NotPossible,
 	}
 
+	[NoiOS][NoTV][NoWatch]
 	[Mac (10,10)]
 	[Native]
 	public enum AVSampleBufferRequestDirection : nint {
@@ -714,13 +715,13 @@ namespace XamCore.AVFoundation {
 		Reverse = -1,
 	}
 
+	[NoiOS][NoTV][NoWatch]
 	[Mac (10,10)]
 	[Native]
 	public enum AVSampleBufferRequestMode : nint {
 		Immediate,
 		Scheduled,
 	}
-#endif
 
 	[NoTV, NoWatch, NoMac, iOS (10,0)]
 	[Native]
@@ -930,8 +931,6 @@ namespace XamCore.AVFoundation {
 		EncodedPixels = 2,
 	}
 
-	/*
-	// Enum values are present in header but missing rdar filed at: https://bugreport.apple.com/web/?problemID=34184435
 	[NoWatch, NoTV, NoMac, iOS (11, 0)]
 	public enum AVAssetDownloadedAssetEvictionPriority {
 		[Field ("AVAssetDownloadedAssetEvictionPriorityDefault")]
@@ -940,7 +939,6 @@ namespace XamCore.AVFoundation {
 		[Field ("AVAssetDownloadedAssetEvictionPriorityImportant")]
 		Important = 1,
 	}
-	*/
 
 	[NoWatch, iOS (11, 0), TV (11,0), Mac (10,13)]
 	public enum AVAssetWriterInputMediaDataLocation {
