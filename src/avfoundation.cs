@@ -1030,6 +1030,7 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (AVAudioNode))]
 	[DisableDefaultCtor] // designated
 	interface AVAudioEnvironmentNode : AVAudioMixing {
+
 		[DesignatedInitializer]
 		[Export ("init")]
 		IntPtr Constructor ();
@@ -1364,6 +1365,7 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (AVAudioNode))]
 	[DisableDefaultCtor] // designated
 	interface AVAudioMixerNode : AVAudioMixing {
+
 		[DesignatedInitializer]
 		[Export ("init")]
 		IntPtr Constructor ();
@@ -1570,6 +1572,7 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (AVAudioNode))]
 	[DisableDefaultCtor] // designated
 	interface AVAudioPlayerNode : AVAudioMixing {
+
 		[DesignatedInitializer]
 		[Export ("init")]
 		IntPtr Constructor ();
