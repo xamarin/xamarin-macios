@@ -195,7 +195,9 @@ MAC_TARGETS_DIRS +=                                     \
 
 MAC_TARGETS += \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen                     \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen-classic             \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/bgen.exe            \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/bgen-classic.exe            \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/XamMac.BindingAttributes.dll     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/Xamarin.Mac-full.BindingAttributes.dll     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/Xamarin.Mac-mobile.BindingAttributes.dll     \
@@ -207,6 +209,10 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen: | $(MAC_DESTDIR)$(MAC_FRAME
 	$(Q_GEN) printf "#!/bin/sh -e\n\nexec /Library/Frameworks/Mono.framework/Versions/Current/bin/mono64 --debug $(abspath $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/bgen.exe) \"\$$@\"\n" > $@
 	$(Q) chmod +x $@
 
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen-classic: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
+	$(Q_GEN) printf "#!/bin/sh -e\n\nexec /Library/Frameworks/Mono.framework/Versions/Current/bin/mono64 --debug $(abspath $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/bgen-classic.exe) \"\$$@\"\n" > $@
+	$(Q) chmod +x $@
+
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac: bmac.ikvm | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
 	$(Q) install -m 0755 $< $@
 
@@ -215,6 +221,10 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/%.dll: $(MAC_BUILD_DIR)/%.dl
 	$(Q) install -m 0644 $<.mdb $@.mdb
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/%.exe: build/common/bgen.exe | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen
+	$(Q) install -m 0755 $< $@
+	$(Q) install -m 0644 $< $(@:.exe=.pdb)
+
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/bgen-classic.exe: $(MACIOS_BINARIES_PATH)/bgen.exe
 	$(Q) install -m 0755 $< $@
 	$(Q) install -m 0644 $< $(@:.exe=.pdb)
 
