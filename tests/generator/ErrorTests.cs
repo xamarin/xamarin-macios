@@ -35,7 +35,6 @@ namespace GeneratorTests
 		[Test]
 		[TestCase (Profile.macFull)]
 		[TestCase (Profile.macModern)]
-		[TestCase (Profile.macClassic)]
 		public void BI1037 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -49,7 +48,6 @@ namespace GeneratorTests
 		[Test]
 		[TestCase (Profile.macFull)]
 		[TestCase (Profile.macModern)]
-		[TestCase (Profile.macClassic)]
 		public void BI1038 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -63,7 +61,6 @@ namespace GeneratorTests
 		[Test]
 		[TestCase (Profile.macFull)]
 		[TestCase (Profile.macModern)]
-		[TestCase (Profile.macClassic)]
 		public void BI1039 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -77,7 +74,6 @@ namespace GeneratorTests
 		[Test]
 		[TestCase (Profile.macFull)]
 		[TestCase (Profile.macModern)]
-		[TestCase (Profile.macClassic)]
 		public void BI1040 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -91,7 +87,6 @@ namespace GeneratorTests
 		[Test]
 		[TestCase (Profile.macFull)]
 		[TestCase (Profile.macModern)]
-		[TestCase (Profile.macClassic)]
 		public void BI1041 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -537,7 +532,8 @@ namespace BI1062Tests {
 
 		[Test]
 		[TestCase (Profile.iOS)]
-		[TestCase (Profile.macClassic)]
+		[TestCase (Profile.macModern)]
+		[TestCase (Profile.macFull)]
 		public void WarnAsError (Profile profile)
 		{
 			const string message = "The member 'SomeMethod' is decorated with [Static] and its container class warnaserrorTests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into warnaserrorTests.FooObject class.";
@@ -587,7 +583,8 @@ namespace BI1062Tests {
 
 		[Test]
 		[TestCase (Profile.iOS)]
-		[TestCase (Profile.macClassic)]
+		[TestCase (Profile.macModern)]
+		[TestCase (Profile.macFull)]
 		public void NoWarn (Profile profile)
 		{
 			const string message = "The member 'SomeMethod' is decorated with [Static] and its container class nowarnTests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into nowarnTests.FooObject class.";
