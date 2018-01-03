@@ -105,8 +105,6 @@
 !missing-pinvoke! CAClockStart is not bound
 !missing-pinvoke! CAClockStop is not bound
 !missing-pinvoke! CAClockTranslateTime is not bound
-!missing-pinvoke! DisposeMusicPlayer is not bound
-!missing-pinvoke! DisposeMusicSequence is not bound
 !missing-pinvoke! ExtAudioFileCreateNew is not bound
 !missing-pinvoke! ExtAudioFileOpen is not bound
 !missing-pinvoke! GetNameFromSoundBank is not bound
