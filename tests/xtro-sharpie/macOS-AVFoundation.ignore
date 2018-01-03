@@ -24,9 +24,6 @@
 !missing-selector! AVMetadataGroup::uniqueID not bound
 !missing-selector! AVMutableMovieTrack::replaceFormatDescription:withFormatDescription: not bound
 !missing-selector! AVPlayerItem::addMediaDataCollector: not bound
-!missing-selector! AVPlayerItem::contentAuthorizationRequestStatus not bound
-!missing-selector! AVPlayerItem::isApplicationAuthorizedForPlayback not bound
-!missing-selector! AVPlayerItem::isAuthorizationRequiredForPlayback not bound
 !missing-selector! AVPlayerItem::mediaDataCollectors not bound
 !missing-selector! AVPlayerItem::removeMediaDataCollector: not bound
 !unknown-native-enum! AVAudioSessionCategoryOptions bound

@@ -230,6 +230,7 @@ AVFOUNDATION_CORE_SOURCES = \
 	AVFoundation/AVTypes.cs \
 
 AVFOUNDATION_SOURCES = \
+	AVFoundation/AVAssetDownloadStorageManagementPolicy.cs \
 	AVFoundation/AVAssetDownloadTask.cs \
 	AVFoundation/AVAssetDownloadUrlSession.cs \
 	AVFoundation/AVAssetImageGenerator.cs \
@@ -261,6 +262,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVMetadataObject.cs \
 	AVFoundation/AVOutputSettingsAssistant.cs \
 	AVFoundation/AVPlayer.cs \
+	AVFoundation/AVPlayerItem.cs \
 	AVFoundation/AVPlayerItemVideoOutput.cs \
 	AVFoundation/AVPlayerLayer.cs \
 	AVFoundation/AVPlayerViewController.cs \

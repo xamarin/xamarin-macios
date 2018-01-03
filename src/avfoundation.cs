@@ -38,6 +38,9 @@ using XamCore.CoreAnimation;
 using XamCore.CoreImage;
 using XamCore.CoreMedia;
 using XamCore.MediaToolbox;
+#else
+// hack: ease compilation without extra defines
+using CIBarcodeDescriptor = XamCore.Foundation.NSObject;
 #endif
 using XamCore.AudioToolbox;
 using XamCore.ObjCRuntime;
@@ -1557,15 +1560,10 @@ namespace XamCore.AVFoundation {
 		[Availability (Deprecated = Platform.iOS_6_0)]
 		void EndInterruption (AVAudioPlayer player);
 
-		// Deprecated in iOS 6.0 but we have same C# signature
-		[NoTV]
-		[Export ("audioPlayerEndInterruption:withFlags:")]
+		[Availability (Deprecated = Platform.iOS_8_0)]
+		[iOS (6,0)]
+		[Export ("audioPlayerEndInterruption:withOptions:")]
 		void EndInterruption (AVAudioPlayer player, AVAudioSessionInterruptionFlags flags);
-
-		//[Availability (Deprecated = Platform.iOS_8_0)]
-		//[iOS (6,0)]
-		//[Export ("audioPlayerEndInterruption:withOptions:")]
-		//void EndInterruption (AVAudioPlayer player, AVAudioSessionInterruptionFlags flags);
 #endif
 	}
 
@@ -6601,6 +6599,13 @@ namespace XamCore.AVFoundation {
 
 		[Export ("stringValue", ArgumentSemantic.Copy)]
 		string StringValue { get; }
+
+		// @interface AVMetadataMachineReadableCodeDescriptor (AVMetadataMachineReadableCodeObject)
+
+		[iOS (11, 0)]
+		[Export ("descriptor")]
+		[NullAllowed]
+		CIBarcodeDescriptor Descriptor { get; }
 	}
 
 	[NoWatch]
@@ -10618,7 +10623,7 @@ namespace XamCore.AVFoundation {
 		[Export ("preferredPeakBitRate")]
 		double PreferredPeakBitRate { get; set; }
 
-		[iOS (11, 0), NoMac, NoTV]
+		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("preferredMaximumResolution", ArgumentSemantic.Assign)]
 		CGSize PreferredMaximumResolution { get; set; }
 
@@ -10659,6 +10664,35 @@ namespace XamCore.AVFoundation {
 		[NullAllowed, Export ("nextContentProposal", ArgumentSemantic.Assign)]
 		AVContentProposal NextContentProposal { get; set; }
 #endif
+
+		[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
+		[Internal]
+		[Export ("videoApertureMode")]
+		NSString _VideoApertureMode { get; set; }
+	}
+
+	[NoiOS][NoTV][NoWatch]
+	[Mac (10, 7)]
+	[Category]
+	[BaseType (typeof (AVPlayerItem))]
+	interface AVPlayerItem_AVPlayerItemProtectedContent {
+		[Export ("isAuthorizationRequiredForPlayback")]
+		bool IsAuthorizationRequiredForPlayback ();
+
+		[Export ("isApplicationAuthorizedForPlayback")]
+		bool IsApplicationAuthorizedForPlayback ();
+
+		[Export ("isContentAuthorizedForPlayback")]
+		bool IsContentAuthorizedForPlayback ();
+
+		[Export ("requestContentAuthorizationAsynchronouslyWithTimeoutInterval:completionHandler:")]
+		void RequestContentAuthorizationAsynchronously (/* NSTimeInterval */ double timeoutInterval, Action handler);
+
+		[Export ("cancelContentAuthorizationRequest")]
+		void CancelContentAuthorizationRequest ();
+
+		[Export ("contentAuthorizationRequestStatus")]
+		AVContentAuthorizationStatus GetContentAuthorizationRequestStatus ();
 	}
 
 	[NoWatch]
@@ -10675,6 +10709,11 @@ namespace XamCore.AVFoundation {
 
 		[Export ("suppressesPlayerRendering")]
 		bool SuppressesPlayerRendering { get; set; }
+
+		[NoiOS][NoTV]
+		[Mac (10,8)]
+		[Export ("itemTimeForCVTimeStamp:")]
+		CMTime GetItemTime (CVTimeStamp timestamp);
 	}
 
 	[NoWatch]
@@ -11699,9 +11738,9 @@ namespace XamCore.AVFoundation {
 	[DisableDefaultCtor]
 	interface AVAssetDownloadStorageManagementPolicy : NSCopying, NSMutableCopying
 	{
-		// Commented until rdar is fixed https://bugreport.apple.com/web/?problemID=34184435 
-		// [Export ("priority")]
-		// AVAssetDownloadedAssetEvictionPriority Priority { get; }
+		[Internal]
+		[Export ("priority")]
+		NSString _Priority { get; [NotImplemented] set; }
 
 		[Export ("expirationDate", ArgumentSemantic.Copy)]
 		NSDate ExpirationDate { get; [NotImplemented] set; }
@@ -11712,9 +11751,9 @@ namespace XamCore.AVFoundation {
 	[DisableDefaultCtor]
 	interface AVMutableAssetDownloadStorageManagementPolicy
 	{
-		// Commented until rdar is fixed https://bugreport.apple.com/web/?problemID=34184435 
-		// [Export ("priority")]
-		// AVAssetDownloadedAssetEvictionPriority Priority { get; set; }
+		[Internal]
+		[Export ("priority")]
+		NSString _Priority { get; set; }
 
 		[Export ("expirationDate", ArgumentSemantic.Copy)]
 		NSDate ExpirationDate { get; set; }

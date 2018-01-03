@@ -1,7 +1,7 @@
 ## there's a type of the same name (like NSObject, check what Swift did)
 !missing-protocol! AVVideoCompositionInstruction not bound
 
-# fixed in XAMCORE_3_0 - API break
+## fixed in XAMCORE_3_0 - API break
 !incorrect-protocol-member! AVAssetResourceLoaderDelegate::resourceLoader:shouldWaitForLoadingOfRequestedResource: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! AVAudioMixing::destinationForMixer:bus: is REQUIRED and should be abstract
 
@@ -25,8 +25,6 @@
 
 ### deprecated in iOS8
 !missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
-### deprecated in iOS6, replaced by above
-!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions: not found
 ### deprecated in iOS8
 !missing-protocol-member! AVAudioRecorderDelegate::audioRecorderEndInterruption:withOptions: not found
 
@@ -43,8 +41,6 @@
 !missing-selector! +AVAudioChannelLayout::layoutWithLayout: not bound
 !missing-selector! +AVAudioChannelLayout::layoutWithLayoutTag: not bound
 !missing-selector! AVCompositionTrack::segmentForTrackTime: not bound
-!missing-selector! AVPlayerItem::setVideoApertureMode: not bound
-!missing-selector! AVPlayerItem::videoApertureMode not bound
 !missing-selector! AVVideoComposition::sourceTrackIDForFrameTiming not bound
 !missing-selector! NSCoder::decodeCMTimeForKey: not bound
 !missing-selector! NSCoder::decodeCMTimeMappingForKey: not bound
