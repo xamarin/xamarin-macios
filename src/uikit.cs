@@ -8140,9 +8140,8 @@ namespace XamCore.UIKit {
 		[Export ("proximityState")]
 		bool ProximityState { get; }
 
-		[Internal]
 		[Export ("userInterfaceIdiom")]
-		UIUserInterfaceIdiom _UserInterfaceIdiom { get; }
+		UIUserInterfaceIdiom UserInterfaceIdiom { get; }
 
 		[NoTV]
 		[Field ("UIDeviceOrientationDidChangeNotification")]
@@ -8163,8 +8162,8 @@ namespace XamCore.UIKit {
 		[Notification]
 		NSString ProximityStateDidChangeNotification { get; }
 		
-		[Export ("isMultitaskingSupported"), Internal]
-		bool _IsMultitaskingSupported { get; }
+		[Export ("isMultitaskingSupported")]
+		bool IsMultitaskingSupported { get; }
 
 		[Export ("playInputClick")]
 		void PlayInputClick ();
