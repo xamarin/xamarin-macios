@@ -6,10 +6,6 @@
 !missing-enum! CAClockSyncMode not bound
 !missing-enum! CAClockTimebase not bound
 !missing-enum! CAClockTimeFormat not bound
-!missing-enum! MusicSequenceFileFlags not bound
-!missing-enum! MusicSequenceFileTypeID not bound
-!missing-enum! MusicSequenceLoadFlags not bound
-!missing-enum! MusicSequenceType not bound
 !missing-pinvoke! AudioCodecAppendInputBufferList is not bound
 !missing-pinvoke! AudioCodecAppendInputData is not bound
 !missing-pinvoke! AudioCodecGetProperty is not bound
@@ -109,71 +105,18 @@
 !missing-pinvoke! CAClockStart is not bound
 !missing-pinvoke! CAClockStop is not bound
 !missing-pinvoke! CAClockTranslateTime is not bound
-!missing-pinvoke! DisposeMusicPlayer is not bound
-!missing-pinvoke! DisposeMusicSequence is not bound
 !missing-pinvoke! ExtAudioFileCreateNew is not bound
 !missing-pinvoke! ExtAudioFileOpen is not bound
 !missing-pinvoke! GetNameFromSoundBank is not bound
 !missing-pinvoke! MusicDevicePrepareInstrument is not bound
 !missing-pinvoke! MusicDeviceReleaseInstrument is not bound
-!missing-pinvoke! MusicPlayerGetBeatsForHostTime is not bound
-!missing-pinvoke! MusicPlayerGetHostTimeForBeats is not bound
-!missing-pinvoke! MusicPlayerGetPlayRateScalar is not bound
-!missing-pinvoke! MusicPlayerGetSequence is not bound
-!missing-pinvoke! MusicPlayerGetTime is not bound
-!missing-pinvoke! MusicPlayerIsPlaying is not bound
-!missing-pinvoke! MusicPlayerPreroll is not bound
-!missing-pinvoke! MusicPlayerSetPlayRateScalar is not bound
-!missing-pinvoke! MusicPlayerSetSequence is not bound
-!missing-pinvoke! MusicPlayerSetTime is not bound
-!missing-pinvoke! MusicPlayerStart is not bound
-!missing-pinvoke! MusicPlayerStop is not bound
-!missing-pinvoke! MusicSequenceBarBeatTimeToBeats is not bound
-!missing-pinvoke! MusicSequenceBeatsToBarBeatTime is not bound
-!missing-pinvoke! MusicSequenceDisposeTrack is not bound
-!missing-pinvoke! MusicSequenceFileCreate is not bound
-!missing-pinvoke! MusicSequenceFileCreateData is not bound
-!missing-pinvoke! MusicSequenceFileLoad is not bound
-!missing-pinvoke! MusicSequenceFileLoadData is not bound
-!missing-pinvoke! MusicSequenceGetAUGraph is not bound
-!missing-pinvoke! MusicSequenceGetBeatsForSeconds is not bound
-!missing-pinvoke! MusicSequenceGetIndTrack is not bound
-!missing-pinvoke! MusicSequenceGetInfoDictionary is not bound
-!missing-pinvoke! MusicSequenceGetSecondsForBeats is not bound
-!missing-pinvoke! MusicSequenceGetSequenceType is not bound
-!missing-pinvoke! MusicSequenceGetTempoTrack is not bound
-!missing-pinvoke! MusicSequenceGetTrackCount is not bound
-!missing-pinvoke! MusicSequenceGetTrackIndex is not bound
 !missing-pinvoke! MusicSequenceLoadSMFDataWithFlags is not bound
 !missing-pinvoke! MusicSequenceLoadSMFWithFlags is not bound
-!missing-pinvoke! MusicSequenceNewTrack is not bound
-!missing-pinvoke! MusicSequenceReverse is not bound
 !missing-pinvoke! MusicSequenceSaveMIDIFile is not bound
 !missing-pinvoke! MusicSequenceSaveSMFData is not bound
-!missing-pinvoke! MusicSequenceSetAUGraph is not bound
 !missing-pinvoke! MusicSequenceSetMIDIEndpoint is not bound
-!missing-pinvoke! MusicSequenceSetSequenceType is not bound
-!missing-pinvoke! MusicSequenceSetUserCallback is not bound
-!missing-pinvoke! MusicTrackClear is not bound
-!missing-pinvoke! MusicTrackCopyInsert is not bound
-!missing-pinvoke! MusicTrackCut is not bound
 !missing-pinvoke! MusicTrackGetDestMIDIEndpoint is not bound
-!missing-pinvoke! MusicTrackGetProperty is not bound
-!missing-pinvoke! MusicTrackGetSequence is not bound
-!missing-pinvoke! MusicTrackMerge is not bound
-!missing-pinvoke! MusicTrackMoveEvents is not bound
 !missing-pinvoke! MusicTrackNewExtendedControlEvent is not bound
-!missing-pinvoke! MusicTrackNewExtendedNoteEvent is not bound
-!missing-pinvoke! MusicTrackNewExtendedTempoEvent is not bound
-!missing-pinvoke! MusicTrackNewMetaEvent is not bound
-!missing-pinvoke! MusicTrackNewMIDIChannelEvent is not bound
-!missing-pinvoke! MusicTrackNewMIDINoteEvent is not bound
-!missing-pinvoke! MusicTrackNewMIDIRawDataEvent is not bound
-!missing-pinvoke! MusicTrackNewUserEvent is not bound
 !missing-pinvoke! MusicTrackSetDestMIDIEndpoint is not bound
-!missing-pinvoke! MusicTrackSetDestNode is not bound
-!missing-pinvoke! MusicTrackSetProperty is not bound
-!missing-pinvoke! NewMusicPlayer is not bound
-!missing-pinvoke! NewMusicSequence is not bound
 !missing-pinvoke! NewMusicTrackFrom is not bound
 !missing-protocol! AUCocoaUIBase not bound
