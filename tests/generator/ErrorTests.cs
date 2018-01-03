@@ -537,7 +537,8 @@ namespace BI1062Tests {
 
 		[Test]
 		[TestCase (Profile.iOS)]
-		[TestCase (Profile.macClassic)]
+		[TestCase (Profile.macFull)]
+		[TestCase (Profile.macModern)]
 		public void WarnAsError (Profile profile)
 		{
 			const string message = "The member 'SomeMethod' is decorated with [Static] and its container class warnaserrorTests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into warnaserrorTests.FooObject class.";
@@ -587,7 +588,8 @@ namespace BI1062Tests {
 
 		[Test]
 		[TestCase (Profile.iOS)]
-		[TestCase (Profile.macClassic)]
+		[TestCase (Profile.macFull)]
+		[TestCase (Profile.macModern)]
 		public void NoWarn (Profile profile)
 		{
 			const string message = "The member 'SomeMethod' is decorated with [Static] and its container class nowarnTests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into nowarnTests.FooObject class.";
