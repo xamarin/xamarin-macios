@@ -19,6 +19,7 @@ namespace Xamarin.Tests
 		iOS,
 		tvOS,
 		watchOS,
+		macClassic,
 		macModern,
 		macFull,
 		macSystem,
@@ -39,9 +40,9 @@ namespace Xamarin.Tests
 		public string WarnAsError; // Set to empty string to pass /warnaserror, set to non-empty string to pass /warnaserror:<nonemptystring>
 		public string NoWarn; // Set to empty string to pass /nowarn, set to non-empty string to pass /nowarn:<nonemptystring>
 
-		protected override string ToolPath { get { return Configuration.BGenPath; } }
+		protected override string ToolPath { get { return Profile == Profile.macClassic ? Configuration.BGenClassicPath : Configuration.BGenPath; } }
 		protected override string MessagePrefix { get { return "BI"; } }
-		protected override string MessageToolName { get { return "bgen"; } }
+		protected override string MessageToolName { get { return Profile == Profile.macClassic ? "bgen-classic" : "bgen"; } }
 
 		public BGenTool ()
 		{
@@ -79,6 +80,9 @@ namespace Xamarin.Tests
 				break;
 			case Profile.watchOS:
 				targetFramework = "Xamarin.WatchOS,v1.0";
+				break;
+			case Profile.macClassic:
+				targetFramework = "XamMac,v1.0";
 				break;
 			case Profile.macFull:
 				targetFramework = "Xamarin.Mac,Version=v4.5,Profile=Full";
@@ -282,6 +286,8 @@ namespace Xamarin.Tests
 			case Profile.macModern:
 			case Profile.macSystem:
 				return new string [] { "MONOMAC", "XAMCORE_2_0" };
+			case Profile.macClassic:
+				return new string [] { "MONOMAC" };
 			case Profile.iOS:
 				return new string [] { "IOS", "XAMCORE_2_0" };
 			default:
