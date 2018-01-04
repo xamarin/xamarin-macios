@@ -1631,6 +1631,7 @@ MAC_FRAMEWORKS =            \
 	CoreMedia               \
 	CoreMidi                \
 	CoreServices            \
+	CoreSpotlight           \
 	CoreText                \
 	CoreWlan                \
 	EventKit                \
