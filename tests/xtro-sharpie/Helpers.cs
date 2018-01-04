@@ -125,6 +125,11 @@ namespace Extrospection {
 			return self.HasAttribute ("ProtocolAttribute");
 		}
 
+		public static bool RequiresSuper (this MethodDefinition self)
+		{
+			return self.HasAttribute ("RequiresSuperAttribute");
+		}
+
 		static bool HasAttribute (this ICustomAttributeProvider self, string attributeName)
 		{
 			if (!self.HasCustomAttributes)

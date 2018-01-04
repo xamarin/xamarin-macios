@@ -14220,6 +14220,31 @@ namespace XamCore.AppKit {
 		[Mac (10,11)]
 		[Field ("NSSplitViewControllerAutomaticDimension")]
 		nfloat AutomaticDimension { get; }
+
+		// 'new' since it's inlined from NSSplitViewDelegate as this instance needs [RequiresSuper]
+		[RequiresSuper]
+		[Export ("splitView:additionalEffectiveRectOfDividerAtIndex:")]
+		new CGRect GetAdditionalEffectiveRect (NSSplitView splitView, nint dividerIndex);
+
+		// 'new' since it's inlined from NSSplitViewDelegate as this instance needs [RequiresSuper]
+		[RequiresSuper]
+		[Export ("splitView:canCollapseSubview:")]
+		new bool CanCollapse (NSSplitView splitView, NSView subview);
+
+		// 'new' since it's inlined from NSSplitViewDelegate as this instance needs [RequiresSuper]
+		[RequiresSuper]
+		[Export ("splitView:effectiveRect:forDrawnRect:ofDividerAtIndex:")]
+		new CGRect GetEffectiveRect (NSSplitView splitView, CGRect proposedEffectiveRect, CGRect drawnRect, nint dividerIndex);
+
+		// 'new' since it's inlined from NSSplitViewDelegate as this instance needs [RequiresSuper]
+		[RequiresSuper]
+		[Export ("splitView:shouldHideDividerAtIndex:")]
+		new bool ShouldHideDivider (NSSplitView splitView, nint dividerIndex);
+
+		// 'new' since it's inlined from NSSplitViewDelegate as this instance needs [RequiresSuper]
+		[RequiresSuper]
+		[Export ("splitView:shouldCollapseSubview:forDoubleClickOnDividerAtIndex:")]
+		new bool ShouldCollapseForDoubleClick (NSSplitView splitView, NSView subview, nint doubleClickAtDividerIndex);
 	}
 
 	[Mac (10,10)]
@@ -17238,6 +17263,41 @@ namespace XamCore.AppKit {
 
 		[Export ("tabViewItemForViewController:")]
 		NSTabViewItem GetTabViewItem (NSViewController viewController);
+
+		// 'new' since it's inlined from NSTabViewDelegate as this instance needs [RequiresSuper]
+		[RequiresSuper]
+		[Export ("tabView:shouldSelectTabViewItem:"), DelegateName ("NSTabViewPredicate")]
+		new bool ShouldSelectTabViewItem (NSTabView tabView, NSTabViewItem item);
+
+		// 'new' since it's inlined from NSTabViewDelegate as this instance needs [RequiresSuper]
+		[RequiresSuper]
+		[Export ("tabView:willSelectTabViewItem:"), EventArgs ("NSTabViewItem")]
+		new void WillSelect (NSTabView tabView, NSTabViewItem item);
+
+		// 'new' since it's inlined from NSTabViewDelegate as this instance needs [RequiresSuper]
+		[RequiresSuper]
+		[Export ("tabView:didSelectTabViewItem:"), EventArgs ("NSTabViewItem")]
+		new void DidSelect (NSTabView tabView, NSTabViewItem item);
+
+		// 'new' since it's inlined from NSToolbarViewDelegate as this instance needs [RequiresSuper]
+		[RequiresSuper]
+		[Export ("toolbar:itemForItemIdentifier:willBeInsertedIntoToolbar:"), DelegateName ("NSToolbarWillInsert")]
+		new NSToolbarItem WillInsertItem (NSToolbar toolbar, string itemIdentifier, bool willBeInserted);
+
+		// 'new' since it's inlined from NSToolbarViewDelegate as this instance needs [RequiresSuper]
+		[RequiresSuper]
+		[Export ("toolbarDefaultItemIdentifiers:"), DelegateName ("NSToolbarIdentifiers")]
+		new string [] DefaultItemIdentifiers (NSToolbar toolbar);
+
+		// 'new' since it's inlined from NSToolbarViewDelegate as this instance needs [RequiresSuper]
+		[RequiresSuper]
+		[Export ("toolbarAllowedItemIdentifiers:"), DelegateName ("NSToolbarIdentifiers")]
+		new string [] AllowedItemIdentifiers (NSToolbar toolbar);
+
+		// 'new' since it's inlined from NSToolbarViewDelegate as this instance needs [RequiresSuper]
+		[RequiresSuper]
+		[Export ("toolbarSelectableItemIdentifiers:"), DelegateName ("NSToolbarIdentifiers")]
+		new string [] SelectableItemIdentifiers (NSToolbar toolbar);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -20356,12 +20416,15 @@ namespace XamCore.AppKit {
 		[Export ("fullScreenMinHeight")]
 		nfloat FullScreenMinHeight { get; set; }
 
+		[RequiresSuper]
 		[Export ("viewWillAppear")]
 		void ViewWillAppear ();
 
+		[RequiresSuper]
 		[Export ("viewDidAppear")]
 		void ViewDidAppear ();
 
+		[RequiresSuper]
 		[Export ("viewDidDisappear")]
 		void ViewDidDisappear ();
 
@@ -20388,9 +20451,11 @@ namespace XamCore.AppKit {
 		[Export ("maskImage", ArgumentSemantic.Retain)]
 		NSImage MaskImage { get; set; }
 
+		[RequiresSuper]
 		[Export ("viewDidMoveToWindow")]
 		void ViewDidMove ();
 
+		[RequiresSuper]
 		[Export ("viewWillMoveToWindow:")]
 		void ViewWillMove (NSWindow newWindow);
 
@@ -25528,6 +25593,7 @@ namespace XamCore.AppKit {
 		[Export ("highlighted")]
 		bool Highlighted { [Bind ("isHighlighted")] get; set; }
 
+		[RequiresSuper]
 		[Export ("applyLayoutAttributes:")]
 		void ApplyLayoutAttributes (NSScrubberLayoutAttributes layoutAttributes);
 	}
@@ -25602,6 +25668,7 @@ namespace XamCore.AppKit {
 		[Export ("visibleRect")]
 		CGRect VisibleRect { get; }
 
+		[RequiresSuper]
 		[Export ("invalidateLayout")]
 		void InvalidateLayout ();
 
