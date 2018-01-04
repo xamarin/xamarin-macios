@@ -308,7 +308,7 @@ The minimum deployment target is the one specified in the error message; please 
 
 If updating the deployment target is not possible, then please use an older version of Xamarin.iOS.
 
-### <a name="MT0074"/>MT0074: Xamarin.iOS * does not support a minimum deployment target of * (the maximum is *). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.
+### <a name="MT0074"/>MT0074: Xamarin.iOS * does not support a deployment target of * (the maximum is *). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.
 
 Xamarin.iOS does not support setting the minimum deployment target to a higher version than the version this particular version of Xamarin.iOS was built for.
 
