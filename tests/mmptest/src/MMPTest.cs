@@ -802,7 +802,7 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
-		public void BuildUnified_ValidSDKDeploymentTargetShouldFail ()
+		public void BuildUnified_ValidSDKDeploymentTargetShouldWork ()
 		{
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
