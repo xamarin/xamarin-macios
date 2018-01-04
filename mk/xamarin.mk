@@ -1,5 +1,13 @@
 ifdef ENABLE_XAMARIN
+
+ifneq ("$(wildcard $(topdir)/class/lib/$(PROFILE))","")
 -include $(MACCORE_PATH)/mk/versions.mk
+$(warning INCLUDED)
+@echo "   NEEDED_MONO_EXTENSIONS_VERSION=$(NEEDED_MONO_EXTENSIONS_VERSION)"
+@echo "   NEEDED_MONO_EXTENSIONS_BRANCH=$(NEEDED_MONO_EXTENSIONS_BRANCH)"
+@echo "   NEEDED_MONO_EXTENSIONS_REMOTE=$(NEEDED_MONO_EXTENSIONS_REMOTE)"
+endif
+
 NEEDED_MACCORE_VERSION := 5a97b45faf02315eb266d3670fd1492e34228f0f
 NEEDED_MACCORE_BRANCH := 2017-12
 
@@ -95,5 +103,6 @@ $(MACCORE_PATH):
 	$(Q) $(MAKE) reset-maccore
 
 $(eval $(call CheckVersionTemplate,maccore,MACCORE))
+-include $(MACCORE_PATH)/mk/versions.mk
 $(MACCORE_PATH)/mk/versions.mk: | $(MACCORE_PATH)
 endif
