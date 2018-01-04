@@ -37,15 +37,13 @@ using XamCore.Foundation;
 using XamCore.CoreGraphics;
 #if !WATCH
 using XamCore.CoreMedia;
+using XamCore.CoreSpotlight;
 using XamCore.CloudKit;
 #endif
 using XamCore.SceneKit;
 using XamCore.Security;
-#if IOS
-using XamCore.CoreSpotlight;
-#if XAMCORE_2_0
+#if IOS && XAMCORE_2_0
 using XamCore.FileProvider;
-#endif
 #endif
 
 #if MONOMAC
@@ -5060,8 +5058,9 @@ namespace XamCore.Foundation
 		[Export ("eligibleForPublicIndexing")]
 		bool EligibleForPublicIndexing { [Bind ("isEligibleForPublicIndexing")] get; set; }
 		
-#if IOS
+#if IOS || MONOMAC
 		[iOS (9,0)]
+		[Mac (10,13, onlyOn64: true)]
 		[NullAllowed]
 		[Export ("contentAttributeSet", ArgumentSemantic.Copy)] // From CSSearchableItemAttributeSet.h
 		CSSearchableItemAttributeSet ContentAttributeSet { get; set; }
