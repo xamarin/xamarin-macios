@@ -3362,22 +3362,15 @@ namespace XamCore.SceneKit {
 		bool RendersContinuously { get; set; }
 	}
 
-#if WATCH || XAMCORE_4_0
-	[Watch (4,0)]
-	[Mac (10,9), iOS (8,0)]
-	delegate void SCNAnimationEventHandler (ISCNAnimationProtocol animation, NSObject animatedObject, bool playingBackward);
-#else
-	[Mac (10,9), iOS (8,0)]
-	delegate void SCNAnimationEventHandler (CAAnimation animation, NSObject animatedObject, bool playingBackward);
-#endif
-
 	[Watch (4,0)]
 	[Mac (10,9), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SCNAnimationEvent {
+
+		[Internal]
 		[Static, Export ("animationEventWithKeyTime:block:")]
-		SCNAnimationEvent Create (nfloat keyTime, SCNAnimationEventHandler eventHandler);
+		SCNAnimationEvent Create (nfloat keyTime, Action<IntPtr, NSObject, bool> handler);
 	}
 
 	[Watch (3,0)]
