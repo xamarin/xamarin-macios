@@ -44,6 +44,12 @@ using XamCore.CoreAnimation;
 using XamCore.CoreImage;
 #endif
 
+#if WATCH || XAMCORE_4_0
+using AnimationType = global::XamCore.SceneKit.ISCNAnimationProtocol;
+#else
+using AnimationType = global::XamCore.CoreAnimation.CAAnimation;
+#endif
+
 using XamCore.CoreGraphics;
 using XamCore.SpriteKit;
 // MonoMac (classic) does not support those 64bits only frameworks
@@ -3362,15 +3368,25 @@ namespace XamCore.SceneKit {
 		bool RendersContinuously { get; set; }
 	}
 
+#if XAMCORE_4_0
+	[Mac (10,9), iOS (8,0), Watch (4,0)]
+	delegate void SCNAnimationEventHandler (AnimationType animation, NSObject animatedObject, bool playingBackward);
+#endif
+
 	[Watch (4,0)]
 	[Mac (10,9), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SCNAnimationEvent {
 
+#if XAMCORE_4_0
+		[Static, Export ("animationEventWithKeyTime:block:")]
+		SCNAnimationEvent Create (nfloat keyTime, SCNAnimationEventHandler handler);
+#else
 		[Internal]
 		[Static, Export ("animationEventWithKeyTime:block:")]
 		SCNAnimationEvent Create (nfloat keyTime, Action<IntPtr, NSObject, bool> handler);
+#endif
 	}
 
 	[Watch (3,0)]

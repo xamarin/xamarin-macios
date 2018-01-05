@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
-#if !WATCH
-using XamCore.CoreAnimation;
+#if WATCH
+using AnimationType = global::XamCore.SceneKit.ISCNAnimationProtocol;
+#else
+using AnimationType = global::XamCore.CoreAnimation.CAAnimation;
 #endif
 
 namespace XamCore.SceneKit {
@@ -77,27 +79,21 @@ namespace XamCore.SceneKit {
 #endif
 #endif
 
-#if WATCH || XAMCORE_4_0
-	[Watch (4,0)]
-	[Mac (10,9), iOS (8,0)]
-	public delegate void SCNAnimationEventHandler (ISCNAnimationProtocol animation, NSObject animatedObject, bool playingBackward);
-#else
-	[Mac (10,9), iOS (8,0)]
-	public delegate void SCNAnimationEventHandler (CAAnimation animation, NSObject animatedObject, bool playingBackward);
-#endif
 
-	public partial class SCNAnimationEvent : NSObject {
+#if !XAMCORE_4_0
+	[Mac (10,9), iOS (8,0), Watch (4,0)]
+	public delegate void SCNAnimationEventHandler (AnimationType animation, NSObject animatedObject, bool playingBackward);
+
+	public partial class SCNAnimationEvent : NSObject
+	{
 		public static SCNAnimationEvent Create (nfloat keyTime, SCNAnimationEventHandler eventHandler)
 		{
 			var handler = new Action<IntPtr, NSObject, bool> ((animationPtr, animatedObject, playingBackward) => {
-#if WATCH || XAMCORE_4_0
-				var animation = Runtime.GetINativeObject<ISCNAnimationProtocol> (animationPtr, true);
-#else
-				var animation = Runtime.GetINativeObject<CAAnimation> (animationPtr, true);
-#endif
+				var animation = Runtime.GetINativeObject<AnimationType> (animationPtr, true);
 				eventHandler (animation, animatedObject, playingBackward);
 			});
 			return Create (keyTime, handler);
 		}
 	}
+#endif
 }
