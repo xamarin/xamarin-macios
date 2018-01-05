@@ -3381,7 +3381,7 @@ namespace XamCore.SceneKit {
 
 #if XAMCORE_4_0
 		[Static, Export ("animationEventWithKeyTime:block:")]
-		SCNAnimationEvent Create (nfloat keyTime, SCNAnimationEventHandler handler);
+		SCNAnimationEvent Create (nfloat keyTime, SCNAnimationEventHandler eventHandler);
 #else
 		[Internal]
 		[Static, Export ("animationEventWithKeyTime:block:")]
