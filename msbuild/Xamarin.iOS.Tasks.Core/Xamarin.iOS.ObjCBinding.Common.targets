@@ -15,9 +15,9 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 -->
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.CollectBundleResources" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.CollectBundleResources" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.CreateEmbeddedResources" AssemblyFile="Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Microsoft.Build.Tasks.RemoveDir" AssemblyFile="Xamarin.MacDev.Tasks.dll"/>
+	<UsingTask TaskName="Microsoft.Build.Tasks.RemoveDir" AssemblyFile="Xamarin.iOS.Tasks.dll"/>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.ObjCBinding.Common.props" 
 			Condition="'$(_XamarinCommonPropsHasBeenImported)' != 'true'" />
