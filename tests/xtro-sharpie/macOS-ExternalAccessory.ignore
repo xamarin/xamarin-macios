@@ -1,0 +1,14 @@
+## the enum is declared before the EAWiFiUnconfiguredAccessory type, which is `NS_CLASS_AVAILABLE(NA, 8_0)`
+
+!missing-enum! EAWiFiUnconfiguredAccessoryProperties not bound
+
+## the enums are declared before the EAWiFiUnconfiguredAccessoryBrowser type, which is `NS_CLASS_AVAILABLE(NA, 8_0)`
+
+!missing-enum! EAWiFiUnconfiguredAccessoryBrowserState not bound
+!missing-enum! EAWiFiUnconfiguredAccessoryConfigurationStatus not bound
+
+## the delegate is declared before the EAWiFiUnconfiguredAccessoryBrowser type, which is `NS_CLASS_AVAILABLE(NA, 8_0)`
+!missing-protocol! EAWiFiUnconfiguredAccessoryBrowserDelegate not bound
+
+## is says __MAC_NA but its already bound and intro says it's present (mistake?)
+!unknown-field! EAAccessorySelectedKey bound
