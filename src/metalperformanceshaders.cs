@@ -499,20 +499,9 @@ namespace XamCore.MetalPerformanceShaders {
 	// MPSImageResampling.h
 
 	[iOS (9,0)][Mac (10, 13, onlyOn64: true)]
-	[BaseType (typeof (MPSUnaryImageKernel))]
+	[BaseType (typeof (MPSImageScale))]
 	[DisableDefaultCtor]
 	interface MPSImageLanczosScale {
-		// scaleTransform property should be like:
-		// unsafe MPSScaleTransform* ScaleTransform { get; set; }
-		// which is both ugly and not supported by the generator
-		[Export ("scaleTransform")]
-		[Internal]
-		IntPtr _GetScaleTransform ();
-
-		[Export ("setScaleTransform:")]
-		[Internal]
-		void _SetScaleTransform (IntPtr value);
-
 		// inlining .ctor from base class
 
 		[Export ("initWithDevice:")]
@@ -1979,8 +1968,16 @@ namespace XamCore.MetalPerformanceShaders {
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device);
 
-		[NullAllowed, Export ("scaleTransform", ArgumentSemantic.Assign)]
-		MPSScaleTransform ScaleTransform { get; set; }
+		// scaleTransform property should be like:
+		// unsafe MPSScaleTransform* ScaleTransform { get; set; }
+		// which is both ugly and not supported by the generator
+		[Export ("scaleTransform")]
+		[Internal]
+		IntPtr _GetScaleTransform ();
+
+		[Export ("setScaleTransform:")]
+		[Internal]
+		void _SetScaleTransform (IntPtr value);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
