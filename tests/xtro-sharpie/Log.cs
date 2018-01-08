@@ -36,9 +36,14 @@ namespace Extrospection {
 				// 3. platform.framework.pending - short term
 				Remove (list, $"{Helpers.Platform}-{framework}.todo");
 
-				list.Sort ();
 				var fname = $"{Helpers.Platform}-{framework}.unclassified";
-				File.WriteAllLines (fname, list);
+				if (list.Count == 0) {
+					if (File.Exists (fname))
+						File.Delete (fname);
+				} else {
+					list.Sort ();
+					File.WriteAllLines (fname, list);
+				}
 			}
 		}
 
