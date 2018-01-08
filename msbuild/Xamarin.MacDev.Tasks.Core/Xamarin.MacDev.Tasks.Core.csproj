@@ -107,13 +107,13 @@
     <Compile Include="Tasks\ZipTaskBase.cs" />
     <Compile Include="AssetPackUtils.cs" />
     <Compile Include="BundleResource.cs" />
+    <Compile Include="CommandLineArgumentBuilder.cs" />
     <Compile Include="DataConverter.cs" />
     <Compile Include="LinkTarget.cs" />
     <Compile Include="LoggingExtensions.cs" />
     <Compile Include="NativeReferenceKind.cs" />
     <Compile Include="PathUtils.cs" />
     <Compile Include="PlatformFramework.cs" />
-    <Compile Include="ProcessArgumentBuilder.cs" />
     <Compile Include="ProcessUtils.cs" />
     <Compile Include="StringParserService.cs" />
   </ItemGroup>
