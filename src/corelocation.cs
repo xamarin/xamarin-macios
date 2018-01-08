@@ -11,6 +11,7 @@
 //
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
+using XamCore.CloudKit;
 using XamCore.CoreGraphics;
 using XamCore.CoreLocation;
 #if !MONOMAC
@@ -70,7 +71,7 @@ namespace XamCore.CoreLocation {
 	}
 	
 	[BaseType (typeof (NSObject))]
-	partial interface CLLocation : NSSecureCoding, NSCopying {
+	partial interface CLLocation : NSSecureCoding, NSCopying, CKRecordValue {
 		[Export ("coordinate")]
 		CLLocationCoordinate2D Coordinate { get;  }
 	

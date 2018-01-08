@@ -884,3 +884,6 @@
 !unknown-native-enum! NSUbiquitousKeyValueStoreChangeReason bound
 !unknown-protocol! NSObject bound
 !unknown-type! NSObject bound
+
+## Used 'INSFastEnumeration' placeholer (just so we can start flagging things)
+!missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration (defined in 'NSGenericFastEnumeraiton' category)

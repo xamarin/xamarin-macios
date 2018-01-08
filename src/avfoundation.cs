@@ -4205,11 +4205,7 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (AVAsset), Name="AVURLAsset")]
 	// 'init' returns NIL
 	[DisableDefaultCtor]
-	interface AVUrlAsset {
-
-		[TV (10, 2), Mac (10, 12, 4), iOS (10, 3)]
-		[Export ("mayRequireContentKeysForMediaDataProcessing")]
-		bool MayRequireContentKeysForMediaDataProcessing { get; }
+	interface AVUrlAsset : AVContentKeyRecipient {
 
 		[Export ("URL", ArgumentSemantic.Copy)]
 		NSUrl Url { get;  }
@@ -11498,7 +11494,7 @@ namespace XamCore.AVFoundation {
 	[NoWatch]
 	[TV (10,2), iOS (8,0), Mac (10,10)]
 	[BaseType (typeof (CALayer))]
-	interface AVSampleBufferDisplayLayer {
+	interface AVSampleBufferDisplayLayer : AVQueuedSampleBufferRendering {
 
 		[NullAllowed]
 		[Export ("controlTimebase", ArgumentSemantic.Retain)]
@@ -11513,24 +11509,21 @@ namespace XamCore.AVFoundation {
 		[Export ("error"), NullAllowed]
 		NSError Error { get; }
 
-		[Export ("readyForMoreMediaData")]
-		bool ReadyForMoreMediaData { [Bind ("isReadyForMoreMediaData")] get; }
-
-		[Export ("enqueueSampleBuffer:")]
+#if !XAMCORE_4_0
+		[Wrap ("Enqueue (sampleBuffer)", IsVirtual = true)]
+		[Obsolete ("Use the 'Enqueue' method instead.")]
 		void EnqueueSampleBuffer (CMSampleBuffer sampleBuffer);
-
-		[Export ("flush")]
-		void Flush ();
+#endif
 
 		[Export ("flushAndRemoveImage")]
 		void FlushAndRemoveImage ();
 
-		[Export ("requestMediaDataWhenReadyOnQueue:usingBlock:")]
+#if !XAMCORE_4_0
+		[Wrap ("RequestMediaData (queue, enqueuer)", IsVirtual = true)]
+		[Obsolete ("Use the 'RequestMediaData' method instead.")]
 		void RequestMediaDataWhenReadyOnQueue (DispatchQueue queue, Action enqueuer);
+#endif
 
-		[Export ("stopRequestingMediaData")]
-		void StopRequestingMediaData ();
-		
 		[iOS (8, 0), Mac (10,10)]
 		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotification")]
 		[Notification]

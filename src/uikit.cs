@@ -13596,7 +13596,7 @@ namespace XamCore.UIKit {
 	interface IUIContentContainer {}
 	
 	[BaseType (typeof (UIResponder))]
-	interface UIViewController : NSCoding, UIAppearanceContainer, UIContentContainer, UITraitEnvironment, UIFocusEnvironment {
+	interface UIViewController : NSCoding, UIAppearanceContainer, UIContentContainer, UITraitEnvironment, UIFocusEnvironment, UIStateRestoring, NSExtensionRequestHandling {
 		[DesignatedInitializer]
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
@@ -13946,14 +13946,6 @@ namespace XamCore.UIKit {
 		Class RestorationClass { get; set; }
 
 		[iOS (6,0)]
-		[Export ("encodeRestorableStateWithCoder:")]
-		void EncodeRestorableState (NSCoder coder);
-
-		[iOS (6,0)]
-		[Export ("decodeRestorableStateWithCoder:")]
-		void DecodeRestorableState (NSCoder coder);
-
-		[iOS (6,0)]
 		[Export ("updateViewConstraints")]
 		void UpdateViewConstraints ();
 
@@ -13994,10 +13986,6 @@ namespace XamCore.UIKit {
 		[iOS (7,0)]
 		[Export ("setNeedsStatusBarAppearanceUpdate")]
 		void SetNeedsStatusBarAppearanceUpdate ();
-
-		[iOS (7,0)]
-		[Export ("applicationFinishedRestoringState")]
-		void ApplicationFinishedRestoringState ();
 
 		[iOS (7,0)]
 		[Export ("transitioningDelegate", ArgumentSemantic.Assign), NullAllowed]
