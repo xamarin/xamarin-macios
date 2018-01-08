@@ -40,27 +40,29 @@ namespace Xamarin.iOS.Tasks
 			return process.ExitCode == 0;
 		}
 
-		void AssertProperlyCodesigned ()
+		void AssertProperlyCodesigned (bool expected)
 		{
 			foreach (var dylib in Directory.EnumerateFiles (AppBundlePath, "*.dylib", SearchOption.AllDirectories))
-				Assert.IsTrue (IsCodesigned (dylib), "{0} is not properly codesigned.", dylib);
+				Assert.AreEqual (expected, IsCodesigned (dylib), "{0} is not properly codesigned.", dylib);
 
 			foreach (var appex in Directory.EnumerateDirectories (AppBundlePath, "*.appex", SearchOption.AllDirectories))
-				Assert.IsTrue (IsCodesigned (appex), "{0} is not properly codesigned.", appex);
+				Assert.AreEqual (expected, IsCodesigned (appex), "{0} is not properly codesigned.", appex);
 
 			var watchDir = Path.Combine (AppBundlePath, "Watch");
 			if (Directory.Exists (watchDir)) {
 				foreach (var watchApp in Directory.EnumerateDirectories (watchDir, "*.app", SearchOption.TopDirectoryOnly))
-					Assert.IsTrue (IsCodesigned (watchApp), "{0} is not properly codesigned.", watchApp);
+					Assert.AreEqual (expected, IsCodesigned (watchApp), "{0} is not properly codesigned.", watchApp);
 			}
 		}
 
 		[Test]
 		public void RebuildNoChanges ()
 		{
+			bool expectedCodesignResults = Platform != "iPhoneSimulator";
+
 			BuildProject ("MyTabbedApplication", Platform, config, clean: true);
 
-			AssertProperlyCodesigned ();
+			AssertProperlyCodesigned (expectedCodesignResults);
 
 			var dsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyTabbedApplication.app.dSYM"));
 			var appexDsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyActionExtension.appex.dSYM"));
@@ -78,7 +80,7 @@ namespace Xamarin.iOS.Tasks
 			// Rebuild w/ no changes
 			BuildProject ("MyTabbedApplication", Platform, config, clean: false);
 
-			AssertProperlyCodesigned ();
+			AssertProperlyCodesigned (expectedCodesignResults);
 
 			var newTimestamps = Directory.EnumerateFiles (AppBundlePath, "*.*", SearchOption.TopDirectoryOnly).ToDictionary (file => file, file => GetLastModified (file));
 
@@ -121,10 +123,11 @@ namespace Xamarin.iOS.Tasks
 			var appexProjectDir = Path.Combine (testsDir, "MyActionExtension");
 			var viewController = Path.Combine (appexProjectDir, "ActionViewController.cs");
 			var mainExecutable = Path.Combine (AppBundlePath, "MyTabbedApplication");
+			bool expectedCodesignResults = Platform != "iPhoneSimulator";
 			var timestamp = File.GetLastWriteTimeUtc (mainExecutable);
 			var text = File.ReadAllText (viewController);
 
-			AssertProperlyCodesigned ();
+			AssertProperlyCodesigned (expectedCodesignResults);
 
 			Thread.Sleep (1000);
 
@@ -137,9 +140,9 @@ namespace Xamarin.iOS.Tasks
 				var newTimestamp = File.GetLastWriteTimeUtc (mainExecutable);
 
 				// make sure that the main app bundle was codesigned due to the changes in the appex
-				Assert.IsTrue (newTimestamp > timestamp, "The main app bundle does not seem to have been re-codesigned");
+				Assert.AreEqual (expectedCodesignResults, newTimestamp > timestamp, "The main app bundle does not seem to have been re-codesigned");
 
-				AssertProperlyCodesigned ();
+				AssertProperlyCodesigned (expectedCodesignResults);
 			} finally {
 				// restore the original ActionViewController.cs code...
 				text = text.Replace ("bool imageFound = true;", "bool imageFound = false;");
@@ -150,9 +153,11 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void RebuildWatchAppNoChanges ()
 		{
+			bool expectedCodesignResults = Platform != "iPhoneSimulator";
+
 			BuildProject ("MyWatch2Container", Platform, config, clean: true);
 
-			AssertProperlyCodesigned ();
+			AssertProperlyCodesigned (expectedCodesignResults);
 
 			Thread.Sleep (1000);
 
@@ -160,7 +165,7 @@ namespace Xamarin.iOS.Tasks
 			BuildProject ("MyWatch2Container", Platform, config, clean: false);
 
 			// make sure everything is still codesigned properly
-			AssertProperlyCodesigned ();
+			AssertProperlyCodesigned (expectedCodesignResults);
 		}
 
 		[Test]
@@ -171,10 +176,11 @@ namespace Xamarin.iOS.Tasks
 			var appexProjectDir = Path.Combine (testsDir, "MyWatchKit2Extension");
 			var viewController = Path.Combine (appexProjectDir, "InterfaceController.cs");
 			var mainExecutable = Path.Combine (AppBundlePath, "MyWatch2Container");
+			bool expectedCodesignResults = Platform != "iPhoneSimulator";
 			var timestamp = File.GetLastWriteTimeUtc (mainExecutable);
 			var text = File.ReadAllText (viewController);
 
-			AssertProperlyCodesigned ();
+			AssertProperlyCodesigned (expectedCodesignResults);
 
 			Thread.Sleep (1000);
 
@@ -185,7 +191,7 @@ namespace Xamarin.iOS.Tasks
 			try {
 				BuildProject ("MyWatch2Container", Platform, config, clean: false);
 
-				AssertProperlyCodesigned ();
+				AssertProperlyCodesigned (expectedCodesignResults);
 
 				var newTimestamp = File.GetLastWriteTimeUtc (mainExecutable);
 
