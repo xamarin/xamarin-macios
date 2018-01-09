@@ -24,6 +24,7 @@ namespace XamCore.MetalPerformanceShaders {
 					IntPtr ptr = Marshal.AllocHGlobal (size_of_scale_transform);
 					try {
 						Marshal.StructureToPtr<MPSScaleTransform> (value.Value, ptr, false);
+						_SetScaleTransform (ptr);
 					}
 					finally {
 						Marshal.FreeHGlobal (ptr);
