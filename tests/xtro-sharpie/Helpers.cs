@@ -30,6 +30,7 @@ namespace Extrospection {
 			{ "NSAttributedStringEnumerationOptions", "NSAttributedStringEnumeration" },
 			{ "NSFileProviderErrorCode", "NSFileProviderError" },
 			{ "NSUbiquitousKeyValueStoreChangeReason", "NSUbiquitousKeyValueStore" },
+			{ "PHLivePhotoEditingErrorCode", "PHLivePhotoEditingError" },
 			{ "RPRecordingErrorCode", "RPRecordingError" },
 			{ "SecTrustResultType", "SecTrustResult" },
 			{ "SKErrorCode", "SKError" },
