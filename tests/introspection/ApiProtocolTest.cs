@@ -184,9 +184,6 @@ namespace Introspection {
 					return true;
 				}
 				break;
-			// Undocumented conformance (members were inlinded in 'UIViewController' before so all subtypes should conform)
-			case "UIStateRestoring":
-				return true;
 			}
 			return false;
 		}
