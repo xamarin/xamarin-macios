@@ -611,7 +611,7 @@ namespace XamCore.SceneKit {
 		[NoWatch]
 		[Mac (10,8), iOS (8,0)]
 		[Export ("addAnimation:forKey:")]
-		new void AddAnimation (CAAnimation animation, NSString key);
+		new void AddAnimation (CAAnimation animation, [NullAllowed] NSString key);
 #endif
 	}
 
@@ -941,7 +941,7 @@ namespace XamCore.SceneKit {
 		[NoWatch]
 		[Mac (10,8), iOS (8,0)]
 		[Export ("addAnimation:forKey:")]
-		new void AddAnimation (CAAnimation animation, NSString key);
+		new void AddAnimation (CAAnimation animation, [NullAllowed] NSString key);
 #endif
 	}
 
@@ -1371,7 +1371,7 @@ namespace XamCore.SceneKit {
 		[NoWatch]
 		[Mac (10,8), iOS (8,0)]
 		[Export ("addAnimation:forKey:")]
-		new void AddAnimation (CAAnimation animation, NSString key);
+		new void AddAnimation (CAAnimation animation, [NullAllowed] NSString key);
 #endif
 	}
 
@@ -1570,7 +1570,7 @@ namespace XamCore.SceneKit {
 		[NoWatch]
 		[Mac (10,8), iOS (8,0)]
 		[Export ("addAnimation:forKey:")]
-		new void AddAnimation (CAAnimation animation, NSString key);
+		new void AddAnimation (CAAnimation animation, [NullAllowed] NSString key);
 #endif
 	}
 
@@ -1663,7 +1663,7 @@ namespace XamCore.SceneKit {
 		[NoWatch]
 		[Mac (10,8), iOS (8,0)]
 		[Export ("addAnimation:forKey:")]
-		new void AddAnimation (CAAnimation animation, NSString key);
+		new void AddAnimation (CAAnimation animation, [NullAllowed] NSString key);
 #endif
 	}
 
@@ -2036,7 +2036,7 @@ namespace XamCore.SceneKit {
 		[NoWatch]
 		[Mac (10,8), iOS (8,0)]
 		[Export ("addAnimation:forKey:")]
-		new void AddAnimation (CAAnimation animation, NSString key);
+		new void AddAnimation (CAAnimation animation, [NullAllowed] NSString key);
 #endif
 
 		// From SCNNode (SIMD) Category
@@ -3548,7 +3548,7 @@ namespace XamCore.SceneKit {
 		[NoWatch]
 		[Mac (10,8), iOS (8,0)]
 		[Export ("addAnimation:forKey:")]
-		new void AddAnimation (CAAnimation animation, NSString key);
+		new void AddAnimation (CAAnimation animation, [NullAllowed] NSString key);
 #endif
 	}
 
@@ -3620,7 +3620,7 @@ namespace XamCore.SceneKit {
 		[NoWatch]
 		[Mac (10,8), iOS (8,0)]
 		[Export ("addAnimation:forKey:")]
-		new void AddAnimation (CAAnimation animation, NSString key);
+		new void AddAnimation (CAAnimation animation, [NullAllowed] NSString key);
 #endif
 	}
 
@@ -4000,7 +4000,7 @@ namespace XamCore.SceneKit {
 		[NoWatch]
 		[Mac (10,8), iOS (8,0)]
 		[Export ("addAnimation:forKey:")]
-		new void AddAnimation (CAAnimation animation, NSString key);
+		new void AddAnimation (CAAnimation animation, [NullAllowed] NSString key);
 #endif
 	}
 
@@ -4839,7 +4839,7 @@ namespace XamCore.SceneKit {
 		[NoWatch]
 		[Mac (10,8), iOS (8,0)]
 		[Export ("addAnimation:forKey:")]
-		new void AddAnimation (CAAnimation animation, NSString key);
+		new void AddAnimation (CAAnimation animation, [NullAllowed] NSString key);
 #endif
 	}
 
@@ -5134,7 +5134,7 @@ namespace XamCore.SceneKit {
 		[NoWatch]
 		[Mac (10,8), iOS (8,0)]
 		[Export ("addAnimation:forKey:")]
-		new void AddAnimation (CAAnimation animation, NSString key);
+		new void AddAnimation (CAAnimation animation, [NullAllowed] NSString key);
 #endif
 	}
 
