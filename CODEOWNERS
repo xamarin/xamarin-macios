@@ -182,7 +182,6 @@
 /tools/linker @spouliot
 /tools/mmp @chamons
 /tools/mtouch @spouliot @rolfbjarne
-/tools/pmcs @abock
 
 configure @rolfbjarne
 Make.* @rolfbjarne

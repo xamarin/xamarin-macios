@@ -33,7 +33,6 @@ Q_BUILD=$(if $(V),,@echo "BUILD    $(@F)";)
 
 Q_PROF_MCS =  $(if $(V),,@echo "MCS      [$(1)] $(@F)";)
 Q_PROF_CSC =  $(if $(V),,@echo "CSC      [$(1)] $(@F)";)
-Q_PROF_PMCS = $(if $(V),,@echo "PMCS     [$(1)] $(@F)";)
 Q_PROF_GEN  = $(if $(V),,@echo "GEN      [$(1)] $(@F)";)
 Q_PROF_SN   = $(if $(V),,@echo "SN       [$(1)] $(@F)";)
 Q_1 = $(if $(V),,@echo "$(1) $(@F)";)

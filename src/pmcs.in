@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-selfdir="$(dirname "$0")"
-profile="$PWD/pmcs-profiles/$PMCS_PROFILE"
-
-/Library/Frameworks/Mono.framework/Commands/mono --debug "@PMCS@" \
-	-profile:"$profile" \
-	-compiler:@MCS@ \
-	"$@"
