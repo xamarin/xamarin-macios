@@ -284,11 +284,11 @@ See the [equivalent mtouch warning](mtouch-errors.md#MT5218).
  MM7xxx msbuild errors
   -->
 
-## <a name="MM7068"/>MT7068: Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile.
+## <a name="MM7068"/>MM7068: Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile.
 
 The $(TeamIdentifierPrefix) variable used in Entitlements.plist is expanded from the value defined in the Provisioning Profile, so without a Provisioning Profile set in the Project Options, the variable cannot be expanded.
 
-## <a name="MM7068"/>MT7069: Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile.
+## <a name="MM7068"/>MM7069: Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile.
 
 The $(AppIdentifierPrefix) variable used in Entitlements.plist is expanded from the value defined in the Provisioning Profile, so without a Provisioning Profile set in the Project Options, the variable cannot be expanded.
 
