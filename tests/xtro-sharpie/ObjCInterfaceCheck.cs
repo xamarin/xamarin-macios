@@ -71,9 +71,6 @@ namespace Extrospection {
 			if (categoryName == null)
 				return;
 
-			if (categoryName.EndsWith ("Internal", StringComparison.Ordinal))
-				return;
-
 			// check availability macros to see if the API is available on the OS and not deprecated
 			if (!decl.IsAvailable ())
 				return;
@@ -104,8 +101,6 @@ namespace Extrospection {
 				return;
 
 			var name = decl.Name;
-			if (name.EndsWith ("Internal", StringComparison.Ordinal))
-				return;
 
 			// check availability macros to see if the API is available on the OS and not deprecated
 			if (!decl.IsAvailable ())
