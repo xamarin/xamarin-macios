@@ -10,28 +10,28 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-using XamCore.AudioUnit;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreAnimation;
-using XamCore.CoreGraphics;
+using AudioUnit;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
+using CoreAnimation;
+using CoreGraphics;
 #if IOS || MONOMAC
-using XamCore.CoreAudioKit;
+using CoreAudioKit;
 #endif
-using XamCore.AudioToolbox;
-using XamCore.AVFoundation;
+using AudioToolbox;
+using AVFoundation;
 
 #if MONOMAC
-using XamCore.AppKit;
-using AUViewControllerBase = XamCore.AppKit.NSViewController;
+using AppKit;
+using AUViewControllerBase = AppKit.NSViewController;
 #else
-using XamCore.UIKit;
-using XamCore.MediaToolbox;
-using AUViewControllerBase = XamCore.UIKit.UIViewController;
+using UIKit;
+using MediaToolbox;
+using AUViewControllerBase = UIKit.UIViewController;
 #endif
 
-namespace XamCore.AudioUnit {
+namespace AudioUnit {
 #if XAMCORE_2_0 || !MONOMAC
 	delegate AudioUnitStatus AUInternalRenderBlock (ref AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timestamp, uint frameCount, nint outputBusNumber, AudioBuffers outputData, AURenderEventEnumerator realtimeEventListHead, [BlockCallback][NullAllowed]AURenderPullInputBlock pullInputBlock);
 	delegate AudioUnitStatus AURenderBlock (ref AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timestamp, uint frameCount, nint outputBusNumber, AudioBuffers outputData, [BlockCallback][NullAllowed] AURenderPullInputBlock pullInputBlock);

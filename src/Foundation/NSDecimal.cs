@@ -30,9 +30,9 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct NSDecimal
 #if !COREBUILD 

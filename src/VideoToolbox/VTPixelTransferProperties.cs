@@ -9,15 +9,15 @@ using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreMedia;
-using XamCore.CoreVideo;
-using XamCore.AVFoundation;
+using CoreFoundation;
+using ObjCRuntime;
+using Foundation;
+using CoreMedia;
+using CoreVideo;
+using AVFoundation;
 
 // VTPixelTransferProperties are available in iOS 9 radar://22614931 https://trello.com/c/bTl6hRu9
-namespace XamCore.VideoToolbox {
+namespace VideoToolbox {
 	public partial class VTPixelTransferProperties : DictionaryContainer {
 
 		public VTScalingMode ScalingMode { 

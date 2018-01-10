@@ -9,10 +9,10 @@
 
 #if !WATCH
 
-using XamCore.ObjCRuntime;
-using XamCore.CoreVideo;
+using ObjCRuntime;
+using CoreVideo;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 	public partial class AVPlayerLayer {
 		[iOS (9,0), Mac (10,11)]
 		public CVPixelBufferAttributes PixelBufferAttributes { 

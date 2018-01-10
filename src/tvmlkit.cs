@@ -1,12 +1,12 @@
 // Copyright 2015 Xamarin Inc.
 
 using System;
-using XamCore.Foundation;
-using XamCore.JavaScriptCore;
-using XamCore.ObjCRuntime;
-using XamCore.UIKit;
+using Foundation;
+using JavaScriptCore;
+using ObjCRuntime;
+using UIKit;
 
-namespace XamCore.TVMLKit {
+namespace TVMLKit {
 
 	[TV (9,0)]
 	[Native]

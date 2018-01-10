@@ -6,10 +6,10 @@
 // Author:
 //  Miguel de Icaza
 //
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.NewsstandKit {
+namespace NewsstandKit {
 
 	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]

@@ -9,13 +9,13 @@ using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreMedia;
-using XamCore.CoreVideo;
+using CoreFoundation;
+using ObjCRuntime;
+using Foundation;
+using CoreMedia;
+using CoreVideo;
 
-namespace XamCore.VideoToolbox {
+namespace VideoToolbox {
 	public partial class VTDecompressionProperties {
 		public CVPixelBufferPool PixelBufferPool {
 			get {

@@ -28,10 +28,10 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AudioToolbox
+namespace AudioToolbox
 {
 	public enum AudioConverterError // Impliclty cast to OSStatus in AudioConverter.h
 	{

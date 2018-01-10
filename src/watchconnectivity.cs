@@ -9,10 +9,10 @@
 
 using System;
 using System.ComponentModel;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.WatchConnectivity {
+namespace WatchConnectivity {
 
 	delegate void WCSessionReplyHandler (NSDictionary<NSString, NSObject> replyMessage);
 	delegate void WCSessionReplyDataHandler (NSData replyMessage);

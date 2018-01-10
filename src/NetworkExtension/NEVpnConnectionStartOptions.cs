@@ -1,8 +1,8 @@
 #if XAMCORE_2_0 || !MONOMAC
 
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.NetworkExtension {
+namespace NetworkExtension {
 
 	public class NEVpnConnectionStartOptions : DictionaryContainer {
 

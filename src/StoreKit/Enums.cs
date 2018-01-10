@@ -1,6 +1,6 @@
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.StoreKit {
+namespace StoreKit {
 
 	// typedef NSInteger SKPaymentTransactionState;
 	// StoreKit.framework/Headers/SKPaymentTransaction.h

@@ -9,7 +9,7 @@
 
 using System;
 
-namespace XamCore.SystemConfiguration {
+namespace SystemConfiguration {
 
 	public class SystemConfigurationException : Exception
 	{

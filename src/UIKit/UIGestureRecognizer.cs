@@ -12,11 +12,11 @@
 
 using System;
 using System.Collections;
-using XamCore.Foundation; 
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
+using Foundation; 
+using ObjCRuntime;
+using CoreGraphics;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UIGestureRecognizer {
 		object recognizers;
 		const string tsel = "target";

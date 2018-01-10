@@ -1,9 +1,9 @@
-﻿using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using Foundation;
 using System;
 
-namespace XamCore.HealthKit
+namespace HealthKit
 {
 	// NSInteger -> HKDefines.h
 	[Watch (2,0)]

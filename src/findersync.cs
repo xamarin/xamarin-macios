@@ -1,10 +1,10 @@
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.AppKit;
+using Foundation;
+using ObjCRuntime;
+using AppKit;
 
 #if XAMCORE_2_0
-namespace XamCore.FinderSync {
+namespace FinderSync {
 	delegate void GetValuesCompletionHandler (NSDictionary<NSString, NSObject> values, NSError error);
 
 	[Mac (10, 10, onlyOn64: true)]

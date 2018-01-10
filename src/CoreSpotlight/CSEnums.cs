@@ -10,10 +10,10 @@
 #if IOS
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreSpotlight {
+namespace CoreSpotlight {
 #if !MONOMAC // TODO: Verify this is available in future OS X El Capitan betas, it was not included in beta 1, also do not forget foundation.cs(3801,3)
 	// NSInteger -> CNContact.h
 	[NoTV] // CS_TVOS_UNAVAILABLE

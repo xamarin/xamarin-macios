@@ -1,6 +1,6 @@
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.NetworkExtension {
+namespace NetworkExtension {
 
 	// needed for generated Async support
 	//public delegate void NEPacketTunnelFlowReadHandler (NSData [] packets, NSNumber [] protocols);

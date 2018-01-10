@@ -7,9 +7,9 @@
 // Copyright 2011-2014, 2016 Xamarin Inc
 //
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.iAd {
+namespace iAd {
 
 	// NSInteger -> ADBannerView.h
 	[Deprecated (PlatformName.iOS, 10, 0)]

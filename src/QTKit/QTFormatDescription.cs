@@ -1,7 +1,7 @@
-﻿using System;
-using XamCore.Foundation;
+using System;
+using Foundation;
 
-namespace XamCore.QTKit
+namespace QTKit
 {
 	public partial class QTFormatDescription
 	{

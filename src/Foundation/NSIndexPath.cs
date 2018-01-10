@@ -12,9 +12,9 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public partial class NSIndexPath {
 #if !XAMCORE_2_0

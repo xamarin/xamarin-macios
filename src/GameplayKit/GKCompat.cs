@@ -5,7 +5,7 @@ using OpenTK;
 
 #if !XAMCORE_4_0 && !MONOMAC
 
-namespace XamCore.GameplayKit {
+namespace GameplayKit {
 
 	public partial class GKQuadTree {
 

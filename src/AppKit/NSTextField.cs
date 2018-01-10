@@ -2,10 +2,10 @@
 // NSTextField.cs: Support for the NSTextField class
 //
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 
 	public partial class NSTextField {
 		public new NSTextFieldCell Cell {

@@ -9,10 +9,10 @@
 
 #if XAMCORE_2_0 || !MONOMAC
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 using Vector2i = global::OpenTK.Vector2i;
 
-namespace XamCore.GameplayKit {
+namespace GameplayKit {
 	public partial class GKGridGraph {
 		
 #if !XAMCORE_4_0

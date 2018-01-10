@@ -1,4 +1,4 @@
-namespace XamCore.InputMethodKit {
+namespace InputMethodKit {
 
 	[Native]
 	public enum IMKCandidatePanelType : nuint_compat_int /* : NSUInteger */ {

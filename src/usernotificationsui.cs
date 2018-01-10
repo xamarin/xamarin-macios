@@ -8,13 +8,13 @@
 //
 
 using System;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.UIKit;
-using XamCore.UserNotifications;
+using CoreGraphics;
+using Foundation;
+using ObjCRuntime;
+using UIKit;
+using UserNotifications;
 
-namespace XamCore.UserNotificationsUI {
+namespace UserNotificationsUI {
 
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]

@@ -2,12 +2,12 @@
 
 using System;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.AudioToolbox;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using AudioToolbox;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 	public partial class AVCaptureVideoPreviewLayer {
 
 		public enum InitMode {

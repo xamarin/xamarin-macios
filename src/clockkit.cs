@@ -8,11 +8,11 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.UIKit;
+using Foundation;
+using ObjCRuntime;
+using UIKit;
 
-namespace XamCore.ClockKit {
+namespace ClockKit {
 	
 	[BaseType (typeof (NSObject))]
 	interface CLKComplication : NSCopying {

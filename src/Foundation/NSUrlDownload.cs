@@ -1,5 +1,5 @@
 #if MONOMAC
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public partial class NSUrlDownload {
 		

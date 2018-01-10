@@ -9,9 +9,9 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.VideoToolbox {
+namespace VideoToolbox {
 
 	// untyped enum -> VTErrors.h
 	public enum VTStatus {

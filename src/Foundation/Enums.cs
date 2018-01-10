@@ -1,6 +1,6 @@
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	// Utility enum, ObjC uses NSString
 	[NoMac]

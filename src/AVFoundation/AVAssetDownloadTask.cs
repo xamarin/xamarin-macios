@@ -8,9 +8,9 @@
 //
 
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 #if !MONOMAC && !WATCH && !TVOS
 	public partial class AVAssetDownloadTask : NSUrlSessionTask {
 

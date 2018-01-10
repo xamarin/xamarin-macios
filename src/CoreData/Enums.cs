@@ -22,9 +22,9 @@
 
 using System;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.CoreData {
+namespace CoreData {
 
 	// NUInteger -> NSEntityMapping.h
 	[Native]

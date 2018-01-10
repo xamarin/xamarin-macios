@@ -13,12 +13,12 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.Metal;
+using ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using Metal;
 
-namespace XamCore.CoreVideo {
+namespace CoreVideo {
 
 	[iOS (8,0)]
 	public class CVMetalTexture : INativeObject, IDisposable {

@@ -24,9 +24,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public partial class NSDictionary : NSObject, IDictionary, IDictionary<NSObject, NSObject> {
 		public NSDictionary (NSObject first, NSObject second, params NSObject [] args) : this (PickOdd (second, args), PickEven (first, args))
@@ -393,9 +393,9 @@ namespace XamCore.Foundation {
 		public IntPtr LowlevelObjectForKey (IntPtr key)
 		{
 #if MONOMAC
-			return XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, selObjectForKey_Handle, key);
+			return ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, selObjectForKey_Handle, key);
 #else
-			return XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle ("objectForKey:"), key);
+			return ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle ("objectForKey:"), key);
 #endif
 		}
 

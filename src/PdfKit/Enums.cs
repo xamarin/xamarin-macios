@@ -28,10 +28,10 @@
 //
 using System;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 #if MONOMAC || (IOS && XAMCORE_2_0)
 
-namespace XamCore.PdfKit {
+namespace PdfKit {
 
 	[iOS (11,0)]
 	[Native]

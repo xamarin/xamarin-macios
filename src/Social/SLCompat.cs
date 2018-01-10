@@ -4,7 +4,7 @@
 
 using System;
 
-namespace XamCore.Social {
+namespace Social {
 
 	partial class SLComposeSheetConfigurationItem {
 

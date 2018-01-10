@@ -1,7 +1,7 @@
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.AssetsLibrary {
+namespace AssetsLibrary {
 
 	// NSInteger -> ALAssetsLibrary.h
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Photos' API instead.")]

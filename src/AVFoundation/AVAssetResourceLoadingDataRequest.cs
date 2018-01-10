@@ -10,9 +10,9 @@
 #if !WATCH
 
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 	public partial class AVAssetResourceLoadingDataRequest {
 		public override string ToString ()
 		{

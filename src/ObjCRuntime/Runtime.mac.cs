@@ -29,11 +29,11 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.IO;
 
-using XamCore.AppKit;
-using XamCore.Foundation;
-using XamCore.Registrar;
+using AppKit;
+using Foundation;
+using Registrar;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 
 	public static partial class Runtime {
 #if !COREBUILD

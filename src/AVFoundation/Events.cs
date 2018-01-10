@@ -31,10 +31,10 @@
 #if !WATCH
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 
 	public class AVErrorEventArgs : EventArgs {
 		public AVErrorEventArgs (NSError error)

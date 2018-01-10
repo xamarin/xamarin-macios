@@ -1,10 +1,10 @@
 // Copyright 2015 Xamarin Inc.
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.TVServices {
+namespace TVServices {
 
 	[TV (9,0)]
 	[BaseType (typeof (NSObject))]

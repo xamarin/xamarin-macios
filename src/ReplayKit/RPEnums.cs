@@ -5,11 +5,11 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.UIKit;
+using ObjCRuntime;
+using Foundation;
+using UIKit;
 
-namespace XamCore.ReplayKit {
+namespace ReplayKit {
 
 	[iOS (9,0)]
 	[TV (10,0)]

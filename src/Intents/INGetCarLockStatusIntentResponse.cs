@@ -8,11 +8,11 @@
 
 #if XAMCORE_2_0 && (IOS || TVOS)
 
-using XamCore.Foundation;
-using XamCore.Intents;
-using XamCore.ObjCRuntime;
+using Foundation;
+using Intents;
+using ObjCRuntime;
 
-namespace XamCore.Intents {
+namespace Intents {
 
 	public partial class INGetCarLockStatusIntentResponse {
 

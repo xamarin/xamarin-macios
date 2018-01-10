@@ -34,12 +34,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.AudioToolbox;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using AudioToolbox;
+using Foundation;
 
-namespace XamCore.AudioUnit
+namespace AudioUnit
 {
 	public enum ExtAudioFileError // Implictly cast to OSType
 	{

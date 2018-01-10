@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.VideoSubscriberAccount {
+namespace VideoSubscriberAccount {
 
 	public static partial class VSAccountProviderAuthenticationSchemeExtensions {
 

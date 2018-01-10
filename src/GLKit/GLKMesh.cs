@@ -2,10 +2,10 @@
 
 #if XAMCORE_2_0 || !MONOMAC
 
-using XamCore.Foundation;
-using XamCore.ModelIO;
+using Foundation;
+using ModelIO;
 
-namespace XamCore.GLKit {
+namespace GLKit {
 
 	public partial class GLKMesh {
 		public static GLKMesh [] FromAsset (MDLAsset asset, out MDLMesh [] sourceMeshes, out NSError error)

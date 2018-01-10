@@ -10,11 +10,11 @@
 #if XAMCORE_2_0
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using Foundation;
 
-namespace XamCore.CoreNFC {
+namespace CoreNFC {
 	// Note on Availability:
 	// This framework says it is available on tvOS but
 	// nothing else but NFCReaderError is available on it in beta 1

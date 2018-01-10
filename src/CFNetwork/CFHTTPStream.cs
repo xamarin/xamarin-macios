@@ -8,15 +8,15 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 
 // CFHttpStream is in CFNetwork.framework, no idea why it ended up in CoreServices when it was bound.
 #if XAMCORE_4_0
-namespace XamCore.CFNetwork {
+namespace CFNetwork {
 #else
-namespace XamCore.CoreServices {
+namespace CoreServices {
 #endif
 
 	// all fields constants that this is using are deprecated in Xcode 7

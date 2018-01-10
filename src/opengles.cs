@@ -8,14 +8,14 @@
 // Copyright 2009, Novell, Inc.
 // Copyright 2015 Xamarin Inc.
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
-using XamCore.UIKit;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreLocation;
+using UIKit;
 using System;
 
-namespace XamCore.OpenGLES {
+namespace OpenGLES {
 
 	[BaseType (typeof (NSObject))]
 	// <quote>It is created when an EAGLContext object is initialized and disposed of when the last EAGLContext object that references it is released.</quote>
@@ -61,7 +61,7 @@ namespace XamCore.OpenGLES {
 		//
 
 		[Export ("renderbufferStorage:fromDrawable:")]
-		bool RenderBufferStorage (nuint target, [NullAllowed] XamCore.CoreAnimation.CAEAGLLayer drawable);
+		bool RenderBufferStorage (nuint target, [NullAllowed] CoreAnimation.CAEAGLLayer drawable);
 
 		[Export ("presentRenderbuffer:")]
 		bool PresentRenderBuffer (nuint target);

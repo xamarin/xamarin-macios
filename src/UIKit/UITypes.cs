@@ -11,11 +11,11 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	[StructLayout (LayoutKind.Sequential)]
 	public struct UIEdgeInsets {

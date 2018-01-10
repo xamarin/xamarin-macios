@@ -30,10 +30,10 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 
 	class CFDictionary : INativeObject, IDisposable {
 		public IntPtr Handle { get; private set; }

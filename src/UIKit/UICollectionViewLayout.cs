@@ -10,10 +10,10 @@
 #if !WATCH
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	public partial class UICollectionViewLayout {
 

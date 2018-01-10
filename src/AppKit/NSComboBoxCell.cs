@@ -1,8 +1,8 @@
 using System;
 
-using XamCore.CoreGraphics;
+using CoreGraphics;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 
 	public partial class NSComboBoxCell {
 #if !XAMCORE_2_0

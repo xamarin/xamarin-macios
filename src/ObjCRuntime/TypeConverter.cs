@@ -4,9 +4,9 @@ using System.Text;
 using System.Reflection;
 using System.Collections.Generic;
 
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 
 	public static class TypeConverter {
 #if !COREBUILD

@@ -10,10 +10,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using CoreGraphics;
 
-namespace XamCore.CoreAnimation {
+namespace CoreAnimation {
 
 	// CATransform3D.h
 	[StructLayout(LayoutKind.Sequential)]

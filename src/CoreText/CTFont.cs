@@ -31,14 +31,14 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using CoreGraphics;
+using Foundation;
 
 using CGGlyph = System.UInt16;
 
-namespace XamCore.CoreText {
+namespace CoreText {
 
 	[Flags]
 	[Native]

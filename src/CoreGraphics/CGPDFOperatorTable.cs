@@ -9,11 +9,11 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
+using Foundation;
+using ObjCRuntime;
+using CoreFoundation;
 
-namespace XamCore.CoreGraphics {
+namespace CoreGraphics {
 
 	// CGPDFOperatorTable.h
 	public class CGPDFOperatorTable : INativeObject, IDisposable {

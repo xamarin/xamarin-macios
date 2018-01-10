@@ -1,11 +1,11 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreMedia {
+namespace CoreMedia {
 
 	public enum CMAttachmentMode : uint {
 		ShouldNotPropagate    = 0,

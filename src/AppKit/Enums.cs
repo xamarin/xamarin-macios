@@ -22,9 +22,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 
 	[Native]
 	public enum NSRunResponse : nint {

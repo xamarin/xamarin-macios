@@ -1,8 +1,8 @@
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.TVMLKit {
+namespace TVMLKit {
 
 	public class TVViewElementDispatchResult {
 

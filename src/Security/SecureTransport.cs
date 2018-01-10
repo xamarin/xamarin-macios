@@ -1,9 +1,9 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Security {
+namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum

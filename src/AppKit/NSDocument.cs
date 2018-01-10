@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 		
 	public partial class NSDocument {
 		public delegate void DuplicateCallback (NSDocument document, bool didDuplicate);

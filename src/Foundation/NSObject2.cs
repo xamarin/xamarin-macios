@@ -29,18 +29,18 @@ using System.Runtime.InteropServices;
 using System.Drawing;
 #endif
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 #if !COREBUILD
 #if MONOTOUCH
-using XamCore.UIKit;
+using UIKit;
 #if !WATCH
-using XamCore.CoreAnimation;
+using CoreAnimation;
 #endif
 #endif
-using XamCore.CoreGraphics;
+using CoreGraphics;
 #endif
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public class NSObjectFlag {
 		public static readonly NSObjectFlag Empty;
 		
@@ -649,15 +649,15 @@ namespace XamCore.Foundation {
 				throw new ArgumentNullException ("keyPath");
 #if MONOMAC
 			if (IsDirectBinding) {
-				XamCore.ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, selSetValue_ForKeyPath_Handle, handle, keyPath.Handle);
+				ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, selSetValue_ForKeyPath_Handle, handle, keyPath.Handle);
 			} else {
-				XamCore.ObjCRuntime.Messaging.void_objc_msgSendSuper_IntPtr_IntPtr (this.SuperHandle, selSetValue_ForKeyPath_Handle, handle, keyPath.Handle);
+				ObjCRuntime.Messaging.void_objc_msgSendSuper_IntPtr_IntPtr (this.SuperHandle, selSetValue_ForKeyPath_Handle, handle, keyPath.Handle);
 			}
 #else
 			if (IsDirectBinding) {
-				XamCore.ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, Selector.GetHandle ("setValue:forKeyPath:"), handle, keyPath.Handle);
+				ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, Selector.GetHandle ("setValue:forKeyPath:"), handle, keyPath.Handle);
 			} else {
-				XamCore.ObjCRuntime.Messaging.void_objc_msgSendSuper_IntPtr_IntPtr (this.SuperHandle, Selector.GetHandle ("setValue:forKeyPath:"), handle, keyPath.Handle);
+				ObjCRuntime.Messaging.void_objc_msgSendSuper_IntPtr_IntPtr (this.SuperHandle, Selector.GetHandle ("setValue:forKeyPath:"), handle, keyPath.Handle);
 			}
 #endif
 		}

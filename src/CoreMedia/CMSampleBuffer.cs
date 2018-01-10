@@ -14,21 +14,21 @@ using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 
 using OSStatus = System.nint;
 
 #if !COREBUILD
-using XamCore.AudioToolbox;
-using XamCore.CoreVideo;
+using AudioToolbox;
+using CoreVideo;
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
 #endif
 
-namespace XamCore.CoreMedia {
+namespace CoreMedia {
 
 	// untyped enum (used as an OSStatus) -> CMSampleBuffer.h
 	public enum CMSampleBufferError : int {

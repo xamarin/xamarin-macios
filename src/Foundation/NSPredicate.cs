@@ -2,7 +2,7 @@
 
 #if !COREBUILD
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public partial class NSPredicate {
 

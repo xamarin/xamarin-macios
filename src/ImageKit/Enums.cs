@@ -28,9 +28,9 @@
 //
 using System;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.ImageKit {
+namespace ImageKit {
 
 	[Native]
 	public enum IKCameraDeviceViewDisplayMode : nint {

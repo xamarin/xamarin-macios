@@ -28,12 +28,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using XamCore.Foundation;
+using Foundation;
 using System.Runtime.InteropServices;
-using XamCore.CoreGraphics;
-using XamCore.ObjCRuntime;
+using CoreGraphics;
+using ObjCRuntime;
 
-namespace XamCore.CoreAnimation {
+namespace CoreAnimation {
 
 	// untyped enum -> CALayer.h
 	// note: edgeAntialiasingMask is an `unsigned int` @property

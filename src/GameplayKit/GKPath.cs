@@ -8,13 +8,13 @@
 //
 #if XAMCORE_2_0 || !MONOMAC
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
 using System.Runtime.InteropServices;
 
-namespace XamCore.GameplayKit {
+namespace GameplayKit {
 	public partial class GKPath {
 
 		public static GKPath FromPoints (Vector2[] points, float radius, bool cyclical)

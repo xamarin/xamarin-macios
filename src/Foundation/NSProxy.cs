@@ -16,17 +16,17 @@
 
 using System;
 using System.ComponentModel;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Register ("NSProxy", true)]
 	internal abstract class NSProxy : NSObject {
 	}
 }
 
-namespace XamCore.WebKit {
+namespace WebKit {
 	// We need to keep NSProxy if WKNavigationDelegate or IWKNavigationDelegate are used
 	// This cannot be done on an interface but the protocol won't be used without a WKWebView
 	// so a reference (from the static constructor) ensure NSProxy will be available

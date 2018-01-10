@@ -2,11 +2,11 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreGraphics;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.TVServices {
+namespace TVServices {
 
 	[TV (9,0)]
 	[Native]

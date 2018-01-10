@@ -7,9 +7,9 @@
 //  Miguel de Icaza
 //
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.NewsstandKit {
+namespace NewsstandKit {
 
 	// untyped enum -> NKIssue.h
 	// note: iOS 8 beta (2) has it defined as an NSInteger, filed as radar 17564957 with Apple

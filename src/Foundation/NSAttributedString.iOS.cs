@@ -29,12 +29,12 @@
 
 using System;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.UIKit;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using Foundation;
+using UIKit;
+using CoreGraphics;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 #if !COREBUILD
 	public partial class NSAttributedString {

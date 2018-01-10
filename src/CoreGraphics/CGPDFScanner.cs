@@ -9,11 +9,11 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
+using Foundation;
+using ObjCRuntime;
+using CoreFoundation;
 
-namespace XamCore.CoreGraphics {
+namespace CoreGraphics {
 
 	public class CGPDFScanner : INativeObject, IDisposable {
 

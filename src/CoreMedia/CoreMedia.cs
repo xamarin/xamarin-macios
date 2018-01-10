@@ -9,10 +9,10 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreMedia {
+namespace CoreMedia {
 
 	// FourCharCode -> CMFormatDescription.h
 	public enum CMMediaType : uint

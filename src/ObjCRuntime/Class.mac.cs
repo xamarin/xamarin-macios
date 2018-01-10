@@ -35,9 +35,9 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	public partial class Class : INativeObject {
 #if !COREBUILD
 		internal static string GetName (IntPtr @class)

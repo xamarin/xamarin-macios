@@ -26,10 +26,10 @@
 using System;
 using System.Collections;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSApplication {
 		public void BeginSheet (NSWindow sheet, NSWindow docWindow)
 		{

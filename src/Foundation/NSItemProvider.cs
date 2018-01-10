@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using XamCore.CloudKit;
-using XamCore.ObjCRuntime;
+using CloudKit;
+using ObjCRuntime;
 
-namespace XamCore.Foundation 
+namespace Foundation 
 {
 #if (MONOMAC || IOS) && XAMCORE_2_0 // Only 64-bit on mac
 	public partial class NSItemProvider

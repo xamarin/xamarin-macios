@@ -27,12 +27,12 @@
 
 #if MONOMAC
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 using System;
 using System.Runtime.InteropServices;
 
-namespace XamCore.Security {
+namespace Security {
 	// Untyped enum in ObjC
 	public enum AuthorizationStatus {
 		Success                 = 0,

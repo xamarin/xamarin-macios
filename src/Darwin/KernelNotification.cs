@@ -28,11 +28,11 @@
 #if MONOMAC
 
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
-namespace XamCore.Darwin {
+namespace Darwin {
 
 	[StructLayout (LayoutKind.Sequential)]
 	public struct TimeSpec {

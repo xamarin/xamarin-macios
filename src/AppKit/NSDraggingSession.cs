@@ -1,11 +1,11 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreGraphics;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSDraggingSession {
 		public void EnumerateDraggingItems (NSDraggingItemEnumerationOptions enumOpts, NSView view, NSPasteboardReading [] classArray, NSDictionary searchOptions, NSDraggingEnumerator enumerator)
 		{

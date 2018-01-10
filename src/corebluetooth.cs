@@ -7,12 +7,12 @@
 //
 // Copyright 2011-2013 Xamarin Inc
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 using System;
-using XamCore.CoreFoundation;
+using CoreFoundation;
 
-namespace XamCore.CoreBluetooth {
+namespace CoreBluetooth {
 
 	[Watch (4,0)]
 	[iOS (8,0)]

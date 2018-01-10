@@ -1,10 +1,10 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 
 using System;
-using XamCore.CoreImage;
-using XamCore.Foundation;
+using CoreImage;
+using Foundation;
 
-namespace XamCore.Photos {
+namespace Photos {
 	
 #if !XAMCORE_3_0 && !MONOMAC
 	public partial class PHContentEditingInputRequestOptions {

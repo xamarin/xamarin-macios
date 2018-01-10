@@ -10,8 +10,8 @@
 // Copyright 2014-2015 Xamarin
 //
 using System;
-using XamCore.Foundation;
-namespace XamCore.HealthKit
+using Foundation;
+namespace HealthKit
 {
 	public partial class HKQuantityType {
 		static internal NSString ToKey (HKQuantityTypeIdentifier kind)

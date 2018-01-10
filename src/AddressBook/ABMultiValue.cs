@@ -34,14 +34,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AddressBook {
+namespace AddressBook {
 
 	static class ABMultiValue {
-		public const uint_compat_int Mask = (1 << 8);
+		public const uint Mask = (1 << 8);
 
 		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueCopyValueAtIndex")]
 		public static extern IntPtr CopyValueAtIndex (IntPtr multiValue, nint index);

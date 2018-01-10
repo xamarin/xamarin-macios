@@ -28,14 +28,14 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
 #if !COREBUILD
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
+using CoreFoundation;
+using Foundation;
 #endif
 
-namespace XamCore.CoreGraphics {
+namespace CoreGraphics {
 
 	// CGColor.h
 	public class CGColor : INativeObject

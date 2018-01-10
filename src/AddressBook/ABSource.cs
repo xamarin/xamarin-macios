@@ -32,11 +32,11 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AddressBook {
+namespace AddressBook {
 	
 	// note: not a true flag
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]

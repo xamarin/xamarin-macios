@@ -24,14 +24,14 @@
 //
 
 #if XAMCORE_2_0 && IOS
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 
 	public partial class AVMetadataObject {
 		public AVMetadataObjectType Type {

@@ -10,12 +10,12 @@
 #if XAMCORE_2_0
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.UIKit;
-using XamCore.FileProvider;
+using ObjCRuntime;
+using Foundation;
+using UIKit;
+using FileProvider;
 
-namespace XamCore.FileProviderUI {
+namespace FileProviderUI {
 
 	[iOS (11,0)]
 	[ErrorDomain ("FPUIErrorDomain")]

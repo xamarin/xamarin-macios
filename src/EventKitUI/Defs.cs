@@ -7,9 +7,9 @@
 // Copyright 2011-2015 Xamarin Inc.
 //
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.EventKitUI {
+namespace EventKitUI {
 
 	// untyped enum -> EKCalendarChooser.h
 	// iOS 9 promoted this to an NSInteger - which breaks compatibility

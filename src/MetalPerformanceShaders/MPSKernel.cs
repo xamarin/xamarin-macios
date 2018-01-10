@@ -3,12 +3,12 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.Metal;
-using XamCore.ObjCRuntime;
+using CoreGraphics;
+using Foundation;
+using Metal;
+using ObjCRuntime;
 
-namespace XamCore.MetalPerformanceShaders {
+namespace MetalPerformanceShaders {
 	public partial class MPSKernel : NSObject {
 
 #if !COREBUILD

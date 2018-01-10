@@ -27,9 +27,9 @@ using System;
 
 #if MONOMAC
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	internal enum NSAttributedStringDataType {
 		RTF,
 		RTFD,

@@ -5,7 +5,7 @@
 
 using System;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	// NSIndexPath UIKit Additions Reference
 	// https://developer.apple.com/library/ios/#documentation/UIKit/Reference/NSIndexPath_UIKitAdditions/Reference/Reference.html

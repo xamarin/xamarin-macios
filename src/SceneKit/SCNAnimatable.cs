@@ -11,10 +11,10 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.CoreAnimation;
+using Foundation;
+using CoreAnimation;
 
-namespace XamCore.SceneKit
+namespace SceneKit
 {
 	public partial class SCNAnimatable {
 		

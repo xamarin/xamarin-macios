@@ -32,16 +32,16 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Diagnostics;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
+using Foundation;
+using CoreFoundation;
 
 #if XAMCORE_2_0
-using CFRunLoopModeString = global::XamCore.Foundation.NSString;
+using CFRunLoopModeString = global::Foundation.NSString;
 #else
 using CFRunLoopModeString = global::System.String;
 #endif
 
-namespace XamCore.CFNetwork {
+namespace CFNetwork {
 
 	public class WorkerThread {
 		CFRunLoop loop;

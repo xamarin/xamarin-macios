@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.VideoSubscriberAccount {
+namespace VideoSubscriberAccount {
 
 	public partial class VSAccountMetadataRequest {
 

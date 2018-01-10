@@ -8,10 +8,10 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreMedia {
+namespace CoreMedia {
 
 	[StructLayout(LayoutKind.Sequential)]
 	public partial struct CMTime {

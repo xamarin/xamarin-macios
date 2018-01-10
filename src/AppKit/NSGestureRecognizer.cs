@@ -8,10 +8,10 @@
 //
 using System;
 using System.Collections;
-using XamCore.Foundation; 
-using XamCore.ObjCRuntime;
+using Foundation; 
+using ObjCRuntime;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSGestureRecognizer {
 		object recognizers;
 		static Selector tsel = new Selector ("target");

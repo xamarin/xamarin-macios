@@ -7,9 +7,9 @@
 // Copyright 2012 Xamarin Inc
 
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 
 	[Mac (10, 7)]
 	[Native]

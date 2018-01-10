@@ -8,10 +8,10 @@
 
 #if IOS
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	public class UITextAttributes {
 		public UIFont Font;

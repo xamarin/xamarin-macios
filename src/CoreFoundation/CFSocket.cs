@@ -31,10 +31,10 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 
 	[Flags]
 	[Native]

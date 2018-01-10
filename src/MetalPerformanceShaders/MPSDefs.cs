@@ -2,12 +2,12 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
 using Vector4 = global::OpenTK.Vector4;
 
-namespace XamCore.MetalPerformanceShaders {
+namespace MetalPerformanceShaders {
 
 	[iOS (9,0)][Mac (10, 13, onlyOn64: true)]
 	[Native] // NSUInteger

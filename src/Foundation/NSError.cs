@@ -26,9 +26,9 @@
 //
 using System;
 using System.Diagnostics;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	
 	public class NSErrorEventArgs : EventArgs {
 		public NSErrorEventArgs (NSError error)

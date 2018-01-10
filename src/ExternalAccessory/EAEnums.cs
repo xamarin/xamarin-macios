@@ -4,10 +4,10 @@
 // Copyright 2012-2014 Xamarin Inc. All rights reserved.
 //
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.ExternalAccessory {
+namespace ExternalAccessory {
 
 	[NoMac]
 	[TV (10,0)]

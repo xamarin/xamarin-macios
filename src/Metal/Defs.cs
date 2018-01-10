@@ -11,11 +11,11 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.ModelIO;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ModelIO;
+using ObjCRuntime;
 
-namespace XamCore.Metal {
+namespace Metal {
 
 	public struct MTLOrigin {
 		public nint X, Y, Z;

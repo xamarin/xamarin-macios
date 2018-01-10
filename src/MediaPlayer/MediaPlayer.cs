@@ -9,10 +9,10 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.MediaPlayer {
+namespace MediaPlayer {
 #if XAMCORE_2_0 || !MONOMAC
 	// NSInteger -> MPMoviePlayerController.h
 	[Native]

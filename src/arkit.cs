@@ -11,24 +11,24 @@
 
 using System;
 using System.ComponentModel;
-using XamCore.AVFoundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreMedia;
-using XamCore.CoreVideo;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.Metal;
-using XamCore.SpriteKit;
-using XamCore.SceneKit;
-using XamCore.UIKit;
+using AVFoundation;
+using CoreFoundation;
+using CoreGraphics;
+using CoreMedia;
+using CoreVideo;
+using Foundation;
+using ObjCRuntime;
+using Metal;
+using SpriteKit;
+using SceneKit;
+using UIKit;
 
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.NVector3;
 using Matrix3 = global::OpenTK.NMatrix3;
 using Matrix4 = global::OpenTK.NMatrix4;
 
-namespace XamCore.ARKit {
+namespace ARKit {
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]

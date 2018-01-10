@@ -11,10 +11,10 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-using XamCore.Foundation;
-using XamCore.CoreData;
+using Foundation;
+using CoreData;
 
-namespace XamCore.AppKit
+namespace AppKit
 {
 	public partial class NSPredicateEditorRowTemplate
 	{

@@ -12,17 +12,17 @@
 
 using System;
 using System.Collections;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
+using Foundation;
+using ObjCRuntime;
+using CoreGraphics;
 
 #if XAMCORE_3_0
-using TextAttributes = XamCore.UIKit.UIStringAttributes;
+using TextAttributes = UIKit.UIStringAttributes;
 #else
-using TextAttributes = XamCore.UIKit.UITextAttributes;
+using TextAttributes = UIKit.UITextAttributes;
 #endif
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UISegmentedControl {
 		public UISegmentedControl (params object [] args) : this (FromObjects (args))
 		{

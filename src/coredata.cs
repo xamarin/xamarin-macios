@@ -8,13 +8,13 @@
 // Copyright 2011, 2015 Xamarin Inc.
 //
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 #if !WATCH && !MONOMAC
-using XamCore.CoreSpotlight;
+using CoreSpotlight;
 #endif
 
-namespace XamCore.CoreData
+namespace CoreData
 {
 	[StrongDictionary ("UserInfoKeys")]
 	interface UserInfo {

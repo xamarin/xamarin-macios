@@ -24,10 +24,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreServices
+namespace CoreServices
 {
 	[Flags]
 	public enum LSRoles/*Mask*/ : uint /* always 32-bit uint */

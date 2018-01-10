@@ -21,12 +21,12 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.AudioToolbox;
+using Foundation;
+using ObjCRuntime;
+using AudioToolbox;
 using System;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 #if !XAMCORE_2_0
 	[Advice ("Use 'AudioSettings' instead.")]
 	public class AVAudioPlayerSettings {

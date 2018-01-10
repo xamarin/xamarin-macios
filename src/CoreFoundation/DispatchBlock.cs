@@ -10,10 +10,10 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 #if !COREBUILD
 	internal class DispatchBlock {
 

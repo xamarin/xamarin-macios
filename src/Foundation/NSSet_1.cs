@@ -30,9 +30,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	[Register ("NSSet", SkipRegistration = true)]
 	public sealed class NSSet<TKey> : NSSet, IEnumerable<TKey>
 		where TKey : class, INativeObject

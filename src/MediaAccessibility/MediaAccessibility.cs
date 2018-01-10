@@ -9,13 +9,13 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreText;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using CoreGraphics;
+using CoreText;
+using Foundation;
 
-namespace XamCore.MediaAccessibility {
+namespace MediaAccessibility {
 
 	[Native]
 	[iOS (7,0)][Mac (10,9)]

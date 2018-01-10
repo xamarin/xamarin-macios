@@ -3,9 +3,9 @@ using System.Reflection;
 using System.Collections;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public partial class NSBundle : NSObject {
 		public string LocalizedString (string key, string comment) {
 			return LocalizedString (key, "", "");

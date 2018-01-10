@@ -9,9 +9,9 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.CoreBluetooth {
+namespace CoreBluetooth {
 
 	[Mac (10,13)]
 	[Watch (4,0)]

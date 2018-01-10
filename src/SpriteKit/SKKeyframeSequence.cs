@@ -12,10 +12,10 @@ using System.Collections.Generic;
 #if !NO_SYSTEM_DRAWING
 using System.Drawing;
 #endif
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.SpriteKit {
+namespace SpriteKit {
 #if XAMCORE_2_0 || !MONOMAC
 	public partial class SKKeyframeSequence {
 

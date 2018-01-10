@@ -2,11 +2,11 @@
 
 using System;
 
-using XamCore.Foundation; 
-using XamCore.CoreGraphics;
-using XamCore.ObjCRuntime;
+using Foundation; 
+using CoreGraphics;
+using ObjCRuntime;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UIPickerView : UIView, IUITableViewDataSource {
 		private UIPickerViewModel model;
 

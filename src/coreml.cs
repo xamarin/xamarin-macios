@@ -10,19 +10,19 @@
 #if XAMCORE_2_0
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.CoreVideo;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using CoreVideo;
+using Foundation;
 
 #if !WATCH
-using XamCore.Metal;
+using Metal;
 #else
-using IMTLCommandBuffer = global::XamCore.Foundation.NSObject; // Won't be used just to make compilation happy.
-using IMTLTexture = global::XamCore.Foundation.NSObject; // Won't be used just to make compilation happy.
+using IMTLCommandBuffer = global::Foundation.NSObject; // Won't be used just to make compilation happy.
+using IMTLTexture = global::Foundation.NSObject; // Won't be used just to make compilation happy.
 #endif
 
-namespace XamCore.CoreML {
+namespace CoreML {
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[Native]

@@ -35,12 +35,12 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-using XamCore.AudioToolbox;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
+using AudioToolbox;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
 
-namespace XamCore.AudioUnit
+namespace AudioUnit
 {
 	public enum AUGraphError // Implictly cast to OSType
 	{

@@ -8,11 +8,11 @@
 
 using System;
 
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using Foundation;
 
-namespace XamCore.AppKit
+namespace AppKit
 {
 	public partial class NSStringAttributes : DictionaryContainer
 	{

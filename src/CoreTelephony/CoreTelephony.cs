@@ -1,8 +1,8 @@
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 using System;
 
-namespace XamCore.CoreTelephony {
+namespace CoreTelephony {
 
 	public partial class CTCall {
 #if !COREBUILD

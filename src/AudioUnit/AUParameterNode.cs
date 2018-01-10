@@ -2,7 +2,7 @@
 
 using System;
 
-namespace XamCore.AudioUnit
+namespace AudioUnit
 {
 	public partial class AUParameterNode
 	{

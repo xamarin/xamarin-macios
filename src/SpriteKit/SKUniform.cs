@@ -8,8 +8,8 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
@@ -22,7 +22,7 @@ using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 
 #if (XAMCORE_2_0 || !MONOMAC) && !WATCH
-namespace XamCore.SpriteKit {
+namespace SpriteKit {
 	public partial class SKUniform {
 
 		static bool? versionCheck = null;
@@ -33,7 +33,7 @@ namespace XamCore.SpriteKit {
 #if MONOMAC
 				versionCheck = PlatformHelper.CheckSystemVersion (10, 12);
 #elif TVOS || IOS
-				versionCheck = XamCore.UIKit.UIDevice.CurrentDevice.CheckSystemVersion (10, 0);
+				versionCheck = UIKit.UIDevice.CurrentDevice.CheckSystemVersion (10, 0);
 #else
 				#error Unknown platform
 #endif

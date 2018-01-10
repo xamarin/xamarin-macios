@@ -9,18 +9,18 @@
 
 #if XAMCORE_2_0 && !MONOMAC
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.Intents {
+namespace Intents {
 	public partial class INBillTypeResolutionResult {
 
 		public static INBillTypeResolutionResult GetSuccess (INBillType resolvedValue)
 		{
 #if IOS
-			if (XamCore.UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
+			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
 #elif WATCH
-			if (XamCore.WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
+			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
 #endif
 				return SuccessWithResolvedBillType (resolvedValue);
 			else
@@ -30,9 +30,9 @@ namespace XamCore.Intents {
 		public static INBillTypeResolutionResult GetConfirmationRequired (INBillType valueToConfirm)
 		{
 #if IOS
-			if (XamCore.UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
+			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
 #elif WATCH
-			if (XamCore.WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
+			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
 #endif
 				return ConfirmationRequiredWithBillTypeToConfirm (valueToConfirm);
 			else

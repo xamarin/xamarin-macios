@@ -10,9 +10,9 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.CoreMotion {
+namespace CoreMotion {
 	public partial class CMSensorDataList : IEnumerable<CMAccelerometerData> {
 #region IEnumerable implementation
 		public IEnumerator<CMAccelerometerData> GetEnumerator ()

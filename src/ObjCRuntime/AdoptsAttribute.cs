@@ -30,7 +30,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple=true)]
 #if XAMCORE_2_0

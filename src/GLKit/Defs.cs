@@ -28,11 +28,11 @@
 #if XAMCORE_2_0 || !MONOMAC
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ModelIO;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ModelIO;
+using ObjCRuntime;
 
-namespace XamCore.GLKit {
+namespace GLKit {
 
 	// GLint (32 bits on 64 bit hardware) -> GLKEffects.h
 	public enum GLKVertexAttrib {

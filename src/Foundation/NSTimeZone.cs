@@ -1,7 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public partial class NSTimeZone {
 		

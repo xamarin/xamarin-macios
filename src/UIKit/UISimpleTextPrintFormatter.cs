@@ -9,7 +9,7 @@
 
 #if IOS && !XAMCORE_3_0
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	public partial class UISimpleTextPrintFormatter : UIPrintFormatter {
 

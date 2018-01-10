@@ -23,9 +23,9 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.QTKit {
+namespace QTKit {
 
 	// Untyped anonymous enum in ObjC
 	[Flags]

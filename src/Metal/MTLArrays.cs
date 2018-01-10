@@ -12,10 +12,10 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.Metal {
+namespace Metal {
 
 	public partial class MTLRenderPipelineColorAttachmentDescriptorArray {
 		public MTLRenderPipelineColorAttachmentDescriptor this [nint idx] {

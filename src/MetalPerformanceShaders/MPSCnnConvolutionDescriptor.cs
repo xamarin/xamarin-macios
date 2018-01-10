@@ -1,6 +1,6 @@
 ﻿#if XAMCORE_2_0 || !MONOMAC
 using System;
-namespace XamCore.MetalPerformanceShaders {
+namespace MetalPerformanceShaders {
 	public partial class MPSCnnConvolutionDescriptor {
 		public unsafe void SetBatchNormalizationParameters (float [] mean, float [] variance, float [] gamma, float [] beta, float epsilon)
 		{

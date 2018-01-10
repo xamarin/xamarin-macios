@@ -6,10 +6,10 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.ComponentModel;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UIPasteboard {
 		const string selImages = "images";
 		const string selSetImages_ = "setImages:";
@@ -46,25 +46,25 @@ namespace XamCore.UIKit {
 		public virtual UIImage[] Images {
 			[Export ("images", ArgumentSemantic.Copy)]
 			get {
-				global::XamCore.UIKit.UIApplication.EnsureUIThread ();
+				global::UIKit.UIApplication.EnsureUIThread ();
 				UIImage[] ret;
 				if (IsDirectBinding) {
-					ret = GetImageArray (XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend (this.Handle, Selector.GetHandle (selImages)));
+					ret = GetImageArray (ObjCRuntime.Messaging.IntPtr_objc_msgSend (this.Handle, Selector.GetHandle (selImages)));
 				} else {
-					ret = GetImageArray (XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle (selImages)));
+					ret = GetImageArray (ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle (selImages)));
 				}
 				return ret;
 			}
 			
 			[Export ("setImages:", ArgumentSemantic.Copy)]
 			set {
-				global::XamCore.UIKit.UIApplication.EnsureUIThread ();
+				global::UIKit.UIApplication.EnsureUIThread ();
 				var nsa_value = NSArray.FromNSObjects (value);
 				
 				if (IsDirectBinding) {
-					XamCore.ObjCRuntime.Messaging.void_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle (selSetImages_), nsa_value.Handle);
+					ObjCRuntime.Messaging.void_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle (selSetImages_), nsa_value.Handle);
 				} else {
-					XamCore.ObjCRuntime.Messaging.void_objc_msgSendSuper_IntPtr (this.SuperHandle, Selector.GetHandle (selSetImages_), nsa_value.Handle);
+					ObjCRuntime.Messaging.void_objc_msgSendSuper_IntPtr (this.SuperHandle, Selector.GetHandle (selSetImages_), nsa_value.Handle);
 				}
 				nsa_value.Dispose ();
 			}

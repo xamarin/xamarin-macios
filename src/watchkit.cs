@@ -7,22 +7,22 @@
 // Copyrigh 2014-2016, Xamarin Inc.
 //
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
-using XamCore.HealthKit;
-using XamCore.HomeKit;
-using XamCore.PassKit;
-using XamCore.SpriteKit;
-using XamCore.SceneKit;
-using XamCore.UIKit;
-using XamCore.MapKit;
-using XamCore.UserNotifications;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreLocation;
+using HealthKit;
+using HomeKit;
+using PassKit;
+using SpriteKit;
+using SceneKit;
+using UIKit;
+using MapKit;
+using UserNotifications;
 using System;
 using System.ComponentModel;
 
-namespace XamCore.WatchKit {
+namespace WatchKit {
 	[iOS (8,2)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // <quote>To use this class, subclass it</quote> 

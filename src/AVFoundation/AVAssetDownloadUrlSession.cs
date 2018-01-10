@@ -8,10 +8,10 @@
 //
 #if !TVOS && !WATCH
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 #if !MONOMAC
 	public partial class AVAssetDownloadUrlSession : NSUrlSession {
 

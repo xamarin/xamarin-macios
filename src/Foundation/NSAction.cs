@@ -24,13 +24,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
-
-#if !XAMCORE_2_0
-	public delegate void NSAction ();
-#endif
+namespace Foundation {
 
 #if !COREBUILD
 	// Use this for synchronous operations

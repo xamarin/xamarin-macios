@@ -8,10 +8,10 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 #if !WATCH
 	public partial class UITraitCollection {
 		public UITraitCollection FromPreferredContentSizeCategory (UIContentSizeCategory category)

@@ -26,9 +26,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.CoreVideo {
+namespace CoreVideo {
 
 	// Note: CoreVideo is not supported in watchOS except for this enum
 	// for which ObjC API uses `int` instead of the enum

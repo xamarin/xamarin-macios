@@ -35,12 +35,12 @@ using System.Text;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.AudioToolbox {
-	public enum AudioFormatType : uint_compat_int { // UInt32 in AudioStreamBasicDescription -- CoreAudio.framework CoreAudioTypes.h
+namespace AudioToolbox {
+	public enum AudioFormatType : uint { // UInt32 in AudioStreamBasicDescription -- CoreAudio.framework CoreAudioTypes.h
 		LinearPCM               = 0x6c70636d,
 		AC3                     = 0x61632d33,
 		CAC3                    = 0x63616333,

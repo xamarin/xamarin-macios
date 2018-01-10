@@ -23,7 +23,7 @@
 
 using System;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSMatrix {
 		public NSCell this [nint col, nint row] {
 			get {

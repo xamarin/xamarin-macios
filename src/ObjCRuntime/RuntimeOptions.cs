@@ -31,7 +31,7 @@ namespace Xamarin.Bundler {
 #elif SYSTEM_NET_HTTP
 namespace System.Net.Http {
 #else
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 #endif
 	class RuntimeOptions
 	{

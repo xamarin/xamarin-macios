@@ -8,14 +8,14 @@
 // Copyright 2014-2015 Xamarin Inc.
 //
 
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using Foundation;
 using System;
 using System.ComponentModel;
-using XamCore.CoreLocation;
+using CoreLocation;
 
-namespace XamCore.HealthKit {
+namespace HealthKit {
 
 	[Watch (3,0), iOS (10,0)]
 	public enum HKDocumentTypeIdentifier {

@@ -7,9 +7,9 @@
 #if !XAMCORE_2_0
 
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	public partial class UIApplicationDelegate {
 

@@ -14,9 +14,9 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	[Register (SkipRegistration = true)]
 	public sealed partial class NSArray<TKey> : NSArray, IEnumerable<TKey> 
 		where TKey : class, INativeObject {

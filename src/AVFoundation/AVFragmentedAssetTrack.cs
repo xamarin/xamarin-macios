@@ -3,9 +3,9 @@
 //
 
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 #if MONOMAC && !XAMCORE_3_0
 	public partial class AVFragmentedAssetTrack {
 		[Obsolete ("Default constructor should not be used")]

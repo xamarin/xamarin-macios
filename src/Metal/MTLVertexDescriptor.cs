@@ -2,12 +2,12 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.ModelIO;
-using XamCore.ObjCRuntime;
-using XamCore.Metal;
+using Foundation;
+using ModelIO;
+using ObjCRuntime;
+using Metal;
 
-namespace XamCore.Metal {
+namespace Metal {
 	public partial class MTLVertexDescriptor {
 
 		[iOS (9,0)]

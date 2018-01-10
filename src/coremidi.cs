@@ -27,11 +27,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using ObjCRuntime;
 
-namespace XamCore.CoreMidi {
+namespace CoreMidi {
 	
 #if !MONOMAC
 	[BaseType (typeof (NSObject), Name="MIDINetworkHost")]

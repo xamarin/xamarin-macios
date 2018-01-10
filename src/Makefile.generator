@@ -127,13 +127,13 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe: build/common/bgen.exe | $(I
 	$(Q) install -m 0755 $< $@
 	$(Q) install -m 0644 $< $(@:.exe=.pdb)
 
-$(IOS_BUILD_DIR)/native/Xamarin.iOS.BindingAttributes.dll: generator-attributes.cs Makefile.generator $(PMCS_EXE)
+$(IOS_BUILD_DIR)/native/Xamarin.iOS.BindingAttributes.dll: generator-attributes.cs Makefile.generator
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/native"     -compiler:$(IOS_MCS) -global-replace:"^XamCore.="        -out:$@ -debug generator-attributes.cs -target:library
+	$(Q_GEN) $(SYSTEM_MCS) -out:$@ -debug generator-attributes.cs -target:library
 
-$(IOS_BUILD_DIR)/native/monotouch.BindingAttributes.dll: generator-attributes.cs Makefile.generator $(PMCS_EXE)
+$(IOS_BUILD_DIR)/native/monotouch.BindingAttributes.dll: generator-attributes.cs Makefile.generator
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/compat-ios"     -compiler:$(IOS_MCS) -global-replace:"^XamCore.=MonoTouch."        -out:$@ -debug generator-attributes.cs -target:library
+	$(Q_GEN) $(SYSTEM_MCS) -out:$@ -debug generator-attributes.cs -target:library
 
 #
 # Xamarin.Watch (bwatch)
@@ -156,9 +156,9 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/%.dll: $(WATCH_BUILD_DIR)/%.dll | $(I
 	$(Q) install -m 0755 $< $@
 	$(Q) install -m 0644 $<.mdb $@.mdb
 
-$(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll: generator-attributes.cs Makefile.generator $(PMCS_EXE)
+$(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll: generator-attributes.cs Makefile.generator
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/watch"     -compiler:$(SYSTEM_MCS) -global-replace:"^XamCore.="        -out:$@ -debug generator-attributes.cs -target:library
+	$(Q_GEN) $(SYSTEM_MCS) -out:$@ -debug generator-attributes.cs -target:library
 
 # #
 # # Xamarin.TVOS (btv)
@@ -181,9 +181,9 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/%.dll: $(TVOS_BUILD_DIR)/%.dll | $(IO
 	$(Q) install -m 0755 $< $@
 	$(Q) install -m 0644 $<.mdb $@.mdb
 
-$(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll: generator-attributes.cs Makefile.generator $(PMCS_EXE)
+$(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll: generator-attributes.cs Makefile.generator
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/tvos"     -compiler:$(SYSTEM_MCS) -global-replace:"^XamCore.="        -out:$@ -debug generator-attributes.cs -target:library
+	$(Q_GEN) $(SYSTEM_MCS) -out:$@ -debug generator-attributes.cs -target:library
 
 #
 # Xamarin.Mac (bmac)
@@ -223,9 +223,9 @@ $(MAC_BUILD_DIR)/XamMac.BindingAttributes.dll: $(MACIOS_BINARIES_PATH)/XamMac.Bi
 	$(Q) cp $< $@
 	$(Q) cp $<.mdb $@.mdb
 
-$(MAC_BUILD_DIR)/Xamarin.Mac-%.BindingAttributes.dll: generator-attributes.cs Makefile.generator $(PMCS_EXE)
+$(MAC_BUILD_DIR)/Xamarin.Mac-%.BindingAttributes.dll: generator-attributes.cs Makefile.generator
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/$*"     -compiler:$(SYSTEM_MCS) -global-replace:"^XamCore.="        -out:$@ -debug generator-attributes.cs -target:library
+	$(Q_GEN) $(SYSTEM_MCS) -out:$@ -debug generator-attributes.cs -target:library
 
 bgen:	\
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen                     \

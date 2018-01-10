@@ -1,6 +1,6 @@
 using System;
 
-namespace XamCore.MediaPlayer {
+namespace MediaPlayer {
 #if !MONOMAC
 	public partial class MPRemoteCommandCenter {
 		[Obsolete ("Use MPRemoteCommandCenter.Shared")]

@@ -29,11 +29,11 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
+using Foundation;
+using ObjCRuntime;
+using CoreFoundation;
 
-namespace XamCore.CoreGraphics {
+namespace CoreGraphics {
 
 	// CGGeometry.h
 	public struct CGVector {

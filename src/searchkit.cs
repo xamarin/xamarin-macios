@@ -3,10 +3,10 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.SearchKit {
+namespace SearchKit {
 	[Static]
 	interface SKTextAnalysisKeys {
 		[Field ("kSKMinTermLength")]

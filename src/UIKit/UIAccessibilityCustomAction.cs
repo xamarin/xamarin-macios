@@ -10,11 +10,11 @@
 #if !WATCH
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
+using Foundation;
+using ObjCRuntime;
+using CoreGraphics;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	public partial class UIAccessibilityCustomAction {
 		object action;

@@ -8,16 +8,16 @@
 #if XAMCORE_2_0 || !MONOMAC // MultipeerConnectivity is 64-bit only on OS X
 using System;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.Security;
+using Foundation;
+using ObjCRuntime;
+using Security;
 #if MONOMAC
-using XamCore.AppKit;
+using AppKit;
 #else
-using XamCore.UIKit;
+using UIKit;
 #endif
 
-namespace XamCore.MultipeerConnectivity {
+namespace MultipeerConnectivity {
 
 	[TV (10,0)]
 	[iOS (7,0)][Mac (10,10, onlyOn64 : true)]

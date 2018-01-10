@@ -7,11 +7,11 @@
 // Copyright 2013-2014 Xamarin Inc
 //
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreGraphics;
+using Foundation;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	
 	public class UIFontAttributes : DictionaryContainer {
 		public UIFontAttributes () {}

@@ -26,10 +26,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 
 	public partial class NSControl {
 		// If you modify, also search for other other XM_ACTIVATED_COPY and update as well

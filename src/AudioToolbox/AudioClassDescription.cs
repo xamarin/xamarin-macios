@@ -28,11 +28,11 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.AudioUnit;
+using CoreFoundation;
+using Foundation;
+using AudioUnit;
 
-namespace XamCore.AudioToolbox {
+namespace AudioToolbox {
 
 	// CoreAudio.framework - CoreAudioTypes.h
 	[StructLayout (LayoutKind.Sequential)]

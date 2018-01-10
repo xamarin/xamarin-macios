@@ -35,18 +35,18 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 #if XAMCORE_4_0
-using XamCore.CFNetwork;
+using CFNetwork;
 #elif !WATCH
-using XamCore.CoreServices;
+using CoreServices;
 #endif
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
 #if XAMCORE_2_0
 using CFIndex = System.nint;
 #endif
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 
 	// CFOptionFlags
 	[Flags]

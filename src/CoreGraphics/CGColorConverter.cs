@@ -11,14 +11,14 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
 #if !COREBUILD
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
+using CoreFoundation;
+using Foundation;
 #endif
 
-namespace XamCore.CoreGraphics {
+namespace CoreGraphics {
 
 	// uint32_t enum -> CGColorConverter.h
 	[TV (9,2)][Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]

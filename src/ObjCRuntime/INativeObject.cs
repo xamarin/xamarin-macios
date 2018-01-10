@@ -1,7 +1,7 @@
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 
 	public interface INativeObject {
 #if !COREBUILD

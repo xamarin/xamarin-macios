@@ -7,11 +7,11 @@
 // Copyright 2012 Xamarin Inc. All rights reserved.
 //
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 using System;
 
-namespace XamCore.AdSupport {
+namespace AdSupport {
 
 	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]

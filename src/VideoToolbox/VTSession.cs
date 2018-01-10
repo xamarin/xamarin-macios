@@ -9,13 +9,13 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreMedia;
-using XamCore.CoreVideo;
+using CoreFoundation;
+using ObjCRuntime;
+using Foundation;
+using CoreMedia;
+using CoreVideo;
 
-namespace XamCore.VideoToolbox {		
+namespace VideoToolbox {		
 	[Mac (10,8), iOS (8,0), TV (10,2)]
 	public class VTSession : INativeObject, IDisposable {
 		IntPtr handle;

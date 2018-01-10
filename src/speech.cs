@@ -8,12 +8,12 @@
 //
 
 using System;
-using XamCore.AVFoundation;
-using XamCore.CoreMedia;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using AVFoundation;
+using CoreMedia;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.Speech {
+namespace Speech {
 
 	[Native]
 	[iOS (10, 0)]

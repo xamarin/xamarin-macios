@@ -28,9 +28,9 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public partial class NSCoder {
 		public void Encode (byte [] buffer, string key)

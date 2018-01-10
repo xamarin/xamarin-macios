@@ -40,15 +40,15 @@
 //		[Field ("QTCaptureDeviceLegacySequenceGrabberAttribute")]
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.AppKit;
-using XamCore.CoreAnimation;
-using XamCore.CoreVideo;
-using XamCore.CoreImage;
-using XamCore.CoreGraphics;
+using Foundation;
+using ObjCRuntime;
+using AppKit;
+using CoreAnimation;
+using CoreVideo;
+using CoreImage;
+using CoreGraphics;
 
-namespace XamCore.QTKit
+namespace QTKit
 {
 	[BaseType (typeof (QTCaptureOutput))]
 	interface QTCaptureAudioPreviewOutput {

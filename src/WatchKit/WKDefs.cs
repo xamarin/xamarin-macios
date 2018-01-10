@@ -8,10 +8,10 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.WatchKit {
+namespace WatchKit {
 	[iOS (8,2)]
 	[Native]
 	public enum WKInterfaceMapPinColor : nint {

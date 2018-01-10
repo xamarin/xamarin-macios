@@ -11,14 +11,14 @@
 
 using System;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
-using XamCore.UIKit;
-using XamCore.MediaPlayer;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreLocation;
+using UIKit;
+using MediaPlayer;
 
-namespace XamCore.AssetsLibrary
+namespace AssetsLibrary
 {
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Photos' API instead.")]
 	public partial class ALAssetsLibrary

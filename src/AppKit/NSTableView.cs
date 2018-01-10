@@ -26,9 +26,9 @@
 
 using System;
 
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 
 	public partial class NSTableView {
 		public NSTableViewSource Source {

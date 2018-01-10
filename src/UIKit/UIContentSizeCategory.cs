@@ -3,10 +3,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	static public partial class UIContentSizeCategoryExtensions {
 
 		[iOS (11, 0), TV (11, 0)]

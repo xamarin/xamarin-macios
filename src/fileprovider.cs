@@ -10,11 +10,11 @@
 #if XAMCORE_2_0
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreGraphics;
+using Foundation;
 
-namespace XamCore.FileProvider {
+namespace FileProvider {
 
 	[iOS (11,0)]
 	[ErrorDomain ("NSFileProviderErrorDomain")]

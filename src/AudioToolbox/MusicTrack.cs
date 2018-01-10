@@ -16,15 +16,15 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 #if IOS
-using XamCore.CoreMidi;
+using CoreMidi;
 #endif
 
 using MidiEndpointRef = System.Int32;
 
-namespace XamCore.AudioToolbox {
+namespace AudioToolbox {
 
 	// MusicPlayer.h
 	[StructLayout (LayoutKind.Sequential)]

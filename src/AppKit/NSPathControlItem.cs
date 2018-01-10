@@ -1,7 +1,7 @@
-﻿using System;
-using XamCore.Foundation;
+using System;
+using Foundation;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSPathControlItem 
 #if !XAMCORE_3_0
 	: INSCoding

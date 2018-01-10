@@ -29,11 +29,11 @@
 
 using System;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.AddressBook {
+namespace AddressBook {
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Native]
 	[ErrorDomain ("ABAddressBookErrorDomain")]

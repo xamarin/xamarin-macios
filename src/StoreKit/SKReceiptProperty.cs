@@ -6,17 +6,17 @@
 //
 // Copyright 2013 Xamarin Inc.
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.StoreKit;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using StoreKit;
 
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
 using System;
 
-namespace XamCore.StoreKit {
+namespace StoreKit {
 	public partial class SKReceiptProperties : DictionaryContainer {
 #if !COREBUILD
 		public SKReceiptProperties ()

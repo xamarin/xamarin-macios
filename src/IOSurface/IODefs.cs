@@ -8,9 +8,9 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.IOSurface {
+namespace IOSurface {
 
 	public enum IOSurfaceLockOptions : uint {
 		ReadOnly = 1,

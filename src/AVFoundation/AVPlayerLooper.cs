@@ -20,13 +20,13 @@
 
 #if !WATCH
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.AudioToolbox;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using AudioToolbox;
+using ObjCRuntime;
 using System;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 
 	public partial class AVPlayerLooper {
 

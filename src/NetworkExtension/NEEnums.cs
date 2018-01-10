@@ -1,6 +1,6 @@
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.NetworkExtension {
+namespace NetworkExtension {
 
 	[iOS (8,0)][Mac (10,10)]
 	[ErrorDomain ("NEVPNErrorDomain")]

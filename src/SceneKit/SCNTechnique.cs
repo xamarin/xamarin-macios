@@ -10,8 +10,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using XamCore.Foundation;
-namespace XamCore.SceneKit
+using Foundation;
+namespace SceneKit
 {
 	public partial class SCNTechnique 
 	{

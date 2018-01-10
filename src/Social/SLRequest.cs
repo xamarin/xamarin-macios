@@ -8,11 +8,11 @@
 //
 #if XAMCORE_2_0 || !MONOMAC
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.Accounts;
+using ObjCRuntime;
+using Foundation;
+using Accounts;
 
-namespace XamCore.Social {
+namespace Social {
 
 	public partial class SLRequest {
 		internal static NSString KindToType (SLServiceKind kind)

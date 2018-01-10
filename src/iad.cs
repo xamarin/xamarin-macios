@@ -7,16 +7,16 @@
 // Copyright 2010, Novell, Inc.
 // Copyright 2011-2014 Xamarin Inc. All rights reserved.
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.UIKit;
-using XamCore.MediaPlayer;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using UIKit;
+using MediaPlayer;
 using System;
 using System.ComponentModel;
-using XamCore.AVKit;
+using AVKit;
 
-namespace XamCore.iAd {
+namespace iAd {
 
 	[iOS (4,0)]
 	[Deprecated (PlatformName.iOS, 10, 0)]

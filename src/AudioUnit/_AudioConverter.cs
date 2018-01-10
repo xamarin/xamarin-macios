@@ -28,10 +28,10 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.AudioToolbox;
+using ObjCRuntime;
+using AudioToolbox;
 
-namespace XamCore.AudioUnitWrapper
+namespace AudioUnitWrapper
 {
 #if !XAMCORE_2_0
     [Obsolete ("Use 'AudioConverter'.")]

@@ -8,11 +8,11 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
 #if (XAMCORE_2_0 || !MONOMAC) && !WATCH
-namespace XamCore.SpriteKit {
+namespace SpriteKit {
 	public partial class SKVideoNode : SKNode {
 
 		static bool CheckSystemVersion ()
@@ -20,7 +20,7 @@ namespace XamCore.SpriteKit {
 #if MONOMAC
 			return PlatformHelper.CheckSystemVersion (10, 10);
 #elif TVOS || IOS
-			return XamCore.UIKit.UIDevice.CurrentDevice.CheckSystemVersion (8, 0);
+			return UIKit.UIDevice.CurrentDevice.CheckSystemVersion (8, 0);
 #else
 			#error Unknown platform
 #endif

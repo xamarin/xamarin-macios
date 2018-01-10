@@ -29,14 +29,14 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
 
 using CFIndex = System.nint;
 
-namespace XamCore.CoreText {
+namespace CoreText {
 
 	public static class CTFontCollectionOptionKey {
 		public static readonly NSString RemoveDuplicates;

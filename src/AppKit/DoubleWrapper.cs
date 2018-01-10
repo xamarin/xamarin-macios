@@ -23,9 +23,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 
 	public partial class NSBrowser {
 		public event EventHandler DoubleClick {

@@ -21,7 +21,7 @@
 //
 using System;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 #if XAMCORE_2_0
 		// Equals(Object) and GetHashCode are provided by NSObject

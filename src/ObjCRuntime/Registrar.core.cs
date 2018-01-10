@@ -1,5 +1,5 @@
 
-namespace XamCore.Registrar {
+namespace Registrar {
 	abstract partial class Registrar {
 		internal static string CreateSetterSelector (string getterSelector)
 		{

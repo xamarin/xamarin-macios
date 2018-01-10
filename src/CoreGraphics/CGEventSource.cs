@@ -15,11 +15,11 @@ using System.Runtime.InteropServices;
 #if !NO_SYSTEM_DRAWING
 using System.Drawing;
 #endif
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreGraphics {
+namespace CoreGraphics {
 	public sealed class CGEventSource : IDisposable, INativeObject {
 		IntPtr handle;
 

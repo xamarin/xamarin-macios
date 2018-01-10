@@ -25,9 +25,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public partial class NSMutableDictionary : NSDictionary, IDictionary, IDictionary<NSObject, NSObject> {
 		
@@ -307,18 +307,18 @@ namespace XamCore.Foundation {
 		public static NSMutableDictionary LowlevelFromObjectAndKey (IntPtr obj, IntPtr key)
 		{
 #if MONOMAC
-			return (NSMutableDictionary) Runtime.GetNSObject (XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (class_ptr, selDictionaryWithObject_ForKey_Handle, obj, key));
+			return (NSMutableDictionary) Runtime.GetNSObject (ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (class_ptr, selDictionaryWithObject_ForKey_Handle, obj, key));
 #else
-			return (NSMutableDictionary) Runtime.GetNSObject (XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (class_ptr, Selector.GetHandle ("dictionaryWithObject:forKey:"), obj, key));
+			return (NSMutableDictionary) Runtime.GetNSObject (ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (class_ptr, Selector.GetHandle ("dictionaryWithObject:forKey:"), obj, key));
 #endif
 		}
 
 		public void LowlevelSetObject (IntPtr obj, IntPtr key)
 		{
 #if MONOMAC
-			XamCore.ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, selSetObject_ForKey_Handle, obj, key);
+			ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, selSetObject_ForKey_Handle, obj, key);
 #else
-			XamCore.ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, Selector.GetHandle ("setObject:forKey:"), obj, key);
+			ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, Selector.GetHandle ("setObject:forKey:"), obj, key);
 #endif
 		}
 
@@ -327,9 +327,9 @@ namespace XamCore.Foundation {
 			if (obj == null)
 				throw new ArgumentNullException (nameof (obj));
 #if MONOMAC
-			XamCore.ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, selSetObject_ForKey_Handle, obj.Handle, key);
+			ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, selSetObject_ForKey_Handle, obj.Handle, key);
 #else
-			XamCore.ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, Selector.GetHandle ("setObject:forKey:"), obj.Handle, key);
+			ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, Selector.GetHandle ("setObject:forKey:"), obj.Handle, key);
 #endif
 		}
 	}

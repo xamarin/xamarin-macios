@@ -10,13 +10,13 @@
 
 using System;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.AudioToolbox;
-using XamCore.AudioUnit;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using AudioToolbox;
+using AudioUnit;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 
 #if !XAMCORE_2_0
 	public partial class AVAudioUnitEffect {

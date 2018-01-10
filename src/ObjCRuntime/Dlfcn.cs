@@ -32,18 +32,18 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 #if !COREBUILD
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
 #if !WATCH
-using XamCore.CoreMedia;
+using CoreMedia;
 #endif
 #endif
 #if !NO_SYSTEM_DRAWING
 using System.Drawing;
 #endif
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 
 	// most are being generated from bindings
 	static partial class Libraries {

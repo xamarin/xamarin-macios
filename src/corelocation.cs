@@ -9,19 +9,19 @@
 // Copyright 2009, Novell, Inc.
 // Copyright 2011, 2013, 2015 Xamarin Inc.
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreLocation;
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
 #if XAMCORE_2_0 && !TVOS
-using XamCore.Contacts;
+using Contacts;
 #endif
 using System;
 
-namespace XamCore.CoreLocation {
+namespace CoreLocation {
 
 	[NoTV][NoWatch]
 	[iOS (7,0)]

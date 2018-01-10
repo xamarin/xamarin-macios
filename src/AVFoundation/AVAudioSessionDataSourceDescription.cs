@@ -3,12 +3,12 @@
 // Authors:
 //   Miguel de Icaza (miguel@xamarin.com)
 //
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 using System;
 #if XAMCORE_2_0 && !MONOMAC
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 	public enum AVAudioDataSourceLocation {
 		Unknown, Upper, Lower
 	}

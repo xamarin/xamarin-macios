@@ -11,11 +11,11 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.SystemConfiguration {
+namespace SystemConfiguration {
 	
 	// http://developer.apple.com/library/ios/#documentation/SystemConfiguration/Reference/CaptiveNetworkRef/Reference/reference.html
 	// CaptiveNetwork.h

@@ -29,7 +29,7 @@
 
 using System;
 
-namespace XamCore.Foundation
+namespace Foundation
 {
 	[AttributeUsage (AttributeTargets.Class | AttributeTargets.Struct |
 		AttributeTargets.Enum | AttributeTargets.Constructor |

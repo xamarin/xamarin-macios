@@ -7,13 +7,13 @@
 // Copyright 2013-2014 Xamarin Inc (http://www.xamarin.com)
 
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public partial class NSMutableData : IEnumerable, IEnumerable<byte> {
 
 		public override byte this [nint idx] {

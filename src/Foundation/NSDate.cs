@@ -30,9 +30,9 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public partial class NSDate {
 		const long NSDATE_TICKS = 631139040000000000;

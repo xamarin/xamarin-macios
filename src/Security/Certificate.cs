@@ -35,11 +35,11 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using Foundation;
 
-namespace XamCore.Security {
+namespace Security {
 
 	public partial class SecCertificate : INativeObject, IDisposable {
 		internal IntPtr handle;

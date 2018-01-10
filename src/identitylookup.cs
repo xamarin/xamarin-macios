@@ -9,10 +9,10 @@
 
 #if XAMCORE_2_0
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.IdentityLookup {
+namespace IdentityLookup {
 
 	[iOS (11,0)]
 	[Native]

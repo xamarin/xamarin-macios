@@ -10,12 +10,12 @@
 #if !WATCH
 
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UIButton {
 		
-		public UIButton (UIButtonType type) : base (XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend_int (class_ptr, Selector.GetHandle ("buttonWithType:"), (int)type))
+		public UIButton (UIButtonType type) : base (ObjCRuntime.Messaging.IntPtr_objc_msgSend_int (class_ptr, Selector.GetHandle ("buttonWithType:"), (int)type))
 		{
 			VerifyIsUIButton ();
 		}

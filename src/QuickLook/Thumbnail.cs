@@ -30,12 +30,12 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
 
-namespace XamCore.QuickLook {
+namespace QuickLook {
 	public static partial class QLThumbnailImage {
 
 		// QuickLook.framework/Versions/A/Headers/QLThumbnailImage.h

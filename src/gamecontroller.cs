@@ -8,15 +8,15 @@
 
 using System;
 
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 using OpenTK;
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
 
-namespace XamCore.GameController {
+namespace GameController {
 
 	[iOS (7,0)]
 	[Mac (10,9, onlyOn64: true)]

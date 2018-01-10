@@ -1,13 +1,13 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 
 using System;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.HealthKit;
-using XamCore.ObjCRuntime;
-using XamCore.UIKit;
+using CoreGraphics;
+using Foundation;
+using HealthKit;
+using ObjCRuntime;
+using UIKit;
 
-namespace XamCore.HealthKitUI {
+namespace HealthKitUI {
 
 	[iOS (9,3), Watch (2,2)]
 	[BaseType (typeof (UIView))]

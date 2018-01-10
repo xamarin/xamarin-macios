@@ -14,11 +14,11 @@ using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using XamCore.Foundation; 
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
+using Foundation; 
+using ObjCRuntime;
+using CoreGraphics;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UIView : IEnumerable {
 
 		public void Add (UIView view)
@@ -159,7 +159,7 @@ namespace XamCore.UIKit {
 
 #if !XAMCORE_2_0
 		[Advice ("Use the version with a 'ref float actualFontSize'.")]
-		public CGSize DrawString (string str, CGPoint point, nfloat width, XamCore.UIKit.UIFont font, nfloat minFontSize, nfloat actualFontSize, XamCore.UIKit.UILineBreakMode breakMode, XamCore.UIKit.UIBaselineAdjustment adjustment)
+		public CGSize DrawString (string str, CGPoint point, nfloat width, UIKit.UIFont font, nfloat minFontSize, nfloat actualFontSize, UIKit.UILineBreakMode breakMode, UIKit.UIBaselineAdjustment adjustment)
 		{
 			nfloat temp = actualFontSize;
 			return DrawString (str, point, width, font, minFontSize, ref temp, breakMode, adjustment);

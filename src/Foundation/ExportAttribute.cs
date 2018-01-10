@@ -36,10 +36,10 @@ using Type = IKVM.Reflection.Type;
 #else
 using System.Reflection;
 #endif
-using XamCore.ObjCRuntime;
-using XamCore.Registrar;
+using ObjCRuntime;
+using Registrar;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	[AttributeUsage (AttributeTargets.Method | AttributeTargets.Constructor | AttributeTargets.Property)]
 	public class ExportAttribute : Attribute {

@@ -7,13 +7,13 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using Foundation;
 
 using OSStatus = System.Int32;
 
-namespace XamCore.AudioToolbox {
+namespace AudioToolbox {
 
 	public class InstrumentInfo {
 

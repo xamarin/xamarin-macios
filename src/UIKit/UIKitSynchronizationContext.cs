@@ -9,9 +9,9 @@
 
 using System;
 using System.Threading;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	internal class UIKitSynchronizationContext : SynchronizationContext {
 		public override SynchronizationContext CreateCopy ()

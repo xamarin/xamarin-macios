@@ -26,7 +26,7 @@
 using System;
 using System.IO;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	[Flags]
 	public enum LinkTarget : int {
 		Simulator    = 1,

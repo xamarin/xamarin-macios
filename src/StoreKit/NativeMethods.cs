@@ -1,8 +1,8 @@
 using System;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.StoreKit {
+namespace StoreKit {
 
 	partial class SKReceiptRefreshRequest {
 #if !MONOMAC || !XAMCORE_2_0

@@ -9,7 +9,7 @@
 
 using System;
 
-namespace XamCore.AppKit
+namespace AppKit
 {
 	public enum NSStatusItemLength
 	{

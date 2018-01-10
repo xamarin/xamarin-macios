@@ -10,11 +10,11 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.ImageIO {
+namespace ImageIO {
 
 	// CGImageMetadata.h
 	[iOS (7,0), Mac (10,8)]

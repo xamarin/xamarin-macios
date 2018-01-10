@@ -8,9 +8,9 @@
 //
 
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.Foundation
+namespace Foundation
 {
 	public partial class NSFileManagerDelegate {
 		public virtual bool ShouldCopyItemAtPath (NSFileManager fileManager, string srcPath, string dstPath)

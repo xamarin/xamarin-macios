@@ -26,9 +26,9 @@
 //
 using System;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.CoreText {
+namespace CoreText {
 
 	[Native]
 	[ErrorDomain ("kCTFontManagerErrorDomain")]

@@ -28,12 +28,12 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
 
-namespace XamCore.CoreText {
+namespace CoreText {
 
 #region Run Delegate Callbacks
 	delegate void CTRunDelegateDeallocateCallback (IntPtr refCon);

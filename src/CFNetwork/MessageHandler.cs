@@ -34,12 +34,12 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Net.Http;
-using XamCore.CFNetwork;
-using XamCore.CoreFoundation;
-using XamCore.CoreServices;
-using XamCore.Foundation;
+using CFNetwork;
+using CoreFoundation;
+using CoreServices;
+using Foundation;
 
-namespace XamCore.CFNetwork {
+namespace CFNetwork {
 
 	public class MessageHandler : HttpClientHandler {
 		public MessageHandler ()

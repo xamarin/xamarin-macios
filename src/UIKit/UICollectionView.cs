@@ -10,11 +10,11 @@
 #if !WATCH
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 using System.Threading.Tasks;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UICollectionView {
 
 		public UICollectionReusableView DequeueReusableCell (string reuseIdentifier, NSIndexPath indexPath)

@@ -11,11 +11,11 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreGraphics;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AppKit
+namespace AppKit
 {
 	[Mac (10,10)]
 	[Native]

@@ -9,13 +9,13 @@
 //
 using System;
 
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
+using CoreGraphics;
+using Foundation;
 #if (XAMCORE_2_0 || !MONOMAC) && !WATCH
-using XamCore.Metal;
+using Metal;
 #endif
 
-namespace XamCore.SceneKit {
+namespace SceneKit {
 	public partial class SCNGeometrySource {
 
 		public static unsafe SCNGeometrySource FromVertices (SCNVector3 [] vertices)

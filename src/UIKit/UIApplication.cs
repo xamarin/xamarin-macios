@@ -10,11 +10,11 @@
 
 using System;
 using System.Threading;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public class UIKitThreadAccessException : Exception {
 		public UIKitThreadAccessException () : base ("UIKit Consistency error: you are calling a UIKit method that can only be invoked from the UI thread.")
 		{

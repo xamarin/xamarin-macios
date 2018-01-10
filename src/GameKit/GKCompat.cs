@@ -3,9 +3,9 @@
 #if !XAMCORE_3_0
 
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.GameKit {
+namespace GameKit {
 
 	public partial class GKMatchRequest {
 		

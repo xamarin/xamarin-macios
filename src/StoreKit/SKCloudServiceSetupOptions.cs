@@ -1,10 +1,10 @@
 #if __IOS__
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.StoreKit {
+namespace StoreKit {
 
 	partial class SKCloudServiceSetupOptions {
 

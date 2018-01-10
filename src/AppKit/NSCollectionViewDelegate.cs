@@ -1,9 +1,9 @@
-﻿#if !XAMCORE_4_0
+#if !XAMCORE_4_0
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AppKit
+namespace AppKit
 {
 	public partial class NSCollectionViewDelegate
 	{

@@ -32,11 +32,11 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using XamCore.CoreFoundation;
-using XamCore.CoreServices;
-using XamCore.Foundation;
+using CoreFoundation;
+using CoreServices;
+using Foundation;
 
-namespace XamCore.CFNetwork {
+namespace CFNetwork {
 
 	class WebRequestStream {
 		Stream stream;

@@ -22,10 +22,10 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSApplicationDelegate : NSObject {
 #if !XAMCORE_2_0
 		[Obsolete ("Use 'DidFinishLaunching (NSNotification)' instead.")]

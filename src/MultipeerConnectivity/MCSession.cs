@@ -11,10 +11,10 @@
 using System;
 using System.Collections.Generic;
 
-using XamCore.Foundation;
-using XamCore.Security;
+using Foundation;
+using Security;
 
-namespace XamCore.MultipeerConnectivity {
+namespace MultipeerConnectivity {
 
 	public partial class MCSession {
 

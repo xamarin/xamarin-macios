@@ -9,11 +9,11 @@
 
 using System;
 using System.ComponentModel;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
 
-namespace XamCore.Contacts {
+namespace Contacts {
 
 #if XAMCORE_2_0 // The Contacts framework uses generics heavily, which is only supported in Unified (for now at least)
 

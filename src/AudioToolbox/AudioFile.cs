@@ -33,14 +33,14 @@ using System.IO;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using Foundation;
 
 using OSStatus = System.Int32;
 using AudioFileID = System.IntPtr;
 
-namespace XamCore.AudioToolbox {
+namespace AudioToolbox {
 
 	public enum AudioFileType {  // UInt32 AudioFileTypeID
 		AIFF = 0x41494646, // AIFF
@@ -1297,7 +1297,7 @@ namespace XamCore.AudioToolbox {
 
 		public NSData AlbumArtwork {
 			get {
-				return (NSData)XamCore.ObjCRuntime.Runtime.GetNSObject (GetIntPtr (AudioFileProperty.AlbumArtwork));
+				return (NSData)ObjCRuntime.Runtime.GetNSObject (GetIntPtr (AudioFileProperty.AlbumArtwork));
 			}
 		}
 		

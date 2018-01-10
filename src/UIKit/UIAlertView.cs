@@ -11,10 +11,10 @@
 #if IOS
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UIAlertView {
 		public UIAlertView (string title, string message, IUIAlertViewDelegate del, string cancelButtonTitle, params string [] otherButtons)
 			: this (title, message, del, cancelButtonTitle, otherButtons == null || otherButtons.Length == 0 ? IntPtr.Zero : new NSString (otherButtons [0]).Handle, IntPtr.Zero, IntPtr.Zero)

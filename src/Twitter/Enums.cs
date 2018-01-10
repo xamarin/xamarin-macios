@@ -7,9 +7,9 @@
 // Copyright 2011-2014 Xamarin Inc
 //
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Twitter {
+namespace Twitter {
 
 	// untyped enum -> TWTweetComposeViewController.h where the values are equals to those of
 	// SLComposeViewControllerResult, which is a NSInteger -> SLComposeViewController.h, but a 

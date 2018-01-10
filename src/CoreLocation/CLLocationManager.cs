@@ -30,13 +30,13 @@
 //
 using System;
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
-using XamCore.Foundation;
-using XamCore.CoreLocation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreLocation;
+using ObjCRuntime;
 
-namespace XamCore.CoreLocation {
+namespace CoreLocation {
 	public partial class CLLocationManager : NSObject {
 
 #if IOS

@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	[StructLayout(LayoutKind.Explicit)]
 	internal struct ObjectWrapper {
 		[FieldOffset(0)] object obj;

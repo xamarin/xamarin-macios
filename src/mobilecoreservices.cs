@@ -1,7 +1,7 @@
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.MobileCoreServices {
+namespace MobileCoreServices {
 
 	[Partial]
 	interface UTType {

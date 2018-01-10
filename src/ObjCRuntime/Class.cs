@@ -12,12 +12,12 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
+using Foundation;
 #if !COREBUILD
-using XamCore.Registrar;
+using Registrar;
 #endif
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	public partial class Class : INativeObject
 	{
 #if !COREBUILD

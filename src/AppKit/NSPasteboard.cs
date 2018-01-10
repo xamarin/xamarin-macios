@@ -1,11 +1,11 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreGraphics;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSPasteboard {
 #if !XAMCORE_2_0
 		// This is a stable API we can't break, even if it is all kinds of wrong

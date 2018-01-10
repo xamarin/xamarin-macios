@@ -12,9 +12,9 @@ using System.IO;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Security {
+namespace Security {
 
 	delegate SslStatus SslReadFunc (IntPtr connection, IntPtr data, /* size_t* */ ref nint dataLength);
 

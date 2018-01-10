@@ -1,4 +1,4 @@
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public partial class NSUrlRequest {
 		public string this [string key] {

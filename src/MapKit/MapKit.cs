@@ -10,12 +10,12 @@
 #if XAMCORE_2_0 || !MONOMAC
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreGraphics;
+using CoreLocation;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.MapKit {
+namespace MapKit {
 
 #if !WATCH
 	// MKTileOverlay.h

@@ -30,25 +30,25 @@
 
 using System;
 #if MONOMAC
-using XamCore.AppKit;
+using AppKit;
 #else
-using XamCore.UIKit;
-using NSColor = XamCore.UIKit.UIColor;
-using NSFont = XamCore.UIKit.UIFont;
-using NSImage = XamCore.UIKit.UIImage;
-using NSView = XamCore.UIKit.UIView;
-using NSEdgeInsets = XamCore.UIKit.UIEdgeInsets;
-using NSEvent = XamCore.UIKit.UIEvent;
-using NSBezierPath = XamCore.UIKit.UIBezierPath;
-using NSTextAlignment = XamCore.UIKit.UITextAlignment;
+using UIKit;
+using NSColor = UIKit.UIColor;
+using NSFont = UIKit.UIFont;
+using NSImage = UIKit.UIImage;
+using NSView = UIKit.UIView;
+using NSEdgeInsets = UIKit.UIEdgeInsets;
+using NSEvent = UIKit.UIEvent;
+using NSBezierPath = UIKit.UIBezierPath;
+using NSTextAlignment = UIKit.UITextAlignment;
 // HACK: to make intermediate dll build, since we use these 
 // types in a few [NoiOS] members (this way we avoid numerous #ifdefs later)
-using NSPrintInfo = XamCore.Foundation.NSObject;
-using NSPrintOperation = XamCore.Foundation.NSObject;
+using NSPrintInfo = Foundation.NSObject;
+using NSPrintOperation = Foundation.NSObject;
 #endif
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
+using Foundation;
+using ObjCRuntime;
+using CoreGraphics;
 
 // Verify/Test Delegate Models
 // Check for missing NullAllowed on all object properties
@@ -56,7 +56,7 @@ using XamCore.CoreGraphics;
 // Check classes with no public inits - Should I make the constructors private?
 // Check the few abnormal properties
 
-namespace XamCore.PdfKit {
+namespace PdfKit {
 
 	[Mac (10,13)]
 	[iOS (11,0)]

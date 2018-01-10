@@ -8,12 +8,12 @@
 // Copyright 2012-2014 Xamarin Inc
 //
 using System.Runtime.InteropServices;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreGraphics;
+using Foundation;
+using ObjCRuntime;
 using System;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	public static class UIGraphics {
 		[DllImport (Constants.UIKitLibrary)]

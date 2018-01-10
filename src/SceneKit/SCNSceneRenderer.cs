@@ -10,11 +10,11 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
 
-namespace XamCore.SceneKit {
+namespace SceneKit {
 
 #if !XAMCORE_3_0
 	public static partial class SCNSceneRenderer_Extensions {

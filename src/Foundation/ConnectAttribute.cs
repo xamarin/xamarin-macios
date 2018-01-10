@@ -22,7 +22,7 @@
 //
 using System;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	[AttributeUsage (AttributeTargets.Property)]
 	public sealed class ConnectAttribute : Attribute {

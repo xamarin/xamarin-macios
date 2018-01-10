@@ -9,11 +9,11 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using Foundation;
 
-namespace XamCore.Security {
+namespace Security {
 
 	// untyped enum in Security.framework/Headers/SecPolicy.h but the API use CFOptionFlags
 	// which is defined as in CFBase.h (do not trust Apple web documentation)

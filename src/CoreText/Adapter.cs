@@ -30,11 +30,11 @@
 using System;
 using System.Collections.Generic;
 
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreText {
+namespace CoreText {
 
 	internal static class Adapter {
 

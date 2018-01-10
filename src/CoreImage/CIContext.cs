@@ -24,15 +24,15 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreFoundation;
+using ObjCRuntime;
 #if !MONOMAC
-using XamCore.Metal;
-using XamCore.OpenGLES;
+using Metal;
+using OpenGLES;
 #endif
-namespace XamCore.CoreImage {
+namespace CoreImage {
 	public class CIContextOptions : DictionaryContainer {
 
 		public CIContextOptions ()

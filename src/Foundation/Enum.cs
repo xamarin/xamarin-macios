@@ -24,9 +24,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation  {
+namespace Foundation  {
 #if COREBUILD
 	[Protocol]
 	public interface INSCopying {}

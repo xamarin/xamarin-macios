@@ -7,11 +7,11 @@
 
 #if !WATCH
 
-using XamCore.Foundation;
+using Foundation;
 using System;
-using XamCore.AudioToolbox;
+using AudioToolbox;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 	public partial class AVAudioBuffer {
 		public AudioBuffers AudioBufferList {
 			get {

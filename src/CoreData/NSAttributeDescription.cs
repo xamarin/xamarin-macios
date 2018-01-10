@@ -31,10 +31,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreData {
+namespace CoreData {
 		public partial class NSAttributeDescription {
 
 #if !XAMCORE_2_0

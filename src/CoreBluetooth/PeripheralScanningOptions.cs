@@ -27,11 +27,11 @@
 
 using System;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreBluetooth {
+namespace CoreBluetooth {
 
 	public partial class PeripheralScanningOptions
 	{

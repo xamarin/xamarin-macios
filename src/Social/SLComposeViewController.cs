@@ -8,12 +8,12 @@
 //
 #if !MONOMAC
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.Accounts;
-using XamCore.UIKit;
+using ObjCRuntime;
+using Foundation;
+using Accounts;
+using UIKit;
 
-namespace XamCore.Social {
+namespace Social {
 
 	public partial class SLComposeViewController {
 		public static SLComposeViewController FromService (SLServiceKind serviceKind)

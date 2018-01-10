@@ -1,6 +1,6 @@
 using System;
 
-namespace XamCore.HealthKit {
+namespace HealthKit {
 
 	public partial class HKAnchoredObjectQuery {
 

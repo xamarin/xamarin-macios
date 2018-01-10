@@ -27,7 +27,7 @@
 //
 
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public abstract partial class NSUrlProtocol : NSObject {
 #if !XAMCORE_2_0
 		NSUrlProtocolClient client;

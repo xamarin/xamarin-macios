@@ -29,10 +29,10 @@
 using System;
 using System.Collections.Generic;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AppKit
+namespace AppKit
 {
 	[Register ("__MonoMac_NSAlertDidEndDispatcher")]
 	internal class NSAlertDidEndDispatcher : NSObject

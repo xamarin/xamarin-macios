@@ -1,10 +1,10 @@
 // Copyright 2012-2014 Xamarin Inc. All rights reserved.
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.PassKit {
+namespace PassKit {
 
 	// untyped enum -> PKError.h
 	// This never seemed to be deprecatd, yet in iOS8 it's obsoleted

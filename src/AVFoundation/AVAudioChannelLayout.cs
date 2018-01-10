@@ -4,15 +4,15 @@
 // Authors:
 //   Miguel de Icaza (miguel@xamarin.com)
 //
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.AudioToolbox;
+using Foundation;
+using ObjCRuntime;
+using AudioToolbox;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 	public partial class AVAudioChannelLayout {
 		[ThreadStatic] 
 		static IntPtr handleToLayout;

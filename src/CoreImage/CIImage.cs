@@ -23,16 +23,16 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
+using ObjCRuntime;
 #if !MONOMAC
-using XamCore.UIKit;
-using XamCore.CoreVideo;
+using UIKit;
+using CoreVideo;
 #endif
 
-namespace XamCore.CoreImage {
+namespace CoreImage {
 	public class CIAutoAdjustmentFilterOptions {
 
 		// The default value is true.
@@ -80,7 +80,7 @@ namespace XamCore.CoreImage {
 				dict.LowlevelSetObject (NSArray.FromObjects (Features), CIImage.AutoAdjustFeaturesKey.Handle);
 			}
 			if (ImageOrientation.HasValue){
-				dict.LowlevelSetObject (new NSNumber ((int)ImageOrientation.Value), global::XamCore.ImageIO.CGImageProperties.Orientation.Handle);
+				dict.LowlevelSetObject (new NSNumber ((int)ImageOrientation.Value), global::ImageIO.CGImageProperties.Orientation.Handle);
 			}
 			if (AutoAdjustCrop.HasValue && AutoAdjustCrop.Value == true){
 				dict.LowlevelSetObject (CFBoolean.True.Handle, CIImage.AutoAdjustCrop.Handle);

@@ -33,15 +33,15 @@ using System.Text;
 using System.Reflection;
 using System.Threading;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 
 #if XAMCORE_2_0
 using CFIndex = System.nint;
 #endif
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 
 	// CFStream.h
 	public class CFReadStream : CFStream {

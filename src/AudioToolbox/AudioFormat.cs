@@ -30,14 +30,14 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 
 using OSStatus = System.Int32;
 using AudioFileID = System.IntPtr;
 
-namespace XamCore.AudioToolbox {
+namespace AudioToolbox {
 
 	// AudioFormatListItem
 	[StructLayout(LayoutKind.Sequential)]

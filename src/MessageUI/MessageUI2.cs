@@ -8,11 +8,11 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
 
-namespace XamCore.MessageUI {
+namespace MessageUI {
 
 	public class MFComposeResultEventArgs : EventArgs {
 		public MFComposeResultEventArgs (MFMailComposeViewController controller, MFMailComposeResult result, NSError error)

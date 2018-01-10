@@ -1,8 +1,8 @@
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.WebKit {
+namespace WebKit {
 	public partial class DomHtmlSelectElement { 
 		public DomNode this [string name] { get { return this.NamedItem (name); } }
 		public DomNode this [uint index] { get { return this.GetItem (index); } } 

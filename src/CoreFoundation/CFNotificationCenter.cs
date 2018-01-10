@@ -14,12 +14,12 @@
 using System;
 using System.Runtime.InteropServices;
 using CFNotificationCenterRef=global::System.IntPtr;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
 using System.Collections.Generic;
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 
 	[Native] // CFIndex
 	public enum CFNotificationSuspensionBehavior : nint {

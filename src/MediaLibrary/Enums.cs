@@ -21,10 +21,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
 #if XAMCORE_2_0
-namespace XamCore.MediaLibrary {
+namespace MediaLibrary {
 	[Native]
 	public enum MLMediaSourceType : nuint
 	{

@@ -33,9 +33,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public partial class NSSet : IEnumerable<NSObject> {
 		public NSSet (params NSObject [] objs) : this (NSArray.FromNSObjects (objs))

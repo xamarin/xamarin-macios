@@ -1,9 +1,9 @@
 #if !WATCH
 
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.SceneKit
+namespace SceneKit
 {
 	[iOS (9,0)][Mac (10,11)]
 	public partial class SCNRenderingOptions {

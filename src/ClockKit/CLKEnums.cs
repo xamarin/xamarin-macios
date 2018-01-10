@@ -8,9 +8,9 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.ClockKit {
+namespace ClockKit {
 
 	[Native]
 	public enum CLKComplicationFamily : nint {

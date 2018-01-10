@@ -25,7 +25,7 @@
 //
 using System;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public class NSErrorException : Exception {
 		NSError error;
 

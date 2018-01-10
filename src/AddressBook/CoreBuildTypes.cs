@@ -11,10 +11,10 @@
 // Authors: miguel de icaza
 //
 #if COREBUILD
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 using System;
-namespace XamCore.AddressBook {
+namespace AddressBook {
 	public class ABAddressBook : INativeObject {
 		public IntPtr Handle { get; set; }
 	}

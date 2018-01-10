@@ -1,7 +1,7 @@
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.PhotosUI {
+namespace PhotosUI {
 
 	[Mac (10,12, onlyOn64: true)]
 	[TV (10,0)]

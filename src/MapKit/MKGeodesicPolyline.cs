@@ -30,11 +30,11 @@ using System;
 using System.Threading.Tasks;
 using System.Threading;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreLocation;
+using Foundation;
+using ObjCRuntime;
+using CoreLocation;
 
-namespace XamCore.MapKit {
+namespace MapKit {
 	public partial class MKGeodesicPolyline {
 		public static unsafe MKGeodesicPolyline FromPoints (MKMapPoint [] points)
 		{

@@ -1,9 +1,9 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.CoreLocation {
+namespace CoreLocation {
 
 #if !XAMCORE_2_0
 	public partial class CLBeaconRegion {

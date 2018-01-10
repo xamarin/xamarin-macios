@@ -15,15 +15,15 @@
 using System;
 using System.ComponentModel;
 
-using XamCore.CoreAnimation;
-using XamCore.CoreData;
-using XamCore.CoreGraphics;
-using XamCore.CoreImage;
-using XamCore.CoreLocation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreAnimation;
+using CoreData;
+using CoreGraphics;
+using CoreImage;
+using CoreLocation;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.Metal {
+namespace Metal {
 	delegate void MTLDeallocator (IntPtr pointer, nuint length);
 
 	delegate void MTLNewComputePipelineStateWithReflectionCompletionHandler (IMTLComputePipelineState computePipelineState, MTLComputePipelineReflection reflection, NSError error);
@@ -726,7 +726,7 @@ namespace XamCore.Metal {
 		[iOS (11,0), TV (11,0), NoWatch, Mac (10,11)]
 		[return: NullAllowed]
 		[Export ("newTextureWithDescriptor:iosurface:plane:")]
-		IMTLTexture CreateTexture (MTLTextureDescriptor descriptor, XamCore.IOSurface.IOSurface iosurface, nuint plane);
+		IMTLTexture CreateTexture (MTLTextureDescriptor descriptor, IOSurface.IOSurface iosurface, nuint plane);
 
 		[Abstract, Export ("newSamplerStateWithDescriptor:")]
 		[return: NullAllowed]
@@ -1112,7 +1112,7 @@ namespace XamCore.Metal {
 		[Abstract]
 #endif
 		[NullAllowed, Export ("iosurface")]
-		XamCore.IOSurface.IOSurface IOSurface { get; }
+		IOSurface.IOSurface IOSurface { get; }
 
 		[Mac (10, 11), iOS (11,0), TV (11,0), NoWatch]
 #if XAMCORE_4_0

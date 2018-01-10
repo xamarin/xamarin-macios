@@ -6,7 +6,7 @@
 
 using System;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	public partial class UISearchController {
 		class __Xamarin_UISearchResultsUpdating : UISearchResultsUpdating {

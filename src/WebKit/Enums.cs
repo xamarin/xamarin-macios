@@ -1,8 +1,8 @@
 using System;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.WebKit {
+namespace WebKit {
 
 	public enum DomCssRuleType : ushort {
 		Unknown = 0,

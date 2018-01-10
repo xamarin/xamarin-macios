@@ -7,14 +7,14 @@
 // Copyright 2010, Novell, Inc.
 // Copyright 2013-2015 Xamarin Inc.
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
-using XamCore.UIKit;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreLocation;
+using UIKit;
 using System;
 
-namespace XamCore.CoreMotion {
+namespace CoreMotion {
 	[iOS (4,0)]
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs

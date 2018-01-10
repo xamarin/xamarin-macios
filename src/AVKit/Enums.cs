@@ -1,7 +1,7 @@
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.AVKit {
+namespace AVKit {
 
 #if !XAMCORE_3_0 || MONOMAC
 	// this enum only exists for OSX (not iOS)

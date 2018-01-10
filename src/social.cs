@@ -8,18 +8,18 @@
 //
 #if XAMCORE_2_0 || !MONOMAC
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.Accounts;
+using ObjCRuntime;
+using Foundation;
+using Accounts;
 
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
 #if MONOMAC
-using XamCore.AppKit;
+using AppKit;
 #endif
 
-namespace XamCore.Social {
+namespace Social {
 	[iOS (6,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[Static]

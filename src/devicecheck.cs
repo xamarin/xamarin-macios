@@ -9,10 +9,10 @@
 
 #if XAMCORE_2_0
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.DeviceCheck {
+namespace DeviceCheck {
 
 	[TV (11,0), NoWatch, NoMac, iOS (11,0)]
 	[ErrorDomain ("DCErrorDomain")]

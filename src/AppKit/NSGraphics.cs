@@ -23,11 +23,11 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public static class NSGraphics {
 		public static readonly float White = 1;
 		public static readonly float Black = 0;

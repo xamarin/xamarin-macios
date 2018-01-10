@@ -1,9 +1,9 @@
 using System;
 using System.Diagnostics;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
+using Foundation;
+using CoreGraphics;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 
 	[DebuggerTypeProxy (typeof(NSEvent.NSEventDebuggerProxy))]
 	public partial class NSEvent {

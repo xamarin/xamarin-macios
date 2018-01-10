@@ -9,9 +9,9 @@
 
 #if XAMCORE_2_0 && !TVOS
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.UserNotifications {
+namespace UserNotifications {
 	public partial class UNNotificationAttachment {
 
 		public static UNNotificationAttachment FromIdentifier (string identifier, NSUrl url, UNNotificationAttachmentOptions attachmentOptions, out NSError error)

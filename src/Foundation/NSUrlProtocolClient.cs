@@ -28,9 +28,9 @@
 
 using System;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 #if !XAMCORE_2_0 || MONOMAC
 	public sealed class NSUrlProtocolClient : NSObject
 	{

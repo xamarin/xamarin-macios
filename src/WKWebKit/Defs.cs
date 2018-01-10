@@ -9,9 +9,9 @@
 
 using System;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.WebKit
+namespace WebKit
 {
 	[Mac (10, 10)]
 	[iOS (8, 0)]

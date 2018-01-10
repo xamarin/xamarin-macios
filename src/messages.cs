@@ -8,14 +8,14 @@
 //
 
 using System;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.UIKit;
+using CoreFoundation;
+using CoreGraphics;
+using Foundation;
+using ObjCRuntime;
+using UIKit;
 
 #if !MONOMAC
-namespace XamCore.Messages {
+namespace Messages {
 
 	[iOS (10,0)]
 	[Native]

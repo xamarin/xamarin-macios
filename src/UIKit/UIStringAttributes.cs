@@ -29,15 +29,15 @@
 
 using System;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
 #if !WATCH
-using XamCore.CoreText;
+using CoreText;
 #endif
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	[iOS (6,0)]
 	public class UIStringAttributes : DictionaryContainer

@@ -27,13 +27,13 @@
 //
 //
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public partial class NSData : IEnumerable, IEnumerable<byte> {
 		
 		// some API, like SecItemCopyMatching, returns a retained NSData

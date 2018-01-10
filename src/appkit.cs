@@ -32,19 +32,19 @@
 using System;
 using System.Diagnostics;
 using System.ComponentModel;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
-using XamCore.CoreImage;
-using XamCore.CoreAnimation;
-using XamCore.CoreData;
-using XamCore.OpenGL;
-using XamCore.CoreVideo;
-using XamCore.CloudKit;
+using Foundation;
+using ObjCRuntime;
+using CoreGraphics;
+using CoreImage;
+using CoreAnimation;
+using CoreData;
+using OpenGL;
+using CoreVideo;
+using CloudKit;
 
 using CGGlyph = System.UInt16;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	//[BaseType (typeof (NSObject))]
 	//interface CIImage {
 	//	[Export ("drawInRect:fromRect:operation:fraction:")]
@@ -9448,19 +9448,19 @@ namespace XamCore.AppKit {
 		CGSize StringSize (NSDictionary attributes);
 
 		[Wrap ("This.StringSize (attributes == null ? null : attributes.Dictionary)")]
-		CGSize StringSize (XamCore.AppKit.NSStringAttributes attributes);
+		CGSize StringSize (AppKit.NSStringAttributes attributes);
 
 		[Export ("drawAtPoint:withAttributes:")]
 		void DrawAtPoint (CGPoint point, NSDictionary attributes);
 
 		[Wrap ("This.DrawAtPoint (point, attributes == null ? null : attributes.Dictionary)")]
-		void DrawAtPoint (CGPoint point, XamCore.AppKit.NSStringAttributes attributes);
+		void DrawAtPoint (CGPoint point, AppKit.NSStringAttributes attributes);
 
 		[Export ("drawInRect:withAttributes:")]
 		void DrawInRect (CGRect rect, NSDictionary attributes);
 
 		[Wrap ("This.DrawInRect (rect, attributes == null ? null : attributes.Dictionary)")]
-		void DrawInRect (CGRect rect, XamCore.AppKit.NSStringAttributes attributes);
+		void DrawInRect (CGRect rect, AppKit.NSStringAttributes attributes);
 	}
 
 	[Category, BaseType (typeof (NSAttributedString))]

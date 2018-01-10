@@ -10,10 +10,10 @@
 #if XAMCORE_2_0 || !MONOMAC
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.GameplayKit {
+namespace GameplayKit {
 
 	public partial class GKObstacleGraph {
 		public

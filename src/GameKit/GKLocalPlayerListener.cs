@@ -1,9 +1,9 @@
 #if !MONOMAC && !WATCH
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.GameKit {
+namespace GameKit {
 	public partial class GKLocalPlayerListener {
 
 		// GKInviteEventListener and GKTurnBasedEventListener both export same selector

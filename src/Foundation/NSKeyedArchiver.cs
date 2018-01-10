@@ -22,11 +22,11 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public partial class NSKeyedArchiver {
 
@@ -38,7 +38,7 @@ namespace XamCore.Foundation {
 				throw new ArgumentNullException ("kls");
 
 			var nsname = new NSString (name);
-			XamCore.ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (class_ptr, Selector.GetHandle ("setClassName:forClass:"), nsname.Handle, kls.Handle);
+			ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (class_ptr, Selector.GetHandle ("setClassName:forClass:"), nsname.Handle, kls.Handle);
 			nsname.Dispose ();
 		}
 
@@ -46,7 +46,7 @@ namespace XamCore.Foundation {
 		{
 			if (kls == null)
 				throw new ArgumentNullException ("kls");
-			return NSString.FromHandle (XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (class_ptr, Selector.GetHandle ("classNameForClass:"), kls.Handle));
+			return NSString.FromHandle (ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (class_ptr, Selector.GetHandle ("classNameForClass:"), kls.Handle));
 		}
 
 		public bool RequiresSecureCoding {

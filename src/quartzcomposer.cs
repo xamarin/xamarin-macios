@@ -24,15 +24,15 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.AppKit;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
-using XamCore.CoreAnimation;
-using XamCore.CoreImage;
-using XamCore.CoreVideo;
+using Foundation;
+using AppKit;
+using ObjCRuntime;
+using CoreGraphics;
+using CoreAnimation;
+using CoreImage;
+using CoreVideo;
 
-namespace XamCore.QuartzComposer {
+namespace QuartzComposer {
 
 	[BaseType (typeof (NSObject))]
 	interface QCComposition : NSCopying {

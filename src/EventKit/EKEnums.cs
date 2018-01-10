@@ -1,14 +1,14 @@
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreLocation;
 
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
 
-namespace XamCore.EventKit {
+namespace EventKit {
 
 	// untyped enum -> EKTypes.h
 	// iOS 9 promoted this to an NSInteger - which breaks compatibility

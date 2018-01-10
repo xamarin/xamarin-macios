@@ -33,14 +33,14 @@
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
 
-namespace XamCore.Security {
+namespace Security {
 
 	public enum SecKind {
 		InternetPassword,
@@ -970,9 +970,9 @@ namespace XamCore.Security {
 
 #if XAMCORE_2_0 && !WATCH && !TVOS
 		[iOS (9, 0), Mac (10, 11)]
-		public XamCore.LocalAuthentication.LAContext AuthenticationContext {
+		public LocalAuthentication.LAContext AuthenticationContext {
 			get {
-				return Fetch<XamCore.LocalAuthentication.LAContext> (SecItem.UseAuthenticationContext);
+				return Fetch<LocalAuthentication.LAContext> (SecItem.UseAuthenticationContext);
 			}
 			set {
 				if (value == null)

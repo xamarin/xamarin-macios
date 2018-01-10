@@ -9,10 +9,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.GameController {
+namespace GameController {
 	// GCExtendedGamepadSnapshot.h
 	// float_t are 4 bytes (at least for ARM64)
 	[StructLayout (LayoutKind.Sequential, Pack = 1)]

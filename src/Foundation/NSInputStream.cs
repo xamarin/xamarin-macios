@@ -21,11 +21,11 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public partial class NSInputStream : NSStream {
 		const string selReadMaxLength = "read:maxLength:";
 

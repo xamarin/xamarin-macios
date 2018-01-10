@@ -3,15 +3,15 @@
 using System;
 using System.Drawing;
 using System.Threading.Tasks;
-using XamCore.CoreMedia;
-using XamCore.CoreMotion;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreAnimation;
-using XamCore.CoreLocation;
+using CoreMedia;
+using CoreMotion;
+using Foundation;
+using ObjCRuntime;
+using CoreAnimation;
+using CoreLocation;
 using OpenTK;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 
 	public unsafe partial class AVOutputSettingsAssistant : NSObject {
 		public AVOutputSettingsAssistant Preset640x480 {

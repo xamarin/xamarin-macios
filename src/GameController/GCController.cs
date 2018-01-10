@@ -8,10 +8,10 @@
 
 using System;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.GameController {
+namespace GameController {
 
 	[iOS (9,0)][Mac (10,11)]
 	[Native]

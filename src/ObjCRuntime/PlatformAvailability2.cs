@@ -22,7 +22,7 @@
 using System;
 using System.Text;
 
-namespace XamCore.ObjCRuntime
+namespace ObjCRuntime
 {
 	[Flags]
 	public enum PlatformArchitecture : byte

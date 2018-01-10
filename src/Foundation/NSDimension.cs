@@ -1,6 +1,6 @@
 using System;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	
 	public partial class NSDimension {
 

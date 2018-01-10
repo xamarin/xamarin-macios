@@ -1,6 +1,6 @@
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.OpenGLES {
+namespace OpenGLES {
 
 	// NSUInteger -> EAGL.h
 	[Native]

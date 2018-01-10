@@ -9,13 +9,13 @@
 
 #if !WATCH
 
-using XamCore.Foundation;
+using Foundation;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	[Register]
 	class UIControlEventProxy : NSObject {
 		EventHandler eh;

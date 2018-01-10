@@ -8,13 +8,13 @@
 //
 
 using System;
-using XamCore.AVFoundation;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using AVFoundation;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 
 #if XAMCORE_2_0
-namespace XamCore.CallKit {
+namespace CallKit {
 
 	[iOS (10, 0)]
 	[Native]

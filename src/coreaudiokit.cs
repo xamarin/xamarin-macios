@@ -10,21 +10,21 @@
 using System;
 using System.ComponentModel;
 
-using XamCore.AudioUnit;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreAnimation;
-using XamCore.CoreGraphics;
+using AudioUnit;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
+using CoreAnimation;
+using CoreGraphics;
 #if MONOMAC
-using XamCore.AppKit;
-using AUViewControllerBase = XamCore.AppKit.NSViewController;
+using AppKit;
+using AUViewControllerBase = AppKit.NSViewController;
 #else
-using XamCore.UIKit;
-using AUViewControllerBase = XamCore.UIKit.UIViewController;
+using UIKit;
+using AUViewControllerBase = UIKit.UIViewController;
 #endif
 
-namespace XamCore.CoreAudioKit {
+namespace CoreAudioKit {
 #if XAMCORE_2_0 || !MONOMAC
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof(AUViewControllerBase))]

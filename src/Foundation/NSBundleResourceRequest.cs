@@ -3,11 +3,11 @@ using System.Reflection;
 using System.Collections;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
 #if !MONOMAC
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public partial class NSBundleResourceRequest : NSObject {
 #if XAMCORE_2_0
 		static NSSet<NSString> MakeSetFromTags (string [] tags)

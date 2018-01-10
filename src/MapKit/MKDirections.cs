@@ -2,7 +2,7 @@
 
 using System;
 
-namespace XamCore.MapKit {
+namespace MapKit {
 
 	public partial class MKDirections {
 		[Obsolete ("iOS9 does not allow creating an empty instance")]

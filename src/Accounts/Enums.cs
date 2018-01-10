@@ -1,7 +1,7 @@
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Accounts {
+namespace Accounts {
 
 	// untyped enum -> ACError.h
 	[ErrorDomain ("ACErrorDomain")]

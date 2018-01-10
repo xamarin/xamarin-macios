@@ -29,10 +29,10 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AudioToolbox
+namespace AudioToolbox
 {
 	// CoreAudio.framework - CoreAudioTypes.h
 	public class AudioBuffers : IDisposable, INativeObject

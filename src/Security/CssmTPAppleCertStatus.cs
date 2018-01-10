@@ -28,7 +28,7 @@
 
 using System;
 
-namespace XamCore.Security {
+namespace Security {
 
 	// typedef uint32 CSSM_TP_APPLE_CERT_STATUS;
 	// Security.framework/Versions/A/Headers/cssmapple.h (OSX only)

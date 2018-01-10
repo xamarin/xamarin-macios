@@ -1,6 +1,6 @@
 #if !MONOMAC
 
-namespace XamCore.NetworkExtension {
+namespace NetworkExtension {
 
 	public partial class NEFilterFlow {
 

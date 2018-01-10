@@ -7,10 +7,10 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
-using XamCore.UIKit;
-using XamCore.ObjCRuntime;
+using UIKit;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public partial class NSObject : INativeObject
 #if !COREBUILD
 	, IDisposable

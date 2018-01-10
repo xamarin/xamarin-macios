@@ -10,20 +10,20 @@
 #if XAMCORE_2_0 // The Intents framework uses generics which is only supported in Unified
 
 using System;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreLocation;
-using XamCore.Contacts;
-using XamCore.EventKit;
+using CoreGraphics;
+using Foundation;
+using ObjCRuntime;
+using CoreLocation;
+using Contacts;
+using EventKit;
 
 #if MONOMAC
-using UIImage = XamCore.Foundation.NSObject;
+using UIImage = Foundation.NSObject;
 #else
-using XamCore.UIKit;
+using UIKit;
 #endif
 
-namespace XamCore.Intents {
+namespace Intents {
 
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]

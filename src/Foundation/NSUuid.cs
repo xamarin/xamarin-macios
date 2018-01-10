@@ -8,9 +8,9 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	partial class NSUuid {
 		static unsafe IntPtr GetIntPtr (byte [] bytes)
 		{

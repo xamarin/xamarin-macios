@@ -11,9 +11,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 	public partial class AVCaptureSynchronizedDataCollection { //: IEnumerable<AVCaptureOutput>
 		public AVCaptureSynchronizedData this [AVCaptureOutput captureOutput] {
 			get {

@@ -10,10 +10,10 @@
 #if !TVOS && !WATCH
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	public static class UIDragDropSessionExtensions {
 

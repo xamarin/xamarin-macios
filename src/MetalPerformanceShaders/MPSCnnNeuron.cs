@@ -1,9 +1,9 @@
 ﻿#if XAMCORE_2_0 || !MONOMAC
 using System;
-using XamCore.Metal;
-using XamCore.Foundation;
+using Metal;
+using Foundation;
 
-namespace XamCore.MetalPerformanceShaders {
+namespace MetalPerformanceShaders {
 	public partial class MPSCnnNeuronPReLU {
 		public unsafe MPSCnnNeuronPReLU (IMTLDevice device, float [] a) : this (NSObjectFlag.Empty)
 		{

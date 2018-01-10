@@ -2,12 +2,12 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.ModelIO;
-using XamCore.ObjCRuntime;
-using XamCore.Metal;
+using Foundation;
+using ModelIO;
+using ObjCRuntime;
+using Metal;
 
-namespace XamCore.ModelIO {
+namespace ModelIO {
 	public partial class MDLVertexDescriptor {
 		[DllImport (Constants.MetalKitLibrary)]
 		static extern  /* MDLVertexDescriptor __nonnull */ IntPtr MTKModelIOVertexDescriptorFromMetal (/* MTLVertexDescriptor __nonnull */ IntPtr mtlDescriptor);

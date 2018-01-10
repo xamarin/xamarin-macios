@@ -7,11 +7,11 @@
 // Copyright 2013-2014 Xamarin, Inc.
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
 
-namespace XamCore.JavaScriptCore {
+namespace JavaScriptCore {
 
 	delegate void JSContextExceptionHandler (JSContext context, JSValue exception);
 

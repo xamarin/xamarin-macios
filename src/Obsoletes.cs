@@ -12,11 +12,11 @@
 //
 using System;
 
-using XamCore.Foundation;
+using Foundation;
 
 #if !XAMCORE_2_0
 
-namespace XamCore.AppKit {
+namespace AppKit {
 
 	public partial class NSBrowser {
 		[Obsolete ("Use 'GetItem' instead.")]
@@ -381,7 +381,7 @@ namespace XamCore.AppKit {
 	}
 }
 
-namespace XamCore.SceneKit {
+namespace SceneKit {
 	public partial class SCNNode {
 		[Obsolete ("Use 'SCNNode.AddChildNode' instead.")]
 		public void AddChildNodechild (SCNNode child)

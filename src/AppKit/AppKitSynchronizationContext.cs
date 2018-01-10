@@ -3,9 +3,9 @@
 //
 using System.Threading;
 
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	class AppKitSynchronizationContext : SynchronizationContext {
 		public override SynchronizationContext CreateCopy ()
 		{

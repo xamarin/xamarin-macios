@@ -27,11 +27,11 @@
 
 using System;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreVideo {
+namespace CoreVideo {
 
 	[Watch (4,0)]
 	public class CVPixelBufferPoolSettings : DictionaryContainer

@@ -1,8 +1,8 @@
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.LocalAuthentication {
+namespace LocalAuthentication {
 
 	[iOS (8,0)]
 	[Mac (10, 10)]

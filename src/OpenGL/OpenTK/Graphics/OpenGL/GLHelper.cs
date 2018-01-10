@@ -127,12 +127,12 @@ namespace OpenTK.Graphics.OpenGL
             GL.Color4(color.R, color.G, color.B, color.A);
         }
 		
-        public static void Color3(XamCore.AppKit.NSColor color)
+        public static void Color3(AppKit.NSColor color)
         {
             GL.Color3(color.RedComponent, color.GreenComponent, color.BlueComponent);
         }
 
-        public static void Color4(XamCore.AppKit.NSColor color)
+        public static void Color4(AppKit.NSColor color)
         {
             GL.Color4(color.RedComponent, color.GreenComponent, color.BlueComponent, color.AlphaComponent);
 		}
@@ -161,7 +161,7 @@ namespace OpenTK.Graphics.OpenGL
             GL.ClearColor(color.R / 255.0f, color.G / 255.0f, color.B / 255.0f, color.A / 255.0f);
         }
 		
-        public static void ClearColor(XamCore.AppKit.NSColor color)
+        public static void ClearColor(AppKit.NSColor color)
         {
             GL.ClearColor((float)color.RedComponent, (float)color.GreenComponent, (float)color.BlueComponent, (float)color.AlphaComponent);
 			
@@ -181,7 +181,7 @@ namespace OpenTK.Graphics.OpenGL
             GL.BlendColor(color.R / 255.0f, color.G / 255.0f, color.B / 255.0f, color.A / 255.0f);
         }
 		
-        public static void BlendColor(XamCore.AppKit.NSColor color)
+        public static void BlendColor(AppKit.NSColor color)
         {
 
             GL.BlendColor((float)color.RedComponent, (float)color.GreenComponent, (float)color.BlueComponent, (float)color.AlphaComponent);			

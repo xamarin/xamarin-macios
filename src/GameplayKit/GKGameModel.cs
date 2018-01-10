@@ -1,6 +1,6 @@
 using System;
 
-namespace XamCore.GameplayKit {
+namespace GameplayKit {
 
 	public partial class GKGameModel {
 

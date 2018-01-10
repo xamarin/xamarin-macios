@@ -7,9 +7,9 @@
 // Copyright 2013-2014, 2016 Xamarin Inc.
 //
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.SafariServices {
+namespace SafariServices {
 
 	// NSInteger -> SSReadingList.h
 	[NoMac][iOS (7,0)]

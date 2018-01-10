@@ -30,15 +30,15 @@ using System;
 using System.Drawing;
 using System.ComponentModel;
 
-using XamCore.Foundation;
-using XamCore.AppKit;
-using XamCore.CoreVideo;
-using XamCore.CoreGraphics;
-using XamCore.OpenGL;
+using Foundation;
+using AppKit;
+using CoreVideo;
+using CoreGraphics;
+using OpenGL;
 
 namespace OpenTK.Platform.MacOS
 {
-	public class MonoMacGameView : XamCore.AppKit.NSView, IGameWindow
+	public class MonoMacGameView : AppKit.NSView, IGameWindow
 	{
 		bool disposed;
 		NSOpenGLContext openGLContext;

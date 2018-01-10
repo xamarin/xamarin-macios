@@ -2,7 +2,7 @@
 
 using System;
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 
 	// note: Make sure names are identical/consistent with NSUrlError.*
 	// they share the same values but there's more entries in CFNetworkErrors

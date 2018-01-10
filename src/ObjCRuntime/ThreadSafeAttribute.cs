@@ -26,7 +26,7 @@
 
 using System;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 
 #if XAMCORE_2_0
 	sealed

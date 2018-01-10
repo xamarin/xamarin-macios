@@ -6,9 +6,9 @@
 //
 // Copyright 2013-2014 Xamarin Inc
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.SpriteKit {
+namespace SpriteKit {
 
 	// NSInteger -> SKKeyframeSequence.h
 	[Native]

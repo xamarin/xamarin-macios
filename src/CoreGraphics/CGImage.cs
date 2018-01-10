@@ -28,10 +28,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreGraphics {
+namespace CoreGraphics {
 
 #if MONOMAC
 	// uint32_t -> CGWindow.h (OSX SDK only)
@@ -207,7 +207,7 @@ namespace XamCore.CoreGraphics {
 #elif !WATCH
 		public static CGImage ScreenImage {
 			get {
-				return XamCore.UIKit.UIScreen.MainScreen.Capture ().CGImage;
+				return UIKit.UIScreen.MainScreen.Capture ().CGImage;
 			}
 		}
 #endif

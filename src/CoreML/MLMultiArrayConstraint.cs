@@ -10,10 +10,10 @@
 #if XAMCORE_2_0
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreML {
+namespace CoreML {
 	public partial class MLMultiArrayConstraint {
 		public nint[] Shape {
 			get {

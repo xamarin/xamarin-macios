@@ -8,12 +8,12 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
 #if XAMCORE_2_0 // The Contacts framework uses generics heavily, which is only supported in Unified (for now at least)
 
-namespace XamCore.Contacts {
+namespace Contacts {
 
 	// NSInteger -> CNContact.h
 	[iOS (9,0), Mac (10,11)]

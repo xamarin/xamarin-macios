@@ -4,11 +4,11 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using Foundation;
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 
 	public class CFBundle : INativeObject, IDisposable {
 

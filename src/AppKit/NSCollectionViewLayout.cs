@@ -1,8 +1,8 @@
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 
 	public partial class NSCollectionViewLayout {
 		public void RegisterClassForDecorationView (Type itemClass, NSString elementKind)

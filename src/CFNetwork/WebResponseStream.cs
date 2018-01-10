@@ -31,12 +31,12 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using XamCore.CoreFoundation;
-using XamCore.CoreServices;
-using XamCore.Foundation;
-using XamCore.CFNetwork;
+using CoreFoundation;
+using CoreServices;
+using Foundation;
+using CFNetwork;
 
-namespace XamCore.CFNetwork {
+namespace CFNetwork {
 	/*
 	 * For optimal performance and reliability, either only access the
 	 * public System.IO.Stream methods from the application's main thread

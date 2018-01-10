@@ -10,10 +10,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AddressBookUI {
+namespace AddressBookUI {
 	
 	// http://developer.apple.com/library/ios/#DOCUMENTATION/AddressBookUI/Reference/AddressBookUI_Functions/Reference/reference.html#//apple_ref/c/func/ABCreateStringWithAddressDictionary
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]

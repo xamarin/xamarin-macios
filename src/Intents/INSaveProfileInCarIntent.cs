@@ -9,12 +9,12 @@
 
 #if XAMCORE_2_0 && IOS
 
-using XamCore.Foundation;
-using XamCore.Intents;
-using XamCore.ObjCRuntime;
-using XamCore.UIKit;
+using Foundation;
+using Intents;
+using ObjCRuntime;
+using UIKit;
 
-namespace XamCore.Intents {
+namespace Intents {
 	public partial class INSaveProfileInCarIntent {
 
 		public INSaveProfileInCarIntent (NSNumber profileNumber, string profileLabel)

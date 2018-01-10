@@ -9,13 +9,13 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using Foundation;
 
 using MidiThruConnectionRef = System.UInt32;
 
-namespace XamCore.CoreMidi {
+namespace CoreMidi {
 #if !COREBUILD
 	public class MidiThruConnection : IDisposable {
 		MidiThruConnectionRef handle;

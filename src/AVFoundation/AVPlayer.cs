@@ -9,11 +9,11 @@
 #if !MONOMAC && !WATCH
 
 using System;
-using XamCore.Foundation;
-using XamCore.CoreMedia;
-using XamCore.CoreVideo;
+using Foundation;
+using CoreMedia;
+using CoreVideo;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 #if !XAMCORE_2_0
 	public partial class AVPlayer {
 		[Obsolete ("Use Seek(CMTime, AVCompletion) instead, the callback contains a `bool finished' parameter")]

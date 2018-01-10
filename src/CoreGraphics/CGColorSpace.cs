@@ -30,11 +30,11 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreGraphics {
+namespace CoreGraphics {
 
 	// untyped enum -> CGColorSpace.h
 	public enum CGColorRenderingIntent {

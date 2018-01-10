@@ -3,7 +3,7 @@ using System;
 using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
 #endif
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	//
 	// BindAsAttribute
 	//

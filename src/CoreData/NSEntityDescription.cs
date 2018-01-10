@@ -6,10 +6,10 @@
 //
 // Copyright 2015 Xamarin Inc. All rights reserved.
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreData
+namespace CoreData
 {
 	public partial class NSEntityDescription
 	{

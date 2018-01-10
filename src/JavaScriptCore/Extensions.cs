@@ -7,9 +7,9 @@
 // Copyright 2013 Xamarin, Inc.
 
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.JavaScriptCore {
+namespace JavaScriptCore {
 
 #if !MONOMAC || XAMCORE_2_0
 	public partial class JSContext {

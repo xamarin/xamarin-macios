@@ -8,9 +8,9 @@
 // Copyright 2014 Xamarin, Inc.
 //
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.MessageUI {
+namespace MessageUI {
 
 #if XAMCORE_4_0
 	[Native]

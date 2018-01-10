@@ -29,11 +29,11 @@
 
 using System;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 	// Convenience enum for native strings - AVAnimation.h
 	public enum AVLayerVideoGravity
 	{

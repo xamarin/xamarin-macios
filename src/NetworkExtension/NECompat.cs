@@ -2,9 +2,9 @@
 
 using System;
 using System.Threading.Tasks;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.NetworkExtension {
+namespace NetworkExtension {
 
 #if !XAMCORE_4_0
 	public partial class NEPacketTunnelNetworkSettings {
@@ -27,7 +27,7 @@ namespace XamCore.NetworkExtension {
 	public partial class NWTcpConnectionAuthenticationDelegate : NSObject {
 
 		[Obsolete ("Use 'NWTcpConnectionAuthenticationDelegate_Extensions.EvaluateTrustAsync' instead.")]
-		public unsafe virtual Task<global::XamCore.Security.SecTrust> EvaluateTrustAsync (NWTcpConnection connection, NSArray peerCertificateChain)
+		public unsafe virtual Task<global::Security.SecTrust> EvaluateTrustAsync (NWTcpConnection connection, NSArray peerCertificateChain)
 		{
 			return NWTcpConnectionAuthenticationDelegate_Extensions.EvaluateTrustAsync (this, connection, peerCertificateChain);
 		}

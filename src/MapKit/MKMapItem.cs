@@ -7,11 +7,11 @@
 
 #if !TVOS && (XAMCORE_2_0 || !MONOMAC)
 
-using XamCore.Foundation;
-using XamCore.CoreLocation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreLocation;
+using ObjCRuntime;
 
-namespace XamCore.MapKit {
+namespace MapKit {
 
 	// it's similar to MKDirectionsTransportType values but it's something only used on the managed side
 	// to replace NSString fields

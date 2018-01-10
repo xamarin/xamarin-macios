@@ -31,12 +31,12 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
 using CFIndex = System.nint;
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 	
 	partial class CFArray : INativeObject, IDisposable {
 

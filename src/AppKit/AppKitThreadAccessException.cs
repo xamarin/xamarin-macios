@@ -1,6 +1,6 @@
 using System;
 
-namespace XamCore.AppKit
+namespace AppKit
 {
 	public class AppKitThreadAccessException : Exception
 	{

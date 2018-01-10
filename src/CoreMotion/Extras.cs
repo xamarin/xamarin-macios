@@ -1,10 +1,10 @@
 //
 // CoreMotion's extra methods
 //
-using XamCore.Foundation;
+using Foundation;
 using System;
 
-namespace XamCore.CoreMotion {
+namespace CoreMotion {
 
 #if !XAMCORE_2_0
 	public partial class CMAttitude {

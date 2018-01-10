@@ -32,10 +32,10 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
-using XamCore.AudioToolbox;
+using ObjCRuntime;
+using AudioToolbox;
 
-namespace XamCore.AudioUnit
+namespace AudioUnit
 {
     public enum AudioComponentType : uint { // OSType in AudioComponentDescription
 		Output = 0x61756f75, //'auou',

@@ -3,7 +3,7 @@
 //
 using System;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	[AttributeUsage (AttributeTargets.ReturnValue)]
 #if XAMCORE_2_0
 	sealed

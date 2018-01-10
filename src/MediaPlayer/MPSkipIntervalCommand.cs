@@ -8,10 +8,10 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.MediaPlayer {
+namespace MediaPlayer {
 #if XAMCORE_2_0
 	public partial class MPSkipIntervalCommand {
 		public double[] PreferredIntervals {

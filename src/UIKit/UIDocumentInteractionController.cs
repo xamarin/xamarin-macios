@@ -4,7 +4,7 @@
 
 using System;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	public partial class UIDocumentInteractionController {
 

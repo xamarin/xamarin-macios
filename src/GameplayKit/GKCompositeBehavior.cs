@@ -9,9 +9,9 @@
 
 #if XAMCORE_2_0 || !MONOMAC
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.GameplayKit {
+namespace GameplayKit {
 	public partial class GKCompositeBehavior {
 
 		public GKBehavior this [nuint index] {

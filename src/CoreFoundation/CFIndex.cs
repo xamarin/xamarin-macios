@@ -28,7 +28,7 @@
 //
 using System;
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 
 #if !XAMCORE_2_0
 	// This struct is redundant with Xamcore 2.0, just use nint instead.

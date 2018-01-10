@@ -11,9 +11,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.SceneKit
+namespace SceneKit
 {
 	public class SCNPropertyControllers {
 		NSMutableDictionary mutDict;

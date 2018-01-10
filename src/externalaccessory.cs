@@ -5,14 +5,14 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
 
-namespace XamCore.ExternalAccessory {
+namespace ExternalAccessory {
 
 	[Mac (10, 13, onlyOn64: true)][TV (10,0)]
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(EAAccessoryDelegate)})]

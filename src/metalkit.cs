@@ -1,15 +1,15 @@
 #if XAMCORE_2_0 || !MONOMAC
 ﻿using System;
-using XamCore.CoreAnimation;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.Metal;
-using XamCore.ModelIO;
-using XamCore.ObjCRuntime;
+using CoreAnimation;
+using CoreGraphics;
+using Foundation;
+using Metal;
+using ModelIO;
+using ObjCRuntime;
 
 using OpenTK;
 
-namespace XamCore.MetalKit {
+namespace MetalKit {
 
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[Static]
@@ -25,9 +25,9 @@ namespace XamCore.MetalKit {
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[DisableDefaultCtor]
 #if MONOMAC
-	[BaseType (typeof (XamCore.AppKit.NSView))]
+	[BaseType (typeof (AppKit.NSView))]
 #else
-	[BaseType (typeof (XamCore.UIKit.UIView))]
+	[BaseType (typeof (UIKit.UIView))]
 #endif
 	interface MTKView : NSCoding, CALayerDelegate {
 

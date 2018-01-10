@@ -10,12 +10,12 @@
 
 using System;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
 using Vector3 = global::OpenTK.Vector3;
 using Vector4 = global::OpenTK.Vector4;
 
-namespace XamCore.SceneKit {
+namespace SceneKit {
 
 	[Watch (3,0)]
 	[Mac (10, 8)]

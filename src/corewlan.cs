@@ -22,13 +22,13 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Security;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using Security;
 using System;
 
-namespace XamCore.CoreWlan {
+namespace CoreWlan {
 
 	[BaseType (typeof (NSObject))]
 	interface CWChannel : NSCoding, NSSecureCoding, NSCopying {

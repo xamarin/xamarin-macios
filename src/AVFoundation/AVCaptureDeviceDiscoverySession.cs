@@ -8,10 +8,10 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 #if IOS
 	public partial class AVCaptureDeviceDiscoverySession {
 		[iOS (10,0)]

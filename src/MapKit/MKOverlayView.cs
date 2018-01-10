@@ -6,11 +6,11 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.MapKit;
+using Foundation;
+using ObjCRuntime;
+using MapKit;
 
-namespace XamCore.MapKit {
+namespace MapKit {
 	public partial class MKOverlayView {
 
 		[TV (9,2)]

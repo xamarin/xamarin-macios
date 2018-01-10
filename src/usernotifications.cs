@@ -8,16 +8,16 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
+using Foundation;
+using ObjCRuntime;
+using CoreGraphics;
+using CoreLocation;
 
 #if !WATCH
-using XamCore.CoreMedia;
+using CoreMedia;
 #endif
 
-namespace XamCore.UserNotifications {
+namespace UserNotifications {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]

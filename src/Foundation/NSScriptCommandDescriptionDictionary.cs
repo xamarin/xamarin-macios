@@ -1,9 +1,9 @@
 // Copyright 2015 Xamarin, Inc.
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 #if MONOMAC
 

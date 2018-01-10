@@ -25,10 +25,10 @@
 #if XAMCORE_2_0
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.IOSurface {
+namespace IOSurface {
 	public partial class IOSurface {
 
 		// kern_return_t

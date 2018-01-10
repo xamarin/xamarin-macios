@@ -20,8 +20,8 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
 #if MTOUCH || MMP
 using TAssembly=Mono.Cecil.AssemblyDefinition;
@@ -29,14 +29,14 @@ using TType=Mono.Cecil.TypeReference;
 using TMethod=Mono.Cecil.MethodDefinition;
 using TProperty=Mono.Cecil.PropertyDefinition;
 using TField=Mono.Cecil.FieldDefinition;
-using R=XamCore.Registrar.Registrar;
+using R=Registrar.Registrar;
 #else
 using TAssembly=System.Reflection.Assembly;
 using TType=System.Type;
 using TMethod=System.Reflection.MethodBase;
 using TProperty=System.Reflection.PropertyInfo;
 using TField=System.Reflection.FieldInfo;
-using R=XamCore.ObjCRuntime.Runtime;
+using R=ObjCRuntime.Runtime;
 #endif
 
 #if MONOTOUCH
@@ -68,7 +68,7 @@ using ProductException=MonoMac.RuntimeException;
 //
 
 #if MONOMAC
-namespace XamCore.ObjCRuntime
+namespace ObjCRuntime
 {
 	public delegate void AssemblyRegistrationHandler (object sender, AssemblyRegistrationEventArgs args);
 
@@ -80,7 +80,7 @@ namespace XamCore.ObjCRuntime
 }
 #endif
 
-namespace XamCore.Registrar {
+namespace Registrar {
 	static class Shared {
 		
 		public static ProductException GetMT4127 (TMethod impl, List<TMethod> ifaceMethods)

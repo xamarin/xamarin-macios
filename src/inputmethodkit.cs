@@ -11,11 +11,11 @@
 
 using System;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.AppKit;
+using ObjCRuntime;
+using Foundation;
+using AppKit;
 
-namespace XamCore.InputMethodKit {
+namespace InputMethodKit {
 
 	partial interface IMKGlobal {
 		[Field ("kIMKCommandMenuItemName")]

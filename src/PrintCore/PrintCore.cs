@@ -10,14 +10,14 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.IO;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreFoundation;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreFoundation;
 using PMObject=System.IntPtr;
 using OSStatus=System.Int32;
 
-namespace XamCore.PrintCore {
+namespace PrintCore {
 	class NativeInvoke {
 		[DllImport (Constants.PrintCoreLibrary)]
 		internal extern static OSStatus PMRetain (PMObject obj);

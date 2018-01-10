@@ -1,10 +1,10 @@
 // Copyright 2011-2015 Xamarin Inc. All rights reserved.
 using System;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.Security {
+namespace Security {
 
 	// this is a subset of OSStatus -> SInt32 -> signed int - see CoreFoundation.framework/Headers/CFBase.h
 	// values are defined in Security.framework/Headers/SecBase.h 

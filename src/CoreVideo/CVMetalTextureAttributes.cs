@@ -8,10 +8,10 @@
 
 #if XAMCORE_2_0 && !WATCH
 using System;
-using XamCore.Foundation;
-using XamCore.Metal;
+using Foundation;
+using Metal;
 
-namespace XamCore.CoreVideo {
+namespace CoreVideo {
 	public partial class CVMetalTextureAttributes : DictionaryContainer {
 
 		public MTLTextureUsage? Usage {

@@ -8,13 +8,13 @@
 //
 
 using System;
-using XamCore.AVFoundation;
-using XamCore.CoreMedia;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.UIKit;
+using AVFoundation;
+using CoreMedia;
+using ObjCRuntime;
+using Foundation;
+using UIKit;
 
-namespace XamCore.ReplayKit {
+namespace ReplayKit {
 
 	[iOS (9,0)]
 	[TV (10,0)]

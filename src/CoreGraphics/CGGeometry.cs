@@ -29,13 +29,13 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreGraphics {
+namespace CoreGraphics {
 
 	// untyped enum -> CGGeometry.h
-	public enum CGRectEdge : uint_compat_int {
+	public enum CGRectEdge : uint {
 		MinXEdge,
 		MinYEdge,
 		MaxXEdge,

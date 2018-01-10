@@ -9,13 +9,13 @@
 
 #if !MONOMAC
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace XamCore.Photos
+namespace Photos
 {
 	public partial class PHPhotoLibrary
 	{

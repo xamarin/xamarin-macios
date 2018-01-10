@@ -6,10 +6,10 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 
 	public partial class NSLevelIndicator {
 		public new NSLevelIndicatorCell Cell {

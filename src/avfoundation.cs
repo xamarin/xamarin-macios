@@ -32,27 +32,27 @@
 using System.ComponentModel;
 
 #if !WATCH
-using XamCore.AudioUnit;
-using XamCore.AVKit;
-using XamCore.CoreAnimation;
-using XamCore.CoreImage;
-using XamCore.CoreMedia;
-using XamCore.MediaToolbox;
+using AudioUnit;
+using AVKit;
+using CoreAnimation;
+using CoreImage;
+using CoreMedia;
+using MediaToolbox;
 #endif
-using XamCore.AudioToolbox;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreVideo;
-using XamCore.ImageIO;
+using AudioToolbox;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
+using CoreVideo;
+using ImageIO;
 using System;
 
 using OpenTK;
 #if MONOMAC
-using XamCore.AppKit;
+using AppKit;
 #else
-using XamCore.UIKit;
+using UIKit;
 #endif
 
 #if !XAMCORE_2_0
@@ -62,15 +62,15 @@ using CMVideoDimensions = System.Drawing.Size;
 
 #if WATCH
 // hack for unexisting structs exposed as [Field]
-using CMTime = XamCore.Foundation.NSString;
-using AVCaptureWhiteBalanceGains = XamCore.Foundation.NSString;
+using CMTime = Foundation.NSString;
+using AVCaptureWhiteBalanceGains = Foundation.NSString;
 // stubs to ease compilation using [NoWatch]
-namespace XamCore.AudioUnit {
+namespace AudioUnit {
 	interface AudioUnit {}
 }
 #endif
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 
 #if WATCH
 	// stubs to ease compilation using [NoWatch]
@@ -1366,7 +1366,7 @@ namespace XamCore.AVFoundation {
 
 		[NoWatch]
 		[Export ("audioUnit"), NullAllowed]
-		global::XamCore.AudioUnit.AudioUnit AudioUnit { get; }
+		global::AudioUnit.AudioUnit AudioUnit { get; }
 	}
 
 	[Watch (3,0)]
@@ -2427,7 +2427,7 @@ namespace XamCore.AVFoundation {
 #endif
 
 		[Export ("audioUnit")]
-		global::XamCore.AudioUnit.AudioUnit AudioUnit { get; }
+		global::AudioUnit.AudioUnit AudioUnit { get; }
 
 		[Export ("name")]
 		string Name { get; }
@@ -8791,7 +8791,7 @@ namespace XamCore.AVFoundation {
 
 		// 5.0 APIs
 #if XAMCORE_4_0
-		[BindAs (typeof (XamCore.CoreVideo.CVPixelFormatType []))]
+		[BindAs (typeof (CoreVideo.CVPixelFormatType []))]
 #endif
 		[Export ("availableVideoCVPixelFormatTypes")]
 		NSNumber [] AvailableVideoCVPixelFormatTypes { get;  }
@@ -12265,7 +12265,7 @@ namespace XamCore.AVFoundation {
 
 		[Mac (10,11)]
 		[NullAllowed, Export ("icon")]
-		global::XamCore.AppKit.NSImage Icon { get; }
+		global::AppKit.NSImage Icon { get; }
 
 		[Export ("passesAUVal")]
 		bool PassesAUVal { get; }

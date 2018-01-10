@@ -33,10 +33,10 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 
 	// The native constants are defined in usr/include/dispatch/queue.h, but since they're
 	// not in any enum, they're untyped.

@@ -1,15 +1,15 @@
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
-using XamCore.CoreAnimation;
-using XamCore.CoreText;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
+using CoreGraphics;
+using CoreAnimation;
+using CoreText;
 
 using CGGlyph = System.UInt16;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSFont
 	{
 		public static NSFont FromCTFont (CTFont font)

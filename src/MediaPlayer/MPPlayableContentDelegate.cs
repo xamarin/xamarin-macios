@@ -2,10 +2,10 @@
 
 using System;
 using System.Threading.Tasks;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.MediaPlayer {
+namespace MediaPlayer {
 	public partial class MPPlayableContentDelegate {
 		[Obsolete ("Use 'InitiatePlaybackOfContentItem' instead.")]
 		public virtual void PlayableContentManager (MPPlayableContentManager contentManager, NSIndexPath indexPath, Action<NSError> completionHandler)

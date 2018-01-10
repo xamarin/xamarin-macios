@@ -10,11 +10,11 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.Metal;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
+using Metal;
+using ObjCRuntime;
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
 using Vector4 = global::OpenTK.Vector4;
@@ -26,7 +26,7 @@ using Matrix4 = global::OpenTK.Matrix4;
 using Quaternion = global::OpenTK.Quaternion;
 using MathHelper = global::OpenTK.MathHelper;
 
-namespace XamCore.ModelIO {
+namespace ModelIO {
 	[Native]
 	public enum MDLVertexFormat : nuint {
 		Invalid = 0,

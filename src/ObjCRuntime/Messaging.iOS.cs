@@ -6,10 +6,10 @@ using System.Drawing;
 #endif
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
+using Foundation;
+using CoreGraphics;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 #if !XAMCORE_2_0 || COREBUILD
 	public
 #endif
@@ -140,19 +140,19 @@ namespace XamCore.ObjCRuntime {
 
 		// Compatibility with older monotouch.dll
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		public extern static bool bool_objc_msgSend_CMTime_CGAffineTransform_CGAffineTransform_CMTimeRange (IntPtr receiver, IntPtr selector, XamCore.CoreMedia.CMTime arg1, XamCore.CoreGraphics.CGAffineTransform arg2, XamCore.CoreGraphics.CGAffineTransform arg3, XamCore.CoreMedia.CMTimeRange arg4);
+		public extern static bool bool_objc_msgSend_CMTime_CGAffineTransform_CGAffineTransform_CMTimeRange (IntPtr receiver, IntPtr selector, CoreMedia.CMTime arg1, CoreGraphics.CGAffineTransform arg2, CoreGraphics.CGAffineTransform arg3, CoreMedia.CMTimeRange arg4);
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper")]
-		public extern static bool bool_objc_msgSendSuper_CMTime_CGAffineTransform_CGAffineTransform_CMTimeRange (IntPtr receiver, IntPtr selector, XamCore.CoreMedia.CMTime arg1, XamCore.CoreGraphics.CGAffineTransform arg2, XamCore.CoreGraphics.CGAffineTransform arg3, XamCore.CoreMedia.CMTimeRange arg4);
+		public extern static bool bool_objc_msgSendSuper_CMTime_CGAffineTransform_CGAffineTransform_CMTimeRange (IntPtr receiver, IntPtr selector, CoreMedia.CMTime arg1, CoreGraphics.CGAffineTransform arg2, CoreGraphics.CGAffineTransform arg3, CoreMedia.CMTimeRange arg4);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		public extern static bool bool_objc_msgSend_CMTime_CMTime_CMTime (IntPtr receiver, IntPtr selector, XamCore.CoreMedia.CMTime arg1, XamCore.CoreMedia.CMTime arg2, XamCore.CoreMedia.CMTime arg3);
+		public extern static bool bool_objc_msgSend_CMTime_CMTime_CMTime (IntPtr receiver, IntPtr selector, CoreMedia.CMTime arg1, CoreMedia.CMTime arg2, CoreMedia.CMTime arg3);
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper")]
-		public extern static bool bool_objc_msgSendSuper_CMTime_CMTime_CMTime (IntPtr receiver, IntPtr selector, XamCore.CoreMedia.CMTime arg1, XamCore.CoreMedia.CMTime arg2, XamCore.CoreMedia.CMTime arg3);
+		public extern static bool bool_objc_msgSendSuper_CMTime_CMTime_CMTime (IntPtr receiver, IntPtr selector, CoreMedia.CMTime arg1, CoreMedia.CMTime arg2, CoreMedia.CMTime arg3);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		public extern static bool bool_objc_msgSend_CMTime_float_float_CMTimeRange (IntPtr receiver, IntPtr selector, XamCore.CoreMedia.CMTime arg1, float arg2, float arg3, XamCore.CoreMedia.CMTimeRange arg4);
+		public extern static bool bool_objc_msgSend_CMTime_float_float_CMTimeRange (IntPtr receiver, IntPtr selector, CoreMedia.CMTime arg1, float arg2, float arg3, CoreMedia.CMTimeRange arg4);
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper")]
-		public extern static bool bool_objc_msgSendSuper_CMTime_float_float_CMTimeRange (IntPtr receiver, IntPtr selector, XamCore.CoreMedia.CMTime arg1, float arg2, float arg3, XamCore.CoreMedia.CMTimeRange arg4);
+		public extern static bool bool_objc_msgSendSuper_CMTime_float_float_CMTimeRange (IntPtr receiver, IntPtr selector, CoreMedia.CMTime arg1, float arg2, float arg3, CoreMedia.CMTimeRange arg4);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
 		public extern static IntPtr IntPtr_objc_msgSend_int_IntPtr_IntPtr_IntPtr_IntPtr (IntPtr receiver, IntPtr selector, int arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5);

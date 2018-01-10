@@ -11,10 +11,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.AudioToolbox;
-using XamCore.ObjCRuntime;
+using AudioToolbox;
+using ObjCRuntime;
 
-namespace XamCore.AudioUnit {
+namespace AudioUnit {
 
 	public delegate void AUScheduledAudioFileRegionCompletionHandler (AUScheduledAudioFileRegion audioFileRegion, AudioUnitStatus status);
 

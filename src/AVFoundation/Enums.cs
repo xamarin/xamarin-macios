@@ -24,11 +24,11 @@
 //
 using System;
 using System.ComponentModel;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 using System.Runtime.InteropServices;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 
 	[Native]
 	// NSInteger - AVAudioSettings.h

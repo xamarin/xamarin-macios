@@ -2,7 +2,7 @@
 
 using System;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public class MonoTouchException : Exception {
 		private NSException native_exc;
 

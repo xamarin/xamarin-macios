@@ -2,7 +2,7 @@
 using OpenTK;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 
-namespace XamCore.ModelIO {
+namespace ModelIO {
 	public partial class MDLTransformComponent_Extensions {
 		public static MatrixFloat4x4 GetMatrix4x4 (this IMDLTransformComponent self)
 		{

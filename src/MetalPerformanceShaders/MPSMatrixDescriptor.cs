@@ -1,9 +1,9 @@
 ﻿#if (XAMCORE_2_0 && !MONOMAC) && !XAMCORE_4_0
 using System;
-using XamCore.Metal;
-using XamCore.Foundation;
+using Metal;
+using Foundation;
 
-namespace XamCore.MetalPerformanceShaders {
+namespace MetalPerformanceShaders {
 	public partial class MPSMatrixDescriptor {
 
 		[Obsolete ("Please use 'GetRowBytesFromColumns' instead.")]

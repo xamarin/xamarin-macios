@@ -22,9 +22,9 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.CoreImage {
+namespace CoreImage {
 
 	// convenience enum for values used with kCGImagePropertyOrientation (key) as NSNumber
 	// values are part of the header file (CGImageProperties.h) as comments (not constants or fields)

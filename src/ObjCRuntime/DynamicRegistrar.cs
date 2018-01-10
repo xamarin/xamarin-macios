@@ -13,13 +13,13 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
 
-namespace XamCore.Registrar {
+namespace Registrar {
 	// Somewhere to put shared code between the old and the new dynamic registrars.
 	// Putting code in either of those classes will increase the executable size,
 	// since unused code will be pulled in by the linker.

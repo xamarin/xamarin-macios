@@ -8,35 +8,35 @@
 // Copyright 2009-2011, Novell, Inc.
 // Copyrigh 2011-2013, Xamarin Inc.
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
-using XamCore.UIKit;
-using XamCore.CloudKit;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreLocation;
+using UIKit;
+using CloudKit;
 #if !TVOS
-using XamCore.Contacts;
+using Contacts;
 #endif
 #if !WATCH
-using XamCore.MediaPlayer;
-using XamCore.CoreImage;
-using XamCore.CoreAnimation;
+using MediaPlayer;
+using CoreImage;
+using CoreAnimation;
 #endif
-using XamCore.CoreData;
+using CoreData;
 
 #if XAMCORE_2_0
 #if IOS
-using XamCore.FileProvider;
+using FileProvider;
 #endif // IOS
 #if !TVOS
-using XamCore.Intents;
+using Intents;
 #endif // !TVOS
 #endif // XAMCORE_2_0
 
 using System;
 using System.ComponentModel;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	[NoWatch]
 	[iOS (9,0)]
@@ -393,7 +393,7 @@ namespace XamCore.UIKit {
 		[iOS (11,0)]
 		[Export ("enumeratorForContainerItemIdentifier:error:")]
 		[return: NullAllowed]
-		XamCore.FileProvider.INSFileProviderEnumerator GetEnumerator (string containerItemIdentifier, out NSError error);
+		FileProvider.INSFileProviderEnumerator GetEnumerator (string containerItemIdentifier, out NSError error);
 
 		// From NSFileProviderExtension (NSFileProviderThumbnailing)
 

@@ -4,7 +4,7 @@
 
 using System;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSPageLayout {
 		object __mt_accessory_var;
 	}

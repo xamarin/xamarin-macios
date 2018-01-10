@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.NVector3;
 
-namespace XamCore.ARKit {
+namespace ARKit {
 	public partial class ARFaceGeometry {
 
 		// Going for GetXXX methods so we can keep the same name as the matching obsoleted property 'Vertices'.

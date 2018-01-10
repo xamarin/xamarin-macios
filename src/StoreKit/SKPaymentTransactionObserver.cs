@@ -4,9 +4,9 @@
 
 using System;
 
-using XamCore.StoreKit;
+using StoreKit;
 
-namespace XamCore.StoreKit {
+namespace StoreKit {
 
 	public partial class SKPaymentTransactionObserver {
 

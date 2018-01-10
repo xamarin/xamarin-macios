@@ -10,10 +10,10 @@
 #if !WATCH && XAMCORE_2_0
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	partial class NSLayoutConstraint {
 		// This solves the duplicate selector export problem while not breaking the API.
 		public static NSLayoutConstraint Create (NSObject view1, NSLayoutAttribute attribute1, NSLayoutRelation relation, 

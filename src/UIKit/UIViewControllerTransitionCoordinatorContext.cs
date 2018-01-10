@@ -8,7 +8,7 @@
 
 #if !WATCH
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public static partial class UIViewControllerTransitionCoordinatorContext_Extensions {
 		public static UIView GetTransitionViewController (this IUIViewControllerTransitionCoordinatorContext This, UITransitionViewControllerKind kind)
 		{

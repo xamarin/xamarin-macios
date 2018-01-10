@@ -12,11 +12,11 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.UIKit;
+using Foundation;
+using ObjCRuntime;
+using UIKit;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	// NSInteger -> UIGuidedAccessRestrictions.h
 	[Native]

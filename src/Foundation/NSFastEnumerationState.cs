@@ -11,9 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	[StructLayout (LayoutKind.Sequential)]
 	internal struct NSFastEnumerationState {
 		nint state;

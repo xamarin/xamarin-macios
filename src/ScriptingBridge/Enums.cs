@@ -23,7 +23,7 @@
 //
 using System;
 
-namespace XamCore.ScriptingBridge
+namespace ScriptingBridge
 {
 	// AE.framework/Headers/AEDataModel.h:typedef SInt32 AESendMode;
 	[Flags]

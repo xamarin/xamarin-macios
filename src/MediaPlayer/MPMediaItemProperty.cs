@@ -10,10 +10,10 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.MediaPlayer {
+namespace MediaPlayer {
 
 	[Obsolete ("The members of this class are available in MPMediaItem as static properties and are more complete")]
 	public static class MPMediaItemProperty {

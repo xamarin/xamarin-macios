@@ -65,7 +65,7 @@ typedef void ALvoid;
  * void
 */
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
 namespace OpenTK.Audio.OpenAL
 {

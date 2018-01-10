@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
 
-using XamCore.Foundation;
+using Foundation;
 
 public partial class Generator {
 

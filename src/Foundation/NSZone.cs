@@ -2,9 +2,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	// Helper to (mostly) support NS[Mutable]Copying protocols
 	public class NSZone : INativeObject {

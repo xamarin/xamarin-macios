@@ -9,10 +9,10 @@
 #if !WATCH // NSMutableAttributedString needs some work before it can be included in WatchOS
 #if !MONOMAC
 
-using XamCore.UIKit;
-using XamCore.CoreText;
+using UIKit;
+using CoreText;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public partial class NSMutableAttributedString {
 		public void SetAttributes (UIStringAttributes attrs, NSRange range)

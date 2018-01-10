@@ -1,21 +1,21 @@
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreLocation;
-using XamCore.AVFoundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreImage;
-using XamCore.CoreMedia;
-using XamCore.ImageIO;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using CoreLocation;
+using AVFoundation;
+using CoreGraphics;
+using CoreImage;
+using CoreMedia;
+using ImageIO;
 using System;
 #if !MONOMAC
-using XamCore.UIKit;
-using NSImage = XamCore.Foundation.NSObject; // help [NoiOS] and [NoTV]
+using UIKit;
+using NSImage = Foundation.NSObject; // help [NoiOS] and [NoTV]
 #else
-using XamCore.AppKit;
+using AppKit;
 #endif
 
-namespace XamCore.Photos
+namespace Photos
 {
 	[iOS (8,0)]
 	[TV (10,0)]
@@ -691,7 +691,7 @@ namespace XamCore.Photos
 		NSUrl FullSizeImageUrl { get; }
 
 		[Export ("fullSizeImageOrientation")]
-		XamCore.CoreImage.CIImageOrientation FullSizeImageOrientation { get; }
+		CoreImage.CIImageOrientation FullSizeImageOrientation { get; }
 
 		[Export ("avAsset", ArgumentSemantic.Strong)]
 		[Availability (Deprecated = Platform.iOS_9_0, Message="Use 'AudiovisualAsset' property instead.")]

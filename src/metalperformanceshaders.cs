@@ -1,12 +1,12 @@
 ﻿#if XAMCORE_2_0 || !MONOMAC
 using System;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.Metal;
-using XamCore.ObjCRuntime;
+using CoreGraphics;
+using Foundation;
+using Metal;
+using ObjCRuntime;
 using Vector4 = global::OpenTK.Vector4;
 
-namespace XamCore.MetalPerformanceShaders {
+namespace MetalPerformanceShaders {
 	// MPSImageConvolution.h
 
 	[iOS (9,0)][Mac (10, 13, onlyOn64: true)]
