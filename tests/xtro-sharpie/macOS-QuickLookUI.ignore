@@ -1,2 +1,0 @@
-## Getting "[FAIL] Selector not found for Foundation.NSUrl : previewItemTitle" when NSUrl conforms to 'QLPreviewItem'
-!missing-protocol-conformance! NSURL should conform to QLPreviewItem (defined in 'QLPreviewConvenienceAdditions' category)

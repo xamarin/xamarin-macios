@@ -1,5 +1,2 @@
 ## fixed for XAMCORE_4_0
 !incorrect-protocol-member! QLPreviewItem::previewItemTitle is OPTIONAL and should NOT be abstract
-
-## Getting "[FAIL] Selector not found for Foundation.NSUrl : previewItemTitle" when NSUrl conforms to 'QLPreviewItem'
-!missing-protocol-conformance! NSURL should conform to QLPreviewItem (defined in 'QLPreviewConvenienceAdditions' category)

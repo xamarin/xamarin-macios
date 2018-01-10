@@ -5278,6 +5278,9 @@ namespace XamCore.Foundation
 #if !(MONOMAC && !XAMCORE_2_0) // exclude Classic/XM
 	, NSItemProviderWriting, NSItemProviderReading
 #endif
+#if IOS || MONOMAC
+	, QLPreviewItem
+#endif
 	{
 		[Export ("initWithScheme:host:path:")]
 		IntPtr Constructor (string scheme, string host, string path);

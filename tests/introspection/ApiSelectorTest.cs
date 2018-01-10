@@ -175,6 +175,13 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (9, 0);
 				}
 				break;
+			case "NSUrl":
+				switch (selectorName) {
+				case "previewItemTitle":
+					// 'previewItemTitle' should be optional (fixed in XAMCORE_4_0)
+					return true;
+				}
+				break;
 #if !MONOMAC
 			case "MTLCaptureManager":
 			case "NEHotspotEapSettings": // Wireless Accessory Configuration is not supported in the simulator.
