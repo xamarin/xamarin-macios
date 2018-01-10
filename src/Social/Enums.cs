@@ -15,14 +15,14 @@ namespace Social {
 
 	// NSInteger -> SLRequest.h
 	[Native]
-	public enum SLRequestMethod : nint {
+	public enum SLRequestMethod : long {
 		Get, Post, Delete, Put
 	}
 
 #if !MONOMAC || !XAMCORE_4_0
 	// NSInteger -> SLComposeViewController.h
 	[Native]
-	public enum SLComposeViewControllerResult : nint {
+	public enum SLComposeViewControllerResult : long {
 		Cancelled, Done
 	}
 #endif

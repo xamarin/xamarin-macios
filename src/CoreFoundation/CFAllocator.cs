@@ -156,7 +156,7 @@ namespace CoreFoundation {
 	// Seems to be some sort of secret values
 	[Flags]
 	[Native]
-	public enum CFAllocatorFlags : nuint_compat_int
+	public enum CFAllocatorFlags : ulong
 	{
 		GCScannedMemory	= 0x200,
 		GCObjectMemory	= 0x400,

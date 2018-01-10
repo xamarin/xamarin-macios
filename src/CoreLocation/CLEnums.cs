@@ -36,7 +36,7 @@ namespace CoreLocation {
 
 	// NSInteger -> CLError.h
 	[Native]
-	public enum CLError : nint {
+	public enum CLError : long {
 		LocationUnknown  = 0,
 		Denied,              
 		Network,             
@@ -95,7 +95,7 @@ namespace CoreLocation {
 
 	// NSInteger -> CLLocationManager.h
 	[Native]
-	public enum CLActivityType : nint {
+	public enum CLActivityType : long {
 		Other = 1,
 		AutomotiveNavigation,
  		Fitness,

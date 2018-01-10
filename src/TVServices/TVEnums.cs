@@ -10,7 +10,7 @@ namespace TVServices {
 
 	[TV (9,0)]
 	[Native]
-	public enum TVContentItemImageShape : nint {
+	public enum TVContentItemImageShape : long {
 		None = 0,
 		Poster,
 		Square,
@@ -22,7 +22,7 @@ namespace TVServices {
 
 	[TV (9,0)]
 	[Native]
-	public enum TVTopShelfContentStyle : nint {
+	public enum TVTopShelfContentStyle : long {
 		Inset = 1,
 		Sectioned = 2
 	}
@@ -30,7 +30,7 @@ namespace TVServices {
 	[TV (11,0)]
 	[Native]
 	[Flags]
-	public enum TVContentItemImageTrait : nuint {
+	public enum TVContentItemImageTrait : ulong {
 		UserInterfaceStyleLight = (1 << 8),
 		UserInterfaceStyleDark = (2 << 8),
 		ScreenScale1x = (1 << 12),

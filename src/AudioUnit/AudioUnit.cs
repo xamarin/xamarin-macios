@@ -1713,14 +1713,14 @@ namespace AudioUnit
 	}
 
 	[Native]
-	public enum AudioUnitBusType : nint
+	public enum AudioUnitBusType : long
 	{
 		Input = 1,
 		Output = 2
 	}
 
 	[Native]
-	public enum AUHostTransportStateFlags : nuint
+	public enum AUHostTransportStateFlags : ulong
 	{
 		Changed = 1,
 		Moving = 2,
@@ -1930,7 +1930,7 @@ namespace AudioUnit
 	}
 
 	[Native]
-	public enum AUAudioUnitBusType : nint
+	public enum AUAudioUnitBusType : long
 	{
 		Input = 1,
 		Output = 2

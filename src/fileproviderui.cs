@@ -20,7 +20,7 @@ namespace FileProviderUI {
 	[iOS (11,0)]
 	[ErrorDomain ("FPUIErrorDomain")]
 	[Native]
-	enum FPUIExtensionErrorCode : nuint {
+	enum FPUIExtensionErrorCode : ulong {
 		UserCancelled,
 		Failed
 	}

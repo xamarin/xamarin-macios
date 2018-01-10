@@ -20,7 +20,7 @@ namespace Security {
 	[iOS (7,0)]
 	[Flags]
 	[Native]
-	public enum SecRevocation : nuint_compat_int {
+	public enum SecRevocation : ulong {
 		None,
 		OCSPMethod = 1,
 		CRLMethod = 2,

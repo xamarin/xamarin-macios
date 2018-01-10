@@ -33,7 +33,7 @@ namespace ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
-	public enum ARTrackingState : nint {
+	public enum ARTrackingState : long {
 		NotAvailable,
 		Limited,
 		Normal,
@@ -42,7 +42,7 @@ namespace ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
-	public enum ARTrackingStateReason : nint {
+	public enum ARTrackingStateReason : long {
 		None,
 		Initializing,
 		ExcessiveMotion,
@@ -53,7 +53,7 @@ namespace ARKit {
 	[NoWatch, NoTV, NoMac]
 	[ErrorDomain ("ARErrorDomain")]
 	[Native]
-	public enum ARErrorCode : nint {
+	public enum ARErrorCode : long {
 		UnsupportedConfiguration = 100,
 		SensorUnavailable = 101,
 		SensorFailed = 102,
@@ -65,7 +65,7 @@ namespace ARKit {
 	[NoWatch, NoTV, NoMac]
 	[Flags]
 	[Native]
-	public enum ARHitTestResultType : nuint {
+	public enum ARHitTestResultType : ulong {
 		FeaturePoint = 1 << 0,
 		EstimatedHorizontalPlane = 1 << 1,
 		ExistingPlane = 1 << 3,
@@ -75,7 +75,7 @@ namespace ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
-	public enum ARPlaneAnchorAlignment : nint {
+	public enum ARPlaneAnchorAlignment : long {
 		Horizontal,
 	}
 
@@ -83,7 +83,7 @@ namespace ARKit {
 	[NoWatch, NoTV, NoMac]
 	[Flags]
 	[Native]
-	public enum ARSessionRunOptions : nuint {
+	public enum ARSessionRunOptions : ulong {
 		ResetTracking = 1 << 0,
 		RemoveExistingAnchors = 1 << 1,
 	}
@@ -91,7 +91,7 @@ namespace ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
-	public enum ARWorldAlignment : nint {
+	public enum ARWorldAlignment : long {
 		Gravity,
 		GravityAndHeading,
 		Camera,
@@ -101,7 +101,7 @@ namespace ARKit {
 	[NoWatch, NoTV, NoMac]
 	[Flags]
 	[Native]
-	public enum ARPlaneDetection : nuint {
+	public enum ARPlaneDetection : ulong {
 		None = 0,
 		Horizontal = 1 << 0,
 	}

@@ -7,8 +7,8 @@ namespace LocalAuthentication {
 	[iOS (8,0)]
 	[Mac (10, 10)]
 	[Native]
-	public enum LAPolicy : nint {
 		[Mac (10,12,2)]
+	public enum LAPolicy : long {
 		DeviceOwnerAuthenticationWithBiometrics = 1,
 		DeviceOwnerAuthentication = 2
 	}
@@ -17,7 +17,7 @@ namespace LocalAuthentication {
 	[Mac (10, 10)]
 	[Native]
 	[ErrorDomain ("LAErrorDomain")]
-	public enum LAStatus : nint {
+	public enum LAStatus : long {
 		Success = 0,
 		/// Authentication was not successful, because user failed to provide valid credentials.
 		AuthenticationFailed = -1,
@@ -54,14 +54,14 @@ namespace LocalAuthentication {
 
 	[iOS (9,0), Mac (10,11), Watch (3,0), TV (11,0)]
 	[Native]
-	public enum LACredentialType : nint {
+	public enum LACredentialType : long {
 		ApplicationPassword = 0
 	}
 
 	[iOS (9,0)]
 	[Mac (10,11)]
 	[Native]
-	public enum LAAccessControlOperation : nint {
+	public enum LAAccessControlOperation : long {
 		CreateItem,
 		UseItem,
 		CreateKey,

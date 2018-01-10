@@ -17,7 +17,7 @@ namespace DeviceCheck {
 	[TV (11,0), NoWatch, NoMac, iOS (11,0)]
 	[ErrorDomain ("DCErrorDomain")]
 	[Native]
-	public enum DCError : nint {
+	public enum DCError : long {
 		UnknownSystemFailure,
 		FeatureUnsupported
 	}

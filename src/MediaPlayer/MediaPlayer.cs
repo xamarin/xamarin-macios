@@ -19,7 +19,7 @@ namespace MediaPlayer {
 	[NoMac]
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 9, 0)]
-	public enum MPMoviePlaybackState : nint {
+	public enum MPMoviePlaybackState : long {
 		Stopped,
 		Playing,
 		Paused,
@@ -33,7 +33,7 @@ namespace MediaPlayer {
 	[NoMac]
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 9, 0)]
-	public enum MPMovieLoadState : nint {
+	public enum MPMovieLoadState : long {
 		Unknown        = 0,
 		Playable       = 1 << 0,
 		PlaythroughOK  = 1 << 1,
@@ -45,7 +45,7 @@ namespace MediaPlayer {
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
-	public enum MPMovieRepeatMode : nint {
+	public enum MPMovieRepeatMode : long {
 		None, One
 	}
 
@@ -54,7 +54,7 @@ namespace MediaPlayer {
 	[NoMac]
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 9, 0)]
-	public enum MPMovieControlStyle : nint {
+	public enum MPMovieControlStyle : long {
 		None, Embedded, Fullscreen, Default = Embedded
 	}
 
@@ -63,7 +63,7 @@ namespace MediaPlayer {
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
-	public enum MPMovieFinishReason : nint {
+	public enum MPMovieFinishReason : long {
 		PlaybackEnded, PlaybackError, UserExited
 	}
 
@@ -73,7 +73,7 @@ namespace MediaPlayer {
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
 	[Flags]
-	public enum MPMovieMediaType : nint {
+	public enum MPMovieMediaType : long {
 		None = 0,
 		Video = 1 << 0,
 		Audio = 1 << 1
@@ -84,7 +84,7 @@ namespace MediaPlayer {
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
-	public enum MPMovieSourceType : nint {
+	public enum MPMovieSourceType : long {
 		Unknown, File, Streaming
 	}
 
@@ -93,7 +93,7 @@ namespace MediaPlayer {
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
-	public enum MPMovieTimeOption : nint {
+	public enum MPMovieTimeOption : long {
 		NearestKeyFrame,
 		Exact
 	}
@@ -101,7 +101,7 @@ namespace MediaPlayer {
 	// NSUInteger -> MPMediaItem.h
 	[Native]
 	[Flags]
-	public enum MPMediaType : nuint_compat_int {
+	public enum MPMediaType : ulong {
 #if !XAMCORE_2_0
 		[Obsolete ("Use Shorter name Music")]
 		MPMediaTypeMusic        = 1 << 0,
@@ -151,7 +151,7 @@ namespace MediaPlayer {
 	[Native]
 	[Flags]
 	[NoTV]
-	public enum MPMediaPlaylistAttribute : nint {
+	public enum MPMediaPlaylistAttribute : long {
 		None    = 0,
 		OnTheGo = (1 << 0), // if set, the playlist was created on a device rather than synced from iTunes
 		Smart   = (1 << 1),
@@ -162,7 +162,7 @@ namespace MediaPlayer {
 	[Native]
 	[NoMac]
 	[NoTV]
-	public enum MPMediaGrouping : nint {
+	public enum MPMediaGrouping : long {
 		Title,
 		Album,
 		Artist,
@@ -177,7 +177,7 @@ namespace MediaPlayer {
 	[Native]
 	[NoMac]
 	[NoTV]
-	public enum MPMediaPredicateComparison : nint {
+	public enum MPMediaPredicateComparison : long {
 		EqualsTo,
 		Contains
 	}
@@ -187,7 +187,7 @@ namespace MediaPlayer {
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
-	public enum MPMovieScalingMode : nint {
+	public enum MPMovieScalingMode : long {
 		None,
 		AspectFit,
 		AspectFill,
@@ -207,7 +207,7 @@ namespace MediaPlayer {
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
-	public enum MPMusicPlaybackState : nint {
+	public enum MPMusicPlaybackState : long {
 		Stopped,
 		Playing,
 		Paused,
@@ -220,7 +220,7 @@ namespace MediaPlayer {
 	[Native]
 	[NoMac]
 	[NoTV]
-	public enum MPMusicRepeatMode : nint {
+	public enum MPMusicRepeatMode : long {
 		Default,
 		None,
 		One,
@@ -231,7 +231,7 @@ namespace MediaPlayer {
 	[Native]
 	[NoMac]
 	[NoTV]
-	public enum MPMusicShuffleMode : nint {
+	public enum MPMusicShuffleMode : long {
 		Default,
 		Off,
 		Songs,
@@ -242,7 +242,7 @@ namespace MediaPlayer {
 
 	[Mac (10,12,2)]
 	[Native]
-	public enum MPShuffleType : nint
+	public enum MPShuffleType : long
 	{
 		Off,
 		Items,
@@ -251,7 +251,7 @@ namespace MediaPlayer {
 
 	[Mac (10,12,2)]
 	[Native]
-	public enum MPRepeatType : nint
+	public enum MPRepeatType : long
 	{
 		Off,
 		One,
@@ -261,7 +261,7 @@ namespace MediaPlayer {
 	[Mac (10,12,2)]
 	[iOS (10,0)]
 	[Native]
-	public enum MPChangeLanguageOptionSetting : nint
+	public enum MPChangeLanguageOptionSetting : long
 	{
 		None,
 		NowPlayingItemOnly,
@@ -272,7 +272,7 @@ namespace MediaPlayer {
 	[Native]
 	[Mac (10,12,2)]
 	[iOS (7,1)]
-	public enum MPRemoteCommandHandlerStatus : nint {
+	public enum MPRemoteCommandHandlerStatus : long {
 		Success = 0,
 		NoSuchContent = 100,
 		[iOS (9,1)]
@@ -286,7 +286,7 @@ namespace MediaPlayer {
 	[Native]
 	[Mac (10,12,2)]
 	[iOS (7,1)]
-	public enum MPSeekCommandEventType : nuint_compat_int {
+	public enum MPSeekCommandEventType : ulong {
 		BeginSeeking,
 		EndSeeking
 	}
@@ -294,7 +294,7 @@ namespace MediaPlayer {
 	[Mac (10,12,2)]
 	[iOS (9,0)]
 	[Native]
-	public enum MPNowPlayingInfoLanguageOptionType : nuint {
+	public enum MPNowPlayingInfoLanguageOptionType : ulong {
 		Audible,
 		Legible
 	}
@@ -303,7 +303,7 @@ namespace MediaPlayer {
 	[iOS (9,3)]
 	[Native]
 	[ErrorDomain ("MPErrorDomain")]
-	public enum MPErrorCode : nint {
+	public enum MPErrorCode : long {
 		Unknown,
 		PermissionDenied,
 		CloudServiceCapabilityMissing,
@@ -319,7 +319,7 @@ namespace MediaPlayer {
 	[NoTV]
 	[iOS (9,3)]
 	[Native]
-	public enum MPMediaLibraryAuthorizationStatus : nint {
+	public enum MPMediaLibraryAuthorizationStatus : long {
 		NotDetermined = 0,
 		Denied,
 		Restricted,
@@ -330,7 +330,7 @@ namespace MediaPlayer {
 	[iOS (10,0)]
 	[TV (10,0)]
 	[Native]
-	public enum MPNowPlayingInfoMediaType : nuint
+	public enum MPNowPlayingInfoMediaType : ulong
 	{
 		None = 0,
 		Audio,
@@ -341,7 +341,7 @@ namespace MediaPlayer {
 	[NoiOS]
 	[NoTV]
 	[Native]
-	public enum MPNowPlayingPlaybackState : nuint
+	public enum MPNowPlayingPlaybackState : ulong
 	{
 		Unknown = 0,
 		Playing,

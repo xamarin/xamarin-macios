@@ -3,7 +3,7 @@ using ObjCRuntime;
 
 namespace FinderSync {
 	[Native]
-	public enum FIMenuKind : nuint
+	public enum FIMenuKind : ulong
 	{
 		ContextualMenuForItems = 0,
 		ContextualMenuForContainer = 1,

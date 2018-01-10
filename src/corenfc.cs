@@ -25,7 +25,7 @@ namespace CoreNFC {
 	[iOS (11,0)]
 	[ErrorDomain ("NFCErrorDomain")]
 	[Native]
-	public enum NFCReaderError : nint {
+	public enum NFCReaderError : long {
 		UnsupportedFeature = 1,
 		SecurityViolation,
 		ReaderTransceiveErrorTagConnectionLost = 100,
@@ -42,7 +42,7 @@ namespace CoreNFC {
 	//[iOS (11,0), NoTV, NoWatch, NoMac]
 	[iOS (11,0)]
 	[Native]
-	public enum NFCTagType : nuint {
+	public enum NFCTagType : ulong {
 		Iso15693 = 1,
 	}
 

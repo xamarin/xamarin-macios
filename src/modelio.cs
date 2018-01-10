@@ -54,14 +54,14 @@ namespace ModelIO {
 
 	[iOS (11,0), Mac(10,13, onlyOn64 : true), TV (11,0)]
 	[Native]
-	enum MDLAnimatedValueInterpolation : nuint {
+	enum MDLAnimatedValueInterpolation : ulong {
 		Constant,
 		Linear,
 	}
 
 	[iOS (11,0), Mac(10,13, onlyOn64 : true), TV (11,0)]
 	[Native]
-	enum MDLTransformOpRotationOrder : nuint {
+	enum MDLTransformOpRotationOrder : ulong {
 		Xyz = 1,
 		Xzy,
 		Yxz,
@@ -72,7 +72,7 @@ namespace ModelIO {
 
 	[iOS (11,0), Mac(10,13, onlyOn64 : true), TV (11,0)]
 	[Native]
-	enum MDLDataPrecision : nuint {
+	enum MDLDataPrecision : ulong {
 		Undefined,
 		Float,
 		Double,

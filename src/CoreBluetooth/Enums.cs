@@ -17,7 +17,7 @@ namespace CoreBluetooth {
 	[Watch (4,0)]
 	[iOS (10,0)]
 	[Native]
-	public enum CBManagerState : nint {
+	public enum CBManagerState : long {
 		Unknown = 0,
 		Resetting,
 		Unsupported,
@@ -31,7 +31,7 @@ namespace CoreBluetooth {
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CBManagerState' instead.")]
 	[NoWatch]
 	[Native]
-	public enum CBCentralManagerState : nint {
+	public enum CBCentralManagerState : long {
 		Unknown = CBManagerState.Unknown,
 		Resetting = CBManagerState.Resetting,
 		Unsupported = CBManagerState.Unsupported,
@@ -45,7 +45,7 @@ namespace CoreBluetooth {
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CBManagerState' instead.")]
 	[NoWatch]
 	[Native]
-	public enum CBPeripheralManagerState : nint {
+	public enum CBPeripheralManagerState : long {
 		Unknown = CBManagerState.Unknown,
 		Resetting = CBManagerState.Resetting,
 		Unsupported = CBManagerState.Unsupported,
@@ -57,7 +57,7 @@ namespace CoreBluetooth {
 	// NSInteger -> CBPeripheralManager.h
 	[Watch (4,0)]
 	[Native]
-	public enum CBPeripheralState : nint {
+	public enum CBPeripheralState : long {
 		Disconnected,
 		Connecting,
 		Connected,
@@ -69,7 +69,7 @@ namespace CoreBluetooth {
 	// NSInteger -> CBPeripheralManager.h
 	[Watch (4,0)]
 	[Native]
-	public enum CBPeripheralManagerAuthorizationStatus : nint {
+	public enum CBPeripheralManagerAuthorizationStatus : long {
 		NotDetermined,
 		Restricted,
 		Denied,
@@ -81,7 +81,7 @@ namespace CoreBluetooth {
 	[Watch (4,0)]
 	[Flags]
 	[Native]
-	public enum CBCharacteristicProperties : nuint_compat_int {
+	public enum CBCharacteristicProperties : ulong {
 		Broadcast = 1,
 		Read = 2,
 		WriteWithoutResponse = 4,
@@ -99,7 +99,7 @@ namespace CoreBluetooth {
 	[Watch (4,0)]
 	[ErrorDomain ("CBErrorDomain")]
 	[Native] // NSInteger -> CBError.h
-	public enum CBError : nint {
+	public enum CBError : long {
 		None = 0,
 		Unknown = 0,
 		InvalidParameters,
@@ -122,7 +122,7 @@ namespace CoreBluetooth {
 	[Watch (4,0)]
 	[ErrorDomain ("CBATTErrorDomain")]
 	[Native] // NSInteger -> CBError.h
-	public enum CBATTError : nint {
+	public enum CBATTError : long {
 		Success = 0,
 		InvalidHandle,
 		ReadNotPermitted,
@@ -146,7 +146,7 @@ namespace CoreBluetooth {
 	// NSInteger -> CBPeripheral.h
 	[Watch (4,0)]
 	[Native]
-	public enum CBCharacteristicWriteType : nint {
+	public enum CBCharacteristicWriteType : long {
 		WithResponse,
 		WithoutResponse
 	}
@@ -156,7 +156,7 @@ namespace CoreBluetooth {
 	[Watch (4,0)]
 	[Flags]
 	[Native]
-	public enum CBAttributePermissions : nuint_compat_int {
+	public enum CBAttributePermissions : ulong {
 		Readable	= 1,
 		Writeable	= 1 << 1,
 		ReadEncryptionRequired	= 1 << 2,
@@ -166,7 +166,7 @@ namespace CoreBluetooth {
 	// NSInteger -> CBPeripheralManager.h
 	[Watch (4,0)]
 	[Native]
-	public enum CBPeripheralManagerConnectionLatency : nint {
+	public enum CBPeripheralManagerConnectionLatency : long {
 		Low = 0,
 		Medium,
 		High

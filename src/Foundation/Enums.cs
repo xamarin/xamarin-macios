@@ -119,7 +119,7 @@ namespace Foundation {
 
 	[NoWatch, NoTV, NoMac, iOS (11, 0)]
 	[Native]
-	public enum NSUrlSessionMultipathServiceType : nint {
+	public enum NSUrlSessionMultipathServiceType : long {
 		None = 0,
 		Handover = 1,
 		Interactive = 2,

@@ -121,7 +121,7 @@ generator that Objective-C runtime calls should first cast the enum to a
 
 However, this also presents a problem of keeping the enum 32-bit on the
 Classic assemblies. Therefore, enums should actually be backed in source
-code `nuint_compat_int`. This will be preprocessed to `int` on the Classic
+code `nuint`. This will be preprocessed to `int` on the Classic
 assembly and `ulong` on the 32/64-bit assemblies.
 
 **Native Enum Definition**
@@ -137,7 +137,7 @@ typedef NS_ENUM(NSUInteger, NSTableViewDropOperation) {
 
 ```csharp
 [Native]
-public enum NSTableViewDropOperation : nuint_compat_int {
+public enum NSTableViewDropOperation : nuint {
 	DropOn,
 	DropAbove
 }

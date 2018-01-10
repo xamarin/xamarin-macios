@@ -22,7 +22,7 @@ using System.Collections.Generic;
 namespace CoreFoundation {
 
 	[Native] // CFIndex
-	public enum CFNotificationSuspensionBehavior : nint {
+	public enum CFNotificationSuspensionBehavior : long {
 		Drop = 1,
 		Coalesce = 2,
 		Hold = 3,

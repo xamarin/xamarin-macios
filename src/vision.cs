@@ -27,7 +27,7 @@ namespace Vision {
 	[ErrorDomain ("VNErrorDomain")]
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[Native]
-	enum VNErrorCode : nint {
+	enum VNErrorCode : long {
 		Ok = 0,
 		RequestCancelled,
 		InvalidFormat,
@@ -48,14 +48,14 @@ namespace Vision {
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[Native]
-	enum VNRequestTrackingLevel : nuint {
+	enum VNRequestTrackingLevel : ulong {
 		Accurate = 0,
 		Fast,
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[Native]
-	enum VNImageCropAndScaleOption : nuint {
+	enum VNImageCropAndScaleOption : ulong {
 		CenterCrop = 0,
 		ScaleFit = 1,
 		ScaleFill,

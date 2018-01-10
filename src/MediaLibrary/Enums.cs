@@ -26,7 +26,7 @@ using ObjCRuntime;
 #if XAMCORE_2_0
 namespace MediaLibrary {
 	[Native]
-	public enum MLMediaSourceType : nuint
+	public enum MLMediaSourceType : ulong
 	{
 		Audio = 1 << 0,
 		Image = 1 << 1,
@@ -34,7 +34,7 @@ namespace MediaLibrary {
 	}
 
 	[Native]
-	public enum MLMediaType : nuint
+	public enum MLMediaType : ulong
 	{
 		Audio = 1 << 0,
 		Image = 1 << 1,

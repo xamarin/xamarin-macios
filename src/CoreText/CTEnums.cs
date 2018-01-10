@@ -33,7 +33,7 @@ namespace CoreText {
 	[Native]
 	[ErrorDomain ("kCTFontManagerErrorDomain")]
 	// defined as CFIndex (signed long [long] = nint) - /System/Library/Frameworks/CoreText.framework/Headers/CTFontManagerError.h
-	public enum CTFontManagerError : nint {
+	public enum CTFontManagerError : long {
 		None = 0,
 		FileNotFount = 101,
 		InsufficientPermissions = 102,

@@ -938,7 +938,7 @@ namespace MetalPerformanceShaders {
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13, onlyOn64: true)]
 	[Native][Flags]
-	public enum MPSCnnConvolutionFlags : nuint {
+	public enum MPSCnnConvolutionFlags : ulong {
 		None = 0
 	}
 
@@ -1304,7 +1304,7 @@ namespace MetalPerformanceShaders {
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13, onlyOn64: true)]
 	[Native][Flags]
-	public enum MPSPurgeableState : nuint {
+	public enum MPSPurgeableState : ulong {
 		AllocationDeferred = 0,
 		KeepCurrent = MTLPurgeableState.KeepCurrent,
 		NonVolatile = MTLPurgeableState.NonVolatile,

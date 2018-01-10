@@ -33,19 +33,19 @@ using ObjCRuntime;
 namespace ImageKit {
 
 	[Native]
-	public enum IKCameraDeviceViewDisplayMode : nint {
+	public enum IKCameraDeviceViewDisplayMode : long {
 		Table = 0,
 		Icon  = 1
 	};
 	
 	[Native]
-	public enum IKCameraDeviceViewTransferMode : nint {
+	public enum IKCameraDeviceViewTransferMode : long {
 		File   = 0,
 		Memory = 1
 	};
 	
 	[Native]
-	public enum IKDeviceBrowserViewDisplayMode : nint {
+	public enum IKDeviceBrowserViewDisplayMode : long {
 		Table   = 0,
 		Outline = 1,
 		Icon    = 2
@@ -60,7 +60,7 @@ namespace ImageKit {
 	
 	[Flags]
 	[Native]
-	public enum IKCellsStyle : nuint {
+	public enum IKCellsStyle : ulong {
 		None      = 0,
 		Shadowed  = 1 << 0,
 		Outlined  = 1 << 1,
@@ -70,7 +70,7 @@ namespace ImageKit {
 
 	//used as a value for the IKImageBrowserGroupStyleKey in the NSDictionary that defines a group in IKImageBrowserView
 	[Native]
-	public enum IKGroupStyle : nint {
+	public enum IKGroupStyle : long {
 		Bezel      = 0,
 		Disclosure = 1
 	};
@@ -82,13 +82,13 @@ namespace ImageKit {
 	};
 	
 	[Native]
-	public enum IKScannerDeviceViewTransferMode : nint {
+	public enum IKScannerDeviceViewTransferMode : long {
 		File   = 0,
 		Memory = 1
 	};
 	
 	[Native]
-	public enum IKScannerDeviceViewDisplayMode : nint {
+	public enum IKScannerDeviceViewDisplayMode : long {
 		Simple   = 0,
 		Advanced = 1
 	};

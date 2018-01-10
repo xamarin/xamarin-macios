@@ -34,7 +34,7 @@ using ObjCRuntime;
 
 namespace Foundation {
 	[Native]
-	public enum NSStringEncoding : nuint {
+	public enum NSStringEncoding : ulong {
 		ASCIIStringEncoding = 1,
 		NEXTSTEP = 2,
 		JapaneseEUC = 3,
@@ -60,7 +60,7 @@ namespace Foundation {
 	};
 	
 	[Native]
-	public enum NSStringCompareOptions : nuint {
+	public enum NSStringCompareOptions : ulong {
 		CaseInsensitiveSearch = 1,
 		LiteralSearch = 2,
 		BackwardsSearch = 4,

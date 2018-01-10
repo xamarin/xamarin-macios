@@ -51,7 +51,7 @@ namespace CoreFoundation {
 	// CFOptionFlags
 	[Flags]
 	[Native] // System/Library/Frameworks/Foundation.framework/Headers/NSStream.h
-	public enum CFStreamEventType : nuint_compat_int {
+	public enum CFStreamEventType : ulong {
 		None = 0,
 		OpenCompleted = 1,
 		HasBytesAvailable = 2,
@@ -141,7 +141,7 @@ namespace CoreFoundation {
 
 	// CFIndex
 	[Native] // System/Library/Frameworks/CoreFoundation.framework/Headers/CFStream.h
-	public enum CFStreamStatus : nint {
+	public enum CFStreamStatus : long {
 		NotOpen = 0,
 		Opening,
 		Open,

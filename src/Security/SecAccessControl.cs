@@ -24,10 +24,10 @@ namespace Security {
 	[Native]
 #if XAMCORE_4_0
 	// changed to CFOptionFlags in Xcode 8 SDK
-	public enum SecAccessControlCreateFlags : nuint {
+	public enum SecAccessControlCreateFlags : ulong {
 #else
 	// CFOptionFlags -> SecAccessControl.h
-	public enum SecAccessControlCreateFlags : nint {
+	public enum SecAccessControlCreateFlags : long {
 #endif
 		UserPresence        = 1 << 0,
 

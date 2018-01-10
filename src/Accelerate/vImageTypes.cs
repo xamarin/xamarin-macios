@@ -91,7 +91,7 @@ namespace Accelerate {
 
 	// vImage_Error (ssize_t) - vImageTypes.h
 	[Native]
-	public enum vImageError : nint {
+	public enum vImageError : long {
 		NoError                      =    0,
 		RoiLargerThanInputBuffer     =    -21766,
 		InvalidKernelSize            =    -21767,

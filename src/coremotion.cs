@@ -444,7 +444,7 @@ namespace CoreMotion {
 
 	[Watch (4,0), iOS (11,0)]
 	[Native]
-	public enum CMAuthorizationStatus : nint {
+	public enum CMAuthorizationStatus : long {
 		NotDetermined = 0,
 		Restricted,
 		Denied,
@@ -489,7 +489,7 @@ namespace CoreMotion {
 
 	[Watch (3,0)][NoTV][iOS (10,0)]
 	[Native]
-	public enum CMPedometerEventType : nint {
+	public enum CMPedometerEventType : long {
 		Pause,
 		Resume
 	}

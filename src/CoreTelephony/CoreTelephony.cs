@@ -44,7 +44,7 @@ namespace CoreTelephony {
 
 	[iOS (9,0)]
 	[Native]
-	public enum CTCellularDataRestrictedState : nuint {
+	public enum CTCellularDataRestrictedState : ulong {
 		Unknown,
 		Restricted,
 		NotRestricted

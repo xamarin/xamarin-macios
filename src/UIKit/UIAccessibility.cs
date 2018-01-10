@@ -31,7 +31,7 @@ namespace UIKit {
 
 	// NSInteger -> UIAccessibilityZoom.h
 	[Native]
-	public enum UIAccessibilityZoomType : nint {
+	public enum UIAccessibilityZoomType : long {
 		InsertionPoint,
 	}
 

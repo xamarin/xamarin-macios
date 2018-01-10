@@ -464,7 +464,7 @@ namespace Security {
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[Native]
-	public enum SecKeyOperationType : nint {
+	public enum SecKeyOperationType : long {
 		Sign = 0,
 		Verify = 1,
 		Encrypt = 2,

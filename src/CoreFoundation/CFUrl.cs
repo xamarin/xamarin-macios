@@ -37,7 +37,7 @@ namespace CoreFoundation {
 
 	// CFURLPathStyle -> CFIndex -> CFURL.h
 	[Native]
-	public enum CFUrlPathStyle : nint {
+	public enum CFUrlPathStyle : long {
 		POSIX = 0,
 		HFS = 1,
 		Windows = 2

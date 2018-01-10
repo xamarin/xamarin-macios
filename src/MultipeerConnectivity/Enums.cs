@@ -16,7 +16,7 @@ namespace MultipeerConnectivity {
 	[TV (10,0)]
 	[iOS (7,0)]
 	[Native]
-	public enum MCSessionSendDataMode : nint {
+	public enum MCSessionSendDataMode : long {
 		Reliable,
 		Unreliable
 	}
@@ -25,7 +25,7 @@ namespace MultipeerConnectivity {
 	[TV (10,0)]
 	[iOS (7,0)]
 	[Native]
-	public enum MCSessionState : nint {
+	public enum MCSessionState : long {
 		NotConnected,
 		Connecting,
 		Connected
@@ -35,7 +35,7 @@ namespace MultipeerConnectivity {
 	[TV (10,0)]
 	[iOS (7,0)]
 	[Native]
-	public enum MCEncryptionPreference : nint {
+	public enum MCEncryptionPreference : long {
 		Optional = 0,
 		Required = 1,
 		None = 2
@@ -46,7 +46,7 @@ namespace MultipeerConnectivity {
 	[iOS (7,0)]
 	[Native]
 	[ErrorDomain ("MCErrorDomain")]
-	public enum MCError : nint {
+	public enum MCError : long {
 		Unknown ,
 		NotConnected,
 		InvalidParameter,

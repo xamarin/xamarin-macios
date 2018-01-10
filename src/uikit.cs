@@ -42,7 +42,7 @@ namespace UIKit {
 	[iOS (9,0)]
 	[Native]
 	[Flags]
-	public enum UIFocusHeading : nuint {
+	public enum UIFocusHeading : ulong {
 		None = 0,
 		Up = 1 << 0,
 		Down = 1 << 1,
@@ -55,20 +55,20 @@ namespace UIKit {
 	[Native] // NSInteger -> UIApplication.h
 	[NoWatch]
 	[TV (11,0)]
-	public enum UIBackgroundRefreshStatus : nint {
+	public enum UIBackgroundRefreshStatus : long {
 		Restricted, Denied, Available
 	}
 
 	[TV (10,0)][NoWatch]
 	[Native] // NSUInteger -> UIApplication.h
-	public enum UIBackgroundFetchResult : nuint_compat_int {
+	public enum UIBackgroundFetchResult : ulong {
 		NewData, NoData, Failed
 	}
 
 	[NoTV][NoWatch]
 	[iOS (9,0)]
 	[Native]
-	public enum UIApplicationShortcutIconType : nint {
+	public enum UIApplicationShortcutIconType : long {
 		Compose,
 		Play,
 		Pause,
@@ -103,7 +103,7 @@ namespace UIKit {
 
 	[NoWatch, NoTV, iOS (10,0)]
 	[Native]
-	public enum UIImpactFeedbackStyle : nint {
+	public enum UIImpactFeedbackStyle : long {
 		Light,
 		Medium,
 		Heavy
@@ -111,7 +111,7 @@ namespace UIKit {
 
 	[NoWatch, NoTV, iOS (10,0)]
 	[Native]
-	public enum UINotificationFeedbackType : nint {
+	public enum UINotificationFeedbackType : long {
 		Success,
 		Warning,
 		Error

@@ -32,7 +32,7 @@ namespace GameplayKit {
 	[Native]
 	[Flags]
 	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
-	public enum GKMeshGraphTriangulationMode : nuint {
+	public enum GKMeshGraphTriangulationMode : ulong {
 		Vertices = 1 << 0,
 		Centers = 1 << 1,
 		EdgeMidpoints = 1 << 2
@@ -40,7 +40,7 @@ namespace GameplayKit {
 
 	[Native]
 	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
-	public enum GKRTreeSplitStrategy : nint {
+	public enum GKRTreeSplitStrategy : long {
 		Halve = 0,
 		Linear = 1,
 		Quadratic = 2,

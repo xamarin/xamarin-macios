@@ -43,7 +43,7 @@ namespace CoreText {
 	[Flags]
 	[Native]
 	// defined as CFOptionFlags (unsigned long [long] = nuint) - /System/Library/Frameworks/CoreText.framework/Headers/CTFont.h
-	public enum CTFontOptions : nuint_compat_int {
+	public enum CTFontOptions : ulong {
 		Default = 0,
 		PreventAutoActivation = 1 << 0,
 		PreferSystemFont      = 1 << 2,

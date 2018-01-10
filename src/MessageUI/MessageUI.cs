@@ -14,7 +14,7 @@ namespace MessageUI {
 
 #if XAMCORE_4_0
 	[Native]
-	public enum MFMailComposeResult : nint {
+	public enum MFMailComposeResult : long {
 #else
 	// Before iOS 10 beta 3, this was an untyped enum -> MFMailComposeViewController.h
 	// Note: now used as a NSInteger in the API.
@@ -29,7 +29,7 @@ namespace MessageUI {
 	[ErrorDomain ("MFMailComposeErrorDomain")]
 #if XAMCORE_4_0
 	[Native]
-	public enum MFMailComposeErrorCode : nint {
+	public enum MFMailComposeErrorCode : long {
 #else
 	// Before iOS 10 beta 3, this was an untyped enum -> MFMailComposeViewController.h
 	// Note: now used as a NSInteger in the API.
@@ -41,7 +41,7 @@ namespace MessageUI {
 
 #if XAMCORE_4_0
 	[Native]
-	public enum MessageComposeResult : nint {
+	public enum MessageComposeResult : long {
 #else
 	// Before iOS 10 beta 3, this was an untyped enum -> MFMessageComposeViewController.h
 	// Note: now used as a NSInteger in the API.

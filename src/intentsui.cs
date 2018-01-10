@@ -20,14 +20,14 @@ namespace IntentsUI {
 
 	[iOS (10, 0)]
 	[Native]
-	public enum INUIHostedViewContext : nuint {
+	public enum INUIHostedViewContext : ulong {
 		SiriSnippet,
 		MapsCard
 	}
 
 	[iOS (11,0)]
 	[Native]
-	public enum INUIInteractiveBehavior : nuint {
+	public enum INUIInteractiveBehavior : ulong {
 		None,
 		NextView,
 		Launch,

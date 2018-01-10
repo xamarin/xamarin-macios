@@ -113,7 +113,7 @@ namespace CoreMotion {
 
 	// NSInteger -> CMMotionActivity.h
 	[Native]
-	public enum CMMotionActivityConfidence : nint {
+	public enum CMMotionActivityConfidence : long {
 		Low = 0,
 		Medium,
 		High

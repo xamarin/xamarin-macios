@@ -28,7 +28,7 @@ namespace HealthKit {
 	[iOS (8,0)]
 	[ErrorDomain ("HKErrorDomain")]
 	[Native]
-	public enum HKErrorCode : nint {
+	public enum HKErrorCode : long {
 		NoError = 0,
 		HealthDataUnavailable,
 		HealthDataRestricted,
@@ -44,7 +44,7 @@ namespace HealthKit {
 	[iOS (10,0)]
 	[Watch (2,0)]
 	[Native]
-	public enum HKWorkoutSessionLocationType : nint {
+	public enum HKWorkoutSessionLocationType : long {
 		Unknown = 1,
 		Indoor,
 		Outdoor
@@ -53,7 +53,7 @@ namespace HealthKit {
 	[NoiOS]
 	[Watch (2,0)]
 	[Native]
-	public enum HKWorkoutSessionState : nint {
+	public enum HKWorkoutSessionState : long {
 		NotStarted = 1,
 		Running,
 		Ended,
@@ -64,7 +64,7 @@ namespace HealthKit {
 	[iOS (11,0)]
 	[Watch (4,0)]
 	[Native]
-	public enum HKHeartRateMotionContext : nint {
+	public enum HKHeartRateMotionContext : long {
 		NotSet = 0,
 		Sedentary,
 		Active,

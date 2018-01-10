@@ -6,7 +6,7 @@ namespace AssetsLibrary {
 	// NSInteger -> ALAssetsLibrary.h
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Photos' API instead.")]
 	[Native]
-	public enum ALAssetOrientation : nint {
+	public enum ALAssetOrientation : long {
 		Up,
 		Down,
 		Left,
@@ -21,7 +21,7 @@ namespace AssetsLibrary {
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Photos' API instead.")]
 	[Native]
 	[Flags]
-	public enum ALAssetsGroupType : nuint {
+	public enum ALAssetsGroupType : ulong {
 		Library        = (1 << 0),
 		Album          = (1 << 1),
 		Event          = (1 << 2),
@@ -50,7 +50,7 @@ namespace AssetsLibrary {
 	// NSInteger -> ALAssetsLibrary.h
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Photos' API instead.")]
 	[Native]
-	public enum ALAuthorizationStatus : nint {
+	public enum ALAuthorizationStatus : long {
 		NotDetermined,
 		Restricted,
 		Denied,

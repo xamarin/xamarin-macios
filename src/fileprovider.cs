@@ -19,7 +19,7 @@ namespace FileProvider {
 	[iOS (11,0)]
 	[ErrorDomain ("NSFileProviderErrorDomain")]
 	[Native]
-	enum NSFileProviderError : nint {
+	enum NSFileProviderError : long {
 		NotAuthenticated = -1000,
 		FilenameCollision = -1001,
 		SyncAnchorExpired = -1002,
@@ -62,7 +62,7 @@ namespace FileProvider {
 	[iOS (11,0)]
 	[Native]
 	[Flags]
-	enum NSFileProviderItemCapabilities : nuint {
+	enum NSFileProviderItemCapabilities : ulong {
 		Reading = 1 << 0,
 		Writing = 1 << 1,
 		Reparenting = 1 << 2,

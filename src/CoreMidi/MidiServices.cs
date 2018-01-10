@@ -74,7 +74,7 @@ namespace CoreMidi {
 #if !MONOMAC || !XAMCORE_4_0
 	// NSUInteger -> MIDINetworkSession.h
 	[Native]
-	public enum MidiNetworkConnectionPolicy : nuint_compat_int {
+	public enum MidiNetworkConnectionPolicy : ulong {
 		NoOne, HostsInContactsList, Anyone
 	}
 #endif

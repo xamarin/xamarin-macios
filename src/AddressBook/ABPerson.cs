@@ -83,7 +83,7 @@ namespace AddressBook {
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Native]
 	[iOS (4,1)]
-	public enum ABPersonImageFormat : nint_compat_int {
+	public enum ABPersonImageFormat : long {
 		Thumbnail = 0,
 		OriginalSize = 2
 	}

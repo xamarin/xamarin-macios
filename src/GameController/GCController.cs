@@ -15,7 +15,7 @@ namespace GameController {
 
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
-	public enum GCControllerPlayerIndex : nint {
+	public enum GCControllerPlayerIndex : long {
 		Unset = -1,
 		Index1 = 0,
 		Index2,

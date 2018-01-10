@@ -534,7 +534,7 @@ namespace AVKit {
 
 	[TV (11,0), NoiOS]
 	[Native]
-	public enum AVRoutePickerViewButtonStyle : nint {
+	public enum AVRoutePickerViewButtonStyle : long {
 		System,
 		Plain,
 		Custom,

@@ -14,7 +14,7 @@ namespace ExternalAccessory {
 	[iOS (8,0)]
 	[Native]
 	[Flags]
-	public enum EAWiFiUnconfiguredAccessoryProperties : nuint {
+	public enum EAWiFiUnconfiguredAccessoryProperties : ulong {
 		SupportsAirPlay  = (1 << 0),
 		SupportsAirPrint = (1 << 1),
 		SupportsHomeKit  = (1 << 2), // iOS 8 beta 5
@@ -24,7 +24,7 @@ namespace ExternalAccessory {
 	[TV (10,0)]
 	[iOS (8,0)]
 	[Native]
-	public enum EAWiFiUnconfiguredAccessoryBrowserState : nint {
+	public enum EAWiFiUnconfiguredAccessoryBrowserState : long {
 		WiFiUnavailable = 0,
 		Stopped,
 		Searching,
@@ -36,7 +36,7 @@ namespace ExternalAccessory {
 	[TV (10,0)]
 	[iOS (8,0)]
 	[Native]
-	public enum EAWiFiUnconfiguredAccessoryConfigurationStatus : nint {
+	public enum EAWiFiUnconfiguredAccessoryConfigurationStatus : long {
 		Success,
 		UserCancelledConfiguration,
 		Failed,
@@ -48,7 +48,7 @@ namespace ExternalAccessory {
 	[Mac (10, 13)]
 	[Native]
 	[ErrorDomain ("EABluetoothAccessoryPickerErrorDomain")]
-	public enum EABluetoothAccessoryPickerError : nint {
+	public enum EABluetoothAccessoryPickerError : long {
 		AlreadyConnected,
 		NotFound,
 		Cancelled,

@@ -19,7 +19,7 @@ namespace Messages {
 
 	[iOS (10,0)]
 	[Native]
-	public enum MSMessagesAppPresentationStyle : nuint
+	public enum MSMessagesAppPresentationStyle : ulong
 	{
 		Compact,
 		Expanded,
@@ -28,7 +28,7 @@ namespace Messages {
 
 	[iOS (10,0)]
 	[Native]
-	public enum MSStickerSize : nint
+	public enum MSStickerSize : long
 	{
 		Small,
 		Regular,
@@ -37,7 +37,7 @@ namespace Messages {
 
 	[Native]
 	[ErrorDomain ("MSMessagesErrorDomain")]
-	public enum MSMessageErrorCode : nint
+	public enum MSMessageErrorCode : long
 	{
 		Unknown = -1,
 		FileNotFound = 1,

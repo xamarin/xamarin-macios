@@ -45,13 +45,13 @@ namespace QTKit {
 	}
 
 	[Native]
-	public enum QTCaptureDevicePlaybackMode : nuint_compat_int {
+	public enum QTCaptureDevicePlaybackMode : ulong {
 		NotPlaying,
 		Playing
 	}
 
 	[Native]
-	public enum QTCaptureDeviceControlsSpeed : nint {
+	public enum QTCaptureDeviceControlsSpeed : long {
 		FastestReverse = -19000,	
 		VeryFastReverse = -16000,
 		FastReverse = -13000,
@@ -70,13 +70,13 @@ namespace QTKit {
 	}
 
 	[Native]
-	public enum QTCaptureDestination : nuint_compat_int {
+	public enum QTCaptureDestination : ulong {
 		NewFile = 1,
 		OldFile = 2
 	}
 
 	[Native]
-	public enum QTError : nint {
+	public enum QTError : long {
 		Unknown = -1,
 		None,
 		IncompatibleInput = 1002,

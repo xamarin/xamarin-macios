@@ -46,7 +46,7 @@ namespace CoreText {
 	// defined as CFOptionFlags (unsigned long [long] = nuint) - /System/Library/Frameworks/CoreText.framework/Headers/CTLine.h
 	[Native]
 	[Flags]
-	public enum CTLineBoundsOptions : nuint_compat_int {
+	public enum CTLineBoundsOptions : ulong {
 		ExcludeTypographicLeading  = 1 << 0,
 		ExcludeTypographicShifts   = 1 << 1,
 		UseHangingPunctuation      = 1 << 2,

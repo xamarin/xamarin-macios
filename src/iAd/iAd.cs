@@ -15,7 +15,7 @@ namespace iAd {
 	[Deprecated (PlatformName.iOS, 10, 0)]
 	[Native]
 	[ErrorDomain ("ADErrorDomain")]
-	public enum ADError : nint {
+	public enum ADError : long {
 		Unknown,
 		ServerFailure,
 		LoadingThrottled,
@@ -33,14 +33,14 @@ namespace iAd {
 	[Deprecated (PlatformName.iOS, 10, 0)]
 	[iOS (6,0)] 
 	[Native]
-	public enum ADAdType : nint {
+	public enum ADAdType : long {
 		Banner, MediumRectangle
 	}
 
 	// NSInteger -> UIViewControlleriAdAdditions.h
 	[Deprecated (PlatformName.iOS, 10, 0)]
 	[Native]
-	public enum ADInterstitialPresentationPolicy : nint {
+	public enum ADInterstitialPresentationPolicy : long {
 		None = 0,
 		Automatic,
 		Manual,
@@ -49,7 +49,7 @@ namespace iAd {
 	[iOS (9,0)]
 	[Native]
 	[ErrorDomain ("ADClientErrorDomain")]
-	public enum ADClientError : nint {
+	public enum ADClientError : long {
 		Unknown = 0,
 		LimitAdTracking = 1
 	}

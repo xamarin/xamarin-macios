@@ -17,7 +17,7 @@ namespace Speech {
 
 	[Native]
 	[iOS (10, 0)]
-	public enum SFSpeechRecognitionTaskState : nint {
+	public enum SFSpeechRecognitionTaskState : long {
 		Starting = 0,
 		Running = 1,
 		Finishing = 2,
@@ -27,7 +27,7 @@ namespace Speech {
 
 	[Native]
 	[iOS (10, 0)]
-	public enum SFSpeechRecognitionTaskHint : nint {
+	public enum SFSpeechRecognitionTaskHint : long {
 		Unspecified = 0,
 		Dictation = 1,
 		Search = 2,
@@ -36,7 +36,7 @@ namespace Speech {
 
 	[Native]
 	[iOS (10, 0)]
-	public enum SFSpeechRecognizerAuthorizationStatus : nint {
+	public enum SFSpeechRecognizerAuthorizationStatus : long {
 		NotDetermined,
 		Denied,
 		Restricted,

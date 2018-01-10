@@ -19,7 +19,7 @@ namespace AppKit
 {
 	[Mac (10,10)]
 	[Native]
-	public enum NSAccessibilityOrientation : nint
+	public enum NSAccessibilityOrientation : long
 	{
 		Unknown = 0,
 		Vertical = 1,
@@ -28,7 +28,7 @@ namespace AppKit
 
 	[Mac (10,10)]
 	[Native]
-	public enum NSAccessibilitySortDirection : nint
+	public enum NSAccessibilitySortDirection : long
 	{
 		Unknown = 0,
 		Ascending = 1,
@@ -37,7 +37,7 @@ namespace AppKit
 
 	[Mac (10,10)]
 	[Native]
-	public enum NSAccessibilityRulerMarkerType : nint
+	public enum NSAccessibilityRulerMarkerType : long
 	{
 		Unknown = 0,
 		TabStopLeft = 1,
@@ -51,7 +51,7 @@ namespace AppKit
 
 	[Mac (10,10)]
 	[Native]
-	public enum NSAccessibilityUnits : nint
+	public enum NSAccessibilityUnits : long
 	{
 		Unknown = 0,
 		Inches = 1,
@@ -62,7 +62,7 @@ namespace AppKit
 
 	[Mac (10,9)]
 	[Native]
-	public enum NSAccessibilityPriorityLevel : nint
+	public enum NSAccessibilityPriorityLevel : long
 	{
 		Low = 10,
 		Medium = 50,

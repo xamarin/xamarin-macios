@@ -20,7 +20,7 @@ namespace CoreSpotlight {
 	[iOS (9,0), Mac (10,11)]
 	[Native]
 	[ErrorDomain ("CSIndexErrorDomain")]
-	public enum CSIndexErrorCode : nint {
+	public enum CSIndexErrorCode : long {
 		UnknownError =	-1,
 		IndexUnavailableError = -1000,
 		InvalidItemError = -1001,
@@ -33,7 +33,7 @@ namespace CoreSpotlight {
 	[NoTV][iOS (10,0)]
 	[ErrorDomain ("CSSearchQueryErrorDomain")]
 	[Native]
-	public enum CSSearchQueryErrorCode : nint {
+	public enum CSSearchQueryErrorCode : long {
 		Unknown = -2000,
 		IndexUnreachable = -2001,
 		InvalidQuery = -2002,

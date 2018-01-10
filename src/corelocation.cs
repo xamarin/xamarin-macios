@@ -26,7 +26,7 @@ namespace CoreLocation {
 	[NoTV][NoWatch]
 	[iOS (7,0)]
 	[Native] // NSInteger -> CLRegion.h
-	public enum CLRegionState : nint {
+	public enum CLRegionState : long {
 		Unknown,
 		Inside,
 		Outside
@@ -35,7 +35,7 @@ namespace CoreLocation {
 	[NoTV][NoWatch]
 	[iOS (7,0)]
 	[Native] // NSInteger -> CLRegion.h
-	public enum CLProximity : nint {
+	public enum CLProximity : long {
 		Unknown,
 		Immediate,
 		Near,
