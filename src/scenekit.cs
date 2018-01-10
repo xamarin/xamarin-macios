@@ -3203,7 +3203,7 @@ namespace SceneKit {
 
 		[Static]
 		[Export ("setCompletionBlock:")]
-		void SetCompletionBlock ([NullAllowed] NSAction completion);
+		void SetCompletionBlock ([NullAllowed] Action completion);
 
 		[Export ("valueForKey:")]
 		NSObject ValueForKey (NSString key);

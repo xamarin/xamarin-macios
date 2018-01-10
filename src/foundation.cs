@@ -6693,11 +6693,11 @@ namespace Foundation
 	
 		[Export ("resetWithCompletionHandler:")]
 		[Async]
-		void Reset (NSAction completionHandler);
+		void Reset (Action completionHandler);
 	
 		[Export ("flushWithCompletionHandler:")]
 		[Async]
-		void Flush (NSAction completionHandler);
+		void Flush (Action completionHandler);
 	
 #if !XAMCORE_3_0
 		// broken version that we must keep for XAMCORE_2_0 binary compatibility
@@ -8656,10 +8656,10 @@ namespace Foundation
 	interface NSBlockOperation {
 		[Static]
 		[Export ("blockOperationWithBlock:")]
-		NSBlockOperation Create (/* non null */ NSAction method);
+		NSBlockOperation Create (/* non null */ Action method);
 
 		[Export ("addExecutionBlock:")]
-		void AddExecutionBlock (/* non null */ NSAction method);
+		void AddExecutionBlock (/* non null */ Action method);
 
 		[Export ("executionBlocks")]
 		NSObject [] ExecutionBlocks { get; }
@@ -8675,7 +8675,7 @@ namespace Foundation
 		void AddOperations ([NullAllowed] NSOperation [] operations, bool waitUntilFinished);
 
 		[Export ("addOperationWithBlock:")][PostGet ("Operations")]
-		void AddOperation (/* non null */ NSAction operation);
+		void AddOperation (/* non null */ Action operation);
 
 		[Export ("operations")]
 		NSOperation [] Operations { get; }
@@ -11380,7 +11380,7 @@ namespace Foundation
 
 		[iOS (7,0), Mac (10, 9)]
 		[Export ("performActivityWithOptions:reason:usingBlock:")]
-		void PerformActivity (NSActivityOptions options, string reason, NSAction runCode);
+		void PerformActivity (NSActivityOptions options, string reason, Action runCode);
 
 		[Mac (10,10)]
 		[iOS (8,0)]
@@ -11507,14 +11507,14 @@ namespace Foundation
 		bool Paused { [Bind ("isPaused")] get; }
 	
 		[Export ("setCancellationHandler:")]
-		void SetCancellationHandler (NSAction handler);
+		void SetCancellationHandler (Action handler);
 	
 		[Export ("setPausingHandler:")]
-		void SetPauseHandler (NSAction handler);
+		void SetPauseHandler (Action handler);
 
 		[iOS (9,0), Mac (10,11)]
 		[Export ("setResumingHandler:")]
-		void SetResumingHandler (NSAction handler);
+		void SetResumingHandler (Action handler);
 	
 		[Export ("setUserInfoObject:forKey:")]
 		void SetUserInfo ([NullAllowed] NSObject obj, NSString key);
@@ -11737,7 +11737,7 @@ namespace Foundation
 		void CoordinateWriteWrite (NSUrl writingURL, NSFileCoordinatorWritingOptions writingOptions, NSUrl writingURL2, NSFileCoordinatorWritingOptions writingOptions2, out NSError error, /* non null */ NSFileCoordinatorWorkerRW writeWriteWorker);
 
 		[Export ("prepareForReadingItemsAtURLs:options:writingItemsAtURLs:options:error:byAccessor:")]
-		void CoordinateBatc (NSUrl [] readingURLs, NSFileCoordinatorReadingOptions readingOptions, NSUrl [] writingURLs, NSFileCoordinatorWritingOptions writingOptions, out NSError error, /* non null */ NSAction batchHandler);
+		void CoordinateBatc (NSUrl [] readingURLs, NSFileCoordinatorReadingOptions readingOptions, NSUrl [] writingURLs, NSFileCoordinatorWritingOptions writingOptions, out NSError error, /* non null */ Action batchHandler);
 
 		[iOS (8,0)][Mac (10,10)]
 		[Export ("coordinateAccessWithIntents:queue:byAccessor:")]

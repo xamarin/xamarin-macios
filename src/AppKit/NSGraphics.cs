@@ -150,7 +150,7 @@ namespace AppKit {
 			NSShowAnimationEffect ((nuint)(ulong)animationEffect, centerLocation, size, animationDelegate, didEndSelector, contextInfo);
 		}
 
-		public static void ShowAnimationEffect (NSAnimationEffect animationEffect, CGPoint centerLocation, CGSize size, NSAction endedCallback)
+		public static void ShowAnimationEffect (NSAnimationEffect animationEffect, CGPoint centerLocation, CGSize size, Action endedCallback)
 		{
 			var d = new NSAsyncActionDispatcher (endedCallback);
 			ShowAnimationEffect (animationEffect, centerLocation, size, d, NSActionDispatcher.Selector, IntPtr.Zero);

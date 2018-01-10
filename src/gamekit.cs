@@ -1685,7 +1685,7 @@ namespace GameKit {
 	partial interface GKNotificationBanner {
 		[Static, Export ("showBannerWithTitle:message:completionHandler:")]
 		[Async]
-		void Show ([NullAllowed] string title, [NullAllowed] string message, [NullAllowed] NSAction onCompleted);
+		void Show ([NullAllowed] string title, [NullAllowed] string message, [NullAllowed] Action onCompleted);
 
 		[iOS (6,0)][Mac (10,8)]
 		[Export ("showBannerWithTitle:message:duration:completionHandler:"), Static]

@@ -153,7 +153,7 @@ namespace CoreAnimation {
 	public partial class CADisplayLink {
 		NSActionDispatcher dispatcher;
 
-		public static CADisplayLink Create (NSAction action)
+		public static CADisplayLink Create (Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var rv = Create (dispatcher, NSActionDispatcher.Selector);

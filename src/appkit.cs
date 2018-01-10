@@ -256,11 +256,11 @@ namespace AppKit {
 		double Duration { get; set; }
 
 		[Mac (10, 7), Export ("completionHandler", ArgumentSemantic.Copy)]
-		NSAction CompletionHandler { get; set; }
+		Action CompletionHandler { get; set; }
 
 		[Static]
 		[Mac (10, 7), Export ("runAnimationGroup:completionHandler:")]
-		void RunAnimation (Action<NSAnimationContext> changes, [NullAllowed] NSAction completionHandler);
+		void RunAnimation (Action<NSAnimationContext> changes, [NullAllowed] Action completionHandler);
 
 		[Mac (10, 7), Export ("timingFunction", ArgumentSemantic.Strong)]
 		CAMediaTimingFunction TimingFunction { get; set; }
@@ -5341,19 +5341,19 @@ namespace AppKit {
 		bool HasUndoManager { get; set; }
 
 		[Mac (10, 7), Export ("performActivityWithSynchronousWaiting:usingBlock:")]
-		void PerformActivity (bool waitSynchronously, NSAction activityCompletionHandler);
+		void PerformActivity (bool waitSynchronously, Action activityCompletionHandler);
 
 		[Mac (10, 7), Export ("continueActivityUsingBlock:")]
-		void ContinueActivity (NSAction resume);
+		void ContinueActivity (Action resume);
 
 		[Mac (10, 7), Export ("continueAsynchronousWorkOnMainThreadUsingBlock:")]
-		void ContinueAsynchronousWorkOnMainThread (NSAction work);
+		void ContinueAsynchronousWorkOnMainThread (Action work);
 
 		[Mac (10, 7), Export ("performSynchronousFileAccessUsingBlock:")]
-		void PerformSynchronousFileAccess (NSAction fileAccessCallback);
+		void PerformSynchronousFileAccess (Action fileAccessCallback);
 
 		[Mac (10, 7), Export ("performAsynchronousFileAccessUsingBlock:")]
-		void PerformAsynchronousFileAccess (NSAction ioCode);
+		void PerformAsynchronousFileAccess (Action ioCode);
 
 		[Mac (10, 7), Export ("isEntireFileLoaded")]
 		bool IsEntireFileLoaded { get; }

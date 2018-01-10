@@ -1335,7 +1335,7 @@ namespace CoreAnimation {
 
 		[iOS (4,0)]
 		[Static, Export ("completionBlock"), NullAllowed]
-		NSAction CompletionBlock { get; set; }
+		Action CompletionBlock { get; set; }
 
 		[Field ("kCATransactionAnimationDuration")]
 		NSString AnimationDurationKey { get; }

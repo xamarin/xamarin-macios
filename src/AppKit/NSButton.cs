@@ -40,7 +40,7 @@ namespace AppKit {
 		}
 
 		[Mac (10,12)]
-		public static NSButton CreateButton (string title, NSImage image, NSAction action)
+		public static NSButton CreateButton (string title, NSImage image, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _CreateButton (title, image, dispatcher, NSActionDispatcher.Selector);
@@ -49,7 +49,7 @@ namespace AppKit {
 		}
 
 		[Mac (10,12)]
-		public static NSButton CreateButton (string title, NSAction action)
+		public static NSButton CreateButton (string title, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _CreateButton (title, dispatcher, NSActionDispatcher.Selector);
@@ -58,7 +58,7 @@ namespace AppKit {
 		}
 
 		[Mac (10,12)]
-		public static NSButton CreateButton (NSImage image, NSAction action)
+		public static NSButton CreateButton (NSImage image, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _CreateButton (image, dispatcher, NSActionDispatcher.Selector);
@@ -67,7 +67,7 @@ namespace AppKit {
 		}
 
 		[Mac (10,12)]
-		public static NSButton CreateCheckbox (string title, NSAction action)
+		public static NSButton CreateCheckbox (string title, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _CreateCheckbox (title, dispatcher, NSActionDispatcher.Selector);
@@ -76,7 +76,7 @@ namespace AppKit {
 		}
 
 		[Mac (10,12)]
-		public static NSButton CreateRadioButton (string title, NSAction action)
+		public static NSButton CreateRadioButton (string title, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _CreateRadioButton (title, dispatcher, NSActionDispatcher.Selector);

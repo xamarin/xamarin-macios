@@ -538,7 +538,7 @@ namespace Foundation {
 			InvokeOnMainThread (sel, obj, true);
 		}
 		
-		public void BeginInvokeOnMainThread (NSAction action)
+		public void BeginInvokeOnMainThread (Action action)
 		{
 			var d = new NSAsyncActionDispatcher (action);
 #if MONOMAC
@@ -550,7 +550,7 @@ namespace Foundation {
 #endif
 		}
 		
-		public void InvokeOnMainThread (NSAction action)
+		public void InvokeOnMainThread (Action action)
 		{
 			using (var d = new NSActionDispatcher (action)) {
 #if MONOMAC
@@ -703,13 +703,13 @@ namespace Foundation {
 			return Description ?? base.ToString ();
 		}
 
-		public virtual void Invoke (NSAction action, double delay)
+		public virtual void Invoke (Action action, double delay)
 		{
 			var d = new NSAsyncActionDispatcher (action);
 			d.PerformSelector (NSActionDispatcher.Selector, null, delay);
 		}
 
-		public virtual void Invoke (NSAction action, TimeSpan delay)
+		public virtual void Invoke (Action action, TimeSpan delay)
 		{
 			var d = new NSAsyncActionDispatcher (action);
 			d.PerformSelector (NSActionDispatcher.Selector, null, delay.TotalSeconds);

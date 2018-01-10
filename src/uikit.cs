@@ -3002,7 +3002,7 @@ namespace UIKit {
 
 		[iOS (4,0), ThreadSafe]
 		[Export ("beginBackgroundTaskWithExpirationHandler:")]
-		nint BeginBackgroundTask ([NullAllowed] NSAction backgroundTimeExpired);
+		nint BeginBackgroundTask ([NullAllowed] Action backgroundTimeExpired);
 
 		[iOS (4,0), ThreadSafe]
 		[Export ("endBackgroundTask:")]
@@ -3012,7 +3012,7 @@ namespace UIKit {
 		[iOS (4,0)]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'PushKit' instead.")]
 		[Export ("setKeepAliveTimeout:handler:")]
-		bool SetKeepAliveTimeout (double timeout, [NullAllowed] NSAction handler);
+		bool SetKeepAliveTimeout (double timeout, [NullAllowed] Action handler);
 
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'PushKit' instead.")]
@@ -3180,7 +3180,7 @@ namespace UIKit {
 		[ThreadSafe]
 		[iOS (7,0)]
 		[Export ("beginBackgroundTaskWithName:expirationHandler:")]
-		nint BeginBackgroundTask (string taskName, NSAction expirationHandler);
+		nint BeginBackgroundTask (string taskName, Action expirationHandler);
 
 		[TV (11,0)]
 		[iOS (7,0)]
@@ -3691,7 +3691,7 @@ namespace UIKit {
 
 		[iOS (7,0)]
 		[Export ("application:handleEventsForBackgroundURLSession:completionHandler:")]
-		void HandleEventsForBackgroundUrl (UIApplication application, string sessionIdentifier, NSAction completionHandler);
+		void HandleEventsForBackgroundUrl (UIApplication application, string sessionIdentifier, Action completionHandler);
 
 		[TV (11,0)]
 		[iOS (7,0)]
@@ -4172,7 +4172,7 @@ namespace UIKit {
 
 		[Export ("performBatchUpdates:completion:")]
 		[Async]
-		void PerformBatchUpdates (NSAction updates, [NullAllowed] UICompletionHandler completed);
+		void PerformBatchUpdates (Action updates, [NullAllowed] UICompletionHandler completed);
 
 		//
 		// 7.0
@@ -5266,7 +5266,7 @@ namespace UIKit {
 
 		[Export ("performAsynchronousFileAccessUsingBlock:")]
 		[Async]
-		void PerformAsynchronousFileAccess (/* non null*/ NSAction action);
+		void PerformAsynchronousFileAccess (/* non null*/ Action action);
 
 		[Export ("handleError:userInteractionPermitted:")]
 		void HandleError (NSError error, bool userInteractionPermitted);
@@ -5487,7 +5487,7 @@ namespace UIKit {
 
 		[NullAllowed] // by default this property is null
 		[Export ("action", ArgumentSemantic.Copy)]
-		NSAction Action { get; set; }
+		Action Action { get; set; }
 
 		[Export ("addChildBehavior:")]
 		[PostGet ("ChildBehaviors")]
@@ -13385,17 +13385,17 @@ namespace UIKit {
 
 		[iOS (4,0)]
 		[Static, Export ("animateWithDuration:animations:")]
-		void Animate (double duration, /* non null */ NSAction animation);
+		void Animate (double duration, /* non null */ Action animation);
 
 		[iOS (4,0)]
 		[Static, Export ("animateWithDuration:animations:completion:")]
 		[Async]
-		void AnimateNotify (double duration, /* non null */ NSAction animation, [NullAllowed] UICompletionHandler completion);
+		void AnimateNotify (double duration, /* non null */ Action animation, [NullAllowed] UICompletionHandler completion);
 		
 		[iOS (4,0)]
 		[Static, Export ("animateWithDuration:delay:options:animations:completion:")]
 		[Async]
-		void AnimateNotify (double duration, double delay, UIViewAnimationOptions options, /* non null */ NSAction animation, [NullAllowed] UICompletionHandler completion);
+		void AnimateNotify (double duration, double delay, UIViewAnimationOptions options, /* non null */ Action animation, [NullAllowed] UICompletionHandler completion);
 
 		[iOS (4,0)]
 		[Static, Export ("transitionFromView:toView:duration:options:completion:")]
@@ -13405,7 +13405,7 @@ namespace UIKit {
 		[iOS (4,0)]
 		[Static, Export ("transitionWithView:duration:options:animations:completion:")]
 		[Async]
-		void TransitionNotify (UIView withView, double duration, UIViewAnimationOptions options, [NullAllowed] NSAction animation, [NullAllowed] UICompletionHandler completion);
+		void TransitionNotify (UIView withView, double duration, UIViewAnimationOptions options, [NullAllowed] Action animation, [NullAllowed] UICompletionHandler completion);
 
 		[iOS (4,0)]
 		[Export ("contentScaleFactor")]
@@ -13582,21 +13582,21 @@ namespace UIKit {
 
 		[iOS (7,0)]
 		[Static, Export ("performWithoutAnimation:")]
-		void PerformWithoutAnimation (NSAction actionsWithoutAnimation);
+		void PerformWithoutAnimation (Action actionsWithoutAnimation);
 
 		[iOS (7,0)]
 		[Static, Export ("performSystemAnimation:onViews:options:animations:completion:")]
 		[Async]
-		void PerformSystemAnimation (UISystemAnimation animation, UIView [] views, UIViewAnimationOptions options, NSAction parallelAnimations, UICompletionHandler completion);
+		void PerformSystemAnimation (UISystemAnimation animation, UIView [] views, UIViewAnimationOptions options, Action parallelAnimations, UICompletionHandler completion);
 
 		[iOS (7,0)]
 		[Static, Export ("animateKeyframesWithDuration:delay:options:animations:completion:")]
 		[Async]
-		void AnimateKeyframes (double duration, double delay, UIViewKeyframeAnimationOptions options, NSAction animations, UICompletionHandler completion);
+		void AnimateKeyframes (double duration, double delay, UIViewKeyframeAnimationOptions options, Action animations, UICompletionHandler completion);
 
 		[iOS (7,0)]
 		[Static, Export ("addKeyframeWithRelativeStartTime:relativeDuration:animations:")]
-		void AddKeyframeWithRelativeStartTime (double frameStartTime, double frameDuration, NSAction animations);
+		void AddKeyframeWithRelativeStartTime (double frameStartTime, double frameDuration, Action animations);
 
 		[iOS (7,0)]
 		[Export ("addMotionEffect:")]
@@ -13630,7 +13630,7 @@ namespace UIKit {
 		[Static]
 		[Export ("animateWithDuration:delay:usingSpringWithDamping:initialSpringVelocity:options:animations:completion:")]
 		[Async]
-		void AnimateNotify (double duration, double delay, nfloat springWithDampingRatio, nfloat initialSpringVelocity, UIViewAnimationOptions options, NSAction animations, [NullAllowed] UICompletionHandler completion);
+		void AnimateNotify (double duration, double delay, nfloat springWithDampingRatio, nfloat initialSpringVelocity, UIViewAnimationOptions options, Action animations, [NullAllowed] UICompletionHandler completion);
 
 
 		[iOS (8,0)]
@@ -14087,12 +14087,12 @@ namespace UIKit {
 		[iOS (5,0)]
 		[Export ("presentViewController:animated:completion:")]
 		[Async]
-		void PresentViewController (UIViewController viewControllerToPresent, bool animated, [NullAllowed] NSAction completionHandler);
+		void PresentViewController (UIViewController viewControllerToPresent, bool animated, [NullAllowed] Action completionHandler);
 
 		[iOS (5,0)]
 		[Export ("dismissViewControllerAnimated:completion:")]
 		[Async]
-		void DismissViewController (bool animated, [NullAllowed] NSAction completionHandler);
+		void DismissViewController (bool animated, [NullAllowed] Action completionHandler);
 
 		// UIViewControllerRotation
 		[NoTV]
@@ -14122,7 +14122,7 @@ namespace UIKit {
 		[iOS (5,0)]
 		[Export ("transitionFromViewController:toViewController:duration:options:animations:completion:")]
 		[Async]
-		/*PROTECTED, MUSTCALLBASE*/ void Transition (UIViewController fromViewController, UIViewController toViewController, double duration, UIViewAnimationOptions options, /* non null */ NSAction animations, UICompletionHandler completionHandler);
+		/*PROTECTED, MUSTCALLBASE*/ void Transition (UIViewController fromViewController, UIViewController toViewController, double duration, UIViewAnimationOptions options, /* non null */ Action animations, UICompletionHandler completionHandler);
 
 		[iOS (5,0)]
 		[Export ("willMoveToParentViewController:")]
@@ -15388,7 +15388,7 @@ namespace UIKit {
 		[iOS (6,0)]
 		[Static]
 		[Export ("segueWithIdentifier:source:destination:performHandler:")]
-		UIStoryboardSegue Create ([NullAllowed] string identifier, UIViewController source, UIViewController destination, NSAction performHandler);
+		UIStoryboardSegue Create ([NullAllowed] string identifier, UIViewController source, UIViewController destination, Action performHandler);
 	}
 
 	[iOS (9,0)]

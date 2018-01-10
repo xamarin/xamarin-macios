@@ -70,7 +70,7 @@ namespace AppKit
 			BeginSheet (window, null, null, IntPtr.Zero);
 		}
 
-		public void BeginSheet (NSWindow window, NSAction onEnded)
+		public void BeginSheet (NSWindow window, Action onEnded)
 		{
 			BeginSheetForResponse (window, r => {
 				if (onEnded != null)

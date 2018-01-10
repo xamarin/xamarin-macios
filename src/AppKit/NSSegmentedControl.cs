@@ -20,7 +20,7 @@ namespace AppKit {
 		}
 
 		[Mac (10,12)]
-		public static NSSegmentedControl FromLabels (string[] labels, NSSegmentSwitchTracking trackingMode, NSAction action)
+		public static NSSegmentedControl FromLabels (string[] labels, NSSegmentSwitchTracking trackingMode, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _FromLabels (labels, trackingMode, dispatcher, NSActionDispatcher.Selector);
@@ -29,7 +29,7 @@ namespace AppKit {
 		}
 
 		[Mac (10,12)]
-		public static NSSegmentedControl FromImages (NSImage[] images, NSSegmentSwitchTracking trackingMode, NSAction action)
+		public static NSSegmentedControl FromImages (NSImage[] images, NSSegmentSwitchTracking trackingMode, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _FromImages (images, trackingMode, dispatcher, NSActionDispatcher.Selector);

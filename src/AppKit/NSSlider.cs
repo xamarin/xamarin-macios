@@ -35,7 +35,7 @@ namespace AppKit {
 		NSActionDispatcher dispatcher;
 
 		[Mac (10,12)]
-		public static NSSlider FromTarget (NSAction action)
+		public static NSSlider FromTarget (Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _FromTarget (dispatcher, NSActionDispatcher.Selector);
@@ -44,7 +44,7 @@ namespace AppKit {
 		}
 
 		[Mac (10,12)]
-		public static NSSlider FromValue (double value, double minValue, double maxValue, NSAction action)
+		public static NSSlider FromValue (double value, double minValue, double maxValue, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _FromValue (value, minValue, maxValue, dispatcher, NSActionDispatcher.Selector);

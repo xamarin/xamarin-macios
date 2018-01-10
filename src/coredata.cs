@@ -1069,11 +1069,11 @@ namespace CoreData
 
 		[iOS (5,0)]
 		[Export ("performBlock:")]
-		void Perform (/* non null */ NSAction action);
+		void Perform (/* non null */ Action action);
 
 		[iOS (5,0)]
 		[Export ("performBlockAndWait:")]
-		void PerformAndWait (/* non null */ NSAction action);
+		void PerformAndWait (/* non null */ Action action);
 
 		[iOS (5,0)]
 		[Export ("userInfo", ArgumentSemantic.Strong)]

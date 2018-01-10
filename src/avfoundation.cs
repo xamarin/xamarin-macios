@@ -2964,7 +2964,7 @@ namespace AVFoundation {
 
 		[Export ("loadValuesAsynchronouslyForKeys:completionHandler:")]
 		[Async ("LoadValuesTaskAsync")]
-		void LoadValuesAsynchronously (string [] keys, NSAction handler);
+		void LoadValuesAsynchronously (string [] keys, Action handler);
 
 		[iOS (6, 0)]
 		[Mac (10,8)]
@@ -3968,7 +3968,7 @@ namespace AVFoundation {
 		[iOS (6,0)]
 		[Export ("finishWritingWithCompletionHandler:")]
 		[Async]
-		void FinishWriting (NSAction completionHandler);
+		void FinishWriting (Action completionHandler);
 
 		[Export ("movieTimeScale")]
 		int /* CMTimeScale = int32_t */ MovieTimeScale { get; set; }
@@ -4072,7 +4072,7 @@ namespace AVFoundation {
 		IntPtr Constructor (string mediaType, [NullAllowed] AVVideoSettingsCompressed outputSettings);
 
 		[Export ("requestMediaDataWhenReadyOnQueue:usingBlock:")]
-		void RequestMediaData (DispatchQueue queue, NSAction action);
+		void RequestMediaData (DispatchQueue queue, Action action);
 
 		[Export ("appendSampleBuffer:")]
 		bool AppendSampleBuffer (CMSampleBuffer sampleBuffer);
@@ -6476,7 +6476,7 @@ namespace AVFoundation {
 
 		[Export ("loadValuesAsynchronouslyForKeys:completionHandler:")]
 		[Async ("LoadValuesTaskAsync")]
-		void LoadValuesAsynchronously (string [] keys, [NullAllowed] NSAction handler);
+		void LoadValuesAsynchronously (string [] keys, [NullAllowed] Action handler);
 
 		[iOS (6,0)]
 		[Static, Export ("metadataItemsFromArray:filteredAndSortedAccordingToPreferredLanguages:")]
@@ -10213,7 +10213,7 @@ namespace AVFoundation {
 #endif
 
 		[Export ("addBoundaryTimeObserverForTimes:queue:usingBlock:")]
-		NSObject AddBoundaryTimeObserver (NSValue [] times, [NullAllowed] DispatchQueue queue, NSAction handler);
+		NSObject AddBoundaryTimeObserver (NSValue [] times, [NullAllowed] DispatchQueue queue, Action handler);
 
 		[Export ("removeTimeObserver:")]
 		void RemoveTimeObserver (NSObject observer);
@@ -11480,7 +11480,7 @@ namespace AVFoundation {
 #endif
 		[Abstract]
 		[Export ("loadValuesAsynchronouslyForKeys:completionHandler:")]
-		void LoadValuesAsynchronously (string [] keys, [NullAllowed] NSAction handler);
+		void LoadValuesAsynchronously (string [] keys, [NullAllowed] Action handler);
 	}
 
 	[NoWatch]

@@ -1621,12 +1621,12 @@ namespace SpriteKit {
 		[Export ("preloadTextures:withCompletionHandler:")]
 		[Async]
 		// note: unlike SKTextureAtlas completion can't be null (or it crash)
-		void PreloadTextures (SKTexture [] textures, NSAction completion);
+		void PreloadTextures (SKTexture [] textures, Action completion);
 
 		[Export ("preloadWithCompletionHandler:")]
 		[Async]
 		// note: unlike SKTextureAtlas completion can't be null (or it crash)
-		void Preload (NSAction completion);
+		void Preload (Action completion);
 
 		[iOS (8,0), Mac (10,10)]
 		[Export ("textureByGeneratingNormalMap")]
@@ -1702,7 +1702,7 @@ namespace SpriteKit {
 		[Export ("preloadTextureAtlases:withCompletionHandler:")]
 		[Async]
 		// Unfortunate name, should have been PreloadTextureAtlases
-		void PreloadTextures (SKTextureAtlas [] textures, [NullAllowed] NSAction completion);
+		void PreloadTextures (SKTextureAtlas [] textures, [NullAllowed] Action completion);
 
 		[iOS (9,0), Mac(10,11)]
 		[Static]
@@ -1712,7 +1712,7 @@ namespace SpriteKit {
 
 		[Export ("preloadWithCompletionHandler:")]
 		[Async]
-		void Preload ([NullAllowed] NSAction completion);
+		void Preload ([NullAllowed] Action completion);
 
 		[iOS (8,0), Mac (10,10)]
 		[Static, Export ("atlasWithDictionary:")]

@@ -40,14 +40,14 @@ namespace Foundation {
 			handle = Messaging.IntPtr_objc_msgSend (handle, Selector.GetHandle ("init"));
 		}
 
-		public static void InvokeInBackground (NSAction action)
+		public static void InvokeInBackground (Action action)
 		{
 			// using the parameterized Thread.Start to avoid capturing
 			// the 'action' parameter (it'll needlessly create an extra
 			// object).
 			new System.Threading.Thread ((v) =>
 			{
-				((NSAction) v) ();
+				((Action) v) ();
 			})
 			{
 				IsBackground = true,
