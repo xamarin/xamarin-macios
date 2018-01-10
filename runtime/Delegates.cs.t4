@@ -19,10 +19,10 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.Registrar;
+using Foundation;
+using Registrar;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	public unsafe partial class Runtime {
 		
 <# foreach (var d in delegates) { #>
