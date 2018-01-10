@@ -125,7 +125,11 @@ namespace XamCore.SceneKit {
 #endif
 		[NoWatch]
 		[Export ("addAnimation:forKey:")]
+#if !XAMCORE_4_0
 		void AddAnimation (CAAnimation animation, [NullAllowed] NSString key);
+#else
+		void AddAnimation (ISCNAnimationProtocol scnAnimation, [NullAllowed] string key);
+#endif
 
 #if XAMCORE_2_0
 #if XAMCORE_4_0
@@ -595,6 +599,20 @@ namespace XamCore.SceneKit {
 		nfloat ScreenSpaceAmbientOcclusionNormalThreshold { get; set; }
 
 #endif
+#if !XAMCORE_4_0
+		// Inlined from SCNAnimatable protocol, this allows us to provide an API to be used with ISCNAnimationProtocol
+		// while XAMCORE_4_0 happens and we are able to fix the protocol itself.
+		[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Sealed]
+		[Export ("addAnimation:forKey:")]
+		void AddAnimation (ISCNAnimationProtocol scnAnimation, [NullAllowed] string key);
+
+		// Needed to avoid error CS0535: `SceneKit.SCNCamera' does not implement interface member `SceneKit.ISCNAnimatable.AddAnimation(CoreAnimation.CAAnimation, Foundation.NSString)'
+		[NoWatch]
+		[Mac (10,8), iOS (8,0)]
+		[Export ("addAnimation:forKey:")]
+		new void AddAnimation (CAAnimation animation, NSString key);
+#endif
 	}
 
 	interface ISCNCameraControlConfiguration {}
@@ -910,6 +928,20 @@ namespace XamCore.SceneKit {
 		[NoWatch, NoTV, Mac (10,13, onlyOn64: true), iOS (11,0)]
 		[NullAllowed, Export ("tessellator", ArgumentSemantic.Retain)]
 		SCNGeometryTessellator Tessellator { get; set; }
+#endif
+#if !XAMCORE_4_0
+		// Inlined from SCNAnimatable protocol, this allows us to provide an API to be used with ISCNAnimationProtocol
+		// while XAMCORE_4_0 happens and we are able to fix the protocol itself.
+		[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Sealed]
+		[Export ("addAnimation:forKey:")]
+		void AddAnimation (ISCNAnimationProtocol scnAnimation, [NullAllowed] string key);
+
+		// Needed to avoid error CS0535: `SceneKit.SCNCamera' does not implement interface member `SceneKit.ISCNAnimatable.AddAnimation(CoreAnimation.CAAnimation, Foundation.NSString)'
+		[NoWatch]
+		[Mac (10,8), iOS (8,0)]
+		[Export ("addAnimation:forKey:")]
+		new void AddAnimation (CAAnimation animation, NSString key);
 #endif
 	}
 
@@ -1327,6 +1359,20 @@ namespace XamCore.SceneKit {
 		[Export ("lightWithMDLLight:")]
 		SCNLight FromModelLight (MDLLight mdllight);
 #endif
+#if !XAMCORE_4_0
+		// Inlined from SCNAnimatable protocol, this allows us to provide an API to be used with ISCNAnimationProtocol
+		// while XAMCORE_4_0 happens and we are able to fix the protocol itself.
+		[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Sealed]
+		[Export ("addAnimation:forKey:")]
+		void AddAnimation (ISCNAnimationProtocol scnAnimation, [NullAllowed] string key);
+
+		// Needed to avoid error CS0535: `SceneKit.SCNCamera' does not implement interface member `SceneKit.ISCNAnimatable.AddAnimation(CoreAnimation.CAAnimation, Foundation.NSString)'
+		[NoWatch]
+		[Mac (10,8), iOS (8,0)]
+		[Export ("addAnimation:forKey:")]
+		new void AddAnimation (CAAnimation animation, NSString key);
+#endif
 	}
 
 	[Watch (3,0)]
@@ -1512,6 +1558,20 @@ namespace XamCore.SceneKit {
 		SCNColorMask ColorBufferWriteMask { get; set; }
 
 #endif
+#if !XAMCORE_4_0
+		// Inlined from SCNAnimatable protocol, this allows us to provide an API to be used with ISCNAnimationProtocol
+		// while XAMCORE_4_0 happens and we are able to fix the protocol itself.
+		[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Sealed]
+		[Export ("addAnimation:forKey:")]
+		void AddAnimation (ISCNAnimationProtocol scnAnimation, [NullAllowed] string key);
+
+		// Needed to avoid error CS0535: `SceneKit.SCNCamera' does not implement interface member `SceneKit.ISCNAnimatable.AddAnimation(CoreAnimation.CAAnimation, Foundation.NSString)'
+		[NoWatch]
+		[Mac (10,8), iOS (8,0)]
+		[Export ("addAnimation:forKey:")]
+		new void AddAnimation (CAAnimation animation, NSString key);
+#endif
 	}
 
 	[Watch (3,0)]
@@ -1591,6 +1651,20 @@ namespace XamCore.SceneKit {
 		[Mac (10,9)]
 		[Static, Export ("materialPropertyWithContents:")]
 		SCNMaterialProperty Create (NSObject contents);
+#if !XAMCORE_4_0
+		// Inlined from SCNAnimatable protocol, this allows us to provide an API to be used with ISCNAnimationProtocol
+		// while XAMCORE_4_0 happens and we are able to fix the protocol itself.
+		[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Sealed]
+		[Export ("addAnimation:forKey:")]
+		void AddAnimation (ISCNAnimationProtocol scnAnimation, [NullAllowed] string key);
+
+		// Needed to avoid error CS0535: `SceneKit.SCNCamera' does not implement interface member `SceneKit.ISCNAnimatable.AddAnimation(CoreAnimation.CAAnimation, Foundation.NSString)'
+		[NoWatch]
+		[Mac (10,8), iOS (8,0)]
+		[Export ("addAnimation:forKey:")]
+		new void AddAnimation (CAAnimation animation, NSString key);
+#endif
 	}
 
 #if !WATCH
@@ -1949,6 +2023,21 @@ namespace XamCore.SceneKit {
 		[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 		[Export ("rotateBy:aroundTarget:")]
 		void Rotate (SCNQuaternion worldRotation, SCNVector3 worldTarget);
+
+#if !XAMCORE_4_0
+		// Inlined from SCNAnimatable protocol, this allows us to provide an API to be used with ISCNAnimationProtocol
+		// while XAMCORE_4_0 happens and we are able to fix the protocol itself.
+		[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Sealed]
+		[Export ("addAnimation:forKey:")]
+		void AddAnimation (ISCNAnimationProtocol scnAnimation, [NullAllowed] string key);
+
+		// Needed to avoid error CS0535: `SceneKit.SCNCamera' does not implement interface member `SceneKit.ISCNAnimatable.AddAnimation(CoreAnimation.CAAnimation, Foundation.NSString)'
+		[NoWatch]
+		[Mac (10,8), iOS (8,0)]
+		[Export ("addAnimation:forKey:")]
+		new void AddAnimation (CAAnimation animation, NSString key);
+#endif
 
 		// From SCNNode (SIMD) Category
 		// Unfortunatelly had to prefix some props Simd due to the property name is already taken
@@ -3446,6 +3535,21 @@ namespace XamCore.SceneKit {
 		[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 		[Export ("weightForTargetNamed:")]
 		nfloat GetWeight (string targetName);
+
+#if !XAMCORE_4_0
+		// Inlined from SCNAnimatable protocol, this allows us to provide an API to be used with ISCNAnimationProtocol
+		// while XAMCORE_4_0 happens and we are able to fix the protocol itself.
+		[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Sealed]
+		[Export ("addAnimation:forKey:")]
+		void AddAnimation (ISCNAnimationProtocol scnAnimation, [NullAllowed] string key);
+
+		// Needed to avoid error CS0535: `SceneKit.SCNCamera' does not implement interface member `SceneKit.ISCNAnimatable.AddAnimation(CoreAnimation.CAAnimation, Foundation.NSString)'
+		[NoWatch]
+		[Mac (10,8), iOS (8,0)]
+		[Export ("addAnimation:forKey:")]
+		new void AddAnimation (CAAnimation animation, NSString key);
+#endif
 	}
 
 	[Watch (3,0)]
@@ -3503,7 +3607,21 @@ namespace XamCore.SceneKit {
 		[Watch (4, 0), TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 		[Export ("incremental")]
 		bool Incremental { [Bind ("isIncremental")] get; set; }
-		
+
+#if !XAMCORE_4_0
+		// Inlined from SCNAnimatable protocol, this allows us to provide an API to be used with ISCNAnimationProtocol
+		// while XAMCORE_4_0 happens and we are able to fix the protocol itself.
+		[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Sealed]
+		[Export ("addAnimation:forKey:")]
+		void AddAnimation (ISCNAnimationProtocol scnAnimation, [NullAllowed] string key);
+
+		// Needed to avoid error CS0535: `SceneKit.SCNCamera' does not implement interface member `SceneKit.ISCNAnimatable.AddAnimation(CoreAnimation.CAAnimation, Foundation.NSString)'
+		[NoWatch]
+		[Mac (10,8), iOS (8,0)]
+		[Export ("addAnimation:forKey:")]
+		new void AddAnimation (CAAnimation animation, NSString key);
+#endif
 	}
 
 	[Watch (3,0)]
@@ -3869,6 +3987,21 @@ namespace XamCore.SceneKit {
 		[iOS (9,0)][Mac (10,11)]
 		[Internal, Export ("setObject:forKeyedSubscript:")]
 		void _SetObject ([NullAllowed] NSObject obj, INSCopying key);
+
+#if !XAMCORE_4_0
+		// Inlined from SCNAnimatable protocol, this allows us to provide an API to be used with ISCNAnimationProtocol
+		// while XAMCORE_4_0 happens and we are able to fix the protocol itself.
+		[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Sealed]
+		[Export ("addAnimation:forKey:")]
+		void AddAnimation (ISCNAnimationProtocol scnAnimation, [NullAllowed] string key);
+
+		// Needed to avoid error CS0535: `SceneKit.SCNCamera' does not implement interface member `SceneKit.ISCNAnimatable.AddAnimation(CoreAnimation.CAAnimation, Foundation.NSString)'
+		[NoWatch]
+		[Mac (10,8), iOS (8,0)]
+		[Export ("addAnimation:forKey:")]
+		new void AddAnimation (CAAnimation animation, NSString key);
+#endif
 	}
 
 	[Watch (3,0)]
@@ -4693,6 +4826,21 @@ namespace XamCore.SceneKit {
 		[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 		[Export ("particleIntensityVariation")]
 		nfloat ParticleIntensityVariation { get; set; }
+
+#if !XAMCORE_4_0
+		// Inlined from SCNAnimatable protocol, this allows us to provide an API to be used with ISCNAnimationProtocol
+		// while XAMCORE_4_0 happens and we are able to fix the protocol itself.
+		[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Sealed]
+		[Export ("addAnimation:forKey:")]
+		void AddAnimation (ISCNAnimationProtocol scnAnimation, [NullAllowed] string key);
+
+		// Needed to avoid error CS0535: `SceneKit.SCNCamera' does not implement interface member `SceneKit.ISCNAnimatable.AddAnimation(CoreAnimation.CAAnimation, Foundation.NSString)'
+		[NoWatch]
+		[Mac (10,8), iOS (8,0)]
+		[Export ("addAnimation:forKey:")]
+		new void AddAnimation (CAAnimation animation, NSString key);
+#endif
 	}
 
 	[Watch (3,0)]
@@ -4973,6 +5121,21 @@ namespace XamCore.SceneKit {
 	
 		[Export ("stopWithBlendOutDuration:")]
 		void StopWithBlendOutDuration (double seconds);
+
+#if !XAMCORE_4_0
+		// Inlined from SCNAnimatable protocol, this allows us to provide an API to be used with ISCNAnimationProtocol
+		// while XAMCORE_4_0 happens and we are able to fix the protocol itself.
+		[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
+		[Sealed]
+		[Export ("addAnimation:forKey:")]
+		void AddAnimation (ISCNAnimationProtocol scnAnimation, [NullAllowed] string key);
+
+		// Needed to avoid error CS0535: `SceneKit.SCNCamera' does not implement interface member `SceneKit.ISCNAnimatable.AddAnimation(CoreAnimation.CAAnimation, Foundation.NSString)'
+		[NoWatch]
+		[Mac (10,8), iOS (8,0)]
+		[Export ("addAnimation:forKey:")]
+		new void AddAnimation (CAAnimation animation, NSString key);
+#endif
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
