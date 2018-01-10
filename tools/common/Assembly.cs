@@ -7,7 +7,7 @@ using System.Linq;
 
 using Mono.Cecil;
 using MonoTouch.Tuner;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 using Xamarin.Utils;
 
 #if MONOTOUCH

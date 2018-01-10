@@ -16,7 +16,7 @@ using MonoMac;
 using MonoMac.Tuner;
 using Xamarin.Bundler;
 #else
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 #endif
 
 namespace Xamarin.Linker.Steps {

@@ -63,8 +63,8 @@ using Mono.Cecil.Cil;
 using Mono.Tuner;
 
 using MonoTouch.Tuner;
-using XamCore.Registrar;
-using XamCore.ObjCRuntime;
+using Registrar;
+using ObjCRuntime;
 
 using Xamarin.Linker;
 using Xamarin.Utils;

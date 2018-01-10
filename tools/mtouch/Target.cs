@@ -17,7 +17,7 @@ using Xamarin.Linker;
 
 using Xamarin.Utils;
 
-using XamCore.Registrar;
+using Registrar;
 
 namespace Xamarin.Bundler
 {

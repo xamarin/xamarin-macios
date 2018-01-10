@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Linker;
 
-using XamCore.Registrar;
+using Registrar;
 using Xamarin.Bundler;
 
 namespace Xamarin.Tuner
