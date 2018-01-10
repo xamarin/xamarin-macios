@@ -208,7 +208,7 @@
     <namespaces>
       <namespace name="System.Net">
         <classes>
-          <class name="IPEndPointCollection" type="class" base="System.Collections.ObjectModel.Collection`1[System.Net.IPEndPoint]" charset="Ansi" layout="Auto">
+          <class name="IPEndPointCollection" type="class" base="System.Collections.ObjectModel.Collection`1[System.Net.IPEndPoint]" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="System.Collections.Generic.ICollection`1[T]" />
               <interface name="System.Collections.Generic.IEnumerable`1[T]" />

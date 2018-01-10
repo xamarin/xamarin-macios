@@ -49,7 +49,7 @@ namespace XamCore.PassKit {
 		string SupplementarySubLocality { get; set; }
 	}
 	
-	[Since (6,0)]
+	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	interface PKPassLibrary {
 		[Static][Export ("isPassLibraryAvailable")]
@@ -74,7 +74,7 @@ namespace XamCore.PassKit {
 		[Export ("replacePassWithPass:")]
 		bool Replace (PKPass pass);
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Export ("addPasses:withCompletionHandler:")]
 		[Async]
 		void AddPasses (PKPass[] passes, [NullAllowed] Action<PKPassLibraryAddPassesStatus> completion);
@@ -151,7 +151,7 @@ namespace XamCore.PassKit {
 		void PresentPaymentPass (PKPaymentPass pass);
 	}
 
-	[Since (6,0)]
+	[iOS (6,0)]
 	[Static]
 	interface PKPassLibraryUserInfoKey
 	{
@@ -523,7 +523,7 @@ namespace XamCore.PassKit {
 	}
 
 #if !WATCH
-	[Since (6,0)]
+	[iOS (6,0)]
 	[BaseType (typeof (UIViewController), Delegates = new string [] {"WeakDelegate"}, Events = new Type [] { typeof (PKAddPassesViewControllerDelegate) })]
 	// invalid null handle for default 'init'
 	[DisableDefaultCtor]
@@ -536,7 +536,7 @@ namespace XamCore.PassKit {
 		[Export ("initWithPass:")]
 		IntPtr Constructor (PKPass pass);
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Export ("initWithPasses:")]
 		IntPtr Constructor (PKPass[] pass);
 
@@ -553,7 +553,7 @@ namespace XamCore.PassKit {
 		PKAddPassesViewControllerDelegate Delegate { get; set;  }
 	}
 
-	[Since (6,0)]
+	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -564,8 +564,13 @@ namespace XamCore.PassKit {
 
 	[iOS (9,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor] // designated
 	interface PKAddPaymentPassRequest : NSSecureCoding
 	{
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[NullAllowed, Export ("encryptedPassData", ArgumentSemantic.Copy)]
 		NSData EncryptedPassData { get; set; }
 	
@@ -660,7 +665,7 @@ namespace XamCore.PassKit {
 	}
 #endif // !WATCH
 		
-	[Since (6,0)]
+	[iOS (6,0)]
 	[BaseType (typeof (PKObject))]
 	interface PKPass : NSSecureCoding, NSCopying {
 		[Export ("initWithData:error:")]
@@ -706,7 +711,7 @@ namespace XamCore.PassKit {
 		NSString ErrorDomain { get; }
 #endif
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Export ("userInfo", ArgumentSemantic.Copy)]
 		NSDictionary UserInfo { get; }
 
@@ -779,14 +784,20 @@ namespace XamCore.PassKit {
 		NSString Amex { get; }
 
 		[iOS (10,3), Watch (3,2)]
-		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'CarteBancaires' instead.")]
-		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'CarteBancaires' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'CartesBancaires' instead.")]
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'CartesBancaires' instead.")]
 		[Field ("PKPaymentNetworkCarteBancaire")]
 		NSString CarteBancaire { get; }
 
 		[iOS (11,0)][Watch (4,0)]
+		[Deprecated (PlatformName.WatchOS, 4,2, message: "Use 'CartesBancaires' instead.")]
+		[Deprecated (PlatformName.iOS, 11,2, message: "Use 'CartesBancaires' instead.")]
 		[Field ("PKPaymentNetworkCarteBancaires")]
 		NSString CarteBancaires { get; }
+
+		[iOS (11,2)][Watch (4,2)]
+		[Field ("PKPaymentNetworkCartesBancaires")]
+		NSString CartesBancaires { get; }
 
 		[iOS (9,2)]
 		[Watch (2,2)]

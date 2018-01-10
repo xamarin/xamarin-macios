@@ -8,7 +8,6 @@ using XamCore.Foundation;
 
 namespace XamCore.Accounts {
 	
-	[Since (5,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccount : NSSecureCoding {
@@ -42,24 +41,23 @@ namespace XamCore.Accounts {
 #endif
 
 #if !MONOMAC
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Export ("userFullName")]
 		string UserFullName { get; }
 #endif
 	}
 
-	[Since (5,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountCredential : NSSecureCoding {
 		[Export ("initWithOAuthToken:tokenSecret:")]
 		IntPtr Constructor (string oauthToken, string tokenSecret);
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("initWithOAuth2Token:refreshToken:expiryDate:")]
 		IntPtr Constructor (string oauth2Token, string refreshToken, NSDate expiryDate);
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[NullAllowed] // by default this property is null
 		[Export ("oauthToken", ArgumentSemantic.Copy)]
 		string OAuthToken { get; set;  }
@@ -69,7 +67,6 @@ namespace XamCore.Accounts {
 	delegate void ACAccountStoreRemoveCompletionHandler (bool success, NSError error);
 	delegate void ACRequestCompletionHandler (bool granted, NSError error);
 	
-	[Since (5,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountStore {
@@ -98,18 +95,18 @@ namespace XamCore.Accounts {
 		[Notification]
 		NSString ChangeNotification { get; }
 		
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("renewCredentialsForAccount:completion:")]
 		[Async]
 		void RenewCredentials (ACAccount account, Action<ACAccountCredentialRenewResult,NSError> completionHandler);
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Protected]
 		[Export ("requestAccessToAccountsWithType:options:completion:")]
 		[Async]
 		void RequestAccess (ACAccountType accountType, [NullAllowed] NSDictionary options, ACRequestCompletionHandler completion);
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Wrap ("RequestAccess (accountType, options == null ? null : options.Dictionary, completion)")]
 		[Async]
 		void RequestAccess (ACAccountType accountType, [NullAllowed] AccountStoreOptions options, ACRequestCompletionHandler completion);
@@ -120,7 +117,6 @@ namespace XamCore.Accounts {
 		void RemoveAccount (ACAccount account, ACAccountStoreRemoveCompletionHandler completionHandler);
 	}
 
-	[Since (5,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountType : NSSecureCoding {
@@ -140,19 +136,19 @@ namespace XamCore.Accounts {
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Sina Weibo SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Sina Weibo SDK instead.")]
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Field ("ACAccountTypeIdentifierSinaWeibo")]
 		NSString SinaWeibo { get; }
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Field ("ACAccountTypeIdentifierFacebook")]
 		NSString Facebook { get; }
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Tencent Weibo SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Tencent Weibo SDK instead.")]
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Mac (10,9)]
 		[Field ("ACAccountTypeIdentifierTencentWeibo")]
 		NSString TencentWeibo { get; }
@@ -167,7 +163,7 @@ namespace XamCore.Accounts {
 
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
-	[Since (6,0)]
+	[iOS (6,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[Static]
 	interface ACFacebookKey {
@@ -184,7 +180,7 @@ namespace XamCore.Accounts {
 
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
-	[Since (6,0)]
+	[iOS (6,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[Static]
 	interface ACFacebookAudienceValue
@@ -201,7 +197,7 @@ namespace XamCore.Accounts {
 
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use Tencent Weibo SDK instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Tencent Weibo SDK instead.")]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Static]
 	interface ACTencentWeiboKey {

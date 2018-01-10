@@ -20,14 +20,8 @@ namespace XamCore.UIKit {
 		High,
 		Medium,
 		Low,
-
-		[iOS (4,0)]
 		At640x480,
-
-		[iOS (5,0)]
 		At1280x720,
-
-		[iOS (5,0)]
 		At960x540
 	}
 
@@ -43,7 +37,6 @@ namespace XamCore.UIKit {
 	// NSInteger -> UIAlertView.h
 	[Native]
 	[NoTV][NoWatch]
-	[iOS (5,0)]
 	public enum UIAlertViewStyle : nint {
 		Default,
 		SecureTextInput,
@@ -57,7 +50,7 @@ namespace XamCore.UIKit {
 	public enum UIBarButtonItemStyle : nint {
 		Plain,
 
-		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'UIBarButtonItemStyle.Plain' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'UIBarButtonItemStyle.Plain' instead.")]
 		Bordered,
 			
 		Done,
@@ -90,8 +83,6 @@ namespace XamCore.UIKit {
 		FastForward,
 		Undo,
 		Redo,
-
-		[iOS (4,0)]
 		[Deprecated (PlatformName.iOS, 11, 0)]
 		PageCurl
 	} 
@@ -144,25 +135,15 @@ namespace XamCore.UIKit {
 		None,
 		MotionShake,
 
-		[iOS (4,0)]
 		RemoteControlPlay                 = 100,
-		[iOS (4,0)]
 		RemoteControlPause                = 101,
-		[iOS (4,0)]
 		RemoteControlStop                 = 102,
-		[iOS (4,0)]
 		RemoteControlTogglePlayPause      = 103,
-		[iOS (4,0)]
 		RemoteControlNextTrack            = 104,
-		[iOS (4,0)]
 		RemoteControlPreviousTrack        = 105,
-		[iOS (4,0)]
 		RemoteControlBeginSeekingBackward = 106,
-		[iOS (4,0)]
 		RemoteControlEndSeekingBackward   = 107,
-		[iOS (4,0)]
 		RemoteControlBeginSeekingForward  = 108,
-		[iOS (4,0)]
 		RemoteControlEndSeekingForward    = 109,
 	}			
 	
@@ -276,17 +257,17 @@ namespace XamCore.UIKit {
 	// NSInteger -> UIBarCommon.h
 	[Native]
 	[NoWatch]
-	[iOS (5,0)]
 	public enum UIBarMetrics : nint {
 		Default,
 		Compact,
 		DefaultPrompt = 101,
 		CompactPrompt,
 
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_8_0, Message = "Use 'UIBarMetrics.Compat' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'UIBarMetrics.Compat' instead.")]
 		LandscapePhone = Compact,
 
-		[Availability (Introduced = Platform.iOS_7_0, Deprecated = Platform.iOS_8_0, Message = "Use 'UIBarMetrics.CompactPrompt' instead.")]
+		[iOS (7, 0)]
+		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'UIBarMetrics.CompactPrompt' instead.")]
 		LandscapePhonePrompt = CompactPrompt
 	}
 
@@ -300,6 +281,7 @@ namespace XamCore.UIKit {
 		InfoLight,
 		InfoDark,
 		ContactAdd,
+		[TV (11,0)][NoiOS]
 		Plain,
 		System = RoundedRect,
 	}
@@ -361,7 +343,6 @@ namespace XamCore.UIKit {
 	// NSInteger -> UIDocument.h
 	[Native]
 	[NoTV][NoWatch]
-	[iOS (5,0)]
 	public enum UIDocumentChangeKind : nint {
 		Done, Undone, Redone, Cleared
 	}
@@ -369,7 +350,6 @@ namespace XamCore.UIKit {
 	// NSInteger -> UIDocument.h
 	[Native]
 	[NoTV][NoWatch]
-	[iOS (5,0)]
 	public enum UIDocumentSaveOperation : nint {
 		ForCreating, ForOverwriting
 	}
@@ -378,7 +358,6 @@ namespace XamCore.UIKit {
 	[Native]
 	[Flags]
 	[NoTV][NoWatch]
-	[iOS (5,0)]
 	public enum UIDocumentState : nuint_compat_int {
 		Normal = 0,
 		Closed = 1 << 0,
@@ -427,11 +406,11 @@ namespace XamCore.UIKit {
 		Black,
 
 		// The header doesn't say when it was deprecated, but the earliest headers I have (iOS 5.1) it is already deprecated.
-		[Availability (Deprecated = Platform.iOS_5_1, Message = "Use 'UIBarStyle.Black'.")]
+		[Deprecated (PlatformName.iOS, 5, 1, message : "Use 'UIBarStyle.Black'.")]
 		BlackOpaque      = 1,
 
 		// The header doesn't say when it was deprecated, but the earliest headers I have (iOS 5.1) it is already deprecated.
-		[Availability (Deprecated = Platform.iOS_5_1, Message = "Use 'UIBarStyle.Black' and set the translucency property to true.")]
+		[Deprecated (PlatformName.iOS, 5, 1, message : "Use 'UIBarStyle.Black' and set the translucency property to true.")]
 		BlackTranslucent = 2,
 	}
 
@@ -495,13 +474,11 @@ namespace XamCore.UIKit {
 	// NSInteger -> UISegmentedControl.h
 	[Native]
 	[NoTV][NoWatch]
-	[Availability (Deprecated = Platform.iOS_7_0, Message = "This no longer has any effect.")]
+	[Deprecated (PlatformName.iOS, 7, 0, message : "This no longer has any effect.")]
 	public enum UISegmentedControlStyle : nint {
 		Plain,
 		Bordered,
 		Bar,
-
-		[iOS (4,0)]
 		Bezeled
 	}
 
@@ -552,15 +529,12 @@ namespace XamCore.UIKit {
 		Bottom,
 		None,
 		Middle,
-
-		[iOS (5,0)]
 		Automatic = 100
 	}
 
 	// #defines over UIBarPosition -> NSInteger -> UIBarCommon.h
 	[Native]
 	[NoTV][NoWatch]
-	[iOS (5,0)]
 	public enum UIToolbarPosition : nint {
 		Any, Bottom, Top
 	}
@@ -759,10 +733,7 @@ namespace XamCore.UIKit {
 	public enum UIDataDetectorType : nuint {
 		PhoneNumber            = 1 << 0,
 		Link                   = 1 << 1,
-
-		[iOS (4,0)]
 		Address                = 1 << 2,
-		[iOS (4,0)]
 		CalendarEvent          = 1 << 3,
 
 		[iOS (10,0)]
@@ -796,12 +767,12 @@ namespace XamCore.UIKit {
 	public enum UIStatusBarStyle : nint {
 		Default,
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'LightContent' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'LightContent' instead.")]
 		BlackTranslucent = 1,
 
 		LightContent = 1,
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'LightContent' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'LightContent' instead.")]
 		BlackOpaque = 2,
 	}
 
@@ -837,8 +808,6 @@ namespace XamCore.UIKit {
 		Badge   = 1 << 0,
 		Sound   = 1 << 1,
 		Alert   = 1 << 2,
-
-		[iOS (5,0)]
 		NewsstandContentAvailability = 1 << 3
 	}
 
@@ -942,7 +911,6 @@ namespace XamCore.UIKit {
 	// NSInteger -> UIApplication.h
 	[Native]
 	[NoWatch]
-	[iOS (5,0)]
 	public enum UIUserInterfaceLayoutDirection : nint {
 		LeftToRight, RightToLeft
 	}
@@ -961,7 +929,6 @@ namespace XamCore.UIKit {
 	// NSInteger -> UIApplication.h
 	[Native]
 	[NoWatch]
-	[iOS (4,0)]
 	public enum UIApplicationState : nint {
 		Active,
 		Inactive,
@@ -972,7 +939,6 @@ namespace XamCore.UIKit {
 	[Native]
 	[Flags]
 	[NoWatch]
-	[iOS (4,0)]
 	public enum UIViewAnimationOptions : nuint_compat_int {
 		LayoutSubviews            = 1 <<  0,
 		AllowUserInteraction      = 1 <<  1,
@@ -1014,7 +980,6 @@ namespace XamCore.UIKit {
 	// untyped (and unamed) enum -> UIPrintError.h
 	// note: it looks unused by any API
 	[NoTV][NoWatch]
-	[iOS (4,2)]
 	[ErrorDomain ("UIPrintErrorDomain")]
 	public enum UIPrintError {
 		NotAvailable = 1,
@@ -1026,7 +991,6 @@ namespace XamCore.UIKit {
 	// NSInteger -> UIPrintInfo.h
 	[Native]
 	[NoTV][NoWatch]
-	[iOS (4,2)]
 	public enum UIPrintInfoDuplex : nint {
 		None,
 		LongEdge,
@@ -1036,7 +1000,6 @@ namespace XamCore.UIKit {
 	// NSInteger -> UIPrintInfo.h
 	[Native]
 	[NoTV][NoWatch]
-	[iOS (4,2)]
 	public enum UIPrintInfoOrientation : nint {
 		Portrait,
 		Landscape,
@@ -1045,7 +1008,6 @@ namespace XamCore.UIKit {
 	// NSInteger -> UIPrintInfo.h
 	[Native]
 	[NoTV][NoWatch]
-	[iOS (4,2)]
 	public enum UIPrintInfoOutputType : nint {
 		General,
 		Photo,
@@ -1056,7 +1018,6 @@ namespace XamCore.UIKit {
 	// NSInteger -> UIAccessibility.h
 	[Native]
 	[NoWatch]
-	[iOS (4,2)]
 	public enum UIAccessibilityScrollDirection : nint {
 		Right = 1,
 		Left,
@@ -1069,7 +1030,6 @@ namespace XamCore.UIKit {
 	// NSInteger -> UIScreen.h
 	[Native]
 	[NoWatch]
-	[iOS (5,0)]
 	public enum UIScreenOverscanCompensation : nint {
 		Scale, InsetBounds,
 		None,
@@ -1080,14 +1040,12 @@ namespace XamCore.UIKit {
 	// NSInteger -> UISegmentedControl.h
 	[Native]
 	[NoWatch]
-	[iOS (5,0)]
 	public enum UISegmentedControlSegment : nint {
 		Any, Left, Center, Right, Alone
 	}
 
 	// NSInteger -> UISearchBar.h
 	[Native]
-	[iOS (5,0)]
 	[NoWatch]
 	public enum UISearchBarIcon : nint {
 		Search,
@@ -1102,7 +1060,6 @@ namespace XamCore.UIKit {
 	// NSInteger -> UIPageViewController.h
 	[Native]
 	[NoWatch]
-	[iOS (5,0)]
 	public enum UIPageViewControllerNavigationOrientation : nint {
 		Horizontal, Vertical
 	}
@@ -1110,7 +1067,6 @@ namespace XamCore.UIKit {
 	// NSInteger -> UIPageViewController.h
 	[Native]
 	[NoWatch]
-	[iOS (5,0)]
 	public enum UIPageViewControllerSpineLocation : nint {
 		None, Min, Mid, Max
 	}
@@ -1118,7 +1074,6 @@ namespace XamCore.UIKit {
 	// NSInteger -> UIPageViewController.h
 	[Native]
 	[NoWatch]
-	[iOS (5,0)]
 	public enum UIPageViewControllerNavigationDirection : nint {
 		Forward, Reverse
 	}
@@ -1126,7 +1081,6 @@ namespace XamCore.UIKit {
 	// NSInteger -> UIPageViewController.h
 	[Native]
 	[NoWatch]
-	[iOS (5,0)]
 	public enum UIPageViewControllerTransitionStyle : nint {
 		PageCurl, Scroll
 	}

@@ -1,0 +1,6 @@
+## OSX-only functions - fixed in maccore/master a0ab1a7027fb2afdd240d2bc54ca2bb048d98da4
+## they are physically in iOS but declared as N/A (so private)
+## fixed in XAMCORE_3_0 so it's not part of the tvOS and watchOS profiles
+!unknown-pinvoke! CGColorCreateGenericGray bound
+!unknown-pinvoke! CGColorCreateGenericRGB bound
+!unknown-pinvoke! CGColorGetConstantColor bound

@@ -7,11 +7,9 @@ using System;
 #if XAMCORE_2_0
 using Metal;
 using MetalPerformanceShaders;
-using UIKit;
 #else
 using MonoTouch.Metal;
 using MonoTouch.MetalPerformanceShaders;
-using MonoTouch.UIKit;
 #endif
 
 using NUnit.Framework;
@@ -26,8 +24,12 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 		[Test]
 		public void Constructors ()
 		{
+#if !MONOMAC
 			TestRuntime.AssertDevice ();
 			TestRuntime.AssertXcodeVersion (7, 0);
+#else
+			TestRuntime.AssertXcodeVersion (9, 0);
+#endif
 
 			MPSImageHistogramInfo info = new MPSImageHistogramInfo ();
 			info.NumberOfHistogramEntries = 256;
@@ -42,7 +44,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 					// > /BuildRoot/Library/Caches/com.apple.xbs/Sources/MetalImage/MetalImage-39.3/MetalImage/Filters/MIHistogram.mm:103: failed assertion `[MPSImageHistogram histogramSizeForSourceFormat:] unsupported texture format: 114'
 					// I made sure the MTLPixelFormat values I tested with were also added in iOS 9, so that's not the problem.
 					// Conclusion: just avoid executing HistogramSizeForSourceFormat on anything below iOS 10.rm 
-					Assert.AreEqual (3072, obj.HistogramSizeForSourceFormat (MTLPixelFormat.RGBA16Sint), "HistogramSizeForSourceFormat");
+					Assert.AreEqual (3072, obj.GetHistogramSize (MTLPixelFormat.RGBA16Sint), "HistogramSizeForSourceFormat");
 				}
 				var crs = obj.ClipRectSource;
 				Assert.AreEqual (0, crs.Origin.X, "ClipRectSource.Origin.X");

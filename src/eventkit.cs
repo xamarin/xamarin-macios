@@ -28,7 +28,6 @@ using XamCore.UIKit;
 
 namespace XamCore.EventKit {
 
-	[Since (5,0)]
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 #if XAMCORE_2_0 || MONOMAC
@@ -51,7 +50,6 @@ namespace XamCore.EventKit {
 		bool Refresh ();
 	}
 
-	[Since (5,0)]
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (EKObject))]
 #if XAMCORE_4_0	
@@ -61,7 +59,7 @@ namespace XamCore.EventKit {
 #if !MONOMAC
 		// Never made avaialble on MonoMac
 		[Export ("UUID")]
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_6_0, Message = "Use 'CalendarItemIdentifier' instead.")]
+		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'CalendarItemIdentifier' instead.")]
 		string UUID { get;  }
 #endif
 
@@ -129,16 +127,15 @@ namespace XamCore.EventKit {
 		[Export ("removeRecurrenceRule:")]
 		void RemoveRecurrenceRule (EKRecurrenceRule rule);
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("calendarItemIdentifier")]
 		string CalendarItemIdentifier { get;  }
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("calendarItemExternalIdentifier")]
 		string CalendarItemExternalIdentifier { get;  }
 	}
 	
-	[Since (5,0)]
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (EKObject))]
 	interface EKSource {
@@ -150,19 +147,19 @@ namespace XamCore.EventKit {
 
 #if !MONOMAC
 		[Export ("calendars")]
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0, Message = "Use 'GetCalendars (EKEntityType)' instead.")]
+		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'GetCalendars (EKEntityType)' instead.")]
 		NSSet Calendars { get;  }
 #endif
 
 		[Export ("sourceIdentifier")]
 		string SourceIdentifier { get; }
 
-		[Since (6, 0)]
+		[iOS (6, 0)]
 		[Export ("calendarsForEntityType:")]
 		NSSet GetCalendars (EKEntityType entityType);
 	}
 
-	[Since (6,0)]
+	[iOS (6,0)]
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (EKObject))]
 	interface EKStructuredLocation : NSCopying {
@@ -188,7 +185,6 @@ namespace XamCore.EventKit {
 #endif
 	}
 
-	[Since (4,0)]
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (EKObject))]
 	[DisableDefaultCtor] // Documentation says to use the static methods FromDate/FromTimeInterval to create instances
@@ -208,12 +204,12 @@ namespace XamCore.EventKit {
 		[Export ("alarmWithRelativeOffset:")]
 		EKAlarm FromTimeInterval (double offsetSeconds);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("structuredLocation", ArgumentSemantic.Copy)]
 		[NullAllowed]
 		EKStructuredLocation StructuredLocation { get; set;  }
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("proximity")]
 		EKAlarmProximity Proximity { get; set;  }
 
@@ -232,7 +228,6 @@ namespace XamCore.EventKit {
 #endif
 	}
 
-	[Since (4,0)]
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (EKObject))]
 	[DisableDefaultCtor]
@@ -257,40 +252,34 @@ namespace XamCore.EventKit {
 		[Export ("supportedEventAvailabilities")]
 		EKCalendarEventAvailability SupportedEventAvailabilities { get; }
 
-		[Since (5,0)]
 		[Export ("calendarIdentifier")]
 		string CalendarIdentifier { get;  }
 
-		[Since (5,0)]
 		[Export ("subscribed")]
 		bool Subscribed { [Bind ("isSubscribed")] get;  }
 
-		[Since (5,0)]
 		[Export ("immutable")]
 		bool Immutable { [Bind ("isImmutable")] get;  }
 
 #if !MONOMAC
-		[Since (5,0)]
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0, Message = "Use 'Create (EKEntityType, EKEventStore)' instead.")]
+		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'Create (EKEntityType, EKEventStore)' instead.")]
 		[Static, Export ("calendarWithEventStore:")]
 		EKCalendar FromEventStore (EKEventStore eventStore);
 #endif
 
-		[Since (5,0)]
 		[Export ("source", ArgumentSemantic.Retain)]
 		EKSource Source { get; set; }
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("allowedEntityTypes")]
 		EKEntityMask AllowedEntityTypes { get;  }
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Static]
 		[Export ("calendarForEntityType:eventStore:")]
 		EKCalendar Create (EKEntityType entityType, EKEventStore eventStore);
 	}
 
-	[Since (4,0)]
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (EKCalendarItem))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: You must use [EKEvent eventWithStore:] to create an event
@@ -342,7 +331,7 @@ namespace XamCore.EventKit {
 		[Export ("birthdayPersonUniqueID")]
 		string BirthdayPersonUniqueID { get; }
 #else
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_9_0, Message = "Replaced by 'BirthdayContactIdentifier'.")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Replaced by 'BirthdayContactIdentifier'.")]
 		[Export ("birthdayPersonID")]
 		nint BirthdayPersonID { get;  }
 #endif
@@ -351,7 +340,6 @@ namespace XamCore.EventKit {
 		string BirthdayContactIdentifier { get; }
 	}
 
-	[Since (4,0)]
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (EKObject))]
 #if XAMCORE_3_0
@@ -379,13 +367,13 @@ namespace XamCore.EventKit {
 //		ABPerson GetPerson (ABAddressBook addressBook);
 #else
 #if !WATCH
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_9_0, Message = "Replaced by 'ContactPredicate'.")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Replaced by 'ContactPredicate'.")]
 		[Export ("ABRecordWithAddressBook:")]
 		ABRecord GetRecord (ABAddressBook addressBook);
 #endif // !WATCH
 
 #endif
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Mac (10,9)]
 		[Export ("isCurrentUser")]
 		bool IsCurrentUser { get; }
@@ -395,7 +383,6 @@ namespace XamCore.EventKit {
 		NSPredicate ContactPredicate { get; }
 	}
 
-	[Since (4,0)]
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	interface EKRecurrenceEnd : NSCopying {
@@ -414,7 +401,6 @@ namespace XamCore.EventKit {
 		EKRecurrenceEnd FromOccurrenceCount (nint occurrenceCount);
 	}
 
-	[Since (4,0)]
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	interface EKRecurrenceDayOfWeek : NSCopying {
@@ -450,7 +436,6 @@ namespace XamCore.EventKit {
 		EKRecurrenceDayOfWeek FromDay (EKDay dayOfTheWeek, nint weekNumber);
 #endif
 
-		[Since (5,0)]
 		[Export ("initWithDayOfTheWeek:weekNumber:")]
 #if XAMCORE_4_0
 		IntPtr Constructor (EKWeekday dayOfTheWeek, nint weekNumber);
@@ -459,7 +444,6 @@ namespace XamCore.EventKit {
 #endif
 	}
 
-	[Since (4,0)]
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (EKObject))]
 	interface EKRecurrenceRule : NSCopying {
@@ -517,7 +501,6 @@ namespace XamCore.EventKit {
 
 	}
 
-	[Since (4,0)]
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	interface EKEventStore {
@@ -530,7 +513,7 @@ namespace XamCore.EventKit {
 
 #if !MONOMAC
 		[Export ("calendars")]
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0, Message = "Use 'GetCalendars' instead.")]
+		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'GetCalendars' instead.")]
 		EKCalendar [] Calendars { get;  }
 #endif
 
@@ -563,99 +546,89 @@ namespace XamCore.EventKit {
 		[Notification]
 		NSString ChangedNotification { get; }
 
-		[Since (5,0)]
 		[Export ("sources")]
 		EKSource [] Sources { get; }
 
-		[Since (5,0)]
 		[return: NullAllowed]
 		[Export ("sourceWithIdentifier:")]
 		EKSource GetSource (string identifier);
 
-		[Since (5,0)]
 		[Export ("calendarWithIdentifier:")]
 		EKCalendar GetCalendar (string identifier);
 
 		[NoWatch]
-		[Since (5,0)]
 		[Export ("saveCalendar:commit:error:")]
 		bool SaveCalendar (EKCalendar calendar, bool commit, out NSError error);
 
 		[NoWatch]
-		[Since (5,0)]
 		[Export ("removeCalendar:commit:error:")]
 		bool RemoveCalendar (EKCalendar calendar, bool commit, out NSError error);
 
 		[NoWatch]
-		[Since (5,0)]
 		[Export ("saveEvent:span:commit:error:")]
 		bool SaveEvent (EKEvent ekEvent, EKSpan span, bool commit, out NSError error);
 
 		[NoWatch]
-		[Since (5,0)]
 		[Export ("removeEvent:span:commit:error:")]
 		bool RemoveEvent (EKEvent ekEvent, EKSpan span, bool commit, out NSError error);
 
 		[NoWatch]
-		[Since (5,0)]
 		[Export ("commit:")]
 		bool Commit (out NSError error);
 
-		[Since (5,0)]
 		[Export ("reset")]
 		void Reset ();
 
 		[NoWatch]
-		[Since (5,0)]
 		[Export ("refreshSourcesIfNecessary")]
 		void RefreshSourcesIfNecessary ();
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[return: NullAllowed]
 		[Export ("calendarItemWithIdentifier:")]
 		EKCalendarItem GetCalendarItem (string identifier);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("calendarItemsWithExternalIdentifier:")]
 		EKCalendarItem[] GetCalendarItems(string externalIdentifier);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("calendarsForEntityType:")]
 		EKCalendar[] GetCalendars (EKEntityType entityType);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[NullAllowed]
 		[Export ("defaultCalendarForNewReminders")]
 		EKCalendar DefaultCalendarForNewReminders { get; }
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("fetchRemindersMatchingPredicate:completion:")]
 		[Async]
 		IntPtr FetchReminders (NSPredicate predicate, Action<EKReminder[]> completion);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("cancelFetchRequest:")]
 		void CancelFetchRequest (IntPtr fetchIdentifier);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("predicateForIncompleteRemindersWithDueDateStarting:ending:calendars:")]
 		NSPredicate PredicateForIncompleteReminders ([NullAllowed] NSDate startDate, [NullAllowed] NSDate endDate, [NullAllowed] EKCalendar[] calendars);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("predicateForCompletedRemindersWithCompletionDateStarting:ending:calendars:")]
 		NSPredicate PredicateForCompleteReminders ([NullAllowed] NSDate startDate, [NullAllowed] NSDate endDate, [NullAllowed] EKCalendar[] calendars);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("predicateForRemindersInCalendars:")]
 		NSPredicate PredicateForReminders ([NullAllowed] EKCalendar[] calendars);
 
 		[NoWatch]
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("removeReminder:commit:error:")]
 		bool RemoveReminder (EKReminder reminder, bool commit, out NSError error);
 
 		[NoWatch]
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("saveReminder:commit:error:")]
 		bool SaveReminder (EKReminder reminder, bool commit, out NSError error);
 
@@ -667,13 +640,13 @@ namespace XamCore.EventKit {
 		[Export ("delegateSources")]
 		EKSource[] DelegateSources { get; }
 #endif
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Mac (10,9)]
 		[Export ("requestAccessToEntityType:completion:")]
 		[Async]
 		void RequestAccess (EKEntityType entityType, Action<bool, NSError> completionHandler);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Mac (10,9)]
 		[Static]
 		[Export ("authorizationStatusForEntityType:")]
@@ -682,7 +655,7 @@ namespace XamCore.EventKit {
 
 	delegate void EKEventSearchCallback (EKEvent theEvent, ref bool stop);
 
-	[Since (6,0)]
+	[iOS (6,0)]
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (EKCalendarItem))]
 	interface EKReminder {

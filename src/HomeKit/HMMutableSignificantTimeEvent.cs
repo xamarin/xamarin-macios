@@ -7,10 +7,10 @@ namespace XamCore.HomeKit {
 
 		public virtual HMSignificantEvent SignificantEvent {
 			get {
-				return (HMSignificantEvent) (HMSignificantEventExtensions.GetValue (_SignificantEvent));
+				return (HMSignificantEvent) (HMSignificantEventExtensions.GetValue (WeakSignificantEvent));
 			}
 			set {
-				_SignificantEvent = HMSignificantEventExtensions.GetConstant (value);
+				WeakSignificantEvent = HMSignificantEventExtensions.GetConstant (value);
 			}
 		}
 	}

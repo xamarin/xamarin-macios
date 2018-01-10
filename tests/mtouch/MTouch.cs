@@ -3593,6 +3593,43 @@ public class HandlerTest
 			}
 		}
 
+		public void XamarinSdkAdjustLibs ()
+		{
+			using (var exttool = new MTouchTool ()) {
+				exttool.Profile = Profile.iOS;
+				exttool.Abi = "arm64";
+				exttool.CreateTemporaryCacheDirectory ();
+				exttool.Debug = false;
+				exttool.MSym = false;
+				exttool.Linker = MTouchLinker.DontLink;
+				exttool.TargetVer = "8.0";
+
+				exttool.CreateTemporaryServiceExtension ();
+				exttool.AssertExecute (MTouchAction.BuildDev, "build extension");
+
+				using (var apptool = new MTouchTool ()) {
+					apptool.Profile = exttool.Profile;
+					apptool.Abi = exttool.Abi;
+					apptool.Debug = exttool.Debug;
+					apptool.MSym = exttool.MSym;
+					apptool.TargetVer = exttool.TargetVer;
+					apptool.CreateTemporaryCacheDirectory ();
+					apptool.CreateTemporaryApp ();
+
+					apptool.AppExtensions.Add (exttool);
+					apptool.Linker = MTouchLinker.DontLink;
+					apptool.AssertExecute (MTouchAction.BuildDev, "build app");
+
+					var sdk = StringUtils.Quote (Path.Combine (apptool.Cache, "arm64", "Xamarin.Sdk"));
+					var shared_libraries = ExecutionHelper.Execute ("otool", $"-L {sdk}", hide_output: true);
+					Asserts.DoesNotContain ("Private", shared_libraries, "Private");
+
+					exttool.AssertNoWarnings();
+					apptool.AssertNoWarnings();
+				}
+			}
+		}
+
 #region Helper functions
 		static void RunUnitTest (Profile profile, string code, string csproj_configuration = "", string [] csproj_references = null, string configuration = "Debug", string platform = "iPhoneSimulator", bool clean_simulator = true)
 		{

@@ -2497,8 +2497,6 @@ by their version number
 
 ## AdviceAttribute
 
-
-
 Use this attribute to give developers a hint about other APIs that
 might be more convenient for them to use.   For example, if you
 provide a strongly typed version of an API, you could use this
@@ -2507,9 +2505,19 @@ better API.
 
 The information from this attribute is shown in the documentation
 and tools can be developed to give user suggestions on how to improve
-his code. <a name="ZeroCopyStringsAttribute" />
+his code.
 
 
+## RequiresSuperAttribute
+
+This is a specialized subclass of the `[Advice]` attribute can be used
+to hint the developer that overriding a method **requires** a call to 
+the base (overridden) method.
+
+This correspond to `clang` [` __attribute__((objc_requires_super))`](https://clang.llvm.org/docs/AttributeReference.html#objc-requires-super-clang-objc-requires-super)
+
+
+<a name="ZeroCopyStringsAttribute" />
 ## ZeroCopyStringsAttribute
 
 Only available in Xamarin.iOS 5.4 and newer.

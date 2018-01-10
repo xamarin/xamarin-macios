@@ -99,7 +99,7 @@ namespace XamCore.MapKit {
 	[NoTV]
 	[NoWatch]
 	[Native]
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'MKPinAnnotationView.PinTintColor' instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'MKPinAnnotationView.PinTintColor' instead.")]
 	public enum MKPinAnnotationColor : nuint_compat_int {
 		Red, Green, Purple
 	}

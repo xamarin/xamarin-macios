@@ -51,9 +51,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <!-- XBuild does not define the MSBuildRuntimeVersion property. -->
-    <Compile Include="MsBuildTasks\MoveTaskBase.cs" Condition="'$(MSBuildRuntimeVersion)' != ''" />
-    <Compile Include="MsBuildTasks\XBuildMoveTaskBase.cs" Condition="'$(MSBuildRuntimeVersion)' == ''" />
+    <!-- Mono has a different implementation of the Move task, so when building on a Mac we need to include XBuildMoveTaskBase.cs -->
+    <Compile Include="MsBuildTasks\MoveTaskBase.cs" Condition="'$(OS)' == 'Windows_NT'" />
+    <Compile Include="MsBuildTasks\XBuildMoveTaskBase.cs" Condition="'$(OS)' != 'Windows_NT'" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MsBuildTasks\CopyBase.cs" />
@@ -107,13 +107,13 @@
     <Compile Include="Tasks\ZipTaskBase.cs" />
     <Compile Include="AssetPackUtils.cs" />
     <Compile Include="BundleResource.cs" />
+    <Compile Include="CommandLineArgumentBuilder.cs" />
     <Compile Include="DataConverter.cs" />
     <Compile Include="LinkTarget.cs" />
     <Compile Include="LoggingExtensions.cs" />
     <Compile Include="NativeReferenceKind.cs" />
     <Compile Include="PathUtils.cs" />
     <Compile Include="PlatformFramework.cs" />
-    <Compile Include="ProcessArgumentBuilder.cs" />
     <Compile Include="ProcessUtils.cs" />
     <Compile Include="StringParserService.cs" />
   </ItemGroup>

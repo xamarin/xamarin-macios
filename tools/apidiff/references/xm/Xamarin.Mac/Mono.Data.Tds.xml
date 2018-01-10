@@ -14,11 +14,6 @@
           <property name="DelaySign" value="True" />
         </properties>
       </attribute>
-      <attribute name="System.Reflection.AssemblyKeyFileAttribute">
-        <properties>
-          <property name="KeyFile" value="../mono.pub" />
-        </properties>
-      </attribute>
       <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
         <properties>
           <property name="CompilationRelaxations" value="8" />

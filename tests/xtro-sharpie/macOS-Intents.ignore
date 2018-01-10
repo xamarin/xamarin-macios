@@ -1,0 +1,6 @@
+## The signature uses INBooleanResolutionResult which is not available on mac
+!missing-protocol-member! INSearchCallHistoryIntentHandling::resolveUnseenForSearchCallHistory:withCompletion: not found
+
+## unsorted
+
+!unknown-native-enum! INSetMessageAttributeIntentResponseCode bound

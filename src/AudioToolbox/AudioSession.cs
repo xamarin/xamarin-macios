@@ -139,7 +139,7 @@ namespace XamCore.AudioToolbox {
 			Dictionary = new NSDictionary (dictHandle);
 		}
 
-		[Availability (Deprecated = Platform.iOS_7_0)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		public AudioSessionRouteChangeReason Reason {
 			get {
 				using (var num = new NSNumber (Dictionary.LowlevelObjectForKey (route_change_key))){
@@ -194,7 +194,7 @@ namespace XamCore.AudioToolbox {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'AVAudioSession' instead.")]
+	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'AVAudioSession' instead.")]
 	public static class AudioSession {
 		static bool initialized;
 		public static event EventHandler Interrupted;
@@ -227,7 +227,7 @@ namespace XamCore.AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus AudioSessionInitialize(IntPtr cfRunLoop, IntPtr cfstr_runMode, InterruptionListener listener, IntPtr userData);
 
-		[Availability (Deprecated = Platform.iOS_7_0)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		public static void Initialize ()
 		{
 			Initialize (null, null);
@@ -291,7 +291,7 @@ namespace XamCore.AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus AudioSessionSetActive ([MarshalAs (UnmanagedType.I1)] bool active);
 
-		[Availability (Deprecated = Platform.iOS_7_0)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		public static void SetActive (bool active)
 		{
 			int k = AudioSessionSetActive (active);
@@ -302,8 +302,7 @@ namespace XamCore.AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static AudioSessionErrors AudioSessionSetActiveWithFlags ([MarshalAs (UnmanagedType.I1)] bool active, AudioSessionActiveFlags inFlags);
 
-		[iOS (4,0)]
-		[Availability (Deprecated = Platform.iOS_7_0)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		public static AudioSessionErrors SetActive (bool active, AudioSessionActiveFlags flags)
 		{
 			return AudioSessionSetActiveWithFlags (active, flags);
@@ -397,7 +396,7 @@ namespace XamCore.AudioToolbox {
 			}
 		}
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public double PreferredHardwareSampleRate {
 			get {
 				return GetDouble (AudioSessionProperty.PreferredHardwareSampleRate);
@@ -407,7 +406,7 @@ namespace XamCore.AudioToolbox {
 			}
 		}
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public float PreferredHardwareIOBufferDuration {
 			get {
 				return GetFloat (AudioSessionProperty.PreferredHardwareIOBufferDuration);
@@ -417,7 +416,7 @@ namespace XamCore.AudioToolbox {
 			}
 		}
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public AudioSessionCategory Category {
 			get {
 				return (AudioSessionCategory) GetInt (AudioSessionProperty.AudioCategory);
@@ -427,29 +426,26 @@ namespace XamCore.AudioToolbox {
 			}
 		}
 
-		[iOS (4,0)]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		public static AudioSessionInterruptionType InterruptionType {
 			get {
 				return (AudioSessionInterruptionType) GetInt (AudioSessionProperty.InterruptionType);
 			}
 		}
 
-		[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'InputRoute' or 'OutputRoute' instead.")]
+		[Deprecated (PlatformName.iOS, 5, 0, message : "Use 'InputRoute' or 'OutputRoute' instead.")]
 		static public string AudioRoute {
 			get {
 				return CFString.FetchString (GetIntPtr (AudioSessionProperty.AudioRoute));
 			}
 		}
 
-		[iOS (5,0)]
 		static public AccessoryInfo[] InputSources {
 			get {
 				return ExtractAccessoryInfo (GetIntPtr (AudioSessionProperty.InputSources), InputSourceKey_ID, InputSourceKey_Description);
 			}
 		}
 
-		[iOS (5,0)]
 		static public AccessoryInfo[] OutputDestinations {
 			get {
 				return ExtractAccessoryInfo (GetIntPtr (AudioSessionProperty.OutputDestinations), OutputDestinationKey_ID, OutputDestinationKey_Description);
@@ -474,7 +470,6 @@ namespace XamCore.AudioToolbox {
 
 		/* Could not test what sort of unique CFNumberRef value it's
 
-		[iOS (5,0)]
 		static public int InputSource {
 			get {
 				return GetInt (AudioSessionProperty.InputSource);
@@ -484,7 +479,6 @@ namespace XamCore.AudioToolbox {
 			}
 		}
 
-		[iOS (5,0)]
 		static public int OutputDestination {
 			get {
 				return GetInt (AudioSessionProperty.OutputDestination);
@@ -569,14 +563,12 @@ namespace XamCore.AudioToolbox {
 			return result;
 		}
 
-		[iOS (5,0)]
 		static public AudioSessionInputRouteKind InputRoute {
 			get {
 				return GetInputRoute ((NSArray) AudioRouteDescription [AudioRouteKey_Inputs]);
 			}
 		}
 		
-		[iOS (5,0)]
 		static public AudioSessionOutputRouteKind [] OutputRoutes {
 			get {
 				return GetOutputRoutes ((NSArray) AudioRouteDescription [AudioRouteKey_Outputs]);
@@ -591,77 +583,77 @@ namespace XamCore.AudioToolbox {
 			}
 		}
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public double CurrentHardwareSampleRate {
 			get {
 				return GetDouble (AudioSessionProperty.CurrentHardwareSampleRate);
 			}
 		}
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public int CurrentHardwareInputNumberChannels {
 			get {
 				return GetInt (AudioSessionProperty.CurrentHardwareInputNumberChannels);
 			}
 		}
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public int CurrentHardwareOutputNumberChannels {
 			get {
 				return GetInt (AudioSessionProperty.CurrentHardwareOutputNumberChannels);
 			}
 		}
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public float CurrentHardwareOutputVolume {
 			get {
 				return GetFloat (AudioSessionProperty.CurrentHardwareOutputVolume);
 			}
 		}
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public float CurrentHardwareInputLatency {
 			get {
 				return GetFloat (AudioSessionProperty.CurrentHardwareInputLatency);
 			}
 		}
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public float CurrentHardwareOutputLatency {
 			get {
 				return GetFloat (AudioSessionProperty.CurrentHardwareOutputLatency);
 			}
 		}
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public float CurrentHardwareIOBufferDuration {
 			get {
 				return GetFloat (AudioSessionProperty.CurrentHardwareIOBufferDuration);
 			}
 		}
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public bool OtherAudioIsPlaying {
 			get {
 				return GetInt (AudioSessionProperty.OtherAudioIsPlaying) != 0;
 			}
 		}
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public AudioSessionRoutingOverride RoutingOverride {
 			set {
 				SetInt (AudioSessionProperty.OverrideAudioRoute, (int) value);
 			}
 		}
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public bool AudioInputAvailable {
 			get {
 				return GetInt (AudioSessionProperty.AudioInputAvailable) != 0;
 			}
 		}
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public bool AudioShouldDuck {
 			get {
 				return GetInt (AudioSessionProperty.OtherMixableAudioShouldDuck) != 0;
@@ -671,7 +663,7 @@ namespace XamCore.AudioToolbox {
 			}
 		}
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public bool OverrideCategoryMixWithOthers {
 			get {
 				return GetInt (AudioSessionProperty.OverrideCategoryMixWithOthers) != 0;
@@ -681,7 +673,7 @@ namespace XamCore.AudioToolbox {
 			}
 		}
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public bool OverrideCategoryDefaultToSpeaker {
 			get {
 				return GetInt (AudioSessionProperty.OverrideCategoryDefaultToSpeaker) != 0;
@@ -691,7 +683,7 @@ namespace XamCore.AudioToolbox {
 			}
 		}
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public bool OverrideCategoryEnableBluetoothInput {
 			get {
 				return GetInt (AudioSessionProperty.OverrideCategoryEnableBluetoothInput) != 0;
@@ -701,8 +693,7 @@ namespace XamCore.AudioToolbox {
 			}
 		}
 		
-		[iOS (5,0)]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public AudioSessionMode Mode {
 			get {
 				return (AudioSessionMode) GetInt (AudioSessionProperty.Mode);
@@ -712,16 +703,14 @@ namespace XamCore.AudioToolbox {
 			}
 		}
 
-		[iOS (5,0)]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public bool InputGainAvailable {
 			get {
 				return GetInt (AudioSessionProperty.InputGainAvailable) != 0;
 			}
 		}
 
-		[iOS (5,0)]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "AudioSession[Get|Set]Property are deprecated in iOS7")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public float InputGainScalar {
 			get {
 				return GetFloat (AudioSessionProperty.InputGainScalar);
@@ -753,7 +742,7 @@ namespace XamCore.AudioToolbox {
 
 		static Hashtable listeners;
 
-		[Availability (Deprecated = Platform.iOS_7_0)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		public static AudioSessionErrors AddListener (AudioSessionProperty property, PropertyListener listener)
 		{
 			if (listener == null)
@@ -859,7 +848,6 @@ namespace XamCore.AudioToolbox {
 			}
 		}
 
-		[iOS (5,0)]
 		public static event Action<bool> InputGainBecameAvailable {
 			add {
 				AddListenerEvent (AudioSessionProperty.InputGainAvailable, value, 
@@ -870,7 +858,6 @@ namespace XamCore.AudioToolbox {
 			}
 		}
 
-		[iOS (5,0)]
 		public static event Action<float> InputGainScalarChanged {
 			add {
 				AddListenerEvent (AudioSessionProperty.InputGainScalar, value, 
@@ -881,7 +868,6 @@ namespace XamCore.AudioToolbox {
 			}
 		}
 
-		[iOS (5,0)]
 		public static event Action<AccessoryInfo[]> InputSourcesChanged {
 			add {
 				AddListenerEvent (AudioSessionProperty.InputSources, value, 
@@ -892,7 +878,6 @@ namespace XamCore.AudioToolbox {
 			}
 		}
 
-		[iOS (5,0)]
 		public static event Action<AccessoryInfo[]> OutputDestinationsChanged {
 			add {
 				AddListenerEvent (AudioSessionProperty.OutputDestinations, value, 

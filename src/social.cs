@@ -20,7 +20,7 @@ using XamCore.AppKit;
 #endif
 
 namespace XamCore.Social {
-	[Since (6,0)]
+	[iOS (6,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[Static]
 	interface SLServiceType {
@@ -44,7 +44,7 @@ namespace XamCore.Social {
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Tencent Weibo SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Tencent Weibo SDK instead.")]
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("SLServiceTypeTencentWeibo")]
 		[Mac (10,9)]
 		NSString TencentWeibo { get; }
@@ -57,7 +57,7 @@ namespace XamCore.Social {
 #endif
 	}
 	
-	[Since (6,0)]
+	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	// init -> Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: SLRequestMultiPart must be obtained through!
 	[DisableDefaultCtor]
@@ -79,6 +79,10 @@ namespace XamCore.Social {
 		[Export ("parameters")]
 		NSDictionary Parameters { get;  }
 
+		[NoiOS] // just macOS
+		[Export ("addMultipartData:withName:type:")]
+		void AddMultipartData (NSData data, string partName, string partType);
+
 		[Export ("addMultipartData:withName:type:filename:")]
 		void AddMultipartData (NSData data, string partName, string partType, string filename);
 
@@ -92,7 +96,7 @@ namespace XamCore.Social {
 	}
 
 #if !MONOMAC
-	[Since (6,0)]
+	[iOS (6,0)]
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor] // see note on 'composeViewControllerForServiceType:'
 	interface SLComposeViewController {
@@ -130,6 +134,7 @@ namespace XamCore.Social {
 		[Export ("removeAllURLs")]
 		bool RemoveAllUrls ();
 	}
+#endif
 
 	[Mac (10,10, onlyOn64 : true)]
 	[iOS (8,0)]
@@ -209,13 +214,18 @@ namespace XamCore.Social {
 		UIViewController AutoCompletionViewController { get; set; }
 #endif
 	}
-#endif
 
 
 #if !MONOMAC
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // designated
 	interface SLComposeSheetConfigurationItem {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[NullAllowed] // by default this property is null
 		[Export ("title")]
 		string Title { get; set; }

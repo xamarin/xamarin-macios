@@ -376,8 +376,13 @@ namespace XamCore.GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // designated
 	interface GKEntity : NSCopying, NSCoding {
-		
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Static]
 		[Export ("entity")]
 		GKEntity GetEntity ();
@@ -472,7 +477,7 @@ namespace XamCore.GameplayKit {
 		[Export ("isLossForPlayer:")]
 		bool IsLoss (IGKGameModelPlayer player);
 
-		[NoMac] // not yet
+		[Mac (10,11,2, onlyOn64 : true)]
 		[iOS (9,1)][TV (9,0)]
 		[Export ("unapplyGameModelUpdate:")]
 		void UnapplyGameModelUpdate (IGKGameModelUpdate gameModelUpdate);
@@ -1131,8 +1136,13 @@ namespace XamCore.GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // designated
 	interface GKRandomSource : GKRandom, NSSecureCoding, NSCopying {
-		
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Static]
 		[Export ("sharedRandom")]
 		GKRandomSource SharedRandom { get; }
@@ -1182,8 +1192,13 @@ namespace XamCore.GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // designated
 	interface GKRuleSystem {
-		
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("evaluate")]
 		void Evaluate ();
 
@@ -1279,7 +1294,13 @@ namespace XamCore.GameplayKit {
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[Abstract]
+	[DisableDefaultCtor] // designated
 	interface GKState {
+
+		[Protected]
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 
 		[NullAllowed]
 		[Export ("stateMachine", ArgumentSemantic.Weak)]

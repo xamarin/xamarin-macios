@@ -32,17 +32,14 @@ namespace XamCore.EventKitUI {
 		[Export ("allowsCalendarPreview")]
 		bool AllowsCalendarPreview { get; set;  }
 
-		[Since (4,2)]
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 		
-		[Since (4,2)]
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
 		EKEventViewDelegate Delegate { get; set;  }
 	}
 
-	[Since (4,2)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -75,7 +72,7 @@ namespace XamCore.EventKitUI {
 		[Export ("event")]
 		EKEvent Event { get; set;  }
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("cancelEditing")]
 		void CancelEditing ();
 	}
@@ -92,7 +89,6 @@ namespace XamCore.EventKitUI {
 		EKCalendar GetDefaultCalendarForNewEvents (EKEventEditViewController controller);
 	}
 
-	[Since (5,0)]
 	[BaseType (typeof (UIViewController),
 		   Delegates = new string [] { "WeakDelegate" },
 		   Events=new Type [] {typeof (EKCalendarChooserDelegate)})]
@@ -104,7 +100,7 @@ namespace XamCore.EventKitUI {
 		[Export ("initWithSelectionStyle:displayStyle:eventStore:")]
 		IntPtr Constructor (EKCalendarChooserSelectionStyle selectionStyle, EKCalendarChooserDisplayStyle displayStyle, EKEventStore eventStore);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("initWithSelectionStyle:displayStyle:entityType:eventStore:")]
 		IntPtr Constructor (EKCalendarChooserSelectionStyle selectionStyle, EKCalendarChooserDisplayStyle displayStyle, EKEntityType entityType, EKEventStore eventStore);
 
@@ -133,7 +129,6 @@ namespace XamCore.EventKitUI {
 		NSSet SelectedCalendars { get; set;  }
 	}
 
-	[Since (5,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]

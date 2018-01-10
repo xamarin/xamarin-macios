@@ -165,16 +165,6 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		public void BI1061 ()
-		{
-			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
-			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bug57070.cs")));
-			bgen.AssertExecuteError ("build");
-			bgen.AssertWarning (1061, "The attribute 'ObjCRuntime.iOSAttribute' found on 'SomeClass.DoSomething' is not a valid binding attribute. Please remove this attribute.");
-		}
-
-		[Test]
 		public void BI1112_Bug37527_WrongProperty ()
 		{
 			var bgen = new BGenTool ();
@@ -221,7 +211,7 @@ namespace Bug52570Tests {
 	}
 }");
 			bgen.AssertExecute ("build");
-			bgen.AssertWarning (1117, "The SomeMethod member is decorated with [Static] and its container class Bug52570Tests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into Bug52570Tests.FooObject class.");
+			bgen.AssertWarning (1117, "The member 'SomeMethod' is decorated with [Static] and its container class Bug52570Tests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into Bug52570Tests.FooObject class.");
 		}
 
 		[Test]
@@ -446,11 +436,112 @@ namespace Bug57094 {
 		}
 
 		[Test]
+		public void BI1062_NoAsyncMethodRefHandlerTest ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding (@"
+using System;
+using Foundation;
+
+namespace BI1062Tests {
+
+	delegate void MyHandler (ref bool staaph, NSError error);
+
+	[BaseType (typeof (NSObject))]
+	interface FooObject {
+
+		[Async]
+		[Export (""fooMethod:"")]
+		void FooMethod (MyHandler handler);
+	}
+}");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1062, "The member 'FooObject.FooMethod' contains ref/out parameters and must not be decorated with [Async].");
+		}
+
+		[Test]
+		public void BI1062_NoAsyncMethodOutHandlerTest ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding (@"
+using System;
+using Foundation;
+
+namespace BI1062Tests {
+
+	delegate void MyHandler (out bool staaph, NSError error);
+
+	[BaseType (typeof (NSObject))]
+	interface FooObject {
+
+		[Async]
+		[Export (""fooMethod:"")]
+		void FooMethod (MyHandler handler);
+	}
+}");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1062, "The member 'FooObject.FooMethod' contains ref/out parameters and must not be decorated with [Async].");
+		}
+
+		[Test]
+		public void BI1062_NoAsyncMethodOutParameterTest ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding (@"
+using System;
+using Foundation;
+
+namespace BI1062Tests {
+
+	delegate void MyHandler (bool staaph, NSError error);
+
+	[BaseType (typeof (NSObject))]
+	interface FooObject {
+
+		[Async]
+		[Export (""fooMethod:completion:"")]
+		void FooMethod (out NSObject obj, MyHandler handler);
+	}
+}");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1062, "The member 'FooObject.FooMethod' contains ref/out parameters and must not be decorated with [Async].");
+		}
+
+		[Test]
+		public void BI1062_NoAsyncMethodRefParameterTest ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding (@"
+using System;
+using Foundation;
+
+namespace BI1062Tests {
+
+	delegate void MyHandler (bool staaph, NSError error);
+
+	[BaseType (typeof (NSObject))]
+	interface FooObject {
+
+		[Async]
+		[Export (""fooMethod:completion:"")]
+		void FooMethod (ref NSObject obj, Action<bool, NSError> handler);
+	}
+}");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1062, "The member 'FooObject.FooMethod' contains ref/out parameters and must not be decorated with [Async].");
+		}
+
+		[Test]
 		[TestCase (Profile.iOS)]
-		[TestCase (Profile.macClassic)]
+		[TestCase (Profile.macFull)]
+		[TestCase (Profile.macModern)]
 		public void WarnAsError (Profile profile)
 		{
-			const string message = "The SomeMethod member is decorated with [Static] and its container class warnaserrorTests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into warnaserrorTests.FooObject class.";
+			const string message = "The member 'SomeMethod' is decorated with [Static] and its container class warnaserrorTests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into warnaserrorTests.FooObject class.";
 			{
 				// Enabled
 				var bgen = new BGenTool ();
@@ -497,10 +588,11 @@ namespace Bug57094 {
 
 		[Test]
 		[TestCase (Profile.iOS)]
-		[TestCase (Profile.macClassic)]
+		[TestCase (Profile.macFull)]
+		[TestCase (Profile.macModern)]
 		public void NoWarn (Profile profile)
 		{
-			const string message = "The SomeMethod member is decorated with [Static] and its container class nowarnTests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into nowarnTests.FooObject class.";
+			const string message = "The member 'SomeMethod' is decorated with [Static] and its container class nowarnTests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into nowarnTests.FooObject class.";
 			{
 				// Enabled
 				var bgen = new BGenTool ();

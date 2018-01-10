@@ -298,7 +298,7 @@ namespace XamCore.CoreMedia {
 		extern static /* size_t */ nint CMBufferQueueGetTotalSize (/* CMBufferQueueRef */ IntPtr queue);
 
 		[iOS (7,1)]
-		[Availability (Platform.Mac_10_10)]
+		[Mac (10, 10)]
 		public nint GetTotalSize ()
 		{
 			return CMBufferQueueGetTotalSize (handle);

@@ -626,6 +626,26 @@ namespace XamCore.HealthKit {
 		[Watch (4,0), iOS (11,0)]
 		[Export ("HeartRateMotionContext")]
 		HKHeartRateMotionContext HeartRateMotionContext { get; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Export ("AverageSpeed")]
+		HKQuantity AverageSpeed { get; set; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Export ("MaximumSpeed")]
+		HKQuantity MaximumSpeed { get; set; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Export ("AlpineSlopeGrade")]
+		HKQuantity AlpineSlopeGrade { get; set; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Export ("ElevationAscended")]
+		HKQuantity ElevationAscended { get; set; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Export ("ElevationDescended")]
+		HKQuantity ElevationDescended { get; set; }
 	}
 		
 	[Watch (2,0)]
@@ -744,6 +764,26 @@ namespace XamCore.HealthKit {
 		[Watch (4,0), iOS (11,0)]
 		[Field ("HKMetadataKeyHeartRateMotionContext")]
 		NSString HeartRateMotionContext { get; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Field ("HKMetadataKeyAverageSpeed")]
+		NSString AverageSpeed { get; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Field ("HKMetadataKeyMaximumSpeed")]
+		NSString MaximumSpeed { get; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Field ("HKMetadataKeyAlpineSlopeGrade")]
+		NSString AlpineSlopeGrade { get; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Field ("HKMetadataKeyElevationAscended")]
+		NSString ElevationAscended { get; }
+
+		[Watch (4,2), iOS (11,2)]
+		[Field ("HKMetadataKeyElevationDescended")]
+		NSString ElevationDescended { get; }
 	}
 
 	[Watch (2,0)]
@@ -1533,6 +1573,10 @@ namespace XamCore.HealthKit {
 		[Field ("HKQuantityTypeIdentifierVO2Max")]
 		NSString VO2Max { get; }
 
+		[Watch (4,2), iOS (11,2)]
+		[Field ("HKQuantityTypeIdentifierDistanceDownhillSnowSports")]
+		NSString DistanceDownhillSnowSports { get; }
+
         // If you add field, add them to the enum too.
 	}
 
@@ -1799,7 +1843,8 @@ namespace XamCore.HealthKit {
 		[Export ("jouleUnit")]
 		HKUnit Joule { get; }
 
-		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Watch_4_0, Message = "Use 'SmallCalorie' or 'LargeCalorie' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'SmallCalorie' or 'LargeCalorie' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'SmallCalorie' or 'LargeCalorie' instead.")]
 		[Static]
 		[Export ("calorieUnit")]
 		HKUnit Calorie { get; }
@@ -1987,7 +2032,8 @@ namespace XamCore.HealthKit {
 		[Export ("type")]
 		HKWorkoutEventType Type { get; }
 
-		[Availability (Deprecated = Platform.iOS_11_0 | Watch_4_0, Message = "Use 'DateInterval' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'DateInterval' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'DateInterval' instead.")]
 		[Export ("date", ArgumentSemantic.Copy)]
 		NSDate Date { get; }
 
@@ -1999,17 +2045,22 @@ namespace XamCore.HealthKit {
 		[Wrap ("WeakMetadata")]
 		HKMetadata Metadata { get; }
 
-		[Availability (Deprecated = Platform.iOS_11_0 | Platform.Watch_4_0, Message = "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
 		[Static, Export ("workoutEventWithType:date:")]
 		HKWorkoutEvent Create (HKWorkoutEventType type, NSDate date);
 
-		[Availability (Introduced = Platform.iOS_10_0 | Platform.Watch_3_0, Deprecated = Platform.iOS_11_0 | Platform.Watch_4_0, Message = "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
+		[Watch (3,0), iOS (10,0)]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
 		[Static]
 		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
 		[Export ("workoutEventWithType:date:metadata:")]
 		HKWorkoutEvent Create (HKWorkoutEventType type, NSDate date, NSDictionary metadata);
 
-		[Availability (Introduced = Platform.iOS_10_0 | Platform.Watch_3_0, Deprecated = Platform.iOS_11_0 | Platform.Watch_4_0, Message = "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
+		[Watch (3,0), iOS (10,0)]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
 		[Static]
 		[Wrap ("Create (type, date, metadata != null ? metadata.Dictionary : null)")]
 		HKWorkoutEvent Create (HKWorkoutEventType type, NSDate date, HKMetadata metadata);
@@ -2356,10 +2407,11 @@ namespace XamCore.HealthKit {
 		nuint Count { get; }
 	}
 
+	[Watch (4, 0), iOS (11, 0)]
 	[BaseType (typeof(HKSeriesSample))]
 	[DisableDefaultCtor]
 	interface HKWorkoutRoute : NSCopying {
-		[Watch (4, 0), iOS (11, 0)]
+
 		[Field ("HKWorkoutRouteTypeIdentifier")]
 		NSString TypeIdentifier { get; }
 	}

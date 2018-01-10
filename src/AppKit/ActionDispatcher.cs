@@ -113,5 +113,10 @@ namespace XamCore.AppKit
 			return true;
 		}
 
+		[Preserve]
+		public bool WorksWhenModal {
+			[Export ("worksWhenModal")]
+			get { return true; }
+		}
 	}
 }

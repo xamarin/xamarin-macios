@@ -34,6 +34,7 @@ namespace Xamarin.Linker {
 			case "UnavailableAttribute":
 			case "LinkWithAttribute":
 			case "DesignatedInitializerAttribute":
+			case "RequiresSuperAttribute":
 				return attr_type.Namespace == Namespaces.ObjCRuntime;
 			default:
 				return base.IsRemovedAttribute (attribute);

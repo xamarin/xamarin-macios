@@ -39,19 +39,19 @@ using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.AddressBook {
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public enum ABPersonSortBy : uint /* uint32_t */ {
 		FirstName = 0,
 		LastName  = 1,
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public enum ABPersonCompositeNameFormat : uint /* uint32_t */ {
 		FirstNameFirst  = 0,
 		LastNameFirst   = 1,
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public enum ABPersonProperty {
 		Address,
 		Birthday,
@@ -80,15 +80,14 @@ namespace XamCore.AddressBook {
 		SocialProfile
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Native]
-	[iOS (4,1)]
 	public enum ABPersonImageFormat : nint_compat_int {
 		Thumbnail = 0,
 		OriginalSize = 2
 	}
 	
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	static class ABPersonPropertyId {
 
 		public static int Address {get; private set;}
@@ -223,7 +222,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public static class ABPersonAddressKey {
 
 		public static NSString City {get; private set;}
@@ -257,7 +256,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public static class ABPersonDateLabel {
 		public static NSString Anniversary {get; private set;}
 
@@ -280,14 +279,14 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public enum ABPersonKind {
 		None,
 		Organization,
 		Person,
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	static class ABPersonKindId {
 		public static NSNumber Organization {get; private set;}
 		public static NSNumber Person {get; private set;}
@@ -330,7 +329,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	static class ABPersonSocialProfile {
 		public static readonly NSString URLKey;
 		public static readonly NSString ServiceKey;
@@ -353,7 +352,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public static class ABPersonSocialProfileService
 	{
 		public static readonly NSString Twitter;
@@ -384,7 +383,7 @@ namespace XamCore.AddressBook {
 		}		
 	}
 	
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public static class ABPersonPhoneLabel {
 		public static NSString HomeFax {get; private set;}
 		public static NSString iPhone {get; private set;}
@@ -421,7 +420,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public static class ABPersonInstantMessageService {
 		public static NSString Aim {get; private set;}
 		public static NSString Icq {get; private set;}
@@ -463,7 +462,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public static class ABPersonInstantMessageKey {
 		public static NSString Service {get; private set;}
 		public static NSString Username {get; private set;}
@@ -488,7 +487,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public static class ABPersonUrlLabel {
 		public static NSString HomePage {get; private set;}
 
@@ -511,7 +510,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public static class ABPersonRelatedNamesLabel {
 		public static NSString Assistant {get; private set;}
 		public static NSString Brother {get; private set;}
@@ -554,7 +553,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public static class ABLabel {
 		public static NSString Home {get; private set;}
 		public static NSString Other {get; private set;}
@@ -581,7 +580,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public class ABPerson : ABRecord, IComparable, IComparable<ABPerson> {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCreate ();
@@ -595,7 +594,6 @@ namespace XamCore.AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCreateInSource (IntPtr source);
 
-		[iOS (4,0)]
 		public ABPerson (ABRecord source)
 			: base (IntPtr.Zero, true)
 		{
@@ -696,7 +694,7 @@ namespace XamCore.AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static ABPersonCompositeNameFormat ABPersonGetCompositeNameFormat ();
 
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use GetCompositeNameFormat (null) instead")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use GetCompositeNameFormat (null) instead")]
 		public static ABPersonCompositeNameFormat CompositeNameFormat {
 			get {return ABPersonGetCompositeNameFormat ();}
 		}
@@ -793,7 +791,6 @@ namespace XamCore.AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCopySource (IntPtr group);
 
-		[iOS (4,0)]
 		public ABRecord Source {
 			get {
 				var h = ABPersonCopySource (Handle);
@@ -1034,7 +1031,6 @@ namespace XamCore.AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCopyArrayOfAllLinkedPeople (IntPtr person);
 
-		[iOS (4,0)]
 		public ABPerson[] GetLinkedPeople ()
 		{
 			var linked = ABPersonCopyArrayOfAllLinkedPeople (Handle);
@@ -1044,7 +1040,6 @@ namespace XamCore.AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCopyImageDataWithFormat (IntPtr handle, nint format);
 		
-		[iOS (4,1)]
 		public NSData GetImage (ABPersonImageFormat format)
 		{
 #if ARCH_32
@@ -1057,7 +1052,6 @@ namespace XamCore.AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCreateVCardRepresentationWithPeople (IntPtr people);
 
-		[iOS (5,0)]
 		public static NSData GetVCards (params ABPerson[] people)
 		{
 			if (people == null)
@@ -1075,7 +1069,6 @@ namespace XamCore.AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCreatePeopleInSourceWithVCardRepresentation (IntPtr source, IntPtr vCardData);
 
-		[iOS (5,0)]
 		public static ABPerson[] CreateFromVCard (ABRecord source, NSData vCardData)
 		{
 			if (vCardData == null)
@@ -1089,7 +1082,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public class SocialProfile : DictionaryContainer
 	{
 		public SocialProfile ()
@@ -1147,7 +1140,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public class InstantMessageService : DictionaryContainer
 	{
 		public InstantMessageService ()
@@ -1190,7 +1183,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public class PersonAddress : DictionaryContainer
 	{
 		public PersonAddress ()

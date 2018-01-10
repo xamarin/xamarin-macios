@@ -1,4 +1,7 @@
 *.results
 *.pch*
 *.unclassified
+*.raw
 *.g.cs
+*.html
+report/

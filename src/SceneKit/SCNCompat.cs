@@ -5,6 +5,12 @@ using System.Threading.Tasks;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
+#if WATCH
+using AnimationType = global::XamCore.SceneKit.ISCNAnimationProtocol;
+#else
+using AnimationType = global::XamCore.CoreAnimation.CAAnimation;
+#endif
+
 namespace XamCore.SceneKit {
 
 #if !XAMCORE_3_0
@@ -18,14 +24,14 @@ namespace XamCore.SceneKit {
 	}
 #elif TVOS && !XAMCORE_4_0
 	partial class SCNMaterialProperty {
-	[Introduced (PlatformName.iOS, 8, 0)]
+	[iOS (8, 0)]
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "This API has been totally removed on tvOS.")]
 		public virtual NSObject BorderColor { get; set; }
 	}
 
 	partial class SCNRenderer {
-		[Introduced (PlatformName.iOS, 8, 0)]
+		[iOS (8, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "This API has been totally removed on tvOS.")]
 		public virtual void Render ()
@@ -55,15 +61,15 @@ namespace XamCore.SceneKit {
 #if !XAMCORE_4_0
 #if XAMCORE_2_0 || !MONOMAC
 	public abstract partial class SCNSceneRenderer : NSObject {
-		[Introduced (PlatformName.MacOSX, 10, 10)]
+		[Mac (10, 10)]
 		[Obsolete ("Use 'SCNSceneRenderer_Extensions.PrepareAsync' instead.")]
 		public unsafe virtual Task<bool> PrepareAsync (NSObject[] objects)
 		{
 			return SCNSceneRenderer_Extensions.PrepareAsync (this, objects);
 		}
 
-		[Introduced (PlatformName.iOS, 9, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 11, PlatformArchitecture.Arch64)]
+		[iOS (9, 0)]
+		[Mac (10, 11, 0, PlatformArchitecture.Arch64)]
 		[Obsolete ("Use 'SCNSceneRenderer_Extensions.PresentSceneAsync' instead.")]
 		public unsafe virtual Task PresentSceneAsync (SCNScene scene, global::XamCore.SpriteKit.SKTransition transition, SCNNode pointOfView)
 		{
@@ -71,5 +77,23 @@ namespace XamCore.SceneKit {
 		}
 	}
 #endif
+#endif
+
+
+#if !XAMCORE_4_0
+	[Mac (10,9), iOS (8,0), Watch (4,0)]
+	public delegate void SCNAnimationEventHandler (AnimationType animation, NSObject animatedObject, bool playingBackward);
+
+	public partial class SCNAnimationEvent : NSObject
+	{
+		public static SCNAnimationEvent Create (nfloat keyTime, SCNAnimationEventHandler eventHandler)
+		{
+			var handler = new Action<IntPtr, NSObject, bool> ((animationPtr, animatedObject, playingBackward) => {
+				var animation = Runtime.GetINativeObject<AnimationType> (animationPtr, true);
+				eventHandler (animation, animatedObject, playingBackward);
+			});
+			return Create (keyTime, handler);
+		}
+	}
 #endif
 }

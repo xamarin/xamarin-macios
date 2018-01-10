@@ -259,7 +259,8 @@ namespace XamCore.CoreFoundation {
 			}
 		}
 	
-		[Availability (Deprecated = Platform.iOS_6_0 | Platform.Mac_10_9)]
+		[Deprecated (PlatformName.iOS, 6, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		public static DispatchQueue CurrentQueue {
 			get {
 				return new DispatchQueue (dispatch_get_current_queue (), false);
@@ -442,7 +443,7 @@ namespace XamCore.CoreFoundation {
 		extern static IntPtr dispatch_get_global_queue (nint priority, nuint flags);
 
 #if MONOMAC
-		[Availability (Obsoleted = Platform.Mac_10_7)]
+		[Obsoleted (PlatformName.MacOSX, 10, 7)]
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_get_main_queue ();
 #endif

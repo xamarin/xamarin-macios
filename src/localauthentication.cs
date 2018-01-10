@@ -5,12 +5,18 @@ using XamCore.Security;
 
 namespace XamCore.LocalAuthentication {
 
-	[iOS (11,0), NoMac]
+	[Mac (10,13,2)][iOS (11,0)]
 	[Native]
 	public enum LABiometryType : nint {
 		None,
 		TouchId,
-		TypeFaceId,
+		[NoMac]
+		FaceId,
+#if !XAMCORE_4_0
+		[NoMac]
+		[Obsolete ("Use 'FaceId' instead.")]
+		TypeFaceId = FaceId,
+#endif
 	}
 
 	[iOS (8,0), Mac (10,10)]
@@ -86,7 +92,7 @@ namespace XamCore.LocalAuthentication {
 		[Export ("interactionNotAllowed")]
 		bool InteractionNotAllowed { get; set; }
 
-		[NoMac, iOS (11,0)]
+		[Mac (10,13,2)][iOS (11,0)]
 		[Export ("biometryType")]
 		LABiometryType BiometryType { get; }
 	}

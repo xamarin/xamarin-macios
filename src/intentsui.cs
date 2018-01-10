@@ -18,7 +18,7 @@ using XamCore.UIKit;
 
 namespace XamCore.IntentsUI {
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[Native]
 	public enum INUIHostedViewContext : nuint {
 		SiriSnippet,
@@ -37,7 +37,7 @@ namespace XamCore.IntentsUI {
 	[iOS (11,0)]
 	delegate void INUIHostedViewControllingConfigureViewHandler (bool success, NSSet<INParameter> configuredParameters, CGSize desiredSize);
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[Protocol]
 	interface INUIHostedViewControlling {
 
@@ -52,7 +52,7 @@ namespace XamCore.IntentsUI {
 		void ConfigureView (NSSet<INParameter> parameters, INInteraction interaction, INUIInteractiveBehavior interactiveBehavior, INUIHostedViewContext context, INUIHostedViewControllingConfigureViewHandler completionHandler);
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[Category]
 	[BaseType (typeof (NSExtensionContext))]
 	interface NSExtensionContext_INUIHostedViewControlling {
@@ -68,7 +68,7 @@ namespace XamCore.IntentsUI {
 		string GetInterfaceParametersDescription ();
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[Protocol]
 	interface INUIHostedViewSiriProviding {
 

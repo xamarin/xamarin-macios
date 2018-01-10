@@ -19,7 +19,7 @@ using System;
 
 namespace XamCore.StoreKit {
 
-	[Since(6,0)]
+	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	partial interface SKDownload {
 #if MONOMAC
@@ -80,7 +80,7 @@ namespace XamCore.StoreKit {
 #if !MONOMAC
 		[Static]
 		[Export ("paymentWithProductIdentifier:")]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_5_0, Message = "Use 'FromProduct (SKProduct)'' after fetching the list of available products from 'SKProductRequest' instead.")]
+		[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'FromProduct (SKProduct)'' after fetching the list of available products from 'SKProductRequest' instead.")]
 		SKPayment CreateFrom (string identifier);
 #endif
 
@@ -93,7 +93,7 @@ namespace XamCore.StoreKit {
 		[Export ("quantity")]
 		nint Quantity { get; }
 
-		[Since (7,0), Mavericks]
+		[iOS (7,0), Mac (10, 9)]
 		[Export ("applicationUsername", ArgumentSemantic.Copy)]
 		string ApplicationUsername { get; }
 
@@ -112,7 +112,7 @@ namespace XamCore.StoreKit {
 
 		[Static]
 		[Export ("paymentWithProductIdentifier:")]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_5_0, Message = "Use 'PaymentWithProduct (SKProduct)' after fetching the list of available products from 'SKProductRequest' instead.")]
+		[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'PaymentWithProduct (SKProduct)' after fetching the list of available products from 'SKProductRequest' instead.")]
 		SKMutablePayment PaymentWithProduct (string identifier);
 
 		[NullAllowed] // by default this property is null
@@ -127,7 +127,7 @@ namespace XamCore.StoreKit {
 		[Override]
 		NSData RequestData { get; set; }
 
-		[Since (7,0), Mavericks]
+		[iOS (7,0), Mac (10, 9)]
 		[NullAllowed] // by default this property is null
 		[Export ("applicationUsername", ArgumentSemantic.Copy)][New]
 		string ApplicationUsername { get; set; }
@@ -153,7 +153,7 @@ namespace XamCore.StoreKit {
 		[Export ("restoreCompletedTransactions")]
 		void RestoreCompletedTransactions ();
 
-		[Since (7,0), Mavericks]
+		[iOS (7,0), Mac (10, 9)]
 		[Export ("restoreCompletedTransactionsWithApplicationUsername:")]
 		void RestoreCompletedTransactions ([NullAllowed] string username);
 
@@ -172,19 +172,19 @@ namespace XamCore.StoreKit {
 		//
 		// iOS 6.0
 		//
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("startDownloads:")]
 		void StartDownloads (SKDownload [] downloads);
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("pauseDownloads:")]
 		void PauseDownloads (SKDownload [] downloads);
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("resumeDownloads:")]
 		void ResumeDownloads (SKDownload [] downloads);
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("cancelDownloads:")]
 		void CancelDownloads (SKDownload [] downloads);
 
@@ -208,7 +208,7 @@ namespace XamCore.StoreKit {
 		[Export ("productIdentifier")]
 		string ProductIdentifier { get; }
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("downloadable")]
 		bool Downloadable {
 #if MONOMAC
@@ -219,7 +219,7 @@ namespace XamCore.StoreKit {
 #endif
 		}
 
-		[Since(6,0)]
+		[iOS (6,0)]
 #if MONOMAC
 		[Export ("contentLengths")]
 #else
@@ -227,13 +227,21 @@ namespace XamCore.StoreKit {
 #endif
 		NSNumber [] DownloadContentLengths { get;  }
 
-		[Since(6,0)]
+		[iOS (6,0)]
 #if MONOMAC
 		[Export ("contentVersion")]
 #else
 		[Export ("downloadContentVersion")]
 #endif
 		string DownloadContentVersion { get;  }
+
+		[iOS (11,2), TV (11,2), Mac (10,13,2)]
+		[NullAllowed, Export ("subscriptionPeriod")]
+		SKProductSubscriptionPeriod SubscriptionPeriod { get; }
+
+		[iOS (11,2), TV (11,2), Mac (10,13,2)]
+		[NullAllowed, Export ("introductoryPrice")]
+		SKProductDiscount IntroductoryPrice { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -253,7 +261,7 @@ namespace XamCore.StoreKit {
 		[Export ("paymentQueueRestoreCompletedTransactionsFinished:")]
 		void RestoreCompletedTransactionsFinished (SKPaymentQueue queue);
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("paymentQueue:updatedDownloads:")]
 		void UpdatedDownloads (SKPaymentQueue queue, SKDownload [] downloads);
 
@@ -280,7 +288,7 @@ namespace XamCore.StoreKit {
 		string TransactionIdentifier { get; }
 
 #if !MONOMAC
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSBundle.AppStoreReceiptUrl' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSBundle.AppStoreReceiptUrl' instead.")]
 		[Export ("transactionReceipt")]
 		NSData TransactionReceipt { get; }
 #endif
@@ -288,7 +296,7 @@ namespace XamCore.StoreKit {
 		[Export ("transactionState")]
 		SKPaymentTransactionState TransactionState { get; }
 
-		[Since(6,0)]
+		[iOS (6,0)]
 		[Export ("downloads")]
 		SKDownload [] Downloads { get;  }
 	}
@@ -320,7 +328,7 @@ namespace XamCore.StoreKit {
 		void RequestFailed (SKRequest request, NSError error);
 	}
 		
-	[Since (7,0)]
+	[iOS (7,0)]
 	[Mac (10,9)]
 	[BaseType (typeof (SKRequest))]
 	interface SKReceiptRefreshRequest {
@@ -337,7 +345,7 @@ namespace XamCore.StoreKit {
 		SKReceiptProperties ReceiptProperties { get; }
 	}
 
-	[Since (7,0)]
+	[iOS (7,0)]
 	[Mac (10,9)]
 	[Static, Internal]
 	interface _SKReceiptProperty {
@@ -383,7 +391,7 @@ namespace XamCore.StoreKit {
 
 #if !MONOMAC
 	[NoTV]
-	[Since (6,0)]
+	[iOS (6,0)]
 	[BaseType (typeof (UIViewController),
 		   Delegates=new string [] { "WeakDelegate" },
 		   Events   =new Type   [] { typeof (SKStoreProductViewControllerDelegate) })]
@@ -411,7 +419,7 @@ namespace XamCore.StoreKit {
 		void LoadProduct (StoreProductParameters parameters, [NullAllowed] Action<bool,NSError> callback);
 	}
 
-	[Since (6,0)]
+	[iOS (6,0)]
 	[Static]
 	interface SKStoreProductParameterKey
 	{
@@ -538,7 +546,11 @@ namespace XamCore.StoreKit {
 	interface SKCloudServiceSetupOptions
 	{
 		// Headers comment: Action for setup entry point (of type SKCloudServiceSetupAction).
-		SKCloudServiceSetupAction Action { get; set; }
+		// FIXME: Once https://bugzilla.xamarin.com/show_bug.cgi?id=57870 is fixed we should have a wrapper on a new property
+		// `SKCloudServiceSetupAction Action { get; set; }` and avoid manual code.
+		[Internal]
+		[Export ("ActionKey")]
+		NSString _Action { get; set; }
 
 		// Headers comment: Identifier of the iTunes Store item the user is trying to access which requires cloud service setup (NSNumber).
 		nint ITunesItemIdentifier { get; set; }
@@ -631,4 +643,35 @@ namespace XamCore.StoreKit {
 		void Update (SKProduct[] storePromotionOrder, [NullAllowed] Action<NSError> completionHandler);
 	}
 #endif
+
+	[iOS (11,2), TV (11,2), Mac (10,13,2)]
+	[BaseType (typeof (NSObject))]
+	interface SKProductSubscriptionPeriod {
+
+		[Export ("numberOfUnits")]
+		nuint NumberOfUnits { get; }
+
+		[Export ("unit")]
+		SKProductPeriodUnit Unit { get; }
+	}
+
+	[iOS (11,2), TV (11,2), Mac (10,13,2)]
+	[BaseType (typeof (NSObject))]
+	interface SKProductDiscount {
+
+		[Export ("price")]
+		NSDecimalNumber Price { get; }
+
+		[Export ("priceLocale")]
+		NSLocale PriceLocale { get; }
+
+		[Export ("subscriptionPeriod")]
+		SKProductSubscriptionPeriod SubscriptionPeriod { get; }
+
+		[Export ("numberOfPeriods")]
+		nuint NumberOfPeriods { get; }
+
+		[Export ("paymentMode")]
+		SKProductDiscountPaymentMode PaymentMode { get; }
+	}
 }

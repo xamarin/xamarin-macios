@@ -35,7 +35,6 @@ namespace XamCore.CoreVideo {
 
 	// CVBuffer.h
 	[Watch (4,0)]
-	[iOS (4,0)]
 	public partial class CVBuffer : INativeObject
 #if !COREBUILD
 		, IDisposable

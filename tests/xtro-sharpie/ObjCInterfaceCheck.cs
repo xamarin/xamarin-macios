@@ -52,7 +52,10 @@ namespace Extrospection {
 				if (!type_map.TryGetValue (rname, out td))
 					type_map.Add (rname, type);
 				else {
-					Console.WriteLine ("!duplicate-register! {0} exists as both {1} and {2}", rname, type.FullName, td.FullName);
+					// always report in the same order (for unique error messages)
+					var sorted = Helpers.Sort (type, td);
+					var framework = Helpers.GetFramework (sorted.Item1);
+					Log.On (framework).Add ($"!duplicate-register! {rname} exists as both {sorted.Item1.FullName} and {sorted.Item2.FullName}");
 				}
 			}
 		}
@@ -72,9 +75,12 @@ namespace Extrospection {
 			if (!decl.IsAvailable ())
 				return;
 
-			TypeDefinition td;
-			if (!type_map.TryGetValue (name, out td)) {
-				Console.WriteLine ("!missing-type! {0} not bound", name);
+			var framework = Helpers.GetFramework (decl);
+			if (framework == null)
+				return;
+
+			if (!type_map.TryGetValue (name, out var td)) {
+				Log.On (framework).Add ($"!missing-type! {name} not bound");
 				// other checks can't be done without an actual type to inspect
 				return;
 			}
@@ -83,13 +89,13 @@ namespace Extrospection {
 			var nbt = decl.SuperClass?.Name;
 			var mbt = td.BaseType?.Resolve ().GetName ();
 			if (nbt != mbt)
-				Console.WriteLine ("!wrong-base-type! {0} expected {1} actual {2}", name, nbt, mbt);
+				Log.On (framework).Add ($"!wrong-base-type! {name} expected {nbt} actual {mbt}");
 
 			// check protocols
 			foreach (var protocol in decl.Protocols) {
 				var pname = protocol.Name;
 				if (!ImplementProtocol (pname, td))
-					Console.WriteLine ("!missing-protocol-conformance! {0} should conform to {1}", name, pname);
+					Log.On (framework).Add ($"!missing-protocol-conformance! {name} should conform to {pname}");
 			}
 
 			// TODO : check for extraneous protocols
@@ -100,10 +106,16 @@ namespace Extrospection {
 		public override void End ()
 		{
 			// at this stage anything else we have is not something we could find in Apple's headers
-			foreach (var extra in type_map.Keys) {
+			foreach (var kvp in type_map) {
+				var extra = kvp.Key;
 				if (extra [0] == '_')
 					continue;
-				Console.WriteLine ("!unknown-type! {0} bound", extra);
+				var type = kvp.Value;
+				// internal inner classes are not mapped to native ones
+				if (type.IsNestedAssembly)
+					continue;
+				var framework = Helpers.MapFramework (type.Namespace);
+				Log.On (framework).Add ($"!unknown-type! {extra} bound");
 			}
 		}
 
@@ -114,7 +126,13 @@ namespace Extrospection {
 				return false;
 			if (td.HasInterfaces) {
 				foreach (var intf in td.Interfaces) {
-					if (protocol == GetProtocolName (intf?.InterfaceType.Resolve ()))
+					TypeReference ifaceType;
+#if CECIL_0_10
+					ifaceType = intf?.InterfaceType;
+#else
+					ifaceType = intf;
+#endif
+					if (protocol == GetProtocolName (ifaceType?.Resolve ()))
 						return true;
 				}
 			}

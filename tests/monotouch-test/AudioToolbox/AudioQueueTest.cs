@@ -85,6 +85,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void InvalidAudioBasicDescription ()
 		{
+			TestRuntime.RequestMicrophonePermission ();
 			Assert.Throws<AudioQueueException> (() => new InputAudioQueue (new AudioStreamBasicDescription ()), "A");
 		}
 	}

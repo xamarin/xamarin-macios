@@ -1,0 +1,4 @@
+# Only iOS and watchOS supports CoreMotion
+
+## no generator support for FastEnumeration - https://bugzilla.xamarin.com/show_bug.cgi?id=4391
+!missing-protocol-conformance! CMSensorDataList should conform to NSFastEnumeration

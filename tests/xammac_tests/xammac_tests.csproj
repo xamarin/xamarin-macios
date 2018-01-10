@@ -71,6 +71,9 @@
     <Compile Include="..\api-shared\ObjCRuntime\Registrar.cs">
       <Link>Registrar.cs</Link>
     </Compile>
+    <Compile Include="..\monotouch-test\ObjCRuntime\RegistrarTest.cs">
+      <Link>ObjCRuntime\RegistrarTest.cs</Link>
+    </Compile>
     <Compile Include="..\api-shared\ObjCRuntime\RegistrarTest.cs">
       <Link>api-shared\ObjCRuntime\RegistrarTest.cs</Link>
     </Compile>
@@ -87,6 +90,18 @@
     </Compile>
     <Compile Include="..\monotouch-test\**\*.cs" Exclude="..\monotouch-test\obj\**;..\monotouch-test\ObjCRuntime\TrampolineTest.generated.cs;..\monotouch-test\ObjCRuntime\RegistrarTest.generated.cs">
       <Link>%(RecursiveDir)%(Filename).cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\MetalPerformanceShaders\KernelTest.cs">
+      <Link>MetalPerformanceShaders\KernelTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\MetalPerformanceShaders\MPSImageHistogramEqualizationTest.cs">
+      <Link>MetalPerformanceShaders\MPSImageHistogramEqualizationTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\MetalPerformanceShaders\MPSImageHistogramSpecificationTest.cs">
+      <Link>MetalPerformanceShaders\MPSImageHistogramSpecificationTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\MetalPerformanceShaders\MPSImageHistogramTest.cs">
+      <Link>MetalPerformanceShaders\MPSImageHistogramTest.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

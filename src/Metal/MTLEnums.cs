@@ -663,17 +663,20 @@ namespace XamCore.Metal {
 		[Mac (10,11), NoiOS, NoTV, NoWatch]
 		macOS_GPUFamily1_v1 = 10000,
 		
-		[Availability (Introduced = Platform.Mac_10_11, Deprecated = Platform.Mac_10_13, Message="Use 'macOS_GPUFamily1_v1' instead.")]
+		[Mac (10, 11)]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message :"Use 'macOS, GPUFamily1, v1' instead.")]
 		OSX_GPUFamily1_v1 = macOS_GPUFamily1_v1,
 		
 		[Mac (10,13), NoiOS, NoTV, NoWatch]
 		macOS_GPUFamily1_v2 = 10001,
-		[Availability (Introduced = Platform.Mac_10_12, Deprecated = Platform.Mac_10_13, Message="Use 'macOS_GPUFamily1_v2' instead.")]
+		[Mac (10, 12)]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message :"Use 'macOS, GPUFamily1, v2' instead.")]
 		OSX_GPUFamily1_v2 = macOS_GPUFamily1_v2,
 		
 		[Mac (10,13), NoiOS, NoTV, NoWatch]
 		macOS_ReadWriteTextureTier2 = 10002,
-		[Availability (Introduced = Platform.Mac_10_12, Deprecated = Platform.Mac_10_13, Message="Use 'macOS_ReadWriteTextureTier2' instead.")]
+		[Mac (10, 12)]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message :"Use 'macOS, ReadWriteTextureTier2' instead.")]
 		OSX_ReadWriteTextureTier2 = macOS_ReadWriteTextureTier2,
 		
 		[Mac (10,13), NoiOS, NoTV, NoWatch]

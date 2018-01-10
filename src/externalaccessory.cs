@@ -72,7 +72,7 @@ namespace XamCore.ExternalAccessory {
 		[Export ("EAAccessoryKey")]
 		EAAccessory Accessory { get; }
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("EAAccessorySelectedKey")]
 		EAAccessory Selected { get; }
 	}
@@ -104,13 +104,13 @@ namespace XamCore.ExternalAccessory {
 
 #if !XAMCORE_3_0 && !MONOMAC
 		// now exposed with the corresponding EABluetoothAccessoryPickerError enum
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Field ("EABluetoothAccessoryPickerErrorDomain")]
 		NSString BluetoothAccessoryPickerErrorDomain { get; }
 #endif
 
 		[NoMac]
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("showBluetoothAccessoryPickerWithNameFilter:completion:")]
 		[Async]
 		void ShowBluetoothAccessoryPicker ([NullAllowed] NSPredicate predicate, [NullAllowed] Action<NSError> completion);

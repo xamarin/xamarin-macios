@@ -2,7 +2,8 @@ using System;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.PhotosUI {
-#if !MONOMAC
+
+	[Mac (10,12, onlyOn64: true)]
 	[TV (10,0)]
 	[iOS (9,1)]
 	[Native]
@@ -13,6 +14,14 @@ namespace XamCore.PhotosUI {
 		Hint
 	}
 
+#if MONOMAC
+	[Mac (10,12, onlyOn64: true)]
+	[Native]
+	public enum PHLivePhotoViewContentMode : nint {
+		AspectFit,
+		AspectFill,
+	}
+#else
 	[TV (10,0)]
 	[iOS (9,1)]
 	[Native]

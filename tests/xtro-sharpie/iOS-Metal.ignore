@@ -1,0 +1,30 @@
+## only on macOS (but removing would be a breaking change)
+!unknown-native-enum! MTLSamplerBorderColor bound
+
+
+## unsorted
+
+!incorrect-protocol-member! MTLComputeCommandEncoder::setImageblockWidth:height: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputePipelineState::imageblockMemoryLengthForDimensions: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newRenderPipelineStateWithTileDescriptor:options:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newRenderPipelineStateWithTileDescriptor:options:reflection:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::dispatchThreadsPerTile: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setThreadgroupMemoryLength:offset:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBuffer:offset:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBufferOffset:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBuffers:offsets:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBytes:length:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerState:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerState:lodMinClamp:lodMaxClamp:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerStates:lodMinClamps:lodMaxClamps:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerStates:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileTexture:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileTextures:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::tileHeight is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::tileWidth is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::imageblockMemoryLengthForDimensions: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::imageblockSampleLength is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::maxTotalThreadsPerThreadgroup is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::threadgroupSizeMatchesTileSize is REQUIRED and should be abstract
+!missing-selector! MTLRenderPassDescriptor::defaultSampleCount not bound
+!missing-selector! MTLRenderPassDescriptor::setDefaultSampleCount: not bound

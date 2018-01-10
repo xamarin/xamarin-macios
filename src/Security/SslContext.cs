@@ -504,10 +504,12 @@ namespace XamCore.Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		[Availability (Deprecated = Platform.iOS_9_0 | Platform.Mac_10_11)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		extern unsafe static /* OSStatus */ SslStatus SSLSetEncryptionCertificate (/* SSLContextRef */ IntPtr context, /* CFArrayRef */ IntPtr certRefs);
 
-		[Availability (Deprecated = Platform.iOS_9_0 | Platform.Mac_10_11, Message = "Export ciphers are not available anymore.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Export ciphers are not available anymore.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Export ciphers are not available anymore.")]
 		public SslStatus SetEncryptionCertificate (SecIdentity identify, IEnumerable<SecCertificate> certificates)
 		{
 			using (var array = Bundle (identify, certificates)) {
@@ -542,7 +544,10 @@ namespace XamCore.Security {
 		// TODO: Headers say /* Deprecated, does nothing */ but we are not completly sure about it since there is no deprecation macro
 		// Plus they added new members to SslSessionStrengthPolicy enum opened radar://23379052 https://trello.com/c/NbdTLVD3
 		// Xcode 8 beta 1: the P/Invoke was removed completely.
-		[Availability (Deprecated = Platform.iOS_9_2 | Platform.Mac_10_11, Unavailable = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "'SetSessionStrengthPolicy' is not available anymore.")]
+		[Deprecated (PlatformName.iOS, 9, 2)]
+		[Unavailable (PlatformName.iOS, message : "'SetSessionStrengthPolicy' is not available anymore.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
+		[Unavailable (PlatformName.MacOSX, message : "'SetSessionStrengthPolicy' is not available anymore.")]
 		[Obsolete ("'SetSessionStrengthPolicy' is not available anymore.")]
 		public SslStatus SetSessionStrengthPolicy (SslSessionStrengthPolicy policyStrength)
 		{
@@ -608,5 +613,73 @@ namespace XamCore.Security {
 			}
 			return result;
 		}
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* OSStatus */ int SSLSetSessionTicketsEnabled (IntPtr /* SSLContextRef */ context, [MarshalAs (UnmanagedType.I1)] bool /* Boolean */ enabled);
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		public int SetSessionTickets (bool enabled)
+		{
+			return SSLSetSessionTicketsEnabled (Handle, enabled);
+		}
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* OSStatus */ int SSLSetError (IntPtr /* SSLContextRef */ context, SecStatusCode /* OSStatus */ status);
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		public int SetError (SecStatusCode status)
+		{
+			return SSLSetError (Handle, status);
+		}
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* OSStatus */ int SSLSetOCSPResponse (IntPtr /* SSLContextRef */ context, IntPtr /* CFDataRef __nonnull */ response);
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		public int SetOcspResponse (NSData response)
+		{
+			if (response == null)
+				throw new ArgumentNullException (nameof (response));
+			return SSLSetOCSPResponse (Handle, response.Handle);
+		}
+
+#if !MONOMAC
+		[iOS (11,0)][TV (11,0)][Watch (4,0)] //[Mac (10,13)] Apple forgot to export SSLSetALPNProtocols. https://bugs.swift.org/browse/SR-6131
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* OSStatus */ int SSLSetALPNProtocols (IntPtr /* SSLContextRef */ context, IntPtr /* CFArrayRef */ protocols);
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)] //[Mac (10,13)]  Apple forgot to export SSLSetALPNProtocols. https://bugs.swift.org/browse/SR-6131
+		public int SetAlpnProtocols (string[] protocols)
+		{
+			using (var array = NSArray.FromStrings (protocols))
+				return SSLSetALPNProtocols (Handle, array.Handle);
+		}
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)] //[Mac (10,13)] Apple forgot to export SSLCopyALPNProtocols.
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* OSStatus */ int SSLCopyALPNProtocols (IntPtr /* SSLContextRef */ context, ref IntPtr /* CFArrayRef* */ protocols);
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)] //[Mac (10,13)] Apple forgot to export the SSLCopyALPNProtocols.
+		public string[] GetAlpnProtocols (out int error)
+		{
+			IntPtr protocols = IntPtr.Zero; // must be null, CFArray allocated by SSLCopyALPNProtocols
+			error = SSLCopyALPNProtocols (Handle, ref protocols);
+			if (protocols == IntPtr.Zero)
+				return Array.Empty<string> ();
+			var result = NSArray.StringArrayFromHandle (protocols);
+			CFObject.CFRelease (protocols);
+			return result;
+		}
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)] //[Mac (10,13)] Apple forgot to export the SSLCopyALPNProtocols.
+		public string[] GetAlpnProtocols ()
+		{
+			int error;
+			return GetAlpnProtocols (out error);
+		}
+#endif
 	}
 }

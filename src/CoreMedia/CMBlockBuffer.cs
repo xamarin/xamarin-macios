@@ -40,7 +40,7 @@ namespace XamCore.CoreMedia {
 		PermitEmptyReference	= (1<<3)
 	}
 
-	[iOS (4,0), Mac (10,7)]
+	[Mac (10,7)]
 	public class CMBlockBuffer : ICMAttachmentBearer, IDisposable {
 		internal IntPtr handle;
 		internal CMCustomBlockAllocator customAllocator;

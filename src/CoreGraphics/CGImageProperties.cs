@@ -545,7 +545,6 @@ namespace XamCore.CoreGraphics {
 		{
 		}
 
-		[iOS (5,0)]
 		public string Author {
 			get {
 				return GetStringValue (Keys.PNGAuthor);
@@ -555,7 +554,6 @@ namespace XamCore.CoreGraphics {
 			}
 		}
 
-		[iOS (5,0)]
 		public string Description {
 			get {
 				return GetStringValue (Keys.PNGDescription);
@@ -574,7 +572,6 @@ namespace XamCore.CoreGraphics {
 			}
 		}
 
-		[iOS (5,0)]
 		public string Software {
 			get {
 				return GetStringValue (Keys.PNGSoftware);
@@ -602,7 +599,6 @@ namespace XamCore.CoreGraphics {
 			}
 		}
 
-		[iOS (5,0)]
 		public string Title {
 			get {
 				return GetStringValue (Keys.PNGTitle);

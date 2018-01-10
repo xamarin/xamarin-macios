@@ -28,7 +28,7 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.QTKit {
 	
-	[Availability (Deprecated = Platform.Mac_10_9)]
+	[Deprecated (PlatformName.MacOSX, 10, 9)]
 	[StructLayout (LayoutKind.Sequential)]
 	public partial struct QTTime {
 		public static readonly QTTime Zero = new QTTime (0, 1, 0);
@@ -92,7 +92,7 @@ namespace XamCore.QTKit {
 		}
 	}
 
-	[Availability (Deprecated = Platform.Mac_10_9)]
+	[Deprecated (PlatformName.MacOSX, 10, 9)]
 	public struct QTTimeRange {
 #if XAMCORE_2_0
 		// QTKit/Headers/QTTime.h:

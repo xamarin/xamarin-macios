@@ -8,7 +8,7 @@ namespace XamCore.CloudKit
 	// NSInteger -> CKContainer.h
 	[Watch (3,0)]
 	[iOS (8,0)]
-	[Availability (Platform.Mac_10_10)]
+	[Mac (10, 10)]
 	[Native]
 	public enum CKAccountStatus : nint {
 		CouldNotDetermine = 0,
@@ -20,7 +20,7 @@ namespace XamCore.CloudKit
 	// NSUInteger -> CKContainer.h
 	[Watch (3,0)]
 	[iOS (8,0)]
-	[Availability (Platform.Mac_10_10)]
+	[Mac (10, 10)]
 	[Native]
 	[Flags]
 	public enum CKApplicationPermissions : nuint {
@@ -30,7 +30,7 @@ namespace XamCore.CloudKit
 	// NSInteger -> CKContainer.h
 	[Watch (3,0)]
 	[iOS (8,0)]
-	[Availability (Platform.Mac_10_10)]
+	[Mac (10, 10)]
 	[Native]
 	public enum CKApplicationPermissionStatus : nint {
 		InitialState = 0,
@@ -42,7 +42,7 @@ namespace XamCore.CloudKit
 	// NSInteger -> CKError.h
 	[Watch (3,0)]
 	[iOS (8,0)]
-	[Availability (Platform.Mac_10_10)]
+	[Mac (10, 10)]
 	[Native]
 	[ErrorDomain ("CKErrorDomain")]
 	public enum CKErrorCode : nint {
@@ -86,7 +86,7 @@ namespace XamCore.CloudKit
 	// NSInteger -> CKModifyRecordsOperation.h
 	[Watch (3,0)]
 	[iOS (8,0)]
-	[Availability (Platform.Mac_10_10)]
+	[Mac (10, 10)]
 	[Native]
 	public enum CKRecordSavePolicy : nint {
 		SaveIfServerRecordUnchanged = 0,
@@ -97,7 +97,7 @@ namespace XamCore.CloudKit
 	// NSInteger -> CKNotification.h
 	[Watch (3,0)]
 	[iOS (8,0)]
-	[Availability (Platform.Mac_10_10)]
+	[Mac (10, 10)]
 	[Native]
 	public enum CKNotificationType : nint {
 		Query = 1,
@@ -109,7 +109,7 @@ namespace XamCore.CloudKit
 	// NSInteger -> CKNotification.h
 	[Watch (3,0)]
 	[iOS (8,0)]
-	[Availability (Platform.Mac_10_10)]
+	[Mac (10, 10)]
 	[Native]
 	public enum CKQueryNotificationReason : nint {
 		RecordCreated = 1,
@@ -120,7 +120,7 @@ namespace XamCore.CloudKit
 	// NSUInteger -> CKRecordZone.h
 	[Watch (3,0)]
 	[iOS (8,0)]
-	[Availability (Platform.Mac_10_10)]
+	[Mac (10, 10)]
 	[Flags]
 	[Native]
 	public enum CKRecordZoneCapabilities : nuint {
@@ -132,7 +132,7 @@ namespace XamCore.CloudKit
 	// NSUInteger -> CKReference.h
 	[Watch (3,0)]
 	[iOS (8,0)]
-	[Availability (Platform.Mac_10_10)]
+	[Mac (10, 10)]
 	[Native]
 	public enum CKReferenceAction : nuint {
 		None = 0,
@@ -142,7 +142,7 @@ namespace XamCore.CloudKit
 	// NSInteger -> CKSubscription.h
 	[NoWatch]
 	[iOS (8,0)]
-	[Availability (Platform.Mac_10_10)]
+	[Mac (10, 10)]
 	[Native]
 	public enum CKSubscriptionType : nint {
 		Query = 1,
@@ -153,7 +153,10 @@ namespace XamCore.CloudKit
 	// NSInteger -> CKSubscription.h
 
 	[NoWatch]
-	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use 'CKQuerySubscriptionOptions' instead.")]
+	[iOS (8, 0)]
+	[Deprecated (PlatformName.iOS, 10, 0, message : "Use 'CKQuerySubscriptionOptions' instead.")]
+	[Mac (10, 10)]
+	[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'CKQuerySubscriptionOptions' instead.")]
 	[Flags]
 	[Native]
 	public enum CKSubscriptionOptions : nuint {

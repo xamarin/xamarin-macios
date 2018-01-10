@@ -114,24 +114,24 @@ namespace MonoTouchFixtures.Security {
 				byte [] cipher;
 				if (TestRuntime.CheckXcodeVersion (8,0)) {
 					Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Encrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "public/IsAlgorithmSupported/Encrypt");
-#if MONOMAC
-					if (TestRuntime.CheckXcodeVersion (9, 0))
-						Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "public/IsAlgorithmSupported/Decrypt");
-					else
-						Assert.False (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "public/IsAlgorithmSupported/Decrypt");
 
-					using (var pub = public_key.GetPublicKey ()) {
-						Assert.That (pub.Handle, Is.EqualTo (public_key.Handle), "public/GetPublicKey");
-					}
-#else
-					// I would have expect false
-					Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "public/IsAlgorithmSupported/Decrypt");
+#if MONOMAC
+					Assert.That (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), Is.EqualTo (TestRuntime.CheckMacSystemVersion (10, 13)), "public/IsAlgorithmSupported/Decrypt");
 
 					using (var pub = public_key.GetPublicKey ()) {
 						// a new native instance of the key is returned (so having a new managed SecKey is fine)
-						Assert.That (pub.Handle, Is.Not.EqualTo (public_key.Handle), "public/GetPublicKey");
+						Assert.True (pub.Handle == public_key.Handle, "public/GetPublicKey");
+					}
+#else
+					Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "public/IsAlgorithmSupported/Decrypt");
+
+					using (var pub = public_key.GetPublicKey ())
+					{
+						// a new native instance of the key is returned (so having a new managed SecKey is fine)
+						Assert.False (pub.Handle == public_key.Handle, "public/GetPublicKey");
 					}
 #endif
+
 					using (var attrs = public_key.GetAttributes ()) {
 						Assert.That (attrs.Count, Is.GreaterThan (0), "public/GetAttributes");
 					}
@@ -217,10 +217,7 @@ namespace MonoTouchFixtures.Security {
 					Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Encrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), "public/IsAlgorithmSupported/Encrypt");
 					// I would have expect false
 #if MONOMAC
-					if (TestRuntime.CheckXcodeVersion (9, 0))
-						Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), "public/IsAlgorithmSupported/Decrypt");
-					else
-						Assert.False (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), "public/IsAlgorithmSupported/Decrypt");
+					Assert.That (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), Is.EqualTo (TestRuntime.CheckMacSystemVersion (10, 13)), "public/IsAlgorithmSupported/Decrypt");
 #else
  					Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), "public/IsAlgorithmSupported/Decrypt");
 #endif

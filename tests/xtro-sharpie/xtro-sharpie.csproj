@@ -9,7 +9,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>xtrosharpie</RootNamespace>
     <AssemblyName>xtro-sharpie</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,17 +33,17 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'watchOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>watchos4.0-armv7.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/32bits/Xamarin.WatchOS.dll</StartArguments>
+    <StartArguments>watchos4.2-armv7.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/32bits/Xamarin.WatchOS.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'iOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>iphoneos11.0-arm64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/Xamarin.iOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll</StartArguments>
+    <StartArguments>iphoneos11.2-arm64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/Xamarin.iOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'tvOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>appletvos11.0-arm64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll</StartArguments>
+    <StartArguments>appletvos11.2-arm64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'macOS' ">
@@ -57,8 +57,21 @@
       <HintPath>\Library\Frameworks\ObjectiveSharpie.framework\Versions\Current\Clang.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil">
-      <HintPath>..\..\packages\Mono.Cecil.0.9.6.1\lib\net45\Mono.Cecil.dll</HintPath>
+      <HintPath>..\..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple">
+      <HintPath>..\..\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -72,6 +85,11 @@
     <Compile Include="SelectorCheck.cs" />
     <Compile Include="DesignatedInitializerCheck.cs" />
     <Compile Include="SimdCheck.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="RequiresSuperCheck.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
