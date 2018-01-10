@@ -1598,11 +1598,14 @@ namespace Intents {
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (INIntent))]
 	interface INBookRestaurantReservationIntent : NSCopying {
-
 		[iOS (11,0)]
 		[Export ("initWithRestaurant:bookingDateComponents:partySize:bookingIdentifier:guest:selectedOffer:guestProvidedSpecialRequestText:")]
+#if XAMCORE_4_0
 		IntPtr Constructor (INRestaurant restaurant, NSDateComponents bookingDateComponents, nuint partySize, [NullAllowed] string bookingIdentifier, [NullAllowed] INRestaurantGuest guest, [NullAllowed] INRestaurantOffer selectedOffer, [NullAllowed] string guestProvidedSpecialRequestText);
-
+#else
+		// This is correctly nuint but a bug in PMCS generated incorrect code which has shipped.
+		IntPtr Constructor (INRestaurant restaurant, NSDateComponents bookingDateComponents, ulong partySize, [NullAllowed] string bookingIdentifier, [NullAllowed] INRestaurantGuest guest, [NullAllowed] INRestaurantOffer selectedOffer, [NullAllowed] string guestProvidedSpecialRequestText);
+#endif
 		[Export ("restaurant", ArgumentSemantic.Copy)]
 		INRestaurant Restaurant { get; set; }
 
