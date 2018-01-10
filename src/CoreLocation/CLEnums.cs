@@ -71,7 +71,7 @@ namespace CoreLocation {
 	}
 
 	// untyped enum -> CLLocationManager.h
-	public enum CLDeviceOrientation : uint_compat_int {
+	public enum CLDeviceOrientation : uint {
 		Unknown,
 		Portrait,
 		PortraitUpsideDown,
@@ -82,7 +82,7 @@ namespace CoreLocation {
 	} 
 
 	// untyped enum -> CLLocationManager.h
-	public enum CLAuthorizationStatus : uint_compat_int {
+	public enum CLAuthorizationStatus : uint {
 		NotDetermined = 0,
 		Restricted,
 		Denied,

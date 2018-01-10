@@ -35,7 +35,7 @@ namespace QTKit {
 
 	// Untyped anonymous enum in ObjC
 	[Flags]
-	public enum  QTMovieFileTypeOptions : uint_compat_int {
+	public enum  QTMovieFileTypeOptions : uint {
 		StillImageTypes = 1 << 0,
 		TranslatableTypes = 1 << 1,
 		AggressiveTypes = 1 << 2,

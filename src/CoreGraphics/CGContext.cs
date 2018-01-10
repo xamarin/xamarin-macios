@@ -58,7 +58,7 @@ namespace CoreGraphics {
 	}
 	
 	// untyped enum -> CGContext.h
-	public enum CGTextDrawingMode : uint_compat_int {
+	public enum CGTextDrawingMode : uint {
 		Fill,
 		Stroke,
 		FillStroke,

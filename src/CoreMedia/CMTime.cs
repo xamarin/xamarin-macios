@@ -17,7 +17,7 @@ namespace CoreMedia {
 	public partial struct CMTime {
 		// CMTimeFlags -> uint32_t -> CMTime.h
 		[Flags]
-		public enum Flags : uint_compat_int {
+		public enum Flags : uint {
 			Valid = 1,
 			HasBeenRounded = 2,
 			PositiveInfinity = 4,

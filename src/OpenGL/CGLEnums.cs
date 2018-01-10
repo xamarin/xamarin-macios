@@ -48,7 +48,7 @@ namespace OpenGL {
 
 	}
 
-	public enum CGLPixelFormatAttribute : uint_compat_int
+	public enum CGLPixelFormatAttribute : uint
 	{
 		AllRenderers = 1,
 		DoubleBuffer = 5,

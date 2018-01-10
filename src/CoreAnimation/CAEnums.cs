@@ -38,7 +38,7 @@ namespace CoreAnimation {
 	// untyped enum -> CALayer.h
 	// note: edgeAntialiasingMask is an `unsigned int` @property
 	[Flags]
-	public enum CAEdgeAntialiasingMask : uint_compat_int {
+	public enum CAEdgeAntialiasingMask : uint {
 		LeftEdge      = 1 << 0,
 		RightEdge     = 1 << 1,
 		BottomEdge    = 1 << 2,
@@ -62,7 +62,7 @@ namespace CoreAnimation {
 	// untyped enum -> CALayer.h (only on OSX headers)
 	// note: autoresizingMask is an `unsigned int` @property
 	[Flags]
-	public enum CAAutoresizingMask : uint_compat_int {
+	public enum CAAutoresizingMask : uint {
 		NotSizable   = 0,
 		MinXMargin   = 1 << 0,
 		WidthSizable = 1 << 1,

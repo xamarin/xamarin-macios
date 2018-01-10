@@ -343,7 +343,7 @@ namespace AudioToolbox {
 
 	[Watch (3,0)]
 	[Flags]
-	public enum AudioChannelFlags : uint_compat_int { // UInt32 in AudioPanningInfo -- AudioFormat.h
+	public enum AudioChannelFlags : uint { // UInt32 in AudioPanningInfo -- AudioFormat.h
 		AllOff = 0,
 		RectangularCoordinates = 1 << 0,
 		SphericalCoordinates = 1 << 1,
@@ -455,7 +455,7 @@ namespace AudioToolbox {
 	}
 
 	[Flags]
-	public enum AudioChannelBit : uint_compat_int // UInt32 mChannelBitmap in AudioChannelLayout
+	public enum AudioChannelBit : uint // UInt32 mChannelBitmap in AudioChannelLayout
 	{
 		Left                       = 1<<0,
 		Right                      = 1<<1,
@@ -1066,7 +1066,7 @@ namespace AudioToolbox {
 		}
 	}
 
-	public enum SmpteTimeType : uint_compat_int // UInt32 in AudioFileRegionList
+	public enum SmpteTimeType : uint // UInt32 in AudioFileRegionList
 	{
 		None		= 0,
 		Type24		= 1,
@@ -1087,7 +1087,7 @@ namespace AudioToolbox {
 	public struct AudioTimeStamp {
 
 		[Flags]
-		public enum AtsFlags : uint_compat_int { // UInt32 in AudioTimeStamp
+		public enum AtsFlags : uint { // UInt32 in AudioTimeStamp
 			NothingValid         = 0,
 			SampleTimeValid      = (1 << 0),
 			HostTimeValid        = (1 << 1),

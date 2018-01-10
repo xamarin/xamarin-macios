@@ -36,7 +36,7 @@ namespace CoreGraphics {
 
 	// uint32_t -> CGGradient.h
 	[Flags]
-	public enum CGGradientDrawingOptions : uint_compat_int {
+	public enum CGGradientDrawingOptions : uint {
 		None = 0,
 		DrawsBeforeStartLocation = (1 << 0),
 		DrawsAfterEndLocation = (1 << 1)

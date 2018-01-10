@@ -94,7 +94,7 @@ namespace ImageKit {
 	};
 
 	[Flags]
-	public enum IKFilterBrowserPanelStyleMask : uint_compat_int {
+	public enum IKFilterBrowserPanelStyleMask : uint {
 		Normal   = 0,
 		Textured = 1 << 8
 		// Other NSWindow Style Mask bit settings do not apply to this panel

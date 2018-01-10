@@ -36,7 +36,7 @@ namespace CoreGraphics {
 #if MONOMAC
 	// uint32_t -> CGWindow.h (OSX SDK only)
 	[Flags]	
-	public enum CGWindowImageOption : uint_compat_int {
+	public enum CGWindowImageOption : uint {
 		Default             = 0,
 		BoundsIgnoreFraming = (1 << 0),
 		ShouldBeOpaque      = (1 << 1),
@@ -45,7 +45,7 @@ namespace CoreGraphics {
 
 	// uint32_t -> CGWindow.h (OSX SDK only)
 	[Flags]
-	public enum CGWindowListOption : uint_compat_int {
+	public enum CGWindowListOption : uint {
 		All                 = 0,
 		OnScreenOnly        = (1 << 0),
 		OnScreenAboveWindow = (1 << 1),
@@ -56,7 +56,7 @@ namespace CoreGraphics {
 #endif
 
 	// uint32_t -> CGImage.h
-	public enum CGImageAlphaInfo : uint_compat_int {
+	public enum CGImageAlphaInfo : uint {
 		None,               
 		PremultipliedLast,  
 		PremultipliedFirst, 
@@ -69,7 +69,7 @@ namespace CoreGraphics {
 
 	// uint32_t -> CGImage.h
 	[Flags]
-	public enum CGBitmapFlags : uint_compat_int {
+	public enum CGBitmapFlags : uint {
 		None,               
 		PremultipliedLast,  
 		PremultipliedFirst, 

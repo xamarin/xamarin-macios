@@ -1990,7 +1990,7 @@ namespace AppKit {
 		BelowWindow = -1
 	}
 
-	public enum NSOpenGLPixelFormatAttribute : uint_compat_int { // uint32_t NSOpenGLPixelFormatAttribute
+	public enum NSOpenGLPixelFormatAttribute : uint { // uint32_t NSOpenGLPixelFormatAttribute
 		AllRenderers       =   1,
 		DoubleBuffer       =   5,
 		[Mac (10, 7)] TripleBuffer = 3,
@@ -2078,7 +2078,7 @@ namespace AppKit {
 		Third = 1002,
 	}
 
-	public enum NSOpenGLGlobalOption : uint_compat_int {
+	public enum NSOpenGLGlobalOption : uint {
 		FormatCacheSize = 501,
 		ClearFormatCache = 502,
 		RetainRenderers = 503,
@@ -2087,19 +2087,19 @@ namespace AppKit {
 		ResetLibrary = 504
 	}
 
-	public enum NSGLTextureTarget : uint_compat_int {
+	public enum NSGLTextureTarget : uint {
 		T2D = 0x0de1,
 		CubeMap = 0x8513,
 		RectangleExt = 0x84F5,
 	}
 
-	public enum NSGLFormat : uint_compat_int {
+	public enum NSGLFormat : uint {
 		RGB = 0x1907,
 		RGBA = 0x1908,
 		DepthComponent = 0x1902,
 	}
 	
-	public enum NSGLTextureCubeMap : uint_compat_int {
+	public enum NSGLTextureCubeMap : uint {
 		None = 0,
 		PositiveX = 0x8515,
 		PositiveY = 0x8517,
@@ -2109,7 +2109,7 @@ namespace AppKit {
 		NegativeZ = 0x851A
 	}
 
-	public enum NSGLColorBuffer : uint_compat_int {
+	public enum NSGLColorBuffer : uint {
 		Front = 0x0404,
 		Back = 0x0405,
 		Aux0 = 0x0409

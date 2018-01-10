@@ -91,7 +91,7 @@ namespace AudioToolbox {
     	public double Maximum;
 	}
 
-	public enum AudioBalanceFadeType : uint_compat_int // UInt32 in AudioBalanceFades
+	public enum AudioBalanceFadeType : uint // UInt32 in AudioBalanceFades
 	{
 		MaxUnityGain = 0,
 		EqualPower = 1
@@ -165,7 +165,7 @@ namespace AudioToolbox {
 #endif // !COREBUILD
 	}
 
-	public enum PanningMode : uint_compat_int // UInt32 in AudioPanningInfo
+	public enum PanningMode : uint // UInt32 in AudioPanningInfo
 	{
 		SoundField					= 3,
 		VectorBasedPanning			= 4
@@ -336,7 +336,7 @@ namespace AudioToolbox {
 	}
 
 	// Properties are used from various types (most suitable should be used)
-	enum AudioFormatProperty : uint_compat_int // UInt32 AudioFormatPropertyID
+	enum AudioFormatProperty : uint // UInt32 AudioFormatPropertyID
 	{
 		FormatInfo					= 0x666d7469,	// 'fmti'
 		FormatName					= 0x666e616d,	// 'fnam'
