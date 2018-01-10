@@ -2428,7 +2428,7 @@ namespace XamCore.WebKit {
 		   )]
 	partial interface WebView
 #if MONOMAC
-: NSUserInterfaceValidations
+		: NSUserInterfaceValidations
 #endif
 {
 		[Static]
