@@ -477,7 +477,7 @@ namespace XamCore.GameplayKit {
 		[Export ("isLossForPlayer:")]
 		bool IsLoss (IGKGameModelPlayer player);
 
-		[NoMac] // not yet
+		[Mac (10,11,2, onlyOn64 : true)]
 		[iOS (9,1)][TV (9,0)]
 		[Export ("unapplyGameModelUpdate:")]
 		void UnapplyGameModelUpdate (IGKGameModelUpdate gameModelUpdate);
