@@ -7,7 +7,7 @@
 // Copyright 2013 Xamarin Inc.
 //
 
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if !__TVOS__ && !__WATCHOS__
 
 using System;
 #if XAMCORE_2_0
@@ -36,6 +36,7 @@ namespace MonoTouchFixtures.ExternalAccessory {
 			Assert.IsNotNull (am.ConnectedAccessories, "ConnectedAccessories");
 		}
 
+#if !MONOMAC
 		[Test]
 		public void ShowBluetoothAccessoryPicker ()
 		{
@@ -44,6 +45,7 @@ namespace MonoTouchFixtures.ExternalAccessory {
 
 			EAAccessoryManager.SharedAccessoryManager.ShowBluetoothAccessoryPicker (null, null);
 		}
+#endif
 	}
 }
 
