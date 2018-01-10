@@ -9,3 +9,6 @@
 !missing-field! MKAnnotationCalloutInfoDidChangeNotification not bound
 !missing-protocol-conformance! MKUserLocation should conform to MKAnnotation
 !missing-protocol-member! MKOverlay::coordinate not found
+
+## Getting "[FAIL] Selector not found for MapKit.MKMapItem : encodeWithCoder:" when 'MKMapItem' implements 'NSSecureCoding' on 32-bit iOS
+!missing-protocol-conformance! MKMapItem should conform to NSSecureCoding (defined in 'MKMapItemSerialization' category)

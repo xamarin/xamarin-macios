@@ -6,5 +6,5 @@
 !unknown-native-enum! MKFeatureVisibility bound
 !unknown-native-enum! MKUserTrackingMode bound
 
-## Getting "[FAIL] Selector not found for MapKit.MKMapItem : encodeWithCoder:" when 'MKMapItem' implements 'NSSecureCoding' on macOS
+## Getting "[FAIL] Selector not found for MapKit.MKMapItem : encodeWithCoder:" when 'MKMapItem' implements 'NSSecureCoding' on 32-bit macOS
 !missing-protocol-conformance! MKMapItem should conform to NSSecureCoding (defined in 'MKMapItemSerialization' category)
