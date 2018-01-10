@@ -24,25 +24,25 @@ $(addprefix $(MAC_BUILD_DIR)/full-%/,OpenTK.dll): XAMMAC = -r:$(MAC_BUILD_DIR)/$
 $(addprefix $(MAC_BUILD_DIR)/mobile-%/,OpenTK.dll): XAMMAC = -r:$(MAC_BUILD_DIR)/$(VARIANT)/Xamarin.Mac.dll
 $(addprefix $(MAC_BUILD_DIR)/net_4_5/,OpenTK.dll): XAMMAC = -r:$(MAC_BUILD_DIR)/full-32/Xamarin.Mac.dll
 
-$(MAC_BUILD_DIR)/mobile-32/OpenTK.dll: $(MAC_BUILD_DIR)/mobile/pmcs $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/mobile-32/Xamarin.Mac.dll
-	$(call Q_PROF_PMCS,mac/$(VARIANT)) PMCS_PROFILE=$(VARIANT) $(MAC_BUILD_DIR)/mobile/pmcs \
+$(MAC_BUILD_DIR)/mobile-32/OpenTK.dll: $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/mobile-32/Xamarin.Mac.dll
+	$(call Q_PROF_CSC,mac/$(VARIANT)) $(SYSTEM_MCS) \
 		-out:$@ -target:library -debug:full -define:OPENTK_DLL -unsafe -nowarn:3021,612,618,1635 \
 		$(MAC_BOOTSTRAP_DEFINES),COREBUILD \
 		$(XAMMAC) \
 		 -keyfile:$(PRODUCT_KEY_PATH) \
 		$(MAC_OPENTK_SOURCES)
 
-$(MAC_BUILD_DIR)/full-32/OpenTK.dll: $(MAC_BUILD_DIR)/full/pmcs $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/full-32/Xamarin.Mac.dll
-	$(call Q_PROF_PMCS,mac/$(VARIANT)) PMCS_PROFILE=$(VARIANT) $(MAC_BUILD_DIR)/full/pmcs \
+$(MAC_BUILD_DIR)/full-32/OpenTK.dll: $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/full-32/Xamarin.Mac.dll
+	$(call Q_PROF_CSC,mac/$(VARIANT)) $(SYSTEM_MCS) \
 		-out:$@ -target:library -debug:full -define:OPENTK_DLL -unsafe -nowarn:3021,612,618,1635 \
 		$(MAC_BOOTSTRAP_DEFINES),COREBUILD \
 		-r:System.Drawing $(XAMMAC) \
 		 -keyfile:$(PRODUCT_KEY_PATH) \
 		$(MAC_OPENTK_FULL_SOURCES)
 
-$(MAC_BUILD_DIR)/net_4_5/OpenTK.dll: $(MAC_BUILD_DIR)/full/pmcs $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/full-32/Xamarin.Mac.dll
+$(MAC_BUILD_DIR)/net_4_5/OpenTK.dll: $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/full-32/Xamarin.Mac.dll
 	@mkdir -p $(MAC_BUILD_DIR)/net_4_5
-	$(call Q_PROF_PMCS,mac/$(VARIANT)) PMCS_PROFILE=full-64 $(MAC_BUILD_DIR)/full/pmcs \
+	$(call Q_PROF_CSC,mac/$(VARIANT)) $(SYSTEM_MCS) \
 		-out:$@ -target:library -debug:full -define:OPENTK_DLL -unsafe -nowarn:3021,612,618,1635 \
 		$(MAC_BOOTSTRAP_DEFINES),COREBUILD \
 		 $(XAMMAC) \

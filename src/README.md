@@ -98,9 +98,6 @@ are backed by 32/64-bit `System.nfloat` type.
 When binding APIs, it is important to use the *new* types (`nint`, `CGRect`,
 etc), *even though they do not exist in the Classic assembly*.
 
-Before compilation, all source code is preprocessed by `pmcs`, an internal
-tool for performing C#-aware preprocessing.
-
 For the Classic assembly, instances of the new types are translated to the
 legacy types. For the Unified assemblies, these types are not translated,
 and the native types are included in the build.
@@ -169,17 +166,6 @@ public partial class Fooable {
 	}
 }
 ```
-
-### pmcs ###
-
-`pmcs` is a wrapper around a regular `mcs` invocation. In addition to any
-regular arguments passed to `mcs`, `pmcs` accepts instructions on how to
-translate some tokens from one value to another. This is used to translate
-instances of native types in source code to legacy types for the 32-bit
-Classic assembly.
-
-`pmcs` lives in the `xamarin-macios` repository and is used for both Xamarin.Mac
-and Xamarin.iOS. [Explore pmcs documentation](https://github.com/xamarin/xamarin-macios/blob/master/tools/pmcs/README.md).
 
 ### `#define` ###
 

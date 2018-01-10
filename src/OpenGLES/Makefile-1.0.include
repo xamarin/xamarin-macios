@@ -33,9 +33,6 @@ OPENTK_1_0_MCS_FLAGS = -warn:0 -unsafe -target:library -noconfig -publicsign -de
 
 # Xamarin.iOS
 
-$(IOS_BUILD_DIR)/compat/OpenTK-1.0%dll $(IOS_BUILD_DIR)/compat/OpenTK-1.0%pdb:    $(IOS_BUILD_DIR)/compat/monotouch.dll $(OPENTK_1_0_DEPENDENCIES) $(IOS_BUILD_DIR)/compat/OpenTK-1.0.dll.config
-	$(call Q_PROF_CSC,ios/compat) $(IOS_CSC) -r:$(MONOTOUCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_MONO_PATH)/System.Xml.dll $(OPENTK_1_0_MCS_FLAGS) -out:$(basename $@).dll -r:$<
-
 $(IOS_BUILD_DIR)/reference/OpenTK-1.0%dll $(IOS_BUILD_DIR)/reference/OpenTK-1.0%pdb: $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll $(OPENTK_1_0_DEPENDENCIES) $(IOS_BUILD_DIR)/reference/OpenTK-1.0.dll.config
 	$(call Q_PROF_CSC,ios/unified) $(IOS_CSC) -r:$(MONOTOUCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_MONO_PATH)/System.Xml.dll $(OPENTK_1_0_MCS_FLAGS) -out:$(basename $@).dll -r:$< -D:XAMCORE_2_0
 
@@ -46,7 +43,7 @@ $(TVOS_BUILD_DIR)/reference/OpenTK-1.0%dll $(TVOS_BUILD_DIR)/reference/OpenTK-1.
 
 # common targets
 
-%/OpenTK-1.0.dll.config: $(OPENTK_PATH)/Source/OpenTK/OpenTK.dll.config | $(IOS_BUILD_DIR)/reference $(IOS_BUILD_DIR)/compat $(TVOS_BUILD_DIR)/reference
+%/OpenTK-1.0.dll.config: $(OPENTK_PATH)/Source/OpenTK/OpenTK.dll.config | $(IOS_BUILD_DIR)/reference $(TVOS_BUILD_DIR)/reference
 	$(Q) cp $< $@
 
 # other stuff
