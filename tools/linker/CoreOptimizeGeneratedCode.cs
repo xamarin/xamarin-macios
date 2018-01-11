@@ -421,6 +421,30 @@ namespace Xamarin.Linker {
 				reachable [i] = false;
 			}
 
+			// Check if there are unreachable instructions at the end.
+			var last_reachable = Array.LastIndexOf (reachable, true);
+			if (last_reachable < reachable.Length - 1) {
+				// There are unreachable instructions at the end.
+				// We must verify that there are no branches into these instructions.
+				// In theory there shouldn't be any (if there are branches into these instructions,
+				// they're reachable), but let's still verify just in case.
+				var last_reachable_offset = instructions [last_reachable].Offset;
+				for (int i = 0; i < last_reachable; i++) {
+					if (!reachable [i])
+						continue; // Unreachable instructions don't branch anywhere, because they'll be removed.
+					var ins = instructions [i];
+					switch (ins.OpCode.FlowControl) {
+					case FlowControl.Break:
+					case FlowControl.Cond_Branch:
+						var target = (Instruction) ins.Operand;
+						if (target.Offset > last_reachable_offset) {
+							Driver.Log (4, "Can't optimize {0} because of branching beyond last instruction alive: {1}", caller, ins);
+							return;
+						}
+						break;
+					}
+				}
+			}
 #if TRACE
 			Console.WriteLine ($"{caller.FullName}:");
 			for (int i = 0; i < reachable.Length; i++) {
@@ -436,6 +460,10 @@ namespace Xamarin.Linker {
 				if (!reachable [i])
 					Nop (instructions [i]);
 			}
+
+			// Remove unreachable instructions (nops) at the end, because the last instruction can only be ret/throw/backwards branch.
+			for (int i = last_reachable + 1; i < reachable.Length; i++)
+				instructions.RemoveAt (last_reachable + 1);
 		}
 
 	}
