@@ -109,8 +109,6 @@ namespace MonoTouch.Tuner {
 				ProcessIsDirectBinding (caller, ins);
 				break;
 			}
-
-			return;
 		}
 				
 		// https://app.asana.com/0/77259014252/77812690163
