@@ -8,6 +8,7 @@ using XamCore.ObjCRuntime;
 #if WATCH
 using AnimationType = global::XamCore.SceneKit.ISCNAnimationProtocol;
 #else
+using XamCore.CoreAnimation;
 using AnimationType = global::XamCore.CoreAnimation.CAAnimation;
 #endif
 
@@ -93,6 +94,20 @@ namespace XamCore.SceneKit {
 				eventHandler (animation, animatedObject, playingBackward);
 			});
 			return Create (keyTime, handler);
+		}
+	}
+#endif
+
+#if !WATCH && !XAMCORE_4_0
+	[iOS (11,0)]
+	[TV (11,0)]
+	[Mac (10,13,0, PlatformArchitecture.Arch64)]
+	static public partial class SCNAnimatableExtensions {
+		static public void AddAnimation (this ISCNAnimatable self, SCNAnimation animation, string key)
+		{
+			using (var ca = CAAnimation.FromSCNAnimation (animation))
+			using (var st = new NSString (key))
+				self.AddAnimation (ca, st);
 		}
 	}
 #endif
