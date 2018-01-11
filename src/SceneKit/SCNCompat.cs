@@ -106,7 +106,7 @@ namespace XamCore.SceneKit {
 		static public void AddAnimation (this ISCNAnimatable self, SCNAnimation animation, string key)
 		{
 			using (var ca = CAAnimation.FromSCNAnimation (animation))
-			using (var st = new NSString (key))
+			using (var st = key != null ? new NSString (key) : null)
 				self.AddAnimation (ca, st);
 		}
 	}

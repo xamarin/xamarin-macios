@@ -70,6 +70,9 @@ namespace MonoTouchFixtures.SceneKit {
 			using (var n = SCNNode.Create ()) {
 				n.AddAnimation (a, "key");
 				n.RemoveAllAnimations ();
+
+				n.AddAnimation (a, null);
+				n.RemoveAllAnimations ();
 			}
 		}
 	}
