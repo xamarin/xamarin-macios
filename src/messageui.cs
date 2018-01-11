@@ -69,7 +69,6 @@ namespace MessageUI {
 		bool TextMessageAvailability { get; }
 	}
 	
-	[iOS (4,0)]
 	[BaseType (typeof (UINavigationController))]
 	interface MFMessageComposeViewController : UIAppearance {
 		[Export ("messageComposeDelegate", ArgumentSemantic.Assign), NullAllowed]
@@ -125,12 +124,10 @@ namespace MessageUI {
 		[Export ("disableUserAttachments")]
 		void DisableUserAttachments ();
 
-		[iOS (5,0)]
 		[Field ("MFMessageComposeViewControllerTextMessageAvailabilityDidChangeNotification")]
 		[Notification (typeof (MFMessageAvailabilityChangedEventArgs))]
 		NSString TextMessageAvailabilityDidChangeNotification { get; }
 
-		[iOS (5,0)]
 		[Field ("MFMessageComposeViewControllerTextMessageAvailabilityKey")]
 		NSString TextMessageAvailabilityKey { get; }
 

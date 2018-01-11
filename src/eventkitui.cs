@@ -32,17 +32,14 @@ namespace EventKitUI {
 		[Export ("allowsCalendarPreview")]
 		bool AllowsCalendarPreview { get; set;  }
 
-		[iOS (4,2)]
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 		
-		[iOS (4,2)]
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
 		EKEventViewDelegate Delegate { get; set;  }
 	}
 
-	[iOS (4,2)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -92,7 +89,6 @@ namespace EventKitUI {
 		EKCalendar GetDefaultCalendarForNewEvents (EKEventEditViewController controller);
 	}
 
-	[iOS (5,0)]
 	[BaseType (typeof (UIViewController),
 		   Delegates = new string [] { "WeakDelegate" },
 		   Events=new Type [] {typeof (EKCalendarChooserDelegate)})]
@@ -133,7 +129,6 @@ namespace EventKitUI {
 		NSSet SelectedCalendars { get; set;  }
 	}
 
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]

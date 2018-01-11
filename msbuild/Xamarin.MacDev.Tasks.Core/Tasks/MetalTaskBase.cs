@@ -63,7 +63,7 @@ namespace Xamarin.MacDev.Tasks
 			var intermediate = Path.Combine (IntermediateOutputPath, ToolName);
 			var logicalName = BundleResource.GetLogicalName (ProjectDir, prefixes, SourceFile, !string.IsNullOrEmpty(SessionId));
 			var path = Path.Combine (intermediate, logicalName);
-			var args = new ProcessArgumentBuilder ();
+			var args = new CommandLineArgumentBuilder ();
 			var dir = Path.GetDirectoryName (path);
 
 			if (!Directory.Exists (dir))

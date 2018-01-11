@@ -156,10 +156,13 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		public void Bug31788 ()
+		[TestCase (Profile.macClassic)]
+		[TestCase (Profile.macFull)]
+		[TestCase (Profile.macModern)]
+		public void Bug31788 (Profile profile)
 		{
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.macClassic;
+			bgen.Profile = profile;
 			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
 			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bug31788.cs")));
 			bgen.AssertExecute ("build");

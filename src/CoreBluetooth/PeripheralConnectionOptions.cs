@@ -100,7 +100,6 @@ namespace CoreBluetooth {
 #endif
 
 #if !XAMCORE_2_0
-		[iOS (5,0)]
 		[Obsolete ("Use 'NotifyOnDisconnection' property instead.")]
 		public bool NotifyOnDisconnectionKey {
 			set {
@@ -109,7 +108,6 @@ namespace CoreBluetooth {
 		}
 #endif
 
-		[iOS (5,0)]
 		public bool? NotifyOnDisconnection {
 			get {
 				return GetBoolValue (CBCentralManager.OptionNotifyOnDisconnectionKey);

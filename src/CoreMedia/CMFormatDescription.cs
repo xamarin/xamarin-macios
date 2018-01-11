@@ -36,7 +36,6 @@ namespace CoreMedia {
 		ValueNotAvailable   = -12718,
 	}
 
-	[iOS (4,0)]
 	public class CMFormatDescription : INativeObject, IDisposable {
 		internal IntPtr handle;
 
@@ -361,7 +360,6 @@ namespace CoreMedia {
 #endif
 	}
 
-	[iOS (4,0)]
 	public class CMAudioFormatDescription : CMFormatDescription {
 		
 		internal CMAudioFormatDescription (IntPtr handle)
@@ -377,7 +375,6 @@ namespace CoreMedia {
 		// TODO: Move more audio specific methods here
 	}
 
-	[iOS (4,0)]
 	public partial class CMVideoFormatDescription : CMFormatDescription {
 		
 		internal CMVideoFormatDescription (IntPtr handle)

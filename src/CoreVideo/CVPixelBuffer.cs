@@ -14,8 +14,7 @@ using Foundation;
 
 namespace CoreVideo {
 
-	[Watch (4, 0)]
-	[iOS (4, 0)]
+	[Watch (4,0)]
 	public partial class CVPixelBuffer : CVImageBuffer {
 #if !COREBUILD
 		[DllImport (Constants.CoreVideoLibrary, EntryPoint = "CVPixelBufferGetTypeID")]

@@ -65,11 +65,7 @@ namespace CoreData {
 	public enum NSFetchRequestResultType : ulong {
 		ManagedObject = 0x00,
 		ManagedObjectID = 0x01,
-		[iOS (3, 0)]
-		[Mac (10, 6)]
 		DictionaryResultType = 0x02,
-		[iOS (3, 0)]
-		[Mac (10, 6)]
 		NSCountResultType = 0x04
 	}
 

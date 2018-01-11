@@ -957,7 +957,7 @@ namespace ModelIO {
 		MDLMesh CreateCylindroid (float height, Vector2 radii, nuint radialSegments, nuint verticalSegments, MDLGeometryType geometryType, bool inwardNormals, [NullAllowed] IMDLMeshBufferAllocator allocator);
 
 		[Static]
-		[iOS (10,2), Mac (12,1,1), TV (10,1)]
+		[iOS (10,2), Mac (10,12,2), TV (10,1)]
 		[Export ("newCapsuleWithHeight:radii:radialSegments:verticalSegments:hemisphereSegments:geometryType:inwardNormals:allocator:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		MDLMesh CreateCapsule (float height, Vector2 radii, nuint radialSegments, nuint verticalSegments, nuint hemisphereSegments, MDLGeometryType geometryType, bool inwardNormals, [NullAllowed] IMDLMeshBufferAllocator allocator);
@@ -972,7 +972,7 @@ namespace ModelIO {
 		MDLMesh CreateIcosahedron (float radius, bool inwardNormals, [NullAllowed] IMDLMeshBufferAllocator allocator);
 
 		[Static]
-		[iOS (10,2), Mac (12,1,1), TV (10,1)]
+		[iOS (10,2), Mac (10,12,2), TV (10,1)]
 		[Export ("newIcosahedronWithRadius:inwardNormals:geometryType:allocator:")]
 		MDLMesh CreateIcosahedron (float radius, bool inwardNormals, MDLGeometryType geometryType, [NullAllowed] IMDLMeshBufferAllocator allocator);
 
@@ -1146,7 +1146,7 @@ namespace ModelIO {
 		IntPtr Constructor (float smoothness, [NullAllowed] string name, Vector2i textureDimensions, int channelCount, MDLTextureChannelEncoding channelEncoding, bool grayscale);
 
 		[Internal]
-		[iOS (10,2), Mac (12,1,1)]
+		[iOS (10,2), Mac (10,12,2)]
 		[Export ("initCellularNoiseWithFrequency:name:textureDimensions:channelEncoding:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr InitCellularNoiseWithFrequency (float frequency, [NullAllowed] string name, Vector2i textureDimensions, MDLTextureChannelEncoding channelEncoding);
@@ -1215,7 +1215,7 @@ namespace ModelIO {
 		[Export ("objectAtPath:")]
 		MDLObject GetObject (string path);
 
-		[iOS (10,2), Mac (12,1,1), TV (10,1)]
+		[iOS (10,2), Mac (10,12,2), TV (10,1)]
 		[Export ("enumerateChildObjectsOfClass:root:usingBlock:stopPointer:")]
 		void EnumerateChildObjects (Class objectClass, MDLObject root, MDLObjectHandler handler, ref bool stop);
 
@@ -1614,7 +1614,7 @@ namespace ModelIO {
 		[NullAllowed, Export ("topology", ArgumentSemantic.Retain)]
 		MDLSubmeshTopology Topology {
 			get;
-			[iOS (10,2), Mac (12,1,1), TV (10,1)]
+			[iOS (10,2), Mac (10,12,2), TV (10,1)]
 			set;
 		}
 

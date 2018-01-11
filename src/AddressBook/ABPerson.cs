@@ -82,7 +82,6 @@ namespace AddressBook {
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Native]
-	[iOS (4,1)]
 	public enum ABPersonImageFormat : long {
 		Thumbnail = 0,
 		OriginalSize = 2
@@ -595,7 +594,6 @@ namespace AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCreateInSource (IntPtr source);
 
-		[iOS (4,0)]
 		public ABPerson (ABRecord source)
 			: base (IntPtr.Zero, true)
 		{
@@ -793,7 +791,6 @@ namespace AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCopySource (IntPtr group);
 
-		[iOS (4,0)]
 		public ABRecord Source {
 			get {
 				var h = ABPersonCopySource (Handle);
@@ -1034,7 +1031,6 @@ namespace AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCopyArrayOfAllLinkedPeople (IntPtr person);
 
-		[iOS (4,0)]
 		public ABPerson[] GetLinkedPeople ()
 		{
 			var linked = ABPersonCopyArrayOfAllLinkedPeople (Handle);
@@ -1044,7 +1040,6 @@ namespace AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCopyImageDataWithFormat (IntPtr handle, nint format);
 		
-		[iOS (4,1)]
 		public NSData GetImage (ABPersonImageFormat format)
 		{
 #if ARCH_32
@@ -1057,7 +1052,6 @@ namespace AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCreateVCardRepresentationWithPeople (IntPtr people);
 
-		[iOS (5,0)]
 		public static NSData GetVCards (params ABPerson[] people)
 		{
 			if (people == null)
@@ -1075,7 +1069,6 @@ namespace AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCreatePeopleInSourceWithVCardRepresentation (IntPtr source, IntPtr vCardData);
 
-		[iOS (5,0)]
 		public static ABPerson[] CreateFromVCard (ABRecord source, NSData vCardData)
 		{
 			if (vCardData == null)

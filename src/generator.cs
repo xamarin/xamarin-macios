@@ -2345,6 +2345,8 @@ public partial class Generator : IMemberGatherer {
 						continue;
 					else if (attr is AvailabilityBaseAttribute)
 						continue;
+					else if (attr is RequiresSuperAttribute)
+						continue;
 					else {
 						switch (attr.GetType ().Name) {
 						case "PreserveAttribute":
@@ -3361,7 +3363,7 @@ public partial class Generator : IMemberGatherer {
 		string name = minfo.is_ctor ? GetGeneratedTypeName (mi.DeclaringType) : is_async ? GetAsyncName (mi) : mi.Name;
 
 		// Some codepaths already write preservation info
-		PrintAttributes (minfo.mi, preserve:!alreadyPreserved, advice:true, bindAs:true);
+		PrintAttributes (minfo.mi, preserve:!alreadyPreserved, advice:true, bindAs:true, requiresSuper: true);
 
 		if (!minfo.is_ctor && !is_async){
 			var prefix = "";
@@ -5639,6 +5641,15 @@ public partial class Generator : IMemberGatherer {
 		print ($"[Advice ({Quote (p.Message)})]");
 	}
 
+	public void PrintRequiresSuperAttribute (ICustomAttributeProvider mi)
+	{
+		var p = AttributeManager.GetCustomAttribute<RequiresSuperAttribute> (mi);
+		if (p == null)
+			return;
+
+		print ("[RequiresSuper]");
+	}
+
 	public void PrintNotImplementedAttribute (ICustomAttributeProvider mi)
 	{
 		var p = AttributeManager.GetCustomAttribute<NotImplementedAttribute> (mi);
@@ -5671,7 +5682,7 @@ public partial class Generator : IMemberGatherer {
 			print (attribstr);
 	}
 
-	public void PrintAttributes (ICustomAttributeProvider mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false, bool bindAs = false)
+	public void PrintAttributes (ICustomAttributeProvider mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false, bool bindAs = false, bool requiresSuper = false)
 	{
 		if (platform)
 			PrintPlatformAttributes (mi as MemberInfo);
@@ -5683,6 +5694,8 @@ public partial class Generator : IMemberGatherer {
 			PrintNotImplementedAttribute (mi);
 		if (bindAs)
 			PrintBindAsAttribute (mi);
+		if (requiresSuper)
+			PrintRequiresSuperAttribute (mi);
 	}
 
 	public void ComputeLibraryName (FieldAttribute fieldAttr, Type type, string propertyName, out string library_name, out string library_path)

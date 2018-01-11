@@ -1,5 +1,0 @@
-!missing-enum! EAWiFiUnconfiguredAccessoryBrowserState not bound
-!missing-enum! EAWiFiUnconfiguredAccessoryConfigurationStatus not bound
-!missing-enum! EAWiFiUnconfiguredAccessoryProperties not bound
-!missing-protocol! EAWiFiUnconfiguredAccessoryBrowserDelegate not bound
-!unknown-field! EAAccessorySelectedKey bound

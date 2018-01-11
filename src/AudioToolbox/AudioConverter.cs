@@ -479,7 +479,6 @@ namespace AudioToolbox
 			return AudioConverterConvertBuffer (handle, input.Length, input, ref outSize, output);
 		}
 
-		[iOS (5,0)]
 		public AudioConverterError ConvertComplexBuffer (int numberPCMFrames, AudioBuffers inputData, AudioBuffers outputData)
 		{
 			if (inputData == null)

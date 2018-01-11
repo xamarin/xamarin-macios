@@ -30,6 +30,7 @@ namespace Extrospection {
 			{ "NSAttributedStringEnumerationOptions", "NSAttributedStringEnumeration" },
 			{ "NSFileProviderErrorCode", "NSFileProviderError" },
 			{ "NSUbiquitousKeyValueStoreChangeReason", "NSUbiquitousKeyValueStore" },
+			{ "PHLivePhotoEditingErrorCode", "PHLivePhotoEditingError" },
 			{ "RPRecordingErrorCode", "RPRecordingError" },
 			{ "SecTrustResultType", "SecTrustResult" },
 			{ "SKErrorCode", "SKError" },
@@ -123,6 +124,11 @@ namespace Extrospection {
 		public static bool IsProtocol (this TypeDefinition self)
 		{
 			return self.HasAttribute ("ProtocolAttribute");
+		}
+
+		public static bool RequiresSuper (this MethodDefinition self)
+		{
+			return self.HasAttribute ("RequiresSuperAttribute");
 		}
 
 		static bool HasAttribute (this ICustomAttributeProvider self, string attributeName)

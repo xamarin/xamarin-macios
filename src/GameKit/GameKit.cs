@@ -24,7 +24,6 @@ namespace GameKit {
 #endif
 	[NoWatch]
 	[Native]
-	[iOS (3, 0)]
 	[Deprecated (PlatformName.iOS, 7, 0)]
 	public enum GKPeerPickerConnectionType : ulong {
 		Online = 1 << 0,
@@ -32,7 +31,6 @@ namespace GameKit {
 	}
 
 	// untyped enum -> GKPublicConstants.h
-	[iOS (3, 0)]
 	[Deprecated (PlatformName.iOS, 7, 0)]
 	[ErrorDomain ("GKVoiceChatServiceErrorDomain")]
 	public enum GKVoiceChatServiceError {
@@ -57,7 +55,6 @@ namespace GameKit {
 #endif
 
 	// untyped enum -> GKPublicConstants.h
-	[iOS (3, 0)]
 	[Deprecated (PlatformName.iOS, 7, 0)]
 	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
@@ -67,7 +64,6 @@ namespace GameKit {
 	} 
 
 	// untyped enum -> GKPublicConstants.h
-	[iOS (3, 0)]
 	[Deprecated (PlatformName.iOS, 7, 0)]
 	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
@@ -78,7 +74,6 @@ namespace GameKit {
 	}
 
 	// untyped enum -> GKPublicConstants.h
-	[iOS (3, 0)]
 	[Deprecated (PlatformName.iOS, 7, 0)]
 	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
@@ -91,21 +86,18 @@ namespace GameKit {
 	}
 
 	// NSInteger -> GKLeaderboard.h
-	[iOS (4,0)]
 	[Native]
 	public enum GKLeaderboardTimeScope : long {
 		Today, Week, AllTime
 	}
 
 	// NSInteger -> GKLeaderboard.h
-	[iOS (4,0)]
 	[Native]
 	public enum GKLeaderboardPlayerScope : long {
 		Global, FriendsOnly
 	}
 
 	// NSInteger -> GKError.h
-	[iOS (4,0)]
 	[Native]
 	[ErrorDomain ("GKErrorDomain")]
 	public enum GKError : long {
@@ -183,7 +175,6 @@ namespace GameKit {
 	}
 
 	// NSInteger -> GKMatch.h
-	[iOS (4, 0)]
 	[Deprecated (PlatformName.iOS, 7, 0)]
 	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
@@ -193,14 +184,12 @@ namespace GameKit {
 	}
 
 	// NSInteger -> GKMatch.h
-	[iOS (4,0)]
 	[Native]
 	public enum GKPlayerConnectionState : long {
 		Unknown, Connected, Disconnected
 	}
 
 	// NSInteger -> GKVoiceChat.h
-	[iOS (4,0)]
 	[Native]
 	public enum GKVoiceChatPlayerState : long {
 		Connected,
@@ -211,28 +200,24 @@ namespace GameKit {
 	}
 
 	// NSInteger -> GKPlayer.h
-	[iOS (5,0)]
 	[Native]
 	public enum GKPhotoSize : long {
 		Small, Normal
 	}
 
 	// NSInteger -> GKTurnBasedMatch.h
-	[iOS (5,0)]
 	[Native]
 	public enum GKTurnBasedMatchStatus : long {
 		Unknown, Open, Ended, Matching
 	}
 
 	// NSInteger -> GKTurnBasedMatch.h
-	[iOS (5,0)]
 	[Native]
 	public enum GKTurnBasedParticipantStatus : long {
 		Unknown, Invited, Declined, Matching, Active, Done
 	}
 
 	// NSInteger -> GKTurnBasedMatch.h
-	[iOS (5,0)]
 	[Native]
 	public enum GKTurnBasedMatchOutcome : long {
 		None, Quit, Won, Lost, Tied, TimeExpired,

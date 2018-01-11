@@ -50,7 +50,6 @@ namespace CoreMedia {
 		Invalidated						= -12744,
 	}
 
-	[iOS (4,0)]
 	public class CMSampleBuffer : ICMAttachmentBearer 
 #if !COREBUILD
 	, IDisposable

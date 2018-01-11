@@ -7,17 +7,15 @@
 // Copyright 2015, 2016 Xamarin Inc. All rights reserved.
 //
 
-#if IOS
-
 using System;
 using ObjCRuntime;
 using Foundation;
 
 namespace CoreSpotlight {
-#if !MONOMAC // TODO: Verify this is available in future OS X El Capitan betas, it was not included in beta 1, also do not forget foundation.cs(3801,3)
 	// NSInteger -> CNContact.h
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0), Mac (10,11)]
+	[Mac (10,13, onlyOn64: true)]
 	[Native]
 	[ErrorDomain ("CSIndexErrorDomain")]
 	public enum CSIndexErrorCode : long {
@@ -31,6 +29,7 @@ namespace CoreSpotlight {
 	}
 
 	[NoTV][iOS (10,0)]
+	[Mac (10,13, onlyOn64: true)]
 	[ErrorDomain ("CSSearchQueryErrorDomain")]
 	[Native]
 	public enum CSSearchQueryErrorCode : long {
@@ -39,7 +38,4 @@ namespace CoreSpotlight {
 		InvalidQuery = -2002,
 		Cancelled = -2003
 	}
-#endif
 }
-
-#endif

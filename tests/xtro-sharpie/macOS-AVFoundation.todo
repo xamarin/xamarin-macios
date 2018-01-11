@@ -1,9 +1,0 @@
-!missing-selector! AVAudioEngine::musicSequence not bound
-!missing-selector! AVAudioEngine::setMusicSequence: not bound
-
-!missing-selector! AVPlayerItem::preferredMaximumResolution not bound
-!missing-selector! AVPlayerItem::setPreferredMaximumResolution: not bound
-!missing-selector! AVPlayerItem::isContentAuthorizedForPlayback not bound
-!missing-selector! AVPlayerItem::requestContentAuthorizationAsynchronouslyWithTimeoutInterval:completionHandler: not bound
-
-!missing-selector! AVPlayerItemOutput::itemTimeForCVTimeStamp: not bound

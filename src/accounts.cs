@@ -8,7 +8,6 @@ using Foundation;
 
 namespace Accounts {
 	
-	[iOS (5,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccount : NSSecureCoding {
@@ -48,7 +47,6 @@ namespace Accounts {
 #endif
 	}
 
-	[iOS (5,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountCredential : NSSecureCoding {
@@ -69,7 +67,6 @@ namespace Accounts {
 	delegate void ACAccountStoreRemoveCompletionHandler (bool success, NSError error);
 	delegate void ACRequestCompletionHandler (bool granted, NSError error);
 	
-	[iOS (5,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountStore {
@@ -120,7 +117,6 @@ namespace Accounts {
 		void RemoveAccount (ACAccount account, ACAccountStoreRemoveCompletionHandler completionHandler);
 	}
 
-	[iOS (5,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountType : NSSecureCoding {

@@ -11,27 +11,6 @@ namespace UIKit {
 	public
 #endif
 	partial class UIDevice {
-#if !WATCH
-		public UIUserInterfaceIdiom UserInterfaceIdiom {
-			get {
-				Selector userInterfaceIdiom = new Selector ("userInterfaceIdiom");
-				if (RespondsToSelector (userInterfaceIdiom))
-					return _UserInterfaceIdiom;
-				else
-					return UIUserInterfaceIdiom.Phone;
-			}
-		}
-
-		[iOS (4,0)]
-		public bool IsMultitaskingSupported {
-			get {
-				Selector mtsupported = new Selector ("isMultitaskingSupported");
-				if (RespondsToSelector (mtsupported))
-					return _IsMultitaskingSupported;
-				return false;
-			}
-		}
-#endif
 		
 		public bool CheckSystemVersion (int major, int minor)
 		{

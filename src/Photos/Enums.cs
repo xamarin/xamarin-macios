@@ -328,4 +328,13 @@ namespace Photos
 		Content = 2,
 		Auxiliary = 3,
 	}
+
+	[Mac (10,12, onlyOn64 : true)]
+	[NoiOS][NoTV]
+	[Native]
+	[ErrorDomain ("PHLivePhotoEditingErrorDomain")]
+	public enum PHLivePhotoEditingError : long {
+		Unknown,
+		Aborted,
+	}
 }

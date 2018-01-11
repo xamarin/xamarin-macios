@@ -20,14 +20,8 @@ namespace UIKit {
 		High,
 		Medium,
 		Low,
-
-		[iOS (4,0)]
 		At640x480,
-
-		[iOS (5,0)]
 		At1280x720,
-
-		[iOS (5,0)]
 		At960x540
 	}
 
@@ -43,7 +37,6 @@ namespace UIKit {
 	// NSInteger -> UIAlertView.h
 	[Native]
 	[NoTV][NoWatch]
-	[iOS (5,0)]
 	public enum UIAlertViewStyle : long {
 		Default,
 		SecureTextInput,
@@ -90,8 +83,6 @@ namespace UIKit {
 		FastForward,
 		Undo,
 		Redo,
-
-		[iOS (4,0)]
 		[Deprecated (PlatformName.iOS, 11, 0)]
 		PageCurl
 	} 
@@ -144,25 +135,15 @@ namespace UIKit {
 		None,
 		MotionShake,
 
-		[iOS (4,0)]
 		RemoteControlPlay                 = 100,
-		[iOS (4,0)]
 		RemoteControlPause                = 101,
-		[iOS (4,0)]
 		RemoteControlStop                 = 102,
-		[iOS (4,0)]
 		RemoteControlTogglePlayPause      = 103,
-		[iOS (4,0)]
 		RemoteControlNextTrack            = 104,
-		[iOS (4,0)]
 		RemoteControlPreviousTrack        = 105,
-		[iOS (4,0)]
 		RemoteControlBeginSeekingBackward = 106,
-		[iOS (4,0)]
 		RemoteControlEndSeekingBackward   = 107,
-		[iOS (4,0)]
 		RemoteControlBeginSeekingForward  = 108,
-		[iOS (4,0)]
 		RemoteControlEndSeekingForward    = 109,
 	}			
 	
@@ -276,14 +257,12 @@ namespace UIKit {
 	// NSInteger -> UIBarCommon.h
 	[Native]
 	[NoWatch]
-	[iOS (5,0)]
 	public enum UIBarMetrics : long {
 		Default,
 		Compact,
 		DefaultPrompt = 101,
 		CompactPrompt,
 
-		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'UIBarMetrics.Compat' instead.")]
 		LandscapePhone = Compact,
 
@@ -364,7 +343,6 @@ namespace UIKit {
 	// NSInteger -> UIDocument.h
 	[Native]
 	[NoTV][NoWatch]
-	[iOS (5,0)]
 	public enum UIDocumentChangeKind : long {
 		Done, Undone, Redone, Cleared
 	}
@@ -372,7 +350,6 @@ namespace UIKit {
 	// NSInteger -> UIDocument.h
 	[Native]
 	[NoTV][NoWatch]
-	[iOS (5,0)]
 	public enum UIDocumentSaveOperation : long {
 		ForCreating, ForOverwriting
 	}
@@ -381,7 +358,6 @@ namespace UIKit {
 	[Native]
 	[Flags]
 	[NoTV][NoWatch]
-	[iOS (5,0)]
 	public enum UIDocumentState : ulong {
 		Normal = 0,
 		Closed = 1 << 0,
@@ -503,8 +479,6 @@ namespace UIKit {
 		Plain,
 		Bordered,
 		Bar,
-
-		[iOS (4,0)]
 		Bezeled
 	}
 
@@ -555,15 +529,12 @@ namespace UIKit {
 		Bottom,
 		None,
 		Middle,
-
-		[iOS (5,0)]
 		Automatic = 100
 	}
 
 	// #defines over UIBarPosition -> NSInteger -> UIBarCommon.h
 	[Native]
 	[NoTV][NoWatch]
-	[iOS (5,0)]
 	public enum UIToolbarPosition : long {
 		Any, Bottom, Top
 	}
@@ -762,10 +733,7 @@ namespace UIKit {
 	public enum UIDataDetectorType : ulong {
 		PhoneNumber            = 1 << 0,
 		Link                   = 1 << 1,
-
-		[iOS (4,0)]
 		Address                = 1 << 2,
-		[iOS (4,0)]
 		CalendarEvent          = 1 << 3,
 
 		[iOS (10,0)]
@@ -840,8 +808,6 @@ namespace UIKit {
 		Badge   = 1 << 0,
 		Sound   = 1 << 1,
 		Alert   = 1 << 2,
-
-		[iOS (5,0)]
 		NewsstandContentAvailability = 1 << 3
 	}
 
@@ -945,7 +911,6 @@ namespace UIKit {
 	// NSInteger -> UIApplication.h
 	[Native]
 	[NoWatch]
-	[iOS (5,0)]
 	public enum UIUserInterfaceLayoutDirection : long {
 		LeftToRight, RightToLeft
 	}
@@ -964,7 +929,6 @@ namespace UIKit {
 	// NSInteger -> UIApplication.h
 	[Native]
 	[NoWatch]
-	[iOS (4,0)]
 	public enum UIApplicationState : long {
 		Active,
 		Inactive,
@@ -975,7 +939,6 @@ namespace UIKit {
 	[Native]
 	[Flags]
 	[NoWatch]
-	[iOS (4,0)]
 	public enum UIViewAnimationOptions : ulong {
 		LayoutSubviews            = 1 <<  0,
 		AllowUserInteraction      = 1 <<  1,
@@ -1017,7 +980,6 @@ namespace UIKit {
 	// untyped (and unamed) enum -> UIPrintError.h
 	// note: it looks unused by any API
 	[NoTV][NoWatch]
-	[iOS (4,2)]
 	[ErrorDomain ("UIPrintErrorDomain")]
 	public enum UIPrintError {
 		NotAvailable = 1,
@@ -1029,7 +991,6 @@ namespace UIKit {
 	// NSInteger -> UIPrintInfo.h
 	[Native]
 	[NoTV][NoWatch]
-	[iOS (4,2)]
 	public enum UIPrintInfoDuplex : long {
 		None,
 		LongEdge,
@@ -1039,7 +1000,6 @@ namespace UIKit {
 	// NSInteger -> UIPrintInfo.h
 	[Native]
 	[NoTV][NoWatch]
-	[iOS (4,2)]
 	public enum UIPrintInfoOrientation : long {
 		Portrait,
 		Landscape,
@@ -1048,7 +1008,6 @@ namespace UIKit {
 	// NSInteger -> UIPrintInfo.h
 	[Native]
 	[NoTV][NoWatch]
-	[iOS (4,2)]
 	public enum UIPrintInfoOutputType : long {
 		General,
 		Photo,
@@ -1059,7 +1018,6 @@ namespace UIKit {
 	// NSInteger -> UIAccessibility.h
 	[Native]
 	[NoWatch]
-	[iOS (4,2)]
 	public enum UIAccessibilityScrollDirection : long {
 		Right = 1,
 		Left,
@@ -1072,7 +1030,6 @@ namespace UIKit {
 	// NSInteger -> UIScreen.h
 	[Native]
 	[NoWatch]
-	[iOS (5,0)]
 	public enum UIScreenOverscanCompensation : long {
 		Scale, InsetBounds,
 		None,
@@ -1083,14 +1040,12 @@ namespace UIKit {
 	// NSInteger -> UISegmentedControl.h
 	[Native]
 	[NoWatch]
-	[iOS (5,0)]
 	public enum UISegmentedControlSegment : long {
 		Any, Left, Center, Right, Alone
 	}
 
 	// NSInteger -> UISearchBar.h
 	[Native]
-	[iOS (5,0)]
 	[NoWatch]
 	public enum UISearchBarIcon : long {
 		Search,
@@ -1105,7 +1060,6 @@ namespace UIKit {
 	// NSInteger -> UIPageViewController.h
 	[Native]
 	[NoWatch]
-	[iOS (5,0)]
 	public enum UIPageViewControllerNavigationOrientation : long {
 		Horizontal, Vertical
 	}
@@ -1113,7 +1067,6 @@ namespace UIKit {
 	// NSInteger -> UIPageViewController.h
 	[Native]
 	[NoWatch]
-	[iOS (5,0)]
 	public enum UIPageViewControllerSpineLocation : long {
 		None, Min, Mid, Max
 	}
@@ -1121,7 +1074,6 @@ namespace UIKit {
 	// NSInteger -> UIPageViewController.h
 	[Native]
 	[NoWatch]
-	[iOS (5,0)]
 	public enum UIPageViewControllerNavigationDirection : long {
 		Forward, Reverse
 	}
@@ -1129,7 +1081,6 @@ namespace UIKit {
 	// NSInteger -> UIPageViewController.h
 	[Native]
 	[NoWatch]
-	[iOS (5,0)]
 	public enum UIPageViewControllerTransitionStyle : long {
 		PageCurl, Scroll
 	}

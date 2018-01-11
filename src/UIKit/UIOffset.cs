@@ -15,7 +15,6 @@ using ObjCRuntime;
 namespace UIKit {
 
 	// UIGeometry.h
-	[iOS (5,0)]
 	public struct UIOffset {
 
 		// API match for UIOffsetZero field/constant

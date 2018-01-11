@@ -8,16 +8,13 @@
 ## from iOS 4.0 to 5.1
 !unknown-field! AVMediaTypeTimedMetadata bound
 
-## no generator support for FastEnumeration - https://bugzilla.xamarin.com/show_bug.cgi?id=4391
+## no generator support for NSFastEnumeration / https://bugzilla.xamarin.com/show_bug.cgi?id=4391
 !missing-protocol-conformance! AVCaptureSynchronizedDataCollection should conform to NSFastEnumeration
 
 
 ## unsorted
 
-!missing-field! AVAssetDownloadedAssetEvictionPriorityDefault not bound
-!missing-field! AVAssetDownloadedAssetEvictionPriorityImportant not bound
 !missing-selector! +AVCapturePhotoBracketSettings::photoBracketSettingsWithRawPixelFormatType:rawFileType:processedFormat:processedFileType:bracketedSettings: not bound
-!missing-selector! AVAssetDownloadStorageManagementPolicy::priority not bound
 !missing-selector! AVCapturePhoto::fileDataRepresentationWithReplacementMetadata:replacementEmbeddedThumbnailPhotoFormat:replacementEmbeddedThumbnailPixelBuffer:replacementDepthData: not bound
 !missing-selector! AVCapturePhotoOutput::availableLivePhotoVideoCodecTypes not bound
 !missing-selector! AVCapturePhotoOutput::isCameraCalibrationDataDeliverySupported not bound
@@ -26,6 +23,3 @@
 !missing-selector! AVCapturePhotoOutput::setDualCameraDualPhotoDeliveryEnabled: not bound
 !missing-selector! AVCaptureResolvedPhotoSettings::embeddedThumbnailDimensions not bound
 !missing-selector! AVCaptureResolvedPhotoSettings::expectedPhotoCount not bound
-!missing-selector! AVMetadataMachineReadableCodeObject::descriptor not bound
-!missing-selector! AVMutableAssetDownloadStorageManagementPolicy::priority not bound
-!missing-selector! AVMutableAssetDownloadStorageManagementPolicy::setPriority: not bound

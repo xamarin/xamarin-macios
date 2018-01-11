@@ -51,7 +51,6 @@ namespace ScriptingBridge {
 	}
 
 #pragma warning disable 0618 // SBElement can only access children elements via NSMutableArray base type
-	[Mac (10,5)]
 	[BaseType (typeof (NSMutableArray))]
 	[DisableDefaultCtor] // *** -[SBElementArray init]: should never be used.
 	interface SBElementArray {

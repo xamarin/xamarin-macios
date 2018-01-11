@@ -41,7 +41,6 @@ namespace AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVAssetExportSession.h
 	public enum AVAssetExportSessionStatus : long {
@@ -54,7 +53,6 @@ namespace AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVAssetReader.h
 	public enum AVAssetReaderStatus : long {
@@ -66,7 +64,6 @@ namespace AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,1)]
 	[Native]
 	// NSInteger - AVAssetWriter.h
 	public enum AVAssetWriterStatus : long {
@@ -78,7 +75,6 @@ namespace AVFoundation {
 	}
 
 	[NoTV, NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureSession.h
 	public enum AVCaptureVideoOrientation : long {
@@ -90,7 +86,6 @@ namespace AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureFlashMode : long {
@@ -99,7 +94,6 @@ namespace AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureTorchMode : long {
@@ -108,7 +102,6 @@ namespace AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureFocusMode : long {
@@ -129,7 +122,6 @@ namespace AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureDevicePosition : long {
@@ -140,7 +132,6 @@ namespace AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureExposureMode : long {
@@ -149,7 +140,6 @@ namespace AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureWhiteBalanceMode : long {
@@ -158,8 +148,6 @@ namespace AVFoundation {
 
 #if !MONOMAC || !XAMCORE_4_0
 	[Flags]
-	[NoTV]
-	[iOS (4,0)]
 	[Native]
 	[Deprecated (PlatformName.iOS, 6, 0)]
 	// NSUInteger - AVAudioSession.h
@@ -213,7 +201,6 @@ namespace AVFoundation {
 		DecoderTemporarilyUnavailable = -11839,
 		EncoderTemporarilyUnavailable = -11840,
 		InvalidVideoComposition = -11841,
-		//[iOS (5,1)]
 		ReferenceForbiddenByReferencePolicy = -11842,
 		InvalidOutputURLPathExtension = -11843,
 		ScreenCaptureFailed = -11844,
@@ -260,7 +247,6 @@ namespace AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVPlayer.h
 	public enum AVPlayerActionAtItemEnd : long {
@@ -270,7 +256,6 @@ namespace AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVPlayerItem.h
 	public enum AVPlayerItemStatus : long {
@@ -280,7 +265,6 @@ namespace AVFoundation {
 #if !MONOMAC || !XAMCORE_4_0
 	[NoTV]
 	[Flags]
-	[iOS (4,0)]
 	[Native]
 	[Deprecated (PlatformName.iOS, 6, 0)]
 	// declared as AVAudioSessionSetActiveOptions (NSUInteger) - AVAudioSession.h
@@ -290,7 +274,6 @@ namespace AVFoundation {
 #endif
 
 	[NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVAsynchronousKeyValueLoading.h
 	public enum AVKeyValueStatus : long {
@@ -298,7 +281,6 @@ namespace AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVPlayer.h
 	public enum AVPlayerStatus : long {
@@ -702,7 +684,7 @@ namespace AVFoundation {
 		ChannelsToTracks = (1 << 0)
 	}
 			
-#if MONOMAC
+	[NoiOS][NoTV][NoWatch]
 	[Mac (10,11)]
 	[Native]
 	public enum AVMovieWritingOptions : ulong
@@ -711,7 +693,8 @@ namespace AVFoundation {
 		TruncateDestinationToMovieHeaderOnly = (1 << 0)
 	}
 
-	[Mac (10,10)]
+	[NoiOS][NoTV][NoWatch]
+	[Mac (10, 7)]
 	[Native]
 	public enum AVContentAuthorizationStatus : long {
 		Unknown,
@@ -723,6 +706,7 @@ namespace AVFoundation {
 		NotPossible,
 	}
 
+	[NoiOS][NoTV][NoWatch]
 	[Mac (10,10)]
 	[Native]
 	public enum AVSampleBufferRequestDirection : long {
@@ -731,13 +715,13 @@ namespace AVFoundation {
 		Reverse = -1,
 	}
 
+	[NoiOS][NoTV][NoWatch]
 	[Mac (10,10)]
 	[Native]
 	public enum AVSampleBufferRequestMode : long {
 		Immediate,
 		Scheduled,
 	}
-#endif
 
 	[NoTV, NoWatch, NoMac, iOS (10,0)]
 	[Native]
@@ -947,8 +931,6 @@ namespace AVFoundation {
 		EncodedPixels = 2,
 	}
 
-	/*
-	// Enum values are present in header but missing rdar filed at: https://bugreport.apple.com/web/?problemID=34184435
 	[NoWatch, NoTV, NoMac, iOS (11, 0)]
 	public enum AVAssetDownloadedAssetEvictionPriority {
 		[Field ("AVAssetDownloadedAssetEvictionPriorityDefault")]
@@ -957,7 +939,6 @@ namespace AVFoundation {
 		[Field ("AVAssetDownloadedAssetEvictionPriorityImportant")]
 		Important = 1,
 	}
-	*/
 
 	[NoWatch, iOS (11, 0), TV (11,0), Mac (10,13)]
 	public enum AVAssetWriterInputMediaDataLocation {

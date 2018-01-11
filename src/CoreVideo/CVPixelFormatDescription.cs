@@ -34,7 +34,6 @@ using Foundation;
 namespace CoreVideo {
 
 	[Watch (4,0)]
-	[iOS (4,0)]
 	public static class CVPixelFormatDescription {
 #if !COREBUILD
 		public static readonly NSString NameKey;

@@ -443,19 +443,15 @@ namespace CoreAnimation {
 		[Protocolize]
 		CALayerDelegate Delegate { get; set; }
 
-		[iOS (3,2)]
 		[Export ("shadowColor")]
 		CGColor ShadowColor { get; set; }
 
-		[iOS (3,2)]
 		[Export ("shadowOffset")]
 		CGSize ShadowOffset { get; set; }
 
-		[iOS (3,2)]
 		[Export ("shadowOpacity")]
 		float ShadowOpacity { get; set; } /* float, not CGFloat */
 
-		[iOS (3,2)]
 		[Export ("shadowRadius")]
 		nfloat ShadowRadius { get; set; }
 
@@ -558,16 +554,13 @@ namespace CoreAnimation {
 		void AddConstraint (CAConstraint c);
 #endif
 
-		[iOS (3,2)]
 		[Export ("shouldRasterize")]
 		bool ShouldRasterize { get; set; }
 
 		[NullAllowed]
-		[iOS (3,2)]
 		[Export ("shadowPath")]
 		CGPath ShadowPath { get; set; }
 
-		[iOS (3,2)]
 		[Export ("rasterizationScale")]
 		nfloat RasterizationScale { get; set; }
 
@@ -771,11 +764,9 @@ namespace CoreAnimation {
 		[Export ("strokeColor")] [NullAllowed]
 		CGColor StrokeColor { get; set; }
 
-		[iOS (4,2)]
 		[Export ("strokeStart")]
 		nfloat StrokeStart { get; set; }
 
-		[iOS (4,2)]
 		[Export ("strokeEnd")]
 		nfloat StrokeEnd { get; set; }
 
@@ -844,7 +835,6 @@ namespace CoreAnimation {
 		Natural,
 	}
 
-	[iOS (3,2)]
 	[BaseType (typeof (CALayer))]
 	interface CATextLayer {
 		[Export ("layer"), New, Static]
@@ -1013,7 +1003,6 @@ namespace CoreAnimation {
 		void DidChangeValueForKey (string key);
 
 		[Export ("shouldArchiveValueForKey:")]
-		[iOS (4,0)]
 		bool ShouldArchiveValueForKey ([NullAllowed] string key);
 
 		[Field ("kCATransitionFade")]
@@ -1333,7 +1322,6 @@ namespace CoreAnimation {
 		[Export ("setValue:forKey:")]
 		void SetValueForKey ([NullAllowed] NSObject anObject, NSString key);
 
-		[iOS (4,0)]
 		[Static, Export ("completionBlock"), NullAllowed]
 		Action CompletionBlock { get; set; }
 
@@ -1491,7 +1479,6 @@ namespace CoreAnimation {
 	}
 #endif
 
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	interface CAEmitterCell : CAMediaTiming, NSSecureCoding {
 		[NullAllowed] // by default this property is null
@@ -1621,7 +1608,6 @@ namespace CoreAnimation {
 		nfloat ContentsScale { get; set; }
 	}
 
-	[iOS (5,0)]
 	[BaseType (typeof (CALayer))]
 	interface CAEmitterLayer {
 		[Export ("layer"), New, Static]

@@ -9,7 +9,7 @@ using ObjCRuntime;
 
 namespace MetalPerformanceShaders {
 
-	public partial class MPSImageLanczosScale {
+	public partial class MPSImageScale {
 		static int size_of_scale_transform = Marshal.SizeOf (typeof(MPSScaleTransform));
 
 		public virtual MPSScaleTransform? ScaleTransform {
@@ -24,6 +24,7 @@ namespace MetalPerformanceShaders {
 					IntPtr ptr = Marshal.AllocHGlobal (size_of_scale_transform);
 					try {
 						Marshal.StructureToPtr<MPSScaleTransform> (value.Value, ptr, false);
+						_SetScaleTransform (ptr);
 					}
 					finally {
 						Marshal.FreeHGlobal (ptr);

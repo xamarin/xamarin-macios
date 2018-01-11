@@ -1222,7 +1222,7 @@ namespace SpriteKit {
 		[Static, Export ("labelNodeWithText:")]
 		SKLabelNode FromText ([NullAllowed] string text);
 
-		[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
+		[TV (11,0), Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("labelNodeWithAttributedText:")]
 		SKLabelNode FromText ([NullAllowed] NSAttributedString attributedText);
@@ -1233,15 +1233,15 @@ namespace SpriteKit {
 		[Export ("horizontalAlignmentMode")]
 		SKLabelHorizontalAlignmentMode HorizontalAlignmentMode { get; set; }
 
-		[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
+		[TV (11,0), Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("numberOfLines")]
 		nint NumberOfLines { get; set; }
 
-		[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
+		[TV (11,0), Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("lineBreakMode", ArgumentSemantic.Assign)]
 		NSLineBreakMode LineBreakMode { get; set; }
 
-		[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
+		[TV (11,0), Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("preferredMaxLayoutWidth")]
 		nfloat PreferredMaxLayoutWidth { get; set; }
 
@@ -1252,7 +1252,7 @@ namespace SpriteKit {
 		[NullAllowed] // nullable in Xcode7 headers and caught by introspection tests
 		string Text { get; set; }
 
-		[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
+		[TV (11,0), Watch (4,0), Mac (10,13), iOS (11,0)]
 		[NullAllowed, Export ("attributedText", ArgumentSemantic.Copy)]
 		NSAttributedString AttributedText { get; set; }
 
@@ -3456,7 +3456,7 @@ namespace SpriteKit {
 		bool ShowsFields { get; set; }
 	}
 
-	[TV (11,0), Watch (4,0), Mac (13,0), iOS (11,0)]
+	[TV (11,0), Watch (4,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(SKNode))]
 	interface SKTransformNode {
 		[Export ("xRotation")]

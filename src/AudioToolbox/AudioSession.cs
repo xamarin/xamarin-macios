@@ -302,7 +302,6 @@ namespace AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static AudioSessionErrors AudioSessionSetActiveWithFlags ([MarshalAs (UnmanagedType.I1)] bool active, AudioSessionActiveFlags inFlags);
 
-		[iOS (4,0)]
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		public static AudioSessionErrors SetActive (bool active, AudioSessionActiveFlags flags)
 		{
@@ -427,7 +426,6 @@ namespace AudioToolbox {
 			}
 		}
 
-		[iOS (4,0)]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		public static AudioSessionInterruptionType InterruptionType {
 			get {
@@ -442,14 +440,12 @@ namespace AudioToolbox {
 			}
 		}
 
-		[iOS (5,0)]
 		static public AccessoryInfo[] InputSources {
 			get {
 				return ExtractAccessoryInfo (GetIntPtr (AudioSessionProperty.InputSources), InputSourceKey_ID, InputSourceKey_Description);
 			}
 		}
 
-		[iOS (5,0)]
 		static public AccessoryInfo[] OutputDestinations {
 			get {
 				return ExtractAccessoryInfo (GetIntPtr (AudioSessionProperty.OutputDestinations), OutputDestinationKey_ID, OutputDestinationKey_Description);
@@ -474,7 +470,6 @@ namespace AudioToolbox {
 
 		/* Could not test what sort of unique CFNumberRef value it's
 
-		[iOS (5,0)]
 		static public int InputSource {
 			get {
 				return GetInt (AudioSessionProperty.InputSource);
@@ -484,7 +479,6 @@ namespace AudioToolbox {
 			}
 		}
 
-		[iOS (5,0)]
 		static public int OutputDestination {
 			get {
 				return GetInt (AudioSessionProperty.OutputDestination);
@@ -569,14 +563,12 @@ namespace AudioToolbox {
 			return result;
 		}
 
-		[iOS (5,0)]
 		static public AudioSessionInputRouteKind InputRoute {
 			get {
 				return GetInputRoute ((NSArray) AudioRouteDescription [AudioRouteKey_Inputs]);
 			}
 		}
 		
-		[iOS (5,0)]
 		static public AudioSessionOutputRouteKind [] OutputRoutes {
 			get {
 				return GetOutputRoutes ((NSArray) AudioRouteDescription [AudioRouteKey_Outputs]);
@@ -701,7 +693,6 @@ namespace AudioToolbox {
 			}
 		}
 		
-		[iOS (5,0)]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public AudioSessionMode Mode {
 			get {
@@ -712,7 +703,6 @@ namespace AudioToolbox {
 			}
 		}
 
-		[iOS (5,0)]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public bool InputGainAvailable {
 			get {
@@ -720,7 +710,6 @@ namespace AudioToolbox {
 			}
 		}
 
-		[iOS (5,0)]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "AudioSession[Get|Set]Property are deprecated in iOS7")]
 		static public float InputGainScalar {
 			get {
@@ -859,7 +848,6 @@ namespace AudioToolbox {
 			}
 		}
 
-		[iOS (5,0)]
 		public static event Action<bool> InputGainBecameAvailable {
 			add {
 				AddListenerEvent (AudioSessionProperty.InputGainAvailable, value, 
@@ -870,7 +858,6 @@ namespace AudioToolbox {
 			}
 		}
 
-		[iOS (5,0)]
 		public static event Action<float> InputGainScalarChanged {
 			add {
 				AddListenerEvent (AudioSessionProperty.InputGainScalar, value, 
@@ -881,7 +868,6 @@ namespace AudioToolbox {
 			}
 		}
 
-		[iOS (5,0)]
 		public static event Action<AccessoryInfo[]> InputSourcesChanged {
 			add {
 				AddListenerEvent (AudioSessionProperty.InputSources, value, 
@@ -892,7 +878,6 @@ namespace AudioToolbox {
 			}
 		}
 
-		[iOS (5,0)]
 		public static event Action<AccessoryInfo[]> OutputDestinationsChanged {
 			add {
 				AddListenerEvent (AudioSessionProperty.OutputDestinations, value, 

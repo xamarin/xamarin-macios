@@ -80,7 +80,7 @@ namespace StoreKit {
 #if !MONOMAC
 		[Static]
 		[Export ("paymentWithProductIdentifier:")]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_5_0, Message = "Use 'FromProduct (SKProduct)'' after fetching the list of available products from 'SKProductRequest' instead.")]
+		[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'FromProduct (SKProduct)'' after fetching the list of available products from 'SKProductRequest' instead.")]
 		SKPayment CreateFrom (string identifier);
 #endif
 
@@ -112,7 +112,7 @@ namespace StoreKit {
 
 		[Static]
 		[Export ("paymentWithProductIdentifier:")]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_5_0, Message = "Use 'PaymentWithProduct (SKProduct)' after fetching the list of available products from 'SKProductRequest' instead.")]
+		[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'PaymentWithProduct (SKProduct)' after fetching the list of available products from 'SKProductRequest' instead.")]
 		SKMutablePayment PaymentWithProduct (string identifier);
 
 		[NullAllowed] // by default this property is null
@@ -288,7 +288,7 @@ namespace StoreKit {
 		string TransactionIdentifier { get; }
 
 #if !MONOMAC
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSBundle.AppStoreReceiptUrl' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSBundle.AppStoreReceiptUrl' instead.")]
 		[Export ("transactionReceipt")]
 		NSData TransactionReceipt { get; }
 #endif

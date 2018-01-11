@@ -7,7 +7,7 @@
 // Copyright 2012-2014 Xamarin Inc.
 //
 
-#if IOS || TVOS
+#if !WATCH
 
 using System;
 using System.Collections.Generic;

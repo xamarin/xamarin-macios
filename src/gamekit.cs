@@ -82,7 +82,7 @@ namespace GameKit {
 	[NoWatch]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
-	[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0, Message = "Use 'MCBrowserViewController' from the 'MultipeerConnectivity' framework instead.")]
+	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MCBrowserViewController' from the 'MultipeerConnectivity' framework instead.")]
 	interface GKPeerPickerController {
 		[Export ("connectionTypesMask", ArgumentSemantic.Assign)]
 		GKPeerPickerConnectionType ConnectionTypesMask { get; set; }
@@ -136,7 +136,7 @@ namespace GameKit {
 	[NoWatch] // deprecated in 2.0 (but framework not added before 3.0)
 	[NoTV]
 	[BaseType (typeof (NSObject))]
-	[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0, Message = "Use 'GKVoiceChat' instead.")]
+	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'GKVoiceChat' instead.")]
 	interface GKVoiceChatService {
 
 		[Export ("defaultVoiceChatService")][Static]
@@ -218,7 +218,6 @@ namespace GameKit {
 	[NoTV]
 	[NoWatch] // deprecated in 2.0 (but framework not added before 3.0)
 	[BaseType (typeof (NSObject))]
-	[iOS (3, 0)]
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'MultipeerConnectivity.MCSession' instead.")]
 	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'MultipeerConnectivity.MCSession' instead.")]
@@ -310,7 +309,7 @@ namespace GameKit {
 #endif
 
 	[Watch (3,0)]
-	[iOS (4,2), Mac (10, 8)]
+	[Mac (10, 8)]
 	[BaseType (typeof (NSObject))]
 	interface GKLeaderboard {
 		[Export ("timeScope", ArgumentSemantic.Assign)]
@@ -364,7 +363,6 @@ namespace GameKit {
 		[NoTV]
 		[NoWatch] // deprecated in 2.0 (but framework not added before 3.0)
 		[Static]
-		[iOS (5,0)]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'SetDefaultLeaderboard' on 'GKLocalPlayer' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'SetDefaultLeaderboard' on 'GKLocalPlayer' instead.")]
 		[Export ("setDefaultLeaderboard:withCompletionHandler:")]
@@ -464,7 +462,6 @@ namespace GameKit {
 	}
 
 	[Watch (3,0)]
-	[iOS (4,2)]
 	[BaseType (typeof (GKBasePlayer))]
 	// note: NSSecureCoding conformity is undocumented - but since it's a runtime check (on ObjC) we still need it
 	interface GKPlayer : NSSecureCoding {
@@ -491,7 +488,6 @@ namespace GameKit {
 		NSString DidChangeNotificationNameNotification { get; }
 
 		[NoWatch]
-		[iOS (5,0)]
 		[Export ("loadPhotoForSize:withCompletionHandler:")]
 		[Async]
 		void LoadPhoto (GKPhotoSize size, [NullAllowed] GKPlayerPhotoLoaded onCompleted);
@@ -515,7 +511,6 @@ namespace GameKit {
 	}
 
 	[Watch (3,0)]
-	[iOS (4,1)]
 	[BaseType (typeof (NSObject))]
 	interface GKScore : NSSecureCoding {
 		[NoWatch]
@@ -571,7 +566,6 @@ namespace GameKit {
 
 		[NoWatch]
 		[NoTV]
-		[iOS (4, 1)]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'LeaderboardIdentifier' instead.")]
 		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'LeaderboardIdentifier' instead.")]
@@ -586,7 +580,6 @@ namespace GameKit {
 
 		[NoWatch]
 		[NoTV]
-		[iOS (4, 1)]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'ReportScores' instead.")]
 		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'ReportScores' instead.")]
@@ -598,11 +591,9 @@ namespace GameKit {
 		void ReportScore ([NullAllowed] GKNotificationHandler errorHandler);
 #endif
 
-		[iOS (5,0)]
 		[Export ("context", ArgumentSemantic.Assign)]
 		ulong Context { get; set; }
 
-		[iOS (5,0)]
 		[Export ("shouldSetDefaultLeaderboard", ArgumentSemantic.Assign)]
 		bool ShouldSetDefaultLeaderboard { get; set; }
 
@@ -654,7 +645,6 @@ namespace GameKit {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,2)]
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'GKGameCenterViewController' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'GKGameCenterViewController' instead.")]
 	[BaseType (typeof (NSObject))]
@@ -670,7 +660,6 @@ namespace GameKit {
 	}
 
 	[NoTV][NoWatch]
-	[iOS (4, 2)]
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'GKGameCenterViewController' instead.")]
 	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'GKGameCenterViewController' instead.")]
@@ -705,7 +694,6 @@ namespace GameKit {
 	}
 
 	[Watch (3,0)]
-	[iOS (4,2)]
 	[Mac (10, 8)]
 	[BaseType (typeof (GKPlayer))]
 	interface GKLocalPlayer {
@@ -879,7 +867,6 @@ namespace GameKit {
 	}
 
 	[NoWatch]
-	[iOS (4,2)]
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(GKMatchDelegate)})]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -[__NSCFDictionary setObject:forKey:]: attempt to insert nil value (key: 1500388194)
 	// <quote>Your application never directly allocates GKMatch objects.</quote> http://developer.apple.com/library/ios/#documentation/GameKit/Reference/GKMatch_Ref/Reference/Reference.html
@@ -945,7 +932,6 @@ namespace GameKit {
 	}
 
 	[NoWatch]
-	[iOS (4,2)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -987,7 +973,6 @@ namespace GameKit {
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'ShouldReinviteDisconnectedPlayer' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'ShouldReinviteDisconnectedPlayer' instead.")]
-		[iOS (5,0)]
 		[Export ("match:shouldReinvitePlayer:"), DelegateName ("GKMatchReinvitation"), DefaultValue (true)]
 		bool ShouldReinvitePlayer (GKMatch match, string playerId);
 
@@ -995,7 +980,7 @@ namespace GameKit {
 		[Export ("match:didReceiveData:fromRemotePlayer:"), EventArgs ("GKMatchReceivedDataFromRemotePlayer")]
 		void DataReceivedFromPlayer (GKMatch match, NSData data, GKPlayer player);
 
-		[iOS (4,1), Mac (10,8)] //Yes, the header file says it was available in 4.1 and 10.8...
+		[Mac (10,8)] //Yes, the header file says it was available in 4.1 and 10.8...
 		[Export ("match:player:didChangeConnectionState:"), EventArgs ("GKMatchConnectionChanged")]
 		void StateChangedForPlayer (GKMatch match, GKPlayer player, GKPlayerConnectionState state);
 
@@ -1011,7 +996,6 @@ namespace GameKit {
 	}
 
 	[NoWatch]
-	[iOS (4,2)]
 	[BaseType (typeof (NSObject))]
 	interface GKVoiceChat {
 		[Export ("name", ArgumentSemantic.Copy)]
@@ -1053,7 +1037,6 @@ namespace GameKit {
 		void SetPlayerVoiceChatStateChangeHandler (Action<GKPlayer,GKVoiceChatPlayerState> handler);
 
 		[NoTV]
-		[iOS (5,0)]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'Players' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'Players' instead.")]
 		[Export ("playerIDs")]
@@ -1237,7 +1220,6 @@ namespace GameKit {
 	[Mac (10,8)]
 #else
 	[BaseType (typeof (UINavigationController), Delegates=new string [] { "WeakMatchmakerDelegate" }, Events=new Type [] {typeof(GKMatchmakerViewControllerDelegate)})]
-	[iOS (4,2)]
 #endif
 	// iOS 6 -> Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: <GKMatchmakerViewController: 0x16101160>: must use one of the designated initializers
 	[DisableDefaultCtor]
@@ -1269,19 +1251,16 @@ namespace GameKit {
 #endif
 
 		[NoTV]
-		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("defaultInvitationMessage", ArgumentSemantic.Copy)]
 		string DefaultInvitationMessage { get; set;  }
 
-		[iOS (5,0)]
 		[Export ("addPlayersToMatch:")]
 		void AddPlayersToMatch (GKMatch match);
 
 		[NoTV]
-		[iOS (5,0)]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'SetHostedPlayerConnected (GKPlayer,bool)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'SetHostedPlayerConnected (GKPlayer,bool)' instead.")]
 		[Export ("setHostedPlayer:connected:")]
@@ -1295,7 +1274,6 @@ namespace GameKit {
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[Model]
-	[iOS (4,2)]
 	[Protocol]
 	interface GKMatchmakerViewControllerDelegate {
 		[Abstract]
@@ -1329,7 +1307,6 @@ namespace GameKit {
 		void DidFindHostedPlayers (GKMatchmakerViewController viewController, GKPlayer [] playerIDs);
 
 		[NoTV]
-		[iOS (5,0)]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'HostedPlayerDidAccept' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'HostedPlayerDidAccept' instead.")]
 		[Export ("matchmakerViewController:didReceiveAcceptFromHostedPlayer:"), EventArgs ("GKPlayer")]
@@ -1341,7 +1318,7 @@ namespace GameKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[iOS (4,2)][Mac (10, 8)]
+	[Mac (10, 8)]
 	[Watch (3,0)]
 	interface GKAchievement : NSSecureCoding {
 		[NoTV]
@@ -1401,7 +1378,6 @@ namespace GameKit {
 		void ReportAchievement ([NullAllowed] GKNotificationHandler completionHandler);
 #endif
 
-		[iOS (5,0)]
 		[Export ("showsCompletionBanner", ArgumentSemantic.Assign)]
 		bool ShowsCompletionBanner { get; set;  }
 
@@ -1492,7 +1468,7 @@ namespace GameKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[iOS (4,2)][Mac (10, 8)]
+	[Mac (10, 8)]
 	[Watch (3,0)]
 	interface GKAchievementDescription : NSSecureCoding {
 		[Export ("identifier", ArgumentSemantic.Copy)]
@@ -1563,7 +1539,6 @@ namespace GameKit {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4, 1)]
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'GKGameCenterViewController' instead.")]
 	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'GKGameCenterViewController' instead.")]
@@ -1580,7 +1555,6 @@ namespace GameKit {
 	}
 
 	[NoTV][NoWatch]
-	[iOS (4, 1)]
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'GKGameCenterViewController' instead.")]
 	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'GKGameCenterViewController' instead.")]
@@ -1629,7 +1603,6 @@ namespace GameKit {
 	interface GKFriendRequestComposeViewController 
 #else
 	[NoTV]
-	[iOS (4,2)]
 	[Deprecated (PlatformName.iOS, 10, 0)]
 	[BaseType (typeof (UINavigationController), Events=new Type [] { typeof (GKFriendRequestComposeViewControllerDelegate)}, Delegates=new string[] {"WeakComposeViewDelegate"})]
 	interface GKFriendRequestComposeViewController : UIAppearance
@@ -1680,7 +1653,6 @@ namespace GameKit {
 	}
 
 	[NoWatch]
-	[iOS (5,0)]
 	[BaseType(typeof(NSObject))]
 	partial interface GKNotificationBanner {
 		[Static, Export ("showBannerWithTitle:message:completionHandler:")]
@@ -1693,7 +1665,6 @@ namespace GameKit {
 		void Show ([NullAllowed] string title, [NullAllowed] string message, double durationSeconds, [NullAllowed] Action completionHandler);
 	}
 
-	[iOS (5,0)]
 	[Watch (3,0)]
 	[BaseType (typeof (NSObject))]
 	interface GKTurnBasedParticipant {
@@ -1725,7 +1696,6 @@ namespace GameKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	[iOS (5, 0)]
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'GKLocalPlayer.RegisterListener' with an object that implements 'IGKTurnBasedEventListener'.")]
 	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'GKLocalPlayer.RegisterListener' with an object that implements 'IGKTurnBasedEventListener'.")]
@@ -1741,13 +1711,11 @@ namespace GameKit {
 		[Abstract]
 #endif
 		[Export ("handleInviteFromGameCenter:")]
-		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		void HandleInviteFromGameCenter (NSString [] playersToInvite);
 
-		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'HandleTurnEvent' instead.")]
 		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use 'HandleTurnEvent' instead.")]
@@ -1774,7 +1742,6 @@ namespace GameKit {
 	}
 
 	[NoTV]
-	[iOS (5, 0)]
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use GKLocalPlayer.RegisterListener with an object that implements IGKTurnBasedEventListener.")]
 	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use GKLocalPlayer.RegisterListener with an object that implements IGKTurnBasedEventListener.")]
@@ -1793,16 +1760,12 @@ namespace GameKit {
 		GKTurnBasedEventHandler SharedTurnBasedEventHandler { get; }
 	}
 
-	[iOS (5,0)]
 	delegate void GKTurnBasedMatchRequest (GKTurnBasedMatch match, NSError error);
 
-	[iOS (5,0)]
 	delegate void GKTurnBasedMatchesRequest (GKTurnBasedMatch [] matches, NSError error);
 
-	[iOS (5,0)]
 	delegate void GKTurnBasedMatchData (NSData matchData, NSError error);
 
-	[iOS (5,0)]
 	[Watch (3,0)]
 	[BaseType (typeof (NSObject))]
 	interface GKTurnBasedMatch {
@@ -1989,7 +1952,6 @@ namespace GameKit {
 	[BaseType (typeof (NSViewController))]
 	interface GKTurnBasedMatchmakerViewController
 #else
-	[iOS (5,0)]
 	[BaseType (typeof (UINavigationController))]
 	interface GKTurnBasedMatchmakerViewController : UIAppearance
 #endif
@@ -2009,7 +1971,6 @@ namespace GameKit {
 	}
 
 	[NoWatch]
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]

@@ -118,25 +118,19 @@ namespace MediaPlayer {
 		AudioITunesU = 1 << 3,
 		AnyAudio     = 0x00ff,
 		
-		[iOS (5,0)]
 		[Mac (10,12,2)]
 		Movie = 1 << 8,
-		[iOS (5,0)]
 		[Mac (10,12,2)]
 		TVShow = 1 << 9,
-		[iOS (5,0)]
 		[Mac (10,12,2)]
 		VideoPodcast = 1 << 10,
-		[iOS (5,0)]
 		[Mac (10,12,2)]
 		MusicVideo = 1 << 11,
-		[iOS (5,0)]
 		[Mac (10,12,2)]
 		VideoITunesU = 1 << 12,
 		[iOS (7,0)]
 		[Mac (10,12,2)]
 		HomeVideo = 1 << 13,
-		[iOS (5,0)]
 		[Mac (10,12,2)]
 		TypeAnyVideo = 0xff00,
 #if XAMCORE_2_0

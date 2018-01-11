@@ -200,6 +200,10 @@ namespace MediaLibrary {
 		[Field ("MLPhotosAllPhotosAlbumTypeIdentifier")]
 		NSString PhotosAllPhotosAlbumTypeIdentifier { get; }
 
+		[Mac (10,12,1, onlyOn64 : true)]
+		[Field ("MLPhotosDepthEffectGroupTypeIdentifier")]
+		NSString PhotosDepthEffectGroupTypeIdentifier { get; }
+
 		[Field ("MLiPhotoRootGroupTypeIdentifier")]
 		NSString IPhotoRootGroupTypeIdentifier { get; }
 

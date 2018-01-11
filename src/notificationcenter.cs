@@ -43,7 +43,13 @@ namespace NotificationCenter {
 
 #if MONOMAC
 		[Export ("widgetAllowsEditing")]
-		bool WidgetAllowsEditing { get; set; }
+		bool WidgetAllowsEditing {
+			get;
+#if !XAMCORE_4_0
+			[NotImplemented]
+			set;
+#endif
+		}
 
 		[Export ("widgetDidBeginEditing")]
 		void WidgetDidBeginEditing ();

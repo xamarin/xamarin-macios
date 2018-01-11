@@ -118,7 +118,6 @@ namespace AudioUnit
 		Delay=0x64656c79, // 'dely'
 
 		[iOS (8, 0)]
-		[Mac (10, 5)]
 		SampleDelay=0x73646c79, // 'sdly'
 		Distortion=0x64697374, // 'dist'
 		BandPassFilter=0x62706173, // 'bpas'
