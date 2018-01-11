@@ -48,9 +48,9 @@ namespace CoreImage {
 		public unsafe CIVector (nfloat [] values, nint count) : base (NSObjectFlag.Empty)
 		{
 			if (values == null)
-				throw new ArgumentNullException (@nameof (values));
+				throw new ArgumentNullException (nameof (values));
 			if (count > values.Length)
-				throw new ArgumentOutOfRangeException (@nameof (count));
+				throw new ArgumentOutOfRangeException (nameof (count));
 
 			fixed (nfloat *ptr = values) {
 				var handle = IntPtr.Zero;
