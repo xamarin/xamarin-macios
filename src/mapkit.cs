@@ -279,15 +279,9 @@ namespace XamCore.MapKit {
 	[iOS (6,0)]
 	[TV (9,2)]
 	[Mac (10,9, onlyOn64 : true)]
-	interface MKMapItem
+	interface MKMapItem : NSSecureCoding
 #if IOS // #if TARGET_OS_IOS
-		: NSItemProviderReading, NSItemProviderWriting
-#if ARCH_64 // [FAIL] Selector not found for MapKit.MKMapItem : encodeWithCoder: on 32-bit iOS
-		, NSSecureCoding
-#endif
-#endif
-#if WATCH || TVOS || MONOMAC && ARCH_64
-		: NSSecureCoding
+		, NSItemProviderReading, NSItemProviderWriting
 #endif
 	{
 		[Export ("placemark", ArgumentSemantic.Retain)]

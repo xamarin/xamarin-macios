@@ -182,6 +182,12 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "MKMapItem": // Selector not available on iOS 32-bit
+				switch (selectorName) {
+				case "encodeWithCoder:":
+					return !TestRuntime.CheckXcodeVersion (9, 0);
+				}
+				break;
 #if !MONOMAC
 			case "MTLCaptureManager":
 			case "NEHotspotEapSettings": // Wireless Accessory Configuration is not supported in the simulator.
