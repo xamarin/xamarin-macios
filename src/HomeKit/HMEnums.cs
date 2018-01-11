@@ -7,8 +7,8 @@ namespace HomeKit {
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Native]
-		[Watch (4,2), TV (11,2), iOS (11,2)]
 	public enum HMError : long {
+		[Watch (4,2), TV (11,2), iOS (11,2)]
 		UnexpectedError                         = -1,
 		AlreadyExists                           = 1,
 		NotFound                                = 2,

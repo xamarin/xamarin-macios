@@ -7,8 +7,8 @@ namespace LocalAuthentication {
 	[iOS (8,0)]
 	[Mac (10, 10)]
 	[Native]
-		[Mac (10,12,2)]
 	public enum LAPolicy : long {
+		[Mac (10,12,2)]
 		DeviceOwnerAuthenticationWithBiometrics = 1,
 		DeviceOwnerAuthentication = 2
 	}
