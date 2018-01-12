@@ -56,7 +56,23 @@ namespace MonoTouchFixtures.SceneKit {
 				string key = "key";
 				n.AddAnimation (a, key);
 				using (var s = new NSString (key))
-					n.AddAnimation (a, key);
+					n.AddAnimation (a, s);
+			}
+		}
+
+		[Test]
+		public void AddAnimation_Overload ()
+		{
+			TestRuntime.AssertXcodeVersion (9,0);
+
+			using (var ca = CAAnimation.CreateAnimation ())
+			using (var a = SCNAnimation.FromCAAnimation (ca))
+			using (var n = SCNNode.Create ()) {
+				n.AddAnimation (a, "key");
+				n.RemoveAllAnimations ();
+
+				n.AddAnimation (a, null);
+				n.RemoveAllAnimations ();
 			}
 		}
 	}

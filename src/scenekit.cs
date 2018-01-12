@@ -125,7 +125,11 @@ namespace XamCore.SceneKit {
 #endif
 		[NoWatch]
 		[Export ("addAnimation:forKey:")]
+#if !XAMCORE_4_0
 		void AddAnimation (CAAnimation animation, [NullAllowed] NSString key);
+#else
+		void AddAnimation (ISCNAnimationProtocol scnAnimation, [NullAllowed] string key);
+#endif
 
 #if XAMCORE_2_0
 #if XAMCORE_4_0
@@ -3503,7 +3507,6 @@ namespace XamCore.SceneKit {
 		[Watch (4, 0), TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 		[Export ("incremental")]
 		bool Incremental { [Bind ("isIncremental")] get; set; }
-		
 	}
 
 	[Watch (3,0)]
