@@ -10,13 +10,11 @@
 //
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 using Mono.Cecil;
-using Mono.Cecil.Cil;
 using Mono.Tuner;
 
 using Xamarin.Bundler;
@@ -52,73 +50,13 @@ namespace MonoTouch.Tuner {
 		}
 	}
 
-	public class MonoTouchResolver : IAssemblyResolver {
+	public class MonoTouchResolver : CoreResolver {
 
-		public string FrameworkDirectory { get; set; }
-		public string RootDirectory { get; set; }
-		public string ArchDirectory { get; set; }
 		public bool EnableRepl { get; set; }
-
-		Dictionary<string, AssemblyDefinition> cache;
-
-		public MonoTouchResolver ()
-		{
-			cache = new Dictionary<string, AssemblyDefinition> (NormalizedStringComparer.OrdinalIgnoreCase);
-		}
-
-		ReaderParameters CreateParameters (string path)
-		{
-			var parameters = new ReaderParameters ();
-			parameters.AssemblyResolver = this;
-			parameters.InMemory = new FileInfo (path).Length < 1024 * 1024 * 100; // 100 MB.
-			parameters.ReadSymbols = true;
-			parameters.SymbolReaderProvider = new DefaultSymbolReaderProvider (throwIfNoSymbol: false);
-			return parameters;
-		}
-
-		public IDictionary<string, AssemblyDefinition> ResolverCache { get { return cache; } }
-
-		public IDictionary ToResolverCache ()
-		{
-			var resolver_cache = new Dictionary<string, AssemblyDefinition> (NormalizedStringComparer.OrdinalIgnoreCase);
-			foreach (var pair in cache)
-				resolver_cache.Add (pair.Key, pair.Value);
-
-			return resolver_cache;
-		}
 
 		public IEnumerable<AssemblyDefinition> GetAssemblies ()
 		{
 			return cache.Values.Cast<AssemblyDefinition> ();
-		}
-
-		public virtual AssemblyDefinition Load (string fileName)
-		{
-			if (!File.Exists (fileName))
-				return null;
-
-			AssemblyDefinition assembly;
-			var name = Path.GetFileNameWithoutExtension (fileName);
-			if (cache.TryGetValue (name, out assembly))
-				return assembly;
-
-			try {
-				fileName = Target.GetRealPath (fileName);
-
-				// Check the architecture-specific directory
-				if (Path.GetDirectoryName (fileName) == FrameworkDirectory && !string.IsNullOrEmpty (ArchDirectory)) {
-					var archName = Path.Combine (ArchDirectory, Path.GetFileName (fileName));
-					if (File.Exists (archName))
-						fileName = archName;
-				}
-
-				assembly = ModuleDefinition.ReadModule (fileName, CreateParameters (fileName)).Assembly;
-			}
-			catch (Exception e) {
-				throw new MonoTouchException (9, true, e, "Error while loading assemblies: {0}", fileName);
-			}
-			cache.Add (name, assembly);
-			return assembly;
 		}
 
 		public void Add (AssemblyDefinition assembly)
@@ -126,22 +64,7 @@ namespace MonoTouch.Tuner {
 			cache [Path.GetFileNameWithoutExtension (assembly.MainModule.FileName)] = assembly;
 		}
 
-		public AssemblyDefinition Resolve (string fullName)
-		{
-			return Resolve (AssemblyNameReference.Parse (fullName), null);
-		}
-
-		public AssemblyDefinition Resolve (string fullName, ReaderParameters parameters)
-		{
-			return Resolve (AssemblyNameReference.Parse (fullName), null);
-		}
-
-		public AssemblyDefinition Resolve (AssemblyNameReference reference)
-		{
-			return Resolve (reference, null);
-		}
-
-		public AssemblyDefinition Resolve (AssemblyNameReference name, ReaderParameters parameters)
+		public override AssemblyDefinition Resolve (AssemblyNameReference name, ReaderParameters parameters)
 		{
 			var aname = name.Name;
 
@@ -184,27 +107,6 @@ namespace MonoTouch.Tuner {
 				return assembly;
 
 			return null;
-		}
-
-		AssemblyDefinition SearchDirectory (string name, string directory, string extension = ".dll")
-		{
-			var file = DirectoryGetFile (directory, name + extension);
-			if (file.Length > 0)
-				return Load (file);
-			return null;
-		}
-
-		static string DirectoryGetFile (string directory, string file)
-		{
-			var files = Directory.GetFiles (directory, file);
-			if (files != null && files.Length > 0)
-				return files [0];
-
-			return String.Empty;
-		}
-
-		public void Dispose ()
-		{
 		}
 	}
 }

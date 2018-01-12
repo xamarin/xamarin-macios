@@ -30,6 +30,10 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 ### <a name="MM0008">MM0008: You should provide one root assembly only, found {0} assemblies: '{1}'
 
+### <a name="MM0009"/>MM0009: Error while loading assemblies: *.
+
+An error occurred while loading the assemblies from the root assembly references. More information may be provided in the build output.
+
 ### <a name="MM0010">MM0010: Could not parse the command line arguments: {0}
 
 <!-- 0013 is unused -->
@@ -103,6 +107,17 @@ A last-straw solution would be to use an older version of Xamarin.Mac, one that 
 ### <a name="MM0099">MM0099: Internal error {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).
 
 ### <a name="MM0114">MM0114: Hybrid AOT compilation requires all assemblies to be AOT compiled.
+
+### <a name="MT0129"/>MT0129: Debugging symbol file for '*' does not match the assembly and is ignored.
+
+The debugging symbols, either a .pdb (portable pdb only) or a .mdb file, for the specified assembly could not be loaded.
+
+This generally means the assembly is newer or older than the symbols. Since they do not match they cannot be used and the symbols are ignored.
+
+This warning won't affect the application being built, however you might not be able to debug it entirely (in particular the code from specified assembly). Also exceptions, stack traces and crash reports might be missing some information.
+
+Please report this issue to the publisher of the assembly package (e.g. nuget author) so this can be fixed in their future releases.
+
 
 # MM1xxx: file copy / symlinks (project related)
 
