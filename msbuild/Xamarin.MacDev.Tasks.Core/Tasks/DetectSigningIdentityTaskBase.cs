@@ -379,10 +379,31 @@ namespace Xamarin.MacDev.Tasks
 			if (!TryGetSigningCertificates (out certs, false))
 				return false;
 
-			if (certs.Count > 0) {
-				Log.LogMessage (MessageImportance.Low, "Available certificates:");
-				foreach (var cert in certs)
-					Log.LogMessage (MessageImportance.Low, "    {0}", Xamarin.MacDev.Keychain.GetCertificateCommonName (cert));
+			Log.LogMessage (MessageImportance.Low, "Available certificates:");
+			foreach (var cert in certs)
+				Log.LogMessage (MessageImportance.Low, "    {0}", SecKeychain.GetCertificateCommonName (cert));
+
+			if (!RequireProvisioningProfile) {
+				if (certs.Count > 1) {
+					if (!string.IsNullOrEmpty (SigningKey))
+						Log.LogMessage (MessageImportance.Normal, "Multiple signing identities match '{0}'; using the first match.", SigningKey);
+					else
+						Log.LogMessage (MessageImportance.Normal, "Multiple signing identities found; using the first identity.");
+
+					for (int i = 0; i < certs.Count; i++) {
+						Log.LogMessage (MessageImportance.Normal, "{0,3}. Signing Identity: {1} ({2})", i + 1,
+						                SecKeychain.GetCertificateCommonName (certs[i]), certs[i].Thumbprint);
+					}
+				}
+
+				codesignCommonName = SecKeychain.GetCertificateCommonName (certs[0]);
+				DetectedCodeSigningKey = certs[0].Thumbprint;
+				DetectedBundleId = identity.BundleId;
+				DetectedAppId = DetectedBundleId;
+
+				ReportDetectedCodesignInfo ();
+
+				return !Log.HasLoggedErrors;
 			}
 
 			if (!IsAutoCodeSignProfile (ProvisioningProfile)) {
