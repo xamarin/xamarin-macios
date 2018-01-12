@@ -134,6 +134,7 @@ MTOUCH_SOURCES = \
 	BuildTasks.mtouch.cs \
 	$(TOP)/tools/common/Application.cs \
 	$(TOP)/tools/common/Assembly.cs \
+	$(TOP)/tools/common/CoreResolver.cs \
 	$(TOP)/tools/common/DerivedLinkContext.cs \
 	$(TOP)/tools/common/Target.cs \
 	$(TOP)/tools/common/CompilerFlags.cs \
