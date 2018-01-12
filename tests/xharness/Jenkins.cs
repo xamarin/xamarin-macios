@@ -345,6 +345,7 @@ namespace xharness
 				"src/ObjCRuntime/Registrar.cs",
 				"external/mono",
 				"external/llvm",
+				"msbuild",
 			};
 			var mmp_prefixes = new string [] {
 				"tests/mmptest",
@@ -354,6 +355,7 @@ namespace xharness
 				"tools/linker",
 				"src/ObjCRuntime/Registrar.cs",
 				"external/mono",
+				"msbuild",
 			};
 			var bcl_prefixes = new string [] {
 				"tests/bcl-test",
