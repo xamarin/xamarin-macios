@@ -13953,16 +13953,6 @@ namespace XamCore.UIKit {
 		[Export ("decodeRestorableStateWithCoder:")]
 		void DecodeRestorableState (NSCoder coder);
 
-		// TODO: Remove (alongside others) when https://github.com/xamarin/xamarin-macios/issues/3213 is fixed and conformance to 'UIStateRestoring' is restored.
-		[iOS (7,0)]
-		[Export ("restorationParent")]
-		IUIStateRestoring RestorationParent { get;  }
-
-		// TODO: Remove (alongside others) when https://github.com/xamarin/xamarin-macios/issues/3213 is fixed and conformance to 'UIStateRestoring' is restored.
-		[iOS (7,0)]
-		[Export ("objectRestorationClass")]
-		Class ObjectRestorationClass { get;  }
-
 		[iOS (6,0)]
 		[Export ("updateViewConstraints")]
 		void UpdateViewConstraints ();
