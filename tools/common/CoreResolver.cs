@@ -88,10 +88,11 @@ namespace Xamarin.Bundler {
 					// cecil use the default message so it's not very helpful to detect the root cause
 					if (!e.TargetSite.ToString ().Contains ("Void ReadSymbols(Mono.Cecil.Cil.ISymbolReader)"))
 						throw;
-					ErrorHelper.Show (ErrorHelper.CreateWarning (129, $"Debugging symbol file for '{fileName}' does not match the assembly and is ignored."));
 					parameters.ReadSymbols = false;
 					parameters.SymbolReaderProvider = null;
 					assembly = ModuleDefinition.ReadModule (fileName, parameters).Assembly;
+					// only report the warning (on symbols) if we can actually load the assembly itself (otherwise it's more confusing than helpful)
+					ErrorHelper.Show (ErrorHelper.CreateWarning (129, $"Debugging symbol file for '{fileName}' does not match the assembly and is ignored."));
 				}
 			}
 			catch (Exception e) {
