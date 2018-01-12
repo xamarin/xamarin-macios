@@ -974,7 +974,11 @@ namespace XamCore.CoreAnimation {
 		void RunAction (string eventKey, NSObject obj, [NullAllowed] NSDictionary arguments);
 	}
 	
-	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] { typeof (CAAnimationDelegate)})]
+	[BaseType (typeof (NSObject)
+#if XAMCORE_4_0
+		, Delegates = new string [] {"WeakDelegate"}, Events = new Type [] { typeof (CAAnimationDelegate) }
+#endif
+	)]
 	interface CAAnimation : CAAction, CAMediaTiming, NSSecureCoding, NSMutableCopying, SCNAnimationProtocol {
 		[Export ("animation"), Static]
 		CAAnimation CreateAnimation ();
@@ -987,8 +991,11 @@ namespace XamCore.CoreAnimation {
 		[Export ("timingFunction", ArgumentSemantic.Strong)]
 		CAMediaTimingFunction TimingFunction { get; set; }
 	
+#if XAMCORE_4_0
+		// before that we need to be wrap this manually to avoid the BI1110 error
 		[Wrap ("WeakDelegate")]
-		CAAnimationDelegate Delegate { get; set; }
+		ICAAnimationDelegate Delegate { get; set; }
+#endif
 	
 		[Export ("delegate", ArgumentSemantic.Strong)][NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -1086,11 +1093,19 @@ namespace XamCore.CoreAnimation {
 		#endregion
 	}
 
-	// Adding [Protocol] breaks when building with older SDKs (see bug #43825)
-	//[Protocol] // since iOS10
+	interface ICAAnimationDelegate {}
+
 	[BaseType (typeof (NSObject))]
-	[Model]
+#if IOS || TVOS
+	[Protocol (FormalSince = "10.0")]
+#elif MONOMAC
+	[Protocol (FormalSince = "10.12")]
+#elif WATCH
+	[Protocol (FormalSince = "3.0"]
+#else
 	[Synthetic]
+#endif
+	[Model]
 	interface CAAnimationDelegate {
 		[Export ("animationDidStart:")]
 		void AnimationStarted ([NullAllowed] CAAnimation anim);
