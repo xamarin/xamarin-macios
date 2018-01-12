@@ -13,6 +13,7 @@ namespace Xamarin.iOS.Tasks
 {
 	[TestFixture ("iPhone", "Debug")]
 	[TestFixture ("iPhone", "Release")]
+	// Note: Disabled because Simulator builds aren't consistently signed or not-signed, while device builds are.
 	//[TestFixture ("iPhoneSimulator", "Debug")]
 	//[TestFixture ("iPhoneSimulator", "Release")]
 	public class CodesignAppBundle : ProjectTest
