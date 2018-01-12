@@ -13,8 +13,8 @@ namespace Xamarin.iOS.Tasks
 {
 	[TestFixture ("iPhone", "Debug")]
 	[TestFixture ("iPhone", "Release")]
-	[TestFixture ("iPhoneSimulator", "Debug")]
-	[TestFixture ("iPhoneSimulator", "Release")]
+	//[TestFixture ("iPhoneSimulator", "Debug")]
+	//[TestFixture ("iPhoneSimulator", "Release")]
 	public class CodesignAppBundle : ProjectTest
 	{
 		readonly string config;
