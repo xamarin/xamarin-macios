@@ -7746,9 +7746,6 @@ namespace XamCore.Foundation
 	#if MONOMAC
 		, NSPasteboardReading, NSPasteboardWriting // Documented that it implements NSPasteboard protocols even if header doesn't show it
 	#endif
-#if !TVOS && XAMCORE_2_0
-		, CNKeyDescriptor
-#endif
 #if !(MONOMAC && !XAMCORE_2_0) // exclude Classic/XM
 		, NSItemProviderReading, NSItemProviderWriting
 #endif

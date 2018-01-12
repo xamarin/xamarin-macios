@@ -28,7 +28,7 @@ namespace XamCore.CoreAudioKit {
 #if XAMCORE_2_0 || !MONOMAC
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof(AUViewControllerBase))]
-	interface AUViewController : NSExtensionRequestHandling {
+	interface AUViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
