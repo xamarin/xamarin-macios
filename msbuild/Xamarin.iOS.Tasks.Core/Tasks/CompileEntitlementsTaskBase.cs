@@ -44,8 +44,6 @@ namespace Xamarin.iOS.Tasks
 			}
 		}
 
-		protected override MobileProvisionPlatform Platform { get { return MobileProvisionPlatform.iOS; } }
-
 		protected override string EntitlementBundlePath { get { return AppBundleDir; } }
 	}
 }
