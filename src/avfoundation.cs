@@ -11494,7 +11494,7 @@ namespace XamCore.AVFoundation {
 	[NoWatch]
 	[TV (10,2), iOS (8,0), Mac (10,10)]
 	[BaseType (typeof (CALayer))]
-	interface AVSampleBufferDisplayLayer : AVQueuedSampleBufferRendering {
+	interface AVSampleBufferDisplayLayer {
 
 		[NullAllowed]
 		[Export ("controlTimebase", ArgumentSemantic.Retain)]
@@ -11509,20 +11509,40 @@ namespace XamCore.AVFoundation {
 		[Export ("error"), NullAllowed]
 		NSError Error { get; }
 
+		[Export ("readyForMoreMediaData")]
+		bool ReadyForMoreMediaData { [Bind ("isReadyForMoreMediaData")] get; }
+
+		[Export ("enqueueSampleBuffer:")]
+		void Enqueue (CMSampleBuffer sampleBuffer);
+
 #if !XAMCORE_4_0
 		[Wrap ("Enqueue (sampleBuffer)", IsVirtual = true)]
 		[Obsolete ("Use the 'Enqueue' method instead.")]
 		void EnqueueSampleBuffer (CMSampleBuffer sampleBuffer);
 #endif
 
+		[Export ("flush")]
+		void Flush ();
+
 		[Export ("flushAndRemoveImage")]
 		void FlushAndRemoveImage ();
+
+		[Export ("requestMediaDataWhenReadyOnQueue:usingBlock:")]
+		void RequestMediaData (DispatchQueue queue, Action handler);
 
 #if !XAMCORE_4_0
 		[Wrap ("RequestMediaData (queue, enqueuer)", IsVirtual = true)]
 		[Obsolete ("Use the 'RequestMediaData' method instead.")]
 		void RequestMediaDataWhenReadyOnQueue (DispatchQueue queue, Action enqueuer);
 #endif
+
+		[Export ("stopRequestingMediaData")]
+		void StopRequestingMediaData ();
+
+		// TODO: Remove (alongside others) when https://github.com/xamarin/xamarin-macios/issues/3213 is fixed and conformance to 'AVQueuedSampleBufferRendering' is restored.
+		[TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("timebase", ArgumentSemantic.Retain)]
+		CMTimebase Timebase { get; }
 
 		[iOS (8, 0), Mac (10,10)]
 		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotification")]

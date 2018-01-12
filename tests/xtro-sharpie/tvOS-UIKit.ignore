@@ -58,3 +58,6 @@
 !missing-protocol-conformance! UIColor should conform to NSItemProviderWriting (defined in 'UINSItemProvider' category)
 !missing-protocol-conformance! UIImage should conform to NSItemProviderReading (defined in 'NSItemProvider' category)
 !missing-protocol-conformance! UIImage should conform to NSItemProviderWriting (defined in 'NSItemProvider' category)
+
+## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'UIStateRestoring' is restored.
+!missing-protocol-conformance! UIViewController should conform to UIStateRestoring (defined in 'UIStateRestoration' category)

@@ -13596,7 +13596,7 @@ namespace XamCore.UIKit {
 	interface IUIContentContainer {}
 	
 	[BaseType (typeof (UIResponder))]
-	interface UIViewController : NSCoding, UIAppearanceContainer, UIContentContainer, UITraitEnvironment, UIFocusEnvironment, UIStateRestoring, NSExtensionRequestHandling {
+	interface UIViewController : NSCoding, UIAppearanceContainer, UIContentContainer, UITraitEnvironment, UIFocusEnvironment, NSExtensionRequestHandling {
 		[DesignatedInitializer]
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
@@ -13946,6 +13946,24 @@ namespace XamCore.UIKit {
 		Class RestorationClass { get; set; }
 
 		[iOS (6,0)]
+		[Export ("encodeRestorableStateWithCoder:")]
+		void EncodeRestorableState (NSCoder coder);
+
+		[iOS (6,0)]
+		[Export ("decodeRestorableStateWithCoder:")]
+		void DecodeRestorableState (NSCoder coder);
+
+		// TODO: Remove (alongside others) when https://github.com/xamarin/xamarin-macios/issues/3213 is fixed and conformance to 'UIStateRestoring' is restored.
+		[iOS (7,0)]
+		[Export ("restorationParent")]
+		IUIStateRestoring RestorationParent { get;  }
+
+		// TODO: Remove (alongside others) when https://github.com/xamarin/xamarin-macios/issues/3213 is fixed and conformance to 'UIStateRestoring' is restored.
+		[iOS (7,0)]
+		[Export ("objectRestorationClass")]
+		Class ObjectRestorationClass { get;  }
+
+		[iOS (6,0)]
 		[Export ("updateViewConstraints")]
 		void UpdateViewConstraints ();
 
@@ -13986,6 +14004,10 @@ namespace XamCore.UIKit {
 		[iOS (7,0)]
 		[Export ("setNeedsStatusBarAppearanceUpdate")]
 		void SetNeedsStatusBarAppearanceUpdate ();
+
+		[iOS (7,0)]
+		[Export ("applicationFinishedRestoringState")]
+		void ApplicationFinishedRestoringState ();
 
 		[iOS (7,0)]
 		[Export ("transitioningDelegate", ArgumentSemantic.Assign), NullAllowed]
