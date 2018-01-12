@@ -108,7 +108,7 @@ A last-straw solution would be to use an older version of Xamarin.Mac, one that 
 
 ### <a name="MM0114">MM0114: Hybrid AOT compilation requires all assemblies to be AOT compiled.
 
-### <a name="MT0129"/>MT0129: Debugging symbol file for '*' does not match the assembly and is ignored.
+### <a name="MM0129"/>MM0129: Debugging symbol file for '*' does not match the assembly and is ignored.
 
 The debugging symbols, either a .pdb (portable pdb only) or a .mdb file, for the specified assembly could not be loaded.
 
