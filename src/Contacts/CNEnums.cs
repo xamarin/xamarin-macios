@@ -16,7 +16,7 @@ using Foundation;
 namespace Contacts {
 
 	// NSInteger -> CNContact.h
-	[iOS (9, 0), Mac (10, 11)]
+	[iOS (9,0), Mac (10,11)]
 	[Native]
 	public enum CNContactType : long {
 		Person,
