@@ -27,6 +27,18 @@ multiple run configurations (`ios-classic`, `ios-unified`, `tvos`, `watchos`,
 `mac-classic`, `mac-unified`, `mac-full`), each configured to execute the
 generator with the options for the corresponding profile.
 
+### Generator diff
+
+Two special `make` targets can be used to compare the generated code (.g.cs files) changes between two branches.  
+This is **required** when making changes to the generator.
+
+1. Checkout the clean base branch (e.g master's HEAD) the feature (target) branch is based on.
+2. Do `make generator-reference` in `xamarin-macios/src`.
+3. Checkout the feature branch that requires the diff.
+4. Do `make generator-diff`.
+
+*Tip: do `git diff | pbcopy` in `xamarin-ios/src/generator-reference` and paste that anywhere ([gist](https://gist.github.com) for instance).*
+
 Conditional compilation
 =======================
 
