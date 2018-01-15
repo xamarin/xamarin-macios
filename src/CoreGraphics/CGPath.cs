@@ -560,7 +560,7 @@ namespace XamCore.CoreGraphics {
 		static CGPath MakeMutable (IntPtr source)
 		{
 			var mutable = CGPathCreateMutableCopy (source);
-			return new CGPath (mutable, false);
+			return new CGPath (mutable, true);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
