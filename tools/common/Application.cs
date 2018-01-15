@@ -478,7 +478,7 @@ namespace Xamarin.Bundler {
 				throw new PlatformException (67, "Invalid registrar: {0}", Registrar); // this is only called during our own build
 
 			if (RootAssemblies.Count < 1)
-				throw ErrorHelper.CreateError (130, "No assemblies found. You should provide at least one assembly.");
+				throw ErrorHelper.CreateError (130, "No root assemblies found. You should provide at least one root assembly.");
 
 			var registrar_m = RegistrarOutputLibrary;
 			var RootAssembly = RootAssemblies [0];

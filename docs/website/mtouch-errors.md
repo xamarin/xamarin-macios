@@ -640,8 +640,7 @@ This warning won't affect the application being built, however you might not be 
 Please report this issue to the publisher of the assembly package (e.g. nuget author) so this can be fixed in their future releases.
 
 ### <a name="MT0130"/>MT0130: No assemblies found. You should provide at least one assembly.
-
-When running --runregistrar, at least one assembly should be provided.
+When running --runregistrar, at least one root assembly should be provided.
 
 ### <a name="MT0131"/>MT0131: Product assembly '{0}' not found in assembly list: '{1}'
 

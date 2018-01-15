@@ -120,7 +120,7 @@ Please report this issue to the publisher of the assembly package (e.g. nuget au
 
 ### <a name="MM0130"/>MM0130: No assemblies found. You should provide at least one assembly.
 
-When running --runregistrar, at least one assembly should be provided.
+When running --runregistrar, at least one root assembly should be provided.
 
 ### <a name="MM0131"/>MM0131: Product assembly '{0}' not found in assembly list: '{1}'
 
