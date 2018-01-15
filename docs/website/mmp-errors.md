@@ -118,7 +118,7 @@ This warning won't affect the application being built, however you might not be 
 
 Please report this issue to the publisher of the assembly package (e.g. nuget author) so this can be fixed in their future releases.
 
-### <a name="MM0130"/>MM0130: No assemblies found. You should provide at least one assembly.
+### <a name="MM0130"/>MM0130: No root assemblies found. You should provide at least one root assembly.
 
 When running --runregistrar, at least one root assembly should be provided.
 
