@@ -112,7 +112,7 @@ namespace Xamarin.Bundler {
 
 		static string DirectoryGetFile (string directory, string file, bool recursive)
 		{
-			var files = Directory.GetFiles (directory, file, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly));
+			var files = Directory.GetFiles (directory, file, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
 			if (files != null && files.Length > 0)
 				return files [0];
 
