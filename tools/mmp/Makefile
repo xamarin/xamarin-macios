@@ -95,6 +95,7 @@ tuner_sources = \
 	$(TOP)/tools/linker/RemoveUserResourcesSubStep.cs \
 	../linker/MonoTouch.Tuner/Extensions.cs	\
 	../linker/MonoTouch.Tuner/ListExportedSymbols.cs	\
+	../linker/MonoTouch.Tuner/MonoTouchTypeMap.cs		\
 	../linker/MonoTouch.Tuner/ProcessExportedFields.cs	\
 	../linker/MonoTouch.Tuner/PreserveSmartEnumConversionsSubStep.cs		\
 	../../src/build/mac/Constants.cs
@@ -131,6 +132,7 @@ mmp_sources = \
 	$(TOP)/tools/common/CoreResolver.cs \
 	$(TOP)/tools/common/DerivedLinkContext.cs \
 	$(TOP)/tools/common/StringUtils.cs \
+	$(TOP)/tools/common/Optimizations.cs \
 	$(TOP)/src/Foundation/ConnectAttribute.cs \
 	$(TOP)/src/Foundation/ExportAttribute.cs \
 	$(TOP)/src/ObjCRuntime/ArgumentSemantic.cs \

@@ -28,7 +28,6 @@ namespace MonoMac.Tuner {
 		public AssemblyResolver Resolver { get; set; }
 		public IEnumerable<string> SkippedAssemblies { get; set; }
 		public I18nAssemblies I18nAssemblies { get; set; }
-		public bool EnsureUIThread { get; set; }
 		public IList<string> ExtraDefinitions { get; set; }
 		public TargetFramework TargetFramework { get; set; }
 		public string Architecture { get; set; }
@@ -36,6 +35,7 @@ namespace MonoMac.Tuner {
 		internal RuntimeOptions RuntimeOptions { get; set; }
 		public bool SkipExportedSymbolsInSdkAssemblies { get; set; }
 		public Target Target { get; set; }
+		public Application Application { get { return Target.App; } }
 
 		public static I18nAssemblies ParseI18nAssemblies (string i18n)
 		{
@@ -157,11 +157,11 @@ namespace MonoMac.Tuner {
 			pipeline.AppendStep (new ProcessExportedFields ());
 
 			if (options.LinkMode != LinkMode.None) {
-				pipeline.AppendStep (new TypeMapStep ());
+				pipeline.AppendStep (new MonoTouchTypeMapStep ());
 
 				var subdispatcher = new SubStepDispatcher {
 					new ApplyPreserveAttribute (),
-					new OptimizeGeneratedCodeSubStep (options.EnsureUIThread),
+					new OptimizeGeneratedCodeSubStep (options),
 					new RemoveUserResourcesSubStep (),
 					new CoreRemoveAttributes (),
 					new CoreHttpMessageHandler (options),

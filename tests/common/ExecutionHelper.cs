@@ -175,6 +175,11 @@ namespace Xamarin.Tests
 			return false;
 		}
 
+		public void AssertWarningCount (int count, string message = "warnings")
+		{
+			Assert.AreEqual (count, WarningCount, message);
+		}
+
 		public void AssertErrorCount (int count, string message = "errors")
 		{
 			Assert.AreEqual (count, ErrorCount, message);

@@ -8,6 +8,7 @@ namespace Xamarin.Bundler {
 
 		public bool Is32Build => !Driver.Is64Bit; 
 		public bool Is64Build => Driver.Is64Bit;
+		public bool IsDualBuild => false;
 
 		bool RequiresXcodeHeaders => Driver.Registrar == RegistrarMode.Static && LinkMode == LinkMode.None;
 
