@@ -509,11 +509,12 @@ namespace Xamarin.Bundler {
 				var rootName = Path.GetFileNameWithoutExtension (asm);
 				if (rootName == productAssembly)
 					foundProductAssembly = true;
-
-				Exception e = null;
-				AssemblyDefinition lastAssembly = null;
+				
 				try {
-					lastAssembly = ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ());
+					AssemblyDefinition lastAssembly = ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ());
+					if (lastAssembly == null)
+						ErrorHelper.CreateWarning (7, "The root assembly '{0}' does not exist", rootName);
+					
 					if (resolvedAssemblies.TryGetValue (rootName, out var previousAssembly)) {
 						if (lastAssembly.MainModule.RuntimeVersion != previousAssembly.MainModule.RuntimeVersion) {
 							Driver.Log (2, "Attemping to load an assembly another time {0} (previous {1})", lastAssembly.FullName, previousAssembly.FullName);
@@ -521,16 +522,12 @@ namespace Xamarin.Bundler {
 						continue;
 					}
 					
-					if (lastAssembly != null) {
-						resolvedAssemblies.Add (rootName, lastAssembly);
-						Driver.Log (3, "Loaded {0}", lastAssembly.MainModule.FileName);
-					}
+					resolvedAssemblies.Add (rootName, lastAssembly);
+					Driver.Log (3, "Loaded {0}", lastAssembly.MainModule.FileName);
 				} catch (Exception ex) {
-					e = ex;
+					ErrorHelper.Warning (9, "Error while loading assemblies: {0}{1}{2}", rootName, Environment.NewLine, ex.ToString ());
+					continue;
 				}
-
-				if (lastAssembly == null)
-					Driver.Log (3, "Failed to load assembly {0}{1}{2}", rootName, Environment.NewLine, e?.ToString ());
 			}
 
 			if (!foundProductAssembly)
