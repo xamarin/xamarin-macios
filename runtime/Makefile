@@ -18,6 +18,7 @@ SHIPPED_HEADERS +=         \
 	xamarin/main.h         \
 	xamarin/trampolines.h  \
 	xamarin/runtime.h      \
+	xamarin/runtime-generated.h \
 
 SHARED_SOURCES += mono-runtime.m bindings.m bindings-generated.m shared.m runtime.m trampolines.m trampolines-invoke.m xamarin-support.m nsstring-localization.m trampolines-varargs.m
 SHARED_I386_SOURCES += trampolines-i386.m trampolines-i386-asm.s trampolines-i386-objc_msgSend.s trampolines-i386-objc_msgSendSuper.s trampolines-i386-objc_msgSend_stret.s trampolines-i386-objc_msgSendSuper_stret.s
@@ -29,6 +30,9 @@ SHARED_FILES = $(SHARED_SOURCES) $(SHARED_HEADERS) $(SHARED_I386_SOURCES) $(SHAR
 EXTRA_DEPENDENCIES = $(SHARED_HEADERS)
 
 xamarin/mono-runtime.h: mono-runtime.h.t4 exports.t4
+	$(Q_GEN) $(TT) $< -o $@
+
+xamarin/runtime-generated.h: runtime-generated.h.t4 delegates.t4
 	$(Q_GEN) $(TT) $< -o $@
 
 mono-runtime.m: mono-runtime.m.t4 exports.t4
