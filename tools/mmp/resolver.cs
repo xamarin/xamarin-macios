@@ -88,41 +88,12 @@ namespace Xamarin.Bundler {
 				return assembly;
 
 			foreach (var directory in RecursiveSearchDirectories) {
-				assembly = SearchDirectory (name, directory, true);
+				assembly = SearchDirectory (name, directory, recursive: true);
 				if (assembly != null)
 					return assembly;
 			}
 
 			return null;
 		}
-<<<<<<< HEAD
-=======
-
-		AssemblyDefinition SearchDirectory (string name, string directory, bool recursive = false)
-		{
-			var file = DirectoryGetFile (directory, name + ".dll", recursive);
-			if (file.Length > 0)
-				return AddAssembly (file);
-
-			file = DirectoryGetFile (directory, name + ".exe", recursive);
-			if (file.Length > 0)
-				return AddAssembly (file);
-
-			return null;
-		}
-
-		static string DirectoryGetFile (string directory, string file, bool recursive)
-		{
-			var files = Directory.GetFiles (directory, file, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
-			if (files != null && files.Length > 0)
-				return files [0];
-
-			return "";
-		}
-
-		public void Dispose ()
-		{
-		}
->>>>>>> [Mmp] Add support for recursive extra search directories.
 	}
 }
