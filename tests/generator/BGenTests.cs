@@ -519,6 +519,9 @@ namespace GeneratorTests
 			Assert.That (!callsMethod (sConstructor, "IntPtr_objc_msgSendSuper"), "S: objc_msgSendSuper");
 		}
 
+		[Test]
+		public void Bug57531 () => BuildFile (Profile.iOS, "bug57531.cs");
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, filenames);
