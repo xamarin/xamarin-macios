@@ -31,7 +31,7 @@ namespace Xamarin.Bundler {
 		public static bool IsClassic { get { return Driver.IsClassic; } }
 		public static bool IsUnified { get { return Driver.IsUnified; } }
 
-		public List<string> ExtraSearchDirectories { get; } = new List<string> ();
+		public List<string> RecursiveSearchDirectories { get; } = new List<string> ();
 
 		public List <string> CommandLineAssemblies { get; set; }
 		public List<Exception> Exceptions = new List<Exception> ();
@@ -87,7 +87,7 @@ namespace Xamarin.Bundler {
 			if (assembly != null)
 				return assembly;
 
-			foreach (var directory in ExtraSearchDirectories) {
+			foreach (var directory in RecursiveSearchDirectories) {
 				assembly = SearchDirectory (name, directory, true);
 				if (assembly != null)
 					return assembly;

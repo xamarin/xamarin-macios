@@ -82,7 +82,7 @@ namespace Xamarin.Bundler {
 		static string app_name;
 		static bool generate_plist;
 		public static RegistrarMode Registrar { get; private set; } = RegistrarMode.Default;
-		public static List<string> ExtraSearchDirectories { get; } = new List<string> ();
+		public static List<string> RecursiveSearchDirectories { get; } = new List<string> ();
 		static bool no_executable;
 		static bool embed_mono = true;
 		static bool? profiling = false;
@@ -311,8 +311,8 @@ namespace Xamarin.Bundler {
 						}
 					}
 				},
-				{ "extra-directories:", "Specify extra search directories to use when probing assemblies", v => {
-						ExtraSearchDirectories.AddRange (v.Split (Path.PathSeparator));
+				{ "recursive-directories:", "Specify extra recursive search directories to use when probing assemblies", v => {
+						RecursiveSearchDirectories.AddRange (v.Split (Path.PathSeparator));
 					}
 				},
 				{ "sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\")",

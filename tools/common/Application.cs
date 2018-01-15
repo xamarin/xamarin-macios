@@ -482,13 +482,13 @@ namespace Xamarin.Bundler {
 
 			var registrar_m = RegistrarOutputLibrary;
 			var RootAssembly = RootAssemblies [0];
-			var resolvedAssemblies = new HashSet<AssemblyDefinition> ();
+			var resolvedAssemblies = new Dictionary<string, AssemblyDefinition> ();
 			var resolver = new PlatformResolver () {
 				FrameworkDirectory = Driver.GetPlatformFrameworkDirectory (this),
 				RootDirectory = Path.GetDirectoryName (RootAssembly),
 			};
 #if MMP
-			resolver.ExtraSearchDirectories.AddRange (Driver.ExtraSearchDirectories);
+			resolver.RecursiveSearchDirectories.AddRange (Driver.RecursiveSearchDirectories);
 #endif
 
 			if (Platform == ApplePlatform.iOS || Platform == ApplePlatform.MacOSX) {
@@ -501,7 +501,7 @@ namespace Xamarin.Bundler {
 
 			var ps = new ReaderParameters ();
 			ps.AssemblyResolver = resolver;
-			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse ("mscorlib"), new ReaderParameters ()));
+			resolvedAssemblies.Add ("mscorlib", ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse ("mscorlib"), new ReaderParameters ()));
 
 			var productAssembly = Driver.GetProductAssembly (this);
 			bool foundProductAssembly = false;
@@ -514,8 +514,17 @@ namespace Xamarin.Bundler {
 				AssemblyDefinition lastAssembly = null;
 				try {
 					lastAssembly = ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ());
-					if (lastAssembly != null && resolvedAssemblies.Add (lastAssembly))
+					if (resolvedAssemblies.TryGetValue (rootName, out var previousAssembly)) {
+						if (lastAssembly.MainModule.RuntimeVersion != previousAssembly.MainModule.RuntimeVersion) {
+							Driver.Log (2, "Attemping to load an assembly another time {0} (previous {1})", lastAssembly.FullName, previousAssembly.FullName);
+						}
+						continue;
+					}
+					
+					if (lastAssembly != null) {
+						resolvedAssemblies.Add (rootName, lastAssembly);
 						Driver.Log (3, "Loaded {0}", lastAssembly.MainModule.FileName);
+					}
 				} catch (Exception ex) {
 					e = ex;
 				}
@@ -532,9 +541,9 @@ namespace Xamarin.Bundler {
 #endif
 			var registrar = new XamCore.Registrar.StaticRegistrar (this);
 			if (RootAssemblies.Count == 1)
-				registrar.GenerateSingleAssembly (resolvedAssemblies, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
+				registrar.GenerateSingleAssembly (resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
 			else
-				registrar.Generate (resolvedAssemblies, Path.ChangeExtension (registrar_m, "h"), registrar_m);
+				registrar.Generate (resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m);
 		}
 	}
 }
