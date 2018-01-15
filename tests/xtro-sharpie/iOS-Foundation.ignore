@@ -1,0 +1,5 @@
+!missing-selector! +NSURLConnection::sendSynchronousRequest:returningResponse:error: not bound
+!missing-selector! NSFileProviderService::getFileProviderConnectionWithCompletionHandler: not bound
+
+## does not exists in iOS as a type - but some API refers to it (messy)
+!unknown-type! NSPortMessage bound

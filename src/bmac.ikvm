@@ -13,6 +13,8 @@ fi
 
 ROOT_DIR=$BIN_DIR/..
 
+bgen_path=$BIN_DIR/bgen
+
 btouch_arguments=()
 for arg in "$@"; do
 	if [[ $sdk == next-arg ]]; then
@@ -41,6 +43,7 @@ sdk=$(echo $sdk | tr '[:upper:]' '[:lower:]')
 case $sdk in
 xammac)
 	refs="--target-framework=XamMac,v1.0"
+	bgen_path=$BIN_DIR/bgen-classic
 	;;
 mobile|xamarin.mac)
 	refs="--target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile"
@@ -60,4 +63,4 @@ mobile|xamarin.mac)
 	;;
 esac
 
-exec $BIN_DIR/bgen $refs "${btouch_arguments[@]}"
+exec $bgen_path $refs "${btouch_arguments[@]}"

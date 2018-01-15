@@ -1,17 +1,15 @@
 ﻿// Copyright 2017 Microsoft Inc. All rights reserved.
 
-#if !__WATCHOS__ && !MONOMAC
+#if !__WATCHOS__
 
 using System;
 
 #if XAMCORE_2_0
 using Metal;
 using MetalPerformanceShaders;
-using UIKit;
 #else
 using MonoTouch.Metal;
 using MonoTouch.MetalPerformanceShaders;
-using MonoTouch.UIKit;
 #endif
 
 using NUnit.Framework;
@@ -26,8 +24,12 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 		[Test]
 		public void Constructors ()
 		{
+#if !MONOMAC
 			TestRuntime.AssertDevice ();
 			TestRuntime.AssertXcodeVersion (7, 0);
+#else
+			TestRuntime.AssertXcodeVersion (9, 0);
+#endif
 
 			MPSImageHistogramInfo info = new MPSImageHistogramInfo ();
 			info.NumberOfHistogramEntries = 256;

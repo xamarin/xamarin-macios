@@ -2345,6 +2345,8 @@ public partial class Generator : IMemberGatherer {
 						continue;
 					else if (attr is AvailabilityBaseAttribute)
 						continue;
+					else if (attr is RequiresSuperAttribute)
+						continue;
 					else {
 						switch (attr.GetType ().Name) {
 						case "PreserveAttribute":
@@ -3361,7 +3363,7 @@ public partial class Generator : IMemberGatherer {
 		string name = minfo.is_ctor ? GetGeneratedTypeName (mi.DeclaringType) : is_async ? GetAsyncName (mi) : mi.Name;
 
 		// Some codepaths already write preservation info
-		PrintAttributes (minfo.mi, preserve:!alreadyPreserved, advice:true, bindAs:true);
+		PrintAttributes (minfo.mi, preserve:!alreadyPreserved, advice:true, bindAs:true, requiresSuper: true);
 
 		if (!minfo.is_ctor && !is_async){
 			var prefix = "";
@@ -4110,7 +4112,7 @@ public partial class Generator : IMemberGatherer {
 		var hasStaticAtt = AttributeManager.HasAttribute<StaticAttribute> (mi);
 		if (category_type != null && hasStaticAtt && !minfo.ignore_category_static_warnings) {
 			var baseTypeAtt = AttributeManager.GetCustomAttribute<BaseTypeAttribute> (minfo.type);
-			ErrorHelper.Show (new BindingException (1117, "The {0} member is decorated with [Static] and its container class {1} is decorated with [Category] this leads to hard to use code. Please inline {0} into {2} class.", mi.Name, type.FullName, baseTypeAtt?.BaseType.FullName));
+			ErrorHelper.Show (new BindingException (1117, "The member '{0}' is decorated with [Static] and its container class {1} is decorated with [Category] this leads to hard to use code. Please inline {0} into {2} class.", mi.Name, type.FullName, baseTypeAtt?.BaseType.FullName));
 		}
 
 		indent++;
@@ -4364,7 +4366,7 @@ public partial class Generator : IMemberGatherer {
 
 	static PropertyInfo GetProperty (PostGetAttribute @this, Type type)
 	{
-		if (type == null)
+		if (type == null || type == TypeManager.System_Object)
 			return null;
 
 		var props = type.GetProperties ();
@@ -4885,6 +4887,21 @@ public partial class Generator : IMemberGatherer {
 		var mi = original_minfo.method;
 		var minfo = new AsyncMethodInfo (this, original_minfo.type, mi, original_minfo.category_extension_type, original_minfo.is_extension_method);
 		var is_void = mi.ReturnType == TypeManager.System_Void;
+
+		// Print a error if any of the method parameters or handler parameters is ref/out, it should not be asyncified.
+		if (minfo.async_initial_params != null) {
+			foreach (var param in minfo.async_initial_params) {
+				if (param.ParameterType.IsByRef) {
+					throw new BindingException (1062, true, $"The member '{original_minfo.type.Name}.{mi.Name}' contains ref/out parameters and must not be decorated with [Async].");
+				}
+			}
+		}
+		foreach (var param in minfo.async_completion_params) {
+			if (param.ParameterType.IsByRef) {
+				throw new BindingException (1062, true, $"The member '{original_minfo.type.Name}.{mi.Name}' contains ref/out parameters and must not be decorated with [Async].");
+			}
+		}
+
 		PrintMethodAttributes (minfo);
 
 		PrintAsyncHeader (minfo, asyncKind);
@@ -5624,6 +5641,15 @@ public partial class Generator : IMemberGatherer {
 		print ($"[Advice ({Quote (p.Message)})]");
 	}
 
+	public void PrintRequiresSuperAttribute (ICustomAttributeProvider mi)
+	{
+		var p = AttributeManager.GetCustomAttribute<RequiresSuperAttribute> (mi);
+		if (p == null)
+			return;
+
+		print ("[RequiresSuper]");
+	}
+
 	public void PrintNotImplementedAttribute (ICustomAttributeProvider mi)
 	{
 		var p = AttributeManager.GetCustomAttribute<NotImplementedAttribute> (mi);
@@ -5656,7 +5682,7 @@ public partial class Generator : IMemberGatherer {
 			print (attribstr);
 	}
 
-	public void PrintAttributes (ICustomAttributeProvider mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false, bool bindAs = false)
+	public void PrintAttributes (ICustomAttributeProvider mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false, bool bindAs = false, bool requiresSuper = false)
 	{
 		if (platform)
 			PrintPlatformAttributes (mi as MemberInfo);
@@ -5668,6 +5694,8 @@ public partial class Generator : IMemberGatherer {
 			PrintNotImplementedAttribute (mi);
 		if (bindAs)
 			PrintBindAsAttribute (mi);
+		if (requiresSuper)
+			PrintRequiresSuperAttribute (mi);
 	}
 
 	public void ComputeLibraryName (FieldAttribute fieldAttr, Type type, string propertyName, out string library_name, out string library_path)

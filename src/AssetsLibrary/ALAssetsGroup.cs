@@ -16,7 +16,7 @@ using XamCore.MediaPlayer;
 
 namespace XamCore.AssetsLibrary {
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Photos' API instead.")]
 	public partial class ALAssetsGroup {
 		public NSString Name {
 			get {
@@ -40,7 +40,6 @@ namespace XamCore.AssetsLibrary {
 			}
 		}
 
-		[iOS (5,0)]
 		public NSUrl PropertyUrl {
 			get {
 				return (NSUrl) ValueForProperty (_PropertyUrl);

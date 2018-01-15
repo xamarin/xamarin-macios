@@ -40,7 +40,6 @@ using System.ComponentModel;
 
 namespace XamCore.QuickLook {
 #if !MONOMAC
-	[Since (4,0)]
 	[BaseType (typeof (UIViewController), Delegates = new string [] { "WeakDelegate" }, Events=new Type [] { typeof (QLPreviewControllerDelegate)})]
 	interface QLPreviewController {
 		[Export ("initWithNibName:bundle:")]
@@ -79,7 +78,6 @@ namespace XamCore.QuickLook {
 		void RefreshCurrentPreviewItem ();
 	}
 
-	[Since (4,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -94,7 +92,6 @@ namespace XamCore.QuickLook {
 		QLPreviewItem GetPreviewItem (QLPreviewController controller, nint index);
 	}
 
-	[Since (4,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -111,11 +108,9 @@ namespace XamCore.QuickLook {
 #if !MONOMAC
 		// UIView and UIImage do not exists in MonoMac
 		
-		[Since (4,2)]
 		[Export ("previewController:frameForPreviewItem:inSourceView:"), DelegateName ("QLFrame"), DefaultValue (typeof (CGRect))]
 		CGRect FrameForPreviewItem (QLPreviewController controller, [Protocolize] QLPreviewItem item, ref UIView view);
 		
-		[Since (4,2)]
 		[Export ("previewController:transitionImageForPreviewItem:contentRect:"), DelegateName ("QLTransition"), DefaultValue (null)]
 		UIImage TransitionImageForPreviewItem (QLPreviewController controller, [Protocolize] QLPreviewItem item, CGRect contentRect);
 
@@ -128,7 +123,6 @@ namespace XamCore.QuickLook {
 
 	interface IQLPreviewItem {}
 
-	[Since (4,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]

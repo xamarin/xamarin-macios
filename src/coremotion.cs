@@ -15,7 +15,6 @@ using XamCore.UIKit;
 using System;
 
 namespace XamCore.CoreMotion {
-	[Since (4,0)]
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
 	interface CMAccelerometerData : NSSecureCoding {
@@ -34,7 +33,6 @@ namespace XamCore.CoreMotion {
 		NSDate StartDate { get; }
 	}
 
-	[Since (4,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
 	interface CMLogItem : NSSecureCoding, NSCopying {
@@ -47,7 +45,6 @@ namespace XamCore.CoreMotion {
 	delegate void CMDeviceMotionHandler (CMDeviceMotion motion, NSError error);
 
 	[BaseType (typeof (NSObject))]
-	[Since (4,0)]
 	interface CMMotionManager {
 		[Export ("accelerometerAvailable")]
 		bool AccelerometerAvailable { [Bind ("isAccelerometerAvailable")] get;  }
@@ -112,57 +109,44 @@ namespace XamCore.CoreMotion {
 		[Export ("stopDeviceMotionUpdates")]
 		void StopDeviceMotionUpdates ();
 
-		[Since (5,0)]
 		[Export ("magnetometerUpdateInterval")]
 		double MagnetometerUpdateInterval { get; set; }
 
-		[Since (5,0)]
 		[Export ("magnetometerAvailable")]
 		bool MagnetometerAvailable { [Bind ("isMagnetometerAvailable")] get; }
 
-		[Since (5,0)]
 		[Export ("magnetometerActive")]
 		bool MagnetometerActive { [Bind ("isMagnetometerActive")] get; }
 
-		[Since (5,0)]
 		[Export ("magnetometerData")]
 		CMMagnetometerData MagnetometerData { get; }
 
-		[Since (5,0)]
 		[Export ("startMagnetometerUpdates")]
 		void StartMagnetometerUpdates ();
 
-		[Since (5,0)]
 		[Export ("startMagnetometerUpdatesToQueue:withHandler:")]
 		void StartMagnetometerUpdates (NSOperationQueue queue, CMMagnetometerHandler handler);
 
-		[Since (5,0)]
 		[Export ("stopMagnetometerUpdates")]
 		void StopMagnetometerUpdates ();
 
-		[Since (5,0)]
 		[Export ("availableAttitudeReferenceFrames"), Static]
 		CMAttitudeReferenceFrame AvailableAttitudeReferenceFrames { get; }
 
-		[Since (5,0)]
 		[Export ("attitudeReferenceFrame")]
 		CMAttitudeReferenceFrame AttitudeReferenceFrame { get; }
 
-		[Since (5,0)]
 		[Export ("startDeviceMotionUpdatesUsingReferenceFrame:")]
 		void StartDeviceMotionUpdates (CMAttitudeReferenceFrame referenceFrame);
 
-		[Since (5,0)]
 		[Export ("startDeviceMotionUpdatesUsingReferenceFrame:toQueue:withHandler:")]
 		void StartDeviceMotionUpdates (CMAttitudeReferenceFrame referenceFrame, NSOperationQueue queue, CMDeviceMotionHandler handler);
 
-		[Since (5,0)]
 		[Export ("showsDeviceMovementDisplay")]
 		bool ShowsDeviceMovementDisplay { get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]
-	[Since (4,0)]
 	//<quote>You access CMAttitude objects through the attitude property of each CMDeviceMotion objects passed to an application.</quote>
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
 	interface CMAttitude : NSSecureCoding, NSCopying {
@@ -186,7 +170,6 @@ namespace XamCore.CoreMotion {
 	}
 
 	[BaseType (typeof (CMLogItem))]
-	[Since (4,0)]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
 	interface CMDeviceMotion : NSSecureCoding {
 		[Export ("rotationRate")]
@@ -201,7 +184,6 @@ namespace XamCore.CoreMotion {
 		[Export ("attitude")]
 		CMAttitude Attitude { get; }
 
-		[Since (5,0)]
 		[Export ("magneticField")]
 		CMCalibratedMagneticField MagneticField { get; }
 
@@ -211,7 +193,6 @@ namespace XamCore.CoreMotion {
 	}
 
 	[BaseType (typeof (CMLogItem))]
-	[Since (4,0)]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
 	interface CMGyroData : NSSecureCoding {
 		[Export ("rotationRate")]
@@ -219,26 +200,24 @@ namespace XamCore.CoreMotion {
 	}
 
 	[BaseType (typeof (CMLogItem))]
-	[Since (5,0)]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
 	interface CMMagnetometerData : NSSecureCoding {
 		[Export ("magneticField")]
 		CMMagneticField MagneticField { get; }
 	}
 
-	[Since (5,0)]
 	delegate void CMMagnetometerHandler (CMMagnetometerData magnetometerData, NSError error);
 
 	[NoWatch]
-	[Since (7,0)]
+	[iOS (7,0)]
 	delegate void CMStepQueryHandler (nint numberOfSteps, NSError error);
 
 	[NoWatch]
-	[Since (7,0)]
+	[iOS (7,0)]
 	delegate void CMStepUpdateHandler (nint numberOfSteps, NSDate timestamp, NSError error);
 
 	[NoWatch]
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'CMPedometer' instead.")]
 	interface CMStepCounter {
@@ -351,13 +330,13 @@ namespace XamCore.CoreMotion {
 		CMAuthorizationStatus AuthorizationStatus { get; }
 	}
 
-	[Since (7,0)]
+	[iOS (7,0)]
 	delegate void CMMotionActivityHandler (CMMotionActivity activity);
 
-	[Since (7,0)]
+	[iOS (7,0)]
 	delegate void CMMotionActivityQueryHandler (CMMotionActivity[] activities, NSError error);
 
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	interface CMMotionActivityManager {
 
@@ -381,7 +360,7 @@ namespace XamCore.CoreMotion {
 		CMAuthorizationStatus AuthorizationStatus { get; }
 	}
 
-	[Since (7,0)]
+	[iOS (7,0)]
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // <quote>You do not create instances of this class yourself.</quote>
 	interface CMMotionActivity : NSCopying, NSSecureCoding {

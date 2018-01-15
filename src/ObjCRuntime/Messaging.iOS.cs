@@ -329,6 +329,11 @@ namespace XamCore.ObjCRuntime {
 		public extern static void void_objc_msgSendSuper_IntPtr_RectangleF_IntPtr (IntPtr receiver, IntPtr selector, IntPtr arg1, System.Drawing.RectangleF arg2, IntPtr arg3);
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper")]
 		public extern static void void_objc_msgSend_IntPtr_RectangleF_IntPtr (IntPtr receiver, IntPtr selector, IntPtr arg1, System.Drawing.RectangleF arg2, IntPtr arg3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		public extern static IntPtr IntPtr_objc_msgSend_IntPtr_nint (IntPtr receiver, IntPtr selector, global::System.IntPtr arg1, nint arg2);
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper")]
+		public extern static IntPtr IntPtr_objc_msgSendSuper_IntPtr_nint (IntPtr receiver, IntPtr selector, global::System.IntPtr arg1, nint arg2);
 #endif
 	}
 }

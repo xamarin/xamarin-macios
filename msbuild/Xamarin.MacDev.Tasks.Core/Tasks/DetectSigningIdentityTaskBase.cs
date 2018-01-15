@@ -344,63 +344,66 @@ namespace Xamarin.MacDev.Tasks
 				return false;
 			}
 
-			if (Framework == PlatformFramework.MacOS && !RequireCodeSigning) {
-				DetectedBundleId = identity.BundleId;
-				DetectedAppId = DetectedBundleId;
+			if (Framework == PlatformFramework.MacOS) {
+				if (!RequireCodeSigning) {
+					DetectedBundleId = identity.BundleId;
+					DetectedAppId = DetectedBundleId;
 
-				ReportDetectedCodesignInfo ();
+					ReportDetectedCodesignInfo ();
 
-				return !Log.HasLoggedErrors;
-			}
-
-			if (!RequireProvisioningProfile) {
-				if (SdkIsSimulator && AppleSdkSettings.XcodeVersion.Major >= 8) {
-					// Note: Starting with Xcode 8.0, we need to codesign iOS Simulator builds in order for them to run.
-					// The "-" key is a special value allowed by the codesign utility that allows us to get away with
-					// not having an actual codesign key. As far as we know, this only works with Xcode >= 8.
-					DetectedCodeSigningKey = "-";
-				} else {
-					// Try and get a valid codesigning certificate...
-					if (!TryGetSigningCertificates (out certs, SdkIsSimulator))
-						return false;
-
-					if (certs.Count > 0) {
-						if (certs.Count > 1) {
-							if (!string.IsNullOrEmpty (SigningKey))
-								Log.LogMessage (MessageImportance.Normal, "Multiple signing identities match '{0}'; using the first match.", SigningKey);
-							else
-								Log.LogMessage (MessageImportance.Normal, "Multiple signing identities found; using the first identity.");
-
-							for (int i = 0; i < certs.Count; i++) {
-								Log.LogMessage (MessageImportance.Normal, "{0,3}. Signing Identity: {1} ({2})", i + 1,
-												SecKeychain.GetCertificateCommonName (certs[i]), certs[i].Thumbprint);
-							}
-						}
-
-						codesignCommonName = SecKeychain.GetCertificateCommonName (certs[0]);
-						DetectedCodeSigningKey = certs[0].Thumbprint;
-					} else {
-						// Note: We don't have to codesign for iOS Simulator builds meant to run on Xcode iOS Simulators
-						// older than 8.0, so it's non-fatal if we don't find any...
-					}
+					return !Log.HasLoggedErrors;
 				}
+			} else {
+				// Framework is either iOS, tvOS or watchOS
+				if (SdkIsSimulator) {
+					if (AppleSdkSettings.XcodeVersion.Major >= 8 && RequireProvisioningProfile) {
+						// Note: Starting with Xcode 8.0, we need to codesign iOS Simulator builds that enable Entitlements
+						// in order for them to run. The "-" key is a special value allowed by the codesign utility that
+						// allows us to get away with not having an actual codesign key.
+						DetectedCodeSigningKey = "-";
+					} else {
+						// Note: Do not codesign. Codesigning seems to break the iOS Simulator in older versions of Xcode.
+						DetectedCodeSigningKey = null;
+					}
 
-				DetectedBundleId = identity.BundleId;
-				DetectedAppId = DetectedBundleId;
+					DetectedBundleId = identity.BundleId;
+					DetectedAppId = DetectedBundleId;
 
-				ReportDetectedCodesignInfo ();
+					ReportDetectedCodesignInfo ();
 
-				return !Log.HasLoggedErrors;
+					return !Log.HasLoggedErrors;
+				}
 			}
 
 			// Note: if we make it this far, we absolutely need a codesigning certificate
 			if (!TryGetSigningCertificates (out certs, false))
 				return false;
 
-			if (certs.Count > 0) {
-				Log.LogMessage (MessageImportance.Low, "Available certificates:");
-				foreach (var cert in certs)
-					Log.LogMessage (MessageImportance.Low, "    {0}", Xamarin.MacDev.Keychain.GetCertificateCommonName (cert));
+			Log.LogMessage (MessageImportance.Low, "Available certificates:");
+			foreach (var cert in certs)
+				Log.LogMessage (MessageImportance.Low, "    {0}", SecKeychain.GetCertificateCommonName (cert));
+
+			if (!RequireProvisioningProfile) {
+				if (certs.Count > 1) {
+					if (!string.IsNullOrEmpty (SigningKey))
+						Log.LogMessage (MessageImportance.Normal, "Multiple signing identities match '{0}'; using the first match.", SigningKey);
+					else
+						Log.LogMessage (MessageImportance.Normal, "Multiple signing identities found; using the first identity.");
+
+					for (int i = 0; i < certs.Count; i++) {
+						Log.LogMessage (MessageImportance.Normal, "{0,3}. Signing Identity: {1} ({2})", i + 1,
+						                SecKeychain.GetCertificateCommonName (certs[i]), certs[i].Thumbprint);
+					}
+				}
+
+				codesignCommonName = SecKeychain.GetCertificateCommonName (certs[0]);
+				DetectedCodeSigningKey = certs[0].Thumbprint;
+				DetectedBundleId = identity.BundleId;
+				DetectedAppId = DetectedBundleId;
+
+				ReportDetectedCodesignInfo ();
+
+				return !Log.HasLoggedErrors;
 			}
 
 			if (!IsAutoCodeSignProfile (ProvisioningProfile)) {
@@ -473,7 +476,12 @@ namespace Xamarin.MacDev.Tasks
 			if (certs.Count > 0) {
 				pairs = (from p in profiles
 						 from c in certs
-						 where p.DeveloperCertificates.Any (d => d.Thumbprint == c.Thumbprint)
+					         where p.DeveloperCertificates.Any (d => {
+							var rv = d.Thumbprint == c.Thumbprint;
+							if (!rv)
+								Log.LogMessage (MessageImportance.Low, "'{0}' doesn't match '{1}'.", d.Thumbprint, c.Thumbprint);
+							return rv;
+						 })
 						 select new CodeSignIdentity { SigningKey = c, Profile = p }).ToList ();
 
 				if (pairs.Count == 0) {
@@ -489,20 +497,30 @@ namespace Xamarin.MacDev.Tasks
 			int matchLength;
 
 			// find matching provisioning profiles with compatible appid, keeping only those with the longest matching (wildcard) ids
+			Log.LogMessage (MessageImportance.Low, "Finding matching provisioning profiles with compatible AppID, keeping only those with the longest matching (wildcard) IDs.");
 			foreach (var pair in pairs) {
 				var appid = ConstructValidAppId (pair.Profile, identity.BundleId, out matchLength);
-				if (appid != null && matchLength >= bestMatchLength) {
-					if (matchLength > bestMatchLength) {
-						bestMatchLength = matchLength;
-						matches.Clear ();
+				if (appid != null) {
+					if (matchLength >= bestMatchLength) {
+						if (matchLength > bestMatchLength) {
+							bestMatchLength = matchLength;
+							foreach (var previousMatch in matches)
+								Log.LogMessage (MessageImportance.Low, "AppID: {0} was ruled out because we found a better match: {1}.", previousMatch.AppId, appid);
+							matches.Clear ();
+						}
+
+						var match = identity.Clone ();
+						match.SigningKey = pair.SigningKey;
+						match.Profile = pair.Profile;
+						match.AppId = appid;
+
+						matches.Add (match);
+					} else {
+						string currentMatches = "";
+						foreach (var match in matches)
+							currentMatches += $"{match}; ";
+						Log.LogMessage (MessageImportance.Low, "AppID: {0} was ruled out because we already found better matches: ", appid, currentMatches);
 					}
-
-					var match = identity.Clone ();
-					match.SigningKey = pair.SigningKey;
-					match.Profile = pair.Profile;
-					match.AppId = appid;
-
-					matches.Add (match);
 				}
 			}
 

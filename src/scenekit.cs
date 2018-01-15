@@ -44,6 +44,12 @@ using XamCore.CoreAnimation;
 using XamCore.CoreImage;
 #endif
 
+#if WATCH || XAMCORE_4_0
+using AnimationType = global::XamCore.SceneKit.ISCNAnimationProtocol;
+#else
+using AnimationType = global::XamCore.CoreAnimation.CAAnimation;
+#endif
+
 using XamCore.CoreGraphics;
 using XamCore.SpriteKit;
 // MonoMac (classic) does not support those 64bits only frameworks
@@ -119,14 +125,20 @@ namespace XamCore.SceneKit {
 #endif
 		[NoWatch]
 		[Export ("addAnimation:forKey:")]
+#if !XAMCORE_4_0
 		void AddAnimation (CAAnimation animation, [NullAllowed] NSString key);
+#else
+		void AddAnimation (ISCNAnimationProtocol scnAnimation, [NullAllowed] string key);
+#endif
 
+#if XAMCORE_2_0
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[iOS (11,0), TV (11,0), Watch (4,0), Mac (10,13, onlyOn64: true)]
 		[Export ("addAnimationPlayer:forKey:")]
 		void AddAnimation (SCNAnimationPlayer player, [NullAllowed] NSString key);
+#endif
 
 #if XAMCORE_2_0
 		[Abstract]
@@ -146,6 +158,7 @@ namespace XamCore.SceneKit {
 		[Export ("animationKeys")]
 		NSString [] GetAnimationKeys ();
 
+#if XAMCORE_2_0
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -153,6 +166,7 @@ namespace XamCore.SceneKit {
 		[iOS (11,0), TV (11,0), Watch (4,0), Mac (10,13, onlyOn64: true)]
 		[Export ("animationPlayerForKey:")]
 		SCNAnimationPlayer GetAnimationPlayer (NSString key);
+#endif
 
 #if XAMCORE_2_0
 		[Abstract]
@@ -189,13 +203,13 @@ namespace XamCore.SceneKit {
 #if XAMCORE_2_0
 		[Abstract]
 #endif
-		[Introduced (PlatformName.WatchOS, 3, 0)]
+		[Watch (3, 0)]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'SCNAnimationPlayer.Paused' instead.")]
-		[Introduced (PlatformName.TvOS, 9, 0)]
+		[TV (9, 0)]
 		[Deprecated (PlatformName.TvOS, 11, 0,   message: "Use 'SCNAnimationPlayer.Paused' instead.")]
-		[Introduced (PlatformName.iOS, 8, 0)]
+		[iOS (8, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0,    message: "Use 'SCNAnimationPlayer.Paused' instead.")]
-		[Introduced (PlatformName.MacOSX, 10, 9)]
+		[Mac (10, 9)]
 		[Deprecated (PlatformName.MacOSX, 10, 13,message: "Use 'SCNAnimationPlayer.Paused' instead.")]
 		[Export ("isAnimationForKeyPaused:")]
 		bool IsAnimationPaused (NSString key);
@@ -2391,7 +2405,8 @@ namespace XamCore.SceneKit {
 
 		[NoWatch, NoTV]
 		[Export ("render")]
-		[Availability (Deprecated = Platform.Mac_10_11 | Platform.iOS_9_0)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		void Render ();
 
 		[Mac (10,10)]
@@ -2716,6 +2731,10 @@ namespace XamCore.SceneKit {
 		[Field ("SCNSceneSourceStrictConformanceKey")]
 		NSString StrictConformanceKey { get; }
 		
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.TvOS, 11, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Field ("SCNSceneSourceUseSafeModeKey")]
 		NSString UseSafeModeKey	 { get; }
 
@@ -3340,11 +3359,11 @@ namespace XamCore.SceneKit {
 		SCNAntialiasingMode AntialiasingMode { get; set; }
 
 #if XAMCORE_2_0
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Watch (4, 0), TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 		[Export ("cameraControlConfiguration")]
 		ISCNCameraControlConfiguration CameraControlConfiguration { get; }
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[Watch (4, 0), TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 		[Export ("defaultCameraController")]
 		SCNCameraController DefaultCameraController { get; }
 #endif
@@ -3353,13 +3372,9 @@ namespace XamCore.SceneKit {
 		bool RendersContinuously { get; set; }
 	}
 
-#if WATCH || XAMCORE_4_0
-	[Watch (4,0)]
-	[Mac (10,9), iOS (8,0)]
-	delegate void SCNAnimationEventHandler (ISCNAnimationProtocol animation, NSObject animatedObject, bool playingBackward);
-#else
-	[Mac (10,9), iOS (8,0)]
-	delegate void SCNAnimationEventHandler (CAAnimation animation, NSObject animatedObject, bool playingBackward);
+#if XAMCORE_4_0
+	[Mac (10,9), iOS (8,0), Watch (4,0)]
+	delegate void SCNAnimationEventHandler (AnimationType animation, NSObject animatedObject, bool playingBackward);
 #endif
 
 	[Watch (4,0)]
@@ -3367,8 +3382,15 @@ namespace XamCore.SceneKit {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SCNAnimationEvent {
+
+#if XAMCORE_4_0
 		[Static, Export ("animationEventWithKeyTime:block:")]
 		SCNAnimationEvent Create (nfloat keyTime, SCNAnimationEventHandler eventHandler);
+#else
+		[Internal]
+		[Static, Export ("animationEventWithKeyTime:block:")]
+		SCNAnimationEvent Create (nfloat keyTime, Action<IntPtr, NSObject, bool> handler);
+#endif
 	}
 
 	[Watch (3,0)]
@@ -3485,7 +3507,6 @@ namespace XamCore.SceneKit {
 		[Watch (4, 0), TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 		[Export ("incremental")]
 		bool Incremental { [Bind ("isIncremental")] get; set; }
-		
 	}
 
 	[Watch (3,0)]
@@ -4833,7 +4854,7 @@ namespace XamCore.SceneKit {
 		unsafe void Length (IntPtr bytes, nuint length);
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10, 13), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	interface SCNTimingFunction : NSSecureCoding
 	{
@@ -4853,7 +4874,7 @@ namespace XamCore.SceneKit {
 
 	interface ISCNAnimationProtocol {}
 
-	[Watch (4,0), TV (11,0), Mac (10, 13), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	interface SCNAnimation : SCNAnimationProtocol, NSCopying, NSSecureCoding
 	{
@@ -4927,7 +4948,7 @@ namespace XamCore.SceneKit {
 		bool Cumulative { [Bind ("isCumulative")] get; set; }
 	}
 	
-	[Watch (4,0), TV (11,0), Mac (10, 13), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	interface SCNAnimationPlayer : SCNAnimatable, NSCopying, NSSecureCoding
 	{

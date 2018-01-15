@@ -37,7 +37,7 @@ namespace XamCore.Foundation
 		AttributeTargets.Field | AttributeTargets.Event |
 		AttributeTargets.Interface | AttributeTargets.Delegate,
 		Inherited=false)]
-	public sealed class AdviceAttribute : Attribute
+	public class AdviceAttribute : Attribute
 	{
 		public AdviceAttribute (string message)
 		{

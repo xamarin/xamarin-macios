@@ -183,26 +183,26 @@ namespace XamCore.Foundation  {
 		Hour = 32,
 		Minute = 64,
 		Second = 128,
-		[Availability (Introduced = Platform.Mac_10_4 | Platform.iOS_2_0, Deprecated = Platform.Mac_10_10 | Platform.iOS_8_0)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
 		Week = 256,
 		Weekday = 512,
 		WeekdayOrdinal = 1024,
-		[Availability (Introduced = Platform.Mac_10_6 | Platform.iOS_4_0)]
 		Quarter = 2048,
 
-		[Availability (Introduced = Platform.Mac_10_7 | Platform.iOS_5_0)]
+		[Mac (10, 7)]
 		WeekOfMonth = (1 << 12),
-		[Availability (Introduced = Platform.Mac_10_7 | Platform.iOS_5_0)]
+		[Mac (10, 7)]
 		WeekOfYear = (1 << 13),
-		[Availability (Introduced = Platform.Mac_10_7 | Platform.iOS_5_0)]
+		[Mac (10, 7)]
 		YearForWeakOfYear = (1 << 14),
 
-		[Availability (Introduced = Platform.Mac_10_7 | Platform.iOS_5_0)]
+		[Mac (10, 7)]
 		Nanosecond = (1 << 15),
 
-		[Availability (Introduced = Platform.Mac_10_7 | Platform.iOS_5_0)]
+		[Mac (10, 7)]
 		Calendar = (1 << 20),
-		[Availability (Introduced = Platform.Mac_10_7 | Platform.iOS_5_0)]
+		[Mac (10, 7)]
 		TimeZone = (1 << 21),
 	}
 
@@ -211,10 +211,7 @@ namespace XamCore.Foundation  {
 	public enum NSDataReadingOptions : nuint {
 		Mapped =   1 << 0,
 		Uncached = 1 << 1,
-
-		[iOS (5,0)]
 		Coordinated = 1 << 2,
-		[iOS (5,0)]
 		MappedAlways = 1 << 3
 	}
 
@@ -230,21 +227,15 @@ namespace XamCore.Foundation  {
 		Coordinated = 1 << 2,
 #endif
 			
-		[iOS (4,0)]
 		FileProtectionNone = 0x10000000,
-		[iOS (4,0)]
 		FileProtectionComplete = 0x20000000,
-		[iOS (4,0)]
 		FileProtectionMask = 0xf0000000,
-		[iOS (5,0)]
 		FileProtectionCompleteUnlessOpen = 0x30000000,
-		[iOS (5,0)]
 		FileProtectionCompleteUntilFirstUserAuthentication = 0x40000000,
 	}
 	
 	public delegate void NSSetEnumerator (NSObject obj, ref bool stop);
 
-	[iOS (4,0)]
 	[Native]
 	public enum NSOperationQueuePriority : nint {
 		VeryLow = -8, Low = -4, Normal = 0, High = 4, VeryHigh = 8
@@ -547,7 +538,6 @@ namespace XamCore.Foundation  {
 		Or
 	}	
 
-	[iOS (4,0)]
 	[Flags]
 	[Native]
 	public enum NSVolumeEnumerationOptions : nuint_compat_int {
@@ -557,7 +547,6 @@ namespace XamCore.Foundation  {
 		ProduceFileReferenceUrls = 1 << 2,
 	}
 
-	[iOS (4,0)]
 	[Flags]
 	[Native]
 	public enum NSDirectoryEnumerationOptions : nuint_compat_int {
@@ -567,7 +556,6 @@ namespace XamCore.Foundation  {
 		SkipsHiddenFiles             = 1 << 2,
 	}
 
-	[iOS (4,0)]
 	[Flags]
 	[Native]
 	public enum NSFileManagerItemReplacementOptions : nuint_compat_int {
@@ -683,9 +671,11 @@ namespace XamCore.Foundation  {
 	public enum NSFileCoordinatorReadingOptions : nuint_compat_int {
 		WithoutChanges = 1,
 		ResolvesSymbolicLink = 1 << 1,
-		[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
+		[Mac (10, 10)]
+		[iOS (8, 0)]
 		ImmediatelyAvailableMetadataOnly = 1 << 2,
-		[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
+		[Mac (10, 10)]
+		[iOS (8, 0)]
 		ForUploading = 1 << 3
 	}
 
@@ -877,21 +867,28 @@ namespace XamCore.Foundation  {
 		None = 0,
 		WrapCalendarComponents = 1 << 0,
 
-		[Availability (Introduced = Platform.Mac_10_9 | Platform.iOS_7_0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 		MatchStrictly = 1 << 1,
-		[Availability (Introduced = Platform.Mac_10_9 | Platform.iOS_7_0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 		SearchBackwards = 1 << 2,
 
-		[Availability (Introduced = Platform.Mac_10_9 | Platform.iOS_7_0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 		MatchPreviousTimePreservingSmallerUnits = 1 << 8,
-		[Availability (Introduced = Platform.Mac_10_9 | Platform.iOS_7_0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 		MatchNextTimePreservingSmallerUnits = 1 << 9,
-		[Availability (Introduced = Platform.Mac_10_9 | Platform.iOS_7_0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 		MatchNextTime = 1 << 10,
 
-		[Availability (Introduced = Platform.Mac_10_9 | Platform.iOS_7_0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 		MatchFirst = 1 << 12,
-		[Availability (Introduced = Platform.Mac_10_9 | Platform.iOS_7_0)]
+		[Mac (10, 9)]
+		[iOS (7, 0)]
 		MatchLast = 1 << 13,
 	}
 	
@@ -1003,7 +1000,8 @@ namespace XamCore.Foundation  {
 	}
 
 	[Native]
-	[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
 	public enum NSDateComponentsFormatterUnitsStyle : nint {
 		Positional = 0,
 		Abbreviated,
@@ -1016,7 +1014,8 @@ namespace XamCore.Foundation  {
 
 	[Flags]
 	[Native]
-	[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
 	public enum NSDateComponentsFormatterZeroFormattingBehavior : nuint {
 		None = (0),
 		Default = (1 << 0),
@@ -1028,7 +1027,8 @@ namespace XamCore.Foundation  {
 	}
 
 	[Native]
-	[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
 	public enum NSFormattingContext : nint {
 		Unknown = 0,
 		Dynamic = 1,
@@ -1038,7 +1038,8 @@ namespace XamCore.Foundation  {
 		MiddleOfSentence = 5
 	}
 
-	[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
 	[Native]
 	public enum NSDateIntervalFormatterStyle : nuint {
 		None = 0,
@@ -1048,7 +1049,8 @@ namespace XamCore.Foundation  {
 		Full = 4
 	}
 
-	[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
 	[Native]
 	public enum NSEnergyFormatterUnit : nint {
 		Joule = 11,
@@ -1057,7 +1059,8 @@ namespace XamCore.Foundation  {
 		Kilocalorie = (7 << 8) + 2
 	}
 
-	[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
+	[Mac (10, 10)]
+	[iOS (8, 0)]
 	[Native]
 	public enum NSFormattingUnitStyle : nint {
 		Short = 1,
@@ -1144,11 +1147,11 @@ namespace XamCore.Foundation  {
 		Dash          = 1 << 7,
 		Replacement   = 1 << 8,
 		Correction    = 1 << 9,
-		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_7)]
+		[Mac (10, 7)]
 		RegularExpression  = 1 << 10,
-		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_7)]
+		[Mac (10, 7)]
 		PhoneNumber        = 1 << 11,
-		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_7)]
+		[Mac (10, 7)]
 		TransitInformation = 1 << 12,
 	}
 

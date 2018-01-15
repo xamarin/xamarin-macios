@@ -247,7 +247,7 @@ namespace XamCore.AppKit {
 			}
 		}
 
-		[MountainLion][Obsolete ("Use 'UnderPageBackgroundColor' instead.")]
+		[Mac (10, 8)][Obsolete ("Use 'UnderPageBackgroundColor' instead.")]
 		public static NSColor UnderPageBackground {
 			get {
 				return UnderPageBackgroundColor;

@@ -41,12 +41,8 @@ namespace XamCore.CoreLocation {
 		Denied,              
 		Network,             
 		HeadingFailure,
-
-		[iOS (4,0)]
 		RegionMonitoringDenied,
-		[iOS (4,0)]
 		RegionMonitoringFailure,
-		[iOS (4,0)]
 		RegionMonitoringSetupDelayed,
 		
 		// ios5 osx10.8
@@ -87,7 +83,7 @@ namespace XamCore.CoreLocation {
 		Restricted,
 		Denied,
 
-		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'AuthorizedAlways' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'AuthorizedAlways' instead.")]
 		Authorized,
 		AuthorizedAlways = Authorized,
 		AuthorizedWhenInUse			

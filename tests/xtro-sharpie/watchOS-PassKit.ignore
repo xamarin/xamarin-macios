@@ -1,0 +1,10 @@
+## enums added in Xcode 8.1 but the only API using them are not available on watchOS
+!missing-enum! PKPaymentButtonStyle not bound
+!missing-enum! PKPaymentButtonType not bound
+
+## No availability macro is provided for PKLabeledValue on watchOS / radar: https://trello.com/c/MvaHEZlc
+## on iOS it's only used in PKAddPaymentPassRequestConfiguration which is not part of watchOS
+!missing-selector! PKLabeledValue::initWithLabel:value: not bound
+!missing-selector! PKLabeledValue::label not bound
+!missing-selector! PKLabeledValue::value not bound
+!missing-type! PKLabeledValue not bound

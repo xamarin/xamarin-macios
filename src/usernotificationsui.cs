@@ -16,7 +16,7 @@ using XamCore.UserNotifications;
 
 namespace XamCore.UserNotificationsUI {
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
@@ -27,7 +27,7 @@ namespace XamCore.UserNotificationsUI {
 		Overlay
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
@@ -40,7 +40,7 @@ namespace XamCore.UserNotificationsUI {
 
 	interface IUNNotificationContentExtension { }
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
@@ -70,7 +70,7 @@ namespace XamCore.UserNotificationsUI {
 		void PauseMedia ();
 	}
 
-	[Introduced (PlatformName.iOS, 10, 0)]
+	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]

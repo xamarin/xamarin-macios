@@ -727,7 +727,6 @@ namespace XamCore.AudioUnit
 			return AudioUnitSetProperty (handle, AudioUnitPropertyIDType.SampleRate, scope, 0, ref sampleRate, sizeof (double));
 		}
 
-		[iOS (5,0)]
 		public AudioUnitStatus MusicDeviceMIDIEvent (uint status, uint data1, uint data2, uint offsetSampleFrame = 0)
 		{
 			return MusicDeviceMIDIEvent (handle, status, data1, data2, offsetSampleFrame);
@@ -1272,12 +1271,12 @@ namespace XamCore.AudioUnit
 		ParameterHistoryInfo = 53,
 		Nickname = 54,
 		OfflineRender = 37,
-		[Availability (Introduced = Platform.iOS_8_0 |Platform.Mac_10_3)]
+		[iOS (8, 0)]
 		ParameterIDName = 34,
-		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_3)]
+		[iOS (8, 0)]
 		ParameterStringFromValue = 33,
 		ParameterClumpName = 35,
-		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_3)]
+		[iOS (8, 0)]
 		ParameterValueFromString = 38,
 		ContextName = 25,
 		PresentationLatency = 40,
@@ -1379,11 +1378,11 @@ namespace XamCore.AudioUnit
 		ReverbRoomType = 10,
 		UsesInternalReverb = 1005,
 		SpatializationAlgorithm = 3000,
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_9_0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		DistanceParams = 3010,
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_9_0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		AttenuationCurve = 3013,
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_9_0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		RenderingFlags = 3003,
 
 		// AUScheduledSoundPlayer
@@ -1489,9 +1488,9 @@ namespace XamCore.AudioUnit
 		ReverbFilterFrequency				= 14,
 		ReverbFilterBandwidth				= 15,
 		ReverbFilterGain					= 16,
-		[Availability (Introduced = Platform.iOS_8_0)]
+		[iOS (8, 0)]
 		ReverbFilterType					= 17,
-		[Availability (Introduced = Platform.iOS_8_0)]
+		[iOS (8, 0)]
 		ReverbFilterEnable					= 18,
 
 		// AUMultiChannelMixer
@@ -1545,7 +1544,7 @@ namespace XamCore.AudioUnit
 		AULowShelfCutoffFrequency			= 0,
 		AULowShelfGain						= 1,
 
-		[Availability (Obsoleted = Platform.iOS_7_0)]
+		[Obsoleted (PlatformName.iOS, 7, 0)]
 		AUDCFilterDecayTime					= 0,
 
 		// AUParametricEQ
@@ -1642,7 +1641,7 @@ namespace XamCore.AudioUnit
 		ObstructionAttenuation = 11
 	}
 
-	[Availability (Introduced = Platform.iOS_8_0)]
+	[iOS (8, 0)]
 	public enum SpatialMixerAttenuation {
 		Power = 0,
 		Exponential = 1,
@@ -1651,10 +1650,10 @@ namespace XamCore.AudioUnit
 	}
 
 	[Flags]
-	[Availability (Introduced = Platform.iOS_8_0)]
+	[iOS (8, 0)]
 	public enum SpatialMixerRenderingFlags {
 		InterAuralDelay = (1 << 0),
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_9_0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		DistanceAttenuation = (1 << 2),
 	}
 
@@ -1664,11 +1663,14 @@ namespace XamCore.AudioUnit
 		BeganToRender = 0x02,
 		BeganToRenderLate = 0x04,
 
-		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 		Loop                   = 0x08,
-		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 		Interrupt              = 0x10,
-		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10)]
+		[iOS (8, 0)]
+		[Mac (10, 10)]
 		InterruptAtLoop        = 0x20
 	}
 

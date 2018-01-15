@@ -40,9 +40,9 @@ namespace Xamarin.Tests
 		public string WarnAsError; // Set to empty string to pass /warnaserror, set to non-empty string to pass /warnaserror:<nonemptystring>
 		public string NoWarn; // Set to empty string to pass /nowarn, set to non-empty string to pass /nowarn:<nonemptystring>
 
-		protected override string ToolPath { get { return Configuration.BGenPath; } }
+		protected override string ToolPath { get { return Profile == Profile.macClassic ? Configuration.BGenClassicPath : Configuration.BGenPath; } }
 		protected override string MessagePrefix { get { return "BI"; } }
-		protected override string MessageToolName { get { return "bgen"; } }
+		protected override string MessageToolName { get { return Profile == Profile.macClassic ? "bgen-classic" : "bgen"; } }
 
 		public BGenTool ()
 		{

@@ -83,7 +83,7 @@ namespace Xamarin.MacDev.Tasks
 			return id.Value == "com.apple.message-payload-provider";
 		}
 
-		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, ProcessArgumentBuilder args, ITaskItem[] items)
+		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem[] items)
 		{
 			string minimumDeploymentTarget;
 
@@ -399,10 +399,36 @@ namespace Xamarin.MacDev.Tasks
 					if (string.IsNullOrEmpty (text))
 						continue;
 
-					var json = JsonValue.Parse (text) as JsonObject;
+					JsonObject json;
 					JsonValue value;
 
-					if (json == null || !json.TryGetValue ("properties", out value) || value.JsonType != JsonType.Object)
+					try {
+						json = (JsonObject) JsonValue.Parse (text);
+					} catch (ArgumentException ex) {
+						// ... At line ###, column ###
+						int line = 0, column = 0;
+						int index, endIndex;
+
+						if ((index = ex.Message.IndexOf ("At line ", StringComparison.Ordinal)) != -1) {
+							index += "At line ".Length;
+
+							if ((endIndex = ex.Message.IndexOf (", column ", index, StringComparison.Ordinal)) != -1) {
+								var columnBuf = ex.Message.Substring (endIndex + ", column ".Length);
+								var lineBuf = ex.Message.Substring (index, endIndex - index);
+
+								int.TryParse (columnBuf, out column);
+								int.TryParse (lineBuf, out line);
+							}
+						}
+
+						Log.LogError (null, null, null, items[i].ItemSpec, line, column, line, column, "{0}", ex.Message);
+						return false;
+					} catch (InvalidCastException) {
+						Log.LogError (null, null, null, items[i].ItemSpec, 0, 0, 0, 0, "Invalid json.");
+						return false;
+					}
+
+					if (!json.TryGetValue ("properties", out value) || value.JsonType != JsonType.Object)
 						continue;
 
 					var properties = (JsonObject) value;
@@ -443,7 +469,7 @@ namespace Xamarin.MacDev.Tasks
 
 			if (catalogs.Count == 0) {
 				// There are no (supported?) asset catalogs
-				return true;
+				return !Log.HasLoggedErrors;
 			}
 
 			partialAppManifest = new TaskItem (Path.Combine (intermediate, "partial-info.plist"));

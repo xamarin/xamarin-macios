@@ -1,0 +1,57 @@
+## not exposed by our API (better use the OS version)
+!missing-field! IntentsVersionNumber not bound
+!missing-field! IntentsVersionString not bound
+
+## new (Xcode9) @required members of an older type cannot be made abstract
+!incorrect-protocol-member! INSpeakable::alternativeSpeakableMatches is REQUIRED and should be abstract
+!incorrect-protocol-member! INSpeakable::vocabularyIdentifier is REQUIRED and should be abstract
+
+## new types that has deprecated members (likely to be removed from headers at some point)
+!missing-selector! +INCallDestinationTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INCallDestinationTypeResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INCallRecordTypeOptionsResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INCallRecordTypeOptionsResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INAccountTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INAccountTypeResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INBalanceTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INBalanceTypeResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INDateSearchTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INDateSearchTypeResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INLocationSearchTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INLocationSearchTypeResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INNoteContentTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INNoteContentTypeResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INNotebookItemTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INNotebookItemTypeResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INTaskStatusResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INTaskStatusResolutionResult::successWithResolvedValue: not bound
+!missing-selector! +INVisualCodeTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INVisualCodeTypeResolutionResult::successWithResolvedValue: not bound
+
+## added and deprecated in Xcode9 (but not removed from headers)
+!missing-selector! +INNotebookItemTypeResolutionResult::disambiguationWithValuesToDisambiguate: not bound
+
+## The following were deprecated in ios(10.0, 10.0)
+!missing-selector! INRideDriver::initWithHandle:displayName:image:rating:phoneNumber: not bound
+!missing-selector! INRideDriver::initWithHandle:nameComponents:image:rating:phoneNumber: not bound
+!missing-selector! INRideOption::identifier not bound
+!missing-selector! INRideOption::setIdentifier: not bound
+
+## INPayBillIntentHandling && INSearchForBillsIntentHandling are new protocols added in iOS 10.3. This two protocols
+## were added to the existing Protocol INPaymentsDomainHandling so making this two required would be a breaking change
+!incorrect-protocol-member! INPayBillIntentHandling::handlePayBill:completion: is REQUIRED and should be abstract
+!incorrect-protocol-member! INSearchForBillsIntentHandling::handleSearchForBills:completion: is REQUIRED and should be abstract
+
+## NS_DEPRECATED(10_12, 10_12, 10_0, 10_0) / Designated init instead
+!missing-selector! INPerson::handle not bound
+!missing-selector! INPerson::initWithHandle:displayName:contactIdentifier: not bound
+!missing-selector! INPerson::initWithHandle:nameComponents:contactIdentifier: not bound
+!missing-selector! INPerson::initWithHandle:nameComponents:displayName:image:contactIdentifier: not bound
+
+## Apple made this @optional in iOS 11 but this is a breaking change
+!incorrect-protocol-member! INSpeakable::identifier is OPTIONAL and should NOT be abstract
+
+
+## unsorted
+
+!missing-selector! +CLPlacemark::placemarkWithLocation:name:postalAddress: not bound

@@ -39,7 +39,7 @@ using XamCore.CoreFoundation;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.AddressBook {
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public class ExternalChangeEventArgs : EventArgs {
 		public ExternalChangeEventArgs (ABAddressBook addressBook, NSDictionary info)
 		{
@@ -91,7 +91,7 @@ namespace XamCore.AddressBook {
 		}
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public class ABAddressBook : INativeObject, IDisposable, IEnumerable<ABRecord> {
 
 		public static readonly NSString ErrorDomain;
@@ -102,7 +102,7 @@ namespace XamCore.AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		internal extern static IntPtr ABAddressBookCreate ();
 
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use the static Create method instead")]
+		[Deprecated (PlatformName.iOS, 6, 0, message : "Use the static Create method instead")]
 		public ABAddressBook ()
 		{
 			this.handle = ABAddressBookCreate ();
@@ -310,7 +310,6 @@ namespace XamCore.AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABAddressBookCopyArrayOfAllPeopleInSource (IntPtr addressBook, IntPtr source);
 
-		[iOS (4,0)]
 		public ABPerson [] GetPeople (ABRecord source)
 		{
 			if (source == null)
@@ -323,7 +322,6 @@ namespace XamCore.AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering (IntPtr addressBook, IntPtr source, ABPersonSortBy sortOrdering);
 
-		[iOS (4,0)]
 		public ABPerson [] GetPeople (ABRecord source, ABPersonSortBy sortOrdering)
 		{
 			if (source == null)
@@ -354,7 +352,6 @@ namespace XamCore.AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABAddressBookCopyArrayOfAllGroupsInSource (IntPtr addressBook, IntPtr source);
 
-		[iOS (4,0)]
 		public ABGroup[] GetGroups (ABRecord source)
 		{
 			if (source == null)

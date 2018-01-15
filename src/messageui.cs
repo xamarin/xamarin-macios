@@ -69,7 +69,6 @@ namespace XamCore.MessageUI {
 		bool TextMessageAvailability { get; }
 	}
 	
-	[Since (4,0)]
 	[BaseType (typeof (UINavigationController))]
 	interface MFMessageComposeViewController : UIAppearance {
 		[Export ("messageComposeDelegate", ArgumentSemantic.Assign), NullAllowed]
@@ -89,23 +88,23 @@ namespace XamCore.MessageUI {
 		[Export ("canSendText")]
 		bool CanSendText { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Static][Export ("canSendAttachments")]
 		bool CanSendAttachments { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Static][Export ("canSendSubject")]
 		bool CanSendSubject { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Static][Export ("isSupportedAttachmentUTI:")]
 		bool IsSupportedAttachment (string uti);
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Export ("subject", ArgumentSemantic.Copy)]
 		string Subject { get; set; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Export ("attachments")]
 		NSDictionary[] GetAttachments ();
 
@@ -113,32 +112,30 @@ namespace XamCore.MessageUI {
 		[NullAllowed, Export ("message", ArgumentSemantic.Copy)]
 		MSMessage Message { get; set; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Export ("addAttachmentURL:withAlternateFilename:")]
 		bool AddAttachment (NSUrl attachmentURL, [NullAllowed] string alternateFilename);
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Export ("addAttachmentData:typeIdentifier:filename:")]
 		bool AddAttachment (NSData attachmentData, string uti, [NullAllowed] string filename);
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Export ("disableUserAttachments")]
 		void DisableUserAttachments ();
 
-		[Since (5,0)]
 		[Field ("MFMessageComposeViewControllerTextMessageAvailabilityDidChangeNotification")]
 		[Notification (typeof (MFMessageAvailabilityChangedEventArgs))]
 		NSString TextMessageAvailabilityDidChangeNotification { get; }
 
-		[Since (5,0)]
 		[Field ("MFMessageComposeViewControllerTextMessageAvailabilityKey")]
 		NSString TextMessageAvailabilityKey { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("MFMessageComposeViewControllerAttachmentAlternateFilename")]
 		NSString AttachmentAlternateFilename { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("MFMessageComposeViewControllerAttachmentURL")]
 		NSString AttachmentURL { get; }
 	}

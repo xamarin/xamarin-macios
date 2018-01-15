@@ -1,0 +1,2 @@
+## only on macOS (but removing would be a breaking change)
+!unknown-native-enum! MTLSamplerBorderColor bound

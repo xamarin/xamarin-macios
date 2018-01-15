@@ -25,6 +25,7 @@
 //
 
 using System;
+using System.ComponentModel;
 using System.Reflection;
 using XamCore.AVFoundation;
 using XamCore.Foundation;
@@ -48,7 +49,6 @@ using XamCore.ImageKit;
 namespace XamCore.CoreImage {
 
 	[BaseType (typeof (NSObject))]
-	[Since (5,0)]
 	[DisableDefaultCtor]
 	interface CIColor : NSSecureCoding, NSCopying {
 		[Static]
@@ -201,7 +201,6 @@ namespace XamCore.CoreImage {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[Since (5,0)]
 	[DisableDefaultCtor]
 	interface CIContext {
 		// When we bind OpenGL add these:
@@ -285,7 +284,8 @@ namespace XamCore.CoreImage {
 		void Render (CIImage image, IMTLTexture texture, [NullAllowed] IMTLCommandBuffer commandBuffer, CGRect bounds, [NullAllowed] CGColorSpace colorSpace);
 #endif
 
-		[Availability (Introduced = Platform.iOS_5_0 | Platform.Mac_10_4, Deprecated = Platform.iOS_6_0 | Platform.Mac_10_8, Message = "Use 'DrawImage (image, CGRect, CGRect)' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'DrawImage (image, CGRect, CGRect)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'DrawImage (image, CGRect, CGRect)' instead.")]
 		[Export ("drawImage:atPoint:fromRect:")]
 		void DrawImage (CIImage image, CGPoint atPoint, CGRect fromRect);
 
@@ -484,7 +484,6 @@ namespace XamCore.CoreImage {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[Since (5,0)]
 	[DisableDefaultCtor] //  In iOS8 they expose custom filters, we expose a protected one in CIFilter.cs
 	interface CIFilter : NSSecureCoding, NSCopying {
 		[Export ("inputKeys")]
@@ -544,7 +543,6 @@ namespace XamCore.CoreImage {
 		NSUrl FilterLocalizedReferenceDocumentation (string filterName);
 
 #if MONOMAC && !XAMCORE_4_0
-		[Mac(10,4)]
 		[Static]
 		[Export ("registerFilterName:constructor:classAttributes:")]
 		void RegisterFilterName (string name, NSObject constructorObject, NSDictionary classAttributes);
@@ -572,11 +570,11 @@ namespace XamCore.CoreImage {
 		[Export ("outputImage")]
 		CIImage OutputImage { get; }
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("serializedXMPFromFilters:inputImageExtent:"), Static]
 		NSData SerializedXMP (CIFilter[] filters, CGRect extent); 
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("filterArrayFromSerializedXMP:inputImageExtent:error:"), Static]
 		CIFilter[] FromSerializedXMP (NSData xmpData, CGRect extent, out NSError error);
 #endif
@@ -830,14 +828,12 @@ namespace XamCore.CoreImage {
 		NSSet ActiveKeys { get; }
 	}
 
-	[Since (5,0)]
 	[Static]
 	interface CIFilterOutputKey {
 		[Field ("kCIOutputImageKey", "+CoreImage")]
 		NSString Image  { get; }
 	}
 	
-	[Since (5,0)]
 	[Static]
 	interface CIFilterInputKey {
 		[Field ("kCIInputBackgroundImageKey", "+CoreImage")]
@@ -862,63 +858,63 @@ namespace XamCore.CoreImage {
 		[Field ("kCIInputShadingImageKey", "+CoreImage")]
 		NSString ShadingImage  { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("kCIInputTimeKey", "+CoreImage")]
 		NSString Time  { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("kCIInputTransformKey", "+CoreImage")]
 		NSString Transform  { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("kCIInputScaleKey", "+CoreImage")]
 		NSString Scale  { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("kCIInputAspectRatioKey", "+CoreImage")]
 		NSString AspectRatio  { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("kCIInputCenterKey", "+CoreImage")]
 		NSString Center  { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("kCIInputRadiusKey", "+CoreImage")]
 		NSString Radius  { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("kCIInputAngleKey", "+CoreImage")]
 		NSString Angle  { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("kCIInputWidthKey", "+CoreImage")]
 		NSString Width  { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("kCIInputSharpnessKey", "+CoreImage")]
 		NSString Sharpness  { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("kCIInputIntensityKey", "+CoreImage")]
 		NSString Intensity  { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("kCIInputEVKey", "+CoreImage")]
 		NSString EV  { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("kCIInputSaturationKey", "+CoreImage")]
 		NSString Saturation  { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("kCIInputColorKey", "+CoreImage")]
 		NSString Color  { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("kCIInputBrightnessKey", "+CoreImage")]
 		NSString Brightness  { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("kCIInputContrastKey", "+CoreImage")]
 		NSString Contrast  { get; }
 
@@ -930,20 +926,27 @@ namespace XamCore.CoreImage {
 		[Field ("kCIInputWeightsKey", "+CoreImage")]
 		NSString WeightsKey { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("kCIInputMaskImageKey", "+CoreImage")]
 		NSString MaskImage  { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("kCIInputTargetImageKey", "+CoreImage")]
 		NSString TargetImage  { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("kCIInputExtentKey", "+CoreImage")]
 		NSString Extent  { get; }
+
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		[Field ("kCIInputDepthImageKey", "+CoreImage")]
+		NSString DepthImage { get; }
+
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		[Field ("kCIInputDisparityImageKey", "+CoreImage")]
+		NSString DisparityImage { get; }
 	}
 		
-	[Since (5,0)]
 	[Static]
 	interface CIFilterAttributes {
 		[Field ("kCIAttributeFilterName", "+CoreImage")]
@@ -1059,7 +1062,6 @@ namespace XamCore.CoreImage {
 		NSString Available_iOS { get; }
 	}
 
-	[Since (5,0)]
 	[Static]
 	interface CIFilterCategory {
 		[Field ("kCICategoryDistortionEffect", "+CoreImage")]
@@ -1261,15 +1263,63 @@ namespace XamCore.CoreImage {
 		[Export ("extent")]
 		CGRect Extent { get; }
 	}
+
+	[StrongDictionary ("CIImageInitializationOptionsKeys")]
+	interface CIImageInitializationOptions {
+		// Bug #60726: [Generator] Support INativeObject in StrongDictionary
+		// (https://bugzilla.xamarin.com/show_bug.cgi?id=60726)
+		// CGColorSpace ColorSpace { get; set; }
+
+		CoreGraphics.CGImageProperties Properties { get; set; }
+
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		bool ApplyOrientationProperty { get; set; }
+
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		bool NearestSampling { get; set; }
+
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		bool AuxiliaryDepth { get; set; }
+
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		bool AuxiliaryDisparity { get; set; }
+	}
+
+	[Internal]
+	[Static]
+	interface CIImageInitializationOptionsKeys {
+		[Field ("kCIImageColorSpace")]
+		NSString ColorSpaceKey { get; }
+
+		[Mac (10, 8)]
+		[Field ("kCIImageProperties")]
+		NSString PropertiesKey { get; }
+
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		[Field ("kCIImageNearestSampling")]
+		NSString NearestSamplingKey { get; }
+
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		[Field ("kCIImageApplyOrientationProperty")]
+		NSString ApplyOrientationPropertyKey { get; }
+
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		[Field ("kCIImageAuxiliaryDepth")]
+		NSString AuxiliaryDepthKey { get; }
+
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		[Field ("kCIImageAuxiliaryDisparity")]
+		NSString AuxiliaryDisparityKey { get; }
+	}
 	
 	[BaseType (typeof (NSObject))]
-	[Since (5,0)]
 	[DisableDefaultCtor]
 	interface CIImage : NSSecureCoding, NSCopying {
 		[Static]
 		[Export ("imageWithCGImage:")]
 		CIImage FromCGImage (CGImage image);
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithCGImage:options:")]
 		CIImage FromCGImage (CGImage image, [NullAllowed] NSDictionary d);
@@ -1297,7 +1347,7 @@ namespace XamCore.CoreImage {
 #endif
 		CIImage FromData (NSData bitmapData, nint bytesPerRow, CGSize size, int /* CIFormat = int */ pixelFormat, [NullAllowed] CGColorSpace colorSpace);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Static]
 		[Export ("imageWithTexture:size:flipped:colorSpace:")]
 		CIImage ImageWithTexture (uint /* unsigned int */ glTextureName, CGSize size, bool flipped, [NullAllowed] CGColorSpace colorspace);
@@ -1306,6 +1356,7 @@ namespace XamCore.CoreImage {
 		[Export ("imageWithContentsOfURL:")]
 		CIImage FromUrl (NSUrl url);
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithContentsOfURL:options:")]
 		CIImage FromUrl (NSUrl url, [NullAllowed] NSDictionary d);
@@ -1318,6 +1369,7 @@ namespace XamCore.CoreImage {
 		[Export ("imageWithData:")]
 		CIImage FromData (NSData data);
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithData:options:")]
 		CIImage FromData (NSData data, [NullAllowed] NSDictionary d);
@@ -1332,18 +1384,20 @@ namespace XamCore.CoreImage {
 		CIImage FromImageBuffer (CVImageBuffer imageBuffer);
 
 #if MONOMAC && !XAMCORE_4_0
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
-		[Mac(10,4)]
 		[Export ("imageWithCVImageBuffer:options:")]
 		CIImage FromImageBuffer (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary dict);
 #else
 #if XAMCORE_2_0
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[iOS(9,0)]
 		[Internal] // This overload is needed for our strong dictionary support (but only for Unified, since for Classic the generic version is transformed to this signature)
 		[Export ("imageWithCVImageBuffer:options:")]
 		CIImage FromImageBuffer (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary dict);
 #endif
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[iOS(9,0)]
 		[Export ("imageWithCVImageBuffer:options:")]
@@ -1359,6 +1413,7 @@ namespace XamCore.CoreImage {
 		[Export ("imageWithCVPixelBuffer:")]
 		CIImage FromImageBuffer (CVPixelBuffer buffer);
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithCVPixelBuffer:options:")]
 		CIImage FromImageBuffer (CVPixelBuffer buffer, [NullAllowed] NSDictionary dict);
@@ -1377,6 +1432,7 @@ namespace XamCore.CoreImage {
 		[iOS (11,0)]
 		[TV (11,0)]
 		[Mac (10,13)]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithIOSurface:options:")]
 		CIImage FromSurface (IOSurface.IOSurface surface, NSDictionary options);
@@ -1399,6 +1455,7 @@ namespace XamCore.CoreImage {
 		[Export ("initWithCGImage:")]
 		IntPtr Constructor (CGImage image);
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithCGImage:options:")]
 		IntPtr Constructor (CGImage image, [NullAllowed] NSDictionary d);
 
@@ -1409,6 +1466,7 @@ namespace XamCore.CoreImage {
 		[Export ("initWithCGLayer:")]
 		IntPtr Constructor (CGLayer layer);
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithCGLayer:options:")]
 		IntPtr Constructor (CGLayer layer, [NullAllowed] NSDictionary d);
 
@@ -1428,7 +1486,7 @@ namespace XamCore.CoreImage {
 		[Export ("initWithBitmapData:bytesPerRow:size:format:colorSpace:")]
 		IntPtr Constructor (NSData d, nint bytesPerRow, CGSize size, int /* CIFormat = int */ pixelFormat, [NullAllowed] CGColorSpace colorSpace);
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("initWithTexture:size:flipped:colorSpace:")]
 		IntPtr Constructor (int /* unsigned int */ glTextureName, CGSize size, bool flipped, [NullAllowed] CGColorSpace colorSpace);
 
@@ -1464,7 +1522,6 @@ namespace XamCore.CoreImage {
 		IntPtr Constructor (CVImageBuffer imageBuffer);
 
 #if MONOMAC && !XAMCORE_4_0
-		[Mac(10,4)]
 		[Export ("initWithCVImageBuffer:options:")]
 		IntPtr Constructor (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary dict);
 #else
@@ -1526,11 +1583,9 @@ namespace XamCore.CoreImage {
 		[Export ("extent")]
 		CGRect Extent { get; }
 
-		[Since (5,0)]
 		[Export ("properties"), Internal]
 		NSDictionary WeakProperties { get; }
 
-		[Since (5,0)]
 		[Wrap ("WeakProperties")]
 		CoreGraphics.CGImageProperties Properties { get; }
 
@@ -1543,11 +1598,11 @@ namespace XamCore.CoreImage {
 		int FormatRGBA16 { get; } /* CIFormat = int */
 
 		[Field ("kCIFormatARGB8")]
-		[Since (6,0)]
+		[iOS (6,0)]
 		int FormatARGB8 { get; } /* CIFormat = int */
 		
 		[Field ("kCIFormatRGBAh")]
-		[Since (6,0)]
+		[iOS (6,0)]
 		int FormatRGBAh { get; } /* CIFormat = int */
 
 		[iOS (8,0)]
@@ -1555,11 +1610,9 @@ namespace XamCore.CoreImage {
 		int FormatRGBAf { get; } /* CIFormat = int */
 
 		[Field ("kCIFormatBGRA8")]
-		[Since (5,0)]
 		int FormatBGRA8 { get; } /* CIFormat = int */
 
 		[Field ("kCIFormatRGBA8")]
-		[Since (5,0)]
 		int FormatRGBA8 { get; } /* CIFormat = int */
 
 		[Field ("kCIFormatABGR8")]
@@ -1648,28 +1701,25 @@ namespace XamCore.CoreImage {
 
 #if !MONOMAC
 		// UIKit extensions
-		[Since (5,0)]
 		[Export ("initWithImage:")]
 		IntPtr Constructor (UIImage image);
 
-		[Since (5,0)]
 		[Export ("initWithImage:options:")]
 		IntPtr Constructor (UIImage image, [NullAllowed] NSDictionary options);
 
-		[Since (5,0)]
 		[Wrap ("this (image, options == null ? null : options.Dictionary)")]
 		IntPtr Constructor (UIImage image, [NullAllowed] CIImageInitializationOptions options);
 #endif
 	
-		[MountainLion]
+		[Mac (10, 8)]
 		[Field ("kCIImageAutoAdjustFeatures"), Internal]
 		NSString AutoAdjustFeaturesKey { get; }
 
-		[MountainLion]
+		[Mac (10, 8)]
 		[Field ("kCIImageAutoAdjustRedEye"), Internal]
 		NSString AutoAdjustRedEyeKey { get; }
 
-		[MountainLion]
+		[Mac (10, 8)]
 		[Field ("kCIImageAutoAdjustEnhance"), Internal]
 		NSString AutoAdjustEnhanceKey { get; }
 
@@ -1681,14 +1731,7 @@ namespace XamCore.CoreImage {
 		[Export ("autoAdjustmentFiltersWithOptions:"), Internal]
 		NSArray _GetAutoAdjustmentFilters ([NullAllowed] NSDictionary opts);
 
-		[Field ("kCIImageColorSpace"), Internal]
-		NSString CIImageColorSpaceKey { get; }
-
-		[MountainLion]
-		[Field ("kCIImageProperties"), Internal]
-		NSString CIImagePropertiesKey { get; }
-
-		[Since (6,0)] // publicly documented in 7.0 but really available since 6.0
+		[iOS (6,0)] // publicly documented in 7.0 but really available since 6.0
 		[Mac (10,12)]
 		[Export ("regionOfInterestForImage:inRect:")]
 		CGRect GetRegionOfInterest (CIImage im, CGRect r);
@@ -2138,7 +2181,6 @@ namespace XamCore.CoreImage {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[Since (5,0)]
 	[DisableDefaultCtor]
 	interface CIVector : NSSecureCoding, NSCopying {
 		[Static, Internal, Export ("vectorWithValues:count:")]
@@ -2178,22 +2220,15 @@ namespace XamCore.CoreImage {
 		[Export ("vectorWithString:")]
 		CIVector FromString (string representation);
 
-		[DesignatedInitializer]
-		[Internal, Export ("initWithValues:count:")]
-		IntPtr Constructor (IntPtr values, nint count);
-
 		[Mac (10,9)]
-		[iOS (5,0)]
 		[Export ("initWithCGPoint:")]
 		IntPtr Constructor (CGPoint p);
 
 		[Mac (10,9)]
-		[iOS (5,0)]
 		[Export ("initWithCGRect:")]
 		IntPtr Constructor (CGRect r);
 
 		[Mac (10,9)]
-		[iOS (5,0)]
 		[Export ("initWithCGAffineTransform:")]
 		IntPtr Constructor (CGAffineTransform r);
 		
@@ -2249,7 +2284,6 @@ namespace XamCore.CoreImage {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[Since (5,0)]
 	[DisableDefaultCtor]
 	interface CIDetector {
 		[Static, Export ("detectorOfType:context:options:"), Internal]
@@ -2264,7 +2298,7 @@ namespace XamCore.CoreImage {
 		[Field ("CIDetectorTypeFace"), Internal]
 		NSString TypeFace { get; }
 
-		[MountainLion]
+		[Mac (10, 8)]
 		[Field ("CIDetectorImageOrientation"), Internal]
 		NSString ImageOrientation { get; }
 
@@ -2277,12 +2311,12 @@ namespace XamCore.CoreImage {
 		[Field ("CIDetectorAccuracyHigh"), Internal]
 		NSString AccuracyHigh { get; }
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Mac (10,8)]
 		[Field ("CIDetectorTracking"), Internal]
 		NSString Tracking { get; }
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Mac (10,8)]
 		[Field ("CIDetectorMinFeatureSize"), Internal]
 		NSString MinFeatureSize { get; }
@@ -2293,11 +2327,11 @@ namespace XamCore.CoreImage {
 		[Field ("CIDetectorMaxFeatureCount"), Internal]
 		NSString MaxFeatureCount { get; }
 
-		[Since (7,0), Mavericks]
+		[iOS (7,0), Mac (10, 9)]
 		[Field ("CIDetectorEyeBlink"), Internal]
 		NSString EyeBlink { get; }
 
-		[Since (7,0), Mavericks]
+		[iOS (7,0), Mac (10, 9)]
 		[Field ("CIDetectorSmile"), Internal]
 		NSString Smile { get; }
 
@@ -2331,7 +2365,6 @@ namespace XamCore.CoreImage {
 	}
 	
 	[BaseType (typeof (NSObject))]
-	[Since (5,0)]
 	[DisableDefaultCtor]
 	interface CIFeature {
 		[Export ("type", ArgumentSemantic.Retain)]
@@ -2357,7 +2390,6 @@ namespace XamCore.CoreImage {
 	}
 
 	[BaseType (typeof (CIFeature))]
-	[Since (5,0)]
 	[DisableDefaultCtor]
 	interface CIFaceFeature {
 		[Export ("hasLeftEyePosition", ArgumentSemantic.Assign)]
@@ -2378,43 +2410,43 @@ namespace XamCore.CoreImage {
 		[Export ("mouthPosition", ArgumentSemantic.Assign)]
 		CGPoint MouthPosition { get; }
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("hasTrackingID", ArgumentSemantic.Assign)]
 		bool HasTrackingId { get; }
 		
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("trackingID", ArgumentSemantic.Assign)]
 		int TrackingId { get; } /* int, not NSInteger */
 		
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("hasTrackingFrameCount", ArgumentSemantic.Assign)]
 		bool HasTrackingFrameCount { get; }
 
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Export ("trackingFrameCount", ArgumentSemantic.Assign)]
 		int TrackingFrameCount { get; } /* int, not NSInteger */
 
-		[Since (7,0), Mavericks]
+		[iOS (7,0), Mac (10, 9)]
 		[Export ("bounds", ArgumentSemantic.Assign)]
 		CGRect Bounds { get; }
 
-		[Since (7,0), Mavericks]
+		[iOS (7,0), Mac (10, 9)]
 		[Export ("faceAngle", ArgumentSemantic.Assign)]
 		float FaceAngle { get; } /* float, not CGFloat */
 
-		[Since (7,0), Mavericks]
+		[iOS (7,0), Mac (10, 9)]
 		[Export ("hasFaceAngle", ArgumentSemantic.Assign)]
 		bool HasFaceAngle { get; }
 
-		[Since (7,0), Mavericks]
+		[iOS (7,0), Mac (10, 9)]
 		[Export ("hasSmile", ArgumentSemantic.Assign)]
 		bool HasSmile { get; }
 
-		[Since (7,0), Mavericks]
+		[iOS (7,0), Mac (10, 9)]
 		[Export ("leftEyeClosed", ArgumentSemantic.Assign)]
 		bool LeftEyeClosed { get; }
 
-		[Since (7,0), Mavericks]
+		[iOS (7,0), Mac (10, 9)]
 		[Export ("rightEyeClosed", ArgumentSemantic.Assign)]
 		bool RightEyeClosed { get; }
 	}
@@ -2615,7 +2647,7 @@ namespace XamCore.CoreImage {
 		CIVector Extent { get; set; }
 	}
 
-	[CoreImageFilter]
+	[CoreImageFilter (StringCtorVisibility = MethodAttributes.Public)]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIAreaMaximum {
@@ -3723,11 +3755,8 @@ namespace XamCore.CoreImage {
 
 	[CoreImageFilter]
 	[iOS (8,3)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CILinearBlur))]
 	interface CIMotionBlur {
-
-		[CoreImageFilterProperty ("inputRadius")]
-		float Radius { get; set; }
 
 		[CoreImageFilterProperty ("inputAngle")]
 		float Angle { get; set; }
@@ -4696,31 +4725,35 @@ namespace XamCore.CoreImage {
 	interface CIXRay {
 	}
 
-#if false // Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIAreaMaximum))]
 	interface CIAreaMinMaxRed {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputExtent")]
-		//CIVector Extent { get; set; }
+		[CoreImageFilterProperty ("inputExtent")]
+		CIVector Extent { get; set; }
+	}
+
+	[CoreImageFilter]
+	[Abstract]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIImageGenerator {
+		[CoreImageFilterProperty ("inputScaleFactor")]
+		float ScaleFactor { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIImageGenerator))]
 	interface CIAttributedTextImageGenerator {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputText")]
-		//NSAttributedString Text { get; set; }
-
-		//[CoreImageProperty ("inputScaleFactor")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float ScaleFactor { get; set; }
+		[CoreImageFilterProperty ("inputText")]
+		NSAttributedString Text { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -4729,70 +4762,75 @@ namespace XamCore.CoreImage {
 	[TV (11,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIBarcodeGenerator {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputBarcodeDescriptor")]
-		//CIBarcodeDescriptor BarcodeDescriptor { get; set; }
+		[CoreImageFilterProperty ("inputBarcodeDescriptor")]
+		CIBarcodeDescriptor BarcodeDescriptor { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
+	// Maybe 'typeof (CIScaleTransform)' (shared 'Scale' and 'AspectRatio' property).
+	// It's possible to add ours but it can bite us back in the future if Apple introduce the same with different properties.
 	[BaseType (typeof (CIFilter))]
 	interface CIBicubicScaleTransform {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputB")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float B { get; set; }
-		//[CoreImageProperty ("inputScale")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float Scale { get; set; }
-		//[CoreImageProperty ("inputC")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float C { get; set; }
-		//[CoreImageProperty ("inputAspectRatio")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float AspectRatio { get; set; }
+		[CoreImageFilterProperty ("inputB")]
+		float B { get; set; }
+
+		[CoreImageFilterProperty ("inputC")]
+		float C { get; set; }
+
+		[CoreImageFilterProperty ("inputScale")]
+		float Scale { get; set; }
+
+		[CoreImageFilterProperty ("inputAspectRatio")]
+		float AspectRatio { get; set; }
+	}
+
+	[CoreImageFilter]
+	[Abstract]
+	[BaseType (typeof (CIFilter))]
+	interface CILinearBlur {
+		[CoreImageFilterProperty ("inputRadius")]
+		float Radius { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CILinearBlur))]
 	interface CIBokehBlur {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputSoftness")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float Softness { get; set; }
-		//[CoreImageProperty ("inputRadius")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float Radius { get; set; }
-		//[CoreImageProperty ("inputRingSize")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float RingSize { get; set; }
-		//[CoreImageProperty ("inputRingAmount")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float RingAmount { get; set; }
+		[CoreImageFilterProperty ("inputSoftness")]
+		float Softness { get; set; }
+
+		[CoreImageFilterProperty ("inputRingSize")]
+		float RingSize { get; set; }
+
+		[CoreImageFilterProperty ("inputRingAmount")]
+		float RingAmount { get; set; }
 	}
+
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIFilter))] // Could almost be typeof 'CIColorCube' but property is 'inputCube0Data' not 'inputCubeData'
 	interface CIColorCubesMixedWithMask {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputCubeDimension")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float CubeDimension { get; set; }
-		//[CoreImageProperty ("inputMaskImage")]
-		//CIImage MaskImage { get; set; }
-		//[CoreImageProperty ("inputCube0Data")]
-		//NSData Cube0Data { get; set; }
-		//[CoreImageProperty ("inputCube1Data")]
-		//NSData Cube1Data { get; set; }
-		//[CoreImageProperty ("inputColorSpace")]
-		//NSObject ColorSpace { get; set; }
+		[CoreImageFilterProperty ("inputCubeDimension")]
+		float CubeDimension { get; set; }
+
+		[CoreImageFilterProperty ("inputMaskImage")]
+		CIImage MaskImage { get; set; }
+
+		[CoreImageFilterProperty ("inputCube0Data")]
+		NSData Cube0Data { get; set; }
+
+		[CoreImageFilterProperty ("inputCube1Data")]
+		NSData Cube1Data { get; set; }
+
+		[CoreImageFilterProperty ("inputColorSpace")]
+		CGColorSpace ColorSpace { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -4801,13 +4839,14 @@ namespace XamCore.CoreImage {
 	[TV (11,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIColorCurves {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputColorSpace")]
-		//NSObject ColorSpace { get; set; }
-		//[CoreImageProperty ("inputCurvesDomain")]
-		//CIVector CurvesDomain { get; set; }
-		//[CoreImageProperty ("inputCurvesData")]
-		//NSData CurvesData { get; set; }
+		[CoreImageFilterProperty ("inputColorSpace")]
+		CGColorSpace ColorSpace { get; set; }
+
+		[CoreImageFilterProperty ("inputCurvesDomain")]
+		CIVector CurvesDomain { get; set; }
+
+		[CoreImageFilterProperty ("inputCurvesData")]
+		NSData CurvesData { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -4816,67 +4855,78 @@ namespace XamCore.CoreImage {
 	[TV (11,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIDepthBlurEffect {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputAperture")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float Aperture { get; set; }
-		//[CoreImageProperty ("inputCalibrationData")]
-		//AVCameraCalibrationData CalibrationData { get; set; }
-		//[CoreImageProperty ("inputTuningParameters")]
-		//NSDictionary TuningParameters { get; set; }
-		//[CoreImageProperty ("inputNosePositions")]
-		//CIVector NosePositions { get; set; }
-		//[CoreImageProperty ("inputLumaNoiseScale")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float LumaNoiseScale { get; set; }
-		//[CoreImageProperty ("inputChinPositions")]
-		//CIVector ChinPositions { get; set; }
-		//[CoreImageProperty ("inputDisparityImage")]
-		//CIImage DisparityImage { get; set; }
-		//[CoreImageProperty ("inputScaleFactor")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float ScaleFactor { get; set; }
-		//[CoreImageProperty ("inputRightEyePositions")]
-		//CIVector RightEyePositions { get; set; }
-		//[CoreImageProperty ("inputLeftEyePositions")]
-		//CIVector LeftEyePositions { get; set; }
-		//[CoreImageProperty ("inputFocusRect")]
-		//CIVector FocusRect { get; set; }
+		[CoreImageFilterProperty ("inputAperture")]
+		float Aperture { get; set; }
+
+		[CoreImageFilterProperty ("inputCalibrationData")]
+		AVCameraCalibrationData CalibrationData { get; set; }
+
+		// Radar: https://trello.com/c/9eA2BA2o
+		// Don't know how to test this as I don't know which keys are valid.
+		// [CoreImageFilterProperty ("inputTuningParameters")]
+		// NSDictionary WeakTuningParameters { get; set; }
+
+		[CoreImageFilterProperty ("inputNosePositions")]
+		CIVector NosePositions { get; set; }
+
+		[CoreImageFilterProperty ("inputLumaNoiseScale")]
+		float LumaNoiseScale { get; set; }
+
+		[CoreImageFilterProperty ("inputChinPositions")]
+		CIVector ChinPositions { get; set; }
+
+		[CoreImageFilterProperty ("inputDisparityImage")]
+		CIImage DisparityImage { get; set; }
+
+		[CoreImageFilterProperty ("inputScaleFactor")]
+		float ScaleFactor { get; set; }
+
+		[CoreImageFilterProperty ("inputRightEyePositions")]
+		CIVector RightEyePositions { get; set; }
+
+		[CoreImageFilterProperty ("inputLeftEyePositions")]
+		CIVector LeftEyePositions { get; set; }
+
+		[CoreImageFilterProperty ("inputFocusRect")]
+		CIVector FocusRect { get; set; }
 	}
+
+	[CoreImageFilter]
+	[Abstract]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIDepthDisparityConverter {}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
-	interface CIDepthToDisparity {
-		// TODO: Needs review
-	}
+	[BaseType (typeof (CIDepthDisparityConverter))]
+	interface CIDepthToDisparity {}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
-	interface CIDisparityToDepth {
-		// TODO: Needs review
-	}
+	[BaseType (typeof (CIDepthDisparityConverter))]
+	interface CIDisparityToDepth {}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
-	[NoMac]
+	[Mac (10,13)]
 	[TV (11,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIEdgePreserveUpsampleFilter {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputLumaSigma")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float LumaSigma { get; set; }
-		//[CoreImageProperty ("inputSmallImage")]
-		//CIImage SmallImage { get; set; }
-		//[CoreImageProperty ("inputSpatialSigma")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float SpatialSigma { get; set; }
+		[CoreImageFilterProperty ("inputLumaSigma")]
+		float LumaSigma { get; set; }
+
+		[CoreImageFilterProperty ("inputSmallImage")]
+		CIImage SmallImage { get; set; }
+
+		[CoreImageFilterProperty ("inputSpatialSigma")]
+		float SpatialSigma { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -4885,75 +4935,71 @@ namespace XamCore.CoreImage {
 	[TV (11,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CILabDeltaE {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputImage2")]
-		//CIImage Image2 { get; set; }
+		[CoreImageFilterProperty ("inputImage2")]
+		CIImage Image2 { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIImageGenerator))]
 	interface CITextImageGenerator {
-		// TODO: Needs review
-		//[CoreImageProperty ("inputText")]
-		//NSString Text { get; set; }
-		//[CoreImageProperty ("inputFontName")]
-		//NSString FontName { get; set; }
-		//[CoreImageProperty ("inputScaleFactor")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float ScaleFactor { get; set; }
-		//[CoreImageProperty ("inputFontSize")]
-		//// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate
-		//float FontSize { get; set; }
+		[CoreImageFilterProperty ("inputText")]
+		string Text { get; set; }
+
+		[CoreImageFilterProperty ("inputFontName")]
+		string FontName { get; set; }
+
+		[CoreImageFilterProperty ("inputFontSize")]
+		float FontSize { get; set; }
+	}
+
+	[CoreImageFilter]
+	[Abstract]
+	[iOS (11,0)]
+	[Mac (10,13)]
+	[TV (11,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIMorphology {
+		[CoreImageFilterProperty ("inputRadius")]
+		float Radius { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
-	interface CIMorphologyGradient {
-		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-	}
+	[BaseType (typeof (CIMorphology))]
+	interface CIMorphologyGradient {}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
-	interface CIMorphologyMaximum {
-		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-	}
+	[BaseType (typeof (CIMorphology))]
+	interface CIMorphologyMaximum {}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
-	interface CIMorphologyMinimum {
-		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-	}
+	[BaseType (typeof (CIMorphology))]
+	interface CIMorphologyMinimum {}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
-	interface CIBlendWithBlueMask {
-		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-	}
+	[BaseType (typeof (CIBlendWithMask))]
+	interface CIBlendWithBlueMask {}
 
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
-	[BaseType (typeof (CIFilter))]
-	interface CIBlendWithRedMask {
-		// TODO: Needs review: https://bugzilla.xamarin.com/show_bug.cgi?id=57350
-	}
-#endif // false
+	[BaseType (typeof (CIBlendWithMask))]
+	interface CIBlendWithRedMask {}
 
 	[iOS (11,0)]
 	[Mac (10,13)]

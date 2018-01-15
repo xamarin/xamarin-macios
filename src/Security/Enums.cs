@@ -68,6 +68,7 @@ namespace XamCore.Security {
 		NoTrustSettings 					= -25263,
 		Pkcs12VerifyFailure 				= -25264,
 		NotSigner 							= -26267,
+		MissingEntitlement				= -34018,
 		ServiceNotAvailable 				= -67585,
 		InsufficientClientID 				= -67586,
 		DeviceReset 						= -67587,
@@ -428,7 +429,8 @@ namespace XamCore.Security {
 		Invalid,
 		Proceed,
 
-		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_9)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		Confirm,
 		Deny,
 		Unspecified,

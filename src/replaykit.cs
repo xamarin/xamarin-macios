@@ -302,6 +302,10 @@ namespace XamCore.ReplayKit {
 		[Field ("RPVideoSampleOrientationKey")]
 		NSString VideoSampleOrientationKey { get; }
 
+		[NoTV, iOS (11, 2)]
+		[Field ("RPApplicationInfoBundleIdentifierKey")]
+		NSString ApplicationInfoBundleIdentifierKey { get; }
+
 		[Export ("broadcastStartedWithSetupInfo:")]
 		void BroadcastStarted ([NullAllowed] NSDictionary<NSString, NSObject> setupInfo);
 
@@ -313,6 +317,10 @@ namespace XamCore.ReplayKit {
 
 		[Export ("broadcastFinished")]
 		void BroadcastFinished ();
+
+		[NoTV, iOS (11,2)]
+		[Export ("broadcastAnnotatedWithApplicationInfo:")]
+		void BroadcastAnnotated (NSDictionary applicationInfo);
 
 		[Export ("processSampleBuffer:withType:")]
 		void ProcessSampleBuffer (CMSampleBuffer sampleBuffer, RPSampleBufferType sampleBufferType);

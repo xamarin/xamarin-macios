@@ -674,6 +674,10 @@ namespace XamCore.PdfKit {
 		[NullAllowed, Export ("fontColor", ArgumentSemantic.Copy)]
 		NSColor FontColor { get; set; }
 
+		[Mac (10,13,2), iOS (11,2)]
+		[NullAllowed, Export ("interiorColor", ArgumentSemantic.Copy)]
+		NSColor InteriorColor { get; set; }
+
 		[Mac (10,13)]
 		[Export ("alignment", ArgumentSemantic.Assign)]
 		NSTextAlignment Alignment { get; set; }
@@ -816,6 +820,10 @@ namespace XamCore.PdfKit {
 		[Mac (10,13)]
 		[NullAllowed, Export ("backgroundColor", ArgumentSemantic.Copy)]
 		NSColor BackgroundColor { get; set; }
+
+		[Mac (10,13,2), iOS (11,2)]
+		[NullAllowed, Export ("stampName")]
+		string StampName { get; set; }
 	}
 
 	[NoiOS]
@@ -909,11 +917,19 @@ namespace XamCore.PdfKit {
 		[Export ("paths")]
 		NSBezierPath [] Paths { get; }
 
+#if !XAMCORE_4_0
 		[Export ("addBezierPath:")]
 		void AddBezierPathpath (NSBezierPath path);
 
 		[Export ("removeBezierPath:")]
 		void RemoveBezierPathpath (NSBezierPath path);
+#else
+		[Export ("addBezierPath:")]
+		void AddBezierPath (NSBezierPath path);
+
+		[Export ("removeBezierPath:")]
+		void RemoveBezierPath (NSBezierPath path);
+#endif
 	}
 
 	[NoiOS]
@@ -1396,6 +1412,7 @@ namespace XamCore.PdfKit {
 		[Export ("index")]
 		nint Index { get; }
 
+		[return: NullAllowed]
 		[Export ("childAtIndex:")]
 		PdfOutline Child (nint index);
 
@@ -1524,7 +1541,7 @@ namespace XamCore.PdfKit {
 		[return: NullAllowed]
 		PdfSelection GetSelection (NSRange range);
 
-		[Export ("dataRepresentation")]
+		[Export ("dataRepresentation"), NullAllowed]
 		NSData DataRepresentation { get; }
 	}
 

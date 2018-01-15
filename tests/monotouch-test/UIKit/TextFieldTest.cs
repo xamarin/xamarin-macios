@@ -88,16 +88,9 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=20572
 			using (UITextField tf = new UITextField ()) {
-				var rect = tf.GetCaretRectForPosition (null);
-				if (TestRuntime.CheckXcodeVersion (9, 0)) {
-#if __TVOS__
-					Assert.AreEqual (new CGRect (0, -24, 2, 19), rect, "IsEmpty");
-#else
-					Assert.AreEqual (new CGRect (0, -12, 2, 18.5), rect, "IsEmpty");
-#endif
-				} else {
-					Assert.AreEqual (CGRect.Empty, rect, "IsEmpty");
-				}
+				// most iOS versions returns `CGRect.Empty` but iOS [9-11.2[ did not
+				// so we're not checking the return value - just that the call works (original bug)
+				tf.GetCaretRectForPosition (null);
 			}
 		}
 

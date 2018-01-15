@@ -155,6 +155,8 @@ APPKIT_SOURCES = \
 # ARKit
 
 ARKIT_SOURCES = \
+	ARKit/ARCompat.cs \
+	ARKit/ARFaceGeometry.cs \
 	ARKit/ARPointCloud.cs \
 
 # AssetsLibrary
@@ -228,6 +230,7 @@ AVFOUNDATION_CORE_SOURCES = \
 	AVFoundation/AVTypes.cs \
 
 AVFOUNDATION_SOURCES = \
+	AVFoundation/AVAssetDownloadStorageManagementPolicy.cs \
 	AVFoundation/AVAssetDownloadTask.cs \
 	AVFoundation/AVAssetDownloadUrlSession.cs \
 	AVFoundation/AVAssetImageGenerator.cs \
@@ -259,6 +262,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVMetadataObject.cs \
 	AVFoundation/AVOutputSettingsAssistant.cs \
 	AVFoundation/AVPlayer.cs \
+	AVFoundation/AVPlayerItem.cs \
 	AVFoundation/AVPlayerItemVideoOutput.cs \
 	AVFoundation/AVPlayerLayer.cs \
 	AVFoundation/AVPlayerViewController.cs \
@@ -1004,7 +1008,12 @@ METALPERFORMANCESHADERS_CORE_SOURCES = \
 	MetalPerformanceShaders/MPSKernel.cs \
 
 METALPERFORMANCESHADERS_SOURCES = \
-	MetalPerformanceShaders/MPSImageLanczosScale.cs \
+	MetalPerformanceShaders/MPSImageScale.cs \
+	MetalPerformanceShaders/MPSCnnConvolutionDescriptor.cs \
+	MetalPerformanceShaders/MPSCnnNeuron.cs \
+	MetalPerformanceShaders/MPSCnnKernel.cs \
+	MetalPerformanceShaders/MPSMatrixDescriptor.cs \
+	MetalPerformanceShaders/MPSImageHistogram.cs \
 
 # MobileCoreServices
 
@@ -1301,6 +1310,7 @@ STOREKIT_CORE_SOURCES = \
 
 STOREKIT_SOURCES = \
 	StoreKit/NativeMethods.cs \
+	StoreKit/SKCloudServiceSetupOptions.cs \
 	StoreKit/SKPayment.cs \
 	StoreKit/SKPaymentTransactionObserver.cs \
 
@@ -1526,7 +1536,9 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/Messaging.mac.cs \
 	ObjCRuntime/Messaging.watch.cs \
 	ObjCRuntime/NativeAttribute.cs \
+	ObjCRuntime/PlatformAvailability.cs \
 	ObjCRuntime/PlatformAvailability2.cs \
+	ObjCRuntime/PlatformAvailabilityShadow.cs \
 	ObjCRuntime/Protocol.cs \
 	ObjCRuntime/Registrar.core.cs \
 	ObjCRuntime/Selector.cs \
@@ -1560,10 +1572,10 @@ SHARED_SOURCES = \
 	ObjCRuntime/MethodDescription.cs \
 	ObjCRuntime/NSStringMarshal.cs \
 	ObjCRuntime/ObjectWrapper.cs \
-	ObjCRuntime/PlatformAvailability.cs \
 	ObjCRuntime/Registrar.cs \
 	ObjCRuntime/ReleaseAttribute.cs \
 	ObjCRuntime/RequiredFrameworkAttribute.cs \
+	ObjCRuntime/RequiresSuperAttribute.cs \
 	ObjCRuntime/Runtime.cs \
 	ObjCRuntime/Runtime.iOS.cs \
 	ObjCRuntime/Runtime.mac.cs \
@@ -1589,6 +1601,7 @@ SHARED_SOURCES = \
 #
 
 COMMON_FRAMEWORKS =         \
+	Accelerate              \
 	AVFoundation            \
 	CoreBluetooth           \
 	CoreFoundation          \
@@ -1601,7 +1614,6 @@ COMMON_FRAMEWORKS =         \
 
 MAC_FRAMEWORKS =            \
 	$(COMMON_FRAMEWORKS)    \
-	Accelerate              \
 	Accounts                \
 	AppKit                  \
 	AudioToolbox            \
@@ -1620,6 +1632,7 @@ MAC_FRAMEWORKS =            \
 	CoreMedia               \
 	CoreMidi                \
 	CoreServices            \
+	CoreSpotlight           \
 	CoreText                \
 	CoreWlan                \
 	EventKit                \
@@ -1641,6 +1654,7 @@ MAC_FRAMEWORKS =            \
 	MediaToolbox            \
 	Metal                   \
 	MetalKit                \
+	MetalPerformanceShaders \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity	\
@@ -1670,7 +1684,6 @@ MAC_FRAMEWORKS =            \
 IOS_FRAMEWORKS =         \
 	$(COMMON_FRAMEWORKS) \
 	AVKit \
-	Accelerate \
 	Accounts \
 	AdSupport \
 	AddressBook \
@@ -1784,7 +1797,6 @@ WATCHOS_FRAMEWORKS =        \
 TVOS_FRAMEWORKS =           \
 	$(COMMON_FRAMEWORKS)    \
 	AVKit                   \
-	Accelerate              \
 	AdSupport               \
 	AudioToolbox            \
 	AudioUnit               \

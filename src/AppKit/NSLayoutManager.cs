@@ -18,7 +18,7 @@ namespace XamCore.AppKit {
 		}
 #endif
 
-		[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_11)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		public CGRect [] GetRectArray (NSRange glyphRange, NSRange selectedGlyphRange, NSTextContainer textContainer)
 		{
 			if (textContainer == null)
@@ -37,5 +37,13 @@ namespace XamCore.AppKit {
 			}
 			return returnArray;
 		}
+
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'GetIntAttribute' instead.")]
+		public virtual nint IntAttributeforGlyphAtIndex (nint attributeTag, nint glyphIndex)
+		{
+			return GetIntAttribute (attributeTag, glyphIndex);
+		}
+#endif
 	}
 }

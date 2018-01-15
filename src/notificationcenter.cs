@@ -43,7 +43,13 @@ namespace XamCore.NotificationCenter {
 
 #if MONOMAC
 		[Export ("widgetAllowsEditing")]
-		bool WidgetAllowsEditing { get; set; }
+		bool WidgetAllowsEditing {
+			get;
+#if !XAMCORE_4_0
+			[NotImplemented]
+			set;
+#endif
+		}
 
 		[Export ("widgetDidBeginEditing")]
 		void WidgetDidBeginEditing ();
@@ -192,9 +198,15 @@ namespace XamCore.NotificationCenter {
 	[BaseType (typeof(NSObject))]
 	interface NCWidgetSearchViewDelegate
 	{
+#if !XAMCORE_4_0
 		[Abstract]
 		[Export ("widgetSearch:searchForTerm:maxResults:"), EventArgs ("NSWidgetSearchForTerm"), DefaultValue (false)]
 		void SearchForTearm (NCWidgetSearchViewController controller, string searchTerm, nuint max);
+#else
+		[Abstract]
+		[Export ("widgetSearch:searchForTerm:maxResults:"), EventArgs ("NSWidgetSearchForTerm"), DefaultValue (false)]
+		void SearchForTerm (NCWidgetSearchViewController controller, string searchTerm, nuint max);
+#endif
 
 		[Abstract]
 		[Export ("widgetSearchTermCleared:"), EventArgs ("NSWidgetSearchViewController"), DefaultValue (false)]

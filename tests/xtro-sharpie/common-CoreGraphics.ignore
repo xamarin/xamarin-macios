@@ -1,0 +1,84 @@
+## deprecated (as the name indicates) and not exposed
+!missing-enum! CGGlyphDeprecatedEnum not bound
+
+## there's another P/Invoke that returns the same result according to the documentation (CGColorSpaceCopyName), so no need to bind another one.
+!missing-pinvoke! CGColorSpaceGetName is not bound
+
+
+## unsorted
+
+!missing-enum! CGBitmapInfo not bound
+!missing-enum! CGError not bound
+!missing-enum! CGFontPostScriptFormat not bound
+!missing-enum! CGImageByteOrderInfo not bound
+!missing-field! CGAffineTransformIdentity not bound
+!missing-field! CGPointZero not bound
+!missing-field! CGSizeZero not bound
+!missing-field! kCGFontVariationAxisDefaultValue not bound
+!missing-field! kCGFontVariationAxisMaxValue not bound
+!missing-field! kCGFontVariationAxisMinValue not bound
+!missing-field! kCGFontVariationAxisName not bound
+!missing-pinvoke! CGAffineTransformConcat is not bound
+!missing-pinvoke! CGAffineTransformEqualToTransform is not bound
+!missing-pinvoke! CGAffineTransformIsIdentity is not bound
+!missing-pinvoke! CGAffineTransformMake is not bound
+!missing-pinvoke! CGAffineTransformMakeRotation is not bound
+!missing-pinvoke! CGAffineTransformMakeScale is not bound
+!missing-pinvoke! CGAffineTransformMakeTranslation is not bound
+!missing-pinvoke! CGAffineTransformRotate is not bound
+!missing-pinvoke! CGAffineTransformScale is not bound
+!missing-pinvoke! CGAffineTransformTranslate is not bound
+!missing-pinvoke! CGBitmapContextCreateWithData is not bound
+!missing-pinvoke! CGColorConversionInfoCreateFromListWithArguments is not bound
+!missing-pinvoke! CGColorConversionInfoGetTypeID is not bound
+!missing-pinvoke! CGColorCreateCopy is not bound
+!missing-pinvoke! CGColorGetTypeID is not bound
+!missing-pinvoke! CGColorSpaceCreateWithPlatformColorSpace is not bound
+!missing-pinvoke! CGColorSpaceGetTypeID is not bound
+!missing-pinvoke! CGContextGetTypeID is not bound
+!missing-pinvoke! CGDataConsumerCreate is not bound
+!missing-pinvoke! CGDataConsumerGetTypeID is not bound
+!missing-pinvoke! CGDataProviderCreateDirect is not bound
+!missing-pinvoke! CGDataProviderCreateSequential is not bound
+!missing-pinvoke! CGDataProviderGetInfo is not bound
+!missing-pinvoke! CGDataProviderGetTypeID is not bound
+!missing-pinvoke! CGFontCanCreatePostScriptSubset is not bound
+!missing-pinvoke! CGFontCopyTableForTag is not bound
+!missing-pinvoke! CGFontCopyTableTags is not bound
+!missing-pinvoke! CGFontCopyVariationAxes is not bound
+!missing-pinvoke! CGFontCopyVariations is not bound
+!missing-pinvoke! CGFontCreateCopyWithVariations is not bound
+!missing-pinvoke! CGFontCreatePostScriptEncoding is not bound
+!missing-pinvoke! CGFontCreatePostScriptSubset is not bound
+!missing-pinvoke! CGFontGetGlyphAdvances is not bound
+!missing-pinvoke! CGFontGetGlyphBBoxes is not bound
+!missing-pinvoke! CGFunctionGetTypeID is not bound
+!missing-pinvoke! CGGradientGetTypeID is not bound
+!missing-pinvoke! CGImageGetTypeID is not bound
+!missing-pinvoke! CGLayerGetTypeID is not bound
+!missing-pinvoke! CGPathApplyWithBlock is not bound
+!missing-pinvoke! CGPathCreateCopy is not bound
+!missing-pinvoke! CGPathGetTypeID is not bound
+!missing-pinvoke! CGPatternGetTypeID is not bound
+!missing-pinvoke! CGPDFArrayGetNull is not bound
+!missing-pinvoke! CGPDFArrayGetObject is not bound
+!missing-pinvoke! CGPDFDictionaryGetObject is not bound
+!missing-pinvoke! CGPDFDocumentGetID is not bound
+!missing-pinvoke! CGPDFDocumentGetTypeID is not bound
+!missing-pinvoke! CGPDFPageGetTypeID is not bound
+!missing-pinvoke! CGPDFStringCopyDate is not bound
+!missing-pinvoke! CGPDFStringGetBytePtr is not bound
+!missing-pinvoke! CGPDFStringGetLength is not bound
+!missing-pinvoke! CGPointApplyAffineTransform is not bound
+!missing-pinvoke! CGPointEqualToPoint is not bound
+!missing-pinvoke! CGRectContainsPoint is not bound
+!missing-pinvoke! CGRectContainsRect is not bound
+!missing-pinvoke! CGRectEqualToRect is not bound
+!missing-pinvoke! CGRectGetHeight is not bound
+!missing-pinvoke! CGRectGetWidth is not bound
+!missing-pinvoke! CGRectIntersection is not bound
+!missing-pinvoke! CGRectIntersectsRect is not bound
+!missing-pinvoke! CGRectIsEmpty is not bound
+!missing-pinvoke! CGRectOffset is not bound
+!missing-pinvoke! CGShadingGetTypeID is not bound
+!missing-pinvoke! CGSizeEqualToSize is not bound

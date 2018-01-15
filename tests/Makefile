@@ -207,6 +207,13 @@ test-ios-tasks:
 	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(NUNIT_MSBUILD_DIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml > $(TOP)/tests/index.html && echo "@MonkeyWrench: AddFile: $$PWD/index.html" )
 	@if test -e $(NUNIT_MSBUILD_DIR)/.failed-stamp; then rm $(NUNIT_MSBUILD_DIR)/.failed-stamp; exit 1; fi
 
+test-install-sources:
+	$(SYSTEM_XBUILD) $(TOP)/tools/install-source/InstallSourcesTests/InstallSourcesTests.csproj
+	cd $(NUNIT_MSBUILD_DIR) && $(SYSTEM_MONO) ../nunit-console.exe ../../../../tools/install-source/InstallSourcesTests/bin/Release/InstallSourcesTests.dll -xml=TestResults_InstallSourcesTests.xml -labels $(TEST_FIXTURE) || touch .failed-stamp
+	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(NUNIT_MSBUILD_DIR)/TestResults_InstallSourcesTests.xml > $(TOP)/tests/index.html && echo "@MonkeyWrench: AddFile: $$PWD/index.html" )
+	@if test -e $(NUNIT_MSBUILD_DIR)/.failed-stamp; then rm $(NUNIT_MSBUILD_DIR)/.failed-stamp; exit 1; fi
+
+
 ifdef ENABLE_XAMARIN
 ifdef INCLUDE_IOS
 qa-test-dependencies.zip:
@@ -307,6 +314,11 @@ wrench-mac-binding-project:
 wrench-mac-introspection:
 	@echo Not here anymore
 
+wrench-mac-xammac_tests:
+	@# This entire target can be removed when merging to master.
+	$(Q) $(MAKE) run-mac-xammac_tests
+	$(Q) $(MAKE) clean-mac-xammac_tests
+	git clean -xfdq
 else
 wrench-mac-%:
 	@echo "Mac tests have been disabled [$@]"

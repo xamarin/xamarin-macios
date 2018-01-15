@@ -1,0 +1,5 @@
+## made optional in xcode9 beta 3 since it was replaced with newer API
+!incorrect-protocol-member! PKPaymentAuthorizationViewControllerDelegate::paymentAuthorizationViewController:didAuthorizePayment:completion: is OPTIONAL and should NOT be abstract
+
+## fixed in XAMCORE_4_0 - API break
+!incorrect-protocol-member! PKPaymentAuthorizationViewControllerDelegate::paymentAuthorizationViewControllerWillAuthorizePayment: is OPTIONAL and should NOT be abstract

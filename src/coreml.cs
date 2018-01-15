@@ -15,6 +15,13 @@ using XamCore.CoreFoundation;
 using XamCore.CoreVideo;
 using XamCore.Foundation;
 
+#if !WATCH
+using XamCore.Metal;
+#else
+using IMTLCommandBuffer = global::XamCore.Foundation.NSObject; // Won't be used just to make compilation happy.
+using IMTLTexture = global::XamCore.Foundation.NSObject; // Won't be used just to make compilation happy.
+#endif
+
 namespace XamCore.CoreML {
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -36,6 +43,8 @@ namespace XamCore.CoreML {
 		Generic = 0,
 		FeatureType = 1,
 		IO = 3,
+		[Watch (4,2), TV (11,2), Mac (10,13,2, onlyOn64: true), iOS (11,2)]
+		CustomLayer = 4,
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -345,6 +354,32 @@ namespace XamCore.CoreML {
 
 		[Export ("usesCPUOnly")]
 		bool UsesCpuOnly { get; set; }
+	}
+
+	[NoWatch, TV (11,2), Mac (10,13,2, onlyOn64: true), iOS (11,2)]
+	[Protocol]
+	interface MLCustomLayer {
+
+		// Must be manually inlined in classes implementing this protocol
+		//[Abstract]
+		//[Export ("initWithParameterDictionary:error:")]
+		//IntPtr Constructor (NSDictionary<NSString, NSObject> parameters, [NullAllowed] out NSError error);
+
+		[Abstract]
+		[Export ("setWeightData:error:")]
+		bool SetWeightData (NSData[] weights, [NullAllowed] out NSError error);
+
+		[Abstract]
+		[Export ("outputShapesForInputShapes:error:")]
+		[return: NullAllowed]
+		NSArray[] GetOutputShapes (NSArray[] inputShapes, [NullAllowed] out NSError error);
+
+		[Abstract]
+		[Export ("evaluateOnCPUWithInputs:outputs:error:")]
+		bool EvaluateOnCpu (MLMultiArray[] inputs, MLMultiArray[] outputs, [NullAllowed] out NSError error);
+
+		[Export ("encodeToCommandBuffer:inputs:outputs:error:")]
+		bool Encode (IMTLCommandBuffer commandBuffer, IMTLTexture[] inputs, IMTLTexture[] outputs, [NullAllowed] out NSError error);
 	}
 }
 #endif // XAMCORE_2_0

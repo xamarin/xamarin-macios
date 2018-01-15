@@ -51,7 +51,6 @@ namespace XamCore.ScriptingBridge {
 	}
 
 #pragma warning disable 0618 // SBElement can only access children elements via NSMutableArray base type
-	[Mac (10,5)]
 	[BaseType (typeof (NSMutableArray))]
 	[DisableDefaultCtor] // *** -[SBElementArray init]: should never be used.
 	interface SBElementArray {
@@ -155,11 +154,16 @@ namespace XamCore.ScriptingBridge {
 	[Model]
 	[Protocol]
 	interface SBApplicationDelegate {
+#if !XAMCORE_4_0
 		[Abstract]
 		[Export ("eventDidFail:withError:"), DelegateName ("SBApplicationError"), DefaultValue (null)]
 		//NSObject EventDidFailwithError (const AppleEvent event, NSError error);
 		NSObject EventDidFailwithError (IntPtr appleEvent, NSError error);
-
+#else
+		[Abstract]
+		[Export ("eventDidFail:withError:"), DelegateName ("SBApplicationError"), DefaultValue (null)]
+		NSObject EventFailed (IntPtr appleEvent, NSError error);
+#endif
 	}
 	
 }

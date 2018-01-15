@@ -37,6 +37,10 @@ namespace XamarinAnalysisDoc
 			section += "[//]: # (The original file resides under https://github.com/xamarin/xamarin-macios/tree/master/docs/website/)\n";
 			section += "[//]: # (This allows all contributors (including external) to submit, using a PR, updates to the documentation that match the tools changes)\n";
 			section += "[//]: # (Modifications outside of xamarin-macios/master will be lost on future updates)\n\n";
+			section += "Xamarin.iOS analysis is a set of rules that check your project settings to help you determine if better/more optimized settings are available.\n\n";
+			section += "Run the analysis rules as often as possible to find possible improvements early on and save development time.\n\n";
+			section += "To run the rules, in Visual Studio for Mac's menu, select **Project > Run Code Analysis**.\n\n";
+			section += "> ⚠️ **NOTE:** Xamarin.iOS analysis only runs on your currently selected configuration. We highly recommend running the tool for debug **and** release configurations.\n\n";
 
 			var root = XDocument.Load (path);
 

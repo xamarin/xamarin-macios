@@ -90,7 +90,7 @@ namespace Xamarin.MacDev.Tasks
 		int Compile (ITaskItem item, string outputDir, string log, string partialPlist)
 		{
 			var environment = new Dictionary<string, string> ();
-			var args = new ProcessArgumentBuilder ();
+			var args = new CommandLineArgumentBuilder ();
 
 			args.Add ("compile");
 			args.AddQuoted (item.ItemSpec);

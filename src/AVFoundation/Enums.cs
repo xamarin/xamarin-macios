@@ -41,7 +41,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVAssetExportSession.h
 	public enum AVAssetExportSessionStatus : nint {
@@ -54,7 +53,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVAssetReader.h
 	public enum AVAssetReaderStatus : nint {
@@ -66,7 +64,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,1)]
 	[Native]
 	// NSInteger - AVAssetWriter.h
 	public enum AVAssetWriterStatus : nint {
@@ -78,7 +75,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoTV, NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureSession.h
 	public enum AVCaptureVideoOrientation : nint {
@@ -90,7 +86,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureFlashMode : nint {
@@ -99,7 +94,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureTorchMode : nint {
@@ -108,7 +102,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureFocusMode : nint {
@@ -129,7 +122,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureDevicePosition : nint {
@@ -140,7 +132,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureExposureMode : nint {
@@ -149,7 +140,6 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureWhiteBalanceMode : nint {
@@ -158,10 +148,8 @@ namespace XamCore.AVFoundation {
 
 #if !MONOMAC || !XAMCORE_4_0
 	[Flags]
-	[NoTV]
-	[iOS (4,0)]
 	[Native]
-	[Availability (Deprecated = Platform.iOS_6_0)]
+	[Deprecated (PlatformName.iOS, 6, 0)]
 	// NSUInteger - AVAudioSession.h
 	public enum AVAudioSessionInterruptionFlags : nuint_compat_int {
 		ShouldResume = 1
@@ -213,7 +201,6 @@ namespace XamCore.AVFoundation {
 		DecoderTemporarilyUnavailable = -11839,
 		EncoderTemporarilyUnavailable = -11840,
 		InvalidVideoComposition = -11841,
-		//[iOS (5,1)]
 		ReferenceForbiddenByReferencePolicy = -11842,
 		InvalidOutputURLPathExtension = -11843,
 		ScreenCaptureFailed = -11844,
@@ -243,10 +230,23 @@ namespace XamCore.AVFoundation {
 		UnsupportedOutputSettings = -11861,
 		[NoWatch, iOS (10,0), TV (10,0), Mac (10,12)]
 		OperationNotAllowed = -11862,
+		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
+		ContentIsUnavailable = -11863,
+		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
+		FormatUnsupported = -11864,
+		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
+		MalformedDepth = -11865,
+		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
+		ContentNotUpdated = -11866,
+		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
+		NoLongerPlayable = -11867,
+		[NoWatch, iOS (11,0), TV (11,0), Mac (10,13)]
+		NoCompatibleAlternatesForExternalDisplay = -11868,
+		[NoWatch, iOS (11,2), TV (11,2), Mac (10,13,2)]
+		NoSourceTrack = -11869,
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVPlayer.h
 	public enum AVPlayerActionAtItemEnd : nint {
@@ -256,7 +256,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVPlayerItem.h
 	public enum AVPlayerItemStatus : nint {
@@ -266,9 +265,8 @@ namespace XamCore.AVFoundation {
 #if !MONOMAC || !XAMCORE_4_0
 	[NoTV]
 	[Flags]
-	[iOS (4,0)]
 	[Native]
-	[Availability (Deprecated = Platform.iOS_6_0)]
+	[Deprecated (PlatformName.iOS, 6, 0)]
 	// declared as AVAudioSessionSetActiveOptions (NSUInteger) - AVAudioSession.h
 	public enum AVAudioSessionFlags : nuint_compat_int {
 		NotifyOthersOnDeactivation = 1
@@ -276,7 +274,6 @@ namespace XamCore.AVFoundation {
 #endif
 
 	[NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVAsynchronousKeyValueLoading.h
 	public enum AVKeyValueStatus : nint {
@@ -284,7 +281,6 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVPlayer.h
 	public enum AVPlayerStatus : nint {
@@ -402,7 +398,7 @@ namespace XamCore.AVFoundation {
 		MissingEntitlement = 0x656e743f,
 		SiriIsRecording = 0x73697269,
 		CannotStartPlaying = 0x21706c61,
-		[Availability (Introduced = Platform.iOS_7_0)]
+		[iOS (7, 0)]
 		CannotStartRecording = 0x21726563,
 		BadParam = -50,
 		Unspecified = 0x77686174,
@@ -688,7 +684,7 @@ namespace XamCore.AVFoundation {
 		ChannelsToTracks = (1 << 0)
 	}
 			
-#if MONOMAC
+	[NoiOS][NoTV][NoWatch]
 	[Mac (10,11)]
 	[Native]
 	public enum AVMovieWritingOptions : nuint
@@ -697,7 +693,8 @@ namespace XamCore.AVFoundation {
 		TruncateDestinationToMovieHeaderOnly = (1 << 0)
 	}
 
-	[Mac (10,10)]
+	[NoiOS][NoTV][NoWatch]
+	[Mac (10, 7)]
 	[Native]
 	public enum AVContentAuthorizationStatus : nint {
 		Unknown,
@@ -709,6 +706,7 @@ namespace XamCore.AVFoundation {
 		NotPossible,
 	}
 
+	[NoiOS][NoTV][NoWatch]
 	[Mac (10,10)]
 	[Native]
 	public enum AVSampleBufferRequestDirection : nint {
@@ -717,13 +715,13 @@ namespace XamCore.AVFoundation {
 		Reverse = -1,
 	}
 
+	[NoiOS][NoTV][NoWatch]
 	[Mac (10,10)]
 	[Native]
 	public enum AVSampleBufferRequestMode : nint {
 		Immediate,
 		Scheduled,
 	}
-#endif
 
 	[NoTV, NoWatch, NoMac, iOS (10,0)]
 	[Native]
@@ -933,8 +931,6 @@ namespace XamCore.AVFoundation {
 		EncodedPixels = 2,
 	}
 
-	/*
-	// Enum values are present in header but missing rdar filed at: https://bugreport.apple.com/web/?problemID=34184435
 	[NoWatch, NoTV, NoMac, iOS (11, 0)]
 	public enum AVAssetDownloadedAssetEvictionPriority {
 		[Field ("AVAssetDownloadedAssetEvictionPriorityDefault")]
@@ -943,7 +939,6 @@ namespace XamCore.AVFoundation {
 		[Field ("AVAssetDownloadedAssetEvictionPriorityImportant")]
 		Important = 1,
 	}
-	*/
 
 	[NoWatch, iOS (11, 0), TV (11,0), Mac (10,13)]
 	public enum AVAssetWriterInputMediaDataLocation {
@@ -989,5 +984,14 @@ namespace XamCore.AVFoundation {
 		SystemTemperature = (1 << 0),
 		PeakPower = (1 << 1),
 		DepthModuleTemperature = (1 << 2)
+	}
+
+	[TV (11,2), NoWatch, NoMac, iOS (11,2)]
+	[Native]
+	[Flags]
+	public enum AVPlayerHdrMode : nint {
+		Hlg = 0x1,
+		Hdr10 = 0x2,
+		DolbyVision = 0x4,
 	}
 }

@@ -946,7 +946,8 @@ namespace XamCore.Security {
 			}
 		}
 
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0, Message = "Use AuthenticationUI property")]
+		[iOS (8, 0)]
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use AuthenticationUI property")]
 		public bool UseNoAuthenticationUI {
 			get {
 				return Fetch (SecItem.UseNoAuthenticationUI) == CFBoolean.True.Handle;
@@ -1303,6 +1304,16 @@ namespace XamCore.Security {
 
 			set {
 				SetValue (value, SecAttributeKey.AccessGroup);
+			}
+		}
+
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+		public bool PersistentReference {
+			get {
+				return Fetch (SecAttributeKey.PersistentReference) == CFBoolean.True.Handle;
+			}
+			set {
+				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKey.PersistentReference);
 			}
 		}
 

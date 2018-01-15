@@ -46,8 +46,7 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[Since (5,0)]
-	[Lion]
+	[Mac (10, 7)]
 	[BaseType (typeof (CBManager), Delegates=new[] {"WeakDelegate"}, Events = new[] { typeof (CBCentralManagerDelegate)})]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
 	interface CBCentralManager {
@@ -85,7 +84,7 @@ namespace XamCore.CoreBluetooth {
 		[NoWatch]
 		[Mac (10, 7, onlyOn64: true)] // Was removed from 32-bit in 10.13 unannounced
 		[Export ("retrieveConnectedPeripherals")]
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0, Message = "Use 'RetrievePeripheralsWithIdentifiers' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0, Message = "Use 'RetrievePeripheralsWithIdentifiers' instead.")]
 		void RetrieveConnectedPeripherals ();
 
 		[Export ("scanForPeripheralsWithServices:options:"), Internal]
@@ -107,49 +106,54 @@ namespace XamCore.CoreBluetooth {
 		NSString OptionNotifyOnDisconnectionKey { get; }
 
 		[Mac (10,13)]
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Field ("CBConnectPeripheralOptionNotifyOnConnectionKey")]
 		NSString OptionNotifyOnConnectionKey { get; }
 
 		[Mac (10,13)]
-		[Since (6,0)]
+		[iOS (6,0)]
 		[Field ("CBConnectPeripheralOptionNotifyOnNotificationKey")]
 		NSString OptionNotifyOnNotificationKey { get; }
 
+		[NoMac] // xcode 9.2 beta 2 does not include this inside its macOS header files
+		[iOS (11,2)][TV (11,2)][Watch (4,2)]
+		[Field ("CBConnectPeripheralOptionStartDelayKey")]
+		NSString OptionStartDelayKey { get; }
+
 		[Field ("CBCentralManagerOptionRestoreIdentifierKey")]
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Mac (10,13)]
 		NSString OptionRestoreIdentifierKey { get; }
 
 		[Field ("CBCentralManagerRestoredStatePeripheralsKey")]
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Mac (10,13)]
 		NSString RestoredStatePeripheralsKey { get; }
 
 		[Field ("CBCentralManagerRestoredStateScanServicesKey")]
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Mac (10,13)]
 		NSString RestoredStateScanServicesKey { get; }
 
 		[Field ("CBCentralManagerRestoredStateScanOptionsKey")]
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Mac (10,13)]
 		NSString RestoredStateScanOptionsKey { get; }
 
-		[Since (7,0), Mac (10,9)]
+		[iOS (7,0), Mac (10,9)]
 		[Export ("retrievePeripheralsWithIdentifiers:")]
 		CBPeripheral [] RetrievePeripheralsWithIdentifiers ([Params] NSUuid [] identifiers);
 
-		[Since (7,0), Mac (10,9)]
+		[iOS (7,0), Mac (10,9)]
 		[Export ("retrieveConnectedPeripheralsWithServices:")]
 		CBPeripheral [] RetrieveConnectedPeripherals ([Params] CBUUID []  serviceUUIDs);
 
 		[Field ("CBCentralManagerOptionShowPowerAlertKey")]
-		[Since (7,0), Mac (10,9)]
+		[iOS (7,0), Mac (10,9)]
 		NSString OptionShowPowerAlertKey { get; }
 
 		[Field ("CBCentralManagerScanOptionSolicitedServiceUUIDsKey")]
-		[Since (7,0), Mac (10,9)]
+		[iOS (7,0), Mac (10,9)]
 		NSString ScanOptionSolicitedServiceUUIDsKey { get; }
 
 		[iOS (9,0)]
@@ -197,11 +201,11 @@ namespace XamCore.CoreBluetooth {
 		[Field ("CBAdvertisementDataTxPowerLevelKey")]
 		NSString TxPowerLevelKey { get; }
 
-		[Since (7,0), Mac (10,9)]
+		[iOS (7,0), Mac (10,9)]
 		[Field ("CBAdvertisementDataIsConnectable")]
 		NSString IsConnectableKey { get; }
 
-		[Since (7,0), Mac (10,9)]
+		[iOS (7,0), Mac (10,9)]
 		[Field ("CBAdvertisementDataSolicitedServiceUUIDsKey")]
 		NSString SolicitedServiceUuidsKey { get; }
 	}
@@ -221,15 +225,15 @@ namespace XamCore.CoreBluetooth {
 	[Watch (4,0)]
 	[Static, Internal]
 	interface RestoredStateKeys {
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("CBCentralManagerRestoredStatePeripheralsKey")]
 		NSString PeripheralsKey { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("CBCentralManagerRestoredStateScanServicesKey")]
 		NSString ScanServicesKey { get; }
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Field ("CBCentralManagerRestoredStateScanOptionsKey")]
 		NSString ScanOptionsKey { get; }
 	}
@@ -272,7 +276,6 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[Since (5,0)]
 	[Static]
 	interface CBAdvertisement {
 		[Field ("CBAdvertisementDataServiceUUIDsKey")]
@@ -290,22 +293,21 @@ namespace XamCore.CoreBluetooth {
 		[Field ("CBAdvertisementDataServiceDataKey")]
 		NSString DataServiceDataKey { get; }
 
-		[Since (6,0), Mac (10,9)]
+		[iOS (6,0), Mac (10,9)]
 		[Field ("CBAdvertisementDataOverflowServiceUUIDsKey")]
 		NSString DataOverflowServiceUUIDsKey { get; }
 
-		[Since (7,0), Mac (10,9)]
+		[iOS (7,0), Mac (10,9)]
 		[Field ("CBAdvertisementDataIsConnectable")]
 		NSString IsConnectable { get; }
 
-		[Since (7,0), Mac (10,9)]
+		[iOS (7,0), Mac (10,9)]
 		[Field ("CBAdvertisementDataSolicitedServiceUUIDsKey")]
 		NSString DataSolicitedServiceUUIDsKey { get; }
 
 	}
 
 	[Watch (4,0)]
-	[Since (5,0)]
 	[BaseType (typeof (CBAttribute))]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
 	interface CBCharacteristic {
@@ -331,13 +333,13 @@ namespace XamCore.CoreBluetooth {
 		CBService Service { get; }
 
 #if !XAMCORE_2_0
-		[Since (7,0), Export ("subscribedCentrals"), Mac (10,9)]
+		[iOS (7,0), Export ("subscribedCentrals"), Mac (10,9)]
 		CBCentral [] SubscribedCentrals { get; }
 #endif
 	}
 
 	[Watch (4,0)]
-	[Since (6, 0), Mac (10,9)]
+	[iOS (6, 0), Mac (10,9)]
 	[BaseType (typeof (CBCharacteristic))]
 	[DisableDefaultCtor]
 	interface CBMutableCharacteristic {
@@ -375,13 +377,12 @@ namespace XamCore.CoreBluetooth {
 		CBDescriptor [] Descriptors { get; set; }
 
 #if XAMCORE_2_0
-		[Since (7,0), Export ("subscribedCentrals"), Mac (10,9)]
+		[iOS (7,0), Export ("subscribedCentrals"), Mac (10,9)]
 		CBCentral [] SubscribedCentrals { get; }
 #endif
 	}
 
 	[Watch (4,0)]
-	[Since (5,0)]
 	[BaseType (typeof (CBAttribute))]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
 	interface CBDescriptor {
@@ -394,7 +395,7 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[Since (6, 0), Mac (10,9)]
+	[iOS (6, 0), Mac (10,9)]
 	[BaseType (typeof (CBDescriptor))]
 	[DisableDefaultCtor]
 	interface CBMutableDescriptor {
@@ -408,7 +409,6 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[Since (5,0)]
 	[BaseType (typeof (CBPeer), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof (CBPeripheralDelegate)})]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
 	interface CBPeripheral : NSCopying {
@@ -479,7 +479,7 @@ namespace XamCore.CoreBluetooth {
 		System.IntPtr UUID { get; }
 #endif
 
-		[Since (7,0), Mac (10,9)]
+		[iOS (7,0), Mac (10,9)]
 		[Export ("state")]
 		CBPeripheralState State { get; }
 
@@ -545,11 +545,11 @@ namespace XamCore.CoreBluetooth {
 		[Export ("peripheralDidInvalidateServices:")]
 		void InvalidatedService (CBPeripheral peripheral);	
 
-		[Since (6, 0)]
+		[iOS (6, 0)]
 		[Export ("peripheralDidUpdateName:")]
 		void UpdatedName (CBPeripheral peripheral);
 
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Export ("peripheral:didModifyServices:"), EventArgs ("CBPeripheralServices")]
 		void ModifiedServices (CBPeripheral peripheral, CBService [] services);
 
@@ -564,7 +564,6 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[Since (5,0)]
 	[BaseType (typeof (CBAttribute))]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
 	interface CBService {
@@ -584,7 +583,7 @@ namespace XamCore.CoreBluetooth {
 	}
 		
 	[Watch (4,0)]
-	[Since (6, 0), Mac(10,9)]
+	[iOS (6, 0), Mac(10,9)]
 	[BaseType (typeof (CBService))]
 	[DisableDefaultCtor]
 	interface CBMutableService {
@@ -617,7 +616,6 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[Since (5,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
 	interface CBUUID : NSCopying {
@@ -633,14 +631,14 @@ namespace XamCore.CoreBluetooth {
 		[Export ("UUIDWithData:")]
 		CBUUID FromData (NSData theData);
 
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_9_0)]
+		[Availability (Deprecated = Platform.iOS_9_0)]
 		[NoWatch]
 		[Static]
 		[Export ("UUIDWithCFUUID:")]
 		CBUUID FromCFUUID (IntPtr theUUID);
 		
 		[Static]
-		[Since (7,0), Mac (10,9)]
+		[iOS (7,0), Mac (10,9)]
 		[Export ("UUIDWithNSUUID:")]
 		CBUUID FromNSUuid (NSUuid theUUID);
 
@@ -728,13 +726,13 @@ namespace XamCore.CoreBluetooth {
 		NSString ServiceChangedString { get; }
 #endif // !XAMCORE_3_0
 
-		[Since (7,1)][Mac (10,10)]
+		[iOS (7,1)][Mac (10,10)]
 		[Export ("UUIDString")]
 		string Uuid { get; }
 	}
 		
 	[Watch (4,0)]
-	[Since (6,0), Mac(10,9)]
+	[iOS (6,0), Mac(10,9)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CBATTRequest {
@@ -767,19 +765,19 @@ namespace XamCore.CoreBluetooth {
 #if MONOMAC
 		// Introduced with iOS7, but does not have NS_AVAILABLE
 		// Moved to a new base class, CBPeer, in iOS 8.
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Export ("identifier")]
 		NSUuid Identifier { get; }
 #endif
 
 		// Introduced with iOS7, but does not have NS_AVAILABLE
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Export ("maximumUpdateValueLength")]
 		nuint MaximumUpdateValueLength { get; }
 	}
 
 	[Watch (4,0)]
-	[Since (6, 0), Mac(10,9)]
+	[iOS (6, 0), Mac(10,9)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CBManager), Delegates=new[] { "WeakDelegate" }, Events=new[] { typeof (CBPeripheralManagerDelegate) })]
 	interface CBPeripheralManager {
@@ -797,7 +795,7 @@ namespace XamCore.CoreBluetooth {
 		[NoTV]
 		[NoWatch]
 		[DesignatedInitializer]
-		[Since (7,0),Mac (10,9)]
+		[iOS (7,0),Mac (10,9)]
 		[Export ("initWithDelegate:queue:options:")]
 		[PostGet ("WeakDelegate")]
 		IntPtr Constructor ([Protocolize] CBPeripheralManagerDelegate peripheralDelegate, [NullAllowed] DispatchQueue queue, [NullAllowed] NSDictionary options);
@@ -850,23 +848,23 @@ namespace XamCore.CoreBluetooth {
 		void UnpublishL2CapChannel (ushort psm);
 
 		[Field ("CBPeripheralManagerOptionShowPowerAlertKey")]
-		[Since (7,0)]
+		[iOS (7,0)]
 		NSString OptionShowPowerAlertKey { get; }
 
 		[Field ("CBPeripheralManagerOptionRestoreIdentifierKey")]
-		[Since (7,0)]
+		[iOS (7,0)]
 		NSString OptionRestoreIdentifierKey { get; }
 
 		[Field ("CBPeripheralManagerRestoredStateServicesKey")]
-		[Since (7,0)]
+		[iOS (7,0)]
 		NSString RestoredStateServicesKey { get; }
 
 		[Field ("CBPeripheralManagerRestoredStateAdvertisementDataKey")]
-		[Since (7,0)]
+		[iOS (7,0)]
 		NSString RestoredStateAdvertisementDataKey { get; }
 
 #if !MONOMAC || !XAMCORE_4_0
-		[Since (7,0)]
+		[iOS (7,0)]
 		[Static]
 		[Export ("authorizationStatus")]
 		CBPeripheralManagerAuthorizationStatus AuthorizationStatus { get; }
@@ -874,7 +872,7 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[Since (6, 0), Mac(10,9)]
+	[iOS (6, 0), Mac(10,9)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -923,7 +921,7 @@ namespace XamCore.CoreBluetooth {
 		void DidPublishL2CapChannel (CBPeripheralManager peripheral, ushort psm, [NullAllowed] NSError error);
 	}
 
-	[Since (8, 0)]
+	[iOS (8, 0)]
 	[Mac (10,13)]
 	[Watch (4,0)]
 	[BaseType (typeof (NSObject))]
@@ -937,7 +935,7 @@ namespace XamCore.CoreBluetooth {
 		[Export ("UUID")]
 		IntPtr _UUID { get;  }
 	
-		[Since (7, 0)]
+		[iOS (7, 0)]
 		[Export ("identifier")]
 		NSUuid Identifier { get; }
 	}

@@ -88,7 +88,7 @@ namespace XamCore.AudioToolbox {
 		PreferredHardwareSampleRate = 0x68777372,
 		PreferredHardwareIOBufferDuration = 0x696f6264,
 		AudioCategory = 0x61636174, // 'acat'
-		[Availability (Deprecated = Platform.iOS_5_0)]
+		[Deprecated (PlatformName.iOS, 5, 0)]
 		AudioRoute = 0x726f7574,
 		AudioRouteChange = 0x726f6368,
 		CurrentHardwareSampleRate = 0x63687372,
@@ -102,7 +102,7 @@ namespace XamCore.AudioToolbox {
 		OverrideAudioRoute = 0x6f767264,
 		AudioInputAvailable = 0x61696176,
 		ServerDied = 0x64696564,
-		[Availability (Deprecated = Platform.iOS_7_0)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		OtherMixableAudioShouldDuck = 0x6475636b,
 		OverrideCategoryMixWithOthers = 0x636d6978,
 		OverrideCategoryDefaultToSpeaker = 0x6373706b, //'cspk'
@@ -126,7 +126,7 @@ namespace XamCore.AudioToolbox {
 		GameChat		= 0x676d6374,	// 'gmct'
 	}
 
-	[Availability (Deprecated = Platform.iOS_6_0)]
+	[Deprecated (PlatformName.iOS, 6, 0)]
 	public enum AudioSessionActiveFlags: uint // UInt32 in AudioSessionSetActiveWithFlags
 	{
 		NotifyOthersOnDeactivation       = (1 << 0)

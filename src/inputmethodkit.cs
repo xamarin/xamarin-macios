@@ -49,10 +49,10 @@ namespace XamCore.InputMethodKit {
 		[Export ("bundle")]
 		NSBundle Bundle { get; }
 
-		[Lion, Export ("paletteWillTerminate")]
+		[Mac (10, 7), Export ("paletteWillTerminate")]
 		bool PaletteWillTerminate { get; }
 
-		[Lion, Export ("lastKeyEventWasDeadKey")]
+		[Mac (10, 7), Export ("lastKeyEventWasDeadKey")]
 		bool LastKeyEventWasDeadKey { get; }
 	}
 
@@ -170,7 +170,7 @@ namespace XamCore.InputMethodKit {
 		[Export ("client")]
 		NSObject Client { get; }
 
-		[Lion, Export ("inputControllerWillClose")]
+		[Mac (10, 7), Export ("inputControllerWillClose")]
 		void InputControllerWillClose ();
 
 		[Export ("annotationSelected:forCandidate:")]
@@ -213,10 +213,10 @@ namespace XamCore.InputMethodKit {
 		[Export ("showSublist:subListDelegate:")]
 		void ShowSublist (NSObject [] candidates, NSObject delegateObject);
 
-		[Lion, Export ("selectedCandidateString")]
+		[Mac (10, 7), Export ("selectedCandidateString")]
 		NSAttributedString SelectedCandidateString { get; }
 
-		[Lion, Export ("candidateFrameTopLeft")]
+		[Mac (10, 7), Export ("candidateFrameTopLeft")]
 		NSPoint CandidateFrameTopLeft { set; }
 
 		[Export ("candidateFrame")]
@@ -235,25 +235,25 @@ namespace XamCore.InputMethodKit {
 		[Export ("dismissesAutomatically")]
 		bool DismissesAutomatically { get; set; }
 
-		[Lion, Export ("selectedCandidate")]
+		[Mac (10, 7), Export ("selectedCandidate")]
 		nint SelectedCandidate { get; }
 
-		[Lion, Export ("showChild")]
+		[Mac (10, 7), Export ("showChild")]
 		void ShowChild ();
 
-		[Lion, Export ("hideChild")]
+		[Mac (10, 7), Export ("hideChild")]
 		void HideChild ();
 
-		[Lion, Export ("attachChild:toCandidate:type:")]
+		[Mac (10, 7), Export ("attachChild:toCandidate:type:")]
 		void AttachChild (IMKCandidates child, nint candidateIdentifier, IMKStyleType theType);
 
-		[Lion, Export ("detachChild:")]
+		[Mac (10, 7), Export ("detachChild:")]
 		void DetachChild (nint candidateIdentifier);
 
-		[Lion, Export ("candidateData")]
+		[Mac (10, 7), Export ("candidateData")]
 		NSObject [] CandidateData { set; }
 
-		[Lion, Export ("selectCandidateWithIdentifier:")]
+		[Mac (10, 7), Export ("selectCandidateWithIdentifier:")]
 		bool SelectCandidateWithIdentifier (nint candidateIdentifier);
 
 		[Export ("selectCandidate:")]
@@ -262,13 +262,13 @@ namespace XamCore.InputMethodKit {
 		[Export ("showCandidates")]
 		void ShowCandidates ();
 
-		[Lion, Export ("candidateStringIdentifier:")]
+		[Mac (10, 7), Export ("candidateStringIdentifier:")]
 		nint GetCandidateIdentifier (NSObject candidateString);
 
-		[Lion, Export ("candidateIdentifierAtLineNumber:")]
+		[Mac (10, 7), Export ("candidateIdentifierAtLineNumber:")]
 		nint GetCandidateIdentifier (nint lineNumber);
 
-		[Lion, Export ("lineNumberForCandidateWithIdentifier:")]
+		[Mac (10, 7), Export ("lineNumberForCandidateWithIdentifier:")]
 		nint GetLineNumberForCandidate (nint candidateIdentifier);
 
 		[Export ("clearSelection")]
