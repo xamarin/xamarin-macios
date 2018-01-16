@@ -126,15 +126,15 @@ namespace xharness
 						var slnPath = Path.ChangeExtension (target.ProjectPath, "sln");
 						var fileToBuild = File.Exists (slnPath) ? slnPath : target.ProjectPath;
 						writer.WriteTarget (MakeMacClassicTargetName (target, MacTargetNameType.Build), "$(GUI_UNIT_PATH)/bin/net_4_5/GuiUnit.exe");
-						writer.WriteLine ("\t$(Q) $(MDTOOL) build {0}", fileToBuild);
+						writer.WriteLine ("\t$(Q) $(MDTOOL) build \"{0}\"", fileToBuild);
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacClassicTargetName (target, MacTargetNameType.Clean), "");
-						writer.WriteLine ("\t$(Q) $(MDTOOL) build -t:Clean {0}", fileToBuild);
+						writer.WriteLine ("\t$(Q) $(MDTOOL) build -t:Clean \"{0}\"", fileToBuild);
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacClassicTargetName (target, MacTargetNameType.Exec), "");
-						writer.WriteLine ("\t$(Q) {0}/bin/x86/$(CONFIG)/{1}.app/Contents/MacOS/{1}", CreateRelativePath (Path.GetDirectoryName (target.ProjectPath), Path.GetDirectoryName (makefile)), make_escaped_name);
+						writer.WriteLine ("\t$(Q) {0}/bin/x86/$(CONFIG)/{1}.app/Contents/MacOS/{1}", CreateRelativePath (Path.GetDirectoryName (target.ProjectPath).Replace (" ", "\\ "), Path.GetDirectoryName (makefile)), make_escaped_name);
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacClassicTargetName (target, MacTargetNameType.Run), "");
@@ -160,13 +160,13 @@ namespace xharness
 						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Exec), "");
 						if (target.IsNUnitProject) {
 							writer.WriteLine ("\t$(Q)rm -f $(CURDIR)/.{0}-failed.stamp", make_escaped_name);
-							writer.WriteLine ("\t$(SYSTEM_MONO) --debug $(TOP)/packages/NUnit.ConsoleRunner.3.5.0/tools/nunit3-console.exe {1}/bin/$(CONFIG)/mmptest.dll \"--result=$(abspath $(CURDIR)/{0}-TestResult.xml);format=nunit2\" $(TEST_FIXTURE) --labels=All || touch $(CURDIR)/.{0}-failed.stamp", make_escaped_name, Path.GetDirectoryName (target.ProjectPath));
+							writer.WriteLine ("\t$(SYSTEM_MONO) --debug $(TOP)/packages/NUnit.ConsoleRunner.3.5.0/tools/nunit3-console.exe \"{1}/bin/$(CONFIG)/mmptest.dll\" \"--result=$(abspath $(CURDIR)/{0}-TestResult.xml);format=nunit2\" $(TEST_FIXTURE) --labels=All || touch $(CURDIR)/.{0}-failed.stamp", make_escaped_name, Path.GetDirectoryName (target.ProjectPath));
 							writer.WriteLine ("\t$(Q)[[ -z \"$$BUILD_REPOSITORY\" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt {0}-TestResult.xml > {0}-index.html && echo \"@MonkeyWrench: AddFile: $$PWD/{0}-index.html\")", make_escaped_name);
 							writer.WriteLine ("\t$(Q)[[ ! -e .{0}-failed.stamp ]]", make_escaped_name);
 						} else if (target.IsBCLProject)
-							writer.WriteLine ("\t$(Q) {2}/bin/$(CONFIG){1}/{0}Tests.app/Contents/MacOS/{0}Tests", make_escaped_name, target.Suffix, CreateRelativePath (Path.GetDirectoryName (target.ProjectPath), Path.GetDirectoryName (makefile)));
+							writer.WriteLine ("\t$(Q) {2}/bin/$(CONFIG){1}/{0}Tests.app/Contents/MacOS/{0}Tests", make_escaped_name, target.Suffix, CreateRelativePath (Path.GetDirectoryName (target.ProjectPath).Replace (" ", "\\ "), Path.GetDirectoryName (makefile)));
 						else
-							writer.WriteLine ("\t$(Q) {2}/bin/x86/$(CONFIG){1}/{0}.app/Contents/MacOS/{0}", make_escaped_name, target.Suffix, CreateRelativePath (Path.GetDirectoryName (target.ProjectPath), Path.GetDirectoryName (makefile)));
+							writer.WriteLine ("\t$(Q) {2}/bin/x86/$(CONFIG){1}/{0}.app/Contents/MacOS/{0}", make_escaped_name, target.Suffix, CreateRelativePath (Path.GetDirectoryName (target.ProjectPath).Replace (" ", "\\ "), Path.GetDirectoryName (makefile)));
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Run), "");
@@ -197,8 +197,8 @@ namespace xharness
 				foreach (MacTargetNameType action in Enum.GetValues (typeof (MacTargetNameType))) {
 					var actionName = action.ToString ().ToLowerInvariant ();
 					foreach (var group in grouped) {
-						var targetName = group.Key;
-						writer.WriteLine ("{0}-mac-{1}:", actionName, targetName);
+						var targetName = group.Key.Replace (" ", "\\ ");
+						writer.WriteTarget ("{0}-mac-{1}", string.Empty, actionName, targetName);
 						writer.WriteLine ("\t$(Q) rm -f \".$@-failure.stamp\"");
 						foreach (var entry in group)
 							writer.WriteLine ("\t$(Q) $(MAKE) {0} || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacTargetName (entry, action));
