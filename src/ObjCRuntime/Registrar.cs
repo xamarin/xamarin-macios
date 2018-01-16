@@ -2268,13 +2268,13 @@ namespace XamCore.Registrar {
 			if (assemblies.ContainsKey (assembly))
 				return;
 
-			if (!ContainsPlatformReference (assembly)) {
-				assemblies.Add (assembly, null);
+			if (SkipRegisterAssembly (assembly)) {
+				Trace ("[ASSEMBLY] Skipped registration for {0}", GetAssemblyName (assembly));
 				return;
 			}
 
-			if (SkipRegisterAssembly (assembly)) {
-				Trace ("[ASSEMBLY] Skipped registration for {0}", GetAssemblyName (assembly));
+			if (!ContainsPlatformReference (assembly)) {
+				assemblies.Add (assembly, null);
 				return;
 			}
 			
