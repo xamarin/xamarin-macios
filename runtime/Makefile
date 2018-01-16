@@ -508,8 +508,8 @@ $(foreach arch,$(MAC_ARCHITECTURES),.libs/mac/extension-main.$(arch).o): EXTRA_D
 .libs/mac/libxammac-system.a: .libs/mac/libxammac-system.i386.a .libs/mac/libxammac-system.x86_64.a
 	$(call Q_2,LIPO,  [mac]) xcrun lipo -create $^ -o $@
 
-.libs/mac/XamMacLauncher: $(MAC_SOURCES) $(SHARED_HEADERS) | .libs/mac
-	$(call Q_2,CC,    [mac]) $(MAC_CLANG) $(MAC_LDFLAGS) $(MAC_OBJC_CFLAGS) $(MAC_CFLAGS) -DDYNAMIC_MONO_RUNTIME -DSYSTEM_LAUNCHER -arch i386 -o $@ $(filter %.c %.m %.mm,$(MAC_SOURCES)) -x assembler-with-cpp $(filter %.s,$(MAC_SOURCES))
+.libs/mac/XamMacLauncher: $(MACIOS_BINARIES_PATH)/XamMacLauncher | .libs/mac
+	$(Q) cp $< $@
 
 RUNTIME_MAC_TARGETS_DIRS +=                                    \
 	.libs/mac                                                  \
