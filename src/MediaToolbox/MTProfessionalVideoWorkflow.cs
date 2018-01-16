@@ -11,7 +11,7 @@ namespace XamCore.MediaToolbox {
 
 		[Mac (10,10)]
 		[DllImport (Constants.MediaToolboxLibrary, EntryPoint = "MTRegisterProfessionalVideoWorkflowFormatReaders")]
-		static extern void RegisterFormatReaders ();
+		public static extern void RegisterFormatReaders ();
 	}
 }
 
