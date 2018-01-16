@@ -224,32 +224,21 @@ $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll: $(IOS_BUILD_DIR)/native-64/Xamarin.i
 $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll.mdb: $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
 	@touch $@
 
-%.dll: $(IOS_BUILD_DIR)/compat/%.dll
-	$(Q) cp $< $(<:.dll=.pdb) . || cp $< $<.mdb .
+$(IOS_BUILD_DIR)/compat/monotouch.pdb:
+	@touch $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/System.Net.Http.dll : $(MACIOS_BINARIES_PATH)/System.Net.Http.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/System.Net.Http.pdb : $(MACIOS_BINARIES_PATH)/System.Net.Http.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/monotouch.dll : $(MACIOS_BINARIES_PATH)/monotouch.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/monotouch.dll.mdb : $(MACIOS_BINARIES_PATH)/monotouch.dll.mdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/OpenTK.dll : $(MACIOS_BINARIES_PATH)/OpenTK.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/OpenTK.pdb : $(MACIOS_BINARIES_PATH)/OpenTK.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/OpenTK-1.0.dll : $(MACIOS_BINARIES_PATH)/OpenTK-1.0.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/OpenTK-1.0.pdb : $(MACIOS_BINARIES_PATH)/OpenTK-1.0.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/OpenTK-1.0.dll.config : $(MACIOS_BINARIES_PATH)/OpenTK-1.0.dll.config | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/MonoTouch.Dialog-1.dll : $(MACIOS_BINARIES_PATH)/MonoTouch.Dialog-1.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/MonoTouch.Dialog-1.pdb : $(MACIOS_BINARIES_PATH)/MonoTouch.Dialog-1.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/MonoTouch.NUnitLite.dll : $(MACIOS_BINARIES_PATH)/MonoTouch.NUnitLite.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/MonoTouch.NUnitLite.pdb : $(MACIOS_BINARIES_PATH)/MonoTouch.NUnitLite.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades/System.Drawing.Primitives.dll : $(MACIOS_BINARIES_PATH)/Facades/System.Drawing.Primitives.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades/netstandard.dll : $(MACIOS_BINARIES_PATH)/Facades/netstandard.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
-build/ios/compat/monotouch.dll: $(MACIOS_BINARIES_PATH)/monotouch.dll | build/ios/compat
-build/ios/compat/MonoTouch.NUnitLite.dll: $(MACIOS_BINARIES_PATH)/MonoTouch.NUnitLite.dll | build/ios/compat
-build/ios/compat/MonoTouch.NUnitLite.pdb: $(MACIOS_BINARIES_PATH)/MonoTouch.NUnitLite.pdb | build/ios/compat
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/% : $(MACIOS_BINARIES_PATH)/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
+	$(Q) cp $< $@
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades/% : $(MACIOS_BINARIES_PATH)/Facades/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
+	$(Q) cp $< $@
+
+build/ios/compat/%: $(MACIOS_BINARIES_PATH)/% | build/ios/compat
+	$(Q) cp $< $@
+
 build/ios/compat/Facades/System.Drawing.Primitives.dll : $(MACIOS_BINARIES_PATH)/Facades/System.Drawing.Primitives.dll | build/ios/compat/Facades
 	$(Q) cp $< $@
 
-build/ios/compat/monotouch.pdb:
-	@touch $@
 #
 # Assemblies which require special handling as they have dependency on Xamarin.iOS.dll
 # hence we cannot built it as part of Mono BCL
@@ -326,9 +315,6 @@ IOS_TARGETS_DIRS += \
 
 IOS_TARGETS += \
 	xamios.csproj                                                                  \
-	monotouch.dll                                                                  \
-	MonoTouch.Dialog-1.dll                                                         \
-	MonoTouch.NUnitLite.dll                                                        \
 	MonoTouch.NUnitLite.csproj                                                     \
 	MonoTouch.Dialog-1.csproj                                                      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/Version                                      \
