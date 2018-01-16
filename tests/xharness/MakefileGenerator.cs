@@ -126,11 +126,11 @@ namespace xharness
 						var slnPath = Path.ChangeExtension (target.ProjectPath, "sln");
 						var fileToBuild = File.Exists (slnPath) ? slnPath : target.ProjectPath;
 						writer.WriteTarget (MakeMacClassicTargetName (target, MacTargetNameType.Build), "$(GUI_UNIT_PATH)/bin/net_4_5/GuiUnit.exe");
-						writer.WriteLine ("\t$(Q) $(MDTOOL) build {0}", fileToBuild);
+						writer.WriteLine ("\t$(Q) $(MDTOOL) build \"{0}\"", fileToBuild);
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacClassicTargetName (target, MacTargetNameType.Clean), "");
-						writer.WriteLine ("\t$(Q) $(MDTOOL) build -t:Clean {0}", fileToBuild);
+						writer.WriteLine ("\t$(Q) $(MDTOOL) build -t:Clean \"{0}\"", fileToBuild);
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacClassicTargetName (target, MacTargetNameType.Exec), "");
@@ -198,7 +198,7 @@ namespace xharness
 					var actionName = action.ToString ().ToLowerInvariant ();
 					foreach (var group in grouped) {
 						var targetName = group.Key.Replace (" ", "\\ ");
-						writer.WriteLine ("{0}-mac-{1}:", actionName, targetName);
+						writer.WriteTarget ("{0}-mac-{1}", string.Empty, actionName, targetName);
 						writer.WriteLine ("\t$(Q) rm -f \".$@-failure.stamp\"");
 						foreach (var entry in group)
 							writer.WriteLine ("\t$(Q) $(MAKE) {0} || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacTargetName (entry, action));
