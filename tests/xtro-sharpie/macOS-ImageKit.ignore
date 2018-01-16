@@ -1,7 +1,3 @@
 # In header as old style, unnamed enums
 !unknown-native-enum! IKCellsStyle bound
 !unknown-native-enum! IKGroupStyle bound
-
-# Informal Protocol
-!unknown-protocol! IKImageBrowserDataSource bound
-!unknown-protocol! IKImageBrowserItem bound
