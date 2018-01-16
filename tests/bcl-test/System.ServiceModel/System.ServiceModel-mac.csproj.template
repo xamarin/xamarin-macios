@@ -54,7 +54,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="Xamarin.Mac" />
@@ -81,5 +80,13 @@
   <ItemGroup>
 #FILES#
   </ItemGroup>
+  <ItemGroup>
+    <FilesToCopyChannels Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\System.ServiceModel.Channels\soap-fault.xml" />
+    <FilesToCopyChannels Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\System.ServiceModel.Channels\soap-fault-incomplete.xml" />
+    <FilesToCopyChannels Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\System.ServiceModel.Channels\soap-fault-incomplete4.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+  <Target Name="AfterBuild">
+    <Copy SourceFiles="@(FilesToCopyChannels)" DestinationFolder="$(OutputPath)\System.IO.Compression.FileSystemTests.app\Contents\MonoBundle\Test\System.ServiceModel.Channels" />
+  </Target>
 </Project>

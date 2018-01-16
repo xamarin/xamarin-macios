@@ -134,6 +134,8 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.IdentityModel" />
     <Reference Include="Xamarin.iOS" />
     <Reference Include="MonoTouch.NUnitLite" />
   </ItemGroup>
@@ -158,6 +160,17 @@
   </ItemGroup>
   <ItemGroup>
 #FILES#
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\System.ServiceModel.Channels\soap-fault.xml">
+      <Link>Test\System.ServiceModel.Channels\soap-fault.xml</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\System.ServiceModel.Channels\soap-fault-incomplete.xml">
+      <Link>Test\System.ServiceModel.Channels\soap-fault-incomplete.xml</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\System.ServiceModel.Channels\soap-fault-incomplete4.xml">
+      <Link>Test\System.ServiceModel.Channels\soap-fault-incomplete4.xml</Link>
+    </BundleResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
