@@ -3,9 +3,9 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.MediaToolbox {
+namespace MediaToolbox {
 
 	static public class MTProfessionalVideoWorkflow {
 
