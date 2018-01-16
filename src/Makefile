@@ -1,3 +1,4 @@
+export V=1
 TOP=..
 include $(TOP)/Make.config
 
