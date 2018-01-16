@@ -19,7 +19,10 @@ namespace Xamarin.Tuner
 		List<ICustomAttributeProvider> xml_serialization = new List<ICustomAttributeProvider> ();
 
 		HashSet<TypeDefinition> cached_isnsobject;
-		HashSet<TypeDefinition> needs_isdirectbinding_check;
+		// Tristate:
+		//   null = don't know, must check at runtime (can't inline)
+		//   true/false = corresponding constant value
+		Dictionary<TypeDefinition, bool?> isdirectbinding_value;
 		HashSet<MethodDefinition> generated_code;
 
 		public HashSet<TypeDefinition> CachedIsNSObject {
@@ -27,9 +30,9 @@ namespace Xamarin.Tuner
 			set { cached_isnsobject = value; }
 		}
 
-		public HashSet<TypeDefinition> NeedsIsDirectBindingCheck {
-			get { return needs_isdirectbinding_check; }
-			set { needs_isdirectbinding_check = value; }
+		public Dictionary<TypeDefinition, bool?> IsDirectBindingValue {
+			get { return isdirectbinding_value; }
+			set { isdirectbinding_value = value; }
 		}
 
 		public HashSet<MethodDefinition> GeneratedCode {

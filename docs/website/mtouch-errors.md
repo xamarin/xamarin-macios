@@ -65,7 +65,7 @@ More than one root assembly was passed to mtouch, while there can be only one ro
 
 ### <a name="MT0009"/>MT0009: Error while loading assemblies: *.
 
-An error occurred while loading the assemblies the root assembly references. More information may be provided in the build output.
+An error occurred while loading the assemblies from the root assembly references. More information may be provided in the build output.
 
 ### <a name="MT0010"/>MT0010: Could not parse the command line arguments: *.
 
@@ -628,6 +628,16 @@ For further information see bug #[52727](https://bugzilla.xamarin.com/show_bug.c
 A failure occurred when touching a file (which is done to ensure partial builds are done correctly).
 
 This warning can most likely be ignored; in case of any problems file a bug (https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS)) and it will be investigated.
+
+### <a name="MT0129"/>MT0129: Debugging symbol file for '*' does not match the assembly and is ignored.
+
+The debugging symbols, either a .pdb (portable pdb only) or a .mdb file, for the specified assembly could not be loaded.
+
+This generally means the assembly is newer or older than the symbols. Since they do not match they cannot be used and the symbols are ignored.
+
+This warning won't affect the application being built, however you might not be able to debug it entirely (in particular the code from specified assembly). Also exceptions, stack traces and crash reports might be missing some information.
+
+Please report this issue to the publisher of the assembly package (e.g. nuget author) so this can be fixed in their future releases.
 
 # MT1xxx: Project related error messages
 

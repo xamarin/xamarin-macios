@@ -2653,7 +2653,7 @@ namespace WebKit {
 		void ToggleSmartInsertDelete (NSObject sender);
 
 		[Export ("setSelectedDOMRange:affinity:")]
-		void SetSelectedDomRange (DomRange range, NSSelectionAffinity selectionAffinity);
+		void SetSelectedDomRange ([NullAllowed] DomRange range, NSSelectionAffinity selectionAffinity);
 
 		[Export ("selectedDOMRange")]
 		DomRange SelectedDomRange { get; }

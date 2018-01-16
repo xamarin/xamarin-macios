@@ -4926,7 +4926,7 @@ public partial class Generator : IMemberGatherer {
 			GetInvokeParamList (minfo.async_initial_params, false),
 			minfo.async_initial_params.Length > 0 ? ", " : "",
 			GetInvokeParamList (minfo.async_completion_params),
-			minfo.is_extension_method ? "This." : string.Empty,
+			minfo.is_extension_method || minfo.is_category_extension ? "This." : string.Empty,
 			is_void || ignoreResult ? string.Empty : minfo.GetUniqueParamName ("result") + " = ",
 			is_void || ignoreResult ? string.Empty : (asyncKind == AsyncMethodKind.WithResultOutParameter ? string.Empty : "var ")
 		);

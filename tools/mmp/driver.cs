@@ -1912,7 +1912,7 @@ namespace Xamarin.Bundler {
 			if (AssemblySwapInfo.AssemblyNeedsSwappedOut (path))
 				path = AssemblySwapInfo.GetSwappedAssemblyPath (path);
 
-			var assembly = BuildTarget.Resolver.AddAssembly (path);
+			var assembly = BuildTarget.Resolver.Load (path);
 			if (assembly == null)
 				ErrorHelper.Warning (1501, "Can not resolve reference: {0}", path);
 			return assembly;
@@ -1921,7 +1921,7 @@ namespace Xamarin.Bundler {
 		static AssemblyDefinition AddAssemblyReferenceToResolver (string reference)
 		{
 			if (AssemblySwapInfo.ReferencedNeedsSwappedOut (reference))
-				return BuildTarget.Resolver.AddAssembly (AssemblySwapInfo.GetSwappedReference (reference));
+				return BuildTarget.Resolver.Load (AssemblySwapInfo.GetSwappedReference (reference));
 
 			return BuildTarget.Resolver.Resolve (reference);
 		}

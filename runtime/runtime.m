@@ -1532,6 +1532,8 @@ objc_skip_type (const char *type)
 int
 xamarin_objc_type_size (const char *type)
 {
+	const char *original_type = type;
+
 	// COOP: no managed memory access: any mode
 	switch (type [0]) {
 		case _C_ID: return sizeof (id);
@@ -1588,11 +1590,17 @@ xamarin_objc_type_size (const char *type)
 
 			do {
 				type++;
+
+				if (*type == 0)
+					xamarin_assertion_message ("Unsupported union type: %s", original_type);
 			} while (*type != '=');
 
 			++type;
 
 			do {
+				if (*type == 0)
+					xamarin_assertion_message ("Unsupported union type: %s", original_type);
+
 				int tsize = xamarin_objc_type_size (type);
 				type = objc_skip_type (type);
 
@@ -1607,11 +1615,16 @@ xamarin_objc_type_size (const char *type)
 
 			do {
 				type++;
+
+				if (*type == 0)
+					xamarin_assertion_message ("Unsupported struct type: %s", original_type);
 			} while (*type != '=');
 
 			type++;
 
 			while (*type != _C_STRUCT_E) {
+				if (*type == 0)
+					xamarin_assertion_message ("Unsupported struct type: %s", original_type);
 				int item_size = xamarin_objc_type_size (type);
 				
 				size += (item_size + (sizeof (void *) - 1)) & ~((sizeof (void *) - 1));
@@ -1632,7 +1645,7 @@ xamarin_objc_type_size (const char *type)
 			return xamarin_objc_type_size (type + 1);
 	}
 	
-	xamarin_assertion_message ("Unsupported type encoding: %s", type);
+	xamarin_assertion_message ("Unsupported type encoding: %s", original_type);
 }
 
 /*
