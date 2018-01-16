@@ -399,88 +399,72 @@ namespace XamCore.CoreImage {
 		[return: NullAllowed]
 		NSData GetTiffRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, NSDictionary options);
 
-#if false // [Wrap] does not support [Category] extension methods - https://bugzilla.xamarin.com/show_bug.cgi?id=59294
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("GetTiffRepresentation (image, format, colorSpace, options?.Dictionary)")]
+		[Wrap ("GetTiffRepresentation (This, image, format, colorSpace, options?.Dictionary)")]
 		[return: NullAllowed]
 		NSData GetTiffRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options);
-#endif
 
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("JPEGRepresentationOfImage:colorSpace:options:")]
 		[return: NullAllowed]
 		NSData GetJpegRepresentation (CIImage image, CGColorSpace colorSpace, NSDictionary options);
 
-#if false // [Wrap] does not support [Category] extension methods - https://bugzilla.xamarin.com/show_bug.cgi?id=59294
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("GetJpegRepresentation (image, format, colorSpace, options?.Dictionary)")]
+		[Wrap ("GetJpegRepresentation (This, image, colorSpace, options?.Dictionary)")]
 		[return: NullAllowed]
 		NSData GetJpegRepresentation (CIImage image, CGColorSpace colorSpace, CIImageRepresentationOptions options);
-#endif
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("HEIFRepresentationOfImage:format:colorSpace:options:")]
 		[return: NullAllowed]
 		NSData GetHeifRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, NSDictionary options);
 
-#if false // [Wrap] does not support [Category] extension methods - https://bugzilla.xamarin.com/show_bug.cgi?id=59294
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
-		[Wrap ("GetHeifRepresentation (image, format, colorSpace, options?.Dictionary)")]
+		[Wrap ("GetHeifRepresentation (This, image, format, colorSpace, options?.Dictionary)")]
 		[return: NullAllowed]
 		NSData GetHeifRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options);
-#endif
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("PNGRepresentationOfImage:format:colorSpace:options:")]
 		[return: NullAllowed]
 		NSData GetPngRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, NSDictionary options);
 
-#if false // [Wrap] does not support [Category] extension methods - https://bugzilla.xamarin.com/show_bug.cgi?id=59294
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
-		[Wrap ("GetPngRepresentation (image, format, colorSpace, options?.Dictionary)")]
+		[Wrap ("GetPngRepresentation (This, image, format, colorSpace, options?.Dictionary)")]
 		[return: NullAllowed]
 		NSData GetPngRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options);
-#endif
 
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("writeTIFFRepresentationOfImage:toURL:format:colorSpace:options:error:")]
 		bool WriteTiffRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, NSDictionary options, out NSError error);
 
-#if false // [Wrap] does not support [Category] extension methods - https://bugzilla.xamarin.com/show_bug.cgi?id=59294
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("WriteTiffRepresentation (image, url, format, colorSpace, options?.Dictionary, out error)")]
+		[Wrap ("WriteTiffRepresentation (This, image, url, format, colorSpace, options?.Dictionary, out error)")]
 		bool WriteTiffRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options, out NSError error);
-#endif
 
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("writeJPEGRepresentationOfImage:toURL:colorSpace:options:error:")]
 		bool WriteJpegRepresentation (CIImage image, NSUrl url, CGColorSpace colorSpace, NSDictionary options, [NullAllowed] out NSError error);
 
-#if false // [Wrap] does not support [Category] extension methods - https://bugzilla.xamarin.com/show_bug.cgi?id=59294
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("WriteJpegRepresentation (image, url, format, colorSpace, options?.Dictionary, out error)")]
+		[Wrap ("WriteJpegRepresentation (This, image, url, colorSpace, options?.Dictionary, out error)")]
 		bool WriteJpegRepresentation (CIImage image, NSUrl url, CGColorSpace colorSpace, CIImageRepresentationOptions options, [NullAllowed] out NSError error);
-#endif
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("writeHEIFRepresentationOfImage:toURL:format:colorSpace:options:error:")]
 		bool WriteHeifRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, NSDictionary options, [NullAllowed] out NSError error);
 
-#if false // [Wrap] does not support [Category] extension methods - https://bugzilla.xamarin.com/show_bug.cgi?id=59294
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
-		[Wrap ("WriteHeifRepresentation (image, url, format, colorSpace, options?.Dictionary, out error)")]
+		[Wrap ("WriteHeifRepresentation (This, image, url, format, colorSpace, options?.Dictionary, out error)")]
 		bool WriteHeifRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options, [NullAllowed] out NSError error);
-#endif
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("writePNGRepresentationOfImage:toURL:format:colorSpace:options:error:")]
 		bool WritePngRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, NSDictionary options, [NullAllowed] out NSError error);
 
-#if false // [Wrap] does not support [Category] extension methods - https://bugzilla.xamarin.com/show_bug.cgi?id=59294
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
-		[Wrap ("WritePngRepresentation (image, url, format, colorSpace, options?.Dictionary, out error)")]
+		[Wrap ("WritePngRepresentation (This, image, url, format, colorSpace, options?.Dictionary, out error)")]
 		bool WritePngRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options, [NullAllowed] out NSError error);
-#endif
 	}
 
 	[BaseType (typeof (NSObject))]
