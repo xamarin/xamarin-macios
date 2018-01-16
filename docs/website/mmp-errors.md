@@ -134,6 +134,8 @@ The accepted format is `[+|-]optimization-name`, where `optimization-name` is on
 
 See [Build optimizations](https://developer.xamarin.com/guides/cross-platform/macios/build-optimizations) for a complete description of each optimization.
 
+### <a name="MM0133"/>MM0133: Found more than 1 assembly matching '{0}' choosing first: '{1}'
+
 
 # MM1xxx: file copy / symlinks (project related)
 

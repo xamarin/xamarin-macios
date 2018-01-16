@@ -512,8 +512,10 @@ namespace Xamarin.Bundler {
 				
 				try {
 					AssemblyDefinition lastAssembly = ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ());
-					if (lastAssembly == null)
+					if (lastAssembly == null) {
 						ErrorHelper.CreateWarning (7, "The root assembly '{0}' does not exist", rootName);
+						continue;
+					}
 					
 					if (resolvedAssemblies.TryGetValue (rootName, out var previousAssembly)) {
 						if (lastAssembly.MainModule.RuntimeVersion != previousAssembly.MainModule.RuntimeVersion) {
@@ -525,7 +527,7 @@ namespace Xamarin.Bundler {
 					resolvedAssemblies.Add (rootName, lastAssembly);
 					Driver.Log (3, "Loaded {0}", lastAssembly.MainModule.FileName);
 				} catch (Exception ex) {
-					ErrorHelper.Warning (9, "Error while loading assemblies: {0}{1}{2}", rootName, Environment.NewLine, ex.ToString ());
+					ErrorHelper.Warning (9, ex, "Error while loading assemblies: {0}: {1}", rootName, ex.Message);
 					continue;
 				}
 			}
