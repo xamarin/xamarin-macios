@@ -968,6 +968,7 @@ MEDIATOOLBOX_CORE_SOURCES = \
 
 MEDIATOOLBOX_SOURCES = \
 	MediaToolbox/MTFormatNames.cs \
+	MediaToolbox/MTProfessionalVideoWorkflow.cs \
 
 # MessageUI
 
