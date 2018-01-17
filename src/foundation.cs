@@ -10385,23 +10385,23 @@ namespace Foundation
 
 		// Maybe we should include this inside mapkit.cs instead (it's a partial interface, so that's trivial)?
 
-		[TV (9, 2)]
-		[iOS (6, 0)]
+		[TV (9,2)]
+		[iOS (6,0)]
 		[Static, Export ("valueWithMKCoordinate:")]
 		NSValue FromMKCoordinate (CoreLocation.CLLocationCoordinate2D coordinate);
 
-		[TV (9, 2)]
-		[iOS (6, 0)]
+		[TV (9,2)]
+		[iOS (6,0)]
 		[Static, Export ("valueWithMKCoordinateSpan:")]
 		NSValue FromMKCoordinateSpan (MapKit.MKCoordinateSpan coordinateSpan);
 
-		[TV (9, 2)]
-		[iOS (6, 0)]
+		[TV (9,2)]
+		[iOS (6,0)]
 		[Export ("MKCoordinateValue")]
 		CoreLocation.CLLocationCoordinate2D CoordinateValue { get; }
 
-		[TV (9, 2)]
-		[iOS (6, 0)]
+		[TV (9,2)]
+		[iOS (6,0)]
 		[Export ("MKCoordinateSpanValue")]
 		MapKit.MKCoordinateSpan CoordinateSpanValue { get; }
 #endif
