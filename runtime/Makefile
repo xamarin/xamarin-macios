@@ -411,10 +411,14 @@ MAC_LIBS =                   \
 	libextension.a			 \
 	libxammac.a              \
 	libxammac-debug.a        \
+	libxammac-classic.a      \
+	libxammac-classic-debug.a\
 	libxammac.dylib          \
 	libxammac-debug.dylib    \
 	libxammac-system.a       \
 	libxammac-system-debug.a \
+	libxammac-system-classic.a       \
+	libxammac-system-classic-debug.a \
 
 #
 # XamMacLauncher: -DDYNAMIC_MONO_RUNTIME -DSYSTEM_LAUNCHER 
@@ -510,6 +514,11 @@ $(foreach arch,$(MAC_ARCHITECTURES),.libs/mac/extension-main.$(arch).o): EXTRA_D
 
 .libs/mac/XamMacLauncher: $(MACIOS_BINARIES_PATH)/XamMacLauncher | .libs/mac
 	$(Q) cp $< $@
+
+.libs/mac/libxammac-%.a: $(MACIOS_BINARIES_PATH)/libxammac-%.a | .libs/mac
+	$(Q) cp $< $@
+
+.SECONDARY: .libs/mac/libxammac-classic.a .libs/mac/libxammac-system-classic.a .libs/mac/libxammac-classic-debug.a .libs/mac/libxammac-system-classic-debug.a
 
 RUNTIME_MAC_TARGETS_DIRS +=                                    \
 	.libs/mac                                                  \
