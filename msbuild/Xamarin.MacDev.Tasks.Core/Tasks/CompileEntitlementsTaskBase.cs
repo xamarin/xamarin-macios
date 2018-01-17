@@ -70,12 +70,12 @@ namespace Xamarin.MacDev.Tasks
 
 			if (profile == null) {
 				if (!warnedTeamIdentifierPrefix && pstr.Value.Contains ("$(TeamIdentifierPrefix)")) {
-					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, "Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile.");
+					Log.MTError (7068, "Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile.", Entitlements);
 					warnedTeamIdentifierPrefix = true;
 				}
-				
+
 				if (!warnedAppIdentifierPrefix && pstr.Value.Contains ("$(AppIdentifierPrefix)")) {
-					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, "Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile.");
+					Log.MTError (7069, "Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile.", Entitlements);
 					warnedAppIdentifierPrefix = true;
 				}
 			}
