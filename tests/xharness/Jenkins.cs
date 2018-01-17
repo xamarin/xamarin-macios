@@ -157,6 +157,8 @@ namespace xharness
 
 		IEnumerable<TestData> GetTestData (RunTestTask test)
 		{
+			// This function returns additional test configurations (in addition to the default one) for the specific test
+
 			switch (test.ProjectPlatform) {
 			case "iPhone":
 				/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
@@ -172,6 +174,7 @@ namespace xharness
 			case "iPhoneSimulator":
 				switch (test.TestName) {
 				case "monotouch-test":
+					// The default is to run monotouch-test with the dynamic registrar (in the simulator), so that's already covered
 					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false };
 					break;
 				}
