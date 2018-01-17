@@ -423,11 +423,6 @@ MAC_mobile_ARGS =
 MAC_BOOTSTRAP_DEFINES = $(MAC_COMMON_DEFINES),COREBUILD
 MAC_GENERATED_DEFINES = -d:MONOMAC -d:XAMARIN_MAC -d:XAMCORE_2_0 -d:__UNIFIED__
 
-MOBILE_BCL_DIR = $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac
-MAC_mobile_CSC = $(SYSTEM_CSC) -nostdlib -noconfig -r:$(MOBILE_BCL_DIR)/System.dll -r:$(MOBILE_BCL_DIR)/System.Core.dll -r:$(MOBILE_BCL_DIR)/System.Xml.dll -r:$(MOBILE_BCL_DIR)/mscorlib.dll -r:$(MOBILE_BCL_DIR)/System.Net.Http.dll
-FULL_BCL_DIR = $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5
-MAC_full_CSC = $(SYSTEM_CSC) -nostdlib -noconfig -r:$(FULL_BCL_DIR)/System.dll -r:$(FULL_BCL_DIR)/System.Core.dll -r:$(FULL_BCL_DIR)/System.Xml.dll -r:$(FULL_BCL_DIR)/mscorlib.dll -r:$(FULL_BCL_DIR)/System.Net.Http.dll
-
 $(MAC_BUILD_DIR)/$(1)/$(3).pdb: $(MAC_BUILD_DIR)/$(1)/$(3).dll
 
 SN_KEY = $(PRODUCT_KEY_PATH)
