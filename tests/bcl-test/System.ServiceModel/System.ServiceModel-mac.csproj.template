@@ -87,6 +87,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <Target Name="AfterBuild">
-    <Copy SourceFiles="@(FilesToCopyChannels)" DestinationFolder="$(OutputPath)\System.IO.Compression.FileSystemTests.app\Contents\MonoBundle\Test\System.ServiceModel.Channels" />
+    <Copy SourceFiles="@(FilesToCopyChannels)" DestinationFolder="$(OutputPath)\System.ServiceModelTests.app\Contents\MonoBundle\Test\System.ServiceModel.Channels" />
   </Target>
 </Project>
