@@ -186,18 +186,6 @@ namespace xharness
 
 		IEnumerable<T> CreateTestVariations<T> (IEnumerable<T> tests, Func<XBuildTask, T, T> creator) where T: RunTestTask
 		{
-			// Don't build in the original project directory
-			// We can build multiple projects in parallel, and if some of those
-			// projects have the same project dependencies, then we may end up
-			// building the same (dependent) project simultaneously (and they can
-			// stomp on eachother). This is done asynchronously to speed to the initial test load.
-			foreach (var device_test in tests) {
-				var clone = device_test.TestProject.Clone ();
-				device_test.BuildTask.InitialTask = clone.CreateCopyAsync (device_test);
-				device_test.BuildTask.TestProject = clone;
-				device_test.TestProject = clone;
-			}
-
 			foreach (var task in tests)
 				task.Variation = "Debug";
 
@@ -260,13 +248,13 @@ namespace xharness
 				foreach (var pair in ps) {
 					var derived = new XBuildTask () {
 						Jenkins = this,
-						TestProject = pair.Item1,
 						ProjectConfiguration = "Debug",
 						ProjectPlatform = "iPhoneSimulator",
 						Platform = pair.Item2,
 						Ignored = pair.Item3,
 						TestName = project.Name,
 					};
+					derived.CloneTestProject (pair.Item1);
 					runSimulatorTasks.AddRange (CreateRunSimulatorTaskAsync (derived));
 				}
 			}
@@ -293,33 +281,33 @@ namespace xharness
 				if (!project.SkipiOSVariation) {
 					var build64 = new XBuildTask {
 						Jenkins = this,
-						TestProject = project,
 						ProjectConfiguration = "Debug64",
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.iOS_Unified64,
 						TestName = project.Name,
 					};
+					build64.CloneTestProject (project);
 					rv.Add (new RunDeviceTask (build64, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOS });
 
 					var build32 = new XBuildTask {
 						Jenkins = this,
-						TestProject = project,
 						ProjectConfiguration = "Debug32",
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.iOS_Unified32,
 						TestName = project.Name,
 					};
+					build32.CloneTestProject (project);
 					rv.Add (new RunDeviceTask (build32, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports32Bit)) { Ignored = ignored || !IncludeiOS });
 
 					var todayProject = project.AsTodayExtensionProject ();
 					var buildToday = new XBuildTask {
 						Jenkins = this,
-						TestProject = todayProject,
 						ProjectConfiguration = "Debug64",
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.iOS_TodayExtension64,
 						TestName = project.Name,
 					};
+					buildToday.CloneTestProject (todayProject);
 					rv.Add (new RunDeviceTask (buildToday, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOSExtensions });
 				}
 
@@ -327,12 +315,12 @@ namespace xharness
 					var tvOSProject = project.AsTvOSProject ();
 					var buildTV = new XBuildTask {
 						Jenkins = this,
-						TestProject = tvOSProject,
 						ProjectConfiguration = "Debug",
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.tvOS,
 						TestName = project.Name,
 					};
+					buildTV.CloneTestProject (tvOSProject);
 					rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.tvOS)) { Ignored = ignored || !IncludetvOS });
 				}
 
@@ -340,12 +328,12 @@ namespace xharness
 					var watchOSProject = project.AsWatchOSProject ();
 					var buildWatch = new XBuildTask {
 						Jenkins = this,
-						TestProject = watchOSProject,
 						ProjectConfiguration = "Debug",
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.watchOS,
 						TestName = project.Name,
 					};
+					buildWatch.CloneTestProject (watchOSProject);
 					rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.watchOS)) { Ignored = ignored || !IncludewatchOS });
 				}
 			}
@@ -1994,6 +1982,19 @@ function oninitialload ()
 		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
 
 		public Task InitialTask; // a task that's executed before this task's ExecuteAsync method.
+
+		public void CloneTestProject (TestProject project)
+		{
+			// Don't build in the original project directory
+			// We can build multiple projects in parallel, and if some of those
+			// projects have the same project dependencies, then we may end up
+			// building the same (dependent) project simultaneously (and they can
+			// stomp on eachother).
+			// So we clone the project file to a separate directory and build there instead.
+			// This is done asynchronously to speed to the initial test load.
+			TestProject = project.Clone ();
+			InitialTask = TestProject.CreateCopyAsync ();
+		}
 
 		protected Stopwatch duration = new Stopwatch ();
 		public TimeSpan Duration { 
