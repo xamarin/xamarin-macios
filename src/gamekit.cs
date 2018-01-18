@@ -697,7 +697,7 @@ namespace XamCore.GameKit {
 	[Mac (10, 8)]
 	[BaseType (typeof (GKPlayer))]
 	interface GKLocalPlayer
-#if !WATCH
+#if !TVOS && !WATCH
 	: GKSavedGameListener
 #endif
 	{
@@ -859,14 +859,13 @@ namespace XamCore.GameKit {
 	}
 
 	[NoWatch]
+	[NoTV]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface GKSavedGameListener {
-		[NoTV]
 		[Export ("player:didModifySavedGame:")]
 		void DidModifySavedGame (GKPlayer player, GKSavedGame savedGame);
 
-		[NoTV]
 		[Export ("player:hasConflictingSavedGames:")]
 		void HasConflictingSavedGames (GKPlayer player, GKSavedGame [] savedGames);
 	}
@@ -2261,8 +2260,11 @@ namespace XamCore.GameKit {
 	[Watch (3,0)]
 	[Model, Protocol, BaseType (typeof (NSObject))]
 	interface GKLocalPlayerListener : GKTurnBasedEventListener
+#if !TVOS && !WATCH
+		, GKSavedGameListener
+#endif
 #if !WATCH
-		, GKChallengeListener, GKInviteEventListener, GKSavedGameListener
+		, GKChallengeListener, GKInviteEventListener
 #endif
 	{
 	}
