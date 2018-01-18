@@ -234,6 +234,9 @@ namespace xharness
 			var runSimulatorTasks = new List<RunSimulatorTask> ();
 
 			foreach (var project in Harness.IOSTestProjects) {
+				if (!project.IsExecutableProject)
+					continue;
+
 				bool ignored = !IncludeSimulator;
 				if (!IsIncluded (project))
 					ignored = true;
@@ -274,6 +277,9 @@ namespace xharness
 			var rv = new List<RunDeviceTask> ();
 
 			foreach (var project in Harness.IOSTestProjects) {
+				if (!project.IsExecutableProject)
+					continue;
+				
 				bool ignored = !IncludeDevice;
 				if (!IsIncluded (project))
 					ignored = true;
