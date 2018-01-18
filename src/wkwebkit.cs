@@ -543,7 +543,7 @@ namespace XamCore.WebKit
 #if MONOMAC
 		: NSUserInterfaceValidations
 #endif
-{
+	{
 
 		[DesignatedInitializer]
 		[Export ("initWithFrame:configuration:")]

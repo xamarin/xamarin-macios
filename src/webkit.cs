@@ -2430,7 +2430,7 @@ namespace XamCore.WebKit {
 #if MONOMAC
 		: NSUserInterfaceValidations
 #endif
-{
+	{
 		[Static]
 		[Export ("canShowMIMEType:")]
 		bool CanShowMimeType (string MimeType);
