@@ -10,6 +10,7 @@ namespace Extrospection {
 	public class ObjCInterfaceCheck : BaseVisitor {
 
 		Dictionary<string, TypeDefinition> type_map = new Dictionary<string, TypeDefinition> ();
+		Dictionary<string, TypeDefinition> type_map_copy = new Dictionary<string, TypeDefinition> ();
 
 		public override void VisitManagedType (TypeDefinition type)
 		{
@@ -49,14 +50,46 @@ namespace Extrospection {
 			}
 			if (!skip && wrapper && !String.IsNullOrEmpty (rname)) {
 				TypeDefinition td;
-				if (!type_map.TryGetValue (rname, out td))
+				if (!type_map.TryGetValue (rname, out td)) {
 					type_map.Add (rname, type);
-				else {
+					type_map_copy.Add (rname, type);
+				} else {
 					// always report in the same order (for unique error messages)
 					var sorted = Helpers.Sort (type, td);
 					var framework = Helpers.GetFramework (sorted.Item1);
 					Log.On (framework).Add ($"!duplicate-register! {rname} exists as both {sorted.Item1.FullName} and {sorted.Item2.FullName}");
 				}
+			}
+		}
+
+		public override void VisitObjCCategoryDecl (ObjCCategoryDecl decl, VisitKind visitKind)
+		{
+			if (visitKind != VisitKind.Enter)
+				return;
+
+			var categoryName = decl.Name;
+			if (categoryName == null)
+				return;
+
+			// check availability macros to see if the API is available on the OS and not deprecated
+			if (!decl.IsAvailable ())
+				return;
+
+			var framework = Helpers.GetFramework (decl);
+			if (framework == null)
+				return;
+
+			var ciName = decl.ClassInterface.Name;
+			if (!type_map_copy.TryGetValue (ciName, out var td)) {
+				// other checks can't be done without an actual type to inspect
+				return;
+			}
+
+			// check protocols
+			foreach (var protocol in decl.Protocols) {
+				var pname = protocol.Name;
+				if (!ImplementProtocol (pname, td))
+					Log.On (framework).Add ($"!missing-protocol-conformance! {ciName} should conform to {pname} (defined in '{categoryName}' category)");
 			}
 		}
 
@@ -68,8 +101,6 @@ namespace Extrospection {
 				return;
 
 			var name = decl.Name;
-			if (name.EndsWith ("Internal", StringComparison.Ordinal))
-				return;
 
 			// check availability macros to see if the API is available on the OS and not deprecated
 			if (!decl.IsAvailable ())
