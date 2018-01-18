@@ -20,11 +20,32 @@ namespace Xamarin.iOS.Tasks
 		[Required]
 		public string ProvisioningProfile { get; set; }
 
+		[Required]
+		public string SdkPlatform { get; set; }
+
 		#endregion
 
 		public override bool Execute ()
 		{
-			var profile = MobileProvisionIndex.GetMobileProvision (MobileProvisionPlatform.iOS, ProvisioningProfile);
+			MobileProvisionPlatform platform;
+
+			switch (SdkPlatform) {
+			case "AppleTVSimulator":
+			case "AppleTVOS":
+				platform = MobileProvisionPlatform.tvOS;
+				break;
+			case "iPhoneSimulator":
+			case "WatchSimulator":
+			case "iPhoneOS":
+			case "WatchOS":
+				platform = MobileProvisionPlatform.iOS;
+				break;
+			default:
+				Log.LogError ("Unknown SDK platform: {0}", SdkPlatform);
+				return false;
+			}
+
+			var profile = MobileProvisionIndex.GetMobileProvision (platform, ProvisioningProfile);
 
 			if (profile == null) {
 				Log.LogError ("Could not locate the provisioning profile with a Name or UUID of {0}.", ProvisioningProfile);
