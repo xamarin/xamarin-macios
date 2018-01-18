@@ -549,7 +549,9 @@ $(eval $(call MAC_TARGETS_template,full-64,Xamarin.Mac.dll,full,$(MAC_CFNETWORK_
 $(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/%-64/Xamarin.Mac.dll
 	@mkdir -p $(@D)
 	$(Q) cp $^ $@
-	$(Q) cp $(^:.dll=.pdb) $(@:.dll=.pdb)
+
+$(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.pdb: $(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.dll
+	@touch $@
 
 # System.Drawing.Primitives.dll is special
 
