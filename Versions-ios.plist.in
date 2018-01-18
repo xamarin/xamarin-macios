@@ -129,5 +129,17 @@
 		<string>mono-symbol-archive</string>
 		<string>sgen-concurrent-gc</string>
 	</array>
+	<key>Optimizations</key>
+	<dict>
+		<!-- The key is the value to be passed to mtouch. The string is a very short description. Any IDE UI should also point to the documentation for the optimizations. -->
+		<key>inline-intptr-size</key>
+		<string>Inline IntPtr.Size</string>
+		<key>inline-runtime-arch</key>
+		<string>Inline NSObject.IsDirectBinding</string>
+		<key>dead-code-elimination</key>
+		<string>Dead code elimination</string>
+		<key>remove-uithread-checks</key>
+		<string>Remove UI thread checks</string>
+	</dict>
 </dict>
 </plist>
