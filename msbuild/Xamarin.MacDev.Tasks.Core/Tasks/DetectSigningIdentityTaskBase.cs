@@ -374,7 +374,7 @@ namespace Xamarin.MacDev.Tasks
 						string currentMatches = "";
 						foreach (var match in matches)
 							currentMatches += $"{match}; ";
-						Log.LogMessage (MessageImportance.Low, "AppID: {0} was ruled out because we already found better matches: ", appid, currentMatches);
+						Log.LogMessage (MessageImportance.Low, "AppID: {0} was ruled out because we already found better matches: {1}.", appid, currentMatches);
 					}
 				}
 			}
