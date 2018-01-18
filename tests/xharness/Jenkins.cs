@@ -147,6 +147,128 @@ namespace xharness
 			return true;
 		}
 
+		class TestData
+		{
+			public string Variation;
+			public string MTouchExtraArgs;
+			public bool Debug;
+			public bool Profiling;
+		}
+
+		IEnumerable<TestData> GetTestData (RunTestTask test)
+		{
+			// This function returns additional test configurations (in addition to the default one) for the specific test
+
+			switch (test.ProjectPlatform) {
+			case "iPhone":
+				/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
+				yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = false };
+				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = false };
+
+				yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = true };
+				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = true };
+
+				yield return new TestData { Variation = "Release", MTouchExtraArgs = "", Debug = false, Profiling = false };
+				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = false, Profiling = false };
+				break;
+			case "iPhoneSimulator":
+				switch (test.TestName) {
+				case "monotouch-test":
+					// The default is to run monotouch-test with the dynamic registrar (in the simulator), so that's already covered
+					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false };
+					break;
+				}
+				break;
+			default:
+				throw new NotImplementedException (test.ProjectPlatform);
+			}
+		}
+
+		IEnumerable<T> CreateTestVariations<T> (IEnumerable<T> tests, Func<XBuildTask, T, T> creator) where T: RunTestTask
+		{
+			foreach (var task in tests)
+				task.Variation = "Debug";
+
+			var rv = new List<T> (tests);
+			foreach (var task in tests.ToArray ()) {
+				foreach (var test_data in GetTestData (task)) {
+					var variation = test_data.Variation;
+					var mtouch_extra_args = test_data.MTouchExtraArgs;
+					var configuration = test_data.Debug ? task.ProjectConfiguration : task.ProjectConfiguration.Replace ("Debug", "Release");
+					var debug = test_data.Debug;
+					var profiling = test_data.Profiling;
+
+					var clone = task.TestProject.Clone ();
+					var clone_task = Task.Run (async () => {
+						await task.BuildTask.InitialTask; // this is the project cloning above
+						await clone.CreateCopyAsync (task);
+						if (!string.IsNullOrEmpty (mtouch_extra_args))
+							clone.Xml.AddExtraMtouchArgs (mtouch_extra_args, task.ProjectPlatform, configuration);
+						clone.Xml.SetNode ("MTouchProfiling", profiling ? "True" : "False", task.ProjectPlatform, configuration);
+						if (!debug)
+							clone.Xml.SetMtouchUseLlvm (true, task.ProjectPlatform, configuration);
+						clone.Xml.Save (clone.Path);
+					});
+
+					var build = new XBuildTask {
+						Jenkins = this,
+						TestProject = clone,
+						ProjectConfiguration = configuration,
+						ProjectPlatform = task.ProjectPlatform,
+						Platform = task.Platform,
+						InitialTask = clone_task,
+						TestName = clone.Name,
+					};
+					T newVariation = creator (build, task);
+					newVariation.Variation = variation;
+					newVariation.Ignored = task.Ignored;
+					rv.Add (newVariation);
+				}
+			}
+
+			return rv;
+		}
+
+		IEnumerable<TestTask> CreateRunSimulatorTasks ()
+		{
+			var runSimulatorTasks = new List<RunSimulatorTask> ();
+
+			foreach (var project in Harness.IOSTestProjects) {
+				bool ignored = !IncludeSimulator;
+				if (!IsIncluded (project))
+					ignored = true;
+
+				var ps = new List<Tuple<TestProject, TestPlatform, bool>> ();
+				if (!project.SkipiOSVariation)
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored || !IncludeiOS));
+				if (!project.SkiptvOSVariation)
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored || !IncludetvOS));
+				if (!project.SkipwatchOSVariation)
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored || !IncludewatchOS));
+				foreach (var pair in ps) {
+					var derived = new XBuildTask () {
+						Jenkins = this,
+						ProjectConfiguration = "Debug",
+						ProjectPlatform = "iPhoneSimulator",
+						Platform = pair.Item2,
+						Ignored = pair.Item3,
+						TestName = project.Name,
+					};
+					derived.CloneTestProject (pair.Item1);
+					runSimulatorTasks.AddRange (CreateRunSimulatorTaskAsync (derived));
+				}
+			}
+
+			var testVariations = CreateTestVariations (runSimulatorTasks, (buildTask, test) => new RunSimulatorTask (buildTask, test.Candidates)).ToList ();
+
+			foreach (var taskGroup in testVariations.GroupBy ((RunSimulatorTask task) => task.Platform)) {
+				yield return new AggregatedRunSimulatorTask (taskGroup) {
+					Jenkins = this,
+					TestName = $"Tests for {taskGroup.Key}",
+				};
+			}
+		}
+
 		IEnumerable<TestTask> CreateRunDeviceTasks ()
 		{
 			var rv = new List<RunDeviceTask> ();
@@ -159,33 +281,33 @@ namespace xharness
 				if (!project.SkipiOSVariation) {
 					var build64 = new XBuildTask {
 						Jenkins = this,
-						TestProject = project,
 						ProjectConfiguration = "Debug64",
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.iOS_Unified64,
 						TestName = project.Name,
 					};
+					build64.CloneTestProject (project);
 					rv.Add (new RunDeviceTask (build64, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOS });
 
 					var build32 = new XBuildTask {
 						Jenkins = this,
-						TestProject = project,
 						ProjectConfiguration = "Debug32",
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.iOS_Unified32,
 						TestName = project.Name,
 					};
+					build32.CloneTestProject (project);
 					rv.Add (new RunDeviceTask (build32, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports32Bit)) { Ignored = ignored || !IncludeiOS });
 
 					var todayProject = project.AsTodayExtensionProject ();
 					var buildToday = new XBuildTask {
 						Jenkins = this,
-						TestProject = todayProject,
 						ProjectConfiguration = "Debug64",
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.iOS_TodayExtension64,
 						TestName = project.Name,
 					};
+					buildToday.CloneTestProject (todayProject);
 					rv.Add (new RunDeviceTask (buildToday, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOSExtensions });
 				}
 
@@ -193,12 +315,12 @@ namespace xharness
 					var tvOSProject = project.AsTvOSProject ();
 					var buildTV = new XBuildTask {
 						Jenkins = this,
-						TestProject = tvOSProject,
 						ProjectConfiguration = "Debug",
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.tvOS,
 						TestName = project.Name,
 					};
+					buildTV.CloneTestProject (tvOSProject);
 					rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.tvOS)) { Ignored = ignored || !IncludetvOS });
 				}
 
@@ -206,82 +328,17 @@ namespace xharness
 					var watchOSProject = project.AsWatchOSProject ();
 					var buildWatch = new XBuildTask {
 						Jenkins = this,
-						TestProject = watchOSProject,
 						ProjectConfiguration = "Debug",
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.watchOS,
 						TestName = project.Name,
 					};
+					buildWatch.CloneTestProject (watchOSProject);
 					rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.watchOS)) { Ignored = ignored || !IncludewatchOS });
 				}
 			}
 
-			var assembly_build_targets = new []
-			{
-				/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
-				new { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = false },
-				new { Variation = "AssemblyBuildTarget: SDK framework (debug)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = false },
-
-				new { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = true },
-				new { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = true },
-
-				new { Variation = "Release", MTouchExtraArgs = "", Debug = false, Profiling = false }, 
-				new { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = false, Profiling = false },
-
-			};
-
-			// Don't build in the original project directory
-			// We can build multiple projects in parallel, and if some of those
-			// projects have the same project dependencies, then we may end up
-			// building the same (dependent) project simultaneously (and they can
-			// stomp on eachother). This is done asynchronously to speed to the initial test load.
-			// FIXME: we should really do this for simulator builds as well.
-			foreach (var device_test in rv.ToArray ()) {
-				var clone = device_test.TestProject.Clone ();
-				device_test.BuildTask.InitialTask = clone.CreateCopyAsync (device_test);
-				device_test.BuildTask.TestProject = clone;
-				device_test.TestProject = clone;
-			}
-
-			foreach (var task in rv)
-				task.Variation = "Debug";
-
-			foreach (var task in rv.ToArray ()) {
-				foreach (var test_data in assembly_build_targets) {
-					var variation = test_data.Variation;
-					var mtouch_extra_args = test_data.MTouchExtraArgs;
-					var configuration = test_data.Debug ? task.ProjectConfiguration : task.ProjectConfiguration.Replace ("Debug", "Release");
-					var debug = test_data.Debug;
-					var profiling = test_data.Profiling;
-
-					var clone = task.TestProject.Clone ();
-					var clone_task = Task.Run (async () =>
-					{
-						await task.BuildTask.InitialTask; // this is the project cloning above
-						await clone.CreateCopyAsync (task);
-						if (!string.IsNullOrEmpty (mtouch_extra_args))
-							clone.Xml.AddExtraMtouchArgs (mtouch_extra_args, task.ProjectPlatform, configuration);
-						clone.Xml.SetNode ("MTouchProfiling", profiling ? "True" : "False", task.ProjectPlatform, configuration);
-						if (!debug)
-							clone.Xml.SetMtouchUseLlvm (true, task.ProjectPlatform, configuration);
-						clone.Xml.Save (clone.Path);
-					});
-
-					var build = new XBuildTask
-					{
-						Jenkins = this,
-						TestProject = clone,
-						ProjectConfiguration = configuration,
-						ProjectPlatform = task.ProjectPlatform,
-						Platform = task.Platform,
-						InitialTask = clone_task,
-						TestName = clone.Name,
-					};
-					rv.Add (new RunDeviceTask (build, task.Candidates) { Variation = variation, Ignored = task.Ignored });
-				}
-			}
-
-			return rv;
+			return CreateTestVariations (rv, (buildTask, test) => new RunDeviceTask (buildTask, test.Candidates));
 		}
 
 		static string AddSuffixToPath (string path, string suffix)
@@ -461,43 +518,7 @@ namespace xharness
 
 			await LoadSimulatorsAndDevicesAsync ();
 
-			var runSimulatorTasks = new List<RunSimulatorTask> ();
-
-			foreach (var project in Harness.IOSTestProjects) {
-				bool ignored = false;
-				if (!IncludeSimulator)
-					ignored = true;
-
-				if (!IsIncluded (project))
-					ignored = true;
-
-				var ps = new List<Tuple<TestProject, TestPlatform, bool>> ();
-				if (!project.SkipiOSVariation)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored || !IncludeiOS));
-				if (!project.SkiptvOSVariation)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored || !IncludetvOS));
-				if (!project.SkipwatchOSVariation)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored || !IncludewatchOS));
-				foreach (var pair in ps) {
-					var derived = new XBuildTask () {
-						Jenkins = this,
-						TestProject = pair.Item1,
-						ProjectConfiguration = "Debug",
-						ProjectPlatform = "iPhoneSimulator",
-						Platform = pair.Item2,
-						Ignored = pair.Item3,
-						TestName = project.Name,
-					};
-					runSimulatorTasks.AddRange (CreateRunSimulatorTaskAsync (derived));
-				}
-			}
-
-			foreach (var taskGroup in runSimulatorTasks.GroupBy ((RunSimulatorTask task) => task.Platform)) {
-				Tasks.Add (new AggregatedRunSimulatorTask (taskGroup) {
-					Jenkins = this,
-					TestName = $"Tests for {taskGroup.Key}",
-				});
-			}
+			Tasks.AddRange (CreateRunSimulatorTasks ());
 
 			var buildiOSMSBuild = new XBuildTask ()
 			{
@@ -529,6 +550,7 @@ namespace xharness
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
 			};
+			buildInstallSources.SolutionPath = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "tools", "install-source", "install-source.sln")); // this is required for nuget restore to be executed
 			var nunitExecutionInstallSource = new NUnitExecuteTask (buildInstallSources)
 			{
 				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "bin", "Release", "InstallSourcesTests.dll"),
@@ -1961,6 +1983,19 @@ function oninitialload ()
 		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
 
 		public Task InitialTask; // a task that's executed before this task's ExecuteAsync method.
+
+		public void CloneTestProject (TestProject project)
+		{
+			// Don't build in the original project directory
+			// We can build multiple projects in parallel, and if some of those
+			// projects have the same project dependencies, then we may end up
+			// building the same (dependent) project simultaneously (and they can
+			// stomp on eachother).
+			// So we clone the project file to a separate directory and build there instead.
+			// This is done asynchronously to speed to the initial test load.
+			TestProject = project.Clone ();
+			InitialTask = TestProject.CreateCopyAsync ();
+		}
 
 		protected Stopwatch duration = new Stopwatch ();
 		public TimeSpan Duration { 

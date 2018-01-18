@@ -211,9 +211,9 @@ namespace xharness
 				writer.WriteLine ("\t$(Q) rm -rf \".$@-failure.stamp\"");
 				foreach (var target in allTargets) {
 					if (target is MacClassicTarget)
-						writer.WriteLine ("\t$(Q) $(MAKE) \"{0}\" || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacClassicTargetName (target, MacTargetNameType.Run));
+						writer.WriteLine ("\t$(Q) $(MAKE) {0} || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacClassicTargetName (target, MacTargetNameType.Run));
 					else if (target is MacUnifiedTarget)
-						writer.WriteLine ("\t$(Q) $(MAKE) \"{0}\" || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacUnifiedTargetName (target, MacTargetNameType.Run));
+						writer.WriteLine ("\t$(Q) $(MAKE) {0} || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacUnifiedTargetName (target, MacTargetNameType.Run));
 					else
 						throw new NotImplementedException ();					
 				}
@@ -225,9 +225,9 @@ namespace xharness
 				writer.WriteLine ("\t$(Q) rm -rf \".$@-failure.stamp\"");
 				foreach (var target in allTargets) {
 					if (target is MacClassicTarget)
-						writer.WriteLine ("\t$(Q) $(MAKE) \"{0}\" || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacClassicTargetName (target, MacTargetNameType.Build));
+						writer.WriteLine ("\t$(Q) $(MAKE) {0} || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacClassicTargetName (target, MacTargetNameType.Build));
 					else if (target is MacUnifiedTarget)
-						writer.WriteLine ("\t$(Q) $(MAKE) \"{0}\" || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacUnifiedTargetName (target, MacTargetNameType.Build));
+						writer.WriteLine ("\t$(Q) $(MAKE) {0} || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacUnifiedTargetName (target, MacTargetNameType.Build));
 					else
 						throw new NotImplementedException ();
 

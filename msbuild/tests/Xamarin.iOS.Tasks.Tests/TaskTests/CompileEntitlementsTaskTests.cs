@@ -40,6 +40,7 @@ namespace Xamarin.iOS.Tasks
 			task.Entitlements = Path.Combine ("..", "bin", "Resources", "Entitlements.plist");
 			task.IsAppExtension = false;
 			task.ProvisioningProfile = Path.Combine ("..", "bin", "Resources", "profile.mobileprovision");
+			task.SdkPlatform = "iPhoneOS";
 			task.SdkVersion = "6.1";
 
 			compiledEntitlements = task.CompiledEntitlements;
