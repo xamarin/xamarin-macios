@@ -175,6 +175,7 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (9, 0);
 				}
 				break;
+#if !XAMCORE_4_0
 			case "NSUrl":
 				switch (selectorName) {
 				case "previewItemTitle":
@@ -182,6 +183,7 @@ namespace Introspection {
 					return true;
 				}
 				break;
+#endif
 			case "MKMapItem": // Selector not available on iOS 32-bit
 				switch (selectorName) {
 				case "encodeWithCoder:":
