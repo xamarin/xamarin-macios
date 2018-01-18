@@ -1,6 +1,7 @@
 using System.Linq;
 
-namespace Xamarin.Bundler {
+namespace Xamarin.Bundler
+{
 	public class Optimizations
 	{
 		static string [] opt_names =
@@ -18,7 +19,7 @@ namespace Xamarin.Bundler {
 
 		public bool? RemoveUIThreadChecks {
 			get { return values [0]; }
-			set { values [0] = value;  }
+			set { values [0] = value; }
 		}
 		public bool? DeadCodeElimination {
 			get { return values [1]; }
@@ -64,7 +65,7 @@ namespace Xamarin.Bundler {
 			// By default we always eliminate dead code.
 			if (!DeadCodeElimination.HasValue)
 				DeadCodeElimination = true;
-			
+
 			if (!InlineIsDirectBinding.HasValue) {
 #if MONOTOUCH
 				// By default we always inline calls to NSObject.IsDirectBinding
