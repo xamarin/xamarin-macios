@@ -27,7 +27,7 @@ Mono.Cecil.dll: $(MONO_CECIL_DLL)
 
 IOS_ASSEMBLIES = \
 	$(wildcard $(MONO_PATH)/mcs/class/lib/monotouch/*.pdb) \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.iOS.dll.mdb
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.iOS.pdb
 
 MAC_ASSEMBLIES = \
 	$(wildcard $(MONO_PATH)/mcs/class/lib/xammac/*.pdb) \
