@@ -727,7 +727,7 @@ namespace XamCore.CoreData
 	// 'init' issues a warning: CoreData: error: Failed to call designated initializer on NSManagedObject class 'NSManagedObject' 
 	// then crash while disposing the instance
 	[DisableDefaultCtor]
-	interface NSManagedObject {
+	interface NSManagedObject : NSFetchRequestResult {
 		[DesignatedInitializer]
 		[Export ("initWithEntity:insertIntoManagedObjectContext:")]
 		IntPtr Constructor (NSEntityDescription entity, [NullAllowed] NSManagedObjectContext context);
@@ -1145,7 +1145,7 @@ namespace XamCore.CoreData
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -URIRepresentation cannot be sent to an abstract object of class NSManagedObjectID: Create a concrete instance!
 	[DisableDefaultCtor]
-	interface NSManagedObjectID : NSCopying {
+	interface NSManagedObjectID : NSCopying, NSFetchRequestResult {
 
 		[Export ("entity", ArgumentSemantic.Strong)]
 		NSEntityDescription Entity { get; }

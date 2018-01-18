@@ -279,9 +279,9 @@ namespace XamCore.MapKit {
 	[iOS (6,0)]
 	[TV (9,2)]
 	[Mac (10,9, onlyOn64 : true)]
-	interface MKMapItem 
+	interface MKMapItem : NSSecureCoding
 #if IOS // #if TARGET_OS_IOS
-		: NSItemProviderReading, NSItemProviderWriting
+		, NSItemProviderReading, NSItemProviderWriting
 #endif
 	{
 		[Export ("placemark", ArgumentSemantic.Retain)]

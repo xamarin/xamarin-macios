@@ -13596,7 +13596,7 @@ namespace XamCore.UIKit {
 	interface IUIContentContainer {}
 	
 	[BaseType (typeof (UIResponder))]
-	interface UIViewController : NSCoding, UIAppearanceContainer, UIContentContainer, UITraitEnvironment, UIFocusEnvironment {
+	interface UIViewController : NSCoding, UIAppearanceContainer, UIContentContainer, UITraitEnvironment, UIFocusEnvironment, NSExtensionRequestHandling {
 		[DesignatedInitializer]
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]

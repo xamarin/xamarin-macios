@@ -539,7 +539,11 @@ namespace XamCore.WebKit
 #endif
 	)]
 	[DisableDefaultCtor ()] // Crashes during deallocation in Xcode 6 beta 2. radar 17377712.
-	interface WKWebView {
+	interface WKWebView
+#if MONOMAC
+		: NSUserInterfaceValidations
+#endif
+	{
 
 		[DesignatedInitializer]
 		[Export ("initWithFrame:configuration:")]
