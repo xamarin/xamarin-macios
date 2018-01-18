@@ -64,10 +64,17 @@ namespace Xamarin.Bundler {
 			// By default we always eliminate dead code.
 			if (!DeadCodeElimination.HasValue)
 				DeadCodeElimination = true;
-
-			// By default we always inline calls to NSObject.IsDirectBinding
-			if (!InlineIsDirectBinding.HasValue)
+			
+			if (!InlineIsDirectBinding.HasValue) {
+#if MONOTOUCH
+				// By default we always inline calls to NSObject.IsDirectBinding
 				InlineIsDirectBinding = true;
+#else
+				// NSObject.IsDirectBinding is not a safe optimization to apply to XM apps,
+				// because there may be additional code/assemblies we don't know about at build time.
+				InlineIsDirectBinding = false;
+#endif
+			}
 
 			// The default behavior for InlineIntPtrSize depends on the assembly being linked,
 			// which means we can't set it to a global constant. It's handled in the OptimizeGeneratedCodeSubStep directly.
