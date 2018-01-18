@@ -42,8 +42,6 @@ namespace Xamarin.Mac.Tasks
 			get { return Path.Combine (SdkDevPath, "Platforms/MacOSX.platform/Entitlements.plist"); }
 		}
 
-		protected override MobileProvisionPlatform Platform { get { return MobileProvisionPlatform.MacOS; } }
-		
 		protected override string EntitlementBundlePath { get { return Path.Combine (AppBundleDir, "Contents", "Resources"); } }
 
 		protected override PDictionary GetCompiledEntitlements (MobileProvision profile, PDictionary template)
