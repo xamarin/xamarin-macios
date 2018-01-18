@@ -32,7 +32,7 @@ namespace Xamarin.Linker {
 		}
 
 		public int Arch {
-			get { return Options.Application.Is64Build ? 8 : 4; }
+			get { return Options.Target.Is64Build ? 8 : 4; }
 		}
 
 		protected Optimizations Optimizations {
@@ -166,6 +166,8 @@ namespace Xamarin.Linker {
 			case Code.Ldc_I4_S:
 				if (ins.Operand is int)
 					return (int) ins.Operand;
+				if (ins.Operand is sbyte)
+					return (sbyte) ins.Operand;
 				return null;
 #if DEBUG
 			case Code.Isinst: // We might be able to calculate a constant value here in the future
@@ -276,7 +278,7 @@ namespace Xamarin.Linker {
 							var x1 = GetConstantValue (ins?.Previous?.Previous);
 							var x2 = GetConstantValue (ins?.Previous);
 							if (x1.HasValue && x2.HasValue)
-								branch = x1.Value <= x2.Value;
+								branch = x1.Value < x2.Value;
 							cond_instruction_count = 3;
 							break;
 						}
@@ -609,28 +611,17 @@ namespace Xamarin.Linker {
 
 		void ProcessIntPtrSize (MethodDefinition caller, Instruction ins)
 		{
-			const string operation = "inline IntPtr.Size";
-
 			if (!InlineIntPtrSize)
 				return;
 
-			// This will optimize the following code sequence
-			// if (IntPtr.Size == 8) { ... } else { ... }
+			// This will inline IntPtr.Size to load the corresponding constant value instead
 
 			// Verify we're checking the right get_Size call
 			var mr = ins.Operand as MethodReference;
 			if (!mr.DeclaringType.Is ("System", "IntPtr"))
 				return;
 
-			// Verify a few assumptions before doing anything
-			if (!ValidateInstruction (caller, ins.Next, operation, Code.Ldc_I4_8))
-				return;
-
-			var branchInstruction = ins.Next.Next;
-			if (!ValidateInstruction (caller, branchInstruction, operation, Code.Bne_Un, Code.Bne_Un_S))
-				return;
-
-			// We're fine, inline the get_Size condition
+			// We're fine, inline the get_Size call
 			ins.OpCode = Arch == 8 ? OpCodes.Ldc_I4_8 : OpCodes.Ldc_I4_4;
 			ins.Operand = null;
 		}

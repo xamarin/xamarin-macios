@@ -8,7 +8,9 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -179,6 +181,79 @@ namespace Linker.Shared {
 			} finally {
 				finally_invoked = true;
 			}
+		}
+
+		[Test]
+		public void IntPtrSizeTest ()
+		{
+			MethodInfo passingMethod = null;
+			MethodInfo failingMethod = null;
+			switch (IntPtr.Size) {
+			case 4:
+				Size4Test ();
+				passingMethod = GetType ().GetMethod (nameof (Size4Test), BindingFlags.NonPublic | BindingFlags.Instance);
+				failingMethod = GetType ().GetMethod (nameof (Size8Test), BindingFlags.NonPublic | BindingFlags.Instance);
+				break;
+			case 8:
+				Size8Test ();
+				passingMethod = GetType ().GetMethod (nameof (Size8Test), BindingFlags.NonPublic | BindingFlags.Instance);
+				failingMethod = GetType ().GetMethod (nameof (Size4Test), BindingFlags.NonPublic | BindingFlags.Instance);
+				break;
+			default:
+				Assert.Fail ("Invalid size: {0}", IntPtr.Size);
+				break;
+			}
+
+#if !DEBUG
+			// Verify that the passing method is completely empty (save for nop instructions and a final ret instruction).
+			// Unfortunately in debug mode csc produces IL sequences the optimizer doesn't understand (a lot of unnecessary instructions),
+			// which means we can only check this in release mode. Also on device this will probably always pass,
+			// since we strip assemblies (and the methods will always be empty), but running the test shouldn't hurt.
+			IEnumerable<ILInstruction> passingInstructions = new ILReader (passingMethod);
+			IEnumerable<ILInstruction> failingInstructions = new ILReader (failingMethod);
+			passingInstructions = passingInstructions.Where ((v) => v.OpCode.Name != "nop");
+			failingInstructions = failingInstructions.Where ((v) => v.OpCode.Name != "nop");
+			Assert.AreEqual (1, passingInstructions.Count (), "empty body");
+			Assert.That (failingInstructions.Count (), Is.GreaterThan (1), "non-empty body");
+#endif
+		}
+
+		[CompilerGenerated] // Trigger optimizations
+		[Foundation.Export ("alsoRequiredForOptimizations")]
+		void Size8Test ()
+		{
+			// Everything in this method should be optimized away (when building for 64-bits)
+			if (IntPtr.Size != 8)
+				throw new NUnit.Framework.Internal.NUnitException ("1");
+			if (IntPtr.Size == 4)
+				throw new NUnit.Framework.Internal.NUnitException ("2");
+			if (IntPtr.Size > 8)
+				throw new NUnit.Framework.Internal.NUnitException ("3");
+			if (IntPtr.Size < 8)
+				throw new NUnit.Framework.Internal.NUnitException ("4");
+			if (IntPtr.Size >= 9)
+				throw new NUnit.Framework.Internal.NUnitException ("5");
+			if (IntPtr.Size <= 7)
+				throw new NUnit.Framework.Internal.NUnitException ("6");
+		}
+
+		[CompilerGenerated] // Trigger optimizations
+		[Foundation.Export ("alsoRequiredForOptimizations")]
+		void Size4Test ()
+		{
+			// Everything in this method should be optimized away (when building for 32-bits)
+			if (IntPtr.Size != 4)
+				throw new NUnit.Framework.Internal.NUnitException ("1");
+			if (IntPtr.Size == 8)
+				throw new NUnit.Framework.Internal.NUnitException ("2");
+			if (IntPtr.Size > 4)
+				throw new NUnit.Framework.Internal.NUnitException ("3");
+			if (IntPtr.Size < 4)
+				throw new NUnit.Framework.Internal.NUnitException ("4");
+			if (IntPtr.Size >= 5)
+				throw new NUnit.Framework.Internal.NUnitException ("5");
+			if (IntPtr.Size <= 3)
+				throw new NUnit.Framework.Internal.NUnitException ("6");
 		}
 #endif
 	}
