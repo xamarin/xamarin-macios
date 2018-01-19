@@ -173,6 +173,16 @@ UNREFERENCED_SYMBOLS = 							\
 	_xamarin_get_block_descriptor				\
 	_xamarin_get_locale_country_code			\
 	_xamarin_log								\
+	_xamarin_localized_string_format			\
+	_xamarin_localized_string_format_1			\
+	_xamarin_localized_string_format_2			\
+	_xamarin_localized_string_format_3			\
+	_xamarin_localized_string_format_4			\
+	_xamarin_localized_string_format_5			\
+	_xamarin_localized_string_format_6			\
+	_xamarin_localized_string_format_7			\
+	_xamarin_localized_string_format_8			\
+	_xamarin_localized_string_format_9			\
 	_xamarin_start_wwan							\
 	_xamarin_timezone_get_data					\
 	_xamarin_timezone_get_names					\
