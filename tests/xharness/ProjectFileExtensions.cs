@@ -733,6 +733,7 @@ namespace xharness
 			{
 				new string [] { "None", "Include" },
 				new string [] { "Compile", "Include" },
+				new string [] { "Compile", "Exclude" },
 				new string [] { "ProjectReference", "Include" },
 				new string [] { "InterfaceDefinition", "Include" },
 				new string [] { "BundleResource", "Include" },
