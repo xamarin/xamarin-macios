@@ -9206,7 +9206,7 @@ namespace XamCore.Foundation
 		string PathForResource (string name, [NullAllowed] string ofType, string subpath, string localizationName);
 
 		[Export ("localizedStringForKey:value:table:")]
-		string LocalizedString ([NullAllowed] string key, [NullAllowed] string value, [NullAllowed] string table);
+		NSString GetLocalizedString ([NullAllowed] NSString key, [NullAllowed] NSString value, [NullAllowed] NSString table);
 
 		[Export ("objectForInfoDictionaryKey:")]
 		NSObject ObjectForInfoDictionary (string key);
