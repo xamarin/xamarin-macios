@@ -539,6 +539,9 @@ $(MAC_BUILD_DIR)/$(1)/$(2): $(MAC_BUILD_DIR)/$(3)/generated-sources $(MAC_SOURCE
 		$(MAC_MCS_FLAGS_XM) \
 		$(4) \
 		@$$< $$(MAC_SOURCES)
+
+$(MAC_BUILD_DIR)/$(1)/$(2:.dll=.pdb): $(MAC_BUILD_DIR)/$(1)/$(2)
+
 endef
 
 $(eval $(call MAC_TARGETS_template,mobile-32,Xamarin.Mac.dll,mobile,$(MAC_CFNETWORK_SOURCES) $(MAC_MODERNHTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,mobile-32,32))
