@@ -24,7 +24,6 @@ namespace Xamarin.Tuner
 		//   null = don't know, must check at runtime (can't inline)
 		//   true/false = corresponding constant value
 		Dictionary<TypeDefinition, bool?> isdirectbinding_value;
-		HashSet<MethodDefinition> generated_code;
 
 		public HashSet<TypeDefinition> CachedIsNSObject {
 			get { return cached_isnsobject; }
@@ -34,11 +33,6 @@ namespace Xamarin.Tuner
 		public Dictionary<TypeDefinition, bool?> IsDirectBindingValue {
 			get { return isdirectbinding_value; }
 			set { isdirectbinding_value = value; }
-		}
-
-		public HashSet<MethodDefinition> GeneratedCode {
-			get { return generated_code; }
-			set { generated_code = value; }
 		}
 
 		public IList<ICustomAttributeProvider> DataContract {
