@@ -70,18 +70,18 @@ namespace Xamarin
 
 				var profiler_symbol = "_mono_profiler_init_log";
 
-				var symbols = File.ReadAllLines (mtouch.SymbolList);
+				var symbols = (IEnumerable<string>) File.ReadAllLines (mtouch.SymbolList);
 				Assert.That (symbols, Contains.Item (profiler_symbol), profiler_symbol);
 
-				symbols = ExecutionHelper.Execute ("nm", StringUtils.Quote (mtouch.NativeExecutablePath), hide_output: true).Split ('\n');
-				Assert.That (symbols, Has.Some.EndsWith (" T " + profiler_symbol), $"{profiler_symbol} nm");
+				symbols = GetNativeSymbols (mtouch.NativeExecutablePath);
+				Assert.That (symbols, Contains.Item (profiler_symbol), $"{profiler_symbol} nm");
 
 				if (ext != null) {
 					symbols = File.ReadAllLines (ext.SymbolList);
 					Assert.That (symbols, Contains.Item (profiler_symbol), $"{profiler_symbol} - extension");
 
-					symbols = ExecutionHelper.Execute ("nm", StringUtils.Quote (ext.NativeExecutablePath), hide_output: true).Split ('\n');
-					Assert.That (symbols, Has.Some.EndsWith (" T " + profiler_symbol), $"{profiler_symbol} extension nm");
+					symbols = GetNativeSymbols (ext.NativeExecutablePath);
+					Assert.That (symbols, Contains.Item (profiler_symbol), $"{profiler_symbol} extension nm");
 
 				}
 			}
@@ -167,7 +167,7 @@ public class B : A {}
 				mtouch.CustomArguments = new string [] { "--dlsym:+A.dll", "--dlsym:-testApp.exe" };
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
 
-				var symbols = ExecutionHelper.Execute ("nm", $"-gUj {StringUtils.Quote (mtouch.NativeExecutablePath)}", hide_output: true).Split ('\n');
+				var symbols = GetNativeSymbols (mtouch.NativeExecutablePath);
 				Assert.That (symbols, Does.Contain ("_xamarin_start_wwan"), "symb");
 			}
 		}
@@ -1895,11 +1895,11 @@ public class TestApp {
 				mtouch.CreateTemporaryApp_LinkWith ();
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev), "build");
 
-				var symbols = ExecutionHelper.Execute ("nm", StringUtils.Quote (mtouch.NativeExecutablePath), hide_output: true).Split ('\n');
-				Assert.That (symbols, Has.None.EndsWith (" T _theUltimateAnswer"), "Binding symbol not in executable");
+				var symbols = GetNativeSymbols (mtouch.NativeExecutablePath);
+				Assert.That (symbols, Has.None.EqualTo ("_theUltimateAnswer"), "Binding symbol not in executable");
 
-				symbols = ExecutionHelper.Execute ("nm", StringUtils.Quote (Path.Combine (mtouch.AppPath, "libbindings-test.dll.dylib")), hide_output: true).Split ('\n');
-				Assert.That (symbols, Has.Some.EndsWith (" T _theUltimateAnswer"), "Binding symbol in binding library");
+				symbols = GetNativeSymbols (Path.Combine (mtouch.AppPath, "libbindings-test.dll.dylib"));
+				Assert.That (symbols, Has.Some.EqualTo ("_theUltimateAnswer"), "Binding symbol in binding library");
 			}
 		}
 
@@ -2414,15 +2414,15 @@ public class TestApp {
 				// each variation is tested twice so that we don't break when everything is found in the cache the second time around.
 
 				mtouch.AssertExecute (MTouchAction.BuildDev, "first build");
-				var symbols = ExecutionHelper.Execute ("nm", mtouch.NativeExecutablePath, hide_output: true).Split ('\n');
-				Assert.That (symbols, Has.Some.EndsWith (" S _dummy_field"), "Field not found in initial build");
-				Assert.That (symbols, Has.Some.EndsWith (" T _DummyMethod"), "P/invoke not found in initial build");
+				var symbols = GetNativeSymbols (mtouch.NativeExecutablePath);
+				Assert.That (symbols, Has.Some.EqualTo ("_dummy_field"), "Field not found in initial build");
+				Assert.That (symbols, Has.Some.EqualTo ("_DummyMethod"), "P/invoke not found in initial build");
 
 				ExecutionHelper.Execute ("touch", bindingLib); // This will make it so that the second identical variation won't skip the final link step.
 				mtouch.AssertExecute (MTouchAction.BuildDev, "second build");
-				symbols = ExecutionHelper.Execute ("nm", mtouch.NativeExecutablePath, hide_output: true).Split ('\n');
-				Assert.That (symbols, Has.Some.EndsWith (" S _dummy_field"), "Field not found in second build");
-				Assert.That (symbols, Has.Some.EndsWith (" T _DummyMethod"), "P/invoke not found in second build");
+				symbols = GetNativeSymbols (mtouch.NativeExecutablePath);
+				Assert.That (symbols, Has.Some.EqualTo ("_dummy_field"), "Field not found in second build");
+				Assert.That (symbols, Has.Some.EqualTo ("_DummyMethod"), "P/invoke not found in second build");
 			}
 		}
 
@@ -2475,15 +2475,9 @@ public class TestApp {
 
 					mtouch.AssertExecute (MTouchAction.BuildDev, $"build #{iteration}");
 
-					var lines = ExecutionHelper.Execute ("nm", mtouch.NativeExecutablePath, hide_output: true).Split ('\n');
-					var found_field = false;
-					var found_pinvoke = false;
-					foreach (var line in lines) {
-						found_field |= line.EndsWith (" S _dummy_field", StringComparison.Ordinal);
-						found_pinvoke |= line.EndsWith (" T _DummyMethod", StringComparison.Ordinal);
-						if (found_field && found_pinvoke)
-							break;
-					}
+					var lines = GetNativeSymbols (mtouch.NativeExecutablePath);
+					var found_field = lines.Contains ("_dummy_field");
+					var found_pinvoke = lines.Contains ("_DummyMethod");
 
 					Assert.IsFalse (found_field, string.Format ("Field found for variation #{0}", iteration));
 					Assert.IsFalse (found_field, string.Format ("P/Invoke found for variation #{0}", iteration));
@@ -3942,7 +3936,7 @@ public class TestApp {
 	
 		static void VerifyGC (string file, string message)
 		{
-			var symbols = ExecutionHelper.Execute ("nm", file, hide_output: true);
+			var symbols = GetNativeSymbols (file);
 			var _sgen_gc_lock = symbols.Contains ("_sgen_gc_lock");
 			if (!_sgen_gc_lock) {
 				Assert.Fail ("Expected '{0}' to use SGen: {1}", file, message);
