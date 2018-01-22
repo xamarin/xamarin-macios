@@ -34,7 +34,7 @@ namespace XamCore.ObjCRuntime {
 
 			for (int i = 0; i < map->assembly_count; i++) {
 				var ptr = Marshal.ReadIntPtr (map->assembly, i * IntPtr.Size);
-				Runtime.Registrar.SetAssemblyRegistered (Marshal.PtrToStringAuto (ptr));
+				DynamicRegistrar.SetAssemblyRegistered (Marshal.PtrToStringAuto (ptr));
 			}
 		}
 
@@ -48,7 +48,7 @@ namespace XamCore.ObjCRuntime {
 
 		public Class (Type type)
 		{
-			this.handle = Class.Register (type);
+			this.handle = GetClassHandle (type);
 		}
 
 		public Class (IntPtr handle)
@@ -56,7 +56,7 @@ namespace XamCore.ObjCRuntime {
 			this.handle = handle;
 		}
 
-		internal static Class Construct (IntPtr handle) 
+		internal static Class Construct (IntPtr handle)
 		{
 			return new Class (handle);
 		}
@@ -86,12 +86,30 @@ namespace XamCore.ObjCRuntime {
 		// class (it will be faster than GetHandle, but it will
 		// not compile unless the class in question actually exists
 		// as an ObjectiveC class in the binary).
-		public static IntPtr GetHandleIntrinsic (string name) {
+		public static IntPtr GetHandleIntrinsic (string name)
+		{
 			return objc_getClass (name);
 		}
 
-		public static IntPtr GetHandle (Type type) {
-			return Register (type);
+		public static IntPtr GetHandle (Type type)
+		{
+			return GetClassHandle (type);
+		}
+
+		[LinkerOptimize] // To inline the Runtime.DynamicRegistrationSupported code if possible.
+		static IntPtr GetClassHandle (Type type)
+		{
+			bool is_custom_type;
+			var rv = FindClass (type, out is_custom_type);
+			if (rv != IntPtr.Zero)
+				return rv;
+
+			// The linker will remove this condition (and the subsequent method call) if possible
+			if (Runtime.DynamicRegistrationSupported)
+				return Register (type);
+
+			// FIXME: add tests for working and failing scenarios.
+			throw ErrorHelper.CreateError (8999 /* FIXME */, $"Could not register the type {type.FullName}");
 		}
 
 		internal static IntPtr GetClassForObject (IntPtr obj)
@@ -113,12 +131,34 @@ namespace XamCore.ObjCRuntime {
 
 		internal static Type Lookup (IntPtr klass)
 		{
-			return Lookup (klass, true);
+			return LookupClass (klass, true);
 		}
 
 		internal static Type Lookup (IntPtr klass, bool throw_on_error)
 		{
-			return Runtime.Registrar.Lookup (klass, throw_on_error);
+			return LookupClass (klass, throw_on_error);
+		}
+
+		[LinkerOptimize] // To inline the Runtime.DynamicRegistrationSupported code if possible.
+		static Type LookupClass (IntPtr klass, bool throw_on_error)
+		{
+			bool is_custom_type;
+			var find_class = klass;
+			do {
+				var tp = FindType (find_class, out is_custom_type);
+				if (tp != null)
+					return tp;
+				find_class = class_getSuperclass (find_class);
+			} while (find_class != IntPtr.Zero);
+
+			// The linker will remove this condition (and the subsequent method call) if possible
+			if (Runtime.DynamicRegistrationSupported)
+				return Runtime.Registrar.Lookup (klass, throw_on_error);
+
+			// FIXME: add tests, both working and failing
+			if (throw_on_error)
+				throw ErrorHelper.CreateError (8999 /* FIXME */, $"Could not find class 0x{klass.ToString ("x")}");
+			return null;
 		}
 
 		internal static IntPtr Register (Type type)
@@ -129,6 +169,86 @@ namespace XamCore.ObjCRuntime {
 		internal static void Register (Type type, ref List<Exception> exceptions)
 		{
 			Runtime.Registrar.Register (type, ref exceptions);
+		}
+
+		unsafe static IntPtr FindClass (Type type, out bool is_custom_type)
+		{
+			var map = Runtime.options->RegistrationMap;
+
+			is_custom_type = false;
+
+			if (map == null) {
+#if LOG_TYPELOAD
+				Console.WriteLine ($"FindClass ({type.FullName}): found no map.");
+#endif
+				return IntPtr.Zero;
+			}
+
+			if (type.IsGenericType)
+				type = type.GetGenericTypeDefinition ();
+
+			// FIXME: binary search
+			var asm_name = type.Assembly.GetName ().Name;
+			var mod_token = type.Module.MetadataToken;
+			var type_token = type.MetadataToken & ~0x02000000;
+			for (int i = 0; i < map->map_count; i++) {
+				var token_reference = map->map [i].type_reference;
+				if (!CompareTokenReference (asm_name, mod_token, type_token, token_reference))
+					continue;
+
+				var rv = map->map [i].handle;
+#if LOG_TYPELOAD
+				Console.WriteLine ($"FindClass ({type.FullName}): 0x{rv.ToString ("x")} = {class_getName (rv)}.");
+#endif
+				is_custom_type = i >= (map->map_count - map->custom_type_count);
+				return rv;
+			}
+
+			for (int i = 0; i < map->skipped_map_count; i++) {
+				var token_reference = map->skipped_map [i].skipped_reference;
+				if (!CompareTokenReference (asm_name, mod_token, type_token, token_reference))
+					continue;
+
+				var actual_reference = map->skipped_map [i].actual_reference;
+				for (int k = 0; k < map->map_count; k++) {
+					if (map->map [k].type_reference != actual_reference)
+						continue;
+					is_custom_type = k >= (map->map_count - map->custom_type_count);
+					return map->map [k].handle;
+				}
+				throw ErrorHelper.CreateError (9999, "This should not happen, if something's in the skipped map, it should be in the normal map too.");
+			}
+
+			return IntPtr.Zero;
+		}
+
+		unsafe static bool CompareTokenReference (string asm_name, int mod_token, int type_token, uint token_reference)
+		{
+			var map = Runtime.options->RegistrationMap;
+
+			IntPtr assembly_name;
+			if ((token_reference & 0x1) == 0x1) {
+				// full token reference
+				var entry = Runtime.options->RegistrationMap->full_token_references + (IntPtr.Size + 8) * (int) (token_reference >> 1);
+				var token = (uint) Marshal.ReadInt32 (entry + IntPtr.Size + 4);
+				if (type_token != token)
+					return false;
+
+				var module_token = (uint) Marshal.ReadInt32 (entry + IntPtr.Size);
+				if (mod_token != module_token)
+					return false;
+
+				assembly_name = Marshal.ReadIntPtr (entry);
+			} else {
+				// packed token reference
+				if (token_reference >> 8 != type_token)
+					return false;
+
+				var assembly_index = (token_reference >> 1) & 0x7F;
+				assembly_name = Marshal.ReadIntPtr (map->assembly, (int) assembly_index * IntPtr.Size);
+			}
+
+			return Runtime.StringEquals (assembly_name, asm_name);
 		}
 
 		internal unsafe static Type FindType (IntPtr @class, out bool is_custom_type)
@@ -183,7 +303,7 @@ namespace XamCore.ObjCRuntime {
 		{
 			// sizeof (MTFullTokenReference) = IntPtr.Size + 4 + 4
 			var entry = Runtime.options->RegistrationMap->full_token_references + (IntPtr.Size + 8) * (int) (token_reference >> 1);
-			var assembly_name = Marshal.PtrToStringAuto (Marshal.ReadIntPtr (entry));
+			var assembly_name = Marshal.ReadIntPtr (entry);
 			var module_token = (uint) Marshal.ReadInt32 (entry + IntPtr.Size);
 			var token = (uint) Marshal.ReadInt32 (entry + IntPtr.Size + 4);
 
@@ -210,7 +330,7 @@ namespace XamCore.ObjCRuntime {
 			Console.WriteLine ($"ResolveTokenReference (0x{token_reference:X}) assembly index: {assembly_index} token: 0x{token:X}.");
 #endif
 
-			var assembly_name = Marshal.PtrToStringAuto (Marshal.ReadIntPtr (map->assembly, (int) assembly_index * IntPtr.Size));
+			var assembly_name = Marshal.ReadIntPtr (map->assembly, (int) assembly_index * IntPtr.Size);
 			var assembly = ResolveAssembly (assembly_name);
 			var module = ResolveModule (assembly, 0x1);
 
@@ -254,11 +374,11 @@ namespace XamCore.ObjCRuntime {
 			throw ErrorHelper.CreateError (8020, $"Could not find the module with MetadataToken 0x{token:X} in the assembly {assembly}.");
 		}
 
-		static Assembly ResolveAssembly (string assembly_name)
+		static Assembly ResolveAssembly (IntPtr assembly_name)
 		{
 			// Find the assembly. We've already loaded all the assemblies that contain registered types, so just look at those assemblies.
 			foreach (var asm in AppDomain.CurrentDomain.GetAssemblies ()) {
-				if (assembly_name != asm.GetName ().Name)
+				if (!Runtime.StringEquals (assembly_name, asm.GetName ().Name))
 					continue;
 
 #if LOG_TYPELOAD
@@ -267,12 +387,73 @@ namespace XamCore.ObjCRuntime {
 				return asm;
 			}
 
-			throw ErrorHelper.CreateError (8019, $"Could not find the assembly {assembly_name} in the loaded assemblies.");
+			throw ErrorHelper.CreateError (8019, $"Could not find the assembly {Marshal.PtrToStringUTF8 (assembly_name)} in the loaded assemblies.");
+		}
+
+		internal unsafe static uint GetTokenReference (Type type)
+		{
+			if (type.IsGenericType)
+				type = type.GetGenericTypeDefinition ();
+
+			var asm_name = type.Module.Assembly.GetName ().Name;
+
+			// First check if there's a full token reference to this type
+			var token = GetFullTokenReference (asm_name, type.Module.MetadataToken, type.MetadataToken);
+			if (token != uint.MaxValue)
+				return token;
+
+			// If type.Module.MetadataToken != 1, then the token must be a full token, which is not the case because we've already checked, so throw an exception.
+			if (type.Module.MetadataToken != 1)
+				throw ErrorHelper.CreateError (9999, $"Could not find the module ({type.Module.FullyQualifiedName}) with MetadataToken {type.Module.MetadataToken} for the type ({type.FullName}).");
+			
+			var map = Runtime.options->RegistrationMap;
+
+			// Find the assembly index in our list of registered assemblies.
+			int assembly_index = -1;
+			for (int i = 0; i < map->assembly_count; i++) {
+				var name_ptr = Marshal.ReadIntPtr (map->assembly, (int) i * IntPtr.Size);
+				if (Runtime.StringEquals (name_ptr, asm_name)) {
+					assembly_index = i;
+					break;
+				}
+			}
+			// If the assembly isn't registered, then the token must be a full token (which it isn't, because we've already checked).
+			if (assembly_index == -1)
+				throw ErrorHelper.CreateError (9999, $"Could not find the assembly ({asm_name}) for the type ({type.FullName}) in the list of registered assemblies.");
+
+			if (assembly_index > 127)
+				throw ErrorHelper.CreateError (9999, $"Expected to find a full token reference for the assembly ({asm_name}) for type ({type.FullName}), since its index ({assembly_index}) is > 127.");
+
+			return (uint) ((type.MetadataToken << 8) + (assembly_index << 1));
+			
+		}
+
+		// Look for the specified metadata token in the table of full token references.
+		static unsafe uint GetFullTokenReference (string assembly_name, int module_token, int metadata_token)
+		{
+			var map = Runtime.options->RegistrationMap;
+			for (int i = 0; i < map->full_token_reference_count; i++) {
+				var ptr = map->full_token_references + (i * IntPtr.Size + 8);
+				var asm_ptr = Marshal.ReadIntPtr (ptr);
+				var token = Marshal.ReadInt32 (ptr + IntPtr.Size + 4);
+				if (token != metadata_token)
+					continue;
+				var mod_token = Marshal.ReadInt32 (ptr + IntPtr.Size);
+				if (mod_token != module_token)
+					continue;
+				if (!Runtime.StringEquals (asm_ptr, assembly_name))
+					continue;
+
+				return (uint) i;
+			}
+
+			return uint.MaxValue;
 		}
 
 		/*
 		Type must have been previously registered.
 		*/
+		[LinkerOptimize] // To inline the Runtime.DynamicRegistrationSupported code if possible.
 #if !XAMCORE_2_0 && !MONOTOUCH // Accidently exposed this to public, can't break API
 		public
 #else
@@ -280,7 +461,15 @@ namespace XamCore.ObjCRuntime {
 #endif
 		static bool IsCustomType (Type type)
 		{
-			return Runtime.Registrar.IsCustomType (type);
+			bool is_custom_type;
+			var @class = FindClass (type, out is_custom_type);
+			if (@class != IntPtr.Zero)
+				return is_custom_type;
+			// The linker will remove this condition (and the subsequent method call) if possible
+			if (Runtime.DynamicRegistrationSupported)
+				return Runtime.Registrar.IsCustomType (type);
+			// FIXME: add tests, failing and working.
+			throw ErrorHelper.CreateError (8999 /* FIXME */, "Can't determine custom-ness");
 		}
 
 		[DllImport ("/usr/lib/libobjc.dylib")]

@@ -83,21 +83,11 @@ namespace XamCore.ObjCRuntime {
 		[DllImport ("__Internal")]
 		static extern IntPtr xamarin_get_block_descriptor ();
 
+		[LinkerOptimize]
 		unsafe void SetupBlock (Delegate trampoline, Delegate userDelegate, bool safe)
 		{
-			isa = block_class;
-			invoke = Marshal.GetFunctionPointerForDelegate (trampoline);
-			object delegates;
-			if (safe) {
-				delegates = new Tuple<Delegate, Delegate> (trampoline, userDelegate);
-			} else {
-				delegates = userDelegate;
-			}
-			local_handle = (IntPtr) GCHandle.Alloc (delegates);
-			global_handle = IntPtr.Zero;
-			flags = BlockFlags.BLOCK_HAS_COPY_DISPOSE | BlockFlags.BLOCK_HAS_SIGNATURE;
-
-			/* FIXME: support stret blocks */
+			if (!Runtime.DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8025, "BlockLiteral.SetupBlock is not supported when the dynamic registrar has been linked away.");
 
 			// We need to get the signature of the target method, so that we can compute
 			// the ObjC signature correctly (the generated method that's actually
@@ -117,12 +107,31 @@ namespace XamCore.ObjCRuntime {
 				blockSignature = false;
 			}
 
+			var signature = Runtime.ComputeSignature (userMethod, blockSignature);
+			SetupBlockImpl (trampoline, userDelegate, safe, signature);
+		}
+
+		unsafe void SetupBlockImpl (Delegate trampoline, Delegate userDelegate, bool safe, string signature)
+		{
+			isa = block_class;
+			invoke = Marshal.GetFunctionPointerForDelegate (trampoline);
+			object delegates;
+			if (safe) {
+				delegates = new Tuple<Delegate, Delegate> (trampoline, userDelegate);
+			} else {
+				delegates = userDelegate;
+			}
+			local_handle = (IntPtr) GCHandle.Alloc (delegates);
+			global_handle = IntPtr.Zero;
+			flags = BlockFlags.BLOCK_HAS_COPY_DISPOSE | BlockFlags.BLOCK_HAS_SIGNATURE;
+
+			/* FIXME: support stret blocks */
+
 			// we allocate one big block of memory, the first part is the BlockDescriptor, 
 			// the second part is the signature string (no need to allocate a second time
 			// for the signature if we can avoid it). One descriptor is allocated for every 
 			// Block; this is potentially something the static registrar can fix, since it
 			// should know every possible trampoline signature.
-			var signature = Runtime.ComputeSignature (userMethod, blockSignature);
 			var bytes = System.Text.Encoding.UTF8.GetBytes (signature);
 			var desclen = sizeof (XamarinBlockDescriptor) + bytes.Length + 1 /* null character */;
 			var descptr = Marshal.AllocHGlobal (desclen);
@@ -228,7 +237,8 @@ namespace XamCore.ObjCRuntime {
 			return descriptor->copy_helper == ((BlockDescriptor *) literal->block_descriptor)->copy_helper;
 		}
 
-		internal static IntPtr GetBlockForDelegate (MethodInfo minfo, object @delegate)
+		[LinkerOptimize]
+		internal static IntPtr GetBlockForDelegate (MethodInfo minfo, object @delegate, string signature)
 		{
 			if (@delegate == null)
 				return IntPtr.Zero;
@@ -263,7 +273,15 @@ namespace XamCore.ObjCRuntime {
 			// call _Block_copy, which will create a heap-allocated block
 			// with the proper reference count.
 			BlockLiteral block = new BlockLiteral ();
-			block.SetupBlock ((Delegate) handlerDelegate, (Delegate) @delegate);
+			if (signature == null) {
+				if (Runtime.DynamicRegistrationSupported) {
+					block.SetupBlock ((Delegate) handlerDelegate, (Delegate) @delegate);
+				} else {
+					throw ErrorHelper.CreateError (8888, "Can't calculate signature for " + @delegate.GetType ().FullName);
+				}
+			} else {
+				block.SetupBlockImpl ((Delegate) handlerDelegate, (Delegate) @delegate, true, signature);
+			}
 			var rv = _Block_copy (ref block);
 			block.CleanupBlock ();
 			return rv;

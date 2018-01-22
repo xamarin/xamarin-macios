@@ -9,6 +9,8 @@ using Mono.Cecil.Cil;
 using Mono.Linker;
 using Mono.Tuner;
 
+using XamCore.Registrar;
+
 namespace Xamarin.Linker.Steps {
 
 	// Generated backend fields inside <product>.dll are also removed if only used (i.e. set to null)
@@ -212,9 +214,47 @@ namespace Xamarin.Linker.Steps {
 			var method = base.MarkMethod (reference);
 			if (method == null)
 				return null;
+			
+			var t = method.DeclaringType;
+
+			// We have special processing that prevents protocol interfaces from being marked if they're
+			// only used by being implemented by a class, but the linker will not mark interfaces if a method implemented by an interface
+			// is marked: this means we need special processing to a protocol interface whose methods have been implemented.
+			if (t.HasInterfaces && method.IsVirtual) {
+				foreach (var r in t.Interfaces) {
+					var i = r.InterfaceType.Resolve ();
+					if (i == null)
+						continue;
+					if (Annotations.IsMarked (i))
+						continue;
+					if (!i.HasCustomAttribute (Namespaces.Foundation, "ProtocolAttribute"))
+						continue;
+
+					var isProtocolImplementation = false;
+					foreach (var @override in method.Overrides) {
+						if (!i.Methods.Contains (@override.Resolve ()))
+							continue;
+						isProtocolImplementation = true;
+						break;
+					}
+					if (!isProtocolImplementation) {
+						foreach (var imethod in i.Methods) {
+							if (!SharedStatic.MethodMatch (imethod, method))
+								continue;
+							isProtocolImplementation = true;
+							break;
+						}
+						
+					}
+					if (isProtocolImplementation) {
+						MarkType (r.InterfaceType);
+						Console.WriteLine ($"Marking {r.InterfaceType} because the method {method.FullName} implements one of its methods.");
+					}
+				}
+			}
+
 			// special processing to find [BlockProxy] attributes in _Extensions types
 			// ref: https://bugzilla.xamarin.com/show_bug.cgi?id=23540
-			var t = method.DeclaringType;
 			if (method.HasCustomAttributes && t.HasInterfaces) {
 				string selector = null;
 				foreach (var r in t.Interfaces) {
@@ -277,6 +317,36 @@ namespace Xamarin.Linker.Steps {
 				}
 			}
 			return method;
+		}
+
+		protected override void MarkInterfaceImplementation (TypeDefinition type, InterfaceImplementation iface)
+		{
+			if (!LinkContext.DynamicRegistrationSupported) {
+				// If we don't have to support dynamic registration, we can remove interfaces that represent protocols.
+				// This also means that we can't mark interface types .. FIXME more desc
+				var mark = false;
+
+				var isProtocol = type.IsNSObject (LinkContext) && iface.InterfaceType.Resolve ().HasCustomAttribute (LinkContext, Namespaces.Foundation, "ProtocolAttribute");
+
+				if (IgnoreScope (type.Scope)) {
+					// We're not linking the current assembly, which means the interface should be marked.
+					mark = true;
+				} else if (!isProtocol) {
+					// We only skip interfaces that represent protocols.
+					mark = true;
+				}
+
+				if (isProtocol)
+					LinkContext.StoreProtocolMethods (iface.InterfaceType.Resolve ());
+
+				if (!mark) {
+					Console.WriteLine ($"Not marking interface {iface.InterfaceType.FullName} implemented by {type.FullName}");
+					return;
+				}
+			}
+
+
+			base.MarkInterfaceImplementation (type, iface);
 		}
 	}
 }

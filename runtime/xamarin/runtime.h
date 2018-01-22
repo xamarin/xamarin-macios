@@ -18,6 +18,7 @@
 
 #include "main.h"
 #include "mono-runtime.h"
+#include "runtime-generated.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -65,22 +66,45 @@ typedef struct __attribute__((packed)) {
 	uint8_t assembly_index:7; /* 0-based index into the '__xamarin_registration_assemblies' array. Max 127 (registered) assemblies before a full token reference has to be used */
 	uint32_t token:24; /* RID of the corresponding metadata token. The exact type of metadata token depends on the context where the token reference is used. */
 } MTTokenReference;
+static const uint32_t INVALID_TOKEN_REF = 0xFFFFFFFF;
 
 typedef struct __attribute__((packed)) {
 	void *handle;
 	uint32_t /* MTTokenReference */ type_reference;
 } MTClassMap;
 
+typedef struct __attribute__((packed)) {
+	uint32_t /* MTTokenReference */ skipped_reference;
+	uint32_t /* MTTokenReference */ actual_reference;
+} MTManagedClassMap;
+
+typedef struct __attribute__((packed)) {
+	uint32_t /* MTTokenReference */ token; // Token to a class)
+	uint32_t protocol_count; // Number of protocols
+	const char * const * protocols;
+} MTProtocolMap;
+
+typedef struct __attribute__((packed)) {
+	uint32_t protocol_token;
+	uint32_t wrapper_token;
+} MTProtocolWrapperMap;
+
 struct MTRegistrationMap;
 
 struct MTRegistrationMap {
 	const char **assembly;
 	MTClassMap *map;
-	MTFullTokenReference *full_token_references;
+	const MTProtocolMap *protocols; // array of MTProtocolMap, sorted ascending by token
+	const MTProtocolWrapperMap *protocol_wrappers; // array of MTProtocolWrapperMap, sorted ascending by protocol_token
+	const MTFullTokenReference *full_token_references;
+	const MTManagedClassMap *skipped_map;
 	int assembly_count;
 	int map_count;
 	int custom_type_count;
+	int protocol_count;
+	int protocol_wrapper_count;
 	int full_token_reference_count;
+	int skipped_map_count;
 };
 
 typedef struct {
@@ -141,7 +165,7 @@ MonoType *		xamarin_get_parameter_type (MonoMethod *managed_method, int index);
 MonoObject *	xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, guint32 *exception_gchandle);
 MonoObject *	xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, guint32 *exception_gchandle);
 int *			xamarin_get_delegate_for_block_parameter (MonoMethod *method, int par, void *nativeBlock, guint32 *exception_gchandle);
-id              xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, guint32 *exception_gchandle);
+id              xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature, guint32 *exception_gchandle);
 id				xamarin_get_nsobject_handle (MonoObject *obj);
 void			xamarin_set_nsobject_handle (MonoObject *obj, id handle);
 uint8_t         xamarin_get_nsobject_flags (MonoObject *obj);
@@ -154,6 +178,7 @@ char *			xamarin_strdup_printf (const char *msg, ...);
 void *			xamarin_calloc (size_t size);
 void			xamarin_free (void *ptr);
 MonoMethod *	xamarin_get_reflection_method_method (MonoReflectionMethod *method);
+MonoMethod *	xamarin_get_managed_method_for_token (guint32 token_ref, guint32 *exception_gchandle);
 void			xamarin_framework_peer_lock ();
 void			xamarin_framework_peer_unlock ();
 bool			xamarin_file_exists (const char *path);

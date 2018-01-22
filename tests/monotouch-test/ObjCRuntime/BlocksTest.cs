@@ -39,6 +39,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void TestSetupBlock ()
 		{
+			if (!Runtime.DynamicRegistrationSupported)
+				Assert.Ignore ("This test requires the dynamic registrar to be available.");
+
 			using (var obj = new TestClass ()) {
 				TestClass.OnCallback = ((IntPtr blockArgument, IntPtr self, IntPtr argument) => 
 					{

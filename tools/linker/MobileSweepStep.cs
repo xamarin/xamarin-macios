@@ -6,6 +6,8 @@ using Mono.Cecil;
 using Mono.Linker;
 using Mono.Linker.Steps;
 
+using Xamarin.Tuner;
+
 namespace Xamarin.Linker {
 
 	// MobileMarkStep process a bit more data and that can be used to sweep
@@ -19,6 +21,10 @@ namespace Xamarin.Linker {
 		}
 
 		public AssemblyAction CurrentAction { get; private set; }
+
+		public DerivedLinkContext LinkContext {
+			get { return (DerivedLinkContext) base.Context; }
+		}
 
 		protected override void Process ()
 		{

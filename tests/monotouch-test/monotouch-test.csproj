@@ -25,12 +25,14 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
-    <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
+    <MtouchExtraArgs>-v -v -v -v --registrar:static --linker-optimize:remove-dynamic-registrar</MtouchExtraArgs>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchArch>i386, x86_64</MtouchArch>
+    <MtouchArch>x86_64</MtouchArch>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchLink>None</MtouchLink>
+    <MtouchLink>SdkOnly</MtouchLink>
+    <DeviceSpecificBuild>false</DeviceSpecificBuild>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -56,11 +58,12 @@
     <MtouchDebug>True</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
+    <MtouchArch>ARM64</MtouchArch>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <IpaPackageName>
     </IpaPackageName>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+    <DeviceSpecificBuild>false</DeviceSpecificBuild>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug64|iPhone' ">
     <DebugSymbols>True</DebugSymbols>
@@ -76,6 +79,7 @@
     <MtouchArch>ARM64</MtouchArch>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+    <DeviceSpecificBuild>false</DeviceSpecificBuild>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug32|iPhone' ">
     <DebugSymbols>True</DebugSymbols>
@@ -166,9 +170,6 @@
     <None Include="EmptyNib.xib" Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="**\*.cs" Exclude="obj\**">
-      <Link>%(RecursiveDir)%(Filename).cs</Link>
-    </Compile>
     <Compile Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
     <Compile Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
     <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestPoint.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
@@ -200,6 +201,1536 @@
     </Compile>
     <Compile Include="..\common\ConditionalCompilation.cs">
       <Link>ConditionalCompilation.cs</Link>
+    </Compile>
+    <Compile Include="AppDelegate.cs">
+      <Link>AppDelegate.cs</Link>
+    </Compile>
+    <Compile Include="Asserts.cs">
+      <Link>Asserts.cs</Link>
+    </Compile>
+    <Compile Include="Main.cs">
+      <Link>Main.cs</Link>
+    </Compile>
+    <Compile Include="NativeTypesTest.cs">
+      <Link>NativeTypesTest.cs</Link>
+    </Compile>
+    <Compile Include="ARKit\ARPointCloudTest.cs">
+      <Link>ARKit\ARPointCloudTest.cs</Link>
+    </Compile>
+    <Compile Include="AVFoundation\AVAssetDownloadUrlSessionTests.cs">
+      <Link>AVFoundation\AVAssetDownloadUrlSessionTests.cs</Link>
+    </Compile>
+    <Compile Include="AVFoundation\AVAssetImageGeneratorTest.cs">
+      <Link>AVFoundation\AVAssetImageGeneratorTest.cs</Link>
+    </Compile>
+    <Compile Include="AVFoundation\AVAudioConverterPrimeInfoTest.cs">
+      <Link>AVFoundation\AVAudioConverterPrimeInfoTest.cs</Link>
+    </Compile>
+    <Compile Include="AVFoundation\AVBeatRangeTest.cs">
+      <Link>AVFoundation\AVBeatRangeTest.cs</Link>
+    </Compile>
+    <Compile Include="AVFoundation\AVCapturePhotoBracketSettingsTest.cs">
+      <Link>AVFoundation\AVCapturePhotoBracketSettingsTest.cs</Link>
+    </Compile>
+    <Compile Include="AVFoundation\AVCaptureWhiteBalanceGainsTest.cs">
+      <Link>AVFoundation\AVCaptureWhiteBalanceGainsTest.cs</Link>
+    </Compile>
+    <Compile Include="AVFoundation\AVDepthDataTests.cs">
+      <Link>AVFoundation\AVDepthDataTests.cs</Link>
+    </Compile>
+    <Compile Include="AVFoundation\AVPlayerLooperTest.cs">
+      <Link>AVFoundation\AVPlayerLooperTest.cs</Link>
+    </Compile>
+    <Compile Include="AVFoundation\AudioPlayerTest.cs">
+      <Link>AVFoundation\AudioPlayerTest.cs</Link>
+    </Compile>
+    <Compile Include="AVFoundation\AudioRecorderTest.cs">
+      <Link>AVFoundation\AudioRecorderTest.cs</Link>
+    </Compile>
+    <Compile Include="AVFoundation\CaptureDeviceTest.cs">
+      <Link>AVFoundation\CaptureDeviceTest.cs</Link>
+    </Compile>
+    <Compile Include="AVFoundation\CaptureMetadataOutputTest.cs">
+      <Link>AVFoundation\CaptureMetadataOutputTest.cs</Link>
+    </Compile>
+    <Compile Include="AVFoundation\MetadataObjectTest.cs">
+      <Link>AVFoundation\MetadataObjectTest.cs</Link>
+    </Compile>
+    <Compile Include="AVFoundation\PlayerItemTest.cs">
+      <Link>AVFoundation\PlayerItemTest.cs</Link>
+    </Compile>
+    <Compile Include="AVFoundation\PlayerItemVideoOutputTest.cs">
+      <Link>AVFoundation\PlayerItemVideoOutputTest.cs</Link>
+    </Compile>
+    <Compile Include="AVFoundation\QueuePlayerTest.cs">
+      <Link>AVFoundation\QueuePlayerTest.cs</Link>
+    </Compile>
+    <Compile Include="AVFoundation\SpeechSynthesisVoiceTest.cs">
+      <Link>AVFoundation\SpeechSynthesisVoiceTest.cs</Link>
+    </Compile>
+    <Compile Include="AVFoundation\UtilitiesTest.cs">
+      <Link>AVFoundation\UtilitiesTest.cs</Link>
+    </Compile>
+    <Compile Include="AVFoundation\VideoCompositionInstructionTest.cs">
+      <Link>AVFoundation\VideoCompositionInstructionTest.cs</Link>
+    </Compile>
+    <Compile Include="AVKit\PlayerViewControllerTest.cs">
+      <Link>AVKit\PlayerViewControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="AdSupport\IdentifierManagerTest.cs">
+      <Link>AdSupport\IdentifierManagerTest.cs</Link>
+    </Compile>
+    <Compile Include="AddressBook\AddressBookTest.cs">
+      <Link>AddressBook\AddressBookTest.cs</Link>
+    </Compile>
+    <Compile Include="AddressBook\PersonTest.cs">
+      <Link>AddressBook\PersonTest.cs</Link>
+    </Compile>
+    <Compile Include="AddressBook\SourceTest.cs">
+      <Link>AddressBook\SourceTest.cs</Link>
+    </Compile>
+    <Compile Include="AddressBookUI\AddressFormattingTest.cs">
+      <Link>AddressBookUI\AddressFormattingTest.cs</Link>
+    </Compile>
+    <Compile Include="AudioToolbox\AudioBalanceFadeTest.cs">
+      <Link>AudioToolbox\AudioBalanceFadeTest.cs</Link>
+    </Compile>
+    <Compile Include="AudioToolbox\AudioChannelLayoutTest.cs">
+      <Link>AudioToolbox\AudioChannelLayoutTest.cs</Link>
+    </Compile>
+    <Compile Include="AudioToolbox\AudioComponentTest.cs">
+      <Link>AudioToolbox\AudioComponentTest.cs</Link>
+    </Compile>
+    <Compile Include="AudioToolbox\AudioFileGlobalInfoTest.cs">
+      <Link>AudioToolbox\AudioFileGlobalInfoTest.cs</Link>
+    </Compile>
+    <Compile Include="AudioToolbox\AudioFileStreamTest.cs">
+      <Link>AudioToolbox\AudioFileStreamTest.cs</Link>
+    </Compile>
+    <Compile Include="AudioToolbox\AudioFileTest.cs">
+      <Link>AudioToolbox\AudioFileTest.cs</Link>
+    </Compile>
+    <Compile Include="AudioToolbox\AudioFormatAvailabilityTest.cs">
+      <Link>AudioToolbox\AudioFormatAvailabilityTest.cs</Link>
+    </Compile>
+    <Compile Include="AudioToolbox\AudioFormatTest.cs">
+      <Link>AudioToolbox\AudioFormatTest.cs</Link>
+    </Compile>
+    <Compile Include="AudioToolbox\AudioQueueTest.cs">
+      <Link>AudioToolbox\AudioQueueTest.cs</Link>
+    </Compile>
+    <Compile Include="AudioToolbox\AudioSessionTest.cs">
+      <Link>AudioToolbox\AudioSessionTest.cs</Link>
+    </Compile>
+    <Compile Include="AudioToolbox\AudioStreamBasicDescriptionTest.cs">
+      <Link>AudioToolbox\AudioStreamBasicDescriptionTest.cs</Link>
+    </Compile>
+    <Compile Include="AudioToolbox\FourCCTest.cs">
+      <Link>AudioToolbox\FourCCTest.cs</Link>
+    </Compile>
+    <Compile Include="AudioToolbox\MusicSequenceTest.cs">
+      <Link>AudioToolbox\MusicSequenceTest.cs</Link>
+    </Compile>
+    <Compile Include="AudioToolbox\SoundBankTest.cs">
+      <Link>AudioToolbox\SoundBankTest.cs</Link>
+    </Compile>
+    <Compile Include="AudioToolbox\SystemSoundTest.cs">
+      <Link>AudioToolbox\SystemSoundTest.cs</Link>
+    </Compile>
+    <Compile Include="AudioUnit\AUAudioUnitFactoryTest.cs">
+      <Link>AudioUnit\AUAudioUnitFactoryTest.cs</Link>
+    </Compile>
+    <Compile Include="AudioUnit\AUGraphTest.cs">
+      <Link>AudioUnit\AUGraphTest.cs</Link>
+    </Compile>
+    <Compile Include="AudioUnit\AUParameterNodeTest.cs">
+      <Link>AudioUnit\AUParameterNodeTest.cs</Link>
+    </Compile>
+    <Compile Include="AudioUnit\AudioUnitTest.cs">
+      <Link>AudioUnit\AudioUnitTest.cs</Link>
+    </Compile>
+    <Compile Include="AudioUnit\ExtAudioFileTest.cs">
+      <Link>AudioUnit\ExtAudioFileTest.cs</Link>
+    </Compile>
+    <Compile Include="CloudKit\CKDiscoverUserInfosOperationTest.cs">
+      <Link>CloudKit\CKDiscoverUserInfosOperationTest.cs</Link>
+    </Compile>
+    <Compile Include="CloudKit\CKFetchNotificationChangesOperationTest.cs">
+      <Link>CloudKit\CKFetchNotificationChangesOperationTest.cs</Link>
+    </Compile>
+    <Compile Include="CloudKit\CKFetchRecordChangesOperationTest.cs">
+      <Link>CloudKit\CKFetchRecordChangesOperationTest.cs</Link>
+    </Compile>
+    <Compile Include="CloudKit\CKFetchRecordZonesOperationTest.cs">
+      <Link>CloudKit\CKFetchRecordZonesOperationTest.cs</Link>
+    </Compile>
+    <Compile Include="CloudKit\CKFetchRecordsOperationTest.cs">
+      <Link>CloudKit\CKFetchRecordsOperationTest.cs</Link>
+    </Compile>
+    <Compile Include="CloudKit\CKFetchSubscriptionsOperationTest.cs">
+      <Link>CloudKit\CKFetchSubscriptionsOperationTest.cs</Link>
+    </Compile>
+    <Compile Include="CloudKit\CKMarkNotificationsReadOperationTest.cs">
+      <Link>CloudKit\CKMarkNotificationsReadOperationTest.cs</Link>
+    </Compile>
+    <Compile Include="CloudKit\CKModifyBadgeOperationTest.cs">
+      <Link>CloudKit\CKModifyBadgeOperationTest.cs</Link>
+    </Compile>
+    <Compile Include="CloudKit\CKModifyRecordZonesOperationTest.cs">
+      <Link>CloudKit\CKModifyRecordZonesOperationTest.cs</Link>
+    </Compile>
+    <Compile Include="CloudKit\CKModifyRecordsOperationTest.cs">
+      <Link>CloudKit\CKModifyRecordsOperationTest.cs</Link>
+    </Compile>
+    <Compile Include="CloudKit\CKModifySubscriptionsOperationTest.cs">
+      <Link>CloudKit\CKModifySubscriptionsOperationTest.cs</Link>
+    </Compile>
+    <Compile Include="CloudKit\CKQueryOperationTest.cs">
+      <Link>CloudKit\CKQueryOperationTest.cs</Link>
+    </Compile>
+    <Compile Include="CloudKit\CKUserIdentityLookupInfoTest.cs">
+      <Link>CloudKit\CKUserIdentityLookupInfoTest.cs</Link>
+    </Compile>
+    <Compile Include="Contacts\ContactFetchRequestTest.cs">
+      <Link>Contacts\ContactFetchRequestTest.cs</Link>
+    </Compile>
+    <Compile Include="Contacts\ContactFormatterTest.cs">
+      <Link>Contacts\ContactFormatterTest.cs</Link>
+    </Compile>
+    <Compile Include="Contacts\ContactStoreTest.cs">
+      <Link>Contacts\ContactStoreTest.cs</Link>
+    </Compile>
+    <Compile Include="Contacts\ContactTest.cs">
+      <Link>Contacts\ContactTest.cs</Link>
+    </Compile>
+    <Compile Include="Contacts\ContactVCardSerializationTest.cs">
+      <Link>Contacts\ContactVCardSerializationTest.cs</Link>
+    </Compile>
+    <Compile Include="Contacts\MutableContactTest.cs">
+      <Link>Contacts\MutableContactTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreAnimation\CATextLayerTests.cs">
+      <Link>CoreAnimation\CATextLayerTests.cs</Link>
+    </Compile>
+    <Compile Include="CoreAnimation\EmitterBehaviorTest.cs">
+      <Link>CoreAnimation\EmitterBehaviorTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreAnimation\EmitterCellTest.cs">
+      <Link>CoreAnimation\EmitterCellTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreAnimation\LayerTest.cs">
+      <Link>CoreAnimation\LayerTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreAnimation\MediaTimingFunctionTest.cs">
+      <Link>CoreAnimation\MediaTimingFunctionTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreAnimation\ShapeLayerTest.cs">
+      <Link>CoreAnimation\ShapeLayerTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreAnimation\TransactionTest.cs">
+      <Link>CoreAnimation\TransactionTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreAudioKit\AUViewController.cs">
+      <Link>CoreAudioKit\AUViewController.cs</Link>
+    </Compile>
+    <Compile Include="CoreBluetooth\CentralManagerTest.cs">
+      <Link>CoreBluetooth\CentralManagerTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreBluetooth\ErrorTest.cs">
+      <Link>CoreBluetooth\ErrorTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreBluetooth\PeerTest.cs">
+      <Link>CoreBluetooth\PeerTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreBluetooth\PeripheralScanningOptionsTest.cs">
+      <Link>CoreBluetooth\PeripheralScanningOptionsTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreBluetooth\UuidTest.cs">
+      <Link>CoreBluetooth\UuidTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreData\AttributeDescriptionTest.cs">
+      <Link>CoreData\AttributeDescriptionTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreData\ExpressionDescriptionTest.cs">
+      <Link>CoreData\ExpressionDescriptionTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreData\FetchRequestExpressionTest.cs">
+      <Link>CoreData\FetchRequestExpressionTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreData\FetchRequestTest.cs">
+      <Link>CoreData\FetchRequestTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreData\FetchedResultsControllerTest.cs">
+      <Link>CoreData\FetchedResultsControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreData\ManagedObjectContextTest.cs">
+      <Link>CoreData\ManagedObjectContextTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreData\ManagedObjectModelTest.cs">
+      <Link>CoreData\ManagedObjectModelTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreData\NSQueryGenerationTokenTest.cs">
+      <Link>CoreData\NSQueryGenerationTokenTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreData\PropertyDescriptionTest.cs">
+      <Link>CoreData\PropertyDescriptionTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreFoundation\BundleTest.cs">
+      <Link>CoreFoundation\BundleTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreFoundation\DispatchGroupTest.cs">
+      <Link>CoreFoundation\DispatchGroupTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreFoundation\DispatchTests.cs">
+      <Link>CoreFoundation\DispatchTests.cs</Link>
+    </Compile>
+    <Compile Include="CoreFoundation\NetworkTest.cs">
+      <Link>CoreFoundation\NetworkTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreFoundation\NotificationCenterTest.cs">
+      <Link>CoreFoundation\NotificationCenterTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreFoundation\ProxyTest.cs">
+      <Link>CoreFoundation\ProxyTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreFoundation\StringTest.cs">
+      <Link>CoreFoundation\StringTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreFoundation\UrlTest.cs">
+      <Link>CoreFoundation\UrlTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\AffineTransformTest.cs">
+      <Link>CoreGraphics\AffineTransformTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\BitmapContextTest.cs">
+      <Link>CoreGraphics\BitmapContextTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\CGImageTest.cs">
+      <Link>CoreGraphics\CGImageTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\ColorConversionInfoTest.cs">
+      <Link>CoreGraphics\ColorConversionInfoTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\ColorSpaceTest.cs">
+      <Link>CoreGraphics\ColorSpaceTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\ColorTest.cs">
+      <Link>CoreGraphics\ColorTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\ContextTest.cs">
+      <Link>CoreGraphics\ContextTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\DataConsumerTest.cs">
+      <Link>CoreGraphics\DataConsumerTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\DataProviderTest.cs">
+      <Link>CoreGraphics\DataProviderTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\FontTest.cs">
+      <Link>CoreGraphics\FontTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\FunctionTest.cs">
+      <Link>CoreGraphics\FunctionTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\GeometryTest.cs">
+      <Link>CoreGraphics\GeometryTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\GradientTest.cs">
+      <Link>CoreGraphics\GradientTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\PDFArrayTest.cs">
+      <Link>CoreGraphics\PDFArrayTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\PDFContentStreamTest.cs">
+      <Link>CoreGraphics\PDFContentStreamTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\PDFContextTest.cs">
+      <Link>CoreGraphics\PDFContextTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\PDFDocumentTest.cs">
+      <Link>CoreGraphics\PDFDocumentTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\PDFInfoTest.cs">
+      <Link>CoreGraphics\PDFInfoTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\PDFObjectTest.cs">
+      <Link>CoreGraphics\PDFObjectTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\PDFOperatorTableTest.cs">
+      <Link>CoreGraphics\PDFOperatorTableTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\PDFScannerTest.cs">
+      <Link>CoreGraphics\PDFScannerTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\PathTest.cs">
+      <Link>CoreGraphics\PathTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreGraphics\RectTest.cs">
+      <Link>CoreGraphics\RectTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreImage\CIKernelTests.cs">
+      <Link>CoreImage\CIKernelTests.cs</Link>
+    </Compile>
+    <Compile Include="CoreImage\CoreContextTest.cs">
+      <Link>CoreImage\CoreContextTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreImage\CoreVectorTest.cs">
+      <Link>CoreImage\CoreVectorTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreImage\DetectorTest.cs">
+      <Link>CoreImage\DetectorTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreImage\FilterTest.cs">
+      <Link>CoreImage\FilterTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreImage\ImageInitializationOptionsTest.cs">
+      <Link>CoreImage\ImageInitializationOptionsTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreImage\ImageTest.cs">
+      <Link>CoreImage\ImageTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreLocation\BeaconRegionTest.cs">
+      <Link>CoreLocation\BeaconRegionTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreML\MLMultiArrayTest.cs">
+      <Link>CoreML\MLMultiArrayTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreMedia\BlockBufferTest.cs">
+      <Link>CoreMedia\BlockBufferTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreMedia\CMClockOrTimebaseTest.cs">
+      <Link>CoreMedia\CMClockOrTimebaseTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreMedia\CMClockTest.cs">
+      <Link>CoreMedia\CMClockTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreMedia\CMFormatDescriptionTest.cs">
+      <Link>CoreMedia\CMFormatDescriptionTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreMedia\CMMemoryPoolTest.cs">
+      <Link>CoreMedia\CMMemoryPoolTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreMedia\CMTimeRangeTests.cs">
+      <Link>CoreMedia\CMTimeRangeTests.cs</Link>
+    </Compile>
+    <Compile Include="CoreMedia\CMTimeTests.cs">
+      <Link>CoreMedia\CMTimeTests.cs</Link>
+    </Compile>
+    <Compile Include="CoreMedia\CMTimebaseTest.cs">
+      <Link>CoreMedia\CMTimebaseTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreMedia\EnumTest.cs">
+      <Link>CoreMedia\EnumTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreMedia\SampleBufferTest.cs">
+      <Link>CoreMedia\SampleBufferTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreMidi\MidiEndpointTest.cs">
+      <Link>CoreMidi\MidiEndpointTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreMidi\MidiThruConnectionTests.cs">
+      <Link>CoreMidi\MidiThruConnectionTests.cs</Link>
+    </Compile>
+    <Compile Include="CoreMotion\AccelerometerDataTest.cs">
+      <Link>CoreMotion\AccelerometerDataTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreMotion\LogItemTest.cs">
+      <Link>CoreMotion\LogItemTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreServices\HttpMessageTest.cs">
+      <Link>CoreServices\HttpMessageTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreText\CTFrameTests.cs">
+      <Link>CoreText\CTFrameTests.cs</Link>
+    </Compile>
+    <Compile Include="CoreText\CTLineTest.cs">
+      <Link>CoreText\CTLineTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreText\CTParagraphStyleTests.cs">
+      <Link>CoreText\CTParagraphStyleTests.cs</Link>
+    </Compile>
+    <Compile Include="CoreText\FontDescriptorTest.cs">
+      <Link>CoreText\FontDescriptorTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreText\FontManagerTest.cs">
+      <Link>CoreText\FontManagerTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreText\FontTest.cs">
+      <Link>CoreText\FontTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreText\StringAttributes.cs">
+      <Link>CoreText\StringAttributes.cs</Link>
+    </Compile>
+    <Compile Include="CoreVideo\CVImageBufferTests.cs">
+      <Link>CoreVideo\CVImageBufferTests.cs</Link>
+    </Compile>
+    <Compile Include="CoreVideo\CVMetalTextureCacheTests.cs">
+      <Link>CoreVideo\CVMetalTextureCacheTests.cs</Link>
+    </Compile>
+    <Compile Include="CoreVideo\CoreVideoEnumsTest.cs">
+      <Link>CoreVideo\CoreVideoEnumsTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreVideo\PixelBufferAttributesTest.cs">
+      <Link>CoreVideo\PixelBufferAttributesTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreVideo\PixelBufferPoolTest.cs">
+      <Link>CoreVideo\PixelBufferPoolTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreVideo\PixelBufferTest.cs">
+      <Link>CoreVideo\PixelBufferTest.cs</Link>
+    </Compile>
+    <Compile Include="CoreVideo\PixelFormatDescriptionTest.cs">
+      <Link>CoreVideo\PixelFormatDescriptionTest.cs</Link>
+    </Compile>
+    <Compile Include="EventKit\AlarmTest.cs">
+      <Link>EventKit\AlarmTest.cs</Link>
+    </Compile>
+    <Compile Include="EventKit\CalendarTest.cs">
+      <Link>EventKit\CalendarTest.cs</Link>
+    </Compile>
+    <Compile Include="EventKit\EKUIBundleTest.cs">
+      <Link>EventKit\EKUIBundleTest.cs</Link>
+    </Compile>
+    <Compile Include="EventKit\EventStoreTest.cs">
+      <Link>EventKit\EventStoreTest.cs</Link>
+    </Compile>
+    <Compile Include="EventKit\RecurrenceRule.cs">
+      <Link>EventKit\RecurrenceRule.cs</Link>
+    </Compile>
+    <Compile Include="EventKit\ReminderTest.cs">
+      <Link>EventKit\ReminderTest.cs</Link>
+    </Compile>
+    <Compile Include="EventKit\StructuredLocationTest.cs">
+      <Link>EventKit\StructuredLocationTest.cs</Link>
+    </Compile>
+    <Compile Include="ExternalAccessory\AccessoryManagerTest.cs">
+      <Link>ExternalAccessory\AccessoryManagerTest.cs</Link>
+    </Compile>
+    <Compile Include="FileProvider\NSFileProviderPageTest.cs">
+      <Link>FileProvider\NSFileProviderPageTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\ArrayTest.cs">
+      <Link>Foundation\ArrayTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\AttributedStringTest.cs">
+      <Link>Foundation\AttributedStringTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\BlockOperationTest.cs">
+      <Link>Foundation\BlockOperationTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\BundleTest.cs">
+      <Link>Foundation\BundleTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\CachedUrlResponseTest.cs">
+      <Link>Foundation\CachedUrlResponseTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\CalendarTest.cs">
+      <Link>Foundation\CalendarTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\CoderTest.cs">
+      <Link>Foundation\CoderTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\CookieTest.cs">
+      <Link>Foundation\CookieTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\DateFormatterTest.cs">
+      <Link>Foundation\DateFormatterTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\DateTest.cs">
+      <Link>Foundation\DateTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\DecimalNumberTest.cs">
+      <Link>Foundation\DecimalNumberTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\DecimalTest.cs">
+      <Link>Foundation\DecimalTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\DictionaryContainerTest.cs">
+      <Link>Foundation\DictionaryContainerTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\DimensionTest.cs">
+      <Link>Foundation\DimensionTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\EncodingDetectionOptionsTest.cs">
+      <Link>Foundation\EncodingDetectionOptionsTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\FileCoordinatorTest.cs">
+      <Link>Foundation\FileCoordinatorTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\FileHandleTest.cs">
+      <Link>Foundation\FileHandleTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\FileManagerTest.cs">
+      <Link>Foundation\FileManagerTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\FormatterTests.cs">
+      <Link>Foundation\FormatterTests.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\IndexPathTest.cs">
+      <Link>Foundation\IndexPathTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\KeyedUnarchiverTest.cs">
+      <Link>Foundation\KeyedUnarchiverTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\LocaleTest.cs">
+      <Link>Foundation\LocaleTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\MutableAttributedStringTest.cs">
+      <Link>Foundation\MutableAttributedStringTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\MutableDataTest.cs">
+      <Link>Foundation\MutableDataTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\MutableStringTest.cs">
+      <Link>Foundation\MutableStringTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSArray1Test.cs">
+      <Link>Foundation\NSArray1Test.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSCharacterSetTest.cs">
+      <Link>Foundation\NSCharacterSetTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSDataTest.cs">
+      <Link>Foundation\NSDataTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSDictionary2Test.cs">
+      <Link>Foundation\NSDictionary2Test.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSDictionaryTest.cs">
+      <Link>Foundation\NSDictionaryTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSExpressionTest.cs">
+      <Link>Foundation\NSExpressionTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSInputStreamTest.cs">
+      <Link>Foundation\NSInputStreamTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSLayoutConstraintTest.cs">
+      <Link>Foundation\NSLayoutConstraintTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSLocaleTest.cs">
+      <Link>Foundation\NSLocaleTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSMutableArray1Test.cs">
+      <Link>Foundation\NSMutableArray1Test.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSMutableDictionary2Test.cs">
+      <Link>Foundation\NSMutableDictionary2Test.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSMutableDictionaryTest.cs">
+      <Link>Foundation\NSMutableDictionaryTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSMutableOrderedSet1Test.cs">
+      <Link>Foundation\NSMutableOrderedSet1Test.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSMutableOrderedSetTest.cs">
+      <Link>Foundation\NSMutableOrderedSetTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSMutableSet1Test.cs">
+      <Link>Foundation\NSMutableSet1Test.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSMutableSetTest.cs">
+      <Link>Foundation\NSMutableSetTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSOrderedSet1Test.cs">
+      <Link>Foundation\NSOrderedSet1Test.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSOrderedSetTest.cs">
+      <Link>Foundation\NSOrderedSetTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSSet1Test.cs">
+      <Link>Foundation\NSSet1Test.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSSetTest.cs">
+      <Link>Foundation\NSSetTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSStreamTest.cs">
+      <Link>Foundation\NSStreamTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSStringTest.cs">
+      <Link>Foundation\NSStringTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NSTimeZoneTest.cs">
+      <Link>Foundation\NSTimeZoneTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NetServiceTest.cs">
+      <Link>Foundation\NetServiceTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NotificationCenter.cs">
+      <Link>Foundation\NotificationCenter.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NotificationQueueTest.cs">
+      <Link>Foundation\NotificationQueueTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\NumberTest.cs">
+      <Link>Foundation\NumberTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\ObjectTest.cs">
+      <Link>Foundation\ObjectTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\OperationQueueTest.cs">
+      <Link>Foundation\OperationQueueTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\OutputStreamTest.cs">
+      <Link>Foundation\OutputStreamTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\ProtocolAttributeTest.cs">
+      <Link>Foundation\ProtocolAttributeTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\StringTest.cs">
+      <Link>Foundation\StringTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\ThreadTest.cs">
+      <Link>Foundation\ThreadTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\TimerTest.cs">
+      <Link>Foundation\TimerTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\UbiquitousKeyValueStoreTest.cs">
+      <Link>Foundation\UbiquitousKeyValueStoreTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\UrlConnectionTest.cs">
+      <Link>Foundation\UrlConnectionTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\UrlCredentialTest.cs">
+      <Link>Foundation\UrlCredentialTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\UrlProtectionSpaceTest.cs">
+      <Link>Foundation\UrlProtectionSpaceTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\UrlProtocolTest.cs">
+      <Link>Foundation\UrlProtocolTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\UrlRequestTest.cs">
+      <Link>Foundation\UrlRequestTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\UrlSessionConfigurationTest.cs">
+      <Link>Foundation\UrlSessionConfigurationTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\UrlSessionTaskMetricsTest.cs">
+      <Link>Foundation\UrlSessionTaskMetricsTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\UrlSessionTaskTest.cs">
+      <Link>Foundation\UrlSessionTaskTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\UrlSessionTaskTransactionMetricsTest.cs">
+      <Link>Foundation\UrlSessionTaskTransactionMetricsTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\UrlSessionTest.cs">
+      <Link>Foundation\UrlSessionTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\UrlTest.cs">
+      <Link>Foundation\UrlTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\UserDefaultsTest.cs">
+      <Link>Foundation\UserDefaultsTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\UuidTest.cs">
+      <Link>Foundation\UuidTest.cs</Link>
+    </Compile>
+    <Compile Include="Foundation\ZoneTest.cs">
+      <Link>Foundation\ZoneTest.cs</Link>
+    </Compile>
+    <Compile Include="GLKit\BaseEffectTest.cs">
+      <Link>GLKit\BaseEffectTest.cs</Link>
+    </Compile>
+    <Compile Include="GLKit\EffectPropertyFog.cs">
+      <Link>GLKit\EffectPropertyFog.cs</Link>
+    </Compile>
+    <Compile Include="GLKit\EffectPropertyLightTest.cs">
+      <Link>GLKit\EffectPropertyLightTest.cs</Link>
+    </Compile>
+    <Compile Include="GLKit\EffectPropertyMaterialTest.cs">
+      <Link>GLKit\EffectPropertyMaterialTest.cs</Link>
+    </Compile>
+    <Compile Include="GLKit\EffectPropertyTransformTest.cs">
+      <Link>GLKit\EffectPropertyTransformTest.cs</Link>
+    </Compile>
+    <Compile Include="GLKit\KViewTest.cs">
+      <Link>GLKit\KViewTest.cs</Link>
+    </Compile>
+    <Compile Include="GameController\ExtendedGamepadSnapshotTest.cs">
+      <Link>GameController\ExtendedGamepadSnapshotTest.cs</Link>
+    </Compile>
+    <Compile Include="GameController\GamepadSnapshotTest.cs">
+      <Link>GameController\GamepadSnapshotTest.cs</Link>
+    </Compile>
+    <Compile Include="GameKit\LeaderboardTest.cs">
+      <Link>GameKit\LeaderboardTest.cs</Link>
+    </Compile>
+    <Compile Include="GameKit\LeaderboardViewControllerTest.cs">
+      <Link>GameKit\LeaderboardViewControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="GameKit\NotificationBannerTest.cs">
+      <Link>GameKit\NotificationBannerTest.cs</Link>
+    </Compile>
+    <Compile Include="GameKit\ScoreTest.cs">
+      <Link>GameKit\ScoreTest.cs</Link>
+    </Compile>
+    <Compile Include="GameKit\SessionTest.cs">
+      <Link>GameKit\SessionTest.cs</Link>
+    </Compile>
+    <Compile Include="GameplayKit\GKAgent3DTest.cs">
+      <Link>GameplayKit\GKAgent3DTest.cs</Link>
+    </Compile>
+    <Compile Include="GameplayKit\GKComponentSystemTests.cs">
+      <Link>GameplayKit\GKComponentSystemTests.cs</Link>
+    </Compile>
+    <Compile Include="GameplayKit\GKEntityTests.cs">
+      <Link>GameplayKit\GKEntityTests.cs</Link>
+    </Compile>
+    <Compile Include="GameplayKit\GKGridGraphTests.cs">
+      <Link>GameplayKit\GKGridGraphTests.cs</Link>
+    </Compile>
+    <Compile Include="GameplayKit\GKMeshGraphTests.cs">
+      <Link>GameplayKit\GKMeshGraphTests.cs</Link>
+    </Compile>
+    <Compile Include="GameplayKit\GKNoiseMapTests.cs">
+      <Link>GameplayKit\GKNoiseMapTests.cs</Link>
+    </Compile>
+    <Compile Include="GameplayKit\GKNoiseTests.cs">
+      <Link>GameplayKit\GKNoiseTests.cs</Link>
+    </Compile>
+    <Compile Include="GameplayKit\GKOctreeTests.cs">
+      <Link>GameplayKit\GKOctreeTests.cs</Link>
+    </Compile>
+    <Compile Include="GameplayKit\GKPathTests.cs">
+      <Link>GameplayKit\GKPathTests.cs</Link>
+    </Compile>
+    <Compile Include="GameplayKit\GKPolygonObstacleTests.cs">
+      <Link>GameplayKit\GKPolygonObstacleTests.cs</Link>
+    </Compile>
+    <Compile Include="GameplayKit\GKQuadTreeTests.cs">
+      <Link>GameplayKit\GKQuadTreeTests.cs</Link>
+    </Compile>
+    <Compile Include="GameplayKit\GKStateMachineTests.cs">
+      <Link>GameplayKit\GKStateMachineTests.cs</Link>
+    </Compile>
+    <Compile Include="GameplayKit\GKStateTests.cs">
+      <Link>GameplayKit\GKStateTests.cs</Link>
+    </Compile>
+    <Compile Include="HealthKit\AnchoredObjectQueryTest.cs">
+      <Link>HealthKit\AnchoredObjectQueryTest.cs</Link>
+    </Compile>
+    <Compile Include="HealthKit\CategoryTypeIdentifierTest.cs">
+      <Link>HealthKit\CategoryTypeIdentifierTest.cs</Link>
+    </Compile>
+    <Compile Include="HealthKit\CdaDocumentSampleTest.cs">
+      <Link>HealthKit\CdaDocumentSampleTest.cs</Link>
+    </Compile>
+    <Compile Include="HealthKit\ErrorTest.cs">
+      <Link>HealthKit\ErrorTest.cs</Link>
+    </Compile>
+    <Compile Include="HealthKit\ObjectTypeTest.cs">
+      <Link>HealthKit\ObjectTypeTest.cs</Link>
+    </Compile>
+    <Compile Include="HealthKit\QuantityTypeIdentifierTest.cs">
+      <Link>HealthKit\QuantityTypeIdentifierTest.cs</Link>
+    </Compile>
+    <Compile Include="HomeKit\HMMutableSignificantTimeEventTest.cs">
+      <Link>HomeKit\HMMutableSignificantTimeEventTest.cs</Link>
+    </Compile>
+    <Compile Include="HomeKit\HMSignificantTimeEventTest.cs">
+      <Link>HomeKit\HMSignificantTimeEventTest.cs</Link>
+    </Compile>
+    <Compile Include="HttpClient\HttpClientTest.cs">
+      <Link>HttpClient\HttpClientTest.cs</Link>
+    </Compile>
+    <Compile Include="ImageIO\CGImageSourceTest.cs">
+      <Link>ImageIO\CGImageSourceTest.cs</Link>
+    </Compile>
+    <Compile Include="ImageIO\ImageDestinationTest.cs">
+      <Link>ImageIO\ImageDestinationTest.cs</Link>
+    </Compile>
+    <Compile Include="ImageIO\ImageMetadataTagTest.cs">
+      <Link>ImageIO\ImageMetadataTagTest.cs</Link>
+    </Compile>
+    <Compile Include="ImageIO\ImageMetadataTest.cs">
+      <Link>ImageIO\ImageMetadataTest.cs</Link>
+    </Compile>
+    <Compile Include="ImageIO\ImagePropertiesTest.cs">
+      <Link>ImageIO\ImagePropertiesTest.cs</Link>
+    </Compile>
+    <Compile Include="ImageIO\MutableImageMetadataTest.cs">
+      <Link>ImageIO\MutableImageMetadataTest.cs</Link>
+    </Compile>
+    <Compile Include="Intents\INIntentResolutionResultTests.cs">
+      <Link>Intents\INIntentResolutionResultTests.cs</Link>
+    </Compile>
+    <Compile Include="JavascriptCore\ContextTest.cs">
+      <Link>JavascriptCore\ContextTest.cs</Link>
+    </Compile>
+    <Compile Include="JavascriptCore\JSExportTest.cs">
+      <Link>JavascriptCore\JSExportTest.cs</Link>
+    </Compile>
+    <Compile Include="JavascriptCore\ValueTest.cs">
+      <Link>JavascriptCore\ValueTest.cs</Link>
+    </Compile>
+    <Compile Include="MapKit\AnnotationViewTest.cs">
+      <Link>MapKit\AnnotationViewTest.cs</Link>
+    </Compile>
+    <Compile Include="MapKit\CircleViewTest.cs">
+      <Link>MapKit\CircleViewTest.cs</Link>
+    </Compile>
+    <Compile Include="MapKit\GeometryTest.cs">
+      <Link>MapKit\GeometryTest.cs</Link>
+    </Compile>
+    <Compile Include="MapKit\LocalSearchRequestTest.cs">
+      <Link>MapKit\LocalSearchRequestTest.cs</Link>
+    </Compile>
+    <Compile Include="MapKit\LocalSearchTest.cs">
+      <Link>MapKit\LocalSearchTest.cs</Link>
+    </Compile>
+    <Compile Include="MapKit\MapRectTest.cs">
+      <Link>MapKit\MapRectTest.cs</Link>
+    </Compile>
+    <Compile Include="MapKit\MapViewTest.cs">
+      <Link>MapKit\MapViewTest.cs</Link>
+    </Compile>
+    <Compile Include="MapKit\OverlayPathRendererTest.cs">
+      <Link>MapKit\OverlayPathRendererTest.cs</Link>
+    </Compile>
+    <Compile Include="MapKit\OverlayPathViewTest.cs">
+      <Link>MapKit\OverlayPathViewTest.cs</Link>
+    </Compile>
+    <Compile Include="MapKit\OverlayViewTest.cs">
+      <Link>MapKit\OverlayViewTest.cs</Link>
+    </Compile>
+    <Compile Include="MapKit\PinAnnotationViewTest.cs">
+      <Link>MapKit\PinAnnotationViewTest.cs</Link>
+    </Compile>
+    <Compile Include="MapKit\PolygonTest.cs">
+      <Link>MapKit\PolygonTest.cs</Link>
+    </Compile>
+    <Compile Include="MapKit\PolygonViewTest.cs">
+      <Link>MapKit\PolygonViewTest.cs</Link>
+    </Compile>
+    <Compile Include="MapKit\PolylineTest.cs">
+      <Link>MapKit\PolylineTest.cs</Link>
+    </Compile>
+    <Compile Include="MapKit\PolylineViewTest.cs">
+      <Link>MapKit\PolylineViewTest.cs</Link>
+    </Compile>
+    <Compile Include="MapKit\ShapeTest.cs">
+      <Link>MapKit\ShapeTest.cs</Link>
+    </Compile>
+    <Compile Include="MapKit\UserTrackingBarButtonItemTest.cs">
+      <Link>MapKit\UserTrackingBarButtonItemTest.cs</Link>
+    </Compile>
+    <Compile Include="MediaAccessibility\AudibleMediaTest.cs">
+      <Link>MediaAccessibility\AudibleMediaTest.cs</Link>
+    </Compile>
+    <Compile Include="MediaAccessibility\CaptionAppearanceTest.cs">
+      <Link>MediaAccessibility\CaptionAppearanceTest.cs</Link>
+    </Compile>
+    <Compile Include="MediaPlayer\MediaItemArtworkTest.cs">
+      <Link>MediaPlayer\MediaItemArtworkTest.cs</Link>
+    </Compile>
+    <Compile Include="MediaPlayer\MediaItemTest.cs">
+      <Link>MediaPlayer\MediaItemTest.cs</Link>
+    </Compile>
+    <Compile Include="MediaPlayer\MoviePlayerControllerTest.cs">
+      <Link>MediaPlayer\MoviePlayerControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="MediaPlayer\NowPlayingInfoCenterTest.cs">
+      <Link>MediaPlayer\NowPlayingInfoCenterTest.cs</Link>
+    </Compile>
+    <Compile Include="MediaPlayer\PlayableContentManagerTest.cs">
+      <Link>MediaPlayer\PlayableContentManagerTest.cs</Link>
+    </Compile>
+    <Compile Include="MediaPlayer\RemoteCommandCenterTest.cs">
+      <Link>MediaPlayer\RemoteCommandCenterTest.cs</Link>
+    </Compile>
+    <Compile Include="MediaPlayer\SkipIntervalCommandTest.cs">
+      <Link>MediaPlayer\SkipIntervalCommandTest.cs</Link>
+    </Compile>
+    <Compile Include="MediaPlayer\VolumeViewTest.cs">
+      <Link>MediaPlayer\VolumeViewTest.cs</Link>
+    </Compile>
+    <Compile Include="MediaToolbox\AudioProcessingTapTest.cs">
+      <Link>MediaToolbox\AudioProcessingTapTest.cs</Link>
+    </Compile>
+    <Compile Include="MediaToolbox\FormatNamesTest.cs">
+      <Link>MediaToolbox\FormatNamesTest.cs</Link>
+    </Compile>
+    <Compile Include="MessageUI\MailComposeViewControllerTest.cs">
+      <Link>MessageUI\MailComposeViewControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="MessageUI\MessageComposeViewControllerTest.cs">
+      <Link>MessageUI\MessageComposeViewControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="Messages\MSMessageTest.cs">
+      <Link>Messages\MSMessageTest.cs</Link>
+    </Compile>
+    <Compile Include="Metal\ClearValueTest.cs">
+      <Link>Metal\ClearValueTest.cs</Link>
+    </Compile>
+    <Compile Include="Metal\DeviceTest.cs">
+      <Link>Metal\DeviceTest.cs</Link>
+    </Compile>
+    <Compile Include="Metal\HeapDescriptorTest.cs">
+      <Link>Metal\HeapDescriptorTest.cs</Link>
+    </Compile>
+    <Compile Include="Metal\MTLArgumentDescriptorTest.cs">
+      <Link>Metal\MTLArgumentDescriptorTest.cs</Link>
+    </Compile>
+    <Compile Include="Metal\MTLAttributeDescriptorTest.cs">
+      <Link>Metal\MTLAttributeDescriptorTest.cs</Link>
+    </Compile>
+    <Compile Include="Metal\MTLAttributeTest.cs">
+      <Link>Metal\MTLAttributeTest.cs</Link>
+    </Compile>
+    <Compile Include="Metal\MTLBufferLayoutDescriptorTest.cs">
+      <Link>Metal\MTLBufferLayoutDescriptorTest.cs</Link>
+    </Compile>
+    <Compile Include="Metal\MTLDeviceTests.cs">
+      <Link>Metal\MTLDeviceTests.cs</Link>
+    </Compile>
+    <Compile Include="Metal\MTLFunctionConstantTest.cs">
+      <Link>Metal\MTLFunctionConstantTest.cs</Link>
+    </Compile>
+    <Compile Include="Metal\MTLPipelineBufferDescriptorTests.cs">
+      <Link>Metal\MTLPipelineBufferDescriptorTests.cs</Link>
+    </Compile>
+    <Compile Include="Metal\MTLPointerTypeTests.cs">
+      <Link>Metal\MTLPointerTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="Metal\MTLStageInputOutputDescriptorTest.cs">
+      <Link>Metal\MTLStageInputOutputDescriptorTest.cs</Link>
+    </Compile>
+    <Compile Include="Metal\MTLTextureReferenceType.cs">
+      <Link>Metal\MTLTextureReferenceType.cs</Link>
+    </Compile>
+    <Compile Include="Metal\MTLTileRenderPipelineColorAttachmentDescriptorTests.cs">
+      <Link>Metal\MTLTileRenderPipelineColorAttachmentDescriptorTests.cs</Link>
+    </Compile>
+    <Compile Include="Metal\MTLTileRenderPipelineDescriptor.cs">
+      <Link>Metal\MTLTileRenderPipelineDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="MetalPerformanceShaders\KernelTest.cs">
+      <Link>MetalPerformanceShaders\KernelTest.cs</Link>
+    </Compile>
+    <Compile Include="MetalPerformanceShaders\MPSImageHistogramEqualizationTest.cs">
+      <Link>MetalPerformanceShaders\MPSImageHistogramEqualizationTest.cs</Link>
+    </Compile>
+    <Compile Include="MetalPerformanceShaders\MPSImageHistogramSpecificationTest.cs">
+      <Link>MetalPerformanceShaders\MPSImageHistogramSpecificationTest.cs</Link>
+    </Compile>
+    <Compile Include="MetalPerformanceShaders\MPSImageHistogramTest.cs">
+      <Link>MetalPerformanceShaders\MPSImageHistogramTest.cs</Link>
+    </Compile>
+    <Compile Include="MobileCoreServices\UTTypeTest.cs">
+      <Link>MobileCoreServices\UTTypeTest.cs</Link>
+    </Compile>
+    <Compile Include="ModelIO\MDLAnimatedValueTypesTests.cs">
+      <Link>ModelIO\MDLAnimatedValueTypesTests.cs</Link>
+    </Compile>
+    <Compile Include="ModelIO\MDLAssetTest.cs">
+      <Link>ModelIO\MDLAssetTest.cs</Link>
+    </Compile>
+    <Compile Include="ModelIO\MDLCameraTest.cs">
+      <Link>ModelIO\MDLCameraTest.cs</Link>
+    </Compile>
+    <Compile Include="ModelIO\MDLLight.cs">
+      <Link>ModelIO\MDLLight.cs</Link>
+    </Compile>
+    <Compile Include="ModelIO\MDLMaterialProperty.cs">
+      <Link>ModelIO\MDLMaterialProperty.cs</Link>
+    </Compile>
+    <Compile Include="ModelIO\MDLMesh.cs">
+      <Link>ModelIO\MDLMesh.cs</Link>
+    </Compile>
+    <Compile Include="ModelIO\MDLNoiseTexture.cs">
+      <Link>ModelIO\MDLNoiseTexture.cs</Link>
+    </Compile>
+    <Compile Include="ModelIO\MDLObject.cs">
+      <Link>ModelIO\MDLObject.cs</Link>
+    </Compile>
+    <Compile Include="ModelIO\MDLStereoscopicCameraTest.cs">
+      <Link>ModelIO\MDLStereoscopicCameraTest.cs</Link>
+    </Compile>
+    <Compile Include="ModelIO\MDLTexture.cs">
+      <Link>ModelIO\MDLTexture.cs</Link>
+    </Compile>
+    <Compile Include="ModelIO\MDLTransform.cs">
+      <Link>ModelIO\MDLTransform.cs</Link>
+    </Compile>
+    <Compile Include="ModelIO\MDLTransformComponentTest.cs">
+      <Link>ModelIO\MDLTransformComponentTest.cs</Link>
+    </Compile>
+    <Compile Include="ModelIO\MDLVertexAttribute.cs">
+      <Link>ModelIO\MDLVertexAttribute.cs</Link>
+    </Compile>
+    <Compile Include="ModelIO\MDLVoxelArrayTest.cs">
+      <Link>ModelIO\MDLVoxelArrayTest.cs</Link>
+    </Compile>
+    <Compile Include="MultipeerConnectivity\PeerIDTest.cs">
+      <Link>MultipeerConnectivity\PeerIDTest.cs</Link>
+    </Compile>
+    <Compile Include="MultipeerConnectivity\SessionTest.cs">
+      <Link>MultipeerConnectivity\SessionTest.cs</Link>
+    </Compile>
+    <Compile Include="NetworkExtension\OnDemandTest.cs">
+      <Link>NetworkExtension\OnDemandTest.cs</Link>
+    </Compile>
+    <Compile Include="NetworkExtension\VpnManagerTest.cs">
+      <Link>NetworkExtension\VpnManagerTest.cs</Link>
+    </Compile>
+    <Compile Include="ObjCRuntime\BlocksTest.cs">
+      <Link>ObjCRuntime\BlocksTest.cs</Link>
+    </Compile>
+    <Compile Include="ObjCRuntime\CategoryTest.cs">
+      <Link>ObjCRuntime\CategoryTest.cs</Link>
+    </Compile>
+    <Compile Include="ObjCRuntime\ClassTest.classlist.cs">
+      <Link>ObjCRuntime\ClassTest.classlist.cs</Link>
+    </Compile>
+    <Compile Include="ObjCRuntime\ClassTest.cs">
+      <Link>ObjCRuntime\ClassTest.cs</Link>
+    </Compile>
+    <Compile Include="ObjCRuntime\DlfcnTest.cs">
+      <Link>ObjCRuntime\DlfcnTest.cs</Link>
+    </Compile>
+    <Compile Include="ObjCRuntime\ExceptionsTest.cs">
+      <Link>ObjCRuntime\ExceptionsTest.cs</Link>
+    </Compile>
+    <Compile Include="ObjCRuntime\Messaging.cs">
+      <Link>ObjCRuntime\Messaging.cs</Link>
+    </Compile>
+    <Compile Include="ObjCRuntime\RegistrarTest.cs">
+      <Link>ObjCRuntime\RegistrarTest.cs</Link>
+    </Compile>
+    <Compile Include="ObjCRuntime\RuntimeTest.cs">
+      <Link>ObjCRuntime\RuntimeTest.cs</Link>
+    </Compile>
+    <Compile Include="ObjCRuntime\TrampolineTest.cs">
+      <Link>ObjCRuntime\TrampolineTest.cs</Link>
+    </Compile>
+    <Compile Include="OpenGLES\EAGLContext.cs">
+      <Link>OpenGLES\EAGLContext.cs</Link>
+    </Compile>
+    <Compile Include="PassKit\AddPassesViewControllerTest.cs">
+      <Link>PassKit\AddPassesViewControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="PassKit\LabeledValueTest.cs">
+      <Link>PassKit\LabeledValueTest.cs</Link>
+    </Compile>
+    <Compile Include="PassKit\ObjectTest.cs">
+      <Link>PassKit\ObjectTest.cs</Link>
+    </Compile>
+    <Compile Include="PassKit\PKPaymentRequestTest.cs">
+      <Link>PassKit\PKPaymentRequestTest.cs</Link>
+    </Compile>
+    <Compile Include="PassKit\PassLibraryTest.cs">
+      <Link>PassKit\PassLibraryTest.cs</Link>
+    </Compile>
+    <Compile Include="PassKit\PassTest.cs">
+      <Link>PassKit\PassTest.cs</Link>
+    </Compile>
+    <Compile Include="PdfKit\PdfAnnotationTest.cs">
+      <Link>PdfKit\PdfAnnotationTest.cs</Link>
+    </Compile>
+    <Compile Include="Photos\FetchResultTest.cs">
+      <Link>Photos\FetchResultTest.cs</Link>
+    </Compile>
+    <Compile Include="Photos\PhotoLibraryTest.cs">
+      <Link>Photos\PhotoLibraryTest.cs</Link>
+    </Compile>
+    <Compile Include="PushKit\PushRegistryTest.cs">
+      <Link>PushKit\PushRegistryTest.cs</Link>
+    </Compile>
+    <Compile Include="QuickLook\PreviewControllerTest.cs">
+      <Link>QuickLook\PreviewControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="ReplayKit\BroadcastHandlerTest.cs">
+      <Link>ReplayKit\BroadcastHandlerTest.cs</Link>
+    </Compile>
+    <Compile Include="SafariServices\ReadingListTest.cs">
+      <Link>SafariServices\ReadingListTest.cs</Link>
+    </Compile>
+    <Compile Include="SceneKit\GeometrySourceTest.cs">
+      <Link>SceneKit\GeometrySourceTest.cs</Link>
+    </Compile>
+    <Compile Include="SceneKit\NodeTest.cs">
+      <Link>SceneKit\NodeTest.cs</Link>
+    </Compile>
+    <Compile Include="SceneKit\StructTest.cs">
+      <Link>SceneKit\StructTest.cs</Link>
+    </Compile>
+    <Compile Include="Security\CertificateTest.cs">
+      <Link>Security\CertificateTest.cs</Link>
+    </Compile>
+    <Compile Include="Security\IdentityTest.cs">
+      <Link>Security\IdentityTest.cs</Link>
+    </Compile>
+    <Compile Include="Security\ImportExportTest.cs">
+      <Link>Security\ImportExportTest.cs</Link>
+    </Compile>
+    <Compile Include="Security\KeyChainTest.cs">
+      <Link>Security\KeyChainTest.cs</Link>
+    </Compile>
+    <Compile Include="Security\KeyTest.cs">
+      <Link>Security\KeyTest.cs</Link>
+    </Compile>
+    <Compile Include="Security\PolicyTest.cs">
+      <Link>Security\PolicyTest.cs</Link>
+    </Compile>
+    <Compile Include="Security\RecordTest.cs">
+      <Link>Security\RecordTest.cs</Link>
+    </Compile>
+    <Compile Include="Security\SecSharedCredentialTest.cs">
+      <Link>Security\SecSharedCredentialTest.cs</Link>
+    </Compile>
+    <Compile Include="Security\SecureTransportTest.cs">
+      <Link>Security\SecureTransportTest.cs</Link>
+    </Compile>
+    <Compile Include="Security\TrustTest.cs">
+      <Link>Security\TrustTest.cs</Link>
+    </Compile>
+    <Compile Include="Simd\MatrixFloat2x2Test.cs">
+      <Link>Simd\MatrixFloat2x2Test.cs</Link>
+    </Compile>
+    <Compile Include="Simd\MatrixFloat3x3Test.cs">
+      <Link>Simd\MatrixFloat3x3Test.cs</Link>
+    </Compile>
+    <Compile Include="Simd\MatrixFloat4x3Test.cs">
+      <Link>Simd\MatrixFloat4x3Test.cs</Link>
+    </Compile>
+    <Compile Include="Simd\MatrixFloat4x4Test.cs">
+      <Link>Simd\MatrixFloat4x4Test.cs</Link>
+    </Compile>
+    <Compile Include="Simd\NMatrix4dTest.cs">
+      <Link>Simd\NMatrix4dTest.cs</Link>
+    </Compile>
+    <Compile Include="Simd\NVector3dTest.cs">
+      <Link>Simd\NVector3dTest.cs</Link>
+    </Compile>
+    <Compile Include="Simd\VectorFloat3Test.cs">
+      <Link>Simd\VectorFloat3Test.cs</Link>
+    </Compile>
+    <Compile Include="SpriteKit\FieldNodeTest.cs">
+      <Link>SpriteKit\FieldNodeTest.cs</Link>
+    </Compile>
+    <Compile Include="SpriteKit\KeyframeSequenceTest.cs">
+      <Link>SpriteKit\KeyframeSequenceTest.cs</Link>
+    </Compile>
+    <Compile Include="SpriteKit\PhysicsBodyTest.cs">
+      <Link>SpriteKit\PhysicsBodyTest.cs</Link>
+    </Compile>
+    <Compile Include="SpriteKit\PhysicsJointFixedTest.cs">
+      <Link>SpriteKit\PhysicsJointFixedTest.cs</Link>
+    </Compile>
+    <Compile Include="SpriteKit\PhysicsJointLimitTest.cs">
+      <Link>SpriteKit\PhysicsJointLimitTest.cs</Link>
+    </Compile>
+    <Compile Include="SpriteKit\PhysicsWorldTest.cs">
+      <Link>SpriteKit\PhysicsWorldTest.cs</Link>
+    </Compile>
+    <Compile Include="SpriteKit\SK3DNodeTest.cs">
+      <Link>SpriteKit\SK3DNodeTest.cs</Link>
+    </Compile>
+    <Compile Include="SpriteKit\SKShapeNodeTest.cs">
+      <Link>SpriteKit\SKShapeNodeTest.cs</Link>
+    </Compile>
+    <Compile Include="SpriteKit\SKTransformNodeTest.cs">
+      <Link>SpriteKit\SKTransformNodeTest.cs</Link>
+    </Compile>
+    <Compile Include="SpriteKit\SpriteNodeTest.cs">
+      <Link>SpriteKit\SpriteNodeTest.cs</Link>
+    </Compile>
+    <Compile Include="SpriteKit\TextureAtlasTest.cs">
+      <Link>SpriteKit\TextureAtlasTest.cs</Link>
+    </Compile>
+    <Compile Include="SpriteKit\TextureTest.cs">
+      <Link>SpriteKit\TextureTest.cs</Link>
+    </Compile>
+    <Compile Include="SpriteKit\UniformTest.cs">
+      <Link>SpriteKit\UniformTest.cs</Link>
+    </Compile>
+    <Compile Include="SpriteKit\WarpGeometryGridTest.cs">
+      <Link>SpriteKit\WarpGeometryGridTest.cs</Link>
+    </Compile>
+    <Compile Include="StoreKit\ReceiptRefreshRequestTest.cs">
+      <Link>StoreKit\ReceiptRefreshRequestTest.cs</Link>
+    </Compile>
+    <Compile Include="System.Net.Http\MessageHandlers.cs">
+      <Link>System.Net.Http\MessageHandlers.cs</Link>
+    </Compile>
+    <Compile Include="SystemConfiguration\CaptiveNetworkTest.cs">
+      <Link>SystemConfiguration\CaptiveNetworkTest.cs</Link>
+    </Compile>
+    <Compile Include="SystemConfiguration\NetworkReachabilityTest.cs">
+      <Link>SystemConfiguration\NetworkReachabilityTest.cs</Link>
+    </Compile>
+    <Compile Include="SystemConfiguration\StatusCodeErrorTest.cs">
+      <Link>SystemConfiguration\StatusCodeErrorTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\AccessibilityTest.cs">
+      <Link>UIKit\AccessibilityTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\ActionSheetTest.cs">
+      <Link>UIKit\ActionSheetTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\ActivityIndicatorViewTest.cs">
+      <Link>UIKit\ActivityIndicatorViewTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\AlertViewDelegateTest.cs">
+      <Link>UIKit\AlertViewDelegateTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\AlertViewTest.cs">
+      <Link>UIKit\AlertViewTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\AppearanceTest.cs">
+      <Link>UIKit\AppearanceTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\ApplicationTest.cs">
+      <Link>UIKit\ApplicationTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\BarButtonItemTest.cs">
+      <Link>UIKit\BarButtonItemTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\ButtonTest.cs">
+      <Link>UIKit\ButtonTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\CollectionViewControllerTest.cs">
+      <Link>UIKit\CollectionViewControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\CollectionViewTransitionLayoutTest.cs">
+      <Link>UIKit\CollectionViewTransitionLayoutTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\ColorTest.cs">
+      <Link>UIKit\ColorTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\ControlTest.cs">
+      <Link>UIKit\ControlTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\DatePickerTest.cs">
+      <Link>UIKit\DatePickerTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\DeviceTest.cs">
+      <Link>UIKit\DeviceTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\DictationPhrase.cs">
+      <Link>UIKit\DictationPhrase.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\DirectionalEdgeInsetsTest.cs">
+      <Link>UIKit\DirectionalEdgeInsetsTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\EdgeInsetsTest.cs">
+      <Link>UIKit\EdgeInsetsTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\FloatRangeTest.cs">
+      <Link>UIKit\FloatRangeTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\FontTest.cs">
+      <Link>UIKit\FontTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\GestureRecognizerTest.cs">
+      <Link>UIKit\GestureRecognizerTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\GraphicsRendererTest.cs">
+      <Link>UIKit\GraphicsRendererTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\GuidedAccessRestrictionTest.cs">
+      <Link>UIKit\GuidedAccessRestrictionTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\ImageTest.cs">
+      <Link>UIKit\ImageTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\ImageViewTest.cs">
+      <Link>UIKit\ImageViewTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\LabelTest.cs">
+      <Link>UIKit\LabelTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\LayoutConstraintTest.cs">
+      <Link>UIKit\LayoutConstraintTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\LayoutManagerTest.cs">
+      <Link>UIKit\LayoutManagerTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\LocalNotificationTest.cs">
+      <Link>UIKit\LocalNotificationTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\NavigationBarTest.cs">
+      <Link>UIKit\NavigationBarTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\NavigationControllerTest.cs">
+      <Link>UIKit\NavigationControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\NavigationItemTest.cs">
+      <Link>UIKit\NavigationItemTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\NibTest.cs">
+      <Link>UIKit\NibTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\PageControlTest.cs">
+      <Link>UIKit\PageControlTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\PageViewControllerTest.cs">
+      <Link>UIKit\PageViewControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\PanGestureRecognizerTest.cs">
+      <Link>UIKit\PanGestureRecognizerTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\PasteboardTest.cs">
+      <Link>UIKit\PasteboardTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\PickerViewTest.cs">
+      <Link>UIKit\PickerViewTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\PopoverBackgroundViewTest.cs">
+      <Link>UIKit\PopoverBackgroundViewTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\PopoverControllerTest.cs">
+      <Link>UIKit\PopoverControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\PopoverPresentationControllerTest.cs">
+      <Link>UIKit\PopoverPresentationControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\ProgressViewTest.cs">
+      <Link>UIKit\ProgressViewTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\ReferenceLibraryViewControllerTest.cs">
+      <Link>UIKit\ReferenceLibraryViewControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\ScrollViewTest.cs">
+      <Link>UIKit\ScrollViewTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\SearchBarTest.cs">
+      <Link>UIKit\SearchBarTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\SearchDisplayControllerTest.cs">
+      <Link>UIKit\SearchDisplayControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\SegmentedControlTest.cs">
+      <Link>UIKit\SegmentedControlTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\SimpleTextPrintFormatterTest.cs">
+      <Link>UIKit\SimpleTextPrintFormatterTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\SliderTest.cs">
+      <Link>UIKit\SliderTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\SplitViewControllerTest.cs">
+      <Link>UIKit\SplitViewControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\StepperTest.cs">
+      <Link>UIKit\StepperTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\StringAttributesTest.cs">
+      <Link>UIKit\StringAttributesTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\SwitchTest.cs">
+      <Link>UIKit\SwitchTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\TabBarControllerTest.cs">
+      <Link>UIKit\TabBarControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\TabBarTest.cs">
+      <Link>UIKit\TabBarTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\TableViewCellTest.cs">
+      <Link>UIKit\TableViewCellTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\TableViewControllerTest.cs">
+      <Link>UIKit\TableViewControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\TableViewTest.cs">
+      <Link>UIKit\TableViewTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\TarBarItemTest.cs">
+      <Link>UIKit\TarBarItemTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\TextAttachmentTest.cs">
+      <Link>UIKit\TextAttachmentTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\TextContainerTest.cs">
+      <Link>UIKit\TextContainerTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\TextFieldTest.cs">
+      <Link>UIKit\TextFieldTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\TextViewTest.cs">
+      <Link>UIKit\TextViewTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\ToolbarTest.cs">
+      <Link>UIKit\ToolbarTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\UIAlertControllerTest.cs">
+      <Link>UIKit\UIAlertControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\UIContentSizeCategoryTest.cs">
+      <Link>UIKit\UIContentSizeCategoryTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\UIDocumentTest.cs">
+      <Link>UIKit\UIDocumentTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\UIDragDropSessionExtensionsTest.cs">
+      <Link>UIKit\UIDragDropSessionExtensionsTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\UIPasteConfigurationSupportingTest.cs">
+      <Link>UIKit\UIPasteConfigurationSupportingTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\UISearchControllerTest.cs">
+      <Link>UIKit\UISearchControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\UISpringLoadedInteractionSupportingTest.cs">
+      <Link>UIKit\UISpringLoadedInteractionSupportingTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\UIStackViewTest.cs">
+      <Link>UIKit\UIStackViewTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\VibrancyEffectTest.cs">
+      <Link>UIKit\VibrancyEffectTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\ViewControllerTest.cs">
+      <Link>UIKit\ViewControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\ViewTest.cs">
+      <Link>UIKit\ViewTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\WebViewTest.cs">
+      <Link>UIKit\WebViewTest.cs</Link>
+    </Compile>
+    <Compile Include="UIKit\WindowTest.cs">
+      <Link>UIKit\WindowTest.cs</Link>
+    </Compile>
+    <Compile Include="VideoToolbox\VTCompressionSessionTests.cs">
+      <Link>VideoToolbox\VTCompressionSessionTests.cs</Link>
+    </Compile>
+    <Compile Include="VideoToolbox\VTDecompressionSessionTests.cs">
+      <Link>VideoToolbox\VTDecompressionSessionTests.cs</Link>
+    </Compile>
+    <Compile Include="VideoToolbox\VTFrameSiloTests.cs">
+      <Link>VideoToolbox\VTFrameSiloTests.cs</Link>
+    </Compile>
+    <Compile Include="VideoToolbox\VTMultiPassStorageTests.cs">
+      <Link>VideoToolbox\VTMultiPassStorageTests.cs</Link>
+    </Compile>
+    <Compile Include="VideoToolbox\VTUtilitiesTests.cs">
+      <Link>VideoToolbox\VTUtilitiesTests.cs</Link>
+    </Compile>
+    <Compile Include="VideoToolbox\VTVideoEncoderListTests.cs">
+      <Link>VideoToolbox\VTVideoEncoderListTests.cs</Link>
+    </Compile>
+    <Compile Include="iAd\BannerViewTest.cs">
+      <Link>iAd\BannerViewTest.cs</Link>
+    </Compile>
+    <Compile Include="iAd\ViewControllerExtensionsTest.cs">
+      <Link>iAd\ViewControllerExtensionsTest.cs</Link>
+    </Compile>
+    <Compile Include="mono\ConfigTest.cs">
+      <Link>mono\ConfigTest.cs</Link>
+    </Compile>
+    <Compile Include="mono\Symbols.cs">
+      <Link>mono\Symbols.cs</Link>
+    </Compile>
+    <Compile Include="mono\bug18634.cs">
+      <Link>mono\bug18634.cs</Link>
+    </Compile>
+    <Compile Include="mono\bug26989.cs">
+      <Link>mono\bug26989.cs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
@@ -313,7 +1844,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Security\openssl_crt.der">
-        <LogicalName>monotouchtest.Security.openssl_crt.der</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

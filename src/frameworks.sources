@@ -1532,6 +1532,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/Blocks.cs \
 	ObjCRuntime/Class.cs \
 	ObjCRuntime/INativeObject.cs \
+	ObjCRuntime/LinkerOptimizeAttribute.cs \
 	ObjCRuntime/LinkWithAttribute.cs \
 	ObjCRuntime/Messaging.iOS.cs \
 	ObjCRuntime/Messaging.mac.cs \

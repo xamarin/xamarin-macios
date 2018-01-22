@@ -73,6 +73,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			if (connectMethodTestDone)
 				Assert.Ignore ("This test can only be executed once, it modifies global state.");
+			if (!Runtime.DynamicRegistrationSupported)
+				Assert.Ignore ("This test requires support for dynamic registration.");
 			connectMethodTestDone = true;
 			// Bug 20013. This should not throw a KeyNotFoundException.
 			Runtime.ConnectMethod (typeof (ConnectMethodClass).GetMethod ("Method"), new Selector ("method"));
@@ -356,6 +358,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void ConnectMethod ()
 		{
+			if (!Runtime.DynamicRegistrationSupported)
+				Assert.Ignore ("This test requires support for dynamic registration.");
+			
 			var minfo = typeof (RuntimeTest).GetMethod ("ConnectMethod");
 			Assert.Throws<ArgumentNullException> (() => Runtime.ConnectMethod (null, new Selector ("")), "1");
 			Assert.Throws<ArgumentNullException> (() => Runtime.ConnectMethod (minfo, null), "2");
@@ -371,6 +376,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void ConnectMethod1 ()
 		{
+			if (!Runtime.DynamicRegistrationSupported)
+				Assert.Ignore ("This test requires support for dynamic registration.");
+			
 			if (connectMethod1Done)
 				Assert.Ignore ("This is a one-shot test. Restart to run again.");
 			connectMethod1Done = true;
@@ -385,6 +393,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void ConnectMethod2 ()
 		{
+			if (!Runtime.DynamicRegistrationSupported)
+				Assert.Ignore ("This test requires support for dynamic registration.");
+			
 			if (connectMethod2Done)
 				Assert.Ignore ("This is a one-shot test. Restart to run again.");
 			connectMethod2Done = true;
@@ -407,6 +418,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void ConnectMethod3 ()
 		{
+			if (!Runtime.DynamicRegistrationSupported)
+				Assert.Ignore ("This test requires support for dynamic registration.");
+			
 			if (connectMethod3Done)
 				Assert.Ignore ("This is a one-shot test. Restart to run again.");
 			connectMethod3Done = true;

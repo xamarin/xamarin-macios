@@ -233,6 +233,7 @@ namespace XamCore.CoreText {
 		}
 
 		public delegate void CaretEdgeEnumerator (double offset, nint charIndex, bool leadingEdge, ref bool stop);
+		[UserDelegateType (typeof (CaretEdgeEnumerator))]
 		unsafe delegate void CaretEdgeEnumeratorProxy (IntPtr block, double offset, nint charIndex, [MarshalAs (UnmanagedType.I1)] bool leadingEdge, [MarshalAs (UnmanagedType.I1)] ref bool stop);
 		
 		[iOS (9,0)][Mac (10,11)]
@@ -251,6 +252,7 @@ namespace XamCore.CoreText {
  		}
 		
 		[iOS (9,0)][Mac (10,11)]
+		[LinkerOptimize]
 		public void EnumerateCaretOffsets (CaretEdgeEnumerator enumerator)
 		{
 			if (enumerator == null)

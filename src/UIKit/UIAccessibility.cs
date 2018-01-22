@@ -196,6 +196,7 @@ namespace XamCore.UIKit {
 		extern unsafe static void UIAccessibilityRequestGuidedAccessSession (/* BOOL */ bool enable, /* void(^completionHandler)(BOOL didSucceed) */ void * completionHandler);
 
 		[iOS (7,0)]
+		[LinkerOptimize]
 		public static void RequestGuidedAccessSession (bool enable, Action<bool> completionHandler)
 		{
 			unsafe {
@@ -219,7 +220,8 @@ namespace XamCore.UIKit {
 			});
 			return tcs.Task;
 		}
-		
+
+		[UserDelegateType  (typeof (Action<bool>))]
 		internal delegate void InnerRequestGuidedAccessSession (IntPtr block, bool enable);
 		static readonly InnerRequestGuidedAccessSession callback = TrampolineRequestGuidedAccessSession;
 

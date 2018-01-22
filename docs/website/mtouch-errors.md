@@ -2322,3 +2322,9 @@ This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamar
 
 This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
+### <a name="MT8025"/>MT8025: * is not supported when the dynamic registrar has been linked away.
+
+This usually indicates a bug in Xamarin.iOS, because the dynamic registrar should not be linked away if it's needed. Please file a bug at [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
+It's possible to force the linker to keep the dynamic registrar present by adding `--linker-optimize=-remove-dynamic-registrar` to the additional mtouch arguments in the project's iOS Build options.
+

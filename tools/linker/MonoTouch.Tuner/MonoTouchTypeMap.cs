@@ -24,12 +24,95 @@ namespace MonoTouch.Tuner {
 	public class MonoTouchTypeMapStep : TypeMapStep {
 		HashSet<TypeDefinition> cached_isnsobject = new HashSet<TypeDefinition> ();
 		Dictionary<TypeDefinition, bool?> isdirectbinding_value = new Dictionary<TypeDefinition, bool?> ();
-		HashSet<MethodDefinition> generated_code = new HashSet<MethodDefinition> ();
+		bool dynamic_registration_support_required;
 
 		DerivedLinkContext LinkContext {
 			get {
 				return (DerivedLinkContext) base.Context;
 			}
+		}
+
+		protected override void ProcessAssembly (AssemblyDefinition assembly)
+		{
+			if (!LinkContext.App.Optimizations.RemoveDynamicRegistrar.HasValue)
+				dynamic_registration_support_required |= RequiresDynamicRegistrar (assembly);
+
+			base.ProcessAssembly (assembly);
+		}
+
+		// If certain conditions are met, we can optimize away the code for the dynamic registrar..
+		bool RequiresDynamicRegistrar (AssemblyDefinition assembly)
+		{
+#if MONOMAC && !XAMCORE_2_0
+			// Disable removing the dynamic registrar for XM/Classic to simplify the code a little bit.
+			return true;
+#else
+			if (LinkContext.Target.App.Registrar != RegistrarMode.Static)
+				return true;
+
+			// Req 1: Nobody must call Runtime.ConnectMethod.
+			if (HasProductMethodReference (assembly, "ObjCRuntime", "Runtime", "ConnectMethod")) {
+				Driver.Log (4, "Can't optimize away the dynamic registrar, because {0} references Runtime.ConnectMethod.", assembly.FullName);
+				return true;
+			}
+
+			// Req 2: Nobody must call BlockLiteral.SetupBlock[Unsafe].
+			//
+			// Fortunately the linker is able to rewrite calls to SetupBlock[Unsafe] to call
+			// SetupBlockImpl (which doesn't need the dynamic registrar), which means we only have
+			// to look in assemblies that aren't linked.
+			if (LinkContext.Annotations.GetAction (assembly) != Mono.Linker.AssemblyAction.Link) {
+				if (HasProductMethodReference (assembly, "ObjCRuntime", "BlockLiteral", "SetupBlock")) {
+					Driver.Log (4, "Can't optimize away the dynamic registrar, because {0} references BlockLiteral.SetupBlock.", assembly.FullName);
+					return true;
+				}
+				if (HasProductMethodReference (assembly, "ObjCRuntime", "BlockLiteral", "SetupBlockImpl")) {
+					Driver.Log (4, "Can't optimize away the dynamic registrar, because {0} references BlockLiteral.SetupBlockImpl.", assembly.FullName);
+					return true;
+				}
+			}
+
+			return false;
+#endif
+		}
+
+		bool HasProductMethodReference (AssemblyDefinition assembly, string @namespace, string type_name, string method_name)
+		{
+			if (Profile.IsProductAssembly (assembly) || Profile.IsSdkAssembly (assembly)) {
+				// We know that the assemblies we ship don't use the methods we're looking for.
+				return false;
+			}
+
+			// Check if the assembly is referencing our product assembly
+			var hasProductReference = false;
+			foreach (var ar in assembly.MainModule.AssemblyReferences) {
+				if (Profile.IsProductAssembly (ar.Name)) {
+					hasProductReference = true;
+					break;
+				}
+			}
+
+			// Can't use reference a product method if not referencing the product assembly.
+			if (!hasProductReference)
+				return false;
+
+			// Check if the assembly references the method.
+			foreach (var mr in assembly.MainModule.GetMemberReferences ()) {
+				if (mr.Name != method_name)
+					continue;
+				if (mr.DeclaringType == null)
+					continue;
+				if (mr.DeclaringType.Name != type_name)
+					continue;
+				if (mr.DeclaringType.Namespace != @namespace)
+					continue;
+				if (!Profile.IsProductAssembly (mr.Module.Assembly))
+					continue;
+
+				return true;
+			}
+
+			return false;
 		}
 
 		protected override void EndProcess ()
@@ -38,22 +121,15 @@ namespace MonoTouch.Tuner {
 
 			LinkContext.CachedIsNSObject = cached_isnsobject;
 			LinkContext.IsDirectBindingValue = isdirectbinding_value;
-			LinkContext.GeneratedCode = generated_code;
+
+			if (!LinkContext.App.Optimizations.RemoveDynamicRegistrar.HasValue)
+				LinkContext.App.Optimizations.RemoveDynamicRegistrar = !dynamic_registration_support_required;	
 		}
 
 		protected override void MapType (TypeDefinition type)
 		{
 			base.MapType (type);
 
-			// we'll remove [GeneratedCode] in RemoveAttribute but we need this information later
-			// when processing Dispose methods in MonoTouchMarkStep
-			if (type.HasMethods) {
-				foreach (MethodDefinition m in type.Methods) {
-					if (m.IsGeneratedCode (LinkContext))
-						generated_code.Add (m);
-				}
-			}
-			
 			// additional checks for NSObject to check if the type is a *generated* bindings
 			// bonus: we cache, for every type, whether or not it inherits from NSObject (very useful later)
 			if (!IsNSObject (type))
