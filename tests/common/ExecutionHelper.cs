@@ -56,6 +56,12 @@ namespace Xamarin.Tests
 			}
 		}
 
+		public StringBuilder Output {
+			get {
+				return output;
+			}
+		}
+
 		public int Execute (string arguments, params string [] args)
 		{
 			return Execute (ToolPath, arguments, false, args);
@@ -86,7 +92,21 @@ namespace Xamarin.Tests
 			return rv;
 		}
 
-		void ParseMessages ()
+		bool IndexOfAny (string line, out int start, out int end, params string [] values)
+		{
+			foreach (var value in values) {
+				start = line.IndexOf (value);
+				if (start >= 0) {
+					end = start + value.Length;
+					return true;
+				}
+			}
+			start = -1;
+			end = -1;
+			return false;
+		}
+
+		public void ParseMessages ()
 		{
 			messages.Clear ();
 
@@ -94,15 +114,13 @@ namespace Xamarin.Tests
 				var line = l;
 				var msg = new ToolMessage ();
 				var origin = string.Empty;
-				if (line.Contains (": error ")) {
+				if (IndexOfAny (line, out var idxError, out var endError, ": error ", ":  error ")) {
 					msg.IsError = true;
-					var idx = line.IndexOf (": error ", StringComparison.Ordinal);
-					origin = line.Substring (0, idx);
-					line = line.Substring (idx + ": error ".Length);
-				} else if (line.Contains (": warning ")) {
-					var idx = line.IndexOf (": warning ", StringComparison.Ordinal);
-					origin = line.Substring (0, idx);
-					line = line.Substring (idx + ": warning ".Length);
+					origin = line.Substring (0, idxError);
+					line = line.Substring (endError);
+				} else if (IndexOfAny (line, out var idxWarning, out var endWarning, ": warning ", ":  warning ")) {
+					origin = line.Substring (0, idxWarning);
+					line = line.Substring (endWarning);
 				} else if (line.StartsWith ("error ", StringComparison.Ordinal)) {
 					msg.IsError = true;
 					line = line.Substring (6);
