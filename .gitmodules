@@ -8,7 +8,7 @@
 [submodule "external/llvm"]
     path = external/llvm
     url = ../../mono/llvm.git
-    branch = master
+    branch = d15-6
 [submodule "external/macios-binaries"]
     path = external/macios-binaries
     url = ../../xamarin/macios-binaries
