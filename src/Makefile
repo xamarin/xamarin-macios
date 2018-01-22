@@ -553,8 +553,9 @@ $(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/%-64/Xamarin.Mac.
 	@mkdir -p $(@D)
 	$(Q) cp $^ $@
 
-$(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.pdb: $(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.dll
-	@touch $@
+$(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.pdb: $(MAC_BUILD_DIR)/%-64/Xamarin.Mac.pdb
+	@mkdir -p $(@D)
+	$(Q) cp $^ $@
 
 # System.Drawing.Primitives.dll is special
 
