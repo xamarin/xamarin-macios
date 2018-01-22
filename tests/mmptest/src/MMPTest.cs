@@ -817,28 +817,32 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		[TestCase ("all")]
 		[TestCase ("-all")]
-		[TestCase ("remove-uithread-checks,dead-code-elimination,inline-isdirectbinding,inline-intptr-size,inline-runtime-arch")]
+		[TestCase ("remove-uithread-checks,dead-code-elimination,inline-isdirectbinding,inline-intptr-size")]
 		public void Optimizations (string opt)
 		{
 			RunMMPTest (tmpDir => {
 				var test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = $"<MonoBundlingExtraArgs>--optimize=${opt}</MonoBundlingExtraArgs>",
+					CSProjConfig = $"<MonoBundlingExtraArgs>--optimize={opt}</MonoBundlingExtraArgs>" + 
+						"<LinkMode>Full</LinkMode>",
 				};
 				var rv = TI.TestUnifiedExecutable (test, shouldFail: false);
-				rv.Messages.AssertWarningCount (0);
+				rv.Messages.AssertNoWarnings ();
 				rv.Messages.AssertErrorCount (0);
 			});
 		}
 
 		[Test]
-		public void MM0132 ()
+		[TestCase ("inline-runtime-arch")] // This is valid for Xamarin.iOS
+		[TestCase ("foo")]
+		public void MM0132 (string opt)
 		{
 			RunMMPTest (tmpDir => {
 				var test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = $"<MonoBundlingExtraArgs>--optimize=foo</MonoBundlingExtraArgs>",
+					CSProjConfig = $"<MonoBundlingExtraArgs>--optimize={opt}</MonoBundlingExtraArgs>" + 
+						"<LinkMode>Full</LinkMode>",
 				};
 				var rv = TI.TestUnifiedExecutable (test, shouldFail: false);
-				rv.Messages.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size.");
+				rv.Messages.AssertWarning (132, $"Unknown optimization: '{opt}'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size.");
 				rv.Messages.AssertErrorCount (0);
 			});
 		}
