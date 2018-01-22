@@ -645,6 +645,8 @@ The specified optimization was not recognized.
 
 The accepted format is `[+|-]optimization-name`, where `optimization-name` is one of the values listed in the error message.
 
+See [Build optimizations](https://developer.xamarin.com/guides/cross-platform/macios/build-optimization/) for a complete description of each optimization.
+
 # MT1xxx: Project related error messages
 
 ### MT10xx: Installer / mtouch
