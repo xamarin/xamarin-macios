@@ -3593,6 +3593,38 @@ public class HandlerTest
 			}
 		}
 
+		[Test]
+		[TestCase ("i386", "32-sgen")]
+		[TestCase ("x86_64", "64-sgen")]
+		public void SimlauncherSymbols (string arch, string simlauncher_suffix)
+		{
+			var libxamarin_path = Path.Combine (Configuration.SdkRootXI, "SDKs", "MonoTouch.iphonesimulator.sdk", "usr", "lib", "libxamarin.a");
+			var simlauncher_path = Path.Combine (Configuration.BinDirXI, "simlauncher" + simlauncher_suffix);
+
+			var libxamarin_symbols = new HashSet<string> (GetNativeSymbols (libxamarin_path, arch));
+			var simlauncher_symbols = new HashSet<string> (GetNativeSymbols (simlauncher_path, arch));
+			var only_libxamarin = libxamarin_symbols.Except (simlauncher_symbols);
+
+			var missingSimlauncherSymbols = new List<string> ();
+			foreach (var symbol in only_libxamarin) {
+				switch (symbol) {
+				case "_fix_ranlib_warning_about_no_symbols": // Dummy symbol to fix linker warning
+				case "_fix_ranlib_warning_about_no_symbols_v2": // Dummy symbol to fix linker warning
+				case "_monotouch_IntPtr_objc_msgSendSuper_IntPtr": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
+				case "_monotouch_IntPtr_objc_msgSend_IntPtr": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
+				case "_xamarin_float_objc_msgSend": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
+				case "_xamarin_float_objc_msgSendSuper": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
+				case "_xamarin_nfloat_objc_msgSend": // XM only
+				case "_xamarin_nfloat_objc_msgSendSuper": // Xm only
+					continue;
+				default:
+					missingSimlauncherSymbols.Add (symbol);
+					break;
+				}
+			}
+			Assert.That (missingSimlauncherSymbols, Is.Empty, "no missing simlauncher symbols");
+		}
+
 		public void XamarinSdkAdjustLibs ()
 		{
 			using (var exttool = new MTouchTool ()) {
@@ -4020,6 +4052,20 @@ public class TestApp {
 		{
 			if (!Configuration.include_device)
 				Assert.Ignore ("This build does not include device support.");
+		}
+
+		public static IEnumerable<string> GetNativeSymbols (string file, string arch = null)
+		{
+			var arguments = $"-gUjA {StringUtils.Quote (file)}";
+			if (!string.IsNullOrEmpty (arch))
+				arguments += " -arch " + arch;
+			var symbols = ExecutionHelper.Execute ("nm", arguments, hide_output: true).Split ('\n');
+			return symbols.Select ((v) => {
+				var idx = v.LastIndexOf (": ", StringComparison.Ordinal);
+				if (idx <= 0)
+					return v;
+				return v.Substring (idx + 2);
+			});
 		}
 #endregion
 	}
