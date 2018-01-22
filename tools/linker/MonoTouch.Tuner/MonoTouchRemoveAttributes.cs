@@ -6,7 +6,7 @@ using Xamarin.Linker;
 
 namespace MonoTouch.Tuner {
 
-	public class RemoveAttributes : CoreRemoveAttributes {
+	public class MonoTouchRemoveAttributes : CoreRemoveAttributes {
 
 		static readonly HashSet<string> attribute_types = new HashSet<string> (StringComparer.Ordinal) {
 			// Used by CA routines to check how attribute behaves. Removing this attributes causes fallback to default

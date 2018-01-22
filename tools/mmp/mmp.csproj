@@ -236,9 +236,6 @@
     <Compile Include="..\linker\CoreHttpMessageHandler.cs">
       <Link>Xamarin.Linker\CoreHttpMessageHandler.cs</Link>
     </Compile>
-    <Compile Include="..\linker\MobileRemoveAttributes.cs">
-      <Link>Xamarin.Linker\MobileRemoveAttributes.cs</Link>
-    </Compile>
     <Compile Include="..\linker\MobileMarkStep.cs">
       <Link>Xamarin.Linker\MobileMarkStep.cs</Link>
     </Compile>
