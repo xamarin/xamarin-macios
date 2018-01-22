@@ -156,13 +156,19 @@ public class ListSourceFiles {
 				continue;
 			}
 
-			var assemblySrcs = GetFilePathsFromPdb(pdbFile);
-			if (verbose) {
-				Console.WriteLine("Pdb file sources are:");
-				foreach (var p in srcs)
-					Console.WriteLine($"\t{p}");
+			try {
+				var assemblySrcs = GetFilePathsFromPdb(pdbFile);
+				if (verbose) {
+					Console.WriteLine("Pdb file sources are:");
+					foreach (var p in srcs)
+						Console.WriteLine($"\t{p}");
+				}
+				srcs.UnionWith(assemblySrcs);
 			}
-			srcs.UnionWith(assemblySrcs);
+			catch (Exception) {
+				Console.WriteLine ("Error processing: {0}", pdbFile);
+				throw;
+			}
 		}
 
 		// add the paths from the mdb files
@@ -171,13 +177,19 @@ public class ListSourceFiles {
 				Console.WriteLine ("File does not exist: {0}", mdbFile);
 				continue;
 			}
-			var assemblySrcs = GetFilePathsFromMdb (mdbFile);
-			if (verbose) {
-				Console.WriteLine("Mdb file sources are:");
-				foreach (var p in srcs)
-					Console.WriteLine($"\t{p}");
+			try {
+				var assemblySrcs = GetFilePathsFromMdb (mdbFile);
+				if (verbose) {
+					Console.WriteLine("Mdb file sources are:");
+					foreach (var p in srcs)
+						Console.WriteLine($"\t{p}");
+				}
+				srcs.UnionWith (assemblySrcs);
 			}
-			srcs.UnionWith (assemblySrcs);
+			catch (Exception) {
+				Console.WriteLine ("Error processing: {0}", mdbFile);
+				throw;
+			}
 		}
 
 		if (verbose) {
