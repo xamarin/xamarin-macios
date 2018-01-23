@@ -85,7 +85,6 @@ namespace Xamarin.Bundler {
 		static bool no_executable;
 		static bool embed_mono = true;
 		static bool? profiling = false;
-		static bool? thread_check = null;
 		static string link_flags = null;
 		static LinkerOptions linker_options;
 		static bool? disable_lldb_attach = null;
@@ -286,8 +285,8 @@ namespace Xamarin.Bundler {
 				{ "arch=", "Specify the architecture ('i386' or 'x86_64') of the native runtime (default to 'i386')", v => { arch = v; arch_set = true; } },
 				{ "profile=", "(Obsoleted in favor of --target-framework) Specify the .NET profile to use (defaults to '" + Xamarin.Utils.TargetFramework.Default + "')", v => SetTargetFramework (v) },
 				{ "target-framework=", "Specify the .NET target framework to use (defaults to '" + Xamarin.Utils.TargetFramework.Default + "')", v => SetTargetFramework (v) },
-				{ "force-thread-check", "Keep UI thread checks inside (even release) builds", v => { thread_check = true; }},
-				{ "disable-thread-check", "Remove UI thread checks inside (even debug) builds", v => { thread_check = false; }},
+				{ "force-thread-check", "Keep UI thread checks inside (even release) builds [DEPRECATED, use --linker-optimize=-remove-uithread-checks instead]", v => { App.Optimizations.RemoveUIThreadChecks = false; }, true},
+				{ "disable-thread-check", "Remove UI thread checks inside (even debug) builds [DEPRECATED, use --linker-optimize=remove-uithread-checks instead]", v => { App.Optimizations.RemoveUIThreadChecks = true; }, true},
 				{ "registrar:", "Specify the registrar to use (dynamic [default], static, partial)", v => {
 						switch (v) {
 						case "static":
@@ -809,10 +808,6 @@ namespace Xamarin.Bundler {
 						native_libs.Add (nr, null);
 				}
 
-				// warn if we ask to remove thread checks but the linker is not enabled
-				if (App.LinkMode == LinkMode.None && thread_check.HasValue && !thread_check.Value)
-					ErrorHelper.Warning (2003, "Option '{0}' will be ignored since linking is disabled", "-disable-thread-check");
-				
 				var linked_native_libs = Link ();
 				foreach (var kvp in linked_native_libs) {
 					List<MethodDefinition> methods;
@@ -1210,6 +1205,8 @@ namespace Xamarin.Bundler {
 			libdir = libdirb.ToString ().Replace (Environment.NewLine, String.Empty);
 
 			var libmain = embed_mono ? "libxammac" : "libxammac-system";
+			if (IsClassic)
+				libmain += "-classic";
 			var libxammac = Path.Combine (GetXamMacPrefix (), "lib", libmain + (App.EnableDebug ? "-debug" : "") + ".a");
 
 			if (!File.Exists (libxammac))
@@ -1457,9 +1454,6 @@ namespace Xamarin.Bundler {
 				TargetFramework = TargetFramework,
 				Architecture = arch,
 				RuntimeOptions = App.RuntimeOptions,
-				// by default we keep the code to ensure we're executing on the UI thread (for UI code) for debug builds
-				// but this can be overridden to either (a) remove it from debug builds or (b) keep it in release builds
-				EnsureUIThread = thread_check.HasValue ? thread_check.Value : App.EnableDebug,
 				MarshalNativeExceptionsState = !App.RequiresPInvokeWrappers ? null : new PInvokeWrapperGenerator ()
 				{
 					App = App,

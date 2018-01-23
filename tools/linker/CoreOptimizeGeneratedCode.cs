@@ -7,16 +7,47 @@ using Mono.Linker;
 using Mono.Tuner;
 using Xamarin.Bundler;
 
+using MonoTouch.Tuner;
+#if MONOMAC
+using MonoMac.Tuner;
+#endif
+
 namespace Xamarin.Linker {
 
 	public abstract class CoreOptimizeGeneratedCode : ExceptionalSubStep {
+		// If the type currently being processed is a direct binding or not.
+		// A null value means it's not a constant value, and can't be inlined.
+		bool? isdirectbinding_constant;
 
 		protected override string Name { get; } = "Binding Optimizer";
 		protected override int ErrorCode { get; } = 2020;
 
 		protected bool HasGeneratedCode { get; private set; }
 		protected bool IsExtensionType { get; private set; }
-		protected bool ProcessMethods { get; private set; }
+
+		protected LinkerOptions Options { get; set; }
+
+		public bool IsDualBuild {
+			get { return Options.Application.IsDualBuild; }
+		}
+
+		public int Arch {
+			get { return Options.Target.Is64Build ? 8 : 4; }
+		}
+
+		protected Optimizations Optimizations {
+			get {
+				return Options.Application.Optimizations;
+			}
+		}
+
+		// This is per assembly, so we set it in 'void Process (AssemblyDefinition)'
+		bool InlineIntPtrSize { get; set; }
+
+		public CoreOptimizeGeneratedCode (LinkerOptions options)
+		{
+			Options = options;
+		}
 
 		public override SubStepTargets Targets {
 			get { return SubStepTargets.Assembly | SubStepTargets.Type | SubStepTargets.Method; }
@@ -62,10 +93,14 @@ namespace Xamarin.Linker {
 
 		protected override void Process (TypeDefinition type)
 		{
+			if (!HasGeneratedCode)
+				return;
+
+			isdirectbinding_constant = type.IsNSObject (LinkContext) ? type.GetIsDirectBindingConstant (LinkContext) : null;
+
 			// if 'type' inherits from NSObject inside an assembly that has [GeneratedCode]
 			// or for static types used for optional members (using extensions methods), they can be optimized too
 			IsExtensionType = type.IsSealed && type.IsAbstract && type.Name.EndsWith ("_Extensions", StringComparison.Ordinal);
-			ProcessMethods = HasGeneratedCode || (!type.IsNSObject (LinkContext) && !IsExtensionType);
 		}
 
 		// [GeneratedCode] is not enough - e.g. it's used for anonymous delegates even if the 
@@ -131,6 +166,8 @@ namespace Xamarin.Linker {
 			case Code.Ldc_I4_S:
 				if (ins.Operand is int)
 					return (int) ins.Operand;
+				if (ins.Operand is sbyte)
+					return (sbyte) ins.Operand;
 				return null;
 #if DEBUG
 			case Code.Isinst: // We might be able to calculate a constant value here in the future
@@ -241,7 +278,7 @@ namespace Xamarin.Linker {
 							var x1 = GetConstantValue (ins?.Previous?.Previous);
 							var x2 = GetConstantValue (ins?.Previous);
 							if (x1.HasValue && x2.HasValue)
-								branch = x1.Value <= x2.Value;
+								branch = x1.Value < x2.Value;
 							cond_instruction_count = 3;
 							break;
 						}
@@ -342,8 +379,11 @@ namespace Xamarin.Linker {
 			return false;
 		}
 
-		protected static void EliminateDeadCode (MethodDefinition caller)
+		protected void EliminateDeadCode (MethodDefinition caller)
 		{
+			if (Optimizations.DeadCodeElimination != true)
+				return;
+
 			var instructions = caller.Body.Instructions;
 			var reachable = new bool [instructions.Count];
 
@@ -466,5 +506,155 @@ namespace Xamarin.Linker {
 				instructions.RemoveAt (last_reachable + 1);
 		}
 
+		protected override void Process (AssemblyDefinition assembly)
+		{
+			// The "get_Size" is a performance (over size) optimization.
+			// It always makes sense for platform assemblies because:
+			// * Xamarin.TVOS.dll only ship the 64 bits code paths (all 32 bits code is extra weight better removed)
+			// * Xamarin.WatchOS.dll only ship the 32 bits code paths (all 64 bits code is extra weight better removed)
+			// * Xamarin.iOS.dll  ship different 32/64 bits versions of the assembly anyway (nint... support)
+			//   Each is better to be optimized (it will be smaller anyway)
+			//
+			// However for fat (32/64) apps (i.e. iOS only right now) the optimization can duplicate the assembly
+			// (metadata) for 3rd parties binding projects, increasing app size for very minimal performance gains.
+			// For non-fat apps (the AppStore allows 64bits only iOS apps) then it's better to be applied
+			//
+			// TODO: we could make this an option "optimize for size vs optimize for speed" in the future
+			if (Optimizations.InlineIntPtrSize.HasValue) {
+				InlineIntPtrSize = Optimizations.InlineIntPtrSize.Value;
+			} else if (!IsDualBuild) {
+				InlineIntPtrSize = true;
+			} else {
+				InlineIntPtrSize = (Profile.Current as BaseProfile).ProductAssembly == assembly.Name.Name;
+			}
+			Driver.Log (4, "Optimization 'inline-intptr-size' enabled for assembly '{0}'.", assembly.Name);
+
+			base.Process (assembly);
+		}
+
+		protected override void Process (MethodDefinition method)
+		{
+			if (!method.HasBody)
+				return;
+
+			if (method.IsGeneratedCode (LinkContext) && (IsExtensionType || IsExport (method))) {
+				// We optimize methods that have the [GeneratedCodeAttribute] and is either an extension type or an exported method
+			} else {
+				// but it would be too risky to apply on user-generated code
+				return;
+			}
+
+			var instructions = method.Body.Instructions;
+			for (int i = 0; i < instructions.Count; i++) {
+				var ins = instructions [i];
+				switch (ins.OpCode.Code) {
+				case Code.Call:
+					ProcessCalls (method, ins);
+					break;
+				case Code.Ldsfld:
+					ProcessLoadStaticField (method, ins);
+					break;
+				}
+			}
+
+			EliminateDeadCode (method);
+		}
+
+		protected virtual void ProcessCalls (MethodDefinition caller, Instruction ins)
+		{
+			var mr = ins.Operand as MethodReference;
+			switch (mr?.Name) {
+			case "EnsureUIThread":
+				ProcessEnsureUIThread (caller, ins);
+				break;
+			case "get_Size":
+				ProcessIntPtrSize (caller, ins);
+				break;
+			case "get_IsDirectBinding":
+				ProcessIsDirectBinding (caller, ins);
+				break;
+			}
+		}
+
+		protected virtual void ProcessLoadStaticField (MethodDefinition caller, Instruction ins)
+		{
+		}
+
+		void ProcessEnsureUIThread (MethodDefinition caller, Instruction ins)
+		{
+#if MONOTOUCH
+			const string operation = "remove calls to UIApplication::EnsureUIThread";
+#else
+			const string operation = "remove calls to NSApplication::EnsureUIThread";
+#endif
+
+			if (Optimizations.RemoveUIThreadChecks != true)
+				return;
+
+			// Verify we're checking the right get_EnsureUIThread call
+			var mr = ins.Operand as MethodReference;
+#if MONOTOUCH
+			if (!mr.DeclaringType.Is (Namespaces.UIKit, "UIApplication"))
+				return;
+#else
+			if (!mr.DeclaringType.Is (Namespaces.AppKit, "NSApplication"))
+				return;
+#endif
+
+			// Verify a few assumptions before doing anything
+			if (!ValidateInstruction (caller, ins, operation, Code.Call))
+				return;
+
+			// This is simple: just remove the call
+			Nop (ins); // call void UIKit.UIApplication::EnsureUIThread()
+		}
+
+		void ProcessIntPtrSize (MethodDefinition caller, Instruction ins)
+		{
+			if (!InlineIntPtrSize)
+				return;
+
+			// This will inline IntPtr.Size to load the corresponding constant value instead
+
+			// Verify we're checking the right get_Size call
+			var mr = ins.Operand as MethodReference;
+			if (!mr.DeclaringType.Is ("System", "IntPtr"))
+				return;
+
+			// We're fine, inline the get_Size call
+			ins.OpCode = Arch == 8 ? OpCodes.Ldc_I4_8 : OpCodes.Ldc_I4_4;
+			ins.Operand = null;
+		}
+
+		void ProcessIsDirectBinding (MethodDefinition caller, Instruction ins)
+		{
+			const string operation = "inline IsDirectBinding";
+
+			if (Optimizations.InlineIsDirectBinding != true)
+				return;
+
+			// If we don't know the constant isdirectbinding value, then we can't inline anything
+			if (!isdirectbinding_constant.HasValue)
+				return;
+
+			// Verify we're checking the right get_IsDirectBinding call
+			var mr = ins.Operand as MethodReference;
+			if (!mr.DeclaringType.Is (Namespaces.Foundation, "NSObject"))
+				return;
+
+			// Verify a few assumptions before doing anything
+			if (!ValidateInstruction (caller, ins.Previous, operation, Code.Ldarg_0))
+				return;
+
+			if (!ValidateInstruction (caller, ins, operation, Code.Call))
+				return;
+
+			// Clearing the branch succeeded, so clear the condition too
+			// ldarg.0
+			Nop (ins.Previous);
+			// call System.Boolean Foundation.NSObject::get_IsDirectBinding()
+			ins.OpCode = isdirectbinding_constant.Value ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0;
+			ins.Operand = null;
+		}
 	}
 }

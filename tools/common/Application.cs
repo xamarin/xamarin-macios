@@ -43,6 +43,7 @@ namespace Xamarin.Bundler {
 		public bool DeadStrip = true;
 		public bool EnableDebug;
 		internal RuntimeOptions RuntimeOptions;
+		public Optimizations Optimizations = new Optimizations ();
 		public RegistrarMode Registrar = RegistrarMode.Default;
 		public RegistrarOptions RegistrarOptions = RegistrarOptions.Default;
 		public SymbolMode SymbolMode;
@@ -466,6 +467,8 @@ namespace Xamarin.Bundler {
 				ErrorHelper.Warning (115, "It is recommended to reference dynamic symbols using code (--dynamic-symbol-mode=code) when bitcode is enabled.");
 			}
 #endif
+
+			Optimizations.Initialize (this);
 		}
 
 		public void RunRegistrar ()

@@ -9206,7 +9206,7 @@ namespace Foundation
 		string PathForResource (string name, [NullAllowed] string ofType, string subpath, string localizationName);
 
 		[Export ("localizedStringForKey:value:table:")]
-		string LocalizedString ([NullAllowed] string key, [NullAllowed] string value, [NullAllowed] string table);
+		NSString GetLocalizedString ([NullAllowed] NSString key, [NullAllowed] NSString value, [NullAllowed] NSString table);
 
 		[Export ("objectForInfoDictionaryKey:")]
 		NSObject ObjectForInfoDictionary (string key);
@@ -12086,7 +12086,11 @@ namespace Foundation
 		[Abstract]
 #endif
 		[Export ("presentedItemOperationQueue", ArgumentSemantic.Retain)]
+#if XAMCORE_4_0
+		NSOperationQueue PresentedItemOperationQueue { get; }
+#else
 		NSOperationQueue PesentedItemOperationQueue { get; }
+#endif
 
 #if DOUBLE_BLOCKS
 		[Export ("relinquishPresentedItemToReader:")]
