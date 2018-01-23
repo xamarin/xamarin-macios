@@ -90,6 +90,7 @@ namespace Xamarin
 		public string Cache;
 		public string Device; // --device
 		public MTouchLinker Linker;
+		public string [] Optimize;
 		public MTouchSymbolMode SymbolMode;
 		public bool? NoFastSim;
 		public MTouchRegistrar Registrar;
@@ -410,6 +411,11 @@ namespace Xamarin
 				break;
 			default:
 				throw new NotImplementedException ();
+			}
+
+			if (Optimize != null) {
+				foreach (var opt in Optimize)
+					sb.Append (" --optimize:").Append (opt);
 			}
 
 			switch (SymbolMode) {

@@ -604,6 +604,17 @@ public class B : A {}
 		}
 
 		[Test]
+		public void MT0010 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CustomArguments = new string [] { "--optimize:?" };
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (10, "Could not parse the command line argument '--optimize=?'");
+			}
+		}
+
+		[Test]
 		public void MT0015 ()
 		{
 			using (var mtouch = new MTouchTool ()) {
@@ -1614,6 +1625,35 @@ public class TestApp {
 				mtouch.FastDev = true;
 				mtouch.AssertExecute (MTouchAction.BuildDev, "first build");
 				mtouch.AssertWarning (127, "Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.");
+			}
+		}
+
+		[Test]
+		public void MT0132 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.Optimize = new string [] { "foo" };
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch.");
+			}
+		}
+
+		[Test]
+		[TestCase ("all")]
+		[TestCase ("-all")]
+		[TestCase ("remove-uithread-checks,dead-code-elimination,inline-isdirectbinding,inline-intptr-size,inline-runtime-arch")]
+		public void Optimizations (string opt)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.Optimize = new string [] { opt };
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertNoWarnings ();
 			}
 		}
 
@@ -3239,6 +3279,34 @@ public partial class NotificationService : UNNotificationServiceExtension
 				Assert.AreEqual (exeStamp, File.GetLastWriteTimeUtc (exePath), "exe no change");
 				Assert.IsTrue (File.Exists (mdbPath), "mdb existence");
 				Assert.AreNotEqual (mdbStamp, File.GetLastWriteTimeUtc (mdbPath), "mdb changed");
+			}
+		}
+
+		[Test]
+		public void MT2003 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Debug = true; // makes simlauncher possible, which speeds up the build
+				mtouch.Optimize = new string [] { "all"};
+				mtouch.AssertExecute (MTouchAction.BuildSim);
+				mtouch.AssertWarning (2003, "Option '--optimize=remove-uithread-checks' will be ignored since linking is disabled");
+				mtouch.AssertWarning (2003, "Option '--optimize=dead-code-elimination' will be ignored since linking is disabled");
+				mtouch.AssertWarning (2003, "Option '--optimize=inline-isdirectbinding' will be ignored since linking is disabled");
+				mtouch.AssertWarning (2003, "Option '--optimize=inline-intptr-size' will be ignored since linking is disabled");
+				mtouch.AssertWarning (2003, "Option '--optimize=inline-runtime-arch' will be ignored since linking is disabled");
+				mtouch.AssertWarningCount (5);
+			}
+
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Debug = true; // makes simlauncher possible, which speeds up the build
+				mtouch.Optimize = new string [] { "-inline-intptr-size" };
+				mtouch.AssertExecute (MTouchAction.BuildSim);
+				mtouch.AssertWarning (2003, "Option '--optimize=-inline-intptr-size' will be ignored since linking is disabled");
+				mtouch.AssertWarningCount (1);
 			}
 		}
 

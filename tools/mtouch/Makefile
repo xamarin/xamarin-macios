@@ -138,6 +138,7 @@ MTOUCH_SOURCES = \
 	$(TOP)/tools/common/DerivedLinkContext.cs \
 	$(TOP)/tools/common/Target.cs \
 	$(TOP)/tools/common/CompilerFlags.cs \
+	$(TOP)/tools/common/Optimizations.cs \
 	$(TOP)/src/Foundation/ExportAttribute.cs \
 	$(TOP)/src/Foundation/ConnectAttribute.cs \
 	$(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/PListObject.cs \
