@@ -210,8 +210,6 @@ namespace Introspection {
 				return true;
 			case "INBookRestaurantReservationIntentResponse": // iOS 11 beta 2: stack overflow in description. radar:32945914
 				return true;
-			case "MPVolumeView": // Started failing with Xcode 9 beta 3
-				return true;
 			case "IOSurface": // Only works on device
 			case "NEHotspotEapSettings": // Wireless Accessory Configuration is not supported in the simulator.
 			case "NEHotspotConfigurationManager":
