@@ -42,6 +42,7 @@ GENERATOR_ATTRIBUTE_SOURCES = \
 	$(TOP)/src/ObjCRuntime/AlphaAttribute.cs \
 	$(TOP)/src/ObjCRuntime/ArgumentSemantic.cs \
 	$(TOP)/src/ObjCRuntime/BindAsAttribute.cs \
+	$(TOP)/src/ObjCRuntime/BindingImplAttribute.cs \
 	$(TOP)/src/ObjCRuntime/LinkWithAttribute.cs \
 	$(TOP)/src/ObjCRuntime/NativeAttribute.cs \
 	$(TOP)/src/ObjCRuntime/PlatformAvailability2.cs \
