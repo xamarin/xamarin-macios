@@ -12086,7 +12086,11 @@ namespace XamCore.Foundation
 		[Abstract]
 #endif
 		[Export ("presentedItemOperationQueue", ArgumentSemantic.Retain)]
+#if XAMCORE_4_0
+		NSOperationQueue PresentedItemOperationQueue { get; }
+#else
 		NSOperationQueue PesentedItemOperationQueue { get; }
+#endif
 
 #if DOUBLE_BLOCKS
 		[Export ("relinquishPresentedItemToReader:")]
