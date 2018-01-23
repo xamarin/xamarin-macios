@@ -813,5 +813,38 @@ namespace Xamarin.MMP.Tests
 				TI.TestUnifiedExecutable (test, shouldFail: false);
 			});
 		}
+
+		[Test]
+		[TestCase ("all")]
+		[TestCase ("-all")]
+		[TestCase ("remove-uithread-checks,dead-code-elimination,inline-isdirectbinding,inline-intptr-size")]
+		public void Optimizations (string opt)
+		{
+			RunMMPTest (tmpDir => {
+				var test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = $"<MonoBundlingExtraArgs>--optimize={opt}</MonoBundlingExtraArgs>" + 
+						"<LinkMode>Full</LinkMode>",
+				};
+				var rv = TI.TestUnifiedExecutable (test, shouldFail: false);
+				rv.Messages.AssertNoWarnings ();
+				rv.Messages.AssertErrorCount (0);
+			});
+		}
+
+		[Test]
+		[TestCase ("inline-runtime-arch")] // This is valid for Xamarin.iOS
+		[TestCase ("foo")]
+		public void MM0132 (string opt)
+		{
+			RunMMPTest (tmpDir => {
+				var test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = $"<MonoBundlingExtraArgs>--optimize={opt}</MonoBundlingExtraArgs>" + 
+						"<LinkMode>Full</LinkMode>",
+				};
+				var rv = TI.TestUnifiedExecutable (test, shouldFail: false);
+				rv.Messages.AssertWarning (132, $"Unknown optimization: '{opt}'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size.");
+				rv.Messages.AssertErrorCount (0);
+			});
+		}
 	}
 }

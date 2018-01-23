@@ -234,6 +234,9 @@ namespace xharness
 			var runSimulatorTasks = new List<RunSimulatorTask> ();
 
 			foreach (var project in Harness.IOSTestProjects) {
+				if (!project.IsExecutableProject)
+					continue;
+
 				bool ignored = !IncludeSimulator;
 				if (!IsIncluded (project))
 					ignored = true;
@@ -274,6 +277,9 @@ namespace xharness
 			var rv = new List<RunDeviceTask> ();
 
 			foreach (var project in Harness.IOSTestProjects) {
+				if (!project.IsExecutableProject)
+					continue;
+				
 				bool ignored = !IncludeDevice;
 				if (!IsIncluded (project))
 					ignored = true;
@@ -1098,9 +1104,13 @@ namespace xharness
 
 		string GetTestColor (IEnumerable<TestTask> tests)
 		{
-			if (tests.All ((v) => v.Succeeded))
-				return "green";
-			else if (tests.Any ((v) => v.Crashed))
+			if (!tests.Any ())
+				return "black";
+
+			var first = tests.First ();
+			if (tests.All ((v) => v.ExecutionResult == first.ExecutionResult))
+				return GetTestColor (first);
+			if (tests.Any ((v) => v.Crashed))
 				return "maroon";
 			else if (tests.Any ((v) => v.TimedOut))
 				return "purple";
@@ -1108,10 +1118,6 @@ namespace xharness
 				return "darkred";
 			else if (tests.Any ((v) => v.Failed))
 				return "red";
-			else if (tests.All ((v) => v.Building))
-				return "darkblue";
-			else if (tests.All ((v) => v.InProgress))
-				return "blue";
 			else if (tests.Any ((v) => v.NotStarted))
 				return "black";
 			else if (tests.Any ((v) => v.Ignored))

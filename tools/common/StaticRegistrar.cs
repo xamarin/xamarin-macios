@@ -3492,10 +3492,10 @@ namespace Registrar {
 						setup_return.AppendLine ("mt_dummy_use (retval);");
 						setup_return.AppendLine ("res = retobj;");
 					} else if (type.IsPlatformType ("ObjCRuntime", "Selector")) {
-						setup_return.AppendLine ("res = xamarin_get_selector_handle (retval, &exception_gchandle);");
+						setup_return.AppendLine ("res = (SEL) xamarin_get_handle_for_inativeobject (retval, &exception_gchandle);");
 						setup_return.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 					} else if (type.IsPlatformType ("ObjCRuntime", "Class")) {
-						setup_return.AppendLine ("res = xamarin_get_class_handle (retval, &exception_gchandle);");
+						setup_return.AppendLine ("res = (Class) xamarin_get_handle_for_inativeobject (retval, &exception_gchandle);");
 						setup_return.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 					} else if (SharedStatic.IsNativeObject (type)) {
 						setup_return.AppendLine ("{0} retobj;", rettype);

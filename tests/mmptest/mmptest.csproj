@@ -83,6 +83,9 @@
     <Compile Include="..\common\ProductTests.cs">
       <Link>ProductTests.cs</Link>
     </Compile>
+    <Compile Include="..\common\ExecutionHelper.cs">
+      <Link>src\ExecutionHelper.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

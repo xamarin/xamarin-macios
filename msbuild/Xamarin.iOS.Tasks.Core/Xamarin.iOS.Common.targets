@@ -19,7 +19,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Codesign" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CollectBundleResources" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ComputeBundleResourceOutputPaths" AssemblyFile="Xamarin.iOS.Tasks.dll" />
-  <UsingTask TaskName="Xamarin.MacDev.Tasks.CoreMLCompiler" AssemblyFile="Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.CoreMLCompiler" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreateAssetPackManifest" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreatePkgInfo" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Ditto" AssemblyFile="Xamarin.iOS.Tasks.dll" />
@@ -1466,6 +1466,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(AppBundleDir)"
 			ProvisioningProfile="$(_ProvisioningProfile)"
+			SdkPlatform="$(_SdkPlatform)"
 			>
 		</EmbedMobileProvision>
 	</Target>

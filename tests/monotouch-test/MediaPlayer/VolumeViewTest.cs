@@ -29,9 +29,6 @@ namespace MonoTouchFixtures.MediaPlayer {
 	[Preserve (AllMembers = true)]
 	public class VolumeViewTest {
 
-		// TODO: Test temporarily ignored.
-		// Reason: MPVolumeView started failing with iOS 11 beta 3.
-		[Ignore]
 		[Test]
 		public void InitWithFrame ()
 		{

@@ -604,6 +604,17 @@ public class B : A {}
 		}
 
 		[Test]
+		public void MT0010 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CustomArguments = new string [] { "--optimize:?" };
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (10, "Could not parse the command line argument '--optimize=?'");
+			}
+		}
+
+		[Test]
 		public void MT0015 ()
 		{
 			using (var mtouch = new MTouchTool ()) {
@@ -1614,6 +1625,35 @@ public class TestApp {
 				mtouch.FastDev = true;
 				mtouch.AssertExecute (MTouchAction.BuildDev, "first build");
 				mtouch.AssertWarning (127, "Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.");
+			}
+		}
+
+		[Test]
+		public void MT0132 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.Optimize = new string [] { "foo" };
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch.");
+			}
+		}
+
+		[Test]
+		[TestCase ("all")]
+		[TestCase ("-all")]
+		[TestCase ("remove-uithread-checks,dead-code-elimination,inline-isdirectbinding,inline-intptr-size,inline-runtime-arch")]
+		public void Optimizations (string opt)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.Optimize = new string [] { opt };
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertNoWarnings ();
 			}
 		}
 
@@ -3242,6 +3282,34 @@ public partial class NotificationService : UNNotificationServiceExtension
 			}
 		}
 
+		[Test]
+		public void MT2003 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Debug = true; // makes simlauncher possible, which speeds up the build
+				mtouch.Optimize = new string [] { "all"};
+				mtouch.AssertExecute (MTouchAction.BuildSim);
+				mtouch.AssertWarning (2003, "Option '--optimize=remove-uithread-checks' will be ignored since linking is disabled");
+				mtouch.AssertWarning (2003, "Option '--optimize=dead-code-elimination' will be ignored since linking is disabled");
+				mtouch.AssertWarning (2003, "Option '--optimize=inline-isdirectbinding' will be ignored since linking is disabled");
+				mtouch.AssertWarning (2003, "Option '--optimize=inline-intptr-size' will be ignored since linking is disabled");
+				mtouch.AssertWarning (2003, "Option '--optimize=inline-runtime-arch' will be ignored since linking is disabled");
+				mtouch.AssertWarningCount (5);
+			}
+
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Debug = true; // makes simlauncher possible, which speeds up the build
+				mtouch.Optimize = new string [] { "-inline-intptr-size" };
+				mtouch.AssertExecute (MTouchAction.BuildSim);
+				mtouch.AssertWarning (2003, "Option '--optimize=-inline-intptr-size' will be ignored since linking is disabled");
+				mtouch.AssertWarningCount (1);
+			}
+		}
+
 		[TestCase (Profile.iOS)]
 		[TestCase (Profile.tvOS)]
 		public void MT2010 (Profile profile)
@@ -3591,6 +3659,38 @@ public class HandlerTest
 				mtouch.Debug = true; // makes the test faster because it makes simlauncher possible
 				mtouch.AssertExecute (MTouchAction.BuildSim);
 			}
+		}
+
+		[Test]
+		[TestCase ("i386", "32-sgen")]
+		[TestCase ("x86_64", "64-sgen")]
+		public void SimlauncherSymbols (string arch, string simlauncher_suffix)
+		{
+			var libxamarin_path = Path.Combine (Configuration.SdkRootXI, "SDKs", "MonoTouch.iphonesimulator.sdk", "usr", "lib", "libxamarin.a");
+			var simlauncher_path = Path.Combine (Configuration.BinDirXI, "simlauncher" + simlauncher_suffix);
+
+			var libxamarin_symbols = new HashSet<string> (GetNativeSymbols (libxamarin_path, arch));
+			var simlauncher_symbols = new HashSet<string> (GetNativeSymbols (simlauncher_path, arch));
+			var only_libxamarin = libxamarin_symbols.Except (simlauncher_symbols);
+
+			var missingSimlauncherSymbols = new List<string> ();
+			foreach (var symbol in only_libxamarin) {
+				switch (symbol) {
+				case "_fix_ranlib_warning_about_no_symbols": // Dummy symbol to fix linker warning
+				case "_fix_ranlib_warning_about_no_symbols_v2": // Dummy symbol to fix linker warning
+				case "_monotouch_IntPtr_objc_msgSendSuper_IntPtr": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
+				case "_monotouch_IntPtr_objc_msgSend_IntPtr": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
+				case "_xamarin_float_objc_msgSend": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
+				case "_xamarin_float_objc_msgSendSuper": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
+				case "_xamarin_nfloat_objc_msgSend": // XM only
+				case "_xamarin_nfloat_objc_msgSendSuper": // Xm only
+					continue;
+				default:
+					missingSimlauncherSymbols.Add (symbol);
+					break;
+				}
+			}
+			Assert.That (missingSimlauncherSymbols, Is.Empty, "no missing simlauncher symbols");
 		}
 
 		public void XamarinSdkAdjustLibs ()
@@ -4020,6 +4120,20 @@ public class TestApp {
 		{
 			if (!Configuration.include_device)
 				Assert.Ignore ("This build does not include device support.");
+		}
+
+		public static IEnumerable<string> GetNativeSymbols (string file, string arch = null)
+		{
+			var arguments = $"-gUjA {StringUtils.Quote (file)}";
+			if (!string.IsNullOrEmpty (arch))
+				arguments += " -arch " + arch;
+			var symbols = ExecutionHelper.Execute ("nm", arguments, hide_output: true).Split ('\n');
+			return symbols.Select ((v) => {
+				var idx = v.LastIndexOf (": ", StringComparison.Ordinal);
+				if (idx <= 0)
+					return v;
+				return v.Substring (idx + 2);
+			});
 		}
 #endregion
 	}
