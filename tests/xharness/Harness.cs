@@ -294,6 +294,7 @@ namespace xharness
 				"System.IO.Compression.FileSystem",
 				"Mono.CSharp",
 				"System.Security",
+				"System.ServiceModel",
 				"System.IdentityModel",
 			};
 			foreach (var p in bcl_suites) {
@@ -338,6 +339,7 @@ namespace xharness
 				"System.IO.Compression.FileSystem",
 				"Mono.CSharp",
 				"System.Security",
+				"System.ServiceModel",
 				"System.IdentityModel",
 			};
 			var bcl_skip_watchos = new string [] {

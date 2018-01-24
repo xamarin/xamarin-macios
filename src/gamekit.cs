@@ -696,7 +696,11 @@ namespace XamCore.GameKit {
 	[Watch (3,0)]
 	[Mac (10, 8)]
 	[BaseType (typeof (GKPlayer))]
-	interface GKLocalPlayer {
+	interface GKLocalPlayer
+#if !TVOS && !WATCH
+	: GKSavedGameListener
+#endif
+	{
 		[Export ("authenticated")]
 		bool Authenticated { [Bind ("isAuthenticated")] get;  }
 

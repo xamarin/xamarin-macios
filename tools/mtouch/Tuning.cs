@@ -27,10 +27,8 @@ namespace MonoTouch.Tuner {
 		public bool LinkSymbols { get; set; }
 		public bool LinkAway { get; set; }
 		public bool Device { get; set; }
-		public bool EnsureUIThread { get; set; }
 		public IList<string> ExtraDefinitions { get; set; }
 		public bool DebugBuild { get; set; }
-		public int Arch { get; set; }
 		public bool IsDualBuild { get; set; }
 		public bool DumpDependencies { get; set; }
 		internal PInvokeWrapperGenerator MarshalNativeExceptionsState { get; set; }

@@ -20,17 +20,26 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 	[TestFixture]
 	public class MPSImageHistogramSpecificationTest
 	{
+		IMTLDevice device;
 
-		[Test]
-		public void Constructors ()
+		[TestFixtureSetUp]
+		public void Metal ()
 		{
 #if !MONOMAC
-			TestRuntime.AssertDevice ();
 			TestRuntime.AssertXcodeVersion (7, 0);
 #else
 			TestRuntime.AssertXcodeVersion (9, 0);
 #endif
 
+			device = MTLDevice.SystemDefault;
+			// some older hardware won't have a default
+			if (device == null)
+				Assert.Inconclusive ("Metal is not supported");
+		}
+
+		[Test]
+		public void Constructors ()
+		{
 			MPSImageHistogramInfo info = new MPSImageHistogramInfo ();
 			info.NumberOfHistogramEntries = 256;
 			using (var obj = new MPSImageHistogramSpecification (MTLDevice.SystemDefault, ref info)) {

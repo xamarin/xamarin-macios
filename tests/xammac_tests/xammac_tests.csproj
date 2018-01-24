@@ -68,6 +68,9 @@
     <Compile Include="..\common\mac\MacTestMain.cs">
       <Link>MacTestMain.cs</Link>
     </Compile>
+    <Compile Include="..\common\ExecutionHelper.cs">
+      <Link>ExecutionHelper.cs</Link>
+    </Compile>
     <Compile Include="..\api-shared\ObjCRuntime\Registrar.cs">
       <Link>Registrar.cs</Link>
     </Compile>
@@ -173,6 +176,7 @@
   <ItemGroup>
     <Folder Include="EmbeddedResources\" />
     <Folder Include="System.ServiceModel\" />
+	<Folder Include="..\monotouch-test\BundleResourceResources\Base.lproj\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">
@@ -183,6 +187,9 @@
   <ItemGroup>
     <BundleResource Include="..\monotouch-test\CoreImage\xamarinmonkey.heic">
       <Link>CoreImage\xamarinmonkey.heic</Link>
+    </BundleResource>
+	<BundleResource Include="..\monotouch-test\Resources\Base.lproj\Localizable.strings" >
+      <Link>Base.lproj\Localizable.strings</Link>
     </BundleResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />

@@ -163,7 +163,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			var main = CFBundle.GetMain ();
 			var localizations = CFBundle.GetLocalizations (main.Url);
-			Assert.AreEqual (0, localizations.Length);
+			Assert.AreEqual (1, localizations.Length);
 		}
 
 		[Test]

@@ -1242,3 +1242,6 @@
 !unknown-native-enum! NSWindowStyle bound
 !wrong-enum-size! NSEventSubtype managed 8 vs native 2
 !wrong-enum-size! NSSpellingState managed 4 vs native 8
+
+## NSGlyphStorage protocol not bound
+!missing-protocol-conformance! NSLayoutManager should conform to NSGlyphStorage (defined in 'NSGlyphGeneration' category)

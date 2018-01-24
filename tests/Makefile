@@ -33,6 +33,7 @@ BCL_TEST_SUITES=mscorlib \
 	System.IO.Compression.FileSystem \
 	Mono.CSharp \
 	System.Security \
+	System.ServiceModel \
 	System.IdentityModel \
 
 ALL_TEST_SUITES=$(TEST_SUITES) $(BCL_TEST_SUITES)

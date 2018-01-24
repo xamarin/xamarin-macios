@@ -98,9 +98,9 @@ namespace xharness
 			return rv;
 		}
 
-		internal async Task CreateCopyAsync (TestTask test)
+		internal async Task CreateCopyAsync (TestTask test = null)
 		{
-			var directory = Xamarin.Cache.CreateTemporaryDirectory (test.TestName);
+			var directory = Xamarin.Cache.CreateTemporaryDirectory (test?.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
 			Directory.CreateDirectory (directory);
 			var original_path = Path;
 			Path = System.IO.Path.Combine (directory, System.IO.Path.GetFileName (Path));

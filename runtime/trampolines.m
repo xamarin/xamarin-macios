@@ -63,10 +63,10 @@ xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *ret
 	/* Any changes in this method probably need to be reflected in the static registrar as well */
 	switch (type [0]) {
 		case _C_CLASS:
-			return xamarin_get_class_handle (retval, exception_gchandle);
+			return xamarin_get_handle_for_inativeobject (retval, exception_gchandle);
 
 		case _C_SEL:
-			return xamarin_get_selector_handle (retval, exception_gchandle);
+			return xamarin_get_handle_for_inativeobject (retval, exception_gchandle);
 
 		case _C_PTR: {
 			MonoClass *klass = mono_class_from_mono_type (mtype);

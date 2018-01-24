@@ -4205,11 +4205,7 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (AVAsset), Name="AVURLAsset")]
 	// 'init' returns NIL
 	[DisableDefaultCtor]
-	interface AVUrlAsset {
-
-		[TV (10, 2), Mac (10, 12, 4), iOS (10, 3)]
-		[Export ("mayRequireContentKeysForMediaDataProcessing")]
-		bool MayRequireContentKeysForMediaDataProcessing { get; }
+	interface AVUrlAsset : AVContentKeyRecipient {
 
 		[Export ("URL", ArgumentSemantic.Copy)]
 		NSUrl Url { get;  }
@@ -11517,7 +11513,13 @@ namespace XamCore.AVFoundation {
 		bool ReadyForMoreMediaData { [Bind ("isReadyForMoreMediaData")] get; }
 
 		[Export ("enqueueSampleBuffer:")]
+		void Enqueue (CMSampleBuffer sampleBuffer);
+
+#if !XAMCORE_4_0
+		[Wrap ("Enqueue (sampleBuffer)", IsVirtual = true)]
+		[Obsolete ("Use the 'Enqueue' method instead.")]
 		void EnqueueSampleBuffer (CMSampleBuffer sampleBuffer);
+#endif
 
 		[Export ("flush")]
 		void Flush ();
@@ -11526,11 +11528,22 @@ namespace XamCore.AVFoundation {
 		void FlushAndRemoveImage ();
 
 		[Export ("requestMediaDataWhenReadyOnQueue:usingBlock:")]
+		void RequestMediaData (DispatchQueue queue, Action handler);
+
+#if !XAMCORE_4_0
+		[Wrap ("RequestMediaData (queue, enqueuer)", IsVirtual = true)]
+		[Obsolete ("Use the 'RequestMediaData' method instead.")]
 		void RequestMediaDataWhenReadyOnQueue (DispatchQueue queue, Action enqueuer);
+#endif
 
 		[Export ("stopRequestingMediaData")]
 		void StopRequestingMediaData ();
-		
+
+		// TODO: Remove (alongside others) when https://github.com/xamarin/xamarin-macios/issues/3213 is fixed and conformance to 'AVQueuedSampleBufferRendering' is restored.
+		[TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("timebase", ArgumentSemantic.Retain)]
+		CMTimebase Timebase { get; }
+
 		[iOS (8, 0), Mac (10,10)]
 		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotification")]
 		[Notification]

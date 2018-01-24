@@ -262,6 +262,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			IsAppExtension="$(IsAppExtension)"
 			ProvisioningProfile="$(_ProvisioningProfile)"
 			SdkVersion="$(MacOSXSdkVersion)"
+			SdkPlatform="MacOSX"
 			SdkDevPath="$(_SdkDevPath)"
 			Debug="$(DebugSymbols)"
 			>

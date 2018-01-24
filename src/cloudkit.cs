@@ -12,7 +12,7 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You must call -[CKAsset initWithFileURL:] or -[CKAsset initWithData:]
 	[BaseType (typeof (NSObject))]
-	interface CKAsset : NSCoding, NSSecureCoding {
+	interface CKAsset : NSCoding, NSSecureCoding, CKRecordValue {
 
 		[Export ("initWithFileURL:")]
 		IntPtr Constructor (NSUrl fileUrl);
@@ -1511,7 +1511,7 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You must call -[CKReference initWithRecordID:] or -[CKReference initWithRecord:] or -[CKReference initWithAsset:]
 	[BaseType (typeof (NSObject))]
-	interface CKReference : NSSecureCoding, NSCopying {
+	interface CKReference : NSSecureCoding, NSCopying, CKRecordValue {
 
 		[DesignatedInitializer]
 		[Export ("initWithRecordID:action:")]

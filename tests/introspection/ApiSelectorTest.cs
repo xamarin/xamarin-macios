@@ -175,6 +175,21 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (9, 0);
 				}
 				break;
+#if !XAMCORE_4_0
+			case "NSUrl":
+				switch (selectorName) {
+				case "previewItemTitle":
+					// 'previewItemTitle' should be optional (fixed in XAMCORE_4_0)
+					return true;
+				}
+				break;
+#endif
+			case "MKMapItem": // Selector not available on iOS 32-bit
+				switch (selectorName) {
+				case "encodeWithCoder:":
+					return !TestRuntime.CheckXcodeVersion (9, 0);
+				}
+				break;
 #if !MONOMAC
 			case "MTLCaptureManager":
 			case "NEHotspotEapSettings": // Wireless Accessory Configuration is not supported in the simulator.

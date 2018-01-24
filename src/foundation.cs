@@ -32,13 +32,21 @@
 //
 #define DOUBLE_BLOCKS
 using XamCore.ObjCRuntime;
+using XamCore.CloudKit;
+using XamCore.CoreData;
 using XamCore.CoreFoundation;
 using XamCore.Foundation;
 using XamCore.CoreGraphics;
+#if IOS
+using XamCore.QuickLook;
+#endif
+#if !TVOS
+using XamCore.Contacts;
+#endif
 #if !WATCH
+using XamCore.CoreAnimation;
 using XamCore.CoreMedia;
 using XamCore.CoreSpotlight;
-using XamCore.CloudKit;
 #endif
 using XamCore.SceneKit;
 using XamCore.Security;
@@ -48,6 +56,7 @@ using XamCore.FileProvider;
 
 #if MONOMAC
 using XamCore.AppKit;
+using XamCore.QuickLookUI;
 #else
 using XamCore.CoreLocation;
 using XamCore.UIKit;
@@ -102,7 +111,7 @@ namespace XamCore.Foundation
 	interface NSArray<TValue> : NSArray {}
 
 	[BaseType (typeof (NSObject))]
-	interface NSArray : NSSecureCoding, NSMutableCopying, INSFastEnumeration {
+	interface NSArray : NSSecureCoding, NSMutableCopying, INSFastEnumeration, CKRecordValue {
 		[Export ("count")]
 		nuint Count { get; }
 
@@ -1372,7 +1381,7 @@ namespace XamCore.Foundation
 	delegate void NSDataByteRangeEnumerator (IntPtr bytes, NSRange range, ref bool stop);
 	
 	[BaseType (typeof (NSObject))]
-	interface NSData : NSSecureCoding, NSMutableCopying {
+	interface NSData : NSSecureCoding, NSMutableCopying, CKRecordValue {
 		[Export ("dataWithContentsOfURL:")]
 		[Static]
 		NSData FromUrl (NSUrl url);
@@ -3495,7 +3504,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-	interface NSDate : NSSecureCoding, NSCopying {
+	interface NSDate : NSSecureCoding, NSCopying, CKRecordValue {
 		[Export ("timeIntervalSinceReferenceDate")]
 		double SecondsSinceReferenceDate { get; }
 
@@ -3542,7 +3551,7 @@ namespace XamCore.Foundation
 	}
 	
 	[BaseType (typeof (NSObject))]
-	interface NSDictionary : NSSecureCoding, NSMutableCopying {
+	interface NSDictionary : NSSecureCoding, NSMutableCopying, NSFetchRequestResult, INSFastEnumeration {
 		[Export ("dictionaryWithContentsOfFile:")]
 		[Static]
 		NSDictionary FromFile (string path);
@@ -4069,7 +4078,11 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-	interface NSNull : NSSecureCoding, NSCopying {
+	interface NSNull : NSSecureCoding, NSCopying
+#if !WATCH
+	, CAAction
+#endif
+	{
 		[Export ("null"), Static]
 		NSNull Null { get; }
 	}
@@ -5264,6 +5277,9 @@ namespace XamCore.Foundation
 #endif
 #if !(MONOMAC && !XAMCORE_2_0) // exclude Classic/XM
 	, NSItemProviderWriting, NSItemProviderReading
+#endif
+#if IOS || MONOMAC
+	, QLPreviewItem
 #endif
 	{
 		[Export ("initWithScheme:host:path:")]
@@ -7726,7 +7742,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject)), Bind ("NSString")]
-	interface NSString2 : NSSecureCoding, NSMutableCopying
+	interface NSString2 : NSSecureCoding, NSMutableCopying, CKRecordValue
 	#if MONOMAC
 		, NSPasteboardReading, NSPasteboardWriting // Documented that it implements NSPasteboard protocols even if header doesn't show it
 	#endif
@@ -9190,7 +9206,7 @@ namespace XamCore.Foundation
 		string PathForResource (string name, [NullAllowed] string ofType, string subpath, string localizationName);
 
 		[Export ("localizedStringForKey:value:table:")]
-		string LocalizedString ([NullAllowed] string key, [NullAllowed] string value, [NullAllowed] string table);
+		NSString GetLocalizedString ([NullAllowed] NSString key, [NullAllowed] NSString value, [NullAllowed] NSString table);
 
 		[Export ("objectForInfoDictionaryKey:")]
 		NSObject ObjectForInfoDictionary (string key);
@@ -10522,7 +10538,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSValue))]
 	// init returns NIL
 	[DisableDefaultCtor]
-	interface NSNumber {
+	interface NSNumber : CKRecordValue, NSFetchRequestResult {
 		[Export ("charValue")]
 		sbyte SByteValue { get; }
 	
@@ -12070,7 +12086,11 @@ namespace XamCore.Foundation
 		[Abstract]
 #endif
 		[Export ("presentedItemOperationQueue", ArgumentSemantic.Retain)]
+#if XAMCORE_4_0
+		NSOperationQueue PresentedItemOperationQueue { get; }
+#else
 		NSOperationQueue PesentedItemOperationQueue { get; }
+#endif
 
 #if DOUBLE_BLOCKS
 		[Export ("relinquishPresentedItemToReader:")]

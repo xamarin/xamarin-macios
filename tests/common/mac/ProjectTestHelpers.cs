@@ -8,10 +8,11 @@ using System.Text.RegularExpressions;
 using NUnit.Framework;
 using System.Reflection;
 using Xamarin.Utils;
+using Xamarin.Tests;
 
 namespace Xamarin.MMP.Tests
 {
-	public struct OutputText
+	public class OutputText
 	{
 		public string BuildOutput { get; private set; }
 		public string RunOutput { get; private set; }
@@ -20,6 +21,25 @@ namespace Xamarin.MMP.Tests
 		{
 			BuildOutput = buildOutput;
 			RunOutput = runOutput;
+		}
+
+		MessageTool messages;
+		internal MessageTool Messages {
+			get {
+				if (messages == null) {
+					messages = new MessageTool ();
+					messages.Output.Append (BuildOutput);
+					messages.ParseMessages ();
+				}
+				return messages;
+			}
+		}
+
+		internal class MessageTool : Tool
+		{
+			protected override string ToolPath => throw new NotImplementedException ();
+
+			protected override string MessagePrefix => "MM";
 		}
 	}
 

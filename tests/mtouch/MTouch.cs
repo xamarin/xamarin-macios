@@ -70,18 +70,18 @@ namespace Xamarin
 
 				var profiler_symbol = "_mono_profiler_init_log";
 
-				var symbols = File.ReadAllLines (mtouch.SymbolList);
+				var symbols = (IEnumerable<string>) File.ReadAllLines (mtouch.SymbolList);
 				Assert.That (symbols, Contains.Item (profiler_symbol), profiler_symbol);
 
-				symbols = ExecutionHelper.Execute ("nm", StringUtils.Quote (mtouch.NativeExecutablePath), hide_output: true).Split ('\n');
-				Assert.That (symbols, Has.Some.EndsWith (" T " + profiler_symbol), $"{profiler_symbol} nm");
+				symbols = GetNativeSymbols (mtouch.NativeExecutablePath);
+				Assert.That (symbols, Contains.Item (profiler_symbol), $"{profiler_symbol} nm");
 
 				if (ext != null) {
 					symbols = File.ReadAllLines (ext.SymbolList);
 					Assert.That (symbols, Contains.Item (profiler_symbol), $"{profiler_symbol} - extension");
 
-					symbols = ExecutionHelper.Execute ("nm", StringUtils.Quote (ext.NativeExecutablePath), hide_output: true).Split ('\n');
-					Assert.That (symbols, Has.Some.EndsWith (" T " + profiler_symbol), $"{profiler_symbol} extension nm");
+					symbols = GetNativeSymbols (ext.NativeExecutablePath);
+					Assert.That (symbols, Contains.Item (profiler_symbol), $"{profiler_symbol} extension nm");
 
 				}
 			}
@@ -167,7 +167,7 @@ public class B : A {}
 				mtouch.CustomArguments = new string [] { "--dlsym:+A.dll", "--dlsym:-testApp.exe" };
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
 
-				var symbols = ExecutionHelper.Execute ("nm", $"-gUj {StringUtils.Quote (mtouch.NativeExecutablePath)}", hide_output: true).Split ('\n');
+				var symbols = GetNativeSymbols (mtouch.NativeExecutablePath);
 				Assert.That (symbols, Does.Contain ("_xamarin_start_wwan"), "symb");
 			}
 		}
@@ -600,6 +600,17 @@ public class B : A {}
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
 				mtouch.AssertError (3, "Application name 'mscorlib.exe' conflicts with an SDK or product assembly (.dll) name.");
+			}
+		}
+
+		[Test]
+		public void MT0010 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CustomArguments = new string [] { "--optimize:?" };
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (10, "Could not parse the command line argument '--optimize=?'");
 			}
 		}
 
@@ -1618,6 +1629,35 @@ public class TestApp {
 		}
 
 		[Test]
+		public void MT0132 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.Optimize = new string [] { "foo" };
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch.");
+			}
+		}
+
+		[Test]
+		[TestCase ("all")]
+		[TestCase ("-all")]
+		[TestCase ("remove-uithread-checks,dead-code-elimination,inline-isdirectbinding,inline-intptr-size,inline-runtime-arch")]
+		public void Optimizations (string opt)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.Optimize = new string [] { opt };
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertNoWarnings ();
+			}
+		}
+
+		[Test]
 		public void ExtensionBuild ()
 		{
 			using (var mtouch = new MTouchTool ()) {
@@ -1895,11 +1935,11 @@ public class TestApp {
 				mtouch.CreateTemporaryApp_LinkWith ();
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev), "build");
 
-				var symbols = ExecutionHelper.Execute ("nm", StringUtils.Quote (mtouch.NativeExecutablePath), hide_output: true).Split ('\n');
-				Assert.That (symbols, Has.None.EndsWith (" T _theUltimateAnswer"), "Binding symbol not in executable");
+				var symbols = GetNativeSymbols (mtouch.NativeExecutablePath);
+				Assert.That (symbols, Has.None.EqualTo ("_theUltimateAnswer"), "Binding symbol not in executable");
 
-				symbols = ExecutionHelper.Execute ("nm", StringUtils.Quote (Path.Combine (mtouch.AppPath, "libbindings-test.dll.dylib")), hide_output: true).Split ('\n');
-				Assert.That (symbols, Has.Some.EndsWith (" T _theUltimateAnswer"), "Binding symbol in binding library");
+				symbols = GetNativeSymbols (Path.Combine (mtouch.AppPath, "libbindings-test.dll.dylib"));
+				Assert.That (symbols, Has.Some.EqualTo ("_theUltimateAnswer"), "Binding symbol in binding library");
 			}
 		}
 
@@ -2414,15 +2454,15 @@ public class TestApp {
 				// each variation is tested twice so that we don't break when everything is found in the cache the second time around.
 
 				mtouch.AssertExecute (MTouchAction.BuildDev, "first build");
-				var symbols = ExecutionHelper.Execute ("nm", mtouch.NativeExecutablePath, hide_output: true).Split ('\n');
-				Assert.That (symbols, Has.Some.EndsWith (" S _dummy_field"), "Field not found in initial build");
-				Assert.That (symbols, Has.Some.EndsWith (" T _DummyMethod"), "P/invoke not found in initial build");
+				var symbols = GetNativeSymbols (mtouch.NativeExecutablePath);
+				Assert.That (symbols, Has.Some.EqualTo ("_dummy_field"), "Field not found in initial build");
+				Assert.That (symbols, Has.Some.EqualTo ("_DummyMethod"), "P/invoke not found in initial build");
 
 				ExecutionHelper.Execute ("touch", bindingLib); // This will make it so that the second identical variation won't skip the final link step.
 				mtouch.AssertExecute (MTouchAction.BuildDev, "second build");
-				symbols = ExecutionHelper.Execute ("nm", mtouch.NativeExecutablePath, hide_output: true).Split ('\n');
-				Assert.That (symbols, Has.Some.EndsWith (" S _dummy_field"), "Field not found in second build");
-				Assert.That (symbols, Has.Some.EndsWith (" T _DummyMethod"), "P/invoke not found in second build");
+				symbols = GetNativeSymbols (mtouch.NativeExecutablePath);
+				Assert.That (symbols, Has.Some.EqualTo ("_dummy_field"), "Field not found in second build");
+				Assert.That (symbols, Has.Some.EqualTo ("_DummyMethod"), "P/invoke not found in second build");
 			}
 		}
 
@@ -2475,15 +2515,9 @@ public class TestApp {
 
 					mtouch.AssertExecute (MTouchAction.BuildDev, $"build #{iteration}");
 
-					var lines = ExecutionHelper.Execute ("nm", mtouch.NativeExecutablePath, hide_output: true).Split ('\n');
-					var found_field = false;
-					var found_pinvoke = false;
-					foreach (var line in lines) {
-						found_field |= line.EndsWith (" S _dummy_field", StringComparison.Ordinal);
-						found_pinvoke |= line.EndsWith (" T _DummyMethod", StringComparison.Ordinal);
-						if (found_field && found_pinvoke)
-							break;
-					}
+					var lines = GetNativeSymbols (mtouch.NativeExecutablePath);
+					var found_field = lines.Contains ("_dummy_field");
+					var found_pinvoke = lines.Contains ("_DummyMethod");
 
 					Assert.IsFalse (found_field, string.Format ("Field found for variation #{0}", iteration));
 					Assert.IsFalse (found_field, string.Format ("P/Invoke found for variation #{0}", iteration));
@@ -3242,6 +3276,34 @@ public partial class NotificationService : UNNotificationServiceExtension
 			}
 		}
 
+		[Test]
+		public void MT2003 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Debug = true; // makes simlauncher possible, which speeds up the build
+				mtouch.Optimize = new string [] { "all"};
+				mtouch.AssertExecute (MTouchAction.BuildSim);
+				mtouch.AssertWarning (2003, "Option '--optimize=remove-uithread-checks' will be ignored since linking is disabled");
+				mtouch.AssertWarning (2003, "Option '--optimize=dead-code-elimination' will be ignored since linking is disabled");
+				mtouch.AssertWarning (2003, "Option '--optimize=inline-isdirectbinding' will be ignored since linking is disabled");
+				mtouch.AssertWarning (2003, "Option '--optimize=inline-intptr-size' will be ignored since linking is disabled");
+				mtouch.AssertWarning (2003, "Option '--optimize=inline-runtime-arch' will be ignored since linking is disabled");
+				mtouch.AssertWarningCount (5);
+			}
+
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Debug = true; // makes simlauncher possible, which speeds up the build
+				mtouch.Optimize = new string [] { "-inline-intptr-size" };
+				mtouch.AssertExecute (MTouchAction.BuildSim);
+				mtouch.AssertWarning (2003, "Option '--optimize=-inline-intptr-size' will be ignored since linking is disabled");
+				mtouch.AssertWarningCount (1);
+			}
+		}
+
 		[TestCase (Profile.iOS)]
 		[TestCase (Profile.tvOS)]
 		public void MT2010 (Profile profile)
@@ -3593,6 +3655,38 @@ public class HandlerTest
 			}
 		}
 
+		[Test]
+		[TestCase ("i386", "32-sgen")]
+		[TestCase ("x86_64", "64-sgen")]
+		public void SimlauncherSymbols (string arch, string simlauncher_suffix)
+		{
+			var libxamarin_path = Path.Combine (Configuration.SdkRootXI, "SDKs", "MonoTouch.iphonesimulator.sdk", "usr", "lib", "libxamarin.a");
+			var simlauncher_path = Path.Combine (Configuration.BinDirXI, "simlauncher" + simlauncher_suffix);
+
+			var libxamarin_symbols = new HashSet<string> (GetNativeSymbols (libxamarin_path, arch));
+			var simlauncher_symbols = new HashSet<string> (GetNativeSymbols (simlauncher_path, arch));
+			var only_libxamarin = libxamarin_symbols.Except (simlauncher_symbols);
+
+			var missingSimlauncherSymbols = new List<string> ();
+			foreach (var symbol in only_libxamarin) {
+				switch (symbol) {
+				case "_fix_ranlib_warning_about_no_symbols": // Dummy symbol to fix linker warning
+				case "_fix_ranlib_warning_about_no_symbols_v2": // Dummy symbol to fix linker warning
+				case "_monotouch_IntPtr_objc_msgSendSuper_IntPtr": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
+				case "_monotouch_IntPtr_objc_msgSend_IntPtr": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
+				case "_xamarin_float_objc_msgSend": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
+				case "_xamarin_float_objc_msgSendSuper": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
+				case "_xamarin_nfloat_objc_msgSend": // XM only
+				case "_xamarin_nfloat_objc_msgSendSuper": // Xm only
+					continue;
+				default:
+					missingSimlauncherSymbols.Add (symbol);
+					break;
+				}
+			}
+			Assert.That (missingSimlauncherSymbols, Is.Empty, "no missing simlauncher symbols");
+		}
+
 		public void XamarinSdkAdjustLibs ()
 		{
 			using (var exttool = new MTouchTool ()) {
@@ -3910,7 +4004,7 @@ public class TestApp {
 	
 		static void VerifyGC (string file, string message)
 		{
-			var symbols = ExecutionHelper.Execute ("nm", file, hide_output: true);
+			var symbols = GetNativeSymbols (file);
 			var _sgen_gc_lock = symbols.Contains ("_sgen_gc_lock");
 			if (!_sgen_gc_lock) {
 				Assert.Fail ("Expected '{0}' to use SGen: {1}", file, message);
@@ -4020,6 +4114,20 @@ public class TestApp {
 		{
 			if (!Configuration.include_device)
 				Assert.Ignore ("This build does not include device support.");
+		}
+
+		public static IEnumerable<string> GetNativeSymbols (string file, string arch = null)
+		{
+			var arguments = $"-gUjA {StringUtils.Quote (file)}";
+			if (!string.IsNullOrEmpty (arch))
+				arguments += " -arch " + arch;
+			var symbols = ExecutionHelper.Execute ("nm", arguments, hide_output: true).Split ('\n');
+			return symbols.Select ((v) => {
+				var idx = v.LastIndexOf (": ", StringComparison.Ordinal);
+				if (idx <= 0)
+					return v;
+				return v.Substring (idx + 2);
+			});
 		}
 #endregion
 	}
