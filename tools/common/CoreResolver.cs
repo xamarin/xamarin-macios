@@ -115,7 +115,7 @@ namespace Xamarin.Bundler {
 			var files = Directory.GetFiles (directory, file, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
 			if (files != null && files.Length > 0) {
 				if (files.Length > 1) {
-					ErrorHelper.Warning (132, "Found more than 1 assembly matching '{0}', choosing first:{1}{2}", file, Environment.NewLine, string.Join ("\n", files));
+					ErrorHelper.Warning (133, "Found more than 1 assembly matching '{0}', choosing first:{1}{2}", file, Environment.NewLine, string.Join ("\n", files));
 				}
 				return files [0];
 			}
