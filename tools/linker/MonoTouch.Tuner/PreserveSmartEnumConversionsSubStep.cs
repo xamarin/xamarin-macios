@@ -51,15 +51,6 @@ namespace Xamarin.Linker.Steps
 			}
 		}
 
-		static string ProviderToString (ICustomAttributeProvider provider)
-		{
-			if (provider is MemberReference member)
-				return member.DeclaringType.FullName + "." + member.Name;
-			if (provider is MethodReturnType returnType)
-				return ProviderToString ((ICustomAttributeProvider) returnType.Method);
-			return provider.ToString ();
-		}
-
 		void ProcessAttributeProvider (ICustomAttributeProvider provider, MethodDefinition conditionA, MethodDefinition conditionB = null)
 		{
 			if (provider?.HasCustomAttributes != true)
@@ -72,14 +63,14 @@ namespace Xamarin.Linker.Steps
 					continue;
 
 				if (ca.ConstructorArguments.Count != 1) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, "Invalid BindAsAttribute found on '{0}': should have 1 constructor arguments, found {1}. Please file a bug report at https://bugzilla.xamarin.com", ProviderToString (provider), ca.ConstructorArguments.Count));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, "Invalid BindAsAttribute found on '{0}': should have 1 constructor arguments, found {1}. Please file a bug report at https://bugzilla.xamarin.com", provider.AsString (), ca.ConstructorArguments.Count));
 					continue;
 				}
 
 				var managedType = ca.ConstructorArguments [0].Value as TypeReference;
 				var managedEnumType = managedType?.GetElementType ().Resolve ();
 				if (managedEnumType == null) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, "Invalid BindAsAttribute found on '{0}': could not find the underlying enum type of {1}. Please file a bug report at https://bugzilla.xamarin.com", ProviderToString (provider), managedType?.FullName));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, "Invalid BindAsAttribute found on '{0}': could not find the underlying enum type of {1}. Please file a bug report at https://bugzilla.xamarin.com", provider.AsString (), managedType?.FullName));
 					continue;
 				}
 
@@ -105,7 +96,7 @@ namespace Xamarin.Linker.Steps
 					break;
 				}
 				if (extensionType == null) {
-					Driver.Log (1, $"Could not find a smart extension type for the enum {managedEnumType.FullName} (due to BindAs attribute on {ProviderToString (provider)}): most likely this is because the enum isn't a smart enum.");
+					Driver.Log (1, $"Could not find a smart extension type for the enum {managedEnumType.FullName} (due to BindAs attribute on {provider.AsString ()}): most likely this is because the enum isn't a smart enum.");
 					continue;
 				}
 
@@ -134,12 +125,12 @@ namespace Xamarin.Linker.Steps
 				}
 
 				if (getConstant == null) {
-					Driver.Log (1, $"Could not find the GetConstant method on the supposedly smart extension type {extensionType.FullName} for the enum {managedEnumType.FullName} (due to BindAs attribute on {ProviderToString (provider)}): most likely this is because the enum isn't a smart enum.");
+					Driver.Log (1, $"Could not find the GetConstant method on the supposedly smart extension type {extensionType.FullName} for the enum {managedEnumType.FullName} (due to BindAs attribute on {provider.AsString ()}): most likely this is because the enum isn't a smart enum.");
 					continue;
 				}
 
 				if (getValue == null) {
-					Driver.Log (1, $"Could not find the GetValue method on the supposedly smart extension type {extensionType.FullName} for the enum {managedEnumType.FullName} (due to BindAs attribute on {ProviderToString (provider)}): most likely this is because the enum isn't a smart enum.");
+					Driver.Log (1, $"Could not find the GetValue method on the supposedly smart extension type {extensionType.FullName} for the enum {managedEnumType.FullName} (due to BindAs attribute on {provider.AsString ()}): most likely this is because the enum isn't a smart enum.");
 					continue;
 				}
 

@@ -10,6 +10,16 @@ namespace Xamarin.Linker {
 
 	public static class MobileExtensions {
 
+		// Returns a string representation of the specified provider that is suitable for user-visible error/warning messages.
+		public static string AsString (this ICustomAttributeProvider provider)
+		{
+			if (provider is MemberReference member)
+				return member.DeclaringType.FullName + "." + member.Name;
+			if (provider is MethodReturnType returnType)
+				return AsString ((ICustomAttributeProvider) returnType.Method);
+			return provider.ToString ();
+		}
+
 		// This method will look in any stored attributes in the link context as well as the provider itself.
 		public static bool HasCustomAttribute (this ICustomAttributeProvider provider, DerivedLinkContext context, string @namespace, string name)
 		{
