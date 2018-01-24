@@ -490,7 +490,7 @@ app_initialize (xamarin_initialize_data *data)
 		xamarin_entry_assembly_path = strdup ([dllPath UTF8String]);
 	}
 
-	// 7a) [If not embedding] Parse the system Mono's config file ($monodir/etc/mono/config).
+	// 7a) [If not embedding] Don't parse any config files, leave it to the Mono runtime to load the defaults.
 	// 7b) [If embedding] Parse $appdir/Contents/MonoBundle/machine.config and $appdir/Contents/MonoBundle/config
 	if (!mkbundle) {
 		NSString *config_path = nil;
