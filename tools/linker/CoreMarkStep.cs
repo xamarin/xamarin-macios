@@ -66,7 +66,7 @@ namespace Xamarin.Linker.Steps {
 				if (!Annotations.IsMarked (od))
 					continue;
 				// we do NOT process non-generated code - we could break user code
-				if (!od.IsGeneratedCode (LinkContext))
+				if (!od.IsOptimizableCode (LinkContext))
 					continue;
 
 				ProcessDispose (skip ? bd : cd, od);
@@ -142,7 +142,7 @@ namespace Xamarin.Linker.Steps {
 		{
 			if (!method.IsFamily || !method.IsVirtual || method.IsNewSlot || !method.HasParameters || !method.HasBody)
 				return false;
-			return ((method.Name == "Dispose") && method.IsGeneratedCode (LinkContext));
+			return ((method.Name == "Dispose") && method.IsOptimizableCode (LinkContext));
 		}
 
 		protected override TypeDefinition MarkType (TypeReference reference)
@@ -254,7 +254,7 @@ namespace Xamarin.Linker.Steps {
 					var td = i.Module.GetType (i.Namespace, i.Name.Substring (1) + "_Extensions");
 					if (td != null && td.HasMethods) {
 						foreach (var m in td.Methods) {
-							if (!m.HasParameters || (m.Name != name) || !m.IsGeneratedCode (LinkContext))
+							if (!m.HasParameters || (m.Name != name) || !m.IsOptimizableCode (LinkContext))
 							    continue;
 							bool proxy = false;
 							match = method.Parameters.Count == m.Parameters.Count - 1;

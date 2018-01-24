@@ -136,6 +136,7 @@ mmp_sources = \
 	$(TOP)/src/Foundation/ConnectAttribute.cs \
 	$(TOP)/src/Foundation/ExportAttribute.cs \
 	$(TOP)/src/ObjCRuntime/ArgumentSemantic.cs \
+	$(TOP)/src/ObjCRuntime/BindingImplAttribute.cs	\
 	$(TOP)/src/ObjCRuntime/LinkWithAttribute.cs \
 	$(TOP)/src/ObjCRuntime/PlatformAvailability2.cs \
 

@@ -105,6 +105,7 @@ MTOUCH_SOURCES = \
 	$(COMMON_SOURCES)	\
 	$(LINKER_SOURCES)	\
 	$(TOP)/src/ObjCRuntime/ArgumentSemantic.cs	\
+	$(TOP)/src/ObjCRuntime/BindingImplAttribute.cs	\
 	$(TOP)/src/ObjCRuntime/LinkWithAttribute.cs	\
 	$(TOP)/src/ObjCRuntime/NativeAttribute.cs	\
 	$(TOP)/src/ObjCRuntime/PlatformAvailability2.cs	\
