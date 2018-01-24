@@ -214,6 +214,9 @@ namespace Introspection {
 				case "FPUIActionExtensionContext": // Conformance not in headers
 				case "UIDocumentBrowserAction": // Conformance not in headers
 					return true;
+				// iOS 11.3
+				case "PKSuicaPassProperties": // Conformance not in headers
+					return true;
 				// Header shows implementing NSSecureCoding, but supportsSecureCoding returns false.  Radar #34800025
 				case "HKSeriesBuilder":
 				case "HKWorkoutRouteBuilder":
@@ -363,6 +366,9 @@ namespace Introspection {
 				case "FPUIActionExtensionContext": // Conformance not in headers
 				case "UIDocumentBrowserAction": // Conformance not in headers
 					return true;
+				// iOS 11.3
+				case "PKSuicaPassProperties": // Conformance not in headers
+					return true;
 				// Header shows implementing NSSecureCoding, but supportsSecureCoding returns false.  Radar #34800025
 				case "HKSeriesBuilder":
 				case "HKWorkoutRouteBuilder":
@@ -460,6 +466,10 @@ namespace Introspection {
 					return true;
 				// iOS 11.1
 				case "ARDirectionalLightEstimate":
+					return true;
+				// iOS 11.3
+				case "PKSuicaPassProperties": // Conformance not in headers
+				case "WKPreferences": // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTimelineEntry":

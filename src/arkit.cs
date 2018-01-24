@@ -110,7 +110,7 @@ namespace XamCore.ARKit {
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface ARAnchor : NSCopying {
+	interface ARAnchor : NSCopying, NSSecureCoding {
 
 		[NullAllowed, Export ("identifier")]
 		NSUuid Identifier { get; }
@@ -284,7 +284,7 @@ namespace XamCore.ARKit {
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface ARPointCloud {
+	interface ARPointCloud : NSSecureCoding {
 
 		[Export ("count")]
 		nuint Count { get; }
@@ -821,7 +821,7 @@ namespace XamCore.ARKit {
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface ARFaceGeometry : NSCopying {
+	interface ARFaceGeometry : NSCopying, NSSecureCoding {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithBlendShapes:")]
 		IntPtr Constructor (NSDictionary blendShapes);
