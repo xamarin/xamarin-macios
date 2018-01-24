@@ -70,7 +70,7 @@ LINKER_SOURCES = \
 	$(LINKER_DIR)/MonoTouch.Tuner/OptimizeGeneratedCodeSubStep.cs	\
 	$(LINKER_DIR)/MonoTouch.Tuner/PreserveCode.cs			\
 	$(LINKER_DIR)/MonoTouch.Tuner/ProcessExportedFields.cs	\
-	$(LINKER_DIR)/MonoTouch.Tuner/RemoveAttributes.cs		\
+	$(LINKER_DIR)/MonoTouch.Tuner/MonoTouchRemoveAttributes.cs		\
 	$(LINKER_DIR)/MonoTouch.Tuner/RemoveCode.cs			\
 	$(LINKER_DIR)/MonoTouch.Tuner/SealerSubStep.cs	\
 	$(LINKER_DIR)/MonoTouch.Tuner/PreserveSmartEnumConversionsSubStep.cs		\
@@ -87,7 +87,6 @@ LINKER_SOURCES = \
 	$(TOP)/tools/linker/MobileExtensions.cs		\
 	$(TOP)/tools/linker/MobileMarkStep.cs			\
 	$(TOP)/tools/linker/MobileProfile.cs			\
-	$(TOP)/tools/linker/MobileRemoveAttributes.cs		\
 	$(TOP)/tools/linker/MobileResolveMainAssemblyStep.cs	\
 	$(TOP)/tools/linker/MobileSweepStep.cs			\
 	$(TOP)/tools/linker/ObjCExtensions.cs			\

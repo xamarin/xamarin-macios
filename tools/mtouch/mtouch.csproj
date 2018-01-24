@@ -71,8 +71,8 @@
     <Compile Include="..\linker\MonoTouch.Tuner\PreserveCode.cs">
       <Link>MonoTouch.Tuner\PreserveCode.cs</Link>
     </Compile>
-    <Compile Include="..\linker\MonoTouch.Tuner\RemoveAttributes.cs">
-      <Link>MonoTouch.Tuner\RemoveAttributes.cs</Link>
+    <Compile Include="..\linker\MonoTouch.Tuner\MonoTouchRemoveAttributes.cs">
+      <Link>MonoTouch.Tuner\MonoTouchRemoveAttributes.cs</Link>
     </Compile>
     <Compile Include="..\linker\MonoTouch.Tuner\RemoveCode.cs">
       <Link>MonoTouch.Tuner\RemoveCode.cs</Link>
@@ -235,9 +235,6 @@
     </Compile>
     <Compile Include="..\linker\MobileMarkStep.cs">
       <Link>Xamarin.Linker\MobileMarkStep.cs</Link>
-    </Compile>
-    <Compile Include="..\linker\MobileRemoveAttributes.cs">
-      <Link>Xamarin.Linker\MobileRemoveAttributes.cs</Link>
     </Compile>
     <Compile Include="..\linker\CorePreserveCode.cs">
       <Link>Xamarin.Linker\CorePreserveCode.cs</Link>

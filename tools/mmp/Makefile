@@ -88,7 +88,6 @@ tuner_sources = \
 	$(TOP)/tools/linker/MobileExtensions.cs		\
 	$(TOP)/tools/linker/MobileMarkStep.cs			\
 	$(TOP)/tools/linker/MobileProfile.cs			\
-	$(TOP)/tools/linker/MobileRemoveAttributes.cs		\
 	$(TOP)/tools/linker/MobileSweepStep.cs			\
 	$(TOP)/tools/linker/RemoveSelectors.cs			\
 	$(TOP)/tools/linker/ExceptionalSubStep.cs		\
