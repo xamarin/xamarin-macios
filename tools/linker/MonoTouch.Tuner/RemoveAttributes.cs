@@ -153,5 +153,21 @@ namespace MonoTouch.Tuner {
 #endif
 			return false;
 		}
+
+		protected override void WillRemoveAttribute (ICustomAttributeProvider provider, CustomAttribute attribute)
+		{
+			var attr_type = attribute.AttributeType;
+			switch (attr_type.Namespace) {
+			case "System.Runtime.CompilerServices":
+				switch (attr_type.Name) {
+				case "CompilerGeneratedAttribute":
+					LinkContext.StoreCustomAttribute (provider, attribute);
+					break;
+				}
+				break;
+			}
+
+			base.WillRemoveAttribute (provider, attribute);
+		}
 	}
 }

@@ -528,7 +528,7 @@ namespace XamCore.Registrar {
 		readonly Version MacOSTenTwelveVersion = new Version (10,12);
 #endif
 
-		public Mono.Linker.LinkContext LinkContext {
+		public Xamarin.Tuner.DerivedLinkContext LinkContext {
 			get {
 				return Target?.LinkContext;
 			}
@@ -537,7 +537,7 @@ namespace XamCore.Registrar {
 		Dictionary<IMetadataTokenProvider, object> AvailabilityAnnotations {
 			get {
 				if (availability_annotations == null)
-					availability_annotations = LinkContext?.Annotations?.GetCustomAnnotations ("Availability");
+					availability_annotations = LinkContext?.GetAllCustomAttributes ("Availability");
 				return availability_annotations;
 			}
 		}
@@ -1354,12 +1354,7 @@ namespace XamCore.Registrar {
 			}
 		}
 
-		void CollectAvailabilityAttributes (IEnumerable<CustomAttribute> attributes, ref List<AvailabilityBaseAttribute> list)
-		{
-			CollectAvailabilityAttributes (attributes.Select ((v) => new Tuple<CustomAttribute, TypeReference> (v, v.Constructor.DeclaringType)), ref list);
-		}
-
-		void CollectAvailabilityAttributes (IEnumerable<Tuple<CustomAttribute, TypeReference>> attributes, ref List<AvailabilityBaseAttribute> list)
+		void CollectAvailabilityAttributes (IEnumerable<ICustomAttribute> attributes, ref List<AvailabilityBaseAttribute> list)
 		{
 			PlatformName currentPlatform;
 #if MTOUCH
@@ -1380,9 +1375,8 @@ namespace XamCore.Registrar {
 			currentPlatform = global::XamCore.ObjCRuntime.PlatformName.MacOSX;
 #endif
 
-			foreach (var tuple in attributes) {
-				var ca = tuple.Item1;
-				var caType = tuple.Item2;
+			foreach (var ca in attributes) {
+				var caType = ca.AttributeType;
 				if (caType.Namespace != ObjCRuntime)
 					continue;
 				
@@ -1511,7 +1505,7 @@ namespace XamCore.Registrar {
 			if (AvailabilityAnnotations != null) {
 				object attribObjects;
 				if (AvailabilityAnnotations.TryGetValue (td, out attribObjects))
-					CollectAvailabilityAttributes ((List<Tuple<CustomAttribute, TypeReference>>) attribObjects, ref rv);
+					CollectAvailabilityAttributes ((IEnumerable<ICustomAttribute>) attribObjects, ref rv);
 			}
 
 			return rv;

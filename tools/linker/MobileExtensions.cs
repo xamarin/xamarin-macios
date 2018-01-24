@@ -10,6 +10,15 @@ namespace Xamarin.Linker {
 
 	public static class MobileExtensions {
 
+		// This method will look in any stored attributes in the link context as well as the provider itself.
+		public static bool HasCustomAttribute (this ICustomAttributeProvider provider, DerivedLinkContext context, string @namespace, string name)
+		{
+			if (provider?.HasCustomAttribute (@namespace, name) == true)
+				return true;
+			
+			return context?.GetCustomAttributes (provider, @namespace, name)?.Count > 0;
+		}
+
 		public static bool HasCustomAttribute (this ICustomAttributeProvider provider, string @namespace, string name)
 		{
 			if (provider == null || !provider.HasCustomAttributes)
@@ -23,9 +32,9 @@ namespace Xamarin.Linker {
 			return false;
 		}
 
-		static bool HasGeneratedCodeAttribute (ICustomAttributeProvider provider)
+		static bool HasGeneratedCodeAttribute (ICustomAttributeProvider provider, DerivedLinkContext context)
 		{
-			return provider.HasCustomAttribute ("System.Runtime.CompilerServices", "CompilerGeneratedAttribute");
+			return provider.HasCustomAttribute (context, "System.Runtime.CompilerServices", "CompilerGeneratedAttribute");
 		}
 
 		static PropertyDefinition GetPropertyByAccessor (MethodDefinition method)
@@ -39,15 +48,12 @@ namespace Xamarin.Linker {
 
 		public static bool IsGeneratedCode (this MethodDefinition self, DerivedLinkContext link_context)
 		{
-			if (link_context.GeneratedCode != null)
-				return link_context.GeneratedCode.Contains (self);
-
 			// check the property too
 			if (self.IsGetter || self.IsSetter) {
-				if (HasGeneratedCodeAttribute (GetPropertyByAccessor (self)))
+				if (HasGeneratedCodeAttribute (GetPropertyByAccessor (self), link_context))
 					return true;
 			}
-			return HasGeneratedCodeAttribute (self);
+			return HasGeneratedCodeAttribute (self, link_context);
 		}
 	}
 }
