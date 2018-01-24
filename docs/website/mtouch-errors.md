@@ -1279,7 +1279,7 @@ An unexpected error occured when processing an assembly.
 
 The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
-### <a name="MT2104"/>MM2104: Unable to link assembly '{0}' as it is mixed-mode.
+### <a name="MT2104"/>MT2104: Unable to link assembly '{0}' as it is mixed-mode.
 
 Mixed-mode assemblies can not be processed by the linker.
 
