@@ -654,7 +654,7 @@ The accepted format is `[+|-]optimization-name`, where `optimization-name` is on
 
 See [Build optimizations](https://developer.xamarin.com/guides/cross-platform/macios/build-optimization/) for a complete description of each optimization.
 
-### <a name="MT0133"/>MT0132: Found more than 1 assembly matching '{0}' choosing first: '{1}'
+### <a name="MT0133"/>MT0133: Found more than 1 assembly matching '{0}' choosing first: '{1}'
 
 When using --recursive-directories, only 1 assembly should match
 
