@@ -393,11 +393,11 @@ namespace XamCore.WebKit
 		[Field ("WKWebsiteDataTypeIndexedDBDatabases", "WebKit")]
 		NSString IndexedDBDatabases { get; }
 
-		[Mac (10, 13, 4), iOS (11, 3)]
+		[Mac (10, 13, 4, onlyOn64 : true), iOS (11, 3)]
 		[Field ("WKWebsiteDataTypeFetchCache")]
 		NSString FetchCache { get; }
 
-		[Mac (10, 13, 4), iOS (11, 3)]
+		[Mac (10, 13, 4, onlyOn64 : true), iOS (11, 3)]
 		[Field ("WKWebsiteDataTypeServiceWorkerRegistrations")]
 		NSString ServiceWorkerRegistrations { get; }
 	}
@@ -444,7 +444,7 @@ namespace XamCore.WebKit
 		[Export ("allowsMultipleSelection")]
 		bool AllowsMultipleSelection { get; }
 
-		[Mac (10, 13, 4)]
+		[Mac (10, 13, 4, onlyOn64 : true)]
 		[Export ("allowsDirectories")]
 		bool AllowsDirectories { get; }
 	}
