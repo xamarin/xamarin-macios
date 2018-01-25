@@ -1,0 +1,2 @@
+### moved from macOS-NotificationCenter.todo
+!extra-protocol-member! unexpected selector NCWidgetProviding::setWidgetAllowsEditing: found

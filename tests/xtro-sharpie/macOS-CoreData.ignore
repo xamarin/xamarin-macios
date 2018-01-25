@@ -1,0 +1,45 @@
+!missing-field! NSBinaryExternalRecordType not bound
+!missing-field! NSEntityNameInPathKey not bound
+!missing-field! NSExternalRecordExtensionOption not bound
+!missing-field! NSExternalRecordsDirectoryOption not bound
+!missing-field! NSExternalRecordsFileFormatOption not bound
+!missing-field! NSModelPathKey not bound
+!missing-field! NSObjectURIKey not bound
+!missing-field! NSStorePathKey not bound
+!missing-field! NSStoreUUIDInPathKey not bound
+!missing-field! NSXMLExternalRecordType not bound
+!missing-protocol! NSFetchedResultsControllerDelegate not bound
+!missing-protocol! NSFetchedResultsSectionInfo not bound
+!missing-selector! +NSFetchedResultsController::deleteCacheWithName: not bound
+!missing-selector! +NSPersistentStoreCoordinator::elementsDerivedFromExternalRecordURL: not bound
+!missing-selector! NSCoreDataCoreSpotlightDelegate::attributeSetForObject: not bound
+!missing-selector! NSCoreDataCoreSpotlightDelegate::initForStoreWithDescription:model: not bound
+!missing-selector! NSCoreDataCoreSpotlightDelegate::searchableIndex:reindexAllSearchableItemsWithAcknowledgementHandler: not bound
+!missing-selector! NSCoreDataCoreSpotlightDelegate::searchableIndex:reindexSearchableItemsWithIdentifiers:acknowledgementHandler: not bound
+!missing-selector! NSFetchedResultsController::cacheName not bound
+!missing-selector! NSFetchedResultsController::delegate not bound
+!missing-selector! NSFetchedResultsController::fetchedObjects not bound
+!missing-selector! NSFetchedResultsController::fetchRequest not bound
+!missing-selector! NSFetchedResultsController::indexPathForObject: not bound
+!missing-selector! NSFetchedResultsController::initWithFetchRequest:managedObjectContext:sectionNameKeyPath:cacheName: not bound
+!missing-selector! NSFetchedResultsController::managedObjectContext not bound
+!missing-selector! NSFetchedResultsController::objectAtIndexPath: not bound
+!missing-selector! NSFetchedResultsController::performFetch: not bound
+!missing-selector! NSFetchedResultsController::sectionForSectionIndexTitle:atIndex: not bound
+!missing-selector! NSFetchedResultsController::sectionIndexTitleForSectionName: not bound
+!missing-selector! NSFetchedResultsController::sectionIndexTitles not bound
+!missing-selector! NSFetchedResultsController::sectionNameKeyPath not bound
+!missing-selector! NSFetchedResultsController::sections not bound
+!missing-selector! NSFetchedResultsController::setDelegate: not bound
+!missing-selector! NSPersistentStore::coreSpotlightExporter not bound
+!missing-selector! NSPersistentStoreCoordinator::importStoreWithIdentifier:fromExternalRecordsDirectory:toURL:options:withType:error: not bound
+!missing-type! NSCoreDataCoreSpotlightDelegate not bound
+!missing-type! NSFetchedResultsController not bound
+
+### moved from macOS-CoreData.todo
+!missing-designated-initializer! NSFetchRequest::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSManagedObjectModel::init is missing an [DesignatedInitializer] attribute
+!missing-protocol-conformance! NSDictionary should conform to NSFetchRequestResult (defined in 'NSFetchedResultSupport' category)
+!missing-protocol-conformance! NSManagedObject should conform to NSFetchRequestResult (defined in 'NSFetchedResultSupport' category)
+!missing-protocol-conformance! NSManagedObjectID should conform to NSFetchRequestResult (defined in 'NSFetchedResultSupport' category)
+!missing-protocol-conformance! NSNumber should conform to NSFetchRequestResult (defined in 'NSFetchedResultSupport' category)

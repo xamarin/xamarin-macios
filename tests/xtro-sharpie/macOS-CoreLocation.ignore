@@ -1,0 +1,6 @@
+### moved from macOS-CoreLocation.todo
+!extra-protocol-member! unexpected selector CLLocationManagerDelegate::locationManagerDidPauseLocationUpdates: found
+!extra-protocol-member! unexpected selector CLLocationManagerDelegate::locationManagerDidResumeLocationUpdates: found
+!extra-protocol-member! unexpected selector CLLocationManagerDelegate::locationManagerShouldDisplayHeadingCalibration: found
+!unknown-field! CLLocationDistanceMax bound
+!unknown-native-enum! CLProximity bound

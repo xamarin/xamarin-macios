@@ -1,0 +1,75 @@
+!missing-pinvoke! IOBluetoothDeviceSelectorRunPanelWithAttributes is not bound
+!missing-pinvoke! IOBluetoothGetDeviceSelectorController is not bound
+!missing-pinvoke! IOBluetoothGetPairingController is not bound
+!missing-pinvoke! IOBluetoothPairingControllerRunPanelWithAttributes is not bound
+!missing-pinvoke! IOBluetoothServiceBrowserControllerBrowseDevices is not bound
+!missing-pinvoke! IOBluetoothServiceBrowserControllerCreate is not bound
+!missing-pinvoke! IOBluetoothServiceBrowserControllerDiscover is not bound
+!missing-pinvoke! IOBluetoothServiceBrowserControllerDiscoverWithDeviceAttributes is not bound
+!missing-pinvoke! IOBluetoothServiceBrowserControllerSetOptions is not bound
+!missing-pinvoke! IOBluetoothValidateHardware is not bound
+!missing-pinvoke! IOBluetoothValidateHardwareWithDescription is not bound
+!missing-selector! +IOBluetoothDeviceSelectorController::withDeviceSelectorControllerRef: not bound
+!missing-selector! +IOBluetoothPairingController::withPairingControllerRef: not bound
+!missing-selector! +IOBluetoothServiceBrowserController::browseDevices:options: not bound
+!missing-selector! +IOBluetoothServiceBrowserController::browseDevicesAsSheetForWindow:options:window: not bound
+!missing-selector! +IOBluetoothServiceBrowserController::serviceBrowserController: not bound
+!missing-selector! +IOBluetoothServiceBrowserController::withServiceBrowserControllerRef: not bound
+!missing-selector! IOBluetoothDeviceSelectorController::addAllowedUUID: not bound
+!missing-selector! IOBluetoothDeviceSelectorController::addAllowedUUIDArray: not bound
+!missing-selector! IOBluetoothDeviceSelectorController::beginSheetModalForWindow:modalDelegate:didEndSelector:contextInfo: not bound
+!missing-selector! IOBluetoothDeviceSelectorController::setCancel: not bound
+!missing-selector! IOBluetoothDeviceSelectorController::setDescriptionText: not bound
+!missing-selector! IOBluetoothDeviceSelectorController::setHeader: not bound
+!missing-selector! IOBluetoothDeviceSelectorController::setOptions: not bound
+!missing-selector! IOBluetoothDeviceSelectorController::setPrompt: not bound
+!missing-selector! IOBluetoothDeviceSelectorController::setSearchAttributes: not bound
+!missing-selector! IOBluetoothDeviceSelectorController::setTitle: not bound
+!missing-selector! IOBluetoothObjectPushUIController::beginSheetModalForWindow:modalDelegate:didEndSelector:contextInfo: not bound
+!missing-selector! IOBluetoothObjectPushUIController::initObjectPushWithBluetoothDevice:withFiles:delegate: not bound
+!missing-selector! IOBluetoothObjectPushUIController::setIconImage: not bound
+!missing-selector! IOBluetoothObjectPushUIController::setTitle: not bound
+!missing-selector! IOBluetoothPairingController::addAllowedUUID: not bound
+!missing-selector! IOBluetoothPairingController::addAllowedUUIDArray: not bound
+!missing-selector! IOBluetoothPairingController::setDescriptionText: not bound
+!missing-selector! IOBluetoothPairingController::setOptions: not bound
+!missing-selector! IOBluetoothPairingController::setPrompt: not bound
+!missing-selector! IOBluetoothPairingController::setSearchAttributes: not bound
+!missing-selector! IOBluetoothPairingController::setTitle: not bound
+!missing-selector! IOBluetoothPasskeyDisplay::backgroundImageConstraint not bound
+!missing-selector! IOBluetoothPasskeyDisplay::centeredView not bound
+!missing-selector! IOBluetoothPasskeyDisplay::isIncomingRequest not bound
+!missing-selector! IOBluetoothPasskeyDisplay::passkey not bound
+!missing-selector! IOBluetoothPasskeyDisplay::returnHighlightImage not bound
+!missing-selector! IOBluetoothPasskeyDisplay::returnImage not bound
+!missing-selector! IOBluetoothPasskeyDisplay::setBackgroundImageConstraint: not bound
+!missing-selector! IOBluetoothPasskeyDisplay::setCenteredView: not bound
+!missing-selector! IOBluetoothPasskeyDisplay::setIsIncomingRequest: not bound
+!missing-selector! IOBluetoothPasskeyDisplay::setPasskey: not bound
+!missing-selector! IOBluetoothPasskeyDisplay::setPasskey:forDevice:usingSSP: not bound
+!missing-selector! IOBluetoothPasskeyDisplay::setPasskeyIndicatorEnabled: not bound
+!missing-selector! IOBluetoothPasskeyDisplay::setPasskeyString: not bound
+!missing-selector! IOBluetoothPasskeyDisplay::setReturnHighlightImage: not bound
+!missing-selector! IOBluetoothPasskeyDisplay::setReturnImage: not bound
+!missing-selector! IOBluetoothPasskeyDisplay::setupUIForDevice: not bound
+!missing-selector! IOBluetoothPasskeyDisplay::setupUIForSSPDevice: not bound
+!missing-selector! IOBluetoothPasskeyDisplay::setUsePasskeyNotificaitons: not bound
+!missing-selector! IOBluetoothPasskeyDisplay::usePasskeyNotificaitons not bound
+!missing-selector! IOBluetoothServiceBrowserController::addAllowedUUID: not bound
+!missing-selector! IOBluetoothServiceBrowserController::addAllowedUUIDArray: not bound
+!missing-selector! IOBluetoothServiceBrowserController::beginSheetModalForWindow:modalDelegate:didEndSelector:contextInfo: not bound
+!missing-selector! IOBluetoothServiceBrowserController::discover: not bound
+!missing-selector! IOBluetoothServiceBrowserController::discoverAsSheetForWindow:withRecord: not bound
+!missing-selector! IOBluetoothServiceBrowserController::discoverWithDeviceAttributes:serviceList:serviceRecord: not bound
+!missing-selector! IOBluetoothServiceBrowserController::setDescriptionText: not bound
+!missing-selector! IOBluetoothServiceBrowserController::setOptions: not bound
+!missing-selector! IOBluetoothServiceBrowserController::setPrompt: not bound
+!missing-selector! IOBluetoothServiceBrowserController::setSearchAttributes: not bound
+!missing-selector! IOBluetoothServiceBrowserController::setTitle: not bound
+!missing-type! IOBluetoothAccessibilityIgnoredImageCell not bound
+!missing-type! IOBluetoothAccessibilityIgnoredTextFieldCell not bound
+!missing-type! IOBluetoothDeviceSelectorController not bound
+!missing-type! IOBluetoothObjectPushUIController not bound
+!missing-type! IOBluetoothPairingController not bound
+!missing-type! IOBluetoothPasskeyDisplay not bound
+!missing-type! IOBluetoothServiceBrowserController not bound

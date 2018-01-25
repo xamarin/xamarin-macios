@@ -1,0 +1,14 @@
+## it's an internal that is called from a non-generated binding
+!incorrect-designated-initializer! SKWarpGeometryGrid::initWithColumns:rows:sourcePositions:destPositions: is not a constructor
+
+## Deprecated in iOS 10 (xcode8)
+!missing-selector! +SKUniform::uniformWithName:floatVector2: not bound
+!missing-selector! +SKUniform::uniformWithName:floatVector3: not bound
+!missing-selector! +SKUniform::uniformWithName:floatVector4: not bound
+!missing-selector! +SKUniform::uniformWithName:floatMatrix2: not bound
+!missing-selector! +SKUniform::uniformWithName:floatMatrix3: not bound
+!missing-selector! +SKUniform::uniformWithName:floatMatrix4: not bound
+
+## both introduced and deprecated in Xcode8
+!missing-selector! SKView::preferredFrameRate not bound
+!missing-selector! SKView::setPreferredFrameRate: not bound

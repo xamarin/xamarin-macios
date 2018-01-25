@@ -1,0 +1,50 @@
+!missing-enum! AudioDeviceClockAlgorithmSelector not bound
+!missing-enum! AudioHardwarePowerHint not bound
+!missing-enum! AudioLevelControlTransferFunction not bound
+!missing-enum! AudioServerPlugInIOOperation not bound
+!missing-pinvoke! AudioConvertHostTimeToNanos is not bound
+!missing-pinvoke! AudioConvertNanosToHostTime is not bound
+!missing-pinvoke! AudioDeviceAddIOProc is not bound
+!missing-pinvoke! AudioDeviceAddPropertyListener is not bound
+!missing-pinvoke! AudioDeviceCreateIOProcID is not bound
+!missing-pinvoke! AudioDeviceCreateIOProcIDWithBlock is not bound
+!missing-pinvoke! AudioDeviceDestroyIOProcID is not bound
+!missing-pinvoke! AudioDeviceGetCurrentTime is not bound
+!missing-pinvoke! AudioDeviceGetNearestStartTime is not bound
+!missing-pinvoke! AudioDeviceGetProperty is not bound
+!missing-pinvoke! AudioDeviceGetPropertyInfo is not bound
+!missing-pinvoke! AudioDeviceRead is not bound
+!missing-pinvoke! AudioDeviceRemoveIOProc is not bound
+!missing-pinvoke! AudioDeviceRemovePropertyListener is not bound
+!missing-pinvoke! AudioDeviceSetProperty is not bound
+!missing-pinvoke! AudioDeviceStart is not bound
+!missing-pinvoke! AudioDeviceStartAtTime is not bound
+!missing-pinvoke! AudioDeviceStop is not bound
+!missing-pinvoke! AudioDeviceTranslateTime is not bound
+!missing-pinvoke! AudioGetCurrentHostTime is not bound
+!missing-pinvoke! AudioGetHostClockFrequency is not bound
+!missing-pinvoke! AudioGetHostClockMinimumTimeDelta is not bound
+!missing-pinvoke! AudioHardwareAddPropertyListener is not bound
+!missing-pinvoke! AudioHardwareAddRunLoopSource is not bound
+!missing-pinvoke! AudioHardwareCreateAggregateDevice is not bound
+!missing-pinvoke! AudioHardwareDestroyAggregateDevice is not bound
+!missing-pinvoke! AudioHardwareGetProperty is not bound
+!missing-pinvoke! AudioHardwareGetPropertyInfo is not bound
+!missing-pinvoke! AudioHardwareRemovePropertyListener is not bound
+!missing-pinvoke! AudioHardwareRemoveRunLoopSource is not bound
+!missing-pinvoke! AudioHardwareSetProperty is not bound
+!missing-pinvoke! AudioHardwareUnload is not bound
+!missing-pinvoke! AudioObjectAddPropertyListener is not bound
+!missing-pinvoke! AudioObjectAddPropertyListenerBlock is not bound
+!missing-pinvoke! AudioObjectGetPropertyDataSize is not bound
+!missing-pinvoke! AudioObjectHasProperty is not bound
+!missing-pinvoke! AudioObjectIsPropertySettable is not bound
+!missing-pinvoke! AudioObjectRemovePropertyListener is not bound
+!missing-pinvoke! AudioObjectRemovePropertyListenerBlock is not bound
+!missing-pinvoke! AudioObjectSetPropertyData is not bound
+!missing-pinvoke! AudioObjectShow is not bound
+!missing-pinvoke! AudioStreamAddPropertyListener is not bound
+!missing-pinvoke! AudioStreamGetProperty is not bound
+!missing-pinvoke! AudioStreamGetPropertyInfo is not bound
+!missing-pinvoke! AudioStreamRemovePropertyListener is not bound
+!missing-pinvoke! AudioStreamSetProperty is not bound

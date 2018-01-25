@@ -1,0 +1,20 @@
+## key only useful when used with an API not available on watchOS
+!missing-field! HKDetailedCDAValidationErrorKey not bound
+
+## deprecated API (removed in same version it was added)
+!missing-selector! HKAnchoredObjectQuery::initWithType:predicate:anchor:limit:completionHandler: not bound
+
+## marked as iOS-only (confirmed by Apple) even if some watchOS 3 API returns this type, rdar #27865614
+!missing-type! HKDocumentType not bound
+!missing-selector! HKDocumentSample::documentType not bound
+!missing-selector! +HKObjectType::documentTypeForIdentifier: not bound
+
+## Not available on WatchOS, headers show no watch info about them
+!missing-type! HKDocumentQuery not bound
+!missing-selector! HKDocumentQuery::includeDocumentData not bound
+!missing-selector! HKDocumentQuery::initWithDocumentType:predicate:limit:sortDescriptors:includeDocumentData:resultsHandler: not bound
+!missing-selector! HKDocumentQuery::limit not bound
+!missing-selector! HKDocumentQuery::sortDescriptors not bound
+
+## type was marked as available in 3.0 - but it's now iOS 11 only (even if members are marked with 10.0)
+!unknown-type! HKCDADocument bound

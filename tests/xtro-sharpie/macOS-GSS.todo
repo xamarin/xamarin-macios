@@ -1,0 +1,182 @@
+!missing-field! __gss_appl_lkdc_supported_oid_desc not bound
+!missing-field! __gss_c_attr_local_login_user not bound
+!missing-field! __gss_c_cred_certificate_oid_desc not bound
+!missing-field! __gss_c_cred_diag_oid_desc not bound
+!missing-field! __gss_c_cred_get_default_oid_desc not bound
+!missing-field! __gss_c_cred_heimbase_oid_desc not bound
+!missing-field! __gss_c_cred_password_oid_desc not bound
+!missing-field! __gss_c_cred_renew_oid_desc not bound
+!missing-field! __gss_c_cred_secidentity_oid_desc not bound
+!missing-field! __gss_c_cred_set_default_oid_desc not bound
+!missing-field! __gss_c_cred_validate_oid_desc not bound
+!missing-field! __gss_c_ctx_pfs_x_oid_desc not bound
+!missing-field! __gss_c_inq_sspi_session_key_oid_desc not bound
+!missing-field! __gss_c_inq_win2k_pac_x_oid_desc not bound
+!missing-field! __gss_c_ma_auth_init_anon_oid_desc not bound
+!missing-field! __gss_c_ma_auth_init_init_oid_desc not bound
+!missing-field! __gss_c_ma_auth_init_oid_desc not bound
+!missing-field! __gss_c_ma_auth_targ_anon_oid_desc not bound
+!missing-field! __gss_c_ma_auth_targ_init_oid_desc not bound
+!missing-field! __gss_c_ma_auth_targ_oid_desc not bound
+!missing-field! __gss_c_ma_cbindings_oid_desc not bound
+!missing-field! __gss_c_ma_compress_oid_desc not bound
+!missing-field! __gss_c_ma_conf_prot_oid_desc not bound
+!missing-field! __gss_c_ma_ctx_trans_oid_desc not bound
+!missing-field! __gss_c_ma_deleg_cred_oid_desc not bound
+!missing-field! __gss_c_ma_deprecated_oid_desc not bound
+!missing-field! __gss_c_ma_integ_prot_oid_desc not bound
+!missing-field! __gss_c_ma_itok_framed_oid_desc not bound
+!missing-field! __gss_c_ma_mech_composite_oid_desc not bound
+!missing-field! __gss_c_ma_mech_concrete_oid_desc not bound
+!missing-field! __gss_c_ma_mech_description_oid_desc not bound
+!missing-field! __gss_c_ma_mech_glue_oid_desc not bound
+!missing-field! __gss_c_ma_mech_name_oid_desc not bound
+!missing-field! __gss_c_ma_mech_nego_oid_desc not bound
+!missing-field! __gss_c_ma_mech_pseudo_oid_desc not bound
+!missing-field! __gss_c_ma_mic_oid_desc not bound
+!missing-field! __gss_c_ma_not_dflt_mech_oid_desc not bound
+!missing-field! __gss_c_ma_not_mech_oid_desc not bound
+!missing-field! __gss_c_ma_oos_det_oid_desc not bound
+!missing-field! __gss_c_ma_pfs_oid_desc not bound
+!missing-field! __gss_c_ma_prot_ready_oid_desc not bound
+!missing-field! __gss_c_ma_replay_det_oid_desc not bound
+!missing-field! __gss_c_ma_sasl_mech_name_oid_desc not bound
+!missing-field! __gss_c_ma_wrap_oid_desc not bound
+!missing-field! __gss_c_nt_anonymous_oid_desc not bound
+!missing-field! __gss_c_nt_dn_oid_desc not bound
+!missing-field! __gss_c_nt_export_name_oid_desc not bound
+!missing-field! __gss_c_nt_hostbased_service_oid_desc not bound
+!missing-field! __gss_c_nt_hostbased_service_x_oid_desc not bound
+!missing-field! __gss_c_nt_machine_uid_name_oid_desc not bound
+!missing-field! __gss_c_nt_ntlm_oid_desc not bound
+!missing-field! __gss_c_nt_string_uid_name_oid_desc not bound
+!missing-field! __gss_c_nt_user_name_oid_desc not bound
+!missing-field! __gss_c_nt_uuid_oid_desc not bound
+!missing-field! __gss_c_ntlm_force_v1_oid_desc not bound
+!missing-field! __gss_c_ntlm_guest_oid_desc not bound
+!missing-field! __gss_c_ntlm_reset_keys_oid_desc not bound
+!missing-field! __gss_c_ntlm_session_key_oid_desc not bound
+!missing-field! __gss_c_ntlm_support_channelbindings_oid_desc not bound
+!missing-field! __gss_c_ntlm_support_lm2_oid_desc not bound
+!missing-field! __gss_c_ntlm_v1_oid_desc not bound
+!missing-field! __gss_c_ntlm_v2_oid_desc not bound
+!missing-field! __gss_c_peer_has_updated_spnego_oid_desc not bound
+!missing-field! __gss_iakerb_mechanism_oid_desc not bound
+!missing-field! __gss_krb5_ccache_name_x_oid_desc not bound
+!missing-field! __gss_krb5_compat_des3_mic_x_oid_desc not bound
+!missing-field! __gss_krb5_copy_ccache_x_oid_desc not bound
+!missing-field! __gss_krb5_cred_no_ci_flags_x_oid_desc not bound
+!missing-field! __gss_krb5_export_lucid_context_v1_x_oid_desc not bound
+!missing-field! __gss_krb5_export_lucid_context_x_oid_desc not bound
+!missing-field! __gss_krb5_extract_authz_data_from_sec_context_x_oid_desc not bound
+!missing-field! __gss_krb5_get_acceptor_subkey_x_oid_desc not bound
+!missing-field! __gss_krb5_get_authtime_x_oid_desc not bound
+!missing-field! __gss_krb5_get_initiator_subkey_x_oid_desc not bound
+!missing-field! __gss_krb5_get_service_keyblock_x_oid_desc not bound
+!missing-field! __gss_krb5_get_subkey_x_oid_desc not bound
+!missing-field! __gss_krb5_get_time_offset_x_oid_desc not bound
+!missing-field! __gss_krb5_get_tkt_flags_x_oid_desc not bound
+!missing-field! __gss_krb5_import_cred_x_oid_desc not bound
+!missing-field! __gss_krb5_mechanism_oid_desc not bound
+!missing-field! __gss_krb5_nt_principal_name_oid_desc not bound
+!missing-field! __gss_krb5_nt_principal_name_referral_oid_desc not bound
+!missing-field! __gss_krb5_nt_principal_oid_desc not bound
+!missing-field! __gss_krb5_plugin_register_x_oid_desc not bound
+!missing-field! __gss_krb5_register_acceptor_identity_x_oid_desc not bound
+!missing-field! __gss_krb5_send_to_kdc_x_oid_desc not bound
+!missing-field! __gss_krb5_set_allowable_enctypes_x_oid_desc not bound
+!missing-field! __gss_krb5_set_default_realm_x_oid_desc not bound
+!missing-field! __gss_krb5_set_dns_canonicalize_x_oid_desc not bound
+!missing-field! __gss_krb5_set_time_offset_x_oid_desc not bound
+!missing-field! __gss_netlogon_mechanism_oid_desc not bound
+!missing-field! __gss_netlogon_nt_netbios_dns_name_oid_desc not bound
+!missing-field! __gss_netlogon_set_session_key_x_oid_desc not bound
+!missing-field! __gss_netlogon_set_sign_algorithm_x_oid_desc not bound
+!missing-field! __gss_ntlm_get_session_key_x_oid_desc not bound
+!missing-field! __gss_ntlm_mechanism_oid_desc not bound
+!missing-field! __gss_pku2u_mechanism_oid_desc not bound
+!missing-field! __gss_sasl_digest_md5_mechanism_oid_desc not bound
+!missing-field! __gss_scram_mechanism_oid_desc not bound
+!missing-field! __gss_spnego_mechanism_oid_desc not bound
+!missing-pinvoke! gss_aapl_change_password is not bound
+!missing-pinvoke! gss_aapl_initial_cred is not bound
+!missing-pinvoke! gss_accept_sec_context is not bound
+!missing-pinvoke! gss_acquire_cred is not bound
+!missing-pinvoke! gss_acquire_cred_with_password is not bound
+!missing-pinvoke! gss_add_buffer_set_member is not bound
+!missing-pinvoke! gss_add_cred is not bound
+!missing-pinvoke! gss_add_oid_set_member is not bound
+!missing-pinvoke! gss_canonicalize_name is not bound
+!missing-pinvoke! gss_compare_name is not bound
+!missing-pinvoke! gss_context_time is not bound
+!missing-pinvoke! gss_create_empty_buffer_set is not bound
+!missing-pinvoke! gss_create_empty_oid_set is not bound
+!missing-pinvoke! gss_decapsulate_token is not bound
+!missing-pinvoke! gss_delete_sec_context is not bound
+!missing-pinvoke! gss_destroy_cred is not bound
+!missing-pinvoke! gss_display_mech_attr is not bound
+!missing-pinvoke! gss_display_name is not bound
+!missing-pinvoke! gss_display_status is not bound
+!missing-pinvoke! gss_duplicate_name is not bound
+!missing-pinvoke! gss_duplicate_oid is not bound
+!missing-pinvoke! gss_encapsulate_token is not bound
+!missing-pinvoke! gss_export_cred is not bound
+!missing-pinvoke! gss_export_name is not bound
+!missing-pinvoke! gss_export_sec_context is not bound
+!missing-pinvoke! gss_get_mic is not bound
+!missing-pinvoke! gss_import_cred is not bound
+!missing-pinvoke! gss_import_name is not bound
+!missing-pinvoke! gss_import_sec_context is not bound
+!missing-pinvoke! gss_indicate_mechs is not bound
+!missing-pinvoke! gss_indicate_mechs_by_attrs is not bound
+!missing-pinvoke! gss_init_sec_context is not bound
+!missing-pinvoke! gss_inquire_attrs_for_mech is not bound
+!missing-pinvoke! gss_inquire_context is not bound
+!missing-pinvoke! gss_inquire_cred is not bound
+!missing-pinvoke! gss_inquire_cred_by_mech is not bound
+!missing-pinvoke! gss_inquire_cred_by_oid is not bound
+!missing-pinvoke! gss_inquire_mech_for_saslname is not bound
+!missing-pinvoke! gss_inquire_mechs_for_name is not bound
+!missing-pinvoke! gss_inquire_name is not bound
+!missing-pinvoke! gss_inquire_names_for_mech is not bound
+!missing-pinvoke! gss_inquire_saslname_for_mech is not bound
+!missing-pinvoke! gss_inquire_sec_context_by_oid is not bound
+!missing-pinvoke! gss_iter_creds is not bound
+!missing-pinvoke! gss_iter_creds_f is not bound
+!missing-pinvoke! gss_krb5_ccache_name is not bound
+!missing-pinvoke! gss_krb5_copy_ccache is not bound
+!missing-pinvoke! gss_krb5_export_lucid_sec_context is not bound
+!missing-pinvoke! gss_krb5_free_lucid_sec_context is not bound
+!missing-pinvoke! gss_krb5_set_allowable_enctypes is not bound
+!missing-pinvoke! gss_oid_equal is not bound
+!missing-pinvoke! gss_oid_to_str is not bound
+!missing-pinvoke! gss_process_context_token is not bound
+!missing-pinvoke! gss_pseudo_random is not bound
+!missing-pinvoke! gss_release_buffer is not bound
+!missing-pinvoke! gss_release_buffer_set is not bound
+!missing-pinvoke! gss_release_cred is not bound
+!missing-pinvoke! gss_release_name is not bound
+!missing-pinvoke! gss_release_oid is not bound
+!missing-pinvoke! gss_release_oid_set is not bound
+!missing-pinvoke! gss_seal is not bound
+!missing-pinvoke! gss_set_cred_option is not bound
+!missing-pinvoke! gss_set_sec_context_option is not bound
+!missing-pinvoke! gss_sign is not bound
+!missing-pinvoke! gss_test_oid_set_member is not bound
+!missing-pinvoke! gss_unseal is not bound
+!missing-pinvoke! gss_unwrap is not bound
+!missing-pinvoke! gss_userok is not bound
+!missing-pinvoke! gss_verify is not bound
+!missing-pinvoke! gss_verify_mic is not bound
+!missing-pinvoke! gss_wrap is not bound
+!missing-pinvoke! gss_wrap_size_limit is not bound
+!missing-pinvoke! GSSCreateCredentialFromUUID is not bound
+!missing-pinvoke! GSSCreateError is not bound
+!missing-pinvoke! GSSCreateName is not bound
+!missing-pinvoke! GSSCredentialCopyName is not bound
+!missing-pinvoke! GSSCredentialCopyUUID is not bound
+!missing-pinvoke! GSSCredentialGetLifetime is not bound
+!missing-pinvoke! gsskrb5_extract_authz_data_from_sec_context is not bound
+!missing-pinvoke! gsskrb5_register_acceptor_identity is not bound
+!missing-pinvoke! GSSNameCreateDisplayString is not bound
+!missing-pinvoke! krb5_gss_register_acceptor_identity is not bound

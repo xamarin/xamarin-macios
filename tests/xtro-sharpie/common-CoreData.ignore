@@ -1,0 +1,31 @@
+## no generator support for FastEnumeration - https://bugzilla.xamarin.com/show_bug.cgi?id=4391
+
+!missing-protocol-conformance! NSEntityDescription should conform to NSFastEnumeration
+!missing-protocol-conformance! NSManagedObjectModel should conform to NSFastEnumeration
+
+
+## unsorted
+
+!missing-field! NSAffectedObjectsErrorKey not bound
+!missing-field! NSCoreDataVersionNumber not bound
+!missing-field! NSErrorMergePolicy not bound
+!missing-field! NSManagedObjectContextQueryGenerationKey not bound
+!missing-field! NSMergeByPropertyObjectTrumpMergePolicy not bound
+!missing-field! NSMergeByPropertyStoreTrumpMergePolicy not bound
+!missing-field! NSMigrationDestinationObjectKey not bound
+!missing-field! NSMigrationEntityMappingKey not bound
+!missing-field! NSMigrationEntityPolicyKey not bound
+!missing-field! NSMigrationManagerKey not bound
+!missing-field! NSMigrationPropertyMappingKey not bound
+!missing-field! NSMigrationSourceObjectKey not bound
+!missing-field! NSOverwriteMergePolicy not bound
+!missing-field! NSPersistentStoreConnectionPoolMaxSizeKey not bound
+!missing-field! NSPersistentStoreForceDestroyOption not bound
+!missing-field! NSRollbackMergePolicy not bound
+!missing-field! NSSQLiteErrorDomain not bound
+!missing-protocol-conformance! NSPersistentHistoryToken should conform to NSSecureCoding
+!missing-selector! NSAsynchronousFetchRequest::completionBlock not bound
+!unknown-native-enum! MigrationErrorType bound
+!unknown-native-enum! ObjectGraphManagementErrorType bound
+!unknown-native-enum! PersistentStoreErrorType bound
+!unknown-native-enum! ValidationErrorType bound

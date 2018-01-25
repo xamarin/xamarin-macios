@@ -1,0 +1,2 @@
+### moved from tvOS-ModelIO.todo
+!missing-designated-initializer! MDLTexture::init is missing an [DesignatedInitializer] attribute

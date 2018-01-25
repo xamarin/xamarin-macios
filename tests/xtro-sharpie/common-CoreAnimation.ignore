@@ -1,0 +1,18 @@
+## header file removed from the framework umbrella in xcode9
+!unknown-type! CAEmitterBehavior bound
+!unknown-field! kCAEmitterBehaviorAlignToMotion bound
+!unknown-field! kCAEmitterBehaviorAttractor bound
+!unknown-field! kCAEmitterBehaviorColorOverLife bound
+!unknown-field! kCAEmitterBehaviorDrag bound
+!unknown-field! kCAEmitterBehaviorLight bound
+!unknown-field! kCAEmitterBehaviorSimpleAttractor bound
+!unknown-field! kCAEmitterBehaviorValueOverLife bound
+!unknown-field! kCAEmitterBehaviorWave bound
+
+
+## unsorted
+
+!missing-field! CATransform3DIdentity not bound
+!missing-pinvoke! CATransform3DMakeScale is not bound
+!missing-pinvoke! CATransform3DMakeTranslation is not bound
+!missing-selector! CALayer::shouldArchiveValueForKey: not bound

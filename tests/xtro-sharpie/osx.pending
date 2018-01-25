@@ -2,13 +2,7 @@
 
 ## AVFoundation
 
-# Won't be used as a Delegate protocol so no need to mark this one as abstract
-!incorrect-protocol-member! AVFragmentMinding::isAssociatedWithFragmentMinder is REQUIRED and should be abstract
-
 #iOS Only. Available on OSX but probably private selector mostly decorated with NS_AVAILABLE_IOS
-!missing-enum! AVCaptureAutoFocusSystem not bound
-!missing-field! AVAssetResourceLoadingRequestStreamingContentKeyRequestRequiresPersistentKey not bound
-!missing-field! AVAudioTimePitchAlgorithmLowQualityZeroLatency not bound
 !missing-field! AVCaptureDeviceSubjectAreaDidChangeNotification not bound
 !missing-field! AVCaptureExposureDurationCurrent not bound
 !missing-field! AVCaptureExposureTargetBiasCurrent not bound
@@ -85,16 +79,6 @@
 !missing-selector! AVCaptureDevice::torchLevel not bound
 !missing-selector! AVCaptureDevice::transportControlsSpeed not bound
 !missing-selector! AVCaptureDevice::videoZoomFactor not bound
-!missing-selector! AVCaptureMetadataOutput::availableMetadataObjectTypes not bound
-!missing-selector! AVCaptureMetadataOutput::metadataObjectTypes not bound
-!missing-selector! AVCaptureMetadataOutput::metadataObjectsCallbackQueue not bound
-!missing-selector! AVCaptureMetadataOutput::metadataObjectsDelegate not bound
-!missing-selector! AVCaptureMetadataOutput::rectOfInterest not bound
-!missing-selector! AVCaptureMetadataOutput::setMetadataObjectTypes: not bound
-!missing-selector! AVCaptureMetadataOutput::setMetadataObjectsDelegate:queue: not bound
-!missing-selector! AVCaptureMetadataOutput::setRectOfInterest: not bound
-!missing-selector! AVCaptureMetadataInput::appendTimedMetadataGroup:error: not bound
-!missing-selector! AVCaptureMetadataInput::initWithFormatDescription:clock: not bound
 !missing-selector! AVCaptureOutput::metadataOutputRectOfInterestForRect: not bound
 !missing-selector! AVCaptureOutput::rectForMetadataOutputRectOfInterest: not bound
 !missing-selector! AVCaptureOutput::transformedMetadataObjectForMetadataObject:connection: not bound
@@ -104,162 +88,13 @@
 !missing-selector! AVCaptureVideoPreviewLayer::pointForCaptureDevicePointOfInterest: not bound
 !missing-selector! AVCaptureVideoPreviewLayer::rectForMetadataOutputRectOfInterest: not bound
 !missing-selector! AVCaptureVideoPreviewLayer::transformedMetadataObjectForMetadataObject: not bound
-!missing-selector! AVMetadataMachineReadableCodeObject::corners not bound
-!missing-selector! AVMetadataMachineReadableCodeObject::stringValue not bound
 !missing-selector! AVPlayer::setUsesExternalPlaybackWhileExternalScreenIsActive: not bound
 !missing-selector! AVPlayer::usesExternalPlaybackWhileExternalScreenIsActive not bound
 !missing-protocol! AVCaptureMetadataOutputObjectsDelegate not bound
-!missing-type! AVCaptureMetadataInput not bound
-!missing-type! AVMetadataMachineReadableCodeObject not bound
-!missing-type! AVCaptureMetadataOutput not bound
-
-# Manually bound
-!missing-field! AVOutputSettingsPreset1280x720 not bound
-!missing-field! AVOutputSettingsPreset1920x1080 not bound
-!missing-field! AVOutputSettingsPreset3840x2160 not bound
-!missing-field! AVOutputSettingsPreset640x480 not bound
-!missing-field! AVOutputSettingsPreset960x540 not bound
-
-# Deprecated so won't bind it
-!missing-selector! AVAudioUnitComponent::componentURL not bound
-!missing-selector! AVCaptureConnection::isVideoMaxFrameDurationSupported not bound
-!missing-selector! AVCaptureConnection::setVideoMaxFrameDuration: not bound
-!missing-selector! AVCaptureConnection::videoMaxFrameDuration not bound
-
-# TODO: Verify Later, could not find it on header
-!missing-selector! AVAssetReaderTrackOutput::setAudioTimePitchAlgorithm: not bound
-!missing-selector! AVPlayerItem::contentAuthorizationRequestStatus not bound
-!missing-selector! AVPlayerItem::isApplicationAuthorizedForPlayback not bound
-!missing-selector! AVPlayerItem::isAuthorizationRequiredForPlayback not bound
-!missing-selector! AVPlayerItem::isContentAuthorizedForPlayback not bound
-!missing-selector! AVPlayerItem::requestContentAuthorizationAsynchronouslyWithTimeoutInterval:completionHandler: not bound
-
-# TODO: Not bound, needed unbound type
-!missing-selector! AVPlayerItemOutput::itemTimeForCVTimeStamp: not bound
-!missing-selector! AVAudioEngine::musicSequence not bound
-!missing-selector! AVAudioEngine::setMusicSequence: not bound
 
 # --- End of AVFoundation - AVKit ---
 
-# OSX only - API not exposed in XI even if it's in the header files
-!missing-selector! NEVPNProtocol::identityReference is not bound
-!missing-selector! NEVPNProtocol::setIdentityReference: is not bound
-
-# https://bugzilla.xamarin.com/show_bug.cgi?id=30717 
-!duplicate-register! _NSDatePickerCellDelegate exists as both AppKit.NSDatePickerCell/_NSDatePickerCellDelegate and AppKit.NSDatePicker/_NSDatePickerCellDelegate
-
-
-# should we bother ?
-
-## *GetTypeID
-!missing-pinvoke! AXObserverGetTypeID is not bound
-!missing-pinvoke! AXUIElementGetTypeID is not bound
-!missing-pinvoke! AXValueGetTypeID is not bound
-!missing-pinvoke! CFUserNotificationGetTypeID is not bound
-!missing-pinvoke! CFXMLNodeGetTypeID is not bound
-!missing-pinvoke! CFXMLParserGetTypeID is not bound
-!missing-pinvoke! CGDisplayModeGetTypeID is not bound
-!missing-pinvoke! CGDisplayStreamGetTypeID is not bound
-!missing-pinvoke! CGDisplayStreamUpdateGetTypeID is not bound
-!missing-pinvoke! CGEventGetTypeID is not bound
-!missing-pinvoke! CGEventSourceGetTypeID is not bound
-!missing-pinvoke! CGPSConverterGetTypeID is not bound
-!missing-pinvoke! CMSDecoderGetTypeID is not bound
-!missing-pinvoke! CMSEncoderGetTypeID is not bound
-!missing-pinvoke! CSIdentityAuthorityGetTypeID is not bound
-!missing-pinvoke! CSIdentityGetTypeID is not bound
-!missing-pinvoke! CSIdentityQueryGetTypeID is not bound
-!missing-pinvoke! CVDisplayLinkGetTypeID is not bound
-!missing-pinvoke! CVOpenGLBufferGetTypeID is not bound
-!missing-pinvoke! CVOpenGLBufferPoolGetTypeID is not bound
-!missing-pinvoke! CVOpenGLTextureCacheGetTypeID is not bound
-!missing-pinvoke! CVOpenGLTextureGetTypeID is not bound
-!missing-pinvoke! ColorSyncCMMGetTypeID is not bound
-!missing-pinvoke! ColorSyncProfileGetTypeID is not bound
-!missing-pinvoke! ColorSyncTransformGetTypeID is not bound
-!missing-pinvoke! DAApprovalSessionGetTypeID is not bound
-!missing-pinvoke! DADiskGetTypeID is not bound
-!missing-pinvoke! DASessionGetTypeID is not bound
-!missing-pinvoke! DRBurnGetTypeID is not bound
-!missing-pinvoke! DRBurnSessionGetTypeID is not bound
-!missing-pinvoke! DRCDTextBlockGetTypeID is not bound
-!missing-pinvoke! DRDeviceGetTypeID is not bound
-!missing-pinvoke! DREraseGetTypeID is not bound
-!missing-pinvoke! DREraseSessionGetTypeID is not bound
-!missing-pinvoke! DRFileGetTypeID is not bound
-!missing-pinvoke! DRFolderGetTypeID is not bound
-!missing-pinvoke! DRNotificationCenterGetTypeID is not bound
-!missing-pinvoke! DRTrackGetTypeID is not bound
-!missing-pinvoke! FSFileOperationGetTypeID is not bound
-!missing-pinvoke! FSFileSecurityGetTypeID is not bound
-!missing-pinvoke! HIShapeGetTypeID is not bound
-!missing-pinvoke! IOHIDDeviceGetTypeID is not bound
-!missing-pinvoke! IOHIDElementGetTypeID is not bound
-!missing-pinvoke! IOHIDManagerGetTypeID is not bound
-!missing-pinvoke! IOHIDQueueGetTypeID is not bound
-!missing-pinvoke! IOHIDTransactionGetTypeID is not bound
-!missing-pinvoke! IOHIDValueGetTypeID is not bound
-!missing-pinvoke! IOSurfaceGetTypeID is not bound
-!missing-pinvoke! InkStrokeGetTypeID is not bound
-!missing-pinvoke! InkTextGetTypeID is not bound
-!missing-pinvoke! LSMMapGetTypeID is not bound
-!missing-pinvoke! LSMResultGetTypeID is not bound
-!missing-pinvoke! LSMTextGetTypeID is not bound
-!missing-pinvoke! LSSharedFileListGetTypeID is not bound
-!missing-pinvoke! LSSharedFileListItemGetTypeID is not bound
-!missing-pinvoke! MDItemGetTypeID is not bound
-!missing-pinvoke! MDLabelGetTypeID is not bound
-!missing-pinvoke! MDQueryGetTypeID is not bound
-!missing-pinvoke! ODContextGetTypeID is not bound
-!missing-pinvoke! ODNodeGetTypeID is not bound
-!missing-pinvoke! ODQueryGetTypeID is not bound
-!missing-pinvoke! ODRecordGetTypeID is not bound
-!missing-pinvoke! ODSessionGetTypeID is not bound
-!missing-pinvoke! PasteboardGetTypeID is not bound
-!missing-pinvoke! QLPreviewRequestGetTypeID is not bound
-!missing-pinvoke! QLThumbnailGetTypeID is not bound
-!missing-pinvoke! QLThumbnailRequestGetTypeID is not bound
-!missing-pinvoke! SCBondStatusGetTypeID is not bound
-!missing-pinvoke! SCDynamicStoreGetTypeID is not bound
-!missing-pinvoke! SCNetworkConnectionGetTypeID is not bound
-!missing-pinvoke! SCNetworkInterfaceGetTypeID is not bound
-!missing-pinvoke! SCNetworkProtocolGetTypeID is not bound
-!missing-pinvoke! SCNetworkServiceGetTypeID is not bound
-!missing-pinvoke! SCNetworkSetGetTypeID is not bound
-!missing-pinvoke! SCPreferencesGetTypeID is not bound
-!missing-pinvoke! SKDocumentGetTypeID is not bound
-!missing-pinvoke! SKIndexDocumentIteratorGetTypeID is not bound
-!missing-pinvoke! SKIndexGetTypeID is not bound
-!missing-pinvoke! SKSearchGetTypeID is not bound
-!missing-pinvoke! SKSearchGroupGetTypeID is not bound
-!missing-pinvoke! SKSearchResultsGetTypeID is not bound
-!missing-pinvoke! SKSummaryGetTypeID is not bound
-!missing-pinvoke! SecACLGetTypeID is not bound
-!missing-pinvoke! SecAccessGetTypeID is not bound
-!missing-pinvoke! SecCodeGetTypeID is not bound
-!missing-pinvoke! SecDecryptTransformGetTypeID is not bound
-!missing-pinvoke! SecDigestTransformGetTypeID is not bound
-!missing-pinvoke! SecEncryptTransformGetTypeID is not bound
-!missing-pinvoke! SecGroupTransformGetTypeID is not bound
-!missing-pinvoke! SecIdentitySearchGetTypeID is not bound
-!missing-pinvoke! SecKeychainGetTypeID is not bound
-!missing-pinvoke! SecKeychainItemGetTypeID is not bound
-!missing-pinvoke! SecKeychainSearchGetTypeID is not bound
-!missing-pinvoke! SecPolicySearchGetTypeID is not bound
-!missing-pinvoke! SecRequirementGetTypeID is not bound
-!missing-pinvoke! SecStaticCodeGetTypeID is not bound
-!missing-pinvoke! SecTaskGetTypeID is not bound
-!missing-pinvoke! SecTransformGetTypeID is not bound
-!missing-pinvoke! SecTrustedApplicationGetTypeID is not bound
-!missing-pinvoke! TISInputSourceGetTypeID is not bound
-!missing-pinvoke! TranslationGetTypeID is not bound
-!missing-pinvoke! VTPixelTransferSessionGetTypeID is not bound
-!missing-pinvoke! WSMethodInvocationGetTypeID is not bound
-!missing-pinvoke! WSProtocolHandlerGetTypeID is not bound
-
 # Used to remove hard to kill delegate API until XAMCORE_4_0
-!extra-protocol-member! unexpected selector CBPeripheralDelegate::xamarin:selector:removed: found
-!extra-protocol-member! unexpected selector GKMatchDelegate::xamarin:selector:removed: found
 !extra-protocol-member! unexpected selector NSGestureRecognizerDelegate::xamarinselector:removed: found
 !extra-protocol-member! unexpected selector NSPasteboardReading::xamarinselector:removed: found
 !extra-protocol-member! unexpected selector NSApplicationDelegate::orderFrontStandardAboutPanel: found
@@ -272,43 +107,10 @@
 !incorrect-protocol-member! MTLDevice::isLowPower is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::recommendedMaxWorkingSetSize is REQUIRED and should be abstract
 
-# Intents API macOS 10.12 
-
-## API_AVAILABLE(macosx(10.12), ios(10.0)); This is supposed to be there according to availability (Last Review: Beta 3)
-!unknown-field! INSearchCallHistoryIntentIdentifier bound
-!unknown-field! INSearchForMessagesIntentIdentifier bound
-!unknown-field! INSendMessageIntentIdentifier bound
-!unknown-field! INSetMessageAttributeIntentIdentifier bound
-!unknown-field! INStartAudioCallIntentIdentifier bound
-!unknown-field! INStartVideoCallIntentIdentifier bound
-!unknown-protocol! INCallsDomainHandling bound
-!unknown-protocol! INIntentHandlerProviding bound
-!unknown-protocol! INMessagesDomainHandling bound
-!unknown-protocol! INSetMessageAttributeIntentHandling bound
-!unknown-type! INSetMessageAttributeIntent bound
-!unknown-type! INSetMessageAttributeIntentResponse bound
-!unknown-native-enum! INSetMessageAttributeIntentResponseCode bound
-
-## No availability set on headers, it is possible to be fixed later since makes sense to have in macOS
-!unknown-type! INExtension bound
-!unknown-native-enum! INMessageAttribute bound
-!unknown-type! INMessageAttributeResolutionResult bound
-!unknown-native-enum! INRelativeReference bound
-!unknown-type! INRelativeReferenceResolutionResult bound
-!unknown-native-enum! INRelativeSetting bound
-!unknown-type! INRelativeSettingResolutionResult bound
-
-## The signature uses INBooleanResolutionResult which is not available on mac
-!missing-protocol-member! INSearchCallHistoryIntentHandling::resolveUnseenForSearchCallHistory:withCompletion: not found
-
-# Used in sandbox for NSOpen/Save panel but never should have been bound. #if !XAMCORE_3_0'ed
-!unknown-type! NSRemoteOpenPanel bound
-!unknown-type! NSRemoteSavePanel bound
 
 # Fixed in XAMCORE_4_0
 !wrong-enum-size! NSEventSubtype managed 8 vs native 2
 !wrong-enum-size! WebNavigationType managed 4 vs native 8
-!unknown-field! AVKitErrorDomain bound
 !unknown-native-enum! AVAudioSessionCategoryOptions bound
 !unknown-native-enum! AVAudioSessionInterruptionType bound
 !unknown-native-enum! AVAudioSessionErrorCode bound
@@ -318,10 +120,7 @@
 !unknown-native-enum! AVAudioSessionRouteChangeReason bound
 !unknown-native-enum! AVAudioSessionRecordPermission bound
 !unknown-native-enum! AVAudioSessionSilenceSecondaryAudioHintType bound
-!unknown-native-enum! AVKitError bound
 !unknown-native-enum! AVSpeechBoundary bound
-!unknown-native-enum! CBPeripheralManagerAuthorizationStatus bound
-!unknown-native-enum! MidiNetworkConnectionPolicy bound
 !unknown-native-enum! NSAlertButtonReturn bound
 !unknown-native-enum! NSAlertType bound
 !unknown-native-enum! NSApplicationLayoutDirection bound
@@ -335,142 +134,15 @@
 !unknown-native-enum! NSTextMovement bound
 !unknown-native-enum! NSTextStorageEditedFlags bound
 !unknown-native-enum! NSTextWritingDirection bound
-!unknown-native-enum! WKSelectionGranularity bound
-!unknown-native-enum! SKCloudServiceAuthorizationStatus bound
-!unknown-native-enum! SKCloudServiceCapability bound
 !unknown-native-enum! NSWindowStyle bound
 !unknown-native-enum! NSPanelButtonType bound
 !unknown-native-enum! NSWindowNumberListOptions bound
 !unknown-native-enum! NSType bound
-!unknown-native-enum! SLComposeViewControllerResult bound
-!wrong-base-type! MDLVoxelArray expected MDLObject actual NSObject
 !incorrect-protocol-member! NSAccessibility::accessibilityChildrenInNavigationOrder is REQUIRED and should be abstract
 !incorrect-protocol-member! NSAccessibility::accessibilityCustomActions is REQUIRED and should be abstract
 !incorrect-protocol-member! NSAccessibility::accessibilityCustomRotors is REQUIRED and should be abstract
 !incorrect-protocol-member! NSAccessibility::setAccessibilityChildrenInNavigationOrder: is REQUIRED and should be bstract
 !incorrect-protocol-member! NSAccessibility::setAccessibilityCustomActions: is REQUIRED and should be abstract
 !incorrect-protocol-member! NSAccessibility::setAccessibilityCustomRotors: is REQUIRED and should be abstract
-!incorrect-protocol-member! CIImageProcessorInput::surface is REQUIRED and should be abstract
-!incorrect-protocol-member! CIImageProcessorOutput::surface is REQUIRED and should be abstract
-!incorrect-protocol-member! INSpeakable::alternativeSpeakableMatches is REQUIRED and should be abstract
-!incorrect-protocol-member! INSpeakable::vocabularyIdentifier is REQUIRED and should be abstract
+
 !wrong-enum-size! NSSpellingState managed 4 vs native 8
-!extra-protocol-member! unexpected selector MTLCommandBuffer::GPUEndTime found
-!extra-protocol-member! unexpected selector MTLCommandBuffer::GPUStartTime found
-!extra-protocol-member! unexpected selector MTLCommandBuffer::kernelEndTime found
-!extra-protocol-member! unexpected selector MTLCommandBuffer::kernelStartTime found
-
-# Bound but commented out until we can test w\ template
-!missing-selector! +SFSafariExtensionManager::getStateOfSafariExtensionWithIdentifier:completionHandler: not bound
-!missing-type! SFSafariExtensionManager not bound
-!missing-selector! SFSafariExtensionState::isEnabled not bound
-!missing-type! SFSafariExtensionState not bound
-
-## CoreLocation
-# False positives, not available on macOS as 10.12
-# Mostly __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_X_Y);
-!missing-type! CLBeacon not bound
-!missing-selector! CLBeacon::accuracy not bound
-!missing-selector! CLBeacon::major not bound
-!missing-selector! CLBeacon::minor not bound
-!missing-selector! CLBeacon::proximity not bound
-!missing-selector! CLBeacon::proximityUUID not bound
-!missing-selector! CLBeacon::rssi not bound
-!missing-protocol-member! CLLocationManagerDelegate::locationManager:didRangeBeacons:inRegion: not found
-!missing-type! CLBeaconRegion not bound
-!missing-selector! CLBeaconRegion::initWithProximityUUID:identifier: not bound
-!missing-selector! CLBeaconRegion::initWithProximityUUID:major:identifier: not bound
-!missing-selector! CLBeaconRegion::initWithProximityUUID:major:minor:identifier: not bound
-!missing-selector! CLBeaconRegion::major not bound
-!missing-selector! CLBeaconRegion::minor not bound
-!missing-selector! CLBeaconRegion::notifyEntryStateOnDisplay not bound
-!missing-selector! CLBeaconRegion::peripheralDataWithMeasuredPower: not bound
-!missing-selector! CLBeaconRegion::proximityUUID not bound
-!missing-selector! CLBeaconRegion::setNotifyEntryStateOnDisplay: not bound
-!missing-protocol-member! CLLocationManagerDelegate::locationManager:rangingBeaconsDidFailForRegion:withError: not found
-!missing-type! CLFloor not bound
-!missing-selector! CLFloor::level not bound
-!missing-selector! CLLocation::floor not bound
-!missing-type! CLVisit not bound
-!missing-selector! CLVisit::arrivalDate not bound
-!missing-selector! CLVisit::coordinate not bound
-!missing-selector! CLVisit::departureDate not bound
-!missing-selector! CLVisit::horizontalAccuracy not bound
-!missing-protocol-member! CLLocationManagerDelegate::locationManager:didVisit: not found
-!missing-protocol-member! CLLocationManagerDelegate::locationManager:didUpdateHeading: not found
-!missing-field! CLTimeIntervalMax not bound
-!missing-selector! CLLocation::getDistanceFrom: not bound
-!missing-selector! CLLocationManager::activityType not bound
-!missing-selector! CLLocationManager::setActivityType: not bound
-!missing-selector! CLLocationManager::allowDeferredLocationUpdatesUntilTraveled:timeout: not bound
-!missing-selector! CLLocationManager::allowsBackgroundLocationUpdates not bound
-!missing-selector! CLLocationManager::setAllowsBackgroundLocationUpdates: not bound
-!missing-selector! CLLocationManager::heading not bound
-!missing-selector! CLLocationManager::headingAvailable not bound
-!missing-selector! CLLocationManager::headingFilter not bound
-!missing-selector! CLLocationManager::setHeadingFilter: not bound
-!missing-selector! CLLocationManager::headingOrientation not bound
-!missing-selector! CLLocationManager::setHeadingOrientation: not bound
-!missing-selector! CLLocationManager::locationServicesEnabled not bound
-!missing-selector! CLLocationManager::pausesLocationUpdatesAutomatically not bound
-!missing-selector! CLLocationManager::setPausesLocationUpdatesAutomatically: not bound
-!missing-selector! CLLocationManager::rangedRegions not bound
-!missing-selector! CLLocationManager::startMonitoringForRegion:desiredAccuracy: not bound
-!missing-selector! CLLocationManager::startRangingBeaconsInRegion: not bound
-!missing-selector! CLLocationManager::stopRangingBeaconsInRegion: not bound
-
-# MediaPlayer API macOS 10.12.2
-
-## MPMediaItem only exposed for fields, it's not really available in macOS
-!wrong-base-type! MPMediaItem expected MPMediaEntity actual NSObject
-
-# These are not available on macOS even if xtro says so.
-!missing-type! MPMediaEntity not bound
-
-!missing-enum! MPErrorCode not bound
-!missing-enum! MPMediaType not bound
-
-!missing-field! MPErrorDomain not bound
-!missing-field! MPMediaEntityPropertyPersistentID not bound
-
-## type not available on macOS
-!missing-selector! +MPMediaEntity::canFilterByProperty: not bound
-!missing-selector! MPMediaEntity::enumerateValuesForProperties:usingBlock: not bound
-!missing-selector! MPMediaEntity::objectForKeyedSubscript: not bound
-!missing-selector! MPMediaEntity::valueForProperty: not bound
-
-## deprecaed in iOS 10, not on macOS
-!missing-selector! MPMediaItemArtwork::imageCropRect not bound
-
-
-# Metal
-
-## [Notification] in protocol - https://bugzilla.xamarin.com/show_bug.cgi?id=59342
-!missing-field! MTLDeviceRemovalRequestedNotification not bound
-!missing-field! MTLDeviceWasAddedNotification not bound
-!missing-field! MTLDeviceWasRemovedNotification not bound
-
-
-# Not available in OS X
-!missing-selector! ACAccount::userFullName not bound
-
-## These are not available on macOS even if xtro says so.
-!missing-selector! EKCalendarItem::UUID not bound
-!missing-selector! EKEvent::birthdayPersonID not bound
-!missing-selector! EKEventStore::calendars not bound
-!missing-selector! EKEventStore::removeEvent:span:error: not bound
-!missing-selector! EKEventStore::saveEvent:span:error: not bound
-!missing-selector! EKSource::calendars not bound
-
-### This is not bound and it is already deprecated
-!missing-selector! EKParticipant::ABPersonInAddressBook: not bound
-
-#PDFKit
-## Deprecated
-!missing-selector! PDFAnnotation::initWithDictionary:forPage: not bound
-
-# NetworkExtension
-## Will be removed in XAMCORE_4_0
-!unknown-field! NEFilterProviderRemediationMapRemediationButtonTexts bound
-!unknown-field! NEFilterProviderRemediationMapRemediationURLs bound
-!unknown-type! NEFilterProvider bound

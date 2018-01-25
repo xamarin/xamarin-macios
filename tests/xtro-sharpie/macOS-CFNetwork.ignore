@@ -1,0 +1,28 @@
+!missing-field! kCFNetworkProxiesExceptionsList not bound
+!missing-field! kCFNetworkProxiesExcludeSimpleHostnames not bound
+!missing-field! kCFNetworkProxiesFTPEnable not bound
+!missing-field! kCFNetworkProxiesFTPPassive not bound
+!missing-field! kCFNetworkProxiesFTPPort not bound
+!missing-field! kCFNetworkProxiesFTPProxy not bound
+!missing-field! kCFNetworkProxiesGopherEnable not bound
+!missing-field! kCFNetworkProxiesGopherPort not bound
+!missing-field! kCFNetworkProxiesGopherProxy not bound
+!missing-field! kCFNetworkProxiesHTTPSEnable not bound
+!missing-field! kCFNetworkProxiesHTTPSPort not bound
+!missing-field! kCFNetworkProxiesHTTPSProxy not bound
+!missing-field! kCFNetworkProxiesProxyAutoDiscoveryEnable not bound
+!missing-field! kCFNetworkProxiesRTSPEnable not bound
+!missing-field! kCFNetworkProxiesRTSPPort not bound
+!missing-field! kCFNetworkProxiesRTSPProxy not bound
+!missing-field! kCFNetworkProxiesSOCKSEnable not bound
+!missing-field! kCFNetworkProxiesSOCKSPort not bound
+!missing-field! kCFNetworkProxiesSOCKSProxy not bound
+!missing-field! kCFStreamPropertySSLPeerCertificates not bound
+!missing-field! kCFStreamSSLAllowsAnyRoot not bound
+!missing-field! kCFStreamSSLAllowsExpiredCertificates not bound
+!missing-field! kCFStreamSSLAllowsExpiredRoots not bound
+!missing-pinvoke! CFHTTPReadStreamSetRedirectsAutomatically is not bound
+!missing-pinvoke! CFNetServiceGetProtocolSpecificInformation is not bound
+!missing-pinvoke! CFNetServiceRegister is not bound
+!missing-pinvoke! CFNetServiceResolve is not bound
+!missing-pinvoke! CFNetServiceSetProtocolSpecificInformation is not bound

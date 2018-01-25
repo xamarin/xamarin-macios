@@ -1,0 +1,13 @@
+## new @required on existing protocols are breaking changes
+!incorrect-protocol-member! CIImageProcessorInput::surface is REQUIRED and should be abstract
+!incorrect-protocol-member! CIImageProcessorOutput::surface is REQUIRED and should be abstract
+
+
+## requires varargs support
+!missing-selector! +CIFilter::filterWithName:keysAndValues: not bound
+!missing-selector! CISampler::initWithImage:keysAndValues: not bound
+!missing-selector! +CISampler::samplerWithImage:keysAndValues: not bound
+
+
+## bound in informal protocol CIImageProvider
+!missing-selector! NSObject::provideImageData:bytesPerRow:origin::size::userInfo: not bound

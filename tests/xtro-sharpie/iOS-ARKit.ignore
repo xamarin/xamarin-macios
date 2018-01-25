@@ -1,0 +1,9 @@
+## NS_SWIFT_UNAVAILABLE("Use run(_:options:) instead")
+!missing-selector! ARSession::runWithConfiguration: not bound
+
+## Those methods are manually bound
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPointCloud::GetRawPoints(): simd type: vector_float3
+
+## not available in this branch
+## !wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARFaceGeometry::GetRawTextureCoordinates(): simd type: vector_float2
+## !wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARFaceGeometry::GetRawVertices(): simd type: vector_float3

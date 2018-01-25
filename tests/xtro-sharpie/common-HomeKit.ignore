@@ -1,0 +1,7 @@
+## This was added and deprecated at the same time recommending the use of UpdateAudioStreamSetting.
+## We decided not to bind it, as it could be that Apple is just keeping it around because it's needed somewhere else.
+!missing-selector! HMCameraStream::setAudioStreamSetting: not bound
+
+## unrecognized selector - rdar 33883958: https://trello.com/c/TIlzWzrL
+!missing-selector! HMMutablePresenceEvent::setPresenceEventType: not bound
+!missing-selector! HMMutablePresenceEvent::setPresenceUserType: not bound

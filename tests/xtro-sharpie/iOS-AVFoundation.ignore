@@ -1,0 +1,43 @@
+## OSX-only enums - fixed in XAMCORE_3_0
+!unknown-native-enum! AVCaptureDeviceTransportControlsPlaybackMode bound
+!unknown-native-enum! AVVideoFieldMode bound
+
+## OSX only - but only the member is marked (not the protocol itself)
+!missing-protocol! AVFragmentMinding not bound
+
+## from iOS 4.0 to 5.1
+!unknown-field! AVMediaTypeTimedMetadata bound
+
+## no generator support for NSFastEnumeration / https://bugzilla.xamarin.com/show_bug.cgi?id=4391
+!missing-protocol-conformance! AVCaptureSynchronizedDataCollection should conform to NSFastEnumeration
+
+
+## unsorted
+
+!missing-selector! +AVCapturePhotoBracketSettings::photoBracketSettingsWithRawPixelFormatType:rawFileType:processedFormat:processedFileType:bracketedSettings: not bound
+!missing-selector! AVCapturePhoto::fileDataRepresentationWithReplacementMetadata:replacementEmbeddedThumbnailPhotoFormat:replacementEmbeddedThumbnailPixelBuffer:replacementDepthData: not bound
+!missing-selector! AVCapturePhotoOutput::availableLivePhotoVideoCodecTypes not bound
+!missing-selector! AVCapturePhotoOutput::isCameraCalibrationDataDeliverySupported not bound
+!missing-selector! AVCapturePhotoOutput::isDualCameraDualPhotoDeliveryEnabled not bound
+!missing-selector! AVCapturePhotoOutput::isDualCameraDualPhotoDeliverySupported not bound
+!missing-selector! AVCapturePhotoOutput::setDualCameraDualPhotoDeliveryEnabled: not bound
+!missing-selector! AVCaptureResolvedPhotoSettings::embeddedThumbnailDimensions not bound
+!missing-selector! AVCaptureResolvedPhotoSettings::expectedPhotoCount not bound
+
+## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'AVQueuedSampleBufferRendering' is restored.
+!missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)
+
+### moved from iOS-AVFoundation.todo
+!missing-designated-initializer! AVAudioEnvironmentNode::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! AVAudioMixerNode::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! AVAudioPlayerNode::init is missing an [DesignatedInitializer] attribute
+!missing-field! AVAssetDownloadedAssetEvictionPriorityDefault not bound
+!missing-field! AVAssetDownloadedAssetEvictionPriorityImportant not bound
+!missing-protocol-conformance! AVURLAsset should conform to AVContentKeyRecipient (defined in 'AVURLAssetContentKeyEligibility' category)
+!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions: not found
+!missing-selector! AVAssetDownloadStorageManagementPolicy::priority not bound
+!missing-selector! AVMetadataMachineReadableCodeObject::descriptor not bound
+!missing-selector! AVMutableAssetDownloadStorageManagementPolicy::priority not bound
+!missing-selector! AVMutableAssetDownloadStorageManagementPolicy::setPriority: not bound
+!missing-selector! AVPlayerItem::setVideoApertureMode: not bound
+!missing-selector! AVPlayerItem::videoApertureMode not bound

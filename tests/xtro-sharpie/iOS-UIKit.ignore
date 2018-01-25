@@ -1,0 +1,75 @@
+## we do not (need to) redefine the tintColor at every level, it will be dispatched to the right type
+!missing-selector! UIRefreshControl::setTintColor: not bound
+!missing-selector! UIRefreshControl::tintColor not bound
+!missing-selector! UIStepper::setTintColor: not bound
+!missing-selector! UIStepper::tintColor not bound
+!missing-selector! UISwitch::setTintColor: not bound
+!missing-selector! UISwitch::tintColor not bound
+!missing-selector! UIToolbar::setTintColor: not bound
+!missing-selector! UIToolbar::tintColor not bound
+
+## macro is used in UIBarCommon.h: #define UIToolbarPosition UIBarPosition
+!unknown-native-enum! UIToolbarPosition bound
+
+### ARM ABI issue wrt variadic arguments
+!missing-selector! UIAlertView::initWithTitle:message:delegate:cancelButtonTitle:otherButtonTitles: not bound
+
+# Apple docs: Deprecated in iOS 3.2
+!unknown-field! UIKeyboardBoundsUserInfoKey bound
+!unknown-field! UIKeyboardCenterBeginUserInfoKey bound
+!unknown-field! UIKeyboardCenterEndUserInfoKey bound
+
+# from docs: Important: UIActionSheetDelegate is deprecated in iOS 8.
+!missing-protocol-conformance! UIDocumentInteractionController should conform to UIActionSheetDelegate
+
+## exception name, not clear if useful
+!missing-field! UIApplicationInvalidInterfaceOrientationException not bound
+
+## fixed for XAMCORE_4_0
+!incorrect-protocol-member! UIDocumentPickerDelegate::documentPicker:didPickDocumentAtURL: is OPTIONAL and should NOT be abstract
+
+## Special case from UIAccessibilityAction. We added it (completly) on UIResponser but magic tap is also available on app delegate according to docs
+## See comments is uikit.cs for more info
+!extra-protocol-member! unexpected selector UIApplicationDelegate::accessibilityPerformMagicTap found
+
+## Obsoleted selectors in very early versions of iOS (3.0) and removed in XAMCORE_3_0
+!extra-protocol-member! unexpected selector UITableViewDelegate::tableView:accessoryTypeForRowWithIndexPath: found
+!extra-protocol-member! unexpected selector UIImagePickerControllerDelegate::imagePickerController:didFinishPickingImage:editingInfo: found
+
+# fixed in XAMCORE_4_0 - API break
+!incorrect-protocol-member! UIDocumentMenuDelegate::documentMenuWasCancelled: is OPTIONAL and should NOT be abstract
+
+
+## unsorted
+
+!missing-selector! NSObject::accessibilityDragSourceDescriptors not bound
+!missing-selector! NSObject::accessibilityDropPointDescriptors not bound
+!missing-selector! NSObject::setAccessibilityDragSourceDescriptors: not bound
+!missing-selector! NSObject::setAccessibilityDropPointDescriptors: not bound
+
+## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'UIStateRestoring' is restored.
+!missing-protocol-conformance! UIViewController should conform to UIStateRestoring (defined in 'UIStateRestoration' category)
+
+### moved from iOS-UIKit.todo
+!missing-designated-initializer! NSLayoutManager::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSShadow::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIBarButtonItem::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIBarItem::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UICollectionViewLayout::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UICubicTimingParameters::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIImageAsset::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIKeyCommand::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIMotionEffect::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIPasteConfiguration::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UITabBarItem::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UITraitCollection::init is missing an [DesignatedInitializer] attribute
+
+!missing-designated-initializer! UIDragPreviewParameters::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIUserNotificationAction::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIUserNotificationCategory::init is missing an [DesignatedInitializer] attribute
+
+### fixed in master
+!missing-designated-initializer! UIBezierPath::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UILocalNotification::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UISpringTimingParameters::init is missing an [DesignatedInitializer] attribute
+!missing-protocol-conformance! UIViewController should conform to NSExtensionRequestHandling (defined in 'NSExtensionAdditions' category)

@@ -1,0 +1,6 @@
+## Apple made this protocol member optional in iOS 11 but it is a breaking change for us. Added to XAMCORE_4_0.
+!incorrect-protocol-member! INUIHostedViewControlling::configureWithInteraction:context:completion: is OPTIONAL and should NOT be abstract
+
+## not exposed by our API (better use the OS version)
+!missing-field! IntentsUIVersionNumber not bound
+!missing-field! IntentsUIVersionString not bound

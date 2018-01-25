@@ -1,0 +1,6 @@
+### moved from macOS-GameplayKit.todo
+!missing-designated-initializer! GKEntity::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! GKRandomSource::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! GKRuleSystem::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! GKState::init is missing an [DesignatedInitializer] attribute
+!missing-protocol-member! GKGameModel::unapplyGameModelUpdate: not found

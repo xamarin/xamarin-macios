@@ -1,0 +1,58 @@
+## no generator support for FastEnumeration - https://bugzilla.xamarin.com/show_bug.cgi?id=4391
+!missing-protocol-conformance! AUAudioUnitBusArray should conform to NSFastEnumeration
+
+
+## unsorted
+
+!missing-enum! AudioBytePacketTranslationFlags not bound
+!missing-enum! AudioComponentFlags not bound
+!missing-enum! AudioFilePermissions not bound
+!missing-enum! AudioFileStreamParseFlags not bound
+!missing-enum! AudioFileStreamPropertyFlags not bound
+!missing-enum! AudioFileStreamSeekFlags not bound
+!missing-enum! AudioPanningMode not bound
+!missing-enum! CAFFormatFlags not bound
+!missing-enum! CAFRegionFlags not bound
+!missing-pinvoke! AudioComponentCount is not bound
+!missing-pinvoke! AudioComponentInstanceCanDo is not bound
+!missing-pinvoke! AudioComponentInstantiate is not bound
+!missing-pinvoke! AudioComponentRegister is not bound
+!missing-pinvoke! AudioQueueNewInputWithDispatchQueue is not bound
+!missing-pinvoke! AudioQueueNewOutputWithDispatchQueue is not bound
+!missing-pinvoke! AudioServicesGetPropertyInfo is not bound
+!missing-pinvoke! AudioUnitAddPropertyListener is not bound
+!missing-pinvoke! AudioUnitAddRenderNotify is not bound
+!missing-pinvoke! AudioUnitGetParameter is not bound
+!missing-pinvoke! AudioUnitProcess is not bound
+!missing-pinvoke! AudioUnitProcessMultiple is not bound
+!missing-pinvoke! AudioUnitRemovePropertyListenerWithUserData is not bound
+!missing-pinvoke! AudioUnitRemoveRenderNotify is not bound
+!missing-pinvoke! AudioUnitReset is not bound
+!missing-pinvoke! AUGraphGetInteractionInfo is not bound
+!missing-pinvoke! AUGraphGetNodeInteractions is not bound
+!missing-pinvoke! CAShowFile is not bound
+!missing-pinvoke! DisposeMusicEventIterator is not bound
+!missing-pinvoke! ExtAudioFileGetPropertyInfo is not bound
+!missing-pinvoke! MusicDeviceStartNote is not bound
+!missing-pinvoke! MusicDeviceStopNote is not bound
+!missing-pinvoke! MusicDeviceSysEx is not bound
+!missing-pinvoke! MusicEventIteratorDeleteEvent is not bound
+!missing-pinvoke! MusicEventIteratorGetEventInfo is not bound
+!missing-pinvoke! MusicEventIteratorHasCurrentEvent is not bound
+!missing-pinvoke! MusicEventIteratorHasNextEvent is not bound
+!missing-pinvoke! MusicEventIteratorHasPreviousEvent is not bound
+!missing-pinvoke! MusicEventIteratorNextEvent is not bound
+!missing-pinvoke! MusicEventIteratorPreviousEvent is not bound
+!missing-pinvoke! MusicEventIteratorSeek is not bound
+!missing-pinvoke! MusicEventIteratorSetEventInfo is not bound
+!missing-pinvoke! MusicEventIteratorSetEventTime is not bound
+!missing-pinvoke! MusicTrackGetDestNode is not bound
+!missing-pinvoke! MusicTrackNewAUPresetEvent is not bound
+!missing-pinvoke! MusicTrackNewParameterEvent is not bound
+!missing-pinvoke! NewMusicEventIterator is not bound
+!missing-selector! AUAudioUnit::isRunning not bound
+!missing-selector! AUAudioUnit::musicalContextBlock not bound
+!missing-selector! AUAudioUnit::scheduleMIDIEventBlock not bound
+!missing-selector! AUAudioUnit::setMusicalContextBlock: not bound
+!missing-selector! AUAudioUnit::tokenByAddingRenderObserver: not bound
+!missing-type! AUAudioUnitV2Bridge not bound

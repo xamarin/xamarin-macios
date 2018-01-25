@@ -1,0 +1,2 @@
+!missing-selector! AVPlayer::preferredVideoDecoderGPURegistryID not bound
+!missing-selector! AVPlayer::setPreferredVideoDecoderGPURegistryID: not bound

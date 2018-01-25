@@ -1,0 +1,7 @@
+!missing-field! WKWebsiteDataTypeFetchCache not bound
+!missing-field! WKWebsiteDataTypeServiceWorkerRegistrations not bound
+!missing-protocol-conformance! WKPreferences should conform to NSSecureCoding
+!missing-protocol-conformance! WKProcessPool should conform to NSSecureCoding
+!missing-protocol-conformance! WKUserContentController should conform to NSSecureCoding
+!missing-protocol-conformance! WKWebsiteDataStore should conform to NSSecureCoding
+!missing-protocol-conformance! WKWebViewConfiguration should conform to NSSecureCoding

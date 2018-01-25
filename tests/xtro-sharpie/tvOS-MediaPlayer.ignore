@@ -1,0 +1,15 @@
+## incorrect macro/parsing - decorated with `MP_API(macos(10.12.2))`
+!missing-enum! MPNowPlayingPlaybackState not bound
+!missing-selector! MPNowPlayingInfoCenter::playbackState not bound
+!missing-selector! MPNowPlayingInfoCenter::setPlaybackState: not bound
+
+## MPMediaItem only exposed for fields, it's not really available
+!unknown-type! MPMediaItem bound
+
+## marked as available in tvOS 11 but the member is not and using a type, MPMusicPlayerQueueDescriptor, that's not available
+!missing-protocol! MPSystemMusicPlayerController not bound
+
+## shown as available in iOS 9.3 in tvOS header files (from Xcode 7.3) so normally available in tvOS 9.2 
+## In reality it's only available in the simulator, not on AppleTV devices (all fields are null)
+!missing-field! MPMediaPlaylistPropertyAuthorDisplayName not bound
+!missing-field! MPMediaPlaylistPropertyDescriptionText not bound

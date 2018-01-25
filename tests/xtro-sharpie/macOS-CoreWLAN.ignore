@@ -1,0 +1,6 @@
+# Types removed in 10.10
+!unknown-type! CW8021XProfile bound
+!unknown-type! CWWirelessProfile bound
+
+# It's named `CWErr` in the header file 
+!unknown-native-enum! CWStatus bound

@@ -1,0 +1,4 @@
+!missing-selector! HMAccessory::supportsIdentify not bound
+!missing-selector! HMAccessorySetupPayload::initWithURL: not bound
+!missing-selector! HMHome::addAndSetupAccessoriesWithPayload:completionHandler: not bound
+!missing-type! HMAccessorySetupPayload not bound

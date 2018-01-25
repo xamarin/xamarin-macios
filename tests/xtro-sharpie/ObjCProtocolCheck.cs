@@ -41,6 +41,11 @@ namespace Extrospection {
 			if (!type.HasCustomAttributes)
 				return;
 
+			if (!type.IsInterface) {
+				// Only interfaces map to protocols, but unfortunately we add [Protocol] to generated model classes too, so we need to skip those.
+				return;
+			}
+
 			string pname = null;
 			bool informal = false;
 
@@ -77,10 +82,14 @@ namespace Extrospection {
 			if (!decl.IsAvailable ())
 				return;
 
+			var framework = Helpers.GetFramework (decl);
+			if (framework == null)
+				return;
+
 			var name = decl.Name;
 			TypeDefinition td;
 			if (!protocol_map.TryGetValue (name, out td)) {
-				Console.WriteLine ("!missing-protocol! {0} not bound", name);
+				Log.On (framework).Add ($"!missing-protocol! {name} not bound");
 				// other checks can't be done without an actual protocol to inspect
 				return;
 			}
@@ -162,21 +171,21 @@ namespace Extrospection {
 					bool required = method.ImplementationControl == ObjCImplementationControl.Required;
 					if (required) {
 						if (!is_abstract)
-							Console.WriteLine ("!incorrect-protocol-member! {0} is REQUIRED and should be abstract", GetName (decl, method));
+							Log.On (framework).Add ($"!incorrect-protocol-member! {GetName (decl, method)} is REQUIRED and should be abstract");
 					} else {
 						if (is_abstract)
-							Console.WriteLine ("!incorrect-protocol-member! {0} is OPTIONAL and should NOT be abstract", GetName (decl, method));
+							Log.On (framework).Add ($"!incorrect-protocol-member! {GetName (decl, method)} is OPTIONAL and should NOT be abstract");
 					}
 					remaining.Remove (selector);
 				} else if (!method.IsClassMethod) {
 					// a .NET interface cannot have static methods - so we can only report missing instance methods
-					Console.WriteLine ("!missing-protocol-member! {0} not found", GetName (decl, method));
+					Log.On (framework).Add ($"!missing-protocol-member! {GetName (decl, method)} not found");
 					remaining.Remove (selector);
 				}
 			}
 
 			foreach (var selector in remaining.Keys)
-				Console.WriteLine ("!extra-protocol-member! unexpected selector {0}::{1} found", decl.Name, selector);
+				Log.On (framework).Add ($"!extra-protocol-member! unexpected selector {decl.Name}::{selector} found");
 			remaining.Clear ();
 			map.Clear ();
 
@@ -212,8 +221,10 @@ namespace Extrospection {
 		public override void End ()
 		{
 			// at this stage anything else we have is not something we could find in Apple's headers
-			foreach (var extra in protocol_map.Keys) {
-				Console.WriteLine ("!unknown-protocol! {0} bound", extra);
+			foreach (var kvp in protocol_map) {
+				var extra = kvp.Key;
+				var fx = kvp.Value.Namespace;
+				Log.On (fx).Add ($"!unknown-protocol! {extra} bound");
 			}
 		}
 	}

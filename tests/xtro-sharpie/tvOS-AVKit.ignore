@@ -1,0 +1,5 @@
+## inside AVPlayerViewControllerDeprecated
+!missing-selector! AVPlayerItem::externalSubtitleOptionLanguages not bound
+!missing-selector! AVPlayerItem::selectedExternalSubtitleOptionLanguage not bound
+!missing-selector! AVPlayerItem::setExternalSubtitleOptionLanguages: not bound
+!missing-selector! AVPlayerItem::setSelectedExternalSubtitleOptionLanguage: not bound
