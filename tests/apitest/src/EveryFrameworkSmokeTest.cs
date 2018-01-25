@@ -74,6 +74,7 @@ namespace Xamarin.Mac.Tests
 				case "VisionLibrary":
 				case "CoreMLLibrary":
 				case "ExternalAccessoryLibrary":
+				case "CoreSpotlightLibrary":
 					return LoadStatus.Acceptable;
 				}
 			}
