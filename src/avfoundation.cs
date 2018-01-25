@@ -10316,6 +10316,12 @@ namespace XamCore.AVFoundation {
 		[Field ("AVPlayerAvailableHDRModesDidChangeNotification")]
 		[Notification]
 		NSString AvailableHdrModesDidChangeNotification { get; }
+
+		// From AVPlayer (AVPlayerVideoDecoderGPUSupport) Category
+
+		[NoWatch, NoTV, NoiOS, Mac (10,13,4)]
+		[Export ("preferredVideoDecoderGPURegistryID")]
+		ulong PreferredVideoDecoderGpuRegistryId { get; set; }
 	}
 
 	[NoWatch]
